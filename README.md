@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.11.0 · Pre-lanzamiento · Iteración de diseño
+**Estado:** v0.11.3 · Pre-lanzamiento · Iteración de diseño
 **Autor:** [@acuradesign](https://github.com/ezradesign)
 
 ---

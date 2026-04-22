@@ -185,11 +185,49 @@ function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) 
   );
 }
 
+/* ============================================================
+   PaceLogoImage · logo oficial (PNG adjunto) que el usuario nos pasa.
+   Sustituye pictograma vaca + wordmark "pace" por la imagen cerrada
+   con el subtítulo "Touch grass, even from your desk".
+   Se escala responsive al ancho disponible.
+   ============================================================ */
+// Logo oficial v2 (17:16) — vaca integrada en "P" de Pace.
+// con subtítulo "Touch grass, even from your desk"
+const PACE_LOGO_URL = "https://www.genspark.ai/api/files/s/gv4cpVUt";
+function PaceLogoImage({ maxWidth = 240 }) {
+  return (
+    <img
+      src={PACE_LOGO_URL}
+      alt="Pace — Touch grass, even from your desk"
+      style={{
+        display: 'block',
+        width: '100%',
+        maxWidth,
+        height: 'auto',
+        objectFit: 'contain',
+        /* El PNG original viene con fondo crema; lo fundimos visualmente
+           con el paper del sidebar usando blend mode. */
+        mixBlendMode: 'multiply',
+      }}
+      draggable={false}
+    />
+  );
+}
+
 /* Wordmark completo · "Pace" italic serif
-   Cuando variant === 'pace' usamos el nuevo lockup con vaca integrada en la P.
-   Las otras variantes conservan el formato original (icono a la izq + texto). */
+   Desde v0.11.3 usamos SIEMPRE el logo OFICIAL (imagen PNG) pase lo que pase
+   en state.logoVariant — el pictograma de la vaca y el título "Pace." anteriores
+   se reemplazan por el lockup oficial con subtítulo
+   "Touch grass, even from your desk".
+   Las variantes legacy (lineal/sello/ilustrado/lockup) quedan disponibles por
+   código para el TweaksPanel pero el default y el render visible son siempre
+   la imagen. */
 function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
-  if (variant === 'pace') {
+  // Siempre devolver el logo oficial PNG, independientemente de la variante.
+  return <PaceLogoImage maxWidth={240} />;
+  // (código antiguo preservado abajo por si se quiere volver a exponer variantes)
+  // eslint-disable-next-line no-unreachable
+  if (variant === 'lockup') {
     return <PaceLockup size={14} subtitle="FOCO · CUERPO" />;
   }
   return (
@@ -217,4 +255,4 @@ function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
   );
 }
 
-Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup });
+Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup, PaceLogoImage });

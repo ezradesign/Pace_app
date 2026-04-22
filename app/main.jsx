@@ -77,23 +77,37 @@ function PaceApp() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
+    <div style={{
+      display: 'flex',
+      height: '100vh',
+      maxHeight: '100vh',
+      overflow: 'hidden',
+      background: 'var(--paper)',
+      position: 'relative',
+    }}>
       {/* SIDEBAR */}
       {state.layout !== 'minimal' && <Sidebar />}
 
       {/* MAIN AREA */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
         {/* Top bar */}
         <TopBar
           onOpenLibrary={(kind) => setOpenLibrary(kind)}
           onOpenHydrate={() => setOpenHydrate(true)}
-          onOpenTweaks={() => setOpenTweaks(true)}
           onOpenStats={() => setOpenStats(true)}
+          onOpenTweaks={() => setOpenTweaks(true)}
           onCowClick={() => setCowClicks(c => c + 1)}
         />
 
         {/* Content */}
-        <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '20px 40px' }}>
+        <div style={{
+          flex: 1,
+          display: 'grid',
+          placeItems: 'center',
+          padding: '10px 40px',
+          minHeight: 0,
+          overflow: 'hidden',
+        }}>
           <FocusTimer onFinish={handleFocusFinish} />
         </div>
 
@@ -155,20 +169,15 @@ function PaceApp() {
 /* ================
    TOP BAR
    ================ */
-function TopBar({ onOpenLibrary, onOpenHydrate, onOpenTweaks, onOpenStats, onCowClick }) {
+function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCowClick }) {
   const [state] = usePace();
   return (
     <div style={{
       display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
-      padding: '16px 24px',
+      padding: '14px 24px',
       gap: 8,
+      flexShrink: 0,
     }}>
-      <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-      </button>
       <button onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
@@ -177,6 +186,13 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenTweaks, onOpenStats, onCow
       <button onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
+        </svg>
+      </button>
+      {/* Tweaks · a la derecha de Logros (última posición del topbar) */}
+      <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
       </button>
     </div>
@@ -196,6 +212,8 @@ const topBarStyles = {
   }
 };
 
+
+
 /* ================
    ACTIVITY BAR (bottom)
    ================ */
@@ -211,8 +229,8 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
     { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
-    <div style={{ padding: '8px 40px 28px' }}>
-      <div style={{ textAlign: 'center', marginBottom: 14 }}>
+    <div style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
+      <div style={{ textAlign: 'center', marginBottom: 10 }}>
         <Meta>Actividades</Meta>
       </div>
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
@@ -340,8 +358,11 @@ function ABDrop() {
   );
 }
 
-Object.assign(window, { PaceApp });
+Object.assign(window, { PaceApp, TopBar, ActivityBar });
 
-/* ARRANQUE */
-const root = ReactDOM.createRoot(document.getElementById('pace-root'));
-root.render(<PaceApp />);
+/* ARRANQUE DIRECTO (sólo si existe #pace-root en DOM — entry point standalone).
+   En el entry point modular PACE.html el montaje lo hace el script de abajo en #root. */
+if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
+  const root = ReactDOM.createRoot(document.getElementById('pace-root'));
+  root.render(<PaceApp />);
+}

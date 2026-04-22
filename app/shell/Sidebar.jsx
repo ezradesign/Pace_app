@@ -9,26 +9,11 @@ const { useState: useStateSB, useMemo: useMemoSB } = React;
 
 function Sidebar() {
   const [state, set] = usePace();
-  const [reminderInput, setReminderInput] = useStateSB('');
-  const [reminderMin, setReminderMin] = useStateSB('15');
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
-
-  const addReminder = () => {
-    if (!reminderInput.trim()) return;
-    set({
-      reminders: [...(state.reminders || []), {
-        id: Date.now(), text: reminderInput.trim(), minutes: parseInt(reminderMin) || 15, createdAt: Date.now()
-      }]
-    });
-    setReminderInput('');
-  };
-  const removeReminder = (id) => {
-    set({ reminders: (state.reminders || []).filter(r => r.id !== id) });
-  };
 
   /* Versión colapsada: rail estrecho con solo iconos verticales */
   if (collapsed) {
@@ -73,7 +58,7 @@ function Sidebar() {
 
   return (
     <aside style={sidebarStyles.root}>
-      {/* LOGO + toggle */}
+      {/* LOGO oficial (imagen) + toggle */}
       <div style={sidebarStyles.logoRow}>
         <div style={sidebarStyles.logo}>
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
@@ -94,7 +79,7 @@ function Sidebar() {
         </div>
       </div>
 
-      <Divider style={{ margin: '20px 0 16px' }} />
+      <Divider style={{ margin: '16px 0 14px' }} />
 
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
@@ -112,14 +97,14 @@ function Sidebar() {
         <WeekDots weeklyStats={state.weeklyStats} />
       </div>
 
-      <Divider style={{ margin: '20px 0 16px' }} />
+      <Divider style={{ margin: '16px 0 14px' }} />
 
       {/* SENDERO — el día como camino con hitos */}
       <div style={sidebarStyles.section}>
         <SenderoDelDia state={state} />
       </div>
 
-      <Divider style={{ margin: '20px 0 16px' }} />
+      <Divider style={{ margin: '16px 0 14px' }} />
 
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
@@ -136,48 +121,10 @@ function Sidebar() {
         </button>
       </div>
 
-      <Divider style={{ margin: '20px 0 16px' }} />
+      <Divider style={{ margin: '16px 0 14px' }} />
 
-      {/* RECORDATORIOS — ahora con más espacio al haber quitado Plan */}
-      <div style={sidebarStyles.section}>
-        <Meta style={{ marginBottom: 10 }}>Recordatorios</Meta>
-        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-          <input
-            value={reminderInput}
-            onChange={(e) => setReminderInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') addReminder(); }}
-            placeholder="Avisa…"
-            style={sidebarStyles.input}
-          />
-          <input
-            value={reminderMin}
-            onChange={(e) => setReminderMin(e.target.value)}
-            style={{ ...sidebarStyles.input, width: 44, textAlign: 'center' }}
-            type="number"
-            min="1"
-          />
-          <button onClick={addReminder} style={sidebarStyles.addBtn}>+</button>
-        </div>
-        {(state.reminders || []).length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
-            {state.reminders.map(r => (
-              <div key={r.id} style={sidebarStyles.reminderItem}>
-                <span style={{ flex: 1, fontSize: 12 }}>{r.text}</span>
-                <span style={{ fontSize: 10, color: 'var(--ink-3)' }}>{r.minutes}m</span>
-                <button onClick={() => removeReminder(r.id)} style={sidebarStyles.reminderRemove}>×</button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'var(--font-display)', fontStyle: 'italic', lineHeight: 1.5 }}>
-            Sin recordatorios activos. Añade uno arriba y avisará en minutos.
-          </div>
-        )}
-      </div>
-
-      <Divider style={{ margin: '20px 0 16px' }} />
-
-      {/* INTENCIÓN */}
+      {/* INTENCIÓN · apartado breve, reemplaza el bloque de "anotaciones/recordatorios"
+          eliminado en v0.11.3 para que todo quepa en 1920×1080 sin scroll. */}
       <div style={sidebarStyles.section}>
         <Meta style={{ marginBottom: 8 }}>Intención</Meta>
         <textarea
@@ -399,21 +346,24 @@ function StatusBar({ compact }) {
 const sidebarStyles = {
   root: {
     width: 280,
-    minHeight: '100vh',
+    height: '100vh',
+    maxHeight: '100vh',
     background: 'var(--paper-2)',
     borderRight: '1px solid var(--line)',
-    padding: '24px 20px',
+    padding: '18px 18px',
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
+    overflowY: 'auto',
     transition: 'width 260ms var(--ease), padding 260ms var(--ease)',
   },
   logoRow: {
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: 6,
-    marginBottom: 16,
+    marginBottom: 10,
+    minHeight: 48,
   },
   logo: { flex: 1, minWidth: 0 },
   toggleExpanded: {
@@ -472,7 +422,7 @@ const sidebarStyles = {
   streakNum: {
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
-    fontSize: 56,
+    fontSize: 44,
     fontWeight: 500,
     lineHeight: 0.9,
     color: 'var(--ink)',
@@ -531,10 +481,10 @@ const sidebarStyles = {
     color: 'var(--ink)',
   },
   footer: {
-    marginTop: 20,
-    paddingTop: 16,
+    marginTop: 14,
+    paddingTop: 12,
     borderTop: '1px solid var(--line)',
-    display: 'flex', flexDirection: 'column', gap: 8,
+    display: 'flex', flexDirection: 'column', gap: 6,
   },
   footerRow: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',

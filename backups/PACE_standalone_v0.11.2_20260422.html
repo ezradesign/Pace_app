@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.11.3 (17:16)</title>
+  <title>PACE · Foco · Cuerpo</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -875,49 +875,11 @@ function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) 
   );
 }
 
-/* ============================================================
-   PaceLogoImage · logo oficial (PNG adjunto) que el usuario nos pasa.
-   Sustituye pictograma vaca + wordmark "pace" por la imagen cerrada
-   con el subtítulo "Touch grass, even from your desk".
-   Se escala responsive al ancho disponible.
-   ============================================================ */
-// Logo oficial v2 (17:16) — vaca integrada en "P" de Pace.
-// con subtítulo "Touch grass, even from your desk"
-const PACE_LOGO_URL = "https://www.genspark.ai/api/files/s/gv4cpVUt";
-function PaceLogoImage({ maxWidth = 240 }) {
-  return (
-    <img
-      src={PACE_LOGO_URL}
-      alt="Pace — Touch grass, even from your desk"
-      style={{
-        display: 'block',
-        width: '100%',
-        maxWidth,
-        height: 'auto',
-        objectFit: 'contain',
-        /* El PNG original viene con fondo crema; lo fundimos visualmente
-           con el paper del sidebar usando blend mode. */
-        mixBlendMode: 'multiply',
-      }}
-      draggable={false}
-    />
-  );
-}
-
 /* Wordmark completo · "Pace" italic serif
-   Desde v0.11.3 usamos SIEMPRE el logo OFICIAL (imagen PNG) pase lo que pase
-   en state.logoVariant — el pictograma de la vaca y el título "Pace." anteriores
-   se reemplazan por el lockup oficial con subtítulo
-   "Touch grass, even from your desk".
-   Las variantes legacy (lineal/sello/ilustrado/lockup) quedan disponibles por
-   código para el TweaksPanel pero el default y el render visible son siempre
-   la imagen. */
+   Cuando variant === 'pace' usamos el nuevo lockup con vaca integrada en la P.
+   Las otras variantes conservan el formato original (icono a la izq + texto). */
 function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
-  // Siempre devolver el logo oficial PNG, independientemente de la variante.
-  return <PaceLogoImage maxWidth={240} />;
-  // (código antiguo preservado abajo por si se quiere volver a exponer variantes)
-  // eslint-disable-next-line no-unreachable
-  if (variant === 'lockup') {
+  if (variant === 'pace') {
     return <PaceLockup size={14} subtitle="FOCO · CUERPO" />;
   }
   return (
@@ -945,7 +907,7 @@ function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
   );
 }
 
-Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup, PaceLogoImage });
+Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup });
 </script>
   <script type="text/babel">/* PACE · Toast (para notificar logros desbloqueados) */
 
@@ -1024,11 +986,26 @@ const { useState: useStateSB, useMemo: useMemoSB } = React;
 
 function Sidebar() {
   const [state, set] = usePace();
+  const [reminderInput, setReminderInput] = useStateSB('');
+  const [reminderMin, setReminderMin] = useStateSB('15');
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
+
+  const addReminder = () => {
+    if (!reminderInput.trim()) return;
+    set({
+      reminders: [...(state.reminders || []), {
+        id: Date.now(), text: reminderInput.trim(), minutes: parseInt(reminderMin) || 15, createdAt: Date.now()
+      }]
+    });
+    setReminderInput('');
+  };
+  const removeReminder = (id) => {
+    set({ reminders: (state.reminders || []).filter(r => r.id !== id) });
+  };
 
   /* Versión colapsada: rail estrecho con solo iconos verticales */
   if (collapsed) {
@@ -1073,7 +1050,7 @@ function Sidebar() {
 
   return (
     <aside style={sidebarStyles.root}>
-      {/* LOGO oficial (imagen) + toggle */}
+      {/* LOGO + toggle */}
       <div style={sidebarStyles.logoRow}>
         <div style={sidebarStyles.logo}>
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
@@ -1094,7 +1071,7 @@ function Sidebar() {
         </div>
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: '20px 0 16px' }} />
 
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
@@ -1112,14 +1089,14 @@ function Sidebar() {
         <WeekDots weeklyStats={state.weeklyStats} />
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: '20px 0 16px' }} />
 
       {/* SENDERO — el día como camino con hitos */}
       <div style={sidebarStyles.section}>
         <SenderoDelDia state={state} />
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: '20px 0 16px' }} />
 
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
@@ -1136,10 +1113,48 @@ function Sidebar() {
         </button>
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: '20px 0 16px' }} />
 
-      {/* INTENCIÓN · apartado breve, reemplaza el bloque de "anotaciones/recordatorios"
-          eliminado en v0.11.3 para que todo quepa en 1920×1080 sin scroll. */}
+      {/* RECORDATORIOS — ahora con más espacio al haber quitado Plan */}
+      <div style={sidebarStyles.section}>
+        <Meta style={{ marginBottom: 10 }}>Recordatorios</Meta>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+          <input
+            value={reminderInput}
+            onChange={(e) => setReminderInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') addReminder(); }}
+            placeholder="Avisa…"
+            style={sidebarStyles.input}
+          />
+          <input
+            value={reminderMin}
+            onChange={(e) => setReminderMin(e.target.value)}
+            style={{ ...sidebarStyles.input, width: 44, textAlign: 'center' }}
+            type="number"
+            min="1"
+          />
+          <button onClick={addReminder} style={sidebarStyles.addBtn}>+</button>
+        </div>
+        {(state.reminders || []).length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
+            {state.reminders.map(r => (
+              <div key={r.id} style={sidebarStyles.reminderItem}>
+                <span style={{ flex: 1, fontSize: 12 }}>{r.text}</span>
+                <span style={{ fontSize: 10, color: 'var(--ink-3)' }}>{r.minutes}m</span>
+                <button onClick={() => removeReminder(r.id)} style={sidebarStyles.reminderRemove}>×</button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'var(--font-display)', fontStyle: 'italic', lineHeight: 1.5 }}>
+            Sin recordatorios activos. Añade uno arriba y avisará en minutos.
+          </div>
+        )}
+      </div>
+
+      <Divider style={{ margin: '20px 0 16px' }} />
+
+      {/* INTENCIÓN */}
       <div style={sidebarStyles.section}>
         <Meta style={{ marginBottom: 8 }}>Intención</Meta>
         <textarea
@@ -1361,24 +1376,21 @@ function StatusBar({ compact }) {
 const sidebarStyles = {
   root: {
     width: 280,
-    height: '100vh',
-    maxHeight: '100vh',
+    minHeight: '100vh',
     background: 'var(--paper-2)',
     borderRight: '1px solid var(--line)',
-    padding: '18px 18px',
+    padding: '24px 20px',
     display: 'flex',
     flexDirection: 'column',
     flexShrink: 0,
-    overflowY: 'auto',
     transition: 'width 260ms var(--ease), padding 260ms var(--ease)',
   },
   logoRow: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: 6,
-    marginBottom: 10,
-    minHeight: 48,
+    marginBottom: 16,
   },
   logo: { flex: 1, minWidth: 0 },
   toggleExpanded: {
@@ -1437,7 +1449,7 @@ const sidebarStyles = {
   streakNum: {
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
-    fontSize: 44,
+    fontSize: 56,
     fontWeight: 500,
     lineHeight: 0.9,
     color: 'var(--ink)',
@@ -1496,10 +1508,10 @@ const sidebarStyles = {
     color: 'var(--ink)',
   },
   footer: {
-    marginTop: 14,
-    paddingTop: 12,
+    marginTop: 20,
+    paddingTop: 16,
     borderTop: '1px solid var(--line)',
-    display: 'flex', flexDirection: 'column', gap: 6,
+    display: 'flex', flexDirection: 'column', gap: 8,
   },
   footerRow: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -3812,37 +3824,23 @@ function PaceApp() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      height: '100vh',
-      maxHeight: '100vh',
-      overflow: 'hidden',
-      background: 'var(--paper)',
-      position: 'relative',
-    }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       {/* SIDEBAR */}
       {state.layout !== 'minimal' && <Sidebar />}
 
       {/* MAIN AREA */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Top bar */}
         <TopBar
           onOpenLibrary={(kind) => setOpenLibrary(kind)}
           onOpenHydrate={() => setOpenHydrate(true)}
-          onOpenStats={() => setOpenStats(true)}
           onOpenTweaks={() => setOpenTweaks(true)}
+          onOpenStats={() => setOpenStats(true)}
           onCowClick={() => setCowClicks(c => c + 1)}
         />
 
         {/* Content */}
-        <div style={{
-          flex: 1,
-          display: 'grid',
-          placeItems: 'center',
-          padding: '10px 40px',
-          minHeight: 0,
-          overflow: 'hidden',
-        }}>
+        <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '20px 40px' }}>
           <FocusTimer onFinish={handleFocusFinish} />
         </div>
 
@@ -3904,15 +3902,20 @@ function PaceApp() {
 /* ================
    TOP BAR
    ================ */
-function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCowClick }) {
+function TopBar({ onOpenLibrary, onOpenHydrate, onOpenTweaks, onOpenStats, onCowClick }) {
   const [state] = usePace();
   return (
     <div style={{
       display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
-      padding: '14px 24px',
+      padding: '16px 24px',
       gap: 8,
-      flexShrink: 0,
     }}>
+      <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      </button>
       <button onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
@@ -3921,13 +3924,6 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCow
       <button onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
-        </svg>
-      </button>
-      {/* Tweaks · a la derecha de Logros (última posición del topbar) */}
-      <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
       </button>
     </div>
@@ -3947,8 +3943,6 @@ const topBarStyles = {
   }
 };
 
-
-
 /* ================
    ACTIVITY BAR (bottom)
    ================ */
@@ -3964,8 +3958,8 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
     { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
-    <div style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
-      <div style={{ textAlign: 'center', marginBottom: 10 }}>
+    <div style={{ padding: '8px 40px 28px' }}>
+      <div style={{ textAlign: 'center', marginBottom: 14 }}>
         <Meta>Actividades</Meta>
       </div>
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
@@ -4093,14 +4087,11 @@ function ABDrop() {
   );
 }
 
-Object.assign(window, { PaceApp, TopBar, ActivityBar });
+Object.assign(window, { PaceApp });
 
-/* ARRANQUE DIRECTO (sólo si existe #pace-root en DOM — entry point standalone).
-   En el entry point modular PACE.html el montaje lo hace el script de abajo en #root. */
-if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
-  const root = ReactDOM.createRoot(document.getElementById('pace-root'));
-  root.render(<PaceApp />);
-}
+/* ARRANQUE */
+const root = ReactDOM.createRoot(document.getElementById('pace-root'));
+root.render(<PaceApp />);
 </script>
 
   <!-- Monta la app
