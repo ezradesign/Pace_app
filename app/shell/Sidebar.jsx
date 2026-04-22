@@ -401,20 +401,31 @@ function AchievementsPreview({ onOpen }) {
   );
 }
 
-/* StatusBar: barra inferior del sidebar (En camino + versión).
+/* StatusBar: barra inferior del sidebar.
+   Estructura (top → bottom):
+     1. "En camino" + tag Pace (identidad / estado).
+     2. Botón de apoyo (BMC) — añadido en sesión 16 / v0.11.11.
+        Presencia calmada, pill paper con borde fino. Abre el
+        SupportModal vía evento global `pace:open-support`
+        (mismo patrón que `pace:open-achievements`).
+     3. Versión + autor en micro-type.
    La rama compact={true} se eliminó en v0.11.6 porque el rail colapsado
    ya no existe desde v0.11.4 (el sidebar colapsado devuelve null). */
 function StatusBar() {
   const [state] = usePace();
+  const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
   return (
     <div style={sidebarStyles.footer}>
       <div style={sidebarStyles.footerRow}>
         <Meta>En camino</Meta>
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
+      <div style={{ marginTop: 10, marginBottom: 10 }}>
+        <SupportButton onOpen={openSupport} />
+      </div>
       <div style={sidebarStyles.footerRow}>
         <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace {PACE_VERSION}</span>
-        <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @acuradesign</span>
+        <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @ezradesign</span>
       </div>
     </div>
   );

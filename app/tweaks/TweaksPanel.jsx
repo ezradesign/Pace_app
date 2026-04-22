@@ -46,6 +46,14 @@ function TweaksPanel({ open, onClose }) {
       { v: 'sello', name: 'Sello tipo café' },
       { v: 'ilustrado', name: 'Ilustrado' },
     ]},
+    /* Apoya el proyecto — texto del pill del sidebar.
+       3 variantes registradas en SupportModule.jsx (SUPPORT_COPY).
+       Añadido sesión 16 / v0.11.11. */
+    { key: 'supportCopyVariant', label: 'Copy del botón de apoyo', options: [
+      { v: 'cafe', name: 'Invita a un café (default)' },
+      { v: 'pasto', name: 'Riega el pasto' },
+      { v: 'vaca', name: 'Da de comer a la vaca' },
+    ]},
   ];
 
   return (

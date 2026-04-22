@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.11.10</title>
+  <title>PACE · Foco · Cuerpo — v0.11.11</title>
   <link rel="stylesheet" href="app/tokens.css" />
 </head>
 <body>
@@ -26,6 +26,10 @@
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>
   <script type="text/babel" src="app/ui/CowLogo.jsx"></script>
   <script type="text/babel" src="app/ui/Toast.jsx"></script>
+
+  <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
+       porque Sidebar importa <SupportButton/> en su StatusBar. -->
+  <script type="text/babel" src="app/support/SupportModule.jsx"></script>
 
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
 

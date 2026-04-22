@@ -4,7 +4,7 @@
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
 **Estado:** v0.11.7 · Pre-lanzamiento · Iteración de diseño
-**Autor:** [@acuradesign](https://github.com/ezradesign)
+**Autor:** [@ezradesign](https://github.com/ezradesign)
 
 ---
 
