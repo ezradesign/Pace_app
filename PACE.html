@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.11.11</title>
+  <title>PACE · Foco · Cuerpo — v0.12.0</title>
   <link rel="stylesheet" href="app/tokens.css" />
 </head>
 <body>
@@ -30,6 +30,10 @@
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
   <script type="text/babel" src="app/support/SupportModule.jsx"></script>
+
+  <!-- Bienvenida de primera vez (sesión 17 / v0.12.0).
+       Se carga antes que main.jsx porque este la monta. -->
+  <script type="text/babel" src="app/welcome/WelcomeModule.jsx"></script>
 
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
 

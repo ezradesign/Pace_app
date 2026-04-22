@@ -30,6 +30,11 @@ Para historial público de versiones, ver [`../../CHANGELOG.md`](../../CHANGELOG
 | 10 | 2026-04-22 | v0.11.5 | Auditoría profesional — 7 bugs críticos + logo local | [session-10-auditoria.md](./session-10-auditoria.md) |
 | 11 | 2026-04-22 | v0.11.6 | Limpieza sin riesgo — dead code (~150 líneas) | [session-11-limpieza.md](./session-11-limpieza.md) |
 | 12 | 2026-04-22 | v0.11.7 | Barra horizontal del sidebar — logo 2.5× + iconos gráficos | [session-12-barra-horizontal.md](./session-12-barra-horizontal.md) |
+| 13 | 2026-04-22 | v0.11.8 | Backlog de robustez — 6 bugs del informe de auditoría | [session-13-backlog-robustez.md](./session-13-backlog-robustez.md) |
+| 14 | 2026-04-22 | v0.11.9 | Swap Mueve ↔ Estira — contenido reubicado + título del modal | [session-14-swap-mueve-estira.md](./session-14-swap-mueve-estira.md) |
+| 15 | 2026-04-22 | v0.11.10 | Logros — arreglo `explore.*` + estado "Próximamente" | [session-15-logros-proximamente.md](./session-15-logros-proximamente.md) |
+| 16 | 2026-04-22 | v0.11.11 | Integración Buy Me a Coffee — frente 1 de monetización | [session-16-bmc-integracion.md](./session-16-bmc-integracion.md) |
+| 17 | 2026-04-22 | v0.12.0 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | [session-17-welcome-export-tweaksecrets.md](./session-17-welcome-export-tweaksecrets.md) |
 
 ---
 

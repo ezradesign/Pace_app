@@ -151,10 +151,15 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'explore.ancestral', 'explore.neck', 'explore.desk',
   // Maestría (1/25)
   'master.pomodoro.8',
-  // Secretos (5/21) — los secretos con trigger se siguen pintando como secretos
+  // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
+  'explore.tweaks',
+  // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
+  // Sesión 17: +5 tweak-secrets (aged, dark.mode, mono, seal, illustrated).
   'secret.cow.click', 'secret.breath.hold.60',
   'secret.breath.hold.90', 'secret.breath.hold.120',
   'secret.supporter',
+  'secret.aged', 'secret.dark.mode', 'secret.mono',
+  'secret.seal', 'secret.illustrated',
 ]);
 
 function isImplemented(a) {
