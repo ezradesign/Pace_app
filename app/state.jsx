@@ -231,15 +231,6 @@ function completeMoveSession(routineId, durationMin) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
   unlockAchievement('first.stretch');
-  const map = {
-    'move.hips.5': 'explore.hips',
-    'move.shoulders.5': 'explore.shoulders',
-    'move.atg.knees': 'explore.atg',
-    'move.ancestral': 'explore.ancestral',
-    'move.neck.3': 'explore.neck',
-    'move.desk.quick': 'explore.desk',
-  };
-  if (map[routineId]) unlockAchievement(map[routineId]);
   updateStreak();
 }
 
@@ -256,6 +247,23 @@ function completeExtraSession(routineId, durationMin = 0) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
   unlockAchievement('first.extra');
+  // Logros de exploración de movilidad.
+  // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
+  // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
+  // move.ancestral, move.neck.3, move.desk.quick) pasaron de
+  // MOVE_ROUTINES a EXTRA_ROUTINES y ahora desembocan aquí. Los ids de
+  // rutina no se renombran (decisión activa: ids = identificadores
+  // estables), así que el map conserva los ids `move.*` aunque viva en
+  // completeExtraSession.
+  const exploreMap = {
+    'move.hips.5': 'explore.hips',
+    'move.shoulders.5': 'explore.shoulders',
+    'move.atg.knees': 'explore.atg',
+    'move.ancestral': 'explore.ancestral',
+    'move.neck.3': 'explore.neck',
+    'move.desk.quick': 'explore.desk',
+  };
+  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
   updateStreak();
 }
 
