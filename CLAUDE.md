@@ -19,6 +19,33 @@ Este proyecto es **continuable a través de múltiples conversaciones**. Antes d
 
 ---
 
+## 🧭 REGLAS DE COMUNICACIÓN (SIEMPRE)
+
+### Aviso de contexto disponible
+Al inicio de **cada respuesta larga** (o cuando cambie el estado), indicar al usuario una de estas señales:
+
+- 🟢 **Contexto holgado** — podemos iterar con libertad
+- 🟡 **Contexto medio** — conviene cerrar tareas abiertas pronto
+- 🔴 **Contexto ajustado** — hora de cerrar sesión (ver protocolo abajo)
+
+Nota: el sistema no expone un contador exacto de tokens; la señal se basa en longitud de la conversación, volumen de tool outputs acumulados y complejidad de lo leído/escrito.
+
+### Protocolo de cierre de sesión (auto-disparar cuando contexto = 🔴 o cuando el usuario diga "cierra sesión")
+1. Actualizar `STATE.md` (hecho / pendiente / próximos pasos / decisiones con fecha)
+2. Si hubo cambios funcionales → regenerar `PACE_standalone.html` con `super_inline_html` + rotar backup
+3. Listar archivos modificados en la sesión
+4. Generar descarga del proyecto (`present_fs_item_for_download`)
+5. Dar al usuario el mensaje exacto de commit sugerido para GitHub
+
+### Plantilla para abrir sesión nueva (el usuario la copia y pega)
+```
+Proyecto PACE. Importa la última versión desde
+https://github.com/ezradesign/Pace_app y lee STATE.md
+antes de tocar nada. Tarea de hoy: [descripción].
+```
+
+---
+
 ## 🔒 PROTOCOLO DE SEGURIDAD (OBLIGATORIO EN CADA SESIÓN)
 
 Este protocolo se aplica **en cada sesión de trabajo, sin excepción**:
