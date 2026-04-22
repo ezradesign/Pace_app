@@ -40,7 +40,8 @@ function TweaksPanel({ open, onClose }) {
       { v: 'organico', name: 'Orgánico' },
     ]},
     { key: 'logoVariant', label: 'Logo de la vaca', options: [
-      { v: 'pace', name: 'Pace. (lockup, default)' },
+      { v: 'pace', name: 'Pace. oficial (default)' },
+      { v: 'lockup', name: 'Lockup SVG' },
       { v: 'lineal', name: 'Lineal minimalista' },
       { v: 'sello', name: 'Sello tipo café' },
       { v: 'ilustrado', name: 'Ilustrado' },

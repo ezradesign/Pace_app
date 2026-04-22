@@ -23,9 +23,14 @@ function Sidebar() {
 
   return (
     <aside style={sidebarStyles.root}>
-      {/* LOGO oficial (imagen) + toggle */}
+      {/* LOGO oficial (imagen) + toggle.
+          Clicable para el easter egg "vaca feliz" (10 clicks → secret.cow.click). */}
       <div style={sidebarStyles.logoRow}>
-        <div style={sidebarStyles.logo}>
+        <div
+          style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
+          onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
+          title="¿Le haces cosquillas?"
+        >
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
         </div>
         <button onClick={toggle} style={sidebarStyles.toggleExpanded} title="Colapsar (⌘\\)">
@@ -290,7 +295,7 @@ function StatusBar({ compact }) {
   if (compact) {
     return (
       <div style={{ paddingTop: 12, borderTop: '1px solid var(--line)', display: 'flex', justifyContent: 'center' }}>
-        <span style={{ fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>v0.11</span>
+        <span style={{ fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{PACE_VERSION}</span>
       </div>
     );
   }
@@ -301,7 +306,7 @@ function StatusBar({ compact }) {
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
       <div style={sidebarStyles.footerRow}>
-        <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace v0.11.2</span>
+        <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace {PACE_VERSION}</span>
         <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @acuradesign</span>
       </div>
     </div>
