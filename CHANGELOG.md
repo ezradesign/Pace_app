@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.11.10** | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [abajo ↓](#v01110--2026-04-22--logros-arreglo-explore--estado-próximamente) |
 | **v0.11.9** | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | [abajo ↓](#v0119--2026-04-22--swap-mueve--estira) |
-| **v0.11.8** | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [abajo ↓](#v0118--2026-04-22--backlog-de-robustez) |
+| v0.11.8 | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [session-13-backlog-robustez.md](./docs/sessions/session-13-backlog-robustez.md) |
 | v0.11.7 | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | [session-12-barra-horizontal.md](./docs/sessions/session-12-barra-horizontal.md) |
 | v0.11.6 | 2026-04-22 | Limpieza sin riesgo: dead code del backlog de auditoría | #11 | [session-11-limpieza.md](./docs/sessions/session-11-limpieza.md) |
 | v0.11.5 | 2026-04-22 | Auditoría: 7 bugs críticos + logo local | #10 | [session-10-auditoria.md](./docs/sessions/session-10-auditoria.md) |
@@ -29,6 +30,52 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.11.10] — 2026-04-22 — Logros: arreglo `explore.*` + estado "Próximamente"
+
+Sesión corta y quirúrgica sobre el backlog **#9** (logros sin trigger).
+Usuario eligió vía mixta: reparar los 6 `explore.*` rotos en sesión 14 +
+marcar el resto como "Próximamente" en la UI para incentivar sin
+prometer.
+
+### Corregido
+- **6 logros `explore.*` de movilidad** vuelven a dispararse. El map
+  `'move.hips.5' → 'explore.hips'` (y las otras 5 entradas) se movió
+  desde `completeMoveSession` a `completeExtraSession` en `state.jsx`,
+  porque tras el swap de sesión 14 esas rutinas desembocan ahí. Los ids
+  `move.*` se conservan (decisión activa: ids estables ≠ clasificación
+  semántica). Comentario inline explicando el desajuste aparente.
+
+### Añadido
+- **`IMPLEMENTED_ACHIEVEMENTS`** (Set en `Achievements.jsx`) lista los
+  26 ids de logros con trigger real hoy. Fuente de verdad para decidir
+  qué se pinta como "disponible" vs "Próximamente". Cuando se implemente
+  un trigger nuevo, hay que añadir su id aquí.
+- **3er estado visual en `Seal`** — `coming-soon`: borde dotted gris,
+  opacidad 0.38, glifo original con opacity 0.25 (se intuye, no se
+  afirma), descripción sustituida por "Pronto", badge "Pronto" en
+  esquina superior derecha (pill, 7.5px, uppercase). Título se conserva
+  para incentivar "lo quiero". Los secretos **no** entran en este
+  estado: su mecánica es intriga, no señalización; se siguen pintando
+  como `?` / "Secreto" / "?????".
+
+### Cambiado
+- **Contador de cabecera** en el modal de Logros: `X / 100 descubiertos`
+  · `Por descubrir` → `X / 26 disponibles` · `74 Próximamente`.
+  Denominador dinámico (`availableCount`) que crecerá automáticamente
+  cuando se implementen más triggers.
+- **`PACE_VERSION`** en `state.jsx`: `v0.11.9` → `v0.11.10`.
+- **`<title>` de `PACE.html`**: `v0.11.8` → `v0.11.10` (arrastraba desfase
+  de sesión 14).
+
+### Red de seguridad
+- `PACE_standalone.html` regenerado a **v0.11.10** (~186 KB).
+- Rotado `backups/PACE_standalone_v0.11.9_20260422.html` (sale v0.11.5).
+- 4 backups activos (v0.11.6 → v0.11.9), dentro del límite de 5.
+
+Detalle: [`docs/sessions/session-15-logros-proximamente.md`](./docs/sessions/session-15-logros-proximamente.md).
 
 ---
 
@@ -81,52 +128,4 @@ Swap de contenido + renombre de los dos modales en una sola pasada.
 - Rotado `backups/PACE_standalone_v0.11.8_20260422.html`.
 - 4 backups activos (v0.11.5 → v0.11.8), dentro del límite de 5.
 
----
-
-## [v0.11.6] — 2026-04-22 — Limpieza sin riesgo
-
-Sesión quirúrgica. Sin cambios funcionales ni visuales. Solo borrado de
-código muerto acumulado tras las refactorizaciones de las sesiones 7–9
-(sidebar colapsable, TopBar con tabs, eliminación del bloque Recordatorios).
-**~150 líneas menos** en el bundle.
-
-### Eliminado
-- **[#18]** Función `ModeToggle({ value, onChange })` completa en
-  `FocusTimer.jsx` (33 líneas). Los tabs Foco/Pausa/Larga viven en TopBar
-  desde v0.11.4.
-- **[#19]** Entrada `focusStyles.modeRow` — envoltura del ModeToggle
-  desaparecido.
-- **[#20]** Entradas `toggleCollapsed / railItem / railBtn / railDivider`
-  en `sidebarStyles` (~30 líneas). Definían el antiguo rail vertical de
-  56 px; el sidebar colapsado devuelve `null` desde v0.11.4.
-- **[#21]** Entradas `input / addBtn / reminderItem / reminderRemove` en
-  `sidebarStyles` (~30 líneas). El bloque Recordatorios se quitó de la UI
-  en v0.11.3.
-- **[#23]** Rama `if (compact) return ...` en `StatusBar`. Solo se
-  invocaba desde el rail colapsado eliminado. `StatusBar` pasa a ser
-  `function StatusBar()` sin argumentos.
-- **[#24]** Componente `ChevronRightIcon` completo en `Sidebar.jsx`. Se
-  usaba para el chevron "expandir" del antiguo rail.
-
-### Cambiado
-- **[#26]** Iconos locales del BreakMenu renombrados:
-  `WindIcon / MoveIcon / DropIcon` → `BMWindIcon / BMMoveIcon / BMDropIcon`.
-  Evita lectura confusa con los `ABBreathe / ABMove / ABDrop` de la
-  ActivityBar en `main.jsx` (son iconografías distintas para los mismos
-  tres conceptos).
-- **[#22]** Añadido comentario de decisión explícito en `app/state.jsx`
-  sobre por qué el campo `reminders: []` permanece en el default state a
-  pesar de no tener UI: compatibilidad con localStorage de usuarios
-  existentes + futura reintroducción en un modal dedicado.
-
-### Añadido
-- **Regla nueva en `CLAUDE.md`**: "Carpeta `Pace_app` siempre lista antes
-  de quedarse sin contexto". Formaliza que antes de cualquier cierre
-  brusco o cambio de contexto, la carpeta espejo tiene que reflejar una
-  app **estable y sin crashear**, aunque eso signifique revertir trabajo a
-  medias.
-
-### Red de seguridad
-- `PACE_standalone.html` regenerado a **v0.11.6** (~172 KB, ~2 KB menos
-  que v0.11.5).
-- Rotado `backups/PACE_standalone_v0.11.5_20260422.html`.
+Detalle: [`docs/sessions/session-14-swap-mueve-estira.md`](./docs/sessions/session-14-swap-mueve-estira.md).
