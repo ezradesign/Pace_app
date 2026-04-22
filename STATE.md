@@ -3,8 +3,89 @@
 > **Actualiza este archivo al final de cada sesión de trabajo.**
 > **Sigue el protocolo de `CLAUDE.md` > "PROTOCOLO DE SEGURIDAD (OBLIGATORIO)".**
 
-**Versión actual:** v0.11.0
-**Última actualización:** 2026-04-22 · Sesión 5 — Fortalecimiento del proyecto
+**Versión actual:** v0.11.2
+**Última actualización:** 2026-04-22 16:44 · Sesión 7 — Sidebar colapsable + Sendero + logo Pace.
+
+---
+
+## 🚜 Sesión 7 (2026-04-22 · 16:44) — Sidebar colapsable + Sendero + logo Pace.
+
+### ✅ Cambios aplicados
+
+**Logo nuevo (`app/ui/CowLogo.jsx`):**
+- `PaceLockup` — la vaca se integra en la letra "P" (lomo + cabeza inclinada paciendo con cuernito y oreja), hierba al pie, "ace." en cursiva serif verde oliva y punto terracota final.
+- `PaceWordmark` reescrito para detectar `variant === 'pace'` y delegar en `PaceLockup`; variantes legacy `lineal/sello/ilustrado` conservan comportamiento anterior.
+- `state.logoVariant` default cambiado de `'lineal'` a `'pace'` en `app/state.jsx`.
+- Añadida opción `{ v: 'pace', name: 'Pace. (lockup, default)' }` como primera del eje de logo en `TweaksPanel`.
+
+**Sidebar reescrito (`app/shell/Sidebar.jsx`):**
+- Añadido estado `sidebarCollapsed` (en `app/state.jsx`) y lógica para togglear entre 280 px expandido y 56 px en rail.
+- Toggle chevron en cabecera (arriba a la derecha del logo) cuando está expandido.
+- Modo colapsado: rail vertical con atajos visuales (número de días, icono logros con contador, icono campana recordatorios, chevron inverso para expandir).
+- **Sección Plan eliminada** — los chips interactivos (Muévete/Respira/Extra/Hidrátate) ya no aparecen. El estado `plan.*` se conserva internamente para ActivityBar y logros.
+- **Sección Sendero añadida** (componente `SenderoDelDia`):
+  - SVG 240×46 px con curva cuadrática horizontal empalmada representando el arco del día 6h→22h.
+  - Puntos circulares en la curva marcan hitos reales del día: pomodoros (focus), respiraciones, movimientos, vasos de agua — cada uno con su color de módulo.
+  - Pointer negro pequeño sobre la curva indica la hora actual.
+  - Debajo: "6h … ahora · HH:MM … 22h" en cursiva.
+  - Cabecera con contador dinámico `N hitos`.
+- Mensaje placeholder italic cuando no hay recordatorios.
+- Altura máxima de la lista de recordatorios con scroll para que no rompa el layout ahora que hay más espacio.
+
+**Tweaks reubicado (`app/main.jsx`):**
+- El FAB flotante `fabStyles.tweaks` (bottom-right) ya fue eliminado en sesión previa.
+- El TopBar ahora agrupa los 3 iconos arriba a la derecha en este orden: Tweaks (gear) · Stats (chart) · Logros (trophy).
+- Atajo `T` sigue activo.
+
+### 📁 Archivos modificados
+- `app/ui/CowLogo.jsx` (nuevo componente `PaceLockup`, modificada fábrica `PaceWordmark`)
+- `app/shell/Sidebar.jsx` (reescrito: toggle, Sendero, sin Plan, recordatorios con placeholder)
+- `app/state.jsx` (default `logoVariant: 'pace'`, añadido `sidebarCollapsed`)
+- `app/tweaks/TweaksPanel.jsx` (opción `pace` en logo)
+
+### 🔒 Red de seguridad
+- `PACE_standalone.html` regenerado a **v0.11.2** (166 KB)
+- `backups/PACE_standalone_v0.11.1_20260422.html` (backup previo rotado)
+- `backups/PACE_standalone_v0.11.0_20260422.html` (backup aún más antiguo)
+
+### 🎯 Por qué esta sesión
+Pulir la presentación del Home antes de llevar todo a GitHub:
+- El logo nuevo refuerza la identidad "Pace. · ritmo propio" con la vaca como protagonista visual.
+- La barra colapsable libera espacio en pantallas pequeñas y da al usuario control sobre qué ver.
+- Sendero vuelve visible el avance del día sin abrumar: una línea con hitos.
+- Quitar Plan libera espacio útil; la ActivityBar inferior ya hace ese trabajo.
+- Tweaks en el top-right es más consistente con stats y logros y libera la esquina inferior.
+
+---
+
+## 🎨 Sesión 6 (2026-04-22 · 16:35) — Iconos ActivityBar restaurados
+
+### ✅ Cambios aplicados
+
+**`app/main.jsx` — Barra de Actividades rehecha:**
+- 4 iconos SVG nuevos, coincidentes con la imagen de referencia del usuario:
+  - **Respira** → pulmones anatómicos con tráquea y bronquios
+  - **Estira** → figura en postura de puente/arco con cabeza circular
+  - **Mueve** → mancuerna horizontal (dos discos a cada lado de la barra)
+  - **Hidrátate** → gota con highlight interior
+- Layout de tarjeta **cambiado** de vertical (column) a horizontal (row): icono a la izquierda, bloque de texto a la derecha
+- **Sublabels añadidos** en italic serif pequeña:
+  - Respira · *ritmo, calma*
+  - Estira · *afloja tensión*
+  - Mueve · *cuerpo activo*
+  - Hidrátate · *agua ahora*
+- Iconos ampliados de 22×22 a 26×26 para el nuevo layout más ancho
+- Tarjetas con `minWidth: 180`, padding `16px 22px`, gap de 16px entre icono y texto
+
+### 📁 Archivos modificados
+- `app/main.jsx` (3 edits: array activities con sub, button layout horizontal, 4 componentes SVG reescritos)
+
+### 🔒 Red de seguridad
+- `PACE_standalone.html` regenerado a **v0.11.1** (154 KB)
+- `backups/PACE_standalone_v0.11.0_20260422.html` (backup previo v0.11.0 rotado)
+
+### 🎯 Por qué esta sesión
+El usuario había iterado estos iconos en una sesión previa pero se quedó sin contexto antes de consolidarlos; los pulmones, puente, mancuerna y gota se habían perdido en el código modular actual, que tenía versiones simplificadas (círculo+cruz, palito con brazos, flechas). Se restauran según la imagen de referencia, con el extra de sublabels y layout horizontal editorial.
 
 ---
 
@@ -174,13 +255,16 @@ El sistema versiona automáticamente cada cambio. Para sincronizar con el repo d
 
 | Archivo | Estado | Última actualización |
 |---|---|---|
-| `CLAUDE.md` | ✅ Con protocolo obligatorio | 2026-04-22 |
-| `STATE.md` | ✅ Este archivo | 2026-04-22 |
+| `CLAUDE.md` | ✅ Con protocolo obligatorio + espejo `Pace_app_HH_MM/` | 2026-04-22 |
+| `STATE.md` | ✅ Este archivo | 2026-04-22 16:35 |
+| `CHANGELOG.md` | ✅ Historial v0.9 → v0.11.1 | 2026-04-22 16:35 |
 | `DESIGN_SYSTEM.md` | ✅ Tokens completos | 2026-04-22 |
 | `CONTENT.md` | ✅ Rutinas + 100 logros | 2026-04-22 |
 | `HANDOFF.md` | ✅ Doc completa para retomar | 2026-04-22 |
-| `PACE_standalone.html` | ✅ v0.9 (130KB, offline) | 2026-04-22 |
-| `backups/` | ✅ 1 backup (`v0.9_20260422`) | 2026-04-22 |
+| `ROADMAP.md` | ✅ Corto/medio/largo plazo | 2026-04-22 |
+| `README.md` | ✅ Presentación para GitHub | 2026-04-22 |
+| `PACE_standalone.html` | ✅ **v0.11.2** (166 KB, offline) | 2026-04-22 16:44 |
+| `backups/` | ✅ `v0.11.1_20260422` + `v0.11.0_20260422` (2 backups) | 2026-04-22 16:44 |
 
 ---
 

@@ -11,9 +11,10 @@ const defaultState = {
   palette: 'crema',           // crema | oscuro | envejecido
   font: 'cormorant',          // garamond | cormorant | mono
   layout: 'sidebar',          // sidebar | minimal | editorial
+  sidebarCollapsed: false,    // true cuando el usuario colapsa el sidebar a icon-rail
   timerStyle: 'aro',          // numero | circulo | barra | analogico | aro (híbrido círculo+barra)
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
-  logoVariant: 'lineal',      // lineal | sello | ilustrado
+  logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
 
   // Foco
