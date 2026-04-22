@@ -79,8 +79,119 @@ function CowLogo({ variant = 'lineal', size = 28, color = 'currentColor' }) {
   return <CowLogoLineal size={size} color={color} />;
 }
 
-/* Wordmark completo · "Pace" italic serif */
-function PaceWordmark({ variant = 'lineal', color = 'currentColor' }) {
+/* ============================================================
+   PaceLockup · wordmark "Pace." con la vaca integrada en la P
+   La P sirve de cuerpo del animal: el trazo superior de la P hace
+   de cuello + cabeza inclinada, y la hierba sale del pie de la letra.
+   Subtítulo "FOCO · CUERPO" (o el que pase el usuario).
+   ============================================================ */
+function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) {
+  // Las proporciones se basan en un canvas 640×260 y luego escalamos por size
+  const w = size * 14.5;        // ancho total aprox
+  const h = size * 4;
+  const green = 'var(--focus, #3E5A3A)';
+  const terra = 'var(--breathe, #C97A5D)';
+  return (
+    <svg
+      width={w}
+      height={h}
+      viewBox="0 0 640 180"
+      fill="none"
+      aria-label="Pace"
+      style={{ display: 'block' }}
+    >
+      {/* ========= GRUPO 1: la "P" + vaca ========= */}
+      {/* Vástago vertical de la P — grueso y elegante */}
+      <path
+        d="M78 30 C 78 30, 74 60, 74 95 C 74 130, 70 160, 64 170"
+        stroke={green}
+        strokeWidth="7"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Bucle superior de la P — se curva como lomo de vaca y desciende al morro */}
+      <path
+        d="M78 32 C 130 18, 180 30, 196 62 C 208 88, 196 108, 170 112 C 150 115, 120 112, 100 108"
+        stroke={green}
+        strokeWidth="7"
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Cabeza de la vaca en terracota — cuelga del bucle de la P, paciendo */}
+      {/* Morro + perfil inclinado */}
+      <path
+        d="M138 104 C 138 120, 130 135, 118 142 C 108 148, 96 150, 88 146 C 82 143, 82 138, 86 134 C 90 130, 98 128, 104 126 L 110 118 L 116 108"
+        stroke={terra}
+        strokeWidth="3.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      {/* Cuernito curvo hacia arriba */}
+      <path
+        d="M118 108 C 122 100, 128 98, 134 102"
+        stroke={terra}
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Oreja */}
+      <path
+        d="M128 110 C 132 104, 138 104, 142 110"
+        stroke={terra}
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Ojo — punto */}
+      <circle cx="108" cy="126" r="1.6" fill={green} />
+
+      {/* Hierba al pie de la P */}
+      <path d="M 40 168 L 40 178 M 50 166 L 50 178 M 60 169 L 60 178 M 70 167 L 70 178 M 80 170 L 80 178 M 92 168 L 92 178 M 102 171 L 102 178 M 114 169 L 114 178"
+            stroke={green} strokeWidth="2.4" strokeLinecap="round" />
+
+      {/* ========= GRUPO 2: "ace." en cursiva ========= */}
+      <text
+        x="210"
+        y="148"
+        fontSize="142"
+        fontFamily="Cormorant Garamond, EB Garamond, Georgia, serif"
+        fontStyle="italic"
+        fontWeight="500"
+        fill={green}
+        letterSpacing="-2"
+      >ace</text>
+
+      {/* Punto final — terracota */}
+      {showDot && (
+        <circle cx="540" cy="148" r="12" fill={terra} />
+      )}
+
+      {/* ========= SUBTÍTULO ========= */}
+      {subtitle && (
+        <text
+          x="210"
+          y="176"
+          fontSize="18"
+          fontFamily="Cormorant Garamond, EB Garamond, Georgia, serif"
+          letterSpacing="6"
+          fill={green}
+          opacity="0.75"
+          fontWeight="500"
+        >{subtitle}</text>
+      )}
+    </svg>
+  );
+}
+
+/* Wordmark completo · "Pace" italic serif
+   Cuando variant === 'pace' usamos el nuevo lockup con vaca integrada en la P.
+   Las otras variantes conservan el formato original (icono a la izq + texto). */
+function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
+  if (variant === 'pace') {
+    return <PaceLockup size={14} subtitle="FOCO · CUERPO" />;
+  }
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
       <CowLogo variant={variant} size={26} color={color} />
@@ -106,4 +217,4 @@ function PaceWordmark({ variant = 'lineal', color = 'currentColor' }) {
   );
 }
 
-Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark });
+Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup });

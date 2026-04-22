@@ -104,14 +104,6 @@ function PaceApp() {
         />
       </main>
 
-      {/* FAB Tweaks */}
-      <button onClick={() => setOpenTweaks(true)} style={fabStyles.tweaks} title="Tweaks (T)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-      </button>
-
       {/* ========== MODALS ========== */}
       <BreatheLibrary
         open={openLibrary === 'breathe'}
@@ -171,12 +163,18 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenTweaks, onOpenStats, onCow
       padding: '16px 24px',
       gap: 8,
     }}>
-      <button onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)">
+      <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      </button>
+      <button onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
         </svg>
       </button>
-      <button onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)">
+      <button onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
         </svg>
@@ -191,6 +189,9 @@ const topBarStyles = {
     display: 'grid', placeItems: 'center',
     borderRadius: 'var(--r-sm)',
     color: 'var(--ink-2)',
+    background: 'transparent',
+    border: '1px solid transparent',
+    cursor: 'pointer',
     transition: 'all 180ms',
   }
 };
@@ -204,10 +205,10 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
   /* NOTA: estilo "tarjeta editorial" — fondo paper claro, icono terracota fino,
      label serif italic coloreado. Estado activo: punto en esquina + fondo cálido. */
   const activities = [
-    { key: 'respira', label: 'Respira', color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
-    { key: 'extra', label: 'Estira', color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
-    { key: 'muevete', label: 'Mueve', color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
-    { key: 'hidratate', label: 'Hidrátate', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
+    { key: 'respira', label: 'Respira', sub: 'ritmo, calma', color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
+    { key: 'extra', label: 'Estira', sub: 'afloja tensión', color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
+    { key: 'muevete', label: 'Mueve', sub: 'cuerpo activo', color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
+    { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
     <div style={{ padding: '8px 40px 28px' }}>
@@ -220,16 +221,18 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
           return (
             <button key={a.key} onClick={a.action} style={{
               position: 'relative',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              gap: 10,
-              padding: '18px 28px',
-              minWidth: 124,
+              display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
+              gap: 16,
+              padding: '16px 22px',
+              minWidth: 180,
+              flex: '0 1 200px',
               background: active ? 'var(--paper-2)' : 'var(--paper)',
               border: `1px solid ${active ? 'var(--line-2)' : 'var(--line)'}`,
               borderRadius: 'var(--r-md)',
               boxShadow: active ? 'inset 0 0 0 1px var(--line)' : 'var(--sh-soft)',
               transition: 'all 220ms var(--ease)',
               cursor: 'pointer',
+              textAlign: 'left',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
@@ -249,19 +252,29 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
                 }} />
               )}
               {/* Icono en terracota */}
-              <span style={{ color: a.color, display: 'grid', placeItems: 'center', height: 24 }}>
+              <span style={{ color: a.color, display: 'grid', placeItems: 'center', width: 28, height: 28, flexShrink: 0 }}>
                 {a.icon}
               </span>
-              {/* Label serif italic */}
-              <span style={{
-                fontFamily: 'var(--font-display)',
-                fontStyle: 'italic',
-                fontSize: 16,
-                fontWeight: 500,
-                color: 'var(--ink)',
-                letterSpacing: 0,
-                lineHeight: 1,
-              }}>{a.label}</span>
+              {/* Bloque de texto: label + sublabel */}
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                <span style={{
+                  fontFamily: 'var(--font-display)',
+                  fontStyle: 'italic',
+                  fontSize: 18,
+                  fontWeight: 500,
+                  color: 'var(--ink)',
+                  lineHeight: 1.05,
+                }}>{a.label}</span>
+                <span style={{
+                  fontFamily: 'var(--font-display)',
+                  fontStyle: 'italic',
+                  fontSize: 12,
+                  fontWeight: 400,
+                  color: 'var(--ink-3)',
+                  lineHeight: 1.1,
+                  letterSpacing: 0.1,
+                }}>{a.sub}</span>
+              </span>
             </button>
           );
         })}
@@ -270,61 +283,62 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
   );
 }
 
-/* Iconos ActivityBar — stroke fino en currentColor (heredan color terracota del módulo) */
+/* Iconos ActivityBar — stroke fino en currentColor (heredan color del módulo).
+   Dibujados para la referencia del usuario: pulmones / postura puente / mancuerna / gota. */
 function ABBreathe() {
-  // Círculo con cruz — "Respira" (el que ya teníamos, que te gusta más)
+  // Pulmones anatómicos con tráquea — "Respira"
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 3v18 M3 12h18" />
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Tráquea */}
+      <path d="M14 4.5v9" />
+      {/* Bronquios */}
+      <path d="M14 10.5c-1.2 0-2.2-.4-3-1.2 M14 10.5c1.2 0 2.2-.4 3-1.2" />
+      {/* Pulmón izquierdo */}
+      <path d="M11 10.2c-2.2.3-4.2 1.4-5.3 3.3-1.3 2.2-1.4 5-.6 7.6.5 1.6 1.6 2.7 3.1 2.8 1.4.1 2.4-.8 2.8-2.2.6-2.1.8-4.6.8-7.1 0-1.7-.1-3.2-.8-4.4z" />
+      {/* Pulmón derecho */}
+      <path d="M17 10.2c2.2.3 4.2 1.4 5.3 3.3 1.3 2.2 1.4 5 .6 7.6-.5 1.6-1.6 2.7-3.1 2.8-1.4.1-2.4-.8-2.8-2.2-.6-2.1-.8-4.6-.8-7.1 0-1.7.1-3.2.8-4.4z" />
     </svg>
   );
 }
 function ABStretch() {
-  // Figura zen con brazos abiertos — "Estira"
+  // Figura en postura de puente/arco — "Estira"
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="5" r="2" />
-      <path d="M12 7v6" />
-      <path d="M5 10c3 0 4 1.5 7 1.5S16 10 19 10" />
-      <path d="M12 13l-3 8 M12 13l3 8" />
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Arco del cuerpo (puente boca abajo / downward dog) */}
+      <path d="M4 21c3-8 7-12 10-12s7 4 10 12" />
+      {/* Cabeza en el vértice superior */}
+      <circle cx="14" cy="7.5" r="1.6" />
+      {/* Suelo sutil */}
+      <path d="M4 22h20" opacity="0.35" strokeDasharray="1.5 2.5" />
     </svg>
   );
 }
 function ABMove() {
-  // Flecha doble lateral (izq-dcha) — "Mueve"
+  // Mancuerna horizontal — "Mueve"
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M7 8l-4 4 4 4" />
-      <path d="M17 8l4 4-4 4" />
-      <path d="M3 12h18" />
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Pesa izquierda (dos discos) */}
+      <rect x="3" y="10" width="2.2" height="8" rx="0.6" />
+      <rect x="5.6" y="8" width="2.4" height="12" rx="0.6" />
+      {/* Barra */}
+      <path d="M8 14h12" />
+      {/* Pesa derecha (dos discos) */}
+      <rect x="20" y="8" width="2.4" height="12" rx="0.6" />
+      <rect x="22.8" y="10" width="2.2" height="8" rx="0.6" />
     </svg>
   );
 }
 function ABDrop() {
-  // Gota simple
+  // Gota con highlight interior — "Hidrátate"
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z" />
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Silueta de la gota */}
+      <path d="M14 3.5c-3.6 5.2-7 8.6-7 12.6a7 7 0 0 0 14 0c0-4-3.4-7.4-7-12.6z" />
+      {/* Highlight interior (reflejo) */}
+      <path d="M10.5 15.5c0 2 1.3 3.6 3 3.9" opacity="0.55" />
     </svg>
   );
 }
-
-const fabStyles = {
-  tweaks: {
-    position: 'fixed',
-    right: 24, bottom: 24,
-    width: 44, height: 44,
-    borderRadius: '50%',
-    background: 'var(--paper)',
-    border: '1px solid var(--line-2)',
-    color: 'var(--ink-2)',
-    display: 'grid', placeItems: 'center',
-    boxShadow: 'var(--sh-soft)',
-    zIndex: 70,
-    transition: 'all 200ms',
-  }
-};
 
 Object.assign(window, { PaceApp });
 
