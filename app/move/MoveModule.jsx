@@ -106,7 +106,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   useEffectMV(() => {
     if (stage !== 'prep' || paused) return;
     if (prepCount <= 0) { setStage('active'); sessionStart.current = Date.now(); return; }
-    const t = setTimeout(() => setPrepCount(c => c - 1), 1000);
+    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
     return () => clearTimeout(t);
   }, [stage, prepCount, paused]);
 

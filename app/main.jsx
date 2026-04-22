@@ -185,12 +185,17 @@ function PaceApp() {
         />
       )}
 
-      {/* ========== SESSION FULLSCREEN ========== */}
+      {/* ========== SESSION FULLSCREEN ==========
+          NOTA (#29): los <Session/> llaman `onExit('exit')` vs `onExit('done')`
+          para diferenciar salida voluntaria de finalización completa. Hoy
+          ambos caminos van a home y el argumento se descarta intencionalmente;
+          se conserva la señal en la API para un futuro consumidor (p.ej.
+          micro-animación de despedida distinta, o métrica de abandono). */}
       {view.type === 'breathe-session' && (
-        <BreatheSession routine={view.routine} onExit={() => setView({ type: 'home' })} />
+        <BreatheSession routine={view.routine} onExit={(_reason) => setView({ type: 'home' })} />
       )}
       {view.type === 'move-session' && (
-        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={() => setView({ type: 'home' })} />
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
       )}
 
       {/* ========== TOASTS ========== */}

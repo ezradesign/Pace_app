@@ -187,7 +187,7 @@ function BreatheSession({ routine, onExit }) {
       startTime.current = Date.now();
       return;
     }
-    const t = setTimeout(() => setPrepCount(c => c - 1), 1000);
+    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
     return () => clearTimeout(t);
   }, [stage, prepCount, paused]);
 
