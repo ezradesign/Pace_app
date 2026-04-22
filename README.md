@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.11.3 · Pre-lanzamiento · Iteración de diseño
+**Estado:** v0.11.7 · Pre-lanzamiento · Iteración de diseño
 **Autor:** [@acuradesign](https://github.com/ezradesign)
 
 ---
@@ -61,14 +61,18 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 ```
 /
 ├── PACE.html                ← entry point de desarrollo
-├── PACE_standalone.html     ← bundle offline
-├── CLAUDE.md                ← reglas y protocolo del proyecto
+├── PACE_standalone.html     ← bundle offline (inline, ~174 KB)
+├── CLAUDE.md                ← protocolo y arquitectura
 ├── STATE.md                 ← estado actual y próximos pasos
+├── CHANGELOG.md             ← historial por versión
 ├── DESIGN_SYSTEM.md         ← tokens, paleta, tipografía
 ├── CONTENT.md               ← catálogo de rutinas + 100 logros
-├── HANDOFF.md               ← documentación para retomar
-├── CHANGELOG.md             ← historial de versiones
 ├── ROADMAP.md               ← visión a medio/largo plazo
+├── HANDOFF.md               ← snapshot histórico v0.9 (referencia)
+│
+├── docs/
+│   ├── porting.md           ← cómo portar a Next.js / Chrome / Android
+│   └── sessions/            ← diario completo de cada sesión
 │
 └── app/
     ├── tokens.css · state.jsx · main.jsx
@@ -116,4 +120,9 @@ Por definir. Proyecto personal en desarrollo — no reutilizar contenido ni asse
 
 ## 🤝 Continuidad
 
-El proyecto está diseñado para iterarse en múltiples sesiones con ayuda de asistentes de diseño. Ver [`CLAUDE.md`](./CLAUDE.md) para el protocolo de trabajo y [`HANDOFF.md`](./HANDOFF.md) para retomar el proyecto sin contexto previo.
+El proyecto está diseñado para iterarse en múltiples sesiones con ayuda de asistentes de diseño. Para retomar el proyecto:
+
+1. [`STATE.md`](./STATE.md) — estado actual y próximos pasos
+2. [`CLAUDE.md`](./CLAUDE.md) — protocolo de trabajo y arquitectura
+3. [`docs/sessions/`](./docs/sessions/) — diario detallado de cada sesión
+4. [`HANDOFF.md`](./HANDOFF.md) — snapshot histórico v0.9 (filosofía de base)
