@@ -3,8 +3,78 @@
 > **Actualiza este archivo al final de cada sesión de trabajo.**
 > **Sigue el protocolo de `CLAUDE.md` > "PROTOCOLO DE SEGURIDAD (OBLIGATORIO)".**
 
-**Versión actual:** v0.10
-**Última actualización:** 2026-04-22 · Sesión 3 — Core pulido (Respira + Mueve)
+**Versión actual:** v0.10.1
+**Última actualización:** 2026-04-22 · Sesión 4 — Reorganización modular post-GitHub
+
+---
+
+## 🔧 Sesión 4 (2026-04-22) — Reorganización modular post-GitHub
+
+### Contexto
+Proyecto importado desde `github.com/ezradesign/Pace_app`. El repo contenía todos los JSX en raíz plana + `PACE_standalone.html` como único entry point. La estructura documentada en `CLAUDE.md`/`HANDOFF.md` describe una organización modular con subcarpetas y un `PACE.html` de desarrollo que aquí faltaba.
+
+### ✅ Cambios aplicados
+
+**Reorganización de archivos** (plano → modular):
+- `tokens.css` → `app/tokens.css`
+- `state.jsx` → `app/state.jsx`
+- `main.jsx` → `app/main.jsx`
+- `Primitives.jsx` / `CowLogo.jsx` / `Toast.jsx` → `app/ui/`
+- `Sidebar.jsx` → `app/shell/`
+- `FocusTimer.jsx` → `app/focus/`
+- `BreatheModule.jsx` → `app/breathe/`
+- `MoveModule.jsx` → `app/move/`
+- `ExtraModule.jsx` → `app/extra/`
+- `HydrateModule.jsx` → `app/hydrate/`
+- `BreakMenu.jsx` → `app/breakmenu/`
+- `Achievements.jsx` → `app/achievements/`
+- `WeeklyStats.jsx` → `app/stats/`
+- `TweaksPanel.jsx` → `app/tweaks/`
+
+**Creado `PACE.html`** — entry point de desarrollo con:
+- React 18.3.1 + ReactDOM + Babel standalone (pinneado con SRI)
+- Carga ordenada de todos los JSX (state → ui → shell → módulos → main)
+- Montaje de `<PaceApp/>` con retry loop (los `<script type="text/babel" src>` se compilan async, así que espera a que `PaceApp` exista en `window` antes de montar)
+- `PACE_standalone.html` preservado como backup funcional offline
+
+### 📁 Archivos modificados/creados
+- `PACE.html` (nuevo — entry point modular)
+- Todos los JSX/CSS movidos a `app/**`
+
+### 🔒 Red de seguridad
+- `PACE_standalone.html` (v0.10, preservado intacto)
+- `PACE.html` (nuevo, verificado con screenshot — carga limpia)
+
+---
+
+## 🔄 Flujo de trabajo recomendado (para sesiones futuras)
+
+Para aprovechar al máximo el contexto disponible, sigue este orden en cada sesión:
+
+### 1. Al abrir una sesión
+- Leer `CLAUDE.md`, `STATE.md`, `DESIGN_SYSTEM.md` (siempre)
+- Listar `app/` para confirmar estructura actual
+- Si la sesión es para un módulo específico, leer SOLO ese JSX (no todos)
+
+### 2. Durante el trabajo
+- **Ediciones quirúrgicas** con `str_replace_edit` en vez de reescribir archivos enteros
+- **Verificar tras cada cambio funcional** con `done` / screenshot (consume pocos tokens)
+- **NO hacer screenshots proactivos** de verificación — delegar al `fork_verifier_agent`
+- **Mantener commits frecuentes** (cada `write_file`/`str_replace_edit` versiona auto)
+
+### 3. Antes de cerrar la sesión
+- Actualizar `STATE.md` (sesión nueva, cambios, pendientes, decisiones)
+- Si hubo cambios significativos → regenerar `PACE_standalone.html` con `super_inline_html`
+- Rotar backup anterior a `backups/PACE_standalone_vX.Y_YYYYMMDD.html`
+- Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `HANDOFF.md` si aplica
+
+### 4. Para subir a GitHub
+El sistema versiona automáticamente cada cambio. Para sincronizar con el repo de GitHub:
+- Descargar el proyecto con `present_fs_item_for_download` (o copiar archivos sueltos)
+- Hacer `git add . && git commit -m "..." && git push` en tu local
+- Alternativa: usar GitHub Desktop y arrastrar los archivos descargados sobre la carpeta local del repo
+
+**Tip de tokens:** cuando termines una iteración clara (ej: "pulido de Respira"), el sistema snipea automáticamente el contexto viejo al detectar presión. No necesitas hacer nada manual.
 
 ---
 
