@@ -100,6 +100,11 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'secret.breath.hold.90', cat: 'secretos', title: 'Apnea 90s', desc: '90 segundos de retención', glyph: '?', secret: true },
   { id: 'secret.breath.hold.120', cat: 'secretos', title: 'Apnea 2 min', desc: '120 segundos de retención', glyph: '?', secret: true },
   { id: 'secret.zen', cat: 'secretos', title: 'Zen accidental', desc: '30 min respira en un día', glyph: '?', secret: true },
+  /* Añadido en sesión 16 (v0.11.11) — activable por honor (botón "Ya doné"
+     en el modal de apoyo). Sin verificación: no hay backend, confiar es
+     parte del tono. Glifo '✦' para que al desbloquearse muestre una chispa
+     más cálida (el resto de secretos son '?'). */
+  { id: 'secret.supporter', cat: 'secretos', title: 'Sostienes el pasto', desc: 'Apoyaste el proyecto', glyph: '✦', secret: true },
 
   // Estacionales (91-100)
   { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },
@@ -146,9 +151,10 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'explore.ancestral', 'explore.neck', 'explore.desk',
   // Maestría (1/25)
   'master.pomodoro.8',
-  // Secretos (4/20) — los secretos con trigger se siguen pintando como secretos
+  // Secretos (5/21) — los secretos con trigger se siguen pintando como secretos
   'secret.cow.click', 'secret.breath.hold.60',
   'secret.breath.hold.90', 'secret.breath.hold.120',
+  'secret.supporter',
 ]);
 
 function isImplemented(a) {
@@ -167,7 +173,7 @@ function Achievements({ open, onClose }) {
   const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Colección" title="Logros" subtitle="Sellos de libreta de campo. 100 coherentes. Explora, no compitas." maxWidth={920}>
+    <Modal open={open} onClose={onClose} tagLabel="Colección" title="Logros" subtitle="Sellos de libreta de campo. Colección creciente. Explora, no compitas." maxWidth={920}>
       {/* Counter */}
       <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
         <div>

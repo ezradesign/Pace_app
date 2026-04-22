@@ -5,7 +5,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.11.9';
+const PACE_VERSION = 'v0.11.11';
 
 const defaultState = {
   // Settings / Tweaks
@@ -51,6 +51,17 @@ const defaultState = {
 
   // Intención del día
   intention: '',
+
+  // Buy Me a Coffee — monetización por donación (sesión 16, v0.11.11).
+  // `supportSeenAt`: timestamp de la primera apertura del modal de apoyo.
+  //   null = nunca visto → el auto-trigger (a los 7 días de racha) puede
+  //   dispararse. Una vez visto (manual o auto) se fija el timestamp y
+  //   no vuelve a auto-abrirse nunca. El usuario puede re-abrirlo las
+  //   veces que quiera desde el botón del sidebar.
+  // `supportCopyVariant`: 'cafe' | 'pasto' | 'vaca' — texto del botón
+  //   (exposición vía Tweaks). Default 'cafe' (clásico de BMC).
+  supportSeenAt: null,
+  supportCopyVariant: 'cafe',
 
   // Recordatorios — DECISIÓN (v0.11.3): la sección de UI se eliminó del Sidebar
   // para que todo quepa en 1920×1080 sin scroll. El array se conserva en el

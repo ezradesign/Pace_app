@@ -21,7 +21,7 @@
 
 **Versión del snapshot:** v0.9
 **Fecha del snapshot:** 2026-04-22
-**Autor de diseño:** @acuradesign
+**Autor de diseño:** @ezradesign
 **Stack:** HTML + React 18 + Babel standalone (sin build step)
 
 ---

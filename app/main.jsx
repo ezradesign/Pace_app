@@ -15,6 +15,7 @@ function PaceApp() {
   const [openStats, setOpenStats] = useStateMain(false);
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
+  const [openSupport, setOpenSupport] = useStateMain(false);
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
@@ -38,6 +39,21 @@ function PaceApp() {
     window.addEventListener('pace:open-achievements', h);
     return () => window.removeEventListener('pace:open-achievements', h);
   }, []);
+
+  // Abrir modal de apoyo desde sidebar (sesión 16 / v0.11.11).
+  // Mismo patrón que `pace:open-achievements`: el Sidebar despacha el
+  // evento y aquí lo escuchamos para abrir. Desacopla el botón del root.
+  useEffectMain(() => {
+    const h = () => setOpenSupport(true);
+    window.addEventListener('pace:open-support', h);
+    return () => window.removeEventListener('pace:open-support', h);
+  }, []);
+
+  // Auto-trigger único del SupportModal a los 7 días de racha.
+  // Consumidor del helper expuesto en SupportModule.jsx; la lógica
+  // ('condición + flag de una sola vez') vive allí para mantenerla
+  // junto a la filosofía del módulo.
+  useSupportAutoTrigger(setOpenSupport);
 
   // Atajo logros
   useEffectMain(() => {
@@ -176,6 +192,7 @@ function PaceApp() {
         onClose={() => setOpenBreakMenu(false)}
         onChoose={handleBreakChoice}
       />
+      <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
 
       {safetyRoutine && (
         <BreatheSafety
