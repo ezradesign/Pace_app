@@ -87,9 +87,14 @@ function MoveLibrary({ open, onClose, onStart }) {
   );
 }
 
-function MoveSession({ routine, onExit }) {
+function MoveSession({ routine, onExit, kind = 'move' }) {
   const { useRef: useRefMV } = React;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
+  // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
+  const dispatchComplete = () => {
+    if (kind === 'extra') completeExtraSession(routine.id, routine.min);
+    else completeMoveSession(routine.id, routine.min);
+  };
   const [prepCount, setPrepCount] = useStateMV(3);
   const [stepIdx, setStepIdx] = useStateMV(0);
   const [elapsed, setElapsed] = useStateMV(0);
@@ -112,7 +117,7 @@ function MoveSession({ routine, onExit }) {
       setElapsed(e => {
         if (e + 1 >= step.dur) {
           if (stepIdx + 1 >= routine.steps.length) {
-            completeMoveSession(routine.id, routine.min);
+            dispatchComplete();
             setStage('done');
             return 0;
           }
@@ -141,7 +146,7 @@ function MoveSession({ routine, onExit }) {
   const goNext = () => {
     if (stage !== 'active') return;
     if (stepIdx + 1 >= routine.steps.length) {
-      completeMoveSession(routine.id, routine.min);
+      dispatchComplete();
       setStage('done');
     } else {
       setStepIdx(stepIdx + 1); setElapsed(0);

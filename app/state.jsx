@@ -5,6 +5,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
+const PACE_VERSION = 'v0.11.5';
 
 const defaultState = {
   // Settings / Tweaks
@@ -53,6 +54,10 @@ const defaultState = {
 
   // Recordatorios
   reminders: [],
+
+  // Rollover: día de calendario del último uso (toDateString()).
+  // Cuando cambia, se resetean cycle / plan / water.today al cargar.
+  lastActiveDay: null,
 };
 
 let _state = loadState();
@@ -61,11 +66,37 @@ const _listeners = new Set();
 function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return { ...defaultState };
+    if (!raw) return { ...defaultState, lastActiveDay: new Date().toDateString() };
     const parsed = JSON.parse(raw);
-    return { ...defaultState, ...parsed };
+    return rolloverIfNeeded({ ...defaultState, ...parsed });
   } catch (e) {
-    return { ...defaultState };
+    return { ...defaultState, lastActiveDay: new Date().toDateString() };
+  }
+}
+
+/* Rollover diario: si el día de calendario ha cambiado desde la última actividad,
+   reseteamos los contadores "de hoy" (ciclo de pomodoros, plan del día, vasos de agua).
+   Se llama al cargar el estado y también defensivamente antes de escribir cualquier
+   contador "de hoy" desde las actions (completePomodoro, addWaterGlass, etc.) para
+   cubrir el caso de que la pestaña siga abierta al cruzar la medianoche. */
+function rolloverIfNeeded(state) {
+  const today = new Date().toDateString();
+  if (state.lastActiveDay === today) return state;
+  return {
+    ...state,
+    cycle: 0,
+    plan: { muevete: false, respira: false, extra: false, hidratate: false },
+    water: { ...state.water, today: 0, lastReset: today },
+    lastActiveDay: today,
+  };
+}
+
+function ensureDayFresh() {
+  const next = rolloverIfNeeded(_state);
+  if (next !== _state) {
+    _state = next;
+    persistState();
+    _listeners.forEach(l => l());
   }
 }
 
@@ -115,6 +146,7 @@ function unlockAchievement(id, note) {
 }
 
 function addFocusMinutes(mins) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.focusMinutes];
@@ -131,15 +163,18 @@ function addFocusMinutes(mins) {
 }
 
 function completePomodoro() {
+  ensureDayFresh();
   const s = getState();
-  setState({ cycle: s.cycle + 1 });
+  const nextCycle = s.cycle + 1;
+  setState({ cycle: nextCycle });
   addFocusMinutes(s.focusMinutes);
   unlockAchievement('first.step');
-  if (s.cycle + 1 >= 8) unlockAchievement('master.pomodoro.8');
+  if (nextCycle >= 8) unlockAchievement('master.pomodoro.8');
   updateStreak();
 }
 
 function completeBreathSession(routineId, durationMin) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.breathMinutes];
@@ -169,6 +204,7 @@ function completeBreathSession(routineId, durationMin) {
 }
 
 function completeMoveSession(routineId, durationMin) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.moveMinutes];
@@ -190,13 +226,24 @@ function completeMoveSession(routineId, durationMin) {
   updateStreak();
 }
 
-function completeExtraSession() {
-  setState(s => ({ plan: { ...s.plan, extra: true } }));
+function completeExtraSession(routineId, durationMin = 0) {
+  ensureDayFresh();
+  const s = getState();
+  const day = new Date().getDay();
+  const week = [...s.weeklyStats.moveMinutes];
+  // Los minutos de Extra se agregan al bucket de 'move' en stats (ambos son cuerpo activo),
+  // pero el plan del día y los logros sí se separan.
+  if (durationMin > 0) week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, extra: true },
+    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+  });
   unlockAchievement('first.extra');
   updateStreak();
 }
 
 function addWaterGlass(delta = 1) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.waterGlasses];
@@ -248,5 +295,7 @@ Object.assign(window, {
   unlockAchievement, completePomodoro,
   completeBreathSession, completeMoveSession, completeExtraSession,
   addWaterGlass, addFocusMinutes, updateStreak,
+  ensureDayFresh,
   showToast, onToast,
+  PACE_VERSION,
 });

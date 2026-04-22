@@ -19,11 +19,18 @@ function PaceApp() {
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
 
-  // Logro secreto: clicks en la vaca
+  // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
+  // Se escucha como evento global para que el Sidebar pueda disparar clicks
+  // sobre el logo sin acoplarse a props del root.
   const [cowClicks, setCowClicks] = useStateMain(0);
   useEffectMain(() => {
     if (cowClicks >= 10) unlockAchievement('secret.cow.click');
   }, [cowClicks]);
+  useEffectMain(() => {
+    const h = () => setCowClicks(c => c + 1);
+    window.addEventListener('pace:cow-click', h);
+    return () => window.removeEventListener('pace:cow-click', h);
+  }, []);
 
   // Abrir colección desde sidebar
   useEffectMain(() => {
@@ -61,7 +68,9 @@ function PaceApp() {
   };
   const handleStartExtra = (routine) => {
     setOpenLibrary(null);
-    setView({ type: 'move-session', routine }); // reutiliza MoveSession
+    // Reutiliza MoveSession pero marca kind='extra' para que la completion
+    // dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
+    setView({ type: 'move-session', routine, kind: 'extra' });
   };
 
   const handleFocusFinish = () => {
@@ -121,7 +130,6 @@ function PaceApp() {
           onOpenHydrate={() => setOpenHydrate(true)}
           onOpenStats={() => setOpenStats(true)}
           onOpenTweaks={() => setOpenTweaks(true)}
-          onCowClick={() => setCowClicks(c => c + 1)}
         />
 
         {/* Content */}
@@ -182,7 +190,7 @@ function PaceApp() {
         <BreatheSession routine={view.routine} onExit={() => setView({ type: 'home' })} />
       )}
       {view.type === 'move-session' && (
-        <MoveSession routine={view.routine} onExit={() => setView({ type: 'home' })} />
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={() => setView({ type: 'home' })} />
       )}
 
       {/* ========== TOASTS ========== */}
@@ -194,7 +202,7 @@ function PaceApp() {
 /* ================
    TOP BAR
    ================ */
-function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCowClick }) {
+function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
   const modes = [
     { v: 'foco', label: 'Foco' },
