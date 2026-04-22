@@ -5,7 +5,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.11.5';
+const PACE_VERSION = 'v0.11.6';
 
 const defaultState = {
   // Settings / Tweaks
@@ -52,7 +52,12 @@ const defaultState = {
   // Intención del día
   intention: '',
 
-  // Recordatorios
+  // Recordatorios — DECISIÓN (v0.11.3): la sección de UI se eliminó del Sidebar
+  // para que todo quepa en 1920×1080 sin scroll. El array se conserva en el
+  // state para no romper instalaciones existentes (usuarios que ya tengan
+  // recordatorios guardados en localStorage) y por si se reintroduce un día
+  // la sección (probablemente en un modal dedicado, no en el sidebar).
+  // No hay action que lo mute actualmente.
   reminders: [],
 
   // Rollover: día de calendario del último uso (toDateString()).

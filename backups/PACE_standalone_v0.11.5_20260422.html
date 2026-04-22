@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.11.4</title>
+  <title>PACE · Foco · Cuerpo — v0.11.5</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -215,6 +215,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
+const PACE_VERSION = 'v0.11.5';
 
 const defaultState = {
   // Settings / Tweaks
@@ -263,6 +264,10 @@ const defaultState = {
 
   // Recordatorios
   reminders: [],
+
+  // Rollover: día de calendario del último uso (toDateString()).
+  // Cuando cambia, se resetean cycle / plan / water.today al cargar.
+  lastActiveDay: null,
 };
 
 let _state = loadState();
@@ -271,11 +276,37 @@ const _listeners = new Set();
 function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return { ...defaultState };
+    if (!raw) return { ...defaultState, lastActiveDay: new Date().toDateString() };
     const parsed = JSON.parse(raw);
-    return { ...defaultState, ...parsed };
+    return rolloverIfNeeded({ ...defaultState, ...parsed });
   } catch (e) {
-    return { ...defaultState };
+    return { ...defaultState, lastActiveDay: new Date().toDateString() };
+  }
+}
+
+/* Rollover diario: si el día de calendario ha cambiado desde la última actividad,
+   reseteamos los contadores "de hoy" (ciclo de pomodoros, plan del día, vasos de agua).
+   Se llama al cargar el estado y también defensivamente antes de escribir cualquier
+   contador "de hoy" desde las actions (completePomodoro, addWaterGlass, etc.) para
+   cubrir el caso de que la pestaña siga abierta al cruzar la medianoche. */
+function rolloverIfNeeded(state) {
+  const today = new Date().toDateString();
+  if (state.lastActiveDay === today) return state;
+  return {
+    ...state,
+    cycle: 0,
+    plan: { muevete: false, respira: false, extra: false, hidratate: false },
+    water: { ...state.water, today: 0, lastReset: today },
+    lastActiveDay: today,
+  };
+}
+
+function ensureDayFresh() {
+  const next = rolloverIfNeeded(_state);
+  if (next !== _state) {
+    _state = next;
+    persistState();
+    _listeners.forEach(l => l());
   }
 }
 
@@ -325,6 +356,7 @@ function unlockAchievement(id, note) {
 }
 
 function addFocusMinutes(mins) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.focusMinutes];
@@ -341,15 +373,18 @@ function addFocusMinutes(mins) {
 }
 
 function completePomodoro() {
+  ensureDayFresh();
   const s = getState();
-  setState({ cycle: s.cycle + 1 });
+  const nextCycle = s.cycle + 1;
+  setState({ cycle: nextCycle });
   addFocusMinutes(s.focusMinutes);
   unlockAchievement('first.step');
-  if (s.cycle + 1 >= 8) unlockAchievement('master.pomodoro.8');
+  if (nextCycle >= 8) unlockAchievement('master.pomodoro.8');
   updateStreak();
 }
 
 function completeBreathSession(routineId, durationMin) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.breathMinutes];
@@ -379,6 +414,7 @@ function completeBreathSession(routineId, durationMin) {
 }
 
 function completeMoveSession(routineId, durationMin) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.moveMinutes];
@@ -400,13 +436,24 @@ function completeMoveSession(routineId, durationMin) {
   updateStreak();
 }
 
-function completeExtraSession() {
-  setState(s => ({ plan: { ...s.plan, extra: true } }));
+function completeExtraSession(routineId, durationMin = 0) {
+  ensureDayFresh();
+  const s = getState();
+  const day = new Date().getDay();
+  const week = [...s.weeklyStats.moveMinutes];
+  // Los minutos de Extra se agregan al bucket de 'move' en stats (ambos son cuerpo activo),
+  // pero el plan del día y los logros sí se separan.
+  if (durationMin > 0) week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, extra: true },
+    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+  });
   unlockAchievement('first.extra');
   updateStreak();
 }
 
 function addWaterGlass(delta = 1) {
+  ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
   const week = [...s.weeklyStats.waterGlasses];
@@ -458,7 +505,9 @@ Object.assign(window, {
   unlockAchievement, completePomodoro,
   completeBreathSession, completeMoveSession, completeExtraSession,
   addWaterGlass, addFocusMinutes, updateStreak,
+  ensureDayFresh,
   showToast, onToast,
+  PACE_VERSION,
 });
 </script>
 
@@ -881,14 +930,27 @@ function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) 
    con el subtítulo "Touch grass, even from your desk".
    Se escala responsive al ancho disponible.
    ============================================================ */
-// Logo oficial v2 (17:16) — vaca integrada en "P" de Pace.
-// con subtítulo "Touch grass, even from your desk"
-const PACE_LOGO_URL = "https://www.genspark.ai/api/files/s/gv4cpVUt";
+// Logo oficial — vaca integrada en "P" de Pace.
+// Ruta relativa al entry point modular (PACE.html). En el standalone inline
+// el PNG no viaja con el archivo, así que si falla la carga se hace fallback
+// automático al PaceLockup SVG (que es visualmente equivalente).
+const PACE_LOGO_URL = "app/ui/pace-logo.png";
 function PaceLogoImage({ maxWidth = 240 }) {
+  const { useState: useStateLG } = React;
+  const [failed, setFailed] = useStateLG(false);
+  if (failed) {
+    // Fallback: PaceLockup SVG con subtítulo equivalente al del PNG.
+    return (
+      <div style={{ maxWidth, width: '100%' }}>
+        <PaceLockup size={14} subtitle="TOUCH GRASS · EVEN FROM YOUR DESK" />
+      </div>
+    );
+  }
   return (
     <img
       src={PACE_LOGO_URL}
       alt="Pace — Touch grass, even from your desk"
+      onError={() => setFailed(true)}
       style={{
         display: 'block',
         width: '100%',
@@ -904,19 +966,16 @@ function PaceLogoImage({ maxWidth = 240 }) {
   );
 }
 
-/* Wordmark completo · "Pace" italic serif
-   Desde v0.11.3 usamos SIEMPRE el logo OFICIAL (imagen PNG) pase lo que pase
-   en state.logoVariant — el pictograma de la vaca y el título "Pace." anteriores
-   se reemplazan por el lockup oficial con subtítulo
-   "Touch grass, even from your desk".
-   Las variantes legacy (lineal/sello/ilustrado/lockup) quedan disponibles por
-   código para el TweaksPanel pero el default y el render visible son siempre
-   la imagen. */
+/* Wordmark completo · entrega el logo según `variant`:
+   - 'pace' (default)  → PNG oficial (lockup vaca-en-P + tagline)
+   - 'lockup'          → PaceLockup SVG (misma idea, sin subir imagen)
+   - 'lineal'/'sello'/'ilustrado' → pictograma + wordmark "P a.c.e."
+   Los TweaksPanel y los logros secret.seal / secret.illustrated dependen
+   de que cada variante realmente se renderice distinta. */
 function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
-  // Siempre devolver el logo oficial PNG, independientemente de la variante.
-  return <PaceLogoImage maxWidth={240} />;
-  // (código antiguo preservado abajo por si se quiere volver a exponer variantes)
-  // eslint-disable-next-line no-unreachable
+  if (variant === 'pace') {
+    return <PaceLogoImage maxWidth={240} />;
+  }
   if (variant === 'lockup') {
     return <PaceLockup size={14} subtitle="FOCO · CUERPO" />;
   }
@@ -1038,9 +1097,14 @@ function Sidebar() {
 
   return (
     <aside style={sidebarStyles.root}>
-      {/* LOGO oficial (imagen) + toggle */}
+      {/* LOGO oficial (imagen) + toggle.
+          Clicable para el easter egg "vaca feliz" (10 clicks → secret.cow.click). */}
       <div style={sidebarStyles.logoRow}>
-        <div style={sidebarStyles.logo}>
+        <div
+          style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
+          onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
+          title="¿Le haces cosquillas?"
+        >
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
         </div>
         <button onClick={toggle} style={sidebarStyles.toggleExpanded} title="Colapsar (⌘\\)">
@@ -1305,7 +1369,7 @@ function StatusBar({ compact }) {
   if (compact) {
     return (
       <div style={{ paddingTop: 12, borderTop: '1px solid var(--line)', display: 'flex', justifyContent: 'center' }}>
-        <span style={{ fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>v0.11</span>
+        <span style={{ fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{PACE_VERSION}</span>
       </div>
     );
   }
@@ -1316,7 +1380,7 @@ function StatusBar({ compact }) {
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
       <div style={sidebarStyles.footerRow}>
-        <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace v0.11.2</span>
+        <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace {PACE_VERSION}</span>
         <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @acuradesign</span>
       </div>
     </div>
@@ -2804,9 +2868,14 @@ function MoveLibrary({ open, onClose, onStart }) {
   );
 }
 
-function MoveSession({ routine, onExit }) {
+function MoveSession({ routine, onExit, kind = 'move' }) {
   const { useRef: useRefMV } = React;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
+  // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
+  const dispatchComplete = () => {
+    if (kind === 'extra') completeExtraSession(routine.id, routine.min);
+    else completeMoveSession(routine.id, routine.min);
+  };
   const [prepCount, setPrepCount] = useStateMV(3);
   const [stepIdx, setStepIdx] = useStateMV(0);
   const [elapsed, setElapsed] = useStateMV(0);
@@ -2829,7 +2898,7 @@ function MoveSession({ routine, onExit }) {
       setElapsed(e => {
         if (e + 1 >= step.dur) {
           if (stepIdx + 1 >= routine.steps.length) {
-            completeMoveSession(routine.id, routine.min);
+            dispatchComplete();
             setStage('done');
             return 0;
           }
@@ -2858,7 +2927,7 @@ function MoveSession({ routine, onExit }) {
   const goNext = () => {
     if (stage !== 'active') return;
     if (stepIdx + 1 >= routine.steps.length) {
-      completeMoveSession(routine.id, routine.min);
+      dispatchComplete();
       setStage('done');
     } else {
       setStepIdx(stepIdx + 1); setElapsed(0);
@@ -3722,7 +3791,8 @@ function TweaksPanel({ open, onClose }) {
       { v: 'organico', name: 'Orgánico' },
     ]},
     { key: 'logoVariant', label: 'Logo de la vaca', options: [
-      { v: 'pace', name: 'Pace. (lockup, default)' },
+      { v: 'pace', name: 'Pace. oficial (default)' },
+      { v: 'lockup', name: 'Lockup SVG' },
       { v: 'lineal', name: 'Lineal minimalista' },
       { v: 'sello', name: 'Sello tipo café' },
       { v: 'ilustrado', name: 'Ilustrado' },
@@ -3835,11 +3905,18 @@ function PaceApp() {
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
 
-  // Logro secreto: clicks en la vaca
+  // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
+  // Se escucha como evento global para que el Sidebar pueda disparar clicks
+  // sobre el logo sin acoplarse a props del root.
   const [cowClicks, setCowClicks] = useStateMain(0);
   useEffectMain(() => {
     if (cowClicks >= 10) unlockAchievement('secret.cow.click');
   }, [cowClicks]);
+  useEffectMain(() => {
+    const h = () => setCowClicks(c => c + 1);
+    window.addEventListener('pace:cow-click', h);
+    return () => window.removeEventListener('pace:cow-click', h);
+  }, []);
 
   // Abrir colección desde sidebar
   useEffectMain(() => {
@@ -3877,7 +3954,9 @@ function PaceApp() {
   };
   const handleStartExtra = (routine) => {
     setOpenLibrary(null);
-    setView({ type: 'move-session', routine }); // reutiliza MoveSession
+    // Reutiliza MoveSession pero marca kind='extra' para que la completion
+    // dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
+    setView({ type: 'move-session', routine, kind: 'extra' });
   };
 
   const handleFocusFinish = () => {
@@ -3937,7 +4016,6 @@ function PaceApp() {
           onOpenHydrate={() => setOpenHydrate(true)}
           onOpenStats={() => setOpenStats(true)}
           onOpenTweaks={() => setOpenTweaks(true)}
-          onCowClick={() => setCowClicks(c => c + 1)}
         />
 
         {/* Content */}
@@ -3998,7 +4076,7 @@ function PaceApp() {
         <BreatheSession routine={view.routine} onExit={() => setView({ type: 'home' })} />
       )}
       {view.type === 'move-session' && (
-        <MoveSession routine={view.routine} onExit={() => setView({ type: 'home' })} />
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={() => setView({ type: 'home' })} />
       )}
 
       {/* ========== TOASTS ========== */}
@@ -4010,7 +4088,7 @@ function PaceApp() {
 /* ================
    TOP BAR
    ================ */
-function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCowClick }) {
+function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
   const modes = [
     { v: 'foco', label: 'Foco' },
