@@ -34,8 +34,65 @@ Nota: el sistema no expone un contador exacto de tokens; la señal se basa en lo
 1. Actualizar `STATE.md` (hecho / pendiente / próximos pasos / decisiones con fecha)
 2. Si hubo cambios funcionales → regenerar `PACE_standalone.html` con `super_inline_html` + rotar backup
 3. Listar archivos modificados en la sesión
-4. Generar descarga del proyecto (`present_fs_item_for_download`)
-5. Dar al usuario el mensaje exacto de commit sugerido para GitHub
+4. **Sincronizar carpeta `Pace_app/`** con el estado actual del proyecto (ver regla abajo)
+5. Generar descarga de la carpeta `Pace_app/` (`present_fs_item_for_download` con `path: "Pace_app"`)
+6. Dar al usuario el mensaje exacto de commit sugerido para GitHub
+
+### Regla de la carpeta espejo `Pace_app_HH_MM/` (SIEMPRE)
+
+El proyecto mantiene en paralelo una carpeta espejo que replica 1:1 el contenido del proyecto. Sirve para que el usuario pueda descargarla, descomprimirla y pegarla sobre su carpeta local de GitHub Desktop sin reestructurar nada.
+
+**Nombrado con timestamp en el nombre de la carpeta:**
+El nombre sigue el formato `Pace_app_HH_MM` donde `HH_MM` es la hora UTC de la última sincronización. Ejemplo: `Pace_app_13_05` para una sincronización a las 13:05 UTC.
+
+Al abrir una nueva sesión o cuando se detecte que existe una carpeta espejo vieja:
+1. Borrar la carpeta espejo anterior (`Pace_app_HH_MM` antigua)
+2. Crear nueva carpeta con timestamp actualizado
+3. Copiar todo el contenido actualizado dentro
+
+Esto evita confusión al tener múltiples descargas en `Descargas/` del usuario — cada ZIP lleva la hora exacta en el nombre.
+
+**Regla:** cada vez que se cree, modifique, mueva o elimine un archivo del proyecto (fuera de `Pace_app/`), reflejar ese cambio también dentro de `Pace_app/` **en el mismo tool call o inmediatamente después**.
+
+- Nuevo archivo `foo.jsx` en `app/bar/` → copiar a `Pace_app/app/bar/foo.jsx`
+- Edición en `STATE.md` → copiar sobre `Pace_app/STATE.md`
+- Archivo eliminado → eliminar también en `Pace_app/`
+- Renombrado → renombrar en ambos
+
+**Timestamp:** la hora local en el nombre de la carpeta (`Pace_app_HH_MM`) es suficiente. No crear archivos internos tipo `SYNC_TIMESTAMP.md` — la versión y el historial ya están en `CHANGELOG.md` / `STATE.md`.
+
+Al cerrar sesión, verificar que la carpeta espejo está al día antes de presentar la descarga. Si hay dudas, regenerar entera con `copy_files` desde la raíz del proyecto.
+
+**Excluir de la carpeta espejo:** la propia carpeta espejo (evitar recursión), la carpeta `screenshots/` (no sirve para GitHub), y cualquier `.napkin` / temporal.
+
+### Hora local (España) en lugar de UTC
+
+El formato `HH_MM` debe reflejar la **hora local del usuario en España** (CET = UTC+1 / CEST = UTC+2), NO UTC. El entorno del asistente no tiene reloj fiable sincronizado con la zona horaria del usuario, por lo que:
+
+1. **Al inicio de la sincronización, preguntar al usuario qué hora local es** (si no lo ha dicho ya)
+2. Usar esa hora en el nombre de la carpeta y en `SYNC_TIMESTAMP.md`
+3. Si el usuario dice "ahora son las X", usar exactamente esa hora
+
+### Orden crítico de operaciones (NO paralelo)
+
+Al regenerar la carpeta espejo, respetar este orden estrictamente:
+
+1. **Copiar primero** desde la raíz del proyecto (NO desde la carpeta espejo vieja) a la nueva `Pace_app_HH_MM/`
+2. **Verificar** con `list_files` que la nueva carpeta está completa
+3. **Generar `SYNC_TIMESTAMP.md`** dentro
+4. **Actualizar `.gitignore`** si es necesario (patrón `Pace_app_*/`)
+5. **En tool call SEPARADO**, borrar la carpeta espejo vieja
+
+⚠️ **NUNCA** copiar y borrar en el mismo batch paralelo — el orden de ejecución no está garantizado y pueden perderse archivos.
+
+### Actualizar `.gitignore` con patrón glob
+
+El `.gitignore` debe excluir todas las carpetas espejo con patrón glob:
+
+```
+Pace_app/
+Pace_app_*/
+```
 
 ### Plantilla para abrir sesión nueva (el usuario la copia y pega)
 ```
