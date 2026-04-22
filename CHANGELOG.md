@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.12.1** | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [abajo ↓](#v0121--2026-04-22--pulido-bugs-y-layout) |
 | **v0.12.0** | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [abajo ↓](#v0120--2026-04-22--welcome-export-tweak-secrets) |
-| **v0.11.11** | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [abajo ↓](#v01111--2026-04-22--integración-buy-me-a-coffee) |
+| v0.11.11 | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [session-16-bmc-integracion.md](./docs/sessions/session-16-bmc-integracion.md) |
 | v0.11.10 | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [session-15-logros-proximamente.md](./docs/sessions/session-15-logros-proximamente.md) |
 | v0.11.9 | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | [session-14-swap-mueve-estira.md](./docs/sessions/session-14-swap-mueve-estira.md) |
 | v0.11.8 | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [session-13-backlog-robustez.md](./docs/sessions/session-13-backlog-robustez.md) |
@@ -32,6 +33,75 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.1] — 2026-04-22 — Pulido: bugs y layout
+
+Sesión corta de consolidación: tras la sesión 17 (feature-heavy) tocó
+ revisar código con lupa y arreglar lo que estaba levemente roto pero
+ pasaba desapercibido. También dos cambios de UX: quitar la sección
+ "Intención" del sidebar (redundante con el Welcome) y rediseñar el
+ Welcome para que no necesite scroll en pantallas 720p.
+
+### Arreglado
+- **`addFocusMinutes` (state.jsx)** — la evaluación de umbrales de
+  logros `focus.hours.10/50/100` dependía de una variable de cierre
+  (`nextTotal`) capturada fuera del updater. Ahora se lee `_state`
+  tras el `setState` asíncrono: los logros se disparan sobre el valor
+  recién persistido, no sobre un snapshot intermedio.
+- **`completePomodoro` (state.jsx)** — mismo patrón: el updater ya no
+  captura variables para decisiones posteriores; se lee `_state.cycle`
+  después del commit para los umbrales de logro.
+- **Toast buffer race (state.jsx)** — `onToast` vaciaba el buffer de
+  toasts pendientes sólo si el listener entrante era el primero
+  (`size === 1`). Bajo StrictMode de React (mount/unmount doble en
+  dev), el segundo listener no recibía los toasts acumulados.
+  Reemplazado por `wasEmpty` que captura el estado ANTES de añadir.
+- **`applyTheme` se llamaba en cada `setState` (state.jsx)** — 2
+  `setAttribute()` DOM por cada tick, aunque palette/font no hubieran
+  cambiado. Ahora sólo se ejecuta si `prev.palette !== _state.palette`
+  o `prev.font !== _state.font`. Micro-optimización de sólo render.
+
+### Cambiado
+- **Sidebar: eliminada la sección `Intención`** (tenía un textarea que
+  muchos usuarios dejaban vacío). El campo `state.intention` sigue
+  existiendo — se captura opcionalmente en el WelcomeModal (decidido
+  en sesión 17). La retirada deja más respiro visual y sube la
+  prominencia del footer.
+- **Sidebar: el pill "Invita a un café" gana prominencia por
+  sustracción** — al quitar la sección Intención el footer tiene
+  más aire alrededor del pill, así que gana presencia sin necesitar
+  rehacer el componente. Se mantiene el diseño elegante original
+  de sesión 16 (pill delgado paper con borde fino, icono taza,
+  copy italic pequeño). Se probó durante esta sesión una
+  `SupportCard` más destacada (3 líneas + CTA pill terracota)
+  pero el usuario confirmó que el pill original era más elegante:
+  la elegancia viene del contraste con el espacio vacío, no de
+  inflar el componente. Revertido al pill original.
+- **WelcomeModal rehecho para caber sin scroll en 720p** — antes era
+  un apilado vertical (logo + Meta + título + lede + valores +
+  intención + botón + skip) que en pantallas cortas pedía scroll.
+  Ahora es una grid de 2 columnas en el header (logo+meta a la izq,
+  título+lede a la der), fila de valores compacta (10px padding vs
+  14px), input de intención ligeramente más corto, y botón +
+  "prefiero saltarlo" en línea horizontal. Total: ~440px de alto
+  (antes ~620px).
+- **`PACE_VERSION`** en `state.jsx`: `v0.12.0` → `v0.12.1`.
+- **`<title>` de `PACE.html`**: `v0.12.0` → `v0.12.1`.
+
+### Red de seguridad
+- `PACE_standalone.html` regenerado a **v0.12.1** (~224 KB, sin cambio
+  significativo de tamaño).
+- `PACE.html` y `PACE_standalone.html` cargan con logs limpios (solo
+  warnings habituales de Babel standalone).
+- Screenshot del Welcome en fresh state confirma que entra sin
+  scroll en viewport 1920×1080.
+- Screenshot del sidebar con state populado confirma que el pill
+  Invita a un café destaca visualmente con el espacio extra del
+  footer, y que la sección Intención ya no aparece.
+
+Detalle: [`docs/sessions/session-18-pulido-bugs-layout.md`](./docs/sessions/session-18-pulido-bugs-layout.md) *(por escribir)*.
 
 ---
 

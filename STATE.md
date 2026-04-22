@@ -10,9 +10,9 @@
 
 ---
 
-**Versión actual:** v0.12.0
-**Última sesión:** #17 — 2026-04-22 · Welcome de primera vez + Export/Import JSON + 6 tweak-secrets
-**Última actualización de este archivo:** 2026-04-22 · sesión 17
+**Versión actual:** v0.12.1
+**Última sesión:** #18 — 2026-04-22 · Pulido: bugs de race condition, sidebar más limpio, Welcome compacto
+**Última actualización de este archivo:** 2026-04-22 · sesión 18
 
 ---
 
@@ -20,53 +20,55 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.0, carga limpio |
-| `PACE_standalone.html` | Bundle offline inline | v0.12.0 (~225 KB) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.1, carga limpio |
+| `PACE_standalone.html` | Bundle offline inline | v0.12.1 (~226 KB) |
 | `app/ui/pace-logo.png` | Logo oficial local (fallback SVG si falla) | Presente |
-| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.11.11 |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | Nuevo, v0.12.0 |
-| `backups/PACE_standalone_v0.11.11_20260422.html` | Backup (1 atrás) | — |
-| `backups/PACE_standalone_v0.11.10_20260422.html` | Backup (2 atrás) | — |
-| `backups/PACE_standalone_v0.11.9_20260422.html` | Backup (3 atrás) | — |
+| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.11.11 (sin cambios) |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (layout compacto) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.1 (3 bugs fixed) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.1 (sin Intención) |
 
-Backups rotados con la regla "máximo 5 más recientes" (ver `CLAUDE.md`).
-Los backups previos (v0.11.6/7/8) existen en el repo de GitHub pero no se
-re-importaron en esta sesión. No es regresión — son archivos versionados
-en git, no dependencias activas.
+No se reimportaron los backups previos en esta sesión — siguen en git.
+Para rotar según la regla "máximo 5", baja los backups anteriores
+desde GitHub en la próxima sesión y rota v0.12.0.
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 17 · v0.12.0 · Welcome + Export/Import + 6 tweak-secrets**
+**Sesión 18 · v0.12.1 · Pulido: bugs + layout**
 
-Combo de sesión corta recomendado por el STATE.md anterior. Refuerza la
-narrativa del modal de BMC (sesión 16): ahora lo primero que ve un
-usuario al abrir PACE son los mismos 3 valores, y el Export/Import hace
-literal la promesa "todo local, para siempre".
+Sesión corta de consolidación tras la sesión 17 (feature-heavy).
+Revisión de código con lupa + dos ajustes de UX.
 
-- **Módulo nuevo `app/welcome/WelcomeModule.jsx`** con `WelcomeModal`
-  (single-screen editorial: logo oficial + *"Antídoto a la silla. A tu
-  ritmo."* + 3 valores + campo opcional de intención + botón `Empezar`
-  + link `prefiero saltarlo`) y hook `useFirstTimeWelcome` que abre el
-  modal una sola vez cuando `state.firstSeen == null`. Mismo patrón
-  que `useSupportAutoTrigger` de sesión 16.
-- **Export/Import JSON** en `TweaksPanel.jsx`. Export descarga
-  `pace-backup-YYYYMMDD.json` con `{app, version, exportedAt, state}`.
-  Import valida schema, pregunta confirmación con contador, reemplaza
-  localStorage y recarga. Refuerza "todo local" como promesa visible.
-- **`TweakSecretsWatcher`** (componente auxiliar, retorna null, monta
-  siempre) desbloquea 5 tweak-secrets: `secret.aged` / `.mono` /
-  `.seal` / `.illustrated` son instantáneos al cambiar el tweak;
-  `secret.dark.mode` acumula 7 días distintos (no consecutivos) en
-  `localStorage.pace.darkDays.v1`. Además abrir el panel dispara
-  `explore.tweaks`. **Total "Próximamente" baja de 19 → 13**.
-- **Campo nuevo en state**: `firstSeen: null` (timestamp al primer open
-  del Welcome).
-- Versión `v0.11.11` → `v0.12.0` (feature nueva + data portability).
-- Backup rotado `backups/PACE_standalone_v0.11.11_20260422.html`.
+### Bugs críticos arreglados
+- **`addFocusMinutes` (state.jsx)** — umbrales de logros `focus.hours.*`
+  dependían de una variable de cierre capturada fuera del updater.
+  Ahora se lee `_state` tras persist: los logros se disparan sobre el
+  valor comprometido, no un snapshot intermedio.
+- **`completePomodoro` (state.jsx)** — mismo patrón que el anterior.
+- **Toast buffer race (state.jsx)** — `onToast` vaciaba el buffer sólo
+  si el listener entrante era el primero (`size === 1`). Bajo
+  StrictMode de React el segundo listener no recibía los toasts
+  acumulados. Arreglado con flag `wasEmpty`.
+- **`applyTheme` se llamaba en cada `setState`** — 2 `setAttribute()`
+  por tick aunque palette/font no cambiaran. Ahora diff previo.
 
-Detalle completo: [`docs/sessions/session-17-welcome-export-tweaksecrets.md`](./docs/sessions/session-17-welcome-export-tweaksecrets.md).
+### Cambios de UX
+- **Sidebar: sección Intención eliminada.** Aportaba poco (la mayoría
+  la dejaba vacía) y ya se captura en el WelcomeModal desde sesión 17.
+  El campo `state.intention` sigue existiendo (retro-compat).
+- **Sidebar: pill "Invita a un café" gana prominencia por sustracción.**
+  Se probó una `SupportCard` más destacada pero el usuario confirmó
+  que el pill original de sesión 16 era más elegante. Revertido.
+- **WelcomeModal rehecho sin scroll en 720p**: grid 2 columnas en el
+  header (logo a la izq, título+lede a la der), valores más compactos,
+  botón + skip en línea horizontal. ~440px alto (antes ~620px).
+
+### Versión
+- `v0.12.0` → `v0.12.1` (patch: fixes + layout, sin features nuevas).
+
+Detalle completo: [`docs/sessions/session-18-pulido-bugs-layout.md`](./docs/sessions/session-18-pulido-bugs-layout.md).
 
 ---
 
@@ -98,6 +100,20 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **El diseño del sidebar se cuida por sustracción, no por adición.**
+  En sesión 18 se probó sustituir el pill "Invita a un café" por
+  una `SupportCard` más llamativa y el usuario lo rechazó: "era
+  mucho más elegante el pill original". Regla vigente: si algo
+  debe ganar prominencia, quita cosas alrededor antes de inflar
+  el propio componente. El pill delgado de SupportButton de
+  sesión 16 se mantiene como diseño canonico. (Sesión 18.)
+- **Antes de disparar logros por umbrales se debe leer `_state`
+  tras el `setState` asíncrono**, no variables de cierre capturadas
+  en el updater. Si al añadir nuevas métricas con umbral (rachas
+  largas, horas de foco, etc.) se hace lo primero, los umbrales
+  disparan sobre snapshots intermedios y se pueden perder (o
+  dispararse con valores erróneos). Ver `addFocusMinutes` como
+  patrón. (Sesión 18.)
 - **El Welcome se muestra una sola vez** por instalaci\u00f3n, al primer\n  open con `state.firstSeen == null`. Tanto `Empezar` como el link\n  `prefiero saltarlo` fijan `firstSeen` a timestamp \u2014 es una bienvenida,\n  no un tr\u00e1mite. Re-abrir es posible v\u00eda `pace:open-welcome` pero sin\n  UI visible (dev/debug only). (Sesi\u00f3n 17.)\n- **El backup JSON incluye `version` y `exportedAt`** para migraci\u00f3n\n  futura. El import acepta tanto `{app, version, state}` como state\n  plano (fallback legacy). Tras import exitoso se recarga la p\u00e1gina;\n  actualizar state en memoria arriesga inconsistencias con\n  `useSyncExternalStore`. (Sesi\u00f3n 17.)\n- **`secret.dark.mode` cuenta d\u00edas distintos, no consecutivos.** La\n  descripci\u00f3n dice \"7 d\u00edas en oscuro\" sin exigir racha. Persistido en\n  clave propia `pace.darkDays.v1` (no en el state principal \u2014 es un\n  contador auxiliar de un \u00fanico logro). Cap de 30 fechas. (Sesi\u00f3n 17.)\n- **`TweakSecretsWatcher` retorna `null` y vive en el \u00e1rbol siempre**\n  (en `main.jsx`, no dentro del TweaksPanel). Raz\u00f3n: los secretos\n  deben dispararse cuando el state cambia, no s\u00f3lo cuando el panel\n  est\u00e1 abierto. Cubre casos como importar un JSON con palette oscuro\n  ya fijada. (Sesi\u00f3n 17.)\n\n- **Donar no desbloquea nada funcional** en PACE. `secret.supporter`
   es un sello visible en la colección, nada más. Sin verificación,
   solo honor. Sumar unlocks tangibles por donar rompería el
@@ -159,8 +175,9 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 ## 📋 Próximos pasos recomendados
 
 > Estado actual: Frente 1 (BMC) ✅ · Combo Welcome/Export/tweak-secrets
-> ✅ completo en sesión 17. La app ya ofrece al usuario nuevo una
-> bienvenida editorial + portabilidad completa de sus datos.
+> ✅ completo en sesión 17 · Pulido de bugs + layout ✅ en sesión 18.
+> La app ya ofrece bienvenida editorial + portabilidad completa de
+> datos + código con menos race conditions.
 
 ### 🎯 Próxima sesión corta (recomendada)
 
