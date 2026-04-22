@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.11.8** | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [abajo ↓](#v0118--2026-04-22--backlog-de-robustez) |
 | **v0.11.7** | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | [abajo ↓](#v0117--2026-04-22--barra-horizontal-del-sidebar) |
-| **v0.11.6** | 2026-04-22 | Limpieza sin riesgo: dead code del backlog de auditoría | #11 | [abajo ↓](#v0116--2026-04-22--limpieza-sin-riesgo) |
+| v0.11.6 | 2026-04-22 | Limpieza sin riesgo: dead code del backlog de auditoría | #11 | [session-11-limpieza.md](./docs/sessions/session-11-limpieza.md) |
 | v0.11.5 | 2026-04-22 | Auditoría: 7 bugs críticos + logo local | #10 | [session-10-auditoria.md](./docs/sessions/session-10-auditoria.md) |
 | v0.11.4 | 2026-04-22 | Timer "Aro" alineado a referencia visual | #9 | [session-09-timer-aro.md](./docs/sessions/session-09-timer-aro.md) |
 | v0.11.3 | 2026-04-22 | Logo oficial v2, Tweaks topbar-derecha, viewport 1920×1080 | #8 | [session-08-logo-oficial.md](./docs/sessions/session-08-logo-oficial.md) |

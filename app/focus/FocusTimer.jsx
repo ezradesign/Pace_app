@@ -27,15 +27,13 @@ function FocusTimer({ onFinish }) {
       return;
     }
     intervalRef.current = setInterval(() => {
+      // Reducer PURO: sólo calcula el siguiente valor. Los side-effects
+      // (completePomodoro, onFinish) viven en el useEffect de abajo que
+      // observa `justFinished`. Esto evita doble ejecución si React
+      // re-invoca el reducer (StrictMode en React 19).
       setRemainingSec(s => {
         if (s <= 1) {
           clearInterval(intervalRef.current);
-          setRunning(false);
-          setJustFinished(true);
-          if (state.focusMode === 'foco') {
-            completePomodoro();
-            onFinish && onFinish();
-          }
           return 0;
         }
         return s - 1;
@@ -43,6 +41,20 @@ function FocusTimer({ onFinish }) {
     }, 1000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [running]);
+
+  // Efecto de finalización: se dispara cuando el timer llega a 0 estando en
+  // marcha. Single-shot gracias al guard `justFinished` que se re-setea
+  // en el efecto de reset de modo/minutos.
+  useEffectFT(() => {
+    if (!running) return;
+    if (remainingSec !== 0) return;
+    setRunning(false);
+    setJustFinished(true);
+    if (state.focusMode === 'foco') {
+      completePomodoro();
+      onFinish && onFinish();
+    }
+  }, [remainingSec, running, state.focusMode]);
 
   const mins = Math.floor(remainingSec / 60);
   const secs = remainingSec % 60;

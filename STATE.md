@@ -10,9 +10,9 @@
 
 ---
 
-**Versión actual:** v0.11.7
-**Última sesión:** #12 — 2026-04-22 · Barra horizontal del sidebar (logo 2.5× + iconos gráficos)
-**Última actualización de este archivo:** 2026-04-22 · sesión 13 (reestructura de documentación)
+**Versión actual:** v0.11.8
+**Última sesión:** #13 — 2026-04-22 · Backlog de robustez (6 bugs del informe de auditoría)
+**Última actualización de este archivo:** 2026-04-22 · sesión 13
 
 ---
 
@@ -20,11 +20,12 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.11.7, carga limpio |
-| `PACE_standalone.html` | Bundle offline inline | v0.11.7 (~174 KB) |
+| `PACE.html` | Entry point de desarrollo modular | v0.11.8, carga limpio |
+| `PACE_standalone.html` | Bundle offline inline | v0.11.8 (~181 KB) |
 | `app/ui/pace-logo.png` | Logo oficial local (fallback SVG si falla) | Presente |
 | `backups/PACE_standalone_v0.11.5_20260422.html` | Backup (3 atrás) | — |
 | `backups/PACE_standalone_v0.11.6_20260422.html` | Backup (2 atrás) | — |
+| `backups/PACE_standalone_v0.11.7_20260422.html` | Backup (1 atrás) | — |
 
 Backups rotados con la regla "máximo 5 más recientes" (ver `CLAUDE.md`).
 
@@ -32,36 +33,32 @@ Backups rotados con la regla "máximo 5 más recientes" (ver `CLAUDE.md`).
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 12 · v0.11.7 · Barra horizontal del sidebar**
+**Sesión 13 · v0.11.8 · Backlog de robustez**
 
-- Logo oficial ampliado ~2.5× (`PaceLogoImage.maxWidth` 240→600). Altura
-  rendered ~55px → ~146px.
-- Chevron de colapsar reubicado a botón flotante (`position: absolute`)
-  top-right del `<aside>`; ya no comparte fila con el logo.
-- Contadores `# / ↻ / ◉` pasan de caracteres tipográficos alineados a la
-  izquierda a pills centradas con iconografía SVG propia:
-  - `PomodoroIcon` (tomate) en vez de `#`
-  - `RoundsIcon` (espiral) en vez de `↻`
-  - `StreakFlameIcon` (llama) en vez de `◉`
+Cerrado el bloque pendiente del informe de auditoría (sesión 10). 6 bugs
+corregidos + 1 documentado. Sin cambio de UX salvo #25.
 
-Detalle completo: [`docs/sessions/session-12-barra-horizontal.md`](./docs/sessions/session-12-barra-horizontal.md).
+- **#7** `FocusTimer`: `completePomodoro()` sale del reducer de
+  `setRemainingSec` a un `useEffect` dedicado. Previene doble-conteo de
+  pomodoro en React 19 / StrictMode.
+- **#6 + #5** `state.jsx`: `completePomodoro` y `addFocusMinutes` con
+  `setState(prev => ...)` atómico. Umbrales de horas calculados sobre
+  `nextTotal` dentro del updater.
+- **#1** Buffer `_pendingToasts` en `state.jsx`: los toasts disparados
+  antes del mount del `ToastHost` se encolan y drenan al registrar el
+  primer listener.
+- **#30** `Math.max(0, c-1)` en `setPrepCount` de Breathe + Move
+  (cinturón redundante).
+- **#25** `BreakMenu`: atajos **B/M/H/Esc** ahora realmente funcionan
+  (la UI los anunciaba sin implementarlos).
+- **#29** Documentado: `onExit(reason)` en sesiones queda disponible para
+  un futuro consumidor; sin cambio de comportamiento.
+
+Detalle completo: [`docs/sessions/session-13-backlog-robustez.md`](./docs/sessions/session-13-backlog-robustez.md).
 
 ---
 
 ## 📋 Backlog priorizado
-
-### 🐛 Robustez funcional (pendiente de auditoría sesión 10)
-
-- **#1** `ToastHost` pierde toasts que lleguen antes de mount → buffer `_pendingToasts`.
-- **#5** `addFocusMinutes` lee stale state para los umbrales de horas (idempotente hoy, frágil mañana).
-- **#6** `completePomodoro` lee stale state — usar `setState(prev => ...)`.
-- **#7** `completePomodoro` invocado dentro de un reducer de `setRemainingSec` (violación de pureza, warning en React 19).
-- **#29** `onExit(argumento)` en sesiones ignora el arg — útil si algún día se quiere discriminar salida vs. completion.
-- **#30** Preparación: `setPrepCount(c => c - 1)` sin clamp inferior.
-
-### 🧩 Cosmético visible
-
-- **#25** BreakMenu anuncia atajos `B·M·H·Esc` que no existen — implementar o quitar el Meta.
 
 ### 🏆 Deuda de producto
 
@@ -102,24 +99,30 @@ con nota explícita y quitarla de aquí.
   checkbox obligatorio.** No negociable (Wim Hof, Kapalabhati). Si se
   añaden técnicas nuevas con riesgo, marcar `safety: true` en la routine.
   (Sesión 1 · base.)
+- **Importación desde GitHub incluye assets binarios.** Al arrancar una
+  sesión con `github_import_files`, la lista de paths debe incluir
+  `app/ui/pace-logo.png` (y cualquier WAV/fuente futuros). Si se olvidan,
+  el usuario ve el fallback SVG del logo durante la sesión sin que haya
+  regresión de código. (Sesión 13.)
 
 ---
 
 ## 📋 Próximos pasos recomendados
 
-1. **Frente 2 de esta sesión** — (lo que el usuario especifique a continuación).
-2. **Frente 3 de esta sesión** — (lo que el usuario especifique a continuación).
-3. Atacar bloque de robustez funcional (#1, #6, #7) — son patrones de
-   state-stale que van a dar warnings en React 19.
-4. Decidir qué hacer con los 19 logros sin trigger (#9).
-5. Mockups extensión Chrome (popup + newtab).
+1. Decidir qué hacer con los 19 logros sin trigger (**#9**): implementar
+   triggers reales o marcarlos en la UI como "próximamente" con glifo
+   distinto. Requiere decisión de diseño antes de tocar código.
+2. Mockups extensión Chrome (popup 340×480 + nueva pestaña).
+3. Layout "Editorial" — el tweak está listado pero a día de hoy no
+   renderiza nada distinto al sidebar.
+4. Sonidos sutiles (hay toggle en Tweaks pero no archivos WAV).
 
 ---
 
 ## 🐛 Bugs / issues abiertos conocidos
 
-*Ninguno reportado al cerrar sesión 12. El backlog funcional del informe de
-auditoría (sesión 10) está arriba en "Robustez funcional".*
+*Ninguno reportado al cerrar sesión 13. El backlog funcional del informe
+de auditoría (sesión 10) queda cerrado con esta sesión.*
 
 ---
 

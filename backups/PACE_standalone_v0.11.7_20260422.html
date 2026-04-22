@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.11.8</title>
+  <title>PACE · Foco · Cuerpo — v0.11.7</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -215,7 +215,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.11.8';
+const PACE_VERSION = 'v0.11.7';
 
 const defaultState = {
   // Settings / Tweaks
@@ -362,23 +362,16 @@ function unlockAchievement(id, note) {
 
 function addFocusMinutes(mins) {
   ensureDayFresh();
-  // Actualización atómica: leemos y escribimos dentro del mismo updater
-  // para no depender del `_state` snapshot del momento de la llamada
-  // (evita stale state si se encadenan varias acciones en el mismo tick).
-  let nextTotal = 0;
-  setState(prev => {
-    const day = new Date().getDay();
-    const week = [...prev.weeklyStats.focusMinutes];
-    week[day] += mins;
-    nextTotal = prev.totalFocusMin + mins;
-    return {
-      ...prev,
-      totalFocusMin: nextTotal,
-      weeklyStats: { ...prev.weeklyStats, focusMinutes: week },
-    };
+  const s = getState();
+  const day = new Date().getDay();
+  const week = [...s.weeklyStats.focusMinutes];
+  week[day] += mins;
+  setState({
+    totalFocusMin: s.totalFocusMin + mins,
+    weeklyStats: { ...s.weeklyStats, focusMinutes: week },
   });
-  // Logros por horas de foco — calculados sobre el total YA actualizado.
-  const h = nextTotal / 60;
+  // Logros por horas de foco
+  const h = (s.totalFocusMin + mins) / 60;
   if (h >= 10) unlockAchievement('focus.hours.10');
   if (h >= 50) unlockAchievement('focus.hours.50');
   if (h >= 100) unlockAchievement('focus.hours.100');
@@ -386,15 +379,10 @@ function addFocusMinutes(mins) {
 
 function completePomodoro() {
   ensureDayFresh();
-  // Incremento atómico del ciclo.
-  let nextCycle = 0;
-  let focusMinsAtCompletion = 0;
-  setState(prev => {
-    nextCycle = prev.cycle + 1;
-    focusMinsAtCompletion = prev.focusMinutes;
-    return { ...prev, cycle: nextCycle };
-  });
-  addFocusMinutes(focusMinsAtCompletion);
+  const s = getState();
+  const nextCycle = s.cycle + 1;
+  setState({ cycle: nextCycle });
+  addFocusMinutes(s.focusMinutes);
   unlockAchievement('first.step');
   if (nextCycle >= 8) unlockAchievement('master.pomodoro.8');
   updateStreak();
@@ -503,30 +491,14 @@ function updateStreak() {
   if (current >= 100) unlockAchievement('streak.100');
 }
 
-/* TOAST NOTIFICATIONS
-   Buffer pre-mount: si se dispara un toast antes de que ToastHost monte
-   (p.ej. desbloqueo por rollover durante loadState), se encola en
-   `_pendingToasts` y se vacía en orden cuando el primer listener se
-   registra. Evita que el primer logro de una sesión "recién abierta" se
-   pierda silenciosamente. */
+/* TOAST NOTIFICATIONS */
 const _toastListeners = new Set();
-const _pendingToasts = [];
 function showToast(toast) {
   const t = { ...toast, _id: Date.now() + Math.random() };
-  if (_toastListeners.size === 0) {
-    _pendingToasts.push(t);
-    return;
-  }
   _toastListeners.forEach(l => l(t));
 }
 function onToast(listener) {
   _toastListeners.add(listener);
-  // Si es el primer listener, vaciamos el buffer pendiente.
-  if (_toastListeners.size === 1 && _pendingToasts.length > 0) {
-    const drained = _pendingToasts.splice(0);
-    // Despachamos en el próximo tick para no interferir con el mount del Host.
-    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
-  }
   return () => _toastListeners.delete(listener);
 }
 
@@ -1694,13 +1666,15 @@ function FocusTimer({ onFinish }) {
       return;
     }
     intervalRef.current = setInterval(() => {
-      // Reducer PURO: sólo calcula el siguiente valor. Los side-effects
-      // (completePomodoro, onFinish) viven en el useEffect de abajo que
-      // observa `justFinished`. Esto evita doble ejecución si React
-      // re-invoca el reducer (StrictMode en React 19).
       setRemainingSec(s => {
         if (s <= 1) {
           clearInterval(intervalRef.current);
+          setRunning(false);
+          setJustFinished(true);
+          if (state.focusMode === 'foco') {
+            completePomodoro();
+            onFinish && onFinish();
+          }
           return 0;
         }
         return s - 1;
@@ -1708,20 +1682,6 @@ function FocusTimer({ onFinish }) {
     }, 1000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [running]);
-
-  // Efecto de finalización: se dispara cuando el timer llega a 0 estando en
-  // marcha. Single-shot gracias al guard `justFinished` que se re-setea
-  // en el efecto de reset de modo/minutos.
-  useEffectFT(() => {
-    if (!running) return;
-    if (remainingSec !== 0) return;
-    setRunning(false);
-    setJustFinished(true);
-    if (state.focusMode === 'foco') {
-      completePomodoro();
-      onFinish && onFinish();
-    }
-  }, [remainingSec, running, state.focusMode]);
 
   const mins = Math.floor(remainingSec / 60);
   const secs = remainingSec % 60;
@@ -2335,7 +2295,7 @@ function BreatheSession({ routine, onExit }) {
       startTime.current = Date.now();
       return;
     }
-    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
+    const t = setTimeout(() => setPrepCount(c => c - 1), 1000);
     return () => clearTimeout(t);
   }, [stage, prepCount, paused]);
 
@@ -2992,7 +2952,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   useEffectMV(() => {
     if (stage !== 'prep' || paused) return;
     if (prepCount <= 0) { setStage('active'); sessionStart.current = Date.now(); return; }
-    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
+    const t = setTimeout(() => setPrepCount(c => c - 1), 1000);
     return () => clearTimeout(t);
   }, [stage, prepCount, paused]);
 
@@ -3433,28 +3393,7 @@ Object.assign(window, { HydrateTracker });
    3 opciones: Respira / Mueve / Agua + Saltar
 */
 
-const { useEffect: useEffectBM } = React;
-
 function BreakMenu({ open, onClose, onChoose }) {
-  // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
-  // La UI anuncia estos atajos en el Meta de abajo; aquí se implementan.
-  // Se ignoran cuando el foco está en un input/textarea para no colisionar
-  // con edición de texto.
-  useEffectBM(() => {
-    if (!open) return;
-    const onKey = (e) => {
-      const tag = (e.target && e.target.tagName) || '';
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      const k = e.key.toLowerCase();
-      if (k === 'b') { e.preventDefault(); onChoose('breathe'); }
-      else if (k === 'm') { e.preventDefault(); onChoose('move'); }
-      else if (k === 'h') { e.preventDefault(); onChoose('water'); }
-      else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onChoose, onClose]);
-
   if (!open) return null;
 
   const opts = [
@@ -4201,17 +4140,12 @@ function PaceApp() {
         />
       )}
 
-      {/* ========== SESSION FULLSCREEN ==========
-          NOTA (#29): los <Session/> llaman `onExit('exit')` vs `onExit('done')`
-          para diferenciar salida voluntaria de finalización completa. Hoy
-          ambos caminos van a home y el argumento se descarta intencionalmente;
-          se conserva la señal en la API para un futuro consumidor (p.ej.
-          micro-animación de despedida distinta, o métrica de abandono). */}
+      {/* ========== SESSION FULLSCREEN ========== */}
       {view.type === 'breathe-session' && (
-        <BreatheSession routine={view.routine} onExit={(_reason) => setView({ type: 'home' })} />
+        <BreatheSession routine={view.routine} onExit={() => setView({ type: 'home' })} />
       )}
       {view.type === 'move-session' && (
-        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={() => setView({ type: 'home' })} />
       )}
 
       {/* ========== TOASTS ========== */}

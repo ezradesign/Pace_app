@@ -3,7 +3,28 @@
    3 opciones: Respira / Mueve / Agua + Saltar
 */
 
+const { useEffect: useEffectBM } = React;
+
 function BreakMenu({ open, onClose, onChoose }) {
+  // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
+  // La UI anuncia estos atajos en el Meta de abajo; aquí se implementan.
+  // Se ignoran cuando el foco está en un input/textarea para no colisionar
+  // con edición de texto.
+  useEffectBM(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      const tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      const k = e.key.toLowerCase();
+      if (k === 'b') { e.preventDefault(); onChoose('breathe'); }
+      else if (k === 'm') { e.preventDefault(); onChoose('move'); }
+      else if (k === 'h') { e.preventDefault(); onChoose('water'); }
+      else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onChoose, onClose]);
+
   if (!open) return null;
 
   const opts = [

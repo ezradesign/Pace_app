@@ -5,7 +5,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.11.7';
+const PACE_VERSION = 'v0.11.8';
 
 const defaultState = {
   // Settings / Tweaks
@@ -152,16 +152,23 @@ function unlockAchievement(id, note) {
 
 function addFocusMinutes(mins) {
   ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.focusMinutes];
-  week[day] += mins;
-  setState({
-    totalFocusMin: s.totalFocusMin + mins,
-    weeklyStats: { ...s.weeklyStats, focusMinutes: week },
+  // Actualización atómica: leemos y escribimos dentro del mismo updater
+  // para no depender del `_state` snapshot del momento de la llamada
+  // (evita stale state si se encadenan varias acciones en el mismo tick).
+  let nextTotal = 0;
+  setState(prev => {
+    const day = new Date().getDay();
+    const week = [...prev.weeklyStats.focusMinutes];
+    week[day] += mins;
+    nextTotal = prev.totalFocusMin + mins;
+    return {
+      ...prev,
+      totalFocusMin: nextTotal,
+      weeklyStats: { ...prev.weeklyStats, focusMinutes: week },
+    };
   });
-  // Logros por horas de foco
-  const h = (s.totalFocusMin + mins) / 60;
+  // Logros por horas de foco — calculados sobre el total YA actualizado.
+  const h = nextTotal / 60;
   if (h >= 10) unlockAchievement('focus.hours.10');
   if (h >= 50) unlockAchievement('focus.hours.50');
   if (h >= 100) unlockAchievement('focus.hours.100');
@@ -169,10 +176,15 @@ function addFocusMinutes(mins) {
 
 function completePomodoro() {
   ensureDayFresh();
-  const s = getState();
-  const nextCycle = s.cycle + 1;
-  setState({ cycle: nextCycle });
-  addFocusMinutes(s.focusMinutes);
+  // Incremento atómico del ciclo.
+  let nextCycle = 0;
+  let focusMinsAtCompletion = 0;
+  setState(prev => {
+    nextCycle = prev.cycle + 1;
+    focusMinsAtCompletion = prev.focusMinutes;
+    return { ...prev, cycle: nextCycle };
+  });
+  addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (nextCycle >= 8) unlockAchievement('master.pomodoro.8');
   updateStreak();
@@ -281,14 +293,30 @@ function updateStreak() {
   if (current >= 100) unlockAchievement('streak.100');
 }
 
-/* TOAST NOTIFICATIONS */
+/* TOAST NOTIFICATIONS
+   Buffer pre-mount: si se dispara un toast antes de que ToastHost monte
+   (p.ej. desbloqueo por rollover durante loadState), se encola en
+   `_pendingToasts` y se vacía en orden cuando el primer listener se
+   registra. Evita que el primer logro de una sesión "recién abierta" se
+   pierda silenciosamente. */
 const _toastListeners = new Set();
+const _pendingToasts = [];
 function showToast(toast) {
   const t = { ...toast, _id: Date.now() + Math.random() };
+  if (_toastListeners.size === 0) {
+    _pendingToasts.push(t);
+    return;
+  }
   _toastListeners.forEach(l => l(t));
 }
 function onToast(listener) {
   _toastListeners.add(listener);
+  // Si es el primer listener, vaciamos el buffer pendiente.
+  if (_toastListeners.size === 1 && _pendingToasts.length > 0) {
+    const drained = _pendingToasts.splice(0);
+    // Despachamos en el próximo tick para no interferir con el mount del Host.
+    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
+  }
   return () => _toastListeners.delete(listener);
 }
 
