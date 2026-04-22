@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.11.7</title>
+  <title>PACE · Foco · Cuerpo — v0.11.6</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -215,7 +215,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.11.7';
+const PACE_VERSION = 'v0.11.6';
 
 const defaultState = {
   // Settings / Tweaks
@@ -940,12 +940,7 @@ function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) 
 // el PNG no viaja con el archivo, así que si falla la carga se hace fallback
 // automático al PaceLockup SVG (que es visualmente equivalente).
 const PACE_LOGO_URL = "app/ui/pace-logo.png";
-function PaceLogoImage({ maxWidth = 600 }) {
-  /* NOTA v0.11.7 · sesión 12 — aumentado maxWidth 240 → 600 (≈2.5×) para
-     dar al logo el peso visual que tenía en el mockup de referencia. En la
-     práctica el ancho real lo limita el contenedor del sidebar (width 100%),
-     pero subir este tope permite que el logo se escale sin tope en sidebars
-     más anchos o layouts futuros. */
+function PaceLogoImage({ maxWidth = 240 }) {
   const { useState: useStateLG } = React;
   const [failed, setFailed] = useStateLG(false);
   if (failed) {
@@ -984,7 +979,7 @@ function PaceLogoImage({ maxWidth = 600 }) {
    de que cada variante realmente se renderice distinta. */
 function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
   if (variant === 'pace') {
-    return <PaceLogoImage maxWidth={600} />;
+    return <PaceLogoImage maxWidth={240} />;
   }
   if (variant === 'lockup') {
     return <PaceLockup size={14} subtitle="FOCO · CUERPO" />;
@@ -1107,25 +1102,9 @@ function Sidebar() {
 
   return (
     <aside style={sidebarStyles.root}>
-      {/* ============================================================
-          BARRA HORIZONTAL SUPERIOR · logo + contadores
-          ------------------------------------------------------------
-          v0.11.7 / sesión 12 · Reestructurado por petición del usuario:
-          - Logo ampliado ~2.5× (PaceLogoImage ahora con maxWidth 600,
-            antes 240) ocupando toda la franja horizontal.
-          - Chevron de colapsar extraído de la fila del logo a un botón
-            flotante en la esquina superior-derecha del sidebar para no
-            competir con la imagen.
-          - Contadores "# / ↻ / ◉" centrados debajo del logo (antes
-            alineados a la izquierda) y con iconos SVG gráficos en vez
-            de caracteres tipográficos (tomate, espiral, llama).
-          El área del logo sigue siendo clicable para el easter egg
-          "vaca feliz" (10 clicks → secret.cow.click).
-          ============================================================ */}
-      <button onClick={toggle} style={sidebarStyles.toggleFloating} title="Colapsar (⌘\\)" aria-label="Colapsar panel">
-        <ChevronLeftIcon />
-      </button>
-      <div style={sidebarStyles.logoBar}>
+      {/* LOGO oficial (imagen) + toggle.
+          Clicable para el easter egg "vaca feliz" (10 clicks → secret.cow.click). */}
+      <div style={sidebarStyles.logoRow}>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
@@ -1133,25 +1112,19 @@ function Sidebar() {
         >
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
         </div>
+        <button onClick={toggle} style={sidebarStyles.toggleExpanded} title="Colapsar (⌘\\)">
+          <ChevronLeftIcon />
+        </button>
       </div>
 
-      {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
+      {/* CICLOS HOY */}
       <div style={sidebarStyles.cycles}>
         <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title="Pomodoros completados hoy">
-            <PomodoroIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Rondas largas (cada 4 pomodoros)">
-            <RoundsIcon />
-            <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Días activos seguidos">
-            <StreakFlameIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
-          </span>
+          <span style={sidebarStyles.cycleNum}># {String(state.cycle).padStart(2, '0')}</span>
+          <span style={sidebarStyles.cycleSep}>|</span>
+          <span style={sidebarStyles.cycleNum}>↻ {String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
+          <span style={sidebarStyles.cycleSep}>|</span>
+          <span style={sidebarStyles.cycleNum} title="Días activos seguidos">◉ {String(state.streak.current).padStart(2, '0')}</span>
         </div>
       </div>
 
@@ -1328,99 +1301,6 @@ function ChevronLeftIcon() {
     </svg>
   );
 }
-
-/* ============================================================
-   Iconos gráficos para los contadores del sidebar superior
-   (sesión 12 · v0.11.7) — sustituyen los caracteres # ↻ ◉ por
-   glifos editoriales con stroke fino y un toque de color sutil.
-   Dibujados en viewBox 16×16, render a 14px para encajar con
-   la tipografía tabular (line-height 16–18).
-   ============================================================ */
-
-// Tomate / pomodoro: círculo con hendidura superior + tallo y hojita.
-// Metáfora universal para "pomodoro completado". Relleno terracota con
-// opacidad baja, stroke del color de foco para que case con el tag.
-function PomodoroIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Cuerpo del tomate */}
-      <path
-        d="M8 4.2c2.9 0 5 2.1 5 4.7 0 2.5-2.1 4.6-5 4.6s-5-2.1-5-4.6c0-2.6 2.1-4.7 5-4.7z"
-        fill="var(--focus)"
-        fillOpacity="0.14"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-      />
-      {/* Hendidura central vertical (sugerencia de gajo) */}
-      <path
-        d="M8 5.2v1.4"
-        stroke="var(--focus)"
-        strokeWidth="1"
-        strokeLinecap="round"
-        opacity="0.55"
-      />
-      {/* Tallo */}
-      <path
-        d="M8 4.2V3"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      {/* Hoja */}
-      <path
-        d="M8 3.4c1.1-.5 2-.2 2.5.4-.8.6-1.8.5-2.5-.4z"
-        fill="var(--focus)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-
-// Rondas / ciclos largos: espiral de ~1.5 vueltas que sugiere repetición
-// acumulada. Alternativa gráfica al ↻ tipográfico (que es un arrow-rotate
-// poco expresivo). Mantiene el peso visual del set.
-function RoundsIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"
-         stroke="var(--ink-2)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      {/* Espiral: centro → fuera en ~1.4 vueltas */}
-      <path d="M8 8
-               a1 1 0 0 1 1 -1
-               a2 2 0 0 1 2 2
-               a3 3 0 0 1 -3 3
-               a4 4 0 0 1 -4 -4
-               a5 5 0 0 1 5 -5
-               a5.5 5.5 0 0 1 4 1.5" />
-      {/* Cabeza de flecha en el extremo exterior, insinuando "otra vuelta" */}
-      <path d="M13 3.5l.2 2.5 -2.3 -.6" />
-    </svg>
-  );
-}
-
-// Racha / streak: llama fina en dos trazos. El relleno cálido (breathe)
-// la diferencia del resto de iconos del set y conecta con la idea de
-// "mantener el calor" de los días seguidos.
-function StreakFlameIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Silueta principal de la llama */}
-      <path
-        d="M8 2.2c.6 1.8 2.1 2.8 2.9 4.1 1 1.6 1.1 3.4 .1 4.8 -1 1.4 -3 2.2 -4.6 1.5 -1.8 -.8 -2.7 -2.8 -2.1 -4.7 .3 -1 .9 -1.7 1.4 -2.5 .6 -.9 1.3 -1.8 2.3 -3.2z"
-        fill="var(--breathe)"
-        fillOpacity="0.2"
-        stroke="var(--breathe)"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-      {/* Llama interior (corazón) */}
-      <path
-        d="M8 7.5c.4 .7 1 1.1 1.2 1.8 .2 .7 -.1 1.5 -.8 1.9 -.8 .4 -1.8 .1 -2.1 -.8 -.2 -.6 .1 -1.1 .4 -1.6 .3 -.4 .7 -.8 1.3 -1.3z"
-        fill="var(--breathe)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
 /* NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
    ya no es un rail con chevron, vuelve a abrirse con el handle flotante
    que vive en main.jsx (≡). */
@@ -1506,7 +1386,6 @@ function StatusBar() {
 
 const sidebarStyles = {
   root: {
-    position: 'relative',  // contexto para toggleFloating (v0.11.7)
     width: 280,
     height: '100vh',
     maxHeight: '100vh',
@@ -1519,66 +1398,34 @@ const sidebarStyles = {
     overflowY: 'auto',
     transition: 'width 260ms var(--ease), padding 260ms var(--ease)',
   },
-  /* v0.11.7 · "barra horizontal" del logo: el logo llena todo el ancho
-     del sidebar (sin competencia lateral), los márgenes negativos dejan
-     que invada el padding lateral de 18px para ganar más tamaño aparente.
-     El chevron de colapsar sale de aquí y vive como botón flotante. */
-  logoBar: {
+  logoRow: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: -14,
-    marginRight: -14,
-    marginTop: -4,
-    marginBottom: 4,
-    minHeight: 96,
+    justifyContent: 'space-between',
+    gap: 6,
+    marginBottom: 10,
+    minHeight: 48,
   },
-  logo: { width: '100%', minWidth: 0, display: 'flex', justifyContent: 'center' },
-  toggleFloating: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 22, height: 22,
+  logo: { flex: 1, minWidth: 0 },
+  toggleExpanded: {
+    width: 26, height: 26,
     display: 'grid', placeItems: 'center',
     color: 'var(--ink-3)',
     border: '1px solid var(--line)',
     borderRadius: 'var(--r-sm)',
     background: 'var(--paper)',
-    cursor: 'pointer',
-    zIndex: 2,
-    opacity: 0.7,
-    transition: 'opacity 180ms, color 180ms',
+    flexShrink: 0,
+    marginTop: 4,
   },
   /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
-     se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4.
-     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7. */
+     se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4. */
   cycles: {},
-  /* Contadores centrados debajo del logo (v0.11.7). Antes estaban
-     alineados a la izquierda con caracteres tipográficos (# ↻ ◉);
-     ahora son icon+num en pill sutil. */
   cycleCount: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    gap: 14,
-    fontSize: 12, color: 'var(--ink-2)', letterSpacing: '0.02em',
-    padding: '6px 10px',
+    display: 'flex', alignItems: 'center', gap: 8,
+    fontSize: 12, color: 'var(--ink-2)', letterSpacing: '0.05em',
   },
-  cycleItem: {
-    display: 'inline-flex', alignItems: 'center', gap: 5,
-    lineHeight: 1,
-  },
-  cycleNum: {
-    fontVariantNumeric: 'tabular-nums',
-    fontWeight: 500,
-    fontSize: 13,
-    color: 'var(--ink)',
-  },
-  /* Separador vertical fino en vez del "|" tipográfico anterior */
-  cycleSep: {
-    display: 'inline-block',
-    width: 1, height: 14,
-    background: 'var(--line)',
-    opacity: 0.8,
-  },
+  cycleNum: { fontVariantNumeric: 'tabular-nums', fontWeight: 500 },
+  cycleSep: { color: 'var(--ink-3)', opacity: 0.5 },
   section: {},
   sectionHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
