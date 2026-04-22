@@ -77,25 +77,12 @@ function TweaksPanel({ open, onClose }) {
       { v: 'ondas', name: 'Ondas' },
       { v: 'organico', name: 'Orgánico' },
     ]},
-    { key: 'logoVariant', label: 'Logo de la vaca', options: [
-      { v: 'pace', name: 'Pace. oficial (default)' },
-      { v: 'lockup', name: 'Lockup SVG' },
-      { v: 'lineal', name: 'Lineal minimalista' },
-      { v: 'sello', name: 'Sello tipo café' },
-      { v: 'ilustrado', name: 'Ilustrado' },
-    ]},
-    /* Apoya el proyecto — texto del pill del sidebar.
-       4 variantes registradas en SupportModule.jsx (SUPPORT_COPY).
-       Añadido sesión 16 / v0.11.11. Ampliado a 4 en sesión 19:
-       'come' añade icono de vaca + copy directo por sugerencia del
-       usuario. Las 2 primeras variantes usan icono de taza; las
-       2 últimas usan icono de vaca (coherencia con el copy). */
-    { key: 'supportCopyVariant', label: 'Copy del botón de apoyo', options: [
-      { v: 'cafe', name: 'Invita a un café (default)' },
-      { v: 'pasto', name: 'Riega el pasto' },
-      { v: 'vaca', name: 'Da de comer a la vaca' },
-      { v: 'come', name: 'Ayuda a que la vaca coma' },
-    ]},
+    /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
+       (sesión post-v0.12.1). El logo queda fijo en 'pace' (oficial)
+       y el copy del botón de apoyo consolidado en una sola variante
+       ("Da de pastar a la vaca" + icono de vaca). Los campos del
+       state se conservan por compatibilidad con instalaciones
+       existentes, pero ya no son configurables desde la UI. */
   ];
 
   /* ============================================================
@@ -345,6 +332,10 @@ function TweakSecretsWatcher() {
     if (state.font === 'mono') unlockAchievement('secret.mono');
   }, [state.font]);
 
+  /* Logros ligados a logoVariant. Tras retirar el Tweak del panel
+     (sesión post-v0.12.1) ya no hay forma estándar de dispararlos
+     desde la UI, pero se conservan por si se vuelven a exponer o se
+     activan vía devtools / futuros easter eggs. */
   useEffectTW(() => {
     if (state.logoVariant === 'sello') unlockAchievement('secret.seal');
     if (state.logoVariant === 'ilustrado') unlockAchievement('secret.illustrated');

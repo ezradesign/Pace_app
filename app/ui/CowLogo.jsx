@@ -192,10 +192,15 @@ function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) 
    Se escala responsive al ancho disponible.
    ============================================================ */
 // Logo oficial — vaca integrada en "P" de Pace.
-// Ruta relativa al entry point modular (PACE.html). En el standalone inline
-// el PNG no viaja con el archivo, así que si falla la carga se hace fallback
-// automático al PaceLockup SVG (que es visualmente equivalente).
-const PACE_LOGO_URL = "app/ui/pace-logo.png";
+// Leemos el src desde un <img id="pace-logo-src"> pre-cargado en el HTML.
+// Esto permite que super_inline_html inline el PNG como data URI al generar
+// el bundle standalone, manteniendo la misma API en modo modular.
+function _getPaceLogoUrl() {
+  if (typeof document === 'undefined') return 'app/ui/pace-logo.png';
+  const el = document.getElementById('pace-logo-src');
+  return el && el.getAttribute('src') || 'app/ui/pace-logo.png';
+}
+const PACE_LOGO_URL = _getPaceLogoUrl();
 function PaceLogoImage({ maxWidth = 600 }) {
   /* NOTA v0.11.7 · sesión 12 — aumentado maxWidth 240 → 600 (≈2.5×) para
      dar al logo el peso visual que tenía en el mockup de referencia. En la

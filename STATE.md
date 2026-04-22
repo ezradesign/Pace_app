@@ -10,9 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.1
-**Última sesión:** #18 — 2026-04-22 · Pulido: bugs de race condition, sidebar más limpio, Welcome compacto
-**Última actualización de este archivo:** 2026-04-22 · sesión 18
+**Versión actual:** v0.12.2
+**Última sesión:** #19 — 2026-04-22 · Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido
+**Última actualización de este archivo:** 2026-04-22 · sesión 19
+**Build entregado:** `PACE_App_1_38.html` (también presente como `PACE_standalone.html`)
 
 ---
 
@@ -20,13 +21,15 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.1, carga limpio |
-| `PACE_standalone.html` | Bundle offline inline | v0.12.1 (~226 KB) |
-| `app/ui/pace-logo.png` | Logo oficial local (fallback SVG si falla) | Presente |
-| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.11.11 (sin cambios) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (layout compacto) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.1 (3 bugs fixed) |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.1 (sin Intención) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.2, con `<img id="pace-logo-src">` para inline |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.2 (~326 KB, logo en data URI) |
+| `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
+| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (copy único "Da de pastar a la vaca", icono a la derecha) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (retirados `logoVariant` y `supportCopyVariant`) |
+| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (URL resuelta vía DOM) |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.2 (comentarios actualizados; campos deprecados conservados) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.1 (sin cambios) |
 
 No se reimportaron los backups previos en esta sesión — siguen en git.
 Para rotar según la regla "máximo 5", baja los backups anteriores
@@ -36,39 +39,50 @@ desde GitHub en la próxima sesión y rota v0.12.0.
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 18 · v0.12.1 · Pulido: bugs + layout**
+**Sesión 19 · v0.12.2 · Pill consolidada + standalone autocontenido**
 
-Sesión corta de consolidación tras la sesión 17 (feature-heavy).
-Revisión de código con lupa + dos ajustes de UX.
+Sesión breve de simplificación: decidir bien una vez en vez de dar 4
+opciones al usuario. Además, el bundle offline por fin lo es de verdad.
 
-### Bugs críticos arreglados
-- **`addFocusMinutes` (state.jsx)** — umbrales de logros `focus.hours.*`
-  dependían de una variable de cierre capturada fuera del updater.
-  Ahora se lee `_state` tras persist: los logros se disparan sobre el
-  valor comprometido, no un snapshot intermedio.
-- **`completePomodoro` (state.jsx)** — mismo patrón que el anterior.
-- **Toast buffer race (state.jsx)** — `onToast` vaciaba el buffer sólo
-  si el listener entrante era el primero (`size === 1`). Bajo
-  StrictMode de React el segundo listener no recibía los toasts
-  acumulados. Arreglado con flag `wasEmpty`.
-- **`applyTheme` se llamaba en cada `setState`** — 2 `setAttribute()`
-  por tick aunque palette/font no cambiaran. Ahora diff previo.
+### Consolidado
+- **4 variantes de copy → 1 sola.** El botón de apoyo pasa de
+  `cafe`/`pasto`/`vaca`/`come` a una línea única *"Da de pastar a la
+  vaca"*, con icono de vaca siempre. "Pastar" enlaza con PACE (pacer)
+  y con la metáfora de la UI.
+- **Icono a la derecha del texto** tanto en el pill del sidebar como
+  en el CTA terracota del modal. Orden `<span> → <SupportIcon>` —
+  rompe la convención del botón web clásico, pero es intencional:
+  texto lleva la acción, icono firma visual.
 
-### Cambios de UX
-- **Sidebar: sección Intención eliminada.** Aportaba poco (la mayoría
-  la dejaba vacía) y ya se captura en el WelcomeModal desde sesión 17.
-  El campo `state.intention` sigue existiendo (retro-compat).
-- **Sidebar: pill "Invita a un café" gana prominencia por sustracción.**
-  Se probó una `SupportCard` más destacada pero el usuario confirmó
-  que el pill original de sesión 16 era más elegante. Revertido.
-- **WelcomeModal rehecho sin scroll en 720p**: grid 2 columnas en el
-  header (logo a la izq, título+lede a la der), valores más compactos,
-  botón + skip en línea horizontal. ~440px alto (antes ~620px).
+### Retirado del panel de Tweaks
+- **"Logo de la vaca"** (`logoVariant`): queda fijo en `'pace'`
+  (oficial). Los 4 fallbacks eran experimentos pre-v0.11.3 sin razón
+  de exponerlos al usuario.
+- **"Copy del botón de apoyo"** (`supportCopyVariant`): ya no tiene
+  sentido tras consolidar el copy.
+
+### Conservado por compatibilidad
+- Los campos `logoVariant` y `supportCopyVariant` siguen en
+  `state.jsx` y en el localStorage de usuarios existentes. Solo
+  dejan de ser editables.
+- Los logros secretos `secret.seal` y `secret.illustrated` quedan
+  dormidos pero vivos por si se reintroducen como easter egg.
+
+### Standalone autocontenido de verdad
+`PACE.html` añade `<img id="pace-logo-src" src="app/ui/pace-logo.png">`
+oculto; `CowLogo.jsx` lee el `src` resuelto de ese elemento. Cuando
+`super_inline_html` genera el bundle, inlinea automáticamente el PNG
+como data URI. El nuevo `PACE_standalone.html` (~326 KB) funciona al
+100% sin servidor, con el logo oficial embedded — no el fallback SVG.
+
+El build entregado de esta sesión es `PACE_App_1_38.html` (idéntico a
+`PACE_standalone.html` en esta carpeta).
 
 ### Versión
-- `v0.12.0` → `v0.12.1` (patch: fixes + layout, sin features nuevas).
+- `v0.12.1` → `v0.12.2` (patch: consolidación y packaging, sin
+  features nuevas).
 
-Detalle completo: [`docs/sessions/session-18-pulido-bugs-layout.md`](./docs/sessions/session-18-pulido-bugs-layout.md).
+Detalle completo: [`docs/sessions/session-19-pill-consolidada-standalone.md`](./docs/sessions/session-19-pill-consolidada-standalone.md).
 
 ---
 
@@ -100,6 +114,20 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **Menos variantes, más identidad.** No se exponen al usuario
+  elecciones cosméticas que no tiene por qué tomar (5 logos, 4
+  copys del mismo botón, etc.). Decidir bien una vez. Si en el
+  futuro vuelve una variante a los Tweaks, debe defenderse como
+  eje real de personalización (paleta, tipografía, layout) — no
+  como acumulación de prototipos descartados. (Sesión 19.)
+- **Assets locales del standalone se inlinean vía `<img src>` en
+  el HTML principal, no hardcoded en strings JS.** Patrón: poner
+  un `<img id="foo-src" src="ruta/foo.png" style="display:none">`
+  en `PACE.html`; el JS lee `document.getElementById('foo-src')
+  .getAttribute('src')`. `super_inline_html` convierte automáticamente
+  `<img src>` en data URI. Regla vigente: cualquier asset binario
+  nuevo que deba viajar en el standalone sigue este patrón.
+  (Sesión 19.)
 - **El diseño del sidebar se cuida por sustracción, no por adición.**
   En sesión 18 se probó sustituir el pill "Invita a un café" por
   una `SupportCard` más llamativa y el usuario lo rechazó: "era
