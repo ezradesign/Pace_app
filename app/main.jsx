@@ -16,6 +16,7 @@ function PaceApp() {
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
   const [openSupport, setOpenSupport] = useStateMain(false);
+  const [openWelcome, setOpenWelcome] = useStateMain(false);
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
@@ -54,6 +55,18 @@ function PaceApp() {
   // ('condición + flag de una sola vez') vive allí para mantenerla
   // junto a la filosofía del módulo.
   useSupportAutoTrigger(setOpenSupport);
+
+  // Auto-trigger del WelcomeModal la primera vez que se abre la app
+  // (state.firstSeen == null). Mismo patrón que el anterior.
+  useFirstTimeWelcome(setOpenWelcome);
+
+  // Re-abrir welcome a mano (dev / curiosidad): evento global
+  // `pace:open-welcome`. Mismo patrón que `pace:open-support`.
+  useEffectMain(() => {
+    const h = () => setOpenWelcome(true);
+    window.addEventListener('pace:open-welcome', h);
+    return () => window.removeEventListener('pace:open-welcome', h);
+  }, []);
 
   // Atajo logros
   useEffectMain(() => {
@@ -193,6 +206,12 @@ function PaceApp() {
         onChoose={handleBreakChoice}
       />
       <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
+      <WelcomeModal open={openWelcome} onClose={() => setOpenWelcome(false)} />
+
+      {/* Observador de tweak-secrets — monta siempre, retorna null.
+          Desbloquea secret.aged / dark.mode / mono / seal / illustrated
+          en función del state actual. Ver TweaksPanel.jsx. */}
+      <TweakSecretsWatcher />
 
       {safetyRoutine && (
         <BreatheSafety

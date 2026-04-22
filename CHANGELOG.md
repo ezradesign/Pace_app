@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.12.0** | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [abajo ↓](#v0120--2026-04-22--welcome-export-tweak-secrets) |
 | **v0.11.11** | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [abajo ↓](#v01111--2026-04-22--integración-buy-me-a-coffee) |
-| **v0.11.10** | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [abajo ↓](#v01110--2026-04-22--logros-arreglo-explore--estado-próximamente) |
+| v0.11.10 | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [session-15-logros-proximamente.md](./docs/sessions/session-15-logros-proximamente.md) |
 | v0.11.9 | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | [session-14-swap-mueve-estira.md](./docs/sessions/session-14-swap-mueve-estira.md) |
 | v0.11.8 | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [session-13-backlog-robustez.md](./docs/sessions/session-13-backlog-robustez.md) |
 | v0.11.7 | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | [session-12-barra-horizontal.md](./docs/sessions/session-12-barra-horizontal.md) |
@@ -31,6 +32,79 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.0] — 2026-04-22 — Welcome, Export/Import, tweak-secrets
+
+Combo de sesión corta (~5h) recomendado por el `STATE.md` cerrado en
+sesión 16. Tres frentes que se refuerzan entre sí: el Welcome es lo
+primero que el usuario ve y comunica los mismos valores que el modal
+de BMC; el Export/Import hace literal la promesa "todo local, para
+siempre"; los tweak-secrets recompensan la exploración de estilo sin
+anunciar nada.
+
+### Añadido
+- **`app/welcome/WelcomeModule.jsx`** (nuevo, ~240 líneas):
+  - `WelcomeModal` — modal single-screen editorial: logo oficial
+    (respeta `state.logoVariant`), título serif italic *"Antídoto a
+    la silla. A tu ritmo."*, 3 valores (`Todo local · Sin cuentas ·
+    Siempre gratis`), campo opcional de intención con auto-focus y
+    Enter-to-submit, botón `Empezar` + link discreto `prefiero
+    saltarlo`. Cap de 120 chars para la intención.
+  - `useFirstTimeWelcome(setOpen)` — abre el modal una sola vez
+    cuando `state.firstSeen == null`. Mismo patrón exacto que
+    `useSupportAutoTrigger` de sesión 16 (demora 1.2s post-mount).
+  - Evento global `pace:open-welcome` para re-abrir manualmente
+    (uso dev / futuros Tweaks).
+- **Export/Import JSON en Tweaks** (`TweaksPanel.jsx`):
+  - Sección "Tus datos" con botones `Exportar` (descarga
+    `pace-backup-YYYYMMDD.json` con `{app, version, exportedAt,
+    state}`) e `Importar` (valida schema, pregunta `confirm()` con
+    contador, reemplaza `localStorage.pace.state.v1`, recarga).
+  - Feedback inline `✓ Backup descargado` (verde) / `✗ No se pudo
+    exportar` (rojo), fade automático.
+  - Caption explicando "Todo vive en tu navegador. El backup es un
+    archivo JSON local — sin servidor, sin cuenta."
+- **`TweakSecretsWatcher`** (componente auxiliar en mismo archivo,
+  retorna `null`, se monta siempre desde `main.jsx`):
+  - `secret.aged` cuando `palette === 'envejecido'`.
+  - `secret.dark.mode` al acumular 7 días de calendario distintos
+    con `palette === 'oscuro'`. Fechas en clave propia
+    `pace.darkDays.v1` (cap 30).
+  - `secret.mono` cuando `font === 'mono'`.
+  - `secret.seal` cuando `logoVariant === 'sello'`.
+  - `secret.illustrated` cuando `logoVariant === 'ilustrado'`.
+- **`explore.tweaks`** se desbloquea al abrir el panel por primera
+  vez (pasa de secreto a exploración visible).
+- **Campos nuevos en default state**: `firstSeen: null` (timestamp
+  al primer open del Welcome, ya sea "Empezar" o "skip").
+
+### Cambiado
+- **`PACE_VERSION`** en `state.jsx`: `v0.11.11` → `v0.12.0`.
+- **`<title>` de `PACE.html`**: `v0.11.11` → `v0.12.0`.
+- **`IMPLEMENTED_ACHIEVEMENTS`** en `Achievements.jsx` crece
+  +6 ids: `explore.tweaks` + los 5 secretos tweak (`secret.aged`,
+  `.dark.mode`, `.mono`, `.seal`, `.illustrated`). Total de
+  "Próximamente" visible baja de 19 → 13.
+- **`main.jsx`** monta `<WelcomeModal/>` y `<TweakSecretsWatcher/>`
+  junto al resto de modales; consume `useFirstTimeWelcome`; escucha
+  `pace:open-welcome`.
+- **`PACE.html`** carga `app/welcome/WelcomeModule.jsx` antes de
+  `Sidebar.jsx` porque `main.jsx` lo necesita.
+
+### Red de seguridad
+- `PACE_standalone.html` regenerado a **v0.12.0** (~225 KB, +27 KB
+  sobre v0.11.11).
+- Rotado `backups/PACE_standalone_v0.11.11_20260422.html`.
+- 3 backups activos (v0.11.9, v0.11.10, v0.11.11), bien por debajo
+  del límite de 5.
+- `PACE.html` y `PACE_standalone.html` cargados en iframe con logs
+  limpios (sólo warnings habituales de Babel standalone).
+- Screenshot en fresh state confirma que el Welcome aparece; tras
+  fijar `firstSeen` manualmente, no vuelve a aparecer.
+
+Detalle: [`docs/sessions/session-17-welcome-export-tweaksecrets.md`](./docs/sessions/session-17-welcome-export-tweaksecrets.md).
 
 ---
 
@@ -94,48 +168,6 @@ Detalle: [`docs/sessions/session-16-bmc-integracion.md`](./docs/sessions/session
 
 ---
 
-## [v0.11.10] — 2026-04-22 — Logros: arreglo `explore.*` + estado "Próximamente"
-
-Sesión corta y quirúrgica sobre el backlog **#9** (logros sin trigger).
-Usuario eligió vía mixta: reparar los 6 `explore.*` rotos en sesión 14 +
-marcar el resto como "Próximamente" en la UI para incentivar sin
-prometer.
-
-### Corregido
-- **6 logros `explore.*` de movilidad** vuelven a dispararse. El map
-  `'move.hips.5' → 'explore.hips'` (y las otras 5 entradas) se movió
-  desde `completeMoveSession` a `completeExtraSession` en `state.jsx`,
-  porque tras el swap de sesión 14 esas rutinas desembocan ahí. Los ids
-  `move.*` se conservan (decisión activa: ids estables ≠ clasificación
-  semántica). Comentario inline explicando el desajuste aparente.
-
-### Añadido
-- **`IMPLEMENTED_ACHIEVEMENTS`** (Set en `Achievements.jsx`) lista los
-  26 ids de logros con trigger real hoy. Fuente de verdad para decidir
-  qué se pinta como "disponible" vs "Próximamente". Cuando se implemente
-  un trigger nuevo, hay que añadir su id aquí.
-- **3er estado visual en `Seal`** — `coming-soon`: borde dotted gris,
-  opacidad 0.38, glifo original con opacity 0.25 (se intuye, no se
-  afirma), descripción sustituida por "Pronto", badge "Pronto" en
-  esquina superior derecha (pill, 7.5px, uppercase). Título se conserva
-  para incentivar "lo quiero". Los secretos **no** entran en este
-  estado: su mecánica es intriga, no señalización; se siguen pintando
-  como `?` / "Secreto" / "?????".
-
-### Cambiado
-- **Contador de cabecera** en el modal de Logros: `X / 100 descubiertos`
-  · `Por descubrir` → `X / 26 disponibles` · `74 Próximamente`.
-  Denominador dinámico (`availableCount`) que crecerá automáticamente
-  cuando se implementen más triggers.
-- **`PACE_VERSION`** en `state.jsx`: `v0.11.9` → `v0.11.10`.
-- **`<title>` de `PACE.html`**: `v0.11.8` → `v0.11.10` (arrastraba desfase
-  de sesión 14).
-
-### Red de seguridad
-- `PACE_standalone.html` regenerado a **v0.11.10** (~186 KB).
-- Rotado `backups/PACE_standalone_v0.11.9_20260422.html` (sale v0.11.5).
-- 4 backups activos (v0.11.6 → v0.11.9), dentro del límite de 5.
-
-Detalle: [`docs/sessions/session-15-logros-proximamente.md`](./docs/sessions/session-15-logros-proximamente.md).
+Para versiones anteriores, ver los diarios en [`docs/sessions/`](./docs/sessions/).
 
 

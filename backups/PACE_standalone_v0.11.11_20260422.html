@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.0</title>
+  <title>PACE · Foco · Cuerpo — v0.11.11</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -215,7 +215,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.0';
+const PACE_VERSION = 'v0.11.11';
 
 const defaultState = {
   // Settings / Tweaks
@@ -259,16 +259,8 @@ const defaultState = {
   // Streak
   streak: { current: 0, longest: 0, lastActiveDate: null },
 
-  // Intención del día — capturada opcionalmente en el Welcome de primera
-  // vez (sesión 17 / v0.12.0), visible también para edición futura.
+  // Intención del día
   intention: '',
-
-  // Welcome de primera vez (sesión 17 / v0.12.0).
-  // `firstSeen`: timestamp de la primera interacción con el WelcomeModal.
-  //   null = nunca visto → auto-trigger dispara la bienvenida.
-  //   Una vez cerrado (OK o skip), se fija timestamp y no vuelve nunca.
-  //   Mismo patrón que `supportSeenAt` (v0.11.11).
-  firstSeen: null,
 
   // Buy Me a Coffee — monetización por donación (sesión 16, v0.11.11).
   // `supportSeenAt`: timestamp de la primera apertura del modal de apoyo.
@@ -1534,304 +1526,6 @@ const supportStyles = {
 Object.assign(window, {
   SupportButton, SupportModal, useSupportAutoTrigger,
   supportCopy, BMC_URL, BMC_USERNAME,
-});
-</script>
-
-  <!-- Bienvenida de primera vez (sesión 17 / v0.12.0).
-       Se carga antes que main.jsx porque este la monta. -->
-  <script type="text/babel">/* PACE · Welcome de primera vez
-   ============================================================
-   FILOSOFÍA — sesión 17 · v0.12.0
-
-   La primera vez que alguien abre PACE, merece una bienvenida
-   editorial corta — no un onboarding de 5 pantallas con tooltips.
-
-   Estructura (1 sola pantalla):
-     1. Logo + wordmark Pace.
-     2. Manifesto breve: "Antídoto a la silla. A tu ritmo."
-     3. 3 valores en positivo: todo local · sin cuentas · siempre gratis.
-     4. Campo opcional de intención — "¿Qué quieres cultivar hoy?"
-        Si el usuario escribe algo, se guarda en `state.intention`.
-        Si lo deja vacío, no pasa nada (no es obligatorio).
-     5. Botón primario "Empezar" — cierra el modal y marca
-        `state.firstSeen = timestamp`.
-
-   MECÁNICA:
-     - Se dispara una sola vez por instalación, cuando
-       `state.firstSeen == null`.
-     - Al cerrar (o terminar) se fija `firstSeen` a timestamp
-       para no volver a mostrarse nunca.
-     - Hook `useFirstTimeWelcome` replica el patrón de
-       `useSupportAutoTrigger`: mismo contrato, mismo tiempo de
-       espera (1.2s tras mount) para no competir con otros
-       modales de auto-trigger.
-     - Re-abrir manualmente es posible via evento
-       `pace:open-welcome` (para Tweaks dev o pruebas).
-
-   POR QUÉ ESTE MÓDULO EXISTE:
-     - Refuerza el argumento del modal de BMC (v0.11.11):
-       cuando dice "Todo local", ahora es lo PRIMERO que el
-       usuario lee al abrir la app.
-     - Captura una intención opcional — el campo ya existía en
-       state (`intention: ''`) pero nunca se exponía en UI.
-     - No interrumpe. Es la primera puerta; si el usuario la
-       cierra sin escribir, la app sigue funcionando igual.
-============================================================ */
-
-const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = React;
-
-/* ============================================================
-   WelcomeModal — la pantalla de bienvenida
-   ============================================================ */
-function WelcomeModal({ open, onClose }) {
-  const [state, set] = usePace();
-  const [draft, setDraft] = useStateWEL('');
-  const inputRef = useRefWEL(null);
-
-  // Al abrir: precargar la intención actual si existía.
-  // Y enfocar el input después de la animación de entrada del modal
-  // (280ms según Primitives.jsx → pace-slide-up).
-  useEffectWEL(() => {
-    if (!open) return;
-    setDraft(state.intention || '');
-    const t = setTimeout(() => {
-      if (inputRef.current) inputRef.current.focus();
-    }, 320);
-    return () => clearTimeout(t);
-  }, [open]);
-
-  if (!open) return null;
-
-  const finish = () => {
-    // Guardamos la intención si el usuario escribió algo; sino no tocamos.
-    // `firstSeen` se fija SIEMPRE al cerrar (por botón o por X) para que
-    // no vuelva a aparecer nunca — es una bienvenida, no un trámite.
-    const patch = { firstSeen: Date.now() };
-    const trimmed = draft.trim();
-    if (trimmed) patch.intention = trimmed.slice(0, 120); // cap defensivo
-    set(patch);
-    onClose && onClose();
-  };
-
-  const skip = () => {
-    // "No gracias" también marca firstSeen. Sin intención.
-    set({ firstSeen: Date.now() });
-    onClose && onClose();
-  };
-
-  return (
-    <Modal open={open} onClose={skip} maxWidth={560}>
-      <div style={welcomeStyles.inner}>
-        {/* Logo oficial — usa PaceLogoImage (PNG con fallback SVG).
-            Respeta el tweak `logoVariant` del usuario si ya cambió algo
-            en una sesión previa. */}
-        <div style={welcomeStyles.logoRow}>
-          <div style={{ maxWidth: 320, width: '100%' }}>
-            <PaceWordmark variant={state.logoVariant || 'pace'} />
-          </div>
-        </div>
-
-        <Meta style={{ textAlign: 'center', marginBottom: 8 }}>Bienvenida</Meta>
-
-        <h2 style={welcomeStyles.title}>
-          Antídoto a la silla.<br/>
-          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
-        </h2>
-
-        <p style={welcomeStyles.lede}>
-          Micro-pausas de foco, respiración, movilidad e hidratación
-          a lo largo del día. Nada de gamificación agresiva, nada
-          de notificaciones abrumadoras.
-        </p>
-
-        {/* 3 valores en línea */}
-        <div style={welcomeStyles.values}>
-          <WValue label="Todo local" sub="vive en tu navegador" />
-          <span style={welcomeStyles.sep} />
-          <WValue label="Sin cuentas" sub="sin registro, sin email" />
-          <span style={welcomeStyles.sep} />
-          <WValue label="Siempre gratis" sub="sin paywall, sin pro" />
-        </div>
-
-        {/* Campo de intención — opcional */}
-        <div style={welcomeStyles.intentionBlock}>
-          <label htmlFor="pace-intention" style={welcomeStyles.intentionLabel}>
-            ¿Qué quieres cultivar hoy?
-            <span style={welcomeStyles.optional}> opcional</span>
-          </label>
-          <input
-            id="pace-intention"
-            ref={inputRef}
-            type="text"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') finish(); }}
-            placeholder="concentración, calma, movimiento…"
-            maxLength={120}
-            style={welcomeStyles.intentionInput}
-          />
-        </div>
-
-        {/* Acciones */}
-        <div style={welcomeStyles.actions}>
-          <Button variant="primary" size="lg" onClick={finish}>
-            Empezar
-          </Button>
-          <button onClick={skip} style={welcomeStyles.skip}>
-            prefiero saltarlo
-          </button>
-        </div>
-      </div>
-    </Modal>
-  );
-}
-
-/* Valor individual — misma composición que en SupportModal
-   pero con la tipografía ligeramente más compacta (el bloque
-   es más ancho porque hay 3 valores + separadores). */
-function WValue({ label, sub }) {
-  return (
-    <div style={{ flex: 1, textAlign: 'center', padding: '0 6px' }}>
-      <div style={{
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        fontSize: 14,
-        color: 'var(--ink)',
-        lineHeight: 1.1,
-      }}>{label}</div>
-      <div style={{
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        marginTop: 3,
-        letterSpacing: 0.1,
-      }}>{sub}</div>
-    </div>
-  );
-}
-
-/* ============================================================
-   Hook — auto-trigger cuando firstSeen == null
-   ------------------------------------------------------------
-   Mismo patrón que useSupportAutoTrigger. La demora de 1.2s
-   evita que el modal compita con el mount de la app (logo
-   parpadeando, toasts de rollover, etc.).
-   ============================================================ */
-function useFirstTimeWelcome(setOpen) {
-  const [state] = usePace();
-  useEffectWEL(() => {
-    if (state.firstSeen == null) {
-      const t = setTimeout(() => setOpen(true), 1200);
-      return () => clearTimeout(t);
-    }
-  }, [state.firstSeen]);
-}
-
-/* ============================================================
-   Estilos — nombre único según regla CLAUDE.md
-   ============================================================ */
-const welcomeStyles = {
-  inner: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-  },
-  logoRow: {
-    display: 'grid',
-    placeItems: 'center',
-    marginBottom: 18,
-  },
-  title: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 30,
-    fontWeight: 500,
-    lineHeight: 1.05,
-    margin: '0 0 14px',
-    textAlign: 'center',
-    color: 'var(--ink)',
-  },
-  lede: {
-    fontSize: 14,
-    lineHeight: 1.5,
-    color: 'var(--ink-2)',
-    margin: '0 auto 20px',
-    maxWidth: 420,
-    textAlign: 'center',
-  },
-  values: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '14px 8px',
-    margin: '0 0 22px',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-md)',
-  },
-  sep: {
-    width: 1,
-    height: 28,
-    background: 'var(--line)',
-    flexShrink: 0,
-  },
-  intentionBlock: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    marginBottom: 22,
-  },
-  intentionLabel: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 14,
-    color: 'var(--ink)',
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-  },
-  optional: {
-    fontSize: 10,
-    color: 'var(--ink-3)',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    fontStyle: 'normal',
-  },
-  intentionInput: {
-    width: '100%',
-    padding: '10px 14px',
-    fontSize: 15,
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    color: 'var(--ink)',
-    background: 'var(--paper)',
-    border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
-    outline: 'none',
-    transition: 'border-color 180ms',
-    boxSizing: 'border-box',
-  },
-  actions: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 10,
-    marginTop: 4,
-  },
-  skip: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 12,
-    color: 'var(--ink-3)',
-    background: 'transparent',
-    border: 'none',
-    padding: '4px 8px',
-    cursor: 'pointer',
-    transition: 'color 180ms',
-  },
-};
-
-Object.assign(window, {
-  WelcomeModal, useFirstTimeWelcome,
 });
 </script>
 
@@ -4443,15 +4137,10 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'explore.ancestral', 'explore.neck', 'explore.desk',
   // Maestría (1/25)
   'master.pomodoro.8',
-  // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
-  'explore.tweaks',
-  // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
-  // Sesión 17: +5 tweak-secrets (aged, dark.mode, mono, seal, illustrated).
+  // Secretos (5/21) — los secretos con trigger se siguen pintando como secretos
   'secret.cow.click', 'secret.breath.hold.60',
   'secret.breath.hold.90', 'secret.breath.hold.120',
   'secret.supporter',
-  'secret.aged', 'secret.dark.mode', 'secret.mono',
-  'secret.seal', 'secret.illustrated',
 ]);
 
 function isImplemented(a) {
@@ -4729,51 +4418,13 @@ function WeekBarRow({ label, data, color, unit }) {
 Object.assign(window, { WeeklyStats });
 </script>
   <script type="text/babel">/* PACE · Panel de Tweaks
-   ============================================================
-   7 ejes de customización: paleta, tipografía, layout, timer,
-   breath, logo, copy del botón de apoyo.
+   6 ejes de customización: paleta, tipografía, layout, timer, breath, logo
+*/
 
-   Sesión 17 (v0.12.0) — añadido:
-     - Export/Import JSON (backup local portátil).
-     - 6 tweak-secrets reaccionando a combinaciones específicas:
-         · secret.aged       → paleta 'envejecido'.
-         · secret.dark.mode  → paleta 'oscuro' durante 7 días (acumulado).
-         · secret.mono       → font 'mono'.
-         · secret.seal       → logo 'sello'.
-         · secret.illustrated→ logo 'ilustrado'.
-         · explore.tweaks    → abrir este panel por primera vez.
-       Patrón: hook ligero en el componente que llama unlockAchievement()
-       cuando la condición se cumple. La idempotencia la garantiza
-       unlockAchievement (no dispara dos veces el mismo id).
-   ============================================================ */
-
-const { useState: useStateTW, useEffect: useEffectTW, useRef: useRefTW } = React;
-
-/* Clave donde se persiste el racking de "días en paleta oscura" para el
-   secret.dark.mode. Independiente de la racha principal — sólo cuenta
-   días de calendario distintos con palette === 'oscuro'. */
-const DARK_DAYS_KEY = 'pace.darkDays.v1';
+const { useState: useStateTW, useEffect: useEffectTW } = React;
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
-  const fileInputRef = useRefTW(null);
-  const [msg, setMsg] = useStateTW(null); // {kind, text} para feedback Export/Import
-
-  /* ============================================================
-     SECRETS — detectores simples que viven mientras el panel existe.
-     No dependen de que el panel esté abierto (el hook monta siempre
-     dentro del componente, pero como TweaksPanel retorna null cuando
-     !open, el hook efectivamente sólo observa cambios mientras el
-     panel está visible). Para los secretos que NO dependen de la UI
-     de tweaks (aged, mono, seal, ilustrado, dark-days), movemos la
-     detección a un componente separado que SÍ monta siempre:
-     <TweakSecretsWatcher />, exportado al final.
-     ============================================================ */
-
-  // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
-  useEffectTW(() => {
-    if (open) unlockAchievement('explore.tweaks');
-  }, [open]);
 
   if (!open) return null;
 
@@ -4823,93 +4474,6 @@ function TweaksPanel({ open, onClose }) {
       { v: 'vaca', name: 'Da de comer a la vaca' },
     ]},
   ];
-
-  /* ============================================================
-     EXPORT — descarga un JSON con el estado completo de PACE.
-     Refuerza la promesa "todo local" del modal BMC: ahora es local
-     Y portátil. El archivo incluye:
-       - version: para migración futura si el schema cambia.
-       - exportedAt: timestamp legible.
-       - state: copia literal de localStorage['pace.state.v1'].
-     ============================================================ */
-  const exportJSON = () => {
-    try {
-      const raw = localStorage.getItem('pace.state.v1') || '{}';
-      const parsed = JSON.parse(raw);
-      const payload = {
-        app: 'PACE',
-        version: PACE_VERSION,
-        exportedAt: new Date().toISOString(),
-        state: parsed,
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      const yyyymmdd = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      a.href = url;
-      a.download = `pace-backup-${yyyymmdd}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: 'Backup descargado.' });
-      setTimeout(() => setMsg(null), 2200);
-    } catch (e) {
-      setMsg({ kind: 'err', text: 'No se pudo exportar.' });
-      setTimeout(() => setMsg(null), 2600);
-    }
-  };
-
-  /* ============================================================
-     IMPORT — lee un JSON y lo mergea/reemplaza en localStorage.
-     Valida estructura mínima (app === 'PACE' + state como objeto)
-     y pregunta confirmación explícita antes de sobrescribir.
-     Tras confirmar, recarga la página para que useSyncExternalStore
-     re-lea el nuevo estado desde cero (evita estados inconsistentes).
-     ============================================================ */
-  const importJSON = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const raw = String(ev.target.result || '');
-        const payload = JSON.parse(raw);
-
-        // Validación mínima: tiene que parecerse a un backup de PACE.
-        const looksValid = payload && (
-          (payload.app === 'PACE' && payload.state && typeof payload.state === 'object')
-          || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
-        );
-        if (!looksValid) {
-          setMsg({ kind: 'err', text: 'Archivo no reconocido.' });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-
-        // Soporta dos formatos: {app, state:{...}} o state plano (fallback).
-        const incoming = (payload.state && typeof payload.state === 'object') ? payload.state : payload;
-
-        // Contador rápido para el aviso de confirmación.
-        const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
-        const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(
-          `¿Sobreescribir tus datos con los del archivo?\n\n` +
-          `Archivo contiene: ${nLogros} logros, ${nFoco} min de foco.\n` +
-          `Esta acción no se puede deshacer.`
-        );
-        if (!ok) return;
-
-        // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v1', JSON.stringify(incoming));
-        setMsg({ kind: 'ok', text: 'Importado — recargando…' });
-        setTimeout(() => location.reload(), 900);
-      } catch (e) {
-        setMsg({ kind: 'err', text: 'JSON inválido.' });
-        setTimeout(() => setMsg(null), 2600);
-      }
-    };
-    reader.readAsText(file);
-  };
 
   return (
     <div style={{
@@ -4975,63 +4539,6 @@ function TweaksPanel({ open, onClose }) {
           }}>{state.soundOn ? 'Activo' : 'Silencio'}</button>
       </div>
 
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* ============================================================
-          Datos — Export / Import JSON (sesión 17 / v0.12.0)
-          ============================================================ */}
-      <Meta style={{ marginBottom: 8 }}>Tus datos</Meta>
-      <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-        <button
-          onClick={exportJSON}
-          style={tweaksStyles.dataBtn}
-          title="Descarga un JSON con tu estado actual"
-        >
-          <DownloadIcon /> <span>Exportar</span>
-        </button>
-        <button
-          onClick={() => fileInputRef.current && fileInputRef.current.click()}
-          style={tweaksStyles.dataBtn}
-          title="Sobreescribe tus datos con un backup"
-        >
-          <UploadIcon /> <span>Importar</span>
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/json,.json"
-          style={{ display: 'none' }}
-          onChange={(e) => {
-            const f = e.target.files && e.target.files[0];
-            importJSON(f);
-            e.target.value = ''; // permitir re-importar el mismo archivo
-          }}
-        />
-      </div>
-      {msg && (
-        <div style={{
-          fontSize: 10.5,
-          color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)',
-          fontFamily: 'var(--font-display)',
-          fontStyle: 'italic',
-          marginBottom: 8,
-          letterSpacing: 0.1,
-          textAlign: 'center',
-        }}>{msg.text}</div>
-      )}
-      <div style={{
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        lineHeight: 1.4,
-        letterSpacing: 0.1,
-        marginBottom: 4,
-      }}>
-        Todo vive en tu navegador. El backup es un archivo JSON
-        local — sin servidor, sin cuenta.
-      </div>
-
-      <Divider style={{ margin: '14px 0' }} />
-
       {/* Reset */}
       <button
         onClick={() => { if (confirm('¿Resetear todos los datos de PACE?')) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
@@ -5042,6 +4549,7 @@ function TweaksPanel({ open, onClose }) {
           color: 'var(--ink-3)',
           border: '1px dashed var(--line)',
           borderRadius: 'var(--r-sm)',
+          marginTop: 10,
           letterSpacing: 0.2,
         }}
       >Resetear todo</button>
@@ -5049,113 +4557,7 @@ function TweaksPanel({ open, onClose }) {
   );
 }
 
-/* ============================================================
-   TweakSecretsWatcher — monta siempre, observa combinaciones
-   ------------------------------------------------------------
-   Vive en el árbol aunque el panel de Tweaks esté cerrado, así
-   los secretos se disparan cuando el usuario cambia el tweak
-   correspondiente (desde Tweaks o por import JSON).
-
-   unlockAchievement es idempotente (no dispara el mismo id dos
-   veces), así que los efectos no necesitan guardas adicionales.
-   ============================================================ */
-function TweakSecretsWatcher() {
-  const [state] = usePace();
-
-  // Instantáneos: cambio de palette/font/logo → desbloqueo inmediato.
-  useEffectTW(() => {
-    if (state.palette === 'envejecido') unlockAchievement('secret.aged');
-  }, [state.palette]);
-
-  useEffectTW(() => {
-    if (state.font === 'mono') unlockAchievement('secret.mono');
-  }, [state.font]);
-
-  useEffectTW(() => {
-    if (state.logoVariant === 'sello') unlockAchievement('secret.seal');
-    if (state.logoVariant === 'ilustrado') unlockAchievement('secret.illustrated');
-  }, [state.logoVariant]);
-
-  /* secret.dark.mode — "7 días en oscuro" (días de calendario distintos
-     con palette === 'oscuro', no necesariamente consecutivos; la
-     definición original del logro dice "7 días en oscuro" sin exigir
-     racha seguida, y es la lectura más amable).
-
-     Implementación: set de cadenas `YYYY-MM-DD` persistido en una
-     clave propia (`pace.darkDays.v1`) para no engordar el state
-     principal — es un contador auxiliar de un único logro, no un
-     dato de producto. Se suma el día actual cada vez que cambia el
-     state mientras palette === 'oscuro' (la primera por día).
-  */
-  useEffectTW(() => {
-    if (state.palette !== 'oscuro') return;
-    try {
-      const today = new Date().toISOString().slice(0, 10);
-      const raw = localStorage.getItem(DARK_DAYS_KEY);
-      let set;
-      try { set = new Set(JSON.parse(raw || '[]')); } catch (e) { set = new Set(); }
-      if (!set.has(today)) {
-        set.add(today);
-        // Cap defensivo: guardamos máximo 30 fechas (suficiente para el logro).
-        const arr = Array.from(set).slice(-30);
-        localStorage.setItem(DARK_DAYS_KEY, JSON.stringify(arr));
-        if (arr.length >= 7) unlockAchievement('secret.dark.mode');
-      } else if (set.size >= 7) {
-        // Ya acumulado en sesiones anteriores, desbloqueamos ahora.
-        unlockAchievement('secret.dark.mode');
-      }
-    } catch (e) { /* silencioso — no es crítico */ }
-  }, [state.palette]);
-
-  return null;
-}
-
-/* ============================================================
-   Iconos + estilos (nombres únicos)
-   ============================================================ */
-function DownloadIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.3"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 2.5v8" />
-      <path d="M4.5 7L8 10.5 11.5 7" />
-      <path d="M3 13h10" />
-    </svg>
-  );
-}
-function UploadIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.3"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 10.5v-8" />
-      <path d="M4.5 6L8 2.5 11.5 6" />
-      <path d="M3 13h10" />
-    </svg>
-  );
-}
-
-const tweaksStyles = {
-  dataBtn: {
-    flex: 1,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: '8px 10px',
-    fontSize: 11,
-    color: 'var(--ink-2)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    letterSpacing: 0.2,
-    cursor: 'pointer',
-    transition: 'all 180ms',
-  },
-};
-
-Object.assign(window, { TweaksPanel, TweakSecretsWatcher });
+Object.assign(window, { TweaksPanel });
 </script>
 
   <script type="text/babel">/* PACE · Main orchestrator
@@ -5176,7 +4578,6 @@ function PaceApp() {
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
   const [openSupport, setOpenSupport] = useStateMain(false);
-  const [openWelcome, setOpenWelcome] = useStateMain(false);
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
@@ -5215,18 +4616,6 @@ function PaceApp() {
   // ('condición + flag de una sola vez') vive allí para mantenerla
   // junto a la filosofía del módulo.
   useSupportAutoTrigger(setOpenSupport);
-
-  // Auto-trigger del WelcomeModal la primera vez que se abre la app
-  // (state.firstSeen == null). Mismo patrón que el anterior.
-  useFirstTimeWelcome(setOpenWelcome);
-
-  // Re-abrir welcome a mano (dev / curiosidad): evento global
-  // `pace:open-welcome`. Mismo patrón que `pace:open-support`.
-  useEffectMain(() => {
-    const h = () => setOpenWelcome(true);
-    window.addEventListener('pace:open-welcome', h);
-    return () => window.removeEventListener('pace:open-welcome', h);
-  }, []);
 
   // Atajo logros
   useEffectMain(() => {
@@ -5366,12 +4755,6 @@ function PaceApp() {
         onChoose={handleBreakChoice}
       />
       <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
-      <WelcomeModal open={openWelcome} onClose={() => setOpenWelcome(false)} />
-
-      {/* Observador de tweak-secrets — monta siempre, retorna null.
-          Desbloquea secret.aged / dark.mode / mono / seal / illustrated
-          en función del state actual. Ver TweaksPanel.jsx. */}
-      <TweakSecretsWatcher />
 
       {safetyRoutine && (
         <BreatheSafety

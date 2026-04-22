@@ -10,9 +10,9 @@
 
 ---
 
-**Versión actual:** v0.11.11
-**Última sesión:** #16 — 2026-04-22 · Integración Buy Me a Coffee (frente 1 de monetización)
-**Última actualización de este archivo:** 2026-04-22 · sesión 16
+**Versión actual:** v0.12.0
+**Última sesión:** #17 — 2026-04-22 · Welcome de primera vez + Export/Import JSON + 6 tweak-secrets
+**Última actualización de este archivo:** 2026-04-22 · sesión 17
 
 ---
 
@@ -20,12 +20,14 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.11.11, carga limpio |
-| `PACE_standalone.html` | Bundle offline inline | v0.11.11 (~198 KB) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.0, carga limpio |
+| `PACE_standalone.html` | Bundle offline inline | v0.12.0 (~225 KB) |
 | `app/ui/pace-logo.png` | Logo oficial local (fallback SVG si falla) | Presente |
-| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | Nuevo, v0.11.11 |
-| `backups/PACE_standalone_v0.11.10_20260422.html` | Backup (1 atrás) | — |
-| `backups/PACE_standalone_v0.11.9_20260422.html` | Backup (2 atrás) | — |
+| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.11.11 |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | Nuevo, v0.12.0 |
+| `backups/PACE_standalone_v0.11.11_20260422.html` | Backup (1 atrás) | — |
+| `backups/PACE_standalone_v0.11.10_20260422.html` | Backup (2 atrás) | — |
+| `backups/PACE_standalone_v0.11.9_20260422.html` | Backup (3 atrás) | — |
 
 Backups rotados con la regla "máximo 5 más recientes" (ver `CLAUDE.md`).
 Los backups previos (v0.11.6/7/8) existen en el repo de GitHub pero no se
@@ -36,32 +38,35 @@ en git, no dependencias activas.
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 16 · v0.11.11 · Integración Buy Me a Coffee**
+**Sesión 17 · v0.12.0 · Welcome + Export/Import + 6 tweak-secrets**
 
-Frente 1 del plan de monetización ejecutado completo. Respeta los 3
-principios planteados en la sesión anterior: presencia calmada, razón
-por valores, momento elegido.
+Combo de sesión corta recomendado por el STATE.md anterior. Refuerza la
+narrativa del modal de BMC (sesión 16): ahora lo primero que ve un
+usuario al abrir PACE son los mismos 3 valores, y el Export/Import hace
+literal la promesa "todo local, para siempre".
 
-- **Módulo nuevo `app/support/SupportModule.jsx`** con `SupportButton`
-  (pill discreto en footer del sidebar), `SupportModal` (hero de taza
-  terracota + título *"PACE es gratis. Y lo seguirá siendo."* + 3
-  valores + botón a BMC + `Ya doné →`) y hook `useSupportAutoTrigger`
-  que abre el modal una sola vez al llegar a 7 días de racha.
-- **Logro `secret.supporter`** ("Sostienes el pasto", glifo `✦`)
-  añadido al catálogo y a `IMPLEMENTED_ACHIEVEMENTS` (5/21 secretos
-  con trigger). Activable por honor desde el modal.
-- **Tweak `supportCopyVariant`** con 3 opciones (`cafe` default,
-  `pasto`, `vaca`) actualiza el copy del pill y del botón primario en
-  vivo.
-- **Campos nuevos en state**: `supportSeenAt` (timestamp, inhibe
-  auto-trigger) y `supportCopyVariant`. Se suman al patrón existente
-  de persistencia via localStorage.
-- **Corrección de versión arrastrada**: `PACE_VERSION` en `state.jsx`
-  era `v0.11.9` aunque STATE.md y PACE.html decían `v0.11.10`.
-  Corregido a `v0.11.11`.
-- Backup rotado `backups/PACE_standalone_v0.11.10_20260422.html`.
+- **Módulo nuevo `app/welcome/WelcomeModule.jsx`** con `WelcomeModal`
+  (single-screen editorial: logo oficial + *"Antídoto a la silla. A tu
+  ritmo."* + 3 valores + campo opcional de intención + botón `Empezar`
+  + link `prefiero saltarlo`) y hook `useFirstTimeWelcome` que abre el
+  modal una sola vez cuando `state.firstSeen == null`. Mismo patrón
+  que `useSupportAutoTrigger` de sesión 16.
+- **Export/Import JSON** en `TweaksPanel.jsx`. Export descarga
+  `pace-backup-YYYYMMDD.json` con `{app, version, exportedAt, state}`.
+  Import valida schema, pregunta confirmación con contador, reemplaza
+  localStorage y recarga. Refuerza "todo local" como promesa visible.
+- **`TweakSecretsWatcher`** (componente auxiliar, retorna null, monta
+  siempre) desbloquea 5 tweak-secrets: `secret.aged` / `.mono` /
+  `.seal` / `.illustrated` son instantáneos al cambiar el tweak;
+  `secret.dark.mode` acumula 7 días distintos (no consecutivos) en
+  `localStorage.pace.darkDays.v1`. Además abrir el panel dispara
+  `explore.tweaks`. **Total "Próximamente" baja de 19 → 13**.
+- **Campo nuevo en state**: `firstSeen: null` (timestamp al primer open
+  del Welcome).
+- Versión `v0.11.11` → `v0.12.0` (feature nueva + data portability).
+- Backup rotado `backups/PACE_standalone_v0.11.11_20260422.html`.
 
-Detalle completo: [`docs/sessions/session-16-bmc-integracion.md`](./docs/sessions/session-16-bmc-integracion.md).
+Detalle completo: [`docs/sessions/session-17-welcome-export-tweaksecrets.md`](./docs/sessions/session-17-welcome-export-tweaksecrets.md).
 
 ---
 
@@ -69,16 +74,14 @@ Detalle completo: [`docs/sessions/session-16-bmc-integracion.md`](./docs/session
 
 ### 🏆 Deuda de producto
 
-- **#9 (reducido)** ~19 logros visibles como "Próximamente" en la UI que
-  aún no tienen trigger: `master.*` (24 entradas del catálogo, varias ya
-  descontadas), `season.*` (10), `first.ritual/cycle/day/plan/return`,
-  `streak.14/60/365`, `breathe.sessions.10/50`, `move.sessions.25`,
-  `hydrate.week.perfect`, `morning.5`, `explore.all.*` (3),
-  `explore.chrome`, `explore.tweaks`. La UI ya comunica correctamente
-  que son futuros. Candidatos de "fruta fácil" para próxima sesión
-  corta: los 6 tweak-secrets (`secret.aged`, `.dark.mode`, `.mono`,
-  `.seal`, `.illustrated`, `explore.tweaks`) son ~1 línea cada uno en
-  `TweaksPanel.jsx`.
+- **#9 (reducido a 13)** logros visibles como "Próximamente" sin trigger:
+  `master.*` (restantes del catálogo), `season.*` (10),
+  `first.ritual/cycle/day/plan/return`, `streak.14/60/365`,
+  `breathe.sessions.10/50`, `move.sessions.25`, `hydrate.week.perfect`,
+  `morning.5`, `explore.all.*` (3), `explore.chrome`. Los tweak-secrets
+  y `explore.tweaks` ya tienen trigger desde sesión 17. Siguientes
+  candidatos de fruta fácil: los 3 `first.*` (`ritual`, `cycle`,
+  `plan`) con datos ya en state, ~2h totales.
 
 ### 🎨 Diseño pendiente (del roadmap corto)
 
@@ -95,7 +98,7 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
-- **Donar no desbloquea nada funcional** en PACE. `secret.supporter`
+- **El Welcome se muestra una sola vez** por instalaci\u00f3n, al primer\n  open con `state.firstSeen == null`. Tanto `Empezar` como el link\n  `prefiero saltarlo` fijan `firstSeen` a timestamp \u2014 es una bienvenida,\n  no un tr\u00e1mite. Re-abrir es posible v\u00eda `pace:open-welcome` pero sin\n  UI visible (dev/debug only). (Sesi\u00f3n 17.)\n- **El backup JSON incluye `version` y `exportedAt`** para migraci\u00f3n\n  futura. El import acepta tanto `{app, version, state}` como state\n  plano (fallback legacy). Tras import exitoso se recarga la p\u00e1gina;\n  actualizar state en memoria arriesga inconsistencias con\n  `useSyncExternalStore`. (Sesi\u00f3n 17.)\n- **`secret.dark.mode` cuenta d\u00edas distintos, no consecutivos.** La\n  descripci\u00f3n dice \"7 d\u00edas en oscuro\" sin exigir racha. Persistido en\n  clave propia `pace.darkDays.v1` (no en el state principal \u2014 es un\n  contador auxiliar de un \u00fanico logro). Cap de 30 fechas. (Sesi\u00f3n 17.)\n- **`TweakSecretsWatcher` retorna `null` y vive en el \u00e1rbol siempre**\n  (en `main.jsx`, no dentro del TweaksPanel). Raz\u00f3n: los secretos\n  deben dispararse cuando el state cambia, no s\u00f3lo cuando el panel\n  est\u00e1 abierto. Cubre casos como importar un JSON con palette oscuro\n  ya fijada. (Sesi\u00f3n 17.)\n\n- **Donar no desbloquea nada funcional** en PACE. `secret.supporter`
   es un sello visible en la colección, nada más. Sin verificación,
   solo honor. Sumar unlocks tangibles por donar rompería el
   diferencial ético del producto. (Sesión 16.)
@@ -155,52 +158,39 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual: Frente 1 (monetización BMC) ✅ completo. Queda
-> alimentar la app con funcionalidades para que la donación tenga
-> más sentido y alcance más usuarios.
+> Estado actual: Frente 1 (BMC) ✅ · Combo Welcome/Export/tweak-secrets
+> ✅ completo en sesión 17. La app ya ofrece al usuario nuevo una
+> bienvenida editorial + portabilidad completa de sus datos.
 
 ### 🎯 Próxima sesión corta (recomendada)
 
-Combo de 5h con alto impacto emocional. Refuerza el argumento del
-modal de BMC: cuando dice "Todo local", ahora es literalmente
-exportable; cuando dice "Para siempre", tienes un backup físico.
+Tres bloques de fruta fácil que siguen bajando la cuenta de
+"Próximamente" y mejoran la constancia percibida:
 
-1. **Welcome screen de primera vez** (~2h) — Modal único que aparece
-   cuando `state.firstSeen == null`. Saludo editorial corto, no
-   onboarding largo. Logo Pace + frase manifesto + 3 valores en
-   positivo ("Todo local · Sin cuentas · Siempre gratis") + botón
-   "Empezar". Opcional: pedir intención inicial ("¿Qué quieres
-   cultivar?") que se guarda en `state.intention` — deja algo útil.
-   Patrón técnico idéntico a `SupportModal`: flag
-   `state.firstSeen: null → timestamp`, hook `useFirstTimeWelcome`,
-   evento `pace:open-welcome` para re-abrir desde Tweaks dev.
-2. **Export/Import JSON** (~2h) — Botón "Exportar mis datos" en
-   TweaksPanel descarga `pace-backup-YYYYMMDD.json` con
-   `localStorage.getItem('pace.state.v1')`. Botón "Importar" con
-   input file: valida schema, pregunta confirmación ("¿Sobreescribir
-   datos actuales? N logros, M minutos..."), hace merge o replace.
-   Añadir `exportedAt` y `version` al JSON para migración futura.
-   Refuerza valor "todo local" de BMC: ahora es local Y portátil.
-3. **6 tweak-secrets** (~1h) — fruta fácil, ~1 línea cada uno en
-   `TweaksPanel.jsx`: `secret.aged`, `.dark.mode`, `.mono`, `.seal`,
-   `.illustrated`, `explore.tweaks`. Baja "Próximamente" de 19 a 13.
-   Recompensa la exploración de forma natural.
+1. **3 triggers de primeros pasos** (~2h) — `first.ritual` (4 módulos
+   en 1 día), `first.cycle` (pomodoro + pausa activa), `first.plan`
+   (plan del día completo). Datos ya en `state.plan`, sólo falta el
+   detector en `state.jsx`. Baja "Próximamente" de 13 → 10.
+2. **Rachas largas** (~1–2h) — `streak.14`, `streak.60`, `streak.365`.
+   Cálculo trivial dentro de `updateStreak` (las demás ya están ahí).
+   Impacto emocional alto, 13 → 10 (si se combina con el anterior:
+   13 → 7).
+3. **Sonidos sutiles** (~2h) — el toggle `state.soundOn` ya existe,
+   faltan 3–4 WAV CC0 de freesound.org: click timer, fin pomodoro,
+   +1 vaso, fase respiración. Hook `useSound(name)` nuevo en UI.
 
 ### 🚀 Frente 2 — Funcionalidades (ordenado por coste/impacto)
 
 **Alto impacto · coste bajo:**
 
-- **Sonidos sutiles** (~2h) — el toggle ya existe en Tweaks, faltan
-  3–4 WAVs: click timer, fin pomodoro, +1 vaso, inhalar/exhalar.
-  Fuente: [freesound.org](https://freesound.org) con licencia CC0.
-- **3 triggers obvios de logros** (~2h) — `first.ritual` (4 módulos
-  en 1 día), `first.cycle` (pomodoro + pausa activa), `first.plan`
-  (plan del día completo). Datos ya en state, solo falta el detector.
+- **Sonidos sutiles** (~2h) — ver bloque anterior. También se puede
+  hacer aislado si no se combina con los triggers de logros.
+- **Combinar 3 triggers de logros + rachas largas** en una única
+  sesión corta (ya detallado arriba).
 
 **Alto impacto · coste medio:**
 
-- **Rachas largas** (~1–2h) — `streak.14/30/60/365`. Cálculo trivial,
-  impacto emocional alto. Baja "Próximamente" de ~19 a ~15.
+- **Rachas largas** (~1–2h) — ver arriba.
 - **Extensión Chrome popup 340×480** (~1 sesión larga) — ventaja
   competitiva enorme. El código ya está modularizado para reutilizar.
   Triplica el espacio para CTA de BMC (popup + new tab + web).

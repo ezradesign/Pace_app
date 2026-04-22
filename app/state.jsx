@@ -5,7 +5,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.11.11';
+const PACE_VERSION = 'v0.12.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -49,8 +49,16 @@ const defaultState = {
   // Streak
   streak: { current: 0, longest: 0, lastActiveDate: null },
 
-  // Intención del día
+  // Intención del día — capturada opcionalmente en el Welcome de primera
+  // vez (sesión 17 / v0.12.0), visible también para edición futura.
   intention: '',
+
+  // Welcome de primera vez (sesión 17 / v0.12.0).
+  // `firstSeen`: timestamp de la primera interacción con el WelcomeModal.
+  //   null = nunca visto → auto-trigger dispara la bienvenida.
+  //   Una vez cerrado (OK o skip), se fija timestamp y no vuelve nunca.
+  //   Mismo patrón que `supportSeenAt` (v0.11.11).
+  firstSeen: null,
 
   // Buy Me a Coffee — monetización por donación (sesión 16, v0.11.11).
   // `supportSeenAt`: timestamp de la primera apertura del modal de apoyo.
