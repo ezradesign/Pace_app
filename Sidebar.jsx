@@ -1,0 +1,362 @@
+/* PACE · Sidebar izquierdo
+   Ritmo, Plan, Logros, Recordatorios, Intención
+*/
+
+const { useState: useStateSB } = React;
+
+function Sidebar() {
+  const [state, set] = usePace();
+  const [reminderInput, setReminderInput] = useStateSB('');
+  const [reminderMin, setReminderMin] = useStateSB('15');
+
+  const unlockedCount = Object.keys(state.achievements || {}).length;
+  const plan = state.plan;
+  const planItems = [
+    { key: 'muevete', label: 'Muévete', color: 'var(--move)' },
+    { key: 'respira', label: 'Respira', color: 'var(--breathe)' },
+    { key: 'extra', label: 'Extra', color: 'var(--extra)' },
+    { key: 'hidratate', label: 'Hidrátate', color: 'var(--hydrate)' },
+  ];
+
+  const addReminder = () => {
+    if (!reminderInput.trim()) return;
+    set({
+      reminders: [...(state.reminders || []), {
+        id: Date.now(), text: reminderInput.trim(), minutes: parseInt(reminderMin) || 15, createdAt: Date.now()
+      }]
+    });
+    setReminderInput('');
+  };
+  const removeReminder = (id) => {
+    set({ reminders: (state.reminders || []).filter(r => r.id !== id) });
+  };
+
+  return (
+    <aside style={sidebarStyles.root}>
+      {/* LOGO */}
+      <div style={sidebarStyles.logo}>
+        <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
+      </div>
+
+      {/* CICLOS HOY */}
+      <div style={sidebarStyles.cycles}>
+        <div style={sidebarStyles.cycleCount}>
+          <span style={sidebarStyles.cycleNum}># {String(state.cycle).padStart(2, '0')}</span>
+          <span style={sidebarStyles.cycleSep}>|</span>
+          <span style={sidebarStyles.cycleNum}>↻ {String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
+          <span style={sidebarStyles.cycleSep}>|</span>
+          <span style={sidebarStyles.cycleNum} title="Días activos seguidos">◉ {String(state.streak.current).padStart(2, '0')}</span>
+        </div>
+      </div>
+
+      <Divider style={{ margin: '20px 0 16px' }} />
+
+      {/* RITMO / RACHA */}
+      <div style={sidebarStyles.section}>
+        <div style={sidebarStyles.sectionHeader}>
+          <Meta>Ritmo</Meta>
+          <span style={sidebarStyles.sectionAside}>{state.streak.longest}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+          <span style={sidebarStyles.streakNum}>{state.streak.current}</span>
+          <div>
+            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? 'día seguido' : 'días seguidos'}</div>
+            <div style={sidebarStyles.streakSub}>Mejor: {state.streak.longest} días</div>
+          </div>
+        </div>
+        <WeekDots weeklyStats={state.weeklyStats} />
+      </div>
+
+      <Divider style={{ margin: '20px 0 16px' }} />
+
+      {/* PLAN */}
+      <div style={sidebarStyles.section}>
+        <div style={sidebarStyles.sectionHeader}>
+          <Meta>Plan</Meta>
+          <span style={sidebarStyles.sectionAside}>Equilibrado</span>
+        </div>
+        <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 8 }}>Martes</div>
+        <div style={sidebarStyles.planBar}>
+          {planItems.map(item => (
+            <button
+              key={item.key}
+              onClick={() => set({ plan: { ...plan, [item.key]: !plan[item.key] } })}
+              style={{
+                ...sidebarStyles.planChip,
+                background: plan[item.key] ? item.color : 'transparent',
+                color: plan[item.key] ? 'var(--paper)' : 'var(--ink-2)',
+                borderColor: plan[item.key] ? item.color : 'var(--line)',
+              }}
+            >
+              {plan[item.key] && '✓ '}
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '20px 0 16px' }} />
+
+      {/* LOGROS */}
+      <div style={sidebarStyles.section}>
+        <div style={sidebarStyles.sectionHeader}>
+          <Meta>Logros</Meta>
+          <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
+        </div>
+        <AchievementsPreview onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} />
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
+          style={sidebarStyles.linkBtn}
+        >
+          {100 - unlockedCount} por descubrir →
+        </button>
+      </div>
+
+      <Divider style={{ margin: '20px 0 16px' }} />
+
+      {/* RECORDATORIOS */}
+      <div style={sidebarStyles.section}>
+        <Meta style={{ marginBottom: 10 }}>Recordatorios</Meta>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+          <input
+            value={reminderInput}
+            onChange={(e) => setReminderInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') addReminder(); }}
+            placeholder="Avisa…"
+            style={sidebarStyles.input}
+          />
+          <input
+            value={reminderMin}
+            onChange={(e) => setReminderMin(e.target.value)}
+            style={{ ...sidebarStyles.input, width: 44, textAlign: 'center' }}
+            type="number"
+            min="1"
+          />
+          <button onClick={addReminder} style={sidebarStyles.addBtn}>+</button>
+        </div>
+        {(state.reminders || []).length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {state.reminders.map(r => (
+              <div key={r.id} style={sidebarStyles.reminderItem}>
+                <span style={{ flex: 1, fontSize: 12 }}>{r.text}</span>
+                <span style={{ fontSize: 10, color: 'var(--ink-3)' }}>{r.minutes}m</span>
+                <button onClick={() => removeReminder(r.id)} style={sidebarStyles.reminderRemove}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <Divider style={{ margin: '20px 0 16px' }} />
+
+      {/* INTENCIÓN */}
+      <div style={sidebarStyles.section}>
+        <Meta style={{ marginBottom: 8 }}>Intención</Meta>
+        <textarea
+          value={state.intention}
+          onChange={(e) => set({ intention: e.target.value })}
+          placeholder="¿Qué quieres cultivar hoy?"
+          style={sidebarStyles.intentionBox}
+        />
+      </div>
+
+      <div style={{ flex: 1 }} />
+
+      {/* STATUS BAR INFERIOR */}
+      <StatusBar />
+    </aside>
+  );
+}
+
+function WeekDots({ weeklyStats }) {
+  const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const today = (new Date().getDay() + 6) % 7; // L=0
+  return (
+    <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
+      {days.map((d, i) => {
+        const active = (weeklyStats.focusMinutes[(i+1)%7] || 0) > 0;
+        const isToday = i === today;
+        return (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1 }}>
+            <div style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: active ? 'var(--focus)' : 'var(--line)',
+              outline: isToday ? '2px solid var(--ink-2)' : 'none',
+              outlineOffset: 2,
+            }} />
+            <span style={{ fontSize: 9, color: isToday ? 'var(--ink)' : 'var(--ink-3)', fontWeight: isToday ? 600 : 400 }}>{d}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function AchievementsPreview({ onOpen }) {
+  const [state] = usePace();
+  const unlocked = Object.keys(state.achievements || {});
+  // Mostrar 5 slots: los 3 últimos + 2 placeholders
+  const shown = 5;
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
+      {Array.from({ length: shown }).map((_, i) => {
+        const id = unlocked[i];
+        return (
+          <button
+            key={i}
+            onClick={onOpen}
+            style={{
+              aspectRatio: '1/1',
+              borderRadius: '50%',
+              border: '1px solid var(--line)',
+              background: id ? 'var(--achievement-soft)' : 'transparent',
+              color: id ? 'var(--achievement)' : 'var(--ink-3)',
+              display: 'grid', placeItems: 'center',
+              fontSize: 10,
+              fontFamily: 'var(--font-display)',
+              fontStyle: 'italic',
+              cursor: 'pointer',
+              transition: 'all 180ms',
+            }}
+            title={id || 'Por descubrir'}
+          >
+            {id ? '✦' : '·'}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function StatusBar() {
+  const [state] = usePace();
+  return (
+    <div style={sidebarStyles.footer}>
+      <div style={sidebarStyles.footerRow}>
+        <Meta>En camino</Meta>
+        <Tag color="var(--breathe)">● Pace</Tag>
+      </div>
+      <div style={sidebarStyles.footerRow}>
+        <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace v0.9</span>
+        <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @acuradesign</span>
+      </div>
+    </div>
+  );
+}
+
+const sidebarStyles = {
+  root: {
+    width: 280,
+    minHeight: '100vh',
+    background: 'var(--paper-2)',
+    borderRight: '1px solid var(--line)',
+    padding: '24px 20px',
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 0,
+  },
+  logo: { marginBottom: 16 },
+  cycles: {},
+  cycleCount: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    fontSize: 12, color: 'var(--ink-2)', letterSpacing: '0.05em',
+  },
+  cycleNum: { fontVariantNumeric: 'tabular-nums', fontWeight: 500 },
+  cycleSep: { color: 'var(--ink-3)', opacity: 0.5 },
+  section: {},
+  sectionHeader: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+    marginBottom: 10,
+  },
+  sectionAside: {
+    fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+    color: 'var(--ink-3)',
+  },
+  streakNum: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 56,
+    fontWeight: 500,
+    lineHeight: 0.9,
+    color: 'var(--ink)',
+  },
+  streakLabel: { fontSize: 12, color: 'var(--ink-2)', fontStyle: 'italic', fontFamily: 'var(--font-display)' },
+  streakSub: { fontSize: 10, color: 'var(--ink-3)', marginTop: 2 },
+  planBar: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 6,
+  },
+  planChip: {
+    padding: '7px 10px',
+    fontSize: 11,
+    fontWeight: 500,
+    border: '1px solid',
+    borderRadius: 'var(--r-sm)',
+    letterSpacing: 0.2,
+    transition: 'all 180ms',
+    textAlign: 'center',
+  },
+  linkBtn: {
+    fontSize: 11,
+    color: 'var(--ink-3)',
+    textDecoration: 'none',
+    padding: 0,
+    marginTop: 4,
+  },
+  input: {
+    flex: 1,
+    background: 'var(--paper)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-sm)',
+    padding: '6px 10px',
+    fontSize: 12,
+    color: 'var(--ink)',
+    outline: 'none',
+  },
+  addBtn: {
+    background: 'var(--focus)',
+    color: 'var(--paper)',
+    borderRadius: 'var(--r-sm)',
+    width: 30, height: 30,
+    fontSize: 14,
+    fontWeight: 600,
+    display: 'grid', placeItems: 'center',
+  },
+  reminderItem: {
+    display: 'flex', alignItems: 'center', gap: 6,
+    padding: '4px 8px',
+    background: 'var(--paper)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-sm)',
+  },
+  reminderRemove: {
+    color: 'var(--ink-3)', fontSize: 14, width: 16, height: 16,
+    display: 'grid', placeItems: 'center',
+  },
+  intentionBox: {
+    width: '100%',
+    minHeight: 50,
+    background: 'var(--paper)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-sm)',
+    padding: '8px 10px',
+    fontSize: 12,
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    resize: 'vertical',
+    outline: 'none',
+    color: 'var(--ink)',
+  },
+  footer: {
+    marginTop: 20,
+    paddingTop: 16,
+    borderTop: '1px solid var(--line)',
+    display: 'flex', flexDirection: 'column', gap: 8,
+  },
+  footerRow: {
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+  },
+};
+
+Object.assign(window, { Sidebar });
