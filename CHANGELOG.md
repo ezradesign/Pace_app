@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.12.1** | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [abajo ↓](#v0121--2026-04-22--pulido-bugs-y-layout) |
-| **v0.12.0** | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [abajo ↓](#v0120--2026-04-22--welcome-export-tweak-secrets) |
+| **v0.12.2** | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [abajo ↓](#v0122--2026-04-22--pill-consolidada-y-standalone-autocontenido) |
+| **v0.12.1** | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
+| v0.12.0 | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [session-17-welcome-export.md](./docs/sessions/session-17-welcome-export.md) |
 | v0.11.11 | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [session-16-bmc-integracion.md](./docs/sessions/session-16-bmc-integracion.md) |
 | v0.11.10 | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [session-15-logros-proximamente.md](./docs/sessions/session-15-logros-proximamente.md) |
 | v0.11.9 | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | [session-14-swap-mueve-estira.md](./docs/sessions/session-14-swap-mueve-estira.md) |
@@ -33,6 +34,68 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.2] — 2026-04-22 — Pill consolidada y standalone autocontenido
+
+Sesión breve de simplificación. El botón de apoyo en el sidebar tenía
+cuatro variantes de copy configurables (`cafe`, `pasto`, `vaca`, `come`)
+que mezclaban metáforas y diluían la identidad. Se consolidan en una
+sola línea alineada con la filosofía del producto (la vaca que *pace* =
+PACE), con el icono a la derecha para invertir la jerarquía clásica y
+dar más peso al gesto. Además, el tweak "Logo de la vaca" se retira:
+decidir entre 5 variantes del logo no aportaba al usuario final y
+añadía ruido al panel.
+
+Como efecto colateral, `PACE_standalone.html` por fin es **de verdad
+autocontenido**: el logo oficial viaja como data URI dentro del bundle,
+sin dependencia de rutas externas.
+
+### Cambiado
+- **`app/support/SupportModule.jsx`** — las 4 variantes de copy
+  (`cafe`/`pasto`/`vaca`/`come`) se reducen a una única
+  `SUPPORT_COPY_DEFAULT`:
+  - Label: *"Da de pastar a la vaca"*.
+  - Icono: siempre la silueta de vaca (antes alternaba con taza).
+  - Orden en el pill y en el CTA del modal: **texto → icono** (icono
+    a la derecha), invirtiendo el patrón habitual.
+  - `supportCopy(variant)` mantiene la firma pero ignora el argumento
+    — compatibilidad con código existente que lo siga llamando.
+- **`app/tweaks/TweaksPanel.jsx`** — retirados dos ejes del panel:
+  - *"Logo de la vaca"* (`logoVariant`): el logo queda fijo en la
+    variante oficial `'pace'`.
+  - *"Copy del botón de apoyo"* (`supportCopyVariant`): ya no tiene
+    sentido al consolidar el copy.
+- **`app/ui/CowLogo.jsx`** — el `PACE_LOGO_URL` ya no es una constante
+  hardcoded. Se lee del atributo `src` de un `<img id="pace-logo-src">`
+  pre-cargado en `PACE.html`. Esto permite que `super_inline_html`
+  inlinee el PNG como data URI al generar el bundle, sin romper la
+  carga modular.
+
+### Conservado (no retirado)
+- Los campos `logoVariant` y `supportCopyVariant` siguen existiendo en
+  `app/state.jsx` y en el `localStorage` de los usuarios. Solo se
+  eliminan del panel de Tweaks. Instalaciones existentes no pierden
+  datos.
+- Los logros secretos `secret.seal` y `secret.illustrated` (ligados a
+  `logoVariant`) quedan dormidos pero definidos, por si se reintroducen
+  como easter egg futuro.
+
+### Nuevo
+- **`PACE_standalone.html` autocontenido de verdad** — el logo PNG se
+  inlinea como data URI en el bundle (tamaño: ~326 KB, antes ~225 KB).
+  El archivo ahora funciona al 100% sin servidor ni dependencias
+  locales. Se ha versionado este build como `PACE_App_1_38.html` a
+  efectos de entrega.
+
+### Notas de diseño
+- "Da de pastar a la vaca" se eligió sobre "Da de comer" porque
+  *pastar* vincula directamente con el brand (PACE = pacer) y con la
+  metáfora que recorre toda la UI (la vaca del logo pasta en el campo).
+- El icono a la derecha es una decisión intencional: rompe la
+  convención del botón web (icono-izquierda) y da al texto el peso de
+  la acción. El icono actúa como firma visual, no como señalética.
 
 ---
 

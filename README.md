@@ -3,7 +3,8 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.11.7 · Pre-lanzamiento · Iteración de diseño
+**Estado:** v0.12.2 · Pre-lanzamiento · Iteración de diseño
+**Build entregado:** `PACE_App_1_38.html` (standalone autocontenido)
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 
 ---
@@ -91,16 +92,19 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 
 ---
 
-## 🎛️ 6 ejes de personalización (Tweaks)
+## 🎛️ 5 ejes de personalización (Tweaks)
 
 | Eje | Opciones |
 |---|---|
 | Paleta | crema · oscuro · envejecido |
 | Tipografía | garamond · cormorant · mono |
 | Layout | sidebar · minimal · editorial |
-| Timer | número · aro (default) · círculo · barra · analógico |
-| Círculo respiración | flor (default) · pulso · ondas · pétalo · orgánico |
-| Logo | lineal · sello · ilustrado |
+| Timer | aro (default) · círculo · barra · número · analógico |
+| Círculo respiración | flor (default) · pulso · pétalo · ondas · orgánico |
+
+> El logo y el copy del botón de apoyo eran tweaks configurables hasta
+> v0.12.1. Desde v0.12.2 quedan fijos en la variante oficial para
+> reforzar la identidad del producto.
 
 ---
 

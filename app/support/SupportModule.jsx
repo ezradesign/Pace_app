@@ -34,54 +34,29 @@ const { useEffect: useEffectSUP, useState: useStateSUP } = React;
 const BMC_USERNAME = 'ezradesign';
 const BMC_URL = `https://buymeacoffee.com/${BMC_USERNAME}`;
 
-/* 4 variantes de copy — expuestas como Tweak. Default = 'cafe' (clásico).
-   'pasto', 'vaca' y 'come' juegan con la metáfora de la vaca paciendo
-   (logo). Cada variante declara también su `icon` ('cup' | 'cow') para
-   que el pill y el CTA del modal mantengan coherencia visual entre
-   metáforas: cuando el copy habla de la vaca, el icono pasa a ser la
-   vaca; cuando habla de café o pasto, taza. */
-const SUPPORT_COPY = {
-  cafe: {
-    icon: 'cup',
-    label: 'Invita a un café',
-    short: 'Invita a un café',
-    title: '¿Te invito a uno?',
-    subtitle: 'Un café, un gesto. Nada más.',
-  },
-  pasto: {
-    icon: 'cup',
-    label: 'Riega el pasto',
-    short: 'Riega el pasto',
-    title: 'Riega el pasto',
-    subtitle: 'Para que el proyecto siga creciendo a su ritmo.',
-  },
-  vaca: {
-    icon: 'cow',
-    label: 'Da de comer a la vaca',
-    short: 'Da de comer',
-    title: 'Da de comer a la vaca',
-    subtitle: 'Un gesto para que siga paciendo a su ritmo.',
-  },
-  come: {
-    icon: 'cow',
-    label: 'Ayuda a que la vaca coma',
-    short: 'Ayuda a que la vaca coma',
-    title: 'Ayuda a que la vaca coma',
-    subtitle: 'Un gesto para que siga paciendo a su ritmo.',
-  },
+/* Copy único — decidido en sesión de diseño post-v0.12.1: se descartan
+   las 4 variantes ('cafe', 'pasto', 'vaca', 'come') y se consolida en
+   una sola que abraza la metáfora central del proyecto (la vaca que
+   pace = PACE). El icono siempre es la vaca. Mantenemos la API
+   `supportCopy(variant)` por compatibilidad con state.supportCopyVariant
+   pero ignora el argumento. */
+const SUPPORT_COPY_DEFAULT = {
+  icon: 'cow',
+  label: 'Da de pastar a la vaca',
+  short: 'Da de pastar a la vaca',
+  title: 'Da de pastar a la vaca',
+  subtitle: 'Un gesto para que siga paciendo a su ritmo.',
 };
 
-function supportCopy(variant) {
-  return SUPPORT_COPY[variant] || SUPPORT_COPY.cafe;
+function supportCopy(_variant) {
+  return SUPPORT_COPY_DEFAULT;
 }
 
-/* Helper que decide qué icono renderizar según la variante.
-   Uso: <SupportIcon variant={state.supportCopyVariant} /> */
+/* Helper que renderiza el icono del pill / CTA. Con la consolidación
+   a una sola variante, siempre es la vaca. Se mantiene la firma
+   (variant, size) por si en el futuro volvemos a bifurcar. */
 function SupportIcon({ variant, size = 13 }) {
-  const copy = supportCopy(variant);
-  return copy.icon === 'cow'
-    ? <CowIcon size={size} />
-    : <CupIcon size={size} />;
+  return <CowIcon size={size} />;
 }
 
 /* ============================================================
@@ -122,8 +97,8 @@ function SupportButton({ onOpen }) {
         cursor: 'pointer',
       }}
     >
-      <SupportIcon variant={state.supportCopyVariant} />
       <span>{copy.short}</span>
+      <SupportIcon variant={state.supportCopyVariant} />
     </button>
   );
 }
@@ -272,8 +247,8 @@ function SupportModal({ open, onClose }) {
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
+            <span style={{ marginRight: 2 }}>{supportCopy(state.supportCopyVariant).label}</span>
             <SupportIcon variant={state.supportCopyVariant} />
-            <span style={{ marginLeft: 2 }}>{supportCopy(state.supportCopyVariant).label}</span>
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
             {copied ? '✓ copiado' : 'Copiar enlace'}
@@ -382,11 +357,10 @@ function BigCow() {
   );
 }
 
-/* Selector del hero según la variante de copy. Same pattern as
-   SupportIcon but para el tamaño hero del modal. */
+/* Hero del modal. Con la consolidación a una sola variante, siempre
+   es la vaca grande. Se mantiene la firma por compatibilidad. */
 function SupportHero({ variant }) {
-  const copy = supportCopy(variant);
-  return copy.icon === 'cow' ? <BigCow /> : <BigCup />;
+  return <BigCow />;
 }
 
 /* ============================================================

@@ -66,10 +66,12 @@ const defaultState = {
   //   dispararse. Una vez visto (manual o auto) se fija el timestamp y
   //   no vuelve a auto-abrirse nunca. El usuario puede re-abrirlo las
   //   veces que quiera desde el botón del sidebar.
-  // `supportCopyVariant`: 'cafe' | 'pasto' | 'vaca' — texto del botón
-  //   (exposición vía Tweaks). Default 'cafe' (clásico de BMC).
+  // `supportCopyVariant`: DEPRECADO post-v0.12.1. El copy se consolidó
+  //   en una sola variante ("Da de pastar a la vaca" con icono de vaca).
+  //   Se conserva el campo en el state para no romper instalaciones
+  //   existentes, pero SupportModule ignora su valor.
   supportSeenAt: null,
-  supportCopyVariant: 'cafe',
+  supportCopyVariant: 'pastar',
 
   // Recordatorios — DECISIÓN (v0.11.3): la sección de UI se eliminó del Sidebar
   // para que todo quepa en 1920×1080 sin scroll. El array se conserva en el

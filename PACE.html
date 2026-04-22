@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="app/tokens.css" />
 </head>
 <body>
+  <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
+       como data URI en el bundle standalone. CowLogo.jsx lee el src
+       resuelto de este elemento (id="pace-logo-src"). -->
+  <img id="pace-logo-src" src="app/ui/pace-logo.png" style="display:none" alt="" />
+
   <div id="root"></div>
 
   <!-- React + Babel (pinned, no tocar) -->
