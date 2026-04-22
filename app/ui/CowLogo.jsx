@@ -196,7 +196,12 @@ function PaceLockup({ size = 44, subtitle = 'FOCO · CUERPO', showDot = true }) 
 // el PNG no viaja con el archivo, así que si falla la carga se hace fallback
 // automático al PaceLockup SVG (que es visualmente equivalente).
 const PACE_LOGO_URL = "app/ui/pace-logo.png";
-function PaceLogoImage({ maxWidth = 240 }) {
+function PaceLogoImage({ maxWidth = 600 }) {
+  /* NOTA v0.11.7 · sesión 12 — aumentado maxWidth 240 → 600 (≈2.5×) para
+     dar al logo el peso visual que tenía en el mockup de referencia. En la
+     práctica el ancho real lo limita el contenedor del sidebar (width 100%),
+     pero subir este tope permite que el logo se escale sin tope en sidebars
+     más anchos o layouts futuros. */
   const { useState: useStateLG } = React;
   const [failed, setFailed] = useStateLG(false);
   if (failed) {
@@ -235,7 +240,7 @@ function PaceLogoImage({ maxWidth = 240 }) {
    de que cada variante realmente se renderice distinta. */
 function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
   if (variant === 'pace') {
-    return <PaceLogoImage maxWidth={240} />;
+    return <PaceLogoImage maxWidth={600} />;
   }
   if (variant === 'lockup') {
     return <PaceLockup size={14} subtitle="FOCO · CUERPO" />;
