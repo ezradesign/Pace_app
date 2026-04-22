@@ -159,48 +159,95 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 > alimentar la app con funcionalidades para que la donación tenga
 > más sentido y alcance más usuarios.
 
+### 🎯 Próxima sesión corta (recomendada)
+
+Combo de 5h con alto impacto emocional. Refuerza el argumento del
+modal de BMC: cuando dice "Todo local", ahora es literalmente
+exportable; cuando dice "Para siempre", tienes un backup físico.
+
+1. **Welcome screen de primera vez** (~2h) — Modal único que aparece
+   cuando `state.firstSeen == null`. Saludo editorial corto, no
+   onboarding largo. Logo Pace + frase manifesto + 3 valores en
+   positivo ("Todo local · Sin cuentas · Siempre gratis") + botón
+   "Empezar". Opcional: pedir intención inicial ("¿Qué quieres
+   cultivar?") que se guarda en `state.intention` — deja algo útil.
+   Patrón técnico idéntico a `SupportModal`: flag
+   `state.firstSeen: null → timestamp`, hook `useFirstTimeWelcome`,
+   evento `pace:open-welcome` para re-abrir desde Tweaks dev.
+2. **Export/Import JSON** (~2h) — Botón "Exportar mis datos" en
+   TweaksPanel descarga `pace-backup-YYYYMMDD.json` con
+   `localStorage.getItem('pace.state.v1')`. Botón "Importar" con
+   input file: valida schema, pregunta confirmación ("¿Sobreescribir
+   datos actuales? N logros, M minutos..."), hace merge o replace.
+   Añadir `exportedAt` y `version` al JSON para migración futura.
+   Refuerza valor "todo local" de BMC: ahora es local Y portátil.
+3. **6 tweak-secrets** (~1h) — fruta fácil, ~1 línea cada uno en
+   `TweaksPanel.jsx`: `secret.aged`, `.dark.mode`, `.mono`, `.seal`,
+   `.illustrated`, `explore.tweaks`. Baja "Próximamente" de 19 a 13.
+   Recompensa la exploración de forma natural.
+
 ### 🚀 Frente 2 — Funcionalidades (ordenado por coste/impacto)
 
-**Alto impacto · coste bajo (hacer primero):**
+**Alto impacto · coste bajo:**
 
-1. **6 tweak-secrets fáciles** (~1h) — `secret.aged`, `.dark.mode`,
-   `.mono`, `.seal`, `.illustrated`, `explore.tweaks`. ~1 línea cada
-   uno en `TweaksPanel.jsx`. Baja "Próximamente" de 19 a ~13.
-2. **Sonidos sutiles** (~2h) — el toggle ya existe en Tweaks, faltan
-   3–4 WAVs: click timer, fin pomodoro, inhalar/exhalar, +1 vaso.
-   Fuente: [freesound.org](https://freesound.org) con licencia CC0.
-3. **3 triggers obvios de logros** (~2h) — `first.ritual` (4 módulos
-   en 1 día), `first.cycle` (pomodoro + pausa activa), `first.plan`
-   (plan del día completo). Los datos ya están en el state, solo
-   falta el detector.
+- **Sonidos sutiles** (~2h) — el toggle ya existe en Tweaks, faltan
+  3–4 WAVs: click timer, fin pomodoro, +1 vaso, inhalar/exhalar.
+  Fuente: [freesound.org](https://freesound.org) con licencia CC0.
+- **3 triggers obvios de logros** (~2h) — `first.ritual` (4 módulos
+  en 1 día), `first.cycle` (pomodoro + pausa activa), `first.plan`
+  (plan del día completo). Datos ya en state, solo falta el detector.
 
 **Alto impacto · coste medio:**
 
-4. **Rachas largas** (~1–2h) — `streak.14/30/60/365`. Cálculo trivial,
-   impacto emocional alto. Baja "Próximamente" de ~19 a ~15.
-5. **Extensión Chrome popup 340×480** (~1 sesión larga) — ventaja
-   competitiva enorme. El código ya está modularizado para reutilizar.
-   Triplica el espacio para CTA de BMC (popup + new tab + web).
-6. **Notificaciones del navegador para agua** (~2h) — reintroducir UI
-   de recordatorios como modal + Web Notifications API. El state ya
-   conserva `reminders: []` por decisión activa.
+- **Rachas largas** (~1–2h) — `streak.14/30/60/365`. Cálculo trivial,
+  impacto emocional alto. Baja "Próximamente" de ~19 a ~15.
+- **Extensión Chrome popup 340×480** (~1 sesión larga) — ventaja
+  competitiva enorme. El código ya está modularizado para reutilizar.
+  Triplica el espacio para CTA de BMC (popup + new tab + web).
+- **Notificaciones del navegador para agua** (~2h) — reintroducir UI
+  de recordatorios como modal + Web Notifications API. El state ya
+  conserva `reminders: []` por decisión activa.
 
 **Medio impacto · coste alto (más adelante):**
 
-7. **Layout "Editorial"** — el tweak está listado pero sin impl visual.
-   Potencial estético brutal, pero requiere diseño desde cero.
-8. **Export CSV/JSON** de logros, sesiones, minutos. Útil para power
-   users. No monetizar como "pro feature" — respeta el principio
-   "todo gratis".
+- **Layout "Editorial"** — el tweak está listado pero sin impl visual.
+  Potencial estético brutal, pero requiere diseño desde cero.
+- **Historial visual ("año en pace")** — vista anual tipo GitHub
+  contributions pero con tierra/oliva en vez de verde. Muy
+  satisfactorio visualmente cuando la app acumula datos.
 
-### 🗺️ Secuencia recomendada
+### 📌 Preferencia baja (pendientes de diseño antes de implementar)
 
-1. **Sesión corta** (próxima): puntos 1+2+4 → la app se siente
-   "completa" con ~30 logros cazables + sonidos + rachas largas.
-2. **Sesión larga**: Chrome Extension (punto 5) → triplicas superficie
-   de uso y de CTA de BMC.
-3. **Sesión media**: resto de triggers (punto 3) + layout editorial
-   o notificaciones (según preferencia).
+Ideas válidas pero que requieren definición previa de producto/UX/visual.
+No arrancar sin mockup o decisión explícita del usuario.
+
+- **Google Calendar sync** — Sincronización opcional de pomodoros y
+  sesiones completadas con un calendario Google. Problema filosófico:
+  PACE se vende por "todo local, sin cuentas, sin backend". Meter
+  OAuth de Google contradice eso. Rutas posibles a explorar cuando
+  toque:
+  · **Opt-in explícito, 100% opcional**, con disclaimer claro en el
+    modal de activación ("sólo si lo activas, conecta con Google").
+  · **Exportar .ics en vez de OAuth** — sin cuentas, sin tracking,
+    sigue siendo todo local. Menos "sync" y más "descarga para
+    importar". Mucho más coherente con la filosofía.
+  · **Decisión pendiente**: ¿OAuth real o .ics? El .ics alinea mejor
+    con el producto; OAuth requiere backend (ruptura mayor).
+  Entregable mínimo: mockup del flujo + decisión OAuth vs .ics antes
+  de tocar código.
+
+- **Cambiar glifos de logros** — Los glifos actuales son un mix de
+  símbolos unicode (`✦`, `❦`, `❀`, `☉`, numerales romanos, etc.).
+  Funciona pero es inconsistente: algunos están en el catálogo
+  serif, otros parecen emoji degradado. Opciones a diseñar:
+  · Set cohesivo de glifos SVG dibujados a mano en `app/ui/glyphs/`.
+  · Biblioteca abstracta (Noun Project, Feather, custom) con paleta
+    alineada a la categoría (`focus`/`breathe`/`move`/`achievement`).
+  · Mantener unicode pero auditar y homogeneizar (misma familia
+    tipográfica, mismo peso visual).
+  Entregable mínimo: mood board + decisión de dirección visual +
+  bocetos de 5–10 glifos representativos antes de remplazar el set
+  entero.
 
 ### 📋 Plantilla para arrancar próxima sesión
 

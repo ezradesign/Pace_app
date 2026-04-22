@@ -1,0 +1,42 @@
+# Netlify configuration for PACE
+# Sirve PACE_standalone.html como entry point.
+# El standalone es el bundle offline-first (~198 KB) con todo inline:
+# CSS, JS, React, Babel y el PNG del logo. Una sola petición, todo local.
+# Alineado con la filosofía del producto: "todo local, sin backend".
+
+[build]
+  publish = "."
+  # Sin build command — es un proyecto estático puro, sin compilación.
+
+# Redirige la raíz al standalone.
+# Cualquier otra ruta también cae aquí (SPA-style).
+[[redirects]]
+  from = "/*"
+  to = "/PACE_standalone.html"
+  status = 200
+
+# Headers de seguridad y caché.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Permisos mínimos: solo los que PACE realmente usa.
+    # Notificaciones se añadirán cuando se implemente el módulo de
+    # recordatorios de agua (backlog #6 del Frente 2).
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
+# El standalone es estable por versión — cachéalo 1 hora.
+# Suficiente para que el usuario no descargue 198 KB en cada visita,
+# pero no tanto como para dejarle una versión vieja si despliegas.
+[[headers]]
+  for = "/PACE_standalone.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, must-revalidate"
+
+# El PNG del logo es estable — caché agresiva.
+[[headers]]
+  for = "/app/ui/pace-logo.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
