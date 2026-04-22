@@ -15,46 +15,11 @@ function Sidebar() {
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
 
-  /* Versión colapsada: rail estrecho con solo iconos verticales */
-  if (collapsed) {
-    return (
-      <aside style={{ ...sidebarStyles.root, width: 56, padding: '20px 10px' }}>
-        <button onClick={toggle} style={sidebarStyles.toggleCollapsed} title="Expandir (⌘\\)">
-          <ChevronRightIcon />
-        </button>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, marginTop: 18 }}>
-          <div title={`Racha: ${state.streak.current} días`} style={sidebarStyles.railItem}>
-            <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, color: 'var(--ink)', lineHeight: 1 }}>
-              {state.streak.current}
-            </span>
-            <span style={{ fontSize: 8, letterSpacing: '0.14em', color: 'var(--ink-3)', textTransform: 'uppercase', marginTop: 2 }}>días</span>
-          </div>
-          <div style={sidebarStyles.railDivider} />
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
-            style={sidebarStyles.railBtn}
-            title={`Logros · ${unlockedCount}/100`}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
-            </svg>
-            <span style={{ fontSize: 8, color: 'var(--ink-3)', marginTop: 2 }}>{unlockedCount}</span>
-          </button>
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('pace:open-reminders'))}
-            style={sidebarStyles.railBtn}
-            title="Recordatorios"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-          </button>
-        </div>
-        <StatusBar compact />
-      </aside>
-    );
-  }
+  /* Colapsado → ocultar TOTALMENTE.
+     La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
+     (Antes era un rail de 56px con iconos; se quitó por petición del usuario
+     para tener pantalla limpia como la referencia del 2026-04-22 / sesión 9.) */
+  if (collapsed) return null;
 
   return (
     <aside style={sidebarStyles.root}>

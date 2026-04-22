@@ -63,12 +63,56 @@ function FocusTimer({ onFinish }) {
     setRemainingSec(baseMin * 60);
   };
 
+  const isAro = state.timerStyle === 'aro';
+  const runningLabel = running ? 'Pausar' : (remainingSec === totalSec ? 'Comenzar' : 'Continuar');
+
+  /* Dots de ciclo (4 puntitos + etiqueta CICLO).
+     En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
+     En otros estilos se renderizan en su bloque propio fuera del timer. */
+  const cycleDotsEl = (
+    <div style={focusStyles.cycleDots}>
+      {[0,1,2,3].map(i => (
+        <span key={i} style={{
+          width: 4, height: 4, borderRadius: '50%',
+          background: (state.cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
+        }} />
+      ))}
+      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>Ciclo</span>
+    </div>
+  );
+
+  /* Bloque de controles + ciclo inyectado DENTRO del aro (layout ref. usuario).
+     Para otros estilos se renderiza debajo en un bloque aparte. */
+  const controls = (
+    <div style={focusStyles.controlsTight}>
+      <button
+        onClick={() => setRunning(r => !r)}
+        style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
+      >
+        <span style={{ fontSize: 11, lineHeight: 1 }}>{running ? '❚❚' : '▶'}</span>
+        <span>{runningLabel}</span>
+      </button>
+      <button onClick={reset} style={focusStyles.resetCircle} title="Reiniciar" aria-label="Reiniciar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7" />
+          <polyline points="3 4 3 10 9 10" />
+        </svg>
+      </button>
+    </div>
+  );
+
+  /* Para estilo aro: unimos controles + ciclo en un mismo bloque interior. */
+  const innerForAro = (
+    <>
+      {controls}
+      <div style={{ marginTop: 10 }}>{cycleDotsEl}</div>
+    </>
+  );
+
   return (
     <div style={focusStyles.root}>
-      {/* Selector modo */}
-      <div style={focusStyles.modeRow}>
-        <ModeToggle value={state.focusMode} onChange={(v) => set({ focusMode: v })} />
-      </div>
+      {/* NOTA: el ModeToggle Foco/Pausa/Larga vive ahora en TopBar
+         (centrado arriba), por referencia del usuario (sesión 9). */}
 
       {/* Selector minutos */}
       {state.focusMode === 'foco' && (
@@ -85,34 +129,17 @@ function FocusTimer({ onFinish }) {
           mode={state.focusMode}
           modeLabel={modeLabel}
           subtitle={subtitle}
+          inner={isAro ? innerForAro : null}
         />
       </div>
 
-      {/* Controles */}
-      <div style={focusStyles.controls}>
-        <Button
-          variant={running ? 'secondary' : 'primary'}
-          size="lg"
-          onClick={() => setRunning(r => !r)}
-          icon={running ? '❚❚' : '▶'}
-        >
-          {running ? 'Pausar' : (remainingSec === totalSec ? 'Comenzar' : 'Continuar')}
-        </Button>
-        <button onClick={reset} style={focusStyles.resetBtn} title="Reiniciar">
-          <span style={{ fontSize: 18 }}>↻</span>
-        </button>
-      </div>
-
-      {/* Dots de ciclo */}
-      <div style={focusStyles.cycleDots}>
-        {[0,1,2,3].map(i => (
-          <span key={i} style={{
-            width: 4, height: 4, borderRadius: '50%',
-            background: (state.cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
-          }} />
-        ))}
-        <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>Ciclo</span>
-      </div>
+      {/* Controles + ciclo fuera del aro — solo para estilos no-aro */}
+      {!isAro && (
+        <>
+          <div style={focusStyles.controls}>{controls}</div>
+          {cycleDotsEl}
+        </>
+      )}
     </div>
   );
 }
@@ -159,21 +186,23 @@ function ModeToggle({ value, onChange }) {
 function MinutesPicker({ value, onChange }) {
   const options = [15, 25, 35, 45];
   return (
-    <div style={{ display: 'flex', gap: 0, alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
       <span style={{
-        fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginRight: 12,
+        fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
       }}>Min</span>
       {options.map(m => (
         <button key={m} onClick={() => onChange(m)}
           style={{
-            padding: '4px 14px',
+            padding: '4px 12px',
+            minWidth: 34,
             fontSize: 13,
             fontVariantNumeric: 'tabular-nums',
             fontWeight: value === m ? 600 : 400,
             color: value === m ? 'var(--ink)' : 'var(--ink-3)',
             background: value === m ? 'var(--paper-3)' : 'transparent',
             borderRadius: 'var(--r-pill)',
+            border: '1px solid transparent',
             transition: 'all 180ms',
           }}>{m}</button>
       ))}
@@ -184,60 +213,54 @@ function MinutesPicker({ value, onChange }) {
 /* ===================== */
 /* TIMER VISUALIZATIONS */
 /* ===================== */
-function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle }) {
-  if (style === 'aro') return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
+function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+  if (style === 'aro') return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
   if (style === 'circulo') return <TimerCircle mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   return <TimerNumber mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
 }
 
-/* Timer "Aro" — híbrido entre círculo y barra.
-   Doble anillo sutil + arco de progreso grueso + micro-barra inferior.
-   Pensado para sentir avance tanto radial como lineal. */
-function TimerAro({ mins, secs, progress, modeLabel, subtitle }) {
-  const R = 45;
+/* Timer "Aro" (default · ref. usuario).
+   Anillo fino, progreso sutil y punto indicador verde oliva sobre el aro.
+   Dentro: etiqueta de modo · número gigante italic serif · divisor fino ·
+   botón de comenzar + reset (inyectados via `inner`). El layout coincide
+   con la composición de referencia (2026-04-22).
+   Responsive: ocupa el mínimo entre ancho y alto del contenedor. */
+function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
+  const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
+  // Ángulo para el punto indicador (parte superior = 12 en punto)
+  const angle = progress * 2 * Math.PI - Math.PI / 2;
+  const dotCx = 50 + R * Math.cos(angle);
+  const dotCy = 50 + R * Math.sin(angle);
+
   return (
-    <div style={{ position: 'relative', width: 440, height: 440, display: 'grid', placeItems: 'center' }}>
-      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        {/* Anillo exterior finísimo */}
-        <circle cx="50" cy="50" r="48" fill="none" stroke="var(--line)" strokeWidth="0.3" />
-        {/* Pista del progreso */}
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="1.2" opacity="0.5" />
-        {/* Arco de progreso grueso */}
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--focus)" strokeWidth="2.2"
+    <div style={focusStyles.aroFrame}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+        {/* Aro base — trazo fino cálido */}
+        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
+        {/* Arco de progreso (sutil, mismo trazo pero ligeramente más intenso) */}
+        <circle cx="50" cy="50" r={R} fill="none"
+          stroke="var(--line-2)" strokeWidth="0.5"
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
           style={{ transition: 'stroke-dashoffset 1s linear' }} />
-        {/* Punto indicador al final del arco */}
-        <circle
-          cx={50 + R * Math.cos(progress * 2 * Math.PI - Math.PI / 2)}
-          cy={50 + R * Math.sin(progress * 2 * Math.PI - Math.PI / 2)}
-          r="1.6" fill="var(--focus)"
-          style={{ transition: 'all 1s linear' }}
-        />
+        {/* Punto verde oliva (indicador) */}
+        <circle cx={dotCx} cy={dotCy} r="1.25" fill="var(--focus)"
+          style={{ transition: 'cx 1s linear, cy 1s linear' }} />
       </svg>
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>{modeLabel}</div>
-        <div style={{
-          fontFamily: 'var(--font-display)', fontStyle: 'italic',
-          fontSize: 108, fontWeight: 400, lineHeight: 0.9,
-          fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em',
-          color: 'var(--ink)',
-        }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
-        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 14 }}>{subtitle}</div>
-        {/* Micro-barra inferior (guiño a la versión "barra") */}
-        <div style={{
-          width: 140, height: 2, margin: '16px auto 0',
-          background: 'var(--line)', borderRadius: 2, overflow: 'hidden',
-        }}>
-          <div style={{
-            width: `${progress * 100}%`, height: '100%',
-            background: 'var(--focus)',
-            transition: 'width 1s linear',
-          }} />
+
+      {/* Contenido centrado */}
+      <div style={focusStyles.aroInner}>
+        <div style={focusStyles.modeLabel}>{modeLabel}</div>
+        <div style={focusStyles.numberHuge}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
+        <div style={focusStyles.subtitleItalic}>{subtitle}</div>
+        <div style={focusStyles.innerDivider} />
+        {inner /* botones Comenzar + reset inyectados desde el padre */}
       </div>
     </div>
   );
@@ -356,27 +379,120 @@ const focusStyles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 20,
-    padding: '32px 40px',
+    gap: 14,
+    padding: '8px 40px 0',
     width: '100%',
+    height: '100%',
+    minHeight: 0,
   },
-  modeRow: { marginBottom: 4 },
+  modeRow: { marginBottom: 0 },
   timerWrap: {
     display: 'grid', placeItems: 'center',
-    margin: '12px 0',
+    flex: 1,
+    minHeight: 0,
+    width: '100%',
   },
+
+  /* ===== AroFrame (default) — cuadrado, compacto para dejar sitio a los controles.
+     Altura MAX ~520px para que a 1080p quepa: topbar(~56) + min(~45) + aro(520)
+     + actividades(~110) + colchón ≈ 730–800 px. Así queda con aire. */
+  aroFrame: {
+    position: 'relative',
+    height: 'min(56vh, 520px)',
+    width: 'min(56vh, 520px)',
+    aspectRatio: '1 / 1',
+    flexShrink: 0,
+    display: 'grid',
+    placeItems: 'center',
+  },
+  aroInner: {
+    position: 'relative',
+    textAlign: 'center',
+    zIndex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    // Limita el ancho del texto para que "Concentración profunda" quepa bien
+    // y el contenido no se desborde por los bordes curvos del círculo.
+    maxWidth: '70%',
+  },
+  modeLabel: {
+    fontSize: 11,
+    letterSpacing: '0.26em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-3)',
+    marginBottom: 10,
+    fontWeight: 500,
+  },
+  numberHuge: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontWeight: 400,
+    lineHeight: 0.9,
+    fontVariantNumeric: 'tabular-nums',
+    letterSpacing: '-0.03em',
+    color: 'var(--ink)',
+    // Escala para caber en el aro reducido (520 max)
+    fontSize: 'clamp(64px, 7vw, 104px)',
+  },
+  subtitleItalic: {
+    fontStyle: 'italic',
+    fontFamily: 'var(--font-display)',
+    fontSize: 14,
+    color: 'var(--ink-3)',
+    marginTop: 10,
+    letterSpacing: 0.2,
+  },
+  innerDivider: {
+    width: 110,
+    height: 1,
+    background: 'var(--line-2)',
+    opacity: 0.55,
+    margin: '12px 0 10px',
+  },
+
+  /* ===== Controles (compactos, estilo referencia) ===== */
   controls: {
-    display: 'flex', alignItems: 'center', gap: 12,
+    display: 'flex', alignItems: 'center', gap: 10, marginTop: 10,
   },
-  resetBtn: {
-    width: 48, height: 48,
-    borderRadius: 'var(--r-md)',
-    border: '1px solid var(--line-2)',
-    color: 'var(--ink-2)',
+  controlsTight: {
+    display: 'flex', alignItems: 'center', gap: 8,
+  },
+  startBtnPrimary: {
+    display: 'inline-flex', alignItems: 'center', gap: 7,
+    padding: '7px 16px 7px 14px',
+    background: 'var(--focus)',
+    color: 'var(--paper)',
+    borderRadius: 'var(--r-xs)',
+    fontSize: 12,
+    letterSpacing: 0.3,
+    fontWeight: 500,
+    border: '1px solid var(--focus)',
+    boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
+    transition: 'all 180ms',
+  },
+  startBtnSecondary: {
+    display: 'inline-flex', alignItems: 'center', gap: 7,
+    padding: '7px 16px 7px 14px',
     background: 'var(--paper)',
+    color: 'var(--ink)',
+    borderRadius: 'var(--r-xs)',
+    fontSize: 12,
+    letterSpacing: 0.3,
+    fontWeight: 500,
+    border: '1px solid var(--line-2)',
+    transition: 'all 180ms',
+  },
+  resetCircle: {
+    width: 28, height: 28,
+    borderRadius: '50%',
+    border: '1px solid var(--line-2)',
+    background: 'var(--paper)',
+    color: 'var(--ink-2)',
     display: 'grid', placeItems: 'center',
     transition: 'all 180ms',
   },
+
   cycleDots: {
     display: 'flex', alignItems: 'center', gap: 5,
     marginTop: 4,
