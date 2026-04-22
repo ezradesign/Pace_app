@@ -88,6 +88,31 @@ function PaceApp() {
       {/* SIDEBAR */}
       {state.layout !== 'minimal' && <Sidebar />}
 
+      {/* Handle flotante para re-abrir sidebar cuando está oculto
+          (aparece sólo en layout con sidebar y cuando está colapsado). */}
+      {state.layout !== 'minimal' && state.sidebarCollapsed && (
+        <button
+          onClick={() => set({ sidebarCollapsed: false })}
+          title="Abrir panel"
+          aria-label="Abrir panel"
+          style={{
+            position: 'fixed', top: 16, left: 14, zIndex: 50,
+            width: 30, height: 30, borderRadius: 6,
+            display: 'grid', placeItems: 'center',
+            background: 'transparent', border: '1px solid transparent',
+            color: 'var(--ink-3)', transition: 'all 180ms',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--paper-2)'; e.currentTarget.style.borderColor = 'var(--line)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="14" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </svg>
+        </button>
+      )}
+
       {/* MAIN AREA */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
         {/* Top bar */}
@@ -170,14 +195,49 @@ function PaceApp() {
    TOP BAR
    ================ */
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCowClick }) {
-  const [state] = usePace();
+  const [state, set] = usePace();
+  const modes = [
+    { v: 'foco', label: 'Foco' },
+    { v: 'pausa', label: 'Pausa' },
+    { v: 'larga', label: 'Larga' },
+  ];
   return (
     <div style={{
-      display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
+      position: 'relative',
+      display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
       padding: '14px 24px',
       gap: 8,
       flexShrink: 0,
+      minHeight: 56,
     }}>
+      {/* Tabs centrados (según referencia) */}
+      <div style={{
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)',
+        display: 'inline-flex',
+        background: 'var(--paper-2)',
+        border: '1px solid var(--line)',
+        borderRadius: 'var(--r-pill)',
+        padding: 3,
+        gap: 2,
+      }}>
+        {modes.map(m => (
+          <button key={m.v} onClick={() => set({ focusMode: m.v })}
+            style={{
+              padding: '6px 18px',
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              fontWeight: 500,
+              borderRadius: 'var(--r-pill)',
+              background: state.focusMode === m.v ? 'var(--ink)' : 'transparent',
+              color: state.focusMode === m.v ? 'var(--paper)' : 'var(--ink-2)',
+              transition: 'all 200ms',
+            }}>{m.label}</button>
+        ))}
+      </div>
+
+      {/* Iconos top-right */}
       <button onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
@@ -188,7 +248,6 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks, onCow
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
         </svg>
       </button>
-      {/* Tweaks · a la derecha de Logros (última posición del topbar) */}
       <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />
