@@ -7,9 +7,9 @@ function BreakMenu({ open, onClose, onChoose }) {
   if (!open) return null;
 
   const opts = [
-    { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <WindIcon /> },
-    { key: 'move', label: 'Muévete', desc: 'Antídoto rápido a la silla', color: 'var(--move)', bg: 'var(--move-soft)', icon: <MoveIcon /> },
-    { key: 'water', label: 'Hidrátate', desc: 'Un vaso ahora', color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <DropIcon /> },
+    { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
+    { key: 'move', label: 'Muévete', desc: 'Antídoto rápido a la silla', color: 'var(--move)', bg: 'var(--move-soft)', icon: <BMMoveIcon /> },
+    { key: 'water', label: 'Hidrátate', desc: 'Un vaso ahora', color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
   ];
 
   return (
@@ -49,7 +49,11 @@ function BreakMenu({ open, onClose, onChoose }) {
   );
 }
 
-function WindIcon() {
+/* Iconos locales del BreakMenu (prefijo BM* para distinguirlos de los AB*
+   de la ActivityBar en main.jsx: son metodologías visuales distintas para
+   los mismos tres conceptos — respira / mueve / gota — y en v0.11.6 se
+   renombraron para evitar confusión de lectura). */
+function BMWindIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9.6 4.6A2 2 0 1 1 11 8H2" />
@@ -58,7 +62,7 @@ function WindIcon() {
     </svg>
   );
 }
-function MoveIcon() {
+function BMMoveIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="5" r="2" />
@@ -68,7 +72,7 @@ function MoveIcon() {
     </svg>
   );
 }
-function DropIcon() {
+function BMDropIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z" />

@@ -144,41 +144,8 @@ function FocusTimer({ onFinish }) {
   );
 }
 
-/* ===================== */
-/* MODE TOGGLE */
-/* ===================== */
-function ModeToggle({ value, onChange }) {
-  const modes = [
-    { v: 'foco', label: 'Foco' },
-    { v: 'pausa', label: 'Pausa' },
-    { v: 'larga', label: 'Larga' },
-  ];
-  return (
-    <div style={{
-      display: 'inline-flex',
-      background: 'var(--paper-2)',
-      border: '1px solid var(--line)',
-      borderRadius: 'var(--r-pill)',
-      padding: 3,
-      gap: 2,
-    }}>
-      {modes.map(m => (
-        <button key={m.v} onClick={() => onChange(m.v)}
-          style={{
-            padding: '6px 18px',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            borderRadius: 'var(--r-pill)',
-            background: value === m.v ? 'var(--ink)' : 'transparent',
-            color: value === m.v ? 'var(--paper)' : 'var(--ink-2)',
-            transition: 'all 200ms',
-          }}>{m.label}</button>
-      ))}
-    </div>
-  );
-}
+/* NOTA: el antiguo ModeToggle interno (Foco/Pausa/Larga) se eliminó en v0.11.6.
+   Los tabs viven ahora en TopBar (app/main.jsx), centrados arriba (v0.11.4). */
 
 /* ===================== */
 /* MINUTES PICKER */
@@ -385,7 +352,6 @@ const focusStyles = {
     height: '100%',
     minHeight: 0,
   },
-  modeRow: { marginBottom: 0 },
   timerWrap: {
     display: 'grid', placeItems: 'center',
     flex: 1,

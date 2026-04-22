@@ -1,36 +1,46 @@
-# Sync timestamp
+# Pace_app — Sync timestamp
 
-**Hora local España:** 19:18 (2026-04-22)
-**Versión del proyecto:** v0.11.5
-**Sesión:** 10 — Auditoría profesional: 7 bugs críticos corregidos + logo local con fallback SVG.
+**Última sincronización:** 2026-04-22 · ~19:00 (hora local España, CEST)
+**Versión empaquetada:** v0.11.6
+**Sesión:** #11 — Limpieza sin riesgo del backlog de auditoría (#18–#24, #26)
 
-Contenido 1:1 con la raíz del proyecto en el momento de la sincronización.
-Excluye: `screenshots/`, `.napkin`, temporales y la propia carpeta espejo.
+## Qué contiene esta carpeta
 
-## Qué incluye este snapshot
+Espejo 1:1 del proyecto PACE listo para pegar sobre la carpeta local de GitHub Desktop del usuario. Incluye:
 
-- `PACE.html` — entry point de desarrollo (v0.11.5)
-- `PACE_standalone.html` — versión inline offline (~173 KB, con fallback SVG si falta el PNG)
-- `app/` — código fuente modular (main, state, tokens.css + 9 módulos + ui/pace-logo.png)
-- `backups/PACE_standalone_v0.11.4_20260422.html` — última versión estable antes de esta sesión
-- Documentación meta: `CLAUDE.md`, `STATE.md`, `DESIGN_SYSTEM.md`, `CONTENT.md`, `HANDOFF.md`, `CHANGELOG.md`, `ROADMAP.md`, `README.md`
+- Docs raíz: `CLAUDE.md`, `STATE.md`, `CHANGELOG.md`, `README.md`, `ROADMAP.md`, `HANDOFF.md`, `DESIGN_SYSTEM.md`, `CONTENT.md`.
+- Entry points: `PACE.html` (dev modular) + `PACE_standalone.html` (v0.11.6, ~172 KB).
+- Todo el árbol `app/**` (14 JSX + tokens.css + pace-logo.png).
+- Último backup funcional en `backups/PACE_standalone_v0.11.5_20260422.html`.
 
-## Resumen de cambios sesión 10
+## Estado de la app
 
-Auditoría profesional tras importar desde GitHub. 7 bugs críticos cerrados:
+✅ **Estable y sin crashear.** Verificado en esta sesión:
+- `PACE.html` carga limpio (solo el warning estándar de Babel in-browser).
+- `PACE_standalone.html` carga limpio. El fallback SVG del logo entra cuando el PNG local no es accesible (comportamiento esperado por diseño).
 
-- **#28** Extra desbloquea sus logros (antes llamaba a `completeMoveSession`)
-- **#4** `water.today` se resetea al cambiar de día (nuevo `rolloverIfNeeded`)
-- **#3** `cycle` + `plan` se resetean al cambiar de día (mismo rollover)
-- **#10** Easter egg "vaca feliz" alcanzable (CustomEvent `pace:cow-click`)
-- **#11** `PaceWordmark` respeta prop `variant` (antes todas rendían lo mismo)
-- **#14** Versión hardcodeada `v0.11.2` → constante `PACE_VERSION`
-- **#12** Logo ya no depende de URL externa (`app/ui/pace-logo.png` + fallback SVG)
+## Nota
 
-23 puntos más en backlog (limpieza de código muerto + robustez + triggers de logros pendientes). Ver `STATE.md > Sesión 10 > Backlog de auditoría pendiente`.
+La regla de "carpeta Pace_app siempre lista antes de quedarse sin contexto" se añadió a `CLAUDE.md` en esta sesión. Futuras sesiones deben respetarla: antes de cualquier cierre o transición, la carpeta espejo debe reflejar una versión estable y documentada, aunque eso signifique revertir trabajo a medias.
 
-## Cómo usarlo para GitHub
+## Commit sugerido
 
-1. Descarga el ZIP de `Pace_app_19_18/`.
-2. Descomprime sobre tu carpeta local del repo de GitHub Desktop.
-3. Revisa los cambios y haz commit con el mensaje sugerido al final de `STATE.md` (sesión 10).
+```
+v0.11.6 · Limpieza sin riesgo: dead code del backlog de auditoría
+
+- [#18] Eliminada función ModeToggle duplicada en FocusTimer (33 líneas)
+- [#19] Eliminado focusStyles.modeRow (no usado)
+- [#20] Eliminados estilos del rail colapsado en sidebarStyles (~30 líneas)
+- [#21] Eliminados estilos del bloque Recordatorios en sidebarStyles (~30 líneas)
+- [#22] Documentada decisión de mantener reminders:[] en default state
+- [#23] Simplificado StatusBar — eliminada rama compact={true} inalcanzable
+- [#24] Eliminado ChevronRightIcon no usado
+- [#26] Iconos BreakMenu renombrados a BM* para evitar colisión conceptual con AB*
+
+Añadida regla a CLAUDE.md: "carpeta Pace_app siempre lista antes de
+quedarse sin contexto" — la carpeta espejo debe reflejar una app estable
+y sin crashear en todo momento.
+
+~150 líneas de dead code fuera. Sin cambios funcionales ni visuales.
+PACE_standalone.html regenerado a v0.11.6 (~172 KB, ~2 KB menos que v0.11.5).
+```

@@ -94,6 +94,18 @@ Pace_app/
 Pace_app_*/
 ```
 
+### Regla de "carpeta Pace_app siempre lista" (antes de quedarse sin contexto)
+
+**SIEMPRE** antes de que el contexto llegue a 🔴 (o cuando se detecte que queda poco margen), dejar la carpeta `Pace_app_HH_MM/` lista para subir a GitHub con:
+
+1. **Aplicación estable y sin crashear.** `PACE.html` debe abrir limpio (sin errores en consola) y `PACE_standalone.html` debe cargar también sin errores. Si hay cualquier cambio funcional a medias que pueda romper la app, **revertirlo o completarlo** antes de sincronizar.
+2. **Standalone regenerado** a la versión actual.
+3. **STATE.md actualizado** con lo hecho + lo que quedó a medias (explícitamente marcado como 🚧).
+4. **Carpeta espejo sincronizada** 1:1 con el timestamp local.
+5. **Descarga preparada** con `present_fs_item_for_download`.
+
+Esto aplica **incluso si la sesión se interrumpe a mitad de tarea**: mejor quedarse en un estado anterior estable y documentado que dejar al usuario con un repo roto. En caso de duda, rotar al último backup funcional de `backups/` y dejar constancia en STATE.md.
+
 ### Plantilla para abrir sesión nueva (el usuario la copia y pega)
 ```
 Proyecto PACE. Importa la última versión desde

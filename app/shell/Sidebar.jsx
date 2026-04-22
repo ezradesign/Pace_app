@@ -222,13 +222,9 @@ function ChevronLeftIcon() {
     </svg>
   );
 }
-function ChevronRightIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
+/* NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
+   ya no es un rail con chevron, vuelve a abrirse con el handle flotante
+   que vive en main.jsx (≡). */
 
 function WeekDots({ weeklyStats }) {
   const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
@@ -290,15 +286,11 @@ function AchievementsPreview({ onOpen }) {
   );
 }
 
-function StatusBar({ compact }) {
+/* StatusBar: barra inferior del sidebar (En camino + versión).
+   La rama compact={true} se eliminó en v0.11.6 porque el rail colapsado
+   ya no existe desde v0.11.4 (el sidebar colapsado devuelve null). */
+function StatusBar() {
   const [state] = usePace();
-  if (compact) {
-    return (
-      <div style={{ paddingTop: 12, borderTop: '1px solid var(--line)', display: 'flex', justifyContent: 'center' }}>
-        <span style={{ fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{PACE_VERSION}</span>
-      </div>
-    );
-  }
   return (
     <div style={sidebarStyles.footer}>
       <div style={sidebarStyles.footerRow}>
@@ -346,33 +338,8 @@ const sidebarStyles = {
     flexShrink: 0,
     marginTop: 4,
   },
-  toggleCollapsed: {
-    width: 36, height: 36,
-    display: 'grid', placeItems: 'center',
-    color: 'var(--ink-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    background: 'var(--paper)',
-    margin: '0 auto',
-  },
-  railItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  railBtn: {
-    width: 36, height: 36,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'var(--ink-2)',
-    borderRadius: 'var(--r-sm)',
-    background: 'transparent',
-  },
-  railDivider: {
-    width: 20, height: 1, background: 'var(--line)',
-  },
+  /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
+     se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4. */
   cycles: {},
   cycleCount: {
     display: 'flex', alignItems: 'center', gap: 8,
@@ -406,36 +373,10 @@ const sidebarStyles = {
     padding: 0,
     marginTop: 4,
   },
-  input: {
-    flex: 1,
-    background: 'var(--paper)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    padding: '6px 10px',
-    fontSize: 12,
-    color: 'var(--ink)',
-    outline: 'none',
-  },
-  addBtn: {
-    background: 'var(--focus)',
-    color: 'var(--paper)',
-    borderRadius: 'var(--r-sm)',
-    width: 30, height: 30,
-    fontSize: 14,
-    fontWeight: 600,
-    display: 'grid', placeItems: 'center',
-  },
-  reminderItem: {
-    display: 'flex', alignItems: 'center', gap: 6,
-    padding: '4px 8px',
-    background: 'var(--paper)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-  },
-  reminderRemove: {
-    color: 'var(--ink-3)', fontSize: 14, width: 16, height: 16,
-    display: 'grid', placeItems: 'center',
-  },
+  /* NOTA: los estilos del bloque Recordatorios (input/addBtn/reminderItem/reminderRemove)
+     se eliminaron en v0.11.6. La sección se quitó de la UI en v0.11.3 para que todo
+     quepa en 1920×1080 sin scroll. El campo state.reminders sigue existiendo por si
+     algún día se reintroduce — ver nota en app/state.jsx. */
   intentionBox: {
     width: '100%',
     minHeight: 50,
