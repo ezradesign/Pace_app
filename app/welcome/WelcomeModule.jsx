@@ -79,44 +79,46 @@ function WelcomeModal({ open, onClose }) {
   };
 
   return (
-    <Modal open={open} onClose={skip} maxWidth={560}>
+    <Modal open={open} onClose={skip} maxWidth={520}>
       <div style={welcomeStyles.inner}>
-        {/* Logo oficial — usa PaceLogoImage (PNG con fallback SVG).
-            Respeta el tweak `logoVariant` del usuario si ya cambió algo
-            en una sesión previa. */}
-        <div style={welcomeStyles.logoRow}>
-          <div style={{ maxWidth: 320, width: '100%' }}>
-            <PaceWordmark variant={state.logoVariant || 'pace'} />
+        {/* LAYOUT DE 2 COLUMNAS (v0.12.1) — header compacto a la izquierda
+            (logo + meta + título) y lede a la derecha. Ahorra ~120px
+            verticales respecto al layout apilado anterior y encaja sin
+            scroll en pantallas 720p. */}
+        <div style={welcomeStyles.header}>
+          <div style={welcomeStyles.headerLeft}>
+            <div style={welcomeStyles.logoMini}>
+              <PaceWordmark variant={state.logoVariant || 'pace'} />
+            </div>
+            <Meta style={{ marginTop: 10 }}>Bienvenida</Meta>
+          </div>
+          <div style={welcomeStyles.headerRight}>
+            <h2 style={welcomeStyles.title}>
+              Antídoto a la silla.{' '}
+              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
+            </h2>
+            <p style={welcomeStyles.lede}>
+              Micro-pausas de foco, respiración, movilidad e
+              hidratación. Sin gamificación ni notificaciones
+              abrumadoras.
+            </p>
           </div>
         </div>
 
-        <Meta style={{ textAlign: 'center', marginBottom: 8 }}>Bienvenida</Meta>
-
-        <h2 style={welcomeStyles.title}>
-          Antídoto a la silla.<br/>
-          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
-        </h2>
-
-        <p style={welcomeStyles.lede}>
-          Micro-pausas de foco, respiración, movilidad e hidratación
-          a lo largo del día. Nada de gamificación agresiva, nada
-          de notificaciones abrumadoras.
-        </p>
-
-        {/* 3 valores en línea */}
+        {/* 3 valores en línea — ya más compactos */}
         <div style={welcomeStyles.values}>
-          <WValue label="Todo local" sub="vive en tu navegador" />
+          <WValue label="Todo local" sub="en tu navegador" />
           <span style={welcomeStyles.sep} />
-          <WValue label="Sin cuentas" sub="sin registro, sin email" />
+          <WValue label="Sin cuentas" sub="sin registro" />
           <span style={welcomeStyles.sep} />
-          <WValue label="Siempre gratis" sub="sin paywall, sin pro" />
+          <WValue label="Siempre gratis" sub="sin paywall" />
         </div>
 
-        {/* Campo de intención — opcional */}
+        {/* Campo de intención — opcional, fila horizontal label+input */}
         <div style={welcomeStyles.intentionBlock}>
           <label htmlFor="pace-intention" style={welcomeStyles.intentionLabel}>
             ¿Qué quieres cultivar hoy?
-            <span style={welcomeStyles.optional}> opcional</span>
+            <span style={welcomeStyles.optional}>opcional</span>
           </label>
           <input
             id="pace-intention"
@@ -131,37 +133,37 @@ function WelcomeModal({ open, onClose }) {
           />
         </div>
 
-        {/* Acciones */}
+        {/* Acciones — botón + skip en línea para no añadir altura */}
         <div style={welcomeStyles.actions}>
-          <Button variant="primary" size="lg" onClick={finish}>
-            Empezar
-          </Button>
           <button onClick={skip} style={welcomeStyles.skip}>
             prefiero saltarlo
           </button>
+          <Button variant="primary" size="md" onClick={finish}>
+            Empezar
+          </Button>
         </div>
       </div>
     </Modal>
   );
 }
 
-/* Valor individual — misma composición que en SupportModal
-   pero con la tipografía ligeramente más compacta (el bloque
-   es más ancho porque hay 3 valores + separadores). */
+/* Valor individual — compacto: label + sub en una sola columna.
+   v0.12.1: tamaños reducidos ligeramente para que la fila de valores
+   quepa en ~48px de alto total. */
 function WValue({ label, sub }) {
   return (
-    <div style={{ flex: 1, textAlign: 'center', padding: '0 6px' }}>
+    <div style={{ flex: 1, textAlign: 'center', padding: '0 4px' }}>
       <div style={{
         fontFamily: 'var(--font-display)',
         fontStyle: 'italic',
-        fontSize: 14,
+        fontSize: 13,
         color: 'var(--ink)',
         lineHeight: 1.1,
       }}>{label}</div>
       <div style={{
         fontSize: 10,
         color: 'var(--ink-3)',
-        marginTop: 3,
+        marginTop: 2,
         letterSpacing: 0.1,
       }}>{sub}</div>
     </div>
@@ -187,69 +189,83 @@ function useFirstTimeWelcome(setOpen) {
 
 /* ============================================================
    Estilos — nombre único según regla CLAUDE.md
+   v0.12.1: layout de 2 columnas + tamaños ajustados para que el
+   modal completo quepa en ~440px de alto (sin scroll en 720p).
    ============================================================ */
 const welcomeStyles = {
   inner: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
+    gap: 16,
   },
-  logoRow: {
+  header: {
     display: 'grid',
-    placeItems: 'center',
-    marginBottom: 18,
+    gridTemplateColumns: '140px 1fr',
+    gap: 18,
+    alignItems: 'center',
+  },
+  headerLeft: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  headerRight: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+  },
+  logoMini: {
+    width: '100%',
+    maxWidth: 140,
   },
   title: {
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 500,
-    lineHeight: 1.05,
-    margin: '0 0 14px',
-    textAlign: 'center',
+    lineHeight: 1.1,
+    margin: 0,
     color: 'var(--ink)',
   },
   lede: {
-    fontSize: 14,
+    fontSize: 13,
     lineHeight: 1.5,
     color: 'var(--ink-2)',
-    margin: '0 auto 20px',
-    maxWidth: 420,
-    textAlign: 'center',
+    margin: 0,
   },
   values: {
     display: 'flex',
     alignItems: 'center',
     gap: 6,
-    padding: '14px 8px',
-    margin: '0 0 22px',
+    padding: '10px 8px',
     background: 'var(--paper-2)',
     border: '1px solid var(--line)',
     borderRadius: 'var(--r-md)',
   },
   sep: {
     width: 1,
-    height: 28,
+    height: 24,
     background: 'var(--line)',
     flexShrink: 0,
   },
   intentionBlock: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
-    marginBottom: 22,
+    gap: 6,
   },
   intentionLabel: {
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
-    fontSize: 14,
+    fontSize: 13,
     color: 'var(--ink)',
     display: 'flex',
     alignItems: 'baseline',
     justifyContent: 'space-between',
+    gap: 8,
   },
   optional: {
-    fontSize: 10,
+    fontSize: 9,
     color: 'var(--ink-3)',
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
@@ -257,8 +273,8 @@ const welcomeStyles = {
   },
   intentionInput: {
     width: '100%',
-    padding: '10px 14px',
-    fontSize: 15,
+    padding: '9px 12px',
+    fontSize: 14,
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     color: 'var(--ink)',
@@ -271,10 +287,10 @@ const welcomeStyles = {
   },
   actions: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 4,
+    justifyContent: 'space-between',
+    marginTop: 2,
   },
   skip: {
     fontFamily: 'var(--font-display)',

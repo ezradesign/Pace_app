@@ -5,7 +5,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.0';
+const PACE_VERSION = 'v0.12.1';
 
 const defaultState = {
   // Settings / Tweaks
@@ -131,11 +131,16 @@ function persistState() {
 function getState() { return _state; }
 
 function setState(patch) {
+  const prev = _state;
   _state = typeof patch === 'function' ? patch(_state) : { ...(_state), ...patch };
   persistState();
   _listeners.forEach(l => l());
-  // Aplicar tokens visuales
-  applyTheme();
+  /* Optimización v0.12.1: aplicar tokens visuales sólo cuando palette o
+     font cambian realmente. Antes se llamaba a setAttribute en cada tick
+     (inocuo pero innecesario, 2 DOM writes por cada setState). */
+  if (prev.palette !== _state.palette || prev.font !== _state.font) {
+    applyTheme();
+  }
 }
 
 function subscribe(listener) {
@@ -171,23 +176,21 @@ function unlockAchievement(id, note) {
 
 function addFocusMinutes(mins) {
   ensureDayFresh();
-  // Actualización atómica: leemos y escribimos dentro del mismo updater
-  // para no depender del `_state` snapshot del momento de la llamada
-  // (evita stale state si se encadenan varias acciones en el mismo tick).
-  let nextTotal = 0;
+  /* v0.12.1: calculamos todo dentro del updater y, tras el setState,
+     leemos el total oficial desde `_state` (no desde una variable de
+     cierre) para disparar logros. Evita el riesgo de que otra acción
+     se cuele entre el updater y la evaluación de umbrales. */
   setState(prev => {
     const day = new Date().getDay();
     const week = [...prev.weeklyStats.focusMinutes];
     week[day] += mins;
-    nextTotal = prev.totalFocusMin + mins;
     return {
       ...prev,
-      totalFocusMin: nextTotal,
+      totalFocusMin: prev.totalFocusMin + mins,
       weeklyStats: { ...prev.weeklyStats, focusMinutes: week },
     };
   });
-  // Logros por horas de foco — calculados sobre el total YA actualizado.
-  const h = nextTotal / 60;
+  const h = _state.totalFocusMin / 60;
   if (h >= 10) unlockAchievement('focus.hours.10');
   if (h >= 50) unlockAchievement('focus.hours.50');
   if (h >= 100) unlockAchievement('focus.hours.100');
@@ -195,17 +198,15 @@ function addFocusMinutes(mins) {
 
 function completePomodoro() {
   ensureDayFresh();
-  // Incremento atómico del ciclo.
-  let nextCycle = 0;
-  let focusMinsAtCompletion = 0;
-  setState(prev => {
-    nextCycle = prev.cycle + 1;
-    focusMinsAtCompletion = prev.focusMinutes;
-    return { ...prev, cycle: nextCycle };
-  });
+  /* v0.12.1: capturamos el valor de minutos de foco ANTES del updater
+     (el modo/minutos puede cambiar por tweak durante el tick); el
+     updater sólo incrementa cycle. Luego leemos el nuevo cycle desde
+     `_state` para los umbrales de logro. */
+  const focusMinsAtCompletion = _state.focusMinutes;
+  setState(prev => ({ ...prev, cycle: prev.cycle + 1 }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
-  if (nextCycle >= 8) unlockAchievement('master.pomodoro.8');
+  if (_state.cycle >= 8) unlockAchievement('master.pomodoro.8');
   updateStreak();
 }
 
@@ -337,9 +338,13 @@ function showToast(toast) {
   _toastListeners.forEach(l => l(t));
 }
 function onToast(listener) {
+  const wasEmpty = _toastListeners.size === 0;
   _toastListeners.add(listener);
-  // Si es el primer listener, vaciamos el buffer pendiente.
-  if (_toastListeners.size === 1 && _pendingToasts.length > 0) {
+  /* v0.12.1: vaciamos el buffer pendiente en cuanto hay AL MENOS un
+     listener (antes la condición era `size === 1`, que fallaba bajo
+     StrictMode cuando React monta y desmonta el host dos veces: el
+     segundo listener nunca recibía los toasts buffeados). */
+  if (wasEmpty && _pendingToasts.length > 0) {
     const drained = _pendingToasts.splice(0);
     // Despachamos en el próximo tick para no interferir con el mount del Host.
     setTimeout(() => { drained.forEach(t => listener(t)); }, 0);

@@ -1,8 +1,14 @@
 /* PACE · Sidebar izquierdo — colapsable
-   Secciones: Ritmo (racha), Sendero (línea del día con hitos),
-   Logros, Recordatorios, Intención.
-   (La sección "Plan" se eliminó en v0.11.2 porque aportaba poco valor
-   y los chips de actividades ya existen en la ActivityBar inferior.)
+   Secciones: Ritmo (racha), Sendero (línea del día con hitos), Logros.
+   Footer: StatusBar con botón destacado Donar café.
+
+   Historial de lo eliminado (no revivir sin justificación de producto):
+     - "Plan" del día — v0.11.2 (redundante con ActivityBar).
+     - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
+     - "Intención" — v0.12.1 (aporta poco valor; la misma pregunta se
+       hace al usuario nuevo en el WelcomeModal, que la guarda en
+       `state.intention`. Quitarla libera espacio vertical y deja que
+       el botón de Donar gane prominencia en el footer).
 */
 
 const { useState: useStateSB, useMemo: useMemoSB } = React;
@@ -111,20 +117,6 @@ function Sidebar() {
         >
           {100 - unlockedCount} por descubrir →
         </button>
-      </div>
-
-      <Divider style={{ margin: '16px 0 14px' }} />
-
-      {/* INTENCIÓN · apartado breve, reemplaza el bloque de "anotaciones/recordatorios"
-          eliminado en v0.11.3 para que todo quepa en 1920×1080 sin scroll. */}
-      <div style={sidebarStyles.section}>
-        <Meta style={{ marginBottom: 8 }}>Intención</Meta>
-        <textarea
-          value={state.intention}
-          onChange={(e) => set({ intention: e.target.value })}
-          placeholder="¿Qué quieres cultivar hoy?"
-          style={sidebarStyles.intentionBox}
-        />
       </div>
 
       <div style={{ flex: 1 }} />
@@ -402,15 +394,19 @@ function AchievementsPreview({ onOpen }) {
 }
 
 /* StatusBar: barra inferior del sidebar.
+
+   v0.12.1 · Al quitar la sección Intención el footer gana aire,
+   así que el pill "Invita a un café" ahora respira más sin
+   necesitar cambiar su diseño — sigue siendo el pill delgado
+   y elegante del SupportModule (decisión de sesión 16: presencia
+   calmada, sin gritar). La elegancia viene del contraste con el
+   espacio vacío, no de inflar el componente.
+
    Estructura (top → bottom):
      1. "En camino" + tag Pace (identidad / estado).
-     2. Botón de apoyo (BMC) — añadido en sesión 16 / v0.11.11.
-        Presencia calmada, pill paper con borde fino. Abre el
-        SupportModal vía evento global `pace:open-support`
-        (mismo patrón que `pace:open-achievements`).
+     2. Pill SupportButton — mismo diseño del sello original.
      3. Versión + autor en micro-type.
-   La rama compact={true} se eliminó en v0.11.6 porque el rail colapsado
-   ya no existe desde v0.11.4 (el sidebar colapsado devuelve null). */
+*/
 function StatusBar() {
   const [state] = usePace();
   const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
@@ -532,30 +528,17 @@ const sidebarStyles = {
     padding: 0,
     marginTop: 4,
   },
-  /* NOTA: los estilos del bloque Recordatorios (input/addBtn/reminderItem/reminderRemove)
-     se eliminaron en v0.11.6. La sección se quitó de la UI en v0.11.3 para que todo
-     quepa en 1920×1080 sin scroll. El campo state.reminders sigue existiendo por si
-     algún día se reintroduce — ver nota en app/state.jsx. */
-  intentionBox: {
-    width: '100%',
-    minHeight: 50,
-    background: 'var(--paper)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    padding: '8px 10px',
-    fontSize: 12,
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    resize: 'vertical',
-    outline: 'none',
-    color: 'var(--ink)',
-  },
+  /* NOTA histórica: los estilos de Recordatorios (v0.11.6) e Intención
+     (v0.12.1) se eliminaron aquí cuando esas secciones se quitaron del
+     sidebar. Los campos `state.reminders` y `state.intention` siguen
+     existiendo en state.jsx (retro-compat + captura en Welcome). */
   footer: {
     marginTop: 14,
     paddingTop: 12,
     borderTop: '1px solid var(--line)',
-    display: 'flex', flexDirection: 'column', gap: 6,
+    display: 'flex', flexDirection: 'column', gap: 10,
   },
+
   footerRow: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },

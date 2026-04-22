@@ -85,12 +85,16 @@ function TweaksPanel({ open, onClose }) {
       { v: 'ilustrado', name: 'Ilustrado' },
     ]},
     /* Apoya el proyecto — texto del pill del sidebar.
-       3 variantes registradas en SupportModule.jsx (SUPPORT_COPY).
-       Añadido sesión 16 / v0.11.11. */
+       4 variantes registradas en SupportModule.jsx (SUPPORT_COPY).
+       Añadido sesión 16 / v0.11.11. Ampliado a 4 en sesión 19:
+       'come' añade icono de vaca + copy directo por sugerencia del
+       usuario. Las 2 primeras variantes usan icono de taza; las
+       2 últimas usan icono de vaca (coherencia con el copy). */
     { key: 'supportCopyVariant', label: 'Copy del botón de apoyo', options: [
       { v: 'cafe', name: 'Invita a un café (default)' },
       { v: 'pasto', name: 'Riega el pasto' },
       { v: 'vaca', name: 'Da de comer a la vaca' },
+      { v: 'come', name: 'Ayuda a que la vaca coma' },
     ]},
   ];
 

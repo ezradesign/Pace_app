@@ -34,31 +34,54 @@ const { useEffect: useEffectSUP, useState: useStateSUP } = React;
 const BMC_USERNAME = 'ezradesign';
 const BMC_URL = `https://buymeacoffee.com/${BMC_USERNAME}`;
 
-/* 3 variantes de copy — expuestas como Tweak. Default = 'cafe' (clásico).
-   'pasto' y 'vaca' juegan con la metáfora de la vaca paciendo (logo) */
+/* 4 variantes de copy — expuestas como Tweak. Default = 'cafe' (clásico).
+   'pasto', 'vaca' y 'come' juegan con la metáfora de la vaca paciendo
+   (logo). Cada variante declara también su `icon` ('cup' | 'cow') para
+   que el pill y el CTA del modal mantengan coherencia visual entre
+   metáforas: cuando el copy habla de la vaca, el icono pasa a ser la
+   vaca; cuando habla de café o pasto, taza. */
 const SUPPORT_COPY = {
   cafe: {
+    icon: 'cup',
     label: 'Invita a un café',
     short: 'Invita a un café',
     title: '¿Te invito a uno?',
     subtitle: 'Un café, un gesto. Nada más.',
   },
   pasto: {
+    icon: 'cup',
     label: 'Riega el pasto',
     short: 'Riega el pasto',
     title: 'Riega el pasto',
     subtitle: 'Para que el proyecto siga creciendo a su ritmo.',
   },
   vaca: {
+    icon: 'cow',
     label: 'Da de comer a la vaca',
     short: 'Da de comer',
     title: 'Da de comer a la vaca',
+    subtitle: 'Un gesto para que siga paciendo a su ritmo.',
+  },
+  come: {
+    icon: 'cow',
+    label: 'Ayuda a que la vaca coma',
+    short: 'Ayuda a que la vaca coma',
+    title: 'Ayuda a que la vaca coma',
     subtitle: 'Un gesto para que siga paciendo a su ritmo.',
   },
 };
 
 function supportCopy(variant) {
   return SUPPORT_COPY[variant] || SUPPORT_COPY.cafe;
+}
+
+/* Helper que decide qué icono renderizar según la variante.
+   Uso: <SupportIcon variant={state.supportCopyVariant} /> */
+function SupportIcon({ variant, size = 13 }) {
+  const copy = supportCopy(variant);
+  return copy.icon === 'cow'
+    ? <CowIcon size={size} />
+    : <CupIcon size={size} />;
 }
 
 /* ============================================================
@@ -99,7 +122,7 @@ function SupportButton({ onOpen }) {
         cursor: 'pointer',
       }}
     >
-      <CupIcon />
+      <SupportIcon variant={state.supportCopyVariant} />
       <span>{copy.short}</span>
     </button>
   );
@@ -107,9 +130,9 @@ function SupportButton({ onOpen }) {
 
 /* Taza de café — stroke fino, currentColor. Sin relleno para que
    no rompa la jerarquía visual del sidebar. */
-function CupIcon() {
+function CupIcon({ size = 13 }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none"
          stroke="currentColor" strokeWidth="1.2"
          strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {/* Cuerpo de la taza */}
@@ -119,6 +142,38 @@ function CupIcon() {
       {/* Vaho — 2 líneas finas */}
       <path d="M5 3.2c.3.6.3 1.2 0 1.8" opacity="0.6" />
       <path d="M8 2.4c.3.8.3 1.5 0 2.3" opacity="0.6" />
+    </svg>
+  );
+}
+
+/* Cabeza de vaca — silueta inspirada en el lockup del logo (cara
+   alargada, cuernos cortos hacia arriba, mancha frontal asimétrica).
+   Trazo fino en currentColor, 16×16. La pieza crítica que la
+   diferencia de un cerdo: los CUERNOS (no las orejas hacia los lados)
+   y la CARA ALARGADA hacia abajo (no redonda). */
+function CowIcon({ size = 13 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none"
+         stroke="currentColor" strokeWidth="1.2"
+         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {/* Cuernos cortos hacia arriba — clave para distinguir de cerdo */}
+      <path d="M5.5 3.5c-.3-.6-.6-1.1-.2-1.6" />
+      <path d="M10.5 3.5c.3-.6.6-1.1.2-1.6" />
+      {/* Orejas laterales (salen entre cuerno y cara) */}
+      <path d="M4 5c-.8.1-1.6.5-2 1.2" />
+      <path d="M12 5c.8.1 1.6.5 2 1.2" />
+      {/* Cara alargada: frente ancha, morro más estrecho hacia abajo */}
+      <path d="M4.5 5c-.3 2 .1 4.5 1 6 .7 1 1.7 1.5 2.5 1.5s1.8-.5 2.5-1.5c.9-1.5 1.3-4 1-6" />
+      {/* Morro — pequeño óvalo en la base */}
+      <ellipse cx="8" cy="11.8" rx="1.6" ry="1.1" opacity="0.7" />
+      {/* Fosas nasales */}
+      <circle cx="7.2" cy="11.8" r="0.25" fill="currentColor" stroke="none" />
+      <circle cx="8.8" cy="11.8" r="0.25" fill="currentColor" stroke="none" />
+      {/* Ojitos */}
+      <circle cx="6.3" cy="8" r="0.35" fill="currentColor" stroke="none" />
+      <circle cx="9.7" cy="8" r="0.35" fill="currentColor" stroke="none" />
+      {/* Mancha frontal asimétrica — guiño al logo */}
+      <path d="M6.2 5.5c-.5.5-.7 1.2-.5 1.8" opacity="0.5" />
     </svg>
   );
 }
@@ -183,7 +238,7 @@ function SupportModal({ open, onClose }) {
       <div style={supportStyles.inner}>
         {/* Ícono grande de taza con humo — no emoji, trazo a mano */}
         <div style={supportStyles.heroIcon}>
-          <BigCup />
+          <SupportHero variant={state.supportCopyVariant} />
         </div>
 
         <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
@@ -217,7 +272,8 @@ function SupportModal({ open, onClose }) {
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
-            <CupIcon /> <span style={{ marginLeft: 2 }}>Invita a un café</span>
+            <SupportIcon variant={state.supportCopyVariant} />
+            <span style={{ marginLeft: 2 }}>{supportCopy(state.supportCopyVariant).label}</span>
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
             {copied ? '✓ copiado' : 'Copiar enlace'}
@@ -287,6 +343,50 @@ function BigCup() {
       <path d="M7 41h28" opacity="0.5" />
     </svg>
   );
+}
+
+/* Cabeza de vaca grande para el hero del modal — mismo diseño que
+   CowIcon pero a 48×48. Cuernos cortos arriba, cara alargada,
+   morro diferenciado, mancha frontal y briznas de pasto debajo
+   para reforzar la metáfora de "pacer" (pace). */
+function BigCow() {
+  return (
+    <svg width="58" height="58" viewBox="0 0 48 48" fill="none"
+         stroke="var(--breathe)" strokeWidth="1.4"
+         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {/* Cuernos cortos — la pieza crítica para distinguir de cerdo */}
+      <path d="M17 9c-.9-1.8-1.9-3.3-.6-4.8" />
+      <path d="M31 9c.9-1.8 1.9-3.3.6-4.8" />
+      {/* Orejas laterales (salen más abajo que los cuernos) */}
+      <path d="M12 14c-2.3.3-4.6 1.4-5.8 3.4" />
+      <path d="M36 14c2.3.3 4.6 1.4 5.8 3.4" />
+      {/* Cara alargada: ancha arriba, estrecha hacia el morro */}
+      <path d="M13.5 14c-1 6 .3 13.5 3 18 2 3 5 4.5 7.5 4.5s5.5-1.5 7.5-4.5c2.7-4.5 4-12 3-18" />
+      {/* Morro — óvalo diferenciado en la base */}
+      <ellipse cx="24" cy="34" rx="5" ry="3.5" opacity="0.7" />
+      {/* Fosas nasales */}
+      <ellipse cx="21.5" cy="34" rx="0.7" ry="0.9" fill="var(--breathe)" stroke="none" opacity="0.8" />
+      <ellipse cx="26.5" cy="34" rx="0.7" ry="0.9" fill="var(--breathe)" stroke="none" opacity="0.8" />
+      {/* Ojitos */}
+      <circle cx="19" cy="22" r="1.2" fill="var(--breathe)" stroke="none" />
+      <circle cx="29" cy="22" r="1.2" fill="var(--breathe)" stroke="none" />
+      {/* Mancha frontal asimétrica — guiño al logo */}
+      <path d="M18 16c-1.5 1.5-2 3.5-1.5 5.5" opacity="0.5" />
+      <path d="M17 18.5c-.3 1-.2 2 .3 2.8" opacity="0.5" />
+      {/* Briznas de pasto bajo la cabeza — refuerza la metáfora "pacer" */}
+      <path d="M12 44c.6-1 1-2 1-3" opacity="0.45" />
+      <path d="M18 44c.4-1.2.4-2.5 0-3.5" opacity="0.6" />
+      <path d="M30 44c-.4-1.2-.4-2.5 0-3.5" opacity="0.6" />
+      <path d="M36 44c-.6-1-1-2-1-3" opacity="0.45" />
+    </svg>
+  );
+}
+
+/* Selector del hero según la variante de copy. Same pattern as
+   SupportIcon but para el tamaño hero del modal. */
+function SupportHero({ variant }) {
+  const copy = supportCopy(variant);
+  return copy.icon === 'cow' ? <BigCow /> : <BigCup />;
 }
 
 /* ============================================================
