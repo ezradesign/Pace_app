@@ -1,0 +1,47 @@
+# Sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Node / build (por si algún día se añade)
+node_modules/
+dist/
+build/
+.cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Entornos
+.env
+.env.local
+.env.*.local
+
+# Temporales del proyecto
+screenshots/
+*.tmp
+*.bak
+.napkin
+*.napkin
+
+# Carpetas espejo con timestamp (se regeneran en cada sesión — no deben estar en Git)
+Pace_app/
+Pace_app_*/
+
+# Backups rotados (se mantienen los 5 más recientes localmente pero no se versionan todos)
+# Si quieres versionarlos, comenta la siguiente línea:
+# backups/
