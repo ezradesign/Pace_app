@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.11.9** | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | [abajo ↓](#v0119--2026-04-22--swap-mueve--estira) |
 | **v0.11.8** | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [abajo ↓](#v0118--2026-04-22--backlog-de-robustez) |
-| **v0.11.7** | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | [abajo ↓](#v0117--2026-04-22--barra-horizontal-del-sidebar) |
+| v0.11.7 | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | [session-12-barra-horizontal.md](./docs/sessions/session-12-barra-horizontal.md) |
 | v0.11.6 | 2026-04-22 | Limpieza sin riesgo: dead code del backlog de auditoría | #11 | [session-11-limpieza.md](./docs/sessions/session-11-limpieza.md) |
 | v0.11.5 | 2026-04-22 | Auditoría: 7 bugs críticos + logo local | #10 | [session-10-auditoria.md](./docs/sessions/session-10-auditoria.md) |
 | v0.11.4 | 2026-04-22 | Timer "Aro" alineado a referencia visual | #9 | [session-09-timer-aro.md](./docs/sessions/session-09-timer-aro.md) |
@@ -31,47 +32,54 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.11.7] — 2026-04-22 — Barra horizontal del sidebar
+## [v0.11.9] — 2026-04-22 — Swap Mueve ↔ Estira
 
-Logo oficial del PNG quedaba pequeño dentro de la franja superior del
-sidebar y los contadores `# 01 | ↻ 00 | ◉ 01` usaban caracteres
-tipográficos alineados a la izquierda. Se rediseña la zona superior como
-una verdadera "barra horizontal" con el logo dominando la composición y
-los contadores centrados debajo con iconografía propia.
+Bug de larga data tras el rebrand parcial de sesión 02 (`Extra` →
+`Estira` en el sidebar): el botón **"Estira"** abría una librería de
+calistenia y el botón **"Mueve"** abría una librería de estiramientos
+— exactamente lo contrario de lo que los nombres prometían. Además el
+título del modal de "Estira" seguía diciendo `"Extra"` (string obsoleto).
+Swap de contenido + renombre de los dos modales en una sola pasada.
 
 ### Cambiado
-- **Logo ampliado ~2.5×**: `PaceLogoImage.maxWidth` sube de `240` → `600`
-  (tanto en la función como en la llamada desde `PaceWordmark` con variant
-  `'pace'`). El ancho real efectivo queda limitado por el sidebar (280 px),
-  pero el logo ahora ocupa toda la franja sin caps artificiales. Altura
-  rendered: ~55 px → ~146 px.
-- **Chevron de colapsar reubicado**: sale de la fila del logo y se
-  convierte en botón flotante `position: absolute` en la esquina
-  superior-derecha del `<aside>` (22×22, opacidad 0.7). Nuevo estilo
-  `toggleFloating`. El logo ya no comparte espacio horizontal con ningún
-  otro elemento.
-- **`logoRow` → `logoBar`**: margin negativos laterales (−14 px) para que
-  el logo invada el padding del sidebar y gane más tamaño aparente.
-  `justify-content: center` para centrar la imagen.
-- **Contadores centrados**: la fila `# 01 | ↻ 00 | ◉ 01` pasa de alinear
-  a la izquierda con caracteres tipográficos a una fila centrada con pills
-  `<icono SVG> + <número>` separadas por un divisor vertical fino
-  (1×14 px, `var(--line)`).
+- **`MOVE_ROUTINES` ahora contiene calistenia/fuerza** (flexiones de
+  escritorio, fondos en silla, wall sit, gemelos, core silencioso, grip,
+  postura reset). Antes vivían en `EXTRA_ROUTINES`.
+- **`EXTRA_ROUTINES` ahora contiene movilidad/estiramientos** (antídoto
+  silla, caderas, hombros, ATG rodillas, ancestral, cuello, escritorio
+  express). Antes vivían en `MOVE_ROUTINES`.
+- **`MoveLibrary`**: modal title `"Movilidad"` → `"Mueve"`; subtitle
+  reescrito a `"Calistenia y fuerza. Corto, discreto, sin equipo."`;
+  meta superior `"Antídoto a estar sentado"` → `"Cuerpo activo"`.
+- **`ExtraLibrary`**: modal title `"Extra"` → `"Estira"` (arregla el bug
+  de copy reportado); subtitle reescrito a `"Movilidad y estiramientos.
+  Antídoto a la silla."`; añadida la fila superior con meta
+  `"Afloja tensión"` + encabezado `"Rutinas"` para emparejar la
+  estructura visual con `MoveLibrary` (antes era más escueto).
+- **`PACE_VERSION`** en `state.jsx`: `v0.11.8` → `v0.11.9`.
 
-### Añadido
-- **3 iconos SVG nuevos** en `Sidebar.jsx` sustituyen los caracteres
-  tipográficos:
-  - `PomodoroIcon` (tomate con tallo y hojita, relleno `var(--focus)` 14%)
-    — reemplaza `#` (pomodoros completados hoy).
-  - `RoundsIcon` (espiral de ~1.5 vueltas con cabeza de flecha, stroke
-    `var(--ink-2)`) — reemplaza `↻` (rondas largas, cada 4 pomodoros).
-  - `StreakFlameIcon` (llama fina de dos trazos, relleno `var(--breathe)`)
-    — reemplaza `◉` (días activos seguidos).
-- `position: relative` en `sidebarStyles.root` como contexto del botón flotante.
+### Conservado deliberadamente (no regresión)
+- **Los ids `move.*` / `extra.*` permanecen ligados a su rutina
+  original**, no al array donde viven ahora. `move.hips.5` sigue siendo
+  `move.hips.5` aunque hoy viva en `EXTRA_ROUTINES`. Razón: localStorage
+  de usuarios existentes conserva sus logros desbloqueados por id.
+- **`completeMoveSession` / `completeExtraSession` sin cambios**. Cada
+  botón sigue marcando el bucket correcto del plan (`plan.muevete` vs
+  `plan.extra`) vía el prop `kind` de `MoveSession`.
+- **Decisión activa "Extra suma a `moveMinutes`" vigente**. La
+  justificación pasa de "calistenia es movimiento" a "estiramientos son
+  cuerpo activo"; el comportamiento no cambia.
+
+### Deuda introducida (pequeña, acotada)
+- El map `explore.hips / .shoulders / .atg / .ancestral / .neck / .desk`
+  en `completeMoveSession` queda huérfano: esas rutinas ahora se
+  completan vía `completeExtraSession`, que no las mira. Se suman a los
+  19 logros sin trigger del backlog **#9**.
 
 ### Red de seguridad
-- `PACE_standalone.html` regenerado a **v0.11.7** (~174 KB).
-- Rotado `backups/PACE_standalone_v0.11.6_20260422.html`.
+- `PACE_standalone.html` regenerado a **v0.11.9** (~182 KB).
+- Rotado `backups/PACE_standalone_v0.11.8_20260422.html`.
+- 4 backups activos (v0.11.5 → v0.11.8), dentro del límite de 5.
 
 ---
 
