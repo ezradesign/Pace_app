@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.12.6** | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | [abajo ↓](#v0126--2026-04-23--dvh-fit) |
 | **v0.12.5** | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | [abajo ↓](#v0125--2026-04-23--responsive-movil) |
-| **v0.12.4** | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [abajo ↓](#v0124--2026-04-23--briefing-de-direccion) |
+| v0.12.4 | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [session-21-briefing-direccion.md](./docs/sessions/session-21-briefing-direccion.md) |
 | v0.12.3 | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
 | v0.12.2 | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
 | v0.12.1 | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
@@ -37,6 +38,83 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.6] — 2026-04-23 — DVH fit
+
+Sesión de cirujano: una sola unidad CSS cambia para resolver el
+último bug de encaje móvil heredado de v0.12.5. El sidebar
+fullscreen y el layout raíz pasan de `100vh` a `100dvh` (dynamic
+viewport height). Con ello el contenido encaja en el espacio
+**realmente visible** del navegador, aparezca o desaparezca la
+barra de URL. Se mantiene fallback a `100vh` para navegadores
+antiguos (pre iOS Safari 15.4 / Chrome Android 108 / Firefox 101).
+
+### Cambiado
+- **`app/shell/Sidebar.jsx` · bloque `pace-sidebar-responsive-css`** —
+  dentro de `@media (max-width:768px) [data-pace-sidebar]` se
+  duplican las declaraciones de alto con el patrón estándar
+  fallback + override:
+  ```css
+  height: 100vh;      /* fallback navegadores antiguos */
+  height: 100dvh;     /* navegadores modernos */
+  max-height: 100vh;
+  max-height: 100dvh;
+  ```
+  El drawer fullscreen ya no se corta si la barra de URL está
+  visible.
+- **`app/main.jsx` · bloque `pace-main-responsive-css`** — nueva
+  regla CSS **fuera de `@media`** (aplica desktop + móvil):
+  `[data-pace-app-root] { height: 100vh; height: 100dvh;
+  max-height: 100vh; max-height: 100dvh; }`.
+  Se aplica fuera del media query porque en desktop
+  `100dvh === 100vh` (no hay UI dinámica que descontar), así que
+  no hay regresión posible y el código queda más simple.
+- **`app/main.jsx` · div raíz de `PaceApp`** — recibe
+  `data-pace-app-root` y pierde `height: '100vh'` /
+  `maxHeight: '100vh'` del objeto de estilos inline (delegados al
+  bloque CSS para poder expresar la cascada fallback → override,
+  que un objeto JS con una sola key por propiedad no puede
+  expresar). Se conservan inline `display`, `overflow`,
+  `background`, `position`.
+- **`app/state.jsx` · PACE_VERSION** — `v0.12.5` → `v0.12.6`.
+- **`PACE.html` · title** — `v0.12.5` → `v0.12.6`.
+
+### Notas de diseño
+- **Patrón CSS fallback de dos líneas**. Navegadores que no
+  entienden `100dvh` descartan esa declaración y se quedan con
+  `100vh`. Los que sí la entienden la aplican por ser la última
+  válida en el orden de cascada. Cero user-agent sniffing.
+- **Aplicado también en desktop**. El usuario preguntó si
+  conviene cambiarlo sólo en `@media (max-width:768px)` o también
+  en el layout raíz desktop. Se aplica también en desktop porque
+  `100dvh === 100vh` allí donde no hay barra dinámica — no hay
+  matemática distinta, no hay regresión. Además futuros modos
+  (PWA, ventana pequeña con barra de herramientas) ya funcionan
+  sin nuevo código. Si alguna vez saliera mal, aislarlo a
+  `@media (max-width:768px)` es un cambio de tres líneas.
+- **Por qué no quedarse con `100vh`**. `vh` siempre se resuelve
+  al alto máximo del viewport — el que tiene el navegador con la
+  barra de URL oculta. Con la barra desplegada, el layout se
+  desborda ~56px porque `vh` no lo compensa. `dvh` se recalcula
+  dinámicamente al espacio real. Es la unidad correcta para este
+  caso desde 2022 (spec w3c csswg); sólo esperamos a que el
+  soporte fuera ≥97% para usarla, y ya lo es.
+
+### Conservado (no retirado)
+- **Cifras de identidad** — `MM:SS` del timer y `0` de la racha
+  siguen en EB Garamond italic blindado. Decisión activa desde
+  sesión 20.
+- **Patrón responsive** — `<style>` inyectado con `[data-*]` y
+  `!important`. Decisión activa desde sesión 22.
+- **Desktop 1920×1080** — idéntico. Verificado en preview:
+  `[data-pace-app-root]` resuelve a `height: window.innerHeight`.
+
+### Versión
+- `v0.12.5` → `v0.12.6` (cambios de código, regenera standalone).
+
+Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/session-23-dvh-fit.md).
 
 ---
 
@@ -119,54 +197,8 @@ Detalle completo: [`docs/sessions/session-22-responsive-movil.md`](./docs/sessio
 
 ---
 
-## [v0.12.4] — 2026-04-23 — Briefing de dirección
-
-Sesión estratégica. **No se toca código.** Se consolida en la
-memoria del proyecto la dirección de las próximas fases tras una
-conversación por voz con el usuario. El `PACE_standalone.html`
-sigue siendo el v0.12.3 (sin regeneración — no hay cambios
-funcionales que inlinear).
-
-### Añadido
-- **`MONETIZATION.md`** — documento nuevo. Modelo Lifetime híbrido
-  (~20 € pago único + temporadas ~5 € + donaciones BMC), gating
-  de contenido con 5 valores de `access`, validación offline de
-  licencia con clave firmada. Todo sigue local, sin backend.
-- **`CONTENT.md`** — nueva sección "Progresión de desbloqueo" al
-  inicio: la app arranca con 2 ejercicios desbloqueados por
-  módulo (Respira, Mueve, Estira). Iniciales elegidos según
-  criterios de baja barrera + diversidad calma/activa. Tabla de
-  tipos de `access` al final, sección "Contenido premium"
-  (CTB + sesiones personalizadas + ejercicios exclusivos).
-- **`ROADMAP.md`** — reescrito completo con nuevas prioridades:
-  responsive móvil (bloqueante), loop post-Pomodoro, Ritmos
-  semanal/mensual/anual, CTB premium, sesiones personalizadas,
-  retos semanales, notificaciones inteligentes, feedback
-  narrativo. Sección "Fuera de alcance" actualizada (biometría,
-  suscripción mensual, backend propio fuera).
-
-### Decisiones nuevas (todas registradas en `STATE.md`)
-- Modelo de monetización = Lifetime híbrido. No suscripción
-  mensual. Todo local.
-- Los 2 ejercicios iniciales por módulo son la puerta de
-  entrada. No cambiar sin migración.
-- Campo `access` en rutinas con 5 valores posibles.
-- Biometría y wearables fuera de alcance (decisión explícita del
-  usuario).
-- El core gratuito debe ser útil por sí solo.
-
-### Sin cambios
-- `PACE.html`, `PACE_standalone.html`, `app/*` — ningún archivo
-  de código tocado.
-- `DESIGN_SYSTEM.md` — sin cambios.
-- `README.md` — sin cambios (próxima sesión revisar si conviene
-  mencionar el gating y la monetización cuando se empiece a
-  implementar).
-
-### Versión
-- `v0.12.3` → `v0.12.4` (doc-only bump).
-
-Detalle completo: [`docs/sessions/session-21-briefing-direccion.md`](./docs/sessions/session-21-briefing-direccion.md).
+> *Las versiones anteriores ya no se detallan aquí — ver la tabla
+> de arriba para enlaces al diario completo de cada sesión.*
 
 ---
 

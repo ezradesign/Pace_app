@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.6</title>
+  <title>PACE · Foco · Cuerpo — v0.12.5</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -220,7 +220,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.6';
+const PACE_VERSION = 'v0.12.5';
 
 const defaultState = {
   // Settings / Tweaks
@@ -1979,17 +1979,8 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
         position: fixed !important;
         inset: 0 !important;
         width: 100vw !important;
-        /* Alto del drawer fullscreen: 100vh de fallback, 100dvh en
-           navegadores modernos. 100dvh (dynamic viewport height)
-           descuenta la barra de URL cuando está visible, así que el
-           contenido del sidebar cabe sin scroll independientemente
-           de si el usuario está con la barra del navegador desplegada
-           o plegada (iOS Safari 15.4+, Chrome Android 108+, Firefox 101+).
-           Sesión 23 · v0.12.6. */
         height: 100vh !important;
-        height: 100dvh !important;
         max-height: 100vh !important;
-        max-height: 100dvh !important;
         z-index: 60 !important;
         padding: 22px 22px !important;
         border-right: none !important;
@@ -5479,20 +5470,6 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
   const s = document.createElement('style');
   s.id = 'pace-main-responsive-css';
   s.textContent = `
-    /* Alto del contenedor raíz: 100vh de fallback + 100dvh en navegadores
-       modernos. 100dvh (dynamic viewport height) se recalcula cuando la
-       barra de URL móvil aparece/desaparece, así que la app siempre
-       encaja en el espacio real visible en vez de quedarse atada al
-       alto máximo (con URL oculta) como hace 100vh. En desktop 1920×1080
-       100dvh === 100vh — cero impacto. Fallback garantiza que navegadores
-       antiguos (pre-iOS 15.4 / Chrome 107 / Firefox 100) siguen usando vh.
-       Sesión 23 · v0.12.6. */
-    [data-pace-app-root] {
-      height: 100vh;
-      height: 100dvh;
-      max-height: 100vh;
-      max-height: 100dvh;
-    }
     @media (max-width: 768px) {
       [data-pace-topbar] {
         padding: 10px 12px !important;
@@ -5671,14 +5648,10 @@ function PaceApp() {
   };
 
   return (
-    /* NOTA sesión 23: `height` y `maxHeight` se delegan al bloque CSS
-       inyectado [data-pace-app-root] arriba. Permite fallback vh →
-       override dvh que los objetos de estilos inline no pueden
-       expresar (una sola key por propiedad). El resto de estilos
-       (display, overflow, background, position) se quedan inline
-       porque no necesitan fallback cascada. */
-    <div data-pace-app-root style={{
+    <div style={{
       display: 'flex',
+      height: '100vh',
+      maxHeight: '100vh',
       overflow: 'hidden',
       background: 'var(--paper)',
       position: 'relative',

@@ -35,8 +35,17 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
         position: fixed !important;
         inset: 0 !important;
         width: 100vw !important;
+        /* Alto del drawer fullscreen: 100vh de fallback, 100dvh en
+           navegadores modernos. 100dvh (dynamic viewport height)
+           descuenta la barra de URL cuando está visible, así que el
+           contenido del sidebar cabe sin scroll independientemente
+           de si el usuario está con la barra del navegador desplegada
+           o plegada (iOS Safari 15.4+, Chrome Android 108+, Firefox 101+).
+           Sesión 23 · v0.12.6. */
         height: 100vh !important;
+        height: 100dvh !important;
         max-height: 100vh !important;
+        max-height: 100dvh !important;
         z-index: 60 !important;
         padding: 22px 22px !important;
         border-right: none !important;
