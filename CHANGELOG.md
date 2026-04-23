@@ -15,9 +15,10 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| v0.12.7 | 2026-04-23 | Auditoría interna previa al refactor · sin cambios de código · informe en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md) | #25 | [session-25-auditoria-refactor.md](./docs/sessions/session-25-auditoria-refactor.md) |
-| **v0.12.7** | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra del navegador | #24 | [abajo ↓](#v0127--2026-04-23--scroll-asimetrico) |
-| **v0.12.6** | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | [abajo ↓](#v0126--2026-04-23--dvh-fit) |
+| **v0.12.8** | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [abajo ↓](#v0128--2026-04-23--refactor-fase-2) |
+| **v0.12.7** | 2026-04-23 | Auditoría interna previa al refactor · sin cambios de código · informe en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md) | #25 | [abajo ↓](#v0127--2026-04-23--auditoria-interna) |
+| v0.12.7 | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra del navegador | #24 | [session-24-scroll-asimetrico.md](./docs/sessions/session-24-scroll-asimetrico.md) |
+| v0.12.6 | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | [session-23-dvh-fit.md](./docs/sessions/session-23-dvh-fit.md) |
 | v0.12.5 | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | [session-22-responsive-movil.md](./docs/sessions/session-22-responsive-movil.md) |
 | v0.12.4 | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [session-21-briefing-direccion.md](./docs/sessions/session-21-briefing-direccion.md) |
 | v0.12.3 | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
@@ -40,6 +41,132 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.8] — 2026-04-23 — Refactor Fase 2
+
+Ejecución de los 4 ítems de prioridad A del informe de auditoría
+[`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md)
+validados al cierre de sesión 25. Regla no negociable: ningún
+cambio de comportamiento observable. La app post-sesión 26 se ve
+y se comporta idéntica a v0.12.7.
+
+### Añadido
+- **`app/ui/SessionShell.jsx`** — cáscara compartida de sesiones
+  activas. Exporta `SessionShell`, `SessionHeader`, `SessionPrep`,
+  `SessionDone`, `SessionStat` y `sessionShellStyles`. Absorbe la
+  duplicación top-1 del repo (audit §3.1): `sessionStyles`/
+  `moveSessionStyles` + `SessionHeader`/`MoveHeader` + `Stat`/
+  `MoveStat` + pantallas prep/done de Breathe y Move. Cargado en
+  `PACE.html` tras `Primitives.jsx` y antes de los módulos que lo
+  consumen.
+- **`displayItalic`** en `app/ui/Primitives.jsx` — helper para el
+  par inline más repetido del repo (`fontFamily: 'var(--font-display)',
+  fontStyle: 'italic'`). Uso por spread: `{...displayItalic, fontSize: 22}`.
+  Exportado a `window` junto con los demás primitivos.
+
+### Cambiado
+- **`app/breathe/BreatheModule.jsx`** — ramas `prep`/`done` del
+  BreatheSession ahora delegan en `<SessionPrep>`/`<SessionDone>`;
+  ramas `hold`/`active` envueltas en `<SessionShell>` conservando
+  visuales específicos (BreathVisual, dots, countdown). Eliminado
+  el bloque local `sessionStyles` (~45 líneas), `SessionHeader`
+  local (~12), `Stat` local (~12). Export saneado: de 6 símbolos a
+  3 (`BreatheLibrary`, `BreatheSafety`, `BreatheSession`).
+  Aplicado `displayItalic` en 8 sitios. Tamaño del archivo: ~740 →
+  ~565 líneas.
+- **`app/move/MoveModule.jsx`** — mismo patrón: `prep`/`done` a
+  `<SessionPrep>`/`<SessionDone>`, `active` envuelto en
+  `<SessionShell>` con Meta de paso, ruler + hint. Eliminado
+  `MoveHeader`, `MoveStat`, `moveSessionStyles`. Export saneado: de
+  3 símbolos a 2 (`MoveLibrary`, `MoveSession`). `displayItalic` en
+  7 sitios incluido `StepGlyph`. Tamaño: ~360 → ~280 líneas.
+- **`app/support/SupportModule.jsx`** — eliminado `CupIcon` (17 líneas
+  de SVG muerto) y `BigCup` (22 líneas muertas) — audit §2.1 alta
+  confianza. Callsites saneados: `SupportIcon` y `SupportHero` ya no
+  reciben `variant={state.supportCopyVariant}` (siempre devuelven vaca
+  desde v0.12.2). Firma de `supportCopy()` sin argumento. `displayItalic`
+  en 4 sitios (Value label, title, cta, alreadyLink).
+- **`app/extra/ExtraModule.jsx`** — export saneado: de
+  `{ExtraLibrary, EXTRA_ROUTINES}` a `{ExtraLibrary}` (audit §4.1).
+  `displayItalic` en el h3 de "Rutinas".
+- **`app/ui/CowLogo.jsx`** — export saneado. De 7 símbolos a 1
+  (`PaceWordmark`). `CowLogo`, `PaceLockup`, `PaceLogoImage` son
+  dependencias internas del wordmark; `CowLogoLineal/Sello/Ilustrado`
+  son variantes dormidas vivas por compat `localStorage` legacy pero
+  no se exponen al global.
+- **`app/achievements/Achievements.jsx`** · **`app/breakmenu/BreakMenu.jsx`** ·
+  **`app/focus/FocusTimer.jsx`** · **`app/shell/Sidebar.jsx`** ·
+  **`app/stats/WeeklyStats.jsx`** · **`app/tweaks/TweaksPanel.jsx`** ·
+  **`app/ui/Toast.jsx`** — `displayItalic` aplicado (un sitio cada uno,
+  tres en Achievements, tres en FocusTimer).
+- **`app/state.jsx` · PACE_VERSION** — `v0.12.7` → `v0.12.8`.
+- **`PACE.html` · title** — `v0.12.7` → `v0.12.8`; nueva entrada
+  `<script src="app/ui/SessionShell.jsx">` entre `Primitives.jsx` y
+  `CowLogo.jsx`.
+
+### Conservado por decisión explícita
+- **`state.supportCopyVariant`** — campo del state marcado como
+  `DEPRECADO` en `state.jsx` se mantiene por compat `localStorage` de
+  instalaciones existentes. `SupportModule` ya no lo consume.
+- **`supportCopy()` y `SupportIcon`** — siguen exportados a `window`
+  sin argumentos por si un futuro caller quiere re-bifurcar el copy.
+- **Variantes `CowLogoLineal/Sello/Ilustrado`** — conservadas en el
+  archivo pero fuera del namespace global. `CowLogo()` las invoca
+  internamente para soportar `logoVariant: 'lineal'|'sello'|'ilustrado'`
+  en localStorage legacy.
+- **Ítems B/C del informe** — `useKeyboardShortcuts` hook, troceo de
+  `BreatheModule`, `paceDate()` helper, limpieza de campos dormidos del
+  state (`intention`, `reminders`, `font`) y los ~20 sitios multi-línea
+  restantes de `displayItalic` quedan para sesión 27+.
+
+### Resultado cuantitativo
+- **~115 líneas de código fuente** menos en neto (Breathe+Move pierden
+  ~255, SessionShell aporta ~140).
+- **Dead code eliminado:** `CupIcon` + `BigCup` + pares de callsites
+  con variante ignorada ≈ 62 líneas (audit §2.1 ítem #2).
+- **Exports globales reducidos:** de 17 símbolos innecesarios a 0 en
+  el namespace `window`.
+- **Un único sitio** donde vive el layout de sesión activa
+  (`app/ui/SessionShell.jsx`). Prepara el terreno para adaptar modales
+  a móvil en sesión 27.
+
+### Standalone
+- `backups/PACE_standalone_v0.12.7_20260423.html` — rotado.
+- `PACE_standalone.html` — regenerado con `super_inline_html` desde
+  `PACE.html` v0.12.8. Tamaño: ~349 KB (prácticamente idéntico al
+  anterior porque el peso dominante sigue siendo el PNG del logo
+  embebido).
+
+### Verificación
+- Preview de `PACE.html` y `PACE_standalone.html` limpia (solo warning
+  esperado de Babel in-browser).
+- Sin imports rotos tras el saneo de exports (grep confirma que los
+  símbolos retirados del global no se consumen fuera de su módulo).
+
+Detalle completo: [`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
+
+---
+
+## [v0.12.7] — 2026-04-23 — Auditoría interna
+
+Sesión 25 fue auditoría pura **sin refactor**. El único entregable
+fue el informe
+[`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md)
+(~290 líneas, 7 apartados: inventario, dead code, duplicación,
+inconsistencias, riesgos, oportunidades, priorización). No se tocó
+ningún archivo de código fuente; `PACE_standalone.html` quedó
+bit-a-bit idéntico al entregado en sesión 24.
+
+### Plan validado al cierre
+Los 4 ítems de prioridad A ejecutados en sesión 26 (v0.12.8):
+1. Extraer `SessionShell.jsx`.
+2. Limpiar Support (`CupIcon`, `BigCup`, callsites `supportCopyVariant`).
+3. Sanear exports a `window`.
+4. Helper `displayItalic`.
+
+Detalle completo: [`docs/sessions/session-25-auditoria-refactor.md`](./docs/sessions/session-25-auditoria-refactor.md).
 
 ---
 

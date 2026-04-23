@@ -55,7 +55,7 @@ function BreakMenu({ open, onClose, onChoose }) {
           >
             <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
             <div>
-              <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
+              <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
               <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>{o.desc}</div>
             </div>
           </button>

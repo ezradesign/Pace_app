@@ -182,14 +182,14 @@ function Achievements({ open, onClose }) {
       {/* Counter */}
       <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
+          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
           </div>
           <Meta style={{ marginTop: 4 }}>Disponibles</Meta>
         </div>
         <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
+          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {comingSoonCount}
           </div>
           <Meta style={{ marginTop: 4 }}>Próximamente</Meta>
@@ -202,7 +202,7 @@ function Achievements({ open, onClose }) {
         return (
           <div key={cat} style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
+              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>

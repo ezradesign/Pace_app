@@ -52,7 +52,7 @@ function ToastHost() {
           }}>{t.glyph}</div>
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>Nuevo sello</div>
-            <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
+            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
           </div>
         </div>

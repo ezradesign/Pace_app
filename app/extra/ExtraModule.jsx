@@ -83,7 +83,7 @@ function ExtraLibrary({ open, onClose, onStart }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
         <Meta>Afloja tensión</Meta>
       </div>
-      <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {EXTRA_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />
@@ -93,5 +93,7 @@ function ExtraLibrary({ open, onClose, onStart }) {
   );
 }
 
-// Reutiliza MoveSession para la ejecución (misma estructura de pasos)
-Object.assign(window, { ExtraLibrary, EXTRA_ROUTINES });
+// Reutiliza MoveSession para la ejecución (misma estructura de pasos).
+// Export a window saneado en sesión 26 (audit §4.1): EXTRA_ROUTINES no se
+// consume fuera del módulo — sigue como const local.
+Object.assign(window, { ExtraLibrary });
