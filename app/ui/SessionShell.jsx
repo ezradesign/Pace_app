@@ -1,5 +1,9 @@
-/* PACE · SessionShell — cáscara compartida de sesiones activas
-   ============================================================
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   SessionShell — cáscara compartida de sesiones activas
+   =====================================================
    Extraído en sesión 26 (v0.12.8) desde la duplicación detectada entre
    Breathe y Move en el informe `docs/audits/audit-v0.12.7.md`:
      - sessionStyles / moveSessionStyles (idénticos salvo gap)

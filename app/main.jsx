@@ -1,4 +1,8 @@
-/* PACE · Main orchestrator
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Main orchestrator.
    Monta todo: Sidebar + FocusTimer + modales de librerías + sesiones
 
    RESPONSIVE (sesión 22 · v0.12.5):

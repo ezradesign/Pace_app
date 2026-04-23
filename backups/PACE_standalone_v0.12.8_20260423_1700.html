@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.7</title>
+  <title>PACE · Foco · Cuerpo — v0.12.8</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -220,7 +220,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.7';
+const PACE_VERSION = 'v0.12.8';
 
 const defaultState = {
   // Settings / Tweaks
@@ -589,6 +589,28 @@ Object.assign(window, {
 
 const { useEffect } = React;
 
+/* ============================================================
+   displayItalic — helper para el par inline más repetido del repo.
+
+   Audit v0.12.7 §3.3 detectó ~50 ocurrencias inline de
+     fontFamily: 'var(--font-display)', fontStyle: 'italic'
+   En sesión 26 (v0.12.8) se extrajo a este helper para que cada
+   cambio futuro al token viva en un único sitio. El patrón de uso
+   es spread dentro de un style inline, NO className, porque casi
+   todos los callsites ya co-locan otros estilos inline (fontSize,
+   color, margin, etc.) y romper eso forzaría refactor masivo.
+
+     <h2 style={{ ...displayItalic, fontSize: 22, margin: 0 }}>…</h2>
+
+   La clase CSS equivalente `.pace-display-italic` sigue declarada
+   en tokens.css por si un futuro consumidor prefiere la ruta
+   className; ambas rutas coexisten sin conflicto.
+   ============================================================ */
+const displayItalic = {
+  fontFamily: 'var(--font-display)',
+  fontStyle: 'italic',
+};
+
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle }) {
   useEffect(() => {
     if (!open) return;
@@ -807,7 +829,259 @@ if (!_paceAnimStyle) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
+</script>
+  <script type="text/babel">/* PACE · SessionShell — cáscara compartida de sesiones activas
+   ============================================================
+   Extraído en sesión 26 (v0.12.8) desde la duplicación detectada entre
+   Breathe y Move en el informe `docs/audits/audit-v0.12.7.md`:
+     - sessionStyles / moveSessionStyles (idénticos salvo gap)
+     - SessionHeader / MoveHeader (idéntico JSX)
+     - Stat / MoveStat (byte-por-byte iguales)
+     - Pantalla 'prep' (countdown 3-2-1, 200px italic)
+     - Pantalla 'done' (círculo check 120px + stats + copy italic)
+
+   Regla no negociable: ningún cambio de comportamiento observable.
+   Los módulos pasan `accent` (color CSS var), copy específico y
+   el subconjunto de stats que quieran mostrar.
+
+   API expuesta a `window`:
+     - SessionShell   → root + header con salida
+     - SessionPrep    → cuenta atrás de preparación
+     - SessionDone    → pantalla de completado
+     - SessionStat    → cifra grande + label pequeño
+     - sessionShellStyles → objeto de estilos por si un módulo necesita
+                            componer layouts custom (ej: dots / ruler)
+
+   Los colores se pasan como strings de var CSS:
+     accent:      'var(--breathe)' | 'var(--move)' | 'var(--extra)'
+     accentSoft:  'var(--breathe-soft)' | 'var(--move-soft)' | ...
+   ============================================================ */
+
+/* Estilos base — fusión de sessionStyles + moveSessionStyles.
+   Los dos originales eran idénticos salvo `center.gap` (32 en breathe,
+   ausente en move). Lo absorbemos aceptando `gap` como prop opcional
+   en SessionShell — por defecto sin gap (ningún módulo necesitaba
+   exactamente 32; Breathe usaba ese gap entre visual+texto pero
+   dentro de `center` ya hay flexbox column ahí que lo controla). */
+const sessionShellStyles = {
+  root: {
+    position: 'fixed', inset: 0,
+    background: 'var(--paper)',
+    zIndex: 90,
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '28px 48px 40px',
+  },
+  header: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+  },
+  exitBtn: {
+    fontSize: 13, color: 'var(--ink-2)',
+    padding: '6px 10px',
+  },
+  center: {
+    flex: 1, display: 'flex', flexDirection: 'column',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  centerGap: {
+    gap: 32,
+  },
+  footer: {
+    display: 'flex', justifyContent: 'center',
+  },
+  ctrlBtn: {
+    padding: '10px 22px',
+    fontSize: 13,
+    border: '1px solid var(--line-2)',
+    borderRadius: 'var(--r-md)',
+    background: 'var(--paper-2)',
+    color: 'var(--ink)',
+  },
+};
+
+/* ============================================================
+   SessionShell — root + header + slot de children + footer
+   Props:
+     - routine        → { code, name } para el header
+     - onExit(reason) → cerrar sesión ('exit' | 'done')
+     - headerExtra    → nodo entre el título y el botón "× Salir"
+     - footerGap      → gap entre botones del footer (default 12)
+     - centerGap      → true para añadir gap:32 al contenedor central
+                        (el patrón de Breathe con visual+texto)
+     - children       → contenido del área central (lo que va dentro de .center)
+     - footer         → nodo del footer (botones de control)
+     - hint           → texto de ayuda en la base ("Espacio pausar · …")
+   ============================================================ */
+function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
+  return (
+    <div style={sessionShellStyles.root}>
+      <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
+      <div style={centerGap
+        ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
+        : sessionShellStyles.center
+      }>
+        {children}
+      </div>
+      {footer && (
+        <div style={{ ...sessionShellStyles.footer, gap: footerGap }}>
+          {footer}
+        </div>
+      )}
+      {hint && (
+        <div style={{
+          position: 'absolute', bottom: 14, left: 0, right: 0,
+          textAlign: 'center', fontSize: 10,
+          letterSpacing: '0.16em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', opacity: 0.6,
+        }}>{hint}</div>
+      )}
+    </div>
+  );
+}
+
+function SessionHeader({ routine, onExit, extra }) {
+  return (
+    <div style={sessionShellStyles.header}>
+      <div>
+        <Meta style={{ fontSize: 10 }}>{routine.code}</Meta>
+        <h2 style={{
+          ...displayItalic,
+          fontSize: 22, margin: '2px 0 0', fontWeight: 500,
+        }}>{routine.name}</h2>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {extra}
+        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>× Salir</button>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   SessionPrep — pantalla de cuenta atrás 3-2-1
+   Props:
+     - routine        → header passthrough
+     - onExit         → header passthrough
+     - accent         → color del número gigante (var CSS)
+     - prepCount      → número a mostrar (3..0)
+     - copy           → línea italic bajo el número
+                        ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
+     - onSkip         → callback del botón "Empezar ahora"
+   ============================================================ */
+function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
+  return (
+    <SessionShell
+      routine={routine}
+      onExit={onExit}
+      footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>Empezar ahora</button>}
+    >
+      <div style={{ textAlign: 'center', maxWidth: 460 }}>
+        <div style={{
+          fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', marginBottom: 18,
+        }}>Prepárate</div>
+        <div style={{
+          ...displayItalic,
+          fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+          color: accent,
+          fontVariantNumeric: 'tabular-nums',
+        }}>{prepCount > 0 ? prepCount : '·'}</div>
+        <div style={{
+          ...displayItalic,
+          fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
+        }}>{copy}</div>
+      </div>
+    </SessionShell>
+  );
+}
+
+/* ============================================================
+   SessionDone — pantalla de completado
+   Props:
+     - routine        → header passthrough
+     - onExit         → header passthrough
+     - accent         → color del círculo check + botón
+     - accentSoft     → fondo soft del círculo
+     - doneMeta       → "Sesión completada" / "Antídoto completado"
+     - doneCopy       → párrafo italic bajo las stats
+     - stats          → [{ label, value }] — se renderizan con <SessionStat>
+     - buttonVariant  → 'terracota' (Breathe) o null (Move usa estilo custom)
+     - buttonStyle    → override del style del botón "Volver al inicio"
+   ============================================================ */
+function SessionDone({
+  routine, onExit, accent, accentSoft,
+  doneMeta, doneCopy, stats = [],
+  buttonVariant, buttonStyle,
+}) {
+  const btn = buttonVariant
+    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>Volver al inicio</Button>
+    : <Button onClick={() => onExit('done')} style={buttonStyle}>Volver al inicio</Button>;
+
+  return (
+    <SessionShell routine={routine} onExit={onExit} footer={btn}>
+      <div style={{ textAlign: 'center', maxWidth: 520 }}>
+        <div style={{
+          width: 120, height: 120, margin: '0 auto 24px',
+          borderRadius: '50%',
+          background: accentSoft,
+          border: `1.5px solid ${accent}`,
+          display: 'grid', placeItems: 'center',
+          animation: 'pace-fade-in 600ms ease',
+        }}>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+               stroke={accent} strokeWidth="1.5"
+               strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+        </div>
+        <div style={{
+          fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', marginBottom: 12,
+        }}>{doneMeta}</div>
+        <h1 style={{
+          ...displayItalic,
+          fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
+        }}>{routine.name}</h1>
+        {stats.length > 0 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
+            {stats.map((s, i) => <SessionStat key={i} label={s.label} value={s.value} />)}
+          </div>
+        )}
+        <p style={{
+          ...displayItalic,
+          fontSize: 18, color: 'var(--ink-2)',
+          maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
+        }}>{doneCopy}</p>
+      </div>
+    </SessionShell>
+  );
+}
+
+/* ============================================================
+   SessionStat — cifra grande italic + label pequeño
+   Fusión de `Stat` (Breathe) y `MoveStat` (Move) — byte-por-byte iguales.
+   ============================================================ */
+function SessionStat({ label, value }) {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        ...displayItalic,
+        fontSize: 40, fontWeight: 500, lineHeight: 1,
+        color: 'var(--ink)',
+      }}>{value}</div>
+      <div style={{
+        fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginTop: 8,
+      }}>{label}</div>
+    </div>
+  );
+}
+
+Object.assign(window, {
+  SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
+  sessionShellStyles,
+});
 </script>
   <script type="text/babel">/* PACE · Cow logos — 3 interpretations
    Uso: <CowLogo variant="lineal" size={28} color="currentColor" />
@@ -1086,7 +1360,17 @@ function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
   );
 }
 
-Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup, PaceLogoImage });
+/* Export a window saneado en sesión 26 (audit §4.1 + §2.1):
+     - PaceWordmark es el único consumido fuera del módulo (Sidebar,
+       Welcome). Es la API pública.
+     - CowLogo, PaceLockup, PaceLogoImage son dependencias internas
+       que PaceWordmark compone según `variant`. No se exponen.
+     - CowLogoLineal, CowLogoSello, CowLogoIlustrado son variantes
+       dormidas tras la retirada de sus tweaks en s19. Siguen vivas
+       en el archivo porque CowLogo las invoca (por si alguien trae
+       `logoVariant: 'lineal'|'sello'|'ilustrado'` en localStorage
+       legacy), pero no se exportan al namespace global. */
+Object.assign(window, { PaceWordmark }); 
 </script>
   <script type="text/babel">/* PACE · Toast (para notificar logros desbloqueados) */
 
@@ -1142,7 +1426,7 @@ function ToastHost() {
           }}>{t.glyph}</div>
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>Nuevo sello</div>
-            <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
+            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
           </div>
         </div>
@@ -1195,9 +1479,17 @@ const BMC_URL = `https://buymeacoffee.com/${BMC_USERNAME}`;
 /* Copy único — decidido en sesión de diseño post-v0.12.1: se descartan
    las 4 variantes ('cafe', 'pasto', 'vaca', 'come') y se consolida en
    una sola que abraza la metáfora central del proyecto (la vaca que
-   pace = PACE). El icono siempre es la vaca. Mantenemos la API
-   `supportCopy(variant)` por compatibilidad con state.supportCopyVariant
-   pero ignora el argumento. */
+   pace = PACE). El icono siempre es la vaca.
+
+   Sesión 26 (v0.12.8, audit §2.1): se eliminan los callsites que
+   pasaban `state.supportCopyVariant` como argumento y los helpers
+   `CupIcon`/`BigCup` muertos. El campo del state se conserva por
+   compat localStorage (ver state.jsx: DEPRECADO) pero este módulo
+   ya no lo consume en absoluto.
+
+   La función `supportCopy()` y el helper `SupportIcon()` se conservan
+   exportados a window sin parámetros — futuros callers que quieran
+   re-bifurcar tendrán una API neutra a la que volver. */
 const SUPPORT_COPY_DEFAULT = {
   icon: 'cow',
   label: 'Da de pastar a la vaca',
@@ -1206,14 +1498,11 @@ const SUPPORT_COPY_DEFAULT = {
   subtitle: 'Un gesto para que siga paciendo a su ritmo.',
 };
 
-function supportCopy(_variant) {
+function supportCopy() {
   return SUPPORT_COPY_DEFAULT;
 }
 
-/* Helper que renderiza el icono del pill / CTA. Con la consolidación
-   a una sola variante, siempre es la vaca. Se mantiene la firma
-   (variant, size) por si en el futuro volvemos a bifurcar. */
-function SupportIcon({ variant, size = 13 }) {
+function SupportIcon({ size = 13 }) {
   return <CowIcon size={size} />;
 }
 
@@ -1225,8 +1514,7 @@ function SupportIcon({ variant, size = 13 }) {
    Sin animación permanente. Sin gradiente. Sin color llamativo.
    ============================================================ */
 function SupportButton({ onOpen }) {
-  const [state] = usePace();
-  const copy = supportCopy(state.supportCopyVariant);
+  const copy = supportCopy();
   const [hover, setHover] = useStateSUP(false);
 
   return (
@@ -1237,6 +1525,7 @@ function SupportButton({ onOpen }) {
       title="Apoya el proyecto"
       aria-label={copy.label}
       style={{
+        ...displayItalic,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1244,8 +1533,6 @@ function SupportButton({ onOpen }) {
         width: '100%',
         padding: '9px 14px',
         fontSize: 12,
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
         color: hover ? 'var(--ink)' : 'var(--ink-2)',
         background: hover ? 'var(--paper-3)' : 'var(--paper)',
         border: `1px solid ${hover ? 'var(--line-2)' : 'var(--line)'}`,
@@ -1256,28 +1543,14 @@ function SupportButton({ onOpen }) {
       }}
     >
       <span>{copy.short}</span>
-      <SupportIcon variant={state.supportCopyVariant} />
+      <SupportIcon />
     </button>
   );
 }
 
-/* Taza de café — stroke fino, currentColor. Sin relleno para que
-   no rompa la jerarquía visual del sidebar. */
-function CupIcon({ size = 13 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.2"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {/* Cuerpo de la taza */}
-      <path d="M3 7h8v4.5a2.5 2.5 0 0 1-2.5 2.5h-3A2.5 2.5 0 0 1 3 11.5V7z" />
-      {/* Asa */}
-      <path d="M11 8.2c1.4 0 2 .7 2 1.8s-.7 1.8-2 1.8" />
-      {/* Vaho — 2 líneas finas */}
-      <path d="M5 3.2c.3.6.3 1.2 0 1.8" opacity="0.6" />
-      <path d="M8 2.4c.3.8.3 1.5 0 2.3" opacity="0.6" />
-    </svg>
-  );
-}
+/* CupIcon eliminado en sesión 26 (audit §2.1 — dead code alta confianza):
+   tras la consolidación a una sola variante de copy en v0.12.2, SupportIcon
+   siempre devuelve <CowIcon/>, y CupIcon quedó definido sin callsites. */
 
 /* Cabeza de vaca — silueta inspirada en el lockup del logo (cara
    alargada, cuernos cortos hacia arriba, mancha frontal asimétrica).
@@ -1369,9 +1642,9 @@ function SupportModal({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} maxWidth={540}>
       <div style={supportStyles.inner}>
-        {/* Ícono grande de taza con humo — no emoji, trazo a mano */}
+        {/* Ícono grande de vaca — no emoji, trazo a mano */}
         <div style={supportStyles.heroIcon}>
-          <SupportHero variant={state.supportCopyVariant} />
+          <SupportHero />
         </div>
 
         <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
@@ -1405,8 +1678,8 @@ function SupportModal({ open, onClose }) {
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
-            <span style={{ marginRight: 2 }}>{supportCopy(state.supportCopyVariant).label}</span>
-            <SupportIcon variant={state.supportCopyVariant} />
+            <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
+            <SupportIcon />
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
             {copied ? '✓ copiado' : 'Copiar enlace'}
@@ -1440,8 +1713,7 @@ function Value({ label, sub }) {
   return (
     <div style={{ flex: 1, textAlign: 'center', padding: '0 6px' }}>
       <div style={{
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
+        ...displayItalic,
         fontSize: 14,
         color: 'var(--ink)',
         lineHeight: 1.1,
@@ -1456,27 +1728,8 @@ function Value({ label, sub }) {
   );
 }
 
-/* Taza grande para el hero del modal — misma silueta que el botón
-   pero con más detalle: un par de líneas de vaho más orgánicas y
-   un platillo debajo. Todo currentColor = --breathe (terracota). */
-function BigCup() {
-  return (
-    <svg width="58" height="58" viewBox="0 0 48 48" fill="none"
-         stroke="var(--breathe)" strokeWidth="1.4"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {/* Vaho — 3 líneas orgánicas */}
-      <path d="M16 9c1 2 1 3.5 0 5.5" opacity="0.5" />
-      <path d="M23 6.5c1.2 2.5 1.2 4.3 0 6.8" opacity="0.7" />
-      <path d="M30 9c1 2 1 3.5 0 5.5" opacity="0.5" />
-      {/* Taza */}
-      <path d="M10 19h22v13a7 7 0 0 1-7 7h-8a7 7 0 0 1-7-7V19z" />
-      {/* Asa */}
-      <path d="M32 22c4 0 6 2 6 5s-2 5-6 5" />
-      {/* Platillo */}
-      <path d="M7 41h28" opacity="0.5" />
-    </svg>
-  );
-}
+/* BigCup eliminado en sesión 26 (audit §2.1). Tras la consolidación a
+   una sola variante de copy, SupportHero siempre devuelve <BigCow/>. */
 
 /* Cabeza de vaca grande para el hero del modal — mismo diseño que
    CowIcon pero a 48×48. Cuernos cortos arriba, cara alargada,
@@ -1515,9 +1768,9 @@ function BigCow() {
   );
 }
 
-/* Hero del modal. Con la consolidación a una sola variante, siempre
-   es la vaca grande. Se mantiene la firma por compatibilidad. */
-function SupportHero({ variant }) {
+/* Hero del modal — siempre la vaca grande tras la consolidación de
+   copy en v0.12.2. Firma saneada en sesión 26 (audit §2.1). */
+function SupportHero() {
   return <BigCow />;
 }
 
@@ -1557,8 +1810,7 @@ const supportStyles = {
     border: '1px solid var(--breathe)',
   },
   title: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
+    ...displayItalic,
     fontSize: 32,
     fontWeight: 500,
     lineHeight: 1.05,
@@ -1585,13 +1837,12 @@ const supportStyles = {
     borderRadius: 'var(--r-md)',
   },
   cta: {
+    ...displayItalic,
     fontSize: 13,
     lineHeight: 1.55,
     textAlign: 'center',
     margin: '0 0 20px',
     color: 'var(--ink)',
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
   },
   actions: {
     display: 'flex',
@@ -1610,8 +1861,7 @@ const supportStyles = {
     marginTop: 6,
   },
   alreadyLink: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
+    ...displayItalic,
     fontSize: 12,
     color: 'var(--ink-3)',
     background: 'transparent',
@@ -2236,7 +2486,7 @@ function SenderoDelDia({ state }) {
         </svg>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
           <span>6h</span>
-          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>ahora · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
+          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>ahora · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
           <span>22h</span>
         </div>
       </div>
@@ -2942,8 +3192,7 @@ function TimerNumber({ mins, secs, progress, modeLabel, subtitle }) {
       <div style={{ textAlign: 'center', zIndex: 1 }}>
         <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 16 }}>{modeLabel}</div>
         <div style={{
-          fontFamily: 'var(--font-display)',
-          fontStyle: 'italic',
+          ...displayItalic,
           fontSize: 'var(--size-hero)',
           fontWeight: 400,
           lineHeight: 0.9,
@@ -2970,7 +3219,7 @@ function TimerCircle({ mins, secs, progress, modeLabel, subtitle }) {
       </svg>
       <div style={{ textAlign: 'center', zIndex: 1 }}>
         <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>{modeLabel}</div>
-        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
+        <div style={{ ...displayItalic, fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
         <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 36 }}>{subtitle}</div>
@@ -2984,7 +3233,7 @@ function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
     <div style={{ width: 520, textAlign: 'center' }}>
       <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 24 }}>{modeLabel}</div>
       <div style={{
-        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        ...displayItalic,
         fontSize: 140, fontWeight: 400, lineHeight: 0.9,
         fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.04em',
         marginBottom: 30,
@@ -3243,7 +3492,7 @@ function BreatheLibrary({ open, onClose, onStart }) {
         {Object.entries(BREATHE_ROUTINES).map(([key, group]) => (
           <div key={key}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, margin: 0, fontWeight: 500 }}>{group.label}</h3>
+              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{group.label}</h3>
               {group.aside && <Meta>{group.aside}</Meta>}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
@@ -3273,7 +3522,7 @@ function RoutineCard({ routine, color, onClick }) {
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
         <Tag color={color}>{routine.tag}</Tag>
       </div>
-      <h4 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
+      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{routine.desc}</p>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -3283,7 +3532,7 @@ function RoutineCard({ routine, color, onClick }) {
           {routine.code}
         </span>
         <span style={{
-          fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16,
+          ...displayItalic, fontSize: 16,
           color: color, fontWeight: 500,
         }}>{routine.min} min</span>
       </div>
@@ -3308,7 +3557,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         }}>⚠</div>
         <div>
           <div className="pace-meta" style={{ marginBottom: 4 }}>Antes de empezar</div>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, margin: 0, fontWeight: 500 }}>{routine.name}</h3>
+          <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{routine.name}</h3>
         </div>
       </div>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' }}>
@@ -3465,28 +3714,14 @@ function BreatheSession({ routine, onExit }) {
   // PREPARACIÓN
   if (stage === 'prep') {
     return (
-      <div style={sessionStyles.root}>
-        <SessionHeader routine={routine} onExit={onExit} extra={null} />
-        <div style={sessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 460 }}>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 18 }}>Prepárate</div>
-            <div style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-              color: 'var(--breathe)',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{prepCount > 0 ? prepCount : '·'}</div>
-            <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--ink-2)', marginTop: 20 }}>
-              Siéntate cómodo. Respira natural.
-            </div>
-          </div>
-        </div>
-        <div style={sessionStyles.footer}>
-          <button onClick={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); }} style={sessionStyles.ctrlBtn}>
-            Empezar ahora
-          </button>
-        </div>
-      </div>
+      <SessionPrep
+        routine={routine}
+        onExit={onExit}
+        accent="var(--breathe)"
+        prepCount={prepCount}
+        copy="Siéntate cómodo. Respira natural."
+        onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); }}
+      />
     );
   }
 
@@ -3495,44 +3730,24 @@ function BreatheSession({ routine, onExit }) {
     const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
+    const stats = [
+      { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
+    ];
+    if (isRounds) {
+      stats.push({ label: 'Rondas', value: String(routine.rounds) });
+      stats.push({ label: 'Respiraciones', value: String(routine.breaths * routine.rounds) });
+    }
     return (
-      <div style={sessionStyles.root}>
-        <SessionHeader routine={routine} onExit={onExit} extra={null} />
-        <div style={sessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 520 }}>
-            <div style={{
-              width: 120, height: 120, margin: '0 auto 24px',
-              borderRadius: '50%',
-              background: 'var(--breathe-soft)',
-              border: '1.5px solid var(--breathe)',
-              display: 'grid', placeItems: 'center',
-              animation: 'pace-fade-in 600ms ease',
-            }}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--breathe)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-            </div>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12 }}>
-              Sesión completada
-            </div>
-            <h1 style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
-            }}>{routine.name}</h1>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
-              <Stat label="Tiempo" value={`${mins}:${String(secs).padStart(2,'0')}`} />
-              {isRounds && <Stat label="Rondas" value={String(routine.rounds)} />}
-              {isRounds && <Stat label="Respiraciones" value={String(routine.breaths * routine.rounds)} />}
-            </div>
-            <p style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--ink-2)', maxWidth: 380, margin: '0 auto 36px', lineHeight: 1.5 }}>
-              Bien hecho. Observa cómo te sientes antes de volver.
-            </p>
-          </div>
-        </div>
-        <div style={sessionStyles.footer}>
-          <Button variant="terracota" onClick={() => onExit('done')}>Volver al inicio</Button>
-        </div>
-      </div>
+      <SessionDone
+        routine={routine}
+        onExit={onExit}
+        accent="var(--breathe)"
+        accentSoft="var(--breathe-soft)"
+        doneMeta="Sesión completada"
+        doneCopy="Bien hecho. Observa cómo te sientes antes de volver."
+        stats={stats}
+        buttonVariant="terracota"
+      />
     );
   }
 
@@ -3541,35 +3756,37 @@ function BreatheSession({ routine, onExit }) {
     const holdMins = Math.floor(holdSeconds / 60);
     const holdSecs = holdSeconds % 60;
     return (
-      <div style={sessionStyles.root}>
-        <SessionHeader routine={routine} onExit={onExit}
-          extra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>Ronda {round} / {routine.rounds}</div>} />
-        <div style={sessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 520 }}>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
-              Retén sin aire
-            </div>
-            <div style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 160, fontWeight: 400, lineHeight: 0.9,
-              color: 'var(--ink)',
-              fontVariantNumeric: 'tabular-nums',
-              letterSpacing: '-0.03em',
-            }}>
-              {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
-            </div>
-            <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-              {holdMins > 0 ? 'minutos' : 'segundos'}
-            </div>
-            <p style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--ink-2)', maxWidth: 360, margin: '30px auto 0', lineHeight: 1.5 }}>
-              Pulsa cuando sientas la necesidad de respirar.
-            </p>
+      <SessionShell
+        routine={routine}
+        onExit={onExit}
+        headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>Ronda {round} / {routine.rounds}</div>}
+        footer={<Button variant="terracota" onClick={releaseHold}>Respirar de nuevo</Button>}
+      >
+        <div style={{ textAlign: 'center', maxWidth: 520 }}>
+          <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
+            Retén sin aire
           </div>
+          <div style={{
+            ...displayItalic,
+            fontSize: 160, fontWeight: 400, lineHeight: 0.9,
+            color: 'var(--ink)',
+            fontVariantNumeric: 'tabular-nums',
+            letterSpacing: '-0.03em',
+          }}>
+            {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            {holdMins > 0 ? 'minutos' : 'segundos'}
+          </div>
+          <p style={{
+            ...displayItalic,
+            fontSize: 18, color: 'var(--ink-2)',
+            maxWidth: 360, margin: '30px auto 0', lineHeight: 1.5,
+          }}>
+            Pulsa cuando sientas la necesidad de respirar.
+          </p>
         </div>
-        <div style={sessionStyles.footer}>
-          <Button variant="terracota" onClick={releaseHold}>Respirar de nuevo</Button>
-        </div>
-      </div>
+      </SessionShell>
     );
   }
 
@@ -3581,41 +3798,61 @@ function BreatheSession({ routine, onExit }) {
   const totalDots = isRounds ? routine.breaths : 20;
   const activeDot = isRounds ? breathCount : Math.floor(phaseTime % totalDots);
 
-  return (
-    <div style={sessionStyles.root}>
-      <SessionHeader routine={routine} onExit={onExit}
-        extra={isRounds ? (
-          <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-            Ronda {round} / {routine.rounds}
-          </div>
-        ) : null} />
+  const footer = (
+    <React.Fragment>
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
+        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+      </button>
+      <button onClick={finish} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title="Esc">
+        ▶| Terminar
+      </button>
+    </React.Fragment>
+  );
 
-      <div style={sessionStyles.center}>
-        <BreathVisual
-          style={state.breathStyle}
-          phase={current.label}
-          progress={progress}
-          scale={current.scale}
-        />
-        <div style={sessionStyles.text}>
+  return (
+    <SessionShell
+      routine={routine}
+      onExit={onExit}
+      centerGap={true}
+      footerGap={16}
+      footer={footer}
+      hint="Espacio pausar · Esc salir"
+      headerExtra={isRounds ? (
+        <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+          Ronda {round} / {routine.rounds}
+        </div>
+      ) : null}
+    >
+      <BreathVisual
+        style={state.breathStyle}
+        phase={current.label}
+        progress={progress}
+        scale={current.scale}
+      />
+      <div style={{ textAlign: 'center' }}>
+        <div style={{
+          ...displayItalic,
+          fontSize: 44, fontWeight: 500, color: 'var(--ink)',
+          marginBottom: 8, lineHeight: 1,
+        }}>{current.label}</div>
+        {showCountdown && (
           <div style={{
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-            fontSize: 44, fontWeight: 500, color: 'var(--ink)',
-            marginBottom: 8, lineHeight: 1,
-          }}>{current.label}</div>
-          {showCountdown && (
-            <div style={{
-              fontSize: 28, fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              color: 'var(--breathe)', fontVariantNumeric: 'tabular-nums', marginTop: 4,
-            }}>{remaining}</div>
-          )}
-          <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-            {isRounds ? `Respiración ${breathCount} de ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
-          </div>
+            ...displayItalic,
+            fontSize: 28, color: 'var(--breathe)',
+            fontVariantNumeric: 'tabular-nums', marginTop: 4,
+          }}>{remaining}</div>
+        )}
+        <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
+          {isRounds ? `Respiración ${breathCount} de ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
         </div>
       </div>
-
-      <div style={sessionStyles.dots}>
+      <div style={{
+        display: 'flex', gap: 5,
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        maxWidth: 400,
+        margin: '0 auto',
+      }}>
         {Array.from({ length: Math.min(totalDots, 30) }).map((_, i) => (
           <span key={i} style={{
             width: 4, height: 4, borderRadius: '50%',
@@ -3624,52 +3861,13 @@ function BreatheSession({ routine, onExit }) {
           }} />
         ))}
       </div>
-
-      <div style={sessionStyles.footer}>
-        <button onClick={() => setPaused(p => !p)} style={sessionStyles.ctrlBtn} title="Espacio">
-          {paused ? '▶ Reanudar' : '❚❚ Pausar'}
-        </button>
-        <button onClick={finish} style={{ ...sessionStyles.ctrlBtn, borderColor: 'transparent' }} title="Esc">
-          ▶| Terminar
-        </button>
-      </div>
-      <div style={{ position: 'absolute', bottom: 14, left: 0, right: 0, textAlign: 'center', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.6 }}>
-        Espacio pausar · Esc salir
-      </div>
-    </div>
+    </SessionShell>
   );
 }
 
-/* Header reutilizable de sesión */
-function SessionHeader({ routine, onExit, extra }) {
-  return (
-    <div style={sessionStyles.header}>
-      <div>
-        <Meta style={{ fontSize: 10 }}>{routine.code}</Meta>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, margin: '2px 0 0', fontWeight: 500 }}>{routine.name}</h2>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {extra}
-        <button onClick={() => onExit('exit')} style={sessionStyles.exitBtn}>× Salir</button>
-      </div>
-    </div>
-  );
-}
-
-function Stat({ label, value }) {
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        fontFamily: 'var(--font-display)', fontStyle: 'italic',
-        fontSize: 40, fontWeight: 500, lineHeight: 1,
-        color: 'var(--ink)',
-      }}>{value}</div>
-      <div style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>
-        {label}
-      </div>
-    </div>
-  );
-}
+/* SessionHeader y Stat (antes locales aquí) se extrajeron en sesión 26
+   a app/ui/SessionShell.jsx como componentes compartidos con Move.
+   Ver docs/audits/audit-v0.12.7.md §3.1 (Top-1 duplicación). */
 
 function getSequence(routine) {
   // Devuelve [{label, duration, scale}, …]
@@ -3872,52 +4070,15 @@ const visualStyles = {
   },
 };
 
-const sessionStyles = {
-  root: {
-    position: 'fixed', inset: 0,
-    background: 'var(--paper)',
-    zIndex: 90,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '28px 48px 40px',
-  },
-  header: {
-    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-  },
-  exitBtn: {
-    fontSize: 13, color: 'var(--ink-2)',
-    padding: '6px 10px',
-  },
-  center: {
-    flex: 1, display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'center',
-    gap: 32,
-  },
-  text: {
-    textAlign: 'center',
-  },
-  dots: {
-    display: 'flex', gap: 5,
-    justifyContent: 'center',
-    marginBottom: 28,
-    flexWrap: 'wrap',
-    maxWidth: 400,
-    margin: '0 auto 28px',
-  },
-  footer: {
-    display: 'flex', gap: 16, justifyContent: 'center',
-  },
-  ctrlBtn: {
-    padding: '10px 22px',
-    fontSize: 13,
-    border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
-    background: 'var(--paper-2)',
-    color: 'var(--ink)',
-  },
-};
+/* sessionStyles local eliminado en sesión 26. El layout de sesión vive ahora
+   en app/ui/SessionShell.jsx (sessionShellStyles) y los componentes
+   SessionShell / SessionPrep / SessionDone lo consumen. */
 
-Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession, BREATHE_ROUTINES, SessionHeader, Stat });
+/* Export a window: sólo los componentes consumidos fuera del módulo.
+   SessionHeader y Stat se movieron a SessionShell.jsx (expuestos desde
+   allí). BREATHE_ROUTINES sigue declarado como const local (nadie lo
+   consume fuera), saneado por audit §4.1. */
+Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession });
 </script>
   <script type="text/babel">/* PACE · Módulo Mueve (Calistenia / Fuerza)
    Librería + Sesión con pasos + timer
@@ -3989,7 +4150,7 @@ function MoveLibrary({ open, onClose, onStart }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
         <Meta>Cuerpo activo</Meta>
       </div>
-      <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {MOVE_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
@@ -4072,28 +4233,14 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   // PREPARACIÓN
   if (stage === 'prep') {
     return (
-      <div style={moveSessionStyles.root}>
-        <MoveHeader routine={routine} onExit={onExit} />
-        <div style={moveSessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 460 }}>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 18 }}>Prepárate</div>
-            <div style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-              color: 'var(--move)',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{prepCount > 0 ? prepCount : '·'}</div>
-            <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 20, color: 'var(--ink-2)', marginTop: 20 }}>
-              De pie. Sin prisa. {routine.steps.length} pasos.
-            </div>
-          </div>
-        </div>
-        <div style={moveSessionStyles.footer}>
-          <button onClick={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }} style={moveSessionStyles.ctrlBtn}>
-            Empezar ahora
-          </button>
-        </div>
-      </div>
+      <SessionPrep
+        routine={routine}
+        onExit={onExit}
+        accent="var(--move)"
+        prepCount={prepCount}
+        copy={`De pie. Sin prisa. ${routine.steps.length} pasos.`}
+        onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
+      />
     );
   }
 
@@ -4103,79 +4250,71 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     return (
-      <div style={moveSessionStyles.root}>
-        <MoveHeader routine={routine} onExit={onExit} />
-        <div style={moveSessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 520 }}>
-            <div style={{
-              width: 120, height: 120, margin: '0 auto 24px',
-              borderRadius: '50%', background: 'var(--move-soft)',
-              border: '1.5px solid var(--move)',
-              display: 'grid', placeItems: 'center',
-              animation: 'pace-fade-in 600ms ease',
-            }}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--move)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-            </div>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12 }}>
-              Antídoto completado
-            </div>
-            <h1 style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
-            }}>{routine.name}</h1>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
-              <MoveStat label="Tiempo" value={`${mins}:${String(secs).padStart(2,'0')}`} />
-              <MoveStat label="Pasos" value={String(routine.steps.length)} />
-            </div>
-            <p style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--ink-2)', maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5 }}>
-              El cuerpo vuelve a sentirse tuyo.
-            </p>
-          </div>
-        </div>
-        <div style={moveSessionStyles.footer}>
-          <Button onClick={() => onExit('done')} style={{ background: 'var(--move)', borderColor: 'var(--move)' }}>Volver al inicio</Button>
-        </div>
-      </div>
+      <SessionDone
+        routine={routine}
+        onExit={onExit}
+        accent="var(--move)"
+        accentSoft="var(--move-soft)"
+        doneMeta="Antídoto completado"
+        doneCopy="El cuerpo vuelve a sentirse tuyo."
+        stats={[
+          { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
+          { label: 'Pasos',  value: String(routine.steps.length) },
+        ]}
+        buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+      />
     );
   }
 
   // ACTIVE
   const progress = elapsed / step.dur;
   const remaining = Math.max(0, step.dur - elapsed);
+  const footer = (
+    <React.Fragment>
+      <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn} title="←">
+        ← Anterior
+      </button>
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
+        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+      </button>
+      <button onClick={goNext} style={sessionShellStyles.ctrlBtn} title="→">
+        {stepIdx + 1 >= routine.steps.length ? 'Terminar' : 'Siguiente →'}
+      </button>
+    </React.Fragment>
+  );
   return (
-    <div style={moveSessionStyles.root}>
-      <MoveHeader routine={routine} onExit={onExit}
-        extra={<Meta>Paso {stepIdx + 1} / {routine.steps.length}</Meta>} />
-
-      <div style={moveSessionStyles.center}>
-        <div style={{ textAlign: 'center', maxWidth: 620 }}>
-          <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
-          <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
-            Paso {stepIdx + 1} de {routine.steps.length}
-          </div>
-          <h1 style={{
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-            fontSize: 56, fontWeight: 500,
-            lineHeight: 1.05, margin: '0 0 20px',
-          }}>{step.name}</h1>
-          <p style={{
-            fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-            maxWidth: 460, margin: '0 auto 30px',
-          }}>{step.cue}</p>
-
-          <div style={{
-            fontSize: 128, fontFamily: 'var(--font-display)', fontStyle: 'italic',
-            fontWeight: 400, fontVariantNumeric: 'tabular-nums',
-            color: 'var(--ink)', lineHeight: 1,
-          }}>{String(remaining).padStart(2, '0')}</div>
-          <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
+    <SessionShell
+      routine={routine}
+      onExit={onExit}
+      headerExtra={<Meta>Paso {stepIdx + 1} / {routine.steps.length}</Meta>}
+      footer={footer}
+      hint="← → navegar · Espacio pausar · Esc salir"
+    >
+      <div style={{ textAlign: 'center', maxWidth: 620 }}>
+        <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
+        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
+          Paso {stepIdx + 1} de {routine.steps.length}
         </div>
+        <h1 style={{
+          ...displayItalic,
+          fontSize: 56, fontWeight: 500,
+          lineHeight: 1.05, margin: '0 0 20px',
+        }}>{step.name}</h1>
+        <p style={{
+          fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
+          maxWidth: 460, margin: '0 auto 30px',
+        }}>{step.cue}</p>
+
+        <div style={{
+          ...displayItalic,
+          fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
+          color: 'var(--ink)', lineHeight: 1,
+        }}>{String(remaining).padStart(2, '0')}</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
       </div>
 
-      <div style={moveSessionStyles.rulerWrap}>
-        <div style={moveSessionStyles.ruler}>
+      <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 10 }}>
           {routine.steps.map((s, i) => (
             <div key={i} style={{
               flex: s.dur,
@@ -4199,54 +4338,13 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           {routine.steps[stepIdx + 1] ? `Siguiente: ${routine.steps[stepIdx + 1].name}` : 'Último paso'}
         </div>
       </div>
-
-      <div style={moveSessionStyles.footer}>
-        <button onClick={goPrev} disabled={stepIdx === 0} style={moveSessionStyles.ctrlBtn} title="←">
-          ← Anterior
-        </button>
-        <button onClick={() => setPaused(p => !p)} style={moveSessionStyles.ctrlBtn} title="Espacio">
-          {paused ? '▶ Reanudar' : '❚❚ Pausar'}
-        </button>
-        <button onClick={goNext} style={moveSessionStyles.ctrlBtn} title="→">
-          {stepIdx + 1 >= routine.steps.length ? 'Terminar' : 'Siguiente →'}
-        </button>
-      </div>
-      <div style={{ position: 'absolute', bottom: 14, left: 0, right: 0, textAlign: 'center', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.6 }}>
-        ← → navegar · Espacio pausar · Esc salir
-      </div>
-    </div>
+    </SessionShell>
   );
 }
 
-function MoveHeader({ routine, onExit, extra }) {
-  return (
-    <div style={moveSessionStyles.header}>
-      <div>
-        <Meta>{routine.code}</Meta>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, margin: '2px 0 0', fontWeight: 500 }}>{routine.name}</h2>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {extra}
-        <button onClick={() => onExit('exit')} style={moveSessionStyles.exitBtn}>× Salir</button>
-      </div>
-    </div>
-  );
-}
-
-function MoveStat({ label, value }) {
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        fontFamily: 'var(--font-display)', fontStyle: 'italic',
-        fontSize: 40, fontWeight: 500, lineHeight: 1,
-        color: 'var(--ink)',
-      }}>{value}</div>
-      <div style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>
-        {label}
-      </div>
-    </div>
-  );
-}
+/* MoveHeader y MoveStat (antes locales aquí) se fusionaron en sesión 26
+   con SessionHeader/Stat de Breathe en app/ui/SessionShell.jsx. Ver
+   docs/audits/audit-v0.12.7.md §3.1. */
 
 /* Glifo placeholder por paso — círculo con símbolo de categoría.
    Proyecta sensación de "ficha de biblioteca" hasta que tengamos ilustraciones reales. */
@@ -4255,55 +4353,26 @@ function StepGlyph({ tag, stepIdx }) {
   const sym = symbols[stepIdx % symbols.length];
   return (
     <div style={{
+      ...displayItalic,
       width: 72, height: 72, margin: '0 auto 20px',
       borderRadius: '50%',
       border: '1px dashed var(--move)',
       background: 'var(--move-soft)',
       display: 'grid', placeItems: 'center',
       color: 'var(--move)',
-      fontFamily: 'var(--font-display)',
       fontSize: 28,
-      fontStyle: 'italic',
     }}>
       {sym}
     </div>
   );
 }
 
-const moveSessionStyles = {
-  root: {
-    position: 'fixed', inset: 0,
-    background: 'var(--paper)',
-    zIndex: 90,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '28px 48px 40px',
-  },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  exitBtn: { fontSize: 13, color: 'var(--ink-2)', padding: '6px 10px' },
-  center: {
-    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  rulerWrap: { margin: '0 auto 20px', width: '100%', maxWidth: 640 },
-  ruler: {
-    display: 'flex', gap: 4,
-    alignItems: 'center',
-    height: 10,
-  },
-  footer: {
-    display: 'flex', gap: 12, justifyContent: 'center',
-  },
-  ctrlBtn: {
-    padding: '10px 22px',
-    fontSize: 13,
-    border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
-    background: 'var(--paper-2)',
-    color: 'var(--ink)',
-  },
-};
+/* moveSessionStyles local eliminado en sesión 26. El layout de sesión
+   vive ahora en app/ui/SessionShell.jsx (sessionShellStyles). */
 
-Object.assign(window, { MoveLibrary, MoveSession, MOVE_ROUTINES });
+/* Export a window: sólo lo consumido fuera del módulo.
+   MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
+Object.assign(window, { MoveLibrary, MoveSession });
 </script>
   <script type="text/babel">/* PACE · Módulo Estira (Estiramientos / Movilidad)
    Botón: "Estira" · afloja tensión.
@@ -4390,7 +4459,7 @@ function ExtraLibrary({ open, onClose, onStart }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
         <Meta>Afloja tensión</Meta>
       </div>
-      <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {EXTRA_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />
@@ -4400,8 +4469,10 @@ function ExtraLibrary({ open, onClose, onStart }) {
   );
 }
 
-// Reutiliza MoveSession para la ejecución (misma estructura de pasos)
-Object.assign(window, { ExtraLibrary, EXTRA_ROUTINES });
+// Reutiliza MoveSession para la ejecución (misma estructura de pasos).
+// Export a window saneado en sesión 26 (audit §4.1): EXTRA_ROUTINES no se
+// consume fuera del módulo — sigue como const local.
+Object.assign(window, { ExtraLibrary });
 </script>
   <script type="text/babel">/* PACE · Módulo Hidrátate */
 
@@ -4541,7 +4612,7 @@ function BreakMenu({ open, onClose, onChoose }) {
           >
             <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
             <div>
-              <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
+              <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
               <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>{o.desc}</div>
             </div>
           </button>
@@ -4773,14 +4844,14 @@ function Achievements({ open, onClose }) {
       {/* Counter */}
       <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
+          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
           </div>
           <Meta style={{ marginTop: 4 }}>Disponibles</Meta>
         </div>
         <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
+          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {comingSoonCount}
           </div>
           <Meta style={{ marginTop: 4 }}>Próximamente</Meta>
@@ -4793,7 +4864,7 @@ function Achievements({ open, onClose }) {
         return (
           <div key={cat} style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
+              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
@@ -4980,7 +5051,7 @@ function WeekBarRow({ label, data, color, unit }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-        <span style={{ fontSize: 13, color: 'var(--ink-2)', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500 }}>{label}</span>
+        <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
@@ -5227,7 +5298,7 @@ function TweaksPanel({ open, onClose }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
           <Meta>Panel</Meta>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, fontWeight: 500 }}>Tweaks</div>
+          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>

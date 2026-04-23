@@ -3,9 +3,10 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.12.2 · Pre-lanzamiento · Iteración de diseño
-**Build entregado:** `PACE_App_1_38.html` (standalone autocontenido)
+**Estado:** v0.12.9 · Pre-lanzamiento · Iteración de diseño
+**Build entregado:** `PACE_standalone.html` (standalone autocontenido)
 **Autor:** [@ezradesign](https://github.com/ezradesign)
+**Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
 
 ---
 
@@ -62,7 +63,8 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 ```
 /
 ├── PACE.html                ← entry point de desarrollo
-├── PACE_standalone.html     ← bundle offline (inline, ~174 KB)
+├── PACE_standalone.html     ← bundle offline (inline, ~349 KB)
+├── LICENSE                  ← Elastic License 2.0
 ├── CLAUDE.md                ← protocolo y arquitectura
 ├── STATE.md                 ← estado actual y próximos pasos
 ├── CHANGELOG.md             ← historial por versión
@@ -118,7 +120,25 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 
 ## 📜 Licencia
 
-Por definir. Proyecto personal en desarrollo — no reutilizar contenido ni assets sin permiso.
+El **código fuente** de PACE se publica bajo la [Elastic License 2.0](./LICENSE) — una licencia *source-available*. En claro, para lo que sueles querer saber:
+
+**Puedes:**
+- Leer, clonar, estudiar y modificar el código.
+- Forkear el repositorio para uso personal, educativo o experimental.
+- Proponer cambios vía pull request.
+
+**No puedes:**
+- Ofrecer PACE (o una versión modificada) **como servicio alojado o administrado** a terceros.
+- **Eludir, desactivar o saltarte** el sistema de validación de licencia Lifetime / Pase.
+- **Retirar** los avisos de licencia, copyright o marca.
+
+### Lifetime, Pase y Temporadas ≠ licencia del código
+
+La Elastic License 2.0 cubre el **código fuente** del repositorio. El **Lifetime**, el **Pase mensual** y las **Temporadas** son licencias comerciales **separadas**, aplicadas sobre el producto compilado (`PACE_standalone.html`) para habilitar contenido y funciones premium. Ver [`MONETIZATION.md`](./MONETIZATION.md) para el detalle del modelo de monetización.
+
+### Otros usos
+
+Para licencias comerciales alternativas (por ejemplo, uso interno de una organización que no encaje con los términos de la ELv2) abre un [issue en GitHub](https://github.com/ezradesign/Pace_app/issues) describiendo el caso y lo evaluamos.
 
 ---
 

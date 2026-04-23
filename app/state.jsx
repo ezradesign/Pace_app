@@ -1,11 +1,14 @@
-/* PACE · Estado global
-   Simple store con useSyncExternalStore + localStorage
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Estado global: simple store con useSyncExternalStore + localStorage.
 */
 
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.8';
+const PACE_VERSION = 'v0.12.9';
 
 const defaultState = {
   // Settings / Tweaks
