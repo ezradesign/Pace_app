@@ -1,19 +1,32 @@
 /* PACE · Panel de Tweaks
    ============================================================
-   7 ejes de customización: paleta, tipografía, layout, timer,
-   breath, logo, copy del botón de apoyo.
+   4 ejes vigentes: paleta, layout, timer, breath.
 
-   Sesión 17 (v0.12.0) — añadido:
+   Retirados por decisión "menos variantes, más identidad":
+     - logoVariant + supportCopyVariant (sesión 19).
+     - font / tipografía display (sesión 20). La identidad
+       tipográfica de PACE es Cormorant Garamond (default) +
+       EB Garamond fijo para cifras de identidad (número de
+       racha, número del timer futuro). No tiene sentido dejar
+       al usuario elegir entre 3 alternativas — decide PACE.
+
+   Los campos del state (`font`, `logoVariant`, `supportCopyVariant`)
+   se conservan por compatibilidad con localStorage existente pero
+   no son editables desde la UI.
+
+   Sesión 17 (v0.12.0) — sigue vigente:
      - Export/Import JSON (backup local portátil).
-     - 6 tweak-secrets reaccionando a combinaciones específicas:
+     - tweak-secrets reaccionando a combinaciones específicas:
          · secret.aged       → paleta 'envejecido'.
          · secret.dark.mode  → paleta 'oscuro' durante 7 días (acumulado).
+         · explore.tweaks    → abrir este panel por primera vez.
+     - Secretos dormidos (el eje que los disparaba fue retirado;
+       quedan en código por si se reintroducen como easter egg):
          · secret.mono       → font 'mono'.
          · secret.seal       → logo 'sello'.
          · secret.illustrated→ logo 'ilustrado'.
-         · explore.tweaks    → abrir este panel por primera vez.
-       Patrón: hook ligero en el componente que llama unlockAchievement()
-       cuando la condición se cumple. La idempotencia la garantiza
+       Patrón: hook ligero que llama unlockAchievement() cuando la
+       condición se cumple. La idempotencia la garantiza
        unlockAchievement (no dispara dos veces el mismo id).
    ============================================================ */
 
@@ -52,11 +65,6 @@ function TweaksPanel({ open, onClose }) {
       { v: 'crema', name: 'Crema día' },
       { v: 'oscuro', name: 'Oscuro noche' },
       { v: 'envejecido', name: 'Papel envejecido' },
-    ]},
-    { key: 'font', label: 'Tipografía display', options: [
-      { v: 'cormorant', name: 'Cormorant (default)' },
-      { v: 'garamond', name: 'EB Garamond' },
-      { v: 'mono', name: 'JetBrains Mono' },
     ]},
     { key: 'layout', label: 'Layout', options: [
       { v: 'sidebar', name: 'Sidebar (default)' },
@@ -328,14 +336,18 @@ function TweakSecretsWatcher() {
     if (state.palette === 'envejecido') unlockAchievement('secret.aged');
   }, [state.palette]);
 
+  /* secret.mono — el Tweak de tipografía se retiró en sesión 20.
+     El watcher sigue escuchando por si el valor llega vía import
+     JSON (backup de un usuario pre-v0.12.4) o dev tools. Es
+     idempotente gracias a unlockAchievement. */
   useEffectTW(() => {
     if (state.font === 'mono') unlockAchievement('secret.mono');
   }, [state.font]);
 
   /* Logros ligados a logoVariant. Tras retirar el Tweak del panel
-     (sesión post-v0.12.1) ya no hay forma estándar de dispararlos
-     desde la UI, pero se conservan por si se vuelven a exponer o se
-     activan vía devtools / futuros easter eggs. */
+     (sesión 19) ya no hay forma estándar de dispararlos desde la
+     UI, pero se conservan por si se vuelven a exponer o se activan
+     vía devtools / futuros easter eggs. */
   useEffectTW(() => {
     if (state.logoVariant === 'sello') unlockAchievement('secret.seal');
     if (state.logoVariant === 'ilustrado') unlockAchievement('secret.illustrated');
