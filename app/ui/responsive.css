@@ -1,0 +1,490 @@
+/* ============================================================
+   PACE · Responsive móvil — modales
+   Copyright © 2026 ezradesign · Elastic License 2.0
+
+   Añadido en sesión 27 (v0.12.10).
+
+   ALCANCE: adaptar los 10 modales + las 3 fullscreens de sesión
+   al viewport móvil 375×812 sin romper desktop.
+
+   PATRÓN VIGENTE (sesiones 22/23/24):
+     · Breakpoint único: max-width 560px ("móvil").
+     · Selectores [data-pace-modal="NOMBRE"] o data-attrs semánticas.
+     · Se usa !important para ganar a los estilos inline de los
+       objetos JS existentes (no se tocan para no complicar la
+       legibilidad desktop).
+     · Altos en dvh con fallback vh — los dos en cascada.
+
+   ORGANIZACIÓN:
+     1. MODAL BASE (Primitives.jsx)
+     2. SESSION SHELL (SessionShell.jsx) — fullscreens activas
+     3. Librerías (cards de rutinas)
+     4. Modales específicos con cuadrículas: BreakMenu, Hydrate,
+        Achievements, WeeklyStats, Welcome, Support
+     5. TweaksPanel — de "floating corner" a "bottom sheet" móvil
+   ============================================================ */
+
+/* =====================================================
+   1. MODAL BASE — el shell de <Modal/> en Primitives.jsx
+   =====================================================
+   Modal es el contenedor común de casi todo. En desktop:
+     - overlay fullscreen con padding 24px
+     - inner box con padding var(--s-6)=32, maxHeight 85vh
+       y maxWidth variable (520/580/680/720/780/820/860).
+   Problemas en 375px:
+     · padding 24 + 32*2 = 88px sólo en aire → 287px de contenido.
+     · 85vh se corta cuando la barra URL iOS se muestra.
+     · El box se centra y no aprovecha todo el alto cuando
+       el contenido es largo (Achievements, BreatheLibrary).
+   Fix:
+     · overlay: padding lateral 12px, vertical 16px (80→38px útil).
+     · inner: padding 20px (vs 32px), maxHeight 92dvh con fallback,
+       width 100% (ya lo era), borderRadius grande sólo arriba para
+       reforzar el "bottom sheet feel" que sube desde abajo.
+     · Scroll suave con momentum iOS (-webkit-overflow-scrolling).
+     · X de cerrar más grande y con hit-target ≥ 44px.
+*/
+@media (max-width: 560px) {
+  /* Overlay del Modal — reducimos padding y pegamos abajo
+     para sensación de bottom-sheet cuando el contenido es largo. */
+  [data-pace-modal-overlay] {
+    padding: 16px 12px !important;
+    align-items: flex-end !important;
+  }
+
+  /* Inner del Modal — el "papel" que contiene el contenido. */
+  [data-pace-modal-inner] {
+    padding: 20px 18px !important;
+    max-height: 92vh !important;
+    max-height: 92dvh !important;
+    width: 100% !important;
+    border-radius: var(--r-lg) var(--r-lg) var(--r-md) var(--r-md) !important;
+    -webkit-overflow-scrolling: touch;
+    /* Hint visual de bottom sheet: un "handle" sutil arriba. */
+    position: relative !important;
+  }
+  [data-pace-modal-inner]::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 3px;
+    border-radius: 3px;
+    background: var(--line);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Botón X del modal: hit target accesible (≥44px).
+     Se mueve un poco más abajo para compensar el handle. */
+  [data-pace-modal-close] {
+    top: 14px !important;
+    right: 10px !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 22px !important;
+  }
+
+  /* Tag/Title/Subtitle del header del Modal: ajuste de tamaños
+     para que quepan sin desborde en 375px. */
+  [data-pace-modal-title] {
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+    padding-right: 40px; /* evita tocar la X */
+  }
+  [data-pace-modal-subtitle] {
+    font-size: 13px !important;
+    max-width: 100% !important;
+  }
+}
+
+/* =====================================================
+   2. SESSION SHELL — fullscreens activas (Respira/Mueve/Estira)
+   =====================================================
+   Padding desktop: '28px 48px 40px' — en móvil 48+48 = 96px
+   se come 25% del viewport.
+   El prep tiene un número 200px (item.prepCount) que revienta.
+   El done tiene h1 de 56px + stats de 40px.
+   BreatheSession activa tiene visual 260×260, número 44px,
+   pero también puede mostrar holdCounter 160px.
+   MoveSession tiene h1 de 56px, cue 17px, counter 128px.
+*/
+@media (max-width: 560px) {
+  [data-pace-session-root] {
+    padding: 20px 16px 80px !important; /* -32px lateral, +28px abajo para el footer */
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+
+  /* Header: meta + título de rutina. No se aplasta, pero
+     necesita un tamaño menor para que "extra" (ronda/paso)
+     quepa sin wrap. */
+  [data-pace-session-header] h2 {
+    font-size: 18px !important;
+  }
+  [data-pace-session-exit] {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+    min-height: 36px;
+    min-width: 44px;
+  }
+
+  /* El número gigante del prep: 200 → 132px en móvil. */
+  [data-pace-session-prep-number] {
+    font-size: 132px !important;
+  }
+  [data-pace-session-prep-copy] {
+    font-size: 17px !important;
+  }
+
+  /* Done: nombre de rutina + check circle. */
+  [data-pace-session-done-title] {
+    font-size: 40px !important;
+    line-height: 1.08 !important;
+  }
+  [data-pace-session-done-stats] {
+    gap: 24px !important;
+    flex-wrap: wrap;
+  }
+  [data-pace-session-done-stat-value] {
+    font-size: 32px !important;
+  }
+  [data-pace-session-done-copy] {
+    font-size: 16px !important;
+    max-width: 100% !important;
+  }
+  /* Círculo de check: 120 → 96px */
+  [data-pace-session-done-circle] {
+    width: 96px !important;
+    height: 96px !important;
+    margin-bottom: 20px !important;
+  }
+  [data-pace-session-done-circle] svg {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* BreatheSession active: el visual de respiración se encoge vía var.
+     visualStyles.wrap lee var(--breath-visual-size, 260px) —
+     aquí la sobreescribimos en el contexto de la sesión. */
+  [data-pace-session-root] {
+    --breath-visual-size: 200px;
+  }
+  /* Label grande "Inhala/Exhala" */
+  [data-pace-breath-label] {
+    font-size: 36px !important;
+  }
+  /* Countdown dentro */
+  [data-pace-breath-countdown] {
+    font-size: 22px !important;
+  }
+
+  /* BreatheSession hold: el reloj de apnea (160px → 108px). */
+  [data-pace-breath-hold] {
+    font-size: 108px !important;
+  }
+
+  /* MoveSession active: título de paso + cue + counter. */
+  [data-pace-move-step-title] {
+    font-size: 36px !important;
+    margin-bottom: 14px !important;
+  }
+  [data-pace-move-step-cue] {
+    font-size: 15px !important;
+    max-width: 100% !important;
+    margin-bottom: 22px !important;
+  }
+  [data-pace-move-step-counter] {
+    font-size: 88px !important;
+  }
+  [data-pace-move-glyph] {
+    width: 54px !important;
+    height: 54px !important;
+    font-size: 22px !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Footer con botones de control: pegado abajo, apilado si caben 2,
+     en línea si son 3 (Move: Prev/Pause/Next). */
+  [data-pace-session-footer] {
+    position: fixed !important;
+    left: 12px; right: 12px; bottom: 16px;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 0 !important;
+  }
+  [data-pace-session-footer] > button {
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+    min-height: 42px;
+    flex: 1 1 auto;
+    max-width: 160px;
+  }
+  [data-pace-session-hint] {
+    display: none !important; /* El hint es útil en desktop, confunde en móvil */
+  }
+}
+
+/* =====================================================
+   3. LIBRARIES — grids de tarjetas de rutinas
+   =====================================================
+   BreatheLibrary / MoveLibrary / ExtraLibrary y Achievements
+   usan grid con auto-fill minmax(260px,1fr). En 375px útiles
+   ≈ 320px, una sola columna siempre. Lo forzamos a 1 col limpia. */
+@media (max-width: 560px) {
+  [data-pace-routine-grid] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Cards más compactas en móvil — apuntamos a los hijos del grid */
+  [data-pace-routine-grid] > div {
+    padding: 14px 16px !important;
+  }
+  [data-pace-routine-grid] > div h4 {
+    font-size: 18px !important;
+  }
+
+  /* Achievements: seals minmax(128,1fr) → 3 columnas bien. */
+  [data-pace-seals-grid] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  [data-pace-seals-grid] > div {
+    padding: 10px 6px !important;
+  }
+}
+
+/* =====================================================
+   4. BREAK MENU — 3 opciones en grid
+   =====================================================
+   Desktop: 3 columnas iguales. Móvil: 1 columna con cards
+   de altura natural. Hint "Saltar esta pausa" + atajos abajo. */
+@media (max-width: 560px) {
+  [data-pace-breakmenu-grid] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin: 16px 0 !important;
+  }
+  [data-pace-breakmenu-grid] button {
+    padding: 18px 16px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+  [data-pace-breakmenu-grid] button > div:first-child {
+    /* El bloque del icono */
+    flex-shrink: 0;
+  }
+  [data-pace-breakmenu-foot] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  [data-pace-breakmenu-foot] button {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   5. HYDRATE — vasos + contador
+   =====================================================
+   Desktop: grid repeat(goal, 1fr) con 8 vasos = columnas de
+   ~60px cada una. En 375px eso se convierte en columnas de
+   ~36px: aceptable, pero el número 96px se sale con el "/8"
+   al lado. Lo reducimos y limitamos los vasos a 2 filas. */
+@media (max-width: 560px) {
+  [data-pace-hydrate-counter] {
+    font-size: 72px !important;
+  }
+  [data-pace-hydrate-counter] span {
+    font-size: 28px !important;
+  }
+  [data-pace-hydrate-glasses] {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+  [data-pace-hydrate-actions] {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+  }
+  [data-pace-hydrate-actions] button {
+    width: 100% !important;
+    min-height: 46px;
+  }
+}
+
+/* =====================================================
+   6. WEEKLY STATS — 4 totales + 4 gráficos
+   =====================================================
+   Desktop: grid-template-columns: repeat(4, 1fr). En 375px
+   cada celda quedaría a 70px: los números 28px se ven bien
+   pero la etiqueta "Hidrátate" se parte en 3 líneas. Forzamos
+   2×2 y agrandamos. Las barras de 64px de alto están OK. */
+@media (max-width: 560px) {
+  [data-pace-stats-totals] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  [data-pace-stats-totals] > div {
+    padding: 12px 12px !important;
+  }
+  [data-pace-stats-bars] {
+    height: 56px !important;
+  }
+}
+
+/* =====================================================
+   7. WELCOME MODAL — header de 2 columnas
+   =====================================================
+   Desktop: 140px + 1fr. En 375px el logo se queda fijo a
+   140px y el texto a un lado acaba a ~155px de ancho —
+   ilegible. Apilamos: logo arriba, título y lede abajo.
+   Valores siguen en fila (las 3 columnas se aprietan bien). */
+@media (max-width: 560px) {
+  [data-pace-welcome-header] {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    text-align: center;
+  }
+  [data-pace-welcome-header-left] {
+    align-items: center !important;
+  }
+  [data-pace-welcome-logo] {
+    max-width: 160px !important;
+  }
+  [data-pace-welcome-title] {
+    font-size: 22px !important;
+  }
+  [data-pace-welcome-lede] {
+    font-size: 13px !important;
+  }
+  /* Valores: más pequeños para que quepan los 3 */
+  [data-pace-welcome-values] > div > div:first-child {
+    font-size: 12px !important;
+  }
+  [data-pace-welcome-values] > div > div:last-child {
+    font-size: 9.5px !important;
+  }
+  /* Botón y skip en fila siguen ok, pero botón con hit-target mayor */
+  [data-pace-welcome-actions] button {
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   8. SUPPORT MODAL — valores + botones
+   =====================================================
+   Desktop: 3 valores + 2 botones en fila. En móvil los
+   valores siguen en fila (son cortos), los botones deben
+   apilarse. El hero cow 72px está ok, la tipografía del
+   título 32px hay que bajarla. */
+@media (max-width: 560px) {
+  [data-pace-support-hero] {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  [data-pace-support-title] {
+    font-size: 26px !important;
+  }
+  [data-pace-support-lede] {
+    font-size: 13px !important;
+  }
+  [data-pace-support-values] {
+    padding: 10px 6px !important;
+  }
+  [data-pace-support-values] > div > div:first-child {
+    font-size: 12.5px !important;
+  }
+  [data-pace-support-values] > div > div:last-child {
+    font-size: 9.5px !important;
+  }
+  [data-pace-support-cta] {
+    font-size: 13px !important;
+  }
+  [data-pace-support-actions] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  [data-pace-support-actions] button {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 48px;
+  }
+  [data-pace-support-footer] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-align: center;
+  }
+}
+
+/* =====================================================
+   9. BREATHE SAFETY MODAL
+   =====================================================
+   El check + los botones deben ser grandes y táctiles. */
+@media (max-width: 560px) {
+  [data-pace-safety-actions] {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+  }
+  [data-pace-safety-actions] button {
+    width: 100% !important;
+    min-height: 46px;
+  }
+  [data-pace-safety-check] {
+    padding: 14px !important;
+    min-height: 52px;
+    font-size: 14px !important;
+  }
+  [data-pace-safety-check] input {
+    width: 20px; height: 20px;
+  }
+}
+
+/* =====================================================
+   10. TWEAKS PANEL — de floating a bottom-sheet
+   =====================================================
+   Desktop: card flotante bottom-right 320px.
+   Móvil: full-width abajo, max-height 80dvh, rounded top only,
+   handle igual que Modal. */
+@media (max-width: 560px) {
+  [data-pace-tweaks-panel] {
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: auto !important;
+    max-height: 85vh !important;
+    max-height: 85dvh !important;
+    border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
+    padding: 22px 18px !important;
+    /* borde sólo arriba para el efecto sheet */
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  [data-pace-tweaks-panel]::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 3px;
+    border-radius: 3px;
+    background: var(--line);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  /* botón close más grande */
+  [data-pace-tweaks-close] {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 22px !important;
+  }
+  /* Los chips de opciones: con wrap y hit-target accesible */
+  [data-pace-tweaks-option] {
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+    min-height: 38px;
+  }
+}

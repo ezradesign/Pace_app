@@ -86,7 +86,7 @@ const sessionShellStyles = {
    ============================================================ */
 function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
   return (
-    <div style={sessionShellStyles.root}>
+    <div style={sessionShellStyles.root} data-pace-session-root>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
       <div style={centerGap
         ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
@@ -95,17 +95,23 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
         {children}
       </div>
       {footer && (
-        <div style={{ ...sessionShellStyles.footer, gap: footerGap }}>
+        <div
+          style={{ ...sessionShellStyles.footer, gap: footerGap }}
+          data-pace-session-footer
+        >
           {footer}
         </div>
       )}
       {hint && (
-        <div style={{
-          position: 'absolute', bottom: 14, left: 0, right: 0,
-          textAlign: 'center', fontSize: 10,
-          letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: 'var(--ink-3)', opacity: 0.6,
-        }}>{hint}</div>
+        <div
+          data-pace-session-hint
+          style={{
+            position: 'absolute', bottom: 14, left: 0, right: 0,
+            textAlign: 'center', fontSize: 10,
+            letterSpacing: '0.16em', textTransform: 'uppercase',
+            color: 'var(--ink-3)', opacity: 0.6,
+          }}
+        >{hint}</div>
       )}
     </div>
   );
@@ -113,7 +119,7 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
 
 function SessionHeader({ routine, onExit, extra }) {
   return (
-    <div style={sessionShellStyles.header}>
+    <div style={sessionShellStyles.header} data-pace-session-header>
       <div>
         <Meta style={{ fontSize: 10 }}>{routine.code}</Meta>
         <h2 style={{
@@ -123,7 +129,11 @@ function SessionHeader({ routine, onExit, extra }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {extra}
-        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>× Salir</button>
+        <button
+          onClick={() => onExit('exit')}
+          style={sessionShellStyles.exitBtn}
+          data-pace-session-exit
+        >× Salir</button>
       </div>
     </div>
   );
@@ -152,16 +162,22 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 18,
         }}>Prepárate</div>
-        <div style={{
-          ...displayItalic,
-          fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-          color: accent,
-          fontVariantNumeric: 'tabular-nums',
-        }}>{prepCount > 0 ? prepCount : '·'}</div>
-        <div style={{
-          ...displayItalic,
-          fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
-        }}>{copy}</div>
+        <div
+          data-pace-session-prep-number
+          style={{
+            ...displayItalic,
+            fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+            color: accent,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >{prepCount > 0 ? prepCount : '·'}</div>
+        <div
+          data-pace-session-prep-copy
+          style={{
+            ...displayItalic,
+            fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
+          }}
+        >{copy}</div>
       </div>
     </SessionShell>
   );
@@ -192,14 +208,17 @@ function SessionDone({
   return (
     <SessionShell routine={routine} onExit={onExit} footer={btn}>
       <div style={{ textAlign: 'center', maxWidth: 520 }}>
-        <div style={{
-          width: 120, height: 120, margin: '0 auto 24px',
-          borderRadius: '50%',
-          background: accentSoft,
-          border: `1.5px solid ${accent}`,
-          display: 'grid', placeItems: 'center',
-          animation: 'pace-fade-in 600ms ease',
-        }}>
+        <div
+          data-pace-session-done-circle
+          style={{
+            width: 120, height: 120, margin: '0 auto 24px',
+            borderRadius: '50%',
+            background: accentSoft,
+            border: `1.5px solid ${accent}`,
+            display: 'grid', placeItems: 'center',
+            animation: 'pace-fade-in 600ms ease',
+          }}
+        >
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
                stroke={accent} strokeWidth="1.5"
                strokeLinecap="round" strokeLinejoin="round">
@@ -210,20 +229,29 @@ function SessionDone({
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 12,
         }}>{doneMeta}</div>
-        <h1 style={{
-          ...displayItalic,
-          fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
-        }}>{routine.name}</h1>
+        <h1
+          data-pace-session-done-title
+          style={{
+            ...displayItalic,
+            fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
+          }}
+        >{routine.name}</h1>
         {stats.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
+          <div
+            data-pace-session-done-stats
+            style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}
+          >
             {stats.map((s, i) => <SessionStat key={i} label={s.label} value={s.value} />)}
           </div>
         )}
-        <p style={{
-          ...displayItalic,
-          fontSize: 18, color: 'var(--ink-2)',
-          maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
-        }}>{doneCopy}</p>
+        <p
+          data-pace-session-done-copy
+          style={{
+            ...displayItalic,
+            fontSize: 18, color: 'var(--ink-2)',
+            maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
+          }}
+        >{doneCopy}</p>
       </div>
     </SessionShell>
   );
@@ -236,11 +264,14 @@ function SessionDone({
 function SessionStat({ label, value }) {
   return (
     <div style={{ textAlign: 'center' }}>
-      <div style={{
-        ...displayItalic,
-        fontSize: 40, fontWeight: 500, lineHeight: 1,
-        color: 'var(--ink)',
-      }}>{value}</div>
+      <div
+        data-pace-session-done-stat-value
+        style={{
+          ...displayItalic,
+          fontSize: 40, fontWeight: 500, lineHeight: 1,
+          color: 'var(--ink)',
+        }}
+      >{value}</div>
       <div style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginTop: 8,

@@ -21,7 +21,7 @@ function WeeklyStats({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} tagLabel="Semana" title="Ritmo semanal" subtitle="Métricas suaves. Sin ansiedad, sin comparación." maxWidth={780}>
       {/* Totales */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
+      <div data-pace-stats-totals style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
         {bars.map(b => (
           <div key={b.key} style={{
             padding: '16px 14px',
@@ -71,7 +71,7 @@ function WeekBarRow({ label, data, color, unit }) {
         <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
+      <div data-pace-stats-bars style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
         {reordered.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;

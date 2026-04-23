@@ -35,7 +35,7 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   return (
     <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
+      <div data-pace-breakmenu-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map(o => (
           <button key={o.key}
             onClick={() => onChoose(o.key)}
@@ -62,7 +62,7 @@ function BreakMenu({ open, onClose, onChoose }) {
         ))}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+      <div data-pace-breakmenu-foot style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
         <Meta>Atajo: B · M · H · Esc</Meta>
         <Button variant="ghost" onClick={onClose}>Saltar esta pausa</Button>
       </div>

@@ -85,19 +85,19 @@ function WelcomeModal({ open, onClose }) {
             (logo + meta + título) y lede a la derecha. Ahorra ~120px
             verticales respecto al layout apilado anterior y encaja sin
             scroll en pantallas 720p. */}
-        <div style={welcomeStyles.header}>
-          <div style={welcomeStyles.headerLeft}>
-            <div style={welcomeStyles.logoMini}>
+        <div style={welcomeStyles.header} data-pace-welcome-header>
+          <div style={welcomeStyles.headerLeft} data-pace-welcome-header-left>
+            <div style={welcomeStyles.logoMini} data-pace-welcome-logo>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
             <Meta style={{ marginTop: 10 }}>Bienvenida</Meta>
           </div>
           <div style={welcomeStyles.headerRight}>
-            <h2 style={welcomeStyles.title}>
+            <h2 style={welcomeStyles.title} data-pace-welcome-title>
               Antídoto a la silla.{' '}
               <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
             </h2>
-            <p style={welcomeStyles.lede}>
+            <p style={welcomeStyles.lede} data-pace-welcome-lede>
               Micro-pausas de foco, respiración, movilidad e
               hidratación. Sin gamificación ni notificaciones
               abrumadoras.
@@ -106,7 +106,7 @@ function WelcomeModal({ open, onClose }) {
         </div>
 
         {/* 3 valores en línea — ya más compactos */}
-        <div style={welcomeStyles.values}>
+        <div style={welcomeStyles.values} data-pace-welcome-values>
           <WValue label="Todo local" sub="en tu navegador" />
           <span style={welcomeStyles.sep} />
           <WValue label="Sin cuentas" sub="sin registro" />
@@ -134,7 +134,7 @@ function WelcomeModal({ open, onClose }) {
         </div>
 
         {/* Acciones — botón + skip en línea para no añadir altura */}
-        <div style={welcomeStyles.actions}>
+        <div style={welcomeStyles.actions} data-pace-welcome-actions>
           <button onClick={skip} style={welcomeStyles.skip}>
             prefiero saltarlo
           </button>

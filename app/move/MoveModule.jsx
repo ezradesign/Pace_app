@@ -69,7 +69,7 @@ function MoveLibrary({ open, onClose, onStart }) {
         <Meta>Cuerpo activo</Meta>
       </div>
       <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+      <div data-pace-routine-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {MOVE_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
         ))}
@@ -213,21 +213,30 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
           Paso {stepIdx + 1} de {routine.steps.length}
         </div>
-        <h1 style={{
-          ...displayItalic,
-          fontSize: 56, fontWeight: 500,
-          lineHeight: 1.05, margin: '0 0 20px',
-        }}>{step.name}</h1>
-        <p style={{
-          fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-          maxWidth: 460, margin: '0 auto 30px',
-        }}>{step.cue}</p>
+        <h1
+          data-pace-move-step-title
+          style={{
+            ...displayItalic,
+            fontSize: 56, fontWeight: 500,
+            lineHeight: 1.05, margin: '0 0 20px',
+          }}
+        >{step.name}</h1>
+        <p
+          data-pace-move-step-cue
+          style={{
+            fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
+            maxWidth: 460, margin: '0 auto 30px',
+          }}
+        >{step.cue}</p>
 
-        <div style={{
-          ...displayItalic,
-          fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1,
-        }}>{String(remaining).padStart(2, '0')}</div>
+        <div
+          data-pace-move-step-counter
+          style={{
+            ...displayItalic,
+            fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
+            color: 'var(--ink)', lineHeight: 1,
+          }}
+        >{String(remaining).padStart(2, '0')}</div>
         <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
       </div>
 
@@ -270,16 +279,19 @@ function StepGlyph({ tag, stepIdx }) {
   const symbols = ['◯', '◬', '◇', '△', '▢', '⬡', '✦'];
   const sym = symbols[stepIdx % symbols.length];
   return (
-    <div style={{
-      ...displayItalic,
-      width: 72, height: 72, margin: '0 auto 20px',
-      borderRadius: '50%',
-      border: '1px dashed var(--move)',
-      background: 'var(--move-soft)',
-      display: 'grid', placeItems: 'center',
-      color: 'var(--move)',
-      fontSize: 28,
-    }}>
+    <div
+      data-pace-move-glyph
+      style={{
+        ...displayItalic,
+        width: 72, height: 72, margin: '0 auto 20px',
+        borderRadius: '50%',
+        border: '1px dashed var(--move)',
+        background: 'var(--move-soft)',
+        display: 'grid', placeItems: 'center',
+        color: 'var(--move)',
+        fontSize: 28,
+      }}
+    >
       {sym}
     </div>
   );
