@@ -512,7 +512,12 @@ const sidebarStyles = {
     color: 'var(--ink-3)',
   },
   streakNum: {
-    fontFamily: 'var(--font-display)',
+    // Forzamos EB Garamond explícitamente (no pasa por --font-display)
+    // para que este glifo — firma visual de la racha — no cambie si el
+    // usuario elige otra tipografía display en Tweaks. La cifra del
+    // contador es el único anclaje tipográfico de identidad del
+    // sidebar; mantenerla estable es intencional. (Sesión 20.)
+    fontFamily: "'EB Garamond', Georgia, serif",
     fontStyle: 'italic',
     fontSize: 44,
     fontWeight: 500,

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.12.2** | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [abajo ↓](#v0122--2026-04-22--pill-consolidada-y-standalone-autocontenido) |
-| **v0.12.1** | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
+| **v0.12.3** | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [abajo ↓](#v0123--2026-04-22--timer-aire-y-minutos-personalizados) |
+| **v0.12.2** | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
+| v0.12.1 | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
 | v0.12.0 | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [session-17-welcome-export.md](./docs/sessions/session-17-welcome-export.md) |
 | v0.11.11 | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [session-16-bmc-integracion.md](./docs/sessions/session-16-bmc-integracion.md) |
 | v0.11.10 | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [session-15-logros-proximamente.md](./docs/sessions/session-15-logros-proximamente.md) |
@@ -34,6 +35,100 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.3] — 2026-04-22 — Timer: aire + Otro + tipografía blindada + tweak retirado
+
+Sesión de pulido que empezó con dos peticiones concretas del usuario
+y derivó en cuatro decisiones que refuerzan la filosofía de sesión 19
+("menos variantes, más identidad"). Las cifras de identidad se
+blindan a EB Garamond, y el tweak de tipografía display se retira:
+si PACE ya tiene una identidad tipográfica decidida (Cormorant
+default + EB Garamond en cifras), dejar al usuario elegir entre 3
+alternativas no aporta.
+
+### Cambiado
+- **`app/focus/FocusTimer.jsx` · separación número ↔ subtítulo** — en
+  el estilo Aro (default) el `marginTop` del subtítulo pasa de 10 →
+  30 (+20px de aire). Los estilos Number y Circle reciben la misma
+  separación proporcional. Resultado: el número gigante respira, el
+  divisor inferior queda limpio, y la composición del aro gana
+  jerarquía tipográfica. No afecta a Bar ni Analog (otras
+  composiciones).
+- **`app/focus/FocusTimer.jsx` · `MinutesPicker` con opción "Otro"** —
+  después del preset 45 se añade una etiqueta "Otro" con el mismo
+  tratamiento tipográfico que "MIN" (uppercase, 10px,
+  letter-spacing 0.18em, color `--ink-3`, peso 500), separada con
+  un margen izquierdo de 6px que deja claro que pertenece a otra
+  categoría visual que los numerales. Al clickar se expande a un
+  `<input type="number">` inline. Rango válido: 1–180 min. Enter o
+  blur confirma, Escape cancela. Si el valor actual no es preset,
+  la etiqueta cambia a una pill numeral activa con el valor, que
+  se integra con `15/25/35/45`. Los spinners nativos del
+  `<input type="number">` quedan ocultos vía CSS para respetar la
+  densidad calmada de la línea de presets.
+
+### Notas de diseño
+- **Rango 1–180.** Cubre desde pomodoros ultra-cortos (micro-sesiones
+  de 1–5 min) hasta deep work real (hasta 3h). Por encima entra en
+  territorio donde ya no es un pomodoro — es algo que necesita su
+  propia UX.
+- **"Otro" como etiqueta hermana de "MIN", no como pill.** El
+  primer boceto usaba una pill italic, pero rompía la jerarquía:
+  "Otro" no es un valor del mismo rango que los numerales, es una
+  acción para abrir otro registro. Darle el mismo tratamiento que
+  "MIN" (uppercase pequeño, spacing ancho, color tenue) hace que
+  se lea correctamente como meta-opción. Cuando se activa con un
+  valor custom, entonces sí pasa a pill numeral para convivir con
+  los presets.
+- **Icono ausente.** Se probó mentalmente un `+` o lápiz pero rompía
+  la densidad de la línea. La palabra "Otro" basta — PACE es
+  calmado, no minimalista por minimalismo.
+
+### Cambiado (tipografía de cifras de identidad)
+- **`app/shell/Sidebar.jsx` · `streakNum` blindado a EB Garamond** —
+  el estilo del número grande del contador de racha pasa de
+  `fontFamily: 'var(--font-display)'` a
+  `fontFamily: "'EB Garamond', Georgia, serif"`. No pasa por la
+  variable, así que aunque se cambie la tipografía display por
+  otros medios (import JSON, devtools) el "0" sigue siempre en EB
+  Garamond italic. El label "días seguidos" y el sub "Mejor: N
+  días" siguen usando `--font-display` (texto descriptivo, no
+  cifra de identidad).
+
+### Retirado del panel de Tweaks
+- **"Tipografía display"** (`font`): el eje se elimina del panel.
+  Los 4 ejes que quedan son **paleta, layout, timer, breath**. La
+  identidad tipográfica de PACE ya está decidida: Cormorant
+  Garamond como display por defecto + EB Garamond blindado en
+  cifras de identidad. No tiene sentido que el usuario elija entre
+  3 alternativas — decide PACE.
+
+### Conservado (no retirado)
+- El campo `state.font` sigue existiendo en `app/state.jsx` y en el
+  `localStorage` de usuarios existentes. Solo se elimina del panel
+  de Tweaks. Instalaciones previas que tuvieran `font` distinto de
+  `'cormorant'` no pierden datos pero tampoco verán el cambio
+  aplicado — el default se impone.
+- `TweakSecretsWatcher` sigue escuchando `state.font === 'mono'`
+  para disparar `secret.mono` por si el valor llega vía import
+  JSON o devtools. Logro dormido pero vivo, mismo patrón que
+  `secret.seal` y `secret.illustrated` en sesión 19.
+
+### Notas de diseño — tipografía
+- **Las cifras son firma; el texto es lenguaje.** Un número gigante
+  (el 25:00 del timer, el 0 del contador de racha) es un símbolo
+  visual de identidad — si el usuario cambia la tipografía
+  display, no debe cambiar, igual que un logo no cambia con la
+  paleta. El texto descriptivo ("Concentración profunda", "días
+  seguidos") sí sigue la tipografía display porque es lenguaje.
+- **La decisión de display ya no es del usuario.** Se intentó en
+  su día ofrecer Cormorant / EB Garamond / Mono como opción. Pero
+  una tipografía display es parte del ADN visual de un producto
+  calmado — no una preferencia de usuario. Cormorant Garamond es
+  suficientemente cálida, editorial y legible para ser *la*
+  tipografía de PACE. Decidir bien una vez.
 
 ---
 

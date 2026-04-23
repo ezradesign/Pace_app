@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.2
-**Última sesión:** #19 — 2026-04-22 · Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido
-**Última actualización de este archivo:** 2026-04-22 · sesión 19
-**Build entregado:** `PACE_App_1_38.html` (también presente como `PACE_standalone.html`)
+**Versión actual:** v0.12.3
+**Última sesión:** #20 — 2026-04-22 · Timer: aire sobre subtítulo + minutos personalizados ("Otro")
+**Última actualización de este archivo:** 2026-04-22 · sesión 20
+**Build entregado:** `PACE_standalone.html` (regenerado)
 
 ---
 
@@ -21,14 +21,15 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.2, con `<img id="pace-logo-src">` para inline |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.2 (~326 KB, logo en data URI) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.3, título actualizado |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.3 (regenerado con cambios del timer) |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (copy único "Da de pastar a la vaca", icono a la derecha) |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (retirados `logoVariant` y `supportCopyVariant`) |
-| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (URL resuelta vía DOM) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.3 (+20px aire subtítulo; `MinutesPicker` con "Otro" + input inline 1–180) |
+| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (sin cambios) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (sin cambios) |
+| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (sin cambios) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.2 (comentarios actualizados; campos deprecados conservados) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.2 (sin cambios) |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.1 (sin cambios) |
 
 No se reimportaron los backups previos en esta sesión — siguen en git.
@@ -39,50 +40,49 @@ desde GitHub en la próxima sesión y rota v0.12.0.
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 19 · v0.12.2 · Pill consolidada + standalone autocontenido**
+**Sesión 20 · v0.12.3 · Timer: aire + Otro + tipografía blindada +
+tweak retirado**
 
-Sesión breve de simplificación: decidir bien una vez en vez de dar 4
-opciones al usuario. Además, el bundle offline por fin lo es de verdad.
+Sesión de pulido tipográfico y consolidación de identidad. Cuatro
+cambios concretos, todos en la misma línea: decidir bien una vez,
+quitar opciones que no aportan.
 
-### Consolidado
-- **4 variantes de copy → 1 sola.** El botón de apoyo pasa de
-  `cafe`/`pasto`/`vaca`/`come` a una línea única *"Da de pastar a la
-  vaca"*, con icono de vaca siempre. "Pastar" enlaza con PACE (pacer)
-  y con la metáfora de la UI.
-- **Icono a la derecha del texto** tanto en el pill del sidebar como
-  en el CTA terracota del modal. Orden `<span> → <SupportIcon>` —
-  rompe la convención del botón web clásico, pero es intencional:
-  texto lleva la acción, icono firma visual.
+### Timer pomodoro
+- **+20px de aire** entre el número gigante y el subtítulo italic
+  ("Concentración profunda"). El `marginTop` del subtítulo pasa de
+  10 → 30 en el aro default (20 → 40 en Number, 16 → 36 en Circle).
+  Los descendentes del número ya no tocan la línea inferior.
+- **Minutos personalizados.** `MinutesPicker` añade "Otro" como
+  etiqueta tipográfica hermana de "MIN" (uppercase 10px, spacing
+  0.18em, color `--ink-3`). Click expande a input inline 1–180 min.
+  Si hay valor custom activo, la etiqueta se convierte en pill
+  numeral y se integra con `15/25/35/45`. Enter/blur confirma,
+  Escape cancela. Spinners nativos ocultos vía CSS.
+
+### Tipografía blindada en cifras de identidad
+- **`streakNum` fijado a EB Garamond italic** con `font-family`
+  directa, no vía `var(--font-display)`. Ese "0" del contador de
+  racha es la firma tipográfica del sidebar — no debe cambiar
+  aunque el usuario elija otra tipografía display.
 
 ### Retirado del panel de Tweaks
-- **"Logo de la vaca"** (`logoVariant`): queda fijo en `'pace'`
-  (oficial). Los 4 fallbacks eran experimentos pre-v0.11.3 sin razón
-  de exponerlos al usuario.
-- **"Copy del botón de apoyo"** (`supportCopyVariant`): ya no tiene
-  sentido tras consolidar el copy.
+- **"Tipografía display"** (`font`): el panel queda con 4 ejes
+  (paleta, layout, timer, breath). La identidad tipográfica de
+  PACE ya está decidida: Cormorant Garamond default + EB Garamond
+  blindado para cifras de identidad. El usuario no tiene que
+  elegir entre 3 alternativas — decide PACE.
 
 ### Conservado por compatibilidad
-- Los campos `logoVariant` y `supportCopyVariant` siguen en
-  `state.jsx` y en el localStorage de usuarios existentes. Solo
-  dejan de ser editables.
-- Los logros secretos `secret.seal` y `secret.illustrated` quedan
-  dormidos pero vivos por si se reintroducen como easter egg.
-
-### Standalone autocontenido de verdad
-`PACE.html` añade `<img id="pace-logo-src" src="app/ui/pace-logo.png">`
-oculto; `CowLogo.jsx` lee el `src` resuelto de ese elemento. Cuando
-`super_inline_html` genera el bundle, inlinea automáticamente el PNG
-como data URI. El nuevo `PACE_standalone.html` (~326 KB) funciona al
-100% sin servidor, con el logo oficial embedded — no el fallback SVG.
-
-El build entregado de esta sesión es `PACE_App_1_38.html` (idéntico a
-`PACE_standalone.html` en esta carpeta).
+- El campo `state.font` sigue en `state.jsx` y en `localStorage`
+  de usuarios existentes. Solo deja de ser editable.
+- `TweakSecretsWatcher` sigue escuchando `secret.mono` por si el
+  valor llega vía import JSON o devtools. Logro dormido pero vivo.
 
 ### Versión
-- `v0.12.1` → `v0.12.2` (patch: consolidación y packaging, sin
-  features nuevas).
+- `v0.12.2` → `v0.12.3` (patch: pulido tipográfico + simplificación
+  del panel, sin features nuevas).
 
-Detalle completo: [`docs/sessions/session-19-pill-consolidada-standalone.md`](./docs/sessions/session-19-pill-consolidada-standalone.md).
+Detalle completo: [`docs/sessions/session-20-timer-aire-otro.md`](./docs/sessions/session-20-timer-aire-otro.md).
 
 ---
 
@@ -114,12 +114,24 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **Las cifras de identidad se blindan; el texto sigue al sistema.**
+  Números grandes que actúan como firma visual de un módulo (el
+  `25:00` del timer, el `0` del contador de racha) se fijan a una
+  `font-family` explícita (`'EB Garamond', Georgia, serif`), no a
+  `var(--font-display)`. Así no cambian aunque el state traiga
+  otra tipografía (legacy, import JSON, devtools). Los textos
+  descriptivos ("Concentración profunda", "días seguidos") sí
+  siguen `--font-display` porque son lenguaje, no símbolo.
+  (Sesión 20.)
 - **Menos variantes, más identidad.** No se exponen al usuario
-  elecciones cosméticas que no tiene por qué tomar (5 logos, 4
-  copys del mismo botón, etc.). Decidir bien una vez. Si en el
-  futuro vuelve una variante a los Tweaks, debe defenderse como
-  eje real de personalización (paleta, tipografía, layout) — no
-  como acumulación de prototipos descartados. (Sesión 19.)
+  elecciones cosméticas que no tiene por qué tomar: 5 logos (s19),
+  4 copys del mismo botón (s19), 3 tipografías display (s20).
+  Decidir bien una vez. Si una variante vuelve al panel, debe
+  defenderse como eje real de personalización — no como
+  acumulación de prototipos descartados. Los 4 ejes que quedan
+  (paleta, layout, timer, breath) son los únicos que aportan
+  personalización real sin tocar la identidad del producto.
+  (Sesión 19, extendida en sesión 20.)
 - **Assets locales del standalone se inlinean vía `<img src>` en
   el HTML principal, no hardcoded en strings JS.** Patrón: poner
   un `<img id="foo-src" src="ruta/foo.png" style="display:none">`
