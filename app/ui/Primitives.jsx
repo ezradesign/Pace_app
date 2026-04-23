@@ -41,23 +41,22 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
 
   return (
     <div
+      data-pace-modal-backdrop
       onClick={onClose}
-      data-pace-modal-overlay
       style={{
         position: 'fixed', inset: 0,
         background: 'rgba(31, 28, 23, 0.28)',
         backdropFilter: 'blur(3px)',
         zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: 'grid',
+        placeItems: 'center',
         padding: 24,
         animation: 'pace-fade-in 200ms ease',
       }}
     >
       <div
+        data-pace-modal-card
         onClick={(e) => e.stopPropagation()}
-        data-pace-modal-inner
         style={{
           background: 'var(--paper)',
           borderRadius: 'var(--r-lg)',
@@ -73,9 +72,9 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
       >
         {onClose && (
           <button
+            data-pace-modal-close
             onClick={onClose}
             aria-label="Cerrar"
-            data-pace-modal-close
             style={{
               position: 'absolute', top: 18, right: 20,
               fontSize: 20, color: 'var(--ink-3)',
@@ -89,7 +88,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           >×</button>
         )}
         {(tagLabel || title) && (
-          <div style={{ marginBottom: 'var(--s-5)' }}>
+          <div data-pace-modal-head style={{ marginBottom: 'var(--s-5)' }}>
             {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
             {title && <h2 data-pace-modal-title style={{
               fontFamily: 'var(--font-display)',
@@ -247,6 +246,71 @@ if (!_paceAnimStyle) {
     @keyframes pace-fade-in { from { opacity: 0 } to { opacity: 1 } }
     @keyframes pace-slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes pace-pulse { 0%, 100% { opacity: 0.4 } 50% { opacity: 1 } }
+  `;
+  document.head.appendChild(s);
+}
+
+/* ============================================================
+   CSS responsive del Modal base (sesión 27 · v0.12.10).
+
+   Patrón documentado en decisión activa sesión 22: selectores
+   [data-pace-*] con !important, inyectados en <head>. NO se
+   modifican los objetos de estilos inline (que siguen siendo
+   la fuente de verdad en desktop).
+
+   Breakpoint único: 640px (coherente con main.jsx y Sidebar.jsx).
+
+   En móvil el modal:
+   - Pasa de card centrada 85vh a sheet pegada a los bordes
+     (backdrop padding 24→12).
+   - Ancho ocupa 100% menos el padding del backdrop; el
+     `maxWidth` por prop se ignora.
+   - Alto máximo = 100dvh menos el padding del backdrop, para
+     que el scroll interno siga cabiendo sin tapar la barra URL
+     (sigue la decisión activa sesión 23 de usar dvh con fallback).
+   - Padding interior un paso menos (var(--s-6) → var(--s-5))
+     para ganar pixeles útiles.
+   - Título del header 32→26 y subtitle ancho libre (quita el 90%).
+   - Botón × más grande (28→36) para target táctil ≥44×44 tras
+     sumar padding perimetral.
+   ============================================================ */
+const _paceModalResponsive = document.getElementById('pace-modal-responsive-css');
+if (!_paceModalResponsive) {
+  const s = document.createElement('style');
+  s.id = 'pace-modal-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-modal-backdrop] {
+        padding: 12px !important;
+        place-items: end center !important;
+      }
+      [data-pace-modal-card] {
+        max-width: 100% !important;
+        max-height: calc(100vh - 24px) !important;
+        max-height: calc(100dvh - 24px) !important;
+        padding: var(--s-5) !important;
+        border-radius: var(--r-md) !important;
+      }
+      [data-pace-modal-close] {
+        top: 10px !important;
+        right: 10px !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 22px !important;
+      }
+      [data-pace-modal-head] {
+        margin-bottom: var(--s-4) !important;
+        padding-right: 36px !important;
+      }
+      [data-pace-modal-title] {
+        font-size: 26px !important;
+        line-height: 1.15 !important;
+      }
+      [data-pace-modal-subtitle] {
+        max-width: 100% !important;
+        font-size: 13px !important;
+      }
+    }
   `;
   document.head.appendChild(s);
 }

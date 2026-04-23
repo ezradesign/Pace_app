@@ -63,7 +63,7 @@ function BreatheLibrary({ open, onClose, onStart }) {
               <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{group.label}</h3>
               {group.aside && <Meta>{group.aside}</Meta>}
             </div>
-            <div data-pace-routine-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
               {group.items.map(r => (
                 <RoutineCard key={r.id} routine={r} color="var(--breathe)" onClick={() => onStart(r)} />
               ))}
@@ -137,7 +137,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         <li>No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada</li>
         <li>Detente si te mareas o sientes molestias</li>
       </ul>
-      <label data-pace-safety-check style={{
+      <label style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: 12,
         background: 'var(--paper-2)',
@@ -150,7 +150,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         <input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
         <span>Lo he leído y asumo mi responsabilidad</span>
       </label>
-      <div data-pace-safety-actions style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
         <Button variant="ghost" onClick={onCancel}>Cancelar</Button>
         <Button variant="terracota" disabled={!checked} onClick={() => onAccept(routine)}>Empezar sesión</Button>
       </div>
@@ -334,16 +334,13 @@ function BreatheSession({ routine, onExit }) {
           <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
             Retén sin aire
           </div>
-          <div
-            data-pace-breath-hold
-            style={{
-              ...displayItalic,
-              fontSize: 160, fontWeight: 400, lineHeight: 0.9,
-              color: 'var(--ink)',
-              fontVariantNumeric: 'tabular-nums',
-              letterSpacing: '-0.03em',
-            }}
-          >
+          <div style={{
+            ...displayItalic,
+            fontSize: 160, fontWeight: 400, lineHeight: 0.9,
+            color: 'var(--ink)',
+            fontVariantNumeric: 'tabular-nums',
+            letterSpacing: '-0.03em',
+          }}>
             {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
           </div>
           <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
@@ -401,23 +398,17 @@ function BreatheSession({ routine, onExit }) {
         scale={current.scale}
       />
       <div style={{ textAlign: 'center' }}>
-        <div
-          data-pace-breath-label
-          style={{
-            ...displayItalic,
-            fontSize: 44, fontWeight: 500, color: 'var(--ink)',
-            marginBottom: 8, lineHeight: 1,
-          }}
-        >{current.label}</div>
+        <div style={{
+          ...displayItalic,
+          fontSize: 44, fontWeight: 500, color: 'var(--ink)',
+          marginBottom: 8, lineHeight: 1,
+        }}>{current.label}</div>
         {showCountdown && (
-          <div
-            data-pace-breath-countdown
-            style={{
-              ...displayItalic,
-              fontSize: 28, color: 'var(--breathe)',
-              fontVariantNumeric: 'tabular-nums', marginTop: 4,
-            }}
-          >{remaining}</div>
+          <div style={{
+            ...displayItalic,
+            fontSize: 28, color: 'var(--breathe)',
+            fontVariantNumeric: 'tabular-nums', marginTop: 4,
+          }}>{remaining}</div>
         )}
         <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
           {isRounds ? `Respiración ${breathCount} de ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
@@ -634,20 +625,14 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
   );
 }
 
-/* El tamaño del visual es `var(--breath-visual-size, 260px)` para
-   permitir que responsive.css lo encoja a 210px en móvil sin tocar
-   ninguno de los 5 callsites (pulso/flor/petalo/ondas/organico).
-   El `core` interior hereda proporcionalmente via var anidada. */
 const visualStyles = {
   wrap: {
     position: 'relative',
-    width: 'var(--breath-visual-size, 260px)',
-    height: 'var(--breath-visual-size, 260px)',
+    width: 260, height: 260,
     display: 'grid', placeItems: 'center',
   },
   core: {
-    width: 'calc(var(--breath-visual-size, 260px) * 0.615)',
-    height: 'calc(var(--breath-visual-size, 260px) * 0.615)',
+    width: 160, height: 160,
     borderRadius: '50%',
     position: 'relative',
   },

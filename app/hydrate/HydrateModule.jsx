@@ -9,7 +9,7 @@ function HydrateTracker({ open, onClose }) {
     <Modal open={open} onClose={onClose} tagLabel="Hidratación" title="Hidrátate" subtitle="Un sorbo ahora, un regalo a tu yo de las 5." maxWidth={580}>
       {/* Progreso gigante */}
       <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
-        <div data-pace-hydrate-counter style={{
+        <div style={{
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
           fontSize: 96, fontWeight: 400, lineHeight: 1,
@@ -21,7 +21,7 @@ function HydrateTracker({ open, onClose }) {
       </div>
 
       {/* Vasos visuales */}
-      <div data-pace-hydrate-glasses style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
             onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); } }}
@@ -62,7 +62,7 @@ function HydrateTracker({ open, onClose }) {
         }} />
       </div>
 
-      <div data-pace-hydrate-actions style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
         <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">Un vaso menos</Button>
         <Button onClick={() => addWaterGlass(1)} icon="+" size="md"
           style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>Un vaso más</Button>

@@ -205,7 +205,7 @@ function Achievements({ open, onClose }) {
               <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
-            <div data-pace-seals-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
               {items.map(a => (
                 <Seal
                   key={a.id}

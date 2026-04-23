@@ -86,32 +86,26 @@ const sessionShellStyles = {
    ============================================================ */
 function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
   return (
-    <div style={sessionShellStyles.root} data-pace-session-root>
+    <div data-pace-session-root style={sessionShellStyles.root}>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
-      <div style={centerGap
+      <div data-pace-session-center style={centerGap
         ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
         : sessionShellStyles.center
       }>
         {children}
       </div>
       {footer && (
-        <div
-          style={{ ...sessionShellStyles.footer, gap: footerGap }}
-          data-pace-session-footer
-        >
+        <div data-pace-session-footer style={{ ...sessionShellStyles.footer, gap: footerGap }}>
           {footer}
         </div>
       )}
       {hint && (
-        <div
-          data-pace-session-hint
-          style={{
-            position: 'absolute', bottom: 14, left: 0, right: 0,
-            textAlign: 'center', fontSize: 10,
-            letterSpacing: '0.16em', textTransform: 'uppercase',
-            color: 'var(--ink-3)', opacity: 0.6,
-          }}
-        >{hint}</div>
+        <div data-pace-session-hint style={{
+          position: 'absolute', bottom: 14, left: 0, right: 0,
+          textAlign: 'center', fontSize: 10,
+          letterSpacing: '0.16em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', opacity: 0.6,
+        }}>{hint}</div>
       )}
     </div>
   );
@@ -119,21 +113,17 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
 
 function SessionHeader({ routine, onExit, extra }) {
   return (
-    <div style={sessionShellStyles.header} data-pace-session-header>
+    <div data-pace-session-header style={sessionShellStyles.header}>
       <div>
         <Meta style={{ fontSize: 10 }}>{routine.code}</Meta>
-        <h2 style={{
+        <h2 data-pace-session-title style={{
           ...displayItalic,
           fontSize: 22, margin: '2px 0 0', fontWeight: 500,
         }}>{routine.name}</h2>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {extra}
-        <button
-          onClick={() => onExit('exit')}
-          style={sessionShellStyles.exitBtn}
-          data-pace-session-exit
-        >× Salir</button>
+        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>× Salir</button>
       </div>
     </div>
   );
@@ -157,27 +147,21 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
       onExit={onExit}
       footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>Empezar ahora</button>}
     >
-      <div style={{ textAlign: 'center', maxWidth: 460 }}>
+      <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
         <div style={{
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 18,
         }}>Prepárate</div>
-        <div
-          data-pace-session-prep-number
-          style={{
-            ...displayItalic,
-            fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-            color: accent,
-            fontVariantNumeric: 'tabular-nums',
-          }}
-        >{prepCount > 0 ? prepCount : '·'}</div>
-        <div
-          data-pace-session-prep-copy
-          style={{
-            ...displayItalic,
-            fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
-          }}
-        >{copy}</div>
+        <div data-pace-session-prep-num style={{
+          ...displayItalic,
+          fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+          color: accent,
+          fontVariantNumeric: 'tabular-nums',
+        }}>{prepCount > 0 ? prepCount : '·'}</div>
+        <div data-pace-session-prep-copy style={{
+          ...displayItalic,
+          fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
+        }}>{copy}</div>
       </div>
     </SessionShell>
   );
@@ -207,18 +191,15 @@ function SessionDone({
 
   return (
     <SessionShell routine={routine} onExit={onExit} footer={btn}>
-      <div style={{ textAlign: 'center', maxWidth: 520 }}>
-        <div
-          data-pace-session-done-circle
-          style={{
-            width: 120, height: 120, margin: '0 auto 24px',
-            borderRadius: '50%',
-            background: accentSoft,
-            border: `1.5px solid ${accent}`,
-            display: 'grid', placeItems: 'center',
-            animation: 'pace-fade-in 600ms ease',
-          }}
-        >
+      <div data-pace-session-done style={{ textAlign: 'center', maxWidth: 520 }}>
+        <div data-pace-session-done-hero style={{
+          width: 120, height: 120, margin: '0 auto 24px',
+          borderRadius: '50%',
+          background: accentSoft,
+          border: `1.5px solid ${accent}`,
+          display: 'grid', placeItems: 'center',
+          animation: 'pace-fade-in 600ms ease',
+        }}>
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
                stroke={accent} strokeWidth="1.5"
                strokeLinecap="round" strokeLinejoin="round">
@@ -229,29 +210,20 @@ function SessionDone({
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 12,
         }}>{doneMeta}</div>
-        <h1
-          data-pace-session-done-title
-          style={{
-            ...displayItalic,
-            fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
-          }}
-        >{routine.name}</h1>
+        <h1 data-pace-session-done-title style={{
+          ...displayItalic,
+          fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
+        }}>{routine.name}</h1>
         {stats.length > 0 && (
-          <div
-            data-pace-session-done-stats
-            style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}
-          >
+          <div data-pace-session-stats style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
             {stats.map((s, i) => <SessionStat key={i} label={s.label} value={s.value} />)}
           </div>
         )}
-        <p
-          data-pace-session-done-copy
-          style={{
-            ...displayItalic,
-            fontSize: 18, color: 'var(--ink-2)',
-            maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
-          }}
-        >{doneCopy}</p>
+        <p data-pace-session-done-copy style={{
+          ...displayItalic,
+          fontSize: 18, color: 'var(--ink-2)',
+          maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
+        }}>{doneCopy}</p>
       </div>
     </SessionShell>
   );
@@ -263,21 +235,96 @@ function SessionDone({
    ============================================================ */
 function SessionStat({ label, value }) {
   return (
-    <div style={{ textAlign: 'center' }}>
-      <div
-        data-pace-session-done-stat-value
-        style={{
-          ...displayItalic,
-          fontSize: 40, fontWeight: 500, lineHeight: 1,
-          color: 'var(--ink)',
-        }}
-      >{value}</div>
+    <div data-pace-session-stat style={{ textAlign: 'center' }}>
+      <div data-pace-session-stat-num style={{
+        ...displayItalic,
+        fontSize: 40, fontWeight: 500, lineHeight: 1,
+        color: 'var(--ink)',
+      }}>{value}</div>
       <div style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginTop: 8,
       }}>{label}</div>
     </div>
   );
+}
+
+/* ============================================================
+   CSS responsive de SessionShell (sesión 27 · v0.12.10).
+
+   Patrón coherente con Primitives.Modal: selectores [data-*]
+   con !important inyectados en <head>.
+
+   Las pantallas de sesión son fullscreen (`inset: 0`), no cards
+   centradas — su problema en móvil no es "el modal no cabe"
+   sino "las tipografías monumentales rompen el layout":
+     - prep muestra 3-2-1 a 200px (demasiado en 375px de ancho)
+     - done muestra `routine.name` a 56px italic
+     - stats en fila con gap 40 desbordan con 2 o 3 stats
+     - padding root 28/48/40 se come 96px útiles de 375
+
+   En móvil se ajusta:
+   - Padding root: 28/48/40 → 16/20/24
+   - Header título: 22 → 18
+   - Prep núm 200 → 128, copy 20 → 15
+   - Done círculo 120 → 80, h1 56 → 34, copy 18 → 14
+   - Stats row: gap 40 → 20, padding lateral para que no rocen
+     los bordes cuando son 3
+   - Hint: bottom 14 → 6
+
+   No se mueve la estructura; las tipografías sólo reescalan.
+   ============================================================ */
+const _paceSessionResponsive = document.getElementById('pace-session-responsive-css');
+if (!_paceSessionResponsive) {
+  const s = document.createElement('style');
+  s.id = 'pace-session-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-session-root] {
+        padding: 16px 20px 24px !important;
+      }
+      [data-pace-session-title] {
+        font-size: 18px !important;
+      }
+      [data-pace-session-prep-num] {
+        font-size: 128px !important;
+      }
+      [data-pace-session-prep-copy] {
+        font-size: 15px !important;
+        margin-top: 14px !important;
+      }
+      [data-pace-session-done-hero] {
+        width: 80px !important;
+        height: 80px !important;
+        margin-bottom: 18px !important;
+      }
+      [data-pace-session-done-hero] svg {
+        width: 34px !important;
+        height: 34px !important;
+      }
+      [data-pace-session-done-title] {
+        font-size: 34px !important;
+        margin-bottom: 18px !important;
+      }
+      [data-pace-session-stats] {
+        gap: 20px !important;
+        margin-bottom: 24px !important;
+        flex-wrap: wrap !important;
+      }
+      [data-pace-session-stat-num] {
+        font-size: 28px !important;
+      }
+      [data-pace-session-done-copy] {
+        font-size: 14px !important;
+        margin-bottom: 24px !important;
+      }
+      [data-pace-session-hint] {
+        bottom: 6px !important;
+        font-size: 9px !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
 }
 
 Object.assign(window, {
