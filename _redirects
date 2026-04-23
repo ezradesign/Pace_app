@@ -1,7 +1,0 @@
-# PACE · reglas de redirección para Cloudflare Pages
-#
-# La raíz del dominio sirve el bundle autocontenido por defecto.
-# Regla:  <patrón>  <destino>  <código HTTP>
-# El 200 hace rewrite (URL no cambia). Un 301/302 haría redirect.
-
-/  /PACE_standalone.html  200
