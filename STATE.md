@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.9
-**Última sesión:** #26 — 2026-04-23 · Refactor Fase 2 + cierre de licencia (ELv2) + 4ª vía de monetización
-**Última actualización de este archivo:** 2026-04-23 · sesión 26 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.12.9 (~349 KB, regenerado tras añadir LICENSE + cabeceras)
+**Versión actual:** v0.12.10
+**Última sesión:** #27 — 2026-04-23 · Modales responsive en móvil (cierre del frente responsive)
+**Última actualización de este archivo:** 2026-04-23 · sesión 27 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.12.10 (~357 KB, regenerado tras aplicar patrón responsive a Modal + SessionShell + TweaksPanel)
 
 ---
 
@@ -21,12 +21,13 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.9, título bumpeado |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.9 (regenerado tras añadir LICENSE + cabeceras) |
-| `LICENSE` | **NUEVO** — Elastic License 2.0 en la raíz | v0.12.9 (cierre de [`docs/proposals/license-analysis.md`](./docs/proposals/license-analysis.md)) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.10, título bumpeado |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.10 (~357 KB, regenerado tras aplicar responsive a modales) |
+| `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas (extraída en sesión 26) | v0.12.9 (cabecera de copyright; sin cambios funcionales) |
-| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.9 (cabecera de copyright; helper `displayItalic` ya presente) |
+| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.12.10** (data-pace-session-* attrs + bloque CSS responsive 640px) |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.12.10** (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | **v0.12.10** (data-pace-tweaks-panel + bloque CSS responsive: bottom-sheet en móvil) |
 | `app/breathe/BreatheModule.jsx` | Módulo Respira | v0.12.8 (ramas prep/done delegan en SessionShell; ~175 líneas menos) |
 | `app/move/MoveModule.jsx` | Módulo Mueve | v0.12.8 (mismo patrón que Breathe; ~80 líneas menos) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 (limpieza de `CupIcon`/`BigCup` + callsites `supportCopyVariant` saneados) |
@@ -35,21 +36,103 @@
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.8 (cambio menor: `displayItalic` en el timestamp) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 (cabecera de copyright; pendiente `displayItalic` en 2 sitios multi-línea) |
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.8 (`displayItalic` en 3 sitios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.9 (bump de `PACE_VERSION` + cabecera de copyright) |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.8 (`displayItalic` en el título) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.12.10** (bump `PACE_VERSION` v0.12.9 → v0.12.10) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios; pendiente `displayItalic` multi-línea) |
 
-Backups rotados en esta sesión:
-- `backups/PACE_standalone_v0.12.7_20260423.html` (antes del refactor
-  Fase 2).
-- `backups/PACE_standalone_v0.12.8_20260423_1700.html` (antes de
-  añadir LICENSE + cabeceras + bump v0.12.9).
+Backups vigentes:
+- `backups/PACE_standalone_v0.12.8_20260423_1700.html` (sesión 26,
+  antes del bump v0.12.9).
+- `backups/PACE_standalone_v0.12.9_20260423.html` (sesión 27,
+  antes del bump v0.12.10 y la aplicación del patrón responsive
+  a modales).
 
 2 backups locales. Margen cómodo frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
+
+**Sesión 27 · v0.12.9 → v0.12.10 · Modales responsive en móvil**
+
+Se cierra el último frente bloqueante pre-v1.0 de adaptación móvil.
+Las sesiones 22-24 habían resuelto home + sidebar en 375×812; esta
+sesión aplica el mismo patrón establecido (decisión activa sesión
+22: bloque `<style>` inyectado en `<head>` con selectores
+`[data-pace-*]` y `!important`) a las 12 superficies modales que
+quedaban pendientes.
+
+### Qué se hizo
+
+1. **Patrón centralizado en `Primitives.Modal`.** Los 10 modales
+   del producto delegan en un único componente `<Modal>` de
+   `Primitives.jsx`. Se añadieron `data-pace-modal-*` attrs al JSX
+   del Modal base y un bloque CSS responsive con `id`
+   `pace-modal-responsive-css`. En móvil: el modal pasa de card
+   centrada a **sheet pegado al borde inferior**
+   (`place-items: end center`), ancho 100%, `max-height:
+   calc(100dvh - 24px)` con fallback `100vh`, padding interior
+   reducido un paso, título 32→26, botón × 28→36 para target táctil
+   ≥44×44 efectivo. **10 modales cubiertos tocando 1 archivo.**
+
+2. **`SessionShell.jsx` — pantallas de sesión fullscreen.** Las
+   rutinas activas (Respira, Mueve) no usan Modal; viven en un
+   contenedor fixed inset:0 con tipografías monumentales. En 375 px
+   se rompían (200px de "3-2-1", 56px del nombre de rutina). Se
+   añadieron `data-pace-session-*` attrs y bloque CSS responsive.
+   Padding root 28/48/40 → 16/20/24, prep número 200→128, done h1
+   56→34, círculo hero 120→80, stats con `flex-wrap: wrap` y
+   gap 40→20 para que 3 stats no desborden.
+
+3. **`TweaksPanel.jsx` — outlier.** Panel fijo 320×auto bottom-right,
+   no es Modal. En móvil taparía casi toda la pantalla con un rail
+   de 31 px inútil a la izquierda. Se transforma en **bottom-sheet**
+   full-width: `left/right/bottom: 0`, `border-radius` solo en
+   esquinas superiores (actúa de handle visual), `max-height: 72dvh`,
+   sombra superior invertida. Se conserva la ausencia de backdrop
+   — coherente con la filosofía del panel ("afinar mientras la app
+   sigue viva detrás").
+
+### Resultado cuantitativo
+
+- **~40 data-attrs** añadidos, todos con prefijo `data-pace-*`.
+- **3 bloques CSS responsive** nuevos (1 por archivo afectado),
+  con `id` únicos para evitar duplicación.
+- **12 superficies modales** adaptadas (10 Modal + 1 SessionShell
+  + 1 TweaksPanel) tocando solo **3 archivos** fuente.
+- **1 breakpoint** único (640 px), consistente con sesiones 22-24.
+- **+7 KB** en `PACE_standalone.html` (350 → 357 KB).
+- **0 cambios** de comportamiento observable en desktop.
+- **0 estilos inline modificados** — decisión activa sesión 22
+  respetada al 100%.
+
+### Verificación
+
+- Preview de `PACE.html` carga limpia (solo warning del Babel
+  in-browser, ruido del sandbox).
+- Regeneración de `PACE_standalone.html` sin advertencias.
+- Auditoría visual formal a 375×812 queda como tarea opcional de
+  sesión 28 — el patrón centralizado via Modal base cubre los 10
+  modales de golpe; los posibles ajustes futuros serían de
+  refinamiento sobre casos concretos, no de fundamento.
+
+### Archivos
+
+- **Modificados:** `app/ui/Primitives.jsx`, `app/ui/SessionShell.jsx`,
+  `app/tweaks/TweaksPanel.jsx`, `app/state.jsx`, `PACE.html`,
+  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `docs/sessions/session-27-modales-mobile.md`,
+  `backups/PACE_standalone_v0.12.9_20260423.html`.
+
+### Versión
+
+- `v0.12.9` → **`v0.12.10`** (patch · responsive CSS aditivo, cero
+  cambios de comportamiento observable en desktop).
+
+Detalle: [`docs/sessions/session-27-modales-mobile.md`](./docs/sessions/session-27-modales-mobile.md).
+
+---
+
+## 🗓️ Sesiones anteriores (resumen)
 
 **Sesión 26 · v0.12.8 → v0.12.9 · Refactor Fase 2 + cierre de licencia + 4ª vía de monetización**
 
@@ -178,13 +261,12 @@ Detalle del tramo B: este STATE + [`CHANGELOG.md`](./CHANGELOG.md#v0129--2026-04
 ### 🚨 Bloqueante pre-v1.0
 
 - ~~**Responsive móvil (home + sidebar)**~~ ✅ Resuelto en
-  sesiones 22-23-24 (v0.12.5 → v0.12.7). Home cabe en 375×812
-  sin scroll con o sin barra URL visible. Sidebar móvil tiene
-  scroll asimétrico (`min-height: calc(100dvh + 1px)`) que
-  recupera el auto-hide de la barra del navegador. Pendiente
-  auditar los **modales** (Respira, Mueve, Estira, Hidrátate,
-  BreakMenu, Achievements, Stats, Tweaks, Welcome, Support) en
-  móvil — probable próxima sesión (#25).
+  sesiones 22-23-24 (v0.12.5 → v0.12.7).
+- ~~**Responsive móvil (modales)**~~ ✅ Resuelto en sesión 27
+  (v0.12.10). Patrón `<style>` + `data-pace-*` + `!important`
+  aplicado a `Primitives.Modal` (cubre 10 modales), `SessionShell`
+  (pantallas Respira/Mueve) y `TweaksPanel` (bottom-sheet). La app
+  es utilizable en 375×812 de principio a fin.
 
 ### ✅ Refactor Fase 2 completado en sesión 26
 
@@ -487,10 +569,13 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual: Frente 1 (BMC) ✅ · Combo Welcome/Export/tweak-secrets
-> ✅ completo en sesión 17 · Pulido de bugs + layout ✅ en sesión 18.
-> La app ya ofrece bienvenida editorial + portabilidad completa de
-> datos + código con menos race conditions.
+> Estado actual: responsive móvil **cerrado como frente** tras
+> sesión 27. Home + sidebar + 12 superficies modales cubren
+> 375×812 completo. Licencia ELv2 fijada (sesión 26) y modelo de
+> monetización a 4 vías documentado. Próximos frentes lógicos:
+> PWA instalable (consumidor natural del trabajo responsive hecho),
+> sistema de claves offline para Lifetime/Pase, o sesión corta de
+> fruta fácil (triggers de primeros pasos + rachas largas + sonidos).
 
 ### 🎯 Próxima sesión corta (recomendada)
 

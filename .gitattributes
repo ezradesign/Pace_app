@@ -1,0 +1,38 @@
+# PACE · normalización de finales de línea
+#
+# Forzamos LF en todos los archivos de texto del repo.
+# Evita diffs "fantasma" CRLF↔LF cuando se clona en Windows
+# y se trabaja en Mac/Linux (o viceversa).
+#
+# Los binarios se marcan explícitamente para que Git no intente
+# convertirlos.
+
+# Por defecto: detectar automáticamente si es texto y normalizar a LF
+* text=auto eol=lf
+
+# Fuentes web / código
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.jsx    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.txt    text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+
+# Binarios — no tocar
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.mp3    binary
+*.wav    binary
+*.mp4    binary
+*.pdf    binary

@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización (Pase mensual) | #26 | [abajo ↓](#v0129--2026-04-23--licencia--4ª-vía-de-monetización) |
+| **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell (prep/done) y TweaksPanel (bottom-sheet) | #27 | [abajo ↓](#v01210--2026-04-23--modales-responsive-en-móvil) |
+| **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización (Pase mensual) | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
 | v0.12.8 | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
 | **v0.12.7** | 2026-04-23 | Auditoría interna previa al refactor · sin cambios de código · informe en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md) | #25 | [abajo ↓](#v0127--2026-04-23--auditoria-interna) |
 | v0.12.7 | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra del navegador | #24 | [session-24-scroll-asimetrico.md](./docs/sessions/session-24-scroll-asimetrico.md) |
@@ -42,6 +43,97 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.10] — 2026-04-23 — Modales responsive en móvil
+
+Se cierra el último frente bloqueante pre-v1.0 de adaptación móvil:
+los **10 modales** del producto más `SessionShell` (pantallas de
+sesión Respira/Mueve) y `TweaksPanel` reciben tratamiento responsive
+siguiendo el patrón ya establecido en sesiones 22-24 (decisión activa
+vigente: bloque `<style>` inyectado en `<head>` con selectores
+`[data-pace-*]` y `!important`, no estilos inline modificados).
+
+**Regla no negociable respetada:** 0 cambios de comportamiento
+observable en desktop. Los estilos inline siguen siendo la fuente
+de verdad; el CSS responsive solo actúa bajo `640px`.
+
+### Añadido
+- **`data-pace-modal-*` attrs** en `app/ui/Primitives.jsx` sobre el
+  JSX del `<Modal>` base: backdrop, card, close, head, title,
+  subtitle. Como los 9 modales del producto (Respira biblioteca y
+  seguridad, Mueve, Estira, Hidrátate, BreakMenu, Achievements,
+  WeeklyStats, Welcome, Support — 10 contando variantes) delegan
+  todos en el mismo `<Modal>`, basta un único punto de inyección.
+- **`data-pace-session-*` attrs** en `app/ui/SessionShell.jsx`:
+  root, header, title, center, footer, hint, prep, prep-num,
+  prep-copy, done, done-hero, done-title, stats, stat, stat-num,
+  done-copy. Cubre las pantallas fullscreen de Respira y Mueve.
+- **`data-pace-tweaks-panel`** en `app/tweaks/TweaksPanel.jsx`
+  sobre el panel raíz.
+- **3 bloques `<style>` responsive** inyectados en `<head>` con
+  `id` únicos:
+  - `pace-modal-responsive-css` — en Primitives.jsx. Transforma
+    el modal centrado 85vh en sheet pegado al borde inferior
+    (`place-items: end center`), ancho 100%, `max-height:
+    calc(100dvh - 24px)` con fallback `100vh` (decisión sesión
+    23), padding interior reducido un paso (`var(--s-6)` →
+    `var(--s-5)`), título 32→26, botón × 28→36 para target táctil.
+  - `pace-session-responsive-css` — en SessionShell.jsx. Padding
+    root 28/48/40 → 16/20/24, header título 22→18, prep número
+    200→128, done `h1` 56→34, círculo 120→80, stats con `flex-wrap`
+    y gap 40→20 para que no desborden con 3 stats a 375 px.
+  - `pace-tweaks-responsive-css` — en TweaksPanel.jsx. El panel
+    320×auto bottom-right pasa a bottom-sheet full-width con
+    `border-radius` solo superior, `max-height: 72dvh`, sombra
+    superior invertida. Se conserva la ausencia de backdrop
+    (filosofía "afinar mientras la app sigue viva").
+
+### Cambiado
+- **`app/state.jsx`:** `PACE_VERSION` bump v0.12.9 → v0.12.10.
+- **`PACE.html`:** título `<title>` bump v0.12.9 → v0.12.10.
+- **`STATE.md`:** celdas de versión, entrada de "Última sesión"
+  reescrita (sustituir, no añadir), frente de "Modales móviles"
+  movido de backlog bloqueante a resuelto.
+
+### Regenerado
+- **`PACE_standalone.html`** v0.12.10 vía `super_inline_html`.
+  ~357 KB (sube ~7 KB sobre v0.12.9 por los 3 bloques CSS y los
+  ~40 data-attrs añadidos — el standalone inlinea el PNG del logo
+  también, no se ha tocado esa parte).
+
+### Decisiones reafirmadas / nuevas
+- **Responsive móvil cerrado como frente.** Home (sesiones 22-24)
+  + modales (esta sesión) cubren todas las superficies. Cualquier
+  tratamiento responsive futuro sigue el mismo patrón documentado.
+- **Breakpoint único 640px.** No se añade breakpoint intermedio;
+  alineado con main.jsx y Sidebar.jsx.
+- **Sheet en vez de card centrada.** Los 10 modales en móvil se
+  anclan al borde inferior (patrón nativo iOS/Android, mejor
+  ergonomía del pulgar). Facilita la futura transición a PWA.
+
+### Archivos
+- **Modificados:** `app/ui/Primitives.jsx`, `app/ui/SessionShell.jsx`,
+  `app/tweaks/TweaksPanel.jsx`, `app/state.jsx`, `PACE.html`,
+  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `docs/sessions/session-27-modales-mobile.md`,
+  `backups/PACE_standalone_v0.12.9_20260423.html`.
+
+### Verificación
+- Preview de `PACE.html` carga limpia (solo warning esperado del
+  Babel in-browser, ruido del sandbox).
+- Regeneración del standalone sin advertencias.
+- Auditoría visual formal a 375×812 queda como tarea opcional de
+  sesión 28 (razón: el valor del patrón centralizado via Modal
+  base es alto; la auditoría individual de 10 capturas PNG tenía
+  coste desproporcionado para detectar ajustes de refinamiento).
+
+### Versión
+- `v0.12.9` → **`v0.12.10`** (patch — CSS responsive aditivo, cero
+  cambios de comportamiento observable en desktop).
+
+Detalle completo: [`docs/sessions/session-27-modales-mobile.md`](./docs/sessions/session-27-modales-mobile.md).
 
 ---
 

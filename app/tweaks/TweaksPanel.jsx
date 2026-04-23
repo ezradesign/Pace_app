@@ -200,7 +200,7 @@ function TweaksPanel({ open, onClose }) {
           <Meta>Panel</Meta>
           <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
-        <button onClick={onClose} data-pace-tweaks-close style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
+        <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
 
       {ejes.map(eje => (
@@ -211,7 +211,6 @@ function TweaksPanel({ open, onClose }) {
               const active = state[eje.key] === opt.v;
               return (
                 <button key={opt.v} onClick={() => set({ [eje.key]: opt.v })}
-                  data-pace-tweaks-option
                   style={{
                     padding: '6px 10px',
                     fontSize: 11,
@@ -432,5 +431,49 @@ const tweaksStyles = {
     transition: 'all 180ms',
   },
 };
+
+/* ============================================================
+   CSS responsive del TweaksPanel (sesión 27 · v0.12.10).
+
+   El TweaksPanel es el único "modal" que no usa <Modal> — es un
+   panel flotante 320×auto anclado bottom-right. En móvil eso
+   rompe: 320 de 375 tapa casi toda la pantalla con los bordes
+   pegados a la derecha, queda un rail de 31px inútil a la izq,
+   y la animación `slide-up` empuja contra el borde sin margen.
+
+   Patrón resuelto: bottom sheet. Pegado a bottom:0 left:0 right:0,
+   esquinas superiores redondeadas, sin border laterales (el border
+   superior actúa como handle visual), maxHeight 72vh para que el
+   backdrop oscuro de fondo (que no hay — TweaksPanel no tiene
+   overlay) deje ver que la home sigue viva detrás.
+
+   Nota: TweaksPanel no tiene backdrop, pero eso también es
+   coherente con que se use como "afinador" mientras la app sigue
+   funcionando. Se conserva la filosofía.
+   ============================================================ */
+const _paceTweaksResponsive = document.getElementById('pace-tweaks-responsive-css');
+if (!_paceTweaksResponsive) {
+  const s = document.createElement('style');
+  s.id = 'pace-tweaks-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-tweaks-panel] {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: auto !important;
+        max-height: 72vh !important;
+        max-height: 72dvh !important;
+        border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+        padding: 16px 18px 24px !important;
+        box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 Object.assign(window, { TweaksPanel, TweakSecretsWatcher });

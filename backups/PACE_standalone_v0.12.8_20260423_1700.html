@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.10</title>
+  <title>PACE · Foco · Cuerpo — v0.12.8</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -213,17 +213,14 @@ input, textarea { font-family: inherit; color: inherit; }
        4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
        5. main.jsx  → monta <PaceApp/> en #root
   -->
-  <script type="text/babel">/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   Estado global: simple store con useSyncExternalStore + localStorage.
+  <script type="text/babel">/* PACE · Estado global
+   Simple store con useSyncExternalStore + localStorage
 */
 
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.10';
+const PACE_VERSION = 'v0.12.8';
 
 const defaultState = {
   // Settings / Tweaks
@@ -586,11 +583,8 @@ Object.assign(window, {
 });
 </script>
 
-  <script type="text/babel">/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   Primitivos UI compartidos: Modal, Card, Tag, Button, Divider, Meta.
+  <script type="text/babel">/* PACE · Primitivos UI compartidos
+   Modal, Card, Tag, Button, Divider, Meta
 */
 
 const { useEffect } = React;
@@ -629,7 +623,6 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
 
   return (
     <div
-      data-pace-modal-backdrop
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0,
@@ -643,7 +636,6 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
       }}
     >
       <div
-        data-pace-modal-card
         onClick={(e) => e.stopPropagation()}
         style={{
           background: 'var(--paper)',
@@ -660,7 +652,6 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
       >
         {onClose && (
           <button
-            data-pace-modal-close
             onClick={onClose}
             aria-label="Cerrar"
             style={{
@@ -676,14 +667,14 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           >×</button>
         )}
         {(tagLabel || title) && (
-          <div data-pace-modal-head style={{ marginBottom: 'var(--s-5)' }}>
+          <div style={{ marginBottom: 'var(--s-5)' }}>
             {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
-            {title && <h2 data-pace-modal-title style={{
+            {title && <h2 style={{
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic',
               fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1
             }}>{title}</h2>}
-            {subtitle && <p data-pace-modal-subtitle style={{
+            {subtitle && <p style={{
               color: 'var(--ink-3)', fontSize: 14, margin: '6px 0 0', maxWidth: '90%'
             }}>{subtitle}</p>}
           </div>
@@ -838,79 +829,10 @@ if (!_paceAnimStyle) {
   document.head.appendChild(s);
 }
 
-/* ============================================================
-   CSS responsive del Modal base (sesión 27 · v0.12.10).
-
-   Patrón documentado en decisión activa sesión 22: selectores
-   [data-pace-*] con !important, inyectados en <head>. NO se
-   modifican los objetos de estilos inline (que siguen siendo
-   la fuente de verdad en desktop).
-
-   Breakpoint único: 640px (coherente con main.jsx y Sidebar.jsx).
-
-   En móvil el modal:
-   - Pasa de card centrada 85vh a sheet pegada a los bordes
-     (backdrop padding 24→12).
-   - Ancho ocupa 100% menos el padding del backdrop; el
-     `maxWidth` por prop se ignora.
-   - Alto máximo = 100dvh menos el padding del backdrop, para
-     que el scroll interno siga cabiendo sin tapar la barra URL
-     (sigue la decisión activa sesión 23 de usar dvh con fallback).
-   - Padding interior un paso menos (var(--s-6) → var(--s-5))
-     para ganar pixeles útiles.
-   - Título del header 32→26 y subtitle ancho libre (quita el 90%).
-   - Botón × más grande (28→36) para target táctil ≥44×44 tras
-     sumar padding perimetral.
-   ============================================================ */
-const _paceModalResponsive = document.getElementById('pace-modal-responsive-css');
-if (!_paceModalResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-modal-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-modal-backdrop] {
-        padding: 12px !important;
-        place-items: end center !important;
-      }
-      [data-pace-modal-card] {
-        max-width: 100% !important;
-        max-height: calc(100vh - 24px) !important;
-        max-height: calc(100dvh - 24px) !important;
-        padding: var(--s-5) !important;
-        border-radius: var(--r-md) !important;
-      }
-      [data-pace-modal-close] {
-        top: 10px !important;
-        right: 10px !important;
-        width: 36px !important;
-        height: 36px !important;
-        font-size: 22px !important;
-      }
-      [data-pace-modal-head] {
-        margin-bottom: var(--s-4) !important;
-        padding-right: 36px !important;
-      }
-      [data-pace-modal-title] {
-        font-size: 26px !important;
-        line-height: 1.15 !important;
-      }
-      [data-pace-modal-subtitle] {
-        max-width: 100% !important;
-        font-size: 13px !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
 Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
 </script>
-  <script type="text/babel">/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   SessionShell — cáscara compartida de sesiones activas
-   =====================================================
+  <script type="text/babel">/* PACE · SessionShell — cáscara compartida de sesiones activas
+   ============================================================
    Extraído en sesión 26 (v0.12.8) desde la duplicación detectada entre
    Breathe y Move en el informe `docs/audits/audit-v0.12.7.md`:
      - sessionStyles / moveSessionStyles (idénticos salvo gap)
@@ -993,21 +915,21 @@ const sessionShellStyles = {
    ============================================================ */
 function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
   return (
-    <div data-pace-session-root style={sessionShellStyles.root}>
+    <div style={sessionShellStyles.root}>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
-      <div data-pace-session-center style={centerGap
+      <div style={centerGap
         ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
         : sessionShellStyles.center
       }>
         {children}
       </div>
       {footer && (
-        <div data-pace-session-footer style={{ ...sessionShellStyles.footer, gap: footerGap }}>
+        <div style={{ ...sessionShellStyles.footer, gap: footerGap }}>
           {footer}
         </div>
       )}
       {hint && (
-        <div data-pace-session-hint style={{
+        <div style={{
           position: 'absolute', bottom: 14, left: 0, right: 0,
           textAlign: 'center', fontSize: 10,
           letterSpacing: '0.16em', textTransform: 'uppercase',
@@ -1020,10 +942,10 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
 
 function SessionHeader({ routine, onExit, extra }) {
   return (
-    <div data-pace-session-header style={sessionShellStyles.header}>
+    <div style={sessionShellStyles.header}>
       <div>
         <Meta style={{ fontSize: 10 }}>{routine.code}</Meta>
-        <h2 data-pace-session-title style={{
+        <h2 style={{
           ...displayItalic,
           fontSize: 22, margin: '2px 0 0', fontWeight: 500,
         }}>{routine.name}</h2>
@@ -1054,18 +976,18 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
       onExit={onExit}
       footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>Empezar ahora</button>}
     >
-      <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
+      <div style={{ textAlign: 'center', maxWidth: 460 }}>
         <div style={{
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 18,
         }}>Prepárate</div>
-        <div data-pace-session-prep-num style={{
+        <div style={{
           ...displayItalic,
           fontSize: 200, fontWeight: 400, lineHeight: 0.9,
           color: accent,
           fontVariantNumeric: 'tabular-nums',
         }}>{prepCount > 0 ? prepCount : '·'}</div>
-        <div data-pace-session-prep-copy style={{
+        <div style={{
           ...displayItalic,
           fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
         }}>{copy}</div>
@@ -1098,8 +1020,8 @@ function SessionDone({
 
   return (
     <SessionShell routine={routine} onExit={onExit} footer={btn}>
-      <div data-pace-session-done style={{ textAlign: 'center', maxWidth: 520 }}>
-        <div data-pace-session-done-hero style={{
+      <div style={{ textAlign: 'center', maxWidth: 520 }}>
+        <div style={{
           width: 120, height: 120, margin: '0 auto 24px',
           borderRadius: '50%',
           background: accentSoft,
@@ -1117,16 +1039,16 @@ function SessionDone({
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 12,
         }}>{doneMeta}</div>
-        <h1 data-pace-session-done-title style={{
+        <h1 style={{
           ...displayItalic,
           fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
         }}>{routine.name}</h1>
         {stats.length > 0 && (
-          <div data-pace-session-stats style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
             {stats.map((s, i) => <SessionStat key={i} label={s.label} value={s.value} />)}
           </div>
         )}
-        <p data-pace-session-done-copy style={{
+        <p style={{
           ...displayItalic,
           fontSize: 18, color: 'var(--ink-2)',
           maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
@@ -1142,8 +1064,8 @@ function SessionDone({
    ============================================================ */
 function SessionStat({ label, value }) {
   return (
-    <div data-pace-session-stat style={{ textAlign: 'center' }}>
-      <div data-pace-session-stat-num style={{
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
         ...displayItalic,
         fontSize: 40, fontWeight: 500, lineHeight: 1,
         color: 'var(--ink)',
@@ -1154,84 +1076,6 @@ function SessionStat({ label, value }) {
       }}>{label}</div>
     </div>
   );
-}
-
-/* ============================================================
-   CSS responsive de SessionShell (sesión 27 · v0.12.10).
-
-   Patrón coherente con Primitives.Modal: selectores [data-*]
-   con !important inyectados en <head>.
-
-   Las pantallas de sesión son fullscreen (`inset: 0`), no cards
-   centradas — su problema en móvil no es "el modal no cabe"
-   sino "las tipografías monumentales rompen el layout":
-     - prep muestra 3-2-1 a 200px (demasiado en 375px de ancho)
-     - done muestra `routine.name` a 56px italic
-     - stats en fila con gap 40 desbordan con 2 o 3 stats
-     - padding root 28/48/40 se come 96px útiles de 375
-
-   En móvil se ajusta:
-   - Padding root: 28/48/40 → 16/20/24
-   - Header título: 22 → 18
-   - Prep núm 200 → 128, copy 20 → 15
-   - Done círculo 120 → 80, h1 56 → 34, copy 18 → 14
-   - Stats row: gap 40 → 20, padding lateral para que no rocen
-     los bordes cuando son 3
-   - Hint: bottom 14 → 6
-
-   No se mueve la estructura; las tipografías sólo reescalan.
-   ============================================================ */
-const _paceSessionResponsive = document.getElementById('pace-session-responsive-css');
-if (!_paceSessionResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-session-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-session-root] {
-        padding: 16px 20px 24px !important;
-      }
-      [data-pace-session-title] {
-        font-size: 18px !important;
-      }
-      [data-pace-session-prep-num] {
-        font-size: 128px !important;
-      }
-      [data-pace-session-prep-copy] {
-        font-size: 15px !important;
-        margin-top: 14px !important;
-      }
-      [data-pace-session-done-hero] {
-        width: 80px !important;
-        height: 80px !important;
-        margin-bottom: 18px !important;
-      }
-      [data-pace-session-done-hero] svg {
-        width: 34px !important;
-        height: 34px !important;
-      }
-      [data-pace-session-done-title] {
-        font-size: 34px !important;
-        margin-bottom: 18px !important;
-      }
-      [data-pace-session-stats] {
-        gap: 20px !important;
-        margin-bottom: 24px !important;
-        flex-wrap: wrap !important;
-      }
-      [data-pace-session-stat-num] {
-        font-size: 28px !important;
-      }
-      [data-pace-session-done-copy] {
-        font-size: 14px !important;
-        margin-bottom: 24px !important;
-      }
-      [data-pace-session-hint] {
-        bottom: 6px !important;
-        font-size: 9px !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
 }
 
 Object.assign(window, {
@@ -5437,7 +5281,7 @@ function TweaksPanel({ open, onClose }) {
   };
 
   return (
-    <div data-pace-tweaks-panel style={{
+    <div style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
@@ -5688,58 +5532,10 @@ const tweaksStyles = {
   },
 };
 
-/* ============================================================
-   CSS responsive del TweaksPanel (sesión 27 · v0.12.10).
-
-   El TweaksPanel es el único "modal" que no usa <Modal> — es un
-   panel flotante 320×auto anclado bottom-right. En móvil eso
-   rompe: 320 de 375 tapa casi toda la pantalla con los bordes
-   pegados a la derecha, queda un rail de 31px inútil a la izq,
-   y la animación `slide-up` empuja contra el borde sin margen.
-
-   Patrón resuelto: bottom sheet. Pegado a bottom:0 left:0 right:0,
-   esquinas superiores redondeadas, sin border laterales (el border
-   superior actúa como handle visual), maxHeight 72vh para que el
-   backdrop oscuro de fondo (que no hay — TweaksPanel no tiene
-   overlay) deje ver que la home sigue viva detrás.
-
-   Nota: TweaksPanel no tiene backdrop, pero eso también es
-   coherente con que se use como "afinador" mientras la app sigue
-   funcionando. Se conserva la filosofía.
-   ============================================================ */
-const _paceTweaksResponsive = document.getElementById('pace-tweaks-responsive-css');
-if (!_paceTweaksResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-tweaks-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-tweaks-panel] {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: auto !important;
-        max-height: 72vh !important;
-        max-height: 72dvh !important;
-        border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
-        border-left: 0 !important;
-        border-right: 0 !important;
-        border-bottom: 0 !important;
-        padding: 16px 18px 24px !important;
-        box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
 Object.assign(window, { TweaksPanel, TweakSecretsWatcher });
 </script>
 
-  <script type="text/babel">/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   Main orchestrator.
+  <script type="text/babel">/* PACE · Main orchestrator
    Monta todo: Sidebar + FocusTimer + modales de librerías + sesiones
 
    RESPONSIVE (sesión 22 · v0.12.5):
