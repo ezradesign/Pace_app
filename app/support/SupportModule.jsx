@@ -37,9 +37,17 @@ const BMC_URL = `https://buymeacoffee.com/${BMC_USERNAME}`;
 /* Copy único — decidido en sesión de diseño post-v0.12.1: se descartan
    las 4 variantes ('cafe', 'pasto', 'vaca', 'come') y se consolida en
    una sola que abraza la metáfora central del proyecto (la vaca que
-   pace = PACE). El icono siempre es la vaca. Mantenemos la API
-   `supportCopy(variant)` por compatibilidad con state.supportCopyVariant
-   pero ignora el argumento. */
+   pace = PACE). El icono siempre es la vaca.
+
+   Sesión 26 (v0.12.8, audit §2.1): se eliminan los callsites que
+   pasaban `state.supportCopyVariant` como argumento y los helpers
+   `CupIcon`/`BigCup` muertos. El campo del state se conserva por
+   compat localStorage (ver state.jsx: DEPRECADO) pero este módulo
+   ya no lo consume en absoluto.
+
+   La función `supportCopy()` y el helper `SupportIcon()` se conservan
+   exportados a window sin parámetros — futuros callers que quieran
+   re-bifurcar tendrán una API neutra a la que volver. */
 const SUPPORT_COPY_DEFAULT = {
   icon: 'cow',
   label: 'Da de pastar a la vaca',
@@ -48,14 +56,11 @@ const SUPPORT_COPY_DEFAULT = {
   subtitle: 'Un gesto para que siga paciendo a su ritmo.',
 };
 
-function supportCopy(_variant) {
+function supportCopy() {
   return SUPPORT_COPY_DEFAULT;
 }
 
-/* Helper que renderiza el icono del pill / CTA. Con la consolidación
-   a una sola variante, siempre es la vaca. Se mantiene la firma
-   (variant, size) por si en el futuro volvemos a bifurcar. */
-function SupportIcon({ variant, size = 13 }) {
+function SupportIcon({ size = 13 }) {
   return <CowIcon size={size} />;
 }
 
@@ -67,8 +72,7 @@ function SupportIcon({ variant, size = 13 }) {
    Sin animación permanente. Sin gradiente. Sin color llamativo.
    ============================================================ */
 function SupportButton({ onOpen }) {
-  const [state] = usePace();
-  const copy = supportCopy(state.supportCopyVariant);
+  const copy = supportCopy();
   const [hover, setHover] = useStateSUP(false);
 
   return (
@@ -79,6 +83,7 @@ function SupportButton({ onOpen }) {
       title="Apoya el proyecto"
       aria-label={copy.label}
       style={{
+        ...displayItalic,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -86,8 +91,6 @@ function SupportButton({ onOpen }) {
         width: '100%',
         padding: '9px 14px',
         fontSize: 12,
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
         color: hover ? 'var(--ink)' : 'var(--ink-2)',
         background: hover ? 'var(--paper-3)' : 'var(--paper)',
         border: `1px solid ${hover ? 'var(--line-2)' : 'var(--line)'}`,
@@ -98,28 +101,14 @@ function SupportButton({ onOpen }) {
       }}
     >
       <span>{copy.short}</span>
-      <SupportIcon variant={state.supportCopyVariant} />
+      <SupportIcon />
     </button>
   );
 }
 
-/* Taza de café — stroke fino, currentColor. Sin relleno para que
-   no rompa la jerarquía visual del sidebar. */
-function CupIcon({ size = 13 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.2"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {/* Cuerpo de la taza */}
-      <path d="M3 7h8v4.5a2.5 2.5 0 0 1-2.5 2.5h-3A2.5 2.5 0 0 1 3 11.5V7z" />
-      {/* Asa */}
-      <path d="M11 8.2c1.4 0 2 .7 2 1.8s-.7 1.8-2 1.8" />
-      {/* Vaho — 2 líneas finas */}
-      <path d="M5 3.2c.3.6.3 1.2 0 1.8" opacity="0.6" />
-      <path d="M8 2.4c.3.8.3 1.5 0 2.3" opacity="0.6" />
-    </svg>
-  );
-}
+/* CupIcon eliminado en sesión 26 (audit §2.1 — dead code alta confianza):
+   tras la consolidación a una sola variante de copy en v0.12.2, SupportIcon
+   siempre devuelve <CowIcon/>, y CupIcon quedó definido sin callsites. */
 
 /* Cabeza de vaca — silueta inspirada en el lockup del logo (cara
    alargada, cuernos cortos hacia arriba, mancha frontal asimétrica).
@@ -211,9 +200,9 @@ function SupportModal({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} maxWidth={540}>
       <div style={supportStyles.inner}>
-        {/* Ícono grande de taza con humo — no emoji, trazo a mano */}
+        {/* Ícono grande de vaca — no emoji, trazo a mano */}
         <div style={supportStyles.heroIcon}>
-          <SupportHero variant={state.supportCopyVariant} />
+          <SupportHero />
         </div>
 
         <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
@@ -247,8 +236,8 @@ function SupportModal({ open, onClose }) {
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
-            <span style={{ marginRight: 2 }}>{supportCopy(state.supportCopyVariant).label}</span>
-            <SupportIcon variant={state.supportCopyVariant} />
+            <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
+            <SupportIcon />
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
             {copied ? '✓ copiado' : 'Copiar enlace'}
@@ -282,8 +271,7 @@ function Value({ label, sub }) {
   return (
     <div style={{ flex: 1, textAlign: 'center', padding: '0 6px' }}>
       <div style={{
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
+        ...displayItalic,
         fontSize: 14,
         color: 'var(--ink)',
         lineHeight: 1.1,
@@ -298,27 +286,8 @@ function Value({ label, sub }) {
   );
 }
 
-/* Taza grande para el hero del modal — misma silueta que el botón
-   pero con más detalle: un par de líneas de vaho más orgánicas y
-   un platillo debajo. Todo currentColor = --breathe (terracota). */
-function BigCup() {
-  return (
-    <svg width="58" height="58" viewBox="0 0 48 48" fill="none"
-         stroke="var(--breathe)" strokeWidth="1.4"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {/* Vaho — 3 líneas orgánicas */}
-      <path d="M16 9c1 2 1 3.5 0 5.5" opacity="0.5" />
-      <path d="M23 6.5c1.2 2.5 1.2 4.3 0 6.8" opacity="0.7" />
-      <path d="M30 9c1 2 1 3.5 0 5.5" opacity="0.5" />
-      {/* Taza */}
-      <path d="M10 19h22v13a7 7 0 0 1-7 7h-8a7 7 0 0 1-7-7V19z" />
-      {/* Asa */}
-      <path d="M32 22c4 0 6 2 6 5s-2 5-6 5" />
-      {/* Platillo */}
-      <path d="M7 41h28" opacity="0.5" />
-    </svg>
-  );
-}
+/* BigCup eliminado en sesión 26 (audit §2.1). Tras la consolidación a
+   una sola variante de copy, SupportHero siempre devuelve <BigCow/>. */
 
 /* Cabeza de vaca grande para el hero del modal — mismo diseño que
    CowIcon pero a 48×48. Cuernos cortos arriba, cara alargada,
@@ -357,9 +326,9 @@ function BigCow() {
   );
 }
 
-/* Hero del modal. Con la consolidación a una sola variante, siempre
-   es la vaca grande. Se mantiene la firma por compatibilidad. */
-function SupportHero({ variant }) {
+/* Hero del modal — siempre la vaca grande tras la consolidación de
+   copy en v0.12.2. Firma saneada en sesión 26 (audit §2.1). */
+function SupportHero() {
   return <BigCow />;
 }
 
@@ -399,8 +368,7 @@ const supportStyles = {
     border: '1px solid var(--breathe)',
   },
   title: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
+    ...displayItalic,
     fontSize: 32,
     fontWeight: 500,
     lineHeight: 1.05,
@@ -427,13 +395,12 @@ const supportStyles = {
     borderRadius: 'var(--r-md)',
   },
   cta: {
+    ...displayItalic,
     fontSize: 13,
     lineHeight: 1.55,
     textAlign: 'center',
     margin: '0 0 20px',
     color: 'var(--ink)',
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
   },
   actions: {
     display: 'flex',
@@ -452,8 +419,7 @@ const supportStyles = {
     marginTop: 6,
   },
   alreadyLink: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
+    ...displayItalic,
     fontSize: 12,
     color: 'var(--ink-3)',
     background: 'transparent',

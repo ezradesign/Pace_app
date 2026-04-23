@@ -275,4 +275,14 @@ function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
   );
 }
 
-Object.assign(window, { CowLogo, CowLogoLineal, CowLogoSello, CowLogoIlustrado, PaceWordmark, PaceLockup, PaceLogoImage });
+/* Export a window saneado en sesión 26 (audit §4.1 + §2.1):
+     - PaceWordmark es el único consumido fuera del módulo (Sidebar,
+       Welcome). Es la API pública.
+     - CowLogo, PaceLockup, PaceLogoImage son dependencias internas
+       que PaceWordmark compone según `variant`. No se exponen.
+     - CowLogoLineal, CowLogoSello, CowLogoIlustrado son variantes
+       dormidas tras la retirada de sus tweaks en s19. Siguen vivas
+       en el archivo porque CowLogo las invoca (por si alguien trae
+       `logoVariant: 'lineal'|'sello'|'ilustrado'` en localStorage
+       legacy), pero no se exportan al namespace global. */
+Object.assign(window, { PaceWordmark }); 

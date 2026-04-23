@@ -68,7 +68,7 @@ function WeekBarRow({ label, data, color, unit }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-        <span style={{ fontSize: 13, color: 'var(--ink-2)', fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500 }}>{label}</span>
+        <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>

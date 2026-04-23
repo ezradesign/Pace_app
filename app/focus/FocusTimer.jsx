@@ -373,8 +373,7 @@ function TimerNumber({ mins, secs, progress, modeLabel, subtitle }) {
       <div style={{ textAlign: 'center', zIndex: 1 }}>
         <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 16 }}>{modeLabel}</div>
         <div style={{
-          fontFamily: 'var(--font-display)',
-          fontStyle: 'italic',
+          ...displayItalic,
           fontSize: 'var(--size-hero)',
           fontWeight: 400,
           lineHeight: 0.9,
@@ -401,7 +400,7 @@ function TimerCircle({ mins, secs, progress, modeLabel, subtitle }) {
       </svg>
       <div style={{ textAlign: 'center', zIndex: 1 }}>
         <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>{modeLabel}</div>
-        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
+        <div style={{ ...displayItalic, fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
         <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 36 }}>{subtitle}</div>
@@ -415,7 +414,7 @@ function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
     <div style={{ width: 520, textAlign: 'center' }}>
       <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 24 }}>{modeLabel}</div>
       <div style={{
-        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        ...displayItalic,
         fontSize: 140, fontWeight: 400, lineHeight: 0.9,
         fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.04em',
         marginBottom: 30,

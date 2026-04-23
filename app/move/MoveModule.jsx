@@ -68,7 +68,7 @@ function MoveLibrary({ open, onClose, onStart }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
         <Meta>Cuerpo activo</Meta>
       </div>
-      <h3 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {MOVE_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
@@ -151,28 +151,14 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   // PREPARACIÓN
   if (stage === 'prep') {
     return (
-      <div style={moveSessionStyles.root}>
-        <MoveHeader routine={routine} onExit={onExit} />
-        <div style={moveSessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 460 }}>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 18 }}>Prepárate</div>
-            <div style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-              color: 'var(--move)',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{prepCount > 0 ? prepCount : '·'}</div>
-            <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 20, color: 'var(--ink-2)', marginTop: 20 }}>
-              De pie. Sin prisa. {routine.steps.length} pasos.
-            </div>
-          </div>
-        </div>
-        <div style={moveSessionStyles.footer}>
-          <button onClick={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }} style={moveSessionStyles.ctrlBtn}>
-            Empezar ahora
-          </button>
-        </div>
-      </div>
+      <SessionPrep
+        routine={routine}
+        onExit={onExit}
+        accent="var(--move)"
+        prepCount={prepCount}
+        copy={`De pie. Sin prisa. ${routine.steps.length} pasos.`}
+        onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
+      />
     );
   }
 
@@ -182,79 +168,71 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     return (
-      <div style={moveSessionStyles.root}>
-        <MoveHeader routine={routine} onExit={onExit} />
-        <div style={moveSessionStyles.center}>
-          <div style={{ textAlign: 'center', maxWidth: 520 }}>
-            <div style={{
-              width: 120, height: 120, margin: '0 auto 24px',
-              borderRadius: '50%', background: 'var(--move-soft)',
-              border: '1.5px solid var(--move)',
-              display: 'grid', placeItems: 'center',
-              animation: 'pace-fade-in 600ms ease',
-            }}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--move)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-            </div>
-            <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12 }}>
-              Antídoto completado
-            </div>
-            <h1 style={{
-              fontFamily: 'var(--font-display)', fontStyle: 'italic',
-              fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
-            }}>{routine.name}</h1>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
-              <MoveStat label="Tiempo" value={`${mins}:${String(secs).padStart(2,'0')}`} />
-              <MoveStat label="Pasos" value={String(routine.steps.length)} />
-            </div>
-            <p style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--ink-2)', maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5 }}>
-              El cuerpo vuelve a sentirse tuyo.
-            </p>
-          </div>
-        </div>
-        <div style={moveSessionStyles.footer}>
-          <Button onClick={() => onExit('done')} style={{ background: 'var(--move)', borderColor: 'var(--move)' }}>Volver al inicio</Button>
-        </div>
-      </div>
+      <SessionDone
+        routine={routine}
+        onExit={onExit}
+        accent="var(--move)"
+        accentSoft="var(--move-soft)"
+        doneMeta="Antídoto completado"
+        doneCopy="El cuerpo vuelve a sentirse tuyo."
+        stats={[
+          { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
+          { label: 'Pasos',  value: String(routine.steps.length) },
+        ]}
+        buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+      />
     );
   }
 
   // ACTIVE
   const progress = elapsed / step.dur;
   const remaining = Math.max(0, step.dur - elapsed);
+  const footer = (
+    <React.Fragment>
+      <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn} title="←">
+        ← Anterior
+      </button>
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
+        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+      </button>
+      <button onClick={goNext} style={sessionShellStyles.ctrlBtn} title="→">
+        {stepIdx + 1 >= routine.steps.length ? 'Terminar' : 'Siguiente →'}
+      </button>
+    </React.Fragment>
+  );
   return (
-    <div style={moveSessionStyles.root}>
-      <MoveHeader routine={routine} onExit={onExit}
-        extra={<Meta>Paso {stepIdx + 1} / {routine.steps.length}</Meta>} />
-
-      <div style={moveSessionStyles.center}>
-        <div style={{ textAlign: 'center', maxWidth: 620 }}>
-          <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
-          <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
-            Paso {stepIdx + 1} de {routine.steps.length}
-          </div>
-          <h1 style={{
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-            fontSize: 56, fontWeight: 500,
-            lineHeight: 1.05, margin: '0 0 20px',
-          }}>{step.name}</h1>
-          <p style={{
-            fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-            maxWidth: 460, margin: '0 auto 30px',
-          }}>{step.cue}</p>
-
-          <div style={{
-            fontSize: 128, fontFamily: 'var(--font-display)', fontStyle: 'italic',
-            fontWeight: 400, fontVariantNumeric: 'tabular-nums',
-            color: 'var(--ink)', lineHeight: 1,
-          }}>{String(remaining).padStart(2, '0')}</div>
-          <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
+    <SessionShell
+      routine={routine}
+      onExit={onExit}
+      headerExtra={<Meta>Paso {stepIdx + 1} / {routine.steps.length}</Meta>}
+      footer={footer}
+      hint="← → navegar · Espacio pausar · Esc salir"
+    >
+      <div style={{ textAlign: 'center', maxWidth: 620 }}>
+        <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
+        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
+          Paso {stepIdx + 1} de {routine.steps.length}
         </div>
+        <h1 style={{
+          ...displayItalic,
+          fontSize: 56, fontWeight: 500,
+          lineHeight: 1.05, margin: '0 0 20px',
+        }}>{step.name}</h1>
+        <p style={{
+          fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
+          maxWidth: 460, margin: '0 auto 30px',
+        }}>{step.cue}</p>
+
+        <div style={{
+          ...displayItalic,
+          fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
+          color: 'var(--ink)', lineHeight: 1,
+        }}>{String(remaining).padStart(2, '0')}</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
       </div>
 
-      <div style={moveSessionStyles.rulerWrap}>
-        <div style={moveSessionStyles.ruler}>
+      <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 10 }}>
           {routine.steps.map((s, i) => (
             <div key={i} style={{
               flex: s.dur,
@@ -278,54 +256,13 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           {routine.steps[stepIdx + 1] ? `Siguiente: ${routine.steps[stepIdx + 1].name}` : 'Último paso'}
         </div>
       </div>
-
-      <div style={moveSessionStyles.footer}>
-        <button onClick={goPrev} disabled={stepIdx === 0} style={moveSessionStyles.ctrlBtn} title="←">
-          ← Anterior
-        </button>
-        <button onClick={() => setPaused(p => !p)} style={moveSessionStyles.ctrlBtn} title="Espacio">
-          {paused ? '▶ Reanudar' : '❚❚ Pausar'}
-        </button>
-        <button onClick={goNext} style={moveSessionStyles.ctrlBtn} title="→">
-          {stepIdx + 1 >= routine.steps.length ? 'Terminar' : 'Siguiente →'}
-        </button>
-      </div>
-      <div style={{ position: 'absolute', bottom: 14, left: 0, right: 0, textAlign: 'center', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.6 }}>
-        ← → navegar · Espacio pausar · Esc salir
-      </div>
-    </div>
+    </SessionShell>
   );
 }
 
-function MoveHeader({ routine, onExit, extra }) {
-  return (
-    <div style={moveSessionStyles.header}>
-      <div>
-        <Meta>{routine.code}</Meta>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, margin: '2px 0 0', fontWeight: 500 }}>{routine.name}</h2>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        {extra}
-        <button onClick={() => onExit('exit')} style={moveSessionStyles.exitBtn}>× Salir</button>
-      </div>
-    </div>
-  );
-}
-
-function MoveStat({ label, value }) {
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        fontFamily: 'var(--font-display)', fontStyle: 'italic',
-        fontSize: 40, fontWeight: 500, lineHeight: 1,
-        color: 'var(--ink)',
-      }}>{value}</div>
-      <div style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>
-        {label}
-      </div>
-    </div>
-  );
-}
+/* MoveHeader y MoveStat (antes locales aquí) se fusionaron en sesión 26
+   con SessionHeader/Stat de Breathe en app/ui/SessionShell.jsx. Ver
+   docs/audits/audit-v0.12.7.md §3.1. */
 
 /* Glifo placeholder por paso — círculo con símbolo de categoría.
    Proyecta sensación de "ficha de biblioteca" hasta que tengamos ilustraciones reales. */
@@ -334,52 +271,23 @@ function StepGlyph({ tag, stepIdx }) {
   const sym = symbols[stepIdx % symbols.length];
   return (
     <div style={{
+      ...displayItalic,
       width: 72, height: 72, margin: '0 auto 20px',
       borderRadius: '50%',
       border: '1px dashed var(--move)',
       background: 'var(--move-soft)',
       display: 'grid', placeItems: 'center',
       color: 'var(--move)',
-      fontFamily: 'var(--font-display)',
       fontSize: 28,
-      fontStyle: 'italic',
     }}>
       {sym}
     </div>
   );
 }
 
-const moveSessionStyles = {
-  root: {
-    position: 'fixed', inset: 0,
-    background: 'var(--paper)',
-    zIndex: 90,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '28px 48px 40px',
-  },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  exitBtn: { fontSize: 13, color: 'var(--ink-2)', padding: '6px 10px' },
-  center: {
-    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  rulerWrap: { margin: '0 auto 20px', width: '100%', maxWidth: 640 },
-  ruler: {
-    display: 'flex', gap: 4,
-    alignItems: 'center',
-    height: 10,
-  },
-  footer: {
-    display: 'flex', gap: 12, justifyContent: 'center',
-  },
-  ctrlBtn: {
-    padding: '10px 22px',
-    fontSize: 13,
-    border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
-    background: 'var(--paper-2)',
-    color: 'var(--ink)',
-  },
-};
+/* moveSessionStyles local eliminado en sesión 26. El layout de sesión
+   vive ahora en app/ui/SessionShell.jsx (sessionShellStyles). */
 
-Object.assign(window, { MoveLibrary, MoveSession, MOVE_ROUTINES });
+/* Export a window: sólo lo consumido fuera del módulo.
+   MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
+Object.assign(window, { MoveLibrary, MoveSession });

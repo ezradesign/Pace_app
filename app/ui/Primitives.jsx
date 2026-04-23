@@ -4,6 +4,28 @@
 
 const { useEffect } = React;
 
+/* ============================================================
+   displayItalic — helper para el par inline más repetido del repo.
+
+   Audit v0.12.7 §3.3 detectó ~50 ocurrencias inline de
+     fontFamily: 'var(--font-display)', fontStyle: 'italic'
+   En sesión 26 (v0.12.8) se extrajo a este helper para que cada
+   cambio futuro al token viva en un único sitio. El patrón de uso
+   es spread dentro de un style inline, NO className, porque casi
+   todos los callsites ya co-locan otros estilos inline (fontSize,
+   color, margin, etc.) y romper eso forzaría refactor masivo.
+
+     <h2 style={{ ...displayItalic, fontSize: 22, margin: 0 }}>…</h2>
+
+   La clase CSS equivalente `.pace-display-italic` sigue declarada
+   en tokens.css por si un futuro consumidor prefiere la ruta
+   className; ambas rutas coexisten sin conflicto.
+   ============================================================ */
+const displayItalic = {
+  fontFamily: 'var(--font-display)',
+  fontStyle: 'italic',
+};
+
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle }) {
   useEffect(() => {
     if (!open) return;
@@ -222,4 +244,4 @@ if (!_paceAnimStyle) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });

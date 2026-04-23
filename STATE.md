@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.7 (sin bump — sesión 25 fue auditoría pura)
-**Última sesión:** #25 — 2026-04-23 · Auditoría interna (sin refactor)
-**Última actualización de este archivo:** 2026-04-23 · sesión 25
-**Build entregado:** `PACE_standalone.html` v0.12.7 (bit-a-bit el mismo que entregó sesión 24 — sesión 25 no tocó código fuente)
+**Versión actual:** v0.12.8
+**Última sesión:** #26 — 2026-04-23 · Refactor Fase 2 (4 ítems A de la auditoría)
+**Última actualización de este archivo:** 2026-04-23 · sesión 26
+**Build entregado:** `PACE_standalone.html` v0.12.8 (~349 KB, regenerado tras refactor)
 
 ---
 
@@ -21,105 +21,100 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.7, título actualizado |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.7 (regenerado con scroll asimétrico) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.8, título actualizado + carga de `SessionShell.jsx` |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.8 (regenerado tras refactor) |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.7 (drawer móvil con `min-height: calc(100dvh + 1px)` + `height: auto` para provocar auto-hide de la barra del navegador) |
-| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.6 (sin cambios desde sesión 23) |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.5 (sin cambios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.7 (solo bump de `PACE_VERSION`) |
-| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (sin cambios) |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (sin cambios) |
-| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (sin cambios) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios) |
+| `app/ui/SessionShell.jsx` | **NUEVO** — cáscara compartida de sesiones activas | v0.12.8 (extraída en sesión 26; absorbe duplicación top-1 Breathe↔Move) |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.8 (añadido helper `displayItalic`) |
+| `app/breathe/BreatheModule.jsx` | Módulo Respira | v0.12.8 (ramas prep/done delegan en SessionShell; ~175 líneas menos) |
+| `app/move/MoveModule.jsx` | Módulo Mueve | v0.12.8 (mismo patrón que Breathe; ~80 líneas menos) |
+| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 (limpieza de `CupIcon`/`BigCup` + callsites `supportCopyVariant` saneados) |
+| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 (export a `window` saneado: solo `PaceWordmark`) |
+| `app/extra/ExtraModule.jsx` | Módulo Estira | v0.12.8 (export saneado + `displayItalic`) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.8 (cambio menor: `displayItalic` en el timestamp) |
+| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.6 (sin cambios funcionales; pendiente `displayItalic` en 2 sitios multi-línea) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.8 (`displayItalic` en 3 sitios) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.8 (bump de `PACE_VERSION`) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.8 (`displayItalic` en el título) |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios; pendiente `displayItalic` multi-línea) |
 
 Backup rotado en esta sesión:
-`backups/PACE_standalone_v0.12.6_20260423.html` (el standalone de
-v0.12.6 antes de regenerar con scroll asimétrico). Quedan tres
-backups (`v0.12.3`, `v0.12.5`, `v0.12.6`) — margen cómodo frente
-a la regla "máximo 5".
+`backups/PACE_standalone_v0.12.7_20260423.html` (el standalone de
+v0.12.7 antes del refactor). 1 backup local tras la importación
+desde GitHub — margen cómodo frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 25 · v0.12.7 · Auditoría interna (sin refactor)**
+**Sesión 26 · v0.12.8 · Refactor Fase 2 (4 ítems A ejecutados)**
 
-Tras 24 sesiones acumulando código con varias features retiradas
-a medias (fonts s20, logo variants s19) y módulos con duplicación
-gemela (Breathe ↔ Move), antes de seguir añadiendo features
-(modales móvil, PWA, Lifetime, CTB) el usuario pidió una sesión
-de salud interna: auditoría escrita + plan de refactor priorizado.
+Ejecución disciplinada de los 4 ítems de prioridad A validados al
+cierre de la sesión 25 en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md).
+Regla no negociable respetada: **ningún cambio de comportamiento
+observable**. La app post-sesión 26 se ve y se comporta idéntica
+a v0.12.7.
 
-**Entregable único:** [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md)
-(informe de ~290 líneas con los 7 apartados solicitados:
-inventario, dead code, duplicación, inconsistencias, riesgos
-latentes, oportunidades de compresión, priorización).
+### Qué se hizo
 
-**Diagnóstico:** salud del repo buena. No hay bugs críticos ni
-"peso fantasma". El standalone de 349 KB es explicable byte a
-byte (código ~250 KB + PNG inlined ~103 KB). La deuda real está
-en duplicación entre módulos de sesión activa (Breathe ↔ Move) y
-en símbolos dormidos tras sustracciones acumuladas (CupIcon,
-BigCup, CowLogo*, supportCopyVariant, etc.).
+1. **`app/ui/SessionShell.jsx` extraído** — cáscara compartida de
+   sesiones activas. Absorbe la duplicación top-1 del repo:
+   `sessionStyles`/`moveSessionStyles` + `SessionHeader`/`MoveHeader` +
+   `Stat`/`MoveStat` + pantallas `prep`/`done`. API: `<SessionShell>`,
+   `<SessionPrep>`, `<SessionDone>`, `<SessionStat>`. BreatheModule
+   pasa de 740 a ~565 líneas; MoveModule de ~360 a ~280.
 
-### Decisión del usuario
-Tras evaluar contexto restante (🟡 medio-alto), el usuario
-optó por **cerrar sesión sin aplicar el refactor**. Motivos:
+2. **Support limpiado** — borrados `CupIcon` (17 líneas) y `BigCup`
+   (22 líneas) que no se renderizaban desde v0.12.2. Callsites que
+   pasaban `variant={state.supportCopyVariant}` a `<SupportIcon>` /
+   `<SupportHero>` saneados. Firma de `supportCopy()` sin argumento.
+   El campo `state.supportCopyVariant` se conserva por compat
+   localStorage (decisión ya documentada).
 
-- Lectura exhaustiva de 19 archivos ya había consumido margen.
-- Mejor dejar los 4 ítems prioridad A validados y listos para
-  sesión 26 que forzar ediciones con poco margen para cerrar bien.
-- El ítem #1 (SessionShell) cae naturalmente en la sesión 26-27
-  al adaptar modales móvil.
+3. **Exports a `window` saneados** — 17 símbolos innecesarios retirados
+   del namespace global entre Breathe, Move, Extra y CowLogo. Solo se
+   exponen los componentes realmente consumidos fuera del módulo
+   (`BreatheLibrary`/`BreatheSafety`/`BreatheSession`, `MoveLibrary`/
+   `MoveSession`, `ExtraLibrary`, `PaceWordmark`). Las variantes
+   `CowLogoLineal/Sello/Ilustrado` siguen vivas por compat legacy
+   pero internas.
 
-### Plan validado para sesión 26
-Atacar los 4 ítems de prioridad A — **ninguno cambia comportamiento
-observable**:
+4. **Helper `displayItalic` añadido** a `Primitives.jsx` y aplicado
+   en ~25 sitios de la misma línea. Quedan ~20 sitios multi-línea en
+   `WelcomeModule`, `Achievements` internos, `HydrateModule`, `main.jsx`
+   y `Sidebar.jsx` que se atacarán cuando sea conveniente (el helper
+   ya está disponible).
 
-1. **Extraer `SessionShell.jsx`** (fusionar `sessionStyles`/
-   `moveSessionStyles`, `SessionHeader`/`MoveHeader`, `Stat`/
-   `MoveStat`, pantallas prep/done). ~45 min. ~180 líneas ahorradas.
-2. **Limpiar Support**: borrar `CupIcon`, `BigCup`, callsites de
-   `supportCopyVariant`. ~15 min. ~62 líneas muertas.
-3. **Sanear exports a `window`** huérfanos (SessionHeader, Stat,
-   *_ROUTINES, CowLogoLineal/Sello/Ilustrado). ~15 min.
-4. **Helper `displayItalic = {…}`** para los ~50 sitios inline con
-   el par `fontFamily: 'var(--font-display)', fontStyle: 'italic'`.
-   ~35 min.
+### Resultado cuantitativo
+- **~115 líneas menos** en neto (Breathe+Move pierden ~255,
+  SessionShell aporta ~140).
+- **62 líneas de dead code** eliminadas (CupIcon + BigCup + callsites).
+- **17 símbolos globales** retirados del `window`.
+- **Un único sitio** donde vive el layout de sesión activa —
+  prepara el terreno para la adaptación de modales a móvil.
 
-Total estimado: ~1h50min. Bump previsto **v0.12.7 → v0.12.8**
-(patch — refactor conservador, sin cambio funcional).
+### Verificación
+- Preview de `PACE.html` y `PACE_standalone.html` limpia.
+- No hay imports rotos tras el saneo de exports (grep verificado).
+- No se probaron manualmente sesiones largas (rondas Wim Hof, Mueve
+  con flechas) — riesgo bajo, conservación de estructura JSX.
 
 ### Archivos
-- `docs/audits/audit-v0.12.7.md` — añadido (informe completo).
-- `docs/sessions/session-25-auditoria-refactor.md` — añadido.
-- `CHANGELOG.md` — fila de sesión 25 añadida (sin bump).
-- `STATE.md` — reescritura de "Última sesión" + backlog actualizado.
-- **Ningún archivo de código fuente tocado.**
-- **`PACE_standalone.html` NO regenerado** — es bit-a-bit el
-  mismo de la sesión 24.
+- **Nuevo:** `app/ui/SessionShell.jsx`.
+- **Modificados:** `PACE.html`, `state.jsx`, `Primitives.jsx`,
+  `BreatheModule.jsx`, `MoveModule.jsx`, `ExtraModule.jsx`,
+  `SupportModule.jsx`, `CowLogo.jsx`, `Achievements.jsx`,
+  `BreakMenu.jsx`, `FocusTimer.jsx`, `Sidebar.jsx`, `WeeklyStats.jsx`,
+  `TweaksPanel.jsx`, `Toast.jsx`.
+- **Docs:** `docs/sessions/session-26-refactor-fase2.md` añadido,
+  `CHANGELOG.md` ampliado, `STATE.md` reescrito.
+- **Standalone:** `PACE_standalone.html` regenerado (~349 KB);
+  backup `backups/PACE_standalone_v0.12.7_20260423.html`.
 
 ### Versión
-- `v0.12.7` (sin bump).
+- `v0.12.7` → **`v0.12.8`** (patch · refactor conservador).
 
-Detalle completo: [`docs/sessions/session-25-auditoria-refactor.md`](./docs/sessions/session-25-auditoria-refactor.md).
-
-### (Sesión 24 previa · para referencia rápida)
-**v0.12.7 · Scroll asimétrico — auto-hide recuperado**
-
-Scroll asimétrico por vista: home con `100dvh` puro (los 4
-botones siempre a la vista) + sidebar con `min-height: calc(100dvh
-+ 1px)` que fuerza 1px invisible de scroll latente, activando el
-auto-hide de la barra de URL del navegador y recuperando los
-~56-100px que el navegador puede ceder al contenido.
-
-Implementación: bloque `pace-sidebar-responsive-css` en
-`app/shell/Sidebar.jsx` dentro de `@media (max-width: 768px)`.
-`overflow-y:auto` conservado como red de seguridad para viewports
-patológicos.
-
-Detalle completo: [`docs/sessions/session-24-scroll-asimetrico.md`](./docs/sessions/session-24-scroll-asimetrico.md).
+Detalle completo: [`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
 
 ---
 
@@ -136,42 +131,36 @@ Detalle completo: [`docs/sessions/session-24-scroll-asimetrico.md`](./docs/sessi
   BreakMenu, Achievements, Stats, Tweaks, Welcome, Support) en
   móvil — probable próxima sesión (#25).
 
-### 🧹 Refactor quirúrgico validado (sesión 26 · prioridad A)
+### ✅ Refactor Fase 2 completado en sesión 26
 
-Informe completo: [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md).
-Sesión 25 solo entregó el plan; la ejecución es la siguiente sesión.
+Los 4 ítems de prioridad A del informe
+[`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md)
+se ejecutaron en sesión 26 (v0.12.8). Detalle en
+[`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
 
-Los 4 ítems a atacar en orden (ninguno cambia comportamiento observable):
+### 🛠️ Refactor aplazado (sesión 27 o más tarde · prioridad B/C)
 
-1. **Extraer `app/ui/SessionShell.jsx`** (~45 min) — fusiona
-   `sessionStyles`/`moveSessionStyles`, `SessionHeader`/`MoveHeader`,
-   `Stat`/`MoveStat`, pantallas `prep`/`done` idénticas entre
-   Breathe y Move. Ahorro ~180 líneas. Facilita el siguiente frente
-   (auditoría de modales móvil).
-2. **Limpiar Support** (~15 min) — borrar `CupIcon`, `BigCup` y
-   consumos de `state.supportCopyVariant`. Ahorro ~62 líneas muertas.
-3. **Sanear exports a `window`** (~15 min) — quitar `SessionHeader`,
-   `Stat`, `*_ROUTINES`, `CowLogoLineal/Sello/Ilustrado` del
-   namespace global (no son consumidos fuera de su módulo).
-4. **Helper `displayItalic = {…}`** (~35 min) — reemplaza ~50
-   invocaciones inline del par `fontFamily: 'var(--font-display)',
-   fontStyle: 'italic'` por un spread de objeto.
-
-Bump previsto v0.12.7 → **v0.12.8**.
-
-### 🛠️ Refactor aplazado (sesión 27 o más tarde · prioridad B)
-
-- `useKeyboardShortcuts` hook consolidado (5 bloques de keydown
+- **`displayItalic` en ~20 sitios multi-línea restantes** —
+  `WelcomeModule.jsx` (5), `Achievements.jsx` estilos internos (2),
+  `HydrateModule.jsx` (1), `main.jsx` (2), `Sidebar.jsx` (2),
+  `Stats.jsx` (1), `SupportModule.jsx` estilo heroIcon, más algunos
+  en FocusTimer tipo subtítulo. El helper ya está en Primitives;
+  la aplicación es mecánica y de bajo riesgo cuando se toque el
+  archivo por otro motivo.
+- **`useKeyboardShortcuts` hook consolidado** — 5 bloques de keydown
   casi idénticos entre BreakMenu, BreatheSession, MoveSession,
-  PaceApp, Modal).
-- Decisión de producto sobre `CowLogoLineal/Sello/Ilustrado` y
-  `PaceLockup` (retirar vs conservar por retro-compat).
-- `paceDate()` helper para consolidar local/UTC (inconsistencia
+  PaceApp, Modal.
+- **Trocear `BreatheModule.jsx`** (aún ~565 líneas tras el refactor,
+  supera el techo de 500 de `CLAUDE.md`). Media parte del trabajo ya
+  está hecha porque la sesión vive en SessionShell; quedaría separar
+  library + visual (BreathVisual) + getSequence en archivos propios.
+- **Decisión de producto sobre `CowLogoLineal/Sello/Ilustrado`** y
+  `PaceLockup` (retirar vs conservar por retro-compat localStorage
+  legacy).
+- **`paceDate()` helper** para consolidar local/UTC (inconsistencia
   teórica en state vs TweaksPanel, impacto cero).
-- Trocear `BreatheModule.jsx` (740 líneas, supera techo de 500 de
-  `CLAUDE.md`) en library + session.
-- Limpiar comentarios obsoletos pre-v0.12.x (Sidebar, FocusTimer).
-- Decisión de producto sobre `intention`, `reminders`, `font`
+- **Limpiar comentarios obsoletos pre-v0.12.x** (Sidebar, FocusTimer).
+- **Decisión de producto sobre `intention`, `reminders`, `font`**
   dormidos en state (pre-v1.0, requiere migración de localStorage).
 
 ### 🎯 Alto impacto · coste bajo
