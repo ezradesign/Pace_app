@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.6
-**Última sesión:** #23 — 2026-04-23 · DVH fit (encaje móvil con barra de URL)
-**Última actualización de este archivo:** 2026-04-23 · sesión 23
-**Build entregado:** `PACE_standalone.html` v0.12.6 (regenerado con `100dvh` + fallback `100vh` en sidebar y layout raíz)
+**Versión actual:** v0.12.7
+**Última sesión:** #24 — 2026-04-23 · Scroll asimétrico (auto-hide recuperado)
+**Última actualización de este archivo:** 2026-04-23 · sesión 24
+**Build entregado:** `PACE_standalone.html` v0.12.7 (regenerado con sidebar móvil `min-height: calc(100dvh + 1px)` para recuperar auto-hide de la barra del navegador)
 
 ---
 
@@ -21,29 +21,85 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.6, título actualizado |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.6 (regenerado con DVH fit) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.7, título actualizado |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.7 (regenerado con scroll asimétrico) |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.6 (drawer móvil usa `100dvh` con fallback `100vh`) |
-| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.6 (layout raíz `[data-pace-app-root]` con `100dvh`; inline `height` movido al bloque CSS) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.7 (drawer móvil con `min-height: calc(100dvh + 1px)` + `height: auto` para provocar auto-hide de la barra del navegador) |
+| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.6 (sin cambios desde sesión 23) |
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.5 (sin cambios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.6 (solo bump de `PACE_VERSION`) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.7 (solo bump de `PACE_VERSION`) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (sin cambios) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (sin cambios) |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (sin cambios) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios) |
 
 Backup rotado en esta sesión:
-`backups/PACE_standalone_v0.12.5_20260423.html` (el standalone de
-v0.12.5 antes de regenerar con DVH). El anterior
-(`PACE_standalone_v0.12.3_20260423.html`) se mantiene — quedan dos
-en `backups/`, margen amplio frente a la regla "máximo 5".
+`backups/PACE_standalone_v0.12.6_20260423.html` (el standalone de
+v0.12.6 antes de regenerar con scroll asimétrico). Quedan tres
+backups (`v0.12.3`, `v0.12.5`, `v0.12.6`) — margen cómodo frente
+a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 23 · v0.12.6 · DVH fit — encaje móvil con barra de URL**
+**Sesión 24 · v0.12.7 · Scroll asimétrico — auto-hide recuperado**
+
+Tras probar v0.12.6 en móvil real, el usuario reportó que la
+barra del navegador ya nunca se ocultaba (antes sí lo hacía al
+scrollear) y que la sidebar seguía con scroll interno. Causa
+única: con `100dvh` + `overflow:hidden` en el root, el documento
+pasa a medir exactamente lo visible, y el navegador móvil pierde
+la señal que usa para recoger su barra de URL.
+
+Solución propuesta por el propio usuario: **scroll asimétrico
+por vista**. La home sigue con `100dvh` puro (los 4 botones
+siempre visibles) y la sidebar pasa a `min-height: calc(100dvh
++ 1px)` con `height: auto`. Ese píxel extra invisible es
+suficiente para que el navegador detecte scroll y recoja la
+barra de URL al primer gesto. El contenido del drawer entonces
+respira los ~56-100px recuperados.
+
+### Implementación (una sola unidad CSS)
+- **`app/shell/Sidebar.jsx` · bloque `pace-sidebar-responsive-css`** —
+  dentro de `@media (max-width: 768px) [data-pace-sidebar]`, las
+  cuatro declaraciones de alto se sustituyen:
+  ```css
+  min-height: calc(100vh + 1px);   /* fallback antiguo */
+  min-height: calc(100dvh + 1px);  /* modernos */
+  height: auto;
+  max-height: none;
+  ```
+  `overflow-y:auto` se conserva como red de seguridad para
+  viewports patológicos (landscape muy bajo).
+- **`app/main.jsx`** — sin cambios. La regla `[data-pace-app-root]`
+  con `100dvh` (sesión 23) se queda. Gobierna la home y todas
+  las vistas de main, que deben caber sin scroll latente.
+
+### Coste conocido
+- Primer abrir del drawer con barra URL visible: aparece
+  encajado, un scroll corto recoge la barra y el drawer crece.
+  A partir del segundo uso se abre ya expandido.
+- El auto-hide requiere gesto real del usuario — es
+  comportamiento del navegador, no lo controla la app.
+
+### Cifras de identidad intactas
+- `MM:SS` y `0` en EB Garamond italic blindado.
+
+### Archivos
+- `app/shell/Sidebar.jsx` — cambio CSS del bloque responsive.
+- `app/state.jsx` — `PACE_VERSION` → `v0.12.7`.
+- `PACE.html` — title → v0.12.7.
+- `PACE_standalone.html` — regenerado (347 809 chars).
+- `backups/PACE_standalone_v0.12.6_20260423.html` — rotado.
+
+### Versión
+- `v0.12.6` → `v0.12.7`.
+
+Detalle completo: [`docs/sessions/session-24-scroll-asimetrico.md`](./docs/sessions/session-24-scroll-asimetrico.md).
+
+### (Sesión 23 previa · para referencia rápida)
+**v0.12.6 · DVH fit — encaje móvil con barra de URL**
 
 Sesión de cirujano que cierra el último caveat del responsive
 móvil de la sesión 22. El usuario observó desde el teléfono que
@@ -105,15 +161,14 @@ Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/sessio
 
 ### 🚨 Bloqueante pre-v1.0
 
-- ~~**Responsive móvil**~~ ✅ Resuelto en sesión 22 (v0.12.5) +
-  afinado en sesión 23 (v0.12.6 · DVH fit): sidebar fullscreen
-  desacoplada + home que cabe en ~375×812 sin scroll, y ahora
-  además **con barra de URL visible o no** gracias a `100dvh`
-  con fallback `100vh`. Próxima sesión: verificar que los modales
-  (Respira, Mueve, Achievements, Stats, Tweaks, Welcome) también
-  encajan en móvil; podrían necesitar el mismo tratamiento de
-  `data-*` + bloque CSS responsive (y posiblemente el mismo
-  patrón dvh si tienen reglas de alto fijadas a viewport).
+- ~~**Responsive móvil (home + sidebar)**~~ ✅ Resuelto en
+  sesiones 22-23-24 (v0.12.5 → v0.12.7). Home cabe en 375×812
+  sin scroll con o sin barra URL visible. Sidebar móvil tiene
+  scroll asimétrico (`min-height: calc(100dvh + 1px)`) que
+  recupera el auto-hide de la barra del navegador. Pendiente
+  auditar los **modales** (Respira, Mueve, Estira, Hidrátate,
+  BreakMenu, Achievements, Stats, Tweaks, Welcome, Support) en
+  móvil — probable próxima sesión (#25).
 
 ### 🎯 Alto impacto · coste bajo
 
@@ -133,6 +188,16 @@ Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/sessio
 
 ### 🎨 Medio plazo (requieren diseño previo)
 
+- **PWA instalable** (~1 sesión) — `manifest.json` + iconos 192/
+  512/maskable + prompt de instalación + testing en iOS Safari y
+  Chrome Android. Respuesta "de verdad" al auto-hide de la barra
+  del navegador (la sesión 24 lo arregló a medias con scroll
+  asimétrico; PWA lo elimina de raíz porque la app se abre sin
+  barra ninguna). Además multiplicador de valor para el Lifetime:
+  "compras una vez, instalado a pantalla de inicio, funciona
+  offline, sin barra". Orden recomendado: después de modales
+  móviles (sesión 25) y antes de CTB / Lifetime. Ver también la
+  sección "Coste conocido" en `docs/sessions/session-24-scroll-asimetrico.md`.
 - **Ritmos semanal/mensual/anual** — evolución de `WeeklyStats`.
   Heatmap mensual + "año en pace" estilo GitHub contributions en
   paleta tierra.
@@ -180,6 +245,19 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
   por eso el div raíz de PaceApp delega sus dos declaraciones de
   alto al bloque CSS inyectado. Si sale un nuevo contenedor
   fullscreen, aplicar el mismo patrón. (Sesión 23.)
+- **Scroll asimétrico por vista en móvil.** No todos los
+  contenedores fullscreen deben comportarse igual: la home
+  (vista Foco con los 4 botones de actividad) usa `100dvh` puro
+  para que todo quepa sin scroll y el usuario vea siempre sus
+  accesos. La sidebar móvil usa `min-height: calc(100dvh + 1px)`
+  con `height: auto` para provocar scroll latente de un píxel
+  invisible — eso activa el auto-hide de la barra de URL del
+  navegador cuando el usuario desliza, recuperando ~56-100px
+  para el contenido del drawer. Es intencional que ambas reglas
+  coexistan. Si aparece una tercera vista fullscreen (modal
+  grande, por ejemplo), decidir en qué lado cae: "siempre visible
+  sin scroll" → dvh puro; "puede scrollear y tiene contenido
+  largo" → min-height + 1px. (Sesión 24.)
 - **Los estilos responsive se inyectan como `<style>` en `<head>`
   con selectores `[data-*]` y `!important`**, no como modificaciones
   de los objetos de estilos inline. Los objetos inline ya funcionan

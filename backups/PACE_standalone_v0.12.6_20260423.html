@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.7</title>
+  <title>PACE · Foco · Cuerpo — v0.12.6</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -220,7 +220,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.7';
+const PACE_VERSION = 'v0.12.6';
 
 const defaultState = {
   // Settings / Tweaks
@@ -1979,31 +1979,17 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
         position: fixed !important;
         inset: 0 !important;
         width: 100vw !important;
-        /* Alto del drawer fullscreen · SCROLL ASIMÉTRICO (sesión 24, v0.12.7).
-           A diferencia de la home (que usa 100dvh puro para que los 4
-           botones quepan siempre sin scroll), el sidebar FUERZA scroll
-           latente para que el navegador móvil oculte su barra de URL
-           y el contenido real (ritmo + sendero + logros + footer) tenga
-           espacio para respirar. Técnica: min-height 1px por encima
-           del viewport visible. Ese píxel extra activa el detector de
-           scroll del navegador → auto-hide de la barra → el usuario
-           recupera ~56-100px que el drawer aprovecha.
-             - min-height: calc(100dvh + 1px) con fallback 100vh+1px
-               — 1px invisible, no hay artefacto.
-             - height: auto — el drawer se dimensiona al contenido,
-               no al viewport. Sin límites artificiales.
-             - max-height: none — no limitamos arriba. Si el contenido
-               es más largo que el viewport, scroll natural.
-             - overflow-y: auto — red de seguridad para viewports
-               patológicos (landscape muy bajo).
-           Coste conocido: pequeño tirón la primera vez que se abre el
-           drawer (aparece con barra URL visible, el usuario desliza,
-           la barra se recoge, el drawer crece). A partir del segundo
-           uso con la barra ya oculta, se abre directamente expandido. */
-        min-height: calc(100vh + 1px) !important;
-        min-height: calc(100dvh + 1px) !important;
-        height: auto !important;
-        max-height: none !important;
+        /* Alto del drawer fullscreen: 100vh de fallback, 100dvh en
+           navegadores modernos. 100dvh (dynamic viewport height)
+           descuenta la barra de URL cuando está visible, así que el
+           contenido del sidebar cabe sin scroll independientemente
+           de si el usuario está con la barra del navegador desplegada
+           o plegada (iOS Safari 15.4+, Chrome Android 108+, Firefox 101+).
+           Sesión 23 · v0.12.6. */
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
         z-index: 60 !important;
         padding: 22px 22px !important;
         border-right: none !important;
