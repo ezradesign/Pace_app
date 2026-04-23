@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.3
-**Última sesión:** #20 — 2026-04-22 · Timer: aire sobre subtítulo + minutos personalizados ("Otro")
-**Última actualización de este archivo:** 2026-04-22 · sesión 20
-**Build entregado:** `PACE_standalone.html` (regenerado)
+**Versión actual:** v0.12.4 (solo documentación)
+**Última sesión:** #21 — 2026-04-23 · Briefing de dirección: gating, monetización Lifetime, CTB, Ritmos
+**Última actualización de este archivo:** 2026-04-23 · sesión 21
+**Build entregado:** `PACE_standalone.html` v0.12.3 (sin cambios — sesión de solo documentación)
 
 ---
 
@@ -40,70 +40,105 @@ desde GitHub en la próxima sesión y rota v0.12.0.
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 20 · v0.12.3 · Timer: aire + Otro + tipografía blindada +
-tweak retirado**
+**Sesión 21 · v0.12.4 · Briefing de dirección (solo documentación)**
 
-Sesión de pulido tipográfico y consolidación de identidad. Cuatro
-cambios concretos, todos en la misma línea: decidir bien una vez,
-quitar opciones que no aportan.
+Sesión estratégica, no se toca código. Se consolida en la memoria
+del proyecto la dirección de las próximas fases tras una
+conversación por voz con el usuario.
 
-### Timer pomodoro
-- **+20px de aire** entre el número gigante y el subtítulo italic
-  ("Concentración profunda"). El `marginTop` del subtítulo pasa de
-  10 → 30 en el aro default (20 → 40 en Number, 16 → 36 en Circle).
-  Los descendentes del número ya no tocan la línea inferior.
-- **Minutos personalizados.** `MinutesPicker` añade "Otro" como
-  etiqueta tipográfica hermana de "MIN" (uppercase 10px, spacing
-  0.18em, color `--ink-3`). Click expande a input inline 1–180 min.
-  Si hay valor custom activo, la etiqueta se convierte en pill
-  numeral y se integra con `15/25/35/45`. Enter/blur confirma,
-  Escape cancela. Spinners nativos ocultos vía CSS.
+### Decisiones principales
+- **Progresión 2+2+2:** la app arranca con solo 2 ejercicios
+  desbloqueados por módulo (Respira, Mueve, Estira). El resto se
+  desbloquea por logros o por Lifetime.
+- **Modelo de monetización = Lifetime híbrido** (~20 € pago único
+  + temporadas ~5 € + donaciones BMC). Descartada la suscripción
+  mensual por chocar con la filosofía "antídoto a la silla". Todo
+  sigue local — validación de licencia offline con clave firmada
+  (Gumroad/Lemon Squeezy, proveedor pendiente).
+- **Contenido premium:** CTB (Respiración en Trance Consciente,
+  sesiones largas 20-45 min), sesiones personalizadas en
+  Estira/Mueve, ejercicios exclusivos.
+- **Loop post-Pomodoro:** BreakMenu se reestructura para sugerir
+  explícitamente estirar/mover/hidratar tras un Pomodoro.
+- **Ritmos semanal/mensual/anual:** evolución de WeeklyStats con
+  heatmap mensual y "año en pace" estilo GitHub contributions en
+  paleta tierra.
+- **Responsive móvil (bloqueante):** sidebar fullscreen desacoplada
+  y home acoplada cabe en viewport ~375×812.
 
-### Tipografía blindada en cifras de identidad
-- **`streakNum` fijado a EB Garamond italic** con `font-family`
-  directa, no vía `var(--font-display)`. Ese "0" del contador de
-  racha es la firma tipográfica del sidebar — no debe cambiar
-  aunque el usuario elija otra tipografía display.
+### Descartado explícitamente
+- Biometría / wearables.
+- Suscripción mensual.
+- Backend propio para licencias.
+- OAuth Google Calendar (se queda solo `.ics` opcional).
 
-### Retirado del panel de Tweaks
-- **"Tipografía display"** (`font`): el panel queda con 4 ejes
-  (paleta, layout, timer, breath). La identidad tipográfica de
-  PACE ya está decidida: Cormorant Garamond default + EB Garamond
-  blindado para cifras de identidad. El usuario no tiene que
-  elegir entre 3 alternativas — decide PACE.
-
-### Conservado por compatibilidad
-- El campo `state.font` sigue en `state.jsx` y en `localStorage`
-  de usuarios existentes. Solo deja de ser editable.
-- `TweakSecretsWatcher` sigue escuchando `secret.mono` por si el
-  valor llega vía import JSON o devtools. Logro dormido pero vivo.
+### Archivos nuevos/actualizados
+- [`MONETIZATION.md`](./MONETIZATION.md) — NUEVO.
+- [`CONTENT.md`](./CONTENT.md) — sección "Progresión de desbloqueo"
+  + "Contenido premium".
+- [`ROADMAP.md`](./ROADMAP.md) — reescrito con nuevas prioridades.
+- `CHANGELOG.md` — entrada v0.12.4 (doc-only).
 
 ### Versión
-- `v0.12.2` → `v0.12.3` (patch: pulido tipográfico + simplificación
-  del panel, sin features nuevas).
+- `v0.12.3` → `v0.12.4` (documentación — sin cambios funcionales
+  ni regeneración de standalone).
 
-Detalle completo: [`docs/sessions/session-20-timer-aire-otro.md`](./docs/sessions/session-20-timer-aire-otro.md).
+Detalle completo: [`docs/sessions/session-21-briefing-direccion.md`](./docs/sessions/session-21-briefing-direccion.md).
 
 ---
 
 ## 📋 Backlog priorizado
 
-### 🏆 Deuda de producto
+### 🚨 Bloqueante pre-v1.0
 
-- **#9 (reducido a 13)** logros visibles como "Próximamente" sin trigger:
-  `master.*` (restantes del catálogo), `season.*` (10),
-  `first.ritual/cycle/day/plan/return`, `streak.14/60/365`,
-  `breathe.sessions.10/50`, `move.sessions.25`, `hydrate.week.perfect`,
-  `morning.5`, `explore.all.*` (3), `explore.chrome`. Los tweak-secrets
-  y `explore.tweaks` ya tienen trigger desde sesión 17. Siguientes
-  candidatos de fruta fácil: los 3 `first.*` (`ritual`, `cycle`,
-  `plan`) con datos ya en state, ~2h totales.
+- **Responsive móvil** — sidebar desacoplada fullscreen + home
+  cabe en viewport ~375×812. Prioridad máxima: el usuario reporta
+  problemas reales al usar la app desde el teléfono.
 
-### 🎨 Diseño pendiente (del roadmap corto)
+### 🎯 Alto impacto · coste bajo
 
-- Layout "Editorial" (tweak listado pero sin impl visual distinta al sidebar).
-- Mockups extensión Chrome (popup 340×480 + nueva pestaña).
-- Sonidos sutiles (hay toggle pero no archivos WAV).
+- **Loop post-Pomodoro** (~1-2h) — reestructurar `BreakMenu` para
+  sugerir explícitamente estirar/mover/hidratar tras un Pomodoro,
+  con rotación inteligente. Aprovecha componente ya existente.
+- **Progresión 2+2+2** (~2-3h) — añadir campo `access` a rutinas
+  y filtrar la biblioteca según estado desbloqueado. Placeholders
+  visuales para ejercicios bloqueados. Ver `CONTENT.md`.
+- **3 triggers de primeros pasos** (~2h) — `first.ritual`,
+  `first.cycle`, `first.plan`. Datos ya en `state.plan`, solo
+  falta el detector en `state.jsx`. Baja "Próximamente" 13→10.
+- **Rachas largas** (~1-2h) — `streak.14/60/365` dentro de
+  `updateStreak`. Impacto emocional alto.
+- **Sonidos sutiles** (~2h) — 3-4 WAV CC0 + hook `useSound`. El
+  toggle ya existe.
+
+### 🎨 Medio plazo (requieren diseño previo)
+
+- **Ritmos semanal/mensual/anual** — evolución de `WeeklyStats`.
+  Heatmap mensual + "año en pace" estilo GitHub contributions en
+  paleta tierra.
+- **CTB (premium)** — guion de 1 sesión + pista musical + mockup
+  de pantalla inmersiva antes de tocar código.
+- **Sesiones personalizadas Estira/Mueve (premium)** — mockup del
+  constructor de rutinas.
+- **Layout "Editorial"** — tweak listado sin impl visual.
+- **Mockups extensión Chrome** — popup 340×480 + nueva pestaña.
+
+### 🏆 Deuda de logros (sin cambios)
+
+Logros visibles como "Próximamente" sin trigger:
+`master.*` (restantes del catálogo), `season.*` (10),
+`first.ritual/cycle/day/plan/return`, `streak.14/60/365`,
+`breathe.sessions.10/50`, `move.sessions.25`,
+`hydrate.week.perfect`, `morning.5`, `explore.all.*` (3),
+`explore.chrome`.
+
+### 🔒 Pre-v1.0 monetización
+
+- Elegir proveedor de compra externa (Gumroad / Lemon Squeezy /
+  otro) y generar claves firmables.
+- Sistema de validación offline de clave con clave pública
+  embebida.
+- UI de "Introducir licencia" en Tweaks (discreta, sin upsell).
 
 ---
 
@@ -114,6 +149,28 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **Modelo de monetización = Lifetime híbrido.** ~20 € pago único
+  + temporadas ~5 € + donaciones BMC. Sin suscripción mensual,
+  sin backend, sin cuentas. Validación offline con clave firmada.
+  Cualquier nueva idea de monetización debe defenderse contra
+  este modelo. Detalle en `MONETIZATION.md`. (Sesión 21.)
+- **Los 2 ejercicios iniciales por módulo son la puerta de
+  entrada.** No cambiar sin migración explícita del localStorage
+  de usuarios existentes. Iniciales: `breathe.coherent.55` +
+  `breathe.box.4` (Respira); `move.chair.antidote` +
+  `move.neck.3` (Mueve); `extra.desk.pushups` +
+  `extra.posture.set` (Estira). (Sesión 21.)
+- **Cada ejercicio tiene campo `access`** con 5 valores posibles:
+  `free`, `locked.initial`, `locked.achievement`, `locked.both`,
+  `premium`. Al añadir contenido nuevo, asignar `access` desde el
+  primer momento para evitar migraciones dolorosas. (Sesión 21.)
+- **Biometría y wearables fuera de alcance.** Apple Health, Google
+  Fit, Apple Watch, Wear OS — todo descartado por el usuario. No
+  reintroducir sin decisión explícita. (Sesión 21.)
+- **El core gratuito debe ser útil por sí solo.** Pomodoro,
+  Hidrátate, 2 iniciales de cada módulo y la mayoría de logros
+  son y seguirán siendo gratis. El Lifetime añade valor, no lo
+  extrae. (Sesión 21.)
 - **Las cifras de identidad se blindan; el texto sigue al sistema.**
   Números grandes que actúan como firma visual de un módulo (el
   `25:00` del timer, el `0` del contador de racha) se fijan a una

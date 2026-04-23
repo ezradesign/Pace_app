@@ -1,6 +1,45 @@
 # PACE · Catálogo de contenido
 
 > Rutinas de cada módulo + taxonomía de 100 logros.
+>
+> Desde sesión 21, cada ejercicio tiene un campo `access` que
+> determina cómo se desbloquea. Ver
+> [`MONETIZATION.md`](./MONETIZATION.md) para el modelo.
+
+---
+
+## 🔓 Progresión de desbloqueo (sesión 21)
+
+### Ejercicios iniciales (2 por módulo · `free`)
+
+La app arranca con solo **2 ejercicios desbloqueados** por módulo
+(Respira, Mueve, Estira/Extra). El usuario elige su entrada al
+módulo sin parálisis de decisión. Al completarlos, el resto del
+catálogo empieza a desbloquearse progresivamente por logros.
+
+| Módulo | Inicial 1 | Inicial 2 |
+|---|---|---|
+| **Respira** | `breathe.coherent.55` · Coherente 5·5 | `breathe.box.4` · Box 4·4·4·4 |
+| **Mueve** | `move.chair.antidote` · Antídoto silla | `move.neck.3` · Cuello · 3 min |
+| **Estira/Extra** | `extra.desk.pushups` · Flexiones de escritorio | `extra.posture.set` · Postura reset |
+
+> Criterio de selección: (1) baja barrera de entrada — técnicas
+> que cualquiera puede hacer el primer día; (2) diversidad de
+> objetivo — una de calma + una más activa por módulo.
+
+### Tipos de `access`
+
+| Valor | Significado | Ejemplos |
+|---|---|---|
+| `free` | Disponible desde el inicio. | Los 2 iniciales de cada módulo. |
+| `locked.initial` | Se desbloquea al completar uno de los 2 iniciales. | Tercer y cuarto ejercicio del catálogo. |
+| `locked.achievement` | Desbloqueado por un logro específico. | Exclusivos de colección. |
+| `locked.both` | Por logro **o** por Lifetime. | Mayoría del catálogo avanzado. |
+| `premium` | Solo Lifetime. Sin ruta de logro. | CTB, sesiones personalizadas. |
+
+Decisión activa (sesión 21): los 2 iniciales nunca cambian de
+tipo — son la puerta de entrada. Si se reemplazan, hay que
+migrar localStorage de usuarios existentes.
 
 ---
 
@@ -223,3 +262,38 @@ Estética: sello circular redondeado, tinta oliva/terracota sobre crema, con peq
 - Los **20-30 primeros** (Primeros pasos + constancia básica + exploración) se pueden desbloquear.
 - El resto aparecen en la colección con sello grisaceo + texto "por descubrir" para incentivar la exploración.
 - Cada logro guarda: `{id, unlockedAt, contextNote?}` en `localStorage['pace.achievements']`.
+
+---
+
+## 🔒 Contenido premium (Lifetime · diseño pendiente)
+
+Planificado para v1.0 según [`MONETIZATION.md`](./MONETIZATION.md).
+Listado tentativo — se concretará al diseñar cada pieza.
+
+### Respira · CTB (Respiración en Trance Consciente)
+
+Sesiones largas guiadas (20-45 min) que combinan música ambiental,
+respiración rítmica prolongada, retenciones conscientes y
+visualizaciones. 4-6 sesiones en lanzamiento.
+
+| ID tentativo | Nombre | Duración | Estética |
+|---|---|---|---|
+| `ctb.manantial` | **Manantial** | 20 min | Agua, renovación |
+| `ctb.noche.larga` | **Noche larga** | 30 min | Previo a dormir |
+| `ctb.campo.abierto` | **Campo abierto** | 25 min | Energía contenida |
+| `ctb.ritual.breve` | **Ritual breve** | 15 min | Entrada a CTB |
+
+Todas `access: premium`. Sin ruta por logro.
+
+### Estira/Mueve · Sesiones personalizadas
+
+- `custom.sequence` — constructor de rutinas a medida (selección
+  de ejercicios + duración). Máximo 3 rutinas guardadas.
+- Ejercicios exclusivos que se sumarán al catálogo (aún por
+  diseñar, ~5-8 por módulo).
+
+### Modo "Retiro"
+
+Sesión combinada de 30-60 min mezclando respiración y movilidad
+con música opcional. Posible convergencia con CTB.
+
