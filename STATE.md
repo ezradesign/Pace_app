@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.7
-**Última sesión:** #24 — 2026-04-23 · Scroll asimétrico (auto-hide recuperado)
-**Última actualización de este archivo:** 2026-04-23 · sesión 24
-**Build entregado:** `PACE_standalone.html` v0.12.7 (regenerado con sidebar móvil `min-height: calc(100dvh + 1px)` para recuperar auto-hide de la barra del navegador)
+**Versión actual:** v0.12.7 (sin bump — sesión 25 fue auditoría pura)
+**Última sesión:** #25 — 2026-04-23 · Auditoría interna (sin refactor)
+**Última actualización de este archivo:** 2026-04-23 · sesión 25
+**Build entregado:** `PACE_standalone.html` v0.12.7 (bit-a-bit el mismo que entregó sesión 24 — sesión 25 no tocó código fuente)
 
 ---
 
@@ -43,117 +43,83 @@ a la regla "máximo 5".
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 24 · v0.12.7 · Scroll asimétrico — auto-hide recuperado**
+**Sesión 25 · v0.12.7 · Auditoría interna (sin refactor)**
 
-Tras probar v0.12.6 en móvil real, el usuario reportó que la
-barra del navegador ya nunca se ocultaba (antes sí lo hacía al
-scrollear) y que la sidebar seguía con scroll interno. Causa
-única: con `100dvh` + `overflow:hidden` en el root, el documento
-pasa a medir exactamente lo visible, y el navegador móvil pierde
-la señal que usa para recoger su barra de URL.
+Tras 24 sesiones acumulando código con varias features retiradas
+a medias (fonts s20, logo variants s19) y módulos con duplicación
+gemela (Breathe ↔ Move), antes de seguir añadiendo features
+(modales móvil, PWA, Lifetime, CTB) el usuario pidió una sesión
+de salud interna: auditoría escrita + plan de refactor priorizado.
 
-Solución propuesta por el propio usuario: **scroll asimétrico
-por vista**. La home sigue con `100dvh` puro (los 4 botones
-siempre visibles) y la sidebar pasa a `min-height: calc(100dvh
-+ 1px)` con `height: auto`. Ese píxel extra invisible es
-suficiente para que el navegador detecte scroll y recoja la
-barra de URL al primer gesto. El contenido del drawer entonces
-respira los ~56-100px recuperados.
+**Entregable único:** [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md)
+(informe de ~290 líneas con los 7 apartados solicitados:
+inventario, dead code, duplicación, inconsistencias, riesgos
+latentes, oportunidades de compresión, priorización).
 
-### Implementación (una sola unidad CSS)
-- **`app/shell/Sidebar.jsx` · bloque `pace-sidebar-responsive-css`** —
-  dentro de `@media (max-width: 768px) [data-pace-sidebar]`, las
-  cuatro declaraciones de alto se sustituyen:
-  ```css
-  min-height: calc(100vh + 1px);   /* fallback antiguo */
-  min-height: calc(100dvh + 1px);  /* modernos */
-  height: auto;
-  max-height: none;
-  ```
-  `overflow-y:auto` se conserva como red de seguridad para
-  viewports patológicos (landscape muy bajo).
-- **`app/main.jsx`** — sin cambios. La regla `[data-pace-app-root]`
-  con `100dvh` (sesión 23) se queda. Gobierna la home y todas
-  las vistas de main, que deben caber sin scroll latente.
+**Diagnóstico:** salud del repo buena. No hay bugs críticos ni
+"peso fantasma". El standalone de 349 KB es explicable byte a
+byte (código ~250 KB + PNG inlined ~103 KB). La deuda real está
+en duplicación entre módulos de sesión activa (Breathe ↔ Move) y
+en símbolos dormidos tras sustracciones acumuladas (CupIcon,
+BigCup, CowLogo*, supportCopyVariant, etc.).
 
-### Coste conocido
-- Primer abrir del drawer con barra URL visible: aparece
-  encajado, un scroll corto recoge la barra y el drawer crece.
-  A partir del segundo uso se abre ya expandido.
-- El auto-hide requiere gesto real del usuario — es
-  comportamiento del navegador, no lo controla la app.
+### Decisión del usuario
+Tras evaluar contexto restante (🟡 medio-alto), el usuario
+optó por **cerrar sesión sin aplicar el refactor**. Motivos:
 
-### Cifras de identidad intactas
-- `MM:SS` y `0` en EB Garamond italic blindado.
+- Lectura exhaustiva de 19 archivos ya había consumido margen.
+- Mejor dejar los 4 ítems prioridad A validados y listos para
+  sesión 26 que forzar ediciones con poco margen para cerrar bien.
+- El ítem #1 (SessionShell) cae naturalmente en la sesión 26-27
+  al adaptar modales móvil.
+
+### Plan validado para sesión 26
+Atacar los 4 ítems de prioridad A — **ninguno cambia comportamiento
+observable**:
+
+1. **Extraer `SessionShell.jsx`** (fusionar `sessionStyles`/
+   `moveSessionStyles`, `SessionHeader`/`MoveHeader`, `Stat`/
+   `MoveStat`, pantallas prep/done). ~45 min. ~180 líneas ahorradas.
+2. **Limpiar Support**: borrar `CupIcon`, `BigCup`, callsites de
+   `supportCopyVariant`. ~15 min. ~62 líneas muertas.
+3. **Sanear exports a `window`** huérfanos (SessionHeader, Stat,
+   *_ROUTINES, CowLogoLineal/Sello/Ilustrado). ~15 min.
+4. **Helper `displayItalic = {…}`** para los ~50 sitios inline con
+   el par `fontFamily: 'var(--font-display)', fontStyle: 'italic'`.
+   ~35 min.
+
+Total estimado: ~1h50min. Bump previsto **v0.12.7 → v0.12.8**
+(patch — refactor conservador, sin cambio funcional).
 
 ### Archivos
-- `app/shell/Sidebar.jsx` — cambio CSS del bloque responsive.
-- `app/state.jsx` — `PACE_VERSION` → `v0.12.7`.
-- `PACE.html` — title → v0.12.7.
-- `PACE_standalone.html` — regenerado (347 809 chars).
-- `backups/PACE_standalone_v0.12.6_20260423.html` — rotado.
+- `docs/audits/audit-v0.12.7.md` — añadido (informe completo).
+- `docs/sessions/session-25-auditoria-refactor.md` — añadido.
+- `CHANGELOG.md` — fila de sesión 25 añadida (sin bump).
+- `STATE.md` — reescritura de "Última sesión" + backlog actualizado.
+- **Ningún archivo de código fuente tocado.**
+- **`PACE_standalone.html` NO regenerado** — es bit-a-bit el
+  mismo de la sesión 24.
 
 ### Versión
-- `v0.12.6` → `v0.12.7`.
+- `v0.12.7` (sin bump).
+
+Detalle completo: [`docs/sessions/session-25-auditoria-refactor.md`](./docs/sessions/session-25-auditoria-refactor.md).
+
+### (Sesión 24 previa · para referencia rápida)
+**v0.12.7 · Scroll asimétrico — auto-hide recuperado**
+
+Scroll asimétrico por vista: home con `100dvh` puro (los 4
+botones siempre a la vista) + sidebar con `min-height: calc(100dvh
++ 1px)` que fuerza 1px invisible de scroll latente, activando el
+auto-hide de la barra de URL del navegador y recuperando los
+~56-100px que el navegador puede ceder al contenido.
+
+Implementación: bloque `pace-sidebar-responsive-css` en
+`app/shell/Sidebar.jsx` dentro de `@media (max-width: 768px)`.
+`overflow-y:auto` conservado como red de seguridad para viewports
+patológicos.
 
 Detalle completo: [`docs/sessions/session-24-scroll-asimetrico.md`](./docs/sessions/session-24-scroll-asimetrico.md).
-
-### (Sesión 23 previa · para referencia rápida)
-**v0.12.6 · DVH fit — encaje móvil con barra de URL**
-
-Sesión de cirujano que cierra el último caveat del responsive
-móvil de la sesión 22. El usuario observó desde el teléfono que
-el sidebar fullscreen y la home con los 4 botones sólo encajaban
-sin scroll cuando la barra de URL del navegador estaba oculta,
-porque usábamos `100vh` — unidad que siempre se resuelve al alto
-máximo del viewport. Solución: `100dvh` (dynamic viewport height)
-con fallback a `100vh`.
-
-### Implementación (una sola unidad CSS)
-- **Patrón CSS fallback + override**, sin user-agent sniffing:
-  ```css
-  height: 100vh;   /* fallback navegadores antiguos */
-  height: 100dvh;  /* navegadores modernos: prevalece */
-  ```
-- **`app/shell/Sidebar.jsx`** — dentro del bloque
-  `pace-sidebar-responsive-css`, el drawer fullscreen en móvil
-  usa ahora el patrón fallback en `height` y `max-height`.
-- **`app/main.jsx`** — nueva regla CSS **fuera de `@media`** en
-  el bloque `pace-main-responsive-css`:
-  `[data-pace-app-root] { height: 100vh; height: 100dvh; … }`.
-  Aplica desktop + móvil porque `100dvh === 100vh` cuando no hay
-  UI dinámica (desktop). El div raíz de `PaceApp` recibe
-  `data-pace-app-root` y pierde `height`/`maxHeight` del objeto
-  inline — delegados al CSS para poder expresar la cascada de
-  fallback (un objeto JS con una sola key por propiedad no
-  puede). El resto del inline (display/overflow/background/
-  position) se conserva.
-
-### Soporte `dvh` (abril 2026)
-iOS Safari 15.4+, Chrome Android 108+, Firefox 101+. ~97% del
-tráfico móvil. El ~3% restante sigue con fallback `100vh` — el
-mismo bug que v0.12.5, pero sin regresión visible.
-
-### Cifras de identidad intactas
-- `MM:SS` del timer y `0` de la racha en EB Garamond italic
-  blindado. Sin cambios en FocusTimer.jsx ni Sidebar.jsx
-  tipografía.
-
-### Archivos
-- `app/shell/Sidebar.jsx` — dentro del bloque responsive, dvh
-  fallback en `height`/`max-height` del drawer móvil.
-- `app/main.jsx` — nueva regla `[data-pace-app-root]` fuera de
-  `@media`; hook `data-pace-app-root` en el div raíz; `height`/
-  `maxHeight` inline retirados.
-- `app/state.jsx` — `PACE_VERSION` → `v0.12.6`.
-- `PACE.html` — title → v0.12.6.
-- `PACE_standalone.html` — regenerado.
-- `backups/PACE_standalone_v0.12.5_20260423.html` — rotado.
-
-### Versión
-- `v0.12.5` → `v0.12.6` (código + regeneración de standalone).
-
-Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/session-23-dvh-fit.md).
 
 ---
 
@@ -169,6 +135,44 @@ Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/sessio
   auditar los **modales** (Respira, Mueve, Estira, Hidrátate,
   BreakMenu, Achievements, Stats, Tweaks, Welcome, Support) en
   móvil — probable próxima sesión (#25).
+
+### 🧹 Refactor quirúrgico validado (sesión 26 · prioridad A)
+
+Informe completo: [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md).
+Sesión 25 solo entregó el plan; la ejecución es la siguiente sesión.
+
+Los 4 ítems a atacar en orden (ninguno cambia comportamiento observable):
+
+1. **Extraer `app/ui/SessionShell.jsx`** (~45 min) — fusiona
+   `sessionStyles`/`moveSessionStyles`, `SessionHeader`/`MoveHeader`,
+   `Stat`/`MoveStat`, pantallas `prep`/`done` idénticas entre
+   Breathe y Move. Ahorro ~180 líneas. Facilita el siguiente frente
+   (auditoría de modales móvil).
+2. **Limpiar Support** (~15 min) — borrar `CupIcon`, `BigCup` y
+   consumos de `state.supportCopyVariant`. Ahorro ~62 líneas muertas.
+3. **Sanear exports a `window`** (~15 min) — quitar `SessionHeader`,
+   `Stat`, `*_ROUTINES`, `CowLogoLineal/Sello/Ilustrado` del
+   namespace global (no son consumidos fuera de su módulo).
+4. **Helper `displayItalic = {…}`** (~35 min) — reemplaza ~50
+   invocaciones inline del par `fontFamily: 'var(--font-display)',
+   fontStyle: 'italic'` por un spread de objeto.
+
+Bump previsto v0.12.7 → **v0.12.8**.
+
+### 🛠️ Refactor aplazado (sesión 27 o más tarde · prioridad B)
+
+- `useKeyboardShortcuts` hook consolidado (5 bloques de keydown
+  casi idénticos entre BreakMenu, BreatheSession, MoveSession,
+  PaceApp, Modal).
+- Decisión de producto sobre `CowLogoLineal/Sello/Ilustrado` y
+  `PaceLockup` (retirar vs conservar por retro-compat).
+- `paceDate()` helper para consolidar local/UTC (inconsistencia
+  teórica en state vs TweaksPanel, impacto cero).
+- Trocear `BreatheModule.jsx` (740 líneas, supera techo de 500 de
+  `CLAUDE.md`) en library + session.
+- Limpiar comentarios obsoletos pre-v0.12.x (Sidebar, FocusTimer).
+- Decisión de producto sobre `intention`, `reminders`, `font`
+  dormidos en state (pre-v1.0, requiere migración de localStorage).
 
 ### 🎯 Alto impacto · coste bajo
 
