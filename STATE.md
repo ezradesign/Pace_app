@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.4 (solo documentación)
-**Última sesión:** #21 — 2026-04-23 · Briefing de dirección: gating, monetización Lifetime, CTB, Ritmos
-**Última actualización de este archivo:** 2026-04-23 · sesión 21
-**Build entregado:** `PACE_standalone.html` v0.12.3 (sin cambios — sesión de solo documentación)
+**Versión actual:** v0.12.5
+**Última sesión:** #22 — 2026-04-23 · Responsive móvil (bloqueante pre-v1.0)
+**Última actualización de este archivo:** 2026-04-23 · sesión 22
+**Build entregado:** `PACE_standalone.html` v0.12.5 (regenerado con sidebar fullscreen en móvil + home que cabe en 375×812)
 
 ---
 
@@ -21,69 +21,75 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.3, título actualizado |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.3 (regenerado con cambios del timer) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.5, título actualizado |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.5 (regenerado con responsive móvil) |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.3 (+20px aire subtítulo; `MinutesPicker` con "Otro" + input inline 1–180) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.5 (fullscreen móvil + `data-*` hooks + bloque CSS responsive) |
+| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.5 (bloque CSS responsive, ActivityBar grid 2×2 en móvil) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.5 (`aroFrame` con `min(56vh, 86vw, 520px)` para no desbordar) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.5 (solo bump de `PACE_VERSION`) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (sin cambios) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (sin cambios) |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (sin cambios) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.2 (sin cambios) |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.1 (sin cambios) |
 
-No se reimportaron los backups previos en esta sesión — siguen en git.
-Para rotar según la regla "máximo 5", baja los backups anteriores
-desde GitHub en la próxima sesión y rota v0.12.0.
+Backup rotado en esta sesión:
+`backups/PACE_standalone_v0.12.3_20260423.html`. Es el único en
+`backups/` por ahora — los siguientes se irán rotando según la
+regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 21 · v0.12.4 · Briefing de dirección (solo documentación)**
+**Sesión 22 · v0.12.5 · Responsive móvil (bloqueante pre-v1.0)**
 
-Sesión estratégica, no se toca código. Se consolida en la memoria
-del proyecto la dirección de las próximas fases tras una
-conversación por voz con el usuario.
+Primera sesión de código tras el briefing. Se resuelven los dos
+requisitos del usuario reportados desde el teléfono:
 
-### Decisiones principales
-- **Progresión 2+2+2:** la app arranca con solo 2 ejercicios
-  desbloqueados por módulo (Respira, Mueve, Estira). El resto se
-  desbloquea por logros o por Lifetime.
-- **Modelo de monetización = Lifetime híbrido** (~20 € pago único
-  + temporadas ~5 € + donaciones BMC). Descartada la suscripción
-  mensual por chocar con la filosofía "antídoto a la silla". Todo
-  sigue local — validación de licencia offline con clave firmada
-  (Gumroad/Lemon Squeezy, proveedor pendiente).
-- **Contenido premium:** CTB (Respiración en Trance Consciente,
-  sesiones largas 20-45 min), sesiones personalizadas en
-  Estira/Mueve, ejercicios exclusivos.
-- **Loop post-Pomodoro:** BreakMenu se reestructura para sugerir
-  explícitamente estirar/mover/hidratar tras un Pomodoro.
-- **Ritmos semanal/mensual/anual:** evolución de WeeklyStats con
-  heatmap mensual y "año en pace" estilo GitHub contributions en
-  paleta tierra.
-- **Responsive móvil (bloqueante):** sidebar fullscreen desacoplada
-  y home acoplada cabe en viewport ~375×812.
+1. **Sidebar desacoplada fullscreen en móvil (≤768px):** pasa de
+   `width:280px` (que dejaba el main visible a su derecha) a
+   `position:fixed; inset:0; width:100vw; height:100vh; z-index:60`.
+   Es un drawer fullscreen, no un panel lateral.
+2. **Home que cabe en ~375×812 sin scroll:** el aro del Pomodoro
+   ya no se desborda — `aroFrame` pasa de `min(56vh, 520px)` a
+   `min(56vh, 86vw, 520px)`. Las 4 actividades dejan de ser una
+   fila flex con `min-width:180px` (que requería scroll
+   horizontal) y pasan a grid 2×2 compacto. Padding del
+   main-content y de la topbar reducidos para ganar ancho.
 
-### Descartado explícitamente
-- Biometría / wearables.
-- Suscripción mensual.
-- Backend propio para licencias.
-- OAuth Google Calendar (se queda solo `.ics` opcional).
+### Implementación
+- Estilos responsive como `<style>` inyectados una sola vez en
+  `document.head`, con selectores `[data-*]` y `!important` sobre
+  los objetos de estilos inline. No se tocan los inline styles
+  (desktop queda idéntico). Ya se usaba este patrón en FocusTimer
+  para los spinners del input number.
+- `data-*` hooks añadidos en Sidebar, TopBar (tabs + iconos),
+  Main content, ActivityBar (grid + chips + labels + subs) y
+  handle flotante `≡`.
+- Hit targets ≥44px en móvil (chevron cerrar sidebar, handle `≡`,
+  iconos topbar).
+- En viewports `max-height:720px` (SE, 12 mini) se oculta el
+  sub-label de los chips para comprimir aún más la ActivityBar.
 
-### Archivos nuevos/actualizados
-- [`MONETIZATION.md`](./MONETIZATION.md) — NUEVO.
-- [`CONTENT.md`](./CONTENT.md) — sección "Progresión de desbloqueo"
-  + "Contenido premium".
-- [`ROADMAP.md`](./ROADMAP.md) — reescrito con nuevas prioridades.
-- `CHANGELOG.md` — entrada v0.12.4 (doc-only).
+### Cifras de identidad intactas
+- `MM:SS` del timer y `0` de la racha siguen en EB Garamond
+  italic blindado (decisión vigente desde sesión 20).
+
+### Archivos
+- `app/shell/Sidebar.jsx` — bloque CSS + `data-*` hooks.
+- `app/main.jsx` — bloque CSS + hooks en TopBar + ActivityBar +
+  handle.
+- `app/focus/FocusTimer.jsx` — `aroFrame` con `min(…, 86vw, …)`.
+- `app/state.jsx` — `PACE_VERSION` → `v0.12.5`.
+- `PACE.html` — title → v0.12.5.
+- `PACE_standalone.html` — regenerado.
+- `backups/PACE_standalone_v0.12.3_20260423.html` — rotado.
 
 ### Versión
-- `v0.12.3` → `v0.12.4` (documentación — sin cambios funcionales
-  ni regeneración de standalone).
+- `v0.12.4` → `v0.12.5` (código + regeneración de standalone).
 
-Detalle completo: [`docs/sessions/session-21-briefing-direccion.md`](./docs/sessions/session-21-briefing-direccion.md).
+Detalle completo: [`docs/sessions/session-22-responsive-movil.md`](./docs/sessions/session-22-responsive-movil.md).
 
 ---
 
@@ -91,9 +97,12 @@ Detalle completo: [`docs/sessions/session-21-briefing-direccion.md`](./docs/sess
 
 ### 🚨 Bloqueante pre-v1.0
 
-- **Responsive móvil** — sidebar desacoplada fullscreen + home
-  cabe en viewport ~375×812. Prioridad máxima: el usuario reporta
-  problemas reales al usar la app desde el teléfono.
+- ~~**Responsive móvil**~~ ✅ Resuelto en sesión 22 (v0.12.5):
+  sidebar fullscreen desacoplada + home que cabe en ~375×812 sin
+  scroll. Próxima sesión: verificar que los modales (Respira,
+  Mueve, Achievements, Stats, Tweaks, Welcome) también encajan en
+  móvil; podrían necesitar el mismo tratamiento de `data-*` +
+  bloque CSS responsive.
 
 ### 🎯 Alto impacto · coste bajo
 
@@ -149,6 +158,16 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **Los estilos responsive se inyectan como `<style>` en `<head>`
+  con selectores `[data-*]` y `!important`**, no como modificaciones
+  de los objetos de estilos inline. Los objetos inline ya funcionan
+  y son legibles en desktop; añadir lógica de breakpoints en JS
+  los complicaría sin ganar nada. Un bloque CSS por archivo con
+  `id` único (p.ej. `pace-sidebar-responsive-css`,
+  `pace-main-responsive-css`) evita duplicación. Patrón ya usado
+  para los spinners del input number en FocusTimer. Si hacen falta
+  nuevos tratamientos responsive (modales, etc.), seguir el mismo
+  patrón. (Sesión 22.)
 - **Modelo de monetización = Lifetime híbrido.** ~20 € pago único
   + temporadas ~5 € + donaciones BMC. Sin suscripción mensual,
   sin backend, sin cuentas. Validación offline con clave firmada.

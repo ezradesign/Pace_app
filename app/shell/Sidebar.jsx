@@ -9,9 +9,57 @@
        hace al usuario nuevo en el WelcomeModal, que la guarda en
        `state.intention`. Quitarla libera espacio vertical y deja que
        el botón de Donar gane prominencia en el footer).
+
+   RESPONSIVE (sesión 22 · v0.12.5):
+     En ≤768px el sidebar se desacopla y pasa a ser un drawer
+     fullscreen por encima del main (position:fixed; inset:0;
+     width:100vw). El bug previo era width:280px que dejaba un
+     trozo del main visible a la derecha en móvil. Ahora el main
+     sigue ocupando 100vw debajo pero el sidebar lo tapa entero
+     cuando se abre. Se añade un chevron grande (hit target
+     ≥44px) en esquina superior derecha para cerrar.
 */
 
 const { useState: useStateSB, useMemo: useMemoSB } = React;
+
+/* Inyecta reglas responsive del sidebar una sola vez.
+   Patrón ya usado en FocusTimer para spinners de number input.
+   Mantiene los inline styles intactos y sólo reescribe el layout
+   a partir del breakpoint móvil. */
+if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-sidebar-responsive-css';
+  s.textContent = `
+    @media (max-width: 768px) {
+      [data-pace-sidebar] {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        z-index: 60 !important;
+        padding: 22px 22px !important;
+        border-right: none !important;
+        overflow-y: auto !important;
+      }
+      /* Chevron de cerrar: hit target ≥44px en móvil, más notorio */
+      [data-pace-sidebar] [data-pace-sidebar-toggle] {
+        top: 14px !important;
+        right: 14px !important;
+        width: 44px !important;
+        height: 44px !important;
+        opacity: 1 !important;
+      }
+      /* Logo bar con un poco menos de altura mínima para que quepa
+         ritmo + sendero + logros + footer sin scroll en móviles medios.
+         Los márgenes negativos se mantienen — el logo respira igual. */
+      [data-pace-sidebar] [data-pace-sidebar-logobar] {
+        min-height: 84px !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 function Sidebar() {
   const [state, set] = usePace();
@@ -28,7 +76,7 @@ function Sidebar() {
   if (collapsed) return null;
 
   return (
-    <aside style={sidebarStyles.root}>
+    <aside style={sidebarStyles.root} data-pace-sidebar>
       {/* ============================================================
           BARRA HORIZONTAL SUPERIOR · logo + contadores
           ------------------------------------------------------------
@@ -44,10 +92,10 @@ function Sidebar() {
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
-      <button onClick={toggle} style={sidebarStyles.toggleFloating} title="Colapsar (⌘\\)" aria-label="Colapsar panel">
+      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title="Colapsar (⌘\\)" aria-label="Colapsar panel">
         <ChevronLeftIcon />
       </button>
-      <div style={sidebarStyles.logoBar}>
+      <div style={sidebarStyles.logoBar} data-pace-sidebar-logobar>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
