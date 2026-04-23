@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.12.8** | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [abajo ↓](#v0128--2026-04-23--refactor-fase-2) |
+| **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización (Pase mensual) | #26 | [abajo ↓](#v0129--2026-04-23--licencia--4ª-vía-de-monetización) |
+| v0.12.8 | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
 | **v0.12.7** | 2026-04-23 | Auditoría interna previa al refactor · sin cambios de código · informe en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md) | #25 | [abajo ↓](#v0127--2026-04-23--auditoria-interna) |
 | v0.12.7 | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra del navegador | #24 | [session-24-scroll-asimetrico.md](./docs/sessions/session-24-scroll-asimetrico.md) |
 | v0.12.6 | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | [session-23-dvh-fit.md](./docs/sessions/session-23-dvh-fit.md) |
@@ -41,6 +42,88 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.9] — 2026-04-23 — Licencia + 4ª vía de monetización
+
+Se cierra la decisión de licencia del código pendiente desde
+[`docs/proposals/license-analysis.md`](./docs/proposals/license-analysis.md)
+y, aprovechando la sesión, se amplía el modelo de monetización
+a **4 vías** añadiendo el **Pase mensual** como cuarta opción.
+
+**Regla no negociable respetada:** ningún cambio de comportamiento
+observable. No se toca lógica de negocio, render, ni state. La app
+post-v0.12.9 se ve y se comporta idéntica a v0.12.8.
+
+### Añadido
+- **`LICENSE`** en la raíz con el texto oficial de la **Elastic
+  License 2.0**. Copyright © 2026 ezradesign. Protege explícitamente
+  contra: (a) ofrecer PACE como servicio alojado/administrado, (b)
+  eludir la validación Lifetime/Pase, (c) retirar avisos de licencia,
+  copyright o marca. Permite leer, clonar, modificar, forkear para
+  uso personal/educativo y proponer PRs.
+- **Sección "Licencia"** en `README.md` con explicación en claro de
+  qué se puede y qué no, separación entre licencia del código (ELv2)
+  y licencias comerciales del producto (Lifetime, Pase, Temporadas),
+  y línea de contacto para usos alternativos (issue en GitHub).
+- **Cabeceras de copyright** en los 4 fuentes principales:
+  `app/state.jsx`, `app/main.jsx`, `app/ui/Primitives.jsx`,
+  `app/ui/SessionShell.jsx`. Patrón:
+  ```
+  /* PACE · Foco · Cuerpo
+     Copyright © 2026 ezradesign
+     Licensed under the Elastic License 2.0 — see LICENSE
+     ...
+  */
+  ```
+  El resto de archivos fuente (módulos, shell, ui secundario, etc.)
+  hereda la licencia a nivel de repo vía LICENSE. Las cabeceras
+  individuales se añadieron solo a los 4 fuentes "firma" del
+  proyecto según decisión explícita del usuario.
+- **Pase mensual** como 4ª vía de monetización en `MONETIZATION.md`:
+  3,99 € puntual con caducidad de 30 días, sin renovación automática,
+  sin backend. Se emite como clave firmada con `expiresAt`; la app
+  valida offline. Coexiste con Lifetime, Temporadas y donaciones BMC.
+  Pensado como onramp alternativo para quien no quiere comprometer
+  los 20 € del Lifetime de golpe.
+
+### Cambiado
+- **`MONETIZATION.md`** reescrito para reflejar 4 vías en vez de 3.
+  La filosofía no cambia: sigue sin haber backend, sin cuentas, sin
+  tracking, sin suscripción con renovación automática. Se matiza el
+  bullet "❌ Suscripción mensual" para aclarar que lo que se descarta
+  es la suscripción clásica con renovación + backend, no el pago
+  puntual con caducidad (que es lo que es el Pase).
+- **`README.md`** actualizado: versión v0.12.2 → v0.12.9, build
+  entregado correcto (`PACE_standalone.html` en vez del nombre viejo
+  `PACE_App_1_38.html`), tamaño del standalone actualizado, `LICENSE`
+  añadido al diagrama de estructura.
+- **`app/state.jsx`:** `PACE_VERSION` bump v0.12.8 → v0.12.9.
+- **`PACE.html`:** título `<title>` bump v0.12.8 → v0.12.9.
+- **`STATE.md`:** celda de versión actual, build entregado y entrada
+  de última sesión. Nueva **decisión activa** registrada al tope de
+  "⚠️ Decisiones activas" con la elección de ELv2 + razón.
+
+### Regenerado
+- **`PACE_standalone.html`** v0.12.9 vía `super_inline_html` con
+  las cabeceras y el bump aplicados.
+- **`backups/PACE_standalone_v0.12.8_20260423_1700.html`** — backup
+  del v0.12.8 antes de regenerar. Siguen 2 backups locales (v0.12.7
+  + v0.12.8), margen cómodo frente a la regla "máximo 5".
+
+### Resultado
+- **+1 archivo nuevo en raíz** (`LICENSE`, ~2,4 KB).
+- **~90 líneas cambiadas** repartidas entre README, MONETIZATION,
+  CHANGELOG, STATE y las 4 cabeceras. Todo documentación o metadata.
+- **0 cambios de lógica.** La app es funcionalmente idéntica.
+
+### Verificación
+- Preview de `PACE_standalone.html` regenerado: limpio.
+- `PACE_VERSION` consistente en state.jsx, PACE.html y título de
+  ventana.
+- Cabeceras añadidas **antes** del contenido original de cada archivo,
+  sin borrar comentarios descriptivos previos.
 
 ---
 

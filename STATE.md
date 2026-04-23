@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.8
-**Última sesión:** #26 — 2026-04-23 · Refactor Fase 2 (4 ítems A de la auditoría)
-**Última actualización de este archivo:** 2026-04-23 · sesión 26
-**Build entregado:** `PACE_standalone.html` v0.12.8 (~349 KB, regenerado tras refactor)
+**Versión actual:** v0.12.9
+**Última sesión:** #26 — 2026-04-23 · Refactor Fase 2 + cierre de licencia (ELv2) + 4ª vía de monetización
+**Última actualización de este archivo:** 2026-04-23 · sesión 26 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.12.9 (~349 KB, regenerado tras añadir LICENSE + cabeceras)
 
 ---
 
@@ -21,33 +21,82 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.8, título actualizado + carga de `SessionShell.jsx` |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.8 (regenerado tras refactor) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.9, título bumpeado |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.9 (regenerado tras añadir LICENSE + cabeceras) |
+| `LICENSE` | **NUEVO** — Elastic License 2.0 en la raíz | v0.12.9 (cierre de [`docs/proposals/license-analysis.md`](./docs/proposals/license-analysis.md)) |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/ui/SessionShell.jsx` | **NUEVO** — cáscara compartida de sesiones activas | v0.12.8 (extraída en sesión 26; absorbe duplicación top-1 Breathe↔Move) |
-| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.8 (añadido helper `displayItalic`) |
+| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas (extraída en sesión 26) | v0.12.9 (cabecera de copyright; sin cambios funcionales) |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.9 (cabecera de copyright; helper `displayItalic` ya presente) |
 | `app/breathe/BreatheModule.jsx` | Módulo Respira | v0.12.8 (ramas prep/done delegan en SessionShell; ~175 líneas menos) |
 | `app/move/MoveModule.jsx` | Módulo Mueve | v0.12.8 (mismo patrón que Breathe; ~80 líneas menos) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 (limpieza de `CupIcon`/`BigCup` + callsites `supportCopyVariant` saneados) |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 (export a `window` saneado: solo `PaceWordmark`) |
 | `app/extra/ExtraModule.jsx` | Módulo Estira | v0.12.8 (export saneado + `displayItalic`) |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.8 (cambio menor: `displayItalic` en el timestamp) |
-| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.6 (sin cambios funcionales; pendiente `displayItalic` en 2 sitios multi-línea) |
+| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 (cabecera de copyright; pendiente `displayItalic` en 2 sitios multi-línea) |
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.8 (`displayItalic` en 3 sitios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.8 (bump de `PACE_VERSION`) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.9 (bump de `PACE_VERSION` + cabecera de copyright) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.8 (`displayItalic` en el título) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios; pendiente `displayItalic` multi-línea) |
 
-Backup rotado en esta sesión:
-`backups/PACE_standalone_v0.12.7_20260423.html` (el standalone de
-v0.12.7 antes del refactor). 1 backup local tras la importación
-desde GitHub — margen cómodo frente a la regla "máximo 5".
+Backups rotados en esta sesión:
+- `backups/PACE_standalone_v0.12.7_20260423.html` (antes del refactor
+  Fase 2).
+- `backups/PACE_standalone_v0.12.8_20260423_1700.html` (antes de
+  añadir LICENSE + cabeceras + bump v0.12.9).
+
+2 backups locales. Margen cómodo frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 26 · v0.12.8 · Refactor Fase 2 (4 ítems A ejecutados)**
+**Sesión 26 · v0.12.8 → v0.12.9 · Refactor Fase 2 + cierre de licencia + 4ª vía de monetización**
+
+La sesión se desdobló en dos tramos:
+1. **Tramo A (mañana)** — v0.12.7 → v0.12.8 — refactor Fase 2 (4 ítems A).
+2. **Tramo B (tarde, 17:00)** — v0.12.8 → v0.12.9 — cierre de la decisión
+   de licencia + ampliación del modelo de monetización a 4 vías.
+
+---
+
+### Tramo B — v0.12.9 · Licencia + 4ª vía de monetización
+
+Se cierra la propuesta [`docs/proposals/license-analysis.md`](./docs/proposals/license-analysis.md)
+pendiente desde la redacción del análisis. El usuario aprobó
+**Elastic License 2.0** tras evaluar las 5 preguntas del apartado 7 del
+análisis. En la misma sesión se aprovechó para ampliar
+`MONETIZATION.md` de 3 vías (Lifetime + Temporadas + Donaciones) a
+**4 vías** añadiendo el **Pase mensual** (pago puntual con caducidad,
+sin renovación, sin backend — no es suscripción clásica).
+
+**Archivos tocados:**
+- **Nuevo:** `LICENSE` (Elastic License 2.0, copyright © 2026 ezradesign).
+- **README.md:** versión v0.12.2 → v0.12.9, nombre de build correcto,
+  tamaño actualizado, sección "Licencia" reescrita en claro,
+  `LICENSE` añadido al diagrama de estructura.
+- **MONETIZATION.md:** reescrito a 4 vías, bloque del Pase mensual
+  añadido, bloque "Cómo conviven las 4 vías", "❌ Suscripción mensual"
+  matizado (lo que se descarta es la suscripción con renovación +
+  backend, no el pago puntual con caducidad).
+- **Cabeceras de copyright** en `app/state.jsx`, `app/main.jsx`,
+  `app/ui/Primitives.jsx`, `app/ui/SessionShell.jsx`.
+- **`app/state.jsx`:** `PACE_VERSION` bump v0.12.8 → v0.12.9.
+- **`PACE.html`:** título bumpeado.
+- **`CHANGELOG.md`:** entrada v0.12.9 completa.
+- **`STATE.md`:** este archivo — celdas de versión, última sesión,
+  decisión activa nueva al tope.
+- **`PACE_standalone.html`:** regenerado con `super_inline_html`.
+- **`backups/PACE_standalone_v0.12.8_20260423_1700.html`:** backup
+  del v0.12.8 antes de la regeneración.
+
+**Regla respetada:** 0 cambios de comportamiento observable. Todo es
+documentación, metadata y cabeceras. La app v0.12.9 se ve y se
+comporta idéntica a v0.12.8.
+
+---
+
+### Tramo A — v0.12.8 · Refactor Fase 2 (4 ítems A ejecutados)
 
 Ejecución disciplinada de los 4 ítems de prioridad A validados al
 cierre de la sesión 25 en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md).
@@ -109,12 +158,18 @@ a v0.12.7.
 - **Docs:** `docs/sessions/session-26-refactor-fase2.md` añadido,
   `CHANGELOG.md` ampliado, `STATE.md` reescrito.
 - **Standalone:** `PACE_standalone.html` regenerado (~349 KB);
-  backup `backups/PACE_standalone_v0.12.7_20260423.html`.
+  backup `backups/PACE_standalone_v0.12.7_20260423.html` (creado
+  en el tramo A local; en el snapshot 17:25 entregado aparece
+  solo el backup v0.12.8 del tramo B porque el del tramo A ya
+  estaba en GitHub).
 
 ### Versión
 - `v0.12.7` → **`v0.12.8`** (patch · refactor conservador).
+- `v0.12.8` → **`v0.12.9`** (patch · licencia sin cambio de comportamiento,
+  tramo B de la misma sesión).
 
-Detalle completo: [`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
+Detalle del tramo A: [`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
+Detalle del tramo B: este STATE + [`CHANGELOG.md`](./CHANGELOG.md#v0129--2026-04-23--licencia--4ª-vía-de-monetización).
 
 ---
 
@@ -212,11 +267,29 @@ Logros visibles como "Próximamente" sin trigger:
 
 ### 🔒 Pre-v1.0 monetización
 
-- Elegir proveedor de compra externa (Gumroad / Lemon Squeezy /
-  otro) y generar claves firmables.
+- Elegir proveedor de compra externa (Lemon Squeezy preferido
+  para UE como merchant of record, Gumroad como fallback) y
+  generar claves firmables por producto.
 - Sistema de validación offline de clave con clave pública
-  embebida.
-- UI de "Introducir licencia" en Tweaks (discreta, sin upsell).
+  embebida. 3 tipos de clave: `lifetime` · `pass` (con
+  `expiresAt`) · `season:<id>`.
+- **UI de "Introducir licencia"** en Tweaks — discreta, sin upsell.
+  Sub-bloques mínimos decididos en sesión 26:
+  · Estado actual (línea informativa: "Pase activo · caduca el X").
+  · Aviso silencioso cuando queden ≤ 3 días ("Si quieres seguir
+    con el contenido premium, puedes conseguir otro") + botón
+    "Conseguir otro Pase".
+  · Estado "expirado" con frase amable ("Los logros ganados
+    siguen contigo") + botón "Conseguir un Pase".
+  · **NO** contador agresivo, **NO** modal al abrir la app, **NO**
+    badge rojo. Zero-presión como el resto del producto.
+- **Semántica del Pase:** no se "renueva", se **vuelve a comprar**.
+  El botón abre Lemon Squeezy en pestaña nueva → pago → clave nueva
+  por email → se pega en el mismo sitio. Misma UX que la primera
+  compra. (Decisión de sesión 26: no hay renovación automática
+  porque rompería "todo local".)
+- Dominio: `pace.app` ocupado. Evaluar alternativas — ver
+  "Dominio pendiente" más abajo.
 
 ---
 
@@ -227,6 +300,37 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **Código bajo Elastic License 2.0 desde v0.12.9.** Source-available
+  (no OSI-approved) — elección consciente, alineada con el modelo
+  comercial Lifetime + Pase + Temporadas. Permite leer, clonar,
+  modificar y forkear para uso personal / educativo / experimental +
+  proponer PRs. Prohíbe (a) ofrecer PACE o una versión modificada
+  **como servicio alojado o administrado** a terceros, (b) **eludir
+  la validación** Lifetime/Pase, (c) **retirar avisos** de licencia,
+  copyright o marca. El Lifetime, el Pase mensual y las Temporadas
+  son licencias **comerciales separadas** del producto compilado, no
+  licencias del código. Si surge alguna necesidad de licenciar el
+  código bajo otros términos (ej: uso interno de una organización que
+  no encaje con ELv2), el canal es abrir un issue en GitHub. La
+  licencia puede evolucionar hacia adelante siendo el copyright
+  holder único (`ezradesign`) pero no se revoca sobre versiones ya
+  emitidas. Razonamiento completo y 5 preguntas del apartado 7 del
+  análisis respondidas en
+  [`docs/proposals/license-analysis.md`](./docs/proposals/license-analysis.md)
+  (documento vigente hasta que se marque como histórico). (Sesión 26,
+  tramo B.)
+- **Modelo de monetización ampliado a 4 vías.** Lifetime (~20 €
+  pago único) + **Pase mensual (3,99 € pago puntual con caducidad
+  de 30 días, sin renovación automática)** + Temporadas (~5 €
+  pago puntual, contenido permanente) + Donaciones BMC. El Pase se
+  añade en sesión 26 como onramp alternativo al Lifetime para quien
+  prefiere compromisos pequeños. **Regla técnica vigente:** ni el
+  Pase ni ninguna otra vía puede requerir backend ni validación
+  online — todo se resuelve con claves firmadas offline que incluyen
+  `expiresAt` cuando aplica. Si alguien propone "suscripción de
+  verdad con renovación automática", tiene que defender por qué se
+  rompe el pilar "todo local". Detalle en `MONETIZATION.md`.
+  (Sesión 26, tramo B, extiende decisión de sesión 21.)
 - **Los altos de viewport se declaran con fallback `100vh` +
   override `100dvh`**, no sólo una de las dos. `vh` se resuelve
   al alto máximo (barra URL oculta) y descuadra el layout cuando
@@ -473,6 +577,34 @@ https://github.com/ezradesign/Pace_app y lee STATE.md
 antes de tocar nada. Tarea de hoy: [elegir de la lista].
 [Incluye binarios: app/ui/pace-logo.png]
 ```
+
+---
+
+## 🌐 Dominio pendiente
+
+`pace.app` está ocupado (comprobado en sesión 26). Candidatos
+razonables a evaluar antes de v1.0 — no hace falta decidir ya,
+pero sí reservar uno cuanto antes para que no lo pillen:
+
+- **Con TLD alternativo** (mismo nombre, otra extensión): `pace.so`,
+  `pace.co`, `pace.xyz`, `pace.me`.
+- **Con palabra añadida** (mantienes "pace" legible): `usepace.app`,
+  `getpace.app`, `pace.tools`, `pace.day`, `pace.works`.
+- **Con subtítulo del producto** (refuerza la identidad "Foco·Cuerpo"):
+  `paceritual.com`, `pacecalm.app`, `paceflow.app`.
+- **Nombre compuesto** (si quieres diferenciación fuerte):
+  `pacedesk.app`, `officepace.app`, `sitpace.app`.
+
+**Criterios a respetar al elegir:**
+- `.app` fuerza HTTPS automático — bueno para confianza.
+- Evitar guiones y números.
+- Comprobar disponibilidad simultánea en GitHub / X / Instagram
+  si vas a hacer marca.
+- Registrar en un proveedor serio (Porkbun o Cloudflare Registrar
+  son los más baratos y honestos; evitar GoDaddy).
+
+**Decisión a cerrar antes de v1.0.** Mientras, Netlify ya sirve
+el proyecto desde un subdominio — suficiente para desarrollo.
 
 ---
 

@@ -1,5 +1,8 @@
-/* PACE · Primitivos UI compartidos
-   Modal, Card, Tag, Button, Divider, Meta
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Primitivos UI compartidos: Modal, Card, Tag, Button, Divider, Meta.
 */
 
 const { useEffect } = React;

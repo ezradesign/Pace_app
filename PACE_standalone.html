@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.8</title>
+  <title>PACE · Foco · Cuerpo — v0.12.9</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -213,14 +213,17 @@ input, textarea { font-family: inherit; color: inherit; }
        4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
        5. main.jsx  → monta <PaceApp/> en #root
   -->
-  <script type="text/babel">/* PACE · Estado global
-   Simple store con useSyncExternalStore + localStorage
+  <script type="text/babel">/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Estado global: simple store con useSyncExternalStore + localStorage.
 */
 
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.8';
+const PACE_VERSION = 'v0.12.9';
 
 const defaultState = {
   // Settings / Tweaks
@@ -583,8 +586,11 @@ Object.assign(window, {
 });
 </script>
 
-  <script type="text/babel">/* PACE · Primitivos UI compartidos
-   Modal, Card, Tag, Button, Divider, Meta
+  <script type="text/babel">/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Primitivos UI compartidos: Modal, Card, Tag, Button, Divider, Meta.
 */
 
 const { useEffect } = React;
@@ -831,8 +837,12 @@ if (!_paceAnimStyle) {
 
 Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
 </script>
-  <script type="text/babel">/* PACE · SessionShell — cáscara compartida de sesiones activas
-   ============================================================
+  <script type="text/babel">/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   SessionShell — cáscara compartida de sesiones activas
+   =====================================================
    Extraído en sesión 26 (v0.12.8) desde la duplicación detectada entre
    Breathe y Move en el informe `docs/audits/audit-v0.12.7.md`:
      - sessionStyles / moveSessionStyles (idénticos salvo gap)
@@ -5535,7 +5545,11 @@ const tweaksStyles = {
 Object.assign(window, { TweaksPanel, TweakSecretsWatcher });
 </script>
 
-  <script type="text/babel">/* PACE · Main orchestrator
+  <script type="text/babel">/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Main orchestrator.
    Monta todo: Sidebar + FocusTimer + modales de librerías + sesiones
 
    RESPONSIVE (sesión 22 · v0.12.5):
