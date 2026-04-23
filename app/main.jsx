@@ -27,6 +27,20 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
   const s = document.createElement('style');
   s.id = 'pace-main-responsive-css';
   s.textContent = `
+    /* Alto del contenedor raíz: 100vh de fallback + 100dvh en navegadores
+       modernos. 100dvh (dynamic viewport height) se recalcula cuando la
+       barra de URL móvil aparece/desaparece, así que la app siempre
+       encaja en el espacio real visible en vez de quedarse atada al
+       alto máximo (con URL oculta) como hace 100vh. En desktop 1920×1080
+       100dvh === 100vh — cero impacto. Fallback garantiza que navegadores
+       antiguos (pre-iOS 15.4 / Chrome 107 / Firefox 100) siguen usando vh.
+       Sesión 23 · v0.12.6. */
+    [data-pace-app-root] {
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100vh;
+      max-height: 100dvh;
+    }
     @media (max-width: 768px) {
       [data-pace-topbar] {
         padding: 10px 12px !important;
@@ -205,10 +219,14 @@ function PaceApp() {
   };
 
   return (
-    <div style={{
+    /* NOTA sesión 23: `height` y `maxHeight` se delegan al bloque CSS
+       inyectado [data-pace-app-root] arriba. Permite fallback vh →
+       override dvh que los objetos de estilos inline no pueden
+       expresar (una sola key por propiedad). El resto de estilos
+       (display, overflow, background, position) se quedan inline
+       porque no necesitan fallback cascada. */
+    <div data-pace-app-root style={{
       display: 'flex',
-      height: '100vh',
-      maxHeight: '100vh',
       overflow: 'hidden',
       background: 'var(--paper)',
       position: 'relative',

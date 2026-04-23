@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.5
-**Última sesión:** #22 — 2026-04-23 · Responsive móvil (bloqueante pre-v1.0)
-**Última actualización de este archivo:** 2026-04-23 · sesión 22
-**Build entregado:** `PACE_standalone.html` v0.12.5 (regenerado con sidebar fullscreen en móvil + home que cabe en 375×812)
+**Versión actual:** v0.12.6
+**Última sesión:** #23 — 2026-04-23 · DVH fit (encaje móvil con barra de URL)
+**Última actualización de este archivo:** 2026-04-23 · sesión 23
+**Build entregado:** `PACE_standalone.html` v0.12.6 (regenerado con `100dvh` + fallback `100vh` en sidebar y layout raíz)
 
 ---
 
@@ -21,75 +21,83 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.5, título actualizado |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.5 (regenerado con responsive móvil) |
+| `PACE.html` | Entry point de desarrollo modular | v0.12.6, título actualizado |
+| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.6 (regenerado con DVH fit) |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.5 (fullscreen móvil + `data-*` hooks + bloque CSS responsive) |
-| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.5 (bloque CSS responsive, ActivityBar grid 2×2 en móvil) |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.5 (`aroFrame` con `min(56vh, 86vw, 520px)` para no desbordar) |
-| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.5 (solo bump de `PACE_VERSION`) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.6 (drawer móvil usa `100dvh` con fallback `100vh`) |
+| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.6 (layout raíz `[data-pace-app-root]` con `100dvh`; inline `height` movido al bloque CSS) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.5 (sin cambios) |
+| `app/state.jsx` | Store global + rollover + toast buffer | v0.12.6 (solo bump de `PACE_VERSION`) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.2 (sin cambios) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks | v0.12.2 (sin cambios) |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.2 (sin cambios) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios) |
 
 Backup rotado en esta sesión:
-`backups/PACE_standalone_v0.12.3_20260423.html`. Es el único en
-`backups/` por ahora — los siguientes se irán rotando según la
-regla "máximo 5".
+`backups/PACE_standalone_v0.12.5_20260423.html` (el standalone de
+v0.12.5 antes de regenerar con DVH). El anterior
+(`PACE_standalone_v0.12.3_20260423.html`) se mantiene — quedan dos
+en `backups/`, margen amplio frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 22 · v0.12.5 · Responsive móvil (bloqueante pre-v1.0)**
+**Sesión 23 · v0.12.6 · DVH fit — encaje móvil con barra de URL**
 
-Primera sesión de código tras el briefing. Se resuelven los dos
-requisitos del usuario reportados desde el teléfono:
+Sesión de cirujano que cierra el último caveat del responsive
+móvil de la sesión 22. El usuario observó desde el teléfono que
+el sidebar fullscreen y la home con los 4 botones sólo encajaban
+sin scroll cuando la barra de URL del navegador estaba oculta,
+porque usábamos `100vh` — unidad que siempre se resuelve al alto
+máximo del viewport. Solución: `100dvh` (dynamic viewport height)
+con fallback a `100vh`.
 
-1. **Sidebar desacoplada fullscreen en móvil (≤768px):** pasa de
-   `width:280px` (que dejaba el main visible a su derecha) a
-   `position:fixed; inset:0; width:100vw; height:100vh; z-index:60`.
-   Es un drawer fullscreen, no un panel lateral.
-2. **Home que cabe en ~375×812 sin scroll:** el aro del Pomodoro
-   ya no se desborda — `aroFrame` pasa de `min(56vh, 520px)` a
-   `min(56vh, 86vw, 520px)`. Las 4 actividades dejan de ser una
-   fila flex con `min-width:180px` (que requería scroll
-   horizontal) y pasan a grid 2×2 compacto. Padding del
-   main-content y de la topbar reducidos para ganar ancho.
+### Implementación (una sola unidad CSS)
+- **Patrón CSS fallback + override**, sin user-agent sniffing:
+  ```css
+  height: 100vh;   /* fallback navegadores antiguos */
+  height: 100dvh;  /* navegadores modernos: prevalece */
+  ```
+- **`app/shell/Sidebar.jsx`** — dentro del bloque
+  `pace-sidebar-responsive-css`, el drawer fullscreen en móvil
+  usa ahora el patrón fallback en `height` y `max-height`.
+- **`app/main.jsx`** — nueva regla CSS **fuera de `@media`** en
+  el bloque `pace-main-responsive-css`:
+  `[data-pace-app-root] { height: 100vh; height: 100dvh; … }`.
+  Aplica desktop + móvil porque `100dvh === 100vh` cuando no hay
+  UI dinámica (desktop). El div raíz de `PaceApp` recibe
+  `data-pace-app-root` y pierde `height`/`maxHeight` del objeto
+  inline — delegados al CSS para poder expresar la cascada de
+  fallback (un objeto JS con una sola key por propiedad no
+  puede). El resto del inline (display/overflow/background/
+  position) se conserva.
 
-### Implementación
-- Estilos responsive como `<style>` inyectados una sola vez en
-  `document.head`, con selectores `[data-*]` y `!important` sobre
-  los objetos de estilos inline. No se tocan los inline styles
-  (desktop queda idéntico). Ya se usaba este patrón en FocusTimer
-  para los spinners del input number.
-- `data-*` hooks añadidos en Sidebar, TopBar (tabs + iconos),
-  Main content, ActivityBar (grid + chips + labels + subs) y
-  handle flotante `≡`.
-- Hit targets ≥44px en móvil (chevron cerrar sidebar, handle `≡`,
-  iconos topbar).
-- En viewports `max-height:720px` (SE, 12 mini) se oculta el
-  sub-label de los chips para comprimir aún más la ActivityBar.
+### Soporte `dvh` (abril 2026)
+iOS Safari 15.4+, Chrome Android 108+, Firefox 101+. ~97% del
+tráfico móvil. El ~3% restante sigue con fallback `100vh` — el
+mismo bug que v0.12.5, pero sin regresión visible.
 
 ### Cifras de identidad intactas
-- `MM:SS` del timer y `0` de la racha siguen en EB Garamond
-  italic blindado (decisión vigente desde sesión 20).
+- `MM:SS` del timer y `0` de la racha en EB Garamond italic
+  blindado. Sin cambios en FocusTimer.jsx ni Sidebar.jsx
+  tipografía.
 
 ### Archivos
-- `app/shell/Sidebar.jsx` — bloque CSS + `data-*` hooks.
-- `app/main.jsx` — bloque CSS + hooks en TopBar + ActivityBar +
-  handle.
-- `app/focus/FocusTimer.jsx` — `aroFrame` con `min(…, 86vw, …)`.
-- `app/state.jsx` — `PACE_VERSION` → `v0.12.5`.
-- `PACE.html` — title → v0.12.5.
+- `app/shell/Sidebar.jsx` — dentro del bloque responsive, dvh
+  fallback en `height`/`max-height` del drawer móvil.
+- `app/main.jsx` — nueva regla `[data-pace-app-root]` fuera de
+  `@media`; hook `data-pace-app-root` en el div raíz; `height`/
+  `maxHeight` inline retirados.
+- `app/state.jsx` — `PACE_VERSION` → `v0.12.6`.
+- `PACE.html` — title → v0.12.6.
 - `PACE_standalone.html` — regenerado.
-- `backups/PACE_standalone_v0.12.3_20260423.html` — rotado.
+- `backups/PACE_standalone_v0.12.5_20260423.html` — rotado.
 
 ### Versión
-- `v0.12.4` → `v0.12.5` (código + regeneración de standalone).
+- `v0.12.5` → `v0.12.6` (código + regeneración de standalone).
 
-Detalle completo: [`docs/sessions/session-22-responsive-movil.md`](./docs/sessions/session-22-responsive-movil.md).
+Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/session-23-dvh-fit.md).
 
 ---
 
@@ -97,12 +105,15 @@ Detalle completo: [`docs/sessions/session-22-responsive-movil.md`](./docs/sessio
 
 ### 🚨 Bloqueante pre-v1.0
 
-- ~~**Responsive móvil**~~ ✅ Resuelto en sesión 22 (v0.12.5):
-  sidebar fullscreen desacoplada + home que cabe en ~375×812 sin
-  scroll. Próxima sesión: verificar que los modales (Respira,
-  Mueve, Achievements, Stats, Tweaks, Welcome) también encajan en
-  móvil; podrían necesitar el mismo tratamiento de `data-*` +
-  bloque CSS responsive.
+- ~~**Responsive móvil**~~ ✅ Resuelto en sesión 22 (v0.12.5) +
+  afinado en sesión 23 (v0.12.6 · DVH fit): sidebar fullscreen
+  desacoplada + home que cabe en ~375×812 sin scroll, y ahora
+  además **con barra de URL visible o no** gracias a `100dvh`
+  con fallback `100vh`. Próxima sesión: verificar que los modales
+  (Respira, Mueve, Achievements, Stats, Tweaks, Welcome) también
+  encajan en móvil; podrían necesitar el mismo tratamiento de
+  `data-*` + bloque CSS responsive (y posiblemente el mismo
+  patrón dvh si tienen reglas de alto fijadas a viewport).
 
 ### 🎯 Alto impacto · coste bajo
 
@@ -158,6 +169,17 @@ trabajar. No son historia — son reglas vigentes. Si una se invalida,
 moverla a la sesión en la que cambió (`docs/sessions/session-NN-xxx.md`)
 con nota explícita y quitarla de aquí. Las más recientes primero.
 
+- **Los altos de viewport se declaran con fallback `100vh` +
+  override `100dvh`**, no sólo una de las dos. `vh` se resuelve
+  al alto máximo (barra URL oculta) y descuadra el layout cuando
+  la barra está visible; `dvh` se recalcula al espacio real. El
+  patrón CSS de dos líneas (`height: 100vh; height: 100dvh;`) usa
+  la cascada sin user-agent sniffing — el navegador antiguo
+  ignora la segunda, el moderno la aplica. Este patrón no cabe
+  en un objeto JS de estilos inline (una sola key por propiedad),
+  por eso el div raíz de PaceApp delega sus dos declaraciones de
+  alto al bloque CSS inyectado. Si sale un nuevo contenedor
+  fullscreen, aplicar el mismo patrón. (Sesión 23.)
 - **Los estilos responsive se inyectan como `<style>` en `<head>`
   con selectores `[data-*]` y `!important`**, no como modificaciones
   de los objetos de estilos inline. Los objetos inline ya funcionan
