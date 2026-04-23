@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.9</title>
+  <title>PACE · Foco · Cuerpo — v0.12.10</title>
   <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
@@ -192,6 +192,497 @@ input, textarea { font-family: inherit; color: inherit; }
   }
 }
 </style>
+  <style>/* ============================================================
+   PACE · Responsive móvil — modales
+   Copyright © 2026 ezradesign · Elastic License 2.0
+
+   Añadido en sesión 27 (v0.12.10).
+
+   ALCANCE: adaptar los 10 modales + las 3 fullscreens de sesión
+   al viewport móvil 375×812 sin romper desktop.
+
+   PATRÓN VIGENTE (sesiones 22/23/24):
+     · Breakpoint único: max-width 560px ("móvil").
+     · Selectores [data-pace-modal="NOMBRE"] o data-attrs semánticas.
+     · Se usa !important para ganar a los estilos inline de los
+       objetos JS existentes (no se tocan para no complicar la
+       legibilidad desktop).
+     · Altos en dvh con fallback vh — los dos en cascada.
+
+   ORGANIZACIÓN:
+     1. MODAL BASE (Primitives.jsx)
+     2. SESSION SHELL (SessionShell.jsx) — fullscreens activas
+     3. Librerías (cards de rutinas)
+     4. Modales específicos con cuadrículas: BreakMenu, Hydrate,
+        Achievements, WeeklyStats, Welcome, Support
+     5. TweaksPanel — de "floating corner" a "bottom sheet" móvil
+   ============================================================ */
+
+/* =====================================================
+   1. MODAL BASE — el shell de <Modal/> en Primitives.jsx
+   =====================================================
+   Modal es el contenedor común de casi todo. En desktop:
+     - overlay fullscreen con padding 24px
+     - inner box con padding var(--s-6)=32, maxHeight 85vh
+       y maxWidth variable (520/580/680/720/780/820/860).
+   Problemas en 375px:
+     · padding 24 + 32*2 = 88px sólo en aire → 287px de contenido.
+     · 85vh se corta cuando la barra URL iOS se muestra.
+     · El box se centra y no aprovecha todo el alto cuando
+       el contenido es largo (Achievements, BreatheLibrary).
+   Fix:
+     · overlay: padding lateral 12px, vertical 16px (80→38px útil).
+     · inner: padding 20px (vs 32px), maxHeight 92dvh con fallback,
+       width 100% (ya lo era), borderRadius grande sólo arriba para
+       reforzar el "bottom sheet feel" que sube desde abajo.
+     · Scroll suave con momentum iOS (-webkit-overflow-scrolling).
+     · X de cerrar más grande y con hit-target ≥ 44px.
+*/
+@media (max-width: 560px) {
+  /* Overlay del Modal — reducimos padding y pegamos abajo
+     para sensación de bottom-sheet cuando el contenido es largo. */
+  [data-pace-modal-overlay] {
+    padding: 16px 12px !important;
+    align-items: flex-end !important;
+  }
+
+  /* Inner del Modal — el "papel" que contiene el contenido. */
+  [data-pace-modal-inner] {
+    padding: 20px 18px !important;
+    max-height: 92vh !important;
+    max-height: 92dvh !important;
+    width: 100% !important;
+    border-radius: var(--r-lg) var(--r-lg) var(--r-md) var(--r-md) !important;
+    -webkit-overflow-scrolling: touch;
+    /* Hint visual de bottom sheet: un "handle" sutil arriba. */
+    position: relative !important;
+  }
+  [data-pace-modal-inner]::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 3px;
+    border-radius: 3px;
+    background: var(--line);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Botón X del modal: hit target accesible (≥44px).
+     Se mueve un poco más abajo para compensar el handle. */
+  [data-pace-modal-close] {
+    top: 14px !important;
+    right: 10px !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 22px !important;
+  }
+
+  /* Tag/Title/Subtitle del header del Modal: ajuste de tamaños
+     para que quepan sin desborde en 375px. */
+  [data-pace-modal-title] {
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+    padding-right: 40px; /* evita tocar la X */
+  }
+  [data-pace-modal-subtitle] {
+    font-size: 13px !important;
+    max-width: 100% !important;
+  }
+}
+
+/* =====================================================
+   2. SESSION SHELL — fullscreens activas (Respira/Mueve/Estira)
+   =====================================================
+   Padding desktop: '28px 48px 40px' — en móvil 48+48 = 96px
+   se come 25% del viewport.
+   El prep tiene un número 200px (item.prepCount) que revienta.
+   El done tiene h1 de 56px + stats de 40px.
+   BreatheSession activa tiene visual 260×260, número 44px,
+   pero también puede mostrar holdCounter 160px.
+   MoveSession tiene h1 de 56px, cue 17px, counter 128px.
+*/
+@media (max-width: 560px) {
+  [data-pace-session-root] {
+    padding: 20px 16px 80px !important; /* -32px lateral, +28px abajo para el footer */
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+
+  /* Header: meta + título de rutina. No se aplasta, pero
+     necesita un tamaño menor para que "extra" (ronda/paso)
+     quepa sin wrap. */
+  [data-pace-session-header] h2 {
+    font-size: 18px !important;
+  }
+  [data-pace-session-exit] {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+    min-height: 36px;
+    min-width: 44px;
+  }
+
+  /* El número gigante del prep: 200 → 132px en móvil. */
+  [data-pace-session-prep-number] {
+    font-size: 132px !important;
+  }
+  [data-pace-session-prep-copy] {
+    font-size: 17px !important;
+  }
+
+  /* Done: nombre de rutina + check circle. */
+  [data-pace-session-done-title] {
+    font-size: 40px !important;
+    line-height: 1.08 !important;
+  }
+  [data-pace-session-done-stats] {
+    gap: 24px !important;
+    flex-wrap: wrap;
+  }
+  [data-pace-session-done-stat-value] {
+    font-size: 32px !important;
+  }
+  [data-pace-session-done-copy] {
+    font-size: 16px !important;
+    max-width: 100% !important;
+  }
+  /* Círculo de check: 120 → 96px */
+  [data-pace-session-done-circle] {
+    width: 96px !important;
+    height: 96px !important;
+    margin-bottom: 20px !important;
+  }
+  [data-pace-session-done-circle] svg {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* BreatheSession active: el visual de respiración se encoge vía var.
+     visualStyles.wrap lee var(--breath-visual-size, 260px) —
+     aquí la sobreescribimos en el contexto de la sesión. */
+  [data-pace-session-root] {
+    --breath-visual-size: 200px;
+  }
+  /* Label grande "Inhala/Exhala" */
+  [data-pace-breath-label] {
+    font-size: 36px !important;
+  }
+  /* Countdown dentro */
+  [data-pace-breath-countdown] {
+    font-size: 22px !important;
+  }
+
+  /* BreatheSession hold: el reloj de apnea (160px → 108px). */
+  [data-pace-breath-hold] {
+    font-size: 108px !important;
+  }
+
+  /* MoveSession active: título de paso + cue + counter. */
+  [data-pace-move-step-title] {
+    font-size: 36px !important;
+    margin-bottom: 14px !important;
+  }
+  [data-pace-move-step-cue] {
+    font-size: 15px !important;
+    max-width: 100% !important;
+    margin-bottom: 22px !important;
+  }
+  [data-pace-move-step-counter] {
+    font-size: 88px !important;
+  }
+  [data-pace-move-glyph] {
+    width: 54px !important;
+    height: 54px !important;
+    font-size: 22px !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Footer con botones de control: pegado abajo, apilado si caben 2,
+     en línea si son 3 (Move: Prev/Pause/Next). */
+  [data-pace-session-footer] {
+    position: fixed !important;
+    left: 12px; right: 12px; bottom: 16px;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 0 !important;
+  }
+  [data-pace-session-footer] > button {
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+    min-height: 42px;
+    flex: 1 1 auto;
+    max-width: 160px;
+  }
+  [data-pace-session-hint] {
+    display: none !important; /* El hint es útil en desktop, confunde en móvil */
+  }
+}
+
+/* =====================================================
+   3. LIBRARIES — grids de tarjetas de rutinas
+   =====================================================
+   BreatheLibrary / MoveLibrary / ExtraLibrary y Achievements
+   usan grid con auto-fill minmax(260px,1fr). En 375px útiles
+   ≈ 320px, una sola columna siempre. Lo forzamos a 1 col limpia. */
+@media (max-width: 560px) {
+  [data-pace-routine-grid] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Cards más compactas en móvil — apuntamos a los hijos del grid */
+  [data-pace-routine-grid] > div {
+    padding: 14px 16px !important;
+  }
+  [data-pace-routine-grid] > div h4 {
+    font-size: 18px !important;
+  }
+
+  /* Achievements: seals minmax(128,1fr) → 3 columnas bien. */
+  [data-pace-seals-grid] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  [data-pace-seals-grid] > div {
+    padding: 10px 6px !important;
+  }
+}
+
+/* =====================================================
+   4. BREAK MENU — 3 opciones en grid
+   =====================================================
+   Desktop: 3 columnas iguales. Móvil: 1 columna con cards
+   de altura natural. Hint "Saltar esta pausa" + atajos abajo. */
+@media (max-width: 560px) {
+  [data-pace-breakmenu-grid] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin: 16px 0 !important;
+  }
+  [data-pace-breakmenu-grid] button {
+    padding: 18px 16px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+  [data-pace-breakmenu-grid] button > div:first-child {
+    /* El bloque del icono */
+    flex-shrink: 0;
+  }
+  [data-pace-breakmenu-foot] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  [data-pace-breakmenu-foot] button {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   5. HYDRATE — vasos + contador
+   =====================================================
+   Desktop: grid repeat(goal, 1fr) con 8 vasos = columnas de
+   ~60px cada una. En 375px eso se convierte en columnas de
+   ~36px: aceptable, pero el número 96px se sale con el "/8"
+   al lado. Lo reducimos y limitamos los vasos a 2 filas. */
+@media (max-width: 560px) {
+  [data-pace-hydrate-counter] {
+    font-size: 72px !important;
+  }
+  [data-pace-hydrate-counter] span {
+    font-size: 28px !important;
+  }
+  [data-pace-hydrate-glasses] {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+  [data-pace-hydrate-actions] {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+  }
+  [data-pace-hydrate-actions] button {
+    width: 100% !important;
+    min-height: 46px;
+  }
+}
+
+/* =====================================================
+   6. WEEKLY STATS — 4 totales + 4 gráficos
+   =====================================================
+   Desktop: grid-template-columns: repeat(4, 1fr). En 375px
+   cada celda quedaría a 70px: los números 28px se ven bien
+   pero la etiqueta "Hidrátate" se parte en 3 líneas. Forzamos
+   2×2 y agrandamos. Las barras de 64px de alto están OK. */
+@media (max-width: 560px) {
+  [data-pace-stats-totals] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  [data-pace-stats-totals] > div {
+    padding: 12px 12px !important;
+  }
+  [data-pace-stats-bars] {
+    height: 56px !important;
+  }
+}
+
+/* =====================================================
+   7. WELCOME MODAL — header de 2 columnas
+   =====================================================
+   Desktop: 140px + 1fr. En 375px el logo se queda fijo a
+   140px y el texto a un lado acaba a ~155px de ancho —
+   ilegible. Apilamos: logo arriba, título y lede abajo.
+   Valores siguen en fila (las 3 columnas se aprietan bien). */
+@media (max-width: 560px) {
+  [data-pace-welcome-header] {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    text-align: center;
+  }
+  [data-pace-welcome-header-left] {
+    align-items: center !important;
+  }
+  [data-pace-welcome-logo] {
+    max-width: 160px !important;
+  }
+  [data-pace-welcome-title] {
+    font-size: 22px !important;
+  }
+  [data-pace-welcome-lede] {
+    font-size: 13px !important;
+  }
+  /* Valores: más pequeños para que quepan los 3 */
+  [data-pace-welcome-values] > div > div:first-child {
+    font-size: 12px !important;
+  }
+  [data-pace-welcome-values] > div > div:last-child {
+    font-size: 9.5px !important;
+  }
+  /* Botón y skip en fila siguen ok, pero botón con hit-target mayor */
+  [data-pace-welcome-actions] button {
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   8. SUPPORT MODAL — valores + botones
+   =====================================================
+   Desktop: 3 valores + 2 botones en fila. En móvil los
+   valores siguen en fila (son cortos), los botones deben
+   apilarse. El hero cow 72px está ok, la tipografía del
+   título 32px hay que bajarla. */
+@media (max-width: 560px) {
+  [data-pace-support-hero] {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  [data-pace-support-title] {
+    font-size: 26px !important;
+  }
+  [data-pace-support-lede] {
+    font-size: 13px !important;
+  }
+  [data-pace-support-values] {
+    padding: 10px 6px !important;
+  }
+  [data-pace-support-values] > div > div:first-child {
+    font-size: 12.5px !important;
+  }
+  [data-pace-support-values] > div > div:last-child {
+    font-size: 9.5px !important;
+  }
+  [data-pace-support-cta] {
+    font-size: 13px !important;
+  }
+  [data-pace-support-actions] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  [data-pace-support-actions] button {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 48px;
+  }
+  [data-pace-support-footer] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-align: center;
+  }
+}
+
+/* =====================================================
+   9. BREATHE SAFETY MODAL
+   =====================================================
+   El check + los botones deben ser grandes y táctiles. */
+@media (max-width: 560px) {
+  [data-pace-safety-actions] {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+  }
+  [data-pace-safety-actions] button {
+    width: 100% !important;
+    min-height: 46px;
+  }
+  [data-pace-safety-check] {
+    padding: 14px !important;
+    min-height: 52px;
+    font-size: 14px !important;
+  }
+  [data-pace-safety-check] input {
+    width: 20px; height: 20px;
+  }
+}
+
+/* =====================================================
+   10. TWEAKS PANEL — de floating a bottom-sheet
+   =====================================================
+   Desktop: card flotante bottom-right 320px.
+   Móvil: full-width abajo, max-height 80dvh, rounded top only,
+   handle igual que Modal. */
+@media (max-width: 560px) {
+  [data-pace-tweaks-panel] {
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: auto !important;
+    max-height: 85vh !important;
+    max-height: 85dvh !important;
+    border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
+    padding: 22px 18px !important;
+    /* borde sólo arriba para el efecto sheet */
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  [data-pace-tweaks-panel]::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 3px;
+    border-radius: 3px;
+    background: var(--line);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  /* botón close más grande */
+  [data-pace-tweaks-close] {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 22px !important;
+  }
+  /* Los chips de opciones: con wrap y hit-target accesible */
+  [data-pace-tweaks-option] {
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+    min-height: 38px;
+  }
+}
+</style>
 </head>
 <body>
   <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
@@ -223,7 +714,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.9';
+const PACE_VERSION = 'v0.12.10';
 
 const defaultState = {
   // Settings / Tweaks
@@ -630,19 +1121,22 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
   return (
     <div
       onClick={onClose}
+      data-pace-modal-overlay
       style={{
         position: 'fixed', inset: 0,
         background: 'rgba(31, 28, 23, 0.28)',
         backdropFilter: 'blur(3px)',
         zIndex: 100,
-        display: 'grid',
-        placeItems: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: 24,
         animation: 'pace-fade-in 200ms ease',
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        data-pace-modal-inner
         style={{
           background: 'var(--paper)',
           borderRadius: 'var(--r-lg)',
@@ -660,6 +1154,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           <button
             onClick={onClose}
             aria-label="Cerrar"
+            data-pace-modal-close
             style={{
               position: 'absolute', top: 18, right: 20,
               fontSize: 20, color: 'var(--ink-3)',
@@ -675,12 +1170,12 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
         {(tagLabel || title) && (
           <div style={{ marginBottom: 'var(--s-5)' }}>
             {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
-            {title && <h2 style={{
+            {title && <h2 data-pace-modal-title style={{
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic',
               fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1
             }}>{title}</h2>}
-            {subtitle && <p style={{
+            {subtitle && <p data-pace-modal-subtitle style={{
               color: 'var(--ink-3)', fontSize: 14, margin: '6px 0 0', maxWidth: '90%'
             }}>{subtitle}</p>}
           </div>
@@ -925,7 +1420,7 @@ const sessionShellStyles = {
    ============================================================ */
 function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
   return (
-    <div style={sessionShellStyles.root}>
+    <div style={sessionShellStyles.root} data-pace-session-root>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
       <div style={centerGap
         ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
@@ -934,17 +1429,23 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
         {children}
       </div>
       {footer && (
-        <div style={{ ...sessionShellStyles.footer, gap: footerGap }}>
+        <div
+          style={{ ...sessionShellStyles.footer, gap: footerGap }}
+          data-pace-session-footer
+        >
           {footer}
         </div>
       )}
       {hint && (
-        <div style={{
-          position: 'absolute', bottom: 14, left: 0, right: 0,
-          textAlign: 'center', fontSize: 10,
-          letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: 'var(--ink-3)', opacity: 0.6,
-        }}>{hint}</div>
+        <div
+          data-pace-session-hint
+          style={{
+            position: 'absolute', bottom: 14, left: 0, right: 0,
+            textAlign: 'center', fontSize: 10,
+            letterSpacing: '0.16em', textTransform: 'uppercase',
+            color: 'var(--ink-3)', opacity: 0.6,
+          }}
+        >{hint}</div>
       )}
     </div>
   );
@@ -952,7 +1453,7 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
 
 function SessionHeader({ routine, onExit, extra }) {
   return (
-    <div style={sessionShellStyles.header}>
+    <div style={sessionShellStyles.header} data-pace-session-header>
       <div>
         <Meta style={{ fontSize: 10 }}>{routine.code}</Meta>
         <h2 style={{
@@ -962,7 +1463,11 @@ function SessionHeader({ routine, onExit, extra }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {extra}
-        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>× Salir</button>
+        <button
+          onClick={() => onExit('exit')}
+          style={sessionShellStyles.exitBtn}
+          data-pace-session-exit
+        >× Salir</button>
       </div>
     </div>
   );
@@ -991,16 +1496,22 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 18,
         }}>Prepárate</div>
-        <div style={{
-          ...displayItalic,
-          fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-          color: accent,
-          fontVariantNumeric: 'tabular-nums',
-        }}>{prepCount > 0 ? prepCount : '·'}</div>
-        <div style={{
-          ...displayItalic,
-          fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
-        }}>{copy}</div>
+        <div
+          data-pace-session-prep-number
+          style={{
+            ...displayItalic,
+            fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+            color: accent,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >{prepCount > 0 ? prepCount : '·'}</div>
+        <div
+          data-pace-session-prep-copy
+          style={{
+            ...displayItalic,
+            fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
+          }}
+        >{copy}</div>
       </div>
     </SessionShell>
   );
@@ -1031,14 +1542,17 @@ function SessionDone({
   return (
     <SessionShell routine={routine} onExit={onExit} footer={btn}>
       <div style={{ textAlign: 'center', maxWidth: 520 }}>
-        <div style={{
-          width: 120, height: 120, margin: '0 auto 24px',
-          borderRadius: '50%',
-          background: accentSoft,
-          border: `1.5px solid ${accent}`,
-          display: 'grid', placeItems: 'center',
-          animation: 'pace-fade-in 600ms ease',
-        }}>
+        <div
+          data-pace-session-done-circle
+          style={{
+            width: 120, height: 120, margin: '0 auto 24px',
+            borderRadius: '50%',
+            background: accentSoft,
+            border: `1.5px solid ${accent}`,
+            display: 'grid', placeItems: 'center',
+            animation: 'pace-fade-in 600ms ease',
+          }}
+        >
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
                stroke={accent} strokeWidth="1.5"
                strokeLinecap="round" strokeLinejoin="round">
@@ -1049,20 +1563,29 @@ function SessionDone({
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 12,
         }}>{doneMeta}</div>
-        <h1 style={{
-          ...displayItalic,
-          fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
-        }}>{routine.name}</h1>
+        <h1
+          data-pace-session-done-title
+          style={{
+            ...displayItalic,
+            fontSize: 56, fontWeight: 500, margin: '0 0 24px', lineHeight: 1.05,
+          }}
+        >{routine.name}</h1>
         {stats.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}>
+          <div
+            data-pace-session-done-stats
+            style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 36 }}
+          >
             {stats.map((s, i) => <SessionStat key={i} label={s.label} value={s.value} />)}
           </div>
         )}
-        <p style={{
-          ...displayItalic,
-          fontSize: 18, color: 'var(--ink-2)',
-          maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
-        }}>{doneCopy}</p>
+        <p
+          data-pace-session-done-copy
+          style={{
+            ...displayItalic,
+            fontSize: 18, color: 'var(--ink-2)',
+            maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
+          }}
+        >{doneCopy}</p>
       </div>
     </SessionShell>
   );
@@ -1075,11 +1598,14 @@ function SessionDone({
 function SessionStat({ label, value }) {
   return (
     <div style={{ textAlign: 'center' }}>
-      <div style={{
-        ...displayItalic,
-        fontSize: 40, fontWeight: 500, lineHeight: 1,
-        color: 'var(--ink)',
-      }}>{value}</div>
+      <div
+        data-pace-session-done-stat-value
+        style={{
+          ...displayItalic,
+          fontSize: 40, fontWeight: 500, lineHeight: 1,
+          color: 'var(--ink)',
+        }}
+      >{value}</div>
       <div style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginTop: 8,
@@ -1653,24 +2179,24 @@ function SupportModal({ open, onClose }) {
     <Modal open={open} onClose={onClose} maxWidth={540}>
       <div style={supportStyles.inner}>
         {/* Ícono grande de vaca — no emoji, trazo a mano */}
-        <div style={supportStyles.heroIcon}>
+        <div style={supportStyles.heroIcon} data-pace-support-hero>
           <SupportHero />
         </div>
 
         <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
 
-        <h2 style={supportStyles.title}>
+        <h2 style={supportStyles.title} data-pace-support-title>
           PACE es gratis.<br/>
           <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>Y lo seguirá siendo.</span>
         </h2>
 
-        <p style={supportStyles.lede}>
+        <p style={supportStyles.lede} data-pace-support-lede>
           No hay cuentas. No hay servidor. No te sigue nadie. Todo
           vive en tu navegador — y así queremos que siga.
         </p>
 
         {/* 3 valores en línea fina */}
-        <div style={supportStyles.values}>
+        <div style={supportStyles.values} data-pace-support-values>
           <Value label="Todo local" sub="localStorage únicamente" />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
           <Value label="Sin tracking" sub="sin analytics, sin cookies" />
@@ -1678,7 +2204,7 @@ function SupportModal({ open, onClose }) {
           <Value label="Para siempre" sub="sin paywall, sin pro" />
         </div>
 
-        <p style={supportStyles.cta}>
+        <p style={supportStyles.cta} data-pace-support-cta>
           Si te cuida, ayúdanos a cuidarlo.<br/>
           <span style={{ color: 'var(--ink-3)' }}>
             No desbloquea nada. Solo nos da café.
@@ -1686,7 +2212,7 @@ function SupportModal({ open, onClose }) {
         </p>
 
         {/* Botones de acción */}
-        <div style={supportStyles.actions}>
+        <div style={supportStyles.actions} data-pace-support-actions>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
             <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
             <SupportIcon />
@@ -1697,7 +2223,7 @@ function SupportModal({ open, onClose }) {
         </div>
 
         {/* Enlace en texto + "ya doné" */}
-        <div style={supportStyles.footer}>
+        <div style={supportStyles.footer} data-pace-support-footer>
           <div style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'var(--font-ui)' }}>
             buymeacoffee.com/{BMC_USERNAME}
           </div>
@@ -1977,19 +2503,19 @@ function WelcomeModal({ open, onClose }) {
             (logo + meta + título) y lede a la derecha. Ahorra ~120px
             verticales respecto al layout apilado anterior y encaja sin
             scroll en pantallas 720p. */}
-        <div style={welcomeStyles.header}>
-          <div style={welcomeStyles.headerLeft}>
-            <div style={welcomeStyles.logoMini}>
+        <div style={welcomeStyles.header} data-pace-welcome-header>
+          <div style={welcomeStyles.headerLeft} data-pace-welcome-header-left>
+            <div style={welcomeStyles.logoMini} data-pace-welcome-logo>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
             <Meta style={{ marginTop: 10 }}>Bienvenida</Meta>
           </div>
           <div style={welcomeStyles.headerRight}>
-            <h2 style={welcomeStyles.title}>
+            <h2 style={welcomeStyles.title} data-pace-welcome-title>
               Antídoto a la silla.{' '}
               <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
             </h2>
-            <p style={welcomeStyles.lede}>
+            <p style={welcomeStyles.lede} data-pace-welcome-lede>
               Micro-pausas de foco, respiración, movilidad e
               hidratación. Sin gamificación ni notificaciones
               abrumadoras.
@@ -1998,7 +2524,7 @@ function WelcomeModal({ open, onClose }) {
         </div>
 
         {/* 3 valores en línea — ya más compactos */}
-        <div style={welcomeStyles.values}>
+        <div style={welcomeStyles.values} data-pace-welcome-values>
           <WValue label="Todo local" sub="en tu navegador" />
           <span style={welcomeStyles.sep} />
           <WValue label="Sin cuentas" sub="sin registro" />
@@ -2026,7 +2552,7 @@ function WelcomeModal({ open, onClose }) {
         </div>
 
         {/* Acciones — botón + skip en línea para no añadir altura */}
-        <div style={welcomeStyles.actions}>
+        <div style={welcomeStyles.actions} data-pace-welcome-actions>
           <button onClick={skip} style={welcomeStyles.skip}>
             prefiero saltarlo
           </button>
@@ -3505,7 +4031,7 @@ function BreatheLibrary({ open, onClose, onStart }) {
               <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{group.label}</h3>
               {group.aside && <Meta>{group.aside}</Meta>}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+            <div data-pace-routine-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
               {group.items.map(r => (
                 <RoutineCard key={r.id} routine={r} color="var(--breathe)" onClick={() => onStart(r)} />
               ))}
@@ -3579,7 +4105,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         <li>No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada</li>
         <li>Detente si te mareas o sientes molestias</li>
       </ul>
-      <label style={{
+      <label data-pace-safety-check style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: 12,
         background: 'var(--paper-2)',
@@ -3592,7 +4118,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         <input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
         <span>Lo he leído y asumo mi responsabilidad</span>
       </label>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+      <div data-pace-safety-actions style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
         <Button variant="ghost" onClick={onCancel}>Cancelar</Button>
         <Button variant="terracota" disabled={!checked} onClick={() => onAccept(routine)}>Empezar sesión</Button>
       </div>
@@ -3776,13 +4302,16 @@ function BreatheSession({ routine, onExit }) {
           <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
             Retén sin aire
           </div>
-          <div style={{
-            ...displayItalic,
-            fontSize: 160, fontWeight: 400, lineHeight: 0.9,
-            color: 'var(--ink)',
-            fontVariantNumeric: 'tabular-nums',
-            letterSpacing: '-0.03em',
-          }}>
+          <div
+            data-pace-breath-hold
+            style={{
+              ...displayItalic,
+              fontSize: 160, fontWeight: 400, lineHeight: 0.9,
+              color: 'var(--ink)',
+              fontVariantNumeric: 'tabular-nums',
+              letterSpacing: '-0.03em',
+            }}
+          >
             {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
           </div>
           <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
@@ -3840,17 +4369,23 @@ function BreatheSession({ routine, onExit }) {
         scale={current.scale}
       />
       <div style={{ textAlign: 'center' }}>
-        <div style={{
-          ...displayItalic,
-          fontSize: 44, fontWeight: 500, color: 'var(--ink)',
-          marginBottom: 8, lineHeight: 1,
-        }}>{current.label}</div>
-        {showCountdown && (
-          <div style={{
+        <div
+          data-pace-breath-label
+          style={{
             ...displayItalic,
-            fontSize: 28, color: 'var(--breathe)',
-            fontVariantNumeric: 'tabular-nums', marginTop: 4,
-          }}>{remaining}</div>
+            fontSize: 44, fontWeight: 500, color: 'var(--ink)',
+            marginBottom: 8, lineHeight: 1,
+          }}
+        >{current.label}</div>
+        {showCountdown && (
+          <div
+            data-pace-breath-countdown
+            style={{
+              ...displayItalic,
+              fontSize: 28, color: 'var(--breathe)',
+              fontVariantNumeric: 'tabular-nums', marginTop: 4,
+            }}
+          >{remaining}</div>
         )}
         <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
           {isRounds ? `Respiración ${breathCount} de ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
@@ -4067,14 +4602,20 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
   );
 }
 
+/* El tamaño del visual es `var(--breath-visual-size, 260px)` para
+   permitir que responsive.css lo encoja a 210px en móvil sin tocar
+   ninguno de los 5 callsites (pulso/flor/petalo/ondas/organico).
+   El `core` interior hereda proporcionalmente via var anidada. */
 const visualStyles = {
   wrap: {
     position: 'relative',
-    width: 260, height: 260,
+    width: 'var(--breath-visual-size, 260px)',
+    height: 'var(--breath-visual-size, 260px)',
     display: 'grid', placeItems: 'center',
   },
   core: {
-    width: 160, height: 160,
+    width: 'calc(var(--breath-visual-size, 260px) * 0.615)',
+    height: 'calc(var(--breath-visual-size, 260px) * 0.615)',
     borderRadius: '50%',
     position: 'relative',
   },
@@ -4161,7 +4702,7 @@ function MoveLibrary({ open, onClose, onStart }) {
         <Meta>Cuerpo activo</Meta>
       </div>
       <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+      <div data-pace-routine-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {MOVE_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
         ))}
@@ -4305,21 +4846,30 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
           Paso {stepIdx + 1} de {routine.steps.length}
         </div>
-        <h1 style={{
-          ...displayItalic,
-          fontSize: 56, fontWeight: 500,
-          lineHeight: 1.05, margin: '0 0 20px',
-        }}>{step.name}</h1>
-        <p style={{
-          fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-          maxWidth: 460, margin: '0 auto 30px',
-        }}>{step.cue}</p>
+        <h1
+          data-pace-move-step-title
+          style={{
+            ...displayItalic,
+            fontSize: 56, fontWeight: 500,
+            lineHeight: 1.05, margin: '0 0 20px',
+          }}
+        >{step.name}</h1>
+        <p
+          data-pace-move-step-cue
+          style={{
+            fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
+            maxWidth: 460, margin: '0 auto 30px',
+          }}
+        >{step.cue}</p>
 
-        <div style={{
-          ...displayItalic,
-          fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1,
-        }}>{String(remaining).padStart(2, '0')}</div>
+        <div
+          data-pace-move-step-counter
+          style={{
+            ...displayItalic,
+            fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
+            color: 'var(--ink)', lineHeight: 1,
+          }}
+        >{String(remaining).padStart(2, '0')}</div>
         <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
       </div>
 
@@ -4362,16 +4912,19 @@ function StepGlyph({ tag, stepIdx }) {
   const symbols = ['◯', '◬', '◇', '△', '▢', '⬡', '✦'];
   const sym = symbols[stepIdx % symbols.length];
   return (
-    <div style={{
-      ...displayItalic,
-      width: 72, height: 72, margin: '0 auto 20px',
-      borderRadius: '50%',
-      border: '1px dashed var(--move)',
-      background: 'var(--move-soft)',
-      display: 'grid', placeItems: 'center',
-      color: 'var(--move)',
-      fontSize: 28,
-    }}>
+    <div
+      data-pace-move-glyph
+      style={{
+        ...displayItalic,
+        width: 72, height: 72, margin: '0 auto 20px',
+        borderRadius: '50%',
+        border: '1px dashed var(--move)',
+        background: 'var(--move-soft)',
+        display: 'grid', placeItems: 'center',
+        color: 'var(--move)',
+        fontSize: 28,
+      }}
+    >
       {sym}
     </div>
   );
@@ -4470,7 +5023,7 @@ function ExtraLibrary({ open, onClose, onStart }) {
         <Meta>Afloja tensión</Meta>
       </div>
       <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+      <div data-pace-routine-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {EXTRA_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />
         ))}
@@ -4495,7 +5048,7 @@ function HydrateTracker({ open, onClose }) {
     <Modal open={open} onClose={onClose} tagLabel="Hidratación" title="Hidrátate" subtitle="Un sorbo ahora, un regalo a tu yo de las 5." maxWidth={580}>
       {/* Progreso gigante */}
       <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
-        <div style={{
+        <div data-pace-hydrate-counter style={{
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
           fontSize: 96, fontWeight: 400, lineHeight: 1,
@@ -4507,7 +5060,7 @@ function HydrateTracker({ open, onClose }) {
       </div>
 
       {/* Vasos visuales */}
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
+      <div data-pace-hydrate-glasses style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
             onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); } }}
@@ -4548,7 +5101,7 @@ function HydrateTracker({ open, onClose }) {
         }} />
       </div>
 
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+      <div data-pace-hydrate-actions style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
         <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">Un vaso menos</Button>
         <Button onClick={() => addWaterGlass(1)} icon="+" size="md"
           style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>Un vaso más</Button>
@@ -4602,7 +5155,7 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   return (
     <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
+      <div data-pace-breakmenu-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map(o => (
           <button key={o.key}
             onClick={() => onChoose(o.key)}
@@ -4629,7 +5182,7 @@ function BreakMenu({ open, onClose, onChoose }) {
         ))}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+      <div data-pace-breakmenu-foot style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
         <Meta>Atajo: B · M · H · Esc</Meta>
         <Button variant="ghost" onClick={onClose}>Saltar esta pausa</Button>
       </div>
@@ -4877,7 +5430,7 @@ function Achievements({ open, onClose }) {
               <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
+            <div data-pace-seals-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
               {items.map(a => (
                 <Seal
                   key={a.id}
@@ -5014,7 +5567,7 @@ function WeeklyStats({ open, onClose }) {
   return (
     <Modal open={open} onClose={onClose} tagLabel="Semana" title="Ritmo semanal" subtitle="Métricas suaves. Sin ansiedad, sin comparación." maxWidth={780}>
       {/* Totales */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
+      <div data-pace-stats-totals style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
         {bars.map(b => (
           <div key={b.key} style={{
             padding: '16px 14px',
@@ -5064,7 +5617,7 @@ function WeekBarRow({ label, data, color, unit }) {
         <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
+      <div data-pace-stats-bars style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
         {reordered.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
@@ -5291,7 +5844,7 @@ function TweaksPanel({ open, onClose }) {
   };
 
   return (
-    <div style={{
+    <div data-pace-tweaks-panel style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
@@ -5310,7 +5863,7 @@ function TweaksPanel({ open, onClose }) {
           <Meta>Panel</Meta>
           <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
-        <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
+        <button onClick={onClose} data-pace-tweaks-close style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
 
       {ejes.map(eje => (
@@ -5321,6 +5874,7 @@ function TweaksPanel({ open, onClose }) {
               const active = state[eje.key] === opt.v;
               return (
                 <button key={opt.v} onClick={() => set({ [eje.key]: opt.v })}
+                  data-pace-tweaks-option
                   style={{
                     padding: '6px 10px',
                     fontSize: 11,

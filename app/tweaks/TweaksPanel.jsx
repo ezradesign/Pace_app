@@ -181,7 +181,7 @@ function TweaksPanel({ open, onClose }) {
   };
 
   return (
-    <div style={{
+    <div data-pace-tweaks-panel style={{
       position: 'fixed',
       right: 24, bottom: 24,
       width: 320,
@@ -200,7 +200,7 @@ function TweaksPanel({ open, onClose }) {
           <Meta>Panel</Meta>
           <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
-        <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
+        <button onClick={onClose} data-pace-tweaks-close style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
 
       {ejes.map(eje => (
@@ -211,6 +211,7 @@ function TweaksPanel({ open, onClose }) {
               const active = state[eje.key] === opt.v;
               return (
                 <button key={opt.v} onClick={() => set({ [eje.key]: opt.v })}
+                  data-pace-tweaks-option
                   style={{
                     padding: '6px 10px',
                     fontSize: 11,

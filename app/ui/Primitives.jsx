@@ -42,19 +42,22 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
   return (
     <div
       onClick={onClose}
+      data-pace-modal-overlay
       style={{
         position: 'fixed', inset: 0,
         background: 'rgba(31, 28, 23, 0.28)',
         backdropFilter: 'blur(3px)',
         zIndex: 100,
-        display: 'grid',
-        placeItems: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: 24,
         animation: 'pace-fade-in 200ms ease',
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        data-pace-modal-inner
         style={{
           background: 'var(--paper)',
           borderRadius: 'var(--r-lg)',
@@ -72,6 +75,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           <button
             onClick={onClose}
             aria-label="Cerrar"
+            data-pace-modal-close
             style={{
               position: 'absolute', top: 18, right: 20,
               fontSize: 20, color: 'var(--ink-3)',
@@ -87,12 +91,12 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
         {(tagLabel || title) && (
           <div style={{ marginBottom: 'var(--s-5)' }}>
             {tagLabel && <div className="pace-meta" style={{ marginBottom: 6 }}>{tagLabel}</div>}
-            {title && <h2 style={{
+            {title && <h2 data-pace-modal-title style={{
               fontFamily: 'var(--font-display)',
               fontStyle: 'italic',
               fontSize: 32, fontWeight: 500, margin: 0, lineHeight: 1.1
             }}>{title}</h2>}
-            {subtitle && <p style={{
+            {subtitle && <p data-pace-modal-subtitle style={{
               color: 'var(--ink-3)', fontSize: 14, margin: '6px 0 0', maxWidth: '90%'
             }}>{subtitle}</p>}
           </div>

@@ -201,24 +201,24 @@ function SupportModal({ open, onClose }) {
     <Modal open={open} onClose={onClose} maxWidth={540}>
       <div style={supportStyles.inner}>
         {/* Ícono grande de vaca — no emoji, trazo a mano */}
-        <div style={supportStyles.heroIcon}>
+        <div style={supportStyles.heroIcon} data-pace-support-hero>
           <SupportHero />
         </div>
 
         <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
 
-        <h2 style={supportStyles.title}>
+        <h2 style={supportStyles.title} data-pace-support-title>
           PACE es gratis.<br/>
           <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>Y lo seguirá siendo.</span>
         </h2>
 
-        <p style={supportStyles.lede}>
+        <p style={supportStyles.lede} data-pace-support-lede>
           No hay cuentas. No hay servidor. No te sigue nadie. Todo
           vive en tu navegador — y así queremos que siga.
         </p>
 
         {/* 3 valores en línea fina */}
-        <div style={supportStyles.values}>
+        <div style={supportStyles.values} data-pace-support-values>
           <Value label="Todo local" sub="localStorage únicamente" />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
           <Value label="Sin tracking" sub="sin analytics, sin cookies" />
@@ -226,7 +226,7 @@ function SupportModal({ open, onClose }) {
           <Value label="Para siempre" sub="sin paywall, sin pro" />
         </div>
 
-        <p style={supportStyles.cta}>
+        <p style={supportStyles.cta} data-pace-support-cta>
           Si te cuida, ayúdanos a cuidarlo.<br/>
           <span style={{ color: 'var(--ink-3)' }}>
             No desbloquea nada. Solo nos da café.
@@ -234,7 +234,7 @@ function SupportModal({ open, onClose }) {
         </p>
 
         {/* Botones de acción */}
-        <div style={supportStyles.actions}>
+        <div style={supportStyles.actions} data-pace-support-actions>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
             <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
             <SupportIcon />
@@ -245,7 +245,7 @@ function SupportModal({ open, onClose }) {
         </div>
 
         {/* Enlace en texto + "ya doné" */}
-        <div style={supportStyles.footer}>
+        <div style={supportStyles.footer} data-pace-support-footer>
           <div style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'var(--font-ui)' }}>
             buymeacoffee.com/{BMC_USERNAME}
           </div>
