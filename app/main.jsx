@@ -1,8 +1,98 @@
 /* PACE · Main orchestrator
    Monta todo: Sidebar + FocusTimer + modales de librerías + sesiones
+
+   RESPONSIVE (sesión 22 · v0.12.5):
+     El layout desktop es flex horizontal [Sidebar 280 | Main 1fr].
+     En ≤768px el sidebar se absolutamente desacopla (pasa a
+     position:fixed y ocupa el viewport entero — ver Sidebar.jsx),
+     así que en móvil el main toma 100vw por sí solo sin cambios.
+     Los ajustes aquí son sobre TopBar y ActivityBar para que
+     quepan en 375px de ancho, y sobre el handle flotante `≡` para
+     aumentar su hit target a 44px (accesibilidad móvil).
 */
 
 const { useState: useStateMain, useEffect: useEffectMain } = React;
+
+/* Reglas responsive globales del layout. Inyectadas una sola vez.
+   - TopBar: reduce padding lateral y el ancho de los tabs en móvil
+     para dejar sitio a los 3 iconos de la derecha sin que choquen.
+   - Main content: en móvil sigue centrando el timer pero con menos
+     padding horizontal para ganar ancho para el aro.
+   - ActivityBar: en móvil, los 4 accesos pasan de fila horizontal
+     de pills anchos (min-width 180) a grid 2×2 de tarjetas
+     compactas (chip vertical: icono arriba, label abajo).
+     Así el bloque completo mide ~220px de alto en 375×812 y deja
+     que el timer ocupe unos ~420 px centrales. */
+if (typeof document !== 'undefined' && !document.getElementById('pace-main-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-main-responsive-css';
+  s.textContent = `
+    @media (max-width: 768px) {
+      [data-pace-topbar] {
+        padding: 10px 12px !important;
+        min-height: 48px !important;
+        gap: 4px !important;
+      }
+      /* Tabs Foco/Pausa/Larga: más compactos */
+      [data-pace-topbar] [data-pace-tabs] button {
+        padding: 5px 12px !important;
+        font-size: 10px !important;
+        letter-spacing: 0.14em !important;
+      }
+      /* Iconos top-right: hit target 40x40 */
+      [data-pace-topbar] [data-pace-topbar-icon] {
+        width: 40px !important;
+        height: 40px !important;
+      }
+      /* Main content: menos padding para ganar ancho del aro */
+      [data-pace-main-content] {
+        padding: 4px 12px !important;
+      }
+      /* ActivityBar en móvil: grid 2×2, chips compactos verticales */
+      [data-pace-activitybar] {
+        padding: 4px 12px 14px !important;
+      }
+      [data-pace-activitybar-grid] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+      }
+      [data-pace-activitybar-chip] {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        padding: 10px 12px !important;
+        gap: 10px !important;
+      }
+      [data-pace-activitybar-chip] [data-pace-chip-label] {
+        font-size: 15px !important;
+      }
+      [data-pace-activitybar-chip] [data-pace-chip-sub] {
+        font-size: 11px !important;
+      }
+      /* Handle flotante ≡ para abrir sidebar: hit target ≥44px */
+      [data-pace-sidebar-open] {
+        width: 44px !important;
+        height: 44px !important;
+        top: 8px !important;
+        left: 8px !important;
+      }
+    }
+    /* Viewports muy bajos (≤700 de alto): reducir aún más la ActivityBar
+       para dejar que el aro respire. Sólo afecta móvil vertical pequeño. */
+    @media (max-width: 768px) and (max-height: 720px) {
+      [data-pace-activitybar-chip] {
+        padding: 8px 10px !important;
+      }
+      [data-pace-activitybar-chip] [data-pace-chip-label] {
+        font-size: 14px !important;
+      }
+      [data-pace-activitybar-chip] [data-pace-chip-sub] {
+        display: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 function PaceApp() {
   const [state, set] = usePace();
@@ -127,9 +217,12 @@ function PaceApp() {
       {state.layout !== 'minimal' && <Sidebar />}
 
       {/* Handle flotante para re-abrir sidebar cuando está oculto
-          (aparece sólo en layout con sidebar y cuando está colapsado). */}
+          (aparece sólo en layout con sidebar y cuando está colapsado).
+          En móvil (≤768px) el CSS lo amplía a 44×44 (hit target
+          accesible) — ver bloque pace-main-responsive-css arriba. */}
       {state.layout !== 'minimal' && state.sidebarCollapsed && (
         <button
+          data-pace-sidebar-open
           onClick={() => set({ sidebarCollapsed: false })}
           title="Abrir panel"
           aria-label="Abrir panel"
@@ -162,7 +255,7 @@ function PaceApp() {
         />
 
         {/* Content */}
-        <div style={{
+        <div data-pace-main-content style={{
           flex: 1,
           display: 'grid',
           placeItems: 'center',
@@ -251,7 +344,7 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
     { v: 'larga', label: 'Larga' },
   ];
   return (
-    <div style={{
+    <div data-pace-topbar style={{
       position: 'relative',
       display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
       padding: '14px 24px',
@@ -260,7 +353,7 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       minHeight: 56,
     }}>
       {/* Tabs centrados (según referencia) */}
-      <div style={{
+      <div data-pace-tabs style={{
         position: 'absolute', left: '50%', top: '50%',
         transform: 'translate(-50%, -50%)',
         display: 'inline-flex',
@@ -287,17 +380,17 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       </div>
 
       {/* Iconos top-right */}
-      <button onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
+      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
         </svg>
       </button>
-      <button onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
+      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
         </svg>
       </button>
-      <button onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -337,15 +430,15 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
     { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
-    <div style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
+    <div data-pace-activitybar style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
       <div style={{ textAlign: 'center', marginBottom: 10 }}>
         <Meta>Actividades</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+      <div data-pace-activitybar-grid style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
         {activities.map(a => {
           const active = plan[a.key];
           return (
-            <button key={a.key} onClick={a.action} style={{
+            <button key={a.key} data-pace-activitybar-chip onClick={a.action} style={{
               position: 'relative',
               display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start',
               gap: 16,
@@ -383,7 +476,7 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
               </span>
               {/* Bloque de texto: label + sublabel */}
               <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-                <span style={{
+                <span data-pace-chip-label style={{
                   fontFamily: 'var(--font-display)',
                   fontStyle: 'italic',
                   fontSize: 18,
@@ -391,7 +484,7 @@ function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
                   color: 'var(--ink)',
                   lineHeight: 1.05,
                 }}>{a.label}</span>
-                <span style={{
+                <span data-pace-chip-sub style={{
                   fontFamily: 'var(--font-display)',
                   fontStyle: 'italic',
                   fontSize: 12,

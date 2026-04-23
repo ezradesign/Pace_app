@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.12.5** | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | [abajo ↓](#v0125--2026-04-23--responsive-movil) |
 | **v0.12.4** | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [abajo ↓](#v0124--2026-04-23--briefing-de-direccion) |
-| **v0.12.3** | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
+| v0.12.3 | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
 | v0.12.2 | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
 | v0.12.1 | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
 | v0.12.0 | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [session-17-welcome-export.md](./docs/sessions/session-17-welcome-export.md) |
@@ -36,6 +37,85 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.5] — 2026-04-23 — Responsive móvil
+
+Primera sesión de código tras el briefing de dirección. Se
+resuelven los dos requisitos bloqueantes pre-v1.0 reportados por
+el usuario desde el teléfono: **sidebar desacoplada fullscreen** y
+**home que cabe en ~375×812 sin scroll**. La identidad tipográfica
+y el comportamiento desktop quedan intactos.
+
+### Cambiado
+- **`app/shell/Sidebar.jsx` · sidebar fullscreen en móvil** — se
+  inyecta un bloque `<style id="pace-sidebar-responsive-css">` con
+  reglas `@media (max-width: 768px)` que sobrescriben el layout
+  del sidebar a `position:fixed; inset:0; width:100vw;
+  height:100vh; z-index:60`. Resultado: en móvil el sidebar deja
+  de empujar el main (era un panel de 280px) y pasa a cubrirlo
+  entero como un drawer. El chevron de cerrar crece a 44×44px
+  (hit target accesible) y el `logoBar` reduce `min-height` a
+  84px para dejar sitio a las secciones de abajo.
+- **`app/main.jsx` · TopBar, MainContent y ActivityBar responsive**
+   — bloque `<style id="pace-main-responsive-css">` con tres
+  bloques de reglas:
+  - **TopBar**: padding lateral 14→12px, tabs Foco/Pausa/Larga
+    comprimidos (padding 6→5px, fontSize 11→10px, letter-spacing
+    0.18→0.14em), los 3 iconos a 40×40px.
+  - **Main content**: padding lateral 40→12px. Gana ~56px de
+    ancho útil para el aro.
+  - **ActivityBar**: de `flex` con `min-width:180px` por chip
+    (que forzaba scroll horizontal en móvil) a `grid 2x2`. En
+    `max-height:720px` (SE, 12 mini) se oculta el sub-label
+    ("ritmo, calma", "afloja tensión") para comprimir más.
+  - Handle `≡` flotante de reabrir sidebar a 44×44px en móvil.
+- **`app/focus/FocusTimer.jsx` · aro que no se desborda** — el
+  `aroFrame` cambia de `min(56vh, 520px)` a
+  `min(56vh, 86vw, 520px)`. El `86vw` entra en juego solo en
+  viewports estrechos (móvil), donde antes el aro calculaba
+  56vh=~455px en un iPhone 12 y se salía por la derecha de un
+  ancho de 390px. En desktop (1920×1080), `min` sigue resolviendo
+  a 520 como antes — comportamiento idéntico. El `focusStyles.root`
+  padding lateral cambia de `40px` fijo a `clamp(0, 4vw, 40px)`
+  como refuerzo.
+- **`app/state.jsx` · PACE_VERSION** — `v0.12.1` → `v0.12.5`. La
+  versión mostrada en el footer del sidebar pasa a `v0.12.5`.
+- **`PACE.html` · title** — `v0.12.3` → `v0.12.5`.
+
+### Notas de diseño
+- **Media queries vía `<style>` inyectado, no modificación de
+  inline styles.** Los objetos `sidebarStyles`, `focusStyles`,
+  etc. viven como JS objects y Babel standalone no los pasa por
+  ningún pipeline CSS. La alternativa — añadir lógica de
+  `window.matchMedia` en cada componente — complicaría el código
+  sin ganar nada. El patrón elegido (inyectar `<style>` con
+  selectores `[data-*]` y `!important` sobre los inline styles)
+  es trivial de leer, no duplica estilos, y deja el desktop
+  exactamente igual. Ya se usaba para los spinners del input
+  type=number en FocusTimer. Decisión activa nueva en STATE.md.
+- **Breakpoint único a 768px.** Cubre todos los móviles relevantes
+  (iPhone SE 375, 12 390, 14 Pro Max 430, tablets portrait hasta
+  768). Añadir más breakpoints habría complicado sin justificación.
+  Un segundo bloque `@media (max-width:768px) and (max-height:720px)`
+  afina los viewports verticales ajustados (SE, 12 mini) ocultando
+  los sub-labels de los chips.
+- **No se toca el layout flex del root.** El `<main>` sigue
+  ocupando 100% menos el sidebar en desktop. En móvil, como el
+  sidebar es `position:fixed`, deja de contar para el layout flex
+  y el main toma 100vw por sí solo, sin cambios en JS.
+
+### Conservado (no retirado)
+- **Cifras de identidad en EB Garamond italic** (decisión activa
+  desde sesión 20). El `MM:SS` del timer y el `0` de la racha del
+  sidebar siguen en fuente fija `'EB Garamond', Georgia, serif`.
+- **Estructura del estado y del panel Tweaks** — cero cambios.
+
+### Versión
+- `v0.12.4` → `v0.12.5` (cambios de código, regenera standalone).
+
+Detalle completo: [`docs/sessions/session-22-responsive-movil.md`](./docs/sessions/session-22-responsive-movil.md).
 
 ---
 

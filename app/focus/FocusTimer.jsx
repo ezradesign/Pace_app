@@ -477,7 +477,10 @@ const focusStyles = {
     flexDirection: 'column',
     alignItems: 'center',
     gap: 14,
-    padding: '8px 40px 0',
+    /* Padding lateral 40 en desktop; en móvil el <div data-pace-main-content>
+       ya reduce a 12 su propio padding, y éste se relaja con un clamp
+       para no ahogar el aro en 375×812. (Sesión 22.) */
+    padding: '8px clamp(0px, 4vw, 40px) 0',
     width: '100%',
     height: '100%',
     minHeight: 0,
@@ -491,11 +494,20 @@ const focusStyles = {
 
   /* ===== AroFrame (default) — cuadrado, compacto para dejar sitio a los controles.
      Altura MAX ~520px para que a 1080p quepa: topbar(~56) + min(~45) + aro(520)
-     + actividades(~110) + colchón ≈ 730–800 px. Así queda con aire. */
+     + actividades(~110) + colchón ≈ 730–800 px. Así queda con aire.
+
+     Responsive (sesión 22 · v0.12.5):
+       Se añade `min(…, 86vw)` en ancho para que en viewports estrechos
+       (móvil 375–430) el aro nunca se desborde. Antes `min(56vh, 520)`
+       daba 472 px en un iPhone 12 (844 alto) → se cortaba por los
+       bordes en un ancho de 390. Ahora el lado del cuadrado es el
+       mínimo entre los tres: 56% alto, 86% ancho y 520 px. El `vw`
+       manda en móvil, el `vh` manda en desktop, el 520 px pone techo
+       en pantallas grandes — sin cambiar el comportamiento previo. */
   aroFrame: {
     position: 'relative',
-    height: 'min(56vh, 520px)',
-    width: 'min(56vh, 520px)',
+    height: 'min(56vh, 86vw, 520px)',
+    width: 'min(56vh, 86vw, 520px)',
     aspectRatio: '1 / 1',
     flexShrink: 0,
     display: 'grid',
