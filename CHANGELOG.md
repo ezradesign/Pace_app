@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.12.3** | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [abajo ↓](#v0123--2026-04-22--timer-aire-y-minutos-personalizados) |
-| **v0.12.2** | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
+| **v0.12.4** | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [abajo ↓](#v0124--2026-04-23--briefing-de-direccion) |
+| **v0.12.3** | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
+| v0.12.2 | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
 | v0.12.1 | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
 | v0.12.0 | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [session-17-welcome-export.md](./docs/sessions/session-17-welcome-export.md) |
 | v0.11.11 | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [session-16-bmc-integracion.md](./docs/sessions/session-16-bmc-integracion.md) |
@@ -35,6 +36,57 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.4] — 2026-04-23 — Briefing de dirección
+
+Sesión estratégica. **No se toca código.** Se consolida en la
+memoria del proyecto la dirección de las próximas fases tras una
+conversación por voz con el usuario. El `PACE_standalone.html`
+sigue siendo el v0.12.3 (sin regeneración — no hay cambios
+funcionales que inlinear).
+
+### Añadido
+- **`MONETIZATION.md`** — documento nuevo. Modelo Lifetime híbrido
+  (~20 € pago único + temporadas ~5 € + donaciones BMC), gating
+  de contenido con 5 valores de `access`, validación offline de
+  licencia con clave firmada. Todo sigue local, sin backend.
+- **`CONTENT.md`** — nueva sección "Progresión de desbloqueo" al
+  inicio: la app arranca con 2 ejercicios desbloqueados por
+  módulo (Respira, Mueve, Estira). Iniciales elegidos según
+  criterios de baja barrera + diversidad calma/activa. Tabla de
+  tipos de `access` al final, sección "Contenido premium"
+  (CTB + sesiones personalizadas + ejercicios exclusivos).
+- **`ROADMAP.md`** — reescrito completo con nuevas prioridades:
+  responsive móvil (bloqueante), loop post-Pomodoro, Ritmos
+  semanal/mensual/anual, CTB premium, sesiones personalizadas,
+  retos semanales, notificaciones inteligentes, feedback
+  narrativo. Sección "Fuera de alcance" actualizada (biometría,
+  suscripción mensual, backend propio fuera).
+
+### Decisiones nuevas (todas registradas en `STATE.md`)
+- Modelo de monetización = Lifetime híbrido. No suscripción
+  mensual. Todo local.
+- Los 2 ejercicios iniciales por módulo son la puerta de
+  entrada. No cambiar sin migración.
+- Campo `access` en rutinas con 5 valores posibles.
+- Biometría y wearables fuera de alcance (decisión explícita del
+  usuario).
+- El core gratuito debe ser útil por sí solo.
+
+### Sin cambios
+- `PACE.html`, `PACE_standalone.html`, `app/*` — ningún archivo
+  de código tocado.
+- `DESIGN_SYSTEM.md` — sin cambios.
+- `README.md` — sin cambios (próxima sesión revisar si conviene
+  mencionar el gating y la monetización cuando se empiece a
+  implementar).
+
+### Versión
+- `v0.12.3` → `v0.12.4` (doc-only bump).
+
+Detalle completo: [`docs/sessions/session-21-briefing-direccion.md`](./docs/sessions/session-21-briefing-direccion.md).
 
 ---
 
