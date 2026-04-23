@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.12.7** | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra del navegador | #24 | [abajo ↓](#v0127--2026-04-23--scroll-asimetrico) |
 | **v0.12.6** | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | [abajo ↓](#v0126--2026-04-23--dvh-fit) |
-| **v0.12.5** | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | [abajo ↓](#v0125--2026-04-23--responsive-movil) |
+| v0.12.5 | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | [session-22-responsive-movil.md](./docs/sessions/session-22-responsive-movil.md) |
 | v0.12.4 | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [session-21-briefing-direccion.md](./docs/sessions/session-21-briefing-direccion.md) |
 | v0.12.3 | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
 | v0.12.2 | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
@@ -38,6 +39,97 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.12.7] — 2026-04-23 — Scroll asimétrico
+
+Segunda iteración del encaje móvil. La sesión 23 (v0.12.6) arregló
+el encaje del contenido con la barra del navegador visible, pero
+tuvo un efecto colateral inesperado: al dejar el documento sin
+scroll latente, el navegador móvil perdió la señal que usa para
+recoger automáticamente su barra de URL, y el usuario quedaba
+bloqueado con ~56-100px menos de los que su dispositivo podía dar.
+
+v0.12.7 resuelve ambos problemas a la vez con **scroll asimétrico
+por vista**: la home mantiene `100dvh` puro (los 4 botones siempre
+a la vista), la sidebar móvil pasa a `min-height: calc(100dvh +
+1px)` con `height: auto` para forzar un píxel de scroll latente
+que provoca el auto-hide de la barra.
+
+### Cambiado
+- **`app/shell/Sidebar.jsx` · bloque `pace-sidebar-responsive-css`** —
+  dentro de `@media (max-width: 768px) [data-pace-sidebar]`, las
+  cuatro declaraciones de alto se sustituyen:
+  ```css
+  /* antes: */
+  height: 100vh; height: 100dvh;
+  max-height: 100vh; max-height: 100dvh;
+
+  /* después: */
+  min-height: calc(100vh + 1px);
+  min-height: calc(100dvh + 1px);
+  height: auto;
+  max-height: none;
+  ```
+  El `+1px` es invisible pero es suficiente señal para que el
+  navegador active su auto-hide al scrollear. `height: auto` deja
+  que el drawer se dimensione al contenido sin límites
+  artificiales. `max-height: none` quita el techo de v0.12.6.
+  `overflow-y: auto` se conserva como red de seguridad.
+- **`app/state.jsx` · PACE_VERSION** — `v0.12.6` → `v0.12.7`.
+- **`PACE.html` · title** — `v0.12.6` → `v0.12.7`.
+
+### Sin cambios
+- **`app/main.jsx` · bloque `pace-main-responsive-css`** — la regla
+  `[data-pace-app-root] { height: 100vh; height: 100dvh; … }` se
+  queda tal cual. Gobierna la home y todas las vistas de main, que
+  deben caber sin scroll. La asimetría es intencional: home sin
+  scroll latente (barra del navegador visible, 4 botones siempre),
+  sidebar con scroll latente de 1px (barra se oculta al deslizar).
+
+### Notas de diseño
+- **Por qué scroll asimétrico y no una única regla para toda la
+  app.** Los dos objetivos son incompatibles en el mismo
+  contenedor: "todo cabe sin scroll" implica documento = viewport,
+  y el navegador necesita documento > viewport para disparar el
+  auto-hide. Tratamos cada vista por separado: la home prioriza
+  visibilidad de los 4 botones, la sidebar prioriza recuperar los
+  ~56-100px de la barra.
+- **Por qué `min-height: calc(100dvh + 1px)` y no `101vh` o
+  similares.** `100dvh` se recalcula dinámicamente con el viewport
+  visible, así que cuando la barra se recoge el drawer sabe cuánto
+  espacio nuevo tiene. El `+1px` garantiza scroll latente en el
+  instante inicial (con barra visible). Suma de lo mejor de las
+  dos unidades.
+- **Por qué no `requestFullscreen` ni PWA en esta sesión.**
+  Fullscreen API exige gesto explícito, no funciona en iPhone
+  (solo iPad), y enseña banner intrusivo. PWA (manifest + iconos
+  + prompt) sí resolvería el auto-hide de forma permanente pero
+  es sesión propia — queda en backlog para después de modales
+  móviles y antes del Lifetime, donde actúa como multiplicador
+  de valor ("compras una vez, instalado, sin barra, offline").
+
+### Coste conocido
+- **Primer abrir del drawer con barra URL visible:** aparece
+  encajado en el espacio visible. Primer gesto de scroll hacia
+  abajo recoge la barra y el drawer crece ~56-100px. A partir del
+  segundo uso se abre ya expandido. El tirón se ve una vez.
+- **Auto-hide requiere gesto real del usuario.** Si abre la
+  sidebar y no desliza, la barra se queda. Comportamiento estándar
+  de iOS Safari / Chrome Android, imposible de forzar desde
+  CSS/JS sin entrar en fullscreen API.
+
+### Conservado
+- **Cifras de identidad** — `MM:SS` y `0` en EB Garamond italic.
+- **Patrón responsive** — `<style>` + `[data-*]` + `!important`.
+- **Desktop 1920×1080** — idéntico.
+- **Home móvil** — idéntica a v0.12.6.
+
+### Versión
+- `v0.12.6` → `v0.12.7` (cambios de código, regenera standalone).
+
+Detalle completo: [`docs/sessions/session-24-scroll-asimetrico.md`](./docs/sessions/session-24-scroll-asimetrico.md).
 
 ---
 
@@ -118,14 +210,23 @@ Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/sessio
 
 ---
 
-## [v0.12.5] — 2026-04-23 — Responsive móvil
+> *Las versiones anteriores ya no se detallan aquí — ver la tabla
+> de arriba para enlaces al diario completo de cada sesión.*
 
-Primera sesión de código tras el briefing de dirección. Se
-resuelven los dos requisitos bloqueantes pre-v1.0 reportados por
-el usuario desde el teléfono: **sidebar desacoplada fullscreen** y
-**home que cabe en ~375×812 sin scroll**. La identidad tipográfica
-y el comportamiento desktop quedan intactos.
+<!-- sección v0.12.5 detallada retirada al comprimirse tras el
+     bump a v0.12.7 (convención: solo las 2 últimas detalladas).
+     Diario completo en docs/sessions/session-22-responsive-movil.md.
+     Texto eliminado desde aquí hasta el siguiente separador. -->
 
+## ~~[v0.12.5]~~ — detalle retirado (ver tabla · diario: [session-22](./docs/sessions/session-22-responsive-movil.md))
+
+Resumen en una frase: responsive móvil bloqueante pre-v1.0 —
+sidebar desacoplada fullscreen + home que cabe en 375×812 sin
+scroll. La sesión 23 (v0.12.6) lo afinó con `100dvh`; la sesión
+24 (v0.12.7) recuperó el auto-hide de la barra del navegador.
+
+<!-- CUERPO-V0125-RETIRADO-INICIO -->
+<!--
 ### Cambiado
 - **`app/shell/Sidebar.jsx` · sidebar fullscreen en móvil** — se
   inyecta un bloque `<style id="pace-sidebar-responsive-css">` con
@@ -194,11 +295,8 @@ y el comportamiento desktop quedan intactos.
 - `v0.12.4` → `v0.12.5` (cambios de código, regenera standalone).
 
 Detalle completo: [`docs/sessions/session-22-responsive-movil.md`](./docs/sessions/session-22-responsive-movil.md).
-
----
-
-> *Las versiones anteriores ya no se detallan aquí — ver la tabla
-> de arriba para enlaces al diario completo de cada sesión.*
+-->
+<!-- CUERPO-V0125-RETIRADO-FIN -->
 
 ---
 
