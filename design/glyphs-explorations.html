@@ -1,0 +1,1875 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>PACE · Glifos · Exploración v0.14.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2EDE0;
+    --paper-2: #EAE4D4;
+    --paper-3: #DFD8C4;
+    --ink: #1F1C17;
+    --ink-2: #4A453C;
+    --ink-3: #8A8372;
+    --line: #C9C0A8;
+    --line-2: #B8AD8E;
+    --focus: #3E5A3A;
+    --breathe: #C97A5D;
+    --move: #9A7B4F;
+    --extra: #6B7A8F;
+    --hydrate: #5F8A9B;
+    --achievement: #B8934A;
+    --font-display: 'EB Garamond', Georgia, serif;
+    --font-ui: 'Inter Tight', system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 64px 48px 120px;
+  }
+  .canvas {
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .doc-head { margin-bottom: 64px; }
+  .doc-head .meta {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .doc-head h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 56px;
+    line-height: 1.05;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+  .doc-head p {
+    max-width: 640px;
+    color: var(--ink-2);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .doc-head p + p { margin-top: 12px; }
+
+  /* SECCIÓN */
+  section { margin-bottom: 88px; }
+  .sec-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+    margin-bottom: 32px;
+  }
+  .sec-head h2 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0;
+  }
+  .sec-head .num {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 18px;
+  }
+  .sec-head .right {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .sec-intro {
+    color: var(--ink-2);
+    max-width: 720px;
+    margin: -12px 0 28px;
+  }
+
+  /* MOOD BOARD */
+  .mood {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .mood-cell {
+    aspect-ratio: 1;
+    background: var(--paper-2);
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+  .mood-cell.dark { background: var(--ink); }
+  .mood-cell.tinted { background: var(--paper-3); }
+  .mood-cell.cream { background: var(--paper); }
+  .mood-cell .label {
+    position: absolute;
+    bottom: 8px; left: 10px;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mood-cell.dark .label { color: var(--paper-3); }
+
+  /* DIRECCIÓN — etiqueta principal */
+  .dir-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .dir-tag .num-big {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 42px;
+    color: var(--ink-3);
+    line-height: 1;
+  }
+  .dir-tag h3 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 32px;
+    margin: 0;
+  }
+  .dir-desc {
+    color: var(--ink-2);
+    max-width: 720px;
+    margin: 0 0 32px;
+    font-size: 15px;
+  }
+
+  /* GRID DE GLIFOS */
+  .glyph-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .glyph-cell {
+    background: var(--paper);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 10px 10px;
+    position: relative;
+    transition: background 200ms;
+  }
+  .glyph-cell:hover { background: var(--paper-2); }
+  .glyph-cell svg {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .glyph-cell .name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.15;
+  }
+  .glyph-cell .id {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    margin-top: 2px;
+  }
+
+  /* SELLO REAL — reproduce la card de Achievements.jsx */
+  .seal-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .seal-card {
+    aspect-ratio: 1 / 1.15;
+    border: 1px solid var(--breathe);
+    border-radius: 12px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    text-align: center;
+  }
+  .seal-card.constancia { border-color: var(--focus); }
+  .seal-card.exploracion { border-color: var(--breathe); }
+  .seal-card.maestria { border-color: var(--achievement); }
+  .seal-card.secretos { border-color: var(--ink-2); border-style: dashed; }
+  .seal-card.estacionales { border-color: var(--move); }
+  .seal-card.primeros { border-color: var(--ink-3); }
+
+  .seal-card .ring {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1.2px solid currentColor;
+    display: grid;
+    place-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .seal-card .ring::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 0.5px solid currentColor;
+    opacity: 0.4;
+  }
+  .seal-card .ring svg { display: block; }
+  .seal-card .title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.15;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .seal-card .desc {
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    color: var(--ink-3);
+    line-height: 1.3;
+  }
+  .seal-card.primeros .ring { color: var(--ink-3); }
+  .seal-card.constancia .ring { color: var(--focus); }
+  .seal-card.exploracion .ring { color: var(--breathe); }
+  .seal-card.maestria .ring { color: var(--achievement); }
+  .seal-card.secretos .ring { color: var(--ink-2); }
+  .seal-card.estacionales .ring { color: var(--move); }
+
+  /* COMPARATIVA actual vs propuesta */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .compare-col {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 24px;
+    border-radius: 8px;
+  }
+  .compare-col h4 {
+    font-family: var(--font-display);
+    font-style: italic;
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .compare-col .small {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 20px;
+  }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 60px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .compare-row:first-of-type { border-top: 0; }
+  .compare-row .gly {
+    text-align: center;
+  }
+  .compare-row .gly.old {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink-3);
+  }
+  .compare-row .meta-id {
+    color: var(--ink-3);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .compare-row .lbl {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  /* DECISION SUMMARY */
+  .decision {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    padding: 28px 32px;
+    border-radius: 8px;
+  }
+  .decision h3 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 24px;
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+  .decision ul {
+    margin: 12px 0 0;
+    padding-left: 20px;
+    color: var(--ink-2);
+  }
+  .decision li { margin-bottom: 6px; }
+  .decision li b { color: var(--ink); font-weight: 500; }
+  .decision .tag-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    border: 1px solid var(--ink-3);
+    color: var(--ink-2);
+  }
+  .pill.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* CATEGORÍAS — index */
+  .cat-index {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .cat {
+    border: 1px solid var(--line);
+    padding: 20px 22px;
+    background: var(--paper);
+    border-radius: 8px;
+  }
+  .cat .swatch {
+    width: 40px; height: 14px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+  }
+  .cat h4 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 6px;
+  }
+  .cat .meta {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+  }
+  .cat .preview {
+    display: flex; gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+    border-top: 1px dashed var(--line);
+    padding-top: 14px;
+  }
+
+  /* HALF SECTION */
+  .twohalf {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas">
+
+  <!-- HEADER -->
+  <header class="doc-head">
+    <div class="meta">PACE · Sesión 29 · Bloque B · Glifos</div>
+    <h1>Sellos de libreta de campo<br/>4 direcciones para 100 logros</h1>
+    <p>El catálogo actual mezcla unicode (✦ ❦ ❀ ☉), numerales romanos (III, VII, C) y un par de glifos egipcios (𓇼, 𓂃). Funciona, pero pesos visuales y familias tipográficas chocan. El objetivo de esta exploración es <b>fijar una dirección visual coherente</b> antes de redibujar el set entero.</p>
+    <p>Cuatro propuestas. Cada una mantiene paleta tierra y aire de cuaderno de campo, pero distinta personalidad: tinta fina, sello hundido, marca a hierro o constelación. Todas son SVG vectorial — peso ~0.4 KB cada glifo, viajan dentro del bundle sin tocar el tamaño actual.</p>
+  </header>
+
+
+  <!-- ======================================================
+       1. CATEGORÍAS Y COLORES (recordatorio)
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Las 6 categorías · sin tocar paleta</h2>
+      <span class="num">01</span>
+    </div>
+    <p class="sec-intro">Cada categoría conserva su color del sistema (<code>tokens.css</code>). Lo que cambia es cómo se dibuja el glifo dentro del aro. La paleta es estable; ahí no metemos mano.</p>
+
+    <div class="cat-index">
+      <div class="cat">
+        <div class="swatch" style="background:var(--ink-3)"></div>
+        <h4>Primeros pasos</h4>
+        <div class="meta">10 logros · ya cerrados al 100%</div>
+        <div class="preview">
+          <svg width="36" height="36" viewBox="0 0 36 36"><path d="M18 6 L18 30 M10 18 L26 18" stroke="#8A8372" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+          <span style="font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--ink-2)">cruz fina</span>
+        </div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:var(--focus)"></div>
+        <h4>Constancia</h4>
+        <div class="meta">15 logros · 14 cazables tras sesión 29</div>
+        <div class="preview">
+          <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="9" stroke="#3E5A3A" stroke-width="1.4" fill="none"/><circle cx="18" cy="18" r="2" fill="#3E5A3A"/></svg>
+          <span style="font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--ink-2)">aro hundido</span>
+        </div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:var(--breathe)"></div>
+        <h4>Exploración</h4>
+        <div class="meta">20 logros · 15 cazables</div>
+        <div class="preview">
+          <svg width="36" height="36" viewBox="0 0 36 36"><path d="M18 6 C24 12 24 24 18 30 C12 24 12 12 18 6 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/></svg>
+          <span style="font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--ink-2)">pétalo abierto</span>
+        </div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:var(--achievement)"></div>
+        <h4>Maestría</h4>
+        <div class="meta">25 logros · 5 cazables</div>
+        <div class="preview">
+          <svg width="36" height="36" viewBox="0 0 36 36"><path d="M18 6 L24 16 L34 17 L26 24 L28 34 L18 28 L8 34 L10 24 L2 17 L12 16 Z" stroke="#B8934A" stroke-width="1" fill="none"/></svg>
+          <span style="font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--ink-2)">estrella delgada</span>
+        </div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:var(--ink-2)"></div>
+        <h4>Secretos</h4>
+        <div class="meta">21 logros · 10 cazables · siempre "?"</div>
+        <div class="preview">
+          <svg width="36" height="36" viewBox="0 0 36 36"><path d="M14 13 C14 9 22 9 22 13 C22 16 18 17 18 21 M18 26 L18 27" stroke="#4A453C" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+          <span style="font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--ink-2)">interrogante propio</span>
+        </div>
+      </div>
+      <div class="cat">
+        <div class="swatch" style="background:var(--move)"></div>
+        <h4>Estacionales</h4>
+        <div class="meta">10 logros · 0 cazables · solsticios y equinoccios</div>
+        <div class="preview">
+          <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="6" fill="none" stroke="#9A7B4F" stroke-width="1.2"/><path d="M18 4 L18 9 M18 27 L18 32 M4 18 L9 18 M27 18 L32 18 M8 8 L11 11 M25 25 L28 28 M8 28 L11 25 M25 11 L28 8" stroke="#9A7B4F" stroke-width="1" stroke-linecap="round"/></svg>
+          <span style="font-family:var(--font-display);font-style:italic;font-size:14px;color:var(--ink-2)">sol radiante</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ======================================================
+       2. DIRECCIÓN A — LÍNEA · INK FINA
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Dirección A · Línea</h2>
+      <span class="num">02</span>
+    </div>
+    <div class="dir-tag">
+      <span class="num-big">A</span>
+      <h3>Tinta fina, gesto único</h3>
+    </div>
+    <p class="dir-desc">Stroke 1.2px, sin relleno, sin sombra. Cada glifo es un trazo limpio que cabría en un cuaderno Moleskine. <b>Lo más alineado con el tono actual de PACE</b>: papel, tinta, mucho aire. Riesgo: glifos demasiado parecidos entre sí en thumbnails pequeños.</p>
+
+    <div class="glyph-grid">
+      <!-- PRIMEROS PASOS -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44"><path d="M22 8 L22 36 M8 22 L36 22" stroke="#1F1C17" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+        <div class="name">Primer paso</div>
+        <div class="id">first.step</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 22 Q14 12 22 16 Q30 20 34 14" stroke="#1F1C17" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <circle cx="34" cy="14" r="1.5" fill="#1F1C17"/>
+        </svg>
+        <div class="name">Primer aliento</div>
+        <div class="id">first.breath</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 22 L22 10 L34 22 L22 34 Z" stroke="#1F1C17" stroke-width="1.2" fill="none"/>
+          <path d="M22 10 L22 34 M10 22 L34 22" stroke="#1F1C17" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Primer estirón</div>
+        <div class="id">first.stretch</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="10" stroke="#1F1C17" stroke-width="1.2" fill="none"/><circle cx="22" cy="22" r="2" fill="#1F1C17"/></svg>
+        <div class="name">Primer sorbo</div>
+        <div class="id">first.sip</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44"><path d="M14 14 L30 30 M30 14 L14 30" stroke="#1F1C17" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+        <div class="name">Primera calistenia</div>
+        <div class="id">first.extra</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="10" stroke="#1F1C17" stroke-width="1.2" fill="none"/></svg>
+        <div class="name">Ciclo completo</div>
+        <div class="id">first.cycle</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 10 L24 18 L32 18 L26 24 L28 32 L22 27 L16 32 L18 24 L12 18 L20 18 Z" stroke="#1F1C17" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="name">Primer ritual</div>
+        <div class="id">first.ritual</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M28 14 A12 12 0 1 0 32 26" stroke="#1F1C17" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Primer día</div>
+        <div class="id">first.day</div>
+      </div>
+
+      <!-- CONSTANCIA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 14 L14 30 M22 12 L22 32 M30 14 L30 30" stroke="#3E5A3A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="name">Tres como una</div>
+        <div class="id">streak.3</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 16 L34 16 M22 16 L22 32" stroke="#3E5A3A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <text x="22" y="14" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="9" fill="#3E5A3A">VII</text>
+        </svg>
+        <div class="name">Semana vaca</div>
+        <div class="id">streak.7</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="10" stroke="#3E5A3A" stroke-width="1.2" fill="none"/>
+          <circle cx="22" cy="22" r="6" stroke="#3E5A3A" stroke-width="1" fill="none" opacity="0.6"/>
+          <circle cx="22" cy="22" r="2" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">Luna llena</div>
+        <div class="id">streak.30</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 L24 18 L34 22 L24 26 L22 36 L20 26 L10 22 L20 18 Z" stroke="#3E5A3A" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="name">Vuelta al sol</div>
+        <div class="id">streak.365</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M8 30 Q14 20 22 22 Q30 24 36 14" stroke="#3E5A3A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <circle cx="36" cy="14" r="1.5" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">100 horas foco</div>
+        <div class="id">focus.hours.100</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M8 24 Q12 18 16 24 T24 24 T32 24 T40 24" stroke="#3E5A3A" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="name">10 respiraciones</div>
+        <div class="id">breathe.sessions.10</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M6 18 Q10 12 14 18 T22 18 T30 18 T38 18" stroke="#3E5A3A" stroke-width="1" fill="none"/>
+          <path d="M6 26 Q10 20 14 26 T22 26 T30 26 T38 26" stroke="#3E5A3A" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="name">50 respiraciones</div>
+        <div class="id">breathe.sessions.50</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="9" stroke="#3E5A3A" stroke-width="0" fill="none"/>
+          <path d="M14 12 L30 12 M30 22 L14 22 M14 32 L30 32" stroke="#3E5A3A" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="22" cy="12" r="2" fill="#3E5A3A"/>
+          <circle cx="22" cy="22" r="2" fill="#3E5A3A"/>
+          <circle cx="22" cy="32" r="2" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">25 movilidades</div>
+        <div class="id">move.sessions.25</div>
+      </div>
+
+      <!-- EXPLORACIÓN -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44"><rect x="12" y="12" width="20" height="20" stroke="#C97A5D" stroke-width="1.2" fill="none"/></svg>
+        <div class="name">Box descubierta</div>
+        <div class="id">explore.box</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 6 C28 14 28 24 22 32 C16 24 16 14 22 6 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/>
+          <circle cx="22" cy="22" r="2" fill="#C97A5D"/>
+        </svg>
+        <div class="name">Coherente</div>
+        <div class="id">explore.coherent</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 A14 14 0 1 1 14 36" stroke="#C97A5D" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Rondas</div>
+        <div class="id">explore.rounds</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <ellipse cx="22" cy="22" rx="6" ry="14" stroke="#C97A5D" stroke-width="1" fill="none"/>
+          <ellipse cx="22" cy="22" rx="14" ry="6" stroke="#C97A5D" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="name">Nadi Shodhana</div>
+        <div class="id">explore.nadi</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 30 Q14 18 22 22 Q30 26 34 14" stroke="#C97A5D" stroke-width="1.2" fill="none"/>
+          <path d="M30 16 L34 14 L33 18" stroke="#C97A5D" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Suspiro fisiológico</div>
+        <div class="id">explore.physiological</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 10 L34 22 L22 34 L10 22 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="name">Caderas libres</div>
+        <div class="id">explore.hips</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 12 L33 30 L11 30 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="name">ATG descubierto</div>
+        <div class="id">explore.atg</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 14 L30 14 L34 22 L30 30 L14 30 L10 22 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="name">Ancestral</div>
+        <div class="id">explore.ancestral</div>
+      </div>
+
+      <!-- MAESTRÍA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="28" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="20" fill="#B8934A">VIII</text>
+        </svg>
+        <div class="name">Jornada de ocho</div>
+        <div class="id">master.pomodoro.8</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M8 22 L36 22" stroke="#B8934A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M8 16 L36 16" stroke="#B8934A" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+          <path d="M8 28 L36 28" stroke="#B8934A" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <div class="name">Larga sesión</div>
+        <div class="id">master.long.focus</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 L22 22 M22 22 L28 16" stroke="#B8934A" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <circle cx="22" cy="22" r="14" stroke="#B8934A" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Amanecer</div>
+        <div class="id">master.dawn</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 36 L22 22 M22 22 L16 28" stroke="#B8934A" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <circle cx="22" cy="22" r="14" stroke="#B8934A" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Ocaso</div>
+        <div class="id">master.dusk</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 10 L22 22 L30 26" stroke="#B8934A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="12" stroke="#B8934A" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="name">Día de foco</div>
+        <div class="id">master.focus.day</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 22 Q22 12 30 22 Q22 32 14 22 Z" stroke="#B8934A" stroke-width="1.2" fill="none"/>
+          <circle cx="22" cy="22" r="2" fill="#B8934A"/>
+        </svg>
+        <div class="name">Retiro personal</div>
+        <div class="id">master.retreat</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M8 30 L22 14 L36 30" stroke="#B8934A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Maratoniana</div>
+        <div class="id">master.marathon</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="28" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="22" fill="#B8934A">C</text>
+        </svg>
+        <div class="name">Centurión</div>
+        <div class="id">master.centurion</div>
+      </div>
+    </div>
+
+    <!-- Sellos reales en mockup -->
+    <div class="seal-grid">
+      <div class="seal-card primeros">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 4 L11 18 M4 11 L18 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div class="title">Primer paso</div>
+        <div class="desc">Completa tu primer Pomodoro</div>
+      </div>
+      <div class="seal-card constancia">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.6"/><circle cx="11" cy="11" r="1" fill="currentColor"/></svg>
+        </div>
+        <div class="title">Luna llena</div>
+        <div class="desc">30 días seguidos</div>
+      </div>
+      <div class="seal-card exploracion">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 3 C15 7 15 15 11 19 C7 15 7 7 11 3 Z" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="11" cy="11" r="1.4" fill="currentColor"/></svg>
+        </div>
+        <div class="title">Coherente</div>
+        <div class="desc">HRV sincronizado</div>
+      </div>
+      <div class="seal-card maestria">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 11 L19 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M3 7 L19 7 M3 15 L19 15" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" opacity="0.5"/></svg>
+        </div>
+        <div class="title">Larga sesión</div>
+        <div class="desc">45 min sin pausa</div>
+      </div>
+      <div class="seal-card secretos">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M7 8 C7 5 15 5 15 8 C15 11 11 11.5 11 14 M11 17 L11 17.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div class="title">Secreto</div>
+        <div class="desc">?????</div>
+      </div>
+      <div class="seal-card estacionales">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="4" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M11 2 L11 5 M11 17 L11 20 M2 11 L5 11 M17 11 L20 11" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        </div>
+        <div class="title">Verano</div>
+        <div class="desc">1 sesión/día</div>
+      </div>
+    </div>
+
+    <p class="dir-desc" style="margin-top:0;">
+      <b>Pros:</b> humilde, alineado con la marca, ligero a 320×320 px en thumbnails. <b>Contras:</b> a tamaño 24px se confunden los geométricos básicos (cuadrado, rombo, círculo).
+    </p>
+  </section>
+
+
+  <!-- ======================================================
+       3. DIRECCIÓN B — SELLO HUNDIDO
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Dirección B · Sello hundido</h2>
+      <span class="num">03</span>
+    </div>
+    <div class="dir-tag">
+      <span class="num-big">B</span>
+      <h3>Tinta sólida sobre papel</h3>
+    </div>
+    <p class="dir-desc">Glifos rellenos con el color de la categoría, tipo sello de tampón. Borde más grueso, contraste fuerte. <b>Mucho más legibles a tamaño thumbnail</b> y sentido de "ya conseguido" más potente. Riesgo: empuja la app hacia un look más decorativo, lejos del minimalismo actual.</p>
+
+    <div class="glyph-grid">
+      <!-- PRIMEROS PASOS -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="14" fill="#1F1C17" opacity="0.06"/>
+          <path d="M22 11 L22 33 M11 22 L33 22" stroke="#1F1C17" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="name">Primer paso</div>
+        <div class="id">first.step</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <ellipse cx="22" cy="22" rx="14" ry="6" fill="#1F1C17" opacity="0.1"/>
+          <path d="M8 22 Q15 18 22 22 Q29 26 36 22" stroke="#1F1C17" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Primer aliento</div>
+        <div class="id">first.breath</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 L36 22 L22 36 L8 22 Z" fill="#1F1C17" opacity="0.1"/>
+          <path d="M22 8 L36 22 L22 36 L8 22 Z" stroke="#1F1C17" stroke-width="1.6" fill="none"/>
+          <circle cx="22" cy="22" r="2.5" fill="#1F1C17"/>
+        </svg>
+        <div class="name">Primer estirón</div>
+        <div class="id">first.stretch</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" fill="#1F1C17" opacity="0.1"/>
+          <circle cx="22" cy="22" r="11" stroke="#1F1C17" stroke-width="1.6" fill="none"/>
+          <circle cx="22" cy="22" r="3" fill="#1F1C17"/>
+        </svg>
+        <div class="name">Primer sorbo</div>
+        <div class="id">first.sip</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="14" fill="#1F1C17" opacity="0.06"/>
+          <path d="M14 14 L30 30 M30 14 L14 30" stroke="#1F1C17" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="name">Primera calistenia</div>
+        <div class="id">first.extra</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" fill="#1F1C17" opacity="0.1"/>
+          <circle cx="22" cy="22" r="11" stroke="#1F1C17" stroke-width="1.6" fill="none"/>
+        </svg>
+        <div class="name">Ciclo completo</div>
+        <div class="id">first.cycle</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 7 L24 17 L34 17 L26 23 L29 33 L22 27 L15 33 L18 23 L10 17 L20 17 Z" fill="#1F1C17" opacity="0.12"/>
+          <path d="M22 7 L24 17 L34 17 L26 23 L29 33 L22 27 L15 33 L18 23 L10 17 L20 17 Z" stroke="#1F1C17" stroke-width="1.4" fill="none"/>
+        </svg>
+        <div class="name">Primer ritual</div>
+        <div class="id">first.ritual</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M30 12 A12 12 0 1 0 34 28" fill="#1F1C17" opacity="0.1"/>
+          <path d="M30 12 A12 12 0 1 0 34 28" stroke="#1F1C17" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Primer día</div>
+        <div class="id">first.day</div>
+      </div>
+
+      <!-- CONSTANCIA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <rect x="12" y="12" width="3" height="20" fill="#3E5A3A"/>
+          <rect x="20" y="10" width="3" height="24" fill="#3E5A3A"/>
+          <rect x="28" y="12" width="3" height="20" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">Tres como una</div>
+        <div class="id">streak.3</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="13" fill="#3E5A3A"/>
+          <text x="22" y="27" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="13" fill="#F2EDE0">VII</text>
+        </svg>
+        <div class="name">Semana vaca</div>
+        <div class="id">streak.7</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="13" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">Luna llena</div>
+        <div class="id">streak.30</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="13" fill="#3E5A3A"/>
+          <path d="M22 12 L24 20 L32 22 L24 24 L22 32 L20 24 L12 22 L20 20 Z" fill="#F2EDE0"/>
+        </svg>
+        <div class="name">Vuelta al sol</div>
+        <div class="id">streak.365</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="28" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="500" font-size="22" fill="#3E5A3A">C</text>
+          <circle cx="22" cy="22" r="14" stroke="#3E5A3A" stroke-width="1.2" fill="none"/>
+        </svg>
+        <div class="name">100 horas foco</div>
+        <div class="id">focus.hours.100</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M8 24 Q14 16 22 22 Q30 28 36 20" stroke="#3E5A3A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">10 respiraciones</div>
+        <div class="id">breathe.sessions.10</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M6 16 Q11 12 16 16 Q21 20 26 16 Q31 12 36 16" stroke="#3E5A3A" stroke-width="1.6" fill="none"/>
+          <path d="M6 24 Q11 20 16 24 Q21 28 26 24 Q31 20 36 24" stroke="#3E5A3A" stroke-width="1.6" fill="none"/>
+          <path d="M6 32 Q11 28 16 32 Q21 36 26 32 Q31 28 36 32" stroke="#3E5A3A" stroke-width="1.6" fill="none"/>
+        </svg>
+        <div class="name">50 respiraciones</div>
+        <div class="id">breathe.sessions.50</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="14" cy="14" r="3" fill="#3E5A3A"/>
+          <circle cx="30" cy="14" r="3" fill="#3E5A3A"/>
+          <circle cx="14" cy="22" r="3" fill="#3E5A3A"/>
+          <circle cx="30" cy="22" r="3" fill="#3E5A3A"/>
+          <circle cx="14" cy="30" r="3" fill="#3E5A3A"/>
+          <circle cx="30" cy="30" r="3" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">25 movilidades</div>
+        <div class="id">move.sessions.25</div>
+      </div>
+
+      <!-- EXPLORACIÓN -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <rect x="11" y="11" width="22" height="22" fill="#C97A5D"/>
+        </svg>
+        <div class="name">Box descubierta</div>
+        <div class="id">explore.box</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 5 C29 13 29 25 22 33 C15 25 15 13 22 5 Z" fill="#C97A5D"/>
+          <circle cx="22" cy="22" r="3" fill="#F2EDE0"/>
+        </svg>
+        <div class="name">Coherente</div>
+        <div class="id">explore.coherent</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 A14 14 0 1 1 8 22" stroke="#C97A5D" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Rondas</div>
+        <div class="id">explore.rounds</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <ellipse cx="22" cy="22" rx="6" ry="14" fill="#C97A5D" opacity="0.6"/>
+          <ellipse cx="22" cy="22" rx="14" ry="6" fill="#C97A5D" opacity="0.6"/>
+        </svg>
+        <div class="name">Nadi Shodhana</div>
+        <div class="id">explore.nadi</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 30 Q14 18 22 22 Q30 26 32 14" stroke="#C97A5D" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M28 11 L33 13 L31 18" stroke="#C97A5D" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="name">Suspiro fisiológico</div>
+        <div class="id">explore.physiological</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 L36 22 L22 36 L8 22 Z" fill="#C97A5D"/>
+        </svg>
+        <div class="name">Caderas libres</div>
+        <div class="id">explore.hips</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 9 L34 31 L10 31 Z" fill="#C97A5D"/>
+        </svg>
+        <div class="name">ATG descubierto</div>
+        <div class="id">explore.atg</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 11 L30 11 L36 22 L30 33 L14 33 L8 22 Z" fill="#C97A5D"/>
+        </svg>
+        <div class="name">Ancestral</div>
+        <div class="id">explore.ancestral</div>
+      </div>
+
+      <!-- MAESTRÍA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="14" fill="#B8934A"/>
+          <text x="22" y="28" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="500" font-size="15" fill="#F2EDE0">VIII</text>
+        </svg>
+        <div class="name">Jornada de ocho</div>
+        <div class="id">master.pomodoro.8</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <rect x="6" y="20" width="32" height="4" rx="2" fill="#B8934A"/>
+          <rect x="6" y="14" width="32" height="2" rx="1" fill="#B8934A" opacity="0.5"/>
+          <rect x="6" y="28" width="32" height="2" rx="1" fill="#B8934A" opacity="0.5"/>
+        </svg>
+        <div class="name">Larga sesión</div>
+        <div class="id">master.long.focus</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 4 L25 20 L40 22 L25 24 L22 40 L19 24 L4 22 L19 20 Z" fill="#B8934A"/>
+        </svg>
+        <div class="name">Amanecer</div>
+        <div class="id">master.dawn</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M30 14 A12 12 0 1 1 14 30" fill="#B8934A"/>
+        </svg>
+        <div class="name">Ocaso</div>
+        <div class="id">master.dusk</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="13" fill="#B8934A"/>
+          <path d="M22 12 L22 22 L29 26" stroke="#F2EDE0" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Día de foco</div>
+        <div class="id">master.focus.day</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 22 Q22 11 30 22 Q22 33 14 22 Z" fill="#B8934A"/>
+          <circle cx="22" cy="22" r="3" fill="#F2EDE0"/>
+        </svg>
+        <div class="name">Retiro personal</div>
+        <div class="id">master.retreat</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M6 32 L22 12 L38 32 Z" fill="#B8934A"/>
+        </svg>
+        <div class="name">Maratoniana</div>
+        <div class="id">master.marathon</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="14" fill="#B8934A"/>
+          <text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="500" font-size="20" fill="#F2EDE0">C</text>
+        </svg>
+        <div class="name">Centurión</div>
+        <div class="id">master.centurion</div>
+      </div>
+    </div>
+
+    <!-- Sellos reales en mockup -->
+    <div class="seal-grid">
+      <div class="seal-card primeros">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 4 L11 18 M4 11 L18 11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div class="title">Primer paso</div>
+        <div class="desc">Completa tu primer Pomodoro</div>
+      </div>
+      <div class="seal-card constancia" style="background:#3E5A3A;color:#F2EDE0;border-color:#3E5A3A;">
+        <div class="ring" style="color:#F2EDE0;border-color:#F2EDE0;">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="currentColor"/></svg>
+        </div>
+        <div class="title" style="color:#F2EDE0;">Luna llena</div>
+        <div class="desc" style="color:#DFD8C4;">30 días seguidos</div>
+      </div>
+      <div class="seal-card exploracion">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 3 C15 7 15 15 11 19 C7 15 7 7 11 3 Z" fill="currentColor"/><circle cx="11" cy="11" r="1.6" fill="#F2EDE0"/></svg>
+        </div>
+        <div class="title">Coherente</div>
+        <div class="desc">HRV sincronizado</div>
+      </div>
+      <div class="seal-card maestria" style="background:#B8934A;color:#F2EDE0;border-color:#B8934A;">
+        <div class="ring" style="color:#F2EDE0;border-color:#F2EDE0;">
+          <svg width="22" height="22" viewBox="0 0 22 22"><rect x="3" y="10" width="16" height="2.5" rx="1" fill="currentColor"/></svg>
+        </div>
+        <div class="title" style="color:#F2EDE0;">Larga sesión</div>
+        <div class="desc" style="color:#DFD8C4;">45 min sin pausa</div>
+      </div>
+      <div class="seal-card secretos">
+        <div class="ring">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="currentColor" opacity="0.1"/><path d="M7 8 C7 5 15 5 15 8 C15 11 11 11.5 11 14 M11 17 L11 17.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div class="title">Secreto</div>
+        <div class="desc">?????</div>
+      </div>
+      <div class="seal-card estacionales" style="background:#9A7B4F;color:#F2EDE0;border-color:#9A7B4F;">
+        <div class="ring" style="color:#F2EDE0;border-color:#F2EDE0;">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="4" fill="currentColor"/><path d="M11 1 L11 4 M11 18 L11 21 M1 11 L4 11 M18 11 L21 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="title" style="color:#F2EDE0;">Verano</div>
+        <div class="desc" style="color:#DFD8C4;">1 sesión/día</div>
+      </div>
+    </div>
+
+    <p class="dir-desc" style="margin-top:0;">
+      <b>Pros:</b> mucho más legible, los logros desbloqueados se sienten como conseguidos. <b>Contras:</b> rompe parcialmente el "todo aire, todo papel" del producto. Mejor reservar el fondo sólido para <b>solo categorías de cierre</b> (constancia 30+ días, maestría completada).
+    </p>
+  </section>
+
+
+  <!-- ======================================================
+       4. DIRECCIÓN C — MARCA A HIERRO
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Dirección C · Marca a hierro</h2>
+      <span class="num">04</span>
+    </div>
+    <div class="dir-tag">
+      <span class="num-big">C</span>
+      <h3>Hierro de ganadería rústica</h3>
+    </div>
+    <p class="dir-desc">Stroke 2.4-3px, esquinas redondas tipo hierro de marcar ganado. Encaja brutal con el concepto "vaca paciendo" del logo. <b>Más recio, más viril, más rural</b>. Es la dirección más arriesgada — empuja la app hacia un imaginario muy concreto. Si funciona, funciona muy bien.</p>
+
+    <div class="glyph-grid">
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 22 L30 22" stroke="#1F1C17" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Primer paso</div>
+        <div class="id">first.step</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 24 Q16 14 22 24 Q28 34 34 24" stroke="#1F1C17" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="name">Primer aliento</div>
+        <div class="id">first.breath</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 10 L32 22 L22 34 L12 22 Z" stroke="#1F1C17" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">Primer estirón</div>
+        <div class="id">first.stretch</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="10" stroke="#1F1C17" stroke-width="3" fill="none"/>
+          <circle cx="22" cy="22" r="3" fill="#1F1C17"/>
+        </svg>
+        <div class="name">Primer sorbo</div>
+        <div class="id">first.sip</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 14 L30 30 M30 14 L14 30" stroke="#1F1C17" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Primera calistenia</div>
+        <div class="id">first.extra</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" stroke="#1F1C17" stroke-width="3" fill="none"/>
+        </svg>
+        <div class="name">Ciclo completo</div>
+        <div class="id">first.cycle</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 L26 18 L36 18 L28 24 L31 34 L22 28 L13 34 L16 24 L8 18 L18 18 Z" stroke="#1F1C17" stroke-width="2.4" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">Primer ritual</div>
+        <div class="id">first.ritual</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M30 12 A12 12 0 1 0 34 28" stroke="#1F1C17" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="name">Primer día</div>
+        <div class="id">first.day</div>
+      </div>
+
+      <!-- CONSTANCIA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 12 L14 32 M22 12 L22 32 M30 12 L30 32" stroke="#3E5A3A" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Tres como una</div>
+        <div class="id">streak.3</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="600" font-size="18" fill="#3E5A3A">VII</text>
+          <path d="M10 35 L34 35" stroke="#3E5A3A" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Semana vaca</div>
+        <div class="id">streak.7</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="12" stroke="#3E5A3A" stroke-width="3" fill="none"/>
+          <circle cx="22" cy="22" r="4" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">Luna llena</div>
+        <div class="id">streak.30</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="6" stroke="#3E5A3A" stroke-width="3" fill="none"/>
+          <path d="M22 4 L22 10 M22 34 L22 40 M4 22 L10 22 M34 22 L40 22 M9 9 L13 13 M31 31 L35 35 M9 35 L13 31 M31 13 L35 9" stroke="#3E5A3A" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Vuelta al sol</div>
+        <div class="id">streak.365</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="600" font-size="22" fill="#3E5A3A">C</text>
+        </svg>
+        <div class="name">100 horas foco</div>
+        <div class="id">focus.hours.100</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M8 28 Q14 14 22 22 Q30 30 36 16" stroke="#3E5A3A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">10 respiraciones</div>
+        <div class="id">breathe.sessions.10</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M6 16 Q11 10 16 16 Q21 22 26 16 Q31 10 36 16" stroke="#3E5A3A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M6 28 Q11 22 16 28 Q21 34 26 28 Q31 22 36 28" stroke="#3E5A3A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">50 respiraciones</div>
+        <div class="id">breathe.sessions.50</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 12 L30 12 M14 22 L30 22 M14 32 L30 32" stroke="#3E5A3A" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="name">25 movilidades</div>
+        <div class="id">move.sessions.25</div>
+      </div>
+
+      <!-- EXPLORACIÓN -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <rect x="11" y="11" width="22" height="22" rx="2" stroke="#C97A5D" stroke-width="3" fill="none"/>
+        </svg>
+        <div class="name">Box descubierta</div>
+        <div class="id">explore.box</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 5 C30 13 30 25 22 33 C14 25 14 13 22 5 Z" stroke="#C97A5D" stroke-width="3" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">Coherente</div>
+        <div class="id">explore.coherent</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 7 A15 15 0 1 1 7 22" stroke="#C97A5D" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="22" cy="7" r="2.5" fill="#C97A5D"/>
+        </svg>
+        <div class="name">Rondas</div>
+        <div class="id">explore.rounds</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <ellipse cx="22" cy="22" rx="6" ry="14" stroke="#C97A5D" stroke-width="2.4" fill="none"/>
+          <ellipse cx="22" cy="22" rx="14" ry="6" stroke="#C97A5D" stroke-width="2.4" fill="none"/>
+        </svg>
+        <div class="name">Nadi Shodhana</div>
+        <div class="id">explore.nadi</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M10 30 Q16 18 22 22 Q28 26 32 14" stroke="#C97A5D" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M28 11 L33 13 L31 18" stroke="#C97A5D" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="name">Suspiro fisiológico</div>
+        <div class="id">explore.physiological</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 8 L36 22 L22 36 L8 22 Z" stroke="#C97A5D" stroke-width="3" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">Caderas libres</div>
+        <div class="id">explore.hips</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 9 L34 31 L10 31 Z" stroke="#C97A5D" stroke-width="3" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">ATG descubierto</div>
+        <div class="id">explore.atg</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 11 L30 11 L36 22 L30 33 L14 33 L8 22 Z" stroke="#C97A5D" stroke-width="3" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">Ancestral</div>
+        <div class="id">explore.ancestral</div>
+      </div>
+
+      <!-- MAESTRÍA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="600" font-size="18" fill="#B8934A">VIII</text>
+        </svg>
+        <div class="name">Jornada de ocho</div>
+        <div class="id">master.pomodoro.8</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <rect x="6" y="20" width="32" height="4" rx="2" fill="#B8934A"/>
+        </svg>
+        <div class="name">Larga sesión</div>
+        <div class="id">master.long.focus</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 9 L22 22 M14 17 L22 9 L30 17" stroke="#B8934A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M8 30 L36 30" stroke="#B8934A" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Amanecer</div>
+        <div class="id">master.dawn</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M22 35 L22 22 M14 27 L22 35 L30 27" stroke="#B8934A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M8 14 L36 14" stroke="#B8934A" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Ocaso</div>
+        <div class="id">master.dusk</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="13" stroke="#B8934A" stroke-width="3" fill="none"/>
+          <path d="M22 12 L22 22 L29 26" stroke="#B8934A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="name">Día de foco</div>
+        <div class="id">master.focus.day</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M14 22 Q22 11 30 22 Q22 33 14 22 Z" stroke="#B8934A" stroke-width="3" stroke-linejoin="round" fill="none"/>
+          <circle cx="22" cy="22" r="3" fill="#B8934A"/>
+        </svg>
+        <div class="name">Retiro personal</div>
+        <div class="id">master.retreat</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <path d="M6 32 L22 12 L38 32" stroke="#B8934A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="name">Maratoniana</div>
+        <div class="id">master.marathon</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="32" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-weight="600" font-size="26" fill="#B8934A">C</text>
+        </svg>
+        <div class="name">Centurión</div>
+        <div class="id">master.centurion</div>
+      </div>
+    </div>
+
+    <p class="dir-desc" style="margin-top:0;">
+      <b>Pros:</b> personalidad muy fuerte, refuerza el imaginario "vaca/pace/campo", legible a 24px. <b>Contras:</b> demasiada presencia visual; resta aire al producto. Si se elige, hay que <b>quitar</b> elementos decorativos en otros sitios para compensar.
+    </p>
+  </section>
+
+
+  <!-- ======================================================
+       5. DIRECCIÓN D — CONSTELACIÓN
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Dirección D · Constelación</h2>
+      <span class="num">05</span>
+    </div>
+    <div class="dir-tag">
+      <span class="num-big">D</span>
+      <h3>Puntos finos conectados</h3>
+    </div>
+    <p class="dir-desc">Puntos de 2-3 px conectados por líneas finísimas (0.6 px). Lectura tipo carta astronómica de campo, cuaderno de naturalista. <b>Es la más sutil y la más diferenciada respecto al estado del arte de apps de productividad</b>. Riesgo: queda etérea — los logros se sienten poco "conseguibles", muy intelectuales.</p>
+
+    <div class="glyph-grid">
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="2.4" fill="#1F1C17"/>
+          <circle cx="22" cy="22" r="8" stroke="#1F1C17" stroke-width="0.6" fill="none" opacity="0.6"/>
+        </svg>
+        <div class="name">Primer paso</div>
+        <div class="id">first.step</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="10" cy="22" r="2" fill="#1F1C17"/>
+          <circle cx="22" cy="14" r="2" fill="#1F1C17"/>
+          <circle cx="34" cy="22" r="2" fill="#1F1C17"/>
+          <path d="M10 22 Q22 14 34 22" stroke="#1F1C17" stroke-width="0.6" fill="none"/>
+        </svg>
+        <div class="name">Primer aliento</div>
+        <div class="id">first.breath</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="10" r="2" fill="#1F1C17"/>
+          <circle cx="34" cy="22" r="2" fill="#1F1C17"/>
+          <circle cx="22" cy="34" r="2" fill="#1F1C17"/>
+          <circle cx="10" cy="22" r="2" fill="#1F1C17"/>
+          <path d="M22 10 L34 22 L22 34 L10 22 Z" stroke="#1F1C17" stroke-width="0.6" fill="none"/>
+        </svg>
+        <div class="name">Primer estirón</div>
+        <div class="id">first.stretch</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="2.4" fill="#1F1C17"/>
+          <circle cx="22" cy="22" r="11" stroke="#1F1C17" stroke-width="0.6" fill="none"/>
+        </svg>
+        <div class="name">Primer sorbo</div>
+        <div class="id">first.sip</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="14" cy="14" r="2" fill="#1F1C17"/>
+          <circle cx="30" cy="30" r="2" fill="#1F1C17"/>
+          <circle cx="30" cy="14" r="2" fill="#1F1C17"/>
+          <circle cx="14" cy="30" r="2" fill="#1F1C17"/>
+          <path d="M14 14 L30 30 M30 14 L14 30" stroke="#1F1C17" stroke-width="0.6"/>
+        </svg>
+        <div class="name">Primera calistenia</div>
+        <div class="id">first.extra</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" stroke="#1F1C17" stroke-width="0.6" fill="none"/>
+          <circle cx="22" cy="11" r="2" fill="#1F1C17"/>
+        </svg>
+        <div class="name">Ciclo completo</div>
+        <div class="id">first.cycle</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="8" r="1.8" fill="#1F1C17"/>
+          <circle cx="36" cy="22" r="1.8" fill="#1F1C17"/>
+          <circle cx="22" cy="36" r="1.8" fill="#1F1C17"/>
+          <circle cx="8" cy="22" r="1.8" fill="#1F1C17"/>
+          <circle cx="22" cy="22" r="2.4" fill="#1F1C17"/>
+          <path d="M22 8 L22 36 M8 22 L36 22 M22 22 L22 22" stroke="#1F1C17" stroke-width="0.5" opacity="0.5"/>
+        </svg>
+        <div class="name">Primer ritual</div>
+        <div class="id">first.ritual</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="34" cy="14" r="2" fill="#1F1C17"/>
+          <path d="M30 12 A12 12 0 1 0 34 28" stroke="#1F1C17" stroke-width="0.6" fill="none"/>
+        </svg>
+        <div class="name">Primer día</div>
+        <div class="id">first.day</div>
+      </div>
+
+      <!-- CONSTANCIA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="14" cy="22" r="2" fill="#3E5A3A"/>
+          <circle cx="22" cy="22" r="2" fill="#3E5A3A"/>
+          <circle cx="30" cy="22" r="2" fill="#3E5A3A"/>
+          <path d="M14 22 L30 22" stroke="#3E5A3A" stroke-width="0.5" opacity="0.5"/>
+        </svg>
+        <div class="name">Tres como una</div>
+        <div class="id">streak.3</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="8" cy="22" r="1.6" fill="#3E5A3A"/>
+          <circle cx="14" cy="14" r="1.6" fill="#3E5A3A"/>
+          <circle cx="22" cy="10" r="1.6" fill="#3E5A3A"/>
+          <circle cx="30" cy="14" r="1.6" fill="#3E5A3A"/>
+          <circle cx="36" cy="22" r="1.6" fill="#3E5A3A"/>
+          <circle cx="30" cy="30" r="1.6" fill="#3E5A3A"/>
+          <circle cx="14" cy="30" r="1.6" fill="#3E5A3A"/>
+          <path d="M8 22 L14 14 L22 10 L30 14 L36 22 L30 30 L14 30 Z" stroke="#3E5A3A" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Semana vaca</div>
+        <div class="id">streak.7</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" stroke="#3E5A3A" stroke-width="0.6" fill="none"/>
+          <circle cx="22" cy="22" r="3" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">Luna llena</div>
+        <div class="id">streak.30</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="6" r="1.6" fill="#3E5A3A"/>
+          <circle cx="36" cy="13" r="1.6" fill="#3E5A3A"/>
+          <circle cx="38" cy="28" r="1.6" fill="#3E5A3A"/>
+          <circle cx="28" cy="38" r="1.6" fill="#3E5A3A"/>
+          <circle cx="14" cy="36" r="1.6" fill="#3E5A3A"/>
+          <circle cx="6" cy="24" r="1.6" fill="#3E5A3A"/>
+          <circle cx="10" cy="10" r="1.6" fill="#3E5A3A"/>
+          <circle cx="22" cy="22" r="2.4" fill="#3E5A3A"/>
+          <path d="M22 6 L36 13 L38 28 L28 38 L14 36 L6 24 L10 10 Z" stroke="#3E5A3A" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Vuelta al sol</div>
+        <div class="id">streak.365</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="18" fill="#3E5A3A">C</text>
+        </svg>
+        <div class="name">100 horas foco</div>
+        <div class="id">focus.hours.100</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="10" cy="22" r="1.6" fill="#3E5A3A"/>
+          <circle cx="18" cy="16" r="1.6" fill="#3E5A3A"/>
+          <circle cx="26" cy="28" r="1.6" fill="#3E5A3A"/>
+          <circle cx="34" cy="18" r="1.6" fill="#3E5A3A"/>
+          <path d="M10 22 Q14 19 18 16 Q22 22 26 28 Q30 23 34 18" stroke="#3E5A3A" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">10 respiraciones</div>
+        <div class="id">breathe.sessions.10</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="8" cy="14" r="1.4" fill="#3E5A3A"/>
+          <circle cx="16" cy="20" r="1.4" fill="#3E5A3A"/>
+          <circle cx="24" cy="14" r="1.4" fill="#3E5A3A"/>
+          <circle cx="32" cy="20" r="1.4" fill="#3E5A3A"/>
+          <circle cx="8" cy="26" r="1.4" fill="#3E5A3A"/>
+          <circle cx="16" cy="32" r="1.4" fill="#3E5A3A"/>
+          <circle cx="24" cy="26" r="1.4" fill="#3E5A3A"/>
+          <circle cx="32" cy="32" r="1.4" fill="#3E5A3A"/>
+        </svg>
+        <div class="name">50 respiraciones</div>
+        <div class="id">breathe.sessions.50</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="14" cy="14" r="1.6" fill="#3E5A3A"/>
+          <circle cx="30" cy="14" r="1.6" fill="#3E5A3A"/>
+          <circle cx="14" cy="22" r="1.6" fill="#3E5A3A"/>
+          <circle cx="30" cy="22" r="1.6" fill="#3E5A3A"/>
+          <circle cx="14" cy="30" r="1.6" fill="#3E5A3A"/>
+          <circle cx="30" cy="30" r="1.6" fill="#3E5A3A"/>
+          <path d="M14 14 L30 14 M14 22 L30 22 M14 30 L30 30" stroke="#3E5A3A" stroke-width="0.5" opacity="0.4"/>
+        </svg>
+        <div class="name">25 movilidades</div>
+        <div class="id">move.sessions.25</div>
+      </div>
+
+      <!-- EXPLORACIÓN -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="11" cy="11" r="2" fill="#C97A5D"/>
+          <circle cx="33" cy="11" r="2" fill="#C97A5D"/>
+          <circle cx="33" cy="33" r="2" fill="#C97A5D"/>
+          <circle cx="11" cy="33" r="2" fill="#C97A5D"/>
+          <rect x="11" y="11" width="22" height="22" stroke="#C97A5D" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Box descubierta</div>
+        <div class="id">explore.box</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="6" r="2" fill="#C97A5D"/>
+          <circle cx="22" cy="38" r="2" fill="#C97A5D"/>
+          <circle cx="22" cy="22" r="2.4" fill="#C97A5D"/>
+          <path d="M22 6 C28 14 28 30 22 38 C16 30 16 14 22 6 Z" stroke="#C97A5D" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Coherente</div>
+        <div class="id">explore.coherent</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="8" r="2" fill="#C97A5D"/>
+          <circle cx="36" cy="22" r="2" fill="#C97A5D"/>
+          <circle cx="22" cy="36" r="2" fill="#C97A5D"/>
+          <circle cx="8" cy="22" r="2" fill="#C97A5D"/>
+          <path d="M22 8 A14 14 0 1 1 8 22" stroke="#C97A5D" stroke-width="0.6" fill="none" opacity="0.6"/>
+        </svg>
+        <div class="name">Rondas</div>
+        <div class="id">explore.rounds</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="14" cy="22" r="1.8" fill="#C97A5D"/>
+          <circle cx="30" cy="22" r="1.8" fill="#C97A5D"/>
+          <circle cx="22" cy="14" r="1.8" fill="#C97A5D"/>
+          <circle cx="22" cy="30" r="1.8" fill="#C97A5D"/>
+          <ellipse cx="22" cy="22" rx="6" ry="14" stroke="#C97A5D" stroke-width="0.5" fill="none" opacity="0.5"/>
+          <ellipse cx="22" cy="22" rx="14" ry="6" stroke="#C97A5D" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Nadi Shodhana</div>
+        <div class="id">explore.nadi</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="10" cy="30" r="2" fill="#C97A5D"/>
+          <circle cx="22" cy="22" r="2" fill="#C97A5D"/>
+          <circle cx="33" cy="14" r="2" fill="#C97A5D"/>
+          <path d="M10 30 Q14 22 22 22 Q28 22 33 14" stroke="#C97A5D" stroke-width="0.5" fill="none" opacity="0.6"/>
+          <path d="M28 11 L33 14 L31 19" stroke="#C97A5D" stroke-width="0.6" fill="none" opacity="0.6"/>
+        </svg>
+        <div class="name">Suspiro fisiológico</div>
+        <div class="id">explore.physiological</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="8" r="2" fill="#C97A5D"/>
+          <circle cx="36" cy="22" r="2" fill="#C97A5D"/>
+          <circle cx="22" cy="36" r="2" fill="#C97A5D"/>
+          <circle cx="8" cy="22" r="2" fill="#C97A5D"/>
+          <path d="M22 8 L36 22 L22 36 L8 22 Z" stroke="#C97A5D" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Caderas libres</div>
+        <div class="id">explore.hips</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="9" r="2" fill="#C97A5D"/>
+          <circle cx="34" cy="31" r="2" fill="#C97A5D"/>
+          <circle cx="10" cy="31" r="2" fill="#C97A5D"/>
+          <path d="M22 9 L34 31 L10 31 Z" stroke="#C97A5D" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">ATG descubierto</div>
+        <div class="id">explore.atg</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="14" cy="11" r="1.8" fill="#C97A5D"/>
+          <circle cx="30" cy="11" r="1.8" fill="#C97A5D"/>
+          <circle cx="36" cy="22" r="1.8" fill="#C97A5D"/>
+          <circle cx="30" cy="33" r="1.8" fill="#C97A5D"/>
+          <circle cx="14" cy="33" r="1.8" fill="#C97A5D"/>
+          <circle cx="8" cy="22" r="1.8" fill="#C97A5D"/>
+          <path d="M14 11 L30 11 L36 22 L30 33 L14 33 L8 22 Z" stroke="#C97A5D" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Ancestral</div>
+        <div class="id">explore.ancestral</div>
+      </div>
+
+      <!-- MAESTRÍA -->
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="14" fill="#B8934A">VIII</text>
+        </svg>
+        <div class="name">Jornada de ocho</div>
+        <div class="id">master.pomodoro.8</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="8" cy="22" r="2" fill="#B8934A"/>
+          <circle cx="36" cy="22" r="2" fill="#B8934A"/>
+          <path d="M8 22 L36 22" stroke="#B8934A" stroke-width="0.6" opacity="0.6"/>
+        </svg>
+        <div class="name">Larga sesión</div>
+        <div class="id">master.long.focus</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="6" stroke="#B8934A" stroke-width="0.6" fill="none"/>
+          <circle cx="22" cy="6" r="1.6" fill="#B8934A"/>
+          <circle cx="22" cy="38" r="1.6" fill="#B8934A"/>
+          <circle cx="6" cy="22" r="1.6" fill="#B8934A"/>
+          <circle cx="38" cy="22" r="1.6" fill="#B8934A"/>
+          <path d="M22 6 L22 38 M6 22 L38 22" stroke="#B8934A" stroke-width="0.4" opacity="0.4"/>
+        </svg>
+        <div class="name">Amanecer</div>
+        <div class="id">master.dawn</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" stroke="#B8934A" stroke-width="0.6" fill="none"/>
+          <circle cx="14" cy="14" r="1.6" fill="#B8934A"/>
+          <circle cx="30" cy="30" r="1.6" fill="#B8934A"/>
+        </svg>
+        <div class="name">Ocaso</div>
+        <div class="id">master.dusk</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="11" stroke="#B8934A" stroke-width="0.6" fill="none"/>
+          <circle cx="22" cy="22" r="2" fill="#B8934A"/>
+          <circle cx="22" cy="13" r="1.4" fill="#B8934A"/>
+          <circle cx="29" cy="26" r="1.4" fill="#B8934A"/>
+          <path d="M22 22 L22 13 M22 22 L29 26" stroke="#B8934A" stroke-width="0.5" opacity="0.6"/>
+        </svg>
+        <div class="name">Día de foco</div>
+        <div class="id">master.focus.day</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="2.4" fill="#B8934A"/>
+          <circle cx="14" cy="22" r="1.4" fill="#B8934A"/>
+          <circle cx="30" cy="22" r="1.4" fill="#B8934A"/>
+          <path d="M14 22 Q22 12 30 22 Q22 32 14 22 Z" stroke="#B8934A" stroke-width="0.5" fill="none" opacity="0.6"/>
+        </svg>
+        <div class="name">Retiro personal</div>
+        <div class="id">master.retreat</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <circle cx="6" cy="32" r="1.8" fill="#B8934A"/>
+          <circle cx="22" cy="12" r="1.8" fill="#B8934A"/>
+          <circle cx="38" cy="32" r="1.8" fill="#B8934A"/>
+          <path d="M6 32 L22 12 L38 32" stroke="#B8934A" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="name">Maratoniana</div>
+        <div class="id">master.marathon</div>
+      </div>
+      <div class="glyph-cell">
+        <svg width="44" height="44" viewBox="0 0 44 44">
+          <text x="22" y="30" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="22" fill="#B8934A">C</text>
+        </svg>
+        <div class="name">Centurión</div>
+        <div class="id">master.centurion</div>
+      </div>
+    </div>
+
+    <p class="dir-desc" style="margin-top:0;">
+      <b>Pros:</b> sutilísimo, único, evoca el mood "naturalista" del producto. <b>Contras:</b> a 24px en el sello del Toast los puntos pueden desaparecer; algunos glifos quedan demasiado parecidos. Funciona mejor a tamaño catálogo (56px) que a tamaño Toast.
+    </p>
+  </section>
+
+
+  <!-- ======================================================
+       6. COMPARATIVA RÁPIDA · ACTUAL vs RECOMENDADA
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Comparativa · catálogo actual vs propuesta</h2>
+      <span class="num">06</span>
+    </div>
+    <p class="sec-intro">Mismos 12 logros, mismas categorías. Izquierda: el set actual (unicode mezclado). Derecha: <b>Dirección A</b> aplicada (la más respetuosa con la marca actual). Útil como referencia rápida antes de decidir.</p>
+
+    <div class="compare">
+      <div class="compare-col">
+        <div class="small">Catálogo actual</div>
+        <h4>Mezcla heterogénea</h4>
+        <div class="compare-row"><span class="lbl">Primer paso</span><span class="meta-id">first.step</span><span class="gly old">✦</span></div>
+        <div class="compare-row"><span class="lbl">Primer aliento</span><span class="meta-id">first.breath</span><span class="gly old">𓇼</span></div>
+        <div class="compare-row"><span class="lbl">Primer estirón</span><span class="meta-id">first.stretch</span><span class="gly old">𓂃</span></div>
+        <div class="compare-row"><span class="lbl">Primer sorbo</span><span class="meta-id">first.sip</span><span class="gly old">◌</span></div>
+        <div class="compare-row"><span class="lbl">Tres como una</span><span class="meta-id">streak.3</span><span class="gly old">III</span></div>
+        <div class="compare-row"><span class="lbl">Luna llena</span><span class="meta-id">streak.30</span><span class="gly old">●</span></div>
+        <div class="compare-row"><span class="lbl">Box descubierta</span><span class="meta-id">explore.box</span><span class="gly old">▢</span></div>
+        <div class="compare-row"><span class="lbl">Coherente</span><span class="meta-id">explore.coherent</span><span class="gly old">♥</span></div>
+        <div class="compare-row"><span class="lbl">Caderas libres</span><span class="meta-id">explore.hips</span><span class="gly old">◇</span></div>
+        <div class="compare-row"><span class="lbl">ATG descubierto</span><span class="meta-id">explore.atg</span><span class="gly old">△</span></div>
+        <div class="compare-row"><span class="lbl">Larga sesión</span><span class="meta-id">master.long.focus</span><span class="gly old">═</span></div>
+        <div class="compare-row"><span class="lbl">Centurión</span><span class="meta-id">master.centurion</span><span class="gly old">C</span></div>
+      </div>
+
+      <div class="compare-col">
+        <div class="small">Propuesta · Dirección A · Línea</div>
+        <h4>SVG cohesivo, stroke 1.2</h4>
+        <div class="compare-row"><span class="lbl">Primer paso</span><span class="meta-id">first.step</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M17 6 L17 28 M6 17 L28 17" stroke="#1F1C17" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg></div>
+        <div class="compare-row"><span class="lbl">Primer aliento</span><span class="meta-id">first.breath</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M6 17 Q10 9 17 13 Q24 17 28 9" stroke="#1F1C17" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="28" cy="9" r="1.4" fill="#1F1C17"/></svg></div>
+        <div class="compare-row"><span class="lbl">Primer estirón</span><span class="meta-id">first.stretch</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M6 17 L17 6 L28 17 L17 28 Z" stroke="#1F1C17" stroke-width="1.2" fill="none"/><path d="M17 6 L17 28 M6 17 L28 17" stroke="#1F1C17" stroke-width="0.6" opacity="0.5"/></svg></div>
+        <div class="compare-row"><span class="lbl">Primer sorbo</span><span class="meta-id">first.sip</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="9" stroke="#1F1C17" stroke-width="1.2" fill="none"/><circle cx="17" cy="17" r="1.8" fill="#1F1C17"/></svg></div>
+        <div class="compare-row"><span class="lbl">Tres como una</span><span class="meta-id">streak.3</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M10 10 L10 24 M17 8 L17 26 M24 10 L24 24" stroke="#3E5A3A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="compare-row"><span class="lbl">Luna llena</span><span class="meta-id">streak.30</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="8" stroke="#3E5A3A" stroke-width="1.2" fill="none"/><circle cx="17" cy="17" r="5" stroke="#3E5A3A" stroke-width="0.8" fill="none" opacity="0.6"/><circle cx="17" cy="17" r="1.6" fill="#3E5A3A"/></svg></div>
+        <div class="compare-row"><span class="lbl">Box descubierta</span><span class="meta-id">explore.box</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><rect x="8" y="8" width="18" height="18" stroke="#C97A5D" stroke-width="1.2" fill="none"/></svg></div>
+        <div class="compare-row"><span class="lbl">Coherente</span><span class="meta-id">explore.coherent</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M17 5 C22 11 22 23 17 29 C12 23 12 11 17 5 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/><circle cx="17" cy="17" r="1.8" fill="#C97A5D"/></svg></div>
+        <div class="compare-row"><span class="lbl">Caderas libres</span><span class="meta-id">explore.hips</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M17 7 L27 17 L17 27 L7 17 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/></svg></div>
+        <div class="compare-row"><span class="lbl">ATG descubierto</span><span class="meta-id">explore.atg</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M17 8 L26 25 L8 25 Z" stroke="#C97A5D" stroke-width="1.2" fill="none"/></svg></div>
+        <div class="compare-row"><span class="lbl">Larga sesión</span><span class="meta-id">master.long.focus</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><path d="M5 17 L29 17" stroke="#B8934A" stroke-width="1.4" stroke-linecap="round"/><path d="M5 13 L29 13 M5 21 L29 21" stroke="#B8934A" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/></svg></div>
+        <div class="compare-row"><span class="lbl">Centurión</span><span class="meta-id">master.centurion</span><svg class="gly" width="34" height="34" viewBox="0 0 34 34"><text x="17" y="22" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="18" fill="#B8934A">C</text></svg></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ======================================================
+       7. RECOMENDACIÓN
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Recomendación de cierre</h2>
+      <span class="num">07</span>
+    </div>
+
+    <div class="decision">
+      <h3>Híbrido A + B · línea por defecto, sello al cerrar categoría</h3>
+      <p>La opción más alineada con la filosofía de PACE: sustituir el set actual por la <b>Dirección A (Línea)</b> en todos los logros, y usar la <b>Dirección B (Sello hundido)</b> únicamente en logros de cierre de categoría — luna llena (streak.30), centurión (focus.hours.100), día de foco (master.focus.day), 50 respiraciones, etc. Así <b>el sello sólido pasa a ser un signo de "completado importante"</b>, no un estilo decorativo de fondo.</p>
+
+      <ul>
+        <li><b>Implementación técnica:</b> añadir campo opcional <code>seal: 'line' | 'fill'</code> a las entradas de <code>ACHIEVEMENT_CATALOG</code>. Default <code>'line'</code>. Por ahora unas 5-7 entradas pasarían a <code>'fill'</code>.</li>
+        <li><b>Migración del set actual:</b> mover <code>glyph: '✦'</code> y similares a <code>glyphSvg: &lt;path/&gt;</code>. Mantener <code>glyph</code> string como fallback durante la migración para no romper instalaciones de localStorage existentes (los logros desbloqueados se renderizan con el catálogo, no con un snapshot — así que la migración es <b>solo de catálogo</b>, no de datos).</li>
+        <li><b>Coste estimado:</b> ~3-4h de redibujo + 1h de cableado en <code>Achievements.jsx</code> (Seal component). Los SVG ya están aquí en este canvas — aprox. 30 listos para copiar.</li>
+        <li><b>Quedan fuera de esta sesión:</b> los Toast del logro recién desbloqueado (<code>Toast.jsx</code>) ya consumen <code>achievement.glyph</code> como string; al migrar a SVG hay que actualizarlo también. Ítem nuevo de backlog.</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="pill primary">Recomendada</span>
+        <span class="pill">Mantiene paleta</span>
+        <span class="pill">Compatible con localStorage</span>
+        <span class="pill">~4h de implementación</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ======================================================
+       8. PRÓXIMOS PASOS
+       ====================================================== -->
+  <section>
+    <div class="sec-head">
+      <h2>Próximos pasos</h2>
+      <span class="num">08</span>
+    </div>
+    <div class="twohalf">
+      <div>
+        <h4 style="font-family:var(--font-display);font-style:italic;font-size:22px;margin:0 0 12px;font-weight:500;">Si validas la dirección A híbrida</h4>
+        <p style="color:var(--ink-2);margin:0 0 12px;">Próxima sesión:</p>
+        <ol style="color:var(--ink-2);padding-left:20px;line-height:1.8;">
+          <li>Refactor de <code>ACHIEVEMENT_CATALOG</code> para aceptar <code>glyphSvg</code> y <code>seal: 'line' | 'fill'</code>.</li>
+          <li>Redibujo de los 100 glifos con los criterios fijados aquí (estimación: 30 ya cerrados visualmente en este canvas, 70 restantes a generar siguiendo familia formal).</li>
+          <li>Actualizar <code>Toast.jsx</code> para renderizar SVG en lugar de string glyph.</li>
+          <li>Verificar contraste y legibilidad a 24/40/56 px.</li>
+          <li>Ítem nuevo en STATE.md sección "Decisiones activas": "Glifos viven en SVG inline en el catálogo, no en unicode".</li>
+        </ol>
+      </div>
+      <div>
+        <h4 style="font-family:var(--font-display);font-style:italic;font-size:22px;margin:0 0 12px;font-weight:500;">Si prefieres otra dirección</h4>
+        <p style="color:var(--ink-2);margin:0 0 12px;">Las cuatro son igualmente viables; las elecciones tienen consecuencias:</p>
+        <ul style="color:var(--ink-2);padding-left:20px;line-height:1.8;">
+          <li><b>B sólo</b>: app más decorativa; mejor para legibilidad pero pierde sutileza.</li>
+          <li><b>C marca a hierro</b>: refuerza el imaginario "vaca/campo"; asegúrate de querer ese imaginario antes de comprometer 100 glifos.</li>
+          <li><b>D constelación</b>: muy sutil; recomendado solo si la app va a tener un modo de pantalla completa estilo "telescopio" (vista anual heatmap, por ejemplo).</li>
+          <li><b>Mantener actual</b>: válido. La consistencia tipográfica del catálogo no es un bloqueante pre-v1.0; es un detalle de pulido.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

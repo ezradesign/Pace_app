@@ -8,7 +8,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.13.0';
+const PACE_VERSION = 'v0.14.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -51,6 +51,17 @@ const defaultState = {
 
   // Streak
   streak: { current: 0, longest: 0, lastActiveDate: null },
+
+  // Contadores acumulados de sesiones por módulo (sesión 29).
+  // Crecen monótonamente; nunca resetean en rollover. Alimentan los
+  // logros breathe.sessions.10/50 y move.sessions.25.
+  breatheSessionsTotal: 0,
+  moveSessionsTotal: 0,
+
+  // Set de fechas (toDateString()) en las que el usuario hizo al menos
+  // una sesión antes de las 9:00. Cap de 30 entradas (suficiente para
+  // alimentar `morning.5`). Sesión 29.
+  morningDates: [],
 
   // Intención del día — capturada opcionalmente en el Welcome de primera
   // vez (sesión 17 / v0.12.0), visible también para edición futura.
@@ -212,6 +223,31 @@ function checkFocusDayAchievement() {
   if (todayMin >= 240) unlockAchievement('master.focus.day');
 }
 
+/* Detectores horarios — sesión 29.
+   `master.dawn`  → sesión antes de las 7:00.
+   `master.dusk`  → sesión después de las 21:00.
+   `morning.5`    → 5 fechas distintas con sesión antes de las 9:00.
+   Se llama desde cada acción de completar (breathe / move / extra /
+   pomodoro). El registro de fechas para `morning.5` se persiste en el
+   state como `morningDates: string[]` (toDateString) con cap de 30.
+*/
+function checkTimeOfDayAchievements() {
+  const now = new Date();
+  const h = now.getHours();
+  if (h < 7) unlockAchievement('master.dawn');
+  if (h >= 21) unlockAchievement('master.dusk');
+  if (h < 9) {
+    const today = now.toDateString();
+    const s = getState();
+    const list = Array.isArray(s.morningDates) ? s.morningDates : [];
+    if (!list.includes(today)) {
+      const next = [...list, today].slice(-30);
+      setState({ morningDates: next });
+      if (next.length >= 5) unlockAchievement('morning.5');
+    }
+  }
+}
+
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -260,6 +296,12 @@ function completePomodoro() {
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (_state.cycle >= 8) unlockAchievement('master.pomodoro.8');
+  /* `master.long.focus` — completar un Pomodoro de 45 min sin pausa.
+     Se evalúa contra los minutos del bloque que acaba de cerrarse,
+     no contra el state.focusMinutes (que puede haberse cambiado por
+     tweak antes de que termine el ticker). Sesión 29. */
+  if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
+  checkTimeOfDayAchievements();
   updateStreak();
 }
 
@@ -272,9 +314,17 @@ function completeBreathSession(routineId, durationMin) {
   setState({
     plan: { ...s.plan, respira: true },
     weeklyStats: { ...s.weeklyStats, breathMinutes: week },
+    /* Contador acumulado de sesiones de respiración (sesión 29).
+       Crece monótonamente; alimenta breathe.sessions.10/50. */
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
   });
   unlockAchievement('first.breath');
+  /* Umbrales de constancia por módulo. Leemos `_state` ya actualizado
+     para no usar variables de cierre (patrón validado en sesión 18). */
+  if (_state.breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
+  if (_state.breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
   checkPlanAchievements();
+  checkTimeOfDayAchievements();
   // Exploración
   const explorationMap = {
     'breathe.box.4': 'explore.box',
@@ -303,9 +353,14 @@ function completeMoveSession(routineId, durationMin) {
   setState({
     plan: { ...s.plan, muevete: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+    /* Contador acumulado de sesiones Mueve (sesión 29). Solo Mueve,
+       Extra tiene su propio camino; el bucket de stats sí los suma. */
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
   });
   unlockAchievement('first.stretch');
+  if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   checkPlanAchievements();
+  checkTimeOfDayAchievements();
   updateStreak();
 }
 
@@ -323,6 +378,7 @@ function completeExtraSession(routineId, durationMin = 0) {
   });
   unlockAchievement('first.extra');
   checkPlanAchievements();
+  checkTimeOfDayAchievements();
   // Logros de exploración de movilidad.
   // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
   // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
