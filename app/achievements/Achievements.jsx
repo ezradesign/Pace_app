@@ -137,10 +137,16 @@ const CAT_META = {
    secretos normales (glifo "?" + título oculto). Por eso esta lista solo
    mira logros NO-secretos. */
 const IMPLEMENTED_ACHIEVEMENTS = new Set([
-  // Primeros pasos (5/10)
+  // Primeros pasos (10/10) — sesión 28 cierra esta categoría:
+  // +first.cycle (BreakMenu → pausa activa), +first.ritual (4 módulos
+  // del día), +first.day (updateStreak con current >= 1),
+  // +first.plan (mismo trigger que ritual), +first.return (rollover
+  // con día previo distinto al actual).
   'first.step', 'first.breath', 'first.stretch', 'first.sip', 'first.extra',
-  // Constancia (7/15)
-  'streak.3', 'streak.7', 'streak.30', 'streak.100',
+  'first.cycle', 'first.ritual', 'first.day', 'first.plan', 'first.return',
+  // Constancia (10/15) — sesión 28: +streak.14, +streak.60, +streak.365.
+  'streak.3', 'streak.7', 'streak.14', 'streak.30', 'streak.60',
+  'streak.100', 'streak.365',
   'focus.hours.10', 'focus.hours.50', 'focus.hours.100',
   // Exploración breathe (9/20)
   'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
@@ -149,8 +155,9 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // Exploración move (6/20) — reconectados en sesión 15
   'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (1/25)
-  'master.pomodoro.8',
+  // Maestría (2/25) — sesión 28: +master.focus.day (4h foco/día,
+  // evaluado en addFocusMinutes contra el bucket diario).
+  'master.pomodoro.8', 'master.focus.day',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.

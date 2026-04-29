@@ -64,7 +64,7 @@ function HydrateTracker({ open, onClose }) {
 
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
         <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">Un vaso menos</Button>
-        <Button onClick={() => addWaterGlass(1)} icon="+" size="md"
+        <Button onClick={() => { addWaterGlass(1); try { playSound('sip'); } catch (e) {} }} icon="+" size="md"
           style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>Un vaso más</Button>
       </div>
 

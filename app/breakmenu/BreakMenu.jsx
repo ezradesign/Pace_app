@@ -6,6 +6,20 @@
 const { useEffect: useEffectBM } = React;
 
 function BreakMenu({ open, onClose, onChoose }) {
+  /* `first.cycle` — Pomodoro completado + pausa activa elegida.
+     El BreakMenu sólo se abre tras `completePomodoro`, así que aquí
+     basta con detectar que el usuario eligió una de las 3 micro-pausas
+     activas (Respira, Mueve, Hidrátate). "Saltar" no cuenta — la
+     filosofía del logro es que se cierre el ciclo de verdad.
+     Sesión 28. */
+  const handleChoose = (key) => {
+    if (key === 'breathe' || key === 'move' || key === 'water') {
+      try { unlockAchievement('first.cycle'); } catch (e) {}
+    }
+    onChoose(key);
+  };
+
+
   // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
   // La UI anuncia estos atajos en el Meta de abajo; aquí se implementan.
   // Se ignoran cuando el foco está en un input/textarea para no colisionar
@@ -16,9 +30,9 @@ function BreakMenu({ open, onClose, onChoose }) {
       const tag = (e.target && e.target.tagName) || '';
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       const k = e.key.toLowerCase();
-      if (k === 'b') { e.preventDefault(); onChoose('breathe'); }
-      else if (k === 'm') { e.preventDefault(); onChoose('move'); }
-      else if (k === 'h') { e.preventDefault(); onChoose('water'); }
+      if (k === 'b') { e.preventDefault(); handleChoose('breathe'); }
+      else if (k === 'm') { e.preventDefault(); handleChoose('move'); }
+      else if (k === 'h') { e.preventDefault(); handleChoose('water'); }
       else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
     };
     window.addEventListener('keydown', onKey);
@@ -38,7 +52,7 @@ function BreakMenu({ open, onClose, onChoose }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map(o => (
           <button key={o.key}
-            onClick={() => onChoose(o.key)}
+            onClick={() => handleChoose(o.key)}
             style={{
               padding: '24px 18px',
               background: o.bg,

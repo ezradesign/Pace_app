@@ -8,7 +8,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.12.10';
+const PACE_VERSION = 'v0.13.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -111,6 +111,18 @@ function loadState() {
 function rolloverIfNeeded(state) {
   const today = new Date().toDateString();
   if (state.lastActiveDay === today) return state;
+  /* Trigger `first.return` — abrir la app un día distinto al de la
+     última actividad. Sólo si había un día previo (no en la primera
+     instalación, donde `lastActiveDay` viene null/undefined). El
+     desbloqueo se delega a un microtask para no llamar a
+     `unlockAchievement` desde dentro del propio loadState (la cola
+     de toasts pendientes lo gestiona si el ToastHost aún no montó).
+     Sesión 28. */
+  if (state.lastActiveDay && state.lastActiveDay !== today) {
+    setTimeout(() => {
+      try { unlockAchievement('first.return'); } catch (e) {}
+    }, 0);
+  }
   return {
     ...state,
     cycle: 0,
@@ -168,6 +180,38 @@ function usePace() {
    ACCIONES ESPECÍFICAS
    ============================ */
 
+/* Detecta logros derivados del plan/ritual del día.
+   Se llama desde cada acción de completar (pomodoro, breathe, move,
+   extra, water) DESPUÉS del setState, leyendo `_state` ya actualizado.
+
+   - `first.ritual`  → los 4 módulos del día tocados (respira + mueve +
+                       extra + hidratate). El plan ya marca esos 4 flags;
+                       basta con que los 4 sean true.
+   - `first.plan`    → mismo trigger en código. Decisión de producto:
+                       "completar el plan del día" === "tocar los 4 módulos
+                       del día". `first.plan` se desbloquea junto a
+                       `first.ritual` para que ambos sean cazables sin
+                       inventar un segundo umbral artificial. Sesión 28.
+   - `master.focus.day` → ya tenemos `addFocusMinutes` con buckets diarios;
+                          aprovechamos esta función para chequear las 4h
+                          (240 min) del día actual.
+*/
+function checkPlanAchievements() {
+  const s = getState();
+  const p = s.plan || {};
+  if (p.muevete && p.respira && p.extra && p.hidratate) {
+    unlockAchievement('first.ritual');
+    unlockAchievement('first.plan');
+  }
+}
+
+function checkFocusDayAchievement() {
+  const s = getState();
+  const day = new Date().getDay();
+  const todayMin = (s.weeklyStats.focusMinutes || [])[day] || 0;
+  if (todayMin >= 240) unlockAchievement('master.focus.day');
+}
+
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -199,6 +243,10 @@ function addFocusMinutes(mins) {
   if (h >= 10) unlockAchievement('focus.hours.10');
   if (h >= 50) unlockAchievement('focus.hours.50');
   if (h >= 100) unlockAchievement('focus.hours.100');
+  /* Logro de día de foco intenso: 4h en una sola jornada. Se evalúa
+     aquí porque `addFocusMinutes` es donde crecen los buckets diarios
+     en `weeklyStats.focusMinutes[day]`. Sesión 28. */
+  checkFocusDayAchievement();
 }
 
 function completePomodoro() {
@@ -226,6 +274,7 @@ function completeBreathSession(routineId, durationMin) {
     weeklyStats: { ...s.weeklyStats, breathMinutes: week },
   });
   unlockAchievement('first.breath');
+  checkPlanAchievements();
   // Exploración
   const explorationMap = {
     'breathe.box.4': 'explore.box',
@@ -256,6 +305,7 @@ function completeMoveSession(routineId, durationMin) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
   unlockAchievement('first.stretch');
+  checkPlanAchievements();
   updateStreak();
 }
 
@@ -272,6 +322,7 @@ function completeExtraSession(routineId, durationMin = 0) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
   unlockAchievement('first.extra');
+  checkPlanAchievements();
   // Logros de exploración de movilidad.
   // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
   // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
@@ -304,7 +355,10 @@ function addWaterGlass(delta = 1) {
     plan: { ...s.plan, hidratate: next > 0 ? true : s.plan.hidratate },
     weeklyStats: { ...s.weeklyStats, waterGlasses: week },
   });
-  if (delta > 0) unlockAchievement('first.sip');
+  if (delta > 0) {
+    unlockAchievement('first.sip');
+    checkPlanAchievements();
+  }
 }
 
 function updateStreak() {
@@ -320,10 +374,17 @@ function updateStreak() {
   setState({
     streak: { current, longest, lastActiveDate: today }
   });
+  /* `first.day` — primer día de uso. Equivale a la primera vez que
+     se llama a updateStreak con éxito, así que current === 1 lo
+     captura. unlockAchievement es idempotente. Sesión 28. */
+  if (current >= 1) unlockAchievement('first.day');
   if (current >= 3) unlockAchievement('streak.3');
   if (current >= 7) unlockAchievement('streak.7');
+  if (current >= 14) unlockAchievement('streak.14');
   if (current >= 30) unlockAchievement('streak.30');
+  if (current >= 60) unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
+  if (current >= 365) unlockAchievement('streak.365');
 }
 
 /* TOAST NOTIFICATIONS

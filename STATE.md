@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.12.10
-**Última sesión:** #27 — 2026-04-23 · Modales responsive en móvil (cierre del frente responsive)
-**Última actualización de este archivo:** 2026-04-23 · sesión 27 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.12.10 (~357 KB, regenerado tras aplicar patrón responsive a Modal + SessionShell + TweaksPanel)
+**Versión actual:** v0.13.0
+**Última sesión:** #28 — 2026-04-29 · Fruta fácil (5 triggers de primeros pasos + 3 rachas largas + módulo `Sound.jsx`)
+**Última actualización de este archivo:** 2026-04-29 · sesión 28 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.13.0 (~358 KB, regenerado tras añadir `Sound.jsx` y los 8+1 triggers de logros nuevos)
 
 ---
 
@@ -21,23 +21,27 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | v0.12.10, título bumpeado |
-| `PACE_standalone.html` | Bundle offline autocontenido | v0.12.10 (~357 KB, regenerado tras aplicar responsive a modales) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.13.0** (carga `Sound.jsx` + splash bundler + título bumpeado) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.13.0** (~358 KB, regenerado tras añadir `Sound.jsx` y los triggers de logros) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.12.10** (data-pace-session-* attrs + bloque CSS responsive 640px) |
-| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.12.10** (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | **v0.12.10** (data-pace-tweaks-panel + bloque CSS responsive: bottom-sheet en móvil) |
-| `app/breathe/BreatheModule.jsx` | Módulo Respira | v0.12.8 (ramas prep/done delegan en SessionShell; ~175 líneas menos) |
-| `app/move/MoveModule.jsx` | Módulo Mueve | v0.12.8 (mismo patrón que Breathe; ~80 líneas menos) |
-| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 (limpieza de `CupIcon`/`BigCup` + callsites `supportCopyVariant` saneados) |
-| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 (export a `window` saneado: solo `PaceWordmark`) |
-| `app/extra/ExtraModule.jsx` | Módulo Estira | v0.12.8 (export saneado + `displayItalic`) |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.8 (cambio menor: `displayItalic` en el timestamp) |
-| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 (cabecera de copyright; pendiente `displayItalic` en 2 sitios multi-línea) |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | v0.12.8 (`displayItalic` en 3 sitios) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.12.10** (bump `PACE_VERSION` v0.12.9 → v0.12.10) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 (sin cambios; pendiente `displayItalic` multi-línea) |
+| `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
+| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | v0.12.10 (data-pace-session-* attrs + bloque CSS responsive 640px) |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.10 (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | v0.12.10 (data-pace-tweaks-panel + bottom-sheet en móvil) |
+| `app/breathe/BreatheModule.jsx` | Módulo Respira | **v0.13.0** (cableado `playSound('breath')` en cambio de fase) |
+| `app/move/MoveModule.jsx` | Módulo Mueve | v0.12.8 |
+| `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
+| `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
+| `app/extra/ExtraModule.jsx` | Módulo Estira | v0.12.8 |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.8 |
+| `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.13.0** (cableado `playSound('complete')` al fin de bloque) |
+| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.13.0** (cableado `playSound('sip')` en clic vaso y botón "+") |
+| `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.13.0** (wrapper `handleChoose` para trigger `first.cycle`) |
+| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.13.0** (+9 ids en `IMPLEMENTED_ACHIEVEMENTS`: cierra "Primeros pasos" 10/10) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.13.0** (bump v0.12.10 → v0.13.0; helpers `checkPlanAchievements` + `checkFocusDayAchievement`; triggers `first.return` en rollover, `first.day`/`streak.14`/`60`/`365` en updateStreak; cableado en 4 acciones) |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
 - `backups/PACE_standalone_v0.12.8_20260423_1700.html` (sesión 26,
@@ -45,90 +49,115 @@ Backups vigentes:
 - `backups/PACE_standalone_v0.12.9_20260423.html` (sesión 27,
   antes del bump v0.12.10 y la aplicación del patrón responsive
   a modales).
+- `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28,
+  antes del bump v0.13.0 y el cableado de Sound.jsx + triggers).
 
-2 backups locales. Margen cómodo frente a la regla "máximo 5".
+3 backups locales. Margen cómodo frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 27 · v0.12.9 → v0.12.10 · Modales responsive en móvil**
+**Sesión 28 · v0.12.10 → v0.13.0 · Fruta fácil: triggers + rachas + sonidos**
 
-Se cierra el último frente bloqueante pre-v1.0 de adaptación móvil.
-Las sesiones 22-24 habían resuelto home + sidebar en 375×812; esta
-sesión aplica el mismo patrón establecido (decisión activa sesión
-22: bloque `<style>` inyectado en `<head>` con selectores
-`[data-pace-*]` y `!important`) a las 12 superficies modales que
-quedaban pendientes.
+Sesión corta de fruta fácil del backlog priorizado: tres bloques
+sin cambios estructurales ni visuales. Se cierra la **categoría
+"Primeros pasos" al 100%** (10/10) y se introduce el primer módulo
+de sonido del proyecto.
 
 ### Qué se hizo
 
-1. **Patrón centralizado en `Primitives.Modal`.** Los 10 modales
-   del producto delegan en un único componente `<Modal>` de
-   `Primitives.jsx`. Se añadieron `data-pace-modal-*` attrs al JSX
-   del Modal base y un bloque CSS responsive con `id`
-   `pace-modal-responsive-css`. En móvil: el modal pasa de card
-   centrada a **sheet pegado al borde inferior**
-   (`place-items: end center`), ancho 100%, `max-height:
-   calc(100dvh - 24px)` con fallback `100vh`, padding interior
-   reducido un paso, título 32→26, botón × 28→36 para target táctil
-   ≥44×44 efectivo. **10 modales cubiertos tocando 1 archivo.**
+1. **Bloque 1 — 5 triggers de primeros pasos** (`first.cycle`,
+   `first.ritual`, `first.day`, `first.plan`, `first.return`).
+   Helpers `checkPlanAchievements()` y `checkFocusDayAchievement()`
+   añadidos a `state.jsx`, llamados desde las 4 acciones de
+   completar (`completeBreathSession`, `completeMoveSession`,
+   `completeExtraSession`, `addWaterGlass`). El trigger
+   `first.cycle` vive en `BreakMenu` mediante un wrapper
+   `handleChoose` que lo dispara solo cuando el usuario elige una
+   pausa activa real (Saltar no cuenta). El trigger `first.return`
+   vive en `rolloverIfNeeded()` con `setTimeout` para no llamar
+   `unlockAchievement` desde dentro de `loadState`.
 
-2. **`SessionShell.jsx` — pantallas de sesión fullscreen.** Las
-   rutinas activas (Respira, Mueve) no usan Modal; viven en un
-   contenedor fixed inset:0 con tipografías monumentales. En 375 px
-   se rompían (200px de "3-2-1", 56px del nombre de rutina). Se
-   añadieron `data-pace-session-*` attrs y bloque CSS responsive.
-   Padding root 28/48/40 → 16/20/24, prep número 200→128, done h1
-   56→34, círculo hero 120→80, stats con `flex-wrap: wrap` y
-   gap 40→20 para que 3 stats no desborden.
+2. **Bloque 2 — 3 rachas largas** (`streak.14`, `streak.60`,
+   `streak.365`). Tres líneas en el bloque de umbrales de
+   `updateStreak`, junto a las rachas existentes. Bonus:
+   `master.focus.day` (4h foco/día) cableado en `addFocusMinutes`
+   contra el bucket diario que ya existía.
 
-3. **`TweaksPanel.jsx` — outlier.** Panel fijo 320×auto bottom-right,
-   no es Modal. En móvil taparía casi toda la pantalla con un rail
-   de 31 px inútil a la izquierda. Se transforma en **bottom-sheet**
-   full-width: `left/right/bottom: 0`, `border-radius` solo en
-   esquinas superiores (actúa de handle visual), `max-height: 72dvh`,
-   sombra superior invertida. Se conserva la ausencia de backdrop
-   — coherente con la filosofía del panel ("afinar mientras la app
-   sigue viva detrás").
+3. **Bloque 3 — `app/ui/Sound.jsx`** (módulo nuevo, ~110 líneas).
+   **Decisión técnica: sintetizar con Web Audio en lugar de
+   descargar WAVs CC0** — standalone más ligero (~3 KB vs
+   50-100 KB), coherencia filosófica (campana de campo, no click
+   digital), cero dependencias. 4 recetas (`tick` no cableado,
+   `complete`, `sip`, `breath`) con envolventes ADSR suaves
+   (attack 5-15 ms, gain peak 0.04-0.10). Cableado en
+   `FocusTimer` (fin de bloque), `HydrateTracker` (clic vaso y
+   botón "+") y `BreatheModule` (cambio de fase del ticker).
+   Respeta `state.soundOn` (toggle ya existente). Noop silencioso
+   ante cualquier fallo.
+
+4. **`IMPLEMENTED_ACHIEVEMENTS` actualizado** en `Achievements.jsx`:
+   30 → 39 ids (+9). Comentarios de categoría reescritos.
+
+5. **`<template id="__bundler_thumbnail">` añadido** a `PACE.html`
+   (splash SVG con paleta crema y wordmark "Pace · FOCO ·
+   CUERPO") — requisito de `super_inline_html` para regenerar el
+   standalone.
 
 ### Resultado cuantitativo
 
-- **~40 data-attrs** añadidos, todos con prefijo `data-pace-*`.
-- **3 bloques CSS responsive** nuevos (1 por archivo afectado),
-  con `id` únicos para evitar duplicación.
-- **12 superficies modales** adaptadas (10 Modal + 1 SessionShell
-  + 1 TweaksPanel) tocando solo **3 archivos** fuente.
-- **1 breakpoint** único (640 px), consistente con sesiones 22-24.
-- **+7 KB** en `PACE_standalone.html` (350 → 357 KB).
-- **0 cambios** de comportamiento observable en desktop.
-- **0 estilos inline modificados** — decisión activa sesión 22
-  respetada al 100%.
+- **+9 logros cazables hoy** (5 primeros pasos + 3 rachas largas
+  + master.focus.day).
+- **Categoría "Primeros pasos" 100% cubierta** (10/10).
+- **+1 módulo nuevo** (`app/ui/Sound.jsx`).
+- **+1 KB en standalone** (357 → 358 KB).
+- **0 cambios visuales**, **0 cambios** de comportamiento en
+  desktop más allá de los logros nuevos y los sonidos opt-in.
 
 ### Verificación
 
-- Preview de `PACE.html` carga limpia (solo warning del Babel
-  in-browser, ruido del sandbox).
-- Regeneración de `PACE_standalone.html` sin advertencias.
-- Auditoría visual formal a 375×812 queda como tarea opcional de
-  sesión 28 — el patrón centralizado via Modal base cubre los 10
-  modales de golpe; los posibles ajustes futuros serían de
-  refinamiento sobre casos concretos, no de fundamento.
+- Preview de `PACE.html` carga limpia (consola: 0 logs, 0 errores).
+- Regeneración de `PACE_standalone.html` con `super_inline_html`
+  OK; preview del standalone limpia.
+- Sonidos probados desde devtools (`playSound('complete')`).
+- Triggers de logros nuevos no probados manualmente (requeriría
+  manipular `lastActiveDate` en localStorage). Riesgo bajo: la
+  lógica es comparación de enteros con el patrón validado por
+  `streak.3/7/30/100`.
 
 ### Archivos
 
-- **Modificados:** `app/ui/Primitives.jsx`, `app/ui/SessionShell.jsx`,
-  `app/tweaks/TweaksPanel.jsx`, `app/state.jsx`, `PACE.html`,
-  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
-- **Nuevos:** `docs/sessions/session-27-modales-mobile.md`,
-  `backups/PACE_standalone_v0.12.9_20260423.html`.
+- **Nuevos:** `app/ui/Sound.jsx`,
+  `docs/sessions/session-28-fruta-facil-logros-sonidos.md`,
+  `backups/PACE_standalone_v0.12.10_20260429.html`.
+- **Modificados:** `PACE.html`, `PACE_standalone.html`,
+  `app/state.jsx`, `app/breakmenu/BreakMenu.jsx`,
+  `app/achievements/Achievements.jsx`, `app/focus/FocusTimer.jsx`,
+  `app/hydrate/HydrateModule.jsx`, `app/breathe/BreatheModule.jsx`,
+  `CHANGELOG.md`, `STATE.md`.
 
 ### Versión
 
-- `v0.12.9` → **`v0.12.10`** (patch · responsive CSS aditivo, cero
-  cambios de comportamiento observable en desktop).
+- `v0.12.10` → **`v0.13.0`** (minor · 8 logros nuevos + módulo de
+  sonido nuevo, 0 breaking).
 
-Detalle: [`docs/sessions/session-27-modales-mobile.md`](./docs/sessions/session-27-modales-mobile.md).
+Detalle: [`docs/sessions/session-28-fruta-facil-logros-sonidos.md`](./docs/sessions/session-28-fruta-facil-logros-sonidos.md).
+
+---
+
+## 🗓️ Sesión anterior — #27 (resumen condensado)
+
+**Sesión 27 · v0.12.9 → v0.12.10 · Modales responsive en móvil**.
+Se cerró el último frente bloqueante pre-v1.0 de adaptación móvil:
+los 10 modales del producto, `SessionShell` (pantallas Respira/
+Mueve) y `TweaksPanel` reciben tratamiento responsive con el patrón
+establecido (decisión activa sesión 22: bloque `<style>` con
+selectores `[data-pace-*]` y `!important`). Modal pasa a sheet
+inferior en móvil; `TweaksPanel` se transforma en bottom-sheet
+full-width. ~40 data-attrs, 3 bloques CSS, 12 superficies modales,
+3 archivos. +7 KB. 0 cambios visuales en desktop. Detalle:
+[`docs/sessions/session-27-modales-mobile.md`](./docs/sessions/session-27-modales-mobile.md).
 
 ---
 
@@ -308,13 +337,25 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
 - **Progresión 2+2+2** (~2-3h) — añadir campo `access` a rutinas
   y filtrar la biblioteca según estado desbloqueado. Placeholders
   visuales para ejercicios bloqueados. Ver `CONTENT.md`.
-- **3 triggers de primeros pasos** (~2h) — `first.ritual`,
-  `first.cycle`, `first.plan`. Datos ya en `state.plan`, solo
-  falta el detector en `state.jsx`. Baja "Próximamente" 13→10.
-- **Rachas largas** (~1-2h) — `streak.14/60/365` dentro de
-  `updateStreak`. Impacto emocional alto.
-- **Sonidos sutiles** (~2h) — 3-4 WAV CC0 + hook `useSound`. El
-  toggle ya existe.
+- ~~**3 triggers de primeros pasos**~~ ✅ Resuelto en sesión 28
+  (v0.13.0). Cubiertos `first.cycle`, `first.ritual`, `first.plan`,
+  `first.day`, `first.return` (5 en lugar de los 3 inicialmente
+  previstos). Categoría "Primeros pasos" cerrada al 100%.
+- ~~**Rachas largas**~~ ✅ Resuelto en sesión 28 (v0.13.0).
+  `streak.14/60/365` dentro de `updateStreak`.
+- ~~**Sonidos sutiles**~~ ✅ Resuelto en sesión 28 (v0.13.0).
+  Decisión técnica: sintetizados con Web Audio API en lugar de
+  WAVs CC0 — ver decisiones activas y `app/ui/Sound.jsx`. Hook
+  `useSound` + función plana `playSound` cableados en FocusTimer,
+  HydrateTracker y BreatheModule.
+- **Detectores aplazados de logros (~30 min - 1h cada uno)** —
+  fruta fácil restante: `breathe.sessions.10/50` (contador de
+  sesiones por módulo), `move.sessions.25`, `hydrate.week.perfect`
+  (necesita histórico semanal), `morning.5` (timestamp de sesión
+  vs `Date.getHours()`), `master.dawn`, `master.dusk`,
+  `master.long.focus`, `master.retreat`, `master.collector.half`,
+  `master.collector.full`. Otra sesión corta podría cerrar 6-8
+  más sin tocar arquitectura.
 
 ### 🎨 Medio plazo (requieren diseño previo)
 
@@ -376,6 +417,29 @@ Logros visibles como "Próximamente" sin trigger:
 ---
 
 ## ⚠️ Decisiones activas
+
+- **Sonidos sintetizados con Web Audio en lugar de samples WAV.**
+  El módulo `app/ui/Sound.jsx` (sesión 28) define recetas en
+  `SOUND_RECIPES` que producen tonos cortos con envolventes ADSR
+  suaves (attack 5-15 ms, decay 80-300 ms, peak 0.04-0.10 gain).
+  Cualquier sonido nuevo se añade como receta. Si en algún momento
+  se necesita un sample real (efecto que no se sintetiza bien —
+  viento, campana metálica, etc.), evaluar el coste en KB del
+  standalone antes de meterlo. **Regla no negociable:** el sonido
+  nunca debe romper la app — todos los `playSound(...)` van
+  envueltos en `try/catch` en el lado del consumidor, y el módulo
+  es noop silencioso ante cualquier fallo (navegador sin Web Audio,
+  contexto suspendido, receta inexistente, `state.soundOn === false`).
+  (Sesión 28.)
+- **`first.ritual` y `first.plan` comparten trigger.** Decisión de
+  producto: "completar el plan del día" === "tocar los 4 módulos
+  del día". Si en el futuro se quisieran diferenciar, habría que
+  inventar un umbral artificial (p.ej. añadir un campo
+  `plan.notes` que el usuario rellena explícitamente) — no merece
+  la pena. Documentado para que una sesión futura no se pregunte
+  "por qué dos logros con el mismo detector". (Sesión 28.)
+
+
 
 Decisiones tomadas en sesiones previas que **siguen condicionando** cómo
 trabajar. No son historia — son reglas vigentes. Si una se invalida,
