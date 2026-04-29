@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell (prep/done) y TweaksPanel (bottom-sheet) | #27 | [abajo ↓](#v01210--2026-04-23--modales-responsive-en-móvil) |
+| **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [abajo ↓](#v0130--2026-04-29--fruta-facil-logros--sonidos) |
+| **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell (prep/done) y TweaksPanel (bottom-sheet) | #27 | [session-27-modales-mobile.md](./docs/sessions/session-27-modales-mobile.md) |
 | **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización (Pase mensual) | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
 | v0.12.8 | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
 | **v0.12.7** | 2026-04-23 | Auditoría interna previa al refactor · sin cambios de código · informe en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md) | #25 | [abajo ↓](#v0127--2026-04-23--auditoria-interna) |
@@ -43,6 +44,95 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.13.0] — 2026-04-29 — Fruta fácil: logros + sonidos
+
+Sesión corta de fruta fácil del backlog priorizado. Tres bloques sin
+cambios estructurales ni visuales: triggers de logros que ya estaban
+en el catálogo como "Pronto", rachas largas y un módulo nuevo de
+sonido sintetizado.
+
+**Categoría "Primeros pasos" cerrada al 100%** (10/10) — antes 5/10.
+
+### Añadido
+- **5 triggers de primeros pasos:**
+  - `first.cycle` — Pomodoro completado + el usuario elige una de
+    las 3 micro-pausas activas en `BreakMenu` (Respira/Mueve/Hidrátate).
+    "Saltar" no cuenta. Wrapper `handleChoose` en
+    `app/breakmenu/BreakMenu.jsx`.
+  - `first.ritual` — los 4 flags de `state.plan` en true (respira +
+    muevete + extra + hidratate). Helper `checkPlanAchievements()`
+    en `state.jsx`, llamado desde las 4 acciones de completar.
+  - `first.plan` — mismo trigger que `first.ritual`. Decisión de
+    producto: "completar el plan" === "tocar los 4 módulos del día".
+  - `first.day` — primer día de uso. Disparado en `updateStreak`
+    cuando `current >= 1` (idempotencia de `unlockAchievement`).
+  - `first.return` — abrir la app un día distinto al de la última
+    actividad. Disparado en `rolloverIfNeeded()` con `setTimeout`
+    para no llamar `unlockAchievement` desde dentro de `loadState`.
+- **3 rachas largas:** `streak.14`, `streak.60`, `streak.365`.
+  Tres líneas en el bloque de umbrales de `updateStreak`.
+- **Bonus: `master.focus.day`** — 4h de foco en un día. Aprovecha
+  el bucket diario `weeklyStats.focusMinutes[day]` ya existente.
+  Evaluado al final de `addFocusMinutes`.
+- **`app/ui/Sound.jsx`** (nuevo, ~110 líneas) — módulo de sonidos
+  sutiles vía Web Audio API. Decisión técnica: **sintetizar** en
+  lugar de descargar WAVs CC0. Razones: standalone más ligero
+  (~3 KB vs 50-100 KB), coherencia filosófica (campana de campo,
+  no click digital), cero dependencias externas. Catálogo:
+  - `tick` — click 800 Hz, 30 ms (no cableado, disponible).
+  - `complete` — campana do5+sol5+do6, 600 ms. Cableado en
+    `FocusTimer` al llegar a 00:00.
+  - `sip` — gota con glide 600→380 Hz, 200 ms. Cableado en
+    `HydrateTracker` (clic en vaso y botón "+").
+  - `breath` — la4, 250 ms, gain 0.045 (muy discreto). Cableado
+    en `BreatheModule` al cambio de fase del ticker principal.
+- **`<template id="__bundler_thumbnail">`** en `PACE.html` — splash
+  SVG con paleta crema y wordmark "Pace · FOCO · CUERPO". Requerido
+  por `super_inline_html`; se muestra brevemente al cargar el
+  standalone y como fallback no-JS.
+
+### Cambiado
+- `IMPLEMENTED_ACHIEVEMENTS` en `Achievements.jsx`: 30 → 39 ids
+  (+9). Comentarios de categoría actualizados ("10/10", "10/15",
+  "2/25").
+- `PACE_VERSION`: `v0.12.10` → `v0.13.0` en `state.jsx`.
+- Título de `PACE.html` actualizado.
+
+### Reglas vigentes nuevas (decisiones activas)
+- **Sonidos sintetizados con Web Audio en lugar de samples WAV.**
+  Cualquier sonido nuevo se añade como receta en `SOUND_RECIPES`.
+  Si se necesita un sample real (efecto que no se sintetiza bien),
+  evaluar el coste en KB del standalone antes. **El sonido nunca
+  debe romper la app**: todos los `playSound` van envueltos en
+  `try/catch` y el módulo es noop silencioso ante cualquier fallo.
+- **`first.ritual` y `first.plan` comparten trigger.** "Completar
+  el plan del día" === "tocar los 4 módulos del día". Si en el
+  futuro se quisieran diferenciar, habría que inventar un umbral
+  artificial — no merece la pena.
+
+### Verificación
+- `PACE.html` carga limpio (consola sin errores).
+- `PACE_standalone.html` regenerado a ~358 KB (+1 KB por `Sound.jsx`).
+- Sonidos probados con `playSound('complete')` etc. desde devtools.
+- Triggers de logros nuevos no probados manualmente (requeriría
+  manipular `lastActiveDate` en localStorage). Riesgo bajo: la
+  lógica es comparación de enteros con el patrón validado por
+  `streak.3/7/30/100`.
+
+### Archivos
+- **Nuevos:** `app/ui/Sound.jsx`,
+  `docs/sessions/session-28-fruta-facil-logros-sonidos.md`,
+  `backups/PACE_standalone_v0.12.10_20260429.html`.
+- **Modificados:** `PACE.html`, `PACE_standalone.html`,
+  `app/state.jsx`, `app/breakmenu/BreakMenu.jsx`,
+  `app/achievements/Achievements.jsx`, `app/focus/FocusTimer.jsx`,
+  `app/hydrate/HydrateModule.jsx`, `app/breathe/BreatheModule.jsx`,
+  `CHANGELOG.md`, `STATE.md`.
+
+Detalle completo: [`docs/sessions/session-28-fruta-facil-logros-sonidos.md`](./docs/sessions/session-28-fruta-facil-logros-sonidos.md).
 
 ---
 

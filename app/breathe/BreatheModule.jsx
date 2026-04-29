@@ -204,6 +204,9 @@ function BreatheSession({ routine, onExit }) {
             return 0;
           }
           setPhase(nextPhase);
+          /* Marca de cambio de fase: tono senoidal muy suave (440 Hz,
+             250 ms). Respeta state.soundOn. Sesión 28. */
+          try { playSound('breath'); } catch (e) {}
           return 0;
         }
         return t + 1;

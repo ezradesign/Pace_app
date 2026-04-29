@@ -50,6 +50,10 @@ function FocusTimer({ onFinish }) {
     if (remainingSec !== 0) return;
     setRunning(false);
     setJustFinished(true);
+    /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
+       del bloque, sea foco o pausa. Respeta state.soundOn (noop si
+       está apagado). Sesión 28. */
+    try { playSound('complete'); } catch (e) {}
     if (state.focusMode === 'foco') {
       completePomodoro();
       onFinish && onFinish();
