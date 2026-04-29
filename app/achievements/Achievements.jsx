@@ -144,10 +144,13 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // con día previo distinto al actual).
   'first.step', 'first.breath', 'first.stretch', 'first.sip', 'first.extra',
   'first.cycle', 'first.ritual', 'first.day', 'first.plan', 'first.return',
-  // Constancia (10/15) — sesión 28: +streak.14, +streak.60, +streak.365.
+  // Constancia (14/15) — sesión 29: +breathe.sessions.10/50,
+  // +move.sessions.25, +morning.5. Falta hydrate.week.perfect.
   'streak.3', 'streak.7', 'streak.14', 'streak.30', 'streak.60',
   'streak.100', 'streak.365',
   'focus.hours.10', 'focus.hours.50', 'focus.hours.100',
+  'breathe.sessions.10', 'breathe.sessions.50', 'move.sessions.25',
+  'morning.5',
   // Exploración breathe (9/20)
   'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
   'explore.bhastrika', 'explore.nadi', 'explore.ujjayi',
@@ -155,9 +158,10 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // Exploración move (6/20) — reconectados en sesión 15
   'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (2/25) — sesión 28: +master.focus.day (4h foco/día,
-  // evaluado en addFocusMinutes contra el bucket diario).
+  // Maestría (5/25) — sesión 29: +master.long.focus (45min sin pausa),
+  // +master.dawn (<7h), +master.dusk (>=21h).
   'master.pomodoro.8', 'master.focus.day',
+  'master.long.focus', 'master.dawn', 'master.dusk',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.

@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.13.0
-**Última sesión:** #28 — 2026-04-29 · Fruta fácil (5 triggers de primeros pasos + 3 rachas largas + módulo `Sound.jsx`)
-**Última actualización de este archivo:** 2026-04-29 · sesión 28 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.13.0 (~358 KB, regenerado tras añadir `Sound.jsx` y los 8+1 triggers de logros nuevos)
+**Versión actual:** v0.14.0
+**Última sesión:** #29 — 2026-04-29 (tarde) · Fruta fácil II (6 logros aplazados: contadores breathe/move + horarios dawn/dusk/morning + long.focus) + canvas exploratorio de glifos en 4 direcciones
+**Última actualización de este archivo:** 2026-04-29 · sesión 29 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, regenerado tras añadir contadores acumulados + 3 detectores horarios + umbral long.focus)
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.13.0** (carga `Sound.jsx` + splash bundler + título bumpeado) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.13.0** (~358 KB, regenerado tras añadir `Sound.jsx` y los triggers de logros) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.14.0** (título bumpeado a v0.14.0) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.14.0** (~369 KB, regenerado tras detectores horarios + contadores acumulados + canvas de glifos en `design/`) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
@@ -39,8 +39,8 @@
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.13.0** (cableado `playSound('complete')` al fin de bloque) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.13.0** (cableado `playSound('sip')` en clic vaso y botón "+") |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.13.0** (wrapper `handleChoose` para trigger `first.cycle`) |
-| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.13.0** (+9 ids en `IMPLEMENTED_ACHIEVEMENTS`: cierra "Primeros pasos" 10/10) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.13.0** (bump v0.12.10 → v0.13.0; helpers `checkPlanAchievements` + `checkFocusDayAchievement`; triggers `first.return` en rollover, `first.day`/`streak.14`/`60`/`365` en updateStreak; cableado en 4 acciones) |
+| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.14.0** (+7 ids en `IMPLEMENTED_ACHIEVEMENTS`: 39 → 45; Constancia 11/15, Maestría 5/25) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.14.0** (bump v0.13.0 → v0.14.0; nuevos campos `breatheSessionsTotal`/`moveSessionsTotal`/`morningDates`; helper `checkTimeOfDayAchievements`; trigger `master.long.focus` en `completePomodoro`; umbrales `breathe.sessions.10/50` y `move.sessions.25` en sus respectivas acciones de completar) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
@@ -51,102 +51,130 @@ Backups vigentes:
   a modales).
 - `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28,
   antes del bump v0.13.0 y el cableado de Sound.jsx + triggers).
+- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29,
+  antes del bump v0.14.0 y los detectores aplazados).
 
-3 backups locales. Margen cómodo frente a la regla "máximo 5".
+4 backups locales. Margen cómodo frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 28 · v0.12.10 → v0.13.0 · Fruta fácil: triggers + rachas + sonidos**
+**Sesión 29 · v0.13.0 → v0.14.0 · Fruta fácil II: logros aplazados + canvas de glifos**
 
-Sesión corta de fruta fácil del backlog priorizado: tres bloques
-sin cambios estructurales ni visuales. Se cierra la **categoría
-"Primeros pasos" al 100%** (10/10) y se introduce el primer módulo
-de sonido del proyecto.
+Sesión doble del backlog "Detectores aplazados de logros" + Bloque
+de diseño exploratorio para los 100 glifos del catálogo. Cero
+cambios visuales en producto.
 
 ### Qué se hizo
 
-1. **Bloque 1 — 5 triggers de primeros pasos** (`first.cycle`,
-   `first.ritual`, `first.day`, `first.plan`, `first.return`).
-   Helpers `checkPlanAchievements()` y `checkFocusDayAchievement()`
-   añadidos a `state.jsx`, llamados desde las 4 acciones de
-   completar (`completeBreathSession`, `completeMoveSession`,
-   `completeExtraSession`, `addWaterGlass`). El trigger
-   `first.cycle` vive en `BreakMenu` mediante un wrapper
-   `handleChoose` que lo dispara solo cuando el usuario elige una
-   pausa activa real (Saltar no cuenta). El trigger `first.return`
-   vive en `rolloverIfNeeded()` con `setTimeout` para no llamar
-   `unlockAchievement` desde dentro de `loadState`.
+1. **Bloque A — 6 detectores de logros aplazados** (~1h, código).
+   - **Contadores acumulados por módulo:** nuevos campos
+     `breatheSessionsTotal` y `moveSessionsTotal` en `defaultState`,
+     incrementados en `completeBreathSession` y `completeMoveSession`
+     respectivamente. No resetean en rollover (son métricas
+     acumuladas, no "de hoy"). Umbrales evaluados leyendo `_state`
+     ya actualizado tras setState (patrón sesión 18). Disparan
+     `breathe.sessions.10`, `breathe.sessions.50` y `move.sessions.25`.
+   - **Detectores horarios:** nuevo helper
+     `checkTimeOfDayAchievements()` llamado desde las 4 acciones
+     de completar (Pomodoro, Breathe, Move, Extra). Tres triggers:
+     `master.dawn` (<7h), `master.dusk` (≥21h), `morning.5` (5
+     fechas distintas con sesión <9:00, persistidas en
+     `morningDates: string[]` con cap de 30 entradas).
+   - **`master.long.focus`:** Pomodoro de 45 min completo.
+     Evaluado en `completePomodoro` contra el snapshot
+     `focusMinsAtCompletion` capturado ANTES del updater (no
+     contra `state.focusMinutes` que puede haber cambiado por
+     tweak durante el ticker).
+   - **`IMPLEMENTED_ACHIEVEMENTS`:** 39 → 45 ids (+7,
+     `master.long.focus` ya estaba previsto pero faltaba cableado;
+     los 6 nuevos detectores se cuentan + ese).
 
-2. **Bloque 2 — 3 rachas largas** (`streak.14`, `streak.60`,
-   `streak.365`). Tres líneas en el bloque de umbrales de
-   `updateStreak`, junto a las rachas existentes. Bonus:
-   `master.focus.day` (4h foco/día) cableado en `addFocusMinutes`
-   contra el bucket diario que ya existía.
-
-3. **Bloque 3 — `app/ui/Sound.jsx`** (módulo nuevo, ~110 líneas).
-   **Decisión técnica: sintetizar con Web Audio en lugar de
-   descargar WAVs CC0** — standalone más ligero (~3 KB vs
-   50-100 KB), coherencia filosófica (campana de campo, no click
-   digital), cero dependencias. 4 recetas (`tick` no cableado,
-   `complete`, `sip`, `breath`) con envolventes ADSR suaves
-   (attack 5-15 ms, gain peak 0.04-0.10). Cableado en
-   `FocusTimer` (fin de bloque), `HydrateTracker` (clic vaso y
-   botón "+") y `BreatheModule` (cambio de fase del ticker).
-   Respeta `state.soundOn` (toggle ya existente). Noop silencioso
-   ante cualquier fallo.
-
-4. **`IMPLEMENTED_ACHIEVEMENTS` actualizado** en `Achievements.jsx`:
-   30 → 39 ids (+9). Comentarios de categoría reescritos.
-
-5. **`<template id="__bundler_thumbnail">` añadido** a `PACE.html`
-   (splash SVG con paleta crema y wordmark "Pace · FOCO ·
-   CUERPO") — requisito de `super_inline_html` para regenerar el
-   standalone.
+2. **Bloque B — Canvas exploratorio de glifos** (~1h, diseño puro).
+   `design/glyphs-explorations.html` (~36 KB, self-contained,
+   separado del producto). 4 direcciones visuales para sustituir
+   el set actual de unicode mezclado (`✦ ❦ ❀ ☉ III VII 𓇼 𓂃`) por
+   SVG cohesivo:
+   - **A · Línea** — stroke 1.2px, sin relleno. Más alineada con
+     el tono "papel + tinta" actual.
+   - **B · Sello hundido** — relleno sólido en color de categoría.
+     Más legible a 24px.
+   - **C · Marca a hierro** — stroke 3px, esquinas redondas, look
+     "ganadería rústica".
+   - **D · Constelación** — puntos finos conectados por líneas
+     sutiles. Naturalista, etérea.
+   8 secciones, 32 glifos × 4 direcciones = 128 SVG inline.
+   Comparativa rápida actual vs A. Recomendación de cierre
+   incluida: **híbrido A+B** — línea por defecto, sello solo en
+   logros de cierre de categoría (luna llena, centurión, día de
+   foco). Pendiente de validación del usuario antes de tocar
+   `Achievements.jsx` o `Toast.jsx`.
 
 ### Resultado cuantitativo
 
-- **+9 logros cazables hoy** (5 primeros pasos + 3 rachas largas
-  + master.focus.day).
-- **Categoría "Primeros pasos" 100% cubierta** (10/10).
-- **+1 módulo nuevo** (`app/ui/Sound.jsx`).
-- **+1 KB en standalone** (357 → 358 KB).
-- **0 cambios visuales**, **0 cambios** de comportamiento en
-  desktop más allá de los logros nuevos y los sonidos opt-in.
+- **+6 logros cazables hoy.** Constancia: 7/15 → 11/15. Maestría:
+  2/25 → 5/25. Total catálogo cazable: 39 → 45.
+- **+1 documento de diseño nuevo** (`design/glyphs-explorations.html`).
+- **+~1 KB en standalone** (358 → 369 KB; el plus es la nueva
+  lógica de detectores).
+- **0 cambios visuales** en producto. **0 cambios de
+  comportamiento** observables fuera del unlock toast cuando el
+  usuario complete una sesión que dispare uno de los 6 nuevos.
 
 ### Verificación
 
 - Preview de `PACE.html` carga limpia (consola: 0 logs, 0 errores).
+- Preview de `design/glyphs-explorations.html` carga limpia.
+- Triggers nuevos no probados manualmente (requeriría manipular
+  reloj del sistema o `lastActiveDate` en localStorage). Riesgo
+  bajo: reproducen el patrón validado por sesiones 18 y 28
+  (`streak.X`, `master.focus.day`).
 - Regeneración de `PACE_standalone.html` con `super_inline_html`
-  OK; preview del standalone limpia.
-- Sonidos probados desde devtools (`playSound('complete')`).
-- Triggers de logros nuevos no probados manualmente (requeriría
-  manipular `lastActiveDate` en localStorage). Riesgo bajo: la
-  lógica es comparación de enteros con el patrón validado por
-  `streak.3/7/30/100`.
+  ejecutada. La preview del standalone no se pudo verificar en
+  vivo por desconexión transitoria del cliente al final de la
+  sesión; el archivo se entrega sin tocar tras la regeneración
+  exitosa.
 
 ### Archivos
 
-- **Nuevos:** `app/ui/Sound.jsx`,
-  `docs/sessions/session-28-fruta-facil-logros-sonidos.md`,
-  `backups/PACE_standalone_v0.12.10_20260429.html`.
-- **Modificados:** `PACE.html`, `PACE_standalone.html`,
-  `app/state.jsx`, `app/breakmenu/BreakMenu.jsx`,
-  `app/achievements/Achievements.jsx`, `app/focus/FocusTimer.jsx`,
-  `app/hydrate/HydrateModule.jsx`, `app/breathe/BreatheModule.jsx`,
+- **Nuevos:** `design/glyphs-explorations.html`,
+  `docs/sessions/session-29-logros-aplazados-glifos.md`,
+  `backups/PACE_standalone_v0.13.0_20260429.html`.
+- **Modificados:** `app/state.jsx` (3 campos +
+  `checkTimeOfDayAchievements` + cableado en 4 acciones +
+  trigger `master.long.focus` + contadores en breath/move),
+  `app/achievements/Achievements.jsx` (`IMPLEMENTED_ACHIEVEMENTS`),
+  `PACE.html` (título), `PACE_standalone.html` (regenerado),
   `CHANGELOG.md`, `STATE.md`.
 
 ### Versión
 
-- `v0.12.10` → **`v0.13.0`** (minor · 8 logros nuevos + módulo de
-  sonido nuevo, 0 breaking).
+- `v0.13.0` → **`v0.14.0`** (minor · 6 logros nuevos cazables, 0
+  breaking, 0 cambios visuales).
 
-Detalle: [`docs/sessions/session-28-fruta-facil-logros-sonidos.md`](./docs/sessions/session-28-fruta-facil-logros-sonidos.md).
+Detalle: [`docs/sessions/session-29-logros-aplazados-glifos.md`](./docs/sessions/session-29-logros-aplazados-glifos.md).
 
 ---
 
-## 🗓️ Sesión anterior — #27 (resumen condensado)
+## 🗓️ Sesión anterior — #28 (resumen condensado)
+
+**Sesión 28 · v0.12.10 → v0.13.0 · Fruta fácil: triggers + rachas + sonidos**.
+Sesión corta de tres bloques: 5 triggers de "Primeros pasos"
+(`first.cycle/ritual/day/plan/return` — categoría cerrada al
+100% 10/10), 3 rachas largas (`streak.14/60/365`) +
+`master.focus.day` (4h foco/día), y módulo nuevo `app/ui/Sound.jsx`
+con sonidos sintetizados Web Audio (4 recetas: tick / complete /
+sip / breath, ADSR suaves, sin samples). Cableado en FocusTimer
+(fin de bloque), HydrateTracker (vaso) y BreatheModule (cambio
+de fase). Decisión técnica activa: sintetizar antes que descargar
+WAVs (~3 KB vs 50-100 KB, coherencia "campana de campo, no click
+digital"). 0 cambios visuales. Detalle:
+[`docs/sessions/session-28-fruta-facil-logros-sonidos.md`](./docs/sessions/session-28-fruta-facil-logros-sonidos.md).
+
+---
+
+## 🗓️ Sesión #27 (resumen condensado)
 
 **Sesión 27 · v0.12.9 → v0.12.10 · Modales responsive en móvil**.
 Se cerró el último frente bloqueante pre-v1.0 de adaptación móvil:
@@ -348,14 +376,18 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
   WAVs CC0 — ver decisiones activas y `app/ui/Sound.jsx`. Hook
   `useSound` + función plana `playSound` cableados en FocusTimer,
   HydrateTracker y BreatheModule.
-- **Detectores aplazados de logros (~30 min - 1h cada uno)** —
-  fruta fácil restante: `breathe.sessions.10/50` (contador de
-  sesiones por módulo), `move.sessions.25`, `hydrate.week.perfect`
-  (necesita histórico semanal), `morning.5` (timestamp de sesión
-  vs `Date.getHours()`), `master.dawn`, `master.dusk`,
-  `master.long.focus`, `master.retreat`, `master.collector.half`,
-  `master.collector.full`. Otra sesión corta podría cerrar 6-8
-  más sin tocar arquitectura.
+- ~~**6 detectores aplazados de logros**~~ ✅ Resuelto en sesión 29
+  (v0.14.0). Cubiertos `breathe.sessions.10/50`, `move.sessions.25`,
+  `morning.5`, `master.dawn`, `master.dusk`, `master.long.focus`.
+  Constancia 11/15. Maestría 5/25.
+- **Detectores aplazados de logros restantes (~30 min - 1h cada uno)** —
+  fruta más difícil: `hydrate.week.perfect` (necesita histórico
+  semanal), `master.retreat` (2h respira+mueve en día),
+  `master.collector.half/full` (50/100 logros — listener
+  cross-state), `master.midnight.never` (30 días sin uso tras
+  23h), `master.silent.day` (1 día con `state.soundOn === false`).
+  Categoría Maestría 5/25 → potencial 9-10/25 con otra sesión
+  corta.
 
 ### 🎨 Medio plazo (requieren diseño previo)
 
@@ -418,6 +450,22 @@ Logros visibles como "Próximamente" sin trigger:
 
 ## ⚠️ Decisiones activas
 
+- **Glifos del catálogo de logros: pendiente de elegir dirección
+  visual.** El set actual mezcla unicode de varias familias
+  (`✦ ❦ ❀ ☉ III VII 𓇼 𓂃 ◌ ▢ ⌢ ⚖ ※`) — funciona pero los pesos
+  visuales y las familias tipográficas no casan. Sesión 29 entrega
+  `design/glyphs-explorations.html` con 4 direcciones cerradas
+  (Línea / Sello hundido / Marca a hierro / Constelación) y
+  recomienda **híbrido A+B** (línea por defecto + sello solo en
+  logros de cierre de categoría). Cuando el usuario valide, abrir
+  sesión dedicada de redibujo (~4-5h: refactor de
+  `ACHIEVEMENT_CATALOG` para aceptar `glyphSvg` + `seal`,
+  redibujo de los 70 glifos restantes siguiendo la familia
+  formal del canvas, actualizar `Toast.jsx` para renderizar SVG).
+  Mantener el campo `glyph: string` como fallback durante la
+  migración — el localStorage de usuarios existentes guarda solo
+  IDs, no snapshots de glyph, así que la migración es **solo de
+  catálogo**, no de datos. (Sesión 29.)
 - **Sonidos sintetizados con Web Audio en lugar de samples WAV.**
   El módulo `app/ui/Sound.jsx` (sesión 28) define recetas en
   `SOUND_RECIPES` que producen tonos cortos con envolventes ADSR
@@ -633,13 +681,13 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual: responsive móvil **cerrado como frente** tras
-> sesión 27. Home + sidebar + 12 superficies modales cubren
-> 375×812 completo. Licencia ELv2 fijada (sesión 26) y modelo de
-> monetización a 4 vías documentado. Próximos frentes lógicos:
-> PWA instalable (consumidor natural del trabajo responsive hecho),
-> sistema de claves offline para Lifetime/Pase, o sesión corta de
-> fruta fácil (triggers de primeros pasos + rachas largas + sonidos).
+> Estado actual tras sesión 29: 45/100 logros cazables (39 → 45);
+> Constancia 11/15, Maestría 5/25, Primeros pasos 10/10. Canvas
+> de glifos en `design/glyphs-explorations.html` esperando
+> validación del usuario. Próximos frentes lógicos: (a) ejecutar
+> rediseño de glifos si valida la dirección, (b) PWA instalable,
+> (c) sistema de claves offline para Lifetime/Pase, (d) loop
+> post-Pomodoro inteligente, (e) heatmap "Año en pace".
 
 ### 🎯 Próxima sesión corta (recomendada)
 

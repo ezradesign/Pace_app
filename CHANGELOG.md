@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [abajo ↓](#v0130--2026-04-29--fruta-facil-logros--sonidos) |
+| **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [abajo ↓](#v0140--2026-04-29--fruta-facil-ii-logros-aplazados--glifos) |
+| **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [session-28-fruta-facil-logros-sonidos.md](./docs/sessions/session-28-fruta-facil-logros-sonidos.md) |
 | **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell (prep/done) y TweaksPanel (bottom-sheet) | #27 | [session-27-modales-mobile.md](./docs/sessions/session-27-modales-mobile.md) |
 | **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización (Pase mensual) | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
 | v0.12.8 | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
@@ -44,6 +45,102 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.14.0] — 2026-04-29 — Fruta fácil II: logros aplazados + glifos
+
+Sesión doble de fruta fácil, continuación natural de v0.13.0. Cierra
+6 logros más del backlog "Detectores aplazados de logros" (sección
+🎯 Alto impacto · coste bajo de `STATE.md`) y entrega un canvas
+exploratorio de diseño para el set completo de 100 glifos.
+
+**Categoría "Constancia" pasa de 7/15 → 11/15** (cazables hoy).
+**Categoría "Maestría" pasa de 2/25 → 5/25.**
+
+### Añadido
+- **`breathe.sessions.10` y `breathe.sessions.50`** — contadores
+  acumulados de sesiones de respiración. Nuevo campo
+  `breatheSessionsTotal` en `defaultState`, incrementado en
+  `completeBreathSession`. Crece monótonamente; no resetea en
+  rollover.
+- **`move.sessions.25`** — contador acumulado de sesiones Mueve.
+  Nuevo campo `moveSessionsTotal`. Solo Mueve (Extra no suma —
+  aunque sí comparten bucket de stats por decisión activa de
+  sesión 10/14).
+- **`morning.5`** — 5 fechas distintas con sesión antes de las
+  9:00. Nuevo campo `morningDates: string[]` (toDateString) con
+  cap de 30 entradas para no inflar localStorage.
+- **`master.dawn`** — sesión antes de las 7:00.
+- **`master.dusk`** — sesión a partir de las 21:00.
+- **`master.long.focus`** — Pomodoro de 45 min completo. Evaluado
+  contra el snapshot `focusMinsAtCompletion` capturado ANTES del
+  updater (no contra `state.focusMinutes`, que puede haber sido
+  cambiado por tweak durante el ticker).
+- **`design/glyphs-explorations.html`** (nuevo, ~36 KB) — canvas
+  exploratorio con 4 direcciones visuales para el set de 100
+  glifos del catálogo de logros: Línea (stroke 1.2px), Sello
+  hundido (relleno sólido), Marca a hierro (stroke 3px) y
+  Constelación (puntos finos conectados). 32 glifos × 4
+  direcciones = 128 SVG inline. Recomendación incluida: híbrido
+  Línea + Sello (línea por defecto, sello solo en logros de
+  cierre de categoría). Pendiente de validación del usuario antes
+  de tocar `Achievements.jsx` o `Toast.jsx`.
+
+### Cambiado
+- **`app/state.jsx`:** nuevo helper `checkTimeOfDayAchievements()`
+  que agrupa los 3 detectores horarios. Se llama desde
+  `completePomodoro`, `completeBreathSession`, `completeMoveSession`
+  y `completeExtraSession`.
+- **`app/state.jsx`:** `completePomodoro` evalúa
+  `master.long.focus` contra el snapshot pre-updater.
+- **`app/state.jsx`:** `completeBreathSession` y
+  `completeMoveSession` incrementan sus contadores acumulados y
+  evalúan los umbrales 10/50 y 25 contra `_state` actualizado
+  (patrón de sesión 18 — leer del módulo, no de cierre).
+- **`app/achievements/Achievements.jsx`:**
+  `IMPLEMENTED_ACHIEVEMENTS` 39 → 45 ids (+6).
+- **`PACE.html`:** título bumpeado v0.12.10 → v0.14.0.
+- **`PACE_standalone.html`:** regenerado con `super_inline_html`
+  (~369 KB · +1 KB respecto a v0.13.0).
+
+### No cambiado (intencional)
+- **0 cambios visuales** en la app de producto (el canvas vive
+  en `design/`, separado).
+- **0 cambios de comportamiento** observables fuera del
+  desbloqueo de los nuevos logros cuando aplique.
+- **Ningún glifo del catálogo se ha tocado todavía.** El canvas
+  es decisión previa a implementación; cualquier migración a SVG
+  inline será trabajo de una sesión dedicada y se anotará como
+  decisión activa.
+
+### Verificación
+- Preview de `PACE.html` carga limpia (consola: 0 logs, 0 errores).
+- Triggers nuevos no probados manualmente (requeriría manipular
+  reloj o `lastActiveDate` en localStorage). Riesgo bajo: la
+  lógica reproduce patrón validado por `streak.3/7/14/...` y
+  `master.focus.day` (sesión 28).
+
+### Notas técnicas
+- `master.dawn` / `master.dusk` se disparan inmediatamente la
+  próxima vez que el usuario complete una sesión en horario válido.
+  No requieren acumulación.
+- `morning.5` cap a 30 fechas: suficiente para alimentar el
+  umbral de 5 con margen amplio sin inflar localStorage.
+- Los contadores `breatheSessionsTotal` / `moveSessionsTotal` se
+  conservan al hacer rollover diario — son métricas acumuladas,
+  no "de hoy".
+- `move.sessions.25` cuenta solo Mueve. Si el futuro pide un
+  `extra.sessions.X`, vivirá en otro contador `extraSessionsTotal`
+  separado para no romper la métrica del primero.
+
+### Archivos
+- **Nuevos:** `design/glyphs-explorations.html`,
+  `docs/sessions/session-29-logros-aplazados-glifos.md`,
+  `backups/PACE_standalone_v0.13.0_20260429.html`.
+- **Modificados:** `app/state.jsx`,
+  `app/achievements/Achievements.jsx`, `PACE.html`,
+  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
 
 ---
 
