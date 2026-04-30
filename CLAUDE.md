@@ -284,16 +284,10 @@ entrenamientos largos.
 
 ---
 
-## 🎨 Identidad visual (resumen — detalle en `DESIGN_SYSTEM.md`)
+## 🎨 Identidad visual
 
-- **Fondo:** crema cálido `#F2EDE0`
-- **Texto:** negro tinta `#1F1C17`
-- **Acento verde (Foco):** oliva oscuro `#3E5A3A`
-- **Acento terracota (Respira):** `#C97A5D`
-- **Tipografía display:** serif italic (EB Garamond / Cormorant Garamond)
-- **Tipografía UI:** sans-serif geométrica ligera (Inter Tight)
-- **Estilo:** papel, tinta, mucho espacio en blanco, bordes finos, tags
-  con border-radius pill.
+Ver [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) para tokens completos,
+paletas, tipografía, espaciado, transiciones y utilidades.
 
 ---
 
