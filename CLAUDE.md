@@ -8,99 +8,25 @@
 
 ## ⚡ Arranque de sesión (obligatorio)
 
-Antes de tocar **nada** en cada sesión nueva:
-
-1. **Lee `CLAUDE.md`** (este archivo) — protocolo y reglas.
-2. **Lee `STATE.md`** — versión actual, última sesión, backlog, decisiones activas.
-3. **Lee `DESIGN_SYSTEM.md`** — tokens, paletas, tipografía.
-4. **Lista `app/`** para ver la estructura real de componentes.
-5. **Verifica que `PACE_standalone.html` existe** (backup funcional).
-6. **Confirma al usuario el estado** antes de tocar nada.
-
-**Nunca reinventes componentes existentes.** Si algo ya existe, léelo
-primero y edítalo en vez de reescribirlo.
-
-**Plantilla para abrir sesión nueva** (el usuario la copia y pega):
-```
-Proyecto PACE. Importa la última versión desde
-https://github.com/ezradesign/Pace_app y lee STATE.md
-antes de tocar nada. Tarea de hoy: [descripción].
-```
+Ver `AGENTS.md` > Fases de sesión 1 (Arranque).
 
 ---
 
 ## 🧭 Semáforo de contexto
 
-Al inicio de respuestas largas o cuando cambie el estado, indicar:
-
-- 🟢 **Contexto holgado** — podemos iterar con libertad.
-- 🟡 **Contexto medio** — conviene cerrar tareas abiertas pronto.
-- 🔴 **Contexto ajustado** — disparar cierre de sesión (ver abajo).
-
-El sistema no expone un contador exacto; la señal se basa en longitud de la
-conversación, volumen de outputs acumulados y complejidad de lo leído.
+Ver `AGENTS.md` > Fases de sesión 2 (Semáforo de contexto).
 
 ---
 
 ## 🔒 Cierre de sesión (obligatorio tras cambios significativos)
 
-Disparar cuando el contexto llegue a 🔴, cuando el usuario diga "cierra
-sesión", o al terminar una tarea de cambio significativo. **En este orden,
-sin excepción:**
-
-1. **Verificar que la app carga limpia** → `done` en `PACE.html` (consola
-   sin errores). Si hay errores, arreglar antes de seguir.
-2. **Rotar standalone anterior** a `backups/PACE_standalone_vX.Y_YYYYMMDD.html`
-   (mantener máximo **5 backups**; borrar el más antiguo).
-3. **Regenerar `PACE_standalone.html`** con `super_inline_html` desde
-   `PACE.html`.
-4. **Verificar el nuevo standalone** con `show_html` + `get_webview_logs`.
-5. **Escribir el diario de sesión completo** en
-   `docs/sessions/session-NN-titulo-corto.md` (plantilla en
-   `docs/sessions/_template.md`). Es el relato detallado: qué, por qué,
-   archivos, decisiones, backlog.
-6. **Actualizar `CHANGELOG.md`**: añadir fila a la tabla + (si es una de
-   las 2 versiones más recientes) incluir detalle completo abajo; si hay
-   una versión que cae fuera del top-2, mover su detalle al diario y
-   dejar solo la fila de tabla.
-7. **Reescribir la sección "Última sesión" de `STATE.md`** — **sustituir,
-   no añadir**. Este archivo no crece con el tiempo.
-8. **Actualizar backlog/decisiones activas** de `STATE.md` si aplica.
-9. **Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md`** si hubo
-   cambios.
-10. **Sincronizar carpeta espejo `Pace_app_HH_MM/`** (ver reglas abajo).
-11. **Presentar descarga** con `present_fs_item_for_download`.
-12. **Dar al usuario el mensaje exacto de commit sugerido** para GitHub.
-
-### Qué cuenta como "cambio significativo"
-- Cualquier cambio funcional (nuevo módulo, feature, bugfix importante).
-- Cambios de diseño notables (nueva paleta, tipografía, layout).
-- Cambios estructurales de archivos.
-- Tweaks visuales menores (1-2 líneas de CSS) **no** requieren regenerar
-  standalone, pero sí anotar brevemente en `STATE.md` (sección "Última
-  sesión") y en el diario de sesión.
+Ver `AGENTS.md` > Fases de sesión 3 (Cierre), incluyendo "Qué cuenta como cambio significativo" y "Protocolo de cierre adaptado al tipo de tarea".
 
 ---
 
 ## 📒 Regla de un único sitio por tipo de información
 
-Para que `STATE.md` no crezca linealmente con cada sesión:
-
-| Tipo de información | Dónde vive |
-|---|---|
-| **Estado actual del proyecto** | `STATE.md` (se reescribe cada sesión) |
-| **Backlog abierto** | `STATE.md` sección "Backlog priorizado" |
-| **Decisiones vigentes** que condicionan futuro | `STATE.md` sección "Decisiones activas" |
-| **Historial por versión** (GitHub-friendly) | `CHANGELOG.md` (tabla + 2 últimas versiones) |
-| **Diario detallado de cada sesión** | `docs/sessions/session-NN-xxx.md` |
-| **Tokens / paleta / tipografía** | `DESIGN_SYSTEM.md` |
-| **Catálogo de rutinas y logros** | `CONTENT.md` |
-| **Visión a medio/largo plazo** | `ROADMAP.md` |
-| **Cómo portar a otro stack** | `docs/porting.md` |
-| **Presentación pública** (GitHub reader) | `README.md` |
-
-**No duplicar.** Si el detalle de una sesión está en su archivo de
-`docs/sessions/`, no se copia al changelog ni al state. Se enlaza.
+Ver `AGENTS.md` > Fases de sesión 4 (Regla de un único sitio).
 
 ---
 
@@ -235,26 +161,7 @@ editables en futuras conversaciones. **Nunca** un archivo > 500 líneas.
 
 ## 🧑‍💻 Reglas de código
 
-1. **Archivos < 500 líneas.** Si crecen, trocear.
-2. **Cada JSX exporta a `window`** al final:
-   ```js
-   Object.assign(window, { FocusTimer, MinutesPicker });
-   ```
-3. **Objetos de estilos con nombre único** por componente:
-   ```js
-   const focusTimerStyles = { ... }  // ✅
-   const styles = { ... }            // ❌ colisiona globalmente
-   ```
-4. **Orden de carga en `PACE.html`:** `state.jsx` → `ui/*` → `shell/*` →
-   módulos → `main.jsx`.
-5. **No usar `type="module"`** en scripts — rompe Babel standalone.
-6. **Hooks de React** se desestructuran del global:
-   `const { useState } = React;`.
-7. **Estado persistente** va a `localStorage` bajo la clave `pace.state.v1`.
-8. **React 18.3.1 + Babel standalone 7.29.0** pinneados con SRI (ver
-   `PACE.html`).
-9. **Iconografía mínima.** Tags cortos tipo `SIT`, `HIP`, `SHLD`, `ATG`,
-   `ANC` para categorización.
+Ver `AGENTS.md` > Reglas innegociables (bloques A y B).
 
 ---
 
@@ -344,11 +251,4 @@ paletas, tipografía, espaciado, transiciones y utilidades.
 
 ## 🚫 Qué NO hacer
 
-- ❌ Emojis en la UI (rompe el tono artesanal)
-- ❌ Gradientes llamativos, sombras exageradas
-- ❌ Gamificación agresiva (streaks rojos, notificaciones abrumadoras)
-- ❌ Tipografías trilladas (Inter, Roboto, Arial)
-- ❌ Consejos médicos sin disclaimer (apnea SIEMPRE lleva modal de seguridad)
-- ❌ Archivos monolíticos > 500 líneas
-- ❌ Acumular historia en `STATE.md` (va al diario de sesiones)
-- ❌ Duplicar la misma sesión en STATE + CHANGELOG + diario
+Ver `AGENTS.md` > Reglas innegociables (bloque B, items 10-12 y derivados).
