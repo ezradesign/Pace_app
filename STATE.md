@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.14.1
-**Última sesión:** #30 — 2026-04-30 · DESIGN_SYSTEM.md creado + limpieza de duplicación (tokens, paletas, tipografía, espaciado, breakpoints, utilidades centralizados; CLAUDE.md apunta a nuevo archivo)
-**Última actualización de este archivo:** 2026-04-30 · sesión 30 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — no hubo ediciones en app/)
+**Versión actual:** v0.14.2
+**Última sesión:** #31 — 2026-04-30 · Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27; falsos positivos de encoding descartados)
+**Última actualización de este archivo:** 2026-04-30 · sesión 31 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — tarea de docs)
 
 ---
 
@@ -60,7 +60,33 @@ Backups vigentes:
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 29 · v0.13.0 → v0.14.0 · Fruta fácil II: logros aplazados + canvas de glifos**
+**Sesión 31 · v0.14.2 · Fix de comillas en DESIGN_SYSTEM.md**
+
+Tarea de pulido de documentación tras revisión externa del commit cd75d27.
+
+### Qué se hizo
+
+1. **Corrección de comillas faltantes** en la tabla "Tipografías alternativas (tweaks)" de `DESIGN_SYSTEM.md` (líneas 133-134):
+   - `'Cormorant Garamond', Georgia, serif'` (antes sin comilla final).
+   - `'JetBrains Mono', ui-monospace, monospace'` (antes sin comilla final).
+
+### Verificado (no cambiado)
+- **Punto 2 (breakpoints):** `≤ 640px`, `≤ 768px` y `grid 2×2` correctos en disco.
+- **Punto 3 (encoding):** tildes y símbolos especiales verificados en 5 muestras. Falsos positivos descartados.
+- **Punto 4 (línea 19):** bullet único con wrap estándar.
+
+### Resultado cuantitativo
+- **2 líneas editadas** en `DESIGN_SYSTEM.md`.
+- **0 cambios de tamaño:** 252 → 252 líneas.
+- **0 cambios de código.** **0 cambios visuales.**
+- **No requiere regenerar standalone** (es tarea de docs).
+
+### Archivos
+- **Nuevos:** `docs/sessions/session-31-fix-comillas-design-system.md`.
+- **Modificados:** `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `STATE.md`.
+
+### Versión
+- **v0.14.2** (fix de docs · solo cambios en `DESIGN_SYSTEM.md`).
 
 Sesión doble del backlog "Detectores aplazados de logros" + Bloque
 de diseño exploratorio para los 100 glifos del catálogo. Cero
