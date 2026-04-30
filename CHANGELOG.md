@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [abajo ↓](#v0142--2026-04-30--fix-de-comillas-en-design-systemmd) |
 | **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [abajo ↓](#v0141--2026-04-30--design-systemmd-creado--limpieza-de-duplicacion) |
 | **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [abajo ↓](#v0140--2026-04-29--fruta-facil-ii-logros-aplazados--glifos) |
 | **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [session-28-fruta-facil-logros-sonidos.md](./docs/sessions/session-28-fruta-facil-logros-sonidos.md) |
@@ -742,6 +743,36 @@ Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/sessio
 
 > *Las versiones anteriores ya no se detallan aquí — ver la tabla
 > de arriba para enlaces al diario completo de cada sesión.*
+
+---
+
+## [v0.14.2] — 2026-04-30 — Fix de comillas en DESIGN_SYSTEM.md
+
+Tarea de pulido de documentación tras revisión externa del commit cd75d27.
+
+### Cambiado
+- **`DESIGN_SYSTEM.md`** líneas 133-134: añadidas comillas simples de
+  cierre antes del `|` en la tabla "Tipografías alternativas (tweaks)":
+  - `'Cormorant Garamond', Georgia, serif'` (antes sin comilla final).
+  - `'JetBrains Mono', ui-monospace, monospace'` (antes sin comilla final).
+- **`CHANGELOG.md`** — entrada v0.14.2 añadida a la tabla y detalle abajo.
+- **`STATE.md`** — bump v0.14.1 → v0.14.2, sesión #31.
+
+### Verificado (no cambiado)
+- **Punto 2 (breakpoints):** `≤ 640px`, `≤ 768px` y `grid 2×2` correctos
+  en disco. No tocados.
+- **Punto 3 (encoding):** tildes y símbolos especiales (`≤`, `×`, `→`,
+  `—`, comillas) verificados en 5 muestras. Falsos positivos descartados.
+- **Punto 4 (línea 19):** bullet único con wrap estándar. No tocado.
+- **Cero cambios de código.** Cero cambios visuales.
+
+### Archivos
+- **Nuevos:** `docs/sessions/session-31-fix-comillas-design-system.md`.
+- **Modificados:** `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `STATE.md`.
+
+---
+
+## [v0.14.1] — 2026-04-30 — DESIGN_SYSTEM.md creado + limpieza de duplicación
 
 <!-- sección v0.12.5 detallada retirada al comprimirse tras el
      bump a v0.12.7 (convención: solo las 2 últimas detalladas).

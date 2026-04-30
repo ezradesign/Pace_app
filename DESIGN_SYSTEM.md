@@ -130,8 +130,8 @@ Se activan por `[data-font="..."]` y sobrescriben las variables CSS. Forma parte
 
 | Atributo | Variables que cambia | Valor |
 |---|---|---|
-| `[data-font="cormorant"]` | `--font-display` | `'Cormorant Garamond', Georgia, serif |
-| `[data-font="mono"]` | `--font-display`, `--font-ui` | `'JetBrains Mono', ui-monospace, monospace |
+| `[data-font="cormorant"]` | `--font-display` | `'Cormorant Garamond', Georgia, serif' |
+| `[data-font="mono"]` | `--font-display`, `--font-ui` | `'JetBrains Mono', ui-monospace, monospace' |
 
 Nota: `[data-font="mono"]` sobrescribe tanto display como UI, convirtiendo toda la interfaz a monoespaciada.
 
