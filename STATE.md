@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.14.0
-**Última sesión:** #29 — 2026-04-29 (tarde) · Fruta fácil II (6 logros aplazados: contadores breathe/move + horarios dawn/dusk/morning + long.focus) + canvas exploratorio de glifos en 4 direcciones
-**Última actualización de este archivo:** 2026-04-29 · sesión 29 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, regenerado tras añadir contadores acumulados + 3 detectores horarios + umbral long.focus)
+**Versión actual:** v0.14.1
+**Última sesión:** #30 — 2026-04-30 · DESIGN_SYSTEM.md creado + limpieza de duplicación (tokens, paletas, tipografía, espaciado, breakpoints, utilidades centralizados; CLAUDE.md apunta a nuevo archivo)
+**Última actualización de este archivo:** 2026-04-30 · sesión 30 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — no hubo ediciones en app/)
 
 ---
 

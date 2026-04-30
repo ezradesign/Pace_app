@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [abajo ↓](#v0141--2026-04-30--design-systemmd-creado--limpieza-de-duplicacion) |
 | **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [abajo ↓](#v0140--2026-04-29--fruta-facil-ii-logros-aplazados--glifos) |
 | **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [session-28-fruta-facil-logros-sonidos.md](./docs/sessions/session-28-fruta-facil-logros-sonidos.md) |
 | **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell (prep/done) y TweaksPanel (bottom-sheet) | #27 | [session-27-modales-mobile.md](./docs/sessions/session-27-modales-mobile.md) |
@@ -45,6 +46,45 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.14.1] — 2026-04-30 — DESIGN_SYSTEM.md creado + limpieza de duplicación
+
+Tarea de documentación pura: se crea `DESIGN_SYSTEM.md` (~270 líneas) como
+archivo vivo centralizado de tokens, paletas, tipografía, espaciado,
+breakpoints y utilidades (hasta ahora dispersos en `tokens.css` y un
+resumen de 10 líneas en `CLAUDE.md`). Se sustituye el resumen de
+`CLAUDE.md` por una referencia al nuevo archivo, eliminando la
+duplicación de información.
+
+### Añadido
+- **`DESIGN_SYSTEM.md`** (nuevo, ~270 líneas):
+  - Paletas completas: Crema día (default), Oscuro noche, Papel envejecido.
+  - Tipografía: jerarquía de tamaños, interlineado, tracking, clases utilitarias.
+  - Tipografías alternativas: `[data-font="cormorant"]` y `[data-font="mono"]`
+    que sobrescriben variables vía Tweaks.
+  - Espaciado s-1 a s-9 con equivalencias y usos típicos.
+  - Radios, sombras, transiciones y curva de aceleración.
+  - Breakpoints (640px, 768px) y unidades viewport (100vh/100dvh).
+  - Scrollbar custom, reset base y `:focus-visible` con outline de 2px.
+  - Placeholder para Z-index layers (pendiente de tarea futura).
+  - Fuentes importadas vía Google Fonts en `tokens.css`.
+  - Todos los valores numéricos coinciden exactamente con `tokens.css` (187 líneas verificadas).
+
+### Cambiado
+- **`CLAUDE.md`** líneas 287-296: sustitución de resumen de 10 líneas
+  por referencia a `DESIGN_SYSTEM.md` (siguiendo la regla de un único
+  sitio por tipo de información).
+
+### No cambiado (intencional)
+- **Cero cambios de código.** No se toca `app/`, `PACE.html`,
+  `PACE_standalone.html`, `STATE.md`, `README.md` ni `tokens.css`.
+- **Cero cambios visuales** en la app de producto.
+
+### Archivos
+- **Nuevos:** `DESIGN_SYSTEM.md`, `docs/sessions/session-30-design-system.md`.
+- **Modificados:** `CLAUDE.md`, `CHANGELOG.md`.
 
 ---
 
