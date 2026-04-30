@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.12.9 · Pre-lanzamiento · Iteración de diseño
+**Estado:** v0.14.3 · Pre-lanzamiento · Iteración de diseño
 **Build entregado:** `PACE_standalone.html` (standalone autocontenido)
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)

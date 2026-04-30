@@ -10,9 +10,9 @@
 
 ---
 
-**Versión actual:** v0.14.2
-**Última sesión:** #31 — 2026-04-30 · Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27; falsos positivos de encoding descartados)
-**Última actualización de este archivo:** 2026-04-30 · sesión 31 (cierre)
+**Versión actual:** v0.14.3
+**Última sesión:** #32 — 2026-04-30 · AGENTS.md creado + dedupe de CLAUDE.md + sincronización de README (v0.14.3)
+**Última actualización de este archivo:** 2026-04-30 · sesión 32 (cierre)
 **Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — tarea de docs)
 
 ---
@@ -60,7 +60,51 @@ Backups vigentes:
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 31 · v0.14.2 · Fix de comillas en DESIGN_SYSTEM.md**
+**Sesión 32 · v0.14.3 · AGENTS.md creado + dedupe de CLAUDE.md + sincronización de README**
+
+Tarea de documentación pura (sesión #32) para automatizar el onboarding de agentes (OpenCode) y eliminar duplicación entre CLAUDE.md y AGENTS.md.
+
+### Qué se hizo
+
+1. **Creación de `AGENTS.md`** (~95 líneas) como archivo autosuficiente:
+   - Intro breve del proyecto (2 líneas).
+   - 12 reglas innegociables divididas en dos bloques: identidad/proceso (7) y técnicas del stack (12, algunas fusionadas por naturaleza).
+   - 4 fases de sesión (Arranque, Semáforo, Cierre, Regla de un único sitio).
+   - 4 checkpoints de edición (A/B/C/D) claramente diferenciados de las fases.
+   - Protocolo de cierre adaptado al tipo de tarea (docs vs código).
+   - Referencias a CLAUDE.md y DESIGN_SYSTEM.md para profundizar.
+
+2. **Dedupe de `CLAUDE.md`** — 6 secciones sustituidas por punteros a `AGENTS.md`:
+   - Arranque de sesión → `Ver AGENTS.md > Fases de sesión 1`.
+   - Semáforo de contexto → `Ver AGENTS.md > Fases de sesión 2`.
+   - Cierre de sesión → `Ver AGENTS.md > Fases de sesión 3`.
+   - Regla de un único sitio → `Ver AGENTS.md > Fases de sesión 4`.
+   - Reglas de código → `Ver AGENTS.md > Reglas innegociables`.
+   - Qué NO hacer → `Ver AGENTS.md > Reglas innegociables`.
+
+3. **Sincronización de `README.md`** — corrección de discrepancia v0.12.9 → v0.14.3.
+   - La desincronización venía arrastrada desde sesión 26 (v0.12.9) sin actualizar README en sesiones 27-31.
+   - Añadido "Actualizar README.md" al paso 6 del cierre en AGENTS.md para evitar futuros olvidos.
+
+4. **Bump de versión a v0.14.3** en README.md y PACE.html.
+
+### Resultado cuantitativo
+
+- **+1 archivo nuevo:** `AGENTS.md` (~95 líneas).
+- **~120 líneas eliminadas** de CLAUDE.md (354 → ~234 líneas estimadas por sustitución de secciones).
+- **0 cambios de código.** **0 cambios visuales.**
+- **No requiere regenerar standalone** (es tarea de docs).
+
+### Archivos
+
+- **Nuevos:** `AGENTS.md`, `docs/sessions/session-32-agents-md-creado-dedupe-claudemd.md`.
+- **Modificados:** `CLAUDE.md`, `README.md`, `PACE.html`, `CHANGELOG.md`, `STATE.md`.
+
+### Versión
+
+- **v0.14.2** → **v0.14.3** (patch · docs + dedupe + sincronización de versiones).
+
+Detalle: `docs/sessions/session-32-agents-md-creado-dedupe-claudemd.md`.
 
 Tarea de pulido de documentación tras revisión externa del commit cd75d27.
 

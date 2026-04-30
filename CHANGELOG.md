@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.14.3** | 2026-04-30 | AGENTS.md creado + dedupe de CLAUDE.md + sincronización de README | #32 | [abajo ↓](#v0143--2026-04-30--agentsmd-creado--dedupe-de-claudemd) |
 | **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [abajo ↓](#v0142--2026-04-30--fix-de-comillas-en-design-systemmd) |
 | **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [abajo ↓](#v0141--2026-04-30--design-systemmd-creado--limpieza-de-duplicacion) |
 | **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [abajo ↓](#v0140--2026-04-29--fruta-facil-ii-logros-aplazados--glifos) |
@@ -743,6 +744,42 @@ Detalle completo: [`docs/sessions/session-23-dvh-fit.md`](./docs/sessions/sessio
 
 > *Las versiones anteriores ya no se detallan aquí — ver la tabla
 > de arriba para enlaces al diario completo de cada sesión.*
+
+---
+
+## [v0.14.3] — 2026-04-30 — AGENTS.md creado + dedupe de CLAUDE.md
+
+Tarea de documentación pura (sesión #32). Se crea `AGENTS.md` como archivo
+autosuficiente para que OpenCode cargue las reglas y checkpoints
+automáticamente, eliminando la dependencia del onboarding manual.
+
+### Añadido
+- **`AGENTS.md`** (~95 líneas):
+  - Intro breve del proyecto (2 líneas).
+  - 12 reglas innegociables: 7 de identidad/proceso + 12 técnicas del stack.
+  - 4 fases de sesión (Arranque, Semáforo, Cierre, Regla de un único sitio).
+  - 4 checkpoints de edición (A/B/C/D) claramente diferenciados.
+  - Protocolo de cierre adaptado al tipo de tarea (docs vs código).
+  - Referencias a CLAUDE.md y DESIGN_SYSTEM.md para profundizar.
+
+### Cambiado
+- **`CLAUDE.md`** — 6 secciones sustituidas por punteros a `AGENTS.md`:
+  Arranque, Semáforo, Cierre, Regla de un único sitio, Reglas de código,
+  Qué NO hacer. Eliminadas ~120 líneas de duplicación.
+- **`README.md`** — corrección de discrepancia v0.12.9 → v0.14.3
+  (desincronización arrastrada desde sesión 26 sin actualizar README en
+  sesiones 27-31). Añadido "Actualizar README.md" al paso 6 del
+  cierre en AGENTS.md.
+- **`PACE.html`** — title bumpeado v0.14.0 → v0.14.3.
+
+### No cambiado (intencional)
+- **Cero cambios de código.** No se toca `app/`.
+- **Cero cambios visuales** en la app.
+- **No regenerar `PACE_standalone.html`** (tarea de docs).
+
+### Archivos
+- **Nuevos:** `AGENTS.md`, `docs/sessions/session-32-agents-md-creado-dedupe-claudemd.md`.
+- **Modificados:** `CLAUDE.md`, `README.md`, `PACE.html`, `CHANGELOG.md`, `STATE.md`.
 
 ---
 
