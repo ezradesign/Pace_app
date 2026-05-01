@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.14.3
-**Última sesión:** #32 — 2026-04-30 · AGENTS.md creado + dedupe de CLAUDE.md + sincronización de README (v0.14.3)
-**Última actualización de este archivo:** 2026-04-30 · sesión 32 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — tarea de docs)
+**Versión actual:** v0.14.4
+**Última sesión:** #33 — 2026-05-01 · Refactor BreatheModule (652 → 275 líneas) + 5 archivos nuevos en app/breathe/ + edición AGENTS.md + backlog
+**Última actualización de este archivo:** 2026-05-01 · sesión 33 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, **desactualizado** — pendiente regenerar con `scripts/build-standalone.js` en sesión 34)
 
 ---
 
@@ -401,6 +401,12 @@ Los 4 ítems de prioridad A del informe
 [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md)
 se ejecutaron en sesión 26 (v0.12.8). Detalle en
 [`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
+
+### 🔧 Tooling (nuevo en sesión 33)
+
+- **Crear `scripts/build-standalone.js`** (~30-45 min) — `super_inline_html` (Genspark) no existe en OpenCode. Necesario script propio que lea `PACE.html`, inline scripts y estilos referenciados, escriba `PACE_standalone.html`. Bloquea regeneración de standalone hasta que exista. Sesión 34.
+
+- **Validar funcionalmente refactor BreatheModule v0.14.4** (~10 min, depende de anterior) — el refactor de BreatheModule de la sesión 33 quedó sin verificar en navegador por bloqueo `file://` y por imposibilidad de regenerar standalone. Validar tras tener `scripts/build-standalone.js` y standalone regenerado. Probar biblioteca de respiración, modal de seguridad, círculo animado, y que resto de módulos cargan.
 
 ### 🛠️ Refactor aplazado (sesión 27 o más tarde · prioridad B/C)
 

@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.14.4** | 2026-05-01 | Refactor BreatheModule + edición AGENTS.md + backlog | #33 | [abajo ↓](#v0144--2026-05-01--refactor-breathemodule--edicion-agentsmd) |
 | **v0.14.3** | 2026-04-30 | AGENTS.md creado + dedupe de CLAUDE.md + sincronización de README | #32 | [abajo ↓](#v0143--2026-04-30--agentsmd-creado--dedupe-de-claudemd) |
 | **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [abajo ↓](#v0142--2026-04-30--fix-de-comillas-en-design-systemmd) |
 | **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [abajo ↓](#v0141--2026-04-30--design-systemmd-creado--limpieza-de-duplicacion) |
@@ -48,6 +49,38 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.14.4] — 2026-05-01 — Refactor BreatheModule + edición AGENTS.md + backlog
+
+Sesión dedicada a cumplir la regla técnica innegociable de archivos < 500 líneas, bajando BreatheModule.jsx de ~652 a 275 líneas.
+
+### Añadido
+- **5 archivos nuevos en `app/breathe/`** (sesión 33):
+  - `BreatheRoutines.jsx` (45 líneas) — catálogo `BREATHE_ROUTINES`.
+  - `BreatheLibrary.jsx` (57 líneas) — `BreatheLibrary` + `RoutineCard`.
+  - `BreatheSafety.jsx` (49 líneas) — modal de seguridad.
+  - `breatheHelpers.jsx` (66 líneas) — `getBreatheSequence` (antes `getSequence`, renombrado por regla de nombre único).
+  - `BreathVisual.jsx` (134 líneas) — `BreathVisual` + `breathVisualStyles` (renombrado por regla de nombre único).
+- **2 entradas al backlog de STATE.md**:
+  - "Crear `scripts/build-standalone.js`" (~30-45 min, bloquea regeneración de standalone).
+  - "Validar funcionalmente refactor BreatheModule v0.14.4" (~10 min, depende de anterior).
+- **Sección "Notas de entorno" en AGENTS.md** documentando ausencia de `super_inline_html` y bloqueo de `file://`.
+
+### Cambiado
+- **`BreatheModule.jsx`** de 652 → 275 líneas (solo queda `BreatheSession`).
+- **`PACE.html`** orden de carga: 5 nuevos `<script>` para módulos de respiración.
+- **`AGENTS.md`** paso 3 de Cierre: `super_inline_html` sustituido por referencia a `scripts/build-standalone.js`.
+- **`README.md`** versión bump v0.14.3 → v0.14.4.
+
+### No cambiado (intencional)
+- **`PACE_standalone.html`** se mantiene en v0.14.0 (no se regenera por ausencia de script de empaquetado).
+- **Cero cambios de comportamiento observable** — solo reestructuración de archivos.
+
+### Archivos
+- **Nuevos:** `app/breathe/BreatheRoutines.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSafety.jsx`, `app/breathe/breatheHelpers.jsx`, `app/breathe/BreathVisual.jsx`.
+- **Modificados:** `app/breathe/BreatheModule.jsx`, `PACE.html`, `AGENTS.md`, `README.md`, `CHANGELOG.md`, `STATE.md`.
 
 ---
 
