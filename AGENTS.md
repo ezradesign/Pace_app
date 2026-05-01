@@ -54,7 +54,7 @@ Indicar al inicio de respuestas largas o cambios de estado:
 Disparar en contexto 🔴, al usuario decir "cierra sesión", o al terminar tarea de cambio significativo. Orden estricto:
 1. Verificar que la app carga limpia → `done` en `PACE.html` (consola sin errores).
 2. Rotar standalone anterior a `backups/PACE_standalone_vX.Y_YYYYMMDD.html` (máx 5 backups).
-3. Regenerar `PACE_standalone.html` con `super_inline_html` desde `PACE.html`.
+3. Regenerar `PACE_standalone.html` con el script de empaquetado del proyecto (`scripts/build-standalone.js`). Si el script no existe aún, omitir y documentar la omisión.
 4. Verificar nuevo standalone con `show_html` + `get_webview_logs`.
 5. Escribir diario de sesión en `docs/sessions/session-NN-titulo-corto.md`.
 6. Actualizar `CHANGELOG.md` + `README.md` (versión actual).
@@ -113,3 +113,10 @@ Regenerar `PACE_standalone.html` antes de la siguiente subtarea (salvo tweaks me
 ## Referencias
 - `CLAUDE.md`: arquitectura de archivos, buenas prácticas, decisiones activas.
 - `DESIGN_SYSTEM.md`: tokens completos, paletas, tipografía, espaciado.
+
+---
+
+## Notas de entorno
+
+- **`super_inline_html`** era herramienta del sandbox Genspark Build AI usado en sesiones anteriores. No disponible en OpenCode ni en otros entornos locales. Sustituido por `scripts/build-standalone.js` (pendiente de crear en sesión 34).
+- **PACE.html no se puede abrir directamente con `file://`** porque los navegadores bloquean la carga de scripts `text/babel` desde rutas relativas locales. Para desarrollo, servir con un servidor local (ej. `python -m http.server 8000` desde la raíz del repo, abrir `http://localhost:8000/PACE.html`). El standalone (`PACE_standalone.html`) sí abre directamente porque todo está inline.
