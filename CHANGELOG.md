@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.14.5** | 2026-05-01 | Migración del pipeline a Claude Code (Opus 4.7) + `scripts/build-standalone.js` + standalone regenerado a v0.14.5 + reescritura de `CLAUDE.md` para Claude Code | #35 | [abajo ↓](#v0145--2026-05-01--migracion-claude-code--build-standalonejs) |
 | **v0.14.4** | 2026-05-01 | Refactor BreatheModule + edición AGENTS.md + backlog | #33 | [abajo ↓](#v0144--2026-05-01--refactor-breathemodule--edicion-agentsmd) |
 | **v0.14.3** | 2026-04-30 | AGENTS.md creado + dedupe de CLAUDE.md + sincronización de README | #32 | [abajo ↓](#v0143--2026-04-30--agentsmd-creado--dedupe-de-claudemd) |
 | **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [abajo ↓](#v0142--2026-04-30--fix-de-comillas-en-design-systemmd) |
@@ -49,6 +50,32 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.14.5] — 2026-05-01 — Migración Claude Code + build-standalone.js
+
+Sesión de tooling + reparación de cierre. Se migró el agente ejecutor del proyecto de **OpenCode + Big Pickle (GLM-4.6)** a **Claude Code (Opus 4.7)** y se cerró la deuda técnica que había bloqueado la regeneración del standalone desde la sesión 33.
+
+### Añadido
+- **`scripts/build-standalone.js`** (~200 líneas) — inliner Node puro sin dependencias npm. Lee `PACE.html`, inlinea scripts/links/imgs locales, preserva CDN con SRI, rota el standalone anterior a `backups/` (máx 5), inlinea el logo PNG como data URI base64. Uso: `node scripts/build-standalone.js`.
+- **`docs/sessions/session-35-migracion-claude-code.md`** — diario completo de la sesión.
+- **Sección "🤖 Flujo con Claude Code"** en `CLAUDE.md` con las 4 reglas operativas del nuevo pipeline (sin commits/push automáticos, edición in-place, comando del script de build, servidor local para preview).
+- **Tabla de checkpoints** en `CLAUDE.md` (A/B/C/D) como referencia rápida.
+- **2 entradas en "Notas de entorno"** de `AGENTS.md`: pipeline actual Claude Code + comando de regeneración del standalone con detalle del comportamiento.
+- **Entrada de backlog en `STATE.md`:** "Limpiar splash placeholder `__bundler_thumbnail`" (~10 min, deuda heredada del bundler de Genspark).
+
+### Cambiado
+- **`PACE_standalone.html`** regenerado a v0.14.5 (363.1 KB). Refleja el código real (incluyendo refactor de `BreatheModule` de la sesión 33) por primera vez desde la sesión 29.
+- **`CLAUDE.md`** reescrito como onboarding específico de Claude Code: 255 → 217 líneas. Eliminadas 6 secciones que solo eran punteros a `AGENTS.md` (consolidación pendiente desde sesión 32) y la sección entera "Carpeta espejo `Pace_app_HH_MM/`" (~55 líneas, muleta de Genspark obsoleta).
+- **`AGENTS.md`** sección Cierre: 12 pasos → 8. Eliminados los pasos del flujo Genspark (carpeta espejo, `present_fs_item_for_download`, verificación con `show_html` + `get_webview_logs`). Verificación de la app explícitamente delegada al usuario en Claude Code. Regla técnica B cita ahora el comando `node scripts/build-standalone.js`.
+- **`STATE.md`** cabecera: nueva línea "Sesión 34: abortada (sin commits)" + sección dedicada `## ⛔ Sesión 34 — abortada` antes de "Última sesión (resumen operativo)".
+- **`PACE.html`** título bumpeado v0.14.3 → v0.14.5 (corrige también el desfase de v0.14.4 que sesión 33 dejó sin propagar al `<title>`); comentario del logo y comentario del splash actualizados para retirar la referencia obsoleta a `super_inline_html`.
+- **`README.md`** versión bump v0.14.4 → v0.14.5; tamaño del standalone actualizado; árbol con `app/breathe/` ya troceado y `scripts/`.
+
+### No cambiado (intencional)
+- **0 archivos JSX modificados.** **0 cambios de comportamiento observable.**
+- **Splash placeholder `<template id="__bundler_thumbnail">`** en `PACE.html` líneas 18-30 se mantiene intacto. La deuda queda registrada como entrada de backlog para una sesión futura.
 
 ---
 
