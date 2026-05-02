@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"\\(Get-Content 'c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\STATE.md' | Measure-Object -Line\\).Lines\")",
+      "Bash(powershell -Command \"@\\(Get-Content 'c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\STATE.md'\\).Count\")",
+      "Bash(powershell -Command \"@\\(Get-Content 'c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\CLAUDE.md'\\).Count\")",
+      "PowerShell(if \\(-not \\(Test-Path 'scripts'\\)\\) { New-Item -ItemType Directory -Path 'scripts' | Out-Null; \"creado scripts/\" } else { \"scripts/ ya existe\" })"
+    ]
+  }
+}

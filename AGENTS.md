@@ -27,7 +27,7 @@ Ambos bloques son innegociables, sin jerarquía de importancia: solo difieren en
 - Orden de carga en `PACE.html`: `state.jsx` → `ui/*` → `shell/*` → módulos → `main.jsx`.
 - No usar `type="module"` (rompe Babel standalone).
 - Hooks de React desestructurados del global.
-- Cambios en `app/` → regenerar `PACE_standalone.html`.
+- Cambios en `app/` → regenerar `PACE_standalone.html` con `node scripts/build-standalone.js`.
 - Iconografía mínima: tags cortos (`SIT`, `HIP`, `SHLD`, `ATG`, `ANC`).
 - Sin gradientes llamativos ni sombras exageradas.
 
@@ -52,18 +52,14 @@ Indicar al inicio de respuestas largas o cambios de estado:
 
 ### 3. Cierre (obligatorio tras cambios significativos)
 Disparar en contexto 🔴, al usuario decir "cierra sesión", o al terminar tarea de cambio significativo. Orden estricto:
-1. Verificar que la app carga limpia → `done` en `PACE.html` (consola sin errores).
-2. Rotar standalone anterior a `backups/PACE_standalone_vX.Y_YYYYMMDD.html` (máx 5 backups).
-3. Regenerar `PACE_standalone.html` con el script de empaquetado del proyecto (`scripts/build-standalone.js`). Si el script no existe aún, omitir y documentar la omisión.
-4. Verificar nuevo standalone con `show_html` + `get_webview_logs`.
-5. Escribir diario de sesión en `docs/sessions/session-NN-titulo-corto.md`.
-6. Actualizar `CHANGELOG.md` + `README.md` (versión actual).
-7. Reescribir sección "Última sesión" de `STATE.md` (sustituir, no añadir).
-8. Actualizar backlog/decisiones activas de `STATE.md` si aplica.
-9. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios.
-10. Sincronizar carpeta espejo `Pace_app_HH_MM/` (timestamp local España).
-11. Presentar descarga con `present_fs_item_for_download`.
-12. Dar mensaje de commit sugerido para GitHub.
+1. Verificar que la app carga limpia (servir `PACE.html` con servidor local, consola sin errores). En Claude Code el agente no tiene acceso a navegador — esta verificación la hace el usuario tras el cierre.
+2. Regenerar `PACE_standalone.html` ejecutando `node scripts/build-standalone.js` desde la raíz. El script rota automáticamente el standalone anterior a `backups/PACE_standalone_vX.Y_YYYYMMDD.html` (máx 5 backups; los más viejos se eliminan).
+3. Escribir diario de sesión en `docs/sessions/session-NN-titulo-corto.md`.
+4. Actualizar `CHANGELOG.md` + `README.md` (versión actual).
+5. Reescribir sección "Última sesión" de `STATE.md` (sustituir, no añadir).
+6. Actualizar backlog / decisiones activas de `STATE.md` si aplica.
+7. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios.
+8. Entregar mensaje de commit sugerido al usuario. El commit y el push los hace **el usuario manualmente** desde GitHub Desktop — el agente NO ejecuta `git commit` ni `git push`.
 
 #### Qué cuenta como cambio significativo
 - Cambio funcional (nuevo módulo, feature, bugfix importante).
@@ -72,8 +68,8 @@ Disparar en contexto 🔴, al usuario decir "cierra sesión", o al terminar tare
 - Tweaks menores (1-2 líneas CSS) no requieren regenerar standalone, pero sí anotar en `STATE.md` y diario.
 
 #### Protocolo de cierre adaptado al tipo de tarea
-- Tarea de docs (sin tocar `app/`): omitir pasos 2, 3, 4, 10 del cierre. No regenerar standalone.
-- Tarea de código (toca `app/`): ejecutar todos los pasos de cierre.
+- Tarea de docs (sin tocar `app/`): omitir paso 2 del cierre (no regenerar standalone). El resto se ejecuta normalmente.
+- Tarea de código (toca `app/`): ejecutar todos los pasos de cierre, incluyendo regeneración del standalone.
 
 ### 4. Regla de un único sitio
 Cada tipo de información vive en un único archivo dedicado:
@@ -118,5 +114,7 @@ Regenerar `PACE_standalone.html` antes de la siguiente subtarea (salvo tweaks me
 
 ## Notas de entorno
 
-- **`super_inline_html`** era herramienta del sandbox Genspark Build AI usado en sesiones anteriores. No disponible en OpenCode ni en otros entornos locales. Sustituido por `scripts/build-standalone.js` (pendiente de crear en sesión 34).
+- **Pipeline actual: Claude Code (Opus 4.7)** desde sesión 35 (2026-05-01). Reemplaza al pipeline anterior OpenCode + Big Pickle (GLM-4.6). El usuario edita el repo localmente y commitea/pushea manualmente desde GitHub Desktop — el agente NO ejecuta `git commit` ni `git push`.
+- **`super_inline_html`** era herramienta del sandbox Genspark Build AI usado hasta sesión 32. No disponible en otros entornos. Reemplazado por `scripts/build-standalone.js` desde **sesión 35**.
+- **Regeneración del standalone:** desde la raíz del repo, ejecutar `node scripts/build-standalone.js`. El script lee `PACE.html`, inlinea todos los `<script>` y `<link>` con rutas locales (los CDN con `integrity` se preservan tal cual), inlinea el logo PNG como data URI base64, rota el standalone anterior a `backups/PACE_standalone_vX.Y_YYYYMMDD.html` (máx 5 backups), y escribe `PACE_standalone.html`. Sin dependencias npm — solo Node ≥ 14.
 - **PACE.html no se puede abrir directamente con `file://`** porque los navegadores bloquean la carga de scripts `text/babel` desde rutas relativas locales. Para desarrollo, servir con un servidor local (ej. `python -m http.server 8000` desde la raíz del repo, abrir `http://localhost:8000/PACE.html`). El standalone (`PACE_standalone.html`) sí abre directamente porque todo está inline.
