@@ -24,7 +24,7 @@ function HydrateTracker({ open, onClose }) {
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
-            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); } }}
+            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound('sip'); } catch (e) {} } }}
             style={{
               aspectRatio: '1/1.3',
               background: i < today ? 'var(--hydrate-soft)' : 'transparent',

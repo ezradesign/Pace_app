@@ -9,7 +9,7 @@
    de usuarios existentes — solo cambia qué contenedor visual los muestra.
 */
 
-const { useState: useStateMV, useEffect: useEffectMV } = React;
+const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
 
 const MOVE_ROUTINES = [
   { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
@@ -79,7 +79,6 @@ function MoveLibrary({ open, onClose, onStart }) {
 }
 
 function MoveSession({ routine, onExit, kind = 'move' }) {
-  const { useRef: useRefMV } = React;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
   // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
   const dispatchComplete = () => {

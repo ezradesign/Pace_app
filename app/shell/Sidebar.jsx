@@ -430,8 +430,10 @@ function WeekDots({ weeklyStats }) {
 
 function AchievementsPreview({ onOpen }) {
   const [state] = usePace();
-  const unlocked = Object.keys(state.achievements || {});
-  // Mostrar 5 slots: los 3 últimos + 2 placeholders
+  // Los 5 más recientes primero, por unlockedAt descendente
+  const unlocked = Object.entries(state.achievements || {})
+    .sort((a, b) => (b[1].unlockedAt || 0) - (a[1].unlockedAt || 0))
+    .map(([id]) => id);
   const shown = 5;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>

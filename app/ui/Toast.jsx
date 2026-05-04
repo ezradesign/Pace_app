@@ -21,14 +21,18 @@ function ToastHost() {
   }, []);
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: 20, left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 200,
-      display: 'flex', flexDirection: 'column', gap: 8,
-      pointerEvents: 'none',
-    }}>
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      style={{
+        position: 'fixed',
+        bottom: 20, left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 200,
+        display: 'flex', flexDirection: 'column', gap: 8,
+        pointerEvents: 'none',
+      }}
+    >
       {toasts.map(t => (
         <div key={t._id} style={{
           display: 'flex', alignItems: 'center', gap: 14,
