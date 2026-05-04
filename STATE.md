@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.14.3
-**Última sesión:** #32 — 2026-05-04 · Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes)
-**Última actualización de este archivo:** 2026-05-04 · sesión 32 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB — pendiente regenerar con fixes de v0.14.3)
+**Versión actual:** v0.15.0
+**Última sesión:** #33 — 2026-05-04 · Loop post-Pomodoro: BreakMenu con rotación inteligente
+**Última actualización de este archivo:** 2026-05-04 · sesión 33 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.15.0 (~364 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -38,9 +38,9 @@
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.14.3** (eliminado dead state `justFinished`) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.14.3** (vasos individuales reproducen `sip` al añadir) |
-| `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.13.0** (wrapper `handleChoose` para trigger `first.cycle`) |
+| `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.14.0** (+7 ids en `IMPLEMENTED_ACHIEVEMENTS`: 39 → 45; Constancia 11/15, Maestría 5/25) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.14.3** (`PACE_VERSION` → `'v0.14.2'`; condición redundante en `rolloverIfNeeded` eliminada) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.15.0** (`PACE_VERSION` → `'v0.15.0'`) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
@@ -60,35 +60,35 @@ Backups vigentes:
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 32 · v0.14.3 · Code review: 7 fixes de calidad**
-
-Auditoría interna a petición del usuario: revisión completa del código fuente y aplicación de 7 correcciones de calidad sin cambios de comportamiento visible ni features nuevas.
+**Sesión 33 · v0.14.3 → v0.15.0 · Loop post-Pomodoro: BreakMenu con rotación inteligente**
 
 ### Qué se hizo
 
-1. **`app/state.jsx` — `PACE_VERSION` sincronizado** `'v0.14.0'` → `'v0.14.2'` (había quedado desincronizado durante las sesiones de documentación 30-31).
-2. **`app/state.jsx` — condición redundante eliminada** en `rolloverIfNeeded`: `&& state.lastActiveDay !== today` era dead code (la línea anterior ya retorna si son iguales).
-3. **`app/focus/FocusTimer.jsx` — dead state `justFinished` eliminado** (4 referencias: declaración, reset effect, finish effect, función `reset()`). Era escrito pero nunca leído; el guard real contra doble-ejecución es `if (!running) return`.
-4. **`app/move/MoveModule.jsx` — `useRef: useRefMV` movido al destructure de módulo** (estaba dentro del body de `MoveSession`, re-ejecutándose en cada render; inconsistente con el resto del proyecto).
-5. **`app/ui/Toast.jsx` — accesibilidad** añadido `aria-live="polite"` y `aria-atomic="true"` al contenedor de toasts para que los lectores de pantalla anuncien logros desbloqueados.
-6. **`app/hydrate/HydrateModule.jsx` — consistencia de sonido** los botones de vaso individual ahora reproducen `playSound('sip')` al añadir, igual que el botón "Un vaso más".
-7. **`app/shell/Sidebar.jsx` — `AchievementsPreview` ordenada por recencia** muestra los 5 logros más recientemente desbloqueados (por `unlockedAt` desc) en lugar de los 5 primeros insertados.
-
-### Resultado cuantitativo
-- **7 archivos modificados.** 0 archivos nuevos de código.
-- **0 cambios visuales.** 0 breaking changes. 0 nuevas features.
-- **Standalone pendiente de regenerar** (herramienta `super_inline_html` no disponible en este entorno — anotar como tarea en la próxima sesión).
+1. **`app/breakmenu/BreakMenu.jsx` — rotación inteligente** añadida función `computeScore(key, state)` que puntúa cada actividad según lo hecho hoy: Respira (0 si `plan.respira`, 2 si no), Mueve (0/2 igual), Agua (3 si 0 vasos, 1 si incompleto, 0 si meta). Las 3 cartas se reordenan por score desc (sort estable para empates). La carta con mayor puntuación muestra un tag `<Tag color="var(--focus)">Para ti</Tag>` (solo si score>0). Las cartas ya hechas hoy muestran borde `var(--line)` (muted) + punto color-módulo top-right y descripción "Ya hecho hoy · otra ronda si quieres".
+2. **`app/state.jsx` — `PACE_VERSION`** bumpeado a `'v0.15.0'`.
+3. **`PACE.html` — título** actualizado a `v0.15.0`.
+4. **`build-standalone.js`** — script Node.js nuevo que reemplaza la herramienta `super_inline_html` del entorno anterior. Inlinea `tokens.css`, todos los `.jsx`, y el logo como base64 data URI. Produce `PACE_standalone.html` (~364 KB).
+5. **`PACE_standalone.html`** — regenerado dos veces: primero con código v0.14.3 (pendiente desde sesión 32), luego con el BreakMenu actualizado v0.15.0.
+6. **Backup** `backups/PACE_standalone_v0.14.0_20260504.html` (5 backups, al límite — el más antiguo a borrar en la próxima sesión si hay uno nuevo).
 
 ### Archivos
-- **Modificados:** `app/state.jsx`, `app/focus/FocusTimer.jsx`, `app/move/MoveModule.jsx`, `app/ui/Toast.jsx`, `app/hydrate/HydrateModule.jsx`, `app/shell/Sidebar.jsx`, `CHANGELOG.md`, `STATE.md`.
-- **Nuevos:** `docs/sessions/session-32-code-review-fixes.md`.
+- **Modificados:** `app/breakmenu/BreakMenu.jsx`, `app/state.jsx`, `PACE.html`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `build-standalone.js`, `backups/PACE_standalone_v0.14.0_20260504.html`, `docs/sessions/session-33-loop-post-pomodoro.md`.
 
 ### Versión
-- **v0.14.3** (patch · 7 fixes de calidad).
+- **v0.15.0** (minor · loop post-Pomodoro).
 
 ---
 
-## 🗓️ Sesión anterior — #28 (resumen condensado)
+## 🗓️ Sesión anterior — #32 (resumen condensado)
+
+**Sesión 32 · v0.14.3 · Code review: 7 fixes de calidad.**
+Auditoría interna: 7 correcciones sin cambios visuales ni features. Detalle:
+[`docs/sessions/session-32-code-review-fixes.md`](./docs/sessions/session-32-code-review-fixes.md).
+
+---
+
+## 🗓️ Sesión #28 (resumen condensado)
 
 **Sesión 28 · v0.12.10 → v0.13.0 · Fruta fácil: triggers + rachas + sonidos**.
 Sesión corta de tres bloques: 5 triggers de "Primeros pasos"
@@ -290,9 +290,8 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
 
 ### 🎯 Alto impacto · coste bajo
 
-- **Loop post-Pomodoro** (~1-2h) — reestructurar `BreakMenu` para
-  sugerir explícitamente estirar/mover/hidratar tras un Pomodoro,
-  con rotación inteligente. Aprovecha componente ya existente.
+- ~~**Loop post-Pomodoro**~~ ✅ Resuelto en sesión 33 (v0.15.0).
+  `BreakMenu` reordenado por `computeScore` + tag "Para ti" + indicador done.
 - **Progresión 2+2+2** (~2-3h) — añadir campo `access` a rutinas
   y filtrar la biblioteca según estado desbloqueado. Placeholders
   visuales para ejercicios bloqueados. Ver `CONTENT.md`.
@@ -612,13 +611,11 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 29: 45/100 logros cazables (39 → 45);
-> Constancia 11/15, Maestría 5/25, Primeros pasos 10/10. Canvas
-> de glifos en `design/glyphs-explorations.html` esperando
-> validación del usuario. Próximos frentes lógicos: (a) ejecutar
-> rediseño de glifos si valida la dirección, (b) PWA instalable,
-> (c) sistema de claves offline para Lifetime/Pase, (d) loop
-> post-Pomodoro inteligente, (e) heatmap "Año en pace".
+> Estado actual tras sesión 33: 45/100 logros cazables. BreakMenu
+> con rotación inteligente ✅. `build-standalone.js` disponible para
+> regeneraciones futuras. Próximos frentes: (a) rediseño de glifos SVG
+> (pendiente validación dir visual), (b) PWA instalable, (c) claves offline
+> Lifetime/Pase, (d) heatmap "Año en pace", (e) Progresión 2+2+2.
 
 ### 🎯 Próxima sesión corta (recomendada)
 

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.15.0** | 2026-05-04 | Loop post-Pomodoro: BreakMenu con rotación inteligente (computeScore + sort + "Para ti" + done indicator) | #33 | [abajo ↓](#v0150--2026-05-04--loop-post-pomodoro) |
 | **v0.14.3** | 2026-05-04 | Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes) | #32 | [abajo ↓](#v0143--2026-05-04--code-review-7-fixes-de-calidad) |
-| **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [abajo ↓](#v0142--2026-04-30--fix-de-comillas-en-design-systemmd) |
+| **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [session-31](./docs/sessions/session-31-fix-comillas-design-system.md) |
 | **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [session-30](./docs/sessions/session-30-design-system.md) |
 | **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [session-29](./docs/sessions/session-29-logros-aplazados-glifos.md) |
 | **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [session-28-fruta-facil-logros-sonidos.md](./docs/sessions/session-28-fruta-facil-logros-sonidos.md) |
@@ -48,6 +49,40 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.15.0] — 2026-05-04 — Loop post-Pomodoro
+
+### Añadido
+- **`app/breakmenu/BreakMenu.jsx` — rotación inteligente post-Pomodoro:**
+  - Función `computeScore(key, state)` a nivel de módulo. Puntúa cada opción
+    según lo hecho hoy: Respira → 0 si `plan.respira`, 2 si no; Mueve → 0/2
+    igual; Agua → 3 si 0 vasos, 1 si debajo del objetivo, 0 si meta cubierta.
+  - Las 3 cartas se reordenan por score desc en cada apertura del BreakMenu.
+    El sort es estable: empates conservan el orden original (Respira > Mueve > Agua).
+  - Carta con mayor puntuación (top score > 0): muestra tag `<Tag color="var(--focus)">Para ti</Tag>`
+    en la parte superior de la tarjeta.
+  - Cartas con score 0 (ya hechas hoy): borde pasa a `var(--line)` (muted) +
+    punto semitransparente color-módulo en esquina superior derecha +
+    descripción "Ya hecho hoy · otra ronda si quieres".
+  - Los atajos de teclado (B/M/H) siguen mapeados por actividad, no por
+    posición visual — el reordenamiento no los rompe.
+- **`build-standalone.js`** — script Node.js nuevo que reemplaza la herramienta
+  `super_inline_html` del entorno anterior. Inlinea `tokens.css`, todos los
+  `.jsx` y el logo como data URI base64. Uso: `node build-standalone.js`.
+
+### Cambiado
+- **`app/state.jsx`:** `PACE_VERSION` bumpeado a `'v0.15.0'`.
+- **`PACE.html`:** título actualizado a `v0.15.0`.
+- **`PACE_standalone.html`:** regenerado con el nuevo script (~364 KB, incluye
+  el BreakMenu con rotación).
+
+### Archivos
+- **Modificados:** `app/breakmenu/BreakMenu.jsx`, `app/state.jsx`, `PACE.html`,
+  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `build-standalone.js`, `backups/PACE_standalone_v0.14.0_20260504.html`,
+  `docs/sessions/session-33-loop-post-pomodoro.md`.
 
 ---
 
@@ -91,27 +126,6 @@ sin cambios visuales.
   `app/move/MoveModule.jsx`, `app/ui/Toast.jsx`, `app/hydrate/HydrateModule.jsx`,
   `app/shell/Sidebar.jsx`, `CHANGELOG.md`, `STATE.md`.
 - **Nuevos:** `docs/sessions/session-32-code-review-fixes.md`.
-
----
-
-## [v0.14.2] — 2026-04-30 — Fix de comillas en DESIGN_SYSTEM.md
-
-Corrección de documentación pura: dos comillas faltantes en la tabla
-"Tipografías alternativas (tweaks)" de `DESIGN_SYSTEM.md`.
-
-### Corregido
-- **`DESIGN_SYSTEM.md`** líneas 133-134: comillas de cierre faltantes en los
-  valores de `font-family` de Cormorant Garamond y JetBrains Mono.
-
-### No cambiado
-- 0 cambios de código. 0 cambios visuales.
-- `PACE_standalone.html` sin cambios (tarea de docs).
-
-### Archivos
-- **Modificados:** `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `STATE.md`.
-- **Nuevos:** `docs/sessions/session-31-fix-comillas-design-system.md`.
-
-Detalle: [`docs/sessions/session-31-fix-comillas-design-system.md`](./docs/sessions/session-31-fix-comillas-design-system.md).
 
 ---
 
