@@ -5164,6 +5164,109 @@ Object.assign(window, { BreakMenu });
 
 </script>
   <script type="text/babel">
+/* PACE · Glifos de logros (Dir D · Constelación).
+   Puntos 2–2.4 px conectados por líneas 0.5–0.6 px. Lectura tipo
+   carta astronómica de campo. 80 glifos, 5 categorías.
+   Secretos excluidos — siempre "?". */
+
+const { useState: useStateGS } = React;
+
+const ACHIEVEMENT_GLYPH_SVGS = {
+  /* ─── Primeros pasos (10) ─── */
+  'first.step': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="22" cy="22" r="8" stroke={c} strokeWidth="0.6" fill="none" opacity="0.6"/></svg>),
+  'first.breath': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="10" cy="22" r="2" fill={c}/><circle cx="22" cy="14" r="2" fill={c}/><circle cx="34" cy="22" r="2" fill={c}/><path d="M10 22 Q22 14 34 22" stroke={c} strokeWidth="0.6" fill="none"/></svg>),
+  'first.stretch': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="10" r="2" fill={c}/><circle cx="34" cy="22" r="2" fill={c}/><circle cx="22" cy="34" r="2" fill={c}/><circle cx="10" cy="22" r="2" fill={c}/><path d="M22 10 L34 22 L22 34 L10 22 Z" stroke={c} strokeWidth="0.6" fill="none"/></svg>),
+  'first.sip': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/></svg>),
+  'first.extra': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="14" r="2" fill={c}/><circle cx="30" cy="30" r="2" fill={c}/><circle cx="30" cy="14" r="2" fill={c}/><circle cx="14" cy="30" r="2" fill={c}/><path d="M14 14 L30 30 M30 14 L14 30" stroke={c} strokeWidth="0.6"/></svg>),
+  'first.cycle': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="11" r="2" fill={c}/></svg>),
+  'first.ritual': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.8" fill={c}/><circle cx="36" cy="22" r="1.8" fill={c}/><circle cx="22" cy="36" r="1.8" fill={c}/><circle cx="8" cy="22" r="1.8" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><path d="M22 8 L22 36 M8 22 L36 22" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'first.day': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="34" cy="14" r="2" fill={c}/><path d="M30 12 A12 12 0 1 0 34 28" stroke={c} strokeWidth="0.6" fill="none"/></svg>),
+  'first.plan': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="12" cy="14" r="2" fill={c}/><circle cx="12" cy="22" r="2" fill={c}/><circle cx="12" cy="30" r="2" fill={c}/><circle cx="32" cy="14" r="1.4" fill={c} opacity="0.5"/><circle cx="28" cy="22" r="1.4" fill={c} opacity="0.5"/><circle cx="24" cy="30" r="1.4" fill={c} opacity="0.5"/><path d="M12 14 L12 30" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'first.return': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="32" cy="14" r="2" fill={c}/><circle cx="34" cy="28" r="2" fill={c}/><circle cx="18" cy="34" r="2" fill={c}/><circle cx="12" cy="22" r="2" fill={c}/><circle cx="18" cy="12" r="2" fill={c}/><path d="M32 14 A12 12 0 1 0 34 28" stroke={c} strokeWidth="0.6" fill="none"/><path d="M28 24 L34 28 L33 21" stroke={c} strokeWidth="0.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>),
+
+  /* ─── Constancia (15) ─── */
+  'streak.3': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="22" r="2" fill={c}/><circle cx="22" cy="22" r="2" fill={c}/><circle cx="30" cy="22" r="2" fill={c}/><path d="M14 22 L30 22" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'streak.7': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="8" cy="22" r="1.6" fill={c}/><circle cx="14" cy="14" r="1.6" fill={c}/><circle cx="22" cy="10" r="1.6" fill={c}/><circle cx="30" cy="14" r="1.6" fill={c}/><circle cx="36" cy="22" r="1.6" fill={c}/><circle cx="30" cy="30" r="1.6" fill={c}/><circle cx="14" cy="30" r="1.6" fill={c}/><path d="M8 22 L14 14 L22 10 L30 14 L36 22 L30 30 L14 30 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'streak.14': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="7" cy="15" r="1.2" fill={c}/><circle cx="12" cy="15" r="1.2" fill={c}/><circle cx="17" cy="15" r="1.2" fill={c}/><circle cx="22" cy="15" r="1.2" fill={c}/><circle cx="27" cy="15" r="1.2" fill={c}/><circle cx="32" cy="15" r="1.2" fill={c}/><circle cx="37" cy="15" r="1.2" fill={c}/><circle cx="7" cy="29" r="1.2" fill={c}/><circle cx="12" cy="29" r="1.2" fill={c}/><circle cx="17" cy="29" r="1.2" fill={c}/><circle cx="22" cy="29" r="1.2" fill={c}/><circle cx="27" cy="29" r="1.2" fill={c}/><circle cx="32" cy="29" r="1.2" fill={c}/><circle cx="37" cy="29" r="1.2" fill={c}/><path d="M7 15 L37 15 M7 29 L37 29" stroke={c} strokeWidth="0.5" opacity="0.4"/></svg>),
+  'streak.30': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="22" r="3" fill={c}/></svg>),
+  'streak.60': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="22" r="7" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/><circle cx="22" cy="11" r="1.6" fill={c}/><circle cx="22" cy="33" r="1.6" fill={c}/><circle cx="11" cy="22" r="1.6" fill={c}/><circle cx="33" cy="22" r="1.6" fill={c}/></svg>),
+  'streak.100': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none" opacity="0.4"/><text x="22" y="28" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="18" fill={c}>C</text></svg>),
+  'streak.365': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="6" r="1.6" fill={c}/><circle cx="36" cy="13" r="1.6" fill={c}/><circle cx="38" cy="28" r="1.6" fill={c}/><circle cx="28" cy="38" r="1.6" fill={c}/><circle cx="14" cy="36" r="1.6" fill={c}/><circle cx="6" cy="24" r="1.6" fill={c}/><circle cx="10" cy="10" r="1.6" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><path d="M22 6 L36 13 L38 28 L28 38 L14 36 L6 24 L10 10 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'focus.hours.10': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="13" r="1.4" fill={c}/><circle cx="29" cy="26" r="1.4" fill={c}/><path d="M22 22 L22 13 M22 22 L29 26" stroke={c} strokeWidth="0.5" opacity="0.6"/></svg>),
+  'focus.hours.50': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="13" r="1.4" fill={c}/><circle cx="29" cy="26" r="1.4" fill={c}/><circle cx="15" cy="26" r="1.4" fill={c}/><circle cx="22" cy="31" r="1.4" fill={c}/><path d="M22 22 L22 13 M22 22 L29 26 M22 22 L15 26 M22 22 L22 31" stroke={c} strokeWidth="0.4" opacity="0.5"/></svg>),
+  'focus.hours.100': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><text x="22" y="29" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="22" fill={c}>C</text></svg>),
+  'breathe.sessions.10': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="10" cy="22" r="1.6" fill={c}/><circle cx="18" cy="16" r="1.6" fill={c}/><circle cx="26" cy="28" r="1.6" fill={c}/><circle cx="34" cy="18" r="1.6" fill={c}/><path d="M10 22 Q14 19 18 16 Q22 22 26 28 Q30 23 34 18" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'breathe.sessions.50': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="8" cy="14" r="1.4" fill={c}/><circle cx="16" cy="20" r="1.4" fill={c}/><circle cx="24" cy="14" r="1.4" fill={c}/><circle cx="32" cy="20" r="1.4" fill={c}/><circle cx="8" cy="26" r="1.4" fill={c}/><circle cx="16" cy="32" r="1.4" fill={c}/><circle cx="24" cy="26" r="1.4" fill={c}/><circle cx="32" cy="32" r="1.4" fill={c}/></svg>),
+  'move.sessions.25': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="14" r="1.6" fill={c}/><circle cx="30" cy="14" r="1.6" fill={c}/><circle cx="14" cy="22" r="1.6" fill={c}/><circle cx="30" cy="22" r="1.6" fill={c}/><circle cx="14" cy="30" r="1.6" fill={c}/><circle cx="30" cy="30" r="1.6" fill={c}/><path d="M14 14 L30 14 M14 22 L30 22 M14 30 L30 30" stroke={c} strokeWidth="0.5" opacity="0.4"/></svg>),
+  'hydrate.week.perfect': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="10" r="2" fill={c}/><circle cx="22" cy="22" r="1.4" fill={c} opacity="0.6"/><circle cx="22" cy="34" r="1.4" fill={c} opacity="0.4"/><path d="M22 10 Q16 16 16 22 Q16 28 22 34 Q28 28 28 22 Q28 16 22 10" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'morning.5': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="30" r="1.6" fill={c}/><circle cx="16" cy="26" r="1.6" fill={c}/><circle cx="28" cy="26" r="1.6" fill={c}/><circle cx="12" cy="20" r="1.6" fill={c}/><circle cx="32" cy="20" r="1.6" fill={c}/><path d="M16 26 L22 30 L28 26 M12 20 L16 26 M32 20 L28 26" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/><circle cx="22" cy="14" r="3" stroke={c} strokeWidth="0.6" fill="none"/></svg>),
+
+  /* ─── Exploración (20) ─── */
+  'explore.box': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="11" cy="11" r="2" fill={c}/><circle cx="33" cy="11" r="2" fill={c}/><circle cx="33" cy="33" r="2" fill={c}/><circle cx="11" cy="33" r="2" fill={c}/><rect x="11" y="11" width="22" height="22" stroke={c} strokeWidth="0.6" fill="none" opacity="0.5"/></svg>),
+  'explore.478': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="12" cy="22" r="2" fill={c}/><circle cx="22" cy="16" r="2" fill={c}/><circle cx="22" cy="28" r="2" fill={c}/><path d="M12 22 Q18 19 22 16 M22 16 L22 28" stroke={c} strokeWidth="0.6" fill="none" opacity="0.6"/></svg>),
+  'explore.coherent': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="6" r="2" fill={c}/><circle cx="22" cy="38" r="2" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><path d="M22 6 C28 14 28 30 22 38 C16 30 16 14 22 6 Z" stroke={c} strokeWidth="0.6" fill="none" opacity="0.5"/></svg>),
+  'explore.rounds': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="36" cy="22" r="2" fill={c}/><circle cx="22" cy="36" r="2" fill={c}/><circle cx="8" cy="22" r="2" fill={c}/><path d="M22 8 A14 14 0 1 1 8 22" stroke={c} strokeWidth="0.6" fill="none" opacity="0.6"/></svg>),
+  'explore.bhastrika': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.8" fill={c}/><circle cx="22" cy="16" r="1.8" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="22" cy="28" r="1.8" fill={c}/><circle cx="22" cy="36" r="1.8" fill={c}/><path d="M22 8 L22 36" stroke={c} strokeWidth="0.5" opacity="0.5"/><path d="M16 16 L28 16 M16 28 L28 28" stroke={c} strokeWidth="0.4" opacity="0.4"/></svg>),
+  'explore.nadi': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="22" r="1.8" fill={c}/><circle cx="30" cy="22" r="1.8" fill={c}/><circle cx="22" cy="14" r="1.8" fill={c}/><circle cx="22" cy="30" r="1.8" fill={c}/><ellipse cx="22" cy="22" rx="6" ry="14" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/><ellipse cx="22" cy="22" rx="14" ry="6" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.ujjayi': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="8" cy="22" r="1.6" fill={c}/><circle cx="16" cy="16" r="1.6" fill={c}/><circle cx="24" cy="28" r="1.6" fill={c}/><circle cx="32" cy="22" r="1.6" fill={c}/><circle cx="38" cy="16" r="1.6" fill={c}/><path d="M8 22 Q12 19 16 16 Q20 22 24 28 Q28 25 32 22 Q35 19 38 16" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.kapalabhati': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="10" r="2" fill={c}/><circle cx="12" cy="18" r="1.8" fill={c}/><circle cx="32" cy="18" r="1.8" fill={c}/><circle cx="16" cy="30" r="1.6" fill={c}/><circle cx="28" cy="30" r="1.6" fill={c}/><path d="M22 10 L12 18 M22 10 L32 18 M12 18 L16 30 M32 18 L28 30 M16 30 L28 30" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.physiological': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="10" cy="30" r="2" fill={c}/><circle cx="22" cy="22" r="2" fill={c}/><circle cx="33" cy="14" r="2" fill={c}/><path d="M10 30 Q14 22 22 22 Q28 22 33 14" stroke={c} strokeWidth="0.5" fill="none" opacity="0.6"/><path d="M28 11 L33 14 L31 19" stroke={c} strokeWidth="0.6" fill="none" opacity="0.6"/></svg>),
+  'explore.hips': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="36" cy="22" r="2" fill={c}/><circle cx="22" cy="36" r="2" fill={c}/><circle cx="8" cy="22" r="2" fill={c}/><path d="M22 8 L36 22 L22 36 L8 22 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.shoulders': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="12" r="2" fill={c}/><circle cx="12" cy="18" r="1.8" fill={c}/><circle cx="32" cy="18" r="1.8" fill={c}/><circle cx="10" cy="28" r="1.6" fill={c}/><circle cx="34" cy="28" r="1.6" fill={c}/><path d="M22 12 L12 18 L10 28 M22 12 L32 18 L34 28" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.atg': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="9" r="2" fill={c}/><circle cx="34" cy="31" r="2" fill={c}/><circle cx="10" cy="31" r="2" fill={c}/><path d="M22 9 L34 31 L10 31 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.ancestral': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="11" r="1.8" fill={c}/><circle cx="30" cy="11" r="1.8" fill={c}/><circle cx="36" cy="22" r="1.8" fill={c}/><circle cx="30" cy="33" r="1.8" fill={c}/><circle cx="14" cy="33" r="1.8" fill={c}/><circle cx="8" cy="22" r="1.8" fill={c}/><path d="M14 11 L30 11 L36 22 L30 33 L14 33 L8 22 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.neck': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="18" cy="16" r="1.8" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="26" cy="28" r="1.8" fill={c}/><circle cx="22" cy="36" r="1.6" fill={c}/><path d="M22 8 Q18 12 18 16 Q18 19 22 22 Q26 25 26 28 Q26 32 22 36" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'explore.desk': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="10" cy="14" r="1.8" fill={c}/><circle cx="34" cy="14" r="1.8" fill={c}/><circle cx="10" cy="30" r="1.8" fill={c}/><circle cx="34" cy="30" r="1.8" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><rect x="10" y="14" width="24" height="16" stroke={c} strokeWidth="0.5" fill="none" opacity="0.4"/></svg>),
+  'explore.all.breathe': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.4" fill={c}/><circle cx="16" cy="14" r="1.4" fill={c}/><circle cx="28" cy="14" r="1.4" fill={c}/><circle cx="12" cy="20" r="1.4" fill={c}/><circle cx="22" cy="20" r="1.8" fill={c}/><circle cx="32" cy="20" r="1.4" fill={c}/><circle cx="16" cy="26" r="1.4" fill={c}/><circle cx="28" cy="26" r="1.4" fill={c}/><circle cx="22" cy="34" r="1.4" fill={c}/><path d="M22 8 L16 14 L28 14 L12 20 L22 20 L32 20 L16 26 L28 26 L22 34" stroke={c} strokeWidth="0.4" fill="none" opacity="0.4"/></svg>),
+  'explore.all.move': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.6" fill={c}/><circle cx="14" cy="16" r="1.4" fill={c}/><circle cx="30" cy="16" r="1.4" fill={c}/><circle cx="22" cy="22" r="2" fill={c}/><circle cx="14" cy="30" r="1.4" fill={c}/><circle cx="30" cy="30" r="1.4" fill={c}/><circle cx="22" cy="36" r="1.6" fill={c}/><path d="M22 8 L14 16 L22 22 L30 16 Z M14 16 L14 30 L22 36 L30 30 L30 16" stroke={c} strokeWidth="0.4" fill="none" opacity="0.4"/></svg>),
+  'explore.all.extra': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.6" fill={c}/><circle cx="8" cy="22" r="1.6" fill={c}/><circle cx="36" cy="22" r="1.6" fill={c}/><circle cx="22" cy="36" r="1.6" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="14" cy="14" r="1.2" fill={c} opacity="0.5"/><circle cx="30" cy="14" r="1.2" fill={c} opacity="0.5"/><circle cx="14" cy="30" r="1.2" fill={c} opacity="0.5"/><circle cx="30" cy="30" r="1.2" fill={c} opacity="0.5"/><path d="M22 8 L22 36 M8 22 L36 22" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'explore.chrome': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="22" r="2" fill={c}/><circle cx="22" cy="11" r="1.6" fill={c} opacity="0.6"/><circle cx="31" cy="28" r="1.6" fill={c} opacity="0.6"/><circle cx="13" cy="28" r="1.6" fill={c} opacity="0.6"/><path d="M22 22 L22 11 M22 22 L31 28 M22 22 L13 28" stroke={c} strokeWidth="0.4" opacity="0.4"/></svg>),
+  'explore.tweaks': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="11" r="1.6" fill={c}/><circle cx="32" cy="16" r="1.6" fill={c}/><circle cx="32" cy="28" r="1.6" fill={c}/><circle cx="22" cy="33" r="1.6" fill={c}/><circle cx="12" cy="28" r="1.6" fill={c}/><circle cx="12" cy="16" r="1.6" fill={c}/><circle cx="22" cy="22" r="1.4" fill={c} opacity="0.5"/></svg>),
+
+  /* ─── Maestría (25) ─── */
+  'master.pomodoro.8': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none" opacity="0.4"/><text x="22" y="28" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="14" fill={c}>VIII</text></svg>),
+  'master.pomodoro.12': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none" opacity="0.4"/><text x="22" y="28" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="14" fill={c}>XII</text></svg>),
+  'master.long.focus': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="8" cy="22" r="2" fill={c}/><circle cx="36" cy="22" r="2" fill={c}/><path d="M8 22 L36 22" stroke={c} strokeWidth="0.6" opacity="0.6"/></svg>),
+  'master.box.10': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="11" cy="11" r="1.8" fill={c}/><circle cx="33" cy="11" r="1.8" fill={c}/><circle cx="33" cy="33" r="1.8" fill={c}/><circle cx="11" cy="33" r="1.8" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="17" cy="17" r="1.2" fill={c} opacity="0.5"/><circle cx="27" cy="17" r="1.2" fill={c} opacity="0.5"/><circle cx="27" cy="27" r="1.2" fill={c} opacity="0.5"/><circle cx="17" cy="27" r="1.2" fill={c} opacity="0.5"/><rect x="11" y="11" width="22" height="22" stroke={c} strokeWidth="0.5" fill="none" opacity="0.4"/></svg>),
+  'master.coherent.10': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.4" fill={c}/><circle cx="30" cy="12" r="1.4" fill={c}/><circle cx="34" cy="20" r="1.4" fill={c}/><circle cx="32" cy="28" r="1.4" fill={c}/><circle cx="26" cy="34" r="1.4" fill={c}/><circle cx="18" cy="34" r="1.4" fill={c}/><circle cx="12" cy="28" r="1.4" fill={c}/><circle cx="10" cy="20" r="1.4" fill={c}/><circle cx="14" cy="12" r="1.4" fill={c}/><circle cx="22" cy="22" r="2" fill={c}/><path d="M22 8 L30 12 L34 20 L32 28 L26 34 L18 34 L12 28 L10 20 L14 12 Z" stroke={c} strokeWidth="0.4" fill="none" opacity="0.4"/></svg>),
+  'master.rounds.10': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2" fill={c}/><circle cx="22" cy="12" r="1.4" fill={c}/><circle cx="30" cy="16" r="1.4" fill={c}/><circle cx="32" cy="26" r="1.4" fill={c}/><circle cx="26" cy="32" r="1.4" fill={c}/><circle cx="16" cy="30" r="1.4" fill={c}/><circle cx="14" cy="20" r="1.4" fill={c}/><circle cx="18" cy="14" r="1.4" fill={c}/><path d="M22 22 L22 12 L30 16 L32 26 L26 32 L16 30 L14 20 L18 14" stroke={c} strokeWidth="0.4" fill="none" opacity="0.4"/></svg>),
+  'master.atg.20': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="36" cy="32" r="2" fill={c}/><circle cx="8" cy="32" r="2" fill={c}/><circle cx="22" cy="20" r="1.4" fill={c} opacity="0.6"/><circle cx="28" cy="26" r="1.2" fill={c} opacity="0.5"/><circle cx="16" cy="26" r="1.2" fill={c} opacity="0.5"/><path d="M22 8 L36 32 L8 32 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'master.hips.20': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="36" cy="22" r="2" fill={c}/><circle cx="22" cy="36" r="2" fill={c}/><circle cx="8" cy="22" r="2" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="16" cy="16" r="1.2" fill={c} opacity="0.5"/><circle cx="28" cy="16" r="1.2" fill={c} opacity="0.5"/><circle cx="28" cy="28" r="1.2" fill={c} opacity="0.5"/><circle cx="16" cy="28" r="1.2" fill={c} opacity="0.5"/><path d="M22 8 L36 22 L22 36 L8 22 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'master.shoulders.20': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="10" cy="16" r="1.8" fill={c}/><circle cx="34" cy="16" r="1.8" fill={c}/><circle cx="8" cy="28" r="1.6" fill={c}/><circle cx="36" cy="28" r="1.6" fill={c}/><circle cx="22" cy="36" r="1.4" fill={c}/><path d="M22 8 L10 16 L8 28 M22 8 L34 16 L36 28" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'master.ancestral.10': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="10" r="1.8" fill={c}/><circle cx="30" cy="10" r="1.8" fill={c}/><circle cx="36" cy="22" r="1.8" fill={c}/><circle cx="30" cy="34" r="1.8" fill={c}/><circle cx="14" cy="34" r="1.8" fill={c}/><circle cx="8" cy="22" r="1.8" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><path d="M14 10 L30 10 L36 22 L30 34 L14 34 L8 22 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'master.hydrate.30': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="22" cy="18" r="1.4" fill={c} opacity="0.7"/><circle cx="22" cy="26" r="1.4" fill={c} opacity="0.5"/><circle cx="22" cy="34" r="1.2" fill={c} opacity="0.3"/><path d="M22 8 Q14 13 14 18 Q14 22 22 26 Q30 22 30 18 Q30 13 22 8" stroke={c} strokeWidth="0.5" fill="none" opacity="0.4"/></svg>),
+  'master.hydrate.90': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="16" cy="14" r="1.4" fill={c} opacity="0.7"/><circle cx="28" cy="14" r="1.4" fill={c} opacity="0.7"/><circle cx="14" cy="22" r="1.2" fill={c} opacity="0.5"/><circle cx="22" cy="22" r="1.6" fill={c}/><circle cx="30" cy="22" r="1.2" fill={c} opacity="0.5"/><circle cx="16" cy="30" r="1.2" fill={c} opacity="0.4"/><circle cx="28" cy="30" r="1.2" fill={c} opacity="0.4"/><circle cx="22" cy="36" r="1" fill={c} opacity="0.3"/></svg>),
+  'master.extra.all.week': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.6" fill={c}/><circle cx="32" cy="14" r="1.4" fill={c}/><circle cx="36" cy="24" r="1.4" fill={c}/><circle cx="30" cy="34" r="1.4" fill={c}/><circle cx="14" cy="34" r="1.4" fill={c}/><circle cx="8" cy="24" r="1.4" fill={c}/><circle cx="12" cy="14" r="1.4" fill={c}/><path d="M22 8 L32 14 L36 24 L30 34 L14 34 L8 24 L12 14 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'master.silent.day': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none" opacity="0.3"/><circle cx="22" cy="22" r="2.4" fill={c} opacity="0.4"/></svg>),
+  'master.dawn': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="6" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="6" r="1.6" fill={c}/><circle cx="22" cy="38" r="1.6" fill={c}/><circle cx="6" cy="22" r="1.6" fill={c}/><circle cx="38" cy="22" r="1.6" fill={c}/><path d="M22 6 L22 38 M6 22 L38 22" stroke={c} strokeWidth="0.4" opacity="0.4"/></svg>),
+  'master.dusk': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="14" cy="14" r="1.6" fill={c}/><circle cx="30" cy="30" r="1.6" fill={c}/></svg>),
+  'master.midnight.never': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none" opacity="0.4"/></svg>),
+  'master.focus.day': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="22" r="2" fill={c}/><circle cx="22" cy="13" r="1.4" fill={c}/><circle cx="29" cy="26" r="1.4" fill={c}/><path d="M22 22 L22 13 M22 22 L29 26" stroke={c} strokeWidth="0.5" opacity="0.6"/></svg>),
+  'master.retreat': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="14" cy="22" r="1.4" fill={c}/><circle cx="30" cy="22" r="1.4" fill={c}/><path d="M14 22 Q22 12 30 22 Q22 32 14 22 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.6"/></svg>),
+  'master.marathon': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="6" cy="32" r="1.8" fill={c}/><circle cx="22" cy="12" r="1.8" fill={c}/><circle cx="38" cy="32" r="1.8" fill={c}/><path d="M6 32 L22 12 L38 32" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'master.centurion': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none" opacity="0.4"/><text x="22" y="29" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="20" fill={c}>C</text></svg>),
+  'master.gardener': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="10" r="1.6" fill={c}/><circle cx="14" cy="18" r="1.4" fill={c}/><circle cx="30" cy="18" r="1.4" fill={c}/><circle cx="14" cy="28" r="1.4" fill={c}/><circle cx="30" cy="28" r="1.4" fill={c}/><circle cx="22" cy="36" r="1.6" fill={c}/><circle cx="22" cy="22" r="2" fill={c}/><path d="M22 10 L14 18 L14 28 L22 36 L30 28 L30 18 Z" stroke={c} strokeWidth="0.4" fill="none" opacity="0.4"/></svg>),
+  'master.antidote': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="1.6" fill={c}/><circle cx="8" cy="22" r="1.6" fill={c}/><circle cx="36" cy="22" r="1.6" fill={c}/><circle cx="22" cy="36" r="1.6" fill={c}/><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="14" cy="14" r="1.2" fill={c} opacity="0.5"/><circle cx="30" cy="14" r="1.2" fill={c} opacity="0.5"/><circle cx="14" cy="30" r="1.2" fill={c} opacity="0.5"/><circle cx="30" cy="30" r="1.2" fill={c} opacity="0.5"/><path d="M22 8 L22 36 M8 22 L36 22" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'master.collector.half': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><text x="22" y="28" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="18" fill={c}>L</text></svg>),
+  'master.collector.full': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><text x="22" y="29" textAnchor="middle" fontFamily="EB Garamond" fontStyle="italic" fontSize="22" fill={c}>C</text></svg>),
+
+  /* ─── Estacionales (10) ─── */
+  'season.spring': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2" fill={c}/><circle cx="22" cy="12" r="1.4" fill={c}/><circle cx="30" cy="16" r="1.4" fill={c}/><circle cx="30" cy="28" r="1.4" fill={c}/><circle cx="22" cy="32" r="1.4" fill={c}/><circle cx="14" cy="28" r="1.4" fill={c}/><circle cx="14" cy="16" r="1.4" fill={c}/><path d="M22 12 L30 16 L30 28 L22 32 L14 28 L14 16 Z" stroke={c} strokeWidth="0.4" fill="none" opacity="0.4"/></svg>),
+  'season.summer': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="4" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="22" r="2" fill={c}/><circle cx="22" cy="8" r="1.4" fill={c}/><circle cx="32" cy="12" r="1.4" fill={c}/><circle cx="36" cy="22" r="1.4" fill={c}/><circle cx="32" cy="32" r="1.4" fill={c}/><circle cx="12" cy="32" r="1.4" fill={c}/><circle cx="8" cy="22" r="1.4" fill={c}/><circle cx="12" cy="12" r="1.4" fill={c}/></svg>),
+  'season.autumn': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="8" r="2" fill={c}/><circle cx="30" cy="18" r="1.6" fill={c}/><circle cx="28" cy="30" r="1.4" fill={c}/><circle cx="20" cy="36" r="1.2" fill={c}/><circle cx="14" cy="30" r="1.4" fill={c}/><circle cx="14" cy="18" r="1.6" fill={c}/><path d="M22 8 L30 18 L28 30 L20 36 L14 30 L14 18 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.5"/></svg>),
+  'season.winter': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2.4" fill={c}/><circle cx="22" cy="8" r="1.6" fill={c}/><circle cx="22" cy="36" r="1.6" fill={c}/><circle cx="8" cy="22" r="1.6" fill={c}/><circle cx="36" cy="22" r="1.6" fill={c}/><circle cx="12" cy="12" r="1.4" fill={c}/><circle cx="32" cy="32" r="1.4" fill={c}/><circle cx="32" cy="12" r="1.4" fill={c}/><circle cx="12" cy="32" r="1.4" fill={c}/><path d="M22 8 L22 36 M8 22 L36 22 M12 12 L32 32 M32 12 L12 32" stroke={c} strokeWidth="0.4" opacity="0.4"/></svg>),
+  'season.solstice.summer': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="14" r="4" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="14" r="2" fill={c}/><circle cx="22" cy="4" r="1.2" fill={c}/><circle cx="32" cy="8" r="1.2" fill={c}/><circle cx="32" cy="20" r="1.2" fill={c}/><circle cx="22" cy="24" r="1.2" fill={c}/><circle cx="12" cy="20" r="1.2" fill={c}/><circle cx="12" cy="8" r="1.2" fill={c}/></svg>),
+  'season.solstice.winter': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="30" r="4" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="30" r="2" fill={c}/><circle cx="22" cy="20" r="1.2" fill={c}/><circle cx="32" cy="24" r="1.2" fill={c}/><circle cx="32" cy="36" r="1.2" fill={c}/><circle cx="12" cy="36" r="1.2" fill={c}/><circle cx="12" cy="24" r="1.2" fill={c}/></svg>),
+  'season.equinox.spring': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2" fill={c}/><circle cx="10" cy="22" r="1.6" fill={c}/><circle cx="34" cy="22" r="1.6" fill={c}/><circle cx="22" cy="10" r="1.6" fill={c}/><circle cx="22" cy="34" r="1.6" fill={c}/><path d="M10 22 L34 22 M22 10 L22 34" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'season.equinox.autumn': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="2" fill={c}/><circle cx="10" cy="22" r="1.6" fill={c}/><circle cx="34" cy="22" r="1.6" fill={c}/><circle cx="22" cy="10" r="1.6" fill={c}/><circle cx="22" cy="34" r="1.6" fill={c}/><path d="M10 22 L34 22 M22 10 L22 34" stroke={c} strokeWidth="0.5" opacity="0.5"/></svg>),
+  'season.four': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="14" cy="14" r="2" fill={c}/><circle cx="30" cy="14" r="2" fill={c}/><circle cx="30" cy="30" r="2" fill={c}/><circle cx="14" cy="30" r="2" fill={c}/><circle cx="22" cy="22" r="1.4" fill={c}/><path d="M14 14 L30 14 L30 30 L14 30 Z" stroke={c} strokeWidth="0.5" fill="none" opacity="0.4"/></svg>),
+  'season.cycle': (c) => (<svg viewBox="0 0 44 44" width="32" height="32"><circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/><circle cx="22" cy="11" r="1.6" fill={c}/><circle cx="31" cy="16" r="1.6" fill={c}/><circle cx="33" cy="27" r="1.6" fill={c}/><circle cx="27" cy="33" r="1.6" fill={c}/><circle cx="17" cy="33" r="1.6" fill={c}/><circle cx="11" cy="27" r="1.6" fill={c}/><circle cx="13" cy="16" r="1.6" fill={c}/></svg>),
+};
+
+Object.assign(window, { ACHIEVEMENT_GLYPH_SVGS });
+
+</script>
+  <script type="text/babel">
 /* PACE · Logros (Sellos tipo libreta de campo) */
 
 const ACHIEVEMENT_CATALOG = [
@@ -5345,94 +5448,8 @@ function isImplemented(a) {
   return a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id);
 }
 
-/* Glifos SVG · Primeros Pasos (Dir D · Constelación).
-   Puntos de 2–2.4 px conectados por líneas de 0.5–0.6 px. Lectura tipo
-   carta astronómica de campo. + fondo sutil circular al desbloquearse
-   (sello "conseguido"). first.plan y first.return son diseños propios. */
-const ACHIEVEMENT_GLYPH_SVGS = {
-  'first.step': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="22" cy="22" r="2.4" fill={c}/>
-      <circle cx="22" cy="22" r="8" stroke={c} strokeWidth="0.6" fill="none" opacity="0.6"/>
-    </svg>
-  ),
-  'first.breath': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="10" cy="22" r="2" fill={c}/>
-      <circle cx="22" cy="14" r="2" fill={c}/>
-      <circle cx="34" cy="22" r="2" fill={c}/>
-      <path d="M10 22 Q22 14 34 22" stroke={c} strokeWidth="0.6" fill="none"/>
-    </svg>
-  ),
-  'first.stretch': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="22" cy="10" r="2" fill={c}/>
-      <circle cx="34" cy="22" r="2" fill={c}/>
-      <circle cx="22" cy="34" r="2" fill={c}/>
-      <circle cx="10" cy="22" r="2" fill={c}/>
-      <path d="M22 10 L34 22 L22 34 L10 22 Z" stroke={c} strokeWidth="0.6" fill="none"/>
-    </svg>
-  ),
-  'first.sip': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="22" cy="22" r="2.4" fill={c}/>
-      <circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/>
-    </svg>
-  ),
-  'first.extra': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="14" cy="14" r="2" fill={c}/>
-      <circle cx="30" cy="30" r="2" fill={c}/>
-      <circle cx="30" cy="14" r="2" fill={c}/>
-      <circle cx="14" cy="30" r="2" fill={c}/>
-      <path d="M14 14 L30 30 M30 14 L14 30" stroke={c} strokeWidth="0.6"/>
-    </svg>
-  ),
-  'first.cycle': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="22" cy="22" r="11" stroke={c} strokeWidth="0.6" fill="none"/>
-      <circle cx="22" cy="11" r="2" fill={c}/>
-    </svg>
-  ),
-  'first.ritual': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="22" cy="8" r="1.8" fill={c}/>
-      <circle cx="36" cy="22" r="1.8" fill={c}/>
-      <circle cx="22" cy="36" r="1.8" fill={c}/>
-      <circle cx="8" cy="22" r="1.8" fill={c}/>
-      <circle cx="22" cy="22" r="2.4" fill={c}/>
-      <path d="M22 8 L22 36 M8 22 L36 22" stroke={c} strokeWidth="0.5" opacity="0.5"/>
-    </svg>
-  ),
-  'first.day': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="34" cy="14" r="2" fill={c}/>
-      <path d="M30 12 A12 12 0 1 0 34 28" stroke={c} strokeWidth="0.6" fill="none"/>
-    </svg>
-  ),
-  'first.plan': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="12" cy="14" r="2" fill={c}/>
-      <circle cx="12" cy="22" r="2" fill={c}/>
-      <circle cx="12" cy="30" r="2" fill={c}/>
-      <circle cx="32" cy="14" r="1.4" fill={c} opacity="0.5"/>
-      <circle cx="28" cy="22" r="1.4" fill={c} opacity="0.5"/>
-      <circle cx="24" cy="30" r="1.4" fill={c} opacity="0.5"/>
-      <path d="M12 14 L12 30" stroke={c} strokeWidth="0.5" opacity="0.5"/>
-    </svg>
-  ),
-  'first.return': (c) => (
-    <svg viewBox="0 0 44 44" width="32" height="32">
-      <circle cx="32" cy="14" r="2" fill={c}/>
-      <circle cx="34" cy="28" r="2" fill={c}/>
-      <circle cx="18" cy="34" r="2" fill={c}/>
-      <circle cx="12" cy="22" r="2" fill={c}/>
-      <circle cx="18" cy="12" r="2" fill={c}/>
-      <path d="M32 14 A12 12 0 1 0 34 28" stroke={c} strokeWidth="0.6" fill="none"/>
-      <path d="M28 24 L34 28 L33 21" stroke={c} strokeWidth="0.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  ),
-};
+/* Glifos SVG cargados desde Glyphs.jsx (Dir D · Constelación).
+   Ver: ACHIEVEMENT_GLYPH_SVGS en window. */
 
 function Achievements({ open, onClose }) {
   const [state] = usePace();

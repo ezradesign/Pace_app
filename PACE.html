@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.14.5</title>
+  <title>PACE · Foco · Cuerpo — v0.14.0</title>
   <link rel="stylesheet" href="app/tokens.css" />
 </head>
 <body>
-  <!-- Logo oficial pre-cargado aquí. scripts/build-standalone.js lo
-       inlinea como data URI base64 en el bundle standalone.
-       CowLogo.jsx lee el src resuelto de este elemento (id="pace-logo-src"). -->
+  <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
+       como data URI en el bundle standalone. CowLogo.jsx lee el src
+       resuelto de este elemento (id="pace-logo-src"). -->
   <img id="pace-logo-src" src="app/ui/pace-logo.png" style="display:none" alt="" />
 
-  <!-- Splash placeholder heredado del bundler super_inline_html
-       (Genspark). Hoy no cumple función operativa y está pendiente
-       de retirada — ver entrada de backlog en STATE.md. Paleta crema PACE. -->
+  <!-- Splash placeholder requerido por el bundler super_inline_html.
+       Se muestra brevemente mientras los assets se descomprimen
+       y como fallback no-JS. Paleta crema PACE. -->
   <template id="__bundler_thumbnail">
     <svg xmlns="http://www.w3.org/2000/svg" data-bg-color="#F2EDE0"
          viewBox="0 0 1200 800" width="100%" height="100%"
@@ -62,17 +62,11 @@
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
 
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
-  <script type="text/babel" src="app/breathe/breatheHelpers.jsx"></script>
-  <script type="text/babel" src="app/breathe/BreathVisual.jsx"></script>
-  <script type="text/babel" src="app/breathe/BreatheRoutines.jsx"></script>
-  <script type="text/babel" src="app/breathe/BreatheLibrary.jsx"></script>
-  <script type="text/babel" src="app/breathe/BreatheSafety.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheModule.jsx"></script>
   <script type="text/babel" src="app/move/MoveModule.jsx"></script>
   <script type="text/babel" src="app/extra/ExtraModule.jsx"></script>
   <script type="text/babel" src="app/hydrate/HydrateModule.jsx"></script>
   <script type="text/babel" src="app/breakmenu/BreakMenu.jsx"></script>
-  <script type="text/babel" src="app/achievements/Glyphs.jsx"></script>
   <script type="text/babel" src="app/achievements/Achievements.jsx"></script>
   <script type="text/babel" src="app/stats/WeeklyStats.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweaksPanel.jsx"></script>

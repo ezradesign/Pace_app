@@ -3,8 +3,8 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.14.5 · Pre-lanzamiento · Iteración de diseño
-**Build entregado:** `PACE_standalone.html` (standalone autocontenido, ~363 KB)
+**Estado:** v0.12.9 · Pre-lanzamiento · Iteración de diseño
+**Build entregado:** `PACE_standalone.html` (standalone autocontenido)
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
 
@@ -63,10 +63,9 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 ```
 /
 ├── PACE.html                ← entry point de desarrollo
-├── PACE_standalone.html     ← bundle offline (inline, ~363 KB)
+├── PACE_standalone.html     ← bundle offline (inline, ~349 KB)
 ├── LICENSE                  ← Elastic License 2.0
-├── AGENTS.md                ← reglas y protocolos (fuente operativa)
-├── CLAUDE.md                ← onboarding específico de Claude Code
+├── CLAUDE.md                ← protocolo y arquitectura
 ├── STATE.md                 ← estado actual y próximos pasos
 ├── CHANGELOG.md             ← historial por versión
 ├── DESIGN_SYSTEM.md         ← tokens, paleta, tipografía
@@ -78,23 +77,18 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 │   ├── porting.md           ← cómo portar a Next.js / Chrome / Android
 │   └── sessions/            ← diario completo de cada sesión
 │
-├── scripts/
-│   └── build-standalone.js  ← inliner Node puro (zero deps)
-│
 └── app/
     ├── tokens.css · state.jsx · main.jsx
-    ├── ui/          (Primitives, SessionShell, CowLogo, Sound, Toast)
+    ├── ui/          (Primitives, CowLogo, Toast)
     ├── shell/       (Sidebar)
     ├── focus/       (FocusTimer)
-    ├── breathe/     (Module + Library + Safety + Visual + Routines + helpers)
+    ├── breathe/     (BreatheModule)
     ├── move/        (MoveModule)
     ├── extra/       (ExtraModule)
     ├── hydrate/     (HydrateModule)
     ├── breakmenu/   (BreakMenu)
     ├── achievements/(Achievements)
     ├── stats/       (WeeklyStats)
-    ├── support/     (SupportModule)
-    ├── welcome/     (WelcomeModule)
     └── tweaks/      (TweaksPanel)
 ```
 
