@@ -179,6 +179,9 @@ function isImplemented(a) {
   return a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id);
 }
 
+/* Glifos SVG cargados desde Glyphs.jsx (Dir D · Constelación).
+   Ver: ACHIEVEMENT_GLYPH_SVGS en window. */
+
 function Achievements({ open, onClose }) {
   const [state] = usePace();
   const unlocked = state.achievements || {};
@@ -251,6 +254,8 @@ function Seal({ achievement, unlocked, implemented, color }) {
   const borderStyle = unlocked ? 'solid' : (isComingSoon ? 'dotted' : 'dashed');
   const borderColor = unlocked ? color : 'var(--line)';
   const opacity = unlocked ? 1 : (isComingSoon ? 0.38 : 0.55);
+  const glyphFn = ACHIEVEMENT_GLYPH_SVGS[a.id];
+  const glyphColor = unlocked ? color : 'var(--ink-3)';
 
   return (
     <div
@@ -293,17 +298,30 @@ function Seal({ achievement, unlocked, implemented, color }) {
         border: `1.2px solid ${unlocked ? color : 'var(--line-2)'}`,
         display: 'grid', placeItems: 'center',
         marginBottom: 10,
-        color: unlocked ? color : 'var(--ink-3)',
-        fontFamily: 'var(--font-display)',
-        fontSize: 22,
         position: 'relative',
       }}>
-        <span style={{
-          fontStyle: 'italic',
-          // En "pronto" el glifo queda casi fantasma — se intuye pero no se
-          // afirma. En locked normal se mantiene legible para guiar al usuario.
-          opacity: isComingSoon ? 0.25 : 1,
-        }}>{isSecret ? '?' : a.glyph}</span>
+        {/* Fondo sutil híbrido B — solo cuando hay SVG + desbloqueado */}
+        {glyphFn && unlocked && (
+          <div style={{
+            position: 'absolute', inset: 1,
+            borderRadius: '50%',
+            background: color,
+            opacity: 0.06,
+          }} />
+        )}
+        {glyphFn ? (
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+            {glyphFn(glyphColor)}
+          </span>
+        ) : (
+          <span style={{
+            fontStyle: 'italic',
+            fontFamily: 'var(--font-display)',
+            fontSize: 22,
+            color: unlocked ? color : 'var(--ink-3)',
+            opacity: isComingSoon ? 0.25 : 1,
+          }}>{isSecret ? '?' : a.glyph}</span>
+        )}
         {/* Anillo externo sutil */}
         <div style={{
           position: 'absolute', inset: -4,
