@@ -1,9 +1,24 @@
 /* PACE · Menú post-Pomodoro
    Aparece tras completar un ciclo de foco.
-   3 opciones: Respira / Mueve / Agua + Saltar
+   Las 3 opciones se reordenan según lo que el usuario ha hecho menos hoy:
+   primero la actividad más necesaria, con indicador "Para ti".
 */
 
 const { useEffect: useEffectBM } = React;
+
+/* Score: cuánto se necesita esta actividad en este momento.
+   Mayor → más prioritaria. Water usa escala 0-3 según vasos restantes. */
+function computeScore(key, state) {
+  const { plan, water } = state;
+  if (key === 'breathe') return plan.respira ? 0 : 2;
+  if (key === 'move') return plan.muevete ? 0 : 2;
+  if (key === 'water') {
+    if (water.today === 0) return 3;
+    if (water.today < water.goal) return 1;
+    return 0;
+  }
+  return 0;
+}
 
 function BreakMenu({ open, onClose, onChoose }) {
   /* `first.cycle` — Pomodoro completado + pausa activa elegida.
@@ -19,11 +34,9 @@ function BreakMenu({ open, onClose, onChoose }) {
     onChoose(key);
   };
 
-
   // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
-  // La UI anuncia estos atajos en el Meta de abajo; aquí se implementan.
-  // Se ignoran cuando el foco está en un input/textarea para no colisionar
-  // con edición de texto.
+  // Los atajos siguen mapeados por actividad (no por posición visual),
+  // así el reordenamiento inteligente no los rompe.
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -41,39 +54,67 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   if (!open) return null;
 
-  const opts = [
+  const state = getState();
+
+  const baseOpts = [
     { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
-    { key: 'move', label: 'Muévete', desc: 'Antídoto rápido a la silla', color: 'var(--move)', bg: 'var(--move-soft)', icon: <BMMoveIcon /> },
-    { key: 'water', label: 'Hidrátate', desc: 'Un vaso ahora', color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
+    { key: 'move',    label: 'Muévete', desc: 'Antídoto rápido a la silla',  color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
+    { key: 'water',   label: 'Hidrátate', desc: 'Un vaso ahora',             color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
   ];
+
+  // Ordenar por score descendente; empate → orden original (sort estable).
+  const opts = baseOpts
+    .map(o => ({ ...o, score: computeScore(o.key, state) }))
+    .sort((a, b) => b.score - a.score);
+
+  const topScore = opts[0].score;
 
   return (
     <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
-        {opts.map(o => (
-          <button key={o.key}
-            onClick={() => handleChoose(o.key)}
-            style={{
-              padding: '24px 18px',
-              background: o.bg,
-              border: `1.5px solid ${o.color}`,
-              borderRadius: 'var(--r-md)',
-              textAlign: 'left',
-              display: 'flex', flexDirection: 'column', gap: 12,
-              transition: 'all 220ms var(--ease)',
-              cursor: 'pointer',
-              color: 'var(--ink)',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--sh-card)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-          >
-            <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
-            <div>
-              <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
-              <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>{o.desc}</div>
-            </div>
-          </button>
-        ))}
+        {opts.map((o, i) => {
+          const done = o.score === 0;
+          const recommended = i === 0 && topScore > 0;
+          return (
+            <button key={o.key}
+              onClick={() => handleChoose(o.key)}
+              style={{
+                position: 'relative',
+                padding: '24px 18px',
+                background: o.bg,
+                border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
+                borderRadius: 'var(--r-md)',
+                textAlign: 'left',
+                display: 'flex', flexDirection: 'column', gap: 12,
+                transition: 'all 220ms var(--ease)',
+                cursor: 'pointer',
+                color: 'var(--ink)',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--sh-card)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              {/* Indicador de actividad ya completada hoy (punto color módulo) */}
+              {done && (
+                <span style={{
+                  position: 'absolute', top: 10, right: 10,
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: o.color, opacity: 0.6,
+                }} />
+              )}
+              {/* Tag "Para ti" en la opción recomendada */}
+              {recommended && (
+                <Tag color="var(--focus)">Para ti</Tag>
+              )}
+              <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
+              <div>
+                <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
+                  {done ? 'Ya hecho hoy · otra ronda si quieres' : o.desc}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>

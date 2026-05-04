@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.15.0</title>
-  <style>
-/* ============================================
+  <title>PACE · Foco · Cuerpo — v0.14.0</title>
+  <style>/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
    ============================================ */
@@ -192,8 +191,7 @@ input, textarea { font-family: inherit; color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
-
-  </style>
+</style>
 </head>
 <body>
   <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
@@ -204,7 +202,7 @@ input, textarea { font-family: inherit; color: inherit; }
   <!-- Splash placeholder requerido por el bundler super_inline_html.
        Se muestra brevemente mientras los assets se descomprimen
        y como fallback no-JS. Paleta crema PACE. -->
-  <template id="__bundler_thumbnail">
+  <div id="__splash" style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:2147483647;transition:opacity .25s ease">
     <svg xmlns="http://www.w3.org/2000/svg" data-bg-color="#F2EDE0"
          viewBox="0 0 1200 800" width="100%" height="100%"
          preserveAspectRatio="xMidYMid meet">
@@ -216,7 +214,7 @@ input, textarea { font-family: inherit; color: inherit; }
             font-family="'Inter Tight', sans-serif"
             font-size="14" letter-spacing="6" fill="#7a7367">FOCO · CUERPO</text>
     </svg>
-  </template>
+  </div><script>(function(){var s=document.getElementById("__splash");if(!s)return;function hide(){s.style.opacity="0";setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},300);}if(document.readyState==="complete")hide();else window.addEventListener("load",hide);})();</script>
 
   <div id="root"></div>
 
@@ -232,8 +230,7 @@ input, textarea { font-family: inherit; color: inherit; }
        4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
        5. main.jsx  → monta <PaceApp/> en #root
   -->
-  <script type="text/babel">
-/* PACE · Foco · Cuerpo
+  <script type="text/babel">/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -243,7 +240,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.15.0';
+const PACE_VERSION = 'v0.14.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -364,7 +361,7 @@ function rolloverIfNeeded(state) {
      `unlockAchievement` desde dentro del propio loadState (la cola
      de toasts pendientes lo gestiona si el ToastHost aún no montó).
      Sesión 28. */
-  if (state.lastActiveDay) {
+  if (state.lastActiveDay && state.lastActiveDay !== today) {
     setTimeout(() => {
       try { unlockAchievement('first.return'); } catch (e) {}
     }, 0);
@@ -721,11 +718,9 @@ Object.assign(window, {
   showToast, onToast,
   PACE_VERSION,
 });
-
 </script>
 
-  <script type="text/babel">
-/* PACE · Foco · Cuerpo
+  <script type="text/babel">/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -1043,10 +1038,8 @@ if (!_paceModalResponsive) {
 }
 
 Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
-
 </script>
-  <script type="text/babel">
-/* PACE · Foco · Cuerpo
+  <script type="text/babel">/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -1379,10 +1372,8 @@ Object.assign(window, {
   SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
   sessionShellStyles,
 });
-
 </script>
-  <script type="text/babel">
-/* PACE · Cow logos — 3 interpretations
+  <script type="text/babel">/* PACE · Cow logos — 3 interpretations
    Uso: <CowLogo variant="lineal" size={28} color="currentColor" />
 */
 const { useId } = React;
@@ -1670,10 +1661,8 @@ function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
        `logoVariant: 'lineal'|'sello'|'ilustrado'` en localStorage
        legacy), pero no se exportan al namespace global. */
 Object.assign(window, { PaceWordmark }); 
-
 </script>
-  <script type="text/babel">
-/* PACE · Foco · Cuerpo
+  <script type="text/babel">/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -1808,10 +1797,8 @@ function useSound() {
 }
 
 Object.assign(window, { playSound, useSound });
-
 </script>
-  <script type="text/babel">
-/* PACE · Toast (para notificar logros desbloqueados) */
+  <script type="text/babel">/* PACE · Toast (para notificar logros desbloqueados) */
 
 const { useState: useStateTO, useEffect: useEffectTO } = React;
 
@@ -1834,18 +1821,14 @@ function ToastHost() {
   }, []);
 
   return (
-    <div
-      aria-live="polite"
-      aria-atomic="true"
-      style={{
-        position: 'fixed',
-        bottom: 20, left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 200,
-        display: 'flex', flexDirection: 'column', gap: 8,
-        pointerEvents: 'none',
-      }}
-    >
+    <div style={{
+      position: 'fixed',
+      bottom: 20, left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 200,
+      display: 'flex', flexDirection: 'column', gap: 8,
+      pointerEvents: 'none',
+    }}>
       {toasts.map(t => (
         <div key={t._id} style={{
           display: 'flex', alignItems: 'center', gap: 14,
@@ -1879,13 +1862,11 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost });
-
 </script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
-  <script type="text/babel">
-/* PACE · Apoya el proyecto (Buy Me a Coffee)
+  <script type="text/babel">/* PACE · Apoya el proyecto (Buy Me a Coffee)
    ============================================================
    FILOSOFÍA (no negociable) — sesión 16 · v0.11.11
 
@@ -2321,13 +2302,11 @@ Object.assign(window, {
   SupportButton, SupportModal, useSupportAutoTrigger,
   supportCopy, BMC_URL, BMC_USERNAME,
 });
-
 </script>
 
   <!-- Bienvenida de primera vez (sesión 17 / v0.12.0).
        Se carga antes que main.jsx porque este la monta. -->
-  <script type="text/babel">
-/* PACE · Welcome de primera vez
+  <script type="text/babel">/* PACE · Welcome de primera vez
    ============================================================
    FILOSOFÍA — sesión 17 · v0.12.0
 
@@ -2637,11 +2616,9 @@ const welcomeStyles = {
 Object.assign(window, {
   WelcomeModal, useFirstTimeWelcome,
 });
-
 </script>
 
-  <script type="text/babel">
-/* PACE · Sidebar izquierdo — colapsable
+  <script type="text/babel">/* PACE · Sidebar izquierdo — colapsable
    Secciones: Ritmo (racha), Sendero (línea del día con hitos), Logros.
    Footer: StatusBar con botón destacado Donar café.
 
@@ -3073,10 +3050,8 @@ function WeekDots({ weeklyStats }) {
 
 function AchievementsPreview({ onOpen }) {
   const [state] = usePace();
-  // Los 5 más recientes primero, por unlockedAt descendente
-  const unlocked = Object.entries(state.achievements || {})
-    .sort((a, b) => (b[1].unlockedAt || 0) - (a[1].unlockedAt || 0))
-    .map(([id]) => id);
+  const unlocked = Object.keys(state.achievements || {});
+  // Mostrar 5 slots: los 3 últimos + 2 placeholders
   const shown = 5;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
@@ -3266,11 +3241,9 @@ const sidebarStyles = {
 };
 
 Object.assign(window, { Sidebar });
-
 </script>
 
-  <script type="text/babel">
-/* PACE · Módulo Foco (Pomodoro)
+  <script type="text/babel">/* PACE · Módulo Foco (Pomodoro)
    Temporizador funcional real. 4 estilos visuales de tweaks.
 */
 
@@ -3280,6 +3253,7 @@ function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
   const [running, setRunning] = useStateFT(false);
   const [remainingSec, setRemainingSec] = useStateFT(state.focusMinutes * 60);
+  const [justFinished, setJustFinished] = useStateFT(false);
   const intervalRef = useRefFT(null);
 
   // Reset si cambian minutos o modo
@@ -3289,6 +3263,7 @@ function FocusTimer({ onFinish }) {
                   : 15;
     setRemainingSec(baseMin * 60);
     setRunning(false);
+    setJustFinished(false);
   }, [state.focusMode, state.focusMinutes]);
 
   useEffectFT(() => {
@@ -3319,6 +3294,7 @@ function FocusTimer({ onFinish }) {
     if (!running) return;
     if (remainingSec !== 0) return;
     setRunning(false);
+    setJustFinished(true);
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
        del bloque, sea foco o pausa. Respeta state.soundOn (noop si
        está apagado). Sesión 28. */
@@ -3343,6 +3319,7 @@ function FocusTimer({ onFinish }) {
 
   const reset = () => {
     setRunning(false);
+    setJustFinished(false);
     const baseMin = state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15;
     setRemainingSec(baseMin * 60);
   };
@@ -3882,10 +3859,8 @@ const focusStyles = {
 };
 
 Object.assign(window, { FocusTimer });
-
 </script>
-  <script type="text/babel">
-/* PACE · Módulo Respira
+  <script type="text/babel">/* PACE · Módulo Respira
    Librería + Sesión guiada con círculo animado + Modal de seguridad
 */
 
@@ -4537,10 +4512,8 @@ const visualStyles = {
    allí). BREATHE_ROUTINES sigue declarado como const local (nadie lo
    consume fuera), saneado por audit §4.1. */
 Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession });
-
 </script>
-  <script type="text/babel">
-/* PACE · Módulo Mueve (Calistenia / Fuerza)
+  <script type="text/babel">/* PACE · Módulo Mueve (Calistenia / Fuerza)
    Librería + Sesión con pasos + timer
 
    v0.11.9 — SWAP de contenido (sesión 14):
@@ -4551,7 +4524,7 @@ Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession });
    de usuarios existentes — solo cambia qué contenedor visual los muestra.
 */
 
-const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
+const { useState: useStateMV, useEffect: useEffectMV } = React;
 
 const MOVE_ROUTINES = [
   { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
@@ -4621,6 +4594,7 @@ function MoveLibrary({ open, onClose, onStart }) {
 }
 
 function MoveSession({ routine, onExit, kind = 'move' }) {
+  const { useRef: useRefMV } = React;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
   // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
   const dispatchComplete = () => {
@@ -4832,10 +4806,8 @@ function StepGlyph({ tag, stepIdx }) {
 /* Export a window: sólo lo consumido fuera del módulo.
    MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
 Object.assign(window, { MoveLibrary, MoveSession });
-
 </script>
-  <script type="text/babel">
-/* PACE · Módulo Estira (Estiramientos / Movilidad)
+  <script type="text/babel">/* PACE · Módulo Estira (Estiramientos / Movilidad)
    Botón: "Estira" · afloja tensión.
 
    v0.11.9 — SWAP de contenido (sesión 14):
@@ -4934,10 +4906,8 @@ function ExtraLibrary({ open, onClose, onStart }) {
 // Export a window saneado en sesión 26 (audit §4.1): EXTRA_ROUTINES no se
 // consume fuera del módulo — sigue como const local.
 Object.assign(window, { ExtraLibrary });
-
 </script>
-  <script type="text/babel">
-/* PACE · Módulo Hidrátate */
+  <script type="text/babel">/* PACE · Módulo Hidrátate */
 
 function HydrateTracker({ open, onClose }) {
   const [state] = usePace();
@@ -4963,7 +4933,7 @@ function HydrateTracker({ open, onClose }) {
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
-            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound('sip'); } catch (e) {} } }}
+            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); } }}
             style={{
               aspectRatio: '1/1.3',
               background: i < today ? 'var(--hydrate-soft)' : 'transparent',
@@ -5017,30 +4987,13 @@ function HydrateTracker({ open, onClose }) {
 }
 
 Object.assign(window, { HydrateTracker });
-
 </script>
-  <script type="text/babel">
-/* PACE · Menú post-Pomodoro
+  <script type="text/babel">/* PACE · Menú post-Pomodoro
    Aparece tras completar un ciclo de foco.
-   Las 3 opciones se reordenan según lo que el usuario ha hecho menos hoy:
-   primero la actividad más necesaria, con indicador "Para ti".
+   3 opciones: Respira / Mueve / Agua + Saltar
 */
 
 const { useEffect: useEffectBM } = React;
-
-/* Score: cuánto se necesita esta actividad en este momento.
-   Mayor → más prioritaria. Water usa escala 0-3 según vasos restantes. */
-function computeScore(key, state) {
-  const { plan, water } = state;
-  if (key === 'breathe') return plan.respira ? 0 : 2;
-  if (key === 'move') return plan.muevete ? 0 : 2;
-  if (key === 'water') {
-    if (water.today === 0) return 3;
-    if (water.today < water.goal) return 1;
-    return 0;
-  }
-  return 0;
-}
 
 function BreakMenu({ open, onClose, onChoose }) {
   /* `first.cycle` — Pomodoro completado + pausa activa elegida.
@@ -5056,9 +5009,11 @@ function BreakMenu({ open, onClose, onChoose }) {
     onChoose(key);
   };
 
+
   // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
-  // Los atajos siguen mapeados por actividad (no por posición visual),
-  // así el reordenamiento inteligente no los rompe.
+  // La UI anuncia estos atajos en el Meta de abajo; aquí se implementan.
+  // Se ignoran cuando el foco está en un input/textarea para no colisionar
+  // con edición de texto.
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -5076,67 +5031,39 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   if (!open) return null;
 
-  const state = getState();
-
-  const baseOpts = [
+  const opts = [
     { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
-    { key: 'move',    label: 'Muévete', desc: 'Antídoto rápido a la silla',  color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
-    { key: 'water',   label: 'Hidrátate', desc: 'Un vaso ahora',             color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
+    { key: 'move', label: 'Muévete', desc: 'Antídoto rápido a la silla', color: 'var(--move)', bg: 'var(--move-soft)', icon: <BMMoveIcon /> },
+    { key: 'water', label: 'Hidrátate', desc: 'Un vaso ahora', color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
   ];
-
-  // Ordenar por score descendente; empate → orden original (sort estable).
-  const opts = baseOpts
-    .map(o => ({ ...o, score: computeScore(o.key, state) }))
-    .sort((a, b) => b.score - a.score);
-
-  const topScore = opts[0].score;
 
   return (
     <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
-        {opts.map((o, i) => {
-          const done = o.score === 0;
-          const recommended = i === 0 && topScore > 0;
-          return (
-            <button key={o.key}
-              onClick={() => handleChoose(o.key)}
-              style={{
-                position: 'relative',
-                padding: '24px 18px',
-                background: o.bg,
-                border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
-                borderRadius: 'var(--r-md)',
-                textAlign: 'left',
-                display: 'flex', flexDirection: 'column', gap: 12,
-                transition: 'all 220ms var(--ease)',
-                cursor: 'pointer',
-                color: 'var(--ink)',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--sh-card)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              {/* Indicador de actividad ya completada hoy (punto color módulo) */}
-              {done && (
-                <span style={{
-                  position: 'absolute', top: 10, right: 10,
-                  width: 6, height: 6, borderRadius: '50%',
-                  background: o.color, opacity: 0.6,
-                }} />
-              )}
-              {/* Tag "Para ti" en la opción recomendada */}
-              {recommended && (
-                <Tag color="var(--focus)">Para ti</Tag>
-              )}
-              <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
-              <div>
-                <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
-                <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-                  {done ? 'Ya hecho hoy · otra ronda si quieres' : o.desc}
-                </div>
-              </div>
-            </button>
-          );
-        })}
+        {opts.map(o => (
+          <button key={o.key}
+            onClick={() => handleChoose(o.key)}
+            style={{
+              padding: '24px 18px',
+              background: o.bg,
+              border: `1.5px solid ${o.color}`,
+              borderRadius: 'var(--r-md)',
+              textAlign: 'left',
+              display: 'flex', flexDirection: 'column', gap: 12,
+              transition: 'all 220ms var(--ease)',
+              cursor: 'pointer',
+              color: 'var(--ink)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--sh-card)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
+            <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
+            <div>
+              <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
+              <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>{o.desc}</div>
+            </div>
+          </button>
+        ))}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
@@ -5179,10 +5106,8 @@ function BMDropIcon() {
 }
 
 Object.assign(window, { BreakMenu });
-
 </script>
-  <script type="text/babel">
-/* PACE · Logros (Sellos tipo libreta de campo) */
+  <script type="text/babel">/* PACE · Logros (Sellos tipo libreta de campo) */
 
 const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
@@ -5513,10 +5438,8 @@ function Seal({ achievement, unlocked, implemented, color }) {
 }
 
 Object.assign(window, { Achievements, ACHIEVEMENT_CATALOG });
-
 </script>
-  <script type="text/babel">
-/* PACE · Panel de estadísticas semanales */
+  <script type="text/babel">/* PACE · Panel de estadísticas semanales */
 
 function WeeklyStats({ open, onClose }) {
   const [state] = usePace();
@@ -5632,10 +5555,8 @@ function WeekBarRow({ label, data, color, unit }) {
 }
 
 Object.assign(window, { WeeklyStats });
-
 </script>
-  <script type="text/babel">
-/* PACE · Panel de Tweaks
+  <script type="text/babel">/* PACE · Panel de Tweaks
    ============================================================
    4 ejes vigentes: paleta, layout, timer, breath.
 
@@ -6114,11 +6035,9 @@ if (!_paceTweaksResponsive) {
 }
 
 Object.assign(window, { TweaksPanel, TweakSecretsWatcher });
-
 </script>
 
-  <script type="text/babel">
-/* PACE · Foco · Cuerpo
+  <script type="text/babel">/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -6709,7 +6628,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   const root = ReactDOM.createRoot(document.getElementById('pace-root'));
   root.render(<PaceApp />);
 }
-
 </script>
 
   <!-- Monta la app
