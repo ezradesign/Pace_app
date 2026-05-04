@@ -8,7 +8,6 @@ function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
   const [running, setRunning] = useStateFT(false);
   const [remainingSec, setRemainingSec] = useStateFT(state.focusMinutes * 60);
-  const [justFinished, setJustFinished] = useStateFT(false);
   const intervalRef = useRefFT(null);
 
   // Reset si cambian minutos o modo
@@ -18,7 +17,6 @@ function FocusTimer({ onFinish }) {
                   : 15;
     setRemainingSec(baseMin * 60);
     setRunning(false);
-    setJustFinished(false);
   }, [state.focusMode, state.focusMinutes]);
 
   useEffectFT(() => {
@@ -49,7 +47,6 @@ function FocusTimer({ onFinish }) {
     if (!running) return;
     if (remainingSec !== 0) return;
     setRunning(false);
-    setJustFinished(true);
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
        del bloque, sea foco o pausa. Respeta state.soundOn (noop si
        está apagado). Sesión 28. */
@@ -74,7 +71,6 @@ function FocusTimer({ onFinish }) {
 
   const reset = () => {
     setRunning(false);
-    setJustFinished(false);
     const baseMin = state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15;
     setRemainingSec(baseMin * 60);
   };

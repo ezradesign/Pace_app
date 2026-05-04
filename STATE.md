@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.14.2
-**Última sesión:** #31 — 2026-04-30 · Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27; falsos positivos de encoding descartados)
-**Última actualización de este archivo:** 2026-04-30 · sesión 31 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — tarea de docs)
+**Versión actual:** v0.14.3
+**Última sesión:** #32 — 2026-05-04 · Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes)
+**Última actualización de este archivo:** 2026-05-04 · sesión 32 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB — pendiente regenerar con fixes de v0.14.3)
 
 ---
 
@@ -30,17 +30,17 @@
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.10 (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | v0.12.10 (data-pace-tweaks-panel + bottom-sheet en móvil) |
 | `app/breathe/BreatheModule.jsx` | Módulo Respira | **v0.13.0** (cableado `playSound('breath')` en cambio de fase) |
-| `app/move/MoveModule.jsx` | Módulo Mueve | v0.12.8 |
+| `app/move/MoveModule.jsx` | Módulo Mueve | **v0.14.3** (`useRefMV` movido a destructure de módulo) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
 | `app/extra/ExtraModule.jsx` | Módulo Estira | v0.12.8 |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | v0.12.8 |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.14.3** (`AchievementsPreview` ordenada por `unlockedAt` desc) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.13.0** (cableado `playSound('complete')` al fin de bloque) |
-| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.13.0** (cableado `playSound('sip')` en clic vaso y botón "+") |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.14.3** (eliminado dead state `justFinished`) |
+| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.14.3** (vasos individuales reproducen `sip` al añadir) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.13.0** (wrapper `handleChoose` para trigger `first.cycle`) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.14.0** (+7 ids en `IMPLEMENTED_ACHIEVEMENTS`: 39 → 45; Constancia 11/15, Maestría 5/25) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.14.0** (bump v0.13.0 → v0.14.0; nuevos campos `breatheSessionsTotal`/`moveSessionsTotal`/`morningDates`; helper `checkTimeOfDayAchievements`; trigger `master.long.focus` en `completePomodoro`; umbrales `breathe.sessions.10/50` y `move.sessions.25` en sus respectivas acciones de completar) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.14.3** (`PACE_VERSION` → `'v0.14.2'`; condición redundante en `rolloverIfNeeded` eliminada) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
@@ -60,126 +60,31 @@ Backups vigentes:
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 31 · v0.14.2 · Fix de comillas en DESIGN_SYSTEM.md**
+**Sesión 32 · v0.14.3 · Code review: 7 fixes de calidad**
 
-Tarea de pulido de documentación tras revisión externa del commit cd75d27.
-
-### Qué se hizo
-
-1. **Corrección de comillas faltantes** en la tabla "Tipografías alternativas (tweaks)" de `DESIGN_SYSTEM.md` (líneas 133-134):
-   - `'Cormorant Garamond', Georgia, serif'` (antes sin comilla final).
-   - `'JetBrains Mono', ui-monospace, monospace'` (antes sin comilla final).
-
-### Verificado (no cambiado)
-- **Punto 2 (breakpoints):** `≤ 640px`, `≤ 768px` y `grid 2×2` correctos en disco.
-- **Punto 3 (encoding):** tildes y símbolos especiales verificados en 5 muestras. Falsos positivos descartados.
-- **Punto 4 (línea 19):** bullet único con wrap estándar.
-
-### Resultado cuantitativo
-- **2 líneas editadas** en `DESIGN_SYSTEM.md`.
-- **0 cambios de tamaño:** 252 → 252 líneas.
-- **0 cambios de código.** **0 cambios visuales.**
-- **No requiere regenerar standalone** (es tarea de docs).
-
-### Archivos
-- **Nuevos:** `docs/sessions/session-31-fix-comillas-design-system.md`.
-- **Modificados:** `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `STATE.md`.
-
-### Versión
-- **v0.14.2** (fix de docs · solo cambios en `DESIGN_SYSTEM.md`).
-
-Sesión doble del backlog "Detectores aplazados de logros" + Bloque
-de diseño exploratorio para los 100 glifos del catálogo. Cero
-cambios visuales en producto.
+Auditoría interna a petición del usuario: revisión completa del código fuente y aplicación de 7 correcciones de calidad sin cambios de comportamiento visible ni features nuevas.
 
 ### Qué se hizo
 
-1. **Bloque A — 6 detectores de logros aplazados** (~1h, código).
-   - **Contadores acumulados por módulo:** nuevos campos
-     `breatheSessionsTotal` y `moveSessionsTotal` en `defaultState`,
-     incrementados en `completeBreathSession` y `completeMoveSession`
-     respectivamente. No resetean en rollover (son métricas
-     acumuladas, no "de hoy"). Umbrales evaluados leyendo `_state`
-     ya actualizado tras setState (patrón sesión 18). Disparan
-     `breathe.sessions.10`, `breathe.sessions.50` y `move.sessions.25`.
-   - **Detectores horarios:** nuevo helper
-     `checkTimeOfDayAchievements()` llamado desde las 4 acciones
-     de completar (Pomodoro, Breathe, Move, Extra). Tres triggers:
-     `master.dawn` (<7h), `master.dusk` (≥21h), `morning.5` (5
-     fechas distintas con sesión <9:00, persistidas en
-     `morningDates: string[]` con cap de 30 entradas).
-   - **`master.long.focus`:** Pomodoro de 45 min completo.
-     Evaluado en `completePomodoro` contra el snapshot
-     `focusMinsAtCompletion` capturado ANTES del updater (no
-     contra `state.focusMinutes` que puede haber cambiado por
-     tweak durante el ticker).
-   - **`IMPLEMENTED_ACHIEVEMENTS`:** 39 → 45 ids (+7,
-     `master.long.focus` ya estaba previsto pero faltaba cableado;
-     los 6 nuevos detectores se cuentan + ese).
-
-2. **Bloque B — Canvas exploratorio de glifos** (~1h, diseño puro).
-   `design/glyphs-explorations.html` (~36 KB, self-contained,
-   separado del producto). 4 direcciones visuales para sustituir
-   el set actual de unicode mezclado (`✦ ❦ ❀ ☉ III VII 𓇼 𓂃`) por
-   SVG cohesivo:
-   - **A · Línea** — stroke 1.2px, sin relleno. Más alineada con
-     el tono "papel + tinta" actual.
-   - **B · Sello hundido** — relleno sólido en color de categoría.
-     Más legible a 24px.
-   - **C · Marca a hierro** — stroke 3px, esquinas redondas, look
-     "ganadería rústica".
-   - **D · Constelación** — puntos finos conectados por líneas
-     sutiles. Naturalista, etérea.
-   8 secciones, 32 glifos × 4 direcciones = 128 SVG inline.
-   Comparativa rápida actual vs A. Recomendación de cierre
-   incluida: **híbrido A+B** — línea por defecto, sello solo en
-   logros de cierre de categoría (luna llena, centurión, día de
-   foco). Pendiente de validación del usuario antes de tocar
-   `Achievements.jsx` o `Toast.jsx`.
+1. **`app/state.jsx` — `PACE_VERSION` sincronizado** `'v0.14.0'` → `'v0.14.2'` (había quedado desincronizado durante las sesiones de documentación 30-31).
+2. **`app/state.jsx` — condición redundante eliminada** en `rolloverIfNeeded`: `&& state.lastActiveDay !== today` era dead code (la línea anterior ya retorna si son iguales).
+3. **`app/focus/FocusTimer.jsx` — dead state `justFinished` eliminado** (4 referencias: declaración, reset effect, finish effect, función `reset()`). Era escrito pero nunca leído; el guard real contra doble-ejecución es `if (!running) return`.
+4. **`app/move/MoveModule.jsx` — `useRef: useRefMV` movido al destructure de módulo** (estaba dentro del body de `MoveSession`, re-ejecutándose en cada render; inconsistente con el resto del proyecto).
+5. **`app/ui/Toast.jsx` — accesibilidad** añadido `aria-live="polite"` y `aria-atomic="true"` al contenedor de toasts para que los lectores de pantalla anuncien logros desbloqueados.
+6. **`app/hydrate/HydrateModule.jsx` — consistencia de sonido** los botones de vaso individual ahora reproducen `playSound('sip')` al añadir, igual que el botón "Un vaso más".
+7. **`app/shell/Sidebar.jsx` — `AchievementsPreview` ordenada por recencia** muestra los 5 logros más recientemente desbloqueados (por `unlockedAt` desc) en lugar de los 5 primeros insertados.
 
 ### Resultado cuantitativo
-
-- **+6 logros cazables hoy.** Constancia: 7/15 → 11/15. Maestría:
-  2/25 → 5/25. Total catálogo cazable: 39 → 45.
-- **+1 documento de diseño nuevo** (`design/glyphs-explorations.html`).
-- **+~1 KB en standalone** (358 → 369 KB; el plus es la nueva
-  lógica de detectores).
-- **0 cambios visuales** en producto. **0 cambios de
-  comportamiento** observables fuera del unlock toast cuando el
-  usuario complete una sesión que dispare uno de los 6 nuevos.
-
-### Verificación
-
-- Preview de `PACE.html` carga limpia (consola: 0 logs, 0 errores).
-- Preview de `design/glyphs-explorations.html` carga limpia.
-- Triggers nuevos no probados manualmente (requeriría manipular
-  reloj del sistema o `lastActiveDate` en localStorage). Riesgo
-  bajo: reproducen el patrón validado por sesiones 18 y 28
-  (`streak.X`, `master.focus.day`).
-- Regeneración de `PACE_standalone.html` con `super_inline_html`
-  ejecutada. La preview del standalone no se pudo verificar en
-  vivo por desconexión transitoria del cliente al final de la
-  sesión; el archivo se entrega sin tocar tras la regeneración
-  exitosa.
+- **7 archivos modificados.** 0 archivos nuevos de código.
+- **0 cambios visuales.** 0 breaking changes. 0 nuevas features.
+- **Standalone pendiente de regenerar** (herramienta `super_inline_html` no disponible en este entorno — anotar como tarea en la próxima sesión).
 
 ### Archivos
-
-- **Nuevos:** `design/glyphs-explorations.html`,
-  `docs/sessions/session-29-logros-aplazados-glifos.md`,
-  `backups/PACE_standalone_v0.13.0_20260429.html`.
-- **Modificados:** `app/state.jsx` (3 campos +
-  `checkTimeOfDayAchievements` + cableado en 4 acciones +
-  trigger `master.long.focus` + contadores en breath/move),
-  `app/achievements/Achievements.jsx` (`IMPLEMENTED_ACHIEVEMENTS`),
-  `PACE.html` (título), `PACE_standalone.html` (regenerado),
-  `CHANGELOG.md`, `STATE.md`.
+- **Modificados:** `app/state.jsx`, `app/focus/FocusTimer.jsx`, `app/move/MoveModule.jsx`, `app/ui/Toast.jsx`, `app/hydrate/HydrateModule.jsx`, `app/shell/Sidebar.jsx`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `docs/sessions/session-32-code-review-fixes.md`.
 
 ### Versión
-
-- `v0.13.0` → **`v0.14.0`** (minor · 6 logros nuevos cazables, 0
-  breaking, 0 cambios visuales).
-
-Detalle: [`docs/sessions/session-29-logros-aplazados-glifos.md`](./docs/sessions/session-29-logros-aplazados-glifos.md).
+- **v0.14.3** (patch · 7 fixes de calidad).
 
 ---
 

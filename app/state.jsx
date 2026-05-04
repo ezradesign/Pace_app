@@ -8,7 +8,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.14.0';
+const PACE_VERSION = 'v0.14.2';
 
 const defaultState = {
   // Settings / Tweaks
@@ -129,7 +129,7 @@ function rolloverIfNeeded(state) {
      `unlockAchievement` desde dentro del propio loadState (la cola
      de toasts pendientes lo gestiona si el ToastHost aún no montó).
      Sesión 28. */
-  if (state.lastActiveDay && state.lastActiveDay !== today) {
+  if (state.lastActiveDay) {
     setTimeout(() => {
       try { unlockAchievement('first.return'); } catch (e) {}
     }, 0);

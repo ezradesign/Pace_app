@@ -15,9 +15,10 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.14.3** | 2026-05-04 | Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes) | #32 | [abajo ↓](#v0143--2026-05-04--code-review-7-fixes-de-calidad) |
 | **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [abajo ↓](#v0142--2026-04-30--fix-de-comillas-en-design-systemmd) |
-| **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [abajo ↓](#v0141--2026-04-30--design-systemmd-creado--limpieza-de-duplicacion) |
-| **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [abajo ↓](#v0140--2026-04-29--fruta-facil-ii-logros-aplazados--glifos) |
+| **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [session-30](./docs/sessions/session-30-design-system.md) |
+| **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [session-29](./docs/sessions/session-29-logros-aplazados-glifos.md) |
 | **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de Pomodoro, vaso de agua y cambio de fase de respiración | #28 | [session-28-fruta-facil-logros-sonidos.md](./docs/sessions/session-28-fruta-facil-logros-sonidos.md) |
 | **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell (prep/done) y TweaksPanel (bottom-sheet) | #27 | [session-27-modales-mobile.md](./docs/sessions/session-27-modales-mobile.md) |
 | **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización (Pase mensual) | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
@@ -50,138 +51,67 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.14.1] — 2026-04-30 — DESIGN_SYSTEM.md creado + limpieza de duplicación
+## [v0.14.3] — 2026-05-04 — Code review: 7 fixes de calidad
 
-Tarea de documentación pura: se crea `DESIGN_SYSTEM.md` (~270 líneas) como
-archivo vivo centralizado de tokens, paletas, tipografía, espaciado,
-breakpoints y utilidades (hasta ahora dispersos en `tokens.css` y un
-resumen de 10 líneas en `CLAUDE.md`). Se sustituye el resumen de
-`CLAUDE.md` por una referencia al nuevo archivo, eliminando la
-duplicación de información.
+Auditoría interna del código fuente: 7 correcciones de calidad sin
+cambios de comportamiento visible para el usuario. Sin features nuevas,
+sin cambios visuales.
 
-### Añadido
-- **`DESIGN_SYSTEM.md`** (nuevo, ~270 líneas):
-  - Paletas completas: Crema día (default), Oscuro noche, Papel envejecido.
-  - Tipografía: jerarquía de tamaños, interlineado, tracking, clases utilitarias.
-  - Tipografías alternativas: `[data-font="cormorant"]` y `[data-font="mono"]`
-    que sobrescriben variables vía Tweaks.
-  - Espaciado s-1 a s-9 con equivalencias y usos típicos.
-  - Radios, sombras, transiciones y curva de aceleración.
-  - Breakpoints (640px, 768px) y unidades viewport (100vh/100dvh).
-  - Scrollbar custom, reset base y `:focus-visible` con outline de 2px.
-  - Placeholder para Z-index layers (pendiente de tarea futura).
-  - Fuentes importadas vía Google Fonts en `tokens.css`.
-  - Todos los valores numéricos coinciden exactamente con `tokens.css` (187 líneas verificadas).
+### Corregido
+- **`app/state.jsx`:** `PACE_VERSION` sincronizado `'v0.14.0'` → `'v0.14.2'`
+  (había quedado desincronizado durante las sesiones de documentación 30-31).
+- **`app/state.jsx`:** condición redundante eliminada en `rolloverIfNeeded` —
+  `&& state.lastActiveDay !== today` era dead code porque la línea anterior
+  ya retorna si son iguales.
+- **`app/focus/FocusTimer.jsx`:** eliminado estado muerto `justFinished`
+  (4 referencias). Era escrito pero nunca leído; el guard real contra
+  doble-ejecución es `if (!running) return` en el efecto.
+- **`app/move/MoveModule.jsx`:** `useRef: useRefMV` movido al destructure de
+  módulo — estaba dentro del body de `MoveSession`, re-ejecutándose en cada
+  render (inconsistente con el patrón del resto del proyecto; inocuo pero
+  incorrecto).
+- **`app/ui/Toast.jsx`:** añadido `aria-live="polite"` y `aria-atomic="true"`
+  al contenedor de toasts para que los lectores de pantalla anuncien logros
+  desbloqueados.
+- **`app/hydrate/HydrateModule.jsx`:** botones de vaso individuales ahora
+  reproducen `playSound('sip')` al añadir (consistencia con el botón
+  "Un vaso más", que ya lo hacía).
+- **`app/shell/Sidebar.jsx`:** `AchievementsPreview` muestra los 5 logros más
+  recientemente desbloqueados (ordenados por `unlockedAt` desc) en lugar de
+  los 5 primeros insertados (orden de inserción).
 
-### Cambiado
-- **`CLAUDE.md`** líneas 287-296: sustitución de resumen de 10 líneas
-  por referencia a `DESIGN_SYSTEM.md` (siguiendo la regla de un único
-  sitio por tipo de información).
-
-### No cambiado (intencional)
-- **Cero cambios de código.** No se toca `app/`, `PACE.html`,
-  `PACE_standalone.html`, `STATE.md`, `README.md` ni `tokens.css`.
-- **Cero cambios visuales** en la app de producto.
+### No cambiado
+- 0 cambios visuales. 0 cambios de comportamiento observables salvo: el orden
+  de logros en el sidebar y el sonido `sip` en clic de vasos individuales.
+- `PACE_standalone.html` pendiente de regenerar (herramienta no disponible en
+  este entorno; se nota en STATE.md).
 
 ### Archivos
-- **Nuevos:** `DESIGN_SYSTEM.md`, `docs/sessions/session-30-design-system.md`.
-- **Modificados:** `CLAUDE.md`, `CHANGELOG.md`.
+- **Modificados:** `app/state.jsx`, `app/focus/FocusTimer.jsx`,
+  `app/move/MoveModule.jsx`, `app/ui/Toast.jsx`, `app/hydrate/HydrateModule.jsx`,
+  `app/shell/Sidebar.jsx`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `docs/sessions/session-32-code-review-fixes.md`.
 
 ---
 
-## [v0.14.0] — 2026-04-29 — Fruta fácil II: logros aplazados + glifos
+## [v0.14.2] — 2026-04-30 — Fix de comillas en DESIGN_SYSTEM.md
 
-Sesión doble de fruta fácil, continuación natural de v0.13.0. Cierra
-6 logros más del backlog "Detectores aplazados de logros" (sección
-🎯 Alto impacto · coste bajo de `STATE.md`) y entrega un canvas
-exploratorio de diseño para el set completo de 100 glifos.
+Corrección de documentación pura: dos comillas faltantes en la tabla
+"Tipografías alternativas (tweaks)" de `DESIGN_SYSTEM.md`.
 
-**Categoría "Constancia" pasa de 7/15 → 11/15** (cazables hoy).
-**Categoría "Maestría" pasa de 2/25 → 5/25.**
+### Corregido
+- **`DESIGN_SYSTEM.md`** líneas 133-134: comillas de cierre faltantes en los
+  valores de `font-family` de Cormorant Garamond y JetBrains Mono.
 
-### Añadido
-- **`breathe.sessions.10` y `breathe.sessions.50`** — contadores
-  acumulados de sesiones de respiración. Nuevo campo
-  `breatheSessionsTotal` en `defaultState`, incrementado en
-  `completeBreathSession`. Crece monótonamente; no resetea en
-  rollover.
-- **`move.sessions.25`** — contador acumulado de sesiones Mueve.
-  Nuevo campo `moveSessionsTotal`. Solo Mueve (Extra no suma —
-  aunque sí comparten bucket de stats por decisión activa de
-  sesión 10/14).
-- **`morning.5`** — 5 fechas distintas con sesión antes de las
-  9:00. Nuevo campo `morningDates: string[]` (toDateString) con
-  cap de 30 entradas para no inflar localStorage.
-- **`master.dawn`** — sesión antes de las 7:00.
-- **`master.dusk`** — sesión a partir de las 21:00.
-- **`master.long.focus`** — Pomodoro de 45 min completo. Evaluado
-  contra el snapshot `focusMinsAtCompletion` capturado ANTES del
-  updater (no contra `state.focusMinutes`, que puede haber sido
-  cambiado por tweak durante el ticker).
-- **`design/glyphs-explorations.html`** (nuevo, ~36 KB) — canvas
-  exploratorio con 4 direcciones visuales para el set de 100
-  glifos del catálogo de logros: Línea (stroke 1.2px), Sello
-  hundido (relleno sólido), Marca a hierro (stroke 3px) y
-  Constelación (puntos finos conectados). 32 glifos × 4
-  direcciones = 128 SVG inline. Recomendación incluida: híbrido
-  Línea + Sello (línea por defecto, sello solo en logros de
-  cierre de categoría). Pendiente de validación del usuario antes
-  de tocar `Achievements.jsx` o `Toast.jsx`.
-
-### Cambiado
-- **`app/state.jsx`:** nuevo helper `checkTimeOfDayAchievements()`
-  que agrupa los 3 detectores horarios. Se llama desde
-  `completePomodoro`, `completeBreathSession`, `completeMoveSession`
-  y `completeExtraSession`.
-- **`app/state.jsx`:** `completePomodoro` evalúa
-  `master.long.focus` contra el snapshot pre-updater.
-- **`app/state.jsx`:** `completeBreathSession` y
-  `completeMoveSession` incrementan sus contadores acumulados y
-  evalúan los umbrales 10/50 y 25 contra `_state` actualizado
-  (patrón de sesión 18 — leer del módulo, no de cierre).
-- **`app/achievements/Achievements.jsx`:**
-  `IMPLEMENTED_ACHIEVEMENTS` 39 → 45 ids (+6).
-- **`PACE.html`:** título bumpeado v0.12.10 → v0.14.0.
-- **`PACE_standalone.html`:** regenerado con `super_inline_html`
-  (~369 KB · +1 KB respecto a v0.13.0).
-
-### No cambiado (intencional)
-- **0 cambios visuales** en la app de producto (el canvas vive
-  en `design/`, separado).
-- **0 cambios de comportamiento** observables fuera del
-  desbloqueo de los nuevos logros cuando aplique.
-- **Ningún glifo del catálogo se ha tocado todavía.** El canvas
-  es decisión previa a implementación; cualquier migración a SVG
-  inline será trabajo de una sesión dedicada y se anotará como
-  decisión activa.
-
-### Verificación
-- Preview de `PACE.html` carga limpia (consola: 0 logs, 0 errores).
-- Triggers nuevos no probados manualmente (requeriría manipular
-  reloj o `lastActiveDate` en localStorage). Riesgo bajo: la
-  lógica reproduce patrón validado por `streak.3/7/14/...` y
-  `master.focus.day` (sesión 28).
-
-### Notas técnicas
-- `master.dawn` / `master.dusk` se disparan inmediatamente la
-  próxima vez que el usuario complete una sesión en horario válido.
-  No requieren acumulación.
-- `morning.5` cap a 30 fechas: suficiente para alimentar el
-  umbral de 5 con margen amplio sin inflar localStorage.
-- Los contadores `breatheSessionsTotal` / `moveSessionsTotal` se
-  conservan al hacer rollover diario — son métricas acumuladas,
-  no "de hoy".
-- `move.sessions.25` cuenta solo Mueve. Si el futuro pide un
-  `extra.sessions.X`, vivirá en otro contador `extraSessionsTotal`
-  separado para no romper la métrica del primero.
+### No cambiado
+- 0 cambios de código. 0 cambios visuales.
+- `PACE_standalone.html` sin cambios (tarea de docs).
 
 ### Archivos
-- **Nuevos:** `design/glyphs-explorations.html`,
-  `docs/sessions/session-29-logros-aplazados-glifos.md`,
-  `backups/PACE_standalone_v0.13.0_20260429.html`.
-- **Modificados:** `app/state.jsx`,
-  `app/achievements/Achievements.jsx`, `PACE.html`,
-  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Modificados:** `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `docs/sessions/session-31-fix-comillas-design-system.md`.
+
+Detalle: [`docs/sessions/session-31-fix-comillas-design-system.md`](./docs/sessions/session-31-fix-comillas-design-system.md).
 
 ---
 
