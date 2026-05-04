@@ -10,11 +10,10 @@
 
 ---
 
-**Versión actual:** v0.14.5
-**Última sesión cerrada:** #35 — 2026-05-01 · Migración del pipeline a Claude Code + `scripts/build-standalone.js` + standalone regenerado a v0.14.5
-**Sesión 34:** abortada (sin commits) — migración de pipeline OpenCode + Big Pickle (GLM-4.6) → Claude Code (Opus 4.7) como agente ejecutor.
-**Última actualización de este archivo:** 2026-05-01 · sesión 35 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.14.5 (~363 KB, regenerado en sesión 35 con `scripts/build-standalone.js`)
+**Versión actual:** v0.14.2
+**Última sesión:** #31 — 2026-04-30 · Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27; falsos positivos de encoding descartados)
+**Última actualización de este archivo:** 2026-04-30 · sesión 31 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.14.0 (~369 KB, sin cambios en esta sesión — tarea de docs)
 
 ---
 
@@ -22,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.14.5** (título bumpeado en sesión 35; comentarios de logo y splash actualizados) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.14.5** (~363 KB, regenerado en sesión 35 con `scripts/build-standalone.js` — 26 archivos inline, 3 CDN preservados) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.14.0** (título bumpeado a v0.14.0) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.14.0** (~369 KB, regenerado tras detectores horarios + contadores acumulados + canvas de glifos en `design/`) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
@@ -45,73 +44,142 @@
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
-- `backups/PACE_standalone_v0.12.8_20260423_1700.html` (sesión 26)
-- `backups/PACE_standalone_v0.12.9_20260423.html` (sesión 27)
-- `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28)
-- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29)
-- `backups/PACE_standalone_v0.14.0_20260430.html` (pre-sesión 35 — rotado al regenerar)
+- `backups/PACE_standalone_v0.12.8_20260423_1700.html` (sesión 26,
+  antes del bump v0.12.9).
+- `backups/PACE_standalone_v0.12.9_20260423.html` (sesión 27,
+  antes del bump v0.12.10 y la aplicación del patrón responsive
+  a modales).
+- `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28,
+  antes del bump v0.13.0 y el cableado de Sound.jsx + triggers).
+- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29,
+  antes del bump v0.14.0 y los detectores aplazados).
 
-5 backups locales. Tope máximo alcanzado; el próximo standalone regenerado eliminará el más antiguo.
-
----
-
-## ⛔ Sesión 34 — abortada (sin commits)
-
-**Fecha:** 2026-05-01 (mismo día que sesión 33).
-
-Se decidió **migrar el agente ejecutor** del pipeline OpenCode + Big
-Pickle (GLM-4.6) a Claude Code (Opus 4.7) antes de tocar ningún
-archivo. La sesión se canceló para evitar dejar trabajo a medias entre
-dos pipelines distintos. El trabajo planificado para sesión 34 (crear
-`scripts/build-standalone.js` y regenerar `PACE_standalone.html`) se
-retoma en **sesión 35**.
-
-**Sin commits, sin archivos modificados.**
+4 backups locales. Margen cómodo frente a la regla "máximo 5".
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 35 · v0.14.5 · Migración del pipeline a Claude Code + `scripts/build-standalone.js` + standalone regenerado**
+**Sesión 31 · v0.14.2 · Fix de comillas en DESIGN_SYSTEM.md**
 
-Tarea de tooling + reparación de cierre. Se migró el agente ejecutor del proyecto de **OpenCode + Big Pickle (GLM-4.6)** a **Claude Code (Opus 4.7)**, se cerró la deuda técnica que había bloqueado la regeneración de `PACE_standalone.html` desde la sesión 33, y se realineó la documentación operativa con el nuevo flujo.
+Tarea de pulido de documentación tras revisión externa del commit cd75d27.
 
 ### Qué se hizo
 
-1. **`scripts/build-standalone.js` creado** (~200 líneas, Node puro, zero deps npm). Inlinea scripts/links/imgs locales por regex, preserva CDN con SRI, rota standalone anterior a `backups/` (máx 5), inlinea logo PNG como data URI base64. Errores explícitos si falta archivo. Uso: `node scripts/build-standalone.js`.
+1. **Corrección de comillas faltantes** en la tabla "Tipografías alternativas (tweaks)" de `DESIGN_SYSTEM.md` (líneas 133-134):
+   - `'Cormorant Garamond', Georgia, serif'` (antes sin comilla final).
+   - `'JetBrains Mono', ui-monospace, monospace'` (antes sin comilla final).
 
-2. **`PACE_standalone.html` regenerado a v0.14.5** (363.1 KB). 26 archivos inlineados (1 CSS + 24 JSX + 1 PNG). 3 CDN preservados con `integrity`. Refleja el código real (incluyendo refactor de `BreatheModule` en sesión 33) por primera vez desde sesión 29. Ningún backup rotado esta vez (no había standalone en raíz por la deuda heredada).
+### Verificado (no cambiado)
+- **Punto 2 (breakpoints):** `≤ 640px`, `≤ 768px` y `grid 2×2` correctos en disco.
+- **Punto 3 (encoding):** tildes y símbolos especiales verificados en 5 muestras. Falsos positivos descartados.
+- **Punto 4 (línea 19):** bullet único con wrap estándar.
 
-3. **`CLAUDE.md` reescrito como onboarding Claude Code**: 255 → 217 líneas. Eliminadas 6 secciones que solo eran punteros a `AGENTS.md` y la sección entera "Carpeta espejo `Pace_app_HH_MM/`" (~55 líneas, muleta de Genspark obsoleta). Añadidas: sección "Flujo con Claude Code" (no commits/push automáticos, edición in-place, comando del script de build, servidor local para preview) + tabla de checkpoints A/B/C/D.
+### Resultado cuantitativo
+- **2 líneas editadas** en `DESIGN_SYSTEM.md`.
+- **0 cambios de tamaño:** 252 → 252 líneas.
+- **0 cambios de código.** **0 cambios visuales.**
+- **No requiere regenerar standalone** (es tarea de docs).
 
-4. **`AGENTS.md` actualizado**: cierre 12 → 8 pasos (eliminados pasos del flujo Genspark — carpeta espejo, `present_fs_item_for_download`, `show_html`/`get_webview_logs`); regla técnica B cita ahora el comando del script; "Notas de entorno" amplía con el pipeline Claude Code y el detalle de comportamiento del script.
+### Archivos
+- **Nuevos:** `docs/sessions/session-31-fix-comillas-design-system.md`.
+- **Modificados:** `DESIGN_SYSTEM.md`, `CHANGELOG.md`, `STATE.md`.
 
-5. **`STATE.md` actualizado**: cabecera con línea "Sesión 34: abortada (sin commits)"; sección dedicada `## ⛔ Sesión 34 — abortada` antes de "Última sesión"; entrada de backlog para limpieza del splash placeholder `__bundler_thumbnail` (~10 min, deuda heredada del bundler de Genspark).
+### Versión
+- **v0.14.2** (fix de docs · solo cambios en `DESIGN_SYSTEM.md`).
 
-6. **`PACE.html` cosmética**: título bumpeado v0.14.3 → v0.14.5 (corrige también el desfase de v0.14.4 que sesión 33 dejó sin propagar al título); 2 comentarios actualizados para retirar referencia obsoleta a `super_inline_html`. Splash placeholder `<template id="__bundler_thumbnail">` queda intacto (entrada de backlog para sesión futura).
+Sesión doble del backlog "Detectores aplazados de logros" + Bloque
+de diseño exploratorio para los 100 glifos del catálogo. Cero
+cambios visuales en producto.
+
+### Qué se hizo
+
+1. **Bloque A — 6 detectores de logros aplazados** (~1h, código).
+   - **Contadores acumulados por módulo:** nuevos campos
+     `breatheSessionsTotal` y `moveSessionsTotal` en `defaultState`,
+     incrementados en `completeBreathSession` y `completeMoveSession`
+     respectivamente. No resetean en rollover (son métricas
+     acumuladas, no "de hoy"). Umbrales evaluados leyendo `_state`
+     ya actualizado tras setState (patrón sesión 18). Disparan
+     `breathe.sessions.10`, `breathe.sessions.50` y `move.sessions.25`.
+   - **Detectores horarios:** nuevo helper
+     `checkTimeOfDayAchievements()` llamado desde las 4 acciones
+     de completar (Pomodoro, Breathe, Move, Extra). Tres triggers:
+     `master.dawn` (<7h), `master.dusk` (≥21h), `morning.5` (5
+     fechas distintas con sesión <9:00, persistidas en
+     `morningDates: string[]` con cap de 30 entradas).
+   - **`master.long.focus`:** Pomodoro de 45 min completo.
+     Evaluado en `completePomodoro` contra el snapshot
+     `focusMinsAtCompletion` capturado ANTES del updater (no
+     contra `state.focusMinutes` que puede haber cambiado por
+     tweak durante el ticker).
+   - **`IMPLEMENTED_ACHIEVEMENTS`:** 39 → 45 ids (+7,
+     `master.long.focus` ya estaba previsto pero faltaba cableado;
+     los 6 nuevos detectores se cuentan + ese).
+
+2. **Bloque B — Canvas exploratorio de glifos** (~1h, diseño puro).
+   `design/glyphs-explorations.html` (~36 KB, self-contained,
+   separado del producto). 4 direcciones visuales para sustituir
+   el set actual de unicode mezclado (`✦ ❦ ❀ ☉ III VII 𓇼 𓂃`) por
+   SVG cohesivo:
+   - **A · Línea** — stroke 1.2px, sin relleno. Más alineada con
+     el tono "papel + tinta" actual.
+   - **B · Sello hundido** — relleno sólido en color de categoría.
+     Más legible a 24px.
+   - **C · Marca a hierro** — stroke 3px, esquinas redondas, look
+     "ganadería rústica".
+   - **D · Constelación** — puntos finos conectados por líneas
+     sutiles. Naturalista, etérea.
+   8 secciones, 32 glifos × 4 direcciones = 128 SVG inline.
+   Comparativa rápida actual vs A. Recomendación de cierre
+   incluida: **híbrido A+B** — línea por defecto, sello solo en
+   logros de cierre de categoría (luna llena, centurión, día de
+   foco). Pendiente de validación del usuario antes de tocar
+   `Achievements.jsx` o `Toast.jsx`.
 
 ### Resultado cuantitativo
 
-- **+1 archivo nuevo:** `scripts/build-standalone.js` (~200 líneas).
-- **+1 diario:** `docs/sessions/session-35-migracion-claude-code.md`.
-- **0 archivos JSX modificados.** **0 cambios de comportamiento observable.**
-- **+1 entrada de backlog** (splash placeholder `__bundler_thumbnail`).
-
-### Archivos
-
-- **Nuevos:** `scripts/build-standalone.js`, `docs/sessions/session-35-migracion-claude-code.md`.
-- **Modificados:** `STATE.md`, `CLAUDE.md`, `AGENTS.md`, `PACE.html`, `CHANGELOG.md`, `README.md`, `PACE_standalone.html`.
+- **+6 logros cazables hoy.** Constancia: 7/15 → 11/15. Maestría:
+  2/25 → 5/25. Total catálogo cazable: 39 → 45.
+- **+1 documento de diseño nuevo** (`design/glyphs-explorations.html`).
+- **+~1 KB en standalone** (358 → 369 KB; el plus es la nueva
+  lógica de detectores).
+- **0 cambios visuales** en producto. **0 cambios de
+  comportamiento** observables fuera del unlock toast cuando el
+  usuario complete una sesión que dispare uno de los 6 nuevos.
 
 ### Verificación
 
-- `PACE.html` no probado en navegador en esta sesión (Claude Code no tiene acceso a navegador). El usuario lo verifica abriendo `PACE_standalone.html` con doble clic post-cierre — esto valida también retroactivamente el refactor de `BreatheModule` de sesión 33.
-- Verificación interna del standalone con regex sobre el output: 0 referencias locales sin resolver, 3 CDN con SRI intactas, 25 inline babel scripts (24 archivos + 1 mount script preservado), logo correctamente como data URI base64.
+- Preview de `PACE.html` carga limpia (consola: 0 logs, 0 errores).
+- Preview de `design/glyphs-explorations.html` carga limpia.
+- Triggers nuevos no probados manualmente (requeriría manipular
+  reloj del sistema o `lastActiveDate` en localStorage). Riesgo
+  bajo: reproducen el patrón validado por sesiones 18 y 28
+  (`streak.X`, `master.focus.day`).
+- Regeneración de `PACE_standalone.html` con `super_inline_html`
+  ejecutada. La preview del standalone no se pudo verificar en
+  vivo por desconexión transitoria del cliente al final de la
+  sesión; el archivo se entrega sin tocar tras la regeneración
+  exitosa.
+
+### Archivos
+
+- **Nuevos:** `design/glyphs-explorations.html`,
+  `docs/sessions/session-29-logros-aplazados-glifos.md`,
+  `backups/PACE_standalone_v0.13.0_20260429.html`.
+- **Modificados:** `app/state.jsx` (3 campos +
+  `checkTimeOfDayAchievements` + cableado en 4 acciones +
+  trigger `master.long.focus` + contadores en breath/move),
+  `app/achievements/Achievements.jsx` (`IMPLEMENTED_ACHIEVEMENTS`),
+  `PACE.html` (título), `PACE_standalone.html` (regenerado),
+  `CHANGELOG.md`, `STATE.md`.
 
 ### Versión
 
-- **v0.14.4** → **v0.14.5** (patch · tooling + reparación de cierre + reescritura de `CLAUDE.md` para Claude Code).
+- `v0.13.0` → **`v0.14.0`** (minor · 6 logros nuevos cazables, 0
+  breaking, 0 cambios visuales).
 
-Detalle: [`docs/sessions/session-35-migracion-claude-code.md`](./docs/sessions/session-35-migracion-claude-code.md).
+Detalle: [`docs/sessions/session-29-logros-aplazados-glifos.md`](./docs/sessions/session-29-logros-aplazados-glifos.md).
 
 ---
 
@@ -290,21 +358,8 @@ Los 4 ítems de prioridad A del informe
 se ejecutaron en sesión 26 (v0.12.8). Detalle en
 [`docs/sessions/session-26-refactor-fase2.md`](./docs/sessions/session-26-refactor-fase2.md).
 
-### 🔧 Tooling (nuevo en sesión 33)
-
-- **Crear `scripts/build-standalone.js`** (~30-45 min) — `super_inline_html` (Genspark) no existe en OpenCode. Necesario script propio que lea `PACE.html`, inline scripts y estilos referenciados, escriba `PACE_standalone.html`. Bloquea regeneración de standalone hasta que exista. Sesión 34.
-
-- **Validar funcionalmente refactor BreatheModule v0.14.4** (~10 min, depende de anterior) — el refactor de BreatheModule de la sesión 33 quedó sin verificar en navegador por bloqueo `file://` y por imposibilidad de regenerar standalone. Validar tras tener `scripts/build-standalone.js` y standalone regenerado. Probar biblioteca de respiración, modal de seguridad, círculo animado, y que resto de módulos cargan.
-
 ### 🛠️ Refactor aplazado (sesión 27 o más tarde · prioridad B/C)
 
-- **Limpiar splash placeholder `__bundler_thumbnail`** (~10 min) —
-  bloque `<template id="__bundler_thumbnail">` en `PACE.html` líneas
-  18-30 heredado del bundler `super_inline_html` de Genspark. Hoy no
-  cumple ninguna función (ni splash ni fallback no-JS — el `<div id="root">`
-  se ocupa de todo y la app monta antes de que sea visible). Eliminarlo
-  ahorra ~12 líneas en `PACE.html` y ~600 bytes en el standalone.
-  Pendiente desde sesión 35.
 - **`displayItalic` en ~20 sitios multi-línea restantes** —
   `WelcomeModule.jsx` (5), `Achievements.jsx` estilos internos (2),
   `HydrateModule.jsx` (1), `main.jsx` (2), `Sidebar.jsx` (2),
