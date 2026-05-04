@@ -117,10 +117,25 @@ function FocusTimer({ onFinish }) {
     </div>
   );
 
-  /* Para estilo aro: unimos controles + ciclo en un mismo bloque interior. */
+  /* Para estilo aro: layout interior con reset centrado entre número y subtítulo,
+     botón Comenzar solo debajo del divisor, y dots de ciclo al pie. */
   const innerForAro = (
     <>
-      {controls}
+      <button onClick={reset} style={focusStyles.resetCircle} title="Reiniciar" aria-label="Reiniciar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7" />
+          <polyline points="3 4 3 10 9 10" />
+        </svg>
+      </button>
+      <div style={focusStyles.subtitleItalic}>{subtitle}</div>
+      <div style={focusStyles.innerDivider} />
+      <button
+        onClick={() => setRunning(r => !r)}
+        style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
+      >
+        <span style={{ fontSize: 11, lineHeight: 1 }}>{running ? '❚❚' : '▶'}</span>
+        <span>{runningLabel}</span>
+      </button>
       <div style={{ marginTop: 10 }}>{cycleDotsEl}</div>
     </>
   );
@@ -331,10 +346,6 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
 function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
   const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
-  // Ángulo para el punto indicador (parte superior = 12 en punto)
-  const angle = progress * 2 * Math.PI - Math.PI / 2;
-  const dotCx = 50 + R * Math.cos(angle);
-  const dotCy = 50 + R * Math.sin(angle);
 
   return (
     <div style={focusStyles.aroFrame}>
@@ -348,9 +359,6 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
           style={{ transition: 'stroke-dashoffset 1s linear' }} />
-        {/* Punto verde oliva (indicador) */}
-        <circle cx={dotCx} cy={dotCy} r="1.25" fill="var(--focus)"
-          style={{ transition: 'cx 1s linear, cy 1s linear' }} />
       </svg>
 
       {/* Contenido centrado */}
@@ -359,8 +367,6 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
         <div style={focusStyles.numberHuge}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
-        <div style={focusStyles.subtitleItalic}>{subtitle}</div>
-        <div style={focusStyles.innerDivider} />
         {inner /* botones Comenzar + reset inyectados desde el padre */}
       </div>
     </div>
@@ -543,18 +549,15 @@ const focusStyles = {
     fontVariantNumeric: 'tabular-nums',
     letterSpacing: '-0.03em',
     color: 'var(--ink)',
-    // Escala para caber en el aro reducido (520 max)
     fontSize: 'clamp(64px, 7vw, 104px)',
+    marginBottom: 10,
   },
   subtitleItalic: {
     fontStyle: 'italic',
     fontFamily: 'var(--font-display)',
     fontSize: 14,
     color: 'var(--ink-3)',
-    // Sep. entre número gigante y subtítulo italic: los descendentes del
-    // número (los dos-puntos y el cero) quedaban visualmente pisando al
-    // subtítulo. +20px de aire (sesión 20).
-    marginTop: 30,
+    marginTop: 0,
     letterSpacing: 0.2,
   },
   innerDivider: {
@@ -604,6 +607,7 @@ const focusStyles = {
     background: 'var(--paper)',
     color: 'var(--ink-2)',
     display: 'grid', placeItems: 'center',
+    margin: '14px auto 8px',
     transition: 'all 180ms',
   },
 
