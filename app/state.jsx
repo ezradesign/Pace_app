@@ -20,6 +20,7 @@ const defaultState = {
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
+  lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
 
   // Foco
   focusMode: 'foco',          // foco | pausa | larga
@@ -108,13 +109,19 @@ let _state = loadState();
 const _listeners = new Set();
 
 function loadState() {
+  const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return { ...defaultState, lastActiveDay: new Date().toDateString() };
+    if (!raw) {
+      return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
+    }
     const parsed = JSON.parse(raw);
+    /* Si el usuario no tiene lang guardado (instalación previa a i18n),
+       detectarlo desde navigator.language y persistirlo. */
+    if (!parsed.lang) parsed.lang = _detectLang();
     return rolloverIfNeeded({ ...defaultState, ...parsed });
   } catch (e) {
-    return { ...defaultState, lastActiveDay: new Date().toDateString() };
+    return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
   }
 }
 
@@ -524,6 +531,10 @@ function onToast(listener) {
 // Init theme on load
 applyTheme();
 
+function setLang(lang) {
+  setState({ lang });
+}
+
 Object.assign(window, {
   usePace, getState, setState, subscribe,
   unlockAchievement, completePomodoro,
@@ -531,5 +542,6 @@ Object.assign(window, {
   addWaterGlass, addFocusMinutes, updateStreak,
   ensureDayFresh,
   showToast, onToast,
+  setLang,
   PACE_VERSION,
 });

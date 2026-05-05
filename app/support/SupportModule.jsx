@@ -72,7 +72,7 @@ function SupportIcon({ size = 13 }) {
    Sin animación permanente. Sin gradiente. Sin color llamativo.
    ============================================================ */
 function SupportButton({ onOpen }) {
-  const copy = supportCopy();
+  const { t } = useT();
   const [hover, setHover] = useStateSUP(false);
 
   return (
@@ -80,8 +80,8 @@ function SupportButton({ onOpen }) {
       onClick={onOpen}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      title="Apoya el proyecto"
-      aria-label={copy.label}
+      title={t('support.sidebar.title')}
+      aria-label={t('support.sidebar.label')}
       style={{
         ...displayItalic,
         display: 'inline-flex',
@@ -100,7 +100,7 @@ function SupportButton({ onOpen }) {
         cursor: 'pointer',
       }}
     >
-      <span>{copy.short}</span>
+      <span>{t('support.sidebar.label')}</span>
       <SupportIcon />
     </button>
   );
@@ -158,6 +158,7 @@ function CowIcon({ size = 13 }) {
    ============================================================ */
 function SupportModal({ open, onClose }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [copied, setCopied] = useStateSUP(false);
   const [thanked, setThanked] = useStateSUP(false);
 
@@ -205,42 +206,41 @@ function SupportModal({ open, onClose }) {
           <SupportHero />
         </div>
 
-        <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
+        <Meta style={{ textAlign: 'center', marginBottom: 10 }}>{t('support.meta')}</Meta>
 
         <h2 style={supportStyles.title}>
-          PACE es gratis.<br/>
-          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>Y lo seguirá siendo.</span>
+          {t('support.title.main')}<br/>
+          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>{t('support.title.sub')}</span>
         </h2>
 
         <p style={supportStyles.lede}>
-          No hay cuentas. No hay servidor. No te sigue nadie. Todo
-          vive en tu navegador — y así queremos que siga.
+          {t('support.lede')}
         </p>
 
         {/* 3 valores en línea fina */}
         <div style={supportStyles.values}>
-          <Value label="Todo local" sub="localStorage únicamente" />
+          <Value label={t('support.value.local.label')} sub={t('support.value.local.sub')} />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
-          <Value label="Sin tracking" sub="sin analytics, sin cookies" />
+          <Value label={t('support.value.tracking.label')} sub={t('support.value.tracking.sub')} />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
-          <Value label="Para siempre" sub="sin paywall, sin pro" />
+          <Value label={t('support.value.forever.label')} sub={t('support.value.forever.sub')} />
         </div>
 
         <p style={supportStyles.cta}>
-          Si te cuida, ayúdanos a cuidarlo.<br/>
+          {t('support.cta')}<br/>
           <span style={{ color: 'var(--ink-3)' }}>
-            No desbloquea nada. Solo nos da café.
+            {t('support.cta.sub')}
           </span>
         </p>
 
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
-            <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
+            <span style={{ marginRight: 2 }}>{t('support.btn.label')}</span>
             <SupportIcon />
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
-            {copied ? '✓ copiado' : 'Copiar enlace'}
+            {copied ? t('support.btn.copied') : t('support.btn.copy')}
           </Button>
         </div>
 
@@ -257,9 +257,9 @@ function SupportModal({ open, onClose }) {
           >
             {thanked ? (
               state.achievements['secret.supporter']
-                ? '✦ gracias · sello guardado'
-                : '✦ gracias'
-            ) : 'Ya doné →'}
+                ? t('support.thanks.saved')
+                : t('support.thanks')
+            ) : t('support.donated')}
           </button>
         </div>
       </div>

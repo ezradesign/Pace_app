@@ -86,6 +86,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
 
 function Sidebar() {
   const [state, set] = usePace();
+  const { t, tn } = useT();
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
@@ -115,14 +116,14 @@ function Sidebar() {
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
-      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title="Colapsar (⌘\\)" aria-label="Colapsar panel">
+      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title')} aria-label={t('sidebar.collapse.aria')}>
         <ChevronLeftIcon />
       </button>
       <div style={sidebarStyles.logoBar} data-pace-sidebar-logobar>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
-          title="¿Le haces cosquillas?"
+          title={t('sidebar.logo.title')}
         >
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
         </div>
@@ -131,17 +132,17 @@ function Sidebar() {
       {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
       <div style={sidebarStyles.cycles}>
         <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title="Pomodoros completados hoy">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.pomodoros')}>
             <PomodoroIcon />
             <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
           </span>
           <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Rondas largas (cada 4 pomodoros)">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.rounds')}>
             <RoundsIcon />
             <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
           </span>
           <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Días activos seguidos">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.streak')}>
             <StreakFlameIcon />
             <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
           </span>
@@ -153,14 +154,14 @@ function Sidebar() {
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
         <div style={sidebarStyles.sectionHeader}>
-          <Meta>Ritmo</Meta>
+          <Meta>{t('sidebar.section.rhythm')}</Meta>
           <span style={sidebarStyles.sectionAside}>{state.streak.longest}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
           <span style={sidebarStyles.streakNum}>{state.streak.current}</span>
           <div>
-            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? 'día seguido' : 'días seguidos'}</div>
-            <div style={sidebarStyles.streakSub}>Mejor: {state.streak.longest} días</div>
+            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')}</div>
+            <div style={sidebarStyles.streakSub}>{tn('sidebar.streak.best', { n: state.streak.longest })}</div>
           </div>
         </div>
         <WeekDots weeklyStats={state.weeklyStats} />
@@ -178,7 +179,7 @@ function Sidebar() {
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
         <div style={sidebarStyles.sectionHeader}>
-          <Meta>Logros</Meta>
+          <Meta>{t('sidebar.section.achievements')}</Meta>
           <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
         </div>
         <AchievementsPreview onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} />
@@ -186,7 +187,7 @@ function Sidebar() {
           onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
           style={sidebarStyles.linkBtn}
         >
-          {100 - unlockedCount} por descubrir →
+          {tn('sidebar.achievements.discover', { n: 100 - unlockedCount })}
         </button>
       </div>
 
@@ -204,6 +205,7 @@ function Sidebar() {
    completadas hasta ahora; aparecen como puntos sobre la curva.
    ============================================================ */
 function SenderoDelDia({ state }) {
+  const { t, tn } = useT();
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
   const start = 6;  // 6:00
@@ -262,8 +264,8 @@ function SenderoDelDia({ state }) {
   return (
     <>
       <div style={sidebarStyles.sectionHeader}>
-        <Meta>Sendero</Meta>
-        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? 'hito' : 'hitos'}</span>
+        <Meta>{t('sidebar.section.trail')}</Meta>
+        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? t('sidebar.trail.hito') : t('sidebar.trail.hitos')}</span>
       </div>
       <div style={{ marginTop: 6 }}>
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ display: 'block', width: '100%' }}>
@@ -292,7 +294,7 @@ function SenderoDelDia({ state }) {
         </svg>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
           <span>6h</span>
-          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>ahora · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
+          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>{t('sidebar.trail.now')} · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
           <span>22h</span>
         </div>
       </div>
@@ -405,7 +407,8 @@ function StreakFlameIcon() {
    que vive en main.jsx (≡). */
 
 function WeekDots({ weeklyStats }) {
-  const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const { t } = useT();
+  const days = t('sidebar.days').split(',');
   const today = (new Date().getDay() + 6) % 7; // L=0
   return (
     <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
@@ -482,11 +485,12 @@ function AchievementsPreview({ onOpen }) {
 */
 function StatusBar() {
   const [state] = usePace();
+  const { t } = useT();
   const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
   return (
     <div style={sidebarStyles.footer}>
       <div style={sidebarStyles.footerRow}>
-        <Meta>En camino</Meta>
+        <Meta>{t('sidebar.status.ontrack')}</Meta>
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
       <div style={{ marginTop: 10, marginBottom: 10 }}>

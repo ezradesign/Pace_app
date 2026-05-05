@@ -114,6 +114,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
 
 function PaceApp() {
   const [state, set] = usePace();
+  const { t } = useT();
   const [view, setView] = useStateMain({ type: 'home' });
 
   // Modales
@@ -246,8 +247,8 @@ function PaceApp() {
         <button
           data-pace-sidebar-open
           onClick={() => set({ sidebarCollapsed: false })}
-          title="Abrir panel"
-          aria-label="Abrir panel"
+          title={t('sidebar.open.title')}
+          aria-label={t('sidebar.open.aria')}
           style={{
             position: 'fixed', top: 16, left: 14, zIndex: 50,
             width: 30, height: 30, borderRadius: 6,
@@ -360,10 +361,11 @@ function PaceApp() {
    ================ */
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const modes = [
-    { v: 'foco', label: 'Foco' },
-    { v: 'pausa', label: 'Pausa' },
-    { v: 'larga', label: 'Larga' },
+    { v: 'foco', label: t('topbar.mode.focus') },
+    { v: 'pausa', label: t('topbar.mode.pause') },
+    { v: 'larga', label: t('topbar.mode.long') },
   ];
   return (
     <div data-pace-topbar style={{
@@ -402,17 +404,17 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       </div>
 
       {/* Iconos top-right */}
-      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
+      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title={t('topbar.stats.title')} aria-label={t('topbar.stats.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
         </svg>
       </button>
-      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
+      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title={t('topbar.achievements.title')} aria-label={t('topbar.achievements.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
         </svg>
       </button>
-      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title={t('topbar.tweaks.title')} aria-label={t('topbar.tweaks.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -442,19 +444,20 @@ const topBarStyles = {
    ================ */
 function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
   const [state] = usePace();
+  const { t } = useT();
   const plan = state.plan;
   /* NOTA: estilo "tarjeta editorial" — fondo paper claro, icono terracota fino,
      label serif italic coloreado. Estado activo: punto en esquina + fondo cálido. */
   const activities = [
-    { key: 'respira', label: 'Respira', sub: 'ritmo, calma', color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
-    { key: 'extra', label: 'Estira', sub: 'afloja tensión', color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
-    { key: 'muevete', label: 'Mueve', sub: 'cuerpo activo', color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
-    { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
+    { key: 'respira', label: t('activity.breathe.label'), sub: t('activity.breathe.sub'), color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
+    { key: 'extra', label: t('activity.stretch.label'), sub: t('activity.stretch.sub'), color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
+    { key: 'muevete', label: t('activity.move.label'), sub: t('activity.move.sub'), color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
+    { key: 'hidratate', label: t('activity.hydrate.label'), sub: t('activity.hydrate.sub'), color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
     <div data-pace-activitybar style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
       <div style={{ textAlign: 'center', marginBottom: 10 }}>
-        <Meta>Actividades</Meta>
+        <Meta>{t('activity.meta')}</Meta>
       </div>
       <div data-pace-activitybar-grid style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
         {activities.map(a => {

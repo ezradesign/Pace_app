@@ -21,6 +21,8 @@ function computeScore(key, state) {
 }
 
 function BreakMenu({ open, onClose, onChoose }) {
+  const { t } = useT();
+
   /* `first.cycle` — Pomodoro completado + pausa activa elegida.
      El BreakMenu sólo se abre tras `completePomodoro`, así que aquí
      basta con detectar que el usuario eligió una de las 3 micro-pausas
@@ -57,9 +59,9 @@ function BreakMenu({ open, onClose, onChoose }) {
   const state = getState();
 
   const baseOpts = [
-    { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
-    { key: 'move',    label: 'Muévete', desc: 'Antídoto rápido a la silla',  color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
-    { key: 'water',   label: 'Hidrátate', desc: 'Un vaso ahora',             color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
+    { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
+    { key: 'move',    label: t('break.move.label'),    desc: t('break.move.desc'),    color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
+    { key: 'water',   label: t('break.water.label'),   desc: t('break.water.desc'),   color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
   ];
 
   // Ordenar por score descendente; empate → orden original (sort estable).
@@ -70,7 +72,7 @@ function BreakMenu({ open, onClose, onChoose }) {
   const topScore = opts[0].score;
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
+    <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map((o, i) => {
           const done = o.score === 0;
@@ -103,13 +105,13 @@ function BreakMenu({ open, onClose, onChoose }) {
               )}
               {/* Tag "Para ti" en la opción recomendada */}
               {recommended && (
-                <Tag color="var(--focus)">Para ti</Tag>
+                <Tag color="var(--focus)">{t('break.recommended')}</Tag>
               )}
               <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
               <div>
                 <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
                 <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-                  {done ? 'Ya hecho hoy · otra ronda si quieres' : o.desc}
+                  {done ? t('break.done') : o.desc}
                 </div>
               </div>
             </button>
@@ -118,8 +120,8 @@ function BreakMenu({ open, onClose, onChoose }) {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-        <Meta>Atajo: B · M · H · Esc</Meta>
-        <Button variant="ghost" onClick={onClose}>Saltar esta pausa</Button>
+        <Meta>{t('break.shortcut')}</Meta>
+        <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
       </div>
     </Modal>
   );
