@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.19.1** | 2026-05-05 | fix(i18n): crash al cargar — useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes | #37 hotfix | [abajo ↓](#v0191--2026-05-05--fix-i18n-usett-achievementspreview) |
 | **v0.19.0** | 2026-05-05 | Cierre i18n total (fases respiración + 8 strings restantes) + PWA activada (manifest+SW) + panel Ajustes limpiado (audio primero, timer 3 ops, layout 2 ops) + hard reset localStorage v2 | #37 | [abajo ↓](#v0190--2026-05-05--cierre-i18n--pwa--ajustes) |
 | **v0.18.0** | 2026-05-05 | i18n de contenido (ejercicios Respira/Mueve/Estira) + FocusTimer i18n completo + toggle ES·EN en WelcomeModal + dot verde del aro eliminado | #36 | [abajo ↓](#v0180--2026-05-05--i18n-contenido--focustimer--dot-eliminado) |
 | **v0.17.0** | 2026-05-05 | i18n ES/EN completo: auditoría + 3 bugs críticos corregidos + migración de 6 módulos (BreatheLibrary, MoveModule, ExtraModule, HydrateModule, WeeklyStats, Achievements) | #35 | [session-35](./docs/sessions/session-35-i18n-completo.md) |
@@ -53,6 +54,34 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.19.1] — 2026-05-05 — fix(i18n): useT() AchievementsPreview
+
+### Fix
+- **`app/shell/Sidebar.jsx · AchievementsPreview`** — `const { t } = useT()` añadido. Faltaba tras la migración i18n de sesión 37 que introdujo `t('ach.seal.discover')` en el render. Causaba `Uncaught ReferenceError: t is not defined` y pantalla terracota al arrancar la app.
+
+### Auditoría defensiva
+Verificados los 8 componentes migrados en sesión 37 — solo AchievementsPreview necesitó fix:
+
+| Componente | useT() presente |
+|---|---|
+| `BreatheSession.jsx` | ✅ (línea 24) |
+| `BreatheLibrary.jsx (BreatheSafety)` | ✅ (línea 112) |
+| `Sidebar.jsx (SenderoDelDia)` | ✅ (línea 208) |
+| `Sidebar.jsx (AchievementsPreview)` | ✅ añadido en este fix |
+| `TweaksPanel.jsx` | ✅ (línea 45) |
+| `Toast.jsx` | ✅ (línea 7) |
+| `WelcomeModule.jsx` | ✅ (línea 41) |
+| `Primitives.jsx (Modal)` | ✅ (línea 33) |
+| `FocusTimer.jsx` | ✅ (línea 9) |
+
+- **`app/state.jsx`** — `PACE_VERSION` v0.19.0 → v0.19.1.
+- **`PACE.html`** — Título actualizado a v0.19.1.
+- **`PACE_standalone.html`** — Regenerado (~416 KB).
+
+Detalle completo: [`docs/sessions/session-37-i18n-pwa-ajustes.md`](./docs/sessions/session-37-i18n-pwa-ajustes.md) (sección Hotfix v0.19.1).
 
 ---
 

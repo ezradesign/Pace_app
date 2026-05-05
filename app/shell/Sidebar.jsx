@@ -433,6 +433,7 @@ function WeekDots({ weeklyStats }) {
 
 function AchievementsPreview({ onOpen }) {
   const [state] = usePace();
+  const { t } = useT(); // sesión 37 hotfix v0.19.1: faltaba tras migración i18n
   // Los 5 más recientes primero, por unlockedAt descendente
   const unlocked = Object.entries(state.achievements || {})
     .sort((a, b) => (b[1].unlockedAt || 0) - (a[1].unlockedAt || 0))

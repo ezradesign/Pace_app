@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.19.0
-**Última sesión:** #37 — 2026-05-05 · Cierre i18n total + PWA activada + Limpieza panel Ajustes + hard reset LS v2
-**Última actualización de este archivo:** 2026-05-05 · sesión 37
-**Build entregado:** `PACE_standalone.html` v0.19.0 (~416 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.19.1
+**Última sesión:** #37 hotfix — 2026-05-05 · fix(i18n): useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes
+**Última actualización de este archivo:** 2026-05-05 · sesión 37 hotfix
+**Build entregado:** `PACE_standalone.html` v0.19.1 (~416 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.19.0** (manifest+theme-color+SW; título v0.19.0) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.19.0** (~416 KB, regenerado en sesión 37) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.19.1** (título v0.19.1; manifest+theme-color+SW de v0.19.0) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.19.1** (~416 KB, regenerado en hotfix s37) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
@@ -60,38 +60,25 @@ Backups vigentes:
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 37 · v0.18.0 → v0.19.0 · Cierre i18n total + PWA activada + Limpieza panel Ajustes**
+**Sesión 37 hotfix · v0.19.0 → v0.19.1 · fix(i18n): useT() faltante en AchievementsPreview**
 
 ### Qué se hizo
 
-1. **`app/i18n/strings.js`** — +18 claves nuevas (ES+EN): 11 fases de respiración (`breathe.phase.*`),
-   horas del sendero, "Por descubrir", "Nuevo sello", título Ajustes, eje Audio (label/on/off/hint),
-   toggle de idioma, `common.close`, `focus.minutes.custom.title`. Eliminadas 3 claves obsoletas
-   (`layout.editorial`, `timer.circulo`, `timer.numero`).
-2. **Archivos JSX migrados a `t()`**: `Toast.jsx` (useT + "Nuevo sello"), `Primitives.jsx` (Modal useT + aria-label Cerrar),
-   `WelcomeModule.jsx` (tooltip toggle idioma), `Sidebar.jsx` ("6h"/"22h"/"Por descubrir"), `FocusTimer.jsx`
-   (custom minutes title).
-3. **PWA activada**: `<link rel="manifest">` + `<meta name="theme-color">` + registro SW en `PACE.html`
-   y standalone. `sw.js` CACHE_NAME bumpeado a `pace-v0.19.0`. `manifest.json` `start_url` → `"./"`.
-4. **Panel Ajustes** (`TweaksPanel.jsx`): audio como primer eje con pills. Timer: solo Aro/Barra/Analógico.
-   Layout: solo Sidebar/Minimal. Título "Ajustes"/"Settings". Bloque Sound antiguo eliminado.
-5. **FocusTimer.jsx**: `TimerCircle` y `TimerNumber` eliminados. `TimerVisualization` simplificado.
-6. **`state.jsx`**: `LS_KEY` v1→v2 (hard reset intencional pre-lanzamiento). `PACE_VERSION` → v0.19.0.
-7. **Standalone regenerado** a ~416 KB.
+1. **Bug fix**: `app/shell/Sidebar.jsx · AchievementsPreview` — añadido `const { t } = useT()`.
+   Causaba crash `ReferenceError: t is not defined` y pantalla terracota al cargar la app.
+2. **Auditoría defensiva** — 8 componentes migrados en sesión 37 verificados. Solo AchievementsPreview necesitó fix.
+3. **Bump**: `PACE_VERSION` v0.19.0 → v0.19.1 en `state.jsx`. Título actualizado en `PACE.html`.
+4. **Standalone regenerado** a ~416 KB.
 
-### Archivos
-- **Nuevos:** `docs/sessions/session-37-i18n-pwa-ajustes.md`, `backups/PACE_standalone_v0.18.0_20260505.html`.
-- **Modificados:** `app/i18n/strings.js`, `app/ui/Toast.jsx`, `app/ui/Primitives.jsx`,
-  `app/welcome/WelcomeModule.jsx`, `app/shell/Sidebar.jsx`, `app/focus/FocusTimer.jsx`,
-  `app/tweaks/TweaksPanel.jsx`, `app/state.jsx`, `sw.js`, `PACE.html`, `manifest.json`,
-  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
-- **Pendiente borrar manualmente:** `backups/PACE_standalone_v0.13.0_20260429.html`.
+### Archivos modificados
+`app/shell/Sidebar.jsx`, `app/state.jsx`, `PACE.html`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`,
+`docs/sessions/session-37-i18n-pwa-ajustes.md`.
 
 ### Versión
-- **v0.19.0** (minor · i18n total + PWA + Ajustes).
+- **v0.19.1** (patch · bugfix i18n).
 
 ### Pendiente (Sesión 38)
-- Borrar `backups/PACE_standalone_v0.13.0_20260429.html` manualmente (sandbox no permitió rm).
+- Borrar `backups/PACE_standalone_v0.13.0_20260429.html` manualmente (sandbox no permitió rm — siguen 6 backups en vez de 5).
 - Iconos PNG reales (192×512) para PWA — actualmente SVG.
 - Audio refactor 432 Hz / drone ambiente.
 - Calendarios mes/año (heatmap).
