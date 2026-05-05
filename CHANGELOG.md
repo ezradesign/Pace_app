@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.16.0** | 2026-05-05 | Split BreatheModule (3 archivos: BreatheVisual + BreatheLibrary + BreatheSession) + 4 detectores nuevos (master.collector.half/full, master.silent.day, master.retreat) | #34 | [abajo ↓](#v0160--2026-05-05--split-breathemodule--logros-aplazados) |
 | **v0.15.0** | 2026-05-04 | Loop post-Pomodoro: BreakMenu con rotación inteligente (computeScore + sort + "Para ti" + done indicator) | #33 | [abajo ↓](#v0150--2026-05-04--loop-post-pomodoro) |
-| **v0.14.3** | 2026-05-04 | Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes) | #32 | [abajo ↓](#v0143--2026-05-04--code-review-7-fixes-de-calidad) |
+| **v0.14.3** | 2026-05-04 | Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes) | #32 | [session-32](./docs/sessions/session-32-code-review-fixes.md) |
 | **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [session-31](./docs/sessions/session-31-fix-comillas-design-system.md) |
 | **v0.14.1** | 2026-04-30 | DESIGN_SYSTEM.md creado + limpieza de duplicación: tokens, paletas, tipografía, espaciado, breakpoints y utilidades centralizados | #30 | [session-30](./docs/sessions/session-30-design-system.md) |
 | **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`, `master.dusk`) + canvas exploratorio de glifos en 4 direcciones visuales | #29 | [session-29](./docs/sessions/session-29-logros-aplazados-glifos.md) |
@@ -49,6 +50,42 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.16.0] — 2026-05-05 — Split BreatheModule + logros aplazados
+
+### Refactor
+- **`app/breathe/BreatheModule.jsx` troceado en 3 archivos** (techo 500 líneas de CLAUDE.md):
+  - **`BreatheVisual.jsx`** (~155 líneas) — `getSequence()` + `breathVisualStyles` + `BreathVisual` (5 variantes: pulso, ondas, petalo, organico, flor). Sin hooks. Renombrado `visualStyles` → `breathVisualStyles` para evitar colisión global.
+  - **`BreatheLibrary.jsx`** (~130 líneas) — `BREATHE_ROUTINES` + `BreatheLibrary` + `RoutineCard` + `BreatheSafety`.
+  - **`BreatheSession.jsx`** (~210 líneas) — `BreatheSession` con toda la lógica de ticker, hold, retención, atajos de teclado. Aliases de hooks renombrados a `useStateBRSess / useEffectBRSess / useRefBRSess` para no colisionar con los de BreatheLibrary.
+  - `BreatheModule.jsx` eliminado. Exports a `window` conservados idénticos: `BreatheLibrary`, `BreatheSafety`, `BreatheSession`.
+  - `PACE.html` actualizado: 1 `<script>` → 3 `<script>` en orden de dependencia (Visual → Library → Session).
+
+### Añadido — detectores de logros (sesión 34)
+- **`master.collector.half`** — 50 logros desbloqueados. Detector `checkCollectorAchievements()` llamado al final de cada `unlockAchievement` exitoso. Lectura de `Object.keys(_state.achievements).length` post-setState. Idempotente por diseño: no hay riesgo de recursión infinita.
+- **`master.collector.full`** — 100 logros. Mismo detector y misma llamada.
+- **`master.silent.day`** — 1 día usando la app con `soundOn=false`. Nuevo campo `silentDates: []` en `defaultState` (toDateStrings, cap 30). Detector `checkSilentDayAchievement()` llamado desde `completeBreathSession`, `completeMoveSession`, `completePomodoro`, `completeExtraSession` y `addWaterGlass` (delta>0).
+- **`master.retreat`** — 2h de breathe+move en un día. Detector `checkRetreatAchievement()` usa los buckets `weeklyStats.breathMinutes[day] + moveMinutes[day] >= 120` ya existentes. Extra suma al bucket moveMinutes (decisión activa), así que `completeExtraSession` también lo evalúa.
+- **`IMPLEMENTED_ACHIEVEMENTS`** en `Achievements.jsx`: 45 → 49 ids. Contador Maestría 5/25 → 9/25.
+
+### Cambiado
+- **`app/state.jsx`:** `PACE_VERSION` `'v0.15.0'` → `'v0.16.0'`. Campo `silentDates: []` en `defaultState`.
+- **`PACE.html`:** título actualizado a `v0.16.0`.
+- **`PACE_standalone.html`:** regenerado con `node build-standalone.js` (~365 KB).
+
+### Backups
+- Rotado `backups/PACE_standalone_v0.12.8_20260423_1700.html` (el más antiguo, estábamos al límite).
+- Añadido `backups/PACE_standalone_v0.15.0_20260505.html` (recuperado de git antes de regenerar).
+- 5 backups activos: v0.12.9, v0.12.10, v0.13.0, v0.14.0, v0.15.0.
+
+### Archivos
+- **Nuevos:** `app/breathe/BreatheVisual.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSession.jsx`, `backups/PACE_standalone_v0.15.0_20260505.html`, `docs/sessions/session-34-split-breathe-logros.md`.
+- **Eliminados:** `app/breathe/BreatheModule.jsx`.
+- **Modificados:** `PACE.html`, `app/state.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+
+Detalle completo: [`docs/sessions/session-34-split-breathe-logros.md`](./docs/sessions/session-34-split-breathe-logros.md).
 
 ---
 
@@ -86,46 +123,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.14.3] — 2026-05-04 — Code review: 7 fixes de calidad
+## ~~[v0.14.3]~~ — detalle retirado (ver tabla · diario: [session-32](./docs/sessions/session-32-code-review-fixes.md))
 
-Auditoría interna del código fuente: 7 correcciones de calidad sin
-cambios de comportamiento visible para el usuario. Sin features nuevas,
-sin cambios visuales.
-
-### Corregido
-- **`app/state.jsx`:** `PACE_VERSION` sincronizado `'v0.14.0'` → `'v0.14.2'`
-  (había quedado desincronizado durante las sesiones de documentación 30-31).
-- **`app/state.jsx`:** condición redundante eliminada en `rolloverIfNeeded` —
-  `&& state.lastActiveDay !== today` era dead code porque la línea anterior
-  ya retorna si son iguales.
-- **`app/focus/FocusTimer.jsx`:** eliminado estado muerto `justFinished`
-  (4 referencias). Era escrito pero nunca leído; el guard real contra
-  doble-ejecución es `if (!running) return` en el efecto.
-- **`app/move/MoveModule.jsx`:** `useRef: useRefMV` movido al destructure de
-  módulo — estaba dentro del body de `MoveSession`, re-ejecutándose en cada
-  render (inconsistente con el patrón del resto del proyecto; inocuo pero
-  incorrecto).
-- **`app/ui/Toast.jsx`:** añadido `aria-live="polite"` y `aria-atomic="true"`
-  al contenedor de toasts para que los lectores de pantalla anuncien logros
-  desbloqueados.
-- **`app/hydrate/HydrateModule.jsx`:** botones de vaso individuales ahora
-  reproducen `playSound('sip')` al añadir (consistencia con el botón
-  "Un vaso más", que ya lo hacía).
-- **`app/shell/Sidebar.jsx`:** `AchievementsPreview` muestra los 5 logros más
-  recientemente desbloqueados (ordenados por `unlockedAt` desc) en lugar de
-  los 5 primeros insertados (orden de inserción).
-
-### No cambiado
-- 0 cambios visuales. 0 cambios de comportamiento observables salvo: el orden
-  de logros en el sidebar y el sonido `sip` en clic de vasos individuales.
-- `PACE_standalone.html` pendiente de regenerar (herramienta no disponible en
-  este entorno; se nota en STATE.md).
-
-### Archivos
-- **Modificados:** `app/state.jsx`, `app/focus/FocusTimer.jsx`,
-  `app/move/MoveModule.jsx`, `app/ui/Toast.jsx`, `app/hydrate/HydrateModule.jsx`,
-  `app/shell/Sidebar.jsx`, `CHANGELOG.md`, `STATE.md`.
-- **Nuevos:** `docs/sessions/session-32-code-review-fixes.md`.
+7 correcciones de calidad sin cambios de comportamiento: dead state `justFinished` en FocusTimer, condición redundante en `rolloverIfNeeded`, `useRef` mal ubicado en MoveSession, `aria-live` en Toast, sonido `sip` en vasos individuales, orden de logros en Sidebar por `unlockedAt` desc.
 
 ---
 

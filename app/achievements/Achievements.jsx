@@ -158,10 +158,14 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // Exploración move (6/20) — reconectados en sesión 15
   'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (5/25) — sesión 29: +master.long.focus (45min sin pausa),
-  // +master.dawn (<7h), +master.dusk (>=21h).
+  // Maestría (9/25) — sesión 29: +master.long.focus, +master.dawn, +master.dusk.
+  // Sesión 34: +master.collector.half/full (50/100 logros),
+  //            +master.silent.day (soundOn=false 1 día),
+  //            +master.retreat (2h breathe+move en día).
   'master.pomodoro.8', 'master.focus.day',
   'master.long.focus', 'master.dawn', 'master.dusk',
+  'master.collector.half', 'master.collector.full',
+  'master.silent.day', 'master.retreat',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
