@@ -87,7 +87,7 @@ function WelcomeModal({ open, onClose }) {
             {/* Toggle pill ES · EN — encima del logo, columna izquierda */}
             <button
               onClick={toggleLang}
-              title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+              title={t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs')}
               style={welcomeStyles.langToggle}
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}

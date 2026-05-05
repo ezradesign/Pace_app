@@ -30,6 +30,7 @@ const displayItalic = {
 };
 
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle }) {
+  const { t } = useT();
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
@@ -74,7 +75,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           <button
             data-pace-modal-close
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label={t('common.close')}
             style={{
               position: 'absolute', top: 18, right: 20,
               fontSize: 20, color: 'var(--ink-3)',

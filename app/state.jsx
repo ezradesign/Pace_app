@@ -7,16 +7,21 @@
 
 const { useSyncExternalStore, useCallback } = React;
 
-const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.18.0';
+/* NOTA (sesión 37 · v0.19.0): clave de localStorage bumpeada de v1 a v2.
+   Pre-lanzamiento sin usuarios reales — hard reset intencional. Elimina
+   la necesidad de migración para campos legacy (timerStyle circle/numero,
+   layout editorial). Cualquier estado v1 guardado se ignora; arranca
+   limpio con defaultState en v2. */
+const LS_KEY = 'pace.state.v2';
+const PACE_VERSION = 'v0.19.0';
 
 const defaultState = {
   // Settings / Tweaks
   palette: 'crema',           // crema | oscuro | envejecido
   font: 'cormorant',          // garamond | cormorant | mono
-  layout: 'sidebar',          // sidebar | minimal | editorial
+  layout: 'sidebar',          // sidebar | minimal (editorial eliminado en v0.19.0)
   sidebarCollapsed: false,    // true cuando el usuario colapsa el sidebar a icon-rail
-  timerStyle: 'aro',          // numero | circulo | barra | analogico | aro (híbrido círculo+barra)
+  timerStyle: 'aro',          // aro (default) | barra | analogico (circle/numero eliminados en v0.19.0)
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,

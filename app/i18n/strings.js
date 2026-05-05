@@ -1,5 +1,5 @@
 /* PACE · Catálogo de strings i18n — ES / EN
-   Sesión 35 · v0.17.0
+   Sesión 37 · v0.19.0
    Reglas: no incluir nombres de rutinas, pasos, IDs, "PACE", "Pomodoro",
    "Wim Hof", "Buy Me a Coffee", ni número de versión.
 */
@@ -82,6 +82,12 @@ window.PACE_STRINGS = {
     'sidebar.days':                  'L,M,X,J,V,S,D',
     'sidebar.open.title':            'Abrir panel',
     'sidebar.open.aria':             'Abrir panel',
+    'sidebar.trail.hour.start':      '6h',
+    'sidebar.trail.hour.end':        '22h',
+
+    // Welcome lang toggle
+    'welcome.lang.toggle.toEn':      'Cambiar a English',
+    'welcome.lang.toggle.toEs':      'Cambiar a Español',
 
     // TopBar
     'topbar.mode.focus':             'Foco',
@@ -93,6 +99,13 @@ window.PACE_STRINGS = {
     'topbar.achievements.aria':      'Ver logros',
     'topbar.tweaks.title':           'Tweaks (T)',
     'topbar.tweaks.aria':            'Abrir tweaks',
+
+    // Settings (panel Ajustes)
+    'settings.title':                'Ajustes',
+    'settings.audio.label':          'Audio',
+    'settings.audio.on':             'Activado',
+    'settings.audio.off':            'Silenciado',
+    'settings.audio.hint':           'Sonidos de la sesión',
 
     // ActivityBar
     'activity.meta':                 'Actividades',
@@ -117,11 +130,8 @@ window.PACE_STRINGS = {
     'tweaks.palette.envejecido':     'Papel envejecido',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
-    'tweaks.layout.editorial':       'Editorial',
     'tweaks.timer.aro':              'Aro (default)',
-    'tweaks.timer.circulo':          'Círculo',
     'tweaks.timer.barra':            'Barra',
-    'tweaks.timer.numero':           'Número gigante',
     'tweaks.timer.analogico':        'Analógico',
     'tweaks.breath.flor':            'Flor (default)',
     'tweaks.breath.pulso':           'Pulso',
@@ -176,6 +186,7 @@ window.PACE_STRINGS = {
     'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
 
     // Focus
+    'focus.minutes.custom.title':      'Minutos personalizados (1–180)',
     'focus.cycle':                     'Ciclo',
     'focus.min':                       'Min',
     'focus.other':                     'Otro',
@@ -191,11 +202,25 @@ window.PACE_STRINGS = {
     'focus.subtitle.long':             'Pausa larga · estira y respira',
 
     // Common (compartido entre sesiones)
+    'common.close':                    'Cerrar',
     'common.time':                     'Tiempo',
     'common.rounds':                   'Rondas',
     'common.breaths':                  'Respiraciones',
     'common.breath':                   'Respiración',
     'common.of':                       'de',
+
+    // Breathe (fases de sesión activa)
+    'breathe.phase.inhala':            'Inhala',
+    'breathe.phase.exhala':            'Exhala',
+    'breathe.phase.sosten':            'Sostén',
+    'breathe.phase.inhala.mas':        'Inhala más',
+    'breathe.phase.inhala.oceanica':   'Inhala oceánica',
+    'breathe.phase.exhala.oceanica':   'Exhala oceánica',
+    'breathe.phase.inhala.izq':        'Inhala izq.',
+    'breathe.phase.inhala.dcha':       'Inhala dcha.',
+    'breathe.phase.exhala.dcha':       'Exhala dcha.',
+    'breathe.phase.exhala.izq':        'Exhala izq.',
+    'breathe.phase.respira':           'Respira',
 
     // Breathe (sesión)
     'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
@@ -260,6 +285,8 @@ window.PACE_STRINGS = {
     'ach.cat.estacionales':            'Estacionales',
     'ach.seal.soon':                   'Pronto',
     'ach.seal.secret':                 'Secreto',
+    'ach.seal.discover':               'Por descubrir',
+    'ach.toast.new':                   'Nuevo sello',
 
     // BreatheLibrary safety modal
     'breathe.safety.before':           'Antes de empezar',
@@ -355,6 +382,12 @@ window.PACE_STRINGS = {
     'sidebar.days':                  'Mo,Tu,We,Th,Fr,Sa,Su',
     'sidebar.open.title':            'Open panel',
     'sidebar.open.aria':             'Open panel',
+    'sidebar.trail.hour.start':      '6h',
+    'sidebar.trail.hour.end':        '22h',
+
+    // Welcome lang toggle
+    'welcome.lang.toggle.toEn':      'Switch to English',
+    'welcome.lang.toggle.toEs':      'Switch to Spanish',
 
     // TopBar
     'topbar.mode.focus':             'Focus',
@@ -366,6 +399,13 @@ window.PACE_STRINGS = {
     'topbar.achievements.aria':      'View achievements',
     'topbar.tweaks.title':           'Tweaks (T)',
     'topbar.tweaks.aria':            'Open tweaks',
+
+    // Settings (Ajustes panel)
+    'settings.title':                'Settings',
+    'settings.audio.label':          'Audio',
+    'settings.audio.on':             'On',
+    'settings.audio.off':            'Muted',
+    'settings.audio.hint':           'Session sounds',
 
     // ActivityBar
     'activity.meta':                 'Activities',
@@ -390,11 +430,8 @@ window.PACE_STRINGS = {
     'tweaks.palette.envejecido':     'Aged paper',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
-    'tweaks.layout.editorial':       'Editorial',
     'tweaks.timer.aro':              'Ring (default)',
-    'tweaks.timer.circulo':          'Circle',
     'tweaks.timer.barra':            'Bar',
-    'tweaks.timer.numero':           'Giant number',
     'tweaks.timer.analogico':        'Analog',
     'tweaks.breath.flor':            'Flower (default)',
     'tweaks.breath.pulso':           'Pulse',
@@ -449,6 +486,7 @@ window.PACE_STRINGS = {
     'move.doneCopy':                   'Your body feels like yours again.',
 
     // Focus
+    'focus.minutes.custom.title':      'Custom minutes (1–180)',
     'focus.cycle':                     'Cycle',
     'focus.min':                       'Min',
     'focus.other':                     'Other',
@@ -464,11 +502,25 @@ window.PACE_STRINGS = {
     'focus.subtitle.long':             'Long break · stretch and breathe',
 
     // Common (shared across sessions)
+    'common.close':                    'Close',
     'common.time':                     'Time',
     'common.rounds':                   'Rounds',
     'common.breaths':                  'Breaths',
     'common.breath':                   'Breath',
     'common.of':                       'of',
+
+    // Breathe (active session phases)
+    'breathe.phase.inhala':            'Inhale',
+    'breathe.phase.exhala':            'Exhale',
+    'breathe.phase.sosten':            'Hold',
+    'breathe.phase.inhala.mas':        'Inhale more',
+    'breathe.phase.inhala.oceanica':   'Ocean inhale',
+    'breathe.phase.exhala.oceanica':   'Ocean exhale',
+    'breathe.phase.inhala.izq':        'Inhale left',
+    'breathe.phase.inhala.dcha':       'Inhale right',
+    'breathe.phase.exhala.dcha':       'Exhale right',
+    'breathe.phase.exhala.izq':        'Exhale left',
+    'breathe.phase.respira':           'Breathe',
 
     // Breathe (session)
     'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
@@ -533,6 +585,8 @@ window.PACE_STRINGS = {
     'ach.cat.estacionales':            'Seasonal',
     'ach.seal.soon':                   'Soon',
     'ach.seal.secret':                 'Secret',
+    'ach.seal.discover':               'To discover',
+    'ach.toast.new':                   'New seal',
 
     // BreatheLibrary safety modal
     'breathe.safety.before':           'Before you start',

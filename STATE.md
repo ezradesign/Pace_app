@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.18.0
-**Última sesión:** #36 — 2026-05-05 · i18n contenido (ejercicios) + FocusTimer i18n + toggle EN en Welcome + dot aro eliminado
-**Última actualización de este archivo:** 2026-05-05 · sesión 36
-**Build entregado:** `PACE_standalone.html` v0.18.0 (~413 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.19.0
+**Última sesión:** #37 — 2026-05-05 · Cierre i18n total + PWA activada + Limpieza panel Ajustes + hard reset LS v2
+**Última actualización de este archivo:** 2026-05-05 · sesión 37
+**Build entregado:** `PACE_standalone.html` v0.19.0 (~416 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -21,14 +21,14 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.16.0** (título v0.16.0; scripts breathe = 3 archivos) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.17.0** (~397 KB, regenerado en sesión 35) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.19.0** (manifest+theme-color+SW; título v0.19.0) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.19.0** (~416 KB, regenerado en sesión 37) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
 | `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.17.0** (bug fix: useT en SessionDone) |
-| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.10 (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | v0.12.10 (data-pace-tweaks-panel + bottom-sheet en móvil) |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.19.0** (`useT` + `aria-label` migrado a `common.close`) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (antes Tweaks) | **v0.19.0** (audio primer eje; timer 3 ops; layout 2 ops; título Ajustes; LS v2) |
 | `app/breathe/BreatheVisual.jsx` | Respiración — visual + getSequence | **v0.16.0** (nuevo · extraído de BreatheModule) |
 | `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.17.0** (i18n migrado) |
 | `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.17.0** (bug fix: useT + prepCopy; i18n ya estaba) |
@@ -36,66 +36,68 @@
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
 | `app/extra/ExtraModule.jsx` | Módulo Estira | **v0.17.0** (i18n migrado) |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.14.3** (`AchievementsPreview` ordenada por `unlockedAt` desc) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.19.0** (trail hours + "Por descubrir" migrados a t()) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.18.0** (i18n completo + dot verde del aro eliminado) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.19.0** (TimerCircle/TimerNumber eliminados; custom.title i18n) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.17.0** (i18n migrado) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.16.0** (bump + `silentDates` + 3 checkers de logros) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.18.0** (toggle ES·EN movido a headerLeft, sobre el logo) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.19.0** (LS_KEY v2 + PACE_VERSION bump) |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
+| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.19.0** (`useT` + "Nuevo sello" migrado) |
 
 Backups vigentes:
-- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29, antes de v0.14.0).
+- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29) — **BORRAR manualmente** (el sandbox no permitió el rm).
 - `backups/PACE_standalone_v0.14.0_20260504.html` (sesión 33, antes de v0.15.0).
 - `backups/PACE_standalone_v0.15.0_20260505.html` (sesión 34, antes de v0.16.0).
 - `backups/PACE_standalone_v0.16.0_20260505.html` (sesión 35, antes de v0.17.0).
 - `backups/PACE_standalone_v0.17.0_20260505.html` (sesión 36, antes de v0.18.0).
+- `backups/PACE_standalone_v0.18.0_20260505.html` (sesión 37, antes de v0.19.0).
 
-5 backups. Al límite — en la próxima sesión borrar v0.13.0 al rotar.
+6 backups (1 de más por fallo de sandbox). **Acción pendiente: borrar v0.13.0 manualmente.**
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 36 · v0.17.0 → v0.18.0 · i18n de contenido + FocusTimer i18n + toggle EN en Welcome + dot aro eliminado**
+**Sesión 37 · v0.18.0 → v0.19.0 · Cierre i18n total + PWA activada + Limpieza panel Ajustes**
 
 ### Qué se hizo
 
-1. **`app/i18n/strings-content.js`** (nuevo) — ~190 claves EN de contenido de ejercicios para
-   Respira, Mueve y Estira: categorías + nombres + descripciones + códigos. Augmenta
-   `window.PACE_STRINGS.en`. Solo EN (en ES los datos están en los objetos JS directamente).
-   Helper `tR(key, fallback)` en cada módulo: si lang !== 'en' devuelve fallback; si la clave
-   no existe en EN devuelve fallback. Transición gradual sin textos rotos.
-2. **`app/breathe/BreatheLibrary.jsx`** — helper `tR` + categorías y `RoutineCard` con
-   name/desc/code pasados por `tR`.
-3. **`app/breathe/BreatheSession.jsx`** — `displayRoutine` por `tR`. Fix colateral:
-   `const t = setTimeout(...)` shadowing → renombrado a `timer`.
-4. **`app/move/MoveModule.jsx`** — `displayRoutine` + `displayStep` (name/cue/next por `tR`).
-5. **`app/welcome/WelcomeModule.jsx`** — toggle pill ES·EN movido a `headerLeft` (encima del
-   logo). Antes en esquina superior derecha, colisionaba con la X del modal.
-6. **`app/focus/FocusTimer.jsx`** — migración i18n completa: `useT()` en `FocusTimer` +
-   `MinutesPicker`. modeLabel / subtitle / runningLabel / "Ciclo" / "Reiniciar" / "Min" /
-   "Otro" → `t('focus.*')`. Clave `focus.pause` añadida a strings.js.
-7. **`TimerAro`** — eliminado el `<circle>` dot verde oliva del anillo. Decisión de producto:
-   no añadía información, rompía la calma visual.
-8. **`PACE.html`** — `strings-content.js` añadido al orden de carga.
-9. **Standalone regenerado** a ~413 KB.
+1. **`app/i18n/strings.js`** — +18 claves nuevas (ES+EN): 11 fases de respiración (`breathe.phase.*`),
+   horas del sendero, "Por descubrir", "Nuevo sello", título Ajustes, eje Audio (label/on/off/hint),
+   toggle de idioma, `common.close`, `focus.minutes.custom.title`. Eliminadas 3 claves obsoletas
+   (`layout.editorial`, `timer.circulo`, `timer.numero`).
+2. **Archivos JSX migrados a `t()`**: `Toast.jsx` (useT + "Nuevo sello"), `Primitives.jsx` (Modal useT + aria-label Cerrar),
+   `WelcomeModule.jsx` (tooltip toggle idioma), `Sidebar.jsx` ("6h"/"22h"/"Por descubrir"), `FocusTimer.jsx`
+   (custom minutes title).
+3. **PWA activada**: `<link rel="manifest">` + `<meta name="theme-color">` + registro SW en `PACE.html`
+   y standalone. `sw.js` CACHE_NAME bumpeado a `pace-v0.19.0`. `manifest.json` `start_url` → `"./"`.
+4. **Panel Ajustes** (`TweaksPanel.jsx`): audio como primer eje con pills. Timer: solo Aro/Barra/Analógico.
+   Layout: solo Sidebar/Minimal. Título "Ajustes"/"Settings". Bloque Sound antiguo eliminado.
+5. **FocusTimer.jsx**: `TimerCircle` y `TimerNumber` eliminados. `TimerVisualization` simplificado.
+6. **`state.jsx`**: `LS_KEY` v1→v2 (hard reset intencional pre-lanzamiento). `PACE_VERSION` → v0.19.0.
+7. **Standalone regenerado** a ~416 KB.
 
 ### Archivos
-- **Nuevos:** `app/i18n/strings-content.js`, `docs/sessions/session-36-i18n-content-toggle.md`, `backups/PACE_standalone_v0.17.0_20260505.html`.
-- **Modificados:** `app/welcome/WelcomeModule.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSession.jsx`, `app/move/MoveModule.jsx`, `app/i18n/strings.js`, `app/focus/FocusTimer.jsx`, `PACE.html`, `PACE_standalone.html`, `app/state.jsx`, `CHANGELOG.md`, `STATE.md`.
-- **Borrados:** `backups/PACE_standalone_v0.12.10_20260429.html`.
+- **Nuevos:** `docs/sessions/session-37-i18n-pwa-ajustes.md`, `backups/PACE_standalone_v0.18.0_20260505.html`.
+- **Modificados:** `app/i18n/strings.js`, `app/ui/Toast.jsx`, `app/ui/Primitives.jsx`,
+  `app/welcome/WelcomeModule.jsx`, `app/shell/Sidebar.jsx`, `app/focus/FocusTimer.jsx`,
+  `app/tweaks/TweaksPanel.jsx`, `app/state.jsx`, `sw.js`, `PACE.html`, `manifest.json`,
+  `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Pendiente borrar manualmente:** `backups/PACE_standalone_v0.13.0_20260429.html`.
 
 ### Versión
-- **v0.18.0** (minor · i18n de contenido + FocusTimer + dot eliminado).
+- **v0.19.0** (minor · i18n total + PWA + Ajustes).
 
-### Pendiente (Sesión 37)
-- `BreatheSafety` cuerpo del disclaimer (texto médico hardcodeado en ES) — añadir claves
-  `breathe.safety.body.*` a strings.js y migrar.
-- Etiquetas de fase en BreatheSession (Inhala / Exhala / Retén / Pausa) — añadir claves EN
-  en strings-content.js y traducirlas en el render activo.
-- Decidir qué hacer con archivos PWA huérfanos: `icons/`, `manifest.json`, `sw.js`.
+### Pendiente (Sesión 38)
+- Borrar `backups/PACE_standalone_v0.13.0_20260429.html` manualmente (sandbox no permitió rm).
+- Iconos PNG reales (192×512) para PWA — actualmente SVG.
+- Audio refactor 432 Hz / drone ambiente.
+- Calendarios mes/año (heatmap).
+- README EN.
+- Reddit launch.
+- Glifos SVG (dirección visual pendiente de validación del usuario).
 
 ---
 
@@ -333,16 +335,7 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
 
 ### 🎨 Medio plazo (requieren diseño previo)
 
-- **PWA instalable** (~1 sesión) — `manifest.json` + iconos 192/
-  512/maskable + prompt de instalación + testing en iOS Safari y
-  Chrome Android. Respuesta "de verdad" al auto-hide de la barra
-  del navegador (la sesión 24 lo arregló a medias con scroll
-  asimétrico; PWA lo elimina de raíz porque la app se abre sin
-  barra ninguna). Además multiplicador de valor para el Lifetime:
-  "compras una vez, instalado a pantalla de inicio, funciona
-  offline, sin barra". Orden recomendado: después de modales
-  móviles (sesión 25) y antes de CTB / Lifetime. Ver también la
-  sección "Coste conocido" en `docs/sessions/session-24-scroll-asimetrico.md`.
+- ~~**PWA instalable**~~ ✅ Resuelto en sesión 37 (v0.19.0). `manifest.json` conectado, `sw.js` registrado en `PACE.html` y standalone. Deuda pendiente: iconos PNG reales (actualmente SVG).
 - **Ritmos semanal/mensual/anual** — evolución de `WeeklyStats`.
   Heatmap mensual + "año en pace" estilo GitHub contributions en
   paleta tierra.
@@ -623,7 +616,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 35: 49/100 logros cazables. i18n ES/EN completo en 8 módulos ✅ (falta FocusTimer). Próximos frentes: (a) FocusTimer i18n + BreatheSafety cuerpo, (b) decidir PWA (icons/manifest/sw.js huérfanos), (c) rediseño de glifos SVG, (d) PWA instalable, (e) claves offline Lifetime/Pase, (f) heatmap "Año en pace".
+> Estado actual tras sesión 37: 49/100 logros cazables. i18n ES/EN total ✅ (todos los strings visibles migrados). PWA activada ✅. Panel Ajustes limpiado ✅. Próximos frentes: (a) iconos PNG reales para PWA, (b) rediseño de glifos SVG, (c) claves offline Lifetime/Pase, (d) heatmap "Año en pace", (e) README EN + Reddit launch.
 
 ### 🎯 Próxima sesión corta (recomendada)
 

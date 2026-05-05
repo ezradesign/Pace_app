@@ -293,9 +293,9 @@ function SenderoDelDia({ state }) {
           <circle cx={pointerX} cy={pathY(pointerX)} r="3" fill="var(--ink)" />
         </svg>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
-          <span>6h</span>
+          <span>{t('sidebar.trail.hour.start')}</span>
           <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>{t('sidebar.trail.now')} · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
-          <span>22h</span>
+          <span>{t('sidebar.trail.hour.end')}</span>
         </div>
       </div>
     </>
@@ -459,7 +459,7 @@ function AchievementsPreview({ onOpen }) {
               cursor: 'pointer',
               transition: 'all 180ms',
             }}
-            title={id || 'Por descubrir'}
+            title={id || t('ach.seal.discover')}
           >
             {id ? '✦' : '·'}
           </button>

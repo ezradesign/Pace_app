@@ -261,7 +261,7 @@ function MinutesPicker({ value, onChange }) {
       ) : isCustom ? (
         <button
           onClick={() => setEditing(true)}
-          title="Minutos personalizados (1–180)"
+          title={t('focus.minutes.custom.title')}
           style={{
             ...pillBase,
             fontWeight: 600,
@@ -273,7 +273,7 @@ function MinutesPicker({ value, onChange }) {
       ) : (
         <button
           onClick={() => setEditing(true)}
-          title="Minutos personalizados (1–180)"
+          title={t('focus.minutes.custom.title')}
           style={{
             ...pillBase,
             marginLeft: 6,
@@ -312,12 +312,12 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 /* ===================== */
 /* TIMER VISUALIZATIONS */
 /* ===================== */
+/* TimerVisualization — sesión 37: circle y numero eliminados (rotos).
+   Opciones válidas: aro (default), barra, analogico. */
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
-  if (style === 'aro') return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
-  if (style === 'circulo') return <TimerCircle mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerNumber mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
+  return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
 }
 
 /* Timer "Aro" (default · ref. usuario).
@@ -358,51 +358,8 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
   );
 }
 
-function TimerNumber({ mins, secs, progress, modeLabel, subtitle }) {
-  return (
-    <div style={{ position: 'relative', width: 420, height: 420, display: 'grid', placeItems: 'center' }}>
-      {/* Círculo muy sutil */}
-      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <circle cx="50" cy="50" r="48" fill="none" stroke="var(--line)" strokeWidth="0.3" />
-      </svg>
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 16 }}>{modeLabel}</div>
-        <div style={{
-          ...displayItalic,
-          fontSize: 'var(--size-hero)',
-          fontWeight: 400,
-          lineHeight: 0.9,
-          color: 'var(--ink)',
-          fontVariantNumeric: 'tabular-nums',
-          letterSpacing: '-0.03em',
-        }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
-        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 40 }}>{subtitle}</div>
-      </div>
-    </div>
-  );
-}
-
-function TimerCircle({ mins, secs, progress, modeLabel, subtitle }) {
-  const R = 46;
-  const C = 2 * Math.PI * R;
-  return (
-    <div style={{ position: 'relative', width: 420, height: 420, display: 'grid', placeItems: 'center' }}>
-      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.6" />
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--focus)" strokeWidth="1.2"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear' }} />
-      </svg>
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>{modeLabel}</div>
-        <div style={{ ...displayItalic, fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
-          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
-        </div>
-        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 36 }}>{subtitle}</div>
-      </div>
-    </div>
-  );
-}
+/* TimerNumber y TimerCircle eliminados en v0.19.0 (rotos, sin diseño).
+   Solo quedan: TimerAro (default), TimerBar, TimerAnalog. */
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
   return (

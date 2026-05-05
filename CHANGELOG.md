@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.19.0** | 2026-05-05 | Cierre i18n total (fases respiración + 8 strings restantes) + PWA activada (manifest+SW) + panel Ajustes limpiado (audio primero, timer 3 ops, layout 2 ops) + hard reset localStorage v2 | #37 | [abajo ↓](#v0190--2026-05-05--cierre-i18n--pwa--ajustes) |
 | **v0.18.0** | 2026-05-05 | i18n de contenido (ejercicios Respira/Mueve/Estira) + FocusTimer i18n completo + toggle ES·EN en WelcomeModal + dot verde del aro eliminado | #36 | [abajo ↓](#v0180--2026-05-05--i18n-contenido--focustimer--dot-eliminado) |
-| **v0.17.0** | 2026-05-05 | i18n ES/EN completo: auditoría + 3 bugs críticos corregidos + migración de 6 módulos (BreatheLibrary, MoveModule, ExtraModule, HydrateModule, WeeklyStats, Achievements) | #35 | [abajo ↓](#v0170--2026-05-05--i18n-esen-completo) |
+| **v0.17.0** | 2026-05-05 | i18n ES/EN completo: auditoría + 3 bugs críticos corregidos + migración de 6 módulos (BreatheLibrary, MoveModule, ExtraModule, HydrateModule, WeeklyStats, Achievements) | #35 | [session-35](./docs/sessions/session-35-i18n-completo.md) |
 | **v0.16.0** | 2026-05-05 | Split BreatheModule (3 archivos: BreatheVisual + BreatheLibrary + BreatheSession) + 4 detectores nuevos (master.collector.half/full, master.silent.day, master.retreat) | #34 | [session-34](./docs/sessions/session-34-split-breathe-logros.md) |
 | **v0.15.0** | 2026-05-04 | Loop post-Pomodoro: BreakMenu con rotación inteligente (computeScore + sort + "Para ti" + done indicator) | #33 | [session-33](./docs/sessions/session-33-loop-post-pomodoro.md) |
 | **v0.14.3** | 2026-05-04 | Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes) | #32 | [session-32](./docs/sessions/session-32-code-review-fixes.md) |
@@ -52,6 +53,43 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.19.0] — 2026-05-05 — Cierre i18n + PWA + Ajustes
+
+### Bloque A — Cierre i18n total
+- **`app/i18n/strings.js`** — +18 claves nuevas (ES + EN): `breathe.phase.*` (11 fases de
+  sesión activa), `sidebar.trail.hour.start/end`, `ach.seal.discover`, `ach.toast.new`,
+  `settings.title`, `settings.audio.*` (label/on/off/hint), `welcome.lang.toggle.toEn/toEs`,
+  `common.close`, `focus.minutes.custom.title`. Eliminadas 3 claves obsoletas: `tweaks.layout.editorial`,
+  `tweaks.timer.circulo`, `tweaks.timer.numero`.
+- **`app/breathe/BreatheSession.jsx`** — Funcionalmente ya migrado (PHASE_KEYS + `tR`). Las nuevas
+  claves de strings.js completan la traducción de las 11 fases en EN.
+- **`app/shell/Sidebar.jsx`** — "6h"/"22h" → `t('sidebar.trail.hour.*')`. "Por descubrir" → `t('ach.seal.discover')`.
+- **`app/ui/Toast.jsx`** — `useT()` añadido. "Nuevo sello" → `t('ach.toast.new')`.
+- **`app/welcome/WelcomeModule.jsx`** — Tooltip del toggle de idioma → claves `welcome.lang.toggle.toEn/toEs`.
+- **`app/ui/Primitives.jsx`** — `useT()` añadido a `Modal`. `aria-label="Cerrar"` → `t('common.close')`.
+- **`app/focus/FocusTimer.jsx`** — Dos `title="Minutos personalizados…"` → `t('focus.minutes.custom.title')`.
+
+### Bloque B — Activación PWA
+- **`PACE.html`** — `<link rel="manifest" href="manifest.json">` + `<meta name="theme-color" content="#3E5A3A">` en `<head>`. Registro SW con `navigator.serviceWorker.register('sw.js')` antes de `</body>`.
+- **`PACE_standalone.html`** — Regenerado (~416 KB) con las mismas adiciones PWA.
+- **`sw.js`** — `CACHE_NAME` actualizado a `'pace-v0.19.0'`.
+- **`manifest.json`** — `start_url` cambiado de `"PACE_standalone.html"` a `"./"` para compatibilidad con Cloudflare Pages y apertura local.
+
+### Bloque C — Limpieza panel Ajustes
+- **`app/tweaks/TweaksPanel.jsx`** — Título "Tweaks" → `t('settings.title')` (ES: "Ajustes", EN: "Settings"). Audio promovido al primer eje con pills "Activado/Silenciado" y subtítulo "Sonidos de la sesión". Eje Timer: eliminadas pills `circle` y `numero`, quedan `aro/barra/analogico`. Eje Layout: eliminada pill `editorial`, quedan `sidebar/minimal`. Bloque Sound antiguo (toggle simple) eliminado.
+- **`app/focus/FocusTimer.jsx`** — `TimerCircle` y `TimerNumber` eliminados. `TimerVisualization` simplificado a 3 ramas (aro por defecto, barra, analógico).
+
+### Bloque D — Bump + hard reset
+- **`app/state.jsx`** — `LS_KEY` bumpeado de `'pace.state.v1'` a `'pace.state.v2'` (hard reset intencional pre-lanzamiento; elimina datos legacy sin migración). `PACE_VERSION` v0.18.0 → v0.19.0.
+
+### Backups
+- Añadido `backups/PACE_standalone_v0.18.0_20260505.html`.
+- Nota: borrado del backup v0.13.0 pendiente (permisos de sandbox); el usuario debe eliminarlo manualmente.
+
+Detalle completo: [`docs/sessions/session-37-i18n-pwa-ajustes.md`](./docs/sessions/session-37-i18n-pwa-ajustes.md).
 
 ---
 
@@ -111,49 +149,7 @@ Detalle completo: [`docs/sessions/session-36-i18n-content-toggle.md`](./docs/ses
 
 ---
 
-## [v0.17.0] — 2026-05-05 — i18n ES/EN completo
-
-### Corregido (bugs introducidos por sesión externa)
-- **`app/breathe/BreatheSession.jsx`** — `ReferenceError: t is not defined` al arrancar cualquier sesión de respiración. La otra IA añadió llamadas `t()` pero olvidó `useT()`. Fix: `const { t } = useT()` tras `usePace()`. Además: `copy` del prep pasaba texto hardcodeado en español → `t('breathe.prepCopy')`.
-- **`app/ui/SessionShell.jsx / SessionDone`** — mismo fallo en el cierre de sesión (breathe y move). Fix: `const { t } = useT()` al inicio de `SessionDone`.
-- **`app/welcome/WelcomeModule.jsx`** — `const t = setTimeout(...)` sobreescribía el `t` del `useT()` externo (code smell, no crash). Renombrado a `timer`.
-
-### Añadido — claves i18n en `app/i18n/strings.js`
-~95 claves nuevas en ES y EN:
-- `common.*` — time, rounds, breaths, breath, of (usadas en BreatheSession done/active).
-- `breathe.prepCopy / doneCopy` — copys de prep y done de sesiones de respiración.
-- `breathe.safety.*` — chrome de `BreatheSafety` (before, check, cancel, start, required).
-- `lib.*` — chrome genérico de bibliotecas (tag, breathe.title/subtitle, extra.title/subtitle/meta, routines).
-- `move.steps / hint / prev / finish / next.prefix / lastStep / doneCopy / prepCopy / stepCount` — sesión de Mueve completa.
-- `hydrate.*` — tag, title, subtitle, glasses.today, less, more, tip, tip.label.
-- `stats.*` — tag, title, subtitle, unit.min, unit.glasses, days (CSV), note, note.label.
-- `ach.cat.*` — categorías primeros/constancia/exploracion/maestria/secretos/estacionales.
-- `ach.*` — available, coming.soon, seal.soon, seal.secret.
-
-### Migrado — i18n en 6 módulos
-- **`app/breathe/BreatheLibrary.jsx`** — chrome modal + RoutineCard + BreatheSafety chrome.
-- **`app/move/MoveModule.jsx`** — MoveLibrary chrome + MoveSession completo (counters, buttons, `tn` para step count).
-- **`app/extra/ExtraModule.jsx`** — ExtraLibrary chrome.
-- **`app/hydrate/HydrateModule.jsx`** — HydrateTracker completo.
-- **`app/stats/WeeklyStats.jsx`** — WeeklyStats + WeekBarRow (`days` desde `t('stats.days').split(',')`; `bars` movido dentro de la función).
-- **`app/achievements/Achievements.jsx`** — `CAT_META` de `label:` a `labelKey:` (constante módulo-level → resuelto en render); `Achievements` + `Seal` completos.
-
-### Cambiado
-- **`PACE_standalone.html`:** regenerado con `node build-standalone.js` (~397 KB).
-- **`STATE.md`:** bumpeado a v0.17.0.
-
-### Backups
-- Rotado `backups/PACE_standalone_v0.12.9_20260423.html` (el más antiguo).
-- Añadido `backups/PACE_standalone_v0.16.0_20260505.html` (~394 KB, recuperado de HEAD antes de regenerar).
-- 5 backups activos: v0.12.10, v0.13.0, v0.14.0, v0.15.0, v0.16.0.
-
-### Archivos
-- **Modificados:** `app/breathe/BreatheSession.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/ui/SessionShell.jsx`, `app/welcome/WelcomeModule.jsx`, `app/i18n/strings.js`, `app/move/MoveModule.jsx`, `app/extra/ExtraModule.jsx`, `app/hydrate/HydrateModule.jsx`, `app/stats/WeeklyStats.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `STATE.md`.
-- **Nuevos:** `backups/PACE_standalone_v0.16.0_20260505.html`, `docs/sessions/session-35-i18n-completo.md`.
-
-Detalle completo: [`docs/sessions/session-35-i18n-completo.md`](./docs/sessions/session-35-i18n-completo.md).
-
----
+## ~~[v0.17.0]~~ — detalle retirado (ver tabla · diario: [session-35](./docs/sessions/session-35-i18n-completo.md))
 
 ## ~~[v0.16.0]~~ — detalle retirado (ver tabla · diario: [session-34](./docs/sessions/session-34-split-breathe-logros.md))
 

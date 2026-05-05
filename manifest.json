@@ -2,7 +2,7 @@
   "name": "PACE · Foco · Cuerpo",
   "short_name": "PACE",
   "description": "Micro-pausas de foco, respiración, movilidad e hidratación para tu día.",
-  "start_url": "PACE_standalone.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F2EDE0",
   "theme_color": "#3E5A3A",
