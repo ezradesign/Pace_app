@@ -80,7 +80,11 @@ function MoveLibrary({ open, onClose, onStart }) {
 }
 
 function MoveSession({ routine, onExit, kind = 'move' }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const displayRoutine = lang === 'en'
+    ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
+    : routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
   // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
   const dispatchComplete = () => {
@@ -153,7 +157,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--move)"
         prepCount={prepCount}
@@ -170,7 +174,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     const secs = totalSec % 60;
     return (
       <SessionDone
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--move)"
         accentSoft="var(--move-soft)"
@@ -203,7 +207,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   );
   return (
     <SessionShell
-      routine={routine}
+      routine={displayRoutine}
       onExit={onExit}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer}
@@ -218,11 +222,11 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ...displayItalic,
           fontSize: 56, fontWeight: 500,
           lineHeight: 1.05, margin: '0 0 20px',
-        }}>{step.name}</h1>
+        }}>{tR(`${routine.id}.s${stepIdx}.name`, step.name)}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
           maxWidth: 460, margin: '0 auto 30px',
-        }}>{step.cue}</p>
+        }}>{tR(`${routine.id}.s${stepIdx}.cue`, step.cue)}</p>
 
         <div style={{
           ...displayItalic,
@@ -254,7 +258,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${routine.steps[stepIdx + 1].name}` : t('move.lastStep')}
+          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tR(`${routine.id}.s${stepIdx + 1}.name`, routine.steps[stepIdx + 1].name)}` : t('move.lastStep')}
         </div>
       </div>
     </SessionShell>

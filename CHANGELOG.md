@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.18.0** | 2026-05-05 | i18n de contenido (ejercicios Respira/Mueve/Estira) + FocusTimer i18n completo + toggle ES·EN en WelcomeModal + dot verde del aro eliminado | #36 | [abajo ↓](#v0180--2026-05-05--i18n-contenido--focustimer--dot-eliminado) |
 | **v0.17.0** | 2026-05-05 | i18n ES/EN completo: auditoría + 3 bugs críticos corregidos + migración de 6 módulos (BreatheLibrary, MoveModule, ExtraModule, HydrateModule, WeeklyStats, Achievements) | #35 | [abajo ↓](#v0170--2026-05-05--i18n-esen-completo) |
-| **v0.16.0** | 2026-05-05 | Split BreatheModule (3 archivos: BreatheVisual + BreatheLibrary + BreatheSession) + 4 detectores nuevos (master.collector.half/full, master.silent.day, master.retreat) | #34 | [abajo ↓](#v0160--2026-05-05--split-breathemodule--logros-aplazados) |
+| **v0.16.0** | 2026-05-05 | Split BreatheModule (3 archivos: BreatheVisual + BreatheLibrary + BreatheSession) + 4 detectores nuevos (master.collector.half/full, master.silent.day, master.retreat) | #34 | [session-34](./docs/sessions/session-34-split-breathe-logros.md) |
 | **v0.15.0** | 2026-05-04 | Loop post-Pomodoro: BreakMenu con rotación inteligente (computeScore + sort + "Para ti" + done indicator) | #33 | [session-33](./docs/sessions/session-33-loop-post-pomodoro.md) |
 | **v0.14.3** | 2026-05-04 | Code review: 7 fixes de calidad (dead state, condición redundante, aria-live, sip sound, logros recientes) | #32 | [session-32](./docs/sessions/session-32-code-review-fixes.md) |
 | **v0.14.2** | 2026-04-30 | Fix de comillas en DESIGN_SYSTEM.md (revisión externa commit cd75d27) | #31 | [session-31](./docs/sessions/session-31-fix-comillas-design-system.md) |
@@ -51,6 +52,62 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.18.0] — 2026-05-05 — i18n contenido + FocusTimer + dot eliminado
+
+### Añadido
+- **`app/i18n/strings-content.js`** (nuevo, ~190 claves EN) — traducciones de contenido de
+  ejercicios: categorías + nombres + descripciones + códigos de rutinas de Respira, Mueve y
+  Estira. Augmenta `window.PACE_STRINGS.en` (que ya crea `strings.js`). Solo EN porque en ES
+  los componentes leen los strings del dato JS directamente. En EN el helper `tR(key, fallback)`
+  busca en strings-content; si la clave no existe devuelve el fallback (español), lo que permite
+  una transición gradual sin textos rotos.
+- **`focus.pause`** en `app/i18n/strings.js` — clave que faltaba para el botón de pausar del
+  FocusTimer (ES: `'Pausar'`, EN: `'Pause'`). Las demás claves `focus.*` ya existían desde s35.
+
+### Migrado — i18n en 3 módulos + FocusTimer
+- **`app/breathe/BreatheLibrary.jsx`** — helper `tR` + categorías (`label`, `aside`) +
+  `RoutineCard` (name/desc/code por `tR`). RoutineCard es un componente funcional compartible.
+- **`app/breathe/BreatheSession.jsx`** — `displayRoutine` (name/desc por `tR`).
+  Fix colateral: `const t = setTimeout(...)` shadowing del `t` de `useT()` → renombrado a `timer`.
+- **`app/move/MoveModule.jsx`** — `displayRoutine` + `displayStep`: campos `name`, `cue`, `next`
+  de cada paso pasados por `tR`.
+- **`app/focus/FocusTimer.jsx`** — `const { t } = useT()` añadido en `FocusTimer` y
+  `MinutesPicker`. Migración completa:
+  - `modeLabel` → `t('focus.mode.focus/pause/long')`.
+  - `subtitle` → `t('focus.subtitle.focus/pause/long')`.
+  - `runningLabel` → `t('focus.pause')` / `t('focus.start')` / `t('focus.continue')`.
+  - Etiqueta "Ciclo" → `t('focus.cycle')`.
+  - `title/aria-label="Reiniciar"` → `t('focus.restart')`.
+  - "Min" → `t('focus.min')`. "Otro" → `t('focus.other')`.
+
+### Cambiado
+- **`app/welcome/WelcomeModule.jsx`** — toggle pill ES·EN movido a `headerLeft` (encima del logo,
+  columna izquierda del header). Antes en esquina superior derecha, colisionaba visualmente con
+  la X de cierre del modal. Ahora posición clara y sin conflicto.
+- **`app/focus/FocusTimer.jsx · TimerAro`** — eliminado el `<circle>` de dot verde oliva que
+  recorría el anillo. Decisión de producto: el indicador no añadía información útil y rompía
+  la calma visual del aro.
+- **`PACE.html`** — `strings-content.js` añadido al orden de carga tras `strings.js`.
+- **`PACE_standalone.html`** — rebuild (~413 KB).
+
+### Backups
+- Rotado `backups/PACE_standalone_v0.12.10_20260429.html` (el más antiguo).
+- Añadido `backups/PACE_standalone_v0.17.0_20260505.html` (recuperado de git HEAD).
+- 5 backups activos: v0.13.0, v0.14.0, v0.15.0, v0.16.0, v0.17.0.
+
+### Archivos
+- **Nuevos:** `app/i18n/strings-content.js`, `docs/sessions/session-36-i18n-content-toggle.md`,
+  `backups/PACE_standalone_v0.17.0_20260505.html`.
+- **Modificados:** `app/welcome/WelcomeModule.jsx`, `app/breathe/BreatheLibrary.jsx`,
+  `app/breathe/BreatheSession.jsx`, `app/move/MoveModule.jsx`, `app/i18n/strings.js`,
+  `app/focus/FocusTimer.jsx`, `PACE.html`, `PACE_standalone.html`, `app/state.jsx`,
+  `CHANGELOG.md`, `STATE.md`.
+- **Borrados:** `backups/PACE_standalone_v0.12.10_20260429.html`.
+
+Detalle completo: [`docs/sessions/session-36-i18n-content-toggle.md`](./docs/sessions/session-36-i18n-content-toggle.md).
 
 ---
 
@@ -98,39 +155,9 @@ Detalle completo: [`docs/sessions/session-35-i18n-completo.md`](./docs/sessions/
 
 ---
 
-## [v0.16.0] — 2026-05-05 — Split BreatheModule + logros aplazados
+## ~~[v0.16.0]~~ — detalle retirado (ver tabla · diario: [session-34](./docs/sessions/session-34-split-breathe-logros.md))
 
-### Refactor
-- **`app/breathe/BreatheModule.jsx` troceado en 3 archivos** (techo 500 líneas de CLAUDE.md):
-  - **`BreatheVisual.jsx`** (~155 líneas) — `getSequence()` + `breathVisualStyles` + `BreathVisual` (5 variantes: pulso, ondas, petalo, organico, flor). Sin hooks. Renombrado `visualStyles` → `breathVisualStyles` para evitar colisión global.
-  - **`BreatheLibrary.jsx`** (~130 líneas) — `BREATHE_ROUTINES` + `BreatheLibrary` + `RoutineCard` + `BreatheSafety`.
-  - **`BreatheSession.jsx`** (~210 líneas) — `BreatheSession` con toda la lógica de ticker, hold, retención, atajos de teclado. Aliases de hooks renombrados a `useStateBRSess / useEffectBRSess / useRefBRSess` para no colisionar con los de BreatheLibrary.
-  - `BreatheModule.jsx` eliminado. Exports a `window` conservados idénticos: `BreatheLibrary`, `BreatheSafety`, `BreatheSession`.
-  - `PACE.html` actualizado: 1 `<script>` → 3 `<script>` en orden de dependencia (Visual → Library → Session).
-
-### Añadido — detectores de logros (sesión 34)
-- **`master.collector.half`** — 50 logros desbloqueados. Detector `checkCollectorAchievements()` llamado al final de cada `unlockAchievement` exitoso. Lectura de `Object.keys(_state.achievements).length` post-setState. Idempotente por diseño: no hay riesgo de recursión infinita.
-- **`master.collector.full`** — 100 logros. Mismo detector y misma llamada.
-- **`master.silent.day`** — 1 día usando la app con `soundOn=false`. Nuevo campo `silentDates: []` en `defaultState` (toDateStrings, cap 30). Detector `checkSilentDayAchievement()` llamado desde `completeBreathSession`, `completeMoveSession`, `completePomodoro`, `completeExtraSession` y `addWaterGlass` (delta>0).
-- **`master.retreat`** — 2h de breathe+move en un día. Detector `checkRetreatAchievement()` usa los buckets `weeklyStats.breathMinutes[day] + moveMinutes[day] >= 120` ya existentes. Extra suma al bucket moveMinutes (decisión activa), así que `completeExtraSession` también lo evalúa.
-- **`IMPLEMENTED_ACHIEVEMENTS`** en `Achievements.jsx`: 45 → 49 ids. Contador Maestría 5/25 → 9/25.
-
-### Cambiado
-- **`app/state.jsx`:** `PACE_VERSION` `'v0.15.0'` → `'v0.16.0'`. Campo `silentDates: []` en `defaultState`.
-- **`PACE.html`:** título actualizado a `v0.16.0`.
-- **`PACE_standalone.html`:** regenerado con `node build-standalone.js` (~365 KB).
-
-### Backups
-- Rotado `backups/PACE_standalone_v0.12.8_20260423_1700.html` (el más antiguo, estábamos al límite).
-- Añadido `backups/PACE_standalone_v0.15.0_20260505.html` (recuperado de git antes de regenerar).
-- 5 backups activos: v0.12.9, v0.12.10, v0.13.0, v0.14.0, v0.15.0.
-
-### Archivos
-- **Nuevos:** `app/breathe/BreatheVisual.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSession.jsx`, `backups/PACE_standalone_v0.15.0_20260505.html`, `docs/sessions/session-34-split-breathe-logros.md`.
-- **Eliminados:** `app/breathe/BreatheModule.jsx`.
-- **Modificados:** `PACE.html`, `app/state.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
-
-Detalle completo: [`docs/sessions/session-34-split-breathe-logros.md`](./docs/sessions/session-34-split-breathe-logros.md).
+Split `BreatheModule.jsx` en 3 archivos (`BreatheVisual` + `BreatheLibrary` + `BreatheSession`) + 4 detectores de logros nuevos (`master.collector.half/full`, `master.silent.day`, `master.retreat`). Maestría 5/25 → 9/25.
 
 ---
 

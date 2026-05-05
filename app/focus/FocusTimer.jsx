@@ -6,6 +6,7 @@ const { useState: useStateFT, useEffect: useEffectFT, useRef: useRefFT } = React
 
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [running, setRunning] = useStateFT(false);
   const [remainingSec, setRemainingSec] = useStateFT(state.focusMinutes * 60);
   const intervalRef = useRefFT(null);
@@ -62,12 +63,12 @@ function FocusTimer({ onFinish }) {
   const totalSec = (state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15) * 60;
   const progress = 1 - (remainingSec / totalSec);
 
-  const modeLabel = state.focusMode === 'foco' ? 'Foco'
-                  : state.focusMode === 'pausa' ? 'Pausa corta'
-                  : 'Pausa larga';
-  const subtitle = state.focusMode === 'foco' ? 'Concentración profunda'
-                 : state.focusMode === 'pausa' ? 'Desconecta 5 min'
-                 : 'Pausa larga · estira y respira';
+  const modeLabel = state.focusMode === 'foco' ? t('focus.mode.focus')
+                  : state.focusMode === 'pausa' ? t('focus.mode.pause')
+                  : t('focus.mode.long');
+  const subtitle = state.focusMode === 'foco' ? t('focus.subtitle.focus')
+                 : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
+                 : t('focus.subtitle.long');
 
   const reset = () => {
     setRunning(false);
@@ -76,7 +77,7 @@ function FocusTimer({ onFinish }) {
   };
 
   const isAro = state.timerStyle === 'aro';
-  const runningLabel = running ? 'Pausar' : (remainingSec === totalSec ? 'Comenzar' : 'Continuar');
+  const runningLabel = running ? t('focus.pause') : (remainingSec === totalSec ? t('focus.start') : t('focus.continue'));
 
   /* Dots de ciclo (4 puntitos + etiqueta CICLO).
      En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
@@ -89,7 +90,7 @@ function FocusTimer({ onFinish }) {
           background: (state.cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
         }} />
       ))}
-      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>Ciclo</span>
+      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{t('focus.cycle')}</span>
     </div>
   );
 
@@ -104,7 +105,7 @@ function FocusTimer({ onFinish }) {
         <span style={{ fontSize: 11, lineHeight: 1 }}>{running ? '❚❚' : '▶'}</span>
         <span>{runningLabel}</span>
       </button>
-      <button onClick={reset} style={focusStyles.resetCircle} title="Reiniciar" aria-label="Reiniciar">
+      <button onClick={reset} style={focusStyles.resetCircle} title={t('focus.restart')} aria-label={t('focus.restart')}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 12a9 9 0 1 0 3-6.7" />
           <polyline points="3 4 3 10 9 10" />
@@ -169,6 +170,7 @@ function FocusTimer({ onFinish }) {
    Rango 1–180 para cubrir desde pomodoros ultra-cortos hasta sesiones
    deep-work sin volverse absurdo. */
 function MinutesPicker({ value, onChange }) {
+  const { t } = useT();
   const presets = [15, 25, 35, 45];
   const isCustom = !presets.includes(value);
   const [editing, setEditing] = useStateFT(false);
@@ -221,7 +223,7 @@ function MinutesPicker({ value, onChange }) {
       <span style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
-      }}>Min</span>
+      }}>{t('focus.min')}</span>
       {presets.map(m => (
         <button key={m} onClick={() => { onChange(m); setEditing(false); }}
           style={{
@@ -284,7 +286,7 @@ function MinutesPicker({ value, onChange }) {
             background: 'transparent',
             fontWeight: 500,
           }}>
-          Otro
+          {t('focus.other')}
         </button>
       )}
     </div>
@@ -319,7 +321,7 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
 }
 
 /* Timer "Aro" (default · ref. usuario).
-   Anillo fino, progreso sutil y punto indicador verde oliva sobre el aro.
+   Anillo fino + arco de progreso sutil.
    Dentro: etiqueta de modo · número gigante italic serif · divisor fino ·
    botón de comenzar + reset (inyectados via `inner`). El layout coincide
    con la composición de referencia (2026-04-22).
@@ -327,10 +329,6 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
 function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
   const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
-  // Ángulo para el punto indicador (parte superior = 12 en punto)
-  const angle = progress * 2 * Math.PI - Math.PI / 2;
-  const dotCx = 50 + R * Math.cos(angle);
-  const dotCy = 50 + R * Math.sin(angle);
 
   return (
     <div style={focusStyles.aroFrame}>
@@ -344,9 +342,6 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
           style={{ transition: 'stroke-dashoffset 1s linear' }} />
-        {/* Punto verde oliva (indicador) */}
-        <circle cx={dotCx} cy={dotCy} r="1.25" fill="var(--focus)"
-          style={{ transition: 'cx 1s linear, cy 1s linear' }} />
       </svg>
 
       {/* Contenido centrado */}
