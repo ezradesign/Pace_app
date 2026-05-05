@@ -4,6 +4,7 @@ const { useState: useStateTO, useEffect: useEffectTO } = React;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
+  const { t } = useT();
 
   useEffectTO(() => {
     return onToast((t) => {
@@ -55,7 +56,7 @@ function ToastHost() {
             fontSize: 18,
           }}>{t.glyph}</div>
           <div>
-            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>Nuevo sello</div>
+            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
           </div>

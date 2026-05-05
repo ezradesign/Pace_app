@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.19.0</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3E5A3A">
+  <title>PACE · Foco · Cuerpo — v0.18.0</title>
   <style>
 /* ============================================
    PACE · Design Tokens
@@ -238,7 +236,7 @@ input, textarea { font-family: inherit; color: inherit; }
   -->
   <script type="text/babel">
 /* PACE · Catálogo de strings i18n — ES / EN
-   Sesión 37 · v0.19.0
+   Sesión 35 · v0.17.0
    Reglas: no incluir nombres de rutinas, pasos, IDs, "PACE", "Pomodoro",
    "Wim Hof", "Buy Me a Coffee", ni número de versión.
 */
@@ -321,12 +319,6 @@ window.PACE_STRINGS = {
     'sidebar.days':                  'L,M,X,J,V,S,D',
     'sidebar.open.title':            'Abrir panel',
     'sidebar.open.aria':             'Abrir panel',
-    'sidebar.trail.hour.start':      '6h',
-    'sidebar.trail.hour.end':        '22h',
-
-    // Welcome lang toggle
-    'welcome.lang.toggle.toEn':      'Cambiar a English',
-    'welcome.lang.toggle.toEs':      'Cambiar a Español',
 
     // TopBar
     'topbar.mode.focus':             'Foco',
@@ -338,13 +330,6 @@ window.PACE_STRINGS = {
     'topbar.achievements.aria':      'Ver logros',
     'topbar.tweaks.title':           'Tweaks (T)',
     'topbar.tweaks.aria':            'Abrir tweaks',
-
-    // Settings (panel Ajustes)
-    'settings.title':                'Ajustes',
-    'settings.audio.label':          'Audio',
-    'settings.audio.on':             'Activado',
-    'settings.audio.off':            'Silenciado',
-    'settings.audio.hint':           'Sonidos de la sesión',
 
     // ActivityBar
     'activity.meta':                 'Actividades',
@@ -369,8 +354,11 @@ window.PACE_STRINGS = {
     'tweaks.palette.envejecido':     'Papel envejecido',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
+    'tweaks.layout.editorial':       'Editorial',
     'tweaks.timer.aro':              'Aro (default)',
+    'tweaks.timer.circulo':          'Círculo',
     'tweaks.timer.barra':            'Barra',
+    'tweaks.timer.numero':           'Número gigante',
     'tweaks.timer.analogico':        'Analógico',
     'tweaks.breath.flor':            'Flor (default)',
     'tweaks.breath.pulso':           'Pulso',
@@ -425,7 +413,6 @@ window.PACE_STRINGS = {
     'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
 
     // Focus
-    'focus.minutes.custom.title':      'Minutos personalizados (1–180)',
     'focus.cycle':                     'Ciclo',
     'focus.min':                       'Min',
     'focus.other':                     'Otro',
@@ -441,25 +428,11 @@ window.PACE_STRINGS = {
     'focus.subtitle.long':             'Pausa larga · estira y respira',
 
     // Common (compartido entre sesiones)
-    'common.close':                    'Cerrar',
     'common.time':                     'Tiempo',
     'common.rounds':                   'Rondas',
     'common.breaths':                  'Respiraciones',
     'common.breath':                   'Respiración',
     'common.of':                       'de',
-
-    // Breathe (fases de sesión activa)
-    'breathe.phase.inhala':            'Inhala',
-    'breathe.phase.exhala':            'Exhala',
-    'breathe.phase.sosten':            'Sostén',
-    'breathe.phase.inhala.mas':        'Inhala más',
-    'breathe.phase.inhala.oceanica':   'Inhala oceánica',
-    'breathe.phase.exhala.oceanica':   'Exhala oceánica',
-    'breathe.phase.inhala.izq':        'Inhala izq.',
-    'breathe.phase.inhala.dcha':       'Inhala dcha.',
-    'breathe.phase.exhala.dcha':       'Exhala dcha.',
-    'breathe.phase.exhala.izq':        'Exhala izq.',
-    'breathe.phase.respira':           'Respira',
 
     // Breathe (sesión)
     'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
@@ -524,8 +497,6 @@ window.PACE_STRINGS = {
     'ach.cat.estacionales':            'Estacionales',
     'ach.seal.soon':                   'Pronto',
     'ach.seal.secret':                 'Secreto',
-    'ach.seal.discover':               'Por descubrir',
-    'ach.toast.new':                   'Nuevo sello',
 
     // BreatheLibrary safety modal
     'breathe.safety.before':           'Antes de empezar',
@@ -533,15 +504,6 @@ window.PACE_STRINGS = {
     'breathe.safety.cancel':           'Cancelar',
     'breathe.safety.start':            'Empezar sesión',
     'breathe.safety.required':         'Requiere lectura de seguridad',
-    'breathe.safety.body.intro.pre':   'Esta técnica implica ',
-    'breathe.safety.body.intro.bold':  'hiperventilación controlada y apnea',
-    'breathe.safety.body.intro.post':  '. Puede causar mareo, cosquilleo o desmayo.',
-    'breathe.safety.body.rule1.pre':   'Practícala ',
-    'breathe.safety.body.rule1.bold':  'sentado o tumbado',
-    'breathe.safety.body.rule1.post':  ', nunca de pie',
-    'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
-    'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
-    'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
   },
 
   en: {
@@ -621,12 +583,6 @@ window.PACE_STRINGS = {
     'sidebar.days':                  'Mo,Tu,We,Th,Fr,Sa,Su',
     'sidebar.open.title':            'Open panel',
     'sidebar.open.aria':             'Open panel',
-    'sidebar.trail.hour.start':      '6h',
-    'sidebar.trail.hour.end':        '22h',
-
-    // Welcome lang toggle
-    'welcome.lang.toggle.toEn':      'Switch to English',
-    'welcome.lang.toggle.toEs':      'Switch to Spanish',
 
     // TopBar
     'topbar.mode.focus':             'Focus',
@@ -638,13 +594,6 @@ window.PACE_STRINGS = {
     'topbar.achievements.aria':      'View achievements',
     'topbar.tweaks.title':           'Tweaks (T)',
     'topbar.tweaks.aria':            'Open tweaks',
-
-    // Settings (Ajustes panel)
-    'settings.title':                'Settings',
-    'settings.audio.label':          'Audio',
-    'settings.audio.on':             'On',
-    'settings.audio.off':            'Muted',
-    'settings.audio.hint':           'Session sounds',
 
     // ActivityBar
     'activity.meta':                 'Activities',
@@ -669,8 +618,11 @@ window.PACE_STRINGS = {
     'tweaks.palette.envejecido':     'Aged paper',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
+    'tweaks.layout.editorial':       'Editorial',
     'tweaks.timer.aro':              'Ring (default)',
+    'tweaks.timer.circulo':          'Circle',
     'tweaks.timer.barra':            'Bar',
+    'tweaks.timer.numero':           'Giant number',
     'tweaks.timer.analogico':        'Analog',
     'tweaks.breath.flor':            'Flower (default)',
     'tweaks.breath.pulso':           'Pulse',
@@ -725,7 +677,6 @@ window.PACE_STRINGS = {
     'move.doneCopy':                   'Your body feels like yours again.',
 
     // Focus
-    'focus.minutes.custom.title':      'Custom minutes (1–180)',
     'focus.cycle':                     'Cycle',
     'focus.min':                       'Min',
     'focus.other':                     'Other',
@@ -741,25 +692,11 @@ window.PACE_STRINGS = {
     'focus.subtitle.long':             'Long break · stretch and breathe',
 
     // Common (shared across sessions)
-    'common.close':                    'Close',
     'common.time':                     'Time',
     'common.rounds':                   'Rounds',
     'common.breaths':                  'Breaths',
     'common.breath':                   'Breath',
     'common.of':                       'of',
-
-    // Breathe (active session phases)
-    'breathe.phase.inhala':            'Inhale',
-    'breathe.phase.exhala':            'Exhale',
-    'breathe.phase.sosten':            'Hold',
-    'breathe.phase.inhala.mas':        'Inhale more',
-    'breathe.phase.inhala.oceanica':   'Ocean inhale',
-    'breathe.phase.exhala.oceanica':   'Ocean exhale',
-    'breathe.phase.inhala.izq':        'Inhale left',
-    'breathe.phase.inhala.dcha':       'Inhale right',
-    'breathe.phase.exhala.dcha':       'Exhale right',
-    'breathe.phase.exhala.izq':        'Exhale left',
-    'breathe.phase.respira':           'Breathe',
 
     // Breathe (session)
     'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
@@ -824,8 +761,6 @@ window.PACE_STRINGS = {
     'ach.cat.estacionales':            'Seasonal',
     'ach.seal.soon':                   'Soon',
     'ach.seal.secret':                 'Secret',
-    'ach.seal.discover':               'To discover',
-    'ach.toast.new':                   'New seal',
 
     // BreatheLibrary safety modal
     'breathe.safety.before':           'Before you start',
@@ -833,15 +768,6 @@ window.PACE_STRINGS = {
     'breathe.safety.cancel':           'Cancel',
     'breathe.safety.start':            'Start session',
     'breathe.safety.required':         'Safety briefing required',
-    'breathe.safety.body.intro.pre':   'This technique involves ',
-    'breathe.safety.body.intro.bold':  'controlled hyperventilation and breath holds',
-    'breathe.safety.body.intro.post':  '. It can cause dizziness, tingling or fainting.',
-    'breathe.safety.body.rule1.pre':   'Practice it ',
-    'breathe.safety.body.rule1.bold':  'sitting or lying down',
-    'breathe.safety.body.rule1.post':  ', never standing',
-    'breathe.safety.body.rule2':       'Never in water, while driving or at height',
-    'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
-    'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
   },
 };
 
@@ -853,19 +779,6 @@ window.PACE_STRINGS = {
    Cargado después de strings.js — augmenta window.PACE_STRINGS.en.
 */
 Object.assign(window.PACE_STRINGS.en, {
-
-  // ── Breathe — etiquetas de fase ─────────────────────────────────
-  'breathe.phase.inhala':            'Inhale',
-  'breathe.phase.exhala':            'Exhale',
-  'breathe.phase.sosten':            'Hold',
-  'breathe.phase.inhala.mas':        'Inhale again',
-  'breathe.phase.inhala.oceanica':   'Oceanic inhale',
-  'breathe.phase.exhala.oceanica':   'Oceanic exhale',
-  'breathe.phase.inhala.izq':        'Inhale left',
-  'breathe.phase.inhala.dcha':       'Inhale right',
-  'breathe.phase.exhala.dcha':       'Exhale right',
-  'breathe.phase.exhala.izq':        'Exhale left',
-  'breathe.phase.respira':           'Breathe',
 
   // ── Breathe — categorías ─────────────────────────────────────────
   'breathe.cat.energia.label':           'Energy',
@@ -1170,21 +1083,16 @@ Object.assign(window, { useT, detectInitialLang });
 
 const { useSyncExternalStore, useCallback } = React;
 
-/* NOTA (sesión 37 · v0.19.0): clave de localStorage bumpeada de v1 a v2.
-   Pre-lanzamiento sin usuarios reales — hard reset intencional. Elimina
-   la necesidad de migración para campos legacy (timerStyle circle/numero,
-   layout editorial). Cualquier estado v1 guardado se ignora; arranca
-   limpio con defaultState en v2. */
-const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.19.0';
+const LS_KEY = 'pace.state.v1';
+const PACE_VERSION = 'v0.18.0';
 
 const defaultState = {
   // Settings / Tweaks
   palette: 'crema',           // crema | oscuro | envejecido
   font: 'cormorant',          // garamond | cormorant | mono
-  layout: 'sidebar',          // sidebar | minimal (editorial eliminado en v0.19.0)
+  layout: 'sidebar',          // sidebar | minimal | editorial
   sidebarCollapsed: false,    // true cuando el usuario colapsa el sidebar a icon-rail
-  timerStyle: 'aro',          // aro (default) | barra | analogico (circle/numero eliminados en v0.19.0)
+  timerStyle: 'aro',          // numero | circulo | barra | analogico | aro (híbrido círculo+barra)
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
@@ -1749,7 +1657,6 @@ const displayItalic = {
 };
 
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle }) {
-  const { t } = useT();
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
@@ -1794,7 +1701,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           <button
             data-pace-modal-close
             onClick={onClose}
-            aria-label={t('common.close')}
+            aria-label="Cerrar"
             style={{
               position: 'absolute', top: 18, right: 20,
               fontSize: 20, color: 'var(--ink-3)',
@@ -2813,7 +2720,6 @@ const { useState: useStateTO, useEffect: useEffectTO } = React;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
-  const { t } = useT();
 
   useEffectTO(() => {
     return onToast((t) => {
@@ -2865,7 +2771,7 @@ function ToastHost() {
             fontSize: 18,
           }}>{t.glyph}</div>
           <div>
-            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
+            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>Nuevo sello</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
           </div>
@@ -3413,7 +3319,7 @@ function WelcomeModal({ open, onClose }) {
             {/* Toggle pill ES · EN — encima del logo, columna izquierda */}
             <button
               onClick={toggleLang}
-              title={t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs')}
+              title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
               style={welcomeStyles.langToggle}
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
@@ -3955,9 +3861,9 @@ function SenderoDelDia({ state }) {
           <circle cx={pointerX} cy={pathY(pointerX)} r="3" fill="var(--ink)" />
         </svg>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
-          <span>{t('sidebar.trail.hour.start')}</span>
+          <span>6h</span>
           <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>{t('sidebar.trail.now')} · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
-          <span>{t('sidebar.trail.hour.end')}</span>
+          <span>22h</span>
         </div>
       </div>
     </>
@@ -4121,7 +4027,7 @@ function AchievementsPreview({ onOpen }) {
               cursor: 'pointer',
               transition: 'all 180ms',
             }}
-            title={id || t('ach.seal.discover')}
+            title={id || 'Por descubrir'}
           >
             {id ? '✦' : '·'}
           </button>
@@ -4556,7 +4462,7 @@ function MinutesPicker({ value, onChange }) {
       ) : isCustom ? (
         <button
           onClick={() => setEditing(true)}
-          title={t('focus.minutes.custom.title')}
+          title="Minutos personalizados (1–180)"
           style={{
             ...pillBase,
             fontWeight: 600,
@@ -4568,7 +4474,7 @@ function MinutesPicker({ value, onChange }) {
       ) : (
         <button
           onClick={() => setEditing(true)}
-          title={t('focus.minutes.custom.title')}
+          title="Minutos personalizados (1–180)"
           style={{
             ...pillBase,
             marginLeft: 6,
@@ -4607,12 +4513,12 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 /* ===================== */
 /* TIMER VISUALIZATIONS */
 /* ===================== */
-/* TimerVisualization — sesión 37: circle y numero eliminados (rotos).
-   Opciones válidas: aro (default), barra, analogico. */
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+  if (style === 'aro') return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  if (style === 'circulo') return <TimerCircle mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerNumber mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
 }
 
 /* Timer "Aro" (default · ref. usuario).
@@ -4653,8 +4559,51 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
   );
 }
 
-/* TimerNumber y TimerCircle eliminados en v0.19.0 (rotos, sin diseño).
-   Solo quedan: TimerAro (default), TimerBar, TimerAnalog. */
+function TimerNumber({ mins, secs, progress, modeLabel, subtitle }) {
+  return (
+    <div style={{ position: 'relative', width: 420, height: 420, display: 'grid', placeItems: 'center' }}>
+      {/* Círculo muy sutil */}
+      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <circle cx="50" cy="50" r="48" fill="none" stroke="var(--line)" strokeWidth="0.3" />
+      </svg>
+      <div style={{ textAlign: 'center', zIndex: 1 }}>
+        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 16 }}>{modeLabel}</div>
+        <div style={{
+          ...displayItalic,
+          fontSize: 'var(--size-hero)',
+          fontWeight: 400,
+          lineHeight: 0.9,
+          color: 'var(--ink)',
+          fontVariantNumeric: 'tabular-nums',
+          letterSpacing: '-0.03em',
+        }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
+        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 40 }}>{subtitle}</div>
+      </div>
+    </div>
+  );
+}
+
+function TimerCircle({ mins, secs, progress, modeLabel, subtitle }) {
+  const R = 46;
+  const C = 2 * Math.PI * R;
+  return (
+    <div style={{ position: 'relative', width: 420, height: 420, display: 'grid', placeItems: 'center' }}>
+      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.6" />
+        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--focus)" strokeWidth="1.2"
+          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
+          style={{ transition: 'stroke-dashoffset 1s linear' }} />
+      </svg>
+      <div style={{ textAlign: 'center', zIndex: 1 }}>
+        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>{modeLabel}</div>
+        <div style={{ ...displayItalic, fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
+        </div>
+        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 36 }}>{subtitle}</div>
+      </div>
+    </div>
+  );
+}
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
   return (
@@ -5191,13 +5140,13 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         </div>
       </div>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' }}>
-        {t('breathe.safety.body.intro.pre')}<strong style={{ color: 'var(--ink)' }}>{t('breathe.safety.body.intro.bold')}</strong>{t('breathe.safety.body.intro.post')}
+        Esta técnica implica <strong style={{ color: 'var(--ink)' }}>hiperventilación controlada y apnea</strong>. Puede causar mareo, cosquilleo o desmayo.
       </p>
       <ul style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink-2)', paddingLeft: 18, margin: '0 0 20px' }}>
-        <li>{t('breathe.safety.body.rule1.pre')}<strong style={{color:'var(--ink)'}}>{t('breathe.safety.body.rule1.bold')}</strong>{t('breathe.safety.body.rule1.post')}</li>
-        <li>{t('breathe.safety.body.rule2')}</li>
-        <li>{t('breathe.safety.body.rule3')}</li>
-        <li>{t('breathe.safety.body.rule4')}</li>
+        <li>Practícala <strong style={{color:'var(--ink)'}}>sentado o tumbado</strong>, nunca de pie</li>
+        <li>Nunca en el agua, conduciendo ni en altura</li>
+        <li>No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada</li>
+        <li>Detente si te mareas o sientes molestias</li>
       </ul>
       <label style={{
         display: 'flex', alignItems: 'center', gap: 10,
@@ -5230,20 +5179,6 @@ Object.assign(window, { BreatheLibrary, BreatheSafety });
 */
 
 const { useState, useEffect, useRef } = React;
-
-const PHASE_KEYS = {
-  'Inhala':           'breathe.phase.inhala',
-  'Exhala':           'breathe.phase.exhala',
-  'Sostén':           'breathe.phase.sosten',
-  'Inhala más':       'breathe.phase.inhala.mas',
-  'Inhala oceánica':  'breathe.phase.inhala.oceanica',
-  'Exhala oceánica':  'breathe.phase.exhala.oceanica',
-  'Inhala izq.':      'breathe.phase.inhala.izq',
-  'Inhala dcha.':     'breathe.phase.inhala.dcha',
-  'Exhala dcha.':     'breathe.phase.exhala.dcha',
-  'Exhala izq.':      'breathe.phase.exhala.izq',
-  'Respira':          'breathe.phase.respira',
-};
 
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
@@ -5444,7 +5379,6 @@ function BreatheSession({ routine, onExit }) {
 
   // ACTIVE
   const current = sequence[phase] || sequence[0];
-  const displayLabel = tR(PHASE_KEYS[current.label] || current.label, current.label);
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
@@ -5487,7 +5421,7 @@ function BreatheSession({ routine, onExit }) {
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
           marginBottom: 8, lineHeight: 1,
-        }}>{displayLabel}</div>
+        }}>{current.label}</div>
         {showCountdown && (
           <div style={{
             ...displayItalic,
@@ -6635,12 +6569,9 @@ Object.assign(window, { WeeklyStats });
 
 </script>
   <script type="text/babel">
-/* PACE · Panel de Ajustes (antes Tweaks)
+/* PACE · Panel de Tweaks
    ============================================================
-   5 ejes vigentes: audio, paleta, layout, timer, breath.
-   Sesión 37 (v0.19.0): renombrado a "Ajustes", audio movido al
-   primer eje con pills "Activado / Silenciado", eliminados
-   circle/numero de timer y editorial de layout.
+   4 ejes vigentes: paleta, layout, timer, breath.
 
    Retirados por decisión "menos variantes, más identidad":
      - logoVariant + supportCopyVariant (sesión 19).
@@ -6701,9 +6632,6 @@ function TweaksPanel({ open, onClose }) {
 
   if (!open) return null;
 
-  /* Ejes de personalización.
-     Sesión 37: circle/numero retirados de timer, editorial retirado
-     de layout, audio promovido al primer eje como pills separadas. */
   const ejes = [
     { key: 'palette', label: t('tweaks.eje.palette'), options: [
       { v: 'crema', name: t('tweaks.palette.crema') },
@@ -6713,10 +6641,13 @@ function TweaksPanel({ open, onClose }) {
     { key: 'layout', label: t('tweaks.eje.layout'), options: [
       { v: 'sidebar', name: t('tweaks.layout.sidebar') },
       { v: 'minimal', name: t('tweaks.layout.minimal') },
+      { v: 'editorial', name: t('tweaks.layout.editorial') },
     ]},
     { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
       { v: 'aro', name: t('tweaks.timer.aro') },
+      { v: 'circulo', name: t('tweaks.timer.circulo') },
       { v: 'barra', name: t('tweaks.timer.barra') },
+      { v: 'numero', name: t('tweaks.timer.numero') },
       { v: 'analogico', name: t('tweaks.timer.analogico') },
     ]},
     { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
@@ -6727,8 +6658,11 @@ function TweaksPanel({ open, onClose }) {
       { v: 'organico', name: t('tweaks.breath.organico') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
-       (sesión post-v0.12.1). Los campos del state se conservan por
-       compatibilidad con instalaciones existentes. */
+       (sesión post-v0.12.1). El logo queda fijo en 'pace' (oficial)
+       y el copy del botón de apoyo consolidado en una sola variante
+       ("Da de pastar a la vaca" + icono de vaca). Los campos del
+       state se conservan por compatibilidad con instalaciones
+       existentes, pero ya no son configurables desde la UI. */
   ];
 
   /* ============================================================
@@ -6737,11 +6671,11 @@ function TweaksPanel({ open, onClose }) {
      Y portátil. El archivo incluye:
        - version: para migración futura si el schema cambia.
        - exportedAt: timestamp legible.
-       - state: copia literal de localStorage['pace.state.v2'].
+       - state: copia literal de localStorage['pace.state.v1'].
      ============================================================ */
   const exportJSON = () => {
     try {
-      const raw = localStorage.getItem('pace.state.v2') || '{}';
+      const raw = localStorage.getItem('pace.state.v1') || '{}';
       const parsed = JSON.parse(raw);
       const payload = {
         app: 'PACE',
@@ -6803,7 +6737,7 @@ function TweaksPanel({ open, onClose }) {
         if (!ok) return;
 
         // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+        localStorage.setItem('pace.state.v1', JSON.stringify(incoming));
         setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {
@@ -6832,40 +6766,10 @@ function TweaksPanel({ open, onClose }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
           <Meta>{t('tweaks.meta')}</Meta>
-          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>{t('settings.title')}</div>
+          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
-
-      {/* Audio — primer eje (sesión 37: reubicado desde sección "Sound" inferior) */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
-        <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: true, name: t('settings.audio.on') },
-            { v: false, name: t('settings.audio.off') },
-          ].map(opt => {
-            const active = state.soundOn === opt.v;
-            return (
-              <button key={String(opt.v)} onClick={() => set({ soundOn: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
-
-      <Divider style={{ margin: '14px 0' }} />
 
       {ejes.map(eje => (
         <div key={eje.key} style={{ marginBottom: 16 }}>
@@ -6919,6 +6823,22 @@ function TweaksPanel({ open, onClose }) {
             );
           })}
         </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* Sound */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <Meta>{t('tweaks.sounds.meta')}</Meta>
+        <button onClick={() => set({ soundOn: !state.soundOn })}
+          style={{
+            padding: '4px 10px',
+            background: state.soundOn ? 'var(--focus)' : 'var(--paper-2)',
+            color: state.soundOn ? 'var(--paper)' : 'var(--ink-2)',
+            border: `1px solid ${state.soundOn ? 'var(--focus)' : 'var(--line)'}`,
+            borderRadius: 'var(--r-pill)',
+            fontSize: 11, letterSpacing: 0.2,
+          }}>{state.soundOn ? t('tweaks.sounds.on') : t('tweaks.sounds.off')}</button>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
@@ -6979,7 +6899,7 @@ function TweaksPanel({ open, onClose }) {
 
       {/* Reset */}
       <button
-        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v2'); location.reload(); } }}
+        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
         style={{
           width: '100%',
           padding: '8px',
@@ -7775,15 +7695,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
       document.addEventListener('DOMContentLoaded', () => mount());
     } else {
       mount();
-    }
-  </script>
-
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
-      });
     }
   </script>
 </body>

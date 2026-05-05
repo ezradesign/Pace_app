@@ -1,6 +1,9 @@
-/* PACE · Panel de Tweaks
+/* PACE · Panel de Ajustes (antes Tweaks)
    ============================================================
-   4 ejes vigentes: paleta, layout, timer, breath.
+   5 ejes vigentes: audio, paleta, layout, timer, breath.
+   Sesión 37 (v0.19.0): renombrado a "Ajustes", audio movido al
+   primer eje con pills "Activado / Silenciado", eliminados
+   circle/numero de timer y editorial de layout.
 
    Retirados por decisión "menos variantes, más identidad":
      - logoVariant + supportCopyVariant (sesión 19).
@@ -61,6 +64,9 @@ function TweaksPanel({ open, onClose }) {
 
   if (!open) return null;
 
+  /* Ejes de personalización.
+     Sesión 37: circle/numero retirados de timer, editorial retirado
+     de layout, audio promovido al primer eje como pills separadas. */
   const ejes = [
     { key: 'palette', label: t('tweaks.eje.palette'), options: [
       { v: 'crema', name: t('tweaks.palette.crema') },
@@ -70,13 +76,10 @@ function TweaksPanel({ open, onClose }) {
     { key: 'layout', label: t('tweaks.eje.layout'), options: [
       { v: 'sidebar', name: t('tweaks.layout.sidebar') },
       { v: 'minimal', name: t('tweaks.layout.minimal') },
-      { v: 'editorial', name: t('tweaks.layout.editorial') },
     ]},
     { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
       { v: 'aro', name: t('tweaks.timer.aro') },
-      { v: 'circulo', name: t('tweaks.timer.circulo') },
       { v: 'barra', name: t('tweaks.timer.barra') },
-      { v: 'numero', name: t('tweaks.timer.numero') },
       { v: 'analogico', name: t('tweaks.timer.analogico') },
     ]},
     { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
@@ -87,11 +90,8 @@ function TweaksPanel({ open, onClose }) {
       { v: 'organico', name: t('tweaks.breath.organico') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
-       (sesión post-v0.12.1). El logo queda fijo en 'pace' (oficial)
-       y el copy del botón de apoyo consolidado en una sola variante
-       ("Da de pastar a la vaca" + icono de vaca). Los campos del
-       state se conservan por compatibilidad con instalaciones
-       existentes, pero ya no son configurables desde la UI. */
+       (sesión post-v0.12.1). Los campos del state se conservan por
+       compatibilidad con instalaciones existentes. */
   ];
 
   /* ============================================================
@@ -100,11 +100,11 @@ function TweaksPanel({ open, onClose }) {
      Y portátil. El archivo incluye:
        - version: para migración futura si el schema cambia.
        - exportedAt: timestamp legible.
-       - state: copia literal de localStorage['pace.state.v1'].
+       - state: copia literal de localStorage['pace.state.v2'].
      ============================================================ */
   const exportJSON = () => {
     try {
-      const raw = localStorage.getItem('pace.state.v1') || '{}';
+      const raw = localStorage.getItem('pace.state.v2') || '{}';
       const parsed = JSON.parse(raw);
       const payload = {
         app: 'PACE',
@@ -166,7 +166,7 @@ function TweaksPanel({ open, onClose }) {
         if (!ok) return;
 
         // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v1', JSON.stringify(incoming));
+        localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
         setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {
@@ -195,10 +195,40 @@ function TweaksPanel({ open, onClose }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
           <Meta>{t('tweaks.meta')}</Meta>
-          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
+          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>{t('settings.title')}</div>
         </div>
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
+
+      {/* Audio — primer eje (sesión 37: reubicado desde sección "Sound" inferior) */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
+        <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: true, name: t('settings.audio.on') },
+            { v: false, name: t('settings.audio.off') },
+          ].map(opt => {
+            const active = state.soundOn === opt.v;
+            return (
+              <button key={String(opt.v)} onClick={() => set({ soundOn: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
 
       {ejes.map(eje => (
         <div key={eje.key} style={{ marginBottom: 16 }}>
@@ -252,22 +282,6 @@ function TweaksPanel({ open, onClose }) {
             );
           })}
         </div>
-      </div>
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Sound */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Meta>{t('tweaks.sounds.meta')}</Meta>
-        <button onClick={() => set({ soundOn: !state.soundOn })}
-          style={{
-            padding: '4px 10px',
-            background: state.soundOn ? 'var(--focus)' : 'var(--paper-2)',
-            color: state.soundOn ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${state.soundOn ? 'var(--focus)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-pill)',
-            fontSize: 11, letterSpacing: 0.2,
-          }}>{state.soundOn ? t('tweaks.sounds.on') : t('tweaks.sounds.off')}</button>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
@@ -328,7 +342,7 @@ function TweaksPanel({ open, onClose }) {
 
       {/* Reset */}
       <button
-        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
+        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v2'); location.reload(); } }}
         style={{
           width: '100%',
           padding: '8px',
