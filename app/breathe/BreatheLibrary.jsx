@@ -127,13 +127,13 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         </div>
       </div>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' }}>
-        Esta técnica implica <strong style={{ color: 'var(--ink)' }}>hiperventilación controlada y apnea</strong>. Puede causar mareo, cosquilleo o desmayo.
+        {t('breathe.safety.body.intro.pre')}<strong style={{ color: 'var(--ink)' }}>{t('breathe.safety.body.intro.bold')}</strong>{t('breathe.safety.body.intro.post')}
       </p>
       <ul style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink-2)', paddingLeft: 18, margin: '0 0 20px' }}>
-        <li>Practícala <strong style={{color:'var(--ink)'}}>sentado o tumbado</strong>, nunca de pie</li>
-        <li>Nunca en el agua, conduciendo ni en altura</li>
-        <li>No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada</li>
-        <li>Detente si te mareas o sientes molestias</li>
+        <li>{t('breathe.safety.body.rule1.pre')}<strong style={{color:'var(--ink)'}}>{t('breathe.safety.body.rule1.bold')}</strong>{t('breathe.safety.body.rule1.post')}</li>
+        <li>{t('breathe.safety.body.rule2')}</li>
+        <li>{t('breathe.safety.body.rule3')}</li>
+        <li>{t('breathe.safety.body.rule4')}</li>
       </ul>
       <label style={{
         display: 'flex', alignItems: 'center', gap: 10,

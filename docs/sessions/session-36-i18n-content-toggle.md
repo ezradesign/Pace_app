@@ -132,10 +132,18 @@ clave EN aparece en inglés, el resto cae al español hasta que se añada la cla
 
 ---
 
-## Pendiente (sesión 37)
-- `BreatheSafety` cuerpo del disclaimer (texto médico hardcodeado en ES) — añadir
-  claves `breathe.safety.body.*` a strings.js y migrar.
-- Decidir qué hacer con archivos PWA huérfanos: `icons/`, `manifest.json`, `sw.js`.
-- Etiquetas de fase en BreatheSession (Inhala / Exhala / Retén / Pausa) — vienen de
-  `getSequence()` en `BreatheVisual.jsx`; añadir sus equivalentes EN a strings-content.js
-  y traducirlas en el render activo.
+## Deuda cerrada
+
+- i18n de contenido de ejercicios (Respira, Mueve, Estira) — categorías + nombres + descripciones + códigos en EN.
+- FocusTimer i18n completo (modeLabel, subtitle, runningLabel, ciclo, reiniciar, min, otro, focus.pause).
+- Toggle ES·EN reubicado a headerLeft del Welcome (resuelve colisión con X del modal).
+- Dot verde olivo del TimerAro eliminado (decisión de producto: calma visual).
+- Bug shadowing `t = setTimeout` en BreatheSession renombrado a `timer`.
+
+## Deuda pendiente (sesión 37)
+
+- BreatheSafety body del disclaimer médico.
+- Fases de respiración (Inhala/Exhala/Retén/Pausa) — claves EN.
+- Decisión sobre PWA huérfana (icons/, manifest.json, sw.js).
+- Strings hardcodeados restantes según auditoría MiniMax (14 en 7 archivos).
+- Limpieza panel Ajustes (timer style, layout, posición audio).
