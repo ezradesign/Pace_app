@@ -8,7 +8,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.15.0';
+const PACE_VERSION = 'v0.16.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -94,6 +94,10 @@ const defaultState = {
   // la sección (probablemente en un modal dedicado, no en el sidebar).
   // No hay action que lo mute actualmente.
   reminders: [],
+
+  // Fechas (toDateString()) en las que se realizó alguna acción con soundOn=false.
+  // Cap de 30 entradas. Alimenta master.silent.day. Sesión 34.
+  silentDates: [],
 
   // Rollover: día de calendario del último uso (toDateString()).
   // Cuando cambia, se resetean cycle / plan / water.today al cargar.
@@ -248,6 +252,40 @@ function checkTimeOfDayAchievements() {
   }
 }
 
+/* Detectores de logros collector — sesión 34.
+   Se llama al final de cada unlockAchievement exitoso.
+   Cuenta los logros ya en _state (incluido el que se acaba de añadir).
+   unlockAchievement es idempotente → la recursión termina de forma natural. */
+function checkCollectorAchievements() {
+  const count = Object.keys(_state.achievements).length;
+  if (count >= 50) unlockAchievement('master.collector.half');
+  if (count >= 100) unlockAchievement('master.collector.full');
+}
+
+/* Detector master.silent.day — sesión 34.
+   Registra hoy como día silencioso si soundOn=false y el usuario hizo algo.
+   Se llama desde cada acción de completar. */
+function checkSilentDayAchievement() {
+  if (_state.soundOn) return;
+  const today = new Date().toDateString();
+  const list = Array.isArray(_state.silentDates) ? _state.silentDates : [];
+  if (!list.includes(today)) {
+    setState({ silentDates: [...list, today].slice(-30) });
+    unlockAchievement('master.silent.day');
+  }
+}
+
+/* Detector master.retreat — sesión 34.
+   Usa los buckets weeklyStats ya existentes: breathMinutes[day] + moveMinutes[day].
+   Extra suma al bucket moveMinutes (decisión activa), así que completeExtraSession
+   también llama a este detector. */
+function checkRetreatAchievement() {
+  const day = new Date().getDay();
+  const todayBreath = (_state.weeklyStats.breathMinutes || [])[day] || 0;
+  const todayMove = (_state.weeklyStats.moveMinutes || [])[day] || 0;
+  if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
+}
+
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -256,6 +294,7 @@ function unlockAchievement(id, note) {
   });
   // Notificación flotante
   showToast({ id, type: 'achievement' });
+  checkCollectorAchievements();
   return true;
 }
 
@@ -302,6 +341,7 @@ function completePomodoro() {
      tweak antes de que termine el ticker). Sesión 29. */
   if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
   checkTimeOfDayAchievements();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -341,6 +381,8 @@ function completeBreathSession(routineId, durationMin) {
     'breathe.physiological': 'explore.physiological',
   };
   if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -361,6 +403,8 @@ function completeMoveSession(routineId, durationMin) {
   if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   checkPlanAchievements();
   checkTimeOfDayAchievements();
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -396,6 +440,8 @@ function completeExtraSession(routineId, durationMin = 0) {
     'move.desk.quick': 'explore.desk',
   };
   if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -414,6 +460,7 @@ function addWaterGlass(delta = 1) {
   if (delta > 0) {
     unlockAchievement('first.sip');
     checkPlanAchievements();
+    checkSilentDayAchievement();
   }
 }
 

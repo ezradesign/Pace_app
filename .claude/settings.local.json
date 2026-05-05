@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheModule.jsx\")",
+      "Bash(node build-standalone.js)"
     ]
   }
 }

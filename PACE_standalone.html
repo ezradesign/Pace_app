@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.15.0</title>
+  <title>PACE · Foco · Cuerpo — v0.16.0</title>
   <style>
 /* ============================================
    PACE · Design Tokens
@@ -243,7 +243,7 @@ input, textarea { font-family: inherit; color: inherit; }
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.15.0';
+const PACE_VERSION = 'v0.16.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -329,6 +329,10 @@ const defaultState = {
   // la sección (probablemente en un modal dedicado, no en el sidebar).
   // No hay action que lo mute actualmente.
   reminders: [],
+
+  // Fechas (toDateString()) en las que se realizó alguna acción con soundOn=false.
+  // Cap de 30 entradas. Alimenta master.silent.day. Sesión 34.
+  silentDates: [],
 
   // Rollover: día de calendario del último uso (toDateString()).
   // Cuando cambia, se resetean cycle / plan / water.today al cargar.
@@ -483,6 +487,40 @@ function checkTimeOfDayAchievements() {
   }
 }
 
+/* Detectores de logros collector — sesión 34.
+   Se llama al final de cada unlockAchievement exitoso.
+   Cuenta los logros ya en _state (incluido el que se acaba de añadir).
+   unlockAchievement es idempotente → la recursión termina de forma natural. */
+function checkCollectorAchievements() {
+  const count = Object.keys(_state.achievements).length;
+  if (count >= 50) unlockAchievement('master.collector.half');
+  if (count >= 100) unlockAchievement('master.collector.full');
+}
+
+/* Detector master.silent.day — sesión 34.
+   Registra hoy como día silencioso si soundOn=false y el usuario hizo algo.
+   Se llama desde cada acción de completar. */
+function checkSilentDayAchievement() {
+  if (_state.soundOn) return;
+  const today = new Date().toDateString();
+  const list = Array.isArray(_state.silentDates) ? _state.silentDates : [];
+  if (!list.includes(today)) {
+    setState({ silentDates: [...list, today].slice(-30) });
+    unlockAchievement('master.silent.day');
+  }
+}
+
+/* Detector master.retreat — sesión 34.
+   Usa los buckets weeklyStats ya existentes: breathMinutes[day] + moveMinutes[day].
+   Extra suma al bucket moveMinutes (decisión activa), así que completeExtraSession
+   también llama a este detector. */
+function checkRetreatAchievement() {
+  const day = new Date().getDay();
+  const todayBreath = (_state.weeklyStats.breathMinutes || [])[day] || 0;
+  const todayMove = (_state.weeklyStats.moveMinutes || [])[day] || 0;
+  if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
+}
+
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -491,6 +529,7 @@ function unlockAchievement(id, note) {
   });
   // Notificación flotante
   showToast({ id, type: 'achievement' });
+  checkCollectorAchievements();
   return true;
 }
 
@@ -537,6 +576,7 @@ function completePomodoro() {
      tweak antes de que termine el ticker). Sesión 29. */
   if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
   checkTimeOfDayAchievements();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -576,6 +616,8 @@ function completeBreathSession(routineId, durationMin) {
     'breathe.physiological': 'explore.physiological',
   };
   if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -596,6 +638,8 @@ function completeMoveSession(routineId, durationMin) {
   if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   checkPlanAchievements();
   checkTimeOfDayAchievements();
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -631,6 +675,8 @@ function completeExtraSession(routineId, durationMin = 0) {
     'move.desk.quick': 'explore.desk',
   };
   if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -649,6 +695,7 @@ function addWaterGlass(delta = 1) {
   if (delta > 0) {
     unlockAchievement('first.sip');
     checkPlanAchievements();
+    checkSilentDayAchievement();
   }
 }
 
@@ -3885,13 +3932,214 @@ Object.assign(window, { FocusTimer });
 
 </script>
   <script type="text/babel">
-/* PACE · Módulo Respira
-   Librería + Sesión guiada con círculo animado + Modal de seguridad
+/* PACE · Respiración — Visual animado + getSequence
+   Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
 */
 
-const { useState: useStateBR, useEffect: useEffectBR, useRef: useRefBR } = React;
+function getSequence(routine) {
+  if (routine.pattern === 'rounds') {
+    return [
+      { label: 'Inhala', duration: 2, scale: 1.3 },
+      { label: 'Exhala', duration: 2, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'box') {
+    const [i, h1, e, h2] = routine.cycle;
+    return [
+      { label: 'Inhala', duration: i, scale: 1.3 },
+      { label: 'Sostén', duration: h1, scale: 1.3 },
+      { label: 'Exhala', duration: e, scale: 0.9 },
+      { label: 'Sostén', duration: h2, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'coherent') {
+    const [i, , e] = routine.cycle;
+    return [
+      { label: 'Inhala', duration: i, scale: 1.3 },
+      { label: 'Exhala', duration: e, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'pattern') {
+    const [i, h, e] = routine.cycle;
+    return [
+      { label: 'Inhala', duration: i, scale: 1.3 },
+      { label: 'Sostén', duration: h, scale: 1.3 },
+      { label: 'Exhala', duration: e, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'physiological') {
+    return [
+      { label: 'Inhala', duration: 2, scale: 1.25 },
+      { label: 'Inhala más', duration: 1, scale: 1.35 },
+      { label: 'Exhala', duration: 5, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'ujjayi') {
+    return [
+      { label: 'Inhala oceánica', duration: 5, scale: 1.3 },
+      { label: 'Exhala oceánica', duration: 5, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'bhastrika' || routine.pattern === 'kapalabhati') {
+    return [
+      { label: 'Inhala', duration: 1, scale: 1.2 },
+      { label: 'Exhala', duration: 1, scale: 0.95 },
+    ];
+  }
+  if (routine.pattern === 'nadi') {
+    return [
+      { label: 'Inhala izq.', duration: 4, scale: 1.3 },
+      { label: 'Sostén', duration: 2, scale: 1.3 },
+      { label: 'Exhala dcha.', duration: 4, scale: 0.9 },
+      { label: 'Inhala dcha.', duration: 4, scale: 1.3 },
+      { label: 'Sostén', duration: 2, scale: 1.3 },
+      { label: 'Exhala izq.', duration: 4, scale: 0.9 },
+    ];
+  }
+  return [{ label: 'Respira', duration: 4, scale: 1.2 }];
+}
 
-/* Catálogo */
+const breathVisualStyles = {
+  wrap: {
+    position: 'relative',
+    width: 260, height: 260,
+    display: 'grid', placeItems: 'center',
+  },
+  core: {
+    width: 160, height: 160,
+    borderRadius: '50%',
+    position: 'relative',
+  },
+};
+
+function BreathVisual({ style, phase, progress, scale = 1.2 }) {
+  const transitionDur = '1800ms';
+
+  if (style === 'flor') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        <div style={{
+          position: 'absolute', inset: -40,
+          border: '1px solid var(--breathe)',
+          borderRadius: '50%',
+          opacity: 0.25,
+          transform: `scale(${scale * 0.95})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+        }} />
+        <div style={{
+          position: 'absolute', inset: -20,
+          border: '1px solid var(--breathe)',
+          borderRadius: '50%',
+          opacity: 0.4,
+          transform: `scale(${scale})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+        }} />
+        <svg viewBox="-100 -100 200 200" style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          transform: `scale(${scale * 0.85}) rotate(${progress * 40}deg)`,
+          transition: `transform ${transitionDur} var(--ease)`,
+        }}>
+          {[0,1,2,3,4,5].map(i => (
+            <ellipse key={i} cx="0" cy="-32" rx="14" ry="34"
+              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.6"
+              transform={`rotate(${i * 60})`} opacity="0.5" />
+          ))}
+        </svg>
+        <div style={{
+          width: 80, height: 80,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 80%)',
+          border: '1.5px solid var(--breathe)',
+          transform: `scale(${scale * 0.7})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+          position: 'relative',
+        }} />
+      </div>
+    );
+  }
+
+  if (style === 'ondas') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        {[0,1,2,3].map(i => (
+          <div key={i} style={{
+            position: 'absolute', inset: 0,
+            border: '1px solid var(--breathe)',
+            borderRadius: '50%',
+            opacity: 0.15 + i * 0.1,
+            transform: `scale(${scale - i * 0.15})`,
+            transition: `transform ${transitionDur} var(--ease)`,
+          }} />
+        ))}
+        <div style={{ ...breathVisualStyles.core, background: 'var(--breathe-soft)' }} />
+      </div>
+    );
+  }
+
+  if (style === 'petalo') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} var(--ease)`, transform: `scale(${scale})` }}>
+          {[0,1,2,3,4,5].map(i => (
+            <ellipse key={i} cx="0" cy="-40" rx="20" ry="45"
+              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.8"
+              transform={`rotate(${i * 60})`} opacity="0.55" />
+          ))}
+          <circle cx="0" cy="0" r="12" fill="var(--breathe)" opacity="0.25" />
+        </svg>
+      </div>
+    );
+  }
+
+  if (style === 'organico') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        <div style={{
+          ...breathVisualStyles.core,
+          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 70%)',
+          transform: `scale(${scale})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+          borderRadius: `${42 + Math.sin(progress * Math.PI * 4) * 6}% ${58 - Math.sin(progress * Math.PI * 4) * 6}% ${46 + Math.cos(progress * Math.PI * 3) * 8}% ${54 - Math.cos(progress * Math.PI * 3) * 8}%`,
+          border: '1px solid var(--breathe)',
+        }} />
+      </div>
+    );
+  }
+
+  // Default: pulso
+  return (
+    <div style={breathVisualStyles.wrap}>
+      <div style={{ position: 'absolute', inset: -30, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
+      <div style={{ position: 'absolute', inset: -60, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
+      <div style={{
+        ...breathVisualStyles.core,
+        background: 'var(--breathe-soft)',
+        border: '1.5px solid var(--breathe)',
+        transform: `scale(${scale})`,
+        transition: `transform ${transitionDur} var(--ease)`,
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: 8, height: 8, borderRadius: '50%',
+        background: 'var(--breathe-2)',
+        top: '50%', left: '50%',
+        transform: `translate(-50%, -50%) rotate(${progress * 360}deg) translateY(-110px)`,
+        transition: 'transform 1s linear',
+      }} />
+    </div>
+  );
+}
+
+Object.assign(window, { BreathVisual, getSequence });
+
+</script>
+  <script type="text/babel">
+/* PACE · Respiración — Biblioteca + modal de seguridad
+   Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
+*/
+
+const { useState } = React;
+
 const BREATHE_ROUTINES = {
   energia: {
     label: 'Energía',
@@ -3936,9 +4184,6 @@ const BREATHE_ROUTINES = {
   }
 };
 
-/* =========================
-   LIBRARY MODAL
-   ========================= */
 function BreatheLibrary({ open, onClose, onStart }) {
   return (
     <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Respiración" subtitle="Breathwork guiado: pranayamas, coherencia, rondas."
@@ -3995,11 +4240,8 @@ function RoutineCard({ routine, color, onClick }) {
   );
 }
 
-/* =========================
-   SAFETY MODAL
-   ========================= */
 function BreatheSafety({ routine, onAccept, onCancel }) {
-  const [checked, setChecked] = useStateBR(false);
+  const [checked, setChecked] = useState(false);
   if (!routine) return null;
   return (
     <Modal open={true} onClose={onCancel} maxWidth={520}>
@@ -4045,29 +4287,35 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
   );
 }
 
-/* =========================
-   BREATHING SESSION
-   NOTA: incluye fase de preparación (3s), retención explícita en rondas,
-   countdown visible en fases largas, pantalla de completado, atajos de teclado.
-   ========================= */
+Object.assign(window, { BreatheLibrary, BreatheSafety });
+
+</script>
+  <script type="text/babel">
+/* PACE · Respiración — Sesión guiada
+   Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
+   Depende de BreatheVisual.jsx (BreathVisual, getSequence) que carga antes.
+*/
+
+const { useState, useEffect, useRef } = React;
+
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
-  const [stage, setStage] = useStateBR('prep'); // 'prep' | 'active' | 'hold' | 'done'
-  const [prepCount, setPrepCount] = useStateBR(3);
-  const [phase, setPhase] = useStateBR(0);
-  const [phaseTime, setPhaseTime] = useStateBR(0);
-  const [round, setRound] = useStateBR(1);
-  const [breathCount, setBreathCount] = useStateBR(1);
-  const [holdSeconds, setHoldSeconds] = useStateBR(0);
-  const [paused, setPaused] = useStateBR(false);
-  const startTime = useRefBR(Date.now());
-  const sessionStart = useRefBR(Date.now());
+  const [stage, setStage] = useState('prep'); // 'prep' | 'active' | 'hold' | 'done'
+  const [prepCount, setPrepCount] = useState(3);
+  const [phase, setPhase] = useState(0);
+  const [phaseTime, setPhaseTime] = useState(0);
+  const [round, setRound] = useState(1);
+  const [breathCount, setBreathCount] = useState(1);
+  const [holdSeconds, setHoldSeconds] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const startTime = useRef(Date.now());
+  const sessionStart = useRef(Date.now());
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
 
   // Preparación: cuenta atrás 3 segundos
-  useEffectBR(() => {
+  useEffect(() => {
     if (stage !== 'prep' || paused) return;
     if (prepCount <= 0) {
       setStage('active');
@@ -4079,7 +4327,7 @@ function BreatheSession({ routine, onExit }) {
   }, [stage, prepCount, paused]);
 
   // Ticker principal (active)
-  useEffectBR(() => {
+  useEffect(() => {
     if (paused || stage !== 'active') return;
     const intv = setInterval(() => {
       setPhaseTime(t => {
@@ -4103,12 +4351,11 @@ function BreatheSession({ routine, onExit }) {
   }, [phase, paused, routine, stage]);
 
   // Ticker de retención (hold en rondas)
-  useEffectBR(() => {
+  useEffect(() => {
     if (stage !== 'hold' || paused) return;
     const intv = setInterval(() => {
       setHoldSeconds(s => {
         const next = s + 1;
-        // Desbloqueo de logros por apnea
         if (next === 60) unlockAchievement('secret.breath.hold.60');
         if (next === 90) unlockAchievement('secret.breath.hold.90');
         if (next === 120) unlockAchievement('secret.breath.hold.120');
@@ -4119,7 +4366,7 @@ function BreatheSession({ routine, onExit }) {
   }, [stage, paused]);
 
   // Atajos de teclado
-  useEffectBR(() => {
+  useEffect(() => {
     const onKey = (e) => {
       if (e.key === ' ') { e.preventDefault(); setPaused(p => !p); }
       if (e.key === 'Escape') onExit('exit');
@@ -4136,7 +4383,6 @@ function BreatheSession({ routine, onExit }) {
         setBreathCount(b => b + 1);
         setPhase(0);
       } else {
-        // Se completaron las N respiraciones → retención
         setStage('hold');
         setHoldSeconds(0);
       }
@@ -4151,7 +4397,6 @@ function BreatheSession({ routine, onExit }) {
   };
 
   const releaseHold = () => {
-    // Tras liberar el aire, siguiente ronda o fin
     if (round < routine.rounds) {
       setRound(r => r + 1);
       setBreathCount(1);
@@ -4169,7 +4414,6 @@ function BreatheSession({ routine, onExit }) {
 
   // ====== RENDER STAGES ======
 
-  // PREPARACIÓN
   if (stage === 'prep') {
     return (
       <SessionPrep
@@ -4183,7 +4427,6 @@ function BreatheSession({ routine, onExit }) {
     );
   }
 
-  // COMPLETADO
   if (stage === 'done') {
     const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
     const mins = Math.floor(totalSec / 60);
@@ -4209,7 +4452,6 @@ function BreatheSession({ routine, onExit }) {
     );
   }
 
-  // HOLD (retención en rondas)
   if (stage === 'hold') {
     const holdMins = Math.floor(holdSeconds / 60);
     const holdSecs = holdSeconds % 60;
@@ -4248,7 +4490,7 @@ function BreatheSession({ routine, onExit }) {
     );
   }
 
-  // ACTIVE (ciclo de respiración normal)
+  // ACTIVE
   const current = sequence[phase] || sequence[0];
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
@@ -4323,220 +4565,7 @@ function BreatheSession({ routine, onExit }) {
   );
 }
 
-/* SessionHeader y Stat (antes locales aquí) se extrajeron en sesión 26
-   a app/ui/SessionShell.jsx como componentes compartidos con Move.
-   Ver docs/audits/audit-v0.12.7.md §3.1 (Top-1 duplicación). */
-
-function getSequence(routine) {
-  // Devuelve [{label, duration, scale}, …]
-  if (routine.pattern === 'rounds') {
-    return [
-      { label: 'Inhala', duration: 2, scale: 1.3 },
-      { label: 'Exhala', duration: 2, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'box') {
-    const [i, h1, e, h2] = routine.cycle;
-    return [
-      { label: 'Inhala', duration: i, scale: 1.3 },
-      { label: 'Sostén', duration: h1, scale: 1.3 },
-      { label: 'Exhala', duration: e, scale: 0.9 },
-      { label: 'Sostén', duration: h2, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'coherent') {
-    const [i, , e] = routine.cycle;
-    return [
-      { label: 'Inhala', duration: i, scale: 1.3 },
-      { label: 'Exhala', duration: e, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'pattern') {
-    // 4-7-8
-    const [i, h, e] = routine.cycle;
-    return [
-      { label: 'Inhala', duration: i, scale: 1.3 },
-      { label: 'Sostén', duration: h, scale: 1.3 },
-      { label: 'Exhala', duration: e, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'physiological') {
-    return [
-      { label: 'Inhala', duration: 2, scale: 1.25 },
-      { label: 'Inhala más', duration: 1, scale: 1.35 },
-      { label: 'Exhala', duration: 5, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'ujjayi') {
-    return [
-      { label: 'Inhala oceánica', duration: 5, scale: 1.3 },
-      { label: 'Exhala oceánica', duration: 5, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'bhastrika' || routine.pattern === 'kapalabhati') {
-    return [
-      { label: 'Inhala', duration: 1, scale: 1.2 },
-      { label: 'Exhala', duration: 1, scale: 0.95 },
-    ];
-  }
-  if (routine.pattern === 'nadi') {
-    return [
-      { label: 'Inhala izq.', duration: 4, scale: 1.3 },
-      { label: 'Sostén', duration: 2, scale: 1.3 },
-      { label: 'Exhala dcha.', duration: 4, scale: 0.9 },
-      { label: 'Inhala dcha.', duration: 4, scale: 1.3 },
-      { label: 'Sostén', duration: 2, scale: 1.3 },
-      { label: 'Exhala izq.', duration: 4, scale: 0.9 },
-    ];
-  }
-  return [{ label: 'Respira', duration: 4, scale: 1.2 }];
-}
-
-/* =========================
-   BREATH VISUAL
-   ========================= */
-function BreathVisual({ style, phase, progress, scale = 1.2 }) {
-  const transitionDur = '1800ms';
-  /* Estilo "Flor" — híbrido entre pulso y pétalo.
-     Anillos concéntricos que pulsan + pétalos suaves rotando lentamente + núcleo luminoso. */
-  if (style === 'flor') {
-    return (
-      <div style={visualStyles.wrap}>
-        {/* Anillos externos pulsando */}
-        <div style={{
-          position: 'absolute', inset: -40,
-          border: '1px solid var(--breathe)',
-          borderRadius: '50%',
-          opacity: 0.25,
-          transform: `scale(${scale * 0.95})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-        }} />
-        <div style={{
-          position: 'absolute', inset: -20,
-          border: '1px solid var(--breathe)',
-          borderRadius: '50%',
-          opacity: 0.4,
-          transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-        }} />
-        {/* Pétalos suaves girando muy lento */}
-        <svg viewBox="-100 -100 200 200" style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          transform: `scale(${scale * 0.85}) rotate(${progress * 40}deg)`,
-          transition: `transform ${transitionDur} var(--ease)`,
-        }}>
-          {[0,1,2,3,4,5].map(i => (
-            <ellipse key={i} cx="0" cy="-32" rx="14" ry="34"
-              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.6"
-              transform={`rotate(${i * 60})`} opacity="0.5" />
-          ))}
-        </svg>
-        {/* Núcleo luminoso */}
-        <div style={{
-          width: 80, height: 80,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 80%)',
-          border: '1.5px solid var(--breathe)',
-          transform: `scale(${scale * 0.7})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-          position: 'relative',
-        }} />
-      </div>
-    );
-  }
-  if (style === 'ondas') {
-    return (
-      <div style={visualStyles.wrap}>
-        {[0,1,2,3].map(i => (
-          <div key={i} style={{
-            position: 'absolute', inset: 0,
-            border: '1px solid var(--breathe)',
-            borderRadius: '50%',
-            opacity: 0.15 + i * 0.1,
-            transform: `scale(${scale - i * 0.15})`,
-            transition: `transform ${transitionDur} var(--ease)`,
-          }} />
-        ))}
-        <div style={{ ...visualStyles.core, background: 'var(--breathe-soft)' }} />
-      </div>
-    );
-  }
-  if (style === 'petalo') {
-    return (
-      <div style={visualStyles.wrap}>
-        <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} var(--ease)`, transform: `scale(${scale})` }}>
-          {[0,1,2,3,4,5].map(i => (
-            <ellipse key={i} cx="0" cy="-40" rx="20" ry="45"
-              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.8"
-              transform={`rotate(${i * 60})`} opacity="0.55" />
-          ))}
-          <circle cx="0" cy="0" r="12" fill="var(--breathe)" opacity="0.25" />
-        </svg>
-      </div>
-    );
-  }
-  if (style === 'organico') {
-    return (
-      <div style={visualStyles.wrap}>
-        <div style={{
-          ...visualStyles.core,
-          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 70%)',
-          transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-          borderRadius: `${42 + Math.sin(progress * Math.PI * 4) * 6}% ${58 - Math.sin(progress * Math.PI * 4) * 6}% ${46 + Math.cos(progress * Math.PI * 3) * 8}% ${54 - Math.cos(progress * Math.PI * 3) * 8}%`,
-          border: '1px solid var(--breathe)',
-        }} />
-      </div>
-    );
-  }
-  // Default: pulso
-  return (
-    <div style={visualStyles.wrap}>
-      {/* Anillos externos */}
-      <div style={{ position: 'absolute', inset: -30, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
-      <div style={{ position: 'absolute', inset: -60, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
-      <div style={{
-        ...visualStyles.core,
-        background: 'var(--breathe-soft)',
-        border: '1.5px solid var(--breathe)',
-        transform: `scale(${scale})`,
-        transition: `transform ${transitionDur} var(--ease)`,
-      }} />
-      {/* Puntito indicador rotando */}
-      <div style={{
-        position: 'absolute',
-        width: 8, height: 8, borderRadius: '50%',
-        background: 'var(--breathe-2)',
-        top: '50%', left: '50%',
-        transform: `translate(-50%, -50%) rotate(${progress * 360}deg) translateY(-110px)`,
-        transition: 'transform 1s linear',
-      }} />
-    </div>
-  );
-}
-
-const visualStyles = {
-  wrap: {
-    position: 'relative',
-    width: 260, height: 260,
-    display: 'grid', placeItems: 'center',
-  },
-  core: {
-    width: 160, height: 160,
-    borderRadius: '50%',
-    position: 'relative',
-  },
-};
-
-/* sessionStyles local eliminado en sesión 26. El layout de sesión vive ahora
-   en app/ui/SessionShell.jsx (sessionShellStyles) y los componentes
-   SessionShell / SessionPrep / SessionDone lo consumen. */
-
-/* Export a window: sólo los componentes consumidos fuera del módulo.
-   SessionHeader y Stat se movieron a SessionShell.jsx (expuestos desde
-   allí). BREATHE_ROUTINES sigue declarado como const local (nadie lo
-   consume fuera), saneado por audit §4.1. */
-Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession });
+Object.assign(window, { BreatheSession });
 
 </script>
   <script type="text/babel">
@@ -5342,10 +5371,14 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // Exploración move (6/20) — reconectados en sesión 15
   'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (5/25) — sesión 29: +master.long.focus (45min sin pausa),
-  // +master.dawn (<7h), +master.dusk (>=21h).
+  // Maestría (9/25) — sesión 29: +master.long.focus, +master.dawn, +master.dusk.
+  // Sesión 34: +master.collector.half/full (50/100 logros),
+  //            +master.silent.day (soundOn=false 1 día),
+  //            +master.retreat (2h breathe+move en día).
   'master.pomodoro.8', 'master.focus.day',
   'master.long.focus', 'master.dawn', 'master.dusk',
+  'master.collector.half', 'master.collector.full',
+  'master.silent.day', 'master.retreat',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.

@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.15.0
-**Última sesión:** #33 — 2026-05-04 · Loop post-Pomodoro: BreakMenu con rotación inteligente
-**Última actualización de este archivo:** 2026-05-04 · sesión 33 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.15.0 (~364 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.16.0
+**Última sesión:** #34 — 2026-05-05 · Split BreatheModule + 4 detectores de logros aplazados
+**Última actualización de este archivo:** 2026-05-05 · sesión 34 (cierre)
+**Build entregado:** `PACE_standalone.html` v0.16.0 (~365 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -29,7 +29,9 @@
 | `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | v0.12.10 (data-pace-session-* attrs + bloque CSS responsive 640px) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.10 (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | v0.12.10 (data-pace-tweaks-panel + bottom-sheet en móvil) |
-| `app/breathe/BreatheModule.jsx` | Módulo Respira | **v0.13.0** (cableado `playSound('breath')` en cambio de fase) |
+| `app/breathe/BreatheVisual.jsx` | Respiración — visual + getSequence | **v0.16.0** (nuevo · extraído de BreatheModule) |
+| `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.16.0** (nuevo · extraído de BreatheModule) |
+| `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.16.0** (nuevo · extraído de BreatheModule) |
 | `app/move/MoveModule.jsx` | Módulo Mueve | **v0.14.3** (`useRefMV` movido a destructure de módulo) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
@@ -40,7 +42,7 @@
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.14.3** (vasos individuales reproducen `sip` al añadir) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.14.0** (+7 ids en `IMPLEMENTED_ACHIEVEMENTS`: 39 → 45; Constancia 11/15, Maestría 5/25) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.15.0** (`PACE_VERSION` → `'v0.15.0'`) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.16.0** (bump + `silentDates` + 3 checkers de logros) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
@@ -60,23 +62,27 @@ Backups vigentes:
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 33 · v0.14.3 → v0.15.0 · Loop post-Pomodoro: BreakMenu con rotación inteligente**
+**Sesión 34 · v0.15.0 → v0.16.0 · Split BreatheModule + 4 detectores de logros aplazados**
 
 ### Qué se hizo
 
-1. **`app/breakmenu/BreakMenu.jsx` — rotación inteligente** añadida función `computeScore(key, state)` que puntúa cada actividad según lo hecho hoy: Respira (0 si `plan.respira`, 2 si no), Mueve (0/2 igual), Agua (3 si 0 vasos, 1 si incompleto, 0 si meta). Las 3 cartas se reordenan por score desc (sort estable para empates). La carta con mayor puntuación muestra un tag `<Tag color="var(--focus)">Para ti</Tag>` (solo si score>0). Las cartas ya hechas hoy muestran borde `var(--line)` (muted) + punto color-módulo top-right y descripción "Ya hecho hoy · otra ronda si quieres".
-2. **`app/state.jsx` — `PACE_VERSION`** bumpeado a `'v0.15.0'`.
-3. **`PACE.html` — título** actualizado a `v0.15.0`.
-4. **`build-standalone.js`** — script Node.js nuevo que reemplaza la herramienta `super_inline_html` del entorno anterior. Inlinea `tokens.css`, todos los `.jsx`, y el logo como base64 data URI. Produce `PACE_standalone.html` (~364 KB).
-5. **`PACE_standalone.html`** — regenerado dos veces: primero con código v0.14.3 (pendiente desde sesión 32), luego con el BreakMenu actualizado v0.15.0.
-6. **Backup** `backups/PACE_standalone_v0.14.0_20260504.html` (5 backups, al límite — el más antiguo a borrar en la próxima sesión si hay uno nuevo).
+1. **`BreatheModule.jsx` (565 líneas) troceado** en 3 archivos (`BreatheVisual.jsx` ~155 líneas, `BreatheLibrary.jsx` ~130, `BreatheSession.jsx` ~210). `BreatheModule.jsx` eliminado. `PACE.html` actualizado con 3 `<script>` en orden de dependencia.
+2. **Fix del simplify:** `checkSilentDayAchievement` — `unlockAchievement` movido dentro del bloque `!list.includes(today)` (evita llamadas redundantes tras el primer día silencioso). Aliases de hooks simplificados a `useState`/`useEffect`/`useRef` en los nuevos archivos de breathe.
+3. **4 detectores de logros en `state.jsx`:**
+   - `master.collector.half/full` — `checkCollectorAchievements()` al final de cada `unlockAchievement` exitoso.
+   - `master.silent.day` — `checkSilentDayAchievement()` + nuevo campo `silentDates: []` en state.
+   - `master.retreat` — `checkRetreatAchievement()` usando `weeklyStats.breathMinutes[day] + moveMinutes[day] >= 120`.
+4. **`IMPLEMENTED_ACHIEVEMENTS`** en `Achievements.jsx`: 45 → 49 ids. Maestría 5/25 → 9/25.
+5. **Standalone regenerado** a 365 KB con `node build-standalone.js`.
+6. **Backup rotado:** `v0.12.8` eliminado, `v0.15.0_20260505` añadido (recuperado de git). 5 backups activos: v0.12.9 → v0.15.0.
 
 ### Archivos
-- **Modificados:** `app/breakmenu/BreakMenu.jsx`, `app/state.jsx`, `PACE.html`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
-- **Nuevos:** `build-standalone.js`, `backups/PACE_standalone_v0.14.0_20260504.html`, `docs/sessions/session-33-loop-post-pomodoro.md`.
+- **Nuevos:** `app/breathe/BreatheVisual.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSession.jsx`, `backups/PACE_standalone_v0.15.0_20260505.html`, `docs/sessions/session-34-split-breathe-logros.md`.
+- **Eliminados:** `app/breathe/BreatheModule.jsx`.
+- **Modificados:** `PACE.html`, `app/state.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
 
 ### Versión
-- **v0.15.0** (minor · loop post-Pomodoro).
+- **v0.16.0** (minor · refactor + detectores de logros).
 
 ---
 
@@ -275,10 +281,7 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
 - **`useKeyboardShortcuts` hook consolidado** — 5 bloques de keydown
   casi idénticos entre BreakMenu, BreatheSession, MoveSession,
   PaceApp, Modal.
-- **Trocear `BreatheModule.jsx`** (aún ~565 líneas tras el refactor,
-  supera el techo de 500 de `CLAUDE.md`). Media parte del trabajo ya
-  está hecha porque la sesión vive en SessionShell; quedaría separar
-  library + visual (BreathVisual) + getSequence en archivos propios.
+- ~~**Trocear `BreatheModule.jsx`**~~ ✅ Resuelto en sesión 34 (v0.16.0). Separado en `BreatheVisual.jsx` + `BreatheLibrary.jsx` + `BreatheSession.jsx`.
 - **Decisión de producto sobre `CowLogoLineal/Sello/Ilustrado`** y
   `PaceLockup` (retirar vs conservar por retro-compat localStorage
   legacy).
@@ -310,14 +313,8 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
   (v0.14.0). Cubiertos `breathe.sessions.10/50`, `move.sessions.25`,
   `morning.5`, `master.dawn`, `master.dusk`, `master.long.focus`.
   Constancia 11/15. Maestría 5/25.
-- **Detectores aplazados de logros restantes (~30 min - 1h cada uno)** —
-  fruta más difícil: `hydrate.week.perfect` (necesita histórico
-  semanal), `master.retreat` (2h respira+mueve en día),
-  `master.collector.half/full` (50/100 logros — listener
-  cross-state), `master.midnight.never` (30 días sin uso tras
-  23h), `master.silent.day` (1 día con `state.soundOn === false`).
-  Categoría Maestría 5/25 → potencial 9-10/25 con otra sesión
-  corta.
+- ~~**`master.collector.half/full`, `master.silent.day`, `master.retreat`**~~ ✅ Resuelto en sesión 34 (v0.16.0). Maestría 9/25.
+- **Detectores aplazados restantes** — `hydrate.week.perfect` (histórico semanal), `master.midnight.never` (30 días sin uso tras 23h), contadores por tipo de rutina (`master.box.10`, `coherent.10`, `rounds.10`, `atg.20`, etc.).
 
 ### 🎨 Medio plazo (requieren diseño previo)
 
@@ -611,11 +608,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 33: 45/100 logros cazables. BreakMenu
-> con rotación inteligente ✅. `build-standalone.js` disponible para
-> regeneraciones futuras. Próximos frentes: (a) rediseño de glifos SVG
-> (pendiente validación dir visual), (b) PWA instalable, (c) claves offline
-> Lifetime/Pase, (d) heatmap "Año en pace", (e) Progresión 2+2+2.
+> Estado actual tras sesión 34: 49/100 logros cazables. BreatheModule troceado en 3 archivos ✅. Maestría 9/25. Próximos frentes: (a) rediseño de glifos SVG (pendiente validación dir visual), (b) PWA instalable, (c) claves offline Lifetime/Pase, (d) heatmap "Año en pace", (e) Progresión 2+2+2.
 
 ### 🎯 Próxima sesión corta (recomendada)
 
