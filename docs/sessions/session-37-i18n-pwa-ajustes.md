@@ -116,3 +116,12 @@ Claves eliminadas: `tweaks.layout.editorial`, `tweaks.timer.circulo`, `tweaks.ti
 - Reddit launch.
 - Glifos SVG personalizados (decisión de dirección visual pendiente del usuario).
 - v0.13.0 backup no borrado por permisos de sandbox — el usuario debe eliminarlo manualmente.
+
+---
+
+## Hotfix v0.19.1 (post-cierre)
+
+- `useT()` faltante en `AchievementsPreview` detectado al probar `PACE_standalone.html`: crash con pantalla terracota (`ReferenceError: t is not defined`).
+- Fix aplicado en `app/shell/Sidebar.jsx`: `const { t } = useT()` añadido al inicio del cuerpo de la función.
+- Auditoría defensiva de los 8 componentes migrados en esta sesión completada — solo AchievementsPreview necesitó corrección.
+- `PACE_VERSION` bumpeado a v0.19.1. Standalone regenerado.
