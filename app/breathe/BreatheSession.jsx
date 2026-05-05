@@ -5,6 +5,20 @@
 
 const { useState, useEffect, useRef } = React;
 
+const PHASE_KEYS = {
+  'Inhala':           'breathe.phase.inhala',
+  'Exhala':           'breathe.phase.exhala',
+  'Sostén':           'breathe.phase.sosten',
+  'Inhala más':       'breathe.phase.inhala.mas',
+  'Inhala oceánica':  'breathe.phase.inhala.oceanica',
+  'Exhala oceánica':  'breathe.phase.exhala.oceanica',
+  'Inhala izq.':      'breathe.phase.inhala.izq',
+  'Inhala dcha.':     'breathe.phase.inhala.dcha',
+  'Exhala dcha.':     'breathe.phase.exhala.dcha',
+  'Exhala izq.':      'breathe.phase.exhala.izq',
+  'Respira':          'breathe.phase.respira',
+};
+
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
   const { t, lang } = useT();
@@ -204,6 +218,7 @@ function BreatheSession({ routine, onExit }) {
 
   // ACTIVE
   const current = sequence[phase] || sequence[0];
+  const displayLabel = tR(PHASE_KEYS[current.label] || current.label, current.label);
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
@@ -246,7 +261,7 @@ function BreatheSession({ routine, onExit }) {
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
           marginBottom: 8, lineHeight: 1,
-        }}>{current.label}</div>
+        }}>{displayLabel}</div>
         {showCountdown && (
           <div style={{
             ...displayItalic,
