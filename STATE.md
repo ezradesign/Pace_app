@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.16.0
-**Última sesión:** #34 — 2026-05-05 · Split BreatheModule + 4 detectores de logros aplazados
-**Última actualización de este archivo:** 2026-05-05 · sesión 34 (cierre)
-**Build entregado:** `PACE_standalone.html` v0.16.0 (~365 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.17.0
+**Última sesión:** #35 — 2026-05-05 · i18n ES/EN completo (infraestructura + migración total)
+**Última actualización de este archivo:** 2026-05-05 · sesión 35
+**Build entregado:** `PACE_standalone.html` v0.17.0 (~397 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -21,76 +21,82 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.14.0** (título bumpeado a v0.14.0) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.14.0** (~369 KB, regenerado tras detectores horarios + contadores acumulados + canvas de glifos en `design/`) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.16.0** (título v0.16.0; scripts breathe = 3 archivos) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.17.0** (~397 KB, regenerado en sesión 35) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
-| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | v0.12.10 (data-pace-session-* attrs + bloque CSS responsive 640px) |
+| `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.17.0** (bug fix: useT en SessionDone) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | v0.12.10 (data-pace-modal-* attrs + bloque CSS responsive que cubre los 10 modales de golpe) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Tweaks flotante | v0.12.10 (data-pace-tweaks-panel + bottom-sheet en móvil) |
 | `app/breathe/BreatheVisual.jsx` | Respiración — visual + getSequence | **v0.16.0** (nuevo · extraído de BreatheModule) |
-| `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.16.0** (nuevo · extraído de BreatheModule) |
-| `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.16.0** (nuevo · extraído de BreatheModule) |
-| `app/move/MoveModule.jsx` | Módulo Mueve | **v0.14.3** (`useRefMV` movido a destructure de módulo) |
+| `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.17.0** (i18n migrado) |
+| `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.17.0** (bug fix: useT + prepCopy; i18n ya estaba) |
+| `app/move/MoveModule.jsx` | Módulo Mueve | **v0.17.0** (i18n migrado) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
-| `app/extra/ExtraModule.jsx` | Módulo Estira | v0.12.8 |
+| `app/extra/ExtraModule.jsx` | Módulo Estira | **v0.17.0** (i18n migrado) |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.14.3** (`AchievementsPreview` ordenada por `unlockedAt` desc) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.14.3** (eliminado dead state `justFinished`) |
-| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.14.3** (vasos individuales reproducen `sip` al añadir) |
+| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.17.0** (i18n migrado) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
-| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.14.0** (+7 ids en `IMPLEMENTED_ACHIEVEMENTS`: 39 → 45; Constancia 11/15, Maestría 5/25) |
+| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
 | `app/state.jsx` | Store global + rollover + toast buffer | **v0.16.0** (bump + `silentDates` + 3 checkers de logros) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
 
 Backups vigentes:
-- `backups/PACE_standalone_v0.12.8_20260423_1700.html` (sesión 26,
-  antes del bump v0.12.9).
-- `backups/PACE_standalone_v0.12.9_20260423.html` (sesión 27,
-  antes del bump v0.12.10 y la aplicación del patrón responsive
-  a modales).
-- `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28,
-  antes del bump v0.13.0 y el cableado de Sound.jsx + triggers).
-- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29,
-  antes del bump v0.14.0 y los detectores aplazados).
+- `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28, antes de v0.13.0).
+- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29, antes de v0.14.0).
+- `backups/PACE_standalone_v0.14.0_20260504.html` (sesión 33, antes de v0.15.0).
+- `backups/PACE_standalone_v0.15.0_20260505.html` (sesión 34, antes de v0.16.0).
+- `backups/PACE_standalone_v0.16.0_20260505.html` (sesión 35, antes de v0.17.0).
 
-4 backups locales. Margen cómodo frente a la regla "máximo 5".
+5 backups. Al límite — en la próxima sesión borrar v0.12.10 al rotar.
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 34 · v0.15.0 → v0.16.0 · Split BreatheModule + 4 detectores de logros aplazados**
+**Sesión 35 · v0.16.0 → v0.17.0 · i18n ES/EN completo: auditoría + bugs + migración total**
 
 ### Qué se hizo
 
-1. **`BreatheModule.jsx` (565 líneas) troceado** en 3 archivos (`BreatheVisual.jsx` ~155 líneas, `BreatheLibrary.jsx` ~130, `BreatheSession.jsx` ~210). `BreatheModule.jsx` eliminado. `PACE.html` actualizado con 3 `<script>` en orden de dependencia.
-2. **Fix del simplify:** `checkSilentDayAchievement` — `unlockAchievement` movido dentro del bloque `!list.includes(today)` (evita llamadas redundantes tras el primer día silencioso). Aliases de hooks simplificados a `useState`/`useEffect`/`useRef` en los nuevos archivos de breathe.
-3. **4 detectores de logros en `state.jsx`:**
-   - `master.collector.half/full` — `checkCollectorAchievements()` al final de cada `unlockAchievement` exitoso.
-   - `master.silent.day` — `checkSilentDayAchievement()` + nuevo campo `silentDates: []` en state.
-   - `master.retreat` — `checkRetreatAchievement()` usando `weeklyStats.breathMinutes[day] + moveMinutes[day] >= 120`.
-4. **`IMPLEMENTED_ACHIEVEMENTS`** en `Achievements.jsx`: 45 → 49 ids. Maestría 5/25 → 9/25.
-5. **Standalone regenerado** a 365 KB con `node build-standalone.js`.
-6. **Backup rotado:** `v0.12.8` eliminado, `v0.15.0_20260505` añadido (recuperado de git). 5 backups activos: v0.12.9 → v0.15.0.
+1. **Auditoría de cambios externos** — otra IA había hecho una migración parcial de i18n que dejó 2 crashes críticos + 1 code smell:
+   - `BreatheSession.jsx`: usaba `t()` sin llamar `useT()` → `ReferenceError` al arrancar cualquier sesión de respiración. Añadido `const { t } = useT()`. Corregido también prep copy hardcodeado en español.
+   - `SessionShell.jsx / SessionDone`: misma omisión en el cierre de sesión (breathe y move). Añadido `const { t } = useT()`.
+   - `WelcomeModule.jsx`: `const t = setTimeout(...)` shadowing. Renombrado a `timer`.
+2. **Claves faltantes en `strings.js`** — añadidas ~15 claves de corrección (`common.time/rounds/breaths/breath/of`, `breathe.prepCopy/doneCopy`) para las que `BreatheSession` ya llamaba pero no existían.
+3. **Migración i18n Sesión B — 6 módulos:**
+   - `BreatheLibrary.jsx` — chrome modal + BreatheSafety chrome.
+   - `MoveModule.jsx` — MoveLibrary + MoveSession completo (con `tn()` para step count).
+   - `ExtraModule.jsx` — ExtraLibrary chrome.
+   - `HydrateModule.jsx` — HydrateTracker completo.
+   - `WeeklyStats.jsx` — WeeklyStats + WeekBarRow (days desde `t('stats.days').split(',')`).
+   - `Achievements.jsx` — CAT_META labelKey pattern + Achievements + Seal.
+4. **~80 claves i18n nuevas** en `strings.js` para cubrir los 6 módulos (ES y EN).
+5. **Standalone regenerado** a ~397 KB con `node build-standalone.js`.
+6. **Backup rotado:** `v0.12.9` eliminado, `v0.16.0_20260505` añadido (desde git HEAD). 5 backups: v0.12.10 → v0.16.0.
 
 ### Archivos
-- **Nuevos:** `app/breathe/BreatheVisual.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSession.jsx`, `backups/PACE_standalone_v0.15.0_20260505.html`, `docs/sessions/session-34-split-breathe-logros.md`.
-- **Eliminados:** `app/breathe/BreatheModule.jsx`.
-- **Modificados:** `PACE.html`, `app/state.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`.
+- **Nuevos:** `backups/PACE_standalone_v0.16.0_20260505.html`, `docs/sessions/session-35-i18n-completo.md`.
+- **Modificados:** `app/breathe/BreatheSession.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/ui/SessionShell.jsx`, `app/welcome/WelcomeModule.jsx`, `app/i18n/strings.js`, `app/move/MoveModule.jsx`, `app/extra/ExtraModule.jsx`, `app/hydrate/HydrateModule.jsx`, `app/stats/WeeklyStats.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `CHANGELOG.md`.
 
 ### Versión
-- **v0.16.0** (minor · refactor + detectores de logros).
+- **v0.17.0** (minor · i18n infraestructura + migración completa).
+
+### Pendiente (Sesión 36)
+- `FocusTimer.jsx` i18n (claves ya en strings.js).
+- `BreatheSafety` cuerpo del disclaimer (texto médico hardcodeado en ES).
+- Decidir qué hacer con archivos PWA huérfanos: `icons/`, `manifest.json`, `sw.js` (conectar a `PACE.html` o borrar).
 
 ---
 
-## 🗓️ Sesión anterior — #32 (resumen condensado)
+## 🗓️ Sesión anterior — #34 (resumen condensado)
 
-**Sesión 32 · v0.14.3 · Code review: 7 fixes de calidad.**
-Auditoría interna: 7 correcciones sin cambios visuales ni features. Detalle:
-[`docs/sessions/session-32-code-review-fixes.md`](./docs/sessions/session-32-code-review-fixes.md).
+**Sesión 34 · v0.15.0 → v0.16.0 · Split BreatheModule + 4 detectores de logros.**
+`BreatheModule.jsx` troceado en `BreatheVisual.jsx` + `BreatheLibrary.jsx` + `BreatheSession.jsx`. 4 detectores nuevos: `master.collector.half/full`, `master.silent.day`, `master.retreat`. Maestría 9/25. Detalle:
+[`docs/sessions/session-34-split-breathe-logros.md`](./docs/sessions/session-34-split-breathe-logros.md).
 
 ---
 
@@ -608,7 +614,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 34: 49/100 logros cazables. BreatheModule troceado en 3 archivos ✅. Maestría 9/25. Próximos frentes: (a) rediseño de glifos SVG (pendiente validación dir visual), (b) PWA instalable, (c) claves offline Lifetime/Pase, (d) heatmap "Año en pace", (e) Progresión 2+2+2.
+> Estado actual tras sesión 35: 49/100 logros cazables. i18n ES/EN completo en 8 módulos ✅ (falta FocusTimer). Próximos frentes: (a) FocusTimer i18n + BreatheSafety cuerpo, (b) decidir PWA (icons/manifest/sw.js huérfanos), (c) rediseño de glifos SVG, (d) PWA instalable, (e) claves offline Lifetime/Pase, (f) heatmap "Año en pace".
 
 ### 🎯 Próxima sesión corta (recomendada)
 

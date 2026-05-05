@@ -63,12 +63,13 @@ const MOVE_ROUTINES = [
 ];
 
 function MoveLibrary({ open, onClose, onStart }) {
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Mueve" subtitle="Calistenia y fuerza. Corto, discreto, sin equipo." maxWidth={820}>
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} maxWidth={820}>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
-        <Meta>Cuerpo activo</Meta>
+        <Meta>{t('lib.move.meta')}</Meta>
       </div>
-      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>{t('lib.routines')}</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {MOVE_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
@@ -79,6 +80,7 @@ function MoveLibrary({ open, onClose, onStart }) {
 }
 
 function MoveSession({ routine, onExit, kind = 'move' }) {
+  const { t, tn } = useT();
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
   // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
   const dispatchComplete = () => {
@@ -155,7 +157,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         onExit={onExit}
         accent="var(--move)"
         prepCount={prepCount}
-        copy={`De pie. Sin prisa. ${routine.steps.length} pasos.`}
+        copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
       />
     );
@@ -172,11 +174,11 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         onExit={onExit}
         accent="var(--move)"
         accentSoft="var(--move-soft)"
-        doneMeta="Antídoto completado"
-        doneCopy="El cuerpo vuelve a sentirse tuyo."
+        doneMeta={t('session.antidoteDone')}
+        doneCopy={t('move.doneCopy')}
         stats={[
-          { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
-          { label: 'Pasos',  value: String(routine.steps.length) },
+          { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
+          { label: t('move.steps'),  value: String(routine.steps.length) },
         ]}
         buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
       />
@@ -189,13 +191,13 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   const footer = (
     <React.Fragment>
       <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn} title="←">
-        ← Anterior
+        {t('move.prev')}
       </button>
       <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
-        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+        {paused ? t('session.resume') : t('session.pause')}
       </button>
       <button onClick={goNext} style={sessionShellStyles.ctrlBtn} title="→">
-        {stepIdx + 1 >= routine.steps.length ? 'Terminar' : 'Siguiente →'}
+        {stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next')}
       </button>
     </React.Fragment>
   );
@@ -203,14 +205,14 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     <SessionShell
       routine={routine}
       onExit={onExit}
-      headerExtra={<Meta>Paso {stepIdx + 1} / {routine.steps.length}</Meta>}
+      headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer}
-      hint="← → navegar · Espacio pausar · Esc salir"
+      hint={t('move.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
         <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
-          Paso {stepIdx + 1} de {routine.steps.length}
+          {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>
         <h1 style={{
           ...displayItalic,
@@ -227,7 +229,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
           color: 'var(--ink)', lineHeight: 1,
         }}>{String(remaining).padStart(2, '0')}</div>
-        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>{t('session.seconds')}</div>
       </div>
 
       <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
@@ -252,7 +254,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `Siguiente: ${routine.steps[stepIdx + 1].name}` : 'Último paso'}
+          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${routine.steps[stepIdx + 1].name}` : t('move.lastStep')}
         </div>
       </div>
     </SessionShell>

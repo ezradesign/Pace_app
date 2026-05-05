@@ -120,12 +120,12 @@ const ACHIEVEMENT_CATALOG = [
 ];
 
 const CAT_META = {
-  primeros: { label: 'Primeros pasos', color: 'var(--ink-3)' },
-  constancia: { label: 'Constancia', color: 'var(--focus)' },
-  exploracion: { label: 'Exploración', color: 'var(--breathe)' },
-  maestria: { label: 'Maestría', color: 'var(--achievement)' },
-  secretos: { label: 'Secretos', color: 'var(--ink-2)' },
-  estacionales: { label: 'Estacionales', color: 'var(--move)' },
+  primeros: { labelKey: 'ach.cat.primeros', color: 'var(--ink-3)' },
+  constancia: { labelKey: 'ach.cat.constancia', color: 'var(--focus)' },
+  exploracion: { labelKey: 'ach.cat.exploracion', color: 'var(--breathe)' },
+  maestria: { labelKey: 'ach.cat.maestria', color: 'var(--achievement)' },
+  secretos: { labelKey: 'ach.cat.secretos', color: 'var(--ink-2)' },
+  estacionales: { labelKey: 'ach.cat.estacionales', color: 'var(--move)' },
 };
 
 /* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
@@ -185,6 +185,7 @@ function isImplemented(a) {
 
 function Achievements({ open, onClose }) {
   const [state] = usePace();
+  const { t } = useT();
   const unlocked = state.achievements || {};
   const unlockedCount = Object.keys(unlocked).length;
   // Clasificación sesión 15: disponibles = con trigger hoy; próximamente = sin trigger.
@@ -193,21 +194,21 @@ function Achievements({ open, onClose }) {
   const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Colección" title="Logros" subtitle="Sellos de libreta de campo. Colección creciente. Explora, no compitas." maxWidth={920}>
+    <Modal open={open} onClose={onClose} tagLabel={t('ach.tag')} title={t('ach.title')} subtitle={t('ach.subtitle')} maxWidth={920}>
       {/* Counter */}
       <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
         <div>
           <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
           </div>
-          <Meta style={{ marginTop: 4 }}>Disponibles</Meta>
+          <Meta style={{ marginTop: 4 }}>{t('ach.available')}</Meta>
         </div>
         <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
         <div>
           <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {comingSoonCount}
           </div>
-          <Meta style={{ marginTop: 4 }}>Próximamente</Meta>
+          <Meta style={{ marginTop: 4 }}>{t('ach.coming.soon')}</Meta>
         </div>
       </div>
 
@@ -217,7 +218,7 @@ function Achievements({ open, onClose }) {
         return (
           <div key={cat} style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
+              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{t(meta.labelKey)}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
@@ -248,6 +249,7 @@ function Achievements({ open, onClose }) {
    Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
    título "Secreto") — su mecánica es intriga, no señalización. */
 function Seal({ achievement, unlocked, implemented, color }) {
+  const { t } = useT();
   const a = achievement;
   const isSecret = a.secret && !unlocked;
   const isComingSoon = !unlocked && !implemented && !a.secret;
@@ -271,7 +273,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
         cursor: 'default',
         textAlign: 'center',
       }}
-      title={isComingSoon ? 'Próximamente' : a.desc}
+      title={isComingSoon ? t('ach.coming.soon') : a.desc}
     >
       {/* Badge "Pronto" — solo en estado coming-soon */}
       {isComingSoon && (
@@ -287,7 +289,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
           borderRadius: 999,
           padding: '2px 6px',
           lineHeight: 1,
-        }}>Pronto</div>
+        }}>{t('ach.seal.soon')}</div>
       )}
 
       {/* Sello circular */}
@@ -324,9 +326,9 @@ function Seal({ achievement, unlocked, implemented, color }) {
         lineHeight: 1.15,
         marginBottom: 4,
         color: unlocked ? 'var(--ink)' : 'var(--ink-3)',
-      }}>{isSecret ? 'Secreto' : a.title}</div>
+      }}>{isSecret ? t('ach.seal.secret') : a.title}</div>
       <div style={{ fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 }}>
-        {isSecret ? '?????' : (isComingSoon ? 'Pronto' : a.desc)}
+        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : a.desc)}
       </div>
     </div>
   );

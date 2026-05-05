@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Fondo completo para máscara de Android -->
+  <rect width="512" height="512" fill="#F2EDE0"/>
+  <!-- Safe zone visual central: radio ~205 (80% del mínimo/2) -->
+  <text x="256" y="310" text-anchor="middle"
+        font-family="'EB Garamond', Georgia, serif"
+        font-style="italic" font-size="200" font-weight="500"
+        fill="#1F1C17">Pace</text>
+</svg>

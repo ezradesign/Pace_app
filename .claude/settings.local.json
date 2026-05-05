@@ -3,7 +3,8 @@
     "allow": [
       "Bash(node -e ' *)",
       "Bash(Remove-Item \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheModule.jsx\")",
-      "Bash(node build-standalone.js)"
+      "Bash(node build-standalone.js)",
+      "Bash(node \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\build-standalone.js\")"
     ]
   }
 }

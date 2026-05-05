@@ -147,6 +147,125 @@ window.PACE_STRINGS = {
     'tweaks.msg.import.json.err':    'JSON inválido.',
     'tweaks.confirm.reset':          '¿Resetear todos los datos de PACE?',
     'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
+
+    // Session (compartido: shell + prep + done)
+    'session.exit':                    '× Salir',
+    'session.prep':                    'Prepárate',
+    'session.startNow':                'Empezar ahora',
+    'session.backToHome':              'Volver al inicio',
+    'session.doneMeta':                'Sesión completada',
+    'session.antidoteDone':            'Antídoto completado',
+    'session.hold':                    'Retén sin aire',
+    'session.breatheAgain':            'Respirar de nuevo',
+    'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
+    'session.minutes':                 'minutos',
+    'session.seconds':                 'segundos',
+    'session.hint':                    'Espacio pausar · Esc salir',
+    'session.resume':                  '▶ Reanudar',
+    'session.pause':                   '❚❚ Pausar',
+    'session.finish':                  '▶| Terminar',
+    'session.round':                   'Ronda',
+
+    // Move / Extra (pasos)
+    'move.stepCount':                  'Paso {current} de {total}',
+    'move.nextStep':                   'Siguiente',
+    'move.lastStep':                   'Último paso',
+    'move.prev':                       '← Anterior',
+    'move.next':                       'Siguiente →',
+    'move.doneMeta':                   'Antídoto completado',
+    'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
+
+    // Focus
+    'focus.cycle':                     'Ciclo',
+    'focus.min':                       'Min',
+    'focus.other':                     'Otro',
+    'focus.restart':                   'Reiniciar',
+    'focus.start':                     'Comenzar',
+    'focus.continue':                  'Continuar',
+    'focus.mode.focus':                'Foco',
+    'focus.mode.pause':                'Pausa corta',
+    'focus.mode.long':                 'Pausa larga',
+    'focus.subtitle.focus':            'Concentración profunda',
+    'focus.subtitle.pause':            'Desconecta 5 min',
+    'focus.subtitle.long':             'Pausa larga · estira y respira',
+
+    // Common (compartido entre sesiones)
+    'common.time':                     'Tiempo',
+    'common.rounds':                   'Rondas',
+    'common.breaths':                  'Respiraciones',
+    'common.breath':                   'Respiración',
+    'common.of':                       'de',
+
+    // Breathe (sesión)
+    'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
+    'breathe.doneCopy':                'Tu cuerpo ha encontrado su ritmo.',
+
+    // Libraries (compartido)
+    'lib.tag':                         'Biblioteca',
+    'lib.routines':                    'Rutinas',
+
+    // Breathe Library
+    'lib.breathe.title':               'Respiración',
+    'lib.breathe.subtitle':            'Breathwork guiado: pranayamas, coherencia, rondas.',
+
+    // Move Library
+    'lib.move.title':                  'Mueve',
+    'lib.move.subtitle':               'Calistenia y fuerza. Corto, discreto, sin equipo.',
+    'lib.move.meta':                   'Cuerpo activo',
+
+    // Extra Library
+    'lib.extra.title':                 'Estira',
+    'lib.extra.subtitle':              'Movilidad y estiramientos. Antídoto a la silla.',
+    'lib.extra.meta':                  'Afloja tensión',
+
+    // Move Session (additional)
+    'move.steps':                      'Pasos',
+    'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
+    'move.next.prefix':                'Siguiente:',
+    'move.finish':                     'Terminar',
+    'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
+
+    // Hydrate
+    'hydrate.tag':                     'Hidratación',
+    'hydrate.title':                   'Hidrátate',
+    'hydrate.subtitle':                'Un sorbo ahora, un regalo a tu yo de las 5.',
+    'hydrate.glasses.today':           'Vasos hoy',
+    'hydrate.less':                    'Un vaso menos',
+    'hydrate.more':                    'Un vaso más',
+    'hydrate.tip.label':               'Tip:',
+    'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
+
+    // Stats
+    'stats.tag':                       'Semana',
+    'stats.title':                     'Ritmo semanal',
+    'stats.subtitle':                  'Métricas suaves. Sin ansiedad, sin comparación.',
+    'stats.unit.min':                  'min',
+    'stats.unit.glasses':              'vasos',
+    'stats.note.label':                'Nota:',
+    'stats.note':                      'no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.',
+    'stats.days':                      'Lun,Mar,Mié,Jue,Vie,Sáb,Dom',
+
+    // Achievements
+    'ach.tag':                         'Colección',
+    'ach.title':                       'Logros',
+    'ach.subtitle':                    'Sellos de libreta de campo. Colección creciente. Explora, no compitas.',
+    'ach.available':                   'Disponibles',
+    'ach.coming.soon':                 'Próximamente',
+    'ach.cat.primeros':                'Primeros pasos',
+    'ach.cat.constancia':              'Constancia',
+    'ach.cat.exploracion':             'Exploración',
+    'ach.cat.maestria':                'Maestría',
+    'ach.cat.secretos':                'Secretos',
+    'ach.cat.estacionales':            'Estacionales',
+    'ach.seal.soon':                   'Pronto',
+    'ach.seal.secret':                 'Secreto',
+
+    // BreatheLibrary safety modal
+    'breathe.safety.before':           'Antes de empezar',
+    'breathe.safety.check':            'Lo he leído y asumo mi responsabilidad',
+    'breathe.safety.cancel':           'Cancelar',
+    'breathe.safety.start':            'Empezar sesión',
+    'breathe.safety.required':         'Requiere lectura de seguridad',
   },
 
   en: {
@@ -290,6 +409,125 @@ window.PACE_STRINGS = {
     'tweaks.msg.import.invalid':     'File not recognized.',
     'tweaks.msg.import.json.err':    'Invalid JSON.',
     'tweaks.confirm.reset':          'Reset all PACE data?',
-    'tweaks.confirm.import':         'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
+    'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
+
+    // Session (shared: shell + prep + done)
+    'session.exit':                    '× Exit',
+    'session.prep':                    'Get ready',
+    'session.startNow':                'Start now',
+    'session.backToHome':              'Back to home',
+    'session.doneMeta':                'Session completed',
+    'session.antidoteDone':            'Antidote completed',
+    'session.hold':                    'Hold your breath',
+    'session.breatheAgain':            'Breathe again',
+    'session.holdCue':                 'Press when you feel the need to breathe.',
+    'session.minutes':                 'minutes',
+    'session.seconds':                 'seconds',
+    'session.hint':                    'Space pause · Esc exit',
+    'session.resume':                  '▶ Resume',
+    'session.pause':                   '❚❚ Pause',
+    'session.finish':                  '▶| Finish',
+    'session.round':                   'Round',
+
+    // Move / Extra (steps)
+    'move.stepCount':                  'Step {current} of {total}',
+    'move.nextStep':                   'Next',
+    'move.lastStep':                   'Last step',
+    'move.prev':                       '← Previous',
+    'move.next':                       'Next →',
+    'move.doneMeta':                   'Antidote completed',
+    'move.doneCopy':                   'Your body feels like yours again.',
+
+    // Focus
+    'focus.cycle':                     'Cycle',
+    'focus.min':                       'Min',
+    'focus.other':                     'Other',
+    'focus.restart':                   'Restart',
+    'focus.start':                     'Start',
+    'focus.continue':                  'Continue',
+    'focus.mode.focus':                'Focus',
+    'focus.mode.pause':                'Short break',
+    'focus.mode.long':                 'Long break',
+    'focus.subtitle.focus':            'Deep focus',
+    'focus.subtitle.pause':            'Disconnect for 5 min',
+    'focus.subtitle.long':             'Long break · stretch and breathe',
+
+    // Common (shared across sessions)
+    'common.time':                     'Time',
+    'common.rounds':                   'Rounds',
+    'common.breaths':                  'Breaths',
+    'common.breath':                   'Breath',
+    'common.of':                       'of',
+
+    // Breathe (session)
+    'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
+    'breathe.doneCopy':                'Your body has found its rhythm.',
+
+    // Libraries (shared)
+    'lib.tag':                         'Library',
+    'lib.routines':                    'Routines',
+
+    // Breathe Library
+    'lib.breathe.title':               'Breathing',
+    'lib.breathe.subtitle':            'Guided breathwork: pranayamas, coherence, rounds.',
+
+    // Move Library
+    'lib.move.title':                  'Move',
+    'lib.move.subtitle':               'Calisthenics and strength. Short, discreet, no equipment.',
+    'lib.move.meta':                   'Active body',
+
+    // Extra Library
+    'lib.extra.title':                 'Stretch',
+    'lib.extra.subtitle':              'Mobility and stretching. Antidote to the chair.',
+    'lib.extra.meta':                  'Release tension',
+
+    // Move Session (additional)
+    'move.steps':                      'Steps',
+    'move.prepCopy':                   'Stand up. No rush. {n} steps.',
+    'move.next.prefix':                'Next:',
+    'move.finish':                     'Finish',
+    'move.hint':                       '← → navigate · Space pause · Esc exit',
+
+    // Hydrate
+    'hydrate.tag':                     'Hydration',
+    'hydrate.title':                   'Hydrate',
+    'hydrate.subtitle':                "A sip now, a gift to your 5 o'clock self.",
+    'hydrate.glasses.today':           'Glasses today',
+    'hydrate.less':                    'One less glass',
+    'hydrate.more':                    'One more glass',
+    'hydrate.tip.label':               'Tip:',
+    'hydrate.tip':                     'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
+
+    // Stats
+    'stats.tag':                       'Week',
+    'stats.title':                     'Weekly rhythm',
+    'stats.subtitle':                  'Soft metrics. No anxiety, no comparison.',
+    'stats.unit.min':                  'min',
+    'stats.unit.glasses':              'glasses',
+    'stats.note.label':                'Note:',
+    'stats.note':                      "we don't measure to judge you. The numbers are here so you can recognize your rhythms, not chase them.",
+    'stats.days':                      'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+
+    // Achievements
+    'ach.tag':                         'Collection',
+    'ach.title':                       'Achievements',
+    'ach.subtitle':                    "Field notebook stamps. Growing collection. Explore, don't compete.",
+    'ach.available':                   'Available',
+    'ach.coming.soon':                 'Coming soon',
+    'ach.cat.primeros':                'First steps',
+    'ach.cat.constancia':              'Consistency',
+    'ach.cat.exploracion':             'Exploration',
+    'ach.cat.maestria':                'Mastery',
+    'ach.cat.secretos':                'Secrets',
+    'ach.cat.estacionales':            'Seasonal',
+    'ach.seal.soon':                   'Soon',
+    'ach.seal.secret':                 'Secret',
+
+    // BreatheLibrary safety modal
+    'breathe.safety.before':           'Before you start',
+    'breathe.safety.check':            'I have read this and accept responsibility',
+    'breathe.safety.cancel':           'Cancel',
+    'breathe.safety.start':            'Start session',
+    'breathe.safety.required':         'Safety briefing required',
   },
 };
