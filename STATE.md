@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.17.0
-**Última sesión:** #35 — 2026-05-05 · i18n ES/EN completo (infraestructura + migración total)
-**Última actualización de este archivo:** 2026-05-05 · sesión 35
-**Build entregado:** `PACE_standalone.html` v0.17.0 (~397 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.18.0
+**Última sesión:** #36 — 2026-05-05 · i18n contenido (ejercicios) + FocusTimer i18n + toggle EN en Welcome + dot aro eliminado
+**Última actualización de este archivo:** 2026-05-05 · sesión 36
+**Build entregado:** `PACE_standalone.html` v0.18.0 (~413 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -38,65 +38,74 @@
 | `app/extra/ExtraModule.jsx` | Módulo Estira | **v0.17.0** (i18n migrado) |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.14.3** (`AchievementsPreview` ordenada por `unlockedAt` desc) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.14.3** (eliminado dead state `justFinished`) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.18.0** (i18n completo + dot verde del aro eliminado) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.17.0** (i18n migrado) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
 | `app/state.jsx` | Store global + rollover + toast buffer | **v0.16.0** (bump + `silentDates` + 3 checkers de logros) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | v0.12.1 |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.18.0** (toggle ES·EN movido a headerLeft, sobre el logo) |
 
 Backups vigentes:
-- `backups/PACE_standalone_v0.12.10_20260429.html` (sesión 28, antes de v0.13.0).
 - `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29, antes de v0.14.0).
 - `backups/PACE_standalone_v0.14.0_20260504.html` (sesión 33, antes de v0.15.0).
 - `backups/PACE_standalone_v0.15.0_20260505.html` (sesión 34, antes de v0.16.0).
 - `backups/PACE_standalone_v0.16.0_20260505.html` (sesión 35, antes de v0.17.0).
+- `backups/PACE_standalone_v0.17.0_20260505.html` (sesión 36, antes de v0.18.0).
 
-5 backups. Al límite — en la próxima sesión borrar v0.12.10 al rotar.
+5 backups. Al límite — en la próxima sesión borrar v0.13.0 al rotar.
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 35 · v0.16.0 → v0.17.0 · i18n ES/EN completo: auditoría + bugs + migración total**
+**Sesión 36 · v0.17.0 → v0.18.0 · i18n de contenido + FocusTimer i18n + toggle EN en Welcome + dot aro eliminado**
 
 ### Qué se hizo
 
-1. **Auditoría de cambios externos** — otra IA había hecho una migración parcial de i18n que dejó 2 crashes críticos + 1 code smell:
-   - `BreatheSession.jsx`: usaba `t()` sin llamar `useT()` → `ReferenceError` al arrancar cualquier sesión de respiración. Añadido `const { t } = useT()`. Corregido también prep copy hardcodeado en español.
-   - `SessionShell.jsx / SessionDone`: misma omisión en el cierre de sesión (breathe y move). Añadido `const { t } = useT()`.
-   - `WelcomeModule.jsx`: `const t = setTimeout(...)` shadowing. Renombrado a `timer`.
-2. **Claves faltantes en `strings.js`** — añadidas ~15 claves de corrección (`common.time/rounds/breaths/breath/of`, `breathe.prepCopy/doneCopy`) para las que `BreatheSession` ya llamaba pero no existían.
-3. **Migración i18n Sesión B — 6 módulos:**
-   - `BreatheLibrary.jsx` — chrome modal + BreatheSafety chrome.
-   - `MoveModule.jsx` — MoveLibrary + MoveSession completo (con `tn()` para step count).
-   - `ExtraModule.jsx` — ExtraLibrary chrome.
-   - `HydrateModule.jsx` — HydrateTracker completo.
-   - `WeeklyStats.jsx` — WeeklyStats + WeekBarRow (days desde `t('stats.days').split(',')`).
-   - `Achievements.jsx` — CAT_META labelKey pattern + Achievements + Seal.
-4. **~80 claves i18n nuevas** en `strings.js` para cubrir los 6 módulos (ES y EN).
-5. **Standalone regenerado** a ~397 KB con `node build-standalone.js`.
-6. **Backup rotado:** `v0.12.9` eliminado, `v0.16.0_20260505` añadido (desde git HEAD). 5 backups: v0.12.10 → v0.16.0.
+1. **`app/i18n/strings-content.js`** (nuevo) — ~190 claves EN de contenido de ejercicios para
+   Respira, Mueve y Estira: categorías + nombres + descripciones + códigos. Augmenta
+   `window.PACE_STRINGS.en`. Solo EN (en ES los datos están en los objetos JS directamente).
+   Helper `tR(key, fallback)` en cada módulo: si lang !== 'en' devuelve fallback; si la clave
+   no existe en EN devuelve fallback. Transición gradual sin textos rotos.
+2. **`app/breathe/BreatheLibrary.jsx`** — helper `tR` + categorías y `RoutineCard` con
+   name/desc/code pasados por `tR`.
+3. **`app/breathe/BreatheSession.jsx`** — `displayRoutine` por `tR`. Fix colateral:
+   `const t = setTimeout(...)` shadowing → renombrado a `timer`.
+4. **`app/move/MoveModule.jsx`** — `displayRoutine` + `displayStep` (name/cue/next por `tR`).
+5. **`app/welcome/WelcomeModule.jsx`** — toggle pill ES·EN movido a `headerLeft` (encima del
+   logo). Antes en esquina superior derecha, colisionaba con la X del modal.
+6. **`app/focus/FocusTimer.jsx`** — migración i18n completa: `useT()` en `FocusTimer` +
+   `MinutesPicker`. modeLabel / subtitle / runningLabel / "Ciclo" / "Reiniciar" / "Min" /
+   "Otro" → `t('focus.*')`. Clave `focus.pause` añadida a strings.js.
+7. **`TimerAro`** — eliminado el `<circle>` dot verde oliva del anillo. Decisión de producto:
+   no añadía información, rompía la calma visual.
+8. **`PACE.html`** — `strings-content.js` añadido al orden de carga.
+9. **Standalone regenerado** a ~413 KB.
 
 ### Archivos
-- **Nuevos:** `backups/PACE_standalone_v0.16.0_20260505.html`, `docs/sessions/session-35-i18n-completo.md`.
-- **Modificados:** `app/breathe/BreatheSession.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/ui/SessionShell.jsx`, `app/welcome/WelcomeModule.jsx`, `app/i18n/strings.js`, `app/move/MoveModule.jsx`, `app/extra/ExtraModule.jsx`, `app/hydrate/HydrateModule.jsx`, `app/stats/WeeklyStats.jsx`, `app/achievements/Achievements.jsx`, `PACE_standalone.html`, `CHANGELOG.md`.
+- **Nuevos:** `app/i18n/strings-content.js`, `docs/sessions/session-36-i18n-content-toggle.md`, `backups/PACE_standalone_v0.17.0_20260505.html`.
+- **Modificados:** `app/welcome/WelcomeModule.jsx`, `app/breathe/BreatheLibrary.jsx`, `app/breathe/BreatheSession.jsx`, `app/move/MoveModule.jsx`, `app/i18n/strings.js`, `app/focus/FocusTimer.jsx`, `PACE.html`, `PACE_standalone.html`, `app/state.jsx`, `CHANGELOG.md`, `STATE.md`.
+- **Borrados:** `backups/PACE_standalone_v0.12.10_20260429.html`.
 
 ### Versión
-- **v0.17.0** (minor · i18n infraestructura + migración completa).
+- **v0.18.0** (minor · i18n de contenido + FocusTimer + dot eliminado).
 
-### Pendiente (Sesión 36)
-- `FocusTimer.jsx` i18n (claves ya en strings.js).
-- `BreatheSafety` cuerpo del disclaimer (texto médico hardcodeado en ES).
-- Decidir qué hacer con archivos PWA huérfanos: `icons/`, `manifest.json`, `sw.js` (conectar a `PACE.html` o borrar).
+### Pendiente (Sesión 37)
+- `BreatheSafety` cuerpo del disclaimer (texto médico hardcodeado en ES) — añadir claves
+  `breathe.safety.body.*` a strings.js y migrar.
+- Etiquetas de fase en BreatheSession (Inhala / Exhala / Retén / Pausa) — añadir claves EN
+  en strings-content.js y traducirlas en el render activo.
+- Decidir qué hacer con archivos PWA huérfanos: `icons/`, `manifest.json`, `sw.js`.
 
 ---
 
-## 🗓️ Sesión anterior — #34 (resumen condensado)
+## 🗓️ Sesión anterior — #35 (resumen condensado)
 
-**Sesión 34 · v0.15.0 → v0.16.0 · Split BreatheModule + 4 detectores de logros.**
-`BreatheModule.jsx` troceado en `BreatheVisual.jsx` + `BreatheLibrary.jsx` + `BreatheSession.jsx`. 4 detectores nuevos: `master.collector.half/full`, `master.silent.day`, `master.retreat`. Maestría 9/25. Detalle:
-[`docs/sessions/session-34-split-breathe-logros.md`](./docs/sessions/session-34-split-breathe-logros.md).
+**Sesión 35 · v0.16.0 → v0.17.0 · i18n ES/EN completo: auditoría + bugs + migración total.**
+Auditoría de migración externa (2 crashes + 1 code smell corregidos). Migración i18n de 6 módulos:
+BreatheLibrary, MoveModule, ExtraModule, HydrateModule, WeeklyStats, Achievements. ~80 claves
+nuevas en strings.js. Standalone ~397 KB. Detalle:
+[`docs/sessions/session-35-i18n-completo.md`](./docs/sessions/session-35-i18n-completo.md).
 
 ---
 

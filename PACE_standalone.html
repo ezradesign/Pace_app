@@ -771,6 +771,249 @@ window.PACE_STRINGS = {
 
 </script>
   <script type="text/babel">
+/* PACE · Traducciones EN de contenido de ejercicios
+   Solo EN: en ES los componentes usan los strings del dato directamente.
+   En EN, el helper tR() de cada componente busca aquí con t(key).
+   Cargado después de strings.js — augmenta window.PACE_STRINGS.en.
+*/
+Object.assign(window.PACE_STRINGS.en, {
+
+  // ── Breathe — categorías ─────────────────────────────────────────
+  'breathe.cat.energia.label':           'Energy',
+  'breathe.cat.equilibrio.label':        'Equilibrium',
+  'breathe.cat.equilibrio.aside':        'Regulates the nervous system',
+  'breathe.cat.balance.label':           'Balance',
+  'breathe.cat.balance.aside':           'Harmonizes HRV',
+  'breathe.cat.relajacion.label':        'Relaxation',
+  'breathe.cat.relajacion.aside':        'Quiets the mind',
+  'breathe.cat.pranayama.label':         'Pranayama',
+  'breathe.cat.pranayama.aside':         'Yogic roots',
+
+  // ── Breathe — rutinas ────────────────────────────────────────────
+  'breathe.rounds.full.name':            'Full Round Breathing',
+  'breathe.rounds.full.desc':            '30 deep breaths → empty-lung hold. 3 rounds.',
+  'breathe.rounds.full.code':            'Energy',
+  'breathe.rounds.express.name':         'Express Rounds',
+  'breathe.rounds.express.desc':         'Short version: 2 rounds of 25 breaths.',
+  'breathe.rounds.express.code':         'Energy',
+  'breathe.bellows.name':                'Bhastrika · Bellows',
+  'breathe.bellows.desc':                'Fast energizing pranayama',
+  'breathe.bellows.code':                'Pranayama',
+  'breathe.box.4.name':                  'Box 4·4·4·4',
+  'breathe.box.4.desc':                  'Perfect square. Mental calm and sustained focus.',
+  'breathe.box.4.code':                  'Equilibrium',
+  'breathe.box.6.name':                  'Box 6·6·6·6',
+  'breathe.box.6.desc':                  'Deeper version',
+  'breathe.box.6.code':                  'Equilibrium',
+  'breathe.coherent.55.name':            'Coherent 5·5',
+  'breathe.coherent.55.desc':            'Cardiac breathing. Synchronizes heart and mind.',
+  'breathe.coherent.55.code':            'Balance',
+  'breathe.coherent.66.name':            'Coherent 6·6',
+  'breathe.coherent.66.desc':            'Deeper version. 5 cycles per minute.',
+  'breathe.coherent.66.code':            'Balance',
+  'breathe.478.name':                    '4·7·8',
+  'breathe.478.desc':                    'Long exhale. Lowers anxiety, prepares for sleep.',
+  'breathe.478.code':                    'Relaxation',
+  'breathe.physiological.name':          'Physiological Sigh',
+  'breathe.physiological.desc':          'Double inhale + long exhale. Quick reset.',
+  'breathe.physiological.code':          'Relaxation',
+  'breathe.nadi.shodhana.name':          'Nadi Shodhana',
+  'breathe.nadi.shodhana.desc':          'Alternate nostril breathing. Balances hemispheres.',
+  'breathe.nadi.shodhana.code':          'Pranayama',
+  'breathe.ujjayi.name':                 'Ujjayi',
+  'breathe.ujjayi.desc':                 'Oceanic breath. Meditative.',
+  'breathe.ujjayi.code':                 'Pranayama',
+  'breathe.kapalabhati.name':            'Kapalabhati · Kriya',
+  'breathe.kapalabhati.desc':            'Skull shining breath. Energizing.',
+  'breathe.kapalabhati.code':            'Kriya',
+
+  // ── Mueve — rutinas (ids extra.*) ────────────────────────────────
+  'extra.desk.pushups.name':             'Desk Push-ups',
+  'extra.desk.pushups.desc':             'Inclined against desk. 3 sets.',
+  'extra.desk.pushups.code':             'Strength',
+  'extra.desk.pushups.s0.name':          'Incline push-ups',
+  'extra.desk.pushups.s0.cue':           '12 reps against desk.',
+  'extra.desk.pushups.s1.name':          'Rest',
+  'extra.desk.pushups.s1.cue':           'Breathe.',
+  'extra.desk.pushups.s2.name':          'Incline push-ups',
+  'extra.desk.pushups.s2.cue':           '10 reps.',
+  'extra.desk.pushups.s3.name':          'Rest',
+  'extra.desk.pushups.s3.cue':           'Breathe.',
+  'extra.desk.pushups.s4.name':          'Incline push-ups',
+  'extra.desk.pushups.s4.cue':           '8 slow reps.',
+
+  'extra.chair.dips.name':               'Chair Dips',
+  'extra.chair.dips.desc':               'Triceps in 3 sets.',
+  'extra.chair.dips.code':               'Triceps',
+  'extra.chair.dips.s0.name':            'Chair dips',
+  'extra.chair.dips.s0.cue':             '10–12 reps with good control.',
+  'extra.chair.dips.s1.name':            'Rest',
+  'extra.chair.dips.s1.cue':             '',
+  'extra.chair.dips.s2.name':            'Chair dips',
+  'extra.chair.dips.s2.cue':             '10 reps.',
+  'extra.chair.dips.s3.name':            'Rest',
+  'extra.chair.dips.s3.cue':             '',
+  'extra.chair.dips.s4.name':            'Chair dips',
+  'extra.chair.dips.s4.cue':             'To failure.',
+
+  'extra.wall.sit.name':                 'Wall Sit',
+  'extra.wall.sit.desc':                 'Quadriceps isometric.',
+  'extra.wall.sit.code':                 'Legs',
+  'extra.wall.sit.s0.name':              'Wall sit',
+  'extra.wall.sit.s0.cue':               'Knees at 90°, hold.',
+  'extra.wall.sit.s1.name':              'Rest',
+  'extra.wall.sit.s1.cue':               'Easy.',
+  'extra.wall.sit.s2.name':              'Wall sit',
+  'extra.wall.sit.s2.cue':               'Lower if you can.',
+
+  'extra.calves.name':                   'Stealth Calf Raises',
+  'extra.calves.desc':                   'Under the desk, no one notices.',
+  'extra.calves.code':                   'Calves',
+  'extra.calves.s0.name':                'Calf raises',
+  'extra.calves.s0.cue':                 '25 controlled reps.',
+  'extra.calves.s1.name':                'Calf raises',
+  'extra.calves.s1.cue':                 '20 slower reps.',
+
+  'extra.core.stealth.name':             'Silent Core',
+  'extra.core.stealth.desc':             'Hollow hold in chair.',
+  'extra.core.stealth.code':             'Core',
+  'extra.core.stealth.s0.name':          'Seated hollow',
+  'extra.core.stealth.s0.cue':           'Raise legs, support lower back.',
+  'extra.core.stealth.s1.name':          'Rest',
+  'extra.core.stealth.s1.cue':           '',
+  'extra.core.stealth.s2.name':          'Seated hollow',
+  'extra.core.stealth.s2.cue':           'Hold.',
+  'extra.core.stealth.s3.name':          'Rest',
+  'extra.core.stealth.s3.cue':           '',
+  'extra.core.stealth.s4.name':          'Seated hollow',
+  'extra.core.stealth.s4.cue':           'To the limit.',
+
+  'extra.grip.squeeze.name':             'Grip + Forearms',
+  'extra.grip.squeeze.desc':             'Squeeze and extend.',
+  'extra.grip.squeeze.code':             'Forearms',
+  'extra.grip.squeeze.s0.name':          'Squeeze fist',
+  'extra.grip.squeeze.s0.cue':           'Squeeze hard 20 times.',
+  'extra.grip.squeeze.s1.name':          'Finger extension',
+  'extra.grip.squeeze.s1.cue':           'Stretch fingers to max.',
+  'extra.grip.squeeze.s2.name':          'Wrist stretch',
+  'extra.grip.squeeze.s2.cue':           'Wrist flexion + extension.',
+
+  'extra.posture.set.name':              'Posture Reset',
+  'extra.posture.set.desc':              'Chin tucks, scapular squeeze, thoracic ext.',
+  'extra.posture.set.code':              'Posture',
+  'extra.posture.set.s0.name':           'Chin tucks',
+  'extra.posture.set.s0.cue':            '10 reps, chin back.',
+  'extra.posture.set.s1.name':           'Scapular squeeze',
+  'extra.posture.set.s1.cue':            'Squeeze shoulder blades, 10 reps.',
+  'extra.posture.set.s2.name':           'Thoracic extension',
+  'extra.posture.set.s2.cue':            'Arch over chair.',
+  'extra.posture.set.s3.name':           'Chest opener',
+  'extra.posture.set.s3.cue':            'Arms back, expand chest.',
+
+  // ── Estira — rutinas (ids move.*) ────────────────────────────────
+  'move.chair.antidote.name':            'Chair Antidote',
+  'move.chair.antidote.desc':            'Exact antidote to 4h seated. Hips, lumbar, neck.',
+  'move.chair.antidote.code':            'SIT',
+  'move.chair.antidote.s0.name':         'Chest opening',
+  'move.chair.antidote.s0.cue':          'Hands behind head, open elbows, look at ceiling.',
+  'move.chair.antidote.s1.name':         'Thoracic rotation',
+  'move.chair.antidote.s1.cue':          'Seated: crossed hands, rotate trunk slowly.',
+  'move.chair.antidote.s2.name':         'Hip flexor',
+  'move.chair.antidote.s2.cue':          'Knee to floor, push pelvis forward.',
+  'move.chair.antidote.s3.name':         "World's greatest stretch",
+  'move.chair.antidote.s3.cue':          'Lunge + hand to floor + rotation.',
+  'move.chair.antidote.s4.name':         'Neck and traps',
+  'move.chair.antidote.s4.cue':          'Ear to shoulder, gentle.',
+  'move.chair.antidote.s5.name':         'Breathing reset',
+  'move.chair.antidote.s5.cue':          '3 deep inhales to close.',
+
+  'move.hips.5.name':                    'Hips · 5 steps',
+  'move.hips.5.desc':                    '5 steps to unlock deep hips.',
+  'move.hips.5.code':                    'HIP',
+  'move.hips.5.s0.name':                 'Cossack squat',
+  'move.hips.5.s0.cue':                  'Weight to one side, other leg straight. 5 per side.',
+  'move.hips.5.s1.name':                 '90/90',
+  'move.hips.5.s1.cue':                  'Rotate between sides slowly.',
+  'move.hips.5.s2.name':                 'Pigeon',
+  'move.hips.5.s2.cue':                  'Shin forward, weight forward. 40s per side.',
+  'move.hips.5.s3.name':                 'Deep squat',
+  'move.hips.5.s3.cue':                  'Heels down, elbows inside knees.',
+  'move.hips.5.s4.name':                 'Bridge with march',
+  'move.hips.5.s4.cue':                  'Deep glute activation.',
+
+  'move.shoulders.5.name':               'Shoulders · 5 steps',
+  'move.shoulders.5.desc':               'Shoulder reset. Keyboard antidote. Rotators, chest, traps.',
+  'move.shoulders.5.code':               'SHLD',
+  'move.shoulders.5.s0.name':            'Scapular wall slides',
+  'move.shoulders.5.s0.cue':             'Back against wall, raise arms.',
+  'move.shoulders.5.s1.name':            'Band pull-apart',
+  'move.shoulders.5.s1.cue':             'Without band: crossed arms + open.',
+  'move.shoulders.5.s2.name':            'External rotation',
+  'move.shoulders.5.s2.cue':             'Elbow at 90°, rotate outward.',
+  'move.shoulders.5.s3.name':            'Dead hang (if possible)',
+  'move.shoulders.5.s3.cue':             'Hang from a bar, relaxed.',
+  'move.shoulders.5.s4.name':            'Thoracic extension',
+  'move.shoulders.5.s4.cue':             'Over foam roller or rolled towel.',
+
+  'move.atg.knees.name':                 'ATG · Bulletproof Knees',
+  'move.atg.knees.desc':                 'Knees over toes. Indestructible ankles and knees.',
+  'move.atg.knees.code':                 'ATG',
+  'move.atg.knees.s0.name':              'ATG split squat',
+  'move.atg.knees.s0.cue':               'Deep lunge. Knee goes past foot.',
+  'move.atg.knees.s1.name':              'Tibialis raise',
+  'move.atg.knees.s1.cue':               'Against wall, lift feet.',
+  'move.atg.knees.s2.name':              'Nordics',
+  'move.atg.knees.s2.cue':               'Assisted if needed. Controlled descent.',
+  'move.atg.knees.s3.name':              'Sissy squat',
+  'move.atg.knees.s3.cue':               'Supported. Knees forward, heels up.',
+  'move.atg.knees.s4.name':              'Elephant walk',
+  'move.atg.knees.s4.cue':               'Walk touching floor, legs straight.',
+
+  'move.ancestral.name':                 'Ancestral',
+  'move.ancestral.desc':                 'Ancestral techniques. Crawl, hang, deep squat. Full body reset.',
+  'move.ancestral.code':                 'ANC',
+  'move.ancestral.s0.name':              'Deep squat hold',
+  'move.ancestral.s0.cue':               'Heels down, relax.',
+  'move.ancestral.s1.name':              'Crawling',
+  'move.ancestral.s1.cue':               'Contralateral, slow.',
+  'move.ancestral.s2.name':              'Passive hang',
+  'move.ancestral.s2.cue':               'From a bar, let go.',
+  'move.ancestral.s3.name':              'Ground sitting transitions',
+  'move.ancestral.s3.cue':               'Sit to floor and get up without hands.',
+  'move.ancestral.s4.name':              'Rib pull + breathing',
+  'move.ancestral.s4.cue':               'Cat/cow movement.',
+
+  'move.neck.3.name':                    'Neck · 3 min',
+  'move.neck.3.desc':                    'Micro-break for tense cervicals.',
+  'move.neck.3.code':                    'SIT',
+  'move.neck.3.s0.name':                 'Chin tucks',
+  'move.neck.3.s0.cue':                  'Bring chin back, like a double chin.',
+  'move.neck.3.s1.name':                 'Lateral tilt',
+  'move.neck.3.s1.cue':                  'Ear to shoulder, each side.',
+  'move.neck.3.s2.name':                 'Slow rotation',
+  'move.neck.3.s2.cue':                  "Look over shoulder, don't force.",
+  'move.neck.3.s3.name':                 'Scalenes',
+  'move.neck.3.s3.cue':                  'Hand under glute, tilt head to opposite side.',
+
+  'move.desk.quick.name':                'Desk Express',
+  'move.desk.quick.desc':                'Without standing up. 6 movements in the chair.',
+  'move.desk.quick.code':                'SIT',
+  'move.desk.quick.s0.name':             'Shrug + round',
+  'move.desk.quick.s0.cue':              'Shoulders up, then relax.',
+  'move.desk.quick.s1.name':             'Wrist circles',
+  'move.desk.quick.s1.cue':              '10 each direction.',
+  'move.desk.quick.s2.name':             'Seated twist',
+  'move.desk.quick.s2.cue':              'Rotate toward the backrest.',
+  'move.desk.quick.s3.name':             'Ankle circles',
+  'move.desk.quick.s3.cue':              'Under the desk.',
+  'move.desk.quick.s4.name':             'Chin tucks',
+  'move.desk.quick.s4.cue':              'Chin back 5 times.',
+  'move.desk.quick.s5.name':             'Deep breaths',
+  'move.desk.quick.s5.cue':              '3 full inhales.',
+});
+
+</script>
+  <script type="text/babel">
 /* PACE · i18n helper — useT + detectInitialLang
    Sesión 35 · v0.17.0
 
@@ -3064,26 +3307,25 @@ function WelcomeModal({ open, onClose }) {
 
   return (
     <Modal open={open} onClose={skip} maxWidth={520}>
-      <div style={{ ...welcomeStyles.inner, position: 'relative' }}>
-        {/* Toggle pill ES · EN — esquina superior derecha */}
-        <button
-          onClick={toggleLang}
-          title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
-          style={welcomeStyles.langToggle}
-          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
-        >
-          <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
-          <span style={{ color: 'var(--line-2)' }}> · </span>
-          <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
-        </button>
-
+      <div style={welcomeStyles.inner}>
         {/* LAYOUT DE 2 COLUMNAS (v0.12.1) — header compacto a la izquierda
             (logo + meta + título) y lede a la derecha. Ahorra ~120px
             verticales respecto al layout apilado anterior y encaja sin
             scroll en pantallas 720p. */}
         <div style={welcomeStyles.header}>
           <div style={welcomeStyles.headerLeft}>
+            {/* Toggle pill ES · EN — encima del logo, columna izquierda */}
+            <button
+              onClick={toggleLang}
+              title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+              style={welcomeStyles.langToggle}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
+            >
+              <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
+              <span style={{ color: 'var(--line-2)' }}> · </span>
+              <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
+            </button>
             <div style={welcomeStyles.logoMini}>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
@@ -3195,9 +3437,8 @@ const welcomeStyles = {
     gap: 16,
   },
   langToggle: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
+    alignSelf: 'flex-start',
+    marginBottom: 8,
     padding: '3px 8px',
     fontSize: 10,
     letterSpacing: '0.08em',
@@ -4824,7 +5065,8 @@ const BREATHE_ROUTINES = {
 };
 
 function BreatheLibrary({ open, onClose, onStart }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
       maxWidth={860}>
@@ -4832,8 +5074,8 @@ function BreatheLibrary({ open, onClose, onStart }) {
         {Object.entries(BREATHE_ROUTINES).map(([key, group]) => (
           <div key={key}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{group.label}</h3>
-              {group.aside && <Meta>{group.aside}</Meta>}
+              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{tR(`breathe.cat.${key}.label`, group.label)}</h3>
+              {group.aside && <Meta>{tR(`breathe.cat.${key}.aside`, group.aside)}</Meta>}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
               {group.items.map(r => (
@@ -4848,7 +5090,8 @@ function BreatheLibrary({ open, onClose, onStart }) {
 }
 
 function RoutineCard({ routine, color, onClick }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   return (
     <Card accent={color} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
@@ -4863,14 +5106,14 @@ function RoutineCard({ routine, color, onClick }) {
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
         <Tag color={color}>{routine.tag}</Tag>
       </div>
-      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
-      <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{routine.desc}</p>
+      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{tR(`${routine.id}.name`, routine.name)}</h4>
+      <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{tR(`${routine.id}.desc`, routine.desc)}</p>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderTop: '1px dashed var(--line)', paddingTop: 8,
       }}>
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.code}
+          {tR(`${routine.id}.code`, routine.code)}
         </span>
         <span style={{
           ...displayItalic, fontSize: 16,
@@ -4942,7 +5185,11 @@ const { useState, useEffect, useRef } = React;
 
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
-  const { t } = useT();
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const displayRoutine = lang === 'en'
+    ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
+    : routine;
   const [stage, setStage] = useState('prep'); // 'prep' | 'active' | 'hold' | 'done'
   const [prepCount, setPrepCount] = useState(3);
   const [phase, setPhase] = useState(0);
@@ -4965,8 +5212,8 @@ function BreatheSession({ routine, onExit }) {
       startTime.current = Date.now();
       return;
     }
-    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
+    return () => clearTimeout(timer);
   }, [stage, prepCount, paused]);
 
   // Ticker principal (active)
@@ -5060,7 +5307,7 @@ function BreatheSession({ routine, onExit }) {
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--breathe)"
         prepCount={prepCount}
@@ -5083,7 +5330,7 @@ function BreatheSession({ routine, onExit }) {
     }
     return (
       <SessionDone
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--breathe)"
         accentSoft="var(--breathe-soft)"
@@ -5100,7 +5347,7 @@ function BreatheSession({ routine, onExit }) {
     const holdSecs = holdSeconds % 60;
     return (
       <SessionShell
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
@@ -5154,7 +5401,7 @@ function BreatheSession({ routine, onExit }) {
 
   return (
     <SessionShell
-      routine={routine}
+      routine={displayRoutine}
       onExit={onExit}
       centerGap={true}
       footerGap={16}
@@ -5294,7 +5541,11 @@ function MoveLibrary({ open, onClose, onStart }) {
 }
 
 function MoveSession({ routine, onExit, kind = 'move' }) {
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const displayRoutine = lang === 'en'
+    ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
+    : routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
   // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
   const dispatchComplete = () => {
@@ -5367,7 +5618,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--move)"
         prepCount={prepCount}
@@ -5384,7 +5635,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     const secs = totalSec % 60;
     return (
       <SessionDone
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--move)"
         accentSoft="var(--move-soft)"
@@ -5417,7 +5668,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   );
   return (
     <SessionShell
-      routine={routine}
+      routine={displayRoutine}
       onExit={onExit}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer}
@@ -5432,11 +5683,11 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ...displayItalic,
           fontSize: 56, fontWeight: 500,
           lineHeight: 1.05, margin: '0 0 20px',
-        }}>{step.name}</h1>
+        }}>{tR(`${routine.id}.s${stepIdx}.name`, step.name)}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
           maxWidth: 460, margin: '0 auto 30px',
-        }}>{step.cue}</p>
+        }}>{tR(`${routine.id}.s${stepIdx}.cue`, step.cue)}</p>
 
         <div style={{
           ...displayItalic,
@@ -5468,7 +5719,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${routine.steps[stepIdx + 1].name}` : t('move.lastStep')}
+          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tR(`${routine.id}.s${stepIdx + 1}.name`, routine.steps[stepIdx + 1].name)}` : t('move.lastStep')}
         </div>
       </div>
     </SessionShell>

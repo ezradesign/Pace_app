@@ -8,7 +8,7 @@
 const { useSyncExternalStore, useCallback } = React;
 
 const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.16.0';
+const PACE_VERSION = 'v0.18.0';
 
 const defaultState = {
   // Settings / Tweaks

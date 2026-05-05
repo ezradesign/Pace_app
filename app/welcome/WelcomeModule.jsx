@@ -77,26 +77,25 @@ function WelcomeModal({ open, onClose }) {
 
   return (
     <Modal open={open} onClose={skip} maxWidth={520}>
-      <div style={{ ...welcomeStyles.inner, position: 'relative' }}>
-        {/* Toggle pill ES · EN — esquina superior derecha */}
-        <button
-          onClick={toggleLang}
-          title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
-          style={welcomeStyles.langToggle}
-          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
-        >
-          <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
-          <span style={{ color: 'var(--line-2)' }}> · </span>
-          <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
-        </button>
-
+      <div style={welcomeStyles.inner}>
         {/* LAYOUT DE 2 COLUMNAS (v0.12.1) — header compacto a la izquierda
             (logo + meta + título) y lede a la derecha. Ahorra ~120px
             verticales respecto al layout apilado anterior y encaja sin
             scroll en pantallas 720p. */}
         <div style={welcomeStyles.header}>
           <div style={welcomeStyles.headerLeft}>
+            {/* Toggle pill ES · EN — encima del logo, columna izquierda */}
+            <button
+              onClick={toggleLang}
+              title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+              style={welcomeStyles.langToggle}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
+            >
+              <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
+              <span style={{ color: 'var(--line-2)' }}> · </span>
+              <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
+            </button>
             <div style={welcomeStyles.logoMini}>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
@@ -208,9 +207,8 @@ const welcomeStyles = {
     gap: 16,
   },
   langToggle: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
+    alignSelf: 'flex-start',
+    marginBottom: 8,
     padding: '3px 8px',
     fontSize: 10,
     letterSpacing: '0.08em',

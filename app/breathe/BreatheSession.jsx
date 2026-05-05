@@ -7,7 +7,11 @@ const { useState, useEffect, useRef } = React;
 
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
-  const { t } = useT();
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const displayRoutine = lang === 'en'
+    ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
+    : routine;
   const [stage, setStage] = useState('prep'); // 'prep' | 'active' | 'hold' | 'done'
   const [prepCount, setPrepCount] = useState(3);
   const [phase, setPhase] = useState(0);
@@ -30,8 +34,8 @@ function BreatheSession({ routine, onExit }) {
       startTime.current = Date.now();
       return;
     }
-    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
+    return () => clearTimeout(timer);
   }, [stage, prepCount, paused]);
 
   // Ticker principal (active)
@@ -125,7 +129,7 @@ function BreatheSession({ routine, onExit }) {
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--breathe)"
         prepCount={prepCount}
@@ -148,7 +152,7 @@ function BreatheSession({ routine, onExit }) {
     }
     return (
       <SessionDone
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--breathe)"
         accentSoft="var(--breathe-soft)"
@@ -165,7 +169,7 @@ function BreatheSession({ routine, onExit }) {
     const holdSecs = holdSeconds % 60;
     return (
       <SessionShell
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
@@ -219,7 +223,7 @@ function BreatheSession({ routine, onExit }) {
 
   return (
     <SessionShell
-      routine={routine}
+      routine={displayRoutine}
       onExit={onExit}
       centerGap={true}
       footerGap={16}
