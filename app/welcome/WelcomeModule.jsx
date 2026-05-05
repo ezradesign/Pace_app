@@ -27,14 +27,8 @@
      - Re-abrir manualmente es posible via evento
        `pace:open-welcome` (para Tweaks dev o pruebas).
 
-   POR QUÉ ESTE MÓDULO EXISTE:
-     - Refuerza el argumento del modal de BMC (v0.11.11):
-       cuando dice "Todo local", ahora es lo PRIMERO que el
-       usuario lee al abrir la app.
-     - Captura una intención opcional — el campo ya existía en
-       state (`intention: ''`) pero nunca se exponía en UI.
-     - No interrumpe. Es la primera puerta; si el usuario la
-       cierra sin escribir, la app sigue funcionando igual.
+   i18n sesión 35: strings migrados a useT(). Toggle pill ES·EN
+   en esquina superior derecha para cambiar idioma antes de empezar.
 ============================================================ */
 
 const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = React;
@@ -44,6 +38,7 @@ const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = Re
    ============================================================ */
 function WelcomeModal({ open, onClose }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [draft, setDraft] = useStateWEL('');
   const inputRef = useRefWEL(null);
 
@@ -78,9 +73,24 @@ function WelcomeModal({ open, onClose }) {
     onClose && onClose();
   };
 
+  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+
   return (
     <Modal open={open} onClose={skip} maxWidth={520}>
-      <div style={welcomeStyles.inner}>
+      <div style={{ ...welcomeStyles.inner, position: 'relative' }}>
+        {/* Toggle pill ES · EN — esquina superior derecha */}
+        <button
+          onClick={toggleLang}
+          title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+          style={welcomeStyles.langToggle}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
+        >
+          <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
+          <span style={{ color: 'var(--line-2)' }}> · </span>
+          <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
+        </button>
+
         {/* LAYOUT DE 2 COLUMNAS (v0.12.1) — header compacto a la izquierda
             (logo + meta + título) y lede a la derecha. Ahorra ~120px
             verticales respecto al layout apilado anterior y encaja sin
@@ -90,35 +100,33 @@ function WelcomeModal({ open, onClose }) {
             <div style={welcomeStyles.logoMini}>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
-            <Meta style={{ marginTop: 10 }}>Bienvenida</Meta>
+            <Meta style={{ marginTop: 10 }}>{t('welcome.greeting')}</Meta>
           </div>
           <div style={welcomeStyles.headerRight}>
             <h2 style={welcomeStyles.title}>
-              Antídoto a la silla.{' '}
-              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
+              {t('welcome.tagline')}{' '}
+              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>{t('welcome.tagline.sub')}</span>
             </h2>
             <p style={welcomeStyles.lede}>
-              Micro-pausas de foco, respiración, movilidad e
-              hidratación. Sin gamificación ni notificaciones
-              abrumadoras.
+              {t('welcome.lede')}
             </p>
           </div>
         </div>
 
         {/* 3 valores en línea — ya más compactos */}
         <div style={welcomeStyles.values}>
-          <WValue label="Todo local" sub="en tu navegador" />
+          <WValue label={t('welcome.value.local.label')} sub={t('welcome.value.local.sub')} />
           <span style={welcomeStyles.sep} />
-          <WValue label="Sin cuentas" sub="sin registro" />
+          <WValue label={t('welcome.value.accounts.label')} sub={t('welcome.value.accounts.sub')} />
           <span style={welcomeStyles.sep} />
-          <WValue label="Siempre gratis" sub="sin paywall" />
+          <WValue label={t('welcome.value.free.label')} sub={t('welcome.value.free.sub')} />
         </div>
 
         {/* Campo de intención — opcional, fila horizontal label+input */}
         <div style={welcomeStyles.intentionBlock}>
           <label htmlFor="pace-intention" style={welcomeStyles.intentionLabel}>
-            ¿Qué quieres cultivar hoy?
-            <span style={welcomeStyles.optional}>opcional</span>
+            {t('welcome.intention.label')}
+            <span style={welcomeStyles.optional}>{t('welcome.intention.optional')}</span>
           </label>
           <input
             id="pace-intention"
@@ -127,7 +135,7 @@ function WelcomeModal({ open, onClose }) {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') finish(); }}
-            placeholder="concentración, calma, movimiento…"
+            placeholder={t('welcome.intention.placeholder')}
             maxLength={120}
             style={welcomeStyles.intentionInput}
           />
@@ -136,10 +144,10 @@ function WelcomeModal({ open, onClose }) {
         {/* Acciones — botón + skip en línea para no añadir altura */}
         <div style={welcomeStyles.actions}>
           <button onClick={skip} style={welcomeStyles.skip}>
-            prefiero saltarlo
+            {t('welcome.skip')}
           </button>
           <Button variant="primary" size="md" onClick={finish}>
-            Empezar
+            {t('welcome.cta')}
           </Button>
         </div>
       </div>
@@ -198,6 +206,22 @@ const welcomeStyles = {
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: 16,
+  },
+  langToggle: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: '3px 8px',
+    fontSize: 10,
+    letterSpacing: '0.08em',
+    color: 'var(--ink-3)',
+    background: 'var(--paper-2)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-pill)',
+    cursor: 'pointer',
+    transition: 'color 180ms',
+    fontFamily: 'var(--font-ui, sans-serif)',
+    lineHeight: 1.6,
   },
   header: {
     display: 'grid',

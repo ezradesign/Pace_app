@@ -39,6 +39,7 @@ const DARK_DAYS_KEY = 'pace.darkDays.v1';
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
+  const { t, tn } = useT();
   const fileInputRef = useRefTW(null);
   const [msg, setMsg] = useStateTW(null); // {kind, text} para feedback Export/Import
 
@@ -61,29 +62,29 @@ function TweaksPanel({ open, onClose }) {
   if (!open) return null;
 
   const ejes = [
-    { key: 'palette', label: 'Paleta', options: [
-      { v: 'crema', name: 'Crema día' },
-      { v: 'oscuro', name: 'Oscuro noche' },
-      { v: 'envejecido', name: 'Papel envejecido' },
+    { key: 'palette', label: t('tweaks.eje.palette'), options: [
+      { v: 'crema', name: t('tweaks.palette.crema') },
+      { v: 'oscuro', name: t('tweaks.palette.oscuro') },
+      { v: 'envejecido', name: t('tweaks.palette.envejecido') },
     ]},
-    { key: 'layout', label: 'Layout', options: [
-      { v: 'sidebar', name: 'Sidebar (default)' },
-      { v: 'minimal', name: 'Minimal' },
-      { v: 'editorial', name: 'Editorial' },
+    { key: 'layout', label: t('tweaks.eje.layout'), options: [
+      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
+      { v: 'minimal', name: t('tweaks.layout.minimal') },
+      { v: 'editorial', name: t('tweaks.layout.editorial') },
     ]},
-    { key: 'timerStyle', label: 'Estilo del timer', options: [
-      { v: 'aro', name: 'Aro (default)' },
-      { v: 'circulo', name: 'Círculo' },
-      { v: 'barra', name: 'Barra' },
-      { v: 'numero', name: 'Número gigante' },
-      { v: 'analogico', name: 'Analógico' },
+    { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
+      { v: 'aro', name: t('tweaks.timer.aro') },
+      { v: 'circulo', name: t('tweaks.timer.circulo') },
+      { v: 'barra', name: t('tweaks.timer.barra') },
+      { v: 'numero', name: t('tweaks.timer.numero') },
+      { v: 'analogico', name: t('tweaks.timer.analogico') },
     ]},
-    { key: 'breathStyle', label: 'Círculo de respiración', options: [
-      { v: 'flor', name: 'Flor (default)' },
-      { v: 'pulso', name: 'Pulso' },
-      { v: 'petalo', name: 'Pétalo' },
-      { v: 'ondas', name: 'Ondas' },
-      { v: 'organico', name: 'Orgánico' },
+    { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
+      { v: 'flor', name: t('tweaks.breath.flor') },
+      { v: 'pulso', name: t('tweaks.breath.pulso') },
+      { v: 'petalo', name: t('tweaks.breath.petalo') },
+      { v: 'ondas', name: t('tweaks.breath.ondas') },
+      { v: 'organico', name: t('tweaks.breath.organico') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
        (sesión post-v0.12.1). El logo queda fijo en 'pace' (oficial)
@@ -121,10 +122,10 @@ function TweaksPanel({ open, onClose }) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: 'Backup descargado.' });
+      setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
     } catch (e) {
-      setMsg({ kind: 'err', text: 'No se pudo exportar.' });
+      setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
@@ -150,7 +151,7 @@ function TweaksPanel({ open, onClose }) {
           || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
         );
         if (!looksValid) {
-          setMsg({ kind: 'err', text: 'Archivo no reconocido.' });
+          setMsg({ kind: 'err', text: t('tweaks.msg.import.invalid') });
           setTimeout(() => setMsg(null), 2600);
           return;
         }
@@ -161,19 +162,15 @@ function TweaksPanel({ open, onClose }) {
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
         const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(
-          `¿Sobreescribir tus datos con los del archivo?\n\n` +
-          `Archivo contiene: ${nLogros} logros, ${nFoco} min de foco.\n` +
-          `Esta acción no se puede deshacer.`
-        );
+        const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
         // Escribimos y recargamos para estado limpio.
         localStorage.setItem('pace.state.v1', JSON.stringify(incoming));
-        setMsg({ kind: 'ok', text: 'Importado — recargando…' });
+        setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {
-        setMsg({ kind: 'err', text: 'JSON inválido.' });
+        setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);
       }
     };
@@ -197,7 +194,7 @@ function TweaksPanel({ open, onClose }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
-          <Meta>Panel</Meta>
+          <Meta>{t('tweaks.meta')}</Meta>
           <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
@@ -230,9 +227,38 @@ function TweaksPanel({ open, onClose }) {
 
       <Divider style={{ margin: '14px 0' }} />
 
+      {/* Idioma */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'es', name: t('tweaks.lang.es') },
+            { v: 'en', name: t('tweaks.lang.en') },
+          ].map(opt => {
+            const active = state.lang === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
       {/* Sound */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Meta>Sonidos</Meta>
+        <Meta>{t('tweaks.sounds.meta')}</Meta>
         <button onClick={() => set({ soundOn: !state.soundOn })}
           style={{
             padding: '4px 10px',
@@ -241,7 +267,7 @@ function TweaksPanel({ open, onClose }) {
             border: `1px solid ${state.soundOn ? 'var(--focus)' : 'var(--line)'}`,
             borderRadius: 'var(--r-pill)',
             fontSize: 11, letterSpacing: 0.2,
-          }}>{state.soundOn ? 'Activo' : 'Silencio'}</button>
+          }}>{state.soundOn ? t('tweaks.sounds.on') : t('tweaks.sounds.off')}</button>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
@@ -249,21 +275,21 @@ function TweaksPanel({ open, onClose }) {
       {/* ============================================================
           Datos — Export / Import JSON (sesión 17 / v0.12.0)
           ============================================================ */}
-      <Meta style={{ marginBottom: 8 }}>Tus datos</Meta>
+      <Meta style={{ marginBottom: 8 }}>{t('tweaks.data.meta')}</Meta>
       <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
         <button
           onClick={exportJSON}
           style={tweaksStyles.dataBtn}
-          title="Descarga un JSON con tu estado actual"
+          title={t('tweaks.data.export.title')}
         >
-          <DownloadIcon /> <span>Exportar</span>
+          <DownloadIcon /> <span>{t('tweaks.data.export')}</span>
         </button>
         <button
           onClick={() => fileInputRef.current && fileInputRef.current.click()}
           style={tweaksStyles.dataBtn}
-          title="Sobreescribe tus datos con un backup"
+          title={t('tweaks.data.import.title')}
         >
-          <UploadIcon /> <span>Importar</span>
+          <UploadIcon /> <span>{t('tweaks.data.import')}</span>
         </button>
         <input
           ref={fileInputRef}
@@ -295,15 +321,14 @@ function TweaksPanel({ open, onClose }) {
         letterSpacing: 0.1,
         marginBottom: 4,
       }}>
-        Todo vive en tu navegador. El backup es un archivo JSON
-        local — sin servidor, sin cuenta.
+        {t('tweaks.data.note')}
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
 
       {/* Reset */}
       <button
-        onClick={() => { if (confirm('¿Resetear todos los datos de PACE?')) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
+        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
         style={{
           width: '100%',
           padding: '8px',
@@ -313,7 +338,7 @@ function TweaksPanel({ open, onClose }) {
           borderRadius: 'var(--r-sm)',
           letterSpacing: 0.2,
         }}
-      >Resetear todo</button>
+      >{t('tweaks.reset')}</button>
     </div>
   );
 }

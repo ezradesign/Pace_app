@@ -226,12 +226,370 @@ input, textarea { font-family: inherit; color: inherit; }
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <!-- ORDEN DE CARGA
-       1. state.jsx → store global (usePace, acciones)
+       0. i18n/*    → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
+                      Deben ir ANTES de state.jsx: loadState() llama a detectInitialLang().
+       1. state.jsx → store global (usePace, acciones, setLang)
        2. ui/*      → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
        3. shell/*   → layout (Sidebar)
        4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
        5. main.jsx  → monta <PaceApp/> en #root
   -->
+  <script type="text/babel">
+/* PACE · Catálogo de strings i18n — ES / EN
+   Sesión 35 · v0.17.0
+   Reglas: no incluir nombres de rutinas, pasos, IDs, "PACE", "Pomodoro",
+   "Wim Hof", "Buy Me a Coffee", ni número de versión.
+*/
+
+window.PACE_STRINGS = {
+  es: {
+    // Welcome
+    'welcome.subtitle':              'Un ritmo para tu día',
+    'welcome.cta':                   'Empezar',
+    'welcome.greeting':              'Bienvenida',
+    'welcome.tagline':               'Antídoto a la silla.',
+    'welcome.tagline.sub':           'A tu ritmo.',
+    'welcome.lede':                  'Micro-pausas de foco, respiración, movilidad e hidratación. Sin gamificación ni notificaciones abrumadoras.',
+    'welcome.value.local.label':     'Todo local',
+    'welcome.value.local.sub':       'en tu navegador',
+    'welcome.value.accounts.label':  'Sin cuentas',
+    'welcome.value.accounts.sub':    'sin registro',
+    'welcome.value.free.label':      'Siempre gratis',
+    'welcome.value.free.sub':        'sin paywall',
+    'welcome.intention.label':       '¿Qué quieres cultivar hoy?',
+    'welcome.intention.optional':    'opcional',
+    'welcome.intention.placeholder': 'concentración, calma, movimiento…',
+    'welcome.skip':                  'prefiero saltarlo',
+
+    // Support
+    'support.meta':                  'Apoya el proyecto',
+    'support.title.main':            'PACE es gratis.',
+    'support.title.sub':             'Y lo seguirá siendo.',
+    'support.lede':                  'No hay cuentas. No hay servidor. No te sigue nadie. Todo vive en tu navegador — y así queremos que siga.',
+    'support.value.local.label':     'Todo local',
+    'support.value.local.sub':       'localStorage únicamente',
+    'support.value.tracking.label':  'Sin tracking',
+    'support.value.tracking.sub':    'sin analytics, sin cookies',
+    'support.value.forever.label':   'Para siempre',
+    'support.value.forever.sub':     'sin paywall, sin pro',
+    'support.cta':                   'Si te cuida, ayúdanos a cuidarlo.',
+    'support.cta.sub':               'No desbloquea nada. Solo nos da café.',
+    'support.btn.label':             'Da de pastar a la vaca',
+    'support.btn.copy':              'Copiar enlace',
+    'support.btn.copied':            '✓ copiado',
+    'support.donated':               'Ya doné →',
+    'support.thanks.saved':          '✦ gracias · sello guardado',
+    'support.thanks':                '✦ gracias',
+    'support.sidebar.label':         'Da de pastar a la vaca',
+    'support.sidebar.title':         'Apoya el proyecto',
+
+    // Break
+    'break.tag':                     'Ciclo completado',
+    'break.title':                   'Pausa bien hecha',
+    'break.subtitle':                'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
+    'break.breathe.label':           'Respira',
+    'break.breathe.desc':            '2 min para volver al centro',
+    'break.move.label':              'Muévete',
+    'break.move.desc':               'Antídoto rápido a la silla',
+    'break.water.label':             'Hidrátate',
+    'break.water.desc':              'Un vaso ahora',
+    'break.done':                    'Ya hecho hoy · otra ronda si quieres',
+    'break.recommended':             'Para ti',
+    'break.shortcut':                'Atajo: B · M · H · Esc',
+    'break.skip':                    'Saltar esta pausa',
+
+    // Sidebar
+    'sidebar.section.rhythm':        'Ritmo',
+    'sidebar.section.trail':         'Sendero',
+    'sidebar.section.achievements':  'Logros',
+    'sidebar.achievements.discover': '{n} por descubrir →',
+    'sidebar.streak.day':            'día seguido',
+    'sidebar.streak.days':           'días seguidos',
+    'sidebar.streak.best':           'Mejor: {n} días',
+    'sidebar.status.ontrack':        'En camino',
+    'sidebar.collapse.title':        'Colapsar (⌘\\)',
+    'sidebar.collapse.aria':         'Colapsar panel',
+    'sidebar.logo.title':            '¿Le haces cosquillas?',
+    'sidebar.counter.pomodoros':     'Pomodoros completados hoy',
+    'sidebar.counter.rounds':        'Rondas largas (cada 4 pomodoros)',
+    'sidebar.counter.streak':        'Días activos seguidos',
+    'sidebar.trail.hito':            'hito',
+    'sidebar.trail.hitos':           'hitos',
+    'sidebar.trail.now':             'ahora',
+    'sidebar.days':                  'L,M,X,J,V,S,D',
+    'sidebar.open.title':            'Abrir panel',
+    'sidebar.open.aria':             'Abrir panel',
+
+    // TopBar
+    'topbar.mode.focus':             'Foco',
+    'topbar.mode.pause':             'Pausa',
+    'topbar.mode.long':              'Larga',
+    'topbar.stats.title':            'Ritmo semanal (S)',
+    'topbar.stats.aria':             'Ver estadísticas',
+    'topbar.achievements.title':     'Logros (L)',
+    'topbar.achievements.aria':      'Ver logros',
+    'topbar.tweaks.title':           'Tweaks (T)',
+    'topbar.tweaks.aria':            'Abrir tweaks',
+
+    // ActivityBar
+    'activity.meta':                 'Actividades',
+    'activity.breathe.label':        'Respira',
+    'activity.breathe.sub':          'ritmo, calma',
+    'activity.stretch.label':        'Estira',
+    'activity.stretch.sub':          'afloja tensión',
+    'activity.move.label':           'Mueve',
+    'activity.move.sub':             'cuerpo activo',
+    'activity.hydrate.label':        'Hidrátate',
+    'activity.hydrate.sub':          'agua ahora',
+
+    // Tweaks
+    'tweaks.meta':                   'Panel',
+    'tweaks.eje.palette':            'Paleta',
+    'tweaks.eje.layout':             'Layout',
+    'tweaks.eje.timer':              'Estilo del timer',
+    'tweaks.eje.breath':             'Círculo de respiración',
+    'tweaks.eje.lang':               'Idioma',
+    'tweaks.palette.crema':          'Crema día',
+    'tweaks.palette.oscuro':         'Oscuro noche',
+    'tweaks.palette.envejecido':     'Papel envejecido',
+    'tweaks.layout.sidebar':         'Sidebar (default)',
+    'tweaks.layout.minimal':         'Minimal',
+    'tweaks.layout.editorial':       'Editorial',
+    'tweaks.timer.aro':              'Aro (default)',
+    'tweaks.timer.circulo':          'Círculo',
+    'tweaks.timer.barra':            'Barra',
+    'tweaks.timer.numero':           'Número gigante',
+    'tweaks.timer.analogico':        'Analógico',
+    'tweaks.breath.flor':            'Flor (default)',
+    'tweaks.breath.pulso':           'Pulso',
+    'tweaks.breath.petalo':          'Pétalo',
+    'tweaks.breath.ondas':           'Ondas',
+    'tweaks.breath.organico':        'Orgánico',
+    'tweaks.lang.es':                'Español',
+    'tweaks.lang.en':                'English',
+    'tweaks.sounds.meta':            'Sonidos',
+    'tweaks.sounds.on':              'Activo',
+    'tweaks.sounds.off':             'Silencio',
+    'tweaks.data.meta':              'Tus datos',
+    'tweaks.data.export':            'Exportar',
+    'tweaks.data.import':            'Importar',
+    'tweaks.data.export.title':      'Descarga un JSON con tu estado actual',
+    'tweaks.data.import.title':      'Sobreescribe tus datos con un backup',
+    'tweaks.data.note':              'Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.',
+    'tweaks.reset':                  'Resetear todo',
+    'tweaks.msg.exported':           'Backup descargado.',
+    'tweaks.msg.export.err':         'No se pudo exportar.',
+    'tweaks.msg.imported':           'Importado — recargando…',
+    'tweaks.msg.import.invalid':     'Archivo no reconocido.',
+    'tweaks.msg.import.json.err':    'JSON inválido.',
+    'tweaks.confirm.reset':          '¿Resetear todos los datos de PACE?',
+    'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
+  },
+
+  en: {
+    // Welcome
+    'welcome.subtitle':              'A rhythm for your day',
+    'welcome.cta':                   'Begin',
+    'welcome.greeting':              'Welcome',
+    'welcome.tagline':               'Antidote to the chair.',
+    'welcome.tagline.sub':           'At your own pace.',
+    'welcome.lede':                  'Micro-breaks for focus, breathing, mobility and hydration. No gamification, no overwhelming notifications.',
+    'welcome.value.local.label':     'Fully local',
+    'welcome.value.local.sub':       'in your browser',
+    'welcome.value.accounts.label':  'No accounts',
+    'welcome.value.accounts.sub':    'no sign-up',
+    'welcome.value.free.label':      'Always free',
+    'welcome.value.free.sub':        'no paywall',
+    'welcome.intention.label':       'What do you want to cultivate today?',
+    'welcome.intention.optional':    'optional',
+    'welcome.intention.placeholder': 'focus, calm, movement…',
+    'welcome.skip':                  'skip for now',
+
+    // Support
+    'support.meta':                  'Support the project',
+    'support.title.main':            'PACE is free.',
+    'support.title.sub':             'And it always will be.',
+    'support.lede':                  'No accounts. No server. No tracking. Everything lives in your browser — and we want to keep it that way.',
+    'support.value.local.label':     'Fully local',
+    'support.value.local.sub':       'localStorage only',
+    'support.value.tracking.label':  'No tracking',
+    'support.value.tracking.sub':    'no analytics, no cookies',
+    'support.value.forever.label':   'Forever',
+    'support.value.forever.sub':     'no paywall, no pro',
+    'support.cta':                   'If it takes care of you, help us keep it going.',
+    'support.cta.sub':               "Doesn't unlock anything. Just buys us coffee.",
+    'support.btn.label':             'Feed the cow',
+    'support.btn.copy':              'Copy link',
+    'support.btn.copied':            '✓ copied',
+    'support.donated':               'I donated →',
+    'support.thanks.saved':          '✦ thanks · badge saved',
+    'support.thanks':                '✦ thanks',
+    'support.sidebar.label':         'Feed the cow',
+    'support.sidebar.title':         'Support the project',
+
+    // Break
+    'break.tag':                     'Cycle complete',
+    'break.title':                   'Well-earned break',
+    'break.subtitle':                "You've closed a focus cycle. Choose your micro-break.",
+    'break.breathe.label':           'Breathe',
+    'break.breathe.desc':            '2 min to return to center',
+    'break.move.label':              'Move',
+    'break.move.desc':               'Quick antidote to the chair',
+    'break.water.label':             'Hydrate',
+    'break.water.desc':              'A glass right now',
+    'break.done':                    'Done today · another round if you like',
+    'break.recommended':             'For you',
+    'break.shortcut':                'Shortcut: B · M · H · Esc',
+    'break.skip':                    'Skip this break',
+
+    // Sidebar
+    'sidebar.section.rhythm':        'Rhythm',
+    'sidebar.section.trail':         'Trail',
+    'sidebar.section.achievements':  'Achievements',
+    'sidebar.achievements.discover': '{n} to discover →',
+    'sidebar.streak.day':            'day in a row',
+    'sidebar.streak.days':           'days in a row',
+    'sidebar.streak.best':           'Best: {n} days',
+    'sidebar.status.ontrack':        'On track',
+    'sidebar.collapse.title':        'Collapse (⌘\\)',
+    'sidebar.collapse.aria':         'Collapse panel',
+    'sidebar.logo.title':            'Tickling it?',
+    'sidebar.counter.pomodoros':     'Pomodoros completed today',
+    'sidebar.counter.rounds':        'Long rounds (every 4 pomodoros)',
+    'sidebar.counter.streak':        'Active days in a row',
+    'sidebar.trail.hito':            'milestone',
+    'sidebar.trail.hitos':           'milestones',
+    'sidebar.trail.now':             'now',
+    'sidebar.days':                  'Mo,Tu,We,Th,Fr,Sa,Su',
+    'sidebar.open.title':            'Open panel',
+    'sidebar.open.aria':             'Open panel',
+
+    // TopBar
+    'topbar.mode.focus':             'Focus',
+    'topbar.mode.pause':             'Pause',
+    'topbar.mode.long':              'Long',
+    'topbar.stats.title':            'Weekly rhythm (S)',
+    'topbar.stats.aria':             'View stats',
+    'topbar.achievements.title':     'Achievements (L)',
+    'topbar.achievements.aria':      'View achievements',
+    'topbar.tweaks.title':           'Tweaks (T)',
+    'topbar.tweaks.aria':            'Open tweaks',
+
+    // ActivityBar
+    'activity.meta':                 'Activities',
+    'activity.breathe.label':        'Breathe',
+    'activity.breathe.sub':          'rhythm, calm',
+    'activity.stretch.label':        'Stretch',
+    'activity.stretch.sub':          'release tension',
+    'activity.move.label':           'Move',
+    'activity.move.sub':             'active body',
+    'activity.hydrate.label':        'Hydrate',
+    'activity.hydrate.sub':          'water now',
+
+    // Tweaks
+    'tweaks.meta':                   'Panel',
+    'tweaks.eje.palette':            'Palette',
+    'tweaks.eje.layout':             'Layout',
+    'tweaks.eje.timer':              'Timer style',
+    'tweaks.eje.breath':             'Breathing circle',
+    'tweaks.eje.lang':               'Language',
+    'tweaks.palette.crema':          'Day cream',
+    'tweaks.palette.oscuro':         'Night dark',
+    'tweaks.palette.envejecido':     'Aged paper',
+    'tweaks.layout.sidebar':         'Sidebar (default)',
+    'tweaks.layout.minimal':         'Minimal',
+    'tweaks.layout.editorial':       'Editorial',
+    'tweaks.timer.aro':              'Ring (default)',
+    'tweaks.timer.circulo':          'Circle',
+    'tweaks.timer.barra':            'Bar',
+    'tweaks.timer.numero':           'Giant number',
+    'tweaks.timer.analogico':        'Analog',
+    'tweaks.breath.flor':            'Flower (default)',
+    'tweaks.breath.pulso':           'Pulse',
+    'tweaks.breath.petalo':          'Petal',
+    'tweaks.breath.ondas':           'Waves',
+    'tweaks.breath.organico':        'Organic',
+    'tweaks.lang.es':                'Spanish',
+    'tweaks.lang.en':                'English',
+    'tweaks.sounds.meta':            'Sounds',
+    'tweaks.sounds.on':              'Active',
+    'tweaks.sounds.off':             'Silent',
+    'tweaks.data.meta':              'Your data',
+    'tweaks.data.export':            'Export',
+    'tweaks.data.import':            'Import',
+    'tweaks.data.export.title':      'Download a JSON with your current state',
+    'tweaks.data.import.title':      'Overwrite your data with a backup',
+    'tweaks.data.note':              'Everything lives in your browser. The backup is a local JSON file — no server, no account.',
+    'tweaks.reset':                  'Reset everything',
+    'tweaks.msg.exported':           'Backup downloaded.',
+    'tweaks.msg.export.err':         'Could not export.',
+    'tweaks.msg.imported':           'Imported — reloading…',
+    'tweaks.msg.import.invalid':     'File not recognized.',
+    'tweaks.msg.import.json.err':    'Invalid JSON.',
+    'tweaks.confirm.reset':          'Reset all PACE data?',
+    'tweaks.confirm.import':         'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
+  },
+};
+
+</script>
+  <script type="text/babel">
+/* PACE · i18n helper — useT + detectInitialLang
+   Sesión 35 · v0.17.0
+
+   DEBE cargarse DESPUÉS de strings.js y ANTES de state.jsx,
+   porque state.jsx llama a detectInitialLang() al evaluar loadState().
+*/
+
+function detectInitialLang() {
+  const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  return nav === 'es' ? 'es' : 'en';
+}
+
+/* isDev: true en localhost, 127.0.0.1 o file:// — activa console.warn
+   para claves faltantes. En producción (dominio real) es silencioso. */
+const _i18nIsDev = (
+  ['localhost', '127.0.0.1'].includes(location.hostname) ||
+  location.protocol === 'file:'
+);
+
+/* useT — hook reactivo que lee state.lang y devuelve las funciones
+   de traducción t() y tn() (con variables {key}).
+
+   Depende de usePace (state.jsx) y PACE_STRINGS (strings.js).
+   Ambos deben estar cargados antes de que cualquier componente
+   que use useT() se monte. */
+function useT() {
+  const [state] = usePace();
+  const lang = state.lang || 'en';
+
+  function t(key) {
+    const strings = window.PACE_STRINGS;
+    if (!strings) return key;
+    if (strings[lang] && strings[lang][key] !== undefined) return strings[lang][key];
+    if (strings.en && strings.en[key] !== undefined) {
+      if (_i18nIsDev) console.warn(`[i18n] missing ${lang}: ${key}`);
+      return strings.en[key];
+    }
+    if (_i18nIsDev) console.warn(`[i18n] missing key: ${key}`);
+    return key;
+  }
+
+  function tn(key, vars) {
+    let str = t(key);
+    if (vars) {
+      Object.keys(vars).forEach(k => {
+        str = str.split(`{${k}}`).join(String(vars[k]));
+      });
+    }
+    return str;
+  }
+
+  return { t, tn, lang };
+}
+
+Object.assign(window, { useT, detectInitialLang });
+
+</script>
   <script type="text/babel">
 /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
@@ -255,6 +613,7 @@ const defaultState = {
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
+  lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
 
   // Foco
   focusMode: 'foco',          // foco | pausa | larga
@@ -343,13 +702,19 @@ let _state = loadState();
 const _listeners = new Set();
 
 function loadState() {
+  const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return { ...defaultState, lastActiveDay: new Date().toDateString() };
+    if (!raw) {
+      return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
+    }
     const parsed = JSON.parse(raw);
+    /* Si el usuario no tiene lang guardado (instalación previa a i18n),
+       detectarlo desde navigator.language y persistirlo. */
+    if (!parsed.lang) parsed.lang = _detectLang();
     return rolloverIfNeeded({ ...defaultState, ...parsed });
   } catch (e) {
-    return { ...defaultState, lastActiveDay: new Date().toDateString() };
+    return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
   }
 }
 
@@ -759,6 +1124,10 @@ function onToast(listener) {
 // Init theme on load
 applyTheme();
 
+function setLang(lang) {
+  setState({ lang });
+}
+
 Object.assign(window, {
   usePace, getState, setState, subscribe,
   unlockAchievement, completePomodoro,
@@ -766,6 +1135,7 @@ Object.assign(window, {
   addWaterGlass, addFocusMinutes, updateStreak,
   ensureDayFresh,
   showToast, onToast,
+  setLang,
   PACE_VERSION,
 });
 
@@ -2006,7 +2376,7 @@ function SupportIcon({ size = 13 }) {
    Sin animación permanente. Sin gradiente. Sin color llamativo.
    ============================================================ */
 function SupportButton({ onOpen }) {
-  const copy = supportCopy();
+  const { t } = useT();
   const [hover, setHover] = useStateSUP(false);
 
   return (
@@ -2014,8 +2384,8 @@ function SupportButton({ onOpen }) {
       onClick={onOpen}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      title="Apoya el proyecto"
-      aria-label={copy.label}
+      title={t('support.sidebar.title')}
+      aria-label={t('support.sidebar.label')}
       style={{
         ...displayItalic,
         display: 'inline-flex',
@@ -2034,7 +2404,7 @@ function SupportButton({ onOpen }) {
         cursor: 'pointer',
       }}
     >
-      <span>{copy.short}</span>
+      <span>{t('support.sidebar.label')}</span>
       <SupportIcon />
     </button>
   );
@@ -2092,6 +2462,7 @@ function CowIcon({ size = 13 }) {
    ============================================================ */
 function SupportModal({ open, onClose }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [copied, setCopied] = useStateSUP(false);
   const [thanked, setThanked] = useStateSUP(false);
 
@@ -2139,42 +2510,41 @@ function SupportModal({ open, onClose }) {
           <SupportHero />
         </div>
 
-        <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
+        <Meta style={{ textAlign: 'center', marginBottom: 10 }}>{t('support.meta')}</Meta>
 
         <h2 style={supportStyles.title}>
-          PACE es gratis.<br/>
-          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>Y lo seguirá siendo.</span>
+          {t('support.title.main')}<br/>
+          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>{t('support.title.sub')}</span>
         </h2>
 
         <p style={supportStyles.lede}>
-          No hay cuentas. No hay servidor. No te sigue nadie. Todo
-          vive en tu navegador — y así queremos que siga.
+          {t('support.lede')}
         </p>
 
         {/* 3 valores en línea fina */}
         <div style={supportStyles.values}>
-          <Value label="Todo local" sub="localStorage únicamente" />
+          <Value label={t('support.value.local.label')} sub={t('support.value.local.sub')} />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
-          <Value label="Sin tracking" sub="sin analytics, sin cookies" />
+          <Value label={t('support.value.tracking.label')} sub={t('support.value.tracking.sub')} />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
-          <Value label="Para siempre" sub="sin paywall, sin pro" />
+          <Value label={t('support.value.forever.label')} sub={t('support.value.forever.sub')} />
         </div>
 
         <p style={supportStyles.cta}>
-          Si te cuida, ayúdanos a cuidarlo.<br/>
+          {t('support.cta')}<br/>
           <span style={{ color: 'var(--ink-3)' }}>
-            No desbloquea nada. Solo nos da café.
+            {t('support.cta.sub')}
           </span>
         </p>
 
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
-            <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
+            <span style={{ marginRight: 2 }}>{t('support.btn.label')}</span>
             <SupportIcon />
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
-            {copied ? '✓ copiado' : 'Copiar enlace'}
+            {copied ? t('support.btn.copied') : t('support.btn.copy')}
           </Button>
         </div>
 
@@ -2191,9 +2561,9 @@ function SupportModal({ open, onClose }) {
           >
             {thanked ? (
               state.achievements['secret.supporter']
-                ? '✦ gracias · sello guardado'
-                : '✦ gracias'
-            ) : 'Ya doné →'}
+                ? t('support.thanks.saved')
+                : t('support.thanks')
+            ) : t('support.donated')}
           </button>
         </div>
       </div>
@@ -2403,14 +2773,8 @@ Object.assign(window, {
      - Re-abrir manualmente es posible via evento
        `pace:open-welcome` (para Tweaks dev o pruebas).
 
-   POR QUÉ ESTE MÓDULO EXISTE:
-     - Refuerza el argumento del modal de BMC (v0.11.11):
-       cuando dice "Todo local", ahora es lo PRIMERO que el
-       usuario lee al abrir la app.
-     - Captura una intención opcional — el campo ya existía en
-       state (`intention: ''`) pero nunca se exponía en UI.
-     - No interrumpe. Es la primera puerta; si el usuario la
-       cierra sin escribir, la app sigue funcionando igual.
+   i18n sesión 35: strings migrados a useT(). Toggle pill ES·EN
+   en esquina superior derecha para cambiar idioma antes de empezar.
 ============================================================ */
 
 const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = React;
@@ -2420,6 +2784,7 @@ const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = Re
    ============================================================ */
 function WelcomeModal({ open, onClose }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [draft, setDraft] = useStateWEL('');
   const inputRef = useRefWEL(null);
 
@@ -2454,9 +2819,24 @@ function WelcomeModal({ open, onClose }) {
     onClose && onClose();
   };
 
+  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+
   return (
     <Modal open={open} onClose={skip} maxWidth={520}>
-      <div style={welcomeStyles.inner}>
+      <div style={{ ...welcomeStyles.inner, position: 'relative' }}>
+        {/* Toggle pill ES · EN — esquina superior derecha */}
+        <button
+          onClick={toggleLang}
+          title={state.lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+          style={welcomeStyles.langToggle}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
+        >
+          <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
+          <span style={{ color: 'var(--line-2)' }}> · </span>
+          <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
+        </button>
+
         {/* LAYOUT DE 2 COLUMNAS (v0.12.1) — header compacto a la izquierda
             (logo + meta + título) y lede a la derecha. Ahorra ~120px
             verticales respecto al layout apilado anterior y encaja sin
@@ -2466,35 +2846,33 @@ function WelcomeModal({ open, onClose }) {
             <div style={welcomeStyles.logoMini}>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
-            <Meta style={{ marginTop: 10 }}>Bienvenida</Meta>
+            <Meta style={{ marginTop: 10 }}>{t('welcome.greeting')}</Meta>
           </div>
           <div style={welcomeStyles.headerRight}>
             <h2 style={welcomeStyles.title}>
-              Antídoto a la silla.{' '}
-              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
+              {t('welcome.tagline')}{' '}
+              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>{t('welcome.tagline.sub')}</span>
             </h2>
             <p style={welcomeStyles.lede}>
-              Micro-pausas de foco, respiración, movilidad e
-              hidratación. Sin gamificación ni notificaciones
-              abrumadoras.
+              {t('welcome.lede')}
             </p>
           </div>
         </div>
 
         {/* 3 valores en línea — ya más compactos */}
         <div style={welcomeStyles.values}>
-          <WValue label="Todo local" sub="en tu navegador" />
+          <WValue label={t('welcome.value.local.label')} sub={t('welcome.value.local.sub')} />
           <span style={welcomeStyles.sep} />
-          <WValue label="Sin cuentas" sub="sin registro" />
+          <WValue label={t('welcome.value.accounts.label')} sub={t('welcome.value.accounts.sub')} />
           <span style={welcomeStyles.sep} />
-          <WValue label="Siempre gratis" sub="sin paywall" />
+          <WValue label={t('welcome.value.free.label')} sub={t('welcome.value.free.sub')} />
         </div>
 
         {/* Campo de intención — opcional, fila horizontal label+input */}
         <div style={welcomeStyles.intentionBlock}>
           <label htmlFor="pace-intention" style={welcomeStyles.intentionLabel}>
-            ¿Qué quieres cultivar hoy?
-            <span style={welcomeStyles.optional}>opcional</span>
+            {t('welcome.intention.label')}
+            <span style={welcomeStyles.optional}>{t('welcome.intention.optional')}</span>
           </label>
           <input
             id="pace-intention"
@@ -2503,7 +2881,7 @@ function WelcomeModal({ open, onClose }) {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') finish(); }}
-            placeholder="concentración, calma, movimiento…"
+            placeholder={t('welcome.intention.placeholder')}
             maxLength={120}
             style={welcomeStyles.intentionInput}
           />
@@ -2512,10 +2890,10 @@ function WelcomeModal({ open, onClose }) {
         {/* Acciones — botón + skip en línea para no añadir altura */}
         <div style={welcomeStyles.actions}>
           <button onClick={skip} style={welcomeStyles.skip}>
-            prefiero saltarlo
+            {t('welcome.skip')}
           </button>
           <Button variant="primary" size="md" onClick={finish}>
-            Empezar
+            {t('welcome.cta')}
           </Button>
         </div>
       </div>
@@ -2574,6 +2952,22 @@ const welcomeStyles = {
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: 16,
+  },
+  langToggle: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: '3px 8px',
+    fontSize: 10,
+    letterSpacing: '0.08em',
+    color: 'var(--ink-3)',
+    background: 'var(--paper-2)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-pill)',
+    cursor: 'pointer',
+    transition: 'color 180ms',
+    fontFamily: 'var(--font-ui, sans-serif)',
+    lineHeight: 1.6,
   },
   header: {
     display: 'grid',
@@ -2776,6 +3170,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
 
 function Sidebar() {
   const [state, set] = usePace();
+  const { t, tn } = useT();
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
@@ -2805,14 +3200,14 @@ function Sidebar() {
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
-      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title="Colapsar (⌘\\)" aria-label="Colapsar panel">
+      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title')} aria-label={t('sidebar.collapse.aria')}>
         <ChevronLeftIcon />
       </button>
       <div style={sidebarStyles.logoBar} data-pace-sidebar-logobar>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
-          title="¿Le haces cosquillas?"
+          title={t('sidebar.logo.title')}
         >
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
         </div>
@@ -2821,17 +3216,17 @@ function Sidebar() {
       {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
       <div style={sidebarStyles.cycles}>
         <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title="Pomodoros completados hoy">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.pomodoros')}>
             <PomodoroIcon />
             <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
           </span>
           <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Rondas largas (cada 4 pomodoros)">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.rounds')}>
             <RoundsIcon />
             <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
           </span>
           <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Días activos seguidos">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.streak')}>
             <StreakFlameIcon />
             <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
           </span>
@@ -2843,14 +3238,14 @@ function Sidebar() {
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
         <div style={sidebarStyles.sectionHeader}>
-          <Meta>Ritmo</Meta>
+          <Meta>{t('sidebar.section.rhythm')}</Meta>
           <span style={sidebarStyles.sectionAside}>{state.streak.longest}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
           <span style={sidebarStyles.streakNum}>{state.streak.current}</span>
           <div>
-            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? 'día seguido' : 'días seguidos'}</div>
-            <div style={sidebarStyles.streakSub}>Mejor: {state.streak.longest} días</div>
+            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')}</div>
+            <div style={sidebarStyles.streakSub}>{tn('sidebar.streak.best', { n: state.streak.longest })}</div>
           </div>
         </div>
         <WeekDots weeklyStats={state.weeklyStats} />
@@ -2868,7 +3263,7 @@ function Sidebar() {
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
         <div style={sidebarStyles.sectionHeader}>
-          <Meta>Logros</Meta>
+          <Meta>{t('sidebar.section.achievements')}</Meta>
           <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
         </div>
         <AchievementsPreview onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} />
@@ -2876,7 +3271,7 @@ function Sidebar() {
           onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
           style={sidebarStyles.linkBtn}
         >
-          {100 - unlockedCount} por descubrir →
+          {tn('sidebar.achievements.discover', { n: 100 - unlockedCount })}
         </button>
       </div>
 
@@ -2894,6 +3289,7 @@ function Sidebar() {
    completadas hasta ahora; aparecen como puntos sobre la curva.
    ============================================================ */
 function SenderoDelDia({ state }) {
+  const { t, tn } = useT();
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
   const start = 6;  // 6:00
@@ -2952,8 +3348,8 @@ function SenderoDelDia({ state }) {
   return (
     <>
       <div style={sidebarStyles.sectionHeader}>
-        <Meta>Sendero</Meta>
-        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? 'hito' : 'hitos'}</span>
+        <Meta>{t('sidebar.section.trail')}</Meta>
+        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? t('sidebar.trail.hito') : t('sidebar.trail.hitos')}</span>
       </div>
       <div style={{ marginTop: 6 }}>
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ display: 'block', width: '100%' }}>
@@ -2982,7 +3378,7 @@ function SenderoDelDia({ state }) {
         </svg>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
           <span>6h</span>
-          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>ahora · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
+          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>{t('sidebar.trail.now')} · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
           <span>22h</span>
         </div>
       </div>
@@ -3095,7 +3491,8 @@ function StreakFlameIcon() {
    que vive en main.jsx (≡). */
 
 function WeekDots({ weeklyStats }) {
-  const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const { t } = useT();
+  const days = t('sidebar.days').split(',');
   const today = (new Date().getDay() + 6) % 7; // L=0
   return (
     <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
@@ -3172,11 +3569,12 @@ function AchievementsPreview({ onOpen }) {
 */
 function StatusBar() {
   const [state] = usePace();
+  const { t } = useT();
   const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
   return (
     <div style={sidebarStyles.footer}>
       <div style={sidebarStyles.footerRow}>
-        <Meta>En camino</Meta>
+        <Meta>{t('sidebar.status.ontrack')}</Meta>
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
       <div style={{ marginTop: 10, marginBottom: 10 }}>
@@ -5072,6 +5470,8 @@ function computeScore(key, state) {
 }
 
 function BreakMenu({ open, onClose, onChoose }) {
+  const { t } = useT();
+
   /* `first.cycle` — Pomodoro completado + pausa activa elegida.
      El BreakMenu sólo se abre tras `completePomodoro`, así que aquí
      basta con detectar que el usuario eligió una de las 3 micro-pausas
@@ -5108,9 +5508,9 @@ function BreakMenu({ open, onClose, onChoose }) {
   const state = getState();
 
   const baseOpts = [
-    { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
-    { key: 'move',    label: 'Muévete', desc: 'Antídoto rápido a la silla',  color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
-    { key: 'water',   label: 'Hidrátate', desc: 'Un vaso ahora',             color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
+    { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
+    { key: 'move',    label: t('break.move.label'),    desc: t('break.move.desc'),    color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
+    { key: 'water',   label: t('break.water.label'),   desc: t('break.water.desc'),   color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
   ];
 
   // Ordenar por score descendente; empate → orden original (sort estable).
@@ -5121,7 +5521,7 @@ function BreakMenu({ open, onClose, onChoose }) {
   const topScore = opts[0].score;
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
+    <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map((o, i) => {
           const done = o.score === 0;
@@ -5154,13 +5554,13 @@ function BreakMenu({ open, onClose, onChoose }) {
               )}
               {/* Tag "Para ti" en la opción recomendada */}
               {recommended && (
-                <Tag color="var(--focus)">Para ti</Tag>
+                <Tag color="var(--focus)">{t('break.recommended')}</Tag>
               )}
               <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
               <div>
                 <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
                 <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
-                  {done ? 'Ya hecho hoy · otra ronda si quieres' : o.desc}
+                  {done ? t('break.done') : o.desc}
                 </div>
               </div>
             </button>
@@ -5169,8 +5569,8 @@ function BreakMenu({ open, onClose, onChoose }) {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-        <Meta>Atajo: B · M · H · Esc</Meta>
-        <Button variant="ghost" onClick={onClose}>Saltar esta pausa</Button>
+        <Meta>{t('break.shortcut')}</Meta>
+        <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
       </div>
     </Modal>
   );
@@ -5709,6 +6109,7 @@ const DARK_DAYS_KEY = 'pace.darkDays.v1';
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
+  const { t, tn } = useT();
   const fileInputRef = useRefTW(null);
   const [msg, setMsg] = useStateTW(null); // {kind, text} para feedback Export/Import
 
@@ -5731,29 +6132,29 @@ function TweaksPanel({ open, onClose }) {
   if (!open) return null;
 
   const ejes = [
-    { key: 'palette', label: 'Paleta', options: [
-      { v: 'crema', name: 'Crema día' },
-      { v: 'oscuro', name: 'Oscuro noche' },
-      { v: 'envejecido', name: 'Papel envejecido' },
+    { key: 'palette', label: t('tweaks.eje.palette'), options: [
+      { v: 'crema', name: t('tweaks.palette.crema') },
+      { v: 'oscuro', name: t('tweaks.palette.oscuro') },
+      { v: 'envejecido', name: t('tweaks.palette.envejecido') },
     ]},
-    { key: 'layout', label: 'Layout', options: [
-      { v: 'sidebar', name: 'Sidebar (default)' },
-      { v: 'minimal', name: 'Minimal' },
-      { v: 'editorial', name: 'Editorial' },
+    { key: 'layout', label: t('tweaks.eje.layout'), options: [
+      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
+      { v: 'minimal', name: t('tweaks.layout.minimal') },
+      { v: 'editorial', name: t('tweaks.layout.editorial') },
     ]},
-    { key: 'timerStyle', label: 'Estilo del timer', options: [
-      { v: 'aro', name: 'Aro (default)' },
-      { v: 'circulo', name: 'Círculo' },
-      { v: 'barra', name: 'Barra' },
-      { v: 'numero', name: 'Número gigante' },
-      { v: 'analogico', name: 'Analógico' },
+    { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
+      { v: 'aro', name: t('tweaks.timer.aro') },
+      { v: 'circulo', name: t('tweaks.timer.circulo') },
+      { v: 'barra', name: t('tweaks.timer.barra') },
+      { v: 'numero', name: t('tweaks.timer.numero') },
+      { v: 'analogico', name: t('tweaks.timer.analogico') },
     ]},
-    { key: 'breathStyle', label: 'Círculo de respiración', options: [
-      { v: 'flor', name: 'Flor (default)' },
-      { v: 'pulso', name: 'Pulso' },
-      { v: 'petalo', name: 'Pétalo' },
-      { v: 'ondas', name: 'Ondas' },
-      { v: 'organico', name: 'Orgánico' },
+    { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
+      { v: 'flor', name: t('tweaks.breath.flor') },
+      { v: 'pulso', name: t('tweaks.breath.pulso') },
+      { v: 'petalo', name: t('tweaks.breath.petalo') },
+      { v: 'ondas', name: t('tweaks.breath.ondas') },
+      { v: 'organico', name: t('tweaks.breath.organico') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
        (sesión post-v0.12.1). El logo queda fijo en 'pace' (oficial)
@@ -5791,10 +6192,10 @@ function TweaksPanel({ open, onClose }) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: 'Backup descargado.' });
+      setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
     } catch (e) {
-      setMsg({ kind: 'err', text: 'No se pudo exportar.' });
+      setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
@@ -5820,7 +6221,7 @@ function TweaksPanel({ open, onClose }) {
           || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
         );
         if (!looksValid) {
-          setMsg({ kind: 'err', text: 'Archivo no reconocido.' });
+          setMsg({ kind: 'err', text: t('tweaks.msg.import.invalid') });
           setTimeout(() => setMsg(null), 2600);
           return;
         }
@@ -5831,19 +6232,15 @@ function TweaksPanel({ open, onClose }) {
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
         const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(
-          `¿Sobreescribir tus datos con los del archivo?\n\n` +
-          `Archivo contiene: ${nLogros} logros, ${nFoco} min de foco.\n` +
-          `Esta acción no se puede deshacer.`
-        );
+        const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
         // Escribimos y recargamos para estado limpio.
         localStorage.setItem('pace.state.v1', JSON.stringify(incoming));
-        setMsg({ kind: 'ok', text: 'Importado — recargando…' });
+        setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {
-        setMsg({ kind: 'err', text: 'JSON inválido.' });
+        setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);
       }
     };
@@ -5867,7 +6264,7 @@ function TweaksPanel({ open, onClose }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
-          <Meta>Panel</Meta>
+          <Meta>{t('tweaks.meta')}</Meta>
           <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
         </div>
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
@@ -5900,9 +6297,38 @@ function TweaksPanel({ open, onClose }) {
 
       <Divider style={{ margin: '14px 0' }} />
 
+      {/* Idioma */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'es', name: t('tweaks.lang.es') },
+            { v: 'en', name: t('tweaks.lang.en') },
+          ].map(opt => {
+            const active = state.lang === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
       {/* Sound */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Meta>Sonidos</Meta>
+        <Meta>{t('tweaks.sounds.meta')}</Meta>
         <button onClick={() => set({ soundOn: !state.soundOn })}
           style={{
             padding: '4px 10px',
@@ -5911,7 +6337,7 @@ function TweaksPanel({ open, onClose }) {
             border: `1px solid ${state.soundOn ? 'var(--focus)' : 'var(--line)'}`,
             borderRadius: 'var(--r-pill)',
             fontSize: 11, letterSpacing: 0.2,
-          }}>{state.soundOn ? 'Activo' : 'Silencio'}</button>
+          }}>{state.soundOn ? t('tweaks.sounds.on') : t('tweaks.sounds.off')}</button>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
@@ -5919,21 +6345,21 @@ function TweaksPanel({ open, onClose }) {
       {/* ============================================================
           Datos — Export / Import JSON (sesión 17 / v0.12.0)
           ============================================================ */}
-      <Meta style={{ marginBottom: 8 }}>Tus datos</Meta>
+      <Meta style={{ marginBottom: 8 }}>{t('tweaks.data.meta')}</Meta>
       <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
         <button
           onClick={exportJSON}
           style={tweaksStyles.dataBtn}
-          title="Descarga un JSON con tu estado actual"
+          title={t('tweaks.data.export.title')}
         >
-          <DownloadIcon /> <span>Exportar</span>
+          <DownloadIcon /> <span>{t('tweaks.data.export')}</span>
         </button>
         <button
           onClick={() => fileInputRef.current && fileInputRef.current.click()}
           style={tweaksStyles.dataBtn}
-          title="Sobreescribe tus datos con un backup"
+          title={t('tweaks.data.import.title')}
         >
-          <UploadIcon /> <span>Importar</span>
+          <UploadIcon /> <span>{t('tweaks.data.import')}</span>
         </button>
         <input
           ref={fileInputRef}
@@ -5965,15 +6391,14 @@ function TweaksPanel({ open, onClose }) {
         letterSpacing: 0.1,
         marginBottom: 4,
       }}>
-        Todo vive en tu navegador. El backup es un archivo JSON
-        local — sin servidor, sin cuenta.
+        {t('tweaks.data.note')}
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
 
       {/* Reset */}
       <button
-        onClick={() => { if (confirm('¿Resetear todos los datos de PACE?')) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
+        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
         style={{
           width: '100%',
           padding: '8px',
@@ -5983,7 +6408,7 @@ function TweaksPanel({ open, onClose }) {
           borderRadius: 'var(--r-sm)',
           letterSpacing: 0.2,
         }}
-      >Resetear todo</button>
+      >{t('tweaks.reset')}</button>
     </div>
   );
 }
@@ -6267,6 +6692,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
 
 function PaceApp() {
   const [state, set] = usePace();
+  const { t } = useT();
   const [view, setView] = useStateMain({ type: 'home' });
 
   // Modales
@@ -6399,8 +6825,8 @@ function PaceApp() {
         <button
           data-pace-sidebar-open
           onClick={() => set({ sidebarCollapsed: false })}
-          title="Abrir panel"
-          aria-label="Abrir panel"
+          title={t('sidebar.open.title')}
+          aria-label={t('sidebar.open.aria')}
           style={{
             position: 'fixed', top: 16, left: 14, zIndex: 50,
             width: 30, height: 30, borderRadius: 6,
@@ -6513,10 +6939,11 @@ function PaceApp() {
    ================ */
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const modes = [
-    { v: 'foco', label: 'Foco' },
-    { v: 'pausa', label: 'Pausa' },
-    { v: 'larga', label: 'Larga' },
+    { v: 'foco', label: t('topbar.mode.focus') },
+    { v: 'pausa', label: t('topbar.mode.pause') },
+    { v: 'larga', label: t('topbar.mode.long') },
   ];
   return (
     <div data-pace-topbar style={{
@@ -6555,17 +6982,17 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       </div>
 
       {/* Iconos top-right */}
-      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
+      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title={t('topbar.stats.title')} aria-label={t('topbar.stats.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
         </svg>
       </button>
-      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
+      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title={t('topbar.achievements.title')} aria-label={t('topbar.achievements.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
         </svg>
       </button>
-      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title={t('topbar.tweaks.title')} aria-label={t('topbar.tweaks.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -6595,19 +7022,20 @@ const topBarStyles = {
    ================ */
 function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
   const [state] = usePace();
+  const { t } = useT();
   const plan = state.plan;
   /* NOTA: estilo "tarjeta editorial" — fondo paper claro, icono terracota fino,
      label serif italic coloreado. Estado activo: punto en esquina + fondo cálido. */
   const activities = [
-    { key: 'respira', label: 'Respira', sub: 'ritmo, calma', color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
-    { key: 'extra', label: 'Estira', sub: 'afloja tensión', color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
-    { key: 'muevete', label: 'Mueve', sub: 'cuerpo activo', color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
-    { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
+    { key: 'respira', label: t('activity.breathe.label'), sub: t('activity.breathe.sub'), color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
+    { key: 'extra', label: t('activity.stretch.label'), sub: t('activity.stretch.sub'), color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
+    { key: 'muevete', label: t('activity.move.label'), sub: t('activity.move.sub'), color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
+    { key: 'hidratate', label: t('activity.hydrate.label'), sub: t('activity.hydrate.sub'), color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
     <div data-pace-activitybar style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
       <div style={{ textAlign: 'center', marginBottom: 10 }}>
-        <Meta>Actividades</Meta>
+        <Meta>{t('activity.meta')}</Meta>
       </div>
       <div data-pace-activitybar-grid style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
         {activities.map(a => {

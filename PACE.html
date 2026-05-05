@@ -37,12 +37,16 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <!-- ORDEN DE CARGA
-       1. state.jsx → store global (usePace, acciones)
+       0. i18n/*    → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
+                      Deben ir ANTES de state.jsx: loadState() llama a detectInitialLang().
+       1. state.jsx → store global (usePace, acciones, setLang)
        2. ui/*      → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
        3. shell/*   → layout (Sidebar)
        4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
        5. main.jsx  → monta <PaceApp/> en #root
   -->
+  <script type="text/babel" src="app/i18n/strings.js"></script>
+  <script type="text/babel" src="app/i18n/useT.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>
