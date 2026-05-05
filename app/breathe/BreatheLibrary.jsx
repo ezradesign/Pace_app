@@ -49,8 +49,9 @@ const BREATHE_ROUTINES = {
 };
 
 function BreatheLibrary({ open, onClose, onStart }) {
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Respiración" subtitle="Breathwork guiado: pranayamas, coherencia, rondas."
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
       maxWidth={860}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
         {Object.entries(BREATHE_ROUTINES).map(([key, group]) => (
@@ -72,6 +73,7 @@ function BreatheLibrary({ open, onClose, onStart }) {
 }
 
 function RoutineCard({ routine, color, onClick }) {
+  const { t } = useT();
   return (
     <Card accent={color} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
@@ -81,7 +83,7 @@ function RoutineCard({ routine, color, onClick }) {
           background: 'var(--breathe-soft)', color: 'var(--breathe)',
           display: 'grid', placeItems: 'center',
           fontSize: 11, fontWeight: 600,
-        }} title="Requiere lectura de seguridad">⚠</div>
+        }} title={t('breathe.safety.required')}>⚠</div>
       )}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
         <Tag color={color}>{routine.tag}</Tag>
@@ -105,6 +107,7 @@ function RoutineCard({ routine, color, onClick }) {
 }
 
 function BreatheSafety({ routine, onAccept, onCancel }) {
+  const { t } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
   return (
@@ -117,7 +120,7 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
           color: 'var(--breathe)', fontSize: 20, flexShrink: 0,
         }}>⚠</div>
         <div>
-          <div className="pace-meta" style={{ marginBottom: 4 }}>Antes de empezar</div>
+          <div className="pace-meta" style={{ marginBottom: 4 }}>{t('breathe.safety.before')}</div>
           <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{routine.name}</h3>
         </div>
       </div>
@@ -141,11 +144,11 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         marginBottom: 20,
       }}>
         <input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
-        <span>Lo he leído y asumo mi responsabilidad</span>
+        <span>{t('breathe.safety.check')}</span>
       </label>
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-        <Button variant="ghost" onClick={onCancel}>Cancelar</Button>
-        <Button variant="terracota" disabled={!checked} onClick={() => onAccept(routine)}>Empezar sesión</Button>
+        <Button variant="ghost" onClick={onCancel}>{t('breathe.safety.cancel')}</Button>
+        <Button variant="terracota" disabled={!checked} onClick={() => onAccept(routine)}>{t('breathe.safety.start')}</Button>
       </div>
     </Modal>
   );

@@ -78,12 +78,13 @@ const EXTRA_ROUTINES = [
 ];
 
 function ExtraLibrary({ open, onClose, onStart }) {
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Estira" subtitle="Movilidad y estiramientos. Antídoto a la silla." maxWidth={820}>
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.extra.title')} subtitle={t('lib.extra.subtitle')} maxWidth={820}>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
-        <Meta>Afloja tensión</Meta>
+        <Meta>{t('lib.extra.meta')}</Meta>
       </div>
-      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>{t('lib.routines')}</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {EXTRA_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />

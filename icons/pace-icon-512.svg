@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#F2EDE0" rx="64"/>
+  <text x="256" y="310" text-anchor="middle"
+        font-family="'EB Garamond', Georgia, serif"
+        font-style="italic" font-size="200" font-weight="500"
+        fill="#1F1C17">Pace</text>
+</svg>

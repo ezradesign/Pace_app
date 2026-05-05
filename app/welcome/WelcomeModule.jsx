@@ -48,10 +48,10 @@ function WelcomeModal({ open, onClose }) {
   useEffectWEL(() => {
     if (!open) return;
     setDraft(state.intention || '');
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       if (inputRef.current) inputRef.current.focus();
     }, 320);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [open]);
 
   if (!open) return null;

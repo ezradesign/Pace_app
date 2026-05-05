@@ -112,6 +112,7 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
 }
 
 function SessionHeader({ routine, onExit, extra }) {
+  const { t } = useT();
   return (
     <div data-pace-session-header style={sessionShellStyles.header}>
       <div>
@@ -123,7 +124,7 @@ function SessionHeader({ routine, onExit, extra }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {extra}
-        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>× Salir</button>
+        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>{t('session.exit')}</button>
       </div>
     </div>
   );
@@ -141,17 +142,18 @@ function SessionHeader({ routine, onExit, extra }) {
      - onSkip         → callback del botón "Empezar ahora"
    ============================================================ */
 function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
+  const { t } = useT();
   return (
     <SessionShell
       routine={routine}
       onExit={onExit}
-      footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>Empezar ahora</button>}
+      footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>{t('session.startNow')}</button>}
     >
       <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
         <div style={{
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 18,
-        }}>Prepárate</div>
+        }}>{t('session.prep')}</div>
         <div data-pace-session-prep-num style={{
           ...displayItalic,
           fontSize: 200, fontWeight: 400, lineHeight: 0.9,
@@ -185,9 +187,10 @@ function SessionDone({
   doneMeta, doneCopy, stats = [],
   buttonVariant, buttonStyle,
 }) {
+  const { t } = useT();
   const btn = buttonVariant
-    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>Volver al inicio</Button>
-    : <Button onClick={() => onExit('done')} style={buttonStyle}>Volver al inicio</Button>;
+    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{t('session.backToHome')}</Button>
+    : <Button onClick={() => onExit('done')} style={buttonStyle}>{t('session.backToHome')}</Button>;
 
   return (
     <SessionShell routine={routine} onExit={onExit} footer={btn}>

@@ -7,6 +7,7 @@ const { useState, useEffect, useRef } = React;
 
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
+  const { t } = useT();
   const [stage, setStage] = useState('prep'); // 'prep' | 'active' | 'hold' | 'done'
   const [prepCount, setPrepCount] = useState(3);
   const [phase, setPhase] = useState(0);
@@ -128,7 +129,7 @@ function BreatheSession({ routine, onExit }) {
         onExit={onExit}
         accent="var(--breathe)"
         prepCount={prepCount}
-        copy="Siéntate cómodo. Respira natural."
+        copy={t('breathe.prepCopy')}
         onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); }}
       />
     );
@@ -139,11 +140,11 @@ function BreatheSession({ routine, onExit }) {
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     const stats = [
-      { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
+      { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
     ];
     if (isRounds) {
-      stats.push({ label: 'Rondas', value: String(routine.rounds) });
-      stats.push({ label: 'Respiraciones', value: String(routine.breaths * routine.rounds) });
+      stats.push({ label: t('common.rounds'), value: String(routine.rounds) });
+      stats.push({ label: t('common.breaths'), value: String(routine.breaths * routine.rounds) });
     }
     return (
       <SessionDone
@@ -151,8 +152,8 @@ function BreatheSession({ routine, onExit }) {
         onExit={onExit}
         accent="var(--breathe)"
         accentSoft="var(--breathe-soft)"
-        doneMeta="Sesión completada"
-        doneCopy="Bien hecho. Observa cómo te sientes antes de volver."
+        doneMeta={t('session.doneMeta')}
+        doneCopy={t('breathe.doneCopy')}
         stats={stats}
         buttonVariant="terracota"
       />
@@ -166,12 +167,12 @@ function BreatheSession({ routine, onExit }) {
       <SessionShell
         routine={routine}
         onExit={onExit}
-        headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>Ronda {round} / {routine.rounds}</div>}
-        footer={<Button variant="terracota" onClick={releaseHold}>Respirar de nuevo</Button>}
+        headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
+        footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
         <div style={{ textAlign: 'center', maxWidth: 520 }}>
           <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
-            Retén sin aire
+            {t('session.hold')}
           </div>
           <div style={{
             ...displayItalic,
@@ -183,14 +184,14 @@ function BreatheSession({ routine, onExit }) {
             {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
           </div>
           <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            {holdMins > 0 ? 'minutos' : 'segundos'}
+            {holdMins > 0 ? t('session.minutes') : t('session.seconds')}
           </div>
           <p style={{
             ...displayItalic,
             fontSize: 18, color: 'var(--ink-2)',
             maxWidth: 360, margin: '30px auto 0', lineHeight: 1.5,
           }}>
-            Pulsa cuando sientas la necesidad de respirar.
+            {t('session.holdCue')}
           </p>
         </div>
       </SessionShell>
@@ -207,11 +208,11 @@ function BreatheSession({ routine, onExit }) {
 
   const footer = (
     <React.Fragment>
-      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
-        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title={t('session.pause')}>
+        {paused ? t('session.resume') : t('session.pause')}
       </button>
-      <button onClick={finish} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title="Esc">
-        ▶| Terminar
+      <button onClick={finish} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title={t('session.finish')}>
+        {t('session.finish')}
       </button>
     </React.Fragment>
   );
@@ -223,10 +224,10 @@ function BreatheSession({ routine, onExit }) {
       centerGap={true}
       footerGap={16}
       footer={footer}
-      hint="Espacio pausar · Esc salir"
+      hint={t('session.hint')}
       headerExtra={isRounds ? (
         <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          Ronda {round} / {routine.rounds}
+          {t('session.round')} {round} / {routine.rounds}
         </div>
       ) : null}
     >
@@ -250,7 +251,7 @@ function BreatheSession({ routine, onExit }) {
           }}>{remaining}</div>
         )}
         <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-          {isRounds ? `Respiración ${breathCount} de ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
+          {isRounds ? `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
         </div>
       </div>
       <div style={{

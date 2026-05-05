@@ -2,6 +2,7 @@
 
 function WeeklyStats({ open, onClose }) {
   const [state] = usePace();
+  const { t } = useT();
   const w = state.weeklyStats;
 
   const totals = {
@@ -12,14 +13,14 @@ function WeeklyStats({ open, onClose }) {
   };
 
   const bars = [
-    { key: 'focus', label: 'Foco', color: 'var(--focus)', data: w.focusMinutes, unit: 'min' },
-    { key: 'breath', label: 'Respira', color: 'var(--breathe)', data: w.breathMinutes, unit: 'min' },
-    { key: 'move', label: 'Mueve', color: 'var(--move)', data: w.moveMinutes, unit: 'min' },
-    { key: 'water', label: 'Hidrátate', color: 'var(--hydrate)', data: w.waterGlasses, unit: 'vasos' },
+    { key: 'focus', label: t('topbar.mode.focus'), color: 'var(--focus)', data: w.focusMinutes, unit: t('stats.unit.min') },
+    { key: 'breath', label: t('activity.breathe.label'), color: 'var(--breathe)', data: w.breathMinutes, unit: t('stats.unit.min') },
+    { key: 'move', label: t('activity.move.label'), color: 'var(--move)', data: w.moveMinutes, unit: t('stats.unit.min') },
+    { key: 'water', label: t('activity.hydrate.label'), color: 'var(--hydrate)', data: w.waterGlasses, unit: t('stats.unit.glasses') },
   ];
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Semana" title="Ritmo semanal" subtitle="Métricas suaves. Sin ansiedad, sin comparación." maxWidth={780}>
+    <Modal open={open} onClose={onClose} tagLabel={t('stats.tag')} title={t('stats.title')} subtitle={t('stats.subtitle')} maxWidth={780}>
       {/* Totales */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
         {bars.map(b => (
@@ -51,15 +52,16 @@ function WeeklyStats({ open, onClose }) {
         borderRadius: 'var(--r-sm)',
         fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.6,
       }}>
-        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>Nota: </strong>
-        no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.
+        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
+        {t('stats.note')}
       </div>
     </Modal>
   );
 }
 
 function WeekBarRow({ label, data, color, unit }) {
-  const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const { t } = useT();
+  const days = t('stats.days').split(',');
   const today = (new Date().getDay() + 6) % 7;
   const max = Math.max(1, ...data);
   // Reordenar: en España empezamos en lunes. data está indexado 0=Dom (getDay)

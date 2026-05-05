@@ -2,11 +2,12 @@
 
 function HydrateTracker({ open, onClose }) {
   const [state] = usePace();
+  const { t } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, (today / goal) * 100);
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Hidratación" title="Hidrátate" subtitle="Un sorbo ahora, un regalo a tu yo de las 5." maxWidth={580}>
+    <Modal open={open} onClose={onClose} tagLabel={t('hydrate.tag')} title={t('hydrate.title')} subtitle={t('hydrate.subtitle')} maxWidth={580}>
       {/* Progreso gigante */}
       <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
         <div style={{
@@ -17,7 +18,7 @@ function HydrateTracker({ open, onClose }) {
         }}>
           {today}<span style={{ color: 'var(--ink-3)', fontSize: 40 }}> / {goal}</span>
         </div>
-        <div style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>Vasos hoy</div>
+        <div style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>{t('hydrate.glasses.today')}</div>
       </div>
 
       {/* Vasos visuales */}
@@ -63,15 +64,15 @@ function HydrateTracker({ open, onClose }) {
       </div>
 
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">Un vaso menos</Button>
+        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">{t('hydrate.less')}</Button>
         <Button onClick={() => { addWaterGlass(1); try { playSound('sip'); } catch (e) {} }} icon="+" size="md"
-          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>Un vaso más</Button>
+          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>{t('hydrate.more')}</Button>
       </div>
 
       <Divider style={{ margin: '24px 0 16px' }} />
 
       <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.6 }}>
-        <strong style={{ color: 'var(--ink-2)' }}>Tip:</strong> llena una botella de 500ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.
+        <strong style={{ color: 'var(--ink-2)' }}>{t('hydrate.tip.label')}</strong>{' '}{t('hydrate.tip')}
       </div>
     </Modal>
   );
