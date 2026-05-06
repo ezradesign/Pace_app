@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.19.1
-**Última sesión:** #37 hotfix — 2026-05-05 · fix(i18n): useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes
-**Última actualización de este archivo:** 2026-05-05 · sesión 37 hotfix
-**Build entregado:** `PACE_standalone.html` v0.19.1 (~416 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.20.0
+**Última sesión:** #38a — 2026-05-05 · feat(audio): refactor Sound.jsx 432 Hz + primitivas + breathNoise + cableado Breathe/Focus
+**Última actualización de este archivo:** 2026-05-05 · sesión 38a
+**Build entregado:** `PACE_standalone.html` v0.20.0 (~420 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -21,66 +21,68 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.19.1** (título v0.19.1; manifest+theme-color+SW de v0.19.0) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.19.1** (~416 KB, regenerado en hotfix s37) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.20.0** (título v0.20.0) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.20.0** (~420 KB, regenerado en s38a) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/ui/Sound.jsx` | **Nuevo módulo** sonidos sintetizados Web Audio | **v0.13.0** (4 recetas: tick / complete / sip / breath; hook `useSound` + `playSound`) |
+| `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.20.0** (432 Hz; primitivas tone/glide/chord/bell/breathNoise; catálogo ampliado) |
 | `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.17.0** (bug fix: useT en SessionDone) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.19.0** (`useT` + `aria-label` migrado a `common.close`) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (antes Tweaks) | **v0.19.0** (audio primer eje; timer 3 ops; layout 2 ops; título Ajustes; LS v2) |
 | `app/breathe/BreatheVisual.jsx` | Respiración — visual + getSequence | **v0.16.0** (nuevo · extraído de BreatheModule) |
 | `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.17.0** (i18n migrado) |
-| `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.17.0** (bug fix: useT + prepCopy; i18n ya estaba) |
+| `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.20.0** (session.start/end + inhale/exhale con dur) |
 | `app/move/MoveModule.jsx` | Módulo Mueve | **v0.17.0** (i18n migrado) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
 | `app/extra/ExtraModule.jsx` | Módulo Estira | **v0.17.0** (i18n migrado) |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.19.0** (trail hours + "Por descubrir" migrados a t()) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
-| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.19.0** (TimerCircle/TimerNumber eliminados; custom.title i18n) |
+| `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.20.0** (pomodoro.start + pomodoro.end cableados) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.17.0** (i18n migrado) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.19.0** (LS_KEY v2 + PACE_VERSION bump) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.20.0** (PACE_VERSION bump) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.19.0** (`useT` + "Nuevo sello" migrado) |
 
 Backups vigentes:
-- `backups/PACE_standalone_v0.13.0_20260429.html` (sesión 29) — **BORRAR manualmente** (el sandbox no permitió el rm).
-- `backups/PACE_standalone_v0.14.0_20260504.html` (sesión 33, antes de v0.15.0).
-- `backups/PACE_standalone_v0.15.0_20260505.html` (sesión 34, antes de v0.16.0).
-- `backups/PACE_standalone_v0.16.0_20260505.html` (sesión 35, antes de v0.17.0).
-- `backups/PACE_standalone_v0.17.0_20260505.html` (sesión 36, antes de v0.18.0).
-- `backups/PACE_standalone_v0.18.0_20260505.html` (sesión 37, antes de v0.19.0).
+- `backups/PACE_standalone_v0.13.0_20260429.html` — **BORRAR manualmente** (sandbox no puede).
+- `backups/PACE_standalone_v0.14.0_20260504.html` — **BORRAR manualmente** (sandbox no puede).
+- `backups/PACE_standalone_v0.15.0_20260505.html`
+- `backups/PACE_standalone_v0.16.0_20260505.html`
+- `backups/PACE_standalone_v0.17.0_20260505.html`
+- `backups/PACE_standalone_v0.18.0_20260505.html`
+- `backups/PACE_standalone_v0.19.1_20260505.html`
 
-6 backups (1 de más por fallo de sandbox). **Acción pendiente: borrar v0.13.0 manualmente.**
+7 backups (2 de más). **Acción pendiente: borrar v0.13.0 y v0.14.0 manualmente para quedar en 5.**
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 37 hotfix · v0.19.0 → v0.19.1 · fix(i18n): useT() faltante en AchievementsPreview**
+**Sesión 38a · v0.19.1 → v0.20.0 · feat(audio): refactor 432 Hz + respiración realista**
 
 ### Qué se hizo
 
-1. **Bug fix**: `app/shell/Sidebar.jsx · AchievementsPreview` — añadido `const { t } = useT()`.
-   Causaba crash `ReferenceError: t is not defined` y pantalla terracota al cargar la app.
-2. **Auditoría defensiva** — 8 componentes migrados en sesión 37 verificados. Solo AchievementsPreview necesitó fix.
-3. **Bump**: `PACE_VERSION` v0.19.0 → v0.19.1 en `state.jsx`. Título actualizado en `PACE.html`.
-4. **Standalone regenerado** a ~416 KB.
+1. **`app/ui/Sound.jsx`** reescrito (228 líneas): constante `BASE_A=432`, helper `note()`, primitivas `tone/glide/chord/bell/breathNoise`, catálogo ampliado (`pomodoro.start/end`, `breathe.inhale/exhale`, `breathe.session.start/end`). Alias legacy conservados.
+2. **`app/breathe/BreatheSession.jsx`**: cableados `session.start` al arrancar, `inhale/exhale` con `phaseDur` en cada cambio de fase, `session.end` en `finish()` y en entrada de stage 'hold'. Silencio intencional en Sostén.
+3. **`app/focus/FocusTimer.jsx`**: `pomodoro.start` al toglear running a true; `pomodoro.end` reemplaza `complete` al finalizar.
+4. **Bump**: `PACE_VERSION` v0.19.1 → v0.20.0. Standalone regenerado ~420 KB.
 
 ### Archivos modificados
-`app/shell/Sidebar.jsx`, `app/state.jsx`, `PACE.html`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`,
-`docs/sessions/session-37-i18n-pwa-ajustes.md`.
+`app/ui/Sound.jsx`, `app/breathe/BreatheSession.jsx`, `app/focus/FocusTimer.jsx`, `app/state.jsx`, `PACE.html`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`, `docs/sessions/session-38a-audio-refactor-432hz.md`.
 
 ### Versión
-- **v0.19.1** (patch · bugfix i18n).
+- **v0.20.0** (minor · feature audio significativa).
 
-### Pendiente (Sesión 38)
-- Borrar `backups/PACE_standalone_v0.13.0_20260429.html` manualmente (sandbox no permitió rm — siguen 6 backups en vez de 5).
-- Iconos PNG reales (192×512) para PWA — actualmente SVG.
-- Audio refactor 432 Hz / drone ambiente.
+### Pendiente (Sesión 38b)
+- Borrar `backups/PACE_standalone_v0.13.0` y `v0.14.0` manualmente (sandbox sin permisos — 7 backups en disco).
+- Sonidos `move.start/step/end` + cableado en MoveSession.
+- Sonidos `hydrate.sip` mejorado, `hydrate.goal`.
+- Sonidos `achievement.unlock`, `achievement.secret`.
+- Drone ambiente opt-in (toggle en Ajustes).
+- Iconos PNG reales (192×512) para PWA.
 - Calendarios mes/año (heatmap).
 - README EN.
 - Reddit launch.

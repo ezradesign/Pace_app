@@ -51,7 +51,7 @@ function FocusTimer({ onFinish }) {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
        del bloque, sea foco o pausa. Respeta state.soundOn (noop si
        está apagado). Sesión 28. */
-    try { playSound('complete'); } catch (e) {}
+    try { playSound('pomodoro.end'); } catch (e) {}
     if (state.focusMode === 'foco') {
       completePomodoro();
       onFinish && onFinish();
@@ -99,7 +99,11 @@ function FocusTimer({ onFinish }) {
   const controls = (
     <div style={focusStyles.controlsTight}>
       <button
-        onClick={() => setRunning(r => !r)}
+        onClick={() => {
+          const next = !running;
+          setRunning(next);
+          if (next) try { playSound('pomodoro.start'); } catch (e) {}
+        }}
         style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
       >
         <span style={{ fontSize: 11, lineHeight: 1 }}>{running ? '❚❚' : '▶'}</span>
