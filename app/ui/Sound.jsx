@@ -116,6 +116,7 @@ function bell(ctx, dest, freq, t0, dur, peak) {
    ADSR: attack 15% + plateau hasta 65% + release 35% de dur.
    Resultado: shhhhh que sube (inhala) o haaaaa que baja (exhala). */
 function breathNoise(ctx, dest, direction, t0, dur, peak) {
+  if (!dur || dur <= 0) return; /* guard: createBuffer(1,0,sr) lanzaría NotSupportedError */
   if (peak === undefined) peak = 0.06;
   var sr     = ctx.sampleRate;
   var frames = Math.ceil(dur * sr);

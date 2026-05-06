@@ -7,12 +7,12 @@ function ToastHost() {
   const { t } = useT();
 
   useEffectTO(() => {
-    return onToast((t) => {
+    return onToast((toast) => {
       // Resolver datos del logro
-      if (t.type === 'achievement') {
-        const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === t.id);
+      if (toast.type === 'achievement') {
+        const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
         if (!a) return;
-        const full = { ...t, title: a.title, desc: a.desc, glyph: a.glyph };
+        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph };
         setToasts(prev => [...prev, full]);
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
@@ -34,8 +34,8 @@ function ToastHost() {
         pointerEvents: 'none',
       }}
     >
-      {toasts.map(t => (
-        <div key={t._id} style={{
+      {toasts.map(toast => (
+        <div key={toast._id} style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '12px 20px',
           background: 'var(--paper)',
@@ -54,11 +54,11 @@ function ToastHost() {
             fontFamily: 'var(--font-display)',
             fontStyle: 'italic',
             fontSize: 18,
-          }}>{t.glyph}</div>
+          }}>{toast.glyph}</div>
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
-            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
-            <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
+            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{toast.desc}</div>
           </div>
         </div>
       ))}
