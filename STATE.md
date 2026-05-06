@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.20.0
-**Última sesión:** #38b — 2026-05-06 · fix: crash ToastHost (variable shadowing t/useT) + mount loop + guard breathNoise
-**Última actualización de este archivo:** 2026-05-06 · sesión 38b
-**Build entregado:** `PACE_standalone.html` v0.20.0 patch (431 684 bytes — regenerado con build-standalone.js)
+**Versión actual:** v0.21.0
+**Última sesión:** #40 — 2026-05-06 · feat(audio): sonidos move/hydrate/achievements — capa 1 completa
+**Última actualización de este archivo:** 2026-05-06 · sesión 40
+**Build entregado:** `PACE_standalone.html` v0.21.0 (440 256 bytes — regenerado con build-standalone.js)
 
 ---
 
@@ -25,82 +25,76 @@
 | `PACE_standalone.html` | Bundle offline autocontenido | **v0.20.0 patch** (431 684 bytes, regenerado en s38b) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.20.0 patch** (432 Hz; primitivas; guard dur=0 en breathNoise — s38b) |
+| `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** (7 recetas nuevas: move.start/step/end, hydrate.sip/goal, achievement.unlock/secret — s40) |
 | `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.17.0** (bug fix: useT en SessionDone) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.19.0** (`useT` + `aria-label` migrado a `common.close`) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (antes Tweaks) | **v0.19.0** (audio primer eje; timer 3 ops; layout 2 ops; título Ajustes; LS v2) |
 | `app/breathe/BreatheVisual.jsx` | Respiración — visual + getSequence | **v0.16.0** (nuevo · extraído de BreatheModule) |
 | `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.17.0** (i18n migrado) |
 | `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.20.0** (session.start/end + inhale/exhale con dur) |
-| `app/move/MoveModule.jsx` | Módulo Mueve | **v0.17.0** (i18n migrado) |
+| `app/move/MoveModule.jsx` | Módulo Mueve | **v0.21.0** (move.start/step/end cableados — s40) |
 | `app/support/SupportModule.jsx` | Botón + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
 | `app/extra/ExtraModule.jsx` | Módulo Estira | **v0.17.0** (i18n migrado) |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.19.0** (trail hours + "Por descubrir" migrados a t()) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | v0.12.9 |
 | `app/focus/FocusTimer.jsx` | Módulo Foco (pomodoro) | **v0.20.0** (pomodoro.start + pomodoro.end cableados) |
-| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.17.0** (i18n migrado) |
+| `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** (hydrate.sip/goal cableados — s40) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.20.0** (PACE_VERSION bump) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.21.0** (PACE_VERSION bump — s40) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
-| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.20.0 patch** (fix variable shadowing `t` → `toast` en .map — s38b) |
+| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.21.0** (achievement.unlock/secret al mostrar toast — s40) |
 
-Backups vigentes:
-- `backups/PACE_standalone_v0.15.0_20260505.html` — **BORRAR manualmente** (sandbox no puede · hay 6 backups, máx 5).
+Backups vigentes (5):
 - `backups/PACE_standalone_v0.16.0_20260505.html`
 - `backups/PACE_standalone_v0.17.0_20260505.html`
 - `backups/PACE_standalone_v0.18.0_20260505.html`
 - `backups/PACE_standalone_v0.19.1_20260505.html`
 - `backups/PACE_standalone_v0.20.0_20260506.html`
 
-6 backups (1 de más). **Acción pendiente: borrar v0.15.0 manualmente para quedar en 5.**
-
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 38b · v0.20.0 patch · fix: race condition mount loop + guard breathNoise**
+**Sesión 40 · v0.20.0 → v0.21.0 · feat(audio): capa 1 de sonidos completa**
 
 ### Qué se hizo
 
-1. **`app/ui/Toast.jsx` — crash principal (bug confirmado con console)**: variable shadowing.
-   `const { t } = useT()` (traducción) quedaba ocultada por el `t` del `.map(t => (...))`.
-   `t('ach.toast.new')` dentro del map llamaba al objeto toast como función → `TypeError: t is not a function`.
-   En primera carga (localStorage vacío) todos los logros son nuevos → cualquier acción
-   dispara toast → crash. Con F5 los logros ya están guardados → no toast → no crash.
-   Fix: renombrar parámetro del map de `t` a `toast` en todo su scope.
-2. **`PACE.html` — mount loop** (fix preventivo): ampliado para verificar 6 componentes
-   críticos (era solo PaceApp). Timeout: 2 s → 5 s. Previene crashes en carga lenta de CDN.
-3. **`app/ui/Sound.jsx` — `breathNoise`**: guard defensivo `if (!dur || dur <= 0) return`
-   para prevenir `createBuffer(1, 0, sr)` → `NotSupportedError`. Ninguna fase actual
-   vale 0; el guard es preventivo ante extensiones futuras.
-3. **`.gitignore`** creado (no existía): patrones `Pace_app/`, `Pace_app_*/`, `.~lock.*#`, `*.bak`, `*~`.
-4. **Incidencia OpenOffice**: `.~lock.PACE_standalone.html#` eliminado del índice git
-   (`git rm --cached`). `PACE_standalone.html` restaurado desde `origin/main` (v0.19.1
-   limpio) vía `git cat-file` — bypass necesario por stale `.git/index.lock`.
-5. **Standalone regenerado** (431 684 bytes) con los fixes de 38b.
+Completados los 3 bloques de sonidos pendientes desde s38a:
+
+1. **Bloque A — Mueve** (`Sound.jsx` + `MoveModule.jsx`): 3 recetas nuevas
+   (`move.start`, `move.step`, `move.end`). Cableadas con 2 `useEffectMV` en
+   `MoveSession`: uno en `[stage]` para start/end, otro en `[stepIdx]` para step.
+   Guard `stage !== 'active'` evita que step suene en mount.
+
+2. **Bloque B — Hidrátate** (`Sound.jsx` + `HydrateModule.jsx`): 2 recetas nuevas
+   (`hydrate.sip` más suave que el legacy, `hydrate.goal` como arpegio ascendente
+   en cascada). Lógica inline: `hydrate.goal` exactamente al llegar a la meta diaria,
+   `hydrate.sip` el resto. Alias `sip` conservado.
+
+3. **Bloque C — Logros** (`Sound.jsx` + `Toast.jsx`): 2 recetas nuevas
+   (`achievement.unlock` = bell A5 con overtones; `achievement.secret` = glide
+   tritónico C5→F#3). Cableadas en `ToastHost.onToast` — una línea, `try/catch`
+   en el consumidor.
+
+4. **PACE_VERSION** bumpeada a v0.21.0 en `state.jsx`.
+5. **Standalone regenerado** (440 256 bytes).
 
 ### Archivos modificados
-`PACE.html`, `app/ui/Sound.jsx`, `.gitignore` (nuevo), `PACE_standalone.html`,
-`backups/PACE_standalone_v0.20.0_20260506.html` (nuevo),
-`docs/sessions/session-38b-fix-mount-race.md` (nuevo), `CHANGELOG.md`, `STATE.md`.
+`app/ui/Sound.jsx` (350 líneas), `app/move/MoveModule.jsx` (309),
+`app/hydrate/HydrateModule.jsx` (81), `app/ui/Toast.jsx` (70),
+`app/state.jsx` (bump versión), `PACE_standalone.html` (440 256 bytes),
+`backups/PACE_standalone_v0.20.0_20260506.html` (rotación),
+`docs/sessions/session-40-sonidos-modulos.md` (nuevo), `CHANGELOG.md`, `STATE.md`.
 
 ### Versión
-- **v0.20.0** sin bump (patch correctivo, sin impacto observable para el usuario).
-
-### Pendiente manual (sandbox sin permisos de borrado)
-- Borrar `backups/PACE_standalone_v0.15.0_20260505.html` (hay 6 backups, máx 5).
-- Borrar `.~lock.PACE_standalone.html#` del disco si existe (archivo oculto en raíz).
-- Borrar `.git/index.lock` si aún bloquea GitHub Desktop.
+- **v0.20.0** → **v0.21.0** (feature: capa 1 de audio completa).
 
 ### Pendiente funcional (próximas sesiones)
-- Sonidos `move.start/step/end` + cableado en MoveSession.
-- Sonidos `hydrate.sip` mejorado, `hydrate.goal`.
-- Sonidos `achievement.unlock`, `achievement.secret`.
-- Drone ambiente opt-in (toggle en Ajustes).
+- Drone ambiente opt-in (toggle en Ajustes) — capa 2, Sound.jsx ya la tiene.
 - Iconos PNG reales (192×512) para PWA.
-- Calendarios mes/año (heatmap).
+- Heatmap mes/año ("Año en pace").
 - README EN.
 - Reddit launch.
 - Glifos SVG (dirección visual pendiente de validación del usuario).

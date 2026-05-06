@@ -1188,6 +1188,7 @@ const defaultState = {
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
+  ambientOn: false,           // drone ambiente opt-in — solo activo si soundOn también true
   lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
 
   // Foco
@@ -2897,7 +2898,98 @@ function useSound() {
   return { play: play };
 }
 
-Object.assign(window, { playSound, useSound });
+/* === DRONE AMBIENTE (capa 2 opt-in) ===
+   Singleton. G2 ≈ 96.7 Hz · sine · peak 0.02.
+   LFO senoidal 0.1 Hz · ±0.002 para movimiento orgánico.
+   Arranca solo si soundOn && ambientOn en el momento de llamar start().
+   Activar ambientOn mid-sesión NO arranca el drone retroactivamente;
+   solo arranca al inicio de una sesión nueva (decisión de producto). */
+const ambientDrone = (() => {
+  let osc = null, gainNode = null, lfo = null, lfoGain = null;
+  let isPaused = false;
+
+  function shouldPlay() {
+    try {
+      const s = typeof getState === 'function' ? getState() : null;
+      return !!(s && s.soundOn && s.ambientOn);
+    } catch(e) { return false; }
+  }
+
+  function start() {
+    if (osc) return;
+    if (!shouldPlay()) return;
+    const ctx = getCtx(); if (!ctx) return;
+    ensureRunning(ctx);
+    const t0 = ctx.currentTime;
+    osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(note('G2'), t0);
+    gainNode = ctx.createGain();
+    gainNode.gain.setValueAtTime(0, t0);
+    gainNode.gain.linearRampToValueAtTime(0.02, t0 + 1.2);
+    lfo = ctx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.setValueAtTime(0.1, t0);
+    lfoGain = ctx.createGain();
+    lfoGain.gain.setValueAtTime(0.002, t0);
+    lfo.connect(lfoGain);
+    lfoGain.connect(gainNode.gain);
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    osc.start(t0); lfo.start(t0);
+    isPaused = false;
+  }
+
+  function stop(fadeMs) {
+    if (fadeMs === undefined) fadeMs = 800;
+    if (!osc || !gainNode) return;
+    const ctx = getCtx(); if (!ctx) return;
+    const t0 = ctx.currentTime;
+    const fade = Math.max(0.1, fadeMs / 1000);
+    try {
+      gainNode.gain.cancelScheduledValues(t0);
+      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, t0 + fade);
+    } catch(e) {}
+    const oscRef = osc, lfoRef = lfo;
+    setTimeout(function() {
+      try { oscRef && oscRef.stop(); } catch(e) {}
+      try { lfoRef && lfoRef.stop(); } catch(e) {}
+    }, (fade + 0.1) * 1000);
+    osc = null; lfo = null; gainNode = null; lfoGain = null;
+    isPaused = false;
+  }
+
+  function pause() {
+    if (!gainNode || isPaused) return;
+    const ctx = getCtx(); if (!ctx) return;
+    const t0 = ctx.currentTime;
+    try {
+      gainNode.gain.cancelScheduledValues(t0);
+      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
+      gainNode.gain.linearRampToValueAtTime(0, t0 + 0.4);
+    } catch(e) {}
+    isPaused = true;
+  }
+
+  function resume() {
+    if (!gainNode || !isPaused) return;
+    if (!shouldPlay()) { stop(400); return; }
+    const ctx = getCtx(); if (!ctx) return;
+    const t0 = ctx.currentTime;
+    try {
+      gainNode.gain.cancelScheduledValues(t0);
+      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
+      gainNode.gain.linearRampToValueAtTime(0.02, t0 + 0.6);
+    } catch(e) {}
+    isPaused = false;
+  }
+
+  function isActive() { return osc !== null; }
+  return { start: start, stop: stop, pause: pause, resume: resume, isActive: isActive };
+})();
+
+Object.assign(window, { playSound, useSound, ambientDrone });
 
 </script>
   <script type="text/babel">
@@ -2910,12 +3002,12 @@ function ToastHost() {
   const { t } = useT();
 
   useEffectTO(() => {
-    return onToast((t) => {
+    return onToast((toast) => {
       // Resolver datos del logro
-      if (t.type === 'achievement') {
-        const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === t.id);
+      if (toast.type === 'achievement') {
+        const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
         if (!a) return;
-        const full = { ...t, title: a.title, desc: a.desc, glyph: a.glyph };
+        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph };
         setToasts(prev => [...prev, full]);
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
@@ -2937,8 +3029,8 @@ function ToastHost() {
         pointerEvents: 'none',
       }}
     >
-      {toasts.map(t => (
-        <div key={t._id} style={{
+      {toasts.map(toast => (
+        <div key={toast._id} style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '12px 20px',
           background: 'var(--paper)',
@@ -2957,11 +3049,11 @@ function ToastHost() {
             fontFamily: 'var(--font-display)',
             fontStyle: 'italic',
             fontSize: 18,
-          }}>{t.glyph}</div>
+          }}>{toast.glyph}</div>
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
-            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
-            <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
+            <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{toast.desc}</div>
           </div>
         </div>
       ))}
@@ -4448,6 +4540,34 @@ function FocusTimer({ onFinish }) {
     }
   }, [remainingSec, running, state.focusMode]);
 
+  // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
+  useEffectFT(() => {
+    if (!window.ambientDrone) return;
+    const drone = window.ambientDrone;
+
+    if (state.focusMode !== 'foco') { drone.stop(800); return; }
+    if (remainingSec === 0)         { drone.stop(800); return; }
+
+    if (running) {
+      if (drone.isActive()) {
+        drone.resume();
+      } else {
+        // activar ambientOn mid-sesión no arranca el drone retroactivamente
+        // — solo arranca al inicio de una sesión nueva
+        drone.start();
+      }
+    } else {
+      if (drone.isActive()) drone.pause();
+    }
+  }, [running, state.focusMode, remainingSec]);
+
+  // Apagar soundOn durante sesión → fadeout inmediato
+  useEffectFT(() => {
+    if (!state.soundOn && window.ambientDrone && window.ambientDrone.isActive()) {
+      window.ambientDrone.stop(400);
+    }
+  }, [state.soundOn]);
+
   const mins = Math.floor(remainingSec / 60);
   const secs = remainingSec % 60;
   const totalSec = (state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15) * 60;
@@ -5427,6 +5547,45 @@ function BreatheSession({ routine, onExit }) {
     }, 1000);
     return () => clearInterval(intv);
   }, [stage, paused]);
+
+  // Drone ambiente — efecto paralelo sobre stage y paused
+  useEffect(() => {
+    if (!window.ambientDrone) return;
+    const drone = window.ambientDrone;
+
+    if (stage === 'done') { drone.stop(800); return; }
+    if (stage === 'prep') return; // no arranca en preparación
+
+    if (stage === 'hold') {
+      // Drone sigue sonando durante hold (retención) — sin tocar
+      return;
+    }
+
+    // stage === 'active'
+    if (paused) {
+      drone.pause();
+    } else {
+      if (drone.isActive()) {
+        drone.resume();
+      } else {
+        // activar ambientOn mid-sesión no arranca el drone retroactivamente
+        // — solo arranca al inicio de una sesión nueva
+        drone.start();
+      }
+    }
+  }, [stage, paused]);
+
+  // Stop drone si soundOn se apaga durante sesión
+  useEffect(() => {
+    if (!state.soundOn && window.ambientDrone && window.ambientDrone.isActive()) {
+      window.ambientDrone.stop(400);
+    }
+  }, [state.soundOn]);
+
+  // Cleanup: para el drone en todos los caminos de onExit (unmount)
+  useEffect(() => {
+    return () => { if (window.ambientDrone) window.ambientDrone.stop(800); };
+  }, []);
 
   // Atajos de teclado
   useEffect(() => {
@@ -6976,6 +7135,41 @@ function TweaksPanel({ open, onClose }) {
             );
           })}
         </div>
+        {state.soundOn && (
+          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => {
+                const next = !state.ambientOn;
+                set({ ambientOn: next });
+                if (!next && window.ambientDrone) window.ambientDrone.stop(400);
+              }}
+              style={{
+                width: 14, height: 14, borderRadius: 3, padding: 0,
+                border: `1px solid ${state.ambientOn ? 'var(--focus)' : 'var(--line-2)'}`,
+                background: state.ambientOn ? 'var(--focus)' : 'transparent',
+                display: 'grid', placeItems: 'center',
+                color: 'var(--paper)', cursor: 'pointer', flexShrink: 0,
+              }}
+              aria-label="Ambiente durante sesiones"
+            >
+              {state.ambientOn && (
+                <svg width="9" height="9" viewBox="0 0 16 16" fill="none"
+                     stroke="currentColor" strokeWidth="2"
+                     strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 8L7 12L13 4"/>
+                </svg>
+              )}
+            </button>
+            <span
+              style={{ fontSize: 11, color: 'var(--ink-2)', letterSpacing: 0.2, cursor: 'pointer' }}
+              onClick={() => {
+                const next = !state.ambientOn;
+                set({ ambientOn: next });
+                if (!next && window.ambientDrone) window.ambientDrone.stop(400);
+              }}
+            >+ ambiente durante sesiones</span>
+          </div>
+        )}
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
