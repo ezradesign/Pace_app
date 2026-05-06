@@ -15,6 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.22.1** | 2026-05-06 | fix(ux): hints teclado ocultos en móvil + title attrs eliminados en MoveSession + cronómetro reescalado (128→72px) + shortcut BreakMenu oculto | #42 | [abajo ↓](#v0221--2026-05-06--fixux-corrección-ux-móvil) |
+| **v0.22.0** | 2026-05-06 | feat: split TweakSecretsWatcher + i18n ambient toggle + 5 detectores logros (hydrate.week.perfect + master.box/coherent/rounds.10 + master.atg.20) | #41 | [abajo ↓](#v0220--2026-05-06--feat-split--i18n--5-detectores-logros) |
 | **v0.21.0** | 2026-05-06 | feat(audio): sonidos move.start/step/end + hydrate.sip/goal + achievement.unlock/secret — capa 1 completa | #40 | [abajo ↓](#v0210--2026-05-06--feataudio-sonidos-movhydrateachievements) |
 | **v0.20.0** | 2026-05-06 | fix: crash ToastHost variable shadowing (t/useT) + mount loop 6-check + guard breathNoise | #38b patch | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
 | **v0.20.0** | 2026-05-05 | feat(audio): refactor 432 Hz + primitivas componibles + respiración realista con ruido blanco filtrado + pomodoro.start/end | #38a | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
@@ -60,28 +62,53 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.22.1] — 2026-05-06 — fix(ux): corrección UX móvil
+
+Cuatro fixes quirúrgicos de UX móvil. Sin cambios de comportamiento en desktop.
+
+- **SessionShell.jsx** — `[data-pace-session-hint]` pasa de reescalar a `display: none` en ≤640px. El hint de teclado ya no aparece en móvil donde no tiene utilidad.
+- **MoveModule.jsx** — Eliminados `title="←"`, `title="Espacio"`, `title="→"` de los tres botones de MoveSession (evita tooltip nativo en long-press móvil). Cronómetro de pasos `data-pace-move-timer` + bloque CSS responsive: 128px → 72px en ≤640px.
+- **BreakMenu.jsx** — `data-pace-break-shortcut` en el div contenedor + bloque CSS: `.pace-meta` oculto en ≤640px. El botón "Saltar" (`<Button>`) no se ve afectado.
+
+Detalle completo: [`docs/sessions/session-42-ux-movil-hints-timer-shortcut.md`](./docs/sessions/session-42-ux-movil-hints-timer-shortcut.md).
+
+---
+
+## [v0.22.0] — 2026-05-06 — feat: split + i18n + 5 detectores logros
+
+### Split — TweakSecretsWatcher extraído
+
+`TweakSecretsWatcher` movido de `TweaksPanel.jsx` a `app/tweaks/TweakSecretsWatcher.jsx`
+(61 líneas). `TweaksPanel.jsx` pasa de 553 → **479 líneas**. Sin cambio de comportamiento.
+`PACE.html` carga el nuevo archivo justo antes de `TweaksPanel.jsx`.
+
+### i18n — toggle ambient
+
+`aria-label` y texto del toggle "+ ambiente durante sesiones" migrados a
+`t('settings.audio.ambient')`. Clave añadida en ES y EN en `strings.js`.
+
+### Detectores de logros — state.jsx
+
+Nuevos campos en `defaultState`: `waterGoalDates: []` + `routineCounts: {}`.
+
+Nuevas funciones:
+- `checkHydrateWeekPerfect()` — 7 días consecutivos con `water.today ≥ water.goal`.
+- `checkRoutineCountAchievements(category)` — umbrales por tipo de rutina.
+- `BREATH_ROUTINE_CATEGORIES` — mapa routineId → categoría (`box / coherent / rounds`).
+
+Hooks añadidos en `addWaterGlass`, `completeBreathSession` y `completeExtraSession`.
+
+### IMPLEMENTED_ACHIEVEMENTS
+
+Añadidos: `hydrate.week.perfect` (Constancia **15/15** cerrada),
+`master.box.10`, `master.coherent.10`, `master.rounds.10`, `master.atg.20`
+(Maestría **13/25**).
+
+Detalle completo: [`docs/sessions/session-41-drone-toggle-logros.md`](./docs/sessions/session-41-drone-toggle-logros.md).
+
+---
+
 ## [v0.21.0] — 2026-05-06 — feat(audio): sonidos mov/hydrate/achievements
-
-### Añadido — Sound.jsx (+29 líneas, 7 recetas)
-
-**Mueve:**
-- `move.start` — glide ascendente C4→G4 (0.22 s). Arranque físico.
-- `move.step` — tone triangle A4 (0.06 s). Tick por paso, distinto al pomodoro tick (sine 800 Hz).
-- `move.end` — chord C5+E5+G5 simultáneo (0.60 s). Cierre cálido.
-
-**Hidrátate:**
-- `hydrate.sip` — glide descendente G5→D5 (0.18 s). Más suave que el legacy `sip` (que bajaba >1 octava).
-- `hydrate.goal` — arpegio ascendente C5→E5→G5→C6 en cascada (t0…t0+0.15, peaks decrecientes). Celebración ligera al llegar a la meta.
-
-**Logros:**
-- `achievement.unlock` — bell A5 (0.90 s). Campana con overtones, reconocimiento resonante.
-- `achievement.secret` — glide C5→F#3 (0.55 s). Tritónico descendente, misterio/descubrimiento.
-
-### Cableado
-
-- **MoveSession** (`MoveModule.jsx`): `move.start` al entrar en `active`, `move.end` al entrar en `done`, `move.step` en cada avance de `stepIdx` (con guard `stage !== 'active'` en mount).
-- **HydrateTracker** (`HydrateModule.jsx`): dos call sites actualizados — `hydrate.goal` exactamente al llegar a `water.goal`, `hydrate.sip` el resto.
-- **ToastHost** (`Toast.jsx`): `achievement.secret` si `a.secret === true`, `achievement.unlock` si no. `try/catch` en el consumidor.
 
 Detalle completo: [`docs/sessions/session-40-sonidos-modulos.md`](./docs/sessions/session-40-sonidos-modulos.md).
 
@@ -89,46 +116,7 @@ Detalle completo: [`docs/sessions/session-40-sonidos-modulos.md`](./docs/session
 
 ## [v0.20.0] — 2026-05-05 — feat(audio): refactor 432 Hz
 
-### Cambiado — Sound.jsx reescrito (228 líneas)
-- **Afinación A=432 Hz**: constante `BASE_A = 432` + helper `note(name)` para conversión nota→Hz con temperamento igual. Todos los tonos del catálogo usan `note()`.
-- **Primitivas componibles**: `tone`, `glide`, `chord`, `bell`, `breathNoise` — autocontenidas y combinables para construir cualquier sonido.
-- **`breathNoise`** (primitiva nueva): ruido blanco filtrado con `BiquadFilterNode` lowpass (Q=1.5). La frecuencia de corte se anima linealmente durante `dur` segundos: 200→800 Hz (inhalar) o 800→200 Hz (exhalar). Resultado: "shhhhh/haaaaa" natural que dura toda la fase visual. Sin tonos puros ni clicks digitales. Inspiración: Inner Breeze.
-- **Catálogo ampliado**: `pomodoro.start` (glide C5→G5), `pomodoro.end` (alias de `complete`), `breathe.inhale/exhale` (ruido filtrado con `dur` dinámico), `breathe.session.start` (glide G4→C4), `breathe.session.end` (chord C5+E5+G5).
-- **Hold = silencio intencional**: `breathe.hold` no se define — la retención es silencio meditativo.
-- **Alias legacy conservados**: `tick`, `complete`, `sip`, `breath` funcionan igual para módulos no migrados.
-
-### Cableado — BreatheSession.jsx
-- `breathe.session.start` al pasar de prep → active.
-- `breathe.inhale(phaseDur)` / `breathe.exhale(phaseDur)` en cada cambio de fase, sincronizados con la duración real de la fase visual.
-- `breathe.session.end` al llamar `finish()` (sesión completada) y al entrar en stage 'hold' (Wim Hof — cierra el set de respiraciones).
-
-### Cableado — FocusTimer.jsx
-- `pomodoro.start` al arrancar el timer (toggle running false → true).
-- `pomodoro.end` al finalizar (reemplaza `complete` — mismo sonido, nombre semántico).
-
-Detalle completo: [`docs/sessions/session-38a-audio-refactor-432hz.md`](./docs/sessions/session-38a-audio-refactor-432hz.md).
-
-### Patch — Sesión 38b (2026-05-06)
-
-**Fix: race condition en mount loop + guard `breathNoise` dur=0**
-
-- **`app/ui/Toast.jsx` — crash crítico (confirmado)**: variable shadowing.
-  La migración i18n de s37 añadió `const { t } = useT()` pero el
-  parámetro del `.map(t => (...))` lo ocultaba. `t('ach.toast.new')`
-  llamaba al objeto toast como función → `TypeError: t is not a function`
-  → crash total del árbol React. Ocurría en primera carga (localStorage
-  vacío) porque cualquier acción desbloqueaba logros nuevos y disparaba
-  toasts. Con F5 los logros ya estaban guardados y los toasts no se
-  renderizaban. Fix: renombrar parámetro del map de `t` a `toast`.
-- **`PACE.html` — mount loop (preventivo)**: ampliado para verificar
-  6 componentes críticos del árbol (era solo `PaceApp`). Timeout:
-  2 s → 5 s. Previene posibles crashes por carga lenta de CDN.
-- **`app/ui/Sound.jsx` — `breathNoise` (preventivo)**: guard
-  `if (!dur || dur <= 0) return`. `createBuffer(1, 0, sr)` lanzaría
-  `NotSupportedError` si `dur = 0`. Ninguna fase actual vale 0,
-  pero el guard previene crashes en extensiones futuras.
-
-Detalle completo: [`docs/sessions/session-38b-fix-mount-race.md`](./docs/sessions/session-38b-fix-mount-race.md).
+Detalle completo: [`docs/sessions/session-38a-audio-refactor-432hz.md`](./docs/sessions/session-38a-audio-refactor-432hz.md) y [`docs/sessions/session-38b-fix-mount-race.md`](./docs/sessions/session-38b-fix-mount-race.md).
 
 ---
 

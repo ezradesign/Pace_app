@@ -144,13 +144,12 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // con día previo distinto al actual).
   'first.step', 'first.breath', 'first.stretch', 'first.sip', 'first.extra',
   'first.cycle', 'first.ritual', 'first.day', 'first.plan', 'first.return',
-  // Constancia (14/15) — sesión 29: +breathe.sessions.10/50,
-  // +move.sessions.25, +morning.5. Falta hydrate.week.perfect.
+  // Constancia (15/15) — sesión 41: +hydrate.week.perfect.
   'streak.3', 'streak.7', 'streak.14', 'streak.30', 'streak.60',
   'streak.100', 'streak.365',
   'focus.hours.10', 'focus.hours.50', 'focus.hours.100',
   'breathe.sessions.10', 'breathe.sessions.50', 'move.sessions.25',
-  'morning.5',
+  'morning.5', 'hydrate.week.perfect',
   // Exploración breathe (9/20)
   'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
   'explore.bhastrika', 'explore.nadi', 'explore.ujjayi',
@@ -158,14 +157,14 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // Exploración move (6/20) — reconectados en sesión 15
   'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (9/25) — sesión 29: +master.long.focus, +master.dawn, +master.dusk.
-  // Sesión 34: +master.collector.half/full (50/100 logros),
-  //            +master.silent.day (soundOn=false 1 día),
-  //            +master.retreat (2h breathe+move en día).
+  // Maestría (13/25) — sesión 29: +master.long.focus, +master.dawn, +master.dusk.
+  // Sesión 34: +master.collector.half/full, +master.silent.day, +master.retreat.
+  // Sesión 41: +master.box.10, +master.coherent.10, +master.rounds.10, +master.atg.20.
   'master.pomodoro.8', 'master.focus.day',
   'master.long.focus', 'master.dawn', 'master.dusk',
   'master.collector.half', 'master.collector.full',
   'master.silent.day', 'master.retreat',
+  'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.

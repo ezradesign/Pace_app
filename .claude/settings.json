@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cd \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\"; @{TweaksPanel=\\(Get-Content \"app/tweaks/TweaksPanel.jsx\"\\).Count; State=\\(Get-Content \"app/state.jsx\"\\).Count; Watcher=\\(Get-Content \"app/tweaks/TweakSecretsWatcher.jsx\"\\).Count})",
+      "PowerShell(Copy-Item \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\PACE_standalone.html\" \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\PACE_standalone_v0.21.0_20260506.html\")"
+    ]
+  }
+}

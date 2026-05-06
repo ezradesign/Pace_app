@@ -106,6 +106,7 @@ window.PACE_STRINGS = {
     'settings.audio.on':             'Activado',
     'settings.audio.off':            'Silenciado',
     'settings.audio.hint':           'Sonidos de la sesión',
+    'settings.audio.ambient':        'ambiente durante sesiones',
 
     // ActivityBar
     'activity.meta':                 'Actividades',
@@ -406,6 +407,7 @@ window.PACE_STRINGS = {
     'settings.audio.on':             'On',
     'settings.audio.off':            'Muted',
     'settings.audio.hint':           'Session sounds',
+    'settings.audio.ambient':        'ambient sound during sessions',
 
     // ActivityBar
     'activity.meta':                 'Activities',
