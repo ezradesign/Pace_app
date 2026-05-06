@@ -15,6 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.24.0** | 2026-05-06 | fix(standalone): regenerar build roto de s44 (truncamiento transitorio — sin cambios en código fuente) | #45 | [abajo ↓](#v0240--2026-05-06--featstats-yearview) |
+| **v0.24.0** | 2026-05-06 | feat(stats): YearView — heatmap anual 53×7, score compuesto, 5 niveles tierra→oliva, navegación entre años, click celda→zoom mes, responsive scroll-snap | #44 | [abajo ↓](#v0240--2026-05-06--featstats-yearview) |
 | **v0.23.0** | 2026-05-06 | feat(history): capa de datos history (days/months/years) + migration guard + MonthHeatmap con tabs Semana\|Mes\|Año + tooltip responsive | #43 | [abajo ↓](#v0230--2026-05-06--feathistory-capa-de-datos--heatmap-mensual) |
 | **v0.22.1** | 2026-05-06 | fix(ux): hints teclado ocultos en móvil + title attrs eliminados en MoveSession + cronómetro reescalado (128→72px) + shortcut BreakMenu oculto | #42 | [abajo ↓](#v0221--2026-05-06--fixux-corrección-ux-móvil) |
 | **v0.22.0** | 2026-05-06 | feat: split TweakSecretsWatcher + i18n ambient toggle + 5 detectores logros (hydrate.week.perfect + master.box/coherent/rounds.10 + master.atg.20) | #41 | [session-41](./docs/sessions/session-41-drone-toggle-logros.md) |
@@ -60,6 +62,34 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.24.0] — 2026-05-06 — feat(stats): YearView
+
+Heatmap anual completo. Cierra el frente Stats al 100% (Semana | Mes | Año funcionales).
+
+**Nuevo archivo `app/stats/YearView.jsx`** (324 líneas)
+- Score compuesto por día: `focusBlocks (cap 3) + breathSessions + moveSessions + waterFrac/8`. Techo natural ≈ 5.
+- 5 niveles visuales: vacío (paper-3), 1-2 (ocre/move 22-48%), 3 (terracota/breathe 72%), 4 (oliva/focus 100%) — salto de familia cromática para "día pleno".
+- Grid 53 columnas × 7 filas. Etiquetas de mes flotando; etiquetas de día (L/X/V) a la izquierda.
+- Días futuros: hueco invisible (sin presión silenciosa). Pre-uso: crema/borde muy tenue.
+- Navegación ‹ › entre años con datos + año actual.
+- Click en celda → zoom al tab "Mes" navegado a esa fecha.
+- Tooltip desktop (fixed) + móvil (card bottom 88px, cierra al tocar fuera).
+- Footer: total acciones · días activos · racha máxima.
+- Responsive ≤640px: scroll horizontal + scroll-snap por trimestre + celdas 11px.
+
+**`app/stats/StatsPanel.jsx`** (393 líneas)
+- `MonthHeatmap` acepta `initialYear`/`initialMonth` para el jump desde YearView.
+- `StatsPanel` gestiona `jumpYear`/`jumpMonth` + `handleNavigateToMonth`.
+- `maxWidth` del Modal: 780 → 820px.
+
+**`app/i18n/strings.js`**: 10 claves nuevas ES + 10 EN (prefijo `stats.year.*`).
+
+**Infraestructura**: `PACE.html` +script `YearView.jsx`; `PACE_VERSION` v0.24.0; standalone 451 KB; backup v0.23.0.
+
+Detalle: [`docs/sessions/session-44-yearview.md`](./docs/sessions/session-44-yearview.md)
 
 ---
 
