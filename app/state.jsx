@@ -25,6 +25,7 @@ const defaultState = {
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
+  ambientOn: false,           // drone ambiente opt-in — solo activo si soundOn también true
   lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
 
   // Foco

@@ -103,6 +103,45 @@ function BreatheSession({ routine, onExit }) {
     return () => clearInterval(intv);
   }, [stage, paused]);
 
+  // Drone ambiente — efecto paralelo sobre stage y paused
+  useEffect(() => {
+    if (!window.ambientDrone) return;
+    const drone = window.ambientDrone;
+
+    if (stage === 'done') { drone.stop(800); return; }
+    if (stage === 'prep') return; // no arranca en preparación
+
+    if (stage === 'hold') {
+      // Drone sigue sonando durante hold (retención) — sin tocar
+      return;
+    }
+
+    // stage === 'active'
+    if (paused) {
+      drone.pause();
+    } else {
+      if (drone.isActive()) {
+        drone.resume();
+      } else {
+        // activar ambientOn mid-sesión no arranca el drone retroactivamente
+        // — solo arranca al inicio de una sesión nueva
+        drone.start();
+      }
+    }
+  }, [stage, paused]);
+
+  // Stop drone si soundOn se apaga durante sesión
+  useEffect(() => {
+    if (!state.soundOn && window.ambientDrone && window.ambientDrone.isActive()) {
+      window.ambientDrone.stop(400);
+    }
+  }, [state.soundOn]);
+
+  // Cleanup: para el drone en todos los caminos de onExit (unmount)
+  useEffect(() => {
+    return () => { if (window.ambientDrone) window.ambientDrone.stop(800); };
+  }, []);
+
   // Atajos de teclado
   useEffect(() => {
     const onKey = (e) => {

@@ -58,6 +58,34 @@ function FocusTimer({ onFinish }) {
     }
   }, [remainingSec, running, state.focusMode]);
 
+  // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
+  useEffectFT(() => {
+    if (!window.ambientDrone) return;
+    const drone = window.ambientDrone;
+
+    if (state.focusMode !== 'foco') { drone.stop(800); return; }
+    if (remainingSec === 0)         { drone.stop(800); return; }
+
+    if (running) {
+      if (drone.isActive()) {
+        drone.resume();
+      } else {
+        // activar ambientOn mid-sesión no arranca el drone retroactivamente
+        // — solo arranca al inicio de una sesión nueva
+        drone.start();
+      }
+    } else {
+      if (drone.isActive()) drone.pause();
+    }
+  }, [running, state.focusMode, remainingSec]);
+
+  // Apagar soundOn durante sesión → fadeout inmediato
+  useEffectFT(() => {
+    if (!state.soundOn && window.ambientDrone && window.ambientDrone.isActive()) {
+      window.ambientDrone.stop(400);
+    }
+  }, [state.soundOn]);
+
   const mins = Math.floor(remainingSec / 60);
   const secs = remainingSec % 60;
   const totalSec = (state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15) * 60;

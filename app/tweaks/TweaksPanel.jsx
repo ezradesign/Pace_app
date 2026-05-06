@@ -226,6 +226,41 @@ function TweaksPanel({ open, onClose }) {
             );
           })}
         </div>
+        {state.soundOn && (
+          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => {
+                const next = !state.ambientOn;
+                set({ ambientOn: next });
+                if (!next && window.ambientDrone) window.ambientDrone.stop(400);
+              }}
+              style={{
+                width: 14, height: 14, borderRadius: 3, padding: 0,
+                border: `1px solid ${state.ambientOn ? 'var(--focus)' : 'var(--line-2)'}`,
+                background: state.ambientOn ? 'var(--focus)' : 'transparent',
+                display: 'grid', placeItems: 'center',
+                color: 'var(--paper)', cursor: 'pointer', flexShrink: 0,
+              }}
+              aria-label="Ambiente durante sesiones"
+            >
+              {state.ambientOn && (
+                <svg width="9" height="9" viewBox="0 0 16 16" fill="none"
+                     stroke="currentColor" strokeWidth="2"
+                     strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 8L7 12L13 4"/>
+                </svg>
+              )}
+            </button>
+            <span
+              style={{ fontSize: 11, color: 'var(--ink-2)', letterSpacing: 0.2, cursor: 'pointer' }}
+              onClick={() => {
+                const next = !state.ambientOn;
+                set({ ambientOn: next });
+                if (!next && window.ambientDrone) window.ambientDrone.stop(400);
+              }}
+            >+ ambiente durante sesiones</span>
+          </div>
+        )}
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
