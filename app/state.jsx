@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.22.1';
+const PACE_VERSION = 'v0.23.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -114,6 +114,21 @@ const defaultState = {
   // y movilidad. { box, coherent, rounds, atg }. Sesión 41.
   routineCounts: {},
 
+  // Histórico de actividad — sesión 43.
+  // `days`   : { "YYYY-MM-DD": { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
+  //            Solo se escriben entradas con al menos un valor > 0 (ausencia = sin actividad).
+  // `months` : { "YYYY-MM":   { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
+  // `years`  : { "YYYY":      { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
+  // Agregados incrementales: se suman deltas al cerrar cada día; nunca se recalculan
+  // desde cero (ver updateMonthAggregate / updateYearAggregate).
+  // Cap documental: ~5 años rolling. Sin hard limit en código esta sesión.
+  history: { days: {}, months: {}, years: {} },
+
+  // Migration guard — sesión 43.
+  // true cuando ya se ha migrado weeklyStats → history.days en el primer rollover
+  // post-upgrade. Impide que el guard se ejecute más de una vez.
+  _historyMigrated: false,
+
   // Rollover: día de calendario del último uso (toDateString()).
   // Cuando cambia, se resetean cycle / plan / water.today al cargar.
   lastActiveDay: null,
@@ -139,6 +154,107 @@ function loadState() {
   }
 }
 
+/* ============================
+   HISTÓRICO DE ACTIVIDAD — sesión 43
+   ============================ */
+
+/* Entrada vacía para días/meses/años sin dato previo. */
+function zeroEntry() {
+  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
+}
+
+/* Agrega delta incremental al mes. Clave: "YYYY-MM".
+   Nunca recalcula el mes completo — solo suma lo que el día recién
+   cerrado aportó. Recibe el objeto history completo y devuelve uno nuevo. */
+function updateMonthAggregate(history, dateStr, delta) {
+  const key = dateStr.slice(0, 7);
+  const prev = history.months[key] || zeroEntry();
+  return {
+    ...history,
+    months: {
+      ...history.months,
+      [key]: {
+        focusMinutes:  prev.focusMinutes  + delta.focusMinutes,
+        breathMinutes: prev.breathMinutes + delta.breathMinutes,
+        moveMinutes:   prev.moveMinutes   + delta.moveMinutes,
+        waterGlasses:  prev.waterGlasses  + delta.waterGlasses,
+      },
+    },
+  };
+}
+
+/* Agrega delta incremental al año. Clave: "YYYY". */
+function updateYearAggregate(history, dateStr, delta) {
+  const key = dateStr.slice(0, 4);
+  const prev = history.years[key] || zeroEntry();
+  return {
+    ...history,
+    years: {
+      ...history.years,
+      [key]: {
+        focusMinutes:  prev.focusMinutes  + delta.focusMinutes,
+        breathMinutes: prev.breathMinutes + delta.breathMinutes,
+        moveMinutes:   prev.moveMinutes   + delta.moveMinutes,
+        waterGlasses:  prev.waterGlasses  + delta.waterGlasses,
+      },
+    },
+  };
+}
+
+/* Convierte un toDateString() ("Wed May 06 2026") a "YYYY-MM-DD".
+   Necesario porque toDateString() no tiene formato ISO. */
+function toISODate(dateString) {
+  const d = new Date(dateString);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
+/* Archiva los datos del día `dateStr` (toDateString) en history.
+   Si todos los valores son 0, no escribe entrada (ausencia = sin dato).
+   Devuelve el history actualizado (inmutable). */
+function archiveDayToHistory(history, dateStr, weeklyStats) {
+  // Extraer valores del día desde weeklyStats[getDay()]
+  const dow = new Date(dateStr).getDay(); // 0=Dom … 6=Sab
+  const delta = {
+    focusMinutes:  (weeklyStats.focusMinutes  || [])[dow] || 0,
+    breathMinutes: (weeklyStats.breathMinutes || [])[dow] || 0,
+    moveMinutes:   (weeklyStats.moveMinutes   || [])[dow] || 0,
+    waterGlasses:  (weeklyStats.waterGlasses  || [])[dow] || 0,
+  };
+  const hasData = Object.values(delta).some(v => v > 0);
+  if (!hasData) return history;
+
+  const isoDate = toISODate(dateStr);
+  let h = {
+    ...history,
+    days: { ...history.days, [isoDate]: delta },
+  };
+  h = updateMonthAggregate(h, isoDate, delta);
+  h = updateYearAggregate(h, isoDate, delta);
+  return h;
+}
+
+/* Migration guard — sesión 43.
+   En el primer rollover post-upgrade, copia la semana actual de weeklyStats
+   a history.days con fechas reales calculadas hacia atrás desde lastActiveDay.
+   Solo se ejecuta una vez (_historyMigrated === false). */
+function migrateWeeklyStatsToHistory(state) {
+  if (state._historyMigrated) return state;
+  if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
+
+  let h = state.history || { days: {}, months: {}, years: {} };
+  // Itera los 7 días de la semana actual. El índice 0 es lastActiveDay,
+  // los demás son días anteriores (hasta 6).
+  const lastDate = new Date(state.lastActiveDay);
+  for (let offset = 0; offset < 7; offset++) {
+    const d = new Date(lastDate.getTime() - offset * 86400000);
+    h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
+  }
+  return { ...state, history: h, _historyMigrated: true };
+}
+
 /* Rollover diario: si el día de calendario ha cambiado desde la última actividad,
    reseteamos los contadores "de hoy" (ciclo de pomodoros, plan del día, vasos de agua).
    Se llama al cargar el estado y también defensivamente antes de escribir cualquier
@@ -147,6 +263,21 @@ function loadState() {
 function rolloverIfNeeded(state) {
   const today = new Date().toDateString();
   if (state.lastActiveDay === today) return state;
+
+  /* Migration guard: en el primer rollover post-upgrade, migrar weeklyStats → history. */
+  let migratedState = migrateWeeklyStatsToHistory(state);
+
+  /* Archivar el día que acaba de terminar (lastActiveDay) en history,
+     solo si había actividad registrada (algún valor > 0). */
+  let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
+  if (migratedState.lastActiveDay) {
+    nextHistory = archiveDayToHistory(
+      nextHistory,
+      migratedState.lastActiveDay,
+      migratedState.weeklyStats
+    );
+  }
+
   /* Trigger `first.return` — abrir la app un día distinto al de la
      última actividad. Sólo si había un día previo (no en la primera
      instalación, donde `lastActiveDay` viene null/undefined). El
@@ -154,16 +285,17 @@ function rolloverIfNeeded(state) {
      `unlockAchievement` desde dentro del propio loadState (la cola
      de toasts pendientes lo gestiona si el ToastHost aún no montó).
      Sesión 28. */
-  if (state.lastActiveDay) {
+  if (migratedState.lastActiveDay) {
     setTimeout(() => {
       try { unlockAchievement('first.return'); } catch (e) {}
     }, 0);
   }
   return {
-    ...state,
+    ...migratedState,
+    history: nextHistory,
     cycle: 0,
     plan: { muevete: false, respira: false, extra: false, hidratate: false },
-    water: { ...state.water, today: 0, lastReset: today },
+    water: { ...migratedState.water, today: 0, lastReset: today },
     lastActiveDay: today,
   };
 }
@@ -616,4 +748,7 @@ Object.assign(window, {
   showToast, onToast,
   setLang,
   PACE_VERSION,
+  // sesión 43 — history helpers (expuestos para debugging y tests)
+  zeroEntry, toISODate, archiveDayToHistory,
+  updateMonthAggregate, updateYearAggregate,
 });

@@ -271,6 +271,23 @@ window.PACE_STRINGS = {
     'stats.note.label':                'Nota:',
     'stats.note':                      'no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.',
     'stats.days':                      'Lun,Mar,Mié,Jue,Vie,Sáb,Dom',
+    // Tabs — sesión 43
+    'stats.tab.week':                  'Semana',
+    'stats.tab.month':                 'Mes',
+    'stats.tab.year':                  'Año',
+    // Heatmap mensual — sesión 43
+    'stats.month.days.short':          'L,M,X,J,V,S,D',
+    'stats.month.total.focus':         'Foco',
+    'stats.month.total.breathe':       'Respira',
+    'stats.month.total.move':          'Mueve',
+    'stats.month.total.water':         'vasos',
+    'stats.month.empty':               'Sin actividad',
+    'stats.month.coming':              'Próximamente',
+    'stats.month.tooltip.focus':       'min foco',
+    'stats.month.tooltip.breathe':     'min respira',
+    'stats.month.tooltip.move':        'min mueve',
+    'stats.month.tooltip.water':       'vasos',
+    'stats.month.hours.unit':          'h',
 
     // Achievements
     'ach.tag':                         'Colección',
@@ -572,6 +589,23 @@ window.PACE_STRINGS = {
     'stats.note.label':                'Note:',
     'stats.note':                      "we don't measure to judge you. The numbers are here so you can recognize your rhythms, not chase them.",
     'stats.days':                      'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+    // Tabs — session 43
+    'stats.tab.week':                  'Week',
+    'stats.tab.month':                 'Month',
+    'stats.tab.year':                  'Year',
+    // Monthly heatmap — session 43
+    'stats.month.days.short':          'M,T,W,T,F,S,S',
+    'stats.month.total.focus':         'Focus',
+    'stats.month.total.breathe':       'Breathe',
+    'stats.month.total.move':          'Move',
+    'stats.month.total.water':         'glasses',
+    'stats.month.empty':               'No activity',
+    'stats.month.coming':              'Coming soon',
+    'stats.month.tooltip.focus':       'min focus',
+    'stats.month.tooltip.breathe':     'min breathe',
+    'stats.month.tooltip.move':        'min move',
+    'stats.month.tooltip.water':       'glasses',
+    'stats.month.hours.unit':          'h',
 
     // Achievements
     'ach.tag':                         'Collection',

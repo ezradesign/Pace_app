@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.23.0** | 2026-05-06 | feat(history): capa de datos history (days/months/years) + migration guard + MonthHeatmap con tabs Semana\|Mes\|Año + tooltip responsive | #43 | [abajo ↓](#v0230--2026-05-06--feathistory-capa-de-datos--heatmap-mensual) |
 | **v0.22.1** | 2026-05-06 | fix(ux): hints teclado ocultos en móvil + title attrs eliminados en MoveSession + cronómetro reescalado (128→72px) + shortcut BreakMenu oculto | #42 | [abajo ↓](#v0221--2026-05-06--fixux-corrección-ux-móvil) |
-| **v0.22.0** | 2026-05-06 | feat: split TweakSecretsWatcher + i18n ambient toggle + 5 detectores logros (hydrate.week.perfect + master.box/coherent/rounds.10 + master.atg.20) | #41 | [abajo ↓](#v0220--2026-05-06--feat-split--i18n--5-detectores-logros) |
+| **v0.22.0** | 2026-05-06 | feat: split TweakSecretsWatcher + i18n ambient toggle + 5 detectores logros (hydrate.week.perfect + master.box/coherent/rounds.10 + master.atg.20) | #41 | [session-41](./docs/sessions/session-41-drone-toggle-logros.md) |
 | **v0.21.0** | 2026-05-06 | feat(audio): sonidos move.start/step/end + hydrate.sip/goal + achievement.unlock/secret — capa 1 completa | #40 | [abajo ↓](#v0210--2026-05-06--feataudio-sonidos-movhydrateachievements) |
 | **v0.20.0** | 2026-05-06 | fix: crash ToastHost variable shadowing (t/useT) + mount loop 6-check + guard breathNoise | #38b patch | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
 | **v0.20.0** | 2026-05-05 | feat(audio): refactor 432 Hz + primitivas componibles + respiración realista con ruido blanco filtrado + pomodoro.start/end | #38a | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
@@ -59,6 +60,27 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.23.0] — 2026-05-06 — feat(history): capa de datos + heatmap mensual
+
+Sistema de historial de actividad completo + nueva vista MonthHeatmap en el panel de estadísticas.
+
+**BLOQUE A — Capa de datos (`state.jsx`)**
+- `defaultState` ampliado con `history: { days:{}, months:{}, years:{} }` y `_historyMigrated: false`.
+- 6 funciones puras nuevas: `zeroEntry`, `toISODate`, `updateMonthAggregate`, `updateYearAggregate`, `archiveDayToHistory`, `migrateWeeklyStatsToHistory`.
+- `rolloverIfNeeded` extendido: archiva el día que termina en `history.days` (solo si hay datos) y actualiza agregados mes/año de forma incremental. Migration guard de una sola vez al primer rollover post-upgrade.
+
+**BLOQUE B — UI (`StatsPanel.jsx`)**
+- `WeeklyStats.jsx` → `StatsPanel.jsx`. Script tag y JSX actualizados.
+- Tabs `Semana | Mes | Año` sobre el contenido del modal.
+- `MonthHeatmap`: grid 7 cols (L→D), color por módulo dominante (5 niveles de opacidad via div interno absoluto), navegación ‹ ›, totales del mes, tooltip hover/tap, responsive ≤640px.
+- `YearView`: placeholder "Próximamente" (sesión 44).
+- 15 claves i18n nuevas en ES + EN.
+
+**Archivos:** `state.jsx`, `stats/StatsPanel.jsx` (nuevo), `i18n/strings.js`, `PACE.html`, `main.jsx`.
+**Detalle:** [`docs/sessions/session-43-history-heatmap-mensual.md`](./docs/sessions/session-43-history-heatmap-mensual.md)
 
 ---
 
