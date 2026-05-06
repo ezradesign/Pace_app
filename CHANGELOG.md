@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.20.0** | 2026-05-05 | feat(audio): refactor 432 Hz + primitivas componibles + respiración realista con ruido blanco filtrado + pomodoro.start/end | #38a | [abajo ↓](#v0200--2026-05-05--featauido-refactor-432-hz) |
+| **v0.20.0** | 2026-05-06 | fix: crash ToastHost variable shadowing (t/useT) + mount loop 6-check + guard breathNoise | #38b patch | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
+| **v0.20.0** | 2026-05-05 | feat(audio): refactor 432 Hz + primitivas componibles + respiración realista con ruido blanco filtrado + pomodoro.start/end | #38a | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
 | **v0.19.1** | 2026-05-05 | fix(i18n): crash al cargar — useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes | #37 hotfix | [session-37](./docs/sessions/session-37-i18n-pwa-ajustes.md) |
 | **v0.19.0** | 2026-05-05 | Cierre i18n total (fases respiración + 8 strings restantes) + PWA activada (manifest+SW) + panel Ajustes limpiado (audio primero, timer 3 ops, layout 2 ops) + hard reset localStorage v2 | #37 | [abajo ↓](#v0190--2026-05-05--cierre-i18n--pwa--ajustes) |
 | **v0.18.0** | 2026-05-05 | i18n de contenido (ejercicios Respira/Mueve/Estira) + FocusTimer i18n completo + toggle ES·EN en WelcomeModal + dot verde del aro eliminado | #36 | [abajo ↓](#v0180--2026-05-05--i18n-contenido--focustimer--dot-eliminado) |
@@ -78,6 +79,28 @@ versiones anteriores, la tabla enlaza al diario completo en
 - `pomodoro.end` al finalizar (reemplaza `complete` — mismo sonido, nombre semántico).
 
 Detalle completo: [`docs/sessions/session-38a-audio-refactor-432hz.md`](./docs/sessions/session-38a-audio-refactor-432hz.md).
+
+### Patch — Sesión 38b (2026-05-06)
+
+**Fix: race condition en mount loop + guard `breathNoise` dur=0**
+
+- **`app/ui/Toast.jsx` — crash crítico (confirmado)**: variable shadowing.
+  La migración i18n de s37 añadió `const { t } = useT()` pero el
+  parámetro del `.map(t => (...))` lo ocultaba. `t('ach.toast.new')`
+  llamaba al objeto toast como función → `TypeError: t is not a function`
+  → crash total del árbol React. Ocurría en primera carga (localStorage
+  vacío) porque cualquier acción desbloqueaba logros nuevos y disparaba
+  toasts. Con F5 los logros ya estaban guardados y los toasts no se
+  renderizaban. Fix: renombrar parámetro del map de `t` a `toast`.
+- **`PACE.html` — mount loop (preventivo)**: ampliado para verificar
+  6 componentes críticos del árbol (era solo `PaceApp`). Timeout:
+  2 s → 5 s. Previene posibles crashes por carga lenta de CDN.
+- **`app/ui/Sound.jsx` — `breathNoise` (preventivo)**: guard
+  `if (!dur || dur <= 0) return`. `createBuffer(1, 0, sr)` lanzaría
+  `NotSupportedError` si `dur = 0`. Ninguna fase actual vale 0,
+  pero el guard previene crashes en extensiones futuras.
+
+Detalle completo: [`docs/sessions/session-38b-fix-mount-race.md`](./docs/sessions/session-38b-fix-mount-race.md).
 
 ---
 

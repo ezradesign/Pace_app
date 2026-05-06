@@ -87,16 +87,30 @@
        así que esperamos al evento `DOMContentLoaded` de Babel antes de montar.
   -->
   <script type="text/babel" data-presets="env,react">
-    // Pequeño retry por si PaceApp aún no está en window cuando este script corre
+    /* Mount loop — espera a que TODOS los scripts Babel estén compilados.
+       Los <script type="text/babel" src> se fetchean en paralelo y pueden
+       evaluar en orden no garantizado: PaceApp puede estar lista antes que
+       BreakMenu, TweaksPanel o BreatheSession, provocando crashes en la
+       primera apertura de esas pantallas ("Element type is invalid: undefined").
+       Fix sesión 38b: comprobar los componentes críticos del árbol completo,
+       no sólo PaceApp. Timeout ampliado a 5 s para cargas lentas / CDN frío. */
     function mount(tries = 0) {
       const container = document.getElementById('root');
-      if (container && typeof PaceApp === 'function') {
+      const allReady = (
+        typeof PaceApp          === 'function' &&
+        typeof BreakMenu        === 'function' &&
+        typeof TweaksPanel      === 'function' &&
+        typeof BreatheSession   === 'function' &&
+        typeof MoveSession      === 'function' &&
+        typeof ToastHost        === 'function'
+      );
+      if (container && allReady) {
         const root = ReactDOM.createRoot(container);
         root.render(<PaceApp />);
-      } else if (tries < 40) {
+      } else if (tries < 100) {
         setTimeout(() => mount(tries + 1), 50);
       } else {
-        console.error('PACE · PaceApp o #root no se cargaron tras 2s.');
+        console.error('PACE · Componentes no cargaron en 5 s. Comprueba la red.');
       }
     }
     if (document.readyState === 'loading') {

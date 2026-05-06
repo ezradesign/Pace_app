@@ -11,9 +11,9 @@
 ---
 
 **Versión actual:** v0.20.0
-**Última sesión:** #38a — 2026-05-05 · feat(audio): refactor Sound.jsx 432 Hz + primitivas + breathNoise + cableado Breathe/Focus
-**Última actualización de este archivo:** 2026-05-05 · sesión 38a
-**Build entregado:** `PACE_standalone.html` v0.20.0 (~420 KB — regenerado con build-standalone.js)
+**Última sesión:** #38b — 2026-05-06 · fix: crash ToastHost (variable shadowing t/useT) + mount loop + guard breathNoise
+**Última actualización de este archivo:** 2026-05-06 · sesión 38b
+**Build entregado:** `PACE_standalone.html` v0.20.0 patch (431 684 bytes — regenerado con build-standalone.js)
 
 ---
 
@@ -21,11 +21,11 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.20.0** (título v0.20.0) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.20.0** (~420 KB, regenerado en s38a) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.20.0 patch** (mount loop: 6 checks + 5 s timeout — s38b) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.20.0 patch** (431 684 bytes, regenerado en s38b) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
-| `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.20.0** (432 Hz; primitivas tone/glide/chord/bell/breathNoise; catálogo ampliado) |
+| `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.20.0 patch** (432 Hz; primitivas; guard dur=0 en breathNoise — s38b) |
 | `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.17.0** (bug fix: useT en SessionDone) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.19.0** (`useT` + `aria-label` migrado a `common.close`) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (antes Tweaks) | **v0.19.0** (audio primer eje; timer 3 ops; layout 2 ops; título Ajustes; LS v2) |
@@ -44,40 +44,57 @@
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
 | `app/state.jsx` | Store global + rollover + toast buffer | **v0.20.0** (PACE_VERSION bump) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
-| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.19.0** (`useT` + "Nuevo sello" migrado) |
+| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.20.0 patch** (fix variable shadowing `t` → `toast` en .map — s38b) |
 
 Backups vigentes:
-- `backups/PACE_standalone_v0.13.0_20260429.html` — **BORRAR manualmente** (sandbox no puede).
-- `backups/PACE_standalone_v0.14.0_20260504.html` — **BORRAR manualmente** (sandbox no puede).
-- `backups/PACE_standalone_v0.15.0_20260505.html`
+- `backups/PACE_standalone_v0.15.0_20260505.html` — **BORRAR manualmente** (sandbox no puede · hay 6 backups, máx 5).
 - `backups/PACE_standalone_v0.16.0_20260505.html`
 - `backups/PACE_standalone_v0.17.0_20260505.html`
 - `backups/PACE_standalone_v0.18.0_20260505.html`
 - `backups/PACE_standalone_v0.19.1_20260505.html`
+- `backups/PACE_standalone_v0.20.0_20260506.html`
 
-7 backups (2 de más). **Acción pendiente: borrar v0.13.0 y v0.14.0 manualmente para quedar en 5.**
+6 backups (1 de más). **Acción pendiente: borrar v0.15.0 manualmente para quedar en 5.**
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 38a · v0.19.1 → v0.20.0 · feat(audio): refactor 432 Hz + respiración realista**
+**Sesión 38b · v0.20.0 patch · fix: race condition mount loop + guard breathNoise**
 
 ### Qué se hizo
 
-1. **`app/ui/Sound.jsx`** reescrito (228 líneas): constante `BASE_A=432`, helper `note()`, primitivas `tone/glide/chord/bell/breathNoise`, catálogo ampliado (`pomodoro.start/end`, `breathe.inhale/exhale`, `breathe.session.start/end`). Alias legacy conservados.
-2. **`app/breathe/BreatheSession.jsx`**: cableados `session.start` al arrancar, `inhale/exhale` con `phaseDur` en cada cambio de fase, `session.end` en `finish()` y en entrada de stage 'hold'. Silencio intencional en Sostén.
-3. **`app/focus/FocusTimer.jsx`**: `pomodoro.start` al toglear running a true; `pomodoro.end` reemplaza `complete` al finalizar.
-4. **Bump**: `PACE_VERSION` v0.19.1 → v0.20.0. Standalone regenerado ~420 KB.
+1. **`app/ui/Toast.jsx` — crash principal (bug confirmado con console)**: variable shadowing.
+   `const { t } = useT()` (traducción) quedaba ocultada por el `t` del `.map(t => (...))`.
+   `t('ach.toast.new')` dentro del map llamaba al objeto toast como función → `TypeError: t is not a function`.
+   En primera carga (localStorage vacío) todos los logros son nuevos → cualquier acción
+   dispara toast → crash. Con F5 los logros ya están guardados → no toast → no crash.
+   Fix: renombrar parámetro del map de `t` a `toast` en todo su scope.
+2. **`PACE.html` — mount loop** (fix preventivo): ampliado para verificar 6 componentes
+   críticos (era solo PaceApp). Timeout: 2 s → 5 s. Previene crashes en carga lenta de CDN.
+3. **`app/ui/Sound.jsx` — `breathNoise`**: guard defensivo `if (!dur || dur <= 0) return`
+   para prevenir `createBuffer(1, 0, sr)` → `NotSupportedError`. Ninguna fase actual
+   vale 0; el guard es preventivo ante extensiones futuras.
+3. **`.gitignore`** creado (no existía): patrones `Pace_app/`, `Pace_app_*/`, `.~lock.*#`, `*.bak`, `*~`.
+4. **Incidencia OpenOffice**: `.~lock.PACE_standalone.html#` eliminado del índice git
+   (`git rm --cached`). `PACE_standalone.html` restaurado desde `origin/main` (v0.19.1
+   limpio) vía `git cat-file` — bypass necesario por stale `.git/index.lock`.
+5. **Standalone regenerado** (431 684 bytes) con los fixes de 38b.
 
 ### Archivos modificados
-`app/ui/Sound.jsx`, `app/breathe/BreatheSession.jsx`, `app/focus/FocusTimer.jsx`, `app/state.jsx`, `PACE.html`, `PACE_standalone.html`, `CHANGELOG.md`, `STATE.md`, `docs/sessions/session-38a-audio-refactor-432hz.md`.
+`PACE.html`, `app/ui/Sound.jsx`, `.gitignore` (nuevo), `PACE_standalone.html`,
+`backups/PACE_standalone_v0.20.0_20260506.html` (nuevo),
+`docs/sessions/session-38b-fix-mount-race.md` (nuevo), `CHANGELOG.md`, `STATE.md`.
 
 ### Versión
-- **v0.20.0** (minor · feature audio significativa).
+- **v0.20.0** sin bump (patch correctivo, sin impacto observable para el usuario).
 
-### Pendiente (Sesión 38b)
-- Borrar `backups/PACE_standalone_v0.13.0` y `v0.14.0` manualmente (sandbox sin permisos — 7 backups en disco).
+### Pendiente manual (sandbox sin permisos de borrado)
+- Borrar `backups/PACE_standalone_v0.15.0_20260505.html` (hay 6 backups, máx 5).
+- Borrar `.~lock.PACE_standalone.html#` del disco si existe (archivo oculto en raíz).
+- Borrar `.git/index.lock` si aún bloquea GitHub Desktop.
+
+### Pendiente funcional (próximas sesiones)
 - Sonidos `move.start/step/end` + cableado en MoveSession.
 - Sonidos `hydrate.sip` mejorado, `hydrate.goal`.
 - Sonidos `achievement.unlock`, `achievement.secret`.
