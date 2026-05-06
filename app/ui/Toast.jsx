@@ -12,7 +12,7 @@ function ToastHost() {
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
         if (!a) return;
-        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph };
+        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         setTimeout(() => {
@@ -55,7 +55,12 @@ function ToastHost() {
             fontFamily: 'var(--font-display)',
             fontStyle: 'italic',
             fontSize: 18,
-          }}>{toast.glyph}</div>
+          }}>
+            {toast.glyphSvg
+              ? <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: toast.glyphSvg }} />
+              : <span style={{ fontStyle: 'italic' }}>{toast.glyph}</span>
+            }
+          </div>
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>

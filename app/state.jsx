@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.24.0';
+const PACE_VERSION = 'v0.25.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -137,20 +137,44 @@ const defaultState = {
 let _state = loadState();
 const _listeners = new Set();
 
+function isMobileViewport() {
+  return typeof window !== 'undefined' && window.matchMedia &&
+         window.matchMedia('(max-width: 768px)').matches;
+}
+
 function loadState() {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) {
-      return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
+      /* Primer arranque en móvil: colapsar sidebar para que el usuario
+         vea el Pomodoro directamente. En desktop arranca abierta. */
+      return {
+        ...defaultState,
+        lang: _detectLang(),
+        lastActiveDay: new Date().toDateString(),
+        ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
+      };
     }
     const parsed = JSON.parse(raw);
     /* Si el usuario no tiene lang guardado (instalación previa a i18n),
        detectarlo desde navigator.language y persistirlo. */
     if (!parsed.lang) parsed.lang = _detectLang();
-    return rolloverIfNeeded({ ...defaultState, ...parsed });
+    const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
+    /* Si no hay preferencia explícita de sidebar guardada, aplicar el
+       default móvil. Usuarios existentes con sidebarCollapsed guardado
+       (true o false) mantienen su elección sin cambios. */
+    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
+      return { ...merged, sidebarCollapsed: true };
+    }
+    return merged;
   } catch (e) {
-    return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
+    return {
+      ...defaultState,
+      lang: _detectLang(),
+      lastActiveDay: new Date().toDateString(),
+      ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
+    };
   }
 }
 
@@ -306,6 +330,8 @@ function ensureDayFresh() {
     _state = next;
     persistState();
     _listeners.forEach(l => l());
+    // _state ya tiene el history del día archivado — comprobar stats.
+    try { checkStatsAchievements(); } catch (e) {}
   }
 }
 
@@ -461,6 +487,46 @@ function checkRoutineCountAchievements(category) {
   if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
   if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
   if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
+}
+
+/* Detectores de logros de Estadísticas — sesión 46.
+   Se llama desde ensureDayFresh() después de un rollover (cuando
+   _state ya tiene el history actualizado con el día archivado).
+   unlockAchievement es idempotente: correr esto múltiples veces es inocuo.
+
+   - stats.month.first : cualquier mes con ≥20 días de actividad en history.
+   - stats.month.focus : cualquier mes con ≥600 min (10h) de foco.
+   - stats.year.first  : cualquier año con los 12 meses presentes en history.
+   - stats.streak.30   : cableado como umbral extra en updateStreak (no aquí). */
+function checkStatsAchievements() {
+  const { history } = _state;
+  const days   = history.days   || {};
+  const months = history.months || {};
+
+  // stats.month.first: busca cualquier mes-año con ≥20 entradas en history.days
+  const monthDayCounts = {};
+  Object.keys(days).forEach(d => {
+    const mk = d.slice(0, 7);
+    monthDayCounts[mk] = (monthDayCounts[mk] || 0) + 1;
+  });
+  if (Object.values(monthDayCounts).some(n => n >= 20)) {
+    unlockAchievement('stats.month.first');
+  }
+
+  // stats.month.focus: busca cualquier mes con ≥600 min de foco acumulados
+  if (Object.values(months).some(m => m.focusMinutes >= 600)) {
+    unlockAchievement('stats.month.focus');
+  }
+
+  // stats.year.first: busca cualquier año con los 12 meses presentes
+  const yearMonthCounts = {};
+  Object.keys(months).forEach(k => {
+    const yr = k.slice(0, 4);
+    yearMonthCounts[yr] = (yearMonthCounts[yr] || 0) + 1;
+  });
+  if (Object.values(yearMonthCounts).some(n => n >= 12)) {
+    unlockAchievement('stats.year.first');
+  }
 }
 
 /* Detector master.retreat — sesión 34.
@@ -695,7 +761,7 @@ function updateStreak() {
   if (current >= 3) unlockAchievement('streak.3');
   if (current >= 7) unlockAchievement('streak.7');
   if (current >= 14) unlockAchievement('streak.14');
-  if (current >= 30) unlockAchievement('streak.30');
+  if (current >= 30) { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
   if (current >= 60) unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
   if (current >= 365) unlockAchievement('streak.365');

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.25.0</title>
+  <title>PACE · Foco · Cuerpo — v0.24.0</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <style>
@@ -332,7 +332,7 @@ window.PACE_STRINGS = {
     'topbar.mode.focus':             'Foco',
     'topbar.mode.pause':             'Pausa',
     'topbar.mode.long':              'Larga',
-    'topbar.stats.title':            'Ritmo (S)',
+    'topbar.stats.title':            'Ritmo semanal (S)',
     'topbar.stats.aria':             'Ver estadísticas',
     'topbar.achievements.title':     'Logros (L)',
     'topbar.achievements.aria':      'Ver logros',
@@ -502,8 +502,8 @@ window.PACE_STRINGS = {
     'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
 
     // Stats
-    'stats.tag':                       'Estadísticas',
-    'stats.title':                     'Ritmo',
+    'stats.tag':                       'Semana',
+    'stats.title':                     'Ritmo semanal',
     'stats.subtitle':                  'Métricas suaves. Sin ansiedad, sin comparación.',
     'stats.unit.min':                  'min',
     'stats.unit.glasses':              'vasos',
@@ -550,7 +550,6 @@ window.PACE_STRINGS = {
     'ach.cat.maestria':                'Maestría',
     'ach.cat.secretos':                'Secretos',
     'ach.cat.estacionales':            'Estacionales',
-    'ach.cat.stats':                   'Estadísticas',
     'ach.seal.soon':                   'Pronto',
     'ach.seal.secret':                 'Secreto',
     'ach.seal.discover':               'Por descubrir',
@@ -661,7 +660,7 @@ window.PACE_STRINGS = {
     'topbar.mode.focus':             'Focus',
     'topbar.mode.pause':             'Pause',
     'topbar.mode.long':              'Long',
-    'topbar.stats.title':            'Rhythm (S)',
+    'topbar.stats.title':            'Weekly rhythm (S)',
     'topbar.stats.aria':             'View stats',
     'topbar.achievements.title':     'Achievements (L)',
     'topbar.achievements.aria':      'View achievements',
@@ -831,8 +830,8 @@ window.PACE_STRINGS = {
     'hydrate.tip':                     'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 
     // Stats
-    'stats.tag':                       'Stats',
-    'stats.title':                     'Rhythm',
+    'stats.tag':                       'Week',
+    'stats.title':                     'Weekly rhythm',
     'stats.subtitle':                  'Soft metrics. No anxiety, no comparison.',
     'stats.unit.min':                  'min',
     'stats.unit.glasses':              'glasses',
@@ -879,7 +878,6 @@ window.PACE_STRINGS = {
     'ach.cat.maestria':                'Mastery',
     'ach.cat.secretos':                'Secrets',
     'ach.cat.estacionales':            'Seasonal',
-    'ach.cat.stats':                   'Statistics',
     'ach.seal.soon':                   'Soon',
     'ach.seal.secret':                 'Secret',
     'ach.seal.discover':               'To discover',
@@ -1234,7 +1232,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.25.0';
+const PACE_VERSION = 'v0.24.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -1358,44 +1356,20 @@ const defaultState = {
 let _state = loadState();
 const _listeners = new Set();
 
-function isMobileViewport() {
-  return typeof window !== 'undefined' && window.matchMedia &&
-         window.matchMedia('(max-width: 768px)').matches;
-}
-
 function loadState() {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) {
-      /* Primer arranque en móvil: colapsar sidebar para que el usuario
-         vea el Pomodoro directamente. En desktop arranca abierta. */
-      return {
-        ...defaultState,
-        lang: _detectLang(),
-        lastActiveDay: new Date().toDateString(),
-        ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
-      };
+      return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
     }
     const parsed = JSON.parse(raw);
     /* Si el usuario no tiene lang guardado (instalación previa a i18n),
        detectarlo desde navigator.language y persistirlo. */
     if (!parsed.lang) parsed.lang = _detectLang();
-    const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
-    /* Si no hay preferencia explícita de sidebar guardada, aplicar el
-       default móvil. Usuarios existentes con sidebarCollapsed guardado
-       (true o false) mantienen su elección sin cambios. */
-    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
-      return { ...merged, sidebarCollapsed: true };
-    }
-    return merged;
+    return rolloverIfNeeded({ ...defaultState, ...parsed });
   } catch (e) {
-    return {
-      ...defaultState,
-      lang: _detectLang(),
-      lastActiveDay: new Date().toDateString(),
-      ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
-    };
+    return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
   }
 }
 
@@ -1551,8 +1525,6 @@ function ensureDayFresh() {
     _state = next;
     persistState();
     _listeners.forEach(l => l());
-    // _state ya tiene el history del día archivado — comprobar stats.
-    try { checkStatsAchievements(); } catch (e) {}
   }
 }
 
@@ -1708,46 +1680,6 @@ function checkRoutineCountAchievements(category) {
   if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
   if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
   if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
-}
-
-/* Detectores de logros de Estadísticas — sesión 46.
-   Se llama desde ensureDayFresh() después de un rollover (cuando
-   _state ya tiene el history actualizado con el día archivado).
-   unlockAchievement es idempotente: correr esto múltiples veces es inocuo.
-
-   - stats.month.first : cualquier mes con ≥20 días de actividad en history.
-   - stats.month.focus : cualquier mes con ≥600 min (10h) de foco.
-   - stats.year.first  : cualquier año con los 12 meses presentes en history.
-   - stats.streak.30   : cableado como umbral extra en updateStreak (no aquí). */
-function checkStatsAchievements() {
-  const { history } = _state;
-  const days   = history.days   || {};
-  const months = history.months || {};
-
-  // stats.month.first: busca cualquier mes-año con ≥20 entradas en history.days
-  const monthDayCounts = {};
-  Object.keys(days).forEach(d => {
-    const mk = d.slice(0, 7);
-    monthDayCounts[mk] = (monthDayCounts[mk] || 0) + 1;
-  });
-  if (Object.values(monthDayCounts).some(n => n >= 20)) {
-    unlockAchievement('stats.month.first');
-  }
-
-  // stats.month.focus: busca cualquier mes con ≥600 min de foco acumulados
-  if (Object.values(months).some(m => m.focusMinutes >= 600)) {
-    unlockAchievement('stats.month.focus');
-  }
-
-  // stats.year.first: busca cualquier año con los 12 meses presentes
-  const yearMonthCounts = {};
-  Object.keys(months).forEach(k => {
-    const yr = k.slice(0, 4);
-    yearMonthCounts[yr] = (yearMonthCounts[yr] || 0) + 1;
-  });
-  if (Object.values(yearMonthCounts).some(n => n >= 12)) {
-    unlockAchievement('stats.year.first');
-  }
 }
 
 /* Detector master.retreat — sesión 34.
@@ -1982,7 +1914,7 @@ function updateStreak() {
   if (current >= 3) unlockAchievement('streak.3');
   if (current >= 7) unlockAchievement('streak.7');
   if (current >= 14) unlockAchievement('streak.14');
-  if (current >= 30) { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
+  if (current >= 30) unlockAchievement('streak.30');
   if (current >= 60) unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
   if (current >= 365) unlockAchievement('streak.365');
@@ -3361,7 +3293,7 @@ function ToastHost() {
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
         if (!a) return;
-        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg };
+        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         setTimeout(() => {
@@ -3404,12 +3336,7 @@ function ToastHost() {
             fontFamily: 'var(--font-display)',
             fontStyle: 'italic',
             fontSize: 18,
-          }}>
-            {toast.glyphSvg
-              ? <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: toast.glyphSvg }} />
-              : <span style={{ fontStyle: 'italic' }}>{toast.glyph}</span>
-            }
-          </div>
+          }}>{toast.glyph}</div>
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>
@@ -6849,43 +6776,21 @@ Object.assign(window, { BreakMenu });
   <script type="text/babel">
 /* PACE · Logros (Sellos tipo libreta de campo) */
 
-/* SVG inline — Dirección D (Constelaciones). sesión 46.
-   viewBox 24×24, currentColor, puntos rellenos + líneas finísimas (0.5–0.6 px).
-   El unicode `glyph` permanece como fallback. */
-const SVG_PFX = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">`;
-const SVG_SFX = `</svg>`;
-const g = (body) => SVG_PFX + body + SVG_SFX;
-
-const GLYPH_SVG = {
-  'first.step':    g(`<circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="5.5" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
-  'first.breath':  g(`<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/><path d="M12 5 L12 19" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
-  'first.stretch': g(`<circle cx="4" cy="15" r="1.2" fill="currentColor"/><circle cx="12" cy="8" r="1.2" fill="currentColor"/><circle cx="20" cy="15" r="1.2" fill="currentColor"/><path d="M4 15 L12 8 L20 15" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
-  'first.sip':     g(`<path d="M12 3 C16 8 19 13 12 20 C5 13 8 8 12 3 Z" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="12" cy="14" r="1.3" fill="currentColor"/>`),
-  'first.extra':   g(`<circle cx="4" cy="15" r="1.2" fill="currentColor"/><circle cx="20" cy="15" r="1.2" fill="currentColor"/><path d="M4 15 C4 6 20 6 20 15" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
-  'first.cycle':   g(`<circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/>`),
-  'first.ritual':  g(`<circle cx="12" cy="4" r="1.2" fill="currentColor"/><circle cx="20" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="20" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 4 L12 20 M4 12 L20 12" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
-  'first.day':     g(`<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="4" cy="14" r="1.2" fill="currentColor"/><circle cx="20" cy="14" r="1.2" fill="currentColor"/><path d="M4 14 A8 8 0 0 1 20 14" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
-  'streak.3':      g(`<circle cx="6" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="18" cy="12" r="1.4" fill="currentColor"/><path d="M6 12 L18 12" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
-  'secret.cow.click': g(`<circle cx="7" cy="9" r="1.2" fill="currentColor"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/><circle cx="17" cy="9" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/><circle cx="19" cy="17" r="1.2" fill="currentColor"/><circle cx="20" cy="7" r="1" fill="currentColor" opacity="0.7"/><path d="M5 17 L7 9 L12 14 L17 9 L19 17" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
-};
-/* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
-GLYPH_SVG['first.plan'] = GLYPH_SVG['first.ritual'];
-
 const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
-  { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
-  { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼', glyphSvg: GLYPH_SVG['first.breath'] },
-  { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera movilidad', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
-  { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌', glyphSvg: GLYPH_SVG['first.sip'] },
-  { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
-  { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
-  { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
-  { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: '1 día de uso', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
-  { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
+  { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦' },
+  { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼' },
+  { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera movilidad', glyph: '𓂃' },
+  { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌' },
+  { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕' },
+  { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯' },
+  { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧' },
+  { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: '1 día de uso', glyph: '☾' },
+  { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día', glyph: '✓' },
   { id: 'first.return', cat: 'primeros', title: 'Regresas', desc: 'Abre la app al día siguiente', glyph: '↻' },
 
   // Constancia (11-25)
-  { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III', glyphSvg: GLYPH_SVG['streak.3'] },
+  { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III' },
   { id: 'streak.7', cat: 'constancia', title: 'Semana vaca', desc: '7 días seguidos', glyph: 'VII' },
   { id: 'streak.14', cat: 'constancia', title: 'Quince días', desc: '14 días seguidos', glyph: 'XIV' },
   { id: 'streak.30', cat: 'constancia', title: 'Luna llena', desc: '30 días seguidos', glyph: '●' },
@@ -6951,7 +6856,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '100 logros', glyph: 'C' },
 
   // Secretos (71-90)
-  { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
+  { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', secret: true },
   { id: 'secret.konami', cat: 'secretos', title: 'Código oculto', desc: '↑↑↓↓←→←→BA', glyph: '?', secret: true },
   { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
   { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
@@ -6977,12 +6882,6 @@ const ACHIEVEMENT_CATALOG = [
      más cálida (el resto de secretos son '?'). */
   { id: 'secret.supporter', cat: 'secretos', title: 'Sostienes el pasto', desc: 'Apoyaste el proyecto', glyph: '✦', secret: true },
 
-  // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
-  { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
-  { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Diez horas de foco en un mes', glyph: '✦' },
-  { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
-  { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Un mes seguido sin perder el ritmo', glyph: '✦' },
-
   // Estacionales (91-100)
   { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },
   { id: 'season.summer', cat: 'estacionales', title: 'Verano', desc: '1 sesión/día en verano', glyph: '☀' },
@@ -7003,7 +6902,6 @@ const CAT_META = {
   maestria: { labelKey: 'ach.cat.maestria', color: 'var(--achievement)' },
   secretos: { labelKey: 'ach.cat.secretos', color: 'var(--ink-2)' },
   estacionales: { labelKey: 'ach.cat.estacionales', color: 'var(--move)' },
-  estadisticas: { labelKey: 'ach.cat.stats', color: 'var(--hydrate)' },
 };
 
 /* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
@@ -7043,8 +6941,6 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'master.collector.half', 'master.collector.full',
   'master.silent.day', 'master.retreat',
   'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
-  // Estadísticas (4/4) — sesión 46
-  'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
@@ -7055,21 +6951,6 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'secret.aged', 'secret.dark.mode', 'secret.mono',
   'secret.seal', 'secret.illustrated',
 ]);
-
-/* Renderiza el glifo de un logro. Si tiene glyphSvg (Constelaciones), lo inyecta
-   via dangerouslySetInnerHTML. Fallback: glyph unicode en italic. El wrapper hereda
-   currentColor del contenedor padre, así el mismo SVG funciona en cualquier paleta. */
-function renderGlyph(a, style) {
-  if (a.glyphSvg) {
-    return (
-      <span
-        style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%', ...style }}
-        dangerouslySetInnerHTML={{ __html: a.glyphSvg }}
-      />
-    );
-  }
-  return <span style={{ fontStyle: 'italic', ...style }}>{a.glyph}</span>;
-}
 
 function isImplemented(a) {
   // Los secretos siempre se pintan como secretos (revelen o no).
@@ -7198,9 +7079,12 @@ function Seal({ achievement, unlocked, implemented, color }) {
         fontSize: 22,
         position: 'relative',
       }}>
-        <span style={{ opacity: isComingSoon ? 0.25 : 1, width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
-          {isSecret ? <span style={{ fontStyle: 'italic' }}>?</span> : renderGlyph(a)}
-        </span>
+        <span style={{
+          fontStyle: 'italic',
+          // En "pronto" el glifo queda casi fantasma — se intuye pero no se
+          // afirma. En locked normal se mantiene legible para guiar al usuario.
+          opacity: isComingSoon ? 0.25 : 1,
+        }}>{isSecret ? '?' : a.glyph}</span>
         {/* Anillo externo sutil */}
         <div style={{
           position: 'absolute', inset: -4,
@@ -8552,11 +8436,11 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
         min-height: 48px !important;
         gap: 4px !important;
       }
-      /* Tabs Foco/Pausa/Larga: ocultos en móvil.
-         El modo se elige via BreakMenu post-Pomodoro; libera espacio
-         para los 3 iconos de la derecha sin solapamiento. */
-      [data-pace-topbar] [data-pace-tabs] {
-        display: none !important;
+      /* Tabs Foco/Pausa/Larga: más compactos */
+      [data-pace-topbar] [data-pace-tabs] button {
+        padding: 5px 12px !important;
+        font-size: 10px !important;
+        letter-spacing: 0.14em !important;
       }
       /* Iconos top-right: hit target 40x40 */
       [data-pace-topbar] [data-pace-topbar-icon] {

@@ -51,11 +51,11 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
         min-height: 48px !important;
         gap: 4px !important;
       }
-      /* Tabs Foco/Pausa/Larga: más compactos */
-      [data-pace-topbar] [data-pace-tabs] button {
-        padding: 5px 12px !important;
-        font-size: 10px !important;
-        letter-spacing: 0.14em !important;
+      /* Tabs Foco/Pausa/Larga: ocultos en móvil.
+         El modo se elige via BreakMenu post-Pomodoro; libera espacio
+         para los 3 iconos de la derecha sin solapamiento. */
+      [data-pace-topbar] [data-pace-tabs] {
+        display: none !important;
       }
       /* Iconos top-right: hit target 40x40 */
       [data-pace-topbar] [data-pace-topbar-icon] {

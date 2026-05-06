@@ -8,7 +8,9 @@
       "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE_standalone.html','utf8'\\); const lines=html.split\\('\\\\n'\\); console.log\\('Total lines:', lines.length\\); console.log\\('Last 20 lines:'\\); lines.slice\\(-20\\).forEach\\(\\(l,i\\)=>console.log\\(lines.length-20+i+1, ':', l.substring\\(0,120\\)\\)\\);\")",
       "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE.html','utf8'\\); const scripts=html.match\\(/<script type=\\\\\"text\\\\/babel\\\\\" src=\\\\\"[^\\\\\"]+\\\\\"><\\\\/script>/g\\); console.log\\('Scripts in PACE.html:'\\); scripts.forEach\\(s=>console.log\\(' ',s\\)\\);\")",
       "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE.html','utf8'\\); const lines=html.split\\('\\\\n'\\); console.log\\('Total lines PACE.html:', lines.length\\); console.log\\('Last 20 lines:'\\); lines.slice\\(-20\\).forEach\\(\\(l,i\\)=>console.log\\(lines.length-20+i+1, ':', l.substring\\(0,120\\)\\)\\);\")",
-      "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE_standalone.html','utf8'\\); console.log\\('Ends with </html>:', html.trim\\(\\).endsWith\\('</html>'\\)\\); console.log\\('Contains </body>:', html.includes\\('</body>'\\)\\); console.log\\('Contains serviceWorker register:', html.includes\\('serviceWorker.register'\\)\\);\")"
+      "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE_standalone.html','utf8'\\); console.log\\('Ends with </html>:', html.trim\\(\\).endsWith\\('</html>'\\)\\); console.log\\('Contains </body>:', html.includes\\('</body>'\\)\\); console.log\\('Contains serviceWorker register:', html.includes\\('serviceWorker.register'\\)\\);\")",
+      "Bash(xxd)",
+      "PowerShell(\\(Get-ChildItem \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\"\\).Count)"
     ]
   }
 }

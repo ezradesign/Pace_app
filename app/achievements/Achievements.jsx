@@ -1,20 +1,42 @@
 /* PACE · Logros (Sellos tipo libreta de campo) */
 
+/* SVG inline — Dirección D (Constelaciones). sesión 46.
+   viewBox 24×24, currentColor, puntos rellenos + líneas finísimas (0.5–0.6 px).
+   El unicode `glyph` permanece como fallback. */
+const SVG_PFX = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">`;
+const SVG_SFX = `</svg>`;
+const g = (body) => SVG_PFX + body + SVG_SFX;
+
+const GLYPH_SVG = {
+  'first.step':    g(`<circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="5.5" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
+  'first.breath':  g(`<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/><path d="M12 5 L12 19" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
+  'first.stretch': g(`<circle cx="4" cy="15" r="1.2" fill="currentColor"/><circle cx="12" cy="8" r="1.2" fill="currentColor"/><circle cx="20" cy="15" r="1.2" fill="currentColor"/><path d="M4 15 L12 8 L20 15" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
+  'first.sip':     g(`<path d="M12 3 C16 8 19 13 12 20 C5 13 8 8 12 3 Z" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="12" cy="14" r="1.3" fill="currentColor"/>`),
+  'first.extra':   g(`<circle cx="4" cy="15" r="1.2" fill="currentColor"/><circle cx="20" cy="15" r="1.2" fill="currentColor"/><path d="M4 15 C4 6 20 6 20 15" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
+  'first.cycle':   g(`<circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/>`),
+  'first.ritual':  g(`<circle cx="12" cy="4" r="1.2" fill="currentColor"/><circle cx="20" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="20" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 4 L12 20 M4 12 L20 12" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
+  'first.day':     g(`<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="4" cy="14" r="1.2" fill="currentColor"/><circle cx="20" cy="14" r="1.2" fill="currentColor"/><path d="M4 14 A8 8 0 0 1 20 14" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
+  'streak.3':      g(`<circle cx="6" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="18" cy="12" r="1.4" fill="currentColor"/><path d="M6 12 L18 12" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
+  'secret.cow.click': g(`<circle cx="7" cy="9" r="1.2" fill="currentColor"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/><circle cx="17" cy="9" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/><circle cx="19" cy="17" r="1.2" fill="currentColor"/><circle cx="20" cy="7" r="1" fill="currentColor" opacity="0.7"/><path d="M5 17 L7 9 L12 14 L17 9 L19 17" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
+};
+/* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
+GLYPH_SVG['first.plan'] = GLYPH_SVG['first.ritual'];
+
 const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
-  { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦' },
-  { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼' },
-  { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera movilidad', glyph: '𓂃' },
-  { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌' },
-  { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕' },
-  { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯' },
-  { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧' },
-  { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: '1 día de uso', glyph: '☾' },
-  { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día', glyph: '✓' },
+  { id: 'first.step', cat: 'primeros', title: 'Primer paso', desc: 'Completa tu primer Pomodoro', glyph: '✦', glyphSvg: GLYPH_SVG['first.step'] },
+  { id: 'first.breath', cat: 'primeros', title: 'Primer aliento', desc: 'Tu primera sesión de respiración', glyph: '𓇼', glyphSvg: GLYPH_SVG['first.breath'] },
+  { id: 'first.stretch', cat: 'primeros', title: 'Primer estirón', desc: 'Tu primera movilidad', glyph: '𓂃', glyphSvg: GLYPH_SVG['first.stretch'] },
+  { id: 'first.sip', cat: 'primeros', title: 'Primer sorbo', desc: 'Tu primer vaso de agua', glyph: '◌', glyphSvg: GLYPH_SVG['first.sip'] },
+  { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
+  { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
+  { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
+  { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: '1 día de uso', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
+  { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
   { id: 'first.return', cat: 'primeros', title: 'Regresas', desc: 'Abre la app al día siguiente', glyph: '↻' },
 
   // Constancia (11-25)
-  { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III' },
+  { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III', glyphSvg: GLYPH_SVG['streak.3'] },
   { id: 'streak.7', cat: 'constancia', title: 'Semana vaca', desc: '7 días seguidos', glyph: 'VII' },
   { id: 'streak.14', cat: 'constancia', title: 'Quince días', desc: '14 días seguidos', glyph: 'XIV' },
   { id: 'streak.30', cat: 'constancia', title: 'Luna llena', desc: '30 días seguidos', glyph: '●' },
@@ -80,7 +102,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '100 logros', glyph: 'C' },
 
   // Secretos (71-90)
-  { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', secret: true },
+  { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
   { id: 'secret.konami', cat: 'secretos', title: 'Código oculto', desc: '↑↑↓↓←→←→BA', glyph: '?', secret: true },
   { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
   { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
@@ -106,6 +128,12 @@ const ACHIEVEMENT_CATALOG = [
      más cálida (el resto de secretos son '?'). */
   { id: 'secret.supporter', cat: 'secretos', title: 'Sostienes el pasto', desc: 'Apoyaste el proyecto', glyph: '✦', secret: true },
 
+  // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
+  { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
+  { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Diez horas de foco en un mes', glyph: '✦' },
+  { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
+  { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Un mes seguido sin perder el ritmo', glyph: '✦' },
+
   // Estacionales (91-100)
   { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },
   { id: 'season.summer', cat: 'estacionales', title: 'Verano', desc: '1 sesión/día en verano', glyph: '☀' },
@@ -126,6 +154,7 @@ const CAT_META = {
   maestria: { labelKey: 'ach.cat.maestria', color: 'var(--achievement)' },
   secretos: { labelKey: 'ach.cat.secretos', color: 'var(--ink-2)' },
   estacionales: { labelKey: 'ach.cat.estacionales', color: 'var(--move)' },
+  estadisticas: { labelKey: 'ach.cat.stats', color: 'var(--hydrate)' },
 };
 
 /* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
@@ -165,6 +194,8 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'master.collector.half', 'master.collector.full',
   'master.silent.day', 'master.retreat',
   'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
+  // Estadísticas (4/4) — sesión 46
+  'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
@@ -175,6 +206,21 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'secret.aged', 'secret.dark.mode', 'secret.mono',
   'secret.seal', 'secret.illustrated',
 ]);
+
+/* Renderiza el glifo de un logro. Si tiene glyphSvg (Constelaciones), lo inyecta
+   via dangerouslySetInnerHTML. Fallback: glyph unicode en italic. El wrapper hereda
+   currentColor del contenedor padre, así el mismo SVG funciona en cualquier paleta. */
+function renderGlyph(a, style) {
+  if (a.glyphSvg) {
+    return (
+      <span
+        style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%', ...style }}
+        dangerouslySetInnerHTML={{ __html: a.glyphSvg }}
+      />
+    );
+  }
+  return <span style={{ fontStyle: 'italic', ...style }}>{a.glyph}</span>;
+}
 
 function isImplemented(a) {
   // Los secretos siempre se pintan como secretos (revelen o no).
@@ -303,12 +349,9 @@ function Seal({ achievement, unlocked, implemented, color }) {
         fontSize: 22,
         position: 'relative',
       }}>
-        <span style={{
-          fontStyle: 'italic',
-          // En "pronto" el glifo queda casi fantasma — se intuye pero no se
-          // afirma. En locked normal se mantiene legible para guiar al usuario.
-          opacity: isComingSoon ? 0.25 : 1,
-        }}>{isSecret ? '?' : a.glyph}</span>
+        <span style={{ opacity: isComingSoon ? 0.25 : 1, width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
+          {isSecret ? <span style={{ fontStyle: 'italic' }}>?</span> : renderGlyph(a)}
+        </span>
         {/* Anillo externo sutil */}
         <div style={{
           position: 'absolute', inset: -4,

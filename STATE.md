@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.24.0
-**Última sesión:** #45 — 2026-05-06 · fix(standalone): reparar build post-s44 (truncamiento transitorio)
-**Última actualización de este archivo:** 2026-05-06 · sesión 45
-**Build entregado:** `PACE_standalone.html` v0.24.0 (468 KB — regenerado limpio en s45)
+**Versión actual:** v0.25.0
+**Última sesión:** #46 — 2026-05-06 · feat: stats achievements + mobile UX fixes + 10 constellation glyphs
+**Última actualización de este archivo:** 2026-05-06 · sesión 46
+**Build entregado:** `PACE_standalone.html` v0.25.0 (476 KB — cierra con `</body></html>`)
 
 ---
 
@@ -45,11 +45,12 @@
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
 | `app/stats/YearView.jsx` | Heatmap anual — helpers de datos + componente YearView | **v0.24.0** (nuevo — s44) |
 | `app/stats/StatsPanel.jsx` | Panel stats — tabs Semana/Mes/Año + MonthHeatmap + YearView | **v0.24.0** (YearView extraído a propio archivo, +jump año→mes — s44) |
-| `app/state.jsx` | Store global + rollover + toast buffer + history | **v0.23.0** (+history days/months/years, +migration guard, rollover archiva día — s43) |
+| `app/state.jsx` | Store global + rollover + toast buffer + history | **v0.25.0** (isMobileViewport + loadState móvil + checkStatsAchievements — s46) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
-| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.21.0** (achievement.unlock/secret al mostrar toast — s40) |
+| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** (glyphSvg en full + render SVG condicional — s46) |
+| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.25.0** (GLYPH_SVG 11 entradas + renderGlyph + Seal + cat estadisticas — s46) |
 
-Backups vigentes (9):
+Backups vigentes (10):
 - `backups/PACE_standalone_v0.16.0_20260505.html`
 - `backups/PACE_standalone_v0.17.0_20260505.html`
 - `backups/PACE_standalone_v0.18.0_20260505.html`
@@ -59,42 +60,48 @@ Backups vigentes (9):
 - `backups/PACE_standalone_v0.22.0_20260506.html`
 - `backups/PACE_standalone_v0.22.1_20260506.html`
 - `backups/PACE_standalone_v0.23.0_20260506.html`
+- `backups/PACE_standalone_v0.24.0_20260506.html`
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 45 · v0.24.0 · fix(standalone): reparar build post-s44**
+**Sesión 46 · v0.24.0 → v0.25.0 · feat: stats achievements + mobile UX fixes + 10 constellation glyphs**
 
 ### Qué se hizo
 
-El `PACE_standalone.html` entregado en s44 estaba truncado: terminaba en
-`window` (mitad del bloque Service Worker), sin `</body>` ni `</html>`.
-`PACE.html` funcionaba correctamente; el problema era solo el standalone.
+5 bloques ejecutados en orden estricto B → C2 → C1 → A → D.
 
-**Diagnóstico:**
-- Causa: error transitorio de escritura en s44 (no reproducible; `build-standalone.js` funciona correctamente).
-- Sin `</script>` en YearView.jsx / StatsPanel.jsx / main.jsx.
-- El archivo roto midió 461,549 bytes (451 KB); el nuevo mide 479,104 bytes (468 KB).
+**B** — Renombrado "Ritmo semanal" → "Ritmo" en strings.js (panel ya es multi-tab).
 
-**Fix:** ejecutar `node build-standalone.js` de nuevo. El nuevo standalone
-cierra correctamente con el bloque Service Worker + `</body></html>`.
-Sin cambios en código fuente → versión permanece **v0.24.0**.
+**C2** — Sidebar colapsado en primera carga móvil: nueva `isMobileViewport()` en `state.jsx`;
+`loadState()` aplica `sidebarCollapsed: true` en móvil si no hay preferencia guardada.
 
-**Nota:** el standalone roto fue sobreescrito antes de poder guardarlo como
-backup diagnóstico. No hay `backups/PACE_standalone_v0.24.0_broken_*.html`.
+**C1** — Tabs TopBar (Foco/Pausa/Larga) ocultos en ≤768px vía CSS `display: none !important`
+en `main.jsx`. Sin regresión: BreakMenu maneja la selección post-Pomodoro.
+
+**A** — Nueva categoría "Estadísticas" en el catálogo de logros con 4 IDs:
+`stats.streak.30` (racha 30d), `stats.month.first` (20d/mes), `stats.month.focus` (600min/mes),
+`stats.year.first` (12 meses/año). Detector `checkStatsAchievements()` en `ensureDayFresh()`.
+
+**D** — 10 glifos SVG (Dirección D: Constelaciones). `GLYPH_SVG` + `renderGlyph()` en
+`Achievements.jsx`. `Toast.jsx` actualizado para renderizar SVG inline cuando existe `glyphSvg`.
+Invalida decisión s29 (híbrido A+B). Preview en `design/glyphs-constelaciones-preview.html`.
 
 ### Archivos modificados
-`PACE_standalone.html` (468 KB — regenerado limpio), `STATE.md`.
+`state.jsx`, `main.jsx`, `Achievements.jsx`, `Toast.jsx`, `strings.js`, `PACE.html`,
+`PACE_standalone.html` (476 KB). Nuevo: `design/glyphs-constelaciones-preview.html`,
+`docs/sessions/session-46-stats-ux-glifos.md`.
 
 ### Versión
-- Sin bump (el fix es solo de build, 0 cambios en código fuente).
+- `v0.24.0` → **`v0.25.0`** (minor · nuevas features + UX fixes).
 
 ### Pendiente funcional (próximas sesiones)
-- Logros mensuales/anuales.
+- Ampliar glifos SVG al resto del catálogo (58+ logros sin glyphSvg).
 - Iconos PNG reales (192×512) para PWA.
 - README EN + Reddit launch.
-- Glifos SVG (dirección visual pendiente de validación del usuario).
+- Detector `master.midnight.never`.
+- Claves offline Lifetime/Pase.
 
 ---
 
@@ -382,22 +389,14 @@ Logros visibles como "Próximamente" sin trigger:
 
 ## ⚠️ Decisiones activas
 
-- **Glifos del catálogo de logros: pendiente de elegir dirección
-  visual.** El set actual mezcla unicode de varias familias
-  (`✦ ❦ ❀ ☉ III VII 𓇼 𓂃 ◌ ▢ ⌢ ⚖ ※`) — funciona pero los pesos
-  visuales y las familias tipográficas no casan. Sesión 29 entrega
-  `design/glyphs-explorations.html` con 4 direcciones cerradas
-  (Línea / Sello hundido / Marca a hierro / Constelación) y
-  recomienda **híbrido A+B** (línea por defecto + sello solo en
-  logros de cierre de categoría). Cuando el usuario valide, abrir
-  sesión dedicada de redibujo (~4-5h: refactor de
-  `ACHIEVEMENT_CATALOG` para aceptar `glyphSvg` + `seal`,
-  redibujo de los 70 glifos restantes siguiendo la familia
-  formal del canvas, actualizar `Toast.jsx` para renderizar SVG).
-  Mantener el campo `glyph: string` como fallback durante la
-  migración — el localStorage de usuarios existentes guarda solo
-  IDs, no snapshots de glyph, así que la migración es **solo de
-  catálogo**, no de datos. (Sesión 29.)
+- **Glifos del catálogo de logros: Dirección D (Constelaciones) adoptada.** Sesión 46
+  invalida la decisión s29 de híbrido A+B. Patrón: círculos rellenos r=1.2–1.5,
+  líneas delgadas stroke-width=0.5–0.6, opacidad 0.4–0.6, viewBox 24×24, `currentColor`.
+  10 glifos implementados (first.\*, streak.3, secret.cow.click). El campo `glyph: string`
+  se conserva como fallback unicode en todas las entradas (migración de localStorage
+  no necesaria — solo se actualiza el catálogo). Próximo paso: dibujar los ~58 logros
+  restantes siguiendo el mismo estilo en sesiones dedicadas. (Decisión: sesión 46.
+  Histórica s29 → `docs/sessions/session-29-logros-aplazados-glifos.md`.)
 - **Sonidos sintetizados con Web Audio en lugar de samples WAV.**
   El módulo `app/ui/Sound.jsx` (sesión 28) define recetas en
   `SOUND_RECIPES` que producen tonos cortos con envolventes ADSR
@@ -613,7 +612,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 45: **54/100 logros cazables** (sin cambios). Constancia 15/15 cerrada. Maestría 13/25. i18n total ✅. PWA ✅. UX móvil ✅. Stats completo ✅ (Semana/Mes/Año — s43+44). Standalone limpio ✅ (s45 fix). Próximos frentes: (a) logros mensuales/anuales, (b) iconos PNG reales para PWA, (c) rediseño de glifos SVG, (d) claves offline Lifetime/Pase, (e) README EN + Reddit launch.
+> Estado actual tras sesión 46: **58/100 logros cazables** (+4 Estadísticas). Constancia 15/15 ✅. Maestría 13/25. Estadísticas 4/4 (categoría nueva). i18n total ✅. PWA ✅. UX móvil ✅. Stats completo ✅ (Semana/Mes/Año). Glifos SVG: 10/100 Constelaciones ✅. Standalone 476 KB ✅. Próximos frentes: (a) ampliar glifos SVG (~58 restantes), (b) iconos PNG reales para PWA, (c) detector `master.midnight.never`, (d) claves offline Lifetime/Pase, (e) README EN + Reddit launch.
 
 ### 🎯 Próxima sesión corta (recomendada)
 
