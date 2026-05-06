@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.24.0** | 2026-05-06 | fix(standalone): regenerar build roto de s44 (truncamiento transitorio — sin cambios en código fuente) | #45 | [abajo ↓](#v0240--2026-05-06--featstats-yearview) |
-| **v0.24.0** | 2026-05-06 | feat(stats): YearView — heatmap anual 53×7, score compuesto, 5 niveles tierra→oliva, navegación entre años, click celda→zoom mes, responsive scroll-snap | #44 | [abajo ↓](#v0240--2026-05-06--featstats-yearview) |
+| **v0.25.0** | 2026-05-06 | feat: stats achievements (4 logros nuevos) + mobile UX fixes (sidebar+tabs) + 10 glifos SVG constelaciones + renderGlyph en Seal y Toast | #46 | [abajo ↓](#v0250--2026-05-06--feat-stats-achievements--mobile-ux--10-constellation-glyphs) |
+| **v0.24.0** | 2026-05-06 | fix(standalone): regenerar build roto de s44 (truncamiento transitorio — sin cambios en código fuente) | #45 | [session-45](./docs/sessions/session-45-fix-standalone-build.md) |
+| **v0.24.0** | 2026-05-06 | feat(stats): YearView — heatmap anual 53×7, score compuesto, 5 niveles tierra→oliva, navegación entre años, click celda→zoom mes, responsive scroll-snap | #44 | [session-44](./docs/sessions/session-44-yearview.md) |
 | **v0.23.0** | 2026-05-06 | feat(history): capa de datos history (days/months/years) + migration guard + MonthHeatmap con tabs Semana\|Mes\|Año + tooltip responsive | #43 | [abajo ↓](#v0230--2026-05-06--feathistory-capa-de-datos--heatmap-mensual) |
 | **v0.22.1** | 2026-05-06 | fix(ux): hints teclado ocultos en móvil + title attrs eliminados en MoveSession + cronómetro reescalado (128→72px) + shortcut BreakMenu oculto | #42 | [abajo ↓](#v0221--2026-05-06--fixux-corrección-ux-móvil) |
 | **v0.22.0** | 2026-05-06 | feat: split TweakSecretsWatcher + i18n ambient toggle + 5 detectores logros (hydrate.week.perfect + master.box/coherent/rounds.10 + master.atg.20) | #41 | [session-41](./docs/sessions/session-41-drone-toggle-logros.md) |
@@ -62,6 +63,44 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.25.0] — 2026-05-06 — feat: stats achievements + mobile UX + 10 constellation glyphs
+
+Sesión 46 · 5 bloques. Nueva categoría de logros "Estadísticas", dos fixes de UX móvil,
+y 10 glifos SVG (Dirección D: Constelaciones) que arrancan la migración visual del catálogo.
+
+### Bloque B — fix(copy): "Ritmo semanal" → "Ritmo"
+- `app/i18n/strings.js`: `stats.title` ES→`'Ritmo'` / EN→`'Rhythm'`; nuevas claves
+  `stats.tag` (ES `'Estadísticas'` / EN `'Stats'`) y `ach.cat.stats` (ES/EN).
+
+### Bloque C2 — fix(mobile): sidebar colapsado en primera carga
+- `app/state.jsx`: nueva `isMobileViewport()` + `loadState()` fuerza
+  `sidebarCollapsed: true` en móvil cuando no hay preferencia guardada.
+
+### Bloque C1 — fix(mobile): ocultar tabs TopBar en ≤768px
+- `app/main.jsx`: CSS `[data-pace-topbar] [data-pace-tabs] { display: none !important; }`
+  en `@media (max-width: 768px)`. Tabs no necesarios en móvil (BreakMenu maneja modo).
+
+### Bloque A — feat(achievements): categoría "Estadísticas" con 4 logros
+- `app/achievements/Achievements.jsx`: 4 entradas nuevas (`stats.streak.30`,
+  `stats.month.first`, `stats.month.focus`, `stats.year.first`); `CAT_META.estadisticas`.
+- `app/state.jsx`: `checkStatsAchievements()` + llamada en `ensureDayFresh()`;
+  `updateStreak()` dispara `stats.streak.30` al cruzar 30 días.
+
+### Bloque D — feat(glyphs): 10 glifos SVG Constelaciones
+- **Dirección D (Constelaciones) adoptada.** Invalida decisión s29 (híbrido A+B).
+- `app/achievements/Achievements.jsx`: `GLYPH_SVG` (11 entradas), `renderGlyph()`,
+  `Seal` actualizado; campo `glyphSvg` en 11 entradas del catálogo.
+- `app/ui/Toast.jsx`: `full` incluye `glyphSvg`; render SVG condicional en el círculo.
+- **Nuevo:** `design/glyphs-constelaciones-preview.html` — preview a Seal (56px) y Toast (40px).
+
+**Archivos:** `state.jsx`, `main.jsx`, `Achievements.jsx`, `Toast.jsx`, `strings.js`, `PACE.html`.  
+**Standalone:** 476 KB — cierra con `</body></html>`.  
+**Logros cazables:** 54 → **58** (+4 Estadísticas).
+
+Detalle: [`docs/sessions/session-46-stats-ux-glifos.md`](./docs/sessions/session-46-stats-ux-glifos.md)
 
 ---
 
