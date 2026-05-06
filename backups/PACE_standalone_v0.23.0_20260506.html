@@ -846,61 +846,7 @@ window.PACE_STRINGS = {
     'stats.month.days.short':          'M,T,W,T,F,S,S',
     'stats.month.total.focus':         'Focus',
     'stats.month.total.breathe':       'Breathe',
-    'stats.month.total.move':          'Move',
-    'stats.month.total.water':         'glasses',
-    'stats.month.empty':               'No activity',
-    'stats.month.coming':              'Coming soon',
-    'stats.month.tooltip.focus':       'min focus',
-    'stats.month.tooltip.breathe':     'min breathe',
-    'stats.month.tooltip.move':        'min move',
-    'stats.month.tooltip.water':       'glasses',
-    'stats.month.hours.unit':          'h',
-    // Year view — session 44
-    'stats.year.empty':                'No activity yet in {year}',
-    'stats.year.totalActions':         '{n} actions',
-    'stats.year.activeDays':           '{n} active days',
-    'stats.year.maxStreak':            'max streak: {n} days',
-    'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
-    'stats.year.days.label':           'M,W,F',
-    'stats.year.legend.less':          'less',
-    'stats.year.legend.more':          'more',
-    'stats.year.tooltip.score':        '{n} actions',
-
-    // Achievements
-    'ach.tag':                         'Collection',
-    'ach.title':                       'Achievements',
-    'ach.subtitle':                    "Field notebook stamps. Growing collection. Explore, don't compete.",
-    'ach.available':                   'Available',
-    'ach.coming.soon':                 'Coming soon',
-    'ach.cat.primeros':                'First steps',
-    'ach.cat.constancia':              'Consistency',
-    'ach.cat.exploracion':             'Exploration',
-    'ach.cat.maestria':                'Mastery',
-    'ach.cat.secretos':                'Secrets',
-    'ach.cat.estacionales':            'Seasonal',
-    'ach.seal.soon':                   'Soon',
-    'ach.seal.secret':                 'Secret',
-    'ach.seal.discover':               'To discover',
-    'ach.toast.new':                   'New seal',
-
-    // BreatheLibrary safety modal
-    'breathe.safety.before':           'Before you start',
-    'breathe.safety.check':            'I have read this and accept responsibility',
-    'breathe.safety.cancel':           'Cancel',
-    'breathe.safety.start':            'Start session',
-    'breathe.safety.required':         'Safety briefing required',
-    'breathe.safety.body.intro.pre':   'This technique involves ',
-    'breathe.safety.body.intro.bold':  'controlled hyperventilation and breath holds',
-    'breathe.safety.body.intro.post':  '. It can cause dizziness, tingling or fainting.',
-    'breathe.safety.body.rule1.pre':   'Practice it ',
-    'breathe.safety.body.rule1.bold':  'sitting or lying down',
-    'breathe.safety.body.rule1.post':  ', never standing',
-    'breathe.safety.body.rule2':       'Never in water, while driving or at height',
-    'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
-    'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
-  },
-};
-
+    'stats.month.total.move':          'Move
 </script>
   <script type="text/babel">
 /* PACE · Traducciones EN de contenido de ejercicios
@@ -1752,226 +1698,7 @@ function completePomodoro() {
   updateStreak();
 }
 
-function completeBreathSession(routineId, durationMin) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.breathMinutes];
-  week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, respira: true },
-    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
-    /* Contador acumulado de sesiones de respiración (sesión 29).
-       Crece monótonamente; alimenta breathe.sessions.10/50. */
-    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
-  });
-  unlockAchievement('first.breath');
-  /* Umbrales de constancia por módulo. Leemos `_state` ya actualizado
-     para no usar variables de cierre (patrón validado en sesión 18). */
-  if (_state.breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
-  if (_state.breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  // Exploración
-  const explorationMap = {
-    'breathe.box.4': 'explore.box',
-    'breathe.box.6': 'explore.box',
-    'breathe.478': 'explore.478',
-    'breathe.coherent.55': 'explore.coherent',
-    'breathe.coherent.66': 'explore.coherent',
-    'breathe.rounds.full': 'explore.rounds',
-    'breathe.rounds.express': 'explore.rounds',
-    'breathe.bellows': 'explore.bhastrika',
-    'breathe.nadi.shodhana': 'explore.nadi',
-    'breathe.ujjayi': 'explore.ujjayi',
-    'breathe.kapalabhati': 'explore.kapalabhati',
-    'breathe.physiological': 'explore.physiological',
-  };
-  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  /* Contadores por tipo de rutina — master.box.10 / coherent.10 / rounds.10. */
-  const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
-  if (breathCat) {
-    const c = _state.routineCounts || {};
-    setState({ routineCounts: { ...c, [breathCat]: (c[breathCat] || 0) + 1 } });
-    checkRoutineCountAchievements(breathCat);
-  }
-  updateStreak();
-}
-
-function completeMoveSession(routineId, durationMin) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.moveMinutes];
-  week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, muevete: true },
-    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-    /* Contador acumulado de sesiones Mueve (sesión 29). Solo Mueve,
-       Extra tiene su propio camino; el bucket de stats sí los suma. */
-    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
-  });
-  unlockAchievement('first.stretch');
-  if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  updateStreak();
-}
-
-function completeExtraSession(routineId, durationMin = 0) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.moveMinutes];
-  // Los minutos de Extra se agregan al bucket de 'move' en stats (ambos son cuerpo activo),
-  // pero el plan del día y los logros sí se separan.
-  if (durationMin > 0) week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, extra: true },
-    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-  });
-  unlockAchievement('first.extra');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  // Logros de exploración de movilidad.
-  // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
-  // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
-  // move.ancestral, move.neck.3, move.desk.quick) pasaron de
-  // MOVE_ROUTINES a EXTRA_ROUTINES y ahora desembocan aquí. Los ids de
-  // rutina no se renombran (decisión activa: ids = identificadores
-  // estables), así que el map conserva los ids `move.*` aunque viva en
-  // completeExtraSession.
-  const exploreMap = {
-    'move.hips.5': 'explore.hips',
-    'move.shoulders.5': 'explore.shoulders',
-    'move.atg.knees': 'explore.atg',
-    'move.ancestral': 'explore.ancestral',
-    'move.neck.3': 'explore.neck',
-    'move.desk.quick': 'explore.desk',
-  };
-  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  /* master.atg.20 — contador de sesiones ATG Knees. */
-  if (routineId === 'move.atg.knees') {
-    const c = _state.routineCounts || {};
-    setState({ routineCounts: { ...c, atg: (c.atg || 0) + 1 } });
-    checkRoutineCountAchievements('atg');
-  }
-  updateStreak();
-}
-
-function addWaterGlass(delta = 1) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.waterGlasses];
-  week[day] = Math.max(0, (week[day] || 0) + delta);
-  const next = Math.max(0, s.water.today + delta);
-  setState({
-    water: { ...s.water, today: next },
-    plan: { ...s.plan, hidratate: next > 0 ? true : s.plan.hidratate },
-    weeklyStats: { ...s.weeklyStats, waterGlasses: week },
-  });
-  if (delta > 0) {
-    unlockAchievement('first.sip');
-    checkPlanAchievements();
-    checkSilentDayAchievement();
-    /* hydrate.week.perfect — registrar hoy si se alcanza la meta por
-       primera vez. Leemos _state actualizado (patrón sesión 18). */
-    if (_state.water.today >= _state.water.goal) {
-      const today = new Date().toDateString();
-      const goalDates = Array.isArray(_state.waterGoalDates) ? _state.waterGoalDates : [];
-      if (!goalDates.includes(today)) {
-        setState({ waterGoalDates: [...goalDates, today].slice(-14) });
-        checkHydrateWeekPerfect();
-      }
-    }
-  }
-}
-
-function updateStreak() {
-  const s = getState();
-  const today = new Date().toDateString();
-  const last = s.streak.lastActiveDate;
-  if (last === today) return;
-  const yesterday = new Date(Date.now() - 86400000).toDateString();
-  let current = s.streak.current;
-  if (last === yesterday) current += 1;
-  else current = 1;
-  const longest = Math.max(s.streak.longest, current);
-  setState({
-    streak: { current, longest, lastActiveDate: today }
-  });
-  /* `first.day` — primer día de uso. Equivale a la primera vez que
-     se llama a updateStreak con éxito, así que current === 1 lo
-     captura. unlockAchievement es idempotente. Sesión 28. */
-  if (current >= 1) unlockAchievement('first.day');
-  if (current >= 3) unlockAchievement('streak.3');
-  if (current >= 7) unlockAchievement('streak.7');
-  if (current >= 14) unlockAchievement('streak.14');
-  if (current >= 30) unlockAchievement('streak.30');
-  if (current >= 60) unlockAchievement('streak.60');
-  if (current >= 100) unlockAchievement('streak.100');
-  if (current >= 365) unlockAchievement('streak.365');
-}
-
-/* TOAST NOTIFICATIONS
-   Buffer pre-mount: si se dispara un toast antes de que ToastHost monte
-   (p.ej. desbloqueo por rollover durante loadState), se encola en
-   `_pendingToasts` y se vacía en orden cuando el primer listener se
-   registra. Evita que el primer logro de una sesión "recién abierta" se
-   pierda silenciosamente. */
-const _toastListeners = new Set();
-const _pendingToasts = [];
-function showToast(toast) {
-  const t = { ...toast, _id: Date.now() + Math.random() };
-  if (_toastListeners.size === 0) {
-    _pendingToasts.push(t);
-    return;
-  }
-  _toastListeners.forEach(l => l(t));
-}
-function onToast(listener) {
-  const wasEmpty = _toastListeners.size === 0;
-  _toastListeners.add(listener);
-  /* v0.12.1: vaciamos el buffer pendiente en cuanto hay AL MENOS un
-     listener (antes la condición era `size === 1`, que fallaba bajo
-     StrictMode cuando React monta y desmonta el host dos veces: el
-     segundo listener nunca recibía los toasts buffeados). */
-  if (wasEmpty && _pendingToasts.length > 0) {
-    const drained = _pendingToasts.splice(0);
-    // Despachamos en el próximo tick para no interferir con el mount del Host.
-    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
-  }
-  return () => _toastListeners.delete(listener);
-}
-
-// Init theme on load
-applyTheme();
-
-function setLang(lang) {
-  setState({ lang });
-}
-
-Object.assign(window, {
-  usePace, getState, setState, subscribe,
-  unlockAchievement, completePomodoro,
-  completeBreathSession, completeMoveSession, completeExtraSession,
-  addWaterGlass, addFocusMinutes, updateStreak,
-  ensureDayFresh,
-  showToast, onToast,
-  setLang,
-  PACE_VERSION,
-  // sesión 43 — history helpers (expuestos para debugging y tests)
-  zeroEntry, toISODate, archiveDayToHistory,
-  updateMonthAggregate, updateYearAggregate,
-});
-
+function comple
 </script>
 
   <script type="text/babel">
@@ -2632,7 +2359,7 @@ Object.assign(window, {
   SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
   sessionShellStyles,
 });
-
+                                 
 </script>
   <script type="text/babel">
 /* PACE · Cow logos — 3 interpretations
@@ -3145,138 +2872,7 @@ var SOUND_RECIPES = {
     tone(ctx, ctx.destination, note('C5'), t0,        0.65, 0.06, 'sine');
     tone(ctx, ctx.destination, note('E5'), t0 + 0.05, 0.55, 0.05, 'sine');
     tone(ctx, ctx.destination, note('G5'), t0 + 0.10, 0.45, 0.04, 'sine');
-    tone(ctx, ctx.destination, note('C6'), t0 + 0.15, 0.35, 0.03, 'sine');
-  },
-
-  /* --- LOGROS --- */
-  'achievement.unlock': function(ctx, t0) {
-    bell(ctx, ctx.destination, note('A5'), t0, 0.90, 0.08);
-  },
-  'achievement.secret': function(ctx, t0) {
-    glide(ctx, ctx.destination, note('C5'), note('F#3'), t0, 0.55, 0.05, 'sine');
-  },
-};
-
-/* === API PÚBLICA ===
-   playSound(name, ...args): args extra se pasan a la receta
-   (ej. dur en breathe.inhale/exhale). */
-function playSound(name) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  try {
-    var s = (typeof getState === 'function') ? getState() : null;
-    if (!s || !s.soundOn) return;
-    var ctx = getCtx();
-    if (!ctx) return;
-    ensureRunning(ctx);
-    var recipe = SOUND_RECIPES[name];
-    if (!recipe) return;
-    recipe.apply(null, [ctx, ctx.currentTime].concat(args));
-  } catch (e) {
-    /* Silencio total: el sonido nunca debe romper la app. */
-  }
-}
-
-function useSound() {
-  var play = useCallbackSound(function(name) {
-    var args = Array.prototype.slice.call(arguments);
-    playSound.apply(null, args);
-  }, []);
-  return { play: play };
-}
-
-/* === DRONE AMBIENTE (capa 2 opt-in) ===
-   Singleton. G2 ≈ 96.7 Hz · sine · peak 0.02.
-   LFO senoidal 0.1 Hz · ±0.002 para movimiento orgánico.
-   Arranca solo si soundOn && ambientOn en el momento de llamar start().
-   Activar ambientOn mid-sesión NO arranca el drone retroactivamente;
-   solo arranca al inicio de una sesión nueva (decisión de producto). */
-const ambientDrone = (() => {
-  let osc = null, gainNode = null, lfo = null, lfoGain = null;
-  let isPaused = false;
-
-  function shouldPlay() {
-    try {
-      const s = typeof getState === 'function' ? getState() : null;
-      return !!(s && s.soundOn && s.ambientOn);
-    } catch(e) { return false; }
-  }
-
-  function start() {
-    if (osc) return;
-    if (!shouldPlay()) return;
-    const ctx = getCtx(); if (!ctx) return;
-    ensureRunning(ctx);
-    const t0 = ctx.currentTime;
-    osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(note('G2'), t0);
-    gainNode = ctx.createGain();
-    gainNode.gain.setValueAtTime(0, t0);
-    gainNode.gain.linearRampToValueAtTime(0.02, t0 + 1.2);
-    lfo = ctx.createOscillator();
-    lfo.type = 'sine';
-    lfo.frequency.setValueAtTime(0.1, t0);
-    lfoGain = ctx.createGain();
-    lfoGain.gain.setValueAtTime(0.002, t0);
-    lfo.connect(lfoGain);
-    lfoGain.connect(gainNode.gain);
-    osc.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    osc.start(t0); lfo.start(t0);
-    isPaused = false;
-  }
-
-  function stop(fadeMs) {
-    if (fadeMs === undefined) fadeMs = 800;
-    if (!osc || !gainNode) return;
-    const ctx = getCtx(); if (!ctx) return;
-    const t0 = ctx.currentTime;
-    const fade = Math.max(0.1, fadeMs / 1000);
-    try {
-      gainNode.gain.cancelScheduledValues(t0);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
-      gainNode.gain.exponentialRampToValueAtTime(0.0001, t0 + fade);
-    } catch(e) {}
-    const oscRef = osc, lfoRef = lfo;
-    setTimeout(function() {
-      try { oscRef && oscRef.stop(); } catch(e) {}
-      try { lfoRef && lfoRef.stop(); } catch(e) {}
-    }, (fade + 0.1) * 1000);
-    osc = null; lfo = null; gainNode = null; lfoGain = null;
-    isPaused = false;
-  }
-
-  function pause() {
-    if (!gainNode || isPaused) return;
-    const ctx = getCtx(); if (!ctx) return;
-    const t0 = ctx.currentTime;
-    try {
-      gainNode.gain.cancelScheduledValues(t0);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
-      gainNode.gain.linearRampToValueAtTime(0, t0 + 0.4);
-    } catch(e) {}
-    isPaused = true;
-  }
-
-  function resume() {
-    if (!gainNode || !isPaused) return;
-    if (!shouldPlay()) { stop(400); return; }
-    const ctx = getCtx(); if (!ctx) return;
-    const t0 = ctx.currentTime;
-    try {
-      gainNode.gain.cancelScheduledValues(t0);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
-      gainNode.gain.linearRampToValueAtTime(0.02, t0 + 0.6);
-    } catch(e) {}
-    isPaused = false;
-  }
-
-  function isActive() { return osc !== null; }
-  return { start: start, stop: stop, pause: pause, resume: resume, isActive: isActive };
-})();
-
-Object.assign(window, { playSound, useSound, ambientDrone });
-
+    tone(ctx, ctx.destination, note('
 </script>
   <script type="text/babel">
 /* PACE · Toast (para notificar logros desbloqueados) */
@@ -3340,16 +2936,7 @@ function ToastHost() {
           <div>
             <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{toast.title}</div>
-            <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{toast.desc}</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-Object.assign(window, { ToastHost });
-
+            <div style={{ fontSize: 11, color: 'var(
 </script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
@@ -5326,44 +4913,7 @@ const focusStyles = {
     padding: '7px 16px 7px 14px',
     background: 'var(--focus)',
     color: 'var(--paper)',
-    borderRadius: 'var(--r-xs)',
-    fontSize: 12,
-    letterSpacing: 0.3,
-    fontWeight: 500,
-    border: '1px solid var(--focus)',
-    boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
-    transition: 'all 180ms',
-  },
-  startBtnSecondary: {
-    display: 'inline-flex', alignItems: 'center', gap: 7,
-    padding: '7px 16px 7px 14px',
-    background: 'var(--paper)',
-    color: 'var(--ink)',
-    borderRadius: 'var(--r-xs)',
-    fontSize: 12,
-    letterSpacing: 0.3,
-    fontWeight: 500,
-    border: '1px solid var(--line-2)',
-    transition: 'all 180ms',
-  },
-  resetCircle: {
-    width: 28, height: 28,
-    borderRadius: '50%',
-    border: '1px solid var(--line-2)',
-    background: 'var(--paper)',
-    color: 'var(--ink-2)',
-    display: 'grid', placeItems: 'center',
-    transition: 'all 180ms',
-  },
-
-  cycleDots: {
-    display: 'flex', alignItems: 'center', gap: 5,
-    marginTop: 4,
-  },
-};
-
-Object.assign(window, { FocusTimer });
-
+    borderRadius: 'var
 </script>
   <script type="text/babel">
 /* PACE · Respiración — Visual animado + getSequence
@@ -6045,40 +5595,7 @@ function BreatheSession({ routine, onExit }) {
         <div style={{
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
-          marginBottom: 8, lineHeight: 1,
-        }}>{displayLabel}</div>
-        {showCountdown && (
-          <div style={{
-            ...displayItalic,
-            fontSize: 28, color: 'var(--breathe)',
-            fontVariantNumeric: 'tabular-nums', marginTop: 4,
-          }}>{remaining}</div>
-        )}
-        <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-          {isRounds ? `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
-        </div>
-      </div>
-      <div style={{
-        display: 'flex', gap: 5,
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        maxWidth: 400,
-        margin: '0 auto',
-      }}>
-        {Array.from({ length: Math.min(totalDots, 30) }).map((_, i) => (
-          <span key={i} style={{
-            width: 4, height: 4, borderRadius: '50%',
-            background: i < activeDot ? 'var(--breathe)' : 'var(--line)',
-            transition: 'background 200ms',
-          }} />
-        ))}
-      </div>
-    </SessionShell>
-  );
-}
-
-Object.assign(window, { BreatheSession });
-
+          marginBottom: 8, li
 </script>
   <script type="text/babel">
 /* PACE · Módulo Mueve (Calistenia / Fuerza)
@@ -6384,28 +5901,7 @@ function StepGlyph({ tag, stepIdx }) {
   );
 }
 
-/* moveSessionStyles local eliminado en sesión 26. El layout de sesión
-   vive ahora en app/ui/SessionShell.jsx (sessionShellStyles). */
-
-/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
-const _paceMoveResponsive = document.getElementById('pace-move-responsive-css');
-if (!_paceMoveResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-move-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-move-timer] {
-        font-size: 72px !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-/* Export a window: sólo lo consumido fuera del módulo.
-   MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
-Object.assign(window, { MoveLibrary, MoveSession });
-
+/*
 </script>
   <script type="text/babel">
 /* PACE · Módulo Estira (Estiramientos / Movilidad)
@@ -6585,14 +6081,7 @@ function HydrateTracker({ open, onClose }) {
       <Divider style={{ margin: '24px 0 16px' }} />
 
       <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.6 }}>
-        <strong style={{ color: 'var(--ink-2)' }}>{t('hydrate.tip.label')}</strong>{' '}{t('hydrate.tip')}
-      </div>
-    </Modal>
-  );
-}
-
-Object.assign(window, { HydrateTracker });
-
+        <strong style={{ color: 'var(--ink-2)' }}>{t('hydrate.
 </script>
   <script type="text/babel">
 /* PACE · Menú post-Pomodoro
@@ -6755,23 +6244,7 @@ function BMDropIcon() {
   );
 }
 
-/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
-const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
-if (!_paceBreakResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-break-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-break-shortcut] .pace-meta {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-Object.assign(window, { BreakMenu });
-
+/* Responsive
 </script>
   <script type="text/babel">
 /* PACE · Logros (Sellos tipo libreta de campo) */
@@ -7109,8 +6582,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
   );
 }
 
-Object.assign(window, { Achievements, ACHIEVEMENT_CATALOG });
-
+Object.assign(window, { Achieveme
 </script>
   <script type="text/babel">
 /* PACE · YearView — heatmap anual — sesión 44 */
@@ -8379,7 +7851,7 @@ if (!_paceTweaksResponsive) {
 }
 
 Object.assign(window, { TweaksPanel });
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 </script>
 
   <script type="text/babel">
@@ -8977,7 +8449,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   const root = ReactDOM.createRoot(document.getElementById('pace-root'));
   root.render(<PaceApp />);
 }
-
+ 
 </script>
 
   <!-- Monta la app
@@ -9021,10 +8493,4 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
-      });
-    }
-  </script>
-</body>
-</html>
+      window

@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.23.0
-**Última sesión:** #43 — 2026-05-06 · feat(history): capa de datos history + heatmap mensual + StatsPanel
-**Última actualización de este archivo:** 2026-05-06 · sesión 43
-**Build entregado:** `PACE_standalone.html` v0.23.0 (440 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.24.0
+**Última sesión:** #45 — 2026-05-06 · fix(standalone): reparar build post-s44 (truncamiento transitorio)
+**Última actualización de este archivo:** 2026-05-06 · sesión 45
+**Build entregado:** `PACE_standalone.html` v0.24.0 (468 KB — regenerado limpio en s45)
 
 ---
 
@@ -43,12 +43,13 @@
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** (hydrate.sip/goal cableados — s40) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
-| `app/stats/StatsPanel.jsx` | Panel stats — tabs Semana/Mes/Año + MonthHeatmap | **v0.23.0** (nuevo · reemplaza WeeklyStats.jsx — s43) |
+| `app/stats/YearView.jsx` | Heatmap anual — helpers de datos + componente YearView | **v0.24.0** (nuevo — s44) |
+| `app/stats/StatsPanel.jsx` | Panel stats — tabs Semana/Mes/Año + MonthHeatmap + YearView | **v0.24.0** (YearView extraído a propio archivo, +jump año→mes — s44) |
 | `app/state.jsx` | Store global + rollover + toast buffer + history | **v0.23.0** (+history days/months/years, +migration guard, rollover archiva día — s43) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.21.0** (achievement.unlock/secret al mostrar toast — s40) |
 
-Backups vigentes (8):
+Backups vigentes (9):
 - `backups/PACE_standalone_v0.16.0_20260505.html`
 - `backups/PACE_standalone_v0.17.0_20260505.html`
 - `backups/PACE_standalone_v0.18.0_20260505.html`
@@ -57,40 +58,40 @@ Backups vigentes (8):
 - `backups/PACE_standalone_v0.21.0_20260506.html`
 - `backups/PACE_standalone_v0.22.0_20260506.html`
 - `backups/PACE_standalone_v0.22.1_20260506.html`
+- `backups/PACE_standalone_v0.23.0_20260506.html`
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 43 · v0.22.1 → v0.23.0 · feat(history): capa de datos + heatmap mensual**
+**Sesión 45 · v0.24.0 · fix(standalone): reparar build post-s44**
 
 ### Qué se hizo
 
-Dos bloques. Sin cambios en lógica existente — solo adiciones.
+El `PACE_standalone.html` entregado en s44 estaba truncado: terminaba en
+`window` (mitad del bloque Service Worker), sin `</body>` ni `</html>`.
+`PACE.html` funcionaba correctamente; el problema era solo el standalone.
 
-**BLOQUE A — Capa de datos (`state.jsx`):**
-- `history: { days, months, years }` añadido a `defaultState`. Solo se escriben entradas con dato > 0.
-- 6 funciones puras nuevas: `zeroEntry`, `toISODate`, `updateMonthAggregate`, `updateYearAggregate`, `archiveDayToHistory`, `migrateWeeklyStatsToHistory`.
-- `rolloverIfNeeded` extendido: migration guard (una sola vez) + archivo del día que termina con delta incremental sobre mes/año.
+**Diagnóstico:**
+- Causa: error transitorio de escritura en s44 (no reproducible; `build-standalone.js` funciona correctamente).
+- Sin `</script>` en YearView.jsx / StatsPanel.jsx / main.jsx.
+- El archivo roto midió 461,549 bytes (451 KB); el nuevo mide 479,104 bytes (468 KB).
 
-**BLOQUE B — UI (`StatsPanel.jsx`):**
-- `WeeklyStats.jsx` → `StatsPanel.jsx`. Script tag en `PACE.html` y JSX en `main.jsx` actualizados.
-- Tabs `Semana | Mes | Año` sobre el contenido del modal.
-- `MonthHeatmap`: grid 7 cols L→D, color por módulo dominante (5 opacidades via div interno), navegación ‹ ›, totales al pie, tooltip hover/tap responsive.
-- `YearView`: placeholder (sesión 44).
-- 15 claves i18n nuevas en ES + EN.
+**Fix:** ejecutar `node build-standalone.js` de nuevo. El nuevo standalone
+cierra correctamente con el bloque Service Worker + `</body></html>`.
+Sin cambios en código fuente → versión permanece **v0.24.0**.
+
+**Nota:** el standalone roto fue sobreescrito antes de poder guardarlo como
+backup diagnóstico. No hay `backups/PACE_standalone_v0.24.0_broken_*.html`.
 
 ### Archivos modificados
-`app/state.jsx`, `app/stats/StatsPanel.jsx` (nuevo), `app/i18n/strings.js`,
-`PACE.html`, `app/main.jsx`, `PACE_standalone.html` (440 KB),
-`backups/PACE_standalone_v0.22.1_20260506.html` (rotación).
+`PACE_standalone.html` (468 KB — regenerado limpio), `STATE.md`.
 
 ### Versión
-- **v0.22.1** → **v0.23.0** (minor · feature).
+- Sin bump (el fix es solo de build, 0 cambios en código fuente).
 
 ### Pendiente funcional (próximas sesiones)
-- YearView / mini-calendars anuales (sesión 44).
-- Logros mensuales/anuales (sesión 44 o 45).
+- Logros mensuales/anuales.
 - Iconos PNG reales (192×512) para PWA.
 - README EN + Reddit launch.
 - Glifos SVG (dirección visual pendiente de validación del usuario).
@@ -334,7 +335,7 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
 
 - ~~**PWA instalable**~~ ✅ Resuelto en sesión 37 (v0.19.0). `manifest.json` conectado, `sw.js` registrado en `PACE.html` y standalone. Deuda pendiente: iconos PNG reales (actualmente SVG).
 - ~~**Heatmap mensual**~~ ✅ Resuelto en sesión 43 (v0.23.0). `StatsPanel` con tabs Semana/Mes/Año y `MonthHeatmap` con navegación, opacidad por módulo dominante y tooltip responsive.
-- **YearView / "Año en pace"** — mini-calendars anuales estilo GitHub contributions en paleta tierra. Sesión 44.
+- ~~**YearView / "Año en pace"**~~ ✅ Resuelto en sesión 44 (v0.24.0). Heatmap 53×7 con score compuesto, 5 niveles tierra→oliva, navegación entre años, click celda→zoom mes, responsive scroll-snap.
 - **CTB (premium)** — guion de 1 sesión + pista musical + mockup
   de pantalla inmersiva antes de tocar código.
 - **Sesiones personalizadas Estira/Mueve (premium)** — mockup del
@@ -612,7 +613,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 43: **54/100 logros cazables** (sin cambios). Constancia 15/15 cerrada. Maestría 13/25. i18n total ✅. PWA ✅. UX móvil ✅. History + MonthHeatmap ✅ (s43). Próximos frentes: (a) YearView "Año en pace" (s44), (b) logros mensuales/anuales (s44-45), (c) iconos PNG reales para PWA, (d) rediseño de glifos SVG, (e) claves offline Lifetime/Pase, (f) README EN + Reddit launch.
+> Estado actual tras sesión 45: **54/100 logros cazables** (sin cambios). Constancia 15/15 cerrada. Maestría 13/25. i18n total ✅. PWA ✅. UX móvil ✅. Stats completo ✅ (Semana/Mes/Año — s43+44). Standalone limpio ✅ (s45 fix). Próximos frentes: (a) logros mensuales/anuales, (b) iconos PNG reales para PWA, (c) rediseño de glifos SVG, (d) claves offline Lifetime/Pase, (e) README EN + Reddit launch.
 
 ### 🎯 Próxima sesión corta (recomendada)
 

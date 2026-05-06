@@ -288,6 +288,16 @@ window.PACE_STRINGS = {
     'stats.month.tooltip.move':        'min mueve',
     'stats.month.tooltip.water':       'vasos',
     'stats.month.hours.unit':          'h',
+    // Vista anual — sesión 44
+    'stats.year.empty':                'Aún no hay actividad en {year}',
+    'stats.year.totalActions':         '{n} acciones',
+    'stats.year.activeDays':           '{n} días activos',
+    'stats.year.maxStreak':            'racha máx: {n} días',
+    'stats.year.months.short':         'Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic',
+    'stats.year.days.label':           'L,X,V',
+    'stats.year.legend.less':          'menos',
+    'stats.year.legend.more':          'más',
+    'stats.year.tooltip.score':        '{n} acciones',
 
     // Achievements
     'ach.tag':                         'Colección',
@@ -606,6 +616,16 @@ window.PACE_STRINGS = {
     'stats.month.tooltip.move':        'min move',
     'stats.month.tooltip.water':       'glasses',
     'stats.month.hours.unit':          'h',
+    // Year view — session 44
+    'stats.year.empty':                'No activity yet in {year}',
+    'stats.year.totalActions':         '{n} actions',
+    'stats.year.activeDays':           '{n} active days',
+    'stats.year.maxStreak':            'max streak: {n} days',
+    'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
+    'stats.year.days.label':           'M,W,F',
+    'stats.year.legend.less':          'less',
+    'stats.year.legend.more':          'more',
+    'stats.year.tooltip.score':        '{n} actions',
 
     // Achievements
     'ach.tag':                         'Collection',

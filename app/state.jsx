@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.23.0';
+const PACE_VERSION = 'v0.24.0';
 
 const defaultState = {
   // Settings / Tweaks
