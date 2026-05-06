@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PACE · Glifos Mueve · Estira — Exploración visual</title>
+  <style>
+    :root {
+      --paper: #F2EDE0;
+      --ink: #1F1C17;
+      --ink-2: #4A453C;
+      --ink-3: #8A8372;
+      --move: #9A7B4F;
+      --move-soft: rgba(154,123,79,0.12);
+      --extra: #6B7A8F;
+      --extra-soft: rgba(107,122,143,0.12);
+      --line: #C9C0A8;
+      --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+      --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-ui);
+      background: var(--paper);
+      color: var(--ink);
+      padding: 48px 32px 80px;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 36px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 22px;
+      font-weight: 500;
+      margin: 32px 0 12px;
+      color: var(--ink-2);
+    }
+    .subtitle {
+      font-family: var(--font-ui);
+      font-style: normal;
+      font-size: 13px;
+      color: var(--ink-3);
+      letter-spacing: 0.05em;
+      margin-bottom: 40px;
+    }
+    .section {
+      margin-bottom: 48px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 28px;
+      background: rgba(255,255,255,0.3);
+      transition: all 220ms ease;
+    }
+    .card:hover {
+      border-color: var(--move);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(31,28,23,0.06);
+    }
+    .glyph-preview {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .glyph-preview svg {
+      width: 40px;
+      height: 40px;
+    }
+    .label {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .tag-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: center;
+    }
+    /* Estados */
+    .state-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    .state-pill {
+      padding: 4px 10px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+    }
+    .state-pill.active {
+      color: var(--move);
+      border-color: var(--move);
+      background: var(--move-soft);
+    }
+    .state-pill.future {
+      opacity: 0.4;
+    }
+    /* Breakpoint móvil diagram */
+    .viewport-emu {
+      border: 2px dashed var(--line);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 375px;
+      padding: 20px 16px;
+      margin: 24px auto 32px;
+    }
+    .viewport-emu h3 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 16px;
+      color: var(--ink-2);
+    }
+    .mobile-glyph-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .mobile-glyph {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+    .mobile-glyph svg {
+      width: 28px;
+      height: 28px;
+    }
+    .mobile-glyph.active {
+      background: var(--move-soft);
+    }
+    .mobile-glyph.future {
+      opacity: 0.35;
+    }
+    /* Piedra filosofal: specs técnicos */
+    .spec-block {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 12px;
+      background: rgba(255,255,255,0.15);
+    }
+    .spec-block h4 {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 10px;
+    }
+    .spec-block pre {
+      font-size: 12px;
+      color: var(--ink-2);
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .spec-block code {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+    }
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 40px 0;
+    }
+    /* Paleta */
+    .color-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .color-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>PACE · Glifos Mueve · Estira</h1>
+  <p class="subtitle">Exploración visual de glifos SVG para sesiones de ejercicio — estilo anatomía botánica, trazos artesanales</p>
+
+  <!-- ── SECCION DE GLIFOS ─────────────────────────── -->
+
+  <div class="section">
+    <h2>Mueve — Trabajo de fuerza</h2>
+    <div class="grid">
+
+      <!-- PUSH: Flexiones de escritorio -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--move); background: var(--move-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--move)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Torso en push-up inclinado -->
+            <path d="M20 12 L26 16 L26 24 L20 28 L14 24 L14 16 Z" />
+            <!-- Brazos -->
+            <path d="M14 16 L8 18" />
+            <path d="M26 16 L32 14" />
+            <!-- Manos en escritorio -->
+            <path d="M8 18 L8 22" />
+            <path d="M32 12 L32 16" />
+            <!-- Cabeza -->
+            <circle cx="20" cy="20" r="2" />
+            <!-- Líneas de tensión -->
+            <path d="M16 18 L16 22" stroke-dasharray="1.5 2" />
+            <path d="M24 18 L24 22" stroke-dasharray="1.5 2" />
+          </svg>
+        </div>
+        <div class="label">Flexión inclinada</div>
+        <div class="tag-label">PUSH</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- PULL: Fondos en silla -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--move); background: var(--move-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--move)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Borde de silla -->
+            <path d="M12 10 L12 28" />
+            <path d="M28 10 L28 28" />
+            <path d="M12 28 L28 28" stroke-dasharray="2 2" />
+            <!-- Cuerpo hacia atrás -->
+            <path d="M20 10 L20 14 L16 16 L24 18 L20 20 L20 24" />
+            <!-- Brazos en tracción -->
+            <path d="M16 16 L12 14" />
+            <path d="M24 18 L28 16" />
+            <!-- Flechas de fuerza -->
+            <path d="M14 12 L14 14 L12 14" />
+            <path d="M26 14 L26 16 L28 16" />
+          </svg>
+        </div>
+        <div class="label">Fondos</div>
+        <div class="tag-label">PULL</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- LEG: Sentadilla en pared -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--move); background: var(--move-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--move)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Línea de pared -->
+            <path d="M8 4 L8 36" stroke-dasharray="2 2" />
+            <!-- Columna (postura) -->
+            <path d="M12 8 L12 24" />
+            <!-- Femur horizontal -->
+            <path d="M12 18 L20 18" />
+            <!-- Tibia vertical (90°) -->
+            <path d="M20 18 L20 28" />
+            <!-- Toque en el suelo -->
+            <path d="M18 28 L22 28" />
+            <!-- Cabeza -->
+            <circle cx="12" cy="6" r="1.5" />
+            <!-- Flecha de tensión isométrica -->
+            <path d="M14 16 L14 20 M14 18 L12 18 M14 18 L16 18" />
+          </svg>
+        </div>
+        <div class="label">Wall sit</div>
+        <div class="tag-label">LEG</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- CORE: Core silencioso -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--move); background: var(--move-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--move)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cuerpo en V (hollow hold) -->
+            <path d="M12 28 L20 14 L28 28" />
+            <!-- Piernas elevadas -->
+            <path d="M20 14 L14 10 L16 8" />
+            <path d="M20 14 L26 10 L24 8" />
+            <!-- Abdomen contraído (centro) -->
+            <path d="M16 24 L20 20 L24 24" stroke-dasharray="1.5 2" />
+            <!-- Punto de tensión -->
+            <circle cx="20" cy="22" r="1" fill="var(--move)" />
+          </svg>
+        </div>
+        <div class="label">Hollow hold</div>
+        <div class="tag-label">CORE</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- GRIP: Apretar/estirar -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--move); background: var(--move-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--move)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Antebrazo -->
+            <path d="M10 20 L26 20" />
+            <!-- Muñeca -->
+            <path d="M26 20 L28 18 L28 22 Z" />
+            <!-- Puño cerrado -->
+            <ellipse cx="30" cy="20" rx="3" ry="2" />
+            <!-- Dedos apretados -->
+            <path d="M28 18 L32 18" />
+            <path d="M28 20 L32 20" />
+            <path d="M28 22 L32 22" />
+            <!-- Línea de tensión -->
+            <path d="M20 16 L20 24" stroke-dasharray="1.5 2" />
+            <path d="M24 16 L24 24" stroke-dasharray="1.5 2" />
+          </svg>
+        </div>
+        <div class="label">Grip</div>
+        <div class="tag-label">GRIP</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- POST: Postura -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--move); background: var(--move-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--move)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Esponja dorsal (columna) -->
+            <path d="M20 6 L20 34" />
+            <!-- Barra (escápulas) -->
+            <path d="M14 12 L26 12" />
+            <path d="M14 18 L26 18" />
+            <!-- Flecha de corrección -->
+            <path d="M20 6 L20 10" />
+            <path d="M18 8 L20 10 L22 8" />
+            <!-- Chin tuck flecha -->
+            <path d="M20 28 L20 32" />
+            <path d="M18 30 L20 32 L22 30" />
+          </svg>
+        </div>
+        <div class="label">Postura</div>
+        <div class="tag-label">POST</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── ESTIRA ──────────────────────────────────────── -->
+
+  <div class="section">
+    <h2>Estira — Movilidad y estiramiento</h2>
+    <div class="grid">
+
+      <!-- SIT: Antídoto silla -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--extra); background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Figura sentada (postura colapsada) -->
+            <path d="M18 12 L16 16 L16 24 L18 28" />
+            <!-- Cabeza caída -->
+            <circle cx="18" cy="10" r="2" />
+            <!-- Brazos -->
+            <path d="M14 16 L12 20" />
+            <path d="M18 16 L22 18" />
+            <!-- Flechas de apertura (estiramiento) -->
+            <path d="M24 10 L30 6" />
+            <path d="M24 16 L30 18" />
+            <path d="M24 22 L30 26" />
+            <path d="M26 8 L30 6 L28 4" />
+            <path d="M26 14 L30 18 L32 16" />
+            <path d="M26 20 L30 26 L28 28" />
+          </svg>
+        </div>
+        <div class="label">Antídoto silla</div>
+        <div class="tag-label">SIT</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- HIP: Caderas -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--extra); background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Articulación de cadera (el punto central) -->
+            <circle cx="20" cy="20" r="2" fill="var(--extra)" />
+            <!-- Femur -->
+            <path d="M20 20 L28 24" />
+            <!-- Tibia -->
+            <path d="M28 24 L28 32" />
+            <!-- Pierna extendida (en el piso) -->
+            <path d="M20 20 L12 24" />
+            <path d="M12 24 L12 32" />
+            <!-- Flechas de rotación -->
+            <path d="M24 16 A6 6 0 0 1 30 22" />
+            <path d="M28 18 L30 22 L26 22" />
+            <!-- Línea de tensión en flexores -->
+            <path d="M18 20 L18 26" stroke-dasharray="1.5 2" />
+          </svg>
+        </div>
+        <div class="label">Caderas</div>
+        <div class="tag-label">HIP</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- SHLD: Hombros -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--extra); background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Columna -->
+            <path d="M20 6 L20 14" />
+            <!-- Clavícula -->
+            <path d="M14 12 L26 12" />
+            <!-- Humerus -->
+            <path d="M14 12 L12 24" />
+            <path d="M26 12 L28 24" />
+            <!-- Antebrazos -->
+            <path d="M12 24 L16 32" />
+            <path d="M28 24 L24 32" />
+            <!-- Círculo de rotación -->
+            <path d="M10 8 A8 8 0 0 1 30 8" stroke-dasharray="1.5 2" />
+            <path d="M24 6 L30 8 L26 12" />
+            <path d="M16 6 L10 8 L14 12" />
+          </svg>
+        </div>
+        <div class="label">Hombros</div>
+        <div class="tag-label">SHLD</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- ATG: Rodillas -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--extra); background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Femur profundo -->
+            <path d="M20 8 L20 20" />
+            <!-- Rodilla por encima del tobillo -->
+            <path d="M20 20 L24 28" />
+            <!-- Tibia profunda -->
+            <path d="M24 28 L24 34" />
+            <!-- Pie horizontal -->
+            <path d="M22 34 L26 34" />
+            <!-- Flecha de rodilla por delante del pie -->
+            <path d="M20 18 L26 18" />
+            <path d="M24 16 L26 18 L24 20" />
+            <!-- Líneas de tensión -->
+            <path d="M18 14 L18 22" stroke-dasharray="1.5 2" />
+            <path d="M22 14 L22 22" stroke-dasharray="1.5 2" />
+          </svg>
+        </div>
+        <div class="label">ATG Rodillas</div>
+        <div class="tag-label">ATG</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- ANC: Ancestral -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--extra); background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Figura en squat profundo -->
+            <path d="M18 14 L22 14 L24 22 L20 24 L16 22 Z" />
+            <!-- Cabeza -->
+            <circle cx="20" cy="10" r="2" />
+            <!-- Columna -->
+            <path d="M20 12 L20 14" />
+            <!-- Brazos colgando -->
+            <path d="M16 18 L12 24" />
+            <path d="M24 18 L28 22" />
+            <!-- Raíces/tierra -->
+            <path d="M12 28 Q20 32 28 28" stroke-dasharray="2 2" />
+            <path d="M16 30 L14 34" />
+            <path d="M24 30 L26 34" />
+          </svg>
+        </div>
+        <div class="label">Ancestral</div>
+        <div class="tag-label">ANC</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill active">Activo</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+      <!-- NECK: Cuello -->
+      <div class="card">
+        <div class="glyph-preview" style="border: 1.5px dashed var(--extra); background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Columna cervical -->
+            <path d="M20 12 L20 24" />
+            <!-- Cabeza (inclinada) -->
+            <ellipse cx="20" cy="8" rx="3" ry="4" transform="rotate(15 20 8)" />
+            <!-- Oreja al hombro -->
+            <path d="M18 14 L16 20" />
+            <path d="M22 14 L24 20" />
+            <!-- Trapecio -->
+            <path d="M14 20 L20 24 L26 20" stroke-dasharray="1.5 2" />
+            <!-- Flecha de estiramiento -->
+            <path d="M18 26 L18 30" />
+            <path d="M16 28 L18 30 L20 28" />
+          </svg>
+        </div>
+        <div class="label">Cuello</div>
+        <div class="tag-label">SIT</div>
+        <div class="state-row">
+          <span class="state-pill">Default</span>
+          <span class="state-pill future">Próximo</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── SIMULACIÓN MÓVIL ─────────────────────────────── -->
+
+  <div class="section">
+    <h2>Simulación de flujo en móvil (375×812)</h2>
+    <div class="viewport-emu">
+      <h3>Antídoto de silla — Paso 1 de 6</h3>
+      <div class="mobile-glyph-row">
+        <div class="mobile-glyph active" style="background: var(--extra-soft);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--extra)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 12 L16 16 L16 24 L18 28" />
+            <circle cx="18" cy="10" r="2" />
+            <path d="M14 16 L12 20" />
+            <path d="M18 16 L22 18" />
+            <path d="M24 10 L30 6 M24 16 L30 18 M24 22 L30 26" />
+          </svg>
+        </div>
+        <div class="mobile-glyph future">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--line)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 20 L20 30" />
+            <path d="M16 26 L20 30 L24 26" />
+            <path d="M12 22 L28 22" stroke-dasharray="2 2" />
+          </svg>
+        </div>
+        <div class="mobile-glyph future">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--line)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8 L20 20 L22 8" />
+            <path d="M16 12 L24 12" />
+          </svg>
+        </div>
+      </div>
+      <p style="text-align: center; font-size: 13px; color: var(--ink-2); margin-top: 8px;">
+        Haciendo hover/perdida de contexto? En realidad solo hay flechas táctiles abajo.
+      </p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── ESPECIFICACIONES TÉCNICAS ───────────────────── -->
+
+  <div class="section">
+    <h2>Especificaciones técnicas</h2>
+
+    <div class="spec-block">
+      <h4>Tokens de color por módulo</h4>
+      <div class="color-row">
+        <div class="color-swatch" style="background: var(--move);"></div>
+        <span style="font-size: 12px; color: var(--ink-2); align-self: center;">Mueve: #9A7B4F</span>
+        <div class="color-swatch" style="background: var(--extra);"></div>
+        <span style="font-size: 12px; color: var(--ink-2); align-self: center;">Estira: #6B7A8F</span>
+      </div>
+    </div>
+
+    <div class="spec-block">
+      <h4>Estados visuales del glifo</h4>
+      <pre><code>Default:  stroke: var(--ink-3) @ 60% opacity;   fill: none;    border: 1.5px dashed var(--line);
+Active:   stroke: var(--move);                    fill: var(--move-soft); border: 1.5px solid var(--move);
+Completed: stroke: var(--ink-2);                  fill: none;    + check SVG overlay;
+Future:   stroke: var(--line) @ 40% opacity;       fill: none;    opacity: 0.35;</code></pre>
+    </div>
+
+    <div class="spec-block">
+      <h4>API de componente JSX (propuesta)</h4>
+      <pre><code>// MoveGlyph.jsx
+function MoveGlyph({ tag, state = 'default', stepIdx }) {
+  // tag: 'PUSH' | 'PULL' | 'LEG' | 'CORE' | 'GRIP' | 'POST'
+  //      | 'SIT' | 'HIP' | 'SHLD' | 'ATG' | 'ANC' | 'SIT'
+  // state: 'default' | 'active' | 'completed' | 'future'
+  // stepIdx: fallback a símbolo unicode rotativo si no hay SVG
+}</code></pre>
+    </div>
+
+    <div class="spec-block">
+      <h4>Mapeo tag → glifo</h4>
+      <pre><code>PUSH  → Flexión inclinada      (torso en push-up, líneas de tensión)
+PULL  → Fondos en silla         (cuerpo en tracción, flechas de fuerza)
+LEG   → Wall sit                (90° pierna, isométrico)
+STEALTH→ Gemelos subrepticios   (pantorrilla en esquina)  
+CORE  → Hollow hold             (V invertida, músculo central)
+GRIP  → Apretón de puño         (antebrazo + puño cerrado)
+POST  → Postura reset            (columna + flechas de corrección)
+SIT   → Antídoto silla         (figura sentada, flechas de apertura)
+HIP   → Caderas                 (articulación, flechas de rotación)
+SHLD  → Hombros                 (clavícula + braquial + arcs)
+ATG   → ATG lunge               (rodilla por delante del pie)
+ANC   → Ancestral               (figura en squat + raíces)</code></pre>
+    </div>
+  </div>
+
+</body>
+</html>

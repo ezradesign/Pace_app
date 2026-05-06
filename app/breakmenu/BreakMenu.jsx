@@ -119,7 +119,7 @@ function BreakMenu({ open, onClose, onChoose }) {
         })}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+      <div data-pace-break-shortcut style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
         <Meta>{t('break.shortcut')}</Meta>
         <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
       </div>
@@ -156,6 +156,21 @@ function BMDropIcon() {
       <path d="M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z" />
     </svg>
   );
+}
+
+/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
+const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
+if (!_paceBreakResponsive) {
+  const s = document.createElement('style');
+  s.id = 'pace-break-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-break-shortcut] .pace-meta {
+        display: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
 }
 
 Object.assign(window, { BreakMenu });

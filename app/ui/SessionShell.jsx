@@ -322,8 +322,7 @@ if (!_paceSessionResponsive) {
         margin-bottom: 24px !important;
       }
       [data-pace-session-hint] {
-        bottom: 6px !important;
-        font-size: 9px !important;
+        display: none !important;
       }
     }
   `;

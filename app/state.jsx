@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.21.0';
+const PACE_VERSION = 'v0.22.1';
 
 const defaultState = {
   // Settings / Tweaks
@@ -105,6 +105,14 @@ const defaultState = {
   // Fechas (toDateString()) en las que se realizó alguna acción con soundOn=false.
   // Cap de 30 entradas. Alimenta master.silent.day. Sesión 34.
   silentDates: [],
+
+  // Fechas (toDateString()) en que water.today alcanzó water.goal.
+  // Cap de 14 entradas. Alimenta hydrate.week.perfect. Sesión 41.
+  waterGoalDates: [],
+
+  // Contadores acumulados de sesiones por tipo de rutina de respiración
+  // y movilidad. { box, coherent, rounds, atg }. Sesión 41.
+  routineCounts: {},
 
   // Rollover: día de calendario del último uso (toDateString()).
   // Cuando cambia, se resetean cycle / plan / water.today al cargar.
@@ -288,6 +296,41 @@ function checkSilentDayAchievement() {
   }
 }
 
+/* Mapa de routineId → categoría para contadores de tipo de rutina.
+   Solo breathe; atg se maneja en completeExtraSession. Sesión 41. */
+const BREATH_ROUTINE_CATEGORIES = {
+  'breathe.box.4':         'box',
+  'breathe.box.6':         'box',
+  'breathe.coherent.55':   'coherent',
+  'breathe.coherent.66':   'coherent',
+  'breathe.rounds.full':   'rounds',
+  'breathe.rounds.express':'rounds',
+};
+
+/* hydrate.week.perfect — 7 días consecutivos alcanzando water.goal.
+   Ordena waterGoalDates numéricamente y verifica 7 entradas seguidas
+   separadas exactamente 1 día (86400000 ms). Sesión 41. */
+function checkHydrateWeekPerfect() {
+  const dates = (_state.waterGoalDates || [])
+    .map(d => new Date(d).getTime())
+    .sort((a, b) => a - b);
+  if (dates.length < 7) return;
+  for (let i = dates.length - 1; i >= dates.length - 6; i--) {
+    if (dates[i] - dates[i - 1] !== 86400000) return;
+  }
+  unlockAchievement('hydrate.week.perfect');
+}
+
+/* Contadores por tipo de rutina — sesión 41.
+   Lee _state.routineCounts ya actualizado antes de llamar. */
+function checkRoutineCountAchievements(category) {
+  const c = _state.routineCounts || {};
+  if (category === 'box'      && (c.box      || 0) >= 10) unlockAchievement('master.box.10');
+  if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
+  if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
+  if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
+}
+
 /* Detector master.retreat — sesión 34.
    Usa los buckets weeklyStats ya existentes: breathMinutes[day] + moveMinutes[day].
    Extra suma al bucket moveMinutes (decisión activa), así que completeExtraSession
@@ -396,6 +439,13 @@ function completeBreathSession(routineId, durationMin) {
   if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
   checkRetreatAchievement();
   checkSilentDayAchievement();
+  /* Contadores por tipo de rutina — master.box.10 / coherent.10 / rounds.10. */
+  const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
+  if (breathCat) {
+    const c = _state.routineCounts || {};
+    setState({ routineCounts: { ...c, [breathCat]: (c[breathCat] || 0) + 1 } });
+    checkRoutineCountAchievements(breathCat);
+  }
   updateStreak();
 }
 
@@ -455,6 +505,12 @@ function completeExtraSession(routineId, durationMin = 0) {
   if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
   checkRetreatAchievement();
   checkSilentDayAchievement();
+  /* master.atg.20 — contador de sesiones ATG Knees. */
+  if (routineId === 'move.atg.knees') {
+    const c = _state.routineCounts || {};
+    setState({ routineCounts: { ...c, atg: (c.atg || 0) + 1 } });
+    checkRoutineCountAchievements('atg');
+  }
   updateStreak();
 }
 
@@ -474,6 +530,16 @@ function addWaterGlass(delta = 1) {
     unlockAchievement('first.sip');
     checkPlanAchievements();
     checkSilentDayAchievement();
+    /* hydrate.week.perfect — registrar hoy si se alcanza la meta por
+       primera vez. Leemos _state actualizado (patrón sesión 18). */
+    if (_state.water.today >= _state.water.goal) {
+      const today = new Date().toDateString();
+      const goalDates = Array.isArray(_state.waterGoalDates) ? _state.waterGoalDates : [];
+      if (!goalDates.includes(today)) {
+        setState({ waterGoalDates: [...goalDates, today].slice(-14) });
+        checkHydrateWeekPerfect();
+      }
+    }
   }
 }
 

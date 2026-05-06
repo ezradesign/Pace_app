@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.21.0
-**Última sesión:** #40 — 2026-05-06 · feat(audio): sonidos move/hydrate/achievements — capa 1 completa
-**Última actualización de este archivo:** 2026-05-06 · sesión 40
-**Build entregado:** `PACE_standalone.html` v0.21.0 (440 256 bytes — regenerado con build-standalone.js)
+**Versión actual:** v0.22.1
+**Última sesión:** #42 — 2026-05-06 · fix(ux): UX móvil — hints teclado + title attrs + timer + shortcut BreakMenu
+**Última actualización de este archivo:** 2026-05-06 · sesión 42
+**Build entregado:** `PACE_standalone.html` v0.22.1 (433 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -28,7 +28,8 @@
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** (7 recetas nuevas: move.start/step/end, hydrate.sip/goal, achievement.unlock/secret — s40) |
 | `app/ui/SessionShell.jsx` | Cáscara compartida de sesiones activas | **v0.17.0** (bug fix: useT en SessionDone) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, `displayItalic` | **v0.19.0** (`useT` + `aria-label` migrado a `common.close`) |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (antes Tweaks) | **v0.19.0** (audio primer eje; timer 3 ops; layout 2 ops; título Ajustes; LS v2) |
+| `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos (palette/font/logo) | **v0.22.0** (extraído de TweaksPanel — sesión 41) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (antes Tweaks) | **v0.22.0** (split: 479 líneas; i18n ambient toggle — sesión 41) |
 | `app/breathe/BreatheVisual.jsx` | Respiración — visual + getSequence | **v0.16.0** (nuevo · extraído de BreatheModule) |
 | `app/breathe/BreatheLibrary.jsx` | Respiración — biblioteca + seguridad | **v0.17.0** (i18n migrado) |
 | `app/breathe/BreatheSession.jsx` | Respiración — sesión guiada | **v0.20.0** (session.start/end + inhale/exhale con dur) |
@@ -42,57 +43,44 @@
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** (hydrate.sip/goal cableados — s40) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.21.0** (PACE_VERSION bump — s40) |
+| `app/state.jsx` | Store global + rollover + toast buffer | **v0.22.0** (+waterGoalDates, +routineCounts, +5 detectores logros — s41) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.21.0** (achievement.unlock/secret al mostrar toast — s40) |
 
-Backups vigentes (5):
+Backups vigentes (7):
 - `backups/PACE_standalone_v0.16.0_20260505.html`
 - `backups/PACE_standalone_v0.17.0_20260505.html`
 - `backups/PACE_standalone_v0.18.0_20260505.html`
 - `backups/PACE_standalone_v0.19.1_20260505.html`
 - `backups/PACE_standalone_v0.20.0_20260506.html`
+- `backups/PACE_standalone_v0.21.0_20260506.html`
+- `backups/PACE_standalone_v0.22.0_20260506.html`
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 40 · v0.20.0 → v0.21.0 · feat(audio): capa 1 de sonidos completa**
+**Sesión 42 · v0.22.0 → v0.22.1 · fix(ux): UX móvil — hints, title attrs, timer, shortcut**
 
 ### Qué se hizo
 
-Completados los 3 bloques de sonidos pendientes desde s38a:
+4 fixes quirúrgicos de UX móvil. Sin cambios de comportamiento en desktop ni en lógica de negocio.
 
-1. **Bloque A — Mueve** (`Sound.jsx` + `MoveModule.jsx`): 3 recetas nuevas
-   (`move.start`, `move.step`, `move.end`). Cableadas con 2 `useEffectMV` en
-   `MoveSession`: uno en `[stage]` para start/end, otro en `[stepIdx]` para step.
-   Guard `stage !== 'active'` evita que step suene en mount.
-
-2. **Bloque B — Hidrátate** (`Sound.jsx` + `HydrateModule.jsx`): 2 recetas nuevas
-   (`hydrate.sip` más suave que el legacy, `hydrate.goal` como arpegio ascendente
-   en cascada). Lógica inline: `hydrate.goal` exactamente al llegar a la meta diaria,
-   `hydrate.sip` el resto. Alias `sip` conservado.
-
-3. **Bloque C — Logros** (`Sound.jsx` + `Toast.jsx`): 2 recetas nuevas
-   (`achievement.unlock` = bell A5 con overtones; `achievement.secret` = glide
-   tritónico C5→F#3). Cableadas en `ToastHost.onToast` — una línea, `try/catch`
-   en el consumidor.
-
-4. **PACE_VERSION** bumpeada a v0.21.0 en `state.jsx`.
-5. **Standalone regenerado** (440 256 bytes).
+- **SessionShell.jsx** — Regla `[data-pace-session-hint]` en el bloque CSS responsive reemplazada: de reescalar `bottom/font-size` a `display: none !important`. Hints de teclado invisibles en ≤640px.
+- **MoveModule.jsx (B)** — Eliminados `title="←"`, `title="Espacio"`, `title="→"` de los tres botones de MoveSession.
+- **MoveModule.jsx (C)** — `data-pace-move-timer` añadido al div del cronómetro de pasos. Nuevo bloque CSS `pace-move-responsive-css`: 128px → 72px en ≤640px.
+- **BreakMenu.jsx** — `data-pace-break-shortcut` en el div contenedor de la fila shortcut. Nuevo bloque CSS `pace-break-responsive-css`: `.pace-meta` oculto en ≤640px (el botón "Saltar" sigue visible).
+- **state.jsx** — Bump `PACE_VERSION` v0.22.0 → v0.22.1.
 
 ### Archivos modificados
-`app/ui/Sound.jsx` (350 líneas), `app/move/MoveModule.jsx` (309),
-`app/hydrate/HydrateModule.jsx` (81), `app/ui/Toast.jsx` (70),
-`app/state.jsx` (bump versión), `PACE_standalone.html` (440 256 bytes),
-`backups/PACE_standalone_v0.20.0_20260506.html` (rotación),
-`docs/sessions/session-40-sonidos-modulos.md` (nuevo), `CHANGELOG.md`, `STATE.md`.
+`app/ui/SessionShell.jsx`, `app/move/MoveModule.jsx`, `app/breakmenu/BreakMenu.jsx`,
+`app/state.jsx` (bump versión), `PACE_standalone.html` (433 KB),
+`backups/PACE_standalone_v0.22.0_20260506.html` (rotación).
 
 ### Versión
-- **v0.20.0** → **v0.21.0** (feature: capa 1 de audio completa).
+- **v0.22.0** → **v0.22.1** (patch · bugfix).
 
 ### Pendiente funcional (próximas sesiones)
-- Drone ambiente opt-in (toggle en Ajustes) — capa 2, Sound.jsx ya la tiene.
 - Iconos PNG reales (192×512) para PWA.
 - Heatmap mes/año ("Año en pace").
 - README EN.
@@ -331,7 +319,8 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
   `morning.5`, `master.dawn`, `master.dusk`, `master.long.focus`.
   Constancia 11/15. Maestría 5/25.
 - ~~**`master.collector.half/full`, `master.silent.day`, `master.retreat`**~~ ✅ Resuelto en sesión 34 (v0.16.0). Maestría 9/25.
-- **Detectores aplazados restantes** — `hydrate.week.perfect` (histórico semanal), `master.midnight.never` (30 días sin uso tras 23h), contadores por tipo de rutina (`master.box.10`, `coherent.10`, `rounds.10`, `atg.20`, etc.).
+- ~~**Detectores aplazados: hydrate.week.perfect + contadores tipo rutina**~~ ✅ Resuelto en sesión 41 (v0.22.0). Constancia 15/15, Maestría 13/25.
+- **Detectores aplazados restantes** — `master.midnight.never` (30 días sin uso tras 23h). Maestría restante (12/25) sin detectores.
 
 ### 🎨 Medio plazo (requieren diseño previo)
 
@@ -352,7 +341,7 @@ Logros visibles como "Próximamente" sin trigger:
 `master.*` (restantes del catálogo), `season.*` (10),
 `first.ritual/cycle/day/plan/return`, `streak.14/60/365`,
 `breathe.sessions.10/50`, `move.sessions.25`,
-`hydrate.week.perfect`, `morning.5`, `explore.all.*` (3),
+`morning.5`, `explore.all.*` (3),
 `explore.chrome`.
 
 ### 🔒 Pre-v1.0 monetización
@@ -616,7 +605,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 37: 49/100 logros cazables. i18n ES/EN total ✅ (todos los strings visibles migrados). PWA activada ✅. Panel Ajustes limpiado ✅. Próximos frentes: (a) iconos PNG reales para PWA, (b) rediseño de glifos SVG, (c) claves offline Lifetime/Pase, (d) heatmap "Año en pace", (e) README EN + Reddit launch.
+> Estado actual tras sesión 42: **54/100 logros cazables** (sin cambios). Constancia 15/15 cerrada. Maestría 13/25. i18n total ✅. PWA ✅. UX móvil ✅ (hints + timer + shortcut corregidos). Próximos frentes: (a) iconos PNG reales para PWA, (b) rediseño de glifos SVG, (c) claves offline Lifetime/Pase, (d) heatmap "Año en pace", (e) README EN + Reddit launch.
 
 ### 🎯 Próxima sesión corta (recomendada)
 

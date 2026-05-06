@@ -35,11 +35,6 @@
 
 const { useState: useStateTW, useEffect: useEffectTW, useRef: useRefTW } = React;
 
-/* Clave donde se persiste el racking de "días en paleta oscura" para el
-   secret.dark.mode. Independiente de la racha principal — sólo cuenta
-   días de calendario distintos con palette === 'oscuro'. */
-const DARK_DAYS_KEY = 'pace.darkDays.v1';
-
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
   const { t, tn } = useT();
@@ -54,7 +49,7 @@ function TweaksPanel({ open, onClose }) {
      panel está visible). Para los secretos que NO dependen de la UI
      de tweaks (aged, mono, seal, ilustrado, dark-days), movemos la
      detección a un componente separado que SÍ monta siempre:
-     <TweakSecretsWatcher />, exportado al final.
+     <TweakSecretsWatcher />, en app/tweaks/TweakSecretsWatcher.jsx (sesión 41).
      ============================================================ */
 
   // explore.tweaks — abrir el panel una vez. Se dispara al abrir.
@@ -241,7 +236,7 @@ function TweaksPanel({ open, onClose }) {
                 display: 'grid', placeItems: 'center',
                 color: 'var(--paper)', cursor: 'pointer', flexShrink: 0,
               }}
-              aria-label="Ambiente durante sesiones"
+              aria-label={t('settings.audio.ambient')}
             >
               {state.ambientOn && (
                 <svg width="9" height="9" viewBox="0 0 16 16" fill="none"
@@ -258,7 +253,7 @@ function TweaksPanel({ open, onClose }) {
                 set({ ambientOn: next });
                 if (!next && window.ambientDrone) window.ambientDrone.stop(400);
               }}
-            >+ ambiente durante sesiones</span>
+            >+ {t('settings.audio.ambient')}</span>
           </div>
         )}
       </div>
@@ -393,75 +388,6 @@ function TweaksPanel({ open, onClose }) {
 }
 
 /* ============================================================
-   TweakSecretsWatcher — monta siempre, observa combinaciones
-   ------------------------------------------------------------
-   Vive en el árbol aunque el panel de Tweaks esté cerrado, así
-   los secretos se disparan cuando el usuario cambia el tweak
-   correspondiente (desde Tweaks o por import JSON).
-
-   unlockAchievement es idempotente (no dispara el mismo id dos
-   veces), así que los efectos no necesitan guardas adicionales.
-   ============================================================ */
-function TweakSecretsWatcher() {
-  const [state] = usePace();
-
-  // Instantáneos: cambio de palette/font/logo → desbloqueo inmediato.
-  useEffectTW(() => {
-    if (state.palette === 'envejecido') unlockAchievement('secret.aged');
-  }, [state.palette]);
-
-  /* secret.mono — el Tweak de tipografía se retiró en sesión 20.
-     El watcher sigue escuchando por si el valor llega vía import
-     JSON (backup de un usuario pre-v0.12.4) o dev tools. Es
-     idempotente gracias a unlockAchievement. */
-  useEffectTW(() => {
-    if (state.font === 'mono') unlockAchievement('secret.mono');
-  }, [state.font]);
-
-  /* Logros ligados a logoVariant. Tras retirar el Tweak del panel
-     (sesión 19) ya no hay forma estándar de dispararlos desde la
-     UI, pero se conservan por si se vuelven a exponer o se activan
-     vía devtools / futuros easter eggs. */
-  useEffectTW(() => {
-    if (state.logoVariant === 'sello') unlockAchievement('secret.seal');
-    if (state.logoVariant === 'ilustrado') unlockAchievement('secret.illustrated');
-  }, [state.logoVariant]);
-
-  /* secret.dark.mode — "7 días en oscuro" (días de calendario distintos
-     con palette === 'oscuro', no necesariamente consecutivos; la
-     definición original del logro dice "7 días en oscuro" sin exigir
-     racha seguida, y es la lectura más amable).
-
-     Implementación: set de cadenas `YYYY-MM-DD` persistido en una
-     clave propia (`pace.darkDays.v1`) para no engordar el state
-     principal — es un contador auxiliar de un único logro, no un
-     dato de producto. Se suma el día actual cada vez que cambia el
-     state mientras palette === 'oscuro' (la primera por día).
-  */
-  useEffectTW(() => {
-    if (state.palette !== 'oscuro') return;
-    try {
-      const today = new Date().toISOString().slice(0, 10);
-      const raw = localStorage.getItem(DARK_DAYS_KEY);
-      let set;
-      try { set = new Set(JSON.parse(raw || '[]')); } catch (e) { set = new Set(); }
-      if (!set.has(today)) {
-        set.add(today);
-        // Cap defensivo: guardamos máximo 30 fechas (suficiente para el logro).
-        const arr = Array.from(set).slice(-30);
-        localStorage.setItem(DARK_DAYS_KEY, JSON.stringify(arr));
-        if (arr.length >= 7) unlockAchievement('secret.dark.mode');
-      } else if (set.size >= 7) {
-        // Ya acumulado en sesiones anteriores, desbloqueamos ahora.
-        unlockAchievement('secret.dark.mode');
-      }
-    } catch (e) { /* silencioso — no es crítico */ }
-  }, [state.palette]);
-
-  return null;
-}
-
-/* ============================================================
    Iconos + estilos (nombres únicos)
    ============================================================ */
 function DownloadIcon() {
@@ -550,4 +476,4 @@ if (!_paceTweaksResponsive) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { TweaksPanel, TweakSecretsWatcher });
+Object.assign(window, { TweaksPanel });

@@ -205,13 +205,13 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   const remaining = Math.max(0, step.dur - elapsed);
   const footer = (
     <React.Fragment>
-      <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn} title="←">
+      <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
         {t('move.prev')}
       </button>
-      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn}>
         {paused ? t('session.resume') : t('session.pause')}
       </button>
-      <button onClick={goNext} style={sessionShellStyles.ctrlBtn} title="→">
+      <button onClick={goNext} style={sessionShellStyles.ctrlBtn}>
         {stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next')}
       </button>
     </React.Fragment>
@@ -239,7 +239,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           maxWidth: 460, margin: '0 auto 30px',
         }}>{tR(`${routine.id}.s${stepIdx}.cue`, step.cue)}</p>
 
-        <div style={{
+        <div data-pace-move-timer style={{
           ...displayItalic,
           fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
           color: 'var(--ink)', lineHeight: 1,
@@ -303,6 +303,21 @@ function StepGlyph({ tag, stepIdx }) {
 
 /* moveSessionStyles local eliminado en sesión 26. El layout de sesión
    vive ahora en app/ui/SessionShell.jsx (sessionShellStyles). */
+
+/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
+const _paceMoveResponsive = document.getElementById('pace-move-responsive-css');
+if (!_paceMoveResponsive) {
+  const s = document.createElement('style');
+  s.id = 'pace-move-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-move-timer] {
+        font-size: 72px !important;
+      }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 /* Export a window: sólo lo consumido fuera del módulo.
    MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
