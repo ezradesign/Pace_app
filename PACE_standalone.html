@@ -1176,7 +1176,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.20.0';
+const PACE_VERSION = 'v0.21.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -2869,6 +2869,36 @@ var SOUND_RECIPES = {
   'breathe.session.end': function(ctx, t0) {
     chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.70, 0.10, 'sine');
   },
+
+  /* --- MUEVE --- */
+  'move.start': function(ctx, t0) {
+    glide(ctx, ctx.destination, note('C4'), note('G4'), t0, 0.22, 0.07, 'sine');
+  },
+  'move.step': function(ctx, t0) {
+    tone(ctx, ctx.destination, note('A4'), t0, 0.06, 0.04, 'triangle');
+  },
+  'move.end': function(ctx, t0) {
+    chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.60, 0.09, 'sine');
+  },
+
+  /* --- HIDRÁTATE --- */
+  'hydrate.sip': function(ctx, t0) {
+    glide(ctx, ctx.destination, note('G5'), note('D5'), t0, 0.18, 0.07, 'sine');
+  },
+  'hydrate.goal': function(ctx, t0) {
+    tone(ctx, ctx.destination, note('C5'), t0,        0.65, 0.06, 'sine');
+    tone(ctx, ctx.destination, note('E5'), t0 + 0.05, 0.55, 0.05, 'sine');
+    tone(ctx, ctx.destination, note('G5'), t0 + 0.10, 0.45, 0.04, 'sine');
+    tone(ctx, ctx.destination, note('C6'), t0 + 0.15, 0.35, 0.03, 'sine');
+  },
+
+  /* --- LOGROS --- */
+  'achievement.unlock': function(ctx, t0) {
+    bell(ctx, ctx.destination, note('A5'), t0, 0.90, 0.08);
+  },
+  'achievement.secret': function(ctx, t0) {
+    glide(ctx, ctx.destination, note('C5'), note('F#3'), t0, 0.55, 0.05, 'sine');
+  },
 };
 
 /* === API PÚBLICA ===
@@ -3009,6 +3039,7 @@ function ToastHost() {
         if (!a) return;
         const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph };
         setToasts(prev => [...prev, full]);
+        try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
         }, 5000);
@@ -5935,6 +5966,17 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [stage, stepIdx]);
 
+  // Sonidos de sesión
+  useEffectMV(() => {
+    if (stage === 'active') { try { playSound('move.start'); } catch(e) {} }
+    if (stage === 'done')   { try { playSound('move.end');   } catch(e) {} }
+  }, [stage]);
+
+  useEffectMV(() => {
+    if (stage !== 'active') return;
+    try { playSound('move.step'); } catch(e) {}
+  }, [stepIdx]);
+
   const goNext = () => {
     if (stage !== 'active') return;
     if (stepIdx + 1 >= routine.steps.length) {
@@ -6225,7 +6267,7 @@ function HydrateTracker({ open, onClose }) {
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
-            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound('sip'); } catch (e) {} } }}
+            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} } }}
             style={{
               aspectRatio: '1/1.3',
               background: i < today ? 'var(--hydrate-soft)' : 'transparent',
@@ -6265,7 +6307,7 @@ function HydrateTracker({ open, onClose }) {
 
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
         <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">{t('hydrate.less')}</Button>
-        <Button onClick={() => { addWaterGlass(1); try { playSound('sip'); } catch (e) {} }} icon="+" size="md"
+        <Button onClick={() => { addWaterGlass(1); try { playSound(today < goal && today + 1 >= goal ? 'hydrate.goal' : 'hydrate.sip'); } catch (e) {} }} icon="+" size="md"
           style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>{t('hydrate.more')}</Button>
       </div>
 

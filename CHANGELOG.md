@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.21.0** | 2026-05-06 | feat(audio): sonidos move.start/step/end + hydrate.sip/goal + achievement.unlock/secret — capa 1 completa | #40 | [abajo ↓](#v0210--2026-05-06--feataudio-sonidos-movhydrateachievements) |
 | **v0.20.0** | 2026-05-06 | fix: crash ToastHost variable shadowing (t/useT) + mount loop 6-check + guard breathNoise | #38b patch | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
 | **v0.20.0** | 2026-05-05 | feat(audio): refactor 432 Hz + primitivas componibles + respiración realista con ruido blanco filtrado + pomodoro.start/end | #38a | [abajo ↓](#v0200--2026-05-05--feataudio-refactor-432-hz) |
 | **v0.19.1** | 2026-05-05 | fix(i18n): crash al cargar — useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes | #37 hotfix | [session-37](./docs/sessions/session-37-i18n-pwa-ajustes.md) |
@@ -56,6 +57,33 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.21.0] — 2026-05-06 — feat(audio): sonidos mov/hydrate/achievements
+
+### Añadido — Sound.jsx (+29 líneas, 7 recetas)
+
+**Mueve:**
+- `move.start` — glide ascendente C4→G4 (0.22 s). Arranque físico.
+- `move.step` — tone triangle A4 (0.06 s). Tick por paso, distinto al pomodoro tick (sine 800 Hz).
+- `move.end` — chord C5+E5+G5 simultáneo (0.60 s). Cierre cálido.
+
+**Hidrátate:**
+- `hydrate.sip` — glide descendente G5→D5 (0.18 s). Más suave que el legacy `sip` (que bajaba >1 octava).
+- `hydrate.goal` — arpegio ascendente C5→E5→G5→C6 en cascada (t0…t0+0.15, peaks decrecientes). Celebración ligera al llegar a la meta.
+
+**Logros:**
+- `achievement.unlock` — bell A5 (0.90 s). Campana con overtones, reconocimiento resonante.
+- `achievement.secret` — glide C5→F#3 (0.55 s). Tritónico descendente, misterio/descubrimiento.
+
+### Cableado
+
+- **MoveSession** (`MoveModule.jsx`): `move.start` al entrar en `active`, `move.end` al entrar en `done`, `move.step` en cada avance de `stepIdx` (con guard `stage !== 'active'` en mount).
+- **HydrateTracker** (`HydrateModule.jsx`): dos call sites actualizados — `hydrate.goal` exactamente al llegar a `water.goal`, `hydrate.sip` el resto.
+- **ToastHost** (`Toast.jsx`): `achievement.secret` si `a.secret === true`, `achievement.unlock` si no. `try/catch` en el consumidor.
+
+Detalle completo: [`docs/sessions/session-40-sonidos-modulos.md`](./docs/sessions/session-40-sonidos-modulos.md).
 
 ---
 
@@ -106,29 +134,7 @@ Detalle completo: [`docs/sessions/session-38b-fix-mount-race.md`](./docs/session
 
 ## [v0.19.1] — 2026-05-05 — fix(i18n): useT() AchievementsPreview
 
-### Fix
-- **`app/shell/Sidebar.jsx · AchievementsPreview`** — `const { t } = useT()` añadido. Faltaba tras la migración i18n de sesión 37 que introdujo `t('ach.seal.discover')` en el render. Causaba `Uncaught ReferenceError: t is not defined` y pantalla terracota al arrancar la app.
-
-### Auditoría defensiva
-Verificados los 8 componentes migrados en sesión 37 — solo AchievementsPreview necesitó fix:
-
-| Componente | useT() presente |
-|---|---|
-| `BreatheSession.jsx` | ✅ (línea 24) |
-| `BreatheLibrary.jsx (BreatheSafety)` | ✅ (línea 112) |
-| `Sidebar.jsx (SenderoDelDia)` | ✅ (línea 208) |
-| `Sidebar.jsx (AchievementsPreview)` | ✅ añadido en este fix |
-| `TweaksPanel.jsx` | ✅ (línea 45) |
-| `Toast.jsx` | ✅ (línea 7) |
-| `WelcomeModule.jsx` | ✅ (línea 41) |
-| `Primitives.jsx (Modal)` | ✅ (línea 33) |
-| `FocusTimer.jsx` | ✅ (línea 9) |
-
-- **`app/state.jsx`** — `PACE_VERSION` v0.19.0 → v0.19.1.
-- **`PACE.html`** — Título actualizado a v0.19.1.
-- **`PACE_standalone.html`** — Regenerado (~416 KB).
-
-Detalle completo: [`docs/sessions/session-37-i18n-pwa-ajustes.md`](./docs/sessions/session-37-i18n-pwa-ajustes.md) (sección Hotfix v0.19.1).
+Detalle completo: [`docs/sessions/session-37-i18n-pwa-ajustes.md`](./docs/sessions/session-37-i18n-pwa-ajustes.md).
 
 ---
 

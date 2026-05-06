@@ -14,6 +14,7 @@ function ToastHost() {
         if (!a) return;
         const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph };
         setToasts(prev => [...prev, full]);
+        try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
         }, 5000);

@@ -5,7 +5,11 @@
       "Bash(Remove-Item \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheModule.jsx\")",
       "Bash(node build-standalone.js)",
       "Bash(node \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\build-standalone.js\")",
-      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\ui\\\\Sound.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\tweaks\\\\TweaksPanel.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\focus\\\\FocusTimer.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheSession.jsx\"\\).Count)"
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\ui\\\\Sound.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\tweaks\\\\TweaksPanel.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\focus\\\\FocusTimer.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheSession.jsx\"\\).Count)",
+      "Bash(cd \"/c/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app\" && cp PACE_standalone.html \"backups/PACE_standalone_v0.20.0_20260506.html\" && echo \"backup OK\")"
+    ],
+    "additionalDirectories": [
+      "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
     ]
   }
 }
