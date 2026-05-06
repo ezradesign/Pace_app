@@ -139,6 +139,17 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [stage, stepIdx]);
 
+  // Sonidos de sesión
+  useEffectMV(() => {
+    if (stage === 'active') { try { playSound('move.start'); } catch(e) {} }
+    if (stage === 'done')   { try { playSound('move.end');   } catch(e) {} }
+  }, [stage]);
+
+  useEffectMV(() => {
+    if (stage !== 'active') return;
+    try { playSound('move.step'); } catch(e) {}
+  }, [stepIdx]);
+
   const goNext = () => {
     if (stage !== 'active') return;
     if (stepIdx + 1 >= routine.steps.length) {

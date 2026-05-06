@@ -4,7 +4,8 @@
       "Bash(node -e ' *)",
       "Bash(Remove-Item \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheModule.jsx\")",
       "Bash(node build-standalone.js)",
-      "Bash(node \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\build-standalone.js\")"
+      "Bash(node \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\build-standalone.js\")",
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\ui\\\\Sound.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\tweaks\\\\TweaksPanel.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\focus\\\\FocusTimer.jsx\"\\).Count; \\(Get-Content \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\app\\\\breathe\\\\BreatheSession.jsx\"\\).Count)"
     ]
   }
 }
