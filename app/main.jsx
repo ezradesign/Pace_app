@@ -314,7 +314,7 @@ function PaceApp() {
       />
       <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />
       <Achievements open={openAchievements} onClose={() => setOpenAchievements(false)} />
-      <WeeklyStats open={openStats} onClose={() => setOpenStats(false)} />
+      <StatsPanel open={openStats} onClose={() => setOpenStats(false)} />
       <TweaksPanel open={openTweaks} onClose={() => setOpenTweaks(false)} />
       <BreakMenu
         open={openBreakMenu}

@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.22.1
-**Última sesión:** #42 — 2026-05-06 · fix(ux): UX móvil — hints teclado + title attrs + timer + shortcut BreakMenu
-**Última actualización de este archivo:** 2026-05-06 · sesión 42
-**Build entregado:** `PACE_standalone.html` v0.22.1 (433 KB — regenerado con build-standalone.js)
+**Versión actual:** v0.23.0
+**Última sesión:** #43 — 2026-05-06 · feat(history): capa de datos history + heatmap mensual + StatsPanel
+**Última actualización de este archivo:** 2026-05-06 · sesión 43
+**Build entregado:** `PACE_standalone.html` v0.23.0 (440 KB — regenerado con build-standalone.js)
 
 ---
 
@@ -43,11 +43,12 @@
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** (hydrate.sip/goal cableados — s40) |
 | `app/breakmenu/BreakMenu.jsx` | Menú post-Pomodoro | **v0.15.0** (rotación inteligente: `computeScore` + sort + tag "Para ti" + indicador done) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.17.0** (i18n: CAT_META labelKey + Achievements + Seal; 49 ids) |
-| `app/state.jsx` | Store global + rollover + toast buffer | **v0.22.0** (+waterGoalDates, +routineCounts, +5 detectores logros — s41) |
+| `app/stats/StatsPanel.jsx` | Panel stats — tabs Semana/Mes/Año + MonthHeatmap | **v0.23.0** (nuevo · reemplaza WeeklyStats.jsx — s43) |
+| `app/state.jsx` | Store global + rollover + toast buffer + history | **v0.23.0** (+history days/months/years, +migration guard, rollover archiva día — s43) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.21.0** (achievement.unlock/secret al mostrar toast — s40) |
 
-Backups vigentes (7):
+Backups vigentes (8):
 - `backups/PACE_standalone_v0.16.0_20260505.html`
 - `backups/PACE_standalone_v0.17.0_20260505.html`
 - `backups/PACE_standalone_v0.18.0_20260505.html`
@@ -55,36 +56,43 @@ Backups vigentes (7):
 - `backups/PACE_standalone_v0.20.0_20260506.html`
 - `backups/PACE_standalone_v0.21.0_20260506.html`
 - `backups/PACE_standalone_v0.22.0_20260506.html`
+- `backups/PACE_standalone_v0.22.1_20260506.html`
 
 ---
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 42 · v0.22.0 → v0.22.1 · fix(ux): UX móvil — hints, title attrs, timer, shortcut**
+**Sesión 43 · v0.22.1 → v0.23.0 · feat(history): capa de datos + heatmap mensual**
 
 ### Qué se hizo
 
-4 fixes quirúrgicos de UX móvil. Sin cambios de comportamiento en desktop ni en lógica de negocio.
+Dos bloques. Sin cambios en lógica existente — solo adiciones.
 
-- **SessionShell.jsx** — Regla `[data-pace-session-hint]` en el bloque CSS responsive reemplazada: de reescalar `bottom/font-size` a `display: none !important`. Hints de teclado invisibles en ≤640px.
-- **MoveModule.jsx (B)** — Eliminados `title="←"`, `title="Espacio"`, `title="→"` de los tres botones de MoveSession.
-- **MoveModule.jsx (C)** — `data-pace-move-timer` añadido al div del cronómetro de pasos. Nuevo bloque CSS `pace-move-responsive-css`: 128px → 72px en ≤640px.
-- **BreakMenu.jsx** — `data-pace-break-shortcut` en el div contenedor de la fila shortcut. Nuevo bloque CSS `pace-break-responsive-css`: `.pace-meta` oculto en ≤640px (el botón "Saltar" sigue visible).
-- **state.jsx** — Bump `PACE_VERSION` v0.22.0 → v0.22.1.
+**BLOQUE A — Capa de datos (`state.jsx`):**
+- `history: { days, months, years }` añadido a `defaultState`. Solo se escriben entradas con dato > 0.
+- 6 funciones puras nuevas: `zeroEntry`, `toISODate`, `updateMonthAggregate`, `updateYearAggregate`, `archiveDayToHistory`, `migrateWeeklyStatsToHistory`.
+- `rolloverIfNeeded` extendido: migration guard (una sola vez) + archivo del día que termina con delta incremental sobre mes/año.
+
+**BLOQUE B — UI (`StatsPanel.jsx`):**
+- `WeeklyStats.jsx` → `StatsPanel.jsx`. Script tag en `PACE.html` y JSX en `main.jsx` actualizados.
+- Tabs `Semana | Mes | Año` sobre el contenido del modal.
+- `MonthHeatmap`: grid 7 cols L→D, color por módulo dominante (5 opacidades via div interno), navegación ‹ ›, totales al pie, tooltip hover/tap responsive.
+- `YearView`: placeholder (sesión 44).
+- 15 claves i18n nuevas en ES + EN.
 
 ### Archivos modificados
-`app/ui/SessionShell.jsx`, `app/move/MoveModule.jsx`, `app/breakmenu/BreakMenu.jsx`,
-`app/state.jsx` (bump versión), `PACE_standalone.html` (433 KB),
-`backups/PACE_standalone_v0.22.0_20260506.html` (rotación).
+`app/state.jsx`, `app/stats/StatsPanel.jsx` (nuevo), `app/i18n/strings.js`,
+`PACE.html`, `app/main.jsx`, `PACE_standalone.html` (440 KB),
+`backups/PACE_standalone_v0.22.1_20260506.html` (rotación).
 
 ### Versión
-- **v0.22.0** → **v0.22.1** (patch · bugfix).
+- **v0.22.1** → **v0.23.0** (minor · feature).
 
 ### Pendiente funcional (próximas sesiones)
+- YearView / mini-calendars anuales (sesión 44).
+- Logros mensuales/anuales (sesión 44 o 45).
 - Iconos PNG reales (192×512) para PWA.
-- Heatmap mes/año ("Año en pace").
-- README EN.
-- Reddit launch.
+- README EN + Reddit launch.
 - Glifos SVG (dirección visual pendiente de validación del usuario).
 
 ---
@@ -325,9 +333,8 @@ se ejecutaron en sesión 26 (v0.12.8). Detalle en
 ### 🎨 Medio plazo (requieren diseño previo)
 
 - ~~**PWA instalable**~~ ✅ Resuelto en sesión 37 (v0.19.0). `manifest.json` conectado, `sw.js` registrado en `PACE.html` y standalone. Deuda pendiente: iconos PNG reales (actualmente SVG).
-- **Ritmos semanal/mensual/anual** — evolución de `WeeklyStats`.
-  Heatmap mensual + "año en pace" estilo GitHub contributions en
-  paleta tierra.
+- ~~**Heatmap mensual**~~ ✅ Resuelto en sesión 43 (v0.23.0). `StatsPanel` con tabs Semana/Mes/Año y `MonthHeatmap` con navegación, opacidad por módulo dominante y tooltip responsive.
+- **YearView / "Año en pace"** — mini-calendars anuales estilo GitHub contributions en paleta tierra. Sesión 44.
 - **CTB (premium)** — guion de 1 sesión + pista musical + mockup
   de pantalla inmersiva antes de tocar código.
 - **Sesiones personalizadas Estira/Mueve (premium)** — mockup del
@@ -605,7 +612,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
 
 ## 📋 Próximos pasos recomendados
 
-> Estado actual tras sesión 42: **54/100 logros cazables** (sin cambios). Constancia 15/15 cerrada. Maestría 13/25. i18n total ✅. PWA ✅. UX móvil ✅ (hints + timer + shortcut corregidos). Próximos frentes: (a) iconos PNG reales para PWA, (b) rediseño de glifos SVG, (c) claves offline Lifetime/Pase, (d) heatmap "Año en pace", (e) README EN + Reddit launch.
+> Estado actual tras sesión 43: **54/100 logros cazables** (sin cambios). Constancia 15/15 cerrada. Maestría 13/25. i18n total ✅. PWA ✅. UX móvil ✅. History + MonthHeatmap ✅ (s43). Próximos frentes: (a) YearView "Año en pace" (s44), (b) logros mensuales/anuales (s44-45), (c) iconos PNG reales para PWA, (d) rediseño de glifos SVG, (e) claves offline Lifetime/Pase, (f) README EN + Reddit launch.
 
 ### 🎯 Próxima sesión corta (recomendada)
 
