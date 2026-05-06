@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.12.10</title>
-  <style>/* ============================================
+  <title>PACE · Foco · Cuerpo — v0.19.1</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3E5A3A">
+  <style>
+/* ============================================
    PACE · Design Tokens
    Cambios aquí se reflejan en toda la app.
    ============================================ */
@@ -191,7 +194,8 @@ input, textarea { font-family: inherit; color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
-</style>
+
+  </style>
 </head>
 <body>
   <!-- Logo oficial pre-cargado aquí para que super_inline_html lo inline
@@ -202,7 +206,7 @@ input, textarea { font-family: inherit; color: inherit; }
   <!-- Splash placeholder requerido por el bundler super_inline_html.
        Se muestra brevemente mientras los assets se descomprimen
        y como fallback no-JS. Paleta crema PACE. -->
-  <div id="__splash" style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:2147483647;transition:opacity .25s ease">
+  <template id="__bundler_thumbnail">
     <svg xmlns="http://www.w3.org/2000/svg" data-bg-color="#F2EDE0"
          viewBox="0 0 1200 800" width="100%" height="100%"
          preserveAspectRatio="xMidYMid meet">
@@ -214,7 +218,7 @@ input, textarea { font-family: inherit; color: inherit; }
             font-family="'Inter Tight', sans-serif"
             font-size="14" letter-spacing="6" fill="#7a7367">FOCO · CUERPO</text>
     </svg>
-  </div><script>(function(){var s=document.getElementById("__splash");if(!s)return;function hide(){s.style.opacity="0";setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},300);}if(document.readyState==="complete")hide();else window.addEventListener("load",hide);})();</script>
+  </template>
 
   <div id="root"></div>
 
@@ -224,13 +228,940 @@ input, textarea { font-family: inherit; color: inherit; }
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <!-- ORDEN DE CARGA
-       1. state.jsx → store global (usePace, acciones)
+       0. i18n/*    → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
+                      Deben ir ANTES de state.jsx: loadState() llama a detectInitialLang().
+       1. state.jsx → store global (usePace, acciones, setLang)
        2. ui/*      → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
        3. shell/*   → layout (Sidebar)
        4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
        5. main.jsx  → monta <PaceApp/> en #root
   -->
-  <script type="text/babel">/* PACE · Foco · Cuerpo
+  <script type="text/babel">
+/* PACE · Catálogo de strings i18n — ES / EN
+   Sesión 37 · v0.19.0
+   Reglas: no incluir nombres de rutinas, pasos, IDs, "PACE", "Pomodoro",
+   "Wim Hof", "Buy Me a Coffee", ni número de versión.
+*/
+
+window.PACE_STRINGS = {
+  es: {
+    // Welcome
+    'welcome.subtitle':              'Un ritmo para tu día',
+    'welcome.cta':                   'Empezar',
+    'welcome.greeting':              'Bienvenida',
+    'welcome.tagline':               'Antídoto a la silla.',
+    'welcome.tagline.sub':           'A tu ritmo.',
+    'welcome.lede':                  'Micro-pausas de foco, respiración, movilidad e hidratación. Sin gamificación ni notificaciones abrumadoras.',
+    'welcome.value.local.label':     'Todo local',
+    'welcome.value.local.sub':       'en tu navegador',
+    'welcome.value.accounts.label':  'Sin cuentas',
+    'welcome.value.accounts.sub':    'sin registro',
+    'welcome.value.free.label':      'Siempre gratis',
+    'welcome.value.free.sub':        'sin paywall',
+    'welcome.intention.label':       '¿Qué quieres cultivar hoy?',
+    'welcome.intention.optional':    'opcional',
+    'welcome.intention.placeholder': 'concentración, calma, movimiento…',
+    'welcome.skip':                  'prefiero saltarlo',
+
+    // Support
+    'support.meta':                  'Apoya el proyecto',
+    'support.title.main':            'PACE es gratis.',
+    'support.title.sub':             'Y lo seguirá siendo.',
+    'support.lede':                  'No hay cuentas. No hay servidor. No te sigue nadie. Todo vive en tu navegador — y así queremos que siga.',
+    'support.value.local.label':     'Todo local',
+    'support.value.local.sub':       'localStorage únicamente',
+    'support.value.tracking.label':  'Sin tracking',
+    'support.value.tracking.sub':    'sin analytics, sin cookies',
+    'support.value.forever.label':   'Para siempre',
+    'support.value.forever.sub':     'sin paywall, sin pro',
+    'support.cta':                   'Si te cuida, ayúdanos a cuidarlo.',
+    'support.cta.sub':               'No desbloquea nada. Solo nos da café.',
+    'support.btn.label':             'Da de pastar a la vaca',
+    'support.btn.copy':              'Copiar enlace',
+    'support.btn.copied':            '✓ copiado',
+    'support.donated':               'Ya doné →',
+    'support.thanks.saved':          '✦ gracias · sello guardado',
+    'support.thanks':                '✦ gracias',
+    'support.sidebar.label':         'Da de pastar a la vaca',
+    'support.sidebar.title':         'Apoya el proyecto',
+
+    // Break
+    'break.tag':                     'Ciclo completado',
+    'break.title':                   'Pausa bien hecha',
+    'break.subtitle':                'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
+    'break.breathe.label':           'Respira',
+    'break.breathe.desc':            '2 min para volver al centro',
+    'break.move.label':              'Muévete',
+    'break.move.desc':               'Antídoto rápido a la silla',
+    'break.water.label':             'Hidrátate',
+    'break.water.desc':              'Un vaso ahora',
+    'break.done':                    'Ya hecho hoy · otra ronda si quieres',
+    'break.recommended':             'Para ti',
+    'break.shortcut':                'Atajo: B · M · H · Esc',
+    'break.skip':                    'Saltar esta pausa',
+
+    // Sidebar
+    'sidebar.section.rhythm':        'Ritmo',
+    'sidebar.section.trail':         'Sendero',
+    'sidebar.section.achievements':  'Logros',
+    'sidebar.achievements.discover': '{n} por descubrir →',
+    'sidebar.streak.day':            'día seguido',
+    'sidebar.streak.days':           'días seguidos',
+    'sidebar.streak.best':           'Mejor: {n} días',
+    'sidebar.status.ontrack':        'En camino',
+    'sidebar.collapse.title':        'Colapsar (⌘\\)',
+    'sidebar.collapse.aria':         'Colapsar panel',
+    'sidebar.logo.title':            '¿Le haces cosquillas?',
+    'sidebar.counter.pomodoros':     'Pomodoros completados hoy',
+    'sidebar.counter.rounds':        'Rondas largas (cada 4 pomodoros)',
+    'sidebar.counter.streak':        'Días activos seguidos',
+    'sidebar.trail.hito':            'hito',
+    'sidebar.trail.hitos':           'hitos',
+    'sidebar.trail.now':             'ahora',
+    'sidebar.days':                  'L,M,X,J,V,S,D',
+    'sidebar.open.title':            'Abrir panel',
+    'sidebar.open.aria':             'Abrir panel',
+    'sidebar.trail.hour.start':      '6h',
+    'sidebar.trail.hour.end':        '22h',
+
+    // Welcome lang toggle
+    'welcome.lang.toggle.toEn':      'Cambiar a English',
+    'welcome.lang.toggle.toEs':      'Cambiar a Español',
+
+    // TopBar
+    'topbar.mode.focus':             'Foco',
+    'topbar.mode.pause':             'Pausa',
+    'topbar.mode.long':              'Larga',
+    'topbar.stats.title':            'Ritmo semanal (S)',
+    'topbar.stats.aria':             'Ver estadísticas',
+    'topbar.achievements.title':     'Logros (L)',
+    'topbar.achievements.aria':      'Ver logros',
+    'topbar.tweaks.title':           'Tweaks (T)',
+    'topbar.tweaks.aria':            'Abrir tweaks',
+
+    // Settings (panel Ajustes)
+    'settings.title':                'Ajustes',
+    'settings.audio.label':          'Audio',
+    'settings.audio.on':             'Activado',
+    'settings.audio.off':            'Silenciado',
+    'settings.audio.hint':           'Sonidos de la sesión',
+
+    // ActivityBar
+    'activity.meta':                 'Actividades',
+    'activity.breathe.label':        'Respira',
+    'activity.breathe.sub':          'ritmo, calma',
+    'activity.stretch.label':        'Estira',
+    'activity.stretch.sub':          'afloja tensión',
+    'activity.move.label':           'Mueve',
+    'activity.move.sub':             'cuerpo activo',
+    'activity.hydrate.label':        'Hidrátate',
+    'activity.hydrate.sub':          'agua ahora',
+
+    // Tweaks
+    'tweaks.meta':                   'Panel',
+    'tweaks.eje.palette':            'Paleta',
+    'tweaks.eje.layout':             'Layout',
+    'tweaks.eje.timer':              'Estilo del timer',
+    'tweaks.eje.breath':             'Círculo de respiración',
+    'tweaks.eje.lang':               'Idioma',
+    'tweaks.palette.crema':          'Crema día',
+    'tweaks.palette.oscuro':         'Oscuro noche',
+    'tweaks.palette.envejecido':     'Papel envejecido',
+    'tweaks.layout.sidebar':         'Sidebar (default)',
+    'tweaks.layout.minimal':         'Minimal',
+    'tweaks.timer.aro':              'Aro (default)',
+    'tweaks.timer.barra':            'Barra',
+    'tweaks.timer.analogico':        'Analógico',
+    'tweaks.breath.flor':            'Flor (default)',
+    'tweaks.breath.pulso':           'Pulso',
+    'tweaks.breath.petalo':          'Pétalo',
+    'tweaks.breath.ondas':           'Ondas',
+    'tweaks.breath.organico':        'Orgánico',
+    'tweaks.lang.es':                'Español',
+    'tweaks.lang.en':                'English',
+    'tweaks.sounds.meta':            'Sonidos',
+    'tweaks.sounds.on':              'Activo',
+    'tweaks.sounds.off':             'Silencio',
+    'tweaks.data.meta':              'Tus datos',
+    'tweaks.data.export':            'Exportar',
+    'tweaks.data.import':            'Importar',
+    'tweaks.data.export.title':      'Descarga un JSON con tu estado actual',
+    'tweaks.data.import.title':      'Sobreescribe tus datos con un backup',
+    'tweaks.data.note':              'Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.',
+    'tweaks.reset':                  'Resetear todo',
+    'tweaks.msg.exported':           'Backup descargado.',
+    'tweaks.msg.export.err':         'No se pudo exportar.',
+    'tweaks.msg.imported':           'Importado — recargando…',
+    'tweaks.msg.import.invalid':     'Archivo no reconocido.',
+    'tweaks.msg.import.json.err':    'JSON inválido.',
+    'tweaks.confirm.reset':          '¿Resetear todos los datos de PACE?',
+    'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
+
+    // Session (compartido: shell + prep + done)
+    'session.exit':                    '× Salir',
+    'session.prep':                    'Prepárate',
+    'session.startNow':                'Empezar ahora',
+    'session.backToHome':              'Volver al inicio',
+    'session.doneMeta':                'Sesión completada',
+    'session.antidoteDone':            'Antídoto completado',
+    'session.hold':                    'Retén sin aire',
+    'session.breatheAgain':            'Respirar de nuevo',
+    'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
+    'session.minutes':                 'minutos',
+    'session.seconds':                 'segundos',
+    'session.hint':                    'Espacio pausar · Esc salir',
+    'session.resume':                  '▶ Reanudar',
+    'session.pause':                   '❚❚ Pausar',
+    'session.finish':                  '▶| Terminar',
+    'session.round':                   'Ronda',
+
+    // Move / Extra (pasos)
+    'move.stepCount':                  'Paso {current} de {total}',
+    'move.nextStep':                   'Siguiente',
+    'move.lastStep':                   'Último paso',
+    'move.prev':                       '← Anterior',
+    'move.next':                       'Siguiente →',
+    'move.doneMeta':                   'Antídoto completado',
+    'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
+
+    // Focus
+    'focus.minutes.custom.title':      'Minutos personalizados (1–180)',
+    'focus.cycle':                     'Ciclo',
+    'focus.min':                       'Min',
+    'focus.other':                     'Otro',
+    'focus.restart':                   'Reiniciar',
+    'focus.start':                     'Comenzar',
+    'focus.pause':                     'Pausar',
+    'focus.continue':                  'Continuar',
+    'focus.mode.focus':                'Foco',
+    'focus.mode.pause':                'Pausa corta',
+    'focus.mode.long':                 'Pausa larga',
+    'focus.subtitle.focus':            'Concentración profunda',
+    'focus.subtitle.pause':            'Desconecta 5 min',
+    'focus.subtitle.long':             'Pausa larga · estira y respira',
+
+    // Common (compartido entre sesiones)
+    'common.close':                    'Cerrar',
+    'common.time':                     'Tiempo',
+    'common.rounds':                   'Rondas',
+    'common.breaths':                  'Respiraciones',
+    'common.breath':                   'Respiración',
+    'common.of':                       'de',
+
+    // Breathe (fases de sesión activa)
+    'breathe.phase.inhala':            'Inhala',
+    'breathe.phase.exhala':            'Exhala',
+    'breathe.phase.sosten':            'Sostén',
+    'breathe.phase.inhala.mas':        'Inhala más',
+    'breathe.phase.inhala.oceanica':   'Inhala oceánica',
+    'breathe.phase.exhala.oceanica':   'Exhala oceánica',
+    'breathe.phase.inhala.izq':        'Inhala izq.',
+    'breathe.phase.inhala.dcha':       'Inhala dcha.',
+    'breathe.phase.exhala.dcha':       'Exhala dcha.',
+    'breathe.phase.exhala.izq':        'Exhala izq.',
+    'breathe.phase.respira':           'Respira',
+
+    // Breathe (sesión)
+    'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
+    'breathe.doneCopy':                'Tu cuerpo ha encontrado su ritmo.',
+
+    // Libraries (compartido)
+    'lib.tag':                         'Biblioteca',
+    'lib.routines':                    'Rutinas',
+
+    // Breathe Library
+    'lib.breathe.title':               'Respiración',
+    'lib.breathe.subtitle':            'Breathwork guiado: pranayamas, coherencia, rondas.',
+
+    // Move Library
+    'lib.move.title':                  'Mueve',
+    'lib.move.subtitle':               'Calistenia y fuerza. Corto, discreto, sin equipo.',
+    'lib.move.meta':                   'Cuerpo activo',
+
+    // Extra Library
+    'lib.extra.title':                 'Estira',
+    'lib.extra.subtitle':              'Movilidad y estiramientos. Antídoto a la silla.',
+    'lib.extra.meta':                  'Afloja tensión',
+
+    // Move Session (additional)
+    'move.steps':                      'Pasos',
+    'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
+    'move.next.prefix':                'Siguiente:',
+    'move.finish':                     'Terminar',
+    'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
+
+    // Hydrate
+    'hydrate.tag':                     'Hidratación',
+    'hydrate.title':                   'Hidrátate',
+    'hydrate.subtitle':                'Un sorbo ahora, un regalo a tu yo de las 5.',
+    'hydrate.glasses.today':           'Vasos hoy',
+    'hydrate.less':                    'Un vaso menos',
+    'hydrate.more':                    'Un vaso más',
+    'hydrate.tip.label':               'Tip:',
+    'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
+
+    // Stats
+    'stats.tag':                       'Semana',
+    'stats.title':                     'Ritmo semanal',
+    'stats.subtitle':                  'Métricas suaves. Sin ansiedad, sin comparación.',
+    'stats.unit.min':                  'min',
+    'stats.unit.glasses':              'vasos',
+    'stats.note.label':                'Nota:',
+    'stats.note':                      'no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.',
+    'stats.days':                      'Lun,Mar,Mié,Jue,Vie,Sáb,Dom',
+
+    // Achievements
+    'ach.tag':                         'Colección',
+    'ach.title':                       'Logros',
+    'ach.subtitle':                    'Sellos de libreta de campo. Colección creciente. Explora, no compitas.',
+    'ach.available':                   'Disponibles',
+    'ach.coming.soon':                 'Próximamente',
+    'ach.cat.primeros':                'Primeros pasos',
+    'ach.cat.constancia':              'Constancia',
+    'ach.cat.exploracion':             'Exploración',
+    'ach.cat.maestria':                'Maestría',
+    'ach.cat.secretos':                'Secretos',
+    'ach.cat.estacionales':            'Estacionales',
+    'ach.seal.soon':                   'Pronto',
+    'ach.seal.secret':                 'Secreto',
+    'ach.seal.discover':               'Por descubrir',
+    'ach.toast.new':                   'Nuevo sello',
+
+    // BreatheLibrary safety modal
+    'breathe.safety.before':           'Antes de empezar',
+    'breathe.safety.check':            'Lo he leído y asumo mi responsabilidad',
+    'breathe.safety.cancel':           'Cancelar',
+    'breathe.safety.start':            'Empezar sesión',
+    'breathe.safety.required':         'Requiere lectura de seguridad',
+    'breathe.safety.body.intro.pre':   'Esta técnica implica ',
+    'breathe.safety.body.intro.bold':  'hiperventilación controlada y apnea',
+    'breathe.safety.body.intro.post':  '. Puede causar mareo, cosquilleo o desmayo.',
+    'breathe.safety.body.rule1.pre':   'Practícala ',
+    'breathe.safety.body.rule1.bold':  'sentado o tumbado',
+    'breathe.safety.body.rule1.post':  ', nunca de pie',
+    'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
+    'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
+    'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
+  },
+
+  en: {
+    // Welcome
+    'welcome.subtitle':              'A rhythm for your day',
+    'welcome.cta':                   'Begin',
+    'welcome.greeting':              'Welcome',
+    'welcome.tagline':               'Antidote to the chair.',
+    'welcome.tagline.sub':           'At your own pace.',
+    'welcome.lede':                  'Micro-breaks for focus, breathing, mobility and hydration. No gamification, no overwhelming notifications.',
+    'welcome.value.local.label':     'Fully local',
+    'welcome.value.local.sub':       'in your browser',
+    'welcome.value.accounts.label':  'No accounts',
+    'welcome.value.accounts.sub':    'no sign-up',
+    'welcome.value.free.label':      'Always free',
+    'welcome.value.free.sub':        'no paywall',
+    'welcome.intention.label':       'What do you want to cultivate today?',
+    'welcome.intention.optional':    'optional',
+    'welcome.intention.placeholder': 'focus, calm, movement…',
+    'welcome.skip':                  'skip for now',
+
+    // Support
+    'support.meta':                  'Support the project',
+    'support.title.main':            'PACE is free.',
+    'support.title.sub':             'And it always will be.',
+    'support.lede':                  'No accounts. No server. No tracking. Everything lives in your browser — and we want to keep it that way.',
+    'support.value.local.label':     'Fully local',
+    'support.value.local.sub':       'localStorage only',
+    'support.value.tracking.label':  'No tracking',
+    'support.value.tracking.sub':    'no analytics, no cookies',
+    'support.value.forever.label':   'Forever',
+    'support.value.forever.sub':     'no paywall, no pro',
+    'support.cta':                   'If it takes care of you, help us keep it going.',
+    'support.cta.sub':               "Doesn't unlock anything. Just buys us coffee.",
+    'support.btn.label':             'Feed the cow',
+    'support.btn.copy':              'Copy link',
+    'support.btn.copied':            '✓ copied',
+    'support.donated':               'I donated →',
+    'support.thanks.saved':          '✦ thanks · badge saved',
+    'support.thanks':                '✦ thanks',
+    'support.sidebar.label':         'Feed the cow',
+    'support.sidebar.title':         'Support the project',
+
+    // Break
+    'break.tag':                     'Cycle complete',
+    'break.title':                   'Well-earned break',
+    'break.subtitle':                "You've closed a focus cycle. Choose your micro-break.",
+    'break.breathe.label':           'Breathe',
+    'break.breathe.desc':            '2 min to return to center',
+    'break.move.label':              'Move',
+    'break.move.desc':               'Quick antidote to the chair',
+    'break.water.label':             'Hydrate',
+    'break.water.desc':              'A glass right now',
+    'break.done':                    'Done today · another round if you like',
+    'break.recommended':             'For you',
+    'break.shortcut':                'Shortcut: B · M · H · Esc',
+    'break.skip':                    'Skip this break',
+
+    // Sidebar
+    'sidebar.section.rhythm':        'Rhythm',
+    'sidebar.section.trail':         'Trail',
+    'sidebar.section.achievements':  'Achievements',
+    'sidebar.achievements.discover': '{n} to discover →',
+    'sidebar.streak.day':            'day in a row',
+    'sidebar.streak.days':           'days in a row',
+    'sidebar.streak.best':           'Best: {n} days',
+    'sidebar.status.ontrack':        'On track',
+    'sidebar.collapse.title':        'Collapse (⌘\\)',
+    'sidebar.collapse.aria':         'Collapse panel',
+    'sidebar.logo.title':            'Tickling it?',
+    'sidebar.counter.pomodoros':     'Pomodoros completed today',
+    'sidebar.counter.rounds':        'Long rounds (every 4 pomodoros)',
+    'sidebar.counter.streak':        'Active days in a row',
+    'sidebar.trail.hito':            'milestone',
+    'sidebar.trail.hitos':           'milestones',
+    'sidebar.trail.now':             'now',
+    'sidebar.days':                  'Mo,Tu,We,Th,Fr,Sa,Su',
+    'sidebar.open.title':            'Open panel',
+    'sidebar.open.aria':             'Open panel',
+    'sidebar.trail.hour.start':      '6h',
+    'sidebar.trail.hour.end':        '22h',
+
+    // Welcome lang toggle
+    'welcome.lang.toggle.toEn':      'Switch to English',
+    'welcome.lang.toggle.toEs':      'Switch to Spanish',
+
+    // TopBar
+    'topbar.mode.focus':             'Focus',
+    'topbar.mode.pause':             'Pause',
+    'topbar.mode.long':              'Long',
+    'topbar.stats.title':            'Weekly rhythm (S)',
+    'topbar.stats.aria':             'View stats',
+    'topbar.achievements.title':     'Achievements (L)',
+    'topbar.achievements.aria':      'View achievements',
+    'topbar.tweaks.title':           'Tweaks (T)',
+    'topbar.tweaks.aria':            'Open tweaks',
+
+    // Settings (Ajustes panel)
+    'settings.title':                'Settings',
+    'settings.audio.label':          'Audio',
+    'settings.audio.on':             'On',
+    'settings.audio.off':            'Muted',
+    'settings.audio.hint':           'Session sounds',
+
+    // ActivityBar
+    'activity.meta':                 'Activities',
+    'activity.breathe.label':        'Breathe',
+    'activity.breathe.sub':          'rhythm, calm',
+    'activity.stretch.label':        'Stretch',
+    'activity.stretch.sub':          'release tension',
+    'activity.move.label':           'Move',
+    'activity.move.sub':             'active body',
+    'activity.hydrate.label':        'Hydrate',
+    'activity.hydrate.sub':          'water now',
+
+    // Tweaks
+    'tweaks.meta':                   'Panel',
+    'tweaks.eje.palette':            'Palette',
+    'tweaks.eje.layout':             'Layout',
+    'tweaks.eje.timer':              'Timer style',
+    'tweaks.eje.breath':             'Breathing circle',
+    'tweaks.eje.lang':               'Language',
+    'tweaks.palette.crema':          'Day cream',
+    'tweaks.palette.oscuro':         'Night dark',
+    'tweaks.palette.envejecido':     'Aged paper',
+    'tweaks.layout.sidebar':         'Sidebar (default)',
+    'tweaks.layout.minimal':         'Minimal',
+    'tweaks.timer.aro':              'Ring (default)',
+    'tweaks.timer.barra':            'Bar',
+    'tweaks.timer.analogico':        'Analog',
+    'tweaks.breath.flor':            'Flower (default)',
+    'tweaks.breath.pulso':           'Pulse',
+    'tweaks.breath.petalo':          'Petal',
+    'tweaks.breath.ondas':           'Waves',
+    'tweaks.breath.organico':        'Organic',
+    'tweaks.lang.es':                'Spanish',
+    'tweaks.lang.en':                'English',
+    'tweaks.sounds.meta':            'Sounds',
+    'tweaks.sounds.on':              'Active',
+    'tweaks.sounds.off':             'Silent',
+    'tweaks.data.meta':              'Your data',
+    'tweaks.data.export':            'Export',
+    'tweaks.data.import':            'Import',
+    'tweaks.data.export.title':      'Download a JSON with your current state',
+    'tweaks.data.import.title':      'Overwrite your data with a backup',
+    'tweaks.data.note':              'Everything lives in your browser. The backup is a local JSON file — no server, no account.',
+    'tweaks.reset':                  'Reset everything',
+    'tweaks.msg.exported':           'Backup downloaded.',
+    'tweaks.msg.export.err':         'Could not export.',
+    'tweaks.msg.imported':           'Imported — reloading…',
+    'tweaks.msg.import.invalid':     'File not recognized.',
+    'tweaks.msg.import.json.err':    'Invalid JSON.',
+    'tweaks.confirm.reset':          'Reset all PACE data?',
+    'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
+
+    // Session (shared: shell + prep + done)
+    'session.exit':                    '× Exit',
+    'session.prep':                    'Get ready',
+    'session.startNow':                'Start now',
+    'session.backToHome':              'Back to home',
+    'session.doneMeta':                'Session completed',
+    'session.antidoteDone':            'Antidote completed',
+    'session.hold':                    'Hold your breath',
+    'session.breatheAgain':            'Breathe again',
+    'session.holdCue':                 'Press when you feel the need to breathe.',
+    'session.minutes':                 'minutes',
+    'session.seconds':                 'seconds',
+    'session.hint':                    'Space pause · Esc exit',
+    'session.resume':                  '▶ Resume',
+    'session.pause':                   '❚❚ Pause',
+    'session.finish':                  '▶| Finish',
+    'session.round':                   'Round',
+
+    // Move / Extra (steps)
+    'move.stepCount':                  'Step {current} of {total}',
+    'move.nextStep':                   'Next',
+    'move.lastStep':                   'Last step',
+    'move.prev':                       '← Previous',
+    'move.next':                       'Next →',
+    'move.doneMeta':                   'Antidote completed',
+    'move.doneCopy':                   'Your body feels like yours again.',
+
+    // Focus
+    'focus.minutes.custom.title':      'Custom minutes (1–180)',
+    'focus.cycle':                     'Cycle',
+    'focus.min':                       'Min',
+    'focus.other':                     'Other',
+    'focus.restart':                   'Restart',
+    'focus.start':                     'Start',
+    'focus.pause':                     'Pause',
+    'focus.continue':                  'Continue',
+    'focus.mode.focus':                'Focus',
+    'focus.mode.pause':                'Short break',
+    'focus.mode.long':                 'Long break',
+    'focus.subtitle.focus':            'Deep focus',
+    'focus.subtitle.pause':            'Disconnect for 5 min',
+    'focus.subtitle.long':             'Long break · stretch and breathe',
+
+    // Common (shared across sessions)
+    'common.close':                    'Close',
+    'common.time':                     'Time',
+    'common.rounds':                   'Rounds',
+    'common.breaths':                  'Breaths',
+    'common.breath':                   'Breath',
+    'common.of':                       'of',
+
+    // Breathe (active session phases)
+    'breathe.phase.inhala':            'Inhale',
+    'breathe.phase.exhala':            'Exhale',
+    'breathe.phase.sosten':            'Hold',
+    'breathe.phase.inhala.mas':        'Inhale more',
+    'breathe.phase.inhala.oceanica':   'Ocean inhale',
+    'breathe.phase.exhala.oceanica':   'Ocean exhale',
+    'breathe.phase.inhala.izq':        'Inhale left',
+    'breathe.phase.inhala.dcha':       'Inhale right',
+    'breathe.phase.exhala.dcha':       'Exhale right',
+    'breathe.phase.exhala.izq':        'Exhale left',
+    'breathe.phase.respira':           'Breathe',
+
+    // Breathe (session)
+    'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
+    'breathe.doneCopy':                'Your body has found its rhythm.',
+
+    // Libraries (shared)
+    'lib.tag':                         'Library',
+    'lib.routines':                    'Routines',
+
+    // Breathe Library
+    'lib.breathe.title':               'Breathing',
+    'lib.breathe.subtitle':            'Guided breathwork: pranayamas, coherence, rounds.',
+
+    // Move Library
+    'lib.move.title':                  'Move',
+    'lib.move.subtitle':               'Calisthenics and strength. Short, discreet, no equipment.',
+    'lib.move.meta':                   'Active body',
+
+    // Extra Library
+    'lib.extra.title':                 'Stretch',
+    'lib.extra.subtitle':              'Mobility and stretching. Antidote to the chair.',
+    'lib.extra.meta':                  'Release tension',
+
+    // Move Session (additional)
+    'move.steps':                      'Steps',
+    'move.prepCopy':                   'Stand up. No rush. {n} steps.',
+    'move.next.prefix':                'Next:',
+    'move.finish':                     'Finish',
+    'move.hint':                       '← → navigate · Space pause · Esc exit',
+
+    // Hydrate
+    'hydrate.tag':                     'Hydration',
+    'hydrate.title':                   'Hydrate',
+    'hydrate.subtitle':                "A sip now, a gift to your 5 o'clock self.",
+    'hydrate.glasses.today':           'Glasses today',
+    'hydrate.less':                    'One less glass',
+    'hydrate.more':                    'One more glass',
+    'hydrate.tip.label':               'Tip:',
+    'hydrate.tip':                     'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
+
+    // Stats
+    'stats.tag':                       'Week',
+    'stats.title':                     'Weekly rhythm',
+    'stats.subtitle':                  'Soft metrics. No anxiety, no comparison.',
+    'stats.unit.min':                  'min',
+    'stats.unit.glasses':              'glasses',
+    'stats.note.label':                'Note:',
+    'stats.note':                      "we don't measure to judge you. The numbers are here so you can recognize your rhythms, not chase them.",
+    'stats.days':                      'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+
+    // Achievements
+    'ach.tag':                         'Collection',
+    'ach.title':                       'Achievements',
+    'ach.subtitle':                    "Field notebook stamps. Growing collection. Explore, don't compete.",
+    'ach.available':                   'Available',
+    'ach.coming.soon':                 'Coming soon',
+    'ach.cat.primeros':                'First steps',
+    'ach.cat.constancia':              'Consistency',
+    'ach.cat.exploracion':             'Exploration',
+    'ach.cat.maestria':                'Mastery',
+    'ach.cat.secretos':                'Secrets',
+    'ach.cat.estacionales':            'Seasonal',
+    'ach.seal.soon':                   'Soon',
+    'ach.seal.secret':                 'Secret',
+    'ach.seal.discover':               'To discover',
+    'ach.toast.new':                   'New seal',
+
+    // BreatheLibrary safety modal
+    'breathe.safety.before':           'Before you start',
+    'breathe.safety.check':            'I have read this and accept responsibility',
+    'breathe.safety.cancel':           'Cancel',
+    'breathe.safety.start':            'Start session',
+    'breathe.safety.required':         'Safety briefing required',
+    'breathe.safety.body.intro.pre':   'This technique involves ',
+    'breathe.safety.body.intro.bold':  'controlled hyperventilation and breath holds',
+    'breathe.safety.body.intro.post':  '. It can cause dizziness, tingling or fainting.',
+    'breathe.safety.body.rule1.pre':   'Practice it ',
+    'breathe.safety.body.rule1.bold':  'sitting or lying down',
+    'breathe.safety.body.rule1.post':  ', never standing',
+    'breathe.safety.body.rule2':       'Never in water, while driving or at height',
+    'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
+    'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
+  },
+};
+
+</script>
+  <script type="text/babel">
+/* PACE · Traducciones EN de contenido de ejercicios
+   Solo EN: en ES los componentes usan los strings del dato directamente.
+   En EN, el helper tR() de cada componente busca aquí con t(key).
+   Cargado después de strings.js — augmenta window.PACE_STRINGS.en.
+*/
+Object.assign(window.PACE_STRINGS.en, {
+
+  // ── Breathe — etiquetas de fase ─────────────────────────────────
+  'breathe.phase.inhala':            'Inhale',
+  'breathe.phase.exhala':            'Exhale',
+  'breathe.phase.sosten':            'Hold',
+  'breathe.phase.inhala.mas':        'Inhale again',
+  'breathe.phase.inhala.oceanica':   'Oceanic inhale',
+  'breathe.phase.exhala.oceanica':   'Oceanic exhale',
+  'breathe.phase.inhala.izq':        'Inhale left',
+  'breathe.phase.inhala.dcha':       'Inhale right',
+  'breathe.phase.exhala.dcha':       'Exhale right',
+  'breathe.phase.exhala.izq':        'Exhale left',
+  'breathe.phase.respira':           'Breathe',
+
+  // ── Breathe — categorías ─────────────────────────────────────────
+  'breathe.cat.energia.label':           'Energy',
+  'breathe.cat.equilibrio.label':        'Equilibrium',
+  'breathe.cat.equilibrio.aside':        'Regulates the nervous system',
+  'breathe.cat.balance.label':           'Balance',
+  'breathe.cat.balance.aside':           'Harmonizes HRV',
+  'breathe.cat.relajacion.label':        'Relaxation',
+  'breathe.cat.relajacion.aside':        'Quiets the mind',
+  'breathe.cat.pranayama.label':         'Pranayama',
+  'breathe.cat.pranayama.aside':         'Yogic roots',
+
+  // ── Breathe — rutinas ────────────────────────────────────────────
+  'breathe.rounds.full.name':            'Full Round Breathing',
+  'breathe.rounds.full.desc':            '30 deep breaths → empty-lung hold. 3 rounds.',
+  'breathe.rounds.full.code':            'Energy',
+  'breathe.rounds.express.name':         'Express Rounds',
+  'breathe.rounds.express.desc':         'Short version: 2 rounds of 25 breaths.',
+  'breathe.rounds.express.code':         'Energy',
+  'breathe.bellows.name':                'Bhastrika · Bellows',
+  'breathe.bellows.desc':                'Fast energizing pranayama',
+  'breathe.bellows.code':                'Pranayama',
+  'breathe.box.4.name':                  'Box 4·4·4·4',
+  'breathe.box.4.desc':                  'Perfect square. Mental calm and sustained focus.',
+  'breathe.box.4.code':                  'Equilibrium',
+  'breathe.box.6.name':                  'Box 6·6·6·6',
+  'breathe.box.6.desc':                  'Deeper version',
+  'breathe.box.6.code':                  'Equilibrium',
+  'breathe.coherent.55.name':            'Coherent 5·5',
+  'breathe.coherent.55.desc':            'Cardiac breathing. Synchronizes heart and mind.',
+  'breathe.coherent.55.code':            'Balance',
+  'breathe.coherent.66.name':            'Coherent 6·6',
+  'breathe.coherent.66.desc':            'Deeper version. 5 cycles per minute.',
+  'breathe.coherent.66.code':            'Balance',
+  'breathe.478.name':                    '4·7·8',
+  'breathe.478.desc':                    'Long exhale. Lowers anxiety, prepares for sleep.',
+  'breathe.478.code':                    'Relaxation',
+  'breathe.physiological.name':          'Physiological Sigh',
+  'breathe.physiological.desc':          'Double inhale + long exhale. Quick reset.',
+  'breathe.physiological.code':          'Relaxation',
+  'breathe.nadi.shodhana.name':          'Nadi Shodhana',
+  'breathe.nadi.shodhana.desc':          'Alternate nostril breathing. Balances hemispheres.',
+  'breathe.nadi.shodhana.code':          'Pranayama',
+  'breathe.ujjayi.name':                 'Ujjayi',
+  'breathe.ujjayi.desc':                 'Oceanic breath. Meditative.',
+  'breathe.ujjayi.code':                 'Pranayama',
+  'breathe.kapalabhati.name':            'Kapalabhati · Kriya',
+  'breathe.kapalabhati.desc':            'Skull shining breath. Energizing.',
+  'breathe.kapalabhati.code':            'Kriya',
+
+  // ── Mueve — rutinas (ids extra.*) ────────────────────────────────
+  'extra.desk.pushups.name':             'Desk Push-ups',
+  'extra.desk.pushups.desc':             'Inclined against desk. 3 sets.',
+  'extra.desk.pushups.code':             'Strength',
+  'extra.desk.pushups.s0.name':          'Incline push-ups',
+  'extra.desk.pushups.s0.cue':           '12 reps against desk.',
+  'extra.desk.pushups.s1.name':          'Rest',
+  'extra.desk.pushups.s1.cue':           'Breathe.',
+  'extra.desk.pushups.s2.name':          'Incline push-ups',
+  'extra.desk.pushups.s2.cue':           '10 reps.',
+  'extra.desk.pushups.s3.name':          'Rest',
+  'extra.desk.pushups.s3.cue':           'Breathe.',
+  'extra.desk.pushups.s4.name':          'Incline push-ups',
+  'extra.desk.pushups.s4.cue':           '8 slow reps.',
+
+  'extra.chair.dips.name':               'Chair Dips',
+  'extra.chair.dips.desc':               'Triceps in 3 sets.',
+  'extra.chair.dips.code':               'Triceps',
+  'extra.chair.dips.s0.name':            'Chair dips',
+  'extra.chair.dips.s0.cue':             '10–12 reps with good control.',
+  'extra.chair.dips.s1.name':            'Rest',
+  'extra.chair.dips.s1.cue':             '',
+  'extra.chair.dips.s2.name':            'Chair dips',
+  'extra.chair.dips.s2.cue':             '10 reps.',
+  'extra.chair.dips.s3.name':            'Rest',
+  'extra.chair.dips.s3.cue':             '',
+  'extra.chair.dips.s4.name':            'Chair dips',
+  'extra.chair.dips.s4.cue':             'To failure.',
+
+  'extra.wall.sit.name':                 'Wall Sit',
+  'extra.wall.sit.desc':                 'Quadriceps isometric.',
+  'extra.wall.sit.code':                 'Legs',
+  'extra.wall.sit.s0.name':              'Wall sit',
+  'extra.wall.sit.s0.cue':               'Knees at 90°, hold.',
+  'extra.wall.sit.s1.name':              'Rest',
+  'extra.wall.sit.s1.cue':               'Easy.',
+  'extra.wall.sit.s2.name':              'Wall sit',
+  'extra.wall.sit.s2.cue':               'Lower if you can.',
+
+  'extra.calves.name':                   'Stealth Calf Raises',
+  'extra.calves.desc':                   'Under the desk, no one notices.',
+  'extra.calves.code':                   'Calves',
+  'extra.calves.s0.name':                'Calf raises',
+  'extra.calves.s0.cue':                 '25 controlled reps.',
+  'extra.calves.s1.name':                'Calf raises',
+  'extra.calves.s1.cue':                 '20 slower reps.',
+
+  'extra.core.stealth.name':             'Silent Core',
+  'extra.core.stealth.desc':             'Hollow hold in chair.',
+  'extra.core.stealth.code':             'Core',
+  'extra.core.stealth.s0.name':          'Seated hollow',
+  'extra.core.stealth.s0.cue':           'Raise legs, support lower back.',
+  'extra.core.stealth.s1.name':          'Rest',
+  'extra.core.stealth.s1.cue':           '',
+  'extra.core.stealth.s2.name':          'Seated hollow',
+  'extra.core.stealth.s2.cue':           'Hold.',
+  'extra.core.stealth.s3.name':          'Rest',
+  'extra.core.stealth.s3.cue':           '',
+  'extra.core.stealth.s4.name':          'Seated hollow',
+  'extra.core.stealth.s4.cue':           'To the limit.',
+
+  'extra.grip.squeeze.name':             'Grip + Forearms',
+  'extra.grip.squeeze.desc':             'Squeeze and extend.',
+  'extra.grip.squeeze.code':             'Forearms',
+  'extra.grip.squeeze.s0.name':          'Squeeze fist',
+  'extra.grip.squeeze.s0.cue':           'Squeeze hard 20 times.',
+  'extra.grip.squeeze.s1.name':          'Finger extension',
+  'extra.grip.squeeze.s1.cue':           'Stretch fingers to max.',
+  'extra.grip.squeeze.s2.name':          'Wrist stretch',
+  'extra.grip.squeeze.s2.cue':           'Wrist flexion + extension.',
+
+  'extra.posture.set.name':              'Posture Reset',
+  'extra.posture.set.desc':              'Chin tucks, scapular squeeze, thoracic ext.',
+  'extra.posture.set.code':              'Posture',
+  'extra.posture.set.s0.name':           'Chin tucks',
+  'extra.posture.set.s0.cue':            '10 reps, chin back.',
+  'extra.posture.set.s1.name':           'Scapular squeeze',
+  'extra.posture.set.s1.cue':            'Squeeze shoulder blades, 10 reps.',
+  'extra.posture.set.s2.name':           'Thoracic extension',
+  'extra.posture.set.s2.cue':            'Arch over chair.',
+  'extra.posture.set.s3.name':           'Chest opener',
+  'extra.posture.set.s3.cue':            'Arms back, expand chest.',
+
+  // ── Estira — rutinas (ids move.*) ────────────────────────────────
+  'move.chair.antidote.name':            'Chair Antidote',
+  'move.chair.antidote.desc':            'Exact antidote to 4h seated. Hips, lumbar, neck.',
+  'move.chair.antidote.code':            'SIT',
+  'move.chair.antidote.s0.name':         'Chest opening',
+  'move.chair.antidote.s0.cue':          'Hands behind head, open elbows, look at ceiling.',
+  'move.chair.antidote.s1.name':         'Thoracic rotation',
+  'move.chair.antidote.s1.cue':          'Seated: crossed hands, rotate trunk slowly.',
+  'move.chair.antidote.s2.name':         'Hip flexor',
+  'move.chair.antidote.s2.cue':          'Knee to floor, push pelvis forward.',
+  'move.chair.antidote.s3.name':         "World's greatest stretch",
+  'move.chair.antidote.s3.cue':          'Lunge + hand to floor + rotation.',
+  'move.chair.antidote.s4.name':         'Neck and traps',
+  'move.chair.antidote.s4.cue':          'Ear to shoulder, gentle.',
+  'move.chair.antidote.s5.name':         'Breathing reset',
+  'move.chair.antidote.s5.cue':          '3 deep inhales to close.',
+
+  'move.hips.5.name':                    'Hips · 5 steps',
+  'move.hips.5.desc':                    '5 steps to unlock deep hips.',
+  'move.hips.5.code':                    'HIP',
+  'move.hips.5.s0.name':                 'Cossack squat',
+  'move.hips.5.s0.cue':                  'Weight to one side, other leg straight. 5 per side.',
+  'move.hips.5.s1.name':                 '90/90',
+  'move.hips.5.s1.cue':                  'Rotate between sides slowly.',
+  'move.hips.5.s2.name':                 'Pigeon',
+  'move.hips.5.s2.cue':                  'Shin forward, weight forward. 40s per side.',
+  'move.hips.5.s3.name':                 'Deep squat',
+  'move.hips.5.s3.cue':                  'Heels down, elbows inside knees.',
+  'move.hips.5.s4.name':                 'Bridge with march',
+  'move.hips.5.s4.cue':                  'Deep glute activation.',
+
+  'move.shoulders.5.name':               'Shoulders · 5 steps',
+  'move.shoulders.5.desc':               'Shoulder reset. Keyboard antidote. Rotators, chest, traps.',
+  'move.shoulders.5.code':               'SHLD',
+  'move.shoulders.5.s0.name':            'Scapular wall slides',
+  'move.shoulders.5.s0.cue':             'Back against wall, raise arms.',
+  'move.shoulders.5.s1.name':            'Band pull-apart',
+  'move.shoulders.5.s1.cue':             'Without band: crossed arms + open.',
+  'move.shoulders.5.s2.name':            'External rotation',
+  'move.shoulders.5.s2.cue':             'Elbow at 90°, rotate outward.',
+  'move.shoulders.5.s3.name':            'Dead hang (if possible)',
+  'move.shoulders.5.s3.cue':             'Hang from a bar, relaxed.',
+  'move.shoulders.5.s4.name':            'Thoracic extension',
+  'move.shoulders.5.s4.cue':             'Over foam roller or rolled towel.',
+
+  'move.atg.knees.name':                 'ATG · Bulletproof Knees',
+  'move.atg.knees.desc':                 'Knees over toes. Indestructible ankles and knees.',
+  'move.atg.knees.code':                 'ATG',
+  'move.atg.knees.s0.name':              'ATG split squat',
+  'move.atg.knees.s0.cue':               'Deep lunge. Knee goes past foot.',
+  'move.atg.knees.s1.name':              'Tibialis raise',
+  'move.atg.knees.s1.cue':               'Against wall, lift feet.',
+  'move.atg.knees.s2.name':              'Nordics',
+  'move.atg.knees.s2.cue':               'Assisted if needed. Controlled descent.',
+  'move.atg.knees.s3.name':              'Sissy squat',
+  'move.atg.knees.s3.cue':               'Supported. Knees forward, heels up.',
+  'move.atg.knees.s4.name':              'Elephant walk',
+  'move.atg.knees.s4.cue':               'Walk touching floor, legs straight.',
+
+  'move.ancestral.name':                 'Ancestral',
+  'move.ancestral.desc':                 'Ancestral techniques. Crawl, hang, deep squat. Full body reset.',
+  'move.ancestral.code':                 'ANC',
+  'move.ancestral.s0.name':              'Deep squat hold',
+  'move.ancestral.s0.cue':               'Heels down, relax.',
+  'move.ancestral.s1.name':              'Crawling',
+  'move.ancestral.s1.cue':               'Contralateral, slow.',
+  'move.ancestral.s2.name':              'Passive hang',
+  'move.ancestral.s2.cue':               'From a bar, let go.',
+  'move.ancestral.s3.name':              'Ground sitting transitions',
+  'move.ancestral.s3.cue':               'Sit to floor and get up without hands.',
+  'move.ancestral.s4.name':              'Rib pull + breathing',
+  'move.ancestral.s4.cue':               'Cat/cow movement.',
+
+  'move.neck.3.name':                    'Neck · 3 min',
+  'move.neck.3.desc':                    'Micro-break for tense cervicals.',
+  'move.neck.3.code':                    'SIT',
+  'move.neck.3.s0.name':                 'Chin tucks',
+  'move.neck.3.s0.cue':                  'Bring chin back, like a double chin.',
+  'move.neck.3.s1.name':                 'Lateral tilt',
+  'move.neck.3.s1.cue':                  'Ear to shoulder, each side.',
+  'move.neck.3.s2.name':                 'Slow rotation',
+  'move.neck.3.s2.cue':                  "Look over shoulder, don't force.",
+  'move.neck.3.s3.name':                 'Scalenes',
+  'move.neck.3.s3.cue':                  'Hand under glute, tilt head to opposite side.',
+
+  'move.desk.quick.name':                'Desk Express',
+  'move.desk.quick.desc':                'Without standing up. 6 movements in the chair.',
+  'move.desk.quick.code':                'SIT',
+  'move.desk.quick.s0.name':             'Shrug + round',
+  'move.desk.quick.s0.cue':              'Shoulders up, then relax.',
+  'move.desk.quick.s1.name':             'Wrist circles',
+  'move.desk.quick.s1.cue':              '10 each direction.',
+  'move.desk.quick.s2.name':             'Seated twist',
+  'move.desk.quick.s2.cue':              'Rotate toward the backrest.',
+  'move.desk.quick.s3.name':             'Ankle circles',
+  'move.desk.quick.s3.cue':              'Under the desk.',
+  'move.desk.quick.s4.name':             'Chin tucks',
+  'move.desk.quick.s4.cue':              'Chin back 5 times.',
+  'move.desk.quick.s5.name':             'Deep breaths',
+  'move.desk.quick.s5.cue':              '3 full inhales.',
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · i18n helper — useT + detectInitialLang
+   Sesión 35 · v0.17.0
+
+   DEBE cargarse DESPUÉS de strings.js y ANTES de state.jsx,
+   porque state.jsx llama a detectInitialLang() al evaluar loadState().
+*/
+
+function detectInitialLang() {
+  const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  return nav === 'es' ? 'es' : 'en';
+}
+
+/* isDev: true en localhost, 127.0.0.1 o file:// — activa console.warn
+   para claves faltantes. En producción (dominio real) es silencioso. */
+const _i18nIsDev = (
+  ['localhost', '127.0.0.1'].includes(location.hostname) ||
+  location.protocol === 'file:'
+);
+
+/* useT — hook reactivo que lee state.lang y devuelve las funciones
+   de traducción t() y tn() (con variables {key}).
+
+   Depende de usePace (state.jsx) y PACE_STRINGS (strings.js).
+   Ambos deben estar cargados antes de que cualquier componente
+   que use useT() se monte. */
+function useT() {
+  const [state] = usePace();
+  const lang = state.lang || 'en';
+
+  function t(key) {
+    const strings = window.PACE_STRINGS;
+    if (!strings) return key;
+    if (strings[lang] && strings[lang][key] !== undefined) return strings[lang][key];
+    if (strings.en && strings.en[key] !== undefined) {
+      if (_i18nIsDev) console.warn(`[i18n] missing ${lang}: ${key}`);
+      return strings.en[key];
+    }
+    if (_i18nIsDev) console.warn(`[i18n] missing key: ${key}`);
+    return key;
+  }
+
+  function tn(key, vars) {
+    let str = t(key);
+    if (vars) {
+      Object.keys(vars).forEach(k => {
+        str = str.split(`{${k}}`).join(String(vars[k]));
+      });
+    }
+    return str;
+  }
+
+  return { t, tn, lang };
+}
+
+Object.assign(window, { useT, detectInitialLang });
+
+</script>
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -239,19 +1170,25 @@ input, textarea { font-family: inherit; color: inherit; }
 
 const { useSyncExternalStore, useCallback } = React;
 
-const LS_KEY = 'pace.state.v1';
-const PACE_VERSION = 'v0.13.0';
+/* NOTA (sesión 37 · v0.19.0): clave de localStorage bumpeada de v1 a v2.
+   Pre-lanzamiento sin usuarios reales — hard reset intencional. Elimina
+   la necesidad de migración para campos legacy (timerStyle circle/numero,
+   layout editorial). Cualquier estado v1 guardado se ignora; arranca
+   limpio con defaultState en v2. */
+const LS_KEY = 'pace.state.v2';
+const PACE_VERSION = 'v0.19.1';
 
 const defaultState = {
   // Settings / Tweaks
   palette: 'crema',           // crema | oscuro | envejecido
   font: 'cormorant',          // garamond | cormorant | mono
-  layout: 'sidebar',          // sidebar | minimal | editorial
+  layout: 'sidebar',          // sidebar | minimal (editorial eliminado en v0.19.0)
   sidebarCollapsed: false,    // true cuando el usuario colapsa el sidebar a icon-rail
-  timerStyle: 'aro',          // numero | circulo | barra | analogico | aro (híbrido círculo+barra)
+  timerStyle: 'aro',          // aro (default) | barra | analogico (circle/numero eliminados en v0.19.0)
   breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
   logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
   soundOn: false,
+  lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
 
   // Foco
   focusMode: 'foco',          // foco | pausa | larga
@@ -283,6 +1220,17 @@ const defaultState = {
 
   // Streak
   streak: { current: 0, longest: 0, lastActiveDate: null },
+
+  // Contadores acumulados de sesiones por módulo (sesión 29).
+  // Crecen monótonamente; nunca resetean en rollover. Alimentan los
+  // logros breathe.sessions.10/50 y move.sessions.25.
+  breatheSessionsTotal: 0,
+  moveSessionsTotal: 0,
+
+  // Set de fechas (toDateString()) en las que el usuario hizo al menos
+  // una sesión antes de las 9:00. Cap de 30 entradas (suficiente para
+  // alimentar `morning.5`). Sesión 29.
+  morningDates: [],
 
   // Intención del día — capturada opcionalmente en el Welcome de primera
   // vez (sesión 17 / v0.12.0), visible también para edición futura.
@@ -316,6 +1264,10 @@ const defaultState = {
   // No hay action que lo mute actualmente.
   reminders: [],
 
+  // Fechas (toDateString()) en las que se realizó alguna acción con soundOn=false.
+  // Cap de 30 entradas. Alimenta master.silent.day. Sesión 34.
+  silentDates: [],
+
   // Rollover: día de calendario del último uso (toDateString()).
   // Cuando cambia, se resetean cycle / plan / water.today al cargar.
   lastActiveDay: null,
@@ -325,13 +1277,19 @@ let _state = loadState();
 const _listeners = new Set();
 
 function loadState() {
+  const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return { ...defaultState, lastActiveDay: new Date().toDateString() };
+    if (!raw) {
+      return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
+    }
     const parsed = JSON.parse(raw);
+    /* Si el usuario no tiene lang guardado (instalación previa a i18n),
+       detectarlo desde navigator.language y persistirlo. */
+    if (!parsed.lang) parsed.lang = _detectLang();
     return rolloverIfNeeded({ ...defaultState, ...parsed });
   } catch (e) {
-    return { ...defaultState, lastActiveDay: new Date().toDateString() };
+    return { ...defaultState, lang: _detectLang(), lastActiveDay: new Date().toDateString() };
   }
 }
 
@@ -350,7 +1308,7 @@ function rolloverIfNeeded(state) {
      `unlockAchievement` desde dentro del propio loadState (la cola
      de toasts pendientes lo gestiona si el ToastHost aún no montó).
      Sesión 28. */
-  if (state.lastActiveDay && state.lastActiveDay !== today) {
+  if (state.lastActiveDay) {
     setTimeout(() => {
       try { unlockAchievement('first.return'); } catch (e) {}
     }, 0);
@@ -444,6 +1402,65 @@ function checkFocusDayAchievement() {
   if (todayMin >= 240) unlockAchievement('master.focus.day');
 }
 
+/* Detectores horarios — sesión 29.
+   `master.dawn`  → sesión antes de las 7:00.
+   `master.dusk`  → sesión después de las 21:00.
+   `morning.5`    → 5 fechas distintas con sesión antes de las 9:00.
+   Se llama desde cada acción de completar (breathe / move / extra /
+   pomodoro). El registro de fechas para `morning.5` se persiste en el
+   state como `morningDates: string[]` (toDateString) con cap de 30.
+*/
+function checkTimeOfDayAchievements() {
+  const now = new Date();
+  const h = now.getHours();
+  if (h < 7) unlockAchievement('master.dawn');
+  if (h >= 21) unlockAchievement('master.dusk');
+  if (h < 9) {
+    const today = now.toDateString();
+    const s = getState();
+    const list = Array.isArray(s.morningDates) ? s.morningDates : [];
+    if (!list.includes(today)) {
+      const next = [...list, today].slice(-30);
+      setState({ morningDates: next });
+      if (next.length >= 5) unlockAchievement('morning.5');
+    }
+  }
+}
+
+/* Detectores de logros collector — sesión 34.
+   Se llama al final de cada unlockAchievement exitoso.
+   Cuenta los logros ya en _state (incluido el que se acaba de añadir).
+   unlockAchievement es idempotente → la recursión termina de forma natural. */
+function checkCollectorAchievements() {
+  const count = Object.keys(_state.achievements).length;
+  if (count >= 50) unlockAchievement('master.collector.half');
+  if (count >= 100) unlockAchievement('master.collector.full');
+}
+
+/* Detector master.silent.day — sesión 34.
+   Registra hoy como día silencioso si soundOn=false y el usuario hizo algo.
+   Se llama desde cada acción de completar. */
+function checkSilentDayAchievement() {
+  if (_state.soundOn) return;
+  const today = new Date().toDateString();
+  const list = Array.isArray(_state.silentDates) ? _state.silentDates : [];
+  if (!list.includes(today)) {
+    setState({ silentDates: [...list, today].slice(-30) });
+    unlockAchievement('master.silent.day');
+  }
+}
+
+/* Detector master.retreat — sesión 34.
+   Usa los buckets weeklyStats ya existentes: breathMinutes[day] + moveMinutes[day].
+   Extra suma al bucket moveMinutes (decisión activa), así que completeExtraSession
+   también llama a este detector. */
+function checkRetreatAchievement() {
+  const day = new Date().getDay();
+  const todayBreath = (_state.weeklyStats.breathMinutes || [])[day] || 0;
+  const todayMove = (_state.weeklyStats.moveMinutes || [])[day] || 0;
+  if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
+}
+
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
@@ -452,6 +1469,7 @@ function unlockAchievement(id, note) {
   });
   // Notificación flotante
   showToast({ id, type: 'achievement' });
+  checkCollectorAchievements();
   return true;
 }
 
@@ -492,6 +1510,13 @@ function completePomodoro() {
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (_state.cycle >= 8) unlockAchievement('master.pomodoro.8');
+  /* `master.long.focus` — completar un Pomodoro de 45 min sin pausa.
+     Se evalúa contra los minutos del bloque que acaba de cerrarse,
+     no contra el state.focusMinutes (que puede haberse cambiado por
+     tweak antes de que termine el ticker). Sesión 29. */
+  if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
+  checkTimeOfDayAchievements();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -504,9 +1529,17 @@ function completeBreathSession(routineId, durationMin) {
   setState({
     plan: { ...s.plan, respira: true },
     weeklyStats: { ...s.weeklyStats, breathMinutes: week },
+    /* Contador acumulado de sesiones de respiración (sesión 29).
+       Crece monótonamente; alimenta breathe.sessions.10/50. */
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
   });
   unlockAchievement('first.breath');
+  /* Umbrales de constancia por módulo. Leemos `_state` ya actualizado
+     para no usar variables de cierre (patrón validado en sesión 18). */
+  if (_state.breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
+  if (_state.breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
   checkPlanAchievements();
+  checkTimeOfDayAchievements();
   // Exploración
   const explorationMap = {
     'breathe.box.4': 'explore.box',
@@ -523,6 +1556,8 @@ function completeBreathSession(routineId, durationMin) {
     'breathe.physiological': 'explore.physiological',
   };
   if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -535,9 +1570,16 @@ function completeMoveSession(routineId, durationMin) {
   setState({
     plan: { ...s.plan, muevete: true },
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+    /* Contador acumulado de sesiones Mueve (sesión 29). Solo Mueve,
+       Extra tiene su propio camino; el bucket de stats sí los suma. */
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
   });
   unlockAchievement('first.stretch');
+  if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
   checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -555,6 +1597,7 @@ function completeExtraSession(routineId, durationMin = 0) {
   });
   unlockAchievement('first.extra');
   checkPlanAchievements();
+  checkTimeOfDayAchievements();
   // Logros de exploración de movilidad.
   // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
   // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
@@ -572,6 +1615,8 @@ function completeExtraSession(routineId, durationMin = 0) {
     'move.desk.quick': 'explore.desk',
   };
   if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
   updateStreak();
 }
 
@@ -590,6 +1635,7 @@ function addWaterGlass(delta = 1) {
   if (delta > 0) {
     unlockAchievement('first.sip');
     checkPlanAchievements();
+    checkSilentDayAchievement();
   }
 }
 
@@ -653,6 +1699,10 @@ function onToast(listener) {
 // Init theme on load
 applyTheme();
 
+function setLang(lang) {
+  setState({ lang });
+}
+
 Object.assign(window, {
   usePace, getState, setState, subscribe,
   unlockAchievement, completePomodoro,
@@ -660,11 +1710,14 @@ Object.assign(window, {
   addWaterGlass, addFocusMinutes, updateStreak,
   ensureDayFresh,
   showToast, onToast,
+  setLang,
   PACE_VERSION,
 });
+
 </script>
 
-  <script type="text/babel">/* PACE · Foco · Cuerpo
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -696,6 +1749,7 @@ const displayItalic = {
 };
 
 function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subtitle }) {
+  const { t } = useT();
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
@@ -740,7 +1794,7 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           <button
             data-pace-modal-close
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label={t('common.close')}
             style={{
               position: 'absolute', top: 18, right: 20,
               fontSize: 20, color: 'var(--ink-3)',
@@ -982,8 +2036,10 @@ if (!_paceModalResponsive) {
 }
 
 Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
+
 </script>
-  <script type="text/babel">/* PACE · Foco · Cuerpo
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -1097,6 +2153,7 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
 }
 
 function SessionHeader({ routine, onExit, extra }) {
+  const { t } = useT();
   return (
     <div data-pace-session-header style={sessionShellStyles.header}>
       <div>
@@ -1108,7 +2165,7 @@ function SessionHeader({ routine, onExit, extra }) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {extra}
-        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>× Salir</button>
+        <button onClick={() => onExit('exit')} style={sessionShellStyles.exitBtn}>{t('session.exit')}</button>
       </div>
     </div>
   );
@@ -1126,17 +2183,18 @@ function SessionHeader({ routine, onExit, extra }) {
      - onSkip         → callback del botón "Empezar ahora"
    ============================================================ */
 function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
+  const { t } = useT();
   return (
     <SessionShell
       routine={routine}
       onExit={onExit}
-      footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>Empezar ahora</button>}
+      footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>{t('session.startNow')}</button>}
     >
       <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
         <div style={{
           fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: 'var(--ink-3)', marginBottom: 18,
-        }}>Prepárate</div>
+        }}>{t('session.prep')}</div>
         <div data-pace-session-prep-num style={{
           ...displayItalic,
           fontSize: 200, fontWeight: 400, lineHeight: 0.9,
@@ -1170,9 +2228,10 @@ function SessionDone({
   doneMeta, doneCopy, stats = [],
   buttonVariant, buttonStyle,
 }) {
+  const { t } = useT();
   const btn = buttonVariant
-    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>Volver al inicio</Button>
-    : <Button onClick={() => onExit('done')} style={buttonStyle}>Volver al inicio</Button>;
+    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{t('session.backToHome')}</Button>
+    : <Button onClick={() => onExit('done')} style={buttonStyle}>{t('session.backToHome')}</Button>;
 
   return (
     <SessionShell routine={routine} onExit={onExit} footer={btn}>
@@ -1316,8 +2375,10 @@ Object.assign(window, {
   SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
   sessionShellStyles,
 });
+
 </script>
-  <script type="text/babel">/* PACE · Cow logos — 3 interpretations
+  <script type="text/babel">
+/* PACE · Cow logos — 3 interpretations
    Uso: <CowLogo variant="lineal" size={28} color="currentColor" />
 */
 const { useId } = React;
@@ -1605,8 +2666,10 @@ function PaceWordmark({ variant = 'pace', color = 'currentColor' }) {
        `logoVariant: 'lineal'|'sello'|'ilustrado'` en localStorage
        legacy), pero no se exportan al namespace global. */
 Object.assign(window, { PaceWordmark }); 
+
 </script>
-  <script type="text/babel">/* PACE · Foco · Cuerpo
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -1741,13 +2804,16 @@ function useSound() {
 }
 
 Object.assign(window, { playSound, useSound });
+
 </script>
-  <script type="text/babel">/* PACE · Toast (para notificar logros desbloqueados) */
+  <script type="text/babel">
+/* PACE · Toast (para notificar logros desbloqueados) */
 
 const { useState: useStateTO, useEffect: useEffectTO } = React;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
+  const { t } = useT();
 
   useEffectTO(() => {
     return onToast((t) => {
@@ -1765,14 +2831,18 @@ function ToastHost() {
   }, []);
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: 20, left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 200,
-      display: 'flex', flexDirection: 'column', gap: 8,
-      pointerEvents: 'none',
-    }}>
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      style={{
+        position: 'fixed',
+        bottom: 20, left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 200,
+        display: 'flex', flexDirection: 'column', gap: 8,
+        pointerEvents: 'none',
+      }}
+    >
       {toasts.map(t => (
         <div key={t._id} style={{
           display: 'flex', alignItems: 'center', gap: 14,
@@ -1795,7 +2865,7 @@ function ToastHost() {
             fontSize: 18,
           }}>{t.glyph}</div>
           <div>
-            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>Nuevo sello</div>
+            <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--achievement)' }}>{t('ach.toast.new')}</div>
             <div style={{ ...displayItalic, fontSize: 18, fontWeight: 500, lineHeight: 1.2 }}>{t.title}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{t.desc}</div>
           </div>
@@ -1806,11 +2876,13 @@ function ToastHost() {
 }
 
 Object.assign(window, { ToastHost });
+
 </script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
-  <script type="text/babel">/* PACE · Apoya el proyecto (Buy Me a Coffee)
+  <script type="text/babel">
+/* PACE · Apoya el proyecto (Buy Me a Coffee)
    ============================================================
    FILOSOFÍA (no negociable) — sesión 16 · v0.11.11
 
@@ -1884,7 +2956,7 @@ function SupportIcon({ size = 13 }) {
    Sin animación permanente. Sin gradiente. Sin color llamativo.
    ============================================================ */
 function SupportButton({ onOpen }) {
-  const copy = supportCopy();
+  const { t } = useT();
   const [hover, setHover] = useStateSUP(false);
 
   return (
@@ -1892,8 +2964,8 @@ function SupportButton({ onOpen }) {
       onClick={onOpen}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      title="Apoya el proyecto"
-      aria-label={copy.label}
+      title={t('support.sidebar.title')}
+      aria-label={t('support.sidebar.label')}
       style={{
         ...displayItalic,
         display: 'inline-flex',
@@ -1912,7 +2984,7 @@ function SupportButton({ onOpen }) {
         cursor: 'pointer',
       }}
     >
-      <span>{copy.short}</span>
+      <span>{t('support.sidebar.label')}</span>
       <SupportIcon />
     </button>
   );
@@ -1970,6 +3042,7 @@ function CowIcon({ size = 13 }) {
    ============================================================ */
 function SupportModal({ open, onClose }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [copied, setCopied] = useStateSUP(false);
   const [thanked, setThanked] = useStateSUP(false);
 
@@ -2017,42 +3090,41 @@ function SupportModal({ open, onClose }) {
           <SupportHero />
         </div>
 
-        <Meta style={{ textAlign: 'center', marginBottom: 10 }}>Apoya el proyecto</Meta>
+        <Meta style={{ textAlign: 'center', marginBottom: 10 }}>{t('support.meta')}</Meta>
 
         <h2 style={supportStyles.title}>
-          PACE es gratis.<br/>
-          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>Y lo seguirá siendo.</span>
+          {t('support.title.main')}<br/>
+          <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>{t('support.title.sub')}</span>
         </h2>
 
         <p style={supportStyles.lede}>
-          No hay cuentas. No hay servidor. No te sigue nadie. Todo
-          vive en tu navegador — y así queremos que siga.
+          {t('support.lede')}
         </p>
 
         {/* 3 valores en línea fina */}
         <div style={supportStyles.values}>
-          <Value label="Todo local" sub="localStorage únicamente" />
+          <Value label={t('support.value.local.label')} sub={t('support.value.local.sub')} />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
-          <Value label="Sin tracking" sub="sin analytics, sin cookies" />
+          <Value label={t('support.value.tracking.label')} sub={t('support.value.tracking.sub')} />
           <Divider style={{ width: 1, height: 28, background: 'var(--line)' }} />
-          <Value label="Para siempre" sub="sin paywall, sin pro" />
+          <Value label={t('support.value.forever.label')} sub={t('support.value.forever.sub')} />
         </div>
 
         <p style={supportStyles.cta}>
-          Si te cuida, ayúdanos a cuidarlo.<br/>
+          {t('support.cta')}<br/>
           <span style={{ color: 'var(--ink-3)' }}>
-            No desbloquea nada. Solo nos da café.
+            {t('support.cta.sub')}
           </span>
         </p>
 
         {/* Botones de acción */}
         <div style={supportStyles.actions}>
           <Button variant="terracota" size="lg" onClick={goToBMC}>
-            <span style={{ marginRight: 2 }}>{supportCopy().label}</span>
+            <span style={{ marginRight: 2 }}>{t('support.btn.label')}</span>
             <SupportIcon />
           </Button>
           <Button variant="secondary" size="md" onClick={copyLink}>
-            {copied ? '✓ copiado' : 'Copiar enlace'}
+            {copied ? t('support.btn.copied') : t('support.btn.copy')}
           </Button>
         </div>
 
@@ -2069,9 +3141,9 @@ function SupportModal({ open, onClose }) {
           >
             {thanked ? (
               state.achievements['secret.supporter']
-                ? '✦ gracias · sello guardado'
-                : '✦ gracias'
-            ) : 'Ya doné →'}
+                ? t('support.thanks.saved')
+                : t('support.thanks')
+            ) : t('support.donated')}
           </button>
         </div>
       </div>
@@ -2246,11 +3318,13 @@ Object.assign(window, {
   SupportButton, SupportModal, useSupportAutoTrigger,
   supportCopy, BMC_URL, BMC_USERNAME,
 });
+
 </script>
 
   <!-- Bienvenida de primera vez (sesión 17 / v0.12.0).
        Se carga antes que main.jsx porque este la monta. -->
-  <script type="text/babel">/* PACE · Welcome de primera vez
+  <script type="text/babel">
+/* PACE · Welcome de primera vez
    ============================================================
    FILOSOFÍA — sesión 17 · v0.12.0
 
@@ -2279,14 +3353,8 @@ Object.assign(window, {
      - Re-abrir manualmente es posible via evento
        `pace:open-welcome` (para Tweaks dev o pruebas).
 
-   POR QUÉ ESTE MÓDULO EXISTE:
-     - Refuerza el argumento del modal de BMC (v0.11.11):
-       cuando dice "Todo local", ahora es lo PRIMERO que el
-       usuario lee al abrir la app.
-     - Captura una intención opcional — el campo ya existía en
-       state (`intention: ''`) pero nunca se exponía en UI.
-     - No interrumpe. Es la primera puerta; si el usuario la
-       cierra sin escribir, la app sigue funcionando igual.
+   i18n sesión 35: strings migrados a useT(). Toggle pill ES·EN
+   en esquina superior derecha para cambiar idioma antes de empezar.
 ============================================================ */
 
 const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = React;
@@ -2296,6 +3364,7 @@ const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = Re
    ============================================================ */
 function WelcomeModal({ open, onClose }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [draft, setDraft] = useStateWEL('');
   const inputRef = useRefWEL(null);
 
@@ -2305,10 +3374,10 @@ function WelcomeModal({ open, onClose }) {
   useEffectWEL(() => {
     if (!open) return;
     setDraft(state.intention || '');
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       if (inputRef.current) inputRef.current.focus();
     }, 320);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [open]);
 
   if (!open) return null;
@@ -2330,6 +3399,8 @@ function WelcomeModal({ open, onClose }) {
     onClose && onClose();
   };
 
+  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+
   return (
     <Modal open={open} onClose={skip} maxWidth={520}>
       <div style={welcomeStyles.inner}>
@@ -2339,38 +3410,48 @@ function WelcomeModal({ open, onClose }) {
             scroll en pantallas 720p. */}
         <div style={welcomeStyles.header}>
           <div style={welcomeStyles.headerLeft}>
+            {/* Toggle pill ES · EN — encima del logo, columna izquierda */}
+            <button
+              onClick={toggleLang}
+              title={t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs')}
+              style={welcomeStyles.langToggle}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; }}
+            >
+              <span style={{ fontWeight: state.lang === 'es' ? 600 : 400 }}>ES</span>
+              <span style={{ color: 'var(--line-2)' }}> · </span>
+              <span style={{ fontWeight: state.lang === 'en' ? 600 : 400 }}>EN</span>
+            </button>
             <div style={welcomeStyles.logoMini}>
               <PaceWordmark variant={state.logoVariant || 'pace'} />
             </div>
-            <Meta style={{ marginTop: 10 }}>Bienvenida</Meta>
+            <Meta style={{ marginTop: 10 }}>{t('welcome.greeting')}</Meta>
           </div>
           <div style={welcomeStyles.headerRight}>
             <h2 style={welcomeStyles.title}>
-              Antídoto a la silla.{' '}
-              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>A tu ritmo.</span>
+              {t('welcome.tagline')}{' '}
+              <span style={{ color: 'var(--ink-3)', fontStyle: 'italic' }}>{t('welcome.tagline.sub')}</span>
             </h2>
             <p style={welcomeStyles.lede}>
-              Micro-pausas de foco, respiración, movilidad e
-              hidratación. Sin gamificación ni notificaciones
-              abrumadoras.
+              {t('welcome.lede')}
             </p>
           </div>
         </div>
 
         {/* 3 valores en línea — ya más compactos */}
         <div style={welcomeStyles.values}>
-          <WValue label="Todo local" sub="en tu navegador" />
+          <WValue label={t('welcome.value.local.label')} sub={t('welcome.value.local.sub')} />
           <span style={welcomeStyles.sep} />
-          <WValue label="Sin cuentas" sub="sin registro" />
+          <WValue label={t('welcome.value.accounts.label')} sub={t('welcome.value.accounts.sub')} />
           <span style={welcomeStyles.sep} />
-          <WValue label="Siempre gratis" sub="sin paywall" />
+          <WValue label={t('welcome.value.free.label')} sub={t('welcome.value.free.sub')} />
         </div>
 
         {/* Campo de intención — opcional, fila horizontal label+input */}
         <div style={welcomeStyles.intentionBlock}>
           <label htmlFor="pace-intention" style={welcomeStyles.intentionLabel}>
-            ¿Qué quieres cultivar hoy?
-            <span style={welcomeStyles.optional}>opcional</span>
+            {t('welcome.intention.label')}
+            <span style={welcomeStyles.optional}>{t('welcome.intention.optional')}</span>
           </label>
           <input
             id="pace-intention"
@@ -2379,7 +3460,7 @@ function WelcomeModal({ open, onClose }) {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') finish(); }}
-            placeholder="concentración, calma, movimiento…"
+            placeholder={t('welcome.intention.placeholder')}
             maxLength={120}
             style={welcomeStyles.intentionInput}
           />
@@ -2388,10 +3469,10 @@ function WelcomeModal({ open, onClose }) {
         {/* Acciones — botón + skip en línea para no añadir altura */}
         <div style={welcomeStyles.actions}>
           <button onClick={skip} style={welcomeStyles.skip}>
-            prefiero saltarlo
+            {t('welcome.skip')}
           </button>
           <Button variant="primary" size="md" onClick={finish}>
-            Empezar
+            {t('welcome.cta')}
           </Button>
         </div>
       </div>
@@ -2450,6 +3531,21 @@ const welcomeStyles = {
     flexDirection: 'column',
     alignItems: 'stretch',
     gap: 16,
+  },
+  langToggle: {
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    padding: '3px 8px',
+    fontSize: 10,
+    letterSpacing: '0.08em',
+    color: 'var(--ink-3)',
+    background: 'var(--paper-2)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-pill)',
+    cursor: 'pointer',
+    transition: 'color 180ms',
+    fontFamily: 'var(--font-ui, sans-serif)',
+    lineHeight: 1.6,
   },
   header: {
     display: 'grid',
@@ -2560,9 +3656,11 @@ const welcomeStyles = {
 Object.assign(window, {
   WelcomeModal, useFirstTimeWelcome,
 });
+
 </script>
 
-  <script type="text/babel">/* PACE · Sidebar izquierdo — colapsable
+  <script type="text/babel">
+/* PACE · Sidebar izquierdo — colapsable
    Secciones: Ritmo (racha), Sendero (línea del día con hitos), Logros.
    Footer: StatusBar con botón destacado Donar café.
 
@@ -2650,6 +3748,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
 
 function Sidebar() {
   const [state, set] = usePace();
+  const { t, tn } = useT();
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
@@ -2679,14 +3778,14 @@ function Sidebar() {
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
-      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title="Colapsar (⌘\\)" aria-label="Colapsar panel">
+      <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title')} aria-label={t('sidebar.collapse.aria')}>
         <ChevronLeftIcon />
       </button>
       <div style={sidebarStyles.logoBar} data-pace-sidebar-logobar>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
-          title="¿Le haces cosquillas?"
+          title={t('sidebar.logo.title')}
         >
           <PaceWordmark variant={state.logoVariant} color="var(--ink)" />
         </div>
@@ -2695,17 +3794,17 @@ function Sidebar() {
       {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
       <div style={sidebarStyles.cycles}>
         <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title="Pomodoros completados hoy">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.pomodoros')}>
             <PomodoroIcon />
             <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
           </span>
           <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Rondas largas (cada 4 pomodoros)">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.rounds')}>
             <RoundsIcon />
             <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
           </span>
           <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title="Días activos seguidos">
+          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.streak')}>
             <StreakFlameIcon />
             <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
           </span>
@@ -2717,14 +3816,14 @@ function Sidebar() {
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
         <div style={sidebarStyles.sectionHeader}>
-          <Meta>Ritmo</Meta>
+          <Meta>{t('sidebar.section.rhythm')}</Meta>
           <span style={sidebarStyles.sectionAside}>{state.streak.longest}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
           <span style={sidebarStyles.streakNum}>{state.streak.current}</span>
           <div>
-            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? 'día seguido' : 'días seguidos'}</div>
-            <div style={sidebarStyles.streakSub}>Mejor: {state.streak.longest} días</div>
+            <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')}</div>
+            <div style={sidebarStyles.streakSub}>{tn('sidebar.streak.best', { n: state.streak.longest })}</div>
           </div>
         </div>
         <WeekDots weeklyStats={state.weeklyStats} />
@@ -2742,7 +3841,7 @@ function Sidebar() {
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
         <div style={sidebarStyles.sectionHeader}>
-          <Meta>Logros</Meta>
+          <Meta>{t('sidebar.section.achievements')}</Meta>
           <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
         </div>
         <AchievementsPreview onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} />
@@ -2750,7 +3849,7 @@ function Sidebar() {
           onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
           style={sidebarStyles.linkBtn}
         >
-          {100 - unlockedCount} por descubrir →
+          {tn('sidebar.achievements.discover', { n: 100 - unlockedCount })}
         </button>
       </div>
 
@@ -2768,6 +3867,7 @@ function Sidebar() {
    completadas hasta ahora; aparecen como puntos sobre la curva.
    ============================================================ */
 function SenderoDelDia({ state }) {
+  const { t, tn } = useT();
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
   const start = 6;  // 6:00
@@ -2826,8 +3926,8 @@ function SenderoDelDia({ state }) {
   return (
     <>
       <div style={sidebarStyles.sectionHeader}>
-        <Meta>Sendero</Meta>
-        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? 'hito' : 'hitos'}</span>
+        <Meta>{t('sidebar.section.trail')}</Meta>
+        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? t('sidebar.trail.hito') : t('sidebar.trail.hitos')}</span>
       </div>
       <div style={{ marginTop: 6 }}>
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ display: 'block', width: '100%' }}>
@@ -2855,9 +3955,9 @@ function SenderoDelDia({ state }) {
           <circle cx={pointerX} cy={pathY(pointerX)} r="3" fill="var(--ink)" />
         </svg>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
-          <span>6h</span>
-          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>ahora · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
-          <span>22h</span>
+          <span>{t('sidebar.trail.hour.start')}</span>
+          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>{t('sidebar.trail.now')} · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
+          <span>{t('sidebar.trail.hour.end')}</span>
         </div>
       </div>
     </>
@@ -2969,7 +4069,8 @@ function StreakFlameIcon() {
    que vive en main.jsx (≡). */
 
 function WeekDots({ weeklyStats }) {
-  const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const { t } = useT();
+  const days = t('sidebar.days').split(',');
   const today = (new Date().getDay() + 6) % 7; // L=0
   return (
     <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
@@ -2994,8 +4095,11 @@ function WeekDots({ weeklyStats }) {
 
 function AchievementsPreview({ onOpen }) {
   const [state] = usePace();
-  const unlocked = Object.keys(state.achievements || {});
-  // Mostrar 5 slots: los 3 últimos + 2 placeholders
+  const { t } = useT(); // sesión 37 hotfix v0.19.1: faltaba tras migración i18n
+  // Los 5 más recientes primero, por unlockedAt descendente
+  const unlocked = Object.entries(state.achievements || {})
+    .sort((a, b) => (b[1].unlockedAt || 0) - (a[1].unlockedAt || 0))
+    .map(([id]) => id);
   const shown = 5;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
@@ -3018,7 +4122,7 @@ function AchievementsPreview({ onOpen }) {
               cursor: 'pointer',
               transition: 'all 180ms',
             }}
-            title={id || 'Por descubrir'}
+            title={id || t('ach.seal.discover')}
           >
             {id ? '✦' : '·'}
           </button>
@@ -3044,11 +4148,12 @@ function AchievementsPreview({ onOpen }) {
 */
 function StatusBar() {
   const [state] = usePace();
+  const { t } = useT();
   const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
   return (
     <div style={sidebarStyles.footer}>
       <div style={sidebarStyles.footerRow}>
-        <Meta>En camino</Meta>
+        <Meta>{t('sidebar.status.ontrack')}</Meta>
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
       <div style={{ marginTop: 10, marginBottom: 10 }}>
@@ -3185,9 +4290,11 @@ const sidebarStyles = {
 };
 
 Object.assign(window, { Sidebar });
+
 </script>
 
-  <script type="text/babel">/* PACE · Módulo Foco (Pomodoro)
+  <script type="text/babel">
+/* PACE · Módulo Foco (Pomodoro)
    Temporizador funcional real. 4 estilos visuales de tweaks.
 */
 
@@ -3195,9 +4302,9 @@ const { useState: useStateFT, useEffect: useEffectFT, useRef: useRefFT } = React
 
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const [running, setRunning] = useStateFT(false);
   const [remainingSec, setRemainingSec] = useStateFT(state.focusMinutes * 60);
-  const [justFinished, setJustFinished] = useStateFT(false);
   const intervalRef = useRefFT(null);
 
   // Reset si cambian minutos o modo
@@ -3207,7 +4314,6 @@ function FocusTimer({ onFinish }) {
                   : 15;
     setRemainingSec(baseMin * 60);
     setRunning(false);
-    setJustFinished(false);
   }, [state.focusMode, state.focusMinutes]);
 
   useEffectFT(() => {
@@ -3238,7 +4344,6 @@ function FocusTimer({ onFinish }) {
     if (!running) return;
     if (remainingSec !== 0) return;
     setRunning(false);
-    setJustFinished(true);
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
        del bloque, sea foco o pausa. Respeta state.soundOn (noop si
        está apagado). Sesión 28. */
@@ -3254,22 +4359,21 @@ function FocusTimer({ onFinish }) {
   const totalSec = (state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15) * 60;
   const progress = 1 - (remainingSec / totalSec);
 
-  const modeLabel = state.focusMode === 'foco' ? 'Foco'
-                  : state.focusMode === 'pausa' ? 'Pausa corta'
-                  : 'Pausa larga';
-  const subtitle = state.focusMode === 'foco' ? 'Concentración profunda'
-                 : state.focusMode === 'pausa' ? 'Desconecta 5 min'
-                 : 'Pausa larga · estira y respira';
+  const modeLabel = state.focusMode === 'foco' ? t('focus.mode.focus')
+                  : state.focusMode === 'pausa' ? t('focus.mode.pause')
+                  : t('focus.mode.long');
+  const subtitle = state.focusMode === 'foco' ? t('focus.subtitle.focus')
+                 : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
+                 : t('focus.subtitle.long');
 
   const reset = () => {
     setRunning(false);
-    setJustFinished(false);
     const baseMin = state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15;
     setRemainingSec(baseMin * 60);
   };
 
   const isAro = state.timerStyle === 'aro';
-  const runningLabel = running ? 'Pausar' : (remainingSec === totalSec ? 'Comenzar' : 'Continuar');
+  const runningLabel = running ? t('focus.pause') : (remainingSec === totalSec ? t('focus.start') : t('focus.continue'));
 
   /* Dots de ciclo (4 puntitos + etiqueta CICLO).
      En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
@@ -3282,7 +4386,7 @@ function FocusTimer({ onFinish }) {
           background: (state.cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
         }} />
       ))}
-      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>Ciclo</span>
+      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{t('focus.cycle')}</span>
     </div>
   );
 
@@ -3297,7 +4401,7 @@ function FocusTimer({ onFinish }) {
         <span style={{ fontSize: 11, lineHeight: 1 }}>{running ? '❚❚' : '▶'}</span>
         <span>{runningLabel}</span>
       </button>
-      <button onClick={reset} style={focusStyles.resetCircle} title="Reiniciar" aria-label="Reiniciar">
+      <button onClick={reset} style={focusStyles.resetCircle} title={t('focus.restart')} aria-label={t('focus.restart')}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 12a9 9 0 1 0 3-6.7" />
           <polyline points="3 4 3 10 9 10" />
@@ -3362,6 +4466,7 @@ function FocusTimer({ onFinish }) {
    Rango 1–180 para cubrir desde pomodoros ultra-cortos hasta sesiones
    deep-work sin volverse absurdo. */
 function MinutesPicker({ value, onChange }) {
+  const { t } = useT();
   const presets = [15, 25, 35, 45];
   const isCustom = !presets.includes(value);
   const [editing, setEditing] = useStateFT(false);
@@ -3414,7 +4519,7 @@ function MinutesPicker({ value, onChange }) {
       <span style={{
         fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
         color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
-      }}>Min</span>
+      }}>{t('focus.min')}</span>
       {presets.map(m => (
         <button key={m} onClick={() => { onChange(m); setEditing(false); }}
           style={{
@@ -3452,7 +4557,7 @@ function MinutesPicker({ value, onChange }) {
       ) : isCustom ? (
         <button
           onClick={() => setEditing(true)}
-          title="Minutos personalizados (1–180)"
+          title={t('focus.minutes.custom.title')}
           style={{
             ...pillBase,
             fontWeight: 600,
@@ -3464,7 +4569,7 @@ function MinutesPicker({ value, onChange }) {
       ) : (
         <button
           onClick={() => setEditing(true)}
-          title="Minutos personalizados (1–180)"
+          title={t('focus.minutes.custom.title')}
           style={{
             ...pillBase,
             marginLeft: 6,
@@ -3477,7 +4582,7 @@ function MinutesPicker({ value, onChange }) {
             background: 'transparent',
             fontWeight: 500,
           }}>
-          Otro
+          {t('focus.other')}
         </button>
       )}
     </div>
@@ -3503,16 +4608,16 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 /* ===================== */
 /* TIMER VISUALIZATIONS */
 /* ===================== */
+/* TimerVisualization — sesión 37: circle y numero eliminados (rotos).
+   Opciones válidas: aro (default), barra, analogico. */
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
-  if (style === 'aro') return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
-  if (style === 'circulo') return <TimerCircle mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerNumber mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
+  return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
 }
 
 /* Timer "Aro" (default · ref. usuario).
-   Anillo fino, progreso sutil y punto indicador verde oliva sobre el aro.
+   Anillo fino + arco de progreso sutil.
    Dentro: etiqueta de modo · número gigante italic serif · divisor fino ·
    botón de comenzar + reset (inyectados via `inner`). El layout coincide
    con la composición de referencia (2026-04-22).
@@ -3520,10 +4625,6 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
 function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
   const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
-  // Ángulo para el punto indicador (parte superior = 12 en punto)
-  const angle = progress * 2 * Math.PI - Math.PI / 2;
-  const dotCx = 50 + R * Math.cos(angle);
-  const dotCy = 50 + R * Math.sin(angle);
 
   return (
     <div style={focusStyles.aroFrame}>
@@ -3537,9 +4638,6 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
           style={{ transition: 'stroke-dashoffset 1s linear' }} />
-        {/* Punto verde oliva (indicador) */}
-        <circle cx={dotCx} cy={dotCy} r="1.25" fill="var(--focus)"
-          style={{ transition: 'cx 1s linear, cy 1s linear' }} />
       </svg>
 
       {/* Contenido centrado */}
@@ -3556,51 +4654,8 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
   );
 }
 
-function TimerNumber({ mins, secs, progress, modeLabel, subtitle }) {
-  return (
-    <div style={{ position: 'relative', width: 420, height: 420, display: 'grid', placeItems: 'center' }}>
-      {/* Círculo muy sutil */}
-      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <circle cx="50" cy="50" r="48" fill="none" stroke="var(--line)" strokeWidth="0.3" />
-      </svg>
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 16 }}>{modeLabel}</div>
-        <div style={{
-          ...displayItalic,
-          fontSize: 'var(--size-hero)',
-          fontWeight: 400,
-          lineHeight: 0.9,
-          color: 'var(--ink)',
-          fontVariantNumeric: 'tabular-nums',
-          letterSpacing: '-0.03em',
-        }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
-        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 40 }}>{subtitle}</div>
-      </div>
-    </div>
-  );
-}
-
-function TimerCircle({ mins, secs, progress, modeLabel, subtitle }) {
-  const R = 46;
-  const C = 2 * Math.PI * R;
-  return (
-    <div style={{ position: 'relative', width: 420, height: 420, display: 'grid', placeItems: 'center' }}>
-      <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.6" />
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--focus)" strokeWidth="1.2"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear' }} />
-      </svg>
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 14 }}>{modeLabel}</div>
-        <div style={{ ...displayItalic, fontSize: 96, fontWeight: 400, lineHeight: 0.9, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.03em' }}>
-          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
-        </div>
-        <div style={{ fontStyle: 'italic', fontFamily: 'var(--font-display)', fontSize: 14, color: 'var(--ink-3)', marginTop: 36 }}>{subtitle}</div>
-      </div>
-    </div>
-  );
-}
+/* TimerNumber y TimerCircle eliminados en v0.19.0 (rotos, sin diseño).
+   Solo quedan: TimerAro (default), TimerBar, TimerAnalog. */
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
   return (
@@ -3803,14 +4858,217 @@ const focusStyles = {
 };
 
 Object.assign(window, { FocusTimer });
+
 </script>
-  <script type="text/babel">/* PACE · Módulo Respira
-   Librería + Sesión guiada con círculo animado + Modal de seguridad
+  <script type="text/babel">
+/* PACE · Respiración — Visual animado + getSequence
+   Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
 */
 
-const { useState: useStateBR, useEffect: useEffectBR, useRef: useRefBR } = React;
+function getSequence(routine) {
+  if (routine.pattern === 'rounds') {
+    return [
+      { label: 'Inhala', duration: 2, scale: 1.3 },
+      { label: 'Exhala', duration: 2, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'box') {
+    const [i, h1, e, h2] = routine.cycle;
+    return [
+      { label: 'Inhala', duration: i, scale: 1.3 },
+      { label: 'Sostén', duration: h1, scale: 1.3 },
+      { label: 'Exhala', duration: e, scale: 0.9 },
+      { label: 'Sostén', duration: h2, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'coherent') {
+    const [i, , e] = routine.cycle;
+    return [
+      { label: 'Inhala', duration: i, scale: 1.3 },
+      { label: 'Exhala', duration: e, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'pattern') {
+    const [i, h, e] = routine.cycle;
+    return [
+      { label: 'Inhala', duration: i, scale: 1.3 },
+      { label: 'Sostén', duration: h, scale: 1.3 },
+      { label: 'Exhala', duration: e, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'physiological') {
+    return [
+      { label: 'Inhala', duration: 2, scale: 1.25 },
+      { label: 'Inhala más', duration: 1, scale: 1.35 },
+      { label: 'Exhala', duration: 5, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'ujjayi') {
+    return [
+      { label: 'Inhala oceánica', duration: 5, scale: 1.3 },
+      { label: 'Exhala oceánica', duration: 5, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'bhastrika' || routine.pattern === 'kapalabhati') {
+    return [
+      { label: 'Inhala', duration: 1, scale: 1.2 },
+      { label: 'Exhala', duration: 1, scale: 0.95 },
+    ];
+  }
+  if (routine.pattern === 'nadi') {
+    return [
+      { label: 'Inhala izq.', duration: 4, scale: 1.3 },
+      { label: 'Sostén', duration: 2, scale: 1.3 },
+      { label: 'Exhala dcha.', duration: 4, scale: 0.9 },
+      { label: 'Inhala dcha.', duration: 4, scale: 1.3 },
+      { label: 'Sostén', duration: 2, scale: 1.3 },
+      { label: 'Exhala izq.', duration: 4, scale: 0.9 },
+    ];
+  }
+  return [{ label: 'Respira', duration: 4, scale: 1.2 }];
+}
 
-/* Catálogo */
+const breathVisualStyles = {
+  wrap: {
+    position: 'relative',
+    width: 260, height: 260,
+    display: 'grid', placeItems: 'center',
+  },
+  core: {
+    width: 160, height: 160,
+    borderRadius: '50%',
+    position: 'relative',
+  },
+};
+
+function BreathVisual({ style, phase, progress, scale = 1.2 }) {
+  const transitionDur = '1800ms';
+
+  if (style === 'flor') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        <div style={{
+          position: 'absolute', inset: -40,
+          border: '1px solid var(--breathe)',
+          borderRadius: '50%',
+          opacity: 0.25,
+          transform: `scale(${scale * 0.95})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+        }} />
+        <div style={{
+          position: 'absolute', inset: -20,
+          border: '1px solid var(--breathe)',
+          borderRadius: '50%',
+          opacity: 0.4,
+          transform: `scale(${scale})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+        }} />
+        <svg viewBox="-100 -100 200 200" style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          transform: `scale(${scale * 0.85}) rotate(${progress * 40}deg)`,
+          transition: `transform ${transitionDur} var(--ease)`,
+        }}>
+          {[0,1,2,3,4,5].map(i => (
+            <ellipse key={i} cx="0" cy="-32" rx="14" ry="34"
+              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.6"
+              transform={`rotate(${i * 60})`} opacity="0.5" />
+          ))}
+        </svg>
+        <div style={{
+          width: 80, height: 80,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 80%)',
+          border: '1.5px solid var(--breathe)',
+          transform: `scale(${scale * 0.7})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+          position: 'relative',
+        }} />
+      </div>
+    );
+  }
+
+  if (style === 'ondas') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        {[0,1,2,3].map(i => (
+          <div key={i} style={{
+            position: 'absolute', inset: 0,
+            border: '1px solid var(--breathe)',
+            borderRadius: '50%',
+            opacity: 0.15 + i * 0.1,
+            transform: `scale(${scale - i * 0.15})`,
+            transition: `transform ${transitionDur} var(--ease)`,
+          }} />
+        ))}
+        <div style={{ ...breathVisualStyles.core, background: 'var(--breathe-soft)' }} />
+      </div>
+    );
+  }
+
+  if (style === 'petalo') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} var(--ease)`, transform: `scale(${scale})` }}>
+          {[0,1,2,3,4,5].map(i => (
+            <ellipse key={i} cx="0" cy="-40" rx="20" ry="45"
+              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.8"
+              transform={`rotate(${i * 60})`} opacity="0.55" />
+          ))}
+          <circle cx="0" cy="0" r="12" fill="var(--breathe)" opacity="0.25" />
+        </svg>
+      </div>
+    );
+  }
+
+  if (style === 'organico') {
+    return (
+      <div style={breathVisualStyles.wrap}>
+        <div style={{
+          ...breathVisualStyles.core,
+          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 70%)',
+          transform: `scale(${scale})`,
+          transition: `transform ${transitionDur} var(--ease)`,
+          borderRadius: `${42 + Math.sin(progress * Math.PI * 4) * 6}% ${58 - Math.sin(progress * Math.PI * 4) * 6}% ${46 + Math.cos(progress * Math.PI * 3) * 8}% ${54 - Math.cos(progress * Math.PI * 3) * 8}%`,
+          border: '1px solid var(--breathe)',
+        }} />
+      </div>
+    );
+  }
+
+  // Default: pulso
+  return (
+    <div style={breathVisualStyles.wrap}>
+      <div style={{ position: 'absolute', inset: -30, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
+      <div style={{ position: 'absolute', inset: -60, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
+      <div style={{
+        ...breathVisualStyles.core,
+        background: 'var(--breathe-soft)',
+        border: '1.5px solid var(--breathe)',
+        transform: `scale(${scale})`,
+        transition: `transform ${transitionDur} var(--ease)`,
+      }} />
+      <div style={{
+        position: 'absolute',
+        width: 8, height: 8, borderRadius: '50%',
+        background: 'var(--breathe-2)',
+        top: '50%', left: '50%',
+        transform: `translate(-50%, -50%) rotate(${progress * 360}deg) translateY(-110px)`,
+        transition: 'transform 1s linear',
+      }} />
+    </div>
+  );
+}
+
+Object.assign(window, { BreathVisual, getSequence });
+
+</script>
+  <script type="text/babel">
+/* PACE · Respiración — Biblioteca + modal de seguridad
+   Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
+*/
+
+const { useState } = React;
+
 const BREATHE_ROUTINES = {
   energia: {
     label: 'Energía',
@@ -3855,19 +5113,18 @@ const BREATHE_ROUTINES = {
   }
 };
 
-/* =========================
-   LIBRARY MODAL
-   ========================= */
 function BreatheLibrary({ open, onClose, onStart }) {
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Respiración" subtitle="Breathwork guiado: pranayamas, coherencia, rondas."
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
       maxWidth={860}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
         {Object.entries(BREATHE_ROUTINES).map(([key, group]) => (
           <div key={key}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{group.label}</h3>
-              {group.aside && <Meta>{group.aside}</Meta>}
+              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{tR(`breathe.cat.${key}.label`, group.label)}</h3>
+              {group.aside && <Meta>{tR(`breathe.cat.${key}.aside`, group.aside)}</Meta>}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
               {group.items.map(r => (
@@ -3882,6 +5139,8 @@ function BreatheLibrary({ open, onClose, onStart }) {
 }
 
 function RoutineCard({ routine, color, onClick }) {
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   return (
     <Card accent={color} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
@@ -3891,19 +5150,19 @@ function RoutineCard({ routine, color, onClick }) {
           background: 'var(--breathe-soft)', color: 'var(--breathe)',
           display: 'grid', placeItems: 'center',
           fontSize: 11, fontWeight: 600,
-        }} title="Requiere lectura de seguridad">⚠</div>
+        }} title={t('breathe.safety.required')}>⚠</div>
       )}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
         <Tag color={color}>{routine.tag}</Tag>
       </div>
-      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
-      <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{routine.desc}</p>
+      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{tR(`${routine.id}.name`, routine.name)}</h4>
+      <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{tR(`${routine.id}.desc`, routine.desc)}</p>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderTop: '1px dashed var(--line)', paddingTop: 8,
       }}>
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.code}
+          {tR(`${routine.id}.code`, routine.code)}
         </span>
         <span style={{
           ...displayItalic, fontSize: 16,
@@ -3914,11 +5173,9 @@ function RoutineCard({ routine, color, onClick }) {
   );
 }
 
-/* =========================
-   SAFETY MODAL
-   ========================= */
 function BreatheSafety({ routine, onAccept, onCancel }) {
-  const [checked, setChecked] = useStateBR(false);
+  const { t } = useT();
+  const [checked, setChecked] = useState(false);
   if (!routine) return null;
   return (
     <Modal open={true} onClose={onCancel} maxWidth={520}>
@@ -3930,18 +5187,18 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
           color: 'var(--breathe)', fontSize: 20, flexShrink: 0,
         }}>⚠</div>
         <div>
-          <div className="pace-meta" style={{ marginBottom: 4 }}>Antes de empezar</div>
+          <div className="pace-meta" style={{ marginBottom: 4 }}>{t('breathe.safety.before')}</div>
           <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500 }}>{routine.name}</h3>
         </div>
       </div>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-2)', margin: '0 0 14px' }}>
-        Esta técnica implica <strong style={{ color: 'var(--ink)' }}>hiperventilación controlada y apnea</strong>. Puede causar mareo, cosquilleo o desmayo.
+        {t('breathe.safety.body.intro.pre')}<strong style={{ color: 'var(--ink)' }}>{t('breathe.safety.body.intro.bold')}</strong>{t('breathe.safety.body.intro.post')}
       </p>
       <ul style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink-2)', paddingLeft: 18, margin: '0 0 20px' }}>
-        <li>Practícala <strong style={{color:'var(--ink)'}}>sentado o tumbado</strong>, nunca de pie</li>
-        <li>Nunca en el agua, conduciendo ni en altura</li>
-        <li>No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada</li>
-        <li>Detente si te mareas o sientes molestias</li>
+        <li>{t('breathe.safety.body.rule1.pre')}<strong style={{color:'var(--ink)'}}>{t('breathe.safety.body.rule1.bold')}</strong>{t('breathe.safety.body.rule1.post')}</li>
+        <li>{t('breathe.safety.body.rule2')}</li>
+        <li>{t('breathe.safety.body.rule3')}</li>
+        <li>{t('breathe.safety.body.rule4')}</li>
       </ul>
       <label style={{
         display: 'flex', alignItems: 'center', gap: 10,
@@ -3954,51 +5211,76 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
         marginBottom: 20,
       }}>
         <input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
-        <span>Lo he leído y asumo mi responsabilidad</span>
+        <span>{t('breathe.safety.check')}</span>
       </label>
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-        <Button variant="ghost" onClick={onCancel}>Cancelar</Button>
-        <Button variant="terracota" disabled={!checked} onClick={() => onAccept(routine)}>Empezar sesión</Button>
+        <Button variant="ghost" onClick={onCancel}>{t('breathe.safety.cancel')}</Button>
+        <Button variant="terracota" disabled={!checked} onClick={() => onAccept(routine)}>{t('breathe.safety.start')}</Button>
       </div>
     </Modal>
   );
 }
 
-/* =========================
-   BREATHING SESSION
-   NOTA: incluye fase de preparación (3s), retención explícita en rondas,
-   countdown visible en fases largas, pantalla de completado, atajos de teclado.
-   ========================= */
+Object.assign(window, { BreatheLibrary, BreatheSafety });
+
+</script>
+  <script type="text/babel">
+/* PACE · Respiración — Sesión guiada
+   Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
+   Depende de BreatheVisual.jsx (BreathVisual, getSequence) que carga antes.
+*/
+
+const { useState, useEffect, useRef } = React;
+
+const PHASE_KEYS = {
+  'Inhala':           'breathe.phase.inhala',
+  'Exhala':           'breathe.phase.exhala',
+  'Sostén':           'breathe.phase.sosten',
+  'Inhala más':       'breathe.phase.inhala.mas',
+  'Inhala oceánica':  'breathe.phase.inhala.oceanica',
+  'Exhala oceánica':  'breathe.phase.exhala.oceanica',
+  'Inhala izq.':      'breathe.phase.inhala.izq',
+  'Inhala dcha.':     'breathe.phase.inhala.dcha',
+  'Exhala dcha.':     'breathe.phase.exhala.dcha',
+  'Exhala izq.':      'breathe.phase.exhala.izq',
+  'Respira':          'breathe.phase.respira',
+};
+
 function BreatheSession({ routine, onExit }) {
   const [state] = usePace();
-  const [stage, setStage] = useStateBR('prep'); // 'prep' | 'active' | 'hold' | 'done'
-  const [prepCount, setPrepCount] = useStateBR(3);
-  const [phase, setPhase] = useStateBR(0);
-  const [phaseTime, setPhaseTime] = useStateBR(0);
-  const [round, setRound] = useStateBR(1);
-  const [breathCount, setBreathCount] = useStateBR(1);
-  const [holdSeconds, setHoldSeconds] = useStateBR(0);
-  const [paused, setPaused] = useStateBR(false);
-  const startTime = useRefBR(Date.now());
-  const sessionStart = useRefBR(Date.now());
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const displayRoutine = lang === 'en'
+    ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
+    : routine;
+  const [stage, setStage] = useState('prep'); // 'prep' | 'active' | 'hold' | 'done'
+  const [prepCount, setPrepCount] = useState(3);
+  const [phase, setPhase] = useState(0);
+  const [phaseTime, setPhaseTime] = useState(0);
+  const [round, setRound] = useState(1);
+  const [breathCount, setBreathCount] = useState(1);
+  const [holdSeconds, setHoldSeconds] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const startTime = useRef(Date.now());
+  const sessionStart = useRef(Date.now());
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
 
   // Preparación: cuenta atrás 3 segundos
-  useEffectBR(() => {
+  useEffect(() => {
     if (stage !== 'prep' || paused) return;
     if (prepCount <= 0) {
       setStage('active');
       startTime.current = Date.now();
       return;
     }
-    const t = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
+    return () => clearTimeout(timer);
   }, [stage, prepCount, paused]);
 
   // Ticker principal (active)
-  useEffectBR(() => {
+  useEffect(() => {
     if (paused || stage !== 'active') return;
     const intv = setInterval(() => {
       setPhaseTime(t => {
@@ -4022,12 +5304,11 @@ function BreatheSession({ routine, onExit }) {
   }, [phase, paused, routine, stage]);
 
   // Ticker de retención (hold en rondas)
-  useEffectBR(() => {
+  useEffect(() => {
     if (stage !== 'hold' || paused) return;
     const intv = setInterval(() => {
       setHoldSeconds(s => {
         const next = s + 1;
-        // Desbloqueo de logros por apnea
         if (next === 60) unlockAchievement('secret.breath.hold.60');
         if (next === 90) unlockAchievement('secret.breath.hold.90');
         if (next === 120) unlockAchievement('secret.breath.hold.120');
@@ -4038,7 +5319,7 @@ function BreatheSession({ routine, onExit }) {
   }, [stage, paused]);
 
   // Atajos de teclado
-  useEffectBR(() => {
+  useEffect(() => {
     const onKey = (e) => {
       if (e.key === ' ') { e.preventDefault(); setPaused(p => !p); }
       if (e.key === 'Escape') onExit('exit');
@@ -4055,7 +5336,6 @@ function BreatheSession({ routine, onExit }) {
         setBreathCount(b => b + 1);
         setPhase(0);
       } else {
-        // Se completaron las N respiraciones → retención
         setStage('hold');
         setHoldSeconds(0);
       }
@@ -4070,7 +5350,6 @@ function BreatheSession({ routine, onExit }) {
   };
 
   const releaseHold = () => {
-    // Tras liberar el aire, siguiente ronda o fin
     if (round < routine.rounds) {
       setRound(r => r + 1);
       setBreathCount(1);
@@ -4088,60 +5367,57 @@ function BreatheSession({ routine, onExit }) {
 
   // ====== RENDER STAGES ======
 
-  // PREPARACIÓN
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--breathe)"
         prepCount={prepCount}
-        copy="Siéntate cómodo. Respira natural."
+        copy={t('breathe.prepCopy')}
         onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); }}
       />
     );
   }
 
-  // COMPLETADO
   if (stage === 'done') {
     const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
     const stats = [
-      { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
+      { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
     ];
     if (isRounds) {
-      stats.push({ label: 'Rondas', value: String(routine.rounds) });
-      stats.push({ label: 'Respiraciones', value: String(routine.breaths * routine.rounds) });
+      stats.push({ label: t('common.rounds'), value: String(routine.rounds) });
+      stats.push({ label: t('common.breaths'), value: String(routine.breaths * routine.rounds) });
     }
     return (
       <SessionDone
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--breathe)"
         accentSoft="var(--breathe-soft)"
-        doneMeta="Sesión completada"
-        doneCopy="Bien hecho. Observa cómo te sientes antes de volver."
+        doneMeta={t('session.doneMeta')}
+        doneCopy={t('breathe.doneCopy')}
         stats={stats}
         buttonVariant="terracota"
       />
     );
   }
 
-  // HOLD (retención en rondas)
   if (stage === 'hold') {
     const holdMins = Math.floor(holdSeconds / 60);
     const holdSecs = holdSeconds % 60;
     return (
       <SessionShell
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
-        headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>Ronda {round} / {routine.rounds}</div>}
-        footer={<Button variant="terracota" onClick={releaseHold}>Respirar de nuevo</Button>}
+        headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
+        footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
         <div style={{ textAlign: 'center', maxWidth: 520 }}>
           <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
-            Retén sin aire
+            {t('session.hold')}
           </div>
           <div style={{
             ...displayItalic,
@@ -4153,22 +5429,23 @@ function BreatheSession({ routine, onExit }) {
             {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
           </div>
           <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            {holdMins > 0 ? 'minutos' : 'segundos'}
+            {holdMins > 0 ? t('session.minutes') : t('session.seconds')}
           </div>
           <p style={{
             ...displayItalic,
             fontSize: 18, color: 'var(--ink-2)',
             maxWidth: 360, margin: '30px auto 0', lineHeight: 1.5,
           }}>
-            Pulsa cuando sientas la necesidad de respirar.
+            {t('session.holdCue')}
           </p>
         </div>
       </SessionShell>
     );
   }
 
-  // ACTIVE (ciclo de respiración normal)
+  // ACTIVE
   const current = sequence[phase] || sequence[0];
+  const displayLabel = tR(PHASE_KEYS[current.label] || current.label, current.label);
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
@@ -4177,26 +5454,26 @@ function BreatheSession({ routine, onExit }) {
 
   const footer = (
     <React.Fragment>
-      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
-        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+      <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title={t('session.pause')}>
+        {paused ? t('session.resume') : t('session.pause')}
       </button>
-      <button onClick={finish} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title="Esc">
-        ▶| Terminar
+      <button onClick={finish} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title={t('session.finish')}>
+        {t('session.finish')}
       </button>
     </React.Fragment>
   );
 
   return (
     <SessionShell
-      routine={routine}
+      routine={displayRoutine}
       onExit={onExit}
       centerGap={true}
       footerGap={16}
       footer={footer}
-      hint="Espacio pausar · Esc salir"
+      hint={t('session.hint')}
       headerExtra={isRounds ? (
         <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          Ronda {round} / {routine.rounds}
+          {t('session.round')} {round} / {routine.rounds}
         </div>
       ) : null}
     >
@@ -4211,7 +5488,7 @@ function BreatheSession({ routine, onExit }) {
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
           marginBottom: 8, lineHeight: 1,
-        }}>{current.label}</div>
+        }}>{displayLabel}</div>
         {showCountdown && (
           <div style={{
             ...displayItalic,
@@ -4220,7 +5497,7 @@ function BreatheSession({ routine, onExit }) {
           }}>{remaining}</div>
         )}
         <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-          {isRounds ? `Respiración ${breathCount} de ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
+          {isRounds ? `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
         </div>
       </div>
       <div style={{
@@ -4242,222 +5519,11 @@ function BreatheSession({ routine, onExit }) {
   );
 }
 
-/* SessionHeader y Stat (antes locales aquí) se extrajeron en sesión 26
-   a app/ui/SessionShell.jsx como componentes compartidos con Move.
-   Ver docs/audits/audit-v0.12.7.md §3.1 (Top-1 duplicación). */
+Object.assign(window, { BreatheSession });
 
-function getSequence(routine) {
-  // Devuelve [{label, duration, scale}, …]
-  if (routine.pattern === 'rounds') {
-    return [
-      { label: 'Inhala', duration: 2, scale: 1.3 },
-      { label: 'Exhala', duration: 2, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'box') {
-    const [i, h1, e, h2] = routine.cycle;
-    return [
-      { label: 'Inhala', duration: i, scale: 1.3 },
-      { label: 'Sostén', duration: h1, scale: 1.3 },
-      { label: 'Exhala', duration: e, scale: 0.9 },
-      { label: 'Sostén', duration: h2, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'coherent') {
-    const [i, , e] = routine.cycle;
-    return [
-      { label: 'Inhala', duration: i, scale: 1.3 },
-      { label: 'Exhala', duration: e, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'pattern') {
-    // 4-7-8
-    const [i, h, e] = routine.cycle;
-    return [
-      { label: 'Inhala', duration: i, scale: 1.3 },
-      { label: 'Sostén', duration: h, scale: 1.3 },
-      { label: 'Exhala', duration: e, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'physiological') {
-    return [
-      { label: 'Inhala', duration: 2, scale: 1.25 },
-      { label: 'Inhala más', duration: 1, scale: 1.35 },
-      { label: 'Exhala', duration: 5, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'ujjayi') {
-    return [
-      { label: 'Inhala oceánica', duration: 5, scale: 1.3 },
-      { label: 'Exhala oceánica', duration: 5, scale: 0.9 },
-    ];
-  }
-  if (routine.pattern === 'bhastrika' || routine.pattern === 'kapalabhati') {
-    return [
-      { label: 'Inhala', duration: 1, scale: 1.2 },
-      { label: 'Exhala', duration: 1, scale: 0.95 },
-    ];
-  }
-  if (routine.pattern === 'nadi') {
-    return [
-      { label: 'Inhala izq.', duration: 4, scale: 1.3 },
-      { label: 'Sostén', duration: 2, scale: 1.3 },
-      { label: 'Exhala dcha.', duration: 4, scale: 0.9 },
-      { label: 'Inhala dcha.', duration: 4, scale: 1.3 },
-      { label: 'Sostén', duration: 2, scale: 1.3 },
-      { label: 'Exhala izq.', duration: 4, scale: 0.9 },
-    ];
-  }
-  return [{ label: 'Respira', duration: 4, scale: 1.2 }];
-}
-
-/* =========================
-   BREATH VISUAL
-   ========================= */
-function BreathVisual({ style, phase, progress, scale = 1.2 }) {
-  const transitionDur = '1800ms';
-  /* Estilo "Flor" — híbrido entre pulso y pétalo.
-     Anillos concéntricos que pulsan + pétalos suaves rotando lentamente + núcleo luminoso. */
-  if (style === 'flor') {
-    return (
-      <div style={visualStyles.wrap}>
-        {/* Anillos externos pulsando */}
-        <div style={{
-          position: 'absolute', inset: -40,
-          border: '1px solid var(--breathe)',
-          borderRadius: '50%',
-          opacity: 0.25,
-          transform: `scale(${scale * 0.95})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-        }} />
-        <div style={{
-          position: 'absolute', inset: -20,
-          border: '1px solid var(--breathe)',
-          borderRadius: '50%',
-          opacity: 0.4,
-          transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-        }} />
-        {/* Pétalos suaves girando muy lento */}
-        <svg viewBox="-100 -100 200 200" style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          transform: `scale(${scale * 0.85}) rotate(${progress * 40}deg)`,
-          transition: `transform ${transitionDur} var(--ease)`,
-        }}>
-          {[0,1,2,3,4,5].map(i => (
-            <ellipse key={i} cx="0" cy="-32" rx="14" ry="34"
-              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.6"
-              transform={`rotate(${i * 60})`} opacity="0.5" />
-          ))}
-        </svg>
-        {/* Núcleo luminoso */}
-        <div style={{
-          width: 80, height: 80,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 80%)',
-          border: '1.5px solid var(--breathe)',
-          transform: `scale(${scale * 0.7})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-          position: 'relative',
-        }} />
-      </div>
-    );
-  }
-  if (style === 'ondas') {
-    return (
-      <div style={visualStyles.wrap}>
-        {[0,1,2,3].map(i => (
-          <div key={i} style={{
-            position: 'absolute', inset: 0,
-            border: '1px solid var(--breathe)',
-            borderRadius: '50%',
-            opacity: 0.15 + i * 0.1,
-            transform: `scale(${scale - i * 0.15})`,
-            transition: `transform ${transitionDur} var(--ease)`,
-          }} />
-        ))}
-        <div style={{ ...visualStyles.core, background: 'var(--breathe-soft)' }} />
-      </div>
-    );
-  }
-  if (style === 'petalo') {
-    return (
-      <div style={visualStyles.wrap}>
-        <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} var(--ease)`, transform: `scale(${scale})` }}>
-          {[0,1,2,3,4,5].map(i => (
-            <ellipse key={i} cx="0" cy="-40" rx="20" ry="45"
-              fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.8"
-              transform={`rotate(${i * 60})`} opacity="0.55" />
-          ))}
-          <circle cx="0" cy="0" r="12" fill="var(--breathe)" opacity="0.25" />
-        </svg>
-      </div>
-    );
-  }
-  if (style === 'organico') {
-    return (
-      <div style={visualStyles.wrap}>
-        <div style={{
-          ...visualStyles.core,
-          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 70%)',
-          transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} var(--ease)`,
-          borderRadius: `${42 + Math.sin(progress * Math.PI * 4) * 6}% ${58 - Math.sin(progress * Math.PI * 4) * 6}% ${46 + Math.cos(progress * Math.PI * 3) * 8}% ${54 - Math.cos(progress * Math.PI * 3) * 8}%`,
-          border: '1px solid var(--breathe)',
-        }} />
-      </div>
-    );
-  }
-  // Default: pulso
-  return (
-    <div style={visualStyles.wrap}>
-      {/* Anillos externos */}
-      <div style={{ position: 'absolute', inset: -30, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
-      <div style={{ position: 'absolute', inset: -60, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
-      <div style={{
-        ...visualStyles.core,
-        background: 'var(--breathe-soft)',
-        border: '1.5px solid var(--breathe)',
-        transform: `scale(${scale})`,
-        transition: `transform ${transitionDur} var(--ease)`,
-      }} />
-      {/* Puntito indicador rotando */}
-      <div style={{
-        position: 'absolute',
-        width: 8, height: 8, borderRadius: '50%',
-        background: 'var(--breathe-2)',
-        top: '50%', left: '50%',
-        transform: `translate(-50%, -50%) rotate(${progress * 360}deg) translateY(-110px)`,
-        transition: 'transform 1s linear',
-      }} />
-    </div>
-  );
-}
-
-const visualStyles = {
-  wrap: {
-    position: 'relative',
-    width: 260, height: 260,
-    display: 'grid', placeItems: 'center',
-  },
-  core: {
-    width: 160, height: 160,
-    borderRadius: '50%',
-    position: 'relative',
-  },
-};
-
-/* sessionStyles local eliminado en sesión 26. El layout de sesión vive ahora
-   en app/ui/SessionShell.jsx (sessionShellStyles) y los componentes
-   SessionShell / SessionPrep / SessionDone lo consumen. */
-
-/* Export a window: sólo los componentes consumidos fuera del módulo.
-   SessionHeader y Stat se movieron a SessionShell.jsx (expuestos desde
-   allí). BREATHE_ROUTINES sigue declarado como const local (nadie lo
-   consume fuera), saneado por audit §4.1. */
-Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession });
 </script>
-  <script type="text/babel">/* PACE · Módulo Mueve (Calistenia / Fuerza)
+  <script type="text/babel">
+/* PACE · Módulo Mueve (Calistenia / Fuerza)
    Librería + Sesión con pasos + timer
 
    v0.11.9 — SWAP de contenido (sesión 14):
@@ -4468,7 +5534,7 @@ Object.assign(window, { BreatheLibrary, BreatheSafety, BreatheSession });
    de usuarios existentes — solo cambia qué contenedor visual los muestra.
 */
 
-const { useState: useStateMV, useEffect: useEffectMV } = React;
+const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
 
 const MOVE_ROUTINES = [
   { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
@@ -4522,12 +5588,13 @@ const MOVE_ROUTINES = [
 ];
 
 function MoveLibrary({ open, onClose, onStart }) {
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Mueve" subtitle="Calistenia y fuerza. Corto, discreto, sin equipo." maxWidth={820}>
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} maxWidth={820}>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
-        <Meta>Cuerpo activo</Meta>
+        <Meta>{t('lib.move.meta')}</Meta>
       </div>
-      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>{t('lib.routines')}</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {MOVE_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
@@ -4538,7 +5605,11 @@ function MoveLibrary({ open, onClose, onStart }) {
 }
 
 function MoveSession({ routine, onExit, kind = 'move' }) {
-  const { useRef: useRefMV } = React;
+  const { t, tn, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const displayRoutine = lang === 'en'
+    ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
+    : routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
   // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
   const dispatchComplete = () => {
@@ -4611,11 +5682,11 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--move)"
         prepCount={prepCount}
-        copy={`De pie. Sin prisa. ${routine.steps.length} pasos.`}
+        copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
       />
     );
@@ -4628,15 +5699,15 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     const secs = totalSec % 60;
     return (
       <SessionDone
-        routine={routine}
+        routine={displayRoutine}
         onExit={onExit}
         accent="var(--move)"
         accentSoft="var(--move-soft)"
-        doneMeta="Antídoto completado"
-        doneCopy="El cuerpo vuelve a sentirse tuyo."
+        doneMeta={t('session.antidoteDone')}
+        doneCopy={t('move.doneCopy')}
         stats={[
-          { label: 'Tiempo', value: `${mins}:${String(secs).padStart(2,'0')}` },
-          { label: 'Pasos',  value: String(routine.steps.length) },
+          { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
+          { label: t('move.steps'),  value: String(routine.steps.length) },
         ]}
         buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
       />
@@ -4649,45 +5720,45 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
   const footer = (
     <React.Fragment>
       <button onClick={goPrev} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn} title="←">
-        ← Anterior
+        {t('move.prev')}
       </button>
       <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title="Espacio">
-        {paused ? '▶ Reanudar' : '❚❚ Pausar'}
+        {paused ? t('session.resume') : t('session.pause')}
       </button>
       <button onClick={goNext} style={sessionShellStyles.ctrlBtn} title="→">
-        {stepIdx + 1 >= routine.steps.length ? 'Terminar' : 'Siguiente →'}
+        {stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.next')}
       </button>
     </React.Fragment>
   );
   return (
     <SessionShell
-      routine={routine}
+      routine={displayRoutine}
       onExit={onExit}
-      headerExtra={<Meta>Paso {stepIdx + 1} / {routine.steps.length}</Meta>}
+      headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer}
-      hint="← → navegar · Espacio pausar · Esc salir"
+      hint={t('move.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
         <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
-          Paso {stepIdx + 1} de {routine.steps.length}
+          {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>
         <h1 style={{
           ...displayItalic,
           fontSize: 56, fontWeight: 500,
           lineHeight: 1.05, margin: '0 0 20px',
-        }}>{step.name}</h1>
+        }}>{tR(`${routine.id}.s${stepIdx}.name`, step.name)}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
           maxWidth: 460, margin: '0 auto 30px',
-        }}>{step.cue}</p>
+        }}>{tR(`${routine.id}.s${stepIdx}.cue`, step.cue)}</p>
 
         <div style={{
           ...displayItalic,
           fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
           color: 'var(--ink)', lineHeight: 1,
         }}>{String(remaining).padStart(2, '0')}</div>
-        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>segundos</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>{t('session.seconds')}</div>
       </div>
 
       <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
@@ -4712,7 +5783,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `Siguiente: ${routine.steps[stepIdx + 1].name}` : 'Último paso'}
+          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tR(`${routine.id}.s${stepIdx + 1}.name`, routine.steps[stepIdx + 1].name)}` : t('move.lastStep')}
         </div>
       </div>
     </SessionShell>
@@ -4750,8 +5821,10 @@ function StepGlyph({ tag, stepIdx }) {
 /* Export a window: sólo lo consumido fuera del módulo.
    MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
 Object.assign(window, { MoveLibrary, MoveSession });
+
 </script>
-  <script type="text/babel">/* PACE · Módulo Estira (Estiramientos / Movilidad)
+  <script type="text/babel">
+/* PACE · Módulo Estira (Estiramientos / Movilidad)
    Botón: "Estira" · afloja tensión.
 
    v0.11.9 — SWAP de contenido (sesión 14):
@@ -4831,12 +5904,13 @@ const EXTRA_ROUTINES = [
 ];
 
 function ExtraLibrary({ open, onClose, onStart }) {
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Biblioteca" title="Estira" subtitle="Movilidad y estiramientos. Antídoto a la silla." maxWidth={820}>
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.extra.title')} subtitle={t('lib.extra.subtitle')} maxWidth={820}>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
-        <Meta>Afloja tensión</Meta>
+        <Meta>{t('lib.extra.meta')}</Meta>
       </div>
-      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>Rutinas</h3>
+      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>{t('lib.routines')}</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
         {EXTRA_ROUTINES.map(r => (
           <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />
@@ -4850,16 +5924,19 @@ function ExtraLibrary({ open, onClose, onStart }) {
 // Export a window saneado en sesión 26 (audit §4.1): EXTRA_ROUTINES no se
 // consume fuera del módulo — sigue como const local.
 Object.assign(window, { ExtraLibrary });
+
 </script>
-  <script type="text/babel">/* PACE · Módulo Hidrátate */
+  <script type="text/babel">
+/* PACE · Módulo Hidrátate */
 
 function HydrateTracker({ open, onClose }) {
   const [state] = usePace();
+  const { t } = useT();
   const { today, goal } = state.water;
   const pct = Math.min(100, (today / goal) * 100);
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Hidratación" title="Hidrátate" subtitle="Un sorbo ahora, un regalo a tu yo de las 5." maxWidth={580}>
+    <Modal open={open} onClose={onClose} tagLabel={t('hydrate.tag')} title={t('hydrate.title')} subtitle={t('hydrate.subtitle')} maxWidth={580}>
       {/* Progreso gigante */}
       <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
         <div style={{
@@ -4870,14 +5947,14 @@ function HydrateTracker({ open, onClose }) {
         }}>
           {today}<span style={{ color: 'var(--ink-3)', fontSize: 40 }}> / {goal}</span>
         </div>
-        <div style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>Vasos hoy</div>
+        <div style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>{t('hydrate.glasses.today')}</div>
       </div>
 
       {/* Vasos visuales */}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${goal}, 1fr)`, gap: 8, marginBottom: 24 }}>
         {Array.from({ length: goal }).map((_, i) => (
           <button key={i}
-            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); } }}
+            onClick={() => { if (i < today) { addWaterGlass(-1); } else { addWaterGlass(1); try { playSound('sip'); } catch (e) {} } }}
             style={{
               aspectRatio: '1/1.3',
               background: i < today ? 'var(--hydrate-soft)' : 'transparent',
@@ -4916,30 +5993,49 @@ function HydrateTracker({ open, onClose }) {
       </div>
 
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">Un vaso menos</Button>
+        <Button variant="secondary" onClick={() => addWaterGlass(-1)} icon="−" size="md">{t('hydrate.less')}</Button>
         <Button onClick={() => { addWaterGlass(1); try { playSound('sip'); } catch (e) {} }} icon="+" size="md"
-          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>Un vaso más</Button>
+          style={{ background: 'var(--hydrate)', borderColor: 'var(--hydrate)' }}>{t('hydrate.more')}</Button>
       </div>
 
       <Divider style={{ margin: '24px 0 16px' }} />
 
       <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.6 }}>
-        <strong style={{ color: 'var(--ink-2)' }}>Tip:</strong> llena una botella de 500ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.
+        <strong style={{ color: 'var(--ink-2)' }}>{t('hydrate.tip.label')}</strong>{' '}{t('hydrate.tip')}
       </div>
     </Modal>
   );
 }
 
 Object.assign(window, { HydrateTracker });
+
 </script>
-  <script type="text/babel">/* PACE · Menú post-Pomodoro
+  <script type="text/babel">
+/* PACE · Menú post-Pomodoro
    Aparece tras completar un ciclo de foco.
-   3 opciones: Respira / Mueve / Agua + Saltar
+   Las 3 opciones se reordenan según lo que el usuario ha hecho menos hoy:
+   primero la actividad más necesaria, con indicador "Para ti".
 */
 
 const { useEffect: useEffectBM } = React;
 
+/* Score: cuánto se necesita esta actividad en este momento.
+   Mayor → más prioritaria. Water usa escala 0-3 según vasos restantes. */
+function computeScore(key, state) {
+  const { plan, water } = state;
+  if (key === 'breathe') return plan.respira ? 0 : 2;
+  if (key === 'move') return plan.muevete ? 0 : 2;
+  if (key === 'water') {
+    if (water.today === 0) return 3;
+    if (water.today < water.goal) return 1;
+    return 0;
+  }
+  return 0;
+}
+
 function BreakMenu({ open, onClose, onChoose }) {
+  const { t } = useT();
+
   /* `first.cycle` — Pomodoro completado + pausa activa elegida.
      El BreakMenu sólo se abre tras `completePomodoro`, así que aquí
      basta con detectar que el usuario eligió una de las 3 micro-pausas
@@ -4953,11 +6049,9 @@ function BreakMenu({ open, onClose, onChoose }) {
     onChoose(key);
   };
 
-
   // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
-  // La UI anuncia estos atajos en el Meta de abajo; aquí se implementan.
-  // Se ignoran cuando el foco está en un input/textarea para no colisionar
-  // con edición de texto.
+  // Los atajos siguen mapeados por actividad (no por posición visual),
+  // así el reordenamiento inteligente no los rompe.
   useEffectBM(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -4975,44 +6069,72 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   if (!open) return null;
 
-  const opts = [
-    { key: 'breathe', label: 'Respira', desc: '2 min para volver al centro', color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
-    { key: 'move', label: 'Muévete', desc: 'Antídoto rápido a la silla', color: 'var(--move)', bg: 'var(--move-soft)', icon: <BMMoveIcon /> },
-    { key: 'water', label: 'Hidrátate', desc: 'Un vaso ahora', color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
+  const state = getState();
+
+  const baseOpts = [
+    { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
+    { key: 'move',    label: t('break.move.label'),    desc: t('break.move.desc'),    color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
+    { key: 'water',   label: t('break.water.label'),   desc: t('break.water.desc'),   color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
   ];
 
+  // Ordenar por score descendente; empate → orden original (sort estable).
+  const opts = baseOpts
+    .map(o => ({ ...o, score: computeScore(o.key, state) }))
+    .sort((a, b) => b.score - a.score);
+
+  const topScore = opts[0].score;
+
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Ciclo completado" title="Pausa bien hecha" subtitle="Has cerrado un ciclo de foco. Elige tu micro-pausa." maxWidth={720}>
+    <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
-        {opts.map(o => (
-          <button key={o.key}
-            onClick={() => handleChoose(o.key)}
-            style={{
-              padding: '24px 18px',
-              background: o.bg,
-              border: `1.5px solid ${o.color}`,
-              borderRadius: 'var(--r-md)',
-              textAlign: 'left',
-              display: 'flex', flexDirection: 'column', gap: 12,
-              transition: 'all 220ms var(--ease)',
-              cursor: 'pointer',
-              color: 'var(--ink)',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--sh-card)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-          >
-            <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
-            <div>
-              <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
-              <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>{o.desc}</div>
-            </div>
-          </button>
-        ))}
+        {opts.map((o, i) => {
+          const done = o.score === 0;
+          const recommended = i === 0 && topScore > 0;
+          return (
+            <button key={o.key}
+              onClick={() => handleChoose(o.key)}
+              style={{
+                position: 'relative',
+                padding: '24px 18px',
+                background: o.bg,
+                border: `1.5px solid ${done ? 'var(--line)' : o.color}`,
+                borderRadius: 'var(--r-md)',
+                textAlign: 'left',
+                display: 'flex', flexDirection: 'column', gap: 12,
+                transition: 'all 220ms var(--ease)',
+                cursor: 'pointer',
+                color: 'var(--ink)',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--sh-card)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              {/* Indicador de actividad ya completada hoy (punto color módulo) */}
+              {done && (
+                <span style={{
+                  position: 'absolute', top: 10, right: 10,
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: o.color, opacity: 0.6,
+                }} />
+              )}
+              {/* Tag "Para ti" en la opción recomendada */}
+              {recommended && (
+                <Tag color="var(--focus)">{t('break.recommended')}</Tag>
+              )}
+              <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
+              <div>
+                <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--ink-2)' }}>
+                  {done ? t('break.done') : o.desc}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-        <Meta>Atajo: B · M · H · Esc</Meta>
-        <Button variant="ghost" onClick={onClose}>Saltar esta pausa</Button>
+        <Meta>{t('break.shortcut')}</Meta>
+        <Button variant="ghost" onClick={onClose}>{t('break.skip')}</Button>
       </div>
     </Modal>
   );
@@ -5050,8 +6172,10 @@ function BMDropIcon() {
 }
 
 Object.assign(window, { BreakMenu });
+
 </script>
-  <script type="text/babel">/* PACE · Logros (Sellos tipo libreta de campo) */
+  <script type="text/babel">
+/* PACE · Logros (Sellos tipo libreta de campo) */
 
 const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
@@ -5173,12 +6297,12 @@ const ACHIEVEMENT_CATALOG = [
 ];
 
 const CAT_META = {
-  primeros: { label: 'Primeros pasos', color: 'var(--ink-3)' },
-  constancia: { label: 'Constancia', color: 'var(--focus)' },
-  exploracion: { label: 'Exploración', color: 'var(--breathe)' },
-  maestria: { label: 'Maestría', color: 'var(--achievement)' },
-  secretos: { label: 'Secretos', color: 'var(--ink-2)' },
-  estacionales: { label: 'Estacionales', color: 'var(--move)' },
+  primeros: { labelKey: 'ach.cat.primeros', color: 'var(--ink-3)' },
+  constancia: { labelKey: 'ach.cat.constancia', color: 'var(--focus)' },
+  exploracion: { labelKey: 'ach.cat.exploracion', color: 'var(--breathe)' },
+  maestria: { labelKey: 'ach.cat.maestria', color: 'var(--achievement)' },
+  secretos: { labelKey: 'ach.cat.secretos', color: 'var(--ink-2)' },
+  estacionales: { labelKey: 'ach.cat.estacionales', color: 'var(--move)' },
 };
 
 /* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
@@ -5197,10 +6321,13 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // con día previo distinto al actual).
   'first.step', 'first.breath', 'first.stretch', 'first.sip', 'first.extra',
   'first.cycle', 'first.ritual', 'first.day', 'first.plan', 'first.return',
-  // Constancia (10/15) — sesión 28: +streak.14, +streak.60, +streak.365.
+  // Constancia (14/15) — sesión 29: +breathe.sessions.10/50,
+  // +move.sessions.25, +morning.5. Falta hydrate.week.perfect.
   'streak.3', 'streak.7', 'streak.14', 'streak.30', 'streak.60',
   'streak.100', 'streak.365',
   'focus.hours.10', 'focus.hours.50', 'focus.hours.100',
+  'breathe.sessions.10', 'breathe.sessions.50', 'move.sessions.25',
+  'morning.5',
   // Exploración breathe (9/20)
   'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
   'explore.bhastrika', 'explore.nadi', 'explore.ujjayi',
@@ -5208,9 +6335,14 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   // Exploración move (6/20) — reconectados en sesión 15
   'explore.hips', 'explore.shoulders', 'explore.atg',
   'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (2/25) — sesión 28: +master.focus.day (4h foco/día,
-  // evaluado en addFocusMinutes contra el bucket diario).
+  // Maestría (9/25) — sesión 29: +master.long.focus, +master.dawn, +master.dusk.
+  // Sesión 34: +master.collector.half/full (50/100 logros),
+  //            +master.silent.day (soundOn=false 1 día),
+  //            +master.retreat (2h breathe+move en día).
   'master.pomodoro.8', 'master.focus.day',
+  'master.long.focus', 'master.dawn', 'master.dusk',
+  'master.collector.half', 'master.collector.full',
+  'master.silent.day', 'master.retreat',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
@@ -5230,6 +6362,7 @@ function isImplemented(a) {
 
 function Achievements({ open, onClose }) {
   const [state] = usePace();
+  const { t } = useT();
   const unlocked = state.achievements || {};
   const unlockedCount = Object.keys(unlocked).length;
   // Clasificación sesión 15: disponibles = con trigger hoy; próximamente = sin trigger.
@@ -5238,21 +6371,21 @@ function Achievements({ open, onClose }) {
   const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Colección" title="Logros" subtitle="Sellos de libreta de campo. Colección creciente. Explora, no compitas." maxWidth={920}>
+    <Modal open={open} onClose={onClose} tagLabel={t('ach.tag')} title={t('ach.title')} subtitle={t('ach.subtitle')} maxWidth={920}>
       {/* Counter */}
       <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
         <div>
           <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
           </div>
-          <Meta style={{ marginTop: 4 }}>Disponibles</Meta>
+          <Meta style={{ marginTop: 4 }}>{t('ach.available')}</Meta>
         </div>
         <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
         <div>
           <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {comingSoonCount}
           </div>
-          <Meta style={{ marginTop: 4 }}>Próximamente</Meta>
+          <Meta style={{ marginTop: 4 }}>{t('ach.coming.soon')}</Meta>
         </div>
       </div>
 
@@ -5262,7 +6395,7 @@ function Achievements({ open, onClose }) {
         return (
           <div key={cat} style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{meta.label}</h3>
+              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{t(meta.labelKey)}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
@@ -5293,6 +6426,7 @@ function Achievements({ open, onClose }) {
    Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
    título "Secreto") — su mecánica es intriga, no señalización. */
 function Seal({ achievement, unlocked, implemented, color }) {
+  const { t } = useT();
   const a = achievement;
   const isSecret = a.secret && !unlocked;
   const isComingSoon = !unlocked && !implemented && !a.secret;
@@ -5316,7 +6450,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
         cursor: 'default',
         textAlign: 'center',
       }}
-      title={isComingSoon ? 'Próximamente' : a.desc}
+      title={isComingSoon ? t('ach.coming.soon') : a.desc}
     >
       {/* Badge "Pronto" — solo en estado coming-soon */}
       {isComingSoon && (
@@ -5332,7 +6466,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
           borderRadius: 999,
           padding: '2px 6px',
           lineHeight: 1,
-        }}>Pronto</div>
+        }}>{t('ach.seal.soon')}</div>
       )}
 
       {/* Sello circular */}
@@ -5369,20 +6503,23 @@ function Seal({ achievement, unlocked, implemented, color }) {
         lineHeight: 1.15,
         marginBottom: 4,
         color: unlocked ? 'var(--ink)' : 'var(--ink-3)',
-      }}>{isSecret ? 'Secreto' : a.title}</div>
+      }}>{isSecret ? t('ach.seal.secret') : a.title}</div>
       <div style={{ fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 }}>
-        {isSecret ? '?????' : (isComingSoon ? 'Pronto' : a.desc)}
+        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : a.desc)}
       </div>
     </div>
   );
 }
 
 Object.assign(window, { Achievements, ACHIEVEMENT_CATALOG });
+
 </script>
-  <script type="text/babel">/* PACE · Panel de estadísticas semanales */
+  <script type="text/babel">
+/* PACE · Panel de estadísticas semanales */
 
 function WeeklyStats({ open, onClose }) {
   const [state] = usePace();
+  const { t } = useT();
   const w = state.weeklyStats;
 
   const totals = {
@@ -5393,14 +6530,14 @@ function WeeklyStats({ open, onClose }) {
   };
 
   const bars = [
-    { key: 'focus', label: 'Foco', color: 'var(--focus)', data: w.focusMinutes, unit: 'min' },
-    { key: 'breath', label: 'Respira', color: 'var(--breathe)', data: w.breathMinutes, unit: 'min' },
-    { key: 'move', label: 'Mueve', color: 'var(--move)', data: w.moveMinutes, unit: 'min' },
-    { key: 'water', label: 'Hidrátate', color: 'var(--hydrate)', data: w.waterGlasses, unit: 'vasos' },
+    { key: 'focus', label: t('topbar.mode.focus'), color: 'var(--focus)', data: w.focusMinutes, unit: t('stats.unit.min') },
+    { key: 'breath', label: t('activity.breathe.label'), color: 'var(--breathe)', data: w.breathMinutes, unit: t('stats.unit.min') },
+    { key: 'move', label: t('activity.move.label'), color: 'var(--move)', data: w.moveMinutes, unit: t('stats.unit.min') },
+    { key: 'water', label: t('activity.hydrate.label'), color: 'var(--hydrate)', data: w.waterGlasses, unit: t('stats.unit.glasses') },
   ];
 
   return (
-    <Modal open={open} onClose={onClose} tagLabel="Semana" title="Ritmo semanal" subtitle="Métricas suaves. Sin ansiedad, sin comparación." maxWidth={780}>
+    <Modal open={open} onClose={onClose} tagLabel={t('stats.tag')} title={t('stats.title')} subtitle={t('stats.subtitle')} maxWidth={780}>
       {/* Totales */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
         {bars.map(b => (
@@ -5432,15 +6569,16 @@ function WeeklyStats({ open, onClose }) {
         borderRadius: 'var(--r-sm)',
         fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.6,
       }}>
-        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>Nota: </strong>
-        no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.
+        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
+        {t('stats.note')}
       </div>
     </Modal>
   );
 }
 
 function WeekBarRow({ label, data, color, unit }) {
-  const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const { t } = useT();
+  const days = t('stats.days').split(',');
   const today = (new Date().getDay() + 6) % 7;
   const max = Math.max(1, ...data);
   // Reordenar: en España empezamos en lunes. data está indexado 0=Dom (getDay)
@@ -5495,10 +6633,15 @@ function WeekBarRow({ label, data, color, unit }) {
 }
 
 Object.assign(window, { WeeklyStats });
+
 </script>
-  <script type="text/babel">/* PACE · Panel de Tweaks
+  <script type="text/babel">
+/* PACE · Panel de Ajustes (antes Tweaks)
    ============================================================
-   4 ejes vigentes: paleta, layout, timer, breath.
+   5 ejes vigentes: audio, paleta, layout, timer, breath.
+   Sesión 37 (v0.19.0): renombrado a "Ajustes", audio movido al
+   primer eje con pills "Activado / Silenciado", eliminados
+   circle/numero de timer y editorial de layout.
 
    Retirados por decisión "menos variantes, más identidad":
      - logoVariant + supportCopyVariant (sesión 19).
@@ -5537,6 +6680,7 @@ const DARK_DAYS_KEY = 'pace.darkDays.v1';
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
+  const { t, tn } = useT();
   const fileInputRef = useRefTW(null);
   const [msg, setMsg] = useStateTW(null); // {kind, text} para feedback Export/Import
 
@@ -5558,37 +6702,34 @@ function TweaksPanel({ open, onClose }) {
 
   if (!open) return null;
 
+  /* Ejes de personalización.
+     Sesión 37: circle/numero retirados de timer, editorial retirado
+     de layout, audio promovido al primer eje como pills separadas. */
   const ejes = [
-    { key: 'palette', label: 'Paleta', options: [
-      { v: 'crema', name: 'Crema día' },
-      { v: 'oscuro', name: 'Oscuro noche' },
-      { v: 'envejecido', name: 'Papel envejecido' },
+    { key: 'palette', label: t('tweaks.eje.palette'), options: [
+      { v: 'crema', name: t('tweaks.palette.crema') },
+      { v: 'oscuro', name: t('tweaks.palette.oscuro') },
+      { v: 'envejecido', name: t('tweaks.palette.envejecido') },
     ]},
-    { key: 'layout', label: 'Layout', options: [
-      { v: 'sidebar', name: 'Sidebar (default)' },
-      { v: 'minimal', name: 'Minimal' },
-      { v: 'editorial', name: 'Editorial' },
+    { key: 'layout', label: t('tweaks.eje.layout'), options: [
+      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
+      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
-    { key: 'timerStyle', label: 'Estilo del timer', options: [
-      { v: 'aro', name: 'Aro (default)' },
-      { v: 'circulo', name: 'Círculo' },
-      { v: 'barra', name: 'Barra' },
-      { v: 'numero', name: 'Número gigante' },
-      { v: 'analogico', name: 'Analógico' },
+    { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
+      { v: 'aro', name: t('tweaks.timer.aro') },
+      { v: 'barra', name: t('tweaks.timer.barra') },
+      { v: 'analogico', name: t('tweaks.timer.analogico') },
     ]},
-    { key: 'breathStyle', label: 'Círculo de respiración', options: [
-      { v: 'flor', name: 'Flor (default)' },
-      { v: 'pulso', name: 'Pulso' },
-      { v: 'petalo', name: 'Pétalo' },
-      { v: 'ondas', name: 'Ondas' },
-      { v: 'organico', name: 'Orgánico' },
+    { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
+      { v: 'flor', name: t('tweaks.breath.flor') },
+      { v: 'pulso', name: t('tweaks.breath.pulso') },
+      { v: 'petalo', name: t('tweaks.breath.petalo') },
+      { v: 'ondas', name: t('tweaks.breath.ondas') },
+      { v: 'organico', name: t('tweaks.breath.organico') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
-       (sesión post-v0.12.1). El logo queda fijo en 'pace' (oficial)
-       y el copy del botón de apoyo consolidado en una sola variante
-       ("Da de pastar a la vaca" + icono de vaca). Los campos del
-       state se conservan por compatibilidad con instalaciones
-       existentes, pero ya no son configurables desde la UI. */
+       (sesión post-v0.12.1). Los campos del state se conservan por
+       compatibilidad con instalaciones existentes. */
   ];
 
   /* ============================================================
@@ -5597,11 +6738,11 @@ function TweaksPanel({ open, onClose }) {
      Y portátil. El archivo incluye:
        - version: para migración futura si el schema cambia.
        - exportedAt: timestamp legible.
-       - state: copia literal de localStorage['pace.state.v1'].
+       - state: copia literal de localStorage['pace.state.v2'].
      ============================================================ */
   const exportJSON = () => {
     try {
-      const raw = localStorage.getItem('pace.state.v1') || '{}';
+      const raw = localStorage.getItem('pace.state.v2') || '{}';
       const parsed = JSON.parse(raw);
       const payload = {
         app: 'PACE',
@@ -5619,10 +6760,10 @@ function TweaksPanel({ open, onClose }) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: 'Backup descargado.' });
+      setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
     } catch (e) {
-      setMsg({ kind: 'err', text: 'No se pudo exportar.' });
+      setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
     }
   };
@@ -5648,7 +6789,7 @@ function TweaksPanel({ open, onClose }) {
           || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
         );
         if (!looksValid) {
-          setMsg({ kind: 'err', text: 'Archivo no reconocido.' });
+          setMsg({ kind: 'err', text: t('tweaks.msg.import.invalid') });
           setTimeout(() => setMsg(null), 2600);
           return;
         }
@@ -5659,19 +6800,15 @@ function TweaksPanel({ open, onClose }) {
         // Contador rápido para el aviso de confirmación.
         const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
         const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(
-          `¿Sobreescribir tus datos con los del archivo?\n\n` +
-          `Archivo contiene: ${nLogros} logros, ${nFoco} min de foco.\n` +
-          `Esta acción no se puede deshacer.`
-        );
+        const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
         // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v1', JSON.stringify(incoming));
-        setMsg({ kind: 'ok', text: 'Importado — recargando…' });
+        localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+        setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {
-        setMsg({ kind: 'err', text: 'JSON inválido.' });
+        setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);
       }
     };
@@ -5695,11 +6832,41 @@ function TweaksPanel({ open, onClose }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <div>
-          <Meta>Panel</Meta>
-          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>Tweaks</div>
+          <Meta>{t('tweaks.meta')}</Meta>
+          <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500 }}>{t('settings.title')}</div>
         </div>
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
+
+      {/* Audio — primer eje (sesión 37: reubicado desde sección "Sound" inferior) */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
+        <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: true, name: t('settings.audio.on') },
+            { v: false, name: t('settings.audio.off') },
+          ].map(opt => {
+            const active = state.soundOn === opt.v;
+            return (
+              <button key={String(opt.v)} onClick={() => set({ soundOn: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
 
       {ejes.map(eje => (
         <div key={eje.key} style={{ marginBottom: 16 }}>
@@ -5728,18 +6895,31 @@ function TweaksPanel({ open, onClose }) {
 
       <Divider style={{ margin: '14px 0' }} />
 
-      {/* Sound */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Meta>Sonidos</Meta>
-        <button onClick={() => set({ soundOn: !state.soundOn })}
-          style={{
-            padding: '4px 10px',
-            background: state.soundOn ? 'var(--focus)' : 'var(--paper-2)',
-            color: state.soundOn ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${state.soundOn ? 'var(--focus)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-pill)',
-            fontSize: 11, letterSpacing: 0.2,
-          }}>{state.soundOn ? 'Activo' : 'Silencio'}</button>
+      {/* Idioma */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'es', name: t('tweaks.lang.es') },
+            { v: 'en', name: t('tweaks.lang.en') },
+          ].map(opt => {
+            const active = state.lang === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
@@ -5747,21 +6927,21 @@ function TweaksPanel({ open, onClose }) {
       {/* ============================================================
           Datos — Export / Import JSON (sesión 17 / v0.12.0)
           ============================================================ */}
-      <Meta style={{ marginBottom: 8 }}>Tus datos</Meta>
+      <Meta style={{ marginBottom: 8 }}>{t('tweaks.data.meta')}</Meta>
       <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
         <button
           onClick={exportJSON}
           style={tweaksStyles.dataBtn}
-          title="Descarga un JSON con tu estado actual"
+          title={t('tweaks.data.export.title')}
         >
-          <DownloadIcon /> <span>Exportar</span>
+          <DownloadIcon /> <span>{t('tweaks.data.export')}</span>
         </button>
         <button
           onClick={() => fileInputRef.current && fileInputRef.current.click()}
           style={tweaksStyles.dataBtn}
-          title="Sobreescribe tus datos con un backup"
+          title={t('tweaks.data.import.title')}
         >
-          <UploadIcon /> <span>Importar</span>
+          <UploadIcon /> <span>{t('tweaks.data.import')}</span>
         </button>
         <input
           ref={fileInputRef}
@@ -5793,15 +6973,14 @@ function TweaksPanel({ open, onClose }) {
         letterSpacing: 0.1,
         marginBottom: 4,
       }}>
-        Todo vive en tu navegador. El backup es un archivo JSON
-        local — sin servidor, sin cuenta.
+        {t('tweaks.data.note')}
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
 
       {/* Reset */}
       <button
-        onClick={() => { if (confirm('¿Resetear todos los datos de PACE?')) { localStorage.removeItem('pace.state.v1'); location.reload(); } }}
+        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v2'); location.reload(); } }}
         style={{
           width: '100%',
           padding: '8px',
@@ -5811,7 +6990,7 @@ function TweaksPanel({ open, onClose }) {
           borderRadius: 'var(--r-sm)',
           letterSpacing: 0.2,
         }}
-      >Resetear todo</button>
+      >{t('tweaks.reset')}</button>
     </div>
   );
 }
@@ -5975,9 +7154,11 @@ if (!_paceTweaksResponsive) {
 }
 
 Object.assign(window, { TweaksPanel, TweakSecretsWatcher });
+
 </script>
 
-  <script type="text/babel">/* PACE · Foco · Cuerpo
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -6093,6 +7274,7 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
 
 function PaceApp() {
   const [state, set] = usePace();
+  const { t } = useT();
   const [view, setView] = useStateMain({ type: 'home' });
 
   // Modales
@@ -6225,8 +7407,8 @@ function PaceApp() {
         <button
           data-pace-sidebar-open
           onClick={() => set({ sidebarCollapsed: false })}
-          title="Abrir panel"
-          aria-label="Abrir panel"
+          title={t('sidebar.open.title')}
+          aria-label={t('sidebar.open.aria')}
           style={{
             position: 'fixed', top: 16, left: 14, zIndex: 50,
             width: 30, height: 30, borderRadius: 6,
@@ -6339,10 +7521,11 @@ function PaceApp() {
    ================ */
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
+  const { t } = useT();
   const modes = [
-    { v: 'foco', label: 'Foco' },
-    { v: 'pausa', label: 'Pausa' },
-    { v: 'larga', label: 'Larga' },
+    { v: 'foco', label: t('topbar.mode.focus') },
+    { v: 'pausa', label: t('topbar.mode.pause') },
+    { v: 'larga', label: t('topbar.mode.long') },
   ];
   return (
     <div data-pace-topbar style={{
@@ -6381,17 +7564,17 @@ function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
       </div>
 
       {/* Iconos top-right */}
-      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title="Ritmo semanal (S)" aria-label="Ver estadísticas">
+      <button data-pace-topbar-icon onClick={onOpenStats} style={topBarStyles.iconBtn} title={t('topbar.stats.title')} aria-label={t('topbar.stats.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 6-6" />
         </svg>
       </button>
-      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title="Logros (L)" aria-label="Ver logros">
+      <button data-pace-topbar-icon onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} style={topBarStyles.iconBtn} title={t('topbar.achievements.title')} aria-label={t('topbar.achievements.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="9" r="6" /><path d="M8 14l-1 7 5-3 5 3-1-7" />
         </svg>
       </button>
-      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title="Tweaks (T)" aria-label="Abrir tweaks">
+      <button data-pace-topbar-icon onClick={onOpenTweaks} style={topBarStyles.iconBtn} title={t('topbar.tweaks.title')} aria-label={t('topbar.tweaks.aria')}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="3" />
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -6421,19 +7604,20 @@ const topBarStyles = {
    ================ */
 function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
   const [state] = usePace();
+  const { t } = useT();
   const plan = state.plan;
   /* NOTA: estilo "tarjeta editorial" — fondo paper claro, icono terracota fino,
      label serif italic coloreado. Estado activo: punto en esquina + fondo cálido. */
   const activities = [
-    { key: 'respira', label: 'Respira', sub: 'ritmo, calma', color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
-    { key: 'extra', label: 'Estira', sub: 'afloja tensión', color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
-    { key: 'muevete', label: 'Mueve', sub: 'cuerpo activo', color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
-    { key: 'hidratate', label: 'Hidrátate', sub: 'agua ahora', color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
+    { key: 'respira', label: t('activity.breathe.label'), sub: t('activity.breathe.sub'), color: 'var(--breathe)', action: () => onOpenLibrary('breathe'), icon: <ABBreathe /> },
+    { key: 'extra', label: t('activity.stretch.label'), sub: t('activity.stretch.sub'), color: 'var(--extra)', action: () => onOpenLibrary('extra'), icon: <ABStretch /> },
+    { key: 'muevete', label: t('activity.move.label'), sub: t('activity.move.sub'), color: 'var(--move)', action: () => onOpenLibrary('move'), icon: <ABMove /> },
+    { key: 'hidratate', label: t('activity.hydrate.label'), sub: t('activity.hydrate.sub'), color: 'var(--hydrate)', action: onOpenHydrate, icon: <ABDrop /> },
   ];
   return (
     <div data-pace-activitybar style={{ padding: '6px 40px 20px', flexShrink: 0 }}>
       <div style={{ textAlign: 'center', marginBottom: 10 }}>
-        <Meta>Actividades</Meta>
+        <Meta>{t('activity.meta')}</Meta>
       </div>
       <div data-pace-activitybar-grid style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
         {activities.map(a => {
@@ -6568,6 +7752,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   const root = ReactDOM.createRoot(document.getElementById('pace-root'));
   root.render(<PaceApp />);
 }
+
 </script>
 
   <!-- Monta la app
@@ -6591,6 +7776,15 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
       document.addEventListener('DOMContentLoaded', () => mount());
     } else {
       mount();
+    }
+  </script>
+
+  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
     }
   </script>
 </body>

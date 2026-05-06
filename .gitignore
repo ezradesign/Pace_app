@@ -1,0 +1,10 @@
+# Carpeta espejo de descarga (timestamps locales)
+Pace_app/
+Pace_app_*/
+
+# OpenOffice / LibreOffice lock files (sesión 38b post-incident)
+.~lock.*#
+
+# Archivos de backup de editores
+*.bak
+*~

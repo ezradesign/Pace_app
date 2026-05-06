@@ -44,6 +44,7 @@ function BreatheSession({ routine, onExit }) {
   useEffect(() => {
     if (stage !== 'prep' || paused) return;
     if (prepCount <= 0) {
+      try { playSound('breathe.session.start'); } catch (e) {}
       setStage('active');
       startTime.current = Date.now();
       return;
@@ -65,9 +66,20 @@ function BreatheSession({ routine, onExit }) {
             return 0;
           }
           setPhase(nextPhase);
-          /* Marca de cambio de fase: tono senoidal muy suave (440 Hz,
-             250 ms). Respeta state.soundOn. Sesión 28. */
-          try { playSound('breath'); } catch (e) {}
+          /* Sonido de fase — sesión 38a: ruido filtrado sincronizado con
+             la duración real de la fase. Hold = silencio intencional. */
+          const newCur = sequence[nextPhase];
+          const phaseDur = newCur.duration;
+          const phaseLabel = newCur.label;
+          if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+              phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
+              phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
+            try { playSound('breathe.inhale', phaseDur); } catch (e) {}
+          } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
+                     phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
+            try { playSound('breathe.exhale', phaseDur); } catch (e) {}
+          }
+          // Sostén → silencio intencional (no llamar a playSound).
           return 0;
         }
         return t + 1;
@@ -109,6 +121,7 @@ function BreatheSession({ routine, onExit }) {
         setBreathCount(b => b + 1);
         setPhase(0);
       } else {
+        try { playSound('breathe.session.end'); } catch (e) {}
         setStage('hold');
         setHoldSeconds(0);
       }
@@ -135,6 +148,7 @@ function BreatheSession({ routine, onExit }) {
 
   const finish = () => {
     completeBreathSession(routine.id, routine.min);
+    try { playSound('breathe.session.end'); } catch (e) {}
     setStage('done');
   };
 

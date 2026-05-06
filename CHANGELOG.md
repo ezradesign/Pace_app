@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.19.1** | 2026-05-05 | fix(i18n): crash al cargar — useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes | #37 hotfix | [abajo ↓](#v0191--2026-05-05--fix-i18n-usett-achievementspreview) |
+| **v0.20.0** | 2026-05-05 | feat(audio): refactor 432 Hz + primitivas componibles + respiración realista con ruido blanco filtrado + pomodoro.start/end | #38a | [abajo ↓](#v0200--2026-05-05--featauido-refactor-432-hz) |
+| **v0.19.1** | 2026-05-05 | fix(i18n): crash al cargar — useT() faltante en AchievementsPreview + auditoría defensiva de 8 componentes | #37 hotfix | [session-37](./docs/sessions/session-37-i18n-pwa-ajustes.md) |
 | **v0.19.0** | 2026-05-05 | Cierre i18n total (fases respiración + 8 strings restantes) + PWA activada (manifest+SW) + panel Ajustes limpiado (audio primero, timer 3 ops, layout 2 ops) + hard reset localStorage v2 | #37 | [abajo ↓](#v0190--2026-05-05--cierre-i18n--pwa--ajustes) |
 | **v0.18.0** | 2026-05-05 | i18n de contenido (ejercicios Respira/Mueve/Estira) + FocusTimer i18n completo + toggle ES·EN en WelcomeModal + dot verde del aro eliminado | #36 | [abajo ↓](#v0180--2026-05-05--i18n-contenido--focustimer--dot-eliminado) |
 | **v0.17.0** | 2026-05-05 | i18n ES/EN completo: auditoría + 3 bugs críticos corregidos + migración de 6 módulos (BreatheLibrary, MoveModule, ExtraModule, HydrateModule, WeeklyStats, Achievements) | #35 | [session-35](./docs/sessions/session-35-i18n-completo.md) |
@@ -57,6 +58,29 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.20.0] — 2026-05-05 — feat(audio): refactor 432 Hz
+
+### Cambiado — Sound.jsx reescrito (228 líneas)
+- **Afinación A=432 Hz**: constante `BASE_A = 432` + helper `note(name)` para conversión nota→Hz con temperamento igual. Todos los tonos del catálogo usan `note()`.
+- **Primitivas componibles**: `tone`, `glide`, `chord`, `bell`, `breathNoise` — autocontenidas y combinables para construir cualquier sonido.
+- **`breathNoise`** (primitiva nueva): ruido blanco filtrado con `BiquadFilterNode` lowpass (Q=1.5). La frecuencia de corte se anima linealmente durante `dur` segundos: 200→800 Hz (inhalar) o 800→200 Hz (exhalar). Resultado: "shhhhh/haaaaa" natural que dura toda la fase visual. Sin tonos puros ni clicks digitales. Inspiración: Inner Breeze.
+- **Catálogo ampliado**: `pomodoro.start` (glide C5→G5), `pomodoro.end` (alias de `complete`), `breathe.inhale/exhale` (ruido filtrado con `dur` dinámico), `breathe.session.start` (glide G4→C4), `breathe.session.end` (chord C5+E5+G5).
+- **Hold = silencio intencional**: `breathe.hold` no se define — la retención es silencio meditativo.
+- **Alias legacy conservados**: `tick`, `complete`, `sip`, `breath` funcionan igual para módulos no migrados.
+
+### Cableado — BreatheSession.jsx
+- `breathe.session.start` al pasar de prep → active.
+- `breathe.inhale(phaseDur)` / `breathe.exhale(phaseDur)` en cada cambio de fase, sincronizados con la duración real de la fase visual.
+- `breathe.session.end` al llamar `finish()` (sesión completada) y al entrar en stage 'hold' (Wim Hof — cierra el set de respiraciones).
+
+### Cableado — FocusTimer.jsx
+- `pomodoro.start` al arrancar el timer (toggle running false → true).
+- `pomodoro.end` al finalizar (reemplaza `complete` — mismo sonido, nombre semántico).
+
+Detalle completo: [`docs/sessions/session-38a-audio-refactor-432hz.md`](./docs/sessions/session-38a-audio-refactor-432hz.md).
+
+---
+
 ## [v0.19.1] — 2026-05-05 — fix(i18n): useT() AchievementsPreview
 
 ### Fix
@@ -87,92 +111,11 @@ Detalle completo: [`docs/sessions/session-37-i18n-pwa-ajustes.md`](./docs/sessio
 
 ## [v0.19.0] — 2026-05-05 — Cierre i18n + PWA + Ajustes
 
-### Bloque A — Cierre i18n total
-- **`app/i18n/strings.js`** — +18 claves nuevas (ES + EN): `breathe.phase.*` (11 fases de
-  sesión activa), `sidebar.trail.hour.start/end`, `ach.seal.discover`, `ach.toast.new`,
-  `settings.title`, `settings.audio.*` (label/on/off/hint), `welcome.lang.toggle.toEn/toEs`,
-  `common.close`, `focus.minutes.custom.title`. Eliminadas 3 claves obsoletas: `tweaks.layout.editorial`,
-  `tweaks.timer.circulo`, `tweaks.timer.numero`.
-- **`app/breathe/BreatheSession.jsx`** — Funcionalmente ya migrado (PHASE_KEYS + `tR`). Las nuevas
-  claves de strings.js completan la traducción de las 11 fases en EN.
-- **`app/shell/Sidebar.jsx`** — "6h"/"22h" → `t('sidebar.trail.hour.*')`. "Por descubrir" → `t('ach.seal.discover')`.
-- **`app/ui/Toast.jsx`** — `useT()` añadido. "Nuevo sello" → `t('ach.toast.new')`.
-- **`app/welcome/WelcomeModule.jsx`** — Tooltip del toggle de idioma → claves `welcome.lang.toggle.toEn/toEs`.
-- **`app/ui/Primitives.jsx`** — `useT()` añadido a `Modal`. `aria-label="Cerrar"` → `t('common.close')`.
-- **`app/focus/FocusTimer.jsx`** — Dos `title="Minutos personalizados…"` → `t('focus.minutes.custom.title')`.
-
-### Bloque B — Activación PWA
-- **`PACE.html`** — `<link rel="manifest" href="manifest.json">` + `<meta name="theme-color" content="#3E5A3A">` en `<head>`. Registro SW con `navigator.serviceWorker.register('sw.js')` antes de `</body>`.
-- **`PACE_standalone.html`** — Regenerado (~416 KB) con las mismas adiciones PWA.
-- **`sw.js`** — `CACHE_NAME` actualizado a `'pace-v0.19.0'`.
-- **`manifest.json`** — `start_url` cambiado de `"PACE_standalone.html"` a `"./"` para compatibilidad con Cloudflare Pages y apertura local.
-
-### Bloque C — Limpieza panel Ajustes
-- **`app/tweaks/TweaksPanel.jsx`** — Título "Tweaks" → `t('settings.title')` (ES: "Ajustes", EN: "Settings"). Audio promovido al primer eje con pills "Activado/Silenciado" y subtítulo "Sonidos de la sesión". Eje Timer: eliminadas pills `circle` y `numero`, quedan `aro/barra/analogico`. Eje Layout: eliminada pill `editorial`, quedan `sidebar/minimal`. Bloque Sound antiguo (toggle simple) eliminado.
-- **`app/focus/FocusTimer.jsx`** — `TimerCircle` y `TimerNumber` eliminados. `TimerVisualization` simplificado a 3 ramas (aro por defecto, barra, analógico).
-
-### Bloque D — Bump + hard reset
-- **`app/state.jsx`** — `LS_KEY` bumpeado de `'pace.state.v1'` a `'pace.state.v2'` (hard reset intencional pre-lanzamiento; elimina datos legacy sin migración). `PACE_VERSION` v0.18.0 → v0.19.0.
-
-### Backups
-- Añadido `backups/PACE_standalone_v0.18.0_20260505.html`.
-- Nota: borrado del backup v0.13.0 pendiente (permisos de sandbox); el usuario debe eliminarlo manualmente.
-
 Detalle completo: [`docs/sessions/session-37-i18n-pwa-ajustes.md`](./docs/sessions/session-37-i18n-pwa-ajustes.md).
 
 ---
 
 ## [v0.18.0] — 2026-05-05 — i18n contenido + FocusTimer + dot eliminado
-
-### Añadido
-- **`app/i18n/strings-content.js`** (nuevo, ~190 claves EN) — traducciones de contenido de
-  ejercicios: categorías + nombres + descripciones + códigos de rutinas de Respira, Mueve y
-  Estira. Augmenta `window.PACE_STRINGS.en` (que ya crea `strings.js`). Solo EN porque en ES
-  los componentes leen los strings del dato JS directamente. En EN el helper `tR(key, fallback)`
-  busca en strings-content; si la clave no existe devuelve el fallback (español), lo que permite
-  una transición gradual sin textos rotos.
-- **`focus.pause`** en `app/i18n/strings.js` — clave que faltaba para el botón de pausar del
-  FocusTimer (ES: `'Pausar'`, EN: `'Pause'`). Las demás claves `focus.*` ya existían desde s35.
-
-### Migrado — i18n en 3 módulos + FocusTimer
-- **`app/breathe/BreatheLibrary.jsx`** — helper `tR` + categorías (`label`, `aside`) +
-  `RoutineCard` (name/desc/code por `tR`). RoutineCard es un componente funcional compartible.
-- **`app/breathe/BreatheSession.jsx`** — `displayRoutine` (name/desc por `tR`).
-  Fix colateral: `const t = setTimeout(...)` shadowing del `t` de `useT()` → renombrado a `timer`.
-- **`app/move/MoveModule.jsx`** — `displayRoutine` + `displayStep`: campos `name`, `cue`, `next`
-  de cada paso pasados por `tR`.
-- **`app/focus/FocusTimer.jsx`** — `const { t } = useT()` añadido en `FocusTimer` y
-  `MinutesPicker`. Migración completa:
-  - `modeLabel` → `t('focus.mode.focus/pause/long')`.
-  - `subtitle` → `t('focus.subtitle.focus/pause/long')`.
-  - `runningLabel` → `t('focus.pause')` / `t('focus.start')` / `t('focus.continue')`.
-  - Etiqueta "Ciclo" → `t('focus.cycle')`.
-  - `title/aria-label="Reiniciar"` → `t('focus.restart')`.
-  - "Min" → `t('focus.min')`. "Otro" → `t('focus.other')`.
-
-### Cambiado
-- **`app/welcome/WelcomeModule.jsx`** — toggle pill ES·EN movido a `headerLeft` (encima del logo,
-  columna izquierda del header). Antes en esquina superior derecha, colisionaba visualmente con
-  la X de cierre del modal. Ahora posición clara y sin conflicto.
-- **`app/focus/FocusTimer.jsx · TimerAro`** — eliminado el `<circle>` de dot verde oliva que
-  recorría el anillo. Decisión de producto: el indicador no añadía información útil y rompía
-  la calma visual del aro.
-- **`PACE.html`** — `strings-content.js` añadido al orden de carga tras `strings.js`.
-- **`PACE_standalone.html`** — rebuild (~413 KB).
-
-### Backups
-- Rotado `backups/PACE_standalone_v0.12.10_20260429.html` (el más antiguo).
-- Añadido `backups/PACE_standalone_v0.17.0_20260505.html` (recuperado de git HEAD).
-- 5 backups activos: v0.13.0, v0.14.0, v0.15.0, v0.16.0, v0.17.0.
-
-### Archivos
-- **Nuevos:** `app/i18n/strings-content.js`, `docs/sessions/session-36-i18n-content-toggle.md`,
-  `backups/PACE_standalone_v0.17.0_20260505.html`.
-- **Modificados:** `app/welcome/WelcomeModule.jsx`, `app/breathe/BreatheLibrary.jsx`,
-  `app/breathe/BreatheSession.jsx`, `app/move/MoveModule.jsx`, `app/i18n/strings.js`,
-  `app/focus/FocusTimer.jsx`, `PACE.html`, `PACE_standalone.html`, `app/state.jsx`,
-  `CHANGELOG.md`, `STATE.md`.
-- **Borrados:** `backups/PACE_standalone_v0.12.10_20260429.html`.
 
 Detalle completo: [`docs/sessions/session-36-i18n-content-toggle.md`](./docs/sessions/session-36-i18n-content-toggle.md).
 
