@@ -125,17 +125,31 @@ function CompletionScreen({ snapshot, onBack }) {
           {elapsed} min
         </p>
       )}
-      <button
-        onClick={onBack}
-        style={{
-          padding: '12px 32px', borderRadius: 'var(--r-pill)',
-          background: 'var(--ink)', border: 'none',
-          color: 'var(--paper)', cursor: 'pointer',
-          fontSize: 13, letterSpacing: '0.1em',
-        }}
-      >
-        {t('path.runner.complete.back')}
-      </button>
+      <div style={{ display: 'flex', gap: 10, flexDirection: 'column', alignItems: 'center' }}>
+        <button
+          onClick={onBack}
+          style={{
+            padding: '12px 32px', borderRadius: 'var(--r-pill)',
+            background: 'var(--ink)', border: 'none',
+            color: 'var(--paper)', cursor: 'pointer',
+            fontSize: 13, letterSpacing: '0.1em',
+          }}
+        >
+          {t('path.runner.complete.back')}
+        </button>
+        <button
+          onClick={function() { onBack(); if (typeof startPath === 'function') startPath(snapshot.pathId); }}
+          style={{
+            padding: '8px 24px', borderRadius: 'var(--r-pill)',
+            background: 'transparent', border: '1px solid var(--line)',
+            color: 'var(--ink-3)', cursor: 'pointer',
+            fontSize: 12, letterSpacing: '0.1em',
+            fontFamily: 'var(--font-display)', fontStyle: 'italic',
+          }}
+        >
+          {t('paths.runner.repeat') || 'Repetir camino'}
+        </button>
+      </div>
     </div>
   );
 }

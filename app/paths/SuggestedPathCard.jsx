@@ -1,4 +1,7 @@
-/* PACE - Caminos - SuggestedPathCard - sesion 51 / v0.26.0 */
+/* PACE - Caminos - SuggestedPathCard - sesion 53 / v0.27.0
+   Sugiere el camino del momento o el favorito del usuario (prioritario).
+   Boton "Ver todos" abre PathsLibrary via CustomEvent.
+*/
 
 const { useState: useStateSPC } = React;
 
@@ -18,6 +21,66 @@ function SPCIconHydrate() {
 
 const SPC_STEP_ICONS = { breathe: SPCIconBreathe, focus: SPCIconFocus, body: SPCIconBody, hydrate: SPCIconHydrate };
 
+/* PathMiniCard — reutilizable para sugerido y favorito */
+function PathMiniCard({ pathObj, label, doneToday, onStart }) {
+  const { t } = useT();
+  const name = t(pathObj.nameKey) || pathObj.id;
+  const tagline = t(pathObj.taglineKey) || '';
+
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 16,
+      padding: '14px 20px',
+      background: doneToday ? 'var(--paper-2)' : 'var(--paper)',
+      border: '1px solid var(--line)',
+      borderRadius: 'var(--r-md)',
+      boxShadow: 'var(--sh-soft)',
+      cursor: doneToday ? 'default' : 'pointer',
+      transition: 'all 200ms var(--ease)',
+      flex: 1, minWidth: 0,
+    }}
+    onClick={!doneToday ? onStart : undefined}
+    onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
+    onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
+    >
+      <div style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        {label && (
+          <div style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
+          {doneToday && (
+            <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
+              {t('path.card.done') || 'Hecho hoy'}
+            </span>
+          )}
+        </div>
+        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
+        <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
+          {pathObj.steps.map(function(step, i) {
+            const Icon = SPC_STEP_ICONS[step.kind] || null;
+            return <span key={i} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
+          })}
+        </div>
+      </div>
+
+      {!doneToday && (
+        <button
+          onClick={function(e) { e.stopPropagation(); onStart(); }}
+          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
+        >
+          {t('path.card.start') || 'Comenzar'}
+        </button>
+      )}
+      {doneToday && (
+        <span style={{ fontSize: 18, color: 'var(--olive)', flexShrink: 0, lineHeight: 1, fontFamily: 'Georgia, serif' }}>*</span>
+      )}
+    </div>
+  );
+}
+
 function SuggestedPathCard() {
   const [state] = usePace();
   const { t } = useT();
@@ -25,66 +88,70 @@ function SuggestedPathCard() {
   // Si ya hay camino activo, PathRunner lo gestiona
   if (state.paths && state.paths.current) return null;
 
+  const todayISO = new Date().toISOString().slice(0, 10);
+
+  // Camino sugerido por hora del dia
   const suggestedId = (typeof getSuggestedPath === 'function') ? getSuggestedPath() : null;
   const suggested = (suggestedId && typeof getPath === 'function') ? getPath(suggestedId) : null;
-  if (!suggested) return null;
 
-  const todayISO = new Date().toISOString().slice(0, 10);
-  const compl = state.paths && state.paths.completed && state.paths.completed[suggested.id];
-  const doneToday = !!(compl && compl.lastDoneAt === todayISO);
+  // Favorito del usuario
+  const favoriteId = state.paths && state.paths.favorite;
+  const favorite = (favoriteId && typeof getPath === 'function') ? getPath(favoriteId) : null;
 
-  const name = t(suggested.nameKey) || suggested.id;
-  const tagline = t(suggested.taglineKey) || '';
+  // Si no hay ninguno, no renderizar
+  if (!suggested && !favorite) return null;
 
-  const handleStart = () => { if (typeof startPath === 'function') startPath(suggested.id); };
+  // Mostrar dual solo si el favorito es diferente del sugerido
+  const showDual = favorite && suggested && favoriteId !== suggestedId;
+
+  function isDoneToday(pathId) {
+    const compl = state.paths && state.paths.completed && state.paths.completed[pathId];
+    return !!(compl && compl.lastDoneAt === todayISO);
+  }
+
+  function handleStart(pathId) {
+    if (typeof startPath === 'function') startPath(pathId);
+  }
+
+  function handleOpenLibrary() {
+    window.dispatchEvent(new CustomEvent('pace:open-paths-library'));
+  }
 
   return (
     <div data-pace-spc style={{ padding: '0 40px 12px', flexShrink: 0 }}>
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 16,
-        padding: '14px 20px',
-        background: doneToday ? 'var(--paper-2)' : 'var(--paper)',
-        border: '1px solid var(--line)',
-        borderRadius: 'var(--r-md)',
-        boxShadow: 'var(--sh-soft)',
-        cursor: doneToday ? 'default' : 'pointer',
-        transition: 'all 200ms var(--ease)',
-      }}
-      onClick={!doneToday ? handleStart : undefined}
-      onMouseEnter={!doneToday ? (e) => { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
-      onMouseLeave={!doneToday ? (e) => { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
-      >
-        {/* Acento vertical */}
-        <div style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
-
-        {/* Bloque de texto */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
-            {doneToday && (
-              <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
-                {t('path.card.done') || 'Hecho hoy'}
-              </span>
-            )}
-          </div>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
-          <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
-            {suggested.steps.map((step, i) => {
-              const Icon = SPC_STEP_ICONS[step.kind] || null;
-              return <span key={i} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
-            })}
-          </div>
+      {/* Fila superior: cards (una o dos) */}
+      {showDual ? (
+        <div style={{ display: 'flex', gap: 10 }}>
+          <PathMiniCard
+            pathObj={favorite}
+            label={t('paths.suggested.favorite') || 'Tu favorito'}
+            doneToday={isDoneToday(favoriteId)}
+            onStart={function() { handleStart(favoriteId); }}
+          />
+          <PathMiniCard
+            pathObj={suggested}
+            label={t('paths.suggested.label') || 'Sugerido ahora'}
+            doneToday={isDoneToday(suggestedId)}
+            onStart={function() { handleStart(suggestedId); }}
+          />
         </div>
+      ) : (
+        <PathMiniCard
+          pathObj={favorite || suggested}
+          label={favorite ? (t('paths.suggested.favorite') || 'Tu favorito') : null}
+          doneToday={isDoneToday(favorite ? favoriteId : suggestedId)}
+          onStart={function() { handleStart(favorite ? favoriteId : suggestedId); }}
+        />
+      )}
 
-        {/* Accion */}
-        {!doneToday && (
-          <button onClick={(e) => { e.stopPropagation(); handleStart(); }} style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}>
-            {t('path.card.start') || 'Comenzar'}
-          </button>
-        )}
-        {doneToday && (
-          <span style={{ fontSize: 18, color: 'var(--olive)', flexShrink: 0, lineHeight: 1, fontFamily: 'Georgia, serif' }}>*</span>
-        )}
+      {/* Enlace Ver todos */}
+      <div style={{ textAlign: 'right', marginTop: 6 }}>
+        <button
+          onClick={handleOpenLibrary}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-3)', fontFamily: 'var(--font-display)', fontStyle: 'italic', padding: '2px 0', textDecoration: 'underline', textUnderlineOffset: 3 }}
+        >
+          {t('paths.library.viewAll') || 'Ver todos'}
+        </button>
       </div>
     </div>
   );

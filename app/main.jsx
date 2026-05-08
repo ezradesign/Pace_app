@@ -354,6 +354,7 @@ function PaceApp() {
 
       {/* ========== CAMINOS ========== */}
       <PathRunner />
+      <PathsLibrary />
 
       {/* ========== TOASTS ========== */}
       <ToastHost />

@@ -359,6 +359,18 @@ window.PACE_STRINGS = {
     'paths.path.dusk.tagline':        'Cierra el dia con calma.',
     'paths.path.weekend.name':        'Fin de semana',
     'paths.path.weekend.tagline':     'Ritmo suave. Sin prisas.',
+    // Paths - biblioteca y favoritos (sesion 53)
+    'paths.library.title':            'Todos los caminos',
+    'paths.library.start':            'Comenzar',
+    'paths.library.doneToday':        'Hecho hoy',
+    'paths.library.favorite':         'Favorito',
+    'paths.library.unfavorite':       'Quitar favorito',
+    'paths.library.viewAll':          'Ver todos',
+    'paths.suggested.label':          'Sugerido ahora',
+    'paths.suggested.favorite':       'Tu favorito',
+    'paths.runner.repeat':            'Repetir camino',
+    'path.card.done':                 'Hecho hoy',
+    'path.card.start':                'Comenzar',
   },
 
   en: {
@@ -714,5 +726,17 @@ window.PACE_STRINGS = {
     'paths.path.dusk.tagline':        'Close the day with calm.',
     'paths.path.weekend.name':        'Weekend',
     'paths.path.weekend.tagline':     'Gentle rhythm. No rush.',
+    // Paths - library and favorites (session 53)
+    'paths.library.title':            'All paths',
+    'paths.library.start':            'Start',
+    'paths.library.doneToday':        'Done today',
+    'paths.library.favorite':         'Favorite',
+    'paths.library.unfavorite':       'Remove favorite',
+    'paths.library.viewAll':          'View all',
+    'paths.suggested.label':          'Suggested now',
+    'paths.suggested.favorite':       'Your favorite',
+    'paths.runner.repeat':            'Repeat path',
+    'path.card.done':                 'Done today',
+    'path.card.start':                'Start',
   },
 };

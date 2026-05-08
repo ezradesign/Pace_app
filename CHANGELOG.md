@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.27.0** | 2026-05-08 | feat(paths): Caminos parte 2 -- PathsLibrary overlay, sistema favorito, boton Repetir, sugerencia dual favorito+hora | #53 | [abajo](#v0270--2026-05-08) |
 | **v0.26.1** | 2026-05-08 | chore: saneamiento tecnico - encoding STATE.md, validateFileEnd en build, 0 WARN, audit deuda 5 archivos >500 lineas | #52 | [abajo](#v0261--2026-05-08--chore-saneamiento-tecnico) |
 | **v0.26.0** | 2026-05-08 | feat(paths): SuggestedPathCard -- tarjeta home que sugiere el camino del momento, 4 icons de paso, doneToday badge, 10 claves i18n -- cierra sistema Caminos | #51 | [abajo ↓](#v0260--2026-05-08--featpaths-suggestedpathcard) |
 | **v0.26.0-beta** | 2026-05-08 | feat(paths): PathRunner UI — overlay full-screen, 4 kinds, modal in-app de salida, pantalla de completado, reanudacion tras recarga | #50 | [abajo ↓](#v0260-beta--2026-05-08--featpaths-pathrunner-ui) |
@@ -71,6 +72,27 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.27.0] -- 2026-05-08 -- feat(paths): Caminos parte 2
+
+Segunda parte del sistema de Caminos. Biblioteca visual, favoritos, repeticion y sugerencia dual.
+
+### Nuevo
+- `app/paths/PathsLibrary.jsx` (168 ln): overlay modal con los 5 caminos, toggle favorito, boton comenzar, badges estado.
+- `setFavoritePath`, `clearFavoritePath`, `toggleFavoritePath` en `state.jsx` + exportadas a `window`.
+
+### Mejorado
+- `SuggestedPathCard.jsx`: modo dual (favorito + sugerido por hora si son distintos), boton "Ver todos".
+- `PathRunner.jsx` CompletionScreen: boton "Repetir camino" secundario.
+- `app/i18n/strings.js`: 11 claves nuevas x 2 idiomas (ES + EN).
+- `PACE.html`: script PathsLibrary, titulo v0.27.0.
+- `app/main.jsx`: monta `<PathsLibrary />`.
+- `PACE_VERSION` bumpeado a `v0.27.0`.
+
+### Build
+- 526 KB, 0 ERRORs, 0 WARNs.
 
 ---
 

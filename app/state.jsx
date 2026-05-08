@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.26.1';
+const PACE_VERSION = 'v0.27.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -917,6 +917,29 @@ function getSuggestedPath(now) {
   return 'path.dusk';
 }
 
+function setFavoritePath(pathId) {
+  setState(s => ({
+    ...s,
+    paths: { ...s.paths, favorite: pathId },
+  }));
+}
+
+function clearFavoritePath() {
+  setState(s => ({
+    ...s,
+    paths: { ...s.paths, favorite: null },
+  }));
+}
+
+function toggleFavoritePath(pathId) {
+  const current = getState().paths && getState().paths.favorite;
+  if (current === pathId) {
+    clearFavoritePath();
+  } else {
+    setFavoritePath(pathId);
+  }
+}
+
 Object.assign(window, {
   usePace, getState, setState, subscribe,
   unlockAchievement, completePomodoro,
@@ -931,4 +954,5 @@ Object.assign(window, {
   updateMonthAggregate, updateYearAggregate,
   // sesion 49 -- Caminos
   startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
+  setFavoritePath, clearFavoritePath, toggleFavoritePath,
 });
