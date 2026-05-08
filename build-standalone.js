@@ -41,6 +41,37 @@ function readFileClean(filePath) {
   return s;
 }
 
+/* Sesión 48d.1: detecta strings sin cerrar al final de un archivo JSX.
+   Avisa por consola pero NO aborta el build (modo warning).
+   Un archivo truncado mid-string causaría "Unterminated string constant"
+   en Babel al cargar el standalone. */
+function validateNoUnclosedStrings(fileContent, filePath) {
+  try {
+    var stripped = fileContent
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\/[^\n]*/g, '');
+    var lines = stripped.split('\n');
+    var inTemplate = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var bt = (line.match(/`/g) || []).length;
+      if (bt % 2 === 1) inTemplate = !inTemplate;
+      if (inTemplate) continue;
+      var sq = (line.match(/(?<!\\)'/g) || []).length;
+      var dq = (line.match(/(?<!\\)"/g) || []).length;
+      if ((sq % 2 === 1 || dq % 2 === 1) && i === lines.length - 1) {
+        console.warn('  [WARN] ' + filePath + ': posible string sin cerrar en última línea: ' + line.slice(0, 80));
+      }
+    }
+    if (inTemplate) {
+      console.warn('  [WARN] ' + filePath + ': template literal sin cerrar al final del archivo.');
+    }
+  } catch(e) {
+    console.warn('  [WARN] validateNoUnclosedStrings error en ' + filePath + ': ' + e.message);
+  }
+}
+
+
 var html = readFileClean(INPUT);
 
 // 0. Quitar el <link rel="manifest"> del standalone.
@@ -67,6 +98,7 @@ html = html.replace(
       return '';
     }
     var content = readFileClean(full);
+    validateNoUnclosedStrings(content, src);
     return '<script type="text/babel">\n' + content + '\n</script>';
   }
 );

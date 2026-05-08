@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.25.4</title>
+  <title>PACE · Foco · Cuerpo — v0.25.3</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -1233,7 +1233,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.25.4';
+const PACE_VERSION = 'v0.25.3';
 
 const defaultState = {
   // Settings / Tweaks
@@ -6837,8 +6837,10 @@ if (!_paceBreakResponsive) {
 Object.assign(window, { BreakMenu });
 </script>
   <script type="text/babel">
+/* PACE · Logros (Sellos tipo libreta de campo) */
+
 /* Glifos Dirección D — portados literalmente de design/glyphs-explorations.html.
-   Última verificación: sesión 48d (re-aplicada en hotfix 48d.1 tras truncamiento).
+   Última verificación: sesión 48d.
    currentColor para que el Seal aplique tono según estado.
    NO modificar a ojo: editar primero la exploración y volver a portar.
    Excepción: secret.cow.click (sin canónico, es secreto). */
@@ -7108,138 +7110,7 @@ function Achievements({ open, onClose }) {
           <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
             {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
           </div>
-          <Meta style={{ marginTop: 4 }}>{t('ach.available')}</Meta>
-        </div>
-        <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
-        <div>
-          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
-            {comingSoonCount}
-          </div>
-          <Meta style={{ marginTop: 4 }}>{t('ach.coming.soon')}</Meta>
-        </div>
-      </div>
-
-      {Object.entries(CAT_META).map(([cat, meta]) => {
-        const items = ACHIEVEMENT_CATALOG.filter(a => a.cat === cat);
-        const gotThisCat = items.filter(a => unlocked[a.id]).length;
-        return (
-          <div key={cat} style={{ marginBottom: 28 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{t(meta.labelKey)}</h3>
-              <Meta>{gotThisCat} / {items.length}</Meta>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
-              {items.map(a => (
-                <Seal
-                  key={a.id}
-                  achievement={a}
-                  unlocked={!!unlocked[a.id]}
-                  implemented={isImplemented(a)}
-                  color={meta.color}
-                />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </Modal>
-  );
-}
-
-/* Tres estados del sello:
-   1. unlocked         → borde color sólido, opacidad 1, descripción visible.
-   2. locked           → borde dashed gris, opacidad 0.55, descripción visible
-                         (guía al usuario: "esto se puede cazar").
-   3. comingSoon       → borde dotted gris, opacidad 0.38, glifo opaco 0.25,
-                         descripción sustituida por "Pronto" (crea curiosidad
-                         sin ser opaco). Badge "Pronto" en esquina.
-   Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
-   título "Secreto") — su mecánica es intriga, no señalización. */
-function Seal({ achievement, unlocked, implemented, color }) {
-  const { t } = useT();
-  const a = achievement;
-  const isSecret = a.secret && !unlocked;
-  const isComingSoon = !unlocked && !implemented && !a.secret;
-
-  const borderStyle = unlocked ? 'solid' : (isComingSoon ? 'dotted' : 'dashed');
-  const borderColor = unlocked ? color : 'var(--line)';
-  const opacity = unlocked ? 1 : (isComingSoon ? 0.38 : 0.55);
-
-  return (
-    <div
-      style={{
-        aspectRatio: '1/1.15',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        padding: '14px 8px',
-        border: `1px ${borderStyle} ${borderColor}`,
-        borderRadius: 'var(--r-md)',
-        background: unlocked ? 'var(--paper)' : 'transparent',
-        opacity,
-        position: 'relative',
-        transition: 'all 220ms',
-        cursor: 'default',
-        textAlign: 'center',
-      }}
-      title={isComingSoon ? t('ach.coming.soon') : a.desc}
-    >
-      {/* Badge "Pronto" — solo en estado coming-soon */}
-      {isComingSoon && (
-        <div style={{
-          position: 'absolute',
-          top: 6, right: 6,
-          fontFamily: 'var(--font-ui)',
-          fontSize: 7.5,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-3)',
-          border: '0.5px solid var(--line-2)',
-          borderRadius: 999,
-          padding: '2px 6px',
-          lineHeight: 1,
-        }}>{t('ach.seal.soon')}</div>
-      )}
-
-      {/* Sello circular */}
-      <div style={{
-        width: 56, height: 56,
-        borderRadius: '50%',
-        border: `1.2px solid ${unlocked ? color : 'var(--line-2)'}`,
-        display: 'grid', placeItems: 'center',
-        marginBottom: 10,
-        color: unlocked ? color : 'var(--ink-3)',
-        fontFamily: 'var(--font-display)',
-        fontSize: 22,
-        position: 'relative',
-      }}>
-        <span style={{ opacity: isComingSoon ? 0.25 : 1, width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
-          {isSecret ? <span style={{ fontStyle: 'italic' }}>?</span> : renderGlyph(a)}
-        </span>
-        {/* Anillo externo sutil */}
-        <div style={{
-          position: 'absolute', inset: -4,
-          borderRadius: '50%',
-          border: `0.5px solid ${unlocked ? color : 'var(--line)'}`,
-          opacity: 0.4,
-        }} />
-      </div>
-      <div style={{
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        fontSize: 13,
-        fontWeight: 500,
-        lineHeight: 1.15,
-        marginBottom: 4,
-        color: unlocked ? 'var(--ink)' : 'var(--ink-3)',
-      }}>{isSecret ? t('ach.seal.secret') : a.title}</div>
-      <div style={{ fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 }}>
-        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : a.desc)}
-      </div>
-    </div>
-  );
-}
-
-Object.assign(window, { Achievements, ACHIEVEMENT_CATALOG });
-
+          <Meta style={{ marginTop: 4 }}>{t('ach.av
 </script>
   <script type="text/babel">
 /* PACE · YearView — heatmap anual — sesión 44 */

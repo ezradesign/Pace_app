@@ -15,6 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.25.4** | 2026-05-08 | fix(achievements): hotfix Achievements.jsx truncado en s48d — restaurado desde origin/main + correcciones 48d re-aplicadas + validador de strings en build-standalone.js | #48d.1 | [abajo ↓](#v0254--2026-05-08--fixachievements-hotfix-achievementsjsx-truncado) |
+| **v0.25.3** | 2026-05-08 | fix(achievements): auditoría glifos Dirección D — 18 sustituidos por canónicos + 13 nuevos portados desde glyphs-explorations.html | #48d | [abajo ↓](#v0253--2026-05-08--fixachievements-auditoría-glifos-dirección-d) |
 | **v0.25.2** | 2026-05-07 | fix(standalone): repara crash post-s48b — 10 .jsx tenían `<script type="text/babel">` literal al inicio (provocaba doble script en el bundle y SyntaxError de Babel) + PACE.html truncado sin mount loop ni `</body></html>` + manifest.json eliminado del standalone (causaba CORS en file://) | #48c | [abajo ↓](#v0252--2026-05-07--fixstandalone-repara-crash-post-s48b) |
 | **v0.25.1** | 2026-05-07 | fix(achievements): 20 glifos Dirección D portados literal de design/glyphs-explorations.html (viewBox 44×44, currentColor) — corrige inventados a ojo de s46; restauración masiva de 12 archivos truncados | #48b | [abajo ↓](#v0251--2026-05-07--fixachievements-glifos-canónicos-dirección-d) |
 | **v0.25.0** | 2026-05-06 | feat: stats achievements (4 logros nuevos) + mobile UX fixes (sidebar+tabs) + 10 glifos SVG constelaciones + renderGlyph en Seal y Toast | #46 | [session-46](./docs/sessions/session-46-stats-ux-glifos.md) |
@@ -65,6 +67,78 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.25.4] — 2026-05-08 — fix(achievements): hotfix Achievements.jsx truncado
+
+Sesión 48d.1 · hotfix del truncamiento introducido en s48d.
+
+**Causa raíz:** la llamada Edit que reemplazó el bloque `GLYPH_SVG` en s48d
+truncó `app/achievements/Achievements.jsx` en la línea 273 (el archivo completo
+tiene 389 líneas en base). El standalone inlineó el archivo a medias y Babel
+lanzó `Unterminated string constant` al cargarlo.
+
+### Fixed
+- **`app/achievements/Achievements.jsx` restaurado** — base limpia recuperada
+  de `origin/main` (389 líneas), correcciones de s48d re-aplicadas mediante
+  script Python. Archivo final: 402 líneas, balance `{`/`}` 207/207, Object.assign OK.
+  Incluye las 33 entradas `GLYPH_SVG` + alias + 34 referencias `glyphSvg` en catálogo.
+- **`build-standalone.js` mejorado** — añadida `validateNoUnclosedStrings()` en
+  modo warning: detecta strings/template literals sin cerrar al final de cada
+  `.jsx` inlineado y avisa por consola sin abortar el build.
+- **`app/state.jsx`** — `PACE_VERSION` v0.25.3 → v0.25.4.
+- **`PACE.html`** — título actualizado a v0.25.4.
+
+### Bundle v0.25.4
+493566 bytes / 481 KB · 0 null bytes · `</body>` ×1 · `</html>` ×1 ·
+29 bloques babel · 0 `fill="#` en GLYPH_SVG.
+
+### Backups
+`backups/PACE_standalone_v0.25.3_20260508_ROTO.html` (bundle truncado conservado) ·
+`backups/PACE_standalone_v0.25.4_20260508.html` (nuevo bundle sano). Total: 18 backups.
+
+---
+
+## [v0.25.3] — 2026-05-08 — fix(achievements): auditoría glifos Dirección D
+
+Sesión 48d · auditoría mecánica post-s48/48b/48c. Comparación byte a byte de
+cada `glyphSvg` de `GLYPH_SVG` contra la sección "Dirección D · Constelación"
+de `design/glyphs-explorations.html`. **Nota:** el bundle v0.25.3 estaba roto
+(Achievements.jsx truncado); corregido en v0.25.4.
+
+Sesión 48d · auditoría mecánica post-s48/48b/48c. Comparación byte a byte de
+cada `glyphSvg` de `GLYPH_SVG` contra la sección "Dirección D · Constelación"
+de `design/glyphs-explorations.html`.
+
+**Causa raíz de las divergencias B:** la sesión 48 reducia portó los cuerpos
+SVG omitiendo el espacio entre elementos (`/>` en lugar de `"/> "`). Visualmente
+equivalentes, pero literalmente distintos del canónico. En `first.ritual`
+además faltaba el segmento degenerado `M22 22 L22 22` del path.
+
+**Fixed (B — 18 sustituidos por canónicos literales):**
+`first.step`, `first.breath`, `first.stretch`, `first.sip`, `first.extra`,
+`first.cycle`, `first.ritual` (+ contenido real), `first.day`,
+`streak.3`, `streak.7`, `streak.30`, `streak.365`,
+`breathe.sessions.10`, `breathe.sessions.50`, `move.sessions.25`,
+`explore.box`, `explore.coherent`, `explore.rounds`.
+
+**Added (C — 13 nuevos portados desde Dirección D):**
+`explore.nadi`, `explore.physiological`, `explore.hips`, `explore.atg`,
+`explore.ancestral`, `master.pomodoro.8`, `master.long.focus`,
+`master.dawn`, `master.dusk`, `master.focus.day`, `master.retreat`,
+`master.marathon`, `master.centurion`.
+Cada uno también recibió `glyphSvg: GLYPH_SVG['<id>']` en su entrada
+del `ACHIEVEMENT_CATALOG`.
+
+**Sin cambios (A):** `focus.hours.100` (coincidía literalmente).
+**Sin canónico (D):** `secret.cow.click` (intacto, es secreto).
+**Alias (E):** `first.plan → first.ritual` verificado OK.
+
+Totales: GLYPH_SVG pasa de 20 a 33 entradas + 1 alias.
+Verificación estructural 6/6 OK: 0 `fill="#`, 0 sin `glyphSvg` en catálogo,
+`viewBox 44×44` OK, alias OK, 274 líneas (< 500).
+Standalone: 491202 bytes / 479 KB, 0 anomalías.
 
 ---
 

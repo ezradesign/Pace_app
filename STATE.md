@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.25.2
-**Última sesión:** #48c — 2026-05-07 · fix(standalone): repara crash post-s48b (10 .jsx con `<script>` espurio + PACE.html truncado + manifest CORS)
-**Última actualización de este archivo:** 2026-05-07 · sesión 48c
-**Build entregado:** `PACE_standalone.html` v0.25.2 (480 KB)
+**Versión actual:** v0.25.4
+**Última sesión:** #48d.1 — 2026-05-08 · fix(achievements): hotfix Achievements.jsx truncado en s48d; re-aplicadas correcciones 48d; validador strings en build
+**Última actualización de este archivo:** 2026-05-08 · sesión 48d.1
+**Build entregado:** `PACE_standalone.html` v0.25.4 (493566 bytes / 481 KB)
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.25.2** (reescrito íntegro tras truncamiento detectado en s48c — mount loop 6 checks + 5 s timeout + SW PWA) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.25.2** (491 202 bytes, regenerado en s48c · sin link manifest CORS) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.25.3** (bump título en s48d; reescrito íntegro en s48c — mount loop 6 checks + 5 s timeout + SW PWA) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.25.3** (491 202 bytes, regenerado en s48d · auditoría glifos) |
 | `LICENSE` | Elastic License 2.0 en la raíz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** (7 recetas nuevas: move.start/step/end, hydrate.sip/goal, achievement.unlock/secret — s40) |
@@ -48,10 +48,12 @@
 | `app/state.jsx` | Store global + rollover + toast buffer + history | **v0.25.0** (isMobileViewport + loadState móvil + checkStatsAchievements — s46) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez + hook | **v0.19.0** (tooltip toggle lang → i18n keys) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** (glyphSvg en full + render SVG condicional — s46) |
-| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.25.0** (GLYPH_SVG 11 entradas + renderGlyph + Seal + cat estadisticas — s46) |
+| `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.25.3** (GLYPH_SVG 33 entradas + 1 alias — auditoría s48d: 18 corregidos + 13 nuevos portados) |
 
-Backups vigentes (15):
-- `backups/PACE_standalone_v0.25.2_20260507.html` ← actual
+Backups vigentes (17):
+- `backups/PACE_standalone_v0.25.3_20260508.html` ← actual
+- `backups/PACE_standalone_v0.25.2_20260508_pre48d.html`
+- `backups/PACE_standalone_v0.25.2_20260507.html`
 - `backups/PACE_standalone_v0.25.1_20260507_pre48c.html`
 - `backups/PACE_standalone_v0.25.1_20260507.html`
 - `backups/PACE_standalone_v0.25.0_20260507.html`
@@ -71,71 +73,45 @@ Backups vigentes (15):
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 48c · v0.25.1 → v0.25.2 · fix: standalone crash + manifest CORS**
+**Sesión 48d.1 · v0.25.3 → v0.25.4 · fix(achievements): hotfix Achievements.jsx truncado**
 
 ### Qué se hizo
 
-Hotfix de carga del standalone v0.25.1. Crash en consola:
-`Uncaught SyntaxError: Unexpected token, expected "}" (41:6)` en
-`SessionShell.jsx`, más dos errores CORS sobre `manifest.json`. La aplicación
-no arrancaba.
+Hotfix del truncamiento de `app/achievements/Achievements.jsx` introducido en s48d.
+El archivo quedó en 273 líneas (de 389 originales), provocando que el standalone
+v0.25.3 lanzara `Unterminated string constant` al cargarse en el navegador.
 
-**Causa raíz triple:**
-
-1. **10 archivos `.jsx`** tenían como primera línea literal
-   `  <script type="text/babel">`, residuo de la sesión 48 truncada. Al
-   pasarlos por `build-standalone.js` quedaba un doble
-   `<script type="text/babel"><script type="text/babel">` en el bundle: el
-   primer `</script>` cerraba ambos a nivel HTML y Babel petaba al ver el
-   segundo como JSX literal.
-2. **`PACE.html` estaba truncado** al final (87 L → debería tener 135 L).
-   Faltaba el bloque `<script type="text/babel" data-presets="env,react">` con
-   la `function mount()` 6-check + timeout 5 s (decisión s38b), el registro
-   del Service Worker, y los cierres `</body></html>`. Ningún backup posterior
-   a v0.20.0 estaba completo.
-3. **`<link rel="manifest">`** en el standalone disparaba CORS bajo `file://`
-   (dos errores rojos que parecían parte del crash sin serlo).
-
-**Acciones:**
-
-- 10 `.jsx` limpiados con `tail -n +2`: `TweaksPanel`, `BreakMenu`, `Hydrate`,
-  `Extra`, `Move`, `BreatheSession`, `FocusTimer`, `Toast`, `Sound`,
-  `SessionShell`. Resto del contenido íntegro (verificado balance llaves/parens).
-- `PACE.html` reescrito completo via bash heredoc (135 L, 6 721 bytes).
-- `build-standalone.js` reescrito completo via bash heredoc (90 L, 3 090 bytes)
-  con paso 0 nuevo: `replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ')`.
-- Bump `PACE_VERSION` v0.25.0 → v0.25.2.
-- Regeneración: `PACE_standalone.html` 480 KB / 491 202 bytes / 9 145 L.
-
-**Verificación final:**
-- 0 null bytes, 0 U+FFFD.
-- 27 bloques `<script type="text/babel">` con `braces=0 parens=0` cada uno.
-- 0 dobles `<script type="text/babel"><script` en el bundle.
-- `</body>` y `</html>` presentes 1 vez al final.
-- `function mount` 1 vez. `rel="manifest"` 0 veces (sólo en PACE.html / dev).
+**Solución:**
+1. Base limpia recuperada de git cache (`origin/main`, v0.25.0, 389 líneas).
+2. Correcciones de s48d re-aplicadas via script Python: bloque GLYPH_SVG completo
+   (33 entradas + alias, whitespace canónico, `first.ritual` con segmento completo),
+   13 `glyphSvg` añadidos al catálogo. Resultado: 402 líneas, balance {/} 207/207.
+3. Validador `validateNoUnclosedStrings()` añadido a `build-standalone.js` (modo
+   warning — avisa en consola, no aborta el build).
+4. Bundle regenerado: 481 KB, 0 anomalías, PACE_VERSION v0.25.4 confirmada.
 
 ### Archivos modificados
-10 `.jsx` (cabecera limpiada) · `PACE.html` (reescrito) ·
-`build-standalone.js` (reescrito) · `app/state.jsx` (bump versión) ·
+`app/achievements/Achievements.jsx` (restaurado + 48d re-aplicado) ·
+`app/state.jsx` (bump v0.25.3→v0.25.4) · `PACE.html` (bump título) ·
+`build-standalone.js` (añadido validateNoUnclosedStrings) ·
 `CHANGELOG.md` · este `STATE.md`.
 
 ### Archivos nuevos
-`backups/PACE_standalone_v0.25.1_20260507_pre48c.html`,
-`backups/PACE_standalone_v0.25.2_20260507.html`,
-`PACE.html.bak.pre-fix`,
-`docs/sessions/session-48c-fix-standalone-truncamientos.md`.
+`backups/PACE_standalone_v0.25.3_20260508_ROTO.html` (renombrado, conservado) ·
+`backups/PACE_standalone_v0.25.4_20260508.html` ·
+`docs/sessions/session-48d1-hotfix-achievements-truncado.md`.
 
 ### Versión
-- `v0.25.1` → **`v0.25.2`** (patch · hotfix de carga, sin cambios funcionales).
+- `v0.25.3` → **`v0.25.4`** (patch · hotfix truncamiento + validador de strings en build).
 
 ### Pendiente funcional (próximas sesiones)
-- **Sesión 49:** sistema de Caminos parte 1, sobre base v0.25.2 limpia.
-- Portado de glifos adicionales de Dirección D (maestría, exploración restante).
+- **Sesión 49:** sistema de Caminos parte 1, sobre base v0.25.4 limpia.
+- Añadir sección "Secretos" a `design/glyphs-explorations.html` con glifo canónico de `secret.cow.click`.
+- Mejorar heurístico de backticks en `validateNoUnclosedStrings` (falsos positivos inofensivos).
 - Iconos PNG reales (192×512) para PWA.
 - README EN + Reddit launch.
 - Detector `master.midnight.never`.
 - Claves offline Lifetime/Pase.
-- Añadir sección "Secretos" a `design/glyphs-explorations.html` con glifo canónico de `secret.cow.click`.
 
 
 ## 🗓️ Sesión anterior — #35 (resumen condensado)
@@ -426,11 +402,14 @@ Logros visibles como "Próximamente" sin trigger:
   Sesión 46 invalida s29 (híbrido A+B). Sesión 48 ratifica y porta literal desde
   `design/glyphs-explorations.html`. Patrón canónico: viewBox 44×44, `currentColor`,
   círculos rellenos r=1.4–2.4, líneas stroke-width=0.5–0.6, opacidad 0.4–0.6.
-  20 entradas en `GLYPH_SVG` (18 portados de exploración + alias first.plan + secret
-  reescalado). El campo `glyph: string` se conserva como fallback unicode. Fuente
+  33 entradas explícitas en `GLYPH_SVG` + 1 alias (`first.plan → first.ritual`).
+  Todos los glifos de Dirección D presentes en `design/glyphs-explorations.html`
+  están portados (auditoría s48d). Excepción: `secret.cow.click` (sin canónico,
+  es secreto). El campo `glyph: string` se conserva como fallback unicode. Fuente
   canónica: `design/glyphs-explorations.html` — intocable. Para añadir/corregir un
-  glifo: editar primero la exploración, luego portar. Próximo paso: portado de glifos
-  de maestría y exploración restante. (Decisiones: s46 + s48.
+  glifo: editar primero la exploración, luego portar. Próximo paso: diseñar glifos D
+  para las categorías restantes (secretos, estacionales, estadísticas, maestría
+  no cubierta). (Decisiones: s46 + s48 + s48d.
   Histórica s29 → `docs/sessions/session-29-logros-aplazados-glifos.md`.)
 - **Sonidos sintetizados con Web Audio en lugar de samples WAV.**
   El módulo `app/ui/Sound.jsx` (sesión 28) define recetas en
