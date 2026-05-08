@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.26.1</title>
+  <title>PACE · Foco · Cuerpo — v0.26.0-alpha</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -194,26 +194,6 @@ input, textarea { font-family: inherit; color: inherit; }
   }
 }
 
-  </style>
-  <style id="pace-paths-css">
-    .path-runner-overlay {
-      position: fixed; inset: 0;
-      background: var(--paper);
-      z-index: 80;
-      display: flex; flex-direction: column;
-    }
-    .path-topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--line);
-      flex-shrink: 0;
-    }
-    .path-dots { display: flex; gap: 6px; }
-    .path-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: background 200ms; }
-    .path-dot.active { background: var(--ink); }
-    .path-dot.done   { background: var(--ink-3); }
-    .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
-    .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
   </style>
 </head>
 <body>
@@ -590,33 +570,6 @@ window.PACE_STRINGS = {
     'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
     'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
     'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
-
-    // Caminos - PathRunner (sesion 50)
-    'path.runner.exit':              'Salir del camino',
-    'path.runner.exitConfirmTitle':  'Salir del camino?',
-    'path.runner.exitConfirmBody':   'Perderas el progreso de este camino.',
-    'path.runner.exitConfirmYes':    'Si, salir',
-    'path.runner.exitConfirmNo':     'Seguir',
-    'path.runner.skip':              'Saltar',
-    'path.runner.next':              'Siguiente',
-    'path.runner.done':              'Hecho',
-    'path.runner.complete.title':    'Camino completado',
-    'path.runner.complete.body':     'Has terminado {name}.',
-    'path.runner.complete.back':     'Volver',
-    'path.hydrate.copy':             'Un vaso de agua, si te apetece',
-    'path.hydrate.drank':            'He bebido',
-    'path.error.routineNotFound':    'Rutina no encontrada: {id}',
-    // Caminos - nombres y taglines (sesion 51)
-    'paths.path.dawn.name':           'Amanecer',
-    'paths.path.dawn.tagline':        'Empieza bien el dia.',
-    'paths.path.midday.name':         'Mediodia',
-    'paths.path.midday.tagline':      'Recarga a mitad de jornada.',
-    'paths.path.afternoon.name':      'Tarde',
-    'paths.path.afternoon.tagline':   'Un segundo aire para el resto del dia.',
-    'paths.path.dusk.name':           'Atardecer',
-    'paths.path.dusk.tagline':        'Cierra el dia con calma.',
-    'paths.path.weekend.name':        'Fin de semana',
-    'paths.path.weekend.tagline':     'Ritmo suave. Sin prisas.',
   },
 
   en: {
@@ -946,32 +899,6 @@ window.PACE_STRINGS = {
     'breathe.safety.body.rule2':       'Never in water, while driving or at height',
     'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
     'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
-    // Paths - PathRunner (session 50)
-    'path.runner.exit':              'Exit path',
-    'path.runner.exitConfirmTitle':  'Exit path?',
-    'path.runner.exitConfirmBody':   'You will lose progress on this path.',
-    'path.runner.exitConfirmYes':    'Yes, exit',
-    'path.runner.exitConfirmNo':     'Stay',
-    'path.runner.skip':              'Skip',
-    'path.runner.next':              'Next',
-    'path.runner.done':              'Done',
-    'path.runner.complete.title':    'Path completed',
-    'path.runner.complete.body':     'You finished {name}.',
-    'path.runner.complete.back':     'Back',
-    'path.hydrate.copy':             'A glass of water, if you feel like it',
-    'path.hydrate.drank':            'I drank',
-    'path.error.routineNotFound':    'Routine not found: {id}',
-    // Paths - names and taglines (session 51)
-    'paths.path.dawn.name':           'Dawn',
-    'paths.path.dawn.tagline':        'Start the day right.',
-    'paths.path.midday.name':         'Midday',
-    'paths.path.midday.tagline':      'Recharge at mid-morning.',
-    'paths.path.afternoon.name':      'Afternoon',
-    'paths.path.afternoon.tagline':   'A second wind for the rest of the day.',
-    'paths.path.dusk.name':           'Dusk',
-    'paths.path.dusk.tagline':        'Close the day with calm.',
-    'paths.path.weekend.name':        'Weekend',
-    'paths.path.weekend.tagline':     'Gentle rhythm. No rush.',
   },
 };
 
@@ -1306,7 +1233,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.26.1';
+const PACE_VERSION = 'v0.26.0-alpha';
 
 const defaultState = {
   // Settings / Tweaks
@@ -6672,8 +6599,8 @@ function getMoveRoutine(id) {
   return MOVE_ROUTINES.find(r => r.id === id) || null;
 }
 window.getMoveRoutine = getMoveRoutine;
-Object.assign(window, { MoveLibrary, MoveSession });
 
+/* 
 </script>
   <script type="text/babel">
 /* PACE · Módulo Estira (Estiramientos / Movilidad)
@@ -6777,101 +6704,12 @@ function getExtraRoutine(id) {
   return EXTRA_ROUTINES.find(r => r.id === id) || null;
 }
 window.getExtraRoutine = getExtraRoutine;
-Object.assign(window, { ExtraLibrary });
 
+// Reutiliza MoveSession para la ejecución (misma estructura de
 </script>
-  <!-- Caminos - catalogo y resolvers (sesion 49) -->
-  <script type="text/babel">
-/* PACE · Caminos · Catálogo y resolvers · sesión 49 / v0.26.0-alpha
-   Sin UI en esta sesión — solo capa de datos, helpers y catálogo.
-   PathRunner.jsx (sesión 50) y SuggestedPathCard.jsx (sesión 51) irán aquí.
-*/
-
-const PATH_CATALOG = [
-  {
-    id: 'path.dawn',
-    nameKey: 'paths.path.dawn.name',
-    taglineKey: 'paths.path.dawn.tagline',
-    timeOfDay: 'morning',
-    steps: [
-      { kind: 'breathe', routineId: 'breathe.coherent.55' },
-      { kind: 'focus',                                      min: 25 },
-      { kind: 'body',   routineId: 'move.neck.3' },
-    ],
-    access: 'free',
-  },
-  {
-    id: 'path.midday',
-    nameKey: 'paths.path.midday.name',
-    taglineKey: 'paths.path.midday.tagline',
-    timeOfDay: 'midday',
-    steps: [
-      { kind: 'hydrate',                                    optional: true },
-      { kind: 'body',   routineId: 'move.hips.5' },
-      { kind: 'focus',                                      min: 25 },
-    ],
-    access: 'free',
-  },
-  {
-    id: 'path.afternoon',
-    nameKey: 'paths.path.afternoon.name',
-    taglineKey: 'paths.path.afternoon.tagline',
-    timeOfDay: 'afternoon',
-    steps: [
-      { kind: 'breathe', routineId: 'breathe.478' },
-      { kind: 'focus',                                      min: 15 },
-      { kind: 'body',   routineId: 'extra.desk.pushups' },
-    ],
-    access: 'free',
-  },
-  {
-    id: 'path.dusk',
-    nameKey: 'paths.path.dusk.name',
-    taglineKey: 'paths.path.dusk.tagline',
-    timeOfDay: 'evening',
-    steps: [
-      { kind: 'breathe', routineId: 'breathe.coherent.55' },
-      { kind: 'focus',                                      min: 25 },
-      { kind: 'body',   routineId: 'move.chair.antidote' },
-    ],
-    access: 'free',
-  },
-  {
-    id: 'path.weekend',
-    nameKey: 'paths.path.weekend.name',
-    taglineKey: 'paths.path.weekend.tagline',
-    timeOfDay: 'weekend',
-    steps: [
-      { kind: 'breathe', routineId: 'breathe.nadi.shodhana' },
-      { kind: 'body',   routineId: 'move.atg.knees' },
-      { kind: 'hydrate',                                    optional: true },
-    ],
-    access: 'free',
-  },
-];
-
-const PATH_BY_ID = Object.fromEntries(PATH_CATALOG.map(p => [p.id, p]));
-
-function getPath(id) {
-  return PATH_BY_ID[id] || null;
-}
-
-/* resolveBodyRoutine: busca un routineId primero en MoveModule, luego en ExtraModule.
-   Devuelve { routine, source: 'move'|'extra' } o null si no existe en ninguno.
-   Depende de que getMoveRoutine y getExtraRoutine estén en window (se cargan antes). */
-function resolveBodyRoutine(id) {
-  const m = (window.getMoveRoutine && window.getMoveRoutine(id)) || null;
-  if (m) return { routine: m, source: 'move' };
-  const e = (window.getExtraRoutine && window.getExtraRoutine(id)) || null;
-  if (e) return { routine: e, source: 'extra' };
-  return null;
-}
-
-window.PATH_CATALOG = PATH_CATALOG;
-window.getPath = getPath;
-window.resolveBodyRoutine = resolveBodyRoutine;
-
-</script>
+  <!-- Caminos — catálogo y resolvers (sesión 49). Carga DESPUÉS de Move/Extra
+       porque resolveBodyRoutine depende de getMoveRoutine y getExtraRoutine. -->
+  <script type="text/babel" data-presets="env,react" src="app/paths/registry.js"></script>
   <script type="text/babel">
 /* PACE · Módulo Hidrátate */
 
@@ -8807,542 +8645,6 @@ if (!_paceTweaksResponsive) {
 Object.assign(window, { TweaksPanel });
 </script>
 
-  <!-- Caminos - SuggestedPathCard UI (sesion 51) -->
-  <script type="text/babel">
-/* PACE - Caminos - SuggestedPathCard - sesion 51 / v0.26.0 */
-
-const { useState: useStateSPC } = React;
-
-/* Iconos de paso: stroke fino 14x14 */
-function SPCIconBreathe() {
-  return <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"><path d="M8 2.5v7" /><path d="M5 7.5C3.6 7.8 2.5 8.8 2.2 10.2c-.4 1.7.2 3.4 1.8 3.5.9.1 1.4-.5 1.6-1.3.3-1.3.4-2.9.4-4.5z" /><path d="M11 7.5c1.4.3 2.5 1.3 2.8 2.7.4 1.7-.2 3.4-1.8 3.5-.9.1-1.4-.5-1.6-1.3-.3-1.3-.4-2.9-.4-4.5z" /></svg>;
-}
-function SPCIconFocus() {
-  return <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"><circle cx="8" cy="8" r="5.5" /><circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none" /></svg>;
-}
-function SPCIconBody() {
-  return <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"><path d="M2.5 12c1.8-4.5 4-7 5.5-7s3.7 2.5 5.5 7" /><circle cx="8" cy="4" r="1.2" /></svg>;
-}
-function SPCIconHydrate() {
-  return <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"><path d="M8 1.5c-2 3-4.5 4.8-4.5 7.5a4.5 4.5 0 0 0 9 0c0-2.7-2.5-4.5-4.5-7.5z" /></svg>;
-}
-
-const SPC_STEP_ICONS = { breathe: SPCIconBreathe, focus: SPCIconFocus, body: SPCIconBody, hydrate: SPCIconHydrate };
-
-function SuggestedPathCard() {
-  const [state] = usePace();
-  const { t } = useT();
-
-  // Si ya hay camino activo, PathRunner lo gestiona
-  if (state.paths && state.paths.current) return null;
-
-  const suggestedId = (typeof getSuggestedPath === 'function') ? getSuggestedPath() : null;
-  const suggested = (suggestedId && typeof getPath === 'function') ? getPath(suggestedId) : null;
-  if (!suggested) return null;
-
-  const todayISO = new Date().toISOString().slice(0, 10);
-  const compl = state.paths && state.paths.completed && state.paths.completed[suggested.id];
-  const doneToday = !!(compl && compl.lastDoneAt === todayISO);
-
-  const name = t(suggested.nameKey) || suggested.id;
-  const tagline = t(suggested.taglineKey) || '';
-
-  const handleStart = () => { if (typeof startPath === 'function') startPath(suggested.id); };
-
-  return (
-    <div data-pace-spc style={{ padding: '0 40px 12px', flexShrink: 0 }}>
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 16,
-        padding: '14px 20px',
-        background: doneToday ? 'var(--paper-2)' : 'var(--paper)',
-        border: '1px solid var(--line)',
-        borderRadius: 'var(--r-md)',
-        boxShadow: 'var(--sh-soft)',
-        cursor: doneToday ? 'default' : 'pointer',
-        transition: 'all 200ms var(--ease)',
-      }}
-      onClick={!doneToday ? handleStart : undefined}
-      onMouseEnter={!doneToday ? (e) => { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
-      onMouseLeave={!doneToday ? (e) => { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
-      >
-        {/* Acento vertical */}
-        <div style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
-
-        {/* Bloque de texto */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
-            {doneToday && (
-              <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
-                {t('path.card.done') || 'Hecho hoy'}
-              </span>
-            )}
-          </div>
-          <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
-          <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
-            {suggested.steps.map((step, i) => {
-              const Icon = SPC_STEP_ICONS[step.kind] || null;
-              return <span key={i} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
-            })}
-          </div>
-        </div>
-
-        {/* Accion */}
-        {!doneToday && (
-          <button onClick={(e) => { e.stopPropagation(); handleStart(); }} style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}>
-            {t('path.card.start') || 'Comenzar'}
-          </button>
-        )}
-        {doneToday && (
-          <span style={{ fontSize: 18, color: 'var(--olive)', flexShrink: 0, lineHeight: 1, fontFamily: 'Georgia, serif' }}>*</span>
-        )}
-      </div>
-    </div>
-  );
-}
-
-Object.assign(window, { SuggestedPathCard });
-
-</script>
-  <!-- Caminos - PathRunner UI (sesion 50) -->
-  <script type="text/babel">
-/* PACE - Caminos - PathRunner overlay (sesion 50 / v0.26.0-beta)
-   Monta un overlay full-screen cuando state.paths.current != null.
-   Con paths.current === null y justCompleted === null devuelve null
-   -> cero impacto visual en home.
-*/
-
-const { useState: useStatePR, useEffect: useEffectPR, useRef: useRefPR } = React;
-
-/* PathTopBar - barra superior con dots y boton de salida */
-function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
-  const { t } = useT();
-  return (
-    <div className="path-topbar">
-      <div style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-2)', fontWeight: 500 }}>
-        {pathName}
-      </div>
-      <div className="path-dots">
-        {Array.from({ length: totalSteps }).map((_, i) => (
-          <div
-            key={i}
-            className={
-              'path-dot' +
-              (i < stepIndex ? ' done' : '') +
-              (i === stepIndex ? ' active' : '')
-            }
-          />
-        ))}
-      </div>
-      <button
-        onClick={onRequestExit}
-        aria-label={t('path.runner.exit')}
-        style={{
-          background: 'transparent', border: 'none',
-          color: 'var(--ink-3)', cursor: 'pointer',
-          padding: 8, fontSize: 20, lineHeight: 1,
-        }}
-      >
-        &#x2715;
-      </button>
-    </div>
-  );
-}
-
-/* ExitConfirmModal - confirmacion in-app (sin llamada al dialog nativo) */
-function ExitConfirmModal({ open, onCancel, onConfirm }) {
-  const { t } = useT();
-  if (!open) return null;
-  return (
-    <div className="path-modal-back" onClick={onCancel}>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'var(--paper)', borderRadius: 'var(--r-md)',
-          padding: 32, maxWidth: 380, width: '90%',
-          border: '1px solid var(--line)',
-        }}
-      >
-        <h3 style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
-          {t('path.runner.exitConfirmTitle')}
-        </h3>
-        <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
-          {t('path.runner.exitConfirmBody')}
-        </p>
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button
-            onClick={onCancel}
-            style={{
-              padding: '8px 18px', borderRadius: 'var(--r-sm)',
-              background: 'var(--paper-2)', border: '1px solid var(--line)',
-              color: 'var(--ink)', cursor: 'pointer', fontSize: 13,
-            }}
-          >
-            {t('path.runner.exitConfirmNo')}
-          </button>
-          <button
-            onClick={onConfirm}
-            style={{
-              padding: '8px 18px', borderRadius: 'var(--r-sm)',
-              background: 'var(--terracota)', border: 'none',
-              color: '#fff', cursor: 'pointer', fontSize: 13,
-            }}
-          >
-            {t('path.runner.exitConfirmYes')}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* CompletionScreen - pantalla de camino completado */
-function CompletionScreen({ snapshot, onBack }) {
-  const { t, tn } = useT();
-  const path = getPath(snapshot.pathId);
-  const name = path ? snapshot.pathId : snapshot.pathId;
-  const elapsed = snapshot.startedAt
-    ? Math.round((Date.now() - snapshot.startedAt) / 60000)
-    : 0;
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: 40, textAlign: 'center',
-    }}>
-      <div style={{
-        width: 64, height: 64, borderRadius: '50%',
-        background: 'var(--breathe-soft)', color: 'var(--breathe)',
-        display: 'grid', placeItems: 'center', fontSize: 28,
-        marginBottom: 24,
-      }}>
-        &#x2714;
-      </div>
-      <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 10px' }}>
-        {t('path.runner.complete.title')}
-      </p>
-      <h2 style={{
-        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontSize: 36, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.2,
-      }}>
-        {snapshot.pathId.replace('path.', '')}
-      </h2>
-      {elapsed > 0 && (
-        <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 32px' }}>
-          {elapsed} min
-        </p>
-      )}
-      <button
-        onClick={onBack}
-        style={{
-          padding: '12px 32px', borderRadius: 'var(--r-pill)',
-          background: 'var(--ink)', border: 'none',
-          color: 'var(--paper)', cursor: 'pointer',
-          fontSize: 13, letterSpacing: '0.1em',
-        }}
-      >
-        {t('path.runner.complete.back')}
-      </button>
-    </div>
-  );
-}
-
-/* StepError - fallback si routineId no resuelve */
-function StepError({ routineId, onSkip }) {
-  const { t } = useT();
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
-      <p style={{ color: 'var(--ink-2)', marginBottom: 20, fontSize: 14 }}>
-        {t('path.error.routineNotFound').replace('{id}', routineId)}
-      </p>
-      <button
-        onClick={onSkip}
-        style={{
-          padding: '10px 24px', borderRadius: 'var(--r-sm)',
-          background: 'var(--paper-2)', border: '1px solid var(--line)',
-          color: 'var(--ink)', cursor: 'pointer', fontSize: 13,
-        }}
-      >
-        {t('path.runner.skip')}
-      </button>
-    </div>
-  );
-}
-
-/* PathHydrateStep - vaso de agua opcional */
-function PathHydrateStep({ onDone, onSkip }) {
-  const { t } = useT();
-  const handleDrank = () => {
-    if (typeof addWaterGlass === 'function') {
-      try { addWaterGlass(1); } catch (e) {}
-    }
-    onDone();
-  };
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
-      <div style={{
-        width: 64, height: 64, borderRadius: '50%',
-        background: 'var(--hydrate-soft, rgba(100,180,220,0.12))',
-        display: 'grid', placeItems: 'center',
-        fontSize: 28, marginBottom: 24,
-      }}>
-        &#x1F4A7;
-      </div>
-      <p style={{
-        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontSize: 28, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 32px', lineHeight: 1.3,
-      }}>
-        {t('path.hydrate.copy')}
-      </p>
-      <div style={{ display: 'flex', gap: 12 }}>
-        <button
-          onClick={onSkip}
-          style={{
-            padding: '10px 24px', borderRadius: 'var(--r-sm)',
-            background: 'var(--paper-2)', border: '1px solid var(--line)',
-            color: 'var(--ink-2)', cursor: 'pointer', fontSize: 13,
-          }}
-        >
-          {t('path.runner.skip')}
-        </button>
-        <button
-          onClick={handleDrank}
-          style={{
-            padding: '10px 24px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-          }}
-        >
-          {t('path.hydrate.drank')}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* PathFocusStep - timer simple para paso de foco */
-function PathFocusStep({ step, onExit }) {
-  const { t } = useT();
-  const totalSec = (step.min || 25) * 60;
-  const [remaining, setRemaining] = useStatePR(totalSec);
-  const [running, setRunning] = useStatePR(false);
-  const [done, setDone] = useStatePR(false);
-  const intervalRef = useRefPR(null);
-
-  useEffectPR(() => {
-    if (!running) { clearInterval(intervalRef.current); return; }
-    intervalRef.current = setInterval(() => {
-      setRemaining(r => {
-        if (r <= 1) {
-          clearInterval(intervalRef.current);
-          setRunning(false);
-          setDone(true);
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [running]);
-
-  const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
-  const secs = String(remaining % 60).padStart(2, '0');
-
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
-      <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 16px' }}>
-        {t('topbar.mode.focus')}
-      </p>
-      <div style={{
-        fontFamily: "'EB Garamond', Georgia, serif",
-        fontSize: 96, fontWeight: 400,
-        fontVariantNumeric: 'tabular-nums',
-        color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
-      }}>
-        {mins}:{secs}
-      </div>
-      {!done ? (
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button
-            onClick={() => setRunning(r => !r)}
-            style={{
-              padding: '10px 28px', borderRadius: 'var(--r-sm)',
-              background: 'var(--ink)', border: 'none',
-              color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-            }}
-          >
-            {running ? t('session.pause') : (remaining < totalSec ? t('session.resume') : t('topbar.mode.focus'))}
-          </button>
-          <button
-            onClick={() => onExit('skip')}
-            style={{
-              padding: '10px 20px', borderRadius: 'var(--r-sm)',
-              background: 'var(--paper-2)', border: '1px solid var(--line)',
-              color: 'var(--ink-2)', cursor: 'pointer', fontSize: 13,
-            }}
-          >
-            {t('path.runner.skip')}
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => onExit('done')}
-          style={{
-            padding: '10px 28px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-          }}
-        >
-          {t('path.runner.done')}
-        </button>
-      )}
-    </div>
-  );
-}
-
-/* PathBreatheStep - envoltura sobre BreatheSession */
-function PathBreatheStep({ step, onExit }) {
-  const routine = getBreatheRoutine && getBreatheRoutine(step.routineId);
-  if (!routine) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
-
-  if (routine.safety) {
-    return <PathBreatheSafetyGate routine={routine} onExit={onExit} />;
-  }
-  return <BreatheSession routine={routine} onExit={onExit} />;
-}
-
-function PathBreatheSafetyGate({ routine, onExit }) {
-  const [accepted, setAccepted] = useStatePR(false);
-  if (!accepted) {
-    return (
-      <BreatheSafety
-        routine={routine}
-        onAccept={() => setAccepted(true)}
-        onCancel={() => onExit('skip')}
-      />
-    );
-  }
-  return <BreatheSession routine={routine} onExit={onExit} />;
-}
-
-/* PathBodyStep - envoltura sobre MoveSession / ExtraSession */
-function PathBodyStep({ step, onExit }) {
-  const resolved = resolveBodyRoutine && resolveBodyRoutine(step.routineId);
-  if (!resolved) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
-  const kind = resolved.source === 'extra' ? 'extra' : 'move';
-  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
-}
-
-/* PathRunner - orquestador principal */
-function PathRunner() {
-  const [state] = usePace();
-  const { t } = useT();
-  const cur = state.paths.current;
-  const [justCompleted, setJustCompleted] = useStatePR(null);
-  const [confirmExit, setConfirmExit] = useStatePR(false);
-
-  /* Limpiar justCompleted cuando arranca un nuevo camino */
-  useEffectPR(() => {
-    if (cur) setJustCompleted(null);
-  }, [cur ? cur.id : null]);
-
-  /* Nada que mostrar: home visible */
-  if (!cur && !justCompleted) return null;
-
-  /* Pantalla de completado */
-  if (justCompleted) {
-    return (
-      <div className="path-runner-overlay">
-        <CompletionScreen
-          snapshot={justCompleted}
-          onBack={() => setJustCompleted(null)}
-        />
-      </div>
-    );
-  }
-
-  const path = getPath(cur.id);
-  if (!path) return null;
-
-  const step = path.steps[cur.stepIndex];
-  const totalSteps = path.steps.length;
-
-  /* Callback que reciben los subcomponentes de paso */
-  const handleStepExit = (reason) => {
-    const isLast = cur.stepIndex >= path.steps.length - 1;
-    if (isLast) {
-      const skipped = reason === 'skip'
-        ? [...cur.skippedSteps, cur.stepIndex]
-        : cur.skippedSteps;
-      setJustCompleted({
-        pathId: cur.id,
-        startedAt: cur.startedAt,
-        skippedSteps: skipped,
-      });
-    }
-    advancePathStep(reason);
-  };
-
-  /* Botón de salida: si el paso es opcional, salir directo; si no, confirmar */
-  const handleRequestExit = () => {
-    if (step.optional) {
-      abandonPath();
-    } else {
-      setConfirmExit(true);
-    }
-  };
-
-  return (
-    <div className="path-runner-overlay">
-      <PathTopBar
-        pathName={cur.id.replace('path.', '')}
-        stepIndex={cur.stepIndex}
-        totalSteps={totalSteps}
-        onRequestExit={handleRequestExit}
-      />
-
-      <div className="path-step-body">
-        {step.kind === 'breathe' && (
-          <PathBreatheStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'focus' && (
-          <PathFocusStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'body' && (
-          <PathBodyStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'hydrate' && (
-          <PathHydrateStep
-            onDone={() => handleStepExit('done')}
-            onSkip={() => handleStepExit('skip')}
-          />
-        )}
-      </div>
-
-      <ExitConfirmModal
-        open={confirmExit}
-        onCancel={() => setConfirmExit(false)}
-        onConfirm={() => { abandonPath(); setConfirmExit(false); }}
-      />
-    </div>
-  );
-}
-
-Object.assign(window, { PathRunner });
-
-</script>
-
   <script type="text/babel">
 /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
@@ -9639,9 +8941,6 @@ function PaceApp() {
           onOpenLibrary={(kind) => setOpenLibrary(kind)}
           onOpenHydrate={() => setOpenHydrate(true)}
         />
-
-        {/* Camino sugerido del momento (sesion 51) */}
-        <SuggestedPathCard />
       </main>
 
       {/* ========== MODALS ========== */}
@@ -9697,9 +8996,6 @@ function PaceApp() {
       {view.type === 'move-session' && (
         <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
       )}
-
-      {/* ========== CAMINOS ========== */}
-      <PathRunner />
 
       {/* ========== TOASTS ========== */}
       <ToastHost />
@@ -9985,13 +9281,4 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     }
   </script>
 
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
-      });
-    }
-  </script>
-</body>
-</html>
+  <!-- PWA �

@@ -15,8 +15,12 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.25.4** | 2026-05-08 | fix(achievements): hotfix Achievements.jsx truncado en s48d — restaurado desde origin/main + correcciones 48d re-aplicadas + validador de strings en build-standalone.js | #48d.1 | [abajo ↓](#v0254--2026-05-08--fixachievements-hotfix-achievementsjsx-truncado) |
-| **v0.25.3** | 2026-05-08 | fix(achievements): auditoría glifos Dirección D — 18 sustituidos por canónicos + 13 nuevos portados desde glyphs-explorations.html | #48d | [abajo ↓](#v0253--2026-05-08--fixachievements-auditoría-glifos-dirección-d) |
+| **v0.26.1** | 2026-05-08 | chore: saneamiento tecnico - encoding STATE.md, validateFileEnd en build, 0 WARN, audit deuda 5 archivos >500 lineas | #52 | [abajo](#v0261--2026-05-08--chore-saneamiento-tecnico) |
+| **v0.26.0** | 2026-05-08 | feat(paths): SuggestedPathCard -- tarjeta home que sugiere el camino del momento, 4 icons de paso, doneToday badge, 10 claves i18n -- cierra sistema Caminos | #51 | [abajo ↓](#v0260--2026-05-08--featpaths-suggestedpathcard) |
+| **v0.26.0-beta** | 2026-05-08 | feat(paths): PathRunner UI — overlay full-screen, 4 kinds, modal in-app de salida, pantalla de completado, reanudacion tras recarga | #50 | [abajo ↓](#v0260-beta--2026-05-08--featpaths-pathrunner-ui) |
+| **v0.26.0-alpha** | 2026-05-08 | feat(paths): Caminos parte 1 — capa de datos (5 caminos canónicos, helpers lookup, funciones state, migración defensiva) | #49 | [abajo ↓](#v0260-alpha--2026-05-08--featpaths-caminos-parte-1--capa-de-datos) |
+| **v0.25.4** | 2026-05-08 | fix(achievements): hotfix Achievements.jsx truncado en s48d — restaurado desde origin/main + correcciones 48d re-aplicadas + validador de strings en build-standalone.js | #48d.1 | [session-48d1](./docs/sessions/session-48d1-hotfix-achievements-truncado.md) |
+| **v0.25.3** | 2026-05-08 | fix(achievements): auditoría glifos Dirección D — 18 sustituidos por canónicos + 13 nuevos portados desde glyphs-explorations.html | #48d | [session-48d](./docs/sessions/session-48d-auditoria-glifos.md) |
 | **v0.25.2** | 2026-05-07 | fix(standalone): repara crash post-s48b — 10 .jsx tenían `<script type="text/babel">` literal al inicio (provocaba doble script en el bundle y SyntaxError de Babel) + PACE.html truncado sin mount loop ni `</body></html>` + manifest.json eliminado del standalone (causaba CORS en file://) | #48c | [abajo ↓](#v0252--2026-05-07--fixstandalone-repara-crash-post-s48b) |
 | **v0.25.1** | 2026-05-07 | fix(achievements): 20 glifos Dirección D portados literal de design/glyphs-explorations.html (viewBox 44×44, currentColor) — corrige inventados a ojo de s46; restauración masiva de 12 archivos truncados | #48b | [abajo ↓](#v0251--2026-05-07--fixachievements-glifos-canónicos-dirección-d) |
 | **v0.25.0** | 2026-05-06 | feat: stats achievements (4 logros nuevos) + mobile UX fixes (sidebar+tabs) + 10 glifos SVG constelaciones + renderGlyph en Seal y Toast | #46 | [session-46](./docs/sessions/session-46-stats-ux-glifos.md) |
@@ -67,6 +71,86 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.26.1] -- 2026-05-08 -- chore: saneamiento tecnico
+
+Sesion de consolidacion sin features nuevas. Cierra deuda tecnica acumulada en s48-s51.
+
+### Fixed
+- `STATE.md`: reescrito en UTF-8 limpio (0 null bytes, 0 secuencias \u00xx escapadas).
+- `build-standalone.js`: 2 WARN persistentes resueltos (falsos positivos en
+  validateNoUnclosedStrings por backticks dentro de comentarios de bloque).
+- `build-standalone.js`: nueva funcion validateFileEnd que aborta el build si un
+  archivo JS/JSX esta truncado o tiene comentarios de bloque desbalanceados.
+
+### Changed
+- `build-standalone.js`: strip de comentarios ahora sustituye contenido por espacios
+  (preserva saltos de linea) para no desbalancear contadores de backtick.
+- `build-standalone.js`: WARN_ALLOWLIST explicita para falsos positivos documentados.
+- Version bump v0.26.0 -> v0.26.1.
+
+### Added
+- `docs/audits/audit-2026-05-08-tamanos.md`: lista de archivos >500 lineas (deuda tecnica).
+
+Detalle: [`docs/sessions/session-52-saneamiento.md`](./docs/sessions/session-52-saneamiento.md).
+
+---
+
+## [v0.26.0] -- 2026-05-08 -- feat(paths): SuggestedPathCard
+
+Tercera y ultima sesion del sistema de Caminos. Cierra `v0.26.0` (sin sufijo alpha/beta).
+
+### Que se hizo
+
+**Creado:**
+- `app/paths/SuggestedPathCard.jsx` (92 lineas) -- SPCIconBreathe/Focus/Body/Hydrate + tarjeta principal con acento oliva, doneToday badge, boton Comenzar.
+
+**Modificado:**
+- `app/main.jsx` -- `<SuggestedPathCard />` montado entre ActivityBar y cierre de `<main>`.
+- `app/i18n/strings.js` -- 10 claves `paths.path.*.name/tagline` en ES y EN (20 entradas totales).
+- `PACE.html` -- script SuggestedPathCard.jsx + bump titulo v0.26.0.
+- `app/state.jsx` -- bump PACE_VERSION v0.26.0-beta -> v0.26.0.
+
+**Validacion:** V1..V6 OK. Bundle 492 KB, 0 errores, 2 WARN conocidos.
+
+Detalle: [`docs/sessions/session-51-suggested-path-card.md`](./docs/sessions/session-51-suggested-path-card.md).
+
+---
+
+## [v0.26.0-beta] -- 2026-05-08 -- feat(paths): PathRunner UI
+
+Sesion 50 - segunda de tres sesiones del sistema de Caminos. PathRunner se monta como overlay full-screen cuando paths.current != null. Con paths.current === null devuelve null - cero impacto visual en home.
+
+### Added
+- **`app/paths/PathRunner.jsx`** (434 lineas) - overlay PathRunner con 9 subcomponentes: PathTopBar (dots de progreso), ExitConfirmModal (in-app, sin window.confirm), CompletionScreen (click explicito), StepError, PathHydrateStep (addWaterGlass protegido), PathFocusStep (timer simple), PathBreatheStep (con safety gate), PathBodyStep (resolveBodyRoutine -> MoveSession), PathRunner (orquestador).
+- **12 claves i18n** en ES y EN: `path.runner.*` (exit, confirm, skip, done, complete), `path.hydrate.*`, `path.error.routineNotFound`.
+- **CSS** `.path-runner-overlay`, `.path-topbar`, `.path-dots`, `.path-dot`, `.path-step-body`, `.path-modal-back` en bloque `pace-paths-css` en PACE.html.
+
+### Changed
+- **`app/main.jsx`** - `<PathRunner />` insertado antes de `<ToastHost />`.
+
+---
+
+## [v0.26.0-alpha] — 2026-05-08 — feat(paths): Caminos parte 1 — capa de datos
+
+Sesión 49 · primera de tres sesiones del sistema de Caminos. Sin UI todavía — solo capa de datos limpia y verificable. Con `state.paths.current === null` (estado por defecto), la app se ve y funciona idéntica a v0.25.4.
+
+### Added
+- **`app/paths/registry.js`** (nuevo, 88 líneas) — `PATH_CATALOG` con 5 caminos canónicos (`path.dawn`, `path.midday`, `path.afternoon`, `path.dusk`, `path.weekend`), `getPath(id)`, `resolveBodyRoutine(id)` (busca en Move → Extra). Exportado a `window`.
+- **`state.paths`** en `defaultState` — `{ current, completed, favorite }`. Migración defensiva en `loadState`: si `parsed.paths` no existe (instalación previa a v0.26), se inicializa con el default sin tocar otros campos.
+- **`startPath(pathId)`** — inicia un camino desde el step 0.
+- **`advancePathStep(reason)`** — avanza al siguiente paso (`'done'` o `'skip'`). Si es el último, completa el camino en ambos casos. Actualiza `paths.completed[id].count` y `lastDoneAt`.
+- **`completePath(pathId)`** — atajo manual de compleción.
+- **`abandonPath()`** — cancela el camino en curso (`current → null`).
+- **`getSuggestedPath(now?)`** — heurístico horario: fin de semana → `path.weekend`; 6-11h → `path.dawn`; 12-14h → `path.midday`; 15-17h → `path.afternoon`; 18-22h → `path.dusk`; fuera de rango → `path.dusk`.
+- **`getBreatheRoutine(id)`** en BreatheLibrary · **`getMoveRoutine(id)`** en MoveModule · **`getExtraRoutine(id)`** en ExtraModule — helpers de lookup expuestos a `window`, usados por `resolveBodyRoutine`.
+- **`todayISO()`** — helper interno que devuelve fecha en formato `YYYY-MM-DD`.
+
+### Pending (próximas sesiones)
+- Sesión 50: `PathRunner.jsx` + claves i18n `paths.*`
+- Sesión 51: `SuggestedPathCard.jsx` en home
 
 ---
 
@@ -1268,38 +1352,4 @@ Sesión corta de consolidación: tras la sesión 17 (feature-heavy) tocó
  Welcome para que no necesite scroll en pantallas 720p.
 
 ### Arreglado
-- **`addFocusMinutes` (state.jsx)** — la evaluación de umbrales de
-  logros `focus.hours.10/50/100` dependía de una variable de cierre
-  (`nextTotal`) capturada fuera del updater. Ahora se lee `_state`
-  tras el `setState` asíncrono: los logros se disparan sobre el valor
-  recién persistido, no sobre un snapshot intermedio.
-- **`completePomodoro` (state.jsx)** — mismo patrón: el updater ya no
-  captura variables para decisiones posteriores; se lee `_state.cycle`
-  después del commit para los umbrales de logro.
-- **Toast buffer race (state.jsx)** — `onToast` vaciaba el buffer de
-  toasts pendientes sólo si el listener entrante era el primero
-  (`size === 1`). Bajo StrictMode de React (mount/unmount doble en
-  dev), el segundo listener no recibía los toasts acumulados.
-  Reemplazado por `wasEmpty` que captura el estado ANTES de añadir.
-- **`applyTheme` se llamaba en cada `setState` (state.jsx)** — 2
-  `setAttribute()` DOM por cada tick, aunque palette/font no hubieran
-  cambiado. Ahora sólo se ejecuta si `prev.palette !== _state.palette`
-  o `prev.font !== _state.font`. Micro-optimización de sólo render.
-
-### Cambiado
-- **Sidebar: eliminada la sección `Intención`** (tenía un textarea que
-  muchos usuarios dejaban vacío). El campo `state.intention` sigue
-  existiendo — se captura opcionalmente en el WelcomeModal (decidido
-  en sesión 17). La retirada deja más respiro visual y sube la
-  prominencia del footer.
-- **Sidebar: el pill "Invita a un café" gana prominencia por
-  sustracción** — al quitar la sección Intención el footer tiene
-  más aire alrededor del pill, así que gana presencia sin necesitar
-  rehacer el componente. Se mantiene el diseño elegante original
-  de sesión 16 (pill delgado paper con borde fino, icono taza,
-  copy italic pequeño). Se probó durante esta sesión una
-  `SupportCard` más destacada (3 líneas + CTA pill terracota)
-  pero el usuario confirmó que el pill original era más elegante:
-  la elegancia viene del contraste con el espacio vacío, no de
-  inflar el componente. Revertido al pill original.
-- **WelcomeM
+- **`addFocusMinutes`

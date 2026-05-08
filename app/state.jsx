@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.25.4';
+const PACE_VERSION = 'v0.26.1';
 
 const defaultState = {
   // Settings / Tweaks
@@ -124,6 +124,16 @@ const defaultState = {
   // Cap documental: ~5 años rolling. Sin hard limit en código esta sesión.
   history: { days: {}, months: {}, years: {} },
 
+  // Caminos — sesión 49 / v0.26.0-alpha.
+  // current   : camino en curso { id, stepIndex, startedAt, skippedSteps: [] }, o null.
+  // completed : { 'path.dawn': { count, lastDoneAt } }
+  // favorite  : id del camino marcado como favorito, o null.
+  paths: {
+    current: null,
+    completed: {},
+    favorite: null,
+  },
+
   // Migration guard — sesión 43.
   // true cuando ya se ha migrado weeklyStats → history.days en el primer rollover
   // post-upgrade. Impide que el guard se ejecute más de una vez.
@@ -160,6 +170,9 @@ function loadState() {
     /* Si el usuario no tiene lang guardado (instalación previa a i18n),
        detectarlo desde navigator.language y persistirlo. */
     if (!parsed.lang) parsed.lang = _detectLang();
+    /* Migracion defensiva s49: si paths no existe (instalacion
+       previa a v0.26.0-alpha), inicializar con el default. */
+    if (!parsed.paths) parsed.paths = defaultState.paths;
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
     /* Si no hay preferencia explícita de sidebar guardada, aplicar el
        default móvil. Usuarios existentes con sidebarCollapsed guardado
@@ -805,6 +818,105 @@ function setLang(lang) {
   setState({ lang });
 }
 
+/* ============================
+   CAMINOS -- sesion 49 / v0.26.0-alpha
+   ============================ */
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function startPath(pathId) {
+  const path = window.getPath && window.getPath(pathId);
+  if (!path) return;
+  setState(s => ({
+    ...s,
+    paths: {
+      ...s.paths,
+      current: {
+        id: pathId,
+        stepIndex: 0,
+        startedAt: Date.now(),
+        skippedSteps: [],
+      },
+    },
+  }));
+}
+
+function advancePathStep(reason) {
+  if (reason === undefined) reason = 'done';
+  setState(s => {
+    const c = s.paths.current;
+    if (!c) return s;
+    const path = window.getPath && window.getPath(c.id);
+    if (!path) return s;
+    const newSkipped = reason === 'skip'
+      ? [...c.skippedSteps, c.stepIndex]
+      : c.skippedSteps;
+    const nextIndex = c.stepIndex + 1;
+    if (nextIndex >= path.steps.length) {
+      const prev = s.paths.completed[c.id] || { count: 0 };
+      return {
+        ...s,
+        paths: {
+          ...s.paths,
+          current: null,
+          completed: {
+            ...s.paths.completed,
+            [c.id]: {
+              count: prev.count + 1,
+              lastDoneAt: todayISO(),
+            },
+          },
+        },
+      };
+    }
+    return {
+      ...s,
+      paths: {
+        ...s.paths,
+        current: { ...c, stepIndex: nextIndex, skippedSteps: newSkipped },
+      },
+    };
+  });
+}
+
+function completePath(pathId) {
+  setState(s => {
+    const prev = s.paths.completed[pathId] || { count: 0 };
+    return {
+      ...s,
+      paths: {
+        ...s.paths,
+        current: null,
+        completed: {
+          ...s.paths.completed,
+          [pathId]: { count: prev.count + 1, lastDoneAt: todayISO() },
+        },
+      },
+    };
+  });
+}
+
+function abandonPath() {
+  setState(s => ({
+    ...s,
+    paths: { ...s.paths, current: null },
+  }));
+}
+
+function getSuggestedPath(now) {
+  if (now === undefined) now = new Date();
+  const day = now.getDay();
+  if (day === 0 || day === 6) return 'path.weekend';
+  const h = now.getHours();
+  if (h >= 6 && h <= 11) return 'path.dawn';
+  if (h >= 12 && h <= 14) return 'path.midday';
+  if (h >= 15 && h <= 17) return 'path.afternoon';
+  if (h >= 18 && h <= 22) return 'path.dusk';
+  return 'path.dusk';
+}
+
 Object.assign(window, {
   usePace, getState, setState, subscribe,
   unlockAchievement, completePomodoro,
@@ -814,7 +926,9 @@ Object.assign(window, {
   showToast, onToast,
   setLang,
   PACE_VERSION,
-  // sesión 43 — history helpers (expuestos para debugging y tests)
+  // sesion 43 -- history helpers
   zeroEntry, toISODate, archiveDayToHistory,
   updateMonthAggregate, updateYearAggregate,
+  // sesion 49 -- Caminos
+  startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
 });

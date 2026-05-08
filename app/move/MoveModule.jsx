@@ -319,6 +319,9 @@ if (!_paceMoveResponsive) {
   document.head.appendChild(s);
 }
 
-/* Export a window: sólo lo consumido fuera del módulo.
-   MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
+/* Sesión 49 — helper de lookup para Caminos */
+function getMoveRoutine(id) {
+  return MOVE_ROUTINES.find(r => r.id === id) || null;
+}
+window.getMoveRoutine = getMoveRoutine;
 Object.assign(window, { MoveLibrary, MoveSession });

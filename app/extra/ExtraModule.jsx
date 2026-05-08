@@ -94,7 +94,9 @@ function ExtraLibrary({ open, onClose, onStart }) {
   );
 }
 
-// Reutiliza MoveSession para la ejecución (misma estructura de pasos).
-// Export a window saneado en sesión 26 (audit §4.1): EXTRA_ROUTINES no se
-// consume fuera del módulo — sigue como const local.
+/* Sesión 49 — helper de lookup para Caminos */
+function getExtraRoutine(id) {
+  return EXTRA_ROUTINES.find(r => r.id === id) || null;
+}
+window.getExtraRoutine = getExtraRoutine;
 Object.assign(window, { ExtraLibrary });

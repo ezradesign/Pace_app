@@ -293,6 +293,9 @@ function PaceApp() {
           onOpenLibrary={(kind) => setOpenLibrary(kind)}
           onOpenHydrate={() => setOpenHydrate(true)}
         />
+
+        {/* Camino sugerido del momento (sesion 51) */}
+        <SuggestedPathCard />
       </main>
 
       {/* ========== MODALS ========== */}
@@ -348,6 +351,9 @@ function PaceApp() {
       {view.type === 'move-session' && (
         <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
       )}
+
+      {/* ========== CAMINOS ========== */}
+      <PathRunner />
 
       {/* ========== TOASTS ========== */}
       <ToastHost />

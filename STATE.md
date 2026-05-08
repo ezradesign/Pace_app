@@ -10,10 +10,10 @@
 
 ---
 
-**Versión actual:** v0.25.4
-**Última sesión:** #48d.1 — 2026-05-08 · fix(achievements): hotfix Achievements.jsx truncado en s48d; re-aplicadas correcciones 48d; validador strings en build
-**Última actualización de este archivo:** 2026-05-08 · sesión 48d.1
-**Build entregado:** `PACE_standalone.html` v0.25.4 (493566 bytes / 481 KB)
+**Version actual:** v0.26.1
+**Ultima sesion:** #52 — 2026-05-08 · chore: saneamiento tecnico - encoding, build validateFileEnd, 0 WARN, v0.26.1
+**Última actualización de este archivo:** 2026-05-08 · sesion 52
+**Build entregado:** `PACE_standalone.html` v0.26.1 (525791 bytes / 513 KB)
 
 ---
 
@@ -50,8 +50,10 @@
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** (glyphSvg en full + render SVG condicional — s46) |
 | `app/achievements/Achievements.jsx` | Catálogo + colección | **v0.25.3** (GLYPH_SVG 33 entradas + 1 alias — auditoría s48d: 18 corregidos + 13 nuevos portados) |
 
-Backups vigentes (17):
-- `backups/PACE_standalone_v0.25.3_20260508.html` ← actual
+Backups vigentes (20 -- TODO manual: borrar PACE_standalone_v0.16.0_20260505.html para dejar margen):
+- `backups/PACE_standalone_v0.26.0_20260508.html` <- anterior a s51
+- `backups/PACE_standalone_v0.26.0-alpha_20260508.html`
+- `backups/PACE_standalone_v0.25.4_20260508.html`
 - `backups/PACE_standalone_v0.25.2_20260508_pre48d.html`
 - `backups/PACE_standalone_v0.25.2_20260507.html`
 - `backups/PACE_standalone_v0.25.1_20260507_pre48c.html`
@@ -73,46 +75,28 @@ Backups vigentes (17):
 
 ## 🧭 Última sesión (resumen operativo)
 
-**Sesión 48d.1 · v0.25.3 → v0.25.4 · fix(achievements): hotfix Achievements.jsx truncado**
+**Sesion 52 · v0.26.0 -> v0.26.1 · chore: saneamiento tecnico**
 
-### Qué se hizo
+### Que se hizo
 
-Hotfix del truncamiento de `app/achievements/Achievements.jsx` introducido en s48d.
-El archivo quedó en 273 líneas (de 389 originales), provocando que el standalone
-v0.25.3 lanzara `Unterminated string constant` al cargarse en el navegador.
+Sesion de consolidacion sin features nuevas. Deuda tecnica acumulada en s48-s51.
 
-**Solución:**
-1. Base limpia recuperada de git cache (`origin/main`, v0.25.0, 389 líneas).
-2. Correcciones de s48d re-aplicadas via script Python: bloque GLYPH_SVG completo
-   (33 entradas + alias, whitespace canónico, `first.ritual` con segmento completo),
-   13 `glyphSvg` añadidos al catálogo. Resultado: 402 líneas, balance {/} 207/207.
-3. Validador `validateNoUnclosedStrings()` añadido a `build-standalone.js` (modo
-   warning — avisa en consola, no aborta el build).
-4. Bundle regenerado: 481 KB, 0 anomalías, PACE_VERSION v0.25.4 confirmada.
+**Modificado:**
+- `STATE.md` -- reescrito UTF-8 limpio (0 null bytes, 0 secuencias de escape literales).
+- `build-standalone.js` -- validateFileEnd (aborta si truncado), fix strip comentarios,
+  allowlist de 2 WARNs (SupportModule + Achievements, falsos positivos). Build: 0 WARN.
+- `app/state.jsx` + `PACE.html` -- bump v0.26.1.
 
-### Archivos modificados
-`app/achievements/Achievements.jsx` (restaurado + 48d re-aplicado) ·
-`app/state.jsx` (bump v0.25.3→v0.25.4) · `PACE.html` (bump título) ·
-`build-standalone.js` (añadido validateNoUnclosedStrings) ·
-`CHANGELOG.md` · este `STATE.md`.
+**Creado:**
+- `docs/audits/audit-2026-05-08-tamanos.md` -- lista archivos >500 lineas (deuda tecnica).
+- `docs/sessions/session-52-saneamiento.md` -- diario.
 
-### Archivos nuevos
-`backups/PACE_standalone_v0.25.3_20260508_ROTO.html` (renombrado, conservado) ·
-`backups/PACE_standalone_v0.25.4_20260508.html` ·
-`docs/sessions/session-48d1-hotfix-achievements-truncado.md`.
+**Validacion:** Build 513 KB, 0 WARN, 0 errores, 12/12 checks.
 
-### Versión
-- `v0.25.3` → **`v0.25.4`** (patch · hotfix truncamiento + validador de strings en build).
-
-### Pendiente funcional (próximas sesiones)
-- **Sesión 49:** sistema de Caminos parte 1, sobre base v0.25.4 limpia.
-- Añadir sección "Secretos" a `design/glyphs-explorations.html` con glifo canónico de `secret.cow.click`.
-- Mejorar heurístico de backticks en `validateNoUnclosedStrings` (falsos positivos inofensivos).
-- Iconos PNG reales (192×512) para PWA.
-- README EN + Reddit launch.
-- Detector `master.midnight.never`.
-- Claves offline Lifetime/Pase.
-
+### Proxima sesion
+Backlog: detector `master.midnight.never`, iconos PNG reales PWA,
+claves offline Lifetime/Pase, o siguiente feature segun prioridad.
+TODO manual: borrar `backups/PACE_standalone_v0.16.0_20260505.html`.
 
 ## 🗓️ Sesión anterior — #35 (resumen condensado)
 
@@ -566,7 +550,7 @@ con nota explícita y quitarla de aquí. Las más recientes primero.
   disparan sobre snapshots intermedios y se pueden perder (o
   dispararse con valores erróneos). Ver `addFocusMinutes` como
   patrón. (Sesión 18.)
-- **El Welcome se muestra una sola vez** por instalaci\u00f3n, al primer\n  open con `state.firstSeen == null`. Tanto `Empezar` como el link\n  `prefiero saltarlo` fijan `firstSeen` a timestamp \u2014 es una bienvenida,\n  no un tr\u00e1mite. Re-abrir es posible v\u00eda `pace:open-welcome` pero sin\n  UI visible (dev/debug only). (Sesi\u00f3n 17.)\n- **El backup JSON incluye `version` y `exportedAt`** para migraci\u00f3n\n  futura. El import acepta tanto `{app, version, state}` como state\n  plano (fallback legacy). Tras import exitoso se recarga la p\u00e1gina;\n  actualizar state en memoria arriesga inconsistencias con\n  `useSyncExternalStore`. (Sesi\u00f3n 17.)\n- **`secret.dark.mode` cuenta d\u00edas distintos, no consecutivos.** La\n  descripci\u00f3n dice \"7 d\u00edas en oscuro\" sin exigir racha. Persistido en\n  clave propia `pace.darkDays.v1` (no en el state principal \u2014 es un\n  contador auxiliar de un \u00fanico logro). Cap de 30 fechas. (Sesi\u00f3n 17.)\n- **`TweakSecretsWatcher` retorna `null` y vive en el \u00e1rbol siempre**\n  (en `main.jsx`, no dentro del TweaksPanel). Raz\u00f3n: los secretos\n  deben dispararse cuando el state cambia, no s\u00f3lo cuando el panel\n  est\u00e1 abierto. Cubre casos como importar un JSON con palette oscuro\n  ya fijada. (Sesi\u00f3n 17.)\n\n- **Donar no desbloquea nada funcional** en PACE. `secret.supporter`
+- **El Welcome se muestra una sola vez** por instalacion, al primer\n  open con `state.firstSeen == null`. Tanto `Empezar` como el link\n  `prefiero saltarlo` fijan `firstSeen` a timestamp \u2014 es una bienvenida,\n  no un tramite. Re-abrir es posible via `pace:open-welcome` pero sin\n  UI visible (dev/debug only). (Sesion 17.)\n- **El backup JSON incluye `version` y `exportedAt`** para migracion\n  futura. El import acepta tanto `{app, version, state}` como state\n  plano (fallback legacy). Tras import exitoso se recarga la pagina;\n  actualizar state en memoria arriesga inconsistencias con\n  `useSyncExternalStore`. (Sesion 17.)\n- **`secret.dark.mode` cuenta dias distintos, no consecutivos.** La\n  descripcion dice \"7 dias en oscuro\" sin exigir racha. Persistido en\n  clave propia `pace.darkDays.v1` (no en el state principal \u2014 es un\n  contador auxiliar de un unico logro). Cap de 30 fechas. (Sesion 17.)\n- **`TweakSecretsWatcher` retorna `null` y vive en el arbol siempre**\n  (en `main.jsx`, no dentro del TweaksPanel). Razon: los secretos\n  deben dispararse cuando el state cambia, no solo cuando el panel\n  esta abierto. Cubre casos como importar un JSON con palette oscuro\n  ya fijada. (Sesion 17.)\n\n- **Donar no desbloquea nada funcional** en PACE. `secret.supporter`
   es un sello visible en la colección, nada más. Sin verificación,
   solo honor. Sumar unlocks tangibles por donar rompería el
   diferencial ético del producto. (Sesión 16.)

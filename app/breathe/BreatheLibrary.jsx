@@ -156,4 +156,15 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
   );
 }
 
+
+/* Sesion 49 - helper de lookup para Caminos */
+function getBreatheRoutine(id) {
+  for (const group of Object.values(BREATHE_ROUTINES)) {
+    const found = group.items.find(r => r.id === id);
+    if (found) return found;
+  }
+  return null;
+}
+window.getBreatheRoutine = getBreatheRoutine;
+
 Object.assign(window, { BreatheLibrary, BreatheSafety });
