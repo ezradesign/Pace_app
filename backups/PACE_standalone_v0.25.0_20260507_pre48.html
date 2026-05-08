@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.25.2</title>
+  <title>PACE · Foco · Cuerpo — v0.25.0</title>
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -1233,7 +1234,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.25.2';
+const PACE_VERSION = 'v0.25.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -2028,17 +2029,7 @@ function setLang(lang) {
 Object.assign(window, {
   usePace, getState, setState, subscribe,
   unlockAchievement, completePomodoro,
-  completeBreathSession, completeMoveSession, completeExtraSession,
-  addWaterGlass, addFocusMinutes, updateStreak,
-  ensureDayFresh,
-  showToast, onToast,
-  setLang,
-  PACE_VERSION,
-  // sesión 43 — history helpers (expuestos para debugging y tests)
-  zeroEntry, toISODate, archiveDayToHistory,
-  updateMonthAggregate, updateYearAggregate,
-});
-
+  completeBreathSession, completeMoveSession, completeExtraSessio
 </script>
 
   <script type="text/babel">
@@ -2591,114 +2582,7 @@ function SessionDone({
         <p data-pace-session-done-copy style={{
           ...displayItalic,
           fontSize: 18, color: 'var(--ink-2)',
-          maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5,
-        }}>{doneCopy}</p>
-      </div>
-    </SessionShell>
-  );
-}
-
-/* ============================================================
-   SessionStat — cifra grande italic + label pequeño
-   Fusión de `Stat` (Breathe) y `MoveStat` (Move) — byte-por-byte iguales.
-   ============================================================ */
-function SessionStat({ label, value }) {
-  return (
-    <div data-pace-session-stat style={{ textAlign: 'center' }}>
-      <div data-pace-session-stat-num style={{
-        ...displayItalic,
-        fontSize: 40, fontWeight: 500, lineHeight: 1,
-        color: 'var(--ink)',
-      }}>{value}</div>
-      <div style={{
-        fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginTop: 8,
-      }}>{label}</div>
-    </div>
-  );
-}
-
-/* ============================================================
-   CSS responsive de SessionShell (sesión 27 · v0.12.10).
-
-   Patrón coherente con Primitives.Modal: selectores [data-*]
-   con !important inyectados en <head>.
-
-   Las pantallas de sesión son fullscreen (`inset: 0`), no cards
-   centradas — su problema en móvil no es "el modal no cabe"
-   sino "las tipografías monumentales rompen el layout":
-     - prep muestra 3-2-1 a 200px (demasiado en 375px de ancho)
-     - done muestra `routine.name` a 56px italic
-     - stats en fila con gap 40 desbordan con 2 o 3 stats
-     - padding root 28/48/40 se come 96px útiles de 375
-
-   En móvil se ajusta:
-   - Padding root: 28/48/40 → 16/20/24
-   - Header título: 22 → 18
-   - Prep núm 200 → 128, copy 20 → 15
-   - Done círculo 120 → 80, h1 56 → 34, copy 18 → 14
-   - Stats row: gap 40 → 20, padding lateral para que no rocen
-     los bordes cuando son 3
-   - Hint: bottom 14 → 6
-
-   No se mueve la estructura; las tipografías sólo reescalan.
-   ============================================================ */
-const _paceSessionResponsive = document.getElementById('pace-session-responsive-css');
-if (!_paceSessionResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-session-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-session-root] {
-        padding: 16px 20px 24px !important;
-      }
-      [data-pace-session-title] {
-        font-size: 18px !important;
-      }
-      [data-pace-session-prep-num] {
-        font-size: 128px !important;
-      }
-      [data-pace-session-prep-copy] {
-        font-size: 15px !important;
-        margin-top: 14px !important;
-      }
-      [data-pace-session-done-hero] {
-        width: 80px !important;
-        height: 80px !important;
-        margin-bottom: 18px !important;
-      }
-      [data-pace-session-done-hero] svg {
-        width: 34px !important;
-        height: 34px !important;
-      }
-      [data-pace-session-done-title] {
-        font-size: 34px !important;
-        margin-bottom: 18px !important;
-      }
-      [data-pace-session-stats] {
-        gap: 20px !important;
-        margin-bottom: 24px !important;
-        flex-wrap: wrap !important;
-      }
-      [data-pace-session-stat-num] {
-        font-size: 28px !important;
-      }
-      [data-pace-session-done-copy] {
-        font-size: 14px !important;
-        margin-bottom: 24px !important;
-      }
-      [data-pace-session-hint] {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-Object.assign(window, {
-  SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
-  sessionShellStyles,
-});
+          maxWidth: 400, margin: 
 </script>
   <script type="text/babel">
 /* PACE · Cow logos — 3 interpretations
@@ -3284,64 +3168,7 @@ const ambientDrone = (() => {
     lfo.frequency.setValueAtTime(0.1, t0);
     lfoGain = ctx.createGain();
     lfoGain.gain.setValueAtTime(0.002, t0);
-    lfo.connect(lfoGain);
-    lfoGain.connect(gainNode.gain);
-    osc.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    osc.start(t0); lfo.start(t0);
-    isPaused = false;
-  }
-
-  function stop(fadeMs) {
-    if (fadeMs === undefined) fadeMs = 800;
-    if (!osc || !gainNode) return;
-    const ctx = getCtx(); if (!ctx) return;
-    const t0 = ctx.currentTime;
-    const fade = Math.max(0.1, fadeMs / 1000);
-    try {
-      gainNode.gain.cancelScheduledValues(t0);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
-      gainNode.gain.exponentialRampToValueAtTime(0.0001, t0 + fade);
-    } catch(e) {}
-    const oscRef = osc, lfoRef = lfo;
-    setTimeout(function() {
-      try { oscRef && oscRef.stop(); } catch(e) {}
-      try { lfoRef && lfoRef.stop(); } catch(e) {}
-    }, (fade + 0.1) * 1000);
-    osc = null; lfo = null; gainNode = null; lfoGain = null;
-    isPaused = false;
-  }
-
-  function pause() {
-    if (!gainNode || isPaused) return;
-    const ctx = getCtx(); if (!ctx) return;
-    const t0 = ctx.currentTime;
-    try {
-      gainNode.gain.cancelScheduledValues(t0);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
-      gainNode.gain.linearRampToValueAtTime(0, t0 + 0.4);
-    } catch(e) {}
-    isPaused = true;
-  }
-
-  function resume() {
-    if (!gainNode || !isPaused) return;
-    if (!shouldPlay()) { stop(400); return; }
-    const ctx = getCtx(); if (!ctx) return;
-    const t0 = ctx.currentTime;
-    try {
-      gainNode.gain.cancelScheduledValues(t0);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t0);
-      gainNode.gain.linearRampToValueAtTime(0.02, t0 + 0.6);
-    } catch(e) {}
-    isPaused = false;
-  }
-
-  function isActive() { return osc !== null; }
-  return { start: start, stop: stop, pause: pause, resume: resume, isActive: isActive };
-})();
-
-Object.assign(window, { playSound, useSound, ambientDrone });
+    lfo.connect(lfoGain)
 </script>
   <script type="text/babel">
 /* PACE · Toast (para notificar logros desbloqueados) */
@@ -3418,7 +3245,7 @@ function ToastHost() {
   );
 }
 
-Object.assign(window, { ToastHost });
+Obje
 </script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
@@ -5395,43 +5222,7 @@ const focusStyles = {
     padding: '7px 16px 7px 14px',
     background: 'var(--focus)',
     color: 'var(--paper)',
-    borderRadius: 'var(--r-xs)',
-    fontSize: 12,
-    letterSpacing: 0.3,
-    fontWeight: 500,
-    border: '1px solid var(--focus)',
-    boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
-    transition: 'all 180ms',
-  },
-  startBtnSecondary: {
-    display: 'inline-flex', alignItems: 'center', gap: 7,
-    padding: '7px 16px 7px 14px',
-    background: 'var(--paper)',
-    color: 'var(--ink)',
-    borderRadius: 'var(--r-xs)',
-    fontSize: 12,
-    letterSpacing: 0.3,
-    fontWeight: 500,
-    border: '1px solid var(--line-2)',
-    transition: 'all 180ms',
-  },
-  resetCircle: {
-    width: 28, height: 28,
-    borderRadius: '50%',
-    border: '1px solid var(--line-2)',
-    background: 'var(--paper)',
-    color: 'var(--ink-2)',
-    display: 'grid', placeItems: 'center',
-    transition: 'all 180ms',
-  },
-
-  cycleDots: {
-    display: 'flex', alignItems: 'center', gap: 5,
-    marginTop: 4,
-  },
-};
-
-Object.assign(window, { FocusTimer });
+    borderRadius: 'var
 </script>
   <script type="text/babel">
 /* PACE · Respiración — Visual animado + getSequence
@@ -6113,39 +5904,7 @@ function BreatheSession({ routine, onExit }) {
         <div style={{
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
-          marginBottom: 8, lineHeight: 1,
-        }}>{displayLabel}</div>
-        {showCountdown && (
-          <div style={{
-            ...displayItalic,
-            fontSize: 28, color: 'var(--breathe)',
-            fontVariantNumeric: 'tabular-nums', marginTop: 4,
-          }}>{remaining}</div>
-        )}
-        <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-          {isRounds ? `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
-        </div>
-      </div>
-      <div style={{
-        display: 'flex', gap: 5,
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        maxWidth: 400,
-        margin: '0 auto',
-      }}>
-        {Array.from({ length: Math.min(totalDots, 30) }).map((_, i) => (
-          <span key={i} style={{
-            width: 4, height: 4, borderRadius: '50%',
-            background: i < activeDot ? 'var(--breathe)' : 'var(--line)',
-            transition: 'background 200ms',
-          }} />
-        ))}
-      </div>
-    </SessionShell>
-  );
-}
-
-Object.assign(window, { BreatheSession });
+          marginBottom: 8, li
 </script>
   <script type="text/babel">
 /* PACE · Módulo Mueve (Calistenia / Fuerza)
@@ -6431,47 +6190,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
    docs/audits/audit-v0.12.7.md §3.1. */
 
 /* Glifo placeholder por paso — círculo con símbolo de categoría.
-   Proyecta sensación de "ficha de biblioteca" hasta que tengamos ilustraciones reales. */
-function StepGlyph({ tag, stepIdx }) {
-  const symbols = ['◯', '◬', '◇', '△', '▢', '⬡', '✦'];
-  const sym = symbols[stepIdx % symbols.length];
-  return (
-    <div style={{
-      ...displayItalic,
-      width: 72, height: 72, margin: '0 auto 20px',
-      borderRadius: '50%',
-      border: '1px dashed var(--move)',
-      background: 'var(--move-soft)',
-      display: 'grid', placeItems: 'center',
-      color: 'var(--move)',
-      fontSize: 28,
-    }}>
-      {sym}
-    </div>
-  );
-}
-
-/* moveSessionStyles local eliminado en sesión 26. El layout de sesión
-   vive ahora en app/ui/SessionShell.jsx (sessionShellStyles). */
-
-/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
-const _paceMoveResponsive = document.getElementById('pace-move-responsive-css');
-if (!_paceMoveResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-move-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-move-timer] {
-        font-size: 72px !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-/* Export a window: sólo lo consumido fuera del módulo.
-   MOVE_ROUTINES se saneó (audit §4.1) — sigue como const local. */
-Object.assign(window, { MoveLibrary, MoveSession });
+   Proyecta sensación d
 </script>
   <script type="text/babel">
 /* PACE · Módulo Estira (Estiramientos / Movilidad)
@@ -6560,20 +6279,7 @@ function ExtraLibrary({ open, onClose, onStart }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
         <Meta>{t('lib.extra.meta')}</Meta>
       </div>
-      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>{t('lib.routines')}</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
-        {EXTRA_ROUTINES.map(r => (
-          <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />
-        ))}
-      </div>
-    </Modal>
-  );
-}
-
-// Reutiliza MoveSession para la ejecución (misma estructura de pasos).
-// Export a window saneado en sesión 26 (audit §4.1): EXTRA_ROUTINES no se
-// consume fuera del módulo — sigue como const local.
-Object.assign(window, { ExtraLibrary });
+      <h3 style=
 </script>
   <script type="text/babel">
 /* PACE · Módulo Hidrátate */
@@ -6651,12 +6357,7 @@ function HydrateTracker({ open, onClose }) {
 
       <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.6 }}>
         <strong style={{ color: 'var(--ink-2)' }}>{t('hydrate.tip.label')}</strong>{' '}{t('hydrate.tip')}
-      </div>
-    </Modal>
-  );
-}
-
-Object.assign(window, { HydrateTracker });
+  
 </script>
   <script type="text/babel">
 /* PACE · Menú post-Pomodoro
@@ -6794,59 +6495,24 @@ function BreakMenu({ open, onClose, onChoose }) {
    renombraron para evitar confusión de lectura). */
 function BMWindIcon() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9.6 4.6A2 2 0 1 1 11 8H2" />
-      <path d="M12.6 19.4A2 2 0 1 0 14 16H2" />
-      <path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" />
-    </svg>
-  );
-}
-function BMMoveIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="5" r="2" />
-      <path d="M12 7v8" />
-      <path d="M8 10l4 2 4-2" />
-      <path d="M9 20l3-5 3 5" />
-    </svg>
-  );
-}
-function BMDropIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z" />
-    </svg>
-  );
-}
-
-/* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
-const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
-if (!_paceBreakResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-break-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-break-shortcut] .pace-meta {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-Object.assign(window, { BreakMenu });
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap=
 </script>
   <script type="text/babel">
 /* PACE · Logros (Sellos tipo libreta de campo) */
 
 /* Glifos Dirección D — portados literalmente de design/glyphs-explorations.html (sesión 48).
-   viewBox 44×44, currentColor, puntos rellenos + líneas finísimas (0.5–0.6 px).
-   El unicode `glyph` permanece como fallback. */
+   viewBox 44×44, currentColor para que el Seal aplique tono según estado (locked/unlocked/secret).
+   NO modificar a ojo: editar primero la exploración y volver a portar.
+   first.plan es alias intencional de first.ritual desde sesión 28 (mismo trigger).
+   secret.cow.click — sin canónico en glyphs-explorations.html (logro secreto).
+     Reescalado proporcional 24→44 desde el inventado de sesión 46 (factor ×1.833).
+     Pendiente: añadir sección "Secretos" a glyphs-explorations.html. */
 const SVG_PFX = `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">`;
 const SVG_SFX = `</svg>`;
 const g = (body) => SVG_PFX + body + SVG_SFX;
 
 const GLYPH_SVG = {
+  // Primeros pasos
   'first.step':    g(`<circle cx="22" cy="22" r="2.4" fill="currentColor"/><circle cx="22" cy="22" r="8" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
   'first.breath':  g(`<circle cx="10" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="14" r="2" fill="currentColor"/><circle cx="34" cy="22" r="2" fill="currentColor"/><path d="M10 22 Q22 14 34 22" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
   'first.stretch': g(`<circle cx="22" cy="10" r="2" fill="currentColor"/><circle cx="34" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="34" r="2" fill="currentColor"/><circle cx="10" cy="22" r="2" fill="currentColor"/><path d="M22 10 L34 22 L22 34 L10 22 Z" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
@@ -6855,6 +6521,8 @@ const GLYPH_SVG = {
   'first.cycle':   g(`<circle cx="22" cy="22" r="11" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="22" cy="11" r="2" fill="currentColor"/>`),
   'first.ritual':  g(`<circle cx="22" cy="8" r="1.8" fill="currentColor"/><circle cx="36" cy="22" r="1.8" fill="currentColor"/><circle cx="22" cy="36" r="1.8" fill="currentColor"/><circle cx="8" cy="22" r="1.8" fill="currentColor"/><circle cx="22" cy="22" r="2.4" fill="currentColor"/><path d="M22 8 L22 36 M8 22 L36 22" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>`),
   'first.day':     g(`<circle cx="34" cy="14" r="2" fill="currentColor"/><path d="M30 12 A12 12 0 1 0 34 28" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
+
+  // Constancia
   'streak.3':            g(`<circle cx="14" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="22" r="2" fill="currentColor"/><circle cx="30" cy="22" r="2" fill="currentColor"/><path d="M14 22 L30 22" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>`),
   'streak.7':            g(`<circle cx="8" cy="22" r="1.6" fill="currentColor"/><circle cx="14" cy="14" r="1.6" fill="currentColor"/><circle cx="22" cy="10" r="1.6" fill="currentColor"/><circle cx="30" cy="14" r="1.6" fill="currentColor"/><circle cx="36" cy="22" r="1.6" fill="currentColor"/><circle cx="30" cy="30" r="1.6" fill="currentColor"/><circle cx="14" cy="30" r="1.6" fill="currentColor"/><path d="M8 22 L14 14 L22 10 L30 14 L36 22 L30 30 L14 30 Z" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
   'streak.30':           g(`<circle cx="22" cy="22" r="11" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="22" cy="22" r="3" fill="currentColor"/>`),
@@ -6863,9 +6531,15 @@ const GLYPH_SVG = {
   'breathe.sessions.10': g(`<circle cx="10" cy="22" r="1.6" fill="currentColor"/><circle cx="18" cy="16" r="1.6" fill="currentColor"/><circle cx="26" cy="28" r="1.6" fill="currentColor"/><circle cx="34" cy="18" r="1.6" fill="currentColor"/><path d="M10 22 Q14 19 18 16 Q22 22 26 28 Q30 23 34 18" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
   'breathe.sessions.50': g(`<circle cx="8" cy="14" r="1.4" fill="currentColor"/><circle cx="16" cy="20" r="1.4" fill="currentColor"/><circle cx="24" cy="14" r="1.4" fill="currentColor"/><circle cx="32" cy="20" r="1.4" fill="currentColor"/><circle cx="8" cy="26" r="1.4" fill="currentColor"/><circle cx="16" cy="32" r="1.4" fill="currentColor"/><circle cx="24" cy="26" r="1.4" fill="currentColor"/><circle cx="32" cy="32" r="1.4" fill="currentColor"/>`),
   'move.sessions.25':    g(`<circle cx="14" cy="14" r="1.6" fill="currentColor"/><circle cx="30" cy="14" r="1.6" fill="currentColor"/><circle cx="14" cy="22" r="1.6" fill="currentColor"/><circle cx="30" cy="22" r="1.6" fill="currentColor"/><circle cx="14" cy="30" r="1.6" fill="currentColor"/><circle cx="30" cy="30" r="1.6" fill="currentColor"/><path d="M14 14 L30 14 M14 22 L30 22 M14 30 L30 30" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>`),
+
+  // Exploración
   'explore.box':      g(`<circle cx="11" cy="11" r="2" fill="currentColor"/><circle cx="33" cy="11" r="2" fill="currentColor"/><circle cx="33" cy="33" r="2" fill="currentColor"/><circle cx="11" cy="33" r="2" fill="currentColor"/><rect x="11" y="11" width="22" height="22" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
   'explore.coherent': g(`<circle cx="22" cy="6" r="2" fill="currentColor"/><circle cx="22" cy="38" r="2" fill="currentColor"/><circle cx="22" cy="22" r="2.4" fill="currentColor"/><path d="M22 6 C28 14 28 30 22 38 C16 30 16 14 22 6 Z" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
   'explore.rounds':   g(`<circle cx="22" cy="8" r="2" fill="currentColor"/><circle cx="36" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="36" r="2" fill="currentColor"/><circle cx="8" cy="22" r="2" fill="currentColor"/><path d="M22 8 A14 14 0 1 1 8 22" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
+
+  /* secret.cow.click — sin canónico en glyphs-explorations.html (logro secreto).
+     Reescalado proporcional 24→44 (factor ×1.833) desde inventado de sesión 46.
+     Pendiente: añadir sección "Secretos" a design/glyphs-explorations.html. */
   'secret.cow.click': g(`<circle cx="12.8" cy="16.5" r="2.2" fill="currentColor"/><circle cx="22" cy="25.7" r="2.2" fill="currentColor"/><circle cx="31.2" cy="16.5" r="2.2" fill="currentColor"/><circle cx="9.2" cy="31.2" r="2.2" fill="currentColor"/><circle cx="34.8" cy="31.2" r="2.2" fill="currentColor"/><circle cx="36.7" cy="12.8" r="1.8" fill="currentColor" opacity="0.7"/><path d="M9.2 31.2 L12.8 16.5 L22 25.7 L31.2 16.5 L34.8 31.2" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
 };
 /* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
@@ -7006,227 +6680,7 @@ const CAT_META = {
   estadisticas: { labelKey: 'ach.cat.stats', color: 'var(--hydrate)' },
 };
 
-/* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
-   El resto se pinta en la colección como "Pronto" — visible para incentivar
-   curiosidad, pero sin prometer lo que el código todavía no puede detectar.
-   Decisión sesión 15. Cuando un logro gane su trigger, mover su id aquí.
-
-   Los secretos NO se revelan: aunque estén sin implementar, se pintan como
-   secretos normales (glifo "?" + título oculto). Por eso esta lista solo
-   mira logros NO-secretos. */
-const IMPLEMENTED_ACHIEVEMENTS = new Set([
-  // Primeros pasos (10/10) — sesión 28 cierra esta categoría:
-  // +first.cycle (BreakMenu → pausa activa), +first.ritual (4 módulos
-  // del día), +first.day (updateStreak con current >= 1),
-  // +first.plan (mismo trigger que ritual), +first.return (rollover
-  // con día previo distinto al actual).
-  'first.step', 'first.breath', 'first.stretch', 'first.sip', 'first.extra',
-  'first.cycle', 'first.ritual', 'first.day', 'first.plan', 'first.return',
-  // Constancia (15/15) — sesión 41: +hydrate.week.perfect.
-  'streak.3', 'streak.7', 'streak.14', 'streak.30', 'streak.60',
-  'streak.100', 'streak.365',
-  'focus.hours.10', 'focus.hours.50', 'focus.hours.100',
-  'breathe.sessions.10', 'breathe.sessions.50', 'move.sessions.25',
-  'morning.5', 'hydrate.week.perfect',
-  // Exploración breathe (9/20)
-  'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
-  'explore.bhastrika', 'explore.nadi', 'explore.ujjayi',
-  'explore.kapalabhati', 'explore.physiological',
-  // Exploración move (6/20) — reconectados en sesión 15
-  'explore.hips', 'explore.shoulders', 'explore.atg',
-  'explore.ancestral', 'explore.neck', 'explore.desk',
-  // Maestría (13/25) — sesión 29: +master.long.focus, +master.dawn, +master.dusk.
-  // Sesión 34: +master.collector.half/full, +master.silent.day, +master.retreat.
-  // Sesión 41: +master.box.10, +master.coherent.10, +master.rounds.10, +master.atg.20.
-  'master.pomodoro.8', 'master.focus.day',
-  'master.long.focus', 'master.dawn', 'master.dusk',
-  'master.collector.half', 'master.collector.full',
-  'master.silent.day', 'master.retreat',
-  'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
-  // Estadísticas (4/4) — sesión 46
-  'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
-  // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
-  'explore.tweaks',
-  // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
-  // Sesión 17: +5 tweak-secrets (aged, dark.mode, mono, seal, illustrated).
-  'secret.cow.click', 'secret.breath.hold.60',
-  'secret.breath.hold.90', 'secret.breath.hold.120',
-  'secret.supporter',
-  'secret.aged', 'secret.dark.mode', 'secret.mono',
-  'secret.seal', 'secret.illustrated',
-]);
-
-/* Renderiza el glifo de un logro. Si tiene glyphSvg (Constelaciones), lo inyecta
-   via dangerouslySetInnerHTML. Fallback: glyph unicode en italic. El wrapper hereda
-   currentColor del contenedor padre, así el mismo SVG funciona en cualquier paleta. */
-function renderGlyph(a, style) {
-  if (a.glyphSvg) {
-    return (
-      <span
-        style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%', ...style }}
-        dangerouslySetInnerHTML={{ __html: a.glyphSvg }}
-      />
-    );
-  }
-  return <span style={{ fontStyle: 'italic', ...style }}>{a.glyph}</span>;
-}
-
-function isImplemented(a) {
-  // Los secretos siempre se pintan como secretos (revelen o no).
-  // El estado "Pronto" es para logros visibles no-secretos sin trigger.
-  return a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id);
-}
-
-function Achievements({ open, onClose }) {
-  const [state] = usePace();
-  const { t } = useT();
-  const unlocked = state.achievements || {};
-  const unlockedCount = Object.keys(unlocked).length;
-  // Clasificación sesión 15: disponibles = con trigger hoy; próximamente = sin trigger.
-  // Los secretos se cuentan como disponibles (su mecánica es "intriga", no "pronto").
-  const availableCount = ACHIEVEMENT_CATALOG.filter(isImplemented).length;
-  const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
-
-  return (
-    <Modal open={open} onClose={onClose} tagLabel={t('ach.tag')} title={t('ach.title')} subtitle={t('ach.subtitle')} maxWidth={920}>
-      {/* Counter */}
-      <div style={{ display: 'flex', gap: 20, margin: '8px 0 24px', padding: '16px 20px', background: 'var(--paper-2)', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
-        <div>
-          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
-            {unlockedCount}<span style={{ color: 'var(--ink-3)', fontSize: 20 }}> / {availableCount}</span>
-          </div>
-          <Meta style={{ marginTop: 4 }}>{t('ach.available')}</Meta>
-        </div>
-        <Divider style={{ width: 1, height: 'auto', background: 'var(--line)' }} />
-        <div>
-          <div style={{ ...displayItalic, fontSize: 36, fontWeight: 500, lineHeight: 1 }}>
-            {comingSoonCount}
-          </div>
-          <Meta style={{ marginTop: 4 }}>{t('ach.coming.soon')}</Meta>
-        </div>
-      </div>
-
-      {Object.entries(CAT_META).map(([cat, meta]) => {
-        const items = ACHIEVEMENT_CATALOG.filter(a => a.cat === cat);
-        const gotThisCat = items.filter(a => unlocked[a.id]).length;
-        return (
-          <div key={cat} style={{ marginBottom: 28 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-              <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{t(meta.labelKey)}</h3>
-              <Meta>{gotThisCat} / {items.length}</Meta>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(128px, 1fr))', gap: 12 }}>
-              {items.map(a => (
-                <Seal
-                  key={a.id}
-                  achievement={a}
-                  unlocked={!!unlocked[a.id]}
-                  implemented={isImplemented(a)}
-                  color={meta.color}
-                />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </Modal>
-  );
-}
-
-/* Tres estados del sello:
-   1. unlocked         → borde color sólido, opacidad 1, descripción visible.
-   2. locked           → borde dashed gris, opacidad 0.55, descripción visible
-                         (guía al usuario: "esto se puede cazar").
-   3. comingSoon       → borde dotted gris, opacidad 0.38, glifo opaco 0.25,
-                         descripción sustituida por "Pronto" (crea curiosidad
-                         sin ser opaco). Badge "Pronto" en esquina.
-   Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
-   título "Secreto") — su mecánica es intriga, no señalización. */
-function Seal({ achievement, unlocked, implemented, color }) {
-  const { t } = useT();
-  const a = achievement;
-  const isSecret = a.secret && !unlocked;
-  const isComingSoon = !unlocked && !implemented && !a.secret;
-
-  const borderStyle = unlocked ? 'solid' : (isComingSoon ? 'dotted' : 'dashed');
-  const borderColor = unlocked ? color : 'var(--line)';
-  const opacity = unlocked ? 1 : (isComingSoon ? 0.38 : 0.55);
-
-  return (
-    <div
-      style={{
-        aspectRatio: '1/1.15',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        padding: '14px 8px',
-        border: `1px ${borderStyle} ${borderColor}`,
-        borderRadius: 'var(--r-md)',
-        background: unlocked ? 'var(--paper)' : 'transparent',
-        opacity,
-        position: 'relative',
-        transition: 'all 220ms',
-        cursor: 'default',
-        textAlign: 'center',
-      }}
-      title={isComingSoon ? t('ach.coming.soon') : a.desc}
-    >
-      {/* Badge "Pronto" — solo en estado coming-soon */}
-      {isComingSoon && (
-        <div style={{
-          position: 'absolute',
-          top: 6, right: 6,
-          fontFamily: 'var(--font-ui)',
-          fontSize: 7.5,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-3)',
-          border: '0.5px solid var(--line-2)',
-          borderRadius: 999,
-          padding: '2px 6px',
-          lineHeight: 1,
-        }}>{t('ach.seal.soon')}</div>
-      )}
-
-      {/* Sello circular */}
-      <div style={{
-        width: 56, height: 56,
-        borderRadius: '50%',
-        border: `1.2px solid ${unlocked ? color : 'var(--line-2)'}`,
-        display: 'grid', placeItems: 'center',
-        marginBottom: 10,
-        color: unlocked ? color : 'var(--ink-3)',
-        fontFamily: 'var(--font-display)',
-        fontSize: 22,
-        position: 'relative',
-      }}>
-        <span style={{ opacity: isComingSoon ? 0.25 : 1, width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
-          {isSecret ? <span style={{ fontStyle: 'italic' }}>?</span> : renderGlyph(a)}
-        </span>
-        {/* Anillo externo sutil */}
-        <div style={{
-          position: 'absolute', inset: -4,
-          borderRadius: '50%',
-          border: `0.5px solid ${unlocked ? color : 'var(--line)'}`,
-          opacity: 0.4,
-        }} />
-      </div>
-      <div style={{
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        fontSize: 13,
-        fontWeight: 500,
-        lineHeight: 1.15,
-        marginBottom: 4,
-        color: unlocked ? 'var(--ink)' : 'var(--ink-3)',
-      }}>{isSecret ? t('ach.seal.secret') : a.title}</div>
-      <div style={{ fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 }}>
-        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : a.desc)}
-      </div>
-    </div>
-  );
-}
-
-Object.assign(window, { Achievements, ACHIEVEMENT_CATALOG });
-
+/* Logros con trigger 
 </script>
   <script type="text/babel">
 /* PACE · YearView — heatmap anual — sesión 44 */
@@ -8371,130 +7825,7 @@ function TweaksPanel({ open, onClose }) {
           color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)',
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
-          marginBottom: 8,
-          letterSpacing: 0.1,
-          textAlign: 'center',
-        }}>{msg.text}</div>
-      )}
-      <div style={{
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        lineHeight: 1.4,
-        letterSpacing: 0.1,
-        marginBottom: 4,
-      }}>
-        {t('tweaks.data.note')}
-      </div>
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Reset */}
-      <button
-        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v2'); location.reload(); } }}
-        style={{
-          width: '100%',
-          padding: '8px',
-          fontSize: 11,
-          color: 'var(--ink-3)',
-          border: '1px dashed var(--line)',
-          borderRadius: 'var(--r-sm)',
-          letterSpacing: 0.2,
-        }}
-      >{t('tweaks.reset')}</button>
-    </div>
-  );
-}
-
-/* ============================================================
-   Iconos + estilos (nombres únicos)
-   ============================================================ */
-function DownloadIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.3"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 2.5v8" />
-      <path d="M4.5 7L8 10.5 11.5 7" />
-      <path d="M3 13h10" />
-    </svg>
-  );
-}
-function UploadIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.3"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 10.5v-8" />
-      <path d="M4.5 6L8 2.5 11.5 6" />
-      <path d="M3 13h10" />
-    </svg>
-  );
-}
-
-const tweaksStyles = {
-  dataBtn: {
-    flex: 1,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: '8px 10px',
-    fontSize: 11,
-    color: 'var(--ink-2)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    letterSpacing: 0.2,
-    cursor: 'pointer',
-    transition: 'all 180ms',
-  },
-};
-
-/* ============================================================
-   CSS responsive del TweaksPanel (sesión 27 · v0.12.10).
-
-   El TweaksPanel es el único "modal" que no usa <Modal> — es un
-   panel flotante 320×auto anclado bottom-right. En móvil eso
-   rompe: 320 de 375 tapa casi toda la pantalla con los bordes
-   pegados a la derecha, queda un rail de 31px inútil a la izq,
-   y la animación `slide-up` empuja contra el borde sin margen.
-
-   Patrón resuelto: bottom sheet. Pegado a bottom:0 left:0 right:0,
-   esquinas superiores redondeadas, sin border laterales (el border
-   superior actúa como handle visual), maxHeight 72vh para que el
-   backdrop oscuro de fondo (que no hay — TweaksPanel no tiene
-   overlay) deje ver que la home sigue viva detrás.
-
-   Nota: TweaksPanel no tiene backdrop, pero eso también es
-   coherente con que se use como "afinador" mientras la app sigue
-   funcionando. Se conserva la filosofía.
-   ============================================================ */
-const _paceTweaksResponsive = document.getElementById('pace-tweaks-responsive-css');
-if (!_paceTweaksResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-tweaks-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-tweaks-panel] {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: auto !important;
-        max-height: 72vh !important;
-        max-height: 72dvh !important;
-        border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
-        border-left: 0 !important;
-        border-right: 0 !important;
-        border-bottom: 0 !important;
-        padding: 16px 18px 24px !important;
-        box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-Object.assign(window, { TweaksPanel });
+       
 </script>
 
   <script type="text/babel">
@@ -8551,8 +7882,9 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
         min-height: 48px !important;
         gap: 4px !important;
       }
-      /* Tabs Foco/Pausa/Larga: ocultos en móvil (s46 · v0.25.0)
-         BreakMenu maneja la selección post-Pomodoro en móvil. */
+      /* Tabs Foco/Pausa/Larga: ocultos en móvil.
+         El modo se elige via BreakMenu post-Pomodoro; libera espacio
+         para los 3 iconos de la derecha sin solapamiento. */
       [data-pace-topbar] [data-pace-tabs] {
         display: none !important;
       }
@@ -9088,58 +8420,8 @@ Object.assign(window, { PaceApp, TopBar, ActivityBar });
 /* ARRANQUE DIRECTO (sólo si existe #pace-root en DOM — entry point standalone).
    En el entry point modular PACE.html el montaje lo hace el script de abajo en #root. */
 if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
-  const root = ReactDOM.createRoot(document.getElementById('pace-root'));
-  root.render(<PaceApp />);
-}
-
+  const root = ReactDOM.createRoot(document.getElementById('pa
 </script>
 
   <!-- Monta la app
-       Los <script type="text/babel" src> se fetchean y compilan async,
-       así que esperamos al evento `DOMContentLoaded` de Babel antes de montar.
-  -->
-  <script type="text/babel" data-presets="env,react">
-    /* Mount loop — espera a que TODOS los scripts Babel estén compilados.
-       Los <script type="text/babel" src> se fetchean en paralelo y pueden
-       evaluar en orden no garantizado: PaceApp puede estar lista antes que
-       BreakMenu, TweaksPanel o BreatheSession, provocando crashes en la
-       primera apertura de esas pantallas ("Element type is invalid: undefined").
-       Fix sesion 38b: comprobar los componentes criticos del arbol completo,
-       no solo PaceApp. Timeout ampliado a 5 s para cargas lentas / CDN frio. */
-    function mount(tries) {
-      tries = tries || 0;
-      var container = document.getElementById('root');
-      var allReady = (
-        typeof PaceApp          === 'function' &&
-        typeof BreakMenu        === 'function' &&
-        typeof TweaksPanel      === 'function' &&
-        typeof BreatheSession   === 'function' &&
-        typeof MoveSession      === 'function' &&
-        typeof ToastHost        === 'function'
-      );
-      if (container && allReady) {
-        var root = ReactDOM.createRoot(container);
-        root.render(<PaceApp />);
-      } else if (tries < 100) {
-        setTimeout(function() { mount(tries + 1); }, 50);
-      } else {
-        console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
-      }
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { mount(); });
-    } else {
-      mount();
-    }
-  </script>
-
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
-      });
-    }
-  </script>
-</body>
-</html>
+       Los <script type="te

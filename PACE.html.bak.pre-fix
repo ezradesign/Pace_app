@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.25.2</title>
+  <title>PACE · Foco · Cuerpo — v0.25.0</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <link rel="stylesheet" href="app/tokens.css" />
@@ -85,51 +85,4 @@
   <script type="text/babel" src="app/main.jsx"></script>
 
   <!-- Monta la app
-       Los <script type="text/babel" src> se fetchean y compilan async,
-       así que esperamos al evento `DOMContentLoaded` de Babel antes de montar.
-  -->
-  <script type="text/babel" data-presets="env,react">
-    /* Mount loop — espera a que TODOS los scripts Babel estén compilados.
-       Los <script type="text/babel" src> se fetchean en paralelo y pueden
-       evaluar en orden no garantizado: PaceApp puede estar lista antes que
-       BreakMenu, TweaksPanel o BreatheSession, provocando crashes en la
-       primera apertura de esas pantallas ("Element type is invalid: undefined").
-       Fix sesion 38b: comprobar los componentes criticos del arbol completo,
-       no solo PaceApp. Timeout ampliado a 5 s para cargas lentas / CDN frio. */
-    function mount(tries) {
-      tries = tries || 0;
-      var container = document.getElementById('root');
-      var allReady = (
-        typeof PaceApp          === 'function' &&
-        typeof BreakMenu        === 'function' &&
-        typeof TweaksPanel      === 'function' &&
-        typeof BreatheSession   === 'function' &&
-        typeof MoveSession      === 'function' &&
-        typeof ToastHost        === 'function'
-      );
-      if (container && allReady) {
-        var root = ReactDOM.createRoot(container);
-        root.render(<PaceApp />);
-      } else if (tries < 100) {
-        setTimeout(function() { mount(tries + 1); }, 50);
-      } else {
-        console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
-      }
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { mount(); });
-    } else {
-      mount();
-    }
-  </script>
-
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
-      });
-    }
-  </script>
-</body>
-</html>
+       Los <script type="te

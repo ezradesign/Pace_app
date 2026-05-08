@@ -1,23 +1,33 @@
 /* PACE · Logros (Sellos tipo libreta de campo) */
 
-/* SVG inline — Dirección D (Constelaciones). sesión 46.
-   viewBox 24×24, currentColor, puntos rellenos + líneas finísimas (0.5–0.6 px).
+/* Glifos Dirección D — portados literalmente de design/glyphs-explorations.html (sesión 48).
+   viewBox 44×44, currentColor, puntos rellenos + líneas finísimas (0.5–0.6 px).
    El unicode `glyph` permanece como fallback. */
-const SVG_PFX = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">`;
+const SVG_PFX = `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">`;
 const SVG_SFX = `</svg>`;
 const g = (body) => SVG_PFX + body + SVG_SFX;
 
 const GLYPH_SVG = {
-  'first.step':    g(`<circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="5.5" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
-  'first.breath':  g(`<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/><path d="M12 5 L12 19" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
-  'first.stretch': g(`<circle cx="4" cy="15" r="1.2" fill="currentColor"/><circle cx="12" cy="8" r="1.2" fill="currentColor"/><circle cx="20" cy="15" r="1.2" fill="currentColor"/><path d="M4 15 L12 8 L20 15" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
-  'first.sip':     g(`<path d="M12 3 C16 8 19 13 12 20 C5 13 8 8 12 3 Z" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/><circle cx="12" cy="14" r="1.3" fill="currentColor"/>`),
-  'first.extra':   g(`<circle cx="4" cy="15" r="1.2" fill="currentColor"/><circle cx="20" cy="15" r="1.2" fill="currentColor"/><path d="M4 15 C4 6 20 6 20 15" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
-  'first.cycle':   g(`<circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/>`),
-  'first.ritual':  g(`<circle cx="12" cy="4" r="1.2" fill="currentColor"/><circle cx="20" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="20" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 4 L12 20 M4 12 L20 12" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
-  'first.day':     g(`<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="4" cy="14" r="1.2" fill="currentColor"/><circle cx="20" cy="14" r="1.2" fill="currentColor"/><path d="M4 14 A8 8 0 0 1 20 14" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
-  'streak.3':      g(`<circle cx="6" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="18" cy="12" r="1.4" fill="currentColor"/><path d="M6 12 L18 12" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
-  'secret.cow.click': g(`<circle cx="7" cy="9" r="1.2" fill="currentColor"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/><circle cx="17" cy="9" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/><circle cx="19" cy="17" r="1.2" fill="currentColor"/><circle cx="20" cy="7" r="1" fill="currentColor" opacity="0.7"/><path d="M5 17 L7 9 L12 14 L17 9 L19 17" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
+  'first.step':    g(`<circle cx="22" cy="22" r="2.4" fill="currentColor"/><circle cx="22" cy="22" r="8" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
+  'first.breath':  g(`<circle cx="10" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="14" r="2" fill="currentColor"/><circle cx="34" cy="22" r="2" fill="currentColor"/><path d="M10 22 Q22 14 34 22" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
+  'first.stretch': g(`<circle cx="22" cy="10" r="2" fill="currentColor"/><circle cx="34" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="34" r="2" fill="currentColor"/><circle cx="10" cy="22" r="2" fill="currentColor"/><path d="M22 10 L34 22 L22 34 L10 22 Z" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
+  'first.sip':     g(`<circle cx="22" cy="22" r="2.4" fill="currentColor"/><circle cx="22" cy="22" r="11" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
+  'first.extra':   g(`<circle cx="14" cy="14" r="2" fill="currentColor"/><circle cx="30" cy="30" r="2" fill="currentColor"/><circle cx="30" cy="14" r="2" fill="currentColor"/><circle cx="14" cy="30" r="2" fill="currentColor"/><path d="M14 14 L30 30 M30 14 L14 30" stroke="currentColor" stroke-width="0.6"/>`),
+  'first.cycle':   g(`<circle cx="22" cy="22" r="11" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="22" cy="11" r="2" fill="currentColor"/>`),
+  'first.ritual':  g(`<circle cx="22" cy="8" r="1.8" fill="currentColor"/><circle cx="36" cy="22" r="1.8" fill="currentColor"/><circle cx="22" cy="36" r="1.8" fill="currentColor"/><circle cx="8" cy="22" r="1.8" fill="currentColor"/><circle cx="22" cy="22" r="2.4" fill="currentColor"/><path d="M22 8 L22 36 M8 22 L36 22" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>`),
+  'first.day':     g(`<circle cx="34" cy="14" r="2" fill="currentColor"/><path d="M30 12 A12 12 0 1 0 34 28" stroke="currentColor" stroke-width="0.6" fill="none"/>`),
+  'streak.3':            g(`<circle cx="14" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="22" r="2" fill="currentColor"/><circle cx="30" cy="22" r="2" fill="currentColor"/><path d="M14 22 L30 22" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>`),
+  'streak.7':            g(`<circle cx="8" cy="22" r="1.6" fill="currentColor"/><circle cx="14" cy="14" r="1.6" fill="currentColor"/><circle cx="22" cy="10" r="1.6" fill="currentColor"/><circle cx="30" cy="14" r="1.6" fill="currentColor"/><circle cx="36" cy="22" r="1.6" fill="currentColor"/><circle cx="30" cy="30" r="1.6" fill="currentColor"/><circle cx="14" cy="30" r="1.6" fill="currentColor"/><path d="M8 22 L14 14 L22 10 L30 14 L36 22 L30 30 L14 30 Z" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
+  'streak.30':           g(`<circle cx="22" cy="22" r="11" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="22" cy="22" r="3" fill="currentColor"/>`),
+  'streak.365':          g(`<circle cx="22" cy="6" r="1.6" fill="currentColor"/><circle cx="36" cy="13" r="1.6" fill="currentColor"/><circle cx="38" cy="28" r="1.6" fill="currentColor"/><circle cx="28" cy="38" r="1.6" fill="currentColor"/><circle cx="14" cy="36" r="1.6" fill="currentColor"/><circle cx="6" cy="24" r="1.6" fill="currentColor"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/><circle cx="22" cy="22" r="2.4" fill="currentColor"/><path d="M22 6 L36 13 L38 28 L28 38 L14 36 L6 24 L10 10 Z" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
+  'focus.hours.100':     g(`<text x="22" y="29" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="18" fill="currentColor">C</text>`),
+  'breathe.sessions.10': g(`<circle cx="10" cy="22" r="1.6" fill="currentColor"/><circle cx="18" cy="16" r="1.6" fill="currentColor"/><circle cx="26" cy="28" r="1.6" fill="currentColor"/><circle cx="34" cy="18" r="1.6" fill="currentColor"/><path d="M10 22 Q14 19 18 16 Q22 22 26 28 Q30 23 34 18" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
+  'breathe.sessions.50': g(`<circle cx="8" cy="14" r="1.4" fill="currentColor"/><circle cx="16" cy="20" r="1.4" fill="currentColor"/><circle cx="24" cy="14" r="1.4" fill="currentColor"/><circle cx="32" cy="20" r="1.4" fill="currentColor"/><circle cx="8" cy="26" r="1.4" fill="currentColor"/><circle cx="16" cy="32" r="1.4" fill="currentColor"/><circle cx="24" cy="26" r="1.4" fill="currentColor"/><circle cx="32" cy="32" r="1.4" fill="currentColor"/>`),
+  'move.sessions.25':    g(`<circle cx="14" cy="14" r="1.6" fill="currentColor"/><circle cx="30" cy="14" r="1.6" fill="currentColor"/><circle cx="14" cy="22" r="1.6" fill="currentColor"/><circle cx="30" cy="22" r="1.6" fill="currentColor"/><circle cx="14" cy="30" r="1.6" fill="currentColor"/><circle cx="30" cy="30" r="1.6" fill="currentColor"/><path d="M14 14 L30 14 M14 22 L30 22 M14 30 L30 30" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>`),
+  'explore.box':      g(`<circle cx="11" cy="11" r="2" fill="currentColor"/><circle cx="33" cy="11" r="2" fill="currentColor"/><circle cx="33" cy="33" r="2" fill="currentColor"/><circle cx="11" cy="33" r="2" fill="currentColor"/><rect x="11" y="11" width="22" height="22" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
+  'explore.coherent': g(`<circle cx="22" cy="6" r="2" fill="currentColor"/><circle cx="22" cy="38" r="2" fill="currentColor"/><circle cx="22" cy="22" r="2.4" fill="currentColor"/><path d="M22 6 C28 14 28 30 22 38 C16 30 16 14 22 6 Z" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.5"/>`),
+  'explore.rounds':   g(`<circle cx="22" cy="8" r="2" fill="currentColor"/><circle cx="36" cy="22" r="2" fill="currentColor"/><circle cx="22" cy="36" r="2" fill="currentColor"/><circle cx="8" cy="22" r="2" fill="currentColor"/><path d="M22 8 A14 14 0 1 1 8 22" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.6"/>`),
+  'secret.cow.click': g(`<circle cx="12.8" cy="16.5" r="2.2" fill="currentColor"/><circle cx="22" cy="25.7" r="2.2" fill="currentColor"/><circle cx="31.2" cy="16.5" r="2.2" fill="currentColor"/><circle cx="9.2" cy="31.2" r="2.2" fill="currentColor"/><circle cx="34.8" cy="31.2" r="2.2" fill="currentColor"/><circle cx="36.7" cy="12.8" r="1.8" fill="currentColor" opacity="0.7"/><path d="M9.2 31.2 L12.8 16.5 L22 25.7 L31.2 16.5 L34.8 31.2" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
 };
 /* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
 GLYPH_SVG['first.plan'] = GLYPH_SVG['first.ritual'];
@@ -37,26 +47,26 @@ const ACHIEVEMENT_CATALOG = [
 
   // Constancia (11-25)
   { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III', glyphSvg: GLYPH_SVG['streak.3'] },
-  { id: 'streak.7', cat: 'constancia', title: 'Semana vaca', desc: '7 días seguidos', glyph: 'VII' },
+  { id: 'streak.7', cat: 'constancia', title: 'Semana vaca', desc: '7 días seguidos', glyph: 'VII', glyphSvg: GLYPH_SVG['streak.7'] },
   { id: 'streak.14', cat: 'constancia', title: 'Quince días', desc: '14 días seguidos', glyph: 'XIV' },
-  { id: 'streak.30', cat: 'constancia', title: 'Luna llena', desc: '30 días seguidos', glyph: '●' },
+  { id: 'streak.30', cat: 'constancia', title: 'Luna llena', desc: '30 días seguidos', glyph: '●', glyphSvg: GLYPH_SVG['streak.30'] },
   { id: 'streak.60', cat: 'constancia', title: 'Estación', desc: '60 días seguidos', glyph: '⟢' },
   { id: 'streak.100', cat: 'constancia', title: 'Centenaria', desc: '100 días seguidos', glyph: 'C' },
-  { id: 'streak.365', cat: 'constancia', title: 'Vuelta al sol', desc: '365 días seguidos', glyph: '☉' },
+  { id: 'streak.365', cat: 'constancia', title: 'Vuelta al sol', desc: '365 días seguidos', glyph: '☉', glyphSvg: GLYPH_SVG['streak.365'] },
   { id: 'focus.hours.10', cat: 'constancia', title: '10 horas de foco', desc: 'Tiempo acumulado', glyph: 'X' },
   { id: 'focus.hours.50', cat: 'constancia', title: '50 horas de foco', desc: 'Tiempo acumulado', glyph: 'L' },
-  { id: 'focus.hours.100', cat: 'constancia', title: '100 horas de foco', desc: 'Tiempo acumulado', glyph: 'C' },
-  { id: 'breathe.sessions.10', cat: 'constancia', title: '10 respiraciones', desc: 'Sesiones acumuladas', glyph: '~' },
-  { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋' },
-  { id: 'move.sessions.25', cat: 'constancia', title: '25 movilidades', desc: 'Sesiones acumuladas', glyph: '∷' },
+  { id: 'focus.hours.100', cat: 'constancia', title: '100 horas de foco', desc: 'Tiempo acumulado', glyph: 'C', glyphSvg: GLYPH_SVG['focus.hours.100'] },
+  { id: 'breathe.sessions.10', cat: 'constancia', title: '10 respiraciones', desc: 'Sesiones acumuladas', glyph: '~', glyphSvg: GLYPH_SVG['breathe.sessions.10'] },
+  { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋', glyphSvg: GLYPH_SVG['breathe.sessions.50'] },
+  { id: 'move.sessions.25', cat: 'constancia', title: '25 movilidades', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
   { id: 'hydrate.week.perfect', cat: 'constancia', title: 'Semana hidratada', desc: '8 vasos / 7 días', glyph: '◌' },
   { id: 'morning.5', cat: 'constancia', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
 
   // Exploración (26-45)
-  { id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Box 4·4·4·4', glyph: '▢' },
+  { id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
   { id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Respiración relajante', glyph: '4·7·8' },
-  { id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'HRV sincronizado', glyph: '♥' },
-  { id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Respiración en rondas', glyph: '◴' },
+  { id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'HRV sincronizado', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
+  { id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Respiración en rondas', glyph: '◴', glyphSvg: GLYPH_SVG['explore.rounds'] },
   { id: 'explore.bhastrika', cat: 'exploracion', title: 'Bhastrika', desc: 'Pranayama energizante', glyph: '※' },
   { id: 'explore.nadi', cat: 'exploracion', title: 'Nadi Shodhana', desc: 'Respiración alternada', glyph: '∞' },
   { id: 'explore.ujjayi', cat: 'exploracion', title: 'Ujjayi', desc: 'Oceánica', glyph: '≈' },

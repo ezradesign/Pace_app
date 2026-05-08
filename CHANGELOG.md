@@ -15,7 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.25.0** | 2026-05-06 | feat: stats achievements (4 logros nuevos) + mobile UX fixes (sidebar+tabs) + 10 glifos SVG constelaciones + renderGlyph en Seal y Toast | #46 | [abajo ↓](#v0250--2026-05-06--feat-stats-achievements--mobile-ux--10-constellation-glyphs) |
+| **v0.25.2** | 2026-05-07 | fix(standalone): repara crash post-s48b — 10 .jsx tenían `<script type="text/babel">` literal al inicio (provocaba doble script en el bundle y SyntaxError de Babel) + PACE.html truncado sin mount loop ni `</body></html>` + manifest.json eliminado del standalone (causaba CORS en file://) | #48c | [abajo ↓](#v0252--2026-05-07--fixstandalone-repara-crash-post-s48b) |
+| **v0.25.1** | 2026-05-07 | fix(achievements): 20 glifos Dirección D portados literal de design/glyphs-explorations.html (viewBox 44×44, currentColor) — corrige inventados a ojo de s46; restauración masiva de 12 archivos truncados | #48b | [abajo ↓](#v0251--2026-05-07--fixachievements-glifos-canónicos-dirección-d) |
+| **v0.25.0** | 2026-05-06 | feat: stats achievements (4 logros nuevos) + mobile UX fixes (sidebar+tabs) + 10 glifos SVG constelaciones + renderGlyph en Seal y Toast | #46 | [session-46](./docs/sessions/session-46-stats-ux-glifos.md) |
 | **v0.24.0** | 2026-05-06 | fix(standalone): regenerar build roto de s44 (truncamiento transitorio — sin cambios en código fuente) | #45 | [session-45](./docs/sessions/session-45-fix-standalone-build.md) |
 | **v0.24.0** | 2026-05-06 | feat(stats): YearView — heatmap anual 53×7, score compuesto, 5 niveles tierra→oliva, navegación entre años, click celda→zoom mes, responsive scroll-snap | #44 | [session-44](./docs/sessions/session-44-yearview.md) |
 | **v0.23.0** | 2026-05-06 | feat(history): capa de datos history (days/months/years) + migration guard + MonthHeatmap con tabs Semana\|Mes\|Año + tooltip responsive | #43 | [abajo ↓](#v0230--2026-05-06--feathistory-capa-de-datos--heatmap-mensual) |
@@ -63,6 +65,108 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.25.2] — 2026-05-07 — fix(standalone): repara crash post-s48b
+
+Sesión 48c · hotfix de carga: el standalone v0.25.1 generaba `Uncaught SyntaxError`
+de Babel (`Unexpected token, expected "}"` en SessionShell:41) y la consola
+escupía además dos errores CORS de `manifest.json` que parecían un crash. Causa
+raíz: en la sesión 48 truncada, 10 archivos `.jsx` quedaron con la línea
+literal `  <script type="text/babel">` al principio. El `build-standalone.js`
+los envuelve en otro `<script type="text/babel">{contenido}</script>`, así que
+el primer `</script>` interno cerraba ambos a nivel HTML y el segundo
+`<script type="text/babel">` quedaba como JSX literal — Babel pegaba el petardazo
+al verlo. Adicionalmente, el propio `PACE.html` estaba truncado: faltaba el
+mount loop (`function mount() { ... }`) y los cierres `</body></html>`. Ningún
+backup posterior a v0.20.0 estaba completo.
+
+### Fixed
+- **10 .jsx limpiados** — `<script type="text/babel">` eliminado de la primera
+  línea de: `app/tweaks/TweaksPanel.jsx`, `app/breakmenu/BreakMenu.jsx`,
+  `app/hydrate/HydrateModule.jsx`, `app/extra/ExtraModule.jsx`,
+  `app/move/MoveModule.jsx`, `app/breathe/BreatheSession.jsx`,
+  `app/focus/FocusTimer.jsx`, `app/ui/Toast.jsx`, `app/ui/Sound.jsx`,
+  `app/ui/SessionShell.jsx`. Resto del contenido intacto (verificado balance
+  de llaves/paréntesis, conteo de líneas y final con `Object.assign(window, ...)`).
+- **`PACE.html` reconstruido completo** — añadido el bloque
+  `<script type="text/babel" data-presets="env,react">` con la `function mount()`
+  6-check (PaceApp + BreakMenu + TweaksPanel + BreatheSession + MoveSession +
+  ToastHost) + timeout 5 s (decisión s38b) + registro del Service Worker para
+  PWA + cierres `</body></html>`. Backup del PACE.html previo: `PACE.html.bak.pre-fix`.
+- **`build-standalone.js` reescrito completo via bash** — el archivo previo se
+  truncaba al editarlo con la herramienta Edit. Ahora se escribe vía heredoc.
+  Se añade paso `0`: `html.replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ')`
+  para sacar el `<link rel="manifest">` del bundle final. Razón: en `file://`
+  (uso típico del standalone) el manifest dispara dos errores CORS rojos en
+  consola que parecen un crash sin serlo. `PACE.html` (dev / PWA) lo conserva.
+
+### Verificación
+- Bundle: 480 KB / 491 202 bytes / 9 145 líneas.
+- 0 null bytes, 0 U+FFFD, 0 `<script type="text/babel"><script` doble.
+- 27 bloques `<script type="text/babel">` (26 módulos + mount loop) con balance
+  perfecto de llaves y paréntesis (script de validación con `node`).
+- `</body>` y `</html>` presentes 1 vez cada uno al final.
+- `function mount` aparece 1 vez (en el bundle generado).
+- `rel="manifest"` desaparecido del bundle (se conserva en `PACE.html`).
+
+### Archivos
+**Modificados:** los 10 `.jsx` listados arriba, `PACE.html`, `build-standalone.js`,
+`app/state.jsx` (`PACE_VERSION` v0.25.0 → v0.25.2; la 0.25.1 nunca llegó a
+quedar reflejada en la constante por la corrupción).  
+**Nuevos:** `backups/PACE_standalone_v0.25.1_20260507_pre48c.html`,
+`backups/PACE_standalone_v0.25.2_20260507.html`,
+`PACE.html.bak.pre-fix`,
+`docs/sessions/session-48c-fix-standalone-truncamientos.md`.
+
+### Bugs/issues abiertos descubiertos durante la sesión
+Ninguno — todos los archivos `.jsx` quedaron con balance correcto y ningún
+truncamiento intermedio detectable. La fuente del problema era exclusivamente
+la línea-cabecera `<script>` espuria al principio.
+
+Detalle: [`docs/sessions/session-48c-fix-standalone-truncamientos.md`](./docs/sessions/session-48c-fix-standalone-truncamientos.md)
+
+---
+
+## [v0.25.1] — 2026-05-07 — fix(achievements): glifos canónicos Dirección D
+
+Sesión 48b · restauración masiva de 12 archivos truncados + portado definitivo de
+glifos canónicos Dirección D a `Achievements.jsx`. Standalone limpio 478 KB.
+
+### Fixed
+- **20 glifos portados literalmente** de `design/glyphs-explorations.html`
+  (sección "Dirección D · Constelación"). viewBox 44×44 exacto, `currentColor`
+  en lugar de códigos hex, geometría preservada sin cambios.
+- **Bug corregido (s46):** los 10 glifos previos eran inventados a ojo con
+  viewBox 24×24, no portados de la exploración canónica.
+- **`first.plan`** alias de `first.ritual` (decisión s28).
+- **`secret.cow.click`** reescalado proporcional 24→44 (×1.833) — no tiene
+  canónico en la exploración (logro secreto).
+- **Nuevas entradas glyphSvg en catálogo:** `streak.7`, `streak.30`, `streak.365`,
+  `focus.hours.100`, `breathe.sessions.10`, `breathe.sessions.50`,
+  `move.sessions.25`, `explore.box`, `explore.coherent`, `explore.rounds`.
+- **Restauración de archivos truncados** (sesión 48 previa fallida):
+  `state.jsx`, `main.jsx`, `strings.js`, `BreatheLibrary.jsx`, `SessionShell.jsx`,
+  `Sound.jsx`, `Toast.jsx`, `FocusTimer.jsx`, `BreatheSession.jsx`,
+  `MoveModule.jsx`, `ExtraModule.jsx`, `HydrateModule.jsx`, `BreakMenu.jsx`,
+  `TweaksPanel.jsx`. Fuente: backup `v0.25.0_20260507`.
+- **`build-standalone.js`** reconstruido completo con `readFileClean()` blindado
+  (BOM UTF-8/16 + null bytes + abort si el bundle final contiene null bytes).
+
+### Entradas en GLYPH_SVG (20 total)
+Primeros pasos (8): `first.step`, `first.breath`, `first.stretch`, `first.sip`,
+`first.extra`, `first.cycle`, `first.ritual`, `first.day`.
+Constancia (8): `streak.3`, `streak.7`, `streak.30`, `streak.365`,
+`focus.hours.100`, `breathe.sessions.10`, `breathe.sessions.50`, `move.sessions.25`.
+Exploración (3): `explore.box`, `explore.coherent`, `explore.rounds`.
+Alias: `first.plan` → `first.ritual`. Secreto: `secret.cow.click`.
+
+**Archivos:** `app/achievements/Achievements.jsx` (389L, reescrito via bash).  
+**Standalone:** 478 KB, 0 null bytes, 0 U+FFFD.  
+**Verificación:** 20 entradas GLYPH_SVG, 21 glyphSvg en catálogo, 0 `fill="#`.
+
+Detalle: [`docs/sessions/session-48b-glifos-canonicos-restauracion.md`](./docs/sessions/session-48b-glifos-canonicos-restauracion.md)
 
 ---
 
@@ -1124,165 +1228,4 @@ Sesión corta de consolidación: tras la sesión 17 (feature-heavy) tocó
   pero el usuario confirmó que el pill original era más elegante:
   la elegancia viene del contraste con el espacio vacío, no de
   inflar el componente. Revertido al pill original.
-- **WelcomeModal rehecho para caber sin scroll en 720p** — antes era
-  un apilado vertical (logo + Meta + título + lede + valores +
-  intención + botón + skip) que en pantallas cortas pedía scroll.
-  Ahora es una grid de 2 columnas en el header (logo+meta a la izq,
-  título+lede a la der), fila de valores compacta (10px padding vs
-  14px), input de intención ligeramente más corto, y botón +
-  "prefiero saltarlo" en línea horizontal. Total: ~440px de alto
-  (antes ~620px).
-- **`PACE_VERSION`** en `state.jsx`: `v0.12.0` → `v0.12.1`.
-- **`<title>` de `PACE.html`**: `v0.12.0` → `v0.12.1`.
-
-### Red de seguridad
-- `PACE_standalone.html` regenerado a **v0.12.1** (~224 KB, sin cambio
-  significativo de tamaño).
-- `PACE.html` y `PACE_standalone.html` cargan con logs limpios (solo
-  warnings habituales de Babel standalone).
-- Screenshot del Welcome en fresh state confirma que entra sin
-  scroll en viewport 1920×1080.
-- Screenshot del sidebar con state populado confirma que el pill
-  Invita a un café destaca visualmente con el espacio extra del
-  footer, y que la sección Intención ya no aparece.
-
-Detalle: [`docs/sessions/session-18-pulido-bugs-layout.md`](./docs/sessions/session-18-pulido-bugs-layout.md) *(por escribir)*.
-
----
-
-## [v0.12.0] — 2026-04-22 — Welcome, Export/Import, tweak-secrets
-
-Combo de sesión corta (~5h) recomendado por el `STATE.md` cerrado en
-sesión 16. Tres frentes que se refuerzan entre sí: el Welcome es lo
-primero que el usuario ve y comunica los mismos valores que el modal
-de BMC; el Export/Import hace literal la promesa "todo local, para
-siempre"; los tweak-secrets recompensan la exploración de estilo sin
-anunciar nada.
-
-### Añadido
-- **`app/welcome/WelcomeModule.jsx`** (nuevo, ~240 líneas):
-  - `WelcomeModal` — modal single-screen editorial: logo oficial
-    (respeta `state.logoVariant`), título serif italic *"Antídoto a
-    la silla. A tu ritmo."*, 3 valores (`Todo local · Sin cuentas ·
-    Siempre gratis`), campo opcional de intención con auto-focus y
-    Enter-to-submit, botón `Empezar` + link discreto `prefiero
-    saltarlo`. Cap de 120 chars para la intención.
-  - `useFirstTimeWelcome(setOpen)` — abre el modal una sola vez
-    cuando `state.firstSeen == null`. Mismo patrón exacto que
-    `useSupportAutoTrigger` de sesión 16 (demora 1.2s post-mount).
-  - Evento global `pace:open-welcome` para re-abrir manualmente
-    (uso dev / futuros Tweaks).
-- **Export/Import JSON en Tweaks** (`TweaksPanel.jsx`):
-  - Sección "Tus datos" con botones `Exportar` (descarga
-    `pace-backup-YYYYMMDD.json` con `{app, version, exportedAt,
-    state}`) e `Importar` (valida schema, pregunta `confirm()` con
-    contador, reemplaza `localStorage.pace.state.v1`, recarga).
-  - Feedback inline `✓ Backup descargado` (verde) / `✗ No se pudo
-    exportar` (rojo), fade automático.
-  - Caption explicando "Todo vive en tu navegador. El backup es un
-    archivo JSON local — sin servidor, sin cuenta."
-- **`TweakSecretsWatcher`** (componente auxiliar en mismo archivo,
-  retorna `null`, se monta siempre desde `main.jsx`):
-  - `secret.aged` cuando `palette === 'envejecido'`.
-  - `secret.dark.mode` al acumular 7 días de calendario distintos
-    con `palette === 'oscuro'`. Fechas en clave propia
-    `pace.darkDays.v1` (cap 30).
-  - `secret.mono` cuando `font === 'mono'`.
-  - `secret.seal` cuando `logoVariant === 'sello'`.
-  - `secret.illustrated` cuando `logoVariant === 'ilustrado'`.
-- **`explore.tweaks`** se desbloquea al abrir el panel por primera
-  vez (pasa de secreto a exploración visible).
-- **Campos nuevos en default state**: `firstSeen: null` (timestamp
-  al primer open del Welcome, ya sea "Empezar" o "skip").
-
-### Cambiado
-- **`PACE_VERSION`** en `state.jsx`: `v0.11.11` → `v0.12.0`.
-- **`<title>` de `PACE.html`**: `v0.11.11` → `v0.12.0`.
-- **`IMPLEMENTED_ACHIEVEMENTS`** en `Achievements.jsx` crece
-  +6 ids: `explore.tweaks` + los 5 secretos tweak (`secret.aged`,
-  `.dark.mode`, `.mono`, `.seal`, `.illustrated`). Total de
-  "Próximamente" visible baja de 19 → 13.
-- **`main.jsx`** monta `<WelcomeModal/>` y `<TweakSecretsWatcher/>`
-  junto al resto de modales; consume `useFirstTimeWelcome`; escucha
-  `pace:open-welcome`.
-- **`PACE.html`** carga `app/welcome/WelcomeModule.jsx` antes de
-  `Sidebar.jsx` porque `main.jsx` lo necesita.
-
-### Red de seguridad
-- `PACE_standalone.html` regenerado a **v0.12.0** (~225 KB, +27 KB
-  sobre v0.11.11).
-- Rotado `backups/PACE_standalone_v0.11.11_20260422.html`.
-- 3 backups activos (v0.11.9, v0.11.10, v0.11.11), bien por debajo
-  del límite de 5.
-- `PACE.html` y `PACE_standalone.html` cargados en iframe con logs
-  limpios (sólo warnings habituales de Babel standalone).
-- Screenshot en fresh state confirma que el Welcome aparece; tras
-  fijar `firstSeen` manualmente, no vuelve a aparecer.
-
-Detalle: [`docs/sessions/session-17-welcome-export-tweaksecrets.md`](./docs/sessions/session-17-welcome-export-tweaksecrets.md).
-
----
-
-## [v0.11.11] — 2026-04-22 — Integración Buy Me a Coffee
-
-Primer frente del plan de monetización diseñado en sesión 15: botones +
-modal de apoyo a Buy Me a Coffee respetando los 3 principios éticos
-(presencia calmada, razón explícita por valores, momento elegido).
-El modal se dispara manualmente desde un pill en el sidebar, y una sola
-vez automáticamente cuando la racha llega a 7 días.
-
-### Añadido
-- **`app/support/SupportModule.jsx`** (nuevo, ~290 líneas) con 3
-  exports principales:
-  - `SupportButton` — pill paper con borde fino que vive en el footer
-    del sidebar. Icono de taza SVG en `currentColor`. Hover suave.
-  - `SupportModal` — modal con hero de taza terracota, título serif
-    italic **"PACE es gratis. Y lo seguirá siendo."**, 3 valores en
-    fila (`Todo local · Sin tracking · Para siempre`), botón terracota
-    que abre `buymeacoffee.com/ezradesign` en pestaña nueva, botón
-    secundario `Copiar enlace` con feedback `✓ copiado`, y link
-    `Ya doné →` que desbloquea `secret.supporter` por honor.
-  - `useSupportAutoTrigger(setOpen)` — hook que abre el modal **una
-    sola vez** cuando `streak.current >= 7` y `supportSeenAt == null`.
-- **Logro `secret.supporter`** ("Sostienes el pasto", glifo `✦`)
-  añadido al catálogo y a `IMPLEMENTED_ACHIEVEMENTS` en
-  `Achievements.jsx` (5/21 secretos con trigger real).
-- **Tweak `supportCopyVariant`** en `TweaksPanel.jsx` con 3 opciones:
-  `cafe` ("Invita a un café", default), `pasto` ("Riega el pasto"),
-  `vaca` ("Da de comer a la vaca"). El copy del pill del sidebar se
-  actualiza en vivo.
-- **Evento global `pace:open-support`** escuchado por `main.jsx`,
-  mismo patrón que `pace:open-achievements`.
-- **Campos nuevos en default state**: `supportSeenAt: null` y
-  `supportCopyVariant: 'cafe'`.
-
-### Cambiado
-- **`PACE_VERSION`** en `state.jsx`: `v0.11.9` → `v0.11.11`. Corrige
-  de paso un desfase que arrastraba desde sesión 15 (state decía
-  `v0.11.9` aunque STATE.md y PACE.html decían `v0.11.10`).
-- **`<title>` de `PACE.html`**: `v0.11.10` → `v0.11.11`.
-- **Subtitle del modal de Logros**: `"100 coherentes"` →
-  `"Colección creciente"` (ahora son 101 con el supporter).
-- **`StatusBar` del Sidebar**: se inserta `<SupportButton>` entre la
-  línea `En camino · ● Pace` y la línea de versión, con
-  `marginTop: 10` y `marginBottom: 10` para respirar.
-
-### Red de seguridad
-- `PACE_standalone.html` regenerado a **v0.11.11** (~198 KB, +16 KB
-  por el módulo nuevo).
-- Rotado `backups/PACE_standalone_v0.11.10_20260422.html` (ya existía
-  el v0.11.9).
-- 2 backups activos (v0.11.9, v0.11.10), bien por debajo del límite.
-- Verificación funcional (`eval_js_user_view`):
-  - `pace:open-support` abre el modal con el título correcto.
-  - Tweak cambia copy del pill y del botón primario en vivo.
-  - Botón "Ya doné" desbloquea `secret.supporter` y marca
-    `supportSeenAt` con timestamp.
-
-Detalle: [`docs/sessions/session-16-bmc-integracion.md`](./docs/sessions/session-16-bmc-integracion.md).
-
----
-
-Para versiones anteriores, ver los diarios en [`docs/sessions/`](./docs/sessions/).
-
-
+- **WelcomeM

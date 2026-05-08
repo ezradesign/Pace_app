@@ -51,9 +51,8 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
         min-height: 48px !important;
         gap: 4px !important;
       }
-      /* Tabs Foco/Pausa/Larga: ocultos en móvil.
-         El modo se elige via BreakMenu post-Pomodoro; libera espacio
-         para los 3 iconos de la derecha sin solapamiento. */
+      /* Tabs Foco/Pausa/Larga: ocultos en móvil (s46 · v0.25.0)
+         BreakMenu maneja la selección post-Pomodoro en móvil. */
       [data-pace-topbar] [data-pace-tabs] {
         display: none !important;
       }

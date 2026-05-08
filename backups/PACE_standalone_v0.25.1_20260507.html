@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.25.2</title>
+  <title>PACE · Foco · Cuerpo — v0.25.0</title>
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -1233,7 +1234,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.25.2';
+const PACE_VERSION = 'v0.25.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -2364,6 +2365,7 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic }
 
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
@@ -2992,6 +2994,7 @@ Object.assign(window, { PaceWordmark });
 
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
@@ -3343,6 +3346,7 @@ const ambientDrone = (() => {
 
 Object.assign(window, { playSound, useSound, ambientDrone });
 </script>
+  <script type="text/babel">
   <script type="text/babel">
 /* PACE · Toast (para notificar logros desbloqueados) */
 
@@ -4836,6 +4840,7 @@ Object.assign(window, { Sidebar });
 </script>
 
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Módulo Foco (Pomodoro)
    Temporizador funcional real. 4 estilos visuales de tweaks.
 */
@@ -5798,6 +5803,7 @@ Object.assign(window, { BreatheLibrary, BreatheSafety });
 
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Respiración — Sesión guiada
    Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
    Depende de BreatheVisual.jsx (BreathVisual, getSequence) que carga antes.
@@ -6148,6 +6154,7 @@ function BreatheSession({ routine, onExit }) {
 Object.assign(window, { BreatheSession });
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Módulo Mueve (Calistenia / Fuerza)
    Librería + Sesión con pasos + timer
 
@@ -6474,6 +6481,7 @@ if (!_paceMoveResponsive) {
 Object.assign(window, { MoveLibrary, MoveSession });
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Módulo Estira (Estiramientos / Movilidad)
    Botón: "Estira" · afloja tensión.
 
@@ -6576,6 +6584,7 @@ function ExtraLibrary({ open, onClose, onStart }) {
 Object.assign(window, { ExtraLibrary });
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Módulo Hidrátate */
 
 function HydrateTracker({ open, onClose }) {
@@ -6658,6 +6667,7 @@ function HydrateTracker({ open, onClose }) {
 
 Object.assign(window, { HydrateTracker });
 </script>
+  <script type="text/babel">
   <script type="text/babel">
 /* PACE · Menú post-Pomodoro
    Aparece tras completar un ciclo de foco.
@@ -8016,6 +8026,7 @@ Object.assign(window, { TweakSecretsWatcher });
 
 </script>
   <script type="text/babel">
+  <script type="text/babel">
 /* PACE · Panel de Ajustes (antes Tweaks)
    ============================================================
    5 ejes vigentes: audio, paleta, layout, timer, breath.
@@ -9095,51 +9106,4 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 </script>
 
   <!-- Monta la app
-       Los <script type="text/babel" src> se fetchean y compilan async,
-       así que esperamos al evento `DOMContentLoaded` de Babel antes de montar.
-  -->
-  <script type="text/babel" data-presets="env,react">
-    /* Mount loop — espera a que TODOS los scripts Babel estén compilados.
-       Los <script type="text/babel" src> se fetchean en paralelo y pueden
-       evaluar en orden no garantizado: PaceApp puede estar lista antes que
-       BreakMenu, TweaksPanel o BreatheSession, provocando crashes en la
-       primera apertura de esas pantallas ("Element type is invalid: undefined").
-       Fix sesion 38b: comprobar los componentes criticos del arbol completo,
-       no solo PaceApp. Timeout ampliado a 5 s para cargas lentas / CDN frio. */
-    function mount(tries) {
-      tries = tries || 0;
-      var container = document.getElementById('root');
-      var allReady = (
-        typeof PaceApp          === 'function' &&
-        typeof BreakMenu        === 'function' &&
-        typeof TweaksPanel      === 'function' &&
-        typeof BreatheSession   === 'function' &&
-        typeof MoveSession      === 'function' &&
-        typeof ToastHost        === 'function'
-      );
-      if (container && allReady) {
-        var root = ReactDOM.createRoot(container);
-        root.render(<PaceApp />);
-      } else if (tries < 100) {
-        setTimeout(function() { mount(tries + 1); }, 50);
-      } else {
-        console.error('PACE - Componentes no cargaron en 5 s. Comprueba la red.');
-      }
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { mount(); });
-    } else {
-      mount();
-    }
-  </script>
-
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
-      });
-    }
-  </script>
-</body>
-</html>
+       Los <script type="te
