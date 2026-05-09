@@ -13,7 +13,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.27.0';
+const PACE_VERSION = 'v0.27.1';
 
 const defaultState = {
   // Settings / Tweaks
@@ -132,6 +132,7 @@ const defaultState = {
     current: null,
     completed: {},
     favorite: null,
+    history: [],    // sesion 54 -- array ISO strings de completados
   },
 
   // Migration guard — sesión 43.
@@ -173,6 +174,18 @@ function loadState() {
     /* Migracion defensiva s49: si paths no existe (instalacion
        previa a v0.26.0-alpha), inicializar con el default. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
+    /* Migracion defensiva s54: si paths existe pero sin history,
+       derivarlo aproximadamente de completed (1 entrada por camino). */
+    if (parsed.paths && !parsed.paths.history) {
+      const hist = [];
+      for (const id in (parsed.paths.completed || {})) {
+        const e = parsed.paths.completed[id];
+        if (e && e.lastDoneAt && e.count) {
+          for (let i = 0; i < e.count; i++) hist.push(e.lastDoneAt);
+        }
+      }
+      parsed.paths.history = hist;
+    }
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
     /* Si no hay preferencia explícita de sidebar guardada, aplicar el
        default móvil. Usuarios existentes con sidebarCollapsed guardado
@@ -868,6 +881,7 @@ function advancePathStep(reason) {
               lastDoneAt: todayISO(),
             },
           },
+          history: [...(s.paths.history || []), todayISO()],  // s54
         },
       };
     }
@@ -893,6 +907,7 @@ function completePath(pathId) {
           ...s.paths.completed,
           [pathId]: { count: prev.count + 1, lastDoneAt: todayISO() },
         },
+        history: [...(s.paths.history || []), todayISO()],  // s54
       },
     };
   });
@@ -915,6 +930,57 @@ function getSuggestedPath(now) {
   if (h >= 15 && h <= 17) return 'path.afternoon';
   if (h >= 18 && h <= 22) return 'path.dusk';
   return 'path.dusk';
+}
+
+
+/* ============================
+   PATH STATS HELPERS -- sesion 54
+   ============================ */
+
+function computePathStreaks(history) {
+  if (!history || history.length === 0) return { currentStreak: 0, bestStreak: 0 };
+  const days = new Set(history);
+  // Ordenar dias unicos
+  const sorted = Array.from(days).sort();
+  // bestStreak: recorrer dias ordenados contando secuencias consecutivas
+  let best = 1, cur = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i-1]);
+    const curr = new Date(sorted[i]);
+    const diff = Math.round((curr - prev) / 86400000);
+    if (diff === 1) {
+      cur++;
+      if (cur > best) best = cur;
+    } else if (diff > 1) {
+      cur = 1;
+    }
+  }
+  // currentStreak: contar hacia atras desde hoy
+  const today = todayISO();
+  let cs = 0;
+  let check = today;
+  while (days.has(check)) {
+    cs++;
+    const d = new Date(check);
+    d.setDate(d.getDate() - 1);
+    check = d.toISOString().slice(0, 10);
+  }
+  return { currentStreak: cs, bestStreak: best };
+}
+
+function getPathStats() {
+  const s = getState().paths;
+  const hist = s.history || [];
+  const total = hist.length;
+  const byPath = {};
+  for (const id in (s.completed || {})) {
+    byPath[id] = {
+      count: s.completed[id].count || 0,
+      lastDoneAt: s.completed[id].lastDoneAt || null,
+    };
+  }
+  const streaks = computePathStreaks(hist);
+  return { total, byPath, ...streaks };
 }
 
 function setFavoritePath(pathId) {
@@ -955,4 +1021,5 @@ Object.assign(window, {
   // sesion 49 -- Caminos
   startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
   setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  getPathStats,
 });

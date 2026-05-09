@@ -8,6 +8,7 @@
  * Sesion 51:    regex ampliado para capturar scripts con data-presets.
  * Sesion 52:    validateFileEnd (deteccion de truncamiento), fix de
  *               validateNoUnclosedStrings (backticks en comentarios).
+ * Sesion 54b:   check d (clave sin valor, strip-comments), check e (new Function .js).
  */
 
 var fs   = require('fs');
@@ -85,6 +86,27 @@ function validateFileEnd(filePath, content) {
   var closeCount = (content.match(/\*\//g)  || []).length;
   if (openCount !== closeCount) {
     throw new Error('Comentarios de bloque desbalanceados: ' + openCount + ' /* vs ' + closeCount + ' */');
+  }
+
+  // d) Sesion 54b: clave de objeto sin valor a la derecha del colon.
+  //    Detecta corrupcion: 'paths.path.dawn.name':   <-- sin valor ni coma
+  //    Se eliminan comentarios de bloque primero para evitar falsos positivos
+  //    con texto narrativo que termina en "algo":
+  var contentNoComments = content.replace(/\/\*[\s\S]*?\*\//g, '');
+  var missingValue = contentNoComments.match(/['"][^'"\n]+['"]\s*:\s*$/m);
+  if (missingValue) {
+    throw new Error('Clave de objeto sin valor: ' + missingValue[0].trim());
+  }
+
+  // e) Sesion 54b: para .js (no .jsx), parseo con new Function.
+  //    Los archivos .jsx contienen JSX (<tags>) que no son JS valido.
+  if (ext === '.js') {
+    try {
+      var testSrc = content.replace(/^\s*export\s+default\s+/m, 'var __tmp = ');
+      new Function(testSrc); // eslint-disable-line no-new-func
+    } catch (parseErr) {
+      throw new Error('SyntaxError JS: ' + parseErr.message);
+    }
   }
 }
 

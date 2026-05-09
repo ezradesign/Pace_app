@@ -299,6 +299,18 @@ window.PACE_STRINGS = {
     'stats.year.legend.more':          'más',
     'stats.year.tooltip.score':        '{n} acciones',
 
+    // Caminos stats -- sesion 54
+    'stats.tab.paths':                 'Caminos',
+    'stats.paths.title':               'Caminos',
+    'stats.paths.total':               'Total completados',
+    'stats.paths.currentStreak':       'Racha actual',
+    'stats.paths.bestStreak':          'Mejor racha',
+    'stats.paths.tableName':           'Camino',
+    'stats.paths.tableCount':          'Veces',
+    'stats.paths.tableLast':           'Ultimo dia',
+    'stats.paths.empty':               'Aun no has completado ningun camino',
+    'stats.paths.heatmap':             'Actividad del ano',
+
     // Achievements
     'ach.tag':                         'Colección',
     'ach.title':                       'Logros',
@@ -666,6 +678,18 @@ window.PACE_STRINGS = {
     'stats.year.legend.less':          'less',
     'stats.year.legend.more':          'more',
     'stats.year.tooltip.score':        '{n} actions',
+
+    // Paths stats -- session 54
+    'stats.tab.paths':                 'Paths',
+    'stats.paths.title':               'Paths',
+    'stats.paths.total':               'Total completed',
+    'stats.paths.currentStreak':       'Current streak',
+    'stats.paths.bestStreak':          'Best streak',
+    'stats.paths.tableName':           'Path',
+    'stats.paths.tableCount':          'Times',
+    'stats.paths.tableLast':           'Last day',
+    'stats.paths.empty':               'You have not completed any path yet',
+    'stats.paths.heatmap':             'Year activity',
 
     // Achievements
     'ach.tag':                         'Collection',

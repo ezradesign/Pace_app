@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.27.0
-**Ultima sesion:** #53 -- 2026-05-08 - feat(paths): Caminos parte 2 - PathsLibrary, favoritos, Repetir, dual SuggestedPathCard
-**Ultima actualizacion de este archivo:** 2026-05-08 - sesion 53
-**Build entregado:** `PACE_standalone.html` v0.27.0 (526 KB)
+**Version actual:** v0.27.1b
+**Ultima sesion:** #54b -- 2026-05-09 - fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build
+**Ultima actualizacion de este archivo:** 2026-05-09 - sesion 54
+**Build entregado:** `PACE_standalone.html` v0.27.1b (543 KB)
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.27.0** (script PathsLibrary.jsx anadido s53) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.27.0** (526 KB, regenerado s53) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.27.1** (PathYearView + PathStats anadidos s54) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.27.1** (542 KB, regenerado s54) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** |
@@ -40,22 +40,25 @@
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.20.0** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | Catalogo + coleccion | **v0.25.3** |
+| `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.27.1** (nuevo s54) |
+| `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.27.1** (nuevo s54) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.24.0** |
-| `app/stats/StatsPanel.jsx` | Panel stats | **v0.24.0** |
-| `app/state.jsx` | Store global + rollover + toast + history + paths | **v0.27.0** (setFavoritePath, clearFavoritePath, toggleFavoritePath anadidos s53) |
+| `app/stats/StatsPanel.jsx` | Panel stats | **v0.27.1** (tab Caminos s54) |
+| `app/state.jsx` | Store global + rollover + toast + history + paths | **v0.27.1** (paths.history, getPathStats, computePathStreaks, migracion s54) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.19.0** |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | **v0.27.0** (PathsLibrary montado s53) |
-| `app/i18n/strings.js` | Strings ES + EN | **v0.27.0** (11 claves nuevas s53) |
+| `app/i18n/strings.js` | Strings ES + EN | **v0.27.1** (10 claves nuevas s54) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.26.0-alpha** |
 | `app/paths/PathRunner.jsx` | Runner de caminos | **v0.27.0** (boton Repetir en CompletionScreen s53) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.27.0** (dual card + Ver todos s53) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.0** (nuevo s53) |
 | `build-standalone.js` | Genera el bundle offline | **v0.26.1** (validateFileEnd + fix WARN s52) |
 
-Backups vigentes (21 -- TODO manual: borrar `backups/PACE_standalone_v0.16.0_20260505.html` para dejar margen):
+Backups vigentes (21 -- slot ocupado; proxima sesion borrar el mas antiguo antes del rebuild):
+- `backups/PACE_standalone_v0.27.0_20260509.html` <- creado s54
 - `backups/PACE_standalone_v0.27.0_20260508.html` <- creado s53
 - `backups/PACE_standalone_v0.26.0_20260508.html`
 - `backups/PACE_standalone_v0.26.0-alpha_20260508.html`
@@ -81,36 +84,51 @@ Backups vigentes (21 -- TODO manual: borrar `backups/PACE_standalone_v0.16.0_202
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 53 - v0.26.1 -> v0.27.0 - feat(paths): Caminos parte 2**
+**Sesion 54b (hotfix) - v0.27.1 -> v0.27.1b - fix(i18n): claves EN truncadas**
 
-### Que se hizo
+### Que se hizo (s54b hotfix)
 
-Segunda parte del sistema de Caminos. Todo en 7 archivos modificados / 1 creado.
+Reparacion de corrupcion en app/i18n/strings.js introducida en s54.
+El Edit tool trunco el bloque EN de paths.path.*.name/tagline (10 claves,
+lineas 719-742 del original). El standalone v0.27.1 fallaba con:
+  Uncaught SyntaxError: Unexpected token (745:0) -- clave sin valor.
+
+- Diagnostico: git show origin/main:app/i18n/strings.js -> archivo limpio confirmado.
+- Reparacion: base limpia de git + reinyeccion de 18 claves stats.paths.* (ES+EN).
+- Refuerzo build-standalone.js: check d (clave sin valor, strip-comments-before-match)
+  + check e (new Function parseo sintactico para archivos .js puros).
+- Build verificado: 543 KB, 0 errores, strings.js PARSE OK.
+
+### Que se hizo (s54 base)
+
+Estadisticas de Caminos integradas como cuarta tab del panel Stats existente.
 
 **Creado:**
-- `app/paths/PathsLibrary.jsx` (168 ln) -- overlay modal con los 5 caminos del catalogo, toggle favorito por camino, badges "Hecho hoy" / "Favorito", boton Comenzar.
+- `app/stats/PathYearView.jsx` (176 ln) -- heatmap anual de Caminos, clon ligero de YearView con fuente paths.history (array ISO strings), niveles 0-4 segun count por dia.
+- `app/stats/PathStats.jsx` (105 ln) -- tab Caminos: contador total, rachas current/best, tabla por camino (nombre i18n, veces, ultimo dia), heatmap PathYearView.
 
 **Modificado:**
-- `app/state.jsx` -- tres funciones nuevas: `setFavoritePath`, `clearFavoritePath`, `toggleFavoritePath`. Todas exportadas a window. Bump PACE_VERSION v0.26.1 -> v0.27.0.
-- `app/paths/PathRunner.jsx` -- boton "Repetir camino" en CompletionScreen (secundario, llama `startPath(snapshot.pathId)` tras `onBack()`).
-- `app/paths/SuggestedPathCard.jsx` -- reescrito: subcomponente `PathMiniCard` reutilizable, logica dual (favorito + sugerido por hora si son distintos), boton "Ver todos" -> CustomEvent pace:open-paths-library.
-- `app/i18n/strings.js` -- 11 claves nuevas x 2 idiomas (ES + EN): paths.library.*, paths.suggested.*, paths.runner.repeat, path.card.done/start.
-- `PACE.html` -- script PathsLibrary.jsx anadido, titulo v0.27.0.
-- `app/main.jsx` -- `<PathsLibrary />` montado junto a `<PathRunner />`.
+- `app/state.jsx` -- paths.history en defaultState, migracion defensiva (deriva history desde completed.lastDoneAt en instalaciones pre-s54), push a history en advancePathStep y completePath, helpers computePathStreaks + getPathStats exportados. Bump v0.27.1.
+- `app/stats/StatsPanel.jsx` -- cuarta tab "Caminos" que renderiza <PathStats />.
+- `app/i18n/strings.js` -- 10 claves nuevas x 2 idiomas (stats.tab.paths + stats.paths.*).
+- `PACE.html` -- scripts PathYearView + PathStats, CSS .path-stats-*, titulo v0.27.1.
 
-**Validacion:** Build 526 KB, 0 WARN, 0 ERRORs. 8/8 checks OK.
+**Validacion:** Build 542 KB, 0 WARN, 0 ERRORs. 8/8 checks OK.
 
 ### Decisiones tomadas
-- Sidebar sin entrada de Caminos -- el sidebar no tiene items de navegacion (es decorativo/informativo: streak, trail visual, achievements preview). Anadir un nav item romperia la coherencia.
-- Apertura de PathsLibrary via CustomEvent -- mismo patron que Achievements, evita prop drilling.
-- Dual SuggestedPathCard solo cuando favorito != sugerido por hora -- evita duplicado cuando el usuario ha puesto como favorito el camino del momento.
+- Nueva tab (no sub-seccion ni scroll) -- patron existente de 3 tabs lo permitia limpiamente.
+- Clonar YearView a PathYearView -- YearView tiene logica de score compuesto acoplada a history.days; clonar es mas limpio que parametrizar (176 ln resultado).
+- Migracion aproximada: N entradas con fecha lastDoneAt por cada camino con count N; documentado como "pierde precision historica, recupera total".
 
-### Proxima sesion (backlog)
-- Detector `master.midnight.never` (logro no interrumpir el sueno)
-- Iconos PNG reales para PWA manifest
-- Claves offline Lifetime/Pase en TweaksPanel
-- Split state.jsx (935 ln) -- deuda tecnica critica, supera limite 500 ln
+### Incidencia
+Edit tool trunco StatsPanel.jsx. Detectado por validateFileEnd del build. Reparado con Python append. Leccion: usar Python write para bloques JSX con llaves complejas.
+
+### Proxima sesion (sugerencias)
+- Split state.jsx (1025 ln) -- deuda tecnica critica, duplica limite 500 ln
 - Split main.jsx (600 ln) -- cerca del limite
+- Detector logro master.midnight.never
+- Iconos PNG reales PWA manifest
+- Claves offline Lifetime/Pase en TweaksPanel
 
 TODO manual pendiente: borrar `backups/PACE_standalone_v0.16.0_20260505.html`
 
@@ -133,7 +151,7 @@ TODO manual pendiente: borrar `backups/PACE_standalone_v0.16.0_20260505.html`
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/state.jsx` | 958 | ALTA -- supera limite 500 ln |
+| `app/state.jsx` | 1025 | ALTA -- duplica limite 500 ln |
 | `app/shell/Sidebar.jsx` | 630 | MEDIA |
 | `app/i18n/strings.js` | 742 | MEDIA |
 | `app/achievements/Achievements.jsx` | ~500 | MEDIA |

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.0</title>
+  <title>PACE · Foco · Cuerpo — v0.27.1</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <link rel="stylesheet" href="app/tokens.css" />
@@ -26,6 +26,16 @@
     .path-dot.done   { background: var(--ink-3); }
     .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
     .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
+    /* PathStats -- sesion 54 */
+    .path-stats { display:flex; flex-direction:column; gap:24px; padding:16px 0; }
+    .path-stats-summary { display:flex; gap:16px; flex-wrap:wrap; }
+    .path-stat-card { flex:1; min-width:140px; padding:16px; border:1px solid var(--line); border-radius:var(--r-md); }
+    .path-stat-label { font-size:.85em; opacity:.7; }
+    .path-stat-value { font-size:1.6em; font-weight:600; margin-top:4px; font-family:var(--font-display); font-style:italic; }
+    .path-stats-table table { width:100%; border-collapse:collapse; }
+    .path-stats-table th, .path-stats-table td { padding:8px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.95em; }
+    .path-stats-table th { font-size:.8em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
+    .path-stats-empty { opacity:.6; padding:16px 0; }
   </style>
 </head>
 <body>
@@ -100,6 +110,8 @@
   <script type="text/babel" src="app/breakmenu/BreakMenu.jsx"></script>
   <script type="text/babel" src="app/achievements/Achievements.jsx"></script>
   <script type="text/babel" src="app/stats/YearView.jsx"></script>
+  <script type="text/babel" src="app/stats/PathYearView.jsx"></script>
+  <script type="text/babel" src="app/stats/PathStats.jsx"></script>
   <script type="text/babel" src="app/stats/StatsPanel.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweakSecretsWatcher.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweaksPanel.jsx"></script>

@@ -15,6 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.27.1b** | 2026-05-09 | fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build check-d/e | #54b | (hotfix, sin seccion detalle) |
+| **v0.27.1** | 2026-05-09 | feat(stats): seccion Caminos en Stats -- total, rachas current/best, tabla por camino, heatmap anual + paths.history persistido | #54 | [abajo](#v0271--2026-05-09) |
 | **v0.27.0** | 2026-05-08 | feat(paths): Caminos parte 2 -- PathsLibrary overlay, sistema favorito, boton Repetir, sugerencia dual favorito+hora | #53 | [abajo](#v0270--2026-05-08) |
 | **v0.26.1** | 2026-05-08 | chore: saneamiento tecnico - encoding STATE.md, validateFileEnd en build, 0 WARN, audit deuda 5 archivos >500 lineas | #52 | [abajo](#v0261--2026-05-08--chore-saneamiento-tecnico) |
 | **v0.26.0** | 2026-05-08 | feat(paths): SuggestedPathCard -- tarjeta home que sugiere el camino del momento, 4 icons de paso, doneToday badge, 10 claves i18n -- cierra sistema Caminos | #51 | [abajo ↓](#v0260--2026-05-08--featpaths-suggestedpathcard) |
@@ -75,6 +77,30 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.27.1] -- 2026-05-09 -- feat(stats): seccion Caminos
+
+Estadisticas de Caminos integradas en el panel Stats existente como cuarta tab.
+
+### Nuevo
+- `app/stats/PathStats.jsx` (105 ln): tab Caminos -- contador total, rachas current/best, tabla por camino (nombre i18n, veces, ultimo dia), heatmap anual.
+- `app/stats/PathYearView.jsx` (176 ln): clon ligero de YearView con fuente paths.history (array ISO strings), niveles 0-4 segun count por dia.
+- `getPathStats()` y `computePathStreaks()` en state.jsx, exportadas a window.
+- `paths.history` en defaultState: array ISO strings registrado al completar cada camino.
+- Migracion defensiva: instalaciones pre-s54 derivan history desde paths.completed.lastDoneAt.
+- 10 claves i18n nuevas x 2 idiomas (stats.tab.paths + stats.paths.*).
+
+### Mejorado
+- `StatsPanel.jsx`: cuarta tab "Caminos" que renderiza PathStats.
+- `PACE.html`: scripts PathYearView + PathStats, CSS .path-stats-*, titulo v0.27.1.
+- `PACE_VERSION` bumpeado a `v0.27.1`.
+
+### Build
+- 542 KB, 0 ERRORs, 0 WARNs.
+
+Detalle: [`docs/sessions/session-54-estadisticas-caminos.md`](./docs/sessions/session-54-estadisticas-caminos.md).
+
+---
+
 ## [v0.27.0] -- 2026-05-08 -- feat(paths): Caminos parte 2
 
 Segunda parte del sistema de Caminos. Biblioteca visual, favoritos, repeticion y sugerencia dual.
@@ -96,30 +122,7 @@ Segunda parte del sistema de Caminos. Biblioteca visual, favoritos, repeticion y
 
 ---
 
-## [v0.26.1] -- 2026-05-08 -- chore: saneamiento tecnico
-
-Sesion de consolidacion sin features nuevas. Cierra deuda tecnica acumulada en s48-s51.
-
-### Fixed
-- `STATE.md`: reescrito en UTF-8 limpio (0 null bytes, 0 secuencias \u00xx escapadas).
-- `build-standalone.js`: 2 WARN persistentes resueltos (falsos positivos en
-  validateNoUnclosedStrings por backticks dentro de comentarios de bloque).
-- `build-standalone.js`: nueva funcion validateFileEnd que aborta el build si un
-  archivo JS/JSX esta truncado o tiene comentarios de bloque desbalanceados.
-
-### Changed
-- `build-standalone.js`: strip de comentarios ahora sustituye contenido por espacios
-  (preserva saltos de linea) para no desbalancear contadores de backtick.
-- `build-standalone.js`: WARN_ALLOWLIST explicita para falsos positivos documentados.
-- Version bump v0.26.0 -> v0.26.1.
-
-### Added
-- `docs/audits/audit-2026-05-08-tamanos.md`: lista de archivos >500 lineas (deuda tecnica).
-
-Detalle: [`docs/sessions/session-52-saneamiento.md`](./docs/sessions/session-52-saneamiento.md).
-
----
-
+<!-- Solo se detallan las 2 ultimas versiones. Para v0.26.1 y anteriores ver docs/sessions/ -->
 ## [v0.26.0] -- 2026-05-08 -- feat(paths): SuggestedPathCard
 
 Tercera y ultima sesion del sistema de Caminos. Cierra `v0.26.0` (sin sufijo alpha/beta).

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.0</title>
+  <title>PACE · Foco · Cuerpo — v0.27.1</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -214,6 +214,16 @@ input, textarea { font-family: inherit; color: inherit; }
     .path-dot.done   { background: var(--ink-3); }
     .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
     .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
+    /* PathStats -- sesion 54 */
+    .path-stats { display:flex; flex-direction:column; gap:24px; padding:16px 0; }
+    .path-stats-summary { display:flex; gap:16px; flex-wrap:wrap; }
+    .path-stat-card { flex:1; min-width:140px; padding:16px; border:1px solid var(--line); border-radius:var(--r-md); }
+    .path-stat-label { font-size:.85em; opacity:.7; }
+    .path-stat-value { font-size:1.6em; font-weight:600; margin-top:4px; font-family:var(--font-display); font-style:italic; }
+    .path-stats-table table { width:100%; border-collapse:collapse; }
+    .path-stats-table th, .path-stats-table td { padding:8px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.95em; }
+    .path-stats-table th { font-size:.8em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
+    .path-stats-empty { opacity:.6; padding:16px 0; }
   </style>
 </head>
 <body>
@@ -556,6 +566,18 @@ window.PACE_STRINGS = {
     'stats.year.legend.less':          'menos',
     'stats.year.legend.more':          'más',
     'stats.year.tooltip.score':        '{n} acciones',
+
+    // Caminos stats -- sesion 54
+    'stats.tab.paths':                 'Caminos',
+    'stats.paths.title':               'Caminos',
+    'stats.paths.total':               'Total completados',
+    'stats.paths.currentStreak':       'Racha actual',
+    'stats.paths.bestStreak':          'Mejor racha',
+    'stats.paths.tableName':           'Camino',
+    'stats.paths.tableCount':          'Veces',
+    'stats.paths.tableLast':           'Ultimo dia',
+    'stats.paths.empty':               'Aun no has completado ningun camino',
+    'stats.paths.heatmap':             'Actividad del ano',
 
     // Achievements
     'ach.tag':                         'Colección',
@@ -924,6 +946,18 @@ window.PACE_STRINGS = {
     'stats.year.legend.less':          'less',
     'stats.year.legend.more':          'more',
     'stats.year.tooltip.score':        '{n} actions',
+
+    // Paths stats -- session 54
+    'stats.tab.paths':                 'Paths',
+    'stats.paths.title':               'Paths',
+    'stats.paths.total':               'Total completed',
+    'stats.paths.currentStreak':       'Current streak',
+    'stats.paths.bestStreak':          'Best streak',
+    'stats.paths.tableName':           'Path',
+    'stats.paths.tableCount':          'Times',
+    'stats.paths.tableLast':           'Last day',
+    'stats.paths.empty':               'You have not completed any path yet',
+    'stats.paths.heatmap':             'Year activity',
 
     // Achievements
     'ach.tag':                         'Collection',
@@ -1330,7 +1364,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.27.0';
+const PACE_VERSION = 'v0.27.1';
 
 const defaultState = {
   // Settings / Tweaks
@@ -1449,6 +1483,7 @@ const defaultState = {
     current: null,
     completed: {},
     favorite: null,
+    history: [],    // sesion 54 -- array ISO strings de completados
   },
 
   // Migration guard — sesión 43.
@@ -1490,6 +1525,18 @@ function loadState() {
     /* Migracion defensiva s49: si paths no existe (instalacion
        previa a v0.26.0-alpha), inicializar con el default. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
+    /* Migracion defensiva s54: si paths existe pero sin history,
+       derivarlo aproximadamente de completed (1 entrada por camino). */
+    if (parsed.paths && !parsed.paths.history) {
+      const hist = [];
+      for (const id in (parsed.paths.completed || {})) {
+        const e = parsed.paths.completed[id];
+        if (e && e.lastDoneAt && e.count) {
+          for (let i = 0; i < e.count; i++) hist.push(e.lastDoneAt);
+        }
+      }
+      parsed.paths.history = hist;
+    }
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
     /* Si no hay preferencia explícita de sidebar guardada, aplicar el
        default móvil. Usuarios existentes con sidebarCollapsed guardado
@@ -2185,6 +2232,7 @@ function advancePathStep(reason) {
               lastDoneAt: todayISO(),
             },
           },
+          history: [...(s.paths.history || []), todayISO()],  // s54
         },
       };
     }
@@ -2210,6 +2258,7 @@ function completePath(pathId) {
           ...s.paths.completed,
           [pathId]: { count: prev.count + 1, lastDoneAt: todayISO() },
         },
+        history: [...(s.paths.history || []), todayISO()],  // s54
       },
     };
   });
@@ -2232,6 +2281,57 @@ function getSuggestedPath(now) {
   if (h >= 15 && h <= 17) return 'path.afternoon';
   if (h >= 18 && h <= 22) return 'path.dusk';
   return 'path.dusk';
+}
+
+
+/* ============================
+   PATH STATS HELPERS -- sesion 54
+   ============================ */
+
+function computePathStreaks(history) {
+  if (!history || history.length === 0) return { currentStreak: 0, bestStreak: 0 };
+  const days = new Set(history);
+  // Ordenar dias unicos
+  const sorted = Array.from(days).sort();
+  // bestStreak: recorrer dias ordenados contando secuencias consecutivas
+  let best = 1, cur = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i-1]);
+    const curr = new Date(sorted[i]);
+    const diff = Math.round((curr - prev) / 86400000);
+    if (diff === 1) {
+      cur++;
+      if (cur > best) best = cur;
+    } else if (diff > 1) {
+      cur = 1;
+    }
+  }
+  // currentStreak: contar hacia atras desde hoy
+  const today = todayISO();
+  let cs = 0;
+  let check = today;
+  while (days.has(check)) {
+    cs++;
+    const d = new Date(check);
+    d.setDate(d.getDate() - 1);
+    check = d.toISOString().slice(0, 10);
+  }
+  return { currentStreak: cs, bestStreak: best };
+}
+
+function getPathStats() {
+  const s = getState().paths;
+  const hist = s.history || [];
+  const total = hist.length;
+  const byPath = {};
+  for (const id in (s.completed || {})) {
+    byPath[id] = {
+      count: s.completed[id].count || 0,
+      lastDoneAt: s.completed[id].lastDoneAt || null,
+    };
+  }
+  const streaks = computePathStreaks(hist);
+  return { total, byPath, ...streaks };
 }
 
 function setFavoritePath(pathId) {
@@ -2272,6 +2372,7 @@ Object.assign(window, {
   // sesion 49 -- Caminos
   startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
   setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  getPathStats,
 });
 
 </script>
@@ -7914,6 +8015,293 @@ Object.assign(window, { YearView });
 
 </script>
   <script type="text/babel">
+/* PACE · PathYearView -- heatmap anual de Caminos -- sesion 54
+   Fuente: array de strings ISO (paths.history). Clon ligero de YearView.
+*/
+const { useState, useRef, useEffect } = React;
+
+function buildPathDayMap(history) {
+  const map = {};
+  for (const iso of (history || [])) { if (iso) map[iso] = (map[iso] || 0) + 1; }
+  return map;
+}
+function pathCountLevel(n) {
+  if (!n || n <= 0) return 0;
+  if (n === 1) return 1; if (n === 2) return 2; if (n === 3) return 3; return 4;
+}
+const pyvStyles = [
+  { bg: 'var(--paper-3)', op: 1 },
+  { bg: 'var(--move)',    op: 0.22 },
+  { bg: 'var(--move)',    op: 0.48 },
+  { bg: 'var(--breathe)', op: 0.72 },
+  { bg: 'var(--focus)',   op: 1 },
+];
+function getPyvData(dayMap, year) {
+  const today    = new Date();
+  const pad      = n => String(n).padStart(2,'0');
+  const todayStr = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  const isLeap   = (year%4===0 && year%100!==0) || year%400===0;
+  const total    = isLeap ? 366 : 365;
+  const jan1Dow  = (new Date(year,0,1).getDay()+6)%7;
+  const result   = [];
+  for (let n = 0; n < total; n++) {
+    const d       = new Date(year, 0, n+1);
+    const dateStr = `${year}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const isFuture = dateStr > todayStr;
+    const count   = isFuture ? 0 : (dayMap[dateStr] || 0);
+    const level   = isFuture ? -1 : pathCountLevel(count);
+    const dow     = (d.getDay()+6)%7;
+    const col     = Math.floor((n+jan1Dow)/7);
+    result.push({ dateStr, count, level, isFuture, dow, col, d });
+  }
+  return result;
+}
+function getPyvMonthCols(year, jan1Dow) {
+  const r = {};
+  for (let m = 0; m < 12; m++) {
+    const d = new Date(year, m, 1);
+    const doy = Math.floor((d - new Date(year,0,0)) / 86400000) - 1;
+    r[Math.floor((doy+jan1Dow)/7)] = m;
+  }
+  return r;
+}
+
+function PathYearView({ history, lang }) {
+  const { t } = useT();
+  const now = new Date(); const currentYear = now.getFullYear();
+  const [viewYear, setViewYear] = useState(currentYear);
+  const [tooltip, setTooltip] = useState(null);
+  const tooltipRef = useRef(null);
+
+  const availableYears = (() => {
+    const s = new Set([currentYear]);
+    for (const iso of (history || [])) { if (iso) s.add(parseInt(iso.slice(0,4),10)); }
+    return Array.from(s).sort((a,b)=>a-b);
+  })();
+  const yi = availableYears.indexOf(viewYear);
+  const canPrev = yi > 0, canNext = yi < availableYears.length - 1;
+
+  const dayMap    = buildPathDayMap(history);
+  const yearData  = getPyvData(dayMap, viewYear);
+  const jan1Dow   = (new Date(viewYear,0,1).getDay()+6)%7;
+  const totalCols = Math.ceil((yearData.length+jan1Dow)/7);
+  const monthCols = getPyvMonthCols(viewYear, jan1Dow);
+  const hasAny    = yearData.some(c => c.count > 0);
+  const yearTotal = yearData.reduce((s,c) => s + c.count, 0);
+  const monthNames   = t('stats.year.months.short').split(',');
+  const dayRowLabels = t('stats.year.days.label').split(',');
+  const cellMap = {};
+  for (const c of yearData) cellMap[`${c.col}-${c.dow}`] = c;
+
+  function fmtDate(d) {
+    return d.toLocaleDateString(lang==='en'?'en-GB':'es-ES',{day:'numeric',month:'long'});
+  }
+  function unitWord(n) {
+    return lang==='en' ? (n===1?'path':'paths') : (n===1?'camino':'caminos');
+  }
+  function showTip(e, cell, mobile) {
+    if (cell.count <= 0) return;
+    const txt = `${fmtDate(cell.d)} · ${cell.count} ${unitWord(cell.count)}`;
+    if (mobile) { setTooltip({ text:txt, key:cell.dateStr, mobile:true }); }
+    else {
+      const r = e.currentTarget.getBoundingClientRect();
+      setTooltip({ text:txt, x:r.left+r.width/2, y:r.top, key:cell.dateStr });
+    }
+  }
+
+  useEffect(() => {
+    if (!tooltip || !tooltip.mobile) return;
+    function out(e) { if (tooltipRef.current && !tooltipRef.current.contains(e.target)) setTooltip(null); }
+    document.addEventListener('touchstart', out);
+    return () => document.removeEventListener('touchstart', out);
+  }, [tooltip]);
+
+  const btnStyle = (active) => ({
+    background:'none',border:'none',cursor:active?'pointer':'default',
+    color:active?'var(--ink-2)':'var(--ink-3)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
+  });
+
+  return (
+    <div data-pace-path-year-view>
+      <style>{`@media(max-width:640px){[data-pace-path-year-view] [data-pyv-wrap]{scroll-snap-type:x mandatory!important}[data-pace-path-year-view] [data-pyv-cell]{width:11px!important;height:11px!important}[data-pace-path-year-view] [data-pyv-ml]{font-size:8px!important}[data-pace-path-year-view] [data-pyv-dl]{font-size:8px!important;width:12px!important}}`}</style>
+
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+        <button onClick={()=>{if(canPrev)setViewYear(availableYears[yi-1]);}} disabled={!canPrev} style={btnStyle(canPrev)}>&#8249;</button>
+        <span style={{fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:20,color:'var(--ink)'}}>{viewYear}</span>
+        <button onClick={()=>{if(canNext)setViewYear(availableYears[yi+1]);}} disabled={!canNext} style={btnStyle(canNext)}>&#8250;</button>
+      </div>
+
+      <div data-pyv-wrap style={{overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
+        <div style={{display:'inline-block',minWidth:'max-content'}}>
+          <div style={{display:'flex',marginLeft:20,marginBottom:4}}>
+            {Array.from({length:totalCols},(_,col)=>(
+              <div key={col} data-pyv-ml style={{width:16,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',overflow:'visible',whiteSpace:'nowrap'}}>
+                {monthCols[col]!==undefined?monthNames[monthCols[col]]:''}
+              </div>
+            ))}
+          </div>
+          <div style={{display:'flex'}}>
+            <div style={{display:'flex',flexDirection:'column',gap:2,marginRight:4}}>
+              {[0,1,2,3,4,5,6].map(row=>(
+                <div key={row} data-pyv-dl style={{width:16,height:14,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
+                  {row===0?dayRowLabels[0]:row===2?dayRowLabels[1]:row===4?dayRowLabels[2]:''}
+                </div>
+              ))}
+            </div>
+            {Array.from({length:totalCols},(_,col)=>(
+              <div key={col} style={{display:'flex',flexDirection:'column',gap:2,marginRight:2}}>
+                {[0,1,2,3,4,5,6].map(row=>{
+                  const cell=cellMap[`${col}-${row}`];
+                  if(!cell||cell.isFuture) return <div key={row} data-pyv-cell style={{width:14,height:14,borderRadius:2}}/>;
+                  const lvl=cell.level; const ls=pyvStyles[lvl]||pyvStyles[0]; const hd=cell.count>0;
+                  return(
+                    <div key={row} data-pyv-cell
+                      onMouseEnter={hd?(e)=>showTip(e,cell,false):undefined}
+                      onMouseLeave={hd?()=>setTooltip(null):undefined}
+                      onTouchEnd={hd?(e)=>{e.preventDefault();if(tooltip&&tooltip.key===cell.dateStr){setTooltip(null);}else{showTip(e,cell,true);}}:undefined}
+                      style={{width:14,height:14,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
+                    >
+                      {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{display:'flex',alignItems:'center',gap:5,marginTop:10,justifyContent:'flex-end'}}>
+        <span style={{fontSize:10,color:'var(--ink-3)'}}>{t('stats.year.legend.less')}</span>
+        {[0,1,2,3,4].map(lvl=>{const ls=pyvStyles[lvl];return(
+          <div key={lvl} style={{width:12,height:12,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none'}}>
+            {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
+          </div>
+        );})}
+        <span style={{fontSize:10,color:'var(--ink-3)'}}>{t('stats.year.legend.more')}</span>
+      </div>
+
+      {!hasAny&&<div style={{textAlign:'center',padding:'16px 0 8px',color:'var(--ink-3)',fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:15}}>{t('stats.year.empty').replace('{year}',viewYear)}</div>}
+      {hasAny&&<div style={{marginTop:12,padding:'10px 14px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:12,color:'var(--ink-2)'}}>{yearTotal} {unitWord(yearTotal)} {lang==='en'?'this year':'este año'}</div>}
+
+      {tooltip&&!tooltip.mobile&&<div style={{position:'fixed',left:tooltip.x,top:tooltip.y-8,transform:'translate(-50%,-100%)',background:'var(--ink)',color:'var(--paper)',padding:'6px 10px',borderRadius:'var(--r-sm)',fontSize:11,pointerEvents:'none',whiteSpace:'nowrap',zIndex:9999,boxShadow:'0 2px 8px rgba(0,0,0,0.18)'}}>{tooltip.text}</div>}
+      {tooltip&&tooltip.mobile&&<div ref={tooltipRef} style={{position:'fixed',bottom:88,left:'50%',transform:'translateX(-50%)',background:'var(--ink)',color:'var(--paper)',padding:'10px 16px',borderRadius:'var(--r-md)',fontSize:12,zIndex:9999,boxShadow:'0 4px 16px rgba(0,0,0,0.22)',maxWidth:'90vw',textAlign:'center',lineHeight:1.5}}>{tooltip.text}</div>}
+    </div>
+  );
+}
+
+Object.assign(window, { PathYearView });
+
+</script>
+  <script type="text/babel">
+/* PACE · PathStats -- seccion Caminos del panel Stats -- sesion 54 */
+const { useMemo } = React;
+
+/* ---- Subcomponente: tarjeta de metrica ---- */
+function PathStatCard({ label, value }) {
+  return (
+    <div className="path-stat-card">
+      <div className="path-stat-label">{label}</div>
+      <div className="path-stat-value">{value}</div>
+    </div>
+  );
+}
+
+/* ---- Subcomponente: tabla por camino ---- */
+function PathTable({ byPath, lang, t }) {
+  const ids = Object.keys(byPath);
+  if (ids.length === 0) {
+    return <p className="path-stats-empty">{t('stats.paths.empty')}</p>;
+  }
+  // Ordenar por count desc
+  ids.sort((a, b) => (byPath[b].count || 0) - (byPath[a].count || 0));
+
+  function pathName(id) {
+    const key = id.replace(/\./g, '.') + '.name';
+    // Clave i18n: paths.path.dawn.name etc.
+    // Construimos la clave esperada por strings.js
+    const parts = id.split('.');  // ['path','dawn']
+    const nameKey = 'paths.' + id + '.name';
+    return t(nameKey) || id;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '-';
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  return (
+    <div className="path-stats-table">
+      <table>
+        <thead>
+          <tr>
+            <th>{t('stats.paths.tableName')}</th>
+            <th style={{ textAlign:'right' }}>{t('stats.paths.tableCount')}</th>
+            <th style={{ textAlign:'right' }}>{t('stats.paths.tableLast')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ids.map(id => (
+            <tr key={id}>
+              <td>{pathName(id)}</td>
+              <td style={{ textAlign:'right', fontVariantNumeric:'tabular-nums' }}>{byPath[id].count}</td>
+              <td style={{ textAlign:'right', color:'var(--ink-3)', fontSize:'.88em' }}>{fmtDate(byPath[id].lastDoneAt)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ---- Componente principal ---- */
+function PathStats() {
+  const [state] = usePace();
+  const { t } = useT();
+  const lang = state.lang || 'es';
+
+  const stats = useMemo(() => {
+    return typeof getPathStats === 'function' ? getPathStats() : { total: 0, byPath: {}, currentStreak: 0, bestStreak: 0 };
+  }, [state.paths && state.paths.history, state.paths && state.paths.completed]);
+
+  const history = (state.paths && state.paths.history) || [];
+
+  function streakLabel(n) {
+    if (n === 0) return '-';
+    return `${n} d`;
+  }
+
+  return (
+    <div className="path-stats">
+      <section className="path-stats-summary">
+        <PathStatCard label={t('stats.paths.total')}         value={stats.total} />
+        <PathStatCard label={t('stats.paths.currentStreak')} value={streakLabel(stats.currentStreak)} />
+        <PathStatCard label={t('stats.paths.bestStreak')}    value={streakLabel(stats.bestStreak)} />
+      </section>
+
+      <section>
+        <PathTable byPath={stats.byPath} lang={lang} t={t} />
+      </section>
+
+      <section>
+        <div style={{
+          fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
+          color: 'var(--ink-3)', textTransform: 'uppercase',
+          marginBottom: 12,
+        }}>
+          {t('stats.paths.heatmap')}
+        </div>
+        <PathYearView history={history} lang={lang} />
+      </section>
+    </div>
+  );
+}
+
+Object.assign(window, { PathStats });
+
+</script>
+  <script type="text/babel">
 /* PACE · Panel de estadísticas — sesión 43/44
    Tabs Semana | Mes | Año. WeekView sin cambios (s43). YearView nuevo (s44).
 */
@@ -8294,6 +8682,7 @@ function StatsPanel({ open, onClose }) {
           { key:'week',  label:t('stats.tab.week')  },
           { key:'month', label:t('stats.tab.month') },
           { key:'year',  label:t('stats.tab.year')  },
+          { key:'paths', label:t('stats.tab.paths') },
         ].map(({ key, label }) => (
           <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
         ))}
@@ -8302,6 +8691,7 @@ function StatsPanel({ open, onClose }) {
       {tab==='week'  && <WeekView state={state} />}
       {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
       {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
+      {tab==='paths' && <PathStats />}
     </Modal>
   );
 }

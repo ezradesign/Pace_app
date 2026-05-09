@@ -378,6 +378,7 @@ function StatsPanel({ open, onClose }) {
           { key:'week',  label:t('stats.tab.week')  },
           { key:'month', label:t('stats.tab.month') },
           { key:'year',  label:t('stats.tab.year')  },
+          { key:'paths', label:t('stats.tab.paths') },
         ].map(({ key, label }) => (
           <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
         ))}
@@ -386,6 +387,7 @@ function StatsPanel({ open, onClose }) {
       {tab==='week'  && <WeekView state={state} />}
       {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
       {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
+      {tab==='paths' && <PathStats />}
     </Modal>
   );
 }
