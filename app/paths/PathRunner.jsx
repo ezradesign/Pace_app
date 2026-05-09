@@ -382,6 +382,28 @@ function PathRunner() {
     if (cur) setJustCompleted(null);
   }, [cur ? cur.id : null]);
 
+  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida.
+     NOTA: hook movido antes del early return para cumplir Rules of Hooks.
+     El guard "if (!cur) return" esta dentro del callback, no fuera. */
+  useEffectPR(() => {
+    if (!cur) return; // guard dentro del callback: no actuar si no hay camino activo
+    function handleKey(e) {
+      if (e.key !== 'Escape') return;
+      var active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      if (confirmExit) { setConfirmExit(false); return; }
+      var path = getPath(cur.id);
+      var step = path && path.steps[cur.stepIndex];
+      if (step && step.optional) {
+        abandonPath();
+      } else {
+        setConfirmExit(true);
+      }
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [confirmExit, cur ? cur.stepIndex : null]);
+
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
 
@@ -424,7 +446,7 @@ function PathRunner() {
     advancePathStep(reason);
   };
 
-  /* Botón de salida: si el paso es opcional, salir directo; si no, confirmar */
+  /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar */
   const handleRequestExit = () => {
     if (step.optional) {
       abandonPath();
@@ -432,19 +454,6 @@ function PathRunner() {
       setConfirmExit(true);
     }
   };
-
-  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida */
-  useEffectPR(() => {
-    function handleKey(e) {
-      if (e.key !== 'Escape') return;
-      const active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
-      if (confirmExit) { setConfirmExit(false); return; }
-      handleRequestExit();
-    }
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [confirmExit, cur && cur.stepIndex]);
 
   return (
     <div
