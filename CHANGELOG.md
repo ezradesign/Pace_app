@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.27.2** | 2026-05-09 | chore(polish): i18n sync ES/EN, a11y overlays (role/Escape/focus), mobile audit, smoke tests documentados | #55 | [abajo](#v0272----2026-05-09----chorpolish-i18n-sync-a11y-overlays-mobile-smoke-tests) |
 | **v0.27.1b** | 2026-05-09 | fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build check-d/e | #54b | (hotfix, sin seccion detalle) |
 | **v0.27.1** | 2026-05-09 | feat(stats): seccion Caminos en Stats -- total, rachas current/best, tabla por camino, heatmap anual + paths.history persistido | #54 | [abajo](#v0271--2026-05-09) |
 | **v0.27.0** | 2026-05-08 | feat(paths): Caminos parte 2 -- PathsLibrary overlay, sistema favorito, boton Repetir, sugerencia dual favorito+hora | #53 | [abajo](#v0270--2026-05-08) |
@@ -74,6 +75,38 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.27.2] -- 2026-05-09 -- chore(polish): i18n sync, a11y overlays, mobile, smoke tests
+
+Sesion de pulido sin features nuevas. Consistencia i18n, accesibilidad basica
+en overlays de Caminos, responsive mobile y documentacion de smoke tests.
+
+### Fixed
+- `app/i18n/strings.js`: verificado 0 diff entre bloques ES/EN (321 claves cada uno).
+- `app/i18n/strings.js`: verificado 0 claves t() huerfanas en JSX.
+
+### Changed
+- `app/paths/PathRunner.jsx`: overlay principal con `role="dialog"`, `aria-modal="true"`,
+  Escape handler (redirige a ExitConfirmModal si paso obligatorio, abandona si opcional).
+- `app/paths/PathRunner.jsx`: ExitConfirmModal con `role="dialog"`, `aria-modal="true"`,
+  `aria-labelledby`, Escape handler (cancela), focus inicial en boton Seguir via ref.
+- `app/paths/PathsLibrary.jsx`: `aria-labelledby` + id en titulo, Escape handler,
+  focus inicial en boton cerrar via ref, aria-label i18n (`common.close`), icono ✕ canónico.
+- `PACE.html`: `@media (max-width:480px)` -- padding .path-topbar, min-height 44px en
+  botones touch de overlays, .path-stats-summary en columna, SuggestedPathCard dual a columna.
+- `PACE.html`: titulo bumpeado a v0.27.2.
+- `app/state.jsx`: PACE_VERSION bumpeado a v0.27.2.
+
+### Added
+- `docs/qa/smoke-tests.md`: 7 smoke tests manuales reproducibles (Pomodoro, path.dawn
+  completo, abandon a mitad, favorito dual, libreria->completar, Stats Caminos, i18n EN).
+
+### Build
+- 544 KB, 0 ERRORs, 0 WARNs.
+
+Detalle: [`docs/sessions/session-55-polish.md`](./docs/sessions/session-55-polish.md).
 
 ---
 

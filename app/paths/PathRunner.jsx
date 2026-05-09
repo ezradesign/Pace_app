@@ -44,9 +44,27 @@ function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
 /* ExitConfirmModal - confirmacion in-app (sin llamada al dialog nativo) */
 function ExitConfirmModal({ open, onCancel, onConfirm }) {
   const { t } = useT();
+  const cancelBtnRef = useRefPR(null);
+
+  useEffectPR(() => {
+    if (!open) return;
+    // Focus en boton Seguir al abrir
+    if (cancelBtnRef.current) cancelBtnRef.current.focus();
+    // Cerrar con Escape
+    function handleKey(e) { if (e.key === 'Escape') onCancel(); }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open]);
+
   if (!open) return null;
   return (
-    <div className="path-modal-back" onClick={onCancel}>
+    <div
+      className="path-modal-back"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="exit-confirm-title"
+      onClick={onCancel}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -55,7 +73,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
           border: '1px solid var(--line)',
         }}
       >
-        <h3 style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
+        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
           {t('path.runner.exitConfirmTitle')}
         </h3>
         <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
@@ -63,6 +81,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button
+            ref={cancelBtnRef}
             onClick={onCancel}
             style={{
               padding: '8px 18px', borderRadius: 'var(--r-sm)',
@@ -369,7 +388,12 @@ function PathRunner() {
   /* Pantalla de completado */
   if (justCompleted) {
     return (
-      <div className="path-runner-overlay">
+      <div
+        className="path-runner-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('path.runner.complete.title')}
+      >
         <CompletionScreen
           snapshot={justCompleted}
           onBack={() => setJustCompleted(null)}
@@ -409,8 +433,26 @@ function PathRunner() {
     }
   };
 
+  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida */
+  useEffectPR(() => {
+    function handleKey(e) {
+      if (e.key !== 'Escape') return;
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      if (confirmExit) { setConfirmExit(false); return; }
+      handleRequestExit();
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [confirmExit, cur && cur.stepIndex]);
+
   return (
-    <div className="path-runner-overlay">
+    <div
+      className="path-runner-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label={cur ? cur.id.replace('path.', '') : ''}
+    >
       <PathTopBar
         pathName={cur.id.replace('path.', '')}
         stepIndex={cur.stepIndex}

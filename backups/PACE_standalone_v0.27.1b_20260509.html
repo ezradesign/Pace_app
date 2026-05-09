@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.2</title>
+  <title>PACE · Foco · Cuerpo — v0.27.1</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -224,17 +224,6 @@ input, textarea { font-family: inherit; color: inherit; }
     .path-stats-table th, .path-stats-table td { padding:8px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.95em; }
     .path-stats-table th { font-size:.8em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
     .path-stats-empty { opacity:.6; padding:16px 0; }
-    /* Mobile responsive -- sesion 55 */
-    @media (max-width: 480px) {
-      .path-topbar { padding: 12px 14px; }
-      .path-topbar button { min-height: 44px; min-width: 44px; }
-      .path-modal-back > div { padding: 24px 18px; }
-      .path-modal-back button { min-height: 44px; }
-      .path-stat-card { min-width: 100%; }
-      .path-stats-summary { flex-direction: column; gap: 10px; }
-      /* SuggestedPathCard dual layout: colapsar a columna en mobile */
-      [data-pace-spc] > div { flex-direction: column !important; }
-    }
   </style>
 </head>
 <body>
@@ -1375,7 +1364,7 @@ const { useSyncExternalStore, useCallback } = React;
    layout editorial). Cualquier estado v1 guardado se ignora; arranca
    limpio con defaultState en v2. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.27.2';
+const PACE_VERSION = 'v0.27.1';
 
 const defaultState = {
   // Settings / Tweaks
@@ -9427,7 +9416,7 @@ Object.assign(window, { SuggestedPathCard });
    Patron identico a Achievements: event listener en montaje, modal over app.
 */
 
-const { useState: useStatePL, useEffect: useEffectPL, useRef: useRefPL } = React;
+const { useState: useStatePL, useEffect: useEffectPL } = React;
 
 /* Iconos de paso reutilizados de SuggestedPathCard */
 function PLIconBreathe() {
@@ -9511,22 +9500,12 @@ function PathsLibrary() {
   const [open, setOpenPL] = useStatePL(false);
   const [state] = usePace();
   const { t } = useT();
-  const closeBtnRef = useRefPL(null);
 
   useEffectPL(function() {
     function handleOpen() { setOpenPL(true); }
     window.addEventListener('pace:open-paths-library', handleOpen);
     return function() { window.removeEventListener('pace:open-paths-library', handleOpen); };
   }, []);
-
-  // Focus en boton cerrar al abrir + Escape para cerrar
-  useEffectPL(function() {
-    if (!open) return;
-    if (closeBtnRef.current) closeBtnRef.current.focus();
-    function handleKey(e) { if (e.key === 'Escape') setOpenPL(false); }
-    document.addEventListener('keydown', handleKey);
-    return function() { document.removeEventListener('keydown', handleKey); };
-  }, [open]);
 
   if (!open) return null;
 
@@ -9547,7 +9526,6 @@ function PathsLibrary() {
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby="paths-library-title"
       style={{
         position: 'fixed', inset: 0, zIndex: 900,
         background: 'rgba(0,0,0,0.45)',
@@ -9567,15 +9545,14 @@ function PathsLibrary() {
       }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
-          <span id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
             {t('paths.library.title') || 'Todos los caminos'}
           </span>
           <button
-            ref={closeBtnRef}
             onClick={function() { setOpenPL(false); }}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-3)', fontSize: 20, lineHeight: 1, padding: '2px 6px', borderRadius: 'var(--r-sm)' }}
-            aria-label={t('common.close')}
-          >&#x2715;</button>
+            aria-label="Cerrar"
+          >x</button>
         </div>
 
         {/* Lista */}
@@ -9652,27 +9629,9 @@ function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
 /* ExitConfirmModal - confirmacion in-app (sin llamada al dialog nativo) */
 function ExitConfirmModal({ open, onCancel, onConfirm }) {
   const { t } = useT();
-  const cancelBtnRef = useRefPR(null);
-
-  useEffectPR(() => {
-    if (!open) return;
-    // Focus en boton Seguir al abrir
-    if (cancelBtnRef.current) cancelBtnRef.current.focus();
-    // Cerrar con Escape
-    function handleKey(e) { if (e.key === 'Escape') onCancel(); }
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open]);
-
   if (!open) return null;
   return (
-    <div
-      className="path-modal-back"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="exit-confirm-title"
-      onClick={onCancel}
-    >
+    <div className="path-modal-back" onClick={onCancel}>
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -9681,7 +9640,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
           border: '1px solid var(--line)',
         }}
       >
-        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
+        <h3 style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
           {t('path.runner.exitConfirmTitle')}
         </h3>
         <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
@@ -9689,7 +9648,6 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button
-            ref={cancelBtnRef}
             onClick={onCancel}
             style={{
               padding: '8px 18px', borderRadius: 'var(--r-sm)',
@@ -9996,12 +9954,7 @@ function PathRunner() {
   /* Pantalla de completado */
   if (justCompleted) {
     return (
-      <div
-        className="path-runner-overlay"
-        role="dialog"
-        aria-modal="true"
-        aria-label={t('path.runner.complete.title')}
-      >
+      <div className="path-runner-overlay">
         <CompletionScreen
           snapshot={justCompleted}
           onBack={() => setJustCompleted(null)}
@@ -10041,26 +9994,8 @@ function PathRunner() {
     }
   };
 
-  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida */
-  useEffectPR(() => {
-    function handleKey(e) {
-      if (e.key !== 'Escape') return;
-      const active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
-      if (confirmExit) { setConfirmExit(false); return; }
-      handleRequestExit();
-    }
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [confirmExit, cur && cur.stepIndex]);
-
   return (
-    <div
-      className="path-runner-overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-label={cur ? cur.id.replace('path.', '') : ''}
-    >
+    <div className="path-runner-overlay">
       <PathTopBar
         pathName={cur.id.replace('path.', '')}
         stepIndex={cur.stepIndex}

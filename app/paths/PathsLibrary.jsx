@@ -3,7 +3,7 @@
    Patron identico a Achievements: event listener en montaje, modal over app.
 */
 
-const { useState: useStatePL, useEffect: useEffectPL } = React;
+const { useState: useStatePL, useEffect: useEffectPL, useRef: useRefPL } = React;
 
 /* Iconos de paso reutilizados de SuggestedPathCard */
 function PLIconBreathe() {
@@ -87,12 +87,22 @@ function PathsLibrary() {
   const [open, setOpenPL] = useStatePL(false);
   const [state] = usePace();
   const { t } = useT();
+  const closeBtnRef = useRefPL(null);
 
   useEffectPL(function() {
     function handleOpen() { setOpenPL(true); }
     window.addEventListener('pace:open-paths-library', handleOpen);
     return function() { window.removeEventListener('pace:open-paths-library', handleOpen); };
   }, []);
+
+  // Focus en boton cerrar al abrir + Escape para cerrar
+  useEffectPL(function() {
+    if (!open) return;
+    if (closeBtnRef.current) closeBtnRef.current.focus();
+    function handleKey(e) { if (e.key === 'Escape') setOpenPL(false); }
+    document.addEventListener('keydown', handleKey);
+    return function() { document.removeEventListener('keydown', handleKey); };
+  }, [open]);
 
   if (!open) return null;
 
@@ -113,6 +123,7 @@ function PathsLibrary() {
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby="paths-library-title"
       style={{
         position: 'fixed', inset: 0, zIndex: 900,
         background: 'rgba(0,0,0,0.45)',
@@ -132,14 +143,15 @@ function PathsLibrary() {
       }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
+          <span id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
             {t('paths.library.title') || 'Todos los caminos'}
           </span>
           <button
+            ref={closeBtnRef}
             onClick={function() { setOpenPL(false); }}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-3)', fontSize: 20, lineHeight: 1, padding: '2px 6px', borderRadius: 'var(--r-sm)' }}
-            aria-label="Cerrar"
-          >x</button>
+            aria-label={t('common.close')}
+          >&#x2715;</button>
         </div>
 
         {/* Lista */}

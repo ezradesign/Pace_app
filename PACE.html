@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.1</title>
+  <title>PACE · Foco · Cuerpo — v0.27.2</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <link rel="stylesheet" href="app/tokens.css" />
@@ -36,6 +36,17 @@
     .path-stats-table th, .path-stats-table td { padding:8px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.95em; }
     .path-stats-table th { font-size:.8em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
     .path-stats-empty { opacity:.6; padding:16px 0; }
+    /* Mobile responsive -- sesion 55 */
+    @media (max-width: 480px) {
+      .path-topbar { padding: 12px 14px; }
+      .path-topbar button { min-height: 44px; min-width: 44px; }
+      .path-modal-back > div { padding: 24px 18px; }
+      .path-modal-back button { min-height: 44px; }
+      .path-stat-card { min-width: 100%; }
+      .path-stats-summary { flex-direction: column; gap: 10px; }
+      /* SuggestedPathCard dual layout: colapsar a columna en mobile */
+      [data-pace-spc] > div { flex-direction: column !important; }
+    }
   </style>
 </head>
 <body>

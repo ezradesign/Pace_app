@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.27.1b
-**Ultima sesion:** #54b -- 2026-05-09 - fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build
-**Ultima actualizacion de este archivo:** 2026-05-09 - sesion 54
-**Build entregado:** `PACE_standalone.html` v0.27.1b (543 KB)
+**Version actual:** v0.27.2
+**Ultima sesion:** #55 -- 2026-05-09 - chore(polish): i18n sync ES/EN, a11y overlays, mobile, smoke tests (v0.27.2)
+**Ultima actualizacion de este archivo:** 2026-05-09 - sesion 55
+**Build entregado:** `PACE_standalone.html` v0.27.2 (544 KB)
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.27.1** (PathYearView + PathStats anadidos s54) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.27.1** (542 KB, regenerado s54) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.27.2** (titulo + @media mobile Caminos s55) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.27.2** (544 KB, regenerado s55) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** |
@@ -44,20 +44,21 @@
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.27.1** (nuevo s54) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.24.0** |
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.27.1** (tab Caminos s54) |
-| `app/state.jsx` | Store global + rollover + toast + history + paths | **v0.27.1** (paths.history, getPathStats, computePathStreaks, migracion s54) |
+| `app/state.jsx` | Store global + rollover + toast + history + paths | **v0.27.2** (bump version s55) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.19.0** |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | v0.12.8 |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | **v0.27.0** (PathsLibrary montado s53) |
-| `app/i18n/strings.js` | Strings ES + EN | **v0.27.1** (10 claves nuevas s54) |
+| `app/i18n/strings.js` | Strings ES + EN | **v0.27.2** (321 claves ES = 321 EN, 0 diff s55) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.26.0-alpha** |
-| `app/paths/PathRunner.jsx` | Runner de caminos | **v0.27.0** (boton Repetir en CompletionScreen s53) |
+| `app/paths/PathRunner.jsx` | Runner de caminos | **v0.27.2** (a11y: role/aria-modal/Escape en PathRunner + ExitConfirmModal s55) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.27.0** (dual card + Ver todos s53) |
-| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.0** (nuevo s53) |
+| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
 | `build-standalone.js` | Genera el bundle offline | **v0.26.1** (validateFileEnd + fix WARN s52) |
 
-Backups vigentes (21 -- slot ocupado; proxima sesion borrar el mas antiguo antes del rebuild):
+Backups vigentes (22 -- BORRAR MANUALMENTE los 2 mas antiguos para volver a 20):
+- `backups/PACE_standalone_v0.27.1b_20260509.html` <- creado s55
 - `backups/PACE_standalone_v0.27.0_20260509.html` <- creado s54
 - `backups/PACE_standalone_v0.27.0_20260508.html` <- creado s53
 - `backups/PACE_standalone_v0.26.0_20260508.html`
@@ -76,64 +77,56 @@ Backups vigentes (21 -- slot ocupado; proxima sesion borrar el mas antiguo antes
 - `backups/PACE_standalone_v0.21.0_20260506.html`
 - `backups/PACE_standalone_v0.20.0_20260506.html`
 - `backups/PACE_standalone_v0.19.1_20260505.html`
-- `backups/PACE_standalone_v0.18.0_20260505.html`
-- `backups/PACE_standalone_v0.17.0_20260505.html`
-- `backups/PACE_standalone_v0.16.0_20260505.html` <- BORRAR
+- `backups/PACE_standalone_v0.18.0_20260505.html` <- BORRAR
+- `backups/PACE_standalone_v0.17.0_20260505.html` <- BORRAR
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 54b (hotfix) - v0.27.1 -> v0.27.1b - fix(i18n): claves EN truncadas**
+**Sesion 55 - v0.27.1b -> v0.27.2 - chore(polish): i18n, a11y, mobile, smoke tests**
 
-### Que se hizo (s54b hotfix)
+### Que se hizo
 
-Reparacion de corrupcion en app/i18n/strings.js introducida en s54.
-El Edit tool trunco el bloque EN de paths.path.*.name/tagline (10 claves,
-lineas 719-742 del original). El standalone v0.27.1 fallaba con:
-  Uncaught SyntaxError: Unexpected token (745:0) -- clave sin valor.
+Sesion de pulido sin features nuevas tras las 6 sesiones intensas s49-s54.
 
-- Diagnostico: git show origin/main:app/i18n/strings.js -> archivo limpio confirmado.
-- Reparacion: base limpia de git + reinyeccion de 18 claves stats.paths.* (ES+EN).
-- Refuerzo build-standalone.js: check d (clave sin valor, strip-comments-before-match)
-  + check e (new Function parseo sintactico para archivos .js puros).
-- Build verificado: 543 KB, 0 errores, strings.js PARSE OK.
+**Auditoria i18n:**
+- ES vs EN: 321 claves en cada bloque, 0 diferencias. V1 OK.
+- Claves t() huerfanas: 0 (53 falsos positivos eran IDs de unlockAchievement). V2 OK.
 
-### Que se hizo (s54 base)
+**Accesibilidad overlays:**
+- PathRunner: `role="dialog"`, `aria-modal="true"`, `aria-label`, Escape handler
+  (redirige a ExitConfirmModal si obligatorio / abandona si opcional).
+- ExitConfirmModal: `role="dialog"`, `aria-modal`, `aria-labelledby`, Escape handler,
+  focus inicial en boton Seguir.
+- PathsLibrary: `aria-labelledby`, Escape handler, focus inicial en boton cerrar,
+  `aria-label={t('common.close')}`, icono canonico ✕.
 
-Estadisticas de Caminos integradas como cuarta tab del panel Stats existente.
+**Mobile CSS:**
+- Anadido primer `@media (max-width:480px)` en PACE.html para componentes Caminos:
+  padding reducido en .path-topbar, min-height 44px en botones touch, .path-stats-summary
+  en columna, SuggestedPathCard dual colapsado.
 
-**Creado:**
-- `app/stats/PathYearView.jsx` (176 ln) -- heatmap anual de Caminos, clon ligero de YearView con fuente paths.history (array ISO strings), niveles 0-4 segun count por dia.
-- `app/stats/PathStats.jsx` (105 ln) -- tab Caminos: contador total, rachas current/best, tabla por camino (nombre i18n, veces, ultimo dia), heatmap PathYearView.
+**Smoke tests:**
+- Creado `docs/qa/smoke-tests.md` con 7 escenarios completos (Pomodoro, path.dawn,
+  abandon, favorito dual, libreria, stats Caminos, i18n EN).
 
-**Modificado:**
-- `app/state.jsx` -- paths.history en defaultState, migracion defensiva (deriva history desde completed.lastDoneAt en instalaciones pre-s54), push a history en advancePathStep y completePath, helpers computePathStreaks + getPathStats exportados. Bump v0.27.1.
-- `app/stats/StatsPanel.jsx` -- cuarta tab "Caminos" que renderiza <PathStats />.
-- `app/i18n/strings.js` -- 10 claves nuevas x 2 idiomas (stats.tab.paths + stats.paths.*).
-- `PACE.html` -- scripts PathYearView + PathStats, CSS .path-stats-*, titulo v0.27.1.
-
-**Validacion:** Build 542 KB, 0 WARN, 0 ERRORs. 8/8 checks OK.
+**Build:** 544 KB, 0 errores, 0 WARN. V7 OK.
 
 ### Decisiones tomadas
-- Nueva tab (no sub-seccion ni scroll) -- patron existente de 3 tabs lo permitia limpiamente.
-- Clonar YearView a PathYearView -- YearView tiene logica de score compuesto acoplada a history.days; clonar es mas limpio que parametrizar (176 ln resultado).
-- Migracion aproximada: N entradas con fecha lastDoneAt por cada camino con count N; documentado como "pierde precision historica, recupera total".
+- No se refactorizan archivos grandes (state.jsx, Sidebar) - aplazado a s56.
+- PathYearView mobile (heatmap en 320px muy denso) aplazado a s56 como TODO.
+- Backups: FS sandbox no permite borrar archivos de sesiones previas; hay 22 backups.
+  Los 2 mas antiguos (v0.17.0, v0.18.0 del 2026-05-05) deben borrarse manualmente.
 
 ### Incidencia
-Edit tool trunco StatsPanel.jsx. Detectado por validateFileEnd del build. Reparado con Python append. Leccion: usar Python write para bloques JSX con llaves complejas.
+Ninguna. Build limpio en primer intento.
 
 ### Proxima sesion (sugerencias)
-- Split state.jsx (1025 ln) -- deuda tecnica critica, duplica limite 500 ln
-- Split main.jsx (600 ln) -- cerca del limite
-- Detector logro master.midnight.never
-- Iconos PNG reales PWA manifest
-- Claves offline Lifetime/Pase en TweaksPanel
-
-TODO manual pendiente: borrar `backups/PACE_standalone_v0.16.0_20260505.html`
-
----
-
+- s56: Split state.jsx (1025 ln, deuda critica) o split main.jsx (600 ln)
+- s56: PathYearView mobile (heatmap en 320px)
+- s56: Detector logro master.midnight.never
+- s56: Iconos PNG reales PWA manifest
 ## Decisiones activas
 
 | Decision | Desde | Detalle |

@@ -9,6 +9,9 @@
  * Sesion 52:    validateFileEnd (deteccion de truncamiento), fix de
  *               validateNoUnclosedStrings (backticks en comentarios).
  * Sesion 54b:   check d (clave sin valor, strip-comments), check e (new Function .js).
+ * Sesion 55b:   validateInlineScripts: parsea cada <script> sin src de PACE.html
+ *               con new Function; aborta si hay SyntaxError (detecta truncamiento
+ *               como el corte del bloque mount ocurrido en sesion 55).
  */
 
 var fs   = require('fs');
@@ -166,9 +169,77 @@ function validateNoUnclosedStrings(fileContent, filePath) {
 }
 
 /* ---------------------------------------------------------------------------
+   validateInlineScripts (sesion 55b): parsea cada bloque <script> sin atributo
+   src presente en el HTML de entrada. Los scripts type="text/babel" contienen
+   JSX y no son JS valido para node — se omiten de la validacion estricta pero
+   se comprueba que tienen contenido no vacio y que contienen los tokens
+   minimos esperados (function mount, readyState). Los scripts puros (sin
+   type o type="text/javascript") se parsean con new Function y se aborta si
+   hay SyntaxError.
+   Llama con el HTML ya leido. Lanza Error si encuentra algun problema.
+   --------------------------------------------------------------------------- */
+function validateInlineScripts(html, inputPath) {
+  var re = /<script([^>]*)>([\s\S]*?)<\/script>/g;
+  var m;
+  var idx = 0;
+  while ((m = re.exec(html)) !== null) {
+    var attrs   = m[1];
+    var content = m[2];
+    var hasSrc  = /\bsrc\s*=/.test(attrs);
+    if (hasSrc) { idx++; continue; }
+
+    var isBabel = /type\s*=\s*["']text\/babel["']/.test(attrs);
+    var trimmed = content.trim();
+
+    if (isBabel) {
+      if (trimmed.length === 0) {
+        throw new Error(
+          'Script inline Babel #' + idx + ' esta vacio en ' + inputPath
+        );
+      }
+      if (trimmed.indexOf('function mount') !== -1) {
+        var required = ['readyState', 'console.error', 'DOMContentLoaded'];
+        required.forEach(function(token) {
+          if (trimmed.indexOf(token) === -1) {
+            throw new Error(
+              'Script inline Babel #' + idx + ' (mount loop) parece truncado: ' +
+              'falta token "' + token + '". Ultimo fragmento: ' +
+              JSON.stringify(trimmed.slice(-120))
+            );
+          }
+        });
+      }
+    } else {
+      if (trimmed.length === 0) { idx++; continue; }
+      try {
+        new Function(trimmed); // eslint-disable-line no-new-func
+      } catch (parseErr) {
+        throw new Error(
+          'SyntaxError en script inline #' + idx + ' de ' + inputPath +
+          ': ' + parseErr.message +
+          '\nUltimos 120 chars: ' + JSON.stringify(trimmed.slice(-120))
+        );
+      }
+    }
+    idx++;
+  }
+  console.log('  [OK] validateInlineScripts: ' + idx + ' bloques <script> revisados.');
+}
+
+/* ---------------------------------------------------------------------------
    MAIN
    --------------------------------------------------------------------------- */
 var html = readFileClean(INPUT);
+
+// 0a. Validar scripts inline de PACE.html ANTES de cualquier transformacion
+try {
+  validateInlineScripts(html, INPUT);
+} catch (e) {
+  console.error('  [ERROR] Script inline invalido en ' + INPUT);
+  console.error('  [ERROR] ' + e.message);
+  console.error('  [ERROR] Abortando build. Reparar PACE.html antes de continuar.');
+  process.exit(1);
+}
 
 // 0. Quitar <link rel="manifest"> (CORS en file://)
 html = html.replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ');
