@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.27.2
-**Ultima sesion:** #55 -- 2026-05-09 - chore(polish): i18n sync ES/EN, a11y overlays, mobile, smoke tests (v0.27.2)
-**Ultima actualizacion de este archivo:** 2026-05-09 - sesion 55
-**Build entregado:** `PACE_standalone.html` v0.27.2 (544 KB)
+**Version actual:** v0.27.3
+**Ultima sesion:** #56 -- 2026-05-09 - chore(build): blindaje build con parser sintactico real (v0.27.3)
+**Ultima actualizacion de este archivo:** 2026-05-09 - sesion 56
+**Build entregado:** `PACE_standalone.html` v0.27.3 (545 KB)
 
 ---
 
@@ -21,8 +21,8 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.27.2** (titulo + @media mobile Caminos s55) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.27.2** (544 KB, regenerado s55) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.27.3** (titulo bump s56) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.27.3** (545 KB, regenerado s56) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** |
@@ -84,49 +84,53 @@ Backups vigentes (22 -- BORRAR MANUALMENTE los 2 mas antiguos para volver a 20):
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 55 - v0.27.1b -> v0.27.2 - chore(polish): i18n, a11y, mobile, smoke tests**
+**Sesion 56 - v0.27.2 -> v0.27.3 - chore(build): blindaje build con parser sintactico real**
 
 ### Que se hizo
 
-Sesion de pulido sin features nuevas tras las 6 sesiones intensas s49-s54.
+Sesion de infraestructura pura. Sin cambios de app ni UI.
 
-**Auditoria i18n:**
-- ES vs EN: 321 claves en cada bloque, 0 diferencias. V1 OK.
-- Claves t() huerfanas: 0 (53 falsos positivos eran IDs de unlockAchievement). V2 OK.
+**Objetivo:** reemplazar 4 checks heuristicos acumulados en s52/s54b/s55b por un
+parser sintactico real que valide todos los archivos antes del bundle.
 
-**Accesibilidad overlays:**
-- PathRunner: `role="dialog"`, `aria-modal="true"`, `aria-label`, Escape handler
-  (redirige a ExitConfirmModal si obligatorio / abandona si opcional).
-- ExitConfirmModal: `role="dialog"`, `aria-modal`, `aria-labelledby`, Escape handler,
-  focus inicial en boton Seguir.
-- PathsLibrary: `aria-labelledby`, Escape handler, focus inicial en boton cerrar,
-  `aria-label={t('common.close')}`, icono canonico ✕.
+**Parser elegido:** TypeScript (ya instalado en el workspace). `@babel/parser` no
+pudo instalarse porque npm esta bloqueado por politica de red del entorno Cowork.
+El TypeScript parser con `ScriptKind.JSX` produce los mismos resultados a efectos
+de deteccion de truncamientos.
 
-**Mobile CSS:**
-- Anadido primer `@media (max-width:480px)` en PACE.html para componentes Caminos:
-  padding reducido en .path-topbar, min-height 44px en botones touch, .path-stats-summary
-  en columna, SuggestedPathCard dual colapsado.
+**Refactor build-standalone.js:**
+- Eliminados: `validateFileEnd`, `validateNoUnclosedStrings`, `new Function()`, `WARN_ALLOWLIST`.
+- Nueva funcion: `validateSyntax(content, label, isJSX)` -- parseo real con snippet.
+- Nueva funcion: `validateAppFiles()` -- recorre app/ recursivamente.
+- `validateInlineScripts()` rehecha con parser real + strip de comentarios HTML.
+- Lineas: 297 -> 241 (-19%).
 
-**Smoke tests:**
-- Creado `docs/qa/smoke-tests.md` con 7 escenarios completos (Pomodoro, path.dawn,
-  abandon, favorito dual, libreria, stats Caminos, i18n EN).
+**Test de regresion:**
+- Truncamiento deliberado de `app/state.jsx` a 100 lineas.
+- Build aborto con: `Syntax error in app/state.jsx at 101:0 -- '}' expected`.
+- Restaurado y build completo: 33 archivos OK, 2 scripts inline OK, 545 KB.
 
-**Build:** 544 KB, 0 errores, 0 WARN. V7 OK.
+**Documentacion:** `docs/BUILD.md` creado. `package.json` creado en raiz.
+
+**Build:** 545 KB, 0 errores, 0 WARN.
 
 ### Decisiones tomadas
-- No se refactorizan archivos grandes (state.jsx, Sidebar) - aplazado a s56.
-- PathYearView mobile (heatmap en 320px muy denso) aplazado a s56 como TODO.
-- Backups: FS sandbox no permite borrar archivos de sesiones previas; hay 22 backups.
-  Los 2 mas antiguos (v0.17.0, v0.18.0 del 2026-05-05) deben borrarse manualmente.
+- TypeScript parser como alternativa permanente a @babel/parser.
+  Documentado en docs/BUILD.md "Limitaciones conocidas".
+- Ruta de TS hardcodeada: `/usr/local/lib/node_modules_global/lib/node_modules/typescript`.
+  Fragil si cambia el entorno, pero es la unica opcion sin npm.
+- Backups: FS sandbox sigue sin permitir borrar; 23 backups ahora.
+  Borrar manualmente v0.17.0 y v0.18.0 cuando sea posible.
 
 ### Incidencia
-Ninguna. Build limpio en primer intento.
+npm bloqueado por politica de red -- no se pudo instalar @babel/parser.
+Resuelta usando TypeScript ya disponible en el workspace.
 
 ### Proxima sesion (sugerencias)
-- s56: Split state.jsx (1025 ln, deuda critica) o split main.jsx (600 ln)
-- s56: PathYearView mobile (heatmap en 320px)
-- s56: Detector logro master.midnight.never
-- s56: Iconos PNG reales PWA manifest
+- s57: Split state.jsx (1025 ln, deuda critica) -- sin features nuevas
+- s57: PathYearView mobile (heatmap en 320px)
+- s57: Detector logro master.midnight.never
+- s57: Iconos PNG reales PWA manifest
 ## Decisiones activas
 
 | Decision | Desde | Detalle |
@@ -134,8 +138,8 @@ Ninguna. Build limpio en primer intento.
 | Sintetizar audio (no WAVs) | s28 | Web Audio API, 432 Hz base |
 | Elastic License 2.0 | s26 | No SaaS competidores, si uso personal/comercial propio |
 | Anti-truncamiento: Python write | s48-s52 | Nunca Edit tool con caracteres especiales |
-| Build con validateFileEnd | s52 | Aborta si JS/JSX truncado o comentarios desbalanceados |
-| WARN allowlist (SupportModule, Achievements) | s52 | Falsos positivos conocidos de template literals |
+| Build con TS parser real | s56 | Aborta con linea:columna exacta en cualquier error sintactico |
+
 | Overlay via CustomEvent | s50+ | PathRunner, PathsLibrary -- evita prop drilling |
 
 ---

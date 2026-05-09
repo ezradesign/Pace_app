@@ -1,0 +1,11 @@
+{
+  "name": "pace-app-build",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node build-standalone.js"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.24.0"
+  }
+}

@@ -1,21 +1,24 @@
 /**
  * build-standalone.js - PACE
  * Genera PACE_standalone.html inlineando todos los assets locales en PACE.html.
- * Uso: node build-standalone.js
+ * Uso: node build-standalone.js (o: npm run build)
  *
  * Sesion 48:    blindado contra null bytes y BOM (UTF-8/UTF-16).
  * Sesion 48c:   elimina <link rel="manifest"> del bundle (CORS en file://).
  * Sesion 51:    regex ampliado para capturar scripts con data-presets.
- * Sesion 52:    validateFileEnd (deteccion de truncamiento), fix de
- *               validateNoUnclosedStrings (backticks en comentarios).
- * Sesion 54b:   check d (clave sin valor, strip-comments), check e (new Function .js).
- * Sesion 55b:   validateInlineScripts: parsea cada <script> sin src de PACE.html
- *               con new Function; aborta si hay SyntaxError (detecta truncamiento
- *               como el corte del bloque mount ocurrido en sesion 55).
+ * Sesion 52:    validateFileEnd (heuristico, reemplazado en s56).
+ * Sesion 54b:   check clave-sin-valor y new Function .js (reemplazados en s56).
+ * Sesion 55b:   validateInlineScripts heuristico (reemplazado en s56).
+ * Sesion 56:    PARSER REAL: TypeScript parser via tsserver lib, reemplaza
+ *               todos los checks heuristicos anteriores. Aborta con
+ *               archivo, linea:columna y snippet de contexto exactos.
  */
+
+'use strict';
 
 var fs   = require('fs');
 var path = require('path');
+var ts   = require('/usr/local/lib/node_modules_global/lib/node_modules/typescript');
 
 var ROOT   = __dirname;
 var INPUT  = path.join(ROOT, 'PACE.html');
@@ -23,6 +26,7 @@ var OUTPUT = path.join(ROOT, 'PACE_standalone.html');
 
 /* ---------------------------------------------------------------------------
    readFileClean: lee un archivo, elimina BOM UTF-8/UTF-16 y null bytes.
+   Pre-filtro necesario antes de parsear.
    --------------------------------------------------------------------------- */
 function readFileClean(filePath) {
   var buf = fs.readFileSync(filePath);
@@ -41,257 +45,197 @@ function readFileClean(filePath) {
   if (s.indexOf('\x00') !== -1) {
     var original = s.length;
     s = s.replace(/\x00/g, '');
-    console.warn('  [WARN] Null bytes eliminados en: ' + filePath + ' (' + (original - s.length) + ' bytes)');
+    console.warn('  [WARN] Null bytes eliminados en: ' + filePath +
+                 ' (' + (original - s.length) + ' bytes)');
   }
 
   return s;
 }
 
 /* ---------------------------------------------------------------------------
-   validateFileEnd (T3 sesion 52): aborta el build si un archivo parece
-   truncado. Comprueba:
-     a) Ultimo caracter util no es null ni solo espacios.
-     b) Para .jsx/.js: las ultimas 300 chars contienen al menos uno de los
-        cierres canonicos esperados.
-     c) Numero de comentarios abiertos /* == numero de cierres - balanceados.
-   Si la validacion falla, lanza un Error (el llamador aborta con process.exit).
+   validateSyntax: parsea content con el TypeScript parser (ScriptKind.JSX
+   para .jsx, ScriptKind.JS para .js). Devuelve { ok: true } o
+   { ok: false, message: string } con archivo, linea:columna y snippet.
+   Solo detecta errores de SINTAXIS -- no errores semanticos ni de tipos.
    --------------------------------------------------------------------------- */
-function validateFileEnd(filePath, content) {
-  var ext = path.extname(filePath);
-  var trimmed = content.trimEnd();
+function validateSyntax(content, sourceLabel, isJSX) {
+  var kind = isJSX ? ts.ScriptKind.JSX : ts.ScriptKind.JS;
+  var sf   = ts.createSourceFile(sourceLabel, content,
+                                  ts.ScriptTarget.Latest, true, kind);
+  var diags = sf.parseDiagnostics || [];
+  if (diags.length === 0) return { ok: true };
 
-  // a) Archivo vacio o solo espacios
-  if (trimmed.length === 0) {
-    throw new Error('Archivo vacio o solo espacios en blanco.');
-  }
+  var d    = diags[0];
+  var pos  = sf.getLineAndCharacterOfPosition(d.start);
+  var line = pos.line + 1;
+  var col  = pos.character;
+  var msg  = typeof d.messageText === 'string'
+    ? d.messageText
+    : d.messageText.messageText;
 
-  // b) Para JS/JSX: el cierre final debe ser reconocible
-  if (ext === '.js' || ext === '.jsx') {
-    var tail = trimmed.slice(-300);
-    var validEndings = [
-      'Object.assign(window',
-      'window.',
-      '});',
-      '});',
-      '});',
-      'root.render(',
-      '};',
-      ')',
-    ];
-    var hasValidEnd = validEndings.some(function(e) { return tail.indexOf(e) !== -1; });
-    if (!hasValidEnd) {
-      throw new Error('Cierre no reconocido en las ultimas 300 chars: ' + JSON.stringify(tail.slice(-80)));
-    }
-  }
+  var lines = content.split('\n');
+  var start = Math.max(0, line - 3);
+  var end   = Math.min(lines.length, line + 2);
+  var snippet = lines.slice(start, end).map(function(l, i) {
+    var num    = start + i + 1;
+    var marker = num === line ? '>' : ' ';
+    return marker + ' ' + num.toString().padStart(4) + ' | ' + l;
+  }).join('\n');
 
-  // c) Comentarios de bloque balanceados
-  var openCount  = (content.match(/\/\*/g)  || []).length;
-  var closeCount = (content.match(/\*\//g)  || []).length;
-  if (openCount !== closeCount) {
-    throw new Error('Comentarios de bloque desbalanceados: ' + openCount + ' /* vs ' + closeCount + ' */');
-  }
-
-  // d) Sesion 54b: clave de objeto sin valor a la derecha del colon.
-  //    Detecta corrupcion: 'paths.path.dawn.name':   <-- sin valor ni coma
-  //    Se eliminan comentarios de bloque primero para evitar falsos positivos
-  //    con texto narrativo que termina en "algo":
-  var contentNoComments = content.replace(/\/\*[\s\S]*?\*\//g, '');
-  var missingValue = contentNoComments.match(/['"][^'"\n]+['"]\s*:\s*$/m);
-  if (missingValue) {
-    throw new Error('Clave de objeto sin valor: ' + missingValue[0].trim());
-  }
-
-  // e) Sesion 54b: para .js (no .jsx), parseo con new Function.
-  //    Los archivos .jsx contienen JSX (<tags>) que no son JS valido.
-  if (ext === '.js') {
-    try {
-      var testSrc = content.replace(/^\s*export\s+default\s+/m, 'var __tmp = ');
-      new Function(testSrc); // eslint-disable-line no-new-func
-    } catch (parseErr) {
-      throw new Error('SyntaxError JS: ' + parseErr.message);
-    }
-  }
+  return {
+    ok: false,
+    message: 'Syntax error in ' + sourceLabel + ' at ' + line + ':' + col +
+             '\n' + msg + '\n\n' + snippet
+  };
 }
 
 /* ---------------------------------------------------------------------------
-   validateNoUnclosedStrings (sesion 48d.1, fix sesion 52):
-   Detecta strings sin cerrar al final del archivo. Ahora tiene en cuenta
-   que los comentarios de bloque pueden contener backticks - se eliminan
-   ANTES de contar, pero usando un enfoque de dos pasadas que no confunde
-   backticks dentro de comentarios con toggles de template literal.
-   Usa allowlist para archivos con template literals conocidos que el
-   analizador simplificado no puede seguir correctamente.
-
-   Allowlist (falsos positivos conocidos):
-     - app/support/SupportModule.jsx  : BMC_URL usa template literal con ${}
-     - app/achievements/Achievements.jsx : SVG_PFX es template literal multilinea
+   validateAppFiles: valida todos los .js y .jsx bajo app/.
+   Aborta inmediatamente al primer error.
    --------------------------------------------------------------------------- */
-var WARN_ALLOWLIST = {
-  'app/support/SupportModule.jsx':    'BMC_URL template literal - falso positivo conocido s52',
-  'app/achievements/Achievements.jsx':'SVG_PFX template literal - falso positivo conocido s52',
-};
+function validateAppFiles() {
+  var appDir = path.join(ROOT, 'app');
+  var files  = [];
 
-function validateNoUnclosedStrings(fileContent, filePath) {
-  // Normalizar separador de ruta para la allowlist (Windows usa \)
-  var normalizedPath = filePath.replace(/\\/g, '/');
-  if (WARN_ALLOWLIST[normalizedPath]) {
-    return; // Falso positivo documentado - silenciado
-  }
-
-  try {
-    // Eliminar comentarios de bloque sustituyendo por espacios (preserva lineas)
-    // para no desbalancear los contadores de backtick.
-    var stripped = fileContent.replace(/\/\*[\s\S]*?\*\//g, function(m) {
-      return m.replace(/[^\n]/g, ' ');
-    });
-    // Eliminar comentarios de linea
-    stripped = stripped.replace(/\/\/[^\n]*/g, '');
-
-    var lines = stripped.split('\n');
-    var inTemplate = false;
-    for (var i = 0; i < lines.length; i++) {
-      var line = lines[i];
-      var bt = (line.match(/`/g) || []).length;
-      if (bt % 2 === 1) inTemplate = !inTemplate;
-      if (inTemplate) continue;
-      var sq = (line.match(/(?<!\\)'/g) || []).length;
-      var dq = (line.match(/(?<!\\)"/g) || []).length;
-      if ((sq % 2 === 1 || dq % 2 === 1) && i === lines.length - 1) {
-        console.warn('  [WARN] ' + filePath + ': posible string sin cerrar en ultima linea: ' + line.slice(0, 80));
+  (function walk(dir) {
+    fs.readdirSync(dir).forEach(function(entry) {
+      var full = path.join(dir, entry);
+      var stat = fs.statSync(full);
+      if (stat.isDirectory()) {
+        walk(full);
+      } else if (/\.(js|jsx)$/.test(entry)) {
+        files.push(full);
       }
+    });
+  })(appDir);
+
+  files.sort();
+  var jsCount = 0, jsxCount = 0;
+
+  files.forEach(function(filePath) {
+    var ext     = path.extname(filePath);
+    var isJSX   = ext === '.jsx';
+    var rel     = path.relative(ROOT, filePath).replace(/\\/g, '/');
+    var content = readFileClean(filePath);
+    var result  = validateSyntax(content, rel, isJSX);
+    if (!result.ok) {
+      console.error('\n  [ERROR] ' + result.message);
+      console.error('\n  [ERROR] Abortando build. Reparar el archivo antes de continuar.');
+      process.exit(1);
     }
-    if (inTemplate) {
-      console.warn('  [WARN] ' + filePath + ': template literal sin cerrar al final del archivo.');
-    }
-  } catch(e) {
-    console.warn('  [WARN] validateNoUnclosedStrings error en ' + filePath + ': ' + e.message);
-  }
+    if (isJSX) jsxCount++; else jsCount++;
+  });
+
+  console.log('  [OK] ' + files.length + ' archivos validados (' +
+              jsCount + ' .js, ' + jsxCount + ' .jsx).');
+  return files;
 }
 
 /* ---------------------------------------------------------------------------
-   validateInlineScripts (sesion 55b): parsea cada bloque <script> sin atributo
-   src presente en el HTML de entrada. Los scripts type="text/babel" contienen
-   JSX y no son JS valido para node — se omiten de la validacion estricta pero
-   se comprueba que tienen contenido no vacio y que contienen los tokens
-   minimos esperados (function mount, readyState). Los scripts puros (sin
-   type o type="text/javascript") se parsean con new Function y se aborta si
-   hay SyntaxError.
-   Llama con el HTML ya leido. Lanza Error si encuentra algun problema.
+   validateInlineScripts: extrae y valida con el parser real cada bloque
+   <script> sin atributo src del HTML de entrada.
+   Nota: se eliminan comentarios HTML (<!-- ... -->) antes de aplicar el
+   regex para evitar falsos positivos con etiquetas de script dentro de
+   comentarios (como en el bloque de documentacion del mount loop).
+   Los scripts type="text/babel" se parsean como JSX.
+   Los demas se parsean como JS puro.
    --------------------------------------------------------------------------- */
-function validateInlineScripts(html, inputPath) {
-  var re = /<script([^>]*)>([\s\S]*?)<\/script>/g;
+function validateInlineScripts(htmlContent, htmlPath) {
+  // Strip HTML comments para que fragmentos como <!-- <script src> ... -->
+  // no sean capturados como etiquetas de script reales.
+  var htmlNoComments = htmlContent.replace(/<!--[\s\S]*?-->/g, '');
+  var re = /<script(\s[^>]*)?>(\s*)([\s\S]*?)<\/script>/g;
   var m;
   var idx = 0;
-  while ((m = re.exec(html)) !== null) {
-    var attrs   = m[1];
-    var content = m[2];
-    var hasSrc  = /\bsrc\s*=/.test(attrs);
+  var inlineCount = 0;
+
+  while ((m = re.exec(htmlNoComments)) !== null) {
+    var attrs   = m[1] || '';
+    var body    = m[3] || '';
+    // Script externo: src="..." en sus atributos de apertura
+    var hasSrc  = /\bsrc\s*=\s*["'][^"']+["']/.test(attrs);
     if (hasSrc) { idx++; continue; }
 
-    var isBabel = /type\s*=\s*["']text\/babel["']/.test(attrs);
-    var trimmed = content.trim();
+    var trimmed = body.trim();
+    if (!trimmed) { idx++; continue; }
 
-    if (isBabel) {
-      if (trimmed.length === 0) {
-        throw new Error(
-          'Script inline Babel #' + idx + ' esta vacio en ' + inputPath
-        );
-      }
-      if (trimmed.indexOf('function mount') !== -1) {
-        var required = ['readyState', 'console.error', 'DOMContentLoaded'];
-        required.forEach(function(token) {
-          if (trimmed.indexOf(token) === -1) {
-            throw new Error(
-              'Script inline Babel #' + idx + ' (mount loop) parece truncado: ' +
-              'falta token "' + token + '". Ultimo fragmento: ' +
-              JSON.stringify(trimmed.slice(-120))
-            );
-          }
-        });
-      }
-    } else {
-      if (trimmed.length === 0) { idx++; continue; }
-      try {
-        new Function(trimmed); // eslint-disable-line no-new-func
-      } catch (parseErr) {
-        throw new Error(
-          'SyntaxError en script inline #' + idx + ' de ' + inputPath +
-          ': ' + parseErr.message +
-          '\nUltimos 120 chars: ' + JSON.stringify(trimmed.slice(-120))
-        );
-      }
+    var isBabel = /type\s*=\s*["']text\/babel["']/.test(attrs);
+    var label   = htmlPath + ' inline script #' + idx;
+    var result  = validateSyntax(trimmed, label, isBabel);
+
+    if (!result.ok) {
+      console.error('\n  [ERROR] ' + result.message);
+      console.error('\n  [ERROR] Abortando build. Reparar PACE.html antes de continuar.');
+      process.exit(1);
     }
+
+    inlineCount++;
     idx++;
   }
-  console.log('  [OK] validateInlineScripts: ' + idx + ' bloques <script> revisados.');
+
+  console.log('  [OK] validateInlineScripts: ' + inlineCount + ' scripts inline validados.');
 }
 
 /* ---------------------------------------------------------------------------
    MAIN
    --------------------------------------------------------------------------- */
-var html = readFileClean(INPUT);
+function main() {
+  console.log('=== PACE build-standalone.js (s56 / parser TS real) ===');
 
-// 0a. Validar scripts inline de PACE.html ANTES de cualquier transformacion
-try {
+  // 1. Validar todos los archivos app/*.js y app/*.jsx
+  console.log('\n[1/5] Validando archivos app/ ...');
+  validateAppFiles();
+
+  // 2. Cargar PACE.html y validar scripts inline
+  console.log('\n[2/5] Cargando y validando PACE.html ...');
+  var html = readFileClean(INPUT);
   validateInlineScripts(html, INPUT);
-} catch (e) {
-  console.error('  [ERROR] Script inline invalido en ' + INPUT);
-  console.error('  [ERROR] ' + e.message);
-  console.error('  [ERROR] Abortando build. Reparar PACE.html antes de continuar.');
-  process.exit(1);
-}
 
-// 0. Quitar <link rel="manifest"> (CORS en file://)
-html = html.replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ');
+  // 3. Quitar <link rel="manifest"> (CORS en file://)
+  console.log('\n[3/5] Inlineando assets ...');
+  html = html.replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ');
 
-// 1. Inline tokens.css
-var tokensCss = readFileClean(path.join(ROOT, 'app/tokens.css'));
-html = html.replace(
-  /<link rel="stylesheet" href="app\/tokens\.css"\s*\/>/,
-  '<style>\n' + tokensCss + '\n  </style>'
-);
+  // 4. Inline tokens.css
+  var tokensCss = readFileClean(path.join(ROOT, 'app/tokens.css'));
+  html = html.replace(
+    /<link rel="stylesheet" href="app\/tokens\.css"\s*\/>/,
+    '<style>\n' + tokensCss + '\n  </style>'
+  );
 
-// 2. Inline cada <script type="text/babel" src="..."></script>
-//    El regex captura scripts con o sin atributos extra (data-presets, etc.)
-html = html.replace(
-  /<script type="text\/babel"[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g,
-  function(match, src) {
-    var full = path.join(ROOT, src);
-    if (!fs.existsSync(full)) {
-      console.warn('  [WARN] No encontrado: ' + src);
-      return '';
+  // 5. Inline cada <script type="text/babel" src="..."></script>
+  html = html.replace(
+    /<script type="text\/babel"[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g,
+    function(match, src) {
+      var full = path.join(ROOT, src);
+      if (!fs.existsSync(full)) {
+        console.warn('  [WARN] No encontrado: ' + src);
+        return '';
+      }
+      var content = readFileClean(full);
+      return '<script type="text/babel">\n' + content + '\n</script>';
     }
-    var content = readFileClean(full);
+  );
 
-    // T3: validar cierre del archivo antes de inlinear
-    try {
-      validateFileEnd(src, content);
-    } catch(e) {
-      console.error('  [ERROR] Archivo truncado o malformado: ' + src);
-      console.error('  [ERROR] Motivo: ' + e.message);
-      console.error('  [ERROR] Abortando build. Reparar el archivo antes de continuar.');
-      process.exit(1);
-    }
+  // 6. Logo PNG -> data URI
+  var logoPng = fs.readFileSync(path.join(ROOT, 'app/ui/pace-logo.png'));
+  var logoB64 = logoPng.toString('base64');
+  html = html.replace(
+    /src="app\/ui\/pace-logo\.png"/,
+    'src="data:image/png;base64,' + logoB64 + '"'
+  );
 
-    validateNoUnclosedStrings(content, src);
-    return '<script type="text/babel">\n' + content + '\n</script>';
+  // 7. Verificar que el output no contiene null bytes
+  console.log('\n[4/5] Verificando bundle final ...');
+  if (html.indexOf('\x00') !== -1) {
+    console.error('  [ERROR] El bundle final contiene null bytes. Abortando.');
+    process.exit(1);
   }
-);
 
-// 3. Logo PNG -> data URI
-var logoPng = fs.readFileSync(path.join(ROOT, 'app/ui/pace-logo.png'));
-var logoB64 = logoPng.toString('base64');
-html = html.replace(
-  /src="app\/ui\/pace-logo\.png"/,
-  'src="data:image/png;base64,' + logoB64 + '"'
-);
-
-// 4. Verificar que el output no contiene null bytes
-if (html.indexOf('\x00') !== -1) {
-  console.error('  [ERROR] El bundle final contiene null bytes. Abortando.');
-  process.exit(1);
+  // 8. Escribir
+  console.log('\n[5/5] Escribiendo PACE_standalone.html ...');
+  fs.writeFileSync(OUTPUT, html, 'utf8');
+  var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
+  console.log('\n=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');
 }
 
-fs.writeFileSync(OUTPUT, html, 'utf8');
-var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
-console.log('PACE_standalone.html generado -- ' + kb + ' KB');
+main();
