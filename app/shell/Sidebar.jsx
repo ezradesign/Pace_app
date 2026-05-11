@@ -81,14 +81,24 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       }
     }
     /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
-       Logo recortado al 50%, tagline oculto por overflow:hidden.
-       Secciones y footer con márgenes menores para caber sin scroll
-       en pantallas pequeñas (iPhone SE / ~568px alto). */
+       s64 (v0.28.5): logo con márgenes neutralizados para evitar
+       clip lateral; spacer flex:1 oculto para eliminar hueco antes
+       del footer "EN CAMINO". */
     @media (max-width: 640px) {
       [data-pace-sidebar] [data-pace-sidebar-logobar] {
         min-height: 48px !important;
         max-height: 48px !important;
         overflow: hidden !important;
+        /* Neutralizar márgenes negativos inline — evita que el logo
+           se clipee por la izquierda cuando overflow:hidden está activo. */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 4px !important;
+      }
+      /* Spacer flex:1 oculto: el contenido se apila desde arriba y
+         el espacio sobrante queda al final, antes del footer. */
+      [data-pace-sidebar] [data-pace-sidebar-spacer] {
+        display: none !important;
       }
       [data-pace-sidebar] [data-pace-sidebar-achievements] {
         grid-template-columns: repeat(5, 40px) !important;
@@ -188,7 +198,7 @@ function Sidebar() {
         </button>
       </div>
 
-      <div style={{ flex: 1 }} />
+      <div data-pace-sidebar-spacer style={{ flex: 1 }} />
 
       {/* STATUS BAR INFERIOR */}
       <StatusBar compact={isMob} />

@@ -114,7 +114,7 @@ function PathYearView({ history, lang }) {
         <button onClick={()=>{if(canNext)setViewYear(availableYears[yi+1]);}} disabled={!canNext} style={btnStyle(canNext)}>&#8250;</button>
       </div>
 
-      <div data-pyv-wrap style={{overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
+      <div data-pyv-wrap style={{overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch'}}>
         <div style={{display:'inline-block',minWidth:'max-content'}}>
           {/* s63: month labels alineados con cell stride (11+1). */}
           <div style={{display:'flex',marginLeft:18,marginBottom:4}}>

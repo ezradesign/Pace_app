@@ -11,7 +11,8 @@
       "Bash(xargs -I {} echo \"exists\")",
       "Bash(powershell -ExecutionPolicy Bypass -File scripts/check-session.ps1)",
       "PowerShell(\\(Get-ChildItem \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\"\\).Count)",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\" | Sort-Object Name | ForEach-Object { $_.Name })"
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\" | Sort-Object Name | ForEach-Object { $_.Name })",
+      "Bash(Select-String -Pattern 'no medimos' -Context 2,20)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

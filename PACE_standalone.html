@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.28.4</title>
+  <title>PACE · Foco · Cuerpo — v0.28.5</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -1388,7 +1388,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.4';
+const PACE_VERSION = 'v0.28.5';
 
 const defaultState = {
   // Settings / Tweaks
@@ -4589,14 +4589,24 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       }
     }
     /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
-       Logo recortado al 50%, tagline oculto por overflow:hidden.
-       Secciones y footer con márgenes menores para caber sin scroll
-       en pantallas pequeñas (iPhone SE / ~568px alto). */
+       s64 (v0.28.5): logo con márgenes neutralizados para evitar
+       clip lateral; spacer flex:1 oculto para eliminar hueco antes
+       del footer "EN CAMINO". */
     @media (max-width: 640px) {
       [data-pace-sidebar] [data-pace-sidebar-logobar] {
         min-height: 48px !important;
         max-height: 48px !important;
         overflow: hidden !important;
+        /* Neutralizar márgenes negativos inline — evita que el logo
+           se clipee por la izquierda cuando overflow:hidden está activo. */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 0 4px !important;
+      }
+      /* Spacer flex:1 oculto: el contenido se apila desde arriba y
+         el espacio sobrante queda al final, antes del footer. */
+      [data-pace-sidebar] [data-pace-sidebar-spacer] {
+        display: none !important;
       }
       [data-pace-sidebar] [data-pace-sidebar-achievements] {
         grid-template-columns: repeat(5, 40px) !important;
@@ -4696,7 +4706,7 @@ function Sidebar() {
         </button>
       </div>
 
-      <div style={{ flex: 1 }} />
+      <div data-pace-sidebar-spacer style={{ flex: 1 }} />
 
       {/* STATUS BAR INFERIOR */}
       <StatusBar compact={isMob} />
@@ -8252,7 +8262,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
       </div>
 
       {/* Grid con scroll horizontal en móvil */}
-      <div data-pace-year-grid-wrap style={{ overflowX:'auto',WebkitOverflowScrolling:'touch' }}>
+      <div data-pace-year-grid-wrap style={{ overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch' }}>
         <div style={{ display:'inline-block',minWidth:'max-content' }}>
 
           {/* Etiquetas de meses -- ancho alineado con cell stride (11+2) */}
@@ -8526,7 +8536,7 @@ function PathYearView({ history, lang }) {
         <button onClick={()=>{if(canNext)setViewYear(availableYears[yi+1]);}} disabled={!canNext} style={btnStyle(canNext)}>&#8250;</button>
       </div>
 
-      <div data-pyv-wrap style={{overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
+      <div data-pyv-wrap style={{overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch'}}>
         <div style={{display:'inline-block',minWidth:'max-content'}}>
           {/* s63: month labels alineados con cell stride (11+1). */}
           <div style={{display:'flex',marginLeft:18,marginBottom:4}}>
@@ -8750,6 +8760,10 @@ function WeekView({ state }) {
           [data-pace-week-view] [data-pace-week-bar-row] [data-pace-bar-chart] {
             height: 28px !important;
           }
+          /* Nota inferior oculta en móvil — espacio crítico */
+          [data-pace-week-view] [data-pace-week-note] {
+            display: none !important;
+          }
         }
       `}</style>
       <div data-pace-week-cards style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
@@ -8774,6 +8788,16 @@ function WeekView({ state }) {
       {bars.map(b => (
         <WeekBarRow key={b.key} label={b.label} data={b.data} color={b.color} unit={b.unit} />
       ))}
+
+      <div data-pace-week-note style={{
+        marginTop: 10, padding: 8,
+        background: 'var(--paper-2)',
+        borderRadius: 'var(--r-sm)',
+        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
+      }}>
+        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
+        {t('stats.note')}
+      </div>
     </div>
   );
 }

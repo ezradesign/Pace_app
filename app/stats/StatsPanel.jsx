@@ -47,6 +47,10 @@ function WeekView({ state }) {
           [data-pace-week-view] [data-pace-week-bar-row] [data-pace-bar-chart] {
             height: 28px !important;
           }
+          /* Nota inferior oculta en móvil — espacio crítico */
+          [data-pace-week-view] [data-pace-week-note] {
+            display: none !important;
+          }
         }
       `}</style>
       <div data-pace-week-cards style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
@@ -71,6 +75,16 @@ function WeekView({ state }) {
       {bars.map(b => (
         <WeekBarRow key={b.key} label={b.label} data={b.data} color={b.color} unit={b.unit} />
       ))}
+
+      <div data-pace-week-note style={{
+        marginTop: 10, padding: 8,
+        background: 'var(--paper-2)',
+        borderRadius: 'var(--r-sm)',
+        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
+      }}>
+        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
+        {t('stats.note')}
+      </div>
     </div>
   );
 }

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [abajo](#v0285----2026-05-12----fixui-logo-movil--hueco-sidebar--scroll-heatmaps--nota-semana) |
 | **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [abajo](#v0284----2026-05-12----featui-fix-scroll-desktop--sidebar-movil) |
-| **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada -- barras 44->36, PathStat cards 10/14->8/12, gap 14->10 -- todas las pestanas Stats sin scroll en 1080p + heatmap ano completo (7 etiquetas dia + futuros visibles) | #61/62 | [abajo](#v0283----2026-05-11----choreui-weekview--pathstats-compactacion-segunda-pasada) |
+| **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada -- barras 44->36, PathStat cards 10/14->8/12, gap 14->10 -- todas las pestanas Stats sin scroll en 1080p + heatmap ano completo (7 etiquetas dia + futuros visibles) | #61/62 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil + Sidebar.jsx 630->497 ln (sale de deuda) | #61 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) -- 4 patrones canonicos definidos, pendiente propagar a 33 restantes | #60 | [session-60](./docs/sessions/session-60-glyphs-iter-incompleto.md) |
 | **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira -- pantalla activa de sesion deja de mostrar placeholder y muestra simbolo abstracto unico por ejercicio | #59 | [abajo](#v0280----2026-05-11----featglyphs-46-glifos-canonicos-por-paso) |
@@ -83,6 +84,35 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.28.5] -- 2026-05-12 -- fix(ui): logo movil + hueco sidebar + scroll heatmaps + nota Semana
+
+Sesion 64. Cuatro fixes menores de UI tras feedback visual post-s63.
+
+### Fixed
+
+- **`app/shell/Sidebar.jsx`** (`@media <=640px`): logo "Pace." recortado por la
+  izquierda — neutralizados margenes negativos inline (`margin-left/right:0!important`)
+  y anadido `padding:0 4px` en el logoBar para evitar clip con `overflow:hidden`.
+- **`app/shell/Sidebar.jsx`**: hueco grande antes del footer "EN CAMINO" en movil —
+  `<div data-pace-sidebar-spacer>` (el `flex:1` que ancla StatusBar al fondo en desktop)
+  ocultado en <=640px con `display:none!important`. Contenido se apila desde arriba,
+  espacio sobrante queda al final naturalmente.
+- **`app/stats/YearView.jsx`** + **`app/stats/PathYearView.jsx`**: barra scroll
+  vertical en heatmaps Ano y Caminos — anadido `overflowY:'hidden'` en los wrappers
+  `data-pace-year-grid-wrap` y `data-pyv-wrap`. Causa: CSS spec hace que
+  `overflow-x:auto` ponga `overflow-y:auto` implicito.
+- **`app/stats/StatsPanel.jsx`** (`WeekView`): nota inferior restaurada con estilos
+  compactos (`marginTop:10, padding:8, fontSize:11`). Oculta en <=640px via
+  `data-pace-week-note + display:none`. Desktop: visible sin generar scroll.
+
+### Build
+
+- `PACE_standalone.html`: 557 KB → 558 KB (+1 KB). 40 archivos validados.
+- Backup: `backups/PACE_standalone_v0.28.4_20260512.html`. Eliminado oldest
+  (`v0.25.0_20260507`). Quedan 20 backups.
 
 ---
 

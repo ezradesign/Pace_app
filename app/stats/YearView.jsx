@@ -181,7 +181,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
       </div>
 
       {/* Grid con scroll horizontal en móvil */}
-      <div data-pace-year-grid-wrap style={{ overflowX:'auto',WebkitOverflowScrolling:'touch' }}>
+      <div data-pace-year-grid-wrap style={{ overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch' }}>
         <div style={{ display:'inline-block',minWidth:'max-content' }}>
 
           {/* Etiquetas de meses -- ancho alineado con cell stride (11+2) */}
