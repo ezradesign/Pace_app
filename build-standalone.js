@@ -18,7 +18,16 @@
 
 var fs   = require('fs');
 var path = require('path');
-var ts   = require('/usr/local/lib/node_modules_global/lib/node_modules/typescript');
+var ts   = (function() {
+  var paths = [
+    '/usr/local/lib/node_modules_global/lib/node_modules/typescript',
+    path.join(__dirname, 'node_modules/typescript'),
+  ];
+  for (var i = 0; i < paths.length; i++) {
+    try { return require(paths[i]); } catch (e) {}
+  }
+  throw new Error('TypeScript not found. Run: npm install typescript --no-save');
+})();
 
 var ROOT   = __dirname;
 var INPUT  = path.join(ROOT, 'PACE.html');

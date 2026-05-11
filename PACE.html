@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.3</title>
+  <title>PACE · Foco · Cuerpo — v0.27.5</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <link rel="stylesheet" href="app/tokens.css" />
@@ -80,17 +80,30 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <!-- ORDEN DE CARGA
-       0. i18n/*    → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
-                      Deben ir ANTES de state.jsx: loadState() llama a detectInitialLang().
-       1. state.jsx → store global (usePace, acciones, setLang)
-       2. ui/*      → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
-       3. shell/*   → layout (Sidebar)
-       4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
-       5. main.jsx  → monta <PaceApp/> en #root
+       0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
+                           Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
+       1. state-core.jsx → store, loadState, rollover, history helpers, toast
+       2. state-timer.jsx       → addFocusMinutes, completePomodoro
+       3. state-hydrate.jsx     → addWaterGlass
+       4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
+       5. state-paths.jsx       → paths CRUD, stats
+       6. state-settings.jsx    → setLang
+       7. state.jsx      → índice — re-export consolidado del API pública
+       8. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
+       9. shell/*        → layout (Sidebar)
+      10. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
+      11. main.jsx       → monta <PaceApp/> en #root
+       Split sesion 57 / v0.27.5.
   -->
   <script type="text/babel" src="app/i18n/strings.js"></script>
   <script type="text/babel" src="app/i18n/strings-content.js"></script>
   <script type="text/babel" src="app/i18n/useT.jsx"></script>
+  <script type="text/babel" src="app/state-core.jsx"></script>
+  <script type="text/babel" src="app/state-timer.jsx"></script>
+  <script type="text/babel" src="app/state-hydrate.jsx"></script>
+  <script type="text/babel" src="app/state-achievements.jsx"></script>
+  <script type="text/babel" src="app/state-paths.jsx"></script>
+  <script type="text/babel" src="app/state-settings.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>

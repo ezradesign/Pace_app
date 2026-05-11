@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [abajo](#v0275----2026-05-11----refactorstate-split-en-6-modulos) |
 | **v0.27.3** | 2026-05-09 | chore(build): blindaje build con parser sintactico real -- TS parser reemplaza 4 checks heuristicos, aborta con linea/columna exacta | #56 | [abajo](#v0273----2026-05-09----chorebuild-blindaje-build-con-parser-real) |
 | **v0.27.2** | 2026-05-09 | chore(polish): i18n sync ES/EN, a11y overlays (role/Escape/focus), mobile audit, smoke tests documentados | #55 | [abajo](#v0272----2026-05-09----chorpolish-i18n-sync-a11y-overlays-mobile-smoke-tests) |
 | **v0.27.1b** | 2026-05-09 | fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build check-d/e | #54b | (hotfix, sin seccion detalle) |
@@ -76,6 +77,34 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.27.5] -- 2026-05-11 -- refactor(state): split en 6 modulos
+
+Refactor de infraestructura puro. Sin cambios de comportamiento ni UI.
+
+### Changed
+
+- **`app/state.jsx`** (1026 lineas) dividido en 6 modulos cohesivos + indice:
+  - `state-core.jsx` (356 ln): store, loadState, rollover, history helpers, toast
+  - `state-timer.jsx` (49 ln): addFocusMinutes, completePomodoro
+  - `state-hydrate.jsx` (52 ln): addWaterGlass, checkHydrateWeekPerfect
+  - `state-achievements.jsx` (251 ln): unlockAchievement, detectores, complete*Session, updateStreak
+  - `state-paths.jsx` (166 ln): paths CRUD, stats, favoritos
+  - `state-settings.jsx` (13 ln): setLang
+  - `state.jsx` (58 ln): indice — re-export consolidado del API publica
+- **`PACE.html`**: scripts state-*.jsx en orden correcto antes de state.jsx. Titulo v0.27.5.
+- **`PACE_VERSION`**: bumpeada a `v0.27.5` en state-core.jsx.
+- **`build-standalone.js`**: ruta TypeScript ampliada para funcionar en Windows (fallback a node_modules local).
+- Total lineas state: 1026 → 945 (-8%). Ningun archivo supera 400 lineas.
+- API publica preservada identica (31 exports, mismo nombre).
+- Comportamiento: 21/21 trazas de validacion OK.
+
+### Sizes
+
+- `PACE.html`: titulo bumpeado a v0.27.5.
+- `PACE_standalone.html`: 538 KB (vs 545 KB pre-refactor, -7 KB por menos comentarios duplicados).
 
 ---
 

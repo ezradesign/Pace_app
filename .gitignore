@@ -2,6 +2,9 @@
 Pace_app/
 Pace_app_*/
 
+# Dependencias Node (instaladas localmente para build)
+node_modules/
+
 # OpenOffice / LibreOffice lock files (sesión 38b post-incident)
 .~lock.*#
 

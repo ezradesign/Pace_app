@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.3</title>
+  <title>PACE · Foco · Cuerpo — v0.27.5</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -268,13 +268,20 @@ input, textarea { font-family: inherit; color: inherit; }
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <!-- ORDEN DE CARGA
-       0. i18n/*    → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
-                      Deben ir ANTES de state.jsx: loadState() llama a detectInitialLang().
-       1. state.jsx → store global (usePace, acciones, setLang)
-       2. ui/*      → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
-       3. shell/*   → layout (Sidebar)
-       4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
-       5. main.jsx  → monta <PaceApp/> en #root
+       0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
+                           Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
+       1. state-core.jsx → store, loadState, rollover, history helpers, toast
+       2. state-timer.jsx       → addFocusMinutes, completePomodoro
+       3. state-hydrate.jsx     → addWaterGlass
+       4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
+       5. state-paths.jsx       → paths CRUD, stats
+       6. state-settings.jsx    → setLang
+       7. state.jsx      → índice — re-export consolidado del API pública
+       8. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
+       9. shell/*        → layout (Sidebar)
+      10. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
+      11. main.jsx       → monta <PaceApp/> en #root
+       Split sesion 57 / v0.27.5.
   -->
   <script type="text/babel">
 /* PACE · Catálogo de strings i18n — ES / EN
@@ -1364,220 +1371,126 @@ Object.assign(window, { useT, detectInitialLang });
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
-   Estado global: simple store con useSyncExternalStore + localStorage.
+   state-core.jsx — store, loadState, rollover, history helpers, toast.
+   Split de state.jsx (sesion 57 / v0.27.5).
 */
 
-const { useSyncExternalStore, useCallback } = React;
+const { useSyncExternalStore } = React;
 
-/* NOTA (sesión 37 · v0.19.0): clave de localStorage bumpeada de v1 a v2.
-   Pre-lanzamiento sin usuarios reales — hard reset intencional. Elimina
-   la necesidad de migración para campos legacy (timerStyle circle/numero,
-   layout editorial). Cualquier estado v1 guardado se ignora; arranca
-   limpio con defaultState en v2. */
+/* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.27.3';
+const PACE_VERSION = 'v0.27.5';
 
 const defaultState = {
   // Settings / Tweaks
-  palette: 'crema',           // crema | oscuro | envejecido
-  font: 'cormorant',          // garamond | cormorant | mono
-  layout: 'sidebar',          // sidebar | minimal (editorial eliminado en v0.19.0)
-  sidebarCollapsed: false,    // true cuando el usuario colapsa el sidebar a icon-rail
-  timerStyle: 'aro',          // aro (default) | barra | analogico (circle/numero eliminados en v0.19.0)
-  breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
-  logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
+  palette: 'crema',
+  font: 'cormorant',
+  layout: 'sidebar',
+  sidebarCollapsed: false,
+  timerStyle: 'aro',
+  breathStyle: 'flor',
+  logoVariant: 'pace',
   soundOn: false,
-  ambientOn: false,           // drone ambiente opt-in — solo activo si soundOn también true
-  lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
+  ambientOn: false,
+  lang: 'en',
 
   // Foco
-  focusMode: 'foco',          // foco | pausa | larga
-  focusMinutes: 25,           // 15 | 25 | 35 | 45
-  cycle: 0,                   // Pomodoros completados hoy
-  totalFocusMin: 0,           // minutos totales acumulados
+  focusMode: 'foco',
+  focusMinutes: 25,
+  cycle: 0,
+  totalFocusMin: 0,
 
-  // Plan del día
-  plan: {
-    muevete: false,
-    respira: false,
-    extra: false,
-    hidratate: false,
-  },
+  // Plan del dia
+  plan: { muevete: false, respira: false, extra: false, hidratate: false },
 
-  // Hidratación
+  // Hidratacion
   water: { goal: 8, today: 0, lastReset: null },
 
   // Logros
-  achievements: {},           // { [id]: { unlockedAt } }
+  achievements: {},
 
   // Stats semanales
   weeklyStats: {
-    focusMinutes: [0,0,0,0,0,0,0],
+    focusMinutes:  [0,0,0,0,0,0,0],
     breathMinutes: [0,0,0,0,0,0,0],
-    moveMinutes: [0,0,0,0,0,0,0],
-    waterGlasses: [0,0,0,0,0,0,0],
+    moveMinutes:   [0,0,0,0,0,0,0],
+    waterGlasses:  [0,0,0,0,0,0,0],
   },
 
   // Streak
   streak: { current: 0, longest: 0, lastActiveDate: null },
 
-  // Contadores acumulados de sesiones por módulo (sesión 29).
-  // Crecen monótonamente; nunca resetean en rollover. Alimentan los
-  // logros breathe.sessions.10/50 y move.sessions.25.
+  // Contadores acumulados de sesiones (crecen monotonamente, nunca resetean).
   breatheSessionsTotal: 0,
   moveSessionsTotal: 0,
 
-  // Set de fechas (toDateString()) en las que el usuario hizo al menos
-  // una sesión antes de las 9:00. Cap de 30 entradas (suficiente para
-  // alimentar `morning.5`). Sesión 29.
+  // Fechas (toDateString()) con sesion antes de las 9:00. Cap 30.
   morningDates: [],
 
-  // Intención del día — capturada opcionalmente en el Welcome de primera
-  // vez (sesión 17 / v0.12.0), visible también para edición futura.
   intention: '',
-
-  // Welcome de primera vez (sesión 17 / v0.12.0).
-  // `firstSeen`: timestamp de la primera interacción con el WelcomeModal.
-  //   null = nunca visto → auto-trigger dispara la bienvenida.
-  //   Una vez cerrado (OK o skip), se fija timestamp y no vuelve nunca.
-  //   Mismo patrón que `supportSeenAt` (v0.11.11).
   firstSeen: null,
-
-  // Buy Me a Coffee — monetización por donación (sesión 16, v0.11.11).
-  // `supportSeenAt`: timestamp de la primera apertura del modal de apoyo.
-  //   null = nunca visto → el auto-trigger (a los 7 días de racha) puede
-  //   dispararse. Una vez visto (manual o auto) se fija el timestamp y
-  //   no vuelve a auto-abrirse nunca. El usuario puede re-abrirlo las
-  //   veces que quiera desde el botón del sidebar.
-  // `supportCopyVariant`: DEPRECADO post-v0.12.1. El copy se consolidó
-  //   en una sola variante ("Da de pastar a la vaca" con icono de vaca).
-  //   Se conserva el campo en el state para no romper instalaciones
-  //   existentes, pero SupportModule ignora su valor.
   supportSeenAt: null,
   supportCopyVariant: 'pastar',
-
-  // Recordatorios — DECISIÓN (v0.11.3): la sección de UI se eliminó del Sidebar
-  // para que todo quepa en 1920×1080 sin scroll. El array se conserva en el
-  // state para no romper instalaciones existentes (usuarios que ya tengan
-  // recordatorios guardados en localStorage) y por si se reintroduce un día
-  // la sección (probablemente en un modal dedicado, no en el sidebar).
-  // No hay action que lo mute actualmente.
   reminders: [],
 
-  // Fechas (toDateString()) en las que se realizó alguna acción con soundOn=false.
-  // Cap de 30 entradas. Alimenta master.silent.day. Sesión 34.
+  // Fechas de dias silenciosos (soundOn=false). Cap 30.
   silentDates: [],
 
-  // Fechas (toDateString()) en que water.today alcanzó water.goal.
-  // Cap de 14 entradas. Alimenta hydrate.week.perfect. Sesión 41.
+  // Fechas en que water.today alcanzo water.goal. Cap 14.
   waterGoalDates: [],
 
-  // Contadores acumulados de sesiones por tipo de rutina de respiración
-  // y movilidad. { box, coherent, rounds, atg }. Sesión 41.
+  // Contadores por tipo de rutina. { box, coherent, rounds, atg }.
   routineCounts: {},
 
-  // Histórico de actividad — sesión 43.
-  // `days`   : { "YYYY-MM-DD": { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
-  //            Solo se escriben entradas con al menos un valor > 0 (ausencia = sin actividad).
-  // `months` : { "YYYY-MM":   { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
-  // `years`  : { "YYYY":      { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
-  // Agregados incrementales: se suman deltas al cerrar cada día; nunca se recalculan
-  // desde cero (ver updateMonthAggregate / updateYearAggregate).
-  // Cap documental: ~5 años rolling. Sin hard limit en código esta sesión.
+  // Historico de actividad (sesion 43).
+  // days: { "YYYY-MM-DD": {focusMinutes, breathMinutes, moveMinutes, waterGlasses} }
+  // months: { "YYYY-MM": ... }   years: { "YYYY": ... }
   history: { days: {}, months: {}, years: {} },
 
-  // Caminos — sesión 49 / v0.26.0-alpha.
-  // current   : camino en curso { id, stepIndex, startedAt, skippedSteps: [] }, o null.
-  // completed : { 'path.dawn': { count, lastDoneAt } }
-  // favorite  : id del camino marcado como favorito, o null.
+  // Caminos (sesion 49 / v0.26.0-alpha).
   paths: {
     current: null,
     completed: {},
     favorite: null,
-    history: [],    // sesion 54 -- array ISO strings de completados
+    history: [],
   },
 
-  // Migration guard — sesión 43.
-  // true cuando ya se ha migrado weeklyStats → history.days en el primer rollover
-  // post-upgrade. Impide que el guard se ejecute más de una vez.
+  // Migration guard (sesion 43).
   _historyMigrated: false,
 
-  // Rollover: día de calendario del último uso (toDateString()).
-  // Cuando cambia, se resetean cycle / plan / water.today al cargar.
+  // Rollover: dia del ultimo uso (toDateString()).
   lastActiveDay: null,
 };
 
-let _state = loadState();
-const _listeners = new Set();
+/* ============================
+   UTILS
+   ============================ */
 
 function isMobileViewport() {
   return typeof window !== 'undefined' && window.matchMedia &&
          window.matchMedia('(max-width: 768px)').matches;
 }
 
-function loadState() {
-  const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) {
-      /* Primer arranque en móvil: colapsar sidebar para que el usuario
-         vea el Pomodoro directamente. En desktop arranca abierta. */
-      return {
-        ...defaultState,
-        lang: _detectLang(),
-        lastActiveDay: new Date().toDateString(),
-        ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
-      };
-    }
-    const parsed = JSON.parse(raw);
-    /* Si el usuario no tiene lang guardado (instalación previa a i18n),
-       detectarlo desde navigator.language y persistirlo. */
-    if (!parsed.lang) parsed.lang = _detectLang();
-    /* Migracion defensiva s49: si paths no existe (instalacion
-       previa a v0.26.0-alpha), inicializar con el default. */
-    if (!parsed.paths) parsed.paths = defaultState.paths;
-    /* Migracion defensiva s54: si paths existe pero sin history,
-       derivarlo aproximadamente de completed (1 entrada por camino). */
-    if (parsed.paths && !parsed.paths.history) {
-      const hist = [];
-      for (const id in (parsed.paths.completed || {})) {
-        const e = parsed.paths.completed[id];
-        if (e && e.lastDoneAt && e.count) {
-          for (let i = 0; i < e.count; i++) hist.push(e.lastDoneAt);
-        }
-      }
-      parsed.paths.history = hist;
-    }
-    const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
-    /* Si no hay preferencia explícita de sidebar guardada, aplicar el
-       default móvil. Usuarios existentes con sidebarCollapsed guardado
-       (true o false) mantienen su elección sin cambios. */
-    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
-      return { ...merged, sidebarCollapsed: true };
-    }
-    return merged;
-  } catch (e) {
-    return {
-      ...defaultState,
-      lang: _detectLang(),
-      lastActiveDay: new Date().toDateString(),
-      ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
-    };
-  }
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
 }
 
-/* ============================
-   HISTÓRICO DE ACTIVIDAD — sesión 43
-   ============================ */
+function toISODate(dateString) {
+  const d = new Date(dateString);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
 
-/* Entrada vacía para días/meses/años sin dato previo. */
 function zeroEntry() {
   return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
 }
 
-/* Agrega delta incremental al mes. Clave: "YYYY-MM".
-   Nunca recalcula el mes completo — solo suma lo que el día recién
-   cerrado aportó. Recibe el objeto history completo y devuelve uno nuevo. */
+/* ============================
+   HISTORICO DE ACTIVIDAD (sesion 43)
+   ============================ */
+
 function updateMonthAggregate(history, dateStr, delta) {
   const key = dateStr.slice(0, 7);
   const prev = history.months[key] || zeroEntry();
@@ -1595,7 +1508,6 @@ function updateMonthAggregate(history, dateStr, delta) {
   };
 }
 
-/* Agrega delta incremental al año. Clave: "YYYY". */
 function updateYearAggregate(history, dateStr, delta) {
   const key = dateStr.slice(0, 4);
   const prev = history.years[key] || zeroEntry();
@@ -1613,22 +1525,8 @@ function updateYearAggregate(history, dateStr, delta) {
   };
 }
 
-/* Convierte un toDateString() ("Wed May 06 2026") a "YYYY-MM-DD".
-   Necesario porque toDateString() no tiene formato ISO. */
-function toISODate(dateString) {
-  const d = new Date(dateString);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${dd}`;
-}
-
-/* Archiva los datos del día `dateStr` (toDateString) en history.
-   Si todos los valores son 0, no escribe entrada (ausencia = sin dato).
-   Devuelve el history actualizado (inmutable). */
 function archiveDayToHistory(history, dateStr, weeklyStats) {
-  // Extraer valores del día desde weeklyStats[getDay()]
-  const dow = new Date(dateStr).getDay(); // 0=Dom … 6=Sab
+  const dow = new Date(dateStr).getDay();
   const delta = {
     focusMinutes:  (weeklyStats.focusMinutes  || [])[dow] || 0,
     breathMinutes: (weeklyStats.breathMinutes || [])[dow] || 0,
@@ -1639,26 +1537,18 @@ function archiveDayToHistory(history, dateStr, weeklyStats) {
   if (!hasData) return history;
 
   const isoDate = toISODate(dateStr);
-  let h = {
-    ...history,
-    days: { ...history.days, [isoDate]: delta },
-  };
+  let h = { ...history, days: { ...history.days, [isoDate]: delta } };
   h = updateMonthAggregate(h, isoDate, delta);
   h = updateYearAggregate(h, isoDate, delta);
   return h;
 }
 
-/* Migration guard — sesión 43.
-   En el primer rollover post-upgrade, copia la semana actual de weeklyStats
-   a history.days con fechas reales calculadas hacia atrás desde lastActiveDay.
-   Solo se ejecuta una vez (_historyMigrated === false). */
+/* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
+   rollover post-upgrade. Solo se ejecuta una vez (_historyMigrated === false). */
 function migrateWeeklyStatsToHistory(state) {
   if (state._historyMigrated) return state;
   if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
-
   let h = state.history || { days: {}, months: {}, years: {} };
-  // Itera los 7 días de la semana actual. El índice 0 es lastActiveDay,
-  // los demás son días anteriores (hasta 6).
   const lastDate = new Date(state.lastActiveDay);
   for (let offset = 0; offset < 7; offset++) {
     const d = new Date(lastDate.getTime() - offset * 86400000);
@@ -1667,20 +1557,16 @@ function migrateWeeklyStatsToHistory(state) {
   return { ...state, history: h, _historyMigrated: true };
 }
 
-/* Rollover diario: si el día de calendario ha cambiado desde la última actividad,
-   reseteamos los contadores "de hoy" (ciclo de pomodoros, plan del día, vasos de agua).
-   Se llama al cargar el estado y también defensivamente antes de escribir cualquier
-   contador "de hoy" desde las actions (completePomodoro, addWaterGlass, etc.) para
-   cubrir el caso de que la pestaña siga abierta al cruzar la medianoche. */
+/* ============================
+   ROLLOVER
+   ============================ */
+
 function rolloverIfNeeded(state) {
   const today = new Date().toDateString();
   if (state.lastActiveDay === today) return state;
 
-  /* Migration guard: en el primer rollover post-upgrade, migrar weeklyStats → history. */
   let migratedState = migrateWeeklyStatsToHistory(state);
 
-  /* Archivar el día que acaba de terminar (lastActiveDay) en history,
-     solo si había actividad registrada (algún valor > 0). */
   let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
   if (migratedState.lastActiveDay) {
     nextHistory = archiveDayToHistory(
@@ -1690,13 +1576,9 @@ function rolloverIfNeeded(state) {
     );
   }
 
-  /* Trigger `first.return` — abrir la app un día distinto al de la
-     última actividad. Sólo si había un día previo (no en la primera
-     instalación, donde `lastActiveDay` viene null/undefined). El
-     desbloqueo se delega a un microtask para no llamar a
-     `unlockAchievement` desde dentro del propio loadState (la cola
-     de toasts pendientes lo gestiona si el ToastHost aún no montó).
-     Sesión 28. */
+  /* Trigger first.return — abrir la app un dia distinto al ultimo.
+     Deferred via setTimeout para no llamar a unlockAchievement desde
+     dentro de loadState (achievements aun no cargado en este punto). */
   if (migratedState.lastActiveDay) {
     setTimeout(() => {
       try { unlockAchievement('first.return'); } catch (e) {}
@@ -1712,16 +1594,54 @@ function rolloverIfNeeded(state) {
   };
 }
 
-function ensureDayFresh() {
-  const next = rolloverIfNeeded(_state);
-  if (next !== _state) {
-    _state = next;
-    persistState();
-    _listeners.forEach(l => l());
-    // _state ya tiene el history del día archivado — comprobar stats.
-    try { checkStatsAchievements(); } catch (e) {}
+/* ============================
+   STORE PRIMITIVO
+   ============================ */
+
+function loadState() {
+  const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) {
+      return {
+        ...defaultState,
+        lang: _detectLang(),
+        lastActiveDay: new Date().toDateString(),
+        ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
+      };
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed.lang) parsed.lang = _detectLang();
+    /* Migracion defensiva s49: paths ausente en instalaciones pre-v0.26. */
+    if (!parsed.paths) parsed.paths = defaultState.paths;
+    /* Migracion defensiva s54: paths.history ausente. */
+    if (parsed.paths && !parsed.paths.history) {
+      const hist = [];
+      for (const id in (parsed.paths.completed || {})) {
+        const e = parsed.paths.completed[id];
+        if (e && e.lastDoneAt && e.count) {
+          for (let i = 0; i < e.count; i++) hist.push(e.lastDoneAt);
+        }
+      }
+      parsed.paths.history = hist;
+    }
+    const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
+    if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
+      return { ...merged, sidebarCollapsed: true };
+    }
+    return merged;
+  } catch (e) {
+    return {
+      ...defaultState,
+      lang: _detectLang(),
+      lastActiveDay: new Date().toDateString(),
+      ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
+    };
   }
 }
+
+let _state = loadState();
+const _listeners = new Set();
 
 function persistState() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {}
@@ -1734,9 +1654,7 @@ function setState(patch) {
   _state = typeof patch === 'function' ? patch(_state) : { ...(_state), ...patch };
   persistState();
   _listeners.forEach(l => l());
-  /* Optimización v0.12.1: aplicar tokens visuales sólo cuando palette o
-     font cambian realmente. Antes se llamaba a setAttribute en cada tick
-     (inocuo pero innecesario, 2 DOM writes por cada setState). */
+  /* Aplicar tokens visuales solo cuando palette o font cambian realmente. */
   if (prev.palette !== _state.palette || prev.font !== _state.font) {
     applyTheme();
   }
@@ -1758,34 +1676,63 @@ function usePace() {
   return [state, setState];
 }
 
-/* ============================
-   ACCIONES ESPECÍFICAS
-   ============================ */
-
-/* Detecta logros derivados del plan/ritual del día.
-   Se llama desde cada acción de completar (pomodoro, breathe, move,
-   extra, water) DESPUÉS del setState, leyendo `_state` ya actualizado.
-
-   - `first.ritual`  → los 4 módulos del día tocados (respira + mueve +
-                       extra + hidratate). El plan ya marca esos 4 flags;
-                       basta con que los 4 sean true.
-   - `first.plan`    → mismo trigger en código. Decisión de producto:
-                       "completar el plan del día" === "tocar los 4 módulos
-                       del día". `first.plan` se desbloquea junto a
-                       `first.ritual` para que ambos sean cazables sin
-                       inventar un segundo umbral artificial. Sesión 28.
-   - `master.focus.day` → ya tenemos `addFocusMinutes` con buckets diarios;
-                          aprovechamos esta función para chequear las 4h
-                          (240 min) del día actual.
-*/
-function checkPlanAchievements() {
-  const s = getState();
-  const p = s.plan || {};
-  if (p.muevete && p.respira && p.extra && p.hidratate) {
-    unlockAchievement('first.ritual');
-    unlockAchievement('first.plan');
+function ensureDayFresh() {
+  const next = rolloverIfNeeded(_state);
+  if (next !== _state) {
+    _state = next;
+    persistState();
+    _listeners.forEach(l => l());
+    try { checkStatsAchievements(); } catch (e) {}
   }
 }
+
+/* ============================
+   TOAST (buffer pre-mount)
+   ============================ */
+
+const _toastListeners = new Set();
+const _pendingToasts = [];
+
+function showToast(toast) {
+  const t = { ...toast, _id: Date.now() + Math.random() };
+  if (_toastListeners.size === 0) {
+    _pendingToasts.push(t);
+    return;
+  }
+  _toastListeners.forEach(l => l(t));
+}
+
+function onToast(listener) {
+  const wasEmpty = _toastListeners.size === 0;
+  _toastListeners.add(listener);
+  /* Vaciar buffer pendiente en cuanto hay al menos un listener (fix StrictMode). */
+  if (wasEmpty && _pendingToasts.length > 0) {
+    const drained = _pendingToasts.splice(0);
+    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
+  }
+  return () => _toastListeners.delete(listener);
+}
+
+// Aplicar tema al cargar
+applyTheme();
+
+Object.assign(window, {
+  LS_KEY, PACE_VERSION, defaultState,
+  getState, setState, subscribe, usePace, ensureDayFresh,
+  showToast, onToast,
+  zeroEntry, toISODate, todayISO,
+  archiveDayToHistory, updateMonthAggregate, updateYearAggregate,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-timer.jsx
+   Foco / Pomodoro: addFocusMinutes, completePomodoro.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, ensureDayFresh),
+               state-achievements (unlockAchievement, checkTimeOfDayAchievements,
+                                   checkSilentDayAchievement, updateStreak).
+*/
 
 function checkFocusDayAchievement() {
   const s = getState();
@@ -1794,158 +1741,8 @@ function checkFocusDayAchievement() {
   if (todayMin >= 240) unlockAchievement('master.focus.day');
 }
 
-/* Detectores horarios — sesión 29.
-   `master.dawn`  → sesión antes de las 7:00.
-   `master.dusk`  → sesión después de las 21:00.
-   `morning.5`    → 5 fechas distintas con sesión antes de las 9:00.
-   Se llama desde cada acción de completar (breathe / move / extra /
-   pomodoro). El registro de fechas para `morning.5` se persiste en el
-   state como `morningDates: string[]` (toDateString) con cap de 30.
-*/
-function checkTimeOfDayAchievements() {
-  const now = new Date();
-  const h = now.getHours();
-  if (h < 7) unlockAchievement('master.dawn');
-  if (h >= 21) unlockAchievement('master.dusk');
-  if (h < 9) {
-    const today = now.toDateString();
-    const s = getState();
-    const list = Array.isArray(s.morningDates) ? s.morningDates : [];
-    if (!list.includes(today)) {
-      const next = [...list, today].slice(-30);
-      setState({ morningDates: next });
-      if (next.length >= 5) unlockAchievement('morning.5');
-    }
-  }
-}
-
-/* Detectores de logros collector — sesión 34.
-   Se llama al final de cada unlockAchievement exitoso.
-   Cuenta los logros ya en _state (incluido el que se acaba de añadir).
-   unlockAchievement es idempotente → la recursión termina de forma natural. */
-function checkCollectorAchievements() {
-  const count = Object.keys(_state.achievements).length;
-  if (count >= 50) unlockAchievement('master.collector.half');
-  if (count >= 100) unlockAchievement('master.collector.full');
-}
-
-/* Detector master.silent.day — sesión 34.
-   Registra hoy como día silencioso si soundOn=false y el usuario hizo algo.
-   Se llama desde cada acción de completar. */
-function checkSilentDayAchievement() {
-  if (_state.soundOn) return;
-  const today = new Date().toDateString();
-  const list = Array.isArray(_state.silentDates) ? _state.silentDates : [];
-  if (!list.includes(today)) {
-    setState({ silentDates: [...list, today].slice(-30) });
-    unlockAchievement('master.silent.day');
-  }
-}
-
-/* Mapa de routineId → categoría para contadores de tipo de rutina.
-   Solo breathe; atg se maneja en completeExtraSession. Sesión 41. */
-const BREATH_ROUTINE_CATEGORIES = {
-  'breathe.box.4':         'box',
-  'breathe.box.6':         'box',
-  'breathe.coherent.55':   'coherent',
-  'breathe.coherent.66':   'coherent',
-  'breathe.rounds.full':   'rounds',
-  'breathe.rounds.express':'rounds',
-};
-
-/* hydrate.week.perfect — 7 días consecutivos alcanzando water.goal.
-   Ordena waterGoalDates numéricamente y verifica 7 entradas seguidas
-   separadas exactamente 1 día (86400000 ms). Sesión 41. */
-function checkHydrateWeekPerfect() {
-  const dates = (_state.waterGoalDates || [])
-    .map(d => new Date(d).getTime())
-    .sort((a, b) => a - b);
-  if (dates.length < 7) return;
-  for (let i = dates.length - 1; i >= dates.length - 6; i--) {
-    if (dates[i] - dates[i - 1] !== 86400000) return;
-  }
-  unlockAchievement('hydrate.week.perfect');
-}
-
-/* Contadores por tipo de rutina — sesión 41.
-   Lee _state.routineCounts ya actualizado antes de llamar. */
-function checkRoutineCountAchievements(category) {
-  const c = _state.routineCounts || {};
-  if (category === 'box'      && (c.box      || 0) >= 10) unlockAchievement('master.box.10');
-  if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
-  if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
-  if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
-}
-
-/* Detectores de logros de Estadísticas — sesión 46.
-   Se llama desde ensureDayFresh() después de un rollover (cuando
-   _state ya tiene el history actualizado con el día archivado).
-   unlockAchievement es idempotente: correr esto múltiples veces es inocuo.
-
-   - stats.month.first : cualquier mes con ≥20 días de actividad en history.
-   - stats.month.focus : cualquier mes con ≥600 min (10h) de foco.
-   - stats.year.first  : cualquier año con los 12 meses presentes en history.
-   - stats.streak.30   : cableado como umbral extra en updateStreak (no aquí). */
-function checkStatsAchievements() {
-  const { history } = _state;
-  const days   = history.days   || {};
-  const months = history.months || {};
-
-  // stats.month.first: busca cualquier mes-año con ≥20 entradas en history.days
-  const monthDayCounts = {};
-  Object.keys(days).forEach(d => {
-    const mk = d.slice(0, 7);
-    monthDayCounts[mk] = (monthDayCounts[mk] || 0) + 1;
-  });
-  if (Object.values(monthDayCounts).some(n => n >= 20)) {
-    unlockAchievement('stats.month.first');
-  }
-
-  // stats.month.focus: busca cualquier mes con ≥600 min de foco acumulados
-  if (Object.values(months).some(m => m.focusMinutes >= 600)) {
-    unlockAchievement('stats.month.focus');
-  }
-
-  // stats.year.first: busca cualquier año con los 12 meses presentes
-  const yearMonthCounts = {};
-  Object.keys(months).forEach(k => {
-    const yr = k.slice(0, 4);
-    yearMonthCounts[yr] = (yearMonthCounts[yr] || 0) + 1;
-  });
-  if (Object.values(yearMonthCounts).some(n => n >= 12)) {
-    unlockAchievement('stats.year.first');
-  }
-}
-
-/* Detector master.retreat — sesión 34.
-   Usa los buckets weeklyStats ya existentes: breathMinutes[day] + moveMinutes[day].
-   Extra suma al bucket moveMinutes (decisión activa), así que completeExtraSession
-   también llama a este detector. */
-function checkRetreatAchievement() {
-  const day = new Date().getDay();
-  const todayBreath = (_state.weeklyStats.breathMinutes || [])[day] || 0;
-  const todayMove = (_state.weeklyStats.moveMinutes || [])[day] || 0;
-  if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
-}
-
-function unlockAchievement(id, note) {
-  const s = getState();
-  if (s.achievements[id]) return false;
-  setState({
-    achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } }
-  });
-  // Notificación flotante
-  showToast({ id, type: 'achievement' });
-  checkCollectorAchievements();
-  return true;
-}
-
 function addFocusMinutes(mins) {
   ensureDayFresh();
-  /* v0.12.1: calculamos todo dentro del updater y, tras el setState,
-     leemos el total oficial desde `_state` (no desde una variable de
-     cierre) para disparar logros. Evita el riesgo de que otra acción
-     se cuele entre el updater y la evaluación de umbrales. */
   setState(prev => {
     const day = new Date().getDay();
     const week = [...prev.weeklyStats.focusMinutes];
@@ -1956,151 +1753,57 @@ function addFocusMinutes(mins) {
       weeklyStats: { ...prev.weeklyStats, focusMinutes: week },
     };
   });
-  const h = _state.totalFocusMin / 60;
-  if (h >= 10) unlockAchievement('focus.hours.10');
-  if (h >= 50) unlockAchievement('focus.hours.50');
+  const h = getState().totalFocusMin / 60;
+  if (h >= 10)  unlockAchievement('focus.hours.10');
+  if (h >= 50)  unlockAchievement('focus.hours.50');
   if (h >= 100) unlockAchievement('focus.hours.100');
-  /* Logro de día de foco intenso: 4h en una sola jornada. Se evalúa
-     aquí porque `addFocusMinutes` es donde crecen los buckets diarios
-     en `weeklyStats.focusMinutes[day]`. Sesión 28. */
   checkFocusDayAchievement();
 }
 
 function completePomodoro() {
   ensureDayFresh();
-  /* v0.12.1: capturamos el valor de minutos de foco ANTES del updater
-     (el modo/minutos puede cambiar por tweak durante el tick); el
-     updater sólo incrementa cycle. Luego leemos el nuevo cycle desde
-     `_state` para los umbrales de logro. */
-  const focusMinsAtCompletion = _state.focusMinutes;
+  const focusMinsAtCompletion = getState().focusMinutes;
   setState(prev => ({ ...prev, cycle: prev.cycle + 1 }));
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
-  if (_state.cycle >= 8) unlockAchievement('master.pomodoro.8');
-  /* `master.long.focus` — completar un Pomodoro de 45 min sin pausa.
-     Se evalúa contra los minutos del bloque que acaba de cerrarse,
-     no contra el state.focusMinutes (que puede haberse cambiado por
-     tweak antes de que termine el ticker). Sesión 29. */
+  if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
   if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
 }
 
-function completeBreathSession(routineId, durationMin) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.breathMinutes];
-  week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, respira: true },
-    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
-    /* Contador acumulado de sesiones de respiración (sesión 29).
-       Crece monótonamente; alimenta breathe.sessions.10/50. */
-    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
-  });
-  unlockAchievement('first.breath');
-  /* Umbrales de constancia por módulo. Leemos `_state` ya actualizado
-     para no usar variables de cierre (patrón validado en sesión 18). */
-  if (_state.breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
-  if (_state.breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  // Exploración
-  const explorationMap = {
-    'breathe.box.4': 'explore.box',
-    'breathe.box.6': 'explore.box',
-    'breathe.478': 'explore.478',
-    'breathe.coherent.55': 'explore.coherent',
-    'breathe.coherent.66': 'explore.coherent',
-    'breathe.rounds.full': 'explore.rounds',
-    'breathe.rounds.express': 'explore.rounds',
-    'breathe.bellows': 'explore.bhastrika',
-    'breathe.nadi.shodhana': 'explore.nadi',
-    'breathe.ujjayi': 'explore.ujjayi',
-    'breathe.kapalabhati': 'explore.kapalabhati',
-    'breathe.physiological': 'explore.physiological',
-  };
-  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  /* Contadores por tipo de rutina — master.box.10 / coherent.10 / rounds.10. */
-  const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
-  if (breathCat) {
-    const c = _state.routineCounts || {};
-    setState({ routineCounts: { ...c, [breathCat]: (c[breathCat] || 0) + 1 } });
-    checkRoutineCountAchievements(breathCat);
+Object.assign(window, {
+  addFocusMinutes,
+  completePomodoro,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-hydrate.jsx
+   Hidratacion: addWaterGlass, checkHydrateWeekPerfect.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, ensureDayFresh),
+               state-achievements (unlockAchievement, checkPlanAchievements,
+                                   checkSilentDayAchievement).
+*/
+
+/* hydrate.week.perfect — 7 dias consecutivos alcanzando water.goal.
+   Ordena waterGoalDates numericamente y verifica 7 entradas seguidas
+   separadas exactamente 1 dia (86400000 ms). */
+function checkHydrateWeekPerfect() {
+  const dates = (getState().waterGoalDates || [])
+    .map(d => new Date(d).getTime())
+    .sort((a, b) => a - b);
+  if (dates.length < 7) return;
+  for (let i = dates.length - 1; i >= dates.length - 6; i--) {
+    if (dates[i] - dates[i - 1] !== 86400000) return;
   }
-  updateStreak();
+  unlockAchievement('hydrate.week.perfect');
 }
 
-function completeMoveSession(routineId, durationMin) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.moveMinutes];
-  week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, muevete: true },
-    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-    /* Contador acumulado de sesiones Mueve (sesión 29). Solo Mueve,
-       Extra tiene su propio camino; el bucket de stats sí los suma. */
-    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
-  });
-  unlockAchievement('first.stretch');
-  if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  updateStreak();
-}
-
-function completeExtraSession(routineId, durationMin = 0) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.moveMinutes];
-  // Los minutos de Extra se agregan al bucket de 'move' en stats (ambos son cuerpo activo),
-  // pero el plan del día y los logros sí se separan.
-  if (durationMin > 0) week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, extra: true },
-    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-  });
-  unlockAchievement('first.extra');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  // Logros de exploración de movilidad.
-  // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
-  // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
-  // move.ancestral, move.neck.3, move.desk.quick) pasaron de
-  // MOVE_ROUTINES a EXTRA_ROUTINES y ahora desembocan aquí. Los ids de
-  // rutina no se renombran (decisión activa: ids = identificadores
-  // estables), así que el map conserva los ids `move.*` aunque viva en
-  // completeExtraSession.
-  const exploreMap = {
-    'move.hips.5': 'explore.hips',
-    'move.shoulders.5': 'explore.shoulders',
-    'move.atg.knees': 'explore.atg',
-    'move.ancestral': 'explore.ancestral',
-    'move.neck.3': 'explore.neck',
-    'move.desk.quick': 'explore.desk',
-  };
-  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  /* master.atg.20 — contador de sesiones ATG Knees. */
-  if (routineId === 'move.atg.knees') {
-    const c = _state.routineCounts || {};
-    setState({ routineCounts: { ...c, atg: (c.atg || 0) + 1 } });
-    checkRoutineCountAchievements('atg');
-  }
-  updateStreak();
-}
-
-function addWaterGlass(delta = 1) {
+function addWaterGlass(delta) {
+  if (delta === undefined) delta = 1;
   ensureDayFresh();
   const s = getState();
   const day = new Date().getDay();
@@ -2116,17 +1819,142 @@ function addWaterGlass(delta = 1) {
     unlockAchievement('first.sip');
     checkPlanAchievements();
     checkSilentDayAchievement();
-    /* hydrate.week.perfect — registrar hoy si se alcanza la meta por
-       primera vez. Leemos _state actualizado (patrón sesión 18). */
-    if (_state.water.today >= _state.water.goal) {
+    if (getState().water.today >= getState().water.goal) {
       const today = new Date().toDateString();
-      const goalDates = Array.isArray(_state.waterGoalDates) ? _state.waterGoalDates : [];
+      const goalDates = Array.isArray(getState().waterGoalDates) ? getState().waterGoalDates : [];
       if (!goalDates.includes(today)) {
         setState({ waterGoalDates: [...goalDates, today].slice(-14) });
         checkHydrateWeekPerfect();
       }
     }
   }
+}
+
+Object.assign(window, {
+  addWaterGlass,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-achievements.jsx
+   Logros: unlockAchievement, detectores, complete*Session, updateStreak.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, showToast, ensureDayFresh).
+*/
+
+/* Mapa routineId → categoria para contadores de tipo de rutina. */
+const BREATH_ROUTINE_CATEGORIES = {
+  'breathe.box.4':          'box',
+  'breathe.box.6':          'box',
+  'breathe.coherent.55':    'coherent',
+  'breathe.coherent.66':    'coherent',
+  'breathe.rounds.full':    'rounds',
+  'breathe.rounds.express': 'rounds',
+};
+
+function checkPlanAchievements() {
+  const s = getState();
+  const p = s.plan || {};
+  if (p.muevete && p.respira && p.extra && p.hidratate) {
+    unlockAchievement('first.ritual');
+    unlockAchievement('first.plan');
+  }
+}
+
+/* master.dawn / master.dusk / morning.5 */
+function checkTimeOfDayAchievements() {
+  const now = new Date();
+  const h = now.getHours();
+  if (h < 7)  unlockAchievement('master.dawn');
+  if (h >= 21) unlockAchievement('master.dusk');
+  if (h < 9) {
+    const today = now.toDateString();
+    const s = getState();
+    const list = Array.isArray(s.morningDates) ? s.morningDates : [];
+    if (!list.includes(today)) {
+      const next = [...list, today].slice(-30);
+      setState({ morningDates: next });
+      if (next.length >= 5) unlockAchievement('morning.5');
+    }
+  }
+}
+
+/* master.collector.half / master.collector.full */
+function checkCollectorAchievements() {
+  const count = Object.keys(getState().achievements).length;
+  if (count >= 50)  unlockAchievement('master.collector.half');
+  if (count >= 100) unlockAchievement('master.collector.full');
+}
+
+/* master.silent.day */
+function checkSilentDayAchievement() {
+  const s = getState();
+  if (s.soundOn) return;
+  const today = new Date().toDateString();
+  const list = Array.isArray(s.silentDates) ? s.silentDates : [];
+  if (!list.includes(today)) {
+    setState({ silentDates: [...list, today].slice(-30) });
+    unlockAchievement('master.silent.day');
+  }
+}
+
+/* Contadores por tipo de rutina (master.box.10, coherent.10, rounds.10, atg.20). */
+function checkRoutineCountAchievements(category) {
+  const c = getState().routineCounts || {};
+  if (category === 'box'      && (c.box      || 0) >= 10) unlockAchievement('master.box.10');
+  if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
+  if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
+  if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
+}
+
+/* Detectores de logros de Estadisticas (sesion 46).
+   Llamado desde ensureDayFresh() despues de un rollover. */
+function checkStatsAchievements() {
+  const { history } = getState();
+  const days   = history.days   || {};
+  const months = history.months || {};
+
+  const monthDayCounts = {};
+  Object.keys(days).forEach(d => {
+    const mk = d.slice(0, 7);
+    monthDayCounts[mk] = (monthDayCounts[mk] || 0) + 1;
+  });
+  if (Object.values(monthDayCounts).some(n => n >= 20)) {
+    unlockAchievement('stats.month.first');
+  }
+
+  if (Object.values(months).some(m => m.focusMinutes >= 600)) {
+    unlockAchievement('stats.month.focus');
+  }
+
+  const yearMonthCounts = {};
+  Object.keys(months).forEach(k => {
+    const yr = k.slice(0, 4);
+    yearMonthCounts[yr] = (yearMonthCounts[yr] || 0) + 1;
+  });
+  if (Object.values(yearMonthCounts).some(n => n >= 12)) {
+    unlockAchievement('stats.year.first');
+  }
+}
+
+/* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
+function checkRetreatAchievement() {
+  const s = getState();
+  const day = new Date().getDay();
+  const todayBreath = (s.weeklyStats.breathMinutes || [])[day] || 0;
+  const todayMove   = (s.weeklyStats.moveMinutes   || [])[day] || 0;
+  if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
+}
+
+function unlockAchievement(id, note) {
+  const s = getState();
+  if (s.achievements[id]) return false;
+  setState({
+    achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } }
+  });
+  showToast({ id, type: 'achievement' });
+  checkCollectorAchievements();
+  return true;
 }
 
 function updateStreak() {
@@ -2139,67 +1967,135 @@ function updateStreak() {
   if (last === yesterday) current += 1;
   else current = 1;
   const longest = Math.max(s.streak.longest, current);
-  setState({
-    streak: { current, longest, lastActiveDate: today }
-  });
-  /* `first.day` — primer día de uso. Equivale a la primera vez que
-     se llama a updateStreak con éxito, así que current === 1 lo
-     captura. unlockAchievement es idempotente. Sesión 28. */
-  if (current >= 1) unlockAchievement('first.day');
-  if (current >= 3) unlockAchievement('streak.3');
-  if (current >= 7) unlockAchievement('streak.7');
-  if (current >= 14) unlockAchievement('streak.14');
-  if (current >= 30) { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
-  if (current >= 60) unlockAchievement('streak.60');
+  setState({ streak: { current, longest, lastActiveDate: today } });
+  if (current >= 1)   unlockAchievement('first.day');
+  if (current >= 3)   unlockAchievement('streak.3');
+  if (current >= 7)   unlockAchievement('streak.7');
+  if (current >= 14)  unlockAchievement('streak.14');
+  if (current >= 30)  { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
+  if (current >= 60)  unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
   if (current >= 365) unlockAchievement('streak.365');
 }
 
-/* TOAST NOTIFICATIONS
-   Buffer pre-mount: si se dispara un toast antes de que ToastHost monte
-   (p.ej. desbloqueo por rollover durante loadState), se encola en
-   `_pendingToasts` y se vacía en orden cuando el primer listener se
-   registra. Evita que el primer logro de una sesión "recién abierta" se
-   pierda silenciosamente. */
-const _toastListeners = new Set();
-const _pendingToasts = [];
-function showToast(toast) {
-  const t = { ...toast, _id: Date.now() + Math.random() };
-  if (_toastListeners.size === 0) {
-    _pendingToasts.push(t);
-    return;
-  }
-  _toastListeners.forEach(l => l(t));
-}
-function onToast(listener) {
-  const wasEmpty = _toastListeners.size === 0;
-  _toastListeners.add(listener);
-  /* v0.12.1: vaciamos el buffer pendiente en cuanto hay AL MENOS un
-     listener (antes la condición era `size === 1`, que fallaba bajo
-     StrictMode cuando React monta y desmonta el host dos veces: el
-     segundo listener nunca recibía los toasts buffeados). */
-  if (wasEmpty && _pendingToasts.length > 0) {
-    const drained = _pendingToasts.splice(0);
-    // Despachamos en el próximo tick para no interferir con el mount del Host.
-    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
-  }
-  return () => _toastListeners.delete(listener);
-}
-
-// Init theme on load
-applyTheme();
-
-function setLang(lang) {
-  setState({ lang });
-}
-
 /* ============================
-   CAMINOS -- sesion 49 / v0.26.0-alpha
+   ACCIONES DE SESION
    ============================ */
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+function completeBreathSession(routineId, durationMin) {
+  ensureDayFresh();
+  const s = getState();
+  const day = new Date().getDay();
+  const week = [...s.weeklyStats.breathMinutes];
+  week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, respira: true },
+    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
+  });
+  unlockAchievement('first.breath');
+  if (getState().breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
+  if (getState().breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
+  checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  const explorationMap = {
+    'breathe.box.4':          'explore.box',
+    'breathe.box.6':          'explore.box',
+    'breathe.478':            'explore.478',
+    'breathe.coherent.55':    'explore.coherent',
+    'breathe.coherent.66':    'explore.coherent',
+    'breathe.rounds.full':    'explore.rounds',
+    'breathe.rounds.express': 'explore.rounds',
+    'breathe.bellows':        'explore.bhastrika',
+    'breathe.nadi.shodhana':  'explore.nadi',
+    'breathe.ujjayi':         'explore.ujjayi',
+    'breathe.kapalabhati':    'explore.kapalabhati',
+    'breathe.physiological':  'explore.physiological',
+  };
+  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
+  const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
+  if (breathCat) {
+    const c = getState().routineCounts || {};
+    setState({ routineCounts: { ...c, [breathCat]: (c[breathCat] || 0) + 1 } });
+    checkRoutineCountAchievements(breathCat);
+  }
+  updateStreak();
 }
+
+function completeMoveSession(routineId, durationMin) {
+  ensureDayFresh();
+  const s = getState();
+  const day = new Date().getDay();
+  const week = [...s.weeklyStats.moveMinutes];
+  week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, muevete: true },
+    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
+  });
+  unlockAchievement('first.stretch');
+  if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
+  checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
+  updateStreak();
+}
+
+function completeExtraSession(routineId, durationMin) {
+  if (durationMin === undefined) durationMin = 0;
+  ensureDayFresh();
+  const s = getState();
+  const day = new Date().getDay();
+  const week = [...s.weeklyStats.moveMinutes];
+  if (durationMin > 0) week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, extra: true },
+    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+  });
+  unlockAchievement('first.extra');
+  checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  /* NOTA (sesion 15): rutinas de movilidad pasaron de MOVE a EXTRA_ROUTINES.
+     Los ids move.* se conservan como identificadores estables. */
+  const exploreMap = {
+    'move.hips.5':      'explore.hips',
+    'move.shoulders.5': 'explore.shoulders',
+    'move.atg.knees':   'explore.atg',
+    'move.ancestral':   'explore.ancestral',
+    'move.neck.3':      'explore.neck',
+    'move.desk.quick':  'explore.desk',
+  };
+  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
+  if (routineId === 'move.atg.knees') {
+    const c = getState().routineCounts || {};
+    setState({ routineCounts: { ...c, atg: (c.atg || 0) + 1 } });
+    checkRoutineCountAchievements('atg');
+  }
+  updateStreak();
+}
+
+Object.assign(window, {
+  unlockAchievement,
+  completeBreathSession,
+  completeMoveSession,
+  completeExtraSession,
+  updateStreak,
+  checkStatsAchievements,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-paths.jsx
+   Caminos: CRUD, stats, favoritos.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, todayISO),
+               app/paths/registry.js (window.getPath).
+*/
 
 function startPath(pathId) {
   const path = window.getPath && window.getPath(pathId);
@@ -2243,7 +2139,7 @@ function advancePathStep(reason) {
               lastDoneAt: todayISO(),
             },
           },
-          history: [...(s.paths.history || []), todayISO()],  // s54
+          history: [...(s.paths.history || []), todayISO()],
         },
       };
     }
@@ -2269,7 +2165,7 @@ function completePath(pathId) {
           ...s.paths.completed,
           [pathId]: { count: prev.count + 1, lastDoneAt: todayISO() },
         },
-        history: [...(s.paths.history || []), todayISO()],  // s54
+        history: [...(s.paths.history || []), todayISO()],
       },
     };
   });
@@ -2287,27 +2183,24 @@ function getSuggestedPath(now) {
   const day = now.getDay();
   if (day === 0 || day === 6) return 'path.weekend';
   const h = now.getHours();
-  if (h >= 6 && h <= 11) return 'path.dawn';
+  if (h >= 6  && h <= 11) return 'path.dawn';
   if (h >= 12 && h <= 14) return 'path.midday';
   if (h >= 15 && h <= 17) return 'path.afternoon';
   if (h >= 18 && h <= 22) return 'path.dusk';
   return 'path.dusk';
 }
 
-
 /* ============================
-   PATH STATS HELPERS -- sesion 54
+   PATH STATS (sesion 54)
    ============================ */
 
 function computePathStreaks(history) {
   if (!history || history.length === 0) return { currentStreak: 0, bestStreak: 0 };
   const days = new Set(history);
-  // Ordenar dias unicos
   const sorted = Array.from(days).sort();
-  // bestStreak: recorrer dias ordenados contando secuencias consecutivas
   let best = 1, cur = 1;
   for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i-1]);
+    const prev = new Date(sorted[i - 1]);
     const curr = new Date(sorted[i]);
     const diff = Math.round((curr - prev) / 86400000);
     if (diff === 1) {
@@ -2317,7 +2210,6 @@ function computePathStreaks(history) {
       cur = 1;
     }
   }
-  // currentStreak: contar hacia atras desde hoy
   const today = todayISO();
   let cs = 0;
   let check = today;
@@ -2346,43 +2238,99 @@ function getPathStats() {
 }
 
 function setFavoritePath(pathId) {
-  setState(s => ({
-    ...s,
-    paths: { ...s.paths, favorite: pathId },
-  }));
+  setState(s => ({ ...s, paths: { ...s.paths, favorite: pathId } }));
 }
 
 function clearFavoritePath() {
-  setState(s => ({
-    ...s,
-    paths: { ...s.paths, favorite: null },
-  }));
+  setState(s => ({ ...s, paths: { ...s.paths, favorite: null } }));
 }
 
 function toggleFavoritePath(pathId) {
   const current = getState().paths && getState().paths.favorite;
-  if (current === pathId) {
-    clearFavoritePath();
-  } else {
-    setFavoritePath(pathId);
-  }
+  if (current === pathId) clearFavoritePath();
+  else setFavoritePath(pathId);
 }
 
 Object.assign(window, {
-  usePace, getState, setState, subscribe,
-  unlockAchievement, completePomodoro,
-  completeBreathSession, completeMoveSession, completeExtraSession,
-  addWaterGlass, addFocusMinutes, updateStreak,
+  startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
+  setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  getPathStats,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-settings.jsx
+   Configuracion: setLang y helpers de settings.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (setState).
+*/
+
+function setLang(lang) {
+  setState({ lang });
+}
+
+Object.assign(window, {
+  setLang,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state.jsx — INDICE
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Este archivo es el punto de entrada del sistema de estado.
+   La logica vive en los modulos state-*.jsx (cargados antes en PACE.html).
+   Aqui solo se re-exporta la API publica completa al window para que
+   cualquier componente pueda acceder a ella sin conocer la estructura interna.
+
+   Orden de carga en PACE.html:
+     1. state-core.jsx        (store, loadState, helpers, toast)
+     2. state-timer.jsx       (addFocusMinutes, completePomodoro)
+     3. state-hydrate.jsx     (addWaterGlass)
+     4. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
+     5. state-paths.jsx       (paths CRUD, stats)
+     6. state-settings.jsx    (setLang)
+     7. state.jsx             (este archivo — re-export consolidado)
+
+   Sesion 57 / v0.27.5 — split desde monolito de 1026 lineas.
+*/
+
+/* Re-exportacion consolidada — lista identica a la del Object.assign
+   original de state.jsx v0.27.4. Ningun nombre anadido ni eliminado. */
+Object.assign(window, {
+  usePace,
+  getState,
+  setState,
+  subscribe,
+  unlockAchievement,
+  completePomodoro,
+  completeBreathSession,
+  completeMoveSession,
+  completeExtraSession,
+  addWaterGlass,
+  addFocusMinutes,
+  updateStreak,
   ensureDayFresh,
-  showToast, onToast,
+  showToast,
+  onToast,
   setLang,
   PACE_VERSION,
   // sesion 43 -- history helpers
-  zeroEntry, toISODate, archiveDayToHistory,
-  updateMonthAggregate, updateYearAggregate,
+  zeroEntry,
+  toISODate,
+  archiveDayToHistory,
+  updateMonthAggregate,
+  updateYearAggregate,
   // sesion 49 -- Caminos
-  startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
-  setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  startPath,
+  advancePathStep,
+  completePath,
+  abandonPath,
+  getSuggestedPath,
+  setFavoritePath,
+  clearFavoritePath,
+  toggleFavoritePath,
   getPathStats,
 });
 

@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.27.3
-**Ultima sesion:** #56 -- 2026-05-09 - chore(build): blindaje build con parser sintactico real (v0.27.3)
-**Ultima actualizacion de este archivo:** 2026-05-09 - sesion 56
-**Build entregado:** `PACE_standalone.html` v0.27.3 (545 KB)
+**Version actual:** v0.27.5
+**Ultima sesion:** #57 -- 2026-05-11 - refactor(state): split state.jsx en 6 modulos (v0.27.5)
+**Ultima actualizacion de este archivo:** 2026-05-11 - sesion 57
+**Build entregado:** `PACE_standalone.html` v0.27.5 (538 KB)
 
 ---
 
@@ -44,7 +44,13 @@
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.27.1** (nuevo s54) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.24.0** |
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.27.1** (tab Caminos s54) |
-| `app/state.jsx` | Store global + rollover + toast + history + paths | **v0.27.2** (bump version s55) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.27.5** (nuevo s57) |
+| `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.27.5** (nuevo s57) |
+| `app/state-hydrate.jsx` | addWaterGlass | **v0.27.5** (nuevo s57) |
+| `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.27.5** (nuevo s57) |
+| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.27.5** (nuevo s57) |
+| `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
+| `app/state.jsx` | Indice — re-export consolidado (58 lineas) | **v0.27.5** (reescrito s57) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.19.0** |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
@@ -57,80 +63,64 @@
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
 | `build-standalone.js` | Genera el bundle offline | **v0.26.1** (validateFileEnd + fix WARN s52) |
 
-Backups vigentes (22 -- BORRAR MANUALMENTE los 2 mas antiguos para volver a 20):
-- `backups/PACE_standalone_v0.27.1b_20260509.html` <- creado s55
-- `backups/PACE_standalone_v0.27.0_20260509.html` <- creado s54
-- `backups/PACE_standalone_v0.27.0_20260508.html` <- creado s53
+Backups vigentes (20):
+- `backups/PACE_standalone_v0.27.3_20260511.html` <- creado s57
+- `backups/PACE_standalone_v0.27.2_20260509.html`
+- `backups/PACE_standalone_v0.27.1b_20260509.html`
+- `backups/PACE_standalone_v0.27.0_20260509.html`
+- `backups/PACE_standalone_v0.27.0_20260508.html`
 - `backups/PACE_standalone_v0.26.0_20260508.html`
 - `backups/PACE_standalone_v0.26.0-alpha_20260508.html`
 - `backups/PACE_standalone_v0.25.4_20260508.html`
+- `backups/PACE_standalone_v0.25.3_20260508_ROTO.html`
 - `backups/PACE_standalone_v0.25.2_20260508_pre48d.html`
 - `backups/PACE_standalone_v0.25.2_20260507.html`
 - `backups/PACE_standalone_v0.25.1_20260507_pre48c.html`
 - `backups/PACE_standalone_v0.25.1_20260507.html`
-- `backups/PACE_standalone_v0.25.0_20260507.html`
 - `backups/PACE_standalone_v0.25.0_20260507_pre48.html`
+- `backups/PACE_standalone_v0.25.0_20260507.html`
 - `backups/PACE_standalone_v0.24.0_20260506.html`
 - `backups/PACE_standalone_v0.23.0_20260506.html`
 - `backups/PACE_standalone_v0.22.1_20260506.html`
 - `backups/PACE_standalone_v0.22.0_20260506.html`
 - `backups/PACE_standalone_v0.21.0_20260506.html`
-- `backups/PACE_standalone_v0.20.0_20260506.html`
-- `backups/PACE_standalone_v0.19.1_20260505.html`
-- `backups/PACE_standalone_v0.18.0_20260505.html` <- BORRAR
-- `backups/PACE_standalone_v0.17.0_20260505.html` <- BORRAR
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 56 - v0.27.2 -> v0.27.3 - chore(build): blindaje build con parser sintactico real**
+**Sesion 57 - v0.27.3 -> v0.27.5 - refactor(state): split state.jsx en 6 modulos**
 
 ### Que se hizo
 
-Sesion de infraestructura pura. Sin cambios de app ni UI.
+Refactor de infraestructura puro. Sin cambios de comportamiento ni UI.
 
-**Objetivo:** reemplazar 4 checks heuristicos acumulados en s52/s54b/s55b por un
-parser sintactico real que valide todos los archivos antes del bundle.
+**Objetivo:** dividir state.jsx (1026 lineas, deuda critica) en modulos cohesivos
+para reducir riesgo de truncamiento en ediciones futuras y mejorar legibilidad.
 
-**Parser elegido:** TypeScript (ya instalado en el workspace). `@babel/parser` no
-pudo instalarse porque npm esta bloqueado por politica de red del entorno Cowork.
-El TypeScript parser con `ScriptKind.JSX` produce los mismos resultados a efectos
-de deteccion de truncamientos.
+**Modulos creados:**
+- `state-core.jsx` (356 ln): store, loadState, rollover, history helpers, toast
+- `state-timer.jsx` (49 ln): addFocusMinutes, completePomodoro
+- `state-hydrate.jsx` (52 ln): addWaterGlass
+- `state-achievements.jsx` (251 ln): unlockAchievement, detectores, complete*Session, updateStreak
+- `state-paths.jsx` (166 ln): paths CRUD + stats
+- `state-settings.jsx` (13 ln): setLang
+- `state.jsx` reescrito como indice (58 ln): re-export consolidado
 
-**Refactor build-standalone.js:**
-- Eliminados: `validateFileEnd`, `validateNoUnclosedStrings`, `new Function()`, `WARN_ALLOWLIST`.
-- Nueva funcion: `validateSyntax(content, label, isJSX)` -- parseo real con snippet.
-- Nueva funcion: `validateAppFiles()` -- recorre app/ recursivamente.
-- `validateInlineScripts()` rehecha con parser real + strip de comentarios HTML.
-- Lineas: 297 -> 241 (-19%).
+**PACE.html:** scripts state-*.jsx en orden antes de state.jsx. Titulo v0.27.5.
 
-**Test de regresion:**
-- Truncamiento deliberado de `app/state.jsx` a 100 lineas.
-- Build aborto con: `Syntax error in app/state.jsx at 101:0 -- '}' expected`.
-- Restaurado y build completo: 33 archivos OK, 2 scripts inline OK, 545 KB.
+**Validaciones:** 21/21 trazas comportamentales OK. Build 39 archivos, 0 errores.
 
-**Documentacion:** `docs/BUILD.md` creado. `package.json` creado en raiz.
+**Incidencia:** TypeScript hardcodeado en ruta Linux en build-standalone.js.
+Resuelto anadiendo fallback a node_modules local (npm install typescript --no-save).
 
-**Build:** 545 KB, 0 errores, 0 WARN.
-
-### Decisiones tomadas
-- TypeScript parser como alternativa permanente a @babel/parser.
-  Documentado en docs/BUILD.md "Limitaciones conocidas".
-- Ruta de TS hardcodeada: `/usr/local/lib/node_modules_global/lib/node_modules/typescript`.
-  Fragil si cambia el entorno, pero es la unica opcion sin npm.
-- Backups: FS sandbox sigue sin permitir borrar; 23 backups ahora.
-  Borrar manualmente v0.17.0 y v0.18.0 cuando sea posible.
-
-### Incidencia
-npm bloqueado por politica de red -- no se pudo instalar @babel/parser.
-Resuelta usando TypeScript ya disponible en el workspace.
+**Build:** 538 KB, 0 errores, 0 WARN.
 
 ### Proxima sesion (sugerencias)
-- s57: Split state.jsx (1025 ln, deuda critica) -- sin features nuevas
-- s57: PathYearView mobile (heatmap en 320px)
-- s57: Detector logro master.midnight.never
-- s57: Iconos PNG reales PWA manifest
+- PathYearView mobile (heatmap en 320px)
+- Detector logro master.midnight.never
+- Iconos PNG reales PWA manifest
+- Split Sidebar.jsx (630 ln) o strings.js (742 ln)
 ## Decisiones activas
 
 | Decision | Desde | Detalle |
@@ -148,8 +138,8 @@ Resuelta usando TypeScript ya disponible en el workspace.
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/state.jsx` | 1025 | ALTA -- duplica limite 500 ln |
+| `app/i18n/strings.js` | 742 | ALTA |
 | `app/shell/Sidebar.jsx` | 630 | MEDIA |
-| `app/i18n/strings.js` | 742 | MEDIA |
-| `app/achievements/Achievements.jsx` | ~500 | MEDIA |
 | `app/main.jsx` | 600 | MEDIA |
+| `app/achievements/Achievements.jsx` | ~500 | MEDIA |
+| `app/state-core.jsx` | 356 | BAJA (dentro de limite) |
