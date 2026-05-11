@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.28.5
-**Ultima sesion:** #65 -- 2026-05-11 - fix(deploy): index.html root + manifest PWA + iconos vaca pastando (v0.28.5)
-**Ultima actualizacion de este archivo:** 2026-05-11 - sesion 65
-**Build entregado:** `PACE_standalone.html` v0.28.5 (559 KB) + `index.html` (idem, copia exacta)
+**Version actual:** v0.28.6
+**Ultima sesion:** #66 -- 2026-05-12 - fix(ui): logo completo + tagline sidebar movil + iconos maskable safe zone + cache-bust SW (v0.28.6)
+**Ultima actualizacion de este archivo:** 2026-05-12 - sesion 66
+**Build entregado:** `PACE_standalone.html` v0.28.6 (559 KB) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -38,7 +38,7 @@
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.28.0** (StepGlyph usa ExerciseGlyph s59, sin cambios s61) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.17.0** |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.28.5** (s64: 640px logo margins neutralizados + data-pace-sidebar-spacer oculto -- fix logo clip + hueco) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.28.6** (s66: 640px max-height+overflow eliminados en logobar -- logo+tagline integros en movil; data-pace-sidebar-logo max-width:200px) |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.20.0** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | Catalogo + coleccion | **v0.25.3** |
@@ -48,7 +48,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.5** (s64: nota inferior restaurada data-pace-week-note, oculta <=640px) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.28.5** (PACE_VERSION bump s64) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.28.6** (PACE_VERSION bump s66) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.27.5** (nuevo s57) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.27.5** (nuevo s57) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.27.5** (nuevo s57) |
@@ -66,11 +66,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.28.2** (s61: responsive movil propio, layout compacto, fix dual-only column) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.28.5** (s65: CACHE_NAME pace-v0.28.5, PRECACHE 9 recursos) |
+| `sw.js` | Service Worker PWA | **v0.28.6** (s66: CACHE_NAME pace-v0.28.6 -- cache-bust iconos maskable safe zone) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.28.4_20260512.html` <- creado s64
+- `backups/PACE_standalone_v0.28.5_20260512.html` <- creado s66
+- `backups/PACE_standalone_v0.28.4_20260512.html`
 - `backups/PACE_standalone_v0.28.3_20260512.html`
 - `backups/PACE_standalone_v0.28.2_20260511.html`
 - `backups/PACE_standalone_v0.28.1_20260511.html`
@@ -89,35 +90,38 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.25.2_20260508_pre48d.html`
 - `backups/PACE_standalone_v0.25.2_20260507.html`
 - `backups/PACE_standalone_v0.25.1_20260507_pre48c.html`
-- `backups/PACE_standalone_v0.25.1_20260507.html`
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 65 - v0.28.5 - fix(deploy): index.html root + manifest PWA + iconos vaca pastando**
+**Sesion 66 - v0.28.6 - fix(ui): logo completo + tagline sidebar movil + iconos maskable safe zone**
 
 ### Que se hizo
 
-1. **index.html para Cloudflare Pages:** `build-standalone.js` ahora copia `PACE_standalone.html`
-   a `index.html` tras cada build. SHA256 identico verificado. `PACE_standalone.html` se mantiene
-   como alias temporal (Fase 2: eliminar ~3 jun 2026).
+1. **Fix logo recortado en sidebar movil:** En `@media(max-width:640px)` de `Sidebar.jsx`,
+   eliminados `min-height:48px`, `max-height:48px` y `overflow:hidden` del contenedor
+   `[data-pace-sidebar-logobar]`. Eran las reglas que clippeaban el PNG del logo (vaca
+   completa + tagline embebido). Ahora `overflow:visible` + `padding:6px 4px`.
+   Nueva regla `[data-pace-sidebar-logo]` con `max-width:200px; width:100%; margin:0 auto`.
+   Añadido atributo `data-pace-sidebar-logo` al div contenedor del logo en el JSX.
 
-2. **manifest.json reescrito:** iconos SVGs (eliminados) reemplazados por 4 PNGs reales.
-   `start_url`/`scope` → `"/"`. `theme_color`/`background_color` → `#F5EFE0`.
+2. **Tagline restaurado:** El tagline "TOUCH GRASS, EVEN FROM YOUR DESK" está embebido
+   en el PNG oficial (`pace-logo.png`), en la parte inferior. Al eliminar el clipping,
+   queda visible automáticamente — no había elemento HTML separado.
 
-3. **PACE.html head:** añadidos `<link rel="icon">` (192/512), `<link rel="apple-touch-icon">`,
-   metas PWA iOS/Android. `theme-color` corregido de `#3E5A3A` a `#F5EFE0`. Manifest → `/manifest.json`.
+3. **Cache-bust iconos maskable:** `CACHE_NAME` en `sw.js` bumpeado de `pace-v0.28.5`
+   a `pace-v0.28.6`. Los iconos `icon-192-maskable.png` (192×192, 10.1 KB) e
+   `icon-512-maskable.png` (512×512, 41.4 KB) ya estaban regenerados por el usuario
+   con safe zone correcta (vaca ~70-75% del lienzo).
 
-4. **sw.js actualizado:** `CACHE_NAME` `pace-v0.19.0` → `pace-v0.28.5`. PRECACHE ampliado a 9 recursos.
-
-5. **Icono renombrado:** `icons/pace-512-maskable.png` → `icons/icon-512-maskable.png`.
+4. **Bump de version:** `state-core.jsx` + `PACE.html` → v0.28.6.
 
 ### Build
 
-- Bundle: 558 KB → 559 KB (+1 KB). 40 archivos validados.
-- `index.html` generado (559 KB, copia exacta de `PACE_standalone.html`).
-- Backup v0.28.4 ya existia desde s64; no se generó nuevo backup en esta sesion.
+- Bundle: 559 KB (sin cambio). 40 archivos validados.
+- `index.html` generado (559 KB, SHA256 identico a `PACE_standalone.html`).
+- Backup: `backups/PACE_standalone_v0.28.5_20260512.html` (rotado el mas antiguo v0.25.1).
 
 ### Pendientes activos
 

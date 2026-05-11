@@ -15,9 +15,10 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.28.6** | 2026-05-12 | fix(ui): logo completo + tagline sidebar movil + cache-bust iconos maskable safe zone | #66 | [abajo](#v0286----2026-05-12----fixui-logo-tagline-sidebar-movil) |
 | **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [abajo](#v0285----2026-05-11----fixdeploy-indexhtml-root--manifest-pwa--iconos-vaca-pastando) |
 | **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [session-64](./docs/sessions/session-64-fixes-ui-menores.md) |
-| **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [abajo](#v0284----2026-05-12----featui-fix-scroll-desktop--sidebar-movil) |
+| **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [session-63](./docs/sessions/session-63-fix-desktop-movil.md) |
 | **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada -- barras 44->36, PathStat cards 10/14->8/12, gap 14->10 -- todas las pestanas Stats sin scroll en 1080p + heatmap ano completo (7 etiquetas dia + futuros visibles) | #61/62 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil + Sidebar.jsx 630->497 ln (sale de deuda) | #61 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) -- 4 patrones canonicos definidos, pendiente propagar a 33 restantes | #60 | [session-60](./docs/sessions/session-60-glyphs-iter-incompleto.md) |
@@ -88,6 +89,42 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.28.6] -- 2026-05-12 -- fix(ui): logo completo + tagline sidebar movil
+
+Sesion 66. Fix del logo recortado en sidebar movil: eliminado `max-height: 48px +
+overflow:hidden` que clippeaba el PNG del logo (con el tagline embebido en la parte
+inferior). Logo ahora limitado a `max-width: 200px` con margen automatico centrado.
+Cache-bust del Service Worker para forzar descarga de iconos maskable regenerados
+con safe zone correcta (vaca ~70-75% del lienzo).
+
+### Fixed
+
+- **`app/shell/Sidebar.jsx`** (`@media max-width:640px`): eliminados `min-height:48px`,
+  `max-height:48px` y `overflow:hidden` del contenedor `[data-pace-sidebar-logobar]`
+  que recortaban el PNG del logo (incluyendo la vaca completa + tagline "TOUCH GRASS,
+  EVEN FROM YOUR DESK" embebido). Sustituidos por `overflow:visible` y `padding:6px 4px`.
+  Nueva regla `[data-pace-sidebar-logo]` con `max-width:200px; width:100%; margin:0 auto`
+  para mantener el logo a escala proporcional en movil sin desbordarse.
+  Añadido `data-pace-sidebar-logo` al div contenedor del logo en el JSX.
+- **`sw.js`**: `CACHE_NAME` bumpeado de `pace-v0.28.5` a `pace-v0.28.6`. Fuerza a
+  los navegadores con PWA instalada a invalidar el cache viejo y descargar los
+  iconos maskable nuevos (192px 10.1 KB, 512px 41.4 KB — safe zone corregida).
+- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.5 → v0.28.6.
+
+### Not changed
+
+- Contadores (00/00/00) siguen ocultos en movil — no restaurados.
+- Desktop intacto: logo grande, tagline visible, contadores visibles.
+- Resto del sidebar movil (Ritmo, Sendero, Logros, EN CAMINO, footer) sin cambios.
+
+### Build
+
+- `PACE_standalone.html`: 559 KB (sin cambio de tamano). 40 archivos validados.
+- `index.html` generado como copia exacta (SHA256: `C0AEBFAC...B2F26A`).
+- Backup: `backups/PACE_standalone_v0.28.5_20260512.html` (rotado el mas antiguo v0.25.1).
+
+---
+
 ## [v0.28.5] -- 2026-05-11 -- fix(deploy): index.html root + manifest PWA + iconos vaca pastando
 
 Sesion 65. Fix de despliegue en Cloudflare Pages + actualizacion completa de PWA manifest
@@ -120,73 +157,7 @@ hueco sidebar, scroll heatmaps, nota Semana).
 
 ---
 
-## [v0.28.4] -- 2026-05-12 -- feat(ui): fix scroll desktop + sidebar movil compacta
-
-Sesion 63. Fix de scroll residual en las 4 pestanas del modal Stats en desktop (1080p)
-+ compactacion completa del sidebar en movil (640px) + fixes de layout movil en
-Semana y Caminos dentro de Stats.
-
-### Changed
-
-- **`app/stats/StatsPanel.jsx`** (`WeekView`): eliminado bloque "Nota: no medimos
-  para juzgarte..." -- el subtitulo del modal ya transmite el mensaje. Ganancia ~30px.
-  Añadido wrapper `data-pace-week-view` + `<style>` con `@media(max-width:640px)`:
-  cards `repeat(4,1fr)` → `repeat(2,1fr)`, barras height 36 → 28.
-- **`app/stats/StatsPanel.jsx`** (`MonthHeatmap`): celdas `56px → 48px`;
-  footer: `marginTop:14→10`, `padding:'10px 14px'→'8px 10px'`, `fontSize:12→11`.
-- **`app/stats/YearView.jsx`** + **`app/stats/PathYearView.jsx`**: dias futuros
-  cambian de `background:'var(--paper-3)'` (identico al lvl=0) a
-  `background:'transparent', opacity:0.3`. Ahora son claramente vacios.
-- **`app/stats/PathYearView.jsx`**: nav `marginBottom:16→10`; leyenda `marginTop:10→4`;
-  stride columnas `gap:2→1`, `marginRight:2→1`; footer `marginTop:12→8`,
-  `padding:'10px 14px'→'8px 10px'`, `fontSize:12→11`.
-- **`app/stats/PathStats.jsx`**: titulo heatmap `marginBottom:6→4`.
-- **`PACE.html`** (CSS): `.path-stats { gap:10px→6px }`. Nuevo bloque
-  `@media(max-width:640px)` para `.path-stats-summary`: grid 3 columnas, cards
-  compactas. Regla 480px limpiada.
-- **`app/shell/Sidebar.jsx`**: añadido bloque `@media(max-width:640px)` en
-  `pace-sidebar-responsive-css` (logoBar 48px max + overflow:hidden, circles 40px).
-  `isMob` condiciona: Dividers `14/16px→8px`, sectionHeader `marginBottom:10→6`,
-  streakNum `fontSize:44→32`, WeekDots compacto, SenderoDelDia SVG `240×46→180×36`,
-  StatusBar `marginTop:14→8, paddingTop:12→8, gap:10→6`.
-- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.3 → v0.28.4.
-
-### Build
-
-- `PACE_standalone.html`: 556 KB → 557 KB (+1 KB). 40 archivos validados.
-- Backups: eliminados los 4 mas antiguos (v0.22.1–v0.25.0-pre48) para mantener max 20.
-
----
-
-## [v0.28.3] -- 2026-05-11 -- chore(ui): WeekView + PathStats compactacion segunda pasada
-
-Sesion 61 iter.2. Continuacion tras limite de cuota: los cambios de
-YearView/PathYearView (7 etiquetas de dia L-M-X-J-V-S-D + dias futuros
-visibles) y MonthHeatmap (56px fijas + centrado) estaban ya aplicados
-desde la iteracion anterior. Esta pasada completa la compactacion de
-WeekView y PathStats para eliminar el scroll vertical restante en 1080p.
-
-### Changed
-
-- **`app/stats/StatsPanel.jsx`** (`WeekView`): `WeekBarRow` chart height
-  44 → 36; `marginBottom` 10 → 8. Nota inferior: `marginTop` 12 → 8,
-  `padding` 10 → 6, `fontSize` 11 → 10.
-- **`PACE.html`** (CSS PathStats): `.path-stats` gap 14px → 10px;
-  `.path-stat-card` padding 10px/14px → 8px/12px; `.path-stat-value`
-  1.4em → 1.3em; `.path-stats-table` th/td padding 5px/12px → 4px/10px.
-- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.2 →
-  v0.28.3.
-
-### Build
-
-- `PACE_standalone.html`: 554 KB → 556 KB (+2 KB). 40 archivos
-  validados, 2 inline scripts.
-
----
-
-<!-- v0.28.2 y anteriores: ver tabla de historial + docs/sessions/ -->
-
-<!-- v0.28.2 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- v0.28.4 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.27.6] -- 2026-05-11 -- chore(workflow): blindaje Git
 

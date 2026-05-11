@@ -81,19 +81,21 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       }
     }
     /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
-       s64 (v0.28.5): logo con márgenes neutralizados para evitar
-       clip lateral; spacer flex:1 oculto para eliminar hueco antes
-       del footer "EN CAMINO". */
+       s64 (v0.28.5): márgenes negativos neutralizados para evitar clip lateral.
+       s66 (v0.28.6): eliminado max-height + overflow:hidden que recortaban logo
+       y tagline; logo limitado a max-width 200px con data-pace-sidebar-logo. */
     @media (max-width: 640px) {
       [data-pace-sidebar] [data-pace-sidebar-logobar] {
-        min-height: 48px !important;
-        max-height: 48px !important;
-        overflow: hidden !important;
-        /* Neutralizar márgenes negativos inline — evita que el logo
-           se clipee por la izquierda cuando overflow:hidden está activo. */
+        /* Márgenes neutralizados + overflow visible para mostrar logo+tagline íntegros */
+        overflow: visible !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
-        padding: 0 4px !important;
+        padding: 6px 4px !important;
+      }
+      [data-pace-sidebar] [data-pace-sidebar-logo] {
+        max-width: 200px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
       }
       /* Spacer flex:1 oculto: el contenido se apila desde arriba y
          el espacio sobrante queda al final, antes del footer. */
@@ -149,6 +151,7 @@ function Sidebar() {
       <div style={sidebarStyles.logoBar} data-pace-sidebar-logobar>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
+          data-pace-sidebar-logo
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
           title={t('sidebar.logo.title')}
         >
