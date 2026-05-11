@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) -- 4 patrones canonicos definidos, pendiente propagar a 33 restantes | #60 | [abajo](#v0281----2026-05-11----refactorglyphs-iteracion-parcial-1346) |
 | **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira -- pantalla activa de sesion deja de mostrar placeholder y muestra simbolo abstracto unico por ejercicio | #59 | [abajo](#v0280----2026-05-11----featglyphs-46-glifos-canonicos-por-paso) |
 | **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | [abajo](#v0276----2026-05-11----choreworkflow-blindaje-git) |
 | **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [session-57](./docs/sessions/session-57-refactor-state.md) |
@@ -79,6 +80,94 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.28.1] -- 2026-05-11 -- refactor(glyphs): iteracion parcial 13/46
+
+Sesion 60. Iteracion del lenguaje visual de los glifos de ejercicio.
+Sesion **incompleta** (pausada por el usuario): 13 de 46 glifos rediseñados
+en 3 tandas progresivas. Establece 4 patrones canonicos para la propagacion
+posterior a los 33 restantes.
+
+### Contexto
+
+El feedback del usuario tras la entrega de s59 fue que los 46 glifos
+abstractos no comunicaban el ejercicio al usuario sin contexto. Como
+referencia visual se uso la captura de los 4 botones de actividad de la
+home (`ABBreathe`/`ABStretch`/`ABMove`/`ABDrop` en `app/main.jsx`):
+pulmones, arco corporal, mancuerna, gota.
+
+### Cuatro patrones canonicos definidos
+
+1. **Cuerpo como una sola forma** (compuesto: 1 curva + cabeza puntito +
+   suelo opcional). Para posturas compuestas: squat, plank, bridge, hollow
+   hold, wall sit, pigeon.
+2. **Objeto solo** (sin cuerpo). Para ejercicios con equipo iconico:
+   silla, barra, banda, mancuerna.
+3. **Parte del cuerpo aislada** (zoom anatomico). Para movimientos
+   localizados: muñeca, cabeza, tobillo, mano, pie.
+4. **Metafora pura**. Solo para reposos/respiracion: luna, enso, diafragma.
+
+Cada glifo entra en UNO de los 4 patrones, sin mezclar. Maximo 5 elementos
+visuales por glifo (referencia: home Mueve = 5, home Estira = 3,
+home Respira = 4, home Hidratate = 2).
+
+### Changed -- 13 glifos rediseñados (en `app/glyphs/exercise-glyphs.jsx`)
+
+**Tanda 1 (8 glifos, abstractos -- DESCARTADA parcialmente, queda solo lo metaforico):**
+- `Descanso`: luna creciente + chispa (patron 4) ✓
+- `Reset respiracion`: circulo enso + centro (patron 4) ✓
+- `Deep breaths`: diafragma como boveda + aliento ascendente (patron 4) ✓
+- `Squeeze fist`: silueta puño + 3 nudillos + pulgar (patron 3, pendiente refinar)
+- `Wall sit`: pared + silueta sentada con cadera flexionada (patron 1, pendiente refinar)
+- `Calf raises`: pie de perfil con talon elevado (patron 3, pendiente refinar)
+- `Apertura de pecho`: dos petalos abriendose (patron 4, pendiente refinar)
+- `Rotacion toracica`: espiral nautilo con flecha (patron 4, pendiente refinar)
+
+**Tanda 2 (5 glifos, prototipo Estrategia E -- DESCARTADA):**
+- Squat profundo, Fondos en silla, Wrist circles, Chin tucks, Chest opener.
+  Probaron sticks figures con multiples elementos, no funcionaron.
+
+**Tanda 3 (5 glifos, minimalismo radical -- VERSION FINAL en disco):**
+- `Squat profundo`: arco M sobre suelo (patron 1) -- 3 elementos.
+- `Fondos en silla`: silla en perfil sin persona (patron 2) -- 4 elementos.
+- `Wrist circles`: antebrazo + mano + circulo rotacion (patron 3) -- 3 elementos.
+- `Chin tucks`: cabeza perfil + nariz + columna + chin mark (patron 3) -- 4 elementos.
+- `Chest opener`: T-pose minimal (patron 1) -- 4 elementos.
+
+### Estado de los 46 glifos
+
+- **Rediseñados v0.28.1:** 13/46 (5 finalizados estilo home, 8 intermedios)
+- **Sin tocar (estilo abstracto s59):** 33/46
+- **Patron asignado pendiente de aplicar:** 33 (a propagar en sesion futura)
+
+### Pendiente para proxima sesion (cuando se retome)
+
+- Validar visualmente los 13 actuales con el usuario.
+- Refinar tanda 1 a estilo "una sola forma" (Squeeze fist, Wall sit, Calf
+  raises, Apertura de pecho, Rotacion toracica) -- los 3 metaforicos
+  (Descanso, Reset respiracion, Deep breaths) probablemente OK.
+- Propagar los 4 patrones a los 33 glifos restantes asignando cada uno a 1/2/3/4.
+- Considerar añadir BreatheLibrary card glyphs (sin tocar en esta sesion).
+
+### Changed -- versionado
+
+- `app/state-core.jsx`: PACE_VERSION bumpeada `v0.28.0` → `v0.28.1`.
+- `PACE.html`: titulo bumpeado a `v0.28.1`.
+- Comentario header de `exercise-glyphs.jsx` actualizado a sesion 60.
+
+### Build
+
+- `PACE_standalone.html`: 557 KB → 556 KB (-1 KB), 0 errores, 0 WARN.
+
+### Notas
+
+- No se tocaron los 4 glifos de menu (ActivityBar) -- siguen siendo la
+  referencia canonica del estilo.
+- BreatheSession sigue fuera de scope (usa BreathVisual animado).
+- Sesion **pausada por el usuario** antes de terminar el rediseño.
+  Backup v0.28.0 conservado en `backups/PACE_standalone_v0.28.0_20260511.html`.
 
 ---
 

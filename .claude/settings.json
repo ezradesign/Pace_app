@@ -10,7 +10,11 @@
       "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE.html','utf8'\\); const lines=html.split\\('\\\\n'\\); console.log\\('Total lines PACE.html:', lines.length\\); console.log\\('Last 20 lines:'\\); lines.slice\\(-20\\).forEach\\(\\(l,i\\)=>console.log\\(lines.length-20+i+1, ':', l.substring\\(0,120\\)\\)\\);\")",
       "Bash(node -e \"const fs=require\\('fs'\\); const html=fs.readFileSync\\('PACE_standalone.html','utf8'\\); console.log\\('Ends with </html>:', html.trim\\(\\).endsWith\\('</html>'\\)\\); console.log\\('Contains </body>:', html.includes\\('</body>'\\)\\); console.log\\('Contains serviceWorker register:', html.includes\\('serviceWorker.register'\\)\\);\")",
       "Bash(xxd)",
-      "PowerShell(\\(Get-ChildItem \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\"\\).Count)"
+      "PowerShell(\\(Get-ChildItem \"c:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\"\\).Count)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const c=fs.readFileSync\\('app/glyphs/exercise-glyphs.jsx','utf8'\\);console.log\\('Lines:',c.split\\('\\\\n'\\).length,'Bytes:',c.length\\);const keys=\\(c.match\\(/'[^']+': \\\\\\(\\\\{ size/g\\)||[]\\).length;console.log\\('Glyph keys:',keys\\);\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const c=fs.readFileSync\\('app/glyphs/exercise-glyphs.jsx','utf8'\\);const m=c.match\\(/['\\\\\"][^'\\\\\"]+['\\\\\"]:\\\\s*\\\\\\(\\\\{\\\\s*size/g\\);console.log\\('Total glyph keys \\(incl. double-quoted\\):',m.length\\);\")",
+      "Bash(copy \"PACE_standalone.html\" \"backups\\\\PACE_standalone_v0.28.0_20260511.html\")",
+      "Bash(findstr v0.28)"
     ]
   }
 }
