@@ -40,6 +40,19 @@ function BreatheSession({ routine, onExit }) {
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
 
+  // Helper: reproduce el sonido de una fase por su label.
+  // 'Sostén' → silencio intencional.
+  const playPhaseSound = (phaseLabel, phaseDur) => {
+    if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+        phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
+        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
+      try { playSound('breathe.inhale', phaseDur); } catch (e) {}
+    } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
+               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
+      try { playSound('breathe.exhale', phaseDur); } catch (e) {}
+    }
+  };
+
   // Preparación: cuenta atrás 3 segundos
   useEffect(() => {
     if (stage !== 'prep' || paused) return;
@@ -47,6 +60,8 @@ function BreatheSession({ routine, onExit }) {
       try { playSound('breathe.session.start'); } catch (e) {}
       setStage('active');
       startTime.current = Date.now();
+      // Hueco A: la fase 0 nunca tenía transición previa → su sonido nunca se disparaba.
+      playPhaseSound(sequence[0].label, sequence[0].duration);
       return;
     }
     const timer = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
@@ -66,20 +81,8 @@ function BreatheSession({ routine, onExit }) {
             return 0;
           }
           setPhase(nextPhase);
-          /* Sonido de fase — sesión 38a: ruido filtrado sincronizado con
-             la duración real de la fase. Hold = silencio intencional. */
           const newCur = sequence[nextPhase];
-          const phaseDur = newCur.duration;
-          const phaseLabel = newCur.label;
-          if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
-              phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
-              phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
-            try { playSound('breathe.inhale', phaseDur); } catch (e) {}
-          } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
-                     phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
-            try { playSound('breathe.exhale', phaseDur); } catch (e) {}
-          }
-          // Sostén → silencio intencional (no llamar a playSound).
+          playPhaseSound(newCur.label, newCur.duration);
           return 0;
         }
         return t + 1;
@@ -159,6 +162,8 @@ function BreatheSession({ routine, onExit }) {
       if (breathCount < routine.breaths) {
         setBreathCount(b => b + 1);
         setPhase(0);
+        // Hueco B: reinicio de ciclo en rondas → fase 0 nunca sonaba.
+        playPhaseSound(sequence[0].label, sequence[0].duration);
       } else {
         try { playSound('breathe.session.end'); } catch (e) {}
         setStage('hold');
@@ -170,6 +175,8 @@ function BreatheSession({ routine, onExit }) {
         finish();
       } else {
         setPhase(0);
+        // Hueco B: reinicio de ciclo no-rondas → fase 0 nunca sonaba.
+        playPhaseSound(sequence[0].label, sequence[0].duration);
       }
     }
   };
@@ -180,6 +187,8 @@ function BreatheSession({ routine, onExit }) {
       setBreathCount(1);
       setPhase(0);
       setStage('active');
+      // Nueva ronda tras hold: reproducir sonido de la fase 0 (Inhala*).
+      playPhaseSound(sequence[0].label, sequence[0].duration);
     } else {
       finish();
     }
@@ -201,7 +210,7 @@ function BreatheSession({ routine, onExit }) {
         accent="var(--breathe)"
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
-        onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); }}
+        onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); playPhaseSound(sequence[0].label, sequence[0].duration); }}
       />
     );
   }

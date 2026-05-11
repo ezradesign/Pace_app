@@ -14,7 +14,12 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\\" | Sort-Object Name | ForEach-Object { $_.Name })",
       "Bash(Select-String -Pattern 'no medimos' -Context 2,20)",
       "PowerShell(Add-Type -AssemblyName System.Drawing; $img192 = [System.Drawing.Image]::FromFile\\(\\(Resolve-Path 'C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\icons\\\\icon-192-maskable.png'\\)\\); $img512 = [System.Drawing.Image]::FromFile\\(\\(Resolve-Path 'C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\icons\\\\icon-512-maskable.png'\\)\\); Write-Host \"192: $\\($img192.Width\\)x$\\($img192.Height\\)\"; Write-Host \"512: $\\($img512.Width\\)x$\\($img512.Height\\)\"; $img192.Dispose\\(\\); $img512.Dispose\\(\\))",
-      "Bash(powershell -command \"Get-FileHash PACE_standalone.html -Algorithm SHA256 | Select-Object -ExpandProperty Hash; Get-FileHash index.html -Algorithm SHA256 | Select-Object -ExpandProperty Hash\")"
+      "Bash(powershell -command \"Get-FileHash PACE_standalone.html -Algorithm SHA256 | Select-Object -ExpandProperty Hash; Get-FileHash index.html -Algorithm SHA256 | Select-Object -ExpandProperty Hash\")",
+      "Bash(Remove-Item \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\PACE_standalone_v0.25.1_20260507_pre48c.html\" -ErrorAction SilentlyContinue)",
+      "Bash(Copy-Item \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\PACE_standalone.html\" \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\backups\\\\PACE_standalone_v0.28.6_20260511.html\")",
+      "Bash(Write-Host \"Backup creado OK\")",
+      "PowerShell($h1 = \\(Get-FileHash \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\PACE_standalone.html\" -Algorithm SHA256\\).Hash; $h2 = \\(Get-FileHash \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\index.html\" -Algorithm SHA256\\).Hash; Write-Host \"PACE_standalone: $h1\"; Write-Host \"index.html:      $h2\"; if \\($h1 -eq $h2\\) { Write-Host \"IDENTICOS OK\" } else { Write-Host \"DIFERENTE - ERROR\" })",
+      "PowerShell(git -C \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\" status --short)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

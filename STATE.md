@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.28.6
-**Ultima sesion:** #66 -- 2026-05-12 - fix(ui): logo completo + tagline sidebar movil + iconos maskable safe zone + cache-bust SW (v0.28.6)
-**Ultima actualizacion de este archivo:** 2026-05-12 - sesion 66
-**Build entregado:** `PACE_standalone.html` v0.28.6 (559 KB) + `index.html` (idem, copia exacta)
+**Version actual:** v0.28.7
+**Ultima sesion:** #67 -- 2026-05-11 - fix(breathe): inhalacion suena en arranque y reinicio de ciclo (v0.28.7)
+**Ultima actualizacion de este archivo:** 2026-05-11 - sesion 67
+**Build entregado:** `PACE_standalone.html` v0.28.7 (560 KB) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -34,7 +34,7 @@
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes | **v0.22.0** |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.16.0** |
 | `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad | **v0.17.0** |
-| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.20.0** |
+| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.28.7** (s67: playPhaseSound helper + fix huecos A/B/C inhalacion) |
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.28.0** (StepGlyph usa ExerciseGlyph s59, sin cambios s61) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.17.0** |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
@@ -48,7 +48,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.5** (s64: nota inferior restaurada data-pace-week-note, oculta <=640px) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.28.6** (PACE_VERSION bump s66) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.28.7** (PACE_VERSION bump s67) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.27.5** (nuevo s57) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.27.5** (nuevo s57) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.27.5** (nuevo s57) |
@@ -66,11 +66,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.28.2** (s61: responsive movil propio, layout compacto, fix dual-only column) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.28.6** (s66: CACHE_NAME pace-v0.28.6 -- cache-bust iconos maskable safe zone) |
+| `sw.js` | Service Worker PWA | **v0.28.7** (s67: CACHE_NAME pace-v0.28.7) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.28.5_20260512.html` <- creado s66
+- `backups/PACE_standalone_v0.28.6_20260511.html` <- creado s67
+- `backups/PACE_standalone_v0.28.5_20260512.html`
 - `backups/PACE_standalone_v0.28.4_20260512.html`
 - `backups/PACE_standalone_v0.28.3_20260512.html`
 - `backups/PACE_standalone_v0.28.2_20260511.html`
@@ -89,39 +90,40 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.25.3_20260508_ROTO.html`
 - `backups/PACE_standalone_v0.25.2_20260508_pre48d.html`
 - `backups/PACE_standalone_v0.25.2_20260507.html`
-- `backups/PACE_standalone_v0.25.1_20260507_pre48c.html`
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 66 - v0.28.6 - fix(ui): logo completo + tagline sidebar movil + iconos maskable safe zone**
+**Sesion 67 - v0.28.7 - fix(breathe): inhalacion suena en arranque y reinicio de ciclo**
 
 ### Que se hizo
 
-1. **Fix logo recortado en sidebar movil:** En `@media(max-width:640px)` de `Sidebar.jsx`,
-   eliminados `min-height:48px`, `max-height:48px` y `overflow:hidden` del contenedor
-   `[data-pace-sidebar-logobar]`. Eran las reglas que clippeaban el PNG del logo (vaca
-   completa + tagline embebido). Ahora `overflow:visible` + `padding:6px 4px`.
-   Nueva regla `[data-pace-sidebar-logo]` con `max-width:200px; width:100%; margin:0 auto`.
-   Añadido atributo `data-pace-sidebar-logo` al div contenedor del logo en el JSX.
+1. **Diagnóstico confirmado:** El módulo Respira nunca reproducía el sonido de inhalación
+   porque `playSound` solo se disparaba en transiciones de fase dentro del ticker, dejando
+   la fase 0 (siempre "Inhala*") sin audio en tres huecos: (A) arranque de sesión,
+   (B) reinicio de ciclo en `handleCycleComplete`, (C) nueva ronda tras hold en `releaseHold`.
 
-2. **Tagline restaurado:** El tagline "TOUCH GRASS, EVEN FROM YOUR DESK" está embebido
-   en el PNG oficial (`pace-logo.png`), en la parte inferior. Al eliminar el clipping,
-   queda visible automáticamente — no había elemento HTML separado.
+2. **Helper `playPhaseSound`:** Extraída función local dentro de `BreatheSession` que
+   centraliza la lógica inhala/exhala/sostén, eliminando el bloque inline de 10 líneas
+   del ticker y evitando duplicación.
 
-3. **Cache-bust iconos maskable:** `CACHE_NAME` en `sw.js` bumpeado de `pace-v0.28.5`
-   a `pace-v0.28.6`. Los iconos `icon-192-maskable.png` (192×192, 10.1 KB) e
-   `icon-512-maskable.png` (512×512, 41.4 KB) ya estaban regenerados por el usuario
-   con safe zone correcta (vaca ~70-75% del lienzo).
+3. **Fix Hueco A:** Añadida llamada a `playPhaseSound(sequence[0].label, ...)` tras
+   `setStage('active')` en el prep useEffect y en el callback `onSkip`.
 
-4. **Bump de version:** `state-core.jsx` + `PACE.html` → v0.28.6.
+4. **Fix Hueco B:** Añadida llamada a `playPhaseSound` tras cada `setPhase(0)` en
+   `handleCycleComplete` (rama rondas y rama tiempo libre).
+
+5. **Fix Hueco C:** Añadida llamada a `playPhaseSound` en `releaseHold` tras
+   `setPhase(0); setStage('active')`.
+
+6. **Bump de versión:** `state-core.jsx` + `PACE.html` → v0.28.7. `sw.js` → `pace-v0.28.7`.
 
 ### Build
 
-- Bundle: 559 KB (sin cambio). 40 archivos validados.
-- `index.html` generado (559 KB, SHA256 identico a `PACE_standalone.html`).
-- Backup: `backups/PACE_standalone_v0.28.5_20260512.html` (rotado el mas antiguo v0.25.1).
+- Bundle: 560 KB (+1 KB). 40 archivos validados.
+- `index.html` generado (SHA256 identico a `PACE_standalone.html`).
+- Backup: `backups/PACE_standalone_v0.28.6_20260511.html` (rotado el mas antiguo v0.25.1).
 
 ### Pendientes activos
 

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.28.7** | 2026-05-11 | fix(breathe): inhalacion suena en arranque y reinicio de ciclo | #67 | [abajo](#v0287----2026-05-11----fixbreathe-inhalacion-arranque-ciclo) |
 | **v0.28.6** | 2026-05-12 | fix(ui): logo completo + tagline sidebar movil + cache-bust iconos maskable safe zone | #66 | [abajo](#v0286----2026-05-12----fixui-logo-tagline-sidebar-movil) |
-| **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [abajo](#v0285----2026-05-11----fixdeploy-indexhtml-root--manifest-pwa--iconos-vaca-pastando) |
+| **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [session-65](./docs/sessions/session-65-fix-cloudflare-pwa.md) |
 | **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [session-64](./docs/sessions/session-64-fixes-ui-menores.md) |
 | **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [session-63](./docs/sessions/session-63-fix-desktop-movil.md) |
 | **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada -- barras 44->36, PathStat cards 10/14->8/12, gap 14->10 -- todas las pestanas Stats sin scroll en 1080p + heatmap ano completo (7 etiquetas dia + futuros visibles) | #61/62 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
@@ -89,6 +90,45 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.28.7] -- 2026-05-11 -- fix(breathe): inhalacion arranque ciclo
+
+Sesion 67. La inhalacion en el modulo Respira era siempre muda: el sonido solo
+se disparaba en transiciones de fase dentro del ticker, dejando la fase 0
+(siempre "Inhala*") sin audio al arrancar la sesion y al reiniciar cada ciclo.
+
+### Fixed
+
+- **`app/breathe/BreatheSession.jsx`**: extraida helper `playPhaseSound(label, dur)`
+  que centraliza la logica inhala/exhala/sosten para evitar duplicacion. Corregidos
+  cuatro puntos donde `setPhase(0)` no iba acompanado de sonido:
+  - **Hueco A — arranque**: al terminar la cuenta atras de prep (y al pulsar
+    "Saltar"), se llama ahora a `playPhaseSound(sequence[0].label, ...)`.
+  - **Hueco B · rondas** — `handleCycleComplete`: al reiniciar ciclo dentro de
+    una ronda (`breathCount < routine.breaths`), suena la nueva fase 0.
+  - **Hueco B · libre** — `handleCycleComplete`: al reiniciar ciclo por tiempo
+    (`elapsed < routine.min*60`), idem.
+  - **Hueco C · hold** — `releaseHold`: al iniciar nueva ronda tras retener,
+    suena la fase 0.
+  - **Ticker**: bloque inline de 10 lineas reemplazado por
+    `playPhaseSound(newCur.label, newCur.duration)`.
+- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.6 → v0.28.7.
+- **`sw.js`**: `CACHE_NAME` bumpeado a `pace-v0.28.7`.
+
+### Not changed
+
+- `'Sosten'` sigue siendo silencio intencional en `playPhaseSound`.
+- Drone ambiente (`window.ambientDrone`) sin cambios.
+- Sonidos inicio/fin de sesion (`breathe.session.start/end`) sin cambios.
+- `BreatheVisual.jsx` y `BreatheLibrary.jsx` sin cambios.
+
+### Build
+
+- `PACE_standalone.html`: 560 KB. 40 archivos validados.
+- `index.html` generado como copia exacta (SHA256: `E6488E3C...FD11F3B`).
+- Backup: `backups/PACE_standalone_v0.28.6_20260511.html` (rotado el mas antiguo v0.25.1).
+
+---
+
 ## [v0.28.6] -- 2026-05-12 -- fix(ui): logo completo + tagline sidebar movil
 
 Sesion 66. Fix del logo recortado en sidebar movil: eliminado `max-height: 48px +
@@ -125,39 +165,7 @@ con safe zone correcta (vaca ~70-75% del lienzo).
 
 ---
 
-## [v0.28.5] -- 2026-05-11 -- fix(deploy): index.html root + manifest PWA + iconos vaca pastando
-
-Sesion 65. Fix de despliegue en Cloudflare Pages + actualizacion completa de PWA manifest
-e iconos PNG. Esta version consolida tambien los fixes de UI de la sesion 64 (logo movil,
-hueco sidebar, scroll heatmaps, nota Semana).
-
-### Fixed
-
-- **`build-standalone.js`**: tras generar `PACE_standalone.html`, ahora copia el bundle
-  a `index.html` (root esperado por Cloudflare Pages). Ambos archivos son identicos byte
-  a byte (SHA256 verificado).
-- **`manifest.json`** (reescrito): iconos SVG eliminados reemplazados por 4 PNGs reales.
-  `start_url` y `scope` cambiados de `"./"` / `"."` a `"/"`. `theme_color` y
-  `background_color` actualizados de `#3E5A3A` / `#F2EDE0` a `#F5EFE0` (crema correcto).
-- **`PACE.html`** head: añadidos `<link rel="icon">` (192 y 512), `<link rel="apple-touch-icon">`,
-  corregido `<meta name="theme-color">` a `#F5EFE0`, añadidas metas
-  `mobile-web-app-capable` y `apple-mobile-web-app-*`. Ruta manifest cambiada a
-  `/manifest.json` (absoluta).
-- **`sw.js`**: `CACHE_NAME` actualizado de `pace-v0.19.0` a `pace-v0.28.5`. `PRECACHE`
-  ampliado a 9 recursos: `/`, `/index.html`, `/PACE_standalone.html`, `/manifest.json`
-  y los 5 iconos PNG.
-- **`icons/`**: `pace-512-maskable.png` renombrado a `icon-512-maskable.png` para
-  consistencia con el resto del sistema de nombres.
-
-### Build
-
-- `PACE_standalone.html`: 558 KB → 559 KB (+1 KB). 40 archivos validados.
-- `index.html` generado como copia exacta de `PACE_standalone.html`.
-- Backup en sesion 64: `backups/PACE_standalone_v0.28.4_20260512.html`.
-
----
-
-<!-- v0.28.4 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- v0.28.5 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.27.6] -- 2026-05-11 -- chore(workflow): blindaje Git
 
