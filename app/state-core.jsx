@@ -10,7 +10,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.27.6';
+const PACE_VERSION = 'v0.28.0';
 
 const defaultState = {
   // Settings / Tweaks

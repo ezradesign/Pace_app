@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.6</title>
+  <title>PACE · Foco · Cuerpo — v0.28.0</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <link rel="stylesheet" href="app/tokens.css" />
@@ -121,6 +121,9 @@
   <script type="text/babel" src="app/welcome/WelcomeModule.jsx"></script>
 
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
+
+  <!-- Glifos canónicos de ejercicio (sesión 59) — debe cargarse antes de MoveModule, BreatheSession y PathRunner -->
+  <script type="text/babel" data-presets="env,react" src="app/glyphs/exercise-glyphs.jsx"></script>
 
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>

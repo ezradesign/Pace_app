@@ -225,7 +225,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
       hint={t('move.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
-        <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
+        <StepGlyph stepName={step.name} />
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
           {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>
@@ -280,23 +280,19 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
    con SessionHeader/Stat de Breathe en app/ui/SessionShell.jsx. Ver
    docs/audits/audit-v0.12.7.md §3.1. */
 
-/* Glifo placeholder por paso — círculo con símbolo de categoría.
-   Proyecta sensación de "ficha de biblioteca" hasta que tengamos ilustraciones reales. */
-function StepGlyph({ tag, stepIdx }) {
-  const symbols = ['◯', '◬', '◇', '△', '▢', '⬡', '✦'];
-  const sym = symbols[stepIdx % symbols.length];
+/* Glifo por paso — círculo decorativo (moneda) con SVG canónico interior.
+   La key es el step.name canónico en español (los datos viven en es-ES).
+   El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves. */
+function StepGlyph({ stepName }) {
   return (
     <div style={{
-      ...displayItalic,
       width: 72, height: 72, margin: '0 auto 20px',
       borderRadius: '50%',
-      border: '1px dashed var(--move)',
       background: 'var(--move-soft)',
       display: 'grid', placeItems: 'center',
       color: 'var(--move)',
-      fontSize: 28,
     }}>
-      {sym}
+      <ExerciseGlyph id={stepName} size={44} />
     </div>
   );
 }

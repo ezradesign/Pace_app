@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira -- pantalla activa de sesion deja de mostrar placeholder y muestra simbolo abstracto unico por ejercicio | #59 | [abajo](#v0280----2026-05-11----featglyphs-46-glifos-canonicos-por-paso) |
 | **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | [abajo](#v0276----2026-05-11----choreworkflow-blindaje-git) |
 | **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [session-57](./docs/sessions/session-57-refactor-state.md) |
 | **v0.27.3** | 2026-05-09 | chore(build): blindaje build con parser sintactico real -- TS parser reemplaza 4 checks heuristicos, aborta con linea/columna exacta | #56 | [abajo](#v0273----2026-05-09----chorebuild-blindaje-build-con-parser-real) |
@@ -78,6 +79,68 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.28.0] -- 2026-05-11 -- feat(glyphs): 46 glifos canonicos por paso
+
+Sesion 59. La pantalla activa de sesion (Mueve/Estira + pasos `body` de
+Caminos) deja de mostrar un placeholder generico y muestra un simbolo
+abstracto line-art unico por ejercicio. Granularidad por **paso
+individual**, no por rutina.
+
+### Added
+
+- **`app/glyphs/exercise-glyphs.jsx`** (569 ln, nuevo): registro centralizado
+  con 46 glifos SVG, helper `<G>` con specs canonicas (`viewBox="0 0 44 44"`,
+  `stroke="currentColor"`, `strokeWidth="1.6"`, line-art), `DefaultGlyph`
+  fallback (tres arcos suaves), `ExerciseGlyph({ id, size })` consumidor.
+- 46 entradas en `EXERCISE_GLYPHS`: 13 de Mueve (Flexiones inclinadas,
+  Descanso, Fondos en silla, Wall sit, Calf raises, Seated hollow, Squeeze
+  fist, Finger extension, Wrist stretch, Chin tucks, Scapular squeeze,
+  Thoracic extension, Chest opener) + 33 de Estira (Apertura de pecho,
+  Rotacion toracica, Flexor de cadera, World's greatest stretch, Cuello y
+  trapecios, Reset respiracion, Cossack squat, 90/90, Pigeon, Squat
+  profundo, Puente con marcha, Scapular wall slides, Band pull-apart,
+  External rotation, Dead hang (si puedes), ATG split squat, Tibialis
+  raise, Nordics, Sissy squat, Elephant walk, Deep squat hold, Crawling,
+  Hang pasivo, Ground sitting transitions, Rib pull + respiracion,
+  Inclinacion lateral, Rotacion lenta, Escalenos, Shrug + round, Wrist
+  circles, Seated twist, Ankle circles, Deep breaths).
+
+### Changed
+
+- **`app/move/MoveModule.jsx`**: `StepGlyph` recibe `stepName` (antes `tag` +
+  `stepIdx`), mantiene la moneda circular `var(--move-soft)` 72×72 pero
+  reemplaza el caracter tipografico por `<ExerciseGlyph id={step.name}
+  size={44} />`. La key es `step.name` canonico en espanol — la capa i18n
+  traduce solo la etiqueta mostrada, no la key de lookup.
+- **`PACE.html`**: script `app/glyphs/exercise-glyphs.jsx` cargado antes de
+  FocusTimer/BreatheVisual/MoveModule/PathRunner. Titulo bumpeado a v0.28.0.
+- **`app/state-core.jsx`**: `PACE_VERSION` bumpeada a `v0.28.0`.
+
+### Decisiones de diseno
+
+- Granularidad **por paso** (`step.name`) y no por rutina (`routine.id`):
+  dentro de una rutina hay ejercicios distintos en cada paso.
+- BreatheSession **fuera de scope**: usa `BreathVisual` (animacion guiada),
+  no tiene placeholder de paso a sustituir.
+- Lenguaje visual heredado de los 4 glifos de menu (ABBreathe/ABStretch/
+  ABMove/ABDrop) en `main.jsx`: stroke fino, line-art, sin figura humana.
+- Pares semanticos diferenciados: Descanso vs Reset respiracion vs Deep
+  breaths · Dead hang vs Hang pasivo · Wrist stretch vs Wrist circles ·
+  Squat profundo vs Deep squat hold · los 5 ejercicios de cuello con
+  vectores visuales distintos.
+
+### Build
+
+- `PACE_standalone.html`: 538 KB → 557 KB (+19 KB), 0 errores, 0 WARN.
+
+### Notas
+
+- Las cards de biblioteca (MoveLibrary/ExtraLibrary/BreatheLibrary)
+  **no cambian** — siguen con codigos tipograficos SIT/HIP/SHLU.
+- Los 4 glifos de menu (ActivityBar) **no se tocan**.
 
 ---
 
