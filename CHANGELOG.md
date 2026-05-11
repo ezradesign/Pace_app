@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [abajo](#v0285----2026-05-12----fixui-logo-movil--hueco-sidebar--scroll-heatmaps--nota-semana) |
+| **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [abajo](#v0285----2026-05-11----fixdeploy-indexhtml-root--manifest-pwa--iconos-vaca-pastando) |
+| **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [session-64](./docs/sessions/session-64-fixes-ui-menores.md) |
 | **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [abajo](#v0284----2026-05-12----featui-fix-scroll-desktop--sidebar-movil) |
 | **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada -- barras 44->36, PathStat cards 10/14->8/12, gap 14->10 -- todas las pestanas Stats sin scroll en 1080p + heatmap ano completo (7 etiquetas dia + futuros visibles) | #61/62 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil + Sidebar.jsx 630->497 ln (sale de deuda) | #61 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
@@ -87,32 +88,35 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.28.5] -- 2026-05-12 -- fix(ui): logo movil + hueco sidebar + scroll heatmaps + nota Semana
+## [v0.28.5] -- 2026-05-11 -- fix(deploy): index.html root + manifest PWA + iconos vaca pastando
 
-Sesion 64. Cuatro fixes menores de UI tras feedback visual post-s63.
+Sesion 65. Fix de despliegue en Cloudflare Pages + actualizacion completa de PWA manifest
+e iconos PNG. Esta version consolida tambien los fixes de UI de la sesion 64 (logo movil,
+hueco sidebar, scroll heatmaps, nota Semana).
 
 ### Fixed
 
-- **`app/shell/Sidebar.jsx`** (`@media <=640px`): logo "Pace." recortado por la
-  izquierda — neutralizados margenes negativos inline (`margin-left/right:0!important`)
-  y anadido `padding:0 4px` en el logoBar para evitar clip con `overflow:hidden`.
-- **`app/shell/Sidebar.jsx`**: hueco grande antes del footer "EN CAMINO" en movil —
-  `<div data-pace-sidebar-spacer>` (el `flex:1` que ancla StatusBar al fondo en desktop)
-  ocultado en <=640px con `display:none!important`. Contenido se apila desde arriba,
-  espacio sobrante queda al final naturalmente.
-- **`app/stats/YearView.jsx`** + **`app/stats/PathYearView.jsx`**: barra scroll
-  vertical en heatmaps Ano y Caminos — anadido `overflowY:'hidden'` en los wrappers
-  `data-pace-year-grid-wrap` y `data-pyv-wrap`. Causa: CSS spec hace que
-  `overflow-x:auto` ponga `overflow-y:auto` implicito.
-- **`app/stats/StatsPanel.jsx`** (`WeekView`): nota inferior restaurada con estilos
-  compactos (`marginTop:10, padding:8, fontSize:11`). Oculta en <=640px via
-  `data-pace-week-note + display:none`. Desktop: visible sin generar scroll.
+- **`build-standalone.js`**: tras generar `PACE_standalone.html`, ahora copia el bundle
+  a `index.html` (root esperado por Cloudflare Pages). Ambos archivos son identicos byte
+  a byte (SHA256 verificado).
+- **`manifest.json`** (reescrito): iconos SVG eliminados reemplazados por 4 PNGs reales.
+  `start_url` y `scope` cambiados de `"./"` / `"."` a `"/"`. `theme_color` y
+  `background_color` actualizados de `#3E5A3A` / `#F2EDE0` a `#F5EFE0` (crema correcto).
+- **`PACE.html`** head: añadidos `<link rel="icon">` (192 y 512), `<link rel="apple-touch-icon">`,
+  corregido `<meta name="theme-color">` a `#F5EFE0`, añadidas metas
+  `mobile-web-app-capable` y `apple-mobile-web-app-*`. Ruta manifest cambiada a
+  `/manifest.json` (absoluta).
+- **`sw.js`**: `CACHE_NAME` actualizado de `pace-v0.19.0` a `pace-v0.28.5`. `PRECACHE`
+  ampliado a 9 recursos: `/`, `/index.html`, `/PACE_standalone.html`, `/manifest.json`
+  y los 5 iconos PNG.
+- **`icons/`**: `pace-512-maskable.png` renombrado a `icon-512-maskable.png` para
+  consistencia con el resto del sistema de nombres.
 
 ### Build
 
-- `PACE_standalone.html`: 557 KB → 558 KB (+1 KB). 40 archivos validados.
-- Backup: `backups/PACE_standalone_v0.28.4_20260512.html`. Eliminado oldest
-  (`v0.25.0_20260507`). Quedan 20 backups.
+- `PACE_standalone.html`: 558 KB → 559 KB (+1 KB). 40 archivos validados.
+- `index.html` generado como copia exacta de `PACE_standalone.html`.
+- Backup en sesion 64: `backups/PACE_standalone_v0.28.4_20260512.html`.
 
 ---
 

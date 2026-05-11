@@ -1,6 +1,14 @@
-const CACHE_NAME = 'pace-v0.19.0';
+const CACHE_NAME = 'pace-v0.28.5';
 const PRECACHE = [
-  './PACE_standalone.html'
+  '/',
+  '/index.html',
+  '/PACE_standalone.html',
+  '/manifest.json',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/icon-192-maskable.png',
+  '/icons/icon-512-maskable.png',
+  '/icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (event) => {

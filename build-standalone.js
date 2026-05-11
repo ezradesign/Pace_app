@@ -245,6 +245,11 @@ function main() {
   fs.writeFileSync(OUTPUT, html, 'utf8');
   var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
   console.log('\n=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');
+
+  // 9. Copiar a index.html (root para Cloudflare Pages)
+  var indexPath = path.join(ROOT, 'index.html');
+  fs.copyFileSync(OUTPUT, indexPath);
+  console.log('✓ index.html generado (copia de PACE_standalone.html)');
 }
 
 main();

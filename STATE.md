@@ -11,9 +11,9 @@
 ---
 
 **Version actual:** v0.28.5
-**Ultima sesion:** #64 -- 2026-05-12 - fix(ui): logo movil + hueco sidebar + scroll heatmaps + nota Semana restaurada (v0.28.5)
-**Ultima actualizacion de este archivo:** 2026-05-12 - sesion 64
-**Build entregado:** `PACE_standalone.html` v0.28.5 (558 KB)
+**Ultima sesion:** #65 -- 2026-05-11 - fix(deploy): index.html root + manifest PWA + iconos vaca pastando (v0.28.5)
+**Ultima actualizacion de este archivo:** 2026-05-11 - sesion 65
+**Build entregado:** `PACE_standalone.html` v0.28.5 (559 KB) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,8 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.28.4** (s63: path-stats gap 10->6, 640px grid 3col Caminos, 640px cards 2x2 WeekView) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.28.4** (557 KB, regenerado s63) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.28.5** (s65: manifest /manifest.json, iconos PNG, theme-color crema, metas PWA iOS/Android) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.28.5** (559 KB, regenerado s65) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.28.5** (s65: generado por build-standalone.js) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG -- 13 rediseñados en s60 | **v0.28.1** (iter parcial s60, sin cambios s61) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -64,7 +65,9 @@
 | `app/paths/PathRunner.jsx` | Runner de caminos | **v0.27.2** (a11y: role/aria-modal/Escape en PathRunner + ExitConfirmModal s55) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.28.2** (s61: responsive movil propio, layout compacto, fix dual-only column) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
-| `build-standalone.js` | Genera el bundle offline | **v0.26.1** (validateFileEnd + fix WARN s52) |
+| `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
+| `sw.js` | Service Worker PWA | **v0.28.5** (s65: CACHE_NAME pace-v0.28.5, PRECACHE 9 recursos) |
+| `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.4_20260512.html` <- creado s64
@@ -92,40 +95,38 @@ Backups vigentes (20):
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 64 - v0.28.4 -> v0.28.5 - fix(ui): logo movil + hueco sidebar + scroll heatmaps + nota Semana**
+**Sesion 65 - v0.28.5 - fix(deploy): index.html root + manifest PWA + iconos vaca pastando**
 
 ### Que se hizo
 
-1. **Logo movil cortado (T1):** `@media(max-width:640px)` en `Sidebar.jsx` neutraliza
-   los margenes negativos inline del logoBar (`margin-left/right:0!important`) + anade
-   `padding:0 4px` para evitar clip lateral con `overflow:hidden`.
+1. **index.html para Cloudflare Pages:** `build-standalone.js` ahora copia `PACE_standalone.html`
+   a `index.html` tras cada build. SHA256 identico verificado. `PACE_standalone.html` se mantiene
+   como alias temporal (Fase 2: eliminar ~3 jun 2026).
 
-2. **Hueco sidebar movil (T2):** el spacer `<div style={{flex:1}}/>` gano el atributo
-   `data-pace-sidebar-spacer` y se oculta en 640px via `display:none!important`.
-   StatusBar cae naturalmente tras LOGROS sin espacio artificial.
+2. **manifest.json reescrito:** iconos SVGs (eliminados) reemplazados por 4 PNGs reales.
+   `start_url`/`scope` → `"/"`. `theme_color`/`background_color` → `#F5EFE0`.
 
-3. **Scroll heatmaps anuales (T3):** `overflowY:'hidden'` anadido en `data-pace-year-grid-wrap`
-   (YearView) y `data-pyv-wrap` (PathYearView). Causa: CSS spec hace que `overflow-x:auto`
-   active `overflow-y:auto` implicito; ya no aparece barra scroll vertical en desktop.
+3. **PACE.html head:** añadidos `<link rel="icon">` (192/512), `<link rel="apple-touch-icon">`,
+   metas PWA iOS/Android. `theme-color` corregido de `#3E5A3A` a `#F5EFE0`. Manifest → `/manifest.json`.
 
-4. **Nota WeekView restaurada (T4):** bloque `data-pace-week-note` restaurado con estilos
-   compactos (marginTop:10, padding:8, fontSize:11). Oculto en <=640px. Desktop: visible
-   sin scroll.
+4. **sw.js actualizado:** `CACHE_NAME` `pace-v0.19.0` → `pace-v0.28.5`. PRECACHE ampliado a 9 recursos.
+
+5. **Icono renombrado:** `icons/pace-512-maskable.png` → `icons/icon-512-maskable.png`.
 
 ### Build
 
-- Backup: `backups/PACE_standalone_v0.28.4_20260512.html`.
-- Eliminado oldest: `v0.25.0_20260507.html`. Quedan 20 backups.
-- Bundle: 557 KB → 558 KB (+1 KB). 40 archivos validados.
-- Version: v0.28.4 → v0.28.5.
+- Bundle: 558 KB → 559 KB (+1 KB). 40 archivos validados.
+- `index.html` generado (559 KB, copia exacta de `PACE_standalone.html`).
+- Backup v0.28.4 ya existia desde s64; no se generó nuevo backup en esta sesion.
 
 ### Pendientes activos
 
+- **TODO Fase 2 (~3 jun 2026):** eliminar `PACE_standalone.html` y dejar solo `index.html`.
+  Actualizar PRECACHE de `sw.js` y `build-standalone.js` OUTPUT.
 - **Glifos de ejercicio (s60 quedo en 13/46):** validar visualmente los
   5 minimalistas radicales y propagar 4 patrones a los 33 restantes.
 - `PathYearView` movil (heatmap en 320px) -- pendiente desde s58.
 - Detector logro `master.midnight.never` -- pendiente desde s58.
-- Iconos PNG reales para PWA manifest.
 - Split `strings.js` (742 ln, ALTA).
 - Claves i18n huerfanas `sidebar.counter.pomodoros/rounds/streak` -- podar en cleanup futuro.
 ## Decisiones activas
