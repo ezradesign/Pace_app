@@ -126,7 +126,7 @@ function PathYearView({ history, lang }) {
           <div style={{display:'flex'}}>
             <div style={{display:'flex',flexDirection:'column',gap:2,marginRight:4}}>
               {[0,1,2,3,4,5,6].map(row=>(
-                <div key={row} data-pyv-dl style={{width:16,height:14,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
+                <div key={row} data-pyv-dl style={{width:16,height:12,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
                   {row===0?dayRowLabels[0]:row===2?dayRowLabels[1]:row===4?dayRowLabels[2]:''}
                 </div>
               ))}
@@ -135,14 +135,14 @@ function PathYearView({ history, lang }) {
               <div key={col} style={{display:'flex',flexDirection:'column',gap:2,marginRight:2}}>
                 {[0,1,2,3,4,5,6].map(row=>{
                   const cell=cellMap[`${col}-${row}`];
-                  if(!cell||cell.isFuture) return <div key={row} data-pyv-cell style={{width:14,height:14,borderRadius:2}}/>;
+                  if(!cell||cell.isFuture) return <div key={row} data-pyv-cell style={{width:12,height:12,borderRadius:2}}/>;
                   const lvl=cell.level; const ls=pyvStyles[lvl]||pyvStyles[0]; const hd=cell.count>0;
                   return(
                     <div key={row} data-pyv-cell
                       onMouseEnter={hd?(e)=>showTip(e,cell,false):undefined}
                       onMouseLeave={hd?()=>setTooltip(null):undefined}
                       onTouchEnd={hd?(e)=>{e.preventDefault();if(tooltip&&tooltip.key===cell.dateStr){setTooltip(null);}else{showTip(e,cell,true);}}:undefined}
-                      style={{width:14,height:14,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
+                      style={{width:12,height:12,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
                     >
                       {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
                     </div>

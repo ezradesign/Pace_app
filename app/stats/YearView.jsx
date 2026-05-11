@@ -156,6 +156,9 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   return (
     <div data-pace-year-view>
       <style>{`
+        /* Sesion 61 (v0.28.2): celdas 14 -> 12 en desktop para que las 53
+           columnas + labels quepan en el modal de 820px sin scroll horizontal.
+           Movil sigue en 11px y scroll horizontal. */
         @media (max-width:640px) {
           [data-pace-year-view] [data-pace-year-grid-wrap] { scroll-snap-type:x mandatory !important; }
           [data-pace-year-view] [data-pace-year-cell] { width:11px !important;height:11px !important; }
@@ -199,7 +202,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
             <div style={{ display:'flex',flexDirection:'column',gap:2,marginRight:4 }}>
               {[0,1,2,3,4,5,6].map(row => (
                 <div key={row} data-pace-year-day-lbl style={{
-                  width:16,height:14,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
+                  width:16,height:12,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
                 }}>
                   {row===0 ? dayRowLabels[0] : row===2 ? dayRowLabels[1] : row===4 ? dayRowLabels[2] : ''}
                 </div>
@@ -214,14 +217,14 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
                   // Celda sin día (offset inicio/fin de año) o día futuro → hueco invisible
                   if (!cell || cell.isFuture) {
-                    return <div key={row} data-pace-year-cell style={{ width:14,height:14,borderRadius:2 }} />;
+                    return <div key={row} data-pace-year-cell style={{ width:12,height:12,borderRadius:2 }} />;
                   }
 
                   // Pre-uso: crema con borde muy tenue
                   if (cell.isPreUse) {
                     return (
                       <div key={row} data-pace-year-cell style={{
-                        width:14,height:14,borderRadius:2,
+                        width:12,height:12,borderRadius:2,
                         background:'var(--paper-2)',border:'1px solid var(--line)',opacity:0.35,
                       }} />
                     );
@@ -238,7 +241,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
                       onMouseLeave={hasData ? handleLeave : undefined}
                       onTouchEnd={hasData ? (e)=>handleTap(e,cell) : undefined}
                       style={{
-                        width:14,height:14,borderRadius:2,position:'relative',
+                        width:12,height:12,borderRadius:2,position:'relative',
                         background: lvl===0 ? 'var(--paper-3)' : 'transparent',
                         border: lvl===0 ? '1px solid var(--line)' : 'none',
                         cursor: hasData ? 'pointer' : 'default',

@@ -1,9 +1,41 @@
 /* PACE - Caminos - SuggestedPathCard - sesion 53 / v0.27.0
    Sugiere el camino del momento o el favorito del usuario (prioritario).
    Boton "Ver todos" abre PathsLibrary via CustomEvent.
+
+   Sesion 61 (v0.28.2): compactado en movil. El bug previo era que la regla
+   CSS `[data-pace-spc] > div { flex-direction: column !important }` aplicaba
+   tambien al PathMiniCard suelto (no solo al contenedor dual), forzando una
+   tarjeta apilada de ~250px de alto que aplastaba al timer. Ahora:
+     - El contenedor dual lleva data-pace-spc-dual y solo ese se apila.
+     - PathMiniCard se identifica con data-pace-spc-card y reduce padding,
+       tipos y oculta el tagline en movil para acercarse al layout web
+       horizontal (nombre + iconos + boton en una fila).
 */
 
 const { useState: useStateSPC } = React;
+
+/* Reglas responsive del modulo Caminos sugeridos. Inyectadas una vez.
+   Movil: padding lateral mas estrecho, card en fila pero compacta. */
+if (typeof document !== 'undefined' && !document.getElementById('pace-spc-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-spc-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-spc] { padding: 0 14px 10px !important; }
+      /* Solo el contenedor dual se apila; la card unica queda en row */
+      [data-pace-spc-dual] { flex-direction: column !important; gap: 8px !important; }
+      [data-pace-spc-card] { padding: 10px 12px !important; gap: 10px !important; }
+      [data-pace-spc-card] [data-pace-spc-bar] { display: none !important; }
+      [data-pace-spc-card] [data-pace-spc-label] { font-size: 8px !important; margin-bottom: 2px !important; }
+      [data-pace-spc-card] [data-pace-spc-name] { font-size: 15px !important; }
+      [data-pace-spc-card] [data-pace-spc-tagline] { display: none !important; }
+      [data-pace-spc-card] [data-pace-spc-steps] { margin-top: 4px !important; gap: 4px !important; }
+      [data-pace-spc-card] [data-pace-spc-step] { width: 16px !important; height: 16px !important; }
+      [data-pace-spc-card] [data-pace-spc-cta] { padding: 7px 12px !important; font-size: 11px !important; }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 /* Iconos de paso: stroke fino 14x14 */
 function SPCIconBreathe() {
@@ -28,7 +60,7 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
   const tagline = t(pathObj.taglineKey) || '';
 
   return (
-    <div style={{
+    <div data-pace-spc-card style={{
       display: 'flex', alignItems: 'center', gap: 16,
       padding: '14px 20px',
       background: doneToday ? 'var(--paper-2)' : 'var(--paper)',
@@ -43,31 +75,31 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
     onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (
-          <div style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
+          <div data-pace-spc-label style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
+          <span data-pace-spc-name style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
           {doneToday && (
             <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
               {t('path.card.done') || 'Hecho hoy'}
             </span>
           )}
         </div>
-        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
-        <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
+        <div data-pace-spc-tagline style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
+        <div data-pace-spc-steps style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
           {pathObj.steps.map(function(step, i) {
             const Icon = SPC_STEP_ICONS[step.kind] || null;
-            return <span key={i} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
+            return <span key={i} data-pace-spc-step style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
           })}
         </div>
       </div>
 
       {!doneToday && (
-        <button
+        <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
           style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
         >
@@ -121,7 +153,7 @@ function SuggestedPathCard() {
     <div data-pace-spc style={{ padding: '0 40px 12px', flexShrink: 0 }}>
       {/* Fila superior: cards (una o dos) */}
       {showDual ? (
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div data-pace-spc-dual style={{ display: 'flex', gap: 10 }}>
           <PathMiniCard
             pathObj={favorite}
             label={t('paths.suggested.favorite') || 'Tu favorito'}

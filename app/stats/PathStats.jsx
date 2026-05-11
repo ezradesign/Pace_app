@@ -92,7 +92,7 @@ function PathStats() {
         <div style={{
           fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
           color: 'var(--ink-3)', textTransform: 'uppercase',
-          marginBottom: 12,
+          marginBottom: 6,
         }}>
           {t('stats.paths.heatmap')}
         </div>

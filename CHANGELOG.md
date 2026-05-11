@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) -- 4 patrones canonicos definidos, pendiente propagar a 33 restantes | #60 | [abajo](#v0281----2026-05-11----refactorglyphs-iteracion-parcial-1346) |
+| **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil + Sidebar.jsx 630->497 ln (sale de deuda) | #61 | [abajo](#v0282----2026-05-11----choreui-sidebar-cleanup--ritmo-fit--camino-movil) |
+| **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) -- 4 patrones canonicos definidos, pendiente propagar a 33 restantes | #60 | [session-60](./docs/sessions/session-60-glyphs-iter-incompleto.md) |
 | **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira -- pantalla activa de sesion deja de mostrar placeholder y muestra simbolo abstracto unico por ejercicio | #59 | [abajo](#v0280----2026-05-11----featglyphs-46-glifos-canonicos-por-paso) |
 | **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | [abajo](#v0276----2026-05-11----choreworkflow-blindaje-git) |
 | **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [session-57](./docs/sessions/session-57-refactor-state.md) |
@@ -80,6 +81,83 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.28.2] -- 2026-05-11 -- chore(ui): sidebar cleanup + Ritmo fit + camino movil
+
+Sesion 61. Tres limpiezas de UI sin tocar logica de producto:
+
+1. Sidebar: eliminado el bloque de **contadores** (pomodoros / rondas /
+   racha) que vivia bajo el logo y aplastaba al resto. Mas aire para
+   Ritmo + Sendero + Logros + Status.
+2. Modal Stats (Ritmo) en web: las cuatro pestanas (Semana / Mes / Año /
+   Caminos) caben en el modal sin scroll vertical. El calendario mensual
+   pasa de celdas fijas 36px a `grid 1fr + aspect-ratio:1` y llena el
+   ancho del modal. El heatmap anual reduce celda 14→12 para que las 53
+   semanas quepan en 820px sin scroll horizontal.
+3. Camino sugerido en movil: la tarjeta unica deja de apilarse en
+   columna (era un bug de CSS heredado de la regla dual). Ahora queda
+   en fila como en web pero compacta (sin tagline, fuentes y boton mas
+   pequenos) para que el timer respire.
+
+### Changed
+
+- **`app/shell/Sidebar.jsx`**: eliminado JSX `cycles/cycleCount/cycleItem*3`
+  + iconos `PomodoroIcon`/`RoundsIcon`/`StreakFlameIcon` + estilos
+  asociados. El archivo baja de 630 → 497 lineas y **sale de la deuda
+  tecnica activa** (`>500 ln`).
+- **`app/stats/StatsPanel.jsx`** (`WeekView`):
+  cards padding 16/14 → 10/12, numero 28 → 22, gap 12 → 10, margen
+  tras cards 8/0/24 → 4/0/14. `WeekBarRow` marginBottom 18 → 10,
+  chart height 64 → 44. Nota inferior marginTop 24 → 12, padding 14 →
+  10, fontSize 12 → 11. Tabs container marginBottom 24 → 14.
+- **`app/stats/StatsPanel.jsx`** (`MonthHeatmap`): paso de celdas fijas
+  36×36 a clases CSS (`.pace-heatmap-grid` = `repeat(7, 1fr)`,
+  `.pace-heatmap-cell` con `aspect-ratio:1`,
+  `.pace-heatmap-header-day`, `.pace-heatmap-day-num`). En movil
+  override a `repeat(7, minmax(0, 32px))` con `justify-content:center`.
+  Footer totales marginTop 20 → 14, padding 12 → 10.
+- **`app/stats/YearView.jsx`** + **`app/stats/PathYearView.jsx`**:
+  celdas 14×14 → 12×12 + day labels height 14 → 12 (consistencia
+  visual). Las 53 columnas + labels caben ahora en el modal de 820px
+  sin scroll horizontal. Mobile sigue en 11×11 con scroll horizontal.
+- **`app/stats/PathStats.jsx`**: marginBottom del label heatmap 12 → 6.
+- **`PACE.html`** (CSS PathStats): `.path-stats` gap 24 → 14, padding
+  16 → 8; `.path-stats-summary` gap 16 → 12; `.path-stat-card` padding
+  16 → 10/14; `.path-stat-value` 1.6em → 1.4em; tabla padding 8/12 →
+  5/12 fontSize 0.95 → 0.9em.
+- **`PACE.html`**: eliminada la regla `[data-pace-spc] > div
+  { flex-direction: column }` que aplicaba a la tarjeta unica de
+  Camino sugerido (no solo al dual), forzando layout vertical en movil.
+  El responsive del SPC vive ahora en su propio fichero (`pace-spc-
+  responsive-css`) inyectado por `SuggestedPathCard.jsx`.
+- **`app/paths/SuggestedPathCard.jsx`**: anadidos atributos
+  `data-pace-spc-dual` (contenedor cuando hay favorito + sugerido) y
+  `data-pace-spc-card/-bar/-label/-name/-tagline/-steps/-step/-cta` en
+  `PathMiniCard` para que el CSS movil pueda targetear sin selectores
+  fragiles. Reglas movil: padding 14/20 → 10/12, gap 16 → 10, barra
+  vertical oculta, label 9 → 8, nombre 17 → 15, tagline `display:none`,
+  steps gap 6 → 4 con iconos 20 → 16, boton padding 8/16 → 7/12 y
+  fontSize 12 → 11.
+- **`PACE.html`** + **`app/state-core.jsx`**: bump version y titulo
+  v0.28.1 → v0.28.2.
+
+### Build
+
+- `PACE_standalone.html`: 556 KB → 554 KB (-2 KB). 40 archivos
+  validados por el TS parser, 2 inline scripts validados.
+
+### Notas
+
+- La logica de los contadores eliminados (`state.cycle`,
+  `state.streak.current/longest`) **no se borra**: sigue alimentando
+  WeekDots + sectionAside del bloque Ritmo, plus FocusTimer cycle dots.
+  Solo desaparece la visualizacion redundante de la cabecera.
+- Las claves i18n `sidebar.counter.pomodoros/rounds/streak` quedan
+  huerfanas (sin referencia). Se dejan en `strings.js` para retro-
+  compat por si vuelve algun contador en otra ubicacion; se pueden
+  podar en una sesion de cleanup futura.
 
 ---
 
@@ -168,68 +246,6 @@ home Respira = 4, home Hidratate = 2).
 - BreatheSession sigue fuera de scope (usa BreathVisual animado).
 - Sesion **pausada por el usuario** antes de terminar el rediseño.
   Backup v0.28.0 conservado en `backups/PACE_standalone_v0.28.0_20260511.html`.
-
----
-
-## [v0.28.0] -- 2026-05-11 -- feat(glyphs): 46 glifos canonicos por paso
-
-Sesion 59. La pantalla activa de sesion (Mueve/Estira + pasos `body` de
-Caminos) deja de mostrar un placeholder generico y muestra un simbolo
-abstracto line-art unico por ejercicio. Granularidad por **paso
-individual**, no por rutina.
-
-### Added
-
-- **`app/glyphs/exercise-glyphs.jsx`** (569 ln, nuevo): registro centralizado
-  con 46 glifos SVG, helper `<G>` con specs canonicas (`viewBox="0 0 44 44"`,
-  `stroke="currentColor"`, `strokeWidth="1.6"`, line-art), `DefaultGlyph`
-  fallback (tres arcos suaves), `ExerciseGlyph({ id, size })` consumidor.
-- 46 entradas en `EXERCISE_GLYPHS`: 13 de Mueve (Flexiones inclinadas,
-  Descanso, Fondos en silla, Wall sit, Calf raises, Seated hollow, Squeeze
-  fist, Finger extension, Wrist stretch, Chin tucks, Scapular squeeze,
-  Thoracic extension, Chest opener) + 33 de Estira (Apertura de pecho,
-  Rotacion toracica, Flexor de cadera, World's greatest stretch, Cuello y
-  trapecios, Reset respiracion, Cossack squat, 90/90, Pigeon, Squat
-  profundo, Puente con marcha, Scapular wall slides, Band pull-apart,
-  External rotation, Dead hang (si puedes), ATG split squat, Tibialis
-  raise, Nordics, Sissy squat, Elephant walk, Deep squat hold, Crawling,
-  Hang pasivo, Ground sitting transitions, Rib pull + respiracion,
-  Inclinacion lateral, Rotacion lenta, Escalenos, Shrug + round, Wrist
-  circles, Seated twist, Ankle circles, Deep breaths).
-
-### Changed
-
-- **`app/move/MoveModule.jsx`**: `StepGlyph` recibe `stepName` (antes `tag` +
-  `stepIdx`), mantiene la moneda circular `var(--move-soft)` 72×72 pero
-  reemplaza el caracter tipografico por `<ExerciseGlyph id={step.name}
-  size={44} />`. La key es `step.name` canonico en espanol — la capa i18n
-  traduce solo la etiqueta mostrada, no la key de lookup.
-- **`PACE.html`**: script `app/glyphs/exercise-glyphs.jsx` cargado antes de
-  FocusTimer/BreatheVisual/MoveModule/PathRunner. Titulo bumpeado a v0.28.0.
-- **`app/state-core.jsx`**: `PACE_VERSION` bumpeada a `v0.28.0`.
-
-### Decisiones de diseno
-
-- Granularidad **por paso** (`step.name`) y no por rutina (`routine.id`):
-  dentro de una rutina hay ejercicios distintos en cada paso.
-- BreatheSession **fuera de scope**: usa `BreathVisual` (animacion guiada),
-  no tiene placeholder de paso a sustituir.
-- Lenguaje visual heredado de los 4 glifos de menu (ABBreathe/ABStretch/
-  ABMove/ABDrop) en `main.jsx`: stroke fino, line-art, sin figura humana.
-- Pares semanticos diferenciados: Descanso vs Reset respiracion vs Deep
-  breaths · Dead hang vs Hang pasivo · Wrist stretch vs Wrist circles ·
-  Squat profundo vs Deep squat hold · los 5 ejercicios de cuello con
-  vectores visuales distintos.
-
-### Build
-
-- `PACE_standalone.html`: 538 KB → 557 KB (+19 KB), 0 errores, 0 WARN.
-
-### Notas
-
-- Las cards de biblioteca (MoveLibrary/ExtraLibrary/BreatheLibrary)
-  **no cambian** — siguen con codigos tipograficos SIT/HIP/SHLU.
-- Los 4 glifos de menu (ActivityBar) **no se tocan**.
 
 ---
 

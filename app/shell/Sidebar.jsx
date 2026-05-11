@@ -102,17 +102,17 @@ function Sidebar() {
   return (
     <aside style={sidebarStyles.root} data-pace-sidebar>
       {/* ============================================================
-          BARRA HORIZONTAL SUPERIOR · logo + contadores
+          BARRA HORIZONTAL SUPERIOR · logo
           ------------------------------------------------------------
           v0.11.7 / sesión 12 · Reestructurado por petición del usuario:
-          - Logo ampliado ~2.5× (PaceLogoImage ahora con maxWidth 600,
-            antes 240) ocupando toda la franja horizontal.
-          - Chevron de colapsar extraído de la fila del logo a un botón
-            flotante en la esquina superior-derecha del sidebar para no
-            competir con la imagen.
-          - Contadores "# / ↻ / ◉" centrados debajo del logo (antes
-            alineados a la izquierda) y con iconos SVG gráficos en vez
-            de caracteres tipográficos (tomate, espiral, llama).
+          - Logo ampliado ~2.5× ocupando toda la franja horizontal.
+          - Chevron de colapsar extraído a un botón flotante en la
+            esquina superior-derecha del sidebar.
+          v0.28.2 / sesión 61 · Eliminado el bloque de contadores
+          (pomodoros / rondas / racha) que vivía bajo el logo: aportaba
+          poco y comprimía las secciones. Sin contadores el sidebar
+          respira más y, en móvil, evita scroll vertical. Los iconos
+          (Pomodoro/Rounds/Flame) se eliminan con su sección.
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
@@ -129,27 +129,7 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
-      <div style={sidebarStyles.cycles}>
-        <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.pomodoros')}>
-            <PomodoroIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.rounds')}>
-            <RoundsIcon />
-            <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.streak')}>
-            <StreakFlameIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
-          </span>
-        </div>
-      </div>
-
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: '14px 0 16px' }} />
 
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
@@ -310,99 +290,11 @@ function ChevronLeftIcon() {
   );
 }
 
-/* ============================================================
-   Iconos gráficos para los contadores del sidebar superior
-   (sesión 12 · v0.11.7) — sustituyen los caracteres # ↻ ◉ por
-   glifos editoriales con stroke fino y un toque de color sutil.
-   Dibujados en viewBox 16×16, render a 14px para encajar con
-   la tipografía tabular (line-height 16–18).
-   ============================================================ */
-
-// Tomate / pomodoro: círculo con hendidura superior + tallo y hojita.
-// Metáfora universal para "pomodoro completado". Relleno terracota con
-// opacidad baja, stroke del color de foco para que case con el tag.
-function PomodoroIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Cuerpo del tomate */}
-      <path
-        d="M8 4.2c2.9 0 5 2.1 5 4.7 0 2.5-2.1 4.6-5 4.6s-5-2.1-5-4.6c0-2.6 2.1-4.7 5-4.7z"
-        fill="var(--focus)"
-        fillOpacity="0.14"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-      />
-      {/* Hendidura central vertical (sugerencia de gajo) */}
-      <path
-        d="M8 5.2v1.4"
-        stroke="var(--focus)"
-        strokeWidth="1"
-        strokeLinecap="round"
-        opacity="0.55"
-      />
-      {/* Tallo */}
-      <path
-        d="M8 4.2V3"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      {/* Hoja */}
-      <path
-        d="M8 3.4c1.1-.5 2-.2 2.5.4-.8.6-1.8.5-2.5-.4z"
-        fill="var(--focus)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-
-// Rondas / ciclos largos: espiral de ~1.5 vueltas que sugiere repetición
-// acumulada. Alternativa gráfica al ↻ tipográfico (que es un arrow-rotate
-// poco expresivo). Mantiene el peso visual del set.
-function RoundsIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"
-         stroke="var(--ink-2)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      {/* Espiral: centro → fuera en ~1.4 vueltas */}
-      <path d="M8 8
-               a1 1 0 0 1 1 -1
-               a2 2 0 0 1 2 2
-               a3 3 0 0 1 -3 3
-               a4 4 0 0 1 -4 -4
-               a5 5 0 0 1 5 -5
-               a5.5 5.5 0 0 1 4 1.5" />
-      {/* Cabeza de flecha en el extremo exterior, insinuando "otra vuelta" */}
-      <path d="M13 3.5l.2 2.5 -2.3 -.6" />
-    </svg>
-  );
-}
-
-// Racha / streak: llama fina en dos trazos. El relleno cálido (breathe)
-// la diferencia del resto de iconos del set y conecta con la idea de
-// "mantener el calor" de los días seguidos.
-function StreakFlameIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Silueta principal de la llama */}
-      <path
-        d="M8 2.2c.6 1.8 2.1 2.8 2.9 4.1 1 1.6 1.1 3.4 .1 4.8 -1 1.4 -3 2.2 -4.6 1.5 -1.8 -.8 -2.7 -2.8 -2.1 -4.7 .3 -1 .9 -1.7 1.4 -2.5 .6 -.9 1.3 -1.8 2.3 -3.2z"
-        fill="var(--breathe)"
-        fillOpacity="0.2"
-        stroke="var(--breathe)"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-      {/* Llama interior (corazón) */}
-      <path
-        d="M8 7.5c.4 .7 1 1.1 1.2 1.8 .2 .7 -.1 1.5 -.8 1.9 -.8 .4 -1.8 .1 -2.1 -.8 -.2 -.6 .1 -1.1 .4 -1.6 .3 -.4 .7 -.8 1.3 -1.3z"
-        fill="var(--breathe)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-/* NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
+/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
+   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
+   contadores que los usaba. Si en el futuro vuelve algún contador
+   en otra ubicación, recuperar de git history.
+   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
    ya no es un rail con chevron, vuelve a abrirse con el handle flotante
    que vive en main.jsx (≡). */
 
@@ -552,34 +444,9 @@ const sidebarStyles = {
   },
   /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
      se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4.
-     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7. */
-  cycles: {},
-  /* Contadores centrados debajo del logo (v0.11.7). Antes estaban
-     alineados a la izquierda con caracteres tipográficos (# ↻ ◉);
-     ahora son icon+num en pill sutil. */
-  cycleCount: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    gap: 14,
-    fontSize: 12, color: 'var(--ink-2)', letterSpacing: '0.02em',
-    padding: '6px 10px',
-  },
-  cycleItem: {
-    display: 'inline-flex', alignItems: 'center', gap: 5,
-    lineHeight: 1,
-  },
-  cycleNum: {
-    fontVariantNumeric: 'tabular-nums',
-    fontWeight: 500,
-    fontSize: 13,
-    color: 'var(--ink)',
-  },
-  /* Separador vertical fino en vez del "|" tipográfico anterior */
-  cycleSep: {
-    display: 'inline-block',
-    width: 1, height: 14,
-    background: 'var(--line)',
-    opacity: 0.8,
-  },
+     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7.
+     cycles/cycleCount/cycleItem/cycleNum/cycleSep eliminados en v0.28.2 (sesión 61)
+     junto con el bloque de contadores. */
   section: {},
   sectionHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',

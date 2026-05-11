@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.28.1</title>
+  <title>PACE · Foco · Cuerpo — v0.28.2</title>
   <meta name="theme-color" content="#3E5A3A">
   <style>
 /* ============================================
@@ -214,16 +214,17 @@ input, textarea { font-family: inherit; color: inherit; }
     .path-dot.done   { background: var(--ink-3); }
     .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
     .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
-    /* PathStats -- sesion 54 */
-    .path-stats { display:flex; flex-direction:column; gap:24px; padding:16px 0; }
-    .path-stats-summary { display:flex; gap:16px; flex-wrap:wrap; }
-    .path-stat-card { flex:1; min-width:140px; padding:16px; border:1px solid var(--line); border-radius:var(--r-md); }
-    .path-stat-label { font-size:.85em; opacity:.7; }
-    .path-stat-value { font-size:1.6em; font-weight:600; margin-top:4px; font-family:var(--font-display); font-style:italic; }
+    /* PathStats -- sesion 54 / compactado sesion 61 para que la pestana
+       Caminos del modal Stats no necesite scroll vertical en 1080p. */
+    .path-stats { display:flex; flex-direction:column; gap:14px; padding:8px 0; }
+    .path-stats-summary { display:flex; gap:12px; flex-wrap:wrap; }
+    .path-stat-card { flex:1; min-width:140px; padding:10px 14px; border:1px solid var(--line); border-radius:var(--r-md); }
+    .path-stat-label { font-size:.8em; opacity:.7; }
+    .path-stat-value { font-size:1.4em; font-weight:600; margin-top:2px; font-family:var(--font-display); font-style:italic; line-height:1.1; }
     .path-stats-table table { width:100%; border-collapse:collapse; }
-    .path-stats-table th, .path-stats-table td { padding:8px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.95em; }
-    .path-stats-table th { font-size:.8em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
-    .path-stats-empty { opacity:.6; padding:16px 0; }
+    .path-stats-table th, .path-stats-table td { padding:5px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.9em; }
+    .path-stats-table th { font-size:.78em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
+    .path-stats-empty { opacity:.6; padding:8px 0; }
     /* Mobile responsive -- sesion 55 */
     @media (max-width: 480px) {
       .path-topbar { padding: 12px 14px; }
@@ -232,8 +233,11 @@ input, textarea { font-family: inherit; color: inherit; }
       .path-modal-back button { min-height: 44px; }
       .path-stat-card { min-width: 100%; }
       .path-stats-summary { flex-direction: column; gap: 10px; }
-      /* SuggestedPathCard dual layout: colapsar a columna en mobile */
-      [data-pace-spc] > div { flex-direction: column !important; }
+      /* NOTA: el responsive de SuggestedPathCard (dual + single) vive ahora
+         en su propio fichero (pace-spc-responsive-css), inyectado por
+         app/paths/SuggestedPathCard.jsx. La regla previa aqui hacia que
+         tambien la card unica se apilara vertical, lo que infla el modulo
+         en movil. Sesion 61 / v0.28.2. */
     }
   </style>
 </head>
@@ -1379,7 +1383,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.1';
+const PACE_VERSION = 'v0.28.2';
 
 const defaultState = {
   // Settings / Tweaks
@@ -4601,17 +4605,17 @@ function Sidebar() {
   return (
     <aside style={sidebarStyles.root} data-pace-sidebar>
       {/* ============================================================
-          BARRA HORIZONTAL SUPERIOR · logo + contadores
+          BARRA HORIZONTAL SUPERIOR · logo
           ------------------------------------------------------------
           v0.11.7 / sesión 12 · Reestructurado por petición del usuario:
-          - Logo ampliado ~2.5× (PaceLogoImage ahora con maxWidth 600,
-            antes 240) ocupando toda la franja horizontal.
-          - Chevron de colapsar extraído de la fila del logo a un botón
-            flotante en la esquina superior-derecha del sidebar para no
-            competir con la imagen.
-          - Contadores "# / ↻ / ◉" centrados debajo del logo (antes
-            alineados a la izquierda) y con iconos SVG gráficos en vez
-            de caracteres tipográficos (tomate, espiral, llama).
+          - Logo ampliado ~2.5× ocupando toda la franja horizontal.
+          - Chevron de colapsar extraído a un botón flotante en la
+            esquina superior-derecha del sidebar.
+          v0.28.2 / sesión 61 · Eliminado el bloque de contadores
+          (pomodoros / rondas / racha) que vivía bajo el logo: aportaba
+          poco y comprimía las secciones. Sin contadores el sidebar
+          respira más y, en móvil, evita scroll vertical. Los iconos
+          (Pomodoro/Rounds/Flame) se eliminan con su sección.
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
@@ -4628,27 +4632,7 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
-      <div style={sidebarStyles.cycles}>
-        <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.pomodoros')}>
-            <PomodoroIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.rounds')}>
-            <RoundsIcon />
-            <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.streak')}>
-            <StreakFlameIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
-          </span>
-        </div>
-      </div>
-
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: '14px 0 16px' }} />
 
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
@@ -4809,99 +4793,11 @@ function ChevronLeftIcon() {
   );
 }
 
-/* ============================================================
-   Iconos gráficos para los contadores del sidebar superior
-   (sesión 12 · v0.11.7) — sustituyen los caracteres # ↻ ◉ por
-   glifos editoriales con stroke fino y un toque de color sutil.
-   Dibujados en viewBox 16×16, render a 14px para encajar con
-   la tipografía tabular (line-height 16–18).
-   ============================================================ */
-
-// Tomate / pomodoro: círculo con hendidura superior + tallo y hojita.
-// Metáfora universal para "pomodoro completado". Relleno terracota con
-// opacidad baja, stroke del color de foco para que case con el tag.
-function PomodoroIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Cuerpo del tomate */}
-      <path
-        d="M8 4.2c2.9 0 5 2.1 5 4.7 0 2.5-2.1 4.6-5 4.6s-5-2.1-5-4.6c0-2.6 2.1-4.7 5-4.7z"
-        fill="var(--focus)"
-        fillOpacity="0.14"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-      />
-      {/* Hendidura central vertical (sugerencia de gajo) */}
-      <path
-        d="M8 5.2v1.4"
-        stroke="var(--focus)"
-        strokeWidth="1"
-        strokeLinecap="round"
-        opacity="0.55"
-      />
-      {/* Tallo */}
-      <path
-        d="M8 4.2V3"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      {/* Hoja */}
-      <path
-        d="M8 3.4c1.1-.5 2-.2 2.5.4-.8.6-1.8.5-2.5-.4z"
-        fill="var(--focus)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-
-// Rondas / ciclos largos: espiral de ~1.5 vueltas que sugiere repetición
-// acumulada. Alternativa gráfica al ↻ tipográfico (que es un arrow-rotate
-// poco expresivo). Mantiene el peso visual del set.
-function RoundsIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"
-         stroke="var(--ink-2)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      {/* Espiral: centro → fuera en ~1.4 vueltas */}
-      <path d="M8 8
-               a1 1 0 0 1 1 -1
-               a2 2 0 0 1 2 2
-               a3 3 0 0 1 -3 3
-               a4 4 0 0 1 -4 -4
-               a5 5 0 0 1 5 -5
-               a5.5 5.5 0 0 1 4 1.5" />
-      {/* Cabeza de flecha en el extremo exterior, insinuando "otra vuelta" */}
-      <path d="M13 3.5l.2 2.5 -2.3 -.6" />
-    </svg>
-  );
-}
-
-// Racha / streak: llama fina en dos trazos. El relleno cálido (breathe)
-// la diferencia del resto de iconos del set y conecta con la idea de
-// "mantener el calor" de los días seguidos.
-function StreakFlameIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Silueta principal de la llama */}
-      <path
-        d="M8 2.2c.6 1.8 2.1 2.8 2.9 4.1 1 1.6 1.1 3.4 .1 4.8 -1 1.4 -3 2.2 -4.6 1.5 -1.8 -.8 -2.7 -2.8 -2.1 -4.7 .3 -1 .9 -1.7 1.4 -2.5 .6 -.9 1.3 -1.8 2.3 -3.2z"
-        fill="var(--breathe)"
-        fillOpacity="0.2"
-        stroke="var(--breathe)"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-      {/* Llama interior (corazón) */}
-      <path
-        d="M8 7.5c.4 .7 1 1.1 1.2 1.8 .2 .7 -.1 1.5 -.8 1.9 -.8 .4 -1.8 .1 -2.1 -.8 -.2 -.6 .1 -1.1 .4 -1.6 .3 -.4 .7 -.8 1.3 -1.3z"
-        fill="var(--breathe)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-/* NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
+/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
+   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
+   contadores que los usaba. Si en el futuro vuelve algún contador
+   en otra ubicación, recuperar de git history.
+   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
    ya no es un rail con chevron, vuelve a abrirse con el handle flotante
    que vive en main.jsx (≡). */
 
@@ -5051,34 +4947,9 @@ const sidebarStyles = {
   },
   /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
      se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4.
-     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7. */
-  cycles: {},
-  /* Contadores centrados debajo del logo (v0.11.7). Antes estaban
-     alineados a la izquierda con caracteres tipográficos (# ↻ ◉);
-     ahora son icon+num en pill sutil. */
-  cycleCount: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    gap: 14,
-    fontSize: 12, color: 'var(--ink-2)', letterSpacing: '0.02em',
-    padding: '6px 10px',
-  },
-  cycleItem: {
-    display: 'inline-flex', alignItems: 'center', gap: 5,
-    lineHeight: 1,
-  },
-  cycleNum: {
-    fontVariantNumeric: 'tabular-nums',
-    fontWeight: 500,
-    fontSize: 13,
-    color: 'var(--ink)',
-  },
-  /* Separador vertical fino en vez del "|" tipográfico anterior */
-  cycleSep: {
-    display: 'inline-block',
-    width: 1, height: 14,
-    background: 'var(--line)',
-    opacity: 0.8,
-  },
+     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7.
+     cycles/cycleCount/cycleItem/cycleNum/cycleSep eliminados en v0.28.2 (sesión 61)
+     junto con el bloque de contadores. */
   section: {},
   sectionHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
@@ -8333,6 +8204,9 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   return (
     <div data-pace-year-view>
       <style>{`
+        /* Sesion 61 (v0.28.2): celdas 14 -> 12 en desktop para que las 53
+           columnas + labels quepan en el modal de 820px sin scroll horizontal.
+           Movil sigue en 11px y scroll horizontal. */
         @media (max-width:640px) {
           [data-pace-year-view] [data-pace-year-grid-wrap] { scroll-snap-type:x mandatory !important; }
           [data-pace-year-view] [data-pace-year-cell] { width:11px !important;height:11px !important; }
@@ -8376,7 +8250,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
             <div style={{ display:'flex',flexDirection:'column',gap:2,marginRight:4 }}>
               {[0,1,2,3,4,5,6].map(row => (
                 <div key={row} data-pace-year-day-lbl style={{
-                  width:16,height:14,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
+                  width:16,height:12,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
                 }}>
                   {row===0 ? dayRowLabels[0] : row===2 ? dayRowLabels[1] : row===4 ? dayRowLabels[2] : ''}
                 </div>
@@ -8391,14 +8265,14 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
                   // Celda sin día (offset inicio/fin de año) o día futuro → hueco invisible
                   if (!cell || cell.isFuture) {
-                    return <div key={row} data-pace-year-cell style={{ width:14,height:14,borderRadius:2 }} />;
+                    return <div key={row} data-pace-year-cell style={{ width:12,height:12,borderRadius:2 }} />;
                   }
 
                   // Pre-uso: crema con borde muy tenue
                   if (cell.isPreUse) {
                     return (
                       <div key={row} data-pace-year-cell style={{
-                        width:14,height:14,borderRadius:2,
+                        width:12,height:12,borderRadius:2,
                         background:'var(--paper-2)',border:'1px solid var(--line)',opacity:0.35,
                       }} />
                     );
@@ -8415,7 +8289,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
                       onMouseLeave={hasData ? handleLeave : undefined}
                       onTouchEnd={hasData ? (e)=>handleTap(e,cell) : undefined}
                       style={{
-                        width:14,height:14,borderRadius:2,position:'relative',
+                        width:12,height:12,borderRadius:2,position:'relative',
                         background: lvl===0 ? 'var(--paper-3)' : 'transparent',
                         border: lvl===0 ? '1px solid var(--line)' : 'none',
                         cursor: hasData ? 'pointer' : 'default',
@@ -8630,7 +8504,7 @@ function PathYearView({ history, lang }) {
           <div style={{display:'flex'}}>
             <div style={{display:'flex',flexDirection:'column',gap:2,marginRight:4}}>
               {[0,1,2,3,4,5,6].map(row=>(
-                <div key={row} data-pyv-dl style={{width:16,height:14,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
+                <div key={row} data-pyv-dl style={{width:16,height:12,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
                   {row===0?dayRowLabels[0]:row===2?dayRowLabels[1]:row===4?dayRowLabels[2]:''}
                 </div>
               ))}
@@ -8639,14 +8513,14 @@ function PathYearView({ history, lang }) {
               <div key={col} style={{display:'flex',flexDirection:'column',gap:2,marginRight:2}}>
                 {[0,1,2,3,4,5,6].map(row=>{
                   const cell=cellMap[`${col}-${row}`];
-                  if(!cell||cell.isFuture) return <div key={row} data-pyv-cell style={{width:14,height:14,borderRadius:2}}/>;
+                  if(!cell||cell.isFuture) return <div key={row} data-pyv-cell style={{width:12,height:12,borderRadius:2}}/>;
                   const lvl=cell.level; const ls=pyvStyles[lvl]||pyvStyles[0]; const hd=cell.count>0;
                   return(
                     <div key={row} data-pyv-cell
                       onMouseEnter={hd?(e)=>showTip(e,cell,false):undefined}
                       onMouseLeave={hd?()=>setTooltip(null):undefined}
                       onTouchEnd={hd?(e)=>{e.preventDefault();if(tooltip&&tooltip.key===cell.dateStr){setTooltip(null);}else{showTip(e,cell,true);}}:undefined}
-                      style={{width:14,height:14,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
+                      style={{width:12,height:12,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
                     >
                       {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
                     </div>
@@ -8775,7 +8649,7 @@ function PathStats() {
         <div style={{
           fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
           color: 'var(--ink-3)', textTransform: 'uppercase',
-          marginBottom: 12,
+          marginBottom: 6,
         }}>
           {t('stats.paths.heatmap')}
         </div>
@@ -8817,23 +8691,29 @@ function WeekView({ state }) {
     { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
   ];
 
+  /* Compactado en sesion 61 (v0.28.2): toda la vista cabe en el modal
+     sin scroll vertical en 1080p. Reducciones puntuales:
+       - Cards: padding 16/14 -> 10/12, numero 28 -> 22, gap 12 -> 10.
+       - Margen tras cards: 8/0/24 -> 4/0/14.
+       - WeekBarRow: marginBottom 18 -> 10, chart 64 -> 44.
+       - Nota inferior: marginTop 24 -> 12, padding 14 -> 10, fontSize 12 -> 11. */
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
         {bars.map(b => (
           <div key={b.key} style={{
-            padding: '16px 14px',
+            padding: '10px 12px',
             background: 'var(--paper-2)',
             borderRadius: 'var(--r-md)',
             border: '1px solid var(--line)',
             borderTop: `3px solid ${b.color}`,
           }}>
-            <Meta style={{ fontSize: 10, marginBottom: 6 }}>{b.label}</Meta>
+            <Meta style={{ fontSize: 10, marginBottom: 4 }}>{b.label}</Meta>
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontStyle: 'italic', fontSize: 28, fontWeight: 500, lineHeight: 1,
+              fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1,
             }}>{totals[b.key]}</div>
-            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 4 }}>{b.unit}</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{b.unit}</div>
           </div>
         ))}
       </div>
@@ -8843,10 +8723,10 @@ function WeekView({ state }) {
       ))}
 
       <div style={{
-        marginTop: 24, padding: 14,
+        marginTop: 12, padding: 10,
         background: 'var(--paper-2)',
         borderRadius: 'var(--r-sm)',
-        fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.6,
+        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
       }}>
         <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
         {t('stats.note')}
@@ -8863,12 +8743,12 @@ function WeekBarRow({ label, data, color, unit }) {
   const reordered = [data[1], data[2], data[3], data[4], data[5], data[6], data[0]];
 
   return (
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 44 }}>
         {reordered.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
@@ -9033,20 +8913,29 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     return () => document.removeEventListener('touchstart', onOutside);
   }, [tooltip]);
 
+  /* Sesion 61 (v0.28.2): el calendario llena el ancho del modal usando
+     grid 1fr + aspect-ratio: 1. Antes tenia celdas fijas de 36px que
+     dejaban el calendario diminuto dentro del modal de 820px. En movil
+     una media query baja la celda a aspect-ratio limitado (28-32px) via
+     max-width del grid. */
   return (
     <div>
       <style>{`
-        .pace-heatmap-cell { width:36px;height:36px;border-radius:4px;cursor:default;transition:opacity 120ms;position:relative; }
+        .pace-heatmap-cell { aspect-ratio:1;border-radius:4px;cursor:default;transition:opacity 120ms;position:relative; }
         .pace-heatmap-cell.has-data { cursor:pointer; }
         .pace-heatmap-cell.has-data:hover { opacity:0.85; }
+        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 1fr);gap:6px; }
+        .pace-heatmap-header-day { text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
+        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
         @media (max-width:640px) {
-          .pace-heatmap-cell { width:28px !important;height:28px !important; }
+          .pace-heatmap-grid { grid-template-columns:repeat(7, minmax(0, 32px)) !important;justify-content:center;gap:4px !important; }
           .pace-heatmap-header-day { font-size:9px !important; }
+          .pace-heatmap-day-num { font-size:10px !important; }
           .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
         }
       `}</style>
 
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
         <button onClick={prevMonth} aria-label="Mes anterior" style={{
           background:'none',border:'none',cursor:'pointer',color:'var(--ink-2)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8249;</button>
@@ -9059,17 +8948,15 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         }}>&#8250;</button>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 36px)', gap:4, marginBottom:4 }}>
+      <div className="pace-heatmap-grid" style={{ marginBottom:4 }}>
         {dayHeaders.map((h, i) => (
-          <div key={i} className="pace-heatmap-header-day" style={{
-            width:36,textAlign:'center',fontSize:10,color:'var(--ink-3)',letterSpacing:0.5,fontWeight:600,
-          }}>{h}</div>
+          <div key={i} className="pace-heatmap-header-day">{h}</div>
         ))}
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 36px)', gap:4 }}>
+      <div className="pace-heatmap-grid">
         {cells.map(cell => {
-          if (cell.type === 'empty') return <div key={cell.key} style={{ width:36,height:36 }} />;
+          if (cell.type === 'empty') return <div key={cell.key} style={{ aspectRatio:1 }} />;
           const hasData  = !!cell.entry;
           const totalMin = hasData ? (cell.entry.focusMinutes||0)+(cell.entry.breathMinutes||0)+(cell.entry.moveMinutes||0) : 0;
           const opacity  = hasData ? intensityOpacity(totalMin) : 0;
@@ -9084,10 +8971,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
               aria-label={hasData?dayLabel(viewYear,viewMonth,cell.d,lang):undefined}
             >
               {hasData && <div style={{ position:'absolute',inset:0,borderRadius:'inherit',background:domColor,opacity }} />}
-              <span style={{
-                position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',
-                fontSize:10,color:hasData?'var(--ink)':'var(--ink-3)',fontVariantNumeric:'tabular-nums',
-                fontWeight:cell.isToday?700:400,zIndex:1,
+              <span className="pace-heatmap-day-num" style={{
+                color:hasData?'var(--ink)':'var(--ink-3)',
+                fontWeight:cell.isToday?700:400,
               }}>{cell.d}</span>
             </div>
           );
@@ -9095,7 +8981,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
       </div>
 
       <div className="pace-heatmap-totals" style={{
-        display:'flex',gap:16,marginTop:20,flexWrap:'wrap',padding:'12px 14px',
+        display:'flex',gap:16,marginTop:14,flexWrap:'wrap',padding:'10px 14px',
         background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:12,color:'var(--ink-2)',
       }}>
         <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit)}</span>
@@ -9131,7 +9017,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
 
 const statsPanelTabStyles = {
   container: {
-    display: 'flex', gap: 2, marginBottom: 24,
+    display: 'flex', gap: 2, marginBottom: 14,
     background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', padding: 3,
   },
   tab: (active) => ({
@@ -9737,9 +9623,41 @@ Object.assign(window, { TweaksPanel });
 /* PACE - Caminos - SuggestedPathCard - sesion 53 / v0.27.0
    Sugiere el camino del momento o el favorito del usuario (prioritario).
    Boton "Ver todos" abre PathsLibrary via CustomEvent.
+
+   Sesion 61 (v0.28.2): compactado en movil. El bug previo era que la regla
+   CSS `[data-pace-spc] > div { flex-direction: column !important }` aplicaba
+   tambien al PathMiniCard suelto (no solo al contenedor dual), forzando una
+   tarjeta apilada de ~250px de alto que aplastaba al timer. Ahora:
+     - El contenedor dual lleva data-pace-spc-dual y solo ese se apila.
+     - PathMiniCard se identifica con data-pace-spc-card y reduce padding,
+       tipos y oculta el tagline en movil para acercarse al layout web
+       horizontal (nombre + iconos + boton en una fila).
 */
 
 const { useState: useStateSPC } = React;
+
+/* Reglas responsive del modulo Caminos sugeridos. Inyectadas una vez.
+   Movil: padding lateral mas estrecho, card en fila pero compacta. */
+if (typeof document !== 'undefined' && !document.getElementById('pace-spc-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-spc-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-spc] { padding: 0 14px 10px !important; }
+      /* Solo el contenedor dual se apila; la card unica queda en row */
+      [data-pace-spc-dual] { flex-direction: column !important; gap: 8px !important; }
+      [data-pace-spc-card] { padding: 10px 12px !important; gap: 10px !important; }
+      [data-pace-spc-card] [data-pace-spc-bar] { display: none !important; }
+      [data-pace-spc-card] [data-pace-spc-label] { font-size: 8px !important; margin-bottom: 2px !important; }
+      [data-pace-spc-card] [data-pace-spc-name] { font-size: 15px !important; }
+      [data-pace-spc-card] [data-pace-spc-tagline] { display: none !important; }
+      [data-pace-spc-card] [data-pace-spc-steps] { margin-top: 4px !important; gap: 4px !important; }
+      [data-pace-spc-card] [data-pace-spc-step] { width: 16px !important; height: 16px !important; }
+      [data-pace-spc-card] [data-pace-spc-cta] { padding: 7px 12px !important; font-size: 11px !important; }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 /* Iconos de paso: stroke fino 14x14 */
 function SPCIconBreathe() {
@@ -9764,7 +9682,7 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
   const tagline = t(pathObj.taglineKey) || '';
 
   return (
-    <div style={{
+    <div data-pace-spc-card style={{
       display: 'flex', alignItems: 'center', gap: 16,
       padding: '14px 20px',
       background: doneToday ? 'var(--paper-2)' : 'var(--paper)',
@@ -9779,31 +9697,31 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
     onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (
-          <div style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
+          <div data-pace-spc-label style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
+          <span data-pace-spc-name style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
           {doneToday && (
             <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
               {t('path.card.done') || 'Hecho hoy'}
             </span>
           )}
         </div>
-        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
-        <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
+        <div data-pace-spc-tagline style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
+        <div data-pace-spc-steps style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
           {pathObj.steps.map(function(step, i) {
             const Icon = SPC_STEP_ICONS[step.kind] || null;
-            return <span key={i} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
+            return <span key={i} data-pace-spc-step style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
           })}
         </div>
       </div>
 
       {!doneToday && (
-        <button
+        <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
           style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
         >
@@ -9857,7 +9775,7 @@ function SuggestedPathCard() {
     <div data-pace-spc style={{ padding: '0 40px 12px', flexShrink: 0 }}>
       {/* Fila superior: cards (una o dos) */}
       {showDual ? (
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div data-pace-spc-dual style={{ display: 'flex', gap: 10 }}>
           <PathMiniCard
             pathObj={favorite}
             label={t('paths.suggested.favorite') || 'Tu favorito'}

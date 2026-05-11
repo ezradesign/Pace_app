@@ -26,23 +26,29 @@ function WeekView({ state }) {
     { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
   ];
 
+  /* Compactado en sesion 61 (v0.28.2): toda la vista cabe en el modal
+     sin scroll vertical en 1080p. Reducciones puntuales:
+       - Cards: padding 16/14 -> 10/12, numero 28 -> 22, gap 12 -> 10.
+       - Margen tras cards: 8/0/24 -> 4/0/14.
+       - WeekBarRow: marginBottom 18 -> 10, chart 64 -> 44.
+       - Nota inferior: marginTop 24 -> 12, padding 14 -> 10, fontSize 12 -> 11. */
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
         {bars.map(b => (
           <div key={b.key} style={{
-            padding: '16px 14px',
+            padding: '10px 12px',
             background: 'var(--paper-2)',
             borderRadius: 'var(--r-md)',
             border: '1px solid var(--line)',
             borderTop: `3px solid ${b.color}`,
           }}>
-            <Meta style={{ fontSize: 10, marginBottom: 6 }}>{b.label}</Meta>
+            <Meta style={{ fontSize: 10, marginBottom: 4 }}>{b.label}</Meta>
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontStyle: 'italic', fontSize: 28, fontWeight: 500, lineHeight: 1,
+              fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1,
             }}>{totals[b.key]}</div>
-            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 4 }}>{b.unit}</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{b.unit}</div>
           </div>
         ))}
       </div>
@@ -52,10 +58,10 @@ function WeekView({ state }) {
       ))}
 
       <div style={{
-        marginTop: 24, padding: 14,
+        marginTop: 12, padding: 10,
         background: 'var(--paper-2)',
         borderRadius: 'var(--r-sm)',
-        fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.6,
+        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
       }}>
         <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
         {t('stats.note')}
@@ -72,12 +78,12 @@ function WeekBarRow({ label, data, color, unit }) {
   const reordered = [data[1], data[2], data[3], data[4], data[5], data[6], data[0]];
 
   return (
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 44 }}>
         {reordered.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
@@ -242,20 +248,29 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     return () => document.removeEventListener('touchstart', onOutside);
   }, [tooltip]);
 
+  /* Sesion 61 (v0.28.2): el calendario llena el ancho del modal usando
+     grid 1fr + aspect-ratio: 1. Antes tenia celdas fijas de 36px que
+     dejaban el calendario diminuto dentro del modal de 820px. En movil
+     una media query baja la celda a aspect-ratio limitado (28-32px) via
+     max-width del grid. */
   return (
     <div>
       <style>{`
-        .pace-heatmap-cell { width:36px;height:36px;border-radius:4px;cursor:default;transition:opacity 120ms;position:relative; }
+        .pace-heatmap-cell { aspect-ratio:1;border-radius:4px;cursor:default;transition:opacity 120ms;position:relative; }
         .pace-heatmap-cell.has-data { cursor:pointer; }
         .pace-heatmap-cell.has-data:hover { opacity:0.85; }
+        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 1fr);gap:6px; }
+        .pace-heatmap-header-day { text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
+        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
         @media (max-width:640px) {
-          .pace-heatmap-cell { width:28px !important;height:28px !important; }
+          .pace-heatmap-grid { grid-template-columns:repeat(7, minmax(0, 32px)) !important;justify-content:center;gap:4px !important; }
           .pace-heatmap-header-day { font-size:9px !important; }
+          .pace-heatmap-day-num { font-size:10px !important; }
           .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
         }
       `}</style>
 
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
         <button onClick={prevMonth} aria-label="Mes anterior" style={{
           background:'none',border:'none',cursor:'pointer',color:'var(--ink-2)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8249;</button>
@@ -268,17 +283,15 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         }}>&#8250;</button>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 36px)', gap:4, marginBottom:4 }}>
+      <div className="pace-heatmap-grid" style={{ marginBottom:4 }}>
         {dayHeaders.map((h, i) => (
-          <div key={i} className="pace-heatmap-header-day" style={{
-            width:36,textAlign:'center',fontSize:10,color:'var(--ink-3)',letterSpacing:0.5,fontWeight:600,
-          }}>{h}</div>
+          <div key={i} className="pace-heatmap-header-day">{h}</div>
         ))}
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 36px)', gap:4 }}>
+      <div className="pace-heatmap-grid">
         {cells.map(cell => {
-          if (cell.type === 'empty') return <div key={cell.key} style={{ width:36,height:36 }} />;
+          if (cell.type === 'empty') return <div key={cell.key} style={{ aspectRatio:1 }} />;
           const hasData  = !!cell.entry;
           const totalMin = hasData ? (cell.entry.focusMinutes||0)+(cell.entry.breathMinutes||0)+(cell.entry.moveMinutes||0) : 0;
           const opacity  = hasData ? intensityOpacity(totalMin) : 0;
@@ -293,10 +306,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
               aria-label={hasData?dayLabel(viewYear,viewMonth,cell.d,lang):undefined}
             >
               {hasData && <div style={{ position:'absolute',inset:0,borderRadius:'inherit',background:domColor,opacity }} />}
-              <span style={{
-                position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',
-                fontSize:10,color:hasData?'var(--ink)':'var(--ink-3)',fontVariantNumeric:'tabular-nums',
-                fontWeight:cell.isToday?700:400,zIndex:1,
+              <span className="pace-heatmap-day-num" style={{
+                color:hasData?'var(--ink)':'var(--ink-3)',
+                fontWeight:cell.isToday?700:400,
               }}>{cell.d}</span>
             </div>
           );
@@ -304,7 +316,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
       </div>
 
       <div className="pace-heatmap-totals" style={{
-        display:'flex',gap:16,marginTop:20,flexWrap:'wrap',padding:'12px 14px',
+        display:'flex',gap:16,marginTop:14,flexWrap:'wrap',padding:'10px 14px',
         background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:12,color:'var(--ink-2)',
       }}>
         <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit)}</span>
@@ -340,7 +352,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
 
 const statsPanelTabStyles = {
   container: {
-    display: 'flex', gap: 2, marginBottom: 24,
+    display: 'flex', gap: 2, marginBottom: 14,
     background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', padding: 3,
   },
   tab: (active) => ({
