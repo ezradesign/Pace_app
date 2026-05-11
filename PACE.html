@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.28.2</title>
+  <title>PACE · Foco · Cuerpo — v0.28.4</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3E5A3A">
   <link rel="stylesheet" href="app/tokens.css" />
@@ -26,25 +26,30 @@
     .path-dot.done   { background: var(--ink-3); }
     .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
     .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
-    /* PathStats -- sesion 54 / compactado sesion 61 para que la pestana
+    /* PathStats -- sesion 54 / compactado sesion 61+62+63 para que la pestana
        Caminos del modal Stats no necesite scroll vertical en 1080p. */
-    .path-stats { display:flex; flex-direction:column; gap:14px; padding:8px 0; }
+    .path-stats { display:flex; flex-direction:column; gap:6px; padding:8px 0; }
     .path-stats-summary { display:flex; gap:12px; flex-wrap:wrap; }
-    .path-stat-card { flex:1; min-width:140px; padding:10px 14px; border:1px solid var(--line); border-radius:var(--r-md); }
+    .path-stat-card { flex:1; min-width:140px; padding:8px 12px; border:1px solid var(--line); border-radius:var(--r-md); }
     .path-stat-label { font-size:.8em; opacity:.7; }
-    .path-stat-value { font-size:1.4em; font-weight:600; margin-top:2px; font-family:var(--font-display); font-style:italic; line-height:1.1; }
+    .path-stat-value { font-size:1.3em; font-weight:600; margin-top:2px; font-family:var(--font-display); font-style:italic; line-height:1.1; }
     .path-stats-table table { width:100%; border-collapse:collapse; }
-    .path-stats-table th, .path-stats-table td { padding:5px 12px; border-bottom:1px solid var(--line); text-align:left; font-size:.9em; }
+    .path-stats-table th, .path-stats-table td { padding:4px 10px; border-bottom:1px solid var(--line); text-align:left; font-size:.9em; }
     .path-stats-table th { font-size:.78em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
     .path-stats-empty { opacity:.6; padding:8px 0; }
-    /* Mobile responsive -- sesion 55 */
+    /* Mobile responsive -- sesion 55 / actualizado sesion 63 */
+    @media (max-width: 640px) {
+      /* Summary cards: 3 columnas horizontales en movil (s63) */
+      .path-stats-summary { display:grid !important; grid-template-columns:repeat(3, 1fr) !important; gap:8px !important; }
+      .path-stat-card { min-width:0 !important; padding:6px 8px !important; }
+      .path-stat-label { font-size:.72em !important; }
+      .path-stat-value { font-size:1.05em !important; }
+    }
     @media (max-width: 480px) {
       .path-topbar { padding: 12px 14px; }
       .path-topbar button { min-height: 44px; min-width: 44px; }
       .path-modal-back > div { padding: 24px 18px; }
       .path-modal-back button { min-height: 44px; }
-      .path-stat-card { min-width: 100%; }
-      .path-stats-summary { flex-direction: column; gap: 10px; }
       /* NOTA: el responsive de SuggestedPathCard (dual + single) vive ahora
          en su propio fichero (pace-spc-responsive-css), inyectado por
          app/paths/SuggestedPathCard.jsx. La regla previa aqui hacia que

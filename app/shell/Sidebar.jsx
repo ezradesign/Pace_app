@@ -80,6 +80,22 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
         min-height: 84px !important;
       }
     }
+    /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
+       Logo recortado al 50%, tagline oculto por overflow:hidden.
+       Secciones y footer con márgenes menores para caber sin scroll
+       en pantallas pequeñas (iPhone SE / ~568px alto). */
+    @media (max-width: 640px) {
+      [data-pace-sidebar] [data-pace-sidebar-logobar] {
+        min-height: 48px !important;
+        max-height: 48px !important;
+        overflow: hidden !important;
+      }
+      [data-pace-sidebar] [data-pace-sidebar-achievements] {
+        grid-template-columns: repeat(5, 40px) !important;
+        gap: 4px !important;
+        margin-bottom: 6px !important;
+      }
+    }
   `;
   document.head.appendChild(s);
 }
@@ -90,6 +106,7 @@ function Sidebar() {
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
+  const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
 
@@ -129,36 +146,36 @@ function Sidebar() {
         </div>
       </div>
 
-      <Divider style={{ margin: '14px 0 16px' }} />
+      <Divider style={{ margin: isMob ? '8px 0 10px' : '14px 0 16px' }} />
 
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
-        <div style={sidebarStyles.sectionHeader}>
+        <div style={{ ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 }}>
           <Meta>{t('sidebar.section.rhythm')}</Meta>
           <span style={sidebarStyles.sectionAside}>{state.streak.longest}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-          <span style={sidebarStyles.streakNum}>{state.streak.current}</span>
+          <span style={{ ...sidebarStyles.streakNum, fontSize: isMob ? 32 : 44 }}>{state.streak.current}</span>
           <div>
             <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')}</div>
             <div style={sidebarStyles.streakSub}>{tn('sidebar.streak.best', { n: state.streak.longest })}</div>
           </div>
         </div>
-        <WeekDots weeklyStats={state.weeklyStats} />
+        <WeekDots weeklyStats={state.weeklyStats} compact={isMob} />
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: isMob ? '8px 0 10px' : '16px 0 14px' }} />
 
       {/* SENDERO — el día como camino con hitos */}
       <div style={sidebarStyles.section}>
-        <SenderoDelDia state={state} />
+        <SenderoDelDia state={state} compact={isMob} />
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: isMob ? '8px 0 10px' : '16px 0 14px' }} />
 
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
-        <div style={sidebarStyles.sectionHeader}>
+        <div style={{ ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 }}>
           <Meta>{t('sidebar.section.achievements')}</Meta>
           <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
         </div>
@@ -174,7 +191,7 @@ function Sidebar() {
       <div style={{ flex: 1 }} />
 
       {/* STATUS BAR INFERIOR */}
-      <StatusBar />
+      <StatusBar compact={isMob} />
     </aside>
   );
 }
@@ -184,7 +201,7 @@ function Sidebar() {
    el arco del día (6h → 22h). Los hitos son pomodoros y sesiones
    completadas hasta ahora; aparecen como puntos sobre la curva.
    ============================================================ */
-function SenderoDelDia({ state }) {
+function SenderoDelDia({ state, compact }) {
   const { t, tn } = useT();
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
@@ -213,8 +230,8 @@ function SenderoDelDia({ state }) {
       .sort((a, b) => a.x - b.x);
   }, [state.cycle, state.weeklyStats]);
 
-  const W = 240;
-  const H = 46;
+  const W = compact ? 180 : 240;
+  const H = compact ? 36 : 46;
   const pathD = `M 0 ${H * 0.55} Q ${W * 0.2} ${H * 0.15}, ${W * 0.45} ${H * 0.55} T ${W} ${H * 0.55}`;
 
   const colorOf = (kind) => ({
@@ -298,19 +315,20 @@ function ChevronLeftIcon() {
    ya no es un rail con chevron, vuelve a abrirse con el handle flotante
    que vive en main.jsx (≡). */
 
-function WeekDots({ weeklyStats }) {
+function WeekDots({ weeklyStats, compact }) {
   const { t } = useT();
   const days = t('sidebar.days').split(',');
   const today = (new Date().getDay() + 6) % 7; // L=0
+  const dotSize = compact ? 5 : 6;
   return (
-    <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
+    <div style={{ display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 }}>
       {days.map((d, i) => {
         const active = (weeklyStats.focusMinutes[(i+1)%7] || 0) > 0;
         const isToday = i === today;
         return (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1 }}>
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 }}>
             <div style={{
-              width: 6, height: 6, borderRadius: '50%',
+              width: dotSize, height: dotSize, borderRadius: '50%',
               background: active ? 'var(--focus)' : 'var(--line)',
               outline: isToday ? '2px solid var(--ink-2)' : 'none',
               outlineOffset: 2,
@@ -332,7 +350,7 @@ function AchievementsPreview({ onOpen }) {
     .map(([id]) => id);
   const shown = 5;
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
+    <div data-pace-sidebar-achievements style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
       {Array.from({ length: shown }).map((_, i) => {
         const id = unlocked[i];
         return (
@@ -376,17 +394,17 @@ function AchievementsPreview({ onOpen }) {
      2. Pill SupportButton — mismo diseño del sello original.
      3. Versión + autor en micro-type.
 */
-function StatusBar() {
+function StatusBar({ compact }) {
   const [state] = usePace();
   const { t } = useT();
   const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
   return (
-    <div style={sidebarStyles.footer}>
+    <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 6 : 10 }}>
       <div style={sidebarStyles.footerRow}>
         <Meta>{t('sidebar.status.ontrack')}</Meta>
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
-      <div style={{ marginTop: 10, marginBottom: 10 }}>
+      <div style={{ marginTop: compact ? 4 : 0, marginBottom: compact ? 4 : 0 }}>
         <SupportButton onOpen={openSupport} />
       </div>
       <div style={sidebarStyles.footerRow}>

@@ -15,7 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil + Sidebar.jsx 630->497 ln (sale de deuda) | #61 | [abajo](#v0282----2026-05-11----choreui-sidebar-cleanup--ritmo-fit--camino-movil) |
+| **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [abajo](#v0284----2026-05-12----featui-fix-scroll-desktop--sidebar-movil) |
+| **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada -- barras 44->36, PathStat cards 10/14->8/12, gap 14->10 -- todas las pestanas Stats sin scroll en 1080p + heatmap ano completo (7 etiquetas dia + futuros visibles) | #61/62 | [abajo](#v0283----2026-05-11----choreui-weekview--pathstats-compactacion-segunda-pasada) |
+| **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil + Sidebar.jsx 630->497 ln (sale de deuda) | #61 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) -- 4 patrones canonicos definidos, pendiente propagar a 33 restantes | #60 | [session-60](./docs/sessions/session-60-glyphs-iter-incompleto.md) |
 | **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira -- pantalla activa de sesion deja de mostrar placeholder y muestra simbolo abstracto unico por ejercicio | #59 | [abajo](#v0280----2026-05-11----featglyphs-46-glifos-canonicos-por-paso) |
 | **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | [abajo](#v0276----2026-05-11----choreworkflow-blindaje-git) |
@@ -84,170 +86,73 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.28.2] -- 2026-05-11 -- chore(ui): sidebar cleanup + Ritmo fit + camino movil
+## [v0.28.4] -- 2026-05-12 -- feat(ui): fix scroll desktop + sidebar movil compacta
 
-Sesion 61. Tres limpiezas de UI sin tocar logica de producto:
-
-1. Sidebar: eliminado el bloque de **contadores** (pomodoros / rondas /
-   racha) que vivia bajo el logo y aplastaba al resto. Mas aire para
-   Ritmo + Sendero + Logros + Status.
-2. Modal Stats (Ritmo) en web: las cuatro pestanas (Semana / Mes / Año /
-   Caminos) caben en el modal sin scroll vertical. El calendario mensual
-   pasa de celdas fijas 36px a `grid 1fr + aspect-ratio:1` y llena el
-   ancho del modal. El heatmap anual reduce celda 14→12 para que las 53
-   semanas quepan en 820px sin scroll horizontal.
-3. Camino sugerido en movil: la tarjeta unica deja de apilarse en
-   columna (era un bug de CSS heredado de la regla dual). Ahora queda
-   en fila como en web pero compacta (sin tagline, fuentes y boton mas
-   pequenos) para que el timer respire.
+Sesion 63. Fix de scroll residual en las 4 pestanas del modal Stats en desktop (1080p)
++ compactacion completa del sidebar en movil (640px) + fixes de layout movil en
+Semana y Caminos dentro de Stats.
 
 ### Changed
 
-- **`app/shell/Sidebar.jsx`**: eliminado JSX `cycles/cycleCount/cycleItem*3`
-  + iconos `PomodoroIcon`/`RoundsIcon`/`StreakFlameIcon` + estilos
-  asociados. El archivo baja de 630 → 497 lineas y **sale de la deuda
-  tecnica activa** (`>500 ln`).
-- **`app/stats/StatsPanel.jsx`** (`WeekView`):
-  cards padding 16/14 → 10/12, numero 28 → 22, gap 12 → 10, margen
-  tras cards 8/0/24 → 4/0/14. `WeekBarRow` marginBottom 18 → 10,
-  chart height 64 → 44. Nota inferior marginTop 24 → 12, padding 14 →
-  10, fontSize 12 → 11. Tabs container marginBottom 24 → 14.
-- **`app/stats/StatsPanel.jsx`** (`MonthHeatmap`): paso de celdas fijas
-  36×36 a clases CSS (`.pace-heatmap-grid` = `repeat(7, 1fr)`,
-  `.pace-heatmap-cell` con `aspect-ratio:1`,
-  `.pace-heatmap-header-day`, `.pace-heatmap-day-num`). En movil
-  override a `repeat(7, minmax(0, 32px))` con `justify-content:center`.
-  Footer totales marginTop 20 → 14, padding 12 → 10.
-- **`app/stats/YearView.jsx`** + **`app/stats/PathYearView.jsx`**:
-  celdas 14×14 → 12×12 + day labels height 14 → 12 (consistencia
-  visual). Las 53 columnas + labels caben ahora en el modal de 820px
-  sin scroll horizontal. Mobile sigue en 11×11 con scroll horizontal.
-- **`app/stats/PathStats.jsx`**: marginBottom del label heatmap 12 → 6.
-- **`PACE.html`** (CSS PathStats): `.path-stats` gap 24 → 14, padding
-  16 → 8; `.path-stats-summary` gap 16 → 12; `.path-stat-card` padding
-  16 → 10/14; `.path-stat-value` 1.6em → 1.4em; tabla padding 8/12 →
-  5/12 fontSize 0.95 → 0.9em.
-- **`PACE.html`**: eliminada la regla `[data-pace-spc] > div
-  { flex-direction: column }` que aplicaba a la tarjeta unica de
-  Camino sugerido (no solo al dual), forzando layout vertical en movil.
-  El responsive del SPC vive ahora en su propio fichero (`pace-spc-
-  responsive-css`) inyectado por `SuggestedPathCard.jsx`.
-- **`app/paths/SuggestedPathCard.jsx`**: anadidos atributos
-  `data-pace-spc-dual` (contenedor cuando hay favorito + sugerido) y
-  `data-pace-spc-card/-bar/-label/-name/-tagline/-steps/-step/-cta` en
-  `PathMiniCard` para que el CSS movil pueda targetear sin selectores
-  fragiles. Reglas movil: padding 14/20 → 10/12, gap 16 → 10, barra
-  vertical oculta, label 9 → 8, nombre 17 → 15, tagline `display:none`,
-  steps gap 6 → 4 con iconos 20 → 16, boton padding 8/16 → 7/12 y
-  fontSize 12 → 11.
-- **`PACE.html`** + **`app/state-core.jsx`**: bump version y titulo
-  v0.28.1 → v0.28.2.
+- **`app/stats/StatsPanel.jsx`** (`WeekView`): eliminado bloque "Nota: no medimos
+  para juzgarte..." -- el subtitulo del modal ya transmite el mensaje. Ganancia ~30px.
+  Añadido wrapper `data-pace-week-view` + `<style>` con `@media(max-width:640px)`:
+  cards `repeat(4,1fr)` → `repeat(2,1fr)`, barras height 36 → 28.
+- **`app/stats/StatsPanel.jsx`** (`MonthHeatmap`): celdas `56px → 48px`;
+  footer: `marginTop:14→10`, `padding:'10px 14px'→'8px 10px'`, `fontSize:12→11`.
+- **`app/stats/YearView.jsx`** + **`app/stats/PathYearView.jsx`**: dias futuros
+  cambian de `background:'var(--paper-3)'` (identico al lvl=0) a
+  `background:'transparent', opacity:0.3`. Ahora son claramente vacios.
+- **`app/stats/PathYearView.jsx`**: nav `marginBottom:16→10`; leyenda `marginTop:10→4`;
+  stride columnas `gap:2→1`, `marginRight:2→1`; footer `marginTop:12→8`,
+  `padding:'10px 14px'→'8px 10px'`, `fontSize:12→11`.
+- **`app/stats/PathStats.jsx`**: titulo heatmap `marginBottom:6→4`.
+- **`PACE.html`** (CSS): `.path-stats { gap:10px→6px }`. Nuevo bloque
+  `@media(max-width:640px)` para `.path-stats-summary`: grid 3 columnas, cards
+  compactas. Regla 480px limpiada.
+- **`app/shell/Sidebar.jsx`**: añadido bloque `@media(max-width:640px)` en
+  `pace-sidebar-responsive-css` (logoBar 48px max + overflow:hidden, circles 40px).
+  `isMob` condiciona: Dividers `14/16px→8px`, sectionHeader `marginBottom:10→6`,
+  streakNum `fontSize:44→32`, WeekDots compacto, SenderoDelDia SVG `240×46→180×36`,
+  StatusBar `marginTop:14→8, paddingTop:12→8, gap:10→6`.
+- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.3 → v0.28.4.
 
 ### Build
 
-- `PACE_standalone.html`: 556 KB → 554 KB (-2 KB). 40 archivos
-  validados por el TS parser, 2 inline scripts validados.
-
-### Notas
-
-- La logica de los contadores eliminados (`state.cycle`,
-  `state.streak.current/longest`) **no se borra**: sigue alimentando
-  WeekDots + sectionAside del bloque Ritmo, plus FocusTimer cycle dots.
-  Solo desaparece la visualizacion redundante de la cabecera.
-- Las claves i18n `sidebar.counter.pomodoros/rounds/streak` quedan
-  huerfanas (sin referencia). Se dejan en `strings.js` para retro-
-  compat por si vuelve algun contador en otra ubicacion; se pueden
-  podar en una sesion de cleanup futura.
+- `PACE_standalone.html`: 556 KB → 557 KB (+1 KB). 40 archivos validados.
+- Backups: eliminados los 4 mas antiguos (v0.22.1–v0.25.0-pre48) para mantener max 20.
 
 ---
 
-## [v0.28.1] -- 2026-05-11 -- refactor(glyphs): iteracion parcial 13/46
+## [v0.28.3] -- 2026-05-11 -- chore(ui): WeekView + PathStats compactacion segunda pasada
 
-Sesion 60. Iteracion del lenguaje visual de los glifos de ejercicio.
-Sesion **incompleta** (pausada por el usuario): 13 de 46 glifos rediseñados
-en 3 tandas progresivas. Establece 4 patrones canonicos para la propagacion
-posterior a los 33 restantes.
+Sesion 61 iter.2. Continuacion tras limite de cuota: los cambios de
+YearView/PathYearView (7 etiquetas de dia L-M-X-J-V-S-D + dias futuros
+visibles) y MonthHeatmap (56px fijas + centrado) estaban ya aplicados
+desde la iteracion anterior. Esta pasada completa la compactacion de
+WeekView y PathStats para eliminar el scroll vertical restante en 1080p.
 
-### Contexto
+### Changed
 
-El feedback del usuario tras la entrega de s59 fue que los 46 glifos
-abstractos no comunicaban el ejercicio al usuario sin contexto. Como
-referencia visual se uso la captura de los 4 botones de actividad de la
-home (`ABBreathe`/`ABStretch`/`ABMove`/`ABDrop` en `app/main.jsx`):
-pulmones, arco corporal, mancuerna, gota.
-
-### Cuatro patrones canonicos definidos
-
-1. **Cuerpo como una sola forma** (compuesto: 1 curva + cabeza puntito +
-   suelo opcional). Para posturas compuestas: squat, plank, bridge, hollow
-   hold, wall sit, pigeon.
-2. **Objeto solo** (sin cuerpo). Para ejercicios con equipo iconico:
-   silla, barra, banda, mancuerna.
-3. **Parte del cuerpo aislada** (zoom anatomico). Para movimientos
-   localizados: muñeca, cabeza, tobillo, mano, pie.
-4. **Metafora pura**. Solo para reposos/respiracion: luna, enso, diafragma.
-
-Cada glifo entra en UNO de los 4 patrones, sin mezclar. Maximo 5 elementos
-visuales por glifo (referencia: home Mueve = 5, home Estira = 3,
-home Respira = 4, home Hidratate = 2).
-
-### Changed -- 13 glifos rediseñados (en `app/glyphs/exercise-glyphs.jsx`)
-
-**Tanda 1 (8 glifos, abstractos -- DESCARTADA parcialmente, queda solo lo metaforico):**
-- `Descanso`: luna creciente + chispa (patron 4) ✓
-- `Reset respiracion`: circulo enso + centro (patron 4) ✓
-- `Deep breaths`: diafragma como boveda + aliento ascendente (patron 4) ✓
-- `Squeeze fist`: silueta puño + 3 nudillos + pulgar (patron 3, pendiente refinar)
-- `Wall sit`: pared + silueta sentada con cadera flexionada (patron 1, pendiente refinar)
-- `Calf raises`: pie de perfil con talon elevado (patron 3, pendiente refinar)
-- `Apertura de pecho`: dos petalos abriendose (patron 4, pendiente refinar)
-- `Rotacion toracica`: espiral nautilo con flecha (patron 4, pendiente refinar)
-
-**Tanda 2 (5 glifos, prototipo Estrategia E -- DESCARTADA):**
-- Squat profundo, Fondos en silla, Wrist circles, Chin tucks, Chest opener.
-  Probaron sticks figures con multiples elementos, no funcionaron.
-
-**Tanda 3 (5 glifos, minimalismo radical -- VERSION FINAL en disco):**
-- `Squat profundo`: arco M sobre suelo (patron 1) -- 3 elementos.
-- `Fondos en silla`: silla en perfil sin persona (patron 2) -- 4 elementos.
-- `Wrist circles`: antebrazo + mano + circulo rotacion (patron 3) -- 3 elementos.
-- `Chin tucks`: cabeza perfil + nariz + columna + chin mark (patron 3) -- 4 elementos.
-- `Chest opener`: T-pose minimal (patron 1) -- 4 elementos.
-
-### Estado de los 46 glifos
-
-- **Rediseñados v0.28.1:** 13/46 (5 finalizados estilo home, 8 intermedios)
-- **Sin tocar (estilo abstracto s59):** 33/46
-- **Patron asignado pendiente de aplicar:** 33 (a propagar en sesion futura)
-
-### Pendiente para proxima sesion (cuando se retome)
-
-- Validar visualmente los 13 actuales con el usuario.
-- Refinar tanda 1 a estilo "una sola forma" (Squeeze fist, Wall sit, Calf
-  raises, Apertura de pecho, Rotacion toracica) -- los 3 metaforicos
-  (Descanso, Reset respiracion, Deep breaths) probablemente OK.
-- Propagar los 4 patrones a los 33 glifos restantes asignando cada uno a 1/2/3/4.
-- Considerar añadir BreatheLibrary card glyphs (sin tocar en esta sesion).
-
-### Changed -- versionado
-
-- `app/state-core.jsx`: PACE_VERSION bumpeada `v0.28.0` → `v0.28.1`.
-- `PACE.html`: titulo bumpeado a `v0.28.1`.
-- Comentario header de `exercise-glyphs.jsx` actualizado a sesion 60.
+- **`app/stats/StatsPanel.jsx`** (`WeekView`): `WeekBarRow` chart height
+  44 → 36; `marginBottom` 10 → 8. Nota inferior: `marginTop` 12 → 8,
+  `padding` 10 → 6, `fontSize` 11 → 10.
+- **`PACE.html`** (CSS PathStats): `.path-stats` gap 14px → 10px;
+  `.path-stat-card` padding 10px/14px → 8px/12px; `.path-stat-value`
+  1.4em → 1.3em; `.path-stats-table` th/td padding 5px/12px → 4px/10px.
+- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.2 →
+  v0.28.3.
 
 ### Build
 
-- `PACE_standalone.html`: 557 KB → 556 KB (-1 KB), 0 errores, 0 WARN.
-
-### Notas
-
-- No se tocaron los 4 glifos de menu (ActivityBar) -- siguen siendo la
-  referencia canonica del estilo.
-- BreatheSession sigue fuera de scope (usa BreathVisual animado).
-- Sesion **pausada por el usuario** antes de terminar el rediseño.
-  Backup v0.28.0 conservado en `backups/PACE_standalone_v0.28.0_20260511.html`.
+- `PACE_standalone.html`: 554 KB → 556 KB (+2 KB). 40 archivos
+  validados, 2 inline scripts.
 
 ---
+
+<!-- v0.28.2 y anteriores: ver tabla de historial + docs/sessions/ -->
+
+<!-- v0.28.2 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.27.6] -- 2026-05-11 -- chore(workflow): blindaje Git
 

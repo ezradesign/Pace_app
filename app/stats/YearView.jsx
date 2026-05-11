@@ -156,12 +156,12 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   return (
     <div data-pace-year-view>
       <style>{`
-        /* Sesion 61 (v0.28.2): celdas 14 -> 12 en desktop para que las 53
-           columnas + labels quepan en el modal de 820px sin scroll horizontal.
-           Movil sigue en 11px y scroll horizontal. */
+        /* Sesion 62 (v0.28.3): celdas 12 -> 11 + month labels alineados con
+           cell stride (16 -> 11) para que las 53 columnas + day-label col
+           quepan en el modal de 820px sin scroll horizontal.
+           Movil sin cambios (sigue con scroll horizontal y celdas 11). */
         @media (max-width:640px) {
           [data-pace-year-view] [data-pace-year-grid-wrap] { scroll-snap-type:x mandatory !important; }
-          [data-pace-year-view] [data-pace-year-cell] { width:11px !important;height:11px !important; }
           [data-pace-year-view] [data-pace-year-month-lbl] { font-size:8px !important; }
           [data-pace-year-view] [data-pace-year-day-lbl] { font-size:8px !important;width:12px !important; }
         }
@@ -184,11 +184,11 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
       <div data-pace-year-grid-wrap style={{ overflowX:'auto',WebkitOverflowScrolling:'touch' }}>
         <div style={{ display:'inline-block',minWidth:'max-content' }}>
 
-          {/* Etiquetas de meses */}
-          <div style={{ display:'flex',marginLeft:20,marginBottom:4 }}>
+          {/* Etiquetas de meses -- ancho alineado con cell stride (11+2) */}
+          <div style={{ display:'flex',marginLeft:18,marginBottom:4 }}>
             {Array.from({ length: totalCols }, (_,col) => (
               <div key={col} data-pace-year-month-lbl style={{
-                width:16,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',
+                width:11,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',
                 letterSpacing:0.2,overflow:'visible',whiteSpace:'nowrap',
               }}>
                 {monthCols[col] !== undefined ? monthNames[monthCols[col]] : ''}
@@ -198,13 +198,13 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
           {/* Grid de días */}
           <div style={{ display:'flex' }}>
-            {/* Etiquetas de día (L/X/V en filas 0,2,4) */}
+            {/* Etiquetas de dia (L M X J V S D, los 7 -- sesion 62) */}
             <div style={{ display:'flex',flexDirection:'column',gap:2,marginRight:4 }}>
               {[0,1,2,3,4,5,6].map(row => (
                 <div key={row} data-pace-year-day-lbl style={{
-                  width:16,height:12,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
+                  width:14,height:11,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
                 }}>
-                  {row===0 ? dayRowLabels[0] : row===2 ? dayRowLabels[1] : row===4 ? dayRowLabels[2] : ''}
+                  {dayRowLabels[row] || ''}
                 </div>
               ))}
             </div>
@@ -215,16 +215,27 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
                 {[0,1,2,3,4,5,6].map(row => {
                   const cell = cellMap[`${col}-${row}`];
 
-                  // Celda sin día (offset inicio/fin de año) o día futuro → hueco invisible
-                  if (!cell || cell.isFuture) {
-                    return <div key={row} data-pace-year-cell style={{ width:12,height:12,borderRadius:2 }} />;
+                  // Celda fuera del año (offset inicio/fin) -> hueco invisible.
+                  if (!cell) {
+                    return <div key={row} data-pace-year-cell style={{ width:11,height:11,borderRadius:2 }} />;
+                  }
+
+                  // Dia futuro: solo borde tenue sin relleno (s63) para
+                  // distinguirlos de los dias pasados sin actividad (lvl=0).
+                  if (cell.isFuture) {
+                    return (
+                      <div key={row} data-pace-year-cell style={{
+                        width:11,height:11,borderRadius:2,
+                        background:'transparent',border:'1px solid var(--line)',opacity:0.3,
+                      }} />
+                    );
                   }
 
                   // Pre-uso: crema con borde muy tenue
                   if (cell.isPreUse) {
                     return (
                       <div key={row} data-pace-year-cell style={{
-                        width:12,height:12,borderRadius:2,
+                        width:11,height:11,borderRadius:2,
                         background:'var(--paper-2)',border:'1px solid var(--line)',opacity:0.35,
                       }} />
                     );
@@ -241,7 +252,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
                       onMouseLeave={hasData ? handleLeave : undefined}
                       onTouchEnd={hasData ? (e)=>handleTap(e,cell) : undefined}
                       style={{
-                        width:12,height:12,borderRadius:2,position:'relative',
+                        width:11,height:11,borderRadius:2,position:'relative',
                         background: lvl===0 ? 'var(--paper-3)' : 'transparent',
                         border: lvl===0 ? '1px solid var(--line)' : 'none',
                         cursor: hasData ? 'pointer' : 'default',

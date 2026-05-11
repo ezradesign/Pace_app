@@ -108,7 +108,7 @@ function PathYearView({ history, lang }) {
     <div data-pace-path-year-view>
       <style>{`@media(max-width:640px){[data-pace-path-year-view] [data-pyv-wrap]{scroll-snap-type:x mandatory!important}[data-pace-path-year-view] [data-pyv-cell]{width:11px!important;height:11px!important}[data-pace-path-year-view] [data-pyv-ml]{font-size:8px!important}[data-pace-path-year-view] [data-pyv-dl]{font-size:8px!important;width:12px!important}}`}</style>
 
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
         <button onClick={()=>{if(canPrev)setViewYear(availableYears[yi-1]);}} disabled={!canPrev} style={btnStyle(canPrev)}>&#8249;</button>
         <span style={{fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:20,color:'var(--ink)'}}>{viewYear}</span>
         <button onClick={()=>{if(canNext)setViewYear(availableYears[yi+1]);}} disabled={!canNext} style={btnStyle(canNext)}>&#8250;</button>
@@ -116,33 +116,37 @@ function PathYearView({ history, lang }) {
 
       <div data-pyv-wrap style={{overflowX:'auto',WebkitOverflowScrolling:'touch'}}>
         <div style={{display:'inline-block',minWidth:'max-content'}}>
-          <div style={{display:'flex',marginLeft:20,marginBottom:4}}>
+          {/* s63: month labels alineados con cell stride (11+1). */}
+          <div style={{display:'flex',marginLeft:18,marginBottom:4}}>
             {Array.from({length:totalCols},(_,col)=>(
-              <div key={col} data-pyv-ml style={{width:16,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',overflow:'visible',whiteSpace:'nowrap'}}>
+              <div key={col} data-pyv-ml style={{width:11,marginRight:1,flexShrink:0,fontSize:9,color:'var(--ink-3)',overflow:'visible',whiteSpace:'nowrap'}}>
                 {monthCols[col]!==undefined?monthNames[monthCols[col]]:''}
               </div>
             ))}
           </div>
           <div style={{display:'flex'}}>
-            <div style={{display:'flex',flexDirection:'column',gap:2,marginRight:4}}>
+            {/* Etiquetas de dia (L M X J V S D, los 7 -- sesion 62) */}
+            <div style={{display:'flex',flexDirection:'column',gap:1,marginRight:4}}>
               {[0,1,2,3,4,5,6].map(row=>(
-                <div key={row} data-pyv-dl style={{width:16,height:12,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
-                  {row===0?dayRowLabels[0]:row===2?dayRowLabels[1]:row===4?dayRowLabels[2]:''}
+                <div key={row} data-pyv-dl style={{width:14,height:11,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
+                  {dayRowLabels[row]||''}
                 </div>
               ))}
             </div>
             {Array.from({length:totalCols},(_,col)=>(
-              <div key={col} style={{display:'flex',flexDirection:'column',gap:2,marginRight:2}}>
+              <div key={col} style={{display:'flex',flexDirection:'column',gap:1,marginRight:1}}>
                 {[0,1,2,3,4,5,6].map(row=>{
                   const cell=cellMap[`${col}-${row}`];
-                  if(!cell||cell.isFuture) return <div key={row} data-pyv-cell style={{width:12,height:12,borderRadius:2}}/>;
+                  if(!cell) return <div key={row} data-pyv-cell style={{width:11,height:11,borderRadius:2}}/>;
+                  // Futuro: solo borde tenue sin relleno (s63) — distinguible del lvl=0
+                  if(cell.isFuture) return <div key={row} data-pyv-cell style={{width:11,height:11,borderRadius:2,background:'transparent',border:'1px solid var(--line)',opacity:0.3}}/>;
                   const lvl=cell.level; const ls=pyvStyles[lvl]||pyvStyles[0]; const hd=cell.count>0;
                   return(
                     <div key={row} data-pyv-cell
                       onMouseEnter={hd?(e)=>showTip(e,cell,false):undefined}
                       onMouseLeave={hd?()=>setTooltip(null):undefined}
                       onTouchEnd={hd?(e)=>{e.preventDefault();if(tooltip&&tooltip.key===cell.dateStr){setTooltip(null);}else{showTip(e,cell,true);}}:undefined}
-                      style={{width:12,height:12,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
+                      style={{width:11,height:11,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
                     >
                       {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
                     </div>
@@ -154,7 +158,7 @@ function PathYearView({ history, lang }) {
         </div>
       </div>
 
-      <div style={{display:'flex',alignItems:'center',gap:5,marginTop:10,justifyContent:'flex-end'}}>
+      <div style={{display:'flex',alignItems:'center',gap:5,marginTop:4,justifyContent:'flex-end'}}>
         <span style={{fontSize:10,color:'var(--ink-3)'}}>{t('stats.year.legend.less')}</span>
         {[0,1,2,3,4].map(lvl=>{const ls=pyvStyles[lvl];return(
           <div key={lvl} style={{width:12,height:12,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none'}}>
@@ -165,7 +169,7 @@ function PathYearView({ history, lang }) {
       </div>
 
       {!hasAny&&<div style={{textAlign:'center',padding:'16px 0 8px',color:'var(--ink-3)',fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:15}}>{t('stats.year.empty').replace('{year}',viewYear)}</div>}
-      {hasAny&&<div style={{marginTop:12,padding:'10px 14px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:12,color:'var(--ink-2)'}}>{yearTotal} {unitWord(yearTotal)} {lang==='en'?'this year':'este año'}</div>}
+      {hasAny&&<div style={{marginTop:8,padding:'8px 10px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:11,color:'var(--ink-2)'}}>{yearTotal} {unitWord(yearTotal)} {lang==='en'?'this year':'este año'}</div>}
 
       {tooltip&&!tooltip.mobile&&<div style={{position:'fixed',left:tooltip.x,top:tooltip.y-8,transform:'translate(-50%,-100%)',background:'var(--ink)',color:'var(--paper)',padding:'6px 10px',borderRadius:'var(--r-sm)',fontSize:11,pointerEvents:'none',whiteSpace:'nowrap',zIndex:9999,boxShadow:'0 2px 8px rgba(0,0,0,0.18)'}}>{tooltip.text}</div>}
       {tooltip&&tooltip.mobile&&<div ref={tooltipRef} style={{position:'fixed',bottom:88,left:'50%',transform:'translateX(-50%)',background:'var(--ink)',color:'var(--paper)',padding:'10px 16px',borderRadius:'var(--r-md)',fontSize:12,zIndex:9999,boxShadow:'0 4px 16px rgba(0,0,0,0.22)',maxWidth:'90vw',textAlign:'center',lineHeight:1.5}}>{tooltip.text}</div>}

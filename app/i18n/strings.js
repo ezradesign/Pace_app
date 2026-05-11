@@ -294,7 +294,7 @@ window.PACE_STRINGS = {
     'stats.year.activeDays':           '{n} días activos',
     'stats.year.maxStreak':            'racha máx: {n} días',
     'stats.year.months.short':         'Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic',
-    'stats.year.days.label':           'L,X,V',
+    'stats.year.days.label':           'L,M,X,J,V,S,D',
     'stats.year.legend.less':          'menos',
     'stats.year.legend.more':          'más',
     'stats.year.tooltip.score':        '{n} acciones',
@@ -309,7 +309,7 @@ window.PACE_STRINGS = {
     'stats.paths.tableCount':          'Veces',
     'stats.paths.tableLast':           'Ultimo dia',
     'stats.paths.empty':               'Aun no has completado ningun camino',
-    'stats.paths.heatmap':             'Actividad del ano',
+    'stats.paths.heatmap':             'Actividad del año',
 
     // Achievements
     'ach.tag':                         'Colección',
@@ -674,7 +674,7 @@ window.PACE_STRINGS = {
     'stats.year.activeDays':           '{n} active days',
     'stats.year.maxStreak':            'max streak: {n} days',
     'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
-    'stats.year.days.label':           'M,W,F',
+    'stats.year.days.label':           'M,T,W,T,F,S,S',
     'stats.year.legend.less':          'less',
     'stats.year.legend.more':          'more',
     'stats.year.tooltip.score':        '{n} actions',

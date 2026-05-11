@@ -26,15 +26,30 @@ function WeekView({ state }) {
     { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
   ];
 
-  /* Compactado en sesion 61 (v0.28.2): toda la vista cabe en el modal
-     sin scroll vertical en 1080p. Reducciones puntuales:
+  /* Compactado en sesion 61 (v0.28.2), 62 (v0.28.3) y 63 (v0.28.4):
        - Cards: padding 16/14 -> 10/12, numero 28 -> 22, gap 12 -> 10.
        - Margen tras cards: 8/0/24 -> 4/0/14.
-       - WeekBarRow: marginBottom 18 -> 10, chart 64 -> 44.
-       - Nota inferior: marginTop 24 -> 12, padding 14 -> 10, fontSize 12 -> 11. */
+       - WeekBarRow: marginBottom 18 -> 8, chart 64 -> 36.
+       - Nota inferior: eliminada en s63 (subtitulo del modal ya transmite el mensaje).
+       - Movil (s63): cards 4x1 -> 2x2 via CSS, barras compactas. */
   return (
-    <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
+    <div data-pace-week-view>
+      <style>{`
+        @media (max-width: 640px) {
+          [data-pace-week-view] [data-pace-week-cards] {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+            margin-bottom: 10px !important;
+          }
+          [data-pace-week-view] [data-pace-week-bar-row] {
+            margin-bottom: 6px !important;
+          }
+          [data-pace-week-view] [data-pace-week-bar-row] [data-pace-bar-chart] {
+            height: 28px !important;
+          }
+        }
+      `}</style>
+      <div data-pace-week-cards style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
         {bars.map(b => (
           <div key={b.key} style={{
             padding: '10px 12px',
@@ -56,16 +71,6 @@ function WeekView({ state }) {
       {bars.map(b => (
         <WeekBarRow key={b.key} label={b.label} data={b.data} color={b.color} unit={b.unit} />
       ))}
-
-      <div style={{
-        marginTop: 12, padding: 10,
-        background: 'var(--paper-2)',
-        borderRadius: 'var(--r-sm)',
-        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
-      }}>
-        <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
-        {t('stats.note')}
-      </div>
     </div>
   );
 }
@@ -78,12 +83,12 @@ function WeekBarRow({ label, data, color, unit }) {
   const reordered = [data[1], data[2], data[3], data[4], data[5], data[6], data[0]];
 
   return (
-    <div style={{ marginBottom: 10 }}>
+    <div data-pace-week-bar-row style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 44 }}>
+      <div data-pace-bar-chart style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 36 }}>
         {reordered.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
@@ -248,24 +253,30 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     return () => document.removeEventListener('touchstart', onOutside);
   }, [tooltip]);
 
-  /* Sesion 61 (v0.28.2): el calendario llena el ancho del modal usando
-     grid 1fr + aspect-ratio: 1. Antes tenia celdas fijas de 36px que
-     dejaban el calendario diminuto dentro del modal de 820px. En movil
-     una media query baja la celda a aspect-ratio limitado (28-32px) via
-     max-width del grid. */
+  /* Sesion 62 (v0.28.3): segundo intento del calendario.
+     S61 paso a `grid 1fr + aspect-ratio:1` -> celdas de ~104px que
+     desbordaban en alto y obligaban a scroll. Vuelve a celdas fijas
+     pero mas grandes que las 36px originales (56px) y se centra el
+     grid en el modal (justify-content:center). Asi:
+       - desktop: 7x56 + 6x6 gap = 428 px, centrado en ~756 utiles
+       - 6 filas x 56 + 5x6 = 366 px de alto -> cabe sin scroll
+       - movil: override a 32px sin gap. */
   return (
     <div>
       <style>{`
-        .pace-heatmap-cell { aspect-ratio:1;border-radius:4px;cursor:default;transition:opacity 120ms;position:relative; }
+        .pace-heatmap-cell { width:48px;height:48px;border-radius:6px;cursor:default;transition:opacity 120ms;position:relative; }
         .pace-heatmap-cell.has-data { cursor:pointer; }
         .pace-heatmap-cell.has-data:hover { opacity:0.85; }
-        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 1fr);gap:6px; }
-        .pace-heatmap-header-day { text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
-        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
+        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 48px);gap:6px;justify-content:center; }
+        .pace-heatmap-header-day { width:48px;text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
+        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
+        .pace-heatmap-empty { width:48px;height:48px; }
         @media (max-width:640px) {
-          .pace-heatmap-grid { grid-template-columns:repeat(7, minmax(0, 32px)) !important;justify-content:center;gap:4px !important; }
-          .pace-heatmap-header-day { font-size:9px !important; }
+          .pace-heatmap-cell { width:32px !important;height:32px !important; }
+          .pace-heatmap-grid { grid-template-columns:repeat(7, 32px) !important;gap:4px !important; }
+          .pace-heatmap-header-day { width:32px !important;font-size:9px !important; }
           .pace-heatmap-day-num { font-size:10px !important; }
+          .pace-heatmap-empty { width:32px !important;height:32px !important; }
           .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
         }
       `}</style>
@@ -291,7 +302,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
 
       <div className="pace-heatmap-grid">
         {cells.map(cell => {
-          if (cell.type === 'empty') return <div key={cell.key} style={{ aspectRatio:1 }} />;
+          if (cell.type === 'empty') return <div key={cell.key} className="pace-heatmap-empty" />;
           const hasData  = !!cell.entry;
           const totalMin = hasData ? (cell.entry.focusMinutes||0)+(cell.entry.breathMinutes||0)+(cell.entry.moveMinutes||0) : 0;
           const opacity  = hasData ? intensityOpacity(totalMin) : 0;
@@ -316,8 +327,8 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
       </div>
 
       <div className="pace-heatmap-totals" style={{
-        display:'flex',gap:16,marginTop:14,flexWrap:'wrap',padding:'10px 14px',
-        background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:12,color:'var(--ink-2)',
+        display:'flex',gap:14,marginTop:10,flexWrap:'wrap',padding:'8px 10px',
+        background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:11,color:'var(--ink-2)',
       }}>
         <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit)}</span>
         <span style={{ color:'var(--ink-3)' }}>·</span>

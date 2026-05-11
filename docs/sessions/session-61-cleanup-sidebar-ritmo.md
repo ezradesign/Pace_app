@@ -102,3 +102,50 @@ Tres limpiezas de UI sin tocar logica de producto:
 - Split Sidebar.jsx: el archivo paso de 630 a 497 lineas tras
   s61, ya por debajo del limite de 500. Sale de la deuda tecnica.
 - Split strings.js (742 ln) sigue como deuda ALTA.
+
+---
+
+## Iteracion 2 — feedback usuario (continuacion tras limite de cuota)
+
+**Fecha:** 2026-05-11 (nueva sesion, misma tanda de trabajo)
+**Build:** PACE_standalone.html v0.28.3 (556 KB)
+**Backup creado:** `backups/PACE_standalone_v0.28.2_20260511.html`
+
+Continuacion de la sesion 61: los cambios de Stats (MonthHeatmap
+revertido a celdas 56px, YearView/PathYearView con 7 etiquetas y
+futuros visibles) ya estaban aplicados en disco. Se completaron los
+ajustes de WeekView y PathStats que habian quedado sin aplicar.
+
+### Auditoria inicial (antes de tocar nada)
+
+- `strings.js`: L M X J V S D en `stats.year.days.label` ✅;
+  "Actividad del ano" → "del año" ✅.
+- `StatsPanel.jsx` MonthHeatmap: celdas fijas 56px + centradas ✅
+  (no el 1fr+aspect-ratio que se habia revertido en iter.1).
+- `YearView.jsx`: 7 day labels + dias futuros visibles ✅.
+- `PathYearView.jsx`: consistente con YearView ✅.
+
+### Cambios por archivo
+
+#### `app/stats/StatsPanel.jsx` (WeekView — segunda pasada)
+
+- `WeekBarRow`: `marginBottom` 10 → 8, chart `height` 44 → 36.
+- Nota inferior: `marginTop` 12 → 8, `padding` 10 → 6,
+  `fontSize` 11 → 10.
+
+#### `PACE.html` (CSS PathStats — segunda pasada)
+
+- `.path-stats`: `gap` 14px → 10px.
+- `.path-stat-card`: `padding` 10px 14px → 8px 12px.
+- `.path-stat-value`: `font-size` 1.4em → 1.3em.
+- `.path-stats-table` th/td: `padding` 5px 12px → 4px 10px.
+
+#### `app/state-core.jsx` + `PACE.html`
+
+- Bump de version v0.28.2 → v0.28.3.
+
+### Build
+
+- Backup: `backups/PACE_standalone_v0.28.2_20260511.html`.
+- Bundle: 554 KB → 556 KB (+2 KB). Parser TS: 40 archivos validados.
+- check-session: 7 archivos modificados, worktree Claude prunable.
