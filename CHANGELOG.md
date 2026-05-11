@@ -15,7 +15,8 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [abajo](#v0275----2026-05-11----refactorstate-split-en-6-modulos) |
+| **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | [abajo](#v0276----2026-05-11----choreworkflow-blindaje-git) |
+| **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [session-57](./docs/sessions/session-57-refactor-state.md) |
 | **v0.27.3** | 2026-05-09 | chore(build): blindaje build con parser sintactico real -- TS parser reemplaza 4 checks heuristicos, aborta con linea/columna exacta | #56 | [abajo](#v0273----2026-05-09----chorebuild-blindaje-build-con-parser-real) |
 | **v0.27.2** | 2026-05-09 | chore(polish): i18n sync ES/EN, a11y overlays (role/Escape/focus), mobile audit, smoke tests documentados | #55 | [abajo](#v0272----2026-05-09----chorpolish-i18n-sync-a11y-overlays-mobile-smoke-tests) |
 | **v0.27.1b** | 2026-05-09 | fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build check-d/e | #54b | (hotfix, sin seccion detalle) |
@@ -80,6 +81,35 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.27.6] -- 2026-05-11 -- chore(workflow): blindaje Git
+
+Sesion de infraestructura pura. Sin cambios de app ni UI.
+
+### Added
+
+- **`docs/WORKFLOW.md`**: protocolo de cierre de sesion Git — como detectar si
+  estas en worktree vs main, comandos de merge y push, checklist de 11 pasos,
+  tabla de senales de alarma y limpieza de worktrees obsoletos.
+- **`scripts/check-session.ps1`**: script PowerShell de solo lectura que detecta
+  worktrees activos, cambios sin commitear, commits sin push, lista worktrees y
+  estado del bundle. Imprime resumen "Todo en GitHub" o lista acciones requeridas.
+
+### Changed
+
+- **`README.md`**: version actualizada de v0.12.9 (dato obsoleto) a v0.27.6 +
+  nueva seccion "Estado actual" con tabla de modulos, Caminos, logros, stats,
+  i18n, state split, build y links a WORKFLOW.md y BUILD.md.
+- **`docs/BUILD.md`**: nueva seccion "Despues del build" con recordatorios de
+  commit/push manual y llamada a `scripts/check-session.ps1`.
+- **`app/state-core.jsx`**: PACE_VERSION bumpeada a `v0.27.6`.
+- **`PACE.html`**: titulo bumpeado a `v0.27.6`.
+
+### Build
+
+- `PACE_standalone.html`: 538 KB, 0 errores, 0 WARN.
+
+---
+
 ## [v0.27.5] -- 2026-05-11 -- refactor(state): split en 6 modulos
 
 Refactor de infraestructura puro. Sin cambios de comportamiento ni UI.
@@ -105,47 +135,6 @@ Refactor de infraestructura puro. Sin cambios de comportamiento ni UI.
 
 - `PACE.html`: titulo bumpeado a v0.27.5.
 - `PACE_standalone.html`: 538 KB (vs 545 KB pre-refactor, -7 KB por menos comentarios duplicados).
-
----
-
-## [v0.27.3] -- 2026-05-09 -- chore(build): blindaje build con parser real
-
-Sesion de infraestructura pura. Sin cambios de app ni UI.
-
-### Changed
-
-- **`build-standalone.js`** reescrito con el TypeScript parser como validador
-  sintactico real. Reemplaza cuatro checks heuristicos acumulados en s52/s54b/s55b:
-  `validateFileEnd`, `validateNoUnclosedStrings`, `new Function()` para .js y
-  `validateInlineScripts` con tokens magicos. Ahora el build parsea todos los
-  archivos y scripts inline con el parser de TS (modo JSX activado) y aborta con
-  archivo, linea:columna y snippet de contexto de 5 lineas.
-- **`build-standalone.js`**: de 297 lineas a 241 lineas (-19%).
-- Nota de implementacion: se uso `typescript` (ya presente en el workspace) en
-  lugar de `@babel/parser` porque npm estaba bloqueado por politica de red del
-  entorno. Documentado en `docs/BUILD.md`.
-
-### Added
-
-- **`package.json`** en la raiz: define `name`, `version`, `scripts.build` y
-  `devDependencies`. No instala nada nuevo (dependencia de TS ya disponible).
-- **`docs/BUILD.md`**: documentacion completa del pipeline de build -- overview,
-  validaciones, ejecucion local, que hacer si aborta, como anadir archivos,
-  limitaciones conocidas.
-
-### Removed
-
-- `validateFileEnd` (heuristico de cierres y comentarios de bloque).
-- `validateNoUnclosedStrings` (heuristico de strings sin cerrar).
-- `new Function()` para parseo de .js.
-- `validateInlineScripts` con tokens esperados (reemplazado por parser real).
-- `WARN_ALLOWLIST` (falsos positivos ya no necesarios con parser real).
-
-### Build
-
-- `PACE_standalone.html`: 545 KB (sin cambios respecto a v0.27.2).
-- Test de regresion: truncamiento deliberado de `app/state.jsx` a 100 lineas
-  aborto correctamente con `app/state.jsx at 101:0 -- '}' expected`.
 
 ---
 

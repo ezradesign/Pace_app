@@ -145,6 +145,23 @@ en la seccion 4 de `main()` siguiendo el patron de `tokens.css`.
 
 ---
 
+## Despues del build
+
+El build genera `PACE_standalone.html` pero **no commitea ni pushea nada automaticamente**.
+Antes de cerrar Claude Code, el usuario debe:
+
+1. Verificar que el bundle tiene el tamano esperado (540-590 KB).
+2. Ejecutar `scripts/check-session.ps1` para detectar commits sin push y worktrees sin mergear.
+3. Mergear el worktree de Claude a `main` si es necesario (ver [`docs/WORKFLOW.md`](./WORKFLOW.md)).
+4. Hacer `git push origin main` manualmente.
+
+```powershell
+# Diagnostico rapido antes de cerrar:
+powershell -File scripts/check-session.ps1
+```
+
+---
+
 ## Limitaciones conocidas
 
 - **Solo sintaxis, no semantica.** El parser no detecta variables no definidas,

@@ -3,10 +3,25 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.12.9 · Pre-lanzamiento · Iteración de diseño
+**Estado:** v0.27.6 · Pre-lanzamiento · Iteración de diseño
 **Build entregado:** `PACE_standalone.html` (standalone autocontenido)
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
+
+---
+
+## Estado actual (v0.27.6)
+
+| Area | Estado |
+|---|---|
+| Modulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
+| Caminos (Paths) | Sistema completo: PathsLibrary, PathRunner, SuggestedPathCard, PathStats, PathYearView |
+| Logros | 100 sellos coleccionables con deteccion automatica |
+| Stats | Semana · Mes · Año (heatmap) · Caminos — con rachas y tabla por camino |
+| i18n | ES/EN completo — 321 claves, 0 diff |
+| Estado (state) | Dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) |
+| Build | Validacion sintactica con TypeScript parser real; bundle ~540 KB |
+| Infraestructura | Protocolo de cierre Git en [`docs/WORKFLOW.md`](./docs/WORKFLOW.md) · Script [`scripts/check-session.ps1`](./scripts/check-session.ps1) |
 
 ---
 

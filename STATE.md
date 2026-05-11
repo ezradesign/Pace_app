@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.27.5
-**Ultima sesion:** #57 -- 2026-05-11 - refactor(state): split state.jsx en 6 modulos (v0.27.5)
-**Ultima actualizacion de este archivo:** 2026-05-11 - sesion 57
-**Build entregado:** `PACE_standalone.html` v0.27.5 (538 KB)
+**Version actual:** v0.27.6
+**Ultima sesion:** #58 -- 2026-05-11 - chore(workflow): blindaje Git (v0.27.6)
+**Ultima actualizacion de este archivo:** 2026-05-11 - sesion 58
+**Build entregado:** `PACE_standalone.html` v0.27.6 (538 KB)
 
 ---
 
@@ -44,7 +44,9 @@
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.27.1** (nuevo s54) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.24.0** |
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.27.1** (tab Caminos s54) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.27.5** (nuevo s57) |
+| `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
+| `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.27.6** (v0.27.5 s57, bump s58) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.27.5** (nuevo s57) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.27.5** (nuevo s57) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.27.5** (nuevo s57) |
@@ -64,7 +66,8 @@
 | `build-standalone.js` | Genera el bundle offline | **v0.26.1** (validateFileEnd + fix WARN s52) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.27.3_20260511.html` <- creado s57
+- `backups/PACE_standalone_v0.27.5_20260511.html` <- creado s58
+- `backups/PACE_standalone_v0.27.3_20260511.html`
 - `backups/PACE_standalone_v0.27.2_20260509.html`
 - `backups/PACE_standalone_v0.27.1b_20260509.html`
 - `backups/PACE_standalone_v0.27.0_20260509.html`
@@ -89,32 +92,31 @@ Backups vigentes (20):
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 57 - v0.27.3 -> v0.27.5 - refactor(state): split state.jsx en 6 modulos**
+**Sesion 58 - v0.27.5 -> v0.27.6 - chore(workflow): blindaje Git**
 
 ### Que se hizo
 
-Refactor de infraestructura puro. Sin cambios de comportamiento ni UI.
+Sesion de infraestructura pura. Sin cambios de app ni UI.
 
-**Objetivo:** dividir state.jsx (1026 lineas, deuda critica) en modulos cohesivos
-para reducir riesgo de truncamiento en ediciones futuras y mejorar legibilidad.
+**Objetivo:** prevenir que el trabajo se quede atrapado en worktrees de Claude Code
+sin llegar a `main` ni a GitHub. Causa raiz documentada: sesiones 46-57 estuvieron
+semanas sin push, recuperadas con esfuerzo.
 
-**Modulos creados:**
-- `state-core.jsx` (356 ln): store, loadState, rollover, history helpers, toast
-- `state-timer.jsx` (49 ln): addFocusMinutes, completePomodoro
-- `state-hydrate.jsx` (52 ln): addWaterGlass
-- `state-achievements.jsx` (251 ln): unlockAchievement, detectores, complete*Session, updateStreak
-- `state-paths.jsx` (166 ln): paths CRUD + stats
-- `state-settings.jsx` (13 ln): setLang
-- `state.jsx` reescrito como indice (58 ln): re-export consolidado
+**Archivos nuevos:**
+- `docs/WORKFLOW.md`: protocolo completo de cierre Git — deteccion worktree vs main,
+  comandos merge/push, checklist 11 pasos, tabla senales de alarma, limpieza worktrees.
+- `scripts/check-session.ps1`: script PowerShell solo lectura — detecta rama actual,
+  cambios sin commitear, commits sin push, worktrees activos, estado del bundle.
+  Imprime resumen "Todo en GitHub" o lista de acciones requeridas.
 
-**PACE.html:** scripts state-*.jsx en orden antes de state.jsx. Titulo v0.27.5.
+**Archivos actualizados:**
+- `README.md`: version v0.12.9 (obsoleta) → v0.27.6 + seccion "Estado actual" con
+  tabla de modulos y links a WORKFLOW.md/BUILD.md.
+- `docs/BUILD.md`: nueva seccion "Despues del build" con recordatorio commit/push manual.
+- `app/state-core.jsx`: PACE_VERSION v0.27.5 → v0.27.6.
+- `PACE.html`: titulo v0.27.5 → v0.27.6.
 
-**Validaciones:** 21/21 trazas comportamentales OK. Build 39 archivos, 0 errores.
-
-**Incidencia:** TypeScript hardcodeado en ruta Linux en build-standalone.js.
-Resuelto anadiendo fallback a node_modules local (npm install typescript --no-save).
-
-**Build:** 538 KB, 0 errores, 0 WARN.
+**Build:** 538 KB, 0 errores, 0 WARN. TypeScript instalado via npm --no-save.
 
 ### Proxima sesion (sugerencias)
 - PathYearView mobile (heatmap en 320px)
