@@ -39,12 +39,15 @@ Object.assign(window, {
   onToast,
   setLang,
   PACE_VERSION,
-  // sesion 43 -- history helpers
+  // sesion 43 -- history helpers (refactor sesion 69)
   zeroEntry,
   toISODate,
   archiveDayToHistory,
-  updateMonthAggregate,
-  updateYearAggregate,
+  recomputeMonthFromDays,
+  recomputeYearFromDays,
+  recomputeAllHistoryAggregates,
+  getDayIndexMondayFirst,
+  getMondayOf,
   // sesion 49 -- Caminos
   startPath,
   advancePathStep,

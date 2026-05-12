@@ -92,9 +92,10 @@ function WeekView({ state }) {
 function WeekBarRow({ label, data, color, unit }) {
   const { t } = useT();
   const days = t('stats.days').split(',');
+  /* Sesion 69 (v0.28.8): weeklyStats ahora indexa lunes-primero (data[0]=lunes).
+     Eliminado el reordering [data[1],...,data[0]] que rotaba desde getDay(). */
   const today = (new Date().getDay() + 6) % 7;
   const max = Math.max(1, ...data);
-  const reordered = [data[1], data[2], data[3], data[4], data[5], data[6], data[0]];
 
   return (
     <div data-pace-week-bar-row style={{ marginBottom: 8 }}>
@@ -103,7 +104,7 @@ function WeekBarRow({ label, data, color, unit }) {
         <Meta>{unit}</Meta>
       </div>
       <div data-pace-bar-chart style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 36 }}>
-        {reordered.map((v, i) => {
+        {data.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
           return (

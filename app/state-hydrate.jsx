@@ -24,7 +24,7 @@ function addWaterGlass(delta) {
   if (delta === undefined) delta = 1;
   ensureDayFresh();
   const s = getState();
-  const day = new Date().getDay();
+  const day = getDayIndexMondayFirst(new Date());
   const week = [...s.weeklyStats.waterGlasses];
   week[day] = Math.max(0, (week[day] || 0) + delta);
   const next = Math.max(0, s.water.today + delta);

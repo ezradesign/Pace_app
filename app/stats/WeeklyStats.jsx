@@ -64,8 +64,7 @@ function WeekBarRow({ label, data, color, unit }) {
   const days = t('stats.days').split(',');
   const today = (new Date().getDay() + 6) % 7;
   const max = Math.max(1, ...data);
-  // Reordenar: en España empezamos en lunes. data está indexado 0=Dom (getDay)
-  const reordered = [data[1], data[2], data[3], data[4], data[5], data[6], data[0]];
+  /* Sesion 69 (v0.28.8): weeklyStats ahora es lunes-primero. Sin reorder. */
 
   return (
     <div style={{ marginBottom: 18 }}>
@@ -74,7 +73,7 @@ function WeekBarRow({ label, data, color, unit }) {
         <Meta>{unit}</Meta>
       </div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
-        {reordered.map((v, i) => {
+        {data.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
           return (

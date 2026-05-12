@@ -102,7 +102,7 @@ function checkStatsAchievements() {
 /* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
 function checkRetreatAchievement() {
   const s = getState();
-  const day = new Date().getDay();
+  const day = getDayIndexMondayFirst(new Date());
   const todayBreath = (s.weeklyStats.breathMinutes || [])[day] || 0;
   const todayMove   = (s.weeklyStats.moveMinutes   || [])[day] || 0;
   if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
@@ -147,7 +147,7 @@ function updateStreak() {
 function completeBreathSession(routineId, durationMin) {
   ensureDayFresh();
   const s = getState();
-  const day = new Date().getDay();
+  const day = getDayIndexMondayFirst(new Date());
   const week = [...s.weeklyStats.breathMinutes];
   week[day] += durationMin;
   setState({
@@ -189,7 +189,7 @@ function completeBreathSession(routineId, durationMin) {
 function completeMoveSession(routineId, durationMin) {
   ensureDayFresh();
   const s = getState();
-  const day = new Date().getDay();
+  const day = getDayIndexMondayFirst(new Date());
   const week = [...s.weeklyStats.moveMinutes];
   week[day] += durationMin;
   setState({
@@ -210,7 +210,7 @@ function completeExtraSession(routineId, durationMin) {
   if (durationMin === undefined) durationMin = 0;
   ensureDayFresh();
   const s = getState();
-  const day = new Date().getDay();
+  const day = getDayIndexMondayFirst(new Date());
   const week = [...s.weeklyStats.moveMinutes];
   if (durationMin > 0) week[day] += durationMin;
   setState({

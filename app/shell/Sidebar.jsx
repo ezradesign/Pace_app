@@ -232,7 +232,8 @@ function SenderoDelDia({ state, compact }) {
       out.push({ t, kind: 'focus' });
     }
     // Actividades del plan también cuentan como hitos hoy
-    const day = new Date().getDay();
+    /* Sesion 69 (v0.28.8): weeklyStats indexa lunes-primero. */
+    const day = getDayIndexMondayFirst(new Date());
     const ws = state.weeklyStats || {};
     if ((ws.breathMinutes?.[day] || 0) > 0) out.push({ t: hNow - 0.3, kind: 'breathe' });
     if ((ws.moveMinutes?.[day] || 0) > 0) out.push({ t: hNow - 0.55, kind: 'move' });
@@ -333,10 +334,12 @@ function WeekDots({ weeklyStats, compact }) {
   const days = t('sidebar.days').split(',');
   const today = (new Date().getDay() + 6) % 7; // L=0
   const dotSize = compact ? 5 : 6;
+  /* Sesion 69 (v0.28.8): weeklyStats ahora es lunes-primero (i=0 -> lunes).
+     Eliminado el shift (i+1)%7 que rotaba desde getDay(). */
   return (
     <div style={{ display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 }}>
       {days.map((d, i) => {
-        const active = (weeklyStats.focusMinutes[(i+1)%7] || 0) > 0;
+        const active = (weeklyStats.focusMinutes[i] || 0) > 0;
         const isToday = i === today;
         return (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 }}>

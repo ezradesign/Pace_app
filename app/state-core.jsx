@@ -10,7 +10,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.7';
+const PACE_VERSION = 'v0.28.8';
 
 const defaultState = {
   // Settings / Tweaks
@@ -40,7 +40,8 @@ const defaultState = {
   // Logros
   achievements: {},
 
-  // Stats semanales
+  // Stats semanales — INDICE LUNES-PRIMERO (sesion 69 / v0.28.8).
+  // [0]=lunes ... [6]=domingo. Antes de v0.28.8 era getDay()-style (0=dom).
   weeklyStats: {
     focusMinutes:  [0,0,0,0,0,0,0],
     breathMinutes: [0,0,0,0,0,0,0],
@@ -86,8 +87,10 @@ const defaultState = {
     history: [],
   },
 
-  // Migration guard (sesion 43).
-  _historyMigrated: false,
+  // Migration guards.
+  _historyMigrated: false,                  // sesion 43 — weeklyStats -> history.days
+  _weeklyStatsReindexed_v0_28_8: false,     // sesion 69 — getDay() -> lunes-primero
+  _historyRecalculated_v0_28_8: false,      // sesion 69 — months/years desde days
 
   // Rollover: dia del ultimo uso (toDateString()).
   lastActiveDay: null,
@@ -118,60 +121,96 @@ function zeroEntry() {
   return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
 }
 
+/* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
+function getDayIndexMondayFirst(date) {
+  const d = new Date(date).getDay(); // 0=domingo .. 6=sabado
+  return d === 0 ? 6 : d - 1;
+}
+
+/* Lunes 00:00 local de la semana que contiene `date`. */
+function getMondayOf(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 /* ============================
-   HISTORICO DE ACTIVIDAD (sesion 43)
+   HISTORICO DE ACTIVIDAD (sesion 43, refactor sesion 69)
    ============================ */
 
-function updateMonthAggregate(history, dateStr, delta) {
-  const key = dateStr.slice(0, 7);
-  const prev = history.months[key] || zeroEntry();
-  return {
-    ...history,
-    months: {
-      ...history.months,
-      [key]: {
-        focusMinutes:  prev.focusMinutes  + delta.focusMinutes,
-        breathMinutes: prev.breathMinutes + delta.breathMinutes,
-        moveMinutes:   prev.moveMinutes   + delta.moveMinutes,
-        waterGlasses:  prev.waterGlasses  + delta.waterGlasses,
-      },
-    },
-  };
+/* Suma idempotente de un mes desde history.days. monthKey = "YYYY-MM". */
+function recomputeMonthFromDays(days, monthKey) {
+  const acc = zeroEntry();
+  for (const isoDate in days) {
+    if (isoDate.indexOf(monthKey) === 0) {
+      const d = days[isoDate];
+      acc.focusMinutes  += d.focusMinutes  || 0;
+      acc.breathMinutes += d.breathMinutes || 0;
+      acc.moveMinutes   += d.moveMinutes   || 0;
+      acc.waterGlasses  += d.waterGlasses  || 0;
+    }
+  }
+  return acc;
 }
 
-function updateYearAggregate(history, dateStr, delta) {
-  const key = dateStr.slice(0, 4);
-  const prev = history.years[key] || zeroEntry();
-  return {
-    ...history,
-    years: {
-      ...history.years,
-      [key]: {
-        focusMinutes:  prev.focusMinutes  + delta.focusMinutes,
-        breathMinutes: prev.breathMinutes + delta.breathMinutes,
-        moveMinutes:   prev.moveMinutes   + delta.moveMinutes,
-        waterGlasses:  prev.waterGlasses  + delta.waterGlasses,
-      },
-    },
-  };
+/* Suma idempotente de un año desde history.days. yearKey = "YYYY". */
+function recomputeYearFromDays(days, yearKey) {
+  const acc = zeroEntry();
+  for (const isoDate in days) {
+    if (isoDate.indexOf(yearKey) === 0) {
+      const d = days[isoDate];
+      acc.focusMinutes  += d.focusMinutes  || 0;
+      acc.breathMinutes += d.breathMinutes || 0;
+      acc.moveMinutes   += d.moveMinutes   || 0;
+      acc.waterGlasses  += d.waterGlasses  || 0;
+    }
+  }
+  return acc;
 }
 
+/* Recalcula TODOS los agregados desde history.days. Operacion idempotente
+   y segura: si days es integro, months/years quedan correctos sin importar
+   cuantas veces se haya inflado antes. Sesion 69. */
+function recomputeAllHistoryAggregates(history) {
+  const days = history.days || {};
+  const months = {};
+  const years = {};
+  for (const isoDate in days) {
+    const monthKey = isoDate.slice(0, 7);
+    const yearKey  = isoDate.slice(0, 4);
+    if (!months[monthKey]) months[monthKey] = recomputeMonthFromDays(days, monthKey);
+    if (!years[yearKey])   years[yearKey]   = recomputeYearFromDays(days, yearKey);
+  }
+  return { days, months, years };
+}
+
+/* Sesion 69: archiveDayToHistory ahora es 100% idempotente.
+   days[iso] siempre se sobrescribe (overwrite, no acumulativo).
+   months/years se recalculan desde days (no acumulativo).
+   Llamar dos veces para la misma fecha produce el mismo resultado. */
 function archiveDayToHistory(history, dateStr, weeklyStats) {
-  const dow = new Date(dateStr).getDay();
+  const idx = getDayIndexMondayFirst(dateStr);
   const delta = {
-    focusMinutes:  (weeklyStats.focusMinutes  || [])[dow] || 0,
-    breathMinutes: (weeklyStats.breathMinutes || [])[dow] || 0,
-    moveMinutes:   (weeklyStats.moveMinutes   || [])[dow] || 0,
-    waterGlasses:  (weeklyStats.waterGlasses  || [])[dow] || 0,
+    focusMinutes:  (weeklyStats.focusMinutes  || [])[idx] || 0,
+    breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
+    moveMinutes:   (weeklyStats.moveMinutes   || [])[idx] || 0,
+    waterGlasses:  (weeklyStats.waterGlasses  || [])[idx] || 0,
   };
   const hasData = Object.values(delta).some(v => v > 0);
   if (!hasData) return history;
 
   const isoDate = toISODate(dateStr);
-  let h = { ...history, days: { ...history.days, [isoDate]: delta } };
-  h = updateMonthAggregate(h, isoDate, delta);
-  h = updateYearAggregate(h, isoDate, delta);
-  return h;
+  const days = { ...(history.days || {}), [isoDate]: delta };
+  const monthKey = isoDate.slice(0, 7);
+  const yearKey  = isoDate.slice(0, 4);
+  return {
+    days,
+    months: { ...(history.months || {}), [monthKey]: recomputeMonthFromDays(days, monthKey) },
+    years:  { ...(history.years  || {}), [yearKey]:  recomputeYearFromDays(days, yearKey)  },
+  };
 }
 
 /* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
@@ -188,23 +227,72 @@ function migrateWeeklyStatsToHistory(state) {
   return { ...state, history: h, _historyMigrated: true };
 }
 
+/* Sesion 69 / v0.28.8: re-indexa weeklyStats de la convencion vieja
+   (0=domingo, 1=lunes ... 6=sabado, indexado por getDay()) a la nueva
+   (0=lunes, 1=martes ... 6=domingo). Mapping: nuevo[i] = viejo[(i+1)%7]. */
+function reindexWeeklyStatsMondayFirst(ws) {
+  const rot = (arr) => Array.isArray(arr) && arr.length === 7
+    ? [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]]
+    : [0,0,0,0,0,0,0];
+  return {
+    focusMinutes:  rot(ws && ws.focusMinutes),
+    breathMinutes: rot(ws && ws.breathMinutes),
+    moveMinutes:   rot(ws && ws.moveMinutes),
+    waterGlasses:  rot(ws && ws.waterGlasses),
+  };
+}
+
 /* ============================
    ROLLOVER
    ============================ */
 
 function rolloverIfNeeded(state) {
-  const today = new Date().toDateString();
-  if (state.lastActiveDay === today) return state;
+  const today = new Date();
+  const todayStr = today.toDateString();
+  if (state.lastActiveDay === todayStr) return state;
 
+  /* Detectar si la migracion s43 esta por ejecutarse en esta llamada.
+     Si _historyMigrated era false al entrar, migrateWeeklyStatsToHistory
+     ya archivara lastActiveDay y NO debemos volver a archivarlo aqui (C2). */
+  const wasAlreadyMigrated = !!state._historyMigrated;
   let migratedState = migrateWeeklyStatsToHistory(state);
-
   let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
-  if (migratedState.lastActiveDay) {
+
+  /* Archivar el dia previo solo si NO acaba de migrar (la migracion ya lo cubrio). */
+  if (migratedState.lastActiveDay && wasAlreadyMigrated) {
     nextHistory = archiveDayToHistory(
-      nextHistory,
-      migratedState.lastActiveDay,
-      migratedState.weeklyStats
+      nextHistory, migratedState.lastActiveDay, migratedState.weeklyStats
     );
+  }
+
+  /* FIX C1 (sesion 69): si entramos en una nueva semana lunes-domingo,
+     resetear weeklyStats por completo. */
+  let nextWeekly = migratedState.weeklyStats;
+  if (migratedState.lastActiveDay) {
+    const prevMonday  = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
+    const todayMonday = getMondayOf(today).getTime();
+    if (todayMonday !== prevMonday) {
+      nextWeekly = {
+        focusMinutes:  [0,0,0,0,0,0,0],
+        breathMinutes: [0,0,0,0,0,0,0],
+        moveMinutes:   [0,0,0,0,0,0,0],
+        waterGlasses:  [0,0,0,0,0,0,0],
+      };
+    }
+  }
+
+  /* FIX A2 (sesion 69): rotura proactiva del streak. Si la ultima sesion
+     fue antes de ayer, current=0 inmediatamente (sin esperar a la siguiente). */
+  let nextStreak = migratedState.streak;
+  if (nextStreak && nextStreak.lastActiveDate) {
+    const lastActive = new Date(nextStreak.lastActiveDate);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    lastActive.setHours(0, 0, 0, 0);
+    if (lastActive.getTime() < yesterday.getTime()) {
+      nextStreak = { ...nextStreak, current: 0 };
+    }
   }
 
   /* Trigger first.return — abrir la app un dia distinto al ultimo.
@@ -218,10 +306,12 @@ function rolloverIfNeeded(state) {
   return {
     ...migratedState,
     history: nextHistory,
+    weeklyStats: nextWeekly,
+    streak: nextStreak,
     cycle: 0,
     plan: { muevete: false, respira: false, extra: false, hidratate: false },
-    water: { ...migratedState.water, today: 0, lastReset: today },
-    lastActiveDay: today,
+    water: { ...migratedState.water, today: 0, lastReset: todayStr },
+    lastActiveDay: todayStr,
   };
 }
 
@@ -238,6 +328,8 @@ function loadState() {
         ...defaultState,
         lang: _detectLang(),
         lastActiveDay: new Date().toDateString(),
+        _weeklyStatsReindexed_v0_28_8: true,
+        _historyRecalculated_v0_28_8: true,
         ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
       };
     }
@@ -256,6 +348,24 @@ function loadState() {
       }
       parsed.paths.history = hist;
     }
+
+    /* Sesion 69 / v0.28.8: re-indexar weeklyStats de getDay() a lunes-primero.
+       Idempotente via guard. Debe ocurrir ANTES de cualquier escritura/lectura
+       que asuma la nueva convencion (incluyendo el rollover). */
+    if (!parsed._weeklyStatsReindexed_v0_28_8 && parsed.weeklyStats) {
+      parsed.weeklyStats = reindexWeeklyStatsMondayFirst(parsed.weeklyStats);
+      parsed._weeklyStatsReindexed_v0_28_8 = true;
+    }
+
+    /* Sesion 69 / v0.28.8: migracion compensatoria de history.months/years.
+       Como history.days es integro (overwrite idempotente desde s43),
+       recalcular months/years desde days es 100% seguro y arregla cualquier
+       inflacion previa de C2/C3. Idempotente via guard. */
+    if (!parsed._historyRecalculated_v0_28_8 && parsed.history && parsed.history.days) {
+      parsed.history = recomputeAllHistoryAggregates(parsed.history);
+      parsed._historyRecalculated_v0_28_8 = true;
+    }
+
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
     if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
       return { ...merged, sidebarCollapsed: true };
@@ -266,6 +376,8 @@ function loadState() {
       ...defaultState,
       lang: _detectLang(),
       lastActiveDay: new Date().toDateString(),
+      _weeklyStatsReindexed_v0_28_8: true,
+      _historyRecalculated_v0_28_8: true,
       ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
     };
   }
@@ -352,5 +464,7 @@ Object.assign(window, {
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast,
   zeroEntry, toISODate, todayISO,
-  archiveDayToHistory, updateMonthAggregate, updateYearAggregate,
+  getDayIndexMondayFirst, getMondayOf,
+  archiveDayToHistory,
+  recomputeMonthFromDays, recomputeYearFromDays, recomputeAllHistoryAggregates,
 });

@@ -60,13 +60,26 @@ function getYearData(history, year, firstSeenTimestamp) {
   return result;
 }
 
+/* Definicion de "dia activo" para streaks (sesion 69): focus|breath|move > 0.
+   Agua sola NO cuenta, alineado con updateStreak() en state-achievements.jsx.
+   El "score" puede incluir agua para el color, pero la racha SOLO mira sesiones. */
+function isActiveDay(entry) {
+  if (!entry) return false;
+  return (entry.focusMinutes  || 0) > 0
+      || (entry.breathMinutes || 0) > 0
+      || (entry.moveMinutes   || 0) > 0;
+}
+
 /* Totales del año iterando yearData una sola vez. */
 function computeYearStats(yearData) {
   let totalActions=0, activeDays=0, maxStreak=0, curStreak=0;
   for (const cell of yearData) {
     if (cell.isFuture) break;
+    const active = isActiveDay(cell.entry);
     if (cell.score > 0) {
       totalActions += Math.round(cell.score);
+    }
+    if (active) {
       activeDays++;
       curStreak++;
       if (curStreak > maxStreak) maxStreak = curStreak;

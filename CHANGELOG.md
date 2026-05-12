@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.28.8** | 2026-05-12 | fix(tracking): C1+C2+C3+A1+A2 weeklyStats reset semanal + history idempotente + streak proactivo + dia activo unificado | #69 | [abajo](#v0288----2026-05-12----fixtracking-weeklystats-reset-history-idempotente-streak-proactivo) |
 | **v0.28.7** | 2026-05-11 | fix(breathe): inhalacion suena en arranque y reinicio de ciclo | #67 | [abajo](#v0287----2026-05-11----fixbreathe-inhalacion-arranque-ciclo) |
-| **v0.28.6** | 2026-05-12 | fix(ui): logo completo + tagline sidebar movil + cache-bust iconos maskable safe zone | #66 | [abajo](#v0286----2026-05-12----fixui-logo-tagline-sidebar-movil) |
+| **v0.28.6** | 2026-05-12 | fix(ui): logo completo + tagline sidebar movil + cache-bust iconos maskable safe zone | #66 | [session-66](./docs/sessions/session-66-fix-logo-tagline-movil.md) |
 | **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [session-65](./docs/sessions/session-65-fix-cloudflare-pwa.md) |
 | **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [session-64](./docs/sessions/session-64-fixes-ui-menores.md) |
 | **v0.28.4** | 2026-05-12 | feat(ui): scroll residual Stats desktop eliminado (WeekView sin nota, Mes 56->48px, Año futuros solo borde, Caminos margenes) + sidebar movil compacta (logo 48px, dividers, streak 44->32) + Stats movil Semana 2x2/Caminos 3col | #63 | [session-63](./docs/sessions/session-63-fix-desktop-movil.md) |
@@ -90,6 +91,86 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.28.8] -- 2026-05-12 -- fix(tracking): weeklyStats reset, history idempotente, streak proactivo
+
+Sesion 69. Aplica los 5 fixes criticos/altos identificados en la auditoria de tracking
+(s68 — `docs/audits/audit-tracking-v0.28.7.md`) antes del lanzamiento publico. Tres
+decisiones de diseno del autor: (B) semana fija lunes-domingo con reset completo cada
+nuevo lunes; (X) deteccion proactiva de rotura de streak; (P) migracion compensatoria
+que recalcula `history.months/years` desde `history.days` (integro por overwrite
+idempotente).
+
+### Fixed
+
+- **C1 — reset semanal de `weeklyStats`**: en `rolloverIfNeeded` se compara el "lunes"
+  de `lastActiveDay` con el "lunes" de hoy via `getMondayOf()`. Si difieren, los 4
+  vectores se ponen a `[0,0,0,0,0,0,0]`. Resuelve doble conteo lunes-a-lunes y dias
+  fantasma. (`app/state-core.jsx`)
+- **C2 — doble archivado en migracion s43**: `rolloverIfNeeded` ya no vuelve a
+  archivar `lastActiveDay` cuando `migrateWeeklyStatsToHistory` acaba de cubrirlo
+  (guard `wasAlreadyMigrated`). (`app/state-core.jsx`)
+- **C3 — `archiveDayToHistory` idempotente**: `history.days[iso]` sigue siendo
+  overwrite, pero `months/years` ahora se RECALCULAN desde `days` para esa
+  clave (`recomputeMonthFromDays` + `recomputeYearFromDays`). Archivar el mismo
+  dia N veces produce el mismo resultado. Funciones antiguas `updateMonthAggregate`
+  y `updateYearAggregate` eliminadas. (`app/state-core.jsx`)
+- **A1 — definicion unificada de "dia activo"**: `computeYearStats` en YearView
+  ahora cuenta como activo unicamente los dias con `focusMinutes>0 OR breathMinutes>0
+  OR moveMinutes>0`. Agua sola NO cuenta para la racha del ano, alineado con
+  `updateStreak()`. Helper `isActiveDay(entry)` documentado. (`app/stats/YearView.jsx`)
+- **A2 — rotura proactiva del streak**: `rolloverIfNeeded` evalua si
+  `streak.lastActiveDate < ayer 00:00`; en ese caso `streak.current = 0`
+  inmediatamente, sin esperar a la siguiente sesion. `streak.longest` y
+  `streak.lastActiveDate` preservados. (`app/state-core.jsx`)
+- **Convencion `weeklyStats` lunes-primero**: el array de 7 slots pasa de
+  `getDay()`-indexed (0=domingo) a `lunes=0..domingo=6`. Helper
+  `getDayIndexMondayFirst(date)` introducido. Todas las escrituras actualizadas
+  en `state-timer.jsx`, `state-hydrate.jsx`, `state-achievements.jsx` (4 puntos),
+  `state-core.jsx`. Lectores `StatsPanel.WeekBarRow`, `WeeklyStats.WeekBarRow`,
+  `Sidebar.WeekDots` y `Sidebar.hitos` ya no rotan el array (eliminado el
+  reorder `[data[1]..data[0]]`).
+
+### Added (migracion compensatoria)
+
+- **`recomputeAllHistoryAggregates(history)`** en `loadState` (guard
+  `_historyRecalculated_v0_28_8`): recalcula `months` y `years` desde `days`
+  una vez por instalacion. Datos previamente inflados por C2/C3 quedan
+  corregidos sin intervencion del usuario.
+- **`reindexWeeklyStatsMondayFirst(ws)`** en `loadState` (guard
+  `_weeklyStatsReindexed_v0_28_8`): re-indexa los 7 slots de domingo-primero
+  a lunes-primero con `nuevo[i] = viejo[(i+1)%7]`. Una vez por instalacion.
+
+### Changed
+
+- **`app/state-core.jsx`**: PACE_VERSION → `v0.28.8`. Default state anade
+  `_weeklyStatsReindexed_v0_28_8: false` y `_historyRecalculated_v0_28_8: false`.
+  Helpers nuevos exportados a window: `getDayIndexMondayFirst`, `getMondayOf`,
+  `recomputeMonthFromDays`, `recomputeYearFromDays`, `recomputeAllHistoryAggregates`.
+  Eliminados de exports: `updateMonthAggregate`, `updateYearAggregate`.
+- **`PACE.html`**: titulo `v0.28.8`.
+- **`sw.js`**: `CACHE_NAME` -> `pace-v0.28.8`.
+
+### Not changed (deliberadamente fuera de scope)
+
+- **A3** (DST en `checkHydrateWeekPerfect`): post-lanzamiento — solo afecta 2 dias/ano.
+- **A4** (`checkStatsAchievements` con retraso de 1 dia desde `loadState`): post-lanzamiento.
+- **M1** (`WeeklyStats.jsx` codigo muerto): solo arreglada la indexacion interna por
+  consistencia. La eliminacion del archivo se aplaza.
+- **M2..M6, B1..B5**: documentados en el informe, aplazados.
+
+### Build
+
+- `PACE_standalone.html`: 566 KB (+6 KB vs v0.28.7).
+- `index.html` generado como copia exacta (SHA256: `C1290554...0D40FB`).
+- Backup: `backups/PACE_standalone_v0.28.7_20260512.html` (rotado el mas antiguo v0.25.2 / 20260507).
+
+### Verificacion
+
+Tests de regresion en `docs/audits/regression-tests-v0.28.8.md` (5 scripts DevTools).
+Antes del commit el usuario debe ejecutarlos en ventana incognita y confirmar PASS.
+
+---
+
 ## [v0.28.7] -- 2026-05-11 -- fix(breathe): inhalacion arranque ciclo
 
 Sesion 67. La inhalacion en el modulo Respira era siempre muda: el sonido solo
@@ -129,43 +210,7 @@ se disparaba en transiciones de fase dentro del ticker, dejando la fase 0
 
 ---
 
-## [v0.28.6] -- 2026-05-12 -- fix(ui): logo completo + tagline sidebar movil
-
-Sesion 66. Fix del logo recortado en sidebar movil: eliminado `max-height: 48px +
-overflow:hidden` que clippeaba el PNG del logo (con el tagline embebido en la parte
-inferior). Logo ahora limitado a `max-width: 200px` con margen automatico centrado.
-Cache-bust del Service Worker para forzar descarga de iconos maskable regenerados
-con safe zone correcta (vaca ~70-75% del lienzo).
-
-### Fixed
-
-- **`app/shell/Sidebar.jsx`** (`@media max-width:640px`): eliminados `min-height:48px`,
-  `max-height:48px` y `overflow:hidden` del contenedor `[data-pace-sidebar-logobar]`
-  que recortaban el PNG del logo (incluyendo la vaca completa + tagline "TOUCH GRASS,
-  EVEN FROM YOUR DESK" embebido). Sustituidos por `overflow:visible` y `padding:6px 4px`.
-  Nueva regla `[data-pace-sidebar-logo]` con `max-width:200px; width:100%; margin:0 auto`
-  para mantener el logo a escala proporcional en movil sin desbordarse.
-  Añadido `data-pace-sidebar-logo` al div contenedor del logo en el JSX.
-- **`sw.js`**: `CACHE_NAME` bumpeado de `pace-v0.28.5` a `pace-v0.28.6`. Fuerza a
-  los navegadores con PWA instalada a invalidar el cache viejo y descargar los
-  iconos maskable nuevos (192px 10.1 KB, 512px 41.4 KB — safe zone corregida).
-- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.5 → v0.28.6.
-
-### Not changed
-
-- Contadores (00/00/00) siguen ocultos en movil — no restaurados.
-- Desktop intacto: logo grande, tagline visible, contadores visibles.
-- Resto del sidebar movil (Ritmo, Sendero, Logros, EN CAMINO, footer) sin cambios.
-
-### Build
-
-- `PACE_standalone.html`: 559 KB (sin cambio de tamano). 40 archivos validados.
-- `index.html` generado como copia exacta (SHA256: `C0AEBFAC...B2F26A`).
-- Backup: `backups/PACE_standalone_v0.28.5_20260512.html` (rotado el mas antiguo v0.25.1).
-
----
-
-<!-- v0.28.5 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- v0.28.6 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.27.6] -- 2026-05-11 -- chore(workflow): blindaje Git
 

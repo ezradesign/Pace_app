@@ -8,7 +8,7 @@
 
 function checkFocusDayAchievement() {
   const s = getState();
-  const day = new Date().getDay();
+  const day = getDayIndexMondayFirst(new Date());
   const todayMin = (s.weeklyStats.focusMinutes || [])[day] || 0;
   if (todayMin >= 240) unlockAchievement('master.focus.day');
 }
@@ -16,7 +16,7 @@ function checkFocusDayAchievement() {
 function addFocusMinutes(mins) {
   ensureDayFresh();
   setState(prev => {
-    const day = new Date().getDay();
+    const day = getDayIndexMondayFirst(new Date());
     const week = [...prev.weeklyStats.focusMinutes];
     week[day] += mins;
     return {
