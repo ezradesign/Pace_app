@@ -10,7 +10,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.8';
+const PACE_VERSION = 'v0.28.12';
 
 const defaultState = {
   // Settings / Tweaks
@@ -364,6 +364,11 @@ function loadState() {
     if (!parsed._historyRecalculated_v0_28_8 && parsed.history && parsed.history.days) {
       parsed.history = recomputeAllHistoryAggregates(parsed.history);
       parsed._historyRecalculated_v0_28_8 = true;
+    }
+
+    /* Sesion 71 / v0.28.9: paleta 'envejecido' retirada; migrar a 'crema'. */
+    if (parsed.palette === 'envejecido') {
+      parsed.palette = 'crema';
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });

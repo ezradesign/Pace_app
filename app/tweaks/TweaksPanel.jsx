@@ -62,15 +62,12 @@ function TweaksPanel({ open, onClose }) {
   /* Ejes de personalización.
      Sesión 37: circle/numero retirados de timer, editorial retirado
      de layout, audio promovido al primer eje como pills separadas. */
+  /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
+     'envejecido' retirado en s71 / v0.28.9. */
   const ejes = [
     { key: 'palette', label: t('tweaks.eje.palette'), options: [
       { v: 'crema', name: t('tweaks.palette.crema') },
       { v: 'oscuro', name: t('tweaks.palette.oscuro') },
-      { v: 'envejecido', name: t('tweaks.palette.envejecido') },
-    ]},
-    { key: 'layout', label: t('tweaks.eje.layout'), options: [
-      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
-      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
     { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
       { v: 'aro', name: t('tweaks.timer.aro') },
@@ -83,6 +80,10 @@ function TweaksPanel({ open, onClose }) {
       { v: 'petalo', name: t('tweaks.breath.petalo') },
       { v: 'ondas', name: t('tweaks.breath.ondas') },
       { v: 'organico', name: t('tweaks.breath.organico') },
+    ]},
+    { key: 'layout', label: t('tweaks.eje.layout'), options: [
+      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
+      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
        (sesión post-v0.12.1). Los campos del state se conservan por
@@ -195,7 +196,36 @@ function TweaksPanel({ open, onClose }) {
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
 
-      {/* Audio — primer eje (sesión 37: reubicado desde sección "Sound" inferior) */}
+      {/* Idioma — primer eje (s71: movido al top por frecuencia de uso) */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'es', name: t('tweaks.lang.es') },
+            { v: 'en', name: t('tweaks.lang.en') },
+          ].map(opt => {
+            const active = state.lang === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* Audio */}
       <div style={{ marginBottom: 16 }}>
         <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
         <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
@@ -222,7 +252,7 @@ function TweaksPanel({ open, onClose }) {
           })}
         </div>
         {state.soundOn && (
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ marginTop: 8, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <button
               onClick={() => {
                 const next = !state.ambientOn;
@@ -284,35 +314,6 @@ function TweaksPanel({ open, onClose }) {
           </div>
         </div>
       ))}
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Idioma */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: 'es', name: t('tweaks.lang.es') },
-            { v: 'en', name: t('tweaks.lang.en') },
-          ].map(opt => {
-            const active = state.lang === opt.v;
-            return (
-              <button key={opt.v} onClick={() => set({ lang: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
 
       <Divider style={{ margin: '14px 0' }} />
 

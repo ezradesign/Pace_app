@@ -349,7 +349,29 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerAro mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+}
+
+/* interpolateRingColor — gradiente terracota→ocre→oliva en modo foco.
+   Estable en pausas (breathe) y larga (focus). Sesión 71 / v0.28.9. */
+function interpolateRingColor(progress, mode) {
+  if (mode === 'pausa') return 'var(--breathe)';
+  if (mode === 'larga') return 'var(--focus)';
+  const styles = getComputedStyle(document.documentElement);
+  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
+  const c1 = read('--breathe', '#C97A5D');
+  const c2 = read('--move',    '#9A7B4F');
+  const c3 = read('--focus',   '#6e7a4e');
+  const hexToRgb = (h) => {
+    const m = h.replace('#', '');
+    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
+  };
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
+  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
+  const t = Math.max(0, Math.min(1, progress));
+  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 /* Timer "Aro" (default · ref. usuario).
@@ -358,7 +380,7 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
    botón de comenzar + reset (inyectados via `inner`). El layout coincide
    con la composición de referencia (2026-04-22).
    Responsive: ocupa el mínimo entre ancho y alto del contenedor. */
-function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
+function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner, mode }) {
   const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
 
@@ -368,12 +390,13 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
         {/* Aro base — trazo fino cálido */}
         <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        {/* Arco de progreso (sutil, mismo trazo pero ligeramente más intenso) */}
+        {/* Arco de progreso — gradiente terracota→ocre→oliva en foco; estable en pausa/larga */}
         <circle cx="50" cy="50" r={R} fill="none"
-          stroke="var(--line-2)" strokeWidth="0.5"
+          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
+          strokeOpacity="0.7"
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear' }} />
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
       </svg>
 
       {/* Contenido centrado */}

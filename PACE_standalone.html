@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.28.8</title>
+  <title>PACE · Foco · Cuerpo — v0.28.12</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -103,33 +103,20 @@
 
 /* PALETA · Oscuro noche */
 [data-palette="oscuro"] {
-  --paper: #1A1814;
-  --paper-2: #252119;
-  --paper-3: #302B21;
+  --paper: #15130f;
+  --paper-2: #1d1a15;
+  --paper-3: #252119;
   --ink: #EDE5D3;
-  --ink-2: #B8AF9A;
+  --ink-2: #c0b49e;
   --ink-3: #756D5D;
-  --line: #3C3628;
-  --line-2: #4E4735;
+  --line: #332d24;
+  --line-2: #403930;
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
-}
-
-/* PALETA · Papel envejecido */
-[data-palette="envejecido"] {
-  --paper: #EDE2C8;
-  --paper-2: #E3D6B6;
-  --paper-3: #D6C8A3;
-  --ink: #2B241A;
-  --ink-2: #5A4F3C;
-  --ink-3: #8F826A;
-  --line: #BEAF8C;
-  --focus: #56663E;
-  --breathe: #B86A4D;
 }
 
 /* TIPOGRAFÍAS ALT */
@@ -430,7 +417,6 @@ window.PACE_STRINGS = {
     'tweaks.eje.lang':               'Idioma',
     'tweaks.palette.crema':          'Crema día',
     'tweaks.palette.oscuro':         'Oscuro noche',
-    'tweaks.palette.envejecido':     'Papel envejecido',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
     'tweaks.timer.aro':              'Aro (default)',
@@ -452,13 +438,13 @@ window.PACE_STRINGS = {
     'tweaks.data.export.title':      'Descarga un JSON con tu estado actual',
     'tweaks.data.import.title':      'Sobreescribe tus datos con un backup',
     'tweaks.data.note':              'Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.',
-    'tweaks.reset':                  'Resetear todo',
+    'tweaks.reset':                  'Borrar todos mis datos',
     'tweaks.msg.exported':           'Backup descargado.',
     'tweaks.msg.export.err':         'No se pudo exportar.',
     'tweaks.msg.imported':           'Importado — recargando…',
     'tweaks.msg.import.invalid':     'Archivo no reconocido.',
     'tweaks.msg.import.json.err':    'JSON inválido.',
-    'tweaks.confirm.reset':          '¿Resetear todos los datos de PACE?',
+    'tweaks.confirm.reset':          '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
     'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
 
     // Session (compartido: shell + prep + done)
@@ -810,7 +796,6 @@ window.PACE_STRINGS = {
     'tweaks.eje.lang':               'Language',
     'tweaks.palette.crema':          'Day cream',
     'tweaks.palette.oscuro':         'Night dark',
-    'tweaks.palette.envejecido':     'Aged paper',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
     'tweaks.timer.aro':              'Ring (default)',
@@ -832,13 +817,13 @@ window.PACE_STRINGS = {
     'tweaks.data.export.title':      'Download a JSON with your current state',
     'tweaks.data.import.title':      'Overwrite your data with a backup',
     'tweaks.data.note':              'Everything lives in your browser. The backup is a local JSON file — no server, no account.',
-    'tweaks.reset':                  'Reset everything',
+    'tweaks.reset':                  'Delete all my data',
     'tweaks.msg.exported':           'Backup downloaded.',
     'tweaks.msg.export.err':         'Could not export.',
     'tweaks.msg.imported':           'Imported — reloading…',
     'tweaks.msg.import.invalid':     'File not recognized.',
     'tweaks.msg.import.json.err':    'Invalid JSON.',
-    'tweaks.confirm.reset':          'Reset all PACE data?',
+    'tweaks.confirm.reset':          'Delete all your PACE data? This action cannot be undone.',
     'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
 
     // Session (shared: shell + prep + done)
@@ -1395,7 +1380,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.8';
+const PACE_VERSION = 'v0.28.12';
 
 const defaultState = {
   // Settings / Tweaks
@@ -1749,6 +1734,11 @@ function loadState() {
     if (!parsed._historyRecalculated_v0_28_8 && parsed.history && parsed.history.days) {
       parsed.history = recomputeAllHistoryAggregates(parsed.history);
       parsed._historyRecalculated_v0_28_8 = true;
+    }
+
+    /* Sesion 71 / v0.28.9: paleta 'envejecido' retirada; migrar a 'crema'. */
+    if (parsed.palette === 'envejecido') {
+      parsed.palette = 'crema';
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
@@ -3340,6 +3330,8 @@ function PaceLogoImage({ maxWidth = 600 }) {
      más anchos o layouts futuros. */
   const { useState: useStateLG } = React;
   const [failed, setFailed] = useStateLG(false);
+  const [state] = usePace();
+  const isDark = state.palette === 'oscuro';
   if (failed) {
     // Fallback: PaceLockup SVG con subtítulo equivalente al del PNG.
     return (
@@ -3359,9 +3351,11 @@ function PaceLogoImage({ maxWidth = 600 }) {
         maxWidth,
         height: 'auto',
         objectFit: 'contain',
-        /* El PNG original viene con fondo crema; lo fundimos visualmente
-           con el paper del sidebar usando blend mode. */
-        mixBlendMode: 'multiply',
+        /* El PNG original viene con fondo crema opaco.
+           - Modo claro: multiply funde el fondo crema con el paper claro.
+           - Modo oscuro: invert+screen invierte colores y funde con el oscuro. */
+        mixBlendMode: isDark ? 'screen' : 'multiply',
+        filter: isDark ? 'invert(1)' : 'none',
       }}
       draggable={false}
     />
@@ -6048,7 +6042,29 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerAro mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+}
+
+/* interpolateRingColor — gradiente terracota→ocre→oliva en modo foco.
+   Estable en pausas (breathe) y larga (focus). Sesión 71 / v0.28.9. */
+function interpolateRingColor(progress, mode) {
+  if (mode === 'pausa') return 'var(--breathe)';
+  if (mode === 'larga') return 'var(--focus)';
+  const styles = getComputedStyle(document.documentElement);
+  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
+  const c1 = read('--breathe', '#C97A5D');
+  const c2 = read('--move',    '#9A7B4F');
+  const c3 = read('--focus',   '#6e7a4e');
+  const hexToRgb = (h) => {
+    const m = h.replace('#', '');
+    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
+  };
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
+  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
+  const t = Math.max(0, Math.min(1, progress));
+  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 /* Timer "Aro" (default · ref. usuario).
@@ -6057,7 +6073,7 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
    botón de comenzar + reset (inyectados via `inner`). El layout coincide
    con la composición de referencia (2026-04-22).
    Responsive: ocupa el mínimo entre ancho y alto del contenedor. */
-function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
+function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner, mode }) {
   const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
 
@@ -6067,12 +6083,13 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
         {/* Aro base — trazo fino cálido */}
         <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        {/* Arco de progreso (sutil, mismo trazo pero ligeramente más intenso) */}
+        {/* Arco de progreso — gradiente terracota→ocre→oliva en foco; estable en pausa/larga */}
         <circle cx="50" cy="50" r={R} fill="none"
-          stroke="var(--line-2)" strokeWidth="0.5"
+          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
+          strokeOpacity="0.7"
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear' }} />
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
       </svg>
 
       {/* Contenido centrado */}
@@ -9427,15 +9444,12 @@ function TweaksPanel({ open, onClose }) {
   /* Ejes de personalización.
      Sesión 37: circle/numero retirados de timer, editorial retirado
      de layout, audio promovido al primer eje como pills separadas. */
+  /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
+     'envejecido' retirado en s71 / v0.28.9. */
   const ejes = [
     { key: 'palette', label: t('tweaks.eje.palette'), options: [
       { v: 'crema', name: t('tweaks.palette.crema') },
       { v: 'oscuro', name: t('tweaks.palette.oscuro') },
-      { v: 'envejecido', name: t('tweaks.palette.envejecido') },
-    ]},
-    { key: 'layout', label: t('tweaks.eje.layout'), options: [
-      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
-      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
     { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
       { v: 'aro', name: t('tweaks.timer.aro') },
@@ -9448,6 +9462,10 @@ function TweaksPanel({ open, onClose }) {
       { v: 'petalo', name: t('tweaks.breath.petalo') },
       { v: 'ondas', name: t('tweaks.breath.ondas') },
       { v: 'organico', name: t('tweaks.breath.organico') },
+    ]},
+    { key: 'layout', label: t('tweaks.eje.layout'), options: [
+      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
+      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
        (sesión post-v0.12.1). Los campos del state se conservan por
@@ -9560,7 +9578,36 @@ function TweaksPanel({ open, onClose }) {
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
 
-      {/* Audio — primer eje (sesión 37: reubicado desde sección "Sound" inferior) */}
+      {/* Idioma — primer eje (s71: movido al top por frecuencia de uso) */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'es', name: t('tweaks.lang.es') },
+            { v: 'en', name: t('tweaks.lang.en') },
+          ].map(opt => {
+            const active = state.lang === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* Audio */}
       <div style={{ marginBottom: 16 }}>
         <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
         <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
@@ -9587,7 +9634,7 @@ function TweaksPanel({ open, onClose }) {
           })}
         </div>
         {state.soundOn && (
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ marginTop: 8, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <button
               onClick={() => {
                 const next = !state.ambientOn;
@@ -9649,35 +9696,6 @@ function TweaksPanel({ open, onClose }) {
           </div>
         </div>
       ))}
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Idioma */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: 'es', name: t('tweaks.lang.es') },
-            { v: 'en', name: t('tweaks.lang.en') },
-          ].map(opt => {
-            const active = state.lang === opt.v;
-            return (
-              <button key={opt.v} onClick={() => set({ lang: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
 
       <Divider style={{ margin: '14px 0' }} />
 

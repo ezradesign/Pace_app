@@ -209,6 +209,8 @@ function PaceLogoImage({ maxWidth = 600 }) {
      más anchos o layouts futuros. */
   const { useState: useStateLG } = React;
   const [failed, setFailed] = useStateLG(false);
+  const [state] = usePace();
+  const isDark = state.palette === 'oscuro';
   if (failed) {
     // Fallback: PaceLockup SVG con subtítulo equivalente al del PNG.
     return (
@@ -228,9 +230,11 @@ function PaceLogoImage({ maxWidth = 600 }) {
         maxWidth,
         height: 'auto',
         objectFit: 'contain',
-        /* El PNG original viene con fondo crema; lo fundimos visualmente
-           con el paper del sidebar usando blend mode. */
-        mixBlendMode: 'multiply',
+        /* El PNG original viene con fondo crema opaco.
+           - Modo claro: multiply funde el fondo crema con el paper claro.
+           - Modo oscuro: invert+screen invierte colores y funde con el oscuro. */
+        mixBlendMode: isDark ? 'screen' : 'multiply',
+        filter: isDark ? 'invert(1)' : 'none',
       }}
       draggable={false}
     />

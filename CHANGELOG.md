@@ -15,8 +15,12 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.28.8** | 2026-05-12 | fix(tracking): C1+C2+C3+A1+A2 weeklyStats reset semanal + history idempotente + streak proactivo + dia activo unificado | #69 | [abajo](#v0288----2026-05-12----fixtracking-weeklystats-reset-history-idempotente-streak-proactivo) |
-| **v0.28.7** | 2026-05-11 | fix(breathe): inhalacion suena en arranque y reinicio de ciclo | #67 | [abajo](#v0287----2026-05-11----fixbreathe-inhalacion-arranque-ciclo) |
+| **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [abajo](#v02812----2026-05-12----styleui-recalibrar-oscuro-a-negro-calido-sutil) |
+| **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [abajo](#v02811----2026-05-12----styleui-subir-luminosidad-y-escalonar-fondos-modo-oscuro) |
+| **v0.28.10** | 2026-05-12 | style(ui): marron oscuro calido + aro suavizado en modo oscuro | #72 | [abajo](#v02810----2026-05-12----styleui-marron-oscuro-calido--aro-suavizado) |
+| **v0.28.9** | 2026-05-12 | feat(ux): aro dinamico + retira envejecido + logo modo oscuro + reorden tweaks | #71 | [session-71](./docs/sessions/session-71-aro-dinamico-limpieza-tweaks.md) |
+| **v0.28.8** | 2026-05-12 | fix(tracking): C1+C2+C3+A1+A2 weeklyStats reset semanal + history idempotente + streak proactivo + dia activo unificado | #69 | [session-69](./docs/sessions/session-69-fix-tracking-idempotente.md) |
+| **v0.28.7** | 2026-05-11 | fix(breathe): inhalacion suena en arranque y reinicio de ciclo | #67 | [session-67](./docs/sessions/session-67-fix-breathe-play-inhale.md) |
 | **v0.28.6** | 2026-05-12 | fix(ui): logo completo + tagline sidebar movil + cache-bust iconos maskable safe zone | #66 | [session-66](./docs/sessions/session-66-fix-logo-tagline-movil.md) |
 | **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [session-65](./docs/sessions/session-65-fix-cloudflare-pwa.md) |
 | **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [session-64](./docs/sessions/session-64-fixes-ui-menores.md) |
@@ -90,6 +94,85 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
 
 ---
+
+## [v0.28.12] -- 2026-05-12 -- style(ui): recalibrar oscuro a negro calido sutil
+
+Sesion 74. Tras el rebote de luminosidad de v0.28.11 (fondos demasiado claros,
+sidebar separada como panel) y el desvio cromatico de la primera iteracion
+de s74 (terracota muy marcada), aterrizamos en "casi negro con apenas un
+matiz calido". Escalonamiento entre niveles reducido a ~4 unidades L.
+
+### Changed
+
+- **`app/tokens.css`** -- bloque `[data-palette="oscuro"]`, 5 tokens:
+  - `--paper` `#2a241d -> #15130f` (area principal, L~8).
+  - `--paper-2` `#3a3128 -> #1d1a15` (sidebar, L~12 -- delta ~4 sobre paper).
+  - `--paper-3` `#453a2e -> #252119` (tarjetas, L~16 -- delta ~4 sobre paper-2).
+  - `--line` `#4a3f33 -> #332d24`. `--line-2` `#5a4d40 -> #403930`.
+  - `--ink-*` y acentos sin cambio. Paleta clara sin cambio.
+- **`app/state-core.jsx`**: PACE_VERSION -> `v0.28.12`.
+- **`PACE.html`**: titulo `v0.28.12`.
+- **`sw.js`**: `CACHE_NAME` -> `pace-v0.28.12`.
+
+### Racional
+
+Feedback iterativo: v0.28.10 era demasiado oscuro y sidebar invisible;
+v0.28.11 subio luminosidad pero hizo la sidebar "panel separado"; la
+exploracion terracota de s74 daba caracter pero alejaba del "noche
+calmada". v0.28.12 vuelve al "casi negro" original con apenas un matiz
+calido (hue retenido del marron-tierra de marca, no terracota) y reduce
+el delta sidebar/main a ~4 L: distinguible al fijar la vista, no separada
+como panel.
+
+### Build
+
+- `PACE_standalone.html`: 567 KB (sin cambio -- solo CSS/tokens).
+- SHA256: `36964C7A...334E` (identico a `index.html`).
+- Backup: `backups/PACE_standalone_v0.28.11_20260512.html` (creado en
+  iteracion previa de s74).
+
+---
+
+## [v0.28.11] -- 2026-05-12 -- style(ui): subir luminosidad y escalonar fondos modo oscuro
+
+Sesion 73. Iteracion sobre el pulido del modo oscuro de s72. Feedback del usuario:
+el fondo seguia percibido como muy oscuro y la sidebar no se distinguia
+suficientemente del area principal. Sin cambios de logica ni catalogos.
+
+### Changed
+
+- **`app/tokens.css`** -- bloque `[data-palette="oscuro"]`: 5 tokens
+  recalibrados subiendo luminosidad y ampliando el delta entre niveles a
+  ~6 unidades L:
+  - `--paper` `#1a1612 -> #2a241d` (area principal, L~15).
+  - `--paper-2` `#221d18 -> #3a3128` (sidebar, L~21 -- salto ampliado para
+    diferenciar claramente del fondo principal).
+  - `--paper-3` `#2a241e -> #453a2e` (tarjetas/superficies elevadas, L~25).
+  - `--line` `#3a322a -> #4a3f33`.
+  - `--line-2` `#4a4036 -> #5a4d40`.
+  - Tokens de tinta (`--ink-1/2/3`) sin cambio (ya recalibrados en v0.28.10).
+- **`app/state-core.jsx`**: PACE_VERSION -> `v0.28.11`.
+- **`PACE.html`**: titulo `v0.28.11`.
+- **`sw.js`**: `CACHE_NAME` -> `pace-v0.28.11`.
+
+### Racional
+
+Escalonamiento de ~6 unidades L entre cada nivel (paper -> paper-2 ->
+paper-3) crea jerarquia visual perceptible sin romper la sobriedad.
+Sidebar a L~21 queda claramente diferenciada del fondo principal L~15, y
+las tarjetas elevadas (L~25) se ven por encima del fondo de su contenedor.
+
+### Build
+
+- `PACE_standalone.html`: 567 KB (sin cambio -- solo CSS/tokens).
+- SHA256: `7CE9C44B...FA065` (identico a `index.html`).
+- Backup: `backups/PACE_standalone_v0.28.10_20260512.html`. Rotado el
+  backup mas antiguo (`v0.26.0-alpha_20260508.html`) para mantener el
+  cap de 20.
+
+---
+
+<!-- v0.28.10 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.28.8] -- 2026-05-12 -- fix(tracking): weeklyStats reset, history idempotente, streak proactivo
 
@@ -171,46 +254,7 @@ Antes del commit el usuario debe ejecutarlos en ventana incognita y confirmar PA
 
 ---
 
-## [v0.28.7] -- 2026-05-11 -- fix(breathe): inhalacion arranque ciclo
-
-Sesion 67. La inhalacion en el modulo Respira era siempre muda: el sonido solo
-se disparaba en transiciones de fase dentro del ticker, dejando la fase 0
-(siempre "Inhala*") sin audio al arrancar la sesion y al reiniciar cada ciclo.
-
-### Fixed
-
-- **`app/breathe/BreatheSession.jsx`**: extraida helper `playPhaseSound(label, dur)`
-  que centraliza la logica inhala/exhala/sosten para evitar duplicacion. Corregidos
-  cuatro puntos donde `setPhase(0)` no iba acompanado de sonido:
-  - **Hueco A — arranque**: al terminar la cuenta atras de prep (y al pulsar
-    "Saltar"), se llama ahora a `playPhaseSound(sequence[0].label, ...)`.
-  - **Hueco B · rondas** — `handleCycleComplete`: al reiniciar ciclo dentro de
-    una ronda (`breathCount < routine.breaths`), suena la nueva fase 0.
-  - **Hueco B · libre** — `handleCycleComplete`: al reiniciar ciclo por tiempo
-    (`elapsed < routine.min*60`), idem.
-  - **Hueco C · hold** — `releaseHold`: al iniciar nueva ronda tras retener,
-    suena la fase 0.
-  - **Ticker**: bloque inline de 10 lineas reemplazado por
-    `playPhaseSound(newCur.label, newCur.duration)`.
-- **`app/state-core.jsx`** + **`PACE.html`**: bump version v0.28.6 → v0.28.7.
-- **`sw.js`**: `CACHE_NAME` bumpeado a `pace-v0.28.7`.
-
-### Not changed
-
-- `'Sosten'` sigue siendo silencio intencional en `playPhaseSound`.
-- Drone ambiente (`window.ambientDrone`) sin cambios.
-- Sonidos inicio/fin de sesion (`breathe.session.start/end`) sin cambios.
-- `BreatheVisual.jsx` y `BreatheLibrary.jsx` sin cambios.
-
-### Build
-
-- `PACE_standalone.html`: 560 KB. 40 archivos validados.
-- `index.html` generado como copia exacta (SHA256: `E6488E3C...FD11F3B`).
-- Backup: `backups/PACE_standalone_v0.28.6_20260511.html` (rotado el mas antiguo v0.25.1).
-
----
-
-<!-- v0.28.6 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- v0.28.7 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.27.6] -- 2026-05-11 -- chore(workflow): blindaje Git
 

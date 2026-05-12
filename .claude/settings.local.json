@@ -21,7 +21,10 @@
       "PowerShell($h1 = \\(Get-FileHash \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\PACE_standalone.html\" -Algorithm SHA256\\).Hash; $h2 = \\(Get-FileHash \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\\\\index.html\" -Algorithm SHA256\\).Hash; Write-Host \"PACE_standalone: $h1\"; Write-Host \"index.html:      $h2\"; if \\($h1 -eq $h2\\) { Write-Host \"IDENTICOS OK\" } else { Write-Host \"DIFERENTE - ERROR\" })",
       "PowerShell(git -C \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\" status --short)",
       "Bash(powershell -NoProfile -Command \"Get-FileHash -Path 'PACE_standalone.html','index.html' -Algorithm SHA256 | Select-Object Hash,Path | Format-List\")",
-      "Bash(node _tests/regression-v0.28.8.js)"
+      "Bash(node _tests/regression-v0.28.8.js)",
+      "Bash(powershell -Command \"Get-FileHash PACE_standalone.html -Algorithm SHA256 | Select-Object -ExpandProperty Hash; Get-FileHash index.html -Algorithm SHA256 | Select-Object -ExpandProperty Hash\")",
+      "Bash(powershell -File scripts/check-session.ps1)",
+      "Bash(powershell -Command \"\\(Get-FileHash PACE_standalone.html -Algorithm SHA256\\).Hash; \\(Get-FileHash index.html -Algorithm SHA256\\).Hash\")"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

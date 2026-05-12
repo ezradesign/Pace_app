@@ -88,33 +88,20 @@
 
 /* PALETA · Oscuro noche */
 [data-palette="oscuro"] {
-  --paper: #1A1814;
-  --paper-2: #252119;
-  --paper-3: #302B21;
+  --paper: #15130f;
+  --paper-2: #1d1a15;
+  --paper-3: #252119;
   --ink: #EDE5D3;
-  --ink-2: #B8AF9A;
+  --ink-2: #c0b49e;
   --ink-3: #756D5D;
-  --line: #3C3628;
-  --line-2: #4E4735;
+  --line: #332d24;
+  --line-2: #403930;
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
-}
-
-/* PALETA · Papel envejecido */
-[data-palette="envejecido"] {
-  --paper: #EDE2C8;
-  --paper-2: #E3D6B6;
-  --paper-3: #D6C8A3;
-  --ink: #2B241A;
-  --ink-2: #5A4F3C;
-  --ink-3: #8F826A;
-  --line: #BEAF8C;
-  --focus: #56663E;
-  --breathe: #B86A4D;
 }
 
 /* TIPOGRAFÍAS ALT */
