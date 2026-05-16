@@ -19,6 +19,10 @@
   --focus: #3E5A3A;
   --focus-2: #2A3E27;
   --focus-soft: rgba(62, 90, 58, 0.10);
+  /* CTA Comenzar home (s77b). Variante mas viva y calida del --focus
+     para que el boton protagonista respire sin entrar en zona saturada
+     tipo Stripe. NO usar fuera del CTA principal de Pomodoro. */
+  --focus-cta: #506B3E;
 
   --breathe: #C97A5D;
   --breathe-2: #A85E43;
@@ -85,10 +89,15 @@
   --dur-slow: 640ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Altura de la SenderoBar sticky en overlay Camino (s76).
-     Se afinara en s77 con el resto del ritmo visual; no hardcodear
-     en los JSX. */
-  --sendero-sticky-h: 38px;
+  /* Transiciones entre pantallas del Camino (s77).
+     IntroCard al abrir, StepIntro entre pasos, OutroCard antes de
+     CompletionScreen. PathTransitions.jsx lee estos tokens via
+     getComputedStyle: tweakearlos cambia el ritmo de las cards. */
+  --path-intro-ms: 2500ms;
+  --path-step-ms: 2000ms;
+  --path-outro-ms: 1500ms;
+  --path-card-fade-ms: 200ms;
+  --path-card-scale-from: 0.96;
 }
 
 /* PALETA · Oscuro noche */
@@ -104,6 +113,9 @@
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
+  /* CTA Comenzar home (s77b). Misma logica que la paleta clara:
+     ligeramente mas vivo y calido que --focus para destacar el CTA. */
+  --focus-cta: #8AA776;
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
@@ -247,47 +259,44 @@ input, textarea { font-family: inherit; color: inherit; }
 .sendero-bar .dot-fill { fill: currentColor; }
 
 /* ============================================================
-   Variante sticky (s76 / v0.30.0)
-   Barra fija arriba durante un Camino activo. Persiste sobre
-   BreatheSession / MoveSession (que usan SessionShell z-index 90)
-   gracias a z-index 95. Labels ocultos por compacidad; tooltip
-   nativo via <title> en el SVG.
+   Variante lg (s77 / v0.31.0; ajustes labels en s77b)
+   SenderoBar grande para las TransitionCards (Intro/StepIntro/Outro).
+   Altura mayor: la curva se siente como un "sendero" que recorre la
+   parte alta de la card. Posicion estatica en el flujo (no fixed).
+   Las hito-labels muestran SOLO los hitos done (filtro en JSX), asi
+   que en IntroCard no se ve ninguna y crece segun avanza el Camino.
    ============================================================ */
-.sendero-bar.sticky {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--sendero-sticky-h);
-  z-index: 95;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+.sendero-bar.lg {
+  width: 100%;
   padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
 }
-.sendero-bar.sticky .sendero-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 640px;
+.sendero-bar.lg .sendero-wrap {
   margin: 0 auto;
-  padding: 0 20px;
+  max-width: 720px;
+  padding: 0 4px;
 }
-.sendero-bar.sticky .sendero-svg {
-  display: block;
-  width: 100%;
-  height: calc(var(--sendero-sticky-h) - 6px);
-  overflow: visible;
+.sendero-bar.lg .sendero-svg {
+  height: clamp(140px, 22vh, 220px);
 }
-.sendero-bar.sticky .hito-labels { display: none; }
+/* Labels en .lg: alinear max-width con el wrap (720) para que el
+   calculo left: (xs[i] / 640) * 100% caiga sobre los hitos del SVG.
+   Tamano ligeramente mayor (12 vs 10.5px base) para legibilidad en la
+   card grande. */
+.sendero-bar.lg .hito-labels {
+  max-width: 720px;
+}
+.sendero-bar.lg .hito-label { font-size: 12px; }
+.sendero-bar.lg .hito-roman { font-size: 11px; }
 
-/* Cuando un Camino esta activo, empuja el overlay y la cascara de
-   sesion para dejar sitio a la barra sticky. PathRunner ana de y
-   retira el atributo body[data-pace-path-active] en su efecto de
-   montaje. El !important es necesario para sobreescribir el padding
-   inline de SessionShell.root. */
-body[data-pace-path-active] .path-runner-overlay {
-  padding-top: var(--sendero-sticky-h);
-}
-body[data-pace-path-active] [data-pace-session-root] {
-  padding-top: calc(28px + var(--sendero-sticky-h)) !important;
+/* Orbe viajero (s77).
+   Solo se monta dentro de .sendero-bar cuando el padre pasa orbVisible.
+   Animacion via <animateMotion> SMIL en el JSX (dur=2s). El keyframe
+   path-orb-travel queda reservado para una futura migracion a
+   offset-path / CSS scroll-driven (Safari ya soporta offset-path en
+   elementos HTML; en SVG circle el soporte es desigual y por eso
+   mantenemos SMIL por ahora). */
+.sendero-bar .sendero-orb { pointer-events: none; }
+@keyframes path-orb-travel {
+  0%   { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
 }

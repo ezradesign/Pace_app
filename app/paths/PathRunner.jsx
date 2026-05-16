@@ -112,10 +112,27 @@ const CS_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
      italic. Skipped en tono mas tenue.
    - Tiempo elapsed (ya calculado).
    - Logros desbloqueados DURANTE el Camino: filtra state.achievements
-     por unlockedAt >= snapshot.startedAt. Glifo del catalogo. */
-function CompletionScreen({ snapshot, onBack }) {
+     por unlockedAt >= snapshot.startedAt. Glifo del catalogo.
+
+   s77: prop `fadeIn` opacity 0 -> 1 en 400ms al montar. PathRunner lo
+   activa tras OutroCard para que el cierre simbolico no aparezca de
+   golpe. Aprovecha que ambos comparten background: var(--paper). */
+function CompletionScreen({ snapshot, onBack, fadeIn }) {
   const [state] = usePace();
   const { t } = useT();
+  const [opacity, setOpacity] = useStatePR(fadeIn ? 0 : 1);
+  useEffectPR(function () {
+    if (!fadeIn) return;
+    /* Doble rAF: asegura que el frame con opacity=0 se pinta antes de
+       arrancar la transicion a opacity=1. Sin esto, React podria batch
+       y nunca veriamos el fade-in. */
+    var r1 = requestAnimationFrame(function () {
+      var r2 = requestAnimationFrame(function () { setOpacity(1); });
+      /* Limpieza de la segunda rAF en caso de unmount entre frames. */
+      return function () { cancelAnimationFrame(r2); };
+    });
+    return function () { cancelAnimationFrame(r1); };
+  }, [fadeIn]);
   const path = getPath(snapshot.pathId);
   const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
@@ -153,6 +170,8 @@ function CompletionScreen({ snapshot, onBack }) {
       alignItems: 'center', justifyContent: 'center',
       padding: '32px 40px', textAlign: 'center',
       overflowY: 'auto',
+      opacity: opacity,
+      transition: fadeIn ? 'opacity 400ms ease-out' : 'none',
     }}>
       <div style={{
         width: 64, height: 64, borderRadius: '50%',
@@ -180,7 +199,7 @@ function CompletionScreen({ snapshot, onBack }) {
 
       {/* SenderoBar 100% done: currentIndex = totalSteps -> ningun
           hito en estado 'current', todos en 'done'. */}
-      {totalSteps > 0 && typeof SenderoBar === 'function' && (
+      {totalSteps > 0 && (
         <div style={{ width: '100%', maxWidth: 640, margin: '0 0 12px' }}>
           <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} />
         </div>
@@ -507,13 +526,28 @@ function PathBodyStep({ step, onExit }) {
   return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
 }
 
-/* PathRunner - orquestador principal */
+/* PathRunner - orquestador principal.
+
+   s77: maquina de fases para las transiciones intra-overlay.
+     'intro'      -> IntroCard al abrir el Camino (solo si recien iniciado).
+     'step'       -> render del paso real (Focus/Breathe/Body/Hydrate).
+     'transition' -> StepIntro entre dos pasos (cur.stepIndex ya avanzado).
+     'outro'      -> OutroCard antes de CompletionScreen.
+
+   Reglas clave (volatiles, no se persisten en paths.current):
+   - Recarga durante intro/transition/outro -> phase='step' al rehidratar.
+   - Step intermedio: advancePathStep AHORA, asi recarga aterriza en destino.
+   - Ultimo step: NO se avanza hasta tras OutroCard (cur queda intacto). */
 function PathRunner() {
   const [state] = usePace();
   const { t } = useT();
   const cur = state.paths.current;
   const [justCompleted, setJustCompleted] = useStatePR(null);
   const [confirmExit, setConfirmExit] = useStatePR(false);
+  const [phase, setPhase] = useStatePR('step');
+  /* pendingComplete = snapshot + reason capturados al iniciar OutroCard.
+     Se aplica en handleOutroDone -> setJustCompleted + advancePathStep. */
+  const [pendingComplete, setPendingComplete] = useStatePR(null);
 
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
@@ -523,23 +557,31 @@ function PathRunner() {
   /* s76: marca body cuando hay un Camino activo (no en CompletionScreen).
      CSS en tokens.css empuja el padding-top del overlay y de SessionShell
      para dejar sitio a la SenderoBar sticky superior. */
+  /* s77: phase = 'intro' al iniciar un Camino (volatil). Detecta "recien
+     iniciado" como (Date.now() - startedAt < 1500ms) sobre stepIndex 0.
+     Al recargar, este margen ya habra expirado y aterrizamos en 'step'. */
   useEffectPR(() => {
-    if (cur) {
-      document.body.setAttribute('data-pace-path-active', '1');
-      return () => { document.body.removeAttribute('data-pace-path-active'); };
+    if (!cur) { setPhase('step'); return; }
+    if (cur.stepIndex === 0 && (Date.now() - cur.startedAt) < 1500) {
+      setPhase('intro');
+    } else {
+      setPhase('step');
     }
   }, [cur ? cur.id : null]);
 
-  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida.
-     NOTA: hook movido antes del early return para cumplir Rules of Hooks.
-     El guard "if (!cur) return" esta dentro del callback, no fuera. */
+  /* Escape:
+       - Modal de confirmacion abierto -> cierra modal.
+       - phase != 'step' -> ignorar (la card es tappable de por si).
+       - phase === 'step' -> solicita salida (con confirmacion si no opcional).
+     NOTA: hook movido antes del early return para cumplir Rules of Hooks. */
   useEffectPR(() => {
-    if (!cur) return; // guard dentro del callback: no actuar si no hay camino activo
+    if (!cur) return;
     function handleKey(e) {
       if (e.key !== 'Escape') return;
       var active = document.activeElement;
       if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
       if (confirmExit) { setConfirmExit(false); return; }
+      if (phase !== 'step') return;
       var path = getPath(cur.id);
       var step = path && path.steps[cur.stepIndex];
       if (step && step.optional) {
@@ -550,12 +592,14 @@ function PathRunner() {
     }
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [confirmExit, cur ? cur.stepIndex : null]);
+  }, [confirmExit, cur ? cur.stepIndex : null, phase]);
 
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
 
-  /* Pantalla de completado */
+  /* Pantalla de completado. fadeIn=true cuando viene tras OutroCard
+     (cross-fade simbolico 400ms). Si el usuario llega aqui por otra
+     via, fadeIn queda false. */
   if (justCompleted) {
     return (
       <div
@@ -567,6 +611,7 @@ function PathRunner() {
         <CompletionScreen
           snapshot={justCompleted}
           onBack={() => setJustCompleted(null)}
+          fadeIn
         />
       </div>
     );
@@ -578,20 +623,39 @@ function PathRunner() {
   const step = path.steps[cur.stepIndex];
   const totalSteps = path.steps.length;
 
-  /* Callback que reciben los subcomponentes de paso */
+  /* Callback de paso: dispara intro/transition/outro segun caso.
+     - Intermedio: avanza AHORA (decision 3) + phase='transition'.
+     - Ultimo:     captura snapshot + phase='outro'. El advance final lo
+       hace handleOutroDone tras el hold de OutroCard. */
   const handleStepExit = (reason) => {
     const isLast = cur.stepIndex >= path.steps.length - 1;
     if (isLast) {
       const skipped = reason === 'skip'
         ? [...cur.skippedSteps, cur.stepIndex]
         : cur.skippedSteps;
-      setJustCompleted({
-        pathId: cur.id,
-        startedAt: cur.startedAt,
-        skippedSteps: skipped,
+      setPendingComplete({
+        reason: reason,
+        snapshot: {
+          pathId: cur.id,
+          startedAt: cur.startedAt,
+          skippedSteps: skipped,
+        },
       });
+      setPhase('outro');
+    } else {
+      advancePathStep(reason);
+      setPhase('transition');
     }
-    advancePathStep(reason);
+  };
+
+  const handleIntroDone = () => { setPhase('step'); };
+  const handleTransitionDone = () => { setPhase('step'); };
+  const handleOutroDone = () => {
+    if (pendingComplete) {
+      setJustCompleted(pendingComplete.snapshot);
+      advancePathStep(pendingComplete.reason);
+      setPendingComplete(null);
+    }
   };
 
   /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar */
@@ -611,6 +675,11 @@ function PathRunner() {
     };
   });
 
+  /* Para StepIntro: durante phase='transition', cur.stepIndex YA refleja
+     el destino (advancePathStep ya se llamo). El kind del titulo y el
+     hito current son ambos del step actual. */
+  const transitionKindName = t('paths.kind.' + step.kind + '.name') || step.kind;
+
   return (
     <div
       className="path-runner-overlay"
@@ -618,34 +687,63 @@ function PathRunner() {
       aria-modal="true"
       aria-label={displayPathName}
     >
-      {/* s76: SenderoBar sticky fixed (z=95) -> persiste sobre
-          BreatheSession/MoveSession (SessionShell z=90). */}
-      {typeof SenderoBar === 'function' && (
-        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} sticky />
+      {/* Step activo: TopBar + body del paso.
+          Solo renderizamos esta capa cuando phase==='step' para evitar
+          montar el step mientras hay una card encima (decision 9:
+          StepIntro es bloqueante). La SenderoBar sticky se elimino en
+          s77b -- la lectura del progreso vive ahora en las
+          TransitionCards entre pantallas, no superpuesta al ejercicio. */}
+      {phase === 'step' && (
+        <>
+          <PathTopBar
+            pathName={displayPathName}
+            onRequestExit={handleRequestExit}
+          />
+          <div className="path-step-body">
+            {step.kind === 'breathe' && (
+              <PathBreatheStep step={step} onExit={handleStepExit} />
+            )}
+            {step.kind === 'focus' && (
+              <PathFocusStep step={step} onExit={handleStepExit} />
+            )}
+            {step.kind === 'body' && (
+              <PathBodyStep step={step} onExit={handleStepExit} />
+            )}
+            {step.kind === 'hydrate' && (
+              <PathHydrateStep
+                onDone={() => handleStepExit('done')}
+                onSkip={() => handleStepExit('skip')}
+              />
+            )}
+          </div>
+        </>
       )}
 
-      <PathTopBar
-        pathName={displayPathName}
-        onRequestExit={handleRequestExit}
-      />
-
-      <div className="path-step-body">
-        {step.kind === 'breathe' && (
-          <PathBreatheStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'focus' && (
-          <PathFocusStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'body' && (
-          <PathBodyStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'hydrate' && (
-          <PathHydrateStep
-            onDone={() => handleStepExit('done')}
-            onSkip={() => handleStepExit('skip')}
-          />
-        )}
-      </div>
+      {/* Cards de transicion (s77). Posicionadas absolutas dentro del overlay.
+          Guard "typeof X === 'function'" cubre el caso de carga lenta (mismo
+          patron defensivo que SenderoBar/TimerDial). */}
+      {phase === 'intro' && typeof IntroCard === 'function' && (
+        <IntroCard
+          pathName={displayPathName}
+          blocks={senderoBlocks}
+          onContinue={handleIntroDone}
+        />
+      )}
+      {phase === 'transition' && typeof StepIntro === 'function' && (
+        <StepIntro
+          kindName={transitionKindName}
+          blocks={senderoBlocks}
+          currentIndex={cur.stepIndex}
+          onContinue={handleTransitionDone}
+        />
+      )}
+      {phase === 'outro' && typeof OutroCard === 'function' && (
+        <OutroCard
+          pathName={displayPathName}
+          blocks={senderoBlocks}
+          onContinue={handleOutroDone}
+        />
+      )}
 
       <ExitConfirmModal
         open={confirmExit}

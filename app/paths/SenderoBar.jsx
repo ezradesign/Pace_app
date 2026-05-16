@@ -39,13 +39,15 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBarBase({ blocks, currentIndex, sticky }) {
+function SenderoBarBase({ blocks, currentIndex, size, orbVisible }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
 
   const total = (blocks && blocks.length) || 0;
   if (total === 0) return null;
+
+  const isLarge = size === 'lg';
 
   const xs = [];
   for (let i = 0; i < total; i++) xs.push(sbHitoX(i, total));
@@ -64,8 +66,22 @@ function SenderoBarBase({ blocks, currentIndex, sticky }) {
   const donePath = doneSegs.join(' ');
   const pendingPath = pendingSegs.join(' ');
 
+  /* Orbe viajero (s77): SOLO durante StepIntro. Recorre el ultimo segmento
+     completado (del hito currentIndex-1 al currentIndex) en --path-step-ms.
+     Decision 10 del prompt s77: CSS puro via animateMotion. */
+  const showOrb = !!orbVisible && currentIndex > 0 && currentIndex <= total - 1;
+  let orbPath = null;
+  if (showOrb) {
+    const prev = currentIndex - 1;
+    const segIdx = prev;
+    const segD = sbSegmentPath(xs[prev], xs[currentIndex], segIdx);
+    orbPath = `M ${xs[prev]} 50 ${segD}`;
+  }
+
+  const className = 'sendero-bar' + (isLarge ? ' lg' : '');
+
   return (
-    <div className={'sendero-bar' + (sticky ? ' sticky' : '')}>
+    <div className={className}>
       <div className="sendero-wrap">
         <svg className="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -111,22 +127,38 @@ function SenderoBarBase({ blocks, currentIndex, sticky }) {
               </g>
             );
           })}
+
+          {showOrb && (
+            <g className="sendero-orb">
+              {/* Glow primero (debajo) */}
+              <circle r="7" fill="var(--focus)" opacity="0.30">
+                <animateMotion dur="2s" fill="freeze" path={orbPath} />
+              </circle>
+              {/* Punto solido encima */}
+              <circle r="3" fill="var(--focus)">
+                <animateMotion dur="2s" fill="freeze" path={orbPath} />
+              </circle>
+            </g>
+          )}
         </svg>
       </div>
 
-      {/* hito-labels solo se renderizan en modo NO sticky (CompletionScreen,
-          eventual ampliacion). En sticky la altura es 38px y caben mal. */}
-      {!sticky && (
+      {/* hito-labels (s77b): SOLO los hitos done (i < currentIndex).
+          - En .lg (TransitionCards): el current ya aparece como titulo
+            grande Garamond, asi que no se duplica; los pending quedan
+            sin spoiler.
+          - En no-lg (CompletionScreen): currentIndex === totalSteps,
+            asi que muestra TODOS (todos son done). Comportamiento
+            funcionalmente identico al de s76 en CompletionScreen. */}
+      {currentIndex > 0 && (
         <div className="hito-labels">
           {blocks.map(function(b, i) {
-            let stateClass = 'pending';
-            if (i < currentIndex) stateClass = 'done';
-            else if (i === currentIndex) stateClass = 'current';
+            if (i >= currentIndex) return null;
             const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
             return (
               <span
                 key={b.id + '-' + i}
-                className={'hito-label ' + stateClass}
+                className="hito-label done"
                 style={{ left: leftPct + '%' }}
               >
                 {b.name}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.30.0</title>
+  <title>PACE · Foco · Cuerpo — v0.31.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -34,6 +34,10 @@
   --focus: #3E5A3A;
   --focus-2: #2A3E27;
   --focus-soft: rgba(62, 90, 58, 0.10);
+  /* CTA Comenzar home (s77b). Variante mas viva y calida del --focus
+     para que el boton protagonista respire sin entrar en zona saturada
+     tipo Stripe. NO usar fuera del CTA principal de Pomodoro. */
+  --focus-cta: #506B3E;
 
   --breathe: #C97A5D;
   --breathe-2: #A85E43;
@@ -100,10 +104,15 @@
   --dur-slow: 640ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Altura de la SenderoBar sticky en overlay Camino (s76).
-     Se afinara en s77 con el resto del ritmo visual; no hardcodear
-     en los JSX. */
-  --sendero-sticky-h: 38px;
+  /* Transiciones entre pantallas del Camino (s77).
+     IntroCard al abrir, StepIntro entre pasos, OutroCard antes de
+     CompletionScreen. PathTransitions.jsx lee estos tokens via
+     getComputedStyle: tweakearlos cambia el ritmo de las cards. */
+  --path-intro-ms: 2500ms;
+  --path-step-ms: 2000ms;
+  --path-outro-ms: 1500ms;
+  --path-card-fade-ms: 200ms;
+  --path-card-scale-from: 0.96;
 }
 
 /* PALETA · Oscuro noche */
@@ -119,6 +128,9 @@
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
+  /* CTA Comenzar home (s77b). Misma logica que la paleta clara:
+     ligeramente mas vivo y calido que --focus para destacar el CTA. */
+  --focus-cta: #8AA776;
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
@@ -262,49 +274,46 @@ input, textarea { font-family: inherit; color: inherit; }
 .sendero-bar .dot-fill { fill: currentColor; }
 
 /* ============================================================
-   Variante sticky (s76 / v0.30.0)
-   Barra fija arriba durante un Camino activo. Persiste sobre
-   BreatheSession / MoveSession (que usan SessionShell z-index 90)
-   gracias a z-index 95. Labels ocultos por compacidad; tooltip
-   nativo via <title> en el SVG.
+   Variante lg (s77 / v0.31.0; ajustes labels en s77b)
+   SenderoBar grande para las TransitionCards (Intro/StepIntro/Outro).
+   Altura mayor: la curva se siente como un "sendero" que recorre la
+   parte alta de la card. Posicion estatica en el flujo (no fixed).
+   Las hito-labels muestran SOLO los hitos done (filtro en JSX), asi
+   que en IntroCard no se ve ninguna y crece segun avanza el Camino.
    ============================================================ */
-.sendero-bar.sticky {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--sendero-sticky-h);
-  z-index: 95;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+.sendero-bar.lg {
+  width: 100%;
   padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
 }
-.sendero-bar.sticky .sendero-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 640px;
+.sendero-bar.lg .sendero-wrap {
   margin: 0 auto;
-  padding: 0 20px;
+  max-width: 720px;
+  padding: 0 4px;
 }
-.sendero-bar.sticky .sendero-svg {
-  display: block;
-  width: 100%;
-  height: calc(var(--sendero-sticky-h) - 6px);
-  overflow: visible;
+.sendero-bar.lg .sendero-svg {
+  height: clamp(140px, 22vh, 220px);
 }
-.sendero-bar.sticky .hito-labels { display: none; }
+/* Labels en .lg: alinear max-width con el wrap (720) para que el
+   calculo left: (xs[i] / 640) * 100% caiga sobre los hitos del SVG.
+   Tamano ligeramente mayor (12 vs 10.5px base) para legibilidad en la
+   card grande. */
+.sendero-bar.lg .hito-labels {
+  max-width: 720px;
+}
+.sendero-bar.lg .hito-label { font-size: 12px; }
+.sendero-bar.lg .hito-roman { font-size: 11px; }
 
-/* Cuando un Camino esta activo, empuja el overlay y la cascara de
-   sesion para dejar sitio a la barra sticky. PathRunner ana de y
-   retira el atributo body[data-pace-path-active] en su efecto de
-   montaje. El !important es necesario para sobreescribir el padding
-   inline de SessionShell.root. */
-body[data-pace-path-active] .path-runner-overlay {
-  padding-top: var(--sendero-sticky-h);
-}
-body[data-pace-path-active] [data-pace-session-root] {
-  padding-top: calc(28px + var(--sendero-sticky-h)) !important;
+/* Orbe viajero (s77).
+   Solo se monta dentro de .sendero-bar cuando el padre pasa orbVisible.
+   Animacion via <animateMotion> SMIL en el JSX (dur=2s). El keyframe
+   path-orb-travel queda reservado para una futura migracion a
+   offset-path / CSS scroll-driven (Safari ya soporta offset-path en
+   elementos HTML; en SVG circle el soporte es desigual y por eso
+   mantenemos SMIL por ahora). */
+.sendero-bar .sendero-orb { pointer-events: none; }
+@keyframes path-orb-travel {
+  0%   { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
 }
 
   </style>
@@ -765,6 +774,7 @@ window.PACE_STRINGS = {
     'path.runner.complete.body':     'Has terminado {name}.',
     'path.runner.complete.back':     'Volver',
     'path.runner.complete.recorrido':'Recorrido',
+    'path.runner.transition.continue':'toca para continuar',
     'path.hydrate.copy':             'Un vaso de agua, si te apetece',
     'path.hydrate.drank':            'He bebido',
     'path.error.routineNotFound':    'Rutina no encontrada: {id}',
@@ -1149,6 +1159,7 @@ window.PACE_STRINGS = {
     'path.runner.complete.body':     'You finished {name}.',
     'path.runner.complete.back':     'Back',
     'path.runner.complete.recorrido':'Journey',
+    'path.runner.transition.continue':'tap to continue',
     'path.hydrate.copy':             'A glass of water, if you feel like it',
     'path.hydrate.drank':            'I drank',
     'path.error.routineNotFound':    'Routine not found: {id}',
@@ -1511,7 +1522,11 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.30.0';
+const PACE_VERSION = 'v0.31.0';
+
+/* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
+   sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
+const TOAST_DURATION_MS = 3000;
 
 const defaultState = {
   // Settings / Tweaks
@@ -1971,7 +1986,7 @@ function onToast(listener) {
 applyTheme();
 
 Object.assign(window, {
-  LS_KEY, PACE_VERSION, defaultState,
+  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast,
   zeroEntry, toISODate, todayISO,
@@ -3928,9 +3943,10 @@ function ToastHost() {
         const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
+        const durationMs = (typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000;
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
-        }, 5000);
+        }, durationMs);
       }
     });
   }, []);
@@ -6418,13 +6434,13 @@ const focusStyles = {
   startBtnPrimary: {
     display: 'inline-flex', alignItems: 'center', gap: 7,
     padding: '7px 16px 7px 14px',
-    background: 'var(--focus)',
+    background: 'var(--focus-cta)',
     color: 'var(--paper)',
     borderRadius: 'var(--r-xs)',
     fontSize: 12,
     letterSpacing: 0.3,
     fontWeight: 500,
-    border: '1px solid var(--focus)',
+    border: '1px solid var(--focus-cta)',
     boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
     transition: 'all 180ms',
   },
@@ -10432,13 +10448,15 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBarBase({ blocks, currentIndex, sticky }) {
+function SenderoBarBase({ blocks, currentIndex, size, orbVisible }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
 
   const total = (blocks && blocks.length) || 0;
   if (total === 0) return null;
+
+  const isLarge = size === 'lg';
 
   const xs = [];
   for (let i = 0; i < total; i++) xs.push(sbHitoX(i, total));
@@ -10457,8 +10475,22 @@ function SenderoBarBase({ blocks, currentIndex, sticky }) {
   const donePath = doneSegs.join(' ');
   const pendingPath = pendingSegs.join(' ');
 
+  /* Orbe viajero (s77): SOLO durante StepIntro. Recorre el ultimo segmento
+     completado (del hito currentIndex-1 al currentIndex) en --path-step-ms.
+     Decision 10 del prompt s77: CSS puro via animateMotion. */
+  const showOrb = !!orbVisible && currentIndex > 0 && currentIndex <= total - 1;
+  let orbPath = null;
+  if (showOrb) {
+    const prev = currentIndex - 1;
+    const segIdx = prev;
+    const segD = sbSegmentPath(xs[prev], xs[currentIndex], segIdx);
+    orbPath = `M ${xs[prev]} 50 ${segD}`;
+  }
+
+  const className = 'sendero-bar' + (isLarge ? ' lg' : '');
+
   return (
-    <div className={'sendero-bar' + (sticky ? ' sticky' : '')}>
+    <div className={className}>
       <div className="sendero-wrap">
         <svg className="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -10504,22 +10536,38 @@ function SenderoBarBase({ blocks, currentIndex, sticky }) {
               </g>
             );
           })}
+
+          {showOrb && (
+            <g className="sendero-orb">
+              {/* Glow primero (debajo) */}
+              <circle r="7" fill="var(--focus)" opacity="0.30">
+                <animateMotion dur="2s" fill="freeze" path={orbPath} />
+              </circle>
+              {/* Punto solido encima */}
+              <circle r="3" fill="var(--focus)">
+                <animateMotion dur="2s" fill="freeze" path={orbPath} />
+              </circle>
+            </g>
+          )}
         </svg>
       </div>
 
-      {/* hito-labels solo se renderizan en modo NO sticky (CompletionScreen,
-          eventual ampliacion). En sticky la altura es 38px y caben mal. */}
-      {!sticky && (
+      {/* hito-labels (s77b): SOLO los hitos done (i < currentIndex).
+          - En .lg (TransitionCards): el current ya aparece como titulo
+            grande Garamond, asi que no se duplica; los pending quedan
+            sin spoiler.
+          - En no-lg (CompletionScreen): currentIndex === totalSteps,
+            asi que muestra TODOS (todos son done). Comportamiento
+            funcionalmente identico al de s76 en CompletionScreen. */}
+      {currentIndex > 0 && (
         <div className="hito-labels">
           {blocks.map(function(b, i) {
-            let stateClass = 'pending';
-            if (i < currentIndex) stateClass = 'done';
-            else if (i === currentIndex) stateClass = 'current';
+            if (i >= currentIndex) return null;
             const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
             return (
               <span
                 key={b.id + '-' + i}
-                className={'hito-label ' + stateClass}
+                className="hito-label done"
                 style={{ left: leftPct + '%' }}
               >
                 {b.name}
@@ -10539,6 +10587,261 @@ function SenderoBarBase({ blocks, currentIndex, sticky }) {
 const SenderoBar = React.memo(SenderoBarBase);
 
 Object.assign(window, { SenderoBar });
+
+</script>
+  <!-- Caminos - PathTransitions (sesion 77) - debe cargarse ANTES de PathRunner que lo consume -->
+  <script type="text/babel">
+/* PACE - Caminos - PathTransitions (sesion 77 / v0.31.0)
+   Cards de transicion entre pantallas del Camino:
+
+     - IntroCard:  al abrir el Camino (SenderoBar 0/N + nombre del Camino).
+     - StepIntro:  entre cada par de pasos (SenderoBar parcial + orbe + kind).
+     - OutroCard:  antes de CompletionScreen (SenderoBar N/N + nombre).
+
+   Las tres comparten layout vertical: SenderoBar grande arriba, titulo
+   centrado en vertical, hint "toca para continuar" en la base. La card
+   entera es tappable. Auto-advance por timer (tokens CSS configurables).
+
+   Cero audio (decision 15 del prompt s77). Cero persistencia: si
+   recargas, no ves transicion -- aterrizas en el paso destino.
+
+   API expuesta a window: IntroCard, StepIntro, OutroCard.
+*/
+
+const { useState: useStatePT, useEffect: useEffectPT, useRef: useRefPT } = React;
+
+/* Lee var CSS como ms. Soporta "300ms" y "0.3s". */
+function pathTransitionReadMs(name, fallback) {
+  try {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    if (!v) return fallback;
+    if (v.endsWith('ms')) return parseFloat(v);
+    if (v.endsWith('s'))  return parseFloat(v) * 1000;
+    var n = parseFloat(v);
+    return Number.isFinite(n) ? n : fallback;
+  } catch (e) { return fallback; }
+}
+
+/* TransitionCardBase - logica comun de entrada/salida + auto-advance.
+   El padre (PathRunner) controla cuando se monta/desmonta cada variante. */
+function TransitionCardBase({
+  blocks,         // array para SenderoBar
+  currentIndex,   // hito activo (intro=0, transition=next, outro=total)
+  title,          // texto grande centrado en vertical
+  orbVisible,     // true solo en StepIntro
+  durationVar,    // 'intro' | 'step' | 'outro'
+  fadeMsFallback, // ms para entrada/salida (--path-card-fade-ms)
+  totalMsFallback,// ms total de hold antes del auto-continue
+  onContinue,     // callback al final del hold o al tap
+}) {
+  const { t } = useT();
+  /* Arranca invisible (decision 5: fade + scale 0.96 -> 1.0). */
+  const [visible, setVisible] = useStatePT(false);
+  const [exiting, setExiting] = useStatePT(false);
+  const exitedRef = useRefPT(false);
+  const enterRafRef = useRefPT(null);
+  const holdTimerRef = useRefPT(null);
+  const exitTimerRef = useRefPT(null);
+
+  useEffectPT(function () {
+    var fadeMs  = pathTransitionReadMs('--path-card-fade-ms', fadeMsFallback);
+    var holdMs  = pathTransitionReadMs(
+      durationVar === 'intro' ? '--path-intro-ms' :
+      durationVar === 'outro' ? '--path-outro-ms' :
+                                '--path-step-ms',
+      totalMsFallback
+    );
+    /* Doble rAF para asegurar pintado del estado opacity=0 antes del fade-in. */
+    enterRafRef.current = requestAnimationFrame(function () {
+      enterRafRef.current = requestAnimationFrame(function () { setVisible(true); });
+    });
+    /* Hold "completo" termina cuando expiran (holdMs - fadeMs) tras el fade-in.
+       Asi el conjunto entrada + hold visible + salida cuadra con holdMs total. */
+    var holdAfterEnter = Math.max(0, holdMs - fadeMs);
+    holdTimerRef.current = setTimeout(function () {
+      doExit();
+    }, fadeMs + holdAfterEnter);
+
+    return function () {
+      if (enterRafRef.current) cancelAnimationFrame(enterRafRef.current);
+      clearTimeout(holdTimerRef.current);
+      clearTimeout(exitTimerRef.current);
+    };
+  }, []);
+
+  function doExit() {
+    if (exitedRef.current) return;
+    exitedRef.current = true;
+    clearTimeout(holdTimerRef.current);
+    var fadeMs = pathTransitionReadMs('--path-card-fade-ms', fadeMsFallback);
+    setExiting(true);
+    setVisible(false);
+    exitTimerRef.current = setTimeout(function () {
+      if (typeof onContinue === 'function') onContinue();
+    }, fadeMs);
+  }
+
+  /* Tap acelera la salida (decision 7). */
+  function handleTap() { doExit(); }
+  function handleKey(e) {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      doExit();
+    }
+  }
+
+  /* Opacity y scale derivados del estado:
+       inicial:  opacity 0, scale --path-card-scale-from (0.96)
+       visible:  opacity 1, scale 1
+       exiting:  opacity 0, scale 0.96
+     La transicion CSS (definida inline) se encarga del tween. */
+  var scaleFrom = (function () {
+    try {
+      var v = getComputedStyle(document.documentElement)
+        .getPropertyValue('--path-card-scale-from').trim();
+      var n = parseFloat(v);
+      return Number.isFinite(n) ? n : 0.96;
+    } catch (e) { return 0.96; }
+  })();
+  var opacity, scale;
+  if (exiting)      { opacity = 0; scale = scaleFrom; }
+  else if (visible) { opacity = 1; scale = 1; }
+  else              { opacity = 0; scale = scaleFrom; }
+
+  return (
+    <div
+      onClick={handleTap}
+      onKeyDown={handleKey}
+      role="button"
+      tabIndex={0}
+      aria-label={title}
+      style={Object.assign({}, pathTransitionStyles.card, {
+        opacity: opacity,
+        transform: 'scale(' + scale + ')',
+      })}
+    >
+      <div style={pathTransitionStyles.senderoSlot}>
+        <SenderoBar
+          blocks={blocks}
+          currentIndex={currentIndex}
+          size="lg"
+          orbVisible={orbVisible}
+        />
+      </div>
+
+      <div style={pathTransitionStyles.titleWrap}>
+        <h2 style={pathTransitionStyles.title}>{title}</h2>
+      </div>
+
+      <div style={pathTransitionStyles.hint}>
+        {t('path.runner.transition.continue')}
+      </div>
+    </div>
+  );
+}
+
+function IntroCard({ pathName, blocks, onContinue }) {
+  return (
+    <TransitionCardBase
+      blocks={blocks}
+      currentIndex={0}
+      title={pathName}
+      orbVisible={false}
+      durationVar="intro"
+      fadeMsFallback={200}
+      totalMsFallback={2500}
+      onContinue={onContinue}
+    />
+  );
+}
+
+function StepIntro({ kindName, blocks, currentIndex, onContinue }) {
+  return (
+    <TransitionCardBase
+      blocks={blocks}
+      currentIndex={currentIndex}
+      title={kindName}
+      orbVisible={true}
+      durationVar="step"
+      fadeMsFallback={200}
+      totalMsFallback={2000}
+      onContinue={onContinue}
+    />
+  );
+}
+
+function OutroCard({ pathName, blocks, onContinue }) {
+  var total = (blocks && blocks.length) || 0;
+  return (
+    <TransitionCardBase
+      blocks={blocks}
+      currentIndex={total /* todos done */}
+      title={pathName}
+      orbVisible={false}
+      durationVar="outro"
+      fadeMsFallback={200}
+      totalMsFallback={1500}
+      onContinue={onContinue}
+    />
+  );
+}
+
+const pathTransitionStyles = {
+  card: {
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '10vh 32px 6vh',
+    background: 'var(--paper)',
+    cursor: 'pointer',
+    userSelect: 'none',
+    zIndex: 10,
+    transformOrigin: '50% 50%',
+    transition:
+      'opacity var(--path-card-fade-ms, 200ms) ease-out, ' +
+      'transform var(--path-card-fade-ms, 200ms) ease-out',
+    outline: 'none',
+  },
+  senderoSlot: {
+    width: '100%',
+    maxWidth: 720,
+    flex: '0 0 auto',
+  },
+  titleWrap: {
+    flex: '1 1 auto',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '0 12px',
+    minHeight: 0,
+  },
+  title: {
+    fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+    fontStyle: 'italic',
+    fontSize: 'clamp(36px, 6vw, 64px)',
+    fontWeight: 500,
+    color: 'var(--ink)',
+    margin: 0,
+    textAlign: 'center',
+    lineHeight: 1.15,
+    letterSpacing: '0.005em',
+  },
+  hint: {
+    fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+    fontStyle: 'italic',
+    fontSize: 13,
+    color: 'var(--ink-3)',
+    letterSpacing: '0.04em',
+    flex: '0 0 auto',
+    opacity: 0.85,
+  },
+};
+
+Object.assign(window, { IntroCard, StepIntro, OutroCard });
 
 </script>
   <!-- Caminos - PathRunner UI (sesion 50) -->
@@ -10657,10 +10960,27 @@ const CS_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
      italic. Skipped en tono mas tenue.
    - Tiempo elapsed (ya calculado).
    - Logros desbloqueados DURANTE el Camino: filtra state.achievements
-     por unlockedAt >= snapshot.startedAt. Glifo del catalogo. */
-function CompletionScreen({ snapshot, onBack }) {
+     por unlockedAt >= snapshot.startedAt. Glifo del catalogo.
+
+   s77: prop `fadeIn` opacity 0 -> 1 en 400ms al montar. PathRunner lo
+   activa tras OutroCard para que el cierre simbolico no aparezca de
+   golpe. Aprovecha que ambos comparten background: var(--paper). */
+function CompletionScreen({ snapshot, onBack, fadeIn }) {
   const [state] = usePace();
   const { t } = useT();
+  const [opacity, setOpacity] = useStatePR(fadeIn ? 0 : 1);
+  useEffectPR(function () {
+    if (!fadeIn) return;
+    /* Doble rAF: asegura que el frame con opacity=0 se pinta antes de
+       arrancar la transicion a opacity=1. Sin esto, React podria batch
+       y nunca veriamos el fade-in. */
+    var r1 = requestAnimationFrame(function () {
+      var r2 = requestAnimationFrame(function () { setOpacity(1); });
+      /* Limpieza de la segunda rAF en caso de unmount entre frames. */
+      return function () { cancelAnimationFrame(r2); };
+    });
+    return function () { cancelAnimationFrame(r1); };
+  }, [fadeIn]);
   const path = getPath(snapshot.pathId);
   const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
@@ -10698,6 +11018,8 @@ function CompletionScreen({ snapshot, onBack }) {
       alignItems: 'center', justifyContent: 'center',
       padding: '32px 40px', textAlign: 'center',
       overflowY: 'auto',
+      opacity: opacity,
+      transition: fadeIn ? 'opacity 400ms ease-out' : 'none',
     }}>
       <div style={{
         width: 64, height: 64, borderRadius: '50%',
@@ -10725,7 +11047,7 @@ function CompletionScreen({ snapshot, onBack }) {
 
       {/* SenderoBar 100% done: currentIndex = totalSteps -> ningun
           hito en estado 'current', todos en 'done'. */}
-      {totalSteps > 0 && typeof SenderoBar === 'function' && (
+      {totalSteps > 0 && (
         <div style={{ width: '100%', maxWidth: 640, margin: '0 0 12px' }}>
           <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} />
         </div>
@@ -11052,13 +11374,28 @@ function PathBodyStep({ step, onExit }) {
   return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
 }
 
-/* PathRunner - orquestador principal */
+/* PathRunner - orquestador principal.
+
+   s77: maquina de fases para las transiciones intra-overlay.
+     'intro'      -> IntroCard al abrir el Camino (solo si recien iniciado).
+     'step'       -> render del paso real (Focus/Breathe/Body/Hydrate).
+     'transition' -> StepIntro entre dos pasos (cur.stepIndex ya avanzado).
+     'outro'      -> OutroCard antes de CompletionScreen.
+
+   Reglas clave (volatiles, no se persisten en paths.current):
+   - Recarga durante intro/transition/outro -> phase='step' al rehidratar.
+   - Step intermedio: advancePathStep AHORA, asi recarga aterriza en destino.
+   - Ultimo step: NO se avanza hasta tras OutroCard (cur queda intacto). */
 function PathRunner() {
   const [state] = usePace();
   const { t } = useT();
   const cur = state.paths.current;
   const [justCompleted, setJustCompleted] = useStatePR(null);
   const [confirmExit, setConfirmExit] = useStatePR(false);
+  const [phase, setPhase] = useStatePR('step');
+  /* pendingComplete = snapshot + reason capturados al iniciar OutroCard.
+     Se aplica en handleOutroDone -> setJustCompleted + advancePathStep. */
+  const [pendingComplete, setPendingComplete] = useStatePR(null);
 
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
@@ -11068,23 +11405,31 @@ function PathRunner() {
   /* s76: marca body cuando hay un Camino activo (no en CompletionScreen).
      CSS en tokens.css empuja el padding-top del overlay y de SessionShell
      para dejar sitio a la SenderoBar sticky superior. */
+  /* s77: phase = 'intro' al iniciar un Camino (volatil). Detecta "recien
+     iniciado" como (Date.now() - startedAt < 1500ms) sobre stepIndex 0.
+     Al recargar, este margen ya habra expirado y aterrizamos en 'step'. */
   useEffectPR(() => {
-    if (cur) {
-      document.body.setAttribute('data-pace-path-active', '1');
-      return () => { document.body.removeAttribute('data-pace-path-active'); };
+    if (!cur) { setPhase('step'); return; }
+    if (cur.stepIndex === 0 && (Date.now() - cur.startedAt) < 1500) {
+      setPhase('intro');
+    } else {
+      setPhase('step');
     }
   }, [cur ? cur.id : null]);
 
-  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida.
-     NOTA: hook movido antes del early return para cumplir Rules of Hooks.
-     El guard "if (!cur) return" esta dentro del callback, no fuera. */
+  /* Escape:
+       - Modal de confirmacion abierto -> cierra modal.
+       - phase != 'step' -> ignorar (la card es tappable de por si).
+       - phase === 'step' -> solicita salida (con confirmacion si no opcional).
+     NOTA: hook movido antes del early return para cumplir Rules of Hooks. */
   useEffectPR(() => {
-    if (!cur) return; // guard dentro del callback: no actuar si no hay camino activo
+    if (!cur) return;
     function handleKey(e) {
       if (e.key !== 'Escape') return;
       var active = document.activeElement;
       if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
       if (confirmExit) { setConfirmExit(false); return; }
+      if (phase !== 'step') return;
       var path = getPath(cur.id);
       var step = path && path.steps[cur.stepIndex];
       if (step && step.optional) {
@@ -11095,12 +11440,14 @@ function PathRunner() {
     }
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [confirmExit, cur ? cur.stepIndex : null]);
+  }, [confirmExit, cur ? cur.stepIndex : null, phase]);
 
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
 
-  /* Pantalla de completado */
+  /* Pantalla de completado. fadeIn=true cuando viene tras OutroCard
+     (cross-fade simbolico 400ms). Si el usuario llega aqui por otra
+     via, fadeIn queda false. */
   if (justCompleted) {
     return (
       <div
@@ -11112,6 +11459,7 @@ function PathRunner() {
         <CompletionScreen
           snapshot={justCompleted}
           onBack={() => setJustCompleted(null)}
+          fadeIn
         />
       </div>
     );
@@ -11123,20 +11471,39 @@ function PathRunner() {
   const step = path.steps[cur.stepIndex];
   const totalSteps = path.steps.length;
 
-  /* Callback que reciben los subcomponentes de paso */
+  /* Callback de paso: dispara intro/transition/outro segun caso.
+     - Intermedio: avanza AHORA (decision 3) + phase='transition'.
+     - Ultimo:     captura snapshot + phase='outro'. El advance final lo
+       hace handleOutroDone tras el hold de OutroCard. */
   const handleStepExit = (reason) => {
     const isLast = cur.stepIndex >= path.steps.length - 1;
     if (isLast) {
       const skipped = reason === 'skip'
         ? [...cur.skippedSteps, cur.stepIndex]
         : cur.skippedSteps;
-      setJustCompleted({
-        pathId: cur.id,
-        startedAt: cur.startedAt,
-        skippedSteps: skipped,
+      setPendingComplete({
+        reason: reason,
+        snapshot: {
+          pathId: cur.id,
+          startedAt: cur.startedAt,
+          skippedSteps: skipped,
+        },
       });
+      setPhase('outro');
+    } else {
+      advancePathStep(reason);
+      setPhase('transition');
     }
-    advancePathStep(reason);
+  };
+
+  const handleIntroDone = () => { setPhase('step'); };
+  const handleTransitionDone = () => { setPhase('step'); };
+  const handleOutroDone = () => {
+    if (pendingComplete) {
+      setJustCompleted(pendingComplete.snapshot);
+      advancePathStep(pendingComplete.reason);
+      setPendingComplete(null);
+    }
   };
 
   /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar */
@@ -11156,6 +11523,11 @@ function PathRunner() {
     };
   });
 
+  /* Para StepIntro: durante phase='transition', cur.stepIndex YA refleja
+     el destino (advancePathStep ya se llamo). El kind del titulo y el
+     hito current son ambos del step actual. */
+  const transitionKindName = t('paths.kind.' + step.kind + '.name') || step.kind;
+
   return (
     <div
       className="path-runner-overlay"
@@ -11163,34 +11535,63 @@ function PathRunner() {
       aria-modal="true"
       aria-label={displayPathName}
     >
-      {/* s76: SenderoBar sticky fixed (z=95) -> persiste sobre
-          BreatheSession/MoveSession (SessionShell z=90). */}
-      {typeof SenderoBar === 'function' && (
-        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} sticky />
+      {/* Step activo: TopBar + body del paso.
+          Solo renderizamos esta capa cuando phase==='step' para evitar
+          montar el step mientras hay una card encima (decision 9:
+          StepIntro es bloqueante). La SenderoBar sticky se elimino en
+          s77b -- la lectura del progreso vive ahora en las
+          TransitionCards entre pantallas, no superpuesta al ejercicio. */}
+      {phase === 'step' && (
+        <>
+          <PathTopBar
+            pathName={displayPathName}
+            onRequestExit={handleRequestExit}
+          />
+          <div className="path-step-body">
+            {step.kind === 'breathe' && (
+              <PathBreatheStep step={step} onExit={handleStepExit} />
+            )}
+            {step.kind === 'focus' && (
+              <PathFocusStep step={step} onExit={handleStepExit} />
+            )}
+            {step.kind === 'body' && (
+              <PathBodyStep step={step} onExit={handleStepExit} />
+            )}
+            {step.kind === 'hydrate' && (
+              <PathHydrateStep
+                onDone={() => handleStepExit('done')}
+                onSkip={() => handleStepExit('skip')}
+              />
+            )}
+          </div>
+        </>
       )}
 
-      <PathTopBar
-        pathName={displayPathName}
-        onRequestExit={handleRequestExit}
-      />
-
-      <div className="path-step-body">
-        {step.kind === 'breathe' && (
-          <PathBreatheStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'focus' && (
-          <PathFocusStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'body' && (
-          <PathBodyStep step={step} onExit={handleStepExit} />
-        )}
-        {step.kind === 'hydrate' && (
-          <PathHydrateStep
-            onDone={() => handleStepExit('done')}
-            onSkip={() => handleStepExit('skip')}
-          />
-        )}
-      </div>
+      {/* Cards de transicion (s77). Posicionadas absolutas dentro del overlay.
+          Guard "typeof X === 'function'" cubre el caso de carga lenta (mismo
+          patron defensivo que SenderoBar/TimerDial). */}
+      {phase === 'intro' && typeof IntroCard === 'function' && (
+        <IntroCard
+          pathName={displayPathName}
+          blocks={senderoBlocks}
+          onContinue={handleIntroDone}
+        />
+      )}
+      {phase === 'transition' && typeof StepIntro === 'function' && (
+        <StepIntro
+          kindName={transitionKindName}
+          blocks={senderoBlocks}
+          currentIndex={cur.stepIndex}
+          onContinue={handleTransitionDone}
+        />
+      )}
+      {phase === 'outro' && typeof OutroCard === 'function' && (
+        <OutroCard
+          pathName={displayPathName}
+          blocks={senderoBlocks}
+          onContinue={handleOutroDone}
+        />
+      )}
 
       <ExitConfirmModal
         open={confirmExit}

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [abajo](#v0310----2026-05-17----featcamino-pathtransitions) |
 | **v0.30.0** | 2026-05-16 | feat(camino): arquitectura overlay -- TimerDial compartido + SenderoBar sticky persistente + CompletionScreen rica | #76 | [abajo](#v0300----2026-05-16----featcamino-arquitectura-overlay) |
-| **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [abajo](#v0290----2026-05-16----featcamino-sendero-hibrido--renombrado-sensorial) |
+| **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [session-75](./docs/sessions/session-75-sendero-implementacion.md) |
 | **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [session-74](./docs/sessions/session-74-oscuro-recalibrado.md) |
 | **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [abajo](#v02811----2026-05-12----styleui-subir-luminosidad-y-escalonar-fondos-modo-oscuro) |
 | **v0.28.10** | 2026-05-12 | style(ui): marron oscuro calido + aro suavizado en modo oscuro | #72 | [abajo](#v02810----2026-05-12----styleui-marron-oscuro-calido--aro-suavizado) |
@@ -94,6 +95,172 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.31.0] -- 2026-05-17 -- feat(camino): PathTransitions
+
+Sesiones **77 + 77b** unificadas en un solo commit. s77 introdujo las
+TransitionCards (Intro/Step/Outro) entre pantallas del Camino, la
+maquina de phases en PathRunner, el orbe viajero en SenderoBar y el
+cross-fade a CompletionScreen. s77b corrigio un bug runtime que dejaba
+la SenderoBar invisible en 3 sitios, aplico la microcopia diferida
+(Toast 3000ms + CTA verde musgo) y -- tras validacion del usuario --
+**retiro la SenderoBar sticky introducida en s76** (se sentia invasiva
+sobre cada ejercicio). El progreso visual del Camino vive ahora solo
+entre pantallas, no superpuesto al ejercicio activo.
+
+Diarios: [session-77-path-transitions.md](./docs/sessions/session-77-path-transitions.md)
++ [session-77b-fix-microcopia.md](./docs/sessions/session-77b-fix-microcopia.md).
+
+Bump a v0.31.0 por feature UX nueva (no fix).
+
+### Added
+
+- **`app/paths/PathTransitions.jsx`** -- nuevo (233 ln). Tres
+  componentes (`IntroCard`, `StepIntro`, `OutroCard`) sobre un
+  `TransitionCardBase` privado que centraliza la logica de entrada
+  fade+scale (doble rAF al mount), hold timer leyendo duraciones de
+  tokens CSS, salida acelerada por tap. Layout vertical: SenderoBar
+  grande arriba, titulo Garamond italic clamp(36-64px) centrado en
+  vertical, hint "toca para continuar" en la base. Toda la card es
+  area de tap.
+- **`app/state-core.jsx`** -- constante exportada
+  `TOAST_DURATION_MS = 3000` (s77b). Antes 5000ms hardcodeado en
+  Toast.jsx; ahora unica fuente de verdad.
+- **`app/tokens.css`** -- 5 tokens nuevos en `:root`:
+  `--path-intro-ms: 2500ms`, `--path-step-ms: 2000ms`,
+  `--path-outro-ms: 1500ms`, `--path-card-fade-ms: 200ms`,
+  `--path-card-scale-from: 0.96`. Bloque `.sendero-bar.lg` (max-width
+  720, altura SVG `clamp(140px, 22vh, 220px)`). Reglas s77b para
+  alinear las labels de hito en lg: `.sendero-bar.lg .hito-labels
+  { max-width: 720px; }` + font-size 12/11px. Tokens
+  `--focus-cta: #506B3E` (crema) y `#8AA776` (oscuro) para el CTA
+  Comenzar del home. `@keyframes path-orb-travel` reservado.
+  `.sendero-bar .sendero-orb { pointer-events: none; }`.
+- **i18n** -- 1 sola clave nueva (limite autoimpuesto en s77):
+  `path.runner.transition.continue` ES "toca para continuar" /
+  EN "tap to continue".
+
+### Changed
+
+- **`app/paths/SenderoBar.jsx`** -- nuevas props `size` (acepta `"lg"`)
+  y `orbVisible`. Cuando `orbVisible && currentIndex > 0`, renderiza un
+  orbe viajero: 2 `<circle>` (glow r=7 opacity 0.30, dot r=3) con
+  `<animateMotion dur="2s" fill="freeze">` sobre la curva Bezier del
+  segmento prev->current, reutilizando `sbSegmentPath` para alineacion
+  pixel-a-pixel.
+  - s77b: prop `sticky` **retirada** (sin consumidor restante). Bloque
+    `hito-labels` cambia de filtro: ahora muestra SOLO los hitos done
+    (`i < currentIndex`). Una unica regla unificada: en IntroCard cero
+    labels, en StepIntro/OutroCard van apareciendo segun avanza el
+    Camino, en CompletionScreen (currentIndex=totalSteps) muestra
+    todos. Sin label para el current (ya esta en grande arriba) ni
+    para los pending (sin spoiler).
+- **`app/paths/PathRunner.jsx`** -- maquina de fases nueva:
+  `phase: 'intro' | 'step' | 'transition' | 'outro'` (estado local,
+  volatil). Estado `pendingComplete` para snapshotar el cierre del
+  ultimo paso antes de OutroCard.
+  - `useEffect` inicializador: phase='intro' solo si `cur.stepIndex
+    === 0` y `(Date.now() - cur.startedAt) < 1500ms`. Al recargar,
+    aterrizas en 'step' (decision 3 del prompt s77: transiciones
+    volatiles).
+  - `handleStepExit` reescrito: intermedio llama `advancePathStep`
+    AHORA y entra en phase='transition'; ultimo captura snapshot en
+    `pendingComplete` y entra en phase='outro' (el advance final se
+    difiere a `handleOutroDone`).
+  - Tres nuevos callbacks: `handleIntroDone`, `handleTransitionDone`,
+    `handleOutroDone`. Este ultimo dispara setJustCompleted +
+    advancePathStep (cur=null + CompletionScreen fadeIn).
+  - Render dispatch por phase: la capa step (TopBar + body del paso)
+    SOLO se monta con phase='step'. Las tres cards de transicion son
+    hermanas con `position: absolute`. Cumple decision 9 del prompt
+    s77 (StepIntro bloqueante: el siguiente step se monta TRAS la
+    card).
+  - `useEffect` de Escape extendido: ignora la tecla en phases
+    no='step' (la card es tappable de por si).
+  - **s77b**: eliminado el `useEffect` que toggleaba
+    `body[data-pace-path-active]` y el render
+    `<SenderoBar ... sticky />` dentro del step phase. La barra
+    sticky de s76 se retira por completo.
+- **`CompletionScreen`** -- nueva prop `fadeIn`. Doble rAF al mount
+  para arrancar opacity 0 y transicionar a 1 en 400ms ease-out. Activo
+  solo cuando se entra desde OutroCard. Ambos comparten background
+  `var(--paper)`, asi el cross-fade es limpio.
+- **`app/focus/FocusTimer.jsx`** -- `startBtnPrimary` cambia
+  `background: 'var(--focus)'` -> `'var(--focus-cta)'` (border igual).
+  Solo afecta el CTA Comenzar home, no el resto del sistema.
+- **`app/ui/Toast.jsx`** -- lee `TOAST_DURATION_MS` de window
+  (fallback a 3000 si no esta definido) en vez del 5000 hardcoded.
+- **`PACE.html`** -- nueva linea de carga
+  `app/paths/PathTransitions.jsx` ANTES de
+  `app/paths/PathRunner.jsx` (que lo consume). Titulo `v0.31.0`.
+- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.31.0`.
+- **`sw.js`** -- `CACHE_NAME` `pace-v0.31.0`.
+
+### Fixed (s77b)
+
+- **SenderoBar invisible en 3 sitios -- causa raiz: guard
+  `typeof SenderoBar === 'function'` evaluaba `false`** porque
+  `React.memo()` retorna un objeto, no una funcion. El guard estaba
+  en `PathTransitions.jsx:131` (TransitionCards lg), `PathRunner.jsx:
+  703` (sticky en step phase) y `PathRunner.jsx:202` (CompletionScreen
+  rica). Los tres introducidos en s76 sin validacion runtime real --
+  probablemente llevaban rotos desde entonces. Fix: render directo sin
+  guard. El orden de carga en `PACE.html` ya garantiza que
+  `window.SenderoBar` exista antes de que React evalue los consumidores.
+
+### Removed (s77b)
+
+- **SenderoBar sticky completa** (feature s76). Tras validacion runtime
+  con la fix, el usuario decidio que la barra fija sobre cada ejercicio
+  invade la pantalla. Se quitan:
+  - Render `<SenderoBar ... sticky />` y `useEffect` de toggle de
+    `body[data-pace-path-active]` en `app/paths/PathRunner.jsx`.
+  - Prop `sticky` de `app/paths/SenderoBar.jsx`.
+  - Token `--sendero-sticky-h` y bloque CSS `.sendero-bar.sticky` con
+    sus 4 reglas asociadas en `app/tokens.css`.
+  - Selectores `body[data-pace-path-active] .path-runner-overlay` y
+    `body[data-pace-path-active] [data-pace-session-root]`.
+- **Halo dinamico `@keyframes sb-halo-fade-in`** anyadido durante s77b
+  y revertido en el mismo s77b al quedar como dead code tras retirar
+  la sticky (excluido en .lg, sin escenario en CompletionScreen).
+
+### Racional
+
+s76 dejo continuidad **dentro** de cada pantalla del Camino y al
+**cerrar**, pero los **saltos** entre pantallas seguian siendo
+abruptos. s77 introduce un breath narrativo (intro 2.5s / step 2s /
+outro 1.5s) que da forma de "ceremonia interior" al recorrido sin
+meter audio nuevo (decision 15: silencio total). El orbe viajero en
+StepIntro es el unico elemento dinamico: marca visualmente "venimos
+de aqui, vamos alli" reutilizando la curva del SenderoBar como pista.
+La sticky de s76, aunque arquitecturalmente correcta, en runtime
+restaba foco al ejercicio activo -- s77b la retira y deja el progreso
+solo en los momentos rituales (entre pantallas + completion).
+
+### Build
+
+- `PACE_standalone.html`: **598 KB** (612,203 bytes; -1 KB vs s77
+  inicial por dead code limpio de la sticky retirada).
+- `index.html`: identico byte-a-byte.
+- 43 archivos validados (42 -> 43 por PathTransitions.jsx).
+- Backup: `backups/PACE_standalone_v0.30.0_20260517.html` (creado en
+  s77 ANTES del build, evitando el problema detectado en s76 donde la
+  regeneracion sobrescribia el standalone antes del paso de rotacion).
+  Rotado el mas antiguo (`v0.27.1b_20260509.html`).
+
+### Diferido a sesiones siguientes
+
+- s78 -- catalogo Caminos 5 -> 7 (Te sin Azucar / Plain Tea + Halito /
+  Breath).
+- Split `app/paths/PathRunner.jsx` (717 ln tras s77b) en
+  `PathCompletion.jsx` + `PathSteps.jsx`.
+- Split `app/i18n/strings.js` (~776 ln).
+- Lift `SB_ROMAN` / `CS_ROMAN` a `app/ui/numerals.js` cuando aparezca
+  el tercer consumidor.
+- Validar contraste WCAG de `--focus-cta` oscuro (`#8AA776` sobre
+  `var(--paper)` oscuro).
 
 ---
 
@@ -182,105 +349,11 @@ algo, se detecta con la app aun reconocible. Cambios 2 y 3 son aditivos.
 
 ---
 
-## [v0.29.0] -- 2026-05-16 -- feat(camino): sendero hibrido + renombrado sensorial
-
-Sesion 75. Primer cambio funcional sobre el modulo Caminos desde s54.
-Tres ejes: renombrado evocador de los 5 Caminos (de horarios a
-sensoriales), nuevo componente `SenderoBar` con curva organica y halos,
-y refactor de la sugerencia (preferencia del usuario, no hora del dia).
-Bugs heredados corregidos.
-
-### Added
-
-- **`app/paths/SenderoBar.jsx`** -- nuevo. Progreso visual del Camino
-  como sendero serpenteante: curva Bezier asimetrica + hitos con halo
-  radial. Puramente declarativo, soporta de 1 a 6 bloques, `currentColor`
-  hereda del tema (claro y oscuro). IDs de gradiente unicos via
-  `useId()`.
-- **`app/tokens.css`** -- bloque scoped `.sendero-bar` con tipografia,
-  layout y variantes done/current/pending. Sin variables nuevas: deriva
-  de `--ink/--ink-2/--ink-3` y `currentColor`.
-- **i18n**: 4 claves `paths.kind.{breathe|focus|body|hydrate}.name` (ES y
-  EN) para etiquetar los hitos del sendero.
-- **`state-paths.jsx`**: `setLastViewedPath(pathId)` expuesto. Usado
-  automaticamente desde `startPath()`, asi que no hay que tocar
-  selectores.
-- **`state-core.jsx`**: `paths.lastViewed: null` en `defaultState` +
-  migracion defensiva en `loadState` para instalaciones pre-v0.29.
-
-### Changed
-
-- **5 Caminos renombrados** (IDs internos intactos, solo strings):
-  - `path.dawn`: Amanecer/Dawn -> **Morning Glory** (ambos idiomas).
-  - `path.midday`: Mediodia/Midday -> **Hierbabuena / Spearmint**.
-  - `path.afternoon`: Tarde/Afternoon -> **Chispa de Cerilla / Matchstrike**.
-  - `path.dusk`: Atardecer/Dusk -> **Lampara de Mesa / Desk Lamp**.
-  - `path.weekend`: Fin de semana/Weekend -> **Ventana Abierta / Open Window**.
-  Taglines reescritos como una linea poetica corta.
-- **`getSuggestedPath()`** (state-paths.jsx): deja de usar hora/dia de la
-  semana. Ahora devuelve `lastViewed` si esta en el catalogo, o el primer
-  Camino en caso contrario.
-- **`PathRunner.jsx` -- TopBar**: dots eliminados (redundantes con los
-  hitos del sendero). Pasa a header tipografico (Garamond italic 22px)
-  + boton cerrar.
-- **`PathRunner.jsx` -- SenderoBar montado** entre TopBar y
-  `path-step-body`. Mapea `path.steps -> { id, name: t('paths.kind.X.name') }`.
-- **`state-paths.jsx` -- `startPath()`**: actualiza `lastViewed`
-  automaticamente al abrir un Camino.
-- **`app/state.jsx`**: re-export anadido para `setLastViewedPath`.
-- **`PACE.html`**: titulo `v0.29.0`. Carga `SenderoBar.jsx` antes de
-  `PathRunner.jsx`.
-- **`sw.js`**: `CACHE_NAME` -> `pace-v0.29.0`.
-
-### Fixed
-
-- **`PathRunner.jsx:466` (aprox antes del edit)** -- TopBar mostraba el
-  ID crudo (`"dawn"`) por `cur.id.replace('path.', '')`. Ahora muestra
-  el nombre traducido (`t(path.nameKey)`).
-- **`PathRunner.jsx:463` (aprox)** -- `aria-label` del overlay tenia el
-  mismo bug. Corregido.
-- **`PathRunner.jsx:140` (CompletionScreen)** -- `<h2>` mostraba el ID
-  crudo en la pantalla de cierre. Corregido.
-- **`PathRunner.jsx:114`** -- `const name = path ? snapshot.pathId : snapshot.pathId;`
-  (asignacion inerte sin uso). Renombrado a `displayName` y conectado al
-  `t(path.nameKey)`.
-- **`PathFocusStep`** -- los minutos de foco dentro de un Camino no
-  acreditaban a las estadisticas globales. Ahora, cuando el timer llega
-  a 0 (no por skip), dispara `addFocusMinutes(step.min)` una sola vez
-  (guard `creditedRef`). Alineado con el Pomodoro estandar.
-
-### Racional
-
-El renombrado horario (Amanecer/Mediodia/...) era literal y obvio,
-chocaba con el tono editorial del producto. Los nombres sensoriales
-sugieren un mood, no un momento, y dejan al usuario decidir cuando le
-encaja. Por eso la sugerencia tambien deja de ser horaria: si el usuario
-prefiere "Lampara de Mesa" a las 8am, no hay razon para empujarle
-"Morning Glory". El SenderoBar reemplaza los 3-4 puntitos genericos del
-TopBar por una vista calida del Camino completo, manteniendo la
-sobriedad (sin colores, sin numeros visibles excepto numeracion romana
-discreta).
-
-### Build
-
-- `PACE_standalone.html`: **575.6 KB** (567 -> 575.6, +8.6 KB por
-  SenderoBar, CSS scoped, i18n nuevo y refactor PathRunner).
-- 41 archivos validados (40 -> 41 por SenderoBar.jsx).
-- SHA256: `9D7AC04378F54E3C73E6B98DDA30BF206525F22A9A7E27294D837A49F5018CB9`.
-- Backup: `backups/PACE_standalone_v0.28.12_20260516.html`. Rotado el
-  mas antiguo (`v0.25.4_20260508.html`) para mantener el cap de 20.
-
-### Diferido a sesiones siguientes
-
-- **s76**: crear los 2 Caminos faltantes -- Te sin Azucar / Plain Tea y
-  Halito / Breath. Catalogo pasara de 5 a 7. Revisar tambien el selector
-  inferior.
-- **s77**: animacion de transicion del halo al saltar de hito.
-
----
-
-<!-- v0.28.12 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- v0.29.0 y anteriores: detalle archivado en docs/sessions/. -->
 <!-- (regla CLAUDE.md: solo detalle de las 2 ultimas versiones aqui) -->
+<!-- Detalle v0.29.0 -> docs/sessions/session-75-sendero-implementacion.md -->
+<!-- A partir de aqui, los bloques inline son trazabilidad historica de
+     versiones anteriores a la regla. No se actualizan en sesiones nuevas. -->
 
 ---
 

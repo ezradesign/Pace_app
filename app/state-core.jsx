@@ -10,7 +10,11 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.30.0';
+const PACE_VERSION = 'v0.31.0';
+
+/* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
+   sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
+const TOAST_DURATION_MS = 3000;
 
 const defaultState = {
   // Settings / Tweaks
@@ -470,7 +474,7 @@ function onToast(listener) {
 applyTheme();
 
 Object.assign(window, {
-  LS_KEY, PACE_VERSION, defaultState,
+  LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast,
   zeroEntry, toISODate, todayISO,

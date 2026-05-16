@@ -15,9 +15,10 @@ function ToastHost() {
         const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
+        const durationMs = (typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000;
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
-        }, 5000);
+        }, durationMs);
       }
     });
   }, []);

@@ -14,7 +14,11 @@
       "Bash(node -e \"const fs=require\\('fs'\\);const c=fs.readFileSync\\('app/glyphs/exercise-glyphs.jsx','utf8'\\);console.log\\('Lines:',c.split\\('\\\\n'\\).length,'Bytes:',c.length\\);const keys=\\(c.match\\(/'[^']+': \\\\\\(\\\\{ size/g\\)||[]\\).length;console.log\\('Glyph keys:',keys\\);\")",
       "Bash(node -e \"const fs=require\\('fs'\\);const c=fs.readFileSync\\('app/glyphs/exercise-glyphs.jsx','utf8'\\);const m=c.match\\(/['\\\\\"][^'\\\\\"]+['\\\\\"]:\\\\s*\\\\\\(\\\\{\\\\s*size/g\\);console.log\\('Total glyph keys \\(incl. double-quoted\\):',m.length\\);\")",
       "Bash(copy \"PACE_standalone.html\" \"backups\\\\PACE_standalone_v0.28.0_20260511.html\")",
-      "Bash(findstr v0.28)"
+      "Bash(findstr v0.28)",
+      "Read(//c/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app/**)",
+      "Bash(powershell -Command \"Get-ChildItem PACE_standalone.html,index.html | Select-Object Name,Length\")",
+      "Bash(powershell -Command \"\\(Get-Content app\\\\paths\\\\PathRunner.jsx | Measure-Object -Line\\).Lines\")",
+      "Bash(powershell -Command \"\\(Get-Content app\\\\paths\\\\PathTransitions.jsx | Measure-Object -Line\\).Lines\")"
     ]
   }
 }
