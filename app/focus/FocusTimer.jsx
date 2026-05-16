@@ -345,76 +345,15 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 /* TIMER VISUALIZATIONS */
 /* ===================== */
 /* TimerVisualization — sesión 37: circle y numero eliminados (rotos).
-   Opciones válidas: aro (default), barra, analogico. */
+   Opciones válidas: aro (default), barra, analogico.
+   Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
+   para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
+   ahora en TimerDial.jsx. */
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerAro mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
 }
-
-/* interpolateRingColor — gradiente terracota→ocre→oliva en modo foco.
-   Estable en pausas (breathe) y larga (focus). Sesión 71 / v0.28.9. */
-function interpolateRingColor(progress, mode) {
-  if (mode === 'pausa') return 'var(--breathe)';
-  if (mode === 'larga') return 'var(--focus)';
-  const styles = getComputedStyle(document.documentElement);
-  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
-  const c1 = read('--breathe', '#C97A5D');
-  const c2 = read('--move',    '#9A7B4F');
-  const c3 = read('--focus',   '#6e7a4e');
-  const hexToRgb = (h) => {
-    const m = h.replace('#', '');
-    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
-  };
-  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
-  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
-  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
-  const t = Math.max(0, Math.min(1, progress));
-  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
-  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-}
-
-/* Timer "Aro" (default · ref. usuario).
-   Anillo fino + arco de progreso sutil.
-   Dentro: etiqueta de modo · número gigante italic serif · divisor fino ·
-   botón de comenzar + reset (inyectados via `inner`). El layout coincide
-   con la composición de referencia (2026-04-22).
-   Responsive: ocupa el mínimo entre ancho y alto del contenedor. */
-function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner, mode }) {
-  const R = 47.5;          // radio del anillo (en viewBox 100)
-  const C = 2 * Math.PI * R;
-
-  return (
-    <div style={focusStyles.aroFrame}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        {/* Aro base — trazo fino cálido */}
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        {/* Arco de progreso — gradiente terracota→ocre→oliva en foco; estable en pausa/larga */}
-        <circle cx="50" cy="50" r={R} fill="none"
-          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
-          strokeOpacity="0.7"
-          strokeLinecap="round"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
-      </svg>
-
-      {/* Contenido centrado */}
-      <div style={focusStyles.aroInner}>
-        <div style={focusStyles.modeLabel}>{modeLabel}</div>
-        <div style={focusStyles.numberHuge}>
-          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
-        </div>
-        <div style={focusStyles.subtitleItalic}>{subtitle}</div>
-        <div style={focusStyles.innerDivider} />
-        {inner /* botones Comenzar + reset inyectados desde el padre */}
-      </div>
-    </div>
-  );
-}
-
-/* TimerNumber y TimerCircle eliminados en v0.19.0 (rotos, sin diseño).
-   Solo quedan: TimerAro (default), TimerBar, TimerAnalog. */
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
   return (
@@ -498,75 +437,10 @@ const focusStyles = {
     width: '100%',
   },
 
-  /* ===== AroFrame (default) — cuadrado, compacto para dejar sitio a los controles.
-     Altura MAX ~520px para que a 1080p quepa: topbar(~56) + min(~45) + aro(520)
-     + actividades(~110) + colchón ≈ 730–800 px. Así queda con aire.
-
-     Responsive (sesión 22 · v0.12.5):
-       Se añade `min(…, 86vw)` en ancho para que en viewports estrechos
-       (móvil 375–430) el aro nunca se desborde. Antes `min(56vh, 520)`
-       daba 472 px en un iPhone 12 (844 alto) → se cortaba por los
-       bordes en un ancho de 390. Ahora el lado del cuadrado es el
-       mínimo entre los tres: 56% alto, 86% ancho y 520 px. El `vw`
-       manda en móvil, el `vh` manda en desktop, el 520 px pone techo
-       en pantallas grandes — sin cambiar el comportamiento previo. */
-  aroFrame: {
-    position: 'relative',
-    height: 'min(56vh, 86vw, 520px)',
-    width: 'min(56vh, 86vw, 520px)',
-    aspectRatio: '1 / 1',
-    flexShrink: 0,
-    display: 'grid',
-    placeItems: 'center',
-  },
-  aroInner: {
-    position: 'relative',
-    textAlign: 'center',
-    zIndex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    // Limita el ancho del texto para que "Concentración profunda" quepa bien
-    // y el contenido no se desborde por los bordes curvos del círculo.
-    maxWidth: '70%',
-  },
-  modeLabel: {
-    fontSize: 11,
-    letterSpacing: '0.26em',
-    textTransform: 'uppercase',
-    color: 'var(--ink-3)',
-    marginBottom: 10,
-    fontWeight: 500,
-  },
-  numberHuge: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontWeight: 400,
-    lineHeight: 0.9,
-    fontVariantNumeric: 'tabular-nums',
-    letterSpacing: '-0.03em',
-    color: 'var(--ink)',
-    // Escala para caber en el aro reducido (520 max)
-    fontSize: 'clamp(64px, 7vw, 104px)',
-  },
-  subtitleItalic: {
-    fontStyle: 'italic',
-    fontFamily: 'var(--font-display)',
-    fontSize: 14,
-    color: 'var(--ink-3)',
-    // Sep. entre número gigante y subtítulo italic: los descendentes del
-    // número (los dos-puntos y el cero) quedaban visualmente pisando al
-    // subtítulo. +20px de aire (sesión 20).
-    marginTop: 30,
-    letterSpacing: 0.2,
-  },
-  innerDivider: {
-    width: 110,
-    height: 1,
-    background: 'var(--line-2)',
-    opacity: 0.55,
-    margin: '12px 0 10px',
-  },
+  /* NOTA s76: los estilos aroFrame/aroInner/modeLabel/numberHuge/
+     subtitleItalic/innerDivider vivian aqui y ahora viven en
+     app/ui/TimerDial.jsx (timerDialStyles), compartidos con
+     PathFocusStep. */
 
   /* ===== Controles (compactos, estilo referencia) ===== */
   controls: {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.29.0</title>
+  <title>PACE · Foco · Cuerpo — v0.30.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -99,6 +99,11 @@
   --dur-normal: 320ms;
   --dur-slow: 640ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Altura de la SenderoBar sticky en overlay Camino (s76).
+     Se afinara en s77 con el resto del ritmo visual; no hardcodear
+     en los JSX. */
+  --sendero-sticky-h: 38px;
 }
 
 /* PALETA · Oscuro noche */
@@ -255,6 +260,52 @@ input, textarea { font-family: inherit; color: inherit; }
   opacity: 0.55;
 }
 .sendero-bar .dot-fill { fill: currentColor; }
+
+/* ============================================================
+   Variante sticky (s76 / v0.30.0)
+   Barra fija arriba durante un Camino activo. Persiste sobre
+   BreatheSession / MoveSession (que usan SessionShell z-index 90)
+   gracias a z-index 95. Labels ocultos por compacidad; tooltip
+   nativo via <title> en el SVG.
+   ============================================================ */
+.sendero-bar.sticky {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--sendero-sticky-h);
+  z-index: 95;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+.sendero-bar.sticky .sendero-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.sendero-bar.sticky .sendero-svg {
+  display: block;
+  width: 100%;
+  height: calc(var(--sendero-sticky-h) - 6px);
+  overflow: visible;
+}
+.sendero-bar.sticky .hito-labels { display: none; }
+
+/* Cuando un Camino esta activo, empuja el overlay y la cascara de
+   sesion para dejar sitio a la barra sticky. PathRunner ana de y
+   retira el atributo body[data-pace-path-active] en su efecto de
+   montaje. El !important es necesario para sobreescribir el padding
+   inline de SessionShell.root. */
+body[data-pace-path-active] .path-runner-overlay {
+  padding-top: var(--sendero-sticky-h);
+}
+body[data-pace-path-active] [data-pace-session-root] {
+  padding-top: calc(28px + var(--sendero-sticky-h)) !important;
+}
 
   </style>
   <style id="pace-paths-css">
@@ -713,6 +764,7 @@ window.PACE_STRINGS = {
     'path.runner.complete.title':    'Camino completado',
     'path.runner.complete.body':     'Has terminado {name}.',
     'path.runner.complete.back':     'Volver',
+    'path.runner.complete.recorrido':'Recorrido',
     'path.hydrate.copy':             'Un vaso de agua, si te apetece',
     'path.hydrate.drank':            'He bebido',
     'path.error.routineNotFound':    'Rutina no encontrada: {id}',
@@ -1096,6 +1148,7 @@ window.PACE_STRINGS = {
     'path.runner.complete.title':    'Path completed',
     'path.runner.complete.body':     'You finished {name}.',
     'path.runner.complete.back':     'Back',
+    'path.runner.complete.recorrido':'Journey',
     'path.hydrate.copy':             'A glass of water, if you feel like it',
     'path.hydrate.drank':            'I drank',
     'path.error.routineNotFound':    'Routine not found: {id}',
@@ -1458,7 +1511,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.29.0';
+const PACE_VERSION = 'v0.30.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -3934,6 +3987,134 @@ function ToastHost() {
 
 Object.assign(window, { ToastHost });
 </script>
+  <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
+       PathFocusStep (dentro de un Camino). Debe cargarse antes que ambos. -->
+  <script type="text/babel">
+/* PACE - TimerDial (sesion 76 / v0.30.0)
+   Anillo circular compartido entre FocusTimer (Pomodoro home) y
+   PathFocusStep (Pomodoro dentro de un Camino). Extraido de
+   FocusTimer.TimerAro para eliminar la divergencia visual entre
+   ambos sitios (auditoria s75, captura 3).
+
+   Puramente presentacional. El padre controla running/setRunning y
+   provee los controles via el slot `inner` (FocusTimer los inyecta
+   dentro del aro; PathFocusStep los deja fuera y pasa inner=null).
+
+   Pixel-equivalente al TimerAro previo:
+     viewBox 100 / radio 47.5 / strokeWidth base 0.35 / arco 0.7
+     strokeOpacity 0.7 / strokeLinecap round
+*/
+
+/* interpolateRingColor - gradiente terracota -> ocre -> oliva en modo
+   foco. Estable en pausas (breathe) y larga (focus). Extraido de
+   FocusTimer en s76. */
+function interpolateRingColor(progress, mode) {
+  if (mode === 'pausa') return 'var(--breathe)';
+  if (mode === 'larga') return 'var(--focus)';
+  const styles = getComputedStyle(document.documentElement);
+  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
+  const c1 = read('--breathe', '#C97A5D');
+  const c2 = read('--move',    '#9A7B4F');
+  const c3 = read('--focus',   '#6e7a4e');
+  const hexToRgb = (h) => {
+    const m = h.replace('#', '');
+    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
+  };
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
+  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
+  const t = Math.max(0, Math.min(1, progress));
+  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+}
+
+function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+  const R = 47.5;
+  const C = 2 * Math.PI * R;
+
+  return (
+    <div style={timerDialStyles.frame}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
+        <circle cx="50" cy="50" r={R} fill="none"
+          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
+          strokeOpacity="0.7"
+          strokeLinecap="round"
+          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
+      </svg>
+
+      <div style={timerDialStyles.inner}>
+        <div style={timerDialStyles.modeLabel}>{modeLabel}</div>
+        <div style={timerDialStyles.numberHuge}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
+        </div>
+        {subtitle ? <div style={timerDialStyles.subtitleItalic}>{subtitle}</div> : null}
+        {inner ? <div style={timerDialStyles.innerDivider} /> : null}
+        {inner}
+      </div>
+    </div>
+  );
+}
+
+const timerDialStyles = {
+  frame: {
+    position: 'relative',
+    height: 'min(56vh, 86vw, 520px)',
+    width: 'min(56vh, 86vw, 520px)',
+    aspectRatio: '1 / 1',
+    flexShrink: 0,
+    display: 'grid',
+    placeItems: 'center',
+  },
+  inner: {
+    position: 'relative',
+    textAlign: 'center',
+    zIndex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    maxWidth: '70%',
+  },
+  modeLabel: {
+    fontSize: 11,
+    letterSpacing: '0.26em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-3)',
+    marginBottom: 10,
+    fontWeight: 500,
+  },
+  numberHuge: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontWeight: 400,
+    lineHeight: 0.9,
+    fontVariantNumeric: 'tabular-nums',
+    letterSpacing: '-0.03em',
+    color: 'var(--ink)',
+    fontSize: 'clamp(64px, 7vw, 104px)',
+  },
+  subtitleItalic: {
+    fontStyle: 'italic',
+    fontFamily: 'var(--font-display)',
+    fontSize: 14,
+    color: 'var(--ink-3)',
+    marginTop: 30,
+    letterSpacing: 0.2,
+  },
+  innerDivider: {
+    width: 110,
+    height: 1,
+    background: 'var(--line-2)',
+    opacity: 0.55,
+    margin: '12px 0 10px',
+  },
+};
+
+Object.assign(window, { TimerDial, interpolateRingColor });
+
+</script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
@@ -6130,76 +6311,15 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 /* TIMER VISUALIZATIONS */
 /* ===================== */
 /* TimerVisualization — sesión 37: circle y numero eliminados (rotos).
-   Opciones válidas: aro (default), barra, analogico. */
+   Opciones válidas: aro (default), barra, analogico.
+   Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
+   para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
+   ahora en TimerDial.jsx. */
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerAro mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
 }
-
-/* interpolateRingColor — gradiente terracota→ocre→oliva en modo foco.
-   Estable en pausas (breathe) y larga (focus). Sesión 71 / v0.28.9. */
-function interpolateRingColor(progress, mode) {
-  if (mode === 'pausa') return 'var(--breathe)';
-  if (mode === 'larga') return 'var(--focus)';
-  const styles = getComputedStyle(document.documentElement);
-  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
-  const c1 = read('--breathe', '#C97A5D');
-  const c2 = read('--move',    '#9A7B4F');
-  const c3 = read('--focus',   '#6e7a4e');
-  const hexToRgb = (h) => {
-    const m = h.replace('#', '');
-    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
-  };
-  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
-  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
-  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
-  const t = Math.max(0, Math.min(1, progress));
-  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
-  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-}
-
-/* Timer "Aro" (default · ref. usuario).
-   Anillo fino + arco de progreso sutil.
-   Dentro: etiqueta de modo · número gigante italic serif · divisor fino ·
-   botón de comenzar + reset (inyectados via `inner`). El layout coincide
-   con la composición de referencia (2026-04-22).
-   Responsive: ocupa el mínimo entre ancho y alto del contenedor. */
-function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner, mode }) {
-  const R = 47.5;          // radio del anillo (en viewBox 100)
-  const C = 2 * Math.PI * R;
-
-  return (
-    <div style={focusStyles.aroFrame}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        {/* Aro base — trazo fino cálido */}
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        {/* Arco de progreso — gradiente terracota→ocre→oliva en foco; estable en pausa/larga */}
-        <circle cx="50" cy="50" r={R} fill="none"
-          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
-          strokeOpacity="0.7"
-          strokeLinecap="round"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
-      </svg>
-
-      {/* Contenido centrado */}
-      <div style={focusStyles.aroInner}>
-        <div style={focusStyles.modeLabel}>{modeLabel}</div>
-        <div style={focusStyles.numberHuge}>
-          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
-        </div>
-        <div style={focusStyles.subtitleItalic}>{subtitle}</div>
-        <div style={focusStyles.innerDivider} />
-        {inner /* botones Comenzar + reset inyectados desde el padre */}
-      </div>
-    </div>
-  );
-}
-
-/* TimerNumber y TimerCircle eliminados en v0.19.0 (rotos, sin diseño).
-   Solo quedan: TimerAro (default), TimerBar, TimerAnalog. */
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
   return (
@@ -6283,75 +6403,10 @@ const focusStyles = {
     width: '100%',
   },
 
-  /* ===== AroFrame (default) — cuadrado, compacto para dejar sitio a los controles.
-     Altura MAX ~520px para que a 1080p quepa: topbar(~56) + min(~45) + aro(520)
-     + actividades(~110) + colchón ≈ 730–800 px. Así queda con aire.
-
-     Responsive (sesión 22 · v0.12.5):
-       Se añade `min(…, 86vw)` en ancho para que en viewports estrechos
-       (móvil 375–430) el aro nunca se desborde. Antes `min(56vh, 520)`
-       daba 472 px en un iPhone 12 (844 alto) → se cortaba por los
-       bordes en un ancho de 390. Ahora el lado del cuadrado es el
-       mínimo entre los tres: 56% alto, 86% ancho y 520 px. El `vw`
-       manda en móvil, el `vh` manda en desktop, el 520 px pone techo
-       en pantallas grandes — sin cambiar el comportamiento previo. */
-  aroFrame: {
-    position: 'relative',
-    height: 'min(56vh, 86vw, 520px)',
-    width: 'min(56vh, 86vw, 520px)',
-    aspectRatio: '1 / 1',
-    flexShrink: 0,
-    display: 'grid',
-    placeItems: 'center',
-  },
-  aroInner: {
-    position: 'relative',
-    textAlign: 'center',
-    zIndex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    // Limita el ancho del texto para que "Concentración profunda" quepa bien
-    // y el contenido no se desborde por los bordes curvos del círculo.
-    maxWidth: '70%',
-  },
-  modeLabel: {
-    fontSize: 11,
-    letterSpacing: '0.26em',
-    textTransform: 'uppercase',
-    color: 'var(--ink-3)',
-    marginBottom: 10,
-    fontWeight: 500,
-  },
-  numberHuge: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontWeight: 400,
-    lineHeight: 0.9,
-    fontVariantNumeric: 'tabular-nums',
-    letterSpacing: '-0.03em',
-    color: 'var(--ink)',
-    // Escala para caber en el aro reducido (520 max)
-    fontSize: 'clamp(64px, 7vw, 104px)',
-  },
-  subtitleItalic: {
-    fontStyle: 'italic',
-    fontFamily: 'var(--font-display)',
-    fontSize: 14,
-    color: 'var(--ink-3)',
-    // Sep. entre número gigante y subtítulo italic: los descendentes del
-    // número (los dos-puntos y el cero) quedaban visualmente pisando al
-    // subtítulo. +20px de aire (sesión 20).
-    marginTop: 30,
-    letterSpacing: 0.2,
-  },
-  innerDivider: {
-    width: 110,
-    height: 1,
-    background: 'var(--line-2)',
-    opacity: 0.55,
-    margin: '12px 0 10px',
-  },
+  /* NOTA s76: los estilos aroFrame/aroInner/modeLabel/numberHuge/
+     subtitleItalic/innerDivider vivian aqui y ahora viven en
+     app/ui/TimerDial.jsx (timerDialStyles), compartidos con
+     PathFocusStep. */
 
   /* ===== Controles (compactos, estilo referencia) ===== */
   controls: {
@@ -10377,7 +10432,7 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBar({ blocks, currentIndex }) {
+function SenderoBarBase({ blocks, currentIndex, sticky }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
@@ -10403,7 +10458,7 @@ function SenderoBar({ blocks, currentIndex }) {
   const pendingPath = pendingSegs.join(' ');
 
   return (
-    <div className="sendero-bar">
+    <div className={'sendero-bar' + (sticky ? ' sticky' : '')}>
       <div className="sendero-wrap">
         <svg className="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -10423,9 +10478,11 @@ function SenderoBar({ blocks, currentIndex }) {
           {pendingPath && <path className="path-line pending" d={pendingPath} />}
 
           {xs.map(function(cx, i) {
+            const label = (blocks[i] && blocks[i].name) || '';
             if (i < currentIndex) {
               return (
                 <g key={i}>
+                  {label && <title>{label}</title>}
                   <circle cx={cx} cy="50" r="10" fill={`url(#${haloDoneId})`} />
                   <circle cx={cx} cy="50" r="4" className="dot-fill" />
                 </g>
@@ -10434,39 +10491,52 @@ function SenderoBar({ blocks, currentIndex }) {
             if (i === currentIndex) {
               return (
                 <g key={i}>
+                  {label && <title>{label}</title>}
                   <circle cx={cx} cy="50" r="19" fill={`url(#${haloCurrentId})`} />
                   <circle cx={cx} cy="50" r="4.5" className="dot-fill" />
                 </g>
               );
             }
             return (
-              <circle key={i} cx={cx} cy="50" r="3.2" className="dot-fill" opacity="0.32" />
+              <g key={i}>
+                {label && <title>{label}</title>}
+                <circle cx={cx} cy="50" r="3.2" className="dot-fill" opacity="0.32" />
+              </g>
             );
           })}
         </svg>
       </div>
 
-      <div className="hito-labels">
-        {blocks.map(function(b, i) {
-          let stateClass = 'pending';
-          if (i < currentIndex) stateClass = 'done';
-          else if (i === currentIndex) stateClass = 'current';
-          const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
-          return (
-            <span
-              key={b.id + '-' + i}
-              className={'hito-label ' + stateClass}
-              style={{ left: leftPct + '%' }}
-            >
-              {b.name}
-              <span className="hito-roman">{sbToRoman(i + 1)}</span>
-            </span>
-          );
-        })}
-      </div>
+      {/* hito-labels solo se renderizan en modo NO sticky (CompletionScreen,
+          eventual ampliacion). En sticky la altura es 38px y caben mal. */}
+      {!sticky && (
+        <div className="hito-labels">
+          {blocks.map(function(b, i) {
+            let stateClass = 'pending';
+            if (i < currentIndex) stateClass = 'done';
+            else if (i === currentIndex) stateClass = 'current';
+            const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
+            return (
+              <span
+                key={b.id + '-' + i}
+                className={'hito-label ' + stateClass}
+                style={{ left: leftPct + '%' }}
+              >
+                {b.name}
+                <span className="hito-roman">{sbToRoman(i + 1)}</span>
+              </span>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
+
+/* memo: PathFocusStep tickea cada segundo. Sin memo, SenderoBar
+   re-renderiza por tick aunque blocks/currentIndex sean estables.
+   En movil 60 ticks/min es coste real. */
+const SenderoBar = React.memo(SenderoBarBase);
 
 Object.assign(window, { SenderoBar });
 
@@ -10576,25 +10646,64 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
   );
 }
 
-/* CompletionScreen - pantalla de camino completado */
+/* Numerales romanos (I-VII) para listar hitos en CompletionScreen.
+   SenderoBar tiene su propio set local; lo duplicamos aqui para no
+   exponer un helper compartido en window que aun no se reutiliza. */
+const CS_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+/* CompletionScreen - pantalla de camino completado (s76: rica).
+   - SenderoBar al 100% (todos los hitos como done).
+   - Lista "Recorrido": numeral romano + nombre del kind en Garamond
+     italic. Skipped en tono mas tenue.
+   - Tiempo elapsed (ya calculado).
+   - Logros desbloqueados DURANTE el Camino: filtra state.achievements
+     por unlockedAt >= snapshot.startedAt. Glifo del catalogo. */
 function CompletionScreen({ snapshot, onBack }) {
-  const { t, tn } = useT();
+  const [state] = usePace();
+  const { t } = useT();
   const path = getPath(snapshot.pathId);
   const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
     ? Math.round((Date.now() - snapshot.startedAt) / 60000)
     : 0;
+
+  const steps = (path && path.steps) || [];
+  const totalSteps = steps.length;
+  const skippedSet = new Set(snapshot.skippedSteps || []);
+
+  const senderoBlocks = steps.map(function(s, idx) {
+    return {
+      id: s.kind + '-' + idx,
+      name: t('paths.kind.' + s.kind + '.name') || s.kind,
+    };
+  });
+
+  /* Logros desbloqueados durante este Camino. */
+  const startedAt = snapshot.startedAt || 0;
+  const catalog = (typeof window !== 'undefined' && window.ACHIEVEMENT_CATALOG) || [];
+  const achievementsDuring = Object.keys(state.achievements || {})
+    .map(function(id) {
+      const v = state.achievements[id];
+      if (!v || !v.unlockedAt) return null;
+      if (v.unlockedAt < startedAt) return null;
+      const cat = catalog.find(function(x) { return x.id === id; });
+      if (!cat) return null;
+      return { id, title: cat.title, glyph: cat.glyph, glyphSvg: cat.glyphSvg };
+    })
+    .filter(Boolean);
+
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      padding: 40, textAlign: 'center',
+      padding: '32px 40px', textAlign: 'center',
+      overflowY: 'auto',
     }}>
       <div style={{
         width: 64, height: 64, borderRadius: '50%',
         background: 'var(--breathe-soft)', color: 'var(--breathe)',
         display: 'grid', placeItems: 'center', fontSize: 28,
-        marginBottom: 24,
+        marginBottom: 20,
       }}>
         &#x2714;
       </div>
@@ -10604,15 +10713,98 @@ function CompletionScreen({ snapshot, onBack }) {
       <h2 style={{
         fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.2,
+        color: 'var(--ink)', margin: '0 0 8px', lineHeight: 1.2,
       }}>
         {displayName}
       </h2>
       {elapsed > 0 && (
-        <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 32px' }}>
+        <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 24px' }}>
           {elapsed} min
         </p>
       )}
+
+      {/* SenderoBar 100% done: currentIndex = totalSteps -> ningun
+          hito en estado 'current', todos en 'done'. */}
+      {totalSteps > 0 && typeof SenderoBar === 'function' && (
+        <div style={{ width: '100%', maxWidth: 640, margin: '0 0 12px' }}>
+          <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} />
+        </div>
+      )}
+
+      {/* Lista discreta del recorrido */}
+      {totalSteps > 0 && (
+        <div style={{ margin: '4px 0 24px', maxWidth: 320, width: '100%' }}>
+          <div style={{
+            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: 'var(--ink-3)', marginBottom: 10,
+          }}>
+            {t('path.runner.complete.recorrido')}
+          </div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {steps.map(function(s, idx) {
+              const skipped = skippedSet.has(idx);
+              return (
+                <li key={s.kind + '-' + idx} style={{
+                  display: 'flex', alignItems: 'baseline', gap: 12,
+                  padding: '4px 0',
+                  opacity: skipped ? 0.45 : 1,
+                  textDecoration: skipped ? 'line-through' : 'none',
+                  textDecorationColor: 'var(--ink-3)',
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                    fontSize: 13, color: 'var(--ink-3)',
+                    minWidth: 28, textAlign: 'right',
+                  }}>{CS_ROMAN[idx] || (idx + 1)}</span>
+                  <span style={{
+                    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                    fontSize: 16, color: skipped ? 'var(--ink-3)' : 'var(--ink-2)',
+                  }}>
+                    {t('paths.kind.' + s.kind + '.name') || s.kind}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {/* Logros desbloqueados durante el Camino */}
+      {achievementsDuring.length > 0 && (
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          gap: 8, margin: '0 0 24px',
+          padding: '14px 18px',
+          border: '1px solid var(--achievement)',
+          borderRadius: 'var(--r-md)',
+          background: 'var(--achievement-soft)',
+        }}>
+          {achievementsDuring.map(function(a) {
+            return (
+              <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{
+                  width: 26, height: 26, borderRadius: '50%',
+                  border: '1px solid var(--achievement)',
+                  display: 'grid', placeItems: 'center',
+                  color: 'var(--achievement)',
+                  fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                  fontSize: 12,
+                }}>
+                  {a.glyphSvg
+                    ? <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: a.glyphSvg }} />
+                    : <span>{a.glyph}</span>
+                  }
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                  fontSize: 14, color: 'var(--ink)',
+                }}>{a.title}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div style={{ display: 'flex', gap: 10, flexDirection: 'column', alignItems: 'center' }}>
         <button
           onClick={onBack}
@@ -10754,25 +10946,40 @@ function PathFocusStep({ step, onExit }) {
     return () => clearInterval(intervalRef.current);
   }, [running]);
 
-  const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
-  const secs = String(remaining % 60).padStart(2, '0');
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
 
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
     }}>
-      <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 16px' }}>
-        {t('topbar.mode.focus')}
-      </p>
-      <div style={{
-        fontFamily: "'EB Garamond', Georgia, serif",
-        fontSize: 96, fontWeight: 400,
-        fontVariantNumeric: 'tabular-nums',
-        color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
-      }}>
-        {mins}:{secs}
-      </div>
+      {/* s76: TimerDial compartido con FocusTimer home. Controles del Camino
+          (Iniciar/Pausar + Skip) viven fuera del dial para preservar el
+          patron de salida del PathRunner. */}
+      {typeof TimerDial === 'function' ? (
+        <div style={{ marginBottom: 24 }}>
+          <TimerDial
+            mins={mins}
+            secs={secs}
+            progress={progress}
+            mode="foco"
+            modeLabel={t('topbar.mode.focus')}
+            subtitle={null}
+            inner={null}
+          />
+        </div>
+      ) : (
+        <div style={{
+          fontFamily: "'EB Garamond', Georgia, serif",
+          fontSize: 96, fontWeight: 400,
+          fontVariantNumeric: 'tabular-nums',
+          color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
+        }}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
+        </div>
+      )}
       {!done ? (
         <div style={{ display: 'flex', gap: 12 }}>
           <button
@@ -10856,6 +11063,16 @@ function PathRunner() {
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
     if (cur) setJustCompleted(null);
+  }, [cur ? cur.id : null]);
+
+  /* s76: marca body cuando hay un Camino activo (no en CompletionScreen).
+     CSS en tokens.css empuja el padding-top del overlay y de SessionShell
+     para dejar sitio a la SenderoBar sticky superior. */
+  useEffectPR(() => {
+    if (cur) {
+      document.body.setAttribute('data-pace-path-active', '1');
+      return () => { document.body.removeAttribute('data-pace-path-active'); };
+    }
   }, [cur ? cur.id : null]);
 
   /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida.
@@ -10946,14 +11163,16 @@ function PathRunner() {
       aria-modal="true"
       aria-label={displayPathName}
     >
+      {/* s76: SenderoBar sticky fixed (z=95) -> persiste sobre
+          BreatheSession/MoveSession (SessionShell z=90). */}
+      {typeof SenderoBar === 'function' && (
+        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} sticky />
+      )}
+
       <PathTopBar
         pathName={displayPathName}
         onRequestExit={handleRequestExit}
       />
-
-      {typeof SenderoBar === 'function' && (
-        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} />
-      )}
 
       <div className="path-step-body">
         {step.kind === 'breathe' && (

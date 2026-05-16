@@ -39,7 +39,7 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBar({ blocks, currentIndex }) {
+function SenderoBarBase({ blocks, currentIndex, sticky }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
@@ -65,7 +65,7 @@ function SenderoBar({ blocks, currentIndex }) {
   const pendingPath = pendingSegs.join(' ');
 
   return (
-    <div className="sendero-bar">
+    <div className={'sendero-bar' + (sticky ? ' sticky' : '')}>
       <div className="sendero-wrap">
         <svg className="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -85,9 +85,11 @@ function SenderoBar({ blocks, currentIndex }) {
           {pendingPath && <path className="path-line pending" d={pendingPath} />}
 
           {xs.map(function(cx, i) {
+            const label = (blocks[i] && blocks[i].name) || '';
             if (i < currentIndex) {
               return (
                 <g key={i}>
+                  {label && <title>{label}</title>}
                   <circle cx={cx} cy="50" r="10" fill={`url(#${haloDoneId})`} />
                   <circle cx={cx} cy="50" r="4" className="dot-fill" />
                 </g>
@@ -96,38 +98,51 @@ function SenderoBar({ blocks, currentIndex }) {
             if (i === currentIndex) {
               return (
                 <g key={i}>
+                  {label && <title>{label}</title>}
                   <circle cx={cx} cy="50" r="19" fill={`url(#${haloCurrentId})`} />
                   <circle cx={cx} cy="50" r="4.5" className="dot-fill" />
                 </g>
               );
             }
             return (
-              <circle key={i} cx={cx} cy="50" r="3.2" className="dot-fill" opacity="0.32" />
+              <g key={i}>
+                {label && <title>{label}</title>}
+                <circle cx={cx} cy="50" r="3.2" className="dot-fill" opacity="0.32" />
+              </g>
             );
           })}
         </svg>
       </div>
 
-      <div className="hito-labels">
-        {blocks.map(function(b, i) {
-          let stateClass = 'pending';
-          if (i < currentIndex) stateClass = 'done';
-          else if (i === currentIndex) stateClass = 'current';
-          const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
-          return (
-            <span
-              key={b.id + '-' + i}
-              className={'hito-label ' + stateClass}
-              style={{ left: leftPct + '%' }}
-            >
-              {b.name}
-              <span className="hito-roman">{sbToRoman(i + 1)}</span>
-            </span>
-          );
-        })}
-      </div>
+      {/* hito-labels solo se renderizan en modo NO sticky (CompletionScreen,
+          eventual ampliacion). En sticky la altura es 38px y caben mal. */}
+      {!sticky && (
+        <div className="hito-labels">
+          {blocks.map(function(b, i) {
+            let stateClass = 'pending';
+            if (i < currentIndex) stateClass = 'done';
+            else if (i === currentIndex) stateClass = 'current';
+            const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
+            return (
+              <span
+                key={b.id + '-' + i}
+                className={'hito-label ' + stateClass}
+                style={{ left: leftPct + '%' }}
+              >
+                {b.name}
+                <span className="hito-roman">{sbToRoman(i + 1)}</span>
+              </span>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
+
+/* memo: PathFocusStep tickea cada segundo. Sin memo, SenderoBar
+   re-renderiza por tick aunque blocks/currentIndex sean estables.
+   En movil 60 ticks/min es coste real. */
+const SenderoBar = React.memo(SenderoBarBase);
 
 Object.assign(window, { SenderoBar });

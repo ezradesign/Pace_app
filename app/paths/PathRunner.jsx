@@ -101,25 +101,64 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
   );
 }
 
-/* CompletionScreen - pantalla de camino completado */
+/* Numerales romanos (I-VII) para listar hitos en CompletionScreen.
+   SenderoBar tiene su propio set local; lo duplicamos aqui para no
+   exponer un helper compartido en window que aun no se reutiliza. */
+const CS_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+/* CompletionScreen - pantalla de camino completado (s76: rica).
+   - SenderoBar al 100% (todos los hitos como done).
+   - Lista "Recorrido": numeral romano + nombre del kind en Garamond
+     italic. Skipped en tono mas tenue.
+   - Tiempo elapsed (ya calculado).
+   - Logros desbloqueados DURANTE el Camino: filtra state.achievements
+     por unlockedAt >= snapshot.startedAt. Glifo del catalogo. */
 function CompletionScreen({ snapshot, onBack }) {
-  const { t, tn } = useT();
+  const [state] = usePace();
+  const { t } = useT();
   const path = getPath(snapshot.pathId);
   const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
     ? Math.round((Date.now() - snapshot.startedAt) / 60000)
     : 0;
+
+  const steps = (path && path.steps) || [];
+  const totalSteps = steps.length;
+  const skippedSet = new Set(snapshot.skippedSteps || []);
+
+  const senderoBlocks = steps.map(function(s, idx) {
+    return {
+      id: s.kind + '-' + idx,
+      name: t('paths.kind.' + s.kind + '.name') || s.kind,
+    };
+  });
+
+  /* Logros desbloqueados durante este Camino. */
+  const startedAt = snapshot.startedAt || 0;
+  const catalog = (typeof window !== 'undefined' && window.ACHIEVEMENT_CATALOG) || [];
+  const achievementsDuring = Object.keys(state.achievements || {})
+    .map(function(id) {
+      const v = state.achievements[id];
+      if (!v || !v.unlockedAt) return null;
+      if (v.unlockedAt < startedAt) return null;
+      const cat = catalog.find(function(x) { return x.id === id; });
+      if (!cat) return null;
+      return { id, title: cat.title, glyph: cat.glyph, glyphSvg: cat.glyphSvg };
+    })
+    .filter(Boolean);
+
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      padding: 40, textAlign: 'center',
+      padding: '32px 40px', textAlign: 'center',
+      overflowY: 'auto',
     }}>
       <div style={{
         width: 64, height: 64, borderRadius: '50%',
         background: 'var(--breathe-soft)', color: 'var(--breathe)',
         display: 'grid', placeItems: 'center', fontSize: 28,
-        marginBottom: 24,
+        marginBottom: 20,
       }}>
         &#x2714;
       </div>
@@ -129,15 +168,98 @@ function CompletionScreen({ snapshot, onBack }) {
       <h2 style={{
         fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.2,
+        color: 'var(--ink)', margin: '0 0 8px', lineHeight: 1.2,
       }}>
         {displayName}
       </h2>
       {elapsed > 0 && (
-        <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 32px' }}>
+        <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 24px' }}>
           {elapsed} min
         </p>
       )}
+
+      {/* SenderoBar 100% done: currentIndex = totalSteps -> ningun
+          hito en estado 'current', todos en 'done'. */}
+      {totalSteps > 0 && typeof SenderoBar === 'function' && (
+        <div style={{ width: '100%', maxWidth: 640, margin: '0 0 12px' }}>
+          <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} />
+        </div>
+      )}
+
+      {/* Lista discreta del recorrido */}
+      {totalSteps > 0 && (
+        <div style={{ margin: '4px 0 24px', maxWidth: 320, width: '100%' }}>
+          <div style={{
+            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: 'var(--ink-3)', marginBottom: 10,
+          }}>
+            {t('path.runner.complete.recorrido')}
+          </div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {steps.map(function(s, idx) {
+              const skipped = skippedSet.has(idx);
+              return (
+                <li key={s.kind + '-' + idx} style={{
+                  display: 'flex', alignItems: 'baseline', gap: 12,
+                  padding: '4px 0',
+                  opacity: skipped ? 0.45 : 1,
+                  textDecoration: skipped ? 'line-through' : 'none',
+                  textDecorationColor: 'var(--ink-3)',
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                    fontSize: 13, color: 'var(--ink-3)',
+                    minWidth: 28, textAlign: 'right',
+                  }}>{CS_ROMAN[idx] || (idx + 1)}</span>
+                  <span style={{
+                    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                    fontSize: 16, color: skipped ? 'var(--ink-3)' : 'var(--ink-2)',
+                  }}>
+                    {t('paths.kind.' + s.kind + '.name') || s.kind}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {/* Logros desbloqueados durante el Camino */}
+      {achievementsDuring.length > 0 && (
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          gap: 8, margin: '0 0 24px',
+          padding: '14px 18px',
+          border: '1px solid var(--achievement)',
+          borderRadius: 'var(--r-md)',
+          background: 'var(--achievement-soft)',
+        }}>
+          {achievementsDuring.map(function(a) {
+            return (
+              <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{
+                  width: 26, height: 26, borderRadius: '50%',
+                  border: '1px solid var(--achievement)',
+                  display: 'grid', placeItems: 'center',
+                  color: 'var(--achievement)',
+                  fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                  fontSize: 12,
+                }}>
+                  {a.glyphSvg
+                    ? <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: a.glyphSvg }} />
+                    : <span>{a.glyph}</span>
+                  }
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-display)', fontStyle: 'italic',
+                  fontSize: 14, color: 'var(--ink)',
+                }}>{a.title}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div style={{ display: 'flex', gap: 10, flexDirection: 'column', alignItems: 'center' }}>
         <button
           onClick={onBack}
@@ -279,25 +401,40 @@ function PathFocusStep({ step, onExit }) {
     return () => clearInterval(intervalRef.current);
   }, [running]);
 
-  const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
-  const secs = String(remaining % 60).padStart(2, '0');
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
 
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
     }}>
-      <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 16px' }}>
-        {t('topbar.mode.focus')}
-      </p>
-      <div style={{
-        fontFamily: "'EB Garamond', Georgia, serif",
-        fontSize: 96, fontWeight: 400,
-        fontVariantNumeric: 'tabular-nums',
-        color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
-      }}>
-        {mins}:{secs}
-      </div>
+      {/* s76: TimerDial compartido con FocusTimer home. Controles del Camino
+          (Iniciar/Pausar + Skip) viven fuera del dial para preservar el
+          patron de salida del PathRunner. */}
+      {typeof TimerDial === 'function' ? (
+        <div style={{ marginBottom: 24 }}>
+          <TimerDial
+            mins={mins}
+            secs={secs}
+            progress={progress}
+            mode="foco"
+            modeLabel={t('topbar.mode.focus')}
+            subtitle={null}
+            inner={null}
+          />
+        </div>
+      ) : (
+        <div style={{
+          fontFamily: "'EB Garamond', Georgia, serif",
+          fontSize: 96, fontWeight: 400,
+          fontVariantNumeric: 'tabular-nums',
+          color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
+        }}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
+        </div>
+      )}
       {!done ? (
         <div style={{ display: 'flex', gap: 12 }}>
           <button
@@ -381,6 +518,16 @@ function PathRunner() {
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
     if (cur) setJustCompleted(null);
+  }, [cur ? cur.id : null]);
+
+  /* s76: marca body cuando hay un Camino activo (no en CompletionScreen).
+     CSS en tokens.css empuja el padding-top del overlay y de SessionShell
+     para dejar sitio a la SenderoBar sticky superior. */
+  useEffectPR(() => {
+    if (cur) {
+      document.body.setAttribute('data-pace-path-active', '1');
+      return () => { document.body.removeAttribute('data-pace-path-active'); };
+    }
   }, [cur ? cur.id : null]);
 
   /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida.
@@ -471,14 +618,16 @@ function PathRunner() {
       aria-modal="true"
       aria-label={displayPathName}
     >
+      {/* s76: SenderoBar sticky fixed (z=95) -> persiste sobre
+          BreatheSession/MoveSession (SessionShell z=90). */}
+      {typeof SenderoBar === 'function' && (
+        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} sticky />
+      )}
+
       <PathTopBar
         pathName={displayPathName}
         onRequestExit={handleRequestExit}
       />
-
-      {typeof SenderoBar === 'function' && (
-        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} />
-      )}
 
       <div className="path-step-body">
         {step.kind === 'breathe' && (

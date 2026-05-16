@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.30.0** | 2026-05-16 | feat(camino): arquitectura overlay -- TimerDial compartido + SenderoBar sticky persistente + CompletionScreen rica | #76 | [abajo](#v0300----2026-05-16----featcamino-arquitectura-overlay) |
 | **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [abajo](#v0290----2026-05-16----featcamino-sendero-hibrido--renombrado-sensorial) |
-| **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [abajo](#v02812----2026-05-12----styleui-recalibrar-oscuro-a-negro-calido-sutil) |
+| **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [session-74](./docs/sessions/session-74-oscuro-recalibrado.md) |
 | **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [abajo](#v02811----2026-05-12----styleui-subir-luminosidad-y-escalonar-fondos-modo-oscuro) |
 | **v0.28.10** | 2026-05-12 | style(ui): marron oscuro calido + aro suavizado en modo oscuro | #72 | [abajo](#v02810----2026-05-12----styleui-marron-oscuro-calido--aro-suavizado) |
 | **v0.28.9** | 2026-05-12 | feat(ux): aro dinamico + retira envejecido + logo modo oscuro + reorden tweaks | #71 | [session-71](./docs/sessions/session-71-aro-dinamico-limpieza-tweaks.md) |
@@ -93,6 +94,91 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.30.0] -- 2026-05-16 -- feat(camino): arquitectura overlay
+
+Sesion 76. Tres cambios estructurales sobre el overlay PathRunner que
+resuelven los problemas detectados en la auditoria visual de s75
+(capturas 3, 4 y 5). Bump a v0.30.0 por su naturaleza arquitectural,
+no de pulido.
+
+### Added
+
+- **`app/ui/TimerDial.jsx`** -- nuevo (123 ln). Anillo SVG + arco de
+  progreso + tipografia Garamond italic + modeLabel + subtitle + slot
+  `inner`. Componente puramente presentacional consumido por
+  `FocusTimer` (home) y `PathFocusStep` (Camino). Mantiene
+  pixel-equivalencia con el TimerAro previo (viewBox 100, radio 47.5,
+  strokeWidth 0.35 base + 0.7 progreso, strokeOpacity 0.7). Incluye
+  `interpolateRingColor()` extraida desde `FocusTimer`. Exporta a
+  `window`: `TimerDial`, `interpolateRingColor`.
+- **`app/tokens.css`** -- token `--sendero-sticky-h: 38px` (placeholder,
+  se afinara en s77). Bloque CSS `.sendero-bar.sticky` (position fixed
+  z=95, labels ocultos). Reglas `body[data-pace-path-active]` que
+  empujan `padding-top` del overlay y de `SessionShell.root`
+  (este ultimo con `!important` para sobrescribir el inline-style).
+- **i18n** -- 1 clave nueva: `path.runner.complete.recorrido` ES "Recorrido"
+  / EN "Journey".
+
+### Changed
+
+- **`app/focus/FocusTimer.jsx`** -- `TimerAro` y `interpolateRingColor`
+  eliminadas (vivian aqui en s75; ahora viven en `TimerDial`).
+  `TimerVisualization` llama directo a `<TimerDial>` en estilo aro.
+  `focusStyles` purgado de los 6 estilos migrados (aroFrame/aroInner/
+  modeLabel/numberHuge/subtitleItalic/innerDivider).
+- **`app/paths/PathRunner.jsx`** -- `PathFocusStep` consume `<TimerDial>`
+  (sustituye bloque hardcoded `fontSize: 96`); controles del Camino
+  (Iniciar/Pausar + Skip) viven fuera del dial. PathRunner anyade
+  `useEffect` que toggle `body[data-pace-path-active]` mientras
+  `cur != null`. SenderoBar se monta ANTES de PathTopBar en el render y
+  con prop `sticky`. `CompletionScreen` reescrita: ahora consume
+  `usePace()`, renderiza SenderoBar al 100% done, lista "Recorrido" con
+  numerales romanos en Garamond italic + skipped en tono tenue, tiempo
+  elapsed, y caja de logros desbloqueados durante el Camino (filtra
+  `state.achievements` por `unlockedAt >= snapshot.startedAt` y resuelve
+  glifo desde `window.ACHIEVEMENT_CATALOG`).
+- **`app/paths/SenderoBar.jsx`** -- nueva prop `sticky`. Cada hito ahora
+  envuelve su circulo en `<g><title>name</title>...</g>` para tooltip
+  nativo (sustituto de los labels ocultos en modo sticky). Export
+  envuelto en `React.memo` para no re-renderizar por tick del timer en
+  `PathFocusStep` cuando `blocks`/`currentIndex` son estables.
+- **`PACE.html`** -- nueva linea de carga `app/ui/TimerDial.jsx` antes
+  de `focus/FocusTimer.jsx`. Titulo `v0.30.0`.
+- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.30.0`.
+- **`sw.js`** -- `CACHE_NAME` `pace-v0.30.0`.
+
+### Racional
+
+Las capturas de auditoria s75 mostraron tres problemas: (3) el Pomodoro
+dentro de un Camino se ve pobre vs el del home porque eran dos
+implementaciones distintas; (4) SenderoBar solo se ve en Pomodoro,
+no en Respira ni Mueve, porque SessionShell (z=90 fixed) la tapa;
+(5) CompletionScreen termina raso sin cierre simbolico. s76 ataca los
+tres simultaneamente sin tocar color, catalogo ni anyadir Caminos. La
+extraccion de TimerDial es el cambio mas arriesgado (FocusTimer es
+componente con traccion real), por eso se ataca primero -- si rompe
+algo, se detecta con la app aun reconocible. Cambios 2 y 3 son aditivos.
+
+### Build
+
+- `PACE_standalone.html`: **583 KiB** (597 KB decimal; +7.5 KiB vs s75).
+- 42 archivos validados (41 -> 42 por TimerDial.jsx).
+- SHA256: `1722414C6C7EBF4D4AD90A73A261DE2630EF7027BA4B7C4217E58EFFE81B402A`.
+- Backup: `backups/PACE_standalone_v0.29.0_20260516.html` (restaurado
+  desde `git show HEAD` tras detectar que la regeneracion sobrescribio
+  el standalone antes del paso de rotacion). Rotado el mas antiguo
+  (`v0.27.0_20260508.html`) para mantener el cap de 20.
+
+### Diferido a sesiones siguientes
+
+- **s77** -- Ritmo y microcopia: interstitial 2s entre pasos, Toast
+  3000ms via token, CTA verde musgo apagado, animacion del halo al
+  saltar de hito, afinar `--sendero-sticky-h`.
+- **s78** -- Catalogo Caminos: 2 Caminos faltantes (Te sin Azucar /
+  Plain Tea + Halito / Breath), revision del selector inferior.
 
 ---
 
@@ -193,45 +279,7 @@ discreta).
 
 ---
 
-## [v0.28.12] -- 2026-05-12 -- style(ui): recalibrar oscuro a negro calido sutil
-
-Sesion 74. Tras el rebote de luminosidad de v0.28.11 (fondos demasiado claros,
-sidebar separada como panel) y el desvio cromatico de la primera iteracion
-de s74 (terracota muy marcada), aterrizamos en "casi negro con apenas un
-matiz calido". Escalonamiento entre niveles reducido a ~4 unidades L.
-
-### Changed
-
-- **`app/tokens.css`** -- bloque `[data-palette="oscuro"]`, 5 tokens:
-  - `--paper` `#2a241d -> #15130f` (area principal, L~8).
-  - `--paper-2` `#3a3128 -> #1d1a15` (sidebar, L~12 -- delta ~4 sobre paper).
-  - `--paper-3` `#453a2e -> #252119` (tarjetas, L~16 -- delta ~4 sobre paper-2).
-  - `--line` `#4a3f33 -> #332d24`. `--line-2` `#5a4d40 -> #403930`.
-  - `--ink-*` y acentos sin cambio. Paleta clara sin cambio.
-- **`app/state-core.jsx`**: PACE_VERSION -> `v0.28.12`.
-- **`PACE.html`**: titulo `v0.28.12`.
-- **`sw.js`**: `CACHE_NAME` -> `pace-v0.28.12`.
-
-### Racional
-
-Feedback iterativo: v0.28.10 era demasiado oscuro y sidebar invisible;
-v0.28.11 subio luminosidad pero hizo la sidebar "panel separado"; la
-exploracion terracota de s74 daba caracter pero alejaba del "noche
-calmada". v0.28.12 vuelve al "casi negro" original con apenas un matiz
-calido (hue retenido del marron-tierra de marca, no terracota) y reduce
-el delta sidebar/main a ~4 L: distinguible al fijar la vista, no separada
-como panel.
-
-### Build
-
-- `PACE_standalone.html`: 567 KB (sin cambio -- solo CSS/tokens).
-- SHA256: `36964C7A...334E` (identico a `index.html`).
-- Backup: `backups/PACE_standalone_v0.28.11_20260512.html` (creado en
-  iteracion previa de s74).
-
----
-
-<!-- v0.28.11 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- v0.28.12 y anteriores: ver tabla de historial + docs/sessions/ -->
 <!-- (regla CLAUDE.md: solo detalle de las 2 ultimas versiones aqui) -->
 
 ---

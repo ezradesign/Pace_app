@@ -84,6 +84,11 @@
   --dur-normal: 320ms;
   --dur-slow: 640ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Altura de la SenderoBar sticky en overlay Camino (s76).
+     Se afinara en s77 con el resto del ritmo visual; no hardcodear
+     en los JSX. */
+  --sendero-sticky-h: 38px;
 }
 
 /* PALETA · Oscuro noche */
@@ -240,3 +245,49 @@ input, textarea { font-family: inherit; color: inherit; }
   opacity: 0.55;
 }
 .sendero-bar .dot-fill { fill: currentColor; }
+
+/* ============================================================
+   Variante sticky (s76 / v0.30.0)
+   Barra fija arriba durante un Camino activo. Persiste sobre
+   BreatheSession / MoveSession (que usan SessionShell z-index 90)
+   gracias a z-index 95. Labels ocultos por compacidad; tooltip
+   nativo via <title> en el SVG.
+   ============================================================ */
+.sendero-bar.sticky {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--sendero-sticky-h);
+  z-index: 95;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+.sendero-bar.sticky .sendero-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.sendero-bar.sticky .sendero-svg {
+  display: block;
+  width: 100%;
+  height: calc(var(--sendero-sticky-h) - 6px);
+  overflow: visible;
+}
+.sendero-bar.sticky .hito-labels { display: none; }
+
+/* Cuando un Camino esta activo, empuja el overlay y la cascara de
+   sesion para dejar sitio a la barra sticky. PathRunner ana de y
+   retira el atributo body[data-pace-path-active] en su efecto de
+   montaje. El !important es necesario para sobreescribir el padding
+   inline de SessionShell.root. */
+body[data-pace-path-active] .path-runner-overlay {
+  padding-top: var(--sendero-sticky-h);
+}
+body[data-pace-path-active] [data-pace-session-root] {
+  padding-top: calc(28px + var(--sendero-sticky-h)) !important;
+}

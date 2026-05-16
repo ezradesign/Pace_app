@@ -1,0 +1,123 @@
+/* PACE - TimerDial (sesion 76 / v0.30.0)
+   Anillo circular compartido entre FocusTimer (Pomodoro home) y
+   PathFocusStep (Pomodoro dentro de un Camino). Extraido de
+   FocusTimer.TimerAro para eliminar la divergencia visual entre
+   ambos sitios (auditoria s75, captura 3).
+
+   Puramente presentacional. El padre controla running/setRunning y
+   provee los controles via el slot `inner` (FocusTimer los inyecta
+   dentro del aro; PathFocusStep los deja fuera y pasa inner=null).
+
+   Pixel-equivalente al TimerAro previo:
+     viewBox 100 / radio 47.5 / strokeWidth base 0.35 / arco 0.7
+     strokeOpacity 0.7 / strokeLinecap round
+*/
+
+/* interpolateRingColor - gradiente terracota -> ocre -> oliva en modo
+   foco. Estable en pausas (breathe) y larga (focus). Extraido de
+   FocusTimer en s76. */
+function interpolateRingColor(progress, mode) {
+  if (mode === 'pausa') return 'var(--breathe)';
+  if (mode === 'larga') return 'var(--focus)';
+  const styles = getComputedStyle(document.documentElement);
+  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
+  const c1 = read('--breathe', '#C97A5D');
+  const c2 = read('--move',    '#9A7B4F');
+  const c3 = read('--focus',   '#6e7a4e');
+  const hexToRgb = (h) => {
+    const m = h.replace('#', '');
+    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
+  };
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
+  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
+  const t = Math.max(0, Math.min(1, progress));
+  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+}
+
+function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+  const R = 47.5;
+  const C = 2 * Math.PI * R;
+
+  return (
+    <div style={timerDialStyles.frame}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
+        <circle cx="50" cy="50" r={R} fill="none"
+          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
+          strokeOpacity="0.7"
+          strokeLinecap="round"
+          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
+      </svg>
+
+      <div style={timerDialStyles.inner}>
+        <div style={timerDialStyles.modeLabel}>{modeLabel}</div>
+        <div style={timerDialStyles.numberHuge}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
+        </div>
+        {subtitle ? <div style={timerDialStyles.subtitleItalic}>{subtitle}</div> : null}
+        {inner ? <div style={timerDialStyles.innerDivider} /> : null}
+        {inner}
+      </div>
+    </div>
+  );
+}
+
+const timerDialStyles = {
+  frame: {
+    position: 'relative',
+    height: 'min(56vh, 86vw, 520px)',
+    width: 'min(56vh, 86vw, 520px)',
+    aspectRatio: '1 / 1',
+    flexShrink: 0,
+    display: 'grid',
+    placeItems: 'center',
+  },
+  inner: {
+    position: 'relative',
+    textAlign: 'center',
+    zIndex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    maxWidth: '70%',
+  },
+  modeLabel: {
+    fontSize: 11,
+    letterSpacing: '0.26em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-3)',
+    marginBottom: 10,
+    fontWeight: 500,
+  },
+  numberHuge: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontWeight: 400,
+    lineHeight: 0.9,
+    fontVariantNumeric: 'tabular-nums',
+    letterSpacing: '-0.03em',
+    color: 'var(--ink)',
+    fontSize: 'clamp(64px, 7vw, 104px)',
+  },
+  subtitleItalic: {
+    fontStyle: 'italic',
+    fontFamily: 'var(--font-display)',
+    fontSize: 14,
+    color: 'var(--ink-3)',
+    marginTop: 30,
+    letterSpacing: 0.2,
+  },
+  innerDivider: {
+    width: 110,
+    height: 1,
+    background: 'var(--line-2)',
+    opacity: 0.55,
+    margin: '12px 0 10px',
+  },
+};
+
+Object.assign(window, { TimerDial, interpolateRingColor });

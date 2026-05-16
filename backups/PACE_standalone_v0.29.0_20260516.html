@@ -3,8 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.27.0</title>
-  <meta name="theme-color" content="#3E5A3A">
+  <title>PACE · Foco · Cuerpo — v0.29.0</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#F5EFE0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pace">
   <style>
 /* ============================================
    PACE · Design Tokens
@@ -96,33 +103,20 @@
 
 /* PALETA · Oscuro noche */
 [data-palette="oscuro"] {
-  --paper: #1A1814;
-  --paper-2: #252119;
-  --paper-3: #302B21;
+  --paper: #15130f;
+  --paper-2: #1d1a15;
+  --paper-3: #252119;
   --ink: #EDE5D3;
-  --ink-2: #B8AF9A;
+  --ink-2: #c0b49e;
   --ink-3: #756D5D;
-  --line: #3C3628;
-  --line-2: #4E4735;
+  --line: #332d24;
+  --line-2: #403930;
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
-}
-
-/* PALETA · Papel envejecido */
-[data-palette="envejecido"] {
-  --paper: #EDE2C8;
-  --paper-2: #E3D6B6;
-  --paper-3: #D6C8A3;
-  --ink: #2B241A;
-  --ink-2: #5A4F3C;
-  --ink-3: #8F826A;
-  --line: #BEAF8C;
-  --focus: #56663E;
-  --breathe: #B86A4D;
 }
 
 /* TIPOGRAFÍAS ALT */
@@ -194,6 +188,74 @@ input, textarea { font-family: inherit; color: inherit; }
   }
 }
 
+/* ============================================================
+   SENDERO BAR (sesion 75 / v0.29.0)
+   Progreso visual de un Camino: curva organica + hitos con halo.
+   currentColor hereda del tema (claro / oscuro). No introduce
+   variables nuevas: deriva todo de --ink / --ink-2 / --ink-3.
+   ============================================================ */
+.sendero-bar {
+  color: var(--ink);
+  width: 100%;
+  flex-shrink: 0;
+  padding: 14px 20px 0;
+}
+.sendero-bar .sendero-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 4px auto 6px;
+}
+.sendero-bar .sendero-svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+  overflow: visible;
+}
+.sendero-bar .hito-labels {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  height: 38px;
+  margin: 2px auto 28px;
+}
+.sendero-bar .hito-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+  text-align: center;
+}
+.sendero-bar .hito-label.done    { color: var(--ink-2); }
+.sendero-bar .hito-label.current { color: var(--ink); font-weight: 500; }
+.sendero-bar .hito-label.pending { color: var(--ink-3); opacity: 0.45; }
+.sendero-bar .hito-roman {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  opacity: 0.30;
+  margin-top: 2px;
+  text-transform: none;
+}
+.sendero-bar .path-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sendero-bar .path-line.pending {
+  stroke-dasharray: 3 5;
+  opacity: 0.55;
+}
+.sendero-bar .dot-fill { fill: currentColor; }
+
   </style>
   <style id="pace-paths-css">
     .path-runner-overlay {
@@ -214,6 +276,36 @@ input, textarea { font-family: inherit; color: inherit; }
     .path-dot.done   { background: var(--ink-3); }
     .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
     .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
+    /* PathStats -- sesion 54 / compactado sesion 61+62+63 para que la pestana
+       Caminos del modal Stats no necesite scroll vertical en 1080p. */
+    .path-stats { display:flex; flex-direction:column; gap:6px; padding:8px 0; }
+    .path-stats-summary { display:flex; gap:12px; flex-wrap:wrap; }
+    .path-stat-card { flex:1; min-width:140px; padding:8px 12px; border:1px solid var(--line); border-radius:var(--r-md); }
+    .path-stat-label { font-size:.8em; opacity:.7; }
+    .path-stat-value { font-size:1.3em; font-weight:600; margin-top:2px; font-family:var(--font-display); font-style:italic; line-height:1.1; }
+    .path-stats-table table { width:100%; border-collapse:collapse; }
+    .path-stats-table th, .path-stats-table td { padding:4px 10px; border-bottom:1px solid var(--line); text-align:left; font-size:.9em; }
+    .path-stats-table th { font-size:.78em; font-weight:600; letter-spacing:.4px; color:var(--ink-3); }
+    .path-stats-empty { opacity:.6; padding:8px 0; }
+    /* Mobile responsive -- sesion 55 / actualizado sesion 63 */
+    @media (max-width: 640px) {
+      /* Summary cards: 3 columnas horizontales en movil (s63) */
+      .path-stats-summary { display:grid !important; grid-template-columns:repeat(3, 1fr) !important; gap:8px !important; }
+      .path-stat-card { min-width:0 !important; padding:6px 8px !important; }
+      .path-stat-label { font-size:.72em !important; }
+      .path-stat-value { font-size:1.05em !important; }
+    }
+    @media (max-width: 480px) {
+      .path-topbar { padding: 12px 14px; }
+      .path-topbar button { min-height: 44px; min-width: 44px; }
+      .path-modal-back > div { padding: 24px 18px; }
+      .path-modal-back button { min-height: 44px; }
+      /* NOTA: el responsive de SuggestedPathCard (dual + single) vive ahora
+         en su propio fichero (pace-spc-responsive-css), inyectado por
+         app/paths/SuggestedPathCard.jsx. La regla previa aqui hacia que
+         tambien la card unica se apilara vertical, lo que infla el modulo
+         en movil. Sesion 61 / v0.28.2. */
+    }
   </style>
 </head>
 <body>
@@ -247,13 +339,20 @@ input, textarea { font-family: inherit; color: inherit; }
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <!-- ORDEN DE CARGA
-       0. i18n/*    → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
-                      Deben ir ANTES de state.jsx: loadState() llama a detectInitialLang().
-       1. state.jsx → store global (usePace, acciones, setLang)
-       2. ui/*      → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
-       3. shell/*   → layout (Sidebar)
-       4. módulos   → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
-       5. main.jsx  → monta <PaceApp/> en #root
+       0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
+                           Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
+       1. state-core.jsx → store, loadState, rollover, history helpers, toast
+       2. state-timer.jsx       → addFocusMinutes, completePomodoro
+       3. state-hydrate.jsx     → addWaterGlass
+       4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
+       5. state-paths.jsx       → paths CRUD, stats
+       6. state-settings.jsx    → setLang
+       7. state.jsx      → índice — re-export consolidado del API pública
+       8. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
+       9. shell/*        → layout (Sidebar)
+      10. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
+      11. main.jsx       → monta <PaceApp/> en #root
+       Split sesion 57 / v0.27.5.
   -->
   <script type="text/babel">
 /* PACE · Catálogo de strings i18n — ES / EN
@@ -386,7 +485,6 @@ window.PACE_STRINGS = {
     'tweaks.eje.lang':               'Idioma',
     'tweaks.palette.crema':          'Crema día',
     'tweaks.palette.oscuro':         'Oscuro noche',
-    'tweaks.palette.envejecido':     'Papel envejecido',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
     'tweaks.timer.aro':              'Aro (default)',
@@ -408,13 +506,13 @@ window.PACE_STRINGS = {
     'tweaks.data.export.title':      'Descarga un JSON con tu estado actual',
     'tweaks.data.import.title':      'Sobreescribe tus datos con un backup',
     'tweaks.data.note':              'Todo vive en tu navegador. El backup es un archivo JSON local — sin servidor, sin cuenta.',
-    'tweaks.reset':                  'Resetear todo',
+    'tweaks.reset':                  'Borrar todos mis datos',
     'tweaks.msg.exported':           'Backup descargado.',
     'tweaks.msg.export.err':         'No se pudo exportar.',
     'tweaks.msg.imported':           'Importado — recargando…',
     'tweaks.msg.import.invalid':     'Archivo no reconocido.',
     'tweaks.msg.import.json.err':    'JSON inválido.',
-    'tweaks.confirm.reset':          '¿Resetear todos los datos de PACE?',
+    'tweaks.confirm.reset':          '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
     'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
 
     // Session (compartido: shell + prep + done)
@@ -552,10 +650,22 @@ window.PACE_STRINGS = {
     'stats.year.activeDays':           '{n} días activos',
     'stats.year.maxStreak':            'racha máx: {n} días',
     'stats.year.months.short':         'Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic',
-    'stats.year.days.label':           'L,X,V',
+    'stats.year.days.label':           'L,M,X,J,V,S,D',
     'stats.year.legend.less':          'menos',
     'stats.year.legend.more':          'más',
     'stats.year.tooltip.score':        '{n} acciones',
+
+    // Caminos stats -- sesion 54
+    'stats.tab.paths':                 'Caminos',
+    'stats.paths.title':               'Caminos',
+    'stats.paths.total':               'Total completados',
+    'stats.paths.currentStreak':       'Racha actual',
+    'stats.paths.bestStreak':          'Mejor racha',
+    'stats.paths.tableName':           'Camino',
+    'stats.paths.tableCount':          'Veces',
+    'stats.paths.tableLast':           'Ultimo dia',
+    'stats.paths.empty':               'Aun no has completado ningun camino',
+    'stats.paths.heatmap':             'Actividad del año',
 
     // Achievements
     'ach.tag':                         'Colección',
@@ -606,17 +716,22 @@ window.PACE_STRINGS = {
     'path.hydrate.copy':             'Un vaso de agua, si te apetece',
     'path.hydrate.drank':            'He bebido',
     'path.error.routineNotFound':    'Rutina no encontrada: {id}',
-    // Caminos - nombres y taglines (sesion 51)
-    'paths.path.dawn.name':           'Amanecer',
-    'paths.path.dawn.tagline':        'Empieza bien el dia.',
-    'paths.path.midday.name':         'Mediodia',
-    'paths.path.midday.tagline':      'Recarga a mitad de jornada.',
-    'paths.path.afternoon.name':      'Tarde',
-    'paths.path.afternoon.tagline':   'Un segundo aire para el resto del dia.',
-    'paths.path.dusk.name':           'Atardecer',
-    'paths.path.dusk.tagline':        'Cierra el dia con calma.',
-    'paths.path.weekend.name':        'Fin de semana',
-    'paths.path.weekend.tagline':     'Ritmo suave. Sin prisas.',
+    // Caminos - nombres y taglines (sesion 75 - renombrado sensorial)
+    'paths.path.dawn.name':           'Morning Glory',
+    'paths.path.dawn.tagline':        'Una flor que abre con la primera luz.',
+    'paths.path.midday.name':         'Hierbabuena',
+    'paths.path.midday.tagline':      'Para cuando el cuerpo pide moverse antes que la cabeza.',
+    'paths.path.afternoon.name':      'Chispa de Cerilla',
+    'paths.path.afternoon.tagline':   'Un golpe seco y vuelve la chispa.',
+    'paths.path.dusk.name':           'Lámpara de Mesa',
+    'paths.path.dusk.tagline':        'Un círculo de luz, todo lo demás en penumbra.',
+    'paths.path.weekend.name':        'Ventana Abierta',
+    'paths.path.weekend.tagline':     'Dejar entrar lo que el día traiga, sin moverse.',
+    // Caminos - nombres de bloque por kind (sesion 75 - SenderoBar)
+    'paths.kind.breathe.name':        'Respira',
+    'paths.kind.focus.name':          'Foco',
+    'paths.kind.body.name':           'Cuerpo',
+    'paths.kind.hydrate.name':        'Agua',
     // Paths - biblioteca y favoritos (sesion 53)
     'paths.library.title':            'Todos los caminos',
     'paths.library.start':            'Comenzar',
@@ -754,7 +869,6 @@ window.PACE_STRINGS = {
     'tweaks.eje.lang':               'Language',
     'tweaks.palette.crema':          'Day cream',
     'tweaks.palette.oscuro':         'Night dark',
-    'tweaks.palette.envejecido':     'Aged paper',
     'tweaks.layout.sidebar':         'Sidebar (default)',
     'tweaks.layout.minimal':         'Minimal',
     'tweaks.timer.aro':              'Ring (default)',
@@ -776,13 +890,13 @@ window.PACE_STRINGS = {
     'tweaks.data.export.title':      'Download a JSON with your current state',
     'tweaks.data.import.title':      'Overwrite your data with a backup',
     'tweaks.data.note':              'Everything lives in your browser. The backup is a local JSON file — no server, no account.',
-    'tweaks.reset':                  'Reset everything',
+    'tweaks.reset':                  'Delete all my data',
     'tweaks.msg.exported':           'Backup downloaded.',
     'tweaks.msg.export.err':         'Could not export.',
     'tweaks.msg.imported':           'Imported — reloading…',
     'tweaks.msg.import.invalid':     'File not recognized.',
     'tweaks.msg.import.json.err':    'Invalid JSON.',
-    'tweaks.confirm.reset':          'Reset all PACE data?',
+    'tweaks.confirm.reset':          'Delete all your PACE data? This action cannot be undone.',
     'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
 
     // Session (shared: shell + prep + done)
@@ -920,10 +1034,22 @@ window.PACE_STRINGS = {
     'stats.year.activeDays':           '{n} active days',
     'stats.year.maxStreak':            'max streak: {n} days',
     'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
-    'stats.year.days.label':           'M,W,F',
+    'stats.year.days.label':           'M,T,W,T,F,S,S',
     'stats.year.legend.less':          'less',
     'stats.year.legend.more':          'more',
     'stats.year.tooltip.score':        '{n} actions',
+
+    // Paths stats -- session 54
+    'stats.tab.paths':                 'Paths',
+    'stats.paths.title':               'Paths',
+    'stats.paths.total':               'Total completed',
+    'stats.paths.currentStreak':       'Current streak',
+    'stats.paths.bestStreak':          'Best streak',
+    'stats.paths.tableName':           'Path',
+    'stats.paths.tableCount':          'Times',
+    'stats.paths.tableLast':           'Last day',
+    'stats.paths.empty':               'You have not completed any path yet',
+    'stats.paths.heatmap':             'Year activity',
 
     // Achievements
     'ach.tag':                         'Collection',
@@ -973,17 +1099,22 @@ window.PACE_STRINGS = {
     'path.hydrate.copy':             'A glass of water, if you feel like it',
     'path.hydrate.drank':            'I drank',
     'path.error.routineNotFound':    'Routine not found: {id}',
-    // Paths - names and taglines (session 51)
-    'paths.path.dawn.name':           'Dawn',
-    'paths.path.dawn.tagline':        'Start the day right.',
-    'paths.path.midday.name':         'Midday',
-    'paths.path.midday.tagline':      'Recharge at mid-morning.',
-    'paths.path.afternoon.name':      'Afternoon',
-    'paths.path.afternoon.tagline':   'A second wind for the rest of the day.',
-    'paths.path.dusk.name':           'Dusk',
-    'paths.path.dusk.tagline':        'Close the day with calm.',
-    'paths.path.weekend.name':        'Weekend',
-    'paths.path.weekend.tagline':     'Gentle rhythm. No rush.',
+    // Paths - names and taglines (session 75 - sensory renaming)
+    'paths.path.dawn.name':           'Morning Glory',
+    'paths.path.dawn.tagline':        'A flower that opens with the first light.',
+    'paths.path.midday.name':         'Spearmint',
+    'paths.path.midday.tagline':      'For when the body asks to move before the mind.',
+    'paths.path.afternoon.name':      'Matchstrike',
+    'paths.path.afternoon.tagline':   'A dry strike, and the spark returns.',
+    'paths.path.dusk.name':           'Desk Lamp',
+    'paths.path.dusk.tagline':        'A circle of light, everything else in shadow.',
+    'paths.path.weekend.name':        'Open Window',
+    'paths.path.weekend.tagline':     'Letting in whatever the day brings, without moving.',
+    // Paths - block names by kind (session 75 - SenderoBar)
+    'paths.kind.breathe.name':        'Breathe',
+    'paths.kind.focus.name':          'Focus',
+    'paths.kind.body.name':           'Body',
+    'paths.kind.hydrate.name':        'Water',
     // Paths - library and favorites (session 53)
     'paths.library.title':            'All paths',
     'paths.library.start':            'Start',
@@ -1319,181 +1450,381 @@ Object.assign(window, { useT, detectInitialLang });
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
-   Estado global: simple store con useSyncExternalStore + localStorage.
+   state-core.jsx — store, loadState, rollover, history helpers, toast.
+   Split de state.jsx (sesion 57 / v0.27.5).
 */
 
-const { useSyncExternalStore, useCallback } = React;
+const { useSyncExternalStore } = React;
 
-/* NOTA (sesión 37 · v0.19.0): clave de localStorage bumpeada de v1 a v2.
-   Pre-lanzamiento sin usuarios reales — hard reset intencional. Elimina
-   la necesidad de migración para campos legacy (timerStyle circle/numero,
-   layout editorial). Cualquier estado v1 guardado se ignora; arranca
-   limpio con defaultState en v2. */
+/* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.27.0';
+const PACE_VERSION = 'v0.29.0';
 
 const defaultState = {
   // Settings / Tweaks
-  palette: 'crema',           // crema | oscuro | envejecido
-  font: 'cormorant',          // garamond | cormorant | mono
-  layout: 'sidebar',          // sidebar | minimal (editorial eliminado en v0.19.0)
-  sidebarCollapsed: false,    // true cuando el usuario colapsa el sidebar a icon-rail
-  timerStyle: 'aro',          // aro (default) | barra | analogico (circle/numero eliminados en v0.19.0)
-  breathStyle: 'flor',        // pulso | ondas | petalo | organico | flor (híbrido pulso+pétalo)
-  logoVariant: 'pace',        // pace (lockup vaca-P) | lineal | sello | ilustrado
+  palette: 'crema',
+  font: 'cormorant',
+  layout: 'sidebar',
+  sidebarCollapsed: false,
+  timerStyle: 'aro',
+  breathStyle: 'flor',
+  logoVariant: 'pace',
   soundOn: false,
-  ambientOn: false,           // drone ambiente opt-in — solo activo si soundOn también true
-  lang: 'en',                 // 'es' | 'en' — detectado de navigator.language en first load
+  ambientOn: false,
+  lang: 'en',
 
   // Foco
-  focusMode: 'foco',          // foco | pausa | larga
-  focusMinutes: 25,           // 15 | 25 | 35 | 45
-  cycle: 0,                   // Pomodoros completados hoy
-  totalFocusMin: 0,           // minutos totales acumulados
+  focusMode: 'foco',
+  focusMinutes: 25,
+  cycle: 0,
+  totalFocusMin: 0,
 
-  // Plan del día
-  plan: {
-    muevete: false,
-    respira: false,
-    extra: false,
-    hidratate: false,
-  },
+  // Plan del dia
+  plan: { muevete: false, respira: false, extra: false, hidratate: false },
 
-  // Hidratación
+  // Hidratacion
   water: { goal: 8, today: 0, lastReset: null },
 
   // Logros
-  achievements: {},           // { [id]: { unlockedAt } }
+  achievements: {},
 
-  // Stats semanales
+  // Stats semanales — INDICE LUNES-PRIMERO (sesion 69 / v0.28.8).
+  // [0]=lunes ... [6]=domingo. Antes de v0.28.8 era getDay()-style (0=dom).
   weeklyStats: {
-    focusMinutes: [0,0,0,0,0,0,0],
+    focusMinutes:  [0,0,0,0,0,0,0],
     breathMinutes: [0,0,0,0,0,0,0],
-    moveMinutes: [0,0,0,0,0,0,0],
-    waterGlasses: [0,0,0,0,0,0,0],
+    moveMinutes:   [0,0,0,0,0,0,0],
+    waterGlasses:  [0,0,0,0,0,0,0],
   },
 
   // Streak
   streak: { current: 0, longest: 0, lastActiveDate: null },
 
-  // Contadores acumulados de sesiones por módulo (sesión 29).
-  // Crecen monótonamente; nunca resetean en rollover. Alimentan los
-  // logros breathe.sessions.10/50 y move.sessions.25.
+  // Contadores acumulados de sesiones (crecen monotonamente, nunca resetean).
   breatheSessionsTotal: 0,
   moveSessionsTotal: 0,
 
-  // Set de fechas (toDateString()) en las que el usuario hizo al menos
-  // una sesión antes de las 9:00. Cap de 30 entradas (suficiente para
-  // alimentar `morning.5`). Sesión 29.
+  // Fechas (toDateString()) con sesion antes de las 9:00. Cap 30.
   morningDates: [],
 
-  // Intención del día — capturada opcionalmente en el Welcome de primera
-  // vez (sesión 17 / v0.12.0), visible también para edición futura.
   intention: '',
-
-  // Welcome de primera vez (sesión 17 / v0.12.0).
-  // `firstSeen`: timestamp de la primera interacción con el WelcomeModal.
-  //   null = nunca visto → auto-trigger dispara la bienvenida.
-  //   Una vez cerrado (OK o skip), se fija timestamp y no vuelve nunca.
-  //   Mismo patrón que `supportSeenAt` (v0.11.11).
   firstSeen: null,
-
-  // Buy Me a Coffee — monetización por donación (sesión 16, v0.11.11).
-  // `supportSeenAt`: timestamp de la primera apertura del modal de apoyo.
-  //   null = nunca visto → el auto-trigger (a los 7 días de racha) puede
-  //   dispararse. Una vez visto (manual o auto) se fija el timestamp y
-  //   no vuelve a auto-abrirse nunca. El usuario puede re-abrirlo las
-  //   veces que quiera desde el botón del sidebar.
-  // `supportCopyVariant`: DEPRECADO post-v0.12.1. El copy se consolidó
-  //   en una sola variante ("Da de pastar a la vaca" con icono de vaca).
-  //   Se conserva el campo en el state para no romper instalaciones
-  //   existentes, pero SupportModule ignora su valor.
   supportSeenAt: null,
   supportCopyVariant: 'pastar',
-
-  // Recordatorios — DECISIÓN (v0.11.3): la sección de UI se eliminó del Sidebar
-  // para que todo quepa en 1920×1080 sin scroll. El array se conserva en el
-  // state para no romper instalaciones existentes (usuarios que ya tengan
-  // recordatorios guardados en localStorage) y por si se reintroduce un día
-  // la sección (probablemente en un modal dedicado, no en el sidebar).
-  // No hay action que lo mute actualmente.
   reminders: [],
 
-  // Fechas (toDateString()) en las que se realizó alguna acción con soundOn=false.
-  // Cap de 30 entradas. Alimenta master.silent.day. Sesión 34.
+  // Fechas de dias silenciosos (soundOn=false). Cap 30.
   silentDates: [],
 
-  // Fechas (toDateString()) en que water.today alcanzó water.goal.
-  // Cap de 14 entradas. Alimenta hydrate.week.perfect. Sesión 41.
+  // Fechas en que water.today alcanzo water.goal. Cap 14.
   waterGoalDates: [],
 
-  // Contadores acumulados de sesiones por tipo de rutina de respiración
-  // y movilidad. { box, coherent, rounds, atg }. Sesión 41.
+  // Contadores por tipo de rutina. { box, coherent, rounds, atg }.
   routineCounts: {},
 
-  // Histórico de actividad — sesión 43.
-  // `days`   : { "YYYY-MM-DD": { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
-  //            Solo se escriben entradas con al menos un valor > 0 (ausencia = sin actividad).
-  // `months` : { "YYYY-MM":   { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
-  // `years`  : { "YYYY":      { focusMinutes, breathMinutes, moveMinutes, waterGlasses } }
-  // Agregados incrementales: se suman deltas al cerrar cada día; nunca se recalculan
-  // desde cero (ver updateMonthAggregate / updateYearAggregate).
-  // Cap documental: ~5 años rolling. Sin hard limit en código esta sesión.
+  // Historico de actividad (sesion 43).
+  // days: { "YYYY-MM-DD": {focusMinutes, breathMinutes, moveMinutes, waterGlasses} }
+  // months: { "YYYY-MM": ... }   years: { "YYYY": ... }
   history: { days: {}, months: {}, years: {} },
 
-  // Caminos — sesión 49 / v0.26.0-alpha.
-  // current   : camino en curso { id, stepIndex, startedAt, skippedSteps: [] }, o null.
-  // completed : { 'path.dawn': { count, lastDoneAt } }
-  // favorite  : id del camino marcado como favorito, o null.
+  // Caminos (sesion 49 / v0.26.0-alpha; lastViewed s75).
   paths: {
     current: null,
     completed: {},
     favorite: null,
+    history: [],
+    lastViewed: null, // s75: ultimo Camino abierto, base de getSuggestedPath
   },
 
-  // Migration guard — sesión 43.
-  // true cuando ya se ha migrado weeklyStats → history.days en el primer rollover
-  // post-upgrade. Impide que el guard se ejecute más de una vez.
-  _historyMigrated: false,
+  // Migration guards.
+  _historyMigrated: false,                  // sesion 43 — weeklyStats -> history.days
+  _weeklyStatsReindexed_v0_28_8: false,     // sesion 69 — getDay() -> lunes-primero
+  _historyRecalculated_v0_28_8: false,      // sesion 69 — months/years desde days
 
-  // Rollover: día de calendario del último uso (toDateString()).
-  // Cuando cambia, se resetean cycle / plan / water.today al cargar.
+  // Rollover: dia del ultimo uso (toDateString()).
   lastActiveDay: null,
 };
 
-let _state = loadState();
-const _listeners = new Set();
+/* ============================
+   UTILS
+   ============================ */
 
 function isMobileViewport() {
   return typeof window !== 'undefined' && window.matchMedia &&
          window.matchMedia('(max-width: 768px)').matches;
 }
 
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function toISODate(dateString) {
+  const d = new Date(dateString);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
+function zeroEntry() {
+  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
+}
+
+/* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
+function getDayIndexMondayFirst(date) {
+  const d = new Date(date).getDay(); // 0=domingo .. 6=sabado
+  return d === 0 ? 6 : d - 1;
+}
+
+/* Lunes 00:00 local de la semana que contiene `date`. */
+function getMondayOf(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/* ============================
+   HISTORICO DE ACTIVIDAD (sesion 43, refactor sesion 69)
+   ============================ */
+
+/* Suma idempotente de un mes desde history.days. monthKey = "YYYY-MM". */
+function recomputeMonthFromDays(days, monthKey) {
+  const acc = zeroEntry();
+  for (const isoDate in days) {
+    if (isoDate.indexOf(monthKey) === 0) {
+      const d = days[isoDate];
+      acc.focusMinutes  += d.focusMinutes  || 0;
+      acc.breathMinutes += d.breathMinutes || 0;
+      acc.moveMinutes   += d.moveMinutes   || 0;
+      acc.waterGlasses  += d.waterGlasses  || 0;
+    }
+  }
+  return acc;
+}
+
+/* Suma idempotente de un año desde history.days. yearKey = "YYYY". */
+function recomputeYearFromDays(days, yearKey) {
+  const acc = zeroEntry();
+  for (const isoDate in days) {
+    if (isoDate.indexOf(yearKey) === 0) {
+      const d = days[isoDate];
+      acc.focusMinutes  += d.focusMinutes  || 0;
+      acc.breathMinutes += d.breathMinutes || 0;
+      acc.moveMinutes   += d.moveMinutes   || 0;
+      acc.waterGlasses  += d.waterGlasses  || 0;
+    }
+  }
+  return acc;
+}
+
+/* Recalcula TODOS los agregados desde history.days. Operacion idempotente
+   y segura: si days es integro, months/years quedan correctos sin importar
+   cuantas veces se haya inflado antes. Sesion 69. */
+function recomputeAllHistoryAggregates(history) {
+  const days = history.days || {};
+  const months = {};
+  const years = {};
+  for (const isoDate in days) {
+    const monthKey = isoDate.slice(0, 7);
+    const yearKey  = isoDate.slice(0, 4);
+    if (!months[monthKey]) months[monthKey] = recomputeMonthFromDays(days, monthKey);
+    if (!years[yearKey])   years[yearKey]   = recomputeYearFromDays(days, yearKey);
+  }
+  return { days, months, years };
+}
+
+/* Sesion 69: archiveDayToHistory ahora es 100% idempotente.
+   days[iso] siempre se sobrescribe (overwrite, no acumulativo).
+   months/years se recalculan desde days (no acumulativo).
+   Llamar dos veces para la misma fecha produce el mismo resultado. */
+function archiveDayToHistory(history, dateStr, weeklyStats) {
+  const idx = getDayIndexMondayFirst(dateStr);
+  const delta = {
+    focusMinutes:  (weeklyStats.focusMinutes  || [])[idx] || 0,
+    breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
+    moveMinutes:   (weeklyStats.moveMinutes   || [])[idx] || 0,
+    waterGlasses:  (weeklyStats.waterGlasses  || [])[idx] || 0,
+  };
+  const hasData = Object.values(delta).some(v => v > 0);
+  if (!hasData) return history;
+
+  const isoDate = toISODate(dateStr);
+  const days = { ...(history.days || {}), [isoDate]: delta };
+  const monthKey = isoDate.slice(0, 7);
+  const yearKey  = isoDate.slice(0, 4);
+  return {
+    days,
+    months: { ...(history.months || {}), [monthKey]: recomputeMonthFromDays(days, monthKey) },
+    years:  { ...(history.years  || {}), [yearKey]:  recomputeYearFromDays(days, yearKey)  },
+  };
+}
+
+/* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
+   rollover post-upgrade. Solo se ejecuta una vez (_historyMigrated === false). */
+function migrateWeeklyStatsToHistory(state) {
+  if (state._historyMigrated) return state;
+  if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
+  let h = state.history || { days: {}, months: {}, years: {} };
+  const lastDate = new Date(state.lastActiveDay);
+  for (let offset = 0; offset < 7; offset++) {
+    const d = new Date(lastDate.getTime() - offset * 86400000);
+    h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
+  }
+  return { ...state, history: h, _historyMigrated: true };
+}
+
+/* Sesion 69 / v0.28.8: re-indexa weeklyStats de la convencion vieja
+   (0=domingo, 1=lunes ... 6=sabado, indexado por getDay()) a la nueva
+   (0=lunes, 1=martes ... 6=domingo). Mapping: nuevo[i] = viejo[(i+1)%7]. */
+function reindexWeeklyStatsMondayFirst(ws) {
+  const rot = (arr) => Array.isArray(arr) && arr.length === 7
+    ? [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]]
+    : [0,0,0,0,0,0,0];
+  return {
+    focusMinutes:  rot(ws && ws.focusMinutes),
+    breathMinutes: rot(ws && ws.breathMinutes),
+    moveMinutes:   rot(ws && ws.moveMinutes),
+    waterGlasses:  rot(ws && ws.waterGlasses),
+  };
+}
+
+/* ============================
+   ROLLOVER
+   ============================ */
+
+function rolloverIfNeeded(state) {
+  const today = new Date();
+  const todayStr = today.toDateString();
+  if (state.lastActiveDay === todayStr) return state;
+
+  /* Detectar si la migracion s43 esta por ejecutarse en esta llamada.
+     Si _historyMigrated era false al entrar, migrateWeeklyStatsToHistory
+     ya archivara lastActiveDay y NO debemos volver a archivarlo aqui (C2). */
+  const wasAlreadyMigrated = !!state._historyMigrated;
+  let migratedState = migrateWeeklyStatsToHistory(state);
+  let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
+
+  /* Archivar el dia previo solo si NO acaba de migrar (la migracion ya lo cubrio). */
+  if (migratedState.lastActiveDay && wasAlreadyMigrated) {
+    nextHistory = archiveDayToHistory(
+      nextHistory, migratedState.lastActiveDay, migratedState.weeklyStats
+    );
+  }
+
+  /* FIX C1 (sesion 69): si entramos en una nueva semana lunes-domingo,
+     resetear weeklyStats por completo. */
+  let nextWeekly = migratedState.weeklyStats;
+  if (migratedState.lastActiveDay) {
+    const prevMonday  = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
+    const todayMonday = getMondayOf(today).getTime();
+    if (todayMonday !== prevMonday) {
+      nextWeekly = {
+        focusMinutes:  [0,0,0,0,0,0,0],
+        breathMinutes: [0,0,0,0,0,0,0],
+        moveMinutes:   [0,0,0,0,0,0,0],
+        waterGlasses:  [0,0,0,0,0,0,0],
+      };
+    }
+  }
+
+  /* FIX A2 (sesion 69): rotura proactiva del streak. Si la ultima sesion
+     fue antes de ayer, current=0 inmediatamente (sin esperar a la siguiente). */
+  let nextStreak = migratedState.streak;
+  if (nextStreak && nextStreak.lastActiveDate) {
+    const lastActive = new Date(nextStreak.lastActiveDate);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    lastActive.setHours(0, 0, 0, 0);
+    if (lastActive.getTime() < yesterday.getTime()) {
+      nextStreak = { ...nextStreak, current: 0 };
+    }
+  }
+
+  /* Trigger first.return — abrir la app un dia distinto al ultimo.
+     Deferred via setTimeout para no llamar a unlockAchievement desde
+     dentro de loadState (achievements aun no cargado en este punto). */
+  if (migratedState.lastActiveDay) {
+    setTimeout(() => {
+      try { unlockAchievement('first.return'); } catch (e) {}
+    }, 0);
+  }
+  return {
+    ...migratedState,
+    history: nextHistory,
+    weeklyStats: nextWeekly,
+    streak: nextStreak,
+    cycle: 0,
+    plan: { muevete: false, respira: false, extra: false, hidratate: false },
+    water: { ...migratedState.water, today: 0, lastReset: todayStr },
+    lastActiveDay: todayStr,
+  };
+}
+
+/* ============================
+   STORE PRIMITIVO
+   ============================ */
+
 function loadState() {
   const _detectLang = typeof detectInitialLang === 'function' ? detectInitialLang : () => 'en';
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) {
-      /* Primer arranque en móvil: colapsar sidebar para que el usuario
-         vea el Pomodoro directamente. En desktop arranca abierta. */
       return {
         ...defaultState,
         lang: _detectLang(),
         lastActiveDay: new Date().toDateString(),
+        _weeklyStatsReindexed_v0_28_8: true,
+        _historyRecalculated_v0_28_8: true,
         ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
       };
     }
     const parsed = JSON.parse(raw);
-    /* Si el usuario no tiene lang guardado (instalación previa a i18n),
-       detectarlo desde navigator.language y persistirlo. */
     if (!parsed.lang) parsed.lang = _detectLang();
-    /* Migracion defensiva s49: si paths no existe (instalacion
-       previa a v0.26.0-alpha), inicializar con el default. */
+    /* Migracion defensiva s49: paths ausente en instalaciones pre-v0.26. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
+    /* Migracion defensiva s54: paths.history ausente. */
+    if (parsed.paths && !parsed.paths.history) {
+      const hist = [];
+      for (const id in (parsed.paths.completed || {})) {
+        const e = parsed.paths.completed[id];
+        if (e && e.lastDoneAt && e.count) {
+          for (let i = 0; i < e.count; i++) hist.push(e.lastDoneAt);
+        }
+      }
+      parsed.paths.history = hist;
+    }
+    /* Migracion defensiva s75: paths.lastViewed ausente. */
+    if (parsed.paths && parsed.paths.lastViewed === undefined) {
+      parsed.paths.lastViewed = null;
+    }
+
+    /* Sesion 69 / v0.28.8: re-indexar weeklyStats de getDay() a lunes-primero.
+       Idempotente via guard. Debe ocurrir ANTES de cualquier escritura/lectura
+       que asuma la nueva convencion (incluyendo el rollover). */
+    if (!parsed._weeklyStatsReindexed_v0_28_8 && parsed.weeklyStats) {
+      parsed.weeklyStats = reindexWeeklyStatsMondayFirst(parsed.weeklyStats);
+      parsed._weeklyStatsReindexed_v0_28_8 = true;
+    }
+
+    /* Sesion 69 / v0.28.8: migracion compensatoria de history.months/years.
+       Como history.days es integro (overwrite idempotente desde s43),
+       recalcular months/years desde days es 100% seguro y arregla cualquier
+       inflacion previa de C2/C3. Idempotente via guard. */
+    if (!parsed._historyRecalculated_v0_28_8 && parsed.history && parsed.history.days) {
+      parsed.history = recomputeAllHistoryAggregates(parsed.history);
+      parsed._historyRecalculated_v0_28_8 = true;
+    }
+
+    /* Sesion 71 / v0.28.9: paleta 'envejecido' retirada; migrar a 'crema'. */
+    if (parsed.palette === 'envejecido') {
+      parsed.palette = 'crema';
+    }
+
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });
-    /* Si no hay preferencia explícita de sidebar guardada, aplicar el
-       default móvil. Usuarios existentes con sidebarCollapsed guardado
-       (true o false) mantienen su elección sin cambios. */
     if (parsed.sidebarCollapsed === undefined && isMobileViewport()) {
       return { ...merged, sidebarCollapsed: true };
     }
@@ -1503,167 +1834,15 @@ function loadState() {
       ...defaultState,
       lang: _detectLang(),
       lastActiveDay: new Date().toDateString(),
+      _weeklyStatsReindexed_v0_28_8: true,
+      _historyRecalculated_v0_28_8: true,
       ...(isMobileViewport() ? { sidebarCollapsed: true } : {}),
     };
   }
 }
 
-/* ============================
-   HISTÓRICO DE ACTIVIDAD — sesión 43
-   ============================ */
-
-/* Entrada vacía para días/meses/años sin dato previo. */
-function zeroEntry() {
-  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
-}
-
-/* Agrega delta incremental al mes. Clave: "YYYY-MM".
-   Nunca recalcula el mes completo — solo suma lo que el día recién
-   cerrado aportó. Recibe el objeto history completo y devuelve uno nuevo. */
-function updateMonthAggregate(history, dateStr, delta) {
-  const key = dateStr.slice(0, 7);
-  const prev = history.months[key] || zeroEntry();
-  return {
-    ...history,
-    months: {
-      ...history.months,
-      [key]: {
-        focusMinutes:  prev.focusMinutes  + delta.focusMinutes,
-        breathMinutes: prev.breathMinutes + delta.breathMinutes,
-        moveMinutes:   prev.moveMinutes   + delta.moveMinutes,
-        waterGlasses:  prev.waterGlasses  + delta.waterGlasses,
-      },
-    },
-  };
-}
-
-/* Agrega delta incremental al año. Clave: "YYYY". */
-function updateYearAggregate(history, dateStr, delta) {
-  const key = dateStr.slice(0, 4);
-  const prev = history.years[key] || zeroEntry();
-  return {
-    ...history,
-    years: {
-      ...history.years,
-      [key]: {
-        focusMinutes:  prev.focusMinutes  + delta.focusMinutes,
-        breathMinutes: prev.breathMinutes + delta.breathMinutes,
-        moveMinutes:   prev.moveMinutes   + delta.moveMinutes,
-        waterGlasses:  prev.waterGlasses  + delta.waterGlasses,
-      },
-    },
-  };
-}
-
-/* Convierte un toDateString() ("Wed May 06 2026") a "YYYY-MM-DD".
-   Necesario porque toDateString() no tiene formato ISO. */
-function toISODate(dateString) {
-  const d = new Date(dateString);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${dd}`;
-}
-
-/* Archiva los datos del día `dateStr` (toDateString) en history.
-   Si todos los valores son 0, no escribe entrada (ausencia = sin dato).
-   Devuelve el history actualizado (inmutable). */
-function archiveDayToHistory(history, dateStr, weeklyStats) {
-  // Extraer valores del día desde weeklyStats[getDay()]
-  const dow = new Date(dateStr).getDay(); // 0=Dom … 6=Sab
-  const delta = {
-    focusMinutes:  (weeklyStats.focusMinutes  || [])[dow] || 0,
-    breathMinutes: (weeklyStats.breathMinutes || [])[dow] || 0,
-    moveMinutes:   (weeklyStats.moveMinutes   || [])[dow] || 0,
-    waterGlasses:  (weeklyStats.waterGlasses  || [])[dow] || 0,
-  };
-  const hasData = Object.values(delta).some(v => v > 0);
-  if (!hasData) return history;
-
-  const isoDate = toISODate(dateStr);
-  let h = {
-    ...history,
-    days: { ...history.days, [isoDate]: delta },
-  };
-  h = updateMonthAggregate(h, isoDate, delta);
-  h = updateYearAggregate(h, isoDate, delta);
-  return h;
-}
-
-/* Migration guard — sesión 43.
-   En el primer rollover post-upgrade, copia la semana actual de weeklyStats
-   a history.days con fechas reales calculadas hacia atrás desde lastActiveDay.
-   Solo se ejecuta una vez (_historyMigrated === false). */
-function migrateWeeklyStatsToHistory(state) {
-  if (state._historyMigrated) return state;
-  if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
-
-  let h = state.history || { days: {}, months: {}, years: {} };
-  // Itera los 7 días de la semana actual. El índice 0 es lastActiveDay,
-  // los demás son días anteriores (hasta 6).
-  const lastDate = new Date(state.lastActiveDay);
-  for (let offset = 0; offset < 7; offset++) {
-    const d = new Date(lastDate.getTime() - offset * 86400000);
-    h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
-  }
-  return { ...state, history: h, _historyMigrated: true };
-}
-
-/* Rollover diario: si el día de calendario ha cambiado desde la última actividad,
-   reseteamos los contadores "de hoy" (ciclo de pomodoros, plan del día, vasos de agua).
-   Se llama al cargar el estado y también defensivamente antes de escribir cualquier
-   contador "de hoy" desde las actions (completePomodoro, addWaterGlass, etc.) para
-   cubrir el caso de que la pestaña siga abierta al cruzar la medianoche. */
-function rolloverIfNeeded(state) {
-  const today = new Date().toDateString();
-  if (state.lastActiveDay === today) return state;
-
-  /* Migration guard: en el primer rollover post-upgrade, migrar weeklyStats → history. */
-  let migratedState = migrateWeeklyStatsToHistory(state);
-
-  /* Archivar el día que acaba de terminar (lastActiveDay) en history,
-     solo si había actividad registrada (algún valor > 0). */
-  let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
-  if (migratedState.lastActiveDay) {
-    nextHistory = archiveDayToHistory(
-      nextHistory,
-      migratedState.lastActiveDay,
-      migratedState.weeklyStats
-    );
-  }
-
-  /* Trigger `first.return` — abrir la app un día distinto al de la
-     última actividad. Sólo si había un día previo (no en la primera
-     instalación, donde `lastActiveDay` viene null/undefined). El
-     desbloqueo se delega a un microtask para no llamar a
-     `unlockAchievement` desde dentro del propio loadState (la cola
-     de toasts pendientes lo gestiona si el ToastHost aún no montó).
-     Sesión 28. */
-  if (migratedState.lastActiveDay) {
-    setTimeout(() => {
-      try { unlockAchievement('first.return'); } catch (e) {}
-    }, 0);
-  }
-  return {
-    ...migratedState,
-    history: nextHistory,
-    cycle: 0,
-    plan: { muevete: false, respira: false, extra: false, hidratate: false },
-    water: { ...migratedState.water, today: 0, lastReset: today },
-    lastActiveDay: today,
-  };
-}
-
-function ensureDayFresh() {
-  const next = rolloverIfNeeded(_state);
-  if (next !== _state) {
-    _state = next;
-    persistState();
-    _listeners.forEach(l => l());
-    // _state ya tiene el history del día archivado — comprobar stats.
-    try { checkStatsAchievements(); } catch (e) {}
-  }
-}
+let _state = loadState();
+const _listeners = new Set();
 
 function persistState() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(_state)); } catch (e) {}
@@ -1676,9 +1855,7 @@ function setState(patch) {
   _state = typeof patch === 'function' ? patch(_state) : { ...(_state), ...patch };
   persistState();
   _listeners.forEach(l => l());
-  /* Optimización v0.12.1: aplicar tokens visuales sólo cuando palette o
-     font cambian realmente. Antes se llamaba a setAttribute en cada tick
-     (inocuo pero innecesario, 2 DOM writes por cada setState). */
+  /* Aplicar tokens visuales solo cuando palette o font cambian realmente. */
   if (prev.palette !== _state.palette || prev.font !== _state.font) {
     applyTheme();
   }
@@ -1700,26 +1877,184 @@ function usePace() {
   return [state, setState];
 }
 
+function ensureDayFresh() {
+  const next = rolloverIfNeeded(_state);
+  if (next !== _state) {
+    _state = next;
+    persistState();
+    _listeners.forEach(l => l());
+    try { checkStatsAchievements(); } catch (e) {}
+  }
+}
+
 /* ============================
-   ACCIONES ESPECÍFICAS
+   TOAST (buffer pre-mount)
    ============================ */
 
-/* Detecta logros derivados del plan/ritual del día.
-   Se llama desde cada acción de completar (pomodoro, breathe, move,
-   extra, water) DESPUÉS del setState, leyendo `_state` ya actualizado.
+const _toastListeners = new Set();
+const _pendingToasts = [];
 
-   - `first.ritual`  → los 4 módulos del día tocados (respira + mueve +
-                       extra + hidratate). El plan ya marca esos 4 flags;
-                       basta con que los 4 sean true.
-   - `first.plan`    → mismo trigger en código. Decisión de producto:
-                       "completar el plan del día" === "tocar los 4 módulos
-                       del día". `first.plan` se desbloquea junto a
-                       `first.ritual` para que ambos sean cazables sin
-                       inventar un segundo umbral artificial. Sesión 28.
-   - `master.focus.day` → ya tenemos `addFocusMinutes` con buckets diarios;
-                          aprovechamos esta función para chequear las 4h
-                          (240 min) del día actual.
+function showToast(toast) {
+  const t = { ...toast, _id: Date.now() + Math.random() };
+  if (_toastListeners.size === 0) {
+    _pendingToasts.push(t);
+    return;
+  }
+  _toastListeners.forEach(l => l(t));
+}
+
+function onToast(listener) {
+  const wasEmpty = _toastListeners.size === 0;
+  _toastListeners.add(listener);
+  /* Vaciar buffer pendiente en cuanto hay al menos un listener (fix StrictMode). */
+  if (wasEmpty && _pendingToasts.length > 0) {
+    const drained = _pendingToasts.splice(0);
+    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
+  }
+  return () => _toastListeners.delete(listener);
+}
+
+// Aplicar tema al cargar
+applyTheme();
+
+Object.assign(window, {
+  LS_KEY, PACE_VERSION, defaultState,
+  getState, setState, subscribe, usePace, ensureDayFresh,
+  showToast, onToast,
+  zeroEntry, toISODate, todayISO,
+  getDayIndexMondayFirst, getMondayOf,
+  archiveDayToHistory,
+  recomputeMonthFromDays, recomputeYearFromDays, recomputeAllHistoryAggregates,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-timer.jsx
+   Foco / Pomodoro: addFocusMinutes, completePomodoro.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, ensureDayFresh),
+               state-achievements (unlockAchievement, checkTimeOfDayAchievements,
+                                   checkSilentDayAchievement, updateStreak).
 */
+
+function checkFocusDayAchievement() {
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const todayMin = (s.weeklyStats.focusMinutes || [])[day] || 0;
+  if (todayMin >= 240) unlockAchievement('master.focus.day');
+}
+
+function addFocusMinutes(mins) {
+  ensureDayFresh();
+  setState(prev => {
+    const day = getDayIndexMondayFirst(new Date());
+    const week = [...prev.weeklyStats.focusMinutes];
+    week[day] += mins;
+    return {
+      ...prev,
+      totalFocusMin: prev.totalFocusMin + mins,
+      weeklyStats: { ...prev.weeklyStats, focusMinutes: week },
+    };
+  });
+  const h = getState().totalFocusMin / 60;
+  if (h >= 10)  unlockAchievement('focus.hours.10');
+  if (h >= 50)  unlockAchievement('focus.hours.50');
+  if (h >= 100) unlockAchievement('focus.hours.100');
+  checkFocusDayAchievement();
+}
+
+function completePomodoro() {
+  ensureDayFresh();
+  const focusMinsAtCompletion = getState().focusMinutes;
+  setState(prev => ({ ...prev, cycle: prev.cycle + 1 }));
+  addFocusMinutes(focusMinsAtCompletion);
+  unlockAchievement('first.step');
+  if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
+  if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
+  checkTimeOfDayAchievements();
+  checkSilentDayAchievement();
+  updateStreak();
+}
+
+Object.assign(window, {
+  addFocusMinutes,
+  completePomodoro,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-hydrate.jsx
+   Hidratacion: addWaterGlass, checkHydrateWeekPerfect.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, ensureDayFresh),
+               state-achievements (unlockAchievement, checkPlanAchievements,
+                                   checkSilentDayAchievement).
+*/
+
+/* hydrate.week.perfect — 7 dias consecutivos alcanzando water.goal.
+   Ordena waterGoalDates numericamente y verifica 7 entradas seguidas
+   separadas exactamente 1 dia (86400000 ms). */
+function checkHydrateWeekPerfect() {
+  const dates = (getState().waterGoalDates || [])
+    .map(d => new Date(d).getTime())
+    .sort((a, b) => a - b);
+  if (dates.length < 7) return;
+  for (let i = dates.length - 1; i >= dates.length - 6; i--) {
+    if (dates[i] - dates[i - 1] !== 86400000) return;
+  }
+  unlockAchievement('hydrate.week.perfect');
+}
+
+function addWaterGlass(delta) {
+  if (delta === undefined) delta = 1;
+  ensureDayFresh();
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const week = [...s.weeklyStats.waterGlasses];
+  week[day] = Math.max(0, (week[day] || 0) + delta);
+  const next = Math.max(0, s.water.today + delta);
+  setState({
+    water: { ...s.water, today: next },
+    plan: { ...s.plan, hidratate: next > 0 ? true : s.plan.hidratate },
+    weeklyStats: { ...s.weeklyStats, waterGlasses: week },
+  });
+  if (delta > 0) {
+    unlockAchievement('first.sip');
+    checkPlanAchievements();
+    checkSilentDayAchievement();
+    if (getState().water.today >= getState().water.goal) {
+      const today = new Date().toDateString();
+      const goalDates = Array.isArray(getState().waterGoalDates) ? getState().waterGoalDates : [];
+      if (!goalDates.includes(today)) {
+        setState({ waterGoalDates: [...goalDates, today].slice(-14) });
+        checkHydrateWeekPerfect();
+      }
+    }
+  }
+}
+
+Object.assign(window, {
+  addWaterGlass,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-achievements.jsx
+   Logros: unlockAchievement, detectores, complete*Session, updateStreak.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, showToast, ensureDayFresh).
+*/
+
+/* Mapa routineId → categoria para contadores de tipo de rutina. */
+const BREATH_ROUTINE_CATEGORIES = {
+  'breathe.box.4':          'box',
+  'breathe.box.6':          'box',
+  'breathe.coherent.55':    'coherent',
+  'breathe.coherent.66':    'coherent',
+  'breathe.rounds.full':    'rounds',
+  'breathe.rounds.express': 'rounds',
+};
+
 function checkPlanAchievements() {
   const s = getState();
   const p = s.plan || {};
@@ -1729,25 +2064,11 @@ function checkPlanAchievements() {
   }
 }
 
-function checkFocusDayAchievement() {
-  const s = getState();
-  const day = new Date().getDay();
-  const todayMin = (s.weeklyStats.focusMinutes || [])[day] || 0;
-  if (todayMin >= 240) unlockAchievement('master.focus.day');
-}
-
-/* Detectores horarios — sesión 29.
-   `master.dawn`  → sesión antes de las 7:00.
-   `master.dusk`  → sesión después de las 21:00.
-   `morning.5`    → 5 fechas distintas con sesión antes de las 9:00.
-   Se llama desde cada acción de completar (breathe / move / extra /
-   pomodoro). El registro de fechas para `morning.5` se persiste en el
-   state como `morningDates: string[]` (toDateString) con cap de 30.
-*/
+/* master.dawn / master.dusk / morning.5 */
 function checkTimeOfDayAchievements() {
   const now = new Date();
   const h = now.getHours();
-  if (h < 7) unlockAchievement('master.dawn');
+  if (h < 7)  unlockAchievement('master.dawn');
   if (h >= 21) unlockAchievement('master.dusk');
   if (h < 9) {
     const today = now.toDateString();
@@ -1761,79 +2082,41 @@ function checkTimeOfDayAchievements() {
   }
 }
 
-/* Detectores de logros collector — sesión 34.
-   Se llama al final de cada unlockAchievement exitoso.
-   Cuenta los logros ya en _state (incluido el que se acaba de añadir).
-   unlockAchievement es idempotente → la recursión termina de forma natural. */
+/* master.collector.half / master.collector.full */
 function checkCollectorAchievements() {
-  const count = Object.keys(_state.achievements).length;
-  if (count >= 50) unlockAchievement('master.collector.half');
+  const count = Object.keys(getState().achievements).length;
+  if (count >= 50)  unlockAchievement('master.collector.half');
   if (count >= 100) unlockAchievement('master.collector.full');
 }
 
-/* Detector master.silent.day — sesión 34.
-   Registra hoy como día silencioso si soundOn=false y el usuario hizo algo.
-   Se llama desde cada acción de completar. */
+/* master.silent.day */
 function checkSilentDayAchievement() {
-  if (_state.soundOn) return;
+  const s = getState();
+  if (s.soundOn) return;
   const today = new Date().toDateString();
-  const list = Array.isArray(_state.silentDates) ? _state.silentDates : [];
+  const list = Array.isArray(s.silentDates) ? s.silentDates : [];
   if (!list.includes(today)) {
     setState({ silentDates: [...list, today].slice(-30) });
     unlockAchievement('master.silent.day');
   }
 }
 
-/* Mapa de routineId → categoría para contadores de tipo de rutina.
-   Solo breathe; atg se maneja en completeExtraSession. Sesión 41. */
-const BREATH_ROUTINE_CATEGORIES = {
-  'breathe.box.4':         'box',
-  'breathe.box.6':         'box',
-  'breathe.coherent.55':   'coherent',
-  'breathe.coherent.66':   'coherent',
-  'breathe.rounds.full':   'rounds',
-  'breathe.rounds.express':'rounds',
-};
-
-/* hydrate.week.perfect — 7 días consecutivos alcanzando water.goal.
-   Ordena waterGoalDates numéricamente y verifica 7 entradas seguidas
-   separadas exactamente 1 día (86400000 ms). Sesión 41. */
-function checkHydrateWeekPerfect() {
-  const dates = (_state.waterGoalDates || [])
-    .map(d => new Date(d).getTime())
-    .sort((a, b) => a - b);
-  if (dates.length < 7) return;
-  for (let i = dates.length - 1; i >= dates.length - 6; i--) {
-    if (dates[i] - dates[i - 1] !== 86400000) return;
-  }
-  unlockAchievement('hydrate.week.perfect');
-}
-
-/* Contadores por tipo de rutina — sesión 41.
-   Lee _state.routineCounts ya actualizado antes de llamar. */
+/* Contadores por tipo de rutina (master.box.10, coherent.10, rounds.10, atg.20). */
 function checkRoutineCountAchievements(category) {
-  const c = _state.routineCounts || {};
+  const c = getState().routineCounts || {};
   if (category === 'box'      && (c.box      || 0) >= 10) unlockAchievement('master.box.10');
   if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
   if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
   if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
 }
 
-/* Detectores de logros de Estadísticas — sesión 46.
-   Se llama desde ensureDayFresh() después de un rollover (cuando
-   _state ya tiene el history actualizado con el día archivado).
-   unlockAchievement es idempotente: correr esto múltiples veces es inocuo.
-
-   - stats.month.first : cualquier mes con ≥20 días de actividad en history.
-   - stats.month.focus : cualquier mes con ≥600 min (10h) de foco.
-   - stats.year.first  : cualquier año con los 12 meses presentes en history.
-   - stats.streak.30   : cableado como umbral extra en updateStreak (no aquí). */
+/* Detectores de logros de Estadisticas (sesion 46).
+   Llamado desde ensureDayFresh() despues de un rollover. */
 function checkStatsAchievements() {
-  const { history } = _state;
+  const { history } = getState();
   const days   = history.days   || {};
   const months = history.months || {};
 
-  // stats.month.first: busca cualquier mes-año con ≥20 entradas en history.days
   const monthDayCounts = {};
   Object.keys(days).forEach(d => {
     const mk = d.slice(0, 7);
@@ -1843,12 +2126,10 @@ function checkStatsAchievements() {
     unlockAchievement('stats.month.first');
   }
 
-  // stats.month.focus: busca cualquier mes con ≥600 min de foco acumulados
   if (Object.values(months).some(m => m.focusMinutes >= 600)) {
     unlockAchievement('stats.month.focus');
   }
 
-  // stats.year.first: busca cualquier año con los 12 meses presentes
   const yearMonthCounts = {};
   Object.keys(months).forEach(k => {
     const yr = k.slice(0, 4);
@@ -1859,14 +2140,12 @@ function checkStatsAchievements() {
   }
 }
 
-/* Detector master.retreat — sesión 34.
-   Usa los buckets weeklyStats ya existentes: breathMinutes[day] + moveMinutes[day].
-   Extra suma al bucket moveMinutes (decisión activa), así que completeExtraSession
-   también llama a este detector. */
+/* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
 function checkRetreatAchievement() {
-  const day = new Date().getDay();
-  const todayBreath = (_state.weeklyStats.breathMinutes || [])[day] || 0;
-  const todayMove = (_state.weeklyStats.moveMinutes || [])[day] || 0;
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const todayBreath = (s.weeklyStats.breathMinutes || [])[day] || 0;
+  const todayMove   = (s.weeklyStats.moveMinutes   || [])[day] || 0;
   if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
 }
 
@@ -1876,199 +2155,9 @@ function unlockAchievement(id, note) {
   setState({
     achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } }
   });
-  // Notificación flotante
   showToast({ id, type: 'achievement' });
   checkCollectorAchievements();
   return true;
-}
-
-function addFocusMinutes(mins) {
-  ensureDayFresh();
-  /* v0.12.1: calculamos todo dentro del updater y, tras el setState,
-     leemos el total oficial desde `_state` (no desde una variable de
-     cierre) para disparar logros. Evita el riesgo de que otra acción
-     se cuele entre el updater y la evaluación de umbrales. */
-  setState(prev => {
-    const day = new Date().getDay();
-    const week = [...prev.weeklyStats.focusMinutes];
-    week[day] += mins;
-    return {
-      ...prev,
-      totalFocusMin: prev.totalFocusMin + mins,
-      weeklyStats: { ...prev.weeklyStats, focusMinutes: week },
-    };
-  });
-  const h = _state.totalFocusMin / 60;
-  if (h >= 10) unlockAchievement('focus.hours.10');
-  if (h >= 50) unlockAchievement('focus.hours.50');
-  if (h >= 100) unlockAchievement('focus.hours.100');
-  /* Logro de día de foco intenso: 4h en una sola jornada. Se evalúa
-     aquí porque `addFocusMinutes` es donde crecen los buckets diarios
-     en `weeklyStats.focusMinutes[day]`. Sesión 28. */
-  checkFocusDayAchievement();
-}
-
-function completePomodoro() {
-  ensureDayFresh();
-  /* v0.12.1: capturamos el valor de minutos de foco ANTES del updater
-     (el modo/minutos puede cambiar por tweak durante el tick); el
-     updater sólo incrementa cycle. Luego leemos el nuevo cycle desde
-     `_state` para los umbrales de logro. */
-  const focusMinsAtCompletion = _state.focusMinutes;
-  setState(prev => ({ ...prev, cycle: prev.cycle + 1 }));
-  addFocusMinutes(focusMinsAtCompletion);
-  unlockAchievement('first.step');
-  if (_state.cycle >= 8) unlockAchievement('master.pomodoro.8');
-  /* `master.long.focus` — completar un Pomodoro de 45 min sin pausa.
-     Se evalúa contra los minutos del bloque que acaba de cerrarse,
-     no contra el state.focusMinutes (que puede haberse cambiado por
-     tweak antes de que termine el ticker). Sesión 29. */
-  if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
-  checkTimeOfDayAchievements();
-  checkSilentDayAchievement();
-  updateStreak();
-}
-
-function completeBreathSession(routineId, durationMin) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.breathMinutes];
-  week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, respira: true },
-    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
-    /* Contador acumulado de sesiones de respiración (sesión 29).
-       Crece monótonamente; alimenta breathe.sessions.10/50. */
-    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
-  });
-  unlockAchievement('first.breath');
-  /* Umbrales de constancia por módulo. Leemos `_state` ya actualizado
-     para no usar variables de cierre (patrón validado en sesión 18). */
-  if (_state.breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
-  if (_state.breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  // Exploración
-  const explorationMap = {
-    'breathe.box.4': 'explore.box',
-    'breathe.box.6': 'explore.box',
-    'breathe.478': 'explore.478',
-    'breathe.coherent.55': 'explore.coherent',
-    'breathe.coherent.66': 'explore.coherent',
-    'breathe.rounds.full': 'explore.rounds',
-    'breathe.rounds.express': 'explore.rounds',
-    'breathe.bellows': 'explore.bhastrika',
-    'breathe.nadi.shodhana': 'explore.nadi',
-    'breathe.ujjayi': 'explore.ujjayi',
-    'breathe.kapalabhati': 'explore.kapalabhati',
-    'breathe.physiological': 'explore.physiological',
-  };
-  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  /* Contadores por tipo de rutina — master.box.10 / coherent.10 / rounds.10. */
-  const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
-  if (breathCat) {
-    const c = _state.routineCounts || {};
-    setState({ routineCounts: { ...c, [breathCat]: (c[breathCat] || 0) + 1 } });
-    checkRoutineCountAchievements(breathCat);
-  }
-  updateStreak();
-}
-
-function completeMoveSession(routineId, durationMin) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.moveMinutes];
-  week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, muevete: true },
-    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-    /* Contador acumulado de sesiones Mueve (sesión 29). Solo Mueve,
-       Extra tiene su propio camino; el bucket de stats sí los suma. */
-    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
-  });
-  unlockAchievement('first.stretch');
-  if (_state.moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  updateStreak();
-}
-
-function completeExtraSession(routineId, durationMin = 0) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.moveMinutes];
-  // Los minutos de Extra se agregan al bucket de 'move' en stats (ambos son cuerpo activo),
-  // pero el plan del día y los logros sí se separan.
-  if (durationMin > 0) week[day] += durationMin;
-  setState({
-    plan: { ...s.plan, extra: true },
-    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
-  });
-  unlockAchievement('first.extra');
-  checkPlanAchievements();
-  checkTimeOfDayAchievements();
-  // Logros de exploración de movilidad.
-  // NOTA (sesión 15): tras el swap de sesión 14, las rutinas de
-  // movilidad (move.hips.5, move.shoulders.5, move.atg.knees,
-  // move.ancestral, move.neck.3, move.desk.quick) pasaron de
-  // MOVE_ROUTINES a EXTRA_ROUTINES y ahora desembocan aquí. Los ids de
-  // rutina no se renombran (decisión activa: ids = identificadores
-  // estables), así que el map conserva los ids `move.*` aunque viva en
-  // completeExtraSession.
-  const exploreMap = {
-    'move.hips.5': 'explore.hips',
-    'move.shoulders.5': 'explore.shoulders',
-    'move.atg.knees': 'explore.atg',
-    'move.ancestral': 'explore.ancestral',
-    'move.neck.3': 'explore.neck',
-    'move.desk.quick': 'explore.desk',
-  };
-  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
-  checkRetreatAchievement();
-  checkSilentDayAchievement();
-  /* master.atg.20 — contador de sesiones ATG Knees. */
-  if (routineId === 'move.atg.knees') {
-    const c = _state.routineCounts || {};
-    setState({ routineCounts: { ...c, atg: (c.atg || 0) + 1 } });
-    checkRoutineCountAchievements('atg');
-  }
-  updateStreak();
-}
-
-function addWaterGlass(delta = 1) {
-  ensureDayFresh();
-  const s = getState();
-  const day = new Date().getDay();
-  const week = [...s.weeklyStats.waterGlasses];
-  week[day] = Math.max(0, (week[day] || 0) + delta);
-  const next = Math.max(0, s.water.today + delta);
-  setState({
-    water: { ...s.water, today: next },
-    plan: { ...s.plan, hidratate: next > 0 ? true : s.plan.hidratate },
-    weeklyStats: { ...s.weeklyStats, waterGlasses: week },
-  });
-  if (delta > 0) {
-    unlockAchievement('first.sip');
-    checkPlanAchievements();
-    checkSilentDayAchievement();
-    /* hydrate.week.perfect — registrar hoy si se alcanza la meta por
-       primera vez. Leemos _state actualizado (patrón sesión 18). */
-    if (_state.water.today >= _state.water.goal) {
-      const today = new Date().toDateString();
-      const goalDates = Array.isArray(_state.waterGoalDates) ? _state.waterGoalDates : [];
-      if (!goalDates.includes(today)) {
-        setState({ waterGoalDates: [...goalDates, today].slice(-14) });
-        checkHydrateWeekPerfect();
-      }
-    }
-  }
 }
 
 function updateStreak() {
@@ -2081,67 +2170,135 @@ function updateStreak() {
   if (last === yesterday) current += 1;
   else current = 1;
   const longest = Math.max(s.streak.longest, current);
-  setState({
-    streak: { current, longest, lastActiveDate: today }
-  });
-  /* `first.day` — primer día de uso. Equivale a la primera vez que
-     se llama a updateStreak con éxito, así que current === 1 lo
-     captura. unlockAchievement es idempotente. Sesión 28. */
-  if (current >= 1) unlockAchievement('first.day');
-  if (current >= 3) unlockAchievement('streak.3');
-  if (current >= 7) unlockAchievement('streak.7');
-  if (current >= 14) unlockAchievement('streak.14');
-  if (current >= 30) { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
-  if (current >= 60) unlockAchievement('streak.60');
+  setState({ streak: { current, longest, lastActiveDate: today } });
+  if (current >= 1)   unlockAchievement('first.day');
+  if (current >= 3)   unlockAchievement('streak.3');
+  if (current >= 7)   unlockAchievement('streak.7');
+  if (current >= 14)  unlockAchievement('streak.14');
+  if (current >= 30)  { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
+  if (current >= 60)  unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
   if (current >= 365) unlockAchievement('streak.365');
 }
 
-/* TOAST NOTIFICATIONS
-   Buffer pre-mount: si se dispara un toast antes de que ToastHost monte
-   (p.ej. desbloqueo por rollover durante loadState), se encola en
-   `_pendingToasts` y se vacía en orden cuando el primer listener se
-   registra. Evita que el primer logro de una sesión "recién abierta" se
-   pierda silenciosamente. */
-const _toastListeners = new Set();
-const _pendingToasts = [];
-function showToast(toast) {
-  const t = { ...toast, _id: Date.now() + Math.random() };
-  if (_toastListeners.size === 0) {
-    _pendingToasts.push(t);
-    return;
-  }
-  _toastListeners.forEach(l => l(t));
-}
-function onToast(listener) {
-  const wasEmpty = _toastListeners.size === 0;
-  _toastListeners.add(listener);
-  /* v0.12.1: vaciamos el buffer pendiente en cuanto hay AL MENOS un
-     listener (antes la condición era `size === 1`, que fallaba bajo
-     StrictMode cuando React monta y desmonta el host dos veces: el
-     segundo listener nunca recibía los toasts buffeados). */
-  if (wasEmpty && _pendingToasts.length > 0) {
-    const drained = _pendingToasts.splice(0);
-    // Despachamos en el próximo tick para no interferir con el mount del Host.
-    setTimeout(() => { drained.forEach(t => listener(t)); }, 0);
-  }
-  return () => _toastListeners.delete(listener);
-}
-
-// Init theme on load
-applyTheme();
-
-function setLang(lang) {
-  setState({ lang });
-}
-
 /* ============================
-   CAMINOS -- sesion 49 / v0.26.0-alpha
+   ACCIONES DE SESION
    ============================ */
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+function completeBreathSession(routineId, durationMin) {
+  ensureDayFresh();
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const week = [...s.weeklyStats.breathMinutes];
+  week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, respira: true },
+    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
+    breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
+  });
+  unlockAchievement('first.breath');
+  if (getState().breatheSessionsTotal >= 10) unlockAchievement('breathe.sessions.10');
+  if (getState().breatheSessionsTotal >= 50) unlockAchievement('breathe.sessions.50');
+  checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  const explorationMap = {
+    'breathe.box.4':          'explore.box',
+    'breathe.box.6':          'explore.box',
+    'breathe.478':            'explore.478',
+    'breathe.coherent.55':    'explore.coherent',
+    'breathe.coherent.66':    'explore.coherent',
+    'breathe.rounds.full':    'explore.rounds',
+    'breathe.rounds.express': 'explore.rounds',
+    'breathe.bellows':        'explore.bhastrika',
+    'breathe.nadi.shodhana':  'explore.nadi',
+    'breathe.ujjayi':         'explore.ujjayi',
+    'breathe.kapalabhati':    'explore.kapalabhati',
+    'breathe.physiological':  'explore.physiological',
+  };
+  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
+  const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
+  if (breathCat) {
+    const c = getState().routineCounts || {};
+    setState({ routineCounts: { ...c, [breathCat]: (c[breathCat] || 0) + 1 } });
+    checkRoutineCountAchievements(breathCat);
+  }
+  updateStreak();
 }
+
+function completeMoveSession(routineId, durationMin) {
+  ensureDayFresh();
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const week = [...s.weeklyStats.moveMinutes];
+  week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, muevete: true },
+    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+    moveSessionsTotal: (s.moveSessionsTotal || 0) + 1,
+  });
+  unlockAchievement('first.stretch');
+  if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
+  checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
+  updateStreak();
+}
+
+function completeExtraSession(routineId, durationMin) {
+  if (durationMin === undefined) durationMin = 0;
+  ensureDayFresh();
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const week = [...s.weeklyStats.moveMinutes];
+  if (durationMin > 0) week[day] += durationMin;
+  setState({
+    plan: { ...s.plan, extra: true },
+    weeklyStats: { ...s.weeklyStats, moveMinutes: week },
+  });
+  unlockAchievement('first.extra');
+  checkPlanAchievements();
+  checkTimeOfDayAchievements();
+  /* NOTA (sesion 15): rutinas de movilidad pasaron de MOVE a EXTRA_ROUTINES.
+     Los ids move.* se conservan como identificadores estables. */
+  const exploreMap = {
+    'move.hips.5':      'explore.hips',
+    'move.shoulders.5': 'explore.shoulders',
+    'move.atg.knees':   'explore.atg',
+    'move.ancestral':   'explore.ancestral',
+    'move.neck.3':      'explore.neck',
+    'move.desk.quick':  'explore.desk',
+  };
+  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  checkRetreatAchievement();
+  checkSilentDayAchievement();
+  if (routineId === 'move.atg.knees') {
+    const c = getState().routineCounts || {};
+    setState({ routineCounts: { ...c, atg: (c.atg || 0) + 1 } });
+    checkRoutineCountAchievements('atg');
+  }
+  updateStreak();
+}
+
+Object.assign(window, {
+  unlockAchievement,
+  completeBreathSession,
+  completeMoveSession,
+  completeExtraSession,
+  updateStreak,
+  checkStatsAchievements,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-paths.jsx
+   Caminos: CRUD, stats, favoritos.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (getState, setState, todayISO),
+               app/paths/registry.js (window.getPath).
+*/
 
 function startPath(pathId) {
   const path = window.getPath && window.getPath(pathId);
@@ -2150,6 +2307,7 @@ function startPath(pathId) {
     ...s,
     paths: {
       ...s.paths,
+      lastViewed: pathId, // s75: rastrea el ultimo Camino abierto
       current: {
         id: pathId,
         stepIndex: 0,
@@ -2158,6 +2316,10 @@ function startPath(pathId) {
       },
     },
   }));
+}
+
+function setLastViewedPath(pathId) {
+  setState(s => ({ ...s, paths: { ...s.paths, lastViewed: pathId } }));
 }
 
 function advancePathStep(reason) {
@@ -2185,6 +2347,7 @@ function advancePathStep(reason) {
               lastDoneAt: todayISO(),
             },
           },
+          history: [...(s.paths.history || []), todayISO()],
         },
       };
     }
@@ -2210,6 +2373,7 @@ function completePath(pathId) {
           ...s.paths.completed,
           [pathId]: { count: prev.count + 1, lastDoneAt: todayISO() },
         },
+        history: [...(s.paths.history || []), todayISO()],
       },
     };
   });
@@ -2222,56 +2386,167 @@ function abandonPath() {
   }));
 }
 
-function getSuggestedPath(now) {
-  if (now === undefined) now = new Date();
-  const day = now.getDay();
-  if (day === 0 || day === 6) return 'path.weekend';
-  const h = now.getHours();
-  if (h >= 6 && h <= 11) return 'path.dawn';
-  if (h >= 12 && h <= 14) return 'path.midday';
-  if (h >= 15 && h <= 17) return 'path.afternoon';
-  if (h >= 18 && h <= 22) return 'path.dusk';
-  return 'path.dusk';
+/* Sesion 75: sugerencia basada en preferencia del usuario, no en la hora.
+   - Si lastViewed existe y sigue siendo un Camino vigente: lo devuelve.
+   - Si no: primer Camino del catalogo (orden de definicion). */
+function getSuggestedPath() {
+  const s = getState && getState();
+  const lv = s && s.paths && s.paths.lastViewed;
+  const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (lv) {
+    for (let i = 0; i < catalog.length; i++) {
+      if (catalog[i].id === lv) return lv;
+    }
+  }
+  return catalog.length ? catalog[0].id : null;
+}
+
+/* ============================
+   PATH STATS (sesion 54)
+   ============================ */
+
+function computePathStreaks(history) {
+  if (!history || history.length === 0) return { currentStreak: 0, bestStreak: 0 };
+  const days = new Set(history);
+  const sorted = Array.from(days).sort();
+  let best = 1, cur = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i - 1]);
+    const curr = new Date(sorted[i]);
+    const diff = Math.round((curr - prev) / 86400000);
+    if (diff === 1) {
+      cur++;
+      if (cur > best) best = cur;
+    } else if (diff > 1) {
+      cur = 1;
+    }
+  }
+  const today = todayISO();
+  let cs = 0;
+  let check = today;
+  while (days.has(check)) {
+    cs++;
+    const d = new Date(check);
+    d.setDate(d.getDate() - 1);
+    check = d.toISOString().slice(0, 10);
+  }
+  return { currentStreak: cs, bestStreak: best };
+}
+
+function getPathStats() {
+  const s = getState().paths;
+  const hist = s.history || [];
+  const total = hist.length;
+  const byPath = {};
+  for (const id in (s.completed || {})) {
+    byPath[id] = {
+      count: s.completed[id].count || 0,
+      lastDoneAt: s.completed[id].lastDoneAt || null,
+    };
+  }
+  const streaks = computePathStreaks(hist);
+  return { total, byPath, ...streaks };
 }
 
 function setFavoritePath(pathId) {
-  setState(s => ({
-    ...s,
-    paths: { ...s.paths, favorite: pathId },
-  }));
+  setState(s => ({ ...s, paths: { ...s.paths, favorite: pathId } }));
 }
 
 function clearFavoritePath() {
-  setState(s => ({
-    ...s,
-    paths: { ...s.paths, favorite: null },
-  }));
+  setState(s => ({ ...s, paths: { ...s.paths, favorite: null } }));
 }
 
 function toggleFavoritePath(pathId) {
   const current = getState().paths && getState().paths.favorite;
-  if (current === pathId) {
-    clearFavoritePath();
-  } else {
-    setFavoritePath(pathId);
-  }
+  if (current === pathId) clearFavoritePath();
+  else setFavoritePath(pathId);
 }
 
 Object.assign(window, {
-  usePace, getState, setState, subscribe,
-  unlockAchievement, completePomodoro,
-  completeBreathSession, completeMoveSession, completeExtraSession,
-  addWaterGlass, addFocusMinutes, updateStreak,
+  startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
+  setFavoritePath, clearFavoritePath, toggleFavoritePath, setLastViewedPath,
+  getPathStats,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state-settings.jsx
+   Configuracion: setLang y helpers de settings.
+   Split de state.jsx (sesion 57 / v0.27.5).
+   Depende de: state-core (setState).
+*/
+
+function setLang(lang) {
+  setState({ lang });
+}
+
+Object.assign(window, {
+  setLang,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · state.jsx — INDICE
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Este archivo es el punto de entrada del sistema de estado.
+   La logica vive en los modulos state-*.jsx (cargados antes en PACE.html).
+   Aqui solo se re-exporta la API publica completa al window para que
+   cualquier componente pueda acceder a ella sin conocer la estructura interna.
+
+   Orden de carga en PACE.html:
+     1. state-core.jsx        (store, loadState, helpers, toast)
+     2. state-timer.jsx       (addFocusMinutes, completePomodoro)
+     3. state-hydrate.jsx     (addWaterGlass)
+     4. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
+     5. state-paths.jsx       (paths CRUD, stats)
+     6. state-settings.jsx    (setLang)
+     7. state.jsx             (este archivo — re-export consolidado)
+
+   Sesion 57 / v0.27.5 — split desde monolito de 1026 lineas.
+*/
+
+/* Re-exportacion consolidada — lista identica a la del Object.assign
+   original de state.jsx v0.27.4. Ningun nombre anadido ni eliminado. */
+Object.assign(window, {
+  usePace,
+  getState,
+  setState,
+  subscribe,
+  unlockAchievement,
+  completePomodoro,
+  completeBreathSession,
+  completeMoveSession,
+  completeExtraSession,
+  addWaterGlass,
+  addFocusMinutes,
+  updateStreak,
   ensureDayFresh,
-  showToast, onToast,
+  showToast,
+  onToast,
   setLang,
   PACE_VERSION,
-  // sesion 43 -- history helpers
-  zeroEntry, toISODate, archiveDayToHistory,
-  updateMonthAggregate, updateYearAggregate,
+  // sesion 43 -- history helpers (refactor sesion 69)
+  zeroEntry,
+  toISODate,
+  archiveDayToHistory,
+  recomputeMonthFromDays,
+  recomputeYearFromDays,
+  recomputeAllHistoryAggregates,
+  getDayIndexMondayFirst,
+  getMondayOf,
   // sesion 49 -- Caminos
-  startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
-  setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  startPath,
+  advancePathStep,
+  completePath,
+  abandonPath,
+  getSuggestedPath,
+  setFavoritePath,
+  clearFavoritePath,
+  toggleFavoritePath,
+  setLastViewedPath, // s75
+  getPathStats,
 });
 
 </script>
@@ -3147,6 +3422,8 @@ function PaceLogoImage({ maxWidth = 600 }) {
      más anchos o layouts futuros. */
   const { useState: useStateLG } = React;
   const [failed, setFailed] = useStateLG(false);
+  const [state] = usePace();
+  const isDark = state.palette === 'oscuro';
   if (failed) {
     // Fallback: PaceLockup SVG con subtítulo equivalente al del PNG.
     return (
@@ -3166,9 +3443,11 @@ function PaceLogoImage({ maxWidth = 600 }) {
         maxWidth,
         height: 'auto',
         objectFit: 'contain',
-        /* El PNG original viene con fondo crema; lo fundimos visualmente
-           con el paper del sidebar usando blend mode. */
-        mixBlendMode: 'multiply',
+        /* El PNG original viene con fondo crema opaco.
+           - Modo claro: multiply funde el fondo crema con el paper claro.
+           - Modo oscuro: invert+screen invierte colores y funde con el oscuro. */
+        mixBlendMode: isDark ? 'screen' : 'multiply',
+        filter: isDark ? 'invert(1)' : 'none',
       }}
       draggable={false}
     />
@@ -4519,6 +4798,34 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
         min-height: 84px !important;
       }
     }
+    /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
+       s64 (v0.28.5): márgenes negativos neutralizados para evitar clip lateral.
+       s66 (v0.28.6): eliminado max-height + overflow:hidden que recortaban logo
+       y tagline; logo limitado a max-width 200px con data-pace-sidebar-logo. */
+    @media (max-width: 640px) {
+      [data-pace-sidebar] [data-pace-sidebar-logobar] {
+        /* Márgenes neutralizados + overflow visible para mostrar logo+tagline íntegros */
+        overflow: visible !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 6px 4px !important;
+      }
+      [data-pace-sidebar] [data-pace-sidebar-logo] {
+        max-width: 200px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+      }
+      /* Spacer flex:1 oculto: el contenido se apila desde arriba y
+         el espacio sobrante queda al final, antes del footer. */
+      [data-pace-sidebar] [data-pace-sidebar-spacer] {
+        display: none !important;
+      }
+      [data-pace-sidebar] [data-pace-sidebar-achievements] {
+        grid-template-columns: repeat(5, 40px) !important;
+        gap: 4px !important;
+        margin-bottom: 6px !important;
+      }
+    }
   `;
   document.head.appendChild(s);
 }
@@ -4529,6 +4836,7 @@ function Sidebar() {
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
+  const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
 
@@ -4541,17 +4849,17 @@ function Sidebar() {
   return (
     <aside style={sidebarStyles.root} data-pace-sidebar>
       {/* ============================================================
-          BARRA HORIZONTAL SUPERIOR · logo + contadores
+          BARRA HORIZONTAL SUPERIOR · logo
           ------------------------------------------------------------
           v0.11.7 / sesión 12 · Reestructurado por petición del usuario:
-          - Logo ampliado ~2.5× (PaceLogoImage ahora con maxWidth 600,
-            antes 240) ocupando toda la franja horizontal.
-          - Chevron de colapsar extraído de la fila del logo a un botón
-            flotante en la esquina superior-derecha del sidebar para no
-            competir con la imagen.
-          - Contadores "# / ↻ / ◉" centrados debajo del logo (antes
-            alineados a la izquierda) y con iconos SVG gráficos en vez
-            de caracteres tipográficos (tomate, espiral, llama).
+          - Logo ampliado ~2.5× ocupando toda la franja horizontal.
+          - Chevron de colapsar extraído a un botón flotante en la
+            esquina superior-derecha del sidebar.
+          v0.28.2 / sesión 61 · Eliminado el bloque de contadores
+          (pomodoros / rondas / racha) que vivía bajo el logo: aportaba
+          poco y comprimía las secciones. Sin contadores el sidebar
+          respira más y, en móvil, evita scroll vertical. Los iconos
+          (Pomodoro/Rounds/Flame) se eliminan con su sección.
           El área del logo sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click).
           ============================================================ */}
@@ -4561,6 +4869,7 @@ function Sidebar() {
       <div style={sidebarStyles.logoBar} data-pace-sidebar-logobar>
         <div
           style={{ ...sidebarStyles.logo, cursor: 'pointer' }}
+          data-pace-sidebar-logo
           onClick={() => window.dispatchEvent(new CustomEvent('pace:cow-click'))}
           title={t('sidebar.logo.title')}
         >
@@ -4568,56 +4877,36 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* CONTADORES HOY — centrados debajo del logo, con iconos gráficos */}
-      <div style={sidebarStyles.cycles}>
-        <div style={sidebarStyles.cycleCount}>
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.pomodoros')}>
-            <PomodoroIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.cycle).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.rounds')}>
-            <RoundsIcon />
-            <span style={sidebarStyles.cycleNum}>{String(Math.floor(state.cycle / 4)).padStart(2, '0')}</span>
-          </span>
-          <span style={sidebarStyles.cycleSep} aria-hidden="true" />
-          <span style={sidebarStyles.cycleItem} title={t('sidebar.counter.streak')}>
-            <StreakFlameIcon />
-            <span style={sidebarStyles.cycleNum}>{String(state.streak.current).padStart(2, '0')}</span>
-          </span>
-        </div>
-      </div>
-
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: isMob ? '8px 0 10px' : '14px 0 16px' }} />
 
       {/* RITMO / RACHA */}
       <div style={sidebarStyles.section}>
-        <div style={sidebarStyles.sectionHeader}>
+        <div style={{ ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 }}>
           <Meta>{t('sidebar.section.rhythm')}</Meta>
           <span style={sidebarStyles.sectionAside}>{state.streak.longest}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-          <span style={sidebarStyles.streakNum}>{state.streak.current}</span>
+          <span style={{ ...sidebarStyles.streakNum, fontSize: isMob ? 32 : 44 }}>{state.streak.current}</span>
           <div>
             <div style={sidebarStyles.streakLabel}>{state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')}</div>
             <div style={sidebarStyles.streakSub}>{tn('sidebar.streak.best', { n: state.streak.longest })}</div>
           </div>
         </div>
-        <WeekDots weeklyStats={state.weeklyStats} />
+        <WeekDots weeklyStats={state.weeklyStats} compact={isMob} />
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: isMob ? '8px 0 10px' : '16px 0 14px' }} />
 
       {/* SENDERO — el día como camino con hitos */}
       <div style={sidebarStyles.section}>
-        <SenderoDelDia state={state} />
+        <SenderoDelDia state={state} compact={isMob} />
       </div>
 
-      <Divider style={{ margin: '16px 0 14px' }} />
+      <Divider style={{ margin: isMob ? '8px 0 10px' : '16px 0 14px' }} />
 
       {/* LOGROS */}
       <div style={sidebarStyles.section}>
-        <div style={sidebarStyles.sectionHeader}>
+        <div style={{ ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 }}>
           <Meta>{t('sidebar.section.achievements')}</Meta>
           <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
         </div>
@@ -4630,10 +4919,10 @@ function Sidebar() {
         </button>
       </div>
 
-      <div style={{ flex: 1 }} />
+      <div data-pace-sidebar-spacer style={{ flex: 1 }} />
 
       {/* STATUS BAR INFERIOR */}
-      <StatusBar />
+      <StatusBar compact={isMob} />
     </aside>
   );
 }
@@ -4643,7 +4932,7 @@ function Sidebar() {
    el arco del día (6h → 22h). Los hitos son pomodoros y sesiones
    completadas hasta ahora; aparecen como puntos sobre la curva.
    ============================================================ */
-function SenderoDelDia({ state }) {
+function SenderoDelDia({ state, compact }) {
   const { t, tn } = useT();
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
@@ -4661,7 +4950,8 @@ function SenderoDelDia({ state }) {
       out.push({ t, kind: 'focus' });
     }
     // Actividades del plan también cuentan como hitos hoy
-    const day = new Date().getDay();
+    /* Sesion 69 (v0.28.8): weeklyStats indexa lunes-primero. */
+    const day = getDayIndexMondayFirst(new Date());
     const ws = state.weeklyStats || {};
     if ((ws.breathMinutes?.[day] || 0) > 0) out.push({ t: hNow - 0.3, kind: 'breathe' });
     if ((ws.moveMinutes?.[day] || 0) > 0) out.push({ t: hNow - 0.55, kind: 'move' });
@@ -4672,8 +4962,8 @@ function SenderoDelDia({ state }) {
       .sort((a, b) => a.x - b.x);
   }, [state.cycle, state.weeklyStats]);
 
-  const W = 240;
-  const H = 46;
+  const W = compact ? 180 : 240;
+  const H = compact ? 36 : 46;
   const pathD = `M 0 ${H * 0.55} Q ${W * 0.2} ${H * 0.15}, ${W * 0.45} ${H * 0.55} T ${W} ${H * 0.55}`;
 
   const colorOf = (kind) => ({
@@ -4749,115 +5039,30 @@ function ChevronLeftIcon() {
   );
 }
 
-/* ============================================================
-   Iconos gráficos para los contadores del sidebar superior
-   (sesión 12 · v0.11.7) — sustituyen los caracteres # ↻ ◉ por
-   glifos editoriales con stroke fino y un toque de color sutil.
-   Dibujados en viewBox 16×16, render a 14px para encajar con
-   la tipografía tabular (line-height 16–18).
-   ============================================================ */
-
-// Tomate / pomodoro: círculo con hendidura superior + tallo y hojita.
-// Metáfora universal para "pomodoro completado". Relleno terracota con
-// opacidad baja, stroke del color de foco para que case con el tag.
-function PomodoroIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Cuerpo del tomate */}
-      <path
-        d="M8 4.2c2.9 0 5 2.1 5 4.7 0 2.5-2.1 4.6-5 4.6s-5-2.1-5-4.6c0-2.6 2.1-4.7 5-4.7z"
-        fill="var(--focus)"
-        fillOpacity="0.14"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-      />
-      {/* Hendidura central vertical (sugerencia de gajo) */}
-      <path
-        d="M8 5.2v1.4"
-        stroke="var(--focus)"
-        strokeWidth="1"
-        strokeLinecap="round"
-        opacity="0.55"
-      />
-      {/* Tallo */}
-      <path
-        d="M8 4.2V3"
-        stroke="var(--focus)"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      {/* Hoja */}
-      <path
-        d="M8 3.4c1.1-.5 2-.2 2.5.4-.8.6-1.8.5-2.5-.4z"
-        fill="var(--focus)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-
-// Rondas / ciclos largos: espiral de ~1.5 vueltas que sugiere repetición
-// acumulada. Alternativa gráfica al ↻ tipográfico (que es un arrow-rotate
-// poco expresivo). Mantiene el peso visual del set.
-function RoundsIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"
-         stroke="var(--ink-2)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-      {/* Espiral: centro → fuera en ~1.4 vueltas */}
-      <path d="M8 8
-               a1 1 0 0 1 1 -1
-               a2 2 0 0 1 2 2
-               a3 3 0 0 1 -3 3
-               a4 4 0 0 1 -4 -4
-               a5 5 0 0 1 5 -5
-               a5.5 5.5 0 0 1 4 1.5" />
-      {/* Cabeza de flecha en el extremo exterior, insinuando "otra vuelta" */}
-      <path d="M13 3.5l.2 2.5 -2.3 -.6" />
-    </svg>
-  );
-}
-
-// Racha / streak: llama fina en dos trazos. El relleno cálido (breathe)
-// la diferencia del resto de iconos del set y conecta con la idea de
-// "mantener el calor" de los días seguidos.
-function StreakFlameIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      {/* Silueta principal de la llama */}
-      <path
-        d="M8 2.2c.6 1.8 2.1 2.8 2.9 4.1 1 1.6 1.1 3.4 .1 4.8 -1 1.4 -3 2.2 -4.6 1.5 -1.8 -.8 -2.7 -2.8 -2.1 -4.7 .3 -1 .9 -1.7 1.4 -2.5 .6 -.9 1.3 -1.8 2.3 -3.2z"
-        fill="var(--breathe)"
-        fillOpacity="0.2"
-        stroke="var(--breathe)"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-      {/* Llama interior (corazón) */}
-      <path
-        d="M8 7.5c.4 .7 1 1.1 1.2 1.8 .2 .7 -.1 1.5 -.8 1.9 -.8 .4 -1.8 .1 -2.1 -.8 -.2 -.6 .1 -1.1 .4 -1.6 .3 -.4 .7 -.8 1.3 -1.3z"
-        fill="var(--breathe)"
-        fillOpacity="0.55"
-      />
-    </svg>
-  );
-}
-/* NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
+/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
+   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
+   contadores que los usaba. Si en el futuro vuelve algún contador
+   en otra ubicación, recuperar de git history.
+   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
    ya no es un rail con chevron, vuelve a abrirse con el handle flotante
    que vive en main.jsx (≡). */
 
-function WeekDots({ weeklyStats }) {
+function WeekDots({ weeklyStats, compact }) {
   const { t } = useT();
   const days = t('sidebar.days').split(',');
   const today = (new Date().getDay() + 6) % 7; // L=0
+  const dotSize = compact ? 5 : 6;
+  /* Sesion 69 (v0.28.8): weeklyStats ahora es lunes-primero (i=0 -> lunes).
+     Eliminado el shift (i+1)%7 que rotaba desde getDay(). */
   return (
-    <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
+    <div style={{ display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 }}>
       {days.map((d, i) => {
-        const active = (weeklyStats.focusMinutes[(i+1)%7] || 0) > 0;
+        const active = (weeklyStats.focusMinutes[i] || 0) > 0;
         const isToday = i === today;
         return (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1 }}>
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 }}>
             <div style={{
-              width: 6, height: 6, borderRadius: '50%',
+              width: dotSize, height: dotSize, borderRadius: '50%',
               background: active ? 'var(--focus)' : 'var(--line)',
               outline: isToday ? '2px solid var(--ink-2)' : 'none',
               outlineOffset: 2,
@@ -4879,7 +5084,7 @@ function AchievementsPreview({ onOpen }) {
     .map(([id]) => id);
   const shown = 5;
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
+    <div data-pace-sidebar-achievements style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
       {Array.from({ length: shown }).map((_, i) => {
         const id = unlocked[i];
         return (
@@ -4923,17 +5128,17 @@ function AchievementsPreview({ onOpen }) {
      2. Pill SupportButton — mismo diseño del sello original.
      3. Versión + autor en micro-type.
 */
-function StatusBar() {
+function StatusBar({ compact }) {
   const [state] = usePace();
   const { t } = useT();
   const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
   return (
-    <div style={sidebarStyles.footer}>
+    <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 6 : 10 }}>
       <div style={sidebarStyles.footerRow}>
         <Meta>{t('sidebar.status.ontrack')}</Meta>
         <Tag color="var(--breathe)">● Pace</Tag>
       </div>
-      <div style={{ marginTop: 10, marginBottom: 10 }}>
+      <div style={{ marginTop: compact ? 4 : 0, marginBottom: compact ? 4 : 0 }}>
         <SupportButton onOpen={openSupport} />
       </div>
       <div style={sidebarStyles.footerRow}>
@@ -4991,34 +5196,9 @@ const sidebarStyles = {
   },
   /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
      se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4.
-     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7. */
-  cycles: {},
-  /* Contadores centrados debajo del logo (v0.11.7). Antes estaban
-     alineados a la izquierda con caracteres tipográficos (# ↻ ◉);
-     ahora son icon+num en pill sutil. */
-  cycleCount: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    gap: 14,
-    fontSize: 12, color: 'var(--ink-2)', letterSpacing: '0.02em',
-    padding: '6px 10px',
-  },
-  cycleItem: {
-    display: 'inline-flex', alignItems: 'center', gap: 5,
-    lineHeight: 1,
-  },
-  cycleNum: {
-    fontVariantNumeric: 'tabular-nums',
-    fontWeight: 500,
-    fontSize: 13,
-    color: 'var(--ink)',
-  },
-  /* Separador vertical fino en vez del "|" tipográfico anterior */
-  cycleSep: {
-    display: 'inline-block',
-    width: 1, height: 14,
-    background: 'var(--line)',
-    opacity: 0.8,
-  },
+     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7.
+     cycles/cycleCount/cycleItem/cycleNum/cycleSep eliminados en v0.28.2 (sesión 61)
+     junto con el bloque de contadores. */
   section: {},
   sectionHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
@@ -5067,6 +5247,538 @@ const sidebarStyles = {
 };
 
 Object.assign(window, { Sidebar });
+
+</script>
+
+  <!-- Glifos canónicos de ejercicio (sesión 59) — debe cargarse antes de MoveModule, BreatheSession y PathRunner -->
+  <script type="text/babel">
+/* PACE · Glifos canónicos de ejercicio · sesión 60 / v0.28.1 (iter parcial 13/46)
+   Registro de SVGs line-art para la pantalla activa de sesión.
+
+   GRANULARIDAD: por paso individual, NO por rutina. Cada paso de cada
+   rutina (p. ej. "Apertura de pecho", "Rotación torácica", "Flexor de
+   cadera") tiene su propio glifo.
+
+   KEY: step.name en español canónico.
+
+   Reglas de dibujo:
+     - viewBox 0 0 44 44
+     - fill="none" stroke="currentColor"
+     - strokeWidth 1.8 (proporción equivalente a 1.2 sobre viewBox 28
+       de los 4 glifos de menú en main.jsx)
+     - strokeLinecap "round", strokeLinejoin "round"
+     - Símbolo iconico: una metáfora visual clara por glifo. Objetos
+       reconocibles, posturas simplificadas a 2-5 trazos, curvas orgánicas
+     - Sin flechas explicativas (la forma indica el movimiento)
+     - Sin marcas 90° ni anotaciones de diagrama
+     - Opacidades: 1.0 elementos principales, 0.5-0.6 secundarios,
+       0.35 referencia de suelo (dashed)
+     - BreatheSession queda fuera (usa BreathVisual animado)
+*/
+
+function G({ size = 88, className = '', children }) {
+  return (
+    <svg viewBox="0 0 44 44" width={size} height={size} fill="none"
+         stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+         strokeLinejoin="round" className={className}>
+      {children}
+    </svg>
+  );
+}
+
+const EXERCISE_GLYPHS = {
+
+  /* ============================================================
+     MUEVE — calistenia / fuerza (var(--move))
+     ============================================================ */
+
+  /* 1. Escritorio limpio + cuerpo en diagonal apoyado. */
+  'Flexiones inclinadas': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 16 H24" />
+      <path d="M9 16 V22" />
+      <path d="M21 16 V22" />
+      <path d="M15 16 L34 34" />
+      <path d="M30 34 H36" opacity="0.55" />
+    </G>
+  ),
+
+  /* 2. Luna creciente + chispa: descanso entre series. */
+  'Descanso': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M30 12 A12 12 0 1 0 30 32" />
+      <path d="M30 12 Q22 22 30 32" opacity="0.55" />
+      <circle cx="11" cy="14" r="1" opacity="0.55" />
+    </G>
+  ),
+
+  /* 3. Silla en perfil — patrón 2 (objeto solo, como mancuerna home). */
+  'Fondos en silla': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M12 10 V22" />
+      <path d="M12 22 H30" />
+      <path d="M30 22 V32" />
+      <path d="M12 22 V32" opacity="0.5" />
+    </G>
+  ),
+
+  /* 4. Cuerpo deslizando por la pared — silueta orgánica + cadera y rodilla flexionadas. */
+  'Wall sit': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 6 V36" />
+      <circle cx="13" cy="11" r="2.4" />
+      <path d="M11 13 Q10 20 12 24 Q22 24 26 24 Q26 30 26 36" />
+      <path d="M4 38 H40" opacity="0.35" strokeDasharray="1.5 2.5" />
+    </G>
+  ),
+
+  /* 5. Pie de perfil con talón elevado, dedos apoyados en suelo. */
+  'Calf raises': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M14 8 V20" />
+      <path d="M14 20 Q12 24 16 25" />
+      <path d="M16 25 Q24 26 32 28" />
+      <path d="M14 20 Q22 22 32 28" opacity="0.55" />
+      <path d="M30 28 Q31 26 32 28" opacity="0.55" />
+      <path d="M28 28 Q29 26.5 30 28" opacity="0.45" />
+      <path d="M26 28 Q27 26.5 28 28" opacity="0.35" />
+      <path d="M4 30 H40" opacity="0.35" strokeDasharray="1.5 2.5" />
+    </G>
+  ),
+
+  /* 6. Silla + cuerpo en hollow flotando del asiento. */
+  'Seated hollow': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M10 12 V30" />
+      <path d="M10 22 H22 V34" />
+      <path d="M14 20 Q22 8 32 16" />
+      <circle cx="32" cy="16" r="2" />
+    </G>
+  ),
+
+  /* 7. Puño cerrado con nudillos y pulgar cruzando. */
+  'Squeeze fist': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M10 26 Q8 18 14 14 Q22 10 30 14 Q36 18 34 26 Q32 34 22 34 Q12 34 10 26 Z" />
+      <path d="M14 16 Q16 13 18 16" opacity="0.6" />
+      <path d="M20 14.5 Q22 11.5 24 14.5" opacity="0.6" />
+      <path d="M26 14.5 Q28 11.5 30 14.5" opacity="0.6" />
+      <path d="M10 24 Q18 28 24 24" opacity="0.55" />
+    </G>
+  ),
+
+  /* 8. Mano en abanico — cinco dedos divergentes. */
+  'Finger extension': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M14 30 Q22 34 30 30" />
+      <path d="M14 30 L8 10" />
+      <path d="M18 28 L16 8" />
+      <path d="M22 27 V8" />
+      <path d="M26 28 L28 8" />
+      <path d="M30 30 L36 10" />
+    </G>
+  ),
+
+  /* 9. Antebrazo + mano doblada + arco suave de flex/ext. */
+  'Wrist stretch': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 26 H24" />
+      <path d="M24 26 Q30 24 34 18" />
+      <path d="M26 30 Q34 28 38 20" opacity="0.5" />
+    </G>
+  ),
+
+  /* 10. Cabeza perfil + columna alineada + chin mark — patrón 3 (parte aislada). */
+  'Chin tucks': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="24" cy="13" r="5" />
+      <path d="M29 13 H31" opacity="0.6" />
+      <path d="M24 18 V34" />
+      <path d="M19 22 Q24 24 29 22" opacity="0.55" />
+    </G>
+  ),
+
+  /* 11. Dos omóplatos abrazando el eje espinal. */
+  'Scapular squeeze': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 12 Q14 18 16 28" />
+      <path d="M36 12 Q30 18 28 28" />
+      <path d="M22 8 V36" opacity="0.4" />
+    </G>
+  ),
+
+  /* 12. Arco torácico extendido sobre soporte. */
+  'Thoracic extension': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 24 Q22 4 38 24" />
+      <path d="M10 28 H34" opacity="0.6" />
+    </G>
+  ),
+
+  /* 13. Cuerpo en T-pose con brazos abriéndose — patrón 1 (forma única). */
+  'Chest opener': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="9" r="2.5" />
+      <path d="M22 12 V28" />
+      <path d="M22 16 Q14 14 6 20" />
+      <path d="M22 16 Q30 14 38 20" />
+    </G>
+  ),
+
+  /* ============================================================
+     ESTIRA — movilidad / estiramientos (var(--extra))
+     ============================================================ */
+
+  /* 14. Dos pétalos abriéndose desde un eje central — el pecho que se expande. */
+  'Apertura de pecho': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M22 22 Q14 12 8 22 Q12 28 22 22" />
+      <path d="M22 22 Q30 12 36 22 Q32 28 22 22" />
+      <path d="M22 22 V36" opacity="0.4" />
+      <circle cx="22" cy="22" r="2" opacity="0.7" />
+    </G>
+  ),
+
+  /* 15. Espiral nautilo hacia afuera con flecha — rotación del tronco. */
+  'Rotación torácica': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M22 22 Q22 16 28 16 Q34 16 34 22 Q34 30 26 32 Q14 32 12 22 Q12 10 22 10 Q34 10 36 22" />
+      <path d="M36 22 L33 20" />
+      <path d="M36 22 L33 24" />
+    </G>
+  ),
+
+  /* 16. Cadera + pierna delantera flexionada + trasera apoyada en suelo. */
+  'Flexor de cadera': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="20" cy="12" r="2" />
+      <path d="M20 14 V26 L14 36" />
+      <path d="M20 14 L32 32 H38" />
+      <path d="M4 38 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 17. Zancada profunda + arco amplio de rotación superior. */
+  "World's greatest stretch": ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="20" r="1.8" />
+      <path d="M22 22 V30 L16 38" />
+      <path d="M22 22 L34 36" />
+      <path d="M10 14 Q22 4 34 14" />
+      <path d="M4 40 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 18. Cabeza inclinada + curva trapecio + línea de hombros. */
+  'Cuello y trapecios': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="14" cy="12" r="4" />
+      <path d="M16 15 Q22 22 30 26" />
+      <path d="M12 30 H34" opacity="0.55" />
+    </G>
+  ),
+
+  /* 19. Círculo enso (zen brush) casi cerrado + centro — vuelta a la respiración. */
+  'Reset respiración': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M28 9 Q40 14 38 24 Q34 36 22 36 Q8 36 8 22 Q8 10 22 8" />
+      <circle cx="22" cy="22" r="2" opacity="0.5" />
+      <circle cx="28" cy="9" r="0.8" opacity="0.7" />
+    </G>
+  ),
+
+  /* 20. Una pierna doblada lateral + otra extendida al lado opuesto. */
+  'Cossack squat': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="14" r="2" />
+      <path d="M22 16 L34 26 L30 36" />
+      <path d="M22 16 L8 34" />
+      <path d="M4 38 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 21. Dos L espejadas — caderas y rodillas a 90°. */
+  '90/90': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="22" r="2" />
+      <path d="M22 22 H34 V32" />
+      <path d="M22 22 H10 V12" />
+    </G>
+  ),
+
+  /* 22. Cadera + tibia cruzada + pierna trasera extendida. */
+  'Pigeon': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="18" cy="16" r="2" />
+      <path d="M18 18 L32 22 L34 30" />
+      <path d="M18 18 L6 32" />
+      <path d="M4 36 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 23. Cuerpo como arco M sobre suelo — patrón 1 (forma única). */
+  'Squat profundo': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 30 Q12 16 22 12 Q32 16 36 30" />
+      <circle cx="22" cy="10" r="2" opacity="0.7" />
+      <path d="M4 32 H40" opacity="0.35" strokeDasharray="1.5 2.5" />
+    </G>
+  ),
+
+  /* 24. Arco de puente + pierna elevada en curva. */
+  'Puente con marcha': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 32 Q22 10 38 32" />
+      <path d="M4 34 H10" opacity="0.55" />
+      <path d="M34 34 H40" opacity="0.55" />
+      <path d="M22 14 Q26 10 30 4" />
+      <circle cx="30" cy="4" r="1.6" />
+    </G>
+  ),
+
+  /* 25. Pared + brazos en Y elevada con eco de la W anterior. */
+  'Scapular wall slides': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 6 V38" />
+      <path d="M28 14 L36 6" />
+      <path d="M28 14 V24" />
+      <path d="M28 14 L36 22" opacity="0.5" />
+      <path d="M14 26 L20 20 L24 26" opacity="0.4" />
+    </G>
+  ),
+
+  /* 26. Banda elástica curva + dos manos sujetando. */
+  'Band pull-apart': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M10 22 Q22 18 34 22" />
+      <circle cx="10" cy="22" r="2.4" />
+      <circle cx="34" cy="22" r="2.4" />
+    </G>
+  ),
+
+  /* 27. Codo a 90° + arco de rotación externa del hombro. */
+  'External rotation': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="26" r="2" />
+      <path d="M10 26 H22 V12" />
+      <path d="M22 8 Q34 12 30 24" />
+    </G>
+  ),
+
+  /* 28. Barra + dos brazos rectos colgados (tensión activa). */
+  'Dead hang (si puedes)': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 8 H38" />
+      <circle cx="14" cy="8" r="1.8" />
+      <circle cx="30" cy="8" r="1.8" />
+      <path d="M14 10 V38" />
+      <path d="M30 10 V38" />
+    </G>
+  ),
+
+  /* 29. Zancada ATG: rodilla muy por delante del pie. */
+  'ATG split squat': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="18" cy="20" r="2" />
+      <path d="M18 22 L34 18 L36 32" />
+      <path d="M18 22 L6 36" />
+      <path d="M4 38 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 30. Pared + pierna + pie en flexión dorsal. */
+  'Tibialis raise': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 6 V38" />
+      <path d="M8 38 H38" />
+      <path d="M22 14 V32" />
+      <path d="M22 32 L34 24" />
+    </G>
+  ),
+
+  /* 31. Cuerpo cayendo recto con pivote en las rodillas. */
+  'Nordics': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="36" cy="14" r="2" />
+      <path d="M36 14 L14 30" />
+      <circle cx="14" cy="30" r="2.4" />
+      <path d="M4 36 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 32. Cuerpo inclinado atrás + rodillas adelante + talones arriba. */
+  'Sissy squat': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="14" cy="8" r="2" />
+      <path d="M14 10 L28 30" />
+      <circle cx="28" cy="30" r="1.8" />
+      <path d="M28 30 L36 34" />
+      <path d="M32 30 V26" opacity="0.6" />
+      <path d="M4 38 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 33. Dos arcos consecutivos avanzando — caminar como elefante. */
+  'Elephant walk': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 30 Q10 14 20 30" />
+      <path d="M22 30 Q26 14 36 30" opacity="0.6" />
+      <path d="M4 32 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 34. M profunda + tres puntos verticales (mantener el tiempo). */
+  'Deep squat hold': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M10 34 V20 L22 32 L34 20 V34" />
+      <circle cx="38" cy="20" r="1" opacity="0.65" />
+      <circle cx="38" cy="24" r="1" opacity="0.65" />
+      <circle cx="38" cy="28" r="1" opacity="0.65" />
+      <path d="M4 38 H34" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 35. Cuadrupedia: espalda arqueada + cuatro patas dinámicas. */
+  'Crawling': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 18 Q22 6 36 18" />
+      <path d="M10 18 Q8 24 10 32" />
+      <path d="M18 17 V32" />
+      <path d="M26 17 V32" />
+      <path d="M34 18 Q36 24 34 32" />
+      <path d="M4 34 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
+  /* 36. Barra + dos brazos colgando con curva relajada. */
+  'Hang pasivo': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 8 H38" />
+      <circle cx="14" cy="8" r="1.8" />
+      <circle cx="30" cy="8" r="1.8" />
+      <path d="M14 10 Q10 22 18 38" />
+      <path d="M30 10 Q34 22 26 38" />
+    </G>
+  ),
+
+  /* 37. Sentado arriba + curva descendente + sentado abajo. */
+  'Ground sitting transitions': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="10" cy="10" r="2" />
+      <path d="M10 12 V18" opacity="0.55" />
+      <path d="M12 20 Q22 22 26 32 Q28 36 32 36" />
+      <circle cx="32" cy="36" r="2" />
+      <path d="M22 38 H40" opacity="0.55" />
+    </G>
+  ),
+
+  /* 38. Gato/vaca: dos arcos opuestos + puntos de aire. */
+  'Rib pull + respiración': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 16 Q22 6 36 16" />
+      <path d="M8 28 Q22 38 36 28" />
+      <circle cx="36" cy="22" r="1" opacity="0.55" />
+      <circle cx="40" cy="22" r="1" opacity="0.55" />
+    </G>
+  ),
+
+  /* 39. Cabeza inclinada lateral + cuerpo curvado en arco. */
+  'Inclinación lateral': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="28" cy="10" r="3" />
+      <path d="M22 36 Q30 22 28 13" />
+      <path d="M8 36 H22" opacity="0.5" />
+    </G>
+  ),
+
+  /* 40. Cabeza + elipse horizontal alrededor (rotación cervical). */
+  'Rotación lenta': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="14" r="4" />
+      <ellipse cx="22" cy="14" rx="14" ry="5" opacity="0.5" />
+      <path d="M22 18 V32" opacity="0.4" />
+    </G>
+  ),
+
+  /* 41. Cabeza inclinada + brazo bajando + mano anclada. */
+  'Escalenos': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="14" cy="12" r="4" />
+      <path d="M16 15 L26 22 H30" />
+      <path d="M30 22 V36" />
+      <circle cx="30" cy="36" r="1.8" />
+    </G>
+  ),
+
+  /* 42. Dos hombros elevados como dos arcos espejados. */
+  'Shrug + round': ({ size, className }) => (
+    <G size={size} className={className}>
+      <circle cx="22" cy="18" r="2.2" />
+      <path d="M8 26 Q14 14 22 18" />
+      <path d="M36 26 Q30 14 22 18" />
+      <path d="M22 22 V34" opacity="0.45" />
+    </G>
+  ),
+
+  /* 43. Antebrazo + mano + círculo rotación — patrón 3 (parte aislada). */
+  'Wrist circles': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M4 22 H20" />
+      <path d="M20 22 Q24 22 22 18" />
+      <circle cx="28" cy="22" r="10" />
+    </G>
+  ),
+
+  /* 44. Silla + torso + arco amplio de rotación hacia el respaldo. */
+  'Seated twist': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M10 10 V30" />
+      <path d="M10 24 H24 V34" />
+      <circle cx="14" cy="18" r="2.6" />
+      <path d="M14 14 Q30 14 32 26" />
+    </G>
+  ),
+
+  /* 45. Pierna vertical + círculo en el tobillo (rotación). */
+  'Ankle circles': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M22 4 V26" />
+      <circle cx="22" cy="32" r="6" />
+      <path d="M4 38 H40" opacity="0.4" />
+    </G>
+  ),
+
+  /* 46. Diafragma como bóveda + aliento ascendente con susurros laterales. */
+  'Deep breaths': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M8 28 Q22 14 36 28" />
+      <path d="M22 28 Q20 22 22 16 Q24 12 22 8" />
+      <path d="M19 9 Q21 7 23 9" opacity="0.6" />
+      <path d="M14 24 Q13 21 13 18" opacity="0.4" />
+      <path d="M30 24 Q31 21 31 18" opacity="0.4" />
+    </G>
+  ),
+
+};
+
+function DefaultGlyph({ size = 44, className = '' }) {
+  return (
+    <G size={size} className={className}>
+      {/* Fallback: tres arcos concéntricos suaves */}
+      <path d="M14 22 Q22 14 30 22" />
+      <path d="M12 26 Q22 16 32 26" />
+      <path d="M16 18 Q22 14 28 18" />
+    </G>
+  );
+}
+
+function ExerciseGlyph({ id, size = 88, className = '' }) {
+  const Glyph = EXERCISE_GLYPHS[id];
+  if (!Glyph) return <DefaultGlyph size={size} className={className} />;
+  return <Glyph size={size} className={className} />;
+}
+
+Object.assign(window, { ExerciseGlyph, EXERCISE_GLYPHS, DefaultGlyph });
 
 </script>
 
@@ -5422,7 +6134,29 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
 function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerAro mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerAro mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+}
+
+/* interpolateRingColor — gradiente terracota→ocre→oliva en modo foco.
+   Estable en pausas (breathe) y larga (focus). Sesión 71 / v0.28.9. */
+function interpolateRingColor(progress, mode) {
+  if (mode === 'pausa') return 'var(--breathe)';
+  if (mode === 'larga') return 'var(--focus)';
+  const styles = getComputedStyle(document.documentElement);
+  const read = (name, fb) => (styles.getPropertyValue(name).trim() || fb);
+  const c1 = read('--breathe', '#C97A5D');
+  const c2 = read('--move',    '#9A7B4F');
+  const c3 = read('--focus',   '#6e7a4e');
+  const hexToRgb = (h) => {
+    const m = h.replace('#', '');
+    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
+  };
+  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+  const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
+  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
+  const t = Math.max(0, Math.min(1, progress));
+  const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 /* Timer "Aro" (default · ref. usuario).
@@ -5431,7 +6165,7 @@ function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subt
    botón de comenzar + reset (inyectados via `inner`). El layout coincide
    con la composición de referencia (2026-04-22).
    Responsive: ocupa el mínimo entre ancho y alto del contenedor. */
-function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
+function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner, mode }) {
   const R = 47.5;          // radio del anillo (en viewBox 100)
   const C = 2 * Math.PI * R;
 
@@ -5441,12 +6175,13 @@ function TimerAro({ mins, secs, progress, modeLabel, subtitle, inner }) {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
         {/* Aro base — trazo fino cálido */}
         <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        {/* Arco de progreso (sutil, mismo trazo pero ligeramente más intenso) */}
+        {/* Arco de progreso — gradiente terracota→ocre→oliva en foco; estable en pausa/larga */}
         <circle cx="50" cy="50" r={R} fill="none"
-          stroke="var(--line-2)" strokeWidth="0.5"
+          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
+          strokeOpacity="0.7"
           strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear' }} />
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
       </svg>
 
       {/* Contenido centrado */}
@@ -6086,6 +6821,19 @@ function BreatheSession({ routine, onExit }) {
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
 
+  // Helper: reproduce el sonido de una fase por su label.
+  // 'Sostén' → silencio intencional.
+  const playPhaseSound = (phaseLabel, phaseDur) => {
+    if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+        phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
+        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
+      try { playSound('breathe.inhale', phaseDur); } catch (e) {}
+    } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
+               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
+      try { playSound('breathe.exhale', phaseDur); } catch (e) {}
+    }
+  };
+
   // Preparación: cuenta atrás 3 segundos
   useEffect(() => {
     if (stage !== 'prep' || paused) return;
@@ -6093,6 +6841,8 @@ function BreatheSession({ routine, onExit }) {
       try { playSound('breathe.session.start'); } catch (e) {}
       setStage('active');
       startTime.current = Date.now();
+      // Hueco A: la fase 0 nunca tenía transición previa → su sonido nunca se disparaba.
+      playPhaseSound(sequence[0].label, sequence[0].duration);
       return;
     }
     const timer = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
@@ -6112,20 +6862,8 @@ function BreatheSession({ routine, onExit }) {
             return 0;
           }
           setPhase(nextPhase);
-          /* Sonido de fase — sesión 38a: ruido filtrado sincronizado con
-             la duración real de la fase. Hold = silencio intencional. */
           const newCur = sequence[nextPhase];
-          const phaseDur = newCur.duration;
-          const phaseLabel = newCur.label;
-          if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
-              phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
-              phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
-            try { playSound('breathe.inhale', phaseDur); } catch (e) {}
-          } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
-                     phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
-            try { playSound('breathe.exhale', phaseDur); } catch (e) {}
-          }
-          // Sostén → silencio intencional (no llamar a playSound).
+          playPhaseSound(newCur.label, newCur.duration);
           return 0;
         }
         return t + 1;
@@ -6205,6 +6943,8 @@ function BreatheSession({ routine, onExit }) {
       if (breathCount < routine.breaths) {
         setBreathCount(b => b + 1);
         setPhase(0);
+        // Hueco B: reinicio de ciclo en rondas → fase 0 nunca sonaba.
+        playPhaseSound(sequence[0].label, sequence[0].duration);
       } else {
         try { playSound('breathe.session.end'); } catch (e) {}
         setStage('hold');
@@ -6216,6 +6956,8 @@ function BreatheSession({ routine, onExit }) {
         finish();
       } else {
         setPhase(0);
+        // Hueco B: reinicio de ciclo no-rondas → fase 0 nunca sonaba.
+        playPhaseSound(sequence[0].label, sequence[0].duration);
       }
     }
   };
@@ -6226,6 +6968,8 @@ function BreatheSession({ routine, onExit }) {
       setBreathCount(1);
       setPhase(0);
       setStage('active');
+      // Nueva ronda tras hold: reproducir sonido de la fase 0 (Inhala*).
+      playPhaseSound(sequence[0].label, sequence[0].duration);
     } else {
       finish();
     }
@@ -6247,7 +6991,7 @@ function BreatheSession({ routine, onExit }) {
         accent="var(--breathe)"
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
-        onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); }}
+        onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); playPhaseSound(sequence[0].label, sequence[0].duration); }}
       />
     );
   }
@@ -6621,7 +7365,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
       hint={t('move.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
-        <StepGlyph tag={routine.tag} stepIdx={stepIdx} />
+        <StepGlyph stepName={step.name} />
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
           {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>
@@ -6676,23 +7420,19 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
    con SessionHeader/Stat de Breathe en app/ui/SessionShell.jsx. Ver
    docs/audits/audit-v0.12.7.md §3.1. */
 
-/* Glifo placeholder por paso — círculo con símbolo de categoría.
-   Proyecta sensación de "ficha de biblioteca" hasta que tengamos ilustraciones reales. */
-function StepGlyph({ tag, stepIdx }) {
-  const symbols = ['◯', '◬', '◇', '△', '▢', '⬡', '✦'];
-  const sym = symbols[stepIdx % symbols.length];
+/* Glifo por paso — círculo decorativo (moneda) con SVG canónico interior.
+   La key es el step.name canónico en español (los datos viven en es-ES).
+   El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves. */
+function StepGlyph({ stepName }) {
   return (
     <div style={{
-      ...displayItalic,
       width: 72, height: 72, margin: '0 auto 20px',
       borderRadius: '50%',
-      border: '1px dashed var(--move)',
       background: 'var(--move-soft)',
       display: 'grid', placeItems: 'center',
       color: 'var(--move)',
-      fontSize: 28,
     }}>
-      {sym}
+      <ExerciseGlyph id={stepName} size={44} />
     </div>
   );
 }
@@ -7649,13 +8389,26 @@ function getYearData(history, year, firstSeenTimestamp) {
   return result;
 }
 
+/* Definicion de "dia activo" para streaks (sesion 69): focus|breath|move > 0.
+   Agua sola NO cuenta, alineado con updateStreak() en state-achievements.jsx.
+   El "score" puede incluir agua para el color, pero la racha SOLO mira sesiones. */
+function isActiveDay(entry) {
+  if (!entry) return false;
+  return (entry.focusMinutes  || 0) > 0
+      || (entry.breathMinutes || 0) > 0
+      || (entry.moveMinutes   || 0) > 0;
+}
+
 /* Totales del año iterando yearData una sola vez. */
 function computeYearStats(yearData) {
   let totalActions=0, activeDays=0, maxStreak=0, curStreak=0;
   for (const cell of yearData) {
     if (cell.isFuture) break;
+    const active = isActiveDay(cell.entry);
     if (cell.score > 0) {
       totalActions += Math.round(cell.score);
+    }
+    if (active) {
       activeDays++;
       curStreak++;
       if (curStreak > maxStreak) maxStreak = curStreak;
@@ -7745,9 +8498,12 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   return (
     <div data-pace-year-view>
       <style>{`
+        /* Sesion 62 (v0.28.3): celdas 12 -> 11 + month labels alineados con
+           cell stride (16 -> 11) para que las 53 columnas + day-label col
+           quepan en el modal de 820px sin scroll horizontal.
+           Movil sin cambios (sigue con scroll horizontal y celdas 11). */
         @media (max-width:640px) {
           [data-pace-year-view] [data-pace-year-grid-wrap] { scroll-snap-type:x mandatory !important; }
-          [data-pace-year-view] [data-pace-year-cell] { width:11px !important;height:11px !important; }
           [data-pace-year-view] [data-pace-year-month-lbl] { font-size:8px !important; }
           [data-pace-year-view] [data-pace-year-day-lbl] { font-size:8px !important;width:12px !important; }
         }
@@ -7767,14 +8523,14 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
       </div>
 
       {/* Grid con scroll horizontal en móvil */}
-      <div data-pace-year-grid-wrap style={{ overflowX:'auto',WebkitOverflowScrolling:'touch' }}>
+      <div data-pace-year-grid-wrap style={{ overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch' }}>
         <div style={{ display:'inline-block',minWidth:'max-content' }}>
 
-          {/* Etiquetas de meses */}
-          <div style={{ display:'flex',marginLeft:20,marginBottom:4 }}>
+          {/* Etiquetas de meses -- ancho alineado con cell stride (11+2) */}
+          <div style={{ display:'flex',marginLeft:18,marginBottom:4 }}>
             {Array.from({ length: totalCols }, (_,col) => (
               <div key={col} data-pace-year-month-lbl style={{
-                width:16,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',
+                width:11,marginRight:2,flexShrink:0,fontSize:9,color:'var(--ink-3)',
                 letterSpacing:0.2,overflow:'visible',whiteSpace:'nowrap',
               }}>
                 {monthCols[col] !== undefined ? monthNames[monthCols[col]] : ''}
@@ -7784,13 +8540,13 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
 
           {/* Grid de días */}
           <div style={{ display:'flex' }}>
-            {/* Etiquetas de día (L/X/V en filas 0,2,4) */}
+            {/* Etiquetas de dia (L M X J V S D, los 7 -- sesion 62) */}
             <div style={{ display:'flex',flexDirection:'column',gap:2,marginRight:4 }}>
               {[0,1,2,3,4,5,6].map(row => (
                 <div key={row} data-pace-year-day-lbl style={{
-                  width:16,height:14,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
+                  width:14,height:11,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center',
                 }}>
-                  {row===0 ? dayRowLabels[0] : row===2 ? dayRowLabels[1] : row===4 ? dayRowLabels[2] : ''}
+                  {dayRowLabels[row] || ''}
                 </div>
               ))}
             </div>
@@ -7801,16 +8557,27 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
                 {[0,1,2,3,4,5,6].map(row => {
                   const cell = cellMap[`${col}-${row}`];
 
-                  // Celda sin día (offset inicio/fin de año) o día futuro → hueco invisible
-                  if (!cell || cell.isFuture) {
-                    return <div key={row} data-pace-year-cell style={{ width:14,height:14,borderRadius:2 }} />;
+                  // Celda fuera del año (offset inicio/fin) -> hueco invisible.
+                  if (!cell) {
+                    return <div key={row} data-pace-year-cell style={{ width:11,height:11,borderRadius:2 }} />;
+                  }
+
+                  // Dia futuro: solo borde tenue sin relleno (s63) para
+                  // distinguirlos de los dias pasados sin actividad (lvl=0).
+                  if (cell.isFuture) {
+                    return (
+                      <div key={row} data-pace-year-cell style={{
+                        width:11,height:11,borderRadius:2,
+                        background:'transparent',border:'1px solid var(--line)',opacity:0.3,
+                      }} />
+                    );
                   }
 
                   // Pre-uso: crema con borde muy tenue
                   if (cell.isPreUse) {
                     return (
                       <div key={row} data-pace-year-cell style={{
-                        width:14,height:14,borderRadius:2,
+                        width:11,height:11,borderRadius:2,
                         background:'var(--paper-2)',border:'1px solid var(--line)',opacity:0.35,
                       }} />
                     );
@@ -7827,7 +8594,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
                       onMouseLeave={hasData ? handleLeave : undefined}
                       onTouchEnd={hasData ? (e)=>handleTap(e,cell) : undefined}
                       style={{
-                        width:14,height:14,borderRadius:2,position:'relative',
+                        width:11,height:11,borderRadius:2,position:'relative',
                         background: lvl===0 ? 'var(--paper-3)' : 'transparent',
                         border: lvl===0 ? '1px solid var(--line)' : 'none',
                         cursor: hasData ? 'pointer' : 'default',
@@ -7914,6 +8681,297 @@ Object.assign(window, { YearView });
 
 </script>
   <script type="text/babel">
+/* PACE · PathYearView -- heatmap anual de Caminos -- sesion 54
+   Fuente: array de strings ISO (paths.history). Clon ligero de YearView.
+*/
+const { useState, useRef, useEffect } = React;
+
+function buildPathDayMap(history) {
+  const map = {};
+  for (const iso of (history || [])) { if (iso) map[iso] = (map[iso] || 0) + 1; }
+  return map;
+}
+function pathCountLevel(n) {
+  if (!n || n <= 0) return 0;
+  if (n === 1) return 1; if (n === 2) return 2; if (n === 3) return 3; return 4;
+}
+const pyvStyles = [
+  { bg: 'var(--paper-3)', op: 1 },
+  { bg: 'var(--move)',    op: 0.22 },
+  { bg: 'var(--move)',    op: 0.48 },
+  { bg: 'var(--breathe)', op: 0.72 },
+  { bg: 'var(--focus)',   op: 1 },
+];
+function getPyvData(dayMap, year) {
+  const today    = new Date();
+  const pad      = n => String(n).padStart(2,'0');
+  const todayStr = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  const isLeap   = (year%4===0 && year%100!==0) || year%400===0;
+  const total    = isLeap ? 366 : 365;
+  const jan1Dow  = (new Date(year,0,1).getDay()+6)%7;
+  const result   = [];
+  for (let n = 0; n < total; n++) {
+    const d       = new Date(year, 0, n+1);
+    const dateStr = `${year}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const isFuture = dateStr > todayStr;
+    const count   = isFuture ? 0 : (dayMap[dateStr] || 0);
+    const level   = isFuture ? -1 : pathCountLevel(count);
+    const dow     = (d.getDay()+6)%7;
+    const col     = Math.floor((n+jan1Dow)/7);
+    result.push({ dateStr, count, level, isFuture, dow, col, d });
+  }
+  return result;
+}
+function getPyvMonthCols(year, jan1Dow) {
+  const r = {};
+  for (let m = 0; m < 12; m++) {
+    const d = new Date(year, m, 1);
+    const doy = Math.floor((d - new Date(year,0,0)) / 86400000) - 1;
+    r[Math.floor((doy+jan1Dow)/7)] = m;
+  }
+  return r;
+}
+
+function PathYearView({ history, lang }) {
+  const { t } = useT();
+  const now = new Date(); const currentYear = now.getFullYear();
+  const [viewYear, setViewYear] = useState(currentYear);
+  const [tooltip, setTooltip] = useState(null);
+  const tooltipRef = useRef(null);
+
+  const availableYears = (() => {
+    const s = new Set([currentYear]);
+    for (const iso of (history || [])) { if (iso) s.add(parseInt(iso.slice(0,4),10)); }
+    return Array.from(s).sort((a,b)=>a-b);
+  })();
+  const yi = availableYears.indexOf(viewYear);
+  const canPrev = yi > 0, canNext = yi < availableYears.length - 1;
+
+  const dayMap    = buildPathDayMap(history);
+  const yearData  = getPyvData(dayMap, viewYear);
+  const jan1Dow   = (new Date(viewYear,0,1).getDay()+6)%7;
+  const totalCols = Math.ceil((yearData.length+jan1Dow)/7);
+  const monthCols = getPyvMonthCols(viewYear, jan1Dow);
+  const hasAny    = yearData.some(c => c.count > 0);
+  const yearTotal = yearData.reduce((s,c) => s + c.count, 0);
+  const monthNames   = t('stats.year.months.short').split(',');
+  const dayRowLabels = t('stats.year.days.label').split(',');
+  const cellMap = {};
+  for (const c of yearData) cellMap[`${c.col}-${c.dow}`] = c;
+
+  function fmtDate(d) {
+    return d.toLocaleDateString(lang==='en'?'en-GB':'es-ES',{day:'numeric',month:'long'});
+  }
+  function unitWord(n) {
+    return lang==='en' ? (n===1?'path':'paths') : (n===1?'camino':'caminos');
+  }
+  function showTip(e, cell, mobile) {
+    if (cell.count <= 0) return;
+    const txt = `${fmtDate(cell.d)} · ${cell.count} ${unitWord(cell.count)}`;
+    if (mobile) { setTooltip({ text:txt, key:cell.dateStr, mobile:true }); }
+    else {
+      const r = e.currentTarget.getBoundingClientRect();
+      setTooltip({ text:txt, x:r.left+r.width/2, y:r.top, key:cell.dateStr });
+    }
+  }
+
+  useEffect(() => {
+    if (!tooltip || !tooltip.mobile) return;
+    function out(e) { if (tooltipRef.current && !tooltipRef.current.contains(e.target)) setTooltip(null); }
+    document.addEventListener('touchstart', out);
+    return () => document.removeEventListener('touchstart', out);
+  }, [tooltip]);
+
+  const btnStyle = (active) => ({
+    background:'none',border:'none',cursor:active?'pointer':'default',
+    color:active?'var(--ink-2)':'var(--ink-3)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
+  });
+
+  return (
+    <div data-pace-path-year-view>
+      <style>{`@media(max-width:640px){[data-pace-path-year-view] [data-pyv-wrap]{scroll-snap-type:x mandatory!important}[data-pace-path-year-view] [data-pyv-cell]{width:11px!important;height:11px!important}[data-pace-path-year-view] [data-pyv-ml]{font-size:8px!important}[data-pace-path-year-view] [data-pyv-dl]{font-size:8px!important;width:12px!important}}`}</style>
+
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+        <button onClick={()=>{if(canPrev)setViewYear(availableYears[yi-1]);}} disabled={!canPrev} style={btnStyle(canPrev)}>&#8249;</button>
+        <span style={{fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:20,color:'var(--ink)'}}>{viewYear}</span>
+        <button onClick={()=>{if(canNext)setViewYear(availableYears[yi+1]);}} disabled={!canNext} style={btnStyle(canNext)}>&#8250;</button>
+      </div>
+
+      <div data-pyv-wrap style={{overflowX:'auto',overflowY:'hidden',WebkitOverflowScrolling:'touch'}}>
+        <div style={{display:'inline-block',minWidth:'max-content'}}>
+          {/* s63: month labels alineados con cell stride (11+1). */}
+          <div style={{display:'flex',marginLeft:18,marginBottom:4}}>
+            {Array.from({length:totalCols},(_,col)=>(
+              <div key={col} data-pyv-ml style={{width:11,marginRight:1,flexShrink:0,fontSize:9,color:'var(--ink-3)',overflow:'visible',whiteSpace:'nowrap'}}>
+                {monthCols[col]!==undefined?monthNames[monthCols[col]]:''}
+              </div>
+            ))}
+          </div>
+          <div style={{display:'flex'}}>
+            {/* Etiquetas de dia (L M X J V S D, los 7 -- sesion 62) */}
+            <div style={{display:'flex',flexDirection:'column',gap:1,marginRight:4}}>
+              {[0,1,2,3,4,5,6].map(row=>(
+                <div key={row} data-pyv-dl style={{width:14,height:11,fontSize:9,color:'var(--ink-3)',display:'flex',alignItems:'center'}}>
+                  {dayRowLabels[row]||''}
+                </div>
+              ))}
+            </div>
+            {Array.from({length:totalCols},(_,col)=>(
+              <div key={col} style={{display:'flex',flexDirection:'column',gap:1,marginRight:1}}>
+                {[0,1,2,3,4,5,6].map(row=>{
+                  const cell=cellMap[`${col}-${row}`];
+                  if(!cell) return <div key={row} data-pyv-cell style={{width:11,height:11,borderRadius:2}}/>;
+                  // Futuro: solo borde tenue sin relleno (s63) — distinguible del lvl=0
+                  if(cell.isFuture) return <div key={row} data-pyv-cell style={{width:11,height:11,borderRadius:2,background:'transparent',border:'1px solid var(--line)',opacity:0.3}}/>;
+                  const lvl=cell.level; const ls=pyvStyles[lvl]||pyvStyles[0]; const hd=cell.count>0;
+                  return(
+                    <div key={row} data-pyv-cell
+                      onMouseEnter={hd?(e)=>showTip(e,cell,false):undefined}
+                      onMouseLeave={hd?()=>setTooltip(null):undefined}
+                      onTouchEnd={hd?(e)=>{e.preventDefault();if(tooltip&&tooltip.key===cell.dateStr){setTooltip(null);}else{showTip(e,cell,true);}}:undefined}
+                      style={{width:11,height:11,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none',cursor:hd?'pointer':'default'}}
+                    >
+                      {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{display:'flex',alignItems:'center',gap:5,marginTop:4,justifyContent:'flex-end'}}>
+        <span style={{fontSize:10,color:'var(--ink-3)'}}>{t('stats.year.legend.less')}</span>
+        {[0,1,2,3,4].map(lvl=>{const ls=pyvStyles[lvl];return(
+          <div key={lvl} style={{width:12,height:12,borderRadius:2,position:'relative',background:lvl===0?'var(--paper-3)':'transparent',border:lvl===0?'1px solid var(--line)':'none'}}>
+            {lvl>0&&<div style={{position:'absolute',inset:0,borderRadius:'inherit',background:ls.bg,opacity:ls.op}}/>}
+          </div>
+        );})}
+        <span style={{fontSize:10,color:'var(--ink-3)'}}>{t('stats.year.legend.more')}</span>
+      </div>
+
+      {!hasAny&&<div style={{textAlign:'center',padding:'16px 0 8px',color:'var(--ink-3)',fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:15}}>{t('stats.year.empty').replace('{year}',viewYear)}</div>}
+      {hasAny&&<div style={{marginTop:8,padding:'8px 10px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:11,color:'var(--ink-2)'}}>{yearTotal} {unitWord(yearTotal)} {lang==='en'?'this year':'este año'}</div>}
+
+      {tooltip&&!tooltip.mobile&&<div style={{position:'fixed',left:tooltip.x,top:tooltip.y-8,transform:'translate(-50%,-100%)',background:'var(--ink)',color:'var(--paper)',padding:'6px 10px',borderRadius:'var(--r-sm)',fontSize:11,pointerEvents:'none',whiteSpace:'nowrap',zIndex:9999,boxShadow:'0 2px 8px rgba(0,0,0,0.18)'}}>{tooltip.text}</div>}
+      {tooltip&&tooltip.mobile&&<div ref={tooltipRef} style={{position:'fixed',bottom:88,left:'50%',transform:'translateX(-50%)',background:'var(--ink)',color:'var(--paper)',padding:'10px 16px',borderRadius:'var(--r-md)',fontSize:12,zIndex:9999,boxShadow:'0 4px 16px rgba(0,0,0,0.22)',maxWidth:'90vw',textAlign:'center',lineHeight:1.5}}>{tooltip.text}</div>}
+    </div>
+  );
+}
+
+Object.assign(window, { PathYearView });
+
+</script>
+  <script type="text/babel">
+/* PACE · PathStats -- seccion Caminos del panel Stats -- sesion 54 */
+const { useMemo } = React;
+
+/* ---- Subcomponente: tarjeta de metrica ---- */
+function PathStatCard({ label, value }) {
+  return (
+    <div className="path-stat-card">
+      <div className="path-stat-label">{label}</div>
+      <div className="path-stat-value">{value}</div>
+    </div>
+  );
+}
+
+/* ---- Subcomponente: tabla por camino ---- */
+function PathTable({ byPath, lang, t }) {
+  const ids = Object.keys(byPath);
+  if (ids.length === 0) {
+    return <p className="path-stats-empty">{t('stats.paths.empty')}</p>;
+  }
+  // Ordenar por count desc
+  ids.sort((a, b) => (byPath[b].count || 0) - (byPath[a].count || 0));
+
+  function pathName(id) {
+    const key = id.replace(/\./g, '.') + '.name';
+    // Clave i18n: paths.path.dawn.name etc.
+    // Construimos la clave esperada por strings.js
+    const parts = id.split('.');  // ['path','dawn']
+    const nameKey = 'paths.' + id + '.name';
+    return t(nameKey) || id;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '-';
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  return (
+    <div className="path-stats-table">
+      <table>
+        <thead>
+          <tr>
+            <th>{t('stats.paths.tableName')}</th>
+            <th style={{ textAlign:'right' }}>{t('stats.paths.tableCount')}</th>
+            <th style={{ textAlign:'right' }}>{t('stats.paths.tableLast')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ids.map(id => (
+            <tr key={id}>
+              <td>{pathName(id)}</td>
+              <td style={{ textAlign:'right', fontVariantNumeric:'tabular-nums' }}>{byPath[id].count}</td>
+              <td style={{ textAlign:'right', color:'var(--ink-3)', fontSize:'.88em' }}>{fmtDate(byPath[id].lastDoneAt)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ---- Componente principal ---- */
+function PathStats() {
+  const [state] = usePace();
+  const { t } = useT();
+  const lang = state.lang || 'es';
+
+  const stats = useMemo(() => {
+    return typeof getPathStats === 'function' ? getPathStats() : { total: 0, byPath: {}, currentStreak: 0, bestStreak: 0 };
+  }, [state.paths && state.paths.history, state.paths && state.paths.completed]);
+
+  const history = (state.paths && state.paths.history) || [];
+
+  function streakLabel(n) {
+    if (n === 0) return '-';
+    return `${n} d`;
+  }
+
+  return (
+    <div className="path-stats">
+      <section className="path-stats-summary">
+        <PathStatCard label={t('stats.paths.total')}         value={stats.total} />
+        <PathStatCard label={t('stats.paths.currentStreak')} value={streakLabel(stats.currentStreak)} />
+        <PathStatCard label={t('stats.paths.bestStreak')}    value={streakLabel(stats.bestStreak)} />
+      </section>
+
+      <section>
+        <PathTable byPath={stats.byPath} lang={lang} t={t} />
+      </section>
+
+      <section>
+        <div style={{
+          fontSize: 11, fontWeight: 600, letterSpacing: 0.5,
+          color: 'var(--ink-3)', textTransform: 'uppercase',
+          marginBottom: 4,
+        }}>
+          {t('stats.paths.heatmap')}
+        </div>
+        <PathYearView history={history} lang={lang} />
+      </section>
+    </div>
+  );
+}
+
+Object.assign(window, { PathStats });
+
+</script>
+  <script type="text/babel">
 /* PACE · Panel de estadísticas — sesión 43/44
    Tabs Semana | Mes | Año. WeekView sin cambios (s43). YearView nuevo (s44).
 */
@@ -7942,23 +9000,48 @@ function WeekView({ state }) {
     { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
   ];
 
+  /* Compactado en sesion 61 (v0.28.2), 62 (v0.28.3) y 63 (v0.28.4):
+       - Cards: padding 16/14 -> 10/12, numero 28 -> 22, gap 12 -> 10.
+       - Margen tras cards: 8/0/24 -> 4/0/14.
+       - WeekBarRow: marginBottom 18 -> 8, chart 64 -> 36.
+       - Nota inferior: eliminada en s63 (subtitulo del modal ya transmite el mensaje).
+       - Movil (s63): cards 4x1 -> 2x2 via CSS, barras compactas. */
   return (
-    <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, margin: '8px 0 24px' }}>
+    <div data-pace-week-view>
+      <style>{`
+        @media (max-width: 640px) {
+          [data-pace-week-view] [data-pace-week-cards] {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+            margin-bottom: 10px !important;
+          }
+          [data-pace-week-view] [data-pace-week-bar-row] {
+            margin-bottom: 6px !important;
+          }
+          [data-pace-week-view] [data-pace-week-bar-row] [data-pace-bar-chart] {
+            height: 28px !important;
+          }
+          /* Nota inferior oculta en móvil — espacio crítico */
+          [data-pace-week-view] [data-pace-week-note] {
+            display: none !important;
+          }
+        }
+      `}</style>
+      <div data-pace-week-cards style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, margin: '4px 0 14px' }}>
         {bars.map(b => (
           <div key={b.key} style={{
-            padding: '16px 14px',
+            padding: '10px 12px',
             background: 'var(--paper-2)',
             borderRadius: 'var(--r-md)',
             border: '1px solid var(--line)',
             borderTop: `3px solid ${b.color}`,
           }}>
-            <Meta style={{ fontSize: 10, marginBottom: 6 }}>{b.label}</Meta>
+            <Meta style={{ fontSize: 10, marginBottom: 4 }}>{b.label}</Meta>
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontStyle: 'italic', fontSize: 28, fontWeight: 500, lineHeight: 1,
+              fontStyle: 'italic', fontSize: 22, fontWeight: 500, lineHeight: 1,
             }}>{totals[b.key]}</div>
-            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 4 }}>{b.unit}</div>
+            <div style={{ fontSize: 10, color: 'var(--ink-3)', marginTop: 2 }}>{b.unit}</div>
           </div>
         ))}
       </div>
@@ -7967,11 +9050,11 @@ function WeekView({ state }) {
         <WeekBarRow key={b.key} label={b.label} data={b.data} color={b.color} unit={b.unit} />
       ))}
 
-      <div style={{
-        marginTop: 24, padding: 14,
+      <div data-pace-week-note style={{
+        marginTop: 10, padding: 8,
         background: 'var(--paper-2)',
         borderRadius: 'var(--r-sm)',
-        fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.6,
+        fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5,
       }}>
         <strong style={{ color: 'var(--ink)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>{t('stats.note.label')}{' '}</strong>
         {t('stats.note')}
@@ -7983,18 +9066,19 @@ function WeekView({ state }) {
 function WeekBarRow({ label, data, color, unit }) {
   const { t } = useT();
   const days = t('stats.days').split(',');
+  /* Sesion 69 (v0.28.8): weeklyStats ahora indexa lunes-primero (data[0]=lunes).
+     Eliminado el reordering [data[1],...,data[0]] que rotaba desde getDay(). */
   const today = (new Date().getDay() + 6) % 7;
   const max = Math.max(1, ...data);
-  const reordered = [data[1], data[2], data[3], data[4], data[5], data[6], data[0]];
 
   return (
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+    <div data-pace-week-bar-row style={{ marginBottom: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
         <span style={{ ...displayItalic, fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>{label}</span>
         <Meta>{unit}</Meta>
       </div>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 64 }}>
-        {reordered.map((v, i) => {
+      <div data-pace-bar-chart style={{ display: 'flex', gap: 6, alignItems: 'flex-end', height: 36 }}>
+        {data.map((v, i) => {
           const h = (v / max) * 100;
           const isToday = i === today;
           return (
@@ -8158,20 +9242,35 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
     return () => document.removeEventListener('touchstart', onOutside);
   }, [tooltip]);
 
+  /* Sesion 62 (v0.28.3): segundo intento del calendario.
+     S61 paso a `grid 1fr + aspect-ratio:1` -> celdas de ~104px que
+     desbordaban en alto y obligaban a scroll. Vuelve a celdas fijas
+     pero mas grandes que las 36px originales (56px) y se centra el
+     grid en el modal (justify-content:center). Asi:
+       - desktop: 7x56 + 6x6 gap = 428 px, centrado en ~756 utiles
+       - 6 filas x 56 + 5x6 = 366 px de alto -> cabe sin scroll
+       - movil: override a 32px sin gap. */
   return (
     <div>
       <style>{`
-        .pace-heatmap-cell { width:36px;height:36px;border-radius:4px;cursor:default;transition:opacity 120ms;position:relative; }
+        .pace-heatmap-cell { width:48px;height:48px;border-radius:6px;cursor:default;transition:opacity 120ms;position:relative; }
         .pace-heatmap-cell.has-data { cursor:pointer; }
         .pace-heatmap-cell.has-data:hover { opacity:0.85; }
+        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 48px);gap:6px;justify-content:center; }
+        .pace-heatmap-header-day { width:48px;text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
+        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
+        .pace-heatmap-empty { width:48px;height:48px; }
         @media (max-width:640px) {
-          .pace-heatmap-cell { width:28px !important;height:28px !important; }
-          .pace-heatmap-header-day { font-size:9px !important; }
+          .pace-heatmap-cell { width:32px !important;height:32px !important; }
+          .pace-heatmap-grid { grid-template-columns:repeat(7, 32px) !important;gap:4px !important; }
+          .pace-heatmap-header-day { width:32px !important;font-size:9px !important; }
+          .pace-heatmap-day-num { font-size:10px !important; }
+          .pace-heatmap-empty { width:32px !important;height:32px !important; }
           .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
         }
       `}</style>
 
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
         <button onClick={prevMonth} aria-label="Mes anterior" style={{
           background:'none',border:'none',cursor:'pointer',color:'var(--ink-2)',fontSize:18,padding:'4px 10px',borderRadius:'var(--r-sm)',
         }}>&#8249;</button>
@@ -8184,17 +9283,15 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
         }}>&#8250;</button>
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 36px)', gap:4, marginBottom:4 }}>
+      <div className="pace-heatmap-grid" style={{ marginBottom:4 }}>
         {dayHeaders.map((h, i) => (
-          <div key={i} className="pace-heatmap-header-day" style={{
-            width:36,textAlign:'center',fontSize:10,color:'var(--ink-3)',letterSpacing:0.5,fontWeight:600,
-          }}>{h}</div>
+          <div key={i} className="pace-heatmap-header-day">{h}</div>
         ))}
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 36px)', gap:4 }}>
+      <div className="pace-heatmap-grid">
         {cells.map(cell => {
-          if (cell.type === 'empty') return <div key={cell.key} style={{ width:36,height:36 }} />;
+          if (cell.type === 'empty') return <div key={cell.key} className="pace-heatmap-empty" />;
           const hasData  = !!cell.entry;
           const totalMin = hasData ? (cell.entry.focusMinutes||0)+(cell.entry.breathMinutes||0)+(cell.entry.moveMinutes||0) : 0;
           const opacity  = hasData ? intensityOpacity(totalMin) : 0;
@@ -8209,10 +9306,9 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
               aria-label={hasData?dayLabel(viewYear,viewMonth,cell.d,lang):undefined}
             >
               {hasData && <div style={{ position:'absolute',inset:0,borderRadius:'inherit',background:domColor,opacity }} />}
-              <span style={{
-                position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',
-                fontSize:10,color:hasData?'var(--ink)':'var(--ink-3)',fontVariantNumeric:'tabular-nums',
-                fontWeight:cell.isToday?700:400,zIndex:1,
+              <span className="pace-heatmap-day-num" style={{
+                color:hasData?'var(--ink)':'var(--ink-3)',
+                fontWeight:cell.isToday?700:400,
               }}>{cell.d}</span>
             </div>
           );
@@ -8220,8 +9316,8 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
       </div>
 
       <div className="pace-heatmap-totals" style={{
-        display:'flex',gap:16,marginTop:20,flexWrap:'wrap',padding:'12px 14px',
-        background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:12,color:'var(--ink-2)',
+        display:'flex',gap:14,marginTop:10,flexWrap:'wrap',padding:'8px 10px',
+        background:'var(--paper-2)',borderRadius:'var(--r-sm)',fontSize:11,color:'var(--ink-2)',
       }}>
         <span><strong style={{ color:'var(--focus)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>{t('stats.month.total.focus')}</strong>{' '}{fmtTime(totalFocus,hourUnit)}</span>
         <span style={{ color:'var(--ink-3)' }}>·</span>
@@ -8256,7 +9352,7 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
 
 const statsPanelTabStyles = {
   container: {
-    display: 'flex', gap: 2, marginBottom: 24,
+    display: 'flex', gap: 2, marginBottom: 14,
     background: 'var(--paper-2)', borderRadius: 'var(--r-sm)', padding: 3,
   },
   tab: (active) => ({
@@ -8294,6 +9390,7 @@ function StatsPanel({ open, onClose }) {
           { key:'week',  label:t('stats.tab.week')  },
           { key:'month', label:t('stats.tab.month') },
           { key:'year',  label:t('stats.tab.year')  },
+          { key:'paths', label:t('stats.tab.paths') },
         ].map(({ key, label }) => (
           <button key={key} style={statsPanelTabStyles.tab(tab===key)} onClick={()=>setTab(key)}>{label}</button>
         ))}
@@ -8302,6 +9399,7 @@ function StatsPanel({ open, onClose }) {
       {tab==='week'  && <WeekView state={state} />}
       {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
       {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
+      {tab==='paths' && <PathStats />}
     </Modal>
   );
 }
@@ -8438,15 +9536,12 @@ function TweaksPanel({ open, onClose }) {
   /* Ejes de personalización.
      Sesión 37: circle/numero retirados de timer, editorial retirado
      de layout, audio promovido al primer eje como pills separadas. */
+  /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
+     'envejecido' retirado en s71 / v0.28.9. */
   const ejes = [
     { key: 'palette', label: t('tweaks.eje.palette'), options: [
       { v: 'crema', name: t('tweaks.palette.crema') },
       { v: 'oscuro', name: t('tweaks.palette.oscuro') },
-      { v: 'envejecido', name: t('tweaks.palette.envejecido') },
-    ]},
-    { key: 'layout', label: t('tweaks.eje.layout'), options: [
-      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
-      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
     { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
       { v: 'aro', name: t('tweaks.timer.aro') },
@@ -8459,6 +9554,10 @@ function TweaksPanel({ open, onClose }) {
       { v: 'petalo', name: t('tweaks.breath.petalo') },
       { v: 'ondas', name: t('tweaks.breath.ondas') },
       { v: 'organico', name: t('tweaks.breath.organico') },
+    ]},
+    { key: 'layout', label: t('tweaks.eje.layout'), options: [
+      { v: 'sidebar', name: t('tweaks.layout.sidebar') },
+      { v: 'minimal', name: t('tweaks.layout.minimal') },
     ]},
     /* 'logoVariant' y 'supportCopyVariant' retirados de los Tweaks
        (sesión post-v0.12.1). Los campos del state se conservan por
@@ -8571,7 +9670,36 @@ function TweaksPanel({ open, onClose }) {
         <button onClick={onClose} style={{ fontSize: 18, color: 'var(--ink-3)', width: 26, height: 26, display: 'grid', placeItems: 'center' }}>×</button>
       </div>
 
-      {/* Audio — primer eje (sesión 37: reubicado desde sección "Sound" inferior) */}
+      {/* Idioma — primer eje (s71: movido al top por frecuencia de uso) */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'es', name: t('tweaks.lang.es') },
+            { v: 'en', name: t('tweaks.lang.en') },
+          ].map(opt => {
+            const active = state.lang === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* Audio */}
       <div style={{ marginBottom: 16 }}>
         <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
         <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
@@ -8598,7 +9726,7 @@ function TweaksPanel({ open, onClose }) {
           })}
         </div>
         {state.soundOn && (
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ marginTop: 8, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <button
               onClick={() => {
                 const next = !state.ambientOn;
@@ -8660,35 +9788,6 @@ function TweaksPanel({ open, onClose }) {
           </div>
         </div>
       ))}
-
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* Idioma */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: 'es', name: t('tweaks.lang.es') },
-            { v: 'en', name: t('tweaks.lang.en') },
-          ].map(opt => {
-            const active = state.lang === opt.v;
-            return (
-              <button key={opt.v} onClick={() => set({ lang: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-      </div>
 
       <Divider style={{ margin: '14px 0' }} />
 
@@ -8860,9 +9959,41 @@ Object.assign(window, { TweaksPanel });
 /* PACE - Caminos - SuggestedPathCard - sesion 53 / v0.27.0
    Sugiere el camino del momento o el favorito del usuario (prioritario).
    Boton "Ver todos" abre PathsLibrary via CustomEvent.
+
+   Sesion 61 (v0.28.2): compactado en movil. El bug previo era que la regla
+   CSS `[data-pace-spc] > div { flex-direction: column !important }` aplicaba
+   tambien al PathMiniCard suelto (no solo al contenedor dual), forzando una
+   tarjeta apilada de ~250px de alto que aplastaba al timer. Ahora:
+     - El contenedor dual lleva data-pace-spc-dual y solo ese se apila.
+     - PathMiniCard se identifica con data-pace-spc-card y reduce padding,
+       tipos y oculta el tagline en movil para acercarse al layout web
+       horizontal (nombre + iconos + boton en una fila).
 */
 
 const { useState: useStateSPC } = React;
+
+/* Reglas responsive del modulo Caminos sugeridos. Inyectadas una vez.
+   Movil: padding lateral mas estrecho, card en fila pero compacta. */
+if (typeof document !== 'undefined' && !document.getElementById('pace-spc-responsive-css')) {
+  const s = document.createElement('style');
+  s.id = 'pace-spc-responsive-css';
+  s.textContent = `
+    @media (max-width: 640px) {
+      [data-pace-spc] { padding: 0 14px 10px !important; }
+      /* Solo el contenedor dual se apila; la card unica queda en row */
+      [data-pace-spc-dual] { flex-direction: column !important; gap: 8px !important; }
+      [data-pace-spc-card] { padding: 10px 12px !important; gap: 10px !important; }
+      [data-pace-spc-card] [data-pace-spc-bar] { display: none !important; }
+      [data-pace-spc-card] [data-pace-spc-label] { font-size: 8px !important; margin-bottom: 2px !important; }
+      [data-pace-spc-card] [data-pace-spc-name] { font-size: 15px !important; }
+      [data-pace-spc-card] [data-pace-spc-tagline] { display: none !important; }
+      [data-pace-spc-card] [data-pace-spc-steps] { margin-top: 4px !important; gap: 4px !important; }
+      [data-pace-spc-card] [data-pace-spc-step] { width: 16px !important; height: 16px !important; }
+      [data-pace-spc-card] [data-pace-spc-cta] { padding: 7px 12px !important; font-size: 11px !important; }
+    }
+  `;
+  document.head.appendChild(s);
+}
 
 /* Iconos de paso: stroke fino 14x14 */
 function SPCIconBreathe() {
@@ -8887,7 +10018,7 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
   const tagline = t(pathObj.taglineKey) || '';
 
   return (
-    <div style={{
+    <div data-pace-spc-card style={{
       display: 'flex', alignItems: 'center', gap: 16,
       padding: '14px 20px',
       background: doneToday ? 'var(--paper-2)' : 'var(--paper)',
@@ -8902,31 +10033,31 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
     onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (
-          <div style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
+          <div data-pace-spc-label style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
+          <span data-pace-spc-name style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
           {doneToday && (
             <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', padding: '2px 6px', border: '1px solid var(--line)', borderRadius: 'var(--r-pill)' }}>
               {t('path.card.done') || 'Hecho hoy'}
             </span>
           )}
         </div>
-        <div style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
-        <div style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
+        <div data-pace-spc-tagline style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
+        <div data-pace-spc-steps style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
           {pathObj.steps.map(function(step, i) {
             const Icon = SPC_STEP_ICONS[step.kind] || null;
-            return <span key={i} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
+            return <span key={i} data-pace-spc-step style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
           })}
         </div>
       </div>
 
       {!doneToday && (
-        <button
+        <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
           style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
         >
@@ -8980,7 +10111,7 @@ function SuggestedPathCard() {
     <div data-pace-spc style={{ padding: '0 40px 12px', flexShrink: 0 }}>
       {/* Fila superior: cards (una o dos) */}
       {showDual ? (
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div data-pace-spc-dual style={{ display: 'flex', gap: 10 }}>
           <PathMiniCard
             pathObj={favorite}
             label={t('paths.suggested.favorite') || 'Tu favorito'}
@@ -9026,7 +10157,7 @@ Object.assign(window, { SuggestedPathCard });
    Patron identico a Achievements: event listener en montaje, modal over app.
 */
 
-const { useState: useStatePL, useEffect: useEffectPL } = React;
+const { useState: useStatePL, useEffect: useEffectPL, useRef: useRefPL } = React;
 
 /* Iconos de paso reutilizados de SuggestedPathCard */
 function PLIconBreathe() {
@@ -9110,12 +10241,22 @@ function PathsLibrary() {
   const [open, setOpenPL] = useStatePL(false);
   const [state] = usePace();
   const { t } = useT();
+  const closeBtnRef = useRefPL(null);
 
   useEffectPL(function() {
     function handleOpen() { setOpenPL(true); }
     window.addEventListener('pace:open-paths-library', handleOpen);
     return function() { window.removeEventListener('pace:open-paths-library', handleOpen); };
   }, []);
+
+  // Focus en boton cerrar al abrir + Escape para cerrar
+  useEffectPL(function() {
+    if (!open) return;
+    if (closeBtnRef.current) closeBtnRef.current.focus();
+    function handleKey(e) { if (e.key === 'Escape') setOpenPL(false); }
+    document.addEventListener('keydown', handleKey);
+    return function() { document.removeEventListener('keydown', handleKey); };
+  }, [open]);
 
   if (!open) return null;
 
@@ -9136,6 +10277,7 @@ function PathsLibrary() {
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby="paths-library-title"
       style={{
         position: 'fixed', inset: 0, zIndex: 900,
         background: 'rgba(0,0,0,0.45)',
@@ -9155,14 +10297,15 @@ function PathsLibrary() {
       }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
+          <span id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
             {t('paths.library.title') || 'Todos los caminos'}
           </span>
           <button
+            ref={closeBtnRef}
             onClick={function() { setOpenPL(false); }}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-3)', fontSize: 20, lineHeight: 1, padding: '2px 6px', borderRadius: 'var(--r-sm)' }}
-            aria-label="Cerrar"
-          >x</button>
+            aria-label={t('common.close')}
+          >&#x2715;</button>
         </div>
 
         {/* Lista */}
@@ -9191,6 +10334,143 @@ function PathsLibrary() {
 Object.assign(window, { PathsLibrary });
 
 </script>
+  <!-- Caminos - SenderoBar (sesion 75) - debe cargarse ANTES de PathRunner que lo consume -->
+  <script type="text/babel">
+/* PACE - Caminos - SenderoBar (sesion 75 / v0.29.0)
+   Visualizacion del progreso interno de un Camino como sendero horizontal:
+   curva organica + hitos con halo. Puramente declarativo, sin estado.
+   currentColor hereda del tema (claro / oscuro Candil).
+*/
+
+const { useId: useIdSB } = React;
+
+/* Parametros Bezier por segmento. Asimetria organica intencional para
+   evitar simetria perfecta. Ratios r1/r2 son fracciones de la longitud
+   del segmento (escalan automaticamente con N). y1/y2 son absolutos. */
+const SB_SEG_PARAMS = [
+  { y1: 22, y2: 24, r1: 0.24, r2: 0.760 }, // 0: arriba, ligero peso derecha
+  { y1: 78, y2: 82, r1: 0.24, r2: 0.755 }, // 1: abajo
+  { y1: 22, y2: 18, r1: 0.24, r2: 0.789 }, // 2: arriba, opuesto
+  { y1: 78, y2: 76, r1: 0.24, r2: 0.770 }, // 3: abajo, suave
+  { y1: 22, y2: 26, r1: 0.24, r2: 0.740 }, // 4: arriba
+];
+
+const SB_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+function sbToRoman(n) {
+  return SB_ROMAN[n - 1] || String(n);
+}
+
+/* Posicion X de cada hito, equidistantes entre 60 y 580.
+   N=1 -> hito unico en x=320. */
+function sbHitoX(i, total) {
+  if (total <= 1) return 320;
+  return 60 + i * (520 / (total - 1));
+}
+
+/* Genera el path "C cp1x cp1y, cp2x cp2y, x1 50" de un segmento. */
+function sbSegmentPath(x0, x1, segIdx) {
+  const span = x1 - x0;
+  const p = SB_SEG_PARAMS[segIdx % SB_SEG_PARAMS.length];
+  const cp1x = x0 + p.r1 * span;
+  const cp2x = x0 + p.r2 * span;
+  return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
+}
+
+function SenderoBar({ blocks, currentIndex }) {
+  const reactId = useIdSB();
+  const haloDoneId = `sb-halo-done-${reactId}`;
+  const haloCurrentId = `sb-halo-current-${reactId}`;
+
+  const total = (blocks && blocks.length) || 0;
+  if (total === 0) return null;
+
+  const xs = [];
+  for (let i = 0; i < total; i++) xs.push(sbHitoX(i, total));
+
+  // Partir segmentos en dos paths: completados (solidos) y pendientes (punteados).
+  // El segmento "actual" (entre currentIndex-1 y currentIndex) ya se considera completado.
+  // Los segmentos pendientes son los que parten del hito currentIndex hacia adelante.
+  const doneSegs = [];
+  const pendingSegs = [];
+  for (let i = 0; i < total - 1; i++) {
+    const seg = sbSegmentPath(xs[i], xs[i + 1], i);
+    const startMove = `M ${xs[i]} 50 ${seg}`;
+    if (i < currentIndex) doneSegs.push(startMove);
+    else pendingSegs.push(startMove);
+  }
+  const donePath = doneSegs.join(' ');
+  const pendingPath = pendingSegs.join(' ');
+
+  return (
+    <div className="sendero-bar">
+      <div className="sendero-wrap">
+        <svg className="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id={haloDoneId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.21" />
+              <stop offset="55%" stopColor="currentColor" stopOpacity="0.055" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id={haloCurrentId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.70" />
+              <stop offset="55%" stopColor="currentColor" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+
+          {donePath && <path className="path-line" d={donePath} />}
+          {pendingPath && <path className="path-line pending" d={pendingPath} />}
+
+          {xs.map(function(cx, i) {
+            if (i < currentIndex) {
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy="50" r="10" fill={`url(#${haloDoneId})`} />
+                  <circle cx={cx} cy="50" r="4" className="dot-fill" />
+                </g>
+              );
+            }
+            if (i === currentIndex) {
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy="50" r="19" fill={`url(#${haloCurrentId})`} />
+                  <circle cx={cx} cy="50" r="4.5" className="dot-fill" />
+                </g>
+              );
+            }
+            return (
+              <circle key={i} cx={cx} cy="50" r="3.2" className="dot-fill" opacity="0.32" />
+            );
+          })}
+        </svg>
+      </div>
+
+      <div className="hito-labels">
+        {blocks.map(function(b, i) {
+          let stateClass = 'pending';
+          if (i < currentIndex) stateClass = 'done';
+          else if (i === currentIndex) stateClass = 'current';
+          const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
+          return (
+            <span
+              key={b.id + '-' + i}
+              className={'hito-label ' + stateClass}
+              style={{ left: leftPct + '%' }}
+            >
+              {b.name}
+              <span className="hito-roman">{sbToRoman(i + 1)}</span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { SenderoBar });
+
+</script>
   <!-- Caminos - PathRunner UI (sesion 50) -->
   <script type="text/babel">
 /* PACE - Caminos - PathRunner overlay (sesion 50 / v0.26.0-beta)
@@ -9201,26 +10481,20 @@ Object.assign(window, { PathsLibrary });
 
 const { useState: useStatePR, useEffect: useEffectPR, useRef: useRefPR } = React;
 
-/* PathTopBar - barra superior con dots y boton de salida */
-function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
+/* PathTopBar - nombre del Camino + boton de salida.
+   Sesion 75: dots eliminados (los reemplaza SenderoBar). */
+function PathTopBar({ pathName, onRequestExit }) {
   const { t } = useT();
   return (
     <div className="path-topbar">
-      <div style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-2)', fontWeight: 500 }}>
+      <div style={{
+        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        fontSize: 22, fontWeight: 400, color: 'var(--ink)',
+        letterSpacing: '0.005em',
+      }}>
         {pathName}
       </div>
-      <div className="path-dots">
-        {Array.from({ length: totalSteps }).map((_, i) => (
-          <div
-            key={i}
-            className={
-              'path-dot' +
-              (i < stepIndex ? ' done' : '') +
-              (i === stepIndex ? ' active' : '')
-            }
-          />
-        ))}
-      </div>
+      <div style={{ flex: 1 }} />
       <button
         onClick={onRequestExit}
         aria-label={t('path.runner.exit')}
@@ -9239,9 +10513,27 @@ function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
 /* ExitConfirmModal - confirmacion in-app (sin llamada al dialog nativo) */
 function ExitConfirmModal({ open, onCancel, onConfirm }) {
   const { t } = useT();
+  const cancelBtnRef = useRefPR(null);
+
+  useEffectPR(() => {
+    if (!open) return;
+    // Focus en boton Seguir al abrir
+    if (cancelBtnRef.current) cancelBtnRef.current.focus();
+    // Cerrar con Escape
+    function handleKey(e) { if (e.key === 'Escape') onCancel(); }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open]);
+
   if (!open) return null;
   return (
-    <div className="path-modal-back" onClick={onCancel}>
+    <div
+      className="path-modal-back"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="exit-confirm-title"
+      onClick={onCancel}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -9250,7 +10542,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
           border: '1px solid var(--line)',
         }}
       >
-        <h3 style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
+        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
           {t('path.runner.exitConfirmTitle')}
         </h3>
         <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
@@ -9258,6 +10550,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
           <button
+            ref={cancelBtnRef}
             onClick={onCancel}
             style={{
               padding: '8px 18px', borderRadius: 'var(--r-sm)',
@@ -9287,7 +10580,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
 function CompletionScreen({ snapshot, onBack }) {
   const { t, tn } = useT();
   const path = getPath(snapshot.pathId);
-  const name = path ? snapshot.pathId : snapshot.pathId;
+  const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
     ? Math.round((Date.now() - snapshot.startedAt) / 60000)
     : 0;
@@ -9313,7 +10606,7 @@ function CompletionScreen({ snapshot, onBack }) {
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
         color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.2,
       }}>
-        {snapshot.pathId.replace('path.', '')}
+        {displayName}
       </h2>
       {elapsed > 0 && (
         <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 32px' }}>
@@ -9429,7 +10722,10 @@ function PathHydrateStep({ onDone, onSkip }) {
   );
 }
 
-/* PathFocusStep - timer simple para paso de foco */
+/* PathFocusStep - timer simple para paso de foco.
+   Sesion 75: cuando el timer llega a 0 (no por skip), suma los minutos
+   completos a las estadisticas globales via addFocusMinutes, alineado
+   con el flujo del Pomodoro estandar. Skip o salida no acreditan. */
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
   const totalSec = (step.min || 25) * 60;
@@ -9437,6 +10733,7 @@ function PathFocusStep({ step, onExit }) {
   const [running, setRunning] = useStatePR(false);
   const [done, setDone] = useStatePR(false);
   const intervalRef = useRefPR(null);
+  const creditedRef = useRefPR(false);
 
   useEffectPR(() => {
     if (!running) { clearInterval(intervalRef.current); return; }
@@ -9446,6 +10743,9 @@ function PathFocusStep({ step, onExit }) {
           clearInterval(intervalRef.current);
           setRunning(false);
           setDone(true);
+          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
+            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
+          }
           return 0;
         }
         return r - 1;
@@ -9558,13 +10858,40 @@ function PathRunner() {
     if (cur) setJustCompleted(null);
   }, [cur ? cur.id : null]);
 
+  /* Escape: si hay modal de confirmacion abierto -> lo cierra; si no -> solicita salida.
+     NOTA: hook movido antes del early return para cumplir Rules of Hooks.
+     El guard "if (!cur) return" esta dentro del callback, no fuera. */
+  useEffectPR(() => {
+    if (!cur) return; // guard dentro del callback: no actuar si no hay camino activo
+    function handleKey(e) {
+      if (e.key !== 'Escape') return;
+      var active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      if (confirmExit) { setConfirmExit(false); return; }
+      var path = getPath(cur.id);
+      var step = path && path.steps[cur.stepIndex];
+      if (step && step.optional) {
+        abandonPath();
+      } else {
+        setConfirmExit(true);
+      }
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [confirmExit, cur ? cur.stepIndex : null]);
+
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
 
   /* Pantalla de completado */
   if (justCompleted) {
     return (
-      <div className="path-runner-overlay">
+      <div
+        className="path-runner-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('path.runner.complete.title')}
+      >
         <CompletionScreen
           snapshot={justCompleted}
           onBack={() => setJustCompleted(null)}
@@ -9595,7 +10922,7 @@ function PathRunner() {
     advancePathStep(reason);
   };
 
-  /* Botón de salida: si el paso es opcional, salir directo; si no, confirmar */
+  /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar */
   const handleRequestExit = () => {
     if (step.optional) {
       abandonPath();
@@ -9604,14 +10931,29 @@ function PathRunner() {
     }
   };
 
+  const displayPathName = t(path.nameKey) || cur.id;
+  const senderoBlocks = path.steps.map(function(s, idx) {
+    return {
+      id: s.kind + '-' + idx,
+      name: t('paths.kind.' + s.kind + '.name') || s.kind,
+    };
+  });
+
   return (
-    <div className="path-runner-overlay">
+    <div
+      className="path-runner-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label={displayPathName}
+    >
       <PathTopBar
-        pathName={cur.id.replace('path.', '')}
-        stepIndex={cur.stepIndex}
-        totalSteps={totalSteps}
+        pathName={displayPathName}
         onRequestExit={handleRequestExit}
       />
+
+      {typeof SenderoBar === 'function' && (
+        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} />
+      )}
 
       <div className="path-step-body">
         {step.kind === 'breathe' && (
