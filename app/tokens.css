@@ -19,10 +19,11 @@
   --focus: #3E5A3A;
   --focus-2: #2A3E27;
   --focus-soft: rgba(62, 90, 58, 0.10);
-  /* CTA Comenzar home (s77b). Variante mas viva y calida del --focus
-     para que el boton protagonista respire sin entrar en zona saturada
-     tipo Stripe. NO usar fuera del CTA principal de Pomodoro. */
-  --focus-cta: #506B3E;
+  /* CTAs "Comenzar" principales (s77b): Pomodoro home + Camino sugerido
+     + cada Camino en la biblioteca. Verde apagado equilibrado, mas gris
+     que el --focus (que es verde puro). Refuerza el caracter artesanal
+     y discreto del producto. NO usar para acciones secundarias. */
+  --focus-cta: #50624D;
 
   --breathe: #C97A5D;
   --breathe-2: #A85E43;
@@ -113,9 +114,9 @@
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
-  /* CTA Comenzar home (s77b). Misma logica que la paleta clara:
-     ligeramente mas vivo y calido que --focus para destacar el CTA. */
-  --focus-cta: #8AA776;
+  /* CTAs "Comenzar" (s77b). Misma logica que la paleta clara:
+     verde apagado equilibrado, derivado coherentemente para oscuro. */
+  --focus-cta: #8E9D88;
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);

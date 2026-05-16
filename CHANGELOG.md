@@ -135,8 +135,9 @@ Bump a v0.31.0 por feature UX nueva (no fix).
   720, altura SVG `clamp(140px, 22vh, 220px)`). Reglas s77b para
   alinear las labels de hito en lg: `.sendero-bar.lg .hito-labels
   { max-width: 720px; }` + font-size 12/11px. Tokens
-  `--focus-cta: #506B3E` (crema) y `#8AA776` (oscuro) para el CTA
-  Comenzar del home. `@keyframes path-orb-travel` reservado.
+  `--focus-cta: #50624D` (crema) y `#8E9D88` (oscuro) para los CTAs
+  "Comenzar" del producto (verde apagado equilibrado, mas gris que
+  el --focus puro). `@keyframes path-orb-travel` reservado.
   `.sendero-bar .sendero-orb { pointer-events: none; }`.
 - **i18n** -- 1 sola clave nueva (limite autoimpuesto en s77):
   `path.runner.transition.continue` ES "toca para continuar" /

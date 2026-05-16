@@ -37,7 +37,7 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--focus` | `#3E5A3A` | Acento Foco |
 | `--focus-2` | `#2A3E27` | Acento Foco oscuro |
 | `--focus-soft` | `rgba(62,90,58,0.10)` | Fondos sutiles Foco |
-| `--focus-cta` | `#506B3E` | **CTAs "Comenzar"** principales (s77b): Pomodoro home + Camino sugerido + cada Camino en la biblioteca. Variante mas viva y calida del `--focus`. NO usar para acciones secundarias |
+| `--focus-cta` | `#50624D` | **CTAs "Comenzar"** principales (s77b): Pomodoro home + Camino sugerido + cada Camino en la biblioteca. Verde apagado equilibrado (mas gris que `--focus` puro). NO usar para acciones secundarias |
 | `--breathe` | `#C97A5D` | Acento Respira |
 | `--breathe-2` | `#A85E43` | Acento Respira oscuro |
 | `--breathe-soft` | `rgba(201,122,93,0.12)` | Fondos sutiles Respira |
@@ -67,7 +67,7 @@ Activa con `[data-palette="oscuro"]`.
 | `--focus` | `#7A9A6D` |
 | `--focus-2` | `#98B58B` |
 | `--focus-soft` | `rgba(122,154,109,0.12)` |
-| `--focus-cta` | `#8AA776` |
+| `--focus-cta` | `#8E9D88` |
 | `--breathe` | `#D99477` |
 | `--breathe-2` | `#E8A98F` |
 | `--breathe-soft` | `rgba(217,148,119,0.14)` |

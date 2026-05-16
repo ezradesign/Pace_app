@@ -154,15 +154,16 @@ Cierre unificado: s77 + s77b van en un solo commit v0.31.0. Diarios:
 2. **Toast 3000ms**: nueva constante `TOAST_DURATION_MS = 3000` en
    `state-core.jsx`, exportada a window. `Toast.jsx` la lee con
    fallback a 3000 (antes 5000ms hardcoded).
-3. **CTAs "Comenzar" -> verde musgo apagado** (3 botones unificados):
-   nuevo token `--focus-cta: #506B3E` (crema) / `#8AA776` (oscuro)
-   en `tokens.css`. Usado en:
+3. **CTAs "Comenzar" -> verde apagado equilibrado** (3 botones
+   unificados): nuevo token `--focus-cta: #50624D` (crema) /
+   `#8E9D88` (oscuro) en `tokens.css`. Usado en:
    - `FocusTimer.jsx` startBtnPrimary (CTA Pomodoro home).
    - `SuggestedPathCard.jsx` (CTA Camino sugerido del home).
    - `PathsLibrary.jsx` (CTA cada Camino en el overlay biblioteca).
    El "Repetir camino" del CompletionScreen se mantiene en `var(--ink)`
-   (accion secundaria). Tres opciones mostradas en chat
-   (Medio / Calido / Profundo); usuario eligio Medio.
+   (accion secundaria). Iteracion: primera propuesta `#506B3E` (verde
+   musgo); usuario ajusto al hex final `#50624D` (mas gris-equilibrado,
+   menos verde puro -- coherente con el caracter artesanal del producto).
 4. **RETIRADA SenderoBar sticky (inversion del feature s76)**:
    - `PathRunner.jsx`: quitado render `<SenderoBar ... sticky />` en
      phase==='step' + quitado `useEffect` que toggleaba

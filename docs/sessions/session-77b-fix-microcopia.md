@@ -97,16 +97,23 @@ empirica DevTools al usuario, dado que el comportamiento de
 
 ### 3. CTA Comenzar home -> verde musgo apagado
 
-- `app/tokens.css`: nuevo token `--focus-cta: #506B3E` en `:root`
-  (crema) y `--focus-cta: #8AA776` en `[data-palette="oscuro"]`.
-  Variante mas viva y calida que `--focus` para destacar el boton
-  protagonista del Pomodoro sin entrar en zona Stripe-saturada.
+- `app/tokens.css`: nuevo token `--focus-cta: #50624D` en `:root`
+  (crema) y `--focus-cta: #8E9D88` en `[data-palette="oscuro"]`.
+  Verde apagado equilibrado, mas gris que el `--focus` puro --
+  refuerza el caracter artesanal del producto sin entrar en zona
+  saturada tipo Stripe.
 - `app/focus/FocusTimer.jsx`: `startBtnPrimary` cambia
   `background: 'var(--focus)'` -> `'var(--focus-cta)'` y border
-  igual. Solo afecta el CTA "Comenzar" home, no el resto del sistema
-  (paths, dots, tabs).
-- Decision: tres opciones mostradas en chat (`#506B3E` medio /
-  `#5A7142` calido / `#4A6438` profundo). Usuario eligio Medio.
+  igual.
+- `app/paths/SuggestedPathCard.jsx` + `app/paths/PathsLibrary.jsx`:
+  CTA "Comenzar" en ambos cambia `background: 'var(--ink)'` ->
+  `'var(--focus-cta)'`. Los 3 CTAs principales de "Comenzar"
+  (Pomodoro + Camino sugerido + Camino en biblioteca) quedan
+  unificados.
+- Decision: iteracion en chat. Primera propuesta `#506B3E` (verde
+  musgo medio, opcion A de 3 mostradas). Usuario refino a hex final
+  `#50624D` -- mas gris-equilibrado, menos verde puro. Oscuro
+  derivado coherentemente `#8E9D88`.
 
 ### 4. Inversion arquitectural: retirar SenderoBar sticky (s76)
 
