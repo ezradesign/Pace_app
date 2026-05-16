@@ -37,7 +37,7 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--focus` | `#3E5A3A` | Acento Foco |
 | `--focus-2` | `#2A3E27` | Acento Foco oscuro |
 | `--focus-soft` | `rgba(62,90,58,0.10)` | Fondos sutiles Foco |
-| `--focus-cta` | `#506B3E` | **CTA Comenzar home** (s77b). Variante mas viva y calida del `--focus`. NO usar fuera del boton protagonista del Pomodoro |
+| `--focus-cta` | `#506B3E` | **CTAs "Comenzar"** principales (s77b): Pomodoro home + Camino sugerido + cada Camino en la biblioteca. Variante mas viva y calida del `--focus`. NO usar para acciones secundarias |
 | `--breathe` | `#C97A5D` | Acento Respira |
 | `--breathe-2` | `#A85E43` | Acento Respira oscuro |
 | `--breathe-soft` | `rgba(201,122,93,0.12)` | Fondos sutiles Respira |

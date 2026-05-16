@@ -189,7 +189,12 @@ Bump a v0.31.0 por feature UX nueva (no fix).
   `var(--paper)`, asi el cross-fade es limpio.
 - **`app/focus/FocusTimer.jsx`** -- `startBtnPrimary` cambia
   `background: 'var(--focus)'` -> `'var(--focus-cta)'` (border igual).
-  Solo afecta el CTA Comenzar home, no el resto del sistema.
+- **`app/paths/SuggestedPathCard.jsx`** + **`app/paths/PathsLibrary.jsx`**
+  -- CTA "Comenzar" en ambos cambia `background: 'var(--ink)'` ->
+  `'var(--focus-cta)'`. Los 3 CTAs principales de "Comenzar" (Pomodoro
+  home + Camino sugerido + cada Camino en biblioteca) quedan unificados
+  en verde musgo. El "Repetir camino" del CompletionScreen se mantiene
+  en `var(--ink)` (accion secundaria).
 - **`app/ui/Toast.jsx`** -- lee `TOAST_DURATION_MS` de window
   (fallback a 3000 si no esta definido) en vez del 5000 hardcoded.
 - **`PACE.html`** -- nueva linea de carga

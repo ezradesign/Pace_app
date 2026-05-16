@@ -66,7 +66,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
         {!doneToday && (
           <button
             onClick={onStart}
-            style={{ padding: '7px 14px', fontSize: 11, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer' }}
+            style={{ padding: '7px 14px', fontSize: 11, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer' }}
           >
             {t('paths.library.start') || 'Comenzar'}
           </button>

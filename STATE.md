@@ -67,8 +67,8 @@
 | `app/paths/PathRunner.jsx` | Runner de caminos | **v0.31.0** (s77: maquina phase intro/step/transition/outro + pendingComplete + handleIntro/Transition/OutroDone + render dispatch por phase + CompletionScreen fadeIn 400ms; s77b: quitado useEffect data-pace-path-active + quitado render SenderoBar sticky de step phase; 660->717 ln) |
 | `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.31.0** (nuevo s77, 232 ln; s77b: render SenderoBar lg sin guard typeof) |
 | `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.31.0** (s77: + prop size="lg" + prop orbVisible + orbe viajero via animateMotion sobre la curva Bezier; s77b: **prop sticky retirada** + hito-labels filtran solo done (i<currentIndex) -- comportamiento unificado en lg y CompletionScreen; 148->164 ln) |
-| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.28.2** (s61: responsive movil propio, layout compacto, fix dual-only column) |
-| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
+| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
+| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
 | `sw.js` | Service Worker PWA | **v0.31.0** (s77: CACHE_NAME pace-v0.31.0) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
@@ -154,11 +154,15 @@ Cierre unificado: s77 + s77b van en un solo commit v0.31.0. Diarios:
 2. **Toast 3000ms**: nueva constante `TOAST_DURATION_MS = 3000` en
    `state-core.jsx`, exportada a window. `Toast.jsx` la lee con
    fallback a 3000 (antes 5000ms hardcoded).
-3. **CTA Comenzar home -> verde musgo apagado**: nuevo token
-   `--focus-cta: #506B3E` (crema) / `#8AA776` (oscuro) en
-   `tokens.css`. `FocusTimer.jsx` startBtnPrimary usa
-   `var(--focus-cta)` en background+border. Tres opciones mostradas
-   en chat (Medio / Calido / Profundo); usuario eligio Medio.
+3. **CTAs "Comenzar" -> verde musgo apagado** (3 botones unificados):
+   nuevo token `--focus-cta: #506B3E` (crema) / `#8AA776` (oscuro)
+   en `tokens.css`. Usado en:
+   - `FocusTimer.jsx` startBtnPrimary (CTA Pomodoro home).
+   - `SuggestedPathCard.jsx` (CTA Camino sugerido del home).
+   - `PathsLibrary.jsx` (CTA cada Camino en el overlay biblioteca).
+   El "Repetir camino" del CompletionScreen se mantiene en `var(--ink)`
+   (accion secundaria). Tres opciones mostradas en chat
+   (Medio / Calido / Profundo); usuario eligio Medio.
 4. **RETIRADA SenderoBar sticky (inversion del feature s76)**:
    - `PathRunner.jsx`: quitado render `<SenderoBar ... sticky />` en
      phase==='step' + quitado `useEffect` que toggleaba

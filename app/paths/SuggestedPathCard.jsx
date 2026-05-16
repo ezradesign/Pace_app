@@ -101,7 +101,7 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       {!doneToday && (
         <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
-          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--ink)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
+          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
         >
           {t('path.card.start') || 'Comenzar'}
         </button>
