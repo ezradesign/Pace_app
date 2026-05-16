@@ -12,6 +12,7 @@ function startPath(pathId) {
     ...s,
     paths: {
       ...s.paths,
+      lastViewed: pathId, // s75: rastrea el ultimo Camino abierto
       current: {
         id: pathId,
         stepIndex: 0,
@@ -20,6 +21,10 @@ function startPath(pathId) {
       },
     },
   }));
+}
+
+function setLastViewedPath(pathId) {
+  setState(s => ({ ...s, paths: { ...s.paths, lastViewed: pathId } }));
 }
 
 function advancePathStep(reason) {
@@ -86,16 +91,19 @@ function abandonPath() {
   }));
 }
 
-function getSuggestedPath(now) {
-  if (now === undefined) now = new Date();
-  const day = now.getDay();
-  if (day === 0 || day === 6) return 'path.weekend';
-  const h = now.getHours();
-  if (h >= 6  && h <= 11) return 'path.dawn';
-  if (h >= 12 && h <= 14) return 'path.midday';
-  if (h >= 15 && h <= 17) return 'path.afternoon';
-  if (h >= 18 && h <= 22) return 'path.dusk';
-  return 'path.dusk';
+/* Sesion 75: sugerencia basada en preferencia del usuario, no en la hora.
+   - Si lastViewed existe y sigue siendo un Camino vigente: lo devuelve.
+   - Si no: primer Camino del catalogo (orden de definicion). */
+function getSuggestedPath() {
+  const s = getState && getState();
+  const lv = s && s.paths && s.paths.lastViewed;
+  const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (lv) {
+    for (let i = 0; i < catalog.length; i++) {
+      if (catalog[i].id === lv) return lv;
+    }
+  }
+  return catalog.length ? catalog[0].id : null;
 }
 
 /* ============================
@@ -161,6 +169,6 @@ function toggleFavoritePath(pathId) {
 
 Object.assign(window, {
   startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
-  setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  setFavoritePath, clearFavoritePath, toggleFavoritePath, setLastViewedPath,
   getPathStats,
 });

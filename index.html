@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.28.12</title>
+  <title>PACE · Foco · Cuerpo — v0.29.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -187,6 +187,74 @@ input, textarea { font-family: inherit; color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   SENDERO BAR (sesion 75 / v0.29.0)
+   Progreso visual de un Camino: curva organica + hitos con halo.
+   currentColor hereda del tema (claro / oscuro). No introduce
+   variables nuevas: deriva todo de --ink / --ink-2 / --ink-3.
+   ============================================================ */
+.sendero-bar {
+  color: var(--ink);
+  width: 100%;
+  flex-shrink: 0;
+  padding: 14px 20px 0;
+}
+.sendero-bar .sendero-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 4px auto 6px;
+}
+.sendero-bar .sendero-svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+  overflow: visible;
+}
+.sendero-bar .hito-labels {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  height: 38px;
+  margin: 2px auto 28px;
+}
+.sendero-bar .hito-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+  text-align: center;
+}
+.sendero-bar .hito-label.done    { color: var(--ink-2); }
+.sendero-bar .hito-label.current { color: var(--ink); font-weight: 500; }
+.sendero-bar .hito-label.pending { color: var(--ink-3); opacity: 0.45; }
+.sendero-bar .hito-roman {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  opacity: 0.30;
+  margin-top: 2px;
+  text-transform: none;
+}
+.sendero-bar .path-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sendero-bar .path-line.pending {
+  stroke-dasharray: 3 5;
+  opacity: 0.55;
+}
+.sendero-bar .dot-fill { fill: currentColor; }
 
   </style>
   <style id="pace-paths-css">
@@ -648,17 +716,22 @@ window.PACE_STRINGS = {
     'path.hydrate.copy':             'Un vaso de agua, si te apetece',
     'path.hydrate.drank':            'He bebido',
     'path.error.routineNotFound':    'Rutina no encontrada: {id}',
-    // Caminos - nombres y taglines (sesion 51)
-    'paths.path.dawn.name':           'Amanecer',
-    'paths.path.dawn.tagline':        'Empieza bien el dia.',
-    'paths.path.midday.name':         'Mediodia',
-    'paths.path.midday.tagline':      'Recarga a mitad de jornada.',
-    'paths.path.afternoon.name':      'Tarde',
-    'paths.path.afternoon.tagline':   'Un segundo aire para el resto del dia.',
-    'paths.path.dusk.name':           'Atardecer',
-    'paths.path.dusk.tagline':        'Cierra el dia con calma.',
-    'paths.path.weekend.name':        'Fin de semana',
-    'paths.path.weekend.tagline':     'Ritmo suave. Sin prisas.',
+    // Caminos - nombres y taglines (sesion 75 - renombrado sensorial)
+    'paths.path.dawn.name':           'Morning Glory',
+    'paths.path.dawn.tagline':        'Una flor que abre con la primera luz.',
+    'paths.path.midday.name':         'Hierbabuena',
+    'paths.path.midday.tagline':      'Para cuando el cuerpo pide moverse antes que la cabeza.',
+    'paths.path.afternoon.name':      'Chispa de Cerilla',
+    'paths.path.afternoon.tagline':   'Un golpe seco y vuelve la chispa.',
+    'paths.path.dusk.name':           'Lámpara de Mesa',
+    'paths.path.dusk.tagline':        'Un círculo de luz, todo lo demás en penumbra.',
+    'paths.path.weekend.name':        'Ventana Abierta',
+    'paths.path.weekend.tagline':     'Dejar entrar lo que el día traiga, sin moverse.',
+    // Caminos - nombres de bloque por kind (sesion 75 - SenderoBar)
+    'paths.kind.breathe.name':        'Respira',
+    'paths.kind.focus.name':          'Foco',
+    'paths.kind.body.name':           'Cuerpo',
+    'paths.kind.hydrate.name':        'Agua',
     // Paths - biblioteca y favoritos (sesion 53)
     'paths.library.title':            'Todos los caminos',
     'paths.library.start':            'Comenzar',
@@ -1026,17 +1099,22 @@ window.PACE_STRINGS = {
     'path.hydrate.copy':             'A glass of water, if you feel like it',
     'path.hydrate.drank':            'I drank',
     'path.error.routineNotFound':    'Routine not found: {id}',
-    // Paths - names and taglines (session 51)
-    'paths.path.dawn.name':           'Dawn',
-    'paths.path.dawn.tagline':        'Start the day right.',
-    'paths.path.midday.name':         'Midday',
-    'paths.path.midday.tagline':      'Recharge at mid-morning.',
-    'paths.path.afternoon.name':      'Afternoon',
-    'paths.path.afternoon.tagline':   'A second wind for the rest of the day.',
-    'paths.path.dusk.name':           'Dusk',
-    'paths.path.dusk.tagline':        'Close the day with calm.',
-    'paths.path.weekend.name':        'Weekend',
-    'paths.path.weekend.tagline':     'Gentle rhythm. No rush.',
+    // Paths - names and taglines (session 75 - sensory renaming)
+    'paths.path.dawn.name':           'Morning Glory',
+    'paths.path.dawn.tagline':        'A flower that opens with the first light.',
+    'paths.path.midday.name':         'Spearmint',
+    'paths.path.midday.tagline':      'For when the body asks to move before the mind.',
+    'paths.path.afternoon.name':      'Matchstrike',
+    'paths.path.afternoon.tagline':   'A dry strike, and the spark returns.',
+    'paths.path.dusk.name':           'Desk Lamp',
+    'paths.path.dusk.tagline':        'A circle of light, everything else in shadow.',
+    'paths.path.weekend.name':        'Open Window',
+    'paths.path.weekend.tagline':     'Letting in whatever the day brings, without moving.',
+    // Paths - block names by kind (session 75 - SenderoBar)
+    'paths.kind.breathe.name':        'Breathe',
+    'paths.kind.focus.name':          'Focus',
+    'paths.kind.body.name':           'Body',
+    'paths.kind.hydrate.name':        'Water',
     // Paths - library and favorites (session 53)
     'paths.library.title':            'All paths',
     'paths.library.start':            'Start',
@@ -1380,7 +1458,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.12';
+const PACE_VERSION = 'v0.29.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -1449,12 +1527,13 @@ const defaultState = {
   // months: { "YYYY-MM": ... }   years: { "YYYY": ... }
   history: { days: {}, months: {}, years: {} },
 
-  // Caminos (sesion 49 / v0.26.0-alpha).
+  // Caminos (sesion 49 / v0.26.0-alpha; lastViewed s75).
   paths: {
     current: null,
     completed: {},
     favorite: null,
     history: [],
+    lastViewed: null, // s75: ultimo Camino abierto, base de getSuggestedPath
   },
 
   // Migration guards.
@@ -1717,6 +1796,10 @@ function loadState() {
         }
       }
       parsed.paths.history = hist;
+    }
+    /* Migracion defensiva s75: paths.lastViewed ausente. */
+    if (parsed.paths && parsed.paths.lastViewed === undefined) {
+      parsed.paths.lastViewed = null;
     }
 
     /* Sesion 69 / v0.28.8: re-indexar weeklyStats de getDay() a lunes-primero.
@@ -2224,6 +2307,7 @@ function startPath(pathId) {
     ...s,
     paths: {
       ...s.paths,
+      lastViewed: pathId, // s75: rastrea el ultimo Camino abierto
       current: {
         id: pathId,
         stepIndex: 0,
@@ -2232,6 +2316,10 @@ function startPath(pathId) {
       },
     },
   }));
+}
+
+function setLastViewedPath(pathId) {
+  setState(s => ({ ...s, paths: { ...s.paths, lastViewed: pathId } }));
 }
 
 function advancePathStep(reason) {
@@ -2298,16 +2386,19 @@ function abandonPath() {
   }));
 }
 
-function getSuggestedPath(now) {
-  if (now === undefined) now = new Date();
-  const day = now.getDay();
-  if (day === 0 || day === 6) return 'path.weekend';
-  const h = now.getHours();
-  if (h >= 6  && h <= 11) return 'path.dawn';
-  if (h >= 12 && h <= 14) return 'path.midday';
-  if (h >= 15 && h <= 17) return 'path.afternoon';
-  if (h >= 18 && h <= 22) return 'path.dusk';
-  return 'path.dusk';
+/* Sesion 75: sugerencia basada en preferencia del usuario, no en la hora.
+   - Si lastViewed existe y sigue siendo un Camino vigente: lo devuelve.
+   - Si no: primer Camino del catalogo (orden de definicion). */
+function getSuggestedPath() {
+  const s = getState && getState();
+  const lv = s && s.paths && s.paths.lastViewed;
+  const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (lv) {
+    for (let i = 0; i < catalog.length; i++) {
+      if (catalog[i].id === lv) return lv;
+    }
+  }
+  return catalog.length ? catalog[0].id : null;
 }
 
 /* ============================
@@ -2373,7 +2464,7 @@ function toggleFavoritePath(pathId) {
 
 Object.assign(window, {
   startPath, advancePathStep, completePath, abandonPath, getSuggestedPath,
-  setFavoritePath, clearFavoritePath, toggleFavoritePath,
+  setFavoritePath, clearFavoritePath, toggleFavoritePath, setLastViewedPath,
   getPathStats,
 });
 
@@ -2454,6 +2545,7 @@ Object.assign(window, {
   setFavoritePath,
   clearFavoritePath,
   toggleFavoritePath,
+  setLastViewedPath, // s75
   getPathStats,
 });
 
@@ -10242,6 +10334,143 @@ function PathsLibrary() {
 Object.assign(window, { PathsLibrary });
 
 </script>
+  <!-- Caminos - SenderoBar (sesion 75) - debe cargarse ANTES de PathRunner que lo consume -->
+  <script type="text/babel">
+/* PACE - Caminos - SenderoBar (sesion 75 / v0.29.0)
+   Visualizacion del progreso interno de un Camino como sendero horizontal:
+   curva organica + hitos con halo. Puramente declarativo, sin estado.
+   currentColor hereda del tema (claro / oscuro Candil).
+*/
+
+const { useId: useIdSB } = React;
+
+/* Parametros Bezier por segmento. Asimetria organica intencional para
+   evitar simetria perfecta. Ratios r1/r2 son fracciones de la longitud
+   del segmento (escalan automaticamente con N). y1/y2 son absolutos. */
+const SB_SEG_PARAMS = [
+  { y1: 22, y2: 24, r1: 0.24, r2: 0.760 }, // 0: arriba, ligero peso derecha
+  { y1: 78, y2: 82, r1: 0.24, r2: 0.755 }, // 1: abajo
+  { y1: 22, y2: 18, r1: 0.24, r2: 0.789 }, // 2: arriba, opuesto
+  { y1: 78, y2: 76, r1: 0.24, r2: 0.770 }, // 3: abajo, suave
+  { y1: 22, y2: 26, r1: 0.24, r2: 0.740 }, // 4: arriba
+];
+
+const SB_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
+function sbToRoman(n) {
+  return SB_ROMAN[n - 1] || String(n);
+}
+
+/* Posicion X de cada hito, equidistantes entre 60 y 580.
+   N=1 -> hito unico en x=320. */
+function sbHitoX(i, total) {
+  if (total <= 1) return 320;
+  return 60 + i * (520 / (total - 1));
+}
+
+/* Genera el path "C cp1x cp1y, cp2x cp2y, x1 50" de un segmento. */
+function sbSegmentPath(x0, x1, segIdx) {
+  const span = x1 - x0;
+  const p = SB_SEG_PARAMS[segIdx % SB_SEG_PARAMS.length];
+  const cp1x = x0 + p.r1 * span;
+  const cp2x = x0 + p.r2 * span;
+  return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
+}
+
+function SenderoBar({ blocks, currentIndex }) {
+  const reactId = useIdSB();
+  const haloDoneId = `sb-halo-done-${reactId}`;
+  const haloCurrentId = `sb-halo-current-${reactId}`;
+
+  const total = (blocks && blocks.length) || 0;
+  if (total === 0) return null;
+
+  const xs = [];
+  for (let i = 0; i < total; i++) xs.push(sbHitoX(i, total));
+
+  // Partir segmentos en dos paths: completados (solidos) y pendientes (punteados).
+  // El segmento "actual" (entre currentIndex-1 y currentIndex) ya se considera completado.
+  // Los segmentos pendientes son los que parten del hito currentIndex hacia adelante.
+  const doneSegs = [];
+  const pendingSegs = [];
+  for (let i = 0; i < total - 1; i++) {
+    const seg = sbSegmentPath(xs[i], xs[i + 1], i);
+    const startMove = `M ${xs[i]} 50 ${seg}`;
+    if (i < currentIndex) doneSegs.push(startMove);
+    else pendingSegs.push(startMove);
+  }
+  const donePath = doneSegs.join(' ');
+  const pendingPath = pendingSegs.join(' ');
+
+  return (
+    <div className="sendero-bar">
+      <div className="sendero-wrap">
+        <svg className="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id={haloDoneId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.21" />
+              <stop offset="55%" stopColor="currentColor" stopOpacity="0.055" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id={haloCurrentId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.70" />
+              <stop offset="55%" stopColor="currentColor" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+
+          {donePath && <path className="path-line" d={donePath} />}
+          {pendingPath && <path className="path-line pending" d={pendingPath} />}
+
+          {xs.map(function(cx, i) {
+            if (i < currentIndex) {
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy="50" r="10" fill={`url(#${haloDoneId})`} />
+                  <circle cx={cx} cy="50" r="4" className="dot-fill" />
+                </g>
+              );
+            }
+            if (i === currentIndex) {
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy="50" r="19" fill={`url(#${haloCurrentId})`} />
+                  <circle cx={cx} cy="50" r="4.5" className="dot-fill" />
+                </g>
+              );
+            }
+            return (
+              <circle key={i} cx={cx} cy="50" r="3.2" className="dot-fill" opacity="0.32" />
+            );
+          })}
+        </svg>
+      </div>
+
+      <div className="hito-labels">
+        {blocks.map(function(b, i) {
+          let stateClass = 'pending';
+          if (i < currentIndex) stateClass = 'done';
+          else if (i === currentIndex) stateClass = 'current';
+          const leftPct = total <= 1 ? 50 : ((xs[i] / 640) * 100);
+          return (
+            <span
+              key={b.id + '-' + i}
+              className={'hito-label ' + stateClass}
+              style={{ left: leftPct + '%' }}
+            >
+              {b.name}
+              <span className="hito-roman">{sbToRoman(i + 1)}</span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { SenderoBar });
+
+</script>
   <!-- Caminos - PathRunner UI (sesion 50) -->
   <script type="text/babel">
 /* PACE - Caminos - PathRunner overlay (sesion 50 / v0.26.0-beta)
@@ -10252,26 +10481,20 @@ Object.assign(window, { PathsLibrary });
 
 const { useState: useStatePR, useEffect: useEffectPR, useRef: useRefPR } = React;
 
-/* PathTopBar - barra superior con dots y boton de salida */
-function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
+/* PathTopBar - nombre del Camino + boton de salida.
+   Sesion 75: dots eliminados (los reemplaza SenderoBar). */
+function PathTopBar({ pathName, onRequestExit }) {
   const { t } = useT();
   return (
     <div className="path-topbar">
-      <div style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-2)', fontWeight: 500 }}>
+      <div style={{
+        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        fontSize: 22, fontWeight: 400, color: 'var(--ink)',
+        letterSpacing: '0.005em',
+      }}>
         {pathName}
       </div>
-      <div className="path-dots">
-        {Array.from({ length: totalSteps }).map((_, i) => (
-          <div
-            key={i}
-            className={
-              'path-dot' +
-              (i < stepIndex ? ' done' : '') +
-              (i === stepIndex ? ' active' : '')
-            }
-          />
-        ))}
-      </div>
+      <div style={{ flex: 1 }} />
       <button
         onClick={onRequestExit}
         aria-label={t('path.runner.exit')}
@@ -10357,7 +10580,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
 function CompletionScreen({ snapshot, onBack }) {
   const { t, tn } = useT();
   const path = getPath(snapshot.pathId);
-  const name = path ? snapshot.pathId : snapshot.pathId;
+  const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
     ? Math.round((Date.now() - snapshot.startedAt) / 60000)
     : 0;
@@ -10383,7 +10606,7 @@ function CompletionScreen({ snapshot, onBack }) {
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
         color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.2,
       }}>
-        {snapshot.pathId.replace('path.', '')}
+        {displayName}
       </h2>
       {elapsed > 0 && (
         <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 32px' }}>
@@ -10499,7 +10722,10 @@ function PathHydrateStep({ onDone, onSkip }) {
   );
 }
 
-/* PathFocusStep - timer simple para paso de foco */
+/* PathFocusStep - timer simple para paso de foco.
+   Sesion 75: cuando el timer llega a 0 (no por skip), suma los minutos
+   completos a las estadisticas globales via addFocusMinutes, alineado
+   con el flujo del Pomodoro estandar. Skip o salida no acreditan. */
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
   const totalSec = (step.min || 25) * 60;
@@ -10507,6 +10733,7 @@ function PathFocusStep({ step, onExit }) {
   const [running, setRunning] = useStatePR(false);
   const [done, setDone] = useStatePR(false);
   const intervalRef = useRefPR(null);
+  const creditedRef = useRefPR(false);
 
   useEffectPR(() => {
     if (!running) { clearInterval(intervalRef.current); return; }
@@ -10516,6 +10743,9 @@ function PathFocusStep({ step, onExit }) {
           clearInterval(intervalRef.current);
           setRunning(false);
           setDone(true);
+          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
+            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
+          }
           return 0;
         }
         return r - 1;
@@ -10701,19 +10931,29 @@ function PathRunner() {
     }
   };
 
+  const displayPathName = t(path.nameKey) || cur.id;
+  const senderoBlocks = path.steps.map(function(s, idx) {
+    return {
+      id: s.kind + '-' + idx,
+      name: t('paths.kind.' + s.kind + '.name') || s.kind,
+    };
+  });
+
   return (
     <div
       className="path-runner-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label={cur ? cur.id.replace('path.', '') : ''}
+      aria-label={displayPathName}
     >
       <PathTopBar
-        pathName={cur.id.replace('path.', '')}
-        stepIndex={cur.stepIndex}
-        totalSteps={totalSteps}
+        pathName={displayPathName}
         onRequestExit={handleRequestExit}
       />
+
+      {typeof SenderoBar === 'function' && (
+        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} />
+      )}
 
       <div className="path-step-body">
         {step.kind === 'breathe' && (

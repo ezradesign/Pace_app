@@ -6,26 +6,20 @@
 
 const { useState: useStatePR, useEffect: useEffectPR, useRef: useRefPR } = React;
 
-/* PathTopBar - barra superior con dots y boton de salida */
-function PathTopBar({ pathName, stepIndex, totalSteps, onRequestExit }) {
+/* PathTopBar - nombre del Camino + boton de salida.
+   Sesion 75: dots eliminados (los reemplaza SenderoBar). */
+function PathTopBar({ pathName, onRequestExit }) {
   const { t } = useT();
   return (
     <div className="path-topbar">
-      <div style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-2)', fontWeight: 500 }}>
+      <div style={{
+        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        fontSize: 22, fontWeight: 400, color: 'var(--ink)',
+        letterSpacing: '0.005em',
+      }}>
         {pathName}
       </div>
-      <div className="path-dots">
-        {Array.from({ length: totalSteps }).map((_, i) => (
-          <div
-            key={i}
-            className={
-              'path-dot' +
-              (i < stepIndex ? ' done' : '') +
-              (i === stepIndex ? ' active' : '')
-            }
-          />
-        ))}
-      </div>
+      <div style={{ flex: 1 }} />
       <button
         onClick={onRequestExit}
         aria-label={t('path.runner.exit')}
@@ -111,7 +105,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
 function CompletionScreen({ snapshot, onBack }) {
   const { t, tn } = useT();
   const path = getPath(snapshot.pathId);
-  const name = path ? snapshot.pathId : snapshot.pathId;
+  const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
   const elapsed = snapshot.startedAt
     ? Math.round((Date.now() - snapshot.startedAt) / 60000)
     : 0;
@@ -137,7 +131,7 @@ function CompletionScreen({ snapshot, onBack }) {
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
         color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.2,
       }}>
-        {snapshot.pathId.replace('path.', '')}
+        {displayName}
       </h2>
       {elapsed > 0 && (
         <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 32px' }}>
@@ -253,7 +247,10 @@ function PathHydrateStep({ onDone, onSkip }) {
   );
 }
 
-/* PathFocusStep - timer simple para paso de foco */
+/* PathFocusStep - timer simple para paso de foco.
+   Sesion 75: cuando el timer llega a 0 (no por skip), suma los minutos
+   completos a las estadisticas globales via addFocusMinutes, alineado
+   con el flujo del Pomodoro estandar. Skip o salida no acreditan. */
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
   const totalSec = (step.min || 25) * 60;
@@ -261,6 +258,7 @@ function PathFocusStep({ step, onExit }) {
   const [running, setRunning] = useStatePR(false);
   const [done, setDone] = useStatePR(false);
   const intervalRef = useRefPR(null);
+  const creditedRef = useRefPR(false);
 
   useEffectPR(() => {
     if (!running) { clearInterval(intervalRef.current); return; }
@@ -270,6 +268,9 @@ function PathFocusStep({ step, onExit }) {
           clearInterval(intervalRef.current);
           setRunning(false);
           setDone(true);
+          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
+            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
+          }
           return 0;
         }
         return r - 1;
@@ -455,19 +456,29 @@ function PathRunner() {
     }
   };
 
+  const displayPathName = t(path.nameKey) || cur.id;
+  const senderoBlocks = path.steps.map(function(s, idx) {
+    return {
+      id: s.kind + '-' + idx,
+      name: t('paths.kind.' + s.kind + '.name') || s.kind,
+    };
+  });
+
   return (
     <div
       className="path-runner-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label={cur ? cur.id.replace('path.', '') : ''}
+      aria-label={displayPathName}
     >
       <PathTopBar
-        pathName={cur.id.replace('path.', '')}
-        stepIndex={cur.stepIndex}
-        totalSteps={totalSteps}
+        pathName={displayPathName}
         onRequestExit={handleRequestExit}
       />
+
+      {typeof SenderoBar === 'function' && (
+        <SenderoBar blocks={senderoBlocks} currentIndex={cur.stepIndex} />
+      )}
 
       <div className="path-step-body">
         {step.kind === 'breathe' && (

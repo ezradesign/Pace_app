@@ -10,7 +10,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.28.12';
+const PACE_VERSION = 'v0.29.0';
 
 const defaultState = {
   // Settings / Tweaks
@@ -79,12 +79,13 @@ const defaultState = {
   // months: { "YYYY-MM": ... }   years: { "YYYY": ... }
   history: { days: {}, months: {}, years: {} },
 
-  // Caminos (sesion 49 / v0.26.0-alpha).
+  // Caminos (sesion 49 / v0.26.0-alpha; lastViewed s75).
   paths: {
     current: null,
     completed: {},
     favorite: null,
     history: [],
+    lastViewed: null, // s75: ultimo Camino abierto, base de getSuggestedPath
   },
 
   // Migration guards.
@@ -347,6 +348,10 @@ function loadState() {
         }
       }
       parsed.paths.history = hist;
+    }
+    /* Migracion defensiva s75: paths.lastViewed ausente. */
+    if (parsed.paths && parsed.paths.lastViewed === undefined) {
+      parsed.paths.lastViewed = null;
     }
 
     /* Sesion 69 / v0.28.8: re-indexar weeklyStats de getDay() a lunes-primero.

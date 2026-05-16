@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.28.12
-**Ultima sesion:** #74 -- 2026-05-12 - style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido (v0.28.12)
-**Ultima actualizacion de este archivo:** 2026-05-12 - sesion 74
-**Build entregado:** `PACE_standalone.html` v0.28.12 (567 KB) + `index.html` (idem, copia exacta)
+**Version actual:** v0.29.0
+**Ultima sesion:** #75 -- 2026-05-16 - feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats (v0.29.0)
+**Ultima actualizacion de este archivo:** 2026-05-16 - sesion 75
+**Build entregado:** `PACE_standalone.html` v0.29.0 (575.6 KB) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.28.12** (s74: titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.28.12** (567 KB, regenerado s74) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.28.12** (s74: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.29.0** (s75: titulo bump + carga SenderoBar.jsx) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.29.0** (575.6 KB, regenerado s75) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.29.0** (s75: regenerado por build-standalone.js) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG -- 13 rediseñados en s60 | **v0.28.1** (iter parcial s60, sin cambios s61) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -48,29 +48,32 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.28.12** (s74: PACE_VERSION bump) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.29.0** (s75: PACE_VERSION bump + paths.lastViewed en defaultState + migracion loadState) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.28.8** (s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
-| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.27.5** (nuevo s57) |
+| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.29.0** (s75: getSuggestedPath refactor -> lastViewed + setLastViewedPath + startPath actualiza lastViewed) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
-| `app/state.jsx` | Indice — re-export consolidado | **v0.28.8** (s69: re-export recomputeMonthFromDays/recomputeYearFromDays/recomputeAllHistoryAggregates/getDayIndexMondayFirst/getMondayOf en lugar de updateMonth/YearAggregate) |
+| `app/state.jsx` | Indice — re-export consolidado | **v0.29.0** (s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.19.0** |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.25.0** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | **v0.27.0** (PathsLibrary montado s53) |
-| `app/i18n/strings.js` | Strings ES + EN | **v0.28.9** (s71: quitar envejecido ES+EN, copy reset actualizado ES+EN) |
+| `app/i18n/strings.js` | Strings ES + EN | **v0.29.0** (s75: 5 Caminos renombrados ES+EN + paths.kind.{breathe\|focus\|body\|hydrate}.name) |
+| `app/tokens.css` | Tokens CSS + base | **v0.29.0** (s75: bloque .sendero-bar scoped) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.26.0-alpha** |
-| `app/paths/PathRunner.jsx` | Runner de caminos | **v0.27.2** (a11y: role/aria-modal/Escape en PathRunner + ExitConfirmModal s55) |
+| `app/paths/PathRunner.jsx` | Runner de caminos | **v0.29.0** (s75: SenderoBar integrado + TopBar dots->header tipografico + fix strings crudos dawn/dusk + PathFocusStep wire a addFocusMinutes) |
+| `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.29.0** (nuevo s75) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.28.2** (s61: responsive movil propio, layout compacto, fix dual-only column) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.27.2** (a11y: aria-labelledby/Escape/focus s55) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.28.12** (s74: CACHE_NAME pace-v0.28.12) |
+| `sw.js` | Service Worker PWA | **v0.29.0** (s75: CACHE_NAME pace-v0.29.0) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.28.11_20260512.html` <- creado s74
+- `backups/PACE_standalone_v0.28.12_20260516.html` <- creado s75
+- `backups/PACE_standalone_v0.28.11_20260512.html`
 - `backups/PACE_standalone_v0.28.10_20260512.html`
 - `backups/PACE_standalone_v0.28.9_20260512.html`
 - `backups/PACE_standalone_v0.28.8_20260512.html`
@@ -88,51 +91,83 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.27.2_20260509.html`
 - `backups/PACE_standalone_v0.27.1b_20260509.html`
 - `backups/PACE_standalone_v0.27.0_20260509.html`
-- `backups/PACE_standalone_v0.27.0_20260508.html`
-- `backups/PACE_standalone_v0.25.4_20260508.html` (rotado `v0.26.0_20260508.html`)
+- `backups/PACE_standalone_v0.27.0_20260508.html` (rotado `v0.25.4_20260508.html`)
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 74 - v0.28.12 - style(ui): negro calido sutil con escalonamiento reducido**
+**Sesion 75 - v0.29.0 - feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats**
 
 ### Contexto
 
-Tercera iteracion sobre modo oscuro. Trayectoria: v0.28.10 (casi negro, frio,
-sidebar invisible) -> v0.28.11 (luminosidad alta, escalonamiento ~6 L, sidebar
-"panel separado") -> v0.28.12 (casi negro de nuevo, matiz calido retenido,
-escalonamiento reducido a ~4 L).
+Primer cambio funcional del modulo Caminos desde s54. Tres ejes:
+renombrado evocador de los 5 Caminos (de horarios a sensoriales),
+componente `SenderoBar` nuevo (sendero visual con curva organica + halos
+en hitos), refactor de `getSuggestedPath()` para depender de la
+preferencia del usuario (`lastViewed`) y no de la hora. Bugs heredados
+corregidos. Detalle completo en
+[`docs/sessions/session-75-sendero-implementacion.md`](./docs/sessions/session-75-sendero-implementacion.md).
 
 ### Que se hizo
 
-1. **Fondos oscuros recalibrados a "negro calido sutil"** (`tokens.css`):
-   - `--paper` `#2a241d -> #15130f` (L~8).
-   - `--paper-2` `#3a3128 -> #1d1a15` (sidebar, L~12 -- delta ~4 sobre paper).
-   - `--paper-3` `#453a2e -> #252119` (tarjetas, L~16 -- delta ~4 sobre paper-2).
-   - `--line` `#4a3f33 -> #332d24`. `--line-2` `#5a4d40 -> #403930`.
-   - Tokens de tinta y acentos sin cambio.
-
-2. **Bump version**: `state-core.jsx` -> v0.28.12, `PACE.html`, `sw.js`
-   (ya hechos en iteracion previa de s74, conservados).
+1. **Renombrado de 5 Caminos** (`strings.js` ES + EN). IDs internos
+   intactos para preservar `state.paths.completed/favorite/history`:
+   dawn->Morning Glory, midday->Hierbabuena/Spearmint,
+   afternoon->Chispa de Cerilla/Matchstrike, dusk->Lampara de
+   Mesa/Desk Lamp, weekend->Ventana Abierta/Open Window.
+2. **`app/paths/SenderoBar.jsx` (nuevo)**: SVG 640x100, curva Bezier
+   asimetrica entre hitos equidistantes, halos radiales con
+   `currentColor` (tema-agnostico), `useId()` para IDs unicos.
+3. **`PathRunner.jsx`**: SenderoBar integrado entre TopBar y
+   `path-step-body`. TopBar pasa de dots a header tipografico (Garamond
+   italic 22px). Fix de 3 sitios donde se mostraba el ID crudo
+   (`"dawn"`): TopBar caller, aria-label overlay, CompletionScreen h2.
+4. **`PathFocusStep`**: cuando el timer llega a 0 (no por skip), dispara
+   `addFocusMinutes(step.min)` una vez (guard `creditedRef`). Skip o
+   salida no acreditan -- alineado con Pomodoro estandar.
+5. **`getSuggestedPath()` refactor**: lee `state.paths.lastViewed`; si
+   sigue en el catalogo, lo devuelve; si no, primer Camino.
+   `startPath()` actualiza `lastViewed` automaticamente; sin tocar
+   selectores.
+6. **`defaultState.paths`**: anadido `lastViewed: null`. Migracion
+   defensiva en `loadState`. Re-export `setLastViewedPath` en
+   `app/state.jsx`.
+7. **CSS**: bloque scoped `.sendero-bar` en `tokens.css`. Cero
+   variables nuevas a nivel global. `flex-shrink: 0` para fijar la
+   barra bajo el TopBar.
+8. **Carga**: `SenderoBar.jsx` en `PACE.html` antes de `PathRunner.jsx`.
+9. **i18n nuevas claves**: `paths.kind.{breathe|focus|body|hydrate}.name`
+   (8 entradas ES+EN) para etiquetar los hitos del sendero.
+10. **Bump version v0.29.0**: `state-core`, `PACE.html`, `sw.js`.
 
 ### Build
 
-- Bundle: 567 KB (sin cambio -- solo CSS/tokens). 40 archivos validados.
-- SHA256: `36964C7A...334E` (identico a `index.html`).
-- Backup: `backups/PACE_standalone_v0.28.11_20260512.html` (creado en
-  iteracion previa de s74).
-- `check-session.ps1`: sin worktrees, sin commits pendientes, 567 KB en rango.
+- Bundle: **575.6 KB** (567 -> 575.6, +8.6 KB por SenderoBar + CSS +
+  i18n + refactor). 41 archivos validados (40 -> 41).
+- SHA256: `9D7AC04378F54E3C73E6B98DDA30BF206525F22A9A7E27294D837A49F5018CB9`
+  (identico en `index.html`).
+- Backup: `backups/PACE_standalone_v0.28.12_20260516.html`. Rotado
+  `v0.25.4_20260508.html` (cap 20).
+- `check-session.ps1`: rama main, sin commits pendientes, sin worktrees,
+  tamano en rango.
 
 ### Pendientes activos (diferidos por scope)
 
-- **A3** (DST en `checkHydrateWeekPerfect`) — solo 2 dias/año, post-Reddit.
-- **A4** (`checkStatsAchievements` con 1 dia de retraso desde `loadState`) — post-Reddit.
-- **M1** (eliminar `WeeklyStats.jsx` codigo muerto) — solo arreglada indexacion interna.
-- **M2..M6, B1..B5** — documentados en informe s68.
+- **s76**: crear los 2 Caminos faltantes (Te sin Azucar / Plain Tea -
+  reenganche tras pausa; Halito / Breath - micropausa). Catalogo 5 -> 7.
+- **s76**: revisar selector inferior Caminos (`SuggestedPathCard`,
+  `PathsLibrary`) -- esta s75 NO los toca por scope.
+- **s77**: animacion de transicion del halo al saltar de hito.
+- Si el halo unico (0.70) no convence en oscuro, diferenciar via dos
+  gradientes por `[data-palette]` (Vela 0.78 claro / Candil 0.62 oscuro).
+- **A3** (DST en `checkHydrateWeekPerfect`) - solo 2 dias/año, post-Reddit.
+- **A4** (`checkStatsAchievements` con 1 dia de retraso desde `loadState`) - post-Reddit.
+- **M1** (eliminar `WeeklyStats.jsx` codigo muerto) - solo arreglada indexacion interna.
+- **M2..M6, B1..B5** - documentados en informe s68.
 - **TODO Fase 2 (~3 jun 2026):** eliminar `PACE_standalone.html`, dejar solo `index.html`.
 - **Glifos ejercicio s60** (13/46), `PathYearView` movil, logro `master.midnight.never`.
-- **Split `strings.js`** (742 ln, ALTA).
+- **Split `strings.js`** (~755 ln tras s75, ALTA).
 - Claves i18n huerfanas `sidebar.counter.pomodoros/rounds/streak`.
 
 ## Decisiones activas
@@ -152,7 +187,7 @@ escalonamiento reducido a ~4 L).
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/i18n/strings.js` | 742 | ALTA |
+| `app/i18n/strings.js` | 774 | ALTA |
 | `app/main.jsx` | 600 | MEDIA |
 | `app/achievements/Achievements.jsx` | ~500 | MEDIA |
 | `app/state-core.jsx` | 470 | BAJA (dentro de limite) |

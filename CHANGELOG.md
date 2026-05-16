@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [abajo](#v0290----2026-05-16----featcamino-sendero-hibrido--renombrado-sensorial) |
 | **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [abajo](#v02812----2026-05-12----styleui-recalibrar-oscuro-a-negro-calido-sutil) |
 | **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [abajo](#v02811----2026-05-12----styleui-subir-luminosidad-y-escalonar-fondos-modo-oscuro) |
 | **v0.28.10** | 2026-05-12 | style(ui): marron oscuro calido + aro suavizado en modo oscuro | #72 | [abajo](#v02810----2026-05-12----styleui-marron-oscuro-calido--aro-suavizado) |
@@ -95,6 +96,103 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.29.0] -- 2026-05-16 -- feat(camino): sendero hibrido + renombrado sensorial
+
+Sesion 75. Primer cambio funcional sobre el modulo Caminos desde s54.
+Tres ejes: renombrado evocador de los 5 Caminos (de horarios a
+sensoriales), nuevo componente `SenderoBar` con curva organica y halos,
+y refactor de la sugerencia (preferencia del usuario, no hora del dia).
+Bugs heredados corregidos.
+
+### Added
+
+- **`app/paths/SenderoBar.jsx`** -- nuevo. Progreso visual del Camino
+  como sendero serpenteante: curva Bezier asimetrica + hitos con halo
+  radial. Puramente declarativo, soporta de 1 a 6 bloques, `currentColor`
+  hereda del tema (claro y oscuro). IDs de gradiente unicos via
+  `useId()`.
+- **`app/tokens.css`** -- bloque scoped `.sendero-bar` con tipografia,
+  layout y variantes done/current/pending. Sin variables nuevas: deriva
+  de `--ink/--ink-2/--ink-3` y `currentColor`.
+- **i18n**: 4 claves `paths.kind.{breathe|focus|body|hydrate}.name` (ES y
+  EN) para etiquetar los hitos del sendero.
+- **`state-paths.jsx`**: `setLastViewedPath(pathId)` expuesto. Usado
+  automaticamente desde `startPath()`, asi que no hay que tocar
+  selectores.
+- **`state-core.jsx`**: `paths.lastViewed: null` en `defaultState` +
+  migracion defensiva en `loadState` para instalaciones pre-v0.29.
+
+### Changed
+
+- **5 Caminos renombrados** (IDs internos intactos, solo strings):
+  - `path.dawn`: Amanecer/Dawn -> **Morning Glory** (ambos idiomas).
+  - `path.midday`: Mediodia/Midday -> **Hierbabuena / Spearmint**.
+  - `path.afternoon`: Tarde/Afternoon -> **Chispa de Cerilla / Matchstrike**.
+  - `path.dusk`: Atardecer/Dusk -> **Lampara de Mesa / Desk Lamp**.
+  - `path.weekend`: Fin de semana/Weekend -> **Ventana Abierta / Open Window**.
+  Taglines reescritos como una linea poetica corta.
+- **`getSuggestedPath()`** (state-paths.jsx): deja de usar hora/dia de la
+  semana. Ahora devuelve `lastViewed` si esta en el catalogo, o el primer
+  Camino en caso contrario.
+- **`PathRunner.jsx` -- TopBar**: dots eliminados (redundantes con los
+  hitos del sendero). Pasa a header tipografico (Garamond italic 22px)
+  + boton cerrar.
+- **`PathRunner.jsx` -- SenderoBar montado** entre TopBar y
+  `path-step-body`. Mapea `path.steps -> { id, name: t('paths.kind.X.name') }`.
+- **`state-paths.jsx` -- `startPath()`**: actualiza `lastViewed`
+  automaticamente al abrir un Camino.
+- **`app/state.jsx`**: re-export anadido para `setLastViewedPath`.
+- **`PACE.html`**: titulo `v0.29.0`. Carga `SenderoBar.jsx` antes de
+  `PathRunner.jsx`.
+- **`sw.js`**: `CACHE_NAME` -> `pace-v0.29.0`.
+
+### Fixed
+
+- **`PathRunner.jsx:466` (aprox antes del edit)** -- TopBar mostraba el
+  ID crudo (`"dawn"`) por `cur.id.replace('path.', '')`. Ahora muestra
+  el nombre traducido (`t(path.nameKey)`).
+- **`PathRunner.jsx:463` (aprox)** -- `aria-label` del overlay tenia el
+  mismo bug. Corregido.
+- **`PathRunner.jsx:140` (CompletionScreen)** -- `<h2>` mostraba el ID
+  crudo en la pantalla de cierre. Corregido.
+- **`PathRunner.jsx:114`** -- `const name = path ? snapshot.pathId : snapshot.pathId;`
+  (asignacion inerte sin uso). Renombrado a `displayName` y conectado al
+  `t(path.nameKey)`.
+- **`PathFocusStep`** -- los minutos de foco dentro de un Camino no
+  acreditaban a las estadisticas globales. Ahora, cuando el timer llega
+  a 0 (no por skip), dispara `addFocusMinutes(step.min)` una sola vez
+  (guard `creditedRef`). Alineado con el Pomodoro estandar.
+
+### Racional
+
+El renombrado horario (Amanecer/Mediodia/...) era literal y obvio,
+chocaba con el tono editorial del producto. Los nombres sensoriales
+sugieren un mood, no un momento, y dejan al usuario decidir cuando le
+encaja. Por eso la sugerencia tambien deja de ser horaria: si el usuario
+prefiere "Lampara de Mesa" a las 8am, no hay razon para empujarle
+"Morning Glory". El SenderoBar reemplaza los 3-4 puntitos genericos del
+TopBar por una vista calida del Camino completo, manteniendo la
+sobriedad (sin colores, sin numeros visibles excepto numeracion romana
+discreta).
+
+### Build
+
+- `PACE_standalone.html`: **575.6 KB** (567 -> 575.6, +8.6 KB por
+  SenderoBar, CSS scoped, i18n nuevo y refactor PathRunner).
+- 41 archivos validados (40 -> 41 por SenderoBar.jsx).
+- SHA256: `9D7AC04378F54E3C73E6B98DDA30BF206525F22A9A7E27294D837A49F5018CB9`.
+- Backup: `backups/PACE_standalone_v0.28.12_20260516.html`. Rotado el
+  mas antiguo (`v0.25.4_20260508.html`) para mantener el cap de 20.
+
+### Diferido a sesiones siguientes
+
+- **s76**: crear los 2 Caminos faltantes -- Te sin Azucar / Plain Tea y
+  Halito / Breath. Catalogo pasara de 5 a 7. Revisar tambien el selector
+  inferior.
+- **s77**: animacion de transicion del halo al saltar de hito.
+
+---
+
 ## [v0.28.12] -- 2026-05-12 -- style(ui): recalibrar oscuro a negro calido sutil
 
 Sesion 74. Tras el rebote de luminosidad de v0.28.11 (fondos demasiado claros,
@@ -133,46 +231,10 @@ como panel.
 
 ---
 
-## [v0.28.11] -- 2026-05-12 -- style(ui): subir luminosidad y escalonar fondos modo oscuro
-
-Sesion 73. Iteracion sobre el pulido del modo oscuro de s72. Feedback del usuario:
-el fondo seguia percibido como muy oscuro y la sidebar no se distinguia
-suficientemente del area principal. Sin cambios de logica ni catalogos.
-
-### Changed
-
-- **`app/tokens.css`** -- bloque `[data-palette="oscuro"]`: 5 tokens
-  recalibrados subiendo luminosidad y ampliando el delta entre niveles a
-  ~6 unidades L:
-  - `--paper` `#1a1612 -> #2a241d` (area principal, L~15).
-  - `--paper-2` `#221d18 -> #3a3128` (sidebar, L~21 -- salto ampliado para
-    diferenciar claramente del fondo principal).
-  - `--paper-3` `#2a241e -> #453a2e` (tarjetas/superficies elevadas, L~25).
-  - `--line` `#3a322a -> #4a3f33`.
-  - `--line-2` `#4a4036 -> #5a4d40`.
-  - Tokens de tinta (`--ink-1/2/3`) sin cambio (ya recalibrados en v0.28.10).
-- **`app/state-core.jsx`**: PACE_VERSION -> `v0.28.11`.
-- **`PACE.html`**: titulo `v0.28.11`.
-- **`sw.js`**: `CACHE_NAME` -> `pace-v0.28.11`.
-
-### Racional
-
-Escalonamiento de ~6 unidades L entre cada nivel (paper -> paper-2 ->
-paper-3) crea jerarquia visual perceptible sin romper la sobriedad.
-Sidebar a L~21 queda claramente diferenciada del fondo principal L~15, y
-las tarjetas elevadas (L~25) se ven por encima del fondo de su contenedor.
-
-### Build
-
-- `PACE_standalone.html`: 567 KB (sin cambio -- solo CSS/tokens).
-- SHA256: `7CE9C44B...FA065` (identico a `index.html`).
-- Backup: `backups/PACE_standalone_v0.28.10_20260512.html`. Rotado el
-  backup mas antiguo (`v0.26.0-alpha_20260508.html`) para mantener el
-  cap de 20.
+<!-- v0.28.11 y anteriores: ver tabla de historial + docs/sessions/ -->
+<!-- (regla CLAUDE.md: solo detalle de las 2 ultimas versiones aqui) -->
 
 ---
-
-<!-- v0.28.10 y anteriores: ver tabla de historial + docs/sessions/ -->
 
 ## [v0.28.8] -- 2026-05-12 -- fix(tracking): weeklyStats reset, history idempotente, streak proactivo
 

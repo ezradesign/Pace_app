@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Mockup — Sendero del Camino · Híbrido</title>
+<style>
+  :root {
+    --garamond: Garamond, 'EB Garamond', 'Cormorant Garamond', 'Times New Roman', serif;
+    --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  .theme-light {
+    --paper:   #efe6d3;
+    --paper-2: #e6dcc4;
+    --ink:     #3a2e22;
+    --ink-2:   #5b4a37;
+    --ink-mut: #8a7657;
+    --line:    rgba(58, 46, 34, 0.18);
+  }
+
+  .theme-dark {
+    --paper:   #15130f;
+    --paper-2: #1d1a15;
+    --ink:     #c9a87a;
+    --ink-2:   #b39468;
+    --ink-mut: #7d6a4e;
+    --line:    rgba(201, 168, 122, 0.22);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #2a2520;
+    color: #d8cdb6;
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  .page-title {
+    font-family: var(--garamond);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 34px;
+    margin: 0 0 6px;
+    color: #ece2c9;
+    letter-spacing: 0.01em;
+  }
+
+  .page-sub {
+    font-size: 13px;
+    color: #9a8e74;
+    margin: 0 0 40px;
+    letter-spacing: 0.04em;
+  }
+
+  .variant {
+    margin: 0 0 56px;
+  }
+
+  .variant-header {
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(216, 205, 182, 0.14);
+  }
+
+  .variant-title {
+    font-family: var(--garamond);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    margin: 0 0 4px;
+    color: #ece2c9;
+  }
+
+  .variant-desc {
+    font-size: 12.5px;
+    color: #9a8e74;
+    margin: 0;
+    max-width: 900px;
+    line-height: 1.45;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+
+  .mode-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #807356;
+    margin: 0 0 10px;
+  }
+
+  /* ---------- Tarjeta PathRunner ---------- */
+  .runner {
+    width: 100%;
+    max-width: 720px;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px 32px 26px;
+    font-family: var(--garamond);
+  }
+
+  .runner-camino-name {
+    font-family: var(--garamond);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 30px;
+    margin: 0 0 4px;
+    color: var(--ink);
+    letter-spacing: 0.005em;
+  }
+
+  .runner-copy {
+    font-family: var(--garamond);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-mut);
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .sendero-wrap {
+    position: relative;
+    width: 640px;
+    max-width: 100%;
+    margin: 4px auto 6px;
+  }
+
+  .sendero-svg {
+    display: block;
+    width: 100%;
+    height: 100px;
+    overflow: visible;
+  }
+
+  .hito-labels {
+    position: relative;
+    width: 640px;
+    max-width: 100%;
+    height: 38px;
+    margin: 2px auto 28px;
+  }
+
+  .hito-label {
+    position: absolute;
+    transform: translateX(-50%);
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mut);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .hito-label.done    { color: var(--ink-2); }
+  .hito-label.current { color: var(--ink); font-weight: 500; }
+  .hito-label.pending { color: var(--ink-mut); opacity: 0.45; }
+
+  .hito-roman {
+    display: block;
+    font-family: var(--garamond);
+    font-style: italic;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    opacity: 0.30;
+    margin-top: 2px;
+    text-transform: none;
+  }
+
+  /* ---------- Placeholder bloque actual ---------- */
+  .block-placeholder {
+    margin-top: 6px;
+    padding: 28px 30px;
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    background: var(--paper-2);
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .block-kicker {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mut);
+    margin: 0 0 8px;
+  }
+
+  .block-title {
+    font-family: var(--garamond);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--ink);
+    margin: 0 0 6px;
+  }
+
+  .block-note {
+    font-family: var(--garamond);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-mut);
+    margin: 0;
+  }
+
+  /* ---------- Estilos SVG ---------- */
+  .path-line {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .path-line.pending {
+    stroke-dasharray: 3 5;
+    opacity: 0.55;
+  }
+
+  .dot-fill { fill: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <h1 class="page-title">Mockup — Sendero del Camino</h1>
+  <p class="page-sub">Híbrido refinado: línea serpenteante + luces · Estado: Morning Glory · bloque 2 de 4 (Foco)</p>
+
+  <section class="variant">
+    <header class="variant-header">
+      <h2 class="variant-title">Híbrido — línea + luces</h2>
+      <p class="variant-desc">Curva con asimetría orgánica. Hito completado con presencia tenue; hito actual con halo pleno. Numeración romana discreta. Dos intensidades de halo en modo oscuro: Vela (0.88) y Candil (0.62).</p>
+    </header>
+
+    <div class="compare">
+
+      <!-- ======================================================
+           COLUMNA 1 — Modo claro
+           ====================================================== -->
+      <div>
+        <p class="mode-label">Modo claro</p>
+        <div class="runner theme-light">
+          <h3 class="runner-camino-name">Morning Glory</h3>
+          <p class="runner-copy">Una flor que abre con la primera luz</p>
+
+          <div class="sendero-wrap">
+            <svg class="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <radialGradient id="halo-l-done" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#3a2e22" stop-opacity="0.20"/>
+                  <stop offset="55%"  stop-color="#3a2e22" stop-opacity="0.05"/>
+                  <stop offset="100%" stop-color="#3a2e22" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="halo-l-strong" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#3a2e22" stop-opacity="0.78"/>
+                  <stop offset="55%"  stop-color="#3a2e22" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#3a2e22" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <path class="path-line"
+                    d="M 60 50 C 102 22, 198 24, 240 50" />
+              <path class="path-line pending"
+                    d="M 240 50 C 282 78, 376 82, 420 50 C 462 22, 542 18, 580 50" />
+
+              <!-- hito 1 — completado: halo tenue + punto -->
+              <circle cx="60" cy="50" r="10" fill="url(#halo-l-done)"/>
+              <circle cx="60" cy="50" r="4"  class="dot-fill"/>
+
+              <!-- hito 2 — actual: halo intenso + punto -->
+              <circle cx="240" cy="50" r="19" fill="url(#halo-l-strong)"/>
+              <circle cx="240" cy="50" r="4.5" class="dot-fill"/>
+
+              <!-- hitos pendientes -->
+              <circle cx="420" cy="50" r="3.2" class="dot-fill" opacity="0.35"/>
+              <circle cx="580" cy="50" r="3.2" class="dot-fill" opacity="0.35"/>
+            </svg>
+          </div>
+
+          <div class="hito-labels">
+            <span class="hito-label done" style="left: 9.375%;">
+              Respira
+              <span class="hito-roman">I</span>
+            </span>
+            <span class="hito-label current" style="left: 37.5%;">
+              Foco
+              <span class="hito-roman">II</span>
+            </span>
+            <span class="hito-label pending" style="left: 65.625%;">
+              Estira
+              <span class="hito-roman">III</span>
+            </span>
+            <span class="hito-label pending" style="left: 90.625%;">
+              Cierre
+              <span class="hito-roman">IV</span>
+            </span>
+          </div>
+
+          <div class="block-placeholder">
+            <p class="block-kicker">Bloque 2 · Foco</p>
+            <p class="block-title">Una sesión breve para sostener la atención</p>
+            <p class="block-note">Contenido del bloque actual</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================
+           COLUMNA 2 — Modo oscuro · Vela (halo 0.88)
+           ====================================================== -->
+      <div>
+        <p class="mode-label">Modo oscuro · Vela</p>
+        <div class="runner theme-dark">
+          <h3 class="runner-camino-name">Morning Glory</h3>
+          <p class="runner-copy">Una flor que abre con la primera luz</p>
+
+          <div class="sendero-wrap">
+            <svg class="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <radialGradient id="halo-d-done-vela" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#c9a87a" stop-opacity="0.22"/>
+                  <stop offset="55%"  stop-color="#c9a87a" stop-opacity="0.06"/>
+                  <stop offset="100%" stop-color="#c9a87a" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="halo-d-vela" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#e6c58c" stop-opacity="0.88"/>
+                  <stop offset="55%"  stop-color="#c9a87a" stop-opacity="0.20"/>
+                  <stop offset="100%" stop-color="#c9a87a" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <path class="path-line"
+                    d="M 60 50 C 102 22, 198 24, 240 50" />
+              <path class="path-line pending"
+                    d="M 240 50 C 282 78, 376 82, 420 50 C 462 22, 542 18, 580 50" />
+
+              <circle cx="60" cy="50" r="10" fill="url(#halo-d-done-vela)"/>
+              <circle cx="60" cy="50" r="4"  class="dot-fill"/>
+
+              <circle cx="240" cy="50" r="19" fill="url(#halo-d-vela)"/>
+              <circle cx="240" cy="50" r="4.5" class="dot-fill"/>
+
+              <circle cx="420" cy="50" r="3.2" class="dot-fill" opacity="0.32"/>
+              <circle cx="580" cy="50" r="3.2" class="dot-fill" opacity="0.32"/>
+            </svg>
+          </div>
+
+          <div class="hito-labels">
+            <span class="hito-label done" style="left: 9.375%;">
+              Respira
+              <span class="hito-roman">I</span>
+            </span>
+            <span class="hito-label current" style="left: 37.5%;">
+              Foco
+              <span class="hito-roman">II</span>
+            </span>
+            <span class="hito-label pending" style="left: 65.625%;">
+              Estira
+              <span class="hito-roman">III</span>
+            </span>
+            <span class="hito-label pending" style="left: 90.625%;">
+              Cierre
+              <span class="hito-roman">IV</span>
+            </span>
+          </div>
+
+          <div class="block-placeholder">
+            <p class="block-kicker">Bloque 2 · Foco</p>
+            <p class="block-title">Una sesión breve para sostener la atención</p>
+            <p class="block-note">Contenido del bloque actual</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================
+           COLUMNA 3 — Modo oscuro · Candil (halo 0.62)
+           ====================================================== -->
+      <div>
+        <p class="mode-label">Modo oscuro · Candil</p>
+        <div class="runner theme-dark">
+          <h3 class="runner-camino-name">Morning Glory</h3>
+          <p class="runner-copy">Una flor que abre con la primera luz</p>
+
+          <div class="sendero-wrap">
+            <svg class="sendero-svg" viewBox="0 0 640 100" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <radialGradient id="halo-d-done-candil" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#c9a87a" stop-opacity="0.22"/>
+                  <stop offset="55%"  stop-color="#c9a87a" stop-opacity="0.06"/>
+                  <stop offset="100%" stop-color="#c9a87a" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="halo-d-candil" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%"   stop-color="#e6c58c" stop-opacity="0.62"/>
+                  <stop offset="55%"  stop-color="#c9a87a" stop-opacity="0.14"/>
+                  <stop offset="100%" stop-color="#c9a87a" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <path class="path-line"
+                    d="M 60 50 C 102 22, 198 24, 240 50" />
+              <path class="path-line pending"
+                    d="M 240 50 C 282 78, 376 82, 420 50 C 462 22, 542 18, 580 50" />
+
+              <circle cx="60" cy="50" r="10" fill="url(#halo-d-done-candil)"/>
+              <circle cx="60" cy="50" r="4"  class="dot-fill"/>
+
+              <circle cx="240" cy="50" r="19" fill="url(#halo-d-candil)"/>
+              <circle cx="240" cy="50" r="4.5" class="dot-fill"/>
+
+              <circle cx="420" cy="50" r="3.2" class="dot-fill" opacity="0.32"/>
+              <circle cx="580" cy="50" r="3.2" class="dot-fill" opacity="0.32"/>
+            </svg>
+          </div>
+
+          <div class="hito-labels">
+            <span class="hito-label done" style="left: 9.375%;">
+              Respira
+              <span class="hito-roman">I</span>
+            </span>
+            <span class="hito-label current" style="left: 37.5%;">
+              Foco
+              <span class="hito-roman">II</span>
+            </span>
+            <span class="hito-label pending" style="left: 65.625%;">
+              Estira
+              <span class="hito-roman">III</span>
+            </span>
+            <span class="hito-label pending" style="left: 90.625%;">
+              Cierre
+              <span class="hito-roman">IV</span>
+            </span>
+          </div>
+
+          <div class="block-placeholder">
+            <p class="block-kicker">Bloque 2 · Foco</p>
+            <p class="block-title">Una sesión breve para sostener la atención</p>
+            <p class="block-note">Contenido del bloque actual</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

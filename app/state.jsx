@@ -57,5 +57,6 @@ Object.assign(window, {
   setFavoritePath,
   clearFavoritePath,
   toggleFavoritePath,
+  setLastViewedPath, // s75
   getPathStats,
 });
