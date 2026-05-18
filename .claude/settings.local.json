@@ -28,7 +28,10 @@
       "PowerShell(Remove-Item \"backups/PACE_standalone_v0.25.4_20260508.html\"; \\(Get-ChildItem \"backups/\" -File\\).Count)",
       "PowerShell(node build-standalone.js)",
       "Bash(node -e \"const React = require\\('react'\\); const X = React.memo\\(function\\(\\){return null;}\\); console.log\\('typeof React.memo result =', typeof X\\); console.log\\('keys:', Object.keys\\(X\\)\\);\")",
-      "Bash(xargs wc -l)"
+      "Bash(xargs wc -l)",
+      "Read(//c/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app/**)",
+      "PowerShell(pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-session.ps1)",
+      "Bash(wc -l app/paths/PathRunner.jsx app/ui/Toast.jsx app/tokens.css && echo \"---\" && stat -c \"%s bytes\" PACE_standalone.html index.html && echo \"---\" && git status --short)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

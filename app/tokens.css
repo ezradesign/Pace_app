@@ -101,16 +101,20 @@
   --path-card-scale-from: 0.96;
 }
 
-/* PALETA · Oscuro noche */
+/* PALETA · Oscuro noche
+   s79: recalibrado +10% luminosidad en superficies y bordes (paper*,
+   line*). --ink-* sin cambios para mantener el contraste y la calidez
+   nocturna; el ajuste solo libera la base lo justo para que el texto
+   secundario (--ink-2, --ink-3) respire mejor sin perder el tono. */
 [data-palette="oscuro"] {
-  --paper: #15130f;
-  --paper-2: #1d1a15;
-  --paper-3: #252119;
+  --paper: #1d1a14;
+  --paper-2: #26211a;
+  --paper-3: #2f2920;
   --ink: #EDE5D3;
   --ink-2: #c0b49e;
   --ink-3: #756D5D;
-  --line: #332d24;
-  --line-2: #403930;
+  --line: #3d362b;
+  --line-2: #4a4238;
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);

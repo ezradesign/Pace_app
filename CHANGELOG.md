@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.32.1** | 2026-05-18 | fix(ui): pomodoro contextual en Camino (aro + pausa/reset/saltar) + fade-out toasts + oscuro +10% | #79 | [abajo](#v0321----2026-05-18----fixui-pomodoro-contextual-en-camino) |
 | **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime > catalog[0]) + logro master.path.all7 | #78 | [abajo](#v0320----2026-05-17----featcamino-catalogo-5--7) |
-| **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [abajo](#v0310----2026-05-17----featcamino-pathtransitions) |
+| **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [session-77](./docs/sessions/session-77-path-transitions.md) + [s77b](./docs/sessions/session-77b-fix-microcopia.md) |
 | **v0.30.0** | 2026-05-16 | feat(camino): arquitectura overlay -- TimerDial compartido + SenderoBar sticky persistente + CompletionScreen rica | #76 | [session-76](./docs/sessions/session-76-overlay-arquitectura.md) |
 | **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [session-75](./docs/sessions/session-75-sendero-implementacion.md) |
 | **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [session-74](./docs/sessions/session-74-oscuro-recalibrado.md) |
@@ -96,6 +97,120 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.32.1] -- 2026-05-18 -- fix(ui): pomodoro contextual en Camino
+
+Sesion 79. Tres tareas independientes sin nuevas features:
+
+1. **PathFocusStep rediseniado** como Pomodoro contextual de Camino: el
+   subtitulo "Concentracion profunda" cierra la alineacion visual con el
+   Pomodoro de Home (ya iniciada en s76 con TimerDial compartido) y los
+   controles pasan a tres botones del mismo peso visual --
+   Pausar/Reanudar, Reset y Saltar -- en lugar de los dos previos
+   (Pausar + Saltar). Se elimina la disonancia de no poder reiniciar
+   el bloque actual sin abandonar el Camino. Reset NO acredita foco.
+2. **Toast con fade-out 300ms** antes del desmontaje. La duracion
+   visible (`TOAST_DURATION_MS = 3000`) no cambia; el fade es aditivo.
+   El corte seco previo se sentia abrupto sobre el ritmo calmado.
+3. **Recalibrado paleta oscura +10%** luminosidad en superficies y
+   bordes (`--paper`, `--paper-2`, `--paper-3`, `--line`, `--line-2`).
+   Los tokens `--ink-*` quedan intactos para preservar contraste y
+   calidez nocturna.
+
+Diario: [session-79-pomodoro-camino-fadeout-oscuro.md](./docs/sessions/session-79-pomodoro-camino-fadeout-oscuro.md).
+
+Bump a v0.32.1 (patch) por fixes UX sin features ni cambios estructurales.
+
+### Changed
+
+- **`app/paths/PathRunner.jsx`** -- `PathFocusStep` rediseniado
+  contextualmente:
+  - `<TimerDial>` ahora recibe `subtitle={t('focus.subtitle.focus')}`
+    ("Concentracion profunda" / "Deep focus"); reutiliza la clave que
+    ya usa el Pomodoro del home. Cierra la alineacion visual con
+    FocusTimer iniciada en s76 (TimerDial compartido).
+  - Tres botones del mismo peso visual durante la sesion (`btnBase`
+    compartido: outline 1px `var(--line-2)` + transparent +
+    `var(--ink-2)`, font display italic, padding 10x22, radius
+    `--r-sm`). Etiquetas via i18n: `focus.pause` / `focus.continue`
+    / `focus.start` (toggle segun running/remaining) +
+    `focus.restart` + `path.runner.skip`. Sin CTA dominante --
+    refuerza el caracter contemplativo: la pauta la define el
+    Camino, no el usuario.
+  - Nuevo handler `handleReset()`: pausa el timer y restaura
+    `remaining = totalSec`. No toca `creditedRef.current` ni avanza
+    el Camino.
+  - Bloque `done` sin cambios: un solo CTA "Hecho" centrado
+    (`path.runner.done`) reemplaza los 3 botones al completar.
+- **`app/ui/Toast.jsx`** -- fade-out aditivo 300ms:
+  - Toast insertado con `exiting: false`.
+  - Tras `TOAST_DURATION_MS` visibles, primer `setTimeout` marca
+    `exiting: true` -> el `<div>` aplica `opacity: 0` con
+    `transition: opacity 300ms ease-out`.
+  - Tras `TOAST_DURATION_MS + 300ms`, segundo `setTimeout` desmonta
+    del array.
+  - Duracion visible sin cambios (3000ms). Tiempo total visible
+    aproximado: 3300ms.
+- **`app/tokens.css`** -- bloque `[data-palette="oscuro"]`:
+  - `--paper`: `#15130f` -> `#1d1a14`.
+  - `--paper-2`: `#1d1a15` -> `#26211a`.
+  - `--paper-3`: `#252119` -> `#2f2920`.
+  - `--line`: `#332d24` -> `#3d362b`.
+  - `--line-2`: `#403930` -> `#4a4238`.
+  - `--ink-*` intactos.
+- **`DESIGN_SYSTEM.md`** -- tabla paleta oscuro actualizada con los
+  nuevos valores de superficies y bordes.
+- **`PACE.html`** -- titulo `v0.32.1`.
+- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.32.1`.
+- **`sw.js`** -- `CACHE_NAME` `pace-v0.32.1`.
+
+### Decisiones tomadas
+
+- **D1 -- No extraer `ProgressRing.jsx`**. El aro circular ya esta
+  compartido desde s76 como `app/ui/TimerDial.jsx`. La extraccion
+  pedida por el prompt resulto innecesaria al constatar runtime.
+  Se reutiliza el componente existente pasando `subtitle` (nuevo) +
+  `inner=null` (sin cambios).
+- **D2 -- Tres botones outline sin CTA dominante** en PathFocusStep.
+  El prompt pedia "mismo peso visual"; podian ser tres outlines o
+  tres rellenos. Se eligieron outline por consistencia con el patron
+  s78 de PathHydrateStep y para no introducir jerarquia que el
+  Camino no necesita.
+- **D3 -- Reset NO acredita foco**. `handleReset` solo limpia el
+  contador local; `addFocusMinutes` solo se llama cuando `remaining`
+  cae a 0 estando running (sin cambios respecto a s75). Skip y
+  abandono tampoco acreditan.
+- **D4 -- Done sigue mostrando "Hecho" como CTA solido**. Tras
+  completar el bloque, los 3 botones contemplativos ya no aplican
+  (tiempo acreditado, contador a 0); el CTA solido tiene sentido
+  porque es la unica accion pendiente: avanzar.
+
+### Build
+
+- `PACE_standalone.html`: **607 KB** (621,446 bytes; +1,831 bytes vs
+  v0.32.0). Crecimiento: redisenio PathFocusStep (815->835 ln en
+  PathRunner.jsx, +20 ln neto inc. comentarios) + estados `exiting`
+  en Toast (+~8 ln) + 5 valores hex + 4 ln de comentario en
+  tokens.css + 4 ln de comentario nuevo en cabecera de PathFocusStep.
+- `index.html`: identico byte-a-byte. SHA-256:
+  `143c219e8faf37592b2a1aeb6d597259d597cf92930f6b3209ad893a74a53c5b`.
+- 43 archivos validados (sin cambios estructurales vs s78).
+- Backup creado: `backups/PACE_standalone_v0.32.0_20260518.html`
+  (607 KB). Rotado el mas antiguo:
+  `backups/PACE_standalone_v0.27.2_20260509.html`.
+
+### Diferido a sesiones siguientes
+
+- **s80** -- Split `app/paths/PathRunner.jsx` (815 -> ~820 ln; deuda
+  ALTA). Candidatos: `CompletionScreen`, los 4 `Path*Step`,
+  `ExitConfirmModal`. Migracion del helper `CS_ROMAN` a
+  `app/ui/numerals.js` si aparece tercer consumidor.
+- Aplicar `transition` tambien al `animation: pace-slide-up` de
+  entrada de Toast para que el slide-up no compita con el fade-out
+  durante los 300ms finales (no se observo conflicto en runtime,
+  pero conviene revisar).
 
 ---
 
@@ -239,6 +354,10 @@ establecida (streak.7 / streak.365).
   hay un Camino nocturno (>=22h), conviene distinguir `night`.
 
 ---
+
+<!-- v0.31.0 archivado en s79: ver
+     docs/sessions/session-77-path-transitions.md +
+     docs/sessions/session-77b-fix-microcopia.md -->
 
 ## [v0.31.0] -- 2026-05-17 -- feat(camino): PathTransitions
 
@@ -412,8 +531,9 @@ solo en los momentos rituales (entre pantallas + completion).
 
 ---
 
-<!-- v0.30.0 y anteriores: detalle archivado en docs/sessions/. -->
+<!-- v0.31.0 y anteriores: detalle archivado en docs/sessions/. -->
 <!-- (regla CLAUDE.md: solo detalle de las 2 ultimas versiones aqui) -->
+<!-- Detalle v0.31.0 -> docs/sessions/session-77-path-transitions.md + s77b -->
 <!-- Detalle v0.29.0 -> docs/sessions/session-75-sendero-implementacion.md -->
 <!-- A partir de aqui, los bloques inline son trazabilidad historica de
      versiones anteriores a la regla. No se actualizan en sesiones nuevas. -->

@@ -449,7 +449,13 @@ function PathHydrateStep({ onDone, onSkip }) {
 /* PathFocusStep - timer simple para paso de foco.
    Sesion 75: cuando el timer llega a 0 (no por skip), suma los minutos
    completos a las estadisticas globales via addFocusMinutes, alineado
-   con el flujo del Pomodoro estandar. Skip o salida no acreditan. */
+   con el flujo del Pomodoro estandar. Skip o salida no acreditan.
+   Sesion 79: redisenio contextual. Subtitle "Concentracion profunda"
+   reutilizando focus.subtitle.focus del home; tres botones de mismo
+   peso visual (Pausar/Reset/Saltar) durante la sesion. Sin presets de
+   minutos (los define el Camino), sin puntos de ciclo (los lleva el
+   Camino), sin badge tipo sesion (lo lleva la SenderoBar). Reset NO
+   acredita foco; solo restaura el contador del bloque actual. */
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
   const totalSec = (step.min || 25) * 60;
@@ -478,18 +484,41 @@ function PathFocusStep({ step, onExit }) {
     return () => clearInterval(intervalRef.current);
   }, [running]);
 
+  /* Reset: restaura contador y pausa. NO toca creditedRef ni avanza el
+     Camino. Si el usuario ya termino una vez (done) y resetea, ese caso
+     no se da: el bloque "done" muestra solo "Hecho", no Reset. */
+  const handleReset = () => {
+    setRunning(false);
+    setRemaining(totalSec);
+  };
+
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;
   const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
+
+  /* Botones del mismo peso visual: misma forma/padding/tipografia, solo
+     varia el label. Refuerza el caracter contemplativo del Pomodoro de
+     Camino: durante la sesion ningun control domina visualmente sobre
+     los otros. Mismo patron que PathHydrateStep (s78). */
+  const btnBase = {
+    padding: '10px 22px', borderRadius: 'var(--r-sm)',
+    cursor: 'pointer', fontSize: 13, letterSpacing: '0.08em',
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    background: 'transparent',
+    border: '1px solid var(--line-2)',
+    color: 'var(--ink-2)',
+    transition: 'all 180ms var(--ease)',
+  };
+
+  const pauseLabel = running
+    ? t('focus.pause')
+    : (remaining < totalSec ? t('focus.continue') : t('focus.start'));
 
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
     }}>
-      {/* s76: TimerDial compartido con FocusTimer home. Controles del Camino
-          (Iniciar/Pausar + Skip) viven fuera del dial para preservar el
-          patron de salida del PathRunner. */}
       {typeof TimerDial === 'function' ? (
         <div style={{ marginBottom: 24 }}>
           <TimerDial
@@ -498,7 +527,7 @@ function PathFocusStep({ step, onExit }) {
             progress={progress}
             mode="foco"
             modeLabel={t('topbar.mode.focus')}
-            subtitle={null}
+            subtitle={t('focus.subtitle.focus')}
             inner={null}
           />
         </div>
@@ -513,25 +542,14 @@ function PathFocusStep({ step, onExit }) {
         </div>
       )}
       {!done ? (
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button
-            onClick={() => setRunning(r => !r)}
-            style={{
-              padding: '10px 28px', borderRadius: 'var(--r-sm)',
-              background: 'var(--ink)', border: 'none',
-              color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-            }}
-          >
-            {running ? t('session.pause') : (remaining < totalSec ? t('session.resume') : t('topbar.mode.focus'))}
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => setRunning(r => !r)} style={btnBase}>
+            {pauseLabel}
           </button>
-          <button
-            onClick={() => onExit('skip')}
-            style={{
-              padding: '10px 20px', borderRadius: 'var(--r-sm)',
-              background: 'var(--paper-2)', border: '1px solid var(--line)',
-              color: 'var(--ink-2)', cursor: 'pointer', fontSize: 13,
-            }}
-          >
+          <button onClick={handleReset} style={btnBase}>
+            {t('focus.restart')}
+          </button>
+          <button onClick={() => onExit('skip')} style={btnBase}>
             {t('path.runner.skip')}
           </button>
         </div>
@@ -542,6 +560,8 @@ function PathFocusStep({ step, onExit }) {
             padding: '10px 28px', borderRadius: 'var(--r-sm)',
             background: 'var(--ink)', border: 'none',
             color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
+            letterSpacing: '0.08em',
+            fontFamily: 'var(--font-display)', fontStyle: 'italic',
           }}
         >
           {t('path.runner.done')}

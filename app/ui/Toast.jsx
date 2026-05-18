@@ -12,13 +12,22 @@ function ToastHost() {
       if (toast.type === 'achievement') {
         const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === toast.id);
         if (!a) return;
-        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg };
+        /* s79: exiting=false al insertar; transicion CSS opacity controla
+           el fade. Patron de tres fases: visible (durationMs) -> exiting
+           (TOAST_FADE_MS opacity:1->0) -> desmontaje del array. */
+        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         const durationMs = (typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000;
+        const fadeMs = 300;
+        /* 1. Tras durationMs visibles, marcar exiting -> arranca fade. */
+        setTimeout(() => {
+          setToasts(prev => prev.map(x => x._id === full._id ? { ...x, exiting: true } : x));
+        }, durationMs);
+        /* 2. Tras durationMs + fadeMs, desmontar del array. */
         setTimeout(() => {
           setToasts(prev => prev.filter(x => x._id !== full._id));
-        }, durationMs);
+        }, durationMs + fadeMs);
       }
     });
   }, []);
@@ -46,6 +55,8 @@ function ToastHost() {
           boxShadow: 'var(--sh-card)',
           animation: 'pace-slide-up 320ms var(--ease)',
           minWidth: 280,
+          opacity: toast.exiting ? 0 : 1,
+          transition: 'opacity 300ms ease-out',
         }}>
           <div style={{
             width: 40, height: 40,

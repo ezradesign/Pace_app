@@ -52,18 +52,20 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 
 ### Oscuro noche
 
-Activa con `[data-palette="oscuro"]`.
+Activa con `[data-palette="oscuro"]`. Recalibrada en s79 (v0.32.1):
+superficies y bordes +10% luminosidad; `--ink-*` intactos para preservar
+contraste y calidez nocturna.
 
 | Token | Valor |
 |---|---|
-| `--paper` | `#1A1814` |
-| `--paper-2` | `#252119` |
-| `--paper-3` | `#302B21` |
+| `--paper` | `#1d1a14` |
+| `--paper-2` | `#26211a` |
+| `--paper-3` | `#2f2920` |
 | `--ink` | `#EDE5D3` |
-| `--ink-2` | `#B8AF9A` |
+| `--ink-2` | `#c0b49e` |
 | `--ink-3` | `#756D5D` |
-| `--line` | `#3C3628` |
-| `--line-2` | `#4E4735` |
+| `--line` | `#3d362b` |
+| `--line-2` | `#4a4238` |
 | `--focus` | `#7A9A6D` |
 | `--focus-2` | `#98B58B` |
 | `--focus-soft` | `rgba(122,154,109,0.12)` |
