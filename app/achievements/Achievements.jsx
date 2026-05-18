@@ -41,6 +41,10 @@ const GLYPH_SVG = {
   'master.marathon':          g(`<circle cx="6" cy="32" r="1.8" fill="currentColor"/> <circle cx="22" cy="12" r="1.8" fill="currentColor"/> <circle cx="38" cy="32" r="1.8" fill="currentColor"/> <path d="M6 32 L22 12 L38 32" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
   'master.centurion':         g(`<text x="22" y="30" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="22" fill="currentColor">C</text>`),
   'secret.cow.click':         g(`<circle cx="12.8" cy="16.5" r="2.2" fill="currentColor"/><circle cx="22" cy="25.7" r="2.2" fill="currentColor"/><circle cx="31.2" cy="16.5" r="2.2" fill="currentColor"/><circle cx="9.2" cy="31.2" r="2.2" fill="currentColor"/><circle cx="34.8" cy="31.2" r="2.2" fill="currentColor"/><circle cx="36.7" cy="12.8" r="1.8" fill="currentColor" opacity="0.7"/><path d="M9.2 31.2 L12.8 16.5 L22 25.7 L31.2 16.5 L34.8 31.2" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
+  /* s78 - master.path.all7: heptagono regular con 7 vertices + centro.
+     Familia visual de streak.7/streak.365 (puntos pequenos en poligono
+     mas linea uniendolos en opacity 0.5). El centro 2.4 marca "completo". */
+  'master.path.all7':         g(`<circle cx="22" cy="6" r="1.6" fill="currentColor"/> <circle cx="35" cy="13" r="1.6" fill="currentColor"/> <circle cx="38" cy="26" r="1.6" fill="currentColor"/> <circle cx="29" cy="37" r="1.6" fill="currentColor"/> <circle cx="15" cy="37" r="1.6" fill="currentColor"/> <circle cx="6" cy="26" r="1.6" fill="currentColor"/> <circle cx="9" cy="13" r="1.6" fill="currentColor"/> <circle cx="22" cy="22" r="2.4" fill="currentColor"/> <path d="M22 6 L35 13 L38 26 L29 37 L15 37 L6 26 L9 13 Z" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
 };
 /* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
 GLYPH_SVG['first.plan'] = GLYPH_SVG['first.ritual'];
@@ -123,6 +127,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
   { id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '50 logros', glyph: 'L' },
   { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '100 logros', glyph: 'C' },
+  { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
 
   // Secretos (71-90)
   { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
@@ -217,6 +222,8 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'master.collector.half', 'master.collector.full',
   'master.silent.day', 'master.retreat',
   'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
+  // Caminos (1/1) — sesión 78
+  'master.path.all7',
   // Estadísticas (4/4) — sesión 46
   'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel

@@ -99,6 +99,22 @@ function checkStatsAchievements() {
   }
 }
 
+/* master.path.all7 (s78) — desbloquea cuando el usuario ha completado al
+   menos UNA vez cada uno de los Caminos del catalogo (count >= 1 en cada
+   entrada de paths.completed). El guard catalog.length >= 7 evita que se
+   dispare antes de tiempo si en el futuro reducimos el catalogo. */
+function checkAllPathsCompleted() {
+  const s = getState();
+  const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (catalog.length < 7) return;
+  const compl = (s.paths && s.paths.completed) || {};
+  for (let i = 0; i < catalog.length; i++) {
+    const entry = compl[catalog[i].id];
+    if (!entry || (entry.count || 0) < 1) return;
+  }
+  unlockAchievement('master.path.all7');
+}
+
 /* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
 function checkRetreatAchievement() {
   const s = getState();
@@ -248,4 +264,5 @@ Object.assign(window, {
   completeExtraSession,
   updateStreak,
   checkStatsAchievements,
+  checkAllPathsCompleted,
 });

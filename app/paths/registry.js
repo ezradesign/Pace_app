@@ -41,6 +41,18 @@ const PATH_CATALOG = [
     access: 'free',
   },
   {
+    id: 'path.tea',
+    nameKey: 'paths.path.tea.name',
+    taglineKey: 'paths.path.tea.tagline',
+    timeOfDay: 'afternoon',
+    steps: [
+      { kind: 'breathe', routineId: 'breathe.coherent.55' },
+      { kind: 'hydrate',                                    optional: true },
+      { kind: 'focus',                                      min: 10 },
+    ],
+    access: 'free',
+  },
+  {
     id: 'path.dusk',
     nameKey: 'paths.path.dusk.name',
     taglineKey: 'paths.path.dusk.tagline',
@@ -61,6 +73,17 @@ const PATH_CATALOG = [
       { kind: 'breathe', routineId: 'breathe.nadi.shodhana' },
       { kind: 'body',   routineId: 'move.atg.knees' },
       { kind: 'hydrate',                                    optional: true },
+    ],
+    access: 'free',
+  },
+  {
+    id: 'path.breath',
+    nameKey: 'paths.path.breath.name',
+    taglineKey: 'paths.path.breath.tagline',
+    timeOfDay: 'anytime',
+    steps: [
+      { kind: 'breathe', routineId: 'breathe.478' },
+      { kind: 'breathe', routineId: 'breathe.coherent.55' },
     ],
     access: 'free',
   },

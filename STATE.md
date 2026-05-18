@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.31.0
-**Ultima sesion:** #77 + #77b -- 2026-05-17 - feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (v0.31.0)
-**Ultima actualizacion de este archivo:** 2026-05-17 - sesion 77b
-**Build entregado:** `PACE_standalone.html` v0.31.0 (598 KB; 612,203 bytes) + `index.html` (idem, copia exacta)
+**Version actual:** v0.32.0
+**Ultima sesion:** #78 -- 2026-05-17 - feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica + logro master.path.all7 (v0.32.0)
+**Ultima actualizacion de este archivo:** 2026-05-17 - sesion 78
+**Build entregado:** `PACE_standalone.html` v0.32.0 (605 KB; 619,615 bytes) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.31.0** (s77: carga PathTransitions.jsx antes de PathRunner.jsx + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.31.0** (598 KB, regenerado s77b) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.31.0** (s77b: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.32.0** (s78: titulo bump; s77: carga PathTransitions.jsx antes de PathRunner.jsx) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.32.0** (605 KB, regenerado s78) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.32.0** (s78: regenerado por build-standalone.js) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG -- 13 rediseñados en s60 | **v0.28.1** (iter parcial s60, sin cambios s61) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -42,18 +42,18 @@
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.31.0** (s77b: startBtnPrimary usa var(--focus-cta) -- verde musgo #506B3E claro / #8AA776 oscuro) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
-| `app/achievements/Achievements.jsx` | Catalogo + coleccion | **v0.25.3** |
+| `app/achievements/Achievements.jsx` | Catalogo + coleccion | **v0.32.0** (s78: + entrada master.path.all7 en maestria + glifo SVG heptagonal + IMPLEMENTED_ACHIEVEMENTS subgrupo Caminos) |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** (s64: overflowY:hidden en data-pyv-wrap -- fix scroll vertical) |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** (s63: titulo marginBottom 6->4) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.28.8** (s69: isActiveDay helper + computeYearStats unifica criterio "dia activo" = focus|breath|move>0, agua sola NO cuenta) |
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.31.0** (s77: PACE_VERSION bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.32.0** (s78: PACE_VERSION bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
-| `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.28.8** (s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
-| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.29.0** (s75: getSuggestedPath refactor -> lastViewed + setLastViewedPath + startPath actualiza lastViewed) |
+| `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
+| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.32.0** (s78: getSuggestedPath jerarquica lastViewed>horario>anytime>catalog[0] + hook checkAllPathsCompleted en advancePathStep; s75: getSuggestedPath refactor -> lastViewed + setLastViewedPath) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
 | `app/state.jsx` | Indice — re-export consolidado | **v0.29.0** (s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.19.0** |
@@ -61,20 +61,21 @@
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | **v0.27.0** (PathsLibrary montado s53) |
-| `app/i18n/strings.js` | Strings ES + EN | **v0.31.0** (s77: + path.runner.transition.continue ES/EN) |
+| `app/i18n/strings.js` | Strings ES + EN | **v0.32.0** (s78: +8 claves -- tea/breath name+tagline ES/EN + microcopy hydrate redisenada -- path.hydrate.copy/drank/skip/glasses.today; s77: + path.runner.transition.continue) |
 | `app/tokens.css` | Tokens CSS + base | **v0.31.0** (s77 + s77b: + 5 tokens transicion --path-{intro,step,outro}-ms + --path-card-{fade-ms,scale-from} + bloque .sendero-bar.lg + reglas .lg .hito-labels max-width 720 + .lg .hito-label/roman font-size 12/11 + token --focus-cta crema/oscuro + @keyframes path-orb-travel reservado; **RETIRADO**: --sendero-sticky-h, .sendero-bar.sticky y sus 4 reglas, body[data-pace-path-active], @keyframes sb-halo-fade-in) |
-| `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.26.0-alpha** |
-| `app/paths/PathRunner.jsx` | Runner de caminos | **v0.31.0** (s77: maquina phase intro/step/transition/outro + pendingComplete + handleIntro/Transition/OutroDone + render dispatch por phase + CompletionScreen fadeIn 400ms; s77b: quitado useEffect data-pace-path-active + quitado render SenderoBar sticky de step phase; 660->717 ln) |
+| `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.32.0** (s78: + path.tea timeOfDay='afternoon' + path.breath timeOfDay='anytime' -- catalogo cerrado a 7) |
+| `app/paths/PathRunner.jsx` | Runner de caminos | **v0.32.0** (s78: redisenio completo de PathHydrateStep -- contador Garamond clamp(72-112) + grid vasos visuales no interactivos + 2 botones mismo peso visual; 717->815 ln) |
 | `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.31.0** (nuevo s77, 232 ln; s77b: render SenderoBar lg sin guard typeof) |
 | `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.31.0** (s77: + prop size="lg" + prop orbVisible + orbe viajero via animateMotion sobre la curva Bezier; s77b: **prop sticky retirada** + hito-labels filtran solo done (i<currentIndex) -- comportamiento unificado en lg y CompletionScreen; 148->164 ln) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.31.0** (s77: CACHE_NAME pace-v0.31.0) |
+| `sw.js` | Service Worker PWA | **v0.32.0** (s78: CACHE_NAME pace-v0.32.0) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.30.0_20260517.html` <- creado s77 (copia previa al rebuild, evitando el problema s76 de sobrescritura)
+- `backups/PACE_standalone_v0.31.0_20260517.html` <- creado s78 (copia previa al rebuild v0.32.0)
+- `backups/PACE_standalone_v0.30.0_20260517.html`
 - `backups/PACE_standalone_v0.29.0_20260516.html`
 - `backups/PACE_standalone_v0.28.12_20260516.html`
 - `backups/PACE_standalone_v0.28.11_20260512.html`
@@ -92,173 +93,152 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.27.6_20260511.html`
 - `backups/PACE_standalone_v0.27.5_20260511.html`
 - `backups/PACE_standalone_v0.27.3_20260511.html`
-- `backups/PACE_standalone_v0.27.2_20260509.html`
-- `backups/PACE_standalone_v0.27.0_20260509.html` (rotado `v0.27.1b_20260509.html` segun decision s76)
+- `backups/PACE_standalone_v0.27.2_20260509.html` (rotado `v0.27.0_20260509.html` en s78 para mantener cap de 20)
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesiones 77 + 77b - v0.31.0 - feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia**
+**Sesion 78 - v0.32.0 - feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica + logro master.path.all7**
 
 ### Contexto
 
-s77 cerro los tres saltos abruptos del overlay del Camino con un
-modulo nuevo `PathTransitions.jsx`. Pero la validacion runtime del
-usuario tras el build revelo un bug critico: la SenderoBar dentro de
-las TransitionCards no era visible. s77b diagnostico la causa raiz
-(guards `typeof SenderoBar === 'function'` evaluando `false` porque
-`React.memo()` retorna objeto, no funcion -- bug heredado de s76 que
-afectaba 3 sitios sin detectar), aplico el fix, aplico la microcopia
-diferida (Toast 3000ms + CTA verde musgo apagado), y -- tras nueva
-validacion runtime -- **retiro la SenderoBar sticky introducida en
-s76** (se sentia invasiva sobre cada ejercicio).
+s77+s77b cerro el ciclo UX del overlay Camino (PathTransitions
++ retirada de sticky + microcopia + CTAs `--focus-cta`). v0.31.0
+publicado y sin observaciones abiertas. El catalogo seguia en 5
+Caminos desde s49. s78 lo cierra a 7 y resuelve la unica incoherencia
+visual restante: el PathHydrateStep del PathRunner usaba un lenguaje
+distinto del HydrateModule del home (circulo 64 + emoji + 2 botones
+de jerarquia desigual).
 
-Cierre unificado: s77 + s77b van en un solo commit v0.31.0. Diarios:
-[s77](./docs/sessions/session-77-path-transitions.md)
-+ [s77b](./docs/sessions/session-77b-fix-microcopia.md).
+Diario: [s78](./docs/sessions/session-78-catalogo-caminos.md).
 
 ### Que se hizo
 
-**Bloque s77 (PathTransitions):**
-1. **NUEVO `app/paths/PathTransitions.jsx` (232 ln)**: tres exports
-   (`IntroCard`, `StepIntro`, `OutroCard`) sobre `TransitionCardBase`
-   privado. Entrada fade+scale (doble rAF), hold timer leyendo tokens
-   CSS, salida acelerada por tap. Layout vertical: SenderoBar grande
-   arriba, titulo Garamond italic clamp(36-64px), hint "toca para
-   continuar". Card entera tappable.
-2. **`SenderoBar.jsx`**: + prop `size="lg"` + prop `orbVisible` ->
-   orbe viajero animateMotion sobre la curva Bezier (alineado
-   pixel-a-pixel via `sbSegmentPath` reutilizado).
-3. **`PathRunner.jsx`**: maquina `phase: intro|step|transition|outro`
-   + `pendingComplete` para diferir advance final + dispatch render
-   por phase + `useEffect` inicializador con margen 1.5s (al
-   recargar, aterrizas en 'step' -- decision 3 volatil).
-4. **`CompletionScreen`**: + prop `fadeIn` (doble rAF -> opacity 0->1
-   en 400ms ease-out). Cross-fade limpio por background compartido
-   `var(--paper)`.
-5. **5 tokens nuevos** en tokens.css (`--path-{intro,step,outro}-ms`,
-   `--path-card-{fade-ms,scale-from}`) + bloque `.sendero-bar.lg`.
-6. **1 clave i18n nueva**: `path.runner.transition.continue`.
-7. Bump v0.31.0 (state-core, sw.js).
+1. **NUEVO catalogo +2 entradas (`app/paths/registry.js`)**:
+   - `path.tea` (timeOfDay 'afternoon'): breathe.coherent.55 +
+     hydrate(opt) + focus 10 min. ~17 min, reenganche progresivo de
+     sobremesa.
+   - `path.breath` (timeOfDay **'anytime'** -- slot nuevo):
+     breathe.478 + breathe.coherent.55. ~8 min, micropausa sin foco
+     ni cuerpo.
+2. **`getSuggestedPath` reescrita (`app/state-paths.jsx`)** con
+   jerarquia explicita de 4 niveles:
+   1. `lastViewed` (s75, preferencia del usuario).
+   2. `timeOfDay` match (sabado/domingo -> 'weekend'; resto: slot
+      horario actual segun hora del sistema).
+   3. `'anytime'` (fallback antes de catalog[0]).
+   4. `catalog[0]` (ultimo recurso).
+   Preserva la inversion s75 (lastViewed wins) e incorpora la logica
+   horaria como capa nueva que entra solo cuando lastViewed no aplica.
+3. **Hook `checkAllPathsCompleted`** en `advancePathStep` cuando se
+   cierra un Camino: dispara `setTimeout(0)` para que el detector lea
+   estado ya actualizado y evite re-entradas en el reducer.
+4. **`PathHydrateStep` reescrito de cero** (~50 ln -> ~108 ln en
+   `app/paths/PathRunner.jsx`):
+   - Contador `clamp(72-112px)` EB Garamond italic en `var(--hydrate)`
+     con ` / goal` a 0.42em en `var(--ink-3)`.
+   - Meta-label "Vasos hoy".
+   - Grid de `goal` vasos visuales (no interactivos -- es step de
+     Camino, no tracker). Replica 1:1 el patron del HydrateTracker
+     del home.
+   - Copy 18px Garamond italic max-width 360.
+   - 2 botones del **mismo peso visual** via `btnBase` compartido --
+     "Saltar" outline / "Beber" relleno var(--hydrate). Refuerza la
+     opcionalidad real del paso.
+5. **Logro `master.path.all7` ("Cartografa")**:
+   - Glifo SVG heptagonal (7 puntos + centro + path en bucle, familia
+     visual de streak.7 / streak.365).
+   - Entrada en catalogo `maestria` + IMPLEMENTED_ACHIEVEMENTS bajo
+     nuevo subgrupo "Caminos (1/1)".
+   - Detector en `state-achievements.jsx`: exige
+     `paths.completed[id].count >= 1` para cada uno de los 7. Guard
+     `catalog.length >= 7` evita falsos positivos si el catalogo se
+     reduce en el futuro.
+6. **i18n -- 8 claves nuevas (ES/EN)**:
+   - `paths.path.tea.{name,tagline}` ES "Infusion" + "Un vapor breve,
+     y la tarde recobra forma." / EN "Steeping" + "A brief steam,
+     and the afternoon takes shape again.".
+   - `paths.path.breath.{name,tagline}` ES "Halito" + "Dos vientos
+     cortos para volver." / EN "Breath" + "Two short winds to return.".
+   - Microcopy hydrate redisenada: `path.hydrate.copy`
+     "Si te apetece, suma un vaso.", `path.hydrate.drank` "Beber"
+     (antes "He bebido", pasa de declarativo a infinitivo invitando),
+     + 2 claves nuevas `path.hydrate.skip` y
+     `path.hydrate.glasses.today`.
+7. **Bump v0.32.0** (state-core, PACE.html, sw.js).
 
-**Bloque s77b (fix + microcopia + retirada sticky):**
+### Decisiones tomadas (sin consulta tras "lo mas profesional" del usuario)
 
-1. **🐛 Fix raiz SenderoBar invisible (3 guards)**: quitados
-   `typeof SenderoBar === 'function'` en `PathTransitions.jsx:131`,
-   `PathRunner.jsx:703` (sticky en step phase) y
-   `PathRunner.jsx:202` (CompletionScreen). React.memo retorna
-   objeto, no funcion -- el guard bloqueaba el render. Los 3 sitios
-   probablemente llevaban rotos desde s76 sin que nadie lo notara
-   porque la validacion runtime quedo pendiente.
-2. **Toast 3000ms**: nueva constante `TOAST_DURATION_MS = 3000` en
-   `state-core.jsx`, exportada a window. `Toast.jsx` la lee con
-   fallback a 3000 (antes 5000ms hardcoded).
-3. **CTAs "Comenzar" -> verde apagado equilibrado** (3 botones
-   unificados): nuevo token `--focus-cta: #50624D` (crema) /
-   `#8E9D88` (oscuro) en `tokens.css`. Usado en:
-   - `FocusTimer.jsx` startBtnPrimary (CTA Pomodoro home).
-   - `SuggestedPathCard.jsx` (CTA Camino sugerido del home).
-   - `PathsLibrary.jsx` (CTA cada Camino en el overlay biblioteca).
-   El "Repetir camino" del CompletionScreen se mantiene en `var(--ink)`
-   (accion secundaria). Iteracion: primera propuesta `#506B3E` (verde
-   musgo); usuario ajusto al hex final `#50624D` (mas gris-equilibrado,
-   menos verde puro -- coherente con el caracter artesanal del producto).
-4. **RETIRADA SenderoBar sticky (inversion del feature s76)**:
-   - `PathRunner.jsx`: quitado render `<SenderoBar ... sticky />` en
-     phase==='step' + quitado `useEffect` que toggleaba
-     `body[data-pace-path-active]`.
-   - `SenderoBar.jsx`: prop `sticky` retirada de la firma y className.
-   - `tokens.css`: eliminados token `--sendero-sticky-h`, bloque
-     `.sendero-bar.sticky` (5 reglas), selectores
-     `body[data-pace-path-active]` (2 reglas).
-5. **Labels (kind + romano) en TransitionCards**: en
-   `SenderoBar.jsx`, el `hito-labels` cambia de
-   `{!sticky && !isLarge && (...)}` a `{currentIndex > 0 && (...)}`
-   con filtro interno `i >= currentIndex -> return null`. Una sola
-   regla unificada: solo done. IntroCard sin labels (currentIndex=0),
-   StepIntro N labels, OutroCard/CompletionScreen todas.
-6. **CSS labels en lg**: nuevas reglas en `tokens.css`:
-   `.lg .hito-labels { max-width: 720px }` (alinear con wrap del SVG)
-   + `.lg .hito-label { font-size: 12px }` +
-   `.lg .hito-roman { font-size: 11px }` (legibilidad en card grande).
-7. **Halo dinamico SenderoBar (probado y revertido)**: durante s77b
-   se anyadio `@keyframes sb-halo-fade-in` + className
-   `sendero-halo-current` + key compuesta para forzar remount al
-   saltar de hito. Eliminado en el mismo s77b al quedar como dead
-   code tras retirar la sticky (excluido en .lg, sin escenario en
-   CompletionScreen).
+- D1 -- `getSuggestedPath`: lastViewed-first preservado, logica
+  horaria como capa fallback. **Razon**: preservar inversion s75
+  validada por el usuario sin romperla.
+- D2 -- Logros con title/desc hardcoded ES, no `t()`. **Razon**:
+  consistencia con los 90+ logros existentes; introducir i18n para 1
+  sola entrada generaria deuda mayor.
+- D3 -- Nombres "Infusion"/"Steeping" + "Halito"/"Breath", taglines
+  con lexico sensorial-objeto. **Razon**: encaja con el registro de
+  Morning Glory / Spearmint / Matchstrike / Desk Lamp / Open Window.
+- D4 -- Logro "Cartografa". **Razon**: encaja con "caminos" como
+  dominio.
+- D5 -- Glifo heptagonal en familia streak.7/streak.365. **Razon**:
+  reuso del modelo visual establecido.
+- D6 -- PathsLibrary 7 cards: verificar runtime, ajustar solo si rompe
+  el layout. **Resultado**: modal ya scrollea via maxHeight 85vh +
+  overflowY auto -- no requirio cambios.
 
-### Asimetria documentada (decision 3 -- s77)
+### Validacion runtime usuario
 
-Step intermedio: `advancePathStep` AHORA -> cur.stepIndex se persiste
-antes de la card. Al recargar, aterrizas en step destino.
-
-Ultimo step: snapshot en `pendingComplete` (estado local), advance
-diferido a `handleOutroDone`. Al recargar durante OutroCard, aterrizas
-en el ultimo step. El edge case requiere recargar en ventana de 1.5s
-y la complejidad de mantener un "limbo" persistido es desproporcionada.
-
-### Validacion runtime usuario (s77b)
-
-- ✅ TransitionCards: SenderoBar visible entre pantallas (Intro/Step/
-  Outro). El usuario confirmo en runtime ("ahora se ve entre
-  pantallas").
-- ✅ Step phase sin sticky superior (decision del usuario tras ver la
-  sticky en runtime).
-- ⏳ Capturas A/B/C/G + decisiones s77 (skip 1 StepIntro, recarga
-  durante StepIntro, tooltip `<title>`, consola limpia, Toast 3000ms,
-  CTA verde musgo): el usuario procedera al commit/push directo --
-  validacion completa se asume aceptada.
+Validado con "si, valido" tras presentacion del checklist completo
+(path.tea ejecutable, path.breath ejecutable, PathHydrateStep
+rediseniado, PathsLibrary 7 cards, SuggestedPathCard jerarquica,
+master.path.all7, recarga durante step, i18n EN, consola limpia).
+Sin observaciones que devolvieran al codigo.
 
 ### Build
 
-- Bundle: **598 KB** (612,203 bytes). -2,300 bytes vs s77 inicial por
-  dead code limpio de la sticky retirada.
-- 43 archivos validados (sin cambios vs s77).
+- Bundle: **605 KB** (619,615 bytes; +7,412 bytes vs v0.31.0).
+- 43 archivos validados (sin cambios estructurales vs s77b).
 - `index.html` byte-a-byte identico a `PACE_standalone.html`.
-- Backup: `backups/PACE_standalone_v0.30.0_20260517.html` (creado en
-  s77 ANTES del build). Sin rotacion adicional en s77b -- misma
-  version v0.31.0.
+- Backup creado: `backups/PACE_standalone_v0.31.0_20260517.html`
+  (605 KB). Rotado el mas antiguo: `v0.27.0_20260509.html`.
 
-### Roadmap UX overlay Camino (s75->s76->s77->s77b COMPLETADOS)
+### Roadmap catalogo Caminos (s49->s51->s53->s78 COMPLETADOS)
 
-✅ s75 -- SenderoBar hibrido + sendero implementacion.
-✅ s76 -- Arquitectura overlay: TimerDial compartido + SenderoBar
-   sticky persistente + CompletionScreen rica.
-✅ s77 -- PathTransitions: IntroCard + StepIntro + OutroCard +
-   cross-fade.
-✅ s77b -- Fix SenderoBar visible + microcopia (Toast 3s + CTA verde
-   musgo) + **retirada de sticky** (decision del usuario tras runtime).
+✅ s49 -- registry.js + 5 Caminos canonicos + helpers.
+✅ s51 -- SuggestedPathCard.
+✅ s53 -- PathsLibrary + favoritos.
+✅ s78 -- Cierre del catalogo a 7 + slot 'anytime' +
+   PathHydrateStep redisenado + master.path.all7.
 
-## Proxima sesion -- s78 (Catalogo Caminos)
+## Proxima sesion -- s79 (split tecnico, sin features)
 
 ### Scope propuesto
 
-1. **Crear 2 Caminos faltantes** para llevar el catalogo de 5 -> 7:
-   - `path.tea` -- Te sin Azucar / Plain Tea: reenganche tras pausa
-     (kinds candidatos: breathe ligero + hidratate + 1 micro-focus).
-   - `path.breath` -- Halito / Breath: micropausa corta (2-3 pasos
-     breathe centricos, sin focus ni body).
-2. **Revisar selector inferior Caminos**: `SuggestedPathCard`
-   (logica de sugerencia con catalogo ampliado) y `PathsLibrary`
-   (overlay biblioteca -- layout con 7 caminos vs 5 actuales, scroll
-   o grid?).
-3. Definir nameKey + tagline ES/EN + horario sugerido por Camino.
-4. Anyadir entradas a `paths.history` si se incorpora a stats anuales.
+1. **Split `app/paths/PathRunner.jsx`** -- ya en 815 ln, sigue marcada
+   como deuda ALTA. Candidatos a extraer:
+   - `CompletionScreen` -> `app/paths/PathCompletion.jsx`.
+   - 4 `Path*Step` (Breathe/Focus/Body/Hydrate) -> archivos hijos.
+   - `ExitConfirmModal` + `PathTopBar` + `StepError` -> mover a
+     `PathRunner.parts.jsx` o similar.
+2. Tras el split, verificar:
+   - PathTransitions sigue funcionando (Intro/Step/Outro).
+   - getSuggestedPath con jerarquia s78 OK.
+   - master.path.all7 detector dispara correctamente.
+3. Sin cambios visuales ni de comportamiento -- es refactor puro.
 
 ### Precondicion bloqueante
 
-Cierre Git de s77+s77b publicado por el usuario (commit + push
-manual).
+Cierre Git de s78 publicado por el usuario (commit + push manual).
 
-### Decisiones pendientes para el prompt s78
+### Decisiones pendientes para el prompt s79
 
-- ¿`path.tea` lleva un `breathe` o un `extra` (estira corto)?
-- ¿`path.breath` reusa rutinas existentes (sphere/box/coherent) o
-  introduce una nueva muy corta (3 min, 4-4-4-4)?
-- ¿Horarios sugeridos -- algun slot del dia donde encajen mejor?
-- ¿Algun logro `master.path.X` ligado a completar todos los 7?
+- Donde vive el helper `CS_ROMAN` (numerales) -- exportar de
+  `state-core.jsx` o duplicar en CompletionScreen?
+- `PathBreatheStep` + `PathBreatheSafetyGate` van juntos en
+  `PathBreatheStep.jsx` o cada uno en su archivo?
+- Conviene crear un `PathRunner.types.jsx` para `phase` y otros
+  tipos compartidos?
 
 ---
 
@@ -275,6 +255,9 @@ manual).
 | Progreso del Camino solo entre pantallas | s77b | Retirada la SenderoBar sticky de s76: vive en TransitionCards (Intro/Step/Outro) + CompletionScreen, no superpuesta sobre cada ejercicio. Razon: usuario validó en runtime que la sticky se sentia invasiva |
 | Labels SenderoBar: solo hitos done | s77b | Filtro `i < currentIndex` unificado en lg y CompletionScreen. Current no se etiqueta (ya esta en grande arriba en TransitionCards), pending tampoco (sin spoiler) |
 | Nuevo token --focus-cta para CTA Comenzar home | s77b | Variante mas viva y calida que --focus (#506B3E claro / #8AA776 oscuro). NO usar fuera del CTA principal de Pomodoro |
+| Slot horario 'anytime' como fallback (no compite con slots fijos) | s78 | getSuggestedPath: si lastViewed no aplica, primero match de slot horario (morning/midday/afternoon/evening + weekend); si no, 'anytime' (path.breath); si no, catalog[0]. lastViewed sigue ganando siempre |
+| Logro master.path.all7 ("Cartografa") = cap de 1 logro nuevo por sesion | s78 | Recorre los 7 Caminos al menos una vez. Glifo heptagonal familia streak.7/streak.365. NO meter mas logros en la misma sesion para no inflar el catalogo de golpe |
+| PathHydrateStep usa mismo lenguaje visual que HydrateModule home | s78 | Contador Garamond + grid vasos + 2 botones mismo peso visual (Saltar outline / Beber relleno). Vasos NO interactivos -- es step de Camino, no tracker. Refuerza opcionalidad real |
 
 ---
 
@@ -282,7 +265,7 @@ manual).
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/paths/PathRunner.jsx` | 717 | ALTA (s77/s77b: 660->717 ln, candidato split a PathCompletion + PathSteps) |
+| `app/paths/PathRunner.jsx` | 815 | ALTA (s78: 717->815 ln por redisenio PathHydrateStep, candidato split a PathCompletion + 4xPathSteps + PathRunner.parts; programado en s79) |
 | `app/i18n/strings.js` | 776 | ALTA |
 | `app/main.jsx` | 600 | MEDIA |
 | `app/achievements/Achievements.jsx` | ~500 | MEDIA |

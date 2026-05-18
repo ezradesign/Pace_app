@@ -40,6 +40,14 @@ function advancePathStep(reason) {
     const nextIndex = c.stepIndex + 1;
     if (nextIndex >= path.steps.length) {
       const prev = s.paths.completed[c.id] || { count: 0 };
+      /* s78: tras cerrar un Camino, comprobar si el usuario ha completado
+         ya los 7 -> desbloquea master.path.all7. Se llama fuera del setState
+         para evitar re-entradas (lo dispara el setTimeout(0) de abajo). */
+      if (typeof window.checkAllPathsCompleted === 'function') {
+        setTimeout(function () {
+          try { window.checkAllPathsCompleted(); } catch (e) {}
+        }, 0);
+      }
       return {
         ...s,
         paths: {
@@ -91,19 +99,57 @@ function abandonPath() {
   }));
 }
 
-/* Sesion 75: sugerencia basada en preferencia del usuario, no en la hora.
-   - Si lastViewed existe y sigue siendo un Camino vigente: lo devuelve.
-   - Si no: primer Camino del catalogo (orden de definicion). */
+/* Jerarquia de seleccion (s78):
+     1. lastViewed (s75)    -- la preferencia del usuario manda siempre que
+                               siga apuntando a un Camino del catalogo vigente.
+     2. timeOfDay match     -- en cuanto el usuario nunca abrio uno, sugerir
+                               el slot horario actual (morning/midday/afternoon/
+                               evening + weekend). Para el sabado/domingo, el
+                               slot 'weekend' gana sobre cualquier slot horario.
+     3. 'anytime' (s78)     -- fallback que SIEMPRE entra antes del catalog[0]
+                               (p.ej. path.breath, sin hora fija).
+     4. catalog[0]          -- ultimo recurso, mantiene la garantia de no
+                               devolver null si hay al menos un Camino. */
 function getSuggestedPath() {
   const s = getState && getState();
   const lv = s && s.paths && s.paths.lastViewed;
   const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (!catalog.length) return null;
+
+  // 1. lastViewed
   if (lv) {
     for (let i = 0; i < catalog.length; i++) {
       if (catalog[i].id === lv) return lv;
     }
   }
-  return catalog.length ? catalog[0].id : null;
+
+  // 2. slot horario actual
+  const now = new Date();
+  const dow = now.getDay(); // 0 = domingo, 6 = sabado
+  const isWeekend = dow === 0 || dow === 6;
+  if (isWeekend) {
+    for (let i = 0; i < catalog.length; i++) {
+      if (catalog[i].timeOfDay === 'weekend') return catalog[i].id;
+    }
+  }
+  const h = now.getHours();
+  let slot;
+  if (h < 9)       slot = 'morning';
+  else if (h < 13) slot = 'midday';
+  else if (h < 17) slot = 'afternoon';
+  else if (h < 21) slot = 'evening';
+  else             slot = 'evening';
+  for (let i = 0; i < catalog.length; i++) {
+    if (catalog[i].timeOfDay === slot) return catalog[i].id;
+  }
+
+  // 3. 'anytime'
+  for (let i = 0; i < catalog.length; i++) {
+    if (catalog[i].timeOfDay === 'anytime') return catalog[i].id;
+  }
+
+  // 4. catalog[0]
+  return catalog[0].id;
 }
 
 /* ============================

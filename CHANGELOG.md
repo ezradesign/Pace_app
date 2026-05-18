@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime > catalog[0]) + logro master.path.all7 | #78 | [abajo](#v0320----2026-05-17----featcamino-catalogo-5--7) |
 | **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [abajo](#v0310----2026-05-17----featcamino-pathtransitions) |
-| **v0.30.0** | 2026-05-16 | feat(camino): arquitectura overlay -- TimerDial compartido + SenderoBar sticky persistente + CompletionScreen rica | #76 | [abajo](#v0300----2026-05-16----featcamino-arquitectura-overlay) |
+| **v0.30.0** | 2026-05-16 | feat(camino): arquitectura overlay -- TimerDial compartido + SenderoBar sticky persistente + CompletionScreen rica | #76 | [session-76](./docs/sessions/session-76-overlay-arquitectura.md) |
 | **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [session-75](./docs/sessions/session-75-sendero-implementacion.md) |
 | **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [session-74](./docs/sessions/session-74-oscuro-recalibrado.md) |
 | **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [abajo](#v02811----2026-05-12----styleui-subir-luminosidad-y-escalonar-fondos-modo-oscuro) |
@@ -95,6 +96,147 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.32.0] -- 2026-05-17 -- feat(camino): catalogo 5 -> 7
+
+Sesion 78. Cierra el catalogo de Caminos a **7** (anyade `path.tea` y
+`path.breath`), introduce el slot `'anytime'` para Caminos sin hora fija
+y enriquece `getSuggestedPath` con jerarquia explicita de 4 niveles que
+preserva la inversion s75 (lastViewed wins) mientras incorpora la logica
+horaria como capa nueva. Redisenia el `PathHydrateStep` del PathRunner
+para que hable el mismo lenguaje visual que el `HydrateModule` del home
+(contador Garamond gigante + grid de vasos + botones del mismo peso).
+Anyade un unico logro nuevo (`master.path.all7`, "Cartografa") con glifo
+heptagonal de la familia visual de `streak.7` / `streak.365`.
+
+Diario: [session-78-catalogo-caminos.md](./docs/sessions/session-78-catalogo-caminos.md).
+
+Bump a v0.32.0 por feature de catalogo + slot horario nuevo + logro
+nuevo + redisenio visual coherente del step Hydrate.
+
+### Added
+
+- **`app/paths/registry.js`** -- 2 entradas nuevas en PATH_CATALOG:
+  - `path.tea` (timeOfDay `'afternoon'`): 3 pasos -- breathe.coherent.55
+    + hydrate (optional) + focus 10 min. ~17 min total. Reenganche
+    progresivo de sobremesa.
+  - `path.breath` (timeOfDay `'anytime'` -- nuevo): 2 pasos -- breathe.478
+    + breathe.coherent.55. ~8 min. Micropausa de respiracion sin foco ni
+    cuerpo.
+- **`app/state-achievements.jsx`** -- funcion `checkAllPathsCompleted`.
+  Recorre `PATH_CATALOG` y exige `paths.completed[id].count >= 1` para
+  cada uno. Guard `catalog.length >= 7`. Exportada a window.
+- **`app/achievements/Achievements.jsx`** -- entrada `master.path.all7`
+  en categoria `maestria` (title "Cartografa", desc "Recorre los siete
+  caminos al menos una vez"). Anyadida a `IMPLEMENTED_ACHIEVEMENTS` bajo
+  nuevo subgrupo "Caminos (1/1) -- sesion 78". Glifo SVG `master.path.all7`
+  (heptagono regular: 7 puntos r=1.6 en vertices + centro r=2.4 + path
+  conectandolos en bucle, stroke 0.5 opacity 0.5). Familia visual de
+  streak.7 y streak.365.
+- **i18n** -- 8 claves nuevas (4 x ES/EN):
+  - `paths.path.tea.name` ES "Infusion" / EN "Steeping".
+  - `paths.path.tea.tagline` ES "Un vapor breve, y la tarde recobra forma."
+    / EN "A brief steam, and the afternoon takes shape again.".
+  - `paths.path.breath.name` ES "Halito" / EN "Breath".
+  - `paths.path.breath.tagline` ES "Dos vientos cortos para volver." /
+    EN "Two short winds to return.".
+  - `path.hydrate.skip` ES "Saltar" / EN "Skip" (nueva clave especifica
+    del step, ademas del `path.runner.skip` global).
+  - `path.hydrate.glasses.today` ES "Vasos hoy" / EN "Glasses today".
+
+### Changed
+
+- **`app/state-paths.jsx`** -- `getSuggestedPath` reescrita con jerarquia
+  explicita de 4 niveles:
+  1. `lastViewed` (s75, preferencia del usuario).
+  2. `timeOfDay` match (sabado/domingo -> slot `'weekend'`; resto: slot
+     horario actual segun la hora del sistema -- morning <9h, midday <13h,
+     afternoon <17h, evening >=17h).
+  3. Slot `'anytime'` (nuevo, fallback antes de catalog[0]).
+  4. `catalog[0]` (ultimo recurso, garantia de no devolver null).
+  Hook nuevo en `advancePathStep` cuando se cierra un Camino: dispara
+  `window.checkAllPathsCompleted` via `setTimeout(0)` para que el detector
+  lea el estado ya actualizado y evite re-entradas en el reducer.
+- **`app/paths/PathRunner.jsx`** -- `PathHydrateStep` reescrito de cero
+  (~50 ln -> ~108 ln). Lectura de `state.water.{today, goal}` via
+  `usePace()`. Nuevo layout vertical:
+  - Contador `clamp(72px, 12vw, 112px)` EB Garamond italic en
+    `var(--hydrate)` con ` / goal` a 0.42em en `var(--ink-3)`.
+  - Meta-label "Vasos hoy" 11px tracking 0.22em uppercase.
+  - Grid de `goal` vasos (`gridTemplateColumns: 'repeat(goal, 1fr)'`,
+    aspectRatio 1/1.3, max-width 360px) replicando 1:1 el patron visual
+    del `HydrateTracker` del home (border 1.5px var(--line) /
+    var(--hydrate) + fill desde top 40%). **NO interactivos** (es step de
+    Camino, no tracker).
+  - Copy 18px EB Garamond italic max-width 360px.
+  - Dos botones del **mismo peso visual** via `btnBase` compartido
+    (padding 10px 28px, radius --r-sm, fontSize 13, font display italic);
+    diferencia solo de color: "Saltar" outline 1px var(--line-2) +
+    transparent + var(--ink-2); "Beber" fill var(--hydrate) + paper.
+    Sin jerarquia CTA principal/secundario -- refuerza que la accion es
+    de verdad opcional.
+- **`app/i18n/strings.js`** -- microcopy hydrate redisenada en ES/EN:
+  - `path.hydrate.copy` "Si te apetece, suma un vaso." (antes "Un vaso de
+    agua, si te apetece") / "If you feel like it, add a glass.".
+  - `path.hydrate.drank` "Beber" (antes "He bebido") / "Drink" (antes
+    "I drank"). Pasa de primera persona declarativa a infinitivo
+    invitando.
+- **`PACE.html`** -- titulo `v0.32.0`.
+- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.32.0`.
+- **`sw.js`** -- `CACHE_NAME` `pace-v0.32.0`.
+
+### Racional
+
+El catalogo 7 estaba prometido desde el prompt original del proyecto. s78
+lo cierra con 2 Caminos que ocupan huecos del lexico (sobremesa con
+infusion, micropausa pura de respiracion) sin duplicar `kinds` (path.tea
+es el unico Camino con focus 10 min -- mas corto que los 15/25 estandar;
+path.breath es el unico sin focus ni cuerpo). El slot `'anytime'` permite
+sugerir Caminos sin hora fija sin forzarlos a competir con los slots
+horarios -- queda como fallback explicito en la cascada.
+
+`getSuggestedPath` se enriquece sin romper la inversion s75: lastViewed
+sigue ganando porque el usuario validar runtime que esta es la
+expectativa correcta (memoria > sugerencia contextual). La logica
+horaria entra solo cuando lastViewed no aplica (primer uso o tras reset).
+
+El redisenio del PathHydrateStep es la pieza visualmente mas evidente.
+El step previo (circulo 64px con emoji + un parrafo en Garamond + dos
+botones de jerarquia desigual) se sentia fuera de tono dentro del overlay
+y, peor, comunicaba mal la opcionalidad del paso ("He bebido" oscuro como
+CTA principal sugeria que era la accion preferida). La nueva version
+toma prestado el lenguaje del HydrateModule del home (mismo contador,
+mismos vasos visuales, mismo color) y equilibra los botones para que la
+opcionalidad sea visual, no textual.
+
+Un solo logro nuevo por sesion mantiene el ritmo del catalogo de 90+
+logros sin inflar de golpe. `master.path.all7` es meta natural del
+catalogo cerrado; el glifo heptagonal continua una familia visual ya
+establecida (streak.7 / streak.365).
+
+### Build
+
+- `PACE_standalone.html`: **605 KB** (619,615 bytes; +7,412 bytes vs
+  v0.31.0). Crecimiento: 2 entradas catalogo + 8 claves i18n duplicadas
+  + redisenio PathHydrateStep (+98 ln neto en PathRunner.jsx, 717 -> 815) + glifo SVG +
+  detector + extension de getSuggestedPath.
+- `index.html`: identico byte-a-byte.
+- 43 archivos validados (sin cambios estructurales vs s77b).
+- Backup creado: `backups/PACE_standalone_v0.31.0_20260517.html` (605 KB).
+  Rotado el mas antiguo: `backups/PACE_standalone_v0.27.0_20260509.html`.
+
+### Diferido a sesiones siguientes
+
+- **s79 (puro tecnico)** -- Split `app/paths/PathRunner.jsx` (825 ln).
+  Candidatos: `CompletionScreen`, los 4 `Path*Step`, `ExitConfirmModal`.
+  Estado real al cerrar s78: 815 ln (717 -> 815 por redisenio
+  PathHydrateStep, +98 ln neto).
+- **i18n del catalogo de logros** -- 90+ entradas con title/desc en
+  espanyol hardcoded. Migracion a `t()` es proyecto en si mismo.
+- **Logica horaria fina** -- `evening` cubre 17h-3am. Si en el futuro
+  hay un Camino nocturno (>=22h), conviene distinguir `night`.
 
 ---
 
@@ -270,92 +412,7 @@ solo en los momentos rituales (entre pantallas + completion).
 
 ---
 
-## [v0.30.0] -- 2026-05-16 -- feat(camino): arquitectura overlay
-
-Sesion 76. Tres cambios estructurales sobre el overlay PathRunner que
-resuelven los problemas detectados en la auditoria visual de s75
-(capturas 3, 4 y 5). Bump a v0.30.0 por su naturaleza arquitectural,
-no de pulido.
-
-### Added
-
-- **`app/ui/TimerDial.jsx`** -- nuevo (123 ln). Anillo SVG + arco de
-  progreso + tipografia Garamond italic + modeLabel + subtitle + slot
-  `inner`. Componente puramente presentacional consumido por
-  `FocusTimer` (home) y `PathFocusStep` (Camino). Mantiene
-  pixel-equivalencia con el TimerAro previo (viewBox 100, radio 47.5,
-  strokeWidth 0.35 base + 0.7 progreso, strokeOpacity 0.7). Incluye
-  `interpolateRingColor()` extraida desde `FocusTimer`. Exporta a
-  `window`: `TimerDial`, `interpolateRingColor`.
-- **`app/tokens.css`** -- token `--sendero-sticky-h: 38px` (placeholder,
-  se afinara en s77). Bloque CSS `.sendero-bar.sticky` (position fixed
-  z=95, labels ocultos). Reglas `body[data-pace-path-active]` que
-  empujan `padding-top` del overlay y de `SessionShell.root`
-  (este ultimo con `!important` para sobrescribir el inline-style).
-- **i18n** -- 1 clave nueva: `path.runner.complete.recorrido` ES "Recorrido"
-  / EN "Journey".
-
-### Changed
-
-- **`app/focus/FocusTimer.jsx`** -- `TimerAro` y `interpolateRingColor`
-  eliminadas (vivian aqui en s75; ahora viven en `TimerDial`).
-  `TimerVisualization` llama directo a `<TimerDial>` en estilo aro.
-  `focusStyles` purgado de los 6 estilos migrados (aroFrame/aroInner/
-  modeLabel/numberHuge/subtitleItalic/innerDivider).
-- **`app/paths/PathRunner.jsx`** -- `PathFocusStep` consume `<TimerDial>`
-  (sustituye bloque hardcoded `fontSize: 96`); controles del Camino
-  (Iniciar/Pausar + Skip) viven fuera del dial. PathRunner anyade
-  `useEffect` que toggle `body[data-pace-path-active]` mientras
-  `cur != null`. SenderoBar se monta ANTES de PathTopBar en el render y
-  con prop `sticky`. `CompletionScreen` reescrita: ahora consume
-  `usePace()`, renderiza SenderoBar al 100% done, lista "Recorrido" con
-  numerales romanos en Garamond italic + skipped en tono tenue, tiempo
-  elapsed, y caja de logros desbloqueados durante el Camino (filtra
-  `state.achievements` por `unlockedAt >= snapshot.startedAt` y resuelve
-  glifo desde `window.ACHIEVEMENT_CATALOG`).
-- **`app/paths/SenderoBar.jsx`** -- nueva prop `sticky`. Cada hito ahora
-  envuelve su circulo en `<g><title>name</title>...</g>` para tooltip
-  nativo (sustituto de los labels ocultos en modo sticky). Export
-  envuelto en `React.memo` para no re-renderizar por tick del timer en
-  `PathFocusStep` cuando `blocks`/`currentIndex` son estables.
-- **`PACE.html`** -- nueva linea de carga `app/ui/TimerDial.jsx` antes
-  de `focus/FocusTimer.jsx`. Titulo `v0.30.0`.
-- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.30.0`.
-- **`sw.js`** -- `CACHE_NAME` `pace-v0.30.0`.
-
-### Racional
-
-Las capturas de auditoria s75 mostraron tres problemas: (3) el Pomodoro
-dentro de un Camino se ve pobre vs el del home porque eran dos
-implementaciones distintas; (4) SenderoBar solo se ve en Pomodoro,
-no en Respira ni Mueve, porque SessionShell (z=90 fixed) la tapa;
-(5) CompletionScreen termina raso sin cierre simbolico. s76 ataca los
-tres simultaneamente sin tocar color, catalogo ni anyadir Caminos. La
-extraccion de TimerDial es el cambio mas arriesgado (FocusTimer es
-componente con traccion real), por eso se ataca primero -- si rompe
-algo, se detecta con la app aun reconocible. Cambios 2 y 3 son aditivos.
-
-### Build
-
-- `PACE_standalone.html`: **583 KiB** (597 KB decimal; +7.5 KiB vs s75).
-- 42 archivos validados (41 -> 42 por TimerDial.jsx).
-- SHA256: `1722414C6C7EBF4D4AD90A73A261DE2630EF7027BA4B7C4217E58EFFE81B402A`.
-- Backup: `backups/PACE_standalone_v0.29.0_20260516.html` (restaurado
-  desde `git show HEAD` tras detectar que la regeneracion sobrescribio
-  el standalone antes del paso de rotacion). Rotado el mas antiguo
-  (`v0.27.0_20260508.html`) para mantener el cap de 20.
-
-### Diferido a sesiones siguientes
-
-- **s77** -- Ritmo y microcopia: interstitial 2s entre pasos, Toast
-  3000ms via token, CTA verde musgo apagado, animacion del halo al
-  saltar de hito, afinar `--sendero-sticky-h`.
-- **s78** -- Catalogo Caminos: 2 Caminos faltantes (Te sin Azucar /
-  Plain Tea + Halito / Breath), revision del selector inferior.
-
----
-
-<!-- v0.29.0 y anteriores: detalle archivado en docs/sessions/. -->
+<!-- v0.30.0 y anteriores: detalle archivado en docs/sessions/. -->
 <!-- (regla CLAUDE.md: solo detalle de las 2 ultimas versiones aqui) -->
 <!-- Detalle v0.29.0 -> docs/sessions/session-75-sendero-implementacion.md -->
 <!-- A partir de aqui, los bloques inline son trazabilidad historica de

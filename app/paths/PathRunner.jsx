@@ -333,53 +333,111 @@ function StepError({ routineId, onSkip }) {
   );
 }
 
-/* PathHydrateStep - vaso de agua opcional */
+/* PathHydrateStep - vaso de agua opcional.
+   s78: redisenado para coherencia con HydrateModule del home.
+     - Contador Garamond italic grande (today / goal) en color --hydrate.
+     - Grid visual de `goal` vasos (no clicables; es step de Camino,
+       no tracker). Refleja el estado actual de state.water.
+     - Copy artesanal en italic reforzando opcionalidad.
+     - Dos botones del MISMO peso visual (Saltar outline / Beber relleno);
+       diferencia solo de color, no de jerarquia. Refuerza que la accion
+       es de verdad opcional, no un CTA disfrazado. */
 function PathHydrateStep({ onDone, onSkip }) {
+  const [state] = usePace();
   const { t } = useT();
-  const handleDrank = () => {
+  const today = (state.water && state.water.today) || 0;
+  const goal  = (state.water && state.water.goal)  || 8;
+  const handleDrink = () => {
     if (typeof addWaterGlass === 'function') {
       try { addWaterGlass(1); } catch (e) {}
     }
     onDone();
   };
+  const btnBase = {
+    padding: '10px 28px', borderRadius: 'var(--r-sm)',
+    cursor: 'pointer', fontSize: 13, letterSpacing: '0.08em',
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+  };
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '32px 40px', textAlign: 'center',
     }}>
+      {/* Contador grande, mismo lenguaje que HydrateTracker */}
       <div style={{
-        width: 64, height: 64, borderRadius: '50%',
-        background: 'var(--hydrate-soft, rgba(100,180,220,0.12))',
-        display: 'grid', placeItems: 'center',
-        fontSize: 28, marginBottom: 24,
+        fontFamily: "'EB Garamond', Georgia, serif",
+        fontStyle: 'italic',
+        fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
+        color: 'var(--hydrate)',
       }}>
-        &#x1F4A7;
+        {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
       </div>
+      <div style={{
+        fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
+      }}>
+        {t('path.hydrate.glasses.today') || 'Vasos hoy'}
+      </div>
+
+      {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(' + goal + ', 1fr)',
+        gap: 6,
+        maxWidth: 360, width: '100%',
+        marginBottom: 26,
+      }}>
+        {Array.from({ length: goal }).map(function (_, i) {
+          const filled = i < today;
+          return (
+            <div key={i} style={{
+              aspectRatio: '1/1.3',
+              background: filled ? 'var(--hydrate-soft)' : 'transparent',
+              border: '1.5px solid ' + (filled ? 'var(--hydrate)' : 'var(--line)'),
+              borderRadius: 'var(--r-sm)',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              {filled && (
+                <div style={{
+                  position: 'absolute', inset: 0, top: '40%',
+                  background: 'var(--hydrate-soft)',
+                  borderTop: '1px solid var(--hydrate)',
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
       <p style={{
         fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontSize: 28, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 32px', lineHeight: 1.3,
+        fontStyle: 'italic', fontSize: 18, fontWeight: 400,
+        color: 'var(--ink-2)', margin: '0 0 26px', lineHeight: 1.4,
+        maxWidth: 360,
       }}>
         {t('path.hydrate.copy')}
       </p>
+
+      {/* Dos botones del mismo peso visual: diferencia de color, no de jerarquia */}
       <div style={{ display: 'flex', gap: 12 }}>
         <button
           onClick={onSkip}
-          style={{
-            padding: '10px 24px', borderRadius: 'var(--r-sm)',
-            background: 'var(--paper-2)', border: '1px solid var(--line)',
-            color: 'var(--ink-2)', cursor: 'pointer', fontSize: 13,
-          }}
+          style={Object.assign({}, btnBase, {
+            background: 'transparent',
+            border: '1px solid var(--line-2)',
+            color: 'var(--ink-2)',
+          })}
         >
-          {t('path.runner.skip')}
+          {t('path.hydrate.skip') || t('path.runner.skip')}
         </button>
         <button
-          onClick={handleDrank}
-          style={{
-            padding: '10px 24px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-          }}
+          onClick={handleDrink}
+          style={Object.assign({}, btnBase, {
+            background: 'var(--hydrate)',
+            border: '1px solid var(--hydrate)',
+            color: 'var(--paper)',
+          })}
         >
           {t('path.hydrate.drank')}
         </button>

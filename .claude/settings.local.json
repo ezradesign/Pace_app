@@ -27,7 +27,8 @@
       "Bash(powershell -Command \"\\(Get-FileHash PACE_standalone.html -Algorithm SHA256\\).Hash; \\(Get-FileHash index.html -Algorithm SHA256\\).Hash\")",
       "PowerShell(Remove-Item \"backups/PACE_standalone_v0.25.4_20260508.html\"; \\(Get-ChildItem \"backups/\" -File\\).Count)",
       "PowerShell(node build-standalone.js)",
-      "Bash(node -e \"const React = require\\('react'\\); const X = React.memo\\(function\\(\\){return null;}\\); console.log\\('typeof React.memo result =', typeof X\\); console.log\\('keys:', Object.keys\\(X\\)\\);\")"
+      "Bash(node -e \"const React = require\\('react'\\); const X = React.memo\\(function\\(\\){return null;}\\); console.log\\('typeof React.memo result =', typeof X\\); console.log\\('keys:', Object.keys\\(X\\)\\);\")",
+      "Bash(xargs wc -l)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

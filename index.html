@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.31.0</title>
+  <title>PACE · Foco · Cuerpo — v0.32.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -776,8 +776,10 @@ window.PACE_STRINGS = {
     'path.runner.complete.back':     'Volver',
     'path.runner.complete.recorrido':'Recorrido',
     'path.runner.transition.continue':'toca para continuar',
-    'path.hydrate.copy':             'Un vaso de agua, si te apetece',
-    'path.hydrate.drank':            'He bebido',
+    'path.hydrate.copy':             'Si te apetece, suma un vaso.',
+    'path.hydrate.drank':            'Beber',
+    'path.hydrate.skip':             'Saltar',
+    'path.hydrate.glasses.today':    'Vasos hoy',
     'path.error.routineNotFound':    'Rutina no encontrada: {id}',
     // Caminos - nombres y taglines (sesion 75 - renombrado sensorial)
     'paths.path.dawn.name':           'Morning Glory',
@@ -790,6 +792,10 @@ window.PACE_STRINGS = {
     'paths.path.dusk.tagline':        'Un círculo de luz, todo lo demás en penumbra.',
     'paths.path.weekend.name':        'Ventana Abierta',
     'paths.path.weekend.tagline':     'Dejar entrar lo que el día traiga, sin moverse.',
+    'paths.path.tea.name':            'Infusión',
+    'paths.path.tea.tagline':         'Un vapor breve, y la tarde recobra forma.',
+    'paths.path.breath.name':         'Hálito',
+    'paths.path.breath.tagline':      'Dos vientos cortos para volver.',
     // Caminos - nombres de bloque por kind (sesion 75 - SenderoBar)
     'paths.kind.breathe.name':        'Respira',
     'paths.kind.focus.name':          'Foco',
@@ -1161,8 +1167,10 @@ window.PACE_STRINGS = {
     'path.runner.complete.back':     'Back',
     'path.runner.complete.recorrido':'Journey',
     'path.runner.transition.continue':'tap to continue',
-    'path.hydrate.copy':             'A glass of water, if you feel like it',
-    'path.hydrate.drank':            'I drank',
+    'path.hydrate.copy':             'If you feel like it, add a glass.',
+    'path.hydrate.drank':            'Drink',
+    'path.hydrate.skip':             'Skip',
+    'path.hydrate.glasses.today':    'Glasses today',
     'path.error.routineNotFound':    'Routine not found: {id}',
     // Paths - names and taglines (session 75 - sensory renaming)
     'paths.path.dawn.name':           'Morning Glory',
@@ -1175,6 +1183,10 @@ window.PACE_STRINGS = {
     'paths.path.dusk.tagline':        'A circle of light, everything else in shadow.',
     'paths.path.weekend.name':        'Open Window',
     'paths.path.weekend.tagline':     'Letting in whatever the day brings, without moving.',
+    'paths.path.tea.name':            'Steeping',
+    'paths.path.tea.tagline':         'A brief steam, and the afternoon takes shape again.',
+    'paths.path.breath.name':         'Breath',
+    'paths.path.breath.tagline':      'Two short winds to return.',
     // Paths - block names by kind (session 75 - SenderoBar)
     'paths.kind.breathe.name':        'Breathe',
     'paths.kind.focus.name':          'Focus',
@@ -1523,7 +1535,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.31.0';
+const PACE_VERSION = 'v0.32.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -2209,6 +2221,22 @@ function checkStatsAchievements() {
   }
 }
 
+/* master.path.all7 (s78) — desbloquea cuando el usuario ha completado al
+   menos UNA vez cada uno de los Caminos del catalogo (count >= 1 en cada
+   entrada de paths.completed). El guard catalog.length >= 7 evita que se
+   dispare antes de tiempo si en el futuro reducimos el catalogo. */
+function checkAllPathsCompleted() {
+  const s = getState();
+  const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (catalog.length < 7) return;
+  const compl = (s.paths && s.paths.completed) || {};
+  for (let i = 0; i < catalog.length; i++) {
+    const entry = compl[catalog[i].id];
+    if (!entry || (entry.count || 0) < 1) return;
+  }
+  unlockAchievement('master.path.all7');
+}
+
 /* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
 function checkRetreatAchievement() {
   const s = getState();
@@ -2358,6 +2386,7 @@ Object.assign(window, {
   completeExtraSession,
   updateStreak,
   checkStatsAchievements,
+  checkAllPathsCompleted,
 });
 
 </script>
@@ -2404,6 +2433,14 @@ function advancePathStep(reason) {
     const nextIndex = c.stepIndex + 1;
     if (nextIndex >= path.steps.length) {
       const prev = s.paths.completed[c.id] || { count: 0 };
+      /* s78: tras cerrar un Camino, comprobar si el usuario ha completado
+         ya los 7 -> desbloquea master.path.all7. Se llama fuera del setState
+         para evitar re-entradas (lo dispara el setTimeout(0) de abajo). */
+      if (typeof window.checkAllPathsCompleted === 'function') {
+        setTimeout(function () {
+          try { window.checkAllPathsCompleted(); } catch (e) {}
+        }, 0);
+      }
       return {
         ...s,
         paths: {
@@ -2455,19 +2492,57 @@ function abandonPath() {
   }));
 }
 
-/* Sesion 75: sugerencia basada en preferencia del usuario, no en la hora.
-   - Si lastViewed existe y sigue siendo un Camino vigente: lo devuelve.
-   - Si no: primer Camino del catalogo (orden de definicion). */
+/* Jerarquia de seleccion (s78):
+     1. lastViewed (s75)    -- la preferencia del usuario manda siempre que
+                               siga apuntando a un Camino del catalogo vigente.
+     2. timeOfDay match     -- en cuanto el usuario nunca abrio uno, sugerir
+                               el slot horario actual (morning/midday/afternoon/
+                               evening + weekend). Para el sabado/domingo, el
+                               slot 'weekend' gana sobre cualquier slot horario.
+     3. 'anytime' (s78)     -- fallback que SIEMPRE entra antes del catalog[0]
+                               (p.ej. path.breath, sin hora fija).
+     4. catalog[0]          -- ultimo recurso, mantiene la garantia de no
+                               devolver null si hay al menos un Camino. */
 function getSuggestedPath() {
   const s = getState && getState();
   const lv = s && s.paths && s.paths.lastViewed;
   const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
+  if (!catalog.length) return null;
+
+  // 1. lastViewed
   if (lv) {
     for (let i = 0; i < catalog.length; i++) {
       if (catalog[i].id === lv) return lv;
     }
   }
-  return catalog.length ? catalog[0].id : null;
+
+  // 2. slot horario actual
+  const now = new Date();
+  const dow = now.getDay(); // 0 = domingo, 6 = sabado
+  const isWeekend = dow === 0 || dow === 6;
+  if (isWeekend) {
+    for (let i = 0; i < catalog.length; i++) {
+      if (catalog[i].timeOfDay === 'weekend') return catalog[i].id;
+    }
+  }
+  const h = now.getHours();
+  let slot;
+  if (h < 9)       slot = 'morning';
+  else if (h < 13) slot = 'midday';
+  else if (h < 17) slot = 'afternoon';
+  else if (h < 21) slot = 'evening';
+  else             slot = 'evening';
+  for (let i = 0; i < catalog.length; i++) {
+    if (catalog[i].timeOfDay === slot) return catalog[i].id;
+  }
+
+  // 3. 'anytime'
+  for (let i = 0; i < catalog.length; i++) {
+    if (catalog[i].timeOfDay === 'anytime') return catalog[i].id;
+  }
+
+  // 4. catalog[0]
+  return catalog[0].id;
 }
 
 /* ============================
@@ -7685,6 +7760,18 @@ const PATH_CATALOG = [
     access: 'free',
   },
   {
+    id: 'path.tea',
+    nameKey: 'paths.path.tea.name',
+    taglineKey: 'paths.path.tea.tagline',
+    timeOfDay: 'afternoon',
+    steps: [
+      { kind: 'breathe', routineId: 'breathe.coherent.55' },
+      { kind: 'hydrate',                                    optional: true },
+      { kind: 'focus',                                      min: 10 },
+    ],
+    access: 'free',
+  },
+  {
     id: 'path.dusk',
     nameKey: 'paths.path.dusk.name',
     taglineKey: 'paths.path.dusk.tagline',
@@ -7705,6 +7792,17 @@ const PATH_CATALOG = [
       { kind: 'breathe', routineId: 'breathe.nadi.shodhana' },
       { kind: 'body',   routineId: 'move.atg.knees' },
       { kind: 'hydrate',                                    optional: true },
+    ],
+    access: 'free',
+  },
+  {
+    id: 'path.breath',
+    nameKey: 'paths.path.breath.name',
+    taglineKey: 'paths.path.breath.tagline',
+    timeOfDay: 'anytime',
+    steps: [
+      { kind: 'breathe', routineId: 'breathe.478' },
+      { kind: 'breathe', routineId: 'breathe.coherent.55' },
     ],
     access: 'free',
   },
@@ -8037,6 +8135,10 @@ const GLYPH_SVG = {
   'master.marathon':          g(`<circle cx="6" cy="32" r="1.8" fill="currentColor"/> <circle cx="22" cy="12" r="1.8" fill="currentColor"/> <circle cx="38" cy="32" r="1.8" fill="currentColor"/> <path d="M6 32 L22 12 L38 32" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
   'master.centurion':         g(`<text x="22" y="30" text-anchor="middle" font-family="EB Garamond" font-style="italic" font-size="22" fill="currentColor">C</text>`),
   'secret.cow.click':         g(`<circle cx="12.8" cy="16.5" r="2.2" fill="currentColor"/><circle cx="22" cy="25.7" r="2.2" fill="currentColor"/><circle cx="31.2" cy="16.5" r="2.2" fill="currentColor"/><circle cx="9.2" cy="31.2" r="2.2" fill="currentColor"/><circle cx="34.8" cy="31.2" r="2.2" fill="currentColor"/><circle cx="36.7" cy="12.8" r="1.8" fill="currentColor" opacity="0.7"/><path d="M9.2 31.2 L12.8 16.5 L22 25.7 L31.2 16.5 L34.8 31.2" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>`),
+  /* s78 - master.path.all7: heptagono regular con 7 vertices + centro.
+     Familia visual de streak.7/streak.365 (puntos pequenos en poligono
+     mas linea uniendolos en opacity 0.5). El centro 2.4 marca "completo". */
+  'master.path.all7':         g(`<circle cx="22" cy="6" r="1.6" fill="currentColor"/> <circle cx="35" cy="13" r="1.6" fill="currentColor"/> <circle cx="38" cy="26" r="1.6" fill="currentColor"/> <circle cx="29" cy="37" r="1.6" fill="currentColor"/> <circle cx="15" cy="37" r="1.6" fill="currentColor"/> <circle cx="6" cy="26" r="1.6" fill="currentColor"/> <circle cx="9" cy="13" r="1.6" fill="currentColor"/> <circle cx="22" cy="22" r="2.4" fill="currentColor"/> <path d="M22 6 L35 13 L38 26 L29 37 L15 37 L6 26 L9 13 Z" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.5"/>`),
 };
 /* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
 GLYPH_SVG['first.plan'] = GLYPH_SVG['first.ritual'];
@@ -8119,6 +8221,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
   { id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '50 logros', glyph: 'L' },
   { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '100 logros', glyph: 'C' },
+  { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
 
   // Secretos (71-90)
   { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
@@ -8213,6 +8316,8 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'master.collector.half', 'master.collector.full',
   'master.silent.day', 'master.retreat',
   'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
+  // Caminos (1/1) — sesión 78
+  'master.path.all7',
   // Estadísticas (4/4) — sesión 46
   'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
@@ -11182,53 +11287,111 @@ function StepError({ routineId, onSkip }) {
   );
 }
 
-/* PathHydrateStep - vaso de agua opcional */
+/* PathHydrateStep - vaso de agua opcional.
+   s78: redisenado para coherencia con HydrateModule del home.
+     - Contador Garamond italic grande (today / goal) en color --hydrate.
+     - Grid visual de `goal` vasos (no clicables; es step de Camino,
+       no tracker). Refleja el estado actual de state.water.
+     - Copy artesanal en italic reforzando opcionalidad.
+     - Dos botones del MISMO peso visual (Saltar outline / Beber relleno);
+       diferencia solo de color, no de jerarquia. Refuerza que la accion
+       es de verdad opcional, no un CTA disfrazado. */
 function PathHydrateStep({ onDone, onSkip }) {
+  const [state] = usePace();
   const { t } = useT();
-  const handleDrank = () => {
+  const today = (state.water && state.water.today) || 0;
+  const goal  = (state.water && state.water.goal)  || 8;
+  const handleDrink = () => {
     if (typeof addWaterGlass === 'function') {
       try { addWaterGlass(1); } catch (e) {}
     }
     onDone();
   };
+  const btnBase = {
+    padding: '10px 28px', borderRadius: 'var(--r-sm)',
+    cursor: 'pointer', fontSize: 13, letterSpacing: '0.08em',
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+  };
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '32px 40px', textAlign: 'center',
     }}>
+      {/* Contador grande, mismo lenguaje que HydrateTracker */}
       <div style={{
-        width: 64, height: 64, borderRadius: '50%',
-        background: 'var(--hydrate-soft, rgba(100,180,220,0.12))',
-        display: 'grid', placeItems: 'center',
-        fontSize: 28, marginBottom: 24,
+        fontFamily: "'EB Garamond', Georgia, serif",
+        fontStyle: 'italic',
+        fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
+        color: 'var(--hydrate)',
       }}>
-        &#x1F4A7;
+        {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
       </div>
+      <div style={{
+        fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
+      }}>
+        {t('path.hydrate.glasses.today') || 'Vasos hoy'}
+      </div>
+
+      {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(' + goal + ', 1fr)',
+        gap: 6,
+        maxWidth: 360, width: '100%',
+        marginBottom: 26,
+      }}>
+        {Array.from({ length: goal }).map(function (_, i) {
+          const filled = i < today;
+          return (
+            <div key={i} style={{
+              aspectRatio: '1/1.3',
+              background: filled ? 'var(--hydrate-soft)' : 'transparent',
+              border: '1.5px solid ' + (filled ? 'var(--hydrate)' : 'var(--line)'),
+              borderRadius: 'var(--r-sm)',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              {filled && (
+                <div style={{
+                  position: 'absolute', inset: 0, top: '40%',
+                  background: 'var(--hydrate-soft)',
+                  borderTop: '1px solid var(--hydrate)',
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
       <p style={{
         fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontSize: 28, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 32px', lineHeight: 1.3,
+        fontStyle: 'italic', fontSize: 18, fontWeight: 400,
+        color: 'var(--ink-2)', margin: '0 0 26px', lineHeight: 1.4,
+        maxWidth: 360,
       }}>
         {t('path.hydrate.copy')}
       </p>
+
+      {/* Dos botones del mismo peso visual: diferencia de color, no de jerarquia */}
       <div style={{ display: 'flex', gap: 12 }}>
         <button
           onClick={onSkip}
-          style={{
-            padding: '10px 24px', borderRadius: 'var(--r-sm)',
-            background: 'var(--paper-2)', border: '1px solid var(--line)',
-            color: 'var(--ink-2)', cursor: 'pointer', fontSize: 13,
-          }}
+          style={Object.assign({}, btnBase, {
+            background: 'transparent',
+            border: '1px solid var(--line-2)',
+            color: 'var(--ink-2)',
+          })}
         >
-          {t('path.runner.skip')}
+          {t('path.hydrate.skip') || t('path.runner.skip')}
         </button>
         <button
-          onClick={handleDrank}
-          style={{
-            padding: '10px 24px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-          }}
+          onClick={handleDrink}
+          style={Object.assign({}, btnBase, {
+            background: 'var(--hydrate)',
+            border: '1px solid var(--hydrate)',
+            color: 'var(--paper)',
+          })}
         >
           {t('path.hydrate.drank')}
         </button>
