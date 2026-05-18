@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline | #80 | [abajo](#v0330----2026-05-18----refactorpaths-split-pathrunnerjsx-en-steps) |
 | **v0.32.1** | 2026-05-18 | fix(ui): pomodoro contextual en Camino (aro + pausa/reset/saltar) + fade-out toasts + oscuro +10% | #79 | [abajo](#v0321----2026-05-18----fixui-pomodoro-contextual-en-camino) |
 | **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime > catalog[0]) + logro master.path.all7 | #78 | [abajo](#v0320----2026-05-17----featcamino-catalogo-5--7) |
 | **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [session-77](./docs/sessions/session-77-path-transitions.md) + [s77b](./docs/sessions/session-77b-fix-microcopia.md) |
@@ -97,6 +98,142 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.33.0] -- 2026-05-18 -- refactor(paths): split PathRunner.jsx en steps/
+
+Sesion 80. Refactor puro -- cero cambios funcionales, visuales, de timing o copy.
+
+`PathRunner.jsx` paso de **835 ln a 244 ln (-71%)** mediante split mecanico
+en 7 archivos hermanos:
+
+- 4 Steps extraidos a `app/paths/steps/` (Breathe/Focus/Hydrate/Body).
+- `_shared.js` con `btnTypography` + `btnOutline` (deduplica los 6 keys
+  tipograficos comunes entre PathFocusStep y PathHydrateStep).
+- `PathRunner.parts.jsx` para los componentes chrome (PathTopBar +
+  ExitConfirmModal + StepError) -- aisla 131 ln del orquestador.
+- `CompletionScreen.jsx` para la pantalla terminal (206 ln, incluye
+  `CS_ROMAN` local).
+
+**Contrato uniforme** `(step, onExit(reason))` -- unica firma cambiada:
+`PathHydrateStep` que pasaba antes `(onDone, onSkip)`. PathRunner adapta
+el callsite.
+
+**Decision sobre Move/Stretch:** el prompt mencionaba PathMoveStep y
+PathStretchStep, pero el codigo tenia un unico `PathBodyStep` dispatcher
+que resuelve `kind:'body'` -> MoveSession(`kind='move'|'extra'`) via
+`resolveBodyRoutine`. Dividir requeriria cambiar el catalogo y migrar
+localStorage = cambio de comportamiento. Se mantuvo `PathBodyStep` como
+dispatcher (refactor puro). Reportado como opcion abierta si en el
+futuro se quiere separar move/stretch a nivel catalogo.
+
+Diario: [session-80-split-pathrunner.md](./docs/sessions/session-80-split-pathrunner.md).
+Auditoria previa: [session-80-audit.md](./docs/sessions/session-80-audit.md).
+Diseño de contrato: [session-80-design.md](./docs/sessions/session-80-design.md).
+Checklist no-regresion: [session-80-regression-check.md](./docs/sessions/session-80-regression-check.md).
+
+Bump a v0.33.0 (minor) por refactor arquitectonico significativo. Pre-1.0
+sigue siendo trabajo iterativo, pero el cambio justifica minor bump
+sobre patch.
+
+### Added
+
+- `app/paths/steps/_shared.js` (23 ln) -- `window.pathStepStyles` con
+  `btnTypography` (cursor, fontSize, letterSpacing, fontFamily,
+  fontStyle, borderRadius) y `btnOutline` (background, border, color,
+  transition). Sin comportamiento, solo deduplicacion.
+- `app/paths/steps/PathBreatheStep.jsx` (32 ln) -- Breathe + SafetyGate
+  con resolucion de rutina via `getBreatheRoutine`.
+- `app/paths/steps/PathFocusStep.jsx` (118 ln) -- Pomodoro contextual de
+  Camino. Compone `btnBase` desde `_shared.js` + padding 10x22 propio.
+- `app/paths/steps/PathHydrateStep.jsx` (113 ln) -- Hidratacion opcional.
+  Compone `btnBase` desde `_shared.js` + padding 10x28 propio.
+- `app/paths/steps/PathBodyStep.jsx` (16 ln) -- dispatcher Move/Extra
+  via `resolveBodyRoutine`.
+- `app/paths/PathRunner.parts.jsx` (131 ln) -- chrome del overlay.
+- `app/paths/CompletionScreen.jsx` (206 ln) -- pantalla terminal con
+  `CS_ROMAN` local.
+- `.claude/launch.json` + `.claude/static-server.js` -- mini servidor
+  estatico Node (sin deps) para preview local. Util para regresion
+  runtime en futuras sesiones.
+
+### Changed
+
+- **`app/paths/PathRunner.jsx`** -- reducido de 835 a 244 ln. Contiene
+  SOLO: cabecera, `const { useState, useEffect } = React` (useRef
+  removido, ya no consumido), `function PathRunner()` (la maquina de
+  fases + dispatcher por `step.kind` integro), `Object.assign(window,
+  { PathRunner })`. Toda la logica anterior se preserva verbatim en
+  los archivos nuevos.
+- **`PathRunner` dispatcher (linea ~209)** -- cambio del callsite de
+  PathHydrateStep:
+  - Antes: `<PathHydrateStep onDone={...} onSkip={...} />`.
+  - Despues: `<PathHydrateStep step={step} onExit={handleStepExit} />`.
+  - Cero cambio de comportamiento -- la firma pasa a ser uniforme.
+- **`PACE.html`** -- 7 nuevos `<script src>` insertados entre
+  `PathTransitions.jsx` y `PathRunner.jsx`, en orden:
+  `_shared.js` -> 4 Steps -> `PathRunner.parts.jsx` -> `CompletionScreen.jsx`.
+  Comentarios explicativos del orden.
+- **`PACE.html`** -- titulo `v0.33.0`.
+- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.33.0`.
+- **`sw.js`** -- `CACHE_NAME` `pace-v0.33.0`.
+
+### Decisiones tomadas
+
+- **D1 -- Mantener `PathBodyStep` como dispatcher**. Dividir a Move/
+  Stretch a nivel archivo requeriria cambiar catalogo (`kind`) +
+  migrar localStorage = cambio de comportamiento. Fuera del scope.
+- **D2 -- Extender el split a `PathRunner.parts.jsx`**. Necesario para
+  cumplir metrica PathRunner.jsx <=280 ln. Ya previsto en s79.
+- **D3 -- Contrato uniforme `(step, onExit(reason))`, no el amplio del
+  prompt** (`block`/`onDone`/`onSkip`/`onAbort`/`pathContext`). El
+  contrato actual era casi uniforme; solo `PathHydrateStep` rompia.
+  Uniformar es menos churn. El amplio era premature abstraction.
+- **D4 -- `_shared.js` solo `btnTypography` + `btnOutline`, padding
+  por Step**. El padding difiere (22px focus / 28px hydrate); forzarlo
+  comun sería coherencia falsa.
+- **D5 -- `CS_ROMAN` local en CompletionScreen.jsx**. Decision s79:
+  no extraer hasta tener 3 consumidores. El split no añade ninguno.
+- **D6 -- Preview server local en `.claude/`**. Sin dependencias
+  externas (Node nativo HTTP). Util para regresion runtime sin
+  depender del browser del usuario.
+
+### Verificacion
+
+- **Estatica**: parser TypeScript valida los 8 archivos. `build-standalone.js`
+  procesa 50 archivos (43 anteriores + 7 nuevos). `git diff` confirma
+  que solo el dispatcher de PathHydrateStep es cambio semantico real.
+- **Runtime** (preview local): app monta limpia, Home pixel-a-pixel
+  identico, consola 0 errores. `startPath('path.midday')` -> PathHydrateStep
+  monta con "Saltar" + "Beber". Click Beber -> `water.today` 0->1,
+  `stepIndex` 0->1, phase->transition. Click Saltar -> water sin cambio.
+  `location.reload()` mid-Camino -> overlay vuelve a montar con
+  `aria-label`, `stepIndex`, `lastViewed`, `water` rehidratados.
+  `window.checkAllPathsCompleted` expuesto, `ACHIEVEMENT_CATALOG`
+  incluye `master.path.all7`.
+
+### Build
+
+- `PACE_standalone.html`: **610 KB** (624,539 bytes; +3,093 bytes vs
+  v0.32.1). Crecimiento por boilerplate de cabeceras + 7 IIFE.
+- `index.html`: identico byte-a-byte. SHA-256:
+  `d2c66c6c494f78a7f1c49c489d86e44ad34421635112c6e9f8413e50c231d61b`.
+- 50 archivos validados (43 anteriores + 7 nuevos del split).
+- Backup creado: `backups/PACE_standalone_v0.32.1_20260518.html`
+  (607 KB, pristino restaurado desde HEAD antes del backup).
+- Rotado el mas antiguo:
+  `backups/PACE_standalone_v0.27.3_20260511.html`.
+
+### Diferido a sesiones siguientes
+
+- **Split catalogo Move/Stretch**: si se quiere diferenciar en
+  catalogo, ahora es trivial añadir `steps/PathMoveStep.jsx` +
+  `steps/PathStretchStep.jsx` y cambiar `registry.js`. Bajo coste.
+- **Actualizar `scripts/check-session.ps1`** -- rango de tamaño
+  desactualizado (530-600 KB; real 605-615 KB). No urgente.
+- **Tercera variante de `btnBase`**: si aparece, evaluar
+  parametrizar padding en `_shared.js`.
 
 ---
 

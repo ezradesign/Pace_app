@@ -31,7 +31,13 @@
       "Bash(xargs wc -l)",
       "Read(//c/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app/**)",
       "PowerShell(pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-session.ps1)",
-      "Bash(wc -l app/paths/PathRunner.jsx app/ui/Toast.jsx app/tokens.css && echo \"---\" && stat -c \"%s bytes\" PACE_standalone.html index.html && echo \"---\" && git status --short)"
+      "Bash(wc -l app/paths/PathRunner.jsx app/ui/Toast.jsx app/tokens.css && echo \"---\" && stat -c \"%s bytes\" PACE_standalone.html index.html && echo \"---\" && git status --short)",
+      "Bash(py --version)",
+      "Bash(npx --version)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git checkout *)",
+      "Bash(sha256sum PACE_standalone.html index.html && stat -c \"%n: %s bytes\" PACE_standalone.html index.html)",
+      "PowerShell(.\\\\scripts\\\\check-session.ps1)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

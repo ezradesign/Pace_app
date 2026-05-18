@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.32.1';
+const CACHE_NAME = 'pace-v0.33.0';
 const PRECACHE = [
   '/',
   '/index.html',

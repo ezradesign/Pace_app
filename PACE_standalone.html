@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.32.1</title>
+  <title>PACE · Foco · Cuerpo — v0.33.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1539,7 +1539,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.32.1';
+const PACE_VERSION = 'v0.33.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -10965,15 +10965,337 @@ const pathTransitionStyles = {
 Object.assign(window, { IntroCard, StepIntro, OutroCard });
 
 </script>
-  <!-- Caminos - PathRunner UI (sesion 50) -->
+  <!-- Caminos - Steps (sesion 80) - split de PathRunner.jsx en archivos hijos.
+       Orden: _shared.js primero (estilos comunes), luego los 4 Steps que
+       lo consumen. Todos antes que PathRunner.jsx. -->
   <script type="text/babel">
-/* PACE - Caminos - PathRunner overlay (sesion 50 / v0.26.0-beta)
-   Monta un overlay full-screen cuando state.paths.current != null.
-   Con paths.current === null y justCompleted === null devuelve null
-   -> cero impacto visual en home.
-*/
+/* PACE · Caminos · Estilos compartidos entre Steps · sesion 80 (split de PathRunner.jsx)
+   Solo estilos: btnTypography (tipografia + radius comunes a los botones de
+   los Steps) y btnOutline (defaults del boton outline -- background, border,
+   color, transition). Padding lo decide cada Step segun densidad de su layout.
+   Cero comportamiento. Debe cargarse ANTES de PathFocusStep.jsx y
+   PathHydrateStep.jsx (sus unicos consumidores hoy). */
 
-const { useState: useStatePR, useEffect: useEffectPR, useRef: useRefPR } = React;
+window.pathStepStyles = {
+  btnTypography: {
+    cursor: 'pointer',
+    fontSize: 13,
+    letterSpacing: '0.08em',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    borderRadius: 'var(--r-sm)',
+  },
+  btnOutline: {
+    background: 'transparent',
+    border: '1px solid var(--line-2)',
+    color: 'var(--ink-2)',
+    transition: 'all 180ms var(--ease)',
+  },
+};
+
+</script>
+  <script type="text/babel">
+/* PACE · Caminos · Step de Respira · sesion 80 (split de PathRunner.jsx)
+   Envoltura sobre BreatheSession con resolucion de rutina y gate de
+   seguridad para rutinas marcadas safety:true (wim-hof, kapalabhati).
+   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
+
+const { useState: useStateBS } = React;
+
+function PathBreatheStep({ step, onExit }) {
+  const routine = getBreatheRoutine && getBreatheRoutine(step.routineId);
+  if (!routine) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
+
+  if (routine.safety) {
+    return <PathBreatheSafetyGate routine={routine} onExit={onExit} />;
+  }
+  return <BreatheSession routine={routine} onExit={onExit} />;
+}
+
+function PathBreatheSafetyGate({ routine, onExit }) {
+  const [accepted, setAccepted] = useStateBS(false);
+  if (!accepted) {
+    return (
+      <BreatheSafety
+        routine={routine}
+        onAccept={() => setAccepted(true)}
+        onCancel={() => onExit('skip')}
+      />
+    );
+  }
+  return <BreatheSession routine={routine} onExit={onExit} />;
+}
+
+Object.assign(window, { PathBreatheStep, PathBreatheSafetyGate });
+
+</script>
+  <script type="text/babel">
+/* PACE · Caminos · Step de Foco · sesion 80 (split de PathRunner.jsx)
+   Pomodoro contextual de Camino. TimerDial compartido + subtitulo
+   "Concentracion profunda" + tres botones del mismo peso visual
+   (Pausar/Reset/Saltar) durante la sesion + CTA "Hecho" al completar.
+   Acredita foco UNA SOLA VEZ via creditedRef cuando remaining llega a 0
+   estando running. Reset NO acredita; skip NO acredita.
+   Estilos comunes desde window.pathStepStyles (steps/_shared.js).
+   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
+
+const { useState: useStateFS, useEffect: useEffectFS, useRef: useRefFS } = React;
+
+function PathFocusStep({ step, onExit }) {
+  const { t } = useT();
+  const totalSec = (step.min || 25) * 60;
+  const [remaining, setRemaining] = useStateFS(totalSec);
+  const [running, setRunning] = useStateFS(false);
+  const [done, setDone] = useStateFS(false);
+  const intervalRef = useRefFS(null);
+  const creditedRef = useRefFS(false);
+
+  useEffectFS(() => {
+    if (!running) { clearInterval(intervalRef.current); return; }
+    intervalRef.current = setInterval(() => {
+      setRemaining(r => {
+        if (r <= 1) {
+          clearInterval(intervalRef.current);
+          setRunning(false);
+          setDone(true);
+          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
+            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
+          }
+          return 0;
+        }
+        return r - 1;
+      });
+    }, 1000);
+    return () => clearInterval(intervalRef.current);
+  }, [running]);
+
+  /* Reset: restaura contador y pausa. NO toca creditedRef ni avanza el
+     Camino. Si el usuario ya termino una vez (done) y resetea, ese caso
+     no se da: el bloque "done" muestra solo "Hecho", no Reset. */
+  const handleReset = () => {
+    setRunning(false);
+    setRemaining(totalSec);
+  };
+
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
+
+  /* Botones del mismo peso visual: misma forma/padding/tipografia, solo
+     varia el label. Compone btnTypography + btnOutline desde _shared.js. */
+  const { btnTypography, btnOutline } = window.pathStepStyles;
+  const btnBase = Object.assign({}, btnTypography, btnOutline, { padding: '10px 22px' });
+
+  const pauseLabel = running
+    ? t('focus.pause')
+    : (remaining < totalSec ? t('focus.continue') : t('focus.start'));
+
+  return (
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
+    }}>
+      {typeof TimerDial === 'function' ? (
+        <div style={{ marginBottom: 24 }}>
+          <TimerDial
+            mins={mins}
+            secs={secs}
+            progress={progress}
+            mode="foco"
+            modeLabel={t('topbar.mode.focus')}
+            subtitle={t('focus.subtitle.focus')}
+            inner={null}
+          />
+        </div>
+      ) : (
+        <div style={{
+          fontFamily: "'EB Garamond', Georgia, serif",
+          fontSize: 96, fontWeight: 400,
+          fontVariantNumeric: 'tabular-nums',
+          color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
+        }}>
+          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
+        </div>
+      )}
+      {!done ? (
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => setRunning(r => !r)} style={btnBase}>
+            {pauseLabel}
+          </button>
+          <button onClick={handleReset} style={btnBase}>
+            {t('focus.restart')}
+          </button>
+          <button onClick={() => onExit('skip')} style={btnBase}>
+            {t('path.runner.skip')}
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => onExit('done')}
+          style={{
+            padding: '10px 28px', borderRadius: 'var(--r-sm)',
+            background: 'var(--ink)', border: 'none',
+            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
+            letterSpacing: '0.08em',
+            fontFamily: 'var(--font-display)', fontStyle: 'italic',
+          }}
+        >
+          {t('path.runner.done')}
+        </button>
+      )}
+    </div>
+  );
+}
+
+Object.assign(window, { PathFocusStep });
+
+</script>
+  <script type="text/babel">
+/* PACE · Caminos · Step de Hidratacion · sesion 80 (split de PathRunner.jsx)
+   Mismo lenguaje visual que HydrateModule del home: contador Garamond
+   grande + grid visual de `goal` vasos (no clicables: es step de Camino,
+   no tracker) + 2 botones del mismo peso visual (Saltar outline / Beber
+   relleno). addWaterGlass(1) solo se llama en handleDrink, no en skip.
+   Estilos comunes desde window.pathStepStyles (steps/_shared.js).
+   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'.
+   `step` se acepta para uniformidad de firma aunque no se consume. */
+
+function PathHydrateStep({ step, onExit }) {
+  const [state] = usePace();
+  const { t } = useT();
+  const today = (state.water && state.water.today) || 0;
+  const goal  = (state.water && state.water.goal)  || 8;
+  const handleDrink = () => {
+    if (typeof addWaterGlass === 'function') {
+      try { addWaterGlass(1); } catch (e) {}
+    }
+    onExit('done');
+  };
+  /* Tipografia comun desde _shared; el padding (10px 28px) es propio de
+     este step por densidad de su layout (2 botones, no 3). */
+  const { btnTypography } = window.pathStepStyles;
+  const btnBase = Object.assign({}, btnTypography, { padding: '10px 28px' });
+  return (
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '32px 40px', textAlign: 'center',
+    }}>
+      {/* Contador grande, mismo lenguaje que HydrateTracker */}
+      <div style={{
+        fontFamily: "'EB Garamond', Georgia, serif",
+        fontStyle: 'italic',
+        fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
+        color: 'var(--hydrate)',
+      }}>
+        {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
+      </div>
+      <div style={{
+        fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
+      }}>
+        {t('path.hydrate.glasses.today') || 'Vasos hoy'}
+      </div>
+
+      {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(' + goal + ', 1fr)',
+        gap: 6,
+        maxWidth: 360, width: '100%',
+        marginBottom: 26,
+      }}>
+        {Array.from({ length: goal }).map(function (_, i) {
+          const filled = i < today;
+          return (
+            <div key={i} style={{
+              aspectRatio: '1/1.3',
+              background: filled ? 'var(--hydrate-soft)' : 'transparent',
+              border: '1.5px solid ' + (filled ? 'var(--hydrate)' : 'var(--line)'),
+              borderRadius: 'var(--r-sm)',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              {filled && (
+                <div style={{
+                  position: 'absolute', inset: 0, top: '40%',
+                  background: 'var(--hydrate-soft)',
+                  borderTop: '1px solid var(--hydrate)',
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <p style={{
+        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+        fontStyle: 'italic', fontSize: 18, fontWeight: 400,
+        color: 'var(--ink-2)', margin: '0 0 26px', lineHeight: 1.4,
+        maxWidth: 360,
+      }}>
+        {t('path.hydrate.copy')}
+      </p>
+
+      {/* Dos botones del mismo peso visual: diferencia de color, no de jerarquia */}
+      <div style={{ display: 'flex', gap: 12 }}>
+        <button
+          onClick={() => onExit('skip')}
+          style={Object.assign({}, btnBase, {
+            background: 'transparent',
+            border: '1px solid var(--line-2)',
+            color: 'var(--ink-2)',
+          })}
+        >
+          {t('path.hydrate.skip') || t('path.runner.skip')}
+        </button>
+        <button
+          onClick={handleDrink}
+          style={Object.assign({}, btnBase, {
+            background: 'var(--hydrate)',
+            border: '1px solid var(--hydrate)',
+            color: 'var(--paper)',
+          })}
+        >
+          {t('path.hydrate.drank')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { PathHydrateStep });
+
+</script>
+  <script type="text/babel">
+/* PACE · Caminos · Step de Cuerpo · sesion 80 (split de PathRunner.jsx)
+   Dispatcher: resuelve routineId via resolveBodyRoutine (busca primero en
+   MoveModule, luego en ExtraModule) y renderiza MoveSession con
+   kind='move' o kind='extra'. El catalogo usa kind:'body' como entrada
+   unica; la separacion move/extra (stretch) ocurre aqui por procedencia
+   de la rutina.
+   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
+
+function PathBodyStep({ step, onExit }) {
+  const resolved = resolveBodyRoutine && resolveBodyRoutine(step.routineId);
+  if (!resolved) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
+  const kind = resolved.source === 'extra' ? 'extra' : 'move';
+  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
+}
+
+Object.assign(window, { PathBodyStep });
+
+</script>
+  <!-- Caminos - PathRunner parts (sesion 80) - TopBar + ExitConfirmModal + StepError -->
+  <script type="text/babel">
+/* PACE · Caminos · PathRunner parts · sesion 80 (split de PathRunner.jsx)
+   Componentes auxiliares del overlay del Camino que no son orquestador:
+   - PathTopBar: barra superior fija con nombre del Camino y boton cerrar.
+   - ExitConfirmModal: confirmacion in-app antes de abandonar el Camino.
+   - StepError: fallback visual cuando un routineId no resuelve.
+   Aislados aqui para que PathRunner.jsx quede solo con la maquina de
+   fases y el dispatcher por step.kind. */
+
+const { useEffect: useEffectPP, useRef: useRefPP } = React;
 
 /* PathTopBar - nombre del Camino + boton de salida.
    Sesion 75: dots eliminados (los reemplaza SenderoBar). */
@@ -11007,9 +11329,9 @@ function PathTopBar({ pathName, onRequestExit }) {
 /* ExitConfirmModal - confirmacion in-app (sin llamada al dialog nativo) */
 function ExitConfirmModal({ open, onCancel, onConfirm }) {
   const { t } = useT();
-  const cancelBtnRef = useRefPR(null);
+  const cancelBtnRef = useRefPP(null);
 
-  useEffectPR(() => {
+  useEffectPP(() => {
     if (!open) return;
     // Focus en boton Seguir al abrir
     if (cancelBtnRef.current) cancelBtnRef.current.focus();
@@ -11070,27 +11392,55 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
   );
 }
 
-/* Numerales romanos (I-VII) para listar hitos en CompletionScreen.
-   SenderoBar tiene su propio set local; lo duplicamos aqui para no
-   exponer un helper compartido en window que aun no se reutiliza. */
+/* StepError - fallback si routineId no resuelve */
+function StepError({ routineId, onSkip }) {
+  const { t } = useT();
+  return (
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
+    }}>
+      <p style={{ color: 'var(--ink-2)', marginBottom: 20, fontSize: 14 }}>
+        {t('path.error.routineNotFound').replace('{id}', routineId)}
+      </p>
+      <button
+        onClick={onSkip}
+        style={{
+          padding: '10px 24px', borderRadius: 'var(--r-sm)',
+          background: 'var(--paper-2)', border: '1px solid var(--line)',
+          color: 'var(--ink)', cursor: 'pointer', fontSize: 13,
+        }}
+      >
+        {t('path.runner.skip')}
+      </button>
+    </div>
+  );
+}
+
+Object.assign(window, { PathTopBar, ExitConfirmModal, StepError });
+
+</script>
+  <!-- Caminos - CompletionScreen (sesion 80) - pantalla de Camino completado -->
+  <script type="text/babel">
+/* PACE · Caminos · Pantalla de Camino completado · sesion 80 (split de PathRunner.jsx)
+   SenderoBar al 100% (todos los hitos como done), lista discreta del
+   recorrido con numerales romanos (skipped tachado), logros desbloqueados
+   DURANTE este Camino (filter unlockedAt >= snapshot.startedAt) y dos
+   botones (Volver / Repetir camino).
+   fadeIn=true: cross-fade 400ms al venir de OutroCard (mismo background
+   var(--paper) que la card de salida).
+   CS_ROMAN local: decision s79 (no extraer a helper compartido hasta
+   tener 3 consumidores; aqui sigue siendo solo 1). */
+
+const { useState: useStateCS, useEffect: useEffectCS } = React;
+
 const CS_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
-/* CompletionScreen - pantalla de camino completado (s76: rica).
-   - SenderoBar al 100% (todos los hitos como done).
-   - Lista "Recorrido": numeral romano + nombre del kind en Garamond
-     italic. Skipped en tono mas tenue.
-   - Tiempo elapsed (ya calculado).
-   - Logros desbloqueados DURANTE el Camino: filtra state.achievements
-     por unlockedAt >= snapshot.startedAt. Glifo del catalogo.
-
-   s77: prop `fadeIn` opacity 0 -> 1 en 400ms al montar. PathRunner lo
-   activa tras OutroCard para que el cierre simbolico no aparezca de
-   golpe. Aprovecha que ambos comparten background: var(--paper). */
 function CompletionScreen({ snapshot, onBack, fadeIn }) {
   const [state] = usePace();
   const { t } = useT();
-  const [opacity, setOpacity] = useStatePR(fadeIn ? 0 : 1);
-  useEffectPR(function () {
+  const [opacity, setOpacity] = useStateCS(fadeIn ? 0 : 1);
+  useEffectCS(function () {
     if (!fadeIn) return;
     /* Doble rAF: asegura que el frame con opacity=0 se pinta antes de
        arrancar la transicion a opacity=1. Sin esto, React podria batch
@@ -11277,301 +11627,28 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
   );
 }
 
-/* StepError - fallback si routineId no resuelve */
-function StepError({ routineId, onSkip }) {
-  const { t } = useT();
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
-      <p style={{ color: 'var(--ink-2)', marginBottom: 20, fontSize: 14 }}>
-        {t('path.error.routineNotFound').replace('{id}', routineId)}
-      </p>
-      <button
-        onClick={onSkip}
-        style={{
-          padding: '10px 24px', borderRadius: 'var(--r-sm)',
-          background: 'var(--paper-2)', border: '1px solid var(--line)',
-          color: 'var(--ink)', cursor: 'pointer', fontSize: 13,
-        }}
-      >
-        {t('path.runner.skip')}
-      </button>
-    </div>
-  );
-}
+Object.assign(window, { CompletionScreen });
 
-/* PathHydrateStep - vaso de agua opcional.
-   s78: redisenado para coherencia con HydrateModule del home.
-     - Contador Garamond italic grande (today / goal) en color --hydrate.
-     - Grid visual de `goal` vasos (no clicables; es step de Camino,
-       no tracker). Refleja el estado actual de state.water.
-     - Copy artesanal en italic reforzando opcionalidad.
-     - Dos botones del MISMO peso visual (Saltar outline / Beber relleno);
-       diferencia solo de color, no de jerarquia. Refuerza que la accion
-       es de verdad opcional, no un CTA disfrazado. */
-function PathHydrateStep({ onDone, onSkip }) {
-  const [state] = usePace();
-  const { t } = useT();
-  const today = (state.water && state.water.today) || 0;
-  const goal  = (state.water && state.water.goal)  || 8;
-  const handleDrink = () => {
-    if (typeof addWaterGlass === 'function') {
-      try { addWaterGlass(1); } catch (e) {}
-    }
-    onDone();
-  };
-  const btnBase = {
-    padding: '10px 28px', borderRadius: 'var(--r-sm)',
-    cursor: 'pointer', fontSize: 13, letterSpacing: '0.08em',
-    fontFamily: 'var(--font-display)', fontStyle: 'italic',
-  };
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: '32px 40px', textAlign: 'center',
-    }}>
-      {/* Contador grande, mismo lenguaje que HydrateTracker */}
-      <div style={{
-        fontFamily: "'EB Garamond', Georgia, serif",
-        fontStyle: 'italic',
-        fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
-        color: 'var(--hydrate)',
-      }}>
-        {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
-      </div>
-      <div style={{
-        fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
-      }}>
-        {t('path.hydrate.glasses.today') || 'Vasos hoy'}
-      </div>
+</script>
+  <!-- Caminos - PathRunner UI (sesion 50; split s80) - orquestador -->
+  <script type="text/babel">
+/* PACE · Caminos · PathRunner orquestador · sesion 50 (split s80)
+   Monta un overlay full-screen cuando state.paths.current != null.
+   Con paths.current === null y justCompleted === null devuelve null
+   -> cero impacto visual en home.
 
-      {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(' + goal + ', 1fr)',
-        gap: 6,
-        maxWidth: 360, width: '100%',
-        marginBottom: 26,
-      }}>
-        {Array.from({ length: goal }).map(function (_, i) {
-          const filled = i < today;
-          return (
-            <div key={i} style={{
-              aspectRatio: '1/1.3',
-              background: filled ? 'var(--hydrate-soft)' : 'transparent',
-              border: '1.5px solid ' + (filled ? 'var(--hydrate)' : 'var(--line)'),
-              borderRadius: 'var(--r-sm)',
-              position: 'relative', overflow: 'hidden',
-            }}>
-              {filled && (
-                <div style={{
-                  position: 'absolute', inset: 0, top: '40%',
-                  background: 'var(--hydrate-soft)',
-                  borderTop: '1px solid var(--hydrate)',
-                }} />
-              )}
-            </div>
-          );
-        })}
-      </div>
+   Tras el split de s80 este archivo contiene SOLO la maquina de fases
+   + el dispatcher por step.kind. Los demas componentes viven en:
+     - app/paths/steps/_shared.js         (estilos comunes)
+     - app/paths/steps/PathBreatheStep.jsx
+     - app/paths/steps/PathFocusStep.jsx
+     - app/paths/steps/PathHydrateStep.jsx
+     - app/paths/steps/PathBodyStep.jsx
+     - app/paths/PathRunner.parts.jsx     (PathTopBar, ExitConfirmModal, StepError)
+     - app/paths/CompletionScreen.jsx     (pantalla terminal)
+   Todos deben estar cargados antes que este archivo (ver PACE.html). */
 
-      <p style={{
-        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontSize: 18, fontWeight: 400,
-        color: 'var(--ink-2)', margin: '0 0 26px', lineHeight: 1.4,
-        maxWidth: 360,
-      }}>
-        {t('path.hydrate.copy')}
-      </p>
-
-      {/* Dos botones del mismo peso visual: diferencia de color, no de jerarquia */}
-      <div style={{ display: 'flex', gap: 12 }}>
-        <button
-          onClick={onSkip}
-          style={Object.assign({}, btnBase, {
-            background: 'transparent',
-            border: '1px solid var(--line-2)',
-            color: 'var(--ink-2)',
-          })}
-        >
-          {t('path.hydrate.skip') || t('path.runner.skip')}
-        </button>
-        <button
-          onClick={handleDrink}
-          style={Object.assign({}, btnBase, {
-            background: 'var(--hydrate)',
-            border: '1px solid var(--hydrate)',
-            color: 'var(--paper)',
-          })}
-        >
-          {t('path.hydrate.drank')}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* PathFocusStep - timer simple para paso de foco.
-   Sesion 75: cuando el timer llega a 0 (no por skip), suma los minutos
-   completos a las estadisticas globales via addFocusMinutes, alineado
-   con el flujo del Pomodoro estandar. Skip o salida no acreditan.
-   Sesion 79: redisenio contextual. Subtitle "Concentracion profunda"
-   reutilizando focus.subtitle.focus del home; tres botones de mismo
-   peso visual (Pausar/Reset/Saltar) durante la sesion. Sin presets de
-   minutos (los define el Camino), sin puntos de ciclo (los lleva el
-   Camino), sin badge tipo sesion (lo lleva la SenderoBar). Reset NO
-   acredita foco; solo restaura el contador del bloque actual. */
-function PathFocusStep({ step, onExit }) {
-  const { t } = useT();
-  const totalSec = (step.min || 25) * 60;
-  const [remaining, setRemaining] = useStatePR(totalSec);
-  const [running, setRunning] = useStatePR(false);
-  const [done, setDone] = useStatePR(false);
-  const intervalRef = useRefPR(null);
-  const creditedRef = useRefPR(false);
-
-  useEffectPR(() => {
-    if (!running) { clearInterval(intervalRef.current); return; }
-    intervalRef.current = setInterval(() => {
-      setRemaining(r => {
-        if (r <= 1) {
-          clearInterval(intervalRef.current);
-          setRunning(false);
-          setDone(true);
-          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
-            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
-          }
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [running]);
-
-  /* Reset: restaura contador y pausa. NO toca creditedRef ni avanza el
-     Camino. Si el usuario ya termino una vez (done) y resetea, ese caso
-     no se da: el bloque "done" muestra solo "Hecho", no Reset. */
-  const handleReset = () => {
-    setRunning(false);
-    setRemaining(totalSec);
-  };
-
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
-  const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
-
-  /* Botones del mismo peso visual: misma forma/padding/tipografia, solo
-     varia el label. Refuerza el caracter contemplativo del Pomodoro de
-     Camino: durante la sesion ningun control domina visualmente sobre
-     los otros. Mismo patron que PathHydrateStep (s78). */
-  const btnBase = {
-    padding: '10px 22px', borderRadius: 'var(--r-sm)',
-    cursor: 'pointer', fontSize: 13, letterSpacing: '0.08em',
-    fontFamily: 'var(--font-display)', fontStyle: 'italic',
-    background: 'transparent',
-    border: '1px solid var(--line-2)',
-    color: 'var(--ink-2)',
-    transition: 'all 180ms var(--ease)',
-  };
-
-  const pauseLabel = running
-    ? t('focus.pause')
-    : (remaining < totalSec ? t('focus.continue') : t('focus.start'));
-
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
-      {typeof TimerDial === 'function' ? (
-        <div style={{ marginBottom: 24 }}>
-          <TimerDial
-            mins={mins}
-            secs={secs}
-            progress={progress}
-            mode="foco"
-            modeLabel={t('topbar.mode.focus')}
-            subtitle={t('focus.subtitle.focus')}
-            inner={null}
-          />
-        </div>
-      ) : (
-        <div style={{
-          fontFamily: "'EB Garamond', Georgia, serif",
-          fontSize: 96, fontWeight: 400,
-          fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
-        }}>
-          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
-        </div>
-      )}
-      {!done ? (
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => setRunning(r => !r)} style={btnBase}>
-            {pauseLabel}
-          </button>
-          <button onClick={handleReset} style={btnBase}>
-            {t('focus.restart')}
-          </button>
-          <button onClick={() => onExit('skip')} style={btnBase}>
-            {t('path.runner.skip')}
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => onExit('done')}
-          style={{
-            padding: '10px 28px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-            letterSpacing: '0.08em',
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-          }}
-        >
-          {t('path.runner.done')}
-        </button>
-      )}
-    </div>
-  );
-}
-
-/* PathBreatheStep - envoltura sobre BreatheSession */
-function PathBreatheStep({ step, onExit }) {
-  const routine = getBreatheRoutine && getBreatheRoutine(step.routineId);
-  if (!routine) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
-
-  if (routine.safety) {
-    return <PathBreatheSafetyGate routine={routine} onExit={onExit} />;
-  }
-  return <BreatheSession routine={routine} onExit={onExit} />;
-}
-
-function PathBreatheSafetyGate({ routine, onExit }) {
-  const [accepted, setAccepted] = useStatePR(false);
-  if (!accepted) {
-    return (
-      <BreatheSafety
-        routine={routine}
-        onAccept={() => setAccepted(true)}
-        onCancel={() => onExit('skip')}
-      />
-    );
-  }
-  return <BreatheSession routine={routine} onExit={onExit} />;
-}
-
-/* PathBodyStep - envoltura sobre MoveSession / ExtraSession */
-function PathBodyStep({ step, onExit }) {
-  const resolved = resolveBodyRoutine && resolveBodyRoutine(step.routineId);
-  if (!resolved) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
-  const kind = resolved.source === 'extra' ? 'extra' : 'move';
-  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
-}
+const { useState: useStatePR, useEffect: useEffectPR } = React;
 
 /* PathRunner - orquestador principal.
 
@@ -11757,10 +11834,7 @@ function PathRunner() {
               <PathBodyStep step={step} onExit={handleStepExit} />
             )}
             {step.kind === 'hydrate' && (
-              <PathHydrateStep
-                onDone={() => handleStepExit('done')}
-                onSkip={() => handleStepExit('skip')}
-              />
+              <PathHydrateStep step={step} onExit={handleStepExit} />
             )}
           </div>
         </>

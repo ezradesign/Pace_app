@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.32.1</title>
+  <title>PACE · Foco · Cuerpo — v0.33.0</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -170,7 +170,19 @@
   <script type="text/babel" data-presets="env,react" src="app/paths/SenderoBar.jsx"></script>
   <!-- Caminos - PathTransitions (sesion 77) - debe cargarse ANTES de PathRunner que lo consume -->
   <script type="text/babel" data-presets="env,react" src="app/paths/PathTransitions.jsx"></script>
-  <!-- Caminos - PathRunner UI (sesion 50) -->
+  <!-- Caminos - Steps (sesion 80) - split de PathRunner.jsx en archivos hijos.
+       Orden: _shared.js primero (estilos comunes), luego los 4 Steps que
+       lo consumen. Todos antes que PathRunner.jsx. -->
+  <script type="text/babel" data-presets="env,react" src="app/paths/steps/_shared.js"></script>
+  <script type="text/babel" data-presets="env,react" src="app/paths/steps/PathBreatheStep.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="app/paths/steps/PathFocusStep.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="app/paths/steps/PathHydrateStep.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="app/paths/steps/PathBodyStep.jsx"></script>
+  <!-- Caminos - PathRunner parts (sesion 80) - TopBar + ExitConfirmModal + StepError -->
+  <script type="text/babel" data-presets="env,react" src="app/paths/PathRunner.parts.jsx"></script>
+  <!-- Caminos - CompletionScreen (sesion 80) - pantalla de Camino completado -->
+  <script type="text/babel" data-presets="env,react" src="app/paths/CompletionScreen.jsx"></script>
+  <!-- Caminos - PathRunner UI (sesion 50; split s80) - orquestador -->
   <script type="text/babel" data-presets="env,react" src="app/paths/PathRunner.jsx"></script>
 
   <script type="text/babel" src="app/main.jsx"></script>
