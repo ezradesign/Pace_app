@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.33.0
-**Ultima sesion:** #80 -- 2026-05-18 - refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline (v0.33.0)
-**Ultima actualizacion de este archivo:** 2026-05-18 - sesion 80
-**Build entregado:** `PACE_standalone.html` v0.33.0 (610 KB; 624,539 bytes) + `index.html` (idem, copia exacta)
+**Version actual:** v0.33.1
+**Ultima sesion:** #81 -- 2026-05-19 - refactor(i18n): split `app/i18n/strings.js` (791 ln, 664 keys) en `app/i18n/strings/` -- variante B pragmatica (6 archivos: _bootstrap + ui + sessions + paths + stats + achievements). Scope reorientado desde el prompt original (transiciones del Camino ya existian desde s77) al candidato de deuda ALTA que s80 dejo en cola (v0.33.1)
+**Ultima actualizacion de este archivo:** 2026-05-19 - sesion 81
+**Build entregado:** `PACE_standalone.html` v0.33.1 (614 KB; 628,926 bytes) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.33.0** (s80: 7 nuevos `<script src>` para el split + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.0** (610 KB, regenerado s80) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.0** (s80: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.33.1** (s81: bloque i18n de 3 a 8 `<script src>` por split de strings -- _bootstrap + ui + sessions + paths + stats + achievements + strings-content + useT + titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.1** (614 KB, regenerado s81) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.1** (s81: regenerado por build-standalone.js) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG -- 13 rediseñados en s60 | **v0.28.1** (iter parcial s60, sin cambios s61) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -49,7 +49,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.0** (s80: PACE_VERSION bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.1** (s81: PACE_VERSION bump; s80: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -61,7 +61,13 @@
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
 | `app/main.jsx` | Orquestador + TopBar + ActivityBar | **v0.27.0** (PathsLibrary montado s53) |
-| `app/i18n/strings.js` | Strings ES + EN | **v0.32.0** (s78: +8 claves -- tea/breath name+tagline ES/EN + microcopy hydrate redisenada -- path.hydrate.copy/drank/skip/glasses.today; s77: + path.runner.transition.continue) |
+| `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
+| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + welcome lang toggle | **v0.33.1** (nuevo s81, 315 ln; 134 ES + 134 EN) |
+| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate | **v0.33.1** (nuevo s81, 227 ln; 93 ES + 93 EN) |
+| `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.33.1** (nuevo s81, 122 ln; 47 ES + 47 EN) |
+| `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.33.1** (nuevo s81, 108 ln; 42 ES + 42 EN) |
+| `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
+| `app/i18n/strings-content.js` | Patch EN final de contenido (rutinas Move/Breathe/Extra) | **v0.18.0** (s81: SIN CAMBIOS pero queda al final de la cadena i18n -- preserva override silencioso de 3 keys breathe.phase.*) |
 | `app/tokens.css` | Tokens CSS + base | **v0.32.1** (s79: recalibrado oscuro +10% luminosidad en paper/paper-2/paper-3/line/line-2, --ink-* intactos; s77 + s77b: 5 tokens transicion + bloque .sendero-bar.lg + token --focus-cta crema/oscuro) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.32.0** (s78: + path.tea timeOfDay='afternoon' + path.breath timeOfDay='anytime' -- catalogo cerrado a 7) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
@@ -77,11 +83,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.33.0** (s80: CACHE_NAME pace-v0.33.0) |
+| `sw.js` | Service Worker PWA | **v0.33.1** (s81: CACHE_NAME pace-v0.33.1) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80 (copia pristina restaurada desde HEAD previa al rebuild v0.33.0)
+- `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81 (copia pristina restaurada desde HEAD previa al rebuild v0.33.1)
+- `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
 - `backups/PACE_standalone_v0.32.0_20260518.html`
 - `backups/PACE_standalone_v0.31.0_20260517.html`
 - `backups/PACE_standalone_v0.30.0_20260517.html`
@@ -100,124 +107,145 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.1_20260511.html`
 - `backups/PACE_standalone_v0.28.0_20260511.html`
 - `backups/PACE_standalone_v0.27.6_20260511.html`
-- `backups/PACE_standalone_v0.27.5_20260511.html` (rotado `v0.27.3_20260511.html` en s80 para mantener cap de 20)
+
+Nota s81: `v0.27.5_20260511.html` no existia fisicamente en el filesystem
+cuando se intento rotar (STATE.md previo lo listaba); cap 20 se mantiene
+con el alta de `v0.33.0_20260519.html` sin necesidad de rotar.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 80 - v0.33.0 - refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body)**
+**Sesion 81 - v0.33.1 - refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (variante B pragmatica: _bootstrap + 5 dominios)**
 
 ### Contexto
 
-PathRunner.jsx llevaba marcada como deuda ALTA desde varias sesiones
-(835 ln tras el redisenio de s79). s80 ejecuta el split tecnico
-programado: refactor puro, cero cambios funcionales/visuales/timing/copy.
+El prompt original de s81 pedia **transiciones contemplativas** entre
+Steps del Camino (IntroCard/StepIntro/OutroCard + halo SenderoBar).
+Auditoria de precondiciones (Tarea 0) detecta que **toda esa
+infraestructura ya existia completa desde s77**: `PathTransitions.jsx`
+con `IntroCard`/`StepIntro`/`OutroCard` (252 ln, ya en window), state
+machine `intro/step/transition/outro` integrada en PathRunner.jsx,
+tokens `--path-intro-ms/--path-step-ms/--path-outro-ms/--path-card-fade-ms`
+en tokens.css, y `path.runner.transition.continue` ES/EN en strings.
 
-Diario: [s80](./docs/sessions/session-80-split-pathrunner.md). Documentos
-de apoyo: [audit](./docs/sessions/session-80-audit.md),
-[design](./docs/sessions/session-80-design.md),
-[regression-check](./docs/sessions/session-80-regression-check.md).
+Reporte al usuario con 4 opciones de scope alternativo. Elige **"Cambiar
+scope a otro candidato s80"**, luego **"Split strings.js (ALTA deuda)"**
+de los 4 candidatos del backlog.
+
+Diario: [s81](./docs/sessions/session-81-strings-split.md). Documentos de
+apoyo: [audit](./docs/sessions/session-81-audit.md),
+[design](./docs/sessions/session-81-design.md).
 
 ### Que se hizo
 
-1. **Auditoria estructural previa** detallada (28 invariantes listadas).
-   Detecta 2 discrepancias con el prompt:
-   - "5 steps (Move + Stretch)" en el prompt vs 4 kinds reales en el
-     catalogo (`PathBodyStep` dispatcher resuelve a Move/Extra via
-     `resolveBodyRoutine`).
-   - Para cumplir metrica PathRunner.jsx <=280 ln hay que extraer
-     tambien chrome (TopBar + ExitModal + StepError), no solo Steps.
-2. **Diseño del contrato uniforme** `(step, onExit(reason))` --
-   rechaza el contrato amplio del prompt (block/onAbort/pathContext)
-   como premature abstraction.
-3. **Implementacion mecanica** en orden incremental (sin romper el repo
-   en ningun paso intermedio):
-   - `app/paths/steps/_shared.js` (23 ln) -- btnTypography + btnOutline.
-   - `app/paths/steps/PathBreatheStep.jsx` (32 ln) -- + SafetyGate.
-   - `app/paths/steps/PathFocusStep.jsx` (118 ln).
-   - `app/paths/steps/PathHydrateStep.jsx` (113 ln) -- contrato uniformado.
-   - `app/paths/steps/PathBodyStep.jsx` (16 ln) -- dispatcher.
-   - `app/paths/PathRunner.parts.jsx` (131 ln) -- chrome del overlay.
-   - `app/paths/CompletionScreen.jsx` (206 ln) -- pantalla terminal.
-   - `PACE.html` -- 7 nuevos `<script src>` en orden correcto.
-   - Verificacion intermedia (tras paso 5, antes de reducir
-     PathRunner.jsx): parser TS pasa, scope-isolation confirmado.
-   - `PathRunner.jsx` reducido de 835 a 244 ln (solo orquestador +
-     dispatcher). Dispatcher PathHydrateStep uniformado.
-4. **Verificacion runtime** via preview local (Node mini-HTTP en
-   `.claude/`): home pixel-a-pixel identico, app carga limpia (0
-   errores), `startPath('path.midday')` -> PathHydrateStep monta con
-   contrato nuevo, Beber incrementa water + avanza, Skip no toca water,
-   reload mid-Camino rehidrata estado correctamente.
-5. **Bump v0.33.0** (state-core, PACE.html, sw.js) + restore pristino
-   v0.32.1 antes del backup + rebuild.
+1. **Tarea 0 -- precondiciones**: 6/7 OK, fallo en condicion 7
+   (PathTransitions.jsx no debia existir; existia desde s77 con 252 ln).
+   Reportado al usuario con tabla de evidencias. Cambio de scope confirmado.
+2. **Tarea 1 -- auditoria** ([session-81-audit.md](./docs/sessions/session-81-audit.md)):
+   estructura i18n (3 archivos), conteo por dominio (31 bloques, 664 keys),
+   4 deudas tecnicas detectadas (D-1 override silencioso, D-2 duplicidad
+   "Hecho hoy", D-3 namespaces inconsistentes, D-4 bloques minusculos),
+   13 invariantes, 10 edge cases.
+3. **Tarea 2 -- design con 3 variantes** ([session-81-design.md](./docs/sessions/session-81-design.md)):
+   - **A** Conservadora: 3 archivos + strings.js reducido a 330 ln (sin bootstrap).
+   - **B** Pragmatica: 6 archivos en `strings/` con `_bootstrap.js` + 5 dominios.
+   - **C** Maximalista: 14 archivos (1 por dominio).
+   Usuario delega: "LA QUE TU RECOMIENDES Y SEA MAS PROFESIONAL". Agente
+   elige **B** (5 dominios coherentes, carpeta dedicada, bootstrap explicito).
+4. **Tarea 3 -- implementacion mecanica**:
+   - Crear `app/i18n/strings/_bootstrap.js` (15 ln; vacio).
+   - Crear `app/i18n/strings/achievements.js`, `paths.js`, `stats.js`
+     (paralelo; archivos chicos).
+   - Crear `app/i18n/strings/ui.js`, `sessions.js` (paralelo; archivos
+     grandes con welcome+support+tweaks y session+breathe+focus+move+hydrate
+     respectivamente).
+   - Verificacion intermedia con Grep: 664 keys en los 6 archivos =
+     exactamente las 664 originales. Cero perdida.
+   - Editar `PACE.html` -- de 3 a 8 `<script src>` i18n + comentario explicativo.
+   - Eliminar `app/i18n/strings.js`.
+5. **Tarea 4 -- verificacion**:
+   - `node build-standalone.js`: 55 archivos validados (50 previos +
+     6 nuevos - 1 eliminado = 55). OK.
+   - Runtime via preview local (`.claude/static-server.js` heredado de s80):
+     `Object.keys(PACE_STRINGS.es).length = 332`, `.en = 545`. Snapshot
+     a11y del home con un Camino activo (Hierbabuena + PathHydrateStep):
+     textos correctos en TopBar/Sidebar/FocusTimer/ActivityBar/overlay.
+     Override D-1 verificado preservado.
+6. **Tarea 6 -- versionado y build**:
+   - Restaurar pristino v0.33.0 desde HEAD antes del backup.
+   - Backup `backups/PACE_standalone_v0.33.0_20260519.html`. Cap 20
+     mantenido (v0.27.5 ya no existia fisicamente).
+   - Bump (state-core, PACE.html, sw.js) -> v0.33.1.
+   - Rebuild: bundle 614 KB (628,926 bytes; +4,387 vs v0.33.0). SHA-256:
+     `3b9c49c0...367ae`. `index.html` byte-perfect.
+7. **Tarea 7 -- documentacion**: audit + design + diario s81 + CHANGELOG
+   (degradacion de v0.32.1 a fila-de-enlace, detalle nuevo de v0.33.1)
+   + STATE.md (este archivo).
 
 ### Decisiones tomadas
 
-- D1 -- **Mantener `PathBodyStep` como dispatcher** (no `PathMoveStep` /
-  `PathStretchStep`). Dividir requeriria cambiar catalogo + migrar
-  localStorage = cambio de comportamiento.
-- D2 -- **Extender split a `PathRunner.parts.jsx`** (TopBar +
-  ExitConfirmModal + StepError). Necesario para PathRunner.jsx <=280 ln.
-- D3 -- **Contrato uniforme `(step, onExit(reason))`** -- no el amplio
-  del prompt. 3/4 Steps ya usaban onExit; solo PathHydrateStep rompia.
-- D4 -- **`_shared.js` solo btnTypography + btnOutline, padding por
-  Step**. Focus usa 22px, Hydrate usa 28px; coherencia falsa forzarlo.
-- D5 -- **`CS_ROMAN` queda local en CompletionScreen.jsx**. Decision
-  s79: no extraer hasta 3 consumidores. El split no añade ninguno.
-- D6 -- **useRef removido del destructure de React en PathRunner.jsx**:
-  el orquestador post-split ya no usa refs (migradas a PathFocusStep
-  como useRefFS).
-- D7 -- **`.claude/launch.json` + `.claude/static-server.js`**: mini
-  servidor estatico Node sin deps para preview local. Util para
-  regresion runtime en futuras sesiones sin depender del browser del
-  usuario.
-- D8 -- **Restaurar pristino v0.32.1 desde HEAD antes del backup**.
-  El build de verificacion intermedia sobreescribio el bundle;
-  `git checkout HEAD -- PACE_standalone.html index.html` garantiza que
-  el backup sea pristino.
+- D1 -- **Cambio de scope documentado y trazable**: prompt -> transiciones
+  ya existian -> split de strings.js. Audit + design + diario reflejan el
+  cambio.
+- D2 -- **Variante B aprobada** (no A ni C). Pragmatica: 5 dominios
+  coherentes, carpeta dedicada, bootstrap explicito. Cumple `<500 ln`
+  con holgura.
+- D3 -- **Bootstrap explicito** `_bootstrap.js` vs "primer archivo crea el
+  objeto". Mas resistente a errores de parse.
+- D4 -- **`strings-content.js` intacto**, sigue cargando al final.
+  Override silencioso D-1 PRESERVADO en runtime.
+- D5 -- **ES y EN en mismo archivo del split** (no separar por idioma).
+  Siempre se actualizan en paralelo.
+- D6 -- **NO consolidar deudas D-1 a D-4 en s81**. Scope = split mecanico
+  puro. Cualquier consolidacion abre debate de UX/copy fuera del prompt.
+- D7 -- **`build-standalone.js` sin cambios**. `validateAppFiles` walkea
+  recursivo; los 6 archivos nuevos se descubren automatico.
+- D8 -- **Cap 20 backups mantenido sin rotar explicito**. El backup mas
+  antiguo (`v0.27.5_20260511.html`) ya no existia fisicamente cuando se
+  intento el `rm`; el alta de `v0.33.0_20260519.html` mantiene el cap
+  sin operacion destructiva sobre los demas.
 
 ### Build
 
-- Bundle: **610 KB** (624,539 bytes; +3,093 bytes vs v0.32.1 = 621,446).
-  Crecimiento esperado por boilerplate de 7 archivos nuevos (cabeceras
-  + IIFE wrappers + Object.assign).
-- 50 archivos validados (43 anteriores + 7 nuevos del split).
+- Bundle: **614 KB** (628,926 bytes; +4,387 bytes vs v0.33.0 = 624,539,
+  +0.7%). Crecimiento por cabeceras de doc-comment de 6 archivos nuevos
+  (~6-15 ln cada uno) + Object.assign wrappers (~3 ln × 2 idiomas × 5
+  dominios). Estimado en design: +2-3 KB; real: +4 KB (atribuible a
+  cabeceras mas extensas de lo previsto).
+- 55 archivos validados (9 .js + 46 .jsx).
 - `index.html` byte-a-byte identico a `PACE_standalone.html`.
-- SHA-256:
-  `d2c66c6c494f78a7f1c49c489d86e44ad34421635112c6e9f8413e50c231d61b`.
-- Backup creado: `backups/PACE_standalone_v0.32.1_20260518.html`
-  (607 KB, pristino restaurado desde HEAD). Rotado el mas antiguo:
-  `v0.27.3_20260511.html`.
+- SHA-256: `3b9c49c0736e237dfffd37067b88793af501b0ce820221d0cd61934575a367ae`.
+- Backup creado: `backups/PACE_standalone_v0.33.0_20260519.html` (610 KB,
+  pristino restaurado desde HEAD).
 
 ### Validacion runtime usuario
 
-Cubierta principalmente por preview local (Morning Glory + Hierbabuena
-con Beber/Skip + reload). Quedan pendientes de inspeccion manual:
-los 5 Caminos no testeados live (afternoon, tea, dusk, weekend, breath
--- usan mismo dispatcher por kind, riesgo minimo); PathFocusStep credit
-logic completa (verificada estaticamente); inspeccion visual del halo
-de SenderoBar avanzando entre bloques.
+Cubierta principalmente por preview local (recarga + 19 keys sample de
+los 5 dominios ES+EN + snapshot a11y con un Camino activo). Quedan
+pendientes de inspeccion manual: navegar por StatsPanel (verificar
+textos de stats.month.* / stats.year.* / stats.paths.*) y Achievements
+(textos ach.cat.*); abrir TweaksPanel (textos tweaks.confirm.*); ningun
+riesgo conocido -- el split es mecanico y el conteo coincide.
 
-## Proxima sesion -- s81 (sin scope fijo)
+## Proxima sesion -- s82 (sin scope fijo)
 
-s80 cierra la deuda ALTA mas grande (PathRunner.jsx). Candidatos para
-s81 segun deuda actual:
+s81 cierra el split de strings.js (deuda ALTA mayor). Candidatos para
+s82 segun deuda actual:
 
-1. **`app/i18n/strings.js`** (776 ln, ALTA): split por dominio
-   (focus/breathe/move/extra/hydrate/paths/achievements/ui).
-2. **`app/main.jsx`** (600 ln, MEDIA): orquestador + TopBar +
+1. **`app/main.jsx`** (600 ln, MEDIA): orquestador + TopBar +
    ActivityBar. Candidato a extraer ActivityBar a `app/main/ActivityBar.jsx`.
-3. **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA): catalogo
+2. **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA): catalogo
    + coleccion + preview. Catalogo a `app/achievements/catalog.js`.
-4. **Catalog split Move/Stretch**: si se quiere diferenciar en catalogo
+3. **Catalog split Move/Stretch**: si se quiere diferenciar en catalogo
    (`kind: 'move' | 'stretch'` en vez de `'body'`). Trivial ahora con
    `steps/` ya extraido.
+4. **Consolidar overrides D-1 a D-3** de strings: decidir Ocean vs
+   Oceanic, eliminar redundancia "Hecho hoy", unificar namespace path/paths.
 
 ### Precondicion bloqueante
 
-Cierre Git de s80 publicado por el usuario (commit + push manual).
+Cierre Git de s81 publicado por el usuario (commit + push manual).
 
 ---
 
@@ -243,6 +271,9 @@ Cierre Git de s80 publicado por el usuario (commit + push manual).
 | PathRunner.jsx splittado en `steps/` + `PathRunner.parts.jsx` + `CompletionScreen.jsx` | s80 | Steps son hojas puras (props in, callback out). Contrato uniforme `(step, onExit(reason))`. Si en el futuro un Step necesita disparar `abandonPath`, añadir `onAbort` como segundo callback opcional -- no forzarlo en todos los Steps si solo uno lo necesita |
 | Estilos comunes entre Steps via `window.pathStepStyles` | s80 | `btnTypography` (6 keys) + `btnOutline` (4 keys) deduplicados. Padding por Step (Focus 22px, Hydrate 28px). Si aparece tercer Step con tipografia outline, mantener; si el padding tambien converge, parametrizar |
 | PathBodyStep dispatcher (kind:'body' resuelve Move/Extra via resolveBodyRoutine), NO PathMoveStep + PathStretchStep separados | s80 | Splittear a nivel archivo seria solo cosmetico mientras el catalogo siga usando `kind:'body'`. Si se quiere diferenciar, cambiar catalogo + crear los dos Steps especificos -- bajo coste ahora con `steps/` ya extraido |
+| i18n splittado en `app/i18n/strings/` con bootstrap explicito + 5 dominios | s81 | `_bootstrap.js` crea `window.PACE_STRINGS = { es:{}, en:{} }` vacio. Cinco archivos hijos (ui/sessions/paths/stats/achievements) hacen `Object.assign(PACE_STRINGS.{es,en}, {...})`. `strings-content.js` (s38) sigue cargando al final preservando el override silencioso de 3 keys `breathe.phase.*`. Si en el futuro se anyaden idiomas, ampliar el bootstrap y patch en los 5 archivos. Si se anyade un dominio nuevo grande, archivo propio bajo `strings/`; si es pequeño (<=10 keys), agruparlo con dominio padre |
+| ES y EN en mismo archivo del split (no separar por idioma) | s81 | Siempre se actualizan en paralelo. Separar `welcome-es.js` + `welcome-en.js` duplicaria archivos sin beneficio. Si en el futuro se anyade un tercer idioma, evaluar; con 2 idiomas no merece la pena |
+| Override silencioso strings-content.js sobre 3 keys breathe.phase.* (deuda explicita D-1) | s81 | `strings-content.js` redefine `inhala.mas` ("Inhale again" vs "Inhale more"), `inhala.oceanica` ("Oceanic" vs "Ocean") y `exhala.oceanica` (idem) con valores distintos al split. No consolidado en s81 (debate de copy). Decision futura: consolidar valores o mover los 11 duplicados a sessions.js y dejar strings-content.js solo con keys unicas |
 
 ---
 
@@ -250,9 +281,18 @@ Cierre Git de s80 publicado por el usuario (commit + push manual).
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/i18n/strings.js` | 776 | ALTA |
 | `app/main.jsx` | 600 | MEDIA |
 | `app/achievements/Achievements.jsx` | ~500 | MEDIA |
 | `app/state-core.jsx` | ~475 | BAJA (dentro de limite) |
+| `app/i18n/strings/ui.js` | 315 | BAJA (dentro de limite, dominio mas grande del split) |
 | `app/shell/Sidebar.jsx` | 497 | SALE (s61, antes 630) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
+| `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
+
+### Deudas semanticas (no de tamaño, no urgentes)
+
+| Item | Detectado en | Detalle |
+|---|---|---|
+| D-1 override silencioso strings-content.js | s81 audit | 3 keys `breathe.phase.*` con valores distintos (Inhale again vs more; Oceanic vs Ocean). 8 keys mas duplicadas pero coincidentes. Decision futura |
+| D-2 duplicidad "Hecho hoy" | s81 audit | `path.card.done` + `paths.library.doneToday` mismo valor, dos keys. Consolidar a una |
+| D-3 namespaces path / paths inconsistentes | s81 audit (existente desde s53) | Singular `path.*` (runner, hydrate, card, error) + plural `paths.*` (library, suggested, path, kind, runner.repeat). Mezcla historica |

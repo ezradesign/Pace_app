@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.33.0</title>
+  <title>PACE · Foco · Cuerpo — v0.33.1</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -419,15 +419,46 @@ input, textarea { font-family: inherit; color: inherit; }
       11. main.jsx       → monta <PaceApp/> en #root
        Split sesion 57 / v0.27.5.
   -->
+  <!-- i18n split (sesion 81 / v0.33.1): strings.js de 791 ln se rompio en
+       _bootstrap + 5 dominios coherentes (ui/sessions/paths/stats/achievements).
+       Bootstrap PRIMERO -- crea window.PACE_STRINGS = { es:{}, en:{} } vacio.
+       Los 5 archivos siguientes son Object.assign sobre PACE_STRINGS.{es,en}.
+       strings-content.js (s38) sigue siendo el patch FINAL EN de contenido
+       (rutinas Move/Breathe/Extra) -- carga al final para preservar el
+       override de breathe.phase.inhala.mas/oceanica como ya hacia antes. -->
   <script type="text/babel">
-/* PACE · Catálogo de strings i18n — ES / EN
-   Sesión 37 · v0.19.0
-   Reglas: no incluir nombres de rutinas, pasos, IDs, "PACE", "Pomodoro",
-   "Wim Hof", "Buy Me a Coffee", ni número de versión.
+/* PACE - strings bootstrap (sesion 81 / v0.33.1)
+
+   Inicializa el catalogo i18n vacio.
+
+   Los archivos siguientes (ui.js, sessions.js, paths.js, stats.js,
+   achievements.js) inyectan keys via Object.assign sobre
+   window.PACE_STRINGS.{es,en}.
+
+   strings-content.js sigue siendo el patch final EN de contenido
+   (rutinas Move/Breathe/Extra), cargado al final de la cadena i18n.
+
+   Carga ANTES de cualquier otro archivo i18n del split.
+*/
+window.PACE_STRINGS = { es: {}, en: {} };
+
+</script>
+  <script type="text/babel">
+/* PACE - strings i18n - ui (sesion 81 / v0.33.1)
+   Extraido de strings.js en split por dominio.
+   Patches window.PACE_STRINGS.{es,en} con keys de la UI cronica de la app:
+     - welcome.*  (WelcomeModule)
+     - support.*  (SupportModule / Buy Me a Coffee)
+     - break.*    (BreakMenu post-Pomodoro)
+     - sidebar.*  (Sidebar layout)
+     - topbar.*   (TopBar superior)
+     - settings.* (panel Ajustes en TweaksPanel)
+     - activity.* (ActivityBar cuadrantes)
+     - tweaks.*   (TweaksPanel completo)
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
 */
 
-window.PACE_STRINGS = {
-  es: {
+Object.assign(window.PACE_STRINGS.es, {
     // Welcome
     'welcome.subtitle':              'Un ritmo para tu día',
     'welcome.cta':                   'Empezar',
@@ -579,247 +610,9 @@ window.PACE_STRINGS = {
     'tweaks.msg.import.json.err':    'JSON inválido.',
     'tweaks.confirm.reset':          '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
     'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
+});
 
-    // Session (compartido: shell + prep + done)
-    'session.exit':                    '× Salir',
-    'session.prep':                    'Prepárate',
-    'session.startNow':                'Empezar ahora',
-    'session.backToHome':              'Volver al inicio',
-    'session.doneMeta':                'Sesión completada',
-    'session.antidoteDone':            'Antídoto completado',
-    'session.hold':                    'Retén sin aire',
-    'session.breatheAgain':            'Respirar de nuevo',
-    'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
-    'session.minutes':                 'minutos',
-    'session.seconds':                 'segundos',
-    'session.hint':                    'Espacio pausar · Esc salir',
-    'session.resume':                  '▶ Reanudar',
-    'session.pause':                   '❚❚ Pausar',
-    'session.finish':                  '▶| Terminar',
-    'session.round':                   'Ronda',
-
-    // Move / Extra (pasos)
-    'move.stepCount':                  'Paso {current} de {total}',
-    'move.nextStep':                   'Siguiente',
-    'move.lastStep':                   'Último paso',
-    'move.prev':                       '← Anterior',
-    'move.next':                       'Siguiente →',
-    'move.doneMeta':                   'Antídoto completado',
-    'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
-
-    // Focus
-    'focus.minutes.custom.title':      'Minutos personalizados (1–180)',
-    'focus.cycle':                     'Ciclo',
-    'focus.min':                       'Min',
-    'focus.other':                     'Otro',
-    'focus.restart':                   'Reiniciar',
-    'focus.start':                     'Comenzar',
-    'focus.pause':                     'Pausar',
-    'focus.continue':                  'Continuar',
-    'focus.mode.focus':                'Foco',
-    'focus.mode.pause':                'Pausa corta',
-    'focus.mode.long':                 'Pausa larga',
-    'focus.subtitle.focus':            'Concentración profunda',
-    'focus.subtitle.pause':            'Desconecta 5 min',
-    'focus.subtitle.long':             'Pausa larga · estira y respira',
-
-    // Common (compartido entre sesiones)
-    'common.close':                    'Cerrar',
-    'common.time':                     'Tiempo',
-    'common.rounds':                   'Rondas',
-    'common.breaths':                  'Respiraciones',
-    'common.breath':                   'Respiración',
-    'common.of':                       'de',
-
-    // Breathe (fases de sesión activa)
-    'breathe.phase.inhala':            'Inhala',
-    'breathe.phase.exhala':            'Exhala',
-    'breathe.phase.sosten':            'Sostén',
-    'breathe.phase.inhala.mas':        'Inhala más',
-    'breathe.phase.inhala.oceanica':   'Inhala oceánica',
-    'breathe.phase.exhala.oceanica':   'Exhala oceánica',
-    'breathe.phase.inhala.izq':        'Inhala izq.',
-    'breathe.phase.inhala.dcha':       'Inhala dcha.',
-    'breathe.phase.exhala.dcha':       'Exhala dcha.',
-    'breathe.phase.exhala.izq':        'Exhala izq.',
-    'breathe.phase.respira':           'Respira',
-
-    // Breathe (sesión)
-    'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
-    'breathe.doneCopy':                'Tu cuerpo ha encontrado su ritmo.',
-
-    // Libraries (compartido)
-    'lib.tag':                         'Biblioteca',
-    'lib.routines':                    'Rutinas',
-
-    // Breathe Library
-    'lib.breathe.title':               'Respiración',
-    'lib.breathe.subtitle':            'Breathwork guiado: pranayamas, coherencia, rondas.',
-
-    // Move Library
-    'lib.move.title':                  'Mueve',
-    'lib.move.subtitle':               'Calistenia y fuerza. Corto, discreto, sin equipo.',
-    'lib.move.meta':                   'Cuerpo activo',
-
-    // Extra Library
-    'lib.extra.title':                 'Estira',
-    'lib.extra.subtitle':              'Movilidad y estiramientos. Antídoto a la silla.',
-    'lib.extra.meta':                  'Afloja tensión',
-
-    // Move Session (additional)
-    'move.steps':                      'Pasos',
-    'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
-    'move.next.prefix':                'Siguiente:',
-    'move.finish':                     'Terminar',
-    'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
-
-    // Hydrate
-    'hydrate.tag':                     'Hidratación',
-    'hydrate.title':                   'Hidrátate',
-    'hydrate.subtitle':                'Un sorbo ahora, un regalo a tu yo de las 5.',
-    'hydrate.glasses.today':           'Vasos hoy',
-    'hydrate.less':                    'Un vaso menos',
-    'hydrate.more':                    'Un vaso más',
-    'hydrate.tip.label':               'Tip:',
-    'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
-
-    // Stats
-    'stats.tag':                       'Estadísticas',
-    'stats.title':                     'Ritmo',
-    'stats.subtitle':                  'Métricas suaves. Sin ansiedad, sin comparación.',
-    'stats.unit.min':                  'min',
-    'stats.unit.glasses':              'vasos',
-    'stats.note.label':                'Nota:',
-    'stats.note':                      'no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.',
-    'stats.days':                      'Lun,Mar,Mié,Jue,Vie,Sáb,Dom',
-    // Tabs — sesión 43
-    'stats.tab.week':                  'Semana',
-    'stats.tab.month':                 'Mes',
-    'stats.tab.year':                  'Año',
-    // Heatmap mensual — sesión 43
-    'stats.month.days.short':          'L,M,X,J,V,S,D',
-    'stats.month.total.focus':         'Foco',
-    'stats.month.total.breathe':       'Respira',
-    'stats.month.total.move':          'Mueve',
-    'stats.month.total.water':         'vasos',
-    'stats.month.empty':               'Sin actividad',
-    'stats.month.coming':              'Próximamente',
-    'stats.month.tooltip.focus':       'min foco',
-    'stats.month.tooltip.breathe':     'min respira',
-    'stats.month.tooltip.move':        'min mueve',
-    'stats.month.tooltip.water':       'vasos',
-    'stats.month.hours.unit':          'h',
-    // Vista anual — sesión 44
-    'stats.year.empty':                'Aún no hay actividad en {year}',
-    'stats.year.totalActions':         '{n} acciones',
-    'stats.year.activeDays':           '{n} días activos',
-    'stats.year.maxStreak':            'racha máx: {n} días',
-    'stats.year.months.short':         'Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic',
-    'stats.year.days.label':           'L,M,X,J,V,S,D',
-    'stats.year.legend.less':          'menos',
-    'stats.year.legend.more':          'más',
-    'stats.year.tooltip.score':        '{n} acciones',
-
-    // Caminos stats -- sesion 54
-    'stats.tab.paths':                 'Caminos',
-    'stats.paths.title':               'Caminos',
-    'stats.paths.total':               'Total completados',
-    'stats.paths.currentStreak':       'Racha actual',
-    'stats.paths.bestStreak':          'Mejor racha',
-    'stats.paths.tableName':           'Camino',
-    'stats.paths.tableCount':          'Veces',
-    'stats.paths.tableLast':           'Ultimo dia',
-    'stats.paths.empty':               'Aun no has completado ningun camino',
-    'stats.paths.heatmap':             'Actividad del año',
-
-    // Achievements
-    'ach.tag':                         'Colección',
-    'ach.title':                       'Logros',
-    'ach.subtitle':                    'Sellos de libreta de campo. Colección creciente. Explora, no compitas.',
-    'ach.available':                   'Disponibles',
-    'ach.coming.soon':                 'Próximamente',
-    'ach.cat.primeros':                'Primeros pasos',
-    'ach.cat.constancia':              'Constancia',
-    'ach.cat.exploracion':             'Exploración',
-    'ach.cat.maestria':                'Maestría',
-    'ach.cat.secretos':                'Secretos',
-    'ach.cat.estacionales':            'Estacionales',
-    'ach.cat.stats':                   'Estadísticas',
-    'ach.seal.soon':                   'Pronto',
-    'ach.seal.secret':                 'Secreto',
-    'ach.seal.discover':               'Por descubrir',
-    'ach.toast.new':                   'Nuevo sello',
-
-    // BreatheLibrary safety modal
-    'breathe.safety.before':           'Antes de empezar',
-    'breathe.safety.check':            'Lo he leído y asumo mi responsabilidad',
-    'breathe.safety.cancel':           'Cancelar',
-    'breathe.safety.start':            'Empezar sesión',
-    'breathe.safety.required':         'Requiere lectura de seguridad',
-    'breathe.safety.body.intro.pre':   'Esta técnica implica ',
-    'breathe.safety.body.intro.bold':  'hiperventilación controlada y apnea',
-    'breathe.safety.body.intro.post':  '. Puede causar mareo, cosquilleo o desmayo.',
-    'breathe.safety.body.rule1.pre':   'Practícala ',
-    'breathe.safety.body.rule1.bold':  'sentado o tumbado',
-    'breathe.safety.body.rule1.post':  ', nunca de pie',
-    'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
-    'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
-    'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
-
-    // Caminos - PathRunner (sesion 50)
-    'path.runner.exit':              'Salir del camino',
-    'path.runner.exitConfirmTitle':  'Salir del camino?',
-    'path.runner.exitConfirmBody':   'Perderas el progreso de este camino.',
-    'path.runner.exitConfirmYes':    'Si, salir',
-    'path.runner.exitConfirmNo':     'Seguir',
-    'path.runner.skip':              'Saltar',
-    'path.runner.next':              'Siguiente',
-    'path.runner.done':              'Hecho',
-    'path.runner.complete.title':    'Camino completado',
-    'path.runner.complete.body':     'Has terminado {name}.',
-    'path.runner.complete.back':     'Volver',
-    'path.runner.complete.recorrido':'Recorrido',
-    'path.runner.transition.continue':'toca para continuar',
-    'path.hydrate.copy':             'Si te apetece, suma un vaso.',
-    'path.hydrate.drank':            'Beber',
-    'path.hydrate.skip':             'Saltar',
-    'path.hydrate.glasses.today':    'Vasos hoy',
-    'path.error.routineNotFound':    'Rutina no encontrada: {id}',
-    // Caminos - nombres y taglines (sesion 75 - renombrado sensorial)
-    'paths.path.dawn.name':           'Morning Glory',
-    'paths.path.dawn.tagline':        'Una flor que abre con la primera luz.',
-    'paths.path.midday.name':         'Hierbabuena',
-    'paths.path.midday.tagline':      'Para cuando el cuerpo pide moverse antes que la cabeza.',
-    'paths.path.afternoon.name':      'Chispa de Cerilla',
-    'paths.path.afternoon.tagline':   'Un golpe seco y vuelve la chispa.',
-    'paths.path.dusk.name':           'Lámpara de Mesa',
-    'paths.path.dusk.tagline':        'Un círculo de luz, todo lo demás en penumbra.',
-    'paths.path.weekend.name':        'Ventana Abierta',
-    'paths.path.weekend.tagline':     'Dejar entrar lo que el día traiga, sin moverse.',
-    'paths.path.tea.name':            'Infusión',
-    'paths.path.tea.tagline':         'Un vapor breve, y la tarde recobra forma.',
-    'paths.path.breath.name':         'Hálito',
-    'paths.path.breath.tagline':      'Dos vientos cortos para volver.',
-    // Caminos - nombres de bloque por kind (sesion 75 - SenderoBar)
-    'paths.kind.breathe.name':        'Respira',
-    'paths.kind.focus.name':          'Foco',
-    'paths.kind.body.name':           'Cuerpo',
-    'paths.kind.hydrate.name':        'Agua',
-    // Paths - biblioteca y favoritos (sesion 53)
-    'paths.library.title':            'Todos los caminos',
-    'paths.library.start':            'Comenzar',
-    'paths.library.doneToday':        'Hecho hoy',
-    'paths.library.favorite':         'Favorito',
-    'paths.library.unfavorite':       'Quitar favorito',
-    'paths.library.viewAll':          'Ver todos',
-    'paths.suggested.label':          'Sugerido ahora',
-    'paths.suggested.favorite':       'Tu favorito',
-    'paths.runner.repeat':            'Repetir camino',
-    'path.card.done':                 'Hecho hoy',
-    'path.card.start':                'Comenzar',
-  },
-
-  en: {
+Object.assign(window.PACE_STRINGS.en, {
     // Welcome
     'welcome.subtitle':              'A rhythm for your day',
     'welcome.cta':                   'Begin',
@@ -971,7 +764,150 @@ window.PACE_STRINGS = {
     'tweaks.msg.import.json.err':    'Invalid JSON.',
     'tweaks.confirm.reset':          'Delete all your PACE data? This action cannot be undone.',
     'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
+});
 
+</script>
+  <script type="text/babel">
+/* PACE - strings i18n - sessions (sesion 81 / v0.33.1)
+   Extraido de strings.js en split por dominio.
+   Patches window.PACE_STRINGS.{es,en} con keys de las actividades vivas:
+     - session.*               (shell + prep + done compartidos)
+     - common.*                (close/time/rounds/breaths/of compartidos)
+     - lib.*                   (etiquetas comunes de biblioteca)
+     - focus.*                 (FocusTimer)
+     - breathe.phase.*         (etiquetas de fase de respiracion)
+     - breathe.prepCopy/doneCopy (sesion guiada)
+     - breathe.safety.*        (modal de seguridad de Rondas/Wim Hof)
+     - lib.breathe.*           (BreatheLibrary)
+     - move.*                  (Estira sesion + Move pasos)
+     - lib.move.*              (MoveLibrary - Mueve)
+     - lib.extra.*             (ExtraLibrary - Estira)
+     - hydrate.*               (HydrateModule)
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
+*/
+
+Object.assign(window.PACE_STRINGS.es, {
+    // Session (compartido: shell + prep + done)
+    'session.exit':                    '× Salir',
+    'session.prep':                    'Prepárate',
+    'session.startNow':                'Empezar ahora',
+    'session.backToHome':              'Volver al inicio',
+    'session.doneMeta':                'Sesión completada',
+    'session.antidoteDone':            'Antídoto completado',
+    'session.hold':                    'Retén sin aire',
+    'session.breatheAgain':            'Respirar de nuevo',
+    'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
+    'session.minutes':                 'minutos',
+    'session.seconds':                 'segundos',
+    'session.hint':                    'Espacio pausar · Esc salir',
+    'session.resume':                  '▶ Reanudar',
+    'session.pause':                   '❚❚ Pausar',
+    'session.finish':                  '▶| Terminar',
+    'session.round':                   'Ronda',
+
+    // Move / Extra (pasos)
+    'move.stepCount':                  'Paso {current} de {total}',
+    'move.nextStep':                   'Siguiente',
+    'move.lastStep':                   'Último paso',
+    'move.prev':                       '← Anterior',
+    'move.next':                       'Siguiente →',
+    'move.doneMeta':                   'Antídoto completado',
+    'move.doneCopy':                   'El cuerpo vuelve a sentirse tuyo.',
+
+    // Focus
+    'focus.minutes.custom.title':      'Minutos personalizados (1–180)',
+    'focus.cycle':                     'Ciclo',
+    'focus.min':                       'Min',
+    'focus.other':                     'Otro',
+    'focus.restart':                   'Reiniciar',
+    'focus.start':                     'Comenzar',
+    'focus.pause':                     'Pausar',
+    'focus.continue':                  'Continuar',
+    'focus.mode.focus':                'Foco',
+    'focus.mode.pause':                'Pausa corta',
+    'focus.mode.long':                 'Pausa larga',
+    'focus.subtitle.focus':            'Concentración profunda',
+    'focus.subtitle.pause':            'Desconecta 5 min',
+    'focus.subtitle.long':             'Pausa larga · estira y respira',
+
+    // Common (compartido entre sesiones)
+    'common.close':                    'Cerrar',
+    'common.time':                     'Tiempo',
+    'common.rounds':                   'Rondas',
+    'common.breaths':                  'Respiraciones',
+    'common.breath':                   'Respiración',
+    'common.of':                       'de',
+
+    // Breathe (fases de sesión activa)
+    'breathe.phase.inhala':            'Inhala',
+    'breathe.phase.exhala':            'Exhala',
+    'breathe.phase.sosten':            'Sostén',
+    'breathe.phase.inhala.mas':        'Inhala más',
+    'breathe.phase.inhala.oceanica':   'Inhala oceánica',
+    'breathe.phase.exhala.oceanica':   'Exhala oceánica',
+    'breathe.phase.inhala.izq':        'Inhala izq.',
+    'breathe.phase.inhala.dcha':       'Inhala dcha.',
+    'breathe.phase.exhala.dcha':       'Exhala dcha.',
+    'breathe.phase.exhala.izq':        'Exhala izq.',
+    'breathe.phase.respira':           'Respira',
+
+    // Breathe (sesión)
+    'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
+    'breathe.doneCopy':                'Tu cuerpo ha encontrado su ritmo.',
+
+    // Libraries (compartido)
+    'lib.tag':                         'Biblioteca',
+    'lib.routines':                    'Rutinas',
+
+    // Breathe Library
+    'lib.breathe.title':               'Respiración',
+    'lib.breathe.subtitle':            'Breathwork guiado: pranayamas, coherencia, rondas.',
+
+    // Move Library
+    'lib.move.title':                  'Mueve',
+    'lib.move.subtitle':               'Calistenia y fuerza. Corto, discreto, sin equipo.',
+    'lib.move.meta':                   'Cuerpo activo',
+
+    // Extra Library
+    'lib.extra.title':                 'Estira',
+    'lib.extra.subtitle':              'Movilidad y estiramientos. Antídoto a la silla.',
+    'lib.extra.meta':                  'Afloja tensión',
+
+    // Move Session (additional)
+    'move.steps':                      'Pasos',
+    'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
+    'move.next.prefix':                'Siguiente:',
+    'move.finish':                     'Terminar',
+    'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
+
+    // Hydrate
+    'hydrate.tag':                     'Hidratación',
+    'hydrate.title':                   'Hidrátate',
+    'hydrate.subtitle':                'Un sorbo ahora, un regalo a tu yo de las 5.',
+    'hydrate.glasses.today':           'Vasos hoy',
+    'hydrate.less':                    'Un vaso menos',
+    'hydrate.more':                    'Un vaso más',
+    'hydrate.tip.label':               'Tip:',
+    'hydrate.tip':                     'Llena una botella de 500 ml por la mañana y otra después de comer. Dos botellas = 4 vasos. Hecho.',
+
+    // BreatheLibrary safety modal
+    'breathe.safety.before':           'Antes de empezar',
+    'breathe.safety.check':            'Lo he leído y asumo mi responsabilidad',
+    'breathe.safety.cancel':           'Cancelar',
+    'breathe.safety.start':            'Empezar sesión',
+    'breathe.safety.required':         'Requiere lectura de seguridad',
+    'breathe.safety.body.intro.pre':   'Esta técnica implica ',
+    'breathe.safety.body.intro.bold':  'hiperventilación controlada y apnea',
+    'breathe.safety.body.intro.post':  '. Puede causar mareo, cosquilleo o desmayo.',
+    'breathe.safety.body.rule1.pre':   'Practícala ',
+    'breathe.safety.body.rule1.bold':  'sentado o tumbado',
+    'breathe.safety.body.rule1.post':  ', nunca de pie',
+    'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
+    'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
+    'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
+});
+
+Object.assign(window.PACE_STRINGS.en, {
     // Session (shared: shell + prep + done)
     'session.exit':                    '× Exit',
     'session.prep':                    'Get ready',
@@ -1075,73 +1011,6 @@ window.PACE_STRINGS = {
     'hydrate.tip.label':               'Tip:',
     'hydrate.tip':                     'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
 
-    // Stats
-    'stats.tag':                       'Stats',
-    'stats.title':                     'Rhythm',
-    'stats.subtitle':                  'Soft metrics. No anxiety, no comparison.',
-    'stats.unit.min':                  'min',
-    'stats.unit.glasses':              'glasses',
-    'stats.note.label':                'Note:',
-    'stats.note':                      "we don't measure to judge you. The numbers are here so you can recognize your rhythms, not chase them.",
-    'stats.days':                      'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
-    // Tabs — session 43
-    'stats.tab.week':                  'Week',
-    'stats.tab.month':                 'Month',
-    'stats.tab.year':                  'Year',
-    // Monthly heatmap — session 43
-    'stats.month.days.short':          'M,T,W,T,F,S,S',
-    'stats.month.total.focus':         'Focus',
-    'stats.month.total.breathe':       'Breathe',
-    'stats.month.total.move':          'Move',
-    'stats.month.total.water':         'glasses',
-    'stats.month.empty':               'No activity',
-    'stats.month.coming':              'Coming soon',
-    'stats.month.tooltip.focus':       'min focus',
-    'stats.month.tooltip.breathe':     'min breathe',
-    'stats.month.tooltip.move':        'min move',
-    'stats.month.tooltip.water':       'glasses',
-    'stats.month.hours.unit':          'h',
-    // Year view — session 44
-    'stats.year.empty':                'No activity yet in {year}',
-    'stats.year.totalActions':         '{n} actions',
-    'stats.year.activeDays':           '{n} active days',
-    'stats.year.maxStreak':            'max streak: {n} days',
-    'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
-    'stats.year.days.label':           'M,T,W,T,F,S,S',
-    'stats.year.legend.less':          'less',
-    'stats.year.legend.more':          'more',
-    'stats.year.tooltip.score':        '{n} actions',
-
-    // Paths stats -- session 54
-    'stats.tab.paths':                 'Paths',
-    'stats.paths.title':               'Paths',
-    'stats.paths.total':               'Total completed',
-    'stats.paths.currentStreak':       'Current streak',
-    'stats.paths.bestStreak':          'Best streak',
-    'stats.paths.tableName':           'Path',
-    'stats.paths.tableCount':          'Times',
-    'stats.paths.tableLast':           'Last day',
-    'stats.paths.empty':               'You have not completed any path yet',
-    'stats.paths.heatmap':             'Year activity',
-
-    // Achievements
-    'ach.tag':                         'Collection',
-    'ach.title':                       'Achievements',
-    'ach.subtitle':                    "Field notebook stamps. Growing collection. Explore, don't compete.",
-    'ach.available':                   'Available',
-    'ach.coming.soon':                 'Coming soon',
-    'ach.cat.primeros':                'First steps',
-    'ach.cat.constancia':              'Consistency',
-    'ach.cat.exploracion':             'Exploration',
-    'ach.cat.maestria':                'Mastery',
-    'ach.cat.secretos':                'Secrets',
-    'ach.cat.estacionales':            'Seasonal',
-    'ach.cat.stats':                   'Statistics',
-    'ach.seal.soon':                   'Soon',
-    'ach.seal.secret':                 'Secret',
-    'ach.seal.discover':               'To discover',
-    'ach.toast.new':                   'New seal',
-
     // BreatheLibrary safety modal
     'breathe.safety.before':           'Before you start',
     'breathe.safety.check':            'I have read this and accept responsibility',
@@ -1157,6 +1026,80 @@ window.PACE_STRINGS = {
     'breathe.safety.body.rule2':       'Never in water, while driving or at height',
     'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
     'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
+});
+
+</script>
+  <script type="text/babel">
+/* PACE - strings i18n - paths (sesion 81 / v0.33.1)
+   Extraido de strings.js en split por dominio.
+   Patches window.PACE_STRINGS.{es,en} con keys de:
+     - path.runner.*       (PathRunner overlay + transiciones, s50/s77)
+     - path.hydrate.*      (PathHydrateStep, s78)
+     - path.error.*        (StepError fallback)
+     - path.card.*         (SuggestedPathCard, s53)
+     - paths.path.*        (nombres + taglines sensoriales, s75)
+     - paths.kind.*        (nombres de bloque en SenderoBar, s75)
+     - paths.library.*     (PathsLibrary overlay, s53)
+     - paths.suggested.*   (SuggestedPathCard CTA y favorito, s53)
+     - paths.runner.repeat (CompletionScreen repeat, s53)
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
+*/
+
+Object.assign(window.PACE_STRINGS.es, {
+    // Caminos - PathRunner (sesion 50)
+    'path.runner.exit':              'Salir del camino',
+    'path.runner.exitConfirmTitle':  'Salir del camino?',
+    'path.runner.exitConfirmBody':   'Perderas el progreso de este camino.',
+    'path.runner.exitConfirmYes':    'Si, salir',
+    'path.runner.exitConfirmNo':     'Seguir',
+    'path.runner.skip':              'Saltar',
+    'path.runner.next':              'Siguiente',
+    'path.runner.done':              'Hecho',
+    'path.runner.complete.title':    'Camino completado',
+    'path.runner.complete.body':     'Has terminado {name}.',
+    'path.runner.complete.back':     'Volver',
+    'path.runner.complete.recorrido':'Recorrido',
+    'path.runner.transition.continue':'toca para continuar',
+    'path.hydrate.copy':             'Si te apetece, suma un vaso.',
+    'path.hydrate.drank':            'Beber',
+    'path.hydrate.skip':             'Saltar',
+    'path.hydrate.glasses.today':    'Vasos hoy',
+    'path.error.routineNotFound':    'Rutina no encontrada: {id}',
+    // Caminos - nombres y taglines (sesion 75 - renombrado sensorial)
+    'paths.path.dawn.name':           'Morning Glory',
+    'paths.path.dawn.tagline':        'Una flor que abre con la primera luz.',
+    'paths.path.midday.name':         'Hierbabuena',
+    'paths.path.midday.tagline':      'Para cuando el cuerpo pide moverse antes que la cabeza.',
+    'paths.path.afternoon.name':      'Chispa de Cerilla',
+    'paths.path.afternoon.tagline':   'Un golpe seco y vuelve la chispa.',
+    'paths.path.dusk.name':           'Lámpara de Mesa',
+    'paths.path.dusk.tagline':        'Un círculo de luz, todo lo demás en penumbra.',
+    'paths.path.weekend.name':        'Ventana Abierta',
+    'paths.path.weekend.tagline':     'Dejar entrar lo que el día traiga, sin moverse.',
+    'paths.path.tea.name':            'Infusión',
+    'paths.path.tea.tagline':         'Un vapor breve, y la tarde recobra forma.',
+    'paths.path.breath.name':         'Hálito',
+    'paths.path.breath.tagline':      'Dos vientos cortos para volver.',
+    // Caminos - nombres de bloque por kind (sesion 75 - SenderoBar)
+    'paths.kind.breathe.name':        'Respira',
+    'paths.kind.focus.name':          'Foco',
+    'paths.kind.body.name':           'Cuerpo',
+    'paths.kind.hydrate.name':        'Agua',
+    // Paths - biblioteca y favoritos (sesion 53)
+    'paths.library.title':            'Todos los caminos',
+    'paths.library.start':            'Comenzar',
+    'paths.library.doneToday':        'Hecho hoy',
+    'paths.library.favorite':         'Favorito',
+    'paths.library.unfavorite':       'Quitar favorito',
+    'paths.library.viewAll':          'Ver todos',
+    'paths.suggested.label':          'Sugerido ahora',
+    'paths.suggested.favorite':       'Tu favorito',
+    'paths.runner.repeat':            'Repetir camino',
+    'path.card.done':                 'Hecho hoy',
+    'path.card.start':                'Comenzar',
+});
+
+Object.assign(window.PACE_STRINGS.en, {
     // Paths - PathRunner (session 50)
     'path.runner.exit':              'Exit path',
     'path.runner.exitConfirmTitle':  'Exit path?',
@@ -1208,8 +1151,170 @@ window.PACE_STRINGS = {
     'paths.runner.repeat':            'Repeat path',
     'path.card.done':                 'Done today',
     'path.card.start':                'Start',
-  },
-};
+});
+
+</script>
+  <script type="text/babel">
+/* PACE - strings i18n - stats (sesion 81 / v0.33.1)
+   Extraido de strings.js en split por dominio.
+   Patches window.PACE_STRINGS.{es,en} con keys de:
+     - stats.*               (panel Ritmo / StatsPanel)
+     - stats.tab.*           (semana/mes/año/caminos -- s43, s54)
+     - stats.month.*         (heatmap mensual -- s43)
+     - stats.year.*          (vista anual -- s44)
+     - stats.paths.*         (PathStats subpanel -- s54)
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
+*/
+
+Object.assign(window.PACE_STRINGS.es, {
+    // Stats
+    'stats.tag':                       'Estadísticas',
+    'stats.title':                     'Ritmo',
+    'stats.subtitle':                  'Métricas suaves. Sin ansiedad, sin comparación.',
+    'stats.unit.min':                  'min',
+    'stats.unit.glasses':              'vasos',
+    'stats.note.label':                'Nota:',
+    'stats.note':                      'no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.',
+    'stats.days':                      'Lun,Mar,Mié,Jue,Vie,Sáb,Dom',
+    // Tabs — sesión 43
+    'stats.tab.week':                  'Semana',
+    'stats.tab.month':                 'Mes',
+    'stats.tab.year':                  'Año',
+    // Heatmap mensual — sesión 43
+    'stats.month.days.short':          'L,M,X,J,V,S,D',
+    'stats.month.total.focus':         'Foco',
+    'stats.month.total.breathe':       'Respira',
+    'stats.month.total.move':          'Mueve',
+    'stats.month.total.water':         'vasos',
+    'stats.month.empty':               'Sin actividad',
+    'stats.month.coming':              'Próximamente',
+    'stats.month.tooltip.focus':       'min foco',
+    'stats.month.tooltip.breathe':     'min respira',
+    'stats.month.tooltip.move':        'min mueve',
+    'stats.month.tooltip.water':       'vasos',
+    'stats.month.hours.unit':          'h',
+    // Vista anual — sesión 44
+    'stats.year.empty':                'Aún no hay actividad en {year}',
+    'stats.year.totalActions':         '{n} acciones',
+    'stats.year.activeDays':           '{n} días activos',
+    'stats.year.maxStreak':            'racha máx: {n} días',
+    'stats.year.months.short':         'Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic',
+    'stats.year.days.label':           'L,M,X,J,V,S,D',
+    'stats.year.legend.less':          'menos',
+    'stats.year.legend.more':          'más',
+    'stats.year.tooltip.score':        '{n} acciones',
+
+    // Caminos stats -- sesion 54
+    'stats.tab.paths':                 'Caminos',
+    'stats.paths.title':               'Caminos',
+    'stats.paths.total':               'Total completados',
+    'stats.paths.currentStreak':       'Racha actual',
+    'stats.paths.bestStreak':          'Mejor racha',
+    'stats.paths.tableName':           'Camino',
+    'stats.paths.tableCount':          'Veces',
+    'stats.paths.tableLast':           'Ultimo dia',
+    'stats.paths.empty':               'Aun no has completado ningun camino',
+    'stats.paths.heatmap':             'Actividad del año',
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+    // Stats
+    'stats.tag':                       'Stats',
+    'stats.title':                     'Rhythm',
+    'stats.subtitle':                  'Soft metrics. No anxiety, no comparison.',
+    'stats.unit.min':                  'min',
+    'stats.unit.glasses':              'glasses',
+    'stats.note.label':                'Note:',
+    'stats.note':                      "we don't measure to judge you. The numbers are here so you can recognize your rhythms, not chase them.",
+    'stats.days':                      'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+    // Tabs — session 43
+    'stats.tab.week':                  'Week',
+    'stats.tab.month':                 'Month',
+    'stats.tab.year':                  'Year',
+    // Monthly heatmap — session 43
+    'stats.month.days.short':          'M,T,W,T,F,S,S',
+    'stats.month.total.focus':         'Focus',
+    'stats.month.total.breathe':       'Breathe',
+    'stats.month.total.move':          'Move',
+    'stats.month.total.water':         'glasses',
+    'stats.month.empty':               'No activity',
+    'stats.month.coming':              'Coming soon',
+    'stats.month.tooltip.focus':       'min focus',
+    'stats.month.tooltip.breathe':     'min breathe',
+    'stats.month.tooltip.move':        'min move',
+    'stats.month.tooltip.water':       'glasses',
+    'stats.month.hours.unit':          'h',
+    // Year view — session 44
+    'stats.year.empty':                'No activity yet in {year}',
+    'stats.year.totalActions':         '{n} actions',
+    'stats.year.activeDays':           '{n} active days',
+    'stats.year.maxStreak':            'max streak: {n} days',
+    'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
+    'stats.year.days.label':           'M,T,W,T,F,S,S',
+    'stats.year.legend.less':          'less',
+    'stats.year.legend.more':          'more',
+    'stats.year.tooltip.score':        '{n} actions',
+
+    // Paths stats -- session 54
+    'stats.tab.paths':                 'Paths',
+    'stats.paths.title':               'Paths',
+    'stats.paths.total':               'Total completed',
+    'stats.paths.currentStreak':       'Current streak',
+    'stats.paths.bestStreak':          'Best streak',
+    'stats.paths.tableName':           'Path',
+    'stats.paths.tableCount':          'Times',
+    'stats.paths.tableLast':           'Last day',
+    'stats.paths.empty':               'You have not completed any path yet',
+    'stats.paths.heatmap':             'Year activity',
+});
+
+</script>
+  <script type="text/babel">
+/* PACE - strings i18n - achievements (sesion 81 / v0.33.1)
+   Extraido de strings.js en split por dominio.
+   Patches window.PACE_STRINGS.{es,en} con keys ach.* (catalogo de logros).
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
+*/
+
+Object.assign(window.PACE_STRINGS.es, {
+    // Achievements
+    'ach.tag':                         'Colección',
+    'ach.title':                       'Logros',
+    'ach.subtitle':                    'Sellos de libreta de campo. Colección creciente. Explora, no compitas.',
+    'ach.available':                   'Disponibles',
+    'ach.coming.soon':                 'Próximamente',
+    'ach.cat.primeros':                'Primeros pasos',
+    'ach.cat.constancia':              'Constancia',
+    'ach.cat.exploracion':             'Exploración',
+    'ach.cat.maestria':                'Maestría',
+    'ach.cat.secretos':                'Secretos',
+    'ach.cat.estacionales':            'Estacionales',
+    'ach.cat.stats':                   'Estadísticas',
+    'ach.seal.soon':                   'Pronto',
+    'ach.seal.secret':                 'Secreto',
+    'ach.seal.discover':               'Por descubrir',
+    'ach.toast.new':                   'Nuevo sello',
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+    // Achievements
+    'ach.tag':                         'Collection',
+    'ach.title':                       'Achievements',
+    'ach.subtitle':                    "Field notebook stamps. Growing collection. Explore, don't compete.",
+    'ach.available':                   'Available',
+    'ach.coming.soon':                 'Coming soon',
+    'ach.cat.primeros':                'First steps',
+    'ach.cat.constancia':              'Consistency',
+    'ach.cat.exploracion':             'Exploration',
+    'ach.cat.maestria':                'Mastery',
+    'ach.cat.secretos':                'Secrets',
+    'ach.cat.estacionales':            'Seasonal',
+    'ach.cat.stats':                   'Statistics',
+    'ach.seal.soon':                   'Soon',
+    'ach.seal.secret':                 'Secret',
+    'ach.seal.discover':               'To discover',
+    'ach.toast.new':                   'New seal',
+});
 
 </script>
   <script type="text/babel">
@@ -1539,7 +1644,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.33.0';
+const PACE_VERSION = 'v0.33.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
