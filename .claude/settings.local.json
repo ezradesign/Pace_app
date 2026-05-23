@@ -37,7 +37,10 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(git checkout *)",
       "Bash(sha256sum PACE_standalone.html index.html && stat -c \"%n: %s bytes\" PACE_standalone.html index.html)",
-      "PowerShell(.\\\\scripts\\\\check-session.ps1)"
+      "PowerShell(.\\\\scripts\\\\check-session.ps1)",
+      "Bash(powershell -Command \"\\(Get-Content 'app/main.jsx'\\).Length\")",
+      "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\('CHANGELOG.md'\\); $crlf = 0; $lfOnly = 0; for \\($i=0; $i -lt $bytes.Length; $i++\\) { if \\($bytes[$i] -eq 10\\) { if \\($i -gt 0 -and $bytes[$i-1] -eq 13\\) { $crlf++ } else { $lfOnly++ } } }; \"CRLF: $crlf\"; \"LF-only: $lfOnly\"; \"BOM: $\\($bytes[0] -eq 239 -and $bytes[1] -eq 187 -and $bytes[2] -eq 191\\)\")",
+      "PowerShell($path = 'CHANGELOG.md'; $text = [System.IO.File]::ReadAllText\\($path\\); $lines = $text -split \"`n\"; $kept = $lines[0..366] + $lines[503..\\($lines.Length-1\\)]; $out = $kept -join \"`n\"; [System.IO.File]::WriteAllText\\($path, $out, \\(New-Object System.Text.UTF8Encoding $false\\)\\); \"New total lines: $\\($kept.Length\\)\")"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

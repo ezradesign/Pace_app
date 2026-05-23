@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.33.1</title>
+  <title>PACE · Foco · Cuerpo — v0.33.2</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -197,6 +197,15 @@
   <!-- Caminos - PathRunner UI (sesion 50; split s80) - orquestador -->
   <script type="text/babel" data-presets="env,react" src="app/paths/PathRunner.jsx"></script>
 
+  <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
+       _responsive.js inyecta el bloque <style> de reglas @media globales del
+       layout (TopBar, ActivityBar, main content, sidebar handle, fallback dvh).
+       TopBar.jsx y ActivityBar.jsx son los dos componentes hijos puros que
+       PaceApp compone en su return. Cargan ANTES de main.jsx -- el orquestador
+       los referencia en JSX. -->
+  <script type="text/babel" src="app/main/_responsive.js"></script>
+  <script type="text/babel" src="app/main/TopBar.jsx"></script>
+  <script type="text/babel" src="app/main/ActivityBar.jsx"></script>
   <script type="text/babel" src="app/main.jsx"></script>
 
   <!-- Monta la app

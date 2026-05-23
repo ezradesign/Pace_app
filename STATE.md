@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.33.1
-**Ultima sesion:** #81 -- 2026-05-19 - refactor(i18n): split `app/i18n/strings.js` (791 ln, 664 keys) en `app/i18n/strings/` -- variante B pragmatica (6 archivos: _bootstrap + ui + sessions + paths + stats + achievements). Scope reorientado desde el prompt original (transiciones del Camino ya existian desde s77) al candidato de deuda ALTA que s80 dejo en cola (v0.33.1)
-**Ultima actualizacion de este archivo:** 2026-05-19 - sesion 81
-**Build entregado:** `PACE_standalone.html` v0.33.1 (614 KB; 628,926 bytes) + `index.html` (idem, copia exacta)
+**Version actual:** v0.33.2
+**Ultima sesion:** #82 -- 2026-05-23 - refactor(main): split `app/main.jsx` (600 ln) en `app/main/` -- variante B equilibrada (3 archivos: `_responsive.js` + `TopBar.jsx` + `ActivityBar.jsx`). PaceApp queda intacto como orquestador puro (279 ln, -53%). Tercer split mecanico consecutivo tras s80 (PathRunner) y s81 (strings) -- patron `app/<carpeta>/` consolidado
+**Ultima actualizacion de este archivo:** 2026-05-23 - sesion 82
+**Build entregado:** `PACE_standalone.html` v0.33.2 (617 KB; 632,064 bytes) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.33.1** (s81: bloque i18n de 3 a 8 `<script src>` por split de strings -- _bootstrap + ui + sessions + paths + stats + achievements + strings-content + useT + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.1** (614 KB, regenerado s81) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.1** (s81: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.33.2** (s82: bloque shell con 3 nuevos `<script src>` antes de main.jsx -- `_responsive.js` + `TopBar.jsx` + `ActivityBar.jsx` + comentario explicativo del orden + titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.2** (617 KB, regenerado s82) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.2** (s82: regenerado por build-standalone.js) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG -- 13 rediseñados en s60 | **v0.28.1** (iter parcial s60, sin cambios s61) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -49,7 +49,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.1** (s81: PACE_VERSION bump; s80: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.2** (s82: PACE_VERSION bump; s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -60,7 +60,10 @@
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
-| `app/main.jsx` | Orquestador + TopBar + ActivityBar | **v0.27.0** (PathsLibrary montado s53) |
+| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.33.2** (s82: split mecanico variante B, 600 ln -> 279 ln, -53% -- TopBar/ActivityBar/CSS responsive a `app/main/`) |
+| `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con reglas @media globales (TopBar, ActivityBar, main content, sidebar handle, fallback vh/dvh) | **v0.33.2** (nuevo s82, 105 ln; literal de main.jsx 20-112) |
+| `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent / Tweaks prop) + topBarStyles | **v0.33.2** (nuevo s82, 106 ln) |
+| `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + welcome lang toggle | **v0.33.1** (nuevo s81, 315 ln; 134 ES + 134 EN) |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate | **v0.33.1** (nuevo s81, 227 ln; 93 ES + 93 EN) |
@@ -83,11 +86,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.33.1** (s81: CACHE_NAME pace-v0.33.1) |
+| `sw.js` | Service Worker PWA | **v0.33.2** (s82: CACHE_NAME pace-v0.33.2) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81 (copia pristina restaurada desde HEAD previa al rebuild v0.33.1)
+- `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82 (copia del v0.33.1 publicado en s81)
+- `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81
 - `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
 - `backups/PACE_standalone_v0.32.0_20260518.html`
 - `backups/PACE_standalone_v0.31.0_20260517.html`
@@ -106,146 +110,143 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.2_20260511.html`
 - `backups/PACE_standalone_v0.28.1_20260511.html`
 - `backups/PACE_standalone_v0.28.0_20260511.html`
-- `backups/PACE_standalone_v0.27.6_20260511.html`
 
-Nota s81: `v0.27.5_20260511.html` no existia fisicamente en el filesystem
-cuando se intento rotar (STATE.md previo lo listaba); cap 20 se mantiene
-con el alta de `v0.33.0_20260519.html` sin necesidad de rotar.
+Nota s82: cap 20 mantenido rotando el mas antiguo (`v0.27.6_20260511.html`)
+al crear el backup del v0.33.1 publicado en s81.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 81 - v0.33.1 - refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (variante B pragmatica: _bootstrap + 5 dominios)**
+**Sesion 82 - v0.33.2 - refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (variante B equilibrada: _responsive.js + TopBar.jsx + ActivityBar.jsx). PaceApp intacto como orquestador puro (279 ln, -53%).**
 
 ### Contexto
 
-El prompt original de s81 pedia **transiciones contemplativas** entre
-Steps del Camino (IntroCard/StepIntro/OutroCard + halo SenderoBar).
-Auditoria de precondiciones (Tarea 0) detecta que **toda esa
-infraestructura ya existia completa desde s77**: `PathTransitions.jsx`
-con `IntroCard`/`StepIntro`/`OutroCard` (252 ln, ya en window), state
-machine `intro/step/transition/outro` integrada en PathRunner.jsx,
-tokens `--path-intro-ms/--path-step-ms/--path-outro-ms/--path-card-fade-ms`
-en tokens.css, y `path.runner.transition.continue` ES/EN en strings.
+s82 toma el siguiente candidato MEDIO de deuda que s81 dejo en cola:
+`app/main.jsx` (600 ln). Tercera sesion consecutiva de split mecanico
+tras s80 (PathRunner) y s81 (strings.js). El patron `app/<carpeta>/` ya
+es convencion en el codebase.
 
-Reporte al usuario con 4 opciones de scope alternativo. Elige **"Cambiar
-scope a otro candidato s80"**, luego **"Split strings.js (ALTA deuda)"**
-de los 4 candidatos del backlog.
+Auditoria detecta cero acoplamientos problematicos: `TopBar` y
+`ActivityBar` son hijos puros sin consumidor externo. El bloque CSS
+responsive es global por design.
 
-Diario: [s81](./docs/sessions/session-81-strings-split.md). Documentos de
-apoyo: [audit](./docs/sessions/session-81-audit.md),
-[design](./docs/sessions/session-81-design.md).
+Diario: [s82](./docs/sessions/session-82-main-split.md). Documentos de
+apoyo: [audit](./docs/sessions/session-82-audit.md),
+[design](./docs/sessions/session-82-design.md).
 
 ### Que se hizo
 
-1. **Tarea 0 -- precondiciones**: 6/7 OK, fallo en condicion 7
-   (PathTransitions.jsx no debia existir; existia desde s77 con 252 ln).
-   Reportado al usuario con tabla de evidencias. Cambio de scope confirmado.
-2. **Tarea 1 -- auditoria** ([session-81-audit.md](./docs/sessions/session-81-audit.md)):
-   estructura i18n (3 archivos), conteo por dominio (31 bloques, 664 keys),
-   4 deudas tecnicas detectadas (D-1 override silencioso, D-2 duplicidad
-   "Hecho hoy", D-3 namespaces inconsistentes, D-4 bloques minusculos),
-   13 invariantes, 10 edge cases.
-3. **Tarea 2 -- design con 3 variantes** ([session-81-design.md](./docs/sessions/session-81-design.md)):
-   - **A** Conservadora: 3 archivos + strings.js reducido a 330 ln (sin bootstrap).
-   - **B** Pragmatica: 6 archivos en `strings/` con `_bootstrap.js` + 5 dominios.
-   - **C** Maximalista: 14 archivos (1 por dominio).
-   Usuario delega: "LA QUE TU RECOMIENDES Y SEA MAS PROFESIONAL". Agente
-   elige **B** (5 dominios coherentes, carpeta dedicada, bootstrap explicito).
+1. **Tarea 0 -- precondiciones**: 7/7 OK. git limpio, version coherente,
+   standalone v0.33.1 carga limpia en preview, main.jsx = 600 ln exactas.
+2. **Tarea 1 -- auditoria** ([session-82-audit.md](./docs/sessions/session-82-audit.md)):
+   tabla de 10 secciones, 29 invariantes numeradas, 17 edge cases, 5
+   deudas semanticas detectadas (NO arregladas: scope = split puro).
+3. **Tarea 2 -- design con 3 variantes** ([session-82-design.md](./docs/sessions/session-82-design.md)):
+   - **A** Minima: solo ActivityBar -> 459 ln (-24%). NO cumple metrica.
+   - **B** Equilibrada (aprobada): `_responsive.js` + TopBar + ActivityBar
+     -> 255 ln estimado (-57%). PaceApp intacto.
+   - **C** Maximalista: B + 2 hooks (overlay/keyboard) -> 180 ln (-70%).
+     Premature abstraction (1 consumidor).
+   Usuario delega: "la que sea mas profesional". Agente elige **B** --
+   cumple metrica + respeta principio "no premature abstraction" del
+   codebase + coherente con s80/s81.
 4. **Tarea 3 -- implementacion mecanica**:
-   - Crear `app/i18n/strings/_bootstrap.js` (15 ln; vacio).
-   - Crear `app/i18n/strings/achievements.js`, `paths.js`, `stats.js`
-     (paralelo; archivos chicos).
-   - Crear `app/i18n/strings/ui.js`, `sessions.js` (paralelo; archivos
-     grandes con welcome+support+tweaks y session+breathe+focus+move+hydrate
-     respectivamente).
-   - Verificacion intermedia con Grep: 664 keys en los 6 archivos =
-     exactamente las 664 originales. Cero perdida.
-   - Editar `PACE.html` -- de 3 a 8 `<script src>` i18n + comentario explicativo.
-   - Eliminar `app/i18n/strings.js`.
-5. **Tarea 4 -- verificacion**:
-   - `node build-standalone.js`: 55 archivos validados (50 previos +
-     6 nuevos - 1 eliminado = 55). OK.
-   - Runtime via preview local (`.claude/static-server.js` heredado de s80):
-     `Object.keys(PACE_STRINGS.es).length = 332`, `.en = 545`. Snapshot
-     a11y del home con un Camino activo (Hierbabuena + PathHydrateStep):
-     textos correctos en TopBar/Sidebar/FocusTimer/ActivityBar/overlay.
-     Override D-1 verificado preservado.
+   - Crear `app/main/_responsive.js` (105 ln; IIFE inyecta `<style>` global).
+   - Crear `app/main/TopBar.jsx` (106 ln; TopBar + topBarStyles).
+   - Crear `app/main/ActivityBar.jsx` (170 ln; ActivityBar + 4 iconos AB*).
+   - Editar PACE.html: +3 `<script src>` antes de main.jsx + comentario.
+   - **Verificacion intermedia** (3 archivos cargados, main.jsx aun sin
+     tocar): TopBar/ActivityBar definidos dos veces; ultimo gana (idempotente
+     por copia literal). Consola 0 errores. ✓
+   - Reescribir main.jsx (600 -> 279 ln, -53%; literal copia de PaceApp
+     intacto, sin tocar logica).
+5. **Tarea 4 -- verificacion** (16 invariantes runtime):
+   - 4.1 TopBar: tabs (focusMode larga/foco), 3 iconos (Stats prop, Logros
+     CustomEvent, Tweaks prop), i18n ES<->EN -> tabs/aria/chips actualizan.
+   - 4.2 ActivityBar: 4 chips -> abren BreatheLibrary/ExtraLibrary/
+     MoveLibrary/HydrateTracker. i18n correcto.
+   - 4.3 Overlays + atajos + cowClicks + recarga: S/T/L toggle, cowClicks
+     -> secret.cow.click unlock, PathsLibrary CustomEvent abre, focusMode
+     'larga' sobrevive recarga.
+   - 4.4 Edge cases: T+INPUT skip, guard CSS no duplica, fallback dvh
+     intacto, mobile <=768px tabs ocultos.
+   - Console errors a lo largo de todo el ciclo: **cero**.
 6. **Tarea 6 -- versionado y build**:
-   - Restaurar pristino v0.33.0 desde HEAD antes del backup.
-   - Backup `backups/PACE_standalone_v0.33.0_20260519.html`. Cap 20
-     mantenido (v0.27.5 ya no existia fisicamente).
-   - Bump (state-core, PACE.html, sw.js) -> v0.33.1.
-   - Rebuild: bundle 614 KB (628,926 bytes; +4,387 vs v0.33.0). SHA-256:
-     `3b9c49c0...367ae`. `index.html` byte-perfect.
-7. **Tarea 7 -- documentacion**: audit + design + diario s81 + CHANGELOG
-   (degradacion de v0.32.1 a fila-de-enlace, detalle nuevo de v0.33.1)
+   - Backup `backups/PACE_standalone_v0.33.1_20260523.html` (copia del
+     v0.33.1 publicado). Cap 20 mantenido (rotado v0.27.6_20260511.html).
+   - Bump (state-core, PACE.html, sw.js) -> v0.33.2.
+   - Rebuild: bundle **617 KB (632,064 bytes; +3,138 vs v0.33.1)**.
+     SHA-256: `66455A34...387EFD`. `index.html` byte-perfect.
+   - 58 archivos validados (10 .js + 48 .jsx; antes 55 = +3 nuevos).
+7. **Tarea 7 -- documentacion**: audit + design + diario s82 + CHANGELOG
+   (degradacion de v0.33.0 a fila-de-enlace, detalle nuevo de v0.33.2)
    + STATE.md (este archivo).
 
 ### Decisiones tomadas
 
-- D1 -- **Cambio de scope documentado y trazable**: prompt -> transiciones
-  ya existian -> split de strings.js. Audit + design + diario reflejan el
-  cambio.
-- D2 -- **Variante B aprobada** (no A ni C). Pragmatica: 5 dominios
-  coherentes, carpeta dedicada, bootstrap explicito. Cumple `<500 ln`
-  con holgura.
-- D3 -- **Bootstrap explicito** `_bootstrap.js` vs "primer archivo crea el
-  objeto". Mas resistente a errores de parse.
-- D4 -- **`strings-content.js` intacto**, sigue cargando al final.
-  Override silencioso D-1 PRESERVADO en runtime.
-- D5 -- **ES y EN en mismo archivo del split** (no separar por idioma).
-  Siempre se actualizan en paralelo.
-- D6 -- **NO consolidar deudas D-1 a D-4 en s81**. Scope = split mecanico
-  puro. Cualquier consolidacion abre debate de UX/copy fuera del prompt.
-- D7 -- **`build-standalone.js` sin cambios**. `validateAppFiles` walkea
-  recursivo; los 6 archivos nuevos se descubren automatico.
-- D8 -- **Cap 20 backups mantenido sin rotar explicito**. El backup mas
-  antiguo (`v0.27.5_20260511.html`) ya no existia fisicamente cuando se
-  intento el `rm`; el alta de `v0.33.0_20260519.html` mantiene el cap
-  sin operacion destructiva sobre los demas.
+- D1 -- **Variante B aprobada** (3 archivos: `_responsive.js` + TopBar +
+  ActivityBar). No A (no cumple metrica) ni C (premature abstraction).
+- D2 -- **Carpeta `app/main/`** coherente con `app/paths/steps/` (s80) y
+  `app/i18n/strings/` (s81). Tercer split mecanico con el mismo patron.
+- D3 -- **CSS responsive a `_responsive.js` IIFE**, no inline en
+  TopBar/ActivityBar. El `<style>` toca selectores de AMBOS componentes
+  + main + sidebar handle. Es config global, no de un componente.
+- D4 -- **`topBarStyles` con TopBar.jsx; 4 iconos AB* con ActivityBar.jsx**.
+  Cada uno tiene 1 unico consumidor (verificado por Grep). Cohesion.
+- D5 -- **NO extraer hooks** (variante C descartada). 1 consumidor hoy.
+  Reconsiderar si llega un segundo entry point (p.ej. EmbedApp).
+- D6 -- **`Object.assign(window, { TopBar, ActivityBar })` preservado**
+  desde sus archivos respectivos. Sin consumidor externo, pero
+  estabilidad de superficie publica. Mantener.
+- D7 -- **Arranque directo `#pace-root` preservado**. Legacy v0.12, cero
+  coste, removerlo abre debate -- fuera de scope.
+- D8 -- **`build-standalone.js` sin cambios**. `validateAppFiles` walkea
+  recursivo. 3 nuevos archivos se descubren automatico.
 
 ### Build
 
-- Bundle: **614 KB** (628,926 bytes; +4,387 bytes vs v0.33.0 = 624,539,
-  +0.7%). Crecimiento por cabeceras de doc-comment de 6 archivos nuevos
-  (~6-15 ln cada uno) + Object.assign wrappers (~3 ln × 2 idiomas × 5
-  dominios). Estimado en design: +2-3 KB; real: +4 KB (atribuible a
-  cabeceras mas extensas de lo previsto).
-- 55 archivos validados (9 .js + 46 .jsx).
+- Bundle: **617 KB** (632,064 bytes; +3,138 bytes vs v0.33.1 = 628,926,
+  +0.5%). Crecimiento por cabeceras de doc-comment de 3 archivos nuevos
+  + 2 `Object.assign` + comentarios preservados. Estimado en design:
+  +1-2 KB; real: +3 KB (cabeceras mas extensas).
+- 58 archivos validados (10 .js + 48 .jsx).
 - `index.html` byte-a-byte identico a `PACE_standalone.html`.
-- SHA-256: `3b9c49c0736e237dfffd37067b88793af501b0ce820221d0cd61934575a367ae`.
-- Backup creado: `backups/PACE_standalone_v0.33.0_20260519.html` (610 KB,
-  pristino restaurado desde HEAD).
+- SHA-256: `66455A340EBC492CBA07F65FDBE7994345F51A77679091CCFEFF32576F387EFD`.
+- Backup creado: `backups/PACE_standalone_v0.33.1_20260523.html` (614 KB).
 
 ### Validacion runtime usuario
 
-Cubierta principalmente por preview local (recarga + 19 keys sample de
-los 5 dominios ES+EN + snapshot a11y con un Camino activo). Quedan
-pendientes de inspeccion manual: navegar por StatsPanel (verificar
-textos de stats.month.* / stats.year.* / stats.paths.*) y Achievements
-(textos ach.cat.*); abrir TweaksPanel (textos tweaks.confirm.*); ningun
-riesgo conocido -- el split es mecanico y el conteo coincide.
+Cubierta integramente por preview local (`.claude/static-server.js`
+heredado de s80) en `localhost:8765`. **16/16 invariantes verificadas**:
+TopBar, ActivityBar, atajos, cowClicks, PathsLibrary, persistencia,
+edge cases mobile/INPUT/dvh/guard. Console errors: cero. Pendiente de
+inspeccion manual visual: confirmar pixel-a-pixel que el shell se ve
+igual que en v0.33.1 (riesgo minimo, refactor mecanico sin cambios
+de CSS visible).
 
-## Proxima sesion -- s82 (sin scope fijo)
+## Proxima sesion -- s83 (sin scope fijo)
 
-s81 cierra el split de strings.js (deuda ALTA mayor). Candidatos para
-s82 segun deuda actual:
+s82 cierra el split de main.jsx (deuda MEDIA del backlog s81). Candidatos
+para s83:
 
-1. **`app/main.jsx`** (600 ln, MEDIA): orquestador + TopBar +
-   ActivityBar. Candidato a extraer ActivityBar a `app/main/ActivityBar.jsx`.
-2. **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA): catalogo
-   + coleccion + preview. Catalogo a `app/achievements/catalog.js`.
-3. **Catalog split Move/Stretch**: si se quiere diferenciar en catalogo
+1. **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA): catalogo +
+   coleccion + preview. Catalogo a `app/achievements/catalog.js`. Siguiente
+   candidato natural -- mismo patron de split mecanico aplicable.
+2. **Catalog split Move/Stretch**: si se quiere diferenciar en catalogo
    (`kind: 'move' | 'stretch'` en vez de `'body'`). Trivial ahora con
    `steps/` ya extraido.
-4. **Consolidar overrides D-1 a D-3** de strings: decidir Ocean vs
-   Oceanic, eliminar redundancia "Hecho hoy", unificar namespace path/paths.
+3. **Consolidar deudas semanticas i18n** D-1 (override Ocean vs Oceanic),
+   D-2 (duplicidad "Hecho hoy"), D-3 (namespace path/paths) detectadas
+   en audit s81.
+4. **`scripts/check-session.ps1`** -- actualizar rango de tamaño
+   (530-600 KB desactualizado; real 605-617 KB). Bajo coste.
+5. **Variante C hooks de s82** -- solo si llega un segundo entry point
+   que reutilice `useOverlayManager` / `useGlobalKeyboard`. Hoy no aporta.
 
 ### Precondicion bloqueante
 
-Cierre Git de s81 publicado por el usuario (commit + push manual).
+Cierre Git de s82 publicado por el usuario (commit + push manual).
 
 ---
 
@@ -274,6 +275,9 @@ Cierre Git de s81 publicado por el usuario (commit + push manual).
 | i18n splittado en `app/i18n/strings/` con bootstrap explicito + 5 dominios | s81 | `_bootstrap.js` crea `window.PACE_STRINGS = { es:{}, en:{} }` vacio. Cinco archivos hijos (ui/sessions/paths/stats/achievements) hacen `Object.assign(PACE_STRINGS.{es,en}, {...})`. `strings-content.js` (s38) sigue cargando al final preservando el override silencioso de 3 keys `breathe.phase.*`. Si en el futuro se anyaden idiomas, ampliar el bootstrap y patch en los 5 archivos. Si se anyade un dominio nuevo grande, archivo propio bajo `strings/`; si es pequeño (<=10 keys), agruparlo con dominio padre |
 | ES y EN en mismo archivo del split (no separar por idioma) | s81 | Siempre se actualizan en paralelo. Separar `welcome-es.js` + `welcome-en.js` duplicaria archivos sin beneficio. Si en el futuro se anyade un tercer idioma, evaluar; con 2 idiomas no merece la pena |
 | Override silencioso strings-content.js sobre 3 keys breathe.phase.* (deuda explicita D-1) | s81 | `strings-content.js` redefine `inhala.mas` ("Inhale again" vs "Inhale more"), `inhala.oceanica` ("Oceanic" vs "Ocean") y `exhala.oceanica` (idem) con valores distintos al split. No consolidado en s81 (debate de copy). Decision futura: consolidar valores o mover los 11 duplicados a sessions.js y dejar strings-content.js solo con keys unicas |
+| `app/main.jsx` splittado en `app/main/` (variante B equilibrada) | s82 | Tres archivos hijos: `_responsive.js` (IIFE, inyecta `<style>` global con guard), `TopBar.jsx` (tabs + 3 iconos + topBarStyles + window expose), `ActivityBar.jsx` (4 chips + 4 iconos AB* inline + window expose). PaceApp queda intacto en main.jsx como orquestador puro (state local + handlers + JSX). Si en el futuro hay un segundo entry point que comparta logica de overlays/atajos, evaluar variante C (hooks `useOverlayManager` + `useGlobalKeyboard`). Hasta entonces es premature abstraction. `topBarStyles` y los 4 iconos AB* viajan cada uno con su unico consumidor (cohesion sobre extraccion temprana) |
+| CSS responsive global del shell vive en `app/main/_responsive.js` (IIFE) | s82 | El bloque `<style id="pace-main-responsive-css">` toca selectores de TopBar + ActivityBar + main content + sidebar handle + fallback vh/dvh. Es config global de layout, NO de un componente. Patron `_` prefix coherente con `_shared.js` (s80) y `_bootstrap.js` (s81). Guard `getElementById` impide doble inyeccion. No expone nada a window: side effect del modulo |
+| `Object.assign(window, { TopBar, ActivityBar })` preservado tras split | s82 | Ningun consumidor externo los usa hoy (verificado por Grep), pero se preserva por estabilidad de superficie publica. Removerlo abriria debate; mantenerlo cuesta cero |
 
 ---
 
@@ -281,10 +285,10 @@ Cierre Git de s81 publicado por el usuario (commit + push manual).
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/main.jsx` | 600 | MEDIA |
 | `app/achievements/Achievements.jsx` | ~500 | MEDIA |
 | `app/state-core.jsx` | ~475 | BAJA (dentro de limite) |
 | `app/i18n/strings/ui.js` | 315 | BAJA (dentro de limite, dominio mas grande del split) |
+| `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
 | `app/shell/Sidebar.jsx` | 497 | SALE (s61, antes 630) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |

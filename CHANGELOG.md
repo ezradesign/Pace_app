@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [abajo](#v0332----2026-05-20----refactormain-split-mainjsx-en-main) |
 | **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) -- variante B (pragmatica) | #81 | [abajo](#v0331----2026-05-19----refactori18n-split-strings-en-strings) |
-| **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline | #80 | [abajo](#v0330----2026-05-18----refactorpaths-split-pathrunnerjsx-en-steps) |
+| **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline | #80 | [session-80](./docs/sessions/session-80-split-pathrunner.md) |
 | **v0.32.1** | 2026-05-18 | fix(ui): pomodoro contextual en Camino (aro + pausa/reset/saltar) + fade-out toasts + oscuro +10% | #79 | [session-79](./docs/sessions/session-79-pomodoro-camino-fadeout-oscuro.md) |
 | **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime > catalog[0]) + logro master.path.all7 | #78 | [abajo](#v0320----2026-05-17----featcamino-catalogo-5--7) |
 | **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [session-77](./docs/sessions/session-77-path-transitions.md) + [s77b](./docs/sessions/session-77b-fix-microcopia.md) |
@@ -99,6 +100,139 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.33.2] -- 2026-05-23 -- refactor(main): split main.jsx en main/
+
+Sesion 82. Refactor puro de `app/main.jsx` (600 ln) a un orquestador
+modular: tres piezas extraidas a `app/main/`. Cero cambios funcionales,
+visuales, de timing ni de copy.
+
+`app/main.jsx` paso de **600 ln a 279 ln (-53%)** mediante split mecanico
+en 3 archivos hermanos:
+
+- `app/main/_responsive.js` -- IIFE que inyecta el bloque
+  `<style id="pace-main-responsive-css">` (reglas @media globales del
+  layout + fallback `vh`/`dvh`). 105 ln.
+- `app/main/TopBar.jsx` -- tabs Foco/Pausa/Larga + 3 iconos top-right
+  (Stats / Logros / Tweaks) + `topBarStyles`. 106 ln.
+- `app/main/ActivityBar.jsx` -- 4 chips Respira/Estira/Mueve/Hidratate +
+  los 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop). 170 ln.
+
+`PaceApp` queda en `main.jsx` como **orquestador puro**: state local de
+overlays, 8 useEffect (4 listeners de CustomEvent + cowClicks + atajos
+T/S/L), 5 handlers y la composicion del arbol. Variante B aprobada del
+[design s82](./docs/sessions/session-82-design.md): equilibrada, sin
+extraer hooks (eso era la variante C, descartada por premature
+abstraction con 1 consumidor).
+
+Diario: [session-82-main-split.md](./docs/sessions/session-82-main-split.md).
+Documentos de apoyo: [audit](./docs/sessions/session-82-audit.md),
+[design](./docs/sessions/session-82-design.md).
+
+Bump v0.33.2 (patch) -- refactor sin cambios funcionales ni de copy.
+
+### Added
+
+- **`app/main/_responsive.js`** -- nuevo (105 ln). IIFE auto-ejecutable
+  con guard `getElementById`. Inyecta el `<style>` literal extraido de
+  main.jsx (lineas 20-112). No expone nada a `window`.
+- **`app/main/TopBar.jsx`** -- nuevo (106 ln). `function TopBar(props)` +
+  `const topBarStyles` + `Object.assign(window, { TopBar })`.
+- **`app/main/ActivityBar.jsx`** -- nuevo (170 ln). `function ActivityBar(props)`
+  + 4 iconos SVG + `Object.assign(window, { ActivityBar })`.
+
+### Changed
+
+- **`app/main.jsx`** -- reducido de 600 a 279 ln. Contiene SOLO: cabecera,
+  `const { useState, useEffect } = React`, `function PaceApp()` (orquestador
+  integro), `Object.assign(window, { PaceApp })`, arranque directo en
+  `#pace-root`. Toda la logica presentacional + CSS migrada verbatim a los
+  3 archivos nuevos. Comentarios actualizados para apuntar a `app/main/_responsive.js`.
+- **`PACE.html`** -- 3 nuevos `<script src>` insertados antes de `main.jsx`:
+  `_responsive.js` -> `TopBar.jsx` -> `ActivityBar.jsx`. Comentario
+  explicativo del orden.
+- **`PACE.html`** -- titulo `v0.33.2`.
+- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.33.2'`.
+- **`sw.js`** -- `CACHE_NAME = 'pace-v0.33.2'`.
+
+### Preservado (sin cambios)
+
+- **`PaceApp`** -- intacto. Mismo state local, mismos 8 useEffect, mismos
+  5 handlers, mismo arbol JSX. No se extrajeron hooks (variante C
+  descartada).
+- **`Object.assign(window, { TopBar, ActivityBar })`** -- mantenido (ahora
+  desde sus archivos respectivos). Aunque ningun consumidor externo los
+  use hoy, se preserva la superficie publica.
+- **Arranque directo en `#pace-root`** -- legacy de v0.12, mantenido.
+- **Cero cambios fuera de `app/main.jsx` + `app/main/` + `PACE.html` +
+  bump-implicito**. Ningun modulo, overlay ni consumidor de TopBar/
+  ActivityBar requirio modificacion.
+
+### Decisiones tomadas
+
+| ID | Decision | Razon |
+|---|---|---|
+| D1 | Aplicar Variante B (equilibrada, 3 archivos) -- no A (1) ni C (5) | A (solo ActivityBar) no cumplia metrica `>50%` (dejaba main.jsx en ~459 ln). C (B + hooks useOverlayManager/useGlobalKeyboard) introducia premature abstraction: 2 hooks con 1 unico consumidor (PaceApp). B esta en la interseccion -- cumple metrica y respeta el estilo "no premature abstraction" del codebase (mismo criterio que s80 con `onAbort`) |
+| D2 | Carpeta `app/main/` -- coherente con `app/paths/steps/` (s80) y `app/i18n/strings/` (s81) | Tercer split mecanico consecutivo con el mismo patron: carpeta hermana + `<script src>` antes del consumidor + `Object.assign(window)` por archivo |
+| D3 | Bloque CSS responsive a `_responsive.js` (IIFE), no inline en TopBar/ActivityBar | El `<style>` toca selectores de AMBOS componentes + main content + sidebar handle. Es config global de layout, no de un componente. Prefijo `_` lo marca como helper (igual que `_shared.js`/`_bootstrap.js`). Carga primero (side effect ASAP) |
+| D4 | `topBarStyles` viaja con TopBar.jsx; los 4 iconos AB* con ActivityBar.jsx | Cada uno tiene exactamente 1 consumidor (verificado por Grep). Mantenerlos juntos respeta cohesion |
+| D5 | NO extraer hooks (useOverlayManager / useGlobalKeyboard) | Variante C. Premature abstraction: 1 consumidor hoy. Si en el futuro hay un segundo entry point (EmbedApp), reconsiderar. Scope s82 = split mecanico puro |
+| D6 | `build-standalone.js` sin cambios | `validateAppFiles` walkea `app/` recursivo. Los 3 archivos nuevos se descubren automatico. Verificado: 58 archivos (55 previos + 3 nuevos) |
+
+### Invariantes preservadas (verificadas runtime)
+
+1. `PaceApp` monta en `#root` (mount loop PACE.html) y en `#pace-root` (directo).
+2. `window.PaceApp`, `window.TopBar`, `window.ActivityBar` presentes tras carga.
+3. Bloque `pace-main-responsive-css` inyectado una sola vez (guard verificado).
+4. Fallback `100vh`/`100dvh` intacto en el CSS (2815 bytes de reglas).
+5. Tabs Foco/Pausa/Larga cambian `focusMode` (verificado: click -> larga -> foco).
+6. 3 iconos TopBar: Stats (prop), Logros (CustomEvent `pace:open-achievements`), Tweaks (prop) -- los 3 abren su modal.
+7. 4 chips ActivityBar abren BreatheLibrary/ExtraLibrary/MoveLibrary/HydrateTracker.
+8. Cambio idioma ES<->EN actualiza tabs + iconos aria + chips inmediato.
+9. Atajos T/S/L toggle Tweaks/Stats/Logros; ignoran focus en INPUT/TEXTAREA.
+10. cowClicks: 10 eventos `pace:cow-click` -> `unlockAchievement('secret.cow.click')`.
+11. Overlays PathRunner/PathsLibrary se montan y auto-gestionan via CustomEvent.
+12. Persistencia: `focusMode` sobrevive recarga (localStorage `pace.state.v2`).
+13. Mobile <=768px: tabs ocultos por @media (verificado en viewport 406px).
+
+### Verificacion runtime
+
+Cubierta via preview local (`.claude/static-server.js` de s80) en
+`localhost:8765`.
+
+- ✅ 58 archivos parsean limpios via `validateAppFiles` (TS parser real).
+- ✅ Verificacion intermedia (3 archivos nuevos cargados + main.jsx aun sin
+  tocar): consola 0 errores, todo renderiza identico (los hijos se
+  redefinian, ultimo gana -- idempotente por ser copia literal).
+- ✅ Tras reescribir main.jsx: consola 0 errores en todo el ciclo de
+  interaccion (tabs, 3 iconos, 4 chips, atajos, idioma, overlays, recarga).
+- ✅ 16/16 invariantes runtime verificadas (Fases 4.1 a 4.4 del prompt).
+- ✅ Edge cases: T con focus en INPUT no abre Tweaks; guard del style block
+  impide duplicado; fallback dvh intacto.
+
+### Build
+
+- `PACE_standalone.html`: **617 KB** (632,064 bytes; +3,138 bytes vs
+  v0.33.1 = 628,926; +0.5%). Crecimiento por cabeceras de doc-comment de
+  los 3 archivos nuevos + 2 `Object.assign` + comentarios preservados.
+  Estimado en design: ~1-2 KB; real: +3 KB (cabeceras mas extensas).
+- `index.html`: byte-perfect identico al standalone. SHA-256:
+  `66455A340EBC492CBA07F65FDBE7994345F51A77679091CCFEFF32576F387EFD`.
+- 58 archivos validados (10 .js + 48 .jsx) -- antes 55.
+- Backup creado: `backups/PACE_standalone_v0.33.1_20260520.html`. Cap 20
+  mantenido (rotado el mas antiguo `v0.27.6_20260511.html`).
+
+### Diferido a sesiones siguientes
+
+- **Variante C (hooks)**: si aparece un segundo entry point que comparta la
+  logica de overlays/atajos, extraer `useOverlayManager` + `useGlobalKeyboard`.
+- **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA) -- siguiente
+  candidato natural de deuda: catalogo a `catalog.js`.
+- **Deudas semanticas i18n** D-1/D-2/D-3 heredadas de s81.
+- **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
+  (530-600 KB; real 605-617 KB). Avisa en cada cierre. No urgente.
 
 ---
 
@@ -228,142 +362,6 @@ Cubierta via preview local (.claude/static-server.js de s80) en
 - **D-3** Inconsistencia `path.*` vs `paths.*` namespaces. Existente desde s53.
 - Resto de candidatos de deuda en backlog (main.jsx 600 ln, Achievements.jsx
   ~500 ln, catalog split Move/Stretch).
-
----
-
-## [v0.33.0] -- 2026-05-18 -- refactor(paths): split PathRunner.jsx en steps/
-
-Sesion 80. Refactor puro -- cero cambios funcionales, visuales, de timing o copy.
-
-`PathRunner.jsx` paso de **835 ln a 244 ln (-71%)** mediante split mecanico
-en 7 archivos hermanos:
-
-- 4 Steps extraidos a `app/paths/steps/` (Breathe/Focus/Hydrate/Body).
-- `_shared.js` con `btnTypography` + `btnOutline` (deduplica los 6 keys
-  tipograficos comunes entre PathFocusStep y PathHydrateStep).
-- `PathRunner.parts.jsx` para los componentes chrome (PathTopBar +
-  ExitConfirmModal + StepError) -- aisla 131 ln del orquestador.
-- `CompletionScreen.jsx` para la pantalla terminal (206 ln, incluye
-  `CS_ROMAN` local).
-
-**Contrato uniforme** `(step, onExit(reason))` -- unica firma cambiada:
-`PathHydrateStep` que pasaba antes `(onDone, onSkip)`. PathRunner adapta
-el callsite.
-
-**Decision sobre Move/Stretch:** el prompt mencionaba PathMoveStep y
-PathStretchStep, pero el codigo tenia un unico `PathBodyStep` dispatcher
-que resuelve `kind:'body'` -> MoveSession(`kind='move'|'extra'`) via
-`resolveBodyRoutine`. Dividir requeriria cambiar el catalogo y migrar
-localStorage = cambio de comportamiento. Se mantuvo `PathBodyStep` como
-dispatcher (refactor puro). Reportado como opcion abierta si en el
-futuro se quiere separar move/stretch a nivel catalogo.
-
-Diario: [session-80-split-pathrunner.md](./docs/sessions/session-80-split-pathrunner.md).
-Auditoria previa: [session-80-audit.md](./docs/sessions/session-80-audit.md).
-Diseño de contrato: [session-80-design.md](./docs/sessions/session-80-design.md).
-Checklist no-regresion: [session-80-regression-check.md](./docs/sessions/session-80-regression-check.md).
-
-Bump a v0.33.0 (minor) por refactor arquitectonico significativo. Pre-1.0
-sigue siendo trabajo iterativo, pero el cambio justifica minor bump
-sobre patch.
-
-### Added
-
-- `app/paths/steps/_shared.js` (23 ln) -- `window.pathStepStyles` con
-  `btnTypography` (cursor, fontSize, letterSpacing, fontFamily,
-  fontStyle, borderRadius) y `btnOutline` (background, border, color,
-  transition). Sin comportamiento, solo deduplicacion.
-- `app/paths/steps/PathBreatheStep.jsx` (32 ln) -- Breathe + SafetyGate
-  con resolucion de rutina via `getBreatheRoutine`.
-- `app/paths/steps/PathFocusStep.jsx` (118 ln) -- Pomodoro contextual de
-  Camino. Compone `btnBase` desde `_shared.js` + padding 10x22 propio.
-- `app/paths/steps/PathHydrateStep.jsx` (113 ln) -- Hidratacion opcional.
-  Compone `btnBase` desde `_shared.js` + padding 10x28 propio.
-- `app/paths/steps/PathBodyStep.jsx` (16 ln) -- dispatcher Move/Extra
-  via `resolveBodyRoutine`.
-- `app/paths/PathRunner.parts.jsx` (131 ln) -- chrome del overlay.
-- `app/paths/CompletionScreen.jsx` (206 ln) -- pantalla terminal con
-  `CS_ROMAN` local.
-- `.claude/launch.json` + `.claude/static-server.js` -- mini servidor
-  estatico Node (sin deps) para preview local. Util para regresion
-  runtime en futuras sesiones.
-
-### Changed
-
-- **`app/paths/PathRunner.jsx`** -- reducido de 835 a 244 ln. Contiene
-  SOLO: cabecera, `const { useState, useEffect } = React` (useRef
-  removido, ya no consumido), `function PathRunner()` (la maquina de
-  fases + dispatcher por `step.kind` integro), `Object.assign(window,
-  { PathRunner })`. Toda la logica anterior se preserva verbatim en
-  los archivos nuevos.
-- **`PathRunner` dispatcher (linea ~209)** -- cambio del callsite de
-  PathHydrateStep:
-  - Antes: `<PathHydrateStep onDone={...} onSkip={...} />`.
-  - Despues: `<PathHydrateStep step={step} onExit={handleStepExit} />`.
-  - Cero cambio de comportamiento -- la firma pasa a ser uniforme.
-- **`PACE.html`** -- 7 nuevos `<script src>` insertados entre
-  `PathTransitions.jsx` y `PathRunner.jsx`, en orden:
-  `_shared.js` -> 4 Steps -> `PathRunner.parts.jsx` -> `CompletionScreen.jsx`.
-  Comentarios explicativos del orden.
-- **`PACE.html`** -- titulo `v0.33.0`.
-- **`app/state-core.jsx`** -- `PACE_VERSION` `v0.33.0`.
-- **`sw.js`** -- `CACHE_NAME` `pace-v0.33.0`.
-
-### Decisiones tomadas
-
-- **D1 -- Mantener `PathBodyStep` como dispatcher**. Dividir a Move/
-  Stretch a nivel archivo requeriria cambiar catalogo (`kind`) +
-  migrar localStorage = cambio de comportamiento. Fuera del scope.
-- **D2 -- Extender el split a `PathRunner.parts.jsx`**. Necesario para
-  cumplir metrica PathRunner.jsx <=280 ln. Ya previsto en s79.
-- **D3 -- Contrato uniforme `(step, onExit(reason))`, no el amplio del
-  prompt** (`block`/`onDone`/`onSkip`/`onAbort`/`pathContext`). El
-  contrato actual era casi uniforme; solo `PathHydrateStep` rompia.
-  Uniformar es menos churn. El amplio era premature abstraction.
-- **D4 -- `_shared.js` solo `btnTypography` + `btnOutline`, padding
-  por Step**. El padding difiere (22px focus / 28px hydrate); forzarlo
-  comun sería coherencia falsa.
-- **D5 -- `CS_ROMAN` local en CompletionScreen.jsx**. Decision s79:
-  no extraer hasta tener 3 consumidores. El split no añade ninguno.
-- **D6 -- Preview server local en `.claude/`**. Sin dependencias
-  externas (Node nativo HTTP). Util para regresion runtime sin
-  depender del browser del usuario.
-
-### Verificacion
-
-- **Estatica**: parser TypeScript valida los 8 archivos. `build-standalone.js`
-  procesa 50 archivos (43 anteriores + 7 nuevos). `git diff` confirma
-  que solo el dispatcher de PathHydrateStep es cambio semantico real.
-- **Runtime** (preview local): app monta limpia, Home pixel-a-pixel
-  identico, consola 0 errores. `startPath('path.midday')` -> PathHydrateStep
-  monta con "Saltar" + "Beber". Click Beber -> `water.today` 0->1,
-  `stepIndex` 0->1, phase->transition. Click Saltar -> water sin cambio.
-  `location.reload()` mid-Camino -> overlay vuelve a montar con
-  `aria-label`, `stepIndex`, `lastViewed`, `water` rehidratados.
-  `window.checkAllPathsCompleted` expuesto, `ACHIEVEMENT_CATALOG`
-  incluye `master.path.all7`.
-
-### Build
-
-- `PACE_standalone.html`: **610 KB** (624,539 bytes; +3,093 bytes vs
-  v0.32.1). Crecimiento por boilerplate de cabeceras + 7 IIFE.
-- `index.html`: identico byte-a-byte. SHA-256:
-  `d2c66c6c494f78a7f1c49c489d86e44ad34421635112c6e9f8413e50c231d61b`.
-- 50 archivos validados (43 anteriores + 7 nuevos del split).
-- Backup creado: `backups/PACE_standalone_v0.32.1_20260518.html`
-  (607 KB, pristino restaurado desde HEAD antes del backup).
-- Rotado el mas antiguo:
-  `backups/PACE_standalone_v0.27.3_20260511.html`.
-
-### Diferido a sesiones siguientes
-
-- **Split catalogo Move/Stretch**: si se quiere diferenciar en
-  catalogo, ahora es trivial añadir `steps/PathMoveStep.jsx` +
-  `steps/PathStretchStep.jsx` y cambiar `registry.js`. Bajo coste.
-- **Actualizar `scripts/check-session.ps1`** -- rango de tamaño
-  desactualizado (530-600 KB; real 605-615 KB). No urgente.
-- **Tercera variante de `btnBase`**: si aparece, evaluar
-  parametrizar padding en `_shared.js`.
 
 ---
 

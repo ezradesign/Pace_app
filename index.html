@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.33.1</title>
+  <title>PACE · Foco · Cuerpo — v0.33.2</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1644,7 +1644,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.33.1';
+const PACE_VERSION = 'v0.33.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -11984,37 +11984,36 @@ Object.assign(window, { PathRunner });
 
 </script>
 
+  <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
+       _responsive.js inyecta el bloque <style> de reglas @media globales del
+       layout (TopBar, ActivityBar, main content, sidebar handle, fallback dvh).
+       TopBar.jsx y ActivityBar.jsx son los dos componentes hijos puros que
+       PaceApp compone en su return. Cargan ANTES de main.jsx -- el orquestador
+       los referencia en JSX. -->
   <script type="text/babel">
 /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
-   Main orchestrator.
-   Monta todo: Sidebar + FocusTimer + modales de librerías + sesiones
+   CSS responsive global del shell (sesion 82 / v0.33.2).
+   Inyecta <style id="pace-main-responsive-css"> una sola vez al cargar.
+   Extraido literal de main.jsx (lineas 20-112) en split mecanico s82.
 
-   RESPONSIVE (sesión 22 · v0.12.5):
-     El layout desktop es flex horizontal [Sidebar 280 | Main 1fr].
-     En ≤768px el sidebar se absolutamente desacopla (pasa a
-     position:fixed y ocupa el viewport entero — ver Sidebar.jsx),
-     así que en móvil el main toma 100vw por sí solo sin cambios.
-     Los ajustes aquí son sobre TopBar y ActivityBar para que
-     quepan en 375px de ancho, y sobre el handle flotante `≡` para
-     aumentar su hit target a 44px (accesibilidad móvil).
+   Reglas:
+   - [data-pace-app-root]: alto 100vh con fallback dvh (iOS pre-15.4).
+   - TopBar: reduce padding lateral y ancho de tabs en movil; oculta tabs <=768px.
+   - Main content: padding reducido en movil.
+   - ActivityBar: pasa de fila flex a grid 2x2 en movil; chips compactos.
+   - Handle flotante ≡ del sidebar: hit target 44x44 en movil.
+   - @media max-height:720: oculta sub-labels de ActivityBar.
+
+   Carga ANTES de main.jsx en PACE.html (es config de layout, no componente).
+   No expone nada a window: el side effect es la inyeccion del style block.
 */
 
-const { useState: useStateMain, useEffect: useEffectMain } = React;
-
-/* Reglas responsive globales del layout. Inyectadas una sola vez.
-   - TopBar: reduce padding lateral y el ancho de los tabs en móvil
-     para dejar sitio a los 3 iconos de la derecha sin que choquen.
-   - Main content: en móvil sigue centrando el timer pero con menos
-     padding horizontal para ganar ancho para el aro.
-   - ActivityBar: en móvil, los 4 accesos pasan de fila horizontal
-     de pills anchos (min-width 180) a grid 2×2 de tarjetas
-     compactas (chip vertical: icono arriba, label abajo).
-     Así el bloque completo mide ~220px de alto en 375×812 y deja
-     que el timer ocupe unos ~420 px centrales. */
-if (typeof document !== 'undefined' && !document.getElementById('pace-main-responsive-css')) {
+(function injectPaceMainResponsiveCss() {
+  if (typeof document === 'undefined') return;
+  if (document.getElementById('pace-main-responsive-css')) return;
   const s = document.createElement('style');
   s.id = 'pace-main-responsive-css';
   s.textContent = `
@@ -12096,262 +12095,37 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-main-respo
     }
   `;
   document.head.appendChild(s);
-}
+})();
 
-function PaceApp() {
-  const [state, set] = usePace();
-  const { t } = useT();
-  const [view, setView] = useStateMain({ type: 'home' });
+</script>
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
 
-  // Modales
-  const [openLibrary, setOpenLibrary] = useStateMain(null); // 'breathe' | 'move' | 'extra' | null
-  const [openHydrate, setOpenHydrate] = useStateMain(false);
-  const [openAchievements, setOpenAchievements] = useStateMain(false);
-  const [openStats, setOpenStats] = useStateMain(false);
-  const [openTweaks, setOpenTweaks] = useStateMain(false);
-  const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
-  const [openSupport, setOpenSupport] = useStateMain(false);
-  const [openWelcome, setOpenWelcome] = useStateMain(false);
+   TopBar (sesion 82 / v0.33.2).
+   Barra superior del shell: tabs centrados Foco/Pausa/Larga + 3 iconos
+   top-right (Stats / Logros / Tweaks).
 
-  // Flujo de seguridad para respiración
-  const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
+   Extraido literal de main.jsx (lineas 365-444) en split mecanico s82.
 
-  // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
-  // Se escucha como evento global para que el Sidebar pueda disparar clicks
-  // sobre el logo sin acoplarse a props del root.
-  const [cowClicks, setCowClicks] = useStateMain(0);
-  useEffectMain(() => {
-    if (cowClicks >= 10) unlockAchievement('secret.cow.click');
-  }, [cowClicks]);
-  useEffectMain(() => {
-    const h = () => setCowClicks(c => c + 1);
-    window.addEventListener('pace:cow-click', h);
-    return () => window.removeEventListener('pace:cow-click', h);
-  }, []);
+   Notas de comportamiento (preservadas):
+   - Stats y Tweaks abren via props (onOpenStats / onOpenTweaks).
+   - Logros abre via CustomEvent('pace:open-achievements') -- coherente
+     con Sidebar.jsx que dispara el mismo evento. PaceApp lo escucha.
+   - Tabs Foco/Pausa/Larga cambian state.focusMode (no reinicia el
+     Pomodoro -- solo cambia el modo activo).
+   - Tabs ocultos en movil (@media max-width: 768px en _responsive.js).
+   - data-pace-* selectors usados por _responsive.js: data-pace-topbar,
+     data-pace-tabs, data-pace-topbar-icon.
 
-  // Abrir colección desde sidebar
-  useEffectMain(() => {
-    const h = () => setOpenAchievements(true);
-    window.addEventListener('pace:open-achievements', h);
-    return () => window.removeEventListener('pace:open-achievements', h);
-  }, []);
+   Props:
+     onOpenLibrary  -- (no se usa actualmente, preservado por estabilidad de firma)
+     onOpenHydrate  -- (idem)
+     onOpenStats    -- abre StatsPanel
+     onOpenTweaks   -- abre TweaksPanel
+*/
 
-  // Abrir modal de apoyo desde sidebar (sesión 16 / v0.11.11).
-  // Mismo patrón que `pace:open-achievements`: el Sidebar despacha el
-  // evento y aquí lo escuchamos para abrir. Desacopla el botón del root.
-  useEffectMain(() => {
-    const h = () => setOpenSupport(true);
-    window.addEventListener('pace:open-support', h);
-    return () => window.removeEventListener('pace:open-support', h);
-  }, []);
-
-  // Auto-trigger único del SupportModal a los 7 días de racha.
-  // Consumidor del helper expuesto en SupportModule.jsx; la lógica
-  // ('condición + flag de una sola vez') vive allí para mantenerla
-  // junto a la filosofía del módulo.
-  useSupportAutoTrigger(setOpenSupport);
-
-  // Auto-trigger del WelcomeModal la primera vez que se abre la app
-  // (state.firstSeen == null). Mismo patrón que el anterior.
-  useFirstTimeWelcome(setOpenWelcome);
-
-  // Re-abrir welcome a mano (dev / curiosidad): evento global
-  // `pace:open-welcome`. Mismo patrón que `pace:open-support`.
-  useEffectMain(() => {
-    const h = () => setOpenWelcome(true);
-    window.addEventListener('pace:open-welcome', h);
-    return () => window.removeEventListener('pace:open-welcome', h);
-  }, []);
-
-  // Atajo logros
-  useEffectMain(() => {
-    const onKey = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      if (e.key === 't' || e.key === 'T') setOpenTweaks(o => !o);
-      if (e.key === 's' || e.key === 'S') setOpenStats(o => !o);
-      if (e.key === 'l' || e.key === 'L') setOpenAchievements(o => !o);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
-
-  // Handle start de una rutina
-  const handleStartBreathe = (routine) => {
-    if (routine.safety) {
-      setSafetyRoutine(routine);
-      setOpenLibrary(null);
-    } else {
-      setOpenLibrary(null);
-      setView({ type: 'breathe-session', routine });
-    }
-  };
-
-  const handleStartMove = (routine) => {
-    setOpenLibrary(null);
-    setView({ type: 'move-session', routine });
-  };
-  const handleStartExtra = (routine) => {
-    setOpenLibrary(null);
-    // Reutiliza MoveSession pero marca kind='extra' para que la completion
-    // dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
-    setView({ type: 'move-session', routine, kind: 'extra' });
-  };
-
-  const handleFocusFinish = () => {
-    // Al acabar un Pomodoro → menú pausa
-    setOpenBreakMenu(true);
-  };
-
-  const handleBreakChoice = (choice) => {
-    setOpenBreakMenu(false);
-    if (choice === 'breathe') setOpenLibrary('breathe');
-    else if (choice === 'move') setOpenLibrary('move');
-    else if (choice === 'water') setOpenHydrate(true);
-  };
-
-  return (
-    /* NOTA sesión 23: `height` y `maxHeight` se delegan al bloque CSS
-       inyectado [data-pace-app-root] arriba. Permite fallback vh →
-       override dvh que los objetos de estilos inline no pueden
-       expresar (una sola key por propiedad). El resto de estilos
-       (display, overflow, background, position) se quedan inline
-       porque no necesitan fallback cascada. */
-    <div data-pace-app-root style={{
-      display: 'flex',
-      overflow: 'hidden',
-      background: 'var(--paper)',
-      position: 'relative',
-    }}>
-      {/* SIDEBAR */}
-      {state.layout !== 'minimal' && <Sidebar />}
-
-      {/* Handle flotante para re-abrir sidebar cuando está oculto
-          (aparece sólo en layout con sidebar y cuando está colapsado).
-          En móvil (≤768px) el CSS lo amplía a 44×44 (hit target
-          accesible) — ver bloque pace-main-responsive-css arriba. */}
-      {state.layout !== 'minimal' && state.sidebarCollapsed && (
-        <button
-          data-pace-sidebar-open
-          onClick={() => set({ sidebarCollapsed: false })}
-          title={t('sidebar.open.title')}
-          aria-label={t('sidebar.open.aria')}
-          style={{
-            position: 'fixed', top: 16, left: 14, zIndex: 50,
-            width: 30, height: 30, borderRadius: 6,
-            display: 'grid', placeItems: 'center',
-            background: 'transparent', border: '1px solid transparent',
-            color: 'var(--ink-3)', transition: 'all 180ms',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--paper-2)'; e.currentTarget.style.borderColor = 'var(--line)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="4" y1="7" x2="20" y2="7" />
-            <line x1="4" y1="12" x2="14" y2="12" />
-            <line x1="4" y1="17" x2="20" y2="17" />
-          </svg>
-        </button>
-      )}
-
-      {/* MAIN AREA */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
-        {/* Top bar */}
-        <TopBar
-          onOpenLibrary={(kind) => setOpenLibrary(kind)}
-          onOpenHydrate={() => setOpenHydrate(true)}
-          onOpenStats={() => setOpenStats(true)}
-          onOpenTweaks={() => setOpenTweaks(true)}
-        />
-
-        {/* Content */}
-        <div data-pace-main-content style={{
-          flex: 1,
-          display: 'grid',
-          placeItems: 'center',
-          padding: '10px 40px',
-          minHeight: 0,
-          overflow: 'hidden',
-        }}>
-          <FocusTimer onFinish={handleFocusFinish} />
-        </div>
-
-        {/* Actividades footer */}
-        <ActivityBar
-          onOpenLibrary={(kind) => setOpenLibrary(kind)}
-          onOpenHydrate={() => setOpenHydrate(true)}
-        />
-
-        {/* Camino sugerido del momento (sesion 51) */}
-        <SuggestedPathCard />
-      </main>
-
-      {/* ========== MODALS ========== */}
-      <BreatheLibrary
-        open={openLibrary === 'breathe'}
-        onClose={() => setOpenLibrary(null)}
-        onStart={handleStartBreathe}
-      />
-      <MoveLibrary
-        open={openLibrary === 'move'}
-        onClose={() => setOpenLibrary(null)}
-        onStart={handleStartMove}
-      />
-      <ExtraLibrary
-        open={openLibrary === 'extra'}
-        onClose={() => setOpenLibrary(null)}
-        onStart={handleStartExtra}
-      />
-      <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />
-      <Achievements open={openAchievements} onClose={() => setOpenAchievements(false)} />
-      <StatsPanel open={openStats} onClose={() => setOpenStats(false)} />
-      <TweaksPanel open={openTweaks} onClose={() => setOpenTweaks(false)} />
-      <BreakMenu
-        open={openBreakMenu}
-        onClose={() => setOpenBreakMenu(false)}
-        onChoose={handleBreakChoice}
-      />
-      <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
-      <WelcomeModal open={openWelcome} onClose={() => setOpenWelcome(false)} />
-
-      {/* Observador de tweak-secrets — monta siempre, retorna null.
-          Desbloquea secret.aged / dark.mode / mono / seal / illustrated
-          en función del state actual. Ver TweaksPanel.jsx. */}
-      <TweakSecretsWatcher />
-
-      {safetyRoutine && (
-        <BreatheSafety
-          routine={safetyRoutine}
-          onAccept={(r) => { setSafetyRoutine(null); setView({ type: 'breathe-session', routine: r }); }}
-          onCancel={() => setSafetyRoutine(null)}
-        />
-      )}
-
-      {/* ========== SESSION FULLSCREEN ==========
-          NOTA (#29): los <Session/> llaman `onExit('exit')` vs `onExit('done')`
-          para diferenciar salida voluntaria de finalización completa. Hoy
-          ambos caminos van a home y el argumento se descarta intencionalmente;
-          se conserva la señal en la API para un futuro consumidor (p.ej.
-          micro-animación de despedida distinta, o métrica de abandono). */}
-      {view.type === 'breathe-session' && (
-        <BreatheSession routine={view.routine} onExit={(_reason) => setView({ type: 'home' })} />
-      )}
-      {view.type === 'move-session' && (
-        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
-      )}
-
-      {/* ========== CAMINOS ========== */}
-      <PathRunner />
-      <PathsLibrary />
-
-      {/* ========== TOASTS ========== */}
-      <ToastHost />
-    </div>
-  );
-}
-
-/* ================
-   TOP BAR
-   ================ */
 function TopBar({ onOpenLibrary, onOpenHydrate, onOpenStats, onOpenTweaks }) {
   const [state, set] = usePace();
   const { t } = useT();
@@ -12430,11 +12204,37 @@ const topBarStyles = {
   }
 };
 
+Object.assign(window, { TopBar });
 
+</script>
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
 
-/* ================
-   ACTIVITY BAR (bottom)
-   ================ */
+   ActivityBar (sesion 82 / v0.33.2).
+   Barra inferior del shell: 4 chips Respira/Estira/Mueve/Hidratate.
+   Estilo "tarjeta editorial" -- fondo paper claro, icono terracota fino,
+   label serif italic coloreado. Estado activo: punto en esquina + fondo
+   calido.
+
+   Extraido literal de main.jsx (lineas 448-591) en split mecanico s82.
+
+   Notas de comportamiento (preservadas):
+   - Respira / Estira / Mueve abren librerias via onOpenLibrary(kind).
+   - Hidratate abre tracker via onOpenHydrate.
+   - 4 iconos SVG inline (ABBreathe, ABStretch, ABMove, ABDrop) viven
+     en este archivo porque solo los consume ActivityBar.
+   - Estado "activo" (plan[key] === true): punto indicador + fondo paper-2.
+   - data-pace-* selectors usados por _responsive.js:
+     data-pace-activitybar, data-pace-activitybar-grid,
+     data-pace-activitybar-chip, data-pace-chip-label, data-pace-chip-sub.
+
+   Props:
+     onOpenLibrary -- (kind: 'breathe'|'move'|'extra') => void
+     onOpenHydrate -- () => void
+*/
+
 function ActivityBar({ onOpenLibrary, onOpenHydrate }) {
   const [state] = usePace();
   const { t } = useT();
@@ -12577,7 +12377,282 @@ function ABDrop() {
   );
 }
 
-Object.assign(window, { PaceApp, TopBar, ActivityBar });
+Object.assign(window, { ActivityBar });
+
+</script>
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Main orchestrator (post split s82 / v0.33.2).
+   Monta el shell completo: Sidebar + main area (TopBar + FocusTimer +
+   ActivityBar + SuggestedPathCard) + modales + sesiones fullscreen +
+   overlays de Caminos + Toast.
+
+   Split en s82 (variante B):
+   - app/main/_responsive.js  -- bloque <style> con reglas @media globales.
+   - app/main/TopBar.jsx      -- tabs Foco/Pausa/Larga + 3 iconos top-right.
+   - app/main/ActivityBar.jsx -- 4 chips Respira/Estira/Mueve/Hidratate.
+   PaceApp queda como orquestador puro: state local de overlays + handlers
+   + composicion de JSX.
+*/
+
+const { useState: useStateMain, useEffect: useEffectMain } = React;
+
+function PaceApp() {
+  const [state, set] = usePace();
+  const { t } = useT();
+  const [view, setView] = useStateMain({ type: 'home' });
+
+  // Modales
+  const [openLibrary, setOpenLibrary] = useStateMain(null); // 'breathe' | 'move' | 'extra' | null
+  const [openHydrate, setOpenHydrate] = useStateMain(false);
+  const [openAchievements, setOpenAchievements] = useStateMain(false);
+  const [openStats, setOpenStats] = useStateMain(false);
+  const [openTweaks, setOpenTweaks] = useStateMain(false);
+  const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
+  const [openSupport, setOpenSupport] = useStateMain(false);
+  const [openWelcome, setOpenWelcome] = useStateMain(false);
+
+  // Flujo de seguridad para respiración
+  const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
+
+  // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
+  // Se escucha como evento global para que el Sidebar pueda disparar clicks
+  // sobre el logo sin acoplarse a props del root.
+  const [cowClicks, setCowClicks] = useStateMain(0);
+  useEffectMain(() => {
+    if (cowClicks >= 10) unlockAchievement('secret.cow.click');
+  }, [cowClicks]);
+  useEffectMain(() => {
+    const h = () => setCowClicks(c => c + 1);
+    window.addEventListener('pace:cow-click', h);
+    return () => window.removeEventListener('pace:cow-click', h);
+  }, []);
+
+  // Abrir colección desde sidebar
+  useEffectMain(() => {
+    const h = () => setOpenAchievements(true);
+    window.addEventListener('pace:open-achievements', h);
+    return () => window.removeEventListener('pace:open-achievements', h);
+  }, []);
+
+  // Abrir modal de apoyo desde sidebar (sesión 16 / v0.11.11).
+  // Mismo patrón que `pace:open-achievements`: el Sidebar despacha el
+  // evento y aquí lo escuchamos para abrir. Desacopla el botón del root.
+  useEffectMain(() => {
+    const h = () => setOpenSupport(true);
+    window.addEventListener('pace:open-support', h);
+    return () => window.removeEventListener('pace:open-support', h);
+  }, []);
+
+  // Auto-trigger único del SupportModal a los 7 días de racha.
+  // Consumidor del helper expuesto en SupportModule.jsx; la lógica
+  // ('condición + flag de una sola vez') vive allí para mantenerla
+  // junto a la filosofía del módulo.
+  useSupportAutoTrigger(setOpenSupport);
+
+  // Auto-trigger del WelcomeModal la primera vez que se abre la app
+  // (state.firstSeen == null). Mismo patrón que el anterior.
+  useFirstTimeWelcome(setOpenWelcome);
+
+  // Re-abrir welcome a mano (dev / curiosidad): evento global
+  // `pace:open-welcome`. Mismo patrón que `pace:open-support`.
+  useEffectMain(() => {
+    const h = () => setOpenWelcome(true);
+    window.addEventListener('pace:open-welcome', h);
+    return () => window.removeEventListener('pace:open-welcome', h);
+  }, []);
+
+  // Atajos de teclado: T toggle Tweaks, S toggle Stats, L toggle Logros.
+  // Ignora cuando focus esta en INPUT/TEXTAREA para no interferir con campos.
+  useEffectMain(() => {
+    const onKey = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 't' || e.key === 'T') setOpenTweaks(o => !o);
+      if (e.key === 's' || e.key === 'S') setOpenStats(o => !o);
+      if (e.key === 'l' || e.key === 'L') setOpenAchievements(o => !o);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Handle start de una rutina
+  const handleStartBreathe = (routine) => {
+    if (routine.safety) {
+      setSafetyRoutine(routine);
+      setOpenLibrary(null);
+    } else {
+      setOpenLibrary(null);
+      setView({ type: 'breathe-session', routine });
+    }
+  };
+
+  const handleStartMove = (routine) => {
+    setOpenLibrary(null);
+    setView({ type: 'move-session', routine });
+  };
+  const handleStartExtra = (routine) => {
+    setOpenLibrary(null);
+    // Reutiliza MoveSession pero marca kind='extra' para que la completion
+    // dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
+    setView({ type: 'move-session', routine, kind: 'extra' });
+  };
+
+  const handleFocusFinish = () => {
+    // Al acabar un Pomodoro → menú pausa
+    setOpenBreakMenu(true);
+  };
+
+  const handleBreakChoice = (choice) => {
+    setOpenBreakMenu(false);
+    if (choice === 'breathe') setOpenLibrary('breathe');
+    else if (choice === 'move') setOpenLibrary('move');
+    else if (choice === 'water') setOpenHydrate(true);
+  };
+
+  return (
+    /* NOTA sesión 23: `height` y `maxHeight` se delegan al bloque CSS
+       inyectado [data-pace-app-root] (ahora en app/main/_responsive.js).
+       Permite fallback vh → override dvh que los objetos de estilos
+       inline no pueden expresar (una sola key por propiedad). El resto
+       de estilos (display, overflow, background, position) se quedan
+       inline porque no necesitan fallback cascada. */
+    <div data-pace-app-root style={{
+      display: 'flex',
+      overflow: 'hidden',
+      background: 'var(--paper)',
+      position: 'relative',
+    }}>
+      {/* SIDEBAR */}
+      {state.layout !== 'minimal' && <Sidebar />}
+
+      {/* Handle flotante para re-abrir sidebar cuando está oculto
+          (aparece sólo en layout con sidebar y cuando está colapsado).
+          En móvil (≤768px) el CSS lo amplía a 44×44 (hit target
+          accesible) — ver app/main/_responsive.js. */}
+      {state.layout !== 'minimal' && state.sidebarCollapsed && (
+        <button
+          data-pace-sidebar-open
+          onClick={() => set({ sidebarCollapsed: false })}
+          title={t('sidebar.open.title')}
+          aria-label={t('sidebar.open.aria')}
+          style={{
+            position: 'fixed', top: 16, left: 14, zIndex: 50,
+            width: 30, height: 30, borderRadius: 6,
+            display: 'grid', placeItems: 'center',
+            background: 'transparent', border: '1px solid transparent',
+            color: 'var(--ink-3)', transition: 'all 180ms',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--paper-2)'; e.currentTarget.style.borderColor = 'var(--line)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'transparent'; }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="14" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </svg>
+        </button>
+      )}
+
+      {/* MAIN AREA */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
+        {/* Top bar */}
+        <TopBar
+          onOpenLibrary={(kind) => setOpenLibrary(kind)}
+          onOpenHydrate={() => setOpenHydrate(true)}
+          onOpenStats={() => setOpenStats(true)}
+          onOpenTweaks={() => setOpenTweaks(true)}
+        />
+
+        {/* Content */}
+        <div data-pace-main-content style={{
+          flex: 1,
+          display: 'grid',
+          placeItems: 'center',
+          padding: '10px 40px',
+          minHeight: 0,
+          overflow: 'hidden',
+        }}>
+          <FocusTimer onFinish={handleFocusFinish} />
+        </div>
+
+        {/* Actividades footer */}
+        <ActivityBar
+          onOpenLibrary={(kind) => setOpenLibrary(kind)}
+          onOpenHydrate={() => setOpenHydrate(true)}
+        />
+
+        {/* Camino sugerido del momento (sesion 51) */}
+        <SuggestedPathCard />
+      </main>
+
+      {/* ========== MODALS ========== */}
+      <BreatheLibrary
+        open={openLibrary === 'breathe'}
+        onClose={() => setOpenLibrary(null)}
+        onStart={handleStartBreathe}
+      />
+      <MoveLibrary
+        open={openLibrary === 'move'}
+        onClose={() => setOpenLibrary(null)}
+        onStart={handleStartMove}
+      />
+      <ExtraLibrary
+        open={openLibrary === 'extra'}
+        onClose={() => setOpenLibrary(null)}
+        onStart={handleStartExtra}
+      />
+      <HydrateTracker open={openHydrate} onClose={() => setOpenHydrate(false)} />
+      <Achievements open={openAchievements} onClose={() => setOpenAchievements(false)} />
+      <StatsPanel open={openStats} onClose={() => setOpenStats(false)} />
+      <TweaksPanel open={openTweaks} onClose={() => setOpenTweaks(false)} />
+      <BreakMenu
+        open={openBreakMenu}
+        onClose={() => setOpenBreakMenu(false)}
+        onChoose={handleBreakChoice}
+      />
+      <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
+      <WelcomeModal open={openWelcome} onClose={() => setOpenWelcome(false)} />
+
+      {/* Observador de tweak-secrets — monta siempre, retorna null.
+          Desbloquea secret.aged / dark.mode / mono / seal / illustrated
+          en función del state actual. Ver TweaksPanel.jsx. */}
+      <TweakSecretsWatcher />
+
+      {safetyRoutine && (
+        <BreatheSafety
+          routine={safetyRoutine}
+          onAccept={(r) => { setSafetyRoutine(null); setView({ type: 'breathe-session', routine: r }); }}
+          onCancel={() => setSafetyRoutine(null)}
+        />
+      )}
+
+      {/* ========== SESSION FULLSCREEN ==========
+          NOTA (#29): los <Session/> llaman `onExit('exit')` vs `onExit('done')`
+          para diferenciar salida voluntaria de finalización completa. Hoy
+          ambos caminos van a home y el argumento se descarta intencionalmente;
+          se conserva la señal en la API para un futuro consumidor (p.ej.
+          micro-animación de despedida distinta, o métrica de abandono). */}
+      {view.type === 'breathe-session' && (
+        <BreatheSession routine={view.routine} onExit={(_reason) => setView({ type: 'home' })} />
+      )}
+      {view.type === 'move-session' && (
+        <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />
+      )}
+
+      {/* ========== CAMINOS ========== */}
+      <PathRunner />
+      <PathsLibrary />
+
+      {/* ========== TOASTS ========== */}
+      <ToastHost />
+    </div>
+  );
+}
+
+Object.assign(window, { PaceApp });
 
 /* ARRANQUE DIRECTO (sólo si existe #pace-root en DOM — entry point standalone).
    En el entry point modular PACE.html el montaje lo hace el script de abajo en #root. */
