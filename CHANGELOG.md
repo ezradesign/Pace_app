@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [abajo](#v0332----2026-05-20----refactormain-split-mainjsx-en-main) |
-| **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) -- variante B (pragmatica) | #81 | [abajo](#v0331----2026-05-19----refactori18n-split-strings-en-strings) |
+| **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [abajo](#v0333----2026-05-23----refactorachievements-split-achievementsjsx-en-achievements--glyphs) |
+| **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [abajo](#v0332----2026-05-23----refactormain-split-mainjsx-en-main) |
+| **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) -- variante B (pragmatica) | #81 | [session-81](./docs/sessions/session-81-strings-split.md) |
 | **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline | #80 | [session-80](./docs/sessions/session-80-split-pathrunner.md) |
 | **v0.32.1** | 2026-05-18 | fix(ui): pomodoro contextual en Camino (aro + pausa/reset/saltar) + fade-out toasts + oscuro +10% | #79 | [session-79](./docs/sessions/session-79-pomodoro-camino-fadeout-oscuro.md) |
 | **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime > catalog[0]) + logro master.path.all7 | #78 | [abajo](#v0320----2026-05-17----featcamino-catalogo-5--7) |
@@ -100,6 +101,172 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.33.3] -- 2026-05-23 -- refactor(achievements): split Achievements.jsx en achievements/ + glyphs/
+
+Sesion 83. Refactor puro de `app/achievements/Achievements.jsx` (409 ln)
+a una UI pura: datos extraidos a `app/achievements/catalog.js`, glifos
+SVG extraidos a `app/glyphs/achievement-glyphs.jsx`. Cero cambios
+funcionales, visuales, de copy ni de logica de desbloqueo.
+
+`app/achievements/Achievements.jsx` paso de **409 ln a 184 ln (-55%)**
+mediante split mecanico Variante B en 3 archivos:
+
+- `app/glyphs/achievement-glyphs.jsx` -- NUEVO (68 ln). `SVG_PFX`/`SVG_SFX`/
+  `g()` helpers + `GLYPH_SVG` map con 33 paths + alias `first.plan` =
+  `first.ritual`. Expone `window.ACHIEVEMENT_GLYPHS`. **Hermano de
+  `app/glyphs/exercise-glyphs.jsx`** (s60, intacto) -- dos sistemas
+  visuales conviviendo en `app/glyphs/` sin solapamiento (heraldica vs
+  line-art).
+- `app/achievements/catalog.js` -- NUEVO (209 ln). `ACHIEVEMENT_CATALOG`
+  (106 entradas) + `CAT_META` (7 categorias) + `IMPLEMENTED_ACHIEVEMENTS`
+  (Set de 69 ids con detector activo). Expone los 3 a `window.*`. Lee
+  glifos via `const GLYPH_SVG = window.ACHIEVEMENT_GLYPHS || {}`.
+- `app/achievements/Achievements.jsx` -- queda como **UI pura**:
+  `renderGlyph` + `isImplemented` + `Achievements` componente + `Seal`
+  componente. Lee los 3 globales como `const X = window.X || fallback`
+  al inicio del archivo.
+
+Variante B aprobada del [design s83](./docs/sessions/session-83-design.md):
+cumple metrica `>50%`, separa los dos sistemas conceptualmente, sin
+premature abstraction (la Variante C aislando `Seal.jsx` se descarto
+-- 1 unico consumidor, cero caso de reuso identificado en roadmap).
+
+Diario: [session-83-achievements-split.md](./docs/sessions/session-83-achievements-split.md).
+Documentos de apoyo: [audit](./docs/sessions/session-83-audit.md),
+[design](./docs/sessions/session-83-design.md).
+
+Bump v0.33.3 (patch) -- refactor sin cambios funcionales ni de copy.
+
+### Added
+
+- **`app/glyphs/achievement-glyphs.jsx`** -- nuevo (68 ln). SVG helpers +
+  `GLYPH_SVG` map (33 paths) + alias `first.plan` + `Object.assign(window,
+  { ACHIEVEMENT_GLYPHS: GLYPH_SVG })`. Header doc-comment explica
+  convivencia con `exercise-glyphs.jsx`.
+- **`app/achievements/catalog.js`** -- nuevo (209 ln). `ACHIEVEMENT_CATALOG`
+  + `CAT_META` + `IMPLEMENTED_ACHIEVEMENTS` (este ultimo ahora expuesto a
+  window por simetria, era local-only pre-s83) + `Object.assign`. Entradas
+  del catalogo byte-identicas (siguen usando `GLYPH_SVG['id']`).
+
+### Changed
+
+- **`app/achievements/Achievements.jsx`** -- reducido de 409 a 184 ln.
+  Contiene SOLO: header doc-comment + 3 lineas de import desde window
+  (`ACHIEVEMENT_CATALOG`, `CAT_META`, `IMPLEMENTED_ACHIEVEMENTS`) +
+  `renderGlyph` + `isImplemented` + `Achievements` componente + `Seal`
+  componente + `Object.assign(window, { Achievements })`. Cuerpo de los
+  componentes byte-identico al original. Removido del `Object.assign` final
+  el `ACHIEVEMENT_CATALOG` (ahora unico fuente en catalog.js).
+- **`PACE.html`** -- 2 nuevos `<script src>` insertados antes de
+  `Achievements.jsx`: `app/glyphs/achievement-glyphs.jsx` ->
+  `app/achievements/catalog.js` -> `app/achievements/Achievements.jsx`.
+  Comentario explicativo del orden estricto.
+- **`PACE.html`** -- titulo `v0.33.3`.
+- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.33.3'`.
+- **`sw.js`** -- `CACHE_NAME = 'pace-v0.33.3'`.
+
+### Preservado (sin cambios)
+
+- **`app/glyphs/exercise-glyphs.jsx`** -- intacto en v0.28.1. Reservado
+  para s85+ cuando el usuario integre los nuevos glifos de Move/Stretch
+  que trabaja en paralelo. Verificado por `git diff --stat`: el archivo
+  NO aparece en cambios.
+- **`app/state-achievements.jsx`** -- intacto. NO consume
+  `ACHIEVEMENT_CATALOG` ni `IMPLEMENTED_ACHIEVEMENTS` (audit verifico).
+  `checkAllPathsCompleted` (s78) sigue leyendo `window.PATH_CATALOG`.
+- **`app/paths/CompletionScreen.jsx:50`** -- intacto. Sigue leyendo
+  `window.ACHIEVEMENT_CATALOG` con lectura defensiva.
+- **`app/ui/Toast.jsx:13`** -- idem.
+- **Cero cambios fuera de `app/achievements/` + `app/glyphs/` + `PACE.html`
+  + bump-implicito**. Ningun modulo, overlay ni consumidor requirio
+  modificacion.
+
+### Decisiones tomadas
+
+| ID | Decision | Razon |
+|---|---|---|
+| D1 | Aplicar Variante B (3 archivos: glifos + catalog + UI) -- no A (1) ni C (4) | A no establece `app/glyphs/` como convencion clara (`catalog.js` queda como saco mixto). C es premature abstraction: `Seal` tiene 1 consumidor (Achievements) y cero caso de reuso en roadmap conocido. B esta en la interseccion: cumple metrica (-55%), separa conceptos, sin sobre-abstraer. Mismo principio que s82 con hooks |
+| D2 | `app/glyphs/achievement-glyphs.jsx` con extension `.jsx` aunque no contenga JSX | Coherencia con el hermano `app/glyphs/exercise-glyphs.jsx` (s60). Trade-off cosmetico aceptado: la convencion dentro de `app/glyphs/` pesa mas que la regla `.js` si no hay JSX. `<script>` tag NO requiere `data-presets="env,react"` |
+| D3 | `IMPLEMENTED_ACHIEVEMENTS` expuesto a window (era local-only pre-s83) | Simetria con `ACHIEVEMENT_CATALOG`. Coste cero, abre la puerta a que otro modulo lo lea sin importar el catalogo entero |
+| D4 | Achievements.jsx lee los 3 globales como `const X = window.X || fallback` al inicio del archivo | Captura los valores una vez al cargar (orden de carga garantiza que catalog.js ya ejecuto). Fallback defensivo por si en algun escenario el orden falla -- degradacion graceful en lugar de TypeError |
+| D5 | NO consolidar glifos heraldica con line-art | Sistemas visuales conceptualmente distintos. Documentado en audit (1.2). Mismo namespace `app/glyphs/` pero almacenamiento (strings vs JSX), keys (achievement ids vs nombres de paso) y estilo (heraldica vs postura) totalmente diferentes |
+| D6 | NO modificar `state-achievements.jsx` | Audit confirmo cero acoplamiento. Modificarlo seria scope creep |
+| D7 | NO arreglar el counter "100 logros" vs 106 reales | Deuda menor de copy. Refactor puro -- no toca contenido. Diferida a s87+ cuando se ajuste catalogo |
+| D8 | `build-standalone.js` sin cambios | `validateAppFiles` walkea `app/` recursivo. Los 2 archivos nuevos se descubren automatico. Verificado: 60 archivos (antes 58) |
+
+### Invariantes preservadas (verificadas runtime)
+
+1. `window.ACHIEVEMENT_CATALOG.length === 106` (mismo conteo).
+2. `Object.keys(window.ACHIEVEMENT_GLYPHS).length === 35` (34 paths +
+   alias `first.plan`).
+3. `window.IMPLEMENTED_ACHIEVEMENTS.size === 69`.
+4. `window.CAT_META` con 7 categorias en orden correcto.
+5. Glifo heptagonal `master.path.all7` (s78) byte-identico:
+   `M22 6 L35 13 L38 26 L29 37 L15 37 L6 26 L9 13 Z`. Familia visual
+   streak.7/streak.30/streak.365 coherente.
+6. Alias `first.plan` consume SVG de `first.ritual` (5 circles + 1 path
+   identicos).
+7. `secret.cow.click` se pinta como '?' al estar locked, SVG al
+   desbloquearse.
+8. `Seal` mantiene sus 3 estados (unlocked/locked/coming-soon) +
+   modo-secreto.
+9. Badge "Pronto" en estado coming-soon.
+10. Cambio idioma ES->EN actualiza categorias y titulo del modal.
+11. `unlockAchievement('first.step')` -> seal cambia a unlocked (border
+    solid, opacity 1).
+12. Consumidores externos preservados: `CompletionScreen.jsx:50` y
+    `Toast.jsx:13` siguen leyendo `window.ACHIEVEMENT_CATALOG`.
+
+### Verificacion runtime
+
+Cubierta via preview local (`.claude/static-server.js` de s80) en
+`localhost:8765`. Fases 4.1 a 4.5 verificadas. Detalles en
+[session-83-achievements-split.md](./docs/sessions/session-83-achievements-split.md#tarea-4----verificacion-5-fases).
+
+- ✅ 60 archivos parsean limpios via `validateAppFiles` (TS parser real).
+- ✅ Verificacion intermedia (3 archivos cargados + Achievements.jsx
+  aun sin tocar): consola 0 errores. La duplicacion temporal es
+  idempotente por ser copia literal.
+- ✅ Tras reescribir Achievements.jsx: consola 0 errores en todo el ciclo
+  (modal, idioma, unlock, recarga). Solo warnings benignos de Babel
+  transformer.
+- ✅ Standalone v0.33.3 verifica los mismos invariantes que el modular.
+- ✅ Heptagonal `master.path.all7` byte-perfect en standalone.
+
+### Build
+
+- `PACE_standalone.html`: **620 KB** (635,365 bytes; +3,301 bytes vs
+  v0.33.2 = 632,064; +0.5%). Crecimiento por cabeceras de doc-comment
+  de los 2 archivos nuevos. Estimado en design: ~3 KB; real: +3 KB.
+  Exacto.
+- `index.html`: byte-perfect identico al standalone. SHA-256:
+  `23EF9FF6752B61D586C5C4A43DF6911583AE57AC733BBC65AC9A81795C62B6C7`.
+- 60 archivos validados (11 .js + 49 .jsx) -- antes 58 (10 .js + 48 .jsx).
+- Backup creado: `backups/PACE_standalone_v0.33.2_20260523.html` (617 KB).
+  Cap 20 mantenido (rotado el mas antiguo `v0.28.0_20260511.html`).
+
+### Diferido a sesiones siguientes
+
+- **`app/state-core.jsx`** (~475 ln, BAJA, dentro de limite) -- siguiente
+  candidato menor de deuda. No urgente.
+- **Variante C de Achievements** (Seal aislado) -- solo si surge un
+  segundo consumidor (carrusel de logros en Stats, micropreview en
+  banner de Camino completado).
+- **Deudas semanticas i18n** D-1/D-2/D-3 heredadas de s81 -- asignadas a
+  s87+.
+- **Counter "100 logros"** del `master.collector.full` -- texto
+  desactualizado a 106 reales. Diferido a s87+ cuando se ajuste catalogo.
+- **Consolidacion de glifos comparables** entre `exercise-glyphs.jsx` y
+  `achievement-glyphs.jsx` -- documentada en audit (logros como
+  `explore.hips` podrian reusar glifo de `Flexor de cadera` si se unifica
+  el lenguaje visual). NO consolidar en s83 (sistemas distintos por
+  design). Evaluar en s85+ cuando el usuario integre nuevos glifos
+  Move/Stretch.
+- **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
+  (530-600 KB; real 615-620 KB). Avisa en cada cierre. No urgente.
 
 ---
 
@@ -233,135 +400,6 @@ Cubierta via preview local (`.claude/static-server.js` de s80) en
 - **Deudas semanticas i18n** D-1/D-2/D-3 heredadas de s81.
 - **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
   (530-600 KB; real 605-617 KB). Avisa en cada cierre. No urgente.
-
----
-
-## [v0.33.1] -- 2026-05-19 -- refactor(i18n): split strings en strings/
-
-Sesion 81. Refactor puro de `app/i18n/strings.js` (791 ln, 664 keys) a un
-catalogo modular en `app/i18n/strings/` (6 archivos: `_bootstrap.js` +
-`ui.js` + `sessions.js` + `paths.js` + `stats.js` + `achievements.js`).
-Variante B aprobada del [design s81](./docs/sessions/session-81-design.md):
-pragmatica, bootstrap explicito, cinco dominios coherentes por capa.
-
-> Nota de scope: el prompt original de s81 pedia transiciones del Camino
-> (cards intro/step/outro entre Steps). Esas ya existian completas desde
-> s77 (`PathTransitions.jsx` + tokens + i18n + phase machine en
-> PathRunner). El usuario reorientó la sesion al candidato de deuda ALTA
-> que s80 dejo en cola: `app/i18n/strings.js`.
-
-Diario: [session-81-strings-split.md](./docs/sessions/session-81-strings-split.md).
-Documentos de apoyo: [audit](./docs/sessions/session-81-audit.md),
-[design](./docs/sessions/session-81-design.md).
-
-Bump v0.33.1 (patch) -- refactor sin cambios funcionales ni de copy.
-
-### Changed
-
-- **`app/i18n/strings.js`** -- **ELIMINADO** tras split.
-- **`app/i18n/strings/_bootstrap.js`** -- nuevo. Crea
-  `window.PACE_STRINGS = { es: {}, en: {} }` vacio. Carga primero.
-- **`app/i18n/strings/ui.js`** -- nuevo (~310 ln; 134 ES + 134 EN).
-  welcome + welcome lang toggle + support + break + sidebar + topbar +
-  settings + activity + tweaks.
-- **`app/i18n/strings/sessions.js`** -- nuevo (~210 ln; 93 ES + 93 EN).
-  session + common + lib shared + lib breathe/move/extra + breathe
-  phases/sesion/safety + focus + move + hydrate.
-- **`app/i18n/strings/paths.js`** -- nuevo (~115 ln; 47 ES + 47 EN).
-  path runner + names/taglines sensoriales + kind names + library +
-  hydrate keys + error.
-- **`app/i18n/strings/stats.js`** -- nuevo (~100 ln; 42 ES + 42 EN).
-  stats base + tabs + heatmap mensual + vista anual + caminos.
-- **`app/i18n/strings/achievements.js`** -- nuevo (~36 ln; 16 ES + 16 EN).
-  cat + seal + toast.
-- **`PACE.html`** -- bloque i18n actualizado: de 3 `<script src>`
-  (strings.js + strings-content.js + useT.jsx) a 8
-  (_bootstrap + 5 dominios + strings-content.js + useT.jsx).
-- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.33.1'`.
-- **`PACE.html`** -- `<title>` -> `v0.33.1`.
-- **`sw.js`** -- `CACHE_NAME = 'pace-v0.33.1'`.
-
-### Preservado (sin cambios)
-
-- **`app/i18n/strings-content.js`** -- intacto. Sigue siendo el patch EN
-  final de contenido (rutinas Move/Breathe/Extra). Carga al final de la
-  cadena, despues de los 6 archivos del split, antes de useT.jsx.
-- **`app/i18n/useT.jsx`** -- intacto. Mismo contrato `useT()` con `t`/`tn`/`lang`
-  + `detectInitialLang` exportado.
-- **Cero cambios fuera de `app/i18n/` + `PACE.html` + bundler-implicito**.
-  Ningun consumidor de `t()` requirio modificacion.
-
-### Decisiones tomadas
-
-| ID | Decision | Razon |
-|---|---|---|
-| D1 | Aplicar Variante B (pragmatica, 6 archivos) -- no A (3) ni C (14) | Equilibrio entre granularidad y boilerplate. 5 dominios coherentes <=310 ln cada uno, cumple regla `<500 ln` de CLAUDE.md. C era overkill para ES+EN (2 idiomas hoy), A dejaba asimetria (strings.js raiz + hijos patch) |
-| D2 | Carpeta `app/i18n/strings/` -- no flat con prefijo | Agrupa visualmente los 5 dominios + bootstrap. Patron coherente con `app/paths/steps/` introducido en s80 |
-| D3 | Bootstrap explicito (`_bootstrap.js`) en vez de "primer archivo crea el objeto" | Mas resistente a errores de parse: si el primer dominio falla, los demas siguen escribiendo sobre PACE_STRINGS valido (objeto vacio) en lugar de explotar |
-| D4 | `strings-content.js` intacto, carga al final | Su rol (contenido de rutinas Move/Breathe/Extra solo EN, patch sobre las base EN) es ortogonal al split por dominio. Renombrarlo o moverlo abriria debate de scope; mantener tal cual minimiza diff |
-| D5 | ES y EN en el mismo archivo del split (no `welcome-es.js`/`welcome-en.js`) | Siempre se actualizan en paralelo. Separar por idioma duplica numero de archivos sin beneficio |
-| D6 | NO consolidar deudas semanticas detectadas en el audit | Override silencioso de `strings-content.js` sobre 3 keys de `breathe.phase.*` (D-1), duplicidad "Hecho hoy" (D-2), inconsistencia path/paths (D-3) -- todas se documentan en el audit y quedan como deuda explicita. Scope = split mecanico puro |
-| D7 | `build-standalone.js` sin cambios necesarios | `validateAppFiles` walkea `app/` recursivamente; los 6 archivos nuevos se descubren automaticamente. Verificado: 55 archivos validados (50 previos + 5 nuevos = 55, con strings.js eliminado) |
-
-### Invariantes preservadas
-
-1. `window.PACE_STRINGS` final tiene la misma forma `{ es: {...}, en: {...} }`.
-2. Conteo de keys identico: **332 ES + 545 EN** efectivas (332 EN del split +
-   213 EN unicas de strings-content.js, tras 11 overrides). Verificado runtime.
-3. Override silencioso de `strings-content.js` PRESERVADO. Las 3 keys que
-   divergen (`breathe.phase.inhala.mas` = "Inhale again", `inhala.oceanica` =
-   "Oceanic inhale", `exhala.oceanica` = "Oceanic exhale") siguen siendo
-   "Inhale again"/"Oceanic" en runtime, no "Inhale more"/"Ocean". Verificado.
-4. `detectInitialLang()` sigue en `useT.jsx`, disponible para `state-core.jsx`.
-5. Fallback de lookup ES -> EN -> raw key sin cambios.
-6. `_i18nIsDev` warning en localhost sin cambios.
-7. Orden de carga compatible: i18n entero termina antes de `state-*.jsx`.
-
-### Verificacion runtime
-
-Cubierta via preview local (.claude/static-server.js de s80) en
-`localhost:8765`.
-
-- ✅ 55 archivos parsean limpios via `validateAppFiles` (TS parser real).
-- ✅ Consola del browser: 0 errores tras reload.
-- ✅ `Object.keys(window.PACE_STRINGS.es).length` = **332**.
-- ✅ `Object.keys(window.PACE_STRINGS.en).length` = **545**.
-- ✅ 19 keys sample de los 5 dominios (ES + EN) devuelven el valor
-  correcto. `missingKeys: []`.
-- ✅ Override D-1 verificado: `en.breathe.phase.inhala.mas` = "Inhale again"
-  (de strings-content.js), no "Inhale more" (de strings.js EN base).
-- ✅ Snapshot a11y del home: TopBar/Sidebar/FocusTimer/ActivityBar muestran
-  texto en idioma correcto. Overlay de Camino activo (Hierbabuena) tambien
-  renderiza textos correctos de PathHydrateStep (path.* keys).
-
-### Build
-
-- `PACE_standalone.html`: **614 KB** (628,926 bytes; +4,387 bytes vs
-  v0.33.0 = 624,539). Crecimiento esperado por cabeceras de doc-comment
-  de los 6 archivos nuevos (~6-15 ln cada uno) + Object.assign wrappers
-  (~3 ln × 2 idiomas × 5 dominios). Bundle estimado en design: +2-3 KB;
-  real: +4 KB. Discrepancia +1-2 KB atribuible a cabeceras mas extensas
-  de lo previsto.
-- `index.html`: byte-perfect identico al standalone. SHA-256:
-  `3b9c49c0736e237dfffd37067b88793af501b0ce820221d0cd61934575a367ae`.
-- 55 archivos validados (9 .js + 46 .jsx) -- antes 50.
-- Backup creado: `backups/PACE_standalone_v0.33.0_20260519.html` (610 KB,
-  pristino restaurado desde HEAD antes del rebuild). Cap 20 mantenido
-  (el mas antiguo `v0.27.5_20260511.html` ya no existia fisicamente; el
-  cap se preserva con el alta del nuevo).
-
-### Diferido a sesiones siguientes
-
-- **Override silencioso D-1**: `strings-content.js` redefine 3 keys de
-  `breathe.phase.*` con valores distintos a las del split. Debate de copy
-  (Ocean vs Oceanic, Inhale more vs again) no abordado en s81. Decision
-  futura: o consolidar valores y eliminar override, o mover los 11
-  duplicados de `strings-content.js` a `strings/sessions.js` y dejar
-  `strings-content.js` solo con keys *unicas* de contenido.
-- **D-2** Duplicidad "Hecho hoy" (`path.card.done` + `paths.library.doneToday`).
-- **D-3** Inconsistencia `path.*` vs `paths.*` namespaces. Existente desde s53.
-- Resto de candidatos de deuda en backlog (main.jsx 600 ln, Achievements.jsx
-  ~500 ln, catalog split Move/Stretch).
 
 ---
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.33.2</title>
+  <title>PACE · Foco · Cuerpo — v0.33.3</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -166,6 +166,13 @@
   <script type="text/babel" data-presets="env,react" src="app/paths/registry.js"></script>
   <script type="text/babel" src="app/hydrate/HydrateModule.jsx"></script>
   <script type="text/babel" src="app/breakmenu/BreakMenu.jsx"></script>
+  <!-- Logros (s83): orden estricto. achievement-glyphs.jsx expone
+       window.ACHIEVEMENT_GLYPHS; catalog.js lo lee al construir las
+       entradas con glyphSvg; Achievements.jsx consume ACHIEVEMENT_CATALOG/
+       CAT_META/IMPLEMENTED_ACHIEVEMENTS via window. Si se invierte el orden,
+       los Seals caen al fallback unicode (degradación graceful pero visible). -->
+  <script type="text/babel" src="app/glyphs/achievement-glyphs.jsx"></script>
+  <script type="text/babel" src="app/achievements/catalog.js"></script>
   <script type="text/babel" src="app/achievements/Achievements.jsx"></script>
   <script type="text/babel" src="app/stats/YearView.jsx"></script>
   <script type="text/babel" src="app/stats/PathYearView.jsx"></script>

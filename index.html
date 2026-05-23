@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.33.2</title>
+  <title>PACE · Foco · Cuerpo — v0.33.3</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1644,7 +1644,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.33.2';
+const PACE_VERSION = 'v0.33.3';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -8211,12 +8211,33 @@ if (!_paceBreakResponsive) {
 
 Object.assign(window, { BreakMenu });
 </script>
+  <!-- Logros (s83): orden estricto. achievement-glyphs.jsx expone
+       window.ACHIEVEMENT_GLYPHS; catalog.js lo lee al construir las
+       entradas con glyphSvg; Achievements.jsx consume ACHIEVEMENT_CATALOG/
+       CAT_META/IMPLEMENTED_ACHIEVEMENTS via window. Si se invierte el orden,
+       los Seals caen al fallback unicode (degradación graceful pero visible). -->
   <script type="text/babel">
-/* Glifos Dirección D — portados literalmente de design/glyphs-explorations.html.
+/* PACE · Glifos canónicos de logros · sesión 83 / v0.33.3
+   Extraídos literalmente de app/achievements/Achievements.jsx (v0.32.0, s78).
+
+   Glifos Dirección D — portados literalmente de design/glyphs-explorations.html.
    Última verificación: sesión 48d (re-aplicada en hotfix 48d.1 tras truncamiento).
    currentColor para que el Seal aplique tono según estado.
    NO modificar a ojo: editar primero la exploración y volver a portar.
-   Excepción: secret.cow.click (sin canónico, es secreto). */
+   Excepción: secret.cow.click (sin canónico, es secreto).
+
+   ALMACENAMIENTO: strings de SVG envueltos por g(body), no JSX. El consumidor
+   renderGlyph() en Achievements.jsx los inyecta via dangerouslySetInnerHTML.
+
+   CONVIVENCIA: este archivo es hermano de app/glyphs/exercise-glyphs.jsx
+   (s60, v0.28.1). Dos sistemas visuales distintos (heráldica vs line-art)
+   conviviendo en app/glyphs/. NO unificar: son sistemas conceptualmente
+   independientes con reglas de dibujo distintas.
+
+   Se expone via window.ACHIEVEMENT_GLYPHS para uso desde catalog.js (que
+   construye las entradas del catálogo con glyphSvg). Eventualmente otros
+   módulos (Toast, CompletionScreen) podrían leerlo si necesitan pintar
+   un glifo suelto sin tirar del catálogo entero. */
 const SVG_PFX = `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">`;
 const SVG_SFX = `</svg>`;
 const g = (body) => SVG_PFX + body + SVG_SFX;
@@ -8262,6 +8283,30 @@ const GLYPH_SVG = {
 };
 /* first.plan comparte glifo con first.ritual (misma trigger — decisión s28) */
 GLYPH_SVG['first.plan'] = GLYPH_SVG['first.ritual'];
+
+Object.assign(window, { ACHIEVEMENT_GLYPHS: GLYPH_SVG });
+
+</script>
+  <script type="text/babel">
+/* PACE · Catálogo de logros · sesión 83 / v0.33.3
+   Extraído literalmente de app/achievements/Achievements.jsx (v0.32.0, s78).
+
+   Contiene tres exports a window:
+   - ACHIEVEMENT_CATALOG  — array con las entradas del catálogo (id, cat,
+     title, desc, glyph, glyphSvg, secret). Consumido por Achievements.jsx
+     (render), CompletionScreen.jsx (logros desbloqueados en el Camino),
+     y Toast.jsx (titulo/glifo del logro recién desbloqueado).
+   - CAT_META             — map de 7 categorías → { labelKey, color } para
+     iterar el catálogo agrupado por categoría con sus colores semánticos.
+   - IMPLEMENTED_ACHIEVEMENTS — Set de ids con detector activo. Los
+     logros NO incluidos aquí se pintan como "Pronto" (estado coming-soon).
+     Los secretos NO necesitan estar aquí: su mecánica es intriga, se
+     pintan siempre como secretos hasta desbloquearse.
+
+   Los glifos SVG viven en app/glyphs/achievement-glyphs.jsx (s83) y se
+   leen desde window.ACHIEVEMENT_GLYPHS. Este archivo debe cargarse
+   DESPUÉS de achievement-glyphs.jsx y ANTES de Achievements.jsx. */
+const GLYPH_SVG = window.ACHIEVEMENT_GLYPHS || {};
 
 const ACHIEVEMENT_CATALOG = [
   // Primeros pasos (1-10)
@@ -8451,6 +8496,24 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'secret.seal', 'secret.illustrated',
 ]);
 
+Object.assign(window, { ACHIEVEMENT_CATALOG, CAT_META, IMPLEMENTED_ACHIEVEMENTS });
+
+</script>
+  <script type="text/babel">
+/* PACE · Achievements · sesión 83 / v0.33.3
+   Modal de catálogo + componente Seal.
+
+   Tras s83 este archivo es SOLO UI. Los datos viven en archivos hermanos:
+   - app/glyphs/achievement-glyphs.jsx  →  window.ACHIEVEMENT_GLYPHS (s83)
+   - app/achievements/catalog.js        →  window.ACHIEVEMENT_CATALOG,
+                                            window.CAT_META,
+                                            window.IMPLEMENTED_ACHIEVEMENTS
+
+   Orden de carga en PACE.html (linea ~169): glifos → catalogo → este archivo. */
+const ACHIEVEMENT_CATALOG = window.ACHIEVEMENT_CATALOG || [];
+const CAT_META = window.CAT_META || {};
+const IMPLEMENTED_ACHIEVEMENTS = window.IMPLEMENTED_ACHIEVEMENTS || new Set();
+
 /* Renderiza el glifo de un logro. Si tiene glyphSvg (Constelaciones), lo inyecta
    via dangerouslySetInnerHTML. Fallback: glyph unicode en italic. El wrapper hereda
    currentColor del contenedor padre, así el mismo SVG funciona en cualquier paleta. */
@@ -8620,7 +8683,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
   );
 }
 
-Object.assign(window, { Achievements, ACHIEVEMENT_CATALOG });
+Object.assign(window, { Achievements });
 
 </script>
   <script type="text/babel">

@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.33.2
-**Ultima sesion:** #82 -- 2026-05-23 - refactor(main): split `app/main.jsx` (600 ln) en `app/main/` -- variante B equilibrada (3 archivos: `_responsive.js` + `TopBar.jsx` + `ActivityBar.jsx`). PaceApp queda intacto como orquestador puro (279 ln, -53%). Tercer split mecanico consecutivo tras s80 (PathRunner) y s81 (strings) -- patron `app/<carpeta>/` consolidado
-**Ultima actualizacion de este archivo:** 2026-05-23 - sesion 82
-**Build entregado:** `PACE_standalone.html` v0.33.2 (617 KB; 632,064 bytes) + `index.html` (idem, copia exacta)
+**Version actual:** v0.33.3
+**Ultima sesion:** #83 -- 2026-05-23 - refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` -- variante B (3 archivos: `catalog.js` + `achievement-glyphs.jsx` + `Achievements.jsx` solo UI). 409 ln -> 184 ln (-55%). Cuarto split mecanico consecutivo tras s80/s81/s82 -- convencion `app/glyphs/` consolidada con 2 hermanos (`exercise-glyphs` + `achievement-glyphs`)
+**Ultima actualizacion de este archivo:** 2026-05-23 - sesion 83
+**Build entregado:** `PACE_standalone.html` v0.33.3 (620 KB; 635,365 bytes) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,10 +21,11 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.33.2** (s82: bloque shell con 3 nuevos `<script src>` antes de main.jsx -- `_responsive.js` + `TopBar.jsx` + `ActivityBar.jsx` + comentario explicativo del orden + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.2** (617 KB, regenerado s82) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.2** (s82: regenerado por build-standalone.js) |
-| `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG -- 13 rediseñados en s60 | **v0.28.1** (iter parcial s60, sin cambios s61) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.33.3** (s83: + 2 `<script src>` antes de Achievements.jsx -- `app/glyphs/achievement-glyphs.jsx` + `app/achievements/catalog.js` + comentario orden estricto + titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.3** (620 KB, regenerado s83) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.3** (s83: regenerado por build-standalone.js) |
+| `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.28.1** (iter parcial s60, sin cambios s61-s83; ampliable/sustituible en s85+) |
+| `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG, `Object.assign(window, { ACHIEVEMENT_GLYPHS })` | **v0.33.3** (nuevo s83, 68 ln) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** (s77: NO modificado, decision 15 -- silencio en transiciones) |
@@ -42,14 +43,15 @@
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.31.0** (s77b: startBtnPrimary usa var(--focus-cta) -- verde musgo #506B3E claro / #8AA776 oscuro) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
-| `app/achievements/Achievements.jsx` | Catalogo + coleccion | **v0.32.0** (s78: + entrada master.path.all7 en maestria + glifo SVG heptagonal + IMPLEMENTED_ACHIEVEMENTS subgrupo Caminos) |
+| `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
+| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.33.3** (nuevo s83, 209 ln; lee `window.ACHIEVEMENT_GLYPHS` para entradas con glyphSvg) |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** (s64: overflowY:hidden en data-pyv-wrap -- fix scroll vertical) |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** (s63: titulo marginBottom 6->4) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.28.8** (s69: isActiveDay helper + computeYearStats unifica criterio "dia activo" = focus|breath|move>0, agua sola NO cuenta) |
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.2** (s82: PACE_VERSION bump; s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.3** (s83: PACE_VERSION bump; s82/s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -86,11 +88,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.33.2** (s82: CACHE_NAME pace-v0.33.2) |
+| `sw.js` | Service Worker PWA | **v0.33.3** (s83: CACHE_NAME pace-v0.33.3) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82 (copia del v0.33.1 publicado en s81)
+- `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83 (copia del v0.33.2 publicado en s82)
+- `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82
 - `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81
 - `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
 - `backups/PACE_standalone_v0.32.0_20260518.html`
@@ -109,144 +112,171 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.3_20260512.html`
 - `backups/PACE_standalone_v0.28.2_20260511.html`
 - `backups/PACE_standalone_v0.28.1_20260511.html`
-- `backups/PACE_standalone_v0.28.0_20260511.html`
 
-Nota s82: cap 20 mantenido rotando el mas antiguo (`v0.27.6_20260511.html`)
-al crear el backup del v0.33.1 publicado en s81.
+Nota s83: cap 20 mantenido rotando el mas antiguo (`v0.28.0_20260511.html`)
+al crear el backup del v0.33.2 publicado en s82.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 82 - v0.33.2 - refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (variante B equilibrada: _responsive.js + TopBar.jsx + ActivityBar.jsx). PaceApp intacto como orquestador puro (279 ln, -53%).**
+**Sesion 83 - v0.33.3 - refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (variante B: catalog.js + achievement-glyphs.jsx + Achievements.jsx solo UI). 409 ln -> 184 ln (-55%). Convencion `app/glyphs/` consolidada con 2 archivos hermanos.**
 
 ### Contexto
 
-s82 toma el siguiente candidato MEDIO de deuda que s81 dejo en cola:
-`app/main.jsx` (600 ln). Tercera sesion consecutiva de split mecanico
-tras s80 (PathRunner) y s81 (strings.js). El patron `app/<carpeta>/` ya
-es convencion en el codebase.
+s83 toma el ultimo candidato MEDIO de deuda del backlog s82:
+`app/achievements/Achievements.jsx` (estimado ~500 ln, real 409). Cuarta
+sesion consecutiva de split mecanico tras s80 (PathRunner), s81 (strings)
+y s82 (main). El patron `app/<carpeta>/` esta ya consolidado como
+convencion del codebase.
 
-Auditoria detecta cero acoplamientos problematicos: `TopBar` y
-`ActivityBar` son hijos puros sin consumidor externo. El bloque CSS
-responsive es global por design.
+A diferencia de los splits anteriores, el archivo mezclaba dos
+responsabilidades naturales: **datos** (catalogo de 100 logros + glifos
+SVG + metadata + set de implementados) y **UI** (modal + sello). La
+separacion natural es por tipo: datos a `catalog.js`, glifos a
+`app/glyphs/achievement-glyphs.jsx` (hermano de `exercise-glyphs.jsx`).
 
-Diario: [s82](./docs/sessions/session-82-main-split.md). Documentos de
-apoyo: [audit](./docs/sessions/session-82-audit.md),
-[design](./docs/sessions/session-82-design.md).
+Auditoria detecta cero acoplamientos problematicos:
+`state-achievements.jsx` NO consume `ACHIEVEMENT_CATALOG`; solo dispara
+`unlockAchievement(id)` con ids hardcoded. Consumidores externos
+(`CompletionScreen.jsx:50`, `Toast.jsx:13`) usan lectura defensiva de
+`window.ACHIEVEMENT_CATALOG`. Cero duplicacion de SVG con
+`exercise-glyphs.jsx` (sistemas visuales distintos: heraldica vs
+line-art).
+
+Diario: [s83](./docs/sessions/session-83-achievements-split.md).
+Documentos de apoyo: [audit](./docs/sessions/session-83-audit.md),
+[design](./docs/sessions/session-83-design.md).
 
 ### Que se hizo
 
 1. **Tarea 0 -- precondiciones**: 7/7 OK. git limpio, version coherente,
-   standalone v0.33.1 carga limpia en preview, main.jsx = 600 ln exactas.
-2. **Tarea 1 -- auditoria** ([session-82-audit.md](./docs/sessions/session-82-audit.md)):
-   tabla de 10 secciones, 29 invariantes numeradas, 17 edge cases, 5
-   deudas semanticas detectadas (NO arregladas: scope = split puro).
-3. **Tarea 2 -- design con 3 variantes** ([session-82-design.md](./docs/sessions/session-82-design.md)):
-   - **A** Minima: solo ActivityBar -> 459 ln (-24%). NO cumple metrica.
-   - **B** Equilibrada (aprobada): `_responsive.js` + TopBar + ActivityBar
-     -> 255 ln estimado (-57%). PaceApp intacto.
-   - **C** Maximalista: B + 2 hooks (overlay/keyboard) -> 180 ln (-70%).
-     Premature abstraction (1 consumidor).
-   Usuario delega: "la que sea mas profesional". Agente elige **B** --
-   cumple metrica + respeta principio "no premature abstraction" del
-   codebase + coherente con s80/s81.
+   standalone v0.33.2 carga limpia en preview, Achievements.jsx = 409 ln
+   (no ~500 como estimaba STATE.md -- sobreestimacion 22%).
+2. **Tarea 1 -- auditoria** ([session-83-audit.md](./docs/sessions/session-83-audit.md)):
+   tabla de 9 secciones (DATA 57% + UI 36% + LOGIC 5%), inventario de
+   34 glifos SVG + alias `first.plan` + 71 logros con unicode fallback,
+   cero duplicacion con exercise-glyphs.jsx, 25 invariantes numeradas,
+   12 edge cases.
+3. **Tarea 2 -- design con 3 variantes** ([session-83-design.md](./docs/sessions/session-83-design.md)):
+   - **A** Solo datos: catalog.js mixto (glifos+catalogo+meta) -> 175 ln
+     en Achievements.jsx (-57%). Cumple metrica pero no establece
+     `app/glyphs/` como convencion.
+   - **B** Datos + glifos separados (aprobada): catalog.js + achievement-
+     glyphs.jsx -> 184 ln en Achievements.jsx (-55%). Convencion
+     `app/glyphs/` con 2 hermanos.
+   - **C** B + Seal aislado: 80 ln en Achievements.jsx (-80%). Premature
+     abstraction (1 consumidor, cero caso de reuso).
+   Usuario aprueba B: "si es lo correcto, si". Coherente con principio
+   "no premature abstraction" aplicado en s82.
 4. **Tarea 3 -- implementacion mecanica**:
-   - Crear `app/main/_responsive.js` (105 ln; IIFE inyecta `<style>` global).
-   - Crear `app/main/TopBar.jsx` (106 ln; TopBar + topBarStyles).
-   - Crear `app/main/ActivityBar.jsx` (170 ln; ActivityBar + 4 iconos AB*).
-   - Editar PACE.html: +3 `<script src>` antes de main.jsx + comentario.
-   - **Verificacion intermedia** (3 archivos cargados, main.jsx aun sin
-     tocar): TopBar/ActivityBar definidos dos veces; ultimo gana (idempotente
-     por copia literal). Consola 0 errores. ✓
-   - Reescribir main.jsx (600 -> 279 ln, -53%; literal copia de PaceApp
-     intacto, sin tocar logica).
-5. **Tarea 4 -- verificacion** (16 invariantes runtime):
-   - 4.1 TopBar: tabs (focusMode larga/foco), 3 iconos (Stats prop, Logros
-     CustomEvent, Tweaks prop), i18n ES<->EN -> tabs/aria/chips actualizan.
-   - 4.2 ActivityBar: 4 chips -> abren BreatheLibrary/ExtraLibrary/
-     MoveLibrary/HydrateTracker. i18n correcto.
-   - 4.3 Overlays + atajos + cowClicks + recarga: S/T/L toggle, cowClicks
-     -> secret.cow.click unlock, PathsLibrary CustomEvent abre, focusMode
-     'larga' sobrevive recarga.
-   - 4.4 Edge cases: T+INPUT skip, guard CSS no duplica, fallback dvh
-     intacto, mobile <=768px tabs ocultos.
+   - Crear `app/glyphs/achievement-glyphs.jsx` (68 ln; SVG helpers +
+     `GLYPH_SVG` map + alias + `Object.assign(window, { ACHIEVEMENT_GLYPHS })`).
+   - Crear `app/achievements/catalog.js` (209 ln; lee
+     `window.ACHIEVEMENT_GLYPHS` para entradas + `ACHIEVEMENT_CATALOG` +
+     `CAT_META` + `IMPLEMENTED_ACHIEVEMENTS` + `Object.assign`).
+   - Editar PACE.html: +2 `<script src>` antes de Achievements.jsx +
+     comentario orden estricto.
+   - **Verificacion intermedia** (3 archivos cargados + Achievements.jsx
+     aun sin tocar): consola 0 errores, modal abre identico, 106 seals,
+     35 glyphs map, alias funciona. ✓
+   - Reescribir Achievements.jsx (409 -> 184 ln, -55%; cuerpo de
+     componentes byte-identico, lee globales como `const X = window.X
+     || fallback`).
+5. **Tarea 4 -- verificacion** (5 fases):
+   - 4.1 Modal: 7 categorias, 106 seals, 35 SVGs renderizados, getComputedStyle
+     OK por estado, ESC cierra.
+   - 4.2 Unlock: `window.unlockAchievement('first.step')` -> seal cambia
+     a border solid + opacity 1 (antes dashed/0.55). Detector intacto.
+   - 4.3 Invariantes criticos: globales correctos (catalog 106, glyphs
+     35, IMPLEMENTED 69 ids), CompletionScreen/Toast leen via window OK,
+     state-achievements intacto, consola limpia.
+   - 4.4 Edge cases: alias `first.plan` consume glifo de `first.ritual`,
+     `secret.cow.click` locked -> '?', cambio idioma ES->EN ("Primeros
+     pasos" -> "First steps").
+   - 4.5 Glifos pixel-perfect: heptagonal `master.path.all7` path
+     byte-identico (`M22 6 L35 13 L38 26 L29 37 L15 37 L6 26 L9 13 Z`),
+     familia streak/heptagonal coherente, `exercise-glyphs.jsx` NO
+     modificado (verificado por `git diff --stat`).
    - Console errors a lo largo de todo el ciclo: **cero**.
 6. **Tarea 6 -- versionado y build**:
-   - Backup `backups/PACE_standalone_v0.33.1_20260523.html` (copia del
-     v0.33.1 publicado). Cap 20 mantenido (rotado v0.27.6_20260511.html).
-   - Bump (state-core, PACE.html, sw.js) -> v0.33.2.
-   - Rebuild: bundle **617 KB (632,064 bytes; +3,138 vs v0.33.1)**.
-     SHA-256: `66455A34...387EFD`. `index.html` byte-perfect.
-   - 58 archivos validados (10 .js + 48 .jsx; antes 55 = +3 nuevos).
-7. **Tarea 7 -- documentacion**: audit + design + diario s82 + CHANGELOG
-   (degradacion de v0.33.0 a fila-de-enlace, detalle nuevo de v0.33.2)
+   - Backup `backups/PACE_standalone_v0.33.2_20260523.html` (copia del
+     v0.33.2 publicado). Cap 20 mantenido (rotado v0.28.0_20260511.html).
+   - Bump (state-core, PACE.html, sw.js) -> v0.33.3.
+   - Rebuild: bundle **620 KB (635,365 bytes; +3,301 vs v0.33.2)**.
+     SHA-256: `23EF9FF6...7B62B6C7`. `index.html` byte-perfect.
+   - 60 archivos validados (11 .js + 49 .jsx; antes 58 = +2 nuevos).
+   - Verificacion runtime sobre standalone v0.33.3: heptagonal byte-
+     identico, modal funcional, todos los globales correctos.
+7. **Tarea 7 -- documentacion**: audit + design + diario s83 + CHANGELOG
+   (degradacion de v0.33.1 a fila-de-enlace, detalle nuevo de v0.33.3)
    + STATE.md (este archivo).
 
 ### Decisiones tomadas
 
-- D1 -- **Variante B aprobada** (3 archivos: `_responsive.js` + TopBar +
-  ActivityBar). No A (no cumple metrica) ni C (premature abstraction).
-- D2 -- **Carpeta `app/main/`** coherente con `app/paths/steps/` (s80) y
-  `app/i18n/strings/` (s81). Tercer split mecanico con el mismo patron.
-- D3 -- **CSS responsive a `_responsive.js` IIFE**, no inline en
-  TopBar/ActivityBar. El `<style>` toca selectores de AMBOS componentes
-  + main + sidebar handle. Es config global, no de un componente.
-- D4 -- **`topBarStyles` con TopBar.jsx; 4 iconos AB* con ActivityBar.jsx**.
-  Cada uno tiene 1 unico consumidor (verificado por Grep). Cohesion.
-- D5 -- **NO extraer hooks** (variante C descartada). 1 consumidor hoy.
-  Reconsiderar si llega un segundo entry point (p.ej. EmbedApp).
-- D6 -- **`Object.assign(window, { TopBar, ActivityBar })` preservado**
-  desde sus archivos respectivos. Sin consumidor externo, pero
-  estabilidad de superficie publica. Mantener.
-- D7 -- **Arranque directo `#pace-root` preservado**. Legacy v0.12, cero
-  coste, removerlo abre debate -- fuera de scope.
-- D8 -- **`build-standalone.js` sin cambios**. `validateAppFiles` walkea
-  recursivo. 3 nuevos archivos se descubren automatico.
+- D1 -- **Variante B aprobada** (3 archivos: catalog + glyphs + UI). No A
+  (no establece `app/glyphs/` como convencion) ni C (premature abstraction).
+- D2 -- **`achievement-glyphs.jsx` con extension `.jsx`** aunque no
+  contenga JSX. Coherencia con hermano `exercise-glyphs.jsx`. Trade-off
+  cosmetico aceptado.
+- D3 -- **`IMPLEMENTED_ACHIEVEMENTS` expuesto a window** (era local-only).
+  Simetria con `ACHIEVEMENT_CATALOG`. Coste cero.
+- D4 -- **Achievements.jsx lee globales como `const X = window.X || fallback`**
+  al inicio del archivo. Captura una vez al cargar + fallback defensivo.
+- D5 -- **NO consolidar heraldica con line-art**. Sistemas visualmente
+  distintos. Mismo namespace `app/glyphs/` pero almacenamiento, keys y
+  estilo diferentes.
+- D6 -- **NO modificar `state-achievements.jsx`**. Cero acoplamiento.
+  Scope creep evitado.
+- D7 -- **NO arreglar counter "100 logros" vs 106 reales**. Deuda menor
+  de copy, no de codigo. Diferida a s87+.
+- D8 -- **`build-standalone.js` sin cambios**. 60 archivos validados
+  automaticamente.
 
 ### Build
 
-- Bundle: **617 KB** (632,064 bytes; +3,138 bytes vs v0.33.1 = 628,926,
-  +0.5%). Crecimiento por cabeceras de doc-comment de 3 archivos nuevos
-  + 2 `Object.assign` + comentarios preservados. Estimado en design:
-  +1-2 KB; real: +3 KB (cabeceras mas extensas).
-- 58 archivos validados (10 .js + 48 .jsx).
+- Bundle: **620 KB** (635,365 bytes; +3,301 bytes vs v0.33.2 = 632,064,
+  +0.5%). Crecimiento por cabeceras de doc-comment de los 2 archivos
+  nuevos. Estimado en design: ~3 KB; real: +3 KB. Exacto.
+- 60 archivos validados (11 .js + 49 .jsx).
 - `index.html` byte-a-byte identico a `PACE_standalone.html`.
-- SHA-256: `66455A340EBC492CBA07F65FDBE7994345F51A77679091CCFEFF32576F387EFD`.
-- Backup creado: `backups/PACE_standalone_v0.33.1_20260523.html` (614 KB).
+- SHA-256: `23EF9FF6752B61D586C5C4A43DF6911583AE57AC733BBC65AC9A81795C62B6C7`.
+- Backup creado: `backups/PACE_standalone_v0.33.2_20260523.html` (617 KB).
 
 ### Validacion runtime usuario
 
-Cubierta integramente por preview local (`.claude/static-server.js`
-heredado de s80) en `localhost:8765`. **16/16 invariantes verificadas**:
-TopBar, ActivityBar, atajos, cowClicks, PathsLibrary, persistencia,
-edge cases mobile/INPUT/dvh/guard. Console errors: cero. Pendiente de
-inspeccion manual visual: confirmar pixel-a-pixel que el shell se ve
-igual que en v0.33.1 (riesgo minimo, refactor mecanico sin cambios
-de CSS visible).
+Cubierta integramente por preview local en `localhost:8765`. **Fases
+4.1 a 4.5 verificadas**: modal, unlock, invariantes, edge cases, glifos
+pixel-perfect. Standalone tras rebuild verifica los mismos invariantes
+que el modular. Console errors: cero. Pendiente de inspeccion manual
+visual: confirmar pixel-a-pixel que los seals se ven igual que en
+v0.33.2 (riesgo minimo, refactor mecanico verificado por equivalencia
+de path `d` y conteo de circles).
 
-## Proxima sesion -- s83 (sin scope fijo)
+## Proxima sesion -- s84 (polish pre-Reddit, contenido)
 
-s82 cierra el split de main.jsx (deuda MEDIA del backlog s81). Candidatos
-para s83:
+s83 cierra el ultimo candidato de deuda MEDIA. El backlog tecnico
+visible queda **vacio** (`state-core.jsx` esta en BAJA, dentro de
+limite). La app esta lista para pasar a fase de polish + contenido sin
+sensacion de deuda pendiente.
 
-1. **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA): catalogo +
-   coleccion + preview. Catalogo a `app/achievements/catalog.js`. Siguiente
-   candidato natural -- mismo patron de split mecanico aplicable.
-2. **Catalog split Move/Stretch**: si se quiere diferenciar en catalogo
-   (`kind: 'move' | 'stretch'` en vez de `'body'`). Trivial ahora con
-   `steps/` ya extraido.
-3. **Consolidar deudas semanticas i18n** D-1 (override Ocean vs Oceanic),
-   D-2 (duplicidad "Hecho hoy"), D-3 (namespace path/paths) detectadas
-   en audit s81.
-4. **`scripts/check-session.ps1`** -- actualizar rango de tamaño
-   (530-600 KB desactualizado; real 605-617 KB). Bajo coste.
-5. **Variante C hooks de s82** -- solo si llega un segundo entry point
-   que reutilice `useOverlayManager` / `useGlobalKeyboard`. Hoy no aporta.
+Candidatos sugeridos para s84:
+
+1. **README.md desactualizado** (v0.27.6 -> v0.33.3 con resumen
+   consolidado). Reservado en s82 para esta sesion.
+2. **Generar `og:image` decente**.
+3. **Capturar screenshots oficiales** claro/oscuro x Home/Camino/Completion
+   para Reddit + landing.
+4. **Draftear post de Reddit** con lista de subreddits relevantes.
+5. **Actualizar `scripts/check-session.ps1`** con rango de tamaño
+   correcto (615-625 KB; ahora avisa con 530-600 KB).
+
+Sesion s84 es de **contenido y comunicacion**, no de codigo. Distinto
+caracter al patron de splits s80-s83.
 
 ### Precondicion bloqueante
 
-Cierre Git de s82 publicado por el usuario (commit + push manual).
+Cierre Git de s83 publicado por el usuario (commit + push manual).
 
 ---
 
@@ -278,6 +308,10 @@ Cierre Git de s82 publicado por el usuario (commit + push manual).
 | `app/main.jsx` splittado en `app/main/` (variante B equilibrada) | s82 | Tres archivos hijos: `_responsive.js` (IIFE, inyecta `<style>` global con guard), `TopBar.jsx` (tabs + 3 iconos + topBarStyles + window expose), `ActivityBar.jsx` (4 chips + 4 iconos AB* inline + window expose). PaceApp queda intacto en main.jsx como orquestador puro (state local + handlers + JSX). Si en el futuro hay un segundo entry point que comparta logica de overlays/atajos, evaluar variante C (hooks `useOverlayManager` + `useGlobalKeyboard`). Hasta entonces es premature abstraction. `topBarStyles` y los 4 iconos AB* viajan cada uno con su unico consumidor (cohesion sobre extraccion temprana) |
 | CSS responsive global del shell vive en `app/main/_responsive.js` (IIFE) | s82 | El bloque `<style id="pace-main-responsive-css">` toca selectores de TopBar + ActivityBar + main content + sidebar handle + fallback vh/dvh. Es config global de layout, NO de un componente. Patron `_` prefix coherente con `_shared.js` (s80) y `_bootstrap.js` (s81). Guard `getElementById` impide doble inyeccion. No expone nada a window: side effect del modulo |
 | `Object.assign(window, { TopBar, ActivityBar })` preservado tras split | s82 | Ningun consumidor externo los usa hoy (verificado por Grep), pero se preserva por estabilidad de superficie publica. Removerlo abriria debate; mantenerlo cuesta cero |
+| `app/achievements/Achievements.jsx` splittado en `achievements/` + `glyphs/` (variante B) | s83 | Tres archivos: `app/glyphs/achievement-glyphs.jsx` (heraldica para logros, 34 SVG + alias `first.plan`, expone `window.ACHIEVEMENT_GLYPHS`), `app/achievements/catalog.js` (`ACHIEVEMENT_CATALOG` + `CAT_META` + `IMPLEMENTED_ACHIEVEMENTS`, expone los 3 a window), `app/achievements/Achievements.jsx` (UI pura, lee globales con fallback). Si en el futuro surge un segundo consumidor de `Seal` (carrusel en Stats, micropreview en Camino completado), evaluar Variante C; hoy es premature abstraction |
+| Convencion `app/glyphs/` como home definitivo de sistemas de glifos | s83 | Dos archivos hermanos sin solapamiento: `exercise-glyphs.jsx` (s60, line-art para Move/Stretch, 46 glifos -- ampliable/sustituible en s85+ por nuevos disenos del usuario en paralelo) + `achievement-glyphs.jsx` (s83, heraldica para Logros, 34 glifos + alias -- cerrado y estable, no se modifica en s85+). Mismo namespace, mismo viewBox 0 0 44 44, mismo `currentColor`, pero almacenamiento (JSX components vs strings de SVG), keys (nombres de paso vs achievement ids) y estilo visual (postura vs sello) totalmente diferentes |
+| `IMPLEMENTED_ACHIEVEMENTS` expuesto a window | s83 | Era local-only pre-s83. Tras split a `catalog.js`, expuesto por simetria con `ACHIEVEMENT_CATALOG`. Coste cero, abre la puerta a que otro modulo lo lea sin importar el catalogo entero. Hoy NO tiene consumidores externos |
+| Achievements.jsx lee globales como `const X = window.X \|\| fallback` al inicio del archivo | s83 | Captura los valores una vez al cargar (orden de carga garantiza que `catalog.js` ya ejecuto). Fallback defensivo (`[]`, `{}`, `new Set()`) por si en algun escenario el orden falla -- degradacion graceful en lugar de TypeError. Patron mas legible que leer `window.*` dentro de cada uso |
 
 ---
 
@@ -285,13 +319,17 @@ Cierre Git de s82 publicado por el usuario (commit + push manual).
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/achievements/Achievements.jsx` | ~500 | MEDIA |
 | `app/state-core.jsx` | ~475 | BAJA (dentro de limite) |
 | `app/i18n/strings/ui.js` | 315 | BAJA (dentro de limite, dominio mas grande del split) |
+| `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
 | `app/shell/Sidebar.jsx` | 497 | SALE (s61, antes 630) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
+
+**Backlog tecnico de prioridad MEDIA: vacio.** Tras s83, todos los candidatos
+de deuda MEDIA del backlog s82 han salido. La app esta lista para pasar a
+fase de polish + contenido (s84+) sin sensacion de deuda visible pendiente.
 
 ### Deudas semanticas (no de tamaño, no urgentes)
 
