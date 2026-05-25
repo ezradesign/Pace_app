@@ -1,25 +1,24 @@
-/* PACE · Glifos canónicos de ejercicio · sesión 60 / v0.28.1 (iter parcial 13/46)
-   Registro de SVGs line-art para la pantalla activa de sesión.
+/* PACE · Glifos canónicos de ejercicio · sesión 84 / v0.34.0
+   (iter cerrado: 31/46 aprobados portados desde exploración HTML del usuario
+   + 15 mantenidos del s60 canónico hasta nueva aprobación)
 
-   GRANULARIDAD: por paso individual, NO por rutina. Cada paso de cada
-   rutina (p. ej. "Apertura de pecho", "Rotación torácica", "Flexor de
-   cadera") tiene su propio glifo.
+   31 glifos con versión bloqueada por el usuario:
+     - new (v3): 15  · alt (v4): 5  · v5: 2  · v6: 1  · v7: 1
+     - v8: 4         · v9: 2        · v12: 1
+   15 glifos siguen en estado canónico s60 (sin aprobar todavía).
 
+   GRANULARIDAD: por paso individual, NO por rutina.
    KEY: step.name en español canónico.
 
-   Reglas de dibujo:
+   Reglas de dibujo (heredadas de s59, preservadas):
      - viewBox 0 0 44 44
      - fill="none" stroke="currentColor"
-     - strokeWidth 1.8 (proporción equivalente a 1.2 sobre viewBox 28
-       de los 4 glifos de menú en main.jsx)
+     - strokeWidth 1.8 (wrapper G unifica el lenguaje a nivel repo,
+       aunque varias versiones aprobadas usen 1.5 o 2.0 — divergencia
+       documentada en docs/sessions/session-84-audit.md sección 1.4)
      - strokeLinecap "round", strokeLinejoin "round"
-     - Símbolo iconico: una metáfora visual clara por glifo. Objetos
-       reconocibles, posturas simplificadas a 2-5 trazos, curvas orgánicas
-     - Sin flechas explicativas (la forma indica el movimiento)
-     - Sin marcas 90° ni anotaciones de diagrama
-     - Opacidades: 1.0 elementos principales, 0.5-0.6 secundarios,
-       0.35 referencia de suelo (dashed)
-     - BreatheSession queda fuera (usa BreathVisual animado)
+     - Opacidades preservadas tal cual del HTML del usuario
+     - BreatheSession queda fuera (usa BreatheVisual animado)
 */
 
 function G({ size = 88, className = '', children }) {
@@ -38,23 +37,21 @@ const EXERCISE_GLYPHS = {
      MUEVE — calistenia / fuerza (var(--move))
      ============================================================ */
 
-  /* 1. Escritorio limpio + cuerpo en diagonal apoyado. */
+  /* 1. Mesa de oficina (objeto puro, una sola pieza) (NEW). */
   'Flexiones inclinadas': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M6 16 H24" />
-      <path d="M9 16 V22" />
-      <path d="M21 16 V22" />
-      <path d="M15 16 L34 34" />
-      <path d="M30 34 H36" opacity="0.55" />
+      <path d="M8 16 H36" />
+      <path d="M11 16 V28" />
+      <path d="M33 16 V28" />
+      <path d="M14 20 H30" opacity="0.6" />
     </G>
   ),
 
-  /* 2. Luna creciente + chispa: descanso entre series. */
+  /* 2. Símbolo universal de pausa (NEW). */
   'Descanso': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M30 12 A12 12 0 1 0 30 32" />
-      <path d="M30 12 Q22 22 30 32" opacity="0.55" />
-      <circle cx="11" cy="14" r="1" opacity="0.55" />
+      <path d="M16 12 V32" />
+      <path d="M28 12 V32" />
     </G>
   ),
 
@@ -68,106 +65,107 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 4. Cuerpo deslizando por la pared — silueta orgánica + cadera y rodilla flexionadas. */
+  /* 4. Pared + cabeza apoyada + asiento horizontal + tibia vertical (NEW). */
   'Wall sit': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 6 V36" />
-      <circle cx="13" cy="11" r="2.4" />
-      <path d="M11 13 Q10 20 12 24 Q22 24 26 24 Q26 30 26 36" />
-      <path d="M4 38 H40" opacity="0.35" strokeDasharray="1.5 2.5" />
+      <circle cx="13" cy="11" r="2.2" />
+      <path d="M13 13 V24 H28 V36" />
     </G>
   ),
 
-  /* 5. Pie de perfil con talón elevado, dedos apoyados en suelo. */
+  /* 5. Vista frontal: 2 pies en puntillas + flecha arriba (ALT). */
   'Calf raises': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M14 8 V20" />
-      <path d="M14 20 Q12 24 16 25" />
-      <path d="M16 25 Q24 26 32 28" />
-      <path d="M14 20 Q22 22 32 28" opacity="0.55" />
-      <path d="M30 28 Q31 26 32 28" opacity="0.55" />
-      <path d="M28 28 Q29 26.5 30 28" opacity="0.45" />
-      <path d="M26 28 Q27 26.5 28 28" opacity="0.35" />
-      <path d="M4 30 H40" opacity="0.35" strokeDasharray="1.5 2.5" />
+      <path d="M14 30 V36" />
+      <path d="M18 30 V36" />
+      <path d="M26 30 V36" />
+      <path d="M30 30 V36" />
+      <path d="M11 28 H21" />
+      <path d="M23 28 H33" />
+      <path d="M22 22 V12" opacity="0.6" strokeDasharray="1.5 2" />
+      <path d="M19 15 L22 12 L25 15" opacity="0.6" />
     </G>
   ),
 
-  /* 6. Silla + cuerpo en hollow flotando del asiento. */
+  /* 6. Crescent / boat pose puro (línea única) (V5). */
   'Seated hollow': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M10 12 V30" />
-      <path d="M10 22 H22 V34" />
-      <path d="M14 20 Q22 8 32 16" />
-      <circle cx="32" cy="16" r="2" />
+      <path d="M6 18 Q22 34 38 18" />
+      <path d="M6 18 Q22 24 38 18" opacity="0.5" />
     </G>
   ),
 
-  /* 7. Puño cerrado con nudillos y pulgar cruzando. */
+  /* 7. Núcleo + dos arcos abrazando hacia él (V9). */
   'Squeeze fist': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M10 26 Q8 18 14 14 Q22 10 30 14 Q36 18 34 26 Q32 34 22 34 Q12 34 10 26 Z" />
-      <path d="M14 16 Q16 13 18 16" opacity="0.6" />
-      <path d="M20 14.5 Q22 11.5 24 14.5" opacity="0.6" />
-      <path d="M26 14.5 Q28 11.5 30 14.5" opacity="0.6" />
-      <path d="M10 24 Q18 28 24 24" opacity="0.55" />
+      <circle cx="22" cy="22" r="5" />
+      <path d="M10 14 Q6 22 10 30" />
+      <path d="M34 14 Q38 22 34 30" />
     </G>
   ),
 
-  /* 8. Mano en abanico — cinco dedos divergentes. */
+  /* 8. 5 líneas radiando desde un punto pivote (V9). */
   'Finger extension': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M14 30 Q22 34 30 30" />
-      <path d="M14 30 L8 10" />
-      <path d="M18 28 L16 8" />
-      <path d="M22 27 V8" />
-      <path d="M26 28 L28 8" />
-      <path d="M30 30 L36 10" />
+      <circle cx="22" cy="32" r="1.5" />
+      <path d="M22 30 L14 8" />
+      <path d="M22 30 L18 6" />
+      <path d="M22 30 V4" />
+      <path d="M22 30 L26 6" />
+      <path d="M22 30 L30 8" />
     </G>
   ),
 
-  /* 9. Antebrazo + mano doblada + arco suave de flex/ext. */
+  /* 9. Antebrazo + abanico de 5 trazos de movimiento (V5). */
   'Wrist stretch': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M6 26 H24" />
-      <path d="M24 26 Q30 24 34 18" />
-      <path d="M26 30 Q34 28 38 20" opacity="0.5" />
+      <path d="M6 22 H22" />
+      <path d="M22 22 L30 12" opacity="0.4" />
+      <path d="M22 22 L32 16" opacity="0.55" />
+      <path d="M22 22 L34 22" />
+      <path d="M22 22 L32 28" opacity="0.55" />
+      <path d="M22 22 L30 32" opacity="0.4" />
     </G>
   ),
 
-  /* 10. Cabeza perfil + columna alineada + chin mark — patrón 3 (parte aislada). */
+  /* 10. 3 líneas horizontales decrecientes (retracción progresiva) (V8). */
   'Chin tucks': ({ size, className }) => (
     <G size={size} className={className}>
-      <circle cx="24" cy="13" r="5" />
-      <path d="M29 13 H31" opacity="0.6" />
-      <path d="M24 18 V34" />
-      <path d="M19 22 Q24 24 29 22" opacity="0.55" />
+      <path d="M16 14 H32" opacity="0.35" strokeDasharray="1.5 2" />
+      <path d="M12 22 H28" />
+      <path d="M22 30 H38" opacity="0.55" />
     </G>
   ),
 
-  /* 11. Dos omóplatos abrazando el eje espinal. */
+  /* 11. Dos omóplatos curvos + eje espinal punteado + línea de convergencia (NEW). */
   'Scapular squeeze': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M8 12 Q14 18 16 28" />
-      <path d="M36 12 Q30 18 28 28" />
-      <path d="M22 8 V36" opacity="0.4" />
+      <path d="M10 10 Q16 18 18 30" />
+      <path d="M34 10 Q28 18 26 30" />
+      <path d="M22 8 V34" opacity="0.35" strokeDasharray="1.5 2" />
+      <path d="M19 22 H25" opacity="0.55" />
     </G>
   ),
 
-  /* 12. Arco torácico extendido sobre soporte. */
+  /* 12. Arco torácico amplio sobre soporte (puente) (NEW). */
   'Thoracic extension': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M6 24 Q22 4 38 24" />
-      <path d="M10 28 H34" opacity="0.6" />
+      <path d="M6 28 Q22 6 38 28" />
+      <path d="M14 28 H30" opacity="0.55" />
     </G>
   ),
 
-  /* 13. Cuerpo en T-pose con brazos abriéndose — patrón 1 (forma única). */
+  /* 13. Caja torácica expandiéndose: 3 costillas + flechas laterales (NEW). */
   'Chest opener': ({ size, className }) => (
     <G size={size} className={className}>
-      <circle cx="22" cy="9" r="2.5" />
-      <path d="M22 12 V28" />
-      <path d="M22 16 Q14 14 6 20" />
-      <path d="M22 16 Q30 14 38 20" />
+      <path d="M14 12 Q22 14 30 12" />
+      <path d="M12 20 Q22 24 32 20" />
+      <path d="M14 28 Q22 30 30 28" />
+      <path d="M6 20 L3 18" opacity="0.55" />
+      <path d="M6 20 L3 22" opacity="0.55" />
+      <path d="M38 20 L41 18" opacity="0.55" />
+      <path d="M38 20 L41 22" opacity="0.55" />
     </G>
   ),
 
@@ -175,32 +173,34 @@ const EXERCISE_GLYPHS = {
      ESTIRA — movilidad / estiramientos (var(--extra))
      ============================================================ */
 
-  /* 14. Dos pétalos abriéndose desde un eje central — el pecho que se expande. */
+  /* 14. Arco abriéndose: curva esternón + 2 extensiones + arco inferior (V8). */
   'Apertura de pecho': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M22 22 Q14 12 8 22 Q12 28 22 22" />
-      <path d="M22 22 Q30 12 36 22 Q32 28 22 22" />
-      <path d="M22 22 V36" opacity="0.4" />
-      <circle cx="22" cy="22" r="2" opacity="0.7" />
+      <path d="M6 22 Q22 14 38 22" />
+      <path d="M6 22 L2 20" opacity="0.6" />
+      <path d="M38 22 L42 20" opacity="0.6" />
+      <path d="M14 28 Q22 24 30 28" opacity="0.45" />
     </G>
   ),
 
-  /* 15. Espiral nautilo hacia afuera con flecha — rotación del tronco. */
+  /* 15. Hombros rotados + esternón + caderas estables + arco rotación (NEW). */
   'Rotación torácica': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M22 22 Q22 16 28 16 Q34 16 34 22 Q34 30 26 32 Q14 32 12 22 Q12 10 22 10 Q34 10 36 22" />
-      <path d="M36 22 L33 20" />
-      <path d="M36 22 L33 24" />
+      <path d="M8 16 L34 12" />
+      <circle cx="22" cy="20" r="1.4" />
+      <path d="M22 14 V30" opacity="0.4" />
+      <path d="M12 30 H32" />
+      <path d="M30 4 Q40 10 34 18" opacity="0.6" strokeDasharray="1.5 2" />
+      <path d="M32 16 L34 18 L36 16" opacity="0.6" />
     </G>
   ),
 
-  /* 16. Cadera + pierna delantera flexionada + trasera apoyada en suelo. */
+  /* 16. Dos líneas formando ángulo agudo (zancada abstracta) (V8). */
   'Flexor de cadera': ({ size, className }) => (
     <G size={size} className={className}>
-      <circle cx="20" cy="12" r="2" />
-      <path d="M20 14 V26 L14 36" />
-      <path d="M20 14 L32 32 H38" />
-      <path d="M4 38 H40" strokeDasharray="2 3" opacity="0.4" />
+      <path d="M8 36 L22 14" />
+      <path d="M22 14 L36 36" opacity="0.55" />
+      <path d="M14 26 L30 26" opacity="0.4" />
     </G>
   ),
 
@@ -215,21 +215,25 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 18. Cabeza inclinada + curva trapecio + línea de hombros. */
+  /* 18. Cabeza + trapecio triangular + mano contraria anclando (V6). */
   'Cuello y trapecios': ({ size, className }) => (
     <G size={size} className={className}>
-      <circle cx="14" cy="12" r="4" />
-      <path d="M16 15 Q22 22 30 26" />
-      <path d="M12 30 H34" opacity="0.55" />
+      <circle cx="22" cy="12" r="3.5" />
+      <path d="M22 16 L14 28" />
+      <path d="M22 16 L30 28" opacity="0.55" />
+      <path d="M14 28 H30" />
+      <circle cx="14" cy="8" r="1.4" opacity="0.7" />
+      <path d="M14 10 L18 14" opacity="0.6" />
     </G>
   ),
 
-  /* 19. Círculo enso (zen brush) casi cerrado + centro — vuelta a la respiración. */
+  /* 19. 3 ondas horizontales decrecientes + flecha (corriente de aire) (NEW). */
   'Reset respiración': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M28 9 Q40 14 38 24 Q34 36 22 36 Q8 36 8 22 Q8 10 22 8" />
-      <circle cx="22" cy="22" r="2" opacity="0.5" />
-      <circle cx="28" cy="9" r="0.8" opacity="0.7" />
+      <path d="M8 16 Q22 12 36 16" />
+      <path d="M8 22 Q22 18 36 22" opacity="0.7" />
+      <path d="M8 28 Q22 24 36 28" opacity="0.45" />
+      <path d="M34 14 L36 16 L34 18" />
     </G>
   ),
 
@@ -243,12 +247,15 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 21. Dos L espejadas — caderas y rodillas a 90°. */
+  /* 21. 2 L con pies marcados + eje vertical sutil (ALT). */
   '90/90': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="22" r="2" />
-      <path d="M22 22 H34 V32" />
-      <path d="M22 22 H10 V12" />
+      <path d="M22 22 H32 V32" />
+      <path d="M30 32 H34" opacity="0.55" />
+      <path d="M22 22 H12 V12" />
+      <path d="M10 12 H14" opacity="0.55" />
+      <path d="M22 22 V14" opacity="0.5" />
     </G>
   ),
 
@@ -262,63 +269,72 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 23. Cuerpo como arco M sobre suelo — patrón 1 (forma única). */
+  /* 23. Squat M-pure: piernas dibujando M perfecta (ALT). */
   'Squat profundo': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M8 30 Q12 16 22 12 Q32 16 36 30" />
-      <circle cx="22" cy="10" r="2" opacity="0.7" />
-      <path d="M4 32 H40" opacity="0.35" strokeDasharray="1.5 2.5" />
+      <circle cx="22" cy="8" r="2" />
+      <path d="M22 10 V14" />
+      <path d="M10 34 L22 14 L34 34" />
+      <path d="M14 30 L18 22" opacity="0.5" />
+      <path d="M30 30 L26 22" opacity="0.5" />
     </G>
   ),
 
-  /* 24. Arco de puente + pierna elevada en curva. */
+  /* 24. Arco puente + pierna elevada en curva + pies (NEW). */
   'Puente con marcha': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M6 32 Q22 10 38 32" />
-      <path d="M4 34 H10" opacity="0.55" />
-      <path d="M34 34 H40" opacity="0.55" />
-      <path d="M22 14 Q26 10 30 4" />
-      <circle cx="30" cy="4" r="1.6" />
+      <path d="M6 30 Q22 10 38 30" />
+      <path d="M22 14 Q28 8 32 4" />
+      <circle cx="32" cy="4" r="1.6" />
+      <path d="M4 32 H10" opacity="0.55" />
+      <path d="M34 32 H40" opacity="0.55" />
     </G>
   ),
 
-  /* 25. Pared + brazos en Y elevada con eco de la W anterior. */
+  /* 25. Pared + 2 arcos ascendentes abstractos + eje (V8). */
   'Scapular wall slides': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 6 V38" />
-      <path d="M28 14 L36 6" />
-      <path d="M28 14 V24" />
-      <path d="M28 14 L36 22" opacity="0.5" />
-      <path d="M14 26 L20 20 L24 26" opacity="0.4" />
+      <path d="M14 28 Q22 22 30 28" opacity="0.5" strokeDasharray="1.5 2" />
+      <path d="M14 18 Q22 12 30 18" />
+      <path d="M22 12 V22" />
     </G>
   ),
 
-  /* 26. Banda elástica curva + dos manos sujetando. */
+  /* 26. Banda + 2 manos + líneas sutiles de tensión lateral (NEW). */
   'Band pull-apart': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M10 22 Q22 18 34 22" />
-      <circle cx="10" cy="22" r="2.4" />
-      <circle cx="34" cy="22" r="2.4" />
+      <circle cx="12" cy="22" r="2.4" />
+      <circle cx="32" cy="22" r="2.4" />
+      <path d="M14 22 Q22 18 30 22" />
+      <path d="M7 19 L4 17" opacity="0.5" />
+      <path d="M6 22 L3 22" opacity="0.5" />
+      <path d="M7 25 L4 27" opacity="0.5" />
+      <path d="M37 19 L40 17" opacity="0.5" />
+      <path d="M38 22 L41 22" opacity="0.5" />
+      <path d="M37 25 L40 27" opacity="0.5" />
     </G>
   ),
 
-  /* 27. Codo a 90° + arco de rotación externa del hombro. */
+  /* 27. Hombro (cabeza humeral) + antebrazo + arco de rotación (ALT). */
   'External rotation': ({ size, className }) => (
     <G size={size} className={className}>
-      <circle cx="22" cy="26" r="2" />
-      <path d="M10 26 H22 V12" />
-      <path d="M22 8 Q34 12 30 24" />
+      <circle cx="14" cy="14" r="3" />
+      <path d="M14 17 L20 22" />
+      <path d="M20 22 L32 16" />
+      <path d="M20 22 Q26 32 18 36" opacity="0.55" strokeDasharray="1.5 2" />
+      <path d="M20 36 L18 36 L18 34" opacity="0.55" />
     </G>
   ),
 
-  /* 28. Barra + dos brazos rectos colgados (tensión activa). */
+  /* 28. Barra + 2 manos huecas + brazos rectos colgados (NEW). */
   'Dead hang (si puedes)': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 8 H38" />
-      <circle cx="14" cy="8" r="1.8" />
-      <circle cx="30" cy="8" r="1.8" />
-      <path d="M14 10 V38" />
-      <path d="M30 10 V38" />
+      <circle cx="14" cy="10" r="2.4" />
+      <circle cx="30" cy="10" r="2.4" />
+      <path d="M14 12.5 V38" />
+      <path d="M30 12.5 V38" />
     </G>
   ),
 
@@ -364,12 +380,15 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 33. Dos arcos consecutivos avanzando — caminar como elefante. */
+  /* 33. Pike claro + 2 brazos cayendo + 2 manos en suelo (V7). */
   'Elephant walk': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M6 30 Q10 14 20 30" />
-      <path d="M22 30 Q26 14 36 30" opacity="0.6" />
-      <path d="M4 32 H40" strokeDasharray="2 3" opacity="0.4" />
+      <path d="M22 8 L8 32" />
+      <path d="M22 8 L36 32" />
+      <path d="M22 10 L18 22 L14 32" opacity="0.6" />
+      <path d="M22 10 L26 22 L30 32" opacity="0.6" />
+      <circle cx="14" cy="32" r="0.9" opacity="0.7" />
+      <circle cx="30" cy="32" r="0.9" opacity="0.7" />
     </G>
   ),
 
@@ -396,14 +415,14 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 36. Barra + dos brazos colgando con curva relajada. */
+  /* 36. Barra + 2 manos + cuerpo relajado en curva completa (ALT). */
   'Hang pasivo': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 8 H38" />
-      <circle cx="14" cy="8" r="1.8" />
-      <circle cx="30" cy="8" r="1.8" />
-      <path d="M14 10 Q10 22 18 38" />
-      <path d="M30 10 Q34 22 26 38" />
+      <circle cx="16" cy="10" r="2" />
+      <circle cx="28" cy="10" r="2" />
+      <path d="M16 12 Q12 22 22 28 Q32 22 28 12" />
+      <path d="M22 28 V36" />
     </G>
   ),
 
@@ -456,13 +475,17 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 42. Dos hombros elevados como dos arcos espejados. */
+  /* 42. Cabeza + hombros como 2 arcos + torso + 2 flechas verticales (V12). */
   'Shrug + round': ({ size, className }) => (
     <G size={size} className={className}>
-      <circle cx="22" cy="18" r="2.2" />
-      <path d="M8 26 Q14 14 22 18" />
-      <path d="M36 26 Q30 14 22 18" />
-      <path d="M22 22 V34" opacity="0.45" />
+      <circle cx="22" cy="20" r="2" />
+      <path d="M8 26 Q14 12 22 16" />
+      <path d="M36 26 Q30 12 22 16" />
+      <path d="M22 22 V32" opacity="0.4" />
+      <path d="M12 8 V14" opacity="0.55" />
+      <path d="M10 10 L12 8 L14 10" opacity="0.55" />
+      <path d="M32 8 V14" opacity="0.55" />
+      <path d="M30 10 L32 8 L34 10" opacity="0.55" />
     </G>
   ),
 
@@ -494,14 +517,18 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
-  /* 46. Diafragma como bóveda + aliento ascendente con susurros laterales. */
+  /* 46. Pulmones + flecha de aire entrando + expansión lateral (NEW). */
   'Deep breaths': ({ size, className }) => (
     <G size={size} className={className}>
-      <path d="M8 28 Q22 14 36 28" />
-      <path d="M22 28 Q20 22 22 16 Q24 12 22 8" />
-      <path d="M19 9 Q21 7 23 9" opacity="0.6" />
-      <path d="M14 24 Q13 21 13 18" opacity="0.4" />
-      <path d="M30 24 Q31 21 31 18" opacity="0.4" />
+      <path d="M22 14 V32" />
+      <path d="M22 18 Q12 18 12 26 Q12 32 18 32" />
+      <path d="M22 18 Q32 18 32 26 Q32 32 26 32" />
+      <path d="M22 4 V12" opacity="0.7" strokeDasharray="1.5 2" />
+      <path d="M19 10 L22 13 L25 10" opacity="0.7" />
+      <path d="M6 24 L9 24" opacity="0.5" />
+      <path d="M7 22 L9 24 L7 26" opacity="0.5" />
+      <path d="M38 24 L35 24" opacity="0.5" />
+      <path d="M37 22 L35 24 L37 26" opacity="0.5" />
     </G>
   ),
 

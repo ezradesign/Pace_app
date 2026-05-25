@@ -40,7 +40,13 @@
       "PowerShell(.\\\\scripts\\\\check-session.ps1)",
       "Bash(powershell -Command \"\\(Get-Content 'app/main.jsx'\\).Length\")",
       "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\('CHANGELOG.md'\\); $crlf = 0; $lfOnly = 0; for \\($i=0; $i -lt $bytes.Length; $i++\\) { if \\($bytes[$i] -eq 10\\) { if \\($i -gt 0 -and $bytes[$i-1] -eq 13\\) { $crlf++ } else { $lfOnly++ } } }; \"CRLF: $crlf\"; \"LF-only: $lfOnly\"; \"BOM: $\\($bytes[0] -eq 239 -and $bytes[1] -eq 187 -and $bytes[2] -eq 191\\)\")",
-      "PowerShell($path = 'CHANGELOG.md'; $text = [System.IO.File]::ReadAllText\\($path\\); $lines = $text -split \"`n\"; $kept = $lines[0..366] + $lines[503..\\($lines.Length-1\\)]; $out = $kept -join \"`n\"; [System.IO.File]::WriteAllText\\($path, $out, \\(New-Object System.Text.UTF8Encoding $false\\)\\); \"New total lines: $\\($kept.Length\\)\")"
+      "PowerShell($path = 'CHANGELOG.md'; $text = [System.IO.File]::ReadAllText\\($path\\); $lines = $text -split \"`n\"; $kept = $lines[0..366] + $lines[503..\\($lines.Length-1\\)]; $out = $kept -join \"`n\"; [System.IO.File]::WriteAllText\\($path, $out, \\(New-Object System.Text.UTF8Encoding $false\\)\\); \"New total lines: $\\($kept.Length\\)\")",
+      "Read(//c/Users/ezrav/Desktop/**)",
+      "Bash(node scripts/extract-glyphs-bundle.js)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \"Get-FileHash -Algorithm SHA256 PACE_standalone.html | Select-Object Hash\")",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \"Get-FileHash -Algorithm SHA256 index.html | Select-Object Hash\")",
+      "Bash(awk '/^## \\\\[v0\\\\.33\\\\.2\\\\]/,/^## \\\\[v0\\\\.32\\\\.0\\\\]/' CHANGELOG.md)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

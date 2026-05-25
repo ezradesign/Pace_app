@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.33.3
-**Ultima sesion:** #83 -- 2026-05-23 - refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` -- variante B (3 archivos: `catalog.js` + `achievement-glyphs.jsx` + `Achievements.jsx` solo UI). 409 ln -> 184 ln (-55%). Cuarto split mecanico consecutivo tras s80/s81/s82 -- convencion `app/glyphs/` consolidada con 2 hermanos (`exercise-glyphs` + `achievement-glyphs`)
-**Ultima actualizacion de este archivo:** 2026-05-23 - sesion 83
-**Build entregado:** `PACE_standalone.html` v0.33.3 (620 KB; 635,365 bytes) + `index.html` (idem, copia exacta)
+**Version actual:** v0.34.0
+**Ultima sesion:** #84 -- 2026-05-24 - feat(glyphs): cierre del iter parcial 13/46 abierto en s60 -- port literal de 31/46 glifos aprobados por el usuario desde HTML de exploracion (bundler autoextract gzip+base64 desempaquetado) + 15 pendientes mantenidos en s60. 28 ports (12 Mueve + 16 Estira) + 3 keep identico + 15 keep s60. exercise-glyphs.jsx 527 -> 554 ln (+5%)
+**Ultima actualizacion de este archivo:** 2026-05-24 - sesion 84
+**Build entregado:** `PACE_standalone.html` v0.34.0 (622 KB; 636,429 bytes) + `index.html` (idem, copia exacta)
 
 ---
 
@@ -21,10 +21,10 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.33.3** (s83: + 2 `<script src>` antes de Achievements.jsx -- `app/glyphs/achievement-glyphs.jsx` + `app/achievements/catalog.js` + comentario orden estricto + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.33.3** (620 KB, regenerado s83) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.33.3** (s83: regenerado por build-standalone.js) |
-| `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.28.1** (iter parcial s60, sin cambios s61-s83; ampliable/sustituible en s85+) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.34.0** (s84: titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.34.0** (622 KB, regenerado s84) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.34.0** (s84: regenerado por build-standalone.js) |
+| `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.34.0** (s84: 28 ports + 18 mantenimientos -- iter cerrado 31/46 aprobados + 15 pendientes; 527 -> 554 ln) |
 | `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG, `Object.assign(window, { ACHIEVEMENT_GLYPHS })` | **v0.33.3** (nuevo s83, 68 ln) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -51,7 +51,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.33.3** (s83: PACE_VERSION bump; s82/s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.34.0** (s84: PACE_VERSION bump; s83/s82/s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -88,11 +88,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.33.3** (s83: CACHE_NAME pace-v0.33.3) |
+| `sw.js` | Service Worker PWA | **v0.34.0** (s84: CACHE_NAME pace-v0.34.0) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83 (copia del v0.33.2 publicado en s82)
+- `backups/PACE_standalone_v0.33.3_20260524.html` <- creado s84 (copia del v0.33.3 publicado en s83)
+- `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83
 - `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82
 - `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81
 - `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
@@ -111,159 +112,157 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.4_20260512.html`
 - `backups/PACE_standalone_v0.28.3_20260512.html`
 - `backups/PACE_standalone_v0.28.2_20260511.html`
-- `backups/PACE_standalone_v0.28.1_20260511.html`
 
-Nota s83: cap 20 mantenido rotando el mas antiguo (`v0.28.0_20260511.html`)
-al crear el backup del v0.33.2 publicado en s82.
+Nota s84: cap 20 mantenido rotando el mas antiguo (`v0.28.1_20260511.html`
+-- ironicamente el del s60 iter parcial que esta sesion cierra) al crear
+el backup del v0.33.3 publicado en s83.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 83 - v0.33.3 - refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (variante B: catalog.js + achievement-glyphs.jsx + Achievements.jsx solo UI). 409 ln -> 184 ln (-55%). Convencion `app/glyphs/` consolidada con 2 archivos hermanos.**
+**Sesion 84 - v0.34.0 - feat(glyphs): cierre del iter parcial 13/46 abierto en s60 -- port literal de 31/46 glifos aprobados por el usuario desde HTML de exploracion + 15 pendientes mantenidos en s60. exercise-glyphs.jsx 527 -> 554 ln (+5%).**
 
 ### Contexto
 
-s83 toma el ultimo candidato MEDIO de deuda del backlog s82:
-`app/achievements/Achievements.jsx` (estimado ~500 ln, real 409). Cuarta
-sesion consecutiva de split mecanico tras s80 (PathRunner), s81 (strings)
-y s82 (main). El patron `app/<carpeta>/` esta ya consolidado como
-convencion del codebase.
+s84 cierra el **iter abierto en s60 hace 153 dias** portando literalmente
+las versiones aprobadas por el usuario en su HTML de exploracion
+(`Glifos Mueve y Estira _ standalone v0.19.html`, bundler autoextract
+gzip+base64 desempaquetado con script temporal `scripts/extract-glyphs-bundle.js`).
 
-A diferencia de los splits anteriores, el archivo mezclaba dos
-responsabilidades naturales: **datos** (catalogo de 100 logros + glifos
-SVG + metadata + set de implementados) y **UI** (modal + sello). La
-separacion natural es por tipo: datos a `catalog.js`, glifos a
-`app/glyphs/achievement-glyphs.jsx` (hermano de `exercise-glyphs.jsx`).
+La convencion del HTML (descubierta en `asset-12-6422ee88.js`) es:
+**`window.APPROVED[stepName]` es la fuente de verdad** sobre que version
+esta bloqueada para cada glifo. Cobertura APPROVED: 31 aprobados / 46
+totales · 15 pendientes.
 
-Auditoria detecta cero acoplamientos problematicos:
-`state-achievements.jsx` NO consume `ACHIEVEMENT_CATALOG`; solo dispara
-`unlockAchievement(id)` con ids hardcoded. Consumidores externos
-(`CompletionScreen.jsx:50`, `Toast.jsx:13`) usan lectura defensiva de
-`window.ACHIEVEMENT_CATALOG`. Cero duplicacion de SVG con
-`exercise-glyphs.jsx` (sistemas visuales distintos: heraldica vs
-line-art).
-
-Diario: [s83](./docs/sessions/session-83-achievements-split.md).
-Documentos de apoyo: [audit](./docs/sessions/session-83-audit.md),
-[design](./docs/sessions/session-83-design.md).
+Diario: [s84](./docs/sessions/session-84-glifos-cierre-iter.md).
+Documentos de apoyo: [audit](./docs/sessions/session-84-audit.md),
+[design](./docs/sessions/session-84-design.md).
 
 ### Que se hizo
 
-1. **Tarea 0 -- precondiciones**: 7/7 OK. git limpio, version coherente,
-   standalone v0.33.2 carga limpia en preview, Achievements.jsx = 409 ln
-   (no ~500 como estimaba STATE.md -- sobreestimacion 22%).
-2. **Tarea 1 -- auditoria** ([session-83-audit.md](./docs/sessions/session-83-audit.md)):
-   tabla de 9 secciones (DATA 57% + UI 36% + LOGIC 5%), inventario de
-   34 glifos SVG + alias `first.plan` + 71 logros con unicode fallback,
-   cero duplicacion con exercise-glyphs.jsx, 25 invariantes numeradas,
-   12 edge cases.
-3. **Tarea 2 -- design con 3 variantes** ([session-83-design.md](./docs/sessions/session-83-design.md)):
-   - **A** Solo datos: catalog.js mixto (glifos+catalogo+meta) -> 175 ln
-     en Achievements.jsx (-57%). Cumple metrica pero no establece
-     `app/glyphs/` como convencion.
-   - **B** Datos + glifos separados (aprobada): catalog.js + achievement-
-     glyphs.jsx -> 184 ln en Achievements.jsx (-55%). Convencion
-     `app/glyphs/` con 2 hermanos.
-   - **C** B + Seal aislado: 80 ln en Achievements.jsx (-80%). Premature
-     abstraction (1 consumidor, cero caso de reuso).
-   Usuario aprueba B: "si es lo correcto, si". Coherente con principio
-   "no premature abstraction" aplicado en s82.
-4. **Tarea 3 -- implementacion mecanica**:
-   - Crear `app/glyphs/achievement-glyphs.jsx` (68 ln; SVG helpers +
-     `GLYPH_SVG` map + alias + `Object.assign(window, { ACHIEVEMENT_GLYPHS })`).
-   - Crear `app/achievements/catalog.js` (209 ln; lee
-     `window.ACHIEVEMENT_GLYPHS` para entradas + `ACHIEVEMENT_CATALOG` +
-     `CAT_META` + `IMPLEMENTED_ACHIEVEMENTS` + `Object.assign`).
-   - Editar PACE.html: +2 `<script src>` antes de Achievements.jsx +
-     comentario orden estricto.
-   - **Verificacion intermedia** (3 archivos cargados + Achievements.jsx
-     aun sin tocar): consola 0 errores, modal abre identico, 106 seals,
-     35 glyphs map, alias funciona. ✓
-   - Reescribir Achievements.jsx (409 -> 184 ln, -55%; cuerpo de
-     componentes byte-identico, lee globales como `const X = window.X
-     || fallback`).
+1. **Tarea 0 -- precondiciones**: 6/6 tecnicas OK + 3 decisiones de
+   usuario (`AskUserQuestion`): mantener s60 en los 15 pendientes,
+   v0.34.0 minor, port literal + documentar divergencias.
+2. **Tarea 1 -- auditoria** ([session-84-audit.md](./docs/sessions/session-84-audit.md)):
+   tabla de 46 glifos con accion {port/keep idéntico/keep s60/add/orphan},
+   cobertura 1:1 con MOVE_ROUTINES + EXTRA_ROUTINES, consumidor unico
+   real `MoveModule.jsx:295`, divergencias documentadas (strokeWidth
+   1.5/2.0 vs 1.8 del wrapper, opacidades, dasharray).
+3. **Tarea 2 -- design** ([session-84-design.md](./docs/sessions/session-84-design.md)):
+   28 ports (12 Mueve + 16 Estira) + 3 keep identico + 15 keep s60,
+   orden del archivo en 2 bloques, wrapper G intacto (strokeWidth 1.8
+   unificado a nivel repo), archivo NO se trocea.
+4. **Tarea 3 -- implementacion**:
+   - Header `app/glyphs/exercise-glyphs.jsx` actualizado a v0.34.0.
+   - Bloque A: 12 ports Mueve (Flexiones inclinadas NEW, Descanso NEW,
+     Wall sit NEW, Calf raises ALT, Seated hollow V5, Squeeze fist V9,
+     Finger extension V9, Wrist stretch V5, Chin tucks V8, Scapular
+     squeeze NEW, Thoracic extension NEW, Chest opener NEW). Checkpoint:
+     build OK, 46 glifos, consola limpia.
+   - Bloque B: 16 ports Estira (Apertura de pecho V8, Rotacion toracica
+     NEW, Flexor de cadera V8, Cuello y trapecios V6, Reset respiracion
+     NEW, 90/90 ALT, Squat profundo ALT, Puente con marcha NEW, Scapular
+     wall slides V8, Band pull-apart NEW, External rotation ALT, Dead
+     hang NEW, Elephant walk V7, Hang pasivo ALT, Shrug + round V12,
+     Deep breaths NEW). Checkpoint: build OK.
 5. **Tarea 4 -- verificacion** (5 fases):
-   - 4.1 Modal: 7 categorias, 106 seals, 35 SVGs renderizados, getComputedStyle
-     OK por estado, ESC cierra.
-   - 4.2 Unlock: `window.unlockAchievement('first.step')` -> seal cambia
-     a border solid + opacity 1 (antes dashed/0.55). Detector intacto.
-   - 4.3 Invariantes criticos: globales correctos (catalog 106, glyphs
-     35, IMPLEMENTED 69 ids), CompletionScreen/Toast leen via window OK,
-     state-achievements intacto, consola limpia.
-   - 4.4 Edge cases: alias `first.plan` consume glifo de `first.ritual`,
-     `secret.cow.click` locked -> '?', cambio idioma ES->EN ("Primeros
-     pasos" -> "First steps").
-   - 4.5 Glifos pixel-perfect: heptagonal `master.path.all7` path
-     byte-identico (`M22 6 L35 13 L38 26 L29 37 L15 37 L6 26 L9 13 Z`),
-     familia streak/heptagonal coherente, `exercise-glyphs.jsx` NO
-     modificado (verificado por `git diff --stat`).
+   - 4.1 Cobertura runtime: glifos renderizan visualmente en rutinas
+     Mueve (Squeeze fist V9, Finger extension V9, Wrist stretch V5) y
+     Estira (Apertura de pecho V8).
+   - 4.2 Paletas: `currentColor` heredado correctamente en oscuro
+     (stroke = `rgb(154, 123, 79)` = `var(--move)`).
+   - 4.3 Snapshot control: 15 PENDIENTES + 3 keep idéntico byte-perfect
+     intactos (verificado por `git diff` -- 0 ocurrencias para las 18
+     keys mantenidas).
+   - 4.4 Edge cases: keys especiales (apostrofe, parentesis, slash, +,
+     acentos UTF-8) funcionan; glifos con >5 elementos renderizan OK.
+   - 4.5 Coherencia visual: opcional, NO ejecutada (delegada a inspeccion
+     manual del usuario).
+   - Snapshot DOM byte-perfect: render off-DOM de los 28 ports verifico
+     conteo exacto path/circle/ellipse/rect contra HTML del usuario.
    - Console errors a lo largo de todo el ciclo: **cero**.
 6. **Tarea 6 -- versionado y build**:
-   - Backup `backups/PACE_standalone_v0.33.2_20260523.html` (copia del
-     v0.33.2 publicado). Cap 20 mantenido (rotado v0.28.0_20260511.html).
-   - Bump (state-core, PACE.html, sw.js) -> v0.33.3.
-   - Rebuild: bundle **620 KB (635,365 bytes; +3,301 vs v0.33.2)**.
-     SHA-256: `23EF9FF6...7B62B6C7`. `index.html` byte-perfect.
-   - 60 archivos validados (11 .js + 49 .jsx; antes 58 = +2 nuevos).
-   - Verificacion runtime sobre standalone v0.33.3: heptagonal byte-
-     identico, modal funcional, todos los globales correctos.
-7. **Tarea 7 -- documentacion**: audit + design + diario s83 + CHANGELOG
-   (degradacion de v0.33.1 a fila-de-enlace, detalle nuevo de v0.33.3)
-   + STATE.md (este archivo).
+   - Backup `backups/PACE_standalone_v0.33.3_20260524.html` desde
+     `git show HEAD:PACE_standalone.html`. Cap 20 mantenido (rotado
+     `v0.28.1_20260511.html` -- ironicamente el del s60 iter parcial).
+   - Bump (state-core, PACE.html, sw.js) -> v0.34.0.
+   - Rebuild: bundle **622 KB (636,429 bytes; +1,064 vs v0.33.3)**.
+     SHA-256: `8C02F9AE...A171EB6`. `index.html` byte-perfect.
+   - 60 archivos validados (11 .js + 49 .jsx) -- mismos que s83.
+   - Verificacion runtime sobre standalone v0.34.0: Squeeze fist V9
+     byte-perfect, Cossack squat (keep s60) byte-perfect, todos los
+     globales correctos.
+   - `scripts/check-session.ps1` OK con aviso conocido de rango.
+7. **Tarea 7 -- documentacion**: audit + design + diario s84 + CHANGELOG
+   (degradacion de v0.33.2 a fila-de-enlace, detalle nuevo de v0.34.0)
+   + STATE.md (este archivo). Scripts temporales borrados.
 
 ### Decisiones tomadas
 
-- D1 -- **Variante B aprobada** (3 archivos: catalog + glyphs + UI). No A
-  (no establece `app/glyphs/` como convencion) ni C (premature abstraction).
-- D2 -- **`achievement-glyphs.jsx` con extension `.jsx`** aunque no
-  contenga JSX. Coherencia con hermano `exercise-glyphs.jsx`. Trade-off
-  cosmetico aceptado.
-- D3 -- **`IMPLEMENTED_ACHIEVEMENTS` expuesto a window** (era local-only).
-  Simetria con `ACHIEVEMENT_CATALOG`. Coste cero.
-- D4 -- **Achievements.jsx lee globales como `const X = window.X || fallback`**
-  al inicio del archivo. Captura una vez al cargar + fallback defensivo.
-- D5 -- **NO consolidar heraldica con line-art**. Sistemas visualmente
-  distintos. Mismo namespace `app/glyphs/` pero almacenamiento, keys y
-  estilo diferentes.
-- D6 -- **NO modificar `state-achievements.jsx`**. Cero acoplamiento.
-  Scope creep evitado.
-- D7 -- **NO arreglar counter "100 logros" vs 106 reales**. Deuda menor
-  de copy, no de codigo. Diferida a s87+.
-- D8 -- **`build-standalone.js` sin cambios**. 60 archivos validados
-  automaticamente.
+- D1 -- **Port literal del CUERPO SVG dentro del wrapper G del repo
+  (stroke 1.8)**. Preserva geometria byte-perfect (mismo `d`,
+  `cx`/`cy`/`r`, opacidades, dasharray) pero unifica strokeWidth a nivel
+  repo. El wrapper estandariza el lenguaje; cambiar a 2.0 (estilo V9)
+  seria decision separada.
+- D2 -- **15 PENDIENTES mantenidos en s60** (no portar v8/v9/v10/v11/v12/v13
+  sin aprobacion explicita). Decision usuario Tarea 0. Sirven como
+  CONTROL de Fase 4.3.
+- D3 -- **Bump minor v0.34.0** (no patch v0.33.4). Cierre del iter
+  abierto en s60 -- objetivo declarado del prompt. 28/46 = 61%
+  modificados, 31/46 = 67% bloqueados.
+- D4 -- **Wrapper G intacto** (NO unificar strokeWidth a 2.0). Cambiar
+  el wrapper afectaria los 46 glifos por igual incluido los 15 mantenidos.
+- D5 -- **NO trocear `exercise-glyphs.jsx`** (estimacion 554 ln, dentro
+  del umbral 600).
+- D6 -- **NO modificar `EXTRA_ROUTINES`** para reconciliar divergencia
+  `move.desk.quick` (HTML pone `Apertura de pecho` donde repo pone
+  `Chin tucks` en paso 5). Scope = solo glifos.
+- D7 -- **NO modificar `achievement-glyphs.jsx`**. Sistema visual
+  separado (heraldica vs line-art).
+- D8 -- **Comentarios contextuales actualizados con tag de version**
+  `(NEW)`, `(V8)`, `(V9)`, etc. Facilita rastrear el origen del SVG en
+  sesiones futuras.
+- D9 -- **Script temporal borrado al cerrar** (`scripts/extract-glyphs-bundle.js`
+  + `scripts/extracted-glyphs/`).
 
 ### Build
 
-- Bundle: **620 KB** (635,365 bytes; +3,301 bytes vs v0.33.2 = 632,064,
-  +0.5%). Crecimiento por cabeceras de doc-comment de los 2 archivos
-  nuevos. Estimado en design: ~3 KB; real: +3 KB. Exacto.
-- 60 archivos validados (11 .js + 49 .jsx).
+- Bundle: **622 KB** (636,429 bytes; +1,064 bytes vs v0.33.3 = 635,365,
+  +0.17%). Estimado en design ±0 a +2 KB; real +1 KB. Exacto.
+- 60 archivos validados (11 .js + 49 .jsx). Mismos que s83 -- no se
+  crearon archivos nuevos en `app/`.
 - `index.html` byte-a-byte identico a `PACE_standalone.html`.
-- SHA-256: `23EF9FF6752B61D586C5C4A43DF6911583AE57AC733BBC65AC9A81795C62B6C7`.
-- Backup creado: `backups/PACE_standalone_v0.33.2_20260523.html` (617 KB).
+- SHA-256: `8C02F9AE9E7FCA393F09CFBB0371227A5D6BBFB49E08F0EE4BB7C3FB3A171EB6`.
+- Backup creado: `backups/PACE_standalone_v0.33.3_20260524.html` (635 KB).
 
 ### Validacion runtime usuario
 
-Cubierta integramente por preview local en `localhost:8765`. **Fases
-4.1 a 4.5 verificadas**: modal, unlock, invariantes, edge cases, glifos
-pixel-perfect. Standalone tras rebuild verifica los mismos invariantes
-que el modular. Console errors: cero. Pendiente de inspeccion manual
-visual: confirmar pixel-a-pixel que los seals se ven igual que en
-v0.33.2 (riesgo minimo, refactor mecanico verificado por equivalencia
-de path `d` y conteo de circles).
+Cubierta via preview local en `localhost:8765/PACE_standalone.html`.
+**Fases 4.1 a 4.4 verificadas**: cobertura runtime visual, paletas,
+snapshot control 15 pendientes + 3 keep idéntico byte-perfect, edge
+cases. Fase 4.5 (coherencia visual) opcional, delegada a inspeccion
+manual del usuario.
 
-## Proxima sesion -- s84 (polish pre-Reddit, contenido)
+Pendiente de inspeccion manual visual: confirmar legibilidad de glifos
+a 32px en mobile, detectar potenciales confusiones entre pares similares
+(Chin tucks v8 vs Apertura de pecho v8, Squeeze fist v9 vs Apertura de
+pecho v8). Si detecta confusion -> iteracion focal en sesion futura.
 
-s83 cierra el ultimo candidato de deuda MEDIA. El backlog tecnico
-visible queda **vacio** (`state-core.jsx` esta en BAJA, dentro de
-limite). La app esta lista para pasar a fase de polish + contenido sin
-sensacion de deuda pendiente.
+## Proxima sesion -- s85 (polish pre-Reddit)
 
-Candidatos sugeridos para s84:
+s84 cierra el iter abierto en s60 (153 dias entre apertura y cierre).
+La app queda **lista para fase de polish + contenido** sin sensacion
+de deuda visible:
 
-1. **README.md desactualizado** (v0.27.6 -> v0.33.3 con resumen
-   consolidado). Reservado en s82 para esta sesion.
+- Backlog tecnico MEDIA: **vacio** (heredado de s83).
+- Iter visual: **cerrado** (31/46 aprobados portados + 15 mantenidos
+  hasta nueva aprobacion).
+
+Candidatos sugeridos para s85:
+
+1. **README.md desactualizado** (v0.27.6 -> v0.34.0 con resumen
+   consolidado). Reservado en s82+s83 para esta sesion.
 2. **Generar `og:image` decente**.
 3. **Capturar screenshots oficiales** claro/oscuro x Home/Camino/Completion
    para Reddit + landing.
@@ -271,12 +270,11 @@ Candidatos sugeridos para s84:
 5. **Actualizar `scripts/check-session.ps1`** con rango de tamaño
    correcto (615-625 KB; ahora avisa con 530-600 KB).
 
-Sesion s84 es de **contenido y comunicacion**, no de codigo. Distinto
-caracter al patron de splits s80-s83.
+Sesion s85 es de **contenido y comunicacion**, no de codigo.
 
 ### Precondicion bloqueante
 
-Cierre Git de s83 publicado por el usuario (commit + push manual).
+Cierre Git de s84 publicado por el usuario (commit + push manual).
 
 ---
 
@@ -312,6 +310,9 @@ Cierre Git de s83 publicado por el usuario (commit + push manual).
 | Convencion `app/glyphs/` como home definitivo de sistemas de glifos | s83 | Dos archivos hermanos sin solapamiento: `exercise-glyphs.jsx` (s60, line-art para Move/Stretch, 46 glifos -- ampliable/sustituible en s85+ por nuevos disenos del usuario en paralelo) + `achievement-glyphs.jsx` (s83, heraldica para Logros, 34 glifos + alias -- cerrado y estable, no se modifica en s85+). Mismo namespace, mismo viewBox 0 0 44 44, mismo `currentColor`, pero almacenamiento (JSX components vs strings de SVG), keys (nombres de paso vs achievement ids) y estilo visual (postura vs sello) totalmente diferentes |
 | `IMPLEMENTED_ACHIEVEMENTS` expuesto a window | s83 | Era local-only pre-s83. Tras split a `catalog.js`, expuesto por simetria con `ACHIEVEMENT_CATALOG`. Coste cero, abre la puerta a que otro modulo lo lea sin importar el catalogo entero. Hoy NO tiene consumidores externos |
 | Achievements.jsx lee globales como `const X = window.X \|\| fallback` al inicio del archivo | s83 | Captura los valores una vez al cargar (orden de carga garantiza que `catalog.js` ya ejecuto). Fallback defensivo (`[]`, `{}`, `new Set()`) por si en algun escenario el orden falla -- degradacion graceful en lugar de TypeError. Patron mas legible que leer `window.*` dentro de cada uso |
+| Iter glifos canonicos Mueve/Estira cerrado (port literal desde HTML del usuario) | s84 | 31/46 glifos con version bloqueada en `window.APPROVED` del HTML de exploracion portados literal al wrapper G del repo (strokeWidth 1.8 unificado). 15 pendientes mantenidos en s60 hasta nueva aprobacion del usuario. Patron "port literal desde HTML del usuario, no reinterpretar" reutilizable cuando el usuario aporte iteraciones de glifos en sesiones futuras |
+| Wrapper G de `exercise-glyphs.jsx` mantenido a strokeWidth 1.8 aunque las versiones aprobadas del HTML usen 1.5 (v3-v8, v12) o 2.0 (v9) | s84 | Unifica el lenguaje visual a nivel repo en lugar de copiar el stroke de cada version. Si en el futuro el usuario decide unificar a 2.0 (estilo V9), cambio aislado del wrapper afecta los 46 glifos por igual -- mejor que mezclar strokeWidths por glifo |
+| Para los 15 glifos PENDIENTES (sin entrada en `window.APPROVED`), mantener s60 hasta nueva aprobacion del usuario | s84 | World's greatest stretch, Cossack squat, Pigeon, ATG split squat, Tibialis raise, Nordics, Sissy squat, Deep squat hold, Crawling, Ground sitting transitions, Inclinacion lateral, Escalenos, Wrist circles, Seated twist, Ankle circles. Iteraciones disponibles en exploracion (v8/v9/v10/v11/v12/v13) pero no aprobadas por el usuario. Sirven como CONTROL de Fase 4.3 (snapshot comparativo) -- si cambian, error |
 
 ---
 
@@ -319,17 +320,20 @@ Cierre Git de s83 publicado por el usuario (commit + push manual).
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/state-core.jsx` | ~475 | BAJA (dentro de limite) |
+| `app/state-core.jsx` | ~485 | BAJA (dentro de limite) |
 | `app/i18n/strings/ui.js` | 315 | BAJA (dentro de limite, dominio mas grande del split) |
+| `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
 | `app/shell/Sidebar.jsx` | 497 | SALE (s61, antes 630) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
-**Backlog tecnico de prioridad MEDIA: vacio.** Tras s83, todos los candidatos
-de deuda MEDIA del backlog s82 han salido. La app esta lista para pasar a
-fase de polish + contenido (s84+) sin sensacion de deuda visible pendiente.
+**Backlog tecnico de prioridad MEDIA: vacio.** Tras s83+s84, todos los
+candidatos de deuda MEDIA del backlog s82 han salido + el iter visual de
+glifos esta cerrado (31/46 aprobados portados, 15 mantenidos hasta nueva
+aprobacion). La app esta lista para pasar a fase de polish + contenido
+(s85+) sin sensacion de deuda visible pendiente.
 
 ### Deudas semanticas (no de tamaño, no urgentes)
 
@@ -338,3 +342,6 @@ fase de polish + contenido (s84+) sin sensacion de deuda visible pendiente.
 | D-1 override silencioso strings-content.js | s81 audit | 3 keys `breathe.phase.*` con valores distintos (Inhale again vs more; Oceanic vs Ocean). 8 keys mas duplicadas pero coincidentes. Decision futura |
 | D-2 duplicidad "Hecho hoy" | s81 audit | `path.card.done` + `paths.library.doneToday` mismo valor, dos keys. Consolidar a una |
 | D-3 namespaces path / paths inconsistentes | s81 audit (existente desde s53) | Singular `path.*` (runner, hydrate, card, error) + plural `paths.*` (library, suggested, path, kind, runner.repeat). Mezcla historica |
+| D-4 15 glifos pendientes sin aprobar | s84 | World's greatest stretch, Cossack squat, Pigeon, ATG split squat, Tibialis raise, Nordics, Sissy squat, Deep squat hold, Crawling, Ground sitting transitions, Inclinacion lateral, Escalenos, Wrist circles, Seated twist, Ankle circles. Iteraciones v8/v9/v10/v11/v12/v13 disponibles en exploracion del usuario pero no en `window.APPROVED`. Portar cuando el usuario apruebe |
+| D-5 divergencia move.desk.quick paso 5 | s84 | HTML del usuario lista `Apertura de pecho` donde repo lista `Chin tucks`. Decision de catalogo en sesion futura (modificar EXTRA_ROUTINES o mantener repo) |
+| D-6 strokeWidth wrapper G | s84 | Versiones aprobadas del HTML usan 1.5 (v3-v8, v12) o 2.0 (v9), pero wrapper G del repo unifica a 1.8. Si el usuario quiere unificar a 2.0 (estilo V9), cambio aislado del wrapper afecta los 46 glifos por igual |

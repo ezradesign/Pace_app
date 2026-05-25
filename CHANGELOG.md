@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [abajo](#v0340----2026-05-24----featglyphs-cierre-iter-glifos-canonicos-muevee-estira) |
 | **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [abajo](#v0333----2026-05-23----refactorachievements-split-achievementsjsx-en-achievements--glyphs) |
-| **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [abajo](#v0332----2026-05-23----refactormain-split-mainjsx-en-main) |
+| **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [session-82](./docs/sessions/session-82-main-split.md) |
 | **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) -- variante B (pragmatica) | #81 | [session-81](./docs/sessions/session-81-strings-split.md) |
 | **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline | #80 | [session-80](./docs/sessions/session-80-split-pathrunner.md) |
 | **v0.32.1** | 2026-05-18 | fix(ui): pomodoro contextual en Camino (aro + pausa/reset/saltar) + fade-out toasts + oscuro +10% | #79 | [session-79](./docs/sessions/session-79-pomodoro-camino-fadeout-oscuro.md) |
@@ -101,6 +102,168 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.34.0] -- 2026-05-24 -- feat(glyphs): cierre iter glifos canonicos Mueve/Estira
+
+Sesion 84. Cierra el iter parcial de glifos abierto en s60 portando
+**literalmente** las versiones aprobadas por el usuario desde su HTML de
+exploracion (`Glifos Mueve y Estira _ standalone v0.19.html`,
+bundler autoextract gzip+base64 desempaquetado con script temporal).
+
+`app/glyphs/exercise-glyphs.jsx` paso de **527 ln a 554 ln (+5%)** con
+**28 ports + 18 mantenimientos** (3 keep idéntico + 15 keep s60):
+
+- **28 ports** (12 Mueve + 16 Estira): sustitucion byte-perfect del cuerpo
+  SVG dentro del wrapper `G` existente (strokeWidth 1.8 unificado a nivel
+  repo).
+- **3 keep idéntico** (Fondos en silla, Rib pull + respiracion, Rotacion
+  lenta): version APPROVED='new' es byte-identica al actual; cero edit.
+- **15 keep s60**: glifos PENDIENTES sin entrada en `window.APPROVED` del
+  HTML; mantenidos en estado canonico s60 (decision usuario Tarea 0).
+
+Distribucion de versiones aprobadas portadas:
+- **new (v3)**: 15 -- Flexiones inclinadas, Descanso, Wall sit, Scapular
+  squeeze, Thoracic extension, Chest opener, Rotacion toracica, Reset
+  respiracion, Puente con marcha, Band pull-apart, Dead hang (si puedes),
+  Rib pull + respiracion, Rotacion lenta, Deep breaths (+Fondos en silla idéntico).
+- **alt (v4)**: 5 -- Calf raises, 90/90, Squat profundo, External
+  rotation, Hang pasivo.
+- **v5**: 2 -- Seated hollow, Wrist stretch.
+- **v6**: 1 -- Cuello y trapecios.
+- **v7**: 1 -- Elephant walk.
+- **v8**: 4 -- Chin tucks, Apertura de pecho, Flexor de cadera, Scapular
+  wall slides.
+- **v9**: 2 -- Squeeze fist, Finger extension.
+- **v12**: 1 -- Shrug + round.
+
+Diario: [session-84-glifos-cierre-iter.md](./docs/sessions/session-84-glifos-cierre-iter.md).
+Documentos de apoyo: [audit](./docs/sessions/session-84-audit.md),
+[design](./docs/sessions/session-84-design.md).
+
+Bump v0.34.0 (minor) -- cierre del iter abierto en s60, sustitucion
+mayoritaria del catalogo de glifos (28/46 = 61% modificados, 31/46 = 67%
+bloqueados por el usuario).
+
+### Added
+
+- **`docs/sessions/session-84-audit.md`** -- nuevo (~280 ln). Auditoria
+  estructural completa: inventario cruzado, cobertura, consumidores,
+  reglas de dibujo, invariantes, edge cases.
+- **`docs/sessions/session-84-design.md`** -- nuevo (~180 ln). Lista
+  cerrada de acciones, orden de port, decisiones arquitectonicas,
+  versionado, riesgos.
+- **`docs/sessions/session-84-glifos-cierre-iter.md`** -- nuevo. Diario
+  completo.
+- **`backups/PACE_standalone_v0.33.3_20260524.html`** -- snapshot del v0.33.3
+  publicado pre-s84.
+
+### Changed
+
+- **`app/glyphs/exercise-glyphs.jsx`** -- 28 cuerpos SVG portados literales
+  desde el HTML del usuario. Comentarios contextuales reescritos por glifo
+  portado con tag de version (`(NEW)`, `(V8)`, `(V9)`, etc.). Header
+  actualizado a v0.34.0 con explicacion del estado.
+- **`PACE.html`** -- titulo `v0.34.0`.
+- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.34.0'`.
+- **`sw.js`** -- `CACHE_NAME = 'pace-v0.34.0'`.
+
+### Preservado (sin cambios)
+
+- **Wrapper `G`** (strokeWidth 1.8) -- intacto. Divergencia de strokeWidth
+  del HTML del usuario (1.5/2.0) documentada en audit 1.4 como
+  "divergencia consciente": el wrapper unifica el lenguaje a nivel repo.
+- **15 glifos PENDIENTES** -- byte-perfect intactos. Verificado por
+  `git diff` (0 ocurrencias en el diff para las 15 keys).
+- **3 glifos "keep idéntico"** -- byte-perfect intactos. La version
+  APPROVED='new' es identica al actual.
+- **46 keys** y orden del archivo -- preservados (cobertura 1:1 con
+  `MOVE_ROUTINES` + `EXTRA_ROUTINES`).
+- **`window.EXERCISE_GLYPHS` + `window.ExerciseGlyph` + `window.DefaultGlyph`**
+  -- mismo contrato, mismo `Object.assign` final.
+- **`MoveModule.jsx`** (unico consumidor real) -- intacto.
+- **`achievement-glyphs.jsx`** -- intacto (sistema visual separado).
+- **`MOVE_ROUTINES`/`EXTRA_ROUTINES`** -- intacto. Divergencia menor
+  `move.desk.quick` (HTML usuario tiene `Apertura de pecho` donde repo
+  tiene `Chin tucks` en paso 5) documentada como deuda futura.
+
+### Decisiones tomadas
+
+| ID | Decision | Razon |
+|---|---|---|
+| D1 | Port literal del CUERPO SVG dentro del wrapper G del repo (stroke 1.8) | Preserva geometria byte-perfect (mismo `d`, mismo `cx`/`cy`/`r`, opacidades, dasharray) pero unifica strokeWidth. El wrapper estandariza el lenguaje a nivel repo; cambiar a 2.0 (estilo V9) seria decision separada que afecta 46 glifos por igual |
+| D2 | 15 PENDIENTES mantenidos en s60 (no portar v8/v9/v10/v11/v12/v13 sin aprobacion explicita) | Decision usuario Tarea 0. Sirven como CONTROL de Fase 4.3 (snapshot comparativo): si cambian, error en lista de acciones. Iteraciones disponibles en exploracion; portar cuando el usuario apruebe |
+| D3 | Bump minor v0.34.0 (no patch v0.33.4) | Cierre del iter abierto en s60 -- objetivo declarado del prompt. 28/46 = 61% modificados, 31/46 = 67% bloqueados. Permite s85 ser polish/Reddit puro |
+| D4 | Wrapper G intacto (NO unificar strokeWidth a 2.0) | Aunque V9 (Squeeze fist, Finger extension) y V10/V11 usan stroke 2.0, cambiar el wrapper afectaria los 46 glifos por igual incluido los 15 mantenidos. Decision separada si el usuario lo desea |
+| D5 | NO trocear `exercise-glyphs.jsx` en `move.jsx` + `stretch.jsx` | Estimacion post-port 510-560 ln; resultado real 554 ln (dentro del umbral 600) |
+| D6 | NO modificar `EXTRA_ROUTINES` para reconciliar divergencia `move.desk.quick` | Scope s84 = solo glifos. Decision de catalogo se difiere |
+| D7 | NO modificar `achievement-glyphs.jsx` | Sistema visual separado (heraldica vs line-art). Cero impacto |
+| D8 | Comentarios contextuales actualizados con tag de version | `(NEW)`, `(V8)`, `(V9)`, etc. Facilita rastrear el origen del SVG en sesiones futuras |
+| D9 | Script temporal `scripts/extract-glyphs-bundle.js` + `scripts/extracted-glyphs/` borrados al cerrar | Bundler autoextract gzip+base64 desempaquetado para acceder a SVGs en formato JSX. Cleanup tras cierre |
+
+### Invariantes preservadas (verificadas runtime)
+
+1. `window.EXERCISE_GLYPHS` con 46 keys (sin renombrados).
+2. `window.ExerciseGlyph(id)` lookup intacto.
+3. `window.DefaultGlyph` fallback intacto.
+4. Wrapper `G` con `viewBox="0 0 44 44"`, `fill="none"`,
+   `stroke="currentColor"`, `strokeWidth="1.8"`.
+5. Cobertura 46/46: cero pasos caen al `DefaultGlyph`.
+6. `MoveSession` renderiza pasos de Mueve + Estira + Caminos `body` via
+   `StepGlyph` -> `ExerciseGlyph`.
+7. `currentColor` heredado en SVG: verificado en paleta oscuro
+   (stroke = `rgb(154, 123, 79)` = `var(--move)`).
+8. 15 PENDIENTES byte-perfect (0 ocurrencias en `git diff`).
+9. 3 keep idéntico byte-perfect (0 ocurrencias en `git diff`).
+10. `achievement-glyphs.jsx` intacto (verificado por `git diff --stat`).
+11. Conteo de elementos por port coincide byte-perfect con HTML del
+    usuario (verificado para los 28 ports).
+
+### Verificacion runtime
+
+Cubierta via preview local en `localhost:8765/PACE_standalone.html`.
+
+- ✅ Build limpio: 60 archivos validados (11 .js + 49 .jsx).
+- ✅ Snapshot DOM de los 28 ports renderiza con conteo path/circle
+  esperado (paths+circles+ellipses+rects coinciden byte-perfect con HTML
+  del usuario).
+- ✅ Visualmente verificado en rutina **Grip + antebrazos** (Mueve):
+  Squeeze fist V9 "(o)" + Finger extension V9 (5 lineas radiando) +
+  Wrist stretch V5 (abanico).
+- ✅ Visualmente verificado en rutina **Antidoto silla** (Estira):
+  Apertura de pecho V8 (arco + arco inferior).
+- ✅ Fase 4.2 paletas: paleta oscuro aplicada, `currentColor` heredado
+  correctamente.
+- ✅ Fase 4.3 control: `git diff` revela 0 ocurrencias para los 15
+  pendientes + 3 keep idéntico.
+- ✅ Console errors: cero a lo largo de todo el ciclo.
+
+### Build
+
+- `PACE_standalone.html`: **622 KB** (636,429 bytes; +1,064 bytes vs
+  v0.33.3 = 635,365; +0.17%). Estimado en design: ±0 a +2 KB; real: +1 KB.
+  Exacto. Crecimiento por SVGs ligeramente mas densos (Band pull-apart NEW
+  con tensiones laterales, Deep breaths NEW con 9 paths).
+- `index.html`: byte-perfect identico al standalone. SHA-256:
+  `8C02F9AE9E7FCA393F09CFBB0371227A5D6BBFB49E08F0EE4BB7C3FB3A171EB6`.
+- 60 archivos validados (11 .js + 49 .jsx).
+- Backup creado: `backups/PACE_standalone_v0.33.3_20260524.html` (635 KB).
+  Cap 20 mantenido (rotado el mas antiguo `v0.28.1_20260511.html`).
+
+### Diferido a sesiones siguientes
+
+- **15 glifos PENDIENTES** sin aprobacion. Iteraciones v8/v9/v10/v11/v12/v13
+  disponibles en exploracion del usuario. Abrir sesion futura cuando
+  apruebe.
+- **Divergencia `move.desk.quick`** (HTML pone `Apertura de pecho` donde
+  repo pone `Chin tucks` en paso 5). Decision de catalogo en sesion futura.
+- **strokeWidth wrapper** -- si el usuario quiere unificar a 2.0 (estilo
+  V9), cambio aislado del wrapper G afecta los 46 glifos por igual.
+- **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
+  (530-600 KB; real 615-622 KB). Avisa en cada cierre. No urgente.
+- **README.md** -- desactualizado (v0.27.6 -> v0.34.0). Reservado para
+  s85 (polish pre-Reddit).
 
 ---
 
@@ -272,134 +435,7 @@ Cubierta via preview local (`.claude/static-server.js` de s80) en
 
 ## [v0.33.2] -- 2026-05-23 -- refactor(main): split main.jsx en main/
 
-Sesion 82. Refactor puro de `app/main.jsx` (600 ln) a un orquestador
-modular: tres piezas extraidas a `app/main/`. Cero cambios funcionales,
-visuales, de timing ni de copy.
-
-`app/main.jsx` paso de **600 ln a 279 ln (-53%)** mediante split mecanico
-en 3 archivos hermanos:
-
-- `app/main/_responsive.js` -- IIFE que inyecta el bloque
-  `<style id="pace-main-responsive-css">` (reglas @media globales del
-  layout + fallback `vh`/`dvh`). 105 ln.
-- `app/main/TopBar.jsx` -- tabs Foco/Pausa/Larga + 3 iconos top-right
-  (Stats / Logros / Tweaks) + `topBarStyles`. 106 ln.
-- `app/main/ActivityBar.jsx` -- 4 chips Respira/Estira/Mueve/Hidratate +
-  los 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop). 170 ln.
-
-`PaceApp` queda en `main.jsx` como **orquestador puro**: state local de
-overlays, 8 useEffect (4 listeners de CustomEvent + cowClicks + atajos
-T/S/L), 5 handlers y la composicion del arbol. Variante B aprobada del
-[design s82](./docs/sessions/session-82-design.md): equilibrada, sin
-extraer hooks (eso era la variante C, descartada por premature
-abstraction con 1 consumidor).
-
-Diario: [session-82-main-split.md](./docs/sessions/session-82-main-split.md).
-Documentos de apoyo: [audit](./docs/sessions/session-82-audit.md),
-[design](./docs/sessions/session-82-design.md).
-
-Bump v0.33.2 (patch) -- refactor sin cambios funcionales ni de copy.
-
-### Added
-
-- **`app/main/_responsive.js`** -- nuevo (105 ln). IIFE auto-ejecutable
-  con guard `getElementById`. Inyecta el `<style>` literal extraido de
-  main.jsx (lineas 20-112). No expone nada a `window`.
-- **`app/main/TopBar.jsx`** -- nuevo (106 ln). `function TopBar(props)` +
-  `const topBarStyles` + `Object.assign(window, { TopBar })`.
-- **`app/main/ActivityBar.jsx`** -- nuevo (170 ln). `function ActivityBar(props)`
-  + 4 iconos SVG + `Object.assign(window, { ActivityBar })`.
-
-### Changed
-
-- **`app/main.jsx`** -- reducido de 600 a 279 ln. Contiene SOLO: cabecera,
-  `const { useState, useEffect } = React`, `function PaceApp()` (orquestador
-  integro), `Object.assign(window, { PaceApp })`, arranque directo en
-  `#pace-root`. Toda la logica presentacional + CSS migrada verbatim a los
-  3 archivos nuevos. Comentarios actualizados para apuntar a `app/main/_responsive.js`.
-- **`PACE.html`** -- 3 nuevos `<script src>` insertados antes de `main.jsx`:
-  `_responsive.js` -> `TopBar.jsx` -> `ActivityBar.jsx`. Comentario
-  explicativo del orden.
-- **`PACE.html`** -- titulo `v0.33.2`.
-- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.33.2'`.
-- **`sw.js`** -- `CACHE_NAME = 'pace-v0.33.2'`.
-
-### Preservado (sin cambios)
-
-- **`PaceApp`** -- intacto. Mismo state local, mismos 8 useEffect, mismos
-  5 handlers, mismo arbol JSX. No se extrajeron hooks (variante C
-  descartada).
-- **`Object.assign(window, { TopBar, ActivityBar })`** -- mantenido (ahora
-  desde sus archivos respectivos). Aunque ningun consumidor externo los
-  use hoy, se preserva la superficie publica.
-- **Arranque directo en `#pace-root`** -- legacy de v0.12, mantenido.
-- **Cero cambios fuera de `app/main.jsx` + `app/main/` + `PACE.html` +
-  bump-implicito**. Ningun modulo, overlay ni consumidor de TopBar/
-  ActivityBar requirio modificacion.
-
-### Decisiones tomadas
-
-| ID | Decision | Razon |
-|---|---|---|
-| D1 | Aplicar Variante B (equilibrada, 3 archivos) -- no A (1) ni C (5) | A (solo ActivityBar) no cumplia metrica `>50%` (dejaba main.jsx en ~459 ln). C (B + hooks useOverlayManager/useGlobalKeyboard) introducia premature abstraction: 2 hooks con 1 unico consumidor (PaceApp). B esta en la interseccion -- cumple metrica y respeta el estilo "no premature abstraction" del codebase (mismo criterio que s80 con `onAbort`) |
-| D2 | Carpeta `app/main/` -- coherente con `app/paths/steps/` (s80) y `app/i18n/strings/` (s81) | Tercer split mecanico consecutivo con el mismo patron: carpeta hermana + `<script src>` antes del consumidor + `Object.assign(window)` por archivo |
-| D3 | Bloque CSS responsive a `_responsive.js` (IIFE), no inline en TopBar/ActivityBar | El `<style>` toca selectores de AMBOS componentes + main content + sidebar handle. Es config global de layout, no de un componente. Prefijo `_` lo marca como helper (igual que `_shared.js`/`_bootstrap.js`). Carga primero (side effect ASAP) |
-| D4 | `topBarStyles` viaja con TopBar.jsx; los 4 iconos AB* con ActivityBar.jsx | Cada uno tiene exactamente 1 consumidor (verificado por Grep). Mantenerlos juntos respeta cohesion |
-| D5 | NO extraer hooks (useOverlayManager / useGlobalKeyboard) | Variante C. Premature abstraction: 1 consumidor hoy. Si en el futuro hay un segundo entry point (EmbedApp), reconsiderar. Scope s82 = split mecanico puro |
-| D6 | `build-standalone.js` sin cambios | `validateAppFiles` walkea `app/` recursivo. Los 3 archivos nuevos se descubren automatico. Verificado: 58 archivos (55 previos + 3 nuevos) |
-
-### Invariantes preservadas (verificadas runtime)
-
-1. `PaceApp` monta en `#root` (mount loop PACE.html) y en `#pace-root` (directo).
-2. `window.PaceApp`, `window.TopBar`, `window.ActivityBar` presentes tras carga.
-3. Bloque `pace-main-responsive-css` inyectado una sola vez (guard verificado).
-4. Fallback `100vh`/`100dvh` intacto en el CSS (2815 bytes de reglas).
-5. Tabs Foco/Pausa/Larga cambian `focusMode` (verificado: click -> larga -> foco).
-6. 3 iconos TopBar: Stats (prop), Logros (CustomEvent `pace:open-achievements`), Tweaks (prop) -- los 3 abren su modal.
-7. 4 chips ActivityBar abren BreatheLibrary/ExtraLibrary/MoveLibrary/HydrateTracker.
-8. Cambio idioma ES<->EN actualiza tabs + iconos aria + chips inmediato.
-9. Atajos T/S/L toggle Tweaks/Stats/Logros; ignoran focus en INPUT/TEXTAREA.
-10. cowClicks: 10 eventos `pace:cow-click` -> `unlockAchievement('secret.cow.click')`.
-11. Overlays PathRunner/PathsLibrary se montan y auto-gestionan via CustomEvent.
-12. Persistencia: `focusMode` sobrevive recarga (localStorage `pace.state.v2`).
-13. Mobile <=768px: tabs ocultos por @media (verificado en viewport 406px).
-
-### Verificacion runtime
-
-Cubierta via preview local (`.claude/static-server.js` de s80) en
-`localhost:8765`.
-
-- ✅ 58 archivos parsean limpios via `validateAppFiles` (TS parser real).
-- ✅ Verificacion intermedia (3 archivos nuevos cargados + main.jsx aun sin
-  tocar): consola 0 errores, todo renderiza identico (los hijos se
-  redefinian, ultimo gana -- idempotente por ser copia literal).
-- ✅ Tras reescribir main.jsx: consola 0 errores en todo el ciclo de
-  interaccion (tabs, 3 iconos, 4 chips, atajos, idioma, overlays, recarga).
-- ✅ 16/16 invariantes runtime verificadas (Fases 4.1 a 4.4 del prompt).
-- ✅ Edge cases: T con focus en INPUT no abre Tweaks; guard del style block
-  impide duplicado; fallback dvh intacto.
-
-### Build
-
-- `PACE_standalone.html`: **617 KB** (632,064 bytes; +3,138 bytes vs
-  v0.33.1 = 628,926; +0.5%). Crecimiento por cabeceras de doc-comment de
-  los 3 archivos nuevos + 2 `Object.assign` + comentarios preservados.
-  Estimado en design: ~1-2 KB; real: +3 KB (cabeceras mas extensas).
-- `index.html`: byte-perfect identico al standalone. SHA-256:
-  `66455A340EBC492CBA07F65FDBE7994345F51A77679091CCFEFF32576F387EFD`.
-- 58 archivos validados (10 .js + 48 .jsx) -- antes 55.
-- Backup creado: `backups/PACE_standalone_v0.33.1_20260520.html`. Cap 20
-  mantenido (rotado el mas antiguo `v0.27.6_20260511.html`).
-
-### Diferido a sesiones siguientes
-
-- **Variante C (hooks)**: si aparece un segundo entry point que comparta la
-  logica de overlays/atajos, extraer `useOverlayManager` + `useGlobalKeyboard`.
-- **`app/achievements/Achievements.jsx`** (~500 ln, MEDIA) -- siguiente
-  candidato natural de deuda: catalogo a `catalog.js`.
-- **Deudas semanticas i18n** D-1/D-2/D-3 heredadas de s81.
-- **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
-  (530-600 KB; real 605-617 KB). Avisa en cada cierre. No urgente.
+Detalle completo en [session-82-main-split.md](./docs/sessions/session-82-main-split.md).
 
 ---
 
