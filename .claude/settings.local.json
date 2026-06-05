@@ -46,7 +46,14 @@
       "Bash(awk '{print $5, $9}')",
       "Bash(powershell -ExecutionPolicy Bypass -Command \"Get-FileHash -Algorithm SHA256 PACE_standalone.html | Select-Object Hash\")",
       "Bash(powershell -ExecutionPolicy Bypass -Command \"Get-FileHash -Algorithm SHA256 index.html | Select-Object Hash\")",
-      "Bash(awk '/^## \\\\[v0\\\\.33\\\\.2\\\\]/,/^## \\\\[v0\\\\.32\\\\.0\\\\]/' CHANGELOG.md)"
+      "Bash(awk '/^## \\\\[v0\\\\.33\\\\.2\\\\]/,/^## \\\\[v0\\\\.32\\\\.0\\\\]/' CHANGELOG.md)",
+      "PowerShell($root = \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\"; foreach \\($f in @\\(\"PACE_standalone.html\",\"index.html\",\"CONTENT.md\",\"ROADMAP.md\",\"PACE.html\",\"MONETIZATION.md\"\\)\\) { $p = Join-Path $root $f; if \\(Test-Path $p\\) { $size = \\(Get-Item $p\\).Length; \"EXISTE  $f  \\($size bytes\\)\" } else { \"FALTA   $f\" } })",
+      "PowerShell(git -C $root status --short)",
+      "PowerShell(git -C $root log --oneline -5)",
+      "PowerShell(git -C $root log --all --oneline -- CONTENT.md ROADMAP.md 2>&1)",
+      "PowerShell($root = \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\")",
+      "PowerShell(\"----- LOG -----\")",
+      "PowerShell(\"----- CONTENT/ROADMAP in git history? -----\")"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

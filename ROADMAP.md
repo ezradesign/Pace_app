@@ -1,0 +1,118 @@
+# Roadmap
+
+Visión a medio y largo plazo de PACE.
+Para el estado del día a día, ver [`STATE.md`](./STATE.md).
+Para el catálogo de contenido, ver [`CONTENT.md`](./CONTENT.md).
+Para el modelo de monetización, ver [`MONETIZATION.md`](./MONETIZATION.md).
+
+> **Recreado en sesión 85 (2026-06-05, v0.34.1)** tras ~60 sesiones
+> borrado (commit `be81606`). Refleja lo ya hecho hasta v0.34.0 y el
+> plan vigente del bloque Contenido+Premium.
+
+---
+
+## ✅ Hecho desde el roadmap original (s21 → s84)
+
+Buena parte de la visión de corto/medio plazo de 2026-04 ya está en
+producción:
+
+- **Responsive móvil** — sidebar fullscreen + home en viewport (s22+).
+- **Loop post-Pomodoro** — `BreakMenu` con sugerencias de pausa activa.
+- **Ritmos** — vistas semanal / mensual / anual (heatmaps) (s43-s54).
+- **Sonidos** — sintetizados con Web Audio (432 Hz), no WAVs (s28+).
+- **Caminos** — secuencias guiadas por hora del día, 7 caminos (s49-s80).
+- **i18n ES/EN completo** + PWA en Cloudflare Pages.
+- **Logros** — catálogo de 106 (69 activos) con glifos heráldicos.
+- **Sistema de glifos** de ejercicios (line-art) — iter cerrado 31/46 (s84).
+
+---
+
+## 🎯 Bloque actual — Contenido + Premium (post-v0.34.0)
+
+Bloque grande en fases (1 fase = 1 sesión cerrable). Planificado en la
+Fase 0 (s84-bis / 2026-06-05). Detalle de catálogo en [`CONTENT.md`](./CONTENT.md).
+
+| Fase | Alcance | Estado |
+|---|---|---|
+| **F1** | Copy Buy Me a Coffee (truth-fix) + recrear `CONTENT.md` y `ROADMAP.md` | **en curso (s85)** |
+| **F2** | Auditoría de tracking punta a punta + micro-fixes | pendiente |
+| **F3** | Gating a nivel sesión (`access` en rutinas + sello PREMIUM + desbloqueo inicial/logro) + superficie premium discreta en Tweaks | pendiente |
+| **F4** | Contenido Respira → ~20 técnicas (incl. CTB largas premium, con seguridad) | pendiente |
+| **F5** | Contenido Estira → ~12-15 rutinas (~mitad premium), categorizado | pendiente |
+| **F6** | Contenido Mueve → ~12-15 rutinas (~mitad premium), reclasifica la fuerza | pendiente |
+| **F7** | Registro interno de ejercicios + **constructor de rutinas premium** (`custom.sequence`) | pendiente |
+| **F8** | Visual de Caminos — auditoría DESIGN_SYSTEM + polish de los 6 componentes | pendiente |
+
+**Decisión clave:** el gating va **antes** del contenido (no se puede
+etiquetar `access` con honestidad sin el campo ni el sello). La unidad
+gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
+
+---
+
+## 🌱 Medio plazo — tras el bloque
+
+### CTB · Respiración en Trance Consciente (premium)
+Sesiones largas (20-45 min): música ambiental sin voz, respiración
+guiada prolongada, retenciones conscientes, timer silencioso con hitos
+visuales. 4-6 sesiones en el lanzamiento Lifetime. Entregable mínimo
+antes de código: guion de 1 sesión + pista musical + mockup inmersivo.
+(Arranca en F4; converge con el modo "Retiro".)
+
+### Retos semanales (opcional)
+Reto que aparece el lunes (ej: "3 sesiones de Respira"). Sin penalización.
+Al completarlo, sello de colección. Sin presión.
+
+### Notificaciones inteligentes (opt-in)
+El state ya conserva `reminders: []`. Reintroducir UI como modal opt-in:
+hidratación, pausa activa tras X horas, sugerencia contextual. Nunca por
+defecto, sin spam.
+
+### Feedback literario en Ritmos
+Texto breve al cerrar semana/mes que contextualiza sin juzgar
+("semana de foco profundo, menos movilidad — mañana suave"). Literario,
+no numérico.
+
+### Extensión Chrome
+Popup 340×480 (resumen + acciones rápidas) + nueva pestaña (newtab
+pantalla completa). Manifest V3, permisos mínimos (`storage`, `alarms`),
+persistencia vía `chrome.storage`.
+
+---
+
+## 🌲 Largo plazo — v1.0+
+
+### Lanzamiento pagado v1.0
+Ver [`MONETIZATION.md`](./MONETIZATION.md). Lifetime ~20 € + Pase mensual
+3,99 € + Temporadas ~5 € + donaciones BMC. Validación de **clave firmada
+offline** (sin backend, sin cuentas). Pre-requisitos: bloque
+Contenido+Premium cerrado, ≥2 CTB grabadas, constructor de rutinas
+funcional, Términos + Privacidad redactados por abogado.
+
+### App Android (v2.0)
+Wrapping (Capacitor/Expo), layout móvil heredado del responsive, widget
+de inicio (próximo break + vasos).
+
+### Modo "Retiro"
+Sesión larga combinando respiración + movilidad con música opcional.
+Cercano a CTB — podrían converger en una sección "sesiones largas".
+
+---
+
+## 💭 Ideas sueltas (explorar / descartar)
+
+- Reloj de escritorio (Electron ligero).
+- Exportar `.ics` del plan del día (sin OAuth, alineado con "todo local").
+- Plugin Notion / Obsidian ("espacio de respiración" entre bloques).
+
+---
+
+## 🚫 Fuera de alcance (nunca)
+
+- Gamificación agresiva (rachas rojas, push abrumador).
+- Emojis en la UI.
+- Tracking / analytics sin opt-in explícito.
+- Publicidad o monetización intrusiva.
+- Suscripción mensual clásica con renovación automática (ver `MONETIZATION.md`).
+- Consejos médicos sin disclaimer en técnicas de riesgo.
+- Copia literal de listas de rutinas de terceros.
+- Biometría / wearables (decisión s21 — no encaja con el tono artesanal).
