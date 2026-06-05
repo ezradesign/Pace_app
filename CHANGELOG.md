@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [abajo](#v0341----2026-06-05----fixsupport-copy-bmc-honesto--recrear-contentroadmap) |
 | **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [abajo](#v0340----2026-05-24----featglyphs-cierre-iter-glifos-canonicos-muevee-estira) |
-| **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [abajo](#v0333----2026-05-23----refactorachievements-split-achievementsjsx-en-achievements--glyphs) |
+| **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [session-83](./docs/sessions/session-83-achievements-split.md) |
 | **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [session-82](./docs/sessions/session-82-main-split.md) |
 | **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) -- variante B (pragmatica) | #81 | [session-81](./docs/sessions/session-81-strings-split.md) |
 | **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) -- 835 ln -> 244 ln (-71%) + contrato uniforme `(step, onExit(reason))` + `_shared.js` btnTypography/btnOutline | #80 | [session-80](./docs/sessions/session-80-split-pathrunner.md) |
@@ -102,6 +103,75 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.34.1] -- 2026-06-05 -- fix(support): copy BMC honesto + recrear CONTENT/ROADMAP
+
+Sesion 85. **Fase 1 del bloque Contenido+Premium.** Resuelve la
+contradiccion entre la filosofia "PACE es gratis, no freemium" del modal
+Buy Me a Coffee (s16) y el modelo Lifetime/Pase de `MONETIZATION.md`
+(s21-26), y recrea los dos documentos de catalogo/roadmap que llevaban
+~60 sesiones borrados (commit `be81606`).
+
+### Copy Buy Me a Coffee (truth-fix, opcion A)
+
+Solo se reescriben los 3 strings literalmente falsos bajo el modelo
+premium; el modal sigue siendo **donacion pura** (el premium tendra su
+propia superficie discreta en Tweaks, F3). Tono y metafora de la vaca
+intactos.
+
+- `support.title.main`: "PACE es gratis." -> "El nucleo de PACE es gratis."
+  (EN: "PACE is free." -> "PACE's core is free.")
+- `support.value.forever.sub`: "sin paywall, sin pro" -> "el nucleo, sin
+  condiciones" (EN: "no paywall, no pro" -> "the core, no strings").
+- `support.cta.sub`: "No desbloquea nada. Solo nos da cafe." -> "No
+  desbloquea nada -- es una propina, no una compra." (EN equivalente).
+
+El `lede` (todo local, sin tracking) se mantiene: sigue siendo cierto bajo
+el modelo premium (validacion de clave offline, sin cuentas ni backend).
+
+### Added
+
+- **`CONTENT.md`** -- recreado. Refleja el catalogo REAL v0.34.0 (12
+  Respira + 7 Mueve + 7 Estira), documenta el swap de ids s14, el modelo
+  de gating a nivel sesion (`access` propuesto, lo implementa F3) y apunta
+  a `catalog.js` como fuente canonica de los 106 logros (sin duplicar).
+- **`ROADMAP.md`** -- recreado. Marca lo hecho hasta v0.34.0 y detalla
+  las 8 fases del bloque Contenido+Premium.
+- **`backups/PACE_standalone_v0.34.0_20260605.html`** -- snapshot pre-s85.
+
+### Changed
+
+- **`app/i18n/strings/ui.js`** -- 3 strings ES + 3 EN (`support.*`).
+- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.34.1.
+- **`CHANGELOG.md`** -- v0.33.3 degradado a fila-de-enlace (convencion:
+  solo 2 ultimas detalladas).
+
+### Decisiones tomadas (Fase 0 del bloque)
+
+| ID | Decision | Razon |
+|---|---|---|
+| D1 | Gating a nivel sesion (no por ejercicio suelto) | Gatear pasos dentro de una rutina = muro de pago a mitad de flujo (mal UX). La unidad gateable es lo que pulsas "empezar" |
+| D2 | Copy BMC opcion A (truth-fix minimo) + premium en superficie aparte (F3) | Mantiene el modal de donacion puro (postura legal limpia: donar no desbloquea nada) y alinea con "upsell discreto en Tweaks" de MONETIZATION.md |
+| D3 | Gating ANTES del contenido | No se puede etiquetar `access` con honestidad sin el campo ni el sello que lo haga visible |
+| D4 | Constructor de rutinas premium (`custom.sequence`) como fase propia (F7) | Donde el registro interno de ejercicios gana su sitio, reutilizando el runner data-driven de `MoveSession` |
+
+### Verificacion runtime
+
+Via preview local en `localhost:8765`.
+
+- Dev (`PACE.html`): `PACE_STRINGS` ES/EN reflejan el copy nuevo.
+- Modal de apoyo renderiza el copy nuevo (screenshot), vaca + botones intactos.
+- Standalone v0.34.1: `PACE_VERSION === 'v0.34.1'`, title correcto, copy correcto.
+- Console errors: **cero** en dev y standalone.
+- Build limpio: **60 archivos validados** (11 .js + 49 .jsx).
+
+### Build
+
+- `PACE_standalone.html`: **622 KB**. `index.html` copia exacta.
+- Backup `PACE_standalone_v0.34.0_20260605.html` creado; cap 20 mantenido
+  (rotado el mas antiguo `v0.28.2_20260511.html`).
 
 ---
 
@@ -269,167 +339,7 @@ Cubierta via preview local en `localhost:8765/PACE_standalone.html`.
 
 ## [v0.33.3] -- 2026-05-23 -- refactor(achievements): split Achievements.jsx en achievements/ + glyphs/
 
-Sesion 83. Refactor puro de `app/achievements/Achievements.jsx` (409 ln)
-a una UI pura: datos extraidos a `app/achievements/catalog.js`, glifos
-SVG extraidos a `app/glyphs/achievement-glyphs.jsx`. Cero cambios
-funcionales, visuales, de copy ni de logica de desbloqueo.
-
-`app/achievements/Achievements.jsx` paso de **409 ln a 184 ln (-55%)**
-mediante split mecanico Variante B en 3 archivos:
-
-- `app/glyphs/achievement-glyphs.jsx` -- NUEVO (68 ln). `SVG_PFX`/`SVG_SFX`/
-  `g()` helpers + `GLYPH_SVG` map con 33 paths + alias `first.plan` =
-  `first.ritual`. Expone `window.ACHIEVEMENT_GLYPHS`. **Hermano de
-  `app/glyphs/exercise-glyphs.jsx`** (s60, intacto) -- dos sistemas
-  visuales conviviendo en `app/glyphs/` sin solapamiento (heraldica vs
-  line-art).
-- `app/achievements/catalog.js` -- NUEVO (209 ln). `ACHIEVEMENT_CATALOG`
-  (106 entradas) + `CAT_META` (7 categorias) + `IMPLEMENTED_ACHIEVEMENTS`
-  (Set de 69 ids con detector activo). Expone los 3 a `window.*`. Lee
-  glifos via `const GLYPH_SVG = window.ACHIEVEMENT_GLYPHS || {}`.
-- `app/achievements/Achievements.jsx` -- queda como **UI pura**:
-  `renderGlyph` + `isImplemented` + `Achievements` componente + `Seal`
-  componente. Lee los 3 globales como `const X = window.X || fallback`
-  al inicio del archivo.
-
-Variante B aprobada del [design s83](./docs/sessions/session-83-design.md):
-cumple metrica `>50%`, separa los dos sistemas conceptualmente, sin
-premature abstraction (la Variante C aislando `Seal.jsx` se descarto
--- 1 unico consumidor, cero caso de reuso identificado en roadmap).
-
-Diario: [session-83-achievements-split.md](./docs/sessions/session-83-achievements-split.md).
-Documentos de apoyo: [audit](./docs/sessions/session-83-audit.md),
-[design](./docs/sessions/session-83-design.md).
-
-Bump v0.33.3 (patch) -- refactor sin cambios funcionales ni de copy.
-
-### Added
-
-- **`app/glyphs/achievement-glyphs.jsx`** -- nuevo (68 ln). SVG helpers +
-  `GLYPH_SVG` map (33 paths) + alias `first.plan` + `Object.assign(window,
-  { ACHIEVEMENT_GLYPHS: GLYPH_SVG })`. Header doc-comment explica
-  convivencia con `exercise-glyphs.jsx`.
-- **`app/achievements/catalog.js`** -- nuevo (209 ln). `ACHIEVEMENT_CATALOG`
-  + `CAT_META` + `IMPLEMENTED_ACHIEVEMENTS` (este ultimo ahora expuesto a
-  window por simetria, era local-only pre-s83) + `Object.assign`. Entradas
-  del catalogo byte-identicas (siguen usando `GLYPH_SVG['id']`).
-
-### Changed
-
-- **`app/achievements/Achievements.jsx`** -- reducido de 409 a 184 ln.
-  Contiene SOLO: header doc-comment + 3 lineas de import desde window
-  (`ACHIEVEMENT_CATALOG`, `CAT_META`, `IMPLEMENTED_ACHIEVEMENTS`) +
-  `renderGlyph` + `isImplemented` + `Achievements` componente + `Seal`
-  componente + `Object.assign(window, { Achievements })`. Cuerpo de los
-  componentes byte-identico al original. Removido del `Object.assign` final
-  el `ACHIEVEMENT_CATALOG` (ahora unico fuente en catalog.js).
-- **`PACE.html`** -- 2 nuevos `<script src>` insertados antes de
-  `Achievements.jsx`: `app/glyphs/achievement-glyphs.jsx` ->
-  `app/achievements/catalog.js` -> `app/achievements/Achievements.jsx`.
-  Comentario explicativo del orden estricto.
-- **`PACE.html`** -- titulo `v0.33.3`.
-- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.33.3'`.
-- **`sw.js`** -- `CACHE_NAME = 'pace-v0.33.3'`.
-
-### Preservado (sin cambios)
-
-- **`app/glyphs/exercise-glyphs.jsx`** -- intacto en v0.28.1. Reservado
-  para s85+ cuando el usuario integre los nuevos glifos de Move/Stretch
-  que trabaja en paralelo. Verificado por `git diff --stat`: el archivo
-  NO aparece en cambios.
-- **`app/state-achievements.jsx`** -- intacto. NO consume
-  `ACHIEVEMENT_CATALOG` ni `IMPLEMENTED_ACHIEVEMENTS` (audit verifico).
-  `checkAllPathsCompleted` (s78) sigue leyendo `window.PATH_CATALOG`.
-- **`app/paths/CompletionScreen.jsx:50`** -- intacto. Sigue leyendo
-  `window.ACHIEVEMENT_CATALOG` con lectura defensiva.
-- **`app/ui/Toast.jsx:13`** -- idem.
-- **Cero cambios fuera de `app/achievements/` + `app/glyphs/` + `PACE.html`
-  + bump-implicito**. Ningun modulo, overlay ni consumidor requirio
-  modificacion.
-
-### Decisiones tomadas
-
-| ID | Decision | Razon |
-|---|---|---|
-| D1 | Aplicar Variante B (3 archivos: glifos + catalog + UI) -- no A (1) ni C (4) | A no establece `app/glyphs/` como convencion clara (`catalog.js` queda como saco mixto). C es premature abstraction: `Seal` tiene 1 consumidor (Achievements) y cero caso de reuso en roadmap conocido. B esta en la interseccion: cumple metrica (-55%), separa conceptos, sin sobre-abstraer. Mismo principio que s82 con hooks |
-| D2 | `app/glyphs/achievement-glyphs.jsx` con extension `.jsx` aunque no contenga JSX | Coherencia con el hermano `app/glyphs/exercise-glyphs.jsx` (s60). Trade-off cosmetico aceptado: la convencion dentro de `app/glyphs/` pesa mas que la regla `.js` si no hay JSX. `<script>` tag NO requiere `data-presets="env,react"` |
-| D3 | `IMPLEMENTED_ACHIEVEMENTS` expuesto a window (era local-only pre-s83) | Simetria con `ACHIEVEMENT_CATALOG`. Coste cero, abre la puerta a que otro modulo lo lea sin importar el catalogo entero |
-| D4 | Achievements.jsx lee los 3 globales como `const X = window.X || fallback` al inicio del archivo | Captura los valores una vez al cargar (orden de carga garantiza que catalog.js ya ejecuto). Fallback defensivo por si en algun escenario el orden falla -- degradacion graceful en lugar de TypeError |
-| D5 | NO consolidar glifos heraldica con line-art | Sistemas visuales conceptualmente distintos. Documentado en audit (1.2). Mismo namespace `app/glyphs/` pero almacenamiento (strings vs JSX), keys (achievement ids vs nombres de paso) y estilo (heraldica vs postura) totalmente diferentes |
-| D6 | NO modificar `state-achievements.jsx` | Audit confirmo cero acoplamiento. Modificarlo seria scope creep |
-| D7 | NO arreglar el counter "100 logros" vs 106 reales | Deuda menor de copy. Refactor puro -- no toca contenido. Diferida a s87+ cuando se ajuste catalogo |
-| D8 | `build-standalone.js` sin cambios | `validateAppFiles` walkea `app/` recursivo. Los 2 archivos nuevos se descubren automatico. Verificado: 60 archivos (antes 58) |
-
-### Invariantes preservadas (verificadas runtime)
-
-1. `window.ACHIEVEMENT_CATALOG.length === 106` (mismo conteo).
-2. `Object.keys(window.ACHIEVEMENT_GLYPHS).length === 35` (34 paths +
-   alias `first.plan`).
-3. `window.IMPLEMENTED_ACHIEVEMENTS.size === 69`.
-4. `window.CAT_META` con 7 categorias en orden correcto.
-5. Glifo heptagonal `master.path.all7` (s78) byte-identico:
-   `M22 6 L35 13 L38 26 L29 37 L15 37 L6 26 L9 13 Z`. Familia visual
-   streak.7/streak.30/streak.365 coherente.
-6. Alias `first.plan` consume SVG de `first.ritual` (5 circles + 1 path
-   identicos).
-7. `secret.cow.click` se pinta como '?' al estar locked, SVG al
-   desbloquearse.
-8. `Seal` mantiene sus 3 estados (unlocked/locked/coming-soon) +
-   modo-secreto.
-9. Badge "Pronto" en estado coming-soon.
-10. Cambio idioma ES->EN actualiza categorias y titulo del modal.
-11. `unlockAchievement('first.step')` -> seal cambia a unlocked (border
-    solid, opacity 1).
-12. Consumidores externos preservados: `CompletionScreen.jsx:50` y
-    `Toast.jsx:13` siguen leyendo `window.ACHIEVEMENT_CATALOG`.
-
-### Verificacion runtime
-
-Cubierta via preview local (`.claude/static-server.js` de s80) en
-`localhost:8765`. Fases 4.1 a 4.5 verificadas. Detalles en
-[session-83-achievements-split.md](./docs/sessions/session-83-achievements-split.md#tarea-4----verificacion-5-fases).
-
-- ✅ 60 archivos parsean limpios via `validateAppFiles` (TS parser real).
-- ✅ Verificacion intermedia (3 archivos cargados + Achievements.jsx
-  aun sin tocar): consola 0 errores. La duplicacion temporal es
-  idempotente por ser copia literal.
-- ✅ Tras reescribir Achievements.jsx: consola 0 errores en todo el ciclo
-  (modal, idioma, unlock, recarga). Solo warnings benignos de Babel
-  transformer.
-- ✅ Standalone v0.33.3 verifica los mismos invariantes que el modular.
-- ✅ Heptagonal `master.path.all7` byte-perfect en standalone.
-
-### Build
-
-- `PACE_standalone.html`: **620 KB** (635,365 bytes; +3,301 bytes vs
-  v0.33.2 = 632,064; +0.5%). Crecimiento por cabeceras de doc-comment
-  de los 2 archivos nuevos. Estimado en design: ~3 KB; real: +3 KB.
-  Exacto.
-- `index.html`: byte-perfect identico al standalone. SHA-256:
-  `23EF9FF6752B61D586C5C4A43DF6911583AE57AC733BBC65AC9A81795C62B6C7`.
-- 60 archivos validados (11 .js + 49 .jsx) -- antes 58 (10 .js + 48 .jsx).
-- Backup creado: `backups/PACE_standalone_v0.33.2_20260523.html` (617 KB).
-  Cap 20 mantenido (rotado el mas antiguo `v0.28.0_20260511.html`).
-
-### Diferido a sesiones siguientes
-
-- **`app/state-core.jsx`** (~475 ln, BAJA, dentro de limite) -- siguiente
-  candidato menor de deuda. No urgente.
-- **Variante C de Achievements** (Seal aislado) -- solo si surge un
-  segundo consumidor (carrusel de logros en Stats, micropreview en
-  banner de Camino completado).
-- **Deudas semanticas i18n** D-1/D-2/D-3 heredadas de s81 -- asignadas a
-  s87+.
-- **Counter "100 logros"** del `master.collector.full` -- texto
-  desactualizado a 106 reales. Diferido a s87+ cuando se ajuste catalogo.
-- **Consolidacion de glifos comparables** entre `exercise-glyphs.jsx` y
-  `achievement-glyphs.jsx` -- documentada en audit (logros como
-  `explore.hips` podrian reusar glifo de `Flexor de cadera` si se unifica
-  el lenguaje visual). NO consolidar en s83 (sistemas distintos por
-  design). Evaluar en s85+ cuando el usuario integre nuevos glifos
-  Move/Stretch.
-- **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
-  (530-600 KB; real 615-620 KB). Avisa en cada cierre. No urgente.
+Detalle completo en [session-83-achievements-split.md](./docs/sessions/session-83-achievements-split.md).
 
 ---
 

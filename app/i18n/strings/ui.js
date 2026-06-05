@@ -33,7 +33,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Support
     'support.meta':                  'Apoya el proyecto',
-    'support.title.main':            'PACE es gratis.',
+    'support.title.main':            'El núcleo de PACE es gratis.',
     'support.title.sub':             'Y lo seguirá siendo.',
     'support.lede':                  'No hay cuentas. No hay servidor. No te sigue nadie. Todo vive en tu navegador — y así queremos que siga.',
     'support.value.local.label':     'Todo local',
@@ -41,9 +41,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'support.value.tracking.label':  'Sin tracking',
     'support.value.tracking.sub':    'sin analytics, sin cookies',
     'support.value.forever.label':   'Para siempre',
-    'support.value.forever.sub':     'sin paywall, sin pro',
+    'support.value.forever.sub':     'el núcleo, sin condiciones',
     'support.cta':                   'Si te cuida, ayúdanos a cuidarlo.',
-    'support.cta.sub':               'No desbloquea nada. Solo nos da café.',
+    'support.cta.sub':               'No desbloquea nada — es una propina, no una compra.',
     'support.btn.label':             'Da de pastar a la vaca',
     'support.btn.copy':              'Copiar enlace',
     'support.btn.copied':            '✓ copiado',
@@ -187,7 +187,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Support
     'support.meta':                  'Support the project',
-    'support.title.main':            'PACE is free.',
+    'support.title.main':            "PACE's core is free.",
     'support.title.sub':             'And it always will be.',
     'support.lede':                  'No accounts. No server. No tracking. Everything lives in your browser — and we want to keep it that way.',
     'support.value.local.label':     'Fully local',
@@ -195,9 +195,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'support.value.tracking.label':  'No tracking',
     'support.value.tracking.sub':    'no analytics, no cookies',
     'support.value.forever.label':   'Forever',
-    'support.value.forever.sub':     'no paywall, no pro',
+    'support.value.forever.sub':     'the core, no strings',
     'support.cta':                   'If it takes care of you, help us keep it going.',
-    'support.cta.sub':               "Doesn't unlock anything. Just buys us coffee.",
+    'support.cta.sub':               "Unlocks nothing — it's a tip, not a purchase.",
     'support.btn.label':             'Feed the cow',
     'support.btn.copy':              'Copy link',
     'support.btn.copied':            '✓ copied',

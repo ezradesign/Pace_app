@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.34.0</title>
+  <title>PACE · Foco · Cuerpo — v0.34.1</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -479,7 +479,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
     // Support
     'support.meta':                  'Apoya el proyecto',
-    'support.title.main':            'PACE es gratis.',
+    'support.title.main':            'El núcleo de PACE es gratis.',
     'support.title.sub':             'Y lo seguirá siendo.',
     'support.lede':                  'No hay cuentas. No hay servidor. No te sigue nadie. Todo vive en tu navegador — y así queremos que siga.',
     'support.value.local.label':     'Todo local',
@@ -487,9 +487,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'support.value.tracking.label':  'Sin tracking',
     'support.value.tracking.sub':    'sin analytics, sin cookies',
     'support.value.forever.label':   'Para siempre',
-    'support.value.forever.sub':     'sin paywall, sin pro',
+    'support.value.forever.sub':     'el núcleo, sin condiciones',
     'support.cta':                   'Si te cuida, ayúdanos a cuidarlo.',
-    'support.cta.sub':               'No desbloquea nada. Solo nos da café.',
+    'support.cta.sub':               'No desbloquea nada — es una propina, no una compra.',
     'support.btn.label':             'Da de pastar a la vaca',
     'support.btn.copy':              'Copiar enlace',
     'support.btn.copied':            '✓ copiado',
@@ -633,7 +633,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
     // Support
     'support.meta':                  'Support the project',
-    'support.title.main':            'PACE is free.',
+    'support.title.main':            "PACE's core is free.",
     'support.title.sub':             'And it always will be.',
     'support.lede':                  'No accounts. No server. No tracking. Everything lives in your browser — and we want to keep it that way.',
     'support.value.local.label':     'Fully local',
@@ -641,9 +641,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'support.value.tracking.label':  'No tracking',
     'support.value.tracking.sub':    'no analytics, no cookies',
     'support.value.forever.label':   'Forever',
-    'support.value.forever.sub':     'no paywall, no pro',
+    'support.value.forever.sub':     'the core, no strings',
     'support.cta':                   'If it takes care of you, help us keep it going.',
-    'support.cta.sub':               "Doesn't unlock anything. Just buys us coffee.",
+    'support.cta.sub':               "Unlocks nothing — it's a tip, not a purchase.",
     'support.btn.label':             'Feed the cow',
     'support.btn.copy':              'Copy link',
     'support.btn.copied':            '✓ copied',
@@ -1644,7 +1644,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.0';
+const PACE_VERSION = 'v0.34.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
