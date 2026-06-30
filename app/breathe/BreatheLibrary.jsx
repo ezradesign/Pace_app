@@ -73,11 +73,23 @@ function BreatheLibrary({ open, onClose, onStart }) {
   );
 }
 
+/* RoutineCard — tarjeta compartida por las 3 bibliotecas (Respira/Mueve/Estira),
+   expuesta a window y consumida también por MoveModule y ExtraModule.
+
+   Gating de contenido (s87 · bloque Contenido+Premium F3a):
+   convención del campo `access` en los datos de rutina —
+     ausente | 'free'  → libre (comportamiento normal, clicable)
+     'premium'         → de pago. Hasta v1.0 NO hay ruta de desbloqueo real:
+                         se muestra el sello PREMIUM + 'Pronto' y la tarjeta
+                         NO arranca (onClick desactivado). El desbloqueo real
+                         (inicial / por logro) y la designación de qué rutinas
+                         son premium llegan en F3b / F5-F7. */
 function RoutineCard({ routine, color, onClick }) {
   const { t, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const isPremium = routine.access === 'premium';
   return (
-    <Card accent={color} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={isPremium ? undefined : color} onClick={isPremium ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
         <div style={{
           position: 'absolute', top: 12, right: 12,
@@ -87,8 +99,9 @@ function RoutineCard({ routine, color, onClick }) {
           fontSize: 11, fontWeight: 600,
         }} title={t('breathe.safety.required')}>⚠</div>
       )}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
         <Tag color={color}>{routine.tag}</Tag>
+        {isPremium && <PremiumSeal />}
       </div>
       <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{tR(`${routine.id}.name`, routine.name)}</h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{tR(`${routine.id}.desc`, routine.desc)}</p>
@@ -99,10 +112,11 @@ function RoutineCard({ routine, color, onClick }) {
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {tR(`${routine.id}.code`, routine.code)}
         </span>
-        <span style={{
-          ...displayItalic, fontSize: 16,
-          color: color, fontWeight: 500,
-        }}>{routine.min} min</span>
+        {isPremium ? (
+          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
+        ) : (
+          <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{routine.min} min</span>
+        )}
       </div>
     </Card>
   );

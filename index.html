@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.34.2</title>
+  <title>PACE · Foco · Cuerpo — v0.34.3</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -55,6 +55,14 @@
 
   --achievement: #B8934A;
   --achievement-soft: rgba(184, 147, 74, 0.12);
+
+  /* Premium / gating de contenido (s87 · bloque Contenido+Premium F3a).
+     Bronce profundo y saturado, deliberadamente MÁS oscuro que el oro
+     --achievement (#B8934A) y que el tan --move (#9A7B4F) para que el
+     sello PREMIUM no se confunda con ninguno a simple vista. Tono tierra,
+     sin dorado brillante ni gradiente — coherente con el carácter artesanal. */
+  --premium: #9C6B2E;
+  --premium-soft: rgba(156, 107, 46, 0.12);
 
   /* TIPOGRAFÍA */
   --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
@@ -610,6 +618,10 @@ Object.assign(window.PACE_STRINGS.es, {
     'tweaks.msg.import.json.err':    'JSON inválido.',
     'tweaks.confirm.reset':          '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
     'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
+
+    // Premium (gating de contenido · bloque Contenido+Premium F3)
+    'premium.seal':                  'Premium',
+    'premium.soon':                  'Pronto',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -764,6 +776,10 @@ Object.assign(window.PACE_STRINGS.en, {
     'tweaks.msg.import.json.err':    'Invalid JSON.',
     'tweaks.confirm.reset':          'Delete all your PACE data? This action cannot be undone.',
     'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
+
+    // Premium (content gating · Content+Premium block F3)
+    'premium.seal':                  'Premium',
+    'premium.soon':                  'Soon',
 });
 
 </script>
@@ -1644,7 +1660,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.2';
+const PACE_VERSION = 'v0.34.3';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3045,6 +3061,27 @@ function Meta({ children, style = {} }) {
   return <div className="pace-meta" style={style}>{children}</div>;
 }
 
+/* PremiumSeal — sello de contenido de pago (s87 · bloque Contenido+Premium F3a).
+   Chip inline reutilizable: lo coloca el consumidor (RoutineCard hoy; Tweaks /
+   Caminos en F3b). Usa --premium / --premium-soft. `label` permite override sin
+   depender de i18n; por defecto lee la clave 'premium.seal'. */
+function PremiumSeal({ label, style = {} }) {
+  const { t } = useT();
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '3px 9px',
+      fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+      borderRadius: 'var(--r-pill)',
+      border: '1px solid var(--premium)',
+      color: 'var(--premium)',
+      background: 'var(--premium-soft)',
+      fontWeight: 600,
+      ...style,
+    }}>{label || t('premium.seal')}</span>
+  );
+}
+
 /* Animaciones globales */
 const _paceAnimStyle = document.getElementById('pace-anim');
 if (!_paceAnimStyle) {
@@ -3123,7 +3160,7 @@ if (!_paceModalResponsive) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic });
 
 </script>
   <script type="text/babel">
@@ -6975,11 +7012,23 @@ function BreatheLibrary({ open, onClose, onStart }) {
   );
 }
 
+/* RoutineCard — tarjeta compartida por las 3 bibliotecas (Respira/Mueve/Estira),
+   expuesta a window y consumida también por MoveModule y ExtraModule.
+
+   Gating de contenido (s87 · bloque Contenido+Premium F3a):
+   convención del campo `access` en los datos de rutina —
+     ausente | 'free'  → libre (comportamiento normal, clicable)
+     'premium'         → de pago. Hasta v1.0 NO hay ruta de desbloqueo real:
+                         se muestra el sello PREMIUM + 'Pronto' y la tarjeta
+                         NO arranca (onClick desactivado). El desbloqueo real
+                         (inicial / por logro) y la designación de qué rutinas
+                         son premium llegan en F3b / F5-F7. */
 function RoutineCard({ routine, color, onClick }) {
   const { t, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const isPremium = routine.access === 'premium';
   return (
-    <Card accent={color} onClick={onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={isPremium ? undefined : color} onClick={isPremium ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
         <div style={{
           position: 'absolute', top: 12, right: 12,
@@ -6989,8 +7038,9 @@ function RoutineCard({ routine, color, onClick }) {
           fontSize: 11, fontWeight: 600,
         }} title={t('breathe.safety.required')}>⚠</div>
       )}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
         <Tag color={color}>{routine.tag}</Tag>
+        {isPremium && <PremiumSeal />}
       </div>
       <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{tR(`${routine.id}.name`, routine.name)}</h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{tR(`${routine.id}.desc`, routine.desc)}</p>
@@ -7001,10 +7051,11 @@ function RoutineCard({ routine, color, onClick }) {
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {tR(`${routine.id}.code`, routine.code)}
         </span>
-        <span style={{
-          ...displayItalic, fontSize: 16,
-          color: color, fontWeight: 500,
-        }}>{routine.min} min</span>
+        {isPremium ? (
+          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
+        ) : (
+          <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{routine.min} min</span>
+        )}
       </div>
     </Card>
   );

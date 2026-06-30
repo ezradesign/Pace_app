@@ -238,6 +238,27 @@ function Meta({ children, style = {} }) {
   return <div className="pace-meta" style={style}>{children}</div>;
 }
 
+/* PremiumSeal — sello de contenido de pago (s87 · bloque Contenido+Premium F3a).
+   Chip inline reutilizable: lo coloca el consumidor (RoutineCard hoy; Tweaks /
+   Caminos en F3b). Usa --premium / --premium-soft. `label` permite override sin
+   depender de i18n; por defecto lee la clave 'premium.seal'. */
+function PremiumSeal({ label, style = {} }) {
+  const { t } = useT();
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '3px 9px',
+      fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+      borderRadius: 'var(--r-pill)',
+      border: '1px solid var(--premium)',
+      color: 'var(--premium)',
+      background: 'var(--premium-soft)',
+      fontWeight: 600,
+      ...style,
+    }}>{label || t('premium.seal')}</span>
+  );
+}
+
 /* Animaciones globales */
 const _paceAnimStyle = document.getElementById('pace-anim');
 if (!_paceAnimStyle) {
@@ -316,4 +337,4 @@ if (!_paceModalResponsive) {
   document.head.appendChild(s);
 }
 
-Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, displayItalic });
+Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic });

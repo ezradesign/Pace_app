@@ -41,6 +41,14 @@
   --achievement: #B8934A;
   --achievement-soft: rgba(184, 147, 74, 0.12);
 
+  /* Premium / gating de contenido (s87 · bloque Contenido+Premium F3a).
+     Bronce profundo y saturado, deliberadamente MÁS oscuro que el oro
+     --achievement (#B8934A) y que el tan --move (#9A7B4F) para que el
+     sello PREMIUM no se confunda con ninguno a simple vista. Tono tierra,
+     sin dorado brillante ni gradiente — coherente con el carácter artesanal. */
+  --premium: #9C6B2E;
+  --premium-soft: rgba(156, 107, 46, 0.12);
+
   /* TIPOGRAFÍA */
   --font-display: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
   --font-ui: 'Inter Tight', system-ui, -apple-system, sans-serif;

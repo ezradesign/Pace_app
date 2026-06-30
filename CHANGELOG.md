@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [abajo](#v0343----2026-06-30----featpremium-f3a-mecanismo-de-gating) |
 | **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [abajo](#v0342----2026-06-05----fixtracking-f-1-pathfocusstep-updatestreak--f2-auditoria) |
-| **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [abajo](#v0341----2026-06-05----fixsupport-copy-bmc-honesto--recrear-contentroadmap) |
+| **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [session-85](./docs/sessions/session-85-f1-bmc-docs.md) |
 | **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [session-84](./docs/sessions/session-84-glifos-cierre-iter.md) |
 | **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [session-83](./docs/sessions/session-83-achievements-split.md) |
 | **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [session-82](./docs/sessions/session-82-main-split.md) |
@@ -107,6 +108,59 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.34.3] -- 2026-06-30 -- feat(premium): F3a mecanismo de gating
+
+Sesion 87. **Fase 3a del bloque Contenido+Premium: el mecanismo de gating a
+nivel sesion**, construido y verificado pero **dormante** -- todas las rutinas
+siguen `free`, nada cambia para el usuario. F3b encendera el desbloqueo real y
+designara el set premium.
+
+### Added
+
+- **`app/tokens.css`** -- tokens `--premium` (#9C6B2E) + `--premium-soft`. Bronce
+  profundo, deliberadamente mas oscuro que `--achievement` (#B8934A) y `--move`
+  (#9A7B4F) para que el sello no se confunda con ninguno. Tono tierra, sin
+  dorado brillante ni gradiente.
+- **`app/ui/Primitives.jsx`** -- componente reutilizable `PremiumSeal` (chip
+  inline; prop `label` opcional, por defecto i18n `premium.seal`). Expuesto a
+  `window` para reuso en F3b (Tweaks / Caminos).
+- **`app/i18n/strings/ui.js`** -- `premium.seal` / `premium.soon` (ES + EN).
+
+### Changed
+
+- **`app/breathe/BreatheLibrary.jsx`** -- `RoutineCard` (compartido por las 3
+  bibliotecas Respira/Mueve/Estira via `window`) lee `routine.access`: si
+  `'premium'`, muestra el sello + "Pronto" (en lugar de los minutos) y
+  **desactiva el clic** (no arranca). Convencion documentada: ausente|`'free'` =
+  libre, `'premium'` = de pago. La designacion de que rutinas son premium y el
+  desbloqueo real llegan en F3b / F5-F7.
+- **`DESIGN_SYSTEM.md`** -- documentado el token `--premium` / `--premium-soft`.
+- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.34.3.
+- **`CHANGELOG.md`** -- v0.34.1 degradado a fila-de-enlace (convencion: solo 2
+  ultimas detalladas).
+
+### Verificacion runtime
+
+Via preview local en `localhost:8765`.
+
+- Con una rutina marcada premium temporalmente (Box 6.6.6.6): sello PREMIUM en
+  bronce `rgb(156,107,46)` + fondo `--premium-soft`, "Pronto" en lugar de los
+  minutos (screenshot). Tarjeta libre `cursor: pointer` vs premium
+  `cursor: default` (no clicable) -- confirmado.
+- Flag temporal **revertido**; standalone limpio verificado: 0 rutinas premium
+  en datos, token (#9C6B2E) y componente `PremiumSeal` presentes, consola sin
+  errores.
+- Build limpio: **60 archivos validados**.
+
+### Build
+
+- `PACE_standalone.html`: **625 KB**. `index.html` copia exacta (SHA256 identico).
+- Backup `PACE_standalone_v0.34.2_20260630.html` creado (snapshot del v0.34.2
+  publicado, desde git HEAD); cap 20 (rotado el mas antiguo
+  `v0.28.4_20260512.html`).
+
+---
+
 ## [v0.34.2] -- 2026-06-05 -- fix(tracking): F-1 PathFocusStep updateStreak + F2 auditoria
 
 Sesion 86. **Fase 2 del bloque Contenido+Premium: auditoria de tracking** punta
@@ -161,70 +215,7 @@ Caminos, F-5 metricas que mezclan agua) -- documentados, no aplicados.
 ---
 ## [v0.34.1] -- 2026-06-05 -- fix(support): copy BMC honesto + recrear CONTENT/ROADMAP
 
-Sesion 85. **Fase 1 del bloque Contenido+Premium.** Resuelve la
-contradiccion entre la filosofia "PACE es gratis, no freemium" del modal
-Buy Me a Coffee (s16) y el modelo Lifetime/Pase de `MONETIZATION.md`
-(s21-26), y recrea los dos documentos de catalogo/roadmap que llevaban
-~60 sesiones borrados (commit `be81606`).
-
-### Copy Buy Me a Coffee (truth-fix, opcion A)
-
-Solo se reescriben los 3 strings literalmente falsos bajo el modelo
-premium; el modal sigue siendo **donacion pura** (el premium tendra su
-propia superficie discreta en Tweaks, F3). Tono y metafora de la vaca
-intactos.
-
-- `support.title.main`: "PACE es gratis." -> "El nucleo de PACE es gratis."
-  (EN: "PACE is free." -> "PACE's core is free.")
-- `support.value.forever.sub`: "sin paywall, sin pro" -> "el nucleo, sin
-  condiciones" (EN: "no paywall, no pro" -> "the core, no strings").
-- `support.cta.sub`: "No desbloquea nada. Solo nos da cafe." -> "No
-  desbloquea nada -- es una propina, no una compra." (EN equivalente).
-
-El `lede` (todo local, sin tracking) se mantiene: sigue siendo cierto bajo
-el modelo premium (validacion de clave offline, sin cuentas ni backend).
-
-### Added
-
-- **`CONTENT.md`** -- recreado. Refleja el catalogo REAL v0.34.0 (12
-  Respira + 7 Mueve + 7 Estira), documenta el swap de ids s14, el modelo
-  de gating a nivel sesion (`access` propuesto, lo implementa F3) y apunta
-  a `catalog.js` como fuente canonica de los 106 logros (sin duplicar).
-- **`ROADMAP.md`** -- recreado. Marca lo hecho hasta v0.34.0 y detalla
-  las 8 fases del bloque Contenido+Premium.
-- **`backups/PACE_standalone_v0.34.0_20260605.html`** -- snapshot pre-s85.
-
-### Changed
-
-- **`app/i18n/strings/ui.js`** -- 3 strings ES + 3 EN (`support.*`).
-- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.34.1.
-- **`CHANGELOG.md`** -- v0.33.3 degradado a fila-de-enlace (convencion:
-  solo 2 ultimas detalladas).
-
-### Decisiones tomadas (Fase 0 del bloque)
-
-| ID | Decision | Razon |
-|---|---|---|
-| D1 | Gating a nivel sesion (no por ejercicio suelto) | Gatear pasos dentro de una rutina = muro de pago a mitad de flujo (mal UX). La unidad gateable es lo que pulsas "empezar" |
-| D2 | Copy BMC opcion A (truth-fix minimo) + premium en superficie aparte (F3) | Mantiene el modal de donacion puro (postura legal limpia: donar no desbloquea nada) y alinea con "upsell discreto en Tweaks" de MONETIZATION.md |
-| D3 | Gating ANTES del contenido | No se puede etiquetar `access` con honestidad sin el campo ni el sello que lo haga visible |
-| D4 | Constructor de rutinas premium (`custom.sequence`) como fase propia (F7) | Donde el registro interno de ejercicios gana su sitio, reutilizando el runner data-driven de `MoveSession` |
-
-### Verificacion runtime
-
-Via preview local en `localhost:8765`.
-
-- Dev (`PACE.html`): `PACE_STRINGS` ES/EN reflejan el copy nuevo.
-- Modal de apoyo renderiza el copy nuevo (screenshot), vaca + botones intactos.
-- Standalone v0.34.1: `PACE_VERSION === 'v0.34.1'`, title correcto, copy correcto.
-- Console errors: **cero** en dev y standalone.
-- Build limpio: **60 archivos validados** (11 .js + 49 .jsx).
-
-### Build
-
-- `PACE_standalone.html`: **622 KB**. `index.html` copia exacta.
-- Backup `PACE_standalone_v0.34.0_20260605.html` creado; cap 20 mantenido
-  (rotado el mas antiguo `v0.28.2_20260511.html`).
+Detalle completo en [session-85-f1-bmc-docs.md](./docs/sessions/session-85-f1-bmc-docs.md).
 
 ---
 
