@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [abajo](#v0342----2026-06-05----fixtracking-f-1-pathfocusstep-updatestreak--f2-auditoria) |
 | **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [abajo](#v0341----2026-06-05----fixsupport-copy-bmc-honesto--recrear-contentroadmap) |
-| **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [abajo](#v0340----2026-05-24----featglyphs-cierre-iter-glifos-canonicos-muevee-estira) |
+| **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [session-84](./docs/sessions/session-84-glifos-cierre-iter.md) |
 | **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [session-83](./docs/sessions/session-83-achievements-split.md) |
 | **v0.33.2** | 2026-05-23 | refactor(main): split `app/main.jsx` (600 ln) en `app/main/` (_responsive + TopBar + ActivityBar) -- variante B (equilibrada) -- 600 ln -> 279 ln (-53%) | #82 | [session-82](./docs/sessions/session-82-main-split.md) |
 | **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) -- variante B (pragmatica) | #81 | [session-81](./docs/sessions/session-81-strings-split.md) |
@@ -106,6 +107,58 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.34.2] -- 2026-06-05 -- fix(tracking): F-1 PathFocusStep updateStreak + F2 auditoria
+
+Sesion 86. **Fase 2 del bloque Contenido+Premium: auditoria de tracking** punta
+a punta (read-only) + el unico micro-fix que encontro.
+
+### Auditoria (informe: `docs/audits/audit-tracking-v0.34.1.md`)
+
+Veredicto: **tracking sano**. Los 6 fixes de s69 (C1/C2/C3/A1/A2 + guards de
+migracion) siguen intactos; los refactors s80-s84 no rompieron el nucleo.
+Indexado lunes-primero coherente en escritores y lectores, history idempotente,
+"dia activo" = focus|breath|move>0 (agua sola no cuenta), detectores de logros
+correctos umbral por umbral contra `catalog.js`; `IMPLEMENTED_ACHIEVEMENTS` sin
+huecos. Hallazgos: 1 medio (F-1, aplicado) + 4 cosmeticos/heredados (F-2 DST en
+`hydrate.week.perfect`, F-3 `WeeklyStats.jsx` dead code, F-4 fecha UTC en
+Caminos, F-5 metricas que mezclan agua) -- documentados, no aplicados.
+
+### Fixed
+
+- **`app/paths/steps/PathFocusStep.jsx`** -- **F-1**: el Pomodoro contextual de
+  un Camino acreditaba foco con `addFocusMinutes` pero no llamaba `updateStreak`.
+  Un dia de solo-foco-en-Camino (saltando breathe/body) salia activo en el
+  heatmap/YearView pero no sumaba a `streak.current`. Ahora llama `updateStreak()`
+  tras el credito, igual que la home (`completePomodoro`). Idempotente por dia:
+  no doble-cuenta si el Camino tambien ejecuta un paso breathe/body.
+
+### Changed
+
+- **`PACE.html`**, **`app/state-core.jsx`**, **`sw.js`** -- bump v0.34.2.
+- **`CHANGELOG.md`** -- v0.34.0 degradado a stub-enlace (convencion: solo 2
+  ultimas detalladas).
+
+### Added
+
+- **`docs/audits/audit-tracking-v0.34.1.md`** -- informe de salud F2: hallazgos
+  por severidad (file:linea) + tabla de casos de prueba (rollover dia/semana,
+  idempotencia, lunes-primero, agua-sola-no-cuenta, detectores).
+- **`backups/PACE_standalone_v0.34.1_20260605.html`** -- snapshot pre-s86.
+
+### Verificacion runtime
+
+- Build limpio: **60 archivos validados** (11 .js + 49 .jsx).
+- Standalone v0.34.2: `PACE_VERSION === 'v0.34.2'`, title correcto, fix
+  inlineado (`updateStreak` en `PathFocusStep`). Smoke test headless: la app
+  renderiza completa (welcome + sidebar + chips), sin error fatal en consola.
+
+### Build
+
+- `PACE_standalone.html`: **622 KB**. `index.html` copia exacta.
+- Backup `PACE_standalone_v0.34.1_20260605.html` creado; cap 20 (rotado el mas
+  antiguo `v0.28.3_20260512.html`).
+
+---
 ## [v0.34.1] -- 2026-06-05 -- fix(support): copy BMC honesto + recrear CONTENT/ROADMAP
 
 Sesion 85. **Fase 1 del bloque Contenido+Premium.** Resuelve la
@@ -177,163 +230,7 @@ Via preview local en `localhost:8765`.
 
 ## [v0.34.0] -- 2026-05-24 -- feat(glyphs): cierre iter glifos canonicos Mueve/Estira
 
-Sesion 84. Cierra el iter parcial de glifos abierto en s60 portando
-**literalmente** las versiones aprobadas por el usuario desde su HTML de
-exploracion (`Glifos Mueve y Estira _ standalone v0.19.html`,
-bundler autoextract gzip+base64 desempaquetado con script temporal).
-
-`app/glyphs/exercise-glyphs.jsx` paso de **527 ln a 554 ln (+5%)** con
-**28 ports + 18 mantenimientos** (3 keep idéntico + 15 keep s60):
-
-- **28 ports** (12 Mueve + 16 Estira): sustitucion byte-perfect del cuerpo
-  SVG dentro del wrapper `G` existente (strokeWidth 1.8 unificado a nivel
-  repo).
-- **3 keep idéntico** (Fondos en silla, Rib pull + respiracion, Rotacion
-  lenta): version APPROVED='new' es byte-identica al actual; cero edit.
-- **15 keep s60**: glifos PENDIENTES sin entrada en `window.APPROVED` del
-  HTML; mantenidos en estado canonico s60 (decision usuario Tarea 0).
-
-Distribucion de versiones aprobadas portadas:
-- **new (v3)**: 15 -- Flexiones inclinadas, Descanso, Wall sit, Scapular
-  squeeze, Thoracic extension, Chest opener, Rotacion toracica, Reset
-  respiracion, Puente con marcha, Band pull-apart, Dead hang (si puedes),
-  Rib pull + respiracion, Rotacion lenta, Deep breaths (+Fondos en silla idéntico).
-- **alt (v4)**: 5 -- Calf raises, 90/90, Squat profundo, External
-  rotation, Hang pasivo.
-- **v5**: 2 -- Seated hollow, Wrist stretch.
-- **v6**: 1 -- Cuello y trapecios.
-- **v7**: 1 -- Elephant walk.
-- **v8**: 4 -- Chin tucks, Apertura de pecho, Flexor de cadera, Scapular
-  wall slides.
-- **v9**: 2 -- Squeeze fist, Finger extension.
-- **v12**: 1 -- Shrug + round.
-
-Diario: [session-84-glifos-cierre-iter.md](./docs/sessions/session-84-glifos-cierre-iter.md).
-Documentos de apoyo: [audit](./docs/sessions/session-84-audit.md),
-[design](./docs/sessions/session-84-design.md).
-
-Bump v0.34.0 (minor) -- cierre del iter abierto en s60, sustitucion
-mayoritaria del catalogo de glifos (28/46 = 61% modificados, 31/46 = 67%
-bloqueados por el usuario).
-
-### Added
-
-- **`docs/sessions/session-84-audit.md`** -- nuevo (~280 ln). Auditoria
-  estructural completa: inventario cruzado, cobertura, consumidores,
-  reglas de dibujo, invariantes, edge cases.
-- **`docs/sessions/session-84-design.md`** -- nuevo (~180 ln). Lista
-  cerrada de acciones, orden de port, decisiones arquitectonicas,
-  versionado, riesgos.
-- **`docs/sessions/session-84-glifos-cierre-iter.md`** -- nuevo. Diario
-  completo.
-- **`backups/PACE_standalone_v0.33.3_20260524.html`** -- snapshot del v0.33.3
-  publicado pre-s84.
-
-### Changed
-
-- **`app/glyphs/exercise-glyphs.jsx`** -- 28 cuerpos SVG portados literales
-  desde el HTML del usuario. Comentarios contextuales reescritos por glifo
-  portado con tag de version (`(NEW)`, `(V8)`, `(V9)`, etc.). Header
-  actualizado a v0.34.0 con explicacion del estado.
-- **`PACE.html`** -- titulo `v0.34.0`.
-- **`app/state-core.jsx`** -- `PACE_VERSION = 'v0.34.0'`.
-- **`sw.js`** -- `CACHE_NAME = 'pace-v0.34.0'`.
-
-### Preservado (sin cambios)
-
-- **Wrapper `G`** (strokeWidth 1.8) -- intacto. Divergencia de strokeWidth
-  del HTML del usuario (1.5/2.0) documentada en audit 1.4 como
-  "divergencia consciente": el wrapper unifica el lenguaje a nivel repo.
-- **15 glifos PENDIENTES** -- byte-perfect intactos. Verificado por
-  `git diff` (0 ocurrencias en el diff para las 15 keys).
-- **3 glifos "keep idéntico"** -- byte-perfect intactos. La version
-  APPROVED='new' es identica al actual.
-- **46 keys** y orden del archivo -- preservados (cobertura 1:1 con
-  `MOVE_ROUTINES` + `EXTRA_ROUTINES`).
-- **`window.EXERCISE_GLYPHS` + `window.ExerciseGlyph` + `window.DefaultGlyph`**
-  -- mismo contrato, mismo `Object.assign` final.
-- **`MoveModule.jsx`** (unico consumidor real) -- intacto.
-- **`achievement-glyphs.jsx`** -- intacto (sistema visual separado).
-- **`MOVE_ROUTINES`/`EXTRA_ROUTINES`** -- intacto. Divergencia menor
-  `move.desk.quick` (HTML usuario tiene `Apertura de pecho` donde repo
-  tiene `Chin tucks` en paso 5) documentada como deuda futura.
-
-### Decisiones tomadas
-
-| ID | Decision | Razon |
-|---|---|---|
-| D1 | Port literal del CUERPO SVG dentro del wrapper G del repo (stroke 1.8) | Preserva geometria byte-perfect (mismo `d`, mismo `cx`/`cy`/`r`, opacidades, dasharray) pero unifica strokeWidth. El wrapper estandariza el lenguaje a nivel repo; cambiar a 2.0 (estilo V9) seria decision separada que afecta 46 glifos por igual |
-| D2 | 15 PENDIENTES mantenidos en s60 (no portar v8/v9/v10/v11/v12/v13 sin aprobacion explicita) | Decision usuario Tarea 0. Sirven como CONTROL de Fase 4.3 (snapshot comparativo): si cambian, error en lista de acciones. Iteraciones disponibles en exploracion; portar cuando el usuario apruebe |
-| D3 | Bump minor v0.34.0 (no patch v0.33.4) | Cierre del iter abierto en s60 -- objetivo declarado del prompt. 28/46 = 61% modificados, 31/46 = 67% bloqueados. Permite s85 ser polish/Reddit puro |
-| D4 | Wrapper G intacto (NO unificar strokeWidth a 2.0) | Aunque V9 (Squeeze fist, Finger extension) y V10/V11 usan stroke 2.0, cambiar el wrapper afectaria los 46 glifos por igual incluido los 15 mantenidos. Decision separada si el usuario lo desea |
-| D5 | NO trocear `exercise-glyphs.jsx` en `move.jsx` + `stretch.jsx` | Estimacion post-port 510-560 ln; resultado real 554 ln (dentro del umbral 600) |
-| D6 | NO modificar `EXTRA_ROUTINES` para reconciliar divergencia `move.desk.quick` | Scope s84 = solo glifos. Decision de catalogo se difiere |
-| D7 | NO modificar `achievement-glyphs.jsx` | Sistema visual separado (heraldica vs line-art). Cero impacto |
-| D8 | Comentarios contextuales actualizados con tag de version | `(NEW)`, `(V8)`, `(V9)`, etc. Facilita rastrear el origen del SVG en sesiones futuras |
-| D9 | Script temporal `scripts/extract-glyphs-bundle.js` + `scripts/extracted-glyphs/` borrados al cerrar | Bundler autoextract gzip+base64 desempaquetado para acceder a SVGs en formato JSX. Cleanup tras cierre |
-
-### Invariantes preservadas (verificadas runtime)
-
-1. `window.EXERCISE_GLYPHS` con 46 keys (sin renombrados).
-2. `window.ExerciseGlyph(id)` lookup intacto.
-3. `window.DefaultGlyph` fallback intacto.
-4. Wrapper `G` con `viewBox="0 0 44 44"`, `fill="none"`,
-   `stroke="currentColor"`, `strokeWidth="1.8"`.
-5. Cobertura 46/46: cero pasos caen al `DefaultGlyph`.
-6. `MoveSession` renderiza pasos de Mueve + Estira + Caminos `body` via
-   `StepGlyph` -> `ExerciseGlyph`.
-7. `currentColor` heredado en SVG: verificado en paleta oscuro
-   (stroke = `rgb(154, 123, 79)` = `var(--move)`).
-8. 15 PENDIENTES byte-perfect (0 ocurrencias en `git diff`).
-9. 3 keep idéntico byte-perfect (0 ocurrencias en `git diff`).
-10. `achievement-glyphs.jsx` intacto (verificado por `git diff --stat`).
-11. Conteo de elementos por port coincide byte-perfect con HTML del
-    usuario (verificado para los 28 ports).
-
-### Verificacion runtime
-
-Cubierta via preview local en `localhost:8765/PACE_standalone.html`.
-
-- ✅ Build limpio: 60 archivos validados (11 .js + 49 .jsx).
-- ✅ Snapshot DOM de los 28 ports renderiza con conteo path/circle
-  esperado (paths+circles+ellipses+rects coinciden byte-perfect con HTML
-  del usuario).
-- ✅ Visualmente verificado en rutina **Grip + antebrazos** (Mueve):
-  Squeeze fist V9 "(o)" + Finger extension V9 (5 lineas radiando) +
-  Wrist stretch V5 (abanico).
-- ✅ Visualmente verificado en rutina **Antidoto silla** (Estira):
-  Apertura de pecho V8 (arco + arco inferior).
-- ✅ Fase 4.2 paletas: paleta oscuro aplicada, `currentColor` heredado
-  correctamente.
-- ✅ Fase 4.3 control: `git diff` revela 0 ocurrencias para los 15
-  pendientes + 3 keep idéntico.
-- ✅ Console errors: cero a lo largo de todo el ciclo.
-
-### Build
-
-- `PACE_standalone.html`: **622 KB** (636,429 bytes; +1,064 bytes vs
-  v0.33.3 = 635,365; +0.17%). Estimado en design: ±0 a +2 KB; real: +1 KB.
-  Exacto. Crecimiento por SVGs ligeramente mas densos (Band pull-apart NEW
-  con tensiones laterales, Deep breaths NEW con 9 paths).
-- `index.html`: byte-perfect identico al standalone. SHA-256:
-  `8C02F9AE9E7FCA393F09CFBB0371227A5D6BBFB49E08F0EE4BB7C3FB3A171EB6`.
-- 60 archivos validados (11 .js + 49 .jsx).
-- Backup creado: `backups/PACE_standalone_v0.33.3_20260524.html` (635 KB).
-  Cap 20 mantenido (rotado el mas antiguo `v0.28.1_20260511.html`).
-
-### Diferido a sesiones siguientes
-
-- **15 glifos PENDIENTES** sin aprobacion. Iteraciones v8/v9/v10/v11/v12/v13
-  disponibles en exploracion del usuario. Abrir sesion futura cuando
-  apruebe.
-- **Divergencia `move.desk.quick`** (HTML pone `Apertura de pecho` donde
-  repo pone `Chin tucks` en paso 5). Decision de catalogo en sesion futura.
-- **strokeWidth wrapper** -- si el usuario quiere unificar a 2.0 (estilo
-  V9), cambio aislado del wrapper G afecta los 46 glifos por igual.
-- **`scripts/check-session.ps1`** -- rango de tamaño desactualizado
-  (530-600 KB; real 615-622 KB). Avisa en cada cierre. No urgente.
-- **README.md** -- desactualizado (v0.27.6 -> v0.34.0). Reservado para
-  s85 (polish pre-Reddit).
+Detalle completo en [session-84-glifos-cierre-iter.md](./docs/sessions/session-84-glifos-cierre-iter.md).
 
 ---
 

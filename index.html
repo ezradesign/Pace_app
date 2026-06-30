@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.34.1</title>
+  <title>PACE · Foco · Cuerpo — v0.34.2</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1644,7 +1644,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.1';
+const PACE_VERSION = 'v0.34.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -11254,7 +11254,15 @@ function PathFocusStep({ step, onExit }) {
           setRunning(false);
           setDone(true);
           if (!creditedRef.current && typeof addFocusMinutes === 'function') {
-            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
+            try {
+              addFocusMinutes(step.min || 25);
+              creditedRef.current = true;
+              /* F-1 (s86): igual que la home (completePomodoro), el foco de un
+                 Camino cuenta como actividad del dia para la racha. updateStreak
+                 es idempotente por dia, asi que no doble-cuenta con el paso
+                 breathe/body si el Camino tambien lo ejecuta. */
+              if (typeof updateStreak === 'function') updateStreak();
+            } catch (e) {}
           }
           return 0;
         }

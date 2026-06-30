@@ -27,7 +27,15 @@ function PathFocusStep({ step, onExit }) {
           setRunning(false);
           setDone(true);
           if (!creditedRef.current && typeof addFocusMinutes === 'function') {
-            try { addFocusMinutes(step.min || 25); creditedRef.current = true; } catch (e) {}
+            try {
+              addFocusMinutes(step.min || 25);
+              creditedRef.current = true;
+              /* F-1 (s86): igual que la home (completePomodoro), el foco de un
+                 Camino cuenta como actividad del dia para la racha. updateStreak
+                 es idempotente por dia, asi que no doble-cuenta con el paso
+                 breathe/body si el Camino tambien lo ejecuta. */
+              if (typeof updateStreak === 'function') updateStreak();
+            } catch (e) {}
           }
           return 0;
         }
