@@ -34,9 +34,10 @@ Fase 0 (s84-bis / 2026-06-05). Detalle de catálogo en [`CONTENT.md`](./CONTENT.
 
 | Fase | Alcance | Estado |
 |---|---|---|
-| **F1** | Copy Buy Me a Coffee (truth-fix) + recrear `CONTENT.md` y `ROADMAP.md` | **en curso (s85)** |
-| **F2** | Auditoría de tracking punta a punta + micro-fixes | pendiente |
-| **F3** | Gating a nivel sesión (`access` en rutinas + sello PREMIUM + desbloqueo inicial/logro) + superficie premium discreta en Tweaks | pendiente |
+| **F1** | Copy Buy Me a Coffee (truth-fix) + recrear `CONTENT.md` y `ROADMAP.md` | **hecho (s85, v0.34.1)** |
+| **F2** | Auditoría de tracking punta a punta + micro-fixes | **hecho (s86, v0.34.2)** — tracking sano + fix F-1 |
+| **F3a** | Mecanismo de gating: token `--premium` + `PremiumSeal` + `RoutineCard` lee `access` (sello + "Pronto" + clic off) | **hecho (s87, v0.34.3)** — dormante, todas las rutinas `free` |
+| **F3b** | Activación: desbloqueo (inicial/logro) + superficie premium en Tweaks + designar set premium | pendiente |
 | **F4** | Contenido Respira → ~20 técnicas (incl. CTB largas premium, con seguridad) | pendiente |
 | **F5** | Contenido Estira → ~12-15 rutinas (~mitad premium), categorizado | pendiente |
 | **F6** | Contenido Mueve → ~12-15 rutinas (~mitad premium), reclasifica la fuerza | pendiente |

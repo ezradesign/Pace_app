@@ -49,6 +49,8 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--hydrate-soft` | `rgba(95,138,155,0.12)` | Fondos sutiles Hidrátate |
 | `--achievement` | `#B8934A` | Acento Logros |
 | `--achievement-soft` | `rgba(184,147,74,0.12)` | Fondos sutiles Logros |
+| `--premium` | `#9C6B2E` | **Sello PREMIUM** / gating de contenido (s87, bloque Contenido+Premium F3a). Bronce profundo, deliberadamente más oscuro que `--achievement` y `--move` para no confundirse a simple vista. Lo usa `PremiumSeal` (Primitives) |
+| `--premium-soft` | `rgba(156,107,46,0.12)` | Fondo sutil del sello PREMIUM |
 
 ### Oscuro noche
 

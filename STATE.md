@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.34.2
-**Ultima sesion:** #86 -- 2026-06-05 - audit+fix: **F2 del bloque Contenido+Premium**. Auditoria de tracking punta a punta: tracking sano (fixes s69 intactos, detectores correctos). Hallazgo medio **F-1 aplicado** (`PathFocusStep` ahora llama `updateStreak`, como la home) + 4 cosmeticos documentados en el informe. Bump patch **v0.34.2**. Informe: `docs/audits/audit-tracking-v0.34.1.md`
-**Ultima actualizacion de este archivo:** 2026-06-05 - sesion 86
-**Build entregado:** `PACE_standalone.html` v0.34.2 (622 KB) + `index.html` (idem, copia exacta)
+**Version actual:** v0.34.3
+**Ultima sesion:** #87 -- 2026-06-30 - feat: **F3a del bloque Contenido+Premium**. Mecanismo de gating a nivel sesion construido y verificado pero **dormante** (todas las rutinas siguen free): token `--premium`, componente `PremiumSeal`, `RoutineCard` lee `routine.access` (sello + "Pronto" + clic desactivado si premium). Bump **v0.34.3**. Diario: `docs/sessions/session-87-f3a-gating-mecanismo.md`
+**Ultima actualizacion de este archivo:** 2026-06-30 - sesion 87
+**Build entregado:** `PACE_standalone.html` v0.34.3 (625 KB) + `index.html` (idem, SHA256 identico)
 
 ---
 
@@ -21,20 +21,20 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.34.2** (s86: titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.34.2** (622 KB, regenerado s86) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.34.2** (s86: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.34.3** (s87: titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.34.3** (625 KB, regenerado s87) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.34.3** (s87: regenerado por build-standalone.js, SHA256 identico) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.34.0** (s84: 28 ports + 18 mantenimientos -- iter cerrado 31/46 aprobados + 15 pendientes; 527 -> 554 ln) |
 | `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG, `Object.assign(window, { ACHIEVEMENT_GLYPHS })` | **v0.33.3** (nuevo s83, 68 ln) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.21.0** (s77: NO modificado, decision 15 -- silencio en transiciones) |
 | `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.17.0** |
-| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, displayItalic | **v0.19.0** |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.34.3** (s87: + `PremiumSeal` chip reutilizable --premium para gating; expuesto a window) |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.22.0** |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes | **v0.28.9** (s71: quitar envejecido, reorden idioma→audio→ejes, ambient marginLeft) |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.16.0** |
-| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad | **v0.17.0** |
+| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.34.3** (s87: `RoutineCard` lee `routine.access` -- premium muestra sello + "Pronto" y desactiva el clic; convencion ausente/'free'=libre) |
 | `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.28.7** (s67: playPhaseSound helper + fix huecos A/B/C inhalacion) |
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.28.0** (StepGlyph usa ExerciseGlyph s59, sin cambios s61) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.17.0** |
@@ -51,7 +51,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.34.2** (s86: PACE_VERSION bump; s85/s84/s83/s82/s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.34.3** (s87: PACE_VERSION bump; s86/s85/s84/s83/s82/s81: idem bump; s77b: + constante TOAST_DURATION_MS=3000 exportada a window) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -67,13 +67,13 @@
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent / Tweaks prop) + topBarStyles | **v0.33.2** (nuevo s82, 106 ln) |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
-| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + welcome lang toggle | **v0.34.1** (s85: copy BMC honesto -- 3 strings `support.*` ES+EN: nucleo libre, fuera "sin pro"; nuevo s81, 315 ln) |
+| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium | **v0.34.3** (s87: + `premium.seal`/`premium.soon` ES+EN; s85: copy BMC honesto; nuevo s81) |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate | **v0.33.1** (nuevo s81, 227 ln; 93 ES + 93 EN) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.33.1** (nuevo s81, 122 ln; 47 ES + 47 EN) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.33.1** (nuevo s81, 108 ln; 42 ES + 42 EN) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
 | `app/i18n/strings-content.js` | Patch EN final de contenido (rutinas Move/Breathe/Extra) | **v0.18.0** (s81: SIN CAMBIOS pero queda al final de la cadena i18n -- preserva override silencioso de 3 keys breathe.phase.*) |
-| `app/tokens.css` | Tokens CSS + base | **v0.32.1** (s79: recalibrado oscuro +10% luminosidad en paper/paper-2/paper-3/line/line-2, --ink-* intactos; s77 + s77b: 5 tokens transicion + bloque .sendero-bar.lg + token --focus-cta crema/oscuro) |
+| `app/tokens.css` | Tokens CSS + base | **v0.34.3** (s87: + `--premium` #9C6B2E / `--premium-soft` -- bronce para sello premium, distinto de --achievement y --move; s79: recalibrado oscuro +10%; s77/s77b: 5 tokens transicion + .sendero-bar.lg + --focus-cta) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.32.0** (s78: + path.tea timeOfDay='afternoon' + path.breath timeOfDay='anytime' -- catalogo cerrado a 7) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError (chrome del overlay) | **v0.33.0** (nuevo s80, 131 ln) |
@@ -88,10 +88,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.34.2** (s86: CACHE_NAME pace-v0.34.2) |
+| `sw.js` | Service Worker PWA | **v0.34.3** (s87: CACHE_NAME pace-v0.34.3) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.34.2_20260630.html` <- creado s87 (snapshot del v0.34.2 publicado en s86, desde git HEAD)
+- `backups/PACE_standalone_v0.34.1_20260605.html` <- creado s86 (snapshot del v0.34.1 publicado en s85)
 - `backups/PACE_standalone_v0.34.0_20260605.html` <- creado s85 (snapshot del v0.34.0 publicado en s84)
 - `backups/PACE_standalone_v0.33.3_20260524.html` <- creado s84 (copia del v0.33.3 publicado en s83)
 - `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83
@@ -110,68 +112,60 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.7_20260512.html`
 - `backups/PACE_standalone_v0.28.6_20260511.html`
 - `backups/PACE_standalone_v0.28.5_20260512.html`
-- `backups/PACE_standalone_v0.28.4_20260512.html`
-- `backups/PACE_standalone_v0.28.3_20260512.html`
 
-Nota s85: cap 20 mantenido rotando el mas antiguo (`v0.28.2_20260511.html`)
-al crear el backup del v0.34.0 publicado en s84.
+Nota s87: lista regenerada desde el directorio real (estaba desincronizada:
+faltaba `v0.34.1` y listaba `v0.28.3/4` ya rotados). Cap 20 mantenido rotando
+el mas antiguo (`v0.28.4_20260512.html`) al crear el backup del v0.34.2.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 86 - v0.34.1 (sin bump) - docs(audit): F2 auditoria de tracking.**
+**Sesion 87 - v0.34.3 - feat: F3a, mecanismo de gating premium (dormante).**
 
 ### Contexto
 
-Segunda fase del **bloque Contenido+Premium**. F2 de-risquea la base de
-tracking antes de F3 (gating) y F4-F6 (contenido). Sesion read-only.
-
-Informe: [audit-tracking-v0.34.1](./docs/audits/audit-tracking-v0.34.1.md) ·
-Diario: [s86](./docs/sessions/session-86-f2-tracking-audit.md).
+**Fase 3a del bloque Contenido+Premium.** F3 (gating a nivel sesion) se trocea
+en F3a (mecanismo) + F3b (activacion). F3a construye y verifica el mecanismo
+pero lo deja **dormante**: todas las rutinas siguen `free`, nada cambia para el
+usuario. Diario: [s87](./docs/sessions/session-87-f3a-gating-mecanismo.md).
 
 ### Que se hizo
 
-Auditoria punta a punta de weeklyStats, history (dias/meses/anios), rachas,
-heatmaps (semana / mes / anio + Caminos) y detectores de logros. **Veredicto:
-tracking sano.** Los 6 fixes de s69 (C1/C2/C3/A1/A2 + guards de migracion)
-siguen intactos y los refactors s80-s84 no rompieron el nucleo. Detectores
-correctos umbral por umbral contra `catalog.js`; `IMPLEMENTED_ACHIEVEMENTS`
-sin huecos (cada id tiene trigger y viceversa).
+Auditoria previa: `RoutineCard` (en `BreatheLibrary.jsx`, expuesto a window) es
+**un unico componente compartido** por las 3 bibliotecas -> un solo punto de
+insercion para el sello.
 
-**Hallazgos: 1 medio + 4 cosmeticos/heredados.**
-- **F-1 (MEDIO, nuevo s79):** `PathFocusStep` acredita foco con
-  `addFocusMinutes` pero NO llama `updateStreak`. Un dia de solo-foco-en-Camino
-  (saltando breathe/body) sale activo en el heatmap pero no suma a
-  `streak.current`. Fix de 1 linea (anadir `updateStreak()` tras el credito;
-  seguro por idempotencia diaria). **APLICADO en s86** (`updateStreak()` tras
-  el credito en `PathFocusStep`).
-- F-2 (baja, heredado A3): `checkHydrateWeekPerfect` con `!== 86400000`
-  estricto falla en los 2 cambios de hora/anio.
-- F-3 (cosmetica, M1): `WeeklyStats.jsx` codigo muerto (no esta en PACE.html).
-- F-4 (baja, M5): Caminos sellan fecha en UTC (`todayISO`) vs local del resto.
-- F-5 (cosmetica, M3/B4): metricas que mezclan agua (`totalActions`, color).
+- **Token** `--premium` #9C6B2E (+ `--premium-soft`): bronce profundo,
+  deliberadamente mas oscuro que `--achievement` (#B8934A) y `--move` (#9A7B4F)
+  para no confundirse. Tono tierra, sin gradiente.
+- **`PremiumSeal`** (chip reutilizable) en `Primitives.jsx`, expuesto a window.
+- **`RoutineCard`** lee `routine.access`: si `'premium'` -> sello + "Pronto" (en
+  lugar de minutos) + **clic desactivado** (no arranca). Convencion: ausente/
+  `'free'` = libre, `'premium'` = de pago, sin desbloqueo real hasta v1.0.
+- i18n `premium.seal`/`premium.soon` (ES+EN); `--premium` documentado en
+  DESIGN_SYSTEM.
 
-### Cierre
+### Verificacion + cierre
 
-F-1 **aplicado**: `updateStreak()` tras el credito en `PathFocusStep`
-(idempotente por dia, no doble-cuenta con el paso breathe/body). Cierre
-completo: bump **v0.34.2** (PACE.html + state-core.jsx + sw.js), backup
-`v0.34.1_20260605` (rotado `v0.28.3_20260512`, cap 20), rebuild
-standalone+index (622 KB, 60 archivos validados, smoke test runtime OK),
-diario s86, CHANGELOG. F-2..F-5 quedan documentados en el informe (no
-aplicados, baja prioridad).
+Verificado en preview con una rutina premium temporal (sello bronce + "Pronto" +
+no clicable, screenshot), luego **revertida**: standalone limpio con 0 rutinas
+premium en datos, consola sin errores. Cierre: bump **v0.34.3**, backup
+`v0.34.2_20260630` (desde git HEAD, rotado `v0.28.4`, cap 20; lista de backups
+regenerada por desincronizacion previa), rebuild standalone+index (625 KB, 60
+archivos validados, SHA256 identico), diario s87, CHANGELOG.
 
-## Proxima sesion -- F3 (gating a nivel sesion + superficie premium)
+## Proxima sesion -- F3b (activacion del gating)
 
-Implementar el campo `access` en las rutinas de Respira/Mueve/Estira + sello
-PREMIUM + desbloqueo inicial/logro + superficie premium discreta en Tweaks.
-La base de tracking ya quedo de-risqueada por F2. Opcional antes de F3:
-aplicar el micro-fix F-1 si hay OK (ver Ultima sesion y D-7).
+Encender el gating: logica de desbloqueo (inicial / por logro) + superficie
+premium discreta en Tweaks (sello + input de licencia display-only, sin
+validacion real hasta v1.0) + **designar el set premium inicial** en las
+rutinas. El mecanismo (token + `PremiumSeal` + lectura de `access` en
+`RoutineCard`) ya esta listo de F3a.
 
 ### Fases restantes del bloque
 
-F3 gating a nivel sesion + superficie premium Tweaks - F4 Respira (~20) -
+F3b activacion gating + superficie premium Tweaks - F4 Respira (~20) -
 F5 Estira (~12-15) - F6 Mueve (~12-15) - F7 registro ejercicios +
 constructor rutinas premium - F8 visual Caminos.
 
