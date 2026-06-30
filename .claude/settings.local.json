@@ -53,7 +53,8 @@
       "PowerShell(git -C $root log --all --oneline -- CONTENT.md ROADMAP.md 2>&1)",
       "PowerShell($root = \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\")",
       "PowerShell(\"----- LOG -----\")",
-      "PowerShell(\"----- CONTENT/ROADMAP in git history? -----\")"
+      "PowerShell(\"----- CONTENT/ROADMAP in git history? -----\")",
+      "Bash(node -e \"const ts=require\\('typescript'\\);const fs=require\\('fs'\\);const c=fs.readFileSync\\('app/paths/steps/PathFocusStep.jsx','utf8'\\);const sf=ts.createSourceFile\\('x.jsx',c,ts.ScriptTarget.Latest,true,ts.ScriptKind.JSX\\);console.log\\('PathFocusStep parseDiagnostics:',\\(sf.parseDiagnostics||[]\\).length\\)\")"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
