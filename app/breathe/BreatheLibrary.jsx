@@ -8,8 +8,8 @@ const BREATHE_ROUTINES = {
   energia: {
     label: 'Energía',
     items: [
-      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true },
-      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
+      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
+      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true, access: 'premium' },
       { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
     ]
   },
@@ -41,9 +41,9 @@ const BREATHE_ROUTINES = {
     label: 'Pranayama',
     aside: 'Raíces yóguicas',
     items: [
-      { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada. Equilibra hemisferios.', min: 8, pattern: 'nadi' },
+      { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada. Equilibra hemisferios.', min: 8, pattern: 'nadi', access: 'premium' },
       { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5,0,5,0] },
-      { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true },
+      { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
     ]
   }
 };
@@ -79,17 +79,24 @@ function BreatheLibrary({ open, onClose, onStart }) {
    Gating de contenido (s87 · bloque Contenido+Premium F3a):
    convención del campo `access` en los datos de rutina —
      ausente | 'free'  → libre (comportamiento normal, clicable)
-     'premium'         → de pago. Hasta v1.0 NO hay ruta de desbloqueo real:
-                         se muestra el sello PREMIUM + 'Pronto' y la tarjeta
-                         NO arranca (onClick desactivado). El desbloqueo real
-                         (inicial / por logro) y la designación de qué rutinas
-                         son premium llegan en F3b / F5-F7. */
+     'premium'         → de pago. El sello PREMIUM se muestra siempre como
+                         marca de contenido de pago. El bloqueo real (sello +
+                         'Pronto' + clic desactivado) depende de
+                         `premiumUnlocked` del state: mientras es false (su
+                         valor por defecto, sin ruta de compra hasta v1.0) toda
+                         premium está bloqueada. El cableado queda listo para
+                         que un flag futuro (compra / locked.initial /
+                         locked.achievement) ponga `premiumUnlocked` a true y
+                         las premium pasen a clicables sin tocar este componente.
+     Designación del set premium inicial: s88 (F3b). */
 function RoutineCard({ routine, color, onClick }) {
   const { t, lang } = useT();
+  const [pace] = usePace();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const isPremium = routine.access === 'premium';
+  const isLocked = isPremium && !pace.premiumUnlocked;
   return (
-    <Card accent={isPremium ? undefined : color} onClick={isPremium ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={isLocked ? undefined : color} onClick={isLocked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
         <div style={{
           position: 'absolute', top: 12, right: 12,
@@ -112,7 +119,7 @@ function RoutineCard({ routine, color, onClick }) {
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {tR(`${routine.id}.code`, routine.code)}
         </span>
-        {isPremium ? (
+        {isLocked ? (
           <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
         ) : (
           <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{routine.min} min</span>

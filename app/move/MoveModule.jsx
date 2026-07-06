@@ -28,7 +28,7 @@ const MOVE_ROUTINES = [
       { name: 'Descanso', dur: 30, cue: '' },
       { name: 'Fondos en silla', dur: 40, cue: 'Al fallo.' },
     ]},
-  { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3,
+  { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3, access: 'premium',
     steps: [
       { name: 'Wall sit', dur: 60, cue: 'Rodillas 90°, aguanta.' },
       { name: 'Descanso', dur: 30, cue: 'Suave.' },
@@ -39,7 +39,7 @@ const MOVE_ROUTINES = [
       { name: 'Calf raises', dur: 30, cue: '25 reps controladas.' },
       { name: 'Calf raises', dur: 30, cue: '20 reps más lentas.' },
     ]},
-  { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2,
+  { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
     steps: [
       { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
       { name: 'Descanso', dur: 20, cue: '' },

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.34.4** | 2026-06-30 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [abajo](#v0344----2026-06-30----featpremium-f3b-activacion-del-gating) |
 | **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [abajo](#v0343----2026-06-30----featpremium-f3a-mecanismo-de-gating) |
-| **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [abajo](#v0342----2026-06-05----fixtracking-f-1-pathfocusstep-updatestreak--f2-auditoria) |
+| **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [session-86](./docs/sessions/session-86-f2-tracking-audit.md) |
 | **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [session-85](./docs/sessions/session-85-f1-bmc-docs.md) |
 | **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [session-84](./docs/sessions/session-84-glifos-cierre-iter.md) |
 | **v0.33.3** | 2026-05-23 | refactor(achievements): split `app/achievements/Achievements.jsx` (409 ln) en `achievements/` + `glyphs/` (catalog.js + achievement-glyphs.jsx) -- variante B -- 409 ln -> 184 ln (-55%); convencion `app/glyphs/` consolidada con 2 hermanos | #83 | [session-83](./docs/sessions/session-83-achievements-split.md) |
@@ -108,6 +109,74 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.34.4] -- 2026-06-30 -- feat(premium): F3b activacion del gating
+
+Sesion 88. **Fase 3b del bloque Contenido+Premium: enciende el gating** sobre las
+rutinas que ya existen. Alcance acotado al **binario `free`/`premium`** (los
+estados `locked.*` y la licencia real quedan post-v1.0). Diario:
+[session-88](./docs/sessions/session-88-f3b-activacion-gating.md).
+
+### Set premium (8 / 26, binario, ~1/3 por modulo)
+
+El usuario aprobo la direccion pero pidio **menos premium**. Criterio: lo de
+entrada/accesible se queda `free`, lo avanzado/profundo va `premium`. Las 2
+iniciales de cada modulo se respetan como free.
+
+- **Respira (4):** `breathe.rounds.full`, `breathe.rounds.express`,
+  `breathe.nadi.shodhana`, `breathe.kapalabhati`. Las variantes *mas largas*
+  (box.6, coherent.66) y ujjayi se quedan free.
+- **Mueve (2):** `extra.wall.sit`, `extra.core.stealth` (isometricos al limite).
+- **Estira (2):** `move.atg.knees`, `move.ancestral` (ATG avanzado + suelo).
+
+`safety: true` conservado en las premium con retencion (rounds, kapalabhati): el
+modal seguira siendo obligatorio cuando se desbloqueen.
+
+### Added
+
+- **`app/state-core.jsx`** -- `premiumUnlocked: false` en `defaultState`. Sin
+  ruta de compra real hasta v1.0: permanece `false` y toda rutina `premium` se
+  ve bloqueada. El cableado queda listo para que un flag futuro la abra.
+- **`app/tweaks/TweaksPanel.jsx`** -- superficie premium discreta (tras "Tus
+  datos"): sello `PremiumSeal` + titulo + copy honesto + input de licencia
+  **disabled** (display-only, sin validacion) + CTA "Pronto" disabled + nota
+  offline.
+- **`app/i18n/strings/ui.js`** -- `premium.tweaks.title` / `.body` /
+  `.placeholder` / `.cta` / `.note` (ES + EN).
+
+### Changed
+
+- **`app/breathe/BreatheLibrary.jsx`** -- `RoutineCard` lee `premiumUnlocked`:
+  `isPremium` (marca de pago, sello siempre) vs `isLocked = isPremium &&
+  !premiumUnlocked` (bloqueo real: accent/clic off + "Pronto"). Flip del flag
+  abre las premium sin tocar UI.
+- **`app/move/MoveModule.jsx`** (`extra.wall.sit`, `extra.core.stealth`) +
+  **`app/extra/ExtraModule.jsx`** (`move.atg.knees`, `move.ancestral`) +
+  **`app/breathe/BreatheLibrary.jsx`** (4 tecnicas) -- `access: 'premium'`.
+- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.34.4.
+- **`CHANGELOG.md`** -- v0.34.2 degradado a fila-de-enlace (convencion: solo 2
+  ultimas detalladas).
+
+### Verificacion runtime
+
+Via preview local (puerto propio; otra sesion ocupaba :8765).
+
+- Respira: PREMIUM + "Pronto" en las 4 premium (rounds con ⚠ safety); box.6 /
+  coherent.66 / ujjayi / resto free con minutos (screenshot).
+- Mueve: PREMIUM en wall.sit + core.stealth (screenshot). Estira: PREMIUM en
+  atg.knees + ancestral (screenshot). Tweaks: superficie premium completa
+  (screenshot).
+- `eval`: 8 flags `access:'premium'` correctos, `premiumUnlocked === false`,
+  `PACE_VERSION === 'v0.34.4'`. Consola sin errores.
+
+### Build
+
+- `PACE_standalone.html`: **628 KB**, 60 archivos validados. `index.html` copia
+  exacta (**SHA256 identico**, `f9b9fef0…18a4dd`).
+- Backup `PACE_standalone_v0.34.3_20260630.html` creado; cap 20 (rotado el mas
+  antiguo `v0.28.5_20260512.html`).
+
+---
+
 ## [v0.34.3] -- 2026-06-30 -- feat(premium): F3a mecanismo de gating
 
 Sesion 87. **Fase 3a del bloque Contenido+Premium: el mecanismo de gating a
@@ -159,58 +228,9 @@ Via preview local en `localhost:8765`.
   publicado, desde git HEAD); cap 20 (rotado el mas antiguo
   `v0.28.4_20260512.html`).
 
----
-
-## [v0.34.2] -- 2026-06-05 -- fix(tracking): F-1 PathFocusStep updateStreak + F2 auditoria
-
-Sesion 86. **Fase 2 del bloque Contenido+Premium: auditoria de tracking** punta
-a punta (read-only) + el unico micro-fix que encontro.
-
-### Auditoria (informe: `docs/audits/audit-tracking-v0.34.1.md`)
-
-Veredicto: **tracking sano**. Los 6 fixes de s69 (C1/C2/C3/A1/A2 + guards de
-migracion) siguen intactos; los refactors s80-s84 no rompieron el nucleo.
-Indexado lunes-primero coherente en escritores y lectores, history idempotente,
-"dia activo" = focus|breath|move>0 (agua sola no cuenta), detectores de logros
-correctos umbral por umbral contra `catalog.js`; `IMPLEMENTED_ACHIEVEMENTS` sin
-huecos. Hallazgos: 1 medio (F-1, aplicado) + 4 cosmeticos/heredados (F-2 DST en
-`hydrate.week.perfect`, F-3 `WeeklyStats.jsx` dead code, F-4 fecha UTC en
-Caminos, F-5 metricas que mezclan agua) -- documentados, no aplicados.
-
-### Fixed
-
-- **`app/paths/steps/PathFocusStep.jsx`** -- **F-1**: el Pomodoro contextual de
-  un Camino acreditaba foco con `addFocusMinutes` pero no llamaba `updateStreak`.
-  Un dia de solo-foco-en-Camino (saltando breathe/body) salia activo en el
-  heatmap/YearView pero no sumaba a `streak.current`. Ahora llama `updateStreak()`
-  tras el credito, igual que la home (`completePomodoro`). Idempotente por dia:
-  no doble-cuenta si el Camino tambien ejecuta un paso breathe/body.
-
-### Changed
-
-- **`PACE.html`**, **`app/state-core.jsx`**, **`sw.js`** -- bump v0.34.2.
-- **`CHANGELOG.md`** -- v0.34.0 degradado a stub-enlace (convencion: solo 2
-  ultimas detalladas).
-
-### Added
-
-- **`docs/audits/audit-tracking-v0.34.1.md`** -- informe de salud F2: hallazgos
-  por severidad (file:linea) + tabla de casos de prueba (rollover dia/semana,
-  idempotencia, lunes-primero, agua-sola-no-cuenta, detectores).
-- **`backups/PACE_standalone_v0.34.1_20260605.html`** -- snapshot pre-s86.
-
-### Verificacion runtime
-
-- Build limpio: **60 archivos validados** (11 .js + 49 .jsx).
-- Standalone v0.34.2: `PACE_VERSION === 'v0.34.2'`, title correcto, fix
-  inlineado (`updateStreak` en `PathFocusStep`). Smoke test headless: la app
-  renderiza completa (welcome + sidebar + chips), sin error fatal en consola.
-
-### Build
-
-- `PACE_standalone.html`: **622 KB**. `index.html` copia exacta.
-- Backup `PACE_standalone_v0.34.1_20260605.html` creado; cap 20 (rotado el mas
-  antiguo `v0.28.3_20260512.html`).
+> **v0.34.2** (s86) detallada en
+> [session-86](./docs/sessions/session-86-f2-tracking-audit.md) — convencion:
+> solo las 2 ultimas versiones se detallan aqui.
 
 ---
 ## [v0.34.1] -- 2026-06-05 -- fix(support): copy BMC honesto + recrear CONTENT/ROADMAP

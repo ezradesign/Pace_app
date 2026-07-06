@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Modal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{
+    --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372;
+    --line:#C9C0A8; --line-2:#B8AD8E; --breathe:#C97A5D;
+    --r-md:12px; --r-lg:20px;
+    --sh-modal:0 8px 40px rgba(31,28,23,.18);
+  }
+  body { margin:0; font-family:'Inter Tight',system-ui,sans-serif; }
+  /* Backdrop del Modal real (rgba 28% + blur), aquí como lienzo del preview */
+  .backdrop { min-height:440px; background:rgba(31,28,23,.28); display:grid; place-items:center; padding:28px;
+    background-image:linear-gradient(rgba(31,28,23,.28),rgba(31,28,23,.28)),
+      repeating-linear-gradient(45deg,#EAE4D4 0 16px,#DFD8C4 16px 32px); }
+  .card { position:relative; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg);
+    box-shadow:var(--sh-modal); padding:32px; max-width:520px; width:100%; }
+  .close { position:absolute; top:18px; right:20px; font-size:20px; color:var(--ink-3); width:28px; height:28px;
+    display:grid; place-items:center; border-radius:8px; cursor:pointer; }
+  .meta { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin-bottom:6px; }
+  .title { font-family:'EB Garamond',serif; font-style:italic; font-size:32px; font-weight:500; margin:0; line-height:1.1; }
+  .subtitle { color:var(--ink-3); font-size:14px; margin:6px 0 0; max-width:90%; }
+  .body { margin-top:22px; font-size:14px; line-height:1.6; color:var(--ink-2); }
+  .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:24px; }
+  .btn { border-radius:var(--r-md); padding:10px 22px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; }
+  .ghost { background:transparent; color:var(--ink-2); border:1px solid transparent; }
+  .terracota { background:var(--breathe); color:var(--paper); border:1px solid var(--breathe); }
+</style>
+</head>
+<body>
+  <div class="backdrop">
+    <div class="card">
+      <div class="close">×</div>
+      <div class="meta">Antes de empezar</div>
+      <h2 class="title">Respiración en rondas</h2>
+      <p class="subtitle">Esta técnica incluye retención. Léela con calma antes de comenzar.</p>
+      <div class="body">Practica siempre <strong style="color:var(--ink)">sentado o tumbado</strong>, nunca de pie ni en el agua. Si te mareas, vuelve a la respiración normal.</div>
+      <div class="actions">
+        <button class="btn ghost">Cancelar</button>
+        <button class="btn terracota">Entendido, empezar</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -37,7 +37,7 @@ Fase 0 (s84-bis / 2026-06-05). Detalle de catálogo en [`CONTENT.md`](./CONTENT.
 | **F1** | Copy Buy Me a Coffee (truth-fix) + recrear `CONTENT.md` y `ROADMAP.md` | **hecho (s85, v0.34.1)** |
 | **F2** | Auditoría de tracking punta a punta + micro-fixes | **hecho (s86, v0.34.2)** — tracking sano + fix F-1 |
 | **F3a** | Mecanismo de gating: token `--premium` + `PremiumSeal` + `RoutineCard` lee `access` (sello + "Pronto" + clic off) | **hecho (s87, v0.34.3)** — dormante, todas las rutinas `free` |
-| **F3b** | Activación: desbloqueo (inicial/logro) + superficie premium en Tweaks + designar set premium | pendiente |
+| **F3b** | Activación: gating encendido sobre rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` cableado (sin compra real) + superficie premium display-only en Tweaks | **hecho (s88, v0.34.4)** — `locked.*` y licencia real diferidos a post-v1.0 |
 | **F4** | Contenido Respira → ~20 técnicas (incl. CTB largas premium, con seguridad) | pendiente |
 | **F5** | Contenido Estira → ~12-15 rutinas (~mitad premium), categorizado | pendiente |
 | **F6** | Contenido Mueve → ~12-15 rutinas (~mitad premium), reclasifica la fuerza | pendiente |

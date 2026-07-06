@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.34.3</title>
+  <title>PACE · Foco · Cuerpo — v0.34.4</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -622,6 +622,11 @@ Object.assign(window.PACE_STRINGS.es, {
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Pronto',
+    'premium.tweaks.title':          'Contenido premium',
+    'premium.tweaks.body':           'El núcleo de PACE es y será gratis. Las rutinas y técnicas más profundas serán parte de una compra única, sin cuentas ni suscripción obligatoria.',
+    'premium.tweaks.placeholder':    'Clave de licencia',
+    'premium.tweaks.cta':            'Pronto',
+    'premium.tweaks.note':           'Aún no disponible. Cuando llegue, tu clave funcionará sin conexión.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -780,6 +785,11 @@ Object.assign(window.PACE_STRINGS.en, {
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Soon',
+    'premium.tweaks.title':          'Premium content',
+    'premium.tweaks.body':           'The core of PACE is and will stay free. The deeper routines and techniques will be part of a one-time purchase — no accounts, no required subscription.',
+    'premium.tweaks.placeholder':    'License key',
+    'premium.tweaks.cta':            'Soon',
+    'premium.tweaks.note':           'Not available yet. When it arrives, your key will work offline.',
 });
 
 </script>
@@ -1660,7 +1670,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.3';
+const PACE_VERSION = 'v0.34.4';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -1678,6 +1688,14 @@ const defaultState = {
   soundOn: false,
   ambientOn: false,
   lang: 'en',
+
+  // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del
+  // contenido premium. Sin ruta de compra real hasta v1.0: permanece false y
+  // las rutinas con access:'premium' se muestran bloqueadas (sello + 'Pronto').
+  // El cableado en RoutineCard ya lee este flag: ponerlo a true abre todas las
+  // premium sin tocar UI. La validación de licencia real (claves firmadas,
+  // expiresAt, tipos) queda para una fase posterior post-v1.0.
+  premiumUnlocked: false,
 
   // Foco
   focusMode: 'foco',
@@ -6947,8 +6965,8 @@ const BREATHE_ROUTINES = {
   energia: {
     label: 'Energía',
     items: [
-      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true },
-      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
+      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
+      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true, access: 'premium' },
       { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
     ]
   },
@@ -6980,9 +6998,9 @@ const BREATHE_ROUTINES = {
     label: 'Pranayama',
     aside: 'Raíces yóguicas',
     items: [
-      { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada. Equilibra hemisferios.', min: 8, pattern: 'nadi' },
+      { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada. Equilibra hemisferios.', min: 8, pattern: 'nadi', access: 'premium' },
       { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5,0,5,0] },
-      { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true },
+      { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
     ]
   }
 };
@@ -7018,17 +7036,24 @@ function BreatheLibrary({ open, onClose, onStart }) {
    Gating de contenido (s87 · bloque Contenido+Premium F3a):
    convención del campo `access` en los datos de rutina —
      ausente | 'free'  → libre (comportamiento normal, clicable)
-     'premium'         → de pago. Hasta v1.0 NO hay ruta de desbloqueo real:
-                         se muestra el sello PREMIUM + 'Pronto' y la tarjeta
-                         NO arranca (onClick desactivado). El desbloqueo real
-                         (inicial / por logro) y la designación de qué rutinas
-                         son premium llegan en F3b / F5-F7. */
+     'premium'         → de pago. El sello PREMIUM se muestra siempre como
+                         marca de contenido de pago. El bloqueo real (sello +
+                         'Pronto' + clic desactivado) depende de
+                         `premiumUnlocked` del state: mientras es false (su
+                         valor por defecto, sin ruta de compra hasta v1.0) toda
+                         premium está bloqueada. El cableado queda listo para
+                         que un flag futuro (compra / locked.initial /
+                         locked.achievement) ponga `premiumUnlocked` a true y
+                         las premium pasen a clicables sin tocar este componente.
+     Designación del set premium inicial: s88 (F3b). */
 function RoutineCard({ routine, color, onClick }) {
   const { t, lang } = useT();
+  const [pace] = usePace();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const isPremium = routine.access === 'premium';
+  const isLocked = isPremium && !pace.premiumUnlocked;
   return (
-    <Card accent={isPremium ? undefined : color} onClick={isPremium ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={isLocked ? undefined : color} onClick={isLocked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
         <div style={{
           position: 'absolute', top: 12, right: 12,
@@ -7051,7 +7076,7 @@ function RoutineCard({ routine, color, onClick }) {
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {tR(`${routine.id}.code`, routine.code)}
         </span>
-        {isPremium ? (
+        {isLocked ? (
           <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
         ) : (
           <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{routine.min} min</span>
@@ -7513,7 +7538,7 @@ const MOVE_ROUTINES = [
       { name: 'Descanso', dur: 30, cue: '' },
       { name: 'Fondos en silla', dur: 40, cue: 'Al fallo.' },
     ]},
-  { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3,
+  { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3, access: 'premium',
     steps: [
       { name: 'Wall sit', dur: 60, cue: 'Rodillas 90°, aguanta.' },
       { name: 'Descanso', dur: 30, cue: 'Suave.' },
@@ -7524,7 +7549,7 @@ const MOVE_ROUTINES = [
       { name: 'Calf raises', dur: 30, cue: '25 reps controladas.' },
       { name: 'Calf raises', dur: 30, cue: '20 reps más lentas.' },
     ]},
-  { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2,
+  { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
     steps: [
       { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
       { name: 'Descanso', dur: 20, cue: '' },
@@ -7851,7 +7876,7 @@ const EXTRA_ROUTINES = [
       { name: 'Thoracic extension', dur: 40, cue: 'Sobre foam roller o toalla enrollada.' },
     ]},
   { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
-    desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 6,
+    desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 6, access: 'premium',
     steps: [
       { name: 'ATG split squat', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
       { name: 'Tibialis raise', dur: 45, cue: 'Contra pared, levanta pies.' },
@@ -7860,7 +7885,7 @@ const EXTRA_ROUTINES = [
       { name: 'Elephant walk', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' },
     ]},
   { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
-    desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 6,
+    desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 6, access: 'premium',
     steps: [
       { name: 'Deep squat hold', dur: 60, cue: 'Talones abajo, relaja.' },
       { name: 'Crawling', dur: 60, cue: 'Contralateral, lento.' },
@@ -10279,6 +10304,46 @@ function TweaksPanel({ open, onClose }) {
         marginBottom: 4,
       }}>
         {t('tweaks.data.note')}
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* ============================================================
+          Premium — superficie display-only (s88 · bloque Contenido+Premium F3b).
+          Sello + input de licencia SIN validación + copy honesto. No desbloquea
+          nada: premiumUnlocked sigue false. La validación de clave firmada
+          offline llega post-v1.0. Reusa PremiumSeal (Primitives).
+          ============================================================ */}
+      <div style={{ marginBottom: 4 }}>
+        <div style={{ marginBottom: 8 }}>
+          <PremiumSeal />
+        </div>
+        <div style={{ ...displayItalic, fontSize: 16, fontWeight: 500, marginBottom: 6 }}>{t('premium.tweaks.title')}</div>
+        <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5, marginBottom: 10, letterSpacing: 0.1 }}>{t('premium.tweaks.body')}</div>
+        <input
+          type="text"
+          disabled
+          placeholder={t('premium.tweaks.placeholder')}
+          style={{
+            width: '100%', boxSizing: 'border-box',
+            padding: '8px 10px', fontSize: 11,
+            color: 'var(--ink-2)', background: 'var(--paper-2)',
+            border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
+            letterSpacing: 0.2, marginBottom: 6, cursor: 'not-allowed',
+          }}
+        />
+        <button
+          disabled
+          style={{
+            width: '100%', padding: '8px', fontSize: 11, fontWeight: 500,
+            color: 'var(--premium)', background: 'var(--premium-soft)',
+            border: '1px solid var(--premium)', borderRadius: 'var(--r-sm)',
+            letterSpacing: 0.2, cursor: 'not-allowed',
+          }}
+        >{t('premium.tweaks.cta')}</button>
+        <div style={{ fontSize: 10, color: 'var(--ink-3)', lineHeight: 1.4, letterSpacing: 0.1, marginTop: 6 }}>
+          {t('premium.tweaks.note')}
+        </div>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />

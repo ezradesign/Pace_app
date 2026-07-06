@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Pantallas de sesión</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{
+    --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372;
+    --line:#C9C0A8; --line-2:#B8AD8E; --breathe:#C97A5D; --breathe-soft:rgba(201,122,93,.12);
+    --r-md:12px;
+  }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:24px; }
+  .label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:0 0 14px; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  /* "Pantalla" = SessionShell fullscreen, aquí enmarcada para preview */
+  .screen { position:relative; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
+    padding:22px 26px 28px; min-height:360px; display:flex; flex-direction:column; }
+  .head { display:flex; justify-content:space-between; align-items:center; }
+  .code { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+  .title { font-family:'EB Garamond',serif; font-style:italic; font-size:22px; font-weight:500; margin:2px 0 0; }
+  .exit { font-size:13px; color:var(--ink-2); }
+  .center { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .kicker { font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3); margin-bottom:14px; }
+  .prepnum { font-family:'EB Garamond',serif; font-style:italic; font-weight:400; line-height:.9; color:var(--breathe); font-size:148px; }
+  .prepcopy { font-family:'EB Garamond',serif; font-style:italic; font-size:18px; color:var(--ink-2); margin-top:16px; }
+  .check { width:96px; height:96px; border-radius:50%; background:var(--breathe-soft); border:1.5px solid var(--breathe); display:grid; place-items:center; margin:0 auto 18px; }
+  .donetitle { font-family:'EB Garamond',serif; font-style:italic; font-size:40px; font-weight:500; margin:0 0 20px; line-height:1.05; }
+  .stats { display:flex; justify-content:center; gap:36px; margin-bottom:20px; }
+  .statnum { font-family:'EB Garamond',serif; font-style:italic; font-size:34px; font-weight:500; line-height:1; }
+  .statlbl { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3); margin-top:6px; }
+  .donecopy { font-family:'EB Garamond',serif; font-style:italic; font-size:16px; color:var(--ink-2); max-width:320px; margin:0 auto; line-height:1.5; }
+  .foot { display:flex; justify-content:center; margin-top:8px; }
+  .btn { background:var(--breathe); color:var(--paper); border:1px solid var(--breathe); border-radius:var(--r-md); padding:10px 22px; font-size:14px; font-weight:500; font-family:inherit; }
+</style>
+</head>
+<body>
+  <div class="label">PACE · SessionShell — pantallas de sesión (prep / done)</div>
+  <div class="row">
+
+    <div class="screen">
+      <div class="head"><div><div class="code">Equilibrio</div><div class="title">Box 4·4·4·4</div></div><div class="exit">Salir</div></div>
+      <div class="center">
+        <div class="kicker">Preparación</div>
+        <div class="prepnum">3</div>
+        <div class="prepcopy">Siéntate cómodo. Respira natural.</div>
+      </div>
+      <div class="foot"><button class="btn" style="background:var(--paper-2);color:var(--ink);border-color:var(--line-2);">Empezar ahora</button></div>
+    </div>
+
+    <div class="screen">
+      <div class="head"><div><div class="code">Equilibrio</div><div class="title">Box 4·4·4·4</div></div><div class="exit">Salir</div></div>
+      <div class="center">
+        <div class="check">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--breathe)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="kicker">Sesión completada</div>
+        <div class="donetitle">Box 4·4·4·4</div>
+        <div class="stats">
+          <div><div class="statnum">5:02</div><div class="statlbl">Tiempo</div></div>
+        </div>
+        <div class="donecopy">Has vuelto al centro. Lleva esta calma contigo.</div>
+      </div>
+      <div class="foot"><button class="btn">Volver al inicio</button></div>
+    </div>
+
+  </div>
+</body>
+</html>

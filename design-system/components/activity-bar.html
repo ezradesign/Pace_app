@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · ActivityBar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{
+    --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-3:#8A8372;
+    --line:#C9C0A8; --line-2:#B8AD8E;
+    --breathe:#C97A5D; --move:#9A7B4F; --extra:#6B7A8F; --hydrate:#5F8A9B;
+    --r-md:12px;
+    --sh-soft:0 1px 2px rgba(31,28,23,.06),0 4px 16px rgba(31,28,23,.04);
+  }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  .meta { text-align:center; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin-bottom:14px; }
+  .grid { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .chip { position:relative; display:flex; flex-direction:row; align-items:center; gap:16px; padding:16px 22px; min-width:180px;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); box-shadow:var(--sh-soft); cursor:pointer; text-align:left; }
+  .chip.active { background:var(--paper-2); border-color:var(--line-2); box-shadow:inset 0 0 0 1px var(--line); }
+  .dot { position:absolute; top:10px; right:10px; width:6px; height:6px; border-radius:50%; }
+  .ico { display:grid; place-items:center; width:28px; height:28px; flex-shrink:0; }
+  .txt { display:flex; flex-direction:column; gap:2px; }
+  .lbl { font-family:'EB Garamond',serif; font-style:italic; font-size:18px; font-weight:500; color:var(--ink); line-height:1.05; }
+  .sub { font-family:'EB Garamond',serif; font-style:italic; font-size:12px; color:var(--ink-3); line-height:1.1; }
+</style>
+</head>
+<body>
+  <div class="meta">Actividades</div>
+  <div class="grid">
+
+    <button class="chip active">
+      <span class="dot" style="background:var(--breathe)"></span>
+      <span class="ico" style="color:var(--breathe)">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 4.5v9"/><path d="M14 10.5c-1.2 0-2.2-.4-3-1.2 M14 10.5c1.2 0 2.2-.4 3-1.2"/>
+          <path d="M11 10.2c-2.2.3-4.2 1.4-5.3 3.3-1.3 2.2-1.4 5-.6 7.6.5 1.6 1.6 2.7 3.1 2.8 1.4.1 2.4-.8 2.8-2.2.6-2.1.8-4.6.8-7.1 0-1.7-.1-3.2-.8-4.4z"/>
+          <path d="M17 10.2c2.2.3 4.2 1.4 5.3 3.3 1.3 2.2 1.4 5 .6 7.6-.5 1.6-1.6 2.7-3.1 2.8-1.4.1-2.4-.8-2.8-2.2-.6-2.1-.8-4.6-.8-7.1 0-1.7.1-3.2.8-4.4z"/>
+        </svg>
+      </span>
+      <span class="txt"><span class="lbl">Respira</span><span class="sub">ritmo, calma</span></span>
+    </button>
+
+    <button class="chip">
+      <span class="ico" style="color:var(--extra)">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 21c3-8 7-12 10-12s7 4 10 12"/><circle cx="14" cy="7.5" r="1.6"/><path d="M4 22h20" opacity="0.35" stroke-dasharray="1.5 2.5"/>
+        </svg>
+      </span>
+      <span class="txt"><span class="lbl">Estira</span><span class="sub">afloja tensión</span></span>
+    </button>
+
+    <button class="chip">
+      <span class="ico" style="color:var(--move)">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="10" width="2.2" height="8" rx="0.6"/><rect x="5.6" y="8" width="2.4" height="12" rx="0.6"/>
+          <path d="M8 14h12"/><rect x="20" y="8" width="2.4" height="12" rx="0.6"/><rect x="22.8" y="10" width="2.2" height="8" rx="0.6"/>
+        </svg>
+      </span>
+      <span class="txt"><span class="lbl">Mueve</span><span class="sub">cuerpo activo</span></span>
+    </button>
+
+    <button class="chip">
+      <span class="ico" style="color:var(--hydrate)">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 3.5c-3.6 5.2-7 8.6-7 12.6a7 7 0 0 0 14 0c0-4-3.4-7.4-7-12.6z"/><path d="M10.5 15.5c0 2 1.3 3.6 3 3.9" opacity="0.55"/>
+        </svg>
+      </span>
+      <span class="txt"><span class="lbl">Hidrátate</span><span class="sub">agua ahora</span></span>
+    </button>
+
+  </div>
+</body>
+</html>

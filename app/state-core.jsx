@@ -10,7 +10,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.3';
+const PACE_VERSION = 'v0.34.4';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -28,6 +28,14 @@ const defaultState = {
   soundOn: false,
   ambientOn: false,
   lang: 'en',
+
+  // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del
+  // contenido premium. Sin ruta de compra real hasta v1.0: permanece false y
+  // las rutinas con access:'premium' se muestran bloqueadas (sello + 'Pronto').
+  // El cableado en RoutineCard ya lee este flag: ponerlo a true abre todas las
+  // premium sin tocar UI. La validación de licencia real (claves firmadas,
+  // expiresAt, tipos) queda para una fase posterior post-v1.0.
+  premiumUnlocked: false,
 
   // Foco
   focusMode: 'foco',

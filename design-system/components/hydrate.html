@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Hidrátate</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400&family=Inter+Tight:wght@400;500&display=swap');
+  :root{ --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372;
+    --line:#C9C0A8; --line-2:#B8AD8E; --hydrate:#5F8A9B; --hydrate-soft:rgba(95,138,155,.12);
+    --r-sm:8px; --r-md:12px; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  .card { max-width:520px; margin:0 auto; }
+  .big { text-align:center; padding:8px 0 20px; }
+  .num { font-family:'EB Garamond',serif; font-style:italic; font-size:86px; font-weight:400; line-height:1; color:var(--hydrate); }
+  .num span { color:var(--ink-3); font-size:36px; }
+  .kicker { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3); margin-top:8px; }
+  .glasses { display:grid; grid-template-columns:repeat(8,1fr); gap:8px; margin-bottom:22px; }
+  .glass { aspect-ratio:1/1.3; border-radius:var(--r-sm); display:grid; place-items:end center; padding:0 0 8px;
+    font-size:10px; letter-spacing:.1em; font-weight:500; position:relative; overflow:hidden; }
+  .glass.full { background:var(--hydrate-soft); border:1.5px solid var(--hydrate); color:var(--hydrate); }
+  .glass.empty { background:transparent; border:1.5px solid var(--line); color:var(--ink-3); }
+  .glass.full::before { content:''; position:absolute; inset:40% 0 0 0; background:var(--hydrate-soft); border-top:1px solid var(--hydrate); }
+  .glass span { z-index:1; }
+  .bar { height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin-bottom:22px; }
+  .bar > div { height:100%; width:62.5%; background:var(--hydrate); }
+  .actions { display:flex; gap:10px; justify-content:center; }
+  .btn { border-radius:var(--r-md); padding:10px 22px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+  .sec { background:transparent; color:var(--ink); border:1px solid var(--line-2); }
+  .pri { background:var(--hydrate); color:var(--paper); border:1px solid var(--hydrate); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="big">
+      <div class="num">5<span> / 8</span></div>
+      <div class="kicker">Vasos hoy</div>
+    </div>
+    <div class="glasses">
+      <div class="glass full"><span>1</span></div>
+      <div class="glass full"><span>2</span></div>
+      <div class="glass full"><span>3</span></div>
+      <div class="glass full"><span>4</span></div>
+      <div class="glass full"><span>5</span></div>
+      <div class="glass empty"><span>6</span></div>
+      <div class="glass empty"><span>7</span></div>
+      <div class="glass empty"><span>8</span></div>
+    </div>
+    <div class="bar"><div></div></div>
+    <div class="actions">
+      <button class="btn sec">−&nbsp; Quitar</button>
+      <button class="btn pri">+&nbsp; Añadir</button>
+    </div>
+  </div>
+</body>
+</html>

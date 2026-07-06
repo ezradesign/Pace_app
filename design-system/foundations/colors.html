@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Colores</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  body { margin:0; background:#F2EDE0; color:#1F1C17; font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  h1 { font-family:'EB Garamond',serif; font-style:italic; font-weight:500; font-size:26px; margin:0 0 4px; }
+  .sub { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8A8372; margin-bottom:22px; }
+  h2 { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8A8372; font-weight:500; margin:22px 0 10px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); gap:10px; }
+  .sw { border:1px solid #C9C0A8; border-radius:12px; overflow:hidden; background:#fff; }
+  .chip { height:56px; }
+  .meta { padding:8px 10px; }
+  .nm { font-size:12px; font-weight:500; }
+  .hex { font-size:11px; color:#8A8372; font-family:'Inter Tight',monospace; }
+  .dark { background:#1d1a14; border-color:#3d362b; }
+  .dark .nm { color:#EDE5D3; } .dark .hex { color:#756D5D; }
+</style>
+</head>
+<body>
+  <h1>Paleta tierra</h1>
+  <div class="sub">PACE · tokens de color (app/tokens.css)</div>
+
+  <h2>Superficie · Crema día (default)</h2>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:#F2EDE0"></div><div class="meta"><div class="nm">--paper</div><div class="hex">#F2EDE0</div></div></div>
+    <div class="sw"><div class="chip" style="background:#EAE4D4"></div><div class="meta"><div class="nm">--paper-2</div><div class="hex">#EAE4D4</div></div></div>
+    <div class="sw"><div class="chip" style="background:#DFD8C4"></div><div class="meta"><div class="nm">--paper-3</div><div class="hex">#DFD8C4</div></div></div>
+    <div class="sw"><div class="chip" style="background:#C9C0A8"></div><div class="meta"><div class="nm">--line</div><div class="hex">#C9C0A8</div></div></div>
+    <div class="sw"><div class="chip" style="background:#1F1C17"></div><div class="meta"><div class="nm">--ink</div><div class="hex">#1F1C17</div></div></div>
+    <div class="sw"><div class="chip" style="background:#4A453C"></div><div class="meta"><div class="nm">--ink-2</div><div class="hex">#4A453C</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8A8372"></div><div class="meta"><div class="nm">--ink-3</div><div class="hex">#8A8372</div></div></div>
+  </div>
+
+  <h2>Acentos por módulo</h2>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:#3E5A3A"></div><div class="meta"><div class="nm">--focus</div><div class="hex">#3E5A3A</div></div></div>
+    <div class="sw"><div class="chip" style="background:#C97A5D"></div><div class="meta"><div class="nm">--breathe</div><div class="hex">#C97A5D</div></div></div>
+    <div class="sw"><div class="chip" style="background:#9A7B4F"></div><div class="meta"><div class="nm">--move</div><div class="hex">#9A7B4F</div></div></div>
+    <div class="sw"><div class="chip" style="background:#6B7A8F"></div><div class="meta"><div class="nm">--extra</div><div class="hex">#6B7A8F</div></div></div>
+    <div class="sw"><div class="chip" style="background:#5F8A9B"></div><div class="meta"><div class="nm">--hydrate</div><div class="hex">#5F8A9B</div></div></div>
+    <div class="sw"><div class="chip" style="background:#B8934A"></div><div class="meta"><div class="nm">--achievement</div><div class="hex">#B8934A</div></div></div>
+    <div class="sw"><div class="chip" style="background:#9C6B2E"></div><div class="meta"><div class="nm">--premium</div><div class="hex">#9C6B2E</div></div></div>
+  </div>
+
+  <h2>Superficie · Oscuro noche</h2>
+  <div class="grid">
+    <div class="sw dark"><div class="chip" style="background:#1d1a14"></div><div class="meta"><div class="nm">--paper</div><div class="hex">#1d1a14</div></div></div>
+    <div class="sw dark"><div class="chip" style="background:#26211a"></div><div class="meta"><div class="nm">--paper-2</div><div class="hex">#26211a</div></div></div>
+    <div class="sw dark"><div class="chip" style="background:#2f2920"></div><div class="meta"><div class="nm">--paper-3</div><div class="hex">#2f2920</div></div></div>
+    <div class="sw dark"><div class="chip" style="background:#EDE5D3"></div><div class="meta"><div class="nm">--ink</div><div class="hex">#EDE5D3</div></div></div>
+    <div class="sw dark"><div class="chip" style="background:#7A9A6D"></div><div class="meta"><div class="nm">--focus</div><div class="hex">#7A9A6D</div></div></div>
+    <div class="sw dark"><div class="chip" style="background:#D99477"></div><div class="meta"><div class="nm">--breathe</div><div class="hex">#D99477</div></div></div>
+  </div>
+</body>
+</html>

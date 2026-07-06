@@ -40,7 +40,7 @@ const EXTRA_ROUTINES = [
       { name: 'Thoracic extension', dur: 40, cue: 'Sobre foam roller o toalla enrollada.' },
     ]},
   { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
-    desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 6,
+    desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 6, access: 'premium',
     steps: [
       { name: 'ATG split squat', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
       { name: 'Tibialis raise', dur: 45, cue: 'Contra pared, levanta pies.' },
@@ -49,7 +49,7 @@ const EXTRA_ROUTINES = [
       { name: 'Elephant walk', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' },
     ]},
   { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
-    desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 6,
+    desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 6, access: 'premium',
     steps: [
       { name: 'Deep squat hold', dur: 60, cue: 'Talones abajo, relaja.' },
       { name: 'Crawling', dur: 60, cue: 'Contralateral, lento.' },
