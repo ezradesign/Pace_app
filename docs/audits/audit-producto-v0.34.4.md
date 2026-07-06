@@ -28,7 +28,7 @@
 
 ## 2 · Hallazgos técnicos (por severidad)
 
-### A-1 · MEDIA — Fuga premium vía Camino `path.weekend`
+### A-1 · MEDIA — Fuga premium vía Camino `path.weekend` — ✔ RESUELTO s89 (opción a: degustación curada)
 `app/paths/registry.js:73-74`: el Camino `path.weekend` (free) lanza
 `breathe.nadi.shodhana` + `move.atg.knees`, ambos `premium` desde F3b. Los
 steps de un Camino se ejecutan directos (`PathBreatheStep`/`PathBodyStep`),
@@ -48,7 +48,7 @@ consciente: **(a)** aceptar (los sellos premium son parte del aliciente);
 **(b)** excluir logros premium del denominador de colección. Decidir en F4-F6
 cuando el catálogo crezca. Parte de **D-8**.
 
-### A-3 · MEDIA — Service Worker sin limpieza ni revalidación
+### A-3 · MEDIA — Service Worker sin limpieza ni revalidación — ✔ RESUELTO s89
 `sw.js`: el `activate` hace `clients.claim()` pero **no borra caches de
 versiones anteriores** → cada release deja un cache `pace-vX.Y.Z` huérfano
 ocupando storage del usuario para siempre. Además el fetch es cache-first puro
@@ -57,7 +57,7 @@ navegador re-chequee el SW. Propuesta (pequeña, ~15 ln): en `activate`,
 `caches.keys()` + borrar todo `pace-*` ≠ `CACHE_NAME`; para navegaciones HTML,
 *network-first con fallback a cache* (offline sigue funcionando).
 
-### A-4 · BAJA — `TweaksPanel.jsx` a 519 líneas (>500)
+### A-4 · BAJA — `TweaksPanel.jsx` a 519 líneas (>500) — ✔ RESUELTO s89 (split, 351 ln)
 Tras la superficie premium de s88. Split natural: extraer
 `app/tweaks/PremiumSection.jsx` (~45 ln) + script tag en PACE.html. Registrado
 como deuda MEDIA de tamaño en STATE.
@@ -107,9 +107,9 @@ urgente; D-4/D-5 se resuelven naturalmente en F5/F6 con aprobación del usuario.
 | **Insight sobre stats** | Heatmaps + números | Rise, Exist | Feedback literario semanal (ya en ROADMAP) — diferenciador de tono perfecto |
 | **Bloqueo de distracciones** | No | Forest, Opal, Session | Vía la extensión Chrome del roadmap: blocklist suave opcional durante Foco (cierra el círculo del pomodoro) |
 | **Racha compasiva** | Rotura a 0 al fallar un día | (Duolingo freeze, agresivo) | "Pausa consciente" declarada (vacaciones/enfermedad) que congela sin culpa. Coherente con el tono anti-presión |
-| **Dark mode automático** | Manual en Tweaks | Estándar | `prefers-color-scheme` como default inicial (el toggle manual ya existe y ganaría) |
-| **Reduced motion** | No detectado en el código | Estándar a11y | `prefers-reduced-motion` en BreatheVisual/animaciones. En una app cuyo corazón es una animación de respiración, es a11y de primera clase |
-| **Objetivo de hidratación configurable** | Fijo 8 (`water.goal` existe en state, sin UI) | WaterMinder | Input simple en Tweaks (4-16 vasos). Muy barato: el state ya lo soporta |
+| **Dark mode automático** | Manual en Tweaks → **HECHO s89** | Estándar | `prefers-color-scheme` como default inicial solo en primer arranque (`detectInitialPalette`) |
+| **Reduced motion** | *(corrección s89: SÍ existía un kill global en tokens.css, pero congelaba también la guía de respiración — peor a11y)* → **HECHO s89** | Estándar a11y | Excepción `data-pace-essential` para motion esencial (WCAG 2.3.3); lo decorativo sigue congelado |
+| **Objetivo de hidratación configurable** | Fijo 8 (`water.goal` existía en state, sin UI) → **HECHO s89** | WaterMinder | Stepper en Tweaks (4-12 vasos) |
 | **Atajos de teclado descubribles** | Existen por sesión, no hay ayuda | Superhuman-style | Overlay "?" con el mapa de atajos |
 | **Manifest PWA rico** | Mínimo (18 ln) | Estándar | `shortcuts` (Foco 25 / Respira / +vaso), `screenshots` para el install sheet |
 | **Tercer idioma** | ES + EN | — | FR/PT/DE post-v1.0; el split i18n de s81 lo deja preparado |
@@ -122,11 +122,13 @@ urgente; D-4/D-5 se resuelven naturalmente en F5/F6 con aprobación del usuario.
 
 ## 4 · Priorización recomendada
 
-### P0 — decisiones + fixes pequeños (1 sesión entre todos)
-1. **Decidir D-8** (fuga `path.weekend` + logros premium) — 0-poco código.
-2. **A-3 SW**: cleanup de caches viejos + network-first para HTML (~15 ln).
-3. **`prefers-reduced-motion` + dark auto** — a11y base de una app de bienestar.
-4. **Objetivo de hidratación en Tweaks** — cierra un gap evidente, barato.
+### P0 — decisiones + fixes pequeños ✔ EJECUTADO en s89 (v0.34.5)
+1. ✔ **D-8 decidido**: `path.weekend` = degustación curada; logros premium-tied aceptados (cola: denominador de colección en F4-F6).
+2. ✔ **A-3 SW**: cleanup de caches viejos + network-first para navegaciones.
+3. ✔ **Reduced-motion recalibrado** (excepción motion esencial) + **dark auto** en primer arranque.
+4. ✔ **Objetivo de hidratación en Tweaks** (stepper 4-12) + de propina **A-4** (split TweaksPanel 519→351 ln).
+
+Ver `docs/sessions/session-89-p0-auditoria-fixes.md`.
 
 ### P1 — el bloque actual sigue siendo lo correcto (F4 → F8)
 Contenido Respira/Estira/Mueve + constructor + visual Caminos, tal como está

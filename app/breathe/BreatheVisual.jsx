@@ -1,5 +1,9 @@
 /* PACE · Respiración — Visual animado + getSequence
    Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
+
+   s89: los 5 wrappers llevan `data-pace-essential` — exime al visual del
+   kill global de prefers-reduced-motion (tokens.css). La expansión del
+   círculo ES la guía de respiración: motion esencial, no decorativo.
 */
 
 function getSequence(routine) {
@@ -83,7 +87,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
 
   if (style === 'flor') {
     return (
-      <div style={breathVisualStyles.wrap}>
+      <div data-pace-essential style={breathVisualStyles.wrap}>
         <div style={{
           position: 'absolute', inset: -40,
           border: '1px solid var(--breathe)',
@@ -126,7 +130,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
 
   if (style === 'ondas') {
     return (
-      <div style={breathVisualStyles.wrap}>
+      <div data-pace-essential style={breathVisualStyles.wrap}>
         {[0,1,2,3].map(i => (
           <div key={i} style={{
             position: 'absolute', inset: 0,
@@ -144,7 +148,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
 
   if (style === 'petalo') {
     return (
-      <div style={breathVisualStyles.wrap}>
+      <div data-pace-essential style={breathVisualStyles.wrap}>
         <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} var(--ease)`, transform: `scale(${scale})` }}>
           {[0,1,2,3,4,5].map(i => (
             <ellipse key={i} cx="0" cy="-40" rx="20" ry="45"
@@ -159,7 +163,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
 
   if (style === 'organico') {
     return (
-      <div style={breathVisualStyles.wrap}>
+      <div data-pace-essential style={breathVisualStyles.wrap}>
         <div style={{
           ...breathVisualStyles.core,
           background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 70%)',
@@ -174,7 +178,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
 
   // Default: pulso
   return (
-    <div style={breathVisualStyles.wrap}>
+    <div data-pace-essential style={breathVisualStyles.wrap}>
       <div style={{ position: 'absolute', inset: -30, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.4 }} />
       <div style={{ position: 'absolute', inset: -60, border: '1px solid var(--line)', borderRadius: '50%', opacity: 0.2 }} />
       <div style={{

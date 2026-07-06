@@ -1,7 +1,7 @@
 # Sesión 88 — F3b: activación del gating premium (v0.34.4)
 
 **Versión:** v0.34.3 → **v0.34.4** (patch)
-**Fecha:** 2026-06-30
+**Fecha:** 2026-07-07
 **Bloque:** Contenido+Premium — **Fase 3b** (activación del gating)
 **Tipo:** feat (encender el gating sobre las rutinas existentes) + superficie
 premium en Tweaks + verificación en preview + cierre completo
@@ -118,7 +118,7 @@ El dev server de otra sesión ocupaba :8765; arranqué uno propio (autoPort →
 - `PACE_standalone.html`: **628 KB**, **60 archivos validados** (11 .js + 49
   .jsx). `index.html` copia exacta — **SHA256 idéntico**
   (`f9b9fef0…18a4dd`).
-- Backup `PACE_standalone_v0.34.3_20260630.html` (snapshot del v0.34.3 publicado
+- Backup `PACE_standalone_v0.34.3_20260707.html` (snapshot del v0.34.3 publicado
   en s87); cap 20 (rotado el más antiguo `v0.28.5_20260512.html`).
 
 ---

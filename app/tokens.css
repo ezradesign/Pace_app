@@ -195,9 +195,18 @@ input, textarea { font-family: inherit; color: inherit; }
   border-radius: var(--r-xs);
 }
 
-/* REDUCED MOTION */
+/* REDUCED MOTION (recalibrado s89 · A-reduced de la auditoria v0.34.4).
+   El kill global anterior tambien congelaba la guia visual de respiracion
+   (BreathVisual anima con transitions de 1800ms sobre transform): con
+   reduced-motion activo el circulo saltaba en vez de expandirse y el
+   breathwork guiado perdia su funcion. WCAG 2.3.3 exime el motion ESENCIAL
+   a la funcionalidad. Convencion: un subtree marcado data-pace-essential
+   queda exento del kill; todo lo decorativo (fades, slide-ups, pulsos,
+   anillos de timer) sigue congelado. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not([data-pace-essential], [data-pace-essential] *),
+  *:not([data-pace-essential], [data-pace-essential] *)::before,
+  *:not([data-pace-essential], [data-pace-essential] *)::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

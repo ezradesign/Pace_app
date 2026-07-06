@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
-| **v0.34.4** | 2026-06-30 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [abajo](#v0344----2026-06-30----featpremium-f3b-activacion-del-gating) |
-| **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [abajo](#v0343----2026-06-30----featpremium-f3a-mecanismo-de-gating) |
+| **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [abajo](#v0345----2026-07-07----fixfeat-p0-de-la-auditoria-integral) |
+| **v0.34.4** | 2026-07-07 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [abajo](#v0344----2026-06-30----featpremium-f3b-activacion-del-gating) |
+| **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md) |
 | **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [session-86](./docs/sessions/session-86-f2-tracking-audit.md) |
 | **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [session-85](./docs/sessions/session-85-f1-bmc-docs.md) |
 | **v0.34.0** | 2026-05-24 | feat(glyphs): cierre iter glifos canonicos Mueve/Estira -- 31/46 aprobados portados literal desde HTML exploracion del usuario (new/alt/v5/v6/v7/v8/v9/v12) + 15 mantenidos del s60 hasta nueva aprobacion | #84 | [session-84](./docs/sessions/session-84-glifos-cierre-iter.md) |
@@ -109,7 +110,65 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
-## [v0.34.4] -- 2026-06-30 -- feat(premium): F3b activacion del gating
+## [v0.34.5] -- 2026-07-07 -- fix+feat: P0 de la auditoria integral
+
+Sesion 89. Tras entregar la **auditoria integral de producto+tecnica**
+(`docs/audits/audit-producto-v0.34.4.md`, anexo de s88), se ejecuta su P0:
+decisiones + fixes pequenos que sanean la casa antes de crecer contenido (F4).
+Diario: [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md).
+
+### Decision de producto (D-8, cero codigo)
+
+`path.weekend` queda como **degustacion curada**: el Camino free lanza 2
+rutinas premium (nadi.shodhana + atg.knees) por diseno — probar premium en
+contexto curado. Logros premium-tied aceptados por ahora; revisar denominador
+de coleccion en F4-F6.
+
+### Fixed
+
+- **`sw.js`** -- `activate` borra caches `pace-*` de versiones anteriores
+  (antes quedaban huerfanos para siempre) + navegaciones HTML pasan a
+  **network-first** con fallback a cache (las updates llegan sin esperar al
+  re-chequeo del SW). Assets siguen cache-first.
+- **`app/tokens.css`** + **`app/breathe/BreatheVisual.jsx`** -- el kill global
+  de `prefers-reduced-motion` congelaba tambien la guia visual de respiracion
+  (transitions 1800ms = la funcion misma del breathwork). Ahora exime subtrees
+  `[data-pace-essential]` (los 5 wrappers de BreathVisual); lo decorativo
+  sigue congelado. WCAG 2.3.3 (motion esencial). Corrige ademas un error de
+  la propia auditoria ("reduced-motion no detectado" -- existia, pero roto).
+
+### Added
+
+- **`app/state-core.jsx`** -- `detectInitialPalette()`: `prefers-color-scheme:
+  dark` como paleta inicial SOLO sin estado guardado; la eleccion manual de
+  Tweaks siempre gana despues. Expuesta a window. Bump PACE_VERSION v0.34.5.
+- **`app/tweaks/TweaksPanel.jsx`** -- stepper **"Objetivo de agua"** (4-12
+  vasos) tras los ejes; patch funcional `set(s => ...)` (los clics rapidos en
+  el mismo render no pisan estado). El resto de la app ya leia `water.goal`
+  dinamicamente. i18n `tweaks.eje.water` / `tweaks.water.value` ES+EN.
+- **`app/tweaks/TweaksData.jsx`** (193 ln) + **`app/tweaks/PremiumSection.jsx`**
+  (47 ln) -- split A-4: TweaksPanel 519 -> **351 ln** (sale de deuda). Dos
+  script tags nuevos en `PACE.html`.
+- **`docs/audits/audit-producto-v0.34.4.md`** -- auditoria integral (anexo
+  s88): fortalezas, hallazgos A-1..A-8, gaps vs sector, prioridades P0-P3.
+
+### Verificacion runtime
+
+Preview :8765 propio. Panel Tweaks completo (agua + datos + premium,
+screenshot); stepper 1 clic = 1 paso, clamp 4-12, persiste; wrapper
+`[data-pace-essential]` vivo en sesion Respira; regla `:not(...)` cargada;
+`detectInitialPalette()` -> 'crema' en preview claro. **Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **633 KB**, 62 archivos validados (+2 del split).
+  `index.html` copia exacta (SHA256 identico, `cc5005ee...cacfe2`).
+- Backup `PACE_standalone_v0.34.4_20260707.html`; cap 20 (rotado
+  `v0.28.6_20260511.html`). Fechas de s88 corregidas a 2026-07-07.
+
+---
+
+## [v0.34.4] -- 2026-07-07 -- feat(premium): F3b activacion del gating
 
 Sesion 88. **Fase 3b del bloque Contenido+Premium: enciende el gating** sobre las
 rutinas que ya existen. Alcance acotado al **binario `free`/`premium`** (los
@@ -172,65 +231,17 @@ Via preview local (puerto propio; otra sesion ocupaba :8765).
 
 - `PACE_standalone.html`: **628 KB**, 60 archivos validados. `index.html` copia
   exacta (**SHA256 identico**, `f9b9fef0…18a4dd`).
-- Backup `PACE_standalone_v0.34.3_20260630.html` creado; cap 20 (rotado el mas
+- Backup `PACE_standalone_v0.34.3_20260707.html` creado; cap 20 (rotado el mas
   antiguo `v0.28.5_20260512.html`).
 
 ---
 
-## [v0.34.3] -- 2026-06-30 -- feat(premium): F3a mecanismo de gating
-
-Sesion 87. **Fase 3a del bloque Contenido+Premium: el mecanismo de gating a
-nivel sesion**, construido y verificado pero **dormante** -- todas las rutinas
-siguen `free`, nada cambia para el usuario. F3b encendera el desbloqueo real y
-designara el set premium.
-
-### Added
-
-- **`app/tokens.css`** -- tokens `--premium` (#9C6B2E) + `--premium-soft`. Bronce
-  profundo, deliberadamente mas oscuro que `--achievement` (#B8934A) y `--move`
-  (#9A7B4F) para que el sello no se confunda con ninguno. Tono tierra, sin
-  dorado brillante ni gradiente.
-- **`app/ui/Primitives.jsx`** -- componente reutilizable `PremiumSeal` (chip
-  inline; prop `label` opcional, por defecto i18n `premium.seal`). Expuesto a
-  `window` para reuso en F3b (Tweaks / Caminos).
-- **`app/i18n/strings/ui.js`** -- `premium.seal` / `premium.soon` (ES + EN).
-
-### Changed
-
-- **`app/breathe/BreatheLibrary.jsx`** -- `RoutineCard` (compartido por las 3
-  bibliotecas Respira/Mueve/Estira via `window`) lee `routine.access`: si
-  `'premium'`, muestra el sello + "Pronto" (en lugar de los minutos) y
-  **desactiva el clic** (no arranca). Convencion documentada: ausente|`'free'` =
-  libre, `'premium'` = de pago. La designacion de que rutinas son premium y el
-  desbloqueo real llegan en F3b / F5-F7.
-- **`DESIGN_SYSTEM.md`** -- documentado el token `--premium` / `--premium-soft`.
-- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.34.3.
-- **`CHANGELOG.md`** -- v0.34.1 degradado a fila-de-enlace (convencion: solo 2
-  ultimas detalladas).
-
-### Verificacion runtime
-
-Via preview local en `localhost:8765`.
-
-- Con una rutina marcada premium temporalmente (Box 6.6.6.6): sello PREMIUM en
-  bronce `rgb(156,107,46)` + fondo `--premium-soft`, "Pronto" en lugar de los
-  minutos (screenshot). Tarjeta libre `cursor: pointer` vs premium
-  `cursor: default` (no clicable) -- confirmado.
-- Flag temporal **revertido**; standalone limpio verificado: 0 rutinas premium
-  en datos, token (#9C6B2E) y componente `PremiumSeal` presentes, consola sin
-  errores.
-- Build limpio: **60 archivos validados**.
-
-### Build
-
-- `PACE_standalone.html`: **625 KB**. `index.html` copia exacta (SHA256 identico).
-- Backup `PACE_standalone_v0.34.2_20260630.html` creado (snapshot del v0.34.2
-  publicado, desde git HEAD); cap 20 (rotado el mas antiguo
-  `v0.28.4_20260512.html`).
-
+> **v0.34.3** (s87) detallada en
+> [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md) —
+> convencion: solo las 2 ultimas versiones se detallan aqui.
+>
 > **v0.34.2** (s86) detallada en
-> [session-86](./docs/sessions/session-86-f2-tracking-audit.md) — convencion:
-> solo las 2 ultimas versiones se detallan aqui.
+> [session-86](./docs/sessions/session-86-f2-tracking-audit.md).
 
 ---
 ## [v0.34.1] -- 2026-06-05 -- fix(support): copy BMC honesto + recrear CONTENT/ROADMAP

@@ -144,12 +144,12 @@ Secuencias guiadas (respira → foco → cuerpo) según la hora del día.
 Catálogo cerrado a **7 caminos**, todos `free`. Datos en
 `app/paths/registry.js`.
 
-> **Nota (s88):** `path.weekend` referencia `breathe.nadi.shodhana` +
-> `move.atg.knees` (premium desde F3b). Los steps de un Camino se lanzan
-> directamente (no pasan por `RoutineCard`), así que hoy funciona como
-> **degustación por puerta lateral**. Pendiente de decisión de producto
-> (D-8 en `STATE.md`): declararlo degustación curada, swap a free, o
-> Camino premium.
+> **Nota (s88, resuelto s89):** `path.weekend` referencia
+> `breathe.nadi.shodhana` + `move.atg.knees` (premium desde F3b). Los steps
+> de un Camino se lanzan directamente (no pasan por `RoutineCard`).
+> **Decisión activa (s89): es una degustación curada deliberada** — probar
+> premium dentro de una secuencia guiada. Revisar al crecer el catálogo
+> (F5/F6).
 
 ---
 

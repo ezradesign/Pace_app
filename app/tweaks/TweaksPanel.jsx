@@ -1,6 +1,8 @@
 /* PACE · Panel de Ajustes (antes Tweaks)
    ============================================================
-   5 ejes vigentes: audio, paleta, layout, timer, breath.
+   Ejes vigentes: idioma, audio, paleta, timer, breath, layout
+   + objetivo de agua (s89). Export/Import y superficie premium
+   extraídos a TweaksData.jsx / PremiumSection.jsx (split s89).
    Sesión 37 (v0.19.0): renombrado a "Ajustes", audio movido al
    primer eje con pills "Activado / Silenciado", eliminados
    circle/numero de timer y editorial de layout.
@@ -33,13 +35,11 @@
        unlockAchievement (no dispara dos veces el mismo id).
    ============================================================ */
 
-const { useState: useStateTW, useEffect: useEffectTW, useRef: useRefTW } = React;
+const { useEffect: useEffectTW } = React;
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
   const { t, tn } = useT();
-  const fileInputRef = useRefTW(null);
-  const [msg, setMsg] = useStateTW(null); // {kind, text} para feedback Export/Import
 
   /* ============================================================
      SECRETS — detectores simples que viven mientras el panel existe.
@@ -90,88 +90,8 @@ function TweaksPanel({ open, onClose }) {
        compatibilidad con instalaciones existentes. */
   ];
 
-  /* ============================================================
-     EXPORT — descarga un JSON con el estado completo de PACE.
-     Refuerza la promesa "todo local" del modal BMC: ahora es local
-     Y portátil. El archivo incluye:
-       - version: para migración futura si el schema cambia.
-       - exportedAt: timestamp legible.
-       - state: copia literal de localStorage['pace.state.v2'].
-     ============================================================ */
-  const exportJSON = () => {
-    try {
-      const raw = localStorage.getItem('pace.state.v2') || '{}';
-      const parsed = JSON.parse(raw);
-      const payload = {
-        app: 'PACE',
-        version: PACE_VERSION,
-        exportedAt: new Date().toISOString(),
-        state: parsed,
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      const yyyymmdd = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      a.href = url;
-      a.download = `pace-backup-${yyyymmdd}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
-      setTimeout(() => setMsg(null), 2200);
-    } catch (e) {
-      setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
-      setTimeout(() => setMsg(null), 2600);
-    }
-  };
-
-  /* ============================================================
-     IMPORT — lee un JSON y lo mergea/reemplaza en localStorage.
-     Valida estructura mínima (app === 'PACE' + state como objeto)
-     y pregunta confirmación explícita antes de sobrescribir.
-     Tras confirmar, recarga la página para que useSyncExternalStore
-     re-lea el nuevo estado desde cero (evita estados inconsistentes).
-     ============================================================ */
-  const importJSON = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const raw = String(ev.target.result || '');
-        const payload = JSON.parse(raw);
-
-        // Validación mínima: tiene que parecerse a un backup de PACE.
-        const looksValid = payload && (
-          (payload.app === 'PACE' && payload.state && typeof payload.state === 'object')
-          || (payload.achievements !== undefined || payload.weeklyStats !== undefined)
-        );
-        if (!looksValid) {
-          setMsg({ kind: 'err', text: t('tweaks.msg.import.invalid') });
-          setTimeout(() => setMsg(null), 2600);
-          return;
-        }
-
-        // Soporta dos formatos: {app, state:{...}} o state plano (fallback).
-        const incoming = (payload.state && typeof payload.state === 'object') ? payload.state : payload;
-
-        // Contador rápido para el aviso de confirmación.
-        const nLogros = incoming.achievements ? Object.keys(incoming.achievements).length : 0;
-        const nFoco = incoming.totalFocusMin || 0;
-        const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
-        if (!ok) return;
-
-        // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-        setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
-        setTimeout(() => location.reload(), 900);
-      } catch (e) {
-        setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
-        setTimeout(() => setMsg(null), 2600);
-      }
-    };
-    reader.readAsText(file);
-  };
+  /* Export/Import JSON: extraído a TweaksData.jsx (split s89 / v0.34.5).
+     La superficie premium (s88) vive en PremiumSection.jsx. */
 
   return (
     <div data-pace-tweaks-panel style={{
@@ -315,99 +235,41 @@ function TweaksPanel({ open, onClose }) {
         </div>
       ))}
 
-      <Divider style={{ margin: '14px 0' }} />
-
-      {/* ============================================================
-          Datos — Export / Import JSON (sesión 17 / v0.12.0)
-          ============================================================ */}
-      <Meta style={{ marginBottom: 8 }}>{t('tweaks.data.meta')}</Meta>
-      <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-        <button
-          onClick={exportJSON}
-          style={tweaksStyles.dataBtn}
-          title={t('tweaks.data.export.title')}
-        >
-          <DownloadIcon /> <span>{t('tweaks.data.export')}</span>
-        </button>
-        <button
-          onClick={() => fileInputRef.current && fileInputRef.current.click()}
-          style={tweaksStyles.dataBtn}
-          title={t('tweaks.data.import.title')}
-        >
-          <UploadIcon /> <span>{t('tweaks.data.import')}</span>
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/json,.json"
-          style={{ display: 'none' }}
-          onChange={(e) => {
-            const f = e.target.files && e.target.files[0];
-            importJSON(f);
-            e.target.value = ''; // permitir re-importar el mismo archivo
-          }}
-        />
-      </div>
-      {msg && (
-        <div style={{
-          fontSize: 10.5,
-          color: msg.kind === 'err' ? 'var(--breathe)' : 'var(--focus)',
-          fontFamily: 'var(--font-display)',
-          fontStyle: 'italic',
-          marginBottom: 8,
-          letterSpacing: 0.1,
-          textAlign: 'center',
-        }}>{msg.text}</div>
-      )}
-      <div style={{
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        lineHeight: 1.4,
-        letterSpacing: 0.1,
-        marginBottom: 4,
-      }}>
-        {t('tweaks.data.note')}
+      {/* Objetivo de hidratación (s89 · P0 auditoría). El state (water.goal)
+          siempre lo soportó; esto solo expone la UI. Rango 4-12: el grid de
+          vasos del tracker rinde bien hasta 12 columnas. */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.water')}</Meta>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Patch funcional (no closure): clics rápidos en el mismo render
+              leen siempre el goal fresco del store. */}
+          <button
+            onClick={() => set(s => ({ ...s, water: { ...s.water, goal: Math.max(4, (s.water.goal || 8) - 1) } }))}
+            style={tweaksStyles.stepBtn}
+            aria-label={t('hydrate.less')}
+          >−</button>
+          <span style={{ fontSize: 12, minWidth: 84, textAlign: 'center', color: 'var(--ink-2)', letterSpacing: 0.2 }}>
+            {tn('tweaks.water.value', { n: state.water.goal || 8 })}
+          </span>
+          <button
+            onClick={() => set(s => ({ ...s, water: { ...s.water, goal: Math.min(12, (s.water.goal || 8) + 1) } }))}
+            style={tweaksStyles.stepBtn}
+            aria-label={t('hydrate.more')}
+          >+</button>
+        </div>
       </div>
 
       <Divider style={{ margin: '14px 0' }} />
 
-      {/* ============================================================
-          Premium — superficie display-only (s88 · bloque Contenido+Premium F3b).
-          Sello + input de licencia SIN validación + copy honesto. No desbloquea
-          nada: premiumUnlocked sigue false. La validación de clave firmada
-          offline llega post-v1.0. Reusa PremiumSeal (Primitives).
-          ============================================================ */}
-      <div style={{ marginBottom: 4 }}>
-        <div style={{ marginBottom: 8 }}>
-          <PremiumSeal />
-        </div>
-        <div style={{ ...displayItalic, fontSize: 16, fontWeight: 500, marginBottom: 6 }}>{t('premium.tweaks.title')}</div>
-        <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.5, marginBottom: 10, letterSpacing: 0.1 }}>{t('premium.tweaks.body')}</div>
-        <input
-          type="text"
-          disabled
-          placeholder={t('premium.tweaks.placeholder')}
-          style={{
-            width: '100%', boxSizing: 'border-box',
-            padding: '8px 10px', fontSize: 11,
-            color: 'var(--ink-2)', background: 'var(--paper-2)',
-            border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
-            letterSpacing: 0.2, marginBottom: 6, cursor: 'not-allowed',
-          }}
-        />
-        <button
-          disabled
-          style={{
-            width: '100%', padding: '8px', fontSize: 11, fontWeight: 500,
-            color: 'var(--premium)', background: 'var(--premium-soft)',
-            border: '1px solid var(--premium)', borderRadius: 'var(--r-sm)',
-            letterSpacing: 0.2, cursor: 'not-allowed',
-          }}
-        >{t('premium.tweaks.cta')}</button>
-        <div style={{ fontSize: 10, color: 'var(--ink-3)', lineHeight: 1.4, letterSpacing: 0.1, marginTop: 6 }}>
-          {t('premium.tweaks.note')}
-        </div>
-      </div>
+      {/* Datos — Export / Import JSON (sesión 17 / v0.12.0; extraído a
+          TweaksData.jsx en el split de sesión 89) */}
+      <TweaksDataSection />
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* Premium — superficie display-only (s88 F3b; extraída a
+          PremiumSection.jsx en el split de sesión 89) */}
+      <PremiumSection />
 
       <Divider style={{ margin: '14px 0' }} />
 
@@ -429,47 +291,19 @@ function TweaksPanel({ open, onClose }) {
 }
 
 /* ============================================================
-   Iconos + estilos (nombres únicos)
+   Estilos (nombres únicos). Los iconos Download/Upload y el
+   estilo dataBtn viven ahora en TweaksData.jsx (split s89).
    ============================================================ */
-function DownloadIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.3"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 2.5v8" />
-      <path d="M4.5 7L8 10.5 11.5 7" />
-      <path d="M3 13h10" />
-    </svg>
-  );
-}
-function UploadIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"
-         stroke="currentColor" strokeWidth="1.3"
-         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M8 10.5v-8" />
-      <path d="M4.5 6L8 2.5 11.5 6" />
-      <path d="M3 13h10" />
-    </svg>
-  );
-}
-
 const tweaksStyles = {
-  dataBtn: {
-    flex: 1,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: '8px 10px',
-    fontSize: 11,
+  stepBtn: {
+    width: 26, height: 26,
+    display: 'grid', placeItems: 'center',
+    fontSize: 14,
     color: 'var(--ink-2)',
     background: 'var(--paper-2)',
     border: '1px solid var(--line)',
     borderRadius: 'var(--r-sm)',
-    letterSpacing: 0.2,
     cursor: 'pointer',
-    transition: 'all 180ms',
   },
 };
 

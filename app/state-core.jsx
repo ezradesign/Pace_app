@@ -10,7 +10,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.4';
+const PACE_VERSION = 'v0.34.5';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -116,6 +116,17 @@ const defaultState = {
 function isMobileViewport() {
   return typeof window !== 'undefined' && window.matchMedia &&
          window.matchMedia('(max-width: 768px)').matches;
+}
+
+/* Paleta inicial (s89 · P0 auditoria): respeta prefers-color-scheme del
+   sistema SOLO en el primer arranque (sin estado guardado). La eleccion
+   manual de Tweaks persiste en localStorage y siempre gana en cargas
+   posteriores — esto no re-sigue cambios del SO en caliente. */
+function detectInitialPalette() {
+  try {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'oscuro' : 'crema';
+  } catch (e) { return 'crema'; }
 }
 
 function todayISO() {
@@ -340,6 +351,7 @@ function loadState() {
       return {
         ...defaultState,
         lang: _detectLang(),
+        palette: detectInitialPalette(),
         lastActiveDay: new Date().toDateString(),
         _weeklyStatsReindexed_v0_28_8: true,
         _historyRecalculated_v0_28_8: true,
@@ -397,6 +409,7 @@ function loadState() {
     return {
       ...defaultState,
       lang: _detectLang(),
+      palette: detectInitialPalette(),
       lastActiveDay: new Date().toDateString(),
       _weeklyStatsReindexed_v0_28_8: true,
       _historyRecalculated_v0_28_8: true,
@@ -483,6 +496,7 @@ applyTheme();
 
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
+  detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast,
   zeroEntry, toISODate, todayISO,
