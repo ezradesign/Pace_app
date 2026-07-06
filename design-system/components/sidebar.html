@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Sidebar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{ --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372;
+    --line:#C9C0A8; --line-2:#B8AD8E; --focus:#3E5A3A; --achievement:#B8934A; --r-md:12px; }
+  body { margin:0; background:#DFD8C4; font-family:'Inter Tight',system-ui,sans-serif; padding:24px; }
+  .panel { width:280px; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:22px 20px; }
+  .word { font-family:'EB Garamond',serif; font-style:italic; font-size:28px; font-weight:500; }
+  .tagline { font-size:11px; color:var(--ink-3); margin-top:2px; }
+  .sect { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:24px 0 10px; }
+  .streak { display:flex; align-items:baseline; gap:8px; }
+  .streak .n { font-family:'EB Garamond',serif; font-style:italic; font-size:46px; font-weight:500; line-height:1; color:var(--ink); }
+  .streak .u { font-size:13px; color:var(--ink-2); }
+  .best { font-size:11px; color:var(--ink-3); margin-top:4px; }
+  .week { display:flex; gap:8px; margin-top:14px; }
+  .day { flex:1; text-align:center; }
+  .day .d { font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px; }
+  .dot { width:14px; height:14px; border-radius:50%; margin:0 auto; border:1px solid var(--line-2); }
+  .dot.on { background:var(--focus); border-color:var(--focus); }
+  .dot.today { box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--focus); }
+  .trail { height:38px; margin-top:6px; }
+  .trail path { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; }
+  .trail path.pending { stroke-dasharray:3 5; opacity:.5; }
+  .trail circle { fill:var(--ink); }
+  .ach { display:flex; align-items:center; justify-content:space-between; }
+  .ach .c { font-family:'EB Garamond',serif; font-style:italic; font-size:13px; color:var(--ink-2); }
+  .status { margin-top:22px; padding-top:14px; border-top:1px solid var(--line); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--focus); }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <div class="word">Pace.</div>
+    <div class="tagline">Antídoto a la silla.</div>
+
+    <div class="sect">Ritmo</div>
+    <div class="streak"><span class="n">5</span><span class="u">días seguidos</span></div>
+    <div class="best">Mejor: 11 días</div>
+    <div class="week">
+      <div class="day"><div class="d">L</div><div class="dot on"></div></div>
+      <div class="day"><div class="d">M</div><div class="dot on"></div></div>
+      <div class="day"><div class="d">X</div><div class="dot on"></div></div>
+      <div class="day"><div class="d">J</div><div class="dot on"></div></div>
+      <div class="day"><div class="d">V</div><div class="dot on today"></div></div>
+      <div class="day"><div class="d">S</div><div class="dot"></div></div>
+      <div class="day"><div class="d">D</div><div class="dot"></div></div>
+    </div>
+
+    <div class="sect">Sendero</div>
+    <svg class="trail" viewBox="0 0 240 38" preserveAspectRatio="none" width="100%">
+      <path d="M6 30 C 50 6, 90 6, 120 20" />
+      <path class="pending" d="M120 20 C 150 34, 190 34, 234 12" />
+      <circle cx="6" cy="30" r="3"/><circle cx="120" cy="20" r="3.5"/>
+    </svg>
+
+    <div class="sect">Logros</div>
+    <div class="ach"><span class="c">12 por descubrir</span><span style="color:var(--achievement)">→</span></div>
+
+    <div class="status">En camino</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · TimerDial</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{ --paper:#F2EDE0; --ink:#1F1C17; --ink-3:#8A8372; --line:#C9C0A8; --line-2:#B8AD8E; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif;
+    padding:28px; display:flex; justify-content:center; }
+  .frame { position:relative; width:380px; height:380px; display:grid; place-items:center; }
+  .ring { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+  .inner { position:relative; text-align:center; z-index:1; display:flex; flex-direction:column; align-items:center; max-width:70%; }
+  .mode { font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; font-weight:500; }
+  .num { font-family:'EB Garamond',serif; font-style:italic; font-weight:400; line-height:.9; letter-spacing:-.03em; color:var(--ink); font-size:92px; }
+  .sub { font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:var(--ink-3); margin-top:30px; letter-spacing:.2px; }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <circle cx="50" cy="50" r="47.5" fill="none" stroke="var(--line)" stroke-width="0.35" />
+      <circle cx="50" cy="50" r="47.5" fill="none"
+        stroke="#B0794F" stroke-width="0.7" stroke-opacity="0.7" stroke-linecap="round"
+        stroke-dasharray="298.45" stroke-dashoffset="95.5" />
+    </svg>
+    <div class="inner">
+      <div class="mode">Foco</div>
+      <div class="num">25:00</div>
+      <div class="sub">Concentración profunda</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · BreatheVisual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&display=swap');
+  :root{ --paper:#F2EDE0; --ink-3:#8A8372; --line:#C9C0A8;
+    --breathe:#C97A5D; --breathe-2:#A85E43; --breathe-soft:rgba(201,122,93,.12); --ease:cubic-bezier(.4,0,.2,1); }
+  body { margin:0; background:var(--paper); font-family:'Inter Tight',system-ui,sans-serif; padding:24px; }
+  .label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:0 0 18px; }
+  .row { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; }
+  .cell { text-align:center; }
+  .name { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); margin-top:8px; }
+  .wrap { position:relative; width:230px; height:230px; display:grid; place-items:center; }
+  /* núcleo común */
+  .core { width:140px; height:140px; border-radius:50%; position:relative; }
+</style>
+</head>
+<body>
+  <div class="label">PACE · BreatheVisual — estilos del círculo de respiración (fase: inhala)</div>
+  <div class="row">
+
+    <!-- FLOR -->
+    <div class="cell">
+      <div class="wrap">
+        <div style="position:absolute;inset:-34px;border:1px solid var(--breathe);border-radius:50%;opacity:.25;transform:scale(1.23);"></div>
+        <div style="position:absolute;inset:-18px;border:1px solid var(--breathe);border-radius:50%;opacity:.4;transform:scale(1.3);"></div>
+        <svg viewBox="-100 -100 200 200" style="position:absolute;inset:0;width:100%;height:100%;transform:scale(1.1) rotate(16deg);">
+          <g fill="var(--breathe-soft)" stroke="var(--breathe)" stroke-width="0.6" opacity="0.5">
+            <ellipse cx="0" cy="-32" rx="14" ry="34" transform="rotate(0)"/>
+            <ellipse cx="0" cy="-32" rx="14" ry="34" transform="rotate(60)"/>
+            <ellipse cx="0" cy="-32" rx="14" ry="34" transform="rotate(120)"/>
+            <ellipse cx="0" cy="-32" rx="14" ry="34" transform="rotate(180)"/>
+            <ellipse cx="0" cy="-32" rx="14" ry="34" transform="rotate(240)"/>
+            <ellipse cx="0" cy="-32" rx="14" ry="34" transform="rotate(300)"/>
+          </g>
+        </svg>
+        <div style="width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,var(--breathe-soft) 0%,transparent 80%);border:1.5px solid var(--breathe);transform:scale(.91);"></div>
+      </div>
+      <div class="name">Flor (default)</div>
+    </div>
+
+    <!-- PULSO -->
+    <div class="cell">
+      <div class="wrap">
+        <div style="position:absolute;inset:-26px;border:1px solid var(--line);border-radius:50%;opacity:.4;"></div>
+        <div style="position:absolute;inset:-52px;border:1px solid var(--line);border-radius:50%;opacity:.2;"></div>
+        <div class="core" style="background:var(--breathe-soft);border:1.5px solid var(--breathe);transform:scale(1.3);"></div>
+        <div style="position:absolute;width:8px;height:8px;border-radius:50%;background:var(--breathe-2);top:50%;left:50%;transform:translate(-50%,-50%) rotate(150deg) translateY(-100px);"></div>
+      </div>
+      <div class="name">Pulso</div>
+    </div>
+
+    <!-- ONDAS -->
+    <div class="cell">
+      <div class="wrap">
+        <div style="position:absolute;inset:0;border:1px solid var(--breathe);border-radius:50%;opacity:.15;transform:scale(1.3);"></div>
+        <div style="position:absolute;inset:0;border:1px solid var(--breathe);border-radius:50%;opacity:.25;transform:scale(1.15);"></div>
+        <div style="position:absolute;inset:0;border:1px solid var(--breathe);border-radius:50%;opacity:.35;transform:scale(1.0);"></div>
+        <div style="position:absolute;inset:0;border:1px solid var(--breathe);border-radius:50%;opacity:.45;transform:scale(.85);"></div>
+        <div class="core" style="background:var(--breathe-soft);"></div>
+      </div>
+      <div class="name">Ondas</div>
+    </div>
+
+  </div>
+</body>
+</html>

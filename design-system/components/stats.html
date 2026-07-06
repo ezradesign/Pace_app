@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Stats / heatmaps</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{ --paper:#F2EDE0; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372; --line:#C9C0A8;
+    --focus:#3E5A3A; --r-sm:8px;
+    /* escala tierra→oliva (5 niveles de actividad) */
+    --l0:#E4DDCB; --l1:#C9C7A0; --l2:#A9B179; --l3:#7E9457; --l4:#3E5A3A; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  .label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:0 0 12px; }
+  .cols { display:grid; grid-template-columns:1fr 1.4fr; gap:28px; align-items:start; }
+  .h3 { font-family:'EB Garamond',serif; font-style:italic; font-size:18px; font-weight:500; margin:0 0 12px; }
+  /* Semana: barras */
+  .bars { display:flex; align-items:flex-end; gap:10px; height:130px; }
+  .bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
+  .bar .fill { width:100%; background:var(--focus); border-radius:4px 4px 0 0; }
+  .bar .d { font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+  /* Año: heatmap */
+  .heat { display:grid; grid-template-rows:repeat(7,1fr); grid-auto-flow:column; grid-auto-columns:1fr; gap:3px; }
+  .cell { width:12px; height:12px; border-radius:3px; background:var(--l0); }
+  .legend { display:flex; align-items:center; gap:6px; margin-top:10px; font-size:10px; color:var(--ink-3); }
+  .legend .cell { width:11px; height:11px; }
+</style>
+</head>
+<body>
+  <div class="label">PACE · Ritmo — Semana (barras) + Año (heatmap tierra→oliva)</div>
+  <div class="cols">
+
+    <div>
+      <div class="h3">Semana</div>
+      <div class="bars">
+        <div class="bar"><div class="fill" style="height:60%"></div><div class="d">L</div></div>
+        <div class="bar"><div class="fill" style="height:85%"></div><div class="d">M</div></div>
+        <div class="bar"><div class="fill" style="height:45%"></div><div class="d">X</div></div>
+        <div class="bar"><div class="fill" style="height:95%"></div><div class="d">J</div></div>
+        <div class="bar"><div class="fill" style="height:70%"></div><div class="d">V</div></div>
+        <div class="bar"><div class="fill" style="height:25%;background:var(--line)"></div><div class="d">S</div></div>
+        <div class="bar"><div class="fill" style="height:10%;background:var(--line)"></div><div class="d">D</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="h3">Año</div>
+      <div class="heat" id="heat"></div>
+      <div class="legend">menos
+        <span class="cell" style="background:var(--l0)"></span>
+        <span class="cell" style="background:var(--l1)"></span>
+        <span class="cell" style="background:var(--l2)"></span>
+        <span class="cell" style="background:var(--l3)"></span>
+        <span class="cell" style="background:var(--l4)"></span>
+      más</div>
+    </div>
+
+  </div>
+  <script>
+    // 26 semanas × 7 días con intensidad pseudo-aleatoria estable
+    var lv=['var(--l0)','var(--l1)','var(--l2)','var(--l3)','var(--l4)'];
+    var h=document.getElementById('heat'), s=7;
+    for(var i=0;i<26*7;i++){ var c=document.createElement('div'); c.className='cell';
+      s=(s*1103515245+12345)&0x7fffffff; var r=s%100;
+      var idx = r<34?0 : r<58?1 : r<78?2 : r<92?3 : 4;
+      c.style.background=lv[idx]; h.appendChild(c); }
+  </script>
+</body>
+</html>

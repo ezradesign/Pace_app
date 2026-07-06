@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · BreakMenu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500&display=swap');
+  :root{ --paper:#F2EDE0; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372; --line:#C9C0A8;
+    --focus:#3E5A3A; --breathe:#C97A5D; --breathe-soft:rgba(201,122,93,.12);
+    --move:#9A7B4F; --move-soft:rgba(154,123,79,.12); --hydrate:#5F8A9B; --hydrate-soft:rgba(95,138,155,.12);
+    --r-md:12px; --r-pill:999px; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  .meta { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+  .title { font-family:'EB Garamond',serif; font-style:italic; font-size:30px; font-weight:500; margin:6px 0 4px; }
+  .sub { color:var(--ink-3); font-size:14px; margin:0 0 4px; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 0; }
+  .opt { position:relative; padding:24px 18px; border-radius:var(--r-md); text-align:left; display:flex; flex-direction:column; gap:12px; cursor:pointer; }
+  .b { background:var(--breathe-soft); border:1.5px solid var(--breathe); }
+  .m { background:var(--move-soft); border:1.5px solid var(--move); }
+  .w { background:var(--hydrate-soft); border:1.5px solid var(--hydrate); }
+  .ico { font-size:28px; }
+  .lbl { font-family:'EB Garamond',serif; font-style:italic; font-size:22px; font-weight:500; margin-bottom:4px; }
+  .desc { font-size:12px; color:var(--ink-2); }
+  .tag { display:inline-flex; align-self:flex-start; padding:3px 10px; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    border-radius:var(--r-pill); border:1px solid var(--focus); color:var(--focus); font-weight:500; }
+  .foot { display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+  .skip { background:none; border:1px solid transparent; color:var(--ink-2); font-size:14px; padding:10px 22px; cursor:pointer; font-family:inherit; }
+</style>
+</head>
+<body>
+  <div class="meta">Ciclo completado</div>
+  <div class="title">Pausa bien hecha</div>
+  <p class="sub">Has cerrado un ciclo de foco. Elige tu micro-pausa.</p>
+
+  <div class="grid">
+    <button class="opt b">
+      <span class="tag">Para ti</span>
+      <div class="ico" style="color:var(--breathe)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/></svg>
+      </div>
+      <div><div class="lbl">Respira</div><div class="desc">2 min para volver al centro</div></div>
+    </button>
+
+    <button class="opt m">
+      <div class="ico" style="color:var(--move)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v8"/><path d="M8 10l4 2 4-2"/><path d="M9 20l3-5 3 5"/></svg>
+      </div>
+      <div><div class="lbl">Muévete</div><div class="desc">Antídoto rápido a la silla</div></div>
+    </button>
+
+    <button class="opt w">
+      <span style="position:absolute;top:10px;right:10px;width:6px;height:6px;border-radius:50%;background:var(--hydrate);opacity:.6;"></span>
+      <div class="ico" style="color:var(--hydrate)">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z"/></svg>
+      </div>
+      <div><div class="lbl">Hidrátate</div><div class="desc">Ya hecho hoy · otra ronda si quieres</div></div>
+    </button>
+  </div>
+
+  <div class="foot">
+    <span class="meta">Atajo: B · M · H · Esc</span>
+    <button class="skip">Saltar esta pausa</button>
+  </div>
+</body>
+</html>

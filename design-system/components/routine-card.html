@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · RoutineCard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap');
+  :root{
+    --paper:#F2EDE0; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372; --line:#C9C0A8;
+    --breathe:#C97A5D; --breathe-soft:rgba(201,122,93,.12);
+    --premium:#9C6B2E; --premium-soft:rgba(156,107,46,.12);
+    --r-md:12px; --r-pill:999px;
+  }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  .label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:0 0 16px; }
+  .grid { display:grid; grid-template-columns:repeat(3,minmax(240px,1fr)); gap:14px; align-items:start; }
+  .state { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0 0 8px; }
+
+  .card { position:relative; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 18px;
+    transition:all .22s; }
+  .card.clickable { cursor:pointer; }
+  .card.clickable:hover { border-color:var(--breathe); transform:translateY(-1px); box-shadow:0 1px 2px rgba(31,28,23,.06),0 4px 16px rgba(31,28,23,.04); }
+  .card.locked { cursor:default; }
+
+  .tagrow { display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+  .tag { display:inline-flex; padding:3px 10px; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    border-radius:var(--r-pill); border:1px solid var(--breathe); color:var(--breathe); font-weight:500; }
+  .seal { display:inline-flex; align-items:center; padding:3px 9px; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    border-radius:var(--r-pill); border:1px solid var(--premium); color:var(--premium); background:var(--premium-soft); font-weight:600; }
+
+  h4 { font-family:'EB Garamond',serif; font-style:italic; font-weight:500; font-size:19px; margin:0 0 6px; line-height:1.15; }
+  .desc { font-size:12.5px; color:var(--ink-2); margin:0 0 12px; line-height:1.5; }
+  .foot { display:flex; align-items:center; justify-content:space-between; border-top:1px dashed var(--line); padding-top:8px; }
+  .code { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3); }
+  .min { font-family:'EB Garamond',serif; font-style:italic; font-size:16px; font-weight:500; color:var(--breathe); }
+  .soon { font-family:'EB Garamond',serif; font-style:italic; font-size:16px; font-weight:500; color:var(--premium); }
+  .safety { position:absolute; top:12px; right:12px; width:18px; height:18px; border-radius:50%;
+    background:var(--breathe-soft); color:var(--breathe); display:grid; place-items:center; font-size:11px; font-weight:600; }
+</style>
+</head>
+<body>
+  <div class="label">PACE · RoutineCard — compartido por Respira / Mueve / Estira</div>
+  <div class="grid">
+
+    <div>
+      <div class="state">Libre (default)</div>
+      <div class="card clickable">
+        <div class="tagrow"><span class="tag">EQU</span></div>
+        <h4>Box 4·4·4·4</h4>
+        <div class="desc">Cuadrado perfecto. Calma mental y foco sostenido.</div>
+        <div class="foot"><span class="code">Equilibrio</span><span class="min">5 min</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="state">Premium (access: 'premium')</div>
+      <div class="card locked">
+        <div class="tagrow"><span class="tag">EQU</span><span class="seal">Premium</span></div>
+        <h4>Box 6·6·6·6</h4>
+        <div class="desc">Versión profunda</div>
+        <div class="foot"><span class="code">Equilibrio</span><span class="soon">Pronto</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="state">Con seguridad (safety: true)</div>
+      <div class="card clickable">
+        <div class="safety" title="Requiere leer seguridad">⚠</div>
+        <div class="tagrow"><span class="tag">ENE</span></div>
+        <h4>Respiración en rondas</h4>
+        <div class="desc">30 respiraciones profundas → retención en vacío. 3 rondas.</div>
+        <div class="foot"><span class="code">Energía</span><span class="min">12 min</span></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

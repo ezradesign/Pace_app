@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Primitivos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap');
+  :root{ --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372;
+    --line:#C9C0A8; --breathe:#C97A5D; --premium:#9C6B2E; --premium-soft:rgba(156,107,46,.12);
+    --r-md:12px; --r-pill:999px; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:'Inter Tight',system-ui,sans-serif; padding:28px; }
+  .label { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:0 0 14px; }
+  .col-label { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:18px 0 8px; }
+  .row { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .card { background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md); padding:16px 18px; max-width:260px; }
+  .tag { display:inline-flex; padding:3px 10px; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    border-radius:var(--r-pill); border:1px solid var(--breathe); color:var(--breathe); font-weight:500; }
+  .tag.muted { border-color:var(--line); color:var(--ink-3); }
+  .seal { display:inline-flex; align-items:center; padding:3px 9px; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    border-radius:var(--r-pill); border:1px solid var(--premium); color:var(--premium); background:var(--premium-soft); font-weight:600; }
+  .meta { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; }
+  .divider { display:flex; align-items:center; gap:12px; color:var(--ink-3); max-width:360px; }
+  .divider .ln { flex:1; height:1px; background:var(--line); }
+  .divider .lb { font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+  h4 { font-family:'EB Garamond',serif; font-style:italic; font-weight:500; font-size:19px; margin:0 0 6px; }
+  p { font-size:12.5px; color:var(--ink-2); margin:0; line-height:1.5; }
+</style>
+</head>
+<body>
+  <div class="label">PACE · Primitivos compartidos</div>
+
+  <div class="col-label">Card</div>
+  <div class="card"><h4>Box 4·4·4·4</h4><p>Cuadrado perfecto. Calma mental y foco sostenido.</p></div>
+
+  <div class="col-label">Tag · PremiumSeal</div>
+  <div class="row">
+    <span class="tag">EQU</span>
+    <span class="tag muted">PRA</span>
+    <span class="seal">Premium</span>
+  </div>
+
+  <div class="col-label">Meta</div>
+  <div class="meta">Equilibrio · Regula el sistema nervioso</div>
+
+  <div class="col-label">Divider</div>
+  <div class="divider"><span class="ln"></span><span class="lb">o</span><span class="ln"></span></div>
+</body>
+</html>

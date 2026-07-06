@@ -168,6 +168,11 @@ Object.assign(window.PACE_STRINGS.es, {
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Pronto',
+    'premium.tweaks.title':          'Contenido premium',
+    'premium.tweaks.body':           'El núcleo de PACE es y será gratis. Las rutinas y técnicas más profundas serán parte de una compra única, sin cuentas ni suscripción obligatoria.',
+    'premium.tweaks.placeholder':    'Clave de licencia',
+    'premium.tweaks.cta':            'Pronto',
+    'premium.tweaks.note':           'Aún no disponible. Cuando llegue, tu clave funcionará sin conexión.',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -326,4 +331,9 @@ Object.assign(window.PACE_STRINGS.en, {
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Soon',
+    'premium.tweaks.title':          'Premium content',
+    'premium.tweaks.body':           'The core of PACE is and will stay free. The deeper routines and techniques will be part of a one-time purchase — no accounts, no required subscription.',
+    'premium.tweaks.placeholder':    'License key',
+    'premium.tweaks.cta':            'Soon',
+    'premium.tweaks.note':           'Not available yet. When it arrives, your key will work offline.',
 });

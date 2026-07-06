@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACE · Welcome</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap');
+  :root{ --paper:#F2EDE0; --paper-2:#EAE4D4; --ink:#1F1C17; --ink-2:#4A453C; --ink-3:#8A8372;
+    --line:#C9C0A8; --line-2:#B8AD8E; --focus:#3E5A3A; --r-md:12px; --r-lg:20px; --r-pill:999px;
+    --sh-modal:0 8px 40px rgba(31,28,23,.18); }
+  body { margin:0; font-family:'Inter Tight',system-ui,sans-serif; color:var(--ink);
+    background:repeating-linear-gradient(45deg,#EAE4D4 0 16px,#DFD8C4 16px 32px); padding:28px; display:grid; place-items:center; }
+  .card { background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg); box-shadow:var(--sh-modal);
+    padding:32px; max-width:520px; width:100%; display:flex; flex-direction:column; gap:16px; }
+  .header { display:grid; grid-template-columns:140px 1fr; gap:18px; align-items:center; }
+  .pill { align-self:flex-start; padding:3px 8px; font-size:10px; letter-spacing:.08em; color:var(--ink-3);
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--r-pill); margin-bottom:8px; }
+  .wordmark { font-family:'EB Garamond',serif; font-style:italic; font-size:30px; font-weight:500; }
+  .greeting { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; margin-top:8px; }
+  .title { font-family:'EB Garamond',serif; font-style:italic; font-size:24px; font-weight:500; line-height:1.1; margin:0; }
+  .lede { font-size:13px; line-height:1.5; color:var(--ink-2); margin:6px 0 0; }
+  .values { display:flex; align-items:center; gap:6px; padding:10px 8px; background:var(--paper-2); border:1px solid var(--line); border-radius:var(--r-md); }
+  .val { flex:1; text-align:center; }
+  .val .l { font-family:'EB Garamond',serif; font-style:italic; font-size:13px; }
+  .val .s { font-size:10px; color:var(--ink-3); margin-top:2px; }
+  .sep { width:1px; height:24px; background:var(--line); }
+  .ilabel { font-family:'EB Garamond',serif; font-style:italic; font-size:13px; display:flex; justify-content:space-between; }
+  .opt { font-size:9px; color:var(--ink-3); letter-spacing:.12em; text-transform:uppercase; font-style:normal; }
+  input { width:100%; padding:9px 12px; font-size:14px; font-family:'EB Garamond',serif; font-style:italic; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line-2); border-radius:var(--r-md); box-sizing:border-box; margin-top:6px; }
+  .actions { display:flex; align-items:center; justify-content:space-between; margin-top:2px; }
+  .skip { font-family:'EB Garamond',serif; font-style:italic; font-size:12px; color:var(--ink-3); background:none; border:none; cursor:pointer; }
+  .cta { background:var(--focus); color:var(--paper); border:1px solid var(--focus); border-radius:var(--r-md); padding:10px 22px; font-size:14px; font-weight:500; font-family:inherit; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div style="display:flex;flex-direction:column;align-items:flex-start;">
+        <button class="pill"><b>ES</b> · EN</button>
+        <div class="wordmark">Pace.</div>
+        <div class="greeting">Bienvenida</div>
+      </div>
+      <div>
+        <h2 class="title">Antídoto a la silla. <span style="color:var(--ink-3)">A tu ritmo.</span></h2>
+        <p class="lede">Micro-pausas de foco, respiración, movilidad e hidratación. Sin gamificación ni notificaciones abrumadoras.</p>
+      </div>
+    </div>
+
+    <div class="values">
+      <div class="val"><div class="l">Todo local</div><div class="s">en tu navegador</div></div>
+      <span class="sep"></span>
+      <div class="val"><div class="l">Sin cuentas</div><div class="s">sin registro</div></div>
+      <span class="sep"></span>
+      <div class="val"><div class="l">Siempre gratis</div><div class="s">sin paywall</div></div>
+    </div>
+
+    <div>
+      <div class="ilabel">¿Qué quieres cultivar hoy?<span class="opt">opcional</span></div>
+      <input placeholder="concentración, calma, movimiento…" />
+    </div>
+
+    <div class="actions">
+      <button class="skip">prefiero saltarlo</button>
+      <button class="cta">Empezar</button>
+    </div>
+  </div>
+</body>
+</html>
