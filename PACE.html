@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.34.4</title>
+  <title>PACE · Foco · Cuerpo — v0.34.5</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -179,6 +179,9 @@
   <script type="text/babel" src="app/stats/PathStats.jsx"></script>
   <script type="text/babel" src="app/stats/StatsPanel.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweakSecretsWatcher.jsx"></script>
+  <!-- Split s89: secciones del panel cargan antes que TweaksPanel (que las consume) -->
+  <script type="text/babel" src="app/tweaks/TweaksData.jsx"></script>
+  <script type="text/babel" src="app/tweaks/PremiumSection.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweaksPanel.jsx"></script>
 
   <!-- Caminos - SuggestedPathCard UI (sesion 53) -->

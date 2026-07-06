@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.34.4
-**Ultima sesion:** #88 -- 2026-06-30 - feat: **F3b del bloque Contenido+Premium**. Gating **encendido** sobre las rutinas existentes (8 premium / 26, binario free/premium): Respira 4 (rounds.full/express, nadi.shodhana, kapalabhati), Mueve 2 (wall.sit, core.stealth), Estira 2 (atg.knees, ancestral). `premiumUnlocked:false` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks. Bump **v0.34.4**. Diario: `docs/sessions/session-88-f3b-activacion-gating.md`
-**Ultima actualizacion de este archivo:** 2026-06-30 - sesion 88
-**Build entregado:** `PACE_standalone.html` v0.34.4 (628 KB) + `index.html` (idem, SHA256 identico)
+**Version actual:** v0.34.5
+**Ultima sesion:** #89 -- 2026-07-07 - fix+feat: **P0 de la auditoria integral** (`docs/audits/audit-producto-v0.34.4.md`, entregada como anexo de s88 el mismo dia). SW limpia caches viejos + network-first navegaciones; reduced-motion con excepcion de motion esencial (`data-pace-essential` en BreathVisual); paleta oscura automatica en primer arranque; objetivo de agua configurable en Tweaks (4-12); split TweaksPanel 519->351 ln (+TweaksData.jsx +PremiumSection.jsx); D-8 resuelto como **degustacion curada**. Bump **v0.34.5**. Diario: `docs/sessions/session-89-p0-auditoria-fixes.md`
+**Ultima actualizacion de este archivo:** 2026-07-07 - sesion 89
+**Build entregado:** `PACE_standalone.html` v0.34.5 (633 KB) + `index.html` (idem, SHA256 identico)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.34.4** (s88: titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.34.4** (628 KB, regenerado s88) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.34.4** (s88: regenerado por build-standalone.js, SHA256 identico) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.34.5** (s89: titulo bump + 2 script tags del split tweaks) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.34.5** (633 KB, regenerado s89) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.34.5** (s89: regenerado por build-standalone.js, SHA256 identico) |
 | `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.34.0** (s84: 28 ports + 18 mantenimientos -- iter cerrado 31/46 aprobados + 15 pendientes; 527 -> 554 ln) |
 | `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG, `Object.assign(window, { ACHIEVEMENT_GLYPHS })` | **v0.33.3** (nuevo s83, 68 ln) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
@@ -32,8 +32,10 @@
 | `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.17.0** |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.34.3** (s87: + `PremiumSeal` chip reutilizable --premium; s88: ahora tambien consumido por TweaksPanel, sin cambios en el componente) |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.22.0** |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes | **v0.34.4** (s88: + superficie premium display-only tras "Tus datos" -- PremiumSeal + copy honesto + input licencia disabled + CTA "Pronto" disabled; sin validacion. s71: quitar envejecido, reorden) |
-| `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.16.0** |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + reset; orquesta TweaksDataSection y PremiumSection) | **v0.34.5** (s89: split 519->351 ln + stepper "Objetivo de agua" 4-12 con patch funcional `set(s=>...)`. s88: superficie premium. s71: reorden) |
+| `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.34.5** (nuevo s89, 193 ln; logica de s17 intacta, extraida literal) |
+| `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
+| `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.34.5** (s89: `data-pace-essential` en los 5 wrappers -- exime la guia de respiracion del kill de prefers-reduced-motion) |
 | `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.34.4** (s88: 4 tecnicas a `access:'premium'` -- rounds.full/express, nadi.shodhana, kapalabhati; `RoutineCard` lee `premiumUnlocked`: `isLocked=isPremium && !premiumUnlocked` -> el bloqueo real depende del flag, el sello se muestra siempre que sea premium. s87: lectura inicial de `access`) |
 | `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.28.7** (s67: playPhaseSound helper + fix huecos A/B/C inhalacion) |
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.34.4** (s88: `extra.wall.sit` + `extra.core.stealth` a `access:'premium'`. s59: StepGlyph usa ExerciseGlyph) |
@@ -51,7 +53,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.34.4** (s88: + `premiumUnlocked:false` en defaultState -- flag de desbloqueo premium, cableado sin compra real hasta v1.0; PACE_VERSION bump; s77b: + TOAST_DURATION_MS) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.34.5** (s89: + `detectInitialPalette()` -- prefers-color-scheme como paleta inicial SOLO sin estado guardado, expuesta a window; s88: + `premiumUnlocked:false`; s77b: + TOAST_DURATION_MS) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -67,13 +69,13 @@
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent / Tweaks prop) + topBarStyles | **v0.33.2** (nuevo s82, 106 ln) |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
-| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium | **v0.34.4** (s88: + `premium.tweaks.title/body/placeholder/cta/note` ES+EN; s87: + `premium.seal`/`premium.soon`; s85: copy BMC honesto) |
+| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium | **v0.34.5** (s89: + `tweaks.eje.water`/`tweaks.water.value` ES+EN; s88: + `premium.tweaks.*`; s87: + `premium.seal`/`premium.soon`) |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate | **v0.33.1** (nuevo s81, 227 ln; 93 ES + 93 EN) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.33.1** (nuevo s81, 122 ln; 47 ES + 47 EN) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.33.1** (nuevo s81, 108 ln; 42 ES + 42 EN) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
 | `app/i18n/strings-content.js` | Patch EN final de contenido (rutinas Move/Breathe/Extra) | **v0.18.0** (s81: SIN CAMBIOS pero queda al final de la cadena i18n -- preserva override silencioso de 3 keys breathe.phase.*) |
-| `app/tokens.css` | Tokens CSS + base | **v0.34.3** (s87: + `--premium` #9C6B2E / `--premium-soft` -- bronce para sello premium, distinto de --achievement y --move; s79: recalibrado oscuro +10%; s77/s77b: 5 tokens transicion + .sendero-bar.lg + --focus-cta) |
+| `app/tokens.css` | Tokens CSS + base | **v0.34.5** (s89: reduced-motion recalibrado -- el kill global exime subtrees `[data-pace-essential]` via :not() L4; s87: + `--premium`/`--premium-soft`; s79: recalibrado oscuro +10%; s77/s77b: tokens transicion + --focus-cta) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.32.0** (s78: + path.tea timeOfDay='afternoon' + path.breath timeOfDay='anytime' -- catalogo cerrado a 7) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError (chrome del overlay) | **v0.33.0** (nuevo s80, 131 ln) |
@@ -88,11 +90,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.34.4** (s88: CACHE_NAME pace-v0.34.4) |
+| `sw.js` | Service Worker PWA | **v0.34.5** (s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache; CACHE_NAME pace-v0.34.5) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 
 Backups vigentes (20):
-- `backups/PACE_standalone_v0.34.3_20260630.html` <- creado s88 (snapshot del v0.34.3 publicado en s87)
+- `backups/PACE_standalone_v0.34.4_20260707.html` <- creado s89 (snapshot del v0.34.4 publicado en s88)
+- `backups/PACE_standalone_v0.34.3_20260707.html` <- creado s88 (snapshot del v0.34.3 publicado en s87; renombrado en s89 al corregir la fecha real de s88)
 - `backups/PACE_standalone_v0.34.2_20260630.html` <- creado s87 (snapshot del v0.34.2 publicado en s86, desde git HEAD)
 - `backups/PACE_standalone_v0.34.1_20260605.html` <- creado s86 (snapshot del v0.34.1 publicado en s85)
 - `backups/PACE_standalone_v0.34.0_20260605.html` <- creado s85 (snapshot del v0.34.0 publicado en s84)
@@ -111,71 +114,63 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.28.9_20260512.html`
 - `backups/PACE_standalone_v0.28.8_20260512.html`
 - `backups/PACE_standalone_v0.28.7_20260512.html`
-- `backups/PACE_standalone_v0.28.6_20260511.html`
 
-Nota s88: cap 20 mantenido rotando el mas antiguo (`v0.28.5_20260512.html`) al
-crear el backup del v0.34.3.
+Nota s89: cap 20 mantenido rotando el mas antiguo (`v0.28.6_20260511.html`) al
+crear el backup del v0.34.4.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 88 - v0.34.4 - feat: F3b, activacion del gating premium.**
+**Sesion 89 - v0.34.5 - fix+feat: P0 de la auditoria integral.**
 
 ### Contexto
 
-**Fase 3b del bloque Contenido+Premium.** F3a (s87) dejo el mecanismo listo pero
-dormante. F3b lo **enciende** sobre las rutinas que ya existen. Alcance acotado a
-proposito al **binario `free`/`premium`** (coherente con F3a): los estados
-`locked.initial` / `locked.achievement` / `locked.both` de MONETIZATION.md y el
-sistema de licencia real (claves firmadas, expiresAt, tipos) quedan
-**explicitamente fuera**, para una fase posterior post-v1.0. Diario:
-[s88](./docs/sessions/session-88-f3b-activacion-gating.md).
+En la misma fecha se cerraron **dos sesiones**: s88 (F3b, activacion del
+gating premium -- ver [s88](./docs/sessions/session-88-f3b-activacion-gating.md)
+y CHANGELOG v0.34.4) y, tras entregar la **auditoria integral**
+([audit-producto-v0.34.4](./docs/audits/audit-producto-v0.34.4.md)), su **P0**
+como s89: decisiones + fixes pequenos antes de crecer contenido. El usuario
+delego el orden ("el mas optimo").
 
-### Que se hizo
+### Que se hizo (s89)
 
-Set premium designado (el usuario aprobo la direccion pero pidio **menos
-premium**, ~1/3 por modulo, solo lo mas profundo). Criterio: entrada/accesible =
-free, avanzado/profundo = premium; las 2 iniciales de cada modulo se respetan
-free. **8 premium / 26:**
-- **Respira (4):** rounds.full, rounds.express, nadi.shodhana, kapalabhati.
-  Las variantes *mas largas* (box.6, coherent.66) y ujjayi se quedan free.
-- **Mueve (2):** wall.sit, core.stealth (isometricos al limite).
-- **Estira (2):** atg.knees, ancestral (ATG avanzado + suelo).
-
-- **`premiumUnlocked: false`** en defaultState (state-core.jsx). Sin compra real
-  hasta v1.0: permanece false, toda premium se ve bloqueada.
-- **`RoutineCard`** lee el flag: `isPremium` (marca de pago, sello siempre) vs
-  `isLocked = isPremium && !premiumUnlocked` (bloqueo real). Flip del flag abre
-  las premium sin tocar UI -- cableado listo para compra/logro futuros.
-- **Superficie premium en Tweaks** (display-only): PremiumSeal + copy honesto +
-  input de licencia disabled (sin validacion) + CTA "Pronto" disabled + nota
-  offline. i18n `premium.tweaks.*` (ES+EN).
-- `safety` conservado en las premium con retencion: el modal seguira siendo
-  obligatorio cuando se desbloqueen.
+- **D-8 resuelto como decision (cero codigo):** `path.weekend` = **degustacion
+  curada** (lanza 2 rutinas premium por diseno); logros premium-tied aceptados
+  por ahora, revisar denominador de coleccion en F4-F6.
+- **SW (A-3):** activate borra caches `pace-*` viejos (antes huerfanos para
+  siempre) + navegaciones network-first con fallback a cache.
+- **Reduced-motion (correccion a la propia auditoria):** el kill global
+  existente congelaba la guia visual de respiracion. Ahora exime subtrees
+  `[data-pace-essential]` (5 wrappers de BreathVisual). WCAG 2.3.3.
+- **Dark auto:** `detectInitialPalette()` -- prefers-color-scheme SOLO en
+  primer arranque; la eleccion manual de Tweaks siempre gana despues.
+- **Objetivo de agua** en Tweaks (stepper 4-12, patch funcional `set(s=>...)`)
+  + **split TweaksPanel** 519->351 ln (TweaksData.jsx + PremiumSection.jsx).
 
 ### Verificacion + cierre
 
-Preview en puerto propio (otra sesion ocupaba :8765): las 4 premium de Respira,
-las 2 de Mueve, las 2 de Estira muestran sello PREMIUM + "Pronto"; las free
-muestran minutos. Tweaks con superficie premium completa (screenshots). `eval`:
-8 flags correctos, `premiumUnlocked===false`, version v0.34.4. Consola sin
-errores. Cierre: backup `v0.34.3_20260630` (rotado `v0.28.5`, cap 20), rebuild
-standalone+index (628 KB, 60 archivos validados, SHA256 identico), diario s88,
-CHANGELOG, ROADMAP (F3b hecho).
+Preview :8765 propio: panel Tweaks completo (agua/datos/premium, screenshot);
+stepper 1 clic = 1 paso, clamp 4-12, persiste; `[data-pace-essential]` vivo en
+sesion Respira; regla `:not()` cargada; consola sin errores. Cierre: backup
+`v0.34.4_20260707` (rotado `v0.28.6`, cap 20; fechas s88 corregidas a
+2026-07-07), rebuild standalone+index (633 KB, 62 archivos, SHA256 identico),
+diario s89, CHANGELOG (v0.34.3 degradado a enlace).
 
 ## Proxima sesion -- F4 (contenido Respira)
 
 Crecer Respira a ~20 tecnicas (net-new: diafragmatica, exhalacion 4-6, ritmica
 yin, coherencia 432Hz, Bhramari, tolerancia CO2 + sesiones largas **CTB**
 premium, todas con modal de seguridad). Etiquetar `access` de las nuevas con el
-mismo criterio binario. El gating ya esta encendido y verificado.
+criterio binario de s88. P1 de la auditoria (recordatorios opt-in, onboarding,
+notificacion fin de pomodoro) puede intercalarse entre F4 y F5.
 
 ### Fases restantes del bloque
 
 F4 Respira (~20) - F5 Estira (~12-15, ~mitad premium) - F6 Mueve (~12-15,
 ~mitad premium) - F7 registro ejercicios + constructor rutinas premium -
-F8 visual Caminos. (Post-v1.0: estados `locked.*` + validacion de licencia.)
+F8 visual Caminos. (Post-v1.0: estados `locked.*` + validacion de licencia.
+P2 auditoria: build precompilado, tests state, import sanitizado, landing.)
 
 ---
 
@@ -190,6 +185,11 @@ F8 visual Caminos. (Post-v1.0: estados `locked.*` + validacion de licencia.)
 | F3b solo binario free/premium (locked.* y licencia real diferidos) | s88 | F3b enciende lo construido en F3a sin abrir el sistema de licencia. Los estados intermedios `locked.initial`/`locked.achievement`/`locked.both` de MONETIZATION.md y la validacion de clave firmada (expiresAt, tipos lifetime/pass/season) quedan para post-v1.0. NO implementar validacion |
 | Set premium = 8/26, ~1/3 por modulo, solo lo mas profundo | s88 | El usuario aprobo la direccion pero pidio menos premium. Criterio binario: entrada/accesible=free (incl. las 2 iniciales por modulo y las variantes *mas largas* como box.6/coherent.66), avanzado/profundo=premium. Respira 4 (rounds.full/express, nadi.shodhana, kapalabhati), Mueve 2 (wall.sit, core.stealth), Estira 2 (atg.knees, ancestral). `safety` conservado en las premium con retencion |
 | `premiumUnlocked` controla el bloqueo real; el sello marca "es de pago" | s88 | `RoutineCard`: `isPremium` (sello siempre) vs `isLocked=isPremium && !premiumUnlocked` (accent/clic off + "Pronto"). `premiumUnlocked:false` por defecto sin compra real hasta v1.0. Poner el flag a true (compra/logro futuro) abre todas las premium sin tocar UI. Input de licencia en Tweaks es display-only (disabled, sin validacion) |
+| `path.weekend` = degustacion curada (resolucion D-8a) | s89 | El Camino free lanza nadi.shodhana + atg.knees (premium) POR DISENO: probar premium en contexto curado. No es fuga, es decision. Revisar al crecer catalogo (F5/F6). Los logros premium-tied (explore.nadi/kapalabhati/rounds/atg/ancestral + master.atg.20) se aceptan por ahora (D-8b); revisar denominador de coleccion en F4-F6 |
+| Reduced-motion con excepcion `data-pace-essential` | s89 | El kill global de prefers-reduced-motion exime subtrees marcados (hoy: los 5 wrappers de BreathVisual). La expansion del circulo ES la guia de respiracion (WCAG 2.3.3 motion esencial). Todo lo decorativo sigue congelado. Si un futuro componente tiene motion funcional, marcarlo con el mismo attr |
+| Paleta oscura automatica SOLO en primer arranque | s89 | `detectInitialPalette()` lee prefers-color-scheme unicamente en las ramas sin estado guardado de loadState. La eleccion manual de Tweaks persiste y siempre gana; no se re-sigue el SO en caliente. Nota: usuario nuevo con SO oscuro acumula dias para secret.dark.mode desde el dia 1 (aceptado) |
+| Steppers con patch funcional `set(s=>...)` | s89 | El stepper de agua usa la forma funcional del setState del store: clics rapidos en el mismo render no pisan estado (la version con closure saltaba pasos, hallado en verificacion). Patron a reutilizar en futuros steppers/contadores |
+| SW: navegaciones network-first, assets cache-first, cleanup en activate | s89 | Las updates de HTML llegan sin esperar re-chequeo del SW (fallback a cache + '/' offline). activate borra todo cache pace-* != CACHE_NAME. No cambiar a cache-first puro sin revisar la estrategia de updates |
 | Sintetizar audio (no WAVs) | s28 | Web Audio API, 432 Hz base |
 | Elastic License 2.0 | s26 | No SaaS competidores, si uso personal/comercial propio |
 | Anti-truncamiento: Python write | s48-s52 | Nunca Edit tool con caracteres especiales |
@@ -228,9 +228,9 @@ F8 visual Caminos. (Post-v1.0: estados `locked.*` + validacion de licencia.)
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/tweaks/TweaksPanel.jsx` | 519 | **MEDIA** (s88: supera el limite 500 tras la superficie premium; split natural: extraer `PremiumSection.jsx` ~45 ln) |
-| `app/state-core.jsx` | 492 | BAJA (dentro de limite; s88: +7 ln premiumUnlocked) |
-| `app/i18n/strings/ui.js` | 339 | BAJA (dentro de limite, dominio mas grande del split; s88: +8 keys premium.tweaks) |
+| `app/tweaks/TweaksPanel.jsx` | 351 | SALE (s89, antes 519 -- split en TweaksData.jsx + PremiumSection.jsx) |
+| `app/state-core.jsx` | ~505 | BAJA-MEDIA (s89: +13 ln detectInitialPalette roza el limite; candidato natural: extraer helpers de history a state-history.jsx si vuelve a crecer) |
+| `app/i18n/strings/ui.js` | ~345 | BAJA (dentro de limite, dominio mas grande del split) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
@@ -238,11 +238,11 @@ F8 visual Caminos. (Post-v1.0: estados `locked.*` + validacion de licencia.)
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
-**Backlog tecnico MEDIA (s88): 1 item** -- split de `TweaksPanel.jsx` (519 ln,
-extraer `PremiumSection.jsx`). El resto de deuda de tamano sigue BAJA. Ademas,
-la auditoria integral de s88 (`docs/audits/audit-producto-v0.34.4.md`) propone
-mejoras tecnicas P0-P2 (SW cleanup, reduced-motion, tests del state, build
-precompilado) pendientes de priorizacion por el usuario.
+**Backlog tecnico MEDIA (s89): vacio de nuevo** -- el split de TweaksPanel se
+ejecuto en s89 (P0). Quedan del P2 de la auditoria
+(`docs/audits/audit-producto-v0.34.4.md`): build precompilado (A-5), tests del
+state (A-6), import sanitizado (A-7), manifest rico -- para el camino a v1.0,
+pendientes de calendario.
 
 ### Deudas semanticas (no de tamaño, no urgentes)
 
@@ -255,4 +255,4 @@ precompilado) pendientes de priorizacion por el usuario.
 | D-5 divergencia move.desk.quick paso 5 | s84 | HTML del usuario lista `Apertura de pecho` donde repo lista `Chin tucks`. Decision de catalogo en sesion futura (modificar EXTRA_ROUTINES o mantener repo) |
 | D-6 strokeWidth wrapper G | s84 | Versiones aprobadas del HTML usan 1.5 (v3-v8, v12) o 2.0 (v9), pero wrapper G del repo unifica a 1.8. Si el usuario quiere unificar a 2.0 (estilo V9), cambio aislado del wrapper afecta los 46 glifos por igual |
 | D-7 racha foco-en-Camino (F-1) -- RESUELTO s86 | s86 audit | `PathFocusStep` no llamaba `updateStreak` -> un dia de solo-foco-en-Camino salia activo en heatmap/YearView pero no sumaba a `streak.current`. **Corregido en v0.34.2** (anadido `updateStreak()` tras el credito, idempotente por dia). Ver `docs/audits/audit-tracking-v0.34.1.md` |
-| D-8 fuga premium via `path.weekend` + logros ligados a premium | s88 audit | (a) `path.weekend` (free) lanza `breathe.nadi.shodhana` + `move.atg.knees` (premium) -- los steps de Camino no pasan por `RoutineCard`, asi que funcionan como degustacion por puerta lateral. (b) `explore.nadi/kapalabhati/rounds/atg/ancestral` + `master.atg.20` requieren rutinas premium -> usuario free no puede completar la coleccion (afecta `master.collector.half/full`). Decision de producto pendiente: degustacion curada declarada / swap a free / Camino premium; y si los logros de coleccion excluyen premium del denominador. Ver `docs/audits/audit-producto-v0.34.4.md` |
+| D-8 fuga premium via `path.weekend` + logros ligados a premium -- RESUELTO s89 (decision) | s88 audit | (a) `path.weekend` declarado **degustacion curada** (decision activa s89, cero codigo). (b) Logros premium-tied aceptados por ahora; queda UNA cola: revisar el denominador de `master.collector.half/full` cuando crezca el catalogo (F4-F6). Ver `docs/audits/audit-producto-v0.34.4.md` |

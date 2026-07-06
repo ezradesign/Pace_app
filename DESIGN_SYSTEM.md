@@ -54,7 +54,10 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 
 ### Oscuro noche
 
-Activa con `[data-palette="oscuro"]`. Recalibrada en s79 (v0.32.1):
+Activa con `[data-palette="oscuro"]`. Desde s89 (v0.34.5) es también el
+**default inicial si el SO está en oscuro** (`detectInitialPalette()` lee
+`prefers-color-scheme` SOLO en el primer arranque; la elección manual de
+Tweaks persiste y siempre gana después). Recalibrada en s79 (v0.32.1):
 superficies y bordes +10% luminosidad; `--ink-*` intactos para preservar
 contraste y calidez nocturna.
 
@@ -190,15 +193,23 @@ Nota: `[data-font="mono"]` sobrescribe tanto display como UI, convirtiendo toda 
 | `--dur-slow` | `640ms` | Animaciones de entrada/salida |
 | `--ease` | `cubic-bezier(0.4, 0, 0.2, 1)` | Curva de aceleración estándar |
 
-**Respeto a `prefers-reduced-motion`:** `tokens.css` incluye:
+**Respeto a `prefers-reduced-motion` (recalibrado s89):** el kill global
+exime los subtrees marcados con `data-pace-essential` — hoy, los 5 wrappers
+de `BreathVisual`. La expansión del círculo ES la guía de respiración
+(WCAG 2.3.3: motion esencial a la funcionalidad); todo lo decorativo
+(fades, slide-ups, pulsos, anillo del timer) sí se congela. `tokens.css`:
 ```css
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not([data-pace-essential], [data-pace-essential] *),
+  *:not([data-pace-essential], [data-pace-essential] *)::before,
+  *:not([data-pace-essential], [data-pace-essential] *)::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }
 ```
+Si un componente futuro tiene motion funcional (no decorativo), marcarlo
+con el mismo atributo en su wrapper.
 
 ---
 
