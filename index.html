@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.36.0</title>
+  <title>PACE · Foco · Cuerpo — v0.37.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -440,9 +440,10 @@ input, textarea { font-family: inherit; color: inherit; }
        _bootstrap + 5 dominios coherentes (ui/sessions/paths/stats/achievements).
        Bootstrap PRIMERO -- crea window.PACE_STRINGS = { es:{}, en:{} } vacio.
        Los 5 archivos siguientes son Object.assign sobre PACE_STRINGS.{es,en}.
-       strings-content.js (s38) sigue siendo el patch FINAL EN de contenido
-       (rutinas Move/Breathe/Extra) -- carga al final para preservar el
-       override de breathe.phase.inhala.mas/oceanica como ya hacia antes. -->
+       content/* (s92 / v0.37.0): strings-content.js (s38) se troceo por
+       modulo visual (breathe/move/extra) al superar ~470 ln con F6. Sigue
+       siendo el patch FINAL EN de contenido -- carga al final para preservar
+       el override de breathe.phase.inhala.mas/oceanica (D-1). -->
   <script type="text/babel">
 /* PACE - strings bootstrap (sesion 81 / v0.33.1)
 
@@ -1367,10 +1368,12 @@ Object.assign(window.PACE_STRINGS.en, {
 
 </script>
   <script type="text/babel">
-/* PACE · Traducciones EN de contenido de ejercicios
-   Solo EN: en ES los componentes usan los strings del dato directamente.
-   En EN, el helper tR() de cada componente busca aquí con t(key).
-   Cargado después de strings.js — augmenta window.PACE_STRINGS.en.
+/* PACE · Traducciones EN de contenido — Respira
+   Split de strings-content.js (s92, F6): el patch EN final de contenido se
+   troceó por módulo visual (content/breathe + move + extra) al superar las
+   ~470 líneas. Solo EN: en ES los componentes usan los strings del dato.
+   Carga después de strings/* — augmenta window.PACE_STRINGS.en. Este archivo
+   preserva el override silencioso de 3 keys breathe.phase.* (D-1).
 */
 Object.assign(window.PACE_STRINGS.en, {
 
@@ -1462,6 +1465,28 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.kumbhaka.name':               'Kumbhaka 1:4:2',
   'breathe.kumbhaka.desc':               'Inhale 4, hold 16, exhale 8. Experienced practitioners only.',
   'breathe.kumbhaka.code':               'Pranayama',
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · Traducciones EN de contenido — Mueve (ids extra.*, swap s14)
+   Split de strings-content.js (s92, F6). Solo EN: en ES los componentes
+   usan los strings del dato directamente.
+   Carga después de strings/* — augmenta window.PACE_STRINGS.en.
+   Grupos de biblioteca con prefijo mueve.cat.* (decisión F6: 'move.cat.*'
+   colisionaría conceptualmente con los ids move.* de Estira).
+*/
+Object.assign(window.PACE_STRINGS.en, {
+
+  // ── Mueve — grupos F6 (s92) ──────────────────────────────────────
+  'mueve.cat.empuje.label':              'Push & Pull',
+  'mueve.cat.empuje.aside':              'Chest, arms, upper back',
+  'mueve.cat.sigilo.label':              'Stealth',
+  'mueve.cat.sigilo.aside':              'No one notices',
+  'mueve.cat.piernas.label':             'Legs',
+  'mueve.cat.piernas.aside':             "The body's foundation",
+  'mueve.cat.espalda.label':             'Back & Core',
+  'mueve.cat.espalda.aside':             'What holds your posture',
 
   // ── Mueve — rutinas (ids extra.*) ────────────────────────────────
   'extra.desk.pushups.name':             'Desk Push-ups',
@@ -1545,6 +1570,125 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.posture.set.s2.cue':            'Arch over chair.',
   'extra.posture.set.s3.name':           'Chest opener',
   'extra.posture.set.s3.cue':            'Arms back, expand chest.',
+
+  // ── Mueve — rutinas F6 (s92) ─────────────────────────────────────
+  'extra.push.ladder.name':              'Push · Progression',
+  'extra.push.ladder.desc':              'From the desk to the pike. Complete pushing.',
+  'extra.push.ladder.code':              'Push',
+  'extra.push.ladder.s0.name':           'Incline push-ups',
+  'extra.push.ladder.s0.cue':            '10 deep reps, elbows close to the body.',
+  'extra.push.ladder.s1.name':           'Rest',
+  'extra.push.ladder.s1.cue':            'Breathe.',
+  'extra.push.ladder.s2.name':           'Desk pike',
+  'extra.push.ladder.s2.cue':            'Hips up, head between the arms. 8 reps.',
+  'extra.push.ladder.s3.name':           'Rest',
+  'extra.push.ladder.s3.cue':            'Breathe.',
+  'extra.push.ladder.s4.name':           'Incline push-ups',
+  'extra.push.ladder.s4.cue':            'Negatives: lower in 5 seconds, rise normally.',
+
+  'extra.hang.bar.name':                 'Hanging',
+  'extra.hang.bar.desc':                 'From a bar or a frame. Shoulders were born to hang.',
+  'extra.hang.bar.code':                 'Traction',
+  'extra.hang.bar.s0.name':              'Passive hang',
+  'extra.hang.bar.s0.cue':               'Hang relaxed. Breathe.',
+  'extra.hang.bar.s1.name':              'Rest',
+  'extra.hang.bar.s1.cue':               'Shake out your arms.',
+  'extra.hang.bar.s2.name':              'Active hang',
+  'extra.hang.bar.s2.cue':               'Shoulders down and back, elbows straight.',
+  'extra.hang.bar.s3.name':              'Rest',
+  'extra.hang.bar.s3.cue':               'Shake out your arms.',
+  'extra.hang.bar.s4.name':              'Passive hang',
+  'extra.hang.bar.s4.cue':               'Let go completely. Let the back open up.',
+
+  'extra.glutes.stealth.name':           'Invisible Glutes',
+  'extra.glutes.stealth.desc':           'Activate them seated. Fully invisible.',
+  'extra.glutes.stealth.code':           'Glutes',
+  'extra.glutes.stealth.s0.name':        'Glute squeeze',
+  'extra.glutes.stealth.s0.cue':         '20 firm squeezes, 2 seconds each.',
+  'extra.glutes.stealth.s1.name':        'Rest',
+  'extra.glutes.stealth.s1.cue':         'Let go.',
+  'extra.glutes.stealth.s2.name':        'Glute squeeze',
+  'extra.glutes.stealth.s2.cue':         'Hold 10 seconds, release. 3 times.',
+  'extra.glutes.stealth.s3.name':        'Calf raises',
+  'extra.glutes.stealth.s3.cue':         'Close with 20 gentle raises.',
+
+  'extra.chair.squats.name':             'Chair Squats',
+  'extra.chair.squats.desc':             'Stand up, sit down. The most useful strength.',
+  'extra.chair.squats.code':             'Legs',
+  'extra.chair.squats.s0.name':          'Chair squat',
+  'extra.chair.squats.s0.cue':           '10-12 reps: lower until you graze the chair, rise without momentum.',
+  'extra.chair.squats.s1.name':          'Rest',
+  'extra.chair.squats.s1.cue':           'Breathe.',
+  'extra.chair.squats.s2.name':          'Chair squat',
+  'extra.chair.squats.s2.cue':           '10 slower reps.',
+  'extra.chair.squats.s3.name':          'Rest',
+  'extra.chair.squats.s3.cue':           'Breathe.',
+  'extra.chair.squats.s4.name':          'Chair squat',
+  'extra.chair.squats.s4.cue':           'Last 8, full control.',
+
+  'extra.legs.single.name':              'Legs · Single',
+  'extra.legs.single.desc':              'Single-leg strength. Balance and control.',
+  'extra.legs.single.code':              'Unilateral',
+  'extra.legs.single.s0.name':           'Bulgarian squat',
+  'extra.legs.single.s0.cue':            'Instep on the chair, lower vertically. 8 per leg.',
+  'extra.legs.single.s1.name':           'Rest',
+  'extra.legs.single.s1.cue':            'Breathe.',
+  'extra.legs.single.s2.name':           'ATG split squat',
+  'extra.legs.single.s2.cue':            'Deep lunge. Knee goes past foot.',
+  'extra.legs.single.s3.name':           'Rest',
+  'extra.legs.single.s3.cue':            'Breathe.',
+  'extra.legs.single.s4.name':           'Sissy squat',
+  'extra.legs.single.s4.cue':            'Supported. Knees forward, heels up.',
+  'extra.legs.single.s5.name':           'Calf raises',
+  'extra.legs.single.s5.cue':            'Single leg, 12 per side.',
+
+  'extra.back.desk.name':                'Office Back',
+  'extra.back.desk.desc':                'Wake up the back that holds your posture.',
+  'extra.back.desk.code':                'Back',
+  'extra.back.desk.s0.name':             'Scapular squeeze',
+  'extra.back.desk.s0.cue':              'Squeeze shoulder blades 12 times, 2 seconds each.',
+  'extra.back.desk.s1.name':             'Band pull-apart',
+  'extra.back.desk.s1.cue':              'Without band: crossed arms + open with tension.',
+  'extra.back.desk.s2.name':             'Superman',
+  'extra.back.desk.s2.cue':              'Face down: lift chest and arms, 10 slow reps.',
+  'extra.back.desk.s3.name':             'Chest opening',
+  'extra.back.desk.s3.cue':              'Hands behind head, open elbows, look at ceiling.',
+
+  'extra.core.plank.name':               'Core · Plank',
+  'extra.core.plank.desc':               'Planks and hollow. The center that holds everything.',
+  'extra.core.plank.code':               'Core',
+  'extra.core.plank.s0.name':            'Plank',
+  'extra.core.plank.s0.cue':             'Forearms, body in a line. Squeeze glutes.',
+  'extra.core.plank.s1.name':            'Rest',
+  'extra.core.plank.s1.cue':             'Breathe.',
+  'extra.core.plank.s2.name':            'Side plank',
+  'extra.core.plank.s2.cue':             '30 seconds per side, hips high.',
+  'extra.core.plank.s3.name':            'Rest',
+  'extra.core.plank.s3.cue':             'Breathe.',
+  'extra.core.plank.s4.name':            'Hollow hold',
+  'extra.core.plank.s4.cue':             'Lying down: lower back to the floor, legs and shoulders up.',
+  'extra.core.plank.s5.name':            'Plank',
+  'extra.core.plank.s5.cue':             'Last one. Breathe inside the tension.',
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · Traducciones EN de contenido — Estira (ids move.*, swap s14)
+   Split de strings-content.js (s92, F6). Solo EN: en ES los componentes
+   usan los strings del dato directamente.
+   Carga después de strings/* — augmenta window.PACE_STRINGS.en.
+*/
+Object.assign(window.PACE_STRINGS.en, {
+
+  // ── Estira — grupos F5 (s91) ─────────────────────────────────────
+  'extra.cat.oficina.label':             'Office',
+  'extra.cat.oficina.aside':             'Antidote to the desk',
+  'extra.cat.hombros.label':             'Shoulders & Spine',
+  'extra.cat.hombros.aside':             'Antidote to the keyboard',
+  'extra.cat.caderas.label':             'Hips & Legs',
+  'extra.cat.caderas.aside':             'Unlock the lower half',
+  'extra.cat.flujos.label':              'Flows',
+  'extra.cat.flujos.aside':              'Head to toe',
 
   // ── Estira — rutinas (ids move.*) ────────────────────────────────
   'move.chair.antidote.name':            'Chair Antidote',
@@ -1646,16 +1790,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.desk.quick.s4.cue':              'Chin back 5 times.',
   'move.desk.quick.s5.name':             'Deep breaths',
   'move.desk.quick.s5.cue':              '3 full inhales.',
-
-  // ── Estira — grupos F5 (s91) ─────────────────────────────────────
-  'extra.cat.oficina.label':             'Office',
-  'extra.cat.oficina.aside':             'Antidote to the desk',
-  'extra.cat.hombros.label':             'Shoulders & Spine',
-  'extra.cat.hombros.aside':             'Antidote to the keyboard',
-  'extra.cat.caderas.label':             'Hips & Legs',
-  'extra.cat.caderas.aside':             'Unlock the lower half',
-  'extra.cat.flujos.label':              'Flows',
-  'extra.cat.flujos.aside':              'Head to toe',
 
   // ── Estira — rutinas F5 (s91) ────────────────────────────────────
   'move.wrists.name':                    'Wrists & Hands',
@@ -1829,7 +1963,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.36.0';
+const PACE_VERSION = 'v0.37.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7745,72 +7879,164 @@ Object.assign(window, { BreatheSession });
    Los ids (`move.*` / `extra.*`) y funciones de state (completeMoveSession /
    completeExtraSession) se conservan para no invalidar localStorage ni logros
    de usuarios existentes — solo cambia qué contenedor visual los muestra.
-*/
+
+   F6 (s92): 7 → 14 rutinas, biblioteca agrupada como Respira/Estira
+   (4 grupos, free primero dentro de cada grupo). Inspiración: Strengthside
+   (progresiones de empuje, unilateral, colgarse) + Jess Martin (fuerza
+   discreta de oficina). Los pasos nuevos sin glifo aprobado renderizan
+   DefaultGlyph hasta el port (D-4). */
 
 const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
 
-const MOVE_ROUTINES = [
-  { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
-    steps: [
-      { name: 'Flexiones inclinadas', dur: 30, cue: '12 reps contra escritorio.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', dur: 30, cue: '10 reps.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', dur: 30, cue: '8 reps lentas.' },
-    ]},
-  { id: 'extra.chair.dips', tag: 'PULL', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series.', min: 3,
-    steps: [
-      { name: 'Fondos en silla', dur: 40, cue: '10-12 reps con buen control.' },
-      { name: 'Descanso', dur: 30, cue: '' },
-      { name: 'Fondos en silla', dur: 40, cue: '10 reps.' },
-      { name: 'Descanso', dur: 30, cue: '' },
-      { name: 'Fondos en silla', dur: 40, cue: 'Al fallo.' },
-    ]},
-  { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3, access: 'premium',
-    steps: [
-      { name: 'Wall sit', dur: 60, cue: 'Rodillas 90°, aguanta.' },
-      { name: 'Descanso', dur: 30, cue: 'Suave.' },
-      { name: 'Wall sit', dur: 60, cue: 'Más bajo si puedes.' },
-    ]},
-  { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
-    steps: [
-      { name: 'Calf raises', dur: 30, cue: '25 reps controladas.' },
-      { name: 'Calf raises', dur: 30, cue: '20 reps más lentas.' },
-    ]},
-  { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
-    steps: [
-      { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
-      { name: 'Descanso', dur: 20, cue: '' },
-      { name: 'Seated hollow', dur: 30, cue: 'Aguanta.' },
-      { name: 'Descanso', dur: 20, cue: '' },
-      { name: 'Seated hollow', dur: 30, cue: 'Al límite.' },
-    ]},
-  { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
-    steps: [
-      { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte 20 veces.' },
-      { name: 'Finger extension', dur: 20, cue: 'Estira dedos al máximo.' },
-      { name: 'Wrist stretch', dur: 20, cue: 'Muñeca flexión + extensión.' },
-    ]},
-  { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
-    steps: [
-      { name: 'Chin tucks', dur: 30, cue: '10 reps, barbilla atrás.' },
-      { name: 'Scapular squeeze', dur: 30, cue: 'Junta omóplatos, 10 reps.' },
-      { name: 'Thoracic extension', dur: 30, cue: 'Arquea sobre silla.' },
-      { name: 'Chest opener', dur: 30, cue: 'Brazos atrás, expande pecho.' },
-    ]},
-];
+const MOVE_ROUTINES = {
+  empuje: {
+    label: 'Empuje y tracción',
+    aside: 'Pecho, brazos, espalda alta',
+    items: [
+      { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
+        steps: [
+          { name: 'Flexiones inclinadas', dur: 30, cue: '12 reps contra escritorio.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Flexiones inclinadas', dur: 30, cue: '10 reps.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Flexiones inclinadas', dur: 30, cue: '8 reps lentas.' },
+        ]},
+      { id: 'extra.chair.dips', tag: 'PULL', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series.', min: 3,
+        steps: [
+          { name: 'Fondos en silla', dur: 40, cue: '10-12 reps con buen control.' },
+          { name: 'Descanso', dur: 30, cue: '' },
+          { name: 'Fondos en silla', dur: 40, cue: '10 reps.' },
+          { name: 'Descanso', dur: 30, cue: '' },
+          { name: 'Fondos en silla', dur: 40, cue: 'Al fallo.' },
+        ]},
+      { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 4, access: 'premium',
+        steps: [
+          { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Pica en escritorio', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
+        ]},
+      { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra o un marco. El hombro nace para colgar.', min: 4, access: 'premium',
+        steps: [
+          { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
+          { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
+          { name: 'Hang activo', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
+          { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
+          { name: 'Hang pasivo', dur: 30, cue: 'Suelta del todo. Deja que la espalda se abra.' },
+        ]},
+    ]
+  },
+  sigilo: {
+    label: 'Sigilo',
+    aside: 'Nadie se entera',
+    items: [
+      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
+        steps: [
+          { name: 'Calf raises', dur: 30, cue: '25 reps controladas.' },
+          { name: 'Calf raises', dur: 30, cue: '20 reps más lentas.' },
+        ]},
+      { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
+        steps: [
+          { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte 20 veces.' },
+          { name: 'Finger extension', dur: 20, cue: 'Estira dedos al máximo.' },
+          { name: 'Wrist stretch', dur: 20, cue: 'Muñeca flexión + extensión.' },
+        ]},
+      { id: 'extra.glutes.stealth', tag: 'STEALTH', code: 'Glúteos', name: 'Glúteos invisibles', desc: 'Actívalos sentado. Invisible total.', min: 2,
+        steps: [
+          { name: 'Apretar glúteos', dur: 30, cue: '20 apretones firmes, 2 segundos cada uno.' },
+          { name: 'Descanso', dur: 15, cue: 'Suelta.' },
+          { name: 'Apretar glúteos', dur: 30, cue: 'Aguanta 10 segundos, suelta. 3 veces.' },
+          { name: 'Calf raises', dur: 30, cue: 'Cierra con 20 elevaciones suaves.' },
+        ]},
+      { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
+        steps: [
+          { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
+          { name: 'Descanso', dur: 20, cue: '' },
+          { name: 'Seated hollow', dur: 30, cue: 'Aguanta.' },
+          { name: 'Descanso', dur: 20, cue: '' },
+          { name: 'Seated hollow', dur: 30, cue: 'Al límite.' },
+        ]},
+    ]
+  },
+  piernas: {
+    label: 'Piernas',
+    aside: 'La base del cuerpo',
+    items: [
+      { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil.', min: 3,
+        steps: [
+          { name: 'Sentadilla a silla', dur: 40, cue: '10-12 reps: baja hasta rozar la silla, sube sin impulso.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Sentadilla a silla', dur: 40, cue: '10 reps más lentas.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Sentadilla a silla', dur: 40, cue: 'Últimas 8, control total.' },
+        ]},
+      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3, access: 'premium',
+        steps: [
+          { name: 'Wall sit', dur: 60, cue: 'Rodillas 90°, aguanta.' },
+          { name: 'Descanso', dur: 30, cue: 'Suave.' },
+          { name: 'Wall sit', dur: 60, cue: 'Más bajo si puedes.' },
+        ]},
+      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio y control.', min: 5, access: 'premium',
+        steps: [
+          { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'ATG split squat', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+          { name: 'Calf raises', dur: 40, cue: 'A una pierna, 12 por lado.' },
+        ]},
+    ]
+  },
+  espalda: {
+    label: 'Espalda y core',
+    aside: 'Sostén de la postura',
+    items: [
+      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
+        steps: [
+          { name: 'Chin tucks', dur: 30, cue: '10 reps, barbilla atrás.' },
+          { name: 'Scapular squeeze', dur: 30, cue: 'Junta omóplatos, 10 reps.' },
+          { name: 'Thoracic extension', dur: 30, cue: 'Arquea sobre silla.' },
+          { name: 'Chest opener', dur: 30, cue: 'Brazos atrás, expande pecho.' },
+        ]},
+      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura.', min: 3,
+        steps: [
+          { name: 'Scapular squeeze', dur: 40, cue: 'Junta omóplatos 12 veces, 2 segundos cada una.' },
+          { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
+          { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, 10 veces lentas.' },
+          { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
+        ]},
+      { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow. El centro que sostiene todo.', min: 4, access: 'premium',
+        steps: [
+          { name: 'Plancha', dur: 45, cue: 'Antebrazos, cuerpo en línea. Aprieta glúteos.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Plancha lateral', dur: 60, cue: '30 segundos por lado, cadera alta.' },
+          { name: 'Descanso', dur: 20, cue: 'Respira.' },
+          { name: 'Hollow hold', dur: 30, cue: 'Tumbado: lumbar al suelo, piernas y hombros arriba.' },
+          { name: 'Plancha', dur: 30, cue: 'Última. Respira dentro de la tensión.' },
+        ]},
+    ]
+  },
+};
 
 function MoveLibrary({ open, onClose, onStart }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   return (
-    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} maxWidth={820}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -30, marginBottom: 10 }}>
-        <Meta>{t('lib.move.meta')}</Meta>
-      </div>
-      <h3 style={{ ...displayItalic, fontSize: 20, margin: '0 0 12px', fontWeight: 500 }}>{t('lib.routines')}</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
-        {MOVE_ROUTINES.map(r => (
-          <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
+    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} maxWidth={860}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
+        {Object.entries(MOVE_ROUTINES).map(([key, group]) => (
+          <div key={key}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{tR(`mueve.cat.${key}.label`, group.label)}</h3>
+              {group.aside && <Meta>{tR(`mueve.cat.${key}.aside`, group.aside)}</Meta>}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+              {group.items.map(r => (
+                <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </Modal>
@@ -8053,9 +8279,13 @@ if (!_paceMoveResponsive) {
   document.head.appendChild(s);
 }
 
-/* Sesión 49 — helper de lookup para Caminos */
+/* Sesión 49 — helper de lookup para Caminos (s92: adaptado a grupos) */
 function getMoveRoutine(id) {
-  return MOVE_ROUTINES.find(r => r.id === id) || null;
+  for (const group of Object.values(MOVE_ROUTINES)) {
+    const found = group.items.find(r => r.id === id);
+    if (found) return found;
+  }
+  return null;
 }
 window.getMoveRoutine = getMoveRoutine;
 Object.assign(window, { MoveLibrary, MoveSession });

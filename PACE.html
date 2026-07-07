@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.36.0</title>
+  <title>PACE · Foco · Cuerpo — v0.37.0</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -115,16 +115,19 @@
        _bootstrap + 5 dominios coherentes (ui/sessions/paths/stats/achievements).
        Bootstrap PRIMERO -- crea window.PACE_STRINGS = { es:{}, en:{} } vacio.
        Los 5 archivos siguientes son Object.assign sobre PACE_STRINGS.{es,en}.
-       strings-content.js (s38) sigue siendo el patch FINAL EN de contenido
-       (rutinas Move/Breathe/Extra) -- carga al final para preservar el
-       override de breathe.phase.inhala.mas/oceanica como ya hacia antes. -->
+       content/* (s92 / v0.37.0): strings-content.js (s38) se troceo por
+       modulo visual (breathe/move/extra) al superar ~470 ln con F6. Sigue
+       siendo el patch FINAL EN de contenido -- carga al final para preservar
+       el override de breathe.phase.inhala.mas/oceanica (D-1). -->
   <script type="text/babel" src="app/i18n/strings/_bootstrap.js"></script>
   <script type="text/babel" src="app/i18n/strings/ui.js"></script>
   <script type="text/babel" src="app/i18n/strings/sessions.js"></script>
   <script type="text/babel" src="app/i18n/strings/paths.js"></script>
   <script type="text/babel" src="app/i18n/strings/stats.js"></script>
   <script type="text/babel" src="app/i18n/strings/achievements.js"></script>
-  <script type="text/babel" src="app/i18n/strings-content.js"></script>
+  <script type="text/babel" src="app/i18n/content/breathe.js"></script>
+  <script type="text/babel" src="app/i18n/content/move.js"></script>
+  <script type="text/babel" src="app/i18n/content/extra.js"></script>
   <script type="text/babel" src="app/i18n/useT.jsx"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <script type="text/babel" src="app/state-timer.jsx"></script>
