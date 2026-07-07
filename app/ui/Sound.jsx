@@ -260,22 +260,27 @@ function useSound() {
    Singleton. G2 ≈ 96.7 Hz · sine · peak 0.02.
    LFO senoidal 0.1 Hz · ±0.002 para movimiento orgánico.
    Arranca solo si soundOn && ambientOn en el momento de llamar start().
+   start(force) — F4/s90, Coherente 432: fuerza el arranque aunque
+   ambientOn esté apagado; soundOn (master) manda siempre. El flag se
+   recuerda para que resume() tras una pausa no mate el drone forzado.
    Activar ambientOn mid-sesión NO arranca el drone retroactivamente;
    solo arranca al inicio de una sesión nueva (decisión de producto). */
 const ambientDrone = (() => {
   let osc = null, gainNode = null, lfo = null, lfoGain = null;
   let isPaused = false;
+  let forced = false;
 
   function shouldPlay() {
     try {
       const s = typeof getState === 'function' ? getState() : null;
-      return !!(s && s.soundOn && s.ambientOn);
+      return !!(s && s.soundOn && (forced || s.ambientOn));
     } catch(e) { return false; }
   }
 
-  function start() {
+  function start(force) {
     if (osc) return;
-    if (!shouldPlay()) return;
+    forced = !!force;
+    if (!shouldPlay()) { forced = false; return; }
     const ctx = getCtx(); if (!ctx) return;
     ensureRunning(ctx);
     const t0 = ctx.currentTime;
@@ -316,6 +321,7 @@ const ambientDrone = (() => {
     }, (fade + 0.1) * 1000);
     osc = null; lfo = null; gainNode = null; lfoGain = null;
     isPaused = false;
+    forced = false;
   }
 
   function pause() {

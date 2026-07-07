@@ -66,6 +66,33 @@ function getSequence(routine) {
       { label: 'Exhala izq.', duration: 4, scale: 0.9 },
     ];
   }
+  /* F4 (s90) — patrones nuevos */
+  if (routine.pattern === 'diaphragm') {
+    return [
+      { label: 'Inhala al vientre', duration: 4, scale: 1.3 },
+      { label: 'Exhala', duration: 4, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'yin') {
+    return [
+      { label: 'Inhala', duration: 3, scale: 1.3 },
+      { label: 'Exhala', duration: 5, scale: 0.9 },
+      { label: 'Sostén', duration: 2, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'bhramari') {
+    return [
+      { label: 'Inhala', duration: 4, scale: 1.3 },
+      { label: 'Exhala zumbando', duration: 8, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'co2') {
+    return [
+      { label: 'Inhala', duration: 4, scale: 1.3 },
+      { label: 'Exhala', duration: 6, scale: 0.9 },
+      { label: 'Sostén en vacío', duration: 10, scale: 0.9 },
+    ];
+  }
   return [{ label: 'Respira', duration: 4, scale: 1.2 }];
 }
 

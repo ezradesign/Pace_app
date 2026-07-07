@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.34.5</title>
+  <title>PACE · Foco · Cuerpo — v0.35.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -893,6 +893,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'breathe.phase.exhala.dcha':       'Exhala dcha.',
     'breathe.phase.exhala.izq':        'Exhala izq.',
     'breathe.phase.respira':           'Respira',
+    'breathe.phase.inhala.vientre':    'Inhala al vientre',
+    'breathe.phase.exhala.zumbando':   'Exhala zumbando',
+    'breathe.phase.sosten.vacio':      'Sostén en vacío',
 
     // Breathe (sesión)
     'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
@@ -1014,6 +1017,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'breathe.phase.exhala.dcha':       'Exhale right',
     'breathe.phase.exhala.izq':        'Exhale left',
     'breathe.phase.respira':           'Breathe',
+    'breathe.phase.inhala.vientre':    'Inhale into the belly',
+    'breathe.phase.exhala.zumbando':   'Humming exhale',
+    'breathe.phase.sosten.vacio':      'Hold empty',
 
     // Breathe (session)
     'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
@@ -1383,6 +1389,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Breathe — categorías ─────────────────────────────────────────
   'breathe.cat.energia.label':           'Energy',
+  'breathe.cat.energia.aside':           'Wakes up the system',
   'breathe.cat.equilibrio.label':        'Equilibrium',
   'breathe.cat.equilibrio.aside':        'Regulates the nervous system',
   'breathe.cat.balance.label':           'Balance',
@@ -1429,6 +1436,32 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.kapalabhati.name':            'Kapalabhati · Kriya',
   'breathe.kapalabhati.desc':            'Skull shining breath. Energizing.',
   'breathe.kapalabhati.code':            'Kriya',
+
+  // ── Breathe — técnicas F4 (s90) ──────────────────────────────────
+  'breathe.rounds.long.name':            'Deep Rounds',
+  'breathe.rounds.long.desc':            '5 rounds of 35 breaths. Gateway to conscious trance.',
+  'breathe.rounds.long.code':            'Energy',
+  'breathe.diaphragm.name':              'Diaphragmatic',
+  'breathe.diaphragm.desc':              'Breathe into the belly. The base of everything else.',
+  'breathe.diaphragm.code':              'Equilibrium',
+  'breathe.co2.name':                    'CO₂ Tolerance',
+  'breathe.co2.desc':                    'Exhale and hold empty. Train calm with less air.',
+  'breathe.co2.code':                    'Equilibrium',
+  'breathe.coherent.432.name':           'Coherent 432',
+  'breathe.coherent.432.desc':           'Coherence 6·6 over a background drone. Immersive.',
+  'breathe.coherent.432.code':           'Balance',
+  'breathe.exhale.46.name':              'Exhale 4·6',
+  'breathe.exhale.46.desc':              'Exhale longer than you inhale. A gentle brake.',
+  'breathe.exhale.46.code':              'Relaxation',
+  'breathe.yin.name':                    'Yin Rhythmic',
+  'breathe.yin.desc':                    'Soft rhythm with rest after the exhale. Stillness settles in.',
+  'breathe.yin.code':                    'Relaxation',
+  'breathe.bhramari.name':               'Bhramari · Bee',
+  'breathe.bhramari.desc':               'Exhale with a low hum. The mind grows quiet.',
+  'breathe.bhramari.code':               'Pranayama',
+  'breathe.kumbhaka.name':               'Kumbhaka 1:4:2',
+  'breathe.kumbhaka.desc':               'Inhale 4, hold 16, exhale 8. Experienced practitioners only.',
+  'breathe.kumbhaka.code':               'Pranayama',
 
   // ── Mueve — rutinas (ids extra.*) ────────────────────────────────
   'extra.desk.pushups.name':             'Desk Push-ups',
@@ -1687,7 +1720,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.34.5';
+const PACE_VERSION = 'v0.35.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4107,22 +4140,27 @@ function useSound() {
    Singleton. G2 ≈ 96.7 Hz · sine · peak 0.02.
    LFO senoidal 0.1 Hz · ±0.002 para movimiento orgánico.
    Arranca solo si soundOn && ambientOn en el momento de llamar start().
+   start(force) — F4/s90, Coherente 432: fuerza el arranque aunque
+   ambientOn esté apagado; soundOn (master) manda siempre. El flag se
+   recuerda para que resume() tras una pausa no mate el drone forzado.
    Activar ambientOn mid-sesión NO arranca el drone retroactivamente;
    solo arranca al inicio de una sesión nueva (decisión de producto). */
 const ambientDrone = (() => {
   let osc = null, gainNode = null, lfo = null, lfoGain = null;
   let isPaused = false;
+  let forced = false;
 
   function shouldPlay() {
     try {
       const s = typeof getState === 'function' ? getState() : null;
-      return !!(s && s.soundOn && s.ambientOn);
+      return !!(s && s.soundOn && (forced || s.ambientOn));
     } catch(e) { return false; }
   }
 
-  function start() {
+  function start(force) {
     if (osc) return;
-    if (!shouldPlay()) return;
+    forced = !!force;
+    if (!shouldPlay()) { forced = false; return; }
     const ctx = getCtx(); if (!ctx) return;
     ensureRunning(ctx);
     const t0 = ctx.currentTime;
@@ -4163,6 +4201,7 @@ const ambientDrone = (() => {
     }, (fade + 0.1) * 1000);
     osc = null; lfo = null; gainNode = null; lfoGain = null;
     isPaused = false;
+    forced = false;
   }
 
   function pause() {
@@ -6852,6 +6891,33 @@ function getSequence(routine) {
       { label: 'Exhala izq.', duration: 4, scale: 0.9 },
     ];
   }
+  /* F4 (s90) — patrones nuevos */
+  if (routine.pattern === 'diaphragm') {
+    return [
+      { label: 'Inhala al vientre', duration: 4, scale: 1.3 },
+      { label: 'Exhala', duration: 4, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'yin') {
+    return [
+      { label: 'Inhala', duration: 3, scale: 1.3 },
+      { label: 'Exhala', duration: 5, scale: 0.9 },
+      { label: 'Sostén', duration: 2, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'bhramari') {
+    return [
+      { label: 'Inhala', duration: 4, scale: 1.3 },
+      { label: 'Exhala zumbando', duration: 8, scale: 0.9 },
+    ];
+  }
+  if (routine.pattern === 'co2') {
+    return [
+      { label: 'Inhala', duration: 4, scale: 1.3 },
+      { label: 'Exhala', duration: 6, scale: 0.9 },
+      { label: 'Sostén en vacío', duration: 10, scale: 0.9 },
+    ];
+  }
   return [{ label: 'Respira', duration: 4, scale: 1.2 }];
 }
 
@@ -6996,13 +7062,17 @@ Object.assign(window, { BreathVisual, getSequence });
 
 const { useState } = React;
 
+/* F4 (s90): 12 → 20 técnicas. Orden dentro de cada grupo: free primero,
+   premium al final (el usuario free ve antes lo que puede usar). */
 const BREATHE_ROUTINES = {
   energia: {
     label: 'Energía',
+    aside: 'Despierta el sistema',
     items: [
-      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
-      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true, access: 'premium' },
       { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
+      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true, access: 'premium' },
+      { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
+      { id: 'breathe.rounds.long', tag: 'ENE', code: 'Energía', name: 'Rondas profundas', desc: '5 rondas de 35 respiraciones. Antesala del trance consciente.', min: 20, pattern: 'rounds', rounds: 5, breaths: 35, safety: true, access: 'premium' },
     ]
   },
   equilibrio: {
@@ -7011,6 +7081,8 @@ const BREATHE_ROUTINES = {
     items: [
       { id: 'breathe.box.4', tag: 'EQU', code: 'Equilibrio', name: 'Box 4·4·4·4', desc: 'Cuadrado perfecto. Calma mental y foco sostenido.', min: 5, pattern: 'box', cycle: [4,4,4,4] },
       { id: 'breathe.box.6', tag: 'EQU', code: 'Equilibrio', name: 'Box 6·6·6·6', desc: 'Versión profunda', min: 7, pattern: 'box', cycle: [6,6,6,6] },
+      { id: 'breathe.diaphragm', tag: 'EQU', code: 'Equilibrio', name: 'Diafragmática', desc: 'Respira hacia el vientre. La base de todo lo demás.', min: 5, pattern: 'diaphragm' },
+      { id: 'breathe.co2', tag: 'EQU', code: 'Equilibrio', name: 'Tolerancia CO₂', desc: 'Exhala y sostén en vacío. Entrena la calma con menos aire.', min: 6, pattern: 'co2', safety: true, access: 'premium' },
     ]
   },
   balance: {
@@ -7019,6 +7091,7 @@ const BREATHE_ROUTINES = {
     items: [
       { id: 'breathe.coherent.55', tag: 'BAL', code: 'Balance', name: 'Coherente 5·5', desc: 'Respiración cardíaca. Sincroniza corazón y mente.', min: 5, pattern: 'coherent', cycle: [5,0,5,0] },
       { id: 'breathe.coherent.66', tag: 'BAL', code: 'Balance', name: 'Coherente 6·6', desc: 'Versión más profunda. 5 ciclos por minuto.', min: 10, pattern: 'coherent', cycle: [6,0,6,0] },
+      { id: 'breathe.coherent.432', tag: 'BAL', code: 'Balance', name: 'Coherente 432', desc: 'Coherencia 6·6 sobre un drone de fondo. Inmersiva.', min: 10, pattern: 'coherent', cycle: [6,0,6,0], drone: true, access: 'premium' },
     ]
   },
   relajacion: {
@@ -7027,15 +7100,19 @@ const BREATHE_ROUTINES = {
     items: [
       { id: 'breathe.478', tag: 'REL', code: 'Relajación', name: '4·7·8', desc: 'Exhalación larga. Baja ansiedad, prepara sueño.', min: 3, pattern: 'pattern', cycle: [4,7,8,0] },
       { id: 'breathe.physiological', tag: 'REL', code: 'Relajación', name: 'Suspiro fisiológico', desc: 'Doble inhalación + exhalación larga. Reset rápido.', min: 2, pattern: 'physiological' },
+      { id: 'breathe.exhale.46', tag: 'REL', code: 'Relajación', name: 'Exhalación 4·6', desc: 'Exhala más largo de lo que inhalas. Freno suave.', min: 6, pattern: 'coherent', cycle: [4,0,6,0] },
+      { id: 'breathe.yin', tag: 'REL', code: 'Relajación', name: 'Rítmica yin', desc: 'Ritmo suave con reposo tras exhalar. Quietud que se asienta.', min: 8, pattern: 'yin' },
     ]
   },
   pranayama: {
     label: 'Pranayama',
     aside: 'Raíces yóguicas',
     items: [
-      { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada. Equilibra hemisferios.', min: 8, pattern: 'nadi', access: 'premium' },
       { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5,0,5,0] },
+      { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave. La mente se aquieta.', min: 5, pattern: 'bhramari' },
+      { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada. Equilibra hemisferios.', min: 8, pattern: 'nadi', access: 'premium' },
       { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
+      { id: 'breathe.kumbhaka', tag: 'PRA', code: 'Pranayama', name: 'Kumbhaka 1:4:2', desc: 'Inhala 4, sostén 16, exhala 8. Solo con experiencia.', min: 6, pattern: 'pattern', cycle: [4,16,8,0], safety: true, access: 'premium' },
     ]
   }
 };
@@ -7203,6 +7280,9 @@ const PHASE_KEYS = {
   'Exhala dcha.':     'breathe.phase.exhala.dcha',
   'Exhala izq.':      'breathe.phase.exhala.izq',
   'Respira':          'breathe.phase.respira',
+  'Inhala al vientre': 'breathe.phase.inhala.vientre',
+  'Exhala zumbando':  'breathe.phase.exhala.zumbando',
+  'Sostén en vacío':  'breathe.phase.sosten.vacio',
 };
 
 function BreatheSession({ routine, onExit }) {
@@ -7227,14 +7307,16 @@ function BreatheSession({ routine, onExit }) {
   const isRounds = routine.pattern === 'rounds';
 
   // Helper: reproduce el sonido de una fase por su label.
-  // 'Sostén' → silencio intencional.
+  // 'Sostén' / 'Sostén en vacío' → silencio intencional.
   const playPhaseSound = (phaseLabel, phaseDur) => {
     if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
         phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
-        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
+        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
+        phaseLabel === 'Inhala al vientre') {
       try { playSound('breathe.inhale', phaseDur); } catch (e) {}
     } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
-               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
+               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
+               phaseLabel === 'Exhala zumbando') {
       try { playSound('breathe.exhale', phaseDur); } catch (e) {}
     }
   };
@@ -7313,8 +7395,10 @@ function BreatheSession({ routine, onExit }) {
         drone.resume();
       } else {
         // activar ambientOn mid-sesión no arranca el drone retroactivamente
-        // — solo arranca al inicio de una sesión nueva
-        drone.start();
+        // — solo arranca al inicio de una sesión nueva.
+        // routine.drone (Coherente 432, F4/s90): fuerza el drone aunque
+        // ambientOn esté apagado; soundOn manda siempre.
+        drone.start(routine.drone === true);
       }
     }
   }, [stage, paused]);

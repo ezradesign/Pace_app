@@ -6,8 +6,9 @@
 >
 > **Recreado en sesión 85 (2026-06-05, v0.34.1)** tras llevar ~60 sesiones
 > borrado (se eliminó en el commit `be81606`, era v0.12.9). Refleja el
-> catálogo **real** del código a fecha de **v0.34.4** (s88: columnas
-> `access` fijadas por F3b), no el aspiracional.
+> catálogo **real** del código a fecha de **v0.35.0** (s90: Respira crecida
+> a 20 técnicas por F4; s88: columnas `access` fijadas por F3b), no el
+> aspiracional.
 
 ---
 
@@ -69,27 +70,48 @@ sueltos dentro de una rutina (sería un muro de pago a mitad de flujo).
 
 Modelo: 1 ítem = 1 patrón respiratorio animado (`BreathVisual`).
 Fuentes de inspiración: Breathe With Sandy (coherencia, box, 4·7·8,
-yin/rítmica) · Tom Woodfin (rondas tipo Wim Hof / CTB).
-Datos en `app/breathe/BreatheLibrary.jsx`. Estado actual: **12 técnicas**.
+yin/rítmica, diafragmática) · Tom Woodfin (rondas tipo Wim Hof / CTB,
+retenciones, tolerancia CO₂).
+Datos en `app/breathe/BreatheLibrary.jsx`. Estado actual: **20 técnicas**
+(F4, s90, v0.35.0). Orden en biblioteca: **free primero** dentro de cada
+grupo. Grupos: energia 4 · equilibrio 4 · balance 3 · relajacion 4 ·
+pranayama 5.
 
-| ID | Nombre | min | safety | `access` (real, F3b) |
-|---|---|---|---|---|
-| `breathe.coherent.55` | Coherente 5·5 | 5 | — | **free** (inicial) |
-| `breathe.box.4` | Box 4·4·4·4 | 5 | — | **free** (inicial) |
-| `breathe.physiological` | Suspiro fisiológico | 2 | — | free |
-| `breathe.478` | 4·7·8 | 3 | — | free |
-| `breathe.box.6` | Box 6·6·6·6 | 7 | — | free (variante larga, no avanzada) |
-| `breathe.coherent.66` | Coherente 6·6 | 10 | — | free (variante larga, no avanzada) |
-| `breathe.ujjayi` | Ujjayi | 6 | — | free (oceánica accesible) |
-| `breathe.bellows` | Bhastrika · Fuelle | 3 | — | free (entrada de Energía) |
-| `breathe.nadi.shodhana` | Nadi Shodhana | 8 | — | **premium** (pranayama avanzado) |
-| `breathe.kapalabhati` | Kapalabhati · Kriya | 3 | ⚠ | **premium** (kriya avanzado) |
-| `breathe.rounds.express` | Rondas express (2×25) | 4 | ⚠ | **premium** (rondas) |
-| `breathe.rounds.full` | Respiración en rondas (3×30) | 12 | ⚠ | **premium** (precursora CTB) |
+| ID | Nombre | Grupo | min | safety | `access` (real, F4) |
+|---|---|---|---|---|---|
+| `breathe.coherent.55` | Coherente 5·5 | balance | 5 | — | **free** (inicial) |
+| `breathe.box.4` | Box 4·4·4·4 | equilibrio | 5 | — | **free** (inicial) |
+| `breathe.physiological` | Suspiro fisiológico | relajacion | 2 | — | free |
+| `breathe.478` | 4·7·8 | relajacion | 3 | — | free |
+| `breathe.box.6` | Box 6·6·6·6 | equilibrio | 7 | — | free (variante larga, no avanzada) |
+| `breathe.coherent.66` | Coherente 6·6 | balance | 10 | — | free (variante larga, no avanzada) |
+| `breathe.ujjayi` | Ujjayi | pranayama | 6 | — | free (oceánica accesible) |
+| `breathe.bellows` | Bhastrika · Fuelle | energia | 3 | — | free (entrada de Energía) |
+| `breathe.diaphragm` | Diafragmática | equilibrio | 5 | — | free (F4 — la base de todo) |
+| `breathe.exhale.46` | Exhalación 4·6 | relajacion | 6 | — | free (F4 — freno simple) |
+| `breathe.yin` | Rítmica yin | relajacion | 8 | — | free (F4 — meditativa accesible) |
+| `breathe.bhramari` | Bhramari · Abeja | pranayama | 5 | — | free (F4 — pranayama accesible) |
+| `breathe.nadi.shodhana` | Nadi Shodhana | pranayama | 8 | — | **premium** (pranayama avanzado) |
+| `breathe.kapalabhati` | Kapalabhati · Kriya | pranayama | 3 | ⚠ | **premium** (kriya avanzado) |
+| `breathe.rounds.express` | Rondas express (2×25) | energia | 4 | ⚠ | **premium** (rondas) |
+| `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 12 | ⚠ | **premium** (rondas) |
+| `breathe.coherent.432` | Coherente 432 | balance | 10 | — | **premium** (F4 — inmersiva, drone forzado) |
+| `breathe.kumbhaka` | Kumbhaka 1:4:2 | pranayama | 6 | ⚠ | **premium** (F4 — retención clásica) |
+| `breathe.co2` | Tolerancia CO₂ | equilibrio | 6 | ⚠ | **premium** (F4 — apnea en vacío) |
+| `breathe.rounds.long` | Rondas profundas (5×35) | energia | 20 | ⚠ | **premium** (F4 — precursora CTB) |
 
-> **Seguridad:** toda técnica con `safety: true` (retención / hiperventilación)
-> abre el modal de seguridad obligatorio antes de empezar (`BreatheSafety`).
-> Las sesiones largas CTB (F4) heredan esta regla sin excepción.
+> **Seguridad:** toda técnica con `safety: true` (retención / hiperventilación
+> / apnea) abre el modal de seguridad obligatorio antes de empezar
+> (`BreatheSafety`). Sin excepción — F4 lo aplicó a kumbhaka, co2 y
+> rounds.long.
+>
+> **Coherente 432** lleva `drone: true`: fuerza el drone ambiente (base
+> 432 Hz) durante la sesión aunque el toggle Ambiente esté apagado; `soundOn`
+> (master) manda siempre. Ver `ambientDrone.start(force)` en `Sound.jsx`.
+>
+> **Patrones de `getSequence`:** rounds, box, coherent, pattern,
+> physiological, ujjayi, bhastrika/kapalabhati, nadi + (F4) diaphragm, yin,
+> bhramari, co2.
 
 ---
 
@@ -157,10 +179,13 @@ Catálogo cerrado a **7 caminos**, todos `free`. Datos en
 
 Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):
 
-- **Respira → ~20 técnicas.** Net-new: diafragmática, exhalación 4-6,
-  rítmica yin, coherencia 432Hz, Bhramari, tolerancia CO₂, y las
-  **sesiones largas CTB** premium (3/5 rondas, Tummo, inner-dance —
-  todas con modal de seguridad).
+- **Respira → ~20 técnicas.** ✅ **Hecho en F4 (s90, v0.35.0):** 20 técnicas,
+  8 premium. Entraron diafragmática, exhalación 4·6, rítmica yin, coherente
+  432 (drone forzado), Bhramari, Kumbhaka 1:4:2, tolerancia CO₂ y rondas
+  profundas 5×35 (precursora CTB, con modal de seguridad). La experiencia
+  **CTB completa** (guion + pista + mockup inmersivo, 20-45 min) queda como
+  entregable aparte post-bloque (ver `ROADMAP.md`); Tummo/inner-dance se
+  evaluarán ahí.
 - **Estira / Mueve → ~12-15 rutinas c/u, ~mitad premium.** Rutinas
   curadas nuevas que reagrupan pasos existentes + net-new (Couch
   stretch, círculos de hombro, gato-camello). Categorizar como Respira.

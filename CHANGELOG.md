@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [abajo](#v0350----2026-07-07----featbreathe-f4-catalogo-respira-12--20) |
 | **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [abajo](#v0345----2026-07-07----fixfeat-p0-de-la-auditoria-integral) |
-| **v0.34.4** | 2026-07-07 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [abajo](#v0344----2026-06-30----featpremium-f3b-activacion-del-gating) |
+| **v0.34.4** | 2026-07-07 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [session-88](./docs/sessions/session-88-f3b-activacion-gating.md) |
 | **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md) |
 | **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [session-86](./docs/sessions/session-86-f2-tracking-audit.md) |
 | **v0.34.1** | 2026-06-05 | fix(support)+docs: copy Buy Me a Coffee honesto (nucleo libre, fuera "sin pro") + recrear CONTENT.md y ROADMAP.md (borrados en be81606) -- arranque bloque Contenido+Premium F1 | #85 | [session-85](./docs/sessions/session-85-f1-bmc-docs.md) |
@@ -110,6 +111,72 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.35.0] -- 2026-07-07 -- feat(breathe): F4 catalogo Respira 12 -> 20
+
+Sesion 90. **Fase 4 del bloque Contenido+Premium: crecer Respira** con el
+modelo actual (1 tecnica = 1 patron animado + BreatheSession). Las CTB
+completas con audio guiado quedan como entregable aparte post-bloque (ROADMAP);
+aqui solo entra `rounds.long` como precursora. Diario:
+[session-90](./docs/sessions/session-90-f4-contenido-respira.md).
+
+### Set nuevo (8 tecnicas, 4 free + 4 premium -- criterio s88)
+
+- **Free:** `breathe.diaphragm` (Diafragmatica, equilibrio),
+  `breathe.exhale.46` (Exhalacion 4·6, relajacion), `breathe.yin`
+  (Ritmica yin, relajacion), `breathe.bhramari` (Bhramari · Abeja, pranayama).
+- **Premium:** `breathe.coherent.432` (Coherente 432 con drone forzado,
+  balance), `breathe.kumbhaka` (Kumbhaka 1:4:2, pranayama, ⚠),
+  `breathe.co2` (Tolerancia CO2, equilibrio, ⚠), `breathe.rounds.long`
+  (Rondas profundas 5×35 precursora CTB, energia, ⚠).
+
+Total: **20 tecnicas, 8 premium (40%)**. Toda retencion/apnea con modal
+`BreatheSafety` obligatorio. Sin logros `explore.*` nuevos (mapas cerrados con
+guard; cola D-8b cerrada: `master.collector.*` usa umbrales fijos 50/100, el
+catalogo no lo distorsiona).
+
+### Added
+
+- **`app/breathe/BreatheLibrary.jsx`** (202 ln) -- 8 items + aside de Energia
+  ("Despierta el sistema") + reorden **free-first dentro de cada grupo**.
+- **`app/breathe/BreatheVisual.jsx`** -- 4 patrones nuevos en `getSequence`:
+  `diaphragm`, `yin`, `bhramari`, `co2`. Sin animacion nueva; wrapper
+  `data-pace-essential` heredado.
+- **`app/breathe/BreatheSession.jsx`** -- 3 labels nuevos en `PHASE_KEYS` +
+  mapeo de sonido (vientre→inhale, zumbando→exhale, vacio→silencio) +
+  `drone.start(routine.drone === true)`.
+- **`app/ui/Sound.jsx`** -- `ambientDrone.start(force)`: flag interno `forced`
+  bypasa `ambientOn` (soundOn manda siempre); `resume()` lo respeta y `stop()`
+  lo resetea. Primera modificacion desde v0.21.0, ~10 ln.
+- **i18n** -- 3 fases nuevas ES+EN (`sessions.js`) + 24 keys EN de contenido +
+  `breathe.cat.energia.aside` (`strings-content.js`).
+
+### Changed
+
+- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.35.0
+  (`CACHE_NAME pace-v0.35.0`).
+- **`CHANGELOG.md`** -- v0.34.4 degradado a fila-de-enlace (convencion: solo 2
+  ultimas detalladas).
+
+### Verificacion runtime
+
+Preview :8765. Biblioteca: 20 tarjetas / 5 grupos, 8 sellos PREMIUM exactos,
+6 marcas ⚠, minutos en las free + "Pronto" en las premium (screenshot). Una
+sesion por patron nuevo con fases muestreadas en vivo (diaphragm, yin,
+bhramari, co2, kumbhaka, rounds.long) + modal de seguridad en las 3 con
+retencion. Drone forzado: arranca con `ambientOn=false`, sobrevive a
+pausar+reanudar, muere al salir. Estado de prueba restaurado. **Consola sin
+errores.**
+
+### Build
+
+- `PACE_standalone.html`: **638 KB**, 62 archivos validados. `index.html`
+  copia exacta (SHA256 identico, `82bfe7a9…58a2a41`). Standalone verificado en
+  preview (v0.35.0, 8/8 tecnicas, monta limpio).
+- Backup `PACE_standalone_v0.34.5_20260707.html`; cap 20 (rotado
+  `v0.28.7_20260512.html`).
+
+---
+
 ## [v0.34.5] -- 2026-07-07 -- fix+feat: P0 de la auditoria integral
 
 Sesion 89. Tras entregar la **auditoria integral de producto+tecnica**
@@ -168,77 +235,12 @@ screenshot); stepper 1 clic = 1 paso, clamp 4-12, persiste; wrapper
 
 ---
 
-## [v0.34.4] -- 2026-07-07 -- feat(premium): F3b activacion del gating
-
-Sesion 88. **Fase 3b del bloque Contenido+Premium: enciende el gating** sobre las
-rutinas que ya existen. Alcance acotado al **binario `free`/`premium`** (los
-estados `locked.*` y la licencia real quedan post-v1.0). Diario:
-[session-88](./docs/sessions/session-88-f3b-activacion-gating.md).
-
-### Set premium (8 / 26, binario, ~1/3 por modulo)
-
-El usuario aprobo la direccion pero pidio **menos premium**. Criterio: lo de
-entrada/accesible se queda `free`, lo avanzado/profundo va `premium`. Las 2
-iniciales de cada modulo se respetan como free.
-
-- **Respira (4):** `breathe.rounds.full`, `breathe.rounds.express`,
-  `breathe.nadi.shodhana`, `breathe.kapalabhati`. Las variantes *mas largas*
-  (box.6, coherent.66) y ujjayi se quedan free.
-- **Mueve (2):** `extra.wall.sit`, `extra.core.stealth` (isometricos al limite).
-- **Estira (2):** `move.atg.knees`, `move.ancestral` (ATG avanzado + suelo).
-
-`safety: true` conservado en las premium con retencion (rounds, kapalabhati): el
-modal seguira siendo obligatorio cuando se desbloqueen.
-
-### Added
-
-- **`app/state-core.jsx`** -- `premiumUnlocked: false` en `defaultState`. Sin
-  ruta de compra real hasta v1.0: permanece `false` y toda rutina `premium` se
-  ve bloqueada. El cableado queda listo para que un flag futuro la abra.
-- **`app/tweaks/TweaksPanel.jsx`** -- superficie premium discreta (tras "Tus
-  datos"): sello `PremiumSeal` + titulo + copy honesto + input de licencia
-  **disabled** (display-only, sin validacion) + CTA "Pronto" disabled + nota
-  offline.
-- **`app/i18n/strings/ui.js`** -- `premium.tweaks.title` / `.body` /
-  `.placeholder` / `.cta` / `.note` (ES + EN).
-
-### Changed
-
-- **`app/breathe/BreatheLibrary.jsx`** -- `RoutineCard` lee `premiumUnlocked`:
-  `isPremium` (marca de pago, sello siempre) vs `isLocked = isPremium &&
-  !premiumUnlocked` (bloqueo real: accent/clic off + "Pronto"). Flip del flag
-  abre las premium sin tocar UI.
-- **`app/move/MoveModule.jsx`** (`extra.wall.sit`, `extra.core.stealth`) +
-  **`app/extra/ExtraModule.jsx`** (`move.atg.knees`, `move.ancestral`) +
-  **`app/breathe/BreatheLibrary.jsx`** (4 tecnicas) -- `access: 'premium'`.
-- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.34.4.
-- **`CHANGELOG.md`** -- v0.34.2 degradado a fila-de-enlace (convencion: solo 2
-  ultimas detalladas).
-
-### Verificacion runtime
-
-Via preview local (puerto propio; otra sesion ocupaba :8765).
-
-- Respira: PREMIUM + "Pronto" en las 4 premium (rounds con ⚠ safety); box.6 /
-  coherent.66 / ujjayi / resto free con minutos (screenshot).
-- Mueve: PREMIUM en wall.sit + core.stealth (screenshot). Estira: PREMIUM en
-  atg.knees + ancestral (screenshot). Tweaks: superficie premium completa
-  (screenshot).
-- `eval`: 8 flags `access:'premium'` correctos, `premiumUnlocked === false`,
-  `PACE_VERSION === 'v0.34.4'`. Consola sin errores.
-
-### Build
-
-- `PACE_standalone.html`: **628 KB**, 60 archivos validados. `index.html` copia
-  exacta (**SHA256 identico**, `f9b9fef0…18a4dd`).
-- Backup `PACE_standalone_v0.34.3_20260707.html` creado; cap 20 (rotado el mas
-  antiguo `v0.28.5_20260512.html`).
-
----
-
-> **v0.34.3** (s87) detallada en
-> [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md) —
+> **v0.34.4** (s88) detallada en
+> [session-88](./docs/sessions/session-88-f3b-activacion-gating.md) —
 > convencion: solo las 2 ultimas versiones se detallan aqui.
+>
+> **v0.34.3** (s87) detallada en
+> [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md).
 >
 > **v0.34.2** (s86) detallada en
 > [session-86](./docs/sessions/session-86-f2-tracking-audit.md).

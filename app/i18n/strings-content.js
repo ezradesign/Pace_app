@@ -20,6 +20,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Breathe — categorías ─────────────────────────────────────────
   'breathe.cat.energia.label':           'Energy',
+  'breathe.cat.energia.aside':           'Wakes up the system',
   'breathe.cat.equilibrio.label':        'Equilibrium',
   'breathe.cat.equilibrio.aside':        'Regulates the nervous system',
   'breathe.cat.balance.label':           'Balance',
@@ -66,6 +67,32 @@ Object.assign(window.PACE_STRINGS.en, {
   'breathe.kapalabhati.name':            'Kapalabhati · Kriya',
   'breathe.kapalabhati.desc':            'Skull shining breath. Energizing.',
   'breathe.kapalabhati.code':            'Kriya',
+
+  // ── Breathe — técnicas F4 (s90) ──────────────────────────────────
+  'breathe.rounds.long.name':            'Deep Rounds',
+  'breathe.rounds.long.desc':            '5 rounds of 35 breaths. Gateway to conscious trance.',
+  'breathe.rounds.long.code':            'Energy',
+  'breathe.diaphragm.name':              'Diaphragmatic',
+  'breathe.diaphragm.desc':              'Breathe into the belly. The base of everything else.',
+  'breathe.diaphragm.code':              'Equilibrium',
+  'breathe.co2.name':                    'CO₂ Tolerance',
+  'breathe.co2.desc':                    'Exhale and hold empty. Train calm with less air.',
+  'breathe.co2.code':                    'Equilibrium',
+  'breathe.coherent.432.name':           'Coherent 432',
+  'breathe.coherent.432.desc':           'Coherence 6·6 over a background drone. Immersive.',
+  'breathe.coherent.432.code':           'Balance',
+  'breathe.exhale.46.name':              'Exhale 4·6',
+  'breathe.exhale.46.desc':              'Exhale longer than you inhale. A gentle brake.',
+  'breathe.exhale.46.code':              'Relaxation',
+  'breathe.yin.name':                    'Yin Rhythmic',
+  'breathe.yin.desc':                    'Soft rhythm with rest after the exhale. Stillness settles in.',
+  'breathe.yin.code':                    'Relaxation',
+  'breathe.bhramari.name':               'Bhramari · Bee',
+  'breathe.bhramari.desc':               'Exhale with a low hum. The mind grows quiet.',
+  'breathe.bhramari.code':               'Pranayama',
+  'breathe.kumbhaka.name':               'Kumbhaka 1:4:2',
+  'breathe.kumbhaka.desc':               'Inhale 4, hold 16, exhale 8. Experienced practitioners only.',
+  'breathe.kumbhaka.code':               'Pranayama',
 
   // ── Mueve — rutinas (ids extra.*) ────────────────────────────────
   'extra.desk.pushups.name':             'Desk Push-ups',
