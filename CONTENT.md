@@ -6,9 +6,9 @@
 >
 > **Recreado en sesión 85 (2026-06-05, v0.34.1)** tras llevar ~60 sesiones
 > borrado (se eliminó en el commit `be81606`, era v0.12.9). Refleja el
-> catálogo **real** del código a fecha de **v0.35.0** (s90: Respira crecida
-> a 20 técnicas por F4; s88: columnas `access` fijadas por F3b), no el
-> aspiracional.
+> catálogo **real** del código a fecha de **v0.36.0** (s91: Estira crecida a
+> 14 rutinas por F5; s90: Respira a 20 por F4; s88: columnas `access`
+> fijadas por F3b), no el aspiracional.
 
 ---
 
@@ -137,18 +137,34 @@ Estado actual: **7 rutinas**.
 ## 🤸 Estira · Movilidad / estiramiento
 
 Botón "Estira". Inspirado en Jess Martin (oficina) + Strengthside (ATG,
-caderas, hombros). Datos en `app/extra/ExtraModule.jsx` (`EXTRA_ROUTINES`,
-ids `move.*`). Estado actual: **7 rutinas**.
+caderas, hombros, columna, movilidad de suelo, flujos diarios). Datos en
+`app/extra/ExtraModule.jsx` (`EXTRA_ROUTINES`, ids `move.*`). Estado actual:
+**14 rutinas** (F5, s91, v0.36.0), biblioteca **agrupada en 4 grupos** como
+Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
+· caderas y piernas 5 · flujos 2.
 
-| ID | Nombre | min | `access` (real, F3b) |
-|---|---|---|---|
-| `move.chair.antidote` | Antídoto silla | 5 | **free** (inicial) |
-| `move.neck.3` | Cuello · 3 min | 3 | **free** (inicial) |
-| `move.desk.quick` | Escritorio express | 2 | free (2 min sin levantarse) |
-| `move.shoulders.5` | Hombros · 5 pasos | 5 | free (reset accesible) |
-| `move.hips.5` | Caderas · 5 pasos | 6 | free |
-| `move.atg.knees` | ATG · Rodillas a prueba | 6 | **premium** (ATG avanzado) |
-| `move.ancestral` | Ancestral | 6 | **premium** (suelo/crawl/hang) |
+| ID | Nombre | Grupo | min | `access` (real, F5) |
+|---|---|---|---|---|
+| `move.chair.antidote` | Antídoto silla | oficina | 5 | **free** (inicial) |
+| `move.neck.3` | Cuello · 3 min | oficina | 3 | **free** (inicial) |
+| `move.desk.quick` | Escritorio express | oficina | 2 | free (2 min sin levantarse) |
+| `move.wrists` | Muñecas y manos | oficina | 3 | free (F5 — antídoto al teclado) |
+| `move.shoulders.5` | Hombros · 5 pasos | hombros | 5 | free (reset accesible) |
+| `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
+| `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
+| `move.hips.5` | Caderas · 5 pasos | caderas | 6 | free |
+| `move.couch.stretch` | Couch stretch | caderas | 5 | **premium** (F5 — flexores profundos) |
+| `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
+| `move.atg.knees` | ATG · Rodillas a prueba | caderas | 6 | **premium** (ATG avanzado) |
+| `move.hamstrings` | Cadena posterior | caderas | 5 | **premium** (F5 — isquios profundos) |
+| `move.morning.flow` | Despertar matinal | flujos | 5 | free (F5 — ancla de hábito diario) |
+| `move.ancestral` | Ancestral | flujos | 6 | **premium** (suelo/crawl/hang) |
+
+> **Glifos (F5):** 11 pasos nuevos renderizan `DefaultGlyph` (tres arcos)
+> hasta que el usuario apruebe sus glifos — se suman a la cola D-4 de
+> `STATE.md` (ahora 26 pendientes): Gato-camello, Palmas al suelo, Rezo
+> invertido, Círculos de hombro, Couch stretch, Onda espinal, Puente
+> torácico, Rodar hacia abajo, Rana, Pliegue adelante, Isquio a una pierna.
 
 ---
 
@@ -186,9 +202,14 @@ Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):
   **CTB completa** (guion + pista + mockup inmersivo, 20-45 min) queda como
   entregable aparte post-bloque (ver `ROADMAP.md`); Tummo/inner-dance se
   evaluarán ahí.
-- **Estira / Mueve → ~12-15 rutinas c/u, ~mitad premium.** Rutinas
-  curadas nuevas que reagrupan pasos existentes + net-new (Couch
-  stretch, círculos de hombro, gato-camello). Categorizar como Respira.
+- **Estira → ~12-15 rutinas, ~mitad premium.** ✅ **Hecho en F5 (s91,
+  v0.36.0):** 14 rutinas, 6 premium, agrupadas en 4 grupos. Entraron las 3
+  net-new de este plan (couch stretch, círculos de hombro, gato-camello) +
+  despertar matinal, muñecas, caderas·suelo y cadena posterior
+  (Strengthside-inspired).
+- **Mueve → ~12-15 rutinas, ~mitad premium (F6, pendiente).** Rutinas
+  curadas nuevas que reagrupan pasos existentes + net-new. Categorizar
+  como Respira/Estira (grupos + free-first).
 - **Constructor de rutinas premium** (`custom.sequence`): el usuario
   arma su rutina eligiendo ejercicios + duración. Requiere un registro
   interno de ejercicios (no una biblioteca navegable de ejercicios

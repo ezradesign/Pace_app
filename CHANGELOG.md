@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [abajo](#v0360----2026-07-07----featextra-f5-catalogo-estira-7--14) |
 | **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [abajo](#v0350----2026-07-07----featbreathe-f4-catalogo-respira-12--20) |
-| **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [abajo](#v0345----2026-07-07----fixfeat-p0-de-la-auditoria-integral) |
+| **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md) |
 | **v0.34.4** | 2026-07-07 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [session-88](./docs/sessions/session-88-f3b-activacion-gating.md) |
 | **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md) |
 | **v0.34.2** | 2026-06-05 | fix(tracking): F-1 PathFocusStep llama updateStreak (el foco-en-Camino cuenta para la racha, como la home) + docs auditoria F2 de tracking (informe + casos de prueba) | #86 | [session-86](./docs/sessions/session-86-f2-tracking-audit.md) |
@@ -111,6 +112,64 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.36.0] -- 2026-07-07 -- feat(extra): F5 catalogo Estira 7 -> 14
+
+Sesion 91. **Fase 5 del bloque Contenido+Premium: crecer Estira** con el
+runner actual (`MoveSession`, data-driven -- rutinas nuevas = solo datos).
+Inspiracion pedida por el usuario: **Strengthside** (caderas/hombros/columna,
+movilidad de suelo, flujos diarios, couch stretch); estructura y tecnica,
+nunca copy literal. Diario:
+[session-91](./docs/sessions/session-91-f5-contenido-estira.md).
+
+### Set nuevo (7 rutinas, 3 free + 4 premium -- criterio s88)
+
+- **Free:** `move.morning.flow` (Despertar matinal, flujos), `move.wrists`
+  (Muñecas y manos, oficina), `move.shoulder.circles` (Hombros · circulos,
+  hombros).
+- **Premium:** `move.couch.stretch` (Couch stretch, caderas),
+  `move.spine.waves` (Columna · ondas, hombros), `move.hips.ground`
+  (Caderas · suelo, caderas), `move.hamstrings` (Cadena posterior, caderas).
+
+Total: **14 rutinas, 6 premium (43%)**. Incluye las 3 candidatas net-new de
+CONTENT (couch stretch, circulos de hombro, gato-camello). Sin logros nuevos
+(decision F4). Sin modal de seguridad (no hay apnea en estiramientos).
+
+### Added / Changed
+
+- **`app/extra/ExtraModule.jsx`** (103 -> 204 ln) -- `EXTRA_ROUTINES` pasa de
+  array plano a **objeto agrupado** (mismo shape que `BREATHE_ROUTINES`):
+  oficina 4 · hombros y columna 3 · caderas y piernas 5 · flujos 2,
+  free-first por grupo (decision s90). `ExtraLibrary` renderiza grupos con
+  `tR('extra.cat.*')`; `getExtraRoutine` adaptado (misma firma, consumidor
+  unico `paths/registry.js` verificado).
+- **`app/i18n/strings-content.js`** (280 -> 389 ln) -- 8 keys de grupos +
+  ~101 keys EN de las 7 rutinas (name/desc/code + pasos).
+- **11 pasos nuevos sin glifo** renderizan `DefaultGlyph` (fallback digno) y
+  se suman a la **cola D-4** (ahora 26): Gato-camello, Palmas al suelo, Rezo
+  invertido, Circulos de hombro, Couch stretch, Onda espinal, Puente
+  toracico, Rodar hacia abajo, Rana, Pliegue adelante, Isquio a una pierna.
+- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.36.0
+  (`CACHE_NAME pace-v0.36.0`).
+- **`CHANGELOG.md`** -- v0.34.5 degradado a fila-de-enlace.
+
+### Verificacion runtime
+
+Preview :8765 (limpiado el SW cache viejo que servia assets cache-first).
+Biblioteca: 14 tarjetas / 4 grupos con asides, 6 sellos PREMIUM + "Pronto",
+minutos en las 8 free (screenshot). Sesion "Despertar matinal": paso 1
+Gato-camello con **DefaultGlyph**, countdown y "Siguiente" correctos. EN:
+grupos y 14 tarjetas traducidas; ES restaurado. **Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **652 KB**, 62 archivos validados. `index.html`
+  copia exacta (SHA256 identico, `5edfb95e…463ecb`). Standalone verificado
+  en preview (v0.36.0, 7/7 rutinas, monta limpio).
+- Backup `PACE_standalone_v0.35.0_20260707.html`; cap 20 (rotado
+  `v0.28.8_20260512.html`).
+
+---
+
 ## [v0.35.0] -- 2026-07-07 -- feat(breathe): F4 catalogo Respira 12 -> 20
 
 Sesion 90. **Fase 4 del bloque Contenido+Premium: crecer Respira** con el
@@ -177,67 +236,12 @@ errores.**
 
 ---
 
-## [v0.34.5] -- 2026-07-07 -- fix+feat: P0 de la auditoria integral
-
-Sesion 89. Tras entregar la **auditoria integral de producto+tecnica**
-(`docs/audits/audit-producto-v0.34.4.md`, anexo de s88), se ejecuta su P0:
-decisiones + fixes pequenos que sanean la casa antes de crecer contenido (F4).
-Diario: [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md).
-
-### Decision de producto (D-8, cero codigo)
-
-`path.weekend` queda como **degustacion curada**: el Camino free lanza 2
-rutinas premium (nadi.shodhana + atg.knees) por diseno — probar premium en
-contexto curado. Logros premium-tied aceptados por ahora; revisar denominador
-de coleccion en F4-F6.
-
-### Fixed
-
-- **`sw.js`** -- `activate` borra caches `pace-*` de versiones anteriores
-  (antes quedaban huerfanos para siempre) + navegaciones HTML pasan a
-  **network-first** con fallback a cache (las updates llegan sin esperar al
-  re-chequeo del SW). Assets siguen cache-first.
-- **`app/tokens.css`** + **`app/breathe/BreatheVisual.jsx`** -- el kill global
-  de `prefers-reduced-motion` congelaba tambien la guia visual de respiracion
-  (transitions 1800ms = la funcion misma del breathwork). Ahora exime subtrees
-  `[data-pace-essential]` (los 5 wrappers de BreathVisual); lo decorativo
-  sigue congelado. WCAG 2.3.3 (motion esencial). Corrige ademas un error de
-  la propia auditoria ("reduced-motion no detectado" -- existia, pero roto).
-
-### Added
-
-- **`app/state-core.jsx`** -- `detectInitialPalette()`: `prefers-color-scheme:
-  dark` como paleta inicial SOLO sin estado guardado; la eleccion manual de
-  Tweaks siempre gana despues. Expuesta a window. Bump PACE_VERSION v0.34.5.
-- **`app/tweaks/TweaksPanel.jsx`** -- stepper **"Objetivo de agua"** (4-12
-  vasos) tras los ejes; patch funcional `set(s => ...)` (los clics rapidos en
-  el mismo render no pisan estado). El resto de la app ya leia `water.goal`
-  dinamicamente. i18n `tweaks.eje.water` / `tweaks.water.value` ES+EN.
-- **`app/tweaks/TweaksData.jsx`** (193 ln) + **`app/tweaks/PremiumSection.jsx`**
-  (47 ln) -- split A-4: TweaksPanel 519 -> **351 ln** (sale de deuda). Dos
-  script tags nuevos en `PACE.html`.
-- **`docs/audits/audit-producto-v0.34.4.md`** -- auditoria integral (anexo
-  s88): fortalezas, hallazgos A-1..A-8, gaps vs sector, prioridades P0-P3.
-
-### Verificacion runtime
-
-Preview :8765 propio. Panel Tweaks completo (agua + datos + premium,
-screenshot); stepper 1 clic = 1 paso, clamp 4-12, persiste; wrapper
-`[data-pace-essential]` vivo en sesion Respira; regla `:not(...)` cargada;
-`detectInitialPalette()` -> 'crema' en preview claro. **Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **633 KB**, 62 archivos validados (+2 del split).
-  `index.html` copia exacta (SHA256 identico, `cc5005ee...cacfe2`).
-- Backup `PACE_standalone_v0.34.4_20260707.html`; cap 20 (rotado
-  `v0.28.6_20260511.html`). Fechas de s88 corregidas a 2026-07-07.
-
----
-
-> **v0.34.4** (s88) detallada en
-> [session-88](./docs/sessions/session-88-f3b-activacion-gating.md) —
+> **v0.34.5** (s89) detallada en
+> [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md) —
 > convencion: solo las 2 ultimas versiones se detallan aqui.
+>
+> **v0.34.4** (s88) detallada en
+> [session-88](./docs/sessions/session-88-f3b-activacion-gating.md).
 >
 > **v0.34.3** (s87) detallada en
 > [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md).

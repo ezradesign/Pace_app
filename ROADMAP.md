@@ -39,7 +39,7 @@ Fase 0 (s84-bis / 2026-06-05). Detalle de catálogo en [`CONTENT.md`](./CONTENT.
 | **F3a** | Mecanismo de gating: token `--premium` + `PremiumSeal` + `RoutineCard` lee `access` (sello + "Pronto" + clic off) | **hecho (s87, v0.34.3)** — dormante, todas las rutinas `free` |
 | **F3b** | Activación: gating encendido sobre rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` cableado (sin compra real) + superficie premium display-only en Tweaks | **hecho (s88, v0.34.4)** — `locked.*` y licencia real diferidos a post-v1.0 |
 | **F4** | Contenido Respira → ~20 técnicas (incl. CTB largas premium, con seguridad) | **hecho (s90, v0.35.0)** — 20 técnicas, 8 premium; `rounds.long` 5×35 como precursora CTB; la experiencia CTB completa queda para post-bloque (abajo) |
-| **F5** | Contenido Estira → ~12-15 rutinas (~mitad premium), categorizado | pendiente |
+| **F5** | Contenido Estira → ~12-15 rutinas (~mitad premium), categorizado | **hecho (s91, v0.36.0)** — 14 rutinas, 6 premium, 4 grupos como Respira; 11 pasos nuevos con DefaultGlyph (cola D-4) |
 | **F6** | Contenido Mueve → ~12-15 rutinas (~mitad premium), reclasifica la fuerza | pendiente |
 | **F7** | Registro interno de ejercicios + **constructor de rutinas premium** (`custom.sequence`) | pendiente |
 | **F8** | Visual de Caminos — auditoría DESIGN_SYSTEM + polish de los 6 componentes | pendiente |
