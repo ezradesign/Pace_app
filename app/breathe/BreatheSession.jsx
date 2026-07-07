@@ -17,6 +17,9 @@ const PHASE_KEYS = {
   'Exhala dcha.':     'breathe.phase.exhala.dcha',
   'Exhala izq.':      'breathe.phase.exhala.izq',
   'Respira':          'breathe.phase.respira',
+  'Inhala al vientre': 'breathe.phase.inhala.vientre',
+  'Exhala zumbando':  'breathe.phase.exhala.zumbando',
+  'Sostén en vacío':  'breathe.phase.sosten.vacio',
 };
 
 function BreatheSession({ routine, onExit }) {
@@ -41,14 +44,16 @@ function BreatheSession({ routine, onExit }) {
   const isRounds = routine.pattern === 'rounds';
 
   // Helper: reproduce el sonido de una fase por su label.
-  // 'Sostén' → silencio intencional.
+  // 'Sostén' / 'Sostén en vacío' → silencio intencional.
   const playPhaseSound = (phaseLabel, phaseDur) => {
     if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
         phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
-        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira') {
+        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
+        phaseLabel === 'Inhala al vientre') {
       try { playSound('breathe.inhale', phaseDur); } catch (e) {}
     } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
-               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.') {
+               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
+               phaseLabel === 'Exhala zumbando') {
       try { playSound('breathe.exhale', phaseDur); } catch (e) {}
     }
   };
@@ -127,8 +132,10 @@ function BreatheSession({ routine, onExit }) {
         drone.resume();
       } else {
         // activar ambientOn mid-sesión no arranca el drone retroactivamente
-        // — solo arranca al inicio de una sesión nueva
-        drone.start();
+        // — solo arranca al inicio de una sesión nueva.
+        // routine.drone (Coherente 432, F4/s90): fuerza el drone aunque
+        // ambientOn esté apagado; soundOn manda siempre.
+        drone.start(routine.drone === true);
       }
     }
   }, [stage, paused]);

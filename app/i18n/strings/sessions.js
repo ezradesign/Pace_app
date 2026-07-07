@@ -80,6 +80,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'breathe.phase.exhala.dcha':       'Exhala dcha.',
     'breathe.phase.exhala.izq':        'Exhala izq.',
     'breathe.phase.respira':           'Respira',
+    'breathe.phase.inhala.vientre':    'Inhala al vientre',
+    'breathe.phase.exhala.zumbando':   'Exhala zumbando',
+    'breathe.phase.sosten.vacio':      'Sostén en vacío',
 
     // Breathe (sesión)
     'breathe.prepCopy':                'Siéntate cómodo. Respira natural.',
@@ -201,6 +204,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'breathe.phase.exhala.dcha':       'Exhale right',
     'breathe.phase.exhala.izq':        'Exhale left',
     'breathe.phase.respira':           'Breathe',
+    'breathe.phase.inhala.vientre':    'Inhale into the belly',
+    'breathe.phase.exhala.zumbando':   'Humming exhale',
+    'breathe.phase.sosten.vacio':      'Hold empty',
 
     // Breathe (session)
     'breathe.prepCopy':                'Sit comfortably. Breathe naturally.',
