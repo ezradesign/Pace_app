@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [abajo](#v0370----2026-07-07----featmove-f6-catalogo-mueve-7--14) |
 | **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [abajo](#v0360----2026-07-07----featextra-f5-catalogo-estira-7--14) |
-| **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [abajo](#v0350----2026-07-07----featbreathe-f4-catalogo-respira-12--20) |
+| **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [session-90](./docs/sessions/session-90-f4-contenido-respira.md) |
 | **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md) |
 | **v0.34.4** | 2026-07-07 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [session-88](./docs/sessions/session-88-f3b-activacion-gating.md) |
 | **v0.34.3** | 2026-06-30 | feat(premium): F3a -- mecanismo de gating a nivel sesion (campo `access` + componente `PremiumSeal` + sello/Pronto en `RoutineCard` + token `--premium`); dormante (todas las rutinas siguen free) | #87 | [session-87](./docs/sessions/session-87-f3a-gating-mecanismo.md) |
@@ -112,6 +113,73 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.37.0] -- 2026-07-07 -- feat(move): F6 catalogo Mueve 7 -> 14
+
+Sesion 92. **Fase 6 del bloque Contenido+Premium: crecer Mueve** con el
+runner actual (`MoveSession`, data-driven -- rutinas nuevas = solo datos).
+Inspiracion: **Strengthside** (progresiones de empuje, unilateral, colgarse)
++ **Jess Martin** (fuerza discreta de oficina); estructura y tecnica, nunca
+copy literal. Diario:
+[session-92](./docs/sessions/session-92-f6-contenido-mueve.md).
+
+**Nota Tarea 0:** el commit de s91 no estaba en git (todo F5 en working
+tree); el usuario commiteo a mano (`10ab883`) antes de arrancar F6.
+
+### Set nuevo (7 rutinas, 3 free + 4 premium -- criterio s88)
+
+- **Free:** `extra.chair.squats` (Sentadillas de silla, piernas),
+  `extra.glutes.stealth` (Gluteos invisibles, sigilo), `extra.back.desk`
+  (Espalda de oficina, espalda).
+- **Premium:** `extra.push.ladder` (Empuje · progresion, empuje),
+  `extra.hang.bar` (Colgarse, empuje -- requiere barra), `extra.legs.single`
+  (Piernas · a una, piernas), `extra.core.plank` (Core · plancha, espalda).
+
+Total: **14 rutinas, 6 premium (43%)** -- misma foto que Estira (14/6) y
+Respira (20/8). Ids `extra.*` intocables (swap s14). Sin logros nuevos
+(decision F4). Sin modal de seguridad (no hay apnea).
+
+### Added / Changed
+
+- **`app/move/MoveModule.jsx`** (323 -> 397 ln) -- `MOVE_ROUTINES` pasa de
+  array plano a **objeto agrupado** (mismo shape que `EXTRA_ROUTINES`):
+  empuje y traccion 4 · sigilo 4 · piernas 3 · espalda y core 3, free-first
+  por grupo. `MoveLibrary` renderiza grupos con `tR('mueve.cat.*')` (prefijo
+  nuevo: `move.cat.*` colisionaria con los ids `move.*` de Estira);
+  `getMoveRoutine` adaptado (misma firma, consumidor unico
+  `paths/registry.js` verificado).
+- **`app/i18n/content/`** (nuevo) -- `strings-content.js` (389 ln)
+  **eliminado y troceado por modulo visual** al superar ~470 ln con F6:
+  `breathe.js` (94 ln, con el override D-1 `breathe.phase.*` intacto) +
+  `move.js` (186 ln, grupos `mueve.cat.*` + ~100 keys F6) + `extra.js`
+  (202 ln). Cargan tras `strings/*` en el mismo slot del orden de carga.
+- **9 pasos nuevos sin glifo** renderizan `DefaultGlyph` y se suman a la
+  **cola D-4** (ahora 35): Sentadilla a silla, Apretar gluteos, Superman,
+  Pica en escritorio, Sentadilla bulgara, Plancha, Plancha lateral, Hollow
+  hold, Hang activo.
+- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.37.0
+  (`CACHE_NAME pace-v0.37.0`).
+- **`CHANGELOG.md`** -- v0.35.0 degradado a fila-de-enlace.
+
+### Verificacion runtime
+
+Preview :8765 (SW desregistrado + caches borrados antes de verificar --
+leccion s91). Biblioteca: 14 tarjetas / 4 grupos con asides, 6 sellos
+PREMIUM + "Pronto", minutos en las 8 free, free-first (screenshot). Lookup
+`getMoveRoutine` con id viejo/nuevo/inexistente OK. Sesion "Sentadillas de
+silla": paso 1 Sentadilla a silla con **DefaultGlyph**, countdown y
+"Siguiente" correctos. EN: grupos + 14 tarjetas + checks de los 3 archivos
+del split + override D-1; ES restaurado. **Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **665 KB**, 64 archivos validados (62 + 3
+  `content/*` − `strings-content.js`). `index.html` copia exacta (SHA256
+  identico). Standalone verificado en preview (v0.37.0, monta limpio).
+- Backup `PACE_standalone_v0.36.0_20260707.html`; cap 20 (rotado
+  `v0.28.9_20260512.html`).
+
+---
+
 ## [v0.36.0] -- 2026-07-07 -- feat(extra): F5 catalogo Estira 7 -> 14
 
 Sesion 91. **Fase 5 del bloque Contenido+Premium: crecer Estira** con el
@@ -170,75 +238,12 @@ grupos y 14 tarjetas traducidas; ES restaurado. **Consola sin errores.**
 
 ---
 
-## [v0.35.0] -- 2026-07-07 -- feat(breathe): F4 catalogo Respira 12 -> 20
-
-Sesion 90. **Fase 4 del bloque Contenido+Premium: crecer Respira** con el
-modelo actual (1 tecnica = 1 patron animado + BreatheSession). Las CTB
-completas con audio guiado quedan como entregable aparte post-bloque (ROADMAP);
-aqui solo entra `rounds.long` como precursora. Diario:
-[session-90](./docs/sessions/session-90-f4-contenido-respira.md).
-
-### Set nuevo (8 tecnicas, 4 free + 4 premium -- criterio s88)
-
-- **Free:** `breathe.diaphragm` (Diafragmatica, equilibrio),
-  `breathe.exhale.46` (Exhalacion 4·6, relajacion), `breathe.yin`
-  (Ritmica yin, relajacion), `breathe.bhramari` (Bhramari · Abeja, pranayama).
-- **Premium:** `breathe.coherent.432` (Coherente 432 con drone forzado,
-  balance), `breathe.kumbhaka` (Kumbhaka 1:4:2, pranayama, ⚠),
-  `breathe.co2` (Tolerancia CO2, equilibrio, ⚠), `breathe.rounds.long`
-  (Rondas profundas 5×35 precursora CTB, energia, ⚠).
-
-Total: **20 tecnicas, 8 premium (40%)**. Toda retencion/apnea con modal
-`BreatheSafety` obligatorio. Sin logros `explore.*` nuevos (mapas cerrados con
-guard; cola D-8b cerrada: `master.collector.*` usa umbrales fijos 50/100, el
-catalogo no lo distorsiona).
-
-### Added
-
-- **`app/breathe/BreatheLibrary.jsx`** (202 ln) -- 8 items + aside de Energia
-  ("Despierta el sistema") + reorden **free-first dentro de cada grupo**.
-- **`app/breathe/BreatheVisual.jsx`** -- 4 patrones nuevos en `getSequence`:
-  `diaphragm`, `yin`, `bhramari`, `co2`. Sin animacion nueva; wrapper
-  `data-pace-essential` heredado.
-- **`app/breathe/BreatheSession.jsx`** -- 3 labels nuevos en `PHASE_KEYS` +
-  mapeo de sonido (vientre→inhale, zumbando→exhale, vacio→silencio) +
-  `drone.start(routine.drone === true)`.
-- **`app/ui/Sound.jsx`** -- `ambientDrone.start(force)`: flag interno `forced`
-  bypasa `ambientOn` (soundOn manda siempre); `resume()` lo respeta y `stop()`
-  lo resetea. Primera modificacion desde v0.21.0, ~10 ln.
-- **i18n** -- 3 fases nuevas ES+EN (`sessions.js`) + 24 keys EN de contenido +
-  `breathe.cat.energia.aside` (`strings-content.js`).
-
-### Changed
-
-- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.35.0
-  (`CACHE_NAME pace-v0.35.0`).
-- **`CHANGELOG.md`** -- v0.34.4 degradado a fila-de-enlace (convencion: solo 2
-  ultimas detalladas).
-
-### Verificacion runtime
-
-Preview :8765. Biblioteca: 20 tarjetas / 5 grupos, 8 sellos PREMIUM exactos,
-6 marcas ⚠, minutos en las free + "Pronto" en las premium (screenshot). Una
-sesion por patron nuevo con fases muestreadas en vivo (diaphragm, yin,
-bhramari, co2, kumbhaka, rounds.long) + modal de seguridad en las 3 con
-retencion. Drone forzado: arranca con `ambientOn=false`, sobrevive a
-pausar+reanudar, muere al salir. Estado de prueba restaurado. **Consola sin
-errores.**
-
-### Build
-
-- `PACE_standalone.html`: **638 KB**, 62 archivos validados. `index.html`
-  copia exacta (SHA256 identico, `82bfe7a9…58a2a41`). Standalone verificado en
-  preview (v0.35.0, 8/8 tecnicas, monta limpio).
-- Backup `PACE_standalone_v0.34.5_20260707.html`; cap 20 (rotado
-  `v0.28.7_20260512.html`).
-
----
-
-> **v0.34.5** (s89) detallada en
-> [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md) —
+> **v0.35.0** (s90) detallada en
+> [session-90](./docs/sessions/session-90-f4-contenido-respira.md) —
 > convencion: solo las 2 ultimas versiones se detallan aqui.
+>
+> **v0.34.5** (s89) detallada en
+> [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md).
 >
 > **v0.34.4** (s88) detallada en
 > [session-88](./docs/sessions/session-88-f3b-activacion-gating.md).

@@ -6,9 +6,9 @@
 >
 > **Recreado en sesión 85 (2026-06-05, v0.34.1)** tras llevar ~60 sesiones
 > borrado (se eliminó en el commit `be81606`, era v0.12.9). Refleja el
-> catálogo **real** del código a fecha de **v0.36.0** (s91: Estira crecida a
-> 14 rutinas por F5; s90: Respira a 20 por F4; s88: columnas `access`
-> fijadas por F3b), no el aspiracional.
+> catálogo **real** del código a fecha de **v0.37.0** (s92: Mueve crecida a
+> 14 rutinas por F6; s91: Estira a 14 por F5; s90: Respira a 20 por F4; s88:
+> columnas `access` fijadas por F3b), no el aspiracional.
 
 ---
 
@@ -117,20 +117,38 @@ pranayama 5.
 
 ## 🦴 Mueve · Fuerza / calistenia
 
-Botón "Mueve". Inspirado en Strengthside + Jess Martin. Ejercicios
-cortos, discretos, sin equipo, aptos para la oficina.
-Datos en `app/move/MoveModule.jsx` (`MOVE_ROUTINES`, ids `extra.*`).
-Estado actual: **7 rutinas**.
+Botón "Mueve". Inspirado en Strengthside (progresiones de empuje,
+unilateral, colgarse) + Jess Martin (fuerza discreta de oficina). Ejercicios
+cortos, discretos, sin equipo (salvo "Colgarse": barra o marco), aptos para
+la oficina. Datos en `app/move/MoveModule.jsx` (`MOVE_ROUTINES`, ids
+`extra.*`). Estado actual: **14 rutinas** (F6, s92, v0.37.0), biblioteca
+**agrupada en 4 grupos** como Respira/Estira (free primero dentro de cada
+grupo): empuje y tracción 4 · sigilo 4 · piernas 3 · espalda y core 3.
+Grupos i18n con prefijo `mueve.cat.*` (no `move.cat.*`, que colisionaría
+con los ids `move.*` de Estira).
 
-| ID | Nombre | min | `access` (real, F3b) |
-|---|---|---|---|
-| `extra.desk.pushups` | Flexiones de escritorio | 2 | **free** (inicial) |
-| `extra.posture.set` | Postura reset | 2 | **free** (inicial) |
-| `extra.calves` | Gemelos subrepticios | 1 | free (micro de entrada) |
-| `extra.grip.squeeze` | Grip + antebrazos | 1 | free (micro de entrada) |
-| `extra.chair.dips` | Fondos en silla | 3 | free |
-| `extra.core.stealth` | Core silencioso | 2 | **premium** (hollow al límite) |
-| `extra.wall.sit` | Sentadilla en pared | 3 | **premium** (isométrico exigente) |
+| ID | Nombre | Grupo | min | `access` (real, F6) |
+|---|---|---|---|---|
+| `extra.desk.pushups` | Flexiones de escritorio | empuje | 2 | **free** (inicial) |
+| `extra.chair.dips` | Fondos en silla | empuje | 3 | free |
+| `extra.push.ladder` | Empuje · progresión | empuje | 4 | **premium** (F6 — pica + negativas) |
+| `extra.hang.bar` | Colgarse | empuje | 4 | **premium** (F6 — requiere barra) |
+| `extra.calves` | Gemelos subrepticios | sigilo | 1 | free (micro de entrada) |
+| `extra.grip.squeeze` | Grip + antebrazos | sigilo | 1 | free (micro de entrada) |
+| `extra.glutes.stealth` | Glúteos invisibles | sigilo | 2 | free (F6 — micro discreto) |
+| `extra.core.stealth` | Core silencioso | sigilo | 2 | **premium** (hollow al límite) |
+| `extra.chair.squats` | Sentadillas de silla | piernas | 3 | free (F6 — el patrón más útil) |
+| `extra.wall.sit` | Sentadilla en pared | piernas | 3 | **premium** (isométrico exigente) |
+| `extra.legs.single` | Piernas · a una | piernas | 5 | **premium** (F6 — unilateral avanzado) |
+| `extra.posture.set` | Postura reset | espalda | 2 | **free** (inicial) |
+| `extra.back.desk` | Espalda de oficina | espalda | 3 | free (F6 — tracción accesible) |
+| `extra.core.plank` | Core · plancha | espalda | 4 | **premium** (F6 — isométricos de suelo) |
+
+> **Glifos (F6):** 9 pasos nuevos renderizan `DefaultGlyph` (tres arcos)
+> hasta que el usuario apruebe sus glifos — se suman a la cola D-4 de
+> `STATE.md` (ahora 35 pendientes): Sentadilla a silla, Apretar glúteos,
+> Superman, Pica en escritorio, Sentadilla búlgara, Plancha, Plancha
+> lateral, Hollow hold, Hang activo.
 
 ---
 
@@ -207,9 +225,12 @@ Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):
   net-new de este plan (couch stretch, círculos de hombro, gato-camello) +
   despertar matinal, muñecas, caderas·suelo y cadena posterior
   (Strengthside-inspired).
-- **Mueve → ~12-15 rutinas, ~mitad premium (F6, pendiente).** Rutinas
-  curadas nuevas que reagrupan pasos existentes + net-new. Categorizar
-  como Respira/Estira (grupos + free-first).
+- **Mueve → ~12-15 rutinas, ~mitad premium.** ✅ **Hecho en F6 (s92,
+  v0.37.0):** 14 rutinas, 6 premium, agrupadas en 4 grupos free-first
+  (prefijo i18n `mueve.cat.*`). Entraron sentadillas de silla, glúteos
+  invisibles y espalda de oficina (free) + empuje·progresión, colgarse,
+  piernas·a una y core·plancha (premium). De regalo: `strings-content.js`
+  troceado en `app/i18n/content/` (breathe/move/extra).
 - **Constructor de rutinas premium** (`custom.sequence`): el usuario
   arma su rutina eligiendo ejercicios + duración. Requiere un registro
   interno de ejercicios (no una biblioteca navegable de ejercicios
