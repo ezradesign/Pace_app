@@ -31,7 +31,13 @@ http.createServer(function (req, res) {
       return res.end('Not found: ' + url);
     }
     var ext = path.extname(file).toLowerCase();
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
+    res.writeHead(200, {
+      'Content-Type': MIME[ext] || 'application/octet-stream',
+      // Sin validadores el navegador cachea heuristicamente los .jsx y la
+      // verificacion ve codigo viejo (s93; segunda capa ademas del SW de
+      // s91/s92). Preview siempre fresco: nada de cache.
+      'Cache-Control': 'no-store',
+    });
     fs.createReadStream(file).pipe(res);
   });
 }).listen(PORT, function () {

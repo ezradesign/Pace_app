@@ -35,6 +35,18 @@ function PaceApp() {
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
 
+  // Constructor de rutinas premium (F7 · s93). Overlay singleton abierto vía
+  // CustomEvent `pace:open-custom-builder` (detail.id: rutina a editar o
+  // null para crear). Mientras está abierto se oculta MoveLibrary para que
+  // solo un Modal escuche Escape; al cerrar, la biblioteca reaparece
+  // (openLibrary conserva 'move').
+  const [customBuilder, setCustomBuilder] = useStateMain(null); // null | { id }
+  useEffectMain(() => {
+    const h = (e) => setCustomBuilder({ id: (e.detail && e.detail.id) || null });
+    window.addEventListener('pace:open-custom-builder', h);
+    return () => window.removeEventListener('pace:open-custom-builder', h);
+  }, []);
+
   // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
   // Se escucha como evento global para que el Sidebar pueda disparar clicks
   // sobre el logo sin acoplarse a props del root.
@@ -212,10 +224,13 @@ function PaceApp() {
         onStart={handleStartBreathe}
       />
       <MoveLibrary
-        open={openLibrary === 'move'}
+        open={openLibrary === 'move' && !customBuilder}
         onClose={() => setOpenLibrary(null)}
         onStart={handleStartMove}
       />
+      {customBuilder && (
+        <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />
+      )}
       <ExtraLibrary
         open={openLibrary === 'extra'}
         onClose={() => setOpenLibrary(null)}

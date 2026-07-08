@@ -186,6 +186,35 @@ Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
 
 ---
 
+## 🛠️ Tus rutinas · Constructor premium (F7, s93, v0.38.0)
+
+**Superficie premium entera** (gateada por `premiumUnlocked`, sin muro a
+mitad de flujo): sección "Tus rutinas" como 5º grupo al **final de la
+biblioteca Mueve**. Bloqueada: sello + copy + "Pronto", nada clicable.
+Desbloqueada: crear/editar/borrar rutinas propias y lanzarlas con el
+runner de `MoveSession` (una rutina custom = solo datos).
+
+- **Registro interno de ejercicios** (`app/custom/exercise-registry.js`):
+  **65 ejercicios en 8 grupos** (empuje 5 · piernas 9 · core 8 · cuello 11
+  · columna 8 · caderas 7 · suelo 7 · muñecas/tobillos/pausas 10), unión
+  deduplicada **curada a mano** de los steps de `MOVE_ROUTINES` +
+  `EXTRA_ROUTINES`, con cue neutro y dur por defecto. `name` = ES canónico
+  = key de glifo. **NO es una biblioteca navegable** (decisión s85: la
+  unidad gateable sigue siendo la sesión). Al crecer los catálogos,
+  añadir a mano los pasos nuevos que merezcan entrar.
+- **Rutina custom:** `{ id: 'custom.<timestamp>', name, steps
+  [{name,dur,cue}], min }` en `state.customRoutines` (localStorage).
+  Límites: **10 rutinas · 1-12 pasos · 10-120 s por paso (saltos de 5) ·
+  nombre ≤ 40**. `min` = ceil(Σ dur / 60). Cues no editables en F7.
+- **Crédito:** `completeMoveSession(id, min)` — cuenta como sesión Mueve
+  (plan.muevete, moveMinutes, moveSessionsTotal, first.stretch). Los ids
+  `custom.*` no matchean ningún mapa de logros: **cero logros de
+  exploración accidentales y sin logros nuevos** (decisión F4).
+- **EN:** por nombre canónico en `app/i18n/content/custom.js`
+  (`custom.ex.<name ES>.{name,cue}` + `custom.cat.*.label`).
+
+---
+
 ## 💧 Hidrátate
 
 Por defecto: 8 vasos × 250 ml/día. Tap en el icono = +1 vaso.
@@ -231,10 +260,10 @@ Crecer el catálogo y activar el gating, en fases (ver `ROADMAP.md`):
   invisibles y espalda de oficina (free) + empuje·progresión, colgarse,
   piernas·a una y core·plancha (premium). De regalo: `strings-content.js`
   troceado en `app/i18n/content/` (breathe/move/extra).
-- **Constructor de rutinas premium** (`custom.sequence`): el usuario
-  arma su rutina eligiendo ejercicios + duración. Requiere un registro
-  interno de ejercicios (no una biblioteca navegable de ejercicios
-  sueltos). Reutiliza el runner data-driven de `MoveSession`.
+- **Constructor de rutinas premium.** ✅ **Hecho en F7 (s93, v0.38.0):**
+  registro interno curado (65 ejercicios / 8 grupos) + constructor
+  completo en la biblioteca Mueve (sección "Tus rutinas", superficie
+  premium entera). Ver sección propia más arriba.
 
 **Glifos nuevos (los aprueba el usuario):** Couch stretch, círculos de
 hombro, gato-camello. Más activar los **15 glifos pendientes** (D-4 de

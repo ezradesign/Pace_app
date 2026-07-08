@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.37.0</title>
+  <title>PACE · Foco · Cuerpo — v0.38.0</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -128,6 +128,7 @@
   <script type="text/babel" src="app/i18n/content/breathe.js"></script>
   <script type="text/babel" src="app/i18n/content/move.js"></script>
   <script type="text/babel" src="app/i18n/content/extra.js"></script>
+  <script type="text/babel" src="app/i18n/content/custom.js"></script>
   <script type="text/babel" src="app/i18n/useT.jsx"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <script type="text/babel" src="app/state-timer.jsx"></script>
@@ -135,6 +136,7 @@
   <script type="text/babel" src="app/state-achievements.jsx"></script>
   <script type="text/babel" src="app/state-paths.jsx"></script>
   <script type="text/babel" src="app/state-settings.jsx"></script>
+  <script type="text/babel" src="app/state-custom.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>
@@ -165,6 +167,12 @@
   <script type="text/babel" src="app/breathe/BreatheSession.jsx"></script>
   <script type="text/babel" src="app/move/MoveModule.jsx"></script>
   <script type="text/babel" src="app/extra/ExtraModule.jsx"></script>
+  <!-- Constructor de rutinas premium (F7 · s93): registro de ejercicios +
+       sección "Tus rutinas" (consumida por MoveLibrary en render) +
+       builder overlay (montado por main.jsx). -->
+  <script type="text/babel" data-presets="env,react" src="app/custom/exercise-registry.js"></script>
+  <script type="text/babel" src="app/custom/CustomRoutines.jsx"></script>
+  <script type="text/babel" src="app/custom/CustomBuilder.jsx"></script>
   <!-- Caminos - catalogo y resolvers (sesion 49) -->
   <script type="text/babel" data-presets="env,react" src="app/paths/registry.js"></script>
   <script type="text/babel" src="app/hydrate/HydrateModule.jsx"></script>

@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [abajo](#v0380----2026-07-08----featcustom-f7-registro--constructor-de-rutinas) |
 | **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [abajo](#v0370----2026-07-07----featmove-f6-catalogo-mueve-7--14) |
-| **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [abajo](#v0360----2026-07-07----featextra-f5-catalogo-estira-7--14) |
+| **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [session-91](./docs/sessions/session-91-f5-contenido-estira.md) |
 | **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [session-90](./docs/sessions/session-90-f4-contenido-respira.md) |
 | **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md) |
 | **v0.34.4** | 2026-07-07 | feat(premium): F3b -- activacion del gating sobre las rutinas existentes (8 premium / 26, binario free/premium) + `premiumUnlocked` en defaultState (cableado, sin compra real) + superficie premium display-only en Tweaks | #88 | [session-88](./docs/sessions/session-88-f3b-activacion-gating.md) |
@@ -113,6 +114,98 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.38.0] -- 2026-07-08 -- feat(custom): F7 registro + constructor de rutinas
+
+Sesion 93. **Fase 7 del bloque Contenido+Premium: registro interno de
+ejercicios + constructor de rutinas premium.** El usuario arma su rutina
+eligiendo ejercicios + duracion; reutiliza el runner data-driven de
+`MoveSession` (rutina custom = solo datos). Superficie premium ENTERA
+(gateada por `premiumUnlocked`, sin muro a mitad de flujo). Diario:
+[session-93](./docs/sessions/session-93-f7-constructor-rutinas.md).
+
+### Added
+
+- **`app/custom/exercise-registry.js`** (nuevo, 136 ln) -- registro
+  interno CURADO (no derivado en runtime): union deduplicada a mano de
+  los steps de `MOVE_ROUTINES` + `EXTRA_ROUTINES`, **65 ejercicios en 8
+  grupos**, cada uno `{ name, dur, cue }` con cue neutro. `name` = ES
+  canonico identico a la key de glifo (sin glifos nuevos, cola D-4
+  intacta en 35). NO es biblioteca navegable (decision s85). Curacion:
+  `Dead hang (si puedes)` fuera (duplica Hang pasivo).
+- **`app/custom/CustomRoutines.jsx`** (nuevo, 164 ln) -- seccion **"Tus
+  rutinas"** como 5º grupo al FINAL de la biblioteca Mueve (decision del
+  usuario): header con `PremiumSeal`, estado bloqueado (copy + "Pronto",
+  nada clicable), estado vacio, card "+ Crear rutina" (borde
+  discontinuo), `CustomRoutineCard` gemela visual de RoutineCard con
+  lapiz de edicion (RoutineCard/gating intocados).
+- **`app/custom/CustomBuilder.jsx`** (nuevo, 259 ln) -- modal
+  constructor con 2 vistas: **editor** (nombre, filas con glifo +
+  stepper de duracion ±5 s + reordenar + quitar, total en vivo,
+  "Eliminar rutina" con confirmacion en dos toques) y **picker**
+  (registro agrupado, un toque añade con dur por defecto). Overlay
+  singleton en main.jsx via CustomEvent `pace:open-custom-builder`
+  (patron s50+); MoveLibrary se oculta mientras esta abierto (un solo
+  Modal escucha Escape).
+- **`app/state-custom.jsx`** (nuevo, 100 ln, split estilo s57) --
+  `CUSTOM_LIMITS` (10 rutinas · 1-12 pasos · 10-120 s · nombre ≤ 40) +
+  CRUD con sanitize y lectura defensiva. Shape:
+  `{ id: 'custom.<Date.now()>', name, steps, min (ceil Σdur/60),
+  createdAt, updatedAt }` -- mismo shape de steps que el catalogo, el
+  runner no distingue. El prefijo `custom.` nunca colisiona con
+  `extra.*`/`move.*` ni con los mapas de logros.
+- **`app/i18n/content/custom.js`** (nuevo, 168 ln) -- EN por **nombre
+  canonico ES como key** (`custom.ex.<name>.{name,cue}`), reutilizando
+  los EN ya establecidos en content/move+extra, + `custom.cat.*.label`.
+
+### Changed
+
+- **`app/move/MoveModule.jsx`** (397 -> 436 ln) -- `MoveLibrary` monta
+  `<CustomRoutinesSection/>` tras los 4 grupos (guard `typeof`, patron
+  s83). `MoveSession`: helper `tStep` -- rutinas custom resuelven el EN
+  de pasos por nombre (`custom.ex.*`), catalogo sigue por key posicional;
+  `displayRoutine` salta el lookup por id en custom (evita warns i18n).
+- **`app/main.jsx`** (280 -> 294 ln) -- estado `customBuilder` +
+  listener del CustomEvent + monta `<CustomBuilder/>`.
+- **`app/i18n/strings/sessions.js`** (265 -> 329 ln) -- ~33 keys
+  `custom.*` ES+EN (chrome del constructor).
+- **`app/state-core.jsx`** (511 ln) -- + `customRoutines: []` en
+  defaultState (CRUD fuera; deuda de tamaño sin agravar).
+- **`.claude/static-server.js`** -- + `Cache-Control: no-store` (el
+  preview servia .jsx viejos por cache heuristica sin validadores).
+- **Crédito:** la sesion custom acredita via `completeMoveSession`
+  (`kind='move'`, ruta existente) -- cero cambios en state-achievements,
+  **sin logros nuevos** y sin `explore.*` accidentales (mapas cerrados
+  por id, verificado). Sin modal de seguridad (no hay apnea).
+- **`PACE.html`** / **`sw.js`** -- 5 script tags nuevos + bump v0.38.0
+  (`CACHE_NAME pace-v0.38.0`).
+- **`CHANGELOG.md`** -- v0.36.0 degradado a fila-de-enlace.
+
+### Verificacion runtime
+
+Preview :8765. **Leccion s91/s92 ampliada:** el SW se re-registra en cada
+carga -- purgarlo solo al arrancar no basta; un fix de mitad de sesion
+quedo congelado por el cache pace-v0.37.0 revivido (diagnostico via
+`MoveSession.toString()` + stack del warn). Protocolo nuevo: purgar
+SW+caches tras CADA tanda de edits + `no-store` en el static-server.
+Con gating off: seccion sellada, nada clicable (screenshot). Con gating
+on (snapshot de estado, restaurado al final): crear/editar/reordenar/
+stepper OK, lanzar desde la card real -> runner completo -> **credito
+exacto** (moveMinutes 0->2, moveSessionsTotal 0->1, plan.muevete,
+first.stretch; cero explore.*), borrado en 2 toques, persistencia tras
+recarga, EN completo (seccion + builder + picker + pasos del runner) con
+**cero warns [i18n]**. Estado restaurado (premiumUnlocked=false, lang=es,
+0 rutinas). **Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **713 KB**, 69 archivos validados (64 + 5
+  nuevos). `index.html` copia exacta (SHA256 identico). Standalone
+  verificado en preview (v0.38.0, registro 65, seccion bloqueada OK).
+- Backup `PACE_standalone_v0.37.0_20260708.html`; cap 20 (rotado
+  `v0.28.10_20260512.html`).
+
+---
+
 ## [v0.37.0] -- 2026-07-07 -- feat(move): F6 catalogo Mueve 7 -> 14
 
 Sesion 92. **Fase 6 del bloque Contenido+Premium: crecer Mueve** con el
@@ -180,66 +273,8 @@ del split + override D-1; ES restaurado. **Consola sin errores.**
 
 ---
 
-## [v0.36.0] -- 2026-07-07 -- feat(extra): F5 catalogo Estira 7 -> 14
-
-Sesion 91. **Fase 5 del bloque Contenido+Premium: crecer Estira** con el
-runner actual (`MoveSession`, data-driven -- rutinas nuevas = solo datos).
-Inspiracion pedida por el usuario: **Strengthside** (caderas/hombros/columna,
-movilidad de suelo, flujos diarios, couch stretch); estructura y tecnica,
-nunca copy literal. Diario:
-[session-91](./docs/sessions/session-91-f5-contenido-estira.md).
-
-### Set nuevo (7 rutinas, 3 free + 4 premium -- criterio s88)
-
-- **Free:** `move.morning.flow` (Despertar matinal, flujos), `move.wrists`
-  (Muñecas y manos, oficina), `move.shoulder.circles` (Hombros · circulos,
-  hombros).
-- **Premium:** `move.couch.stretch` (Couch stretch, caderas),
-  `move.spine.waves` (Columna · ondas, hombros), `move.hips.ground`
-  (Caderas · suelo, caderas), `move.hamstrings` (Cadena posterior, caderas).
-
-Total: **14 rutinas, 6 premium (43%)**. Incluye las 3 candidatas net-new de
-CONTENT (couch stretch, circulos de hombro, gato-camello). Sin logros nuevos
-(decision F4). Sin modal de seguridad (no hay apnea en estiramientos).
-
-### Added / Changed
-
-- **`app/extra/ExtraModule.jsx`** (103 -> 204 ln) -- `EXTRA_ROUTINES` pasa de
-  array plano a **objeto agrupado** (mismo shape que `BREATHE_ROUTINES`):
-  oficina 4 · hombros y columna 3 · caderas y piernas 5 · flujos 2,
-  free-first por grupo (decision s90). `ExtraLibrary` renderiza grupos con
-  `tR('extra.cat.*')`; `getExtraRoutine` adaptado (misma firma, consumidor
-  unico `paths/registry.js` verificado).
-- **`app/i18n/strings-content.js`** (280 -> 389 ln) -- 8 keys de grupos +
-  ~101 keys EN de las 7 rutinas (name/desc/code + pasos).
-- **11 pasos nuevos sin glifo** renderizan `DefaultGlyph` (fallback digno) y
-  se suman a la **cola D-4** (ahora 26): Gato-camello, Palmas al suelo, Rezo
-  invertido, Circulos de hombro, Couch stretch, Onda espinal, Puente
-  toracico, Rodar hacia abajo, Rana, Pliegue adelante, Isquio a una pierna.
-- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.36.0
-  (`CACHE_NAME pace-v0.36.0`).
-- **`CHANGELOG.md`** -- v0.34.5 degradado a fila-de-enlace.
-
-### Verificacion runtime
-
-Preview :8765 (limpiado el SW cache viejo que servia assets cache-first).
-Biblioteca: 14 tarjetas / 4 grupos con asides, 6 sellos PREMIUM + "Pronto",
-minutos en las 8 free (screenshot). Sesion "Despertar matinal": paso 1
-Gato-camello con **DefaultGlyph**, countdown y "Siguiente" correctos. EN:
-grupos y 14 tarjetas traducidas; ES restaurado. **Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **652 KB**, 62 archivos validados. `index.html`
-  copia exacta (SHA256 identico, `5edfb95e…463ecb`). Standalone verificado
-  en preview (v0.36.0, 7/7 rutinas, monta limpio).
-- Backup `PACE_standalone_v0.35.0_20260707.html`; cap 20 (rotado
-  `v0.28.8_20260512.html`).
-
----
-
-> **v0.35.0** (s90) detallada en
-> [session-90](./docs/sessions/session-90-f4-contenido-respira.md) —
+> **v0.36.0** (s91) detallada en
+> [session-91](./docs/sessions/session-91-f5-contenido-estira.md) —
 > convencion: solo las 2 ultimas versiones se detallan aqui.
 >
 > **v0.34.5** (s89) detallada en
