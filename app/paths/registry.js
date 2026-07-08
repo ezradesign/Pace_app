@@ -70,8 +70,13 @@ const PATH_CATALOG = [
     taglineKey: 'paths.path.weekend.tagline',
     timeOfDay: 'weekend',
     steps: [
-      { kind: 'breathe', routineId: 'breathe.nadi.shodhana' },
-      { kind: 'body',   routineId: 'move.atg.knees' },
+      // Degustacion curada (s89 D-8a, explicita s95): estos 2 steps sirven
+      // contenido premium GRATIS por diseno. `tasting: true` lo declara al
+      // guard central (canAccessRoutine) — deja de ser excepcion tacita. La
+      // decision final (mantener degustacion vs version free) se toma en la
+      // sesion de licencia, no aqui.
+      { kind: 'breathe', routineId: 'breathe.nadi.shodhana', tasting: true },
+      { kind: 'body',   routineId: 'move.atg.knees',         tasting: true },
       { kind: 'hydrate',                                    optional: true },
     ],
     access: 'free',

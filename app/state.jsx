@@ -59,4 +59,7 @@ Object.assign(window, {
   toggleFavoritePath,
   setLastViewedPath, // s75
   getPathStats,
+  // sesion 95 -- guard central de entitlement
+  canAccessRoutine,
+  canAccessPath,
 });

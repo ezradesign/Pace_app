@@ -116,8 +116,14 @@ function getSuggestedPath() {
   const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
   if (!catalog.length) return null;
 
+  // s95: no sugerir un Camino inaccesible. Via guard central canAccessPath.
+  // Hoy los 7 son free -> siempre true -> jerarquia identica. (s103 lo
+  // reescribira con scoring, donde premium-bloqueado sera penalizacion, no
+  // exclusion dura.)
+  const ok = (id) => !window.canAccessPath || window.canAccessPath(id);
+
   // 1. lastViewed
-  if (lv) {
+  if (lv && ok(lv)) {
     for (let i = 0; i < catalog.length; i++) {
       if (catalog[i].id === lv) return lv;
     }
@@ -129,7 +135,7 @@ function getSuggestedPath() {
   const isWeekend = dow === 0 || dow === 6;
   if (isWeekend) {
     for (let i = 0; i < catalog.length; i++) {
-      if (catalog[i].timeOfDay === 'weekend') return catalog[i].id;
+      if (catalog[i].timeOfDay === 'weekend' && ok(catalog[i].id)) return catalog[i].id;
     }
   }
   const h = now.getHours();
@@ -140,15 +146,19 @@ function getSuggestedPath() {
   else if (h < 21) slot = 'evening';
   else             slot = 'evening';
   for (let i = 0; i < catalog.length; i++) {
-    if (catalog[i].timeOfDay === slot) return catalog[i].id;
+    if (catalog[i].timeOfDay === slot && ok(catalog[i].id)) return catalog[i].id;
   }
 
   // 3. 'anytime'
   for (let i = 0; i < catalog.length; i++) {
-    if (catalog[i].timeOfDay === 'anytime') return catalog[i].id;
+    if (catalog[i].timeOfDay === 'anytime' && ok(catalog[i].id)) return catalog[i].id;
   }
 
-  // 4. catalog[0]
+  // 4. primer Camino accesible (fallback); si ninguno lo es, catalog[0] para
+  //    preservar la garantia de no devolver null con catalogo no vacio.
+  for (let i = 0; i < catalog.length; i++) {
+    if (ok(catalog[i].id)) return catalog[i].id;
+  }
   return catalog[0].id;
 }
 

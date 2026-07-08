@@ -128,4 +128,15 @@ function StepError({ routineId, onSkip }) {
   );
 }
 
-Object.assign(window, { PathTopBar, ExitConfirmModal, StepError });
+/* PathStepLocked - fallback defensivo (s95). Un step cuyo contenido premium
+   no es accesible se SALTA en silencio (auto-skip al montar): el candado vive
+   en la puerta del Camino, nunca a mitad de flujo (ver ROADMAP). Renderiza
+   null para no parpadear. Dead code en s95: los unicos steps premium
+   (path.weekend) llevan tasting:true y el guard central los concede; se
+   activaria si un Camino futuro referenciase premium sin degustacion. */
+function PathStepLocked({ onSkip }) {
+  useEffectPP(() => { if (onSkip) onSkip(); }, []);
+  return null;
+}
+
+Object.assign(window, { PathTopBar, ExitConfirmModal, StepError, PathStepLocked });

@@ -48,6 +48,13 @@ function WelcomeModal({ open, onClose }) {
   useEffectWEL(() => {
     if (!open) return;
     setDraft(state.intention || '');
+    // Autofocus SOLO con puntero fino (escritorio). En tactil, enfocar el input
+    // auto-abre el teclado sobre una bienvenida calmada de campo OPCIONAL
+    // (Android Chrome lo dispara; iOS lo ignora sin gesto — ni aporta): rompe el
+    // tono sin friccion. El usuario toca el campo cuando quiera escribir. (s95)
+    const coarse = typeof window.matchMedia === 'function'
+      && window.matchMedia('(pointer: coarse)').matches;
+    if (coarse) return;
     const timer = setTimeout(() => {
       if (inputRef.current) inputRef.current.focus();
     }, 320);

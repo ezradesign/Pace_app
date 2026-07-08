@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.39.0</title>
+  <title>PACE · Foco · Cuerpo — v0.40.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -2194,7 +2194,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.39.0';
+const PACE_VERSION = 'v0.40.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3076,6 +3076,74 @@ Object.assign(window, {
 });
 
 </script>
+  <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
+       Antes de state-paths (getSuggestedPath lo consume) y del resto de
+       consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
+  <script type="text/babel">
+/* PACE · state-entitlement.jsx
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   Guard central de acceso a contenido (sesion 95 / v0.40.0).
+
+   ÚNICO punto de verdad del entitlement: canAccessRoutine / canAccessPath.
+   Hoy derivan del booleano `premiumUnlocked` (state-core). Cuando llegue la
+   pre-venta (licencia‖trial — decision F3b, hoy diferida) SOLO cambia este
+   archivo: `premiumUnlocked` pasara a derivarse de una clave firmada o de un
+   trial, y los consumidores (RoutineCard, PathBreatheStep/PathBodyStep,
+   getSuggestedPath) no se tocan.
+
+   Degustacion EXPLICITA: un contexto de degustacion pasa { tasting: true } y
+   el guard concede acceso a una rutina premium aunque premiumUnlocked sea
+   false. Hoy: los 2 steps premium de path.weekend (nadi.shodhana + atg.knees,
+   decision s89 D-8a). Deja de ser una excepcion tacita del catalogo.
+
+   Depende (todo en window, resuelto en tiempo de LLAMADA, no de carga):
+     getState (state-core), getBreatheRoutine (BreatheLibrary),
+     resolveBodyRoutine + getPath (paths/registry).
+*/
+
+/* Resuelve un routineId en cualquiera de las 3 bibliotecas: primero Respira,
+   luego Cuerpo (Mueve/Estira via resolveBodyRoutine). Devuelve la rutina o
+   null si no existe en ninguna. */
+function resolveAnyRoutine(routineId) {
+  const b = (window.getBreatheRoutine && window.getBreatheRoutine(routineId)) || null;
+  if (b) return b;
+  const body = (window.resolveBodyRoutine && window.resolveBodyRoutine(routineId)) || null;
+  return body ? body.routine : null;
+}
+
+/* canAccessRoutine(routineId, { tasting }) -> boolean
+     rutina desconocida  -> true  (fail-open: no es trabajo del guard bloquear
+                                    ids que no existen; StepError/lookup ya lo
+                                    manejan, y ocultarlos escondería bugs)
+     access !== 'premium' -> true
+     premium              -> premiumUnlocked || tasting */
+function canAccessRoutine(routineId, opts) {
+  const tasting = !!(opts && opts.tasting);
+  const routine = resolveAnyRoutine(routineId);
+  if (!routine) return true;
+  if (routine.access !== 'premium') return true;
+  const s = getState && getState();
+  const unlocked = !!(s && s.premiumUnlocked);
+  return unlocked || tasting;
+}
+
+/* canAccessPath(pathId) -> boolean
+     path desconocido / access !== 'premium' -> true
+     premium -> premiumUnlocked
+   Hoy los 7 Caminos son access:'free' -> siempre true (sin cambio observable). */
+function canAccessPath(pathId) {
+  const path = (window.getPath && window.getPath(pathId)) || null;
+  if (!path) return true;
+  if (path.access !== 'premium') return true;
+  const s = getState && getState();
+  return !!(s && s.premiumUnlocked);
+}
+
+Object.assign(window, { canAccessRoutine, canAccessPath });
+
+</script>
   <script type="text/babel">
 /* PACE · state-paths.jsx
    Caminos: CRUD, stats, favoritos.
@@ -3195,8 +3263,14 @@ function getSuggestedPath() {
   const catalog = (typeof window !== 'undefined' && window.PATH_CATALOG) || [];
   if (!catalog.length) return null;
 
+  // s95: no sugerir un Camino inaccesible. Via guard central canAccessPath.
+  // Hoy los 7 son free -> siempre true -> jerarquia identica. (s103 lo
+  // reescribira con scoring, donde premium-bloqueado sera penalizacion, no
+  // exclusion dura.)
+  const ok = (id) => !window.canAccessPath || window.canAccessPath(id);
+
   // 1. lastViewed
-  if (lv) {
+  if (lv && ok(lv)) {
     for (let i = 0; i < catalog.length; i++) {
       if (catalog[i].id === lv) return lv;
     }
@@ -3208,7 +3282,7 @@ function getSuggestedPath() {
   const isWeekend = dow === 0 || dow === 6;
   if (isWeekend) {
     for (let i = 0; i < catalog.length; i++) {
-      if (catalog[i].timeOfDay === 'weekend') return catalog[i].id;
+      if (catalog[i].timeOfDay === 'weekend' && ok(catalog[i].id)) return catalog[i].id;
     }
   }
   const h = now.getHours();
@@ -3219,15 +3293,19 @@ function getSuggestedPath() {
   else if (h < 21) slot = 'evening';
   else             slot = 'evening';
   for (let i = 0; i < catalog.length; i++) {
-    if (catalog[i].timeOfDay === slot) return catalog[i].id;
+    if (catalog[i].timeOfDay === slot && ok(catalog[i].id)) return catalog[i].id;
   }
 
   // 3. 'anytime'
   for (let i = 0; i < catalog.length; i++) {
-    if (catalog[i].timeOfDay === 'anytime') return catalog[i].id;
+    if (catalog[i].timeOfDay === 'anytime' && ok(catalog[i].id)) return catalog[i].id;
   }
 
-  // 4. catalog[0]
+  // 4. primer Camino accesible (fallback); si ninguno lo es, catalog[0] para
+  //    preservar la garantia de no devolver null con catalogo no vacio.
+  for (let i = 0; i < catalog.length; i++) {
+    if (ok(catalog[i].id)) return catalog[i].id;
+  }
   return catalog[0].id;
 }
 
@@ -3480,6 +3558,9 @@ Object.assign(window, {
   toggleFavoritePath,
   setLastViewedPath, // s75
   getPathStats,
+  // sesion 95 -- guard central de entitlement
+  canAccessRoutine,
+  canAccessPath,
 });
 
 </script>
@@ -5530,6 +5611,13 @@ function WelcomeModal({ open, onClose }) {
   useEffectWEL(() => {
     if (!open) return;
     setDraft(state.intention || '');
+    // Autofocus SOLO con puntero fino (escritorio). En tactil, enfocar el input
+    // auto-abre el teclado sobre una bienvenida calmada de campo OPCIONAL
+    // (Android Chrome lo dispara; iOS lo ignora sin gesto — ni aporta): rompe el
+    // tono sin friccion. El usuario toca el campo cuando quiera escribir. (s95)
+    const coarse = typeof window.matchMedia === 'function'
+      && window.matchMedia('(pointer: coarse)').matches;
+    if (coarse) return;
     const timer = setTimeout(() => {
       if (inputRef.current) inputRef.current.focus();
     }, 320);
@@ -7746,10 +7834,17 @@ function BreatheLibrary({ open, onClose, onStart }) {
      Designación del set premium inicial: s88 (F3b). */
 function RoutineCard({ routine, color, onClick }) {
   const { t, lang } = useT();
-  const [pace] = usePace();
+  const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
+                            // premiumUnlocked el card re-renderiza y el guard relee el store.
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const isPremium = routine.access === 'premium';
-  const isLocked = isPremium && !pace.premiumUnlocked;
+  const isPremium = routine.access === 'premium'; // marca "es de pago" (sello siempre)
+  // s95: el bloqueo real pasa por el guard central de entitlement. Equivalente
+  // exacto al antiguo `isPremium && !premiumUnlocked` (free->accesible,
+  // premium+bloqueado->locked). Fallback defensivo al chequeo inline por si el
+  // guard no estuviera cargado.
+  const isLocked = window.canAccessRoutine
+    ? !window.canAccessRoutine(routine.id)
+    : (isPremium && !pace.premiumUnlocked);
   return (
     <Card accent={isLocked ? undefined : color} onClick={isLocked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
@@ -9503,8 +9598,13 @@ const PATH_CATALOG = [
     taglineKey: 'paths.path.weekend.tagline',
     timeOfDay: 'weekend',
     steps: [
-      { kind: 'breathe', routineId: 'breathe.nadi.shodhana' },
-      { kind: 'body',   routineId: 'move.atg.knees' },
+      // Degustacion curada (s89 D-8a, explicita s95): estos 2 steps sirven
+      // contenido premium GRATIS por diseno. `tasting: true` lo declara al
+      // guard central (canAccessRoutine) — deja de ser excepcion tacita. La
+      // decision final (mantener degustacion vs version free) se toma en la
+      // sesion de licencia, no aqui.
+      { kind: 'breathe', routineId: 'breathe.nadi.shodhana', tasting: true },
+      { kind: 'body',   routineId: 'move.atg.knees',         tasting: true },
       { kind: 'hydrate',                                    optional: true },
     ],
     access: 'free',
@@ -12889,6 +12989,13 @@ function PathBreatheStep({ step, onExit }) {
   const routine = getBreatheRoutine && getBreatheRoutine(step.routineId);
   if (!routine) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
 
+  // Guard central de acceso (s95). Con degustacion (step.tasting) una rutina
+  // premium se lanza aunque premiumUnlocked sea false; sin ella, PathStepLocked
+  // salta el step en silencio. En s95 nunca se alcanza (weekend es tasting).
+  if (window.canAccessRoutine && !window.canAccessRoutine(step.routineId, { tasting: step.tasting })) {
+    return <PathStepLocked onSkip={() => onExit('skip')} />;
+  }
+
   if (routine.safety) {
     return <PathBreatheSafetyGate routine={routine} onExit={onExit} />;
   }
@@ -13169,6 +13276,11 @@ Object.assign(window, { PathHydrateStep });
 function PathBodyStep({ step, onExit }) {
   const resolved = resolveBodyRoutine && resolveBodyRoutine(step.routineId);
   if (!resolved) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
+  // Guard central de acceso (s95). Ver nota en PathBreatheStep: degustacion via
+  // step.tasting; rama false = PathStepLocked (auto-skip, dead code en s95).
+  if (window.canAccessRoutine && !window.canAccessRoutine(step.routineId, { tasting: step.tasting })) {
+    return <PathStepLocked onSkip={() => onExit('skip')} />;
+  }
   const kind = resolved.source === 'extra' ? 'extra' : 'move';
   return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
 }
@@ -13308,7 +13420,18 @@ function StepError({ routineId, onSkip }) {
   );
 }
 
-Object.assign(window, { PathTopBar, ExitConfirmModal, StepError });
+/* PathStepLocked - fallback defensivo (s95). Un step cuyo contenido premium
+   no es accesible se SALTA en silencio (auto-skip al montar): el candado vive
+   en la puerta del Camino, nunca a mitad de flujo (ver ROADMAP). Renderiza
+   null para no parpadear. Dead code en s95: los unicos steps premium
+   (path.weekend) llevan tasting:true y el guard central los concede; se
+   activaria si un Camino futuro referenciase premium sin degustacion. */
+function PathStepLocked({ onSkip }) {
+  useEffectPP(() => { if (onSkip) onSkip(); }, []);
+  return null;
+}
+
+Object.assign(window, { PathTopBar, ExitConfirmModal, StepError, PathStepLocked });
 
 </script>
   <!-- Caminos - CompletionScreen (sesion 80) - pantalla de Camino completado -->

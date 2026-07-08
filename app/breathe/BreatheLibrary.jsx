@@ -102,10 +102,17 @@ function BreatheLibrary({ open, onClose, onStart }) {
      Designación del set premium inicial: s88 (F3b). */
 function RoutineCard({ routine, color, onClick }) {
   const { t, lang } = useT();
-  const [pace] = usePace();
+  const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
+                            // premiumUnlocked el card re-renderiza y el guard relee el store.
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const isPremium = routine.access === 'premium';
-  const isLocked = isPremium && !pace.premiumUnlocked;
+  const isPremium = routine.access === 'premium'; // marca "es de pago" (sello siempre)
+  // s95: el bloqueo real pasa por el guard central de entitlement. Equivalente
+  // exacto al antiguo `isPremium && !premiumUnlocked` (free->accesible,
+  // premium+bloqueado->locked). Fallback defensivo al chequeo inline por si el
+  // guard no estuviera cargado.
+  const isLocked = window.canAccessRoutine
+    ? !window.canAccessRoutine(routine.id)
+    : (isPremium && !pace.premiumUnlocked);
   return (
     <Card accent={isLocked ? undefined : color} onClick={isLocked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
