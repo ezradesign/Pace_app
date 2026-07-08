@@ -105,6 +105,48 @@ compra/licencias OK; backend de producto y tracking NO) · no abrir más
 de un frente por sesión · el standalone sigue vivo como artefacto de
 exportación en todas las etapas.
 
+### Backlog de pulido / UX (feedback usuario s96, 2026-07-08)
+
+Observaciones del usuario con capturas al cerrar s96. Aún **sin planificar
+en la secuencia**; la prioridad la decide él (los 2 bugs pueden saltar la
+cola). Persistido en memoria `ux-refinement-backlog`.
+
+- **[BUG · alta] Modo oscuro casi ilegible.** `data-palette="oscuro"` SÍ se
+  aplica (documentElement, state-core.jsx:453) pero el contraste es pésimo:
+  aro/anillo casi invisible (`--line #3d362b` para el track de TimerDial),
+  texto secundario/meta muy bajo contraste (`--ink-3 #756D5D` sobre
+  `--paper #1d1a14`), bordes de cards invisibles, y el **logo sale
+  descolorido (azulado/rosado)** — el blend `invert+screen` de CowLogo (s71)
+  se rompe en la paleta recalibrada. No es "no aplica"; son valores sin
+  contraste WCAG + logo que no adapta. Recalibrar `--ink-3`/`--line`/`--line-2`,
+  el stroke del aro y el tratamiento del logo en oscuro. (Cuidado: s79/s89
+  ya recalibraron oscuro — mover en bloque, ver decisión activa STATE.)
+- **[BUG] Precontador "3" solapa el caption.** En cuentas atrás formato
+  "PREPÁRATE / 3 / De pie. Sin prisa. 6 pasos." el numeral grande toca las
+  letras del caption. Pasa en casi todas las cuentas atrás de este formato.
+  Fix mínimo: subir el numeral ~10px o ajustar line-height/margin (revisar
+  PathTransitions StepIntro y el precount de las sesiones).
+- **[Layout web fijo] Pomodoro home: semicírculo integrado en las pills.**
+  El aro debe abrazar de forma FIJA la fila FOCO/PAUSA/LARGA (captura de
+  referencia), no depender del zoom/resolución. Hoy `TimerDial.frame` =
+  `min(56vh, 86vw, 520px)` → tamaño y "abrazo" varían con viewport.
+- **[Caminos] Runner poco atractivo/refinado.** Parte PRINCIPAL de la app
+  pero poco pulida; los pasos (ej. Lámpara de Mesa) no son visualmente
+  atractivos ni coloridos (manteniendo coherencia con el home). F8/s94 fue
+  tokenización, no rediseño → falta refinamiento visual real del runner +
+  TransitionCards + steps.
+- **[Sidebar]** (a) micro: subir el divisor logo↔Ritmo (menos aire bajo el
+  logo, mejor proporción, gana espacio). (b) mayor: más útil / info más
+  atractiva. Encaja con **s103** (home Caminos al centro) o aparte.
+- **[Premium/builder] Constructor más visible + Mueve Y Estira.** El builder
+  (F7, hoy solo al final de MoveLibrary) con más presencia y ejercicios de
+  ambos módulos (no solo Mueve). Sigue premium; `exercise-registry.js` ya
+  une MOVE+EXTRA, falta exponer Estira en el picker.
+- **[UX móvil] Filtros en bibliotecas.** Scroll por catálogos crecidos
+  (Estira 14 / Mueve 14 / Respira 20) poco práctico en móvil. Mapea a
+  **s104-105 (taxonomía + filtros)**; el usuario prioriza la experiencia
+  móvil aquí.
+
 ---
 
 ## 🌱 Medio plazo — tras el bloque
