@@ -302,3 +302,21 @@ pendientes de calendario.
 | D-6 strokeWidth wrapper G | s84 | Versiones aprobadas del HTML usan 1.5 (v3-v8, v12) o 2.0 (v9), pero wrapper G del repo unifica a 1.8. Si el usuario quiere unificar a 2.0 (estilo V9), cambio aislado del wrapper afecta los 46 glifos por igual |
 | D-7 racha foco-en-Camino (F-1) -- RESUELTO s86 | s86 audit | `PathFocusStep` no llamaba `updateStreak` -> un dia de solo-foco-en-Camino salia activo en heatmap/YearView pero no sumaba a `streak.current`. **Corregido en v0.34.2** (anadido `updateStreak()` tras el credito, idempotente por dia). Ver `docs/audits/audit-tracking-v0.34.1.md` |
 | D-8 fuga premium via `path.weekend` + logros ligados a premium -- RESUELTO s89 (decision) + cola cerrada s90 | s88 audit | (a) `path.weekend` declarado **degustacion curada** (decision activa s89, cero codigo). (b) Logros premium-tied aceptados. (c) Cola cerrada en s90: `master.collector.half/full` usa umbrales fijos 50/100 logros desbloqueados, NO un denominador por catalogo -- crecer F4-F6 no lo distorsiona. Ver `docs/audits/audit-producto-v0.34.4.md` |
+
+### Backlog de pulido / UX (feedback usuario s96) -- SIN planificar
+
+Recogido con capturas al cerrar s96. **Prioridad la decide el usuario**
+(los 2 bugs pueden saltar la cola del plan). Lista completa en `ROADMAP.md`
+-> "Backlog de pulido / UX (feedback s96)" + memoria `ux-refinement-backlog`.
+
+- **[BUG · alta] Modo oscuro casi ilegible** (confirmado con captura): aro
+  invisible, `--ink-3`/`--line`/bordes sin contraste, logo descolorido
+  (blend invert+screen roto en oscuro). Recalibrar tokens + logo (cuidado:
+  s79/s89 ya recalibraron -- mover en bloque).
+- **[BUG] Precontador "3" solapa el caption** en las cuentas atras formato
+  "PREPARATE / 3 / <hint>". Subir el numeral ~10px.
+- **[Visual]** pomodoro web con semicirculo fijo integrado en las pills
+  (no depender del zoom) · Caminos runner poco refinado (F8 fue solo
+  tokenizacion) · sidebar (divisor logo↔Ritmo sube + mas util).
+- **[Producto]** builder premium mas visible + ejercicios de Mueve Y Estira
+  · filtros en bibliotecas para movil (mapea a s104-105).
