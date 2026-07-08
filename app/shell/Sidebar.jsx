@@ -20,7 +20,7 @@
      ≥44px) en esquina superior derecha para cerrar.
 */
 
-const { useState: useStateSB, useMemo: useMemoSB } = React;
+const { useState: useStateSB, useMemo: useMemoSB, useId: useIdSidebar } = React;
 
 /* Inyecta reglas responsive del sidebar una sola vez.
    Patrón ya usado en FocusTimer para spinners de number input.
@@ -216,6 +216,10 @@ function Sidebar() {
    ============================================================ */
 function SenderoDelDia({ state, compact }) {
   const { t, tn } = useT();
+  /* Id unico por instancia (s94): evita colisiones de clipPath global
+     si el componente llegara a montarse dos veces. Mismo patron que los
+     radialGradient de SenderoBar.jsx. */
+  const clipId = `sendero-clip-${useIdSidebar()}`;
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
   const start = 6;  // 6:00
@@ -284,11 +288,11 @@ function SenderoDelDia({ state, compact }) {
           <path d={pathD} stroke="var(--line-2)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
           {/* Camino recorrido: clip al punto actual */}
           <defs>
-            <clipPath id="sendero-clip">
+            <clipPath id={clipId}>
               <rect x="0" y="0" width={pointerX} height={H} />
             </clipPath>
           </defs>
-          <path d={pathD} stroke="var(--focus)" strokeWidth="1.8" fill="none" strokeLinecap="round" clipPath="url(#sendero-clip)" />
+          <path d={pathD} stroke="var(--focus)" strokeWidth="1.8" fill="none" strokeLinecap="round" clipPath={`url(#${clipId})`} />
           {/* Hitos */}
           {hitos.map((h, i) => {
             const cx = h.x * W;

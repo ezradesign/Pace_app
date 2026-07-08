@@ -69,7 +69,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
           border: '1px solid var(--line)',
         }}
       >
-        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
+        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500, fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
           {t('path.runner.exitConfirmTitle')}
         </h3>
         <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
@@ -91,8 +91,8 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
             onClick={onConfirm}
             style={{
               padding: '8px 18px', borderRadius: 'var(--r-sm)',
-              background: 'var(--terracota)', border: 'none',
-              color: '#fff', cursor: 'pointer', fontSize: 13,
+              background: 'var(--breathe)', border: 'none',
+              color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
             }}
           >
             {t('path.runner.exitConfirmYes')}

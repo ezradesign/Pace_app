@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.38.0</title>
+  <title>PACE · Foco · Cuerpo — v0.39.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -352,10 +352,6 @@ input, textarea { font-family: inherit; color: inherit; }
       border-bottom: 1px solid var(--line);
       flex-shrink: 0;
     }
-    .path-dots { display: flex; gap: 6px; }
-    .path-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: background 200ms; }
-    .path-dot.active { background: var(--ink); }
-    .path-dot.done   { background: var(--ink-3); }
     .path-step-body  { flex: 1; overflow: auto; display: flex; flex-direction: column; }
     .path-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; display: flex; align-items: center; justify-content: center; }
     /* PathStats -- sesion 54 / compactado sesion 61+62+63 para que la pestana
@@ -2198,7 +2194,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.38.0';
+const PACE_VERSION = 'v0.39.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5842,7 +5838,7 @@ Object.assign(window, {
      ≥44px) en esquina superior derecha para cerrar.
 */
 
-const { useState: useStateSB, useMemo: useMemoSB } = React;
+const { useState: useStateSB, useMemo: useMemoSB, useId: useIdSidebar } = React;
 
 /* Inyecta reglas responsive del sidebar una sola vez.
    Patrón ya usado en FocusTimer para spinners de number input.
@@ -6038,6 +6034,10 @@ function Sidebar() {
    ============================================================ */
 function SenderoDelDia({ state, compact }) {
   const { t, tn } = useT();
+  /* Id unico por instancia (s94): evita colisiones de clipPath global
+     si el componente llegara a montarse dos veces. Mismo patron que los
+     radialGradient de SenderoBar.jsx. */
+  const clipId = `sendero-clip-${useIdSidebar()}`;
   const now = new Date();
   const hNow = now.getHours() + now.getMinutes() / 60;
   const start = 6;  // 6:00
@@ -6106,11 +6106,11 @@ function SenderoDelDia({ state, compact }) {
           <path d={pathD} stroke="var(--line-2)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
           {/* Camino recorrido: clip al punto actual */}
           <defs>
-            <clipPath id="sendero-clip">
+            <clipPath id={clipId}>
               <rect x="0" y="0" width={pointerX} height={H} />
             </clipPath>
           </defs>
-          <path d={pathD} stroke="var(--focus)" strokeWidth="1.8" fill="none" strokeLinecap="round" clipPath="url(#sendero-clip)" />
+          <path d={pathD} stroke="var(--focus)" strokeWidth="1.8" fill="none" strokeLinecap="round" clipPath={`url(#${clipId})`} />
           {/* Hitos */}
           {hitos.map((h, i) => {
             const cx = h.x * W;
@@ -12101,14 +12101,14 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       borderRadius: 'var(--r-md)',
       boxShadow: 'var(--sh-soft)',
       cursor: doneToday ? 'default' : 'pointer',
-      transition: 'all 200ms var(--ease)',
+      transition: 'all var(--dur-quick) var(--ease)',
       flex: 1, minWidth: 0,
     }}
     onClick={!doneToday ? onStart : undefined}
     onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (
@@ -12134,13 +12134,13 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       {!doneToday && (
         <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
-          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
+          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity var(--dur-quick) var(--ease)' }}
         >
           {t('path.card.start') || 'Comenzar'}
         </button>
       )}
       {doneToday && (
-        <span style={{ fontSize: 18, color: 'var(--olive)', flexShrink: 0, lineHeight: 1, fontFamily: 'Georgia, serif' }}>*</span>
+        <span style={{ fontSize: 18, color: 'var(--focus)', flexShrink: 0, lineHeight: 1, fontFamily: 'var(--font-display)' }}>*</span>
       )}
     </div>
   );
@@ -12264,7 +12264,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
       marginBottom: 10,
     }}>
       {/* Acento */}
-      <div style={{ width: 3, minHeight: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+      <div style={{ width: 3, minHeight: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
 
       {/* Contenido */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -12276,7 +12276,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
             </span>
           )}
           {isFavorite && (
-            <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--olive)', padding: '2px 6px', border: '1px solid var(--olive)', borderRadius: 'var(--r-pill)' }}>
+            <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--focus)', padding: '2px 6px', border: '1px solid var(--focus)', borderRadius: 'var(--r-pill)' }}>
               {t('paths.library.favorite') || 'Favorito'}
             </span>
           )}
@@ -12303,7 +12303,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
         <button
           onClick={onToggleFavorite}
           title={isFavorite ? (t('paths.library.unfavorite') || 'Quitar favorito') : (t('paths.library.favorite') || 'Favorito')}
-          style={{ padding: '5px 10px', fontSize: 10, letterSpacing: '0.08em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'transparent', color: isFavorite ? 'var(--olive)' : 'var(--ink-3)', border: '1px solid ' + (isFavorite ? 'var(--olive)' : 'var(--line)'), borderRadius: 'var(--r-sm)', cursor: 'pointer', transition: 'all 150ms' }}
+          style={{ padding: '5px 10px', fontSize: 10, letterSpacing: '0.08em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'transparent', color: isFavorite ? 'var(--focus)' : 'var(--ink-3)', border: '1px solid ' + (isFavorite ? 'var(--focus)' : 'var(--line)'), borderRadius: 'var(--r-sm)', cursor: 'pointer', transition: 'all var(--dur-quick) var(--ease)' }}
         >
           {isFavorite ? (t('paths.library.unfavorite') || 'Quitar') : (t('paths.library.favorite') || 'Fav')}
         </button>
@@ -12367,7 +12367,7 @@ function PathsLibrary() {
         width: '100%', maxWidth: 480,
         maxHeight: '85vh',
         display: 'flex', flexDirection: 'column',
-        boxShadow: 'var(--sh-card)',
+        boxShadow: 'var(--sh-modal)',
         overflow: 'hidden',
       }}>
         {/* Header */}
@@ -12824,7 +12824,7 @@ const pathTransitionStyles = {
     minHeight: 0,
   },
   title: {
-    fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+    fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontSize: 'clamp(36px, 6vw, 64px)',
     fontWeight: 500,
@@ -12835,7 +12835,7 @@ const pathTransitionStyles = {
     letterSpacing: '0.005em',
   },
   hint: {
-    fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+    fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontSize: 13,
     color: 'var(--ink-3)',
@@ -13249,7 +13249,7 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
           border: '1px solid var(--line)',
         }}
       >
-        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500 }}>
+        <h3 id="exit-confirm-title" style={{ margin: '0 0 12px', fontSize: 20, fontWeight: 500, fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
           {t('path.runner.exitConfirmTitle')}
         </h3>
         <p style={{ margin: '0 0 24px', color: 'var(--ink-2)', fontSize: 14, lineHeight: 1.6 }}>
@@ -13271,8 +13271,8 @@ function ExitConfirmModal({ open, onCancel, onConfirm }) {
             onClick={onConfirm}
             style={{
               padding: '8px 18px', borderRadius: 'var(--r-sm)',
-              background: 'var(--terracota)', border: 'none',
-              color: '#fff', cursor: 'pointer', fontSize: 13,
+              background: 'var(--breathe)', border: 'none',
+              color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
             }}
           >
             {t('path.runner.exitConfirmYes')}
@@ -13395,7 +13395,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
         {t('path.runner.complete.title')}
       </p>
       <h2 style={{
-        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+        fontFamily: 'var(--font-display)',
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
         color: 'var(--ink)', margin: '0 0 8px', lineHeight: 1.2,
       }}>

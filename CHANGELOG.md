@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.39.0** | 2026-07-08 | feat(paths): F8 -- polish visual de los 6 componentes de Caminos contra DESIGN_SYSTEM (**CIERRA el bloque Contenido+Premium**) · fix huerfanas `--olive`/`--terracota` -> tokens reales (barra de acento invisible + boton salir ilegible) · clipPath unico por instancia en Sidebar · titulos de Caminos tokenizados a var(--font-display) (siguen los tweaks data-font) · purga CSS muerto .path-dots | #94 | [abajo](#v0390----2026-07-08----featpaths-f8-visual-caminos----cierre-del-bloque) |
 | **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [abajo](#v0380----2026-07-08----featcustom-f7-registro--constructor-de-rutinas) |
-| **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [abajo](#v0370----2026-07-07----featmove-f6-catalogo-mueve-7--14) |
+| **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [session-92](./docs/sessions/session-92-f6-contenido-mueve.md) |
 | **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [session-91](./docs/sessions/session-91-f5-contenido-estira.md) |
 | **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [session-90](./docs/sessions/session-90-f4-contenido-respira.md) |
 | **v0.34.5** | 2026-07-07 | fix+feat(P0 auditoria): SW limpia caches viejos + network-first navegaciones · reduced-motion con excepcion motion esencial (BreathVisual) · paleta oscura auto en primer arranque · objetivo de agua configurable en Tweaks (4-12) · split TweaksPanel 519->351 ln (TweaksData + PremiumSection) · D-8 resuelto como degustacion curada | #89 | [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md) |
@@ -114,6 +115,66 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.39.0] -- 2026-07-08 -- feat(paths): F8 visual Caminos -- cierre del bloque
+
+Sesion 94. **Fase 8 (ULTIMA) del bloque Contenido+Premium: auditoria
+DESIGN_SYSTEM + polish visual de los 6 componentes de Caminos.** Solo
+visual + 2 fixes absorbidos; cero cambios de comportamiento, gating o ids.
+Diario: [session-94](./docs/sessions/session-94-f8-visual-caminos.md).
+
+### Fixed
+
+- **Variables huerfanas `--olive`/`--terracota`** (no definidas en
+  tokens.css, fallaban en silencio). Decision aprobada: **reemplazo
+  directo** por tokens reales, sin alias sinonimos en tokens.css.
+  `--olive` -> `var(--focus)` en SuggestedPathCard (barra de acento --
+  estaba INVISIBLE -- y asterisco "hecho hoy") y PathsLibrary (barra,
+  tag Favorito, boton Fav). `--terracota` -> `var(--breathe)` en el
+  boton confirmar de ExitConfirmModal (fondo transparente con texto
+  #fff, casi ilegible en crema); ademas `#fff` -> `var(--paper)` (en
+  oscuro el texto se adapta: tinta sobre terracota claro).
+- **clipPath unico por instancia**: el id estatico `sendero-clip` vivia
+  en `Sidebar.jsx` (mini-sendero del dia), NO en SenderoBar (que ya usa
+  useId desde s75). Ahora `sendero-clip-<useId>` con referencia derivada.
+
+### Changed
+
+- **Tipografia tokenizada**: stacks `'EB Garamond', ...` hardcodeados ->
+  `var(--font-display)` en titulo+hint de PathTransitions, h2 de
+  CompletionScreen y h3 del ExitConfirmModal (que ademas pasa a serif
+  italic -- antes salia en sans, rompiendo "serif italic para titulos").
+  Los titulos de Caminos ahora siguen los tweaks `data-font`.
+- **Pack menor**: panel de PathsLibrary `--sh-card` -> `--sh-modal` ·
+  transitions hardcodeadas (150/200ms) -> `var(--dur-quick) var(--ease)`
+  (SuggestedPathCard x2, PathsLibrary) · asterisco 'Georgia, serif' ->
+  `var(--font-display)` · purga CSS muerto `.path-dots`/`.path-dot` en
+  PACE.html (sin consumidores desde s75).
+- **SenderoBar**: auditado limpio, cero cambios (todo tokenizado en
+  tokens.css, useId en gradientes desde s75).
+
+### Verificacion runtime
+
+Preview :8765 con protocolo s93 (purgar SW+caches tras cada tanda). Home:
+barra de la card computa `--focus`. Biblioteca: 7 barras verdes + sombra
+`--sh-modal` + tag/boton Favorito en `--focus` (toggle verificado). Runner
+completo de path.dawn: StepIntro con SenderoBar lg + orbe + label done,
+ExitConfirmModal (titulo serif italic + boton `--breathe`/`--paper`),
+CompletionScreen 100% con recorrido y skipped tachado. El perfil del
+preview tenia `data-font="cormorant"` activo: los titulos siguieron el
+tweak (prueba directa de la tokenizacion). Oscuro: barra recalibra a
+#7A9A6D. EN ("All paths"/"Start") y movil 375px (sin scroll horizontal,
+barra de acento oculta por regla responsive) OK. **Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **713 KB**, 69 archivos validados. `index.html`
+  copia exacta (SHA256 identico). Standalone verificado en preview
+  (v0.39.0, sin rastro de `--olive`).
+- Backup `PACE_standalone_v0.38.0_20260708.html`; cap 20 (rotado
+  `v0.28.11_20260512.html`).
+
+---
+
 ## [v0.38.0] -- 2026-07-08 -- feat(custom): F7 registro + constructor de rutinas
 
 Sesion 93. **Fase 7 del bloque Contenido+Premium: registro interno de
@@ -206,76 +267,12 @@ recarga, EN completo (seccion + builder + picker + pasos del runner) con
 
 ---
 
-## [v0.37.0] -- 2026-07-07 -- feat(move): F6 catalogo Mueve 7 -> 14
-
-Sesion 92. **Fase 6 del bloque Contenido+Premium: crecer Mueve** con el
-runner actual (`MoveSession`, data-driven -- rutinas nuevas = solo datos).
-Inspiracion: **Strengthside** (progresiones de empuje, unilateral, colgarse)
-+ **Jess Martin** (fuerza discreta de oficina); estructura y tecnica, nunca
-copy literal. Diario:
-[session-92](./docs/sessions/session-92-f6-contenido-mueve.md).
-
-**Nota Tarea 0:** el commit de s91 no estaba en git (todo F5 en working
-tree); el usuario commiteo a mano (`10ab883`) antes de arrancar F6.
-
-### Set nuevo (7 rutinas, 3 free + 4 premium -- criterio s88)
-
-- **Free:** `extra.chair.squats` (Sentadillas de silla, piernas),
-  `extra.glutes.stealth` (Gluteos invisibles, sigilo), `extra.back.desk`
-  (Espalda de oficina, espalda).
-- **Premium:** `extra.push.ladder` (Empuje · progresion, empuje),
-  `extra.hang.bar` (Colgarse, empuje -- requiere barra), `extra.legs.single`
-  (Piernas · a una, piernas), `extra.core.plank` (Core · plancha, espalda).
-
-Total: **14 rutinas, 6 premium (43%)** -- misma foto que Estira (14/6) y
-Respira (20/8). Ids `extra.*` intocables (swap s14). Sin logros nuevos
-(decision F4). Sin modal de seguridad (no hay apnea).
-
-### Added / Changed
-
-- **`app/move/MoveModule.jsx`** (323 -> 397 ln) -- `MOVE_ROUTINES` pasa de
-  array plano a **objeto agrupado** (mismo shape que `EXTRA_ROUTINES`):
-  empuje y traccion 4 · sigilo 4 · piernas 3 · espalda y core 3, free-first
-  por grupo. `MoveLibrary` renderiza grupos con `tR('mueve.cat.*')` (prefijo
-  nuevo: `move.cat.*` colisionaria con los ids `move.*` de Estira);
-  `getMoveRoutine` adaptado (misma firma, consumidor unico
-  `paths/registry.js` verificado).
-- **`app/i18n/content/`** (nuevo) -- `strings-content.js` (389 ln)
-  **eliminado y troceado por modulo visual** al superar ~470 ln con F6:
-  `breathe.js` (94 ln, con el override D-1 `breathe.phase.*` intacto) +
-  `move.js` (186 ln, grupos `mueve.cat.*` + ~100 keys F6) + `extra.js`
-  (202 ln). Cargan tras `strings/*` en el mismo slot del orden de carga.
-- **9 pasos nuevos sin glifo** renderizan `DefaultGlyph` y se suman a la
-  **cola D-4** (ahora 35): Sentadilla a silla, Apretar gluteos, Superman,
-  Pica en escritorio, Sentadilla bulgara, Plancha, Plancha lateral, Hollow
-  hold, Hang activo.
-- **`PACE.html`** / **`app/state-core.jsx`** / **`sw.js`** -- bump v0.37.0
-  (`CACHE_NAME pace-v0.37.0`).
-- **`CHANGELOG.md`** -- v0.35.0 degradado a fila-de-enlace.
-
-### Verificacion runtime
-
-Preview :8765 (SW desregistrado + caches borrados antes de verificar --
-leccion s91). Biblioteca: 14 tarjetas / 4 grupos con asides, 6 sellos
-PREMIUM + "Pronto", minutos en las 8 free, free-first (screenshot). Lookup
-`getMoveRoutine` con id viejo/nuevo/inexistente OK. Sesion "Sentadillas de
-silla": paso 1 Sentadilla a silla con **DefaultGlyph**, countdown y
-"Siguiente" correctos. EN: grupos + 14 tarjetas + checks de los 3 archivos
-del split + override D-1; ES restaurado. **Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **665 KB**, 64 archivos validados (62 + 3
-  `content/*` − `strings-content.js`). `index.html` copia exacta (SHA256
-  identico). Standalone verificado en preview (v0.37.0, monta limpio).
-- Backup `PACE_standalone_v0.36.0_20260707.html`; cap 20 (rotado
-  `v0.28.9_20260512.html`).
-
----
-
-> **v0.36.0** (s91) detallada en
-> [session-91](./docs/sessions/session-91-f5-contenido-estira.md) —
+> **v0.37.0** (s92) detallada en
+> [session-92](./docs/sessions/session-92-f6-contenido-mueve.md) —
 > convencion: solo las 2 ultimas versiones se detallan aqui.
+>
+> **v0.36.0** (s91) detallada en
+> [session-91](./docs/sessions/session-91-f5-contenido-estira.md).
 >
 > **v0.34.5** (s89) detallada en
 > [session-89](./docs/sessions/session-89-p0-auditoria-fixes.md).

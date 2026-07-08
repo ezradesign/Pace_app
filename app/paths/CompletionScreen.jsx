@@ -80,7 +80,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
         {t('path.runner.complete.title')}
       </p>
       <h2 style={{
-        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+        fontFamily: 'var(--font-display)',
         fontStyle: 'italic', fontSize: 36, fontWeight: 500,
         color: 'var(--ink)', margin: '0 0 8px', lineHeight: 1.2,
       }}>

@@ -227,7 +227,7 @@ const pathTransitionStyles = {
     minHeight: 0,
   },
   title: {
-    fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+    fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontSize: 'clamp(36px, 6vw, 64px)',
     fontWeight: 500,
@@ -238,7 +238,7 @@ const pathTransitionStyles = {
     letterSpacing: '0.005em',
   },
   hint: {
-    fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+    fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontSize: 13,
     color: 'var(--ink-3)',
