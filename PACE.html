@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.40.0</title>
+  <title>PACE · Foco · Cuerpo — v0.41.0</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -95,7 +95,7 @@
        0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
                            Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
        1. state-core.jsx → store, loadState, rollover, history helpers, toast
-       2. state-timer.jsx       → addFocusMinutes, completePomodoro
+       2. state-timer.jsx       → addFocusMinutes, completePomodoro, completeFocusSession
        3. state-hydrate.jsx     → addWaterGlass
        4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
        5. state-paths.jsx       → paths CRUD, stats
@@ -147,6 +147,10 @@
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
        PathFocusStep (dentro de un Camino). Debe cargarse antes que ambos. -->
   <script type="text/babel" src="app/ui/TimerDial.jsx"></script>
+  <!-- Motor de cuenta atras timestamp-based (s96): expone window.useCountdown,
+       compartido por FocusTimer (home) y PathFocusStep (Camino). No deriva en
+       background (remaining = f(Date.now())). Antes que ambos consumidores. -->
+  <script type="text/babel" src="app/focus/useCountdown.jsx"></script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->

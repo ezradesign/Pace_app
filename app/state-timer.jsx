@@ -45,7 +45,29 @@ function completePomodoro() {
   updateStreak();
 }
 
+/* completeFocusSession(context, opts) — punto de entrada unificado del fin de
+   una sesion de foco (s96 · motor useCountdown). PRESERVA la distincion
+   historica; NO fundir en un solo comportamiento:
+     context 'home' -> completePomodoro(): cycle++ + logros de pomodoro
+                       (first.step/master.pomodoro.8/master.long.focus). Lee
+                       focusMinutes internamente (mismo credito que antes).
+     context 'path' -> addFocusMinutes(opts.minutes) + updateStreak(): foco
+                       CONTEXTUAL de Camino, SIN cycle ni logros de pomodoro
+                       (decision s79/s86). El caller pasa los minutos del step.
+   updateStreak se resuelve en runtime (definido en state-achievements, que
+   carga despues); el guard typeof lo protege por simetria con el resto. */
+function completeFocusSession(context, opts) {
+  if (context === 'path') {
+    const mins = (opts && typeof opts.minutes === 'number') ? opts.minutes : 25;
+    addFocusMinutes(mins);
+    if (typeof updateStreak === 'function') updateStreak();
+    return;
+  }
+  completePomodoro();
+}
+
 Object.assign(window, {
   addFocusMinutes,
   completePomodoro,
+  completeFocusSession,
 });

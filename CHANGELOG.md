@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.41.0** | 2026-07-08 | refactor(focus): Cirugia 2 -- **motor de timer basado en timestamps** (`app/focus/useCountdown.jsx`, estados idle/running/paused/completed; `remaining = f(Date.now())` en cada tick -> **cero deriva en background**, la pestana oculta ya no subcuenta) migrado a FocusTimer (home) y PathFocusStep (Camino) · `completeFocusSession(context)` unificado que **PRESERVA la distincion** (home = completePomodoro con cycle+logros de pomodoro; Camino = addFocusMinutes+updateStreak sin cycle) · `'completed'` terminal (cierra un doble-credito latente) · **comportamiento observable identico en primer plano** (creditos, sonidos, logros, drone, single-shot) | #96 | [abajo](#v0410----2026-07-08----refactorfocus-cirugia-2-motor-timer-timestamp) |
 | **v0.40.0** | 2026-07-08 | feat(entitlement): Cirugia 1 -- **guard central `canAccessRoutine`/`canAccessPath`** (UNICO punto de verdad del acceso, hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia) consumido por RoutineCard + PathBreatheStep/PathBodyStep + getSuggestedPath · **degustacion EXPLICITA** de path.weekend (`tasting:true` a nivel step, deja de ser excepcion tacita) · autofocus Welcome solo con puntero fino (sin auto-teclado en movil) · **comportamiento observable identico con premiumUnlocked=false** | #95 | [abajo](#v0400----2026-07-08----featentitlement-cirugia-1-guard-central) |
-| **v0.39.0** | 2026-07-08 | feat(paths): F8 -- polish visual de los 6 componentes de Caminos contra DESIGN_SYSTEM (**CIERRA el bloque Contenido+Premium**) · fix huerfanas `--olive`/`--terracota` -> tokens reales (barra de acento invisible + boton salir ilegible) · clipPath unico por instancia en Sidebar · titulos de Caminos tokenizados a var(--font-display) (siguen los tweaks data-font) · purga CSS muerto .path-dots | #94 | [abajo](#v0390----2026-07-08----featpaths-f8-visual-caminos----cierre-del-bloque) |
+| **v0.39.0** | 2026-07-08 | feat(paths): F8 -- polish visual de los 6 componentes de Caminos contra DESIGN_SYSTEM (**CIERRA el bloque Contenido+Premium**) · fix huerfanas `--olive`/`--terracota` -> tokens reales (barra de acento invisible + boton salir ilegible) · clipPath unico por instancia en Sidebar · titulos de Caminos tokenizados a var(--font-display) (siguen los tweaks data-font) · purga CSS muerto .path-dots | #94 | [session-94](./docs/sessions/session-94-f8-visual-caminos.md) |
 | **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [session-93](./docs/sessions/session-93-f7-constructor-rutinas.md) |
 | **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [session-92](./docs/sessions/session-92-f6-contenido-mueve.md) |
 | **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [session-91](./docs/sessions/session-91-f5-contenido-estira.md) |
@@ -116,6 +117,86 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.41.0] -- 2026-07-08 -- refactor(focus): Cirugia 2 motor timer timestamp
+
+Sesion 96. **Segunda cirugia del plan maestro (ROADMAP "Camino a v1.0"):**
+sustituir los dos temporizadores con `setInterval` + contador que se
+decrementa (derivaban en background -- la pestana oculta throttlea el
+interval a ~1/min y el pomodoro subcontaba/terminaba tarde) por un motor
+basado en TIMESTAMPS. **Comportamiento observable identico en primer
+plano.** Diario:
+[session-96](./docs/sessions/session-96-timer-engine.md).
+
+### Added
+
+- **`app/focus/useCountdown.jsx`** (nuevo, ~135 ln) -- motor de cuenta
+  atras compartido por FocusTimer (home) y PathFocusStep (Camino). La
+  verdad del tiempo vive en `endsAt` (ms epoch): un tick de 1s solo fuerza
+  el re-render y `remaining = ceil((endsAt - Date.now())/1000)`. Con la
+  pestana oculta el navegador throttlea el `setInterval`, pero como
+  `remaining` se recalcula desde el reloj NO subcuenta; un listener
+  `visibilitychange` corrige al instante al volver la pestana. Estados
+  `idle | running | paused | completed`. `'completed'` es **terminal**
+  (start/toggle no-op hasta reset o cambio de duracion) -> cierra un
+  doble-credito latente del timer previo. Pausa: congela `remaining`; al
+  reanudar `endsAt = now + remaining`. `onComplete` en ref (single-shot;
+  reemplaza los guards `justFinished`/`creditedRef`). **Sin persistencia**
+  (local; recargar resetea el Pomodoro como antes -- persistir en pace.state
+  es una decision aparte, diferida). Cargado tras `TimerDial.jsx`.
+- **`completeFocusSession(context, opts)`** (en `state-timer.jsx`, expuesto
+  a window + re-exportado en `state.jsx`) -- punto de entrada unificado del
+  fin de una sesion de foco que **PRESERVA la distincion historica**:
+  `context 'home'` -> `completePomodoro()` (cycle++ + `first.step`/
+  `master.pomodoro.8`/`master.long.focus`; lee `focusMinutes` interno);
+  `context 'path'` -> `addFocusMinutes(opts.minutes) + updateStreak()`
+  (foco CONTEXTUAL de Camino, **sin cycle ni logros de pomodoro** --
+  decision s79/s86). NO se funden en un solo comportamiento.
+
+### Changed
+
+- **`FocusTimer.jsx`** (493 -> 429 ln, sale del borde de las 500):
+  eliminados los 3 useEffect de tiempo (reset/ticker/finalizacion) y el
+  estado `running`/`remainingSec`; ahora derivan del hook. El sonido
+  `pomodoro.end` sigue en el componente (suena en foco/pausa/larga; **solo
+  foco acredita** via `completeFocusSession('home')`). El efecto del drone
+  ambiente queda intacto (solo cambia `remainingSec` -> `remaining`).
+  `pomodoro.start` suena solo en arranque/reanudacion real (no en no-op de
+  `completed`).
+- **`PathFocusStep.jsx`**: migrado al hook; `onComplete` llama
+  `completeFocusSession('path', { minutes: step.min || 25 })`. Contrato
+  `(step, onExit(reason))` intacto; reset/skip siguen sin acreditar.
+- **`PACE.html`** / **`state-core.jsx`** / **`sw.js`** -- 1 script tag
+  nuevo (`useCountdown.jsx` tras TimerDial) + bump v0.41.0
+  (`CACHE_NAME pace-v0.41.0`).
+- **`CHANGELOG.md`** -- v0.39.0 degradada a fila-de-enlace.
+
+### Verificacion runtime
+
+Preview :50333 con protocolo s93 (purgar SW+caches tras cada tanda). **No
+deriva**: simulado salto de reloj (mock `Date.now` + `endsAt` rebasado) y
+pestana oculta -> `remaining` se recalcula sin subcontar y completa con
+credito exacto. **Home/foco**: cycle 0->1, +25 min (total + `weeklyStats`),
+`first.step`; `master.long.focus` (>=45) y `master.pomodoro.8` (cycle>=8)
+verificados; **single-shot** (2 disparos -> 1 credito). **Camino**
+(PathFocusStep montado aislado): +25 min + `streak` **sin cycle ni
+first.step**, CTA "Hecho" -> `onExit('done')`. **Pausa/reanuda** congela y
+continua `remaining`. **Reset/Skip** sin credito. **Pausa(5)/larga(15)**
+tickan y suenan (`pomodoro.start`/`end`) pero NO acreditan. **Drone**
+start->pause->resume->stop (muere al completar). **`'completed'`** terminal
+(Comenzar no re-acredita). EN (Focus/Pause/Long). Estado restaurado.
+**Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **725 KB**, 71 archivos validados (+1 =
+  `useCountdown.jsx`). `index.html` copia exacta (SHA256 identico).
+  Standalone verificado en preview (v0.41.0, completa con credito, consola
+  limpia).
+- Backup `PACE_standalone_v0.40.0_20260708.html`; cap 20 (rotado
+  `v0.29.0_20260516.html`).
+
+---
+
 ## [v0.40.0] -- 2026-07-08 -- feat(entitlement): Cirugia 1 guard central
 
 Sesion 95. **Primera sesion del plan maestro post-bloque (ROADMAP "Camino
@@ -200,66 +281,9 @@ premiumUnlocked=false, sin path activo). **Consola sin errores.**
 
 ---
 
-## [v0.39.0] -- 2026-07-08 -- feat(paths): F8 visual Caminos -- cierre del bloque
-
-Sesion 94. **Fase 8 (ULTIMA) del bloque Contenido+Premium: auditoria
-DESIGN_SYSTEM + polish visual de los 6 componentes de Caminos.** Solo
-visual + 2 fixes absorbidos; cero cambios de comportamiento, gating o ids.
-Diario: [session-94](./docs/sessions/session-94-f8-visual-caminos.md).
-
-### Fixed
-
-- **Variables huerfanas `--olive`/`--terracota`** (no definidas en
-  tokens.css, fallaban en silencio). Decision aprobada: **reemplazo
-  directo** por tokens reales, sin alias sinonimos en tokens.css.
-  `--olive` -> `var(--focus)` en SuggestedPathCard (barra de acento --
-  estaba INVISIBLE -- y asterisco "hecho hoy") y PathsLibrary (barra,
-  tag Favorito, boton Fav). `--terracota` -> `var(--breathe)` en el
-  boton confirmar de ExitConfirmModal (fondo transparente con texto
-  #fff, casi ilegible en crema); ademas `#fff` -> `var(--paper)` (en
-  oscuro el texto se adapta: tinta sobre terracota claro).
-- **clipPath unico por instancia**: el id estatico `sendero-clip` vivia
-  en `Sidebar.jsx` (mini-sendero del dia), NO en SenderoBar (que ya usa
-  useId desde s75). Ahora `sendero-clip-<useId>` con referencia derivada.
-
-### Changed
-
-- **Tipografia tokenizada**: stacks `'EB Garamond', ...` hardcodeados ->
-  `var(--font-display)` en titulo+hint de PathTransitions, h2 de
-  CompletionScreen y h3 del ExitConfirmModal (que ademas pasa a serif
-  italic -- antes salia en sans, rompiendo "serif italic para titulos").
-  Los titulos de Caminos ahora siguen los tweaks `data-font`.
-- **Pack menor**: panel de PathsLibrary `--sh-card` -> `--sh-modal` ·
-  transitions hardcodeadas (150/200ms) -> `var(--dur-quick) var(--ease)`
-  (SuggestedPathCard x2, PathsLibrary) · asterisco 'Georgia, serif' ->
-  `var(--font-display)` · purga CSS muerto `.path-dots`/`.path-dot` en
-  PACE.html (sin consumidores desde s75).
-- **SenderoBar**: auditado limpio, cero cambios (todo tokenizado en
-  tokens.css, useId en gradientes desde s75).
-
-### Verificacion runtime
-
-Preview :8765 con protocolo s93 (purgar SW+caches tras cada tanda). Home:
-barra de la card computa `--focus`. Biblioteca: 7 barras verdes + sombra
-`--sh-modal` + tag/boton Favorito en `--focus` (toggle verificado). Runner
-completo de path.dawn: StepIntro con SenderoBar lg + orbe + label done,
-ExitConfirmModal (titulo serif italic + boton `--breathe`/`--paper`),
-CompletionScreen 100% con recorrido y skipped tachado. El perfil del
-preview tenia `data-font="cormorant"` activo: los titulos siguieron el
-tweak (prueba directa de la tokenizacion). Oscuro: barra recalibra a
-#7A9A6D. EN ("All paths"/"Start") y movil 375px (sin scroll horizontal,
-barra de acento oculta por regla responsive) OK. **Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **713 KB**, 69 archivos validados. `index.html`
-  copia exacta (SHA256 identico). Standalone verificado en preview
-  (v0.39.0, sin rastro de `--olive`).
-- Backup `PACE_standalone_v0.38.0_20260708.html`; cap 20 (rotado
-  `v0.28.11_20260512.html`).
-
----
-
+> **v0.39.0** (s94) detallada en
+> [session-94](./docs/sessions/session-94-f8-visual-caminos.md).
+>
 > **v0.38.0** (s93) detallada en
 > [session-93](./docs/sessions/session-93-f7-constructor-rutinas.md).
 >

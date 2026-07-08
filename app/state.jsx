@@ -9,7 +9,7 @@
 
    Orden de carga en PACE.html:
      1. state-core.jsx        (store, loadState, helpers, toast)
-     2. state-timer.jsx       (addFocusMinutes, completePomodoro)
+     2. state-timer.jsx       (addFocusMinutes, completePomodoro, completeFocusSession)
      3. state-hydrate.jsx     (addWaterGlass)
      4. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
      5. state-paths.jsx       (paths CRUD, stats)
@@ -28,6 +28,7 @@ Object.assign(window, {
   subscribe,
   unlockAchievement,
   completePomodoro,
+  completeFocusSession,
   completeBreathSession,
   completeMoveSession,
   completeExtraSession,
