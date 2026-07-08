@@ -72,9 +72,10 @@ fricción, y quiere volver mañana.*
 - Stats mes/año no muestran el día actual (history se alimenta en
   rollover) → selector `getHistoryWithToday` **memoizado**.
 - `path.weekend` lanza premium sin candado: NO es bug (decisión s89,
-  degustación curada) **pero caduca cuando el premium sea de pago real**
-  → el guard central llevará campo explícito (`tasting: true` o versión
-  free alternativa); decidir en la sesión de licencia.
+  degustación curada). **RESUELTO s95** como campo explícito: sus 2 steps
+  premium llevan `tasting: true` que el guard central reconoce. La decisión
+  final (mantener degustación vs versión free) se toma en la sesión de
+  licencia; el cableado ya la soporta.
 - Cola D-4 (35 glifos placeholder) es **pre-venta**: no se puede vender
   packs cuyos pasos rendericen DefaultGlyph.
 - El Path Builder se abarató ~50% tras F7 (registry + CRUD + builder +
@@ -85,7 +86,7 @@ fricción, y quiere volver mañana.*
 | Sesión | Contenido |
 |---|---|
 | ~~s94~~ | ~~F8 visual Caminos~~ **hecho (v0.39.0)** — huérfanas resueltas + clipPath único (estaba en Sidebar.jsx, no en SenderoBar) + tipografía tokenizada |
-| **s95** | **Cirugía 1:** guard central de entitlement (`canAccessRoutine`/`canAccessPath`) consumido por PathBreatheStep/PathBodyStep/getSuggestedPath, con degustación explícita · autofocus móvil Welcome |
+| ~~s95~~ | ~~Cirugía 1: guard central de entitlement + degustación explícita~~ **hecho (v0.40.0)** — `state-entitlement.jsx` (`canAccessRoutine`/`canAccessPath`) consumido por RoutineCard + PathBreatheStep/PathBodyStep/getSuggestedPath · `path.weekend` con `tasting:true` explícito · `PathStepLocked` (auto-skip) · autofocus Welcome solo puntero fino · comportamiento idéntico con `premiumUnlocked=false`, **NO toca F3b** |
 | **s96** | **Timer engine** timestamp-based (idle/running/paused/completed) + migrar FocusTimer y PathFocusStep + `completeFocusSession()` unificado |
 | **s97** | **BreatheSession tiempo activo** (activeTime vs totalTime; stats y logros acreditan activeTime) |
 | **s98** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |

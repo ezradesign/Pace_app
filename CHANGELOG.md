@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.40.0** | 2026-07-08 | feat(entitlement): Cirugia 1 -- **guard central `canAccessRoutine`/`canAccessPath`** (UNICO punto de verdad del acceso, hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia) consumido por RoutineCard + PathBreatheStep/PathBodyStep + getSuggestedPath · **degustacion EXPLICITA** de path.weekend (`tasting:true` a nivel step, deja de ser excepcion tacita) · autofocus Welcome solo con puntero fino (sin auto-teclado en movil) · **comportamiento observable identico con premiumUnlocked=false** | #95 | [abajo](#v0400----2026-07-08----featentitlement-cirugia-1-guard-central) |
 | **v0.39.0** | 2026-07-08 | feat(paths): F8 -- polish visual de los 6 componentes de Caminos contra DESIGN_SYSTEM (**CIERRA el bloque Contenido+Premium**) · fix huerfanas `--olive`/`--terracota` -> tokens reales (barra de acento invisible + boton salir ilegible) · clipPath unico por instancia en Sidebar · titulos de Caminos tokenizados a var(--font-display) (siguen los tweaks data-font) · purga CSS muerto .path-dots | #94 | [abajo](#v0390----2026-07-08----featpaths-f8-visual-caminos----cierre-del-bloque) |
-| **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [abajo](#v0380----2026-07-08----featcustom-f7-registro--constructor-de-rutinas) |
+| **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [session-93](./docs/sessions/session-93-f7-constructor-rutinas.md) |
 | **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [session-92](./docs/sessions/session-92-f6-contenido-mueve.md) |
 | **v0.36.0** | 2026-07-07 | feat(extra): F5 -- catalogo Estira 7 -> 14 rutinas (7 nuevas Strengthside-inspired: despertar matinal, muñecas y manos, hombros·circulos, couch stretch, columna·ondas, caderas·suelo, cadena posterior) · biblioteca agrupada en 4 grupos como Respira · 11 pasos nuevos con DefaultGlyph (cola D-4) · ~109 keys EN | #91 | [session-91](./docs/sessions/session-91-f5-contenido-estira.md) |
 | **v0.35.0** | 2026-07-07 | feat(breathe): F4 -- catalogo Respira 12 -> 20 tecnicas (8 nuevas: diafragmatica, exhalacion 4·6, ritmica yin, coherente 432 con drone forzado, bhramari, kumbhaka 1:4:2, tolerancia CO2, rondas profundas 5×35 precursora CTB) · 4 patrones nuevos en getSequence · 3 fases nuevas i18n · ambientDrone.start(force) · free-first en grupos · safety en toda retencion/apnea | #90 | [session-90](./docs/sessions/session-90-f4-contenido-respira.md) |
@@ -115,6 +116,90 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.40.0] -- 2026-07-08 -- feat(entitlement): Cirugia 1 guard central
+
+Sesion 95. **Primera sesion del plan maestro post-bloque (ROADMAP "Camino
+a v1.0"):** un unico punto de verdad del acceso a contenido, con
+degustacion explicita. **Comportamiento observable identico con
+`premiumUnlocked=false`** -- las bibliotecas gatean igual, path.weekend
+degusta igual, la sugerencia es la misma. NO toca la decision F3b (licencia
+sigue diferida). Diario:
+[session-95](./docs/sessions/session-95-guard-entitlement.md).
+
+### Added
+
+- **`app/state-entitlement.jsx`** (nuevo, ~65 ln) -- guard central de
+  acceso: `canAccessRoutine(routineId, { tasting })` y
+  `canAccessPath(pathId)`. Hoy derivan de `premiumUnlocked`; cuando llegue
+  la pre-venta (licencia‖trial) **solo cambia este archivo** y los
+  consumidores no se tocan. `canAccessRoutine`: rutina desconocida ->
+  `true` (fail-open), `access!=='premium'` -> `true`, premium ->
+  `premiumUnlocked || tasting`. `canAccessPath`: hoy los 7 Caminos son
+  `access:'free'` -> siempre `true`. Cargado antes de `state-paths.jsx` en
+  PACE.html; re-exportado en `state.jsx`.
+- **`PathStepLocked`** (en `PathRunner.parts.jsx`) -- fallback defensivo:
+  un step cuyo contenido premium no es accesible se **salta en silencio**
+  (auto-skip al montar, renderiza null). El candado vive en la puerta del
+  Camino, nunca a mitad de flujo (ROADMAP). **Dead code en s95** (weekend
+  es tasting); se activaria si un Camino futuro referenciase premium sin
+  degustacion.
+
+### Changed
+
+- **Degustacion EXPLICITA de `path.weekend`** (`registry.js`): sus 2 steps
+  premium (`breathe.nadi.shodhana` + `move.atg.knees`) llevan ahora
+  `tasting: true`. Declara al guard que sirven premium GRATIS por diseno
+  (decision s89 D-8a) -- deja de ser una excepcion tacita del catalogo. El
+  comportamiento no cambia: weekend sigue lanzando ambas rutinas. La
+  decision final (degustacion vs version free) se toma en la sesion de
+  licencia.
+- **Consumidores del guard**: `RoutineCard` (gate real de las 3
+  bibliotecas) deriva `isLocked = !canAccessRoutine(id)` -- equivalente
+  exacto al antiguo `isPremium && !premiumUnlocked`, con `usePace()` para
+  la reactividad y fallback inline defensivo; `isPremium` sigue inline
+  (sello siempre). `PathBreatheStep`/`PathBodyStep` consultan el guard con
+  `{ tasting: step.tasting }`. `getSuggestedPath` salta candidatos con
+  `!canAccessPath` en cada nivel de la jerarquia (todos free -> jerarquia
+  identica; s103 lo reescribira con scoring).
+- **Autofocus del Welcome** (`WelcomeModule.jsx`): el `setTimeout(focus)`
+  se enguarda tras `matchMedia('(pointer: coarse)')` -- **autofocus solo en
+  escritorio**. En tactil (Android Chrome auto-abre el teclado; iOS lo
+  ignora sin gesto) rompia el tono sin friccion de una bienvenida de campo
+  OPCIONAL.
+- `CustomRoutinesSection` **se queda en `premiumUnlocked`** (feature-gate
+  de la superficie del constructor, no un `routineId`): revisar en la
+  sesion de licencia.
+- **`PACE.html`** / **`state-core.jsx`** / **`sw.js`** -- 1 script tag
+  nuevo + bump v0.40.0 (`CACHE_NAME pace-v0.40.0`).
+- **`CHANGELOG.md`** -- v0.38.0 degradado a fila-de-enlace.
+
+### Verificacion runtime
+
+Preview :8765 con protocolo s93 (purgar SW+caches tras cada tanda). Con
+`premiumUnlocked=false`: guard verificado por caso (premium sin tasting ->
+locked, con tasting -> concede, free/desconocido -> true, paths free ->
+true); biblioteca Respira con las 8 premium en sello + "Pronto" +
+`cursor:default` y las free clicables (**gating identico al previo**);
+**degustacion viva** -- `path.weekend` lanza la sesion de Nadi Shodhana
+(premium) sin bloqueo, y atg.knees resuelve igual. Con `premiumUnlocked=true`
+(snapshot + restaurado): las premium pasan a clicables conservando el
+sello, "Pronto"->min (reactividad via `usePace`). Welcome: en puntero fino
+el input se enfoca; forzando `(pointer: coarse)` no se enfoca
+(activeElement=BODY). `getSuggestedPath` -> `path.afternoon` (miercoles
+tarde). EN: premium con "Soon". Estado restaurado (lang=es,
+premiumUnlocked=false, sin path activo). **Consola sin errores.**
+
+### Build
+
+- `PACE_standalone.html`: **719 KB**, 70 archivos validados (+1 =
+  `state-entitlement.jsx`). `index.html` copia exacta (SHA256 identico).
+  Standalone verificado en preview (v0.40.0, guard presente, 2 steps
+  tasting, consola limpia).
+- Backup `PACE_standalone_v0.39.0_20260708.html`; cap 20 (rotado
+  `v0.28.12_20260516.html`).
+
+---
+
 ## [v0.39.0] -- 2026-07-08 -- feat(paths): F8 visual Caminos -- cierre del bloque
 
 Sesion 94. **Fase 8 (ULTIMA) del bloque Contenido+Premium: auditoria
@@ -175,98 +260,9 @@ barra de acento oculta por regla responsive) OK. **Consola sin errores.**
 
 ---
 
-## [v0.38.0] -- 2026-07-08 -- feat(custom): F7 registro + constructor de rutinas
-
-Sesion 93. **Fase 7 del bloque Contenido+Premium: registro interno de
-ejercicios + constructor de rutinas premium.** El usuario arma su rutina
-eligiendo ejercicios + duracion; reutiliza el runner data-driven de
-`MoveSession` (rutina custom = solo datos). Superficie premium ENTERA
-(gateada por `premiumUnlocked`, sin muro a mitad de flujo). Diario:
-[session-93](./docs/sessions/session-93-f7-constructor-rutinas.md).
-
-### Added
-
-- **`app/custom/exercise-registry.js`** (nuevo, 136 ln) -- registro
-  interno CURADO (no derivado en runtime): union deduplicada a mano de
-  los steps de `MOVE_ROUTINES` + `EXTRA_ROUTINES`, **65 ejercicios en 8
-  grupos**, cada uno `{ name, dur, cue }` con cue neutro. `name` = ES
-  canonico identico a la key de glifo (sin glifos nuevos, cola D-4
-  intacta en 35). NO es biblioteca navegable (decision s85). Curacion:
-  `Dead hang (si puedes)` fuera (duplica Hang pasivo).
-- **`app/custom/CustomRoutines.jsx`** (nuevo, 164 ln) -- seccion **"Tus
-  rutinas"** como 5º grupo al FINAL de la biblioteca Mueve (decision del
-  usuario): header con `PremiumSeal`, estado bloqueado (copy + "Pronto",
-  nada clicable), estado vacio, card "+ Crear rutina" (borde
-  discontinuo), `CustomRoutineCard` gemela visual de RoutineCard con
-  lapiz de edicion (RoutineCard/gating intocados).
-- **`app/custom/CustomBuilder.jsx`** (nuevo, 259 ln) -- modal
-  constructor con 2 vistas: **editor** (nombre, filas con glifo +
-  stepper de duracion ±5 s + reordenar + quitar, total en vivo,
-  "Eliminar rutina" con confirmacion en dos toques) y **picker**
-  (registro agrupado, un toque añade con dur por defecto). Overlay
-  singleton en main.jsx via CustomEvent `pace:open-custom-builder`
-  (patron s50+); MoveLibrary se oculta mientras esta abierto (un solo
-  Modal escucha Escape).
-- **`app/state-custom.jsx`** (nuevo, 100 ln, split estilo s57) --
-  `CUSTOM_LIMITS` (10 rutinas · 1-12 pasos · 10-120 s · nombre ≤ 40) +
-  CRUD con sanitize y lectura defensiva. Shape:
-  `{ id: 'custom.<Date.now()>', name, steps, min (ceil Σdur/60),
-  createdAt, updatedAt }` -- mismo shape de steps que el catalogo, el
-  runner no distingue. El prefijo `custom.` nunca colisiona con
-  `extra.*`/`move.*` ni con los mapas de logros.
-- **`app/i18n/content/custom.js`** (nuevo, 168 ln) -- EN por **nombre
-  canonico ES como key** (`custom.ex.<name>.{name,cue}`), reutilizando
-  los EN ya establecidos en content/move+extra, + `custom.cat.*.label`.
-
-### Changed
-
-- **`app/move/MoveModule.jsx`** (397 -> 436 ln) -- `MoveLibrary` monta
-  `<CustomRoutinesSection/>` tras los 4 grupos (guard `typeof`, patron
-  s83). `MoveSession`: helper `tStep` -- rutinas custom resuelven el EN
-  de pasos por nombre (`custom.ex.*`), catalogo sigue por key posicional;
-  `displayRoutine` salta el lookup por id en custom (evita warns i18n).
-- **`app/main.jsx`** (280 -> 294 ln) -- estado `customBuilder` +
-  listener del CustomEvent + monta `<CustomBuilder/>`.
-- **`app/i18n/strings/sessions.js`** (265 -> 329 ln) -- ~33 keys
-  `custom.*` ES+EN (chrome del constructor).
-- **`app/state-core.jsx`** (511 ln) -- + `customRoutines: []` en
-  defaultState (CRUD fuera; deuda de tamaño sin agravar).
-- **`.claude/static-server.js`** -- + `Cache-Control: no-store` (el
-  preview servia .jsx viejos por cache heuristica sin validadores).
-- **Crédito:** la sesion custom acredita via `completeMoveSession`
-  (`kind='move'`, ruta existente) -- cero cambios en state-achievements,
-  **sin logros nuevos** y sin `explore.*` accidentales (mapas cerrados
-  por id, verificado). Sin modal de seguridad (no hay apnea).
-- **`PACE.html`** / **`sw.js`** -- 5 script tags nuevos + bump v0.38.0
-  (`CACHE_NAME pace-v0.38.0`).
-- **`CHANGELOG.md`** -- v0.36.0 degradado a fila-de-enlace.
-
-### Verificacion runtime
-
-Preview :8765. **Leccion s91/s92 ampliada:** el SW se re-registra en cada
-carga -- purgarlo solo al arrancar no basta; un fix de mitad de sesion
-quedo congelado por el cache pace-v0.37.0 revivido (diagnostico via
-`MoveSession.toString()` + stack del warn). Protocolo nuevo: purgar
-SW+caches tras CADA tanda de edits + `no-store` en el static-server.
-Con gating off: seccion sellada, nada clicable (screenshot). Con gating
-on (snapshot de estado, restaurado al final): crear/editar/reordenar/
-stepper OK, lanzar desde la card real -> runner completo -> **credito
-exacto** (moveMinutes 0->2, moveSessionsTotal 0->1, plan.muevete,
-first.stretch; cero explore.*), borrado en 2 toques, persistencia tras
-recarga, EN completo (seccion + builder + picker + pasos del runner) con
-**cero warns [i18n]**. Estado restaurado (premiumUnlocked=false, lang=es,
-0 rutinas). **Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **713 KB**, 69 archivos validados (64 + 5
-  nuevos). `index.html` copia exacta (SHA256 identico). Standalone
-  verificado en preview (v0.38.0, registro 65, seccion bloqueada OK).
-- Backup `PACE_standalone_v0.37.0_20260708.html`; cap 20 (rotado
-  `v0.28.10_20260512.html`).
-
----
-
+> **v0.38.0** (s93) detallada en
+> [session-93](./docs/sessions/session-93-f7-constructor-rutinas.md).
+>
 > **v0.37.0** (s92) detallada en
 > [session-92](./docs/sessions/session-92-f6-contenido-mueve.md) —
 > convencion: solo las 2 ultimas versiones se detallan aqui.

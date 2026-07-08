@@ -63,7 +63,12 @@
       "PowerShell($a = \\(Get-FileHash PACE_standalone.html -Algorithm SHA256\\).Hash; $b = \\(Get-FileHash index.html -Algorithm SHA256\\).Hash; \"standalone: $a\"; \"index:      $b\"; \"identicos: $\\($a -eq $b\\)\")",
       "PowerShell(\"app/custom/exercise-registry.js\",\"app/custom/CustomRoutines.jsx\",\"app/custom/CustomBuilder.jsx\",\"app/state-custom.jsx\",\"app/i18n/content/custom.js\",\"app/move/MoveModule.jsx\",\"app/main.jsx\",\"app/i18n/strings/sessions.js\",\"app/state-core.jsx\" | ForEach-Object { \"{0,4} ln  {1}\" -f \\(Get-Content $_\\).Count, $_ })",
       "Bash(certutil -hashfile PACE_standalone.html SHA256)",
-      "Bash(certutil -hashfile index.html SHA256)"
+      "Bash(certutil -hashfile index.html SHA256)",
+      "Bash(cat .claude/launch.json)",
+      "Bash(ls -la .claude/static-server.js)",
+      "Bash(cp PACE_standalone.html backups/PACE_standalone_v0.39.0_20260708.html)",
+      "Bash(rm -f backups/PACE_standalone_v0.28.12_20260516.html)",
+      "Bash(python -c ' *)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

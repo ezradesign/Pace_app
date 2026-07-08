@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.39.0
-**Ultima sesion:** #94 -- 2026-07-08 - feat(paths): **F8 -- visual de Caminos, CIERRE del bloque Contenido+Premium**. Auditoria DESIGN_SYSTEM + polish de los 6 componentes de Caminos. Fix huerfanas `--olive`/`--terracota` por reemplazo directo (`--focus`/`--breathe` -- la barra de acento estaba INVISIBLE y el boton salir del ExitConfirmModal casi ilegible) + clipPath unico por instancia (vivia en `Sidebar.jsx`, NO en SenderoBar) + titulos de Caminos tokenizados a `var(--font-display)` (siguen los tweaks data-font) + pack menor (sombra `--sh-modal`, transitions a tokens, purga `.path-dot*`). Bump **v0.39.0**. Diario: `docs/sessions/session-94-f8-visual-caminos.md`
-**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 94
-**Build entregado:** `PACE_standalone.html` v0.39.0 (713 KB) + `index.html` (idem, SHA256 identico)
+**Version actual:** v0.40.0
+**Ultima sesion:** #95 -- 2026-07-08 - feat(entitlement): **Cirugia 1 -- guard central de entitlement + degustacion explicita**. Nuevo `app/state-entitlement.jsx` con `canAccessRoutine`/`canAccessPath` como UNICO punto de verdad del acceso (hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia). Consumido por RoutineCard (gate de las 3 bibliotecas) + PathBreatheStep/PathBodyStep + getSuggestedPath. `path.weekend` deja de ser excepcion tacita: sus 2 steps premium llevan `tasting:true` explicito que el guard reconoce. `PathStepLocked` (auto-skip silencioso) como fallback defensivo. Autofocus del Welcome enguardado tras `(pointer: coarse)` (sin auto-teclado en movil). **Comportamiento observable identico con `premiumUnlocked=false`.** NO toca F3b. Bump **v0.40.0**. Diario: `docs/sessions/session-95-guard-entitlement.md`
+**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 95
+**Build entregado:** `PACE_standalone.html` v0.40.0 (719 KB) + `index.html` (idem, SHA256 identico)
 
 ---
 
@@ -21,9 +21,10 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.39.0** (s94: titulo bump + purga CSS muerto `.path-dots`/`.path-dot` del bloque pace-paths-css, sin consumidores desde s75) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.39.0** (713 KB, regenerado s94) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.39.0** (s94: regenerado por build-standalone.js, SHA256 identico) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.40.0** (s95: + script tag `state-entitlement.jsx` antes de state-paths + titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.40.0** (719 KB, 70 archivos, regenerado s95) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.40.0** (s95: regenerado por build-standalone.js, SHA256 identico) |
+| `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
 | `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
 | `app/custom/CustomBuilder.jsx` | Modal constructor 2 vistas (editor con steppers/reordenar/borrar 2-toques + picker agrupado) | **v0.38.0** (nuevo s93, 259 ln; overlay singleton via CustomEvent pace:open-custom-builder) |
@@ -41,7 +42,7 @@
 | `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.34.5** (nuevo s89, 193 ln; logica de s17 intacta, extraida literal) |
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.35.0** (s90: +4 patrones F4 en getSequence -- diaphragm/yin/bhramari/co2, 230 ln; s89: `data-pace-essential` en los 5 wrappers -- exime la guia de respiracion del kill de prefers-reduced-motion) |
-| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.35.0** (s90: F4 12->20 tecnicas + reorden free-first por grupo + aside Energia, 202 ln; s88: gating `premiumUnlocked` en RoutineCard; s87: lectura inicial de `access`) |
+| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.40.0** (s95: `RoutineCard.isLocked = !canAccessRoutine(id)` -- gate real via guard central, equivalente exacto, `usePace()` para reactividad, `isPremium` sigue inline; s90: F4 12->20 tecnicas + free-first; s88: gating premiumUnlocked) |
 | `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.35.0** (s90: +3 labels en PHASE_KEYS + mapeo playPhaseSound + `drone.start(routine.drone === true)`; s67: playPhaseSound helper + fix huecos A/B/C inhalacion) |
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.38.0** (s93: MoveLibrary monta CustomRoutinesSection tras los grupos + helper `tStep` para EN de pasos custom por nombre + displayRoutine salta lookup en custom, 436 ln; s92: F6 7->14 + MOVE_ROUTINES agrupado) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
@@ -58,14 +59,14 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.39.0** (s94: solo bump PACE_VERSION; s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.40.0** (s95: solo bump PACE_VERSION; s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
-| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.32.0** (s78: getSuggestedPath jerarquica lastViewed>horario>anytime>catalog[0] + hook checkAllPathsCompleted en advancePathStep; s75: getSuggestedPath refactor -> lastViewed + setLastViewedPath) |
+| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.40.0** (s95: `getSuggestedPath` salta candidatos con `!canAccessPath` en cada nivel -- hoy todos free, jerarquia identica; s78: jerarquia lastViewed>horario>anytime>catalog[0]; s75: lastViewed + setLastViewedPath) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
-| `app/state.jsx` | Indice — re-export consolidado | **v0.29.0** (s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.19.0** |
+| `app/state.jsx` | Indice — re-export consolidado | **v0.40.0** (s95: + `canAccessRoutine`/`canAccessPath`; s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
+| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.40.0** (s95: autofocus del input intencion enguardado tras `matchMedia('(pointer: coarse)')` -- solo escritorio, no auto-teclado en movil; s19: base) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
@@ -83,25 +84,26 @@
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
 | `app/tokens.css` | Tokens CSS + base | **v0.34.5** (s89: reduced-motion recalibrado -- el kill global exime subtrees `[data-pace-essential]` via :not() L4; s87: + `--premium`/`--premium-soft`; s79: recalibrado oscuro +10%; s77/s77b: tokens transicion + --focus-cta) |
-| `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.32.0** (s78: + path.tea timeOfDay='afternoon' + path.breath timeOfDay='anytime' -- catalogo cerrado a 7) |
+| `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** (s95: `tasting:true` en los 2 steps premium de path.weekend -- degustacion curada explicita para el guard; s78: catalogo cerrado a 7 con path.tea/path.breath) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
-| `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError (chrome del overlay) | **v0.39.0** (s94: boton confirmar `--terracota`(huerfana)->`--breathe` + `#fff`->`var(--paper)` + h3 a font-display italic; 131 ln) |
+| `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del overlay) | **v0.40.0** (s95: + `PathStepLocked` -- auto-skip silencioso de un step premium inaccesible, dead code hoy; s94: boton confirmar tokenizado; ~142 ln) |
 | `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (SenderoBar 100% + recorrido + logros) | **v0.39.0** (s94: h2 stack hardcodeado -> `var(--font-display)`; 206 ln; CS_ROMAN local) |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** (nuevo s80, 23 ln) |
-| `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.33.0** (nuevo s80, 32 ln) |
+| `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.40.0** (s95: consulta `canAccessRoutine(id, {tasting})` -> false = PathStepLocked; nuevo s80) |
 | `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.34.2** (s86: + `updateStreak()` tras acreditar foco -- F-1, el foco-en-Camino cuenta para la racha como la home; nuevo s80, compone btnBase desde _shared.js) |
 | `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.33.0** (nuevo s80, 113 ln; compone btnBase desde _shared.js + padding 28; firma uniformada a (step, onExit)) |
-| `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.33.0** (nuevo s80, 16 ln) |
+| `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.40.0** (s95: consulta `canAccessRoutine(id, {tasting})` -> false = PathStepLocked; nuevo s80) |
 | `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.39.0** (s94: titulo + hint a `var(--font-display)` -- siguen data-font; 251 ln) |
 | `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.31.0** (s94: auditado contra DESIGN_SYSTEM, limpio -- cero cambios; s77b: prop sticky retirada + hito-labels solo done; 180 ln) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` en barra de acento (estaba invisible) y asterisco + asterisco a font-display + transitions a tokens; 192 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` x3 (barra/tag Favorito/boton Fav) + panel a `--sh-modal` + transition a tokens; 180 ln) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.39.0** (s94: CACHE_NAME pace-v0.39.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
+| `sw.js` | Service Worker PWA | **v0.40.0** (s95: CACHE_NAME pace-v0.40.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.39.0_20260708.html` <- creado s95 (snapshot del v0.39.0 publicado en s94)
 - `backups/PACE_standalone_v0.38.0_20260708.html` <- creado s94 (snapshot del v0.38.0 publicado en s93)
 - `backups/PACE_standalone_v0.37.0_20260708.html` <- creado s93 (snapshot del v0.37.0 publicado en s92)
 - `backups/PACE_standalone_v0.36.0_20260707.html` <- creado s92 (snapshot del v0.36.0 publicado en s91)
@@ -121,69 +123,70 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.31.0_20260517.html`
 - `backups/PACE_standalone_v0.30.0_20260517.html`
 - `backups/PACE_standalone_v0.29.0_20260516.html`
-- `backups/PACE_standalone_v0.28.12_20260516.html`
 
-Nota s94: cap 20 mantenido rotando el mas antiguo (`v0.28.11_20260512.html`)
-al crear el backup del v0.38.0.
+Nota s95: cap 20 mantenido rotando el mas antiguo (`v0.28.12_20260516.html`)
+al crear el backup del v0.39.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 94 - v0.39.0 - feat(paths): F8, visual de Caminos -- BLOQUE
-Contenido+Premium CERRADO (F1-F8).**
+**Sesion 95 - v0.40.0 - feat(entitlement): Cirugia 1 -- guard central de
+entitlement + degustacion explicita.** Primera sesion del plan maestro
+post-bloque.
 
-### Que se hizo (s94)
+### Que se hizo (s95)
 
-- **Tarea 0**: commit s93 (`44912f5`) en git ✓; working tree solo con el
-  volcado del plan maestro (ROADMAP+STATE de final de s93) sin commitear,
-  avisado. **Correccion al encargo**: el clipPath estatico NO estaba en
-  SenderoBar (usa useId desde s75) sino en `Sidebar.jsx:287`
-  (mini-sendero del dia).
-- **Fix huerfanas** (decision aprobada: **reemplazo directo**, sin alias
-  sinonimos en tokens.css): `--olive` -> `var(--focus)` en
-  SuggestedPathCard (la barra de acento estaba INVISIBLE + asterisco) y
-  PathsLibrary (barra, tag Favorito, boton Fav); `--terracota` ->
-  `var(--breathe)` en el boton confirmar del ExitConfirmModal (era casi
-  ilegible: fondo transparente + #fff sobre crema) + `#fff` ->
-  `var(--paper)` (en oscuro: tinta sobre terracota claro).
-- **clipPath unico** en Sidebar: `sendero-clip-<useId>` (patron de los
-  radialGradient de SenderoBar).
-- **Tipografia tokenizada**: stacks `'EB Garamond', ...` hardcodeados ->
-  `var(--font-display)` en titulo+hint de PathTransitions, h2 de
-  CompletionScreen y h3 del ExitConfirmModal (que ademas pasa a serif
-  italic). Los titulos de Caminos ahora siguen los tweaks `data-font`.
-- **Pack menor**: panel PathsLibrary `--sh-card`->`--sh-modal` ·
-  transitions 150/200ms -> `var(--dur-quick) var(--ease)` · asterisco
-  Georgia -> font-display · purga `.path-dots`/`.path-dot` (CSS muerto
-  desde s75) en PACE.html. Descartado por el usuario: boton "Volver" de
-  CompletionScreen en display italic.
-- **SenderoBar**: auditado limpio, cero cambios.
+- **Tarea 0**: commit s94 (`995f513`, v0.39.0) en git ✓, working tree
+  limpio. Mapeados los 7 puntos que leen acceso hoy; **verificado que
+  `path.weekend` es el UNICO Camino que referencia rutinas premium**
+  (nadi.shodhana + atg.knees) -> solo el necesita degustacion explicita.
+- **Guard central** `app/state-entitlement.jsx` (nuevo, ~65 ln, cargado
+  antes de state-paths, re-exportado en state.jsx):
+  `canAccessRoutine(id, {tasting})` (desconocida->true fail-open,
+  free->true, premium->`premiumUnlocked||tasting`) y `canAccessPath(id)`
+  (paths free hoy -> true). UNICO punto de verdad; el sitio que cambiara
+  con la licencia.
+- **Degustacion explicita**: los 2 steps premium de `path.weekend` llevan
+  `tasting:true` en registry.js. Deja de ser excepcion tacita; el
+  comportamiento no cambia (weekend sigue lanzando ambas).
+- **Consumidores**: `RoutineCard` (gate de las 3 bibliotecas) ->
+  `isLocked = !canAccessRoutine(id)` (equivalente exacto, `usePace()` para
+  reactividad, `isPremium` inline para el sello). `PathBreatheStep`/
+  `PathBodyStep` consultan el guard con `{tasting: step.tasting}` ->
+  rama false = `PathStepLocked` (auto-skip silencioso, nuevo en
+  PathRunner.parts.jsx, dead code hoy). `getSuggestedPath` salta
+  candidatos con `!canAccessPath` en cada nivel. `CustomRoutinesSection`
+  se queda en `premiumUnlocked` (feature-gate, no routineId).
+- **Autofocus Welcome**: el `setTimeout(focus)` se enguarda tras
+  `matchMedia('(pointer: coarse)')` -> autofocus solo en escritorio (no
+  auto-teclado en movil).
 
 ### Verificacion + cierre
 
-Preview :8765, protocolo s93 (purga SW+caches tras cada tanda). Barra de
-card computa `--focus`; biblioteca con 7 barras + sombra modal + toggle
-Favorito verificados; runner completo de path.dawn (StepIntro con orbe +
-labels done, ExitConfirmModal en paso no-opcional, CompletionScreen 100%
-con skipped tachado). **Hallazgo feliz**: el preview tenia
-`data-font="cormorant"` activo y los titulos siguieron el tweak (prueba
-directa de la tokenizacion). Oscuro (`#7A9A6D`), EN ("All paths") y movil
-375px (sin scroll horizontal, barra oculta por regla s61) OK. Consola sin
-errores. Cierre: backup `v0.38.0_20260708` (rotado `v0.28.11`, cap 20),
-rebuild standalone+index (713 KB, 69 archivos, SHA256 identico), standalone
-verificado en preview (v0.39.0, cero `--olive` en el bundle), diario s94,
-CHANGELOG (v0.37.0 degradado a enlace), ROADMAP bloque cerrado, memoria
-actualizada. Hallazgo colateral: Sidebar.jsx estaba en ~530 ln reales (no
-497 como decia STATE) -- reanotado en deuda.
+Preview :8765, protocolo s93 (purga SW+caches tras cada tanda). Con
+`premiumUnlocked=false`: guard verificado por caso; biblioteca con las 8
+premium en sello+"Pronto"+`cursor:default` y free clicables (**gating
+identico al previo**); **degustacion viva** -- `path.weekend` lanza la
+sesion de Nadi Shodhana (premium) en vivo, sin bloqueo. Con
+`premiumUnlocked=true` (snapshot + restaurado): premium clicables con sello,
+"Pronto"->min (reactividad via usePace). Welcome: puntero fino enfoca el
+input; forzando `(pointer: coarse)` NO enfoca (activeElement=BODY -- el
+preview no emula coarse al redimensionar, se verifico forzando matchMedia).
+`getSuggestedPath`->path.afternoon. EN: premium con "Soon". Estado
+restaurado (lang=es, premium=false, sin path). Consola sin errores.
+Cierre: backup `v0.39.0_20260708` (rotado `v0.28.12`, cap 20), rebuild
+standalone+index (719 KB, 70 archivos, SHA256 identico), standalone
+verificado en preview (v0.40.0, guard + 2 tasting), diario s95, CHANGELOG
+(v0.38.0 degradado a enlace), ROADMAP (s95 hecha), memoria actualizada.
 
-## Proxima sesion -- s95: guard central de entitlement (Cirugia 1)
+## Proxima sesion -- s96: timer engine timestamp-based
 
-Primera sesion del plan maestro post-bloque (ver `ROADMAP.md`, "Camino a
-v1.0"): `canAccessRoutine`/`canAccessPath` consumidos por
-PathBreatheStep/PathBodyStep/getSuggestedPath, con degustacion explicita
-(path.weekend deja de ser excepcion tacita) + autofocus movil Welcome.
-NO adelantar licencia (seria cambiar formalmente la decision F3b).
+Segunda cirugia del plan maestro (ver `ROADMAP.md`, "Camino a v1.0"):
+motor de timer basado en timestamps (idle/running/paused/completed) que no
+derive en background + migrar FocusTimer y PathFocusStep +
+`completeFocusSession()` unificado. Prioridad de fix: Focus (critico) >
+Breathe (activeTime, s97) > Move.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
@@ -206,8 +209,10 @@ decision F3b) + landing.
 | Campo `access` solo en paths/registry.js -- SUPERSEDED s88 | s85 | (Historico) Los datos de ejercicios no tenian `access`. En s88 (F3b) se anadio `access:'premium'` a 8 de las 26 rutinas. Caminos siguen todos free |
 | F3b solo binario free/premium (locked.* y licencia real diferidos) | s88 | F3b enciende lo construido en F3a sin abrir el sistema de licencia. Los estados intermedios `locked.initial`/`locked.achievement`/`locked.both` de MONETIZATION.md y la validacion de clave firmada (expiresAt, tipos lifetime/pass/season) quedan para post-v1.0. NO implementar validacion |
 | Set premium = 8/26, ~1/3 por modulo, solo lo mas profundo | s88 | El usuario aprobo la direccion pero pidio menos premium. Criterio binario: entrada/accesible=free (incl. las 2 iniciales por modulo y las variantes *mas largas* como box.6/coherent.66), avanzado/profundo=premium. Respira 4 (rounds.full/express, nadi.shodhana, kapalabhati), Mueve 2 (wall.sit, core.stealth), Estira 2 (atg.knees, ancestral). `safety` conservado en las premium con retencion |
-| `premiumUnlocked` controla el bloqueo real; el sello marca "es de pago" | s88 | `RoutineCard`: `isPremium` (sello siempre) vs `isLocked=isPremium && !premiumUnlocked` (accent/clic off + "Pronto"). `premiumUnlocked:false` por defecto sin compra real hasta v1.0. Poner el flag a true (compra/logro futuro) abre todas las premium sin tocar UI. Input de licencia en Tweaks es display-only (disabled, sin validacion) |
-| `path.weekend` = degustacion curada (resolucion D-8a) | s89 | El Camino free lanza nadi.shodhana + atg.knees (premium) POR DISENO: probar premium en contexto curado. No es fuga, es decision. Revisar al crecer catalogo (F5/F6). Los logros premium-tied (explore.nadi/kapalabhati/rounds/atg/ancestral + master.atg.20) se aceptan por ahora (D-8b); revisar denominador de coleccion en F4-F6 |
+| `premiumUnlocked` controla el bloqueo real; el sello marca "es de pago" | s88 | `RoutineCard`: `isPremium` (sello siempre) vs `isLocked` (accent/clic off + "Pronto"). `premiumUnlocked:false` por defecto sin compra real hasta v1.0. Poner el flag a true (compra/logro futuro) abre todas las premium sin tocar UI. Input de licencia en Tweaks es display-only (disabled, sin validacion). **s95:** el calculo de `isLocked` pasa por el guard central `!canAccessRoutine(id)` (equivalente exacto) |
+| Guard central de entitlement = UNICO punto de verdad del acceso | s95 | `app/state-entitlement.jsx`: `canAccessRoutine(id, {tasting})` + `canAccessPath(id)`. Todo lo que decide acceso pasa por aqui (RoutineCard, PathBreatheStep/PathBodyStep, getSuggestedPath). Hoy derivan del booleano `premiumUnlocked`; en pre-venta pasaran a licencia‖trial cambiando SOLO este archivo. **NO cambia F3b** (licencia sigue diferida): es el cableado que la implementara. `CustomRoutinesSection` queda fuera (feature-gate de la superficie del constructor, no un routineId; revisar en licencia). Regla: cualquier chequeo nuevo de acceso se anade AL guard, no suelto en un componente |
+| `path.weekend` = degustacion curada, ahora EXPLICITA (`tasting:true`) | s89, explicita s95 | El Camino free lanza nadi.shodhana + atg.knees (premium) POR DISENO (D-8a). **s95:** esos 2 steps llevan `tasting:true` en registry.js -> el guard concede acceso a premium con `premiumUnlocked=false`. Deja de ser excepcion tacita; el comportamiento no cambia. La decision final (degustacion vs version free) se toma en la sesion de licencia. Logros premium-tied aceptados (D-8b). Si un Camino futuro referencia premium SIN tasting, `PathStepLocked` lo salta en silencio (candado en la puerta, nunca a mitad de flujo) |
+| Autofocus del Welcome solo con puntero fino | s95 | El `setTimeout(focus)` del input intencion se enguarda tras `matchMedia('(pointer: coarse)')`: solo enfoca en escritorio. En tactil auto-abria el teclado (Android Chrome) sobre una bienvenida calmada de campo OPCIONAL; iOS lo ignoraba sin gesto. Patron reutilizable para futuros autofocus en modales de arranque |
 | Reduced-motion con excepcion `data-pace-essential` | s89 | El kill global de prefers-reduced-motion exime subtrees marcados (hoy: los 5 wrappers de BreathVisual). La expansion del circulo ES la guia de respiracion (WCAG 2.3.3 motion esencial). Todo lo decorativo sigue congelado. Si un futuro componente tiene motion funcional, marcarlo con el mismo attr |
 | Paleta oscura automatica SOLO en primer arranque | s89 | `detectInitialPalette()` lee prefers-color-scheme unicamente en las ramas sin estado guardado de loadState. La eleccion manual de Tweaks persiste y siempre gana; no se re-sigue el SO en caliente. Nota: usuario nuevo con SO oscuro acumula dias para secret.dark.mode desde el dia 1 (aceptado) |
 | Steppers con patch funcional `set(s=>...)` | s89 | El stepper de agua usa la forma funcional del setState del store: clics rapidos en el mismo render no pisan estado (la version con closure saltaba pasos, hallado en verificacion). Patron a reutilizar en futuros steppers/contadores |

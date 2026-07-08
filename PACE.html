@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.39.0</title>
+  <title>PACE · Foco · Cuerpo — v0.40.0</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -130,6 +130,10 @@
   <script type="text/babel" src="app/state-timer.jsx"></script>
   <script type="text/babel" src="app/state-hydrate.jsx"></script>
   <script type="text/babel" src="app/state-achievements.jsx"></script>
+  <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
+       Antes de state-paths (getSuggestedPath lo consume) y del resto de
+       consumidores. Unico sitio que cambiara cuando llegue la licencia. -->
+  <script type="text/babel" src="app/state-entitlement.jsx"></script>
   <script type="text/babel" src="app/state-paths.jsx"></script>
   <script type="text/babel" src="app/state-settings.jsx"></script>
   <script type="text/babel" src="app/state-custom.jsx"></script>

@@ -9,6 +9,11 @@
 function PathBodyStep({ step, onExit }) {
   const resolved = resolveBodyRoutine && resolveBodyRoutine(step.routineId);
   if (!resolved) return <StepError routineId={step.routineId} onSkip={() => onExit('skip')} />;
+  // Guard central de acceso (s95). Ver nota en PathBreatheStep: degustacion via
+  // step.tasting; rama false = PathStepLocked (auto-skip, dead code en s95).
+  if (window.canAccessRoutine && !window.canAccessRoutine(step.routineId, { tasting: step.tasting })) {
+    return <PathStepLocked onSkip={() => onExit('skip')} />;
+  }
   const kind = resolved.source === 'extra' ? 'extra' : 'move';
   return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
 }
