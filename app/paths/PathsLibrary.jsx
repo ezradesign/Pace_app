@@ -35,7 +35,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
       marginBottom: 10,
     }}>
       {/* Acento */}
-      <div style={{ width: 3, minHeight: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+      <div style={{ width: 3, minHeight: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
 
       {/* Contenido */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -47,7 +47,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
             </span>
           )}
           {isFavorite && (
-            <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--olive)', padding: '2px 6px', border: '1px solid var(--olive)', borderRadius: 'var(--r-pill)' }}>
+            <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--focus)', padding: '2px 6px', border: '1px solid var(--focus)', borderRadius: 'var(--r-pill)' }}>
               {t('paths.library.favorite') || 'Favorito'}
             </span>
           )}
@@ -74,7 +74,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
         <button
           onClick={onToggleFavorite}
           title={isFavorite ? (t('paths.library.unfavorite') || 'Quitar favorito') : (t('paths.library.favorite') || 'Favorito')}
-          style={{ padding: '5px 10px', fontSize: 10, letterSpacing: '0.08em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'transparent', color: isFavorite ? 'var(--olive)' : 'var(--ink-3)', border: '1px solid ' + (isFavorite ? 'var(--olive)' : 'var(--line)'), borderRadius: 'var(--r-sm)', cursor: 'pointer', transition: 'all 150ms' }}
+          style={{ padding: '5px 10px', fontSize: 10, letterSpacing: '0.08em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'transparent', color: isFavorite ? 'var(--focus)' : 'var(--ink-3)', border: '1px solid ' + (isFavorite ? 'var(--focus)' : 'var(--line)'), borderRadius: 'var(--r-sm)', cursor: 'pointer', transition: 'all var(--dur-quick) var(--ease)' }}
         >
           {isFavorite ? (t('paths.library.unfavorite') || 'Quitar') : (t('paths.library.favorite') || 'Fav')}
         </button>
@@ -138,7 +138,7 @@ function PathsLibrary() {
         width: '100%', maxWidth: 480,
         maxHeight: '85vh',
         display: 'flex', flexDirection: 'column',
-        boxShadow: 'var(--sh-card)',
+        boxShadow: 'var(--sh-modal)',
         overflow: 'hidden',
       }}>
         {/* Header */}

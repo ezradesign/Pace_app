@@ -27,10 +27,12 @@ producción:
 
 ---
 
-## 🎯 Bloque actual — Contenido + Premium (post-v0.34.0)
+## 🎯 Bloque Contenido + Premium (post-v0.34.0) — ✅ CERRADO (s94, v0.39.0)
 
 Bloque grande en fases (1 fase = 1 sesión cerrable). Planificado en la
-Fase 0 (s84-bis / 2026-06-05). Detalle de catálogo en [`CONTENT.md`](./CONTENT.md).
+Fase 0 (s84-bis / 2026-06-05), cerrado en s94 (2026-07-08) con las 8 fases
+hechas. Detalle de catálogo en [`CONTENT.md`](./CONTENT.md). El plan
+vigente pasa a ser la secuencia post-bloque de "Camino a v1.0" (abajo).
 
 | Fase | Alcance | Estado |
 |---|---|---|
@@ -42,11 +44,63 @@ Fase 0 (s84-bis / 2026-06-05). Detalle de catálogo en [`CONTENT.md`](./CONTENT.
 | **F5** | Contenido Estira → ~12-15 rutinas (~mitad premium), categorizado | **hecho (s91, v0.36.0)** — 14 rutinas, 6 premium, 4 grupos como Respira; 11 pasos nuevos con DefaultGlyph (cola D-4) |
 | **F6** | Contenido Mueve → ~12-15 rutinas (~mitad premium), reclasifica la fuerza | **hecho (s92, v0.37.0)** — 14 rutinas, 6 premium, 4 grupos free-first (`mueve.cat.*`); 9 pasos nuevos con DefaultGlyph (cola D-4 → 35); strings-content.js troceado en `app/i18n/content/` |
 | **F7** | Registro interno de ejercicios + **constructor de rutinas premium** (`custom.sequence`) | **hecho (s93, v0.38.0)** — registro curado 65 ejercicios / 8 grupos (`app/custom/`) + sección "Tus rutinas" al final de la biblioteca Mueve (superficie premium entera); crédito vía `completeMoveSession`, sin logros nuevos; ids `custom.<ts>` |
-| **F8** | Visual de Caminos — auditoría DESIGN_SYSTEM + polish de los 6 componentes | pendiente |
+| **F8** | Visual de Caminos — auditoría DESIGN_SYSTEM + polish de los 6 componentes | **hecho (s94, v0.39.0)** — huérfanas `--olive`/`--terracota` → tokens reales por reemplazo directo (barra de acento invisible + botón salir ilegible corregidos); clipPath único (vivía en Sidebar, no en SenderoBar); títulos de Caminos a `var(--font-display)` (siguen data-font); SenderoBar auditado limpio, cero cambios — **CIERRA EL BLOQUE** |
 
 **Decisión clave:** el gating va **antes** del contenido (no se puede
 etiquetar `access` con honestidad sin el campo ni el sello). La unidad
 gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
+
+---
+
+## 🧭 Camino a v1.0 — Plan maestro (adoptado s93, 2026-07-08)
+
+Síntesis de las reflexiones de producto/ingeniería del usuario,
+reconciliada contra el código real. **Métrica guía de cada sesión:**
+*un usuario nuevo completa su primer Camino en < 3 minutos, sin
+fricción, y quiere volver mañana.*
+
+### Hallazgos verificados contra el repo (2026-07-08)
+
+- `--olive`/`--terracota` **huérfanas** (sin definir en tokens.css; usadas
+  en PathsLibrary, SuggestedPathCard, PathRunner.parts — pierden color en
+  silencio). **RESUELTO s94** (reemplazo directo por `--focus`/`--breathe`).
+- React **development** + Babel runtime + unpkg CDN en producción.
+- Timers con `setInterval` que derivan en background: prioridad de fix
+  **Focus (crítico) > Breathe (activeTime) > Move (bajo — sesiones cortas
+  con pantalla activa)**.
+- BreatheSession cuenta pausas como tiempo activo (wall-clock).
+- Stats mes/año no muestran el día actual (history se alimenta en
+  rollover) → selector `getHistoryWithToday` **memoizado**.
+- `path.weekend` lanza premium sin candado: NO es bug (decisión s89,
+  degustación curada) **pero caduca cuando el premium sea de pago real**
+  → el guard central llevará campo explícito (`tasting: true` o versión
+  free alternativa); decidir en la sesión de licencia.
+- Cola D-4 (35 glifos placeholder) es **pre-venta**: no se puede vender
+  packs cuyos pasos rendericen DefaultGlyph.
+- El Path Builder se abarató ~50% tras F7 (registry + CRUD + builder +
+  overlay + runner data-driven reutilizables).
+
+### Secuencia post-bloque (1 fase = 1 sesión cerrable)
+
+| Sesión | Contenido |
+|---|---|
+| ~~s94~~ | ~~F8 visual Caminos~~ **hecho (v0.39.0)** — huérfanas resueltas + clipPath único (estaba en Sidebar.jsx, no en SenderoBar) + tipografía tokenizada |
+| **s95** | **Cirugía 1:** guard central de entitlement (`canAccessRoutine`/`canAccessPath`) consumido por PathBreatheStep/PathBodyStep/getSuggestedPath, con degustación explícita · autofocus móvil Welcome |
+| **s96** | **Timer engine** timestamp-based (idle/running/paused/completed) + migrar FocusTimer y PathFocusStep + `completeFocusSession()` unificado |
+| **s97** | **BreatheSession tiempo activo** (activeTime vs totalTime; stats y logros acreditan activeTime) |
+| **s98** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |
+| **s99** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
+| **s100-101** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |
+| **s102** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
+| **s103** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
+| **s104-105** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
+| pre-venta | Iteración glifos D-4 (patrón s84) · **trial 7 días explícito** (no auto-start; `premiumUnlocked` derivado de licencia‖trial) · **licencia firmada offline ECDSA P-256** (guardar la clave y revalidar en arranque, no un booleano) — requiere **cambiar formalmente la decisión F3b** · landing `/` separada de `/app` · pricing/terms |
+| post-venta | Vite/ESM real (Etapa B) · Path Builder (reuso F7) · Modo Estudio · sonidos procedurales premium · CTB completa · Android Capacitor (notificaciones/hápticos/widget/billing) · Wrapped · extensión Chrome · IndexedDB via localForage (antes: `navigator.storage.persist()` tras onboarding, barato) |
+
+**Principios del plan:** local-first ≠ cero servicios (infra de
+compra/licencias OK; backend de producto y tracking NO) · no abrir más
+de un frente por sesión · el standalone sigue vivo como artefacto de
+exportación en todas las etapas.
 
 ---
 
@@ -118,3 +172,7 @@ Cercano a CTB — podrían converger en una sección "sesiones largas".
 - Consejos médicos sin disclaimer en técnicas de riesgo.
 - Copia literal de listas de rutinas de terceros.
 - Biometría / wearables (decisión s21 — no encaja con el tono artesanal).
+- Muro de pago a mitad de una sesión (el candado vive en la puerta, nunca dentro).
+- Modo oscuro OLED #000 — los negros de PACE son cálidos.
+- IA generativa como feature visible.
+- Backend de cuentas (infra de compra/licencias externa sí; cuentas no).

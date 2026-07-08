@@ -61,7 +61,9 @@
       "PowerShell(node build-standalone.js && \\(Get-FileHash PACE_standalone.html\\).Hash -eq \\(Get-FileHash index.html\\).Hash)",
       "PowerShell(\\(Get-Content sw.js -Raw\\) -replace \"const CACHE_NAME = 'pace-v0\\\\.37\\\\.0';\", \"const CACHE_NAME = 'pace-v0.38.0';\" | Set-Content sw.js -NoNewline; Select-String -Path sw.js -Pattern \"CACHE_NAME = \" | Select-Object -First 1)",
       "PowerShell($a = \\(Get-FileHash PACE_standalone.html -Algorithm SHA256\\).Hash; $b = \\(Get-FileHash index.html -Algorithm SHA256\\).Hash; \"standalone: $a\"; \"index:      $b\"; \"identicos: $\\($a -eq $b\\)\")",
-      "PowerShell(\"app/custom/exercise-registry.js\",\"app/custom/CustomRoutines.jsx\",\"app/custom/CustomBuilder.jsx\",\"app/state-custom.jsx\",\"app/i18n/content/custom.js\",\"app/move/MoveModule.jsx\",\"app/main.jsx\",\"app/i18n/strings/sessions.js\",\"app/state-core.jsx\" | ForEach-Object { \"{0,4} ln  {1}\" -f \\(Get-Content $_\\).Count, $_ })"
+      "PowerShell(\"app/custom/exercise-registry.js\",\"app/custom/CustomRoutines.jsx\",\"app/custom/CustomBuilder.jsx\",\"app/state-custom.jsx\",\"app/i18n/content/custom.js\",\"app/move/MoveModule.jsx\",\"app/main.jsx\",\"app/i18n/strings/sessions.js\",\"app/state-core.jsx\" | ForEach-Object { \"{0,4} ln  {1}\" -f \\(Get-Content $_\\).Count, $_ })",
+      "Bash(certutil -hashfile PACE_standalone.html SHA256)",
+      "Bash(certutil -hashfile index.html SHA256)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.38.0
-**Ultima sesion:** #93 -- 2026-07-08 - feat(custom): **F7 -- registro de ejercicios + constructor de rutinas premium**. Registro curado `EXERCISE_REGISTRY` (65 ejercicios / 8 grupos, `app/custom/exercise-registry.js`) + constructor completo (crear/editar/reordenar/borrar/lanzar con el runner de `MoveSession`). Seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium ENTERA (sello + "Pronto" con `premiumUnlocked=false`). `customRoutines` en state (CRUD en `app/state-custom.jsx` nuevo, split s57). Credito via `completeMoveSession` sin logros nuevos. Bump **v0.38.0**. Diario: `docs/sessions/session-93-f7-constructor-rutinas.md`
-**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 93
-**Build entregado:** `PACE_standalone.html` v0.38.0 (713 KB) + `index.html` (idem, SHA256 identico)
+**Version actual:** v0.39.0
+**Ultima sesion:** #94 -- 2026-07-08 - feat(paths): **F8 -- visual de Caminos, CIERRE del bloque Contenido+Premium**. Auditoria DESIGN_SYSTEM + polish de los 6 componentes de Caminos. Fix huerfanas `--olive`/`--terracota` por reemplazo directo (`--focus`/`--breathe` -- la barra de acento estaba INVISIBLE y el boton salir del ExitConfirmModal casi ilegible) + clipPath unico por instancia (vivia en `Sidebar.jsx`, NO en SenderoBar) + titulos de Caminos tokenizados a `var(--font-display)` (siguen los tweaks data-font) + pack menor (sombra `--sh-modal`, transitions a tokens, purga `.path-dot*`). Bump **v0.39.0**. Diario: `docs/sessions/session-94-f8-visual-caminos.md`
+**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 94
+**Build entregado:** `PACE_standalone.html` v0.39.0 (713 KB) + `index.html` (idem, SHA256 identico)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.38.0** (s93: titulo bump + 5 script tags nuevos: content/custom + state-custom + custom/registry+CustomRoutines+CustomBuilder) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.38.0** (713 KB, regenerado s93) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.38.0** (s93: regenerado por build-standalone.js, SHA256 identico) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.39.0** (s94: titulo bump + purga CSS muerto `.path-dots`/`.path-dot` del bloque pace-paths-css, sin consumidores desde s75) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.39.0** (713 KB, regenerado s94) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.39.0** (s94: regenerado por build-standalone.js, SHA256 identico) |
 | `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
 | `app/custom/CustomBuilder.jsx` | Modal constructor 2 vistas (editor con steppers/reordenar/borrar 2-toques + picker agrupado) | **v0.38.0** (nuevo s93, 259 ln; overlay singleton via CustomEvent pace:open-custom-builder) |
@@ -46,7 +46,7 @@
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.38.0** (s93: MoveLibrary monta CustomRoutinesSection tras los grupos + helper `tStep` para EN de pasos custom por nombre + displayRoutine salta lookup en custom, 436 ln; s92: F6 7->14 + MOVE_ROUTINES agrupado) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.28.8** (s69: WeekDots indexa weeklyStats[i] lunes-primero, hitos usa getDayIndexMondayFirst) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.39.0** (s94: clipPath del mini-sendero con id unico por instancia `sendero-clip-<useId>`, +5 ln -> 535; OJO: ya estaba en ~530 ln, no en las 497 registradas -- vuelve a deuda) |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.31.0** (s77b: startBtnPrimary usa var(--focus-cta) -- verde musgo #506B3E claro / #8AA776 oscuro) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
@@ -58,7 +58,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.38.0** (s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.39.0** (s94: solo bump PACE_VERSION; s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -85,23 +85,24 @@
 | `app/tokens.css` | Tokens CSS + base | **v0.34.5** (s89: reduced-motion recalibrado -- el kill global exime subtrees `[data-pace-essential]` via :not() L4; s87: + `--premium`/`--premium-soft`; s79: recalibrado oscuro +10%; s77/s77b: tokens transicion + --focus-cta) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.32.0** (s78: + path.tea timeOfDay='afternoon' + path.breath timeOfDay='anytime' -- catalogo cerrado a 7) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
-| `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError (chrome del overlay) | **v0.33.0** (nuevo s80, 131 ln) |
-| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (SenderoBar 100% + recorrido + logros) | **v0.33.0** (nuevo s80, 206 ln, extraido literal de PathRunner.jsx; CS_ROMAN local) |
+| `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError (chrome del overlay) | **v0.39.0** (s94: boton confirmar `--terracota`(huerfana)->`--breathe` + `#fff`->`var(--paper)` + h3 a font-display italic; 131 ln) |
+| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (SenderoBar 100% + recorrido + logros) | **v0.39.0** (s94: h2 stack hardcodeado -> `var(--font-display)`; 206 ln; CS_ROMAN local) |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** (nuevo s80, 23 ln) |
 | `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.33.0** (nuevo s80, 32 ln) |
 | `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.34.2** (s86: + `updateStreak()` tras acreditar foco -- F-1, el foco-en-Camino cuenta para la racha como la home; nuevo s80, compone btnBase desde _shared.js) |
 | `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.33.0** (nuevo s80, 113 ln; compone btnBase desde _shared.js + padding 28; firma uniformada a (step, onExit)) |
 | `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.33.0** (nuevo s80, 16 ln) |
-| `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.31.0** (nuevo s77, 232 ln; s77b: render SenderoBar lg sin guard typeof) |
-| `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.31.0** (s77: + prop size="lg" + prop orbVisible + orbe viajero via animateMotion sobre la curva Bezier; s77b: **prop sticky retirada** + hito-labels filtran solo done (i<currentIndex) -- comportamiento unificado en lg y CompletionScreen; 148->164 ln) |
-| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta) por coherencia con el Pomodoro) |
-| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.31.0** (s77b: CTA Comenzar usa var(--focus-cta)) |
+| `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.39.0** (s94: titulo + hint a `var(--font-display)` -- siguen data-font; 251 ln) |
+| `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.31.0** (s94: auditado contra DESIGN_SYSTEM, limpio -- cero cambios; s77b: prop sticky retirada + hito-labels solo done; 180 ln) |
+| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` en barra de acento (estaba invisible) y asterisco + asterisco a font-display + transitions a tokens; 192 ln) |
+| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` x3 (barra/tag Favorito/boton Fav) + panel a `--sh-modal` + transition a tokens; 180 ln) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.38.0** (s93: CACHE_NAME pace-v0.38.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
+| `sw.js` | Service Worker PWA | **v0.39.0** (s94: CACHE_NAME pace-v0.39.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.38.0_20260708.html` <- creado s94 (snapshot del v0.38.0 publicado en s93)
 - `backups/PACE_standalone_v0.37.0_20260708.html` <- creado s93 (snapshot del v0.37.0 publicado en s92)
 - `backups/PACE_standalone_v0.36.0_20260707.html` <- creado s92 (snapshot del v0.36.0 publicado en s91)
 - `backups/PACE_standalone_v0.35.0_20260707.html` <- creado s91 (snapshot del v0.35.0 publicado en s90)
@@ -121,81 +122,77 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.30.0_20260517.html`
 - `backups/PACE_standalone_v0.29.0_20260516.html`
 - `backups/PACE_standalone_v0.28.12_20260516.html`
-- `backups/PACE_standalone_v0.28.11_20260512.html`
 
-Nota s93: cap 20 mantenido rotando el mas antiguo (`v0.28.10_20260512.html`)
-al crear el backup del v0.37.0.
+Nota s94: cap 20 mantenido rotando el mas antiguo (`v0.28.11_20260512.html`)
+al crear el backup del v0.38.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 93 - v0.38.0 - feat(custom): F7, registro + constructor de rutinas premium.**
+**Sesion 94 - v0.39.0 - feat(paths): F8, visual de Caminos -- BLOQUE
+Contenido+Premium CERRADO (F1-F8).**
 
-### Que se hizo (s93)
+### Que se hizo (s94)
 
-- **Tarea 0 limpia**: commit s92 (`3326b1a`) en git, working tree limpio.
-- **Registro interno curado** (`app/custom/exercise-registry.js`, decision
-  aprobada: curado a mano, NO derivado en runtime): union deduplicada de
-  los steps de MOVE+EXTRA_ROUTINES, **65 ejercicios en 8 grupos**, cue
-  neutro + dur por defecto; `name` = ES canonico = key de glifo (cero
-  glifos nuevos, cola D-4 intacta en 35). `Dead hang (si puedes)` fuera
-  (duplica Hang pasivo). NO biblioteca navegable (decision s85).
-- **Constructor premium completo**: seccion **"Tus rutinas" como 5º grupo
-  al FINAL de la biblioteca Mueve** (decision del usuario) con sello +
-  copy + "Pronto" en estado bloqueado (nada clicable); con
-  `premiumUnlocked=true`: card "+ Crear rutina", `CustomRoutineCard` con
-  lapiz, `CustomBuilder` modal con editor (nombre + filas glifo/stepper
-  ±5s/reordenar/quitar + total vivo + borrar en 2 toques) y picker
-  agrupado. Overlay singleton en main.jsx via CustomEvent
-  `pace:open-custom-builder`; MoveLibrary se oculta mientras esta abierto
-  (un solo Modal escucha Escape).
-- **Estado**: `customRoutines: []` en defaultState (state-core 511 ln,
-  deuda sin agravar) + CRUD en `app/state-custom.jsx` nuevo (split s57)
-  con `CUSTOM_LIMITS` (10 rutinas · 1-12 pasos · 10-120 s · nombre <=40),
-  sanitize y lectura defensiva. Id `custom.<Date.now()>` -- jamas colisiona
-  con `extra.*`/`move.*` ni con los mapas de logros.
-- **Credito**: `completeMoveSession(id, min)` via `handleStartMove`
-  existente (kind='move'). Cero cambios en state-achievements, sin logros
-  nuevos, cero `explore.*` accidentales (verificado en runtime).
-- **i18n EN completo**: ~33 keys chrome en sessions.js (ES+EN) +
-  `content/custom.js` con EN por nombre canonico (`custom.ex.<name>.*`,
-  reutilizando los EN establecidos). `MoveSession.tStep`: custom resuelve
-  pasos por nombre, catalogo sigue posicional.
-- RoutineCard/gating, ids `extra.*`/`move.*`, registry.js, README: intactos.
-
-### Incidente de verificacion (leccion s91/s92 AMPLIADA)
-
-El SW **se re-registra en cada carga**: purgarlo solo al arrancar no basta
--- revivio con `pace-v0.37.0` y congelo un fix de mitad de sesion
-(diagnostico via `MoveSession.toString()` + stack del warn). Protocolo
-nuevo: **purgar SW+caches tras CADA tanda de edits** + `Cache-Control:
-no-store` añadido al static-server (los .jsx sin validadores se cacheaban
-heuristicamente).
+- **Tarea 0**: commit s93 (`44912f5`) en git ✓; working tree solo con el
+  volcado del plan maestro (ROADMAP+STATE de final de s93) sin commitear,
+  avisado. **Correccion al encargo**: el clipPath estatico NO estaba en
+  SenderoBar (usa useId desde s75) sino en `Sidebar.jsx:287`
+  (mini-sendero del dia).
+- **Fix huerfanas** (decision aprobada: **reemplazo directo**, sin alias
+  sinonimos en tokens.css): `--olive` -> `var(--focus)` en
+  SuggestedPathCard (la barra de acento estaba INVISIBLE + asterisco) y
+  PathsLibrary (barra, tag Favorito, boton Fav); `--terracota` ->
+  `var(--breathe)` en el boton confirmar del ExitConfirmModal (era casi
+  ilegible: fondo transparente + #fff sobre crema) + `#fff` ->
+  `var(--paper)` (en oscuro: tinta sobre terracota claro).
+- **clipPath unico** en Sidebar: `sendero-clip-<useId>` (patron de los
+  radialGradient de SenderoBar).
+- **Tipografia tokenizada**: stacks `'EB Garamond', ...` hardcodeados ->
+  `var(--font-display)` en titulo+hint de PathTransitions, h2 de
+  CompletionScreen y h3 del ExitConfirmModal (que ademas pasa a serif
+  italic). Los titulos de Caminos ahora siguen los tweaks `data-font`.
+- **Pack menor**: panel PathsLibrary `--sh-card`->`--sh-modal` ·
+  transitions 150/200ms -> `var(--dur-quick) var(--ease)` · asterisco
+  Georgia -> font-display · purga `.path-dots`/`.path-dot` (CSS muerto
+  desde s75) en PACE.html. Descartado por el usuario: boton "Volver" de
+  CompletionScreen en display italic.
+- **SenderoBar**: auditado limpio, cero cambios.
 
 ### Verificacion + cierre
 
-Preview :8765: gating off (sello+Pronto, nada clicable, screenshot); gating
-on SOLO en prueba con snapshot de estado: crear/editar/stepper/reordenar OK,
-lanzar desde card real -> runner completo -> credito exacto (moveMinutes
-0->2, sessions 0->1, plan.muevete, first.stretch, cero explore.*), borrado
-2 toques, persistencia tras recarga, EN completo con cero warns [i18n].
-Estado restaurado (premiumUnlocked=false, lang=es, 0 rutinas). Consola sin
-errores. Cierre: backup `v0.37.0_20260708` (rotado `v0.28.10`, cap 20),
+Preview :8765, protocolo s93 (purga SW+caches tras cada tanda). Barra de
+card computa `--focus`; biblioteca con 7 barras + sombra modal + toggle
+Favorito verificados; runner completo de path.dawn (StepIntro con orbe +
+labels done, ExitConfirmModal en paso no-opcional, CompletionScreen 100%
+con skipped tachado). **Hallazgo feliz**: el preview tenia
+`data-font="cormorant"` activo y los titulos siguieron el tweak (prueba
+directa de la tokenizacion). Oscuro (`#7A9A6D`), EN ("All paths") y movil
+375px (sin scroll horizontal, barra oculta por regla s61) OK. Consola sin
+errores. Cierre: backup `v0.38.0_20260708` (rotado `v0.28.11`, cap 20),
 rebuild standalone+index (713 KB, 69 archivos, SHA256 identico), standalone
-verificado en preview (v0.38.0), diario s93, CHANGELOG (v0.36.0 degradado a
-enlace), CONTENT seccion constructor, ROADMAP F7 hecha.
+verificado en preview (v0.39.0, cero `--olive` en el bundle), diario s94,
+CHANGELOG (v0.37.0 degradado a enlace), ROADMAP bloque cerrado, memoria
+actualizada. Hallazgo colateral: Sidebar.jsx estaba en ~530 ln reales (no
+497 como decia STATE) -- reanotado en deuda.
 
-## Proxima sesion -- F8 (visual Caminos)
+## Proxima sesion -- s95: guard central de entitlement (Cirugia 1)
 
-Ultima fase del bloque Contenido+Premium. P1 de la auditoria (recordatorios
-opt-in, onboarding, notificacion fin de pomodoro) puede intercalarse antes.
+Primera sesion del plan maestro post-bloque (ver `ROADMAP.md`, "Camino a
+v1.0"): `canAccessRoutine`/`canAccessPath` consumidos por
+PathBreatheStep/PathBodyStep/getSuggestedPath, con degustacion explicita
+(path.weekend deja de ser excepcion tacita) + autofocus movil Welcome.
+NO adelantar licencia (seria cambiar formalmente la decision F3b).
 
-### Fases restantes del bloque
+### Despues -- Plan maestro v1.0 (adoptado s93)
 
-F8 visual Caminos (ultima). (Post-bloque: experiencia CTB completa.
-Post-v1.0: estados `locked.*` + validacion de licencia. P2 auditoria: build
-precompilado, tests state, import sanitizado, landing.)
+Secuencia completa en `ROADMAP.md` ("Camino a v1.0"): s96 timer engine ·
+s97 breathe activeTime · s98 stats vivos + safety/privacy · s99 PWA
+completa · s100-101 build Etapa A (precompilar ANTES que Vite) · s102
+onboarding · s103 home Caminos al centro · s104-105 taxonomia + filtros +
+sigilo · pre-venta: glifos D-4 + trial/licencia (cambiando formalmente la
+decision F3b) + landing.
 
 ---
 
@@ -227,6 +224,8 @@ precompilado, tests state, import sanitizado, landing.)
 | i18n del registro por NOMBRE canonico ES como key (`custom.ex.<name>.*`) | s93 | Las rutinas custom no tienen keys posicionales `<id>.sN.*`; el EN de sus pasos se resuelve por nombre en `content/custom.js` (mismo criterio que las keys de glifo). `MoveSession.tStep` bifurca: custom por nombre, catalogo posicional. Los EN reutilizan los ya establecidos en content/move+extra para no divergir |
 | Builder como overlay singleton que OCULTA MoveLibrary mientras esta abierto | s93 | Estado en main.jsx + apertura via CustomEvent `pace:open-custom-builder` (patron s50+). Ocultar la biblioteca evita que dos Modal escuchen Escape a la vez; al cerrar el builder la biblioteca reaparece (openLibrary conserva 'move'). Si otro overlay futuro convive con un Modal, mismo patron |
 | Preview: purgar SW+caches tras CADA tanda de edits + static-server con no-store | s93 | El SW se re-registra en cada carga (purgarlo solo al arrancar NO basta -- s93 congelo un fix de mitad de sesion). Ademas los .jsx sin validadores se cacheaban heuristicamente en HTTP: `Cache-Control: no-store` en `.claude/static-server.js`. Diagnostico util: `window.Componente.toString()` para ver el codigo compilado real |
+| Sin tokens sinonimos en tokens.css (huerfanas por reemplazo directo) | s94 | `--olive`/`--terracota` se resolvieron sustituyendo por `var(--focus)`/`var(--breathe)` en los consumidores, NO creando alias. Regla: dos nombres para el mismo color = deriva del design system. Si un modulo necesita un acento propio de verdad, token nuevo documentado en DESIGN_SYSTEM.md, no alias. Corolario s94: titulos con stack de fuente hardcodeado se tokenizan a `var(--font-display)` (el blindaje Georgia de s20 es SOLO para cifras MM:SS/racha) |
+| Plan maestro v1.0 adoptado — secuencia s94→ en ROADMAP.md | s93 | Sintesis de reflexiones del usuario verificada contra el repo. Claves: build en DOS etapas (precompilar Babel+React prod+fuentes self-hosted ANTES que Vite/ESM); guard central de entitlement con degustacion explicita (path.weekend deja de ser excepcion tacita cuando llegue la licencia); trial 7 dias de arranque EXPLICITO (no auto); `premiumUnlocked` pasara a derivarse de licencia‖trial (guardar la clave, no un booleano); licencia ECDSA P-256 (no Ed25519, compat WebCrypto/WebView); cola D-4 es pre-venta; timers: Focus > Breathe > Move. Adelantar licencia = cambiar formalmente la decision F3b, no implementar por encima |
 | Sintetizar audio (no WAVs) | s28 | Web Audio API, 432 Hz base |
 | Elastic License 2.0 | s26 | No SaaS competidores, si uso personal/comercial propio |
 | Anti-truncamiento: Python write | s48-s52 | Nunca Edit tool con caracteres especiales |
@@ -272,7 +271,7 @@ precompilado, tests state, import sanitizado, landing.)
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
-| `app/shell/Sidebar.jsx` | 497 | SALE (s61, antes 630) |
+| `app/shell/Sidebar.jsx` | 535 | MEDIA (s94: re-entra -- estaba en ~530 reales sin registrar desde s61, +5 ln del clipPath unico; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 

@@ -68,14 +68,14 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       borderRadius: 'var(--r-md)',
       boxShadow: 'var(--sh-soft)',
       cursor: doneToday ? 'default' : 'pointer',
-      transition: 'all 200ms var(--ease)',
+      transition: 'all var(--dur-quick) var(--ease)',
       flex: 1, minWidth: 0,
     }}
     onClick={!doneToday ? onStart : undefined}
     onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--olive)', borderRadius: 2, flexShrink: 0 }} />
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (
@@ -101,13 +101,13 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       {!doneToday && (
         <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
-          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity 150ms' }}
+          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity var(--dur-quick) var(--ease)' }}
         >
           {t('path.card.start') || 'Comenzar'}
         </button>
       )}
       {doneToday && (
-        <span style={{ fontSize: 18, color: 'var(--olive)', flexShrink: 0, lineHeight: 1, fontFamily: 'Georgia, serif' }}>*</span>
+        <span style={{ fontSize: 18, color: 'var(--focus)', flexShrink: 0, lineHeight: 1, fontFamily: 'var(--font-display)' }}>*</span>
       )}
     </div>
   );
