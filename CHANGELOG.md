@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.42.0** | 2026-07-08 | fix(ui): pulido **modo oscuro legible** (recalibracion en bloque `--ink-3 #756D5D→#B2A995` que gobierna toda la letra fina + `--line`/`--line-2` para aro y bordes; logo invertido intacto por peticion del usuario) · **aro del timer empieza siempre vacio** (useCountdown: idle deriva `remaining` de `durationSec`, ya no reflejaba relleno proporcional al cambiar preset) · **progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro; sustituye las bolas, que se disparaban a ~50-100 en rutinas largas) + retira "Ns/Ns" redundante · fix solape precontador "3" (SessionPrep) y countdown de Mueve centrado | #97 | [abajo](#v0420----2026-07-08----fixui-pulido-modo-oscuro--progreso) |
 | **v0.41.0** | 2026-07-08 | refactor(focus): Cirugia 2 -- **motor de timer basado en timestamps** (`app/focus/useCountdown.jsx`, estados idle/running/paused/completed; `remaining = f(Date.now())` en cada tick -> **cero deriva en background**, la pestana oculta ya no subcuenta) migrado a FocusTimer (home) y PathFocusStep (Camino) · `completeFocusSession(context)` unificado que **PRESERVA la distincion** (home = completePomodoro con cycle+logros de pomodoro; Camino = addFocusMinutes+updateStreak sin cycle) · `'completed'` terminal (cierra un doble-credito latente) · **comportamiento observable identico en primer plano** (creditos, sonidos, logros, drone, single-shot) | #96 | [abajo](#v0410----2026-07-08----refactorfocus-cirugia-2-motor-timer-timestamp) |
-| **v0.40.0** | 2026-07-08 | feat(entitlement): Cirugia 1 -- **guard central `canAccessRoutine`/`canAccessPath`** (UNICO punto de verdad del acceso, hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia) consumido por RoutineCard + PathBreatheStep/PathBodyStep + getSuggestedPath · **degustacion EXPLICITA** de path.weekend (`tasting:true` a nivel step, deja de ser excepcion tacita) · autofocus Welcome solo con puntero fino (sin auto-teclado en movil) · **comportamiento observable identico con premiumUnlocked=false** | #95 | [abajo](#v0400----2026-07-08----featentitlement-cirugia-1-guard-central) |
+| **v0.40.0** | 2026-07-08 | feat(entitlement): Cirugia 1 -- **guard central `canAccessRoutine`/`canAccessPath`** (UNICO punto de verdad del acceso, hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia) consumido por RoutineCard + PathBreatheStep/PathBodyStep + getSuggestedPath · **degustacion EXPLICITA** de path.weekend (`tasting:true` a nivel step, deja de ser excepcion tacita) · autofocus Welcome solo con puntero fino (sin auto-teclado en movil) · **comportamiento observable identico con premiumUnlocked=false** | #95 | [session-95](./docs/sessions/session-95-guard-entitlement.md) |
 | **v0.39.0** | 2026-07-08 | feat(paths): F8 -- polish visual de los 6 componentes de Caminos contra DESIGN_SYSTEM (**CIERRA el bloque Contenido+Premium**) · fix huerfanas `--olive`/`--terracota` -> tokens reales (barra de acento invisible + boton salir ilegible) · clipPath unico por instancia en Sidebar · titulos de Caminos tokenizados a var(--font-display) (siguen los tweaks data-font) · purga CSS muerto .path-dots | #94 | [session-94](./docs/sessions/session-94-f8-visual-caminos.md) |
 | **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [session-93](./docs/sessions/session-93-f7-constructor-rutinas.md) |
 | **v0.37.0** | 2026-07-07 | feat(move): F6 -- catalogo Mueve 7 -> 14 rutinas (7 nuevas Strengthside/Jess Martin-inspired: sentadillas de silla, gluteos invisibles, espalda de oficina, empuje·progresion, colgarse, piernas·a una, core·plancha) · MOVE_ROUTINES agrupado en 4 grupos free-first (prefijo mueve.cat.*) · strings-content.js troceado en app/i18n/content/ (breathe/move/extra) · 9 pasos nuevos con DefaultGlyph (cola D-4 -> 35) | #92 | [session-92](./docs/sessions/session-92-f6-contenido-mueve.md) |
@@ -117,6 +118,60 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.42.0] -- 2026-07-08 -- fix(ui): pulido modo oscuro + progreso
+
+Sesion 97. Frente de **pulido visual / bugs** del backlog de UX (capturas del
+usuario al cerrar s96); prioriza un defecto visible ya publicado sobre la
+siguiente pieza del plan (breathe activeTime se corre a s98). Un solo frente.
+
+### Modo oscuro legible (recalibracion en bloque)
+
+`app/tokens.css` `[data-palette="oscuro"]`, segunda recalibracion tras s79
+(que dejo `--ink-*` intactos y ahi estaba el bug):
+
+- `--ink-3` `#756D5D → #B2A995`. Estaba **mas oscuro que en la paleta clara**
+  (`#8A8372`) → toda la letra fina (descriptores "ritmo, calma", labels
+  RITMO/SENDERO/LOGROS, "dias seguidos", footer) ilegible (~3.5:1). A blanco
+  calido ~7:1, **por debajo de `--ink-2`** para no colapsar la jerarquia.
+- `--line` `#3d362b → #4d4536`, `--line-2` `#4a4238 → #5f5544`: el track del
+  aro (TimerDial usa `--line`) y los bordes de cards eran imperceptibles.
+- `--paper*`/`--ink`/`--ink-2` intactos. **El logo en oscuro NO se toca**: se
+  intento sustituir el PNG invertido por el lockup SVG y el usuario lo rechazo
+  (el invertido azul/rosa es el original y valida la estetica noche).
+
+### Aro del timer empieza siempre vacio (bug real)
+
+`app/focus/useCountdown.jsx`: al cambiar de preset (25→45) el `status` seguia
+`'idle'`; `setStatus('idle')` del efecto `[durationSec]` lo ignora React (mismo
+valor) → sin re-render, `remaining` con la duracion vieja y `totalSec` nueva →
+`progress = 1 - viejo/nuevo` ≠ 0 → aro relleno proporcional persistente. Fix:
+en `idle`, derivar `remaining` de `durationSec` (no del ref) → aro vacio en
+idle, se llena solo al correr. Beneficia tambien a PathFocusStep.
+
+### Progreso de Respira: barra segmentada por bloques + fixes de countdown
+
+- `app/breathe/BreatheSession.jsx`: las bolas de progreso (20 fijas,
+  `activeDot = phaseTime % 20` → solo ~4 se llenaban y reiniciaban cada fase)
+  se sustituyen por una **barra SEGMENTADA por bloques de respiracion** -- un
+  segmento por ciclo del patron (rounds: por ronda), el activo se rellena por
+  dentro y los completados quedan llenos (`segTotal/segFilled/segActiveProgress`
+  desde `sessionProgress`, tope 24 segmentos). Sintetiza "barra" + "agrupar por
+  bloques" (feedback usuario) con el mismo lenguaje que la barra de Mueve.
+  Descartadas las bolas 1:1 (una por fase/ciclo se dispara a ~50-100 en rutinas
+  de 10-20 min). Ademas se retira el "Ns / Ns" redundante en no-rounds (el
+  numeral grande ya marca la fase).
+- `app/ui/SessionShell.jsx` `SessionPrep`: precontador "3" solapaba el caption
+  (numeral 200px `lineHeight 0.9`, `marginTop 20`) → `marginTop 40` (movil
+  `14→20`).
+- `app/move/MoveModule.jsx`: el countdown de pasos (128px) quedaba pegado a
+  "SEGUNDOS" → rebalanceado a 22/22 + `lineHeight 1.08`, centrado.
+
+Verificado en preview (dev + standalone regenerado 728 KB): oscuro legible,
+aro vacio en idle y al arrancar, barra de progreso, sin "Ns/Ns", consola
+limpia. Diario: `docs/sessions/session-97-pulido-oscuro-progreso.md`.
+
+---
+
 ## [v0.41.0] -- 2026-07-08 -- refactor(focus): Cirugia 2 motor timer timestamp
 
 Sesion 96. **Segunda cirugia del plan maestro (ROADMAP "Camino a v1.0"):**
@@ -197,90 +252,9 @@ start->pause->resume->stop (muere al completar). **`'completed'`** terminal
 
 ---
 
-## [v0.40.0] -- 2026-07-08 -- feat(entitlement): Cirugia 1 guard central
-
-Sesion 95. **Primera sesion del plan maestro post-bloque (ROADMAP "Camino
-a v1.0"):** un unico punto de verdad del acceso a contenido, con
-degustacion explicita. **Comportamiento observable identico con
-`premiumUnlocked=false`** -- las bibliotecas gatean igual, path.weekend
-degusta igual, la sugerencia es la misma. NO toca la decision F3b (licencia
-sigue diferida). Diario:
-[session-95](./docs/sessions/session-95-guard-entitlement.md).
-
-### Added
-
-- **`app/state-entitlement.jsx`** (nuevo, ~65 ln) -- guard central de
-  acceso: `canAccessRoutine(routineId, { tasting })` y
-  `canAccessPath(pathId)`. Hoy derivan de `premiumUnlocked`; cuando llegue
-  la pre-venta (licencia‖trial) **solo cambia este archivo** y los
-  consumidores no se tocan. `canAccessRoutine`: rutina desconocida ->
-  `true` (fail-open), `access!=='premium'` -> `true`, premium ->
-  `premiumUnlocked || tasting`. `canAccessPath`: hoy los 7 Caminos son
-  `access:'free'` -> siempre `true`. Cargado antes de `state-paths.jsx` en
-  PACE.html; re-exportado en `state.jsx`.
-- **`PathStepLocked`** (en `PathRunner.parts.jsx`) -- fallback defensivo:
-  un step cuyo contenido premium no es accesible se **salta en silencio**
-  (auto-skip al montar, renderiza null). El candado vive en la puerta del
-  Camino, nunca a mitad de flujo (ROADMAP). **Dead code en s95** (weekend
-  es tasting); se activaria si un Camino futuro referenciase premium sin
-  degustacion.
-
-### Changed
-
-- **Degustacion EXPLICITA de `path.weekend`** (`registry.js`): sus 2 steps
-  premium (`breathe.nadi.shodhana` + `move.atg.knees`) llevan ahora
-  `tasting: true`. Declara al guard que sirven premium GRATIS por diseno
-  (decision s89 D-8a) -- deja de ser una excepcion tacita del catalogo. El
-  comportamiento no cambia: weekend sigue lanzando ambas rutinas. La
-  decision final (degustacion vs version free) se toma en la sesion de
-  licencia.
-- **Consumidores del guard**: `RoutineCard` (gate real de las 3
-  bibliotecas) deriva `isLocked = !canAccessRoutine(id)` -- equivalente
-  exacto al antiguo `isPremium && !premiumUnlocked`, con `usePace()` para
-  la reactividad y fallback inline defensivo; `isPremium` sigue inline
-  (sello siempre). `PathBreatheStep`/`PathBodyStep` consultan el guard con
-  `{ tasting: step.tasting }`. `getSuggestedPath` salta candidatos con
-  `!canAccessPath` en cada nivel de la jerarquia (todos free -> jerarquia
-  identica; s103 lo reescribira con scoring).
-- **Autofocus del Welcome** (`WelcomeModule.jsx`): el `setTimeout(focus)`
-  se enguarda tras `matchMedia('(pointer: coarse)')` -- **autofocus solo en
-  escritorio**. En tactil (Android Chrome auto-abre el teclado; iOS lo
-  ignora sin gesto) rompia el tono sin friccion de una bienvenida de campo
-  OPCIONAL.
-- `CustomRoutinesSection` **se queda en `premiumUnlocked`** (feature-gate
-  de la superficie del constructor, no un `routineId`): revisar en la
-  sesion de licencia.
-- **`PACE.html`** / **`state-core.jsx`** / **`sw.js`** -- 1 script tag
-  nuevo + bump v0.40.0 (`CACHE_NAME pace-v0.40.0`).
-- **`CHANGELOG.md`** -- v0.38.0 degradado a fila-de-enlace.
-
-### Verificacion runtime
-
-Preview :8765 con protocolo s93 (purgar SW+caches tras cada tanda). Con
-`premiumUnlocked=false`: guard verificado por caso (premium sin tasting ->
-locked, con tasting -> concede, free/desconocido -> true, paths free ->
-true); biblioteca Respira con las 8 premium en sello + "Pronto" +
-`cursor:default` y las free clicables (**gating identico al previo**);
-**degustacion viva** -- `path.weekend` lanza la sesion de Nadi Shodhana
-(premium) sin bloqueo, y atg.knees resuelve igual. Con `premiumUnlocked=true`
-(snapshot + restaurado): las premium pasan a clicables conservando el
-sello, "Pronto"->min (reactividad via `usePace`). Welcome: en puntero fino
-el input se enfoca; forzando `(pointer: coarse)` no se enfoca
-(activeElement=BODY). `getSuggestedPath` -> `path.afternoon` (miercoles
-tarde). EN: premium con "Soon". Estado restaurado (lang=es,
-premiumUnlocked=false, sin path activo). **Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **719 KB**, 70 archivos validados (+1 =
-  `state-entitlement.jsx`). `index.html` copia exacta (SHA256 identico).
-  Standalone verificado en preview (v0.40.0, guard presente, 2 steps
-  tasting, consola limpia).
-- Backup `PACE_standalone_v0.39.0_20260708.html`; cap 20 (rotado
-  `v0.28.12_20260516.html`).
-
----
-
+> **v0.40.0** (s95) detallada en
+> [session-95](./docs/sessions/session-95-guard-entitlement.md).
+>
 > **v0.39.0** (s94) detallada en
 > [session-94](./docs/sessions/session-94-f8-visual-caminos.md).
 >

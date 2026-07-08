@@ -90,13 +90,14 @@ fricción, y quiere volver mañana.*
 | ~~s94~~ | ~~F8 visual Caminos~~ **hecho (v0.39.0)** — huérfanas resueltas + clipPath único (estaba en Sidebar.jsx, no en SenderoBar) + tipografía tokenizada |
 | ~~s95~~ | ~~Cirugía 1: guard central de entitlement + degustación explícita~~ **hecho (v0.40.0)** — `state-entitlement.jsx` (`canAccessRoutine`/`canAccessPath`) consumido por RoutineCard + PathBreatheStep/PathBodyStep/getSuggestedPath · `path.weekend` con `tasting:true` explícito · `PathStepLocked` (auto-skip) · autofocus Welcome solo puntero fino · comportamiento idéntico con `premiumUnlocked=false`, **NO toca F3b** |
 | ~~s96~~ | ~~Cirugía 2: Timer engine timestamp-based~~ **hecho (v0.41.0)** — `app/focus/useCountdown.jsx` (estados idle/running/paused/completed; `remaining = f(Date.now())` desde `endsAt` → **cero deriva en background**, `visibilitychange` corrige al volver; `completed` terminal) migrado a FocusTimer (493→429 ln) y PathFocusStep · `completeFocusSession(context)` unificado que **preserva la distinción** home(cycle+logros)/Camino(minutos+streak) · **comportamiento idéntico en primer plano** · motor LOCAL (persistir en recarga diferido a s99) |
-| **s97** | **BreatheSession tiempo activo** (activeTime vs totalTime; stats y logros acreditan activeTime) |
-| **s98** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |
-| **s99** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
-| **s100-101** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |
-| **s102** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
-| **s103** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
-| **s104-105** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
+| ~~s97~~ | ~~(previsto: breathe activeTime)~~ → **pulido oscuro + progreso** **hecho (v0.42.0)** — modo oscuro legible (recalibración en bloque `--ink-3`/`--line`/`--line-2`; logo invertido intacto, validado por el usuario) · **aro del timer empieza siempre vacío** (`useCountdown` idle deriva de `durationSec`) · **progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro) · fixes de countdown (precontador "3", Mueve centrado). Breathe activeTime se corre a s98 |
+| **s98** | **BreatheSession tiempo activo** (activeTime vs totalTime; stats y logros acreditan activeTime). NOTA: el `sessionProgress` de s97 usa wall-clock (`startTime`, cuenta pausas) → revisar aquí junto con el activeTime |
+| **s99** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |
+| **s100** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
+| **s101-102** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |
+| **s103** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
+| **s104** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
+| **s105-106** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
 | pre-venta | Iteración glifos D-4 (patrón s84) · **trial 7 días explícito** (no auto-start; `premiumUnlocked` derivado de licencia‖trial) · **licencia firmada offline ECDSA P-256** (guardar la clave y revalidar en arranque, no un booleano) — requiere **cambiar formalmente la decisión F3b** · landing `/` separada de `/app` · pricing/terms |
 | post-venta | Vite/ESM real (Etapa B) · Path Builder (reuso F7) · Modo Estudio · sonidos procedurales premium · CTB completa · Android Capacitor (notificaciones/hápticos/widget/billing) · Wrapped · extensión Chrome · IndexedDB via localForage (antes: `navigator.storage.persist()` tras onboarding, barato) |
 
@@ -107,25 +108,23 @@ exportación en todas las etapas.
 
 ### Backlog de pulido / UX (feedback usuario s96, 2026-07-08)
 
-Observaciones del usuario con capturas al cerrar s96. Aún **sin planificar
-en la secuencia**; la prioridad la decide él (los 2 bugs pueden saltar la
-cola). Persistido en memoria `ux-refinement-backlog`.
+Observaciones del usuario con capturas al cerrar s96. Los 2 bugs + los fixes
+de progreso de sesión se atacaron en **s97 (v0.42.0)**; el resto sigue sin
+planificar. Persistido en memoria `ux-refinement-backlog`.
 
-- **[BUG · alta] Modo oscuro casi ilegible.** `data-palette="oscuro"` SÍ se
-  aplica (documentElement, state-core.jsx:453) pero el contraste es pésimo:
-  aro/anillo casi invisible (`--line #3d362b` para el track de TimerDial),
-  texto secundario/meta muy bajo contraste (`--ink-3 #756D5D` sobre
-  `--paper #1d1a14`), bordes de cards invisibles, y el **logo sale
-  descolorido (azulado/rosado)** — el blend `invert+screen` de CowLogo (s71)
-  se rompe en la paleta recalibrada. No es "no aplica"; son valores sin
-  contraste WCAG + logo que no adapta. Recalibrar `--ink-3`/`--line`/`--line-2`,
-  el stroke del aro y el tratamiento del logo en oscuro. (Cuidado: s79/s89
-  ya recalibraron oscuro — mover en bloque, ver decisión activa STATE.)
-- **[BUG] Precontador "3" solapa el caption.** En cuentas atrás formato
-  "PREPÁRATE / 3 / De pie. Sin prisa. 6 pasos." el numeral grande toca las
-  letras del caption. Pasa en casi todas las cuentas atrás de este formato.
-  Fix mínimo: subir el numeral ~10px o ajustar line-height/margin (revisar
-  PathTransitions StepIntro y el precount de las sesiones).
+- ✓ **[HECHO s97] Modo oscuro casi ilegible.** Recalibración EN BLOQUE de
+  `tokens.css` oscuro: `--ink-3 #756D5D→#B2A995` (estaba más oscuro que en la
+  paleta clara → toda la letra fina ilegible), `--line →#4d4536`,
+  `--line-2 →#5f5544` (track del aro de TimerDial + bordes de cards). El
+  **logo NO era bug**: el `invert+screen` azul/rosa es el original y el usuario
+  lo valida como estética noche → se intentó sustituir por SVG y lo rechazó;
+  intacto (ver decisión activa STATE + memoria `feedback-logo-oscuro-original`).
+- ✓ **[HECHO s97] Precontador "3" solapa el caption.** Era `SessionPrep`
+  (`SessionShell.jsx`), numeral 200px `lineHeight 0.9` con `marginTop 20` →
+  subido a 40 (móvil 14→20). `PathTransitions.StepIntro` no tiene numeral.
+- ✓ **[HECHO s97] Countdown de Mueve descentrado** (pegado a "SEGUNDOS") →
+  rebalanceado 22/22 + `lineHeight 1.08`. Y **progreso de Respira** (bolas sin
+  sentido) → barra segmentada por bloques.
 - **[Layout web fijo] Pomodoro home: semicírculo integrado en las pills.**
   El aro debe abrazar de forma FIJA la fila FOCO/PAUSA/LARGA (captura de
   referencia), no depender del zoom/resolución. Hoy `TimerDial.frame` =

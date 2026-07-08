@@ -35,6 +35,10 @@ function BreatheSession({ routine, onExit }) {
   const [phaseTime, setPhaseTime] = useState(0);
   const [round, setRound] = useState(1);
   const [breathCount, setBreathCount] = useState(1);
+  // Ciclos completados en rutinas NO-rounds (patron por fases que se repite
+  // hasta agotar routine.min). Es la unidad de progreso real de estas
+  // sesiones -> alimenta las bolas inferiores (s97). En rounds no se usa.
+  const [cycle, setCycle] = useState(0);
   const [holdSeconds, setHoldSeconds] = useState(0);
   const [paused, setPaused] = useState(false);
   const startTime = useRef(Date.now());
@@ -181,6 +185,7 @@ function BreatheSession({ routine, onExit }) {
       if (elapsed >= routine.min * 60) {
         finish();
       } else {
+        setCycle(c => c + 1);   // un ciclo del patron completado (bolas s97)
         setPhase(0);
         // Hueco B: reinicio de ciclo no-rondas → fase 0 nunca sonaba.
         playPhaseSound(sequence[0].label, sequence[0].duration);
@@ -291,8 +296,25 @@ function BreatheSession({ routine, onExit }) {
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
-  const totalDots = isRounds ? routine.breaths : 20;
-  const activeDot = isRounds ? breathCount : Math.floor(phaseTime % totalDots);
+  // Progreso de la sesion (s97): BARRA SEGMENTADA por bloques de respiracion.
+  // Un segmento por bloque -- rounds: una por ronda; no-rounds: una por CICLO
+  // del patron (el "grupo 4·4·4·4"). El segmento activo se rellena con el
+  // progreso DENTRO del bloque; los completados quedan llenos. Sintetiza "la
+  // barra" + "agrupar por bloques" (feedback usuario) y usa el mismo lenguaje
+  // que la barra segmentada de Mueve. Tope de 24 segmentos: en rutinas largas
+  // (Coherente 6·6 = ~50 ciclos) cada segmento agrupa varios y la barra no se
+  // astilla; en las cortas (Box 5min = ~19) es 1 segmento por ciclo exacto.
+  const cycleSec = sequence.reduce((sum, p) => sum + p.duration, 0) || 1;
+  const doneInCycle = sequence.slice(0, phase).reduce((sum, p) => sum + p.duration, 0) + phaseTime;
+  // progreso continuo 0..1 de la sesion
+  const sessionProgress = isRounds
+    ? Math.min(1, ((round - 1) + Math.min(1, breathCount / routine.breaths)) / routine.rounds)
+    : Math.min(1, (cycle + doneInCycle / cycleSec) / Math.max(1, (routine.min * 60) / cycleSec));
+  const rawSegments = isRounds ? routine.rounds : Math.max(1, Math.round((routine.min * 60) / cycleSec));
+  const segTotal = Math.min(rawSegments, 24);
+  const filledExact = sessionProgress * segTotal;
+  const segFilled = Math.floor(filledExact);
+  const segActiveProgress = filledExact - segFilled;
 
   const footer = (
     <React.Fragment>
@@ -338,24 +360,42 @@ function BreatheSession({ routine, onExit }) {
             fontVariantNumeric: 'tabular-nums', marginTop: 4,
           }}>{remaining}</div>
         )}
-        <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-          {isRounds ? `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
-        </div>
+        {/* En rounds el contador de respiraciones ES el progreso de la ronda
+            (util, Wim Hof). En no-rounds se retira el "Ns/Ns": era redundante
+            con el numeral grande de arriba (mismo dato de fase) -> menos ruido,
+            la sesion la marca la barra (s97, feedback usuario). */}
+        {isRounds && (
+          <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
+            {`${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}`}
+          </div>
+        )}
       </div>
+      {/* Progreso de la SESION: barra SEGMENTADA por bloques de respiracion
+          (un segmento por ciclo/ronda; el activo se llena por dentro). Ver
+          calculo arriba: segTotal / segFilled / segActiveProgress. */}
       <div style={{
-        display: 'flex', gap: 5,
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        maxWidth: 400,
-        margin: '0 auto',
+        display: 'flex', gap: 3, alignItems: 'center',
+        width: '100%', maxWidth: 260, height: 5, margin: '0 auto',
       }}>
-        {Array.from({ length: Math.min(totalDots, 30) }).map((_, i) => (
-          <span key={i} style={{
-            width: 4, height: 4, borderRadius: '50%',
-            background: i < activeDot ? 'var(--breathe)' : 'var(--line)',
-            transition: 'background 200ms',
-          }} />
-        ))}
+        {Array.from({ length: segTotal }).map((_, i) => {
+          const fill = i < segFilled ? 1 : (i === segFilled ? segActiveProgress : 0);
+          return (
+            <div key={i} style={{
+              flex: 1, height: '100%',
+              borderRadius: 'var(--r-pill)',
+              background: 'var(--line)',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{
+                position: 'absolute', inset: 0,
+                width: `${fill * 100}%`,
+                background: 'var(--breathe)',
+                borderRadius: 'var(--r-pill)',
+                transition: 'width 1s linear',
+              }} />
+            </div>
+          );
+        })}
       </div>
     </SessionShell>
   );

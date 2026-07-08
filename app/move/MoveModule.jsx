@@ -345,15 +345,18 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         }}>{tStep(stepIdx, 'name')}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-          maxWidth: 460, margin: '0 auto 30px',
+          maxWidth: 460, margin: '0 auto 22px',
         }}>{tStep(stepIdx, 'cue')}</p>
 
+        {/* Numeral centrado entre la descripcion y "SEGUNDOS": espacio
+            simetrico (22px arriba via cue / 22px abajo) + lineHeight algo
+            mayor para que la cifra italica no roce la etiqueta (s97). */}
         <div data-pace-move-timer style={{
           ...displayItalic,
           fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1,
+          color: 'var(--ink)', lineHeight: 1.08,
         }}>{String(remaining).padStart(2, '0')}</div>
-        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>{t('session.seconds')}</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 22 }}>{t('session.seconds')}</div>
       </div>
 
       <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>

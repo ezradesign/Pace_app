@@ -162,7 +162,11 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
         }}>{prepCount > 0 ? prepCount : '·'}</div>
         <div data-pace-session-prep-copy style={{
           ...displayItalic,
-          fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
+          /* marginTop 20 -> 40: el numeral (200px, lineHeight 0.9) baja su
+             tinta sobre el caption con solo 20px de aire -> solapamiento
+             (bug s96). Empujar el caption ~20px lo separa limpio. En movil
+             el override reduce el numeral a 128px, alli 20px basta. (s97) */
+          fontSize: 20, color: 'var(--ink-2)', marginTop: 40,
         }}>{copy}</div>
       </div>
     </SessionShell>
@@ -294,7 +298,7 @@ if (!_paceSessionResponsive) {
       }
       [data-pace-session-prep-copy] {
         font-size: 15px !important;
-        margin-top: 14px !important;
+        margin-top: 20px !important;
       }
       [data-pace-session-done-hero] {
         width: 80px !important;

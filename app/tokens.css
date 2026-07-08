@@ -113,16 +113,28 @@
    s79: recalibrado +10% luminosidad en superficies y bordes (paper*,
    line*). --ink-* sin cambios para mantener el contraste y la calidez
    nocturna; el ajuste solo libera la base lo justo para que el texto
-   secundario (--ink-2, --ink-3) respire mejor sin perder el tono. */
+   secundario (--ink-2, --ink-3) respire mejor sin perder el tono.
+   s97: segunda recalibracion EN BLOQUE de los 3 peldanos de bajo
+   contraste (bug de legibilidad publicado). --ink-3 estaba MAS oscuro
+   que en la paleta clara (#756D5D < #8A8372) -> texto secundario/meta
+   casi ilegible sobre --paper. Subido a #B2A995 (~7:1, blanco calido):
+   gobierna TODA la letra fina (descriptores de actividad "ritmo, calma",
+   labels RITMO/SENDERO/LOGROS, "dias seguidos", footer) -> el usuario
+   pidio empujarlo hacia blanco para que se distinga mejor; se mantiene
+   por DEBAJO de --ink-2 (#c0b49e) para no colapsar la jerarquia. --line/
+   --line-2 subidos: el track del aro (TimerDial usa --line) y los bordes
+   de cards eran imperceptibles (~1.4:1). paper*, --ink, --ink-2 intactos
+   (s79 en pie). NOTA: el logo en oscuro sigue con el PNG invert+screen
+   (CowLogo) -- el usuario lo valida como estetica noche, NO se reemplaza. */
 [data-palette="oscuro"] {
   --paper: #1d1a14;
   --paper-2: #26211a;
   --paper-3: #2f2920;
   --ink: #EDE5D3;
   --ink-2: #c0b49e;
-  --ink-3: #756D5D;
-  --line: #3d362b;
-  --line-2: #4a4238;
+  --ink-3: #B2A995;
+  --line: #4d4536;
+  --line-2: #5f5544;
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);

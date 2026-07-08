@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.41.0
-**Ultima sesion:** #96 -- 2026-07-08 - refactor(focus): **Cirugia 2 -- motor de timer basado en timestamps**. Nuevo `app/focus/useCountdown.jsx` (~135 ln): la verdad del tiempo vive en `endsAt`, el tick de 1 s solo refresca la UI y `remaining = ceil((endsAt - Date.now())/1000)` -> **cero deriva en background** (la pestana oculta ya no subcuenta; `visibilitychange` corrige al instante). Estados idle/running/paused/completed; `completed` terminal (cierra un doble-credito latente). Migrados FocusTimer (home, 493->429 ln) y PathFocusStep (Camino). `completeFocusSession(context)` unificado en state-timer.jsx que **PRESERVA la distincion**: home->`completePomodoro` (cycle+logros de pomodoro); Camino->`addFocusMinutes+updateStreak` (sin cycle). **Comportamiento observable identico en primer plano** (creditos, sonidos, logros, drone, single-shot). Motor LOCAL (no toca pace.state). Bump **v0.41.0**. Diario: `docs/sessions/session-96-timer-engine.md`
-**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 96
-**Build entregado:** `PACE_standalone.html` v0.41.0 (725 KB) + `index.html` (idem, SHA256 identico)
+**Version actual:** v0.42.0
+**Ultima sesion:** #97 -- 2026-07-08 - fix(ui): **pulido modo oscuro + progreso de sesion**. Frente de pulido/bugs del backlog UX (capturas s96), priorizado sobre s97-breathe (activeTime se corre a s98). (1) **Modo oscuro legible**: recalibracion EN BLOQUE de `tokens.css` oscuro -- `--ink-3 #756D5D->#B2A995` (estaba mas oscuro que en claro; gobierna TODA la letra fina, blanco calido ~7:1 por debajo de `--ink-2`), `--line ->#4d4536`, `--line-2 ->#5f5544` (aro de TimerDial + bordes de cards). Logo invertido INTACTO (el usuario lo valida como estetica noche; se intento sustituir por SVG y lo rechazo). (2) **Aro del timer empieza siempre vacio**: `useCountdown` en idle deriva `remaining` de `durationSec` (antes reflejaba relleno proporcional al cambiar preset por un `setStatus('idle')` no-op sin re-render). (3) **Progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro; sustituye las bolas, que se disparaban a ~50-100 en rutinas largas) + retira "Ns/Ns" redundante. (4) Fixes de countdown: solape precontador "3" (SessionPrep marginTop 20->40) y numeral de Mueve centrado (22/22 + lineHeight 1.08). Bump **v0.42.0**. Diario: `docs/sessions/session-97-pulido-oscuro-progreso.md`
+**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 97
+**Build entregado:** `PACE_standalone.html` v0.42.0 (728 KB) + `index.html` (idem)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.41.0** (s96: + script tag `focus/useCountdown.jsx` tras TimerDial + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.41.0** (725 KB, 71 archivos, regenerado s96) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.41.0** (s96: regenerado por build-standalone.js, SHA256 identico) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.42.0** (s97: solo titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.42.0** (728 KB, 71 archivos, regenerado s97) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.42.0** (s97: regenerado por build-standalone.js) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
 | `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
@@ -35,7 +35,7 @@
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.35.0** (s90: `ambientDrone.start(force)` + flag interno `forced` -- bypasa ambientOn para Coherente 432, soundOn manda siempre; primera modificacion desde v0.21.0, ~10 ln) |
-| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.17.0** |
+| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.42.0** (s97: `SessionPrep` caption `marginTop 20->40` + override movil `14->20` -- el precontador "3" (200px, lineHeight 0.9) ya no solapa el caption. s17 base) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.34.3** (s87: + `PremiumSeal` chip reutilizable --premium; s88: ahora tambien consumido por TweaksPanel, sin cambios en el componente) |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.22.0** |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + reset; orquesta TweaksDataSection y PremiumSection) | **v0.34.5** (s89: split 519->351 ln + stepper "Objetivo de agua" 4-12 con patch funcional `set(s=>...)`. s88: superficie premium. s71: reorden) |
@@ -43,13 +43,13 @@
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.35.0** (s90: +4 patrones F4 en getSequence -- diaphragm/yin/bhramari/co2, 230 ln; s89: `data-pace-essential` en los 5 wrappers -- exime la guia de respiracion del kill de prefers-reduced-motion) |
 | `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.40.0** (s95: `RoutineCard.isLocked = !canAccessRoutine(id)` -- gate real via guard central, equivalente exacto, `usePace()` para reactividad, `isPremium` sigue inline; s90: F4 12->20 tecnicas + free-first; s88: gating premiumUnlocked) |
-| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.35.0** (s90: +3 labels en PHASE_KEYS + mapeo playPhaseSound + `drone.start(routine.drone === true)`; s67: playPhaseSound helper + fix huecos A/B/C inhalacion) |
-| `app/move/MoveModule.jsx` | Modulo Mueve | **v0.38.0** (s93: MoveLibrary monta CustomRoutinesSection tras los grupos + helper `tStep` para EN de pasos custom por nombre + displayRoutine salta lookup en custom, 436 ln; s92: F6 7->14 + MOVE_ROUTINES agrupado) |
+| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.42.0** (s97: progreso = BARRA SEGMENTADA por bloques (`segTotal/segFilled/segActiveProgress`, un segmento por ciclo/ronda, activo relleno por dentro, tope 24) en vez de las bolas; + retira "Ns/Ns" redundante en no-rounds; + estado `cycle`. s90: +3 labels PHASE_KEYS + drone; s67: playPhaseSound) |
+| `app/move/MoveModule.jsx` | Modulo Mueve | **v0.42.0** (s97: countdown de paso (128px) centrado entre descripcion y "SEGUNDOS" -- cue `mb 30->22`, `lineHeight 1->1.08`, SEGUNDOS `mt 8->22`. s93: CustomRoutinesSection + tStep, 436 ln; s92: F6 7->14) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.39.0** (s94: clipPath del mini-sendero con id unico por instancia `sendero-clip-<useId>`, +5 ln -> 535; OJO: ya estaba en ~530 ln, no en las 497 registradas -- vuelve a deuda) |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.41.0** (s96: migrado a `useCountdown` -- fuera los 3 useEffect de tiempo + estado running/remainingSec, 493->429 ln; `onComplete` toca `pomodoro.end`+`completeFocusSession('home')` solo en foco; drone intacto remainingSec->remaining; `pomodoro.start` solo en arranque real. s77b: startBtnPrimary var(--focus-cta)) |
-| `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.41.0** (nuevo s96, ~135 ln; `endsAt` como verdad, tick 1s solo re-renderiza, `visibilitychange` corrige, estados idle/running/paused/completed, `completed` terminal, `onComplete` single-shot en ref, sin persistencia) |
+| `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.42.0** (s97: en `idle` deriva `remaining` de `durationSec` -- el aro empieza SIEMPRE vacio; antes un `setStatus('idle')` no-op al cambiar preset no re-renderizaba y dejaba relleno proporcional. s96: nuevo, ~135 ln, `endsAt` como verdad, `completed` terminal, `onComplete` single-shot) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77/s96 -- puramente presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
@@ -60,7 +60,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.41.0** (s96: solo bump PACE_VERSION; s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.42.0** (s97/s96: solo bump PACE_VERSION; s93: + `customRoutines: []`, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -84,7 +84,7 @@
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.37.0** (nuevo s92, 94 ln; split de strings-content.js al superar ~470 ln con F6) |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
-| `app/tokens.css` | Tokens CSS + base | **v0.34.5** (s89: reduced-motion recalibrado -- el kill global exime subtrees `[data-pace-essential]` via :not() L4; s87: + `--premium`/`--premium-soft`; s79: recalibrado oscuro +10%; s77/s77b: tokens transicion + --focus-cta) |
+| `app/tokens.css` | Tokens CSS + base | **v0.42.0** (s97: 2a recalibracion oscuro EN BLOQUE -- `--ink-3 #756D5D->#B2A995` (letra fina legible), `--line ->#4d4536`, `--line-2 ->#5f5544` (aro+bordes); paper*/ink/ink-2 intactos. s89: reduced-motion excepcion `[data-pace-essential]`; s79: recalibrado oscuro +10%; s77b: --focus-cta) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** (s95: `tasting:true` en los 2 steps premium de path.weekend -- degustacion curada explicita para el guard; s78: catalogo cerrado a 7 con path.tea/path.breath) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del overlay) | **v0.40.0** (s95: + `PathStepLocked` -- auto-skip silencioso de un step premium inaccesible, dead code hoy; s94: boton confirmar tokenizado; ~142 ln) |
@@ -99,11 +99,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` en barra de acento (estaba invisible) y asterisco + asterisco a font-display + transitions a tokens; 192 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` x3 (barra/tag Favorito/boton Fav) + panel a `--sh-modal` + transition a tokens; 180 ln) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.41.0** (s96: CACHE_NAME pace-v0.41.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
+| `sw.js` | Service Worker PWA | **v0.42.0** (s97: CACHE_NAME pace-v0.42.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.41.0_20260708.html` <- creado s97 (snapshot del v0.41.0 publicado en s96)
 - `backups/PACE_standalone_v0.40.0_20260708.html` <- creado s96 (snapshot del v0.40.0 publicado en s95)
 - `backups/PACE_standalone_v0.39.0_20260708.html` <- creado s95 (snapshot del v0.39.0 publicado en s94)
 - `backups/PACE_standalone_v0.38.0_20260708.html` <- creado s94 (snapshot del v0.38.0 publicado en s93)
@@ -123,82 +124,78 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
 - `backups/PACE_standalone_v0.32.0_20260518.html`
 - `backups/PACE_standalone_v0.31.0_20260517.html`
-- `backups/PACE_standalone_v0.30.0_20260517.html`
 
-Nota s96: cap 20 mantenido rotando el mas antiguo (`v0.29.0_20260516.html`)
-al crear el backup del v0.40.0.
+Nota s97: cap 20 mantenido rotando el mas antiguo (`v0.30.0_20260517.html`)
+al crear el backup del v0.41.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 96 - v0.41.0 - refactor(focus): Cirugia 2 -- motor de timer
-basado en timestamps.** Segunda cirugia del plan maestro post-bloque.
+**Sesion 97 - v0.42.0 - fix(ui): pulido modo oscuro + progreso de sesion.**
+Frente de pulido/bugs del backlog UX (capturas s96), priorizado sobre la
+pieza s97-breathe del plan (activeTime se corre a **s98**). Un solo frente.
 
-### Que se hizo (s96)
+### Que se hizo (s97)
 
-- **Tarea 0**: commit s95 (`6622de8`, v0.40.0) en git ✓, working tree
-  limpio. Mapeado TODO lo acoplado a `remaining`/`running` en los dos
-  timers (ticker, reset por cambio, finalizacion, single-shot, drone,
-  reset/skip sin credito, modos pausa(5)/larga(15) que tickan+suenan sin
-  acreditar) y la distincion completePomodoro vs addFocusMinutes.
-- **Motor** `app/focus/useCountdown.jsx` (nuevo, ~135 ln, `window.useCountdown`,
-  cargado tras TimerDial): la verdad del tiempo vive en `endsAt`; el tick de
-  1 s solo re-renderiza y `remaining = ceil((endsAt - Date.now())/1000)`.
-  Con la pestana oculta el interval se throttlea pero `remaining` NO
-  subcuenta (se recalcula del reloj); `visibilitychange` corrige al instante
-  al volver. Estados idle/running/paused/completed; `completed` **terminal**
-  (start/toggle no-op hasta reset o cambio de duracion -> cierra un
-  doble-credito latente). Pausa congela `remaining`; reanudar
-  `endsAt = now + remaining`. `onComplete` en ref = single-shot (reemplaza
-  justFinished/creditedRef). **LOCAL** (no toca pace.state).
-- **`completeFocusSession(context, opts)`** en state-timer.jsx (window +
-  re-export en state.jsx): `'home'`->`completePomodoro()` (cycle+logros de
-  pomodoro); `'path'`->`addFocusMinutes(opts.minutes)+updateStreak()` (sin
-  cycle). Dispatcher que **preserva la distincion**, no la funde.
-- **Migracion**: `FocusTimer.jsx` (493->429 ln) pierde los 3 useEffect de
-  tiempo + estado running/remainingSec; `onComplete` toca `pomodoro.end`
-  (3 modos) + `completeFocusSession('home')` (solo foco); drone y
-  `pomodoro.start` intactos (start solo en arranque real, no en no-op de
-  completed). `PathFocusStep.jsx` migrado; `onComplete`->
-  `completeFocusSession('path', {minutes: step.min})`; contrato (step,
-  onExit) intacto.
+- **Tarea 0**: s96 (`1fd0a62`, v0.41.0) commiteado; el working tree tenia
+  las adiciones de backlog UX a ROADMAP/STATE sin commitear -> avisado, el
+  usuario las commiteo (`e216545`) antes de empezar.
+- **Modo oscuro legible** (`tokens.css` oscuro, 2a recalibracion EN BLOQUE):
+  `--ink-3 #756D5D->#B2A995` (estaba mas oscuro que en claro -> letra fina
+  ilegible; blanco calido ~7:1, por debajo de `--ink-2`), `--line ->#4d4536`,
+  `--line-2 ->#5f5544` (track del aro de TimerDial + bordes de cards). paper*/
+  ink/ink-2 intactos. **Logo INTACTO**: se intento sustituir el PNG invertido
+  por el lockup SVG tokenizado y el usuario lo rechazo (el invertido azul/rosa
+  es el original y valida la estetica noche) -> revertido con `git checkout`.
+- **Aro del timer siempre vacio** (`useCountdown.jsx`): en `idle` deriva
+  `remaining` de `durationSec` (no del ref). Bug: al cambiar preset el
+  `setStatus('idle')` era no-op (mismo valor) -> sin re-render, `remaining`
+  viejo y `totalSec` nuevo -> aro relleno proporcional persistente.
+- **Progreso de Respira = barra SEGMENTADA por bloques** (`BreatheSession.jsx`):
+  sustituye las bolas (20 fijas, solo ~4 se llenaban y reiniciaban por fase).
+  Iteracion con feedback en vivo: bola/ciclo (~20) -> bola/fase de sesion
+  completa (~76-100, "demasiadas") -> barra continua -> **barra segmentada**
+  (un segmento por ciclo/ronda, el activo se rellena por dentro; `segTotal/
+  segFilled/segActiveProgress` desde `sessionProgress`, tope 24). Sintetiza
+  "barra" + "agrupar por bloques" (peticion del usuario), coherente con la
+  barra de Mueve. Retirado el "Ns/Ns" redundante en no-rounds (el numeral
+  grande ya marca la fase).
+- **Fixes de countdown**: `SessionPrep` precontador "3" `marginTop 20->40`
+  (movil `14->20`) -> sin solape. `MoveModule` numeral de paso centrado
+  entre descripcion y "SEGUNDOS" (`22/22` + `lineHeight 1.08`).
 
 ### Verificacion + cierre
 
-Preview :50333, protocolo s93 (purga SW+caches tras cada tanda). **No
-deriva**: mock `Date.now`/`endsAt` rebasado + pestana oculta -> `remaining`
-se recalcula sin subcontar y completa con credito exacto (el preview
-reporta visibilityState 'hidden', la finalizacion llega por el tick del
-interval; con visible el `visibilitychange` completa al instante). **Home**:
-cycle 0->1, +25 min (total+semana), first.step, master.long.focus(>=45),
-master.pomodoro.8(cycle>=8), single-shot (2 disparos->1 credito). **Camino**
-(PathFocusStep aislado, mismo store): +25 min + streak **sin cycle ni
-first.step**, CTA "Hecho"->onExit('done'). **Pausa** congela y reanuda.
-**Reset/Skip** sin credito. **Pausa/larga** tickan+suenan sin acreditar
-(spy playSound). **Drone** start/pause/resume/stop (muere al completar, spy
-ambientDrone). **completed** terminal. EN (Focus/Pause/Long). Estado
-restaurado. Consola sin errores en dev y standalone. Cierre: backup
-`v0.40.0_20260708` (rotado `v0.29.0`, cap 20), rebuild standalone+index
-(725 KB, 71 archivos, SHA256 identico), standalone verificado (v0.41.0,
-completa con credito), diario s96, CHANGELOG (v0.39.0 degradado a enlace),
-ROADMAP (s96 hecha), memoria actualizada.
+Preview :8765, protocolo s93 (purga SW+caches tras cada tanda). Oscuro: home
++ bibliotecas Respira/Mueve legibles (labels, descriptores, bordes, aro),
+logo original restaurado. Aro: preset 25->45 y 45->15 -> `progress 0`; al
+Comenzar arranca en 0 y sube (medido por `strokeDashoffset`). PREPARATE: gap
+limpio (medido + visual). Mueve: "08/SEGUNDOS" centrado. Respira: barra
+segmentada (19 segmentos en Box, el activo se rellena por dentro), sin "Ns/Ns". Consola limpia (dev + standalone). Cierre:
+backup `v0.41.0_20260708` (rotado `v0.30.0`, cap 20), rebuild standalone+index
+(728 KB, 71 archivos), standalone verificado (v0.42.0, oscuro OK, barra
+presente, sin "Ns/Ns"), diario s97, CHANGELOG (v0.40.0 degradado a enlace),
+DESIGN_SYSTEM (paleta oscura), memoria (`feedback-logo-oscuro-original` nueva,
+`ux-refinement-backlog` actualizada).
 
-## Proxima sesion -- s97: BreatheSession tiempo activo
+## Proxima sesion -- s98: BreatheSession tiempo activo (corrida desde s97)
 
-Tercera pieza del plan maestro (ver `ROADMAP.md`, "Camino a v1.0"):
-`BreatheSession` cuenta pausas como tiempo activo (wall-clock) -> distinguir
-`activeTime` de `totalTime`; stats y logros deben acreditar `activeTime`.
-Prioridad de fix: Focus (hecho s96) > **Breathe (activeTime, s97)** > Move.
+Pieza del plan maestro que se aplazo por el pulido (ver `ROADMAP.md`, "Camino
+a v1.0"): `BreatheSession` cuenta pausas como tiempo activo (wall-clock) ->
+distinguir `activeTime` de `totalTime`; stats y logros deben acreditar
+`activeTime`. NOTA: el nuevo `sessionProgress` (s97) usa wall-clock
+(`startTime`) que cuenta pausas -- revisarlo junto con el activeTime.
+Prioridad de fix: Focus (hecho s96) > **Breathe (activeTime, s98)** > Move.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
-Secuencia completa en `ROADMAP.md` ("Camino a v1.0"): s96 timer engine ·
-s97 breathe activeTime · s98 stats vivos + safety/privacy · s99 PWA
-completa · s100-101 build Etapa A (precompilar ANTES que Vite) · s102
-onboarding · s103 home Caminos al centro · s104-105 taxonomia + filtros +
-sigilo · pre-venta: glifos D-4 + trial/licencia (cambiando formalmente la
-decision F3b) + landing.
+Secuencia en `ROADMAP.md` ("Camino a v1.0"), corrida +1 por el pulido s97:
+s98 breathe activeTime · s99 stats vivos + safety/privacy · s100 PWA
+completa · s101-102 build Etapa A (precompilar ANTES que Vite) · onboarding ·
+home Caminos al centro · taxonomia + filtros + sigilo · pre-venta: glifos
+D-4 + trial/licencia (cambiando formalmente la decision F3b) + landing.
+Backlog de pulido restante abajo.
 
 ---
 
@@ -206,6 +203,9 @@ decision F3b) + landing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Logo en oscuro NO se reemplaza (PNG invertido = original) | s97 | `CowLogo.PaceLogoImage` en oscuro usa `mixBlendMode:'screen' + filter:invert(1)` (azul/rosa). En el backlog s96 figuraba como "logo descolorido (bug)"; **NO lo es**: el usuario lo valida como estetica noche y es el logo OFICIAL. Se intento sustituir por el lockup SVG tokenizado y lo rechazo de plano. NO tocar el tratamiento del logo en oscuro; si algun dia se mejora la fidelidad, via un ASSET PNG oscuro que el usuario apruebe, nunca SVG ni quitar el invert. Memoria `feedback-logo-oscuro-original` |
+| Progreso de sesiones activas = BARRA SEGMENTADA por bloques, no bolas | s97 | En Respira el progreso es una **barra segmentada** -- un segmento por bloque de respiracion (rounds: por ronda; no-rounds: por ciclo del patron, el "grupo 4·4·4·4"), el activo se rellena por dentro; `segTotal/segFilled/segActiveProgress` desde `sessionProgress`, **tope 24 segmentos** (rutinas largas agrupan varios ciclos por segmento). Sintetiza "barra" + "agrupar por bloques" y usa el mismo lenguaje que la barra segmentada de Mueve. Se descartaron bolas 1:1 (una por fase/ciclo se dispara a ~50-100 en rutinas de 10-20 min). Regla: progreso de sesiones = barra (segmentada si hay bloques naturales); reservar bolas/puntos para conteos pequeños y fijos (ej. CICLO del pomodoro). El numeral grande + circulo que respira marcan la FASE; no duplicar con "Ns/Ns" |
+| 2a recalibracion oscuro EN BLOQUE (`--ink-3`/`--line`/`--line-2`) | s97 | Extiende la decision s79. El bug: s79 dejo `--ink-*` intactos y `--ink-3 #756D5D` quedo MAS oscuro que en la paleta clara (`#8A8372`) -> letra fina ilegible. Subidos EN BLOQUE `--ink-3 ->#B2A995` (~7:1, gobierna TODA la letra fina, por debajo de `--ink-2` para no colapsar jerarquia), `--line ->#4d4536`, `--line-2 ->#5f5544` (aro TimerDial + bordes). `--paper*`/`--ink`/`--ink-2` intactos. Si hace falta otro recalibrado, seguir moviendo en bloque, no peldano suelto |
 | Motor de timer timestamp-based, LOCAL (no persiste en pace.state) | s96 | `app/focus/useCountdown.jsx`: la verdad del tiempo vive en `endsAt`; `remaining = ceil((endsAt-Date.now())/1000)` en cada render, el tick de 1s solo refresca UI -> **cero deriva en background** (la pestana oculta no subcuenta; `visibilitychange` corrige al volver). `completed` terminal (no re-credita). Compartido por FocusTimer y PathFocusStep via `completeFocusSession(context)` que **PRESERVA la distincion** home(cycle+logros de pomodoro)/path(minutos+streak). **FORK resuelto:** NO persiste el Pomodoro running en pace.state -- recargar resetea el timer (persistirlo es decision UX aparte, encaja con s99 PWA). Cualquier timer nuevo (breathe s97) debe usar este motor |
 | Bloque Contenido+Premium: gating a nivel sesion | s85 | La unidad gateable es lo que pulsas "empezar" (Respira=tecnica, Mueve/Estira=rutina). NO se exponen ejercicios sueltos navegables (gatear pasos dentro de una rutina = muro de pago a mitad de flujo). El registro interno de ejercicios se reserva para el constructor premium (F7). Ver CONTENT.md + ROADMAP.md |
 | Gating ANTES del contenido | s85 | El modelo de access + sello premium va en F3, antes de crecer el catalogo (F4-F6). No se puede etiquetar access con honestidad sin el campo ni el sello visible |
@@ -303,18 +303,19 @@ pendientes de calendario.
 | D-7 racha foco-en-Camino (F-1) -- RESUELTO s86 | s86 audit | `PathFocusStep` no llamaba `updateStreak` -> un dia de solo-foco-en-Camino salia activo en heatmap/YearView pero no sumaba a `streak.current`. **Corregido en v0.34.2** (anadido `updateStreak()` tras el credito, idempotente por dia). Ver `docs/audits/audit-tracking-v0.34.1.md` |
 | D-8 fuga premium via `path.weekend` + logros ligados a premium -- RESUELTO s89 (decision) + cola cerrada s90 | s88 audit | (a) `path.weekend` declarado **degustacion curada** (decision activa s89, cero codigo). (b) Logros premium-tied aceptados. (c) Cola cerrada en s90: `master.collector.half/full` usa umbrales fijos 50/100 logros desbloqueados, NO un denominador por catalogo -- crecer F4-F6 no lo distorsiona. Ver `docs/audits/audit-producto-v0.34.4.md` |
 
-### Backlog de pulido / UX (feedback usuario s96) -- SIN planificar
+### Backlog de pulido / UX (feedback usuario s96)
 
-Recogido con capturas al cerrar s96. **Prioridad la decide el usuario**
-(los 2 bugs pueden saltar la cola del plan). Lista completa en `ROADMAP.md`
--> "Backlog de pulido / UX (feedback s96)" + memoria `ux-refinement-backlog`.
+Recogido con capturas al cerrar s96. Lista completa en `ROADMAP.md` ->
+"Backlog de pulido / UX (feedback s96)" + memoria `ux-refinement-backlog`.
 
-- **[BUG · alta] Modo oscuro casi ilegible** (confirmado con captura): aro
-  invisible, `--ink-3`/`--line`/bordes sin contraste, logo descolorido
-  (blend invert+screen roto en oscuro). Recalibrar tokens + logo (cuidado:
-  s79/s89 ya recalibraron -- mover en bloque).
-- **[BUG] Precontador "3" solapa el caption** en las cuentas atras formato
-  "PREPARATE / 3 / <hint>". Subir el numeral ~10px.
+**Hecho en s97 (v0.42.0):**
+- ✓ **Modo oscuro legible**: recalibracion tokens (`--ink-3`/`--line`/
+  `--line-2`). El "logo descolorido" NO era bug -> el usuario valida el
+  invertido (ver decisiones activas).
+- ✓ **Precontador "3" solapa caption** (SessionPrep) + **countdown de Mueve**
+  descentrado + **bolas de Respira** sin sentido -> barra segmentada por bloques.
+
+**Pendiente (sin planificar):**
 - **[Visual]** pomodoro web con semicirculo fijo integrado en las pills
   (no depender del zoom) · Caminos runner poco refinado (F8 fue solo
   tokenizacion) · sidebar (divisor logo↔Ritmo sube + mas util).
