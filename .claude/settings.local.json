@@ -58,7 +58,10 @@
       "Bash(awk '{print $1}')",
       "WebSearch",
       "PowerShell(Copy-Item \"PACE_standalone.html\" \"backups\\\\PACE_standalone_v0.36.0_20260707.html\" && Remove-Item \"backups\\\\PACE_standalone_v0.28.9_20260512.html\" -Confirm:$false && \\(Get-ChildItem backups | Measure-Object\\).Count)",
-      "PowerShell(node build-standalone.js && \\(Get-FileHash PACE_standalone.html\\).Hash -eq \\(Get-FileHash index.html\\).Hash)"
+      "PowerShell(node build-standalone.js && \\(Get-FileHash PACE_standalone.html\\).Hash -eq \\(Get-FileHash index.html\\).Hash)",
+      "PowerShell(\\(Get-Content sw.js -Raw\\) -replace \"const CACHE_NAME = 'pace-v0\\\\.37\\\\.0';\", \"const CACHE_NAME = 'pace-v0.38.0';\" | Set-Content sw.js -NoNewline; Select-String -Path sw.js -Pattern \"CACHE_NAME = \" | Select-Object -First 1)",
+      "PowerShell($a = \\(Get-FileHash PACE_standalone.html -Algorithm SHA256\\).Hash; $b = \\(Get-FileHash index.html -Algorithm SHA256\\).Hash; \"standalone: $a\"; \"index:      $b\"; \"identicos: $\\($a -eq $b\\)\")",
+      "PowerShell(\"app/custom/exercise-registry.js\",\"app/custom/CustomRoutines.jsx\",\"app/custom/CustomBuilder.jsx\",\"app/state-custom.jsx\",\"app/i18n/content/custom.js\",\"app/move/MoveModule.jsx\",\"app/main.jsx\",\"app/i18n/strings/sessions.js\",\"app/state-core.jsx\" | ForEach-Object { \"{0,4} ln  {1}\" -f \\(Get-Content $_\\).Count, $_ })"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

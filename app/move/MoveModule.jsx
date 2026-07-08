@@ -166,6 +166,11 @@ function MoveLibrary({ open, onClose, onStart }) {
             </div>
           </div>
         ))}
+        {/* Tus rutinas — constructor premium (F7 · s93). Guard defensivo
+            por si el orden de carga fallara (patrón s83). */}
+        {typeof CustomRoutinesSection !== 'undefined' && (
+          <CustomRoutinesSection onStart={onStart} />
+        )}
       </div>
     </Modal>
   );
@@ -174,7 +179,19 @@ function MoveLibrary({ open, onClose, onStart }) {
 function MoveSession({ routine, onExit, kind = 'move' }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const displayRoutine = lang === 'en'
+  // Rutinas custom (F7 · s93): sin keys posicionales `<id>.sN.*` — el EN se
+  // resuelve por nombre canónico de ejercicio (content/custom.js), con
+  // fallback al ES del dato. Las rutinas de catálogo no cambian de ruta.
+  const isCustomRoutine = routine.id.indexOf('custom.') === 0;
+  const tStep = (idx, field) => {
+    const s = routine.steps[idx];
+    return isCustomRoutine
+      ? tR(`custom.ex.${s.name}.${field}`, s[field])
+      : tR(`${routine.id}.s${idx}.${field}`, s[field]);
+  };
+  // Custom: name es texto del usuario y code llega ya localizado desde
+  // CustomRoutinesSection — sin lookup (evita warns [i18n] en dev).
+  const displayRoutine = lang === 'en' && !isCustomRoutine
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
@@ -325,11 +342,11 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ...displayItalic,
           fontSize: 56, fontWeight: 500,
           lineHeight: 1.05, margin: '0 0 20px',
-        }}>{tR(`${routine.id}.s${stepIdx}.name`, step.name)}</h1>
+        }}>{tStep(stepIdx, 'name')}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
           maxWidth: 460, margin: '0 auto 30px',
-        }}>{tR(`${routine.id}.s${stepIdx}.cue`, step.cue)}</p>
+        }}>{tStep(stepIdx, 'cue')}</p>
 
         <div data-pace-move-timer style={{
           ...displayItalic,
@@ -361,7 +378,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tR(`${routine.id}.s${stepIdx + 1}.name`, routine.steps[stepIdx + 1].name)}` : t('move.lastStep')}
+          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')}
         </div>
       </div>
     </SessionShell>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.37.0</title>
+  <title>PACE · Foco · Cuerpo — v0.38.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -952,6 +952,38 @@ Object.assign(window.PACE_STRINGS.es, {
     'breathe.safety.body.rule2':       'Nunca en el agua, conduciendo ni en altura',
     'breathe.safety.body.rule3':       'No la hagas si tienes epilepsia, hipertensión o cardiopatía, ni embarazada',
     'breathe.safety.body.rule4':       'Detente si te mareas o sientes molestias',
+
+    // Constructor de rutinas (F7 · s93)
+    'custom.section.title':            'Tus rutinas',
+    'custom.section.aside':            'A tu medida',
+    'custom.locked.copy':              'Combina ejercicios del catálogo y guarda tus propias rutinas. Parte del contenido premium.',
+    'custom.empty.copy':               'Combina ejercicios del catálogo y guarda tu propia rutina.',
+    'custom.create':                   'Crear rutina',
+    'custom.limit':                    'Has llegado a las {n} rutinas.',
+    'custom.tag':                      'PROPIA',
+    'custom.code':                     'Rutina propia',
+    'custom.steps.one':                '1 ejercicio',
+    'custom.steps.many':               '{n} ejercicios',
+    'custom.card.edit':                'Editar',
+    'custom.builder.tag':              'Constructor',
+    'custom.builder.title.new':        'Nueva rutina',
+    'custom.builder.title.edit':       'Editar rutina',
+    'custom.builder.subtitle':         'Elige ejercicios y ajusta su duración.',
+    'custom.builder.name.label':       'Nombre',
+    'custom.builder.name.placeholder': 'Mi rutina',
+    'custom.builder.steps.label':      'Ejercicios',
+    'custom.builder.empty':            'Aún no hay ejercicios. Añade el primero.',
+    'custom.builder.add':              'Añadir ejercicio',
+    'custom.builder.approx':           '≈ {min} min',
+    'custom.builder.save':             'Guardar',
+    'custom.builder.cancel':           'Cancelar',
+    'custom.builder.delete':           'Eliminar rutina',
+    'custom.builder.delete.confirm':   'Toca otra vez para borrar',
+    'custom.picker.title':             'Elige un ejercicio',
+    'custom.picker.back':              '← Volver',
+    'custom.step.up':                  'Subir',
+    'custom.step.down':                'Bajar',
+    'custom.step.remove':              'Quitar',
 });
 
 Object.assign(window.PACE_STRINGS.en, {
@@ -1076,6 +1108,38 @@ Object.assign(window.PACE_STRINGS.en, {
     'breathe.safety.body.rule2':       'Never in water, while driving or at height',
     'breathe.safety.body.rule3':       'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
     'breathe.safety.body.rule4':       'Stop if you feel dizzy or uncomfortable',
+
+    // Routine builder (F7 · s93)
+    'custom.section.title':            'Your routines',
+    'custom.section.aside':            'Made to measure',
+    'custom.locked.copy':              'Combine exercises from the catalog and save your own routines. Part of the premium content.',
+    'custom.empty.copy':               'Combine exercises from the catalog and save your own routine.',
+    'custom.create':                   'Create routine',
+    'custom.limit':                    'You have reached {n} routines.',
+    'custom.tag':                      'YOURS',
+    'custom.code':                     'Your routine',
+    'custom.steps.one':                '1 exercise',
+    'custom.steps.many':               '{n} exercises',
+    'custom.card.edit':                'Edit',
+    'custom.builder.tag':              'Builder',
+    'custom.builder.title.new':        'New routine',
+    'custom.builder.title.edit':       'Edit routine',
+    'custom.builder.subtitle':         'Pick exercises and adjust their duration.',
+    'custom.builder.name.label':       'Name',
+    'custom.builder.name.placeholder': 'My routine',
+    'custom.builder.steps.label':      'Exercises',
+    'custom.builder.empty':            'No exercises yet. Add the first one.',
+    'custom.builder.add':              'Add exercise',
+    'custom.builder.approx':           '≈ {min} min',
+    'custom.builder.save':             'Save',
+    'custom.builder.cancel':           'Cancel',
+    'custom.builder.delete':           'Delete routine',
+    'custom.builder.delete.confirm':   'Tap again to delete',
+    'custom.picker.title':             'Pick an exercise',
+    'custom.picker.back':              '← Back',
+    'custom.step.up':                  'Move up',
+    'custom.step.down':                'Move down',
+    'custom.step.remove':              'Remove',
 });
 
 </script>
@@ -1893,6 +1957,177 @@ Object.assign(window.PACE_STRINGS.en, {
 
 </script>
   <script type="text/babel">
+/* PACE · Traducciones EN de contenido — Registro de ejercicios (F7 · s93)
+   Solo EN: en ES los componentes usan los strings del dato directamente
+   (app/custom/exercise-registry.js).
+   Carga después de strings/* — augmenta window.PACE_STRINGS.en.
+
+   Keys por NOMBRE canónico ES del ejercicio (la misma convención que las
+   keys de glifo): `custom.ex.<name>.name` / `custom.ex.<name>.cue`, más
+   `custom.cat.<key>.label` para los grupos del picker. Los nombres EN
+   reutilizan los ya establecidos en content/move.js y content/extra.js
+   para no divergir entre catálogo y constructor. */
+Object.assign(window.PACE_STRINGS.en, {
+
+  // ── Grupos del registro ──────────────────────────────────────────
+  'custom.cat.empuje.label':                        'Push & Pull',
+  'custom.cat.piernas.label':                       'Legs',
+  'custom.cat.core.label':                          'Core & Back',
+  'custom.cat.cuello.label':                        'Neck & Shoulders',
+  'custom.cat.columna.label':                       'Spine',
+  'custom.cat.caderas.label':                       'Hips',
+  'custom.cat.suelo.label':                         'Ground & Posterior Chain',
+  'custom.cat.manos.label':                         'Wrists, Ankles & Pauses',
+
+  // ── Empuje y tracción ────────────────────────────────────────────
+  'custom.ex.Flexiones inclinadas.name':            'Incline push-ups',
+  'custom.ex.Flexiones inclinadas.cue':             'Against the desk, elbows close to the body.',
+  'custom.ex.Pica en escritorio.name':              'Desk pike',
+  'custom.ex.Pica en escritorio.cue':               'Hips up, head between the arms.',
+  'custom.ex.Fondos en silla.name':                 'Chair dips',
+  'custom.ex.Fondos en silla.cue':                  'Lower with control, elbows back.',
+  'custom.ex.Hang pasivo.name':                     'Passive hang',
+  'custom.ex.Hang pasivo.cue':                      'Hang relaxed. Breathe.',
+  'custom.ex.Hang activo.name':                     'Active hang',
+  'custom.ex.Hang activo.cue':                      'Shoulders down and back, elbows straight.',
+
+  // ── Piernas ──────────────────────────────────────────────────────
+  'custom.ex.Sentadilla a silla.name':              'Chair squat',
+  'custom.ex.Sentadilla a silla.cue':               'Lower until you graze the chair, rise without momentum.',
+  'custom.ex.Wall sit.name':                        'Wall sit',
+  'custom.ex.Wall sit.cue':                         'Back against the wall, knees at 90°.',
+  'custom.ex.Sentadilla búlgara.name':              'Bulgarian squat',
+  'custom.ex.Sentadilla búlgara.cue':               'Instep on the chair, lower vertically.',
+  'custom.ex.ATG split squat.name':                 'ATG split squat',
+  'custom.ex.ATG split squat.cue':                  'Deep lunge. Knee goes past foot.',
+  'custom.ex.Sissy squat.name':                     'Sissy squat',
+  'custom.ex.Sissy squat.cue':                      'Supported. Knees forward, heels up.',
+  'custom.ex.Nordics.name':                         'Nordics',
+  'custom.ex.Nordics.cue':                          'Assisted if needed. Controlled descent.',
+  'custom.ex.Tibialis raise.name':                  'Tibialis raise',
+  'custom.ex.Tibialis raise.cue':                   'Against wall, lift feet.',
+  'custom.ex.Calf raises.name':                     'Calf raises',
+  'custom.ex.Calf raises.cue':                      'Up and down with control.',
+  'custom.ex.Puente con marcha.name':               'Bridge with march',
+  'custom.ex.Puente con marcha.cue':                'Deep glute activation.',
+
+  // ── Core y espalda ───────────────────────────────────────────────
+  'custom.ex.Plancha.name':                         'Plank',
+  'custom.ex.Plancha.cue':                          'Forearms, body in a line. Squeeze glutes.',
+  'custom.ex.Plancha lateral.name':                 'Side plank',
+  'custom.ex.Plancha lateral.cue':                  'Hips high, body in a line.',
+  'custom.ex.Hollow hold.name':                     'Hollow hold',
+  'custom.ex.Hollow hold.cue':                      'Lower back to the floor, legs and shoulders up.',
+  'custom.ex.Seated hollow.name':                   'Seated hollow',
+  'custom.ex.Seated hollow.cue':                    'Raise legs, support lower back.',
+  'custom.ex.Superman.name':                        'Superman',
+  'custom.ex.Superman.cue':                         'Face down: lift chest and arms, slowly.',
+  'custom.ex.Scapular squeeze.name':                'Scapular squeeze',
+  'custom.ex.Scapular squeeze.cue':                 'Squeeze shoulder blades, 2 seconds each.',
+  'custom.ex.Band pull-apart.name':                 'Band pull-apart',
+  'custom.ex.Band pull-apart.cue':                  'Without band: crossed arms + open with tension.',
+  'custom.ex.Apretar glúteos.name':                 'Glute squeeze',
+  'custom.ex.Apretar glúteos.cue':                  'Firm squeezes, 2 seconds each.',
+
+  // ── Cuello y hombros ─────────────────────────────────────────────
+  'custom.ex.Chin tucks.name':                      'Chin tucks',
+  'custom.ex.Chin tucks.cue':                       'Bring chin back, like a double chin.',
+  'custom.ex.Cuello y trapecios.name':              'Neck and traps',
+  'custom.ex.Cuello y trapecios.cue':               'Ear to shoulder, gentle.',
+  'custom.ex.Inclinación lateral.name':             'Lateral tilt',
+  'custom.ex.Inclinación lateral.cue':              'Ear to shoulder, each side.',
+  'custom.ex.Rotación lenta.name':                  'Slow rotation',
+  'custom.ex.Rotación lenta.cue':                   "Look over shoulder, don't force.",
+  'custom.ex.Escalenos.name':                       'Scalenes',
+  'custom.ex.Escalenos.cue':                        'Hand under glute, tilt head to opposite side.',
+  'custom.ex.Shrug + round.name':                   'Shrug + round',
+  'custom.ex.Shrug + round.cue':                    'Shoulders up, then relax.',
+  'custom.ex.Círculos de hombro.name':              'Shoulder circles',
+  'custom.ex.Círculos de hombro.cue':               'Slow, wide circles with a straight arm.',
+  'custom.ex.Scapular wall slides.name':            'Scapular wall slides',
+  'custom.ex.Scapular wall slides.cue':             'Back against wall, raise arms.',
+  'custom.ex.External rotation.name':               'External rotation',
+  'custom.ex.External rotation.cue':                'Elbow at 90°, rotate outward.',
+  'custom.ex.Apertura de pecho.name':               'Chest opening',
+  'custom.ex.Apertura de pecho.cue':                'Hands behind head, open elbows, look at ceiling.',
+  'custom.ex.Chest opener.name':                    'Chest opener',
+  'custom.ex.Chest opener.cue':                     'Arms back, expand chest.',
+
+  // ── Columna ──────────────────────────────────────────────────────
+  'custom.ex.Rotación torácica.name':               'Thoracic rotation',
+  'custom.ex.Rotación torácica.cue':                'Seated: crossed hands, rotate trunk slowly.',
+  'custom.ex.Thoracic extension.name':              'Thoracic extension',
+  'custom.ex.Thoracic extension.cue':               'Arch over chair.',
+  'custom.ex.Gato-camello.name':                    'Cat-camel',
+  'custom.ex.Gato-camello.cue':                     'On all fours: arch and round, vertebra by vertebra.',
+  'custom.ex.Onda espinal.name':                    'Spinal wave',
+  'custom.ex.Onda espinal.cue':                     'Standing: a slow wave from pelvis to head.',
+  'custom.ex.Puente torácico.name':                 'Thoracic bridge',
+  'custom.ex.Puente torácico.cue':                  'From seated, lift hips and open chest to the ceiling.',
+  'custom.ex.Rodar hacia abajo.name':               'Roll down',
+  'custom.ex.Rodar hacia abajo.cue':                'Standing, lower vertebra by vertebra until you hang.',
+  'custom.ex.Seated twist.name':                    'Seated twist',
+  'custom.ex.Seated twist.cue':                     'Rotate toward the backrest, gentle.',
+  'custom.ex.Rib pull + respiración.name':          'Rib pull + breathing',
+  'custom.ex.Rib pull + respiración.cue':           'Cat/cow movement with breath.',
+
+  // ── Caderas ──────────────────────────────────────────────────────
+  'custom.ex.Flexor de cadera.name':                'Hip flexor',
+  'custom.ex.Flexor de cadera.cue':                 'Knee to floor, push pelvis forward.',
+  'custom.ex.Couch stretch.name':                   'Couch stretch',
+  'custom.ex.Couch stretch.cue':                    'Instep against wall or chair, knee deep back.',
+  'custom.ex.90/90.name':                           '90/90',
+  'custom.ex.90/90.cue':                            'Rotate between sides slowly.',
+  'custom.ex.Pigeon.name':                          'Pigeon',
+  'custom.ex.Pigeon.cue':                           'Shin forward, weight forward.',
+  'custom.ex.Rana.name':                            'Frog',
+  'custom.ex.Rana.cue':                             'Knees wide, push hips back. Rock gently.',
+  'custom.ex.Cossack squat.name':                   'Cossack squat',
+  'custom.ex.Cossack squat.cue':                    'Weight to one side, other leg straight.',
+  "custom.ex.World's greatest stretch.name":        "World's greatest stretch",
+  "custom.ex.World's greatest stretch.cue":         'Lunge + hand to floor + rotation.',
+
+  // ── Suelo y cadena posterior ─────────────────────────────────────
+  'custom.ex.Squat profundo.name':                  'Deep squat',
+  'custom.ex.Squat profundo.cue':                   'Heels down, elbows inside knees.',
+  'custom.ex.Deep squat hold.name':                 'Deep squat hold',
+  'custom.ex.Deep squat hold.cue':                  'Heels down, relax at the bottom.',
+  'custom.ex.Crawling.name':                        'Crawling',
+  'custom.ex.Crawling.cue':                         'Contralateral, slow.',
+  'custom.ex.Ground sitting transitions.name':      'Ground sitting transitions',
+  'custom.ex.Ground sitting transitions.cue':       'Sit to floor and get up without hands.',
+  'custom.ex.Elephant walk.name':                   'Elephant walk',
+  'custom.ex.Elephant walk.cue':                    'Walk touching floor, legs straight.',
+  'custom.ex.Pliegue adelante.name':                'Forward fold',
+  'custom.ex.Pliegue adelante.cue':                 'Feet together, hang the trunk. Soft knees.',
+  'custom.ex.Isquio a una pierna.name':             'Single-leg hamstring',
+  'custom.ex.Isquio a una pierna.cue':              'Heel planted ahead, hips back.',
+
+  // ── Muñecas, tobillos y pausas ───────────────────────────────────
+  'custom.ex.Wrist circles.name':                   'Wrist circles',
+  'custom.ex.Wrist circles.cue':                    'Circles each direction, loose wrists.',
+  'custom.ex.Wrist stretch.name':                   'Wrist stretch',
+  'custom.ex.Wrist stretch.cue':                    'Flexion and extension, gentle.',
+  'custom.ex.Palmas al suelo.name':                 'Palms down',
+  'custom.ex.Palmas al suelo.cue':                  'Palms on the desk, fingers toward you.',
+  'custom.ex.Rezo invertido.name':                  'Reverse prayer',
+  'custom.ex.Rezo invertido.cue':                   'Backs of hands together at chest height.',
+  'custom.ex.Squeeze fist.name':                    'Squeeze fist',
+  'custom.ex.Squeeze fist.cue':                     'Squeeze hard, release.',
+  'custom.ex.Finger extension.name':                'Finger extension',
+  'custom.ex.Finger extension.cue':                 'Spread fingers wide.',
+  'custom.ex.Ankle circles.name':                   'Ankle circles',
+  'custom.ex.Ankle circles.cue':                    'Under the desk, each direction.',
+  'custom.ex.Deep breaths.name':                    'Deep breaths',
+  'custom.ex.Deep breaths.cue':                     '3 full inhales.',
+  'custom.ex.Reset respiración.name':               'Breathing reset',
+  'custom.ex.Reset respiración.cue':                'Deep inhales to close.',
+  'custom.ex.Descanso.name':                        'Rest',
+  'custom.ex.Descanso.cue':                         'Breathe. Let go.',
+});
+
+</script>
+  <script type="text/babel">
 /* PACE · i18n helper — useT + detectInitialLang
    Sesión 35 · v0.17.0
 
@@ -1963,7 +2198,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.37.0';
+const PACE_VERSION = 'v0.38.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -2038,6 +2273,11 @@ const defaultState = {
 
   // Contadores por tipo de rutina. { box, coherent, rounds, atg }.
   routineCounts: {},
+
+  // Rutinas custom del constructor premium (s93 · F7). CRUD y shape en
+  // state-custom.jsx; los helpers leen con fallback [] por si un import
+  // viejo reintroduce un estado sin la key.
+  customRoutines: [],
 
   // Historico de actividad (sesion 43).
   // days: { "YYYY-MM-DD": {focusMinutes, breathMinutes, moveMinutes, waterGlasses} }
@@ -3076,6 +3316,109 @@ function setLang(lang) {
 
 Object.assign(window, {
   setLang,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-custom.jsx — rutinas custom del constructor premium (F7 · s93).
+   CRUD sobre state.customRoutines (localStorage pace.state.v2), siguiendo
+   el split por dominio de la sesión 57.
+   Depende de: state-core (getState, setState).
+
+   Shape de rutina custom:
+     { id: 'custom.<Date.now()>', name, steps: [{ name, dur, cue }],
+       min, createdAt, updatedAt }
+   `steps` usa el mismo shape que las rutinas de catálogo — el runner
+   (MoveSession) no distingue. `min` se deriva al guardar (ceil de la
+   suma de dur). El prefijo `custom.` nunca colisiona con los ids
+   blindados `extra.*` / `move.*`, y al no estar en ningún mapa de
+   logros (exploreMap, BREATH_ROUTINE_CATEGORIES) una sesión custom
+   solo acredita lo genérico de completeMoveSession. */
+
+const CUSTOM_LIMITS = {
+  maxRoutines: 10,
+  minSteps: 1,
+  maxSteps: 12,
+  minDur: 10,   // segundos por paso
+  maxDur: 120,
+  durStep: 5,
+  maxNameLen: 40,
+};
+
+/* Lectura defensiva: instalaciones previas a v0.38.0 no tienen la key
+   (loadState la cubre via defaultState, pero un import de JSON viejo
+   podría reintroducir un estado sin ella o corrupto). */
+function getCustomRoutines() {
+  const list = getState().customRoutines;
+  return Array.isArray(list) ? list : [];
+}
+
+function getCustomRoutine(id) {
+  return getCustomRoutines().find(r => r.id === id) || null;
+}
+
+/* Normaliza el borrador del constructor a los límites. */
+function sanitizeCustomRoutine(draft) {
+  const name = String(draft.name || '').trim().slice(0, CUSTOM_LIMITS.maxNameLen) || 'Rutina propia';
+  const steps = (Array.isArray(draft.steps) ? draft.steps : [])
+    .slice(0, CUSTOM_LIMITS.maxSteps)
+    .map(s => ({
+      name: String(s.name || ''),
+      dur: Math.min(CUSTOM_LIMITS.maxDur, Math.max(CUSTOM_LIMITS.minDur,
+        Math.round((Number(s.dur) || 30) / CUSTOM_LIMITS.durStep) * CUSTOM_LIMITS.durStep)),
+      cue: String(s.cue || ''),
+    }));
+  const totalSec = steps.reduce((acc, s) => acc + s.dur, 0);
+  const min = Math.max(1, Math.ceil(totalSec / 60));
+  return { name, steps, min };
+}
+
+/* Crea una rutina. Devuelve la rutina o null si no pasa los límites. */
+function addCustomRoutine(draft) {
+  if (getCustomRoutines().length >= CUSTOM_LIMITS.maxRoutines) return null;
+  const clean = sanitizeCustomRoutine(draft);
+  if (clean.steps.length < CUSTOM_LIMITS.minSteps) return null;
+  const now = Date.now();
+  const routine = { id: `custom.${now}`, ...clean, createdAt: now, updatedAt: now };
+  setState(s => ({
+    ...s,
+    customRoutines: [...(Array.isArray(s.customRoutines) ? s.customRoutines : []), routine],
+  }));
+  return routine;
+}
+
+/* Edita una rutina existente. Devuelve la rutina o null. */
+function updateCustomRoutine(id, draft) {
+  const clean = sanitizeCustomRoutine(draft);
+  if (clean.steps.length < CUSTOM_LIMITS.minSteps) return null;
+  if (!getCustomRoutine(id)) return null;
+  let updated = null;
+  setState(s => ({
+    ...s,
+    customRoutines: (Array.isArray(s.customRoutines) ? s.customRoutines : []).map(r => {
+      if (r.id !== id) return r;
+      updated = { ...r, ...clean, updatedAt: Date.now() };
+      return updated;
+    }),
+  }));
+  return updated;
+}
+
+function deleteCustomRoutine(id) {
+  setState(s => ({
+    ...s,
+    customRoutines: (Array.isArray(s.customRoutines) ? s.customRoutines : []).filter(r => r.id !== id),
+  }));
+}
+
+Object.assign(window, {
+  CUSTOM_LIMITS,
+  getCustomRoutines, getCustomRoutine,
+  addCustomRoutine, updateCustomRoutine, deleteCustomRoutine,
 });
 
 </script>
@@ -8038,6 +8381,11 @@ function MoveLibrary({ open, onClose, onStart }) {
             </div>
           </div>
         ))}
+        {/* Tus rutinas — constructor premium (F7 · s93). Guard defensivo
+            por si el orden de carga fallara (patrón s83). */}
+        {typeof CustomRoutinesSection !== 'undefined' && (
+          <CustomRoutinesSection onStart={onStart} />
+        )}
       </div>
     </Modal>
   );
@@ -8046,7 +8394,19 @@ function MoveLibrary({ open, onClose, onStart }) {
 function MoveSession({ routine, onExit, kind = 'move' }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const displayRoutine = lang === 'en'
+  // Rutinas custom (F7 · s93): sin keys posicionales `<id>.sN.*` — el EN se
+  // resuelve por nombre canónico de ejercicio (content/custom.js), con
+  // fallback al ES del dato. Las rutinas de catálogo no cambian de ruta.
+  const isCustomRoutine = routine.id.indexOf('custom.') === 0;
+  const tStep = (idx, field) => {
+    const s = routine.steps[idx];
+    return isCustomRoutine
+      ? tR(`custom.ex.${s.name}.${field}`, s[field])
+      : tR(`${routine.id}.s${idx}.${field}`, s[field]);
+  };
+  // Custom: name es texto del usuario y code llega ya localizado desde
+  // CustomRoutinesSection — sin lookup (evita warns [i18n] en dev).
+  const displayRoutine = lang === 'en' && !isCustomRoutine
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
@@ -8197,11 +8557,11 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ...displayItalic,
           fontSize: 56, fontWeight: 500,
           lineHeight: 1.05, margin: '0 0 20px',
-        }}>{tR(`${routine.id}.s${stepIdx}.name`, step.name)}</h1>
+        }}>{tStep(stepIdx, 'name')}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
           maxWidth: 460, margin: '0 auto 30px',
-        }}>{tR(`${routine.id}.s${stepIdx}.cue`, step.cue)}</p>
+        }}>{tStep(stepIdx, 'cue')}</p>
 
         <div data-pace-move-timer style={{
           ...displayItalic,
@@ -8233,7 +8593,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tR(`${routine.id}.s${stepIdx + 1}.name`, routine.steps[stepIdx + 1].name)}` : t('move.lastStep')}
+          {routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')}
         </div>
       </div>
     </SessionShell>
@@ -8496,6 +8856,577 @@ function getExtraRoutine(id) {
 }
 window.getExtraRoutine = getExtraRoutine;
 Object.assign(window, { ExtraLibrary });
+
+</script>
+  <!-- Constructor de rutinas premium (F7 · s93): registro de ejercicios +
+       sección "Tus rutinas" (consumida por MoveLibrary en render) +
+       builder overlay (montado por main.jsx). -->
+  <script type="text/babel">
+/* PACE · Registro interno de ejercicios (F7 · s93 · v0.38.0)
+   Base de datos curada que alimenta el constructor de rutinas premium.
+   NO es una biblioteca navegable: la unidad gateable sigue siendo la
+   sesión (decisión s85). Unión deduplicada a mano de los steps de
+   MOVE_ROUTINES + EXTRA_ROUTINES a fecha v0.37.0, con cue neutro (sin
+   contexto de serie) y dur por defecto en segundos.
+
+   `name` es el ES canónico e IDÉNTICO a la key de glifo
+   (app/glyphs/exercise-glyphs.jsx); los ejercicios sin glifo aprobado
+   renderizan DefaultGlyph (cola D-4, sin cambios). El EN vive en
+   app/i18n/content/custom.js con keys `custom.ex.<name>.{name,cue}` y
+   `custom.cat.<key>.label` para los grupos.
+
+   Curación s93: 'Dead hang (si puedes)' queda fuera (duplica Hang
+   pasivo). Al crecer los catálogos en F8+, añadir aquí a mano los
+   pasos nuevos que merezcan entrar al constructor. */
+
+const EXERCISE_REGISTRY = {
+  empuje: {
+    label: 'Empuje y tracción',
+    items: [
+      { name: 'Flexiones inclinadas', dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
+      { name: 'Pica en escritorio', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos.' },
+      { name: 'Fondos en silla', dur: 40, cue: 'Baja con control, codos atrás.' },
+      { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
+      { name: 'Hang activo', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
+    ]
+  },
+  piernas: {
+    label: 'Piernas',
+    items: [
+      { name: 'Sentadilla a silla', dur: 40, cue: 'Baja hasta rozar la silla, sube sin impulso.' },
+      { name: 'Wall sit', dur: 45, cue: 'Espalda en pared, rodillas a 90°.' },
+      { name: 'Sentadilla búlgara', dur: 45, cue: 'Empeine sobre la silla, baja vertical.' },
+      { name: 'ATG split squat', dur: 50, cue: 'Zancada profunda. Rodilla por delante del pie.' },
+      { name: 'Sissy squat', dur: 40, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+      { name: 'Nordics', dur: 40, cue: 'Asistidos si hace falta. Bajada controlada.' },
+      { name: 'Tibialis raise', dur: 40, cue: 'Contra pared, levanta los pies.' },
+      { name: 'Calf raises', dur: 30, cue: 'Sube y baja con control.' },
+      { name: 'Puente con marcha', dur: 45, cue: 'Activación de glúteo profundo.' },
+    ]
+  },
+  core: {
+    label: 'Core y espalda',
+    items: [
+      { name: 'Plancha', dur: 40, cue: 'Antebrazos, cuerpo en línea. Aprieta glúteos.' },
+      { name: 'Plancha lateral', dur: 40, cue: 'Cadera alta, cuerpo en línea.' },
+      { name: 'Hollow hold', dur: 30, cue: 'Lumbar al suelo, piernas y hombros arriba.' },
+      { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya la baja espalda.' },
+      { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, lento.' },
+      { name: 'Scapular squeeze', dur: 30, cue: 'Junta omóplatos, 2 segundos cada vez.' },
+      { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
+      { name: 'Apretar glúteos', dur: 30, cue: 'Apretones firmes, 2 segundos cada uno.' },
+    ]
+  },
+  cuello: {
+    label: 'Cuello y hombros',
+    items: [
+      { name: 'Chin tucks', dur: 30, cue: 'Barbilla atrás, como doble papada.' },
+      { name: 'Cuello y trapecios', dur: 40, cue: 'Oreja al hombro, suave.' },
+      { name: 'Inclinación lateral', dur: 40, cue: 'Oreja al hombro, cada lado.' },
+      { name: 'Rotación lenta', dur: 40, cue: 'Mira sobre el hombro, sin forzar.' },
+      { name: 'Escalenos', dur: 40, cue: 'Mano bajo el glúteo, inclina la cabeza al lado opuesto.' },
+      { name: 'Shrug + round', dur: 20, cue: 'Hombros arriba, luego relaja.' },
+      { name: 'Círculos de hombro', dur: 45, cue: 'Círculos lentos y amplios, brazo estirado.' },
+      { name: 'Scapular wall slides', dur: 45, cue: 'Espalda en pared, sube los brazos.' },
+      { name: 'External rotation', dur: 40, cue: 'Codo a 90°, rota hacia fuera.' },
+      { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
+      { name: 'Chest opener', dur: 30, cue: 'Brazos atrás, expande el pecho.' },
+    ]
+  },
+  columna: {
+    label: 'Columna',
+    items: [
+      { name: 'Rotación torácica', dur: 40, cue: 'Sentado: manos cruzadas, rota el tronco despacio.' },
+      { name: 'Thoracic extension', dur: 40, cue: 'Arquea sobre la silla.' },
+      { name: 'Gato-camello', dur: 45, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
+      { name: 'Onda espinal', dur: 45, cue: 'De pie: ola desde la pelvis hasta la cabeza, lenta.' },
+      { name: 'Puente torácico', dur: 45, cue: 'Desde sentado, eleva cadera y abre el pecho al techo.' },
+      { name: 'Rodar hacia abajo', dur: 45, cue: 'De pie, baja vértebra a vértebra hasta colgar.' },
+      { name: 'Seated twist', dur: 30, cue: 'Rota hacia el respaldo, suave.' },
+      { name: 'Rib pull + respiración', dur: 40, cue: 'Movimiento de gato/vaca con respiración.' },
+    ]
+  },
+  caderas: {
+    label: 'Caderas',
+    items: [
+      { name: 'Flexor de cadera', dur: 45, cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
+      { name: 'Couch stretch', dur: 60, cue: 'Empeine contra pared o silla, rodilla al fondo.' },
+      { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
+      { name: 'Pigeon', dur: 50, cue: 'Tibia adelante, peso adelante.' },
+      { name: 'Rana', dur: 60, cue: 'Rodillas anchas, empuja la cadera atrás. Mece suave.' },
+      { name: 'Cossack squat', dur: 50, cue: 'Peso a un lado, la otra pierna estirada.' },
+      { name: "World's greatest stretch", dur: 60, cue: 'Zancada + mano al suelo + rotación.' },
+    ]
+  },
+  suelo: {
+    label: 'Suelo y cadena posterior',
+    items: [
+      { name: 'Squat profundo', dur: 50, cue: 'Talones abajo, codos dentro de las rodillas.' },
+      { name: 'Deep squat hold', dur: 50, cue: 'Talones abajo, relaja al fondo.' },
+      { name: 'Crawling', dur: 45, cue: 'Contralateral, lento.' },
+      { name: 'Ground sitting transitions', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
+      { name: 'Elephant walk', dur: 50, cue: 'Camina tocando el suelo, piernas estiradas.' },
+      { name: 'Pliegue adelante', dur: 50, cue: 'Pies juntos, cuelga el tronco. Rodillas suaves.' },
+      { name: 'Isquio a una pierna', dur: 50, cue: 'Talón apoyado delante, cadera atrás.' },
+    ]
+  },
+  manos: {
+    label: 'Muñecas, tobillos y pausas',
+    items: [
+      { name: 'Wrist circles', dur: 20, cue: 'Círculos en cada sentido, muñecas sueltas.' },
+      { name: 'Wrist stretch', dur: 30, cue: 'Flexión y extensión, suave.' },
+      { name: 'Palmas al suelo', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti.' },
+      { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
+      { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte, suelta.' },
+      { name: 'Finger extension', dur: 20, cue: 'Abre los dedos al máximo.' },
+      { name: 'Ankle circles', dur: 20, cue: 'Bajo la mesa, cada sentido.' },
+      { name: 'Deep breaths', dur: 20, cue: '3 inhalaciones completas.' },
+      { name: 'Reset respiración', dur: 30, cue: 'Inhalaciones profundas para cerrar.' },
+      { name: 'Descanso', dur: 20, cue: 'Respira. Suelta.' },
+    ]
+  },
+};
+
+/* Lookup por nombre canónico ES (misma convención que las keys de glifo). */
+function getExerciseDef(name) {
+  for (const group of Object.values(EXERCISE_REGISTRY)) {
+    const found = group.items.find(e => e.name === name);
+    if (found) return found;
+  }
+  return null;
+}
+
+window.EXERCISE_REGISTRY = EXERCISE_REGISTRY;
+window.getExerciseDef = getExerciseDef;
+
+</script>
+  <script type="text/babel">
+/* PACE · Tus rutinas — sección del constructor en la biblioteca Mueve
+   (F7 · s93 · v0.38.0)
+
+   Superficie premium ENTERA: con premiumUnlocked=false muestra sello +
+   copy + "Pronto" sin nada clicable (sin muro a mitad de flujo, mismo
+   lenguaje que RoutineCard bloqueada — el mecanismo de gating no se
+   toca). Si existieran rutinas creadas con el flag apagado, se listan
+   bloqueadas sin borrar datos.
+
+   Crear/editar abre CustomBuilder vía CustomEvent
+   `pace:open-custom-builder` (patrón overlay s50+); el estado del
+   builder vive en main.jsx. Lanzar una rutina reutiliza el onStart de
+   MoveLibrary (handleStartMove → MoveSession kind='move' →
+   completeMoveSession). */
+
+function CustomRoutinesSection({ onStart }) {
+  const { t, tn } = useT();
+  const [pace] = usePace();
+  const unlocked = !!pace.premiumUnlocked;
+  const routines = Array.isArray(pace.customRoutines) ? pace.customRoutines : [];
+  const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
+  const atLimit = routines.length >= limits.maxRoutines;
+
+  const openBuilder = (id) => {
+    window.dispatchEvent(new CustomEvent('pace:open-custom-builder', { detail: { id: id || null } }));
+  };
+  // El runner y las pantallas prep/done leen tag/code; se decoran aquí
+  // (localizados al vuelo) en lugar de persistirlos en el state.
+  const startRoutine = (r) => {
+    onStart({ ...r, tag: t('custom.tag'), code: t('custom.code') });
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{t('custom.section.title')}</h3>
+          <PremiumSeal />
+        </div>
+        <Meta>{t('custom.section.aside')}</Meta>
+      </div>
+
+      {!unlocked ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+          <Card padded={false} style={{ padding: '16px 18px' }}>
+            <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>
+              {t('custom.locked.copy')}
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px dashed var(--line)', paddingTop: 8 }}>
+              <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
+            </div>
+          </Card>
+          {routines.map(r => (
+            <CustomRoutineCard key={r.id} routine={r} locked />
+          ))}
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+          {routines.map(r => (
+            <CustomRoutineCard
+              key={r.id}
+              routine={r}
+              onClick={() => startRoutine(r)}
+              onEdit={() => openBuilder(r.id)}
+            />
+          ))}
+          {!atLimit ? (
+            <div
+              onClick={() => openBuilder(null)}
+              style={customRoutinesStyles.createCard}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--move)'; e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-2)'; }}
+            >
+              <div style={{ textAlign: 'center', padding: '8px 14px' }}>
+                <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 6, color: 'var(--move)' }}>+</div>
+                <div style={{ ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.create')}</div>
+                {routines.length === 0 && (
+                  <p style={{ fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
+                    {t('custom.empty.copy')}
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div style={{ ...customRoutinesStyles.createCard, cursor: 'default' }}>
+              <Meta style={{ textAlign: 'center' }}>{tn('custom.limit', { n: limits.maxRoutines })}</Meta>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Card de rutina propia — gemela visual de RoutineCard (que no se toca:
+   es parte del mecanismo de gating) con lápiz de edición añadido. */
+function CustomRoutineCard({ routine, locked, onClick, onEdit }) {
+  const { t, tn } = useT();
+  const stepsLabel = routine.steps.length === 1
+    ? t('custom.steps.one')
+    : tn('custom.steps.many', { n: routine.steps.length });
+  return (
+    <Card accent={locked ? undefined : 'var(--move)'} onClick={locked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+      {!locked && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onEdit(); }}
+          title={t('custom.card.edit')}
+          aria-label={t('custom.card.edit')}
+          style={customRoutinesStyles.editBtn}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--paper-2)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+          </svg>
+        </button>
+      )}
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+        <Tag color="var(--move)">{t('custom.tag')}</Tag>
+      </div>
+      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
+      <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{stepsLabel}</p>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        borderTop: '1px dashed var(--line)', paddingTop: 8,
+      }}>
+        <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+          {t('custom.code')}
+        </span>
+        {locked ? (
+          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
+        ) : (
+          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--move)', fontWeight: 500 }}>{routine.min} min</span>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+const customRoutinesStyles = {
+  createCard: {
+    border: '1px dashed var(--line-2)',
+    borderRadius: 'var(--r-md)',
+    padding: '16px 18px',
+    display: 'grid',
+    placeItems: 'center',
+    cursor: 'pointer',
+    color: 'var(--ink-2)',
+    minHeight: 130,
+    transition: 'all 220ms var(--ease)',
+  },
+  editBtn: {
+    position: 'absolute', top: 10, right: 10,
+    width: 26, height: 26,
+    display: 'grid', placeItems: 'center',
+    borderRadius: 'var(--r-sm)',
+    color: 'var(--ink-3)',
+    background: 'transparent',
+    border: '1px solid transparent',
+    transition: 'all 160ms',
+  },
+};
+
+Object.assign(window, { CustomRoutinesSection, CustomRoutineCard });
+
+</script>
+  <script type="text/babel">
+/* PACE · Constructor de rutinas premium (F7 · s93 · v0.38.0)
+
+   Modal overlay singleton (montado en main.jsx, abierto vía CustomEvent
+   `pace:open-custom-builder` con detail.id = rutina a editar o null).
+   Mientras está abierto, main.jsx oculta MoveLibrary para que solo un
+   Modal escuche Escape; al cerrar, la biblioteca reaparece.
+
+   Dos vistas internas:
+     - editor: nombre + lista de pasos (glifo, dur stepper, reordenar,
+       quitar) + total en vivo + Guardar/Cancelar (+ Eliminar en edición,
+       confirmación en dos toques).
+     - picker: registro de ejercicios agrupado (EXERCISE_REGISTRY); un
+       toque añade el paso con su dur por defecto.
+
+   Solo se llega aquí con premiumUnlocked=true (la sección de la
+   biblioteca no ofrece nada clicable en estado bloqueado). Los steppers
+   usan la forma funcional de setState local (decisión s89). */
+
+const { useState: useStateCB } = React;
+
+function CustomBuilder({ editId, onClose }) {
+  const { t, tn, lang } = useT();
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const tEx = (name) => tR(`custom.ex.${name}.name`, name);
+
+  const existing = editId ? getCustomRoutine(editId) : null;
+  const [name, setName] = useStateCB(existing ? existing.name : '');
+  const [steps, setSteps] = useStateCB(existing ? existing.steps.map(s => ({ ...s })) : []);
+  const [view, setView] = useStateCB('editor'); // 'editor' | 'picker'
+  const [confirmDelete, setConfirmDelete] = useStateCB(false);
+  const limits = window.CUSTOM_LIMITS;
+
+  const totalSec = steps.reduce((acc, s) => acc + s.dur, 0);
+  const totalMin = Math.max(1, Math.ceil(totalSec / 60));
+  const canSave = steps.length >= limits.minSteps && name.trim().length > 0;
+
+  const addStep = (ex) => {
+    setSteps(prev => prev.length >= limits.maxSteps
+      ? prev
+      : [...prev, { name: ex.name, dur: ex.dur, cue: ex.cue }]);
+  };
+  const removeStep = (idx) => setSteps(prev => prev.filter((_, i) => i !== idx));
+  const moveStep = (idx, delta) => setSteps(prev => {
+    const j = idx + delta;
+    if (j < 0 || j >= prev.length) return prev;
+    const next = [...prev];
+    const [item] = next.splice(idx, 1);
+    next.splice(j, 0, item);
+    return next;
+  });
+  const nudgeDur = (idx, delta) => setSteps(prev => prev.map((s, i) => i === idx
+    ? { ...s, dur: Math.min(limits.maxDur, Math.max(limits.minDur, s.dur + delta)) }
+    : s));
+
+  const save = () => {
+    const draft = { name, steps };
+    const ok = editId ? updateCustomRoutine(editId, draft) : addCustomRoutine(draft);
+    if (ok) onClose();
+  };
+  const del = () => {
+    if (!confirmDelete) { setConfirmDelete(true); return; }
+    deleteCustomRoutine(editId);
+    onClose();
+  };
+
+  // ── Vista PICKER ──────────────────────────────────────────────────
+  if (view === 'picker') {
+    return (
+      <Modal open={true} onClose={onClose} tagLabel={t('custom.builder.tag')} title={t('custom.picker.title')} maxWidth={720}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <button onClick={() => setView('editor')} style={customBuilderStyles.ghostBtn}>
+            {t('custom.picker.back')}
+          </button>
+          <Meta>{steps.length === 1 ? t('custom.steps.one') : tn('custom.steps.many', { n: steps.length })}</Meta>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {Object.entries(EXERCISE_REGISTRY).map(([key, group]) => (
+            <div key={key}>
+              <h4 style={{ ...displayItalic, fontSize: 16, margin: '0 0 8px', fontWeight: 500 }}>
+                {tR(`custom.cat.${key}.label`, group.label)}
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 6 }}>
+                {group.items.map(ex => (
+                  <button
+                    key={ex.name}
+                    onClick={() => { addStep(ex); if (steps.length + 1 >= limits.maxSteps) setView('editor'); }}
+                    disabled={steps.length >= limits.maxSteps}
+                    style={customBuilderStyles.pickRow}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--move)'; e.currentTarget.style.background = 'var(--paper-2)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line)'; e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    <span style={customBuilderStyles.pickGlyph}>
+                      <ExerciseGlyph id={ex.name} size={22} />
+                    </span>
+                    <span style={{ flex: 1, textAlign: 'left', fontSize: 13, lineHeight: 1.25 }}>{tEx(ex.name)}</span>
+                    <span style={{ fontSize: 11, color: 'var(--ink-3)', fontVariantNumeric: 'tabular-nums' }}>{ex.dur} s</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Modal>
+    );
+  }
+
+  // ── Vista EDITOR ──────────────────────────────────────────────────
+  return (
+    <Modal
+      open={true}
+      onClose={onClose}
+      tagLabel={t('custom.builder.tag')}
+      title={editId ? t('custom.builder.title.edit') : t('custom.builder.title.new')}
+      subtitle={t('custom.builder.subtitle')}
+      maxWidth={720}
+    >
+      <div style={{ marginBottom: 18 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('custom.builder.name.label')}</Meta>
+        <input
+          type="text"
+          value={name}
+          maxLength={limits.maxNameLen}
+          placeholder={t('custom.builder.name.placeholder')}
+          onChange={(e) => setName(e.target.value)}
+          style={customBuilderStyles.nameInput}
+        />
+      </div>
+
+      <Meta style={{ marginBottom: 8 }}>{t('custom.builder.steps.label')}</Meta>
+      {steps.length === 0 ? (
+        <p style={{ fontSize: 13, color: 'var(--ink-3)', margin: '0 0 14px', lineHeight: 1.5 }}>
+          {t('custom.builder.empty')}
+        </p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>
+          {steps.map((s, idx) => (
+            <div key={`${s.name}-${idx}`} style={customBuilderStyles.stepRow}>
+              <span style={customBuilderStyles.stepGlyph}>
+                <ExerciseGlyph id={s.name} size={24} />
+              </span>
+              <span style={{ flex: 1, fontSize: 14, lineHeight: 1.3, minWidth: 0 }}>{tEx(s.name)}</span>
+              <span style={customBuilderStyles.durGroup}>
+                <button onClick={() => nudgeDur(idx, -limits.durStep)} disabled={s.dur <= limits.minDur} aria-label="−5 s" style={customBuilderStyles.iconBtn}>−</button>
+                <span style={customBuilderStyles.durValue}>{s.dur} s</span>
+                <button onClick={() => nudgeDur(idx, limits.durStep)} disabled={s.dur >= limits.maxDur} aria-label="+5 s" style={customBuilderStyles.iconBtn}>+</button>
+              </span>
+              <span style={{ display: 'inline-flex', gap: 2 }}>
+                <button onClick={() => moveStep(idx, -1)} disabled={idx === 0} title={t('custom.step.up')} aria-label={t('custom.step.up')} style={customBuilderStyles.iconBtn}>↑</button>
+                <button onClick={() => moveStep(idx, 1)} disabled={idx === steps.length - 1} title={t('custom.step.down')} aria-label={t('custom.step.down')} style={customBuilderStyles.iconBtn}>↓</button>
+                <button onClick={() => removeStep(idx)} title={t('custom.step.remove')} aria-label={t('custom.step.remove')} style={customBuilderStyles.iconBtn}>×</button>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
+        <button
+          onClick={() => setView('picker')}
+          disabled={steps.length >= limits.maxSteps}
+          style={{ ...customBuilderStyles.ghostBtn, opacity: steps.length >= limits.maxSteps ? 0.4 : 1 }}
+        >
+          + {t('custom.builder.add')}
+        </button>
+        {steps.length > 0 && (
+          <Meta>{`${steps.length === 1 ? t('custom.steps.one') : tn('custom.steps.many', { n: steps.length })} · ${tn('custom.builder.approx', { min: totalMin })}`}</Meta>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--line)', paddingTop: 16 }}>
+        <div>
+          {editId && (
+            <button
+              onClick={del}
+              style={{
+                ...customBuilderStyles.ghostBtn,
+                color: confirmDelete ? 'var(--paper)' : 'var(--breathe)',
+                borderColor: 'var(--breathe)',
+                background: confirmDelete ? 'var(--breathe)' : 'transparent',
+              }}
+            >
+              {confirmDelete ? t('custom.builder.delete.confirm') : t('custom.builder.delete')}
+            </button>
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Button variant="ghost" onClick={onClose}>{t('custom.builder.cancel')}</Button>
+          <Button
+            onClick={save}
+            disabled={!canSave}
+            style={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+          >{t('custom.builder.save')}</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+const customBuilderStyles = {
+  nameInput: {
+    width: '100%', boxSizing: 'border-box',
+    padding: '10px 12px', fontSize: 15,
+    color: 'var(--ink)', background: 'var(--paper-2)',
+    border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
+    letterSpacing: 0.2,
+  },
+  stepRow: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '8px 10px',
+    border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
+    background: 'var(--paper)',
+  },
+  stepGlyph: {
+    width: 36, height: 36, flexShrink: 0,
+    borderRadius: '50%',
+    background: 'var(--move-soft)', color: 'var(--move)',
+    display: 'grid', placeItems: 'center',
+  },
+  durGroup: {
+    display: 'inline-flex', alignItems: 'center', gap: 4,
+    flexShrink: 0,
+  },
+  durValue: {
+    fontSize: 12, color: 'var(--ink-2)',
+    minWidth: 38, textAlign: 'center',
+    fontVariantNumeric: 'tabular-nums',
+  },
+  iconBtn: {
+    width: 24, height: 24,
+    display: 'grid', placeItems: 'center',
+    fontSize: 13, lineHeight: 1,
+    color: 'var(--ink-2)', background: 'transparent',
+    border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
+    cursor: 'pointer',
+  },
+  ghostBtn: {
+    padding: '7px 14px', fontSize: 13,
+    color: 'var(--ink-2)', background: 'transparent',
+    border: '1px solid var(--line-2)', borderRadius: 'var(--r-md)',
+    cursor: 'pointer',
+    transition: 'all 160ms',
+  },
+  pickRow: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    padding: '6px 10px',
+    border: '1px solid var(--line)', borderRadius: 'var(--r-sm)',
+    background: 'transparent', color: 'var(--ink)',
+    cursor: 'pointer', textAlign: 'left',
+    transition: 'all 160ms',
+  },
+  pickGlyph: {
+    width: 30, height: 30, flexShrink: 0,
+    borderRadius: '50%',
+    background: 'var(--move-soft)', color: 'var(--move)',
+    display: 'grid', placeItems: 'center',
+  },
+};
+
+Object.assign(window, { CustomBuilder });
 
 </script>
   <!-- Caminos - catalogo y resolvers (sesion 49) -->
@@ -13273,6 +14204,18 @@ function PaceApp() {
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
 
+  // Constructor de rutinas premium (F7 · s93). Overlay singleton abierto vía
+  // CustomEvent `pace:open-custom-builder` (detail.id: rutina a editar o
+  // null para crear). Mientras está abierto se oculta MoveLibrary para que
+  // solo un Modal escuche Escape; al cerrar, la biblioteca reaparece
+  // (openLibrary conserva 'move').
+  const [customBuilder, setCustomBuilder] = useStateMain(null); // null | { id }
+  useEffectMain(() => {
+    const h = (e) => setCustomBuilder({ id: (e.detail && e.detail.id) || null });
+    window.addEventListener('pace:open-custom-builder', h);
+    return () => window.removeEventListener('pace:open-custom-builder', h);
+  }, []);
+
   // Logro secreto: clicks en la vaca del logo (sidebar o topbar).
   // Se escucha como evento global para que el Sidebar pueda disparar clicks
   // sobre el logo sin acoplarse a props del root.
@@ -13450,10 +14393,13 @@ function PaceApp() {
         onStart={handleStartBreathe}
       />
       <MoveLibrary
-        open={openLibrary === 'move'}
+        open={openLibrary === 'move' && !customBuilder}
         onClose={() => setOpenLibrary(null)}
         onStart={handleStartMove}
       />
+      {customBuilder && (
+        <CustomBuilder editId={customBuilder.id} onClose={() => setCustomBuilder(null)} />
+      )}
       <ExtraLibrary
         open={openLibrary === 'extra'}
         onClose={() => setOpenLibrary(null)}
