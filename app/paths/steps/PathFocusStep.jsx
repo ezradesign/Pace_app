@@ -2,56 +2,36 @@
    Pomodoro contextual de Camino. TimerDial compartido + subtitulo
    "Concentracion profunda" + tres botones del mismo peso visual
    (Pausar/Reset/Saltar) durante la sesion + CTA "Hecho" al completar.
-   Acredita foco UNA SOLA VEZ via creditedRef cuando remaining llega a 0
-   estando running. Reset NO acredita; skip NO acredita.
+   Motor de tiempo via useCountdown (s96, timestamp-based): acredita foco UNA
+   SOLA VEZ (onComplete single-shot del hook) cuando el contador llega a 0.
+   Reset NO acredita; skip NO acredita.
    Estilos comunes desde window.pathStepStyles (steps/_shared.js).
    Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
 
-const { useState: useStateFS, useEffect: useEffectFS, useRef: useRefFS } = React;
+const { useState: useStateFS } = React;
 
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
   const totalSec = (step.min || 25) * 60;
-  const [remaining, setRemaining] = useStateFS(totalSec);
-  const [running, setRunning] = useStateFS(false);
   const [done, setDone] = useStateFS(false);
-  const intervalRef = useRefFS(null);
-  const creditedRef = useRefFS(false);
 
-  useEffectFS(() => {
-    if (!running) { clearInterval(intervalRef.current); return; }
-    intervalRef.current = setInterval(() => {
-      setRemaining(r => {
-        if (r <= 1) {
-          clearInterval(intervalRef.current);
-          setRunning(false);
-          setDone(true);
-          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
-            try {
-              addFocusMinutes(step.min || 25);
-              creditedRef.current = true;
-              /* F-1 (s86): igual que la home (completePomodoro), el foco de un
-                 Camino cuenta como actividad del dia para la racha. updateStreak
-                 es idempotente por dia, asi que no doble-cuenta con el paso
-                 breathe/body si el Camino tambien lo ejecuta. */
-              if (typeof updateStreak === 'function') updateStreak();
-            } catch (e) {}
-          }
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [running]);
-
-  /* Reset: restaura contador y pausa. NO toca creditedRef ni avanza el
-     Camino. Si el usuario ya termino una vez (done) y resetea, ese caso
-     no se da: el bloque "done" muestra solo "Hecho", no Reset. */
-  const handleReset = () => {
-    setRunning(false);
-    setRemaining(totalSec);
-  };
+  /* Motor de cuenta atras timestamp-based compartido (s96 · useCountdown).
+     El foco de un Camino es CONTEXTUAL: acredita minutos + racha via
+     completeFocusSession('path'), SIN cycle ni logros de pomodoro (decision
+     s79/s86). onComplete es single-shot dentro del hook (reemplaza el
+     creditedRef previo). Reset (hook) restaura el contador y pausa sin
+     acreditar; skip tampoco acredita. */
+  const { remaining, running, toggle, reset } = useCountdown(totalSec, () => {
+    setDone(true);
+    /* F-1 (s86): igual que la home, el foco de un Camino cuenta como actividad
+       del dia para la racha (updateStreak, idempotente por dia -> no
+       doble-cuenta con el paso breathe/body del mismo Camino). */
+    try {
+      if (typeof completeFocusSession === 'function') {
+        completeFocusSession('path', { minutes: step.min || 25 });
+      }
+    } catch (e) {}
+  });
 
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;
@@ -95,10 +75,10 @@ function PathFocusStep({ step, onExit }) {
       )}
       {!done ? (
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => setRunning(r => !r)} style={btnBase}>
+          <button onClick={toggle} style={btnBase}>
             {pauseLabel}
           </button>
-          <button onClick={handleReset} style={btnBase}>
+          <button onClick={reset} style={btnBase}>
             {t('focus.restart')}
           </button>
           <button onClick={() => onExit('skip')} style={btnBase}>

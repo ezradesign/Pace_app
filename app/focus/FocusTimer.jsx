@@ -7,56 +7,30 @@ const { useState: useStateFT, useEffect: useEffectFT, useRef: useRefFT } = React
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
   const { t } = useT();
-  const [running, setRunning] = useStateFT(false);
-  const [remainingSec, setRemainingSec] = useStateFT(state.focusMinutes * 60);
-  const intervalRef = useRefFT(null);
 
-  // Reset si cambian minutos o modo
-  useEffectFT(() => {
-    const baseMin = state.focusMode === 'foco' ? state.focusMinutes
-                  : state.focusMode === 'pausa' ? 5
-                  : 15;
-    setRemainingSec(baseMin * 60);
-    setRunning(false);
-  }, [state.focusMode, state.focusMinutes]);
+  /* Motor de cuenta atras basado en timestamps (s96 · app/focus/useCountdown).
+     `remaining` se deriva del reloj real, no de un contador que se decrementa:
+     la pestana oculta ya no subcuenta. `durationSec` cambia con el modo/minutos
+     y el hook resetea a idle (reemplaza el antiguo efecto de reset). Sin
+     persistencia: recargar resetea el Pomodoro como antes. */
+  const durationSec = (state.focusMode === 'foco' ? state.focusMinutes
+                     : state.focusMode === 'pausa' ? 5
+                     : 15) * 60;
 
-  useEffectFT(() => {
-    if (!running) {
-      if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
-      return;
-    }
-    intervalRef.current = setInterval(() => {
-      // Reducer PURO: sólo calcula el siguiente valor. Los side-effects
-      // (completePomodoro, onFinish) viven en el useEffect de abajo que
-      // observa `justFinished`. Esto evita doble ejecución si React
-      // re-invoca el reducer (StrictMode en React 19).
-      setRemainingSec(s => {
-        if (s <= 1) {
-          clearInterval(intervalRef.current);
-          return 0;
-        }
-        return s - 1;
-      });
-    }, 1000);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [running]);
-
-  // Efecto de finalización: se dispara cuando el timer llega a 0 estando en
-  // marcha. Single-shot gracias al guard `justFinished` que se re-setea
-  // en el efecto de reset de modo/minutos.
-  useEffectFT(() => {
-    if (!running) return;
-    if (remainingSec !== 0) return;
-    setRunning(false);
-    /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
-       del bloque, sea foco o pausa. Respeta state.soundOn (noop si
-       está apagado). Sesión 28. */
+  const { remaining, running, status, toggle, reset } = useCountdown(durationSec, () => {
+    /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
+       bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado). */
     try { playSound('pomodoro.end'); } catch (e) {}
+    /* Solo el modo foco acredita: cycle + logros de pomodoro via
+       completeFocusSession('home') -> completePomodoro. Pausa(5)/larga(15)
+       tickan y suenan pero NO acreditan (decision historica). El hook fija la
+       ultima onComplete en un ref, asi que este cierre lee el focusMode
+       vigente; un cambio de modo resetea el timer antes de poder completar. */
     if (state.focusMode === 'foco') {
-      completePomodoro();
+      completeFocusSession('home');
       onFinish && onFinish();
     }
-  }, [remainingSec, running, state.focusMode]);
+  });
 
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
   useEffectFT(() => {
@@ -64,7 +38,7 @@ function FocusTimer({ onFinish }) {
     const drone = window.ambientDrone;
 
     if (state.focusMode !== 'foco') { drone.stop(800); return; }
-    if (remainingSec === 0)         { drone.stop(800); return; }
+    if (remaining === 0)            { drone.stop(800); return; }
 
     if (running) {
       if (drone.isActive()) {
@@ -77,7 +51,7 @@ function FocusTimer({ onFinish }) {
     } else {
       if (drone.isActive()) drone.pause();
     }
-  }, [running, state.focusMode, remainingSec]);
+  }, [running, state.focusMode, remaining]);
 
   // Apagar soundOn durante sesión → fadeout inmediato
   useEffectFT(() => {
@@ -86,10 +60,10 @@ function FocusTimer({ onFinish }) {
     }
   }, [state.soundOn]);
 
-  const mins = Math.floor(remainingSec / 60);
-  const secs = remainingSec % 60;
-  const totalSec = (state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15) * 60;
-  const progress = 1 - (remainingSec / totalSec);
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  const totalSec = durationSec;
+  const progress = 1 - (remaining / totalSec);
 
   const modeLabel = state.focusMode === 'foco' ? t('focus.mode.focus')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
@@ -98,14 +72,8 @@ function FocusTimer({ onFinish }) {
                  : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
                  : t('focus.subtitle.long');
 
-  const reset = () => {
-    setRunning(false);
-    const baseMin = state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15;
-    setRemainingSec(baseMin * 60);
-  };
-
   const isAro = state.timerStyle === 'aro';
-  const runningLabel = running ? t('focus.pause') : (remainingSec === totalSec ? t('focus.start') : t('focus.continue'));
+  const runningLabel = running ? t('focus.pause') : (remaining === totalSec ? t('focus.start') : t('focus.continue'));
 
   /* Dots de ciclo (4 puntitos + etiqueta CICLO).
      En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
@@ -128,9 +96,12 @@ function FocusTimer({ onFinish }) {
     <div style={focusStyles.controlsTight}>
       <button
         onClick={() => {
-          const next = !running;
-          setRunning(next);
-          if (next) try { playSound('pomodoro.start'); } catch (e) {}
+          // Sonido de inicio solo en un arranque/reanudacion real (idle|paused
+          // -> running). Pausar no suena; 'completed' es no-op (no re-credita).
+          if (status !== 'running' && status !== 'completed') {
+            try { playSound('pomodoro.start'); } catch (e) {}
+          }
+          toggle();
         }}
         style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
       >

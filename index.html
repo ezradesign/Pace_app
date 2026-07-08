@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.40.0</title>
+  <title>PACE · Foco · Cuerpo — v0.41.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -420,7 +420,7 @@ input, textarea { font-family: inherit; color: inherit; }
        0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
                            Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
        1. state-core.jsx → store, loadState, rollover, history helpers, toast
-       2. state-timer.jsx       → addFocusMinutes, completePomodoro
+       2. state-timer.jsx       → addFocusMinutes, completePomodoro, completeFocusSession
        3. state-hydrate.jsx     → addWaterGlass
        4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
        5. state-paths.jsx       → paths CRUD, stats
@@ -2194,7 +2194,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.40.0';
+const PACE_VERSION = 'v0.41.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -2743,9 +2743,31 @@ function completePomodoro() {
   updateStreak();
 }
 
+/* completeFocusSession(context, opts) — punto de entrada unificado del fin de
+   una sesion de foco (s96 · motor useCountdown). PRESERVA la distincion
+   historica; NO fundir en un solo comportamiento:
+     context 'home' -> completePomodoro(): cycle++ + logros de pomodoro
+                       (first.step/master.pomodoro.8/master.long.focus). Lee
+                       focusMinutes internamente (mismo credito que antes).
+     context 'path' -> addFocusMinutes(opts.minutes) + updateStreak(): foco
+                       CONTEXTUAL de Camino, SIN cycle ni logros de pomodoro
+                       (decision s79/s86). El caller pasa los minutos del step.
+   updateStreak se resuelve en runtime (definido en state-achievements, que
+   carga despues); el guard typeof lo protege por simetria con el resto. */
+function completeFocusSession(context, opts) {
+  if (context === 'path') {
+    const mins = (opts && typeof opts.minutes === 'number') ? opts.minutes : 25;
+    addFocusMinutes(mins);
+    if (typeof updateStreak === 'function') updateStreak();
+    return;
+  }
+  completePomodoro();
+}
+
 Object.assign(window, {
   addFocusMinutes,
   completePomodoro,
+  completeFocusSession,
 });
 
 </script>
@@ -3508,7 +3530,7 @@ Object.assign(window, {
 
    Orden de carga en PACE.html:
      1. state-core.jsx        (store, loadState, helpers, toast)
-     2. state-timer.jsx       (addFocusMinutes, completePomodoro)
+     2. state-timer.jsx       (addFocusMinutes, completePomodoro, completeFocusSession)
      3. state-hydrate.jsx     (addWaterGlass)
      4. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
      5. state-paths.jsx       (paths CRUD, stats)
@@ -3527,6 +3549,7 @@ Object.assign(window, {
   subscribe,
   unlockAchievement,
   completePomodoro,
+  completeFocusSession,
   completeBreathSession,
   completeMoveSession,
   completeExtraSession,
@@ -5113,6 +5136,146 @@ const timerDialStyles = {
 };
 
 Object.assign(window, { TimerDial, interpolateRingColor });
+
+</script>
+  <!-- Motor de cuenta atras timestamp-based (s96): expone window.useCountdown,
+       compartido por FocusTimer (home) y PathFocusStep (Camino). No deriva en
+       background (remaining = f(Date.now())). Antes que ambos consumidores. -->
+  <script type="text/babel">
+/* PACE · useCountdown — motor de cuenta atras timestamp-based (s96 / v0.41.0)
+   Compartido por FocusTimer (Pomodoro home) y PathFocusStep (foco
+   contextual de Camino). Extraido para no engordar FocusTimer (ya a 493 ln).
+
+   La verdad del tiempo vive en `endsAt` (ms epoch), NO en un contador que se
+   decrementa. Un tick de 1s solo fuerza el re-render; `remaining` se deriva
+   en cada render con ceil((endsAt - now)/1000). Con la pestana oculta el
+   navegador throttlea setInterval a ~1/min, pero como `remaining` se
+   recalcula desde `endsAt` NO subcuenta: al volver la pestana
+   (visibilitychange) o en el siguiente tick el valor se corrige y, si ya
+   paso `endsAt`, la sesion se completa. Cero deriva en background.
+
+   Estados: 'idle' | 'running' | 'paused' | 'completed'.
+   'completed' es TERMINAL: start()/toggle() son no-op hasta reset() o hasta
+   que cambie `durationSec` (cambio de modo/minutos en el home) -> resetea a
+   idle. Evita el re-credito latente del timer previo.
+
+   Pausa: se congela `remaining`; al reanudar `endsAt = now + remaining`.
+   Persistencia: NINGUNA (local al componente; recargar resetea el timer como
+   antes -- decision s96: la no-deriva no requiere pace.state).
+
+   Firma: useCountdown(durationSec, onComplete)
+     -> { remaining, running, status, start, pause, resume, toggle, reset }
+   `onComplete` se guarda en ref y se invoca UNA vez en running->completed
+   (single-shot; reemplaza los guards justFinished/creditedRef).
+
+   `remaining` es SIEMPRE segundos enteros (ceil): mins/secs y progress se
+   derivan de el, asi que ambos cambian una vez por segundo -- identico al
+   contador decremental previo (ningun nudge sub-segundo del aro).
+*/
+
+const {
+  useState: useStateUC, useEffect: useEffectUC,
+  useRef: useRefUC, useCallback: useCallbackUC,
+} = React;
+
+function useCountdown(durationSec, onComplete) {
+  const [status, setStatus] = useStateUC('idle');      // idle | running | paused | completed
+  const statusRef = useRefUC('idle');                  // espejo sincrono para los handlers
+  const endsAtRef = useRefUC(null);                    // ms epoch; valido solo en 'running'
+  const remainingMsRef = useRefUC(durationSec * 1000); // congelado en idle/paused/completed
+  const firedRef = useRefUC(false);                    // single-shot de onComplete
+  const onCompleteRef = useRefUC(onComplete);
+  const [, forceTick] = useStateUC(0);                 // el tick SOLO re-renderiza
+
+  // Ultima onComplete sin re-suscribir el interval (patron latest-ref).
+  useEffectUC(() => { onCompleteRef.current = onComplete; });
+  // Espejo de status (backstop; los handlers tambien lo escriben a mano).
+  useEffectUC(() => { statusRef.current = status; });
+
+  // remaining (segundos enteros) derivado del reloj real.
+  let remainingMs;
+  if (status === 'running') remainingMs = Math.max(0, endsAtRef.current - Date.now());
+  else if (status === 'completed') remainingMs = 0;
+  else remainingMs = remainingMsRef.current;           // idle | paused
+  const remaining = Math.ceil(remainingMs / 1000);
+
+  const complete = useCallbackUC(() => {
+    if (firedRef.current) return;
+    firedRef.current = true;
+    remainingMsRef.current = 0;
+    endsAtRef.current = null;
+    statusRef.current = 'completed';
+    setStatus('completed');
+    try {
+      if (typeof onCompleteRef.current === 'function') onCompleteRef.current();
+    } catch (e) {}
+  }, []);
+
+  // Ticker: solo corre en 'running'. Re-renderiza cada segundo y comprueba el
+  // fin contra el reloj real. visibilitychange corrige al instante (sin
+  // esperar al siguiente tick throttleado).
+  useEffectUC(() => {
+    if (status !== 'running') return;
+    const check = () => {
+      if (Date.now() >= endsAtRef.current) complete();
+      else forceTick(n => n + 1);
+    };
+    const id = setInterval(check, 1000);
+    const onVis = () => { if (document.visibilityState === 'visible') check(); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [status, complete]);
+
+  // Reset por cambio de duracion (home: cambio de modo/minutos) -> idle.
+  useEffectUC(() => {
+    firedRef.current = false;
+    endsAtRef.current = null;
+    remainingMsRef.current = durationSec * 1000;
+    statusRef.current = 'idle';
+    setStatus('idle');
+  }, [durationSec]);
+
+  const start = useCallbackUC(() => {
+    if (statusRef.current === 'running' || statusRef.current === 'completed') return;
+    firedRef.current = false;
+    endsAtRef.current = Date.now() + remainingMsRef.current;
+    statusRef.current = 'running';
+    setStatus('running');
+  }, []);
+
+  const pause = useCallbackUC(() => {
+    if (statusRef.current !== 'running') return;
+    remainingMsRef.current = Math.max(0, endsAtRef.current - Date.now());
+    endsAtRef.current = null;
+    statusRef.current = 'paused';
+    setStatus('paused');
+  }, []);
+
+  const toggle = useCallbackUC(() => {
+    if (statusRef.current === 'running') pause();
+    else start();
+  }, [pause, start]);
+
+  const reset = useCallbackUC(() => {
+    firedRef.current = false;
+    endsAtRef.current = null;
+    remainingMsRef.current = durationSec * 1000;
+    statusRef.current = 'idle';
+    setStatus('idle');
+  }, [durationSec]);
+
+  return {
+    remaining,
+    running: status === 'running',
+    status,
+    start, pause, resume: start, toggle, reset,
+  };
+}
+
+Object.assign(window, { useCountdown });
 
 </script>
 
@@ -7011,56 +7174,30 @@ const { useState: useStateFT, useEffect: useEffectFT, useRef: useRefFT } = React
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
   const { t } = useT();
-  const [running, setRunning] = useStateFT(false);
-  const [remainingSec, setRemainingSec] = useStateFT(state.focusMinutes * 60);
-  const intervalRef = useRefFT(null);
 
-  // Reset si cambian minutos o modo
-  useEffectFT(() => {
-    const baseMin = state.focusMode === 'foco' ? state.focusMinutes
-                  : state.focusMode === 'pausa' ? 5
-                  : 15;
-    setRemainingSec(baseMin * 60);
-    setRunning(false);
-  }, [state.focusMode, state.focusMinutes]);
+  /* Motor de cuenta atras basado en timestamps (s96 · app/focus/useCountdown).
+     `remaining` se deriva del reloj real, no de un contador que se decrementa:
+     la pestana oculta ya no subcuenta. `durationSec` cambia con el modo/minutos
+     y el hook resetea a idle (reemplaza el antiguo efecto de reset). Sin
+     persistencia: recargar resetea el Pomodoro como antes. */
+  const durationSec = (state.focusMode === 'foco' ? state.focusMinutes
+                     : state.focusMode === 'pausa' ? 5
+                     : 15) * 60;
 
-  useEffectFT(() => {
-    if (!running) {
-      if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
-      return;
-    }
-    intervalRef.current = setInterval(() => {
-      // Reducer PURO: sólo calcula el siguiente valor. Los side-effects
-      // (completePomodoro, onFinish) viven en el useEffect de abajo que
-      // observa `justFinished`. Esto evita doble ejecución si React
-      // re-invoca el reducer (StrictMode en React 19).
-      setRemainingSec(s => {
-        if (s <= 1) {
-          clearInterval(intervalRef.current);
-          return 0;
-        }
-        return s - 1;
-      });
-    }, 1000);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [running]);
-
-  // Efecto de finalización: se dispara cuando el timer llega a 0 estando en
-  // marcha. Single-shot gracias al guard `justFinished` que se re-setea
-  // en el efecto de reset de modo/minutos.
-  useEffectFT(() => {
-    if (!running) return;
-    if (remainingSec !== 0) return;
-    setRunning(false);
-    /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin
-       del bloque, sea foco o pausa. Respeta state.soundOn (noop si
-       está apagado). Sesión 28. */
+  const { remaining, running, status, toggle, reset } = useCountdown(durationSec, () => {
+    /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
+       bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado). */
     try { playSound('pomodoro.end'); } catch (e) {}
+    /* Solo el modo foco acredita: cycle + logros de pomodoro via
+       completeFocusSession('home') -> completePomodoro. Pausa(5)/larga(15)
+       tickan y suenan pero NO acreditan (decision historica). El hook fija la
+       ultima onComplete en un ref, asi que este cierre lee el focusMode
+       vigente; un cambio de modo resetea el timer antes de poder completar. */
     if (state.focusMode === 'foco') {
-      completePomodoro();
+      completeFocusSession('home');
       onFinish && onFinish();
     }
-  }, [remainingSec, running, state.focusMode]);
+  });
 
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
   useEffectFT(() => {
@@ -7068,7 +7205,7 @@ function FocusTimer({ onFinish }) {
     const drone = window.ambientDrone;
 
     if (state.focusMode !== 'foco') { drone.stop(800); return; }
-    if (remainingSec === 0)         { drone.stop(800); return; }
+    if (remaining === 0)            { drone.stop(800); return; }
 
     if (running) {
       if (drone.isActive()) {
@@ -7081,7 +7218,7 @@ function FocusTimer({ onFinish }) {
     } else {
       if (drone.isActive()) drone.pause();
     }
-  }, [running, state.focusMode, remainingSec]);
+  }, [running, state.focusMode, remaining]);
 
   // Apagar soundOn durante sesión → fadeout inmediato
   useEffectFT(() => {
@@ -7090,10 +7227,10 @@ function FocusTimer({ onFinish }) {
     }
   }, [state.soundOn]);
 
-  const mins = Math.floor(remainingSec / 60);
-  const secs = remainingSec % 60;
-  const totalSec = (state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15) * 60;
-  const progress = 1 - (remainingSec / totalSec);
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  const totalSec = durationSec;
+  const progress = 1 - (remaining / totalSec);
 
   const modeLabel = state.focusMode === 'foco' ? t('focus.mode.focus')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
@@ -7102,14 +7239,8 @@ function FocusTimer({ onFinish }) {
                  : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
                  : t('focus.subtitle.long');
 
-  const reset = () => {
-    setRunning(false);
-    const baseMin = state.focusMode === 'foco' ? state.focusMinutes : state.focusMode === 'pausa' ? 5 : 15;
-    setRemainingSec(baseMin * 60);
-  };
-
   const isAro = state.timerStyle === 'aro';
-  const runningLabel = running ? t('focus.pause') : (remainingSec === totalSec ? t('focus.start') : t('focus.continue'));
+  const runningLabel = running ? t('focus.pause') : (remaining === totalSec ? t('focus.start') : t('focus.continue'));
 
   /* Dots de ciclo (4 puntitos + etiqueta CICLO).
      En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
@@ -7132,9 +7263,12 @@ function FocusTimer({ onFinish }) {
     <div style={focusStyles.controlsTight}>
       <button
         onClick={() => {
-          const next = !running;
-          setRunning(next);
-          if (next) try { playSound('pomodoro.start'); } catch (e) {}
+          // Sonido de inicio solo en un arranque/reanudacion real (idle|paused
+          // -> running). Pausar no suena; 'completed' es no-op (no re-credita).
+          if (status !== 'running' && status !== 'completed') {
+            try { playSound('pomodoro.start'); } catch (e) {}
+          }
+          toggle();
         }}
         style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
       >
@@ -13024,56 +13158,36 @@ Object.assign(window, { PathBreatheStep, PathBreatheSafetyGate });
    Pomodoro contextual de Camino. TimerDial compartido + subtitulo
    "Concentracion profunda" + tres botones del mismo peso visual
    (Pausar/Reset/Saltar) durante la sesion + CTA "Hecho" al completar.
-   Acredita foco UNA SOLA VEZ via creditedRef cuando remaining llega a 0
-   estando running. Reset NO acredita; skip NO acredita.
+   Motor de tiempo via useCountdown (s96, timestamp-based): acredita foco UNA
+   SOLA VEZ (onComplete single-shot del hook) cuando el contador llega a 0.
+   Reset NO acredita; skip NO acredita.
    Estilos comunes desde window.pathStepStyles (steps/_shared.js).
    Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
 
-const { useState: useStateFS, useEffect: useEffectFS, useRef: useRefFS } = React;
+const { useState: useStateFS } = React;
 
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
   const totalSec = (step.min || 25) * 60;
-  const [remaining, setRemaining] = useStateFS(totalSec);
-  const [running, setRunning] = useStateFS(false);
   const [done, setDone] = useStateFS(false);
-  const intervalRef = useRefFS(null);
-  const creditedRef = useRefFS(false);
 
-  useEffectFS(() => {
-    if (!running) { clearInterval(intervalRef.current); return; }
-    intervalRef.current = setInterval(() => {
-      setRemaining(r => {
-        if (r <= 1) {
-          clearInterval(intervalRef.current);
-          setRunning(false);
-          setDone(true);
-          if (!creditedRef.current && typeof addFocusMinutes === 'function') {
-            try {
-              addFocusMinutes(step.min || 25);
-              creditedRef.current = true;
-              /* F-1 (s86): igual que la home (completePomodoro), el foco de un
-                 Camino cuenta como actividad del dia para la racha. updateStreak
-                 es idempotente por dia, asi que no doble-cuenta con el paso
-                 breathe/body si el Camino tambien lo ejecuta. */
-              if (typeof updateStreak === 'function') updateStreak();
-            } catch (e) {}
-          }
-          return 0;
-        }
-        return r - 1;
-      });
-    }, 1000);
-    return () => clearInterval(intervalRef.current);
-  }, [running]);
-
-  /* Reset: restaura contador y pausa. NO toca creditedRef ni avanza el
-     Camino. Si el usuario ya termino una vez (done) y resetea, ese caso
-     no se da: el bloque "done" muestra solo "Hecho", no Reset. */
-  const handleReset = () => {
-    setRunning(false);
-    setRemaining(totalSec);
-  };
+  /* Motor de cuenta atras timestamp-based compartido (s96 · useCountdown).
+     El foco de un Camino es CONTEXTUAL: acredita minutos + racha via
+     completeFocusSession('path'), SIN cycle ni logros de pomodoro (decision
+     s79/s86). onComplete es single-shot dentro del hook (reemplaza el
+     creditedRef previo). Reset (hook) restaura el contador y pausa sin
+     acreditar; skip tampoco acredita. */
+  const { remaining, running, toggle, reset } = useCountdown(totalSec, () => {
+    setDone(true);
+    /* F-1 (s86): igual que la home, el foco de un Camino cuenta como actividad
+       del dia para la racha (updateStreak, idempotente por dia -> no
+       doble-cuenta con el paso breathe/body del mismo Camino). */
+    try {
+      if (typeof completeFocusSession === 'function') {
+        completeFocusSession('path', { minutes: step.min || 25 });
+      }
+    } catch (e) {}
+  });
 
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;
@@ -13117,10 +13231,10 @@ function PathFocusStep({ step, onExit }) {
       )}
       {!done ? (
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => setRunning(r => !r)} style={btnBase}>
+          <button onClick={toggle} style={btnBase}>
             {pauseLabel}
           </button>
-          <button onClick={handleReset} style={btnBase}>
+          <button onClick={reset} style={btnBase}>
             {t('focus.restart')}
           </button>
           <button onClick={() => onExit('skip')} style={btnBase}>

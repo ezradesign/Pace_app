@@ -67,7 +67,9 @@ fricción, y quiere volver mañana.*
 - React **development** + Babel runtime + unpkg CDN en producción.
 - Timers con `setInterval` que derivan en background: prioridad de fix
   **Focus (crítico) > Breathe (activeTime) > Move (bajo — sesiones cortas
-  con pantalla activa)**.
+  con pantalla activa)**. **Focus RESUELTO s96** (motor timestamp-based
+  `useCountdown.jsx`, cero deriva; FocusTimer + PathFocusStep). Breathe
+  pendiente s97, Move sin planificar (bajo).
 - BreatheSession cuenta pausas como tiempo activo (wall-clock).
 - Stats mes/año no muestran el día actual (history se alimenta en
   rollover) → selector `getHistoryWithToday` **memoizado**.
@@ -87,7 +89,7 @@ fricción, y quiere volver mañana.*
 |---|---|
 | ~~s94~~ | ~~F8 visual Caminos~~ **hecho (v0.39.0)** — huérfanas resueltas + clipPath único (estaba en Sidebar.jsx, no en SenderoBar) + tipografía tokenizada |
 | ~~s95~~ | ~~Cirugía 1: guard central de entitlement + degustación explícita~~ **hecho (v0.40.0)** — `state-entitlement.jsx` (`canAccessRoutine`/`canAccessPath`) consumido por RoutineCard + PathBreatheStep/PathBodyStep/getSuggestedPath · `path.weekend` con `tasting:true` explícito · `PathStepLocked` (auto-skip) · autofocus Welcome solo puntero fino · comportamiento idéntico con `premiumUnlocked=false`, **NO toca F3b** |
-| **s96** | **Timer engine** timestamp-based (idle/running/paused/completed) + migrar FocusTimer y PathFocusStep + `completeFocusSession()` unificado |
+| ~~s96~~ | ~~Cirugía 2: Timer engine timestamp-based~~ **hecho (v0.41.0)** — `app/focus/useCountdown.jsx` (estados idle/running/paused/completed; `remaining = f(Date.now())` desde `endsAt` → **cero deriva en background**, `visibilitychange` corrige al volver; `completed` terminal) migrado a FocusTimer (493→429 ln) y PathFocusStep · `completeFocusSession(context)` unificado que **preserva la distinción** home(cycle+logros)/Camino(minutos+streak) · **comportamiento idéntico en primer plano** · motor LOCAL (persistir en recarga diferido a s99) |
 | **s97** | **BreatheSession tiempo activo** (activeTime vs totalTime; stats y logros acreditan activeTime) |
 | **s98** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |
 | **s99** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |

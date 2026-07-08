@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.40.0
-**Ultima sesion:** #95 -- 2026-07-08 - feat(entitlement): **Cirugia 1 -- guard central de entitlement + degustacion explicita**. Nuevo `app/state-entitlement.jsx` con `canAccessRoutine`/`canAccessPath` como UNICO punto de verdad del acceso (hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia). Consumido por RoutineCard (gate de las 3 bibliotecas) + PathBreatheStep/PathBodyStep + getSuggestedPath. `path.weekend` deja de ser excepcion tacita: sus 2 steps premium llevan `tasting:true` explicito que el guard reconoce. `PathStepLocked` (auto-skip silencioso) como fallback defensivo. Autofocus del Welcome enguardado tras `(pointer: coarse)` (sin auto-teclado en movil). **Comportamiento observable identico con `premiumUnlocked=false`.** NO toca F3b. Bump **v0.40.0**. Diario: `docs/sessions/session-95-guard-entitlement.md`
-**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 95
-**Build entregado:** `PACE_standalone.html` v0.40.0 (719 KB) + `index.html` (idem, SHA256 identico)
+**Version actual:** v0.41.0
+**Ultima sesion:** #96 -- 2026-07-08 - refactor(focus): **Cirugia 2 -- motor de timer basado en timestamps**. Nuevo `app/focus/useCountdown.jsx` (~135 ln): la verdad del tiempo vive en `endsAt`, el tick de 1 s solo refresca la UI y `remaining = ceil((endsAt - Date.now())/1000)` -> **cero deriva en background** (la pestana oculta ya no subcuenta; `visibilitychange` corrige al instante). Estados idle/running/paused/completed; `completed` terminal (cierra un doble-credito latente). Migrados FocusTimer (home, 493->429 ln) y PathFocusStep (Camino). `completeFocusSession(context)` unificado en state-timer.jsx que **PRESERVA la distincion**: home->`completePomodoro` (cycle+logros de pomodoro); Camino->`addFocusMinutes+updateStreak` (sin cycle). **Comportamiento observable identico en primer plano** (creditos, sonidos, logros, drone, single-shot). Motor LOCAL (no toca pace.state). Bump **v0.41.0**. Diario: `docs/sessions/session-96-timer-engine.md`
+**Ultima actualizacion de este archivo:** 2026-07-08 - sesion 96
+**Build entregado:** `PACE_standalone.html` v0.41.0 (725 KB) + `index.html` (idem, SHA256 identico)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.40.0** (s95: + script tag `state-entitlement.jsx` antes de state-paths + titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.40.0** (719 KB, 70 archivos, regenerado s95) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.40.0** (s95: regenerado por build-standalone.js, SHA256 identico) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.41.0** (s96: + script tag `focus/useCountdown.jsx` tras TimerDial + titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.41.0** (725 KB, 71 archivos, regenerado s96) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.41.0** (s96: regenerado por build-standalone.js, SHA256 identico) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
 | `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
@@ -48,8 +48,9 @@
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.39.0** (s94: clipPath del mini-sendero con id unico por instancia `sendero-clip-<useId>`, +5 ln -> 535; OJO: ya estaba en ~530 ln, no en las 497 registradas -- vuelve a deuda) |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.31.0** (s77b: startBtnPrimary usa var(--focus-cta) -- verde musgo #506B3E claro / #8AA776 oscuro) |
-| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77) |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.41.0** (s96: migrado a `useCountdown` -- fuera los 3 useEffect de tiempo + estado running/remainingSec, 493->429 ln; `onComplete` toca `pomodoro.end`+`completeFocusSession('home')` solo en foco; drone intacto remainingSec->remaining; `pomodoro.start` solo en arranque real. s77b: startBtnPrimary var(--focus-cta)) |
+| `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.41.0** (nuevo s96, ~135 ln; `endsAt` como verdad, tick 1s solo re-renderiza, `visibilitychange` corrige, estados idle/running/paused/completed, `completed` terminal, `onComplete` single-shot en ref, sin persistencia) |
+| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77/s96 -- puramente presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.33.3** (nuevo s83, 209 ln; lee `window.ACHIEVEMENT_GLYPHS` para entradas con glyphSvg) |
@@ -59,13 +60,13 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.40.0** (s95: solo bump PACE_VERSION; s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
-| `app/state-timer.jsx` | addFocusMinutes, completePomodoro | **v0.28.8** (s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.41.0** (s96: solo bump PACE_VERSION; s93: + `customRoutines: []` en defaultState, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
 | `app/state-paths.jsx` | Caminos CRUD + stats | **v0.40.0** (s95: `getSuggestedPath` salta candidatos con `!canAccessPath` en cada nivel -- hoy todos free, jerarquia identica; s78: jerarquia lastViewed>horario>anytime>catalog[0]; s75: lastViewed + setLastViewedPath) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
-| `app/state.jsx` | Indice — re-export consolidado | **v0.40.0** (s95: + `canAccessRoutine`/`canAccessPath`; s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
+| `app/state.jsx` | Indice — re-export consolidado | **v0.41.0** (s96: + `completeFocusSession`; s95: + `canAccessRoutine`/`canAccessPath`; s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.40.0** (s95: autofocus del input intencion enguardado tras `matchMedia('(pointer: coarse)')` -- solo escritorio, no auto-teclado en movil; s19: base) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
@@ -90,7 +91,7 @@
 | `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (SenderoBar 100% + recorrido + logros) | **v0.39.0** (s94: h2 stack hardcodeado -> `var(--font-display)`; 206 ln; CS_ROMAN local) |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** (nuevo s80, 23 ln) |
 | `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.40.0** (s95: consulta `canAccessRoutine(id, {tasting})` -> false = PathStepLocked; nuevo s80) |
-| `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.34.2** (s86: + `updateStreak()` tras acreditar foco -- F-1, el foco-en-Camino cuenta para la racha como la home; nuevo s80, compone btnBase desde _shared.js) |
+| `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.41.0** (s96: migrado a `useCountdown`; `onComplete`->`completeFocusSession('path', {minutes: step.min})` sin cycle; contrato (step, onExit) intacto; reset/skip sin credito. s86: la racha via updateStreak -- ahora dentro de completeFocusSession) |
 | `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.33.0** (nuevo s80, 113 ln; compone btnBase desde _shared.js + padding 28; firma uniformada a (step, onExit)) |
 | `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.40.0** (s95: consulta `canAccessRoutine(id, {tasting})` -> false = PathStepLocked; nuevo s80) |
 | `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.39.0** (s94: titulo + hint a `var(--font-display)` -- siguen data-font; 251 ln) |
@@ -98,11 +99,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` en barra de acento (estaba invisible) y asterisco + asterisco a font-display + transitions a tokens; 192 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` x3 (barra/tag Favorito/boton Fav) + panel a `--sh-modal` + transition a tokens; 180 ln) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.40.0** (s95: CACHE_NAME pace-v0.40.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
+| `sw.js` | Service Worker PWA | **v0.41.0** (s96: CACHE_NAME pace-v0.41.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.40.0_20260708.html` <- creado s96 (snapshot del v0.40.0 publicado en s95)
 - `backups/PACE_standalone_v0.39.0_20260708.html` <- creado s95 (snapshot del v0.39.0 publicado en s94)
 - `backups/PACE_standalone_v0.38.0_20260708.html` <- creado s94 (snapshot del v0.38.0 publicado en s93)
 - `backups/PACE_standalone_v0.37.0_20260708.html` <- creado s93 (snapshot del v0.37.0 publicado en s92)
@@ -122,71 +124,72 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.32.0_20260518.html`
 - `backups/PACE_standalone_v0.31.0_20260517.html`
 - `backups/PACE_standalone_v0.30.0_20260517.html`
-- `backups/PACE_standalone_v0.29.0_20260516.html`
 
-Nota s95: cap 20 mantenido rotando el mas antiguo (`v0.28.12_20260516.html`)
-al crear el backup del v0.39.0.
+Nota s96: cap 20 mantenido rotando el mas antiguo (`v0.29.0_20260516.html`)
+al crear el backup del v0.40.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 95 - v0.40.0 - feat(entitlement): Cirugia 1 -- guard central de
-entitlement + degustacion explicita.** Primera sesion del plan maestro
-post-bloque.
+**Sesion 96 - v0.41.0 - refactor(focus): Cirugia 2 -- motor de timer
+basado en timestamps.** Segunda cirugia del plan maestro post-bloque.
 
-### Que se hizo (s95)
+### Que se hizo (s96)
 
-- **Tarea 0**: commit s94 (`995f513`, v0.39.0) en git ✓, working tree
-  limpio. Mapeados los 7 puntos que leen acceso hoy; **verificado que
-  `path.weekend` es el UNICO Camino que referencia rutinas premium**
-  (nadi.shodhana + atg.knees) -> solo el necesita degustacion explicita.
-- **Guard central** `app/state-entitlement.jsx` (nuevo, ~65 ln, cargado
-  antes de state-paths, re-exportado en state.jsx):
-  `canAccessRoutine(id, {tasting})` (desconocida->true fail-open,
-  free->true, premium->`premiumUnlocked||tasting`) y `canAccessPath(id)`
-  (paths free hoy -> true). UNICO punto de verdad; el sitio que cambiara
-  con la licencia.
-- **Degustacion explicita**: los 2 steps premium de `path.weekend` llevan
-  `tasting:true` en registry.js. Deja de ser excepcion tacita; el
-  comportamiento no cambia (weekend sigue lanzando ambas).
-- **Consumidores**: `RoutineCard` (gate de las 3 bibliotecas) ->
-  `isLocked = !canAccessRoutine(id)` (equivalente exacto, `usePace()` para
-  reactividad, `isPremium` inline para el sello). `PathBreatheStep`/
-  `PathBodyStep` consultan el guard con `{tasting: step.tasting}` ->
-  rama false = `PathStepLocked` (auto-skip silencioso, nuevo en
-  PathRunner.parts.jsx, dead code hoy). `getSuggestedPath` salta
-  candidatos con `!canAccessPath` en cada nivel. `CustomRoutinesSection`
-  se queda en `premiumUnlocked` (feature-gate, no routineId).
-- **Autofocus Welcome**: el `setTimeout(focus)` se enguarda tras
-  `matchMedia('(pointer: coarse)')` -> autofocus solo en escritorio (no
-  auto-teclado en movil).
+- **Tarea 0**: commit s95 (`6622de8`, v0.40.0) en git ✓, working tree
+  limpio. Mapeado TODO lo acoplado a `remaining`/`running` en los dos
+  timers (ticker, reset por cambio, finalizacion, single-shot, drone,
+  reset/skip sin credito, modos pausa(5)/larga(15) que tickan+suenan sin
+  acreditar) y la distincion completePomodoro vs addFocusMinutes.
+- **Motor** `app/focus/useCountdown.jsx` (nuevo, ~135 ln, `window.useCountdown`,
+  cargado tras TimerDial): la verdad del tiempo vive en `endsAt`; el tick de
+  1 s solo re-renderiza y `remaining = ceil((endsAt - Date.now())/1000)`.
+  Con la pestana oculta el interval se throttlea pero `remaining` NO
+  subcuenta (se recalcula del reloj); `visibilitychange` corrige al instante
+  al volver. Estados idle/running/paused/completed; `completed` **terminal**
+  (start/toggle no-op hasta reset o cambio de duracion -> cierra un
+  doble-credito latente). Pausa congela `remaining`; reanudar
+  `endsAt = now + remaining`. `onComplete` en ref = single-shot (reemplaza
+  justFinished/creditedRef). **LOCAL** (no toca pace.state).
+- **`completeFocusSession(context, opts)`** en state-timer.jsx (window +
+  re-export en state.jsx): `'home'`->`completePomodoro()` (cycle+logros de
+  pomodoro); `'path'`->`addFocusMinutes(opts.minutes)+updateStreak()` (sin
+  cycle). Dispatcher que **preserva la distincion**, no la funde.
+- **Migracion**: `FocusTimer.jsx` (493->429 ln) pierde los 3 useEffect de
+  tiempo + estado running/remainingSec; `onComplete` toca `pomodoro.end`
+  (3 modos) + `completeFocusSession('home')` (solo foco); drone y
+  `pomodoro.start` intactos (start solo en arranque real, no en no-op de
+  completed). `PathFocusStep.jsx` migrado; `onComplete`->
+  `completeFocusSession('path', {minutes: step.min})`; contrato (step,
+  onExit) intacto.
 
 ### Verificacion + cierre
 
-Preview :8765, protocolo s93 (purga SW+caches tras cada tanda). Con
-`premiumUnlocked=false`: guard verificado por caso; biblioteca con las 8
-premium en sello+"Pronto"+`cursor:default` y free clicables (**gating
-identico al previo**); **degustacion viva** -- `path.weekend` lanza la
-sesion de Nadi Shodhana (premium) en vivo, sin bloqueo. Con
-`premiumUnlocked=true` (snapshot + restaurado): premium clicables con sello,
-"Pronto"->min (reactividad via usePace). Welcome: puntero fino enfoca el
-input; forzando `(pointer: coarse)` NO enfoca (activeElement=BODY -- el
-preview no emula coarse al redimensionar, se verifico forzando matchMedia).
-`getSuggestedPath`->path.afternoon. EN: premium con "Soon". Estado
-restaurado (lang=es, premium=false, sin path). Consola sin errores.
-Cierre: backup `v0.39.0_20260708` (rotado `v0.28.12`, cap 20), rebuild
-standalone+index (719 KB, 70 archivos, SHA256 identico), standalone
-verificado en preview (v0.40.0, guard + 2 tasting), diario s95, CHANGELOG
-(v0.38.0 degradado a enlace), ROADMAP (s95 hecha), memoria actualizada.
+Preview :50333, protocolo s93 (purga SW+caches tras cada tanda). **No
+deriva**: mock `Date.now`/`endsAt` rebasado + pestana oculta -> `remaining`
+se recalcula sin subcontar y completa con credito exacto (el preview
+reporta visibilityState 'hidden', la finalizacion llega por el tick del
+interval; con visible el `visibilitychange` completa al instante). **Home**:
+cycle 0->1, +25 min (total+semana), first.step, master.long.focus(>=45),
+master.pomodoro.8(cycle>=8), single-shot (2 disparos->1 credito). **Camino**
+(PathFocusStep aislado, mismo store): +25 min + streak **sin cycle ni
+first.step**, CTA "Hecho"->onExit('done'). **Pausa** congela y reanuda.
+**Reset/Skip** sin credito. **Pausa/larga** tickan+suenan sin acreditar
+(spy playSound). **Drone** start/pause/resume/stop (muere al completar, spy
+ambientDrone). **completed** terminal. EN (Focus/Pause/Long). Estado
+restaurado. Consola sin errores en dev y standalone. Cierre: backup
+`v0.40.0_20260708` (rotado `v0.29.0`, cap 20), rebuild standalone+index
+(725 KB, 71 archivos, SHA256 identico), standalone verificado (v0.41.0,
+completa con credito), diario s96, CHANGELOG (v0.39.0 degradado a enlace),
+ROADMAP (s96 hecha), memoria actualizada.
 
-## Proxima sesion -- s96: timer engine timestamp-based
+## Proxima sesion -- s97: BreatheSession tiempo activo
 
-Segunda cirugia del plan maestro (ver `ROADMAP.md`, "Camino a v1.0"):
-motor de timer basado en timestamps (idle/running/paused/completed) que no
-derive en background + migrar FocusTimer y PathFocusStep +
-`completeFocusSession()` unificado. Prioridad de fix: Focus (critico) >
-Breathe (activeTime, s97) > Move.
+Tercera pieza del plan maestro (ver `ROADMAP.md`, "Camino a v1.0"):
+`BreatheSession` cuenta pausas como tiempo activo (wall-clock) -> distinguir
+`activeTime` de `totalTime`; stats y logros deben acreditar `activeTime`.
+Prioridad de fix: Focus (hecho s96) > **Breathe (activeTime, s97)** > Move.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
@@ -203,6 +206,7 @@ decision F3b) + landing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Motor de timer timestamp-based, LOCAL (no persiste en pace.state) | s96 | `app/focus/useCountdown.jsx`: la verdad del tiempo vive en `endsAt`; `remaining = ceil((endsAt-Date.now())/1000)` en cada render, el tick de 1s solo refresca UI -> **cero deriva en background** (la pestana oculta no subcuenta; `visibilitychange` corrige al volver). `completed` terminal (no re-credita). Compartido por FocusTimer y PathFocusStep via `completeFocusSession(context)` que **PRESERVA la distincion** home(cycle+logros de pomodoro)/path(minutos+streak). **FORK resuelto:** NO persiste el Pomodoro running en pace.state -- recargar resetea el timer (persistirlo es decision UX aparte, encaja con s99 PWA). Cualquier timer nuevo (breathe s97) debe usar este motor |
 | Bloque Contenido+Premium: gating a nivel sesion | s85 | La unidad gateable es lo que pulsas "empezar" (Respira=tecnica, Mueve/Estira=rutina). NO se exponen ejercicios sueltos navegables (gatear pasos dentro de una rutina = muro de pago a mitad de flujo). El registro interno de ejercicios se reserva para el constructor premium (F7). Ver CONTENT.md + ROADMAP.md |
 | Gating ANTES del contenido | s85 | El modelo de access + sello premium va en F3, antes de crecer el catalogo (F4-F6). No se puede etiquetar access con honestidad sin el campo ni el sello visible |
 | Copy BMC: nucleo libre (opcion A) + premium aparte | s85 | El modal Buy Me a Coffee queda como donacion pura (truth-fix: "el nucleo es gratis", fuera "sin pro"). El premium tendra superficie propia discreta en Tweaks (F3). Donar NO desbloquea nada; secret.supporter solo de honor |
