@@ -52,7 +52,14 @@ function useCountdown(durationSec, onComplete) {
   let remainingMs;
   if (status === 'running') remainingMs = Math.max(0, endsAtRef.current - Date.now());
   else if (status === 'completed') remainingMs = 0;
-  else remainingMs = remainingMsRef.current;           // idle | paused
+  else if (status === 'paused') remainingMs = remainingMsRef.current; // congelado mid-run
+  // idle: SIEMPRE la duracion completa (aro vacio -> progress 0). Derivar de
+  // `durationSec` y no de remainingMsRef evita que un cambio de preset deje el
+  // aro con relleno proporcional: el efecto [durationSec] hace setStatus('idle')
+  // que React ignora si ya era 'idle' (no re-render) mientras remainingMsRef
+  // aun tenia la duracion vieja -> aro a medias. Aqui el idle no depende del ref
+  // ni del re-render (s97).
+  else remainingMs = durationSec * 1000;
   const remaining = Math.ceil(remainingMs / 1000);
 
   const complete = useCallbackUC(() => {

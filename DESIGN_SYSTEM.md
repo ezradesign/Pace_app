@@ -58,19 +58,26 @@ Activa con `[data-palette="oscuro"]`. Desde s89 (v0.34.5) es también el
 **default inicial si el SO está en oscuro** (`detectInitialPalette()` lee
 `prefers-color-scheme` SOLO en el primer arranque; la elección manual de
 Tweaks persiste y siempre gana después). Recalibrada en s79 (v0.32.1):
-superficies y bordes +10% luminosidad; `--ink-*` intactos para preservar
-contraste y calidez nocturna.
+superficies y bordes +10% luminosidad; `--ink-*` intactos. **Segunda
+recalibración en s97 (v0.42.0)** — bug de legibilidad publicado: `--ink-3`
+estaba MÁS oscuro que en la paleta clara (`#756D5D` < `#8A8372`) y dejaba
+ilegible toda la letra fina (descriptores, labels de sección, "días
+seguidos", footer); `--line`/`--line-2` dejaban invisibles el track del aro
+(TimerDial usa `--line`) y los bordes de cards. Se subieron **en bloque**
+esos 3 peldaños; `--paper*`, `--ink`, `--ink-2` intactos. El **logo** en
+oscuro sigue con el PNG `invert+screen` de CowLogo (validado por el usuario
+como estética noche, no se reemplaza).
 
-| Token | Valor |
-|---|---|
-| `--paper` | `#1d1a14` |
-| `--paper-2` | `#26211a` |
-| `--paper-3` | `#2f2920` |
-| `--ink` | `#EDE5D3` |
-| `--ink-2` | `#c0b49e` |
-| `--ink-3` | `#756D5D` |
-| `--line` | `#3d362b` |
-| `--line-2` | `#4a4238` |
+| Token | Valor | Nota |
+|---|---|---|
+| `--paper` | `#1d1a14` | |
+| `--paper-2` | `#26211a` | |
+| `--paper-3` | `#2f2920` | |
+| `--ink` | `#EDE5D3` | |
+| `--ink-2` | `#c0b49e` | |
+| `--ink-3` | `#B2A995` | s97: era `#756D5D` (ilegible). Gobierna toda la letra fina; blanco cálido ~7:1, por debajo de `--ink-2` para mantener jerarquía |
+| `--line` | `#4d4536` | s97: era `#3d362b` |
+| `--line-2` | `#5f5544` | s97: era `#4a4238` |
 | `--focus` | `#7A9A6D` |
 | `--focus-2` | `#98B58B` |
 | `--focus-soft` | `rgba(122,154,109,0.12)` |

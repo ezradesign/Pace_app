@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.41.0</title>
+  <title>PACE · Foco · Cuerpo — v0.42.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -128,16 +128,28 @@
    s79: recalibrado +10% luminosidad en superficies y bordes (paper*,
    line*). --ink-* sin cambios para mantener el contraste y la calidez
    nocturna; el ajuste solo libera la base lo justo para que el texto
-   secundario (--ink-2, --ink-3) respire mejor sin perder el tono. */
+   secundario (--ink-2, --ink-3) respire mejor sin perder el tono.
+   s97: segunda recalibracion EN BLOQUE de los 3 peldanos de bajo
+   contraste (bug de legibilidad publicado). --ink-3 estaba MAS oscuro
+   que en la paleta clara (#756D5D < #8A8372) -> texto secundario/meta
+   casi ilegible sobre --paper. Subido a #B2A995 (~7:1, blanco calido):
+   gobierna TODA la letra fina (descriptores de actividad "ritmo, calma",
+   labels RITMO/SENDERO/LOGROS, "dias seguidos", footer) -> el usuario
+   pidio empujarlo hacia blanco para que se distinga mejor; se mantiene
+   por DEBAJO de --ink-2 (#c0b49e) para no colapsar la jerarquia. --line/
+   --line-2 subidos: el track del aro (TimerDial usa --line) y los bordes
+   de cards eran imperceptibles (~1.4:1). paper*, --ink, --ink-2 intactos
+   (s79 en pie). NOTA: el logo en oscuro sigue con el PNG invert+screen
+   (CowLogo) -- el usuario lo valida como estetica noche, NO se reemplaza. */
 [data-palette="oscuro"] {
   --paper: #1d1a14;
   --paper-2: #26211a;
   --paper-3: #2f2920;
   --ink: #EDE5D3;
   --ink-2: #c0b49e;
-  --ink-3: #756D5D;
-  --line: #3d362b;
-  --line-2: #4a4238;
+  --ink-3: #B2A995;
+  --line: #4d4536;
+  --line-2: #5f5544;
   --focus: #7A9A6D;
   --focus-2: #98B58B;
   --focus-soft: rgba(122, 154, 109, 0.12);
@@ -2194,7 +2206,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.41.0';
+const PACE_VERSION = 'v0.42.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4096,7 +4108,11 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
         }}>{prepCount > 0 ? prepCount : '·'}</div>
         <div data-pace-session-prep-copy style={{
           ...displayItalic,
-          fontSize: 20, color: 'var(--ink-2)', marginTop: 20,
+          /* marginTop 20 -> 40: el numeral (200px, lineHeight 0.9) baja su
+             tinta sobre el caption con solo 20px de aire -> solapamiento
+             (bug s96). Empujar el caption ~20px lo separa limpio. En movil
+             el override reduce el numeral a 128px, alli 20px basta. (s97) */
+          fontSize: 20, color: 'var(--ink-2)', marginTop: 40,
         }}>{copy}</div>
       </div>
     </SessionShell>
@@ -4228,7 +4244,7 @@ if (!_paceSessionResponsive) {
       }
       [data-pace-session-prep-copy] {
         font-size: 15px !important;
-        margin-top: 14px !important;
+        margin-top: 20px !important;
       }
       [data-pace-session-done-hero] {
         width: 80px !important;
@@ -5196,7 +5212,14 @@ function useCountdown(durationSec, onComplete) {
   let remainingMs;
   if (status === 'running') remainingMs = Math.max(0, endsAtRef.current - Date.now());
   else if (status === 'completed') remainingMs = 0;
-  else remainingMs = remainingMsRef.current;           // idle | paused
+  else if (status === 'paused') remainingMs = remainingMsRef.current; // congelado mid-run
+  // idle: SIEMPRE la duracion completa (aro vacio -> progress 0). Derivar de
+  // `durationSec` y no de remainingMsRef evita que un cambio de preset deje el
+  // aro con relleno proporcional: el efecto [durationSec] hace setStatus('idle')
+  // que React ignora si ya era 'idle' (no re-render) mientras remainingMsRef
+  // aun tenia la duracion vieja -> aro a medias. Aqui el idle no depende del ref
+  // ni del re-render (s97).
+  else remainingMs = durationSec * 1000;
   const remaining = Math.ceil(remainingMs / 1000);
 
   const complete = useCallbackUC(() => {
@@ -8113,6 +8136,10 @@ function BreatheSession({ routine, onExit }) {
   const [phaseTime, setPhaseTime] = useState(0);
   const [round, setRound] = useState(1);
   const [breathCount, setBreathCount] = useState(1);
+  // Ciclos completados en rutinas NO-rounds (patron por fases que se repite
+  // hasta agotar routine.min). Es la unidad de progreso real de estas
+  // sesiones -> alimenta las bolas inferiores (s97). En rounds no se usa.
+  const [cycle, setCycle] = useState(0);
   const [holdSeconds, setHoldSeconds] = useState(0);
   const [paused, setPaused] = useState(false);
   const startTime = useRef(Date.now());
@@ -8259,6 +8286,7 @@ function BreatheSession({ routine, onExit }) {
       if (elapsed >= routine.min * 60) {
         finish();
       } else {
+        setCycle(c => c + 1);   // un ciclo del patron completado (bolas s97)
         setPhase(0);
         // Hueco B: reinicio de ciclo no-rondas → fase 0 nunca sonaba.
         playPhaseSound(sequence[0].label, sequence[0].duration);
@@ -8369,8 +8397,25 @@ function BreatheSession({ routine, onExit }) {
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
-  const totalDots = isRounds ? routine.breaths : 20;
-  const activeDot = isRounds ? breathCount : Math.floor(phaseTime % totalDots);
+  // Progreso de la sesion (s97): BARRA SEGMENTADA por bloques de respiracion.
+  // Un segmento por bloque -- rounds: una por ronda; no-rounds: una por CICLO
+  // del patron (el "grupo 4·4·4·4"). El segmento activo se rellena con el
+  // progreso DENTRO del bloque; los completados quedan llenos. Sintetiza "la
+  // barra" + "agrupar por bloques" (feedback usuario) y usa el mismo lenguaje
+  // que la barra segmentada de Mueve. Tope de 24 segmentos: en rutinas largas
+  // (Coherente 6·6 = ~50 ciclos) cada segmento agrupa varios y la barra no se
+  // astilla; en las cortas (Box 5min = ~19) es 1 segmento por ciclo exacto.
+  const cycleSec = sequence.reduce((sum, p) => sum + p.duration, 0) || 1;
+  const doneInCycle = sequence.slice(0, phase).reduce((sum, p) => sum + p.duration, 0) + phaseTime;
+  // progreso continuo 0..1 de la sesion
+  const sessionProgress = isRounds
+    ? Math.min(1, ((round - 1) + Math.min(1, breathCount / routine.breaths)) / routine.rounds)
+    : Math.min(1, (cycle + doneInCycle / cycleSec) / Math.max(1, (routine.min * 60) / cycleSec));
+  const rawSegments = isRounds ? routine.rounds : Math.max(1, Math.round((routine.min * 60) / cycleSec));
+  const segTotal = Math.min(rawSegments, 24);
+  const filledExact = sessionProgress * segTotal;
+  const segFilled = Math.floor(filledExact);
+  const segActiveProgress = filledExact - segFilled;
 
   const footer = (
     <React.Fragment>
@@ -8416,24 +8461,42 @@ function BreatheSession({ routine, onExit }) {
             fontVariantNumeric: 'tabular-nums', marginTop: 4,
           }}>{remaining}</div>
         )}
-        <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
-          {isRounds ? `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}` : `${phaseTime}s / ${current.duration}s`}
-        </div>
+        {/* En rounds el contador de respiraciones ES el progreso de la ronda
+            (util, Wim Hof). En no-rounds se retira el "Ns/Ns": era redundante
+            con el numeral grande de arriba (mismo dato de fase) -> menos ruido,
+            la sesion la marca la barra (s97, feedback usuario). */}
+        {isRounds && (
+          <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
+            {`${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}`}
+          </div>
+        )}
       </div>
+      {/* Progreso de la SESION: barra SEGMENTADA por bloques de respiracion
+          (un segmento por ciclo/ronda; el activo se llena por dentro). Ver
+          calculo arriba: segTotal / segFilled / segActiveProgress. */}
       <div style={{
-        display: 'flex', gap: 5,
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        maxWidth: 400,
-        margin: '0 auto',
+        display: 'flex', gap: 3, alignItems: 'center',
+        width: '100%', maxWidth: 260, height: 5, margin: '0 auto',
       }}>
-        {Array.from({ length: Math.min(totalDots, 30) }).map((_, i) => (
-          <span key={i} style={{
-            width: 4, height: 4, borderRadius: '50%',
-            background: i < activeDot ? 'var(--breathe)' : 'var(--line)',
-            transition: 'background 200ms',
-          }} />
-        ))}
+        {Array.from({ length: segTotal }).map((_, i) => {
+          const fill = i < segFilled ? 1 : (i === segFilled ? segActiveProgress : 0);
+          return (
+            <div key={i} style={{
+              flex: 1, height: '100%',
+              borderRadius: 'var(--r-pill)',
+              background: 'var(--line)',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              <div style={{
+                position: 'absolute', inset: 0,
+                width: `${fill * 100}%`,
+                background: 'var(--breathe)',
+                borderRadius: 'var(--r-pill)',
+                transition: 'width 1s linear',
+              }} />
+            </div>
+          );
+        })}
       </div>
     </SessionShell>
   );
@@ -8789,15 +8852,18 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         }}>{tStep(stepIdx, 'name')}</h1>
         <p style={{
           fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-          maxWidth: 460, margin: '0 auto 30px',
+          maxWidth: 460, margin: '0 auto 22px',
         }}>{tStep(stepIdx, 'cue')}</p>
 
+        {/* Numeral centrado entre la descripcion y "SEGUNDOS": espacio
+            simetrico (22px arriba via cue / 22px abajo) + lineHeight algo
+            mayor para que la cifra italica no roce la etiqueta (s97). */}
         <div data-pace-move-timer style={{
           ...displayItalic,
           fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1,
+          color: 'var(--ink)', lineHeight: 1.08,
         }}>{String(remaining).padStart(2, '0')}</div>
-        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 8 }}>{t('session.seconds')}</div>
+        <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 22 }}>{t('session.seconds')}</div>
       </div>
 
       <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
