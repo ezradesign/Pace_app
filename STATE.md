@@ -10,10 +10,16 @@
 
 ---
 
-**Version actual:** v0.43.0
-**Ultima sesion:** #98 -- 2026-07-09 - fix(breathe): **tiempo activo en Respira**. Tercera pieza del plan maestro (tras s95 guard + s96 timer engine), aplazada desde s97. `BreatheSession` media el tiempo con el reloj de pared (cuenta pausas). Se introduce **un solo reloj de tiempo activo timestamp-based** (`activeMsRef`/`segStartRef`/`getActiveSec()`, segmentado por `useEffect([stage,paused])`; mide `Date.now()` -> inmune al estrangulamiento de timers en background, honra s96) que alimenta 4 cosas: (1) **fin no-rounds** `getActiveSec() >= routine.min*60` (antes wall-clock, las pausas acercaban el final); (2) **barra de progreso no-rounds** (mismo reloj -> coherente con el fin, no avanza en pausa; rama rounds intacta); (3) **credito a stats/logros** `completeBreathSession(id, activeMin)` con `activeMin=max(1,round(sec/60))` en vez del nominal `routine.min` -> firma intacta, cero cambios en state, arregla el sobre-credito de "Terminar" pronto; (4) pantalla **done** muestra tiempo activo. Retira codigo muerto `startTime`/`cycle`/`doneInCycle`. Opcion A: aplica igual a rounds. Bump **v0.43.0**. Diario: `docs/sessions/session-98-tiempo-activo-breathe.md`
-**Ultima actualizacion de este archivo:** 2026-07-09 - sesion 98
-**Build entregado:** `PACE_standalone.html` v0.43.0 (731 KB) + `index.html` (idem)
+**Version actual:** v0.44.0
+**Ultima sesion:** #99 -- 2026-07-09/10 - **pulido global + overhaul premium de Caminos**. Pack de pulido del sandbox (microinteracciones en `tokens.css`: glow del aro Pomodoro cuando corre, hover TopBar/CTA, entrada de modulos, modales scale+fade, scrollbar Firefox) + **overhaul del modulo Caminos** iterado en vivo: sendero **revertido a la curva fluida** (el usuario prefirio la original; se conserva solo el anillo pulsante + **hito actual acentuado** en el color del paso); fix "Volver al inicio" -> **"Siguiente"** en Respira/Mueve/Foco (SessionDone recibe `inPath`); **PathFocusStep/PathHydrateStep** adoptan el SessionShell compartido (coherencia total con Respira/Mueve); **timer "aro de marcas de minuto"** + numero protagonista; **botones del Foco por color** (verde/naranja/gris, revisa s79); **atmosfera por paso** (wash tenue del acento del modulo, solo en Camino); cards de transicion editoriales (kicker romano); CompletionScreen rediseñada; bola del timer home -50%. Diario: `docs/sessions/session-99-pulido-caminos-premium.md`
+**Ultima actualizacion de este archivo:** 2026-07-10 - sesion 99
+**Build entregado:** `PACE_standalone.html` v0.44.0 (748 KB) + `index.html` (idem)
+
+> NOTA s99: la tabla "archivos vivos" de abajo conserva version-tags de v0.43.0
+> en las filas tocadas esta sesion (TimerDial, SessionShell, BreatheSession,
+> MoveModule, PathFocusStep, PathHydrateStep, SenderoBar, PathTransitions,
+> PathRunner, CompletionScreen, tokens.css, FocusTimer, Primitives, main/TopBar,
+> ActivityBar, i18n/sessions+paths). Deuda menor: refrescar tags en s100.
 
 ---
 
@@ -104,6 +110,7 @@
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.43.0_20260709.html` <- creado s99 (snapshot del v0.43.0 publicado en s98)
 - `backups/PACE_standalone_v0.42.0_20260709.html` <- creado s98 (snapshot del v0.42.0 publicado en s97)
 - `backups/PACE_standalone_v0.41.0_20260708.html` <- creado s97 (snapshot del v0.41.0 publicado en s96)
 - `backups/PACE_standalone_v0.40.0_20260708.html` <- creado s96 (snapshot del v0.40.0 publicado en s95)
@@ -123,73 +130,75 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82
 - `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81
 - `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
-- `backups/PACE_standalone_v0.32.0_20260518.html`
 
-Nota s98: cap 20 mantenido rotando el mas antiguo (`v0.31.0_20260517.html`)
-al crear el backup del v0.42.0.
+Nota s99: cap 20 mantenido rotando el mas antiguo (`v0.32.0_20260518.html`)
+al crear el backup del v0.43.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 98 - v0.43.0 - fix(breathe): tiempo activo en Respira.**
-Tercera pieza del plan maestro (tras s95 guard + s96 timer engine), aplazada
-desde s97 por el pulido. Un solo frente, un solo archivo.
+**Sesion 99 - v0.44.0 - pulido global + overhaul premium de Caminos.**
+Desvio de pulido priorizado por el usuario (memoria `ui-polish-caminos-plan`),
+por delante del s99-stats del plan maestro. Dos frentes del pack + un overhaul
+del modulo Caminos iterado en vivo con feedback.
 
-### Que se hizo (s98)
+### Que se hizo (s99)
 
-- **Tarea 0**: s97 (`97431ea`, v0.42.0) commiteado y pusheado, working tree
-  limpio. Sin pendientes.
-- **Reloj de tiempo activo timestamp-based** (`BreatheSession.jsx`):
-  `activeMsRef` + `segStartRef` + `getActiveSec()`; un `useEffect([stage,
-  paused])` abre segmento en `active`/`hold` sin pausar y lo cierra sumando al
-  acumulador al pausar/salir. Mide con `Date.now()` -> inmune al
-  estrangulamiento de timers en background (honra decision s96). Excluye pausas
-  manuales; el tiempo con pestana oculta cuenta (como el Focus de s96).
-- **Consumidores unificados al mismo reloj**: (1) fin no-rounds
-  `getActiveSec() >= routine.min*60` (antes wall-clock `Date.now()-startTime`
-  que contaba pausas); (2) barra de progreso no-rounds numerador =
-  `getActiveSec()` -> coherente con el fin, no avanza en pausa, llega a 100% al
-  terminar (rama rounds intacta); (3) **credito a stats/logros**
-  `completeBreathSession(id, activeMin)` con `activeMin=max(1,round(sec/60))` en
-  vez del nominal `routine.min` -> firma intacta, **cero cambios en state-***;
-  arregla el sobre-credito al pulsar "Terminar" pronto + hace real
-  `master.retreat` (120 min); (4) pantalla "done" muestra tiempo activo
-  (`sessionStart` retenido como totalTime, no mostrado).
-- **Codigo muerto retirado**: `startTime`, estado `cycle`, `doneInCycle`.
-- Opcion A: aplica igual a rounds (retenciones incluidas) que a no-rounds.
-  **Fuera de scope**: el ticker de fase sigue con `setInterval` (deriva solo la
-  animacion visual con pestana oculta, no el tiempo acreditado).
+- **Tarea 0**: s98 (`f1151d8`, v0.43.0) commiteado y pusheado, working tree limpio.
+- **Frente A (pulido global)**: bloque de microinteracciones en `tokens.css`
+  (chips `:active`, hover TopBar, CTA `data-pace-cta`, entrada de modulos
+  `pace-module-in`, **glow del aro** `data-pace-dial-running`/`pace-dial-glow`,
+  modales `pace-modal-in` scale+fade, scrollbar Firefox). `TimerDial` recibe
+  `running`; `FocusTimer` lo pasa + `data-pace-cta` en el CTA.
+- **Frente B + overhaul Caminos** (iterado): **sendero revertido** a la curva
+  fluida original (el usuario rechazo cresta/valle); se conserva el **anillo
+  pulsante** (`sendero-pulse-ring`, CSS reduced-motion-safe) + el **hito actual
+  acentuado** en el color del paso (`accent` prop). Fix **"Volver al inicio" ->
+  "Siguiente"** (SessionDone `doneButtonLabel`; BreatheSession/MoveSession `inPath`).
+  **PathFocusStep/PathHydrateStep** reescritos para usar el **SessionShell**
+  compartido (coherencia con Respira/Mueve; el "done" del Foco via SessionDone).
+  **Timer "aro de marcas de minuto"** (variante `ticks` de TimerDial: 60 marcas
+  tipo reloj + numero protagonista). **Botones del Foco por color** (verde/naranja/
+  gris, `--pfbtn` por boton). **Atmosfera por paso** (`SessionShell` prop
+  `atmosphere` -> wash radial tenue del `*-soft` del modulo, doble capa; helper
+  `sessionAtmosphere` expuesto; SOLO en Camino). **Cards de transicion** con tinte
+  + **kicker romano** editorial. **CompletionScreen** rediseñada (hero doble aro,
+  recorrido en panel con punto de color por kind) + wash. Bola del timer home -50%.
 
 ### Verificacion + cierre
 
-Preview :54878 (8765 ocupado), protocolo s93 (purga SW+caches). Pestana
-**oculta y con timers estrangulados** (`sleep(1000)`->1845ms) -> confirmo la
-robustez del reloj timestamp: medido con tiempo real, **pausa congela** (relleno
-de barra identico `152.53==152.53` en 3.5s reales, boton "Reanudar"), **activo
-avanza** (`152.53->153.51` en 2.5s), Box 4·4·4·4 (nominal 5) acredito **4 min** =
-activo real (no 5), done mostro 3:46. Consola limpia (dev + standalone). Cierre:
-bump v0.43.0 (state-core/PACE.html/sw.js), backup `v0.42.0_20260709` (rotado
-`v0.31.0`, cap 20), rebuild standalone+index (731 KB, 71 archivos), standalone
-verificado (v0.43.0, logica presente, consola limpia), diario s98, CHANGELOG
-(v0.41.0 degradado a enlace), ROADMAP (s98 hecha), memoria `plan_maestro_v1`
-actualizada.
+Preview :8765, protocolo s93. La pestana se estrangula en background -> se
+verifico por **montaje aislado + inspeccion de DOM** (y el punto guia del timer
+por geometria `getPointAtLength`, distancia 0.2). Confirmado: 60 ticks, atmosfera
+con gradiente, 3 colores de boton, kicker "II" + sendero acentuado, "Siguiente" en
+done, consola limpia (dev + standalone v0.44.0). Cierre: bump v0.44.0, backup
+`v0.43.0_20260709` (rotado `v0.32.0`, cap 20), rebuild standalone+index (748 KB,
+71 archivos), standalone verificado, diario s99, CHANGELOG, DESIGN_SYSTEM, ROADMAP,
+memoria `ui-polish-caminos-plan`.
 
-## Proxima sesion -- s99: Stats vivos + safety/privacy
+### Pendiente (feedback del usuario, prioridad para s100)
 
-Pieza del plan maestro (ver `ROADMAP.md`, "Camino a v1.0"): las vistas de Stats
-mes/año no muestran el dia actual (`history` se alimenta en rollover) ->
-selector `getHistoryWithToday` **memoizado** consumido por Week/Month/Year. Mas
-las paginas estaticas `/safety` y `/privacy`. Timers ya resueltos: Focus (s96) +
-Breathe (s98); Move queda sin planificar (prioridad baja).
+- **CompletionScreen aun "cutre"**: el usuario quiere seguir elevandola.
+- **OutroCard intermedia** (entre ultimo ejercicio y completado) **no aporta** ->
+  evaluar eliminarla (toca decision s77 de transiciones volatiles).
+- **Banding circular** en el degradado de atmosfera -> suavizar (mas stops/dither).
+- (Opcional) el usuario mostro interes en **ilustracion propia por Camino** (arte
+  aprobado, D-4) como frente aparte.
+
+## Proxima sesion -- s100: rematar Caminos (feedback) + luego stats vivos
+
+Primero el feedback pendiente de arriba (Completion + OutroCard + banding). Despues
+retomar el plan maestro donde quedo: **stats vivos** (`getHistoryWithToday`
+memoizado en Week/Month/Year) + paginas `/safety` y `/privacy`. La secuencia del
+plan maestro se desplaza una posicion (el desvio de pulido ocupo s99).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
-Secuencia en `ROADMAP.md` ("Camino a v1.0"): s99 stats vivos + safety/privacy ·
-s100 PWA completa · s101-102 build Etapa A (precompilar ANTES que Vite) ·
-onboarding · home Caminos al centro · taxonomia + filtros + sigilo · pre-venta:
-glifos D-4 + trial/licencia (cambiando formalmente la decision F3b) + landing.
-Backlog de pulido restante abajo.
+Secuencia en `ROADMAP.md` ("Camino a v1.0"): stats vivos + safety/privacy · PWA
+completa · build Etapa A (precompilar ANTES que Vite) · onboarding · home Caminos
+al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licencia
+(cambiando formalmente la decision F3b) + landing.
 
 ---
 
@@ -197,6 +206,12 @@ Backlog de pulido restante abajo.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Todos los steps de Camino usan el SessionShell compartido | s99 | `PathFocusStep` y `PathHydrateStep` (antes pelados bajo `PathTopBar`) reescritos para usar el mismo `SessionShell` que Respira/Mueve -> los 4 tipos de paso comparten header (code+nombre) + footer + hint + atmosfera. El `PathTopBar` queda cubierto por el shell (como ya pasaba con Respira/Mueve). Consecuencia: el "× Salir" del Foco/Agua ahora hace lo mismo que en Respira/Mueve (`onExit('exit')` -> avanza/salta el paso, coherente); abandonar el Camino entero sigue via Esc (confirmacion PathRunner). El "done" del Foco pasa por `SessionDone` |
+| Atmosfera por paso (SessionShell `atmosphere`), SOLO en Camino | s99 | `SessionShell` acepta `atmosphere` = token `*-soft` del modulo del paso (Respira terracota / Foco verde / Cuerpo tan / Agua azul) -> wash radial MUY tenue (doble capa via helper `sessionAtmosphere`, expuesto a window). Propagado por SessionPrep/SessionDone/SessionShell. Las sesiones lo pasan solo si `inPath` (el home queda limpio). Reutilizado en cards de transicion (por kind) y CompletionScreen (`--focus-soft`). PENDIENTE: el usuario reporto banding circular -> suavizar en s100 |
+| Timer: variante `ticks` (aro de marcas de minuto) para el Foco de Camino | s99 | `TimerDial` gana prop `ticks`: 60 marcas radiales tipo reloj (cada 5 mayor) que se encienden con el color segun `progress`, + numero PROTAGONISTA (`numberHugeTicks`). El home mantiene el aro clasico (arco + punto guia, este ultimo -50% en s99 por peticion). Eleccion del usuario sobre "reloj analogico". `modeLabel` ahora condicional (el Foco de Camino lo omite: la identidad vive en el header del shell) |
+| Botones del Foco por color (revisa s79) | s99 | s79 decia "3 botones outline del MISMO peso". El usuario pidio color: Empezar/Pausar **verde** (`--focus`), Reiniciar **naranja** (`--breathe`), Saltar **gris** (`--ink-3`, relleno `--paper-3`). Cada boton fija `--pfbtn` con su acento; el hover (`[data-pace-path-btn]:hover`, tokens.css) rellena con ese color. Deja de ser "mismo peso": el color marca la funcion. La regla de fondo de s79 (pomodoro contextual, sin presets/ciclo/badge) sigue |
+| Sendero: curva fluida original + hito actual acentuado (cierra iteracion cresta/valle) | s99 | Se probo mover los hitos a crestas/valles (primer pase de B) y el usuario prefirio la **curva fluida original con hitos en la linea** -> revertido (SB_SEG_PARAMS y1/y2 restaurados, `cy=50`). Se conserva SOLO el **anillo pulsante** (`sendero-pulse-ring`) y se anade `accent` prop: tinta SOLO el hito ACTUAL (halo+anillo+punto) en el color del paso (currentColor del `<g>`), el resto en ink. Regla: no rediseñar la forma del sendero sin OK explicito |
+| "Siguiente" (no "Volver al inicio") en el done de una sesion dentro de Camino | s99 | `SessionDone` acepta `doneButtonLabel`; `BreatheSession`/`MoveSession` reciben `inPath` y pasan `t('session.next')`. La accion `onExit('done')` ya avanzaba el Camino; era solo el label (la sesion no sabia que estaba en Camino). Fuera de Camino el label sigue siendo "Volver al inicio" |
 | BreatheSession: un solo reloj de tiempo activo (timestamp-based) | s98 | `activeMsRef`/`segStartRef`/`getActiveSec()` en `BreatheSession.jsx`, segmentado por `useEffect([stage,paused])` (abre en active/hold sin pausa, cierra sumando al pausar/salir). Mide `Date.now()` -> inmune al estrangulamiento de timers en background; excluye SOLO pausas manuales (la pestana oculta cuenta, como el Focus de s96). Es la verdad UNICA de: fin no-rounds (`getActiveSec() >= routine.min*60`), barra de progreso no-rounds y **credito** (`completeBreathSession` recibe minutos activos reales `max(1,round(sec/60))`, no `routine.min`; firma intacta -> cero cambios en state). Extiende la regla de progreso de s97: la barra no-rounds se llena por tiempo activo (antes cycle+phaseTime, equivalente). La rama rounds del progreso (por ronda/respiracion) queda intacta, ya inmune. Regla: cualquier tiempo que una sesion acredite o muestre sale de este reloj, nunca del wall-clock ni del nominal. Fuera de scope: el ticker de fase sigue en setInterval (solo afecta la animacion visual con pestana oculta, no el tiempo acreditado) |
 | Logo en oscuro NO se reemplaza (PNG invertido = original) | s97 | `CowLogo.PaceLogoImage` en oscuro usa `mixBlendMode:'screen' + filter:invert(1)` (azul/rosa). En el backlog s96 figuraba como "logo descolorido (bug)"; **NO lo es**: el usuario lo valida como estetica noche y es el logo OFICIAL. Se intento sustituir por el lockup SVG tokenizado y lo rechazo de plano. NO tocar el tratamiento del logo en oscuro; si algun dia se mejora la fidelidad, via un ASSET PNG oscuro que el usuario apruebe, nunca SVG ni quitar el invert. Memoria `feedback-logo-oscuro-original` |
 | Progreso de sesiones activas = BARRA SEGMENTADA por bloques, no bolas | s97 | En Respira el progreso es una **barra segmentada** -- un segmento por bloque de respiracion (rounds: por ronda; no-rounds: por ciclo del patron, el "grupo 4·4·4·4"), el activo se rellena por dentro; `segTotal/segFilled/segActiveProgress` desde `sessionProgress`, **tope 24 segmentos** (rutinas largas agrupan varios ciclos por segmento). Sintetiza "barra" + "agrupar por bloques" y usa el mismo lenguaje que la barra segmentada de Mueve. Se descartaron bolas 1:1 (una por fase/ciclo se dispara a ~50-100 en rutinas de 10-20 min). Regla: progreso de sesiones = barra (segmentada si hay bloques naturales); reservar bolas/puntos para conteos pequeños y fijos (ej. CICLO del pomodoro). El numeral grande + circulo que respira marcan la FASE; no duplicar con "Ns/Ns" |

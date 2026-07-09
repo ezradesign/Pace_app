@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.43.0</title>
+  <title>PACE · Foco · Cuerpo — v0.44.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -209,7 +209,11 @@ input, textarea { font-family: inherit; color: inherit; }
   font-weight: 500;
 }
 
-/* SCROLLBAR SUTIL */
+/* SCROLLBAR SUTIL
+   WebKit/Blink via ::-webkit-scrollbar; Firefox via scrollbar-width/color
+   (s99 · pack de pulido A: antes Firefox caia al scrollbar por defecto).
+   Ambos leen los mismos tokens -> un solo sitio, sin duplicar el look. */
+html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 3px solid var(--paper); }
@@ -238,6 +242,126 @@ input, textarea { font-family: inherit; color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   MICROINTERACCIONES · pack de pulido global (s99 · Sesion A)
+   Vive aqui (config global de interaccion), no en un <style> nuevo.
+   Reutiliza los ganchos data-pace-* del source + dos nuevos
+   (data-pace-cta, data-pace-dial-running). Todo es DECORATIVO:
+   el kill global de prefers-reduced-motion (arriba) lo neutraliza
+   -- ninguno cuelga de data-pace-essential. Patron s22: cuando hay
+   que ganar a un estilo inline (hover/active), !important.
+   ============================================================ */
+
+/* Chips de la ActivityBar. El hover (lift + --sh-card) sigue inline
+   en ActivityBar.jsx; aqui solo el feedback de pulsacion. !important
+   para ganar al transform inline que fija el hover al presionar. */
+[data-pace-activitybar-chip]:active {
+  transform: translateY(0) scale(0.97) !important;
+}
+
+/* Iconos top-right (Stats / Logros / Tweaks). La base inline es
+   transparente y sin handler; el hover/active viven aqui. */
+[data-pace-topbar-icon]:hover {
+  background: var(--paper-2) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+[data-pace-topbar-icon]:active {
+  transform: scale(0.94);
+}
+
+/* CTA "Comenzar" (Pomodoro home; reservado tambien para los CTA de
+   Camino en la Sesion B). brightness es palette-agnostico -> no
+   hace falta un token --focus-cta-2. Sin inline en filter/transform,
+   asi que sin !important. */
+[data-pace-cta]:hover { filter: brightness(0.95); }
+[data-pace-cta]:active { transform: scale(0.98); }
+
+/* Entrada del area de contenido: fade + leve ascenso al montar
+   (una vez por carga; React no la remonta al abrir modales). */
+[data-pace-main-content] {
+  animation: pace-module-in var(--dur-slow) var(--ease) both;
+}
+
+/* Aro del TimerDial mientras corre. Halo que respira (glow) DETRAS
+   del numero: el ::after es un circulo suave con z-index 0 y el
+   inner del dial va en z-index 1. Amplitud baja: presencia, no
+   espectaculo (regla "sin sombras exageradas"). El color sale de
+   --focus-soft (theme-aware; se ve verde en foco/larga y neutro-
+   calido de fondo en pausa -- aceptable por lo tenue). */
+[data-pace-dial-running]::after {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: pace-dial-glow 3.2s var(--ease) infinite;
+}
+
+@keyframes pace-module-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pace-modal-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pace-dial-glow {
+  0%, 100% { box-shadow: 0 0 22px 4px var(--focus-soft); }
+  50%      { box-shadow: 0 0 46px 12px var(--focus-soft); }
+}
+
+/* ============================================================
+   MICROINTERACCIONES · Caminos (s99 · Sesion B)
+   Mismo criterio que el bloque A: decorativo, reduced-motion via
+   kill global; !important solo para ganar a estilos inline.
+   ============================================================ */
+
+/* Entrada escalonada reutilizable. Los hijos DIRECTOS del contenedor
+   marcado entran con un leve rise secuencial (nth-child). Lo usan las
+   TransitionCards (sendero/titulo/hint) y CompletionScreen (secciones).
+   nth-child se adapta a las secciones condicionales de Completion. */
+[data-pace-reveal] > * {
+  animation: pace-reveal-rise var(--dur-slow) var(--ease) both;
+}
+[data-pace-reveal] > *:nth-child(1) { animation-delay: 0ms; }
+[data-pace-reveal] > *:nth-child(2) { animation-delay: 70ms; }
+[data-pace-reveal] > *:nth-child(3) { animation-delay: 140ms; }
+[data-pace-reveal] > *:nth-child(4) { animation-delay: 210ms; }
+[data-pace-reveal] > *:nth-child(5) { animation-delay: 280ms; }
+[data-pace-reveal] > *:nth-child(6) { animation-delay: 350ms; }
+[data-pace-reveal] > *:nth-child(7) { animation-delay: 420ms; }
+[data-pace-reveal] > *:nth-child(8) { animation-delay: 490ms; }
+@keyframes pace-reveal-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards de la biblioteca de Caminos (PLPathCard): halo suave + leve
+   lift en hover. Sin inline en box-shadow -> sin !important. */
+[data-pace-plib-row] {
+  transition: box-shadow var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease),
+              transform var(--dur-quick) var(--ease);
+}
+[data-pace-plib-row]:hover {
+  border-color: var(--line-2);
+  box-shadow: 0 2px 18px var(--focus-soft);
+  transform: translateY(-1px);
+}
+
+/* Botones de PathFocusStep (s79 revisado s99: DIFERENCIADOS por color, ya no
+   mismo peso -- verde Empezar / naranja Reiniciar / gris Saltar). Cada boton
+   fija --pfbtn con su acento; en hover se rellena con ESE color (fill).
+   !important para ganar al estilo inline. */
+[data-pace-path-btn]:hover {
+  background: var(--pfbtn, var(--focus)) !important;
+  border-color: var(--pfbtn, var(--focus)) !important;
+  color: var(--paper) !important;
+}
+[data-pace-path-btn]:active { transform: scale(0.97); }
 
 /* ============================================================
    SENDERO BAR (sesion 75 / v0.29.0)
@@ -306,6 +430,22 @@ input, textarea { font-family: inherit; color: inherit; }
   opacity: 0.55;
 }
 .sendero-bar .dot-fill { fill: currentColor; }
+/* Anillo pulsante en el hito ACTUAL (s99 · Sesion B). CSS (no SMIL) ->
+   el kill de reduced-motion lo congela. transform-box fill-box: el scale
+   se hace respecto al centro del propio circulo (cx,cy del hito). */
+.sendero-bar .sendero-pulse-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pace-sendero-pulse 2.6s var(--ease) infinite;
+}
+@keyframes pace-sendero-pulse {
+  0%   { opacity: 0.5; transform: scale(0.55); }
+  70%  { opacity: 0;   transform: scale(1.7); }
+  100% { opacity: 0;   transform: scale(1.7); }
+}
 
 /* ============================================================
    Variante lg (s77 / v0.31.0; ajustes labels en s77b)
@@ -844,6 +984,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.prep':                    'Prepárate',
     'session.startNow':                'Empezar ahora',
     'session.backToHome':              'Volver al inicio',
+    'session.next':                    'Siguiente',
+    'session.focusDoneMeta':           'Foco completado',
+    'session.focusDoneCopy':           'Un tramo de atención sostenida.',
     'session.doneMeta':                'Sesión completada',
     'session.antidoteDone':            'Antídoto completado',
     'session.hold':                    'Retén sin aire',
@@ -1000,6 +1143,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.prep':                    'Get ready',
     'session.startNow':                'Start now',
     'session.backToHome':              'Back to home',
+    'session.next':                    'Next',
+    'session.focusDoneMeta':           'Focus complete',
+    'session.focusDoneCopy':           'A stretch of sustained attention.',
     'session.doneMeta':                'Session completed',
     'session.antidoteDone':            'Antidote completed',
     'session.hold':                    'Hold your breath',
@@ -1209,6 +1355,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'paths.kind.hydrate.name':        'Agua',
     // Paths - biblioteca y favoritos (sesion 53)
     'paths.library.title':            'Todos los caminos',
+    'paths.library.count.one':        '1 camino',
+    'paths.library.count.many':       '{n} caminos',
     'paths.library.start':            'Comenzar',
     'paths.library.doneToday':        'Hecho hoy',
     'paths.library.favorite':         'Favorito',
@@ -1263,6 +1411,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'paths.kind.hydrate.name':        'Water',
     // Paths - library and favorites (session 53)
     'paths.library.title':            'All paths',
+    'paths.library.count.one':        '1 path',
+    'paths.library.count.many':       '{n} paths',
     'paths.library.start':            'Start',
     'paths.library.doneToday':        'Done today',
     'paths.library.favorite':         'Favorite',
@@ -2206,7 +2356,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.43.0';
+const PACE_VERSION = 'v0.44.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3671,7 +3821,12 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           overflowY: 'auto',
           position: 'relative',
           border: '1px solid var(--line)',
-          animation: 'pace-slide-up 280ms var(--ease)',
+          /* Entrada scale+fade (pace-modal-in, tokens.css · pack de pulido A).
+             Antes pace-slide-up (opacity+translateY); el escalado desde 0.96
+             se siente mas como una card que "aparece" que como una que sube.
+             El keyframe vive en tokens.css (home global); pace-slide-up sigue
+             definido en pace-anim por si otro consumidor lo usa. */
+          animation: 'pace-modal-in 280ms var(--ease)',
         }}
       >
         {onClose && (
@@ -4030,9 +4185,22 @@ const sessionShellStyles = {
      - footer         → nodo del footer (botones de control)
      - hint           → texto de ayuda en la base ("Espacio pausar · …")
    ============================================================ */
-function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
+/* sessionAtmosphere - fondo de "atmosfera" por paso (s99). Un wash radial
+   muy tenue del acento del modulo (Respira terracota, Foco verde, Cuerpo tan,
+   Agua azul) concentrado arriba y desvanecido hacia paper. Doble capa del
+   token *-soft para que el tinte se note sin gritar (mantiene el tono tierra).
+   Solo se usa dentro de Caminos (los steps pasan el token; el home no). */
+function sessionAtmosphere(soft) {
+  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, transparent 55%)`;
+  return `${g}, ${g}, var(--paper)`;
+}
+
+function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere }) {
+  const rootStyle = atmosphere
+    ? { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere) }
+    : sessionShellStyles.root;
   return (
-    <div data-pace-session-root style={sessionShellStyles.root}>
+    <div data-pace-session-root style={rootStyle}>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
       <div data-pace-session-center style={centerGap
         ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
@@ -4087,12 +4255,13 @@ function SessionHeader({ routine, onExit, extra }) {
                         ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
      - onSkip         → callback del botón "Empezar ahora"
    ============================================================ */
-function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
+function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosphere }) {
   const { t } = useT();
   return (
     <SessionShell
       routine={routine}
       onExit={onExit}
+      atmosphere={atmosphere}
       footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>{t('session.startNow')}</button>}
     >
       <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
@@ -4135,15 +4304,20 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
 function SessionDone({
   routine, onExit, accent, accentSoft,
   doneMeta, doneCopy, stats = [],
-  buttonVariant, buttonStyle,
+  buttonVariant, buttonStyle, doneButtonLabel, atmosphere,
 }) {
   const { t } = useT();
+  /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
+     sesion pasa t('session.next') ("Siguiente") -- onExit('done') ya avanza
+     el Camino; sin el override el label por defecto es "Volver al inicio"
+     (home). Bug de coherencia reportado por el usuario. */
+  const label = doneButtonLabel || t('session.backToHome');
   const btn = buttonVariant
-    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{t('session.backToHome')}</Button>
-    : <Button onClick={() => onExit('done')} style={buttonStyle}>{t('session.backToHome')}</Button>;
+    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{label}</Button>
+    : <Button onClick={() => onExit('done')} style={buttonStyle}>{label}</Button>;
 
   return (
-    <SessionShell routine={routine} onExit={onExit} footer={btn}>
+    <SessionShell routine={routine} onExit={onExit} atmosphere={atmosphere} footer={btn}>
       <div data-pace-session-done style={{ textAlign: 'center', maxWidth: 520 }}>
         <div data-pace-session-done-hero style={{
           width: 120, height: 120, margin: '0 auto 24px',
@@ -4281,7 +4455,7 @@ if (!_paceSessionResponsive) {
 
 Object.assign(window, {
   SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
-  sessionShellStyles,
+  sessionShellStyles, sessionAtmosphere,
 });
 </script>
   <script type="text/babel">
@@ -5067,26 +5241,81 @@ function interpolateRingColor(progress, mode) {
   return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
-function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+/* TimerTicks - aro de marcas de minuto (s99, variante "ticks" del timer,
+   peticion del usuario). 60 marcas radiales tipo reloj; cada 5 es mayor.
+   Las que ya pasaron (i < progress*60) se pintan en el color del arco; las
+   que faltan quedan tenues -> textura de reloj + progreso legible. El svg
+   NO se rota (las marcas ya nacen arriba via -PI/2). */
+function TimerTicks({ progress, color }) {
+  const N = 60;
+  const passed = progress * N;
+  const marks = [];
+  for (let i = 0; i < N; i++) {
+    const major = i % 5 === 0;
+    const a = (i / N) * 2 * Math.PI - Math.PI / 2;
+    const rOut = 48.5;
+    const rIn = major ? 42.5 : 45;
+    const isPast = i < passed;
+    marks.push(
+      <line key={i}
+        x1={(50 + rIn * Math.cos(a)).toFixed(2)} y1={(50 + rIn * Math.sin(a)).toFixed(2)}
+        x2={(50 + rOut * Math.cos(a)).toFixed(2)} y2={(50 + rOut * Math.sin(a)).toFixed(2)}
+        stroke={isPast ? color : 'var(--line)'}
+        strokeWidth={major ? 0.9 : 0.5}
+        strokeOpacity={isPast ? 0.95 : 0.4}
+        strokeLinecap="round"
+        style={{ transition: 'stroke 0.5s linear, stroke-opacity 0.5s linear' }} />
+    );
+  }
+  return <React.Fragment>{marks}</React.Fragment>;
+}
+
+function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks }) {
   const R = 47.5;
   const C = 2 * Math.PI * R;
+  // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
+  const ringColor = interpolateRingColor(progress, mode);
 
   return (
-    <div style={timerDialStyles.frame}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        <circle cx="50" cy="50" r={R} fill="none"
-          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
-          strokeOpacity="0.7"
-          strokeLinecap="round"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
-      </svg>
+    /* data-pace-dial-running: gancho para el halo "respirando" del aro
+       cuando el Pomodoro corre (CSS en tokens.css, pack de pulido A).
+       Solo presente cuando running -> el selector [data-...] no matchea
+       en reposo. Puramente presentacional; el padre decide `running`.
+       `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
+       es el aro clasico con arco + punto guia (FocusTimer home). */
+    <div data-pace-dial-running={running ? '' : undefined} style={timerDialStyles.frame}>
+      {ticks ? (
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          <TimerTicks progress={progress} color={ringColor} />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+          {/* Track suave */}
+          <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.7" strokeOpacity="0.85" />
+          {/* Arco de progreso: mas presente (s99) con cap redondo */}
+          <circle cx="50" cy="50" r={R} fill="none"
+            stroke={ringColor} strokeWidth="1.3"
+            strokeOpacity="0.92"
+            strokeLinecap="round"
+            strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
+            style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
+          {/* Punto guia en la punta del progreso (halo + nucleo). */}
+          {progress > 0.001 && (
+            <g transform={`rotate(${progress * 360} 50 50)`}
+               style={{ transition: 'transform 1s linear' }}>
+              <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />
+              <circle cx={50 + R} cy="50" r="0.85" fill={ringColor}
+                style={{ transition: 'fill 1s linear' }} />
+            </g>
+          )}
+        </svg>
+      )}
 
       <div style={timerDialStyles.inner}>
-        <div style={timerDialStyles.modeLabel}>{modeLabel}</div>
-        <div style={timerDialStyles.numberHuge}>
+        {modeLabel ? <div style={timerDialStyles.modeLabel}>{modeLabel}</div> : null}
+        <div style={ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
         {subtitle ? <div style={timerDialStyles.subtitleItalic}>{subtitle}</div> : null}
@@ -5133,6 +5362,19 @@ const timerDialStyles = {
     letterSpacing: '-0.03em',
     color: 'var(--ink)',
     fontSize: 'clamp(64px, 7vw, 104px)',
+  },
+  /* Variante ticks (Caminos Foco): numero PROTAGONISTA, mayor que el clasico
+     (el usuario lo queria mas grande). nowrap para que no parta el MM:SS. */
+  numberHugeTicks: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontWeight: 400,
+    lineHeight: 0.9,
+    fontVariantNumeric: 'tabular-nums',
+    letterSpacing: '-0.03em',
+    color: 'var(--ink)',
+    fontSize: 'clamp(78px, 9vw, 128px)',
+    whiteSpace: 'nowrap',
   },
   subtitleItalic: {
     fontStyle: 'italic',
@@ -7285,6 +7527,7 @@ function FocusTimer({ onFinish }) {
   const controls = (
     <div style={focusStyles.controlsTight}>
       <button
+        data-pace-cta
         onClick={() => {
           // Sonido de inicio solo en un arranque/reanudacion real (idle|paused
           // -> running). Pausar no suena; 'completed' es no-op (no re-credita).
@@ -7336,6 +7579,7 @@ function FocusTimer({ onFinish }) {
           modeLabel={modeLabel}
           subtitle={subtitle}
           inner={isAro ? innerForAro : null}
+          running={running}
         />
       </div>
 
@@ -7510,10 +7754,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
    Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
    para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
    ahora en TimerDial.jsx. */
-function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner, running }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} running={running} />;
 }
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
@@ -8123,9 +8367,11 @@ const PHASE_KEYS = {
   'Sostén en vacío':  'breathe.phase.sosten.vacio',
 };
 
-function BreatheSession({ routine, onExit }) {
+function BreatheSession({ routine, onExit, inPath }) {
   const [state] = usePace();
   const { t, lang } = useT();
+  // Atmosfera del step (s99): tinte terracota muy sutil SOLO en Camino.
+  const atmo = inPath ? 'var(--breathe-soft)' : undefined;
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const displayRoutine = lang === 'en'
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
@@ -8347,6 +8593,7 @@ function BreatheSession({ routine, onExit }) {
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
         onSkip={() => { setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
+        atmosphere={atmo}
       />
     );
   }
@@ -8374,6 +8621,8 @@ function BreatheSession({ routine, onExit }) {
         doneCopy={t('breathe.doneCopy')}
         stats={stats}
         buttonVariant="terracota"
+        doneButtonLabel={inPath ? t('session.next') : undefined}
+        atmosphere={atmo}
       />
     );
   }
@@ -8385,6 +8634,7 @@ function BreatheSession({ routine, onExit }) {
       <SessionShell
         routine={displayRoutine}
         onExit={onExit}
+        atmosphere={atmo}
         headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
@@ -8459,6 +8709,7 @@ function BreatheSession({ routine, onExit }) {
     <SessionShell
       routine={displayRoutine}
       onExit={onExit}
+      atmosphere={atmo}
       centerGap={true}
       footerGap={16}
       footer={footer}
@@ -8710,8 +8961,11 @@ function MoveLibrary({ open, onClose, onStart }) {
   );
 }
 
-function MoveSession({ routine, onExit, kind = 'move' }) {
+function MoveSession({ routine, onExit, kind = 'move', inPath }) {
   const { t, tn, lang } = useT();
+  // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
+  // Estira azul-gris segun kind).
+  const atmo = inPath ? (kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)') : undefined;
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   // Rutinas custom (F7 · s93): sin keys posicionales `<id>.sN.*` — el EN se
   // resuelve por nombre canónico de ejercicio (content/custom.js), con
@@ -8817,6 +9071,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         prepCount={prepCount}
         copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
+        atmosphere={atmo}
       />
     );
   }
@@ -8839,6 +9094,8 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           { label: t('move.steps'),  value: String(routine.steps.length) },
         ]}
         buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+        doneButtonLabel={inPath ? t('session.next') : undefined}
+        atmosphere={atmo}
       />
     );
   }
@@ -8863,6 +9120,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     <SessionShell
       routine={displayRoutine}
       onExit={onExit}
+      atmosphere={atmo}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer}
       hint={t('move.hint')}
@@ -12432,10 +12690,11 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       flex: 1, minWidth: 0,
     }}
     onClick={!doneToday ? onStart : undefined}
-    onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
+    onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card), 0 2px 18px var(--focus-soft)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0 }} />
+      {/* Acento gradiente --focus -> --focus-cta (s99 · Sesion B) */}
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'linear-gradient(180deg, var(--focus), var(--focus-cta))', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (
@@ -12582,7 +12841,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
   const tagline = t(pathObj.taglineKey) || '';
 
   return (
-    <div style={{
+    <div data-pace-plib-row style={{
       display: 'flex', alignItems: 'flex-start', gap: 14,
       padding: '14px 16px',
       background: 'var(--paper)',
@@ -12590,8 +12849,8 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
       borderRadius: 'var(--r-md)',
       marginBottom: 10,
     }}>
-      {/* Acento */}
-      <div style={{ width: 3, minHeight: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+      {/* Acento gradiente --focus -> --focus-cta (s99 · Sesion B) */}
+      <div style={{ width: 3, minHeight: 40, background: 'linear-gradient(180deg, var(--focus), var(--focus-cta))', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
 
       {/* Contenido */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -12666,6 +12925,12 @@ function PathsLibrary() {
   const todayISO = new Date().toISOString().slice(0, 10);
   const favId = state.paths && state.paths.favorite;
 
+  /* Contador del header (s99 · Sesion B). Interpolo {n} a mano para no
+     depender de que t() soporte params; one/many en strings/paths.js. */
+  const countLabel = catalog.length === 1
+    ? (t('paths.library.count.one') || '1 camino')
+    : (t('paths.library.count.many') || '{n} caminos').replace('{n}', String(catalog.length));
+
   function handleStart(pathId) {
     setOpenPL(false);
     if (typeof startPath === 'function') startPath(pathId);
@@ -12697,11 +12962,16 @@ function PathsLibrary() {
         boxShadow: 'var(--sh-modal)',
         overflow: 'hidden',
       }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
-          <span id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
-            {t('paths.library.title') || 'Todos los caminos'}
-          </span>
+        {/* Header editorial: titulo + contador (s99 · Sesion B) */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
+          <div>
+            <div id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>
+              {t('paths.library.title') || 'Todos los caminos'}
+            </div>
+            <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 5 }}>
+              {countLabel}
+            </div>
+          </div>
           <button
             ref={closeBtnRef}
             onClick={function() { setOpenPL(false); }}
@@ -12748,7 +13018,11 @@ const { useId: useIdSB } = React;
 
 /* Parametros Bezier por segmento. Asimetria organica intencional para
    evitar simetria perfecta. Ratios r1/r2 son fracciones de la longitud
-   del segmento (escalan automaticamente con N). y1/y2 son absolutos. */
+   del segmento (escalan automaticamente con N). y1/y2 son absolutos.
+   NOTA s99: se probo mover los hitos a crestas/valles (Sesion B) y el
+   usuario prefirio la curva fluida original con los hitos en la linea
+   central -> revertido. Se conserva solo el anillo pulsante del hito
+   actual como unico anadido. */
 const SB_SEG_PARAMS = [
   { y1: 22, y2: 24, r1: 0.24, r2: 0.760 }, // 0: arriba, ligero peso derecha
   { y1: 78, y2: 82, r1: 0.24, r2: 0.755 }, // 1: abajo
@@ -12779,7 +13053,7 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBarBase({ blocks, currentIndex, size, orbVisible }) {
+function SenderoBarBase({ blocks, currentIndex, size, orbVisible, accent }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
@@ -12852,10 +13126,15 @@ function SenderoBarBase({ blocks, currentIndex, size, orbVisible }) {
               );
             }
             if (i === currentIndex) {
+              /* accent (s99): tinta SOLO el hito actual (halo + anillo + punto)
+                 en el color del paso -- currentColor de estos elementos resuelve
+                 al color del <g>. El resto del sendero se queda en ink. */
               return (
-                <g key={i}>
+                <g key={i} style={accent ? { color: accent } : undefined}>
                   {label && <title>{label}</title>}
                   <circle cx={cx} cy="50" r="19" fill={`url(#${haloCurrentId})`} />
+                  {/* Anillo pulsante (CSS, respeta reduced-motion) sobre el hito activo */}
+                  <circle className="sendero-pulse-ring" cx={cx} cy="50" r="9" />
                   <circle cx={cx} cy="50" r="4.5" className="dot-fill" />
                 </g>
               );
@@ -12941,6 +13220,22 @@ Object.assign(window, { SenderoBar });
 
 const { useState: useStatePT, useEffect: useEffectPT, useRef: useRefPT } = React;
 
+/* s99: atmosfera (tinte de fondo) + numeral editorial de las cards de paso.
+   PT_KIND_SOFT ata cada tipo de paso a su acento de modulo. */
+const PT_KIND_SOFT = {
+  breathe: 'var(--breathe-soft)',
+  focus:   'var(--focus-soft)',
+  body:    'var(--move-soft)',
+  hydrate: 'var(--hydrate-soft)',
+};
+const PT_KIND_ACCENT = {
+  breathe: 'var(--breathe)',
+  focus:   'var(--focus)',
+  body:    'var(--move)',
+  hydrate: 'var(--hydrate)',
+};
+const PT_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
 /* Lee var CSS como ms. Soporta "300ms" y "0.3s". */
 function pathTransitionReadMs(name, fallback) {
   try {
@@ -12964,6 +13259,9 @@ function TransitionCardBase({
   fadeMsFallback, // ms para entrada/salida (--path-card-fade-ms)
   totalMsFallback,// ms total de hold antes del auto-continue
   onContinue,     // callback al final del hold o al tap
+  atmosphere,     // s99: token *-soft para el wash de fondo (o undefined)
+  kicker,         // s99: eyebrow editorial sobre el titulo (numeral romano)
+  accent,         // s99: color del hito actual del SenderoBar (o undefined)
 }) {
   const { t } = useT();
   /* Arranca invisible (decision 5: fade + scale 0.96 -> 1.0). */
@@ -13046,7 +13344,11 @@ function TransitionCardBase({
       role="button"
       tabIndex={0}
       aria-label={title}
+      data-pace-reveal
       style={Object.assign({}, pathTransitionStyles.card, {
+        background: (atmosphere && window.sessionAtmosphere)
+          ? window.sessionAtmosphere(atmosphere)
+          : pathTransitionStyles.card.background,
         opacity: opacity,
         transform: 'scale(' + scale + ')',
       })}
@@ -13057,11 +13359,15 @@ function TransitionCardBase({
           currentIndex={currentIndex}
           size="lg"
           orbVisible={orbVisible}
+          accent={accent}
         />
       </div>
 
       <div style={pathTransitionStyles.titleWrap}>
-        <h2 style={pathTransitionStyles.title}>{title}</h2>
+        <div>
+          {kicker ? <div style={pathTransitionStyles.kicker}>{kicker}</div> : null}
+          <h2 style={pathTransitionStyles.title}>{title}</h2>
+        </div>
       </div>
 
       <div style={pathTransitionStyles.hint}>
@@ -13086,12 +13392,15 @@ function IntroCard({ pathName, blocks, onContinue }) {
   );
 }
 
-function StepIntro({ kindName, blocks, currentIndex, onContinue }) {
+function StepIntro({ kindName, kind, blocks, currentIndex, onContinue }) {
   return (
     <TransitionCardBase
       blocks={blocks}
       currentIndex={currentIndex}
       title={kindName}
+      kicker={PT_ROMAN[currentIndex] || String(currentIndex + 1)}
+      atmosphere={PT_KIND_SOFT[kind]}
+      accent={PT_KIND_ACCENT[kind]}
       orbVisible={true}
       durationVar="step"
       fadeMsFallback={200}
@@ -13149,6 +13458,16 @@ const pathTransitionStyles = {
     width: '100%',
     padding: '0 12px',
     minHeight: 0,
+  },
+  /* Eyebrow editorial (numeral romano del paso) sobre el titulo. */
+  kicker: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 22,
+    letterSpacing: '0.14em',
+    color: 'var(--ink-3)',
+    marginBottom: 8,
+    opacity: 0.75,
   },
   title: {
     fontFamily: 'var(--font-display)',
@@ -13226,7 +13545,7 @@ function PathBreatheStep({ step, onExit }) {
   if (routine.safety) {
     return <PathBreatheSafetyGate routine={routine} onExit={onExit} />;
   }
-  return <BreatheSession routine={routine} onExit={onExit} />;
+  return <BreatheSession routine={routine} onExit={onExit} inPath />;
 }
 
 function PathBreatheSafetyGate({ routine, onExit }) {
@@ -13240,7 +13559,7 @@ function PathBreatheSafetyGate({ routine, onExit }) {
       />
     );
   }
-  return <BreatheSession routine={routine} onExit={onExit} />;
+  return <BreatheSession routine={routine} onExit={onExit} inPath />;
 }
 
 Object.assign(window, { PathBreatheStep, PathBreatheSafetyGate });
@@ -13248,14 +13567,21 @@ Object.assign(window, { PathBreatheStep, PathBreatheSafetyGate });
 </script>
   <script type="text/babel">
 /* PACE · Caminos · Step de Foco · sesion 80 (split de PathRunner.jsx)
-   Pomodoro contextual de Camino. TimerDial compartido + subtitulo
-   "Concentracion profunda" + tres botones del mismo peso visual
-   (Pausar/Reset/Saltar) durante la sesion + CTA "Hecho" al completar.
-   Motor de tiempo via useCountdown (s96, timestamp-based): acredita foco UNA
-   SOLA VEZ (onComplete single-shot del hook) cuando el contador llega a 0.
-   Reset NO acredita; skip NO acredita.
-   Estilos comunes desde window.pathStepStyles (steps/_shared.js).
-   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
+   Pomodoro contextual de Camino.
+
+   s99: adopta el SessionShell compartido (mismo chrome elaborado que
+   Respira/Mueve) para dar COHERENCIA visual al Camino -- antes iba pelado
+   bajo el PathTopBar y desentonaba con el resto de pasos. El header lleva
+   la identidad (Foco / "Concentracion profunda"), el centro el TimerDial
+   (aro con glow al correr, s99 Sesion A) y el footer los tres controles
+   del mismo peso pero AHORA CON COLOR de foco (peticion del usuario ->
+   revisa s79: sigue siendo mismo peso, ya no outline neutro). El "done"
+   pasa por SessionDone (check + stats + "Siguiente") como Respira/Mueve.
+
+   Motor de tiempo via useCountdown (s96, timestamp-based): acredita foco
+   UNA SOLA VEZ (onComplete single-shot). Reset NO acredita; skip NO acredita.
+   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'.
+   onExit('exit') (header "Salir") = misma semantica que Respira/Mueve. */
 
 const { useState: useStateFS } = React;
 
@@ -13264,17 +13590,11 @@ function PathFocusStep({ step, onExit }) {
   const totalSec = (step.min || 25) * 60;
   const [done, setDone] = useStateFS(false);
 
-  /* Motor de cuenta atras timestamp-based compartido (s96 · useCountdown).
-     El foco de un Camino es CONTEXTUAL: acredita minutos + racha via
-     completeFocusSession('path'), SIN cycle ni logros de pomodoro (decision
-     s79/s86). onComplete es single-shot dentro del hook (reemplaza el
-     creditedRef previo). Reset (hook) restaura el contador y pausa sin
-     acreditar; skip tampoco acredita. */
+  /* Motor timestamp-based compartido (s96). El foco de un Camino es
+     CONTEXTUAL: acredita minutos + racha via completeFocusSession('path'),
+     SIN cycle ni logros de pomodoro (s79/s86). onComplete single-shot. */
   const { remaining, running, toggle, reset } = useCountdown(totalSec, () => {
     setDone(true);
-    /* F-1 (s86): igual que la home, el foco de un Camino cuenta como actividad
-       del dia para la racha (updateStreak, idempotente por dia -> no
-       doble-cuenta con el paso breathe/body del mismo Camino). */
     try {
       if (typeof completeFocusSession === 'function') {
         completeFocusSession('path', { minutes: step.min || 25 });
@@ -13286,70 +13606,106 @@ function PathFocusStep({ step, onExit }) {
   const secs = remaining % 60;
   const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
 
-  /* Botones del mismo peso visual: misma forma/padding/tipografia, solo
-     varia el label. Compone btnTypography + btnOutline desde _shared.js. */
-  const { btnTypography, btnOutline } = window.pathStepStyles;
-  const btnBase = Object.assign({}, btnTypography, btnOutline, { padding: '10px 22px' });
+  /* routine "sintetica" para el header del SessionShell: mismo lenguaje
+     que Respira (code meta + nombre italic). La identidad vive en el header
+     -> el TimerDial va sin modeLabel/subtitle para no duplicar el texto. */
+  const routine = {
+    code: t('topbar.mode.focus'),
+    name: t('focus.subtitle.focus'),
+  };
+
+  /* Pantalla de completado: mismo SessionDone que Respira/Mueve. El Foco de
+     un Camino siempre esta en Camino -> CTA "Siguiente" (onExit('done')
+     avanza el Camino). */
+  if (done) {
+    return (
+      <SessionDone
+        routine={routine}
+        onExit={onExit}
+        accent="var(--focus)"
+        accentSoft="var(--focus-soft)"
+        doneMeta={t('session.focusDoneMeta')}
+        doneCopy={t('session.focusDoneCopy')}
+        stats={[{ label: t('common.time'), value: `${step.min || 25} min` }]}
+        buttonStyle={{ background: 'var(--focus)', borderColor: 'var(--focus)' }}
+        doneButtonLabel={t('session.next')}
+        atmosphere="var(--focus-soft)"
+      />
+    );
+  }
 
   const pauseLabel = running
-    ? t('focus.pause')
-    : (remaining < totalSec ? t('focus.continue') : t('focus.start'));
+    ? t('session.pause')
+    : (remaining < totalSec ? t('session.resume') : t('session.startNow'));
+
+  /* Tres controles DIFERENCIADOS por color (s99, peticion del usuario ->
+     revisa s79: ya no es "mismo peso", el color marca la funcion):
+       - Empezar/Pausar -> verde foco (accion principal)
+       - Reiniciar       -> naranja/terracota
+       - Saltar          -> gris (de-enfatiza saltarse el foco)
+     Cada boton fija --pfbtn con su acento; el hover (tokens.css) rellena
+     con ese mismo color. */
+  const footer = (
+    <React.Fragment>
+      <button data-pace-path-btn onClick={toggle} style={pfBtn('var(--focus)', 'var(--focus-soft)')}>{pauseLabel}</button>
+      <button data-pace-path-btn onClick={reset} style={pfBtn('var(--breathe)', 'var(--breathe-soft)')}>{t('focus.restart')}</button>
+      <button data-pace-path-btn onClick={() => onExit('skip')} style={pfBtn('var(--ink-3)', 'var(--paper-3)')}>{t('path.runner.skip')}</button>
+    </React.Fragment>
+  );
 
   return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
+    <SessionShell
+      routine={routine}
+      onExit={onExit}
+      atmosphere="var(--focus-soft)"
+      footer={footer}
+      footerGap={12}
+      hint={t('session.hint')}
+    >
       {typeof TimerDial === 'function' ? (
-        <div style={{ marginBottom: 24 }}>
-          <TimerDial
-            mins={mins}
-            secs={secs}
-            progress={progress}
-            mode="foco"
-            modeLabel={t('topbar.mode.focus')}
-            subtitle={t('focus.subtitle.focus')}
-            inner={null}
-          />
-        </div>
+        <TimerDial
+          mins={mins}
+          secs={secs}
+          progress={progress}
+          mode="foco"
+          modeLabel=""
+          subtitle={null}
+          inner={null}
+          running={running}
+          ticks
+        />
       ) : (
         <div style={{
           fontFamily: "'EB Garamond', Georgia, serif",
           fontSize: 96, fontWeight: 400,
           fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
+          color: 'var(--ink)', lineHeight: 1,
         }}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
       )}
-      {!done ? (
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={toggle} style={btnBase}>
-            {pauseLabel}
-          </button>
-          <button onClick={reset} style={btnBase}>
-            {t('focus.restart')}
-          </button>
-          <button onClick={() => onExit('skip')} style={btnBase}>
-            {t('path.runner.skip')}
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => onExit('done')}
-          style={{
-            padding: '10px 28px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-            letterSpacing: '0.08em',
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-          }}
-        >
-          {t('path.runner.done')}
-        </button>
-      )}
-    </div>
+    </SessionShell>
   );
+}
+
+/* Estilo de boton de control del Foco. `accent` colorea borde+texto y se
+   expone como --pfbtn para que el hover (tokens.css) rellene con ese color;
+   `soft` es el fondo en reposo. */
+function pfBtn(accent, soft) {
+  return {
+    cursor: 'pointer',
+    fontSize: 13,
+    letterSpacing: '0.08em',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    borderRadius: 'var(--r-sm)',
+    padding: '10px 22px',
+    background: soft,
+    border: '1px solid ' + accent,
+    color: accent,
+    transition: 'all 180ms var(--ease)',
+    '--pfbtn': accent,
+  };
 }
 
 Object.assign(window, { PathFocusStep });
@@ -13357,11 +13713,11 @@ Object.assign(window, { PathFocusStep });
 </script>
   <script type="text/babel">
 /* PACE · Caminos · Step de Hidratacion · sesion 80 (split de PathRunner.jsx)
-   Mismo lenguaje visual que HydrateModule del home: contador Garamond
-   grande + grid visual de `goal` vasos (no clicables: es step de Camino,
-   no tracker) + 2 botones del mismo peso visual (Saltar outline / Beber
-   relleno). addWaterGlass(1) solo se llama en handleDrink, no en skip.
-   Estilos comunes desde window.pathStepStyles (steps/_shared.js).
+   s99: adopta el SessionShell compartido (mismo chrome que Respira / Mueve /
+   Foco) para coherencia total del Camino -- antes iba pelado. El centro
+   conserva el lenguaje del HydrateModule del home: contador Garamond grande
+   + grid visual de `goal` vasos (no clicables: es step de Camino, no tracker).
+   addWaterGlass(1) solo en handleDrink, no en skip.
    Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'.
    `step` se acepta para uniformidad de firma aunque no se consume. */
 
@@ -13376,95 +13732,107 @@ function PathHydrateStep({ step, onExit }) {
     }
     onExit('done');
   };
-  /* Tipografia comun desde _shared; el padding (10px 28px) es propio de
-     este step por densidad de su layout (2 botones, no 3). */
+
+  /* routine sintetica para el header del SessionShell (identidad: Agua /
+     Hidratate), mismo lenguaje que Respira/Mueve/Foco. */
+  const routine = {
+    code: t('paths.kind.hydrate.name'),
+    name: t('activity.hydrate.label'),
+  };
+
   const { btnTypography } = window.pathStepStyles;
-  const btnBase = Object.assign({}, btnTypography, { padding: '10px 28px' });
-  return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: '32px 40px', textAlign: 'center',
-    }}>
-      {/* Contador grande, mismo lenguaje que HydrateTracker */}
-      <div style={{
-        fontFamily: "'EB Garamond', Georgia, serif",
-        fontStyle: 'italic',
-        fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
-        color: 'var(--hydrate)',
-      }}>
-        {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
-      </div>
-      <div style={{
-        fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
-      }}>
-        {t('path.hydrate.glasses.today') || 'Vasos hoy'}
-      </div>
+  const btnBase = Object.assign({}, btnTypography, { padding: '10px 22px' });
 
-      {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(' + goal + ', 1fr)',
-        gap: 6,
-        maxWidth: 360, width: '100%',
-        marginBottom: 26,
-      }}>
-        {Array.from({ length: goal }).map(function (_, i) {
-          const filled = i < today;
-          return (
-            <div key={i} style={{
-              aspectRatio: '1/1.3',
-              background: filled ? 'var(--hydrate-soft)' : 'transparent',
-              border: '1.5px solid ' + (filled ? 'var(--hydrate)' : 'var(--line)'),
-              borderRadius: 'var(--r-sm)',
-              position: 'relative', overflow: 'hidden',
-            }}>
-              {filled && (
-                <div style={{
-                  position: 'absolute', inset: 0, top: '40%',
-                  background: 'var(--hydrate-soft)',
-                  borderTop: '1px solid var(--hydrate)',
-                }} />
-              )}
-            </div>
-          );
+  /* Footer: Saltar en gris (de-enfatizado), Beber como CTA de hidratacion.
+     data-pace-path-btn -> hover que rellena con --pfbtn (gris); data-pace-cta
+     -> brillo/press del CTA relleno (pack de pulido A). */
+  const footer = (
+    <React.Fragment>
+      <button
+        data-pace-path-btn
+        onClick={() => onExit('skip')}
+        style={Object.assign({}, btnBase, {
+          background: 'transparent',
+          border: '1px solid var(--ink-3)',
+          color: 'var(--ink-3)',
+          '--pfbtn': 'var(--ink-3)',
         })}
-      </div>
+      >
+        {t('path.hydrate.skip') || t('path.runner.skip')}
+      </button>
+      <button
+        data-pace-cta
+        onClick={handleDrink}
+        style={Object.assign({}, btnBase, {
+          background: 'var(--hydrate)',
+          border: '1px solid var(--hydrate)',
+          color: 'var(--paper)',
+        })}
+      >
+        {t('path.hydrate.drank')}
+      </button>
+    </React.Fragment>
+  );
 
-      <p style={{
-        fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
-        fontStyle: 'italic', fontSize: 18, fontWeight: 400,
-        color: 'var(--ink-2)', margin: '0 0 26px', lineHeight: 1.4,
-        maxWidth: 360,
-      }}>
-        {t('path.hydrate.copy')}
-      </p>
+  return (
+    <SessionShell routine={routine} onExit={onExit} atmosphere="var(--hydrate-soft)" footer={footer} footerGap={12}>
+      <div style={{ textAlign: 'center', maxWidth: 460 }}>
+        {/* Contador grande, mismo lenguaje que HydrateTracker */}
+        <div style={{
+          fontFamily: "'EB Garamond', Georgia, serif",
+          fontStyle: 'italic',
+          fontSize: 'clamp(72px, 12vw, 112px)', fontWeight: 400, lineHeight: 1,
+          color: 'var(--hydrate)',
+        }}>
+          {today}<span style={{ color: 'var(--ink-3)', fontSize: '0.42em' }}> / {goal}</span>
+        </div>
+        <div style={{
+          fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', marginTop: 8, marginBottom: 22,
+        }}>
+          {t('path.hydrate.glasses.today') || 'Vasos hoy'}
+        </div>
 
-      {/* Dos botones del mismo peso visual: diferencia de color, no de jerarquia */}
-      <div style={{ display: 'flex', gap: 12 }}>
-        <button
-          onClick={() => onExit('skip')}
-          style={Object.assign({}, btnBase, {
-            background: 'transparent',
-            border: '1px solid var(--line-2)',
-            color: 'var(--ink-2)',
+        {/* Vasos visuales (no interactivos: es Camino, no tracker) */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(' + goal + ', 1fr)',
+          gap: 6,
+          maxWidth: 360, width: '100%',
+          margin: '0 auto 26px',
+        }}>
+          {Array.from({ length: goal }).map(function (_, i) {
+            const filled = i < today;
+            return (
+              <div key={i} style={{
+                aspectRatio: '1/1.3',
+                background: filled ? 'var(--hydrate-soft)' : 'transparent',
+                border: '1.5px solid ' + (filled ? 'var(--hydrate)' : 'var(--line)'),
+                borderRadius: 'var(--r-sm)',
+                position: 'relative', overflow: 'hidden',
+              }}>
+                {filled && (
+                  <div style={{
+                    position: 'absolute', inset: 0, top: '40%',
+                    background: 'var(--hydrate-soft)',
+                    borderTop: '1px solid var(--hydrate)',
+                  }} />
+                )}
+              </div>
+            );
           })}
-        >
-          {t('path.hydrate.skip') || t('path.runner.skip')}
-        </button>
-        <button
-          onClick={handleDrink}
-          style={Object.assign({}, btnBase, {
-            background: 'var(--hydrate)',
-            border: '1px solid var(--hydrate)',
-            color: 'var(--paper)',
-          })}
-        >
-          {t('path.hydrate.drank')}
-        </button>
+        </div>
+
+        <p style={{
+          fontFamily: "'EB Garamond', 'Cormorant Garamond', Georgia, serif",
+          fontStyle: 'italic', fontSize: 18, fontWeight: 400,
+          color: 'var(--ink-2)', margin: '0 auto', lineHeight: 1.4,
+          maxWidth: 360,
+        }}>
+          {t('path.hydrate.copy')}
+        </p>
       </div>
-    </div>
+    </SessionShell>
   );
 }
 
@@ -13489,7 +13857,7 @@ function PathBodyStep({ step, onExit }) {
     return <PathStepLocked onSkip={() => onExit('skip')} />;
   }
   const kind = resolved.source === 'extra' ? 'extra' : 'move';
-  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
+  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} inPath />;
 }
 
 Object.assign(window, { PathBodyStep });
@@ -13657,6 +14025,15 @@ const { useState: useStateCS, useEffect: useEffectCS } = React;
 
 const CS_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
+/* Punto de color por tipo de paso en el recorrido (s99): ata cada paso a
+   su acento de modulo (Respira/Foco/Cuerpo/Agua). */
+const CS_KIND_COLOR = {
+  breathe: 'var(--breathe)',
+  focus: 'var(--focus)',
+  body: 'var(--move)',
+  hydrate: 'var(--hydrate)',
+};
+
 function CompletionScreen({ snapshot, onBack, fadeIn }) {
   const [state] = usePace();
   const { t } = useT();
@@ -13705,74 +14082,100 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
     .filter(Boolean);
 
   return (
-    <div style={{
+    <div data-pace-reveal style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      padding: '32px 40px', textAlign: 'center',
-      overflowY: 'auto',
+      padding: '40px 40px 48px', textAlign: 'center',
+      overflowY: 'auto', gap: 6,
+      background: (typeof window !== 'undefined' && window.sessionAtmosphere)
+        ? window.sessionAtmosphere('var(--focus-soft)') : undefined,
       opacity: opacity,
       transition: fadeIn ? 'opacity 400ms ease-out' : 'none',
     }}>
+      {/* Hero: check en circulo con doble aro suave (--focus, acento del
+          modulo Caminos). El box-shadow de anillo da profundidad premium. */}
       <div style={{
-        width: 64, height: 64, borderRadius: '50%',
-        background: 'var(--breathe-soft)', color: 'var(--breathe)',
-        display: 'grid', placeItems: 'center', fontSize: 28,
-        marginBottom: 20,
+        width: 78, height: 78, borderRadius: '50%',
+        background: 'var(--focus-soft)',
+        border: '1.5px solid var(--focus)',
+        boxShadow: '0 0 0 7px var(--focus-soft)',
+        display: 'grid', placeItems: 'center',
+        margin: '0 auto 6px',
       }}>
-        &#x2714;
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
+             stroke="var(--focus)" strokeWidth="1.5"
+             strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
       </div>
-      <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 10px' }}>
-        {t('path.runner.complete.title')}
-      </p>
-      <h2 style={{
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic', fontSize: 36, fontWeight: 500,
-        color: 'var(--ink)', margin: '0 0 8px', lineHeight: 1.2,
-      }}>
-        {displayName}
-      </h2>
-      {elapsed > 0 && (
-        <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '0 0 24px' }}>
-          {elapsed} min
+
+      {/* Encabezado: kicker + titulo + meta (un solo bloque -> reveal juntos) */}
+      <div>
+        <p style={{ fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '10px 0 12px' }}>
+          {t('path.runner.complete.title')}
         </p>
-      )}
+        <h2 style={{
+          fontFamily: 'var(--font-display)',
+          fontStyle: 'italic', fontSize: 46, fontWeight: 500,
+          color: 'var(--ink)', margin: 0, lineHeight: 1.08,
+        }}>
+          {displayName}
+        </h2>
+        {elapsed > 0 && (
+          <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '14px 0 0', letterSpacing: '0.02em' }}>
+            {elapsed} min
+          </p>
+        )}
+      </div>
 
       {/* SenderoBar 100% done: currentIndex = totalSteps -> ningun
           hito en estado 'current', todos en 'done'. */}
       {totalSteps > 0 && (
-        <div style={{ width: '100%', maxWidth: 640, margin: '0 0 12px' }}>
+        <div style={{ width: '100%', maxWidth: 620, margin: '10px 0 4px' }}>
           <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} />
         </div>
       )}
 
-      {/* Lista discreta del recorrido */}
+      {/* Recorrido: panel contenido con punto de color por tipo de paso. */}
       {totalSteps > 0 && (
-        <div style={{ margin: '4px 0 24px', maxWidth: 320, width: '100%' }}>
+        <div style={{ maxWidth: 320, width: '100%', margin: '4px 0 6px' }}>
           <div style={{
-            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
-            color: 'var(--ink-3)', marginBottom: 10,
+            fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase',
+            color: 'var(--ink-3)', marginBottom: 12,
           }}>
             {t('path.runner.complete.recorrido')}
           </div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <ul style={{
+            listStyle: 'none', padding: '6px 18px', margin: 0,
+            display: 'flex', flexDirection: 'column',
+            background: 'var(--paper-2)', border: '1px solid var(--line)',
+            borderRadius: 'var(--r-md)',
+          }}>
             {steps.map(function(s, idx) {
               const skipped = skippedSet.has(idx);
+              const kindColor = CS_KIND_COLOR[s.kind] || 'var(--ink-3)';
               return (
                 <li key={s.kind + '-' + idx} style={{
-                  display: 'flex', alignItems: 'baseline', gap: 12,
-                  padding: '4px 0',
-                  opacity: skipped ? 0.45 : 1,
-                  textDecoration: skipped ? 'line-through' : 'none',
-                  textDecorationColor: 'var(--ink-3)',
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '9px 2px',
+                  borderTop: idx === 0 ? 'none' : '1px solid var(--line)',
+                  opacity: skipped ? 0.5 : 1,
                 }}>
                   <span style={{
                     fontFamily: 'var(--font-display)', fontStyle: 'italic',
-                    fontSize: 13, color: 'var(--ink-3)',
-                    minWidth: 28, textAlign: 'right',
+                    fontSize: 12, color: 'var(--ink-3)',
+                    minWidth: 22, textAlign: 'right',
                   }}>{CS_ROMAN[idx] || (idx + 1)}</span>
                   <span style={{
+                    width: 6, height: 6, borderRadius: '50%',
+                    background: skipped ? 'var(--line-2)' : kindColor,
+                    flexShrink: 0,
+                  }} />
+                  <span style={{
                     fontFamily: 'var(--font-display)', fontStyle: 'italic',
-                    fontSize: 16, color: skipped ? 'var(--ink-3)' : 'var(--ink-2)',
+                    fontSize: 16, color: skipped ? 'var(--ink-3)' : 'var(--ink)',
+                    textDecoration: skipped ? 'line-through' : 'none',
+                    textDecorationColor: 'var(--ink-3)',
                   }}>
                     {t('paths.kind.' + s.kind + '.name') || s.kind}
                   </span>
@@ -13787,8 +14190,8 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
       {achievementsDuring.length > 0 && (
         <div style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
-          gap: 8, margin: '0 0 24px',
-          padding: '14px 18px',
+          gap: 10, margin: '6px 0 4px',
+          padding: '14px 20px',
           border: '1px solid var(--achievement)',
           borderRadius: 'var(--r-md)',
           background: 'var(--achievement-soft)',
@@ -13819,14 +14222,15 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 10, flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: 12, flexDirection: 'column', alignItems: 'center', marginTop: 8 }}>
         <button
+          data-pace-cta
           onClick={onBack}
           style={{
-            padding: '12px 32px', borderRadius: 'var(--r-pill)',
-            background: 'var(--ink)', border: 'none',
+            padding: '13px 40px', borderRadius: 'var(--r-pill)',
+            background: 'var(--ink)', border: '1px solid var(--ink)',
             color: 'var(--paper)', cursor: 'pointer',
-            fontSize: 13, letterSpacing: '0.1em',
+            fontSize: 13, letterSpacing: '0.12em',
           }}
         >
           {t('path.runner.complete.back')}
@@ -13835,9 +14239,9 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
           onClick={function() { onBack(); if (typeof startPath === 'function') startPath(snapshot.pathId); }}
           style={{
             padding: '8px 24px', borderRadius: 'var(--r-pill)',
-            background: 'transparent', border: '1px solid var(--line)',
+            background: 'transparent', border: 'none',
             color: 'var(--ink-3)', cursor: 'pointer',
-            fontSize: 12, letterSpacing: '0.1em',
+            fontSize: 12, letterSpacing: '0.08em',
             fontFamily: 'var(--font-display)', fontStyle: 'italic',
           }}
         >
@@ -14074,6 +14478,7 @@ function PathRunner() {
       {phase === 'transition' && typeof StepIntro === 'function' && (
         <StepIntro
           kindName={transitionKindName}
+          kind={step.kind}
           blocks={senderoBlocks}
           currentIndex={cur.stepIndex}
           onContinue={handleTransitionDone}
