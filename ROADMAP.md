@@ -68,9 +68,12 @@ fricción, y quiere volver mañana.*
 - Timers con `setInterval` que derivan en background: prioridad de fix
   **Focus (crítico) > Breathe (activeTime) > Move (bajo — sesiones cortas
   con pantalla activa)**. **Focus RESUELTO s96** (motor timestamp-based
-  `useCountdown.jsx`, cero deriva; FocusTimer + PathFocusStep). Breathe
-  pendiente s97, Move sin planificar (bajo).
-- BreatheSession cuenta pausas como tiempo activo (wall-clock).
+  `useCountdown.jsx`, cero deriva; FocusTimer + PathFocusStep). **Breathe
+  RESUELTO s98** (reloj de tiempo activo timestamp-based; excluye pausas del
+  fin/barra/credito). Move sin planificar (bajo).
+- BreatheSession cuenta pausas como tiempo activo (wall-clock). **RESUELTO
+  s98** (`getActiveSec()` con `Date.now()`; el credito son minutos activos
+  reales, no el nominal `routine.min`).
 - Stats mes/año no muestran el día actual (history se alimenta en
   rollover) → selector `getHistoryWithToday` **memoizado**.
 - `path.weekend` lanza premium sin candado: NO es bug (decisión s89,
@@ -91,7 +94,7 @@ fricción, y quiere volver mañana.*
 | ~~s95~~ | ~~Cirugía 1: guard central de entitlement + degustación explícita~~ **hecho (v0.40.0)** — `state-entitlement.jsx` (`canAccessRoutine`/`canAccessPath`) consumido por RoutineCard + PathBreatheStep/PathBodyStep/getSuggestedPath · `path.weekend` con `tasting:true` explícito · `PathStepLocked` (auto-skip) · autofocus Welcome solo puntero fino · comportamiento idéntico con `premiumUnlocked=false`, **NO toca F3b** |
 | ~~s96~~ | ~~Cirugía 2: Timer engine timestamp-based~~ **hecho (v0.41.0)** — `app/focus/useCountdown.jsx` (estados idle/running/paused/completed; `remaining = f(Date.now())` desde `endsAt` → **cero deriva en background**, `visibilitychange` corrige al volver; `completed` terminal) migrado a FocusTimer (493→429 ln) y PathFocusStep · `completeFocusSession(context)` unificado que **preserva la distinción** home(cycle+logros)/Camino(minutos+streak) · **comportamiento idéntico en primer plano** · motor LOCAL (persistir en recarga diferido a s99) |
 | ~~s97~~ | ~~(previsto: breathe activeTime)~~ → **pulido oscuro + progreso** **hecho (v0.42.0)** — modo oscuro legible (recalibración en bloque `--ink-3`/`--line`/`--line-2`; logo invertido intacto, validado por el usuario) · **aro del timer empieza siempre vacío** (`useCountdown` idle deriva de `durationSec`) · **progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro) · fixes de countdown (precontador "3", Mueve centrado). Breathe activeTime se corre a s98 |
-| **s98** | **BreatheSession tiempo activo** (activeTime vs totalTime; stats y logros acreditan activeTime). NOTA: el `sessionProgress` de s97 usa wall-clock (`startTime`, cuenta pausas) → revisar aquí junto con el activeTime |
+| ~~s98~~ | ~~BreatheSession tiempo activo~~ **hecho (v0.43.0)** — reloj de tiempo activo timestamp-based (`activeMsRef`/`segStartRef`/`getActiveSec()`, segmentado por `useEffect([stage,paused])`, mide `Date.now()` → inmune a background) que alimenta fin no-rounds (`getActiveSec() >= routine.min*60`) + barra no-rounds + **credito** (`completeBreathSession` recibe minutos activos reales `max(1,round(sec/60))`, no `routine.min`; firma intacta → cero cambios en state) + pantalla done · retira `startTime`/`cycle`/`doneInCycle` · la incoherencia s97 (fin wall-clock vs barra activa) queda unificada al mismo reloj; rama rounds intacta |
 | **s99** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |
 | **s100** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
 | **s101-102** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |

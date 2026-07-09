@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.42.0</title>
+  <title>PACE · Foco · Cuerpo — v0.43.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -2206,7 +2206,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.42.0';
+const PACE_VERSION = 'v0.43.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -8136,17 +8136,36 @@ function BreatheSession({ routine, onExit }) {
   const [phaseTime, setPhaseTime] = useState(0);
   const [round, setRound] = useState(1);
   const [breathCount, setBreathCount] = useState(1);
-  // Ciclos completados en rutinas NO-rounds (patron por fases que se repite
-  // hasta agotar routine.min). Es la unidad de progreso real de estas
-  // sesiones -> alimenta las bolas inferiores (s97). En rounds no se usa.
-  const [cycle, setCycle] = useState(0);
   const [holdSeconds, setHoldSeconds] = useState(0);
   const [paused, setPaused] = useState(false);
-  const startTime = useRef(Date.now());
-  const sessionStart = useRef(Date.now());
+  const sessionStart = useRef(Date.now());   // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
+  // Reloj de TIEMPO ACTIVO (s98): acumulador timestamp-based, local al modulo.
+  // Suma solo el tiempo en 'active'/'hold' SIN pausar (excluye pausas manuales;
+  // el tiempo con pestana oculta cuenta, igual que useCountdown de Focus).
+  // Verdad unica para: fin de sesion no-rounds, barra de progreso no-rounds y
+  // el credito a stats/logros. Honra la decision s96 (timers nuevos = timestamp).
+  const activeMsRef = useRef(0);      // ms activos acumulados entre pausas
+  const segStartRef = useRef(null);   // inicio del segmento activo en curso, o null
+  const getActiveSec = () => {
+    const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
+    return (activeMsRef.current + open) / 1000;
+  };
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
+
+  // Segmentador del reloj de tiempo activo (s98): abre segmento cuando la
+  // sesion corre ('active'|'hold' sin pausa) y lo cierra (acumulando en
+  // activeMsRef) al pausar o salir de esos stages.
+  useEffect(() => {
+    const running = (stage === 'active' || stage === 'hold') && !paused;
+    if (running) {
+      if (segStartRef.current == null) segStartRef.current = Date.now();
+    } else if (segStartRef.current != null) {
+      activeMsRef.current += Date.now() - segStartRef.current;
+      segStartRef.current = null;
+    }
+  }, [stage, paused]);
 
   // Helper: reproduce el sonido de una fase por su label.
   // 'Sostén' / 'Sostén en vacío' → silencio intencional.
@@ -8169,7 +8188,6 @@ function BreatheSession({ routine, onExit }) {
     if (prepCount <= 0) {
       try { playSound('breathe.session.start'); } catch (e) {}
       setStage('active');
-      startTime.current = Date.now();
       // Hueco A: la fase 0 nunca tenía transición previa → su sonido nunca se disparaba.
       playPhaseSound(sequence[0].label, sequence[0].duration);
       return;
@@ -8282,11 +8300,11 @@ function BreatheSession({ routine, onExit }) {
         setHoldSeconds(0);
       }
     } else {
-      const elapsed = (Date.now() - startTime.current) / 1000;
-      if (elapsed >= routine.min * 60) {
+      // Fin no-rounds por TIEMPO ACTIVO (s98), no wall-clock: las pausas no
+      // acercan el final; la sesion entrega los routine.min de practica real.
+      if (getActiveSec() >= routine.min * 60) {
         finish();
       } else {
-        setCycle(c => c + 1);   // un ciclo del patron completado (bolas s97)
         setPhase(0);
         // Hueco B: reinicio de ciclo no-rondas → fase 0 nunca sonaba.
         playPhaseSound(sequence[0].label, sequence[0].duration);
@@ -8308,7 +8326,12 @@ function BreatheSession({ routine, onExit }) {
   };
 
   const finish = () => {
-    completeBreathSession(routine.id, routine.min);
+    // Credito = TIEMPO ACTIVO real (s98), no el nominal routine.min. Excluye
+    // pausas y no sobre-acredita al pulsar "Finalizar" pronto. Aplica igual a
+    // rounds (retenciones incluidas -> mas honesto) que a no-rounds. Minimo 1
+    // min si hubo practica (las sesiones muy cortas cuentan en stats/plan).
+    const activeMin = Math.max(1, Math.round(getActiveSec() / 60));
+    completeBreathSession(routine.id, activeMin);
     try { playSound('breathe.session.end'); } catch (e) {}
     setStage('done');
   };
@@ -8323,15 +8346,17 @@ function BreatheSession({ routine, onExit }) {
         accent="var(--breathe)"
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
-        onSkip={() => { setPrepCount(0); setStage('active'); startTime.current = Date.now(); playPhaseSound(sequence[0].label, sequence[0].duration); }}
+        onSkip={() => { setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
       />
     );
   }
 
   if (stage === 'done') {
-    const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
-    const mins = Math.floor(totalSec / 60);
-    const secs = totalSec % 60;
+    // Tiempo mostrado = TIEMPO ACTIVO real (s98). Al entrar en 'done' el reloj
+    // ya cerro su ultimo segmento, asi que getActiveSec() es el total definitivo.
+    const activeSec = Math.round(getActiveSec());
+    const mins = Math.floor(activeSec / 60);
+    const secs = activeSec % 60;
     const stats = [
       { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
     ];
@@ -8406,11 +8431,13 @@ function BreatheSession({ routine, onExit }) {
   // (Coherente 6·6 = ~50 ciclos) cada segmento agrupa varios y la barra no se
   // astilla; en las cortas (Box 5min = ~19) es 1 segmento por ciclo exacto.
   const cycleSec = sequence.reduce((sum, p) => sum + p.duration, 0) || 1;
-  const doneInCycle = sequence.slice(0, phase).reduce((sum, p) => sum + p.duration, 0) + phaseTime;
-  // progreso continuo 0..1 de la sesion
+  // Progreso continuo 0..1. Rounds: por ronda/respiracion (ya inmune a pausas).
+  // No-rounds (s98): TIEMPO ACTIVO / duracion objetivo -> mismo reloj que decide
+  // el fin y el credito; las pausas no avanzan la barra. Al terminar (activo =
+  // routine.min*60) llega a 1 y los segTotal segmentos quedan llenos.
   const sessionProgress = isRounds
     ? Math.min(1, ((round - 1) + Math.min(1, breathCount / routine.breaths)) / routine.rounds)
-    : Math.min(1, (cycle + doneInCycle / cycleSec) / Math.max(1, (routine.min * 60) / cycleSec));
+    : Math.min(1, getActiveSec() / (routine.min * 60));
   const rawSegments = isRounds ? routine.rounds : Math.max(1, Math.round((routine.min * 60) / cycleSec));
   const segTotal = Math.min(rawSegments, 24);
   const filledExact = sessionProgress * segTotal;
