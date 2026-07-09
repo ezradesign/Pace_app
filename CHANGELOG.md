@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.43.0** | 2026-07-09 | fix(breathe): **tiempo activo en Respira** -- `BreatheSession` mide un `activeTime` timestamp-based (excluye pausas manuales; inmune al estrangulamiento de timers en background) que sustituye al wall-clock/nominal en 3 sitios: **fin de sesion no-rounds** (`getActiveSec() >= routine.min*60`, las pausas ya no acercan el final), **barra de progreso no-rounds** (mismo reloj) y **credito a stats/logros** (`completeBreathSession` recibe minutos activos reales, no `routine.min` -> arregla el sobre-credito al pulsar "Terminar" pronto; firma intacta, cero cambios en state) · pantalla "done" muestra tiempo activo · retira estado muerto `cycle`/`startTime`/`doneInCycle` | #98 | [abajo](#v0430----2026-07-09----fixbreathe-tiempo-activo-en-respira) |
 | **v0.42.0** | 2026-07-08 | fix(ui): pulido **modo oscuro legible** (recalibracion en bloque `--ink-3 #756D5D→#B2A995` que gobierna toda la letra fina + `--line`/`--line-2` para aro y bordes; logo invertido intacto por peticion del usuario) · **aro del timer empieza siempre vacio** (useCountdown: idle deriva `remaining` de `durationSec`, ya no reflejaba relleno proporcional al cambiar preset) · **progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro; sustituye las bolas, que se disparaban a ~50-100 en rutinas largas) + retira "Ns/Ns" redundante · fix solape precontador "3" (SessionPrep) y countdown de Mueve centrado | #97 | [abajo](#v0420----2026-07-08----fixui-pulido-modo-oscuro--progreso) |
-| **v0.41.0** | 2026-07-08 | refactor(focus): Cirugia 2 -- **motor de timer basado en timestamps** (`app/focus/useCountdown.jsx`, estados idle/running/paused/completed; `remaining = f(Date.now())` en cada tick -> **cero deriva en background**, la pestana oculta ya no subcuenta) migrado a FocusTimer (home) y PathFocusStep (Camino) · `completeFocusSession(context)` unificado que **PRESERVA la distincion** (home = completePomodoro con cycle+logros de pomodoro; Camino = addFocusMinutes+updateStreak sin cycle) · `'completed'` terminal (cierra un doble-credito latente) · **comportamiento observable identico en primer plano** (creditos, sonidos, logros, drone, single-shot) | #96 | [abajo](#v0410----2026-07-08----refactorfocus-cirugia-2-motor-timer-timestamp) |
+| **v0.41.0** | 2026-07-08 | refactor(focus): Cirugia 2 -- **motor de timer basado en timestamps** (`app/focus/useCountdown.jsx`, estados idle/running/paused/completed; `remaining = f(Date.now())` en cada tick -> **cero deriva en background**, la pestana oculta ya no subcuenta) migrado a FocusTimer (home) y PathFocusStep (Camino) · `completeFocusSession(context)` unificado que **PRESERVA la distincion** (home = completePomodoro con cycle+logros de pomodoro; Camino = addFocusMinutes+updateStreak sin cycle) · `'completed'` terminal (cierra un doble-credito latente) · **comportamiento observable identico en primer plano** (creditos, sonidos, logros, drone, single-shot) | #96 | [session-96](./docs/sessions/session-96-timer-engine.md) |
 | **v0.40.0** | 2026-07-08 | feat(entitlement): Cirugia 1 -- **guard central `canAccessRoutine`/`canAccessPath`** (UNICO punto de verdad del acceso, hoy derivado de `premiumUnlocked`; el sitio que cambiara con la licencia) consumido por RoutineCard + PathBreatheStep/PathBodyStep + getSuggestedPath · **degustacion EXPLICITA** de path.weekend (`tasting:true` a nivel step, deja de ser excepcion tacita) · autofocus Welcome solo con puntero fino (sin auto-teclado en movil) · **comportamiento observable identico con premiumUnlocked=false** | #95 | [session-95](./docs/sessions/session-95-guard-entitlement.md) |
 | **v0.39.0** | 2026-07-08 | feat(paths): F8 -- polish visual de los 6 componentes de Caminos contra DESIGN_SYSTEM (**CIERRA el bloque Contenido+Premium**) · fix huerfanas `--olive`/`--terracota` -> tokens reales (barra de acento invisible + boton salir ilegible) · clipPath unico por instancia en Sidebar · titulos de Caminos tokenizados a var(--font-display) (siguen los tweaks data-font) · purga CSS muerto .path-dots | #94 | [session-94](./docs/sessions/session-94-f8-visual-caminos.md) |
 | **v0.38.0** | 2026-07-08 | feat(custom): F7 -- registro interno de ejercicios (65 items / 8 grupos, curado a mano) + constructor de rutinas premium (crear/editar/borrar/lanzar con el runner de MoveSession) · seccion "Tus rutinas" al final de la biblioteca Mueve, superficie premium entera · `customRoutines` en state (CRUD en state-custom.jsx) · crédito via completeMoveSession sin logros nuevos | #93 | [session-93](./docs/sessions/session-93-f7-constructor-rutinas.md) |
@@ -118,6 +119,58 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.43.0] -- 2026-07-09 -- fix(breathe): tiempo activo en Respira
+
+Sesion 98. Pieza del plan maestro (ROADMAP "Camino a v1.0") aplazada desde
+s97: `BreatheSession` medía el tiempo con el reloj de pared, que **cuenta las
+pausas** -- terminaba las sesiones no-rounds antes de completar el trabajo real
+y acreditaba a stats/logros el nominal `routine.min` sin mirar lo practicado.
+Diario: [session-98](./docs/sessions/session-98-tiempo-activo-breathe.md).
+
+### Un solo reloj de tiempo activo (timestamp-based)
+
+`app/breathe/BreatheSession.jsx`: acumulador local `activeMsRef` + `segStartRef`
++ helper `getActiveSec()`. Un `useEffect([stage, paused])` abre segmento cuando
+la sesion corre (`active`|`hold` sin pausar) y lo cierra sumando al acumulador
+al pausar o salir. El tiempo se mide con `Date.now()` -> **inmune al
+estrangulamiento de timers en background** (honra la decision s96: los timers
+nuevos usan el motor timestamp-based). Excluye pausas manuales; el tiempo con
+la pestana oculta cuenta (mismo criterio que el Focus de s96).
+
+### Consumidores unificados
+
+- **Fin de sesion no-rounds**: `getActiveSec() >= routine.min*60` (antes
+  `Date.now() - startTime`, wall-clock) -> las pausas ya no acercan el final;
+  la sesion entrega los `routine.min` de practica **real**.
+- **Barra de progreso no-rounds**: numerador = `getActiveSec()` -> el mismo
+  reloj que decide el fin; la barra no avanza en pausa y llega a 100% justo al
+  terminar. La rama rounds (por ronda/respiracion) queda intacta, ya inmune.
+- **Credito a stats y logros**: `completeBreathSession(id, activeMin)` con
+  `activeMin = max(1, round(activeSec/60))` en vez del nominal `routine.min`.
+  **Firma sin cambios -> cero cambios en `state-*`.** Arregla el sobre-credito
+  al pulsar "Terminar" pronto y hace real `master.retreat` (120 min) y los
+  `breathMinutes` semanales. Aplica igual a rounds (retenciones incluidas).
+- **Pantalla "done"**: muestra el tiempo activo. `sessionStart` se conserva
+  como `totalTime` (wall-clock) para la distincion; no se muestra hoy.
+
+Retirados como codigo muerto: `startTime`, el estado `cycle` y `doneInCycle`.
+**Fuera de scope:** el ticker de fase sigue con `setInterval` (su deriva solo
+afecta la animacion visual con la pestana oculta, no el tiempo acreditado).
+
+### Verificacion + build
+
+Preview con protocolo s93 (purga SW+caches). Con la pestana **oculta y timers
+estrangulados** (medido `sleep(1000)`->1845ms), el `activeTime` timestamp-based
+midio bien: pausa **congela** el reloj (relleno de barra identico
+`152.53 == 152.53` durante 3.5s reales, boton "Reanudar"); activo lo **avanza**
+(`152.53 -> 153.51` en 2.5s); Box 4·4·4·4 (nominal 5 min) acredito **4 min** =
+tiempo activo real (no 5) y la pantalla done mostro 3:46. Consola limpia (dev +
+standalone). Standalone regenerado **731 KB**, 71 archivos; `index.html` copia.
+Backup `PACE_standalone_v0.42.0_20260709.html`; cap 20 (rotado
+`v0.31.0_20260517.html`).
+
+---
+
 ## [v0.42.0] -- 2026-07-08 -- fix(ui): pulido modo oscuro + progreso
 
 Sesion 97. Frente de **pulido visual / bugs** del backlog de UX (capturas del
@@ -172,86 +225,9 @@ limpia. Diario: `docs/sessions/session-97-pulido-oscuro-progreso.md`.
 
 ---
 
-## [v0.41.0] -- 2026-07-08 -- refactor(focus): Cirugia 2 motor timer timestamp
-
-Sesion 96. **Segunda cirugia del plan maestro (ROADMAP "Camino a v1.0"):**
-sustituir los dos temporizadores con `setInterval` + contador que se
-decrementa (derivaban en background -- la pestana oculta throttlea el
-interval a ~1/min y el pomodoro subcontaba/terminaba tarde) por un motor
-basado en TIMESTAMPS. **Comportamiento observable identico en primer
-plano.** Diario:
-[session-96](./docs/sessions/session-96-timer-engine.md).
-
-### Added
-
-- **`app/focus/useCountdown.jsx`** (nuevo, ~135 ln) -- motor de cuenta
-  atras compartido por FocusTimer (home) y PathFocusStep (Camino). La
-  verdad del tiempo vive en `endsAt` (ms epoch): un tick de 1s solo fuerza
-  el re-render y `remaining = ceil((endsAt - Date.now())/1000)`. Con la
-  pestana oculta el navegador throttlea el `setInterval`, pero como
-  `remaining` se recalcula desde el reloj NO subcuenta; un listener
-  `visibilitychange` corrige al instante al volver la pestana. Estados
-  `idle | running | paused | completed`. `'completed'` es **terminal**
-  (start/toggle no-op hasta reset o cambio de duracion) -> cierra un
-  doble-credito latente del timer previo. Pausa: congela `remaining`; al
-  reanudar `endsAt = now + remaining`. `onComplete` en ref (single-shot;
-  reemplaza los guards `justFinished`/`creditedRef`). **Sin persistencia**
-  (local; recargar resetea el Pomodoro como antes -- persistir en pace.state
-  es una decision aparte, diferida). Cargado tras `TimerDial.jsx`.
-- **`completeFocusSession(context, opts)`** (en `state-timer.jsx`, expuesto
-  a window + re-exportado en `state.jsx`) -- punto de entrada unificado del
-  fin de una sesion de foco que **PRESERVA la distincion historica**:
-  `context 'home'` -> `completePomodoro()` (cycle++ + `first.step`/
-  `master.pomodoro.8`/`master.long.focus`; lee `focusMinutes` interno);
-  `context 'path'` -> `addFocusMinutes(opts.minutes) + updateStreak()`
-  (foco CONTEXTUAL de Camino, **sin cycle ni logros de pomodoro** --
-  decision s79/s86). NO se funden en un solo comportamiento.
-
-### Changed
-
-- **`FocusTimer.jsx`** (493 -> 429 ln, sale del borde de las 500):
-  eliminados los 3 useEffect de tiempo (reset/ticker/finalizacion) y el
-  estado `running`/`remainingSec`; ahora derivan del hook. El sonido
-  `pomodoro.end` sigue en el componente (suena en foco/pausa/larga; **solo
-  foco acredita** via `completeFocusSession('home')`). El efecto del drone
-  ambiente queda intacto (solo cambia `remainingSec` -> `remaining`).
-  `pomodoro.start` suena solo en arranque/reanudacion real (no en no-op de
-  `completed`).
-- **`PathFocusStep.jsx`**: migrado al hook; `onComplete` llama
-  `completeFocusSession('path', { minutes: step.min || 25 })`. Contrato
-  `(step, onExit(reason))` intacto; reset/skip siguen sin acreditar.
-- **`PACE.html`** / **`state-core.jsx`** / **`sw.js`** -- 1 script tag
-  nuevo (`useCountdown.jsx` tras TimerDial) + bump v0.41.0
-  (`CACHE_NAME pace-v0.41.0`).
-- **`CHANGELOG.md`** -- v0.39.0 degradada a fila-de-enlace.
-
-### Verificacion runtime
-
-Preview :50333 con protocolo s93 (purgar SW+caches tras cada tanda). **No
-deriva**: simulado salto de reloj (mock `Date.now` + `endsAt` rebasado) y
-pestana oculta -> `remaining` se recalcula sin subcontar y completa con
-credito exacto. **Home/foco**: cycle 0->1, +25 min (total + `weeklyStats`),
-`first.step`; `master.long.focus` (>=45) y `master.pomodoro.8` (cycle>=8)
-verificados; **single-shot** (2 disparos -> 1 credito). **Camino**
-(PathFocusStep montado aislado): +25 min + `streak` **sin cycle ni
-first.step**, CTA "Hecho" -> `onExit('done')`. **Pausa/reanuda** congela y
-continua `remaining`. **Reset/Skip** sin credito. **Pausa(5)/larga(15)**
-tickan y suenan (`pomodoro.start`/`end`) pero NO acreditan. **Drone**
-start->pause->resume->stop (muere al completar). **`'completed'`** terminal
-(Comenzar no re-acredita). EN (Focus/Pause/Long). Estado restaurado.
-**Consola sin errores.**
-
-### Build
-
-- `PACE_standalone.html`: **725 KB**, 71 archivos validados (+1 =
-  `useCountdown.jsx`). `index.html` copia exacta (SHA256 identico).
-  Standalone verificado en preview (v0.41.0, completa con credito, consola
-  limpia).
-- Backup `PACE_standalone_v0.40.0_20260708.html`; cap 20 (rotado
-  `v0.29.0_20260516.html`).
-
----
-
+> **v0.41.0** (s96) detallada en
+> [session-96](./docs/sessions/session-96-timer-engine.md).
+>
 > **v0.40.0** (s95) detallada en
 > [session-95](./docs/sessions/session-95-guard-entitlement.md).
 >
