@@ -268,6 +268,43 @@ Estilos definidos en `app/tokens.css` que afectan al documento entero:
 - `::-webkit-scrollbar-track { background: transparent; }` — sin fondo visible.
 - `::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 3px solid var(--paper); }` — grosor visual 4px (thumb 10px - 2×3px border).
 - `::-webkit-scrollbar-thumb:hover { background: var(--line-2); }` — oscurece al hover.
+- **Firefox (s99):** `html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }` — antes Firefox caía al scrollbar por defecto. Mismos tokens, un solo sitio.
+
+---
+
+## Microinteracciones y keyframes (s99 · v0.44.0)
+
+Bloque en `app/tokens.css` (config global de interacción, no `<style>` nuevo).
+Todo es **decorativo** → el kill global de `prefers-reduced-motion` lo neutraliza
+(ninguno cuelga de `data-pace-essential`). Patrón s22: `!important` solo para
+ganar a estilos inline.
+
+**Keyframes:**
+- `pace-module-in` — fade + rise; entrada de `[data-pace-main-content]`.
+- `pace-modal-in` — scale (0.96→1) + fade; card de modal (`Primitives.Modal`).
+- `pace-dial-glow` — halo que respira detrás del aro del Pomodoro cuando corre
+  (`[data-pace-dial-running]::after`, color `--focus-soft`).
+- `pace-reveal-rise` — entrada escalonada de hijos directos de `[data-pace-reveal]`
+  (nth-child con delays 0–490ms). Usado por TransitionCards y CompletionScreen.
+- `pace-sendero-pulse` — anillo pulsante del hito ACTUAL del SenderoBar
+  (`.sendero-pulse-ring`, `transform-box: fill-box` → escala sobre su centro).
+
+**Ganchos `data-pace-*` añadidos:** `-cta`, `-dial-running`, `-reveal`,
+`-plib-row`, `-path-btn`. Los botones del Foco fijan `--pfbtn` (color de relleno
+en hover, uno por botón: verde/naranja/gris).
+
+### Atmósfera por paso (Caminos)
+`SessionShell` acepta `atmosphere` (token `*-soft` del módulo del paso). El helper
+`sessionAtmosphere(soft)` (en `app/ui/SessionShell.jsx`, expuesto a window) devuelve
+un `radial-gradient` **doble capa** muy tenue concentrado arriba y desvanecido a
+`paper`. Solo se aplica dentro de Caminos (Respira terracota / Foco verde / Cuerpo
+tan / Agua azul). **Deuda:** el usuario reportó banding circular → suavizar.
+
+### Timer — variante `ticks`
+`TimerDial` con prop `ticks` renderiza 60 marcas radiales tipo reloj (cada 5 mayor)
+que se encienden con el color del aro según `progress`, + número protagonista
+(`numberHugeTicks`, `clamp(78px, 9vw, 128px)`). El Foco de Camino la usa; el home
+mantiene el aro clásico con arco + punto guía.
 
 ---
 

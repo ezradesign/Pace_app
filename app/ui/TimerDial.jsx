@@ -100,8 +100,8 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
           {progress > 0.001 && (
             <g transform={`rotate(${progress * 360} 50 50)`}
                style={{ transition: 'transform 1s linear' }}>
-              <circle cx={50 + R} cy="50" r="3.4" fill={ringColor} opacity="0.22" />
-              <circle cx={50 + R} cy="50" r="1.7" fill={ringColor}
+              <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />
+              <circle cx={50 + R} cy="50" r="0.85" fill={ringColor}
                 style={{ transition: 'fill 1s linear' }} />
             </g>
           )}

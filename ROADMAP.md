@@ -132,11 +132,17 @@ planificar. Persistido en memoria `ux-refinement-backlog`.
   El aro debe abrazar de forma FIJA la fila FOCO/PAUSA/LARGA (captura de
   referencia), no depender del zoom/resolución. Hoy `TimerDial.frame` =
   `min(56vh, 86vw, 520px)` → tamaño y "abrazo" varían con viewport.
-- **[Caminos] Runner poco atractivo/refinado.** Parte PRINCIPAL de la app
-  pero poco pulida; los pasos (ej. Lámpara de Mesa) no son visualmente
-  atractivos ni coloridos (manteniendo coherencia con el home). F8/s94 fue
-  tokenización, no rediseño → falta refinamiento visual real del runner +
-  TransitionCards + steps.
+- 🟡 **[Caminos · en curso s99] Runner poco atractivo/refinado.** Overhaul
+  premium en **s99 (v0.44.0)**: los 4 tipos de paso comparten el `SessionShell`
+  (Foco/Agua dejan de ir pelados), **timer aro de marcas de minuto**, **botones
+  del Foco por color**, **atmósfera por paso** (tinte del acento del módulo),
+  cards de transición con kicker romano, sendero con hito actual acentuado,
+  CompletionScreen rediseñada. **Pendiente s100** (feedback del usuario):
+  CompletionScreen aún poco convincente, **OutroCard intermedia no aporta**
+  (evaluar eliminarla, toca decisión s77), **banding circular** del degradado de
+  atmósfera (suavizar), y opcional ilustración propia por Camino (arte aprobado,
+  D-4). El pack de pulido GLOBAL (chips/TopBar/aro/modales/scrollbar) también
+  cerró en s99.
 - **[Sidebar]** (a) micro: subir el divisor logo↔Ritmo (menos aire bajo el
   logo, mejor proporción, gana espacio). (b) mayor: más útil / info más
   atractiva. Encaja con **s103** (home Caminos al centro) o aparte.
