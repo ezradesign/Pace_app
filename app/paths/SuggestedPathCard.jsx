@@ -72,10 +72,11 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       flex: 1, minWidth: 0,
     }}
     onClick={!doneToday ? onStart : undefined}
-    onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
+    onMouseEnter={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-card), 0 2px 18px var(--focus-soft)'; e.currentTarget.style.transform = 'translateY(-1px)'; } : undefined}
     onMouseLeave={!doneToday ? function(e) { e.currentTarget.style.boxShadow = 'var(--sh-soft)'; e.currentTarget.style.transform = 'translateY(0)'; } : undefined}
     >
-      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0 }} />
+      {/* Acento gradiente --focus -> --focus-cta (s99 · Sesion B) */}
+      <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'linear-gradient(180deg, var(--focus), var(--focus-cta))', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {label && (

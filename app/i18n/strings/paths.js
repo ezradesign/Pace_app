@@ -55,6 +55,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'paths.kind.hydrate.name':        'Agua',
     // Paths - biblioteca y favoritos (sesion 53)
     'paths.library.title':            'Todos los caminos',
+    'paths.library.count.one':        '1 camino',
+    'paths.library.count.many':       '{n} caminos',
     'paths.library.start':            'Comenzar',
     'paths.library.doneToday':        'Hecho hoy',
     'paths.library.favorite':         'Favorito',
@@ -109,6 +111,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'paths.kind.hydrate.name':        'Water',
     // Paths - library and favorites (session 53)
     'paths.library.title':            'All paths',
+    'paths.library.count.one':        '1 path',
+    'paths.library.count.many':       '{n} paths',
     'paths.library.start':            'Start',
     'paths.library.doneToday':        'Done today',
     'paths.library.favorite':         'Favorite',

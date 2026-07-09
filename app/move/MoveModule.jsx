@@ -176,8 +176,11 @@ function MoveLibrary({ open, onClose, onStart }) {
   );
 }
 
-function MoveSession({ routine, onExit, kind = 'move' }) {
+function MoveSession({ routine, onExit, kind = 'move', inPath }) {
   const { t, tn, lang } = useT();
+  // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
+  // Estira azul-gris segun kind).
+  const atmo = inPath ? (kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)') : undefined;
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   // Rutinas custom (F7 · s93): sin keys posicionales `<id>.sN.*` — el EN se
   // resuelve por nombre canónico de ejercicio (content/custom.js), con
@@ -283,6 +286,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
         prepCount={prepCount}
         copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
+        atmosphere={atmo}
       />
     );
   }
@@ -305,6 +309,8 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
           { label: t('move.steps'),  value: String(routine.steps.length) },
         ]}
         buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+        doneButtonLabel={inPath ? t('session.next') : undefined}
+        atmosphere={atmo}
       />
     );
   }
@@ -329,6 +335,7 @@ function MoveSession({ routine, onExit, kind = 'move' }) {
     <SessionShell
       routine={displayRoutine}
       onExit={onExit}
+      atmosphere={atmo}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer}
       hint={t('move.hint')}

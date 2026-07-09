@@ -219,6 +219,7 @@ function PathRunner() {
       {phase === 'transition' && typeof StepIntro === 'function' && (
         <StepIntro
           kindName={transitionKindName}
+          kind={step.kind}
           blocks={senderoBlocks}
           currentIndex={cur.stepIndex}
           onContinue={handleTransitionDone}

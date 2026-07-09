@@ -84,9 +84,22 @@ const sessionShellStyles = {
      - footer         → nodo del footer (botones de control)
      - hint           → texto de ayuda en la base ("Espacio pausar · …")
    ============================================================ */
-function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false }) {
+/* sessionAtmosphere - fondo de "atmosfera" por paso (s99). Un wash radial
+   muy tenue del acento del modulo (Respira terracota, Foco verde, Cuerpo tan,
+   Agua azul) concentrado arriba y desvanecido hacia paper. Doble capa del
+   token *-soft para que el tinte se note sin gritar (mantiene el tono tierra).
+   Solo se usa dentro de Caminos (los steps pasan el token; el home no). */
+function sessionAtmosphere(soft) {
+  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, transparent 55%)`;
+  return `${g}, ${g}, var(--paper)`;
+}
+
+function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere }) {
+  const rootStyle = atmosphere
+    ? { ...sessionShellStyles.root, background: sessionAtmosphere(atmosphere) }
+    : sessionShellStyles.root;
   return (
-    <div data-pace-session-root style={sessionShellStyles.root}>
+    <div data-pace-session-root style={rootStyle}>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
       <div data-pace-session-center style={centerGap
         ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
@@ -141,12 +154,13 @@ function SessionHeader({ routine, onExit, extra }) {
                         ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
      - onSkip         → callback del botón "Empezar ahora"
    ============================================================ */
-function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
+function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosphere }) {
   const { t } = useT();
   return (
     <SessionShell
       routine={routine}
       onExit={onExit}
+      atmosphere={atmosphere}
       footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>{t('session.startNow')}</button>}
     >
       <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
@@ -189,15 +203,20 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip }) {
 function SessionDone({
   routine, onExit, accent, accentSoft,
   doneMeta, doneCopy, stats = [],
-  buttonVariant, buttonStyle,
+  buttonVariant, buttonStyle, doneButtonLabel, atmosphere,
 }) {
   const { t } = useT();
+  /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
+     sesion pasa t('session.next') ("Siguiente") -- onExit('done') ya avanza
+     el Camino; sin el override el label por defecto es "Volver al inicio"
+     (home). Bug de coherencia reportado por el usuario. */
+  const label = doneButtonLabel || t('session.backToHome');
   const btn = buttonVariant
-    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{t('session.backToHome')}</Button>
-    : <Button onClick={() => onExit('done')} style={buttonStyle}>{t('session.backToHome')}</Button>;
+    ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{label}</Button>
+    : <Button onClick={() => onExit('done')} style={buttonStyle}>{label}</Button>;
 
   return (
-    <SessionShell routine={routine} onExit={onExit} footer={btn}>
+    <SessionShell routine={routine} onExit={onExit} atmosphere={atmosphere} footer={btn}>
       <div data-pace-session-done style={{ textAlign: 'center', maxWidth: 520 }}>
         <div data-pace-session-done-hero style={{
           width: 120, height: 120, margin: '0 auto 24px',
@@ -335,5 +354,5 @@ if (!_paceSessionResponsive) {
 
 Object.assign(window, {
   SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
-  sessionShellStyles,
+  sessionShellStyles, sessionAtmosphere,
 });

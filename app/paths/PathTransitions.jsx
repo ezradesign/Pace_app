@@ -17,6 +17,22 @@
 
 const { useState: useStatePT, useEffect: useEffectPT, useRef: useRefPT } = React;
 
+/* s99: atmosfera (tinte de fondo) + numeral editorial de las cards de paso.
+   PT_KIND_SOFT ata cada tipo de paso a su acento de modulo. */
+const PT_KIND_SOFT = {
+  breathe: 'var(--breathe-soft)',
+  focus:   'var(--focus-soft)',
+  body:    'var(--move-soft)',
+  hydrate: 'var(--hydrate-soft)',
+};
+const PT_KIND_ACCENT = {
+  breathe: 'var(--breathe)',
+  focus:   'var(--focus)',
+  body:    'var(--move)',
+  hydrate: 'var(--hydrate)',
+};
+const PT_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+
 /* Lee var CSS como ms. Soporta "300ms" y "0.3s". */
 function pathTransitionReadMs(name, fallback) {
   try {
@@ -40,6 +56,9 @@ function TransitionCardBase({
   fadeMsFallback, // ms para entrada/salida (--path-card-fade-ms)
   totalMsFallback,// ms total de hold antes del auto-continue
   onContinue,     // callback al final del hold o al tap
+  atmosphere,     // s99: token *-soft para el wash de fondo (o undefined)
+  kicker,         // s99: eyebrow editorial sobre el titulo (numeral romano)
+  accent,         // s99: color del hito actual del SenderoBar (o undefined)
 }) {
   const { t } = useT();
   /* Arranca invisible (decision 5: fade + scale 0.96 -> 1.0). */
@@ -122,7 +141,11 @@ function TransitionCardBase({
       role="button"
       tabIndex={0}
       aria-label={title}
+      data-pace-reveal
       style={Object.assign({}, pathTransitionStyles.card, {
+        background: (atmosphere && window.sessionAtmosphere)
+          ? window.sessionAtmosphere(atmosphere)
+          : pathTransitionStyles.card.background,
         opacity: opacity,
         transform: 'scale(' + scale + ')',
       })}
@@ -133,11 +156,15 @@ function TransitionCardBase({
           currentIndex={currentIndex}
           size="lg"
           orbVisible={orbVisible}
+          accent={accent}
         />
       </div>
 
       <div style={pathTransitionStyles.titleWrap}>
-        <h2 style={pathTransitionStyles.title}>{title}</h2>
+        <div>
+          {kicker ? <div style={pathTransitionStyles.kicker}>{kicker}</div> : null}
+          <h2 style={pathTransitionStyles.title}>{title}</h2>
+        </div>
       </div>
 
       <div style={pathTransitionStyles.hint}>
@@ -162,12 +189,15 @@ function IntroCard({ pathName, blocks, onContinue }) {
   );
 }
 
-function StepIntro({ kindName, blocks, currentIndex, onContinue }) {
+function StepIntro({ kindName, kind, blocks, currentIndex, onContinue }) {
   return (
     <TransitionCardBase
       blocks={blocks}
       currentIndex={currentIndex}
       title={kindName}
+      kicker={PT_ROMAN[currentIndex] || String(currentIndex + 1)}
+      atmosphere={PT_KIND_SOFT[kind]}
+      accent={PT_KIND_ACCENT[kind]}
       orbVisible={true}
       durationVar="step"
       fadeMsFallback={200}
@@ -225,6 +255,16 @@ const pathTransitionStyles = {
     width: '100%',
     padding: '0 12px',
     minHeight: 0,
+  },
+  /* Eyebrow editorial (numeral romano del paso) sobre el titulo. */
+  kicker: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 22,
+    letterSpacing: '0.14em',
+    color: 'var(--ink-3)',
+    marginBottom: 8,
+    opacity: 0.75,
   },
   title: {
     fontFamily: 'var(--font-display)',

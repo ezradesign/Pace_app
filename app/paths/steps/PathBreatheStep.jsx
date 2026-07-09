@@ -19,7 +19,7 @@ function PathBreatheStep({ step, onExit }) {
   if (routine.safety) {
     return <PathBreatheSafetyGate routine={routine} onExit={onExit} />;
   }
-  return <BreatheSession routine={routine} onExit={onExit} />;
+  return <BreatheSession routine={routine} onExit={onExit} inPath />;
 }
 
 function PathBreatheSafetyGate({ routine, onExit }) {
@@ -33,7 +33,7 @@ function PathBreatheSafetyGate({ routine, onExit }) {
       />
     );
   }
-  return <BreatheSession routine={routine} onExit={onExit} />;
+  return <BreatheSession routine={routine} onExit={onExit} inPath />;
 }
 
 Object.assign(window, { PathBreatheStep, PathBreatheSafetyGate });
