@@ -95,6 +95,7 @@ function FocusTimer({ onFinish }) {
   const controls = (
     <div style={focusStyles.controlsTight}>
       <button
+        data-pace-cta
         onClick={() => {
           // Sonido de inicio solo en un arranque/reanudacion real (idle|paused
           // -> running). Pausar no suena; 'completed' es no-op (no re-credita).
@@ -146,6 +147,7 @@ function FocusTimer({ onFinish }) {
           modeLabel={modeLabel}
           subtitle={subtitle}
           inner={isAro ? innerForAro : null}
+          running={running}
         />
       </div>
 
@@ -320,10 +322,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
    Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
    para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
    ahora en TimerDial.jsx. */
-function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner, running }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} />;
+  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} running={running} />;
 }
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {

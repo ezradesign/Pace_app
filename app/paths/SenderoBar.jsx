@@ -8,7 +8,11 @@ const { useId: useIdSB } = React;
 
 /* Parametros Bezier por segmento. Asimetria organica intencional para
    evitar simetria perfecta. Ratios r1/r2 son fracciones de la longitud
-   del segmento (escalan automaticamente con N). y1/y2 son absolutos. */
+   del segmento (escalan automaticamente con N). y1/y2 son absolutos.
+   NOTA s99: se probo mover los hitos a crestas/valles (Sesion B) y el
+   usuario prefirio la curva fluida original con los hitos en la linea
+   central -> revertido. Se conserva solo el anillo pulsante del hito
+   actual como unico anadido. */
 const SB_SEG_PARAMS = [
   { y1: 22, y2: 24, r1: 0.24, r2: 0.760 }, // 0: arriba, ligero peso derecha
   { y1: 78, y2: 82, r1: 0.24, r2: 0.755 }, // 1: abajo
@@ -39,7 +43,7 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBarBase({ blocks, currentIndex, size, orbVisible }) {
+function SenderoBarBase({ blocks, currentIndex, size, orbVisible, accent }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
@@ -112,10 +116,15 @@ function SenderoBarBase({ blocks, currentIndex, size, orbVisible }) {
               );
             }
             if (i === currentIndex) {
+              /* accent (s99): tinta SOLO el hito actual (halo + anillo + punto)
+                 en el color del paso -- currentColor de estos elementos resuelve
+                 al color del <g>. El resto del sendero se queda en ink. */
               return (
-                <g key={i}>
+                <g key={i} style={accent ? { color: accent } : undefined}>
                   {label && <title>{label}</title>}
                   <circle cx={cx} cy="50" r="19" fill={`url(#${haloCurrentId})`} />
+                  {/* Anillo pulsante (CSS, respeta reduced-motion) sobre el hito activo */}
+                  <circle className="sendero-pulse-ring" cx={cx} cy="50" r="9" />
                   <circle cx={cx} cy="50" r="4.5" className="dot-fill" />
                 </g>
               );

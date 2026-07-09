@@ -1,12 +1,19 @@
 /* PACE · Caminos · Step de Foco · sesion 80 (split de PathRunner.jsx)
-   Pomodoro contextual de Camino. TimerDial compartido + subtitulo
-   "Concentracion profunda" + tres botones del mismo peso visual
-   (Pausar/Reset/Saltar) durante la sesion + CTA "Hecho" al completar.
-   Motor de tiempo via useCountdown (s96, timestamp-based): acredita foco UNA
-   SOLA VEZ (onComplete single-shot del hook) cuando el contador llega a 0.
-   Reset NO acredita; skip NO acredita.
-   Estilos comunes desde window.pathStepStyles (steps/_shared.js).
-   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'. */
+   Pomodoro contextual de Camino.
+
+   s99: adopta el SessionShell compartido (mismo chrome elaborado que
+   Respira/Mueve) para dar COHERENCIA visual al Camino -- antes iba pelado
+   bajo el PathTopBar y desentonaba con el resto de pasos. El header lleva
+   la identidad (Foco / "Concentracion profunda"), el centro el TimerDial
+   (aro con glow al correr, s99 Sesion A) y el footer los tres controles
+   del mismo peso pero AHORA CON COLOR de foco (peticion del usuario ->
+   revisa s79: sigue siendo mismo peso, ya no outline neutro). El "done"
+   pasa por SessionDone (check + stats + "Siguiente") como Respira/Mueve.
+
+   Motor de tiempo via useCountdown (s96, timestamp-based): acredita foco
+   UNA SOLA VEZ (onComplete single-shot). Reset NO acredita; skip NO acredita.
+   Contrato uniforme: (step, onExit(reason)) con reason 'done' | 'skip'.
+   onExit('exit') (header "Salir") = misma semantica que Respira/Mueve. */
 
 const { useState: useStateFS } = React;
 
@@ -15,17 +22,11 @@ function PathFocusStep({ step, onExit }) {
   const totalSec = (step.min || 25) * 60;
   const [done, setDone] = useStateFS(false);
 
-  /* Motor de cuenta atras timestamp-based compartido (s96 · useCountdown).
-     El foco de un Camino es CONTEXTUAL: acredita minutos + racha via
-     completeFocusSession('path'), SIN cycle ni logros de pomodoro (decision
-     s79/s86). onComplete es single-shot dentro del hook (reemplaza el
-     creditedRef previo). Reset (hook) restaura el contador y pausa sin
-     acreditar; skip tampoco acredita. */
+  /* Motor timestamp-based compartido (s96). El foco de un Camino es
+     CONTEXTUAL: acredita minutos + racha via completeFocusSession('path'),
+     SIN cycle ni logros de pomodoro (s79/s86). onComplete single-shot. */
   const { remaining, running, toggle, reset } = useCountdown(totalSec, () => {
     setDone(true);
-    /* F-1 (s86): igual que la home, el foco de un Camino cuenta como actividad
-       del dia para la racha (updateStreak, idempotente por dia -> no
-       doble-cuenta con el paso breathe/body del mismo Camino). */
     try {
       if (typeof completeFocusSession === 'function') {
         completeFocusSession('path', { minutes: step.min || 25 });
@@ -37,70 +38,106 @@ function PathFocusStep({ step, onExit }) {
   const secs = remaining % 60;
   const progress = totalSec > 0 ? 1 - (remaining / totalSec) : 0;
 
-  /* Botones del mismo peso visual: misma forma/padding/tipografia, solo
-     varia el label. Compone btnTypography + btnOutline desde _shared.js. */
-  const { btnTypography, btnOutline } = window.pathStepStyles;
-  const btnBase = Object.assign({}, btnTypography, btnOutline, { padding: '10px 22px' });
+  /* routine "sintetica" para el header del SessionShell: mismo lenguaje
+     que Respira (code meta + nombre italic). La identidad vive en el header
+     -> el TimerDial va sin modeLabel/subtitle para no duplicar el texto. */
+  const routine = {
+    code: t('topbar.mode.focus'),
+    name: t('focus.subtitle.focus'),
+  };
+
+  /* Pantalla de completado: mismo SessionDone que Respira/Mueve. El Foco de
+     un Camino siempre esta en Camino -> CTA "Siguiente" (onExit('done')
+     avanza el Camino). */
+  if (done) {
+    return (
+      <SessionDone
+        routine={routine}
+        onExit={onExit}
+        accent="var(--focus)"
+        accentSoft="var(--focus-soft)"
+        doneMeta={t('session.focusDoneMeta')}
+        doneCopy={t('session.focusDoneCopy')}
+        stats={[{ label: t('common.time'), value: `${step.min || 25} min` }]}
+        buttonStyle={{ background: 'var(--focus)', borderColor: 'var(--focus)' }}
+        doneButtonLabel={t('session.next')}
+        atmosphere="var(--focus-soft)"
+      />
+    );
+  }
 
   const pauseLabel = running
-    ? t('focus.pause')
-    : (remaining < totalSec ? t('focus.continue') : t('focus.start'));
+    ? t('session.pause')
+    : (remaining < totalSec ? t('session.resume') : t('session.startNow'));
+
+  /* Tres controles DIFERENCIADOS por color (s99, peticion del usuario ->
+     revisa s79: ya no es "mismo peso", el color marca la funcion):
+       - Empezar/Pausar -> verde foco (accion principal)
+       - Reiniciar       -> naranja/terracota
+       - Saltar          -> gris (de-enfatiza saltarse el foco)
+     Cada boton fija --pfbtn con su acento; el hover (tokens.css) rellena
+     con ese mismo color. */
+  const footer = (
+    <React.Fragment>
+      <button data-pace-path-btn onClick={toggle} style={pfBtn('var(--focus)', 'var(--focus-soft)')}>{pauseLabel}</button>
+      <button data-pace-path-btn onClick={reset} style={pfBtn('var(--breathe)', 'var(--breathe-soft)')}>{t('focus.restart')}</button>
+      <button data-pace-path-btn onClick={() => onExit('skip')} style={pfBtn('var(--ink-3)', 'var(--paper-3)')}>{t('path.runner.skip')}</button>
+    </React.Fragment>
+  );
 
   return (
-    <div style={{
-      flex: 1, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', padding: 40, textAlign: 'center',
-    }}>
+    <SessionShell
+      routine={routine}
+      onExit={onExit}
+      atmosphere="var(--focus-soft)"
+      footer={footer}
+      footerGap={12}
+      hint={t('session.hint')}
+    >
       {typeof TimerDial === 'function' ? (
-        <div style={{ marginBottom: 24 }}>
-          <TimerDial
-            mins={mins}
-            secs={secs}
-            progress={progress}
-            mode="foco"
-            modeLabel={t('topbar.mode.focus')}
-            subtitle={t('focus.subtitle.focus')}
-            inner={null}
-          />
-        </div>
+        <TimerDial
+          mins={mins}
+          secs={secs}
+          progress={progress}
+          mode="foco"
+          modeLabel=""
+          subtitle={null}
+          inner={null}
+          running={running}
+          ticks
+        />
       ) : (
         <div style={{
           fontFamily: "'EB Garamond', Georgia, serif",
           fontSize: 96, fontWeight: 400,
           fontVariantNumeric: 'tabular-nums',
-          color: 'var(--ink)', lineHeight: 1, marginBottom: 32,
+          color: 'var(--ink)', lineHeight: 1,
         }}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
       )}
-      {!done ? (
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={toggle} style={btnBase}>
-            {pauseLabel}
-          </button>
-          <button onClick={reset} style={btnBase}>
-            {t('focus.restart')}
-          </button>
-          <button onClick={() => onExit('skip')} style={btnBase}>
-            {t('path.runner.skip')}
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => onExit('done')}
-          style={{
-            padding: '10px 28px', borderRadius: 'var(--r-sm)',
-            background: 'var(--ink)', border: 'none',
-            color: 'var(--paper)', cursor: 'pointer', fontSize: 13,
-            letterSpacing: '0.08em',
-            fontFamily: 'var(--font-display)', fontStyle: 'italic',
-          }}
-        >
-          {t('path.runner.done')}
-        </button>
-      )}
-    </div>
+    </SessionShell>
   );
+}
+
+/* Estilo de boton de control del Foco. `accent` colorea borde+texto y se
+   expone como --pfbtn para que el hover (tokens.css) rellene con ese color;
+   `soft` es el fondo en reposo. */
+function pfBtn(accent, soft) {
+  return {
+    cursor: 'pointer',
+    fontSize: 13,
+    letterSpacing: '0.08em',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    borderRadius: 'var(--r-sm)',
+    padding: '10px 22px',
+    background: soft,
+    border: '1px solid ' + accent,
+    color: accent,
+    transition: 'all 180ms var(--ease)',
+    '--pfbtn': accent,
+  };
 }
 
 Object.assign(window, { PathFocusStep });

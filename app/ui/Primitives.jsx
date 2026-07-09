@@ -68,7 +68,12 @@ function Modal({ open, onClose, children, maxWidth = 680, tagLabel, title, subti
           overflowY: 'auto',
           position: 'relative',
           border: '1px solid var(--line)',
-          animation: 'pace-slide-up 280ms var(--ease)',
+          /* Entrada scale+fade (pace-modal-in, tokens.css · pack de pulido A).
+             Antes pace-slide-up (opacity+translateY); el escalado desde 0.96
+             se siente mas como una card que "aparece" que como una que sube.
+             El keyframe vive en tokens.css (home global); pace-slide-up sigue
+             definido en pace-anim por si otro consumidor lo usa. */
+          animation: 'pace-modal-in 280ms var(--ease)',
         }}
       >
         {onClose && (

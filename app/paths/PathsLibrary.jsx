@@ -26,7 +26,7 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
   const tagline = t(pathObj.taglineKey) || '';
 
   return (
-    <div style={{
+    <div data-pace-plib-row style={{
       display: 'flex', alignItems: 'flex-start', gap: 14,
       padding: '14px 16px',
       background: 'var(--paper)',
@@ -34,8 +34,8 @@ function PLPathCard({ pathObj, isFavorite, doneToday, onStart, onToggleFavorite 
       borderRadius: 'var(--r-md)',
       marginBottom: 10,
     }}>
-      {/* Acento */}
-      <div style={{ width: 3, minHeight: 40, background: 'var(--focus)', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+      {/* Acento gradiente --focus -> --focus-cta (s99 · Sesion B) */}
+      <div style={{ width: 3, minHeight: 40, background: 'linear-gradient(180deg, var(--focus), var(--focus-cta))', borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
 
       {/* Contenido */}
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -110,6 +110,12 @@ function PathsLibrary() {
   const todayISO = new Date().toISOString().slice(0, 10);
   const favId = state.paths && state.paths.favorite;
 
+  /* Contador del header (s99 · Sesion B). Interpolo {n} a mano para no
+     depender de que t() soporte params; one/many en strings/paths.js. */
+  const countLabel = catalog.length === 1
+    ? (t('paths.library.count.one') || '1 camino')
+    : (t('paths.library.count.many') || '{n} caminos').replace('{n}', String(catalog.length));
+
   function handleStart(pathId) {
     setOpenPL(false);
     if (typeof startPath === 'function') startPath(pathId);
@@ -141,11 +147,16 @@ function PathsLibrary() {
         boxShadow: 'var(--sh-modal)',
         overflow: 'hidden',
       }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
-          <span id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)' }}>
-            {t('paths.library.title') || 'Todos los caminos'}
-          </span>
+        {/* Header editorial: titulo + contador (s99 · Sesion B) */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '20px 20px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
+          <div>
+            <div id="paths-library-title" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>
+              {t('paths.library.title') || 'Todos los caminos'}
+            </div>
+            <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 5 }}>
+              {countLabel}
+            </div>
+          </div>
           <button
             ref={closeBtnRef}
             onClick={function() { setOpenPL(false); }}

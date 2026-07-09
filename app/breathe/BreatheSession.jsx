@@ -22,9 +22,11 @@ const PHASE_KEYS = {
   'Sostén en vacío':  'breathe.phase.sosten.vacio',
 };
 
-function BreatheSession({ routine, onExit }) {
+function BreatheSession({ routine, onExit, inPath }) {
   const [state] = usePace();
   const { t, lang } = useT();
+  // Atmosfera del step (s99): tinte terracota muy sutil SOLO en Camino.
+  const atmo = inPath ? 'var(--breathe-soft)' : undefined;
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const displayRoutine = lang === 'en'
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
@@ -246,6 +248,7 @@ function BreatheSession({ routine, onExit }) {
         prepCount={prepCount}
         copy={t('breathe.prepCopy')}
         onSkip={() => { setPrepCount(0); setStage('active'); playPhaseSound(sequence[0].label, sequence[0].duration); }}
+        atmosphere={atmo}
       />
     );
   }
@@ -273,6 +276,8 @@ function BreatheSession({ routine, onExit }) {
         doneCopy={t('breathe.doneCopy')}
         stats={stats}
         buttonVariant="terracota"
+        doneButtonLabel={inPath ? t('session.next') : undefined}
+        atmosphere={atmo}
       />
     );
   }
@@ -284,6 +289,7 @@ function BreatheSession({ routine, onExit }) {
       <SessionShell
         routine={displayRoutine}
         onExit={onExit}
+        atmosphere={atmo}
         headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
@@ -358,6 +364,7 @@ function BreatheSession({ routine, onExit }) {
     <SessionShell
       routine={displayRoutine}
       onExit={onExit}
+      atmosphere={atmo}
       centerGap={true}
       footerGap={16}
       footer={footer}

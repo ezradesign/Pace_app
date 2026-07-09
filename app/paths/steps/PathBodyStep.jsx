@@ -15,7 +15,7 @@ function PathBodyStep({ step, onExit }) {
     return <PathStepLocked onSkip={() => onExit('skip')} />;
   }
   const kind = resolved.source === 'extra' ? 'extra' : 'move';
-  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} />;
+  return <MoveSession routine={resolved.routine} kind={kind} onExit={onExit} inPath />;
 }
 
 Object.assign(window, { PathBodyStep });

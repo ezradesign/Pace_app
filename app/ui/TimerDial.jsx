@@ -36,26 +36,81 @@ function interpolateRingColor(progress, mode) {
   return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
-function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner }) {
+/* TimerTicks - aro de marcas de minuto (s99, variante "ticks" del timer,
+   peticion del usuario). 60 marcas radiales tipo reloj; cada 5 es mayor.
+   Las que ya pasaron (i < progress*60) se pintan en el color del arco; las
+   que faltan quedan tenues -> textura de reloj + progreso legible. El svg
+   NO se rota (las marcas ya nacen arriba via -PI/2). */
+function TimerTicks({ progress, color }) {
+  const N = 60;
+  const passed = progress * N;
+  const marks = [];
+  for (let i = 0; i < N; i++) {
+    const major = i % 5 === 0;
+    const a = (i / N) * 2 * Math.PI - Math.PI / 2;
+    const rOut = 48.5;
+    const rIn = major ? 42.5 : 45;
+    const isPast = i < passed;
+    marks.push(
+      <line key={i}
+        x1={(50 + rIn * Math.cos(a)).toFixed(2)} y1={(50 + rIn * Math.sin(a)).toFixed(2)}
+        x2={(50 + rOut * Math.cos(a)).toFixed(2)} y2={(50 + rOut * Math.sin(a)).toFixed(2)}
+        stroke={isPast ? color : 'var(--line)'}
+        strokeWidth={major ? 0.9 : 0.5}
+        strokeOpacity={isPast ? 0.95 : 0.4}
+        strokeLinecap="round"
+        style={{ transition: 'stroke 0.5s linear, stroke-opacity 0.5s linear' }} />
+    );
+  }
+  return <React.Fragment>{marks}</React.Fragment>;
+}
+
+function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks }) {
   const R = 47.5;
   const C = 2 * Math.PI * R;
+  // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
+  const ringColor = interpolateRingColor(progress, mode);
 
   return (
-    <div style={timerDialStyles.frame}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-        <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.35" />
-        <circle cx="50" cy="50" r={R} fill="none"
-          stroke={interpolateRingColor(progress, mode)} strokeWidth="0.7"
-          strokeOpacity="0.7"
-          strokeLinecap="round"
-          strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
-          style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
-      </svg>
+    /* data-pace-dial-running: gancho para el halo "respirando" del aro
+       cuando el Pomodoro corre (CSS en tokens.css, pack de pulido A).
+       Solo presente cuando running -> el selector [data-...] no matchea
+       en reposo. Puramente presentacional; el padre decide `running`.
+       `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
+       es el aro clasico con arco + punto guia (FocusTimer home). */
+    <div data-pace-dial-running={running ? '' : undefined} style={timerDialStyles.frame}>
+      {ticks ? (
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          <TimerTicks progress={progress} color={ringColor} />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+          {/* Track suave */}
+          <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.7" strokeOpacity="0.85" />
+          {/* Arco de progreso: mas presente (s99) con cap redondo */}
+          <circle cx="50" cy="50" r={R} fill="none"
+            stroke={ringColor} strokeWidth="1.3"
+            strokeOpacity="0.92"
+            strokeLinecap="round"
+            strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
+            style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
+          {/* Punto guia en la punta del progreso (halo + nucleo). */}
+          {progress > 0.001 && (
+            <g transform={`rotate(${progress * 360} 50 50)`}
+               style={{ transition: 'transform 1s linear' }}>
+              <circle cx={50 + R} cy="50" r="3.4" fill={ringColor} opacity="0.22" />
+              <circle cx={50 + R} cy="50" r="1.7" fill={ringColor}
+                style={{ transition: 'fill 1s linear' }} />
+            </g>
+          )}
+        </svg>
+      )}
 
       <div style={timerDialStyles.inner}>
-        <div style={timerDialStyles.modeLabel}>{modeLabel}</div>
-        <div style={timerDialStyles.numberHuge}>
+        {modeLabel ? <div style={timerDialStyles.modeLabel}>{modeLabel}</div> : null}
+        <div style={ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
         {subtitle ? <div style={timerDialStyles.subtitleItalic}>{subtitle}</div> : null}
@@ -102,6 +157,19 @@ const timerDialStyles = {
     letterSpacing: '-0.03em',
     color: 'var(--ink)',
     fontSize: 'clamp(64px, 7vw, 104px)',
+  },
+  /* Variante ticks (Caminos Foco): numero PROTAGONISTA, mayor que el clasico
+     (el usuario lo queria mas grande). nowrap para que no parta el MM:SS. */
+  numberHugeTicks: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontWeight: 400,
+    lineHeight: 0.9,
+    fontVariantNumeric: 'tabular-nums',
+    letterSpacing: '-0.03em',
+    color: 'var(--ink)',
+    fontSize: 'clamp(78px, 9vw, 128px)',
+    whiteSpace: 'nowrap',
   },
   subtitleItalic: {
     fontStyle: 'italic',

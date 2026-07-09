@@ -194,7 +194,11 @@ input, textarea { font-family: inherit; color: inherit; }
   font-weight: 500;
 }
 
-/* SCROLLBAR SUTIL */
+/* SCROLLBAR SUTIL
+   WebKit/Blink via ::-webkit-scrollbar; Firefox via scrollbar-width/color
+   (s99 · pack de pulido A: antes Firefox caia al scrollbar por defecto).
+   Ambos leen los mismos tokens -> un solo sitio, sin duplicar el look. */
+html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 3px solid var(--paper); }
@@ -223,6 +227,126 @@ input, textarea { font-family: inherit; color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   MICROINTERACCIONES · pack de pulido global (s99 · Sesion A)
+   Vive aqui (config global de interaccion), no en un <style> nuevo.
+   Reutiliza los ganchos data-pace-* del source + dos nuevos
+   (data-pace-cta, data-pace-dial-running). Todo es DECORATIVO:
+   el kill global de prefers-reduced-motion (arriba) lo neutraliza
+   -- ninguno cuelga de data-pace-essential. Patron s22: cuando hay
+   que ganar a un estilo inline (hover/active), !important.
+   ============================================================ */
+
+/* Chips de la ActivityBar. El hover (lift + --sh-card) sigue inline
+   en ActivityBar.jsx; aqui solo el feedback de pulsacion. !important
+   para ganar al transform inline que fija el hover al presionar. */
+[data-pace-activitybar-chip]:active {
+  transform: translateY(0) scale(0.97) !important;
+}
+
+/* Iconos top-right (Stats / Logros / Tweaks). La base inline es
+   transparente y sin handler; el hover/active viven aqui. */
+[data-pace-topbar-icon]:hover {
+  background: var(--paper-2) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+[data-pace-topbar-icon]:active {
+  transform: scale(0.94);
+}
+
+/* CTA "Comenzar" (Pomodoro home; reservado tambien para los CTA de
+   Camino en la Sesion B). brightness es palette-agnostico -> no
+   hace falta un token --focus-cta-2. Sin inline en filter/transform,
+   asi que sin !important. */
+[data-pace-cta]:hover { filter: brightness(0.95); }
+[data-pace-cta]:active { transform: scale(0.98); }
+
+/* Entrada del area de contenido: fade + leve ascenso al montar
+   (una vez por carga; React no la remonta al abrir modales). */
+[data-pace-main-content] {
+  animation: pace-module-in var(--dur-slow) var(--ease) both;
+}
+
+/* Aro del TimerDial mientras corre. Halo que respira (glow) DETRAS
+   del numero: el ::after es un circulo suave con z-index 0 y el
+   inner del dial va en z-index 1. Amplitud baja: presencia, no
+   espectaculo (regla "sin sombras exageradas"). El color sale de
+   --focus-soft (theme-aware; se ve verde en foco/larga y neutro-
+   calido de fondo en pausa -- aceptable por lo tenue). */
+[data-pace-dial-running]::after {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: pace-dial-glow 3.2s var(--ease) infinite;
+}
+
+@keyframes pace-module-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pace-modal-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pace-dial-glow {
+  0%, 100% { box-shadow: 0 0 22px 4px var(--focus-soft); }
+  50%      { box-shadow: 0 0 46px 12px var(--focus-soft); }
+}
+
+/* ============================================================
+   MICROINTERACCIONES · Caminos (s99 · Sesion B)
+   Mismo criterio que el bloque A: decorativo, reduced-motion via
+   kill global; !important solo para ganar a estilos inline.
+   ============================================================ */
+
+/* Entrada escalonada reutilizable. Los hijos DIRECTOS del contenedor
+   marcado entran con un leve rise secuencial (nth-child). Lo usan las
+   TransitionCards (sendero/titulo/hint) y CompletionScreen (secciones).
+   nth-child se adapta a las secciones condicionales de Completion. */
+[data-pace-reveal] > * {
+  animation: pace-reveal-rise var(--dur-slow) var(--ease) both;
+}
+[data-pace-reveal] > *:nth-child(1) { animation-delay: 0ms; }
+[data-pace-reveal] > *:nth-child(2) { animation-delay: 70ms; }
+[data-pace-reveal] > *:nth-child(3) { animation-delay: 140ms; }
+[data-pace-reveal] > *:nth-child(4) { animation-delay: 210ms; }
+[data-pace-reveal] > *:nth-child(5) { animation-delay: 280ms; }
+[data-pace-reveal] > *:nth-child(6) { animation-delay: 350ms; }
+[data-pace-reveal] > *:nth-child(7) { animation-delay: 420ms; }
+[data-pace-reveal] > *:nth-child(8) { animation-delay: 490ms; }
+@keyframes pace-reveal-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards de la biblioteca de Caminos (PLPathCard): halo suave + leve
+   lift en hover. Sin inline en box-shadow -> sin !important. */
+[data-pace-plib-row] {
+  transition: box-shadow var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease),
+              transform var(--dur-quick) var(--ease);
+}
+[data-pace-plib-row]:hover {
+  border-color: var(--line-2);
+  box-shadow: 0 2px 18px var(--focus-soft);
+  transform: translateY(-1px);
+}
+
+/* Botones de PathFocusStep (s79 revisado s99: DIFERENCIADOS por color, ya no
+   mismo peso -- verde Empezar / naranja Reiniciar / gris Saltar). Cada boton
+   fija --pfbtn con su acento; en hover se rellena con ESE color (fill).
+   !important para ganar al estilo inline. */
+[data-pace-path-btn]:hover {
+  background: var(--pfbtn, var(--focus)) !important;
+  border-color: var(--pfbtn, var(--focus)) !important;
+  color: var(--paper) !important;
+}
+[data-pace-path-btn]:active { transform: scale(0.97); }
 
 /* ============================================================
    SENDERO BAR (sesion 75 / v0.29.0)
@@ -291,6 +415,22 @@ input, textarea { font-family: inherit; color: inherit; }
   opacity: 0.55;
 }
 .sendero-bar .dot-fill { fill: currentColor; }
+/* Anillo pulsante en el hito ACTUAL (s99 · Sesion B). CSS (no SMIL) ->
+   el kill de reduced-motion lo congela. transform-box fill-box: el scale
+   se hace respecto al centro del propio circulo (cx,cy del hito). */
+.sendero-bar .sendero-pulse-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pace-sendero-pulse 2.6s var(--ease) infinite;
+}
+@keyframes pace-sendero-pulse {
+  0%   { opacity: 0.5; transform: scale(0.55); }
+  70%  { opacity: 0;   transform: scale(1.7); }
+  100% { opacity: 0;   transform: scale(1.7); }
+}
 
 /* ============================================================
    Variante lg (s77 / v0.31.0; ajustes labels en s77b)
