@@ -84,14 +84,21 @@ const sessionShellStyles = {
      - footer         → nodo del footer (botones de control)
      - hint           → texto de ayuda en la base ("Espacio pausar · …")
    ============================================================ */
-/* sessionAtmosphere - fondo de "atmosfera" por paso (s99). Un wash radial
-   muy tenue del acento del modulo (Respira terracota, Foco verde, Cuerpo tan,
-   Agua azul) concentrado arriba y desvanecido hacia paper. Doble capa del
-   token *-soft para que el tinte se note sin gritar (mantiene el tono tierra).
+/* sessionAtmosphere - fondo de "atmosfera" por paso (s99; suavizado s100).
+   Un wash radial muy tenue del acento del modulo (Respira terracota, Foco
+   verde, Cuerpo tan, Agua azul) concentrado arriba y desvanecido hacia paper.
+   Doble capa del token *-soft para que el tinte se note sin gritar.
+   s100 (banding): la rampa lineal de 2 stops con alphas ~0.10 producia
+   anillos visibles en buffers de 8 bits (peor en oscuro). Dos remedios:
+   (1) hint de interpolacion al 22% -> caida tipo ease-out, la zona externa
+   queda mas plana; (2) capa de grano SVG casi invisible (feTurbulence
+   desaturado, opacity 0.04, tile 160px) como dither que rompe la
+   cuantizacion. El grano lee como fibra de papel: coherente con el tono.
    Solo se usa dentro de Caminos (los steps pasan el token; el home no). */
+const SESSION_ATMOS_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`;
 function sessionAtmosphere(soft) {
-  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, transparent 55%)`;
-  return `${g}, ${g}, var(--paper)`;
+  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, 22%, transparent 55%)`;
+  return `${SESSION_ATMOS_GRAIN}, ${g}, ${g}, var(--paper)`;
 }
 
 function SessionShell({ routine, onExit, headerExtra, children, footer, hint, footerGap = 12, centerGap = false, atmosphere }) {

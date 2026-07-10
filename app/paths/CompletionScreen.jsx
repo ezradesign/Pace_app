@@ -1,10 +1,15 @@
 /* PACE · Caminos · Pantalla de Camino completado · sesion 80 (split de PathRunner.jsx)
-   SenderoBar al 100% (todos los hitos como done), lista discreta del
-   recorrido con numerales romanos (skipped tachado), logros desbloqueados
-   DURANTE este Camino (filter unlockedAt >= snapshot.startedAt) y dos
-   botones (Volver / Repetir camino).
-   fadeIn=true: cross-fade 400ms al venir de OutroCard (mismo background
-   var(--paper) que la card de salida).
+   s100: rediseno "ceremonia editorial" -- fuera el check generico en circulo;
+   la ceremonia es tipografica: kicker + nombre del Camino en display grande +
+   meta editorial (pasos en romano + minutos) + hairline + SenderoBar heroe
+   con draw-in (prop drawIn: el trazo se dibuja y los hitos entran detras) +
+   recorrido sin caja (hairlines) + logros como sellos sin caja. La entrada
+   escalonada viene de data-pace-reveal (tokens.css).
+   SenderoBar al 100% (todos los hitos como done), recorrido con numerales
+   romanos (skipped tachado), logros desbloqueados DURANTE este Camino
+   (filter unlockedAt >= snapshot.startedAt) y dos botones (Volver / Repetir).
+   fadeIn=true: cross-fade 400ms al aterrizar directo desde el ultimo paso
+   (s100: la OutroCard intermedia se elimino).
    CS_ROMAN local: decision s79 (no extraer a helper compartido hasta
    tener 3 consumidores; aqui sigue siendo solo 1). */
 
@@ -21,9 +26,15 @@ const CS_KIND_COLOR = {
   hydrate: 'var(--hydrate)',
 };
 
+/* Kicker/label editorial reutilizado (RECORRIDO, DESBLOQUEADO). */
+const csKickerStyle = {
+  fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase',
+  color: 'var(--ink-3)', marginBottom: 10,
+};
+
 function CompletionScreen({ snapshot, onBack, fadeIn }) {
   const [state] = usePace();
-  const { t } = useT();
+  const { t, tn } = useT();
   const [opacity, setOpacity] = useStateCS(fadeIn ? 0 : 1);
   useEffectCS(function () {
     if (!fadeIn) return;
@@ -54,6 +65,14 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
     };
   });
 
+  /* Meta editorial: "IV pasos · 24 min" (romano = mismo lenguaje que el
+     recorrido y el kicker de las TransitionCards). Sin minutos si 0. */
+  const stepsLabel = totalSteps > 0
+    ? tn('path.runner.complete.steps', { n: CS_ROMAN[totalSteps - 1] || totalSteps })
+    : '';
+  const metaLine = [stepsLabel, elapsed > 0 ? elapsed + ' min' : null]
+    .filter(Boolean).join(' · ');
+
   /* Logros desbloqueados durante este Camino. */
   const startedAt = snapshot.startedAt || 0;
   const catalog = (typeof window !== 'undefined' && window.ACHIEVEMENT_CATALOG) || [];
@@ -73,70 +92,66 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '40px 40px 48px', textAlign: 'center',
-      overflowY: 'auto', gap: 6,
+      overflowY: 'auto', gap: 8,
       background: (typeof window !== 'undefined' && window.sessionAtmosphere)
         ? window.sessionAtmosphere('var(--focus-soft)') : undefined,
       opacity: opacity,
       transition: fadeIn ? 'opacity 400ms ease-out' : 'none',
     }}>
-      {/* Hero: check en circulo con doble aro suave (--focus, acento del
-          modulo Caminos). El box-shadow de anillo da profundidad premium. */}
-      <div style={{
-        width: 78, height: 78, borderRadius: '50%',
-        background: 'var(--focus-soft)',
-        border: '1.5px solid var(--focus)',
-        boxShadow: '0 0 0 7px var(--focus-soft)',
-        display: 'grid', placeItems: 'center',
-        margin: '0 auto 6px',
-      }}>
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
-             stroke="var(--focus)" strokeWidth="1.5"
-             strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-      </div>
-
-      {/* Encabezado: kicker + titulo + meta (un solo bloque -> reveal juntos) */}
+      {/* Encabezado ceremonial: kicker + nombre del Camino protagonista.
+          Un solo bloque -> entra junto en el reveal. */}
       <div>
-        <p style={{ fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '10px 0 12px' }}>
+        <p style={{
+          fontSize: 11, letterSpacing: '0.28em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', margin: '0 0 14px',
+        }}>
           {t('path.runner.complete.title')}
         </p>
         <h2 style={{
           fontFamily: 'var(--font-display)',
-          fontStyle: 'italic', fontSize: 46, fontWeight: 500,
+          fontStyle: 'italic', fontSize: 'clamp(40px, 7vw, 60px)',
+          fontWeight: 500,
           color: 'var(--ink)', margin: 0, lineHeight: 1.08,
         }}>
           {displayName}
         </h2>
-        {elapsed > 0 && (
-          <p style={{ color: 'var(--ink-3)', fontSize: 13, margin: '14px 0 0', letterSpacing: '0.02em' }}>
-            {elapsed} min
-          </p>
-        )}
       </div>
 
-      {/* SenderoBar 100% done: currentIndex = totalSteps -> ningun
-          hito en estado 'current', todos en 'done'. */}
-      {totalSteps > 0 && (
-        <div style={{ width: '100%', maxWidth: 620, margin: '10px 0 4px' }}>
-          <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} />
+      {/* Meta editorial + hairline: "IV pasos · 24 min" bajo una regla fina. */}
+      {metaLine && (
+        <div>
+          <p style={{
+            fontFamily: 'var(--font-display)', fontStyle: 'italic',
+            fontSize: 15, color: 'var(--ink-2)',
+            letterSpacing: '0.05em', margin: '10px 0 0',
+          }}>
+            {metaLine}
+          </p>
+          <div style={{
+            width: 44, height: 1, background: 'var(--line-2)',
+            margin: '16px auto 0',
+          }} />
         </div>
       )}
 
-      {/* Recorrido: panel contenido con punto de color por tipo de paso. */}
+      {/* SenderoBar heroe: 100% done (currentIndex = totalSteps -> ningun
+          hito 'current') con draw-in ceremonial (el trazo se dibuja y los
+          hitos + labels entran escalonados detras). */}
       {totalSteps > 0 && (
-        <div style={{ maxWidth: 320, width: '100%', margin: '4px 0 6px' }}>
-          <div style={{
-            fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase',
-            color: 'var(--ink-3)', marginBottom: 12,
-          }}>
+        <div style={{ width: '100%', maxWidth: 680, margin: '4px 0 0' }}>
+          <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} drawIn />
+        </div>
+      )}
+
+      {/* Recorrido sin caja (s100): hairlines entre filas, respira mas. */}
+      {totalSteps > 0 && (
+        <div style={{ maxWidth: 340, width: '100%', margin: '0 0 6px' }}>
+          <div style={csKickerStyle}>
             {t('path.runner.complete.recorrido')}
           </div>
           <ul style={{
-            listStyle: 'none', padding: '6px 18px', margin: 0,
+            listStyle: 'none', padding: 0, margin: 0,
             display: 'flex', flexDirection: 'column',
-            background: 'var(--paper-2)', border: '1px solid var(--line)',
-            borderRadius: 'var(--r-md)',
           }}>
             {steps.map(function(s, idx) {
               const skipped = skippedSet.has(idx);
@@ -144,7 +159,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
               return (
                 <li key={s.kind + '-' + idx} style={{
                   display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '9px 2px',
+                  padding: '10px 6px',
                   borderTop: idx === 0 ? 'none' : '1px solid var(--line)',
                   opacity: skipped ? 0.5 : 1,
                 }}>
@@ -173,21 +188,21 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
         </div>
       )}
 
-      {/* Logros desbloqueados durante el Camino */}
+      {/* Logros como sellos (s100): sin caja rellena; kicker + anillo con
+          glifo en el acento de Logros + titulo. */}
       {achievementsDuring.length > 0 && (
         <div style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
-          gap: 10, margin: '6px 0 4px',
-          padding: '14px 20px',
-          border: '1px solid var(--achievement)',
-          borderRadius: 'var(--r-md)',
-          background: 'var(--achievement-soft)',
+          gap: 10, margin: '4px 0 2px',
         }}>
+          <div style={{ ...csKickerStyle, marginBottom: 2 }}>
+            {t('path.runner.complete.achievements')}
+          </div>
           {achievementsDuring.map(function(a) {
             return (
               <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{
-                  width: 26, height: 26, borderRadius: '50%',
+                  width: 28, height: 28, borderRadius: '50%',
                   border: '1px solid var(--achievement)',
                   display: 'grid', placeItems: 'center',
                   color: 'var(--achievement)',
@@ -209,7 +224,7 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 12, flexDirection: 'column', alignItems: 'center', marginTop: 8 }}>
+      <div style={{ display: 'flex', gap: 12, flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
         <button
           data-pace-cta
           onClick={onBack}

@@ -3,16 +3,18 @@
 
      - IntroCard:  al abrir el Camino (SenderoBar 0/N + nombre del Camino).
      - StepIntro:  entre cada par de pasos (SenderoBar parcial + orbe + kind).
-     - OutroCard:  antes de CompletionScreen (SenderoBar N/N + nombre).
 
-   Las tres comparten layout vertical: SenderoBar grande arriba, titulo
+   s100: la OutroCard (antes de CompletionScreen) se elimino -- duplicaba
+   la CompletionScreen (nombre + sendero N/N) sin informacion nueva.
+
+   Las dos comparten layout vertical: SenderoBar grande arriba, titulo
    centrado en vertical, hint "toca para continuar" en la base. La card
    entera es tappable. Auto-advance por timer (tokens CSS configurables).
 
    Cero audio (decision 15 del prompt s77). Cero persistencia: si
    recargas, no ves transicion -- aterrizas en el paso destino.
 
-   API expuesta a window: IntroCard, StepIntro, OutroCard.
+   API expuesta a window: IntroCard, StepIntro.
 */
 
 const { useState: useStatePT, useEffect: useEffectPT, useRef: useRefPT } = React;
@@ -49,10 +51,10 @@ function pathTransitionReadMs(name, fallback) {
    El padre (PathRunner) controla cuando se monta/desmonta cada variante. */
 function TransitionCardBase({
   blocks,         // array para SenderoBar
-  currentIndex,   // hito activo (intro=0, transition=next, outro=total)
+  currentIndex,   // hito activo (intro=0, transition=next)
   title,          // texto grande centrado en vertical
   orbVisible,     // true solo en StepIntro
-  durationVar,    // 'intro' | 'step' | 'outro'
+  durationVar,    // 'intro' | 'step'
   fadeMsFallback, // ms para entrada/salida (--path-card-fade-ms)
   totalMsFallback,// ms total de hold antes del auto-continue
   onContinue,     // callback al final del hold o al tap
@@ -72,9 +74,7 @@ function TransitionCardBase({
   useEffectPT(function () {
     var fadeMs  = pathTransitionReadMs('--path-card-fade-ms', fadeMsFallback);
     var holdMs  = pathTransitionReadMs(
-      durationVar === 'intro' ? '--path-intro-ms' :
-      durationVar === 'outro' ? '--path-outro-ms' :
-                                '--path-step-ms',
+      durationVar === 'intro' ? '--path-intro-ms' : '--path-step-ms',
       totalMsFallback
     );
     /* Doble rAF para asegurar pintado del estado opacity=0 antes del fade-in. */
@@ -207,22 +207,6 @@ function StepIntro({ kindName, kind, blocks, currentIndex, onContinue }) {
   );
 }
 
-function OutroCard({ pathName, blocks, onContinue }) {
-  var total = (blocks && blocks.length) || 0;
-  return (
-    <TransitionCardBase
-      blocks={blocks}
-      currentIndex={total /* todos done */}
-      title={pathName}
-      orbVisible={false}
-      durationVar="outro"
-      fadeMsFallback={200}
-      totalMsFallback={1500}
-      onContinue={onContinue}
-    />
-  );
-}
-
 const pathTransitionStyles = {
   card: {
     position: 'absolute',
@@ -288,4 +272,4 @@ const pathTransitionStyles = {
   },
 };
 
-Object.assign(window, { IntroCard, StepIntro, OutroCard });
+Object.assign(window, { IntroCard, StepIntro });

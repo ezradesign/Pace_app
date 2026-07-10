@@ -22,12 +22,14 @@ const { useState: useStatePR, useEffect: useEffectPR } = React;
      'intro'      -> IntroCard al abrir el Camino (solo si recien iniciado).
      'step'       -> render del paso real (Focus/Breathe/Body/Hydrate).
      'transition' -> StepIntro entre dos pasos (cur.stepIndex ya avanzado).
-     'outro'      -> OutroCard antes de CompletionScreen.
+   s100: la fase 'outro' (OutroCard antes de CompletionScreen) se elimino:
+   duplicaba la CompletionScreen (nombre + sendero N/N) sin aportar nada.
 
    Reglas clave (volatiles, no se persisten en paths.current):
-   - Recarga durante intro/transition/outro -> phase='step' al rehidratar.
+   - Recarga durante intro/transition -> phase='step' al rehidratar.
    - Step intermedio: advancePathStep AHORA, asi recarga aterriza en destino.
-   - Ultimo step: NO se avanza hasta tras OutroCard (cur queda intacto). */
+   - Ultimo step: snapshot local a justCompleted + advance inmediato
+     (CompletionScreen renderiza desde el snapshot, no desde paths.current). */
 function PathRunner() {
   const [state] = usePace();
   const { t } = useT();
@@ -35,9 +37,6 @@ function PathRunner() {
   const [justCompleted, setJustCompleted] = useStatePR(null);
   const [confirmExit, setConfirmExit] = useStatePR(false);
   const [phase, setPhase] = useStatePR('step');
-  /* pendingComplete = snapshot + reason capturados al iniciar OutroCard.
-     Se aplica en handleOutroDone -> setJustCompleted + advancePathStep. */
-  const [pendingComplete, setPendingComplete] = useStatePR(null);
 
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
@@ -87,9 +86,8 @@ function PathRunner() {
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
 
-  /* Pantalla de completado. fadeIn=true cuando viene tras OutroCard
-     (cross-fade simbolico 400ms). Si el usuario llega aqui por otra
-     via, fadeIn queda false. */
+  /* Pantalla de completado. fadeIn=true: cross-fade 400ms al aterrizar
+     directo desde el ultimo paso (s100: sin OutroCard intermedia). */
   if (justCompleted) {
     return (
       <div
@@ -113,25 +111,24 @@ function PathRunner() {
   const step = path.steps[cur.stepIndex];
   const totalSteps = path.steps.length;
 
-  /* Callback de paso: dispara intro/transition/outro segun caso.
+  /* Callback de paso: dispara transition o completa el Camino.
      - Intermedio: avanza AHORA (decision 3) + phase='transition'.
-     - Ultimo:     captura snapshot + phase='outro'. El advance final lo
-       hace handleOutroDone tras el hold de OutroCard. */
+     - Ultimo (s100, sin OutroCard): snapshot local a justCompleted +
+       advance INMEDIATO -> CompletionScreen entra con su fade-in.
+       (El snapshot sigue siendo necesario: tras el advance,
+       paths.current es null y la pantalla renderiza desde el.) */
   const handleStepExit = (reason) => {
     const isLast = cur.stepIndex >= path.steps.length - 1;
     if (isLast) {
       const skipped = reason === 'skip'
         ? [...cur.skippedSteps, cur.stepIndex]
         : cur.skippedSteps;
-      setPendingComplete({
-        reason: reason,
-        snapshot: {
-          pathId: cur.id,
-          startedAt: cur.startedAt,
-          skippedSteps: skipped,
-        },
+      setJustCompleted({
+        pathId: cur.id,
+        startedAt: cur.startedAt,
+        skippedSteps: skipped,
       });
-      setPhase('outro');
+      advancePathStep(reason);
     } else {
       advancePathStep(reason);
       setPhase('transition');
@@ -140,13 +137,6 @@ function PathRunner() {
 
   const handleIntroDone = () => { setPhase('step'); };
   const handleTransitionDone = () => { setPhase('step'); };
-  const handleOutroDone = () => {
-    if (pendingComplete) {
-      setJustCompleted(pendingComplete.snapshot);
-      advancePathStep(pendingComplete.reason);
-      setPendingComplete(null);
-    }
-  };
 
   /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar */
   const handleRequestExit = () => {
@@ -223,13 +213,6 @@ function PathRunner() {
           blocks={senderoBlocks}
           currentIndex={cur.stepIndex}
           onContinue={handleTransitionDone}
-        />
-      )}
-      {phase === 'outro' && typeof OutroCard === 'function' && (
-        <OutroCard
-          pathName={displayPathName}
-          blocks={senderoBlocks}
-          onContinue={handleOutroDone}
         />
       )}
 
