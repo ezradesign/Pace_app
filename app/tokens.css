@@ -99,12 +99,12 @@
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Transiciones entre pantallas del Camino (s77).
-     IntroCard al abrir, StepIntro entre pasos, OutroCard antes de
-     CompletionScreen. PathTransitions.jsx lee estos tokens via
-     getComputedStyle: tweakearlos cambia el ritmo de las cards. */
+     IntroCard al abrir, StepIntro entre pasos. PathTransitions.jsx lee
+     estos tokens via getComputedStyle: tweakearlos cambia el ritmo de
+     las cards. (s100: la OutroCard se elimino -- el ultimo paso pasa
+     directo a CompletionScreen.) */
   --path-intro-ms: 2500ms;
   --path-step-ms: 2000ms;
-  --path-outro-ms: 1500ms;
   --path-card-fade-ms: 200ms;
   --path-card-scale-from: 0.96;
 }
@@ -430,6 +430,44 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   0%   { opacity: 0.5; transform: scale(0.55); }
   70%  { opacity: 0;   transform: scale(1.7); }
   100% { opacity: 0;   transform: scale(1.7); }
+}
+
+/* Draw-in ceremonial (s100 · CompletionScreen, prop drawIn del SenderoBar).
+   El trazo done se dibuja de izquierda a derecha (el JSX pone pathLength=1,
+   asi dasharray/dashoffset normalizados valen para cualquier N de pasos) y
+   los hitos (g del SVG) + labels aparecen escalonados siguiendolo. Todo es
+   DECORATIVO: el kill global de reduced-motion lo salta al estado final
+   (fill both). Los delays fijos aproximan el avance del trazo; con menos
+   pasos los ultimos hitos entran un pelin antes de que llegue -- aceptable. */
+.sendero-bar.draw-in .path-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pace-sendero-draw 1100ms var(--ease) 150ms both;
+}
+.sendero-bar.draw-in .sendero-svg > g,
+.sendero-bar.draw-in .hito-label {
+  animation: pace-sendero-dot-in 500ms var(--ease) both;
+}
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(1),
+.sendero-bar.draw-in .hito-label:nth-child(1) { animation-delay: 250ms; }
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(2),
+.sendero-bar.draw-in .hito-label:nth-child(2) { animation-delay: 410ms; }
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(3),
+.sendero-bar.draw-in .hito-label:nth-child(3) { animation-delay: 570ms; }
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(4),
+.sendero-bar.draw-in .hito-label:nth-child(4) { animation-delay: 730ms; }
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(5),
+.sendero-bar.draw-in .hito-label:nth-child(5) { animation-delay: 890ms; }
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(6),
+.sendero-bar.draw-in .hito-label:nth-child(6) { animation-delay: 1050ms; }
+.sendero-bar.draw-in .sendero-svg > g:nth-of-type(7),
+.sendero-bar.draw-in .hito-label:nth-child(7) { animation-delay: 1210ms; }
+@keyframes pace-sendero-draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pace-sendero-dot-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ============================================================

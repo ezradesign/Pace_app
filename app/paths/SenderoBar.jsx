@@ -43,7 +43,12 @@ function sbSegmentPath(x0, x1, segIdx) {
   return `C ${cp1x.toFixed(2)} ${p.y1}, ${cp2x.toFixed(2)} ${p.y2}, ${x1} 50`;
 }
 
-function SenderoBarBase({ blocks, currentIndex, size, orbVisible, accent }) {
+/* drawIn (s100 · CompletionScreen): el trazo done se dibuja de izquierda a
+   derecha (pathLength=1 normaliza el compound path para stroke-dasharray) y
+   los hitos + labels aparecen escalonados detras. CSS puro en tokens.css ->
+   reduced-motion lo salta a estado final. pathLength SOLO se pone con drawIn
+   para no tocar el dasharray del pending en TransitionCards. */
+function SenderoBarBase({ blocks, currentIndex, size, orbVisible, accent, drawIn }) {
   const reactId = useIdSB();
   const haloDoneId = `sb-halo-done-${reactId}`;
   const haloCurrentId = `sb-halo-current-${reactId}`;
@@ -82,7 +87,7 @@ function SenderoBarBase({ blocks, currentIndex, size, orbVisible, accent }) {
     orbPath = `M ${xs[prev]} 50 ${segD}`;
   }
 
-  const className = 'sendero-bar' + (isLarge ? ' lg' : '');
+  const className = 'sendero-bar' + (isLarge ? ' lg' : '') + (drawIn ? ' draw-in' : '');
 
   return (
     <div className={className}>
@@ -101,7 +106,7 @@ function SenderoBarBase({ blocks, currentIndex, size, orbVisible, accent }) {
             </radialGradient>
           </defs>
 
-          {donePath && <path className="path-line" d={donePath} />}
+          {donePath && <path className="path-line" d={donePath} pathLength={drawIn ? 1 : undefined} />}
           {pendingPath && <path className="path-line pending" d={pendingPath} />}
 
           {xs.map(function(cx, i) {

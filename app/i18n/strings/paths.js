@@ -27,6 +27,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'path.runner.complete.body':     'Has terminado {name}.',
     'path.runner.complete.back':     'Volver',
     'path.runner.complete.recorrido':'Recorrido',
+    // s100: meta editorial + kicker de logros de CompletionScreen
+    'path.runner.complete.steps':    '{n} pasos',
+    'path.runner.complete.achievements': 'Desbloqueado',
     'path.runner.transition.continue':'toca para continuar',
     'path.hydrate.copy':             'Si te apetece, suma un vaso.',
     'path.hydrate.drank':            'Beber',
@@ -83,6 +86,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'path.runner.complete.body':     'You finished {name}.',
     'path.runner.complete.back':     'Back',
     'path.runner.complete.recorrido':'Journey',
+    // s100: CompletionScreen editorial meta + achievements kicker
+    'path.runner.complete.steps':    '{n} steps',
+    'path.runner.complete.achievements': 'Unlocked',
     'path.runner.transition.continue':'tap to continue',
     'path.hydrate.copy':             'If you feel like it, add a glass.',
     'path.hydrate.drank':            'Drink',

@@ -10,16 +10,10 @@
 
 ---
 
-**Version actual:** v0.44.0
-**Ultima sesion:** #99 -- 2026-07-09/10 - **pulido global + overhaul premium de Caminos**. Pack de pulido del sandbox (microinteracciones en `tokens.css`: glow del aro Pomodoro cuando corre, hover TopBar/CTA, entrada de modulos, modales scale+fade, scrollbar Firefox) + **overhaul del modulo Caminos** iterado en vivo: sendero **revertido a la curva fluida** (el usuario prefirio la original; se conserva solo el anillo pulsante + **hito actual acentuado** en el color del paso); fix "Volver al inicio" -> **"Siguiente"** en Respira/Mueve/Foco (SessionDone recibe `inPath`); **PathFocusStep/PathHydrateStep** adoptan el SessionShell compartido (coherencia total con Respira/Mueve); **timer "aro de marcas de minuto"** + numero protagonista; **botones del Foco por color** (verde/naranja/gris, revisa s79); **atmosfera por paso** (wash tenue del acento del modulo, solo en Camino); cards de transicion editoriales (kicker romano); CompletionScreen rediseñada; bola del timer home -50%. Diario: `docs/sessions/session-99-pulido-caminos-premium.md`
-**Ultima actualizacion de este archivo:** 2026-07-10 - sesion 99
-**Build entregado:** `PACE_standalone.html` v0.44.0 (748 KB) + `index.html` (idem)
-
-> NOTA s99: la tabla "archivos vivos" de abajo conserva version-tags de v0.43.0
-> en las filas tocadas esta sesion (TimerDial, SessionShell, BreatheSession,
-> MoveModule, PathFocusStep, PathHydrateStep, SenderoBar, PathTransitions,
-> PathRunner, CompletionScreen, tokens.css, FocusTimer, Primitives, main/TopBar,
-> ActivityBar, i18n/sessions+paths). Deuda menor: refrescar tags en s100.
+**Version actual:** v0.45.0
+**Ultima sesion:** #100 -- 2026-07-10 - **remate premium de Caminos** (los 3 pendientes de feedback de s99, direccion aprobada por el usuario antes de tocar). **OutroCard ELIMINADA** (duplicaba la CompletionScreen; el ultimo paso pasa DIRECTO a "Camino completado": PathRunner pierde la fase `outro` y `pendingComplete` -- snapshot a `justCompleted` + advance inmediato --, decision s77 actualizada, `--path-outro-ms` retirado). **CompletionScreen "ceremonia editorial"**: fuera el check generico en circulo y la caja del recorrido; kicker + nombre del Camino protagonista (clamp 40-60px) + meta editorial "IV pasos · 24 min" con hairline + **sendero heroe con draw-in** (prop `drawIn` de SenderoBar: el trazo done se dibuja con `pathLength=1` y los hitos + labels entran escalonados; CSS puro, reduced-motion salta al estado final) + recorrido con hairlines + logros como sellos (+2 keys i18n ES+EN). **Banding de atmosfera suavizado**: `sessionAtmosphere` con hint de interpolacion al 22% + capa de grano SVG (feTurbulence desaturado 4%, dither) -- arregla steps, transiciones y completado a la vez. Ademas: refrescados los version-tags v0.44.0 que s99 dejo sin anotar (deuda saldada). Diario: `docs/sessions/session-100-remate-caminos.md`
+**Ultima actualizacion de este archivo:** 2026-07-10 - sesion 100
+**Build entregado:** `PACE_standalone.html` v0.45.0 (752 KB) + `index.html` (idem)
 
 ---
 
@@ -27,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.43.0** (s98: solo titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.43.0** (731 KB, 71 archivos, regenerado s98) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.43.0** (s98: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.45.0** (s100: solo titulo bump) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.45.0** (752 KB, 71 archivos, regenerado s100) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.45.0** (s100: regenerado por build-standalone.js) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
 | `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
@@ -41,22 +35,22 @@
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.35.0** (s90: `ambientDrone.start(force)` + flag interno `forced` -- bypasa ambientOn para Coherente 432, soundOn manda siempre; primera modificacion desde v0.21.0, ~10 ln) |
-| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.42.0** (s97: `SessionPrep` caption `marginTop 20->40` + override movil `14->20` -- el precontador "3" (200px, lineHeight 0.9) ya no solapa el caption. s17 base) |
-| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.34.3** (s87: + `PremiumSeal` chip reutilizable --premium; s88: ahora tambien consumido por TweaksPanel, sin cambios en el componente) |
+| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.45.0** (s100: `sessionAtmosphere` suavizado -- hint 22% + grano SVG feTurbulence 4% como dither anti-banding, 364 ln; s99: prop `atmosphere` + helper a window; s97: SessionPrep caption; s17 base) |
+| `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** (s99: card del Modal entra con `pace-modal-in` scale+fade; s87: + `PremiumSeal`; s88: consumido por TweaksPanel) |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.22.0** |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + reset; orquesta TweaksDataSection y PremiumSection) | **v0.34.5** (s89: split 519->351 ln + stepper "Objetivo de agua" 4-12 con patch funcional `set(s=>...)`. s88: superficie premium. s71: reorden) |
 | `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.34.5** (nuevo s89, 193 ln; logica de s17 intacta, extraida literal) |
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.35.0** (s90: +4 patrones F4 en getSequence -- diaphragm/yin/bhramari/co2, 230 ln; s89: `data-pace-essential` en los 5 wrappers -- exime la guia de respiracion del kill de prefers-reduced-motion) |
 | `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.40.0** (s95: `RoutineCard.isLocked = !canAccessRoutine(id)` -- gate real via guard central, equivalente exacto, `usePace()` para reactividad, `isPremium` sigue inline; s90: F4 12->20 tecnicas + free-first; s88: gating premiumUnlocked) |
-| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.43.0** (s98: **reloj de tiempo activo timestamp-based** `activeMsRef`/`segStartRef`/`getActiveSec()` + segmentador `useEffect([stage,paused])`; alimenta fin no-rounds + barra no-rounds + credito (`completeBreathSession` recibe minutos activos, no `routine.min`) + pantalla done; retira `startTime`/`cycle`/`doneInCycle`. s97: progreso = BARRA SEGMENTADA por bloques (`segTotal/segFilled/segActiveProgress`, tope 24) + retira "Ns/Ns" redundante. s90: +3 labels PHASE_KEYS + drone; s67: playPhaseSound) |
-| `app/move/MoveModule.jsx` | Modulo Mueve | **v0.42.0** (s97: countdown de paso (128px) centrado entre descripcion y "SEGUNDOS" -- cue `mb 30->22`, `lineHeight 1->1.08`, SEGUNDOS `mt 8->22`. s93: CustomRoutinesSection + tStep, 436 ln; s92: F6 7->14) |
+| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.44.0** (s99: recibe `inPath` -> SessionDone "Siguiente" + atmosfera por paso. s98: **reloj de tiempo activo timestamp-based** `activeMsRef`/`segStartRef`/`getActiveSec()` -- alimenta fin no-rounds + barra + credito (minutos activos, no `routine.min`); retira `startTime`/`cycle`/`doneInCycle`. s97: barra SEGMENTADA por bloques (tope 24). s90: +3 labels + drone; s67: playPhaseSound) |
+| `app/move/MoveModule.jsx` | Modulo Mueve | **v0.44.0** (s99: MoveSession recibe `inPath` -> SessionDone "Siguiente" + atmosfera. s97: countdown de paso centrado 22/22 + lineHeight 1.08. s93: CustomRoutinesSection + tStep, ~440 ln; s92: F6 7->14) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.39.0** (s94: clipPath del mini-sendero con id unico por instancia `sendero-clip-<useId>`, +5 ln -> 535; OJO: ya estaba en ~530 ln, no en las 497 registradas -- vuelve a deuda) |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.41.0** (s96: migrado a `useCountdown` -- fuera los 3 useEffect de tiempo + estado running/remainingSec, 493->429 ln; `onComplete` toca `pomodoro.end`+`completeFocusSession('home')` solo en foco; drone intacto remainingSec->remaining; `pomodoro.start` solo en arranque real. s77b: startBtnPrimary var(--focus-cta)) |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.44.0** (s99: pasa `running` al TimerDial (glow) + `data-pace-cta` en el CTA. s96: migrado a `useCountdown` -- fuera los 3 useEffect de tiempo, ~430 ln; `onComplete` -> `completeFocusSession('home')`. s77b: startBtnPrimary var(--focus-cta)) |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.42.0** (s97: en `idle` deriva `remaining` de `durationSec` -- el aro empieza SIEMPRE vacio; antes un `setStatus('idle')` no-op al cambiar preset no re-renderizaba y dejaba relleno proporcional. s96: nuevo, ~135 ln, `endsAt` como verdad, `completed` terminal, `onComplete` single-shot) |
-| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.30.0** (s76, sin cambios s77/s96 -- puramente presentacional) |
+| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.44.0** (s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.33.3** (nuevo s83, 209 ln; lee `window.ACHIEVEMENT_GLYPHS` para entradas con glyphSvg) |
@@ -66,7 +60,7 @@
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.43.0** (s98/s97/s96: solo bump PACE_VERSION; s93: + `customRoutines: []`, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.45.0** (s100/s99/s98/s97/s96: solo bump PACE_VERSION; s93: + `customRoutines: []`, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -83,33 +77,34 @@
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium | **v0.34.5** (s89: + `tweaks.eje.water`/`tweaks.water.value` ES+EN; s88: + `premium.tweaks.*`; s87: + `premium.seal`/`premium.soon`) |
-| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate + custom | **v0.38.0** (s93: +~33 keys `custom.*` ES+EN chrome del constructor, 329 ln; s90: +3 fases F4; nuevo s81) |
-| `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.33.1** (nuevo s81, 122 ln; 47 ES + 47 EN) |
+| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate + custom | **v0.44.0** (s99: + `session.next` ("Siguiente"/"Next") + `session.focusDoneMeta/Copy` ES+EN; s93: +~33 keys `custom.*`, ~335 ln; nuevo s81) |
+| `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.45.0** (s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN, 132 ln; s99: + `paths.library.count.one/many` ES+EN; nuevo s81) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.33.1** (nuevo s81, 108 ln; 42 ES + 42 EN) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.37.0** (nuevo s92, 94 ln; split de strings-content.js al superar ~470 ln con F6) |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
-| `app/tokens.css` | Tokens CSS + base | **v0.42.0** (s97: 2a recalibracion oscuro EN BLOQUE -- `--ink-3 #756D5D->#B2A995` (letra fina legible), `--line ->#4d4536`, `--line-2 ->#5f5544` (aro+bordes); paper*/ink/ink-2 intactos. s89: reduced-motion excepcion `[data-pace-essential]`; s79: recalibrado oscuro +10%; s77b: --focus-cta) |
+| `app/tokens.css` | Tokens CSS + base | **v0.45.0** (s100: + **draw-in del sendero** (`pace-sendero-draw`/`pace-sendero-dot-in` + delays nth 1-7) + retirado `--path-outro-ms`; OJO 514 ln -> entra en deuda. s99: bloque microinteracciones (module-in, modal-in, dial-glow, reveal-rise, sendero-pulse, plib-row, path-btn, scrollbar FF). s97: 2a recalibracion oscuro EN BLOQUE (`--ink-3 ->#B2A995`, `--line ->#4d4536`, `--line-2 ->#5f5544`). s89: reduced-motion excepcion `[data-pace-essential]`; s77b: --focus-cta) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** (s95: `tasting:true` en los 2 steps premium de path.weekend -- degustacion curada explicita para el guard; s78: catalogo cerrado a 7 con path.tea/path.breath) |
-| `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.33.0** (s80: split, 835->244 ln, -71%; useRef removido del destructure; dispatcher PathHydrateStep uniformado a step/onExit) |
+| `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.45.0** (s100: fuera fase `'outro'` + `pendingComplete` -- ultimo paso: snapshot a `justCompleted` + advance INMEDIATO, 228 ln; s99: pasa `kind` a StepIntro; s80: split 835->244) |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del overlay) | **v0.40.0** (s95: + `PathStepLocked` -- auto-skip silencioso de un step premium inaccesible, dead code hoy; s94: boton confirmar tokenizado; ~142 ln) |
-| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (SenderoBar 100% + recorrido + logros) | **v0.39.0** (s94: h2 stack hardcodeado -> `var(--font-display)`; 206 ln; CS_ROMAN local) |
+| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (ceremonia editorial: kicker + titulo + meta + sendero drawIn + recorrido + logros) | **v0.45.0** (s100: **ceremonia editorial** -- fuera check generico y caja del recorrido; meta romana "IV pasos · N min" (`tn`) + hairline + `drawIn` + logros sellos, 257 ln; s99: punto de color por kind; CS_ROMAN local) |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** (nuevo s80, 23 ln) |
-| `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.40.0** (s95: consulta `canAccessRoutine(id, {tasting})` -> false = PathStepLocked; nuevo s80) |
-| `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.41.0** (s96: migrado a `useCountdown`; `onComplete`->`completeFocusSession('path', {minutes: step.min})` sin cycle; contrato (step, onExit) intacto; reset/skip sin credito. s86: la racha via updateStreak -- ahora dentro de completeFocusSession) |
-| `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.33.0** (nuevo s80, 113 ln; compone btnBase desde _shared.js + padding 28; firma uniformada a (step, onExit)) |
-| `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.40.0** (s95: consulta `canAccessRoutine(id, {tasting})` -> false = PathStepLocked; nuevo s80) |
-| `app/paths/PathTransitions.jsx` | Cards intro/step/outro entre pantallas del Camino | **v0.39.0** (s94: titulo + hint a `var(--font-display)` -- siguen data-font; 251 ln) |
-| `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.31.0** (s94: auditado contra DESIGN_SYSTEM, limpio -- cero cambios; s77b: prop sticky retirada + hito-labels solo done; 180 ln) |
-| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` en barra de acento (estaba invisible) y asterisco + asterisco a font-display + transitions a tokens; 192 ln) |
-| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.39.0** (s94: `--olive`(huerfana)->`--focus` x3 (barra/tag Favorito/boton Fav) + panel a `--sh-modal` + transition a tokens; 180 ln) |
+| `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.44.0** (s99: pasa `inPath` a BreatheSession -> "Siguiente" + atmosfera; s95: guard `canAccessRoutine(id, {tasting})` -> PathStepLocked; nuevo s80) |
+| `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.44.0** (s99: reescrito sobre el **SessionShell compartido** + timer variante `ticks` + botones por color `--pfbtn` + done via SessionDone "Siguiente". s96: `useCountdown` + `completeFocusSession('path')`; contrato (step, onExit) intacto) |
+| `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.44.0** (s99: reescrito sobre el **SessionShell compartido** (header + footer + atmosfera azul); s80: firma (step, onExit)) |
+| `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.44.0** (s99: pasa `inPath` a MoveSession -> "Siguiente" + atmosfera; s95: guard -> PathStepLocked; nuevo s80) |
+| `app/paths/PathTransitions.jsx` | Cards intro/step entre pantallas del Camino | **v0.45.0** (s100: **OutroCard eliminada** (quedan IntroCard + StepIntro), 275 ln; s99: atmosfera por kind + kicker romano + accent al sendero; s94: tipografia tokenizada) |
+| `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.45.0** (s100: prop `drawIn` -- trazo done con `pathLength=1` que se dibuja + hitos/labels escalonados (solo CompletionScreen; pending intacto), 194 ln; s99: anillo pulsante + `accent` del hito actual; s77b: labels solo done) |
+| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
+| `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.43.0** (s98: CACHE_NAME pace-v0.43.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
+| `sw.js` | Service Worker PWA | **v0.45.0** (s100: CACHE_NAME pace-v0.45.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.44.0_20260710.html` <- creado s100 (snapshot del v0.44.0 publicado en s99)
 - `backups/PACE_standalone_v0.43.0_20260709.html` <- creado s99 (snapshot del v0.43.0 publicado en s98)
 - `backups/PACE_standalone_v0.42.0_20260709.html` <- creado s98 (snapshot del v0.42.0 publicado en s97)
 - `backups/PACE_standalone_v0.41.0_20260708.html` <- creado s97 (snapshot del v0.41.0 publicado en s96)
@@ -129,69 +124,69 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83
 - `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82
 - `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81
-- `backups/PACE_standalone_v0.32.1_20260518.html` <- creado s80
 
-Nota s99: cap 20 mantenido rotando el mas antiguo (`v0.32.0_20260518.html`)
-al crear el backup del v0.43.0.
+Nota s100: cap 20 mantenido rotando el mas antiguo (`v0.32.1_20260518.html`)
+al crear el backup del v0.44.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 99 - v0.44.0 - pulido global + overhaul premium de Caminos.**
-Desvio de pulido priorizado por el usuario (memoria `ui-polish-caminos-plan`),
-por delante del s99-stats del plan maestro. Dos frentes del pack + un overhaul
-del modulo Caminos iterado en vivo con feedback.
+**Sesion 100 - v0.45.0 - remate premium de Caminos.** Cierra los 3 pendientes
+de feedback de s99 (memoria `ui-polish-caminos-plan`). Direccion aprobada por
+el usuario ANTES de tocar (AskUserQuestion): eliminar OutroCard + Completion
+"ceremonia editorial".
 
-### Que se hizo (s99)
+### Que se hizo (s100)
 
-- **Tarea 0**: s98 (`f1151d8`, v0.43.0) commiteado y pusheado, working tree limpio.
-- **Frente A (pulido global)**: bloque de microinteracciones en `tokens.css`
-  (chips `:active`, hover TopBar, CTA `data-pace-cta`, entrada de modulos
-  `pace-module-in`, **glow del aro** `data-pace-dial-running`/`pace-dial-glow`,
-  modales `pace-modal-in` scale+fade, scrollbar Firefox). `TimerDial` recibe
-  `running`; `FocusTimer` lo pasa + `data-pace-cta` en el CTA.
-- **Frente B + overhaul Caminos** (iterado): **sendero revertido** a la curva
-  fluida original (el usuario rechazo cresta/valle); se conserva el **anillo
-  pulsante** (`sendero-pulse-ring`, CSS reduced-motion-safe) + el **hito actual
-  acentuado** en el color del paso (`accent` prop). Fix **"Volver al inicio" ->
-  "Siguiente"** (SessionDone `doneButtonLabel`; BreatheSession/MoveSession `inPath`).
-  **PathFocusStep/PathHydrateStep** reescritos para usar el **SessionShell**
-  compartido (coherencia con Respira/Mueve; el "done" del Foco via SessionDone).
-  **Timer "aro de marcas de minuto"** (variante `ticks` de TimerDial: 60 marcas
-  tipo reloj + numero protagonista). **Botones del Foco por color** (verde/naranja/
-  gris, `--pfbtn` por boton). **Atmosfera por paso** (`SessionShell` prop
-  `atmosphere` -> wash radial tenue del `*-soft` del modulo, doble capa; helper
-  `sessionAtmosphere` expuesto; SOLO en Camino). **Cards de transicion** con tinte
-  + **kicker romano** editorial. **CompletionScreen** rediseñada (hero doble aro,
-  recorrido en panel con punto de color por kind) + wash. Bola del timer home -50%.
+- **Tarea 0**: s99 (`033bc1b`, v0.44.0) commiteado y pusheado, working tree limpio.
+- **OutroCard ELIMINADA** (duplicaba la CompletionScreen: nombre + sendero N/N,
+  hold 1.5s sin informacion nueva). `PathRunner`: fuera fase `'outro'` +
+  `pendingComplete`; el ultimo paso hace `setJustCompleted(snapshot)` +
+  `advancePathStep` INMEDIATO (la garantia s77 se mantiene por construccion:
+  CompletionScreen renderiza desde el snapshot, no desde `paths.current`).
+  `PathTransitions` queda con IntroCard + StepIntro; `--path-outro-ms` retirado.
+- **Banding de atmosfera suavizado**: `sessionAtmosphere` (SessionShell) pasa
+  de 2 stops lineales a **hint de interpolacion 22%** (caida ease-out) + **capa
+  de grano SVG** (feTurbulence desaturado, opacity 0.04, tile 160px, data-URI
+  ~0.4 KB) como dither. Un solo helper -> arregla steps + transiciones +
+  completado. El grano lee como fibra de papel.
+- **CompletionScreen "ceremonia editorial"**: fuera el check generico y la caja
+  del recorrido. Kicker + nombre del Camino protagonista (clamp 40-60px) + meta
+  editorial "IV pasos · 24 min" (romano, key `path.runner.complete.steps` via
+  `tn`) + hairline 44px + **sendero heroe con draw-in** (prop `drawIn` de
+  SenderoBar: trazo done `pathLength=1` que se dibuja + hitos/labels escalonados,
+  keyframes en tokens.css, CSS puro reduced-motion-safe; pending intacto) +
+  recorrido sin caja (hairlines) + logros como sellos (kicker "Desbloqueado").
 
 ### Verificacion + cierre
 
-Preview :8765, protocolo s93. La pestana se estrangula en background -> se
-verifico por **montaje aislado + inspeccion de DOM** (y el punto guia del timer
-por geometria `getPointAtLength`, distancia 0.2). Confirmado: 60 ticks, atmosfera
-con gradiente, 3 colores de boton, kicker "II" + sendero acentuado, "Siguiente" en
-done, consola limpia (dev + standalone v0.44.0). Cierre: bump v0.44.0, backup
-`v0.43.0_20260709` (rotado `v0.32.0`, cap 20), rebuild standalone+index (748 KB,
-71 archivos), standalone verificado, diario s99, CHANGELOG, DESIGN_SYSTEM, ROADMAP,
-memoria `ui-polish-caminos-plan`.
+Preview :8765 propio, protocolo s93 (purga SW+caches). Por **montaje aislado +
+DOM**: kicker/titulo/meta correctos, draw-in con stagger computado y
+`dashoffset` final 0, recorrido sin caja, skipped tachado. **Flujo real**
+path.breath completo: del ultimo paso DIRECTO al completado (cero cards),
+`paths.current = null` inmediato, completado acreditado. Movil 375px sin
+overflow. Capturas claro/oscuro sin anillos. Consola limpia (dev + standalone
+v0.45.0). Cierre: bump v0.45.0, backup `v0.44.0_20260710` (rotado `v0.32.1`,
+cap 20), rebuild standalone+index (752 KB, 71 archivos), standalone verificado,
+diario s100, CHANGELOG, STATE (version-tags v0.44.0 de s99 refrescados -- deuda
+saldada), DESIGN_SYSTEM, ROADMAP, memorias.
 
-### Pendiente (feedback del usuario, prioridad para s100)
+### Pendiente
 
-- **CompletionScreen aun "cutre"**: el usuario quiere seguir elevandola.
-- **OutroCard intermedia** (entre ultimo ejercicio y completado) **no aporta** ->
-  evaluar eliminarla (toca decision s77 de transiciones volatiles).
-- **Banding circular** en el degradado de atmosfera -> suavizar (mas stops/dither).
-- (Opcional) el usuario mostro interes en **ilustracion propia por Camino** (arte
-  aprobado, D-4) como frente aparte.
+- (Opcional, espera ARTE del usuario, patron s84/D-4) **ilustracion propia por
+  Camino** para CompletionScreen/cards.
+- `tokens.css` entra en deuda de tamaño (514 ln).
 
-## Proxima sesion -- s100: rematar Caminos (feedback) + luego stats vivos
+## Proxima sesion -- s101: stats a fondo + safety/privacy
 
-Primero el feedback pendiente de arriba (Completion + OutroCard + banding). Despues
-retomar el plan maestro donde quedo: **stats vivos** (`getHistoryWithToday`
-memoizado en Week/Month/Year) + paginas `/safety` y `/privacy`. La secuencia del
-plan maestro se desplaza una posicion (el desvio de pulido ocupo s99).
+Retomar el plan maestro donde quedo, AMPLIADO con el feedback P2 del usuario
+(s100): los paneles de estadisticas no reflejan bien lo que hace -> **revision
+A FONDO de Week/Month/Year** (que trackean, que muestran, coherencia con lo
+practicado) fusionada con **stats vivos** (`getHistoryWithToday` memoizado --
+el dia actual visible en mes/año) + paginas `/safety` y `/privacy`. La
+secuencia del plan maestro queda desplazada DOS posiciones (s99 pulido +
+s100 remate).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
@@ -206,8 +201,9 @@ al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licen
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| CompletionScreen = ceremonia editorial; sin OutroCard; draw-in SOLO alli | s100 | La celebracion del Camino es TIPOGRAFICA (kicker + nombre protagonista + meta romana + hairline + sendero heroe), sin iconografia generica (el check en circulo se retiro) ni cajas rellenas (recorrido y logros van con hairlines/sellos). El **draw-in** del sendero (prop `drawIn`) queda reservado a la CompletionScreen: en TransitionCards el sendero es lectura rapida, no ceremonia. La OutroCard se elimino (ver fila s77). Si se quiere mas celebracion futura, la via es la ilustracion por Camino (espera arte, D-4), no volver a iconos genericos |
 | Todos los steps de Camino usan el SessionShell compartido | s99 | `PathFocusStep` y `PathHydrateStep` (antes pelados bajo `PathTopBar`) reescritos para usar el mismo `SessionShell` que Respira/Mueve -> los 4 tipos de paso comparten header (code+nombre) + footer + hint + atmosfera. El `PathTopBar` queda cubierto por el shell (como ya pasaba con Respira/Mueve). Consecuencia: el "× Salir" del Foco/Agua ahora hace lo mismo que en Respira/Mueve (`onExit('exit')` -> avanza/salta el paso, coherente); abandonar el Camino entero sigue via Esc (confirmacion PathRunner). El "done" del Foco pasa por `SessionDone` |
-| Atmosfera por paso (SessionShell `atmosphere`), SOLO en Camino | s99 | `SessionShell` acepta `atmosphere` = token `*-soft` del modulo del paso (Respira terracota / Foco verde / Cuerpo tan / Agua azul) -> wash radial MUY tenue (doble capa via helper `sessionAtmosphere`, expuesto a window). Propagado por SessionPrep/SessionDone/SessionShell. Las sesiones lo pasan solo si `inPath` (el home queda limpio). Reutilizado en cards de transicion (por kind) y CompletionScreen (`--focus-soft`). PENDIENTE: el usuario reporto banding circular -> suavizar en s100 |
+| Atmosfera por paso (SessionShell `atmosphere`), SOLO en Camino | s99 | `SessionShell` acepta `atmosphere` = token `*-soft` del modulo del paso (Respira terracota / Foco verde / Cuerpo tan / Agua azul) -> wash radial MUY tenue (doble capa via helper `sessionAtmosphere`, expuesto a window). Propagado por SessionPrep/SessionDone/SessionShell. Las sesiones lo pasan solo si `inPath` (el home queda limpio). Reutilizado en cards de transicion (por kind) y CompletionScreen (`--focus-soft`). **s100: banding RESUELTO** en el helper -- hint de interpolacion 22% + capa de grano SVG (feTurbulence 4%) como dither; si un wash futuro banda, mismo remedio, no subir alphas |
 | Timer: variante `ticks` (aro de marcas de minuto) para el Foco de Camino | s99 | `TimerDial` gana prop `ticks`: 60 marcas radiales tipo reloj (cada 5 mayor) que se encienden con el color segun `progress`, + numero PROTAGONISTA (`numberHugeTicks`). El home mantiene el aro clasico (arco + punto guia, este ultimo -50% en s99 por peticion). Eleccion del usuario sobre "reloj analogico". `modeLabel` ahora condicional (el Foco de Camino lo omite: la identidad vive en el header del shell) |
 | Botones del Foco por color (revisa s79) | s99 | s79 decia "3 botones outline del MISMO peso". El usuario pidio color: Empezar/Pausar **verde** (`--focus`), Reiniciar **naranja** (`--breathe`), Saltar **gris** (`--ink-3`, relleno `--paper-3`). Cada boton fija `--pfbtn` con su acento; el hover (`[data-pace-path-btn]:hover`, tokens.css) rellena con ese color. Deja de ser "mismo peso": el color marca la funcion. La regla de fondo de s79 (pomodoro contextual, sin presets/ciclo/badge) sigue |
 | Sendero: curva fluida original + hito actual acentuado (cierra iteracion cresta/valle) | s99 | Se probo mover los hitos a crestas/valles (primer pase de B) y el usuario prefirio la **curva fluida original con hitos en la linea** -> revertido (SB_SEG_PARAMS y1/y2 restaurados, `cy=50`). Se conserva SOLO el **anillo pulsante** (`sendero-pulse-ring`) y se anade `accent` prop: tinta SOLO el hito ACTUAL (halo+anillo+punto) en el color del paso (currentColor del `<g>`), el resto en ink. Regla: no rediseñar la forma del sendero sin OK explicito |
@@ -250,7 +246,7 @@ al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licen
 | Anti-truncamiento: Python write | s48-s52 | Nunca Edit tool con caracteres especiales |
 | Build con TS parser real | s56 | Aborta con linea:columna exacta en cualquier error sintactico |
 | Overlay via CustomEvent | s50+ | PathRunner, PathsLibrary -- evita prop drilling |
-| Transiciones Camino volatiles | s77 | No persisten en paths.current. Step intermedio: advance AHORA. Ultimo: snapshot local pendingComplete + advance diferido |
+| Transiciones Camino volatiles | s77, revisada s100 | No persisten en paths.current. Step intermedio: advance AHORA + StepIntro. Ultimo (s100): la **OutroCard se ELIMINO** (duplicaba la CompletionScreen sin informacion nueva) -> snapshot local a `justCompleted` + advance INMEDIATO; ya no hace falta diferir porque CompletionScreen renderiza desde el snapshot, no desde paths.current |
 | Progreso del Camino solo entre pantallas | s77b | Retirada la SenderoBar sticky de s76: vive en TransitionCards (Intro/Step/Outro) + CompletionScreen, no superpuesta sobre cada ejercicio. Razon: usuario validó en runtime que la sticky se sentia invasiva |
 | Labels SenderoBar: solo hitos done | s77b | Filtro `i < currentIndex` unificado en lg y CompletionScreen. Current no se etiqueta (ya esta en grande arriba en TransitionCards), pending tampoco (sin spoiler) |
 | Nuevo token --focus-cta para CTA Comenzar home | s77b | Variante mas viva y calida que --focus (#506B3E claro / #8AA776 oscuro). NO usar fuera del CTA principal de Pomodoro |
@@ -291,6 +287,7 @@ al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licen
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
 | `app/shell/Sidebar.jsx` | 535 | MEDIA (s94: re-entra -- estaba en ~530 reales sin registrar desde s61, +5 ln del clipPath unico; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
+| `app/tokens.css` | 514 | BAJA (s100: el bloque draw-in del sendero lo pasa de ~475 a 514; es CSS global, no JSX -- candidato natural si vuelve a crecer: extraer el CSS del SenderoBar (~110 ln) a un archivo propio cargado tras tokens) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
@@ -325,9 +322,16 @@ Recogido con capturas al cerrar s96. Lista completa en `ROADMAP.md` ->
 - ✓ **Precontador "3" solapa caption** (SessionPrep) + **countdown de Mueve**
   descentrado + **bolas de Respira** sin sentido -> barra segmentada por bloques.
 
+**Hecho en s99 + s100 (v0.44.0 / v0.45.0):**
+- ✓ **Caminos runner refinado**: overhaul premium s99 (SessionShell en los 4
+  tipos de paso, timer ticks, botones por color, atmosfera, kicker romano) +
+  remate s100 (CompletionScreen ceremonia editorial, OutroCard eliminada,
+  banding suavizado). Queda OPCIONAL: ilustracion por Camino (espera arte, D-4).
+
 **Pendiente (sin planificar):**
 - **[Visual]** pomodoro web con semicirculo fijo integrado en las pills
-  (no depender del zoom) · Caminos runner poco refinado (F8 fue solo
-  tokenizacion) · sidebar (divisor logo↔Ritmo sube + mas util).
+  (no depender del zoom) · sidebar (divisor logo↔Ritmo sube + mas util).
 - **[Producto]** builder premium mas visible + ejercicios de Mueve Y Estira
-  · filtros en bibliotecas para movil (mapea a s104-105).
+  · filtros en bibliotecas para movil (mapea a la fase de taxonomia+filtros).
+- **[Stats]** los paneles no reflejan bien el progreso real (P2 del usuario,
+  s100) -> revision A FONDO planificada como **s101** junto a stats vivos.

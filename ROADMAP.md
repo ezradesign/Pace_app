@@ -95,12 +95,14 @@ fricción, y quiere volver mañana.*
 | ~~s96~~ | ~~Cirugía 2: Timer engine timestamp-based~~ **hecho (v0.41.0)** — `app/focus/useCountdown.jsx` (estados idle/running/paused/completed; `remaining = f(Date.now())` desde `endsAt` → **cero deriva en background**, `visibilitychange` corrige al volver; `completed` terminal) migrado a FocusTimer (493→429 ln) y PathFocusStep · `completeFocusSession(context)` unificado que **preserva la distinción** home(cycle+logros)/Camino(minutos+streak) · **comportamiento idéntico en primer plano** · motor LOCAL (persistir en recarga diferido a s99) |
 | ~~s97~~ | ~~(previsto: breathe activeTime)~~ → **pulido oscuro + progreso** **hecho (v0.42.0)** — modo oscuro legible (recalibración en bloque `--ink-3`/`--line`/`--line-2`; logo invertido intacto, validado por el usuario) · **aro del timer empieza siempre vacío** (`useCountdown` idle deriva de `durationSec`) · **progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro) · fixes de countdown (precontador "3", Mueve centrado). Breathe activeTime se corre a s98 |
 | ~~s98~~ | ~~BreatheSession tiempo activo~~ **hecho (v0.43.0)** — reloj de tiempo activo timestamp-based (`activeMsRef`/`segStartRef`/`getActiveSec()`, segmentado por `useEffect([stage,paused])`, mide `Date.now()` → inmune a background) que alimenta fin no-rounds (`getActiveSec() >= routine.min*60`) + barra no-rounds + **credito** (`completeBreathSession` recibe minutos activos reales `max(1,round(sec/60))`, no `routine.min`; firma intacta → cero cambios en state) + pantalla done · retira `startTime`/`cycle`/`doneInCycle` · la incoherencia s97 (fin wall-clock vs barra activa) queda unificada al mismo reloj; rama rounds intacta |
-| **s99** | **Stats vivos** (`getHistoryWithToday` memoizado en Week/Month/Year) + páginas estáticas `/safety` y `/privacy` |
-| **s100** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
-| **s101-102** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |
-| **s103** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
-| **s104** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
-| **s105-106** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
+| ~~s99~~ | ~~(previsto: stats vivos)~~ → **desvío de pulido** priorizado por el usuario **hecho (v0.44.0)** — pack de microinteracciones global + overhaul premium de Caminos (SessionShell en los 4 pasos, timer ticks, botones por color, atmósfera por paso, kicker romano, sendero con hito acentuado) |
+| ~~s100~~ | ~~(previsto: PWA)~~ → **remate de Caminos** (feedback s99) **hecho (v0.45.0)** — **CompletionScreen "ceremonia editorial"** + sendero héroe con draw-in · **OutroCard eliminada** (el último paso pasa directo al completado; decisión s77 revisada) · **banding de atmósfera suavizado** (hint de interpolación 22% + grano SVG como dither) |
+| **s101** | **Stats a fondo** — revisión completa de los paneles Week/Month/Year (feedback P2 del usuario s100: no reflejan bien lo practicado) fusionada con **stats vivos** (`getHistoryWithToday` memoizado — el día actual visible en mes/año) + páginas estáticas `/safety` y `/privacy` |
+| **s102** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
+| **s103-104** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |
+| **s105** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
+| **s106** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
+| **s107-108** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
 | pre-venta | Iteración glifos D-4 (patrón s84) · **trial 7 días explícito** (no auto-start; `premiumUnlocked` derivado de licencia‖trial) · **licencia firmada offline ECDSA P-256** (guardar la clave y revalidar en arranque, no un booleano) — requiere **cambiar formalmente la decisión F3b** · landing `/` separada de `/app` · pricing/terms |
 | post-venta | Vite/ESM real (Etapa B) · Path Builder (reuso F7) · Modo Estudio · sonidos procedurales premium · CTB completa · Android Capacitor (notificaciones/hápticos/widget/billing) · Wrapped · extensión Chrome · IndexedDB via localForage (antes: `navigator.storage.persist()` tras onboarding, barato) |
 
@@ -132,27 +134,27 @@ planificar. Persistido en memoria `ux-refinement-backlog`.
   El aro debe abrazar de forma FIJA la fila FOCO/PAUSA/LARGA (captura de
   referencia), no depender del zoom/resolución. Hoy `TimerDial.frame` =
   `min(56vh, 86vw, 520px)` → tamaño y "abrazo" varían con viewport.
-- 🟡 **[Caminos · en curso s99] Runner poco atractivo/refinado.** Overhaul
-  premium en **s99 (v0.44.0)**: los 4 tipos de paso comparten el `SessionShell`
-  (Foco/Agua dejan de ir pelados), **timer aro de marcas de minuto**, **botones
-  del Foco por color**, **atmósfera por paso** (tinte del acento del módulo),
-  cards de transición con kicker romano, sendero con hito actual acentuado,
-  CompletionScreen rediseñada. **Pendiente s100** (feedback del usuario):
-  CompletionScreen aún poco convincente, **OutroCard intermedia no aporta**
-  (evaluar eliminarla, toca decisión s77), **banding circular** del degradado de
-  atmósfera (suavizar), y opcional ilustración propia por Camino (arte aprobado,
-  D-4). El pack de pulido GLOBAL (chips/TopBar/aro/modales/scrollbar) también
-  cerró en s99.
+- ✓ **[HECHO s99+s100] Runner de Caminos refinado.** Overhaul premium en
+  **s99 (v0.44.0)**: los 4 tipos de paso comparten el `SessionShell` (Foco/Agua
+  dejan de ir pelados), **timer aro de marcas de minuto**, **botones del Foco
+  por color**, **atmósfera por paso**, cards de transición con kicker romano,
+  sendero con hito actual acentuado. **Remate en s100 (v0.45.0)** con el
+  feedback: **CompletionScreen "ceremonia editorial"** (kicker + nombre
+  protagonista + meta romana + sendero héroe con draw-in + recorrido sin caja +
+  logros como sellos), **OutroCard eliminada** (último paso directo al
+  completado, decisión s77 revisada) y **banding de atmósfera suavizado**
+  (hint + grano SVG dither). El pack de pulido GLOBAL cerró en s99. Queda
+  OPCIONAL: ilustración propia por Camino (espera arte aprobado, D-4).
 - **[Sidebar]** (a) micro: subir el divisor logo↔Ritmo (menos aire bajo el
   logo, mejor proporción, gana espacio). (b) mayor: más útil / info más
-  atractiva. Encaja con **s103** (home Caminos al centro) o aparte.
+  atractiva. Encaja con **s106** (home Caminos al centro) o aparte.
 - **[Premium/builder] Constructor más visible + Mueve Y Estira.** El builder
   (F7, hoy solo al final de MoveLibrary) con más presencia y ejercicios de
   ambos módulos (no solo Mueve). Sigue premium; `exercise-registry.js` ya
   une MOVE+EXTRA, falta exponer Estira en el picker.
 - **[UX móvil] Filtros en bibliotecas.** Scroll por catálogos crecidos
   (Estira 14 / Mueve 14 / Respira 20) poco práctico en móvil. Mapea a
-  **s104-105 (taxonomía + filtros)**; el usuario prioriza la experiencia
+  **s107-108 (taxonomía + filtros)**; el usuario prioriza la experiencia
   móvil aquí.
 
 ---

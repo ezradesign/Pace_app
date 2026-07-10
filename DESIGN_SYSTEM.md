@@ -272,7 +272,7 @@ Estilos definidos en `app/tokens.css` que afectan al documento entero:
 
 ---
 
-## Microinteracciones y keyframes (s99 · v0.44.0)
+## Microinteracciones y keyframes (s99-s100 · v0.44.0-v0.45.0)
 
 Bloque en `app/tokens.css` (config global de interacción, no `<style>` nuevo).
 Todo es **decorativo** → el kill global de `prefers-reduced-motion` lo neutraliza
@@ -288,6 +288,12 @@ ganar a estilos inline.
   (nth-child con delays 0–490ms). Usado por TransitionCards y CompletionScreen.
 - `pace-sendero-pulse` — anillo pulsante del hito ACTUAL del SenderoBar
   (`.sendero-pulse-ring`, `transform-box: fill-box` → escala sobre su centro).
+- `pace-sendero-draw` + `pace-sendero-dot-in` (s100) — **draw-in ceremonial**
+  del SenderoBar con la prop `drawIn` (solo la usa CompletionScreen): el trazo
+  done se dibuja de izquierda a derecha (`pathLength=1` normaliza el compound
+  path; solo se pone con `drawIn` para no romper el punteado pending) y los
+  hitos (`g` del SVG) + `hito-label` entran escalonados con delays nth 1–7
+  (250ms + 160ms/paso). CSS puro → reduced-motion salta al estado final.
 
 **Ganchos `data-pace-*` añadidos:** `-cta`, `-dial-running`, `-reveal`,
 `-plib-row`, `-path-btn`. Los botones del Foco fijan `--pfbtn` (color de relleno
@@ -298,7 +304,12 @@ en hover, uno por botón: verde/naranja/gris).
 `sessionAtmosphere(soft)` (en `app/ui/SessionShell.jsx`, expuesto a window) devuelve
 un `radial-gradient` **doble capa** muy tenue concentrado arriba y desvanecido a
 `paper`. Solo se aplica dentro de Caminos (Respira terracota / Foco verde / Cuerpo
-tan / Agua azul). **Deuda:** el usuario reportó banding circular → suavizar.
+tan / Agua azul). **Banding resuelto (s100):** la rampa lineal de 2 stops con
+alphas ~0.10 producía anillos de cuantización de 8 bits (peor en oscuro) → hint
+de interpolación al 22% (caída ease-out) + **capa de grano SVG** casi invisible
+(feTurbulence desaturado, `opacity` 0.04, tile 160px, data-URI inline) como
+dither. El grano lee como fibra de papel. Regla: si un wash futuro banda, mismo
+remedio — no subir los alphas de los tokens `*-soft`.
 
 ### Timer — variante `ticks`
 `TimerDial` con prop `ticks` renderiza 60 marcas radiales tipo reloj (cada 5 mayor)
