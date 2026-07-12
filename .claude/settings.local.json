@@ -73,7 +73,8 @@
       "PowerShell(git status --short; Write-Output \"--- v0.41.0 detalle \\(debe estar vacio\\) ---\"; Select-String -Path CHANGELOG.md -Pattern '## \\\\[v0\\\\.41\\\\.0\\\\]' -SimpleMatch:$false | ForEach-Object { $_.Line }; Write-Output \"--- headers de detalle CHANGELOG \\(top 4\\) ---\"; \\(Select-String -Path CHANGELOG.md -Pattern '^## \\\\[v0\\\\.' | Select-Object -First 4\\).Line)",
       "PowerShell(\"BreatheSession.jsx: $\\(\\(Get-Content app/breathe/BreatheSession.jsx | Measure-Object -Line\\).Lines\\) lineas\")",
       "Bash(cp PACE_standalone.html \"backups/PACE_standalone_v0.44.0_20260710.html\")",
-      "Bash(rm backups/PACE_standalone_v0.32.1_20260518.html)"
+      "Bash(rm backups/PACE_standalone_v0.32.1_20260518.html)",
+      "WebFetch(domain:www.youtube.com)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
