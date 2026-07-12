@@ -22,7 +22,10 @@ function WeekView({ state }) {
   const bars = [
     { key: 'focus',  label: t('topbar.mode.focus'),       color: 'var(--focus)',   data: w.focusMinutes,  unit: t('stats.unit.min') },
     { key: 'breath', label: t('activity.breathe.label'),  color: 'var(--breathe)', data: w.breathMinutes, unit: t('stats.unit.min') },
-    { key: 'move',   label: t('activity.move.label'),     color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
+    /* s101: la fila es "Cuerpo" -- moveMinutes acumula Mueve Y Estira
+       (completeMoveSession + completeExtraSession escriben al mismo cubo);
+       etiquetarla "Mueve" mentia por omision. */
+    { key: 'move',   label: t('stats.label.body'),        color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
     { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
   ];
 
@@ -398,7 +401,12 @@ function StatsPanel({ open, onClose }) {
   const [jumpYear, setJumpYear] = useState(null);
   const [jumpMonth, setJumpMonth] = useState(null);
 
-  const history = state.history || { days:{}, months:{}, years:{} };
+  /* Stats vivos (s101): history + el dia actual fusionado desde weeklyStats
+     (selector memoizado en state-history.jsx). Mes/Año dejan de ir un dia
+     por detras; el estado persistido no cambia. */
+  const history = typeof getHistoryWithToday === 'function'
+    ? getHistoryWithToday(state)
+    : (state.history || { days:{}, months:{}, years:{} });
   const lang    = state.lang || 'es';
 
   function handleNavigateToMonth(yr, mo) {

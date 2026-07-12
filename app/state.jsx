@@ -8,13 +8,14 @@
    cualquier componente pueda acceder a ella sin conocer la estructura interna.
 
    Orden de carga en PACE.html:
-     1. state-core.jsx        (store, loadState, helpers, toast)
-     2. state-timer.jsx       (addFocusMinutes, completePomodoro, completeFocusSession)
-     3. state-hydrate.jsx     (addWaterGlass)
-     4. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
-     5. state-paths.jsx       (paths CRUD, stats)
-     6. state-settings.jsx    (setLang)
-     7. state.jsx             (este archivo — re-export consolidado)
+     1. state-history.jsx     (utils fecha + history helpers + getHistoryWithToday — s101)
+     2. state-core.jsx        (store, loadState, rollover, migraciones, toast)
+     3. state-timer.jsx       (addFocusMinutes, completePomodoro, completeFocusSession)
+     4. state-hydrate.jsx     (addWaterGlass)
+     5. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
+     6. state-paths.jsx       (paths CRUD, stats)
+     7. state-settings.jsx    (setLang)
+     8. state.jsx             (este archivo — re-export consolidado)
 
    Sesion 57 / v0.27.5 — split desde monolito de 1026 lineas.
 */
@@ -40,7 +41,7 @@ Object.assign(window, {
   onToast,
   setLang,
   PACE_VERSION,
-  // sesion 43 -- history helpers (refactor sesion 69)
+  // sesion 43 -- history helpers (refactor s69; viven en state-history desde s101)
   zeroEntry,
   toISODate,
   archiveDayToHistory,
@@ -49,6 +50,7 @@ Object.assign(window, {
   recomputeAllHistoryAggregates,
   getDayIndexMondayFirst,
   getMondayOf,
+  getHistoryWithToday, // s101 -- stats vivos (Mes/Año incluyen el dia actual)
   // sesion 49 -- Caminos
   startPath,
   advancePathStep,

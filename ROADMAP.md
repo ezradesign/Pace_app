@@ -75,7 +75,9 @@ fricción, y quiere volver mañana.*
   s98** (`getActiveSec()` con `Date.now()`; el credito son minutos activos
   reales, no el nominal `routine.min`).
 - Stats mes/año no muestran el día actual (history se alimenta en
-  rollover) → selector `getHistoryWithToday` **memoizado**.
+  rollover) → selector `getHistoryWithToday` **memoizado**. **RESUELTO
+  s101** (`state-history.jsx`: reutiliza `archiveDayToHistory`, StatsPanel
+  lo consume; el rollover sigue siendo el único escritor).
 - `path.weekend` lanza premium sin candado: NO es bug (decisión s89,
   degustación curada). **RESUELTO s95** como campo explícito: sus 2 steps
   premium llevan `tasting: true` que el guard central reconoce. La decisión
@@ -97,7 +99,7 @@ fricción, y quiere volver mañana.*
 | ~~s98~~ | ~~BreatheSession tiempo activo~~ **hecho (v0.43.0)** — reloj de tiempo activo timestamp-based (`activeMsRef`/`segStartRef`/`getActiveSec()`, segmentado por `useEffect([stage,paused])`, mide `Date.now()` → inmune a background) que alimenta fin no-rounds (`getActiveSec() >= routine.min*60`) + barra no-rounds + **credito** (`completeBreathSession` recibe minutos activos reales `max(1,round(sec/60))`, no `routine.min`; firma intacta → cero cambios en state) + pantalla done · retira `startTime`/`cycle`/`doneInCycle` · la incoherencia s97 (fin wall-clock vs barra activa) queda unificada al mismo reloj; rama rounds intacta |
 | ~~s99~~ | ~~(previsto: stats vivos)~~ → **desvío de pulido** priorizado por el usuario **hecho (v0.44.0)** — pack de microinteracciones global + overhaul premium de Caminos (SessionShell en los 4 pasos, timer ticks, botones por color, atmósfera por paso, kicker romano, sendero con hito acentuado) |
 | ~~s100~~ | ~~(previsto: PWA)~~ → **remate de Caminos** (feedback s99) **hecho (v0.45.0)** — **CompletionScreen "ceremonia editorial"** + sendero héroe con draw-in · **OutroCard eliminada** (el último paso pasa directo al completado; decisión s77 revisada) · **banding de atmósfera suavizado** (hint de interpolación 22% + grano SVG como dither) |
-| **s101** | **Stats a fondo** — revisión completa de los paneles Week/Month/Year (feedback P2 del usuario s100: no reflejan bien lo practicado) fusionada con **stats vivos** (`getHistoryWithToday` memoizado — el día actual visible en mes/año) + páginas estáticas `/safety` y `/privacy` |
+| ~~s101~~ | ~~Stats a fondo~~ **hecho (v0.46.0)** — auditoría de tracking (mapa escritores→lectores, 8 hallazgos verificados, plan aprobado antes de tocar) + **stats vivos** (nuevo `state-history.jsx` con `getHistoryWithToday` memoizado → Mes/Año/totales con el día actual; state-core 511→407 ln, sale de deuda) + WeekDots del sidebar con criterio s69 + fila "Mueve"→**"Cuerpo"** (moveMinutes = Mueve+Estira) + racha de Caminos viva + fix DST hydrate.week.perfect + WeeklyStats.jsx muerto borrado + **`/safety` y `/privacy`** estáticas (autocontenidas, ES+EN; sin enlazar desde la UI aún). Diferidos: H7 crédito solo-al-completar de Mueve/Estira ("Move timer: bajo") y H8 proxies del Sendero del día (→s106) |
 | **s102** | **PWA completa:** manifest.webmanifest + shortcuts + update prompt + notificación fin-pomodoro (P1) |
 | **s103-104** | **Build Etapa A:** precompilar .jsx→.js con Babel CLI en build + React production UMD self-hosted + fuentes self-hosted subseteadas. **Sin Vite todavía** — cero cambios de arquitectura (window globals intactos, PACE.html dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio con ~5% del riesgo |
 | **s105** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
@@ -156,6 +158,28 @@ planificar. Persistido en memoria `ux-refinement-backlog`.
   (Estira 14 / Mueve 14 / Respira 20) poco práctico en móvil. Mapea a
   **s107-108 (taxonomía + filtros)**; el usuario prioriza la experiencia
   móvil aquí.
+- **[feedback s101-cierre — Audio] Módulo de audio más atractivo.**
+  `Sound.jsx` (síntesis Web Audio, v0.35.0) cumple pero el usuario pide
+  pulirlo, perfeccionarlo y hacerlo "mucho más atractivo". Encaje natural:
+  **sesión propia de audio premium ANTES del bloque CTB** (las sesiones
+  largas dependen de él; hoy "sonidos procedurales premium" figura en
+  post-venta → adelantar es decisión de calendario al llegar a pre-venta).
+- **[feedback s101-cierre — Glifos] Coherencia premium Mueve/Estira.**
+  No solo la cola D-4 (35 con DefaultGlyph): los glifos EXISTENTES "tienen
+  fallas y no se ven coherentes ni premium". La iteración pre-venta pasa a
+  ser **revisión COMPLETA del set (46+)**, con Strengthside como referencia
+  visual de Estira. REGLA intacta (s84/D-4): el usuario itera y aprueba,
+  se porta literal — nunca dibujar sin su OK.
+- **[feedback s101-cierre — Contenido] Títulos de ejercicios en inglés.**
+  Varios pasos usan término técnico EN (couch stretch, hollow hold…) y
+  "puede ser difícil entender exactamente qué hay que hacer". Auditoría de
+  nomenclatura: nombre ES claro y/o cue explicativo. Mapea a **s107-108**
+  (la taxonomía ya toca las 3 bibliotecas). OJO: `name` ES canónico es KEY
+  de glifo y de i18n custom (decisión s93) — renombrar exige migrar keys.
+- **[feedback s101-cierre — Fuentes]** Refuerzo del usuario sobre la memoria
+  `breathe-content-sources`: Breathe With Sandy → respiración "muy premium,
+  especial y pulida" · Tom Woodfin → sesiones largas premium CTB ·
+  Strengthside → pulir Estira premium. Inspiración, no copy literal.
 
 ---
 

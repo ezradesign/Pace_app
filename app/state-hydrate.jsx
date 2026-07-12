@@ -15,7 +15,9 @@ function checkHydrateWeekPerfect() {
     .sort((a, b) => a - b);
   if (dates.length < 7) return;
   for (let i = dates.length - 1; i >= dates.length - 6; i--) {
-    if (dates[i] - dates[i - 1] !== 86400000) return;
+    /* Redondeo (s101): los toDateString parseados dan gaps de 23/25h en los
+       cambios de hora (DST) -- la igualdad exacta a 24h rompia la cadena. */
+    if (Math.round((dates[i] - dates[i - 1]) / 86400000) !== 1) return;
   }
   unlockAchievement('hydrate.week.perfect');
 }

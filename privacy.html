@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacidad · PACE</title>
+<meta name="description" content="Privacidad de PACE: local-first, sin cuentas, sin analítica, sin rastreo.">
+<!-- Página estática autocontenida (s101 · v0.46.0). Sin peticiones externas
+     — esta página cumple lo que promete. Misma base visual que safety.html. -->
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4;
+    --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372;
+    --line: #C9C0A8; --focus: #3E5A3A; --breathe: #C97A5D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1d1a14; --paper-2: #26211a;
+      --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --focus: #7A9A6D; --breathe: #D99477;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper); color: var(--ink);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 15px; line-height: 1.65;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 48px 24px 64px; }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 500; margin-bottom: 8px;
+  }
+  h1, h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic; font-weight: 500; line-height: 1.1;
+    color: var(--ink); margin: 0 0 16px;
+  }
+  h1 { font-size: 40px; }
+  h2 { font-size: 24px; margin-top: 40px; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  strong { color: var(--ink); font-weight: 600; }
+  ul { margin: 0 0 14px; padding-left: 20px; color: var(--ink-2); }
+  li { margin-bottom: 6px; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  .footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-3); display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+  a { color: var(--focus); }
+  .fecha { font-size: 12px; color: var(--ink-3); margin-bottom: 24px; }
+</style>
+</head>
+<body>
+<main>
+  <!-- ================= ES ================= -->
+  <section lang="es">
+    <div class="kicker">PACE · Foco · Cuerpo</div>
+    <h1>Privacidad</h1>
+    <p class="fecha">Última actualización: 10 de julio de 2026</p>
+
+    <p><strong>Tus datos viven en tu dispositivo.</strong> PACE es una
+    aplicación local-first: todo lo que registras (minutos de foco,
+    sesiones, vasos de agua, logros, ajustes) se guarda en el almacenamiento
+    local de tu navegador y no sale de él.</p>
+
+    <h2>Lo que NO hacemos</h2>
+    <ul>
+      <li><strong>Sin cuentas.</strong> No hay registro, ni email, ni contraseña.</li>
+      <li><strong>Sin analítica ni rastreo.</strong> No usamos cookies de
+      seguimiento, píxeles ni herramientas de medición de terceros.</li>
+      <li><strong>Sin servidores propios.</strong> No existe una base de datos
+      de PACE donde consultar nada tuyo: no podríamos ver tus datos aunque
+      quisiéramos.</li>
+      <li><strong>Sin venta de datos.</strong> No hay datos que vender.</li>
+    </ul>
+
+    <h2>Tus datos, bajo tu control</h2>
+    <ul>
+      <li>Puedes <strong>exportar</strong> todo tu estado como archivo JSON
+      desde Ajustes → Tus datos, e <strong>importarlo</strong> en otro
+      dispositivo.</li>
+      <li>Puedes <strong>borrarlo todo</strong> desde Ajustes (reset) o
+      limpiando los datos de sitio de tu navegador. El borrado es inmediato
+      y definitivo: no existe copia en ningún servidor.</li>
+    </ul>
+
+    <h2>Lo técnico, con honestidad</h2>
+    <ul>
+      <li>El sitio se sirve a través de <strong>Cloudflare Pages</strong>,
+      que como cualquier proveedor de hosting genera registros técnicos de
+      acceso (IP, fecha) para operar y proteger el servicio. PACE no accede
+      a ellos ni los usa para identificarte.</li>
+      <li>El botón de apoyo enlaza a <strong>Buy Me a Coffee</strong>, un
+      sitio externo con su propia política de privacidad. Donar no crea
+      ninguna cuenta en PACE ni vincula tu identidad con tus datos locales.</li>
+      <li>La app funciona <strong>offline</strong> una vez cargada (PWA):
+      no necesita conexión para registrar tu práctica.</li>
+    </ul>
+
+    <p>Si esta política cambia, la fecha de arriba cambiará con ella.</p>
+  </section>
+
+  <hr>
+
+  <!-- ================= EN ================= -->
+  <section lang="en">
+    <div class="kicker">English</div>
+    <h1>Privacy</h1>
+    <p class="fecha">Last updated: July 10, 2026</p>
+
+    <p><strong>Your data lives on your device.</strong> PACE is a local-first
+    app: everything you log (focus minutes, sessions, water glasses,
+    achievements, settings) is stored in your browser's local storage and
+    never leaves it.</p>
+
+    <h2>What we do NOT do</h2>
+    <ul>
+      <li><strong>No accounts.</strong> No sign-up, no email, no password.</li>
+      <li><strong>No analytics or tracking.</strong> No tracking cookies,
+      pixels or third-party measurement tools.</li>
+      <li><strong>No servers of our own.</strong> There is no PACE database
+      holding anything of yours: we could not see your data even if we
+      wanted to.</li>
+      <li><strong>No data selling.</strong> There is no data to sell.</li>
+    </ul>
+
+    <h2>Your data, under your control</h2>
+    <ul>
+      <li>You can <strong>export</strong> your whole state as a JSON file
+      from Settings → Your data, and <strong>import</strong> it on another
+      device.</li>
+      <li>You can <strong>delete everything</strong> from Settings (reset) or
+      by clearing your browser's site data. Deletion is immediate and final:
+      no server copy exists.</li>
+    </ul>
+
+    <h2>The technical part, honestly</h2>
+    <ul>
+      <li>The site is served through <strong>Cloudflare Pages</strong>, which
+      like any hosting provider generates technical access logs (IP, date) to
+      operate and protect the service. PACE does not access them or use them
+      to identify you.</li>
+      <li>The support button links to <strong>Buy Me a Coffee</strong>, an
+      external site with its own privacy policy. Donating creates no PACE
+      account and never links your identity to your local data.</li>
+      <li>The app works <strong>offline</strong> once loaded (PWA): it needs
+      no connection to log your practice.</li>
+    </ul>
+
+    <p>If this policy changes, the date above will change with it.</p>
+  </section>
+
+  <div class="footer">
+    <span>Pace · by @ezradesign</span>
+    <span><a href="/">Volver a la app</a> · <a href="/safety">Seguridad</a></span>
+  </div>
+</main>
+</body>
+</html>

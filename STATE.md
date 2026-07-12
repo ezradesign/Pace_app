@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.45.0
-**Ultima sesion:** #100 -- 2026-07-10 - **remate premium de Caminos** (los 3 pendientes de feedback de s99, direccion aprobada por el usuario antes de tocar). **OutroCard ELIMINADA** (duplicaba la CompletionScreen; el ultimo paso pasa DIRECTO a "Camino completado": PathRunner pierde la fase `outro` y `pendingComplete` -- snapshot a `justCompleted` + advance inmediato --, decision s77 actualizada, `--path-outro-ms` retirado). **CompletionScreen "ceremonia editorial"**: fuera el check generico en circulo y la caja del recorrido; kicker + nombre del Camino protagonista (clamp 40-60px) + meta editorial "IV pasos · 24 min" con hairline + **sendero heroe con draw-in** (prop `drawIn` de SenderoBar: el trazo done se dibuja con `pathLength=1` y los hitos + labels entran escalonados; CSS puro, reduced-motion salta al estado final) + recorrido con hairlines + logros como sellos (+2 keys i18n ES+EN). **Banding de atmosfera suavizado**: `sessionAtmosphere` con hint de interpolacion al 22% + capa de grano SVG (feTurbulence desaturado 4%, dither) -- arregla steps, transiciones y completado a la vez. Ademas: refrescados los version-tags v0.44.0 que s99 dejo sin anotar (deuda saldada). Diario: `docs/sessions/session-100-remate-caminos.md`
-**Ultima actualizacion de este archivo:** 2026-07-10 - sesion 100
-**Build entregado:** `PACE_standalone.html` v0.45.0 (752 KB) + `index.html` (idem)
+**Version actual:** v0.46.0
+**Ultima sesion:** #101 -- 2026-07-10 - **stats a fondo + safety/privacy** (feedback P2 del usuario en s100: "los paneles no trackean el progreso de forma adecuada"; AUDITORIA previa con 8 hallazgos verificados contra el repo → plan aprobado por el usuario -- 4 bifurcaciones decididas -- antes de tocar). **Stats vivos**: nuevo `app/state-history.jsx` (utils de fecha + helpers de history extraidos de state-core, que baja 511→407 ln y SALE de deuda) con **`getHistoryWithToday` memoizado** (reutiliza `archiveDayToHistory`; el rollover sigue siendo el UNICO escritor) consumido por StatsPanel → **Mes/Año/totales incluyen el dia ACTUAL**. **WeekDots del sidebar con criterio s69** (focus|breath|move>0; antes solo foco). Fila "Mueve" → **"Cuerpo"** (`moveMinutes` acumula Mueve+Estira desde siempre; key `stats.label.body`). **Racha de Caminos viva** (cuenta desde ayer si hoy aun no hay). Fix DST en `hydrate.week.perfect`. `WeeklyStats.jsx` muerto BORRADO (no se cargaba desde s43). Paginas estaticas **`/safety` + `/privacy`** (autocontenidas, ES+EN, rama oscura; SIN enlazar desde la UI aun). Diario: `docs/sessions/session-101-stats-a-fondo.md`
+**Ultima actualizacion de este archivo:** 2026-07-10 - sesion 101
+**Build entregado:** `PACE_standalone.html` v0.46.0 (756 KB) + `index.html` (idem)
 
 ---
 
@@ -21,9 +21,11 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.45.0** (s100: solo titulo bump) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.45.0** (752 KB, 71 archivos, regenerado s100) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.45.0** (s100: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.46.0** (s101: + `<script>` de state-history.jsx ANTES de state-core + comentario de orden actualizado) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.46.0** (756 KB, 71 archivos -- entra state-history, sale WeeklyStats; regenerado s101) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.46.0** (s101: regenerado por build-standalone.js) |
+| `safety.html` | Pagina estatica `/safety` (Cloudflare Pages) -- disclaimers respiracion/movilidad, ES+EN | **v0.46.0** (nueva s101, ~190 ln; autocontenida, rama oscura via prefers-color-scheme, paleta COPIADA de tokens.css; sin enlazar desde la UI aun) |
+| `privacy.html` | Pagina estatica `/privacy` (Cloudflare Pages) -- local-first, sin cuentas/analitica, ES+EN | **v0.46.0** (nueva s101, ~190 ln; misma base visual que safety.html) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
 | `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
@@ -47,7 +49,7 @@
 | `app/move/MoveModule.jsx` | Modulo Mueve | **v0.44.0** (s99: MoveSession recibe `inPath` -> SessionDone "Siguiente" + atmosfera. s97: countdown de paso centrado 22/22 + lineHeight 1.08. s93: CustomRoutinesSection + tStep, ~440 ln; s92: F6 7->14) |
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.39.0** (s94: clipPath del mini-sendero con id unico por instancia `sendero-clip-<useId>`, +5 ln -> 535; OJO: ya estaba en ~530 ln, no en las 497 registradas -- vuelve a deuda) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.46.0** (s101: WeekDots con criterio "dia activo" s69 -- focus\|breath\|move>0, antes solo foco encendia el punto; +6 ln -> 541, sigue en deuda; s94: clipPath unico por instancia) |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.44.0** (s99: pasa `running` al TimerDial (glow) + `data-pace-cta` en el CTA. s96: migrado a `useCountdown` -- fuera los 3 useEffect de tiempo, ~430 ln; `onComplete` -> `completeFocusSession('home')`. s77b: startBtnPrimary var(--focus-cta)) |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.42.0** (s97: en `idle` deriva `remaining` de `durationSec` -- el aro empieza SIEMPRE vacio; antes un `setStatus('idle')` no-op al cambiar preset no re-renderizaba y dejaba relleno proporcional. s96: nuevo, ~135 ln, `endsAt` como verdad, `completed` terminal, `onComplete` single-shot) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.44.0** (s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
@@ -57,16 +59,17 @@
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** (s64: overflowY:hidden en data-pyv-wrap -- fix scroll vertical) |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** (s63: titulo marginBottom 6->4) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.28.8** (s69: isActiveDay helper + computeYearStats unifica criterio "dia activo" = focus|breath|move>0, agua sola NO cuenta) |
-| `app/stats/StatsPanel.jsx` | Panel stats | **v0.28.8** (s69: WeekBarRow elimina reorder, itera data lunes-primero) |
+| `app/stats/StatsPanel.jsx` | Panel stats | **v0.46.0** (s101: consume `getHistoryWithToday` -- Mes/Año/totales con el dia actual + fila "Cuerpo" (`stats.label.body`), 441 ln; s69: WeekBarRow lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-core.jsx` | Store, loadState, rollover, history helpers, toast | **v0.45.0** (s100/s99/s98/s97/s96: solo bump PACE_VERSION; s93: + `customRoutines: []`, 511 ln; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.46.0** (nuevo s101, 160 ln; extraido de state-core + selector memoizado por identidad que reutiliza `archiveDayToHistory`) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.46.0** (s101: split de utils fecha + history a state-history.jsx, 511 -> **407 ln, SALE de deuda**; s93: + `customRoutines: []`; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
-| `app/state-hydrate.jsx` | addWaterGlass | **v0.28.8** (s69: getDayIndexMondayFirst en addWaterGlass) |
+| `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
-| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.40.0** (s95: `getSuggestedPath` salta candidatos con `!canAccessPath` en cada nivel -- hoy todos free, jerarquia identica; s78: jerarquia lastViewed>horario>anytime>catalog[0]; s75: lastViewed + setLastViewedPath) |
+| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.46.0** (s101: racha actual VIVA en computePathStreaks -- si hoy no hay Camino cuenta desde ayer, iguala la semantica del streak principal; s95: getSuggestedPath via guard; s78: jerarquia lastViewed>horario>anytime>catalog[0]) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
-| `app/state.jsx` | Indice — re-export consolidado | **v0.41.0** (s96: + `completeFocusSession`; s95: + `canAccessRoutine`/`canAccessPath`; s75: + setLastViewedPath; s69: recompute*/getDayIndexMondayFirst/getMondayOf) |
+| `app/state.jsx` | Indice — re-export consolidado | **v0.46.0** (s101: + `getHistoryWithToday` + orden de carga actualizado; s96: + `completeFocusSession`; s95: + `canAccessRoutine`/`canAccessPath`) |
 | `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.40.0** (s95: autofocus del input intencion enguardado tras `matchMedia('(pointer: coarse)')` -- solo escritorio, no auto-teclado en movil; s19: base) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
@@ -79,7 +82,7 @@
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium | **v0.34.5** (s89: + `tweaks.eje.water`/`tweaks.water.value` ES+EN; s88: + `premium.tweaks.*`; s87: + `premium.seal`/`premium.soon`) |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate + custom | **v0.44.0** (s99: + `session.next` ("Siguiente"/"Next") + `session.focusDoneMeta/Copy` ES+EN; s93: +~33 keys `custom.*`, ~335 ln; nuevo s81) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.45.0** (s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN, 132 ln; s99: + `paths.library.count.one/many` ES+EN; nuevo s81) |
-| `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.33.1** (nuevo s81, 108 ln; 42 ES + 42 EN) |
+| `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.46.0** (s101: + `stats.label.body` "Cuerpo"/"Body" + valores de `stats.month.total.move`/`.tooltip.move` a Cuerpo, 117 ln; nuevo s81) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.37.0** (nuevo s92, 94 ln; split de strings-content.js al superar ~470 ln con F6) |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
@@ -99,11 +102,12 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.45.0** (s100: CACHE_NAME pace-v0.45.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
+| `sw.js` | Service Worker PWA | **v0.46.0** (s101: CACHE_NAME pace-v0.46.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
 | `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.45.0_20260710.html` <- creado s101 (snapshot del v0.45.0 publicado en s100)
 - `backups/PACE_standalone_v0.44.0_20260710.html` <- creado s100 (snapshot del v0.44.0 publicado en s99)
 - `backups/PACE_standalone_v0.43.0_20260709.html` <- creado s99 (snapshot del v0.43.0 publicado en s98)
 - `backups/PACE_standalone_v0.42.0_20260709.html` <- creado s98 (snapshot del v0.42.0 publicado en s97)
@@ -123,77 +127,83 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.33.3_20260524.html` <- creado s84 (copia del v0.33.3 publicado en s83)
 - `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83
 - `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82
-- `backups/PACE_standalone_v0.33.0_20260519.html` <- creado s81
 
-Nota s100: cap 20 mantenido rotando el mas antiguo (`v0.32.1_20260518.html`)
-al crear el backup del v0.44.0.
+Nota s101: cap 20 mantenido rotando el mas antiguo (`v0.33.0_20260519.html`)
+al crear el backup del v0.45.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 100 - v0.45.0 - remate premium de Caminos.** Cierra los 3 pendientes
-de feedback de s99 (memoria `ui-polish-caminos-plan`). Direccion aprobada por
-el usuario ANTES de tocar (AskUserQuestion): eliminar OutroCard + Completion
-"ceremonia editorial".
+**Sesion 101 - v0.46.0 - stats a fondo + safety/privacy.** Ataca el feedback
+P2 del usuario en s100 ("los paneles no trackean el progreso de forma
+adecuada") con AUDITORIA previa verificada contra el repo y plan aprobado
+ANTES de tocar (AskUserQuestion, 4 bifurcaciones: F1-F5 completo · etiqueta
+"Cuerpo" sobre serie propia · nuevo state-history.jsx sobre engordar
+state-core · safety/privacy si cabian, y cupieron).
 
-### Que se hizo (s100)
+### Que se hizo (s101)
 
-- **Tarea 0**: s99 (`033bc1b`, v0.44.0) commiteado y pusheado, working tree limpio.
-- **OutroCard ELIMINADA** (duplicaba la CompletionScreen: nombre + sendero N/N,
-  hold 1.5s sin informacion nueva). `PathRunner`: fuera fase `'outro'` +
-  `pendingComplete`; el ultimo paso hace `setJustCompleted(snapshot)` +
-  `advancePathStep` INMEDIATO (la garantia s77 se mantiene por construccion:
-  CompletionScreen renderiza desde el snapshot, no desde `paths.current`).
-  `PathTransitions` queda con IntroCard + StepIntro; `--path-outro-ms` retirado.
-- **Banding de atmosfera suavizado**: `sessionAtmosphere` (SessionShell) pasa
-  de 2 stops lineales a **hint de interpolacion 22%** (caida ease-out) + **capa
-  de grano SVG** (feTurbulence desaturado, opacity 0.04, tile 160px, data-URI
-  ~0.4 KB) como dither. Un solo helper -> arregla steps + transiciones +
-  completado. El grano lee como fibra de papel.
-- **CompletionScreen "ceremonia editorial"**: fuera el check generico y la caja
-  del recorrido. Kicker + nombre del Camino protagonista (clamp 40-60px) + meta
-  editorial "IV pasos · 24 min" (romano, key `path.runner.complete.steps` via
-  `tn`) + hairline 44px + **sendero heroe con draw-in** (prop `drawIn` de
-  SenderoBar: trazo done `pathLength=1` que se dibuja + hitos/labels escalonados,
-  keyframes en tokens.css, CSS puro reduced-motion-safe; pending intacto) +
-  recorrido sin caja (hairlines) + logros como sellos (kicker "Desbloqueado").
+- **Tarea 0**: s100 (`1ffc4c1`, v0.45.0) commiteado y pusheado, working tree limpio.
+- **Auditoria (8 hallazgos)**: mapa escritores→lectores. Todo escribe en
+  `weeklyStats[hoy]`; `history` solo se alimentaba en el rollover → Mes/Año
+  ciegos al dia actual (H1). Ademas: WeekDots solo miraba foco (H2), Estira
+  comparte cubo `moveMinutes` con Mueve y la fila "Mueve" mentia (H3), racha
+  de Caminos muerta a medianoche (H4), DST rompia hydrate.week.perfect (H5),
+  WeeklyStats.jsx muerto desde s43 (H6). Diferidos: credito solo-al-completar
+  de Mueve/Estira (H7, "Move timer: bajo" del plan) y proxies del Sendero del
+  dia (H8 → s106).
+- **F1 stats vivos**: nuevo `app/state-history.jsx` (160 ln, ANTES de
+  state-core en PACE.html; loadState resuelve los helpers via window) con
+  `getHistoryWithToday` memoizado que reutiliza `archiveDayToHistory(h, hoy,
+  weeklyStats)` -- cero logica nueva. StatsPanel lo consume. state-core
+  511→407 ln (SALE de deuda). El estado persistido NO cambia.
+- **F2**: WeekDots criterio s69 · **F3**: racha Caminos viva (desde ayer) ·
+  **F4**: DST fix · **F5**: WeeklyStats.jsx borrado · **F6**: fila "Cuerpo"
+  (`stats.label.body` + totales/tooltip del mes).
+- **`/safety` + `/privacy`**: safety.html + privacy.html en raiz,
+  autocontenidas (cero peticiones externas), ES+EN, rama oscura via
+  prefers-color-scheme, copy coherente con el modal in-app. SIN enlazar
+  desde la UI (decision pendiente: ¿footer sidebar? ¿Tweaks? → s102/landing).
 
 ### Verificacion + cierre
 
-Preview :8765 propio, protocolo s93 (purga SW+caches). Por **montaje aislado +
-DOM**: kicker/titulo/meta correctos, draw-in con stagger computado y
-`dashoffset` final 0, recorrido sin caja, skipped tachado. **Flujo real**
-path.breath completo: del ultimo paso DIRECTO al completado (cero cards),
-`paths.current = null` inmediato, completado acreditado. Movil 375px sin
-overflow. Capturas claro/oscuro sin anillos. Consola limpia (dev + standalone
-v0.45.0). Cierre: bump v0.45.0, backup `v0.44.0_20260710` (rotado `v0.32.1`,
-cap 20), rebuild standalone+index (752 KB, 71 archivos), standalone verificado,
-diario s100, CHANGELOG, STATE (version-tags v0.44.0 de s99 refrescados -- deuda
-saldada), DESIGN_SYSTEM, ROADMAP, memorias.
+Preview :8765 propio, protocolo s93 + **seed de `pace.state.v2`** con
+historial conocido (mie 8 foco+cuerpo+agua · jue 9 SOLO respira · HOY vie 10
+mixto · caminos 5 y 9). Capa de datos: selector memo-estable, hoy fusionado,
+mes vivo {75,25,18,7}, persistido intacto, racha caminos 1 (antes 0).
+**Montaje aislado de StatsPanel + DOM**: dia 10 (HOY) relleno + contorno en
+Mes, totales vivos "Foco 1.3h · Cuerpo 18min", Año "3 dias activos · racha
+max 3", fila "Cuerpo" en Semana. WeekDots `off off ON ON ON off off` (jueves
+solo-Respira enciende) en dev Y standalone. Consola limpia. Incidente
+instructivo: interaccion fantasma de la pestaña estrangulada (huella de un
+4-7-8 finalizado; re-seed + reposo → cero auto-disparos; los cambios s101
+son lectores puros) -- refuerza s93: sembrar estado fresco antes de cada
+asercion. Cierre: bump v0.46.0, backup `v0.45.0_20260710` (rotado `v0.33.0`,
+cap 20), rebuild 756 KB / 71 archivos, standalone verificado, diario s101,
+CHANGELOG (detalle v0.46.0 + v0.45.0), STATE, ROADMAP, memorias.
 
 ### Pendiente
 
+- **Enlazar `/safety` y `/privacy` desde la UI** (decision de sitio: footer
+  del sidebar vs Tweaks; encaja con s102 PWA o con la landing pre-venta).
 - (Opcional, espera ARTE del usuario, patron s84/D-4) **ilustracion propia por
   Camino** para CompletionScreen/cards.
-- `tokens.css` entra en deuda de tamaño (514 ln).
+- `tokens.css` sigue en deuda de tamaño (514 ln).
 
-## Proxima sesion -- s101: stats a fondo + safety/privacy
+## Proxima sesion -- s102: PWA completa
 
-Retomar el plan maestro donde quedo, AMPLIADO con el feedback P2 del usuario
-(s100): los paneles de estadisticas no reflejan bien lo que hace -> **revision
-A FONDO de Week/Month/Year** (que trackean, que muestran, coherencia con lo
-practicado) fusionada con **stats vivos** (`getHistoryWithToday` memoizado --
-el dia actual visible en mes/año) + paginas `/safety` y `/privacy`. La
-secuencia del plan maestro queda desplazada DOS posiciones (s99 pulido +
-s100 remate).
+Plan maestro (ROADMAP "Camino a v1.0"): **manifest.webmanifest + shortcuts +
+update prompt + notificacion fin-pomodoro (P1)**. Encaja tambien: decidir
+donde enlazar safety/privacy y (si se quiere) persistir el Pomodoro running
+en recarga (fork s96, decision UX aparte).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
-Secuencia en `ROADMAP.md` ("Camino a v1.0"): stats vivos + safety/privacy · PWA
-completa · build Etapa A (precompilar ANTES que Vite) · onboarding · home Caminos
-al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licencia
-(cambiando formalmente la decision F3b) + landing.
+Secuencia en `ROADMAP.md` ("Camino a v1.0"): PWA completa · build Etapa A
+(precompilar ANTES que Vite) · onboarding · home Caminos al centro · taxonomia
++ filtros + sigilo · pre-venta: glifos D-4 + trial/licencia (cambiando
+formalmente la decision F3b) + landing.
 
 ---
 
@@ -201,6 +211,9 @@ al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licen
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Stats vivos: los paneles leen `getHistoryWithToday`, el rollover sigue siendo el UNICO escritor de history | s101 | Selector memoizado en `state-history.jsx` (memo por identidad de `history`/`weeklyStats` + dayKey) que reutiliza `archiveDayToHistory(h, hoy, weeklyStats)` -- overwrite idempotente + recompute de mes/año, cero logica nueva. El estado persistido NO cambia. Regla: cualquier panel/consumidor futuro que muestre history lee el SELECTOR, nunca `state.history` directo. Los detectores de logros de stats siguen sobre el history real (rollover) -- pueden disparar un dia tarde, aceptado. La racha de Caminos se alineo con la misma semantica (viva si ayer hubo Camino y hoy aun no) |
+| La serie `moveMinutes` se etiqueta "Cuerpo" en stats (Mueve+Estira comparten cubo) | s101 | `completeMoveSession` y `completeExtraSession` escriben al MISMO `weeklyStats.moveMinutes` desde siempre; etiquetarla "Mueve" mentia por omision. Key `stats.label.body` (Semana) + valores de `stats.month.total.move`/`.tooltip.move`. La serie propia `extraMinutes` se DESCARTO por ahora (migracion + el historico viejo quedaria mezclado igualmente); si algun dia se separa, decision nueva. Los chips de ActivityBar no cambian (Mueve y Estira siguen siendo modulos distintos) |
+| `/safety` y `/privacy` = paginas estaticas AUTOCONTENIDAS en raiz | s101 | Cero peticiones externas (coherente con lo que promete privacy), ES+EN en la misma pagina, Georgia display (blindaje), rama oscura via prefers-color-scheme (sin toggle manual). OJO: llevan COPIAS inline de la paleta crema+oscuro -- si se recalibran tokens, actualizar ambas. Sin enlazar desde la UI aun (decision de sitio pendiente, → s102/landing). Sin email personal publicado |
 | CompletionScreen = ceremonia editorial; sin OutroCard; draw-in SOLO alli | s100 | La celebracion del Camino es TIPOGRAFICA (kicker + nombre protagonista + meta romana + hairline + sendero heroe), sin iconografia generica (el check en circulo se retiro) ni cajas rellenas (recorrido y logros van con hairlines/sellos). El **draw-in** del sendero (prop `drawIn`) queda reservado a la CompletionScreen: en TransitionCards el sendero es lectura rapida, no ceremonia. La OutroCard se elimino (ver fila s77). Si se quiere mas celebracion futura, la via es la ilustracion por Camino (espera arte, D-4), no volver a iconos genericos |
 | Todos los steps de Camino usan el SessionShell compartido | s99 | `PathFocusStep` y `PathHydrateStep` (antes pelados bajo `PathTopBar`) reescritos para usar el mismo `SessionShell` que Respira/Mueve -> los 4 tipos de paso comparten header (code+nombre) + footer + hint + atmosfera. El `PathTopBar` queda cubierto por el shell (como ya pasaba con Respira/Mueve). Consecuencia: el "× Salir" del Foco/Agua ahora hace lo mismo que en Respira/Mueve (`onExit('exit')` -> avanza/salta el paso, coherente); abandonar el Camino entero sigue via Esc (confirmacion PathRunner). El "done" del Foco pasa por `SessionDone` |
 | Atmosfera por paso (SessionShell `atmosphere`), SOLO en Camino | s99 | `SessionShell` acepta `atmosphere` = token `*-soft` del modulo del paso (Respira terracota / Foco verde / Cuerpo tan / Agua azul) -> wash radial MUY tenue (doble capa via helper `sessionAtmosphere`, expuesto a window). Propagado por SessionPrep/SessionDone/SessionShell. Las sesiones lo pasan solo si `inPath` (el home queda limpio). Reutilizado en cards de transicion (por kind) y CompletionScreen (`--focus-soft`). **s100: banding RESUELTO** en el helper -- hint de interpolacion 22% + capa de grano SVG (feTurbulence 4%) como dither; si un wash futuro banda, mismo remedio, no subir alphas |
@@ -280,13 +293,13 @@ al centro · taxonomia + filtros + sigilo · pre-venta: glifos D-4 + trial/licen
 | Archivo | Lineas | Prioridad |
 |---|---|---|
 | `app/tweaks/TweaksPanel.jsx` | 351 | SALE (s89, antes 519 -- split en TweaksData.jsx + PremiumSection.jsx) |
-| `app/state-core.jsx` | 511 | BAJA-MEDIA (s93: +5 ln customRoutines -- el CRUD fue a state-custom.jsx para no agravar; candidato natural: extraer helpers de history a state-history.jsx si vuelve a crecer) |
+| `app/state-core.jsx` | 407 | SALE (s101: ejecutado el candidato natural anotado -- utils de fecha + helpers de history extraidos a `state-history.jsx` (160 ln) al añadir getHistoryWithToday; 511 -> 407) |
 | `app/i18n/strings/ui.js` | ~345 | BAJA (dentro de limite, dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
-| `app/shell/Sidebar.jsx` | 535 | MEDIA (s94: re-entra -- estaba en ~530 reales sin registrar desde s61, +5 ln del clipPath unico; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
+| `app/shell/Sidebar.jsx` | 541 | MEDIA (s101: +6 ln del criterio s69 en WeekDots; s94: re-entro; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
 | `app/tokens.css` | 514 | BAJA (s100: el bloque draw-in del sendero lo pasa de ~475 a 514; es CSS global, no JSX -- candidato natural si vuelve a crecer: extraer el CSS del SenderoBar (~110 ln) a un archivo propio cargado tras tokens) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
@@ -328,10 +341,22 @@ Recogido con capturas al cerrar s96. Lista completa en `ROADMAP.md` ->
   remate s100 (CompletionScreen ceremonia editorial, OutroCard eliminada,
   banding suavizado). Queda OPCIONAL: ilustracion por Camino (espera arte, D-4).
 
+**Hecho en s101 (v0.46.0):**
+- ✓ **Stats a fondo** (P2 del usuario, s100): auditoria 8 hallazgos + stats
+  vivos (Mes/Año con el dia actual) + WeekDots criterio s69 + fila "Cuerpo" +
+  racha Caminos viva + fix DST + WeeklyStats muerto borrado. Diferidos: H7
+  (credito solo-al-completar de Mueve/Estira, "Move timer: bajo") y H8
+  (proxies del Sendero del dia → s106 sidebar).
+
 **Pendiente (sin planificar):**
 - **[Visual]** pomodoro web con semicirculo fijo integrado en las pills
   (no depender del zoom) · sidebar (divisor logo↔Ritmo sube + mas util).
 - **[Producto]** builder premium mas visible + ejercicios de Mueve Y Estira
   · filtros en bibliotecas para movil (mapea a la fase de taxonomia+filtros).
-- **[Stats]** los paneles no reflejan bien el progreso real (P2 del usuario,
-  s100) -> revision A FONDO planificada como **s101** junto a stats vivos.
+- **[Feedback s101-cierre]** AUDIO: Sound.jsx mas pulido y atractivo (encaje:
+  sesion de audio premium ANTES del bloque CTB) · GLIFOS: los de Mueve/Estira
+  "tienen fallas, no coherentes ni premium" → la iter pre-venta pasa de la
+  cola D-4 a revision COMPLETA del set (el usuario itera, port literal) ·
+  CONTENIDO: titulos de ejercicios en ingles dificiles de entender →
+  auditoria de nomenclatura ES (mapea a s107-108; OJO name ES = key de
+  glifo/i18n custom, s93). Detalle en ROADMAP "Backlog de pulido".
