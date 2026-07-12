@@ -22,6 +22,11 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 
 ## 🎨 Paletas completas
 
+> **Nota (s101):** las páginas estáticas de raíz `safety.html` y
+> `privacy.html` llevan **copias inline** de crema + oscuro (son
+> autocontenidas, sin acceso a tokens.css). Si se recalibra cualquiera de
+> las dos paletas, actualizar también esas dos páginas.
+
 ### Crema día (default)
 
 | Token | Valor | Uso |

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.45.0</title>
+  <title>PACE · Foco · Cuerpo — v0.46.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -609,17 +609,19 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   <!-- ORDEN DE CARGA
        0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
                            Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
-       1. state-core.jsx → store, loadState, rollover, history helpers, toast
-       2. state-timer.jsx       → addFocusMinutes, completePomodoro, completeFocusSession
-       3. state-hydrate.jsx     → addWaterGlass
-       4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
-       5. state-paths.jsx       → paths CRUD, stats
-       6. state-settings.jsx    → setLang
-       7. state.jsx      → índice — re-export consolidado del API pública
-       8. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
-       9. shell/*        → layout (Sidebar)
-      10. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
-      11. main.jsx       → monta <PaceApp/> en #root
+       1. state-history.jsx → utils de fecha + history helpers + getHistoryWithToday (s101)
+                           ANTES de state-core: loadState() los llama via window al evaluar.
+       2. state-core.jsx → store, loadState, rollover, migraciones, toast
+       3. state-timer.jsx       → addFocusMinutes, completePomodoro, completeFocusSession
+       4. state-hydrate.jsx     → addWaterGlass
+       5. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
+       6. state-paths.jsx       → paths CRUD, stats
+       7. state-settings.jsx    → setLang
+       8. state.jsx      → índice — re-export consolidado del API pública
+       9. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
+      10. shell/*        → layout (Sidebar)
+      11. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
+      12. main.jsx       → monta <PaceApp/> en #root
        Split sesion 57 / v0.27.5.
   -->
   <!-- i18n split (sesion 81 / v0.33.1): strings.js de 791 ln se rompio en
@@ -1492,6 +1494,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.note.label':                'Nota:',
     'stats.note':                      'no medimos para juzgarte. Los números están aquí para que reconozcas tus ritmos, no para que los persigas.',
     'stats.days':                      'Lun,Mar,Mié,Jue,Vie,Sáb,Dom',
+    // s101: la serie moveMinutes acumula Mueve Y Estira (mismo cubo desde
+    // siempre); en stats se etiqueta "Cuerpo" para no mentir por omision.
+    'stats.label.body':                'Cuerpo',
     // Tabs — sesión 43
     'stats.tab.week':                  'Semana',
     'stats.tab.month':                 'Mes',
@@ -1500,13 +1505,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.month.days.short':          'L,M,X,J,V,S,D',
     'stats.month.total.focus':         'Foco',
     'stats.month.total.breathe':       'Respira',
-    'stats.month.total.move':          'Mueve',
+    'stats.month.total.move':          'Cuerpo',
     'stats.month.total.water':         'vasos',
     'stats.month.empty':               'Sin actividad',
     'stats.month.coming':              'Próximamente',
     'stats.month.tooltip.focus':       'min foco',
     'stats.month.tooltip.breathe':     'min respira',
-    'stats.month.tooltip.move':        'min mueve',
+    'stats.month.tooltip.move':        'min cuerpo',
     'stats.month.tooltip.water':       'vasos',
     'stats.month.hours.unit':          'h',
     // Vista anual — sesión 44
@@ -1543,6 +1548,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.note.label':                'Note:',
     'stats.note':                      "we don't measure to judge you. The numbers are here so you can recognize your rhythms, not chase them.",
     'stats.days':                      'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+    // s101: moveMinutes = Move AND Stretch combined -- labelled "Body" in stats.
+    'stats.label.body':                'Body',
     // Tabs — session 43
     'stats.tab.week':                  'Week',
     'stats.tab.month':                 'Month',
@@ -1551,13 +1558,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.month.days.short':          'M,T,W,T,F,S,S',
     'stats.month.total.focus':         'Focus',
     'stats.month.total.breathe':       'Breathe',
-    'stats.month.total.move':          'Move',
+    'stats.month.total.move':          'Body',
     'stats.month.total.water':         'glasses',
     'stats.month.empty':               'No activity',
     'stats.month.coming':              'Coming soon',
     'stats.month.tooltip.focus':       'min focus',
     'stats.month.tooltip.breathe':     'min breathe',
-    'stats.month.tooltip.move':        'min move',
+    'stats.month.tooltip.move':        'min body',
     'stats.month.tooltip.water':       'glasses',
     'stats.month.hours.unit':          'h',
     // Year view — session 44
@@ -2387,20 +2394,191 @@ function useT() {
 Object.assign(window, { useT, detectInitialLang });
 
 </script>
+  <!-- state-history (s101): utils de fecha + history + stats vivos. ANTES de
+       state-core -- loadState() resuelve archiveDayToHistory/getMondayOf/
+       recomputeAllHistoryAggregates via window al evaluarse. -->
   <script type="text/babel">
 /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
-   state-core.jsx — store, loadState, rollover, history helpers, toast.
+   state-history.jsx — utils de fecha + historico de actividad + stats vivos.
+   Extraido de state-core.jsx (sesion 101 / v0.46.0) al anadir
+   getHistoryWithToday; state-core quedaba en 511 lineas.
+
+   CARGA ANTES de state-core.jsx en PACE.html: loadState() (que corre al
+   evaluar state-core) llama a archiveDayToHistory / getMondayOf /
+   recomputeAllHistoryAggregates via window, y este archivo debe haberlos
+   expuesto ya. No depende de ningun otro modulo del estado.
+*/
+
+/* ============================
+   UTILS DE FECHA
+   ============================ */
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function toISODate(dateString) {
+  const d = new Date(dateString);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
+function zeroEntry() {
+  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
+}
+
+/* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
+function getDayIndexMondayFirst(date) {
+  const d = new Date(date).getDay(); // 0=domingo .. 6=sabado
+  return d === 0 ? 6 : d - 1;
+}
+
+/* Lunes 00:00 local de la semana que contiene `date`. */
+function getMondayOf(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/* ============================
+   HISTORICO DE ACTIVIDAD (sesion 43, refactor sesion 69)
+   ============================ */
+
+/* Suma idempotente de un mes desde history.days. monthKey = "YYYY-MM". */
+function recomputeMonthFromDays(days, monthKey) {
+  const acc = zeroEntry();
+  for (const isoDate in days) {
+    if (isoDate.indexOf(monthKey) === 0) {
+      const d = days[isoDate];
+      acc.focusMinutes  += d.focusMinutes  || 0;
+      acc.breathMinutes += d.breathMinutes || 0;
+      acc.moveMinutes   += d.moveMinutes   || 0;
+      acc.waterGlasses  += d.waterGlasses  || 0;
+    }
+  }
+  return acc;
+}
+
+/* Suma idempotente de un año desde history.days. yearKey = "YYYY". */
+function recomputeYearFromDays(days, yearKey) {
+  const acc = zeroEntry();
+  for (const isoDate in days) {
+    if (isoDate.indexOf(yearKey) === 0) {
+      const d = days[isoDate];
+      acc.focusMinutes  += d.focusMinutes  || 0;
+      acc.breathMinutes += d.breathMinutes || 0;
+      acc.moveMinutes   += d.moveMinutes   || 0;
+      acc.waterGlasses  += d.waterGlasses  || 0;
+    }
+  }
+  return acc;
+}
+
+/* Recalcula TODOS los agregados desde history.days. Operacion idempotente
+   y segura: si days es integro, months/years quedan correctos sin importar
+   cuantas veces se haya inflado antes. Sesion 69. */
+function recomputeAllHistoryAggregates(history) {
+  const days = history.days || {};
+  const months = {};
+  const years = {};
+  for (const isoDate in days) {
+    const monthKey = isoDate.slice(0, 7);
+    const yearKey  = isoDate.slice(0, 4);
+    if (!months[monthKey]) months[monthKey] = recomputeMonthFromDays(days, monthKey);
+    if (!years[yearKey])   years[yearKey]   = recomputeYearFromDays(days, yearKey);
+  }
+  return { days, months, years };
+}
+
+/* Sesion 69: archiveDayToHistory ahora es 100% idempotente.
+   days[iso] siempre se sobrescribe (overwrite, no acumulativo).
+   months/years se recalculan desde days (no acumulativo).
+   Llamar dos veces para la misma fecha produce el mismo resultado. */
+function archiveDayToHistory(history, dateStr, weeklyStats) {
+  const idx = getDayIndexMondayFirst(dateStr);
+  const delta = {
+    focusMinutes:  (weeklyStats.focusMinutes  || [])[idx] || 0,
+    breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
+    moveMinutes:   (weeklyStats.moveMinutes   || [])[idx] || 0,
+    waterGlasses:  (weeklyStats.waterGlasses  || [])[idx] || 0,
+  };
+  const hasData = Object.values(delta).some(v => v > 0);
+  if (!hasData) return history;
+
+  const isoDate = toISODate(dateStr);
+  const days = { ...(history.days || {}), [isoDate]: delta };
+  const monthKey = isoDate.slice(0, 7);
+  const yearKey  = isoDate.slice(0, 4);
+  return {
+    days,
+    months: { ...(history.months || {}), [monthKey]: recomputeMonthFromDays(days, monthKey) },
+    years:  { ...(history.years  || {}), [yearKey]:  recomputeYearFromDays(days, yearKey)  },
+  };
+}
+
+/* ============================
+   STATS VIVOS (sesion 101)
+   ============================ */
+
+/* Selector memoizado: history + el dia ACTUAL fusionado desde weeklyStats.
+   history.days solo se alimenta en el rollover, asi que Mes/Año eran ciegos
+   a lo practicado hoy hasta mañana. Los paneles leen esto en vez de
+   state.history; el estado persistido NO cambia (el rollover sigue siendo
+   el unico escritor real).
+   Reutiliza archiveDayToHistory: overwrite idempotente de days[hoy] +
+   recompute de su mes/año; sin actividad hoy devuelve el mismo objeto.
+   Memo por identidad: setState crea objetos nuevos en cada escritura y el
+   cambio de dia invalida via dayKey. */
+let _historyWithTodayCache = null;
+function getHistoryWithToday(state) {
+  const history = (state && state.history) || { days: {}, months: {}, years: {} };
+  const weekly  = (state && state.weeklyStats) || {};
+  const dayKey  = new Date().toDateString();
+  const c = _historyWithTodayCache;
+  if (c && c.history === history && c.weekly === weekly && c.dayKey === dayKey) {
+    return c.result;
+  }
+  const result = archiveDayToHistory(history, dayKey, weekly);
+  _historyWithTodayCache = { history, weekly, dayKey, result };
+  return result;
+}
+
+Object.assign(window, {
+  todayISO, toISODate, zeroEntry,
+  getDayIndexMondayFirst, getMondayOf,
+  recomputeMonthFromDays, recomputeYearFromDays, recomputeAllHistoryAggregates,
+  archiveDayToHistory,
+  getHistoryWithToday,
+});
+
+</script>
+  <script type="text/babel">
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-core.jsx — store, loadState, rollover, migraciones, toast.
    Split de state.jsx (sesion 57 / v0.27.5).
+
+   Sesion 101: los utils de fecha y los helpers de history (zeroEntry,
+   toISODate, todayISO, getDayIndexMondayFirst, getMondayOf, recompute*,
+   archiveDayToHistory) viven en state-history.jsx, que CARGA ANTES:
+   loadState()/rolloverIfNeeded los resuelven via window.
 */
 
 const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.45.0';
+const PACE_VERSION = 'v0.46.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -2522,114 +2700,6 @@ function detectInitialPalette() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'oscuro' : 'crema';
   } catch (e) { return 'crema'; }
-}
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function toISODate(dateString) {
-  const d = new Date(dateString);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${dd}`;
-}
-
-function zeroEntry() {
-  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
-}
-
-/* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
-function getDayIndexMondayFirst(date) {
-  const d = new Date(date).getDay(); // 0=domingo .. 6=sabado
-  return d === 0 ? 6 : d - 1;
-}
-
-/* Lunes 00:00 local de la semana que contiene `date`. */
-function getMondayOf(date) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = (day === 0 ? -6 : 1 - day);
-  d.setDate(d.getDate() + diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-/* ============================
-   HISTORICO DE ACTIVIDAD (sesion 43, refactor sesion 69)
-   ============================ */
-
-/* Suma idempotente de un mes desde history.days. monthKey = "YYYY-MM". */
-function recomputeMonthFromDays(days, monthKey) {
-  const acc = zeroEntry();
-  for (const isoDate in days) {
-    if (isoDate.indexOf(monthKey) === 0) {
-      const d = days[isoDate];
-      acc.focusMinutes  += d.focusMinutes  || 0;
-      acc.breathMinutes += d.breathMinutes || 0;
-      acc.moveMinutes   += d.moveMinutes   || 0;
-      acc.waterGlasses  += d.waterGlasses  || 0;
-    }
-  }
-  return acc;
-}
-
-/* Suma idempotente de un año desde history.days. yearKey = "YYYY". */
-function recomputeYearFromDays(days, yearKey) {
-  const acc = zeroEntry();
-  for (const isoDate in days) {
-    if (isoDate.indexOf(yearKey) === 0) {
-      const d = days[isoDate];
-      acc.focusMinutes  += d.focusMinutes  || 0;
-      acc.breathMinutes += d.breathMinutes || 0;
-      acc.moveMinutes   += d.moveMinutes   || 0;
-      acc.waterGlasses  += d.waterGlasses  || 0;
-    }
-  }
-  return acc;
-}
-
-/* Recalcula TODOS los agregados desde history.days. Operacion idempotente
-   y segura: si days es integro, months/years quedan correctos sin importar
-   cuantas veces se haya inflado antes. Sesion 69. */
-function recomputeAllHistoryAggregates(history) {
-  const days = history.days || {};
-  const months = {};
-  const years = {};
-  for (const isoDate in days) {
-    const monthKey = isoDate.slice(0, 7);
-    const yearKey  = isoDate.slice(0, 4);
-    if (!months[monthKey]) months[monthKey] = recomputeMonthFromDays(days, monthKey);
-    if (!years[yearKey])   years[yearKey]   = recomputeYearFromDays(days, yearKey);
-  }
-  return { days, months, years };
-}
-
-/* Sesion 69: archiveDayToHistory ahora es 100% idempotente.
-   days[iso] siempre se sobrescribe (overwrite, no acumulativo).
-   months/years se recalculan desde days (no acumulativo).
-   Llamar dos veces para la misma fecha produce el mismo resultado. */
-function archiveDayToHistory(history, dateStr, weeklyStats) {
-  const idx = getDayIndexMondayFirst(dateStr);
-  const delta = {
-    focusMinutes:  (weeklyStats.focusMinutes  || [])[idx] || 0,
-    breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
-    moveMinutes:   (weeklyStats.moveMinutes   || [])[idx] || 0,
-    waterGlasses:  (weeklyStats.waterGlasses  || [])[idx] || 0,
-  };
-  const hasData = Object.values(delta).some(v => v > 0);
-  if (!hasData) return history;
-
-  const isoDate = toISODate(dateStr);
-  const days = { ...(history.days || {}), [isoDate]: delta };
-  const monthKey = isoDate.slice(0, 7);
-  const yearKey  = isoDate.slice(0, 4);
-  return {
-    days,
-    months: { ...(history.months || {}), [monthKey]: recomputeMonthFromDays(days, monthKey) },
-    years:  { ...(history.years  || {}), [yearKey]:  recomputeYearFromDays(days, yearKey)  },
-  };
 }
 
 /* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
@@ -2889,15 +2959,14 @@ function onToast(listener) {
 // Aplicar tema al cargar
 applyTheme();
 
+/* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
+   MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-
+   Today) los expone state-history.jsx (s101). */
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast,
-  zeroEntry, toISODate, todayISO,
-  getDayIndexMondayFirst, getMondayOf,
-  archiveDayToHistory,
-  recomputeMonthFromDays, recomputeYearFromDays, recomputeAllHistoryAggregates,
 });
 
 </script>
@@ -2995,7 +3064,9 @@ function checkHydrateWeekPerfect() {
     .sort((a, b) => a - b);
   if (dates.length < 7) return;
   for (let i = dates.length - 1; i >= dates.length - 6; i--) {
-    if (dates[i] - dates[i - 1] !== 86400000) return;
+    /* Redondeo (s101): los toDateString parseados dan gaps de 23/25h en los
+       cambios de hora (DST) -- la igualdad exacta a 24h rompia la cadena. */
+    if (Math.round((dates[i] - dates[i - 1]) / 86400000) !== 1) return;
   }
   unlockAchievement('hydrate.week.perfect');
 }
@@ -3560,6 +3631,14 @@ function computePathStreaks(history) {
   const today = todayISO();
   let cs = 0;
   let check = today;
+  /* s101: la racha sigue VIVA si el ultimo Camino fue ayer -- hoy aun no ha
+     terminado. Antes caia a 0 a medianoche aunque ayer se completara,
+     divergiendo del streak principal (que aguanta hasta el rollover, s69). */
+  if (!days.has(check)) {
+    const y = new Date(check);
+    y.setDate(y.getDate() - 1);
+    check = y.toISOString().slice(0, 10);
+  }
   while (days.has(check)) {
     cs++;
     const d = new Date(check);
@@ -3735,13 +3814,14 @@ Object.assign(window, {
    cualquier componente pueda acceder a ella sin conocer la estructura interna.
 
    Orden de carga en PACE.html:
-     1. state-core.jsx        (store, loadState, helpers, toast)
-     2. state-timer.jsx       (addFocusMinutes, completePomodoro, completeFocusSession)
-     3. state-hydrate.jsx     (addWaterGlass)
-     4. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
-     5. state-paths.jsx       (paths CRUD, stats)
-     6. state-settings.jsx    (setLang)
-     7. state.jsx             (este archivo — re-export consolidado)
+     1. state-history.jsx     (utils fecha + history helpers + getHistoryWithToday — s101)
+     2. state-core.jsx        (store, loadState, rollover, migraciones, toast)
+     3. state-timer.jsx       (addFocusMinutes, completePomodoro, completeFocusSession)
+     4. state-hydrate.jsx     (addWaterGlass)
+     5. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
+     6. state-paths.jsx       (paths CRUD, stats)
+     7. state-settings.jsx    (setLang)
+     8. state.jsx             (este archivo — re-export consolidado)
 
    Sesion 57 / v0.27.5 — split desde monolito de 1026 lineas.
 */
@@ -3767,7 +3847,7 @@ Object.assign(window, {
   onToast,
   setLang,
   PACE_VERSION,
-  // sesion 43 -- history helpers (refactor sesion 69)
+  // sesion 43 -- history helpers (refactor s69; viven en state-history desde s101)
   zeroEntry,
   toISODate,
   archiveDayToHistory,
@@ -3776,6 +3856,7 @@ Object.assign(window, {
   recomputeAllHistoryAggregates,
   getDayIndexMondayFirst,
   getMondayOf,
+  getHistoryWithToday, // s101 -- stats vivos (Mes/Año incluyen el dia actual)
   // sesion 49 -- Caminos
   startPath,
   advancePathStep,
@@ -6728,7 +6809,13 @@ function WeekDots({ weeklyStats, compact }) {
   return (
     <div style={{ display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 }}>
       {days.map((d, i) => {
-        const active = (weeklyStats.focusMinutes[i] || 0) > 0;
+        /* Criterio "dia activo" s69 (como YearView y la racha): cualquier
+           sesion de foco|respira|cuerpo enciende el punto; agua sola NO.
+           Antes solo miraba focusMinutes -- un dia de solo Respira/Mueve
+           quedaba gris (s101). */
+        const active = (weeklyStats.focusMinutes[i]  || 0) > 0
+                    || (weeklyStats.breathMinutes?.[i] || 0) > 0
+                    || (weeklyStats.moveMinutes?.[i]   || 0) > 0;
         const isToday = i === today;
         return (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 }}>
@@ -11586,7 +11673,10 @@ function WeekView({ state }) {
   const bars = [
     { key: 'focus',  label: t('topbar.mode.focus'),       color: 'var(--focus)',   data: w.focusMinutes,  unit: t('stats.unit.min') },
     { key: 'breath', label: t('activity.breathe.label'),  color: 'var(--breathe)', data: w.breathMinutes, unit: t('stats.unit.min') },
-    { key: 'move',   label: t('activity.move.label'),     color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
+    /* s101: la fila es "Cuerpo" -- moveMinutes acumula Mueve Y Estira
+       (completeMoveSession + completeExtraSession escriben al mismo cubo);
+       etiquetarla "Mueve" mentia por omision. */
+    { key: 'move',   label: t('stats.label.body'),        color: 'var(--move)',    data: w.moveMinutes,   unit: t('stats.unit.min') },
     { key: 'water',  label: t('activity.hydrate.label'),  color: 'var(--hydrate)', data: w.waterGlasses,  unit: t('stats.unit.glasses') },
   ];
 
@@ -11962,7 +12052,12 @@ function StatsPanel({ open, onClose }) {
   const [jumpYear, setJumpYear] = useState(null);
   const [jumpMonth, setJumpMonth] = useState(null);
 
-  const history = state.history || { days:{}, months:{}, years:{} };
+  /* Stats vivos (s101): history + el dia actual fusionado desde weeklyStats
+     (selector memoizado en state-history.jsx). Mes/Año dejan de ir un dia
+     por detras; el estado persistido no cambia. */
+  const history = typeof getHistoryWithToday === 'function'
+    ? getHistoryWithToday(state)
+    : (state.history || { days:{}, months:{}, years:{} });
   const lang    = state.lang || 'es';
 
   function handleNavigateToMonth(yr, mo) {

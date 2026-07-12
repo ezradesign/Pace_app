@@ -15,6 +15,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.46.0** | 2026-07-10 | feat(stats): **stats a fondo** (P2 del usuario) -- auditoría completa del tracking (mapa escritores→lectores, 8 hallazgos) + **stats vivos**: nuevo `state-history.jsx` con `getHistoryWithToday` memoizado (reutiliza `archiveDayToHistory`) → **Mes/Año/totales incluyen el día actual** (antes ciegos hasta el rollover); state-core 511→407 ln (sale de deuda) · **WeekDots del sidebar con criterio s69** (focus\|breath\|move>0; antes solo foco) · fila "Mueve" → **"Cuerpo"** (moveMinutes = Mueve+Estira, la etiqueta mentía) · **racha de Caminos viva** (cuenta desde ayer si hoy no hay) · fix DST en hydrate.week.perfect · WeeklyStats.jsx muerto borrado · páginas estáticas **/safety + /privacy** (autocontenidas, ES+EN, rama oscura) | #101 | [abajo](#v0460----2026-07-10----featstats-stats-a-fondo--safetyprivacy) |
 | **v0.45.0** | 2026-07-10 | feat(paths): **remate premium de Caminos** (los 3 pendientes de feedback de s99) -- **OutroCard eliminada** (duplicaba la CompletionScreen; el último paso pasa DIRECTO a "Camino completado", PathRunner pierde la fase `outro` y `pendingComplete`, decisión s77 actualizada) · **CompletionScreen "ceremonia editorial"** (fuera el check genérico; kicker + nombre del Camino protagonista + meta "IV pasos · 24 min" con hairline + **sendero héroe con draw-in** (prop `drawIn` de SenderoBar: el trazo se dibuja y los hitos entran escalonados) + recorrido sin caja + logros como sellos) · **banding de atmósfera suavizado** (hint de interpolación 22% + capa de grano SVG ~4% como dither; arregla steps, transiciones y completado a la vez) | #100 | [abajo](#v0450----2026-07-10----featpaths-remate-premium-de-caminos) |
 | **v0.44.0** | 2026-07-09 | feat(ui+paths): **pulido global + overhaul premium de Caminos** -- pack de microinteracciones (glow del aro Pomodoro cuando corre, hover TopBar/CTA, entrada de modulos, modales scale+fade, scrollbar Firefox) · **Caminos**: fix "Volver al inicio" -> **"Siguiente"** en Respira/Mueve/Foco (SessionDone recibe `inPath`) · **PathFocusStep/PathHydrateStep** adoptan el SessionShell compartido (coherencia total con Respira/Mueve) · **timer "aro de marcas de minuto"** + numero protagonista · **botones del Foco por color** (verde/naranja/gris, revisa s79) · **atmosfera por paso** (wash tenue del acento del modulo, solo en Caminos) · cards de transicion editoriales (kicker romano) + sendero con hito actual acentuado · CompletionScreen rediseñada · bola del timer home -50% | #99 | [session-99](./docs/sessions/session-99-pulido-caminos-premium.md) |
 | **v0.43.0** | 2026-07-09 | fix(breathe): **tiempo activo en Respira** -- `BreatheSession` mide un `activeTime` timestamp-based (excluye pausas manuales; inmune al estrangulamiento de timers en background) que sustituye al wall-clock/nominal en 3 sitios: **fin de sesion no-rounds** (`getActiveSec() >= routine.min*60`, las pausas ya no acercan el final), **barra de progreso no-rounds** (mismo reloj) y **credito a stats/logros** (`completeBreathSession` recibe minutos activos reales, no `routine.min` -> arregla el sobre-credito al pulsar "Terminar" pronto; firma intacta, cero cambios en state) · pantalla "done" muestra tiempo activo · retira estado muerto `cycle`/`startTime`/`doneInCycle` | #98 | [session-98](./docs/sessions/session-98-tiempo-activo-breathe.md) |
@@ -118,6 +119,68 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.46.0] -- 2026-07-10 -- feat(stats): stats a fondo + safety/privacy
+
+Sesion 101. Ataca el feedback P2 del usuario en s100 ("los paneles no
+trackean el progreso de forma adecuada") con AUDITORIA previa verificada
+contra el repo y plan aprobado antes de tocar (4 bifurcaciones decididas por
+el usuario). Diario: [session-101](./docs/sessions/session-101-stats-a-fondo.md).
+
+### Auditoria (8 hallazgos)
+
+Mapa escritores→lectores: todo escribe en `weeklyStats[hoy]`; `history` solo
+se alimentaba en el rollover → **Mes/Año eran ciegos al dia actual** (H1).
+Ademas: WeekDots del sidebar solo miraba foco (H2), Estira comparte cubo
+`moveMinutes` con Mueve y la fila "Mueve" mentia (H3), la racha de Caminos
+moria a medianoche (H4), DST rompia hydrate.week.perfect (H5), WeeklyStats.jsx
+muerto desde s43 (H6). Diferidos: credito solo-al-completar de Mueve/Estira
+(H7, plan maestro "Move timer: bajo") y proxies del Sendero del dia (H8, s106).
+
+### Stats vivos (F1) + split state-history
+
+Nuevo **`app/state-history.jsx`** (160 ln; carga ANTES de state-core, que
+resuelve los helpers via window en `loadState()`): absorbe utils de fecha +
+helpers de history y añade **`getHistoryWithToday(state)`** — selector
+memoizado por identidad que reutiliza `archiveDayToHistory(h, hoy,
+weeklyStats)` (overwrite idempotente + recompute de mes/año; cero logica
+nueva). `StatsPanel` lo consume: celda de HOY, totales del mes, dias
+activos/racha max/acciones del Año, todo vivo. El estado persistido NO
+cambia; el rollover sigue siendo el unico escritor. state-core 511→**407 ln**
+(sale de la deuda de tamaño).
+
+### Resto de fixes
+
+- **WeekDots criterio s69** (F2): activo = focus|breath|move>0; agua sola no.
+- **"Cuerpo"** (F3/H3 → F6): key `stats.label.body` ES/EN + totales y tooltip
+  del mes; el usuario eligio etiqueta honesta sobre serie propia (cero
+  migracion; extraMinutes descartado por ahora).
+- **Racha de Caminos viva** (F3): `computePathStreaks` cuenta desde ayer si
+  hoy aun no hay Camino (iguala la semantica del streak principal).
+- **DST** (F4): `Math.round(diff/86400000)` en checkHydrateWeekPerfect.
+- **WeeklyStats.jsx borrado** (F5): 118 ln muertas, no se cargaba.
+
+### /safety + /privacy
+
+`safety.html` + `privacy.html` en la raiz (Cloudflare Pages → `/safety`,
+`/privacy`). Autocontenidas (cero peticiones externas), ES+EN, paleta crema
++ rama oscura via prefers-color-scheme, Georgia display, sin emojis ni JS.
+Safety reusa el copy del modal in-app (`breathe.safety.*`); privacy documenta
+local-first/export/CDN/BMC con honestidad. Pendiente: enlazarlas desde la UI.
+
+### Verificacion + build
+
+Preview :8765 propio, protocolo s93 (purga SW+caches por tanda) + **seed de
+`pace.state.v2`** con historial conocido. Capa de datos (selector memo-estable,
+mes vivo, racha 1) + montaje aislado de StatsPanel (dia 10 HOY relleno en Mes,
+"3 dias activos" en Año, "Cuerpo" en Semana) + WeekDots `off off ON ON ON off
+off` (jueves solo-Respira enciende) verificado en dev Y standalone. Consola
+limpia. Incidente instructivo: interaccion fantasma de la pestaña estrangulada
+(re-seed + reposo → cero auto-disparos; los cambios s101 son lectores puros).
+Standalone **756 KB, 71 archivos** (entra state-history, sale WeeklyStats) +
+index.html. Backup `v0.45.0_20260710` (rotado `v0.33.0_20260519`, cap 20).
 
 ---
 

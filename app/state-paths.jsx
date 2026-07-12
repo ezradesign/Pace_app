@@ -185,6 +185,14 @@ function computePathStreaks(history) {
   const today = todayISO();
   let cs = 0;
   let check = today;
+  /* s101: la racha sigue VIVA si el ultimo Camino fue ayer -- hoy aun no ha
+     terminado. Antes caia a 0 a medianoche aunque ayer se completara,
+     divergiendo del streak principal (que aguanta hasta el rollover, s69). */
+  if (!days.has(check)) {
+    const y = new Date(check);
+    y.setDate(y.getDate() - 1);
+    check = y.toISOString().slice(0, 10);
+  }
   while (days.has(check)) {
     cs++;
     const d = new Date(check);

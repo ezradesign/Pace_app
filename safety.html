@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguridad · PACE</title>
+<meta name="description" content="Notas de seguridad de PACE: respiración, movilidad y práctica responsable.">
+<!-- Página estática autocontenida (s101 · v0.46.0). Sin peticiones externas:
+     tipografía del sistema (Georgia = blindaje display del design system).
+     Paleta crema + rama oscura via prefers-color-scheme (sin toggle manual).
+     Copy coherente con el modal de seguridad in-app (breathe.safety.*). -->
+<style>
+  :root {
+    --paper: #F2EDE0; --paper-2: #EAE4D4;
+    --ink: #1F1C17; --ink-2: #4A453C; --ink-3: #8A8372;
+    --line: #C9C0A8; --focus: #3E5A3A; --breathe: #C97A5D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1d1a14; --paper-2: #26211a;
+      --ink: #EDE5D3; --ink-2: #c0b49e; --ink-3: #B2A995;
+      --line: #4d4536; --focus: #7A9A6D; --breathe: #D99477;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper); color: var(--ink);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 15px; line-height: 1.65;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 48px 24px 64px; }
+  .kicker {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 500; margin-bottom: 8px;
+  }
+  h1, h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic; font-weight: 500; line-height: 1.1;
+    color: var(--ink); margin: 0 0 16px;
+  }
+  h1 { font-size: 40px; }
+  h2 { font-size: 24px; margin-top: 40px; }
+  p { color: var(--ink-2); margin: 0 0 14px; }
+  strong { color: var(--ink); font-weight: 600; }
+  ul { margin: 0 0 14px; padding-left: 20px; color: var(--ink-2); }
+  li { margin-bottom: 6px; }
+  .aviso {
+    border: 1px solid var(--line); border-left: 3px solid var(--breathe);
+    background: var(--paper-2); border-radius: 8px;
+    padding: 14px 18px; margin: 20px 0;
+  }
+  .aviso p { margin: 0; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
+  .footer {
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-3); display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+  a { color: var(--focus); }
+</style>
+</head>
+<body>
+<main>
+  <!-- ================= ES ================= -->
+  <section lang="es">
+    <div class="kicker">PACE · Foco · Cuerpo</div>
+    <h1>Seguridad</h1>
+
+    <p><strong>PACE no ofrece consejo médico.</strong> Es una herramienta de
+    acompañamiento para pausas, respiración y movilidad suave en el trabajo.
+    Nada de lo que muestra sustituye la valoración de un profesional de la
+    salud. Si tienes cualquier condición médica, consulta antes de practicar.</p>
+
+    <h2>Respiración</h2>
+    <p>La mayoría de las técnicas de PACE son suaves. Aun así, escucha a tu
+    cuerpo: si notas mareo o molestias, para y respira con normalidad.</p>
+    <div class="aviso">
+      <p>Algunas técnicas (Rondas y similares) implican
+      <strong>hiperventilación controlada y apnea</strong>. Pueden causar
+      mareo, cosquilleo o desmayo. La app muestra siempre un aviso de
+      seguridad antes de estas sesiones.</p>
+    </div>
+    <ul>
+      <li>Practícalas <strong>sentado o tumbado</strong>, nunca de pie.</li>
+      <li><strong>Nunca en el agua</strong>, conduciendo ni en altura.</li>
+      <li>No las hagas si tienes <strong>epilepsia, hipertensión o una
+      cardiopatía</strong>, ni durante el <strong>embarazo</strong>.</li>
+      <li>Detente si te mareas o sientes molestias.</li>
+    </ul>
+
+    <h2>Movilidad y estiramientos</h2>
+    <ul>
+      <li>Muévete siempre <strong>dentro de un rango sin dolor</strong>.
+      La incomodidad suave es normal; el dolor agudo no.</li>
+      <li>Si tienes una lesión o cirugía reciente, consulta a un
+      fisioterapeuta antes de seguir las rutinas.</li>
+      <li>Los tiempos y repeticiones son orientativos: adáptalos a tu cuerpo,
+      no al contador.</li>
+    </ul>
+
+    <h2>Ritmo de trabajo e hidratación</h2>
+    <p>Los bloques de foco y los recordatorios de agua son sugerencias de
+    bienestar general, no pautas clínicas. Si tu médico te ha indicado límites
+    de ingesta de líquidos o pautas posturales concretas, ellas mandan.</p>
+  </section>
+
+  <hr>
+
+  <!-- ================= EN ================= -->
+  <section lang="en">
+    <div class="kicker">English</div>
+    <h1>Safety</h1>
+
+    <p><strong>PACE does not provide medical advice.</strong> It is a
+    companion tool for breaks, breathing and gentle mobility at work. Nothing
+    it shows replaces the judgement of a health professional. If you have any
+    medical condition, check with them before practicing.</p>
+
+    <h2>Breathing</h2>
+    <p>Most techniques in PACE are gentle. Even so, listen to your body: if
+    you feel dizzy or uncomfortable, stop and breathe normally.</p>
+    <div class="aviso">
+      <p>Some techniques (Rounds and similar) involve
+      <strong>controlled hyperventilation and breath holds</strong>. They can
+      cause dizziness, tingling or fainting. The app always shows a safety
+      briefing before these sessions.</p>
+    </div>
+    <ul>
+      <li>Practice them <strong>sitting or lying down</strong>, never standing.</li>
+      <li><strong>Never in water</strong>, while driving or at height.</li>
+      <li>Do not practice if you have <strong>epilepsy, hypertension or heart
+      disease</strong>, or if <strong>pregnant</strong>.</li>
+      <li>Stop if you feel dizzy or uncomfortable.</li>
+    </ul>
+
+    <h2>Mobility and stretching</h2>
+    <ul>
+      <li>Always move <strong>within a pain-free range</strong>. Mild
+      discomfort is normal; sharp pain is not.</li>
+      <li>If you have an injury or recent surgery, check with a
+      physiotherapist before following the routines.</li>
+      <li>Durations and reps are guidelines: adapt them to your body, not to
+      the timer.</li>
+    </ul>
+
+    <h2>Work rhythm and hydration</h2>
+    <p>Focus blocks and water reminders are general well-being suggestions,
+    not clinical guidance. If your doctor has given you fluid-intake limits or
+    specific postural guidelines, those come first.</p>
+  </section>
+
+  <div class="footer">
+    <span>Pace · by @ezradesign</span>
+    <span><a href="/">Volver a la app</a> · <a href="/privacy">Privacidad</a></span>
+  </div>
+</main>
+</body>
+</html>

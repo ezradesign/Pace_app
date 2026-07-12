@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.45.0</title>
+  <title>PACE · Foco · Cuerpo — v0.46.0</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -94,17 +94,19 @@
   <!-- ORDEN DE CARGA
        0. i18n/*         → strings.js (catálogo ES/EN) + useT.jsx (hook + detectInitialLang)
                            Deben ir ANTES de state-core.jsx: loadState() llama a detectInitialLang().
-       1. state-core.jsx → store, loadState, rollover, history helpers, toast
-       2. state-timer.jsx       → addFocusMinutes, completePomodoro, completeFocusSession
-       3. state-hydrate.jsx     → addWaterGlass
-       4. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
-       5. state-paths.jsx       → paths CRUD, stats
-       6. state-settings.jsx    → setLang
-       7. state.jsx      → índice — re-export consolidado del API pública
-       8. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
-       9. shell/*        → layout (Sidebar)
-      10. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
-      11. main.jsx       → monta <PaceApp/> en #root
+       1. state-history.jsx → utils de fecha + history helpers + getHistoryWithToday (s101)
+                           ANTES de state-core: loadState() los llama via window al evaluar.
+       2. state-core.jsx → store, loadState, rollover, migraciones, toast
+       3. state-timer.jsx       → addFocusMinutes, completePomodoro, completeFocusSession
+       4. state-hydrate.jsx     → addWaterGlass
+       5. state-achievements.jsx → unlockAchievement, complete*Session, updateStreak
+       6. state-paths.jsx       → paths CRUD, stats
+       7. state-settings.jsx    → setLang
+       8. state.jsx      → índice — re-export consolidado del API pública
+       9. ui/*           → primitivos visuales (Modal, Card, Tag, Button, CowLogo, Toast)
+      10. shell/*        → layout (Sidebar)
+      11. módulos        → focus, breathe, move, extra, hydrate, breakmenu, achievements, stats, tweaks
+      12. main.jsx       → monta <PaceApp/> en #root
        Split sesion 57 / v0.27.5.
   -->
   <!-- i18n split (sesion 81 / v0.33.1): strings.js de 791 ln se rompio en
@@ -126,6 +128,10 @@
   <script type="text/babel" src="app/i18n/content/extra.js"></script>
   <script type="text/babel" src="app/i18n/content/custom.js"></script>
   <script type="text/babel" src="app/i18n/useT.jsx"></script>
+  <!-- state-history (s101): utils de fecha + history + stats vivos. ANTES de
+       state-core -- loadState() resuelve archiveDayToHistory/getMondayOf/
+       recomputeAllHistoryAggregates via window al evaluarse. -->
+  <script type="text/babel" src="app/state-history.jsx"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <script type="text/babel" src="app/state-timer.jsx"></script>
   <script type="text/babel" src="app/state-hydrate.jsx"></script>

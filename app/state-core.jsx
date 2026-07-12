@@ -2,15 +2,20 @@
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
-   state-core.jsx — store, loadState, rollover, history helpers, toast.
+   state-core.jsx — store, loadState, rollover, migraciones, toast.
    Split de state.jsx (sesion 57 / v0.27.5).
+
+   Sesion 101: los utils de fecha y los helpers de history (zeroEntry,
+   toISODate, todayISO, getDayIndexMondayFirst, getMondayOf, recompute*,
+   archiveDayToHistory) viven en state-history.jsx, que CARGA ANTES:
+   loadState()/rolloverIfNeeded los resuelven via window.
 */
 
 const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.45.0';
+const PACE_VERSION = 'v0.46.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -132,114 +137,6 @@ function detectInitialPalette() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'oscuro' : 'crema';
   } catch (e) { return 'crema'; }
-}
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function toISODate(dateString) {
-  const d = new Date(dateString);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${dd}`;
-}
-
-function zeroEntry() {
-  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
-}
-
-/* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
-function getDayIndexMondayFirst(date) {
-  const d = new Date(date).getDay(); // 0=domingo .. 6=sabado
-  return d === 0 ? 6 : d - 1;
-}
-
-/* Lunes 00:00 local de la semana que contiene `date`. */
-function getMondayOf(date) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = (day === 0 ? -6 : 1 - day);
-  d.setDate(d.getDate() + diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-/* ============================
-   HISTORICO DE ACTIVIDAD (sesion 43, refactor sesion 69)
-   ============================ */
-
-/* Suma idempotente de un mes desde history.days. monthKey = "YYYY-MM". */
-function recomputeMonthFromDays(days, monthKey) {
-  const acc = zeroEntry();
-  for (const isoDate in days) {
-    if (isoDate.indexOf(monthKey) === 0) {
-      const d = days[isoDate];
-      acc.focusMinutes  += d.focusMinutes  || 0;
-      acc.breathMinutes += d.breathMinutes || 0;
-      acc.moveMinutes   += d.moveMinutes   || 0;
-      acc.waterGlasses  += d.waterGlasses  || 0;
-    }
-  }
-  return acc;
-}
-
-/* Suma idempotente de un año desde history.days. yearKey = "YYYY". */
-function recomputeYearFromDays(days, yearKey) {
-  const acc = zeroEntry();
-  for (const isoDate in days) {
-    if (isoDate.indexOf(yearKey) === 0) {
-      const d = days[isoDate];
-      acc.focusMinutes  += d.focusMinutes  || 0;
-      acc.breathMinutes += d.breathMinutes || 0;
-      acc.moveMinutes   += d.moveMinutes   || 0;
-      acc.waterGlasses  += d.waterGlasses  || 0;
-    }
-  }
-  return acc;
-}
-
-/* Recalcula TODOS los agregados desde history.days. Operacion idempotente
-   y segura: si days es integro, months/years quedan correctos sin importar
-   cuantas veces se haya inflado antes. Sesion 69. */
-function recomputeAllHistoryAggregates(history) {
-  const days = history.days || {};
-  const months = {};
-  const years = {};
-  for (const isoDate in days) {
-    const monthKey = isoDate.slice(0, 7);
-    const yearKey  = isoDate.slice(0, 4);
-    if (!months[monthKey]) months[monthKey] = recomputeMonthFromDays(days, monthKey);
-    if (!years[yearKey])   years[yearKey]   = recomputeYearFromDays(days, yearKey);
-  }
-  return { days, months, years };
-}
-
-/* Sesion 69: archiveDayToHistory ahora es 100% idempotente.
-   days[iso] siempre se sobrescribe (overwrite, no acumulativo).
-   months/years se recalculan desde days (no acumulativo).
-   Llamar dos veces para la misma fecha produce el mismo resultado. */
-function archiveDayToHistory(history, dateStr, weeklyStats) {
-  const idx = getDayIndexMondayFirst(dateStr);
-  const delta = {
-    focusMinutes:  (weeklyStats.focusMinutes  || [])[idx] || 0,
-    breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
-    moveMinutes:   (weeklyStats.moveMinutes   || [])[idx] || 0,
-    waterGlasses:  (weeklyStats.waterGlasses  || [])[idx] || 0,
-  };
-  const hasData = Object.values(delta).some(v => v > 0);
-  if (!hasData) return history;
-
-  const isoDate = toISODate(dateStr);
-  const days = { ...(history.days || {}), [isoDate]: delta };
-  const monthKey = isoDate.slice(0, 7);
-  const yearKey  = isoDate.slice(0, 4);
-  return {
-    days,
-    months: { ...(history.months || {}), [monthKey]: recomputeMonthFromDays(days, monthKey) },
-    years:  { ...(history.years  || {}), [yearKey]:  recomputeYearFromDays(days, yearKey)  },
-  };
 }
 
 /* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
@@ -499,13 +396,12 @@ function onToast(listener) {
 // Aplicar tema al cargar
 applyTheme();
 
+/* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
+   MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-
+   Today) los expone state-history.jsx (s101). */
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast,
-  zeroEntry, toISODate, todayISO,
-  getDayIndexMondayFirst, getMondayOf,
-  archiveDayToHistory,
-  recomputeMonthFromDays, recomputeYearFromDays, recomputeAllHistoryAggregates,
 });

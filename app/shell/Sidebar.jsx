@@ -343,7 +343,13 @@ function WeekDots({ weeklyStats, compact }) {
   return (
     <div style={{ display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 }}>
       {days.map((d, i) => {
-        const active = (weeklyStats.focusMinutes[i] || 0) > 0;
+        /* Criterio "dia activo" s69 (como YearView y la racha): cualquier
+           sesion de foco|respira|cuerpo enciende el punto; agua sola NO.
+           Antes solo miraba focusMinutes -- un dia de solo Respira/Mueve
+           quedaba gris (s101). */
+        const active = (weeklyStats.focusMinutes[i]  || 0) > 0
+                    || (weeklyStats.breathMinutes?.[i] || 0) > 0
+                    || (weeklyStats.moveMinutes?.[i]   || 0) > 0;
         const isToday = i === today;
         return (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 }}>
