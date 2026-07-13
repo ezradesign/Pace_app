@@ -213,6 +213,78 @@ planificar. Persistido en memoria `ux-refinement-backlog`.
   en el mapa ("cuando corresponda"; antes el plan decía v1.0 web+Chrome,
   v2.0 Android). Capacitor cubre Android e iOS con el mismo wrapper → ver
   línea post-venta.
+- **[feedback s103-cierre — i18n] Más idiomas que ES/EN** para la app
+  final. NO implementar aún — preparar el paso cuando toque: la
+  arquitectura ya lo soporta (ampliar `_bootstrap.js` + patch por dominio,
+  decisión s81; con un 3er idioma, re-evaluar "ES y EN en mismo archivo").
+  OJO: los `name` ES canónicos son keys de glifo/i18n custom (s93).
+- **[feedback s103-cierre — Research] Competidores en Google Play + App
+  Store.** Identificar competidores directos (pomodoro/focus, breathwork,
+  estiramiento de oficina, hábitos), **leer sus reseñas** (quejas
+  recurrentes + qué aman) y destilar insights para perfeccionar PACE.
+  Sesión de research propia; encaja en pre-venta junto a Starter Story.
+- **[feedback s103-cierre — Estrategia] Canal @StarterStoryBuild.**
+  Revisar A FONDO youtube.com/@StarterStoryBuild (variante Build del canal
+  ya registrado) para **creación y lanzamiento** de la app. Memoria
+  `premium-strategy-sources` actualizada.
+- **[feedback s103-cierre — Builder] "Tus rutinas" para Mueve Y Estira +
+  MUCHO más visible.** Refuerza el ítem existente: hoy solo al final de
+  MoveLibrary; debe existir también en Estira y con presencia real
+  (¿home? ¿sidebar? — ver ítem Sidebar). El registro ya une MOVE+EXTRA.
+- **[feedback s103-cierre — Contenido] Botón (i) de información por
+  ejercicio.** Cada ejercicio con acceso a una explicación de CÓMO
+  realizarlo (dudas de forma/técnica). Mapea a **s107-108** (taxonomía +
+  cues explicativos + nomenclatura ES del feedback s101).
+- **[feedback s103-cierre — UI general] Más atractiva y vistosa.**
+  Transversal (principios del usuario); cada sesión de pulido lo aplica.
+- **[feedback s103-cierre — Sidebar] Más bonita, organizada y útil.**
+  Amplía el ítem existente. Pregunta abierta del usuario: ¿las rutinas
+  personalizadas premium en la sidebar? Opinión registrada: como ACCESO
+  RÁPIDO compacto puede funcionar (la sidebar es "estado del día", no
+  biblioteca) — decidir en la sesión de diseño del home/sidebar (s106).
+- **[feedback s103-cierre — Logros] Curva de desbloqueo + glifos.**
+  (a) Al principio se desbloquean muchos sellos "sin casi hacer nada" →
+  revisar el PACING de los logros tempranos (mapea a la sesión de diseño
+  de gamificación suave: los primeros sellos deben saber a logro).
+  (b) Los glifos de logros "no son nada bonitos ni pulidos" y algunos ni
+  siquiera tienen la coherencia de constelaciones del set (ej. "Cuello
+  atendido", "Escritorio express") → la revisión COMPLETA pre-venta cubre
+  TAMBIÉN los 34+ glifos de logros, no solo los 46+ de ejercicio.
+- **[feedback s103-cierre — Timer] Estilos Barra y Analógico
+  sencillos/feos.** Frente al Aro (default), los otros dos estilos de
+  Tweaks necesitan pulido o rediseño para estar a la altura.
+- **[feedback s103-cierre — Ops] Actualizar la app con clientes reales
+  sin romperla y sin que lo noten.** Base YA construida: SW waiting +
+  UpdatePrompt (s102, re-verificado s103) + migraciones defensivas de
+  pace.state. Falta protocolo de despliegue pre-lanzamiento: smoke tests
+  pre-publicación, versionado de datos/migraciones, plan de rollback,
+  ventana de deploy. Sesión propia ANTES de la pre-venta.
+- **[feedback s103-cierre — Respira] Visual de respiración más bonito /
+  gráfico / vistoso.** Sesión de diseño con propuestas para que el usuario
+  ELIJA; ideas iniciales registradas: florecer orgánico con grano de tinta
+  (coherente papel-tinta), ondas concéntricas tipo tinta en agua, pétalos
+  que abren por fase con atmósfera del acento. Los 5 estilos actuales
+  (Flor/Pulso/Pétalo/Ondas/Orgánico) como base a elevar. OJO: motion
+  esencial `data-pace-essential` (s89) se conserva.
+- **[feedback s103-cierre — Welcome] Bienvenida más vistosa, cercana,
+  explicativa y atractiva.** Mapea DIRECTO a **s105** (onboarding 3
+  pantallas): amplía su alcance — no solo pedir datos, también presentar
+  la app con calidez.
+- **[feedback s103-cierre — BreakMenu] Glifos incoherentes con la home.**
+  El menú post-pomodoro no usa los iconos de ActivityBar
+  (ABBreathe/ABStretch/ABMove/ABDrop) y "pierde el diseño original".
+  Fix pequeño y acotado, agrupable en la próxima sesión de pulido.
+- **[feedback s103-cierre — BUG] Aro del pomodoro descolocado en
+  Pausa/Larga.** En FOCO el aro respeta el diseño original; al cambiar a
+  PAUSA o LARGA "se mueve del sitio" (capturas del usuario): la fila MIN
+  de presets solo se renderiza en Foco → toda la columna sube y el aro
+  cambia de posición entre pestañas. Fix acotado (reservar el alto de la
+  fila o equivalente); candidato a la próxima sesión de pulido junto al
+  BreakMenu. Relacionado (NO igual) con el ítem "semicírculo fijo" de s96.
+- **[feedback s103-cierre — Estrategia] Video de monetización.**
+  youtube.com/watch?v=Di973jC2Jio — "técnicas muy interesantes para
+  monetizar la app". Revisar en la pasada de estrategia pre-venta junto a
+  @starterstory + @StarterStoryBuild (memoria `premium-strategy-sources`).
 
 ---
 

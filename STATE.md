@@ -409,3 +409,29 @@ Recogido con capturas al cerrar s96. Lista completa en `ROADMAP.md` ->
   **iOS** cuando corresponda (Capacitor cubre ambos, post-venta). Principios
   transversales del usuario: bonita, simple, util, profesional, vistosa,
   sencilla y facil de usar. Detalle en ROADMAP "Backlog de pulido".
+- **[Feedback s103-cierre]** i18n 3+ IDIOMAS para la app final (preparar
+  cuando toque; arquitectura lista, decision s81) · RESEARCH competidores
+  Google Play + App Store (leer reseñas, destilar insights; pre-venta) ·
+  canal **@StarterStoryBuild** + video monetizacion (memoria
+  premium-strategy-sources) · BUILDER "Tus rutinas" para Mueve Y Estira +
+  mucho mas visible · boton **(i) de informacion por ejercicio** (mapea
+  s107-108) · UI general mas atractiva y vistosa · SIDEBAR mas bonita/
+  organizada/util (¿custom routines premium ahi? → decidir en s106) ·
+  LOGROS: pacing inicial (demasiados sellos sin casi hacer nada → sesion
+  gamificacion suave) + glifos de logros sin coherencia de constelaciones
+  (ej. Cuello atendido, Escritorio express) → la revision COMPLETA pre-venta
+  cubre TAMBIEN los de logros · estilos de TIMER Barra/Analogico feos vs
+  Aro · OPS: protocolo de updates con clientes reales (base SW s102 hecha;
+  falta smoke tests + rollback + versionado de datos; pre-venta) · VISUAL
+  RESPIRA mas bonito/grafico (sesion de diseño, propuestas registradas) ·
+  WELCOME mas vistosa/cercana/explicativa (amplia s105) · BREAKMENU sin los
+  glifos de ActivityBar de la home (fix pequeño, proxima sesion de pulido) ·
+  **BUG aro del timer**: en PAUSA y LARGA el aro se mueve del sitio y no
+  respeta el diseño de FOCO (la fila MIN de presets solo existe en Foco →
+  la columna sube; reservar el espacio o equivalente). Detalle en ROADMAP.
+- **[Entre sesiones — experimento ilustraciones Caminos]** El usuario
+  planea una sesion experimental aparte: ilustracion editorial como fondo
+  del modulo Caminos (empieza por path.dawn, asset a
+  `app/paths/illustrations/assets/`). Patron arte s84/D-4 (el usuario
+  aporta, se porta literal). Si aterriza antes de s104, la Tarea 0 de git
+  debe esperar cambios en `app/paths/` + assets nuevos.
