@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.47.0
-**Ultima sesion:** #102 -- 2026-07-13 - **PWA completa** (plan maestro, fila s102; 4 bifurcaciones decididas por el usuario ANTES de tocar). **manifest.webmanifest** completo (renombrado desde manifest.json: id, categories, **4 shortcuts** Foco/Respira/Mueve/Hidratate con deep links `/?go=` consumidos una vez en main.jsx, launch_handler; colores alineados a `--paper #F2EDE0`). **HALLAZGO+FIX de despliegue**: `index.html` se servia SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal → la PWA publicada NO era instalable); el paso 9 del build lo re-inserta SOLO en la copia desplegada. **Update prompt**: sw.js retira el skipWaiting incondicional (worker queda en waiting) + `app/ui/UpdatePrompt.jsx` ("Actualizar" → SKIP_WAITING → reload; "Luego" respeta el waiting); navegaciones siguen network-first (s89 intacta). **Notificacion fin-pomodoro** opt-in (`notifyFocusEnd:false`; toggle en Ajustes con permiso al activar; dispara solo con pestaña OCULTA, silent, via SW showNotification; helpers en `app/focus/FocusTimer.support.jsx`). Enlaces **Seguridad · Privacidad** al pie de Ajustes (solo http(s)). **Pomodoro persiste la recarga** (`pace.timer.v1` FUERA de pace.state; reanuda solo si sigue vivo, expirado se descarta SIN acreditar — cierra el fork s96). Diario: `docs/sessions/session-102-pwa-completa.md`
-**Ultima actualizacion de este archivo:** 2026-07-13 - sesion 102
-**Build entregado:** `PACE_standalone.html` v0.47.0 (774 KB) + `index.html` (idem + `<link rel="manifest">`)
+**Version actual:** v0.48.0
+**Ultima sesion:** #103 -- 2026-07-13 - **Build Etapa A: precompilado Babel + React production** (plan maestro, fila s103-104, PRIMERA de las dos; 4 bifurcaciones decididas por el usuario ANTES de tocar). Los **74 scripts `text/babel`** (73 archivos + mount loop) se **compilan en build** con `@babel/core` 7.29 (misma major.minor que el @babel/standalone del navegador; sourceType script, targets evergreen, retainLines) y se inlinean como `<script>` planos. **Semantica de scope reproducida con fidelidad**: Babel standalone ejecuta via eval indirecto (function/var top-level → window automatico, const/let privados) → el build envuelve cada archivo en **IIFE** (los `const {useState}=React`/`GLYPH_SVG` repetidos ya no chocan) + **re-expone por AST** los function/var top-level (asi viajan `RoutineCard` y demas globals implicitos sin Object.assign). **React 18.3.1 production UMD** self-hosted (`vendor/`, desde el paquete npm) e inlineado en ambos artefactos; **@babel/standalone FUERA del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga). `app/` INTACTO (ni una linea); PACE.html dev sigue igual. Pins deliberados **Babel 7 / TypeScript 5** (los latest Babel 8 ESM-only y TS 7 Go rompen el build). **Fuentes self-hosted → s104** (bifurcaciones ya decididas: solo EB Garamond + Inter Tight; data URIs en el standalone). Diario: `docs/sessions/session-103-build-etapa-a.md`
+**Ultima actualizacion de este archivo:** 2026-07-13 - sesion 103
+**Build entregado:** `PACE_standalone.html` v0.48.0 (924 KB, compilado, autocontenido en JS) + `index.html` (idem + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,11 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.47.0** (s102: link a manifest.webmanifest + theme-color `#F2EDE0` + registro SW con deteccion de waiting/updatefound y reload guardado en controllerchange + scripts de UpdatePrompt y FocusTimer.support) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.47.0** (774 KB, 73 archivos -- entran UpdatePrompt.jsx y FocusTimer.support.jsx; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.47.0** (s102: el build RE-INSERTA `<link rel="manifest">` en esta copia -- fix del despliegue no-instalable desde s48c) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.48.0** (s103: solo bump del titulo -- dev INTACTO: CDN development + Babel standalone + .jsx fuente; s102: manifest + registro SW waiting/updatefound) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.48.0** (924 KB, 74 scripts COMPILADOS en IIFE + React production inline -- autocontenido en JS por primera vez, cero unpkg; solo queda el @import de Google Fonts → s104; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.48.0** (identico al standalone + `<link rel="manifest">` re-insertado por el paso del build -- s102) |
+| `vendor/` | React 18.3.1 production UMD self-hosted (react + react-dom .min.js) | **NUEVO s103** (copiados del paquete npm, verificados por integrity del lockfile; el build los inlinea -- NO se sirven como archivos) |
+| `package.json` + `package-lock.json` | Toolchain del build (devDependencies) | **s103**: `@babel/core`/`preset-env`/`preset-react` PINEADOS a major 7 + `typescript` a major 5 + react/react-dom 18.3.1 (fuente de vendor/). OJO: los latest (Babel 8 ESM-only, TS 7 Go) ROMPEN el build -- no subir de major sin sesion propia |
 | `safety.html` | Pagina estatica `/safety` (Cloudflare Pages) -- disclaimers respiracion/movilidad, ES+EN | **v0.46.0** (nueva s101, ~190 ln; autocontenida, rama oscura via prefers-color-scheme, paleta COPIADA de tokens.css; sin enlazar desde la UI aun) |
 | `privacy.html` | Pagina estatica `/privacy` (Cloudflare Pages) -- local-first, sin cuentas/analitica, ES+EN | **v0.46.0** (nueva s101, ~190 ln; misma base visual que safety.html) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
@@ -102,13 +104,14 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.47.0** (s102: SIN skipWaiting incondicional -- el worker nuevo queda en WAITING hasta `message SKIP_WAITING` del UpdatePrompt; + `notificationclick` que enfoca la app; precache a manifest.webmanifest; s89: activate borra caches pace-* viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.48.0** (s103: SOLO bump de CACHE_NAME; logica intacta. s102: SIN skipWaiting incondicional -- el worker nuevo queda en WAITING hasta `message SKIP_WAITING` del UpdatePrompt; + `notificationclick`; s89: activate borra caches pace-* viejos + navegaciones network-first. Ciclo waiting→prompt→activate RE-VERIFICADO con el build compilado y dos SW reales) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + persistencia `pace.timer.v1` | **v0.47.0** (nuevo s102, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
-| `build-standalone.js` | Genera el bundle offline | **v0.47.0** (s102: paso 9 re-inserta `<link rel="manifest">` SOLO en index.html -- el standalone sigue sin el (CORS file://, s48c); s65: copia a index.html) |
+| `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.47.0** (s102: + MIME `.webmanifest` + rutas bonitas `/safety`→`safety.html` `/privacy`→`privacy.html`, paridad con Cloudflare; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.47.0_20260713.html` <- creado s103 (snapshot del v0.47.0 publicado en s102, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.46.0_20260713.html` <- creado s102 (snapshot del v0.46.0 publicado en s101)
 - `backups/PACE_standalone_v0.45.0_20260710.html` <- creado s101 (snapshot del v0.45.0 publicado en s100)
 - `backups/PACE_standalone_v0.44.0_20260710.html` <- creado s100 (snapshot del v0.44.0 publicado en s99)
@@ -128,101 +131,110 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.34.1_20260605.html` <- creado s86 (snapshot del v0.34.1 publicado en s85)
 - `backups/PACE_standalone_v0.34.0_20260605.html` <- creado s85 (snapshot del v0.34.0 publicado en s84)
 - `backups/PACE_standalone_v0.33.3_20260524.html` <- creado s84 (copia del v0.33.3 publicado en s83)
-- `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83
 
-Nota s102: cap 20 mantenido rotando el mas antiguo (`v0.33.1_20260523.html`)
-al crear el backup del v0.46.0.
+Nota s103: cap 20 mantenido rotando el mas antiguo (`v0.33.2_20260523.html`)
+al crear el backup del v0.47.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 102 - v0.47.0 - PWA completa.** Fila s102 del plan maestro. Cuatro
-bifurcaciones decididas por el usuario ANTES de tocar (AskUserQuestion):
-enlaces legales en Tweaks · notificacion como toggle opt-in en Tweaks con
-permiso al activar · 4 shortcuts (Foco/Respira/Mueve/Hidratate) ·
-persistencia del Pomodoro "solo si sigue vivo".
+**Sesion 103 - v0.48.0 - Build Etapa A (1 de 2): precompilado Babel + React
+production.** Fila s103-104 del plan maestro. Cuatro bifurcaciones decididas
+por el usuario ANTES de tocar (AskUserQuestion): Build Etapa A confirmado
+(pulido s102-cierre detras) · React inlineado en AMBOS artefactos · fuentes
+(s104) solo EB Garamond + Inter Tight · standalone con fuentes data URIs
+(s104).
 
-### Que se hizo (s102)
+### Que se hizo (s103)
 
-- **Tarea 0**: s101 (`5317563`, v0.46.0) commiteado y pusheado (+ commit de
-  docs del usuario `1ae5488`), working tree limpio.
-- **HALLAZGO de auditoria**: `index.html` desplegado iba SIN
-  `<link rel="manifest">` desde s48c (el build lo quitaba del standalone por
-  CORS file:// y copiaba literal) → **la PWA publicada NO era instalable**.
-  Fix: build paso 9 re-inserta el link SOLO en la copia index.html.
-- **manifest.webmanifest** (renombrado, no duplicado): id "/", categories,
-  4 shortcuts `/?go=focus|breathe|move|hydrate`, launch_handler
-  focus-existing; colores manifest + `<meta theme-color>` alineados a
-  `--paper #F2EDE0` (huerfano `#F5EFE0` de s65; tokens.css intacto).
-  Deep links en main.jsx: consume `?go=` UNA vez + replaceState; `focus`
-  solo asegura el modo, NO auto-arranca el timer.
-- **Update prompt**: sw.js SIN skipWaiting incondicional (el worker nuevo
-  queda en waiting) + message SKIP_WAITING; registro en PACE.html anuncia el
-  waiting (`window.__paceSwWaitingReg` + `pace:sw-waiting`, cubre anuncio
-  pre-mount) y recarga en controllerchange con guard del primer install.
-  Nuevo `app/ui/UpdatePrompt.jsx` (118 ln, barra discreta bottom-center,
-  "Actualizar/Luego", zIndex 150). Navegaciones siguen network-first (s89).
-- **Notificacion fin-pomodoro**: `notifyFocusEnd:false` en defaults; toggle
-  en Ajustes tras Audio (permiso SOLO al activar; hint si esta bloqueado);
-  `maybeNotifyFocusEnd` en nuevo `app/focus/FocusTimer.support.jsx` (89 ln)
-  -- dispara solo con pestaña OCULTA + granted, via SW showNotification con
-  fallback, silent (la campana de la app es el sonido), tag anti-duplicado;
-  `notificationclick` en sw.js enfoca la app. Solo rama foco.
-- **Enlaces legales**: "Seguridad · Privacidad" al pie de Ajustes
-  (`/safety` `/privacy`, _blank noopener, gate `isWeb` -- en file:// no se
-  renderizan). Cierra el pendiente de s101.
-- **Persistencia Pomodoro (fork s96 RESUELTO)**: `useCountdown` +
-  `restore(endsAtMs)` + `endsAt` expuesto; clave `pace.timer.v1` FUERA de
-  pace.state.v2 (timer sigue local); se escribe solo running-foco
-  (pausa/reset/fin limpian); al montar reanuda si endsAt vivo Y modo/minutos
-  coinciden; **expirado estando fuera → descartado SIN acreditar**.
-- **i18n**: 13 keys ES+EN (`tweaks.notify.*`, `tweaks.legal.*`,
-  `notify.focus.*`, `update.*`).
+- **Tarea 0**: s102 (`e8be7b5`, v0.47.0) commiteado y pusheado (+ commit de
+  docs del usuario `86f8be6`), working tree limpio.
+- **Toolchain**: devDependencies @babel/core + preset-env + preset-react
+  **PINEADOS a major 7** (7.29.x = misma major.minor que el @babel/standalone
+  del navegador) y typescript a major 5 (los latest -- Babel 8 ESM-only y
+  TS 7 Go sin ts.createSourceFile -- ROMPEN el build). react/react-dom
+  18.3.1 como devDeps; UMD production copiados del paquete npm a `vendor/`
+  (committeado). package-lock.json nuevo.
+- **build-standalone.js**: cada script text/babel se compila EN MEMORIA
+  (compileBabel: sourceType 'script', preset-env targets evergreen
+  chrome/edge/firefox 90 + safari 14.1, retainLines) y se inlinea como
+  script plano; el mount loop tambien. **Semantica de scope**: IIFE por
+  archivo (const/let privados como bajo el eval de Babel standalone; sin
+  ella, los `const {useState}=React` y GLYPH_SVG repetidos lanzan
+  "already declared" y el archivo entero no evalua) + `collectGlobalNames`
+  re-expone por AST los function/var top-level (RoutineCard,
+  getBreatheRoutine y demas globals implicitos que nunca pasaron por
+  Object.assign). React production inlineado desde vendor/ (replacement
+  como FUNCION: los patrones $ del minificado envenenan los replacement
+  strings de String.replace); @babel/standalone retirado.
+  replaceOutsideComments para los replaces (comentarios HTML con tags
+  literales). Invariantes: sin text/babel residual (solo tags reales), sin
+  unpkg.com, sin cierres de script en el JS inlineado, sanity
+  post-escritura de ambos artefactos.
+- **Version**: PACE.html titulo + sw.js CACHE_NAME a v0.48.0. NADA mas
+  cambio: app/ intacto (ni una linea), manifest/SW/registro intactos,
+  PACE.html dev identico (CDN development + Babel + .jsx).
 
 ### Verificacion + cierre
 
 Preview :8765 propio, protocolo s93 (purga SW+caches por tanda) + seed
-fresco de `pace.state.v2` antes de cada asercion. Consola 0 errores en todas
-las pasadas. Manifest con MIME correcto + 4 shortcuts en DOM · deep links 3
-superficies con URL limpia · rama REAL de permiso denegado (el pane embebido
-tiene Notification denied): hint visible y el toggle no enciende ·
-`/safety`+`/privacy` 200 en preview (rutas bonitas nuevas) · persistencia 3
-casos (reanuda en 01:14 / expirado descartado con weeklyStats a cero /
-Comenzar escribe-Pausar limpia) · **update prompt con DOS SW reales**:
-waiting+barra → "Luego" persiste y REAPARECE al recargar → "Actualizar"
-activa, borra el cache viejo y recarga sola; sin bucle de reload en el
-primer install · standalone verificado (sin manifest, sin prompt) ·
-index.html CON manifest. Cierre: backup `v0.46.0_20260713` (rotado
-`v0.33.1`, cap 20), rebuild **774 KB / 73 archivos**, diario s102, CHANGELOG
-(detalle v0.47.0 + v0.46.0), STATE, ROADMAP, memorias.
+fresco por asercion. **Dev intacto** (Babel in-browser monta igual).
+**Compilado**: monta sin Babel, React 18.3.1 production, checklist COMPLETO
+-- Welcome (intencion persiste) · Respira 20 tecnicas + sesion animada ·
+Mueve PASO 1 DE 5 + countdown vivo · Estira · Hidratate +/- + weeklyStats
+lunes-first + persiste recarga · logro + TOAST VISIBLE (viewport, opacity 1,
+z 200) · paleta Crema/Oscuro con tokens exactos · deep link ?go= consume y
+limpia · **pomodoro s102 en AMBAS ramas** (reanuda 00:06 a 00:04, completa,
+BreakMenu + ciclo + 25 min; y expirado-fuera = descarte SIN acreditar) ·
+equivalencia dev=compilado (Bhastrika directo en ambos; el modal de
+seguridad esta cableado a las Rondas, premium/Pronto en free). **Pareja SW
+s89+s102 con DOS SW reales**: primer install sin bucle, bump CACHE_NAME,
+worker en WAITING + barra "Hay una version nueva de PACE", Actualizar
+activa + borra cache viejo + reload solo + estado intacto. (OJO
+metodologico: el navigate del pane hace hard-reload, deja la pagina sin
+controlar y el SW nuevo activa directo -- falso negativo; probar el waiting
+con reg.update() sobre pagina controlada viva.) Trap de errores en vivo +
+render completo forzado + Estira/Ritmo/Logros abiertos: cero errores.
+Standalone servido: monta, sin manifest, cero CDN de JS. index.html CON
+manifest. Cierre: backup v0.47.0_20260713 desde git HEAD (rotado v0.33.2,
+cap 20), build final **924 KB / 74 scripts**, diario s103, CHANGELOG
+(detalle v0.48.0 + v0.47.0), STATE, ROADMAP, memorias. DESIGN_SYSTEM sin
+cambios (cero tokens).
 
 ### Pendiente
 
+- **s104 = segunda mitad de la fila**: fuentes self-hosted (ver Proxima
+  sesion).
 - **Probar la notificacion y la instalacion PWA en un navegador REAL del
-  usuario** (el pane embebido tiene los permisos de notificacion denegados a
-  nivel de navegador; la logica quedo verificada, la UX del prompt del
-  navegador no). Tras el proximo deploy: comprobar que Chrome ofrece
-  "Instalar" y que los 4 shortcuts aparecen en el icono.
-- (Opcional, espera ARTE del usuario, patron s84/D-4) **ilustracion propia
-  por Camino** + iconos propios por shortcut (96×96).
-- `tokens.css` sigue en deuda de tamaño (514 ln).
+  usuario** (desde s102; el usuario no confirmo al arrancar s103). Tras el
+  proximo deploy: Chrome ofrece "Instalar" + 4 shortcuts en el icono.
+- (Opcional, espera ARTE, patron s84/D-4) ilustracion por Camino + iconos
+  propios por shortcut.
+- `tokens.css` sigue en deuda de tamano (514 ln).
 
-## Proxima sesion -- s103-104: build Etapa A
+## Proxima sesion -- s104: fuentes self-hosted (cierra Etapa A)
 
-Plan maestro (ROADMAP "Camino a v1.0"): **precompilar .jsx→.js con Babel CLI
-+ React production UMD self-hosted + fuentes self-hosted subseteadas. SIN
-Vite** -- cero cambios de arquitectura (window globals intactos, PACE.html
-dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio
-con ~5% del riesgo.
+Bifurcaciones YA decididas en s103: **solo EB Garamond + Inter Tight**
+(Cormorant y JetBrains Mono caen a Georgia/ui-monospace) · **standalone las
+inlinea como data URIs** · web las referencia como archivos.
+
+1. Descargar los woff2 **subset latin** de Google a `fonts/` + sustituir el
+   @import de tokens.css por @font-face locales (el dev las usa igual).
+2. Build: index.html con rutas `/fonts/*.woff2` + **PRECACHE en sw.js**
+   (tipografia fiel offline); standalone con data URIs. MIME woff2 en
+   static-server.
+3. Bump version + re-check del ciclo waiting-activate (protocolo de esta
+   sesion: reg.update() sobre pagina controlada).
+4. Verificar cero peticiones a fonts.googleapis en los 3 artefactos.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
-Secuencia en `ROADMAP.md` ("Camino a v1.0"): build Etapa A (s103-104) ·
-onboarding (s105) · home Caminos al centro (s106) · taxonomia + filtros +
-sigilo (s107-108) · pre-venta: glifos (revision COMPLETA del set) +
-trial/licencia (cambiando formalmente la decision F3b) + landing + canal
-Starter Story A FONDO antes de pricing.
+Secuencia en `ROADMAP.md` ("Camino a v1.0"): ~~build Etapa A s103~~ ·
+fuentes s104 (cierra Etapa A) · onboarding (s105) · home Caminos al centro
+(s106) · taxonomia + filtros + sigilo (s107-108) · pre-venta: glifos
+(revision COMPLETA del set) + trial/licencia (cambiando formalmente la
+decision F3b) + landing + canal Starter Story A FONDO antes de pricing.
 
 ---
 
@@ -230,6 +242,8 @@ Starter Story A FONDO antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Build Etapa A: artefactos COMPILADOS con semantica de eval reproducida (IIFE + re-exposicion AST) | s103 | Los artefactos generados llevan JS plano compilado; el dev sigue en Babel standalone. La fidelidad de semantica la garantizan DOS piezas del build que van JUNTAS: la IIFE por archivo (const/let privados; sin ella los duplicados entre archivos lanzan "already declared") y la re-exposicion de function/var top-level via `collectGlobalNames` (los globals implicitos tipo `RoutineCard` siguen viajando). Regla para codigo nuevo: el canal EXPLICITO `Object.assign(window, ...)` sigue siendo la convencion (CLAUDE.md regla 2); los globals implicitos funcionan pero no añadir nuevos a proposito. Cualquier cambio al pipeline del build se verifica con el checklist funcional completo sobre el COMPILADO, no solo dev |
+| Toolchain del build PINEADO: Babel major 7 + TypeScript major 5 | s103 | `@babel/core`/`preset-env`/`preset-react` a ^7 (7.29.x, misma major.minor que el @babel/standalone 7.29.0 del navegador -- semantica identica dev/prod) y `typescript` a ^5 (API clasica `ts.createSourceFile` del validador s56). Los latest de 2026 ROMPEN el build: Babel 8 es ESM-only y TypeScript 7 (port Go) no expone la API via require. NO subir de major sin sesion propia que migre build-standalone.js. React/react-dom 18.3.1 en devDeps son la FUENTE de vendor/ (re-copiar de node_modules si se actualiza React) |
 | SW: updates con PROMPT (worker en waiting), nunca skipWaiting incondicional | s102 | El install de sw.js ya NO llama skipWaiting: el worker nuevo queda en waiting hasta que el usuario acepte en `UpdatePrompt.jsx` (postMessage SKIP_WAITING → controllerchange → reload, con guard del primer install) o cierre todas las pestañas. "Luego" respeta el waiting (reaparece en la proxima carga). Las NAVEGACIONES siguen network-first (s89 intacta): el HTML fresco llega sin esperar al SW; el prompt gobierna la activacion del worker y el precache offline. NO reintroducir el skipWaiting incondicional -- mata el prompt. Cualquier cambio de estrategia revisa la pareja s89+s102 |
 | Notificacion fin-pomodoro: opt-in, permiso solo al activar, solo pestaña oculta, silent | s102 | `notifyFocusEnd:false` por defecto. El permiso del navegador se pide UNICAMENTE al encender el toggle en Ajustes (gesto real; nunca al arrancar ni al terminar). Dispara solo si `document` NO esta visible (mirando la app, campana + pantalla de fin ya avisan) y solo en modo foco (pausa/larga no). `silent:true`: la campana pomodoro.end de la app es EL sonido; el SO no añade otro. Via `registration.showNotification` con fallback a `new Notification`; click enfoca la app (notificationclick, sw.js). Limitacion aceptada P1: con throttling de fondo puede llegar con ~1 min de retraso. Si se quiere notificar pausa/larga, es decision de producto nueva |
 | Pomodoro persiste la recarga via `pace.timer.v1`, FUERA de pace.state.v2 (cierra fork s96) | s102 | El timer sigue siendo LOCAL (decision s96): la clave aparte solo hace que sobreviva a la recarga. Se escribe SOLO con foco running (pausa/reset/fin/otros modos limpian). Al montar, FocusTimer reanuda via `useCountdown.restore(endsAt)` (endsAt ORIGINAL: el tiempo de la recarga cuenta como transcurrido) solo si endsAt sigue en el futuro Y modo/minutos coinciden con el state; **expirado estando fuera → se descarta en silencio SIN acreditar** (no se abonan minutos no presenciados, linea s101). Blindaje extra: `endsAt-now <= duracion` |
@@ -329,10 +343,10 @@ Starter Story A FONDO antes de pricing.
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
-**Backlog tecnico MEDIA:** FocusTimer.jsx a 493 ln (ver tabla). Quedan del
-P2 de la auditoria (`docs/audits/audit-producto-v0.34.4.md`): build
-precompilado (A-5, ES la proxima sesion s103-104), tests del state (A-6),
-import sanitizado (A-7). El "manifest rico" del P2 quedo HECHO en s102.
+**Backlog tecnico MEDIA:** FocusTimer.jsx a 493 ln (ver tabla). Del P2 de
+la auditoria (`docs/audits/audit-producto-v0.34.4.md`): build precompilado
+(A-5) **HECHO en s103 salvo fuentes (s104)**; quedan tests del state (A-6)
+e import sanitizado (A-7). El "manifest rico" del P2 quedo HECHO en s102.
 
 ### Deudas semanticas (no de tamaño, no urgentes)
 

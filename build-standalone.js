@@ -12,12 +12,19 @@
  * Sesion 56:    PARSER REAL: TypeScript parser via tsserver lib, reemplaza
  *               todos los checks heuristicos anteriores. Aborta con
  *               archivo, linea:columna y snippet de contexto exactos.
+ * Sesion 103:   BUILD ETAPA A: precompila todos los <script type="text/babel">
+ *               con @babel/core (preset-env targets modernos + preset-react,
+ *               sourceType script, retainLines) e inlinea React production
+ *               UMD desde vendor/. El output ya NO carga @babel/standalone ni
+ *               unpkg: standalone e index.html quedan autocontenidos.
+ *               PACE.html (dev) sigue igual: CDN dev + Babel en el navegador.
  */
 
 'use strict';
 
-var fs   = require('fs');
-var path = require('path');
+var fs    = require('fs');
+var path  = require('path');
+var babel = require('@babel/core');
 var ts   = (function() {
   var paths = [
     '/usr/local/lib/node_modules_global/lib/node_modules/typescript',
@@ -32,6 +39,96 @@ var ts   = (function() {
 var ROOT   = __dirname;
 var INPUT  = path.join(ROOT, 'PACE.html');
 var OUTPUT = path.join(ROOT, 'PACE_standalone.html');
+
+/* ---------------------------------------------------------------------------
+   compileBabel: compila un bloque text/babel a JS plano (s103 / Etapa A).
+   - sourceType 'script': NO inyecta "use strict" -> misma semantica sloppy
+     que los <script> del navegador de siempre.
+   - targets evergreen: mantiene ?. ?? arrow/class/async nativos (cero
+     helpers inyectados); es lo que los navegadores soportados ya ejecutan.
+   - retainLines: los numeros de linea del output coinciden con el .jsx
+     fuente -> stack traces de produccion apuntan a la linea real.
+   --------------------------------------------------------------------------- */
+var BABEL_OPTS = {
+  presets: [
+    ['@babel/preset-env', {
+      targets: { chrome: '90', edge: '90', firefox: '90', safari: '14.1' },
+      modules: false
+    }],
+    ['@babel/preset-react', { development: false }]
+  ],
+  sourceType: 'script',
+  retainLines: true,
+  compact: false,
+  comments: true,
+  configFile: false,
+  babelrc: false
+};
+
+/* ---------------------------------------------------------------------------
+   collectGlobalNames (s103): nombres top-level `function` y `var` de un
+   archivo COMPILADO. Babel standalone ejecuta cada text/babel via eval
+   indirecto: esos nombres se vuelven propiedades de window automaticamente
+   (asi comparten RoutineCard y otros helpers SIN Object.assign), mientras
+   que const/let quedan privados por archivo. La IIFE del build reproduce lo
+   privado; esta lista reproduce lo global (se re-expone al final de la IIFE).
+   --------------------------------------------------------------------------- */
+function collectPatternNames(id, out) {
+  if (!id) return;
+  if (id.type === 'Identifier') out.push(id.name);
+  else if (id.type === 'ObjectPattern') id.properties.forEach(function(p) { collectPatternNames(p.value || p.argument, out); });
+  else if (id.type === 'ArrayPattern') id.elements.forEach(function(el) { collectPatternNames(el, out); });
+  else if (id.type === 'AssignmentPattern') collectPatternNames(id.left, out);
+  else if (id.type === 'RestElement') collectPatternNames(id.argument, out);
+}
+
+function collectGlobalNames(code, sourceLabel) {
+  var ast;
+  try {
+    ast = babel.parseSync(code, { sourceType: 'script', configFile: false, babelrc: false });
+  } catch (e) {
+    console.error('\n  [ERROR] No se pudo re-parsear el compilado de ' + sourceLabel + ': ' + e.message);
+    process.exit(1);
+  }
+  var names = [];
+  ast.program.body.forEach(function(node) {
+    if (node.type === 'FunctionDeclaration' && node.id) {
+      names.push(node.id.name);
+    } else if (node.type === 'VariableDeclaration' && node.kind === 'var') {
+      node.declarations.forEach(function(d) { collectPatternNames(d.id, names); });
+    }
+  });
+  return names;
+}
+
+/* Aplica un replace SOLO fuera de comentarios HTML. Necesario porque hay
+   comentarios de documentacion que contienen etiquetas <script ...> literales
+   (p.ej. el bloque "Monta la app") -- mismo motivo por el que
+   validateInlineScripts strippea comentarios antes de validar (s56). */
+function replaceOutsideComments(html, regex, cb) {
+  return html.split(/(<!--[\s\S]*?-->)/).map(function(seg) {
+    if (seg.indexOf('<!--') === 0) return seg;
+    return seg.replace(regex, cb);
+  }).join('');
+}
+
+function compileBabel(content, sourceLabel) {
+  var result;
+  try {
+    result = babel.transformSync(content, Object.assign({ filename: sourceLabel }, BABEL_OPTS));
+  } catch (e) {
+    console.error('\n  [ERROR] Babel fallo compilando ' + sourceLabel + ':\n  ' + e.message);
+    console.error('\n  [ERROR] Abortando build.');
+    process.exit(1);
+  }
+  var code = result.code;
+  // "</script>" dentro del JS compilado rompería el HTML al inlinearlo.
+  if (/<\/script/i.test(code)) {
+    console.error('\n  [ERROR] ' + sourceLabel + ' compilado contiene "</script>" -- rompería el inline HTML. Abortando.');
+    process.exit(1);
+  }
+  return code;
+}
 
 /* ---------------------------------------------------------------------------
    readFileClean: lee un archivo, elimina BOM UTF-8/UTF-16 y null bytes.
@@ -189,19 +286,19 @@ function validateInlineScripts(htmlContent, htmlPath) {
    MAIN
    --------------------------------------------------------------------------- */
 function main() {
-  console.log('=== PACE build-standalone.js (s56 / parser TS real) ===');
+  console.log('=== PACE build-standalone.js (s103 / Etapa A: precompilado Babel + React production) ===');
 
   // 1. Validar todos los archivos app/*.js y app/*.jsx
-  console.log('\n[1/5] Validando archivos app/ ...');
+  console.log('\n[1/7] Validando archivos app/ ...');
   validateAppFiles();
 
   // 2. Cargar PACE.html y validar scripts inline
-  console.log('\n[2/5] Cargando y validando PACE.html ...');
+  console.log('\n[2/7] Cargando y validando PACE.html ...');
   var html = readFileClean(INPUT);
   validateInlineScripts(html, INPUT);
 
   // 3. Quitar <link rel="manifest"> (CORS en file://)
-  console.log('\n[3/5] Inlineando assets ...');
+  console.log('\n[3/7] Inlineando assets ...');
   html = html.replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ');
 
   // 4. Inline tokens.css
@@ -211,8 +308,13 @@ function main() {
     '<style>\n' + tokensCss + '\n  </style>'
   );
 
-  // 5. Inline cada <script type="text/babel" src="..."></script>
-  html = html.replace(
+  // 5. Cada <script type="text/babel" src="..."> -> COMPILADO e inlineado
+  //    como <script> plano (s103). Los scripts planos se ejecutan sincronos
+  //    y en orden de documento: el ORDEN DE CARGA de PACE.html pasa de
+  //    "intencion" (Babel evalua async) a garantia real.
+  var compiledCount = 0;
+  html = replaceOutsideComments(
+    html,
     /<script type="text\/babel"[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g,
     function(match, src) {
       var full = path.join(ROOT, src);
@@ -221,9 +323,60 @@ function main() {
         return '';
       }
       var content = readFileClean(full);
-      return '<script type="text/babel">\n' + content + '\n</script>';
+      compiledCount++;
+      // IIFE por archivo + re-exposicion de function/var top-level =
+      // semantica EXACTA del eval indirecto de Babel standalone:
+      //  - const/let privados por archivo (sin IIFE, los repetidos entre
+      //    archivos -- `const { useState } = React`, GLYPH_SVG -- lanzan
+      //    "Identifier already declared" y el archivo entero no evalua)
+      //  - function/var visibles en window (asi viajan RoutineCard y otros
+      //    helpers que nunca pasaron por Object.assign)
+      var code  = compileBabel(content, src);
+      var names = collectGlobalNames(code, src);
+      var expose = names.length
+        ? '\n;Object.assign(window, { ' + names.join(', ') + ' });'
+        : '';
+      return '<script>\n;(function () {\n' + code + expose + '\n})();\n</script>';
     }
   );
+
+  // 5b. Scripts text/babel INLINE (el mount loop): mismo tratamiento.
+  html = replaceOutsideComments(
+    html,
+    /<script type="text\/babel"[^>]*>([\s\S]*?)<\/script>/g,
+    function(match, body) {
+      if (!body.trim()) return '';
+      compiledCount++;
+      var code  = compileBabel(body, 'PACE.html inline');
+      var names = collectGlobalNames(code, 'PACE.html inline');
+      var expose = names.length
+        ? '\n;Object.assign(window, { ' + names.join(', ') + ' });'
+        : '';
+      return '<script>\n;(function () {\n' + code + expose + '\n})();\n</script>';
+    }
+  );
+  console.log('  [OK] ' + compiledCount + ' scripts text/babel compilados a JS plano.');
+
+  // 5c. React production UMD inlineado desde vendor/ + fuera Babel standalone.
+  //     El output ya no toca unpkg: primer arranque sin CDN ni compile.
+  var reactJs    = readFileClean(path.join(ROOT, 'vendor/react.production.min.js'));
+  var reactDomJs = readFileClean(path.join(ROOT, 'vendor/react-dom.production.min.js'));
+  // OJO: replacement como FUNCION -- el JS minificado esta lleno de '$' y
+  // como string de reemplazo activaria los patrones $&/$' de String.replace.
+  html = html.replace(
+    /<script src="https:\/\/unpkg\.com\/react@[^"]*"[^>]*><\/script>/,
+    function() { return '<script>\n' + reactJs + '\n</script>'; }
+  );
+  html = html.replace(
+    /<script src="https:\/\/unpkg\.com\/react-dom@[^"]*"[^>]*><\/script>/,
+    function() { return '<script>\n' + reactDomJs + '\n</script>'; }
+  );
+  html = html.replace(/\s*<script src="https:\/\/unpkg\.com\/@babel\/standalone@[^"]*"[^>]*><\/script>/, '');
+  html = html.replace(
+    /<!-- React \+ Babel \(pinned, no tocar\) -->/,
+    '<!-- React 18.3.1 production UMD inlineado desde vendor/ (build Etapa A, s103).\n       En dev (PACE.html) siguen los CDN development + Babel standalone. -->'
+  );
+  console.log('  [OK] React production inlineado; @babel/standalone retirado del output.');
 
   // 6. Logo PNG -> data URI
   var logoPng = fs.readFileSync(path.join(ROOT, 'app/ui/pace-logo.png'));
@@ -233,20 +386,40 @@ function main() {
     'src="data:image/png;base64,' + logoB64 + '"'
   );
 
-  // 7. Verificar que el output no contiene null bytes
-  console.log('\n[4/5] Verificando bundle final ...');
+  // 7. Invariantes del bundle (s103): sin null bytes, sin text/babel
+  //    residual, sin referencias a CDN.
+  console.log('\n[4/7] Verificando bundle final ...');
   if (html.indexOf('\x00') !== -1) {
     console.error('  [ERROR] El bundle final contiene null bytes. Abortando.');
     process.exit(1);
   }
+  // (sobre el HTML sin comentarios: la documentacion inline menciona
+  //  text/babel de forma legitima)
+  var htmlSinComentarios = html.replace(/<!--[\s\S]*?-->/g, '');
+  // Solo TAGS reales: se colapsan los cuerpos de los <script> porque los
+  // comentarios JS compilados pueden citar "<script type=text/babel>" (el
+  // mount loop lo hace) sin que eso sea un tag sin compilar.
+  var soloTags = htmlSinComentarios.replace(/(<script[^>]*>)[\s\S]*?(<\/script>)/g, '$1$2');
+  var babelResidual = soloTags.match(/<script[^>]*type="text\/babel"/);
+  if (babelResidual) {
+    console.error('  [ERROR] El bundle final aun contiene scripts text/babel sin compilar. Abortando.');
+    console.error('  Contexto: ...' +
+      soloTags.slice(Math.max(0, babelResidual.index - 150), babelResidual.index + 150) + '...');
+    process.exit(1);
+  }
+  if (htmlSinComentarios.indexOf('unpkg.com') !== -1) {
+    console.error('  [ERROR] El bundle final aun referencia unpkg.com. Abortando.');
+    process.exit(1);
+  }
 
   // 8. Escribir
-  console.log('\n[5/5] Escribiendo PACE_standalone.html ...');
+  console.log('\n[5/7] Escribiendo PACE_standalone.html ...');
   fs.writeFileSync(OUTPUT, html, 'utf8');
   var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
-  console.log('\n=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');
+  console.log('=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');
 
   // 9. Copiar a index.html (root para Cloudflare Pages).
+  console.log('\n[6/7] Generando index.html ...');
   //    s102: la copia DESPLEGADA recupera el <link rel="manifest"> que el
   //    paso 3 quita del standalone (CORS en file://). Sin él, Chrome no
   //    ofrecía instalar la PWA: index.html se servía sin manifest desde s48c.
@@ -260,6 +433,24 @@ function main() {
   }
   fs.writeFileSync(indexPath, indexHtml, 'utf8');
   console.log('✓ index.html generado (standalone + <link rel="manifest">)');
+
+  // 10. Sanity final sobre lo ESCRITO (s103): ambos artefactos re-leidos del
+  //     disco deben declarar React y montar sin Babel.
+  console.log('\n[7/7] Sanity de artefactos escritos ...');
+  [OUTPUT, indexPath].forEach(function(p) {
+    var out = fs.readFileSync(p, 'utf8');
+    var name = path.basename(p);
+    if (out.indexOf('react.production.min.js') === -1 ||
+        out.indexOf('react-dom.production.min.js') === -1) {
+      console.error('  [ERROR] ' + name + ' no contiene React production inlineado. Abortando.');
+      process.exit(1);
+    }
+    if (out.indexOf('ReactDOM.createRoot') === -1) {
+      console.error('  [ERROR] ' + name + ' no contiene el mount (ReactDOM.createRoot). Abortando.');
+      process.exit(1);
+    }
+  });
+  console.log('  [OK] standalone + index.html: React production presente, mount presente.');
 }
 
 main();
