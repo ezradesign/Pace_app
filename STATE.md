@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.46.0
-**Ultima sesion:** #101 -- 2026-07-10 - **stats a fondo + safety/privacy** (feedback P2 del usuario en s100: "los paneles no trackean el progreso de forma adecuada"; AUDITORIA previa con 8 hallazgos verificados contra el repo → plan aprobado por el usuario -- 4 bifurcaciones decididas -- antes de tocar). **Stats vivos**: nuevo `app/state-history.jsx` (utils de fecha + helpers de history extraidos de state-core, que baja 511→407 ln y SALE de deuda) con **`getHistoryWithToday` memoizado** (reutiliza `archiveDayToHistory`; el rollover sigue siendo el UNICO escritor) consumido por StatsPanel → **Mes/Año/totales incluyen el dia ACTUAL**. **WeekDots del sidebar con criterio s69** (focus|breath|move>0; antes solo foco). Fila "Mueve" → **"Cuerpo"** (`moveMinutes` acumula Mueve+Estira desde siempre; key `stats.label.body`). **Racha de Caminos viva** (cuenta desde ayer si hoy aun no hay). Fix DST en `hydrate.week.perfect`. `WeeklyStats.jsx` muerto BORRADO (no se cargaba desde s43). Paginas estaticas **`/safety` + `/privacy`** (autocontenidas, ES+EN, rama oscura; SIN enlazar desde la UI aun). Diario: `docs/sessions/session-101-stats-a-fondo.md`
-**Ultima actualizacion de este archivo:** 2026-07-10 - sesion 101
-**Build entregado:** `PACE_standalone.html` v0.46.0 (756 KB) + `index.html` (idem)
+**Version actual:** v0.47.0
+**Ultima sesion:** #102 -- 2026-07-13 - **PWA completa** (plan maestro, fila s102; 4 bifurcaciones decididas por el usuario ANTES de tocar). **manifest.webmanifest** completo (renombrado desde manifest.json: id, categories, **4 shortcuts** Foco/Respira/Mueve/Hidratate con deep links `/?go=` consumidos una vez en main.jsx, launch_handler; colores alineados a `--paper #F2EDE0`). **HALLAZGO+FIX de despliegue**: `index.html` se servia SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal → la PWA publicada NO era instalable); el paso 9 del build lo re-inserta SOLO en la copia desplegada. **Update prompt**: sw.js retira el skipWaiting incondicional (worker queda en waiting) + `app/ui/UpdatePrompt.jsx` ("Actualizar" → SKIP_WAITING → reload; "Luego" respeta el waiting); navegaciones siguen network-first (s89 intacta). **Notificacion fin-pomodoro** opt-in (`notifyFocusEnd:false`; toggle en Ajustes con permiso al activar; dispara solo con pestaña OCULTA, silent, via SW showNotification; helpers en `app/focus/FocusTimer.support.jsx`). Enlaces **Seguridad · Privacidad** al pie de Ajustes (solo http(s)). **Pomodoro persiste la recarga** (`pace.timer.v1` FUERA de pace.state; reanuda solo si sigue vivo, expirado se descarta SIN acreditar — cierra el fork s96). Diario: `docs/sessions/session-102-pwa-completa.md`
+**Ultima actualizacion de este archivo:** 2026-07-13 - sesion 102
+**Build entregado:** `PACE_standalone.html` v0.47.0 (774 KB) + `index.html` (idem + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.46.0** (s101: + `<script>` de state-history.jsx ANTES de state-core + comentario de orden actualizado) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.46.0** (756 KB, 71 archivos -- entra state-history, sale WeeklyStats; regenerado s101) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.46.0** (s101: regenerado por build-standalone.js) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.47.0** (s102: link a manifest.webmanifest + theme-color `#F2EDE0` + registro SW con deteccion de waiting/updatefound y reload guardado en controllerchange + scripts de UpdatePrompt y FocusTimer.support) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.47.0** (774 KB, 73 archivos -- entran UpdatePrompt.jsx y FocusTimer.support.jsx; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.47.0** (s102: el build RE-INSERTA `<link rel="manifest">` en esta copia -- fix del despliegue no-instalable desde s48c) |
 | `safety.html` | Pagina estatica `/safety` (Cloudflare Pages) -- disclaimers respiracion/movilidad, ES+EN | **v0.46.0** (nueva s101, ~190 ln; autocontenida, rama oscura via prefers-color-scheme, paleta COPIADA de tokens.css; sin enlazar desde la UI aun) |
 | `privacy.html` | Pagina estatica `/privacy` (Cloudflare Pages) -- local-first, sin cuentas/analitica, ES+EN | **v0.46.0** (nueva s101, ~190 ln; misma base visual que safety.html) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
@@ -40,7 +40,7 @@
 | `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.45.0** (s100: `sessionAtmosphere` suavizado -- hint 22% + grano SVG feTurbulence 4% como dither anti-banding, 364 ln; s99: prop `atmosphere` + helper a window; s97: SessionPrep caption; s17 base) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** (s99: card del Modal entra con `pace-modal-in` scale+fade; s87: + `PremiumSeal`; s88: consumido por TweaksPanel) |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.22.0** |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + reset; orquesta TweaksDataSection y PremiumSection) | **v0.34.5** (s89: split 519->351 ln + stepper "Objetivo de agua" 4-12 con patch funcional `set(s=>...)`. s88: superficie premium. s71: reorden) |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + notificacion + reset + legal; orquesta TweaksDataSection y PremiumSection) | **v0.47.0** (s102: + bloque "Aviso de fin de Foco" tras Audio (permiso al activar, hint blocked con re-render forzado) + enlaces Seguridad·Privacidad tras Reset (gate `isWeb` compartido), 430 ln. s89: split 519->351 + stepper agua) |
 | `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.34.5** (nuevo s89, 193 ln; logica de s17 intacta, extraida literal) |
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.35.0** (s90: +4 patrones F4 en getSequence -- diaphragm/yin/bhramari/co2, 230 ln; s89: `data-pace-essential` en los 5 wrappers -- exime la guia de respiracion del kill de prefers-reduced-motion) |
@@ -50,8 +50,8 @@
 | `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.46.0** (s101: WeekDots con criterio "dia activo" s69 -- focus\|breath\|move>0, antes solo foco encendia el punto; +6 ln -> 541, sigue en deuda; s94: clipPath unico por instancia) |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.44.0** (s99: pasa `running` al TimerDial (glow) + `data-pace-cta` en el CTA. s96: migrado a `useCountdown` -- fuera los 3 useEffect de tiempo, ~430 ln; `onComplete` -> `completeFocusSession('home')`. s77b: startBtnPrimary var(--focus-cta)) |
-| `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.42.0** (s97: en `idle` deriva `remaining` de `durationSec` -- el aro empieza SIEMPRE vacio; antes un `setStatus('idle')` no-op al cambiar preset no re-renderizaba y dejaba relleno proporcional. s96: nuevo, ~135 ln, `endsAt` como verdad, `completed` terminal, `onComplete` single-shot) |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.47.0** (s102: notificacion en onComplete rama foco + 2 efectos de persistencia (restore al montar / persist en running), 493 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
+| `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.47.0** (s102: + `restore(endsAtMs)` -- reanuda desde idle con el endsAt ORIGINAL (el tiempo de la recarga cuenta como transcurrido) + expone `endsAt` solo en running, 158 ln. s97: idle deriva de durationSec. s96: nuevo, `endsAt` como verdad, `completed` terminal) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.44.0** (s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
@@ -63,7 +63,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.46.0** (nuevo s101, 160 ln; extraido de state-core + selector memoizado por identidad que reutiliza `archiveDayToHistory`) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.46.0** (s101: split de utils fecha + history a state-history.jsx, 511 -> **407 ln, SALE de deuda**; s93: + `customRoutines: []`; s89: + `detectInitialPalette()`; s88: + `premiumUnlocked:false`) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.47.0** (s102: + `notifyFocusEnd:false` en defaults (el merge `{...defaultState,...parsed}` cubre instalaciones existentes), 412 ln; s101: split a state-history.jsx, SALE de deuda; s93: customRoutines; s88: premiumUnlocked) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -74,12 +74,12 @@
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
-| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.33.2** (s82: split mecanico variante B, 600 ln -> 279 ln, -53% -- TopBar/ActivityBar/CSS responsive a `app/main/`) |
+| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.47.0** (s102: + efecto deep links `?go=` (consume una vez + replaceState; focus NO auto-arranca) + monta `<UpdatePrompt/>` junto a ToastHost, 314 ln; s82: split variante B 600->279) |
 | `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con reglas @media globales (TopBar, ActivityBar, main content, sidebar handle, fallback vh/dvh) | **v0.33.2** (nuevo s82, 105 ln; literal de main.jsx 20-112) |
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent / Tweaks prop) + topBarStyles | **v0.33.2** (nuevo s82, 106 ln) |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
-| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium | **v0.34.5** (s89: + `tweaks.eje.water`/`tweaks.water.value` ES+EN; s88: + `premium.tweaks.*`; s87: + `premium.seal`/`premium.soon`) |
+| `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium + pwa | **v0.47.0** (s102: + 13 keys ES+EN -- `tweaks.notify.*` (5) + `tweaks.legal.*` (2) + `notify.focus.*` (2) + `update.*` (4), 377 ln; s89: agua; s88: premium.tweaks) |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate + custom | **v0.44.0** (s99: + `session.next` ("Siguiente"/"Next") + `session.focusDoneMeta/Copy` ES+EN; s93: +~33 keys `custom.*`, ~335 ln; nuevo s81) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.45.0** (s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN, 132 ln; s99: + `paths.library.count.one/many` ES+EN; nuevo s81) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.46.0** (s101: + `stats.label.body` "Cuerpo"/"Body" + valores de `stats.month.total.move`/`.tooltip.move` a Cuerpo, 117 ln; nuevo s81) |
@@ -101,12 +101,15 @@
 | `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.45.0** (s100: prop `drawIn` -- trazo done con `pathLength=1` que se dibuja + hitos/labels escalonados (solo CompletionScreen; pending intacto), 194 ln; s99: anillo pulsante + `accent` del hito actual; s77b: labels solo done) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
-| `manifest.json` | PWA manifest | **v0.28.5** (s65: reescrito -- PNGs, start_url /,  scope /, theme crema) |
-| `sw.js` | Service Worker PWA | **v0.46.0** (s101: CACHE_NAME pace-v0.46.0; s89: activate borra caches pace-* viejos + navegaciones network-first con fallback a cache) |
-| `build-standalone.js` | Genera el bundle offline | **v0.28.5** (s65: añade copia a index.html tras build) |
-| `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.38.0** (s93: + `Cache-Control: no-store` -- sin validadores Chrome cacheaba .jsx heuristicamente y la verificacion veia codigo viejo) |
+| `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
+| `sw.js` | Service Worker PWA | **v0.47.0** (s102: SIN skipWaiting incondicional -- el worker nuevo queda en WAITING hasta `message SKIP_WAITING` del UpdatePrompt; + `notificationclick` que enfoca la app; precache a manifest.webmanifest; s89: activate borra caches pace-* viejos + navegaciones network-first) |
+| `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
+| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + persistencia `pace.timer.v1` | **v0.47.0** (nuevo s102, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
+| `build-standalone.js` | Genera el bundle offline | **v0.47.0** (s102: paso 9 re-inserta `<link rel="manifest">` SOLO en index.html -- el standalone sigue sin el (CORS file://, s48c); s65: copia a index.html) |
+| `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.47.0** (s102: + MIME `.webmanifest` + rutas bonitas `/safety`→`safety.html` `/privacy`→`privacy.html`, paridad con Cloudflare; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.46.0_20260713.html` <- creado s102 (snapshot del v0.46.0 publicado en s101)
 - `backups/PACE_standalone_v0.45.0_20260710.html` <- creado s101 (snapshot del v0.45.0 publicado en s100)
 - `backups/PACE_standalone_v0.44.0_20260710.html` <- creado s100 (snapshot del v0.44.0 publicado en s99)
 - `backups/PACE_standalone_v0.43.0_20260709.html` <- creado s99 (snapshot del v0.43.0 publicado en s98)
@@ -126,84 +129,100 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.34.0_20260605.html` <- creado s85 (snapshot del v0.34.0 publicado en s84)
 - `backups/PACE_standalone_v0.33.3_20260524.html` <- creado s84 (copia del v0.33.3 publicado en s83)
 - `backups/PACE_standalone_v0.33.2_20260523.html` <- creado s83
-- `backups/PACE_standalone_v0.33.1_20260523.html` <- creado s82
 
-Nota s101: cap 20 mantenido rotando el mas antiguo (`v0.33.0_20260519.html`)
-al crear el backup del v0.45.0.
+Nota s102: cap 20 mantenido rotando el mas antiguo (`v0.33.1_20260523.html`)
+al crear el backup del v0.46.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 101 - v0.46.0 - stats a fondo + safety/privacy.** Ataca el feedback
-P2 del usuario en s100 ("los paneles no trackean el progreso de forma
-adecuada") con AUDITORIA previa verificada contra el repo y plan aprobado
-ANTES de tocar (AskUserQuestion, 4 bifurcaciones: F1-F5 completo · etiqueta
-"Cuerpo" sobre serie propia · nuevo state-history.jsx sobre engordar
-state-core · safety/privacy si cabian, y cupieron).
+**Sesion 102 - v0.47.0 - PWA completa.** Fila s102 del plan maestro. Cuatro
+bifurcaciones decididas por el usuario ANTES de tocar (AskUserQuestion):
+enlaces legales en Tweaks · notificacion como toggle opt-in en Tweaks con
+permiso al activar · 4 shortcuts (Foco/Respira/Mueve/Hidratate) ·
+persistencia del Pomodoro "solo si sigue vivo".
 
-### Que se hizo (s101)
+### Que se hizo (s102)
 
-- **Tarea 0**: s100 (`1ffc4c1`, v0.45.0) commiteado y pusheado, working tree limpio.
-- **Auditoria (8 hallazgos)**: mapa escritores→lectores. Todo escribe en
-  `weeklyStats[hoy]`; `history` solo se alimentaba en el rollover → Mes/Año
-  ciegos al dia actual (H1). Ademas: WeekDots solo miraba foco (H2), Estira
-  comparte cubo `moveMinutes` con Mueve y la fila "Mueve" mentia (H3), racha
-  de Caminos muerta a medianoche (H4), DST rompia hydrate.week.perfect (H5),
-  WeeklyStats.jsx muerto desde s43 (H6). Diferidos: credito solo-al-completar
-  de Mueve/Estira (H7, "Move timer: bajo" del plan) y proxies del Sendero del
-  dia (H8 → s106).
-- **F1 stats vivos**: nuevo `app/state-history.jsx` (160 ln, ANTES de
-  state-core en PACE.html; loadState resuelve los helpers via window) con
-  `getHistoryWithToday` memoizado que reutiliza `archiveDayToHistory(h, hoy,
-  weeklyStats)` -- cero logica nueva. StatsPanel lo consume. state-core
-  511→407 ln (SALE de deuda). El estado persistido NO cambia.
-- **F2**: WeekDots criterio s69 · **F3**: racha Caminos viva (desde ayer) ·
-  **F4**: DST fix · **F5**: WeeklyStats.jsx borrado · **F6**: fila "Cuerpo"
-  (`stats.label.body` + totales/tooltip del mes).
-- **`/safety` + `/privacy`**: safety.html + privacy.html en raiz,
-  autocontenidas (cero peticiones externas), ES+EN, rama oscura via
-  prefers-color-scheme, copy coherente con el modal in-app. SIN enlazar
-  desde la UI (decision pendiente: ¿footer sidebar? ¿Tweaks? → s102/landing).
+- **Tarea 0**: s101 (`5317563`, v0.46.0) commiteado y pusheado (+ commit de
+  docs del usuario `1ae5488`), working tree limpio.
+- **HALLAZGO de auditoria**: `index.html` desplegado iba SIN
+  `<link rel="manifest">` desde s48c (el build lo quitaba del standalone por
+  CORS file:// y copiaba literal) → **la PWA publicada NO era instalable**.
+  Fix: build paso 9 re-inserta el link SOLO en la copia index.html.
+- **manifest.webmanifest** (renombrado, no duplicado): id "/", categories,
+  4 shortcuts `/?go=focus|breathe|move|hydrate`, launch_handler
+  focus-existing; colores manifest + `<meta theme-color>` alineados a
+  `--paper #F2EDE0` (huerfano `#F5EFE0` de s65; tokens.css intacto).
+  Deep links en main.jsx: consume `?go=` UNA vez + replaceState; `focus`
+  solo asegura el modo, NO auto-arranca el timer.
+- **Update prompt**: sw.js SIN skipWaiting incondicional (el worker nuevo
+  queda en waiting) + message SKIP_WAITING; registro en PACE.html anuncia el
+  waiting (`window.__paceSwWaitingReg` + `pace:sw-waiting`, cubre anuncio
+  pre-mount) y recarga en controllerchange con guard del primer install.
+  Nuevo `app/ui/UpdatePrompt.jsx` (118 ln, barra discreta bottom-center,
+  "Actualizar/Luego", zIndex 150). Navegaciones siguen network-first (s89).
+- **Notificacion fin-pomodoro**: `notifyFocusEnd:false` en defaults; toggle
+  en Ajustes tras Audio (permiso SOLO al activar; hint si esta bloqueado);
+  `maybeNotifyFocusEnd` en nuevo `app/focus/FocusTimer.support.jsx` (89 ln)
+  -- dispara solo con pestaña OCULTA + granted, via SW showNotification con
+  fallback, silent (la campana de la app es el sonido), tag anti-duplicado;
+  `notificationclick` en sw.js enfoca la app. Solo rama foco.
+- **Enlaces legales**: "Seguridad · Privacidad" al pie de Ajustes
+  (`/safety` `/privacy`, _blank noopener, gate `isWeb` -- en file:// no se
+  renderizan). Cierra el pendiente de s101.
+- **Persistencia Pomodoro (fork s96 RESUELTO)**: `useCountdown` +
+  `restore(endsAtMs)` + `endsAt` expuesto; clave `pace.timer.v1` FUERA de
+  pace.state.v2 (timer sigue local); se escribe solo running-foco
+  (pausa/reset/fin limpian); al montar reanuda si endsAt vivo Y modo/minutos
+  coinciden; **expirado estando fuera → descartado SIN acreditar**.
+- **i18n**: 13 keys ES+EN (`tweaks.notify.*`, `tweaks.legal.*`,
+  `notify.focus.*`, `update.*`).
 
 ### Verificacion + cierre
 
-Preview :8765 propio, protocolo s93 + **seed de `pace.state.v2`** con
-historial conocido (mie 8 foco+cuerpo+agua · jue 9 SOLO respira · HOY vie 10
-mixto · caminos 5 y 9). Capa de datos: selector memo-estable, hoy fusionado,
-mes vivo {75,25,18,7}, persistido intacto, racha caminos 1 (antes 0).
-**Montaje aislado de StatsPanel + DOM**: dia 10 (HOY) relleno + contorno en
-Mes, totales vivos "Foco 1.3h · Cuerpo 18min", Año "3 dias activos · racha
-max 3", fila "Cuerpo" en Semana. WeekDots `off off ON ON ON off off` (jueves
-solo-Respira enciende) en dev Y standalone. Consola limpia. Incidente
-instructivo: interaccion fantasma de la pestaña estrangulada (huella de un
-4-7-8 finalizado; re-seed + reposo → cero auto-disparos; los cambios s101
-son lectores puros) -- refuerza s93: sembrar estado fresco antes de cada
-asercion. Cierre: bump v0.46.0, backup `v0.45.0_20260710` (rotado `v0.33.0`,
-cap 20), rebuild 756 KB / 71 archivos, standalone verificado, diario s101,
-CHANGELOG (detalle v0.46.0 + v0.45.0), STATE, ROADMAP, memorias.
+Preview :8765 propio, protocolo s93 (purga SW+caches por tanda) + seed
+fresco de `pace.state.v2` antes de cada asercion. Consola 0 errores en todas
+las pasadas. Manifest con MIME correcto + 4 shortcuts en DOM · deep links 3
+superficies con URL limpia · rama REAL de permiso denegado (el pane embebido
+tiene Notification denied): hint visible y el toggle no enciende ·
+`/safety`+`/privacy` 200 en preview (rutas bonitas nuevas) · persistencia 3
+casos (reanuda en 01:14 / expirado descartado con weeklyStats a cero /
+Comenzar escribe-Pausar limpia) · **update prompt con DOS SW reales**:
+waiting+barra → "Luego" persiste y REAPARECE al recargar → "Actualizar"
+activa, borra el cache viejo y recarga sola; sin bucle de reload en el
+primer install · standalone verificado (sin manifest, sin prompt) ·
+index.html CON manifest. Cierre: backup `v0.46.0_20260713` (rotado
+`v0.33.1`, cap 20), rebuild **774 KB / 73 archivos**, diario s102, CHANGELOG
+(detalle v0.47.0 + v0.46.0), STATE, ROADMAP, memorias.
 
 ### Pendiente
 
-- **Enlazar `/safety` y `/privacy` desde la UI** (decision de sitio: footer
-  del sidebar vs Tweaks; encaja con s102 PWA o con la landing pre-venta).
-- (Opcional, espera ARTE del usuario, patron s84/D-4) **ilustracion propia por
-  Camino** para CompletionScreen/cards.
+- **Probar la notificacion y la instalacion PWA en un navegador REAL del
+  usuario** (el pane embebido tiene los permisos de notificacion denegados a
+  nivel de navegador; la logica quedo verificada, la UX del prompt del
+  navegador no). Tras el proximo deploy: comprobar que Chrome ofrece
+  "Instalar" y que los 4 shortcuts aparecen en el icono.
+- (Opcional, espera ARTE del usuario, patron s84/D-4) **ilustracion propia
+  por Camino** + iconos propios por shortcut (96×96).
 - `tokens.css` sigue en deuda de tamaño (514 ln).
 
-## Proxima sesion -- s102: PWA completa
+## Proxima sesion -- s103-104: build Etapa A
 
-Plan maestro (ROADMAP "Camino a v1.0"): **manifest.webmanifest + shortcuts +
-update prompt + notificacion fin-pomodoro (P1)**. Encaja tambien: decidir
-donde enlazar safety/privacy y (si se quiere) persistir el Pomodoro running
-en recarga (fork s96, decision UX aparte).
+Plan maestro (ROADMAP "Camino a v1.0"): **precompilar .jsx→.js con Babel CLI
++ React production UMD self-hosted + fuentes self-hosted subseteadas. SIN
+Vite** -- cero cambios de arquitectura (window globals intactos, PACE.html
+dev sigue igual); build-standalone inlinea compilados. ~80% del beneficio
+con ~5% del riesgo.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
-Secuencia en `ROADMAP.md` ("Camino a v1.0"): PWA completa · build Etapa A
-(precompilar ANTES que Vite) · onboarding · home Caminos al centro · taxonomia
-+ filtros + sigilo · pre-venta: glifos D-4 + trial/licencia (cambiando
-formalmente la decision F3b) + landing.
+Secuencia en `ROADMAP.md` ("Camino a v1.0"): build Etapa A (s103-104) ·
+onboarding (s105) · home Caminos al centro (s106) · taxonomia + filtros +
+sigilo (s107-108) · pre-venta: glifos (revision COMPLETA del set) +
+trial/licencia (cambiando formalmente la decision F3b) + landing + canal
+Starter Story A FONDO antes de pricing.
 
 ---
 
@@ -211,6 +230,11 @@ formalmente la decision F3b) + landing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| SW: updates con PROMPT (worker en waiting), nunca skipWaiting incondicional | s102 | El install de sw.js ya NO llama skipWaiting: el worker nuevo queda en waiting hasta que el usuario acepte en `UpdatePrompt.jsx` (postMessage SKIP_WAITING → controllerchange → reload, con guard del primer install) o cierre todas las pestañas. "Luego" respeta el waiting (reaparece en la proxima carga). Las NAVEGACIONES siguen network-first (s89 intacta): el HTML fresco llega sin esperar al SW; el prompt gobierna la activacion del worker y el precache offline. NO reintroducir el skipWaiting incondicional -- mata el prompt. Cualquier cambio de estrategia revisa la pareja s89+s102 |
+| Notificacion fin-pomodoro: opt-in, permiso solo al activar, solo pestaña oculta, silent | s102 | `notifyFocusEnd:false` por defecto. El permiso del navegador se pide UNICAMENTE al encender el toggle en Ajustes (gesto real; nunca al arrancar ni al terminar). Dispara solo si `document` NO esta visible (mirando la app, campana + pantalla de fin ya avisan) y solo en modo foco (pausa/larga no). `silent:true`: la campana pomodoro.end de la app es EL sonido; el SO no añade otro. Via `registration.showNotification` con fallback a `new Notification`; click enfoca la app (notificationclick, sw.js). Limitacion aceptada P1: con throttling de fondo puede llegar con ~1 min de retraso. Si se quiere notificar pausa/larga, es decision de producto nueva |
+| Pomodoro persiste la recarga via `pace.timer.v1`, FUERA de pace.state.v2 (cierra fork s96) | s102 | El timer sigue siendo LOCAL (decision s96): la clave aparte solo hace que sobreviva a la recarga. Se escribe SOLO con foco running (pausa/reset/fin/otros modos limpian). Al montar, FocusTimer reanuda via `useCountdown.restore(endsAt)` (endsAt ORIGINAL: el tiempo de la recarga cuenta como transcurrido) solo si endsAt sigue en el futuro Y modo/minutos coinciden con el state; **expirado estando fuera → se descarta en silencio SIN acreditar** (no se abonan minutos no presenciados, linea s101). Blindaje extra: `endsAt-now <= duracion` |
+| manifest.webmanifest unico; el build re-inserta el link SOLO en index.html | s102 | `manifest.json` se renombro (no hay dos manifests). El standalone sigue SIN `<link rel="manifest">` (CORS en file://, s48c vigente); el paso 9 del build lo re-inserta en la copia `index.html` desplegada (fix del hallazgo: Cloudflare servia la app sin manifest → no instalable). Shortcuts con deep links `/?go=` que main.jsx consume UNA vez (replaceState); `focus` NO auto-arranca el timer. Iconos de shortcut = icono de la app hasta que haya arte (regla D-4) |
+| Enlaces legales (/safety /privacy) viven en Ajustes, solo en web | s102 | Fila discreta al pie del panel, tras Reset ("Seguridad · Privacidad"), `_blank noopener` para no matar un timer corriendo. Gate `isWeb` (http/https): en el standalone file:// esas rutas no resuelven y NO se renderizan. El mismo gate cubre el bloque de notificacion; si aparece mas superficie solo-web en Tweaks, reutilizarlo. Decision de sitio de s101 CERRADA (se eligio Tweaks sobre footer del sidebar: el home queda limpio) |
 | Stats vivos: los paneles leen `getHistoryWithToday`, el rollover sigue siendo el UNICO escritor de history | s101 | Selector memoizado en `state-history.jsx` (memo por identidad de `history`/`weeklyStats` + dayKey) que reutiliza `archiveDayToHistory(h, hoy, weeklyStats)` -- overwrite idempotente + recompute de mes/año, cero logica nueva. El estado persistido NO cambia. Regla: cualquier panel/consumidor futuro que muestre history lee el SELECTOR, nunca `state.history` directo. Los detectores de logros de stats siguen sobre el history real (rollover) -- pueden disparar un dia tarde, aceptado. La racha de Caminos se alineo con la misma semantica (viva si ayer hubo Camino y hoy aun no) |
 | La serie `moveMinutes` se etiqueta "Cuerpo" en stats (Mueve+Estira comparten cubo) | s101 | `completeMoveSession` y `completeExtraSession` escriben al MISMO `weeklyStats.moveMinutes` desde siempre; etiquetarla "Mueve" mentia por omision. Key `stats.label.body` (Semana) + valores de `stats.month.total.move`/`.tooltip.move`. La serie propia `extraMinutes` se DESCARTO por ahora (migracion + el historico viejo quedaria mezclado igualmente); si algun dia se separa, decision nueva. Los chips de ActivityBar no cambian (Mueve y Estira siguen siendo modulos distintos) |
 | `/safety` y `/privacy` = paginas estaticas AUTOCONTENIDAS en raiz | s101 | Cero peticiones externas (coherente con lo que promete privacy), ES+EN en la misma pagina, Georgia display (blindaje), rama oscura via prefers-color-scheme (sin toggle manual). OJO: llevan COPIAS inline de la paleta crema+oscuro -- si se recalibran tokens, actualizar ambas. Sin enlazar desde la UI aun (decision de sitio pendiente, → s102/landing). Sin email personal publicado |
@@ -292,9 +316,10 @@ formalmente la decision F3b) + landing.
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/tweaks/TweaksPanel.jsx` | 351 | SALE (s89, antes 519 -- split en TweaksData.jsx + PremiumSection.jsx) |
-| `app/state-core.jsx` | 407 | SALE (s101: ejecutado el candidato natural anotado -- utils de fecha + helpers de history extraidos a `state-history.jsx` (160 ln) al añadir getHistoryWithToday; 511 -> 407) |
-| `app/i18n/strings/ui.js` | ~345 | BAJA (dentro de limite, dominio mas grande del split) |
+| `app/tweaks/TweaksPanel.jsx` | 430 | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
+| `app/state-core.jsx` | 412 | SALE (s101: split a state-history.jsx 511 -> 407; s102: +5 del default notifyFocusEnd) |
+| `app/focus/FocusTimer.jsx` | 493 | **MEDIA** (s102: +37 ln de notificacion+persistencia lo dejan AL BORDE del tope; los helpers ya viven en FocusTimer.support.jsx -- la proxima adicion al modulo Foco debe ir alli o a un split del MinutesPicker) |
+| `app/i18n/strings/ui.js` | 377 | BAJA (s102: +26 ln de keys PWA; dentro de limite, dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
@@ -304,11 +329,10 @@ formalmente la decision F3b) + landing.
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
-**Backlog tecnico MEDIA (s89): vacio de nuevo** -- el split de TweaksPanel se
-ejecuto en s89 (P0). Quedan del P2 de la auditoria
-(`docs/audits/audit-producto-v0.34.4.md`): build precompilado (A-5), tests del
-state (A-6), import sanitizado (A-7), manifest rico -- para el camino a v1.0,
-pendientes de calendario.
+**Backlog tecnico MEDIA:** FocusTimer.jsx a 493 ln (ver tabla). Quedan del
+P2 de la auditoria (`docs/audits/audit-producto-v0.34.4.md`): build
+precompilado (A-5, ES la proxima sesion s103-104), tests del state (A-6),
+import sanitizado (A-7). El "manifest rico" del P2 quedo HECHO en s102.
 
 ### Deudas semanticas (no de tamaño, no urgentes)
 

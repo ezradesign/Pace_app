@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.46.0</title>
+  <title>PACE · Foco · Cuerpo — v0.47.0</title>
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <meta name="theme-color" content="#F5EFE0">
+  <meta name="theme-color" content="#F2EDE0">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -821,6 +822,21 @@ Object.assign(window.PACE_STRINGS.es, {
     'tweaks.eje.water':              'Objetivo de agua',
     'tweaks.water.value':            '{n} vasos al día',
 
+    // PWA (s102): aviso fin de Foco + update prompt + enlaces legales
+    'tweaks.notify.label':           'Aviso de fin de Foco',
+    'tweaks.notify.hint':            'Notificación del navegador si el Pomodoro termina con la pestaña en segundo plano.',
+    'tweaks.notify.on':              'Activado',
+    'tweaks.notify.off':             'Desactivado',
+    'tweaks.notify.blocked':         'El navegador tiene las notificaciones bloqueadas para este sitio.',
+    'tweaks.legal.safety':           'Seguridad',
+    'tweaks.legal.privacy':          'Privacidad',
+    'notify.focus.title':            'Foco completado',
+    'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
+    'update.msg':                    'Hay una versión nueva de PACE',
+    'update.cta':                    'Actualizar',
+    'update.applying':               'Actualizando…',
+    'update.later':                  'Luego',
+
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Pronto',
@@ -987,6 +1003,21 @@ Object.assign(window.PACE_STRINGS.en, {
     // Water goal (s89)
     'tweaks.eje.water':              'Water goal',
     'tweaks.water.value':            '{n} glasses a day',
+
+    // PWA (s102): focus end alert + update prompt + legal links
+    'tweaks.notify.label':           'Focus end alert',
+    'tweaks.notify.hint':            'Browser notification if the Pomodoro ends while the tab is in the background.',
+    'tweaks.notify.on':              'On',
+    'tweaks.notify.off':             'Off',
+    'tweaks.notify.blocked':         'Notifications are blocked for this site in your browser.',
+    'tweaks.legal.safety':           'Safety',
+    'tweaks.legal.privacy':          'Privacy',
+    'notify.focus.title':            'Focus complete',
+    'notify.focus.body':             'Cycle closed. Choose your micro-break.',
+    'update.msg':                    'A new version of PACE is ready',
+    'update.cta':                    'Update',
+    'update.applying':               'Updating…',
+    'update.later':                  'Later',
 
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',
@@ -2595,6 +2626,11 @@ const defaultState = {
   logoVariant: 'pace',
   soundOn: false,
   ambientOn: false,
+
+  // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
+  // Opt-in desde Ajustes (el permiso se pide al activar el toggle); solo
+  // dispara con la pestaña en segundo plano. Ver FocusTimer.support.jsx.
+  notifyFocusEnd: false,
   lang: 'en',
 
   // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del
@@ -5332,6 +5368,129 @@ function ToastHost() {
 
 Object.assign(window, { ToastHost });
 </script>
+  <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
+       registro (pace:sw-waiting); main.jsx lo monta junto al ToastHost. -->
+  <script type="text/babel">
+/* PACE · UpdatePrompt — aviso de versión nueva del SW (s102 · v0.47.0)
+   El registro del SW en PACE.html detecta un worker en waiting (el
+   skipWaiting incondicional se retiró de sw.js en s102) y lo anuncia con
+   window.__paceSwWaitingReg + CustomEvent 'pace:sw-waiting'. Este componente
+   escucha ambos (la referencia en window cubre el caso de que el anuncio
+   llegue ANTES de que React monte: Babel standalone compila async).
+   "Actualizar" -> postMessage SKIP_WAITING al worker; el controllerchange
+   del registro recarga la página ya con la versión nueva.
+   "Luego" -> cierra el aviso; el worker queda en waiting y activará solo
+   cuando se cierren todas las pestañas de la app.
+   En file:// (standalone offline) no hay SW: retorna null siempre. */
+
+const { useState: useStateUP, useEffect: useEffectUP } = React;
+
+function UpdatePrompt() {
+  const { t } = useT();
+  const [visible, setVisible] = useStateUP(false);
+  const [applying, setApplying] = useStateUP(false);
+
+  useEffectUP(() => {
+    if (window.__paceSwWaitingReg) setVisible(true); // anunciado antes del mount
+    const h = () => setVisible(true);
+    window.addEventListener('pace:sw-waiting', h);
+    return () => window.removeEventListener('pace:sw-waiting', h);
+  }, []);
+
+  if (!visible) return null;
+
+  const apply = () => {
+    const reg = window.__paceSwWaitingReg;
+    if (reg && reg.waiting) {
+      setApplying(true);
+      try { reg.waiting.postMessage({ type: 'SKIP_WAITING' }); } catch (e) {}
+    } else {
+      setVisible(false); // el waiting ya no existe (activó por otra vía)
+    }
+  };
+
+  return (
+    /* Wrapper centrador SIN transform: pace-slide-up anima `transform`
+       (translateY) y pisaría un translateX(-50%) de centrado durante los
+       280ms. El wrapper centra con flex; la barra interior lleva la
+       animación. */
+    <div data-pace-update-prompt style={updatePromptStyles.wrap}>
+      <div role="status" style={updatePromptStyles.bar}>
+        <span style={updatePromptStyles.msg}>{t('update.msg')}</span>
+        <button
+          onClick={apply}
+          disabled={applying}
+          style={{ ...updatePromptStyles.cta, opacity: applying ? 0.6 : 1 }}
+        >{applying ? t('update.applying') : t('update.cta')}</button>
+        {!applying && (
+          <button onClick={() => setVisible(false)} style={updatePromptStyles.later}>
+            {t('update.later')}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const updatePromptStyles = {
+  wrap: {
+    position: 'fixed',
+    left: 0,
+    right: 0,
+    bottom: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+    zIndex: 150, // sobre paneles (Tweaks 80), bajo los toasts de logros (200)
+    padding: '0 16px',
+  },
+  bar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '10px 16px',
+    background: 'var(--paper)',
+    border: '1px solid var(--line-2)',
+    borderRadius: 'var(--r-md)',
+    boxShadow: 'var(--sh-card)',
+    animation: 'pace-slide-up 280ms var(--ease)',
+    maxWidth: '100%',
+    pointerEvents: 'auto',
+  },
+  msg: {
+    fontSize: 12,
+    color: 'var(--ink-2)',
+    letterSpacing: 0.2,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  cta: {
+    padding: '5px 12px',
+    fontSize: 11,
+    fontWeight: 500,
+    letterSpacing: 0.3,
+    color: 'var(--paper)',
+    background: 'var(--ink)',
+    border: '1px solid var(--ink)',
+    borderRadius: 'var(--r-sm)',
+    flexShrink: 0,
+    transition: 'all 180ms',
+  },
+  later: {
+    padding: '5px 4px',
+    fontSize: 11,
+    color: 'var(--ink-3)',
+    background: 'transparent',
+    border: 'none',
+    letterSpacing: 0.2,
+    flexShrink: 0,
+  },
+};
+
+Object.assign(window, { UpdatePrompt });
+
+</script>
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
        PathFocusStep (dentro de un Camino). Debe cargarse antes que ambos. -->
   <script type="text/babel">
@@ -5664,15 +5823,126 @@ function useCountdown(durationSec, onComplete) {
     setStatus('idle');
   }, [durationSec]);
 
+  /* s102: reanuda una sesion running persistida (pace.timer.v1) con su
+     endsAt original. Solo desde 'idle' y con endsAt en el futuro; la
+     coherencia de duracion/modo la valida el caller (FocusTimer.support).
+     A diferencia de start(), NO recalcula endsAt: el tiempo que paso
+     durante la recarga cuenta como transcurrido. */
+  const restore = useCallbackUC((endsAtMs) => {
+    if (statusRef.current !== 'idle') return;
+    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    firedRef.current = false;
+    endsAtRef.current = endsAtMs;
+    statusRef.current = 'running';
+    setStatus('running');
+  }, []);
+
   return {
     remaining,
     running: status === 'running',
     status,
-    start, pause, resume: start, toggle, reset,
+    /* endsAt expuesto solo en running (para persistencia s102); null en el
+       resto de estados. */
+    endsAt: status === 'running' ? endsAtRef.current : null,
+    start, pause, resume: start, toggle, reset, restore,
   };
 }
 
 Object.assign(window, { useCountdown });
+
+</script>
+  <!-- Helpers sin UI del Pomodoro (s102): notificación fin-pomodoro +
+       persistencia pace.timer.v1. Antes que FocusTimer (su consumidor). -->
+  <script type="text/babel">
+/* PACE · FocusTimer.support — helpers sin UI del Pomodoro (s102 · v0.47.0)
+   Extraídos a archivo propio para no llevar FocusTimer.jsx (~466 ln) por
+   encima del tope de 500. Dos responsabilidades pequeñas y acotadas:
+
+   1) maybeNotifyFocusEnd(opts) — notificación de fin de Pomodoro (PWA).
+      Solo dispara si el usuario activó el aviso en Ajustes
+      (state.notifyFocusEnd), la pestaña NO está visible (mirando la app, el
+      sonido y la pantalla de fin ya avisan; duplicar sería ruido) y el
+      permiso está concedido (se pide al activar el toggle, nunca aquí).
+      Vía registration.showNotification (funciona con la PWA instalada) con
+      fallback a new Notification. silent:true — la campana pomodoro.end de
+      la app es el sonido; el SO no añade un segundo. El click la cierra y
+      enfoca la app (notificationclick en sw.js). Nunca rompe la app
+      (try/catch integral, patrón playSound).
+
+   2) loadPersistedFocusTimer / persistFocusTimer — persistencia del Pomodoro
+      running en recarga (s102, resuelve el fork s96). Clave localStorage
+      `pace.timer.v1` FUERA de pace.state.v2: el timer sigue siendo local
+      (decisión s96), solo sobrevive a la recarga. Se persiste ÚNICAMENTE
+      running en modo foco; pausar/reset/completar limpian. Al montar,
+      FocusTimer reanuda solo si endsAt sigue en el futuro Y modo/minutos
+      coinciden con el state; un timer expirado estando fuera se descarta en
+      silencio — no se acreditan minutos no presenciados (tracking honesto,
+      línea s101). */
+
+const PACE_TIMER_KEY = 'pace.timer.v1';
+
+function maybeNotifyFocusEnd(opts) {
+  try {
+    if (!opts || !opts.enabled) return;
+    if (typeof document !== 'undefined' && document.visibilityState === 'visible') return;
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+    const title = opts.title || 'PACE';
+    const nOpts = {
+      body: opts.body || '',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      tag: 'pace-focus-end', // colapsa duplicados en una sola notificación
+      silent: true,
+    };
+    const fallback = () => { try { new Notification(title, nOpts); } catch (e) {} };
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+      navigator.serviceWorker.getRegistration().then((reg) => {
+        if (reg && reg.showNotification) reg.showNotification(title, nOpts);
+        else fallback();
+      }).catch(fallback);
+    } else {
+      fallback();
+    }
+  } catch (e) {}
+}
+
+/* Devuelve el endsAt (ms epoch) a reanudar, o null (y limpia la clave si
+   estaba corrupta/expirada/incoherente). El caller pasa el modo y los
+   minutos VIGENTES del state: si no coinciden con lo guardado, se descarta. */
+function loadPersistedFocusTimer(focusMode, focusMinutes) {
+  try {
+    const raw = localStorage.getItem(PACE_TIMER_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    const durMs = focusMinutes * 60 * 1000;
+    const valid = saved
+      && typeof saved.endsAt === 'number'
+      && saved.mode === 'foco' && focusMode === 'foco'
+      && saved.minutes === focusMinutes
+      && saved.endsAt > Date.now()
+      && saved.endsAt - Date.now() <= durMs; // blindaje contra relojes raros
+    if (valid) return saved.endsAt;
+    localStorage.removeItem(PACE_TIMER_KEY);
+    return null;
+  } catch (e) {
+    try { localStorage.removeItem(PACE_TIMER_KEY); } catch (e2) {}
+    return null;
+  }
+}
+
+/* Escribe la clave mientras hay un foco running; cualquier otro estado la
+   limpia (pausa, reset, completado, modos pausa/larga). */
+function persistFocusTimer(runningFoco, endsAt, minutes) {
+  try {
+    if (runningFoco && endsAt) {
+      localStorage.setItem(PACE_TIMER_KEY, JSON.stringify({ endsAt, mode: 'foco', minutes }));
+    } else {
+      localStorage.removeItem(PACE_TIMER_KEY);
+    }
+  } catch (e) {}
+}
+
+Object.assign(window, { maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer });
 
 </script>
 
@@ -7587,7 +7857,7 @@ function FocusTimer({ onFinish }) {
                      : state.focusMode === 'pausa' ? 5
                      : 15) * 60;
 
-  const { remaining, running, status, toggle, reset } = useCountdown(durationSec, () => {
+  const { remaining, running, status, endsAt, toggle, reset, restore } = useCountdown(durationSec, () => {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
        bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado). */
     try { playSound('pomodoro.end'); } catch (e) {}
@@ -7597,10 +7867,37 @@ function FocusTimer({ onFinish }) {
        ultima onComplete en un ref, asi que este cierre lee el focusMode
        vigente; un cambio de modo resetea el timer antes de poder completar. */
     if (state.focusMode === 'foco') {
+      /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
+         pestaña está en segundo plano. Nunca rompe (patrón playSound). */
+      try {
+        maybeNotifyFocusEnd({
+          enabled: state.notifyFocusEnd,
+          title: t('notify.focus.title'),
+          body: t('notify.focus.body'),
+        });
+      } catch (e) {}
       completeFocusSession('home');
       onFinish && onFinish();
     }
   });
+
+  /* Persistencia del Pomodoro en recarga (s102, resuelve el fork s96).
+     Clave pace.timer.v1 FUERA de pace.state.v2 (el timer sigue siendo
+     local, decisión s96). Al montar: reanuda solo si el foco guardado
+     sigue VIVO y modo/minutos coinciden; expirado estando fuera se
+     descarta sin acreditar (helpers en FocusTimer.support.jsx). */
+  const restoredRef = useRefFT(false);
+  useEffectFT(() => {
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
+    if (endsAtSaved) restore(endsAtSaved);
+  }, []);
+
+  // Escribe mientras hay un foco running; pausa/reset/fin/otros modos limpian.
+  useEffectFT(() => {
+    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
+  }, [running, endsAt, state.focusMode, state.focusMinutes]);
 
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
   useEffectFT(() => {
@@ -12447,6 +12744,30 @@ function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
   const { t, tn } = useT();
 
+  /* s102 · PWA: el aviso de fin de Foco y los enlaces /safety /privacy solo
+     tienen sentido servidos por web — en el standalone file:// no hay SW ni
+     rutas. Un solo gate para ambos bloques. */
+  const isWeb = location.protocol === 'http:' || location.protocol === 'https:';
+  const canNotify = isWeb && typeof Notification !== 'undefined';
+
+  /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
+     nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, el
+     hint de abajo lo explica; el toggle no puede encenderse. */
+  const enableNotify = () => {
+    if (!canNotify) return;
+    if (Notification.permission === 'granted') { set({ notifyFocusEnd: true }); return; }
+    if (Notification.permission === 'denied') return;
+    try {
+      Notification.requestPermission().then((p) => {
+        /* La rama denegada escribe el MISMO false: el objeto de state nuevo
+           fuerza el re-render que hace visible el hint 'blocked' (permission
+           no es reactivo por sí solo). */
+        if (p === 'granted') set({ notifyFocusEnd: true });
+        else set({ notifyFocusEnd: false });
+      });
+    } catch (e) {}
+  };
+
   /* ============================================================
      SECRETS — detectores simples que viven mientras el panel existe.
      No dependen de que el panel esté abierto (el hook monta siempre
@@ -12614,6 +12935,41 @@ function TweaksPanel({ open, onClose }) {
         )}
       </div>
 
+      {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
+          disponible; el permiso se pide al activar (enableNotify). */}
+      {canNotify && (
+        <div style={{ marginBottom: 16 }}>
+          <Meta style={{ marginBottom: 4 }}>{t('tweaks.notify.label')}</Meta>
+          <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('tweaks.notify.hint')}</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {[
+              { v: true, name: t('tweaks.notify.on') },
+              { v: false, name: t('tweaks.notify.off') },
+            ].map(opt => {
+              const active = !!state.notifyFocusEnd === opt.v;
+              return (
+                <button key={String(opt.v)}
+                  onClick={() => { opt.v ? enableNotify() : set({ notifyFocusEnd: false }); }}
+                  style={{
+                    padding: '6px 10px',
+                    fontSize: 11,
+                    fontWeight: active ? 500 : 400,
+                    background: active ? 'var(--ink)' : 'var(--paper-2)',
+                    color: active ? 'var(--paper)' : 'var(--ink-2)',
+                    border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                    borderRadius: 'var(--r-sm)',
+                    transition: 'all 180ms',
+                    letterSpacing: 0.2,
+                  }}>{opt.name}</button>
+              );
+            })}
+          </div>
+          {Notification.permission === 'denied' && (
+            <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginTop: 6, letterSpacing: 0.1 }}>{t('tweaks.notify.blocked')}</div>
+          )}
+        </div>
+      )}
+
       <Divider style={{ margin: '14px 0' }} />
 
       {ejes.map(eje => (
@@ -12692,6 +13048,17 @@ function TweaksPanel({ open, onClose }) {
           letterSpacing: 0.2,
         }}
       >{t('tweaks.reset')}</button>
+
+      {/* Enlaces /safety y /privacy (s102; páginas estáticas de s101).
+          Solo en web: en file:// esas rutas no resuelven. Nueva pestaña
+          para no matar un timer corriendo. */}
+      {isWeb && (
+        <div style={{ marginTop: 12, textAlign: 'center', fontSize: 10.5, letterSpacing: 0.2 }}>
+          <a href="/safety" target="_blank" rel="noopener" style={tweaksStyles.legalLink}>{t('tweaks.legal.safety')}</a>
+          <span style={{ color: 'var(--ink-3)', margin: '0 8px' }}>·</span>
+          <a href="/privacy" target="_blank" rel="noopener" style={tweaksStyles.legalLink}>{t('tweaks.legal.privacy')}</a>
+        </div>
+      )}
     </div>
   );
 }
@@ -12701,6 +13068,12 @@ function TweaksPanel({ open, onClose }) {
    estilo dataBtn viven ahora en TweaksData.jsx (split s89).
    ============================================================ */
 const tweaksStyles = {
+  legalLink: {
+    color: 'var(--ink-3)',
+    textDecoration: 'none',
+    borderBottom: '1px solid var(--line)',
+    paddingBottom: 1,
+  },
   stepBtn: {
     width: 26, height: 26,
     display: 'grid', placeItems: 'center',
@@ -15131,6 +15504,21 @@ function PaceApp() {
     return () => window.removeEventListener('pace:open-welcome', h);
   }, []);
 
+  // Deep links de shortcuts PWA (s102): /?go=focus|breathe|move|hydrate abre
+  // el módulo al arrancar (manifest.webmanifest → shortcuts). Se consume una
+  // sola vez y se limpia la URL (replaceState) para que recargar no
+  // re-dispare. 'focus' solo asegura el modo foco: el home YA es el Pomodoro
+  // y auto-arrancar un timer sin gesto sería una sorpresa, no una ayuda.
+  useEffectMain(() => {
+    let go = null;
+    try { go = new URLSearchParams(window.location.search).get('go'); } catch (e) {}
+    if (!go) return;
+    if (go === 'breathe' || go === 'move') setOpenLibrary(go);
+    else if (go === 'hydrate') setOpenHydrate(true);
+    else if (go === 'focus') set({ focusMode: 'foco' });
+    try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
+  }, []);
+
   // Atajos de teclado: T toggle Tweaks, S toggle Stats, L toggle Logros.
   // Ignora cuando focus esta en INPUT/TEXTAREA para no interferir con campos.
   useEffectMain(() => {
@@ -15317,6 +15705,11 @@ function PaceApp() {
 
       {/* ========== TOASTS ========== */}
       <ToastHost />
+
+      {/* Aviso de versión nueva del SW (s102 · PWA). Solo aparece cuando el
+          registro en PACE.html anuncia un worker en waiting; en file:// no
+          hay SW y retorna null siempre. */}
+      <UpdatePrompt />
     </div>
   );
 }
@@ -15371,11 +15764,38 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     }
   </script>
 
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
+  <!-- PWA · Service Worker (sesión 37 · v0.19.0 · registro; s102 · v0.47.0 ·
+       detección de update). Cuando hay un worker nuevo en waiting se anuncia
+       vía window.__paceSwWaitingReg + CustomEvent 'pace:sw-waiting' (lo
+       consume app/ui/UpdatePrompt.jsx, que puede montar después del anuncio:
+       por eso también se deja la referencia en window). Al aceptar, el prompt
+       hace postMessage SKIP_WAITING y el controllerchange de aquí recarga.
+       El guard hadController evita recargar en el primer install (claim). -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
+        navigator.serviceWorker.register('sw.js').then(function(reg) {
+          function announceWaiting() {
+            if (!reg.waiting) return;
+            window.__paceSwWaitingReg = reg;
+            window.dispatchEvent(new CustomEvent('pace:sw-waiting'));
+          }
+          announceWaiting(); // quedó esperando de una visita anterior
+          reg.addEventListener('updatefound', function() {
+            var nw = reg.installing;
+            if (!nw) return;
+            nw.addEventListener('statechange', function() {
+              if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                announceWaiting();
+              }
+            });
+          });
+        }).catch(function() {});
+        var hadController = !!navigator.serviceWorker.controller;
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          if (!hadController) { hadController = true; return; }
+          window.location.reload();
+        });
       });
     }
   </script>

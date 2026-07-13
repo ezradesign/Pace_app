@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.47.0** | 2026-07-13 | feat(pwa): **PWA completa** (plan maestro s102) -- **manifest.webmanifest** completo (id, 4 **shortcuts** con deep links `/?go=`, launch_handler, colores alineados a `--paper #F2EDE0`) · **fix despliegue**: `index.html` se servía SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal) → la PWA no era instalable; el build re-inserta el link solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → worker en waiting + aviso discreto "Actualizar/Luego" via `UpdatePrompt.jsx`; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle en Ajustes, permiso al activar, solo pestaña oculta, silent; click enfoca la app) · enlaces **Seguridad · Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` fuera de pace.state; reanuda solo si sigue vivo, expirado se descarta sin acreditar — cierra el fork s96) | #102 | [abajo](#v0470----2026-07-13----featpwa-pwa-completa) |
 | **v0.46.0** | 2026-07-10 | feat(stats): **stats a fondo** (P2 del usuario) -- auditoría completa del tracking (mapa escritores→lectores, 8 hallazgos) + **stats vivos**: nuevo `state-history.jsx` con `getHistoryWithToday` memoizado (reutiliza `archiveDayToHistory`) → **Mes/Año/totales incluyen el día actual** (antes ciegos hasta el rollover); state-core 511→407 ln (sale de deuda) · **WeekDots del sidebar con criterio s69** (focus\|breath\|move>0; antes solo foco) · fila "Mueve" → **"Cuerpo"** (moveMinutes = Mueve+Estira, la etiqueta mentía) · **racha de Caminos viva** (cuenta desde ayer si hoy no hay) · fix DST en hydrate.week.perfect · WeeklyStats.jsx muerto borrado · páginas estáticas **/safety + /privacy** (autocontenidas, ES+EN, rama oscura) | #101 | [abajo](#v0460----2026-07-10----featstats-stats-a-fondo--safetyprivacy) |
-| **v0.45.0** | 2026-07-10 | feat(paths): **remate premium de Caminos** (los 3 pendientes de feedback de s99) -- **OutroCard eliminada** (duplicaba la CompletionScreen; el último paso pasa DIRECTO a "Camino completado", PathRunner pierde la fase `outro` y `pendingComplete`, decisión s77 actualizada) · **CompletionScreen "ceremonia editorial"** (fuera el check genérico; kicker + nombre del Camino protagonista + meta "IV pasos · 24 min" con hairline + **sendero héroe con draw-in** (prop `drawIn` de SenderoBar: el trazo se dibuja y los hitos entran escalonados) + recorrido sin caja + logros como sellos) · **banding de atmósfera suavizado** (hint de interpolación 22% + capa de grano SVG ~4% como dither; arregla steps, transiciones y completado a la vez) | #100 | [abajo](#v0450----2026-07-10----featpaths-remate-premium-de-caminos) |
+| **v0.45.0** | 2026-07-10 | feat(paths): **remate premium de Caminos** (los 3 pendientes de feedback de s99) -- **OutroCard eliminada** (duplicaba la CompletionScreen; el último paso pasa DIRECTO a "Camino completado", PathRunner pierde la fase `outro` y `pendingComplete`, decisión s77 actualizada) · **CompletionScreen "ceremonia editorial"** (fuera el check genérico; kicker + nombre del Camino protagonista + meta "IV pasos · 24 min" con hairline + **sendero héroe con draw-in** (prop `drawIn` de SenderoBar: el trazo se dibuja y los hitos entran escalonados) + recorrido sin caja + logros como sellos) · **banding de atmósfera suavizado** (hint de interpolación 22% + capa de grano SVG ~4% como dither; arregla steps, transiciones y completado a la vez) | #100 | [session-100](./docs/sessions/session-100-remate-caminos.md) |
 | **v0.44.0** | 2026-07-09 | feat(ui+paths): **pulido global + overhaul premium de Caminos** -- pack de microinteracciones (glow del aro Pomodoro cuando corre, hover TopBar/CTA, entrada de modulos, modales scale+fade, scrollbar Firefox) · **Caminos**: fix "Volver al inicio" -> **"Siguiente"** en Respira/Mueve/Foco (SessionDone recibe `inPath`) · **PathFocusStep/PathHydrateStep** adoptan el SessionShell compartido (coherencia total con Respira/Mueve) · **timer "aro de marcas de minuto"** + numero protagonista · **botones del Foco por color** (verde/naranja/gris, revisa s79) · **atmosfera por paso** (wash tenue del acento del modulo, solo en Caminos) · cards de transicion editoriales (kicker romano) + sendero con hito actual acentuado · CompletionScreen rediseñada · bola del timer home -50% | #99 | [session-99](./docs/sessions/session-99-pulido-caminos-premium.md) |
 | **v0.43.0** | 2026-07-09 | fix(breathe): **tiempo activo en Respira** -- `BreatheSession` mide un `activeTime` timestamp-based (excluye pausas manuales; inmune al estrangulamiento de timers en background) que sustituye al wall-clock/nominal en 3 sitios: **fin de sesion no-rounds** (`getActiveSec() >= routine.min*60`, las pausas ya no acercan el final), **barra de progreso no-rounds** (mismo reloj) y **credito a stats/logros** (`completeBreathSession` recibe minutos activos reales, no `routine.min` -> arregla el sobre-credito al pulsar "Terminar" pronto; firma intacta, cero cambios en state) · pantalla "done" muestra tiempo activo · retira estado muerto `cycle`/`startTime`/`doneInCycle` | #98 | [session-98](./docs/sessions/session-98-tiempo-activo-breathe.md) |
 | **v0.42.0** | 2026-07-08 | fix(ui): pulido **modo oscuro legible** (recalibracion en bloque `--ink-3 #756D5D→#B2A995` que gobierna toda la letra fina + `--line`/`--line-2` para aro y bordes; logo invertido intacto por peticion del usuario) · **aro del timer empieza siempre vacio** (useCountdown: idle deriva `remaining` de `durationSec`, ya no reflejaba relleno proporcional al cambiar preset) · **progreso de Respira = barra segmentada por bloques** (un segmento por ciclo/ronda, el activo se rellena por dentro; sustituye las bolas, que se disparaban a ~50-100 en rutinas largas) + retira "Ns/Ns" redundante · fix solape precontador "3" (SessionPrep) y countdown de Mueve centrado | #97 | [session-97](./docs/sessions/session-97-pulido-oscuro-progreso.md) |
@@ -122,6 +123,81 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.47.0] -- 2026-07-13 -- feat(pwa): PWA completa
+
+Sesión 102. Plan maestro "Camino a v1.0", fila s102. Cuatro bifurcaciones
+decididas por el usuario antes de tocar: enlaces legales en Tweaks · toggle
+de notificación en Tweaks (permiso al activar) · 4 shortcuts · persistencia
+"solo si sigue vivo". Diario:
+[session-102](./docs/sessions/session-102-pwa-completa.md).
+
+### Hallazgo: la PWA desplegada no era instalable (desde s48c)
+
+El build elimina el `<link rel="manifest">` del standalone (CORS en
+`file://`) e `index.html` era copia literal → Cloudflare servía la app SIN
+manifest. Fix: el paso 9 del build re-inserta el link SOLO en la copia
+`index.html` (ancla `<link rel="icon">` + WARN); el standalone sigue igual.
+
+### manifest.webmanifest + shortcuts + deep links
+
+`manifest.json` renombrado a **`manifest.webmanifest`** y completado: `id`,
+categories, **4 shortcuts** (Foco/Respira/Mueve/Hidrátate → `/?go=...`,
+icono de la app, regla D-4) y `launch_handler focus-existing`. Colores del
+manifest y `<meta theme-color>` alineados al token real (`#F5EFE0` huérfano
+de s65 → `--paper #F2EDE0`; cero cambios en tokens.css). `main.jsx` consume
+`?go=` UNA vez al montar (breathe/move/hydrate abren su superficie; focus
+solo asegura el modo, sin auto-arrancar) y limpia la URL con replaceState.
+Preview con paridad: static-server sirve `.webmanifest` con su MIME y las
+rutas bonitas `/safety`/`/privacy`.
+
+### Update prompt (cambio de semántica del SW, consciente)
+
+`sw.js` retira el **skipWaiting incondicional** (nunca existía un worker en
+waiting → el prompt era imposible) y añade `message SKIP_WAITING` +
+`notificationclick`. El registro (PACE.html) detecta el waiting (updatefound
++ el heredado de visitas anteriores) y lo anuncia
+(`window.__paceSwWaitingReg` + `pace:sw-waiting`); `controllerchange`
+recarga con guard del primer install. Nuevo **`app/ui/UpdatePrompt.jsx`**:
+barra discreta bottom-center "Hay una versión nueva de PACE · Actualizar ·
+Luego" (zIndex 150, bajo los toasts). Las **navegaciones siguen
+network-first (s89)** → el HTML fresco llega igual; el prompt gobierna la
+activación del worker y el precache offline. NO reintroducir el skipWaiting
+incondicional.
+
+### Notificación fin-pomodoro (opt-in)
+
+Default `notifyFocusEnd:false` + toggle "Aviso de fin de Foco" en Ajustes
+(permiso del navegador SOLO al activar; hint si está bloqueado). Nuevo
+`app/focus/FocusTimer.support.jsx`: `maybeNotifyFocusEnd` dispara solo con
+toggle activo + **pestaña oculta** (mirando la app, la campana y la pantalla
+de fin ya avisan) + permiso granted; vía `registration.showNotification`
+(PWA instalada) con fallback, `silent:true` (la campana de la app es el
+sonido), tag anti-duplicados; click → enfoca la app. Solo modo foco.
+
+### Enlaces legales + persistencia del Pomodoro (fork s96 resuelto)
+
+"Seguridad · Privacidad" al pie de Ajustes (`/safety` `/privacy`, _blank,
+solo http(s) — en file:// no resuelven). Y `useCountdown` gana
+`restore(endsAtMs)` + `endsAt` expuesto: clave **`pace.timer.v1`** (FUERA de
+pace.state.v2, el timer sigue local) escrita solo con foco running; al
+recargar reanuda si endsAt sigue vivo y modo/minutos coinciden; **expirado
+estando fuera → se descarta sin acreditar** (tracking honesto s101).
+
+### Verificación + build
+
+Preview :8765 propio, protocolo s93 + seed fresco por aserción, consola 0
+errores. Deep links (3 superficies + URL limpia) · rama real de permiso
+DENEGADO (pane embebido) · `/safety`+`/privacy` 200 · persistencia 3 casos
+(reanuda 01:14 / expirado descartado sin crédito / Comenzar-Pausar
+escribe-limpia) · **update prompt con DOS SW reales**: waiting + barra →
+"Luego" persiste el waiting y reaparece al recargar → "Actualizar" activa,
+borra el cache viejo y recarga sola · standalone OK (sin manifest, sin
+prompt) · index.html CON manifest. Build **774 KB, 73 archivos** (entran
+UpdatePrompt.jsx y FocusTimer.support.jsx). Backup
+`v0.46.0_20260713` (rotado `v0.33.1_20260523`, cap 20).
+
+---
+
 ## [v0.46.0] -- 2026-07-10 -- feat(stats): stats a fondo + safety/privacy
 
 Sesion 101. Ataca el feedback P2 del usuario en s100 ("los paneles no
@@ -184,57 +260,8 @@ index.html. Backup `v0.45.0_20260710` (rotado `v0.33.0_20260519`, cap 20).
 
 ---
 
-## [v0.45.0] -- 2026-07-10 -- feat(paths): remate premium de Caminos
-
-Sesion 100. Cierra los 3 pendientes de feedback que dejo s99 (memoria
-`ui-polish-caminos-plan`), con la direccion aprobada por el usuario antes
-de tocar: eliminar la OutroCard + CompletionScreen "ceremonia editorial".
-Diario: [session-100](./docs/sessions/session-100-remate-caminos.md).
-
-### OutroCard eliminada (revisa decision s77)
-
-Duplicaba la CompletionScreen (nombre del Camino + sendero N/N) con un hold
-de 1,5s sin informacion nueva. `PathRunner.jsx` pierde la fase `'outro'` y el
-estado `pendingComplete`: el ultimo paso hace `setJustCompleted(snapshot)` +
-`advancePathStep` INMEDIATO -- la garantia de s77 se mantiene por construccion
-(CompletionScreen renderiza desde el snapshot, no desde `paths.current`).
-`PathTransitions.jsx` queda con `IntroCard, StepIntro`; `--path-outro-ms`
-retirado de tokens.css. El fade-in de 400ms del completado se conserva.
-
-### CompletionScreen "ceremonia editorial"
-
-Fuera el check generico en circulo y la caja del recorrido; la ceremonia es
-tipografica: kicker + nombre del Camino protagonista (display italic,
-clamp 40-60px) + meta editorial "IV pasos · 24 min" (romano, key nueva
-`path.runner.complete.steps`) bajo un hairline + **sendero heroe con draw-in**
-(prop `drawIn` de SenderoBar: `pathLength=1` normaliza el trazo done y el
-compound path se dibuja de izquierda a derecha mientras hitos + labels entran
-escalonados -- keyframes `pace-sendero-draw`/`pace-sendero-dot-in`, CSS puro,
-reduced-motion salta al estado final) + recorrido sin caja (hairlines) +
-logros como sellos (kicker "Desbloqueado", key nueva). Botones intactos.
-
-### Atmosfera sin banding
-
-`sessionAtmosphere()` (SessionShell.jsx) era un radial de 2 stops lineales
-con alphas ~0.10 -> anillos de cuantizacion de 8 bits (peor en oscuro).
-Remedios: hint de interpolacion al 22% (caida ease-out) + capa de grano SVG
-casi invisible (feTurbulence desaturado, opacity 0.04, tile 160px, data-URI
-~0,4 KB) como dither. Un solo helper -> arregla steps, TransitionCards y
-CompletionScreen a la vez. El grano lee como fibra de papel.
-
-### Verificacion + build
-
-Preview propio :8765, protocolo s93 (purga SW+caches). Por montaje aislado +
-DOM (pestana estrangulada): draw-in termina `dashoffset: 0` con stagger
-computado; flujo real path.breath completo -> del ultimo paso DIRECTO al
-completado (cero cards), `paths.current = null` inmediato y completado
-acreditado; movil 375px sin overflow; capturas claro/oscuro sin anillos;
-consola limpia (dev + standalone). Standalone regenerado **752 KB**, 71
-archivos; `index.html` copia. Backup `PACE_standalone_v0.44.0_20260710.html`;
-cap 20 (rotado `v0.32.1_20260518.html`).
-
----
-
+> **v0.45.0** (s100) detallada en
+> [session-100](./docs/sessions/session-100-remate-caminos.md).
 > **v0.44.0** (s99) detallada en
 > [session-99](./docs/sessions/session-99-pulido-caminos-premium.md).
 > **v0.43.0** (s98) detallada en

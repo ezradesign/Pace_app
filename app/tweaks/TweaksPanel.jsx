@@ -41,6 +41,30 @@ function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
   const { t, tn } = useT();
 
+  /* s102 · PWA: el aviso de fin de Foco y los enlaces /safety /privacy solo
+     tienen sentido servidos por web — en el standalone file:// no hay SW ni
+     rutas. Un solo gate para ambos bloques. */
+  const isWeb = location.protocol === 'http:' || location.protocol === 'https:';
+  const canNotify = isWeb && typeof Notification !== 'undefined';
+
+  /* Activar el aviso pide el permiso del navegador AQUÍ (gesto del usuario,
+     nunca al arrancar ni al terminar un pomodoro). Si está bloqueado, el
+     hint de abajo lo explica; el toggle no puede encenderse. */
+  const enableNotify = () => {
+    if (!canNotify) return;
+    if (Notification.permission === 'granted') { set({ notifyFocusEnd: true }); return; }
+    if (Notification.permission === 'denied') return;
+    try {
+      Notification.requestPermission().then((p) => {
+        /* La rama denegada escribe el MISMO false: el objeto de state nuevo
+           fuerza el re-render que hace visible el hint 'blocked' (permission
+           no es reactivo por sí solo). */
+        if (p === 'granted') set({ notifyFocusEnd: true });
+        else set({ notifyFocusEnd: false });
+      });
+    } catch (e) {}
+  };
+
   /* ============================================================
      SECRETS — detectores simples que viven mientras el panel existe.
      No dependen de que el panel esté abierto (el hook monta siempre
@@ -208,6 +232,41 @@ function TweaksPanel({ open, onClose }) {
         )}
       </div>
 
+      {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
+          disponible; el permiso se pide al activar (enableNotify). */}
+      {canNotify && (
+        <div style={{ marginBottom: 16 }}>
+          <Meta style={{ marginBottom: 4 }}>{t('tweaks.notify.label')}</Meta>
+          <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('tweaks.notify.hint')}</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {[
+              { v: true, name: t('tweaks.notify.on') },
+              { v: false, name: t('tweaks.notify.off') },
+            ].map(opt => {
+              const active = !!state.notifyFocusEnd === opt.v;
+              return (
+                <button key={String(opt.v)}
+                  onClick={() => { opt.v ? enableNotify() : set({ notifyFocusEnd: false }); }}
+                  style={{
+                    padding: '6px 10px',
+                    fontSize: 11,
+                    fontWeight: active ? 500 : 400,
+                    background: active ? 'var(--ink)' : 'var(--paper-2)',
+                    color: active ? 'var(--paper)' : 'var(--ink-2)',
+                    border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                    borderRadius: 'var(--r-sm)',
+                    transition: 'all 180ms',
+                    letterSpacing: 0.2,
+                  }}>{opt.name}</button>
+              );
+            })}
+          </div>
+          {Notification.permission === 'denied' && (
+            <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginTop: 6, letterSpacing: 0.1 }}>{t('tweaks.notify.blocked')}</div>
+          )}
+        </div>
+      )}
+
       <Divider style={{ margin: '14px 0' }} />
 
       {ejes.map(eje => (
@@ -286,6 +345,17 @@ function TweaksPanel({ open, onClose }) {
           letterSpacing: 0.2,
         }}
       >{t('tweaks.reset')}</button>
+
+      {/* Enlaces /safety y /privacy (s102; páginas estáticas de s101).
+          Solo en web: en file:// esas rutas no resuelven. Nueva pestaña
+          para no matar un timer corriendo. */}
+      {isWeb && (
+        <div style={{ marginTop: 12, textAlign: 'center', fontSize: 10.5, letterSpacing: 0.2 }}>
+          <a href="/safety" target="_blank" rel="noopener" style={tweaksStyles.legalLink}>{t('tweaks.legal.safety')}</a>
+          <span style={{ color: 'var(--ink-3)', margin: '0 8px' }}>·</span>
+          <a href="/privacy" target="_blank" rel="noopener" style={tweaksStyles.legalLink}>{t('tweaks.legal.privacy')}</a>
+        </div>
+      )}
     </div>
   );
 }
@@ -295,6 +365,12 @@ function TweaksPanel({ open, onClose }) {
    estilo dataBtn viven ahora en TweaksData.jsx (split s89).
    ============================================================ */
 const tweaksStyles = {
+  legalLink: {
+    color: 'var(--ink-3)',
+    textDecoration: 'none',
+    borderBottom: '1px solid var(--line)',
+    paddingBottom: 1,
+  },
   stepBtn: {
     width: 26, height: 26,
     display: 'grid', placeItems: 'center',

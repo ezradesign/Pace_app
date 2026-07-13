@@ -246,10 +246,20 @@ function main() {
   var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
   console.log('\n=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');
 
-  // 9. Copiar a index.html (root para Cloudflare Pages)
+  // 9. Copiar a index.html (root para Cloudflare Pages).
+  //    s102: la copia DESPLEGADA recupera el <link rel="manifest"> que el
+  //    paso 3 quita del standalone (CORS en file://). Sin él, Chrome no
+  //    ofrecía instalar la PWA: index.html se servía sin manifest desde s48c.
   var indexPath = path.join(ROOT, 'index.html');
-  fs.copyFileSync(OUTPUT, indexPath);
-  console.log('✓ index.html generado (copia de PACE_standalone.html)');
+  var indexHtml = html.replace(
+    /<link rel="icon"/,
+    '<link rel="manifest" href="/manifest.webmanifest">\n  <link rel="icon"'
+  );
+  if (indexHtml.indexOf('rel="manifest"') === -1) {
+    console.warn('  [WARN] index.html sin <link rel="manifest"> (ancla <link rel="icon"> no encontrada)');
+  }
+  fs.writeFileSync(indexPath, indexHtml, 'utf8');
+  console.log('✓ index.html generado (standalone + <link rel="manifest">)');
 }
 
 main();

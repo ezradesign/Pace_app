@@ -1,9 +1,9 @@
-const CACHE_NAME = 'pace-v0.46.0';
+const CACHE_NAME = 'pace-v0.47.0';
 const PRECACHE = [
   '/',
   '/index.html',
   '/PACE_standalone.html',
-  '/manifest.json',
+  '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-192-maskable.png',
@@ -11,11 +11,21 @@ const PRECACHE = [
   '/icons/apple-touch-icon.png'
 ];
 
+/* s102 (PWA completa): el skipWaiting() incondicional del install se retiró.
+   Con él, el SW nuevo activaba al instante y NUNCA existía un worker en
+   waiting -> el update prompt era imposible. Ahora el worker nuevo queda en
+   waiting hasta que la app lo acepte (mensaje SKIP_WAITING desde el
+   UpdatePrompt) o hasta que se cierren todas las pestañas. Las navegaciones
+   siguen network-first (s89), así que el HTML fresco llega igual sin esperar
+   al SW; el prompt gobierna la activación del worker y su precache. */
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE))
   );
-  self.skipWaiting();
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 /* s89 (A-3 auditoria): borrar caches de versiones anteriores. Antes cada
@@ -30,6 +40,21 @@ self.addEventListener('activate', (event) => {
           .map((k) => caches.delete(k))
       ))
       .then(() => self.clients.claim())
+  );
+});
+
+/* s102: click en la notificación de fin de Pomodoro -> enfocar la app (o
+   abrirla si no hay ventana). La notificación se muestra desde la página
+   (FocusTimer.support.jsx) vía registration.showNotification. */
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      for (const c of list) {
+        if ('focus' in c) return c.focus();
+      }
+      return clients.openWindow('/');
+    })
   );
 });
 
