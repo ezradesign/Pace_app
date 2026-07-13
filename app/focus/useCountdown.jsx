@@ -130,11 +130,28 @@ function useCountdown(durationSec, onComplete) {
     setStatus('idle');
   }, [durationSec]);
 
+  /* s102: reanuda una sesion running persistida (pace.timer.v1) con su
+     endsAt original. Solo desde 'idle' y con endsAt en el futuro; la
+     coherencia de duracion/modo la valida el caller (FocusTimer.support).
+     A diferencia de start(), NO recalcula endsAt: el tiempo que paso
+     durante la recarga cuenta como transcurrido. */
+  const restore = useCallbackUC((endsAtMs) => {
+    if (statusRef.current !== 'idle') return;
+    if (!(typeof endsAtMs === 'number' && endsAtMs > Date.now())) return;
+    firedRef.current = false;
+    endsAtRef.current = endsAtMs;
+    statusRef.current = 'running';
+    setStatus('running');
+  }, []);
+
   return {
     remaining,
     running: status === 'running',
     status,
-    start, pause, resume: start, toggle, reset,
+    /* endsAt expuesto solo en running (para persistencia s102); null en el
+       resto de estados. */
+    endsAt: status === 'running' ? endsAtRef.current : null,
+    start, pause, resume: start, toggle, reset, restore,
   };
 }
 

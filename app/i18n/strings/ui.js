@@ -169,6 +169,21 @@ Object.assign(window.PACE_STRINGS.es, {
     'tweaks.eje.water':              'Objetivo de agua',
     'tweaks.water.value':            '{n} vasos al día',
 
+    // PWA (s102): aviso fin de Foco + update prompt + enlaces legales
+    'tweaks.notify.label':           'Aviso de fin de Foco',
+    'tweaks.notify.hint':            'Notificación del navegador si el Pomodoro termina con la pestaña en segundo plano.',
+    'tweaks.notify.on':              'Activado',
+    'tweaks.notify.off':             'Desactivado',
+    'tweaks.notify.blocked':         'El navegador tiene las notificaciones bloqueadas para este sitio.',
+    'tweaks.legal.safety':           'Seguridad',
+    'tweaks.legal.privacy':          'Privacidad',
+    'notify.focus.title':            'Foco completado',
+    'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
+    'update.msg':                    'Hay una versión nueva de PACE',
+    'update.cta':                    'Actualizar',
+    'update.applying':               'Actualizando…',
+    'update.later':                  'Luego',
+
     // Premium (gating de contenido · bloque Contenido+Premium F3)
     'premium.seal':                  'Premium',
     'premium.soon':                  'Pronto',
@@ -335,6 +350,21 @@ Object.assign(window.PACE_STRINGS.en, {
     // Water goal (s89)
     'tweaks.eje.water':              'Water goal',
     'tweaks.water.value':            '{n} glasses a day',
+
+    // PWA (s102): focus end alert + update prompt + legal links
+    'tweaks.notify.label':           'Focus end alert',
+    'tweaks.notify.hint':            'Browser notification if the Pomodoro ends while the tab is in the background.',
+    'tweaks.notify.on':              'On',
+    'tweaks.notify.off':             'Off',
+    'tweaks.notify.blocked':         'Notifications are blocked for this site in your browser.',
+    'tweaks.legal.safety':           'Safety',
+    'tweaks.legal.privacy':          'Privacy',
+    'notify.focus.title':            'Focus complete',
+    'notify.focus.body':             'Cycle closed. Choose your micro-break.',
+    'update.msg':                    'A new version of PACE is ready',
+    'update.cta':                    'Update',
+    'update.applying':               'Updating…',
+    'update.later':                  'Later',
 
     // Premium (content gating · Content+Premium block F3)
     'premium.seal':                  'Premium',

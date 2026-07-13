@@ -32,6 +32,11 @@ const defaultState = {
   logoVariant: 'pace',
   soundOn: false,
   ambientOn: false,
+
+  // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
+  // Opt-in desde Ajustes (el permiso se pide al activar el toggle); solo
+  // dispara con la pestaña en segundo plano. Ver FocusTimer.support.jsx.
+  notifyFocusEnd: false,
   lang: 'en',
 
   // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del

@@ -94,6 +94,21 @@ function PaceApp() {
     return () => window.removeEventListener('pace:open-welcome', h);
   }, []);
 
+  // Deep links de shortcuts PWA (s102): /?go=focus|breathe|move|hydrate abre
+  // el módulo al arrancar (manifest.webmanifest → shortcuts). Se consume una
+  // sola vez y se limpia la URL (replaceState) para que recargar no
+  // re-dispare. 'focus' solo asegura el modo foco: el home YA es el Pomodoro
+  // y auto-arrancar un timer sin gesto sería una sorpresa, no una ayuda.
+  useEffectMain(() => {
+    let go = null;
+    try { go = new URLSearchParams(window.location.search).get('go'); } catch (e) {}
+    if (!go) return;
+    if (go === 'breathe' || go === 'move') setOpenLibrary(go);
+    else if (go === 'hydrate') setOpenHydrate(true);
+    else if (go === 'focus') set({ focusMode: 'foco' });
+    try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
+  }, []);
+
   // Atajos de teclado: T toggle Tweaks, S toggle Stats, L toggle Logros.
   // Ignora cuando focus esta en INPUT/TEXTAREA para no interferir con campos.
   useEffectMain(() => {
@@ -280,6 +295,11 @@ function PaceApp() {
 
       {/* ========== TOASTS ========== */}
       <ToastHost />
+
+      {/* Aviso de versión nueva del SW (s102 · PWA). Solo aparece cuando el
+          registro en PACE.html anuncia un worker en waiting; en file:// no
+          hay SW y retorna null siempre. */}
+      <UpdatePrompt />
     </div>
   );
 }

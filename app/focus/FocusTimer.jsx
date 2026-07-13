@@ -17,7 +17,7 @@ function FocusTimer({ onFinish }) {
                      : state.focusMode === 'pausa' ? 5
                      : 15) * 60;
 
-  const { remaining, running, status, toggle, reset } = useCountdown(durationSec, () => {
+  const { remaining, running, status, endsAt, toggle, reset, restore } = useCountdown(durationSec, () => {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
        bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado). */
     try { playSound('pomodoro.end'); } catch (e) {}
@@ -27,10 +27,37 @@ function FocusTimer({ onFinish }) {
        ultima onComplete en un ref, asi que este cierre lee el focusMode
        vigente; un cambio de modo resetea el timer antes de poder completar. */
     if (state.focusMode === 'foco') {
+      /* Aviso PWA (s102): solo si el usuario lo activó en Ajustes Y la
+         pestaña está en segundo plano. Nunca rompe (patrón playSound). */
+      try {
+        maybeNotifyFocusEnd({
+          enabled: state.notifyFocusEnd,
+          title: t('notify.focus.title'),
+          body: t('notify.focus.body'),
+        });
+      } catch (e) {}
       completeFocusSession('home');
       onFinish && onFinish();
     }
   });
+
+  /* Persistencia del Pomodoro en recarga (s102, resuelve el fork s96).
+     Clave pace.timer.v1 FUERA de pace.state.v2 (el timer sigue siendo
+     local, decisión s96). Al montar: reanuda solo si el foco guardado
+     sigue VIVO y modo/minutos coinciden; expirado estando fuera se
+     descarta sin acreditar (helpers en FocusTimer.support.jsx). */
+  const restoredRef = useRefFT(false);
+  useEffectFT(() => {
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
+    if (endsAtSaved) restore(endsAtSaved);
+  }, []);
+
+  // Escribe mientras hay un foco running; pausa/reset/fin/otros modos limpian.
+  useEffectFT(() => {
+    persistFocusTimer(running && state.focusMode === 'foco', endsAt, state.focusMinutes);
+  }, [running, endsAt, state.focusMode, state.focusMinutes]);
 
   // Drone ambiente — efecto paralelo (no toca el ticker ni la lógica de logros)
   useEffectFT(() => {

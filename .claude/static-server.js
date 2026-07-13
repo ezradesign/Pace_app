@@ -14,6 +14,7 @@ var MIME = {
   '.jsx':  'text/javascript; charset=utf-8',
   '.css':  'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.png':  'image/png',
   '.svg':  'image/svg+xml',
   '.ico':  'image/x-icon',
@@ -22,6 +23,9 @@ var MIME = {
 http.createServer(function (req, res) {
   var url = decodeURIComponent(req.url.split('?')[0]);
   if (url === '/' || url === '') url = '/PACE.html';
+  // Rutas bonitas de Cloudflare Pages (s102): /safety y /privacy sirven
+  // sus .html para que el preview se comporte como producción.
+  if (url === '/safety' || url === '/privacy') url += '.html';
   var file = path.join(ROOT, url);
   // Block traversal outside ROOT.
   if (file.indexOf(ROOT) !== 0) { res.writeHead(403); return res.end('Forbidden'); }

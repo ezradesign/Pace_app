@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.46.0</title>
-  <link rel="manifest" href="/manifest.json">
+  <title>PACE · Foco · Cuerpo — v0.47.0</title>
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <meta name="theme-color" content="#F5EFE0">
+  <meta name="theme-color" content="#F2EDE0">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -150,6 +150,9 @@
   <script type="text/babel" src="app/ui/CowLogo.jsx"></script>
   <script type="text/babel" src="app/ui/Sound.jsx"></script>
   <script type="text/babel" src="app/ui/Toast.jsx"></script>
+  <!-- Aviso de versión nueva del SW (s102 · PWA). Escucha el anuncio del
+       registro (pace:sw-waiting); main.jsx lo monta junto al ToastHost. -->
+  <script type="text/babel" src="app/ui/UpdatePrompt.jsx"></script>
   <!-- Dial circular compartido (s76): consumido por FocusTimer (home) y
        PathFocusStep (dentro de un Camino). Debe cargarse antes que ambos. -->
   <script type="text/babel" src="app/ui/TimerDial.jsx"></script>
@@ -157,6 +160,9 @@
        compartido por FocusTimer (home) y PathFocusStep (Camino). No deriva en
        background (remaining = f(Date.now())). Antes que ambos consumidores. -->
   <script type="text/babel" src="app/focus/useCountdown.jsx"></script>
+  <!-- Helpers sin UI del Pomodoro (s102): notificación fin-pomodoro +
+       persistencia pace.timer.v1. Antes que FocusTimer (su consumidor). -->
+  <script type="text/babel" src="app/focus/FocusTimer.support.jsx"></script>
 
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
@@ -278,11 +284,38 @@
     }
   </script>
 
-  <!-- PWA · Service Worker (sesión 37 · v0.19.0) -->
+  <!-- PWA · Service Worker (sesión 37 · v0.19.0 · registro; s102 · v0.47.0 ·
+       detección de update). Cuando hay un worker nuevo en waiting se anuncia
+       vía window.__paceSwWaitingReg + CustomEvent 'pace:sw-waiting' (lo
+       consume app/ui/UpdatePrompt.jsx, que puede montar después del anuncio:
+       por eso también se deja la referencia en window). Al aceptar, el prompt
+       hace postMessage SKIP_WAITING y el controllerchange de aquí recarga.
+       El guard hadController evita recargar en el primer install (claim). -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').catch(function() {});
+        navigator.serviceWorker.register('sw.js').then(function(reg) {
+          function announceWaiting() {
+            if (!reg.waiting) return;
+            window.__paceSwWaitingReg = reg;
+            window.dispatchEvent(new CustomEvent('pace:sw-waiting'));
+          }
+          announceWaiting(); // quedó esperando de una visita anterior
+          reg.addEventListener('updatefound', function() {
+            var nw = reg.installing;
+            if (!nw) return;
+            nw.addEventListener('statechange', function() {
+              if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                announceWaiting();
+              }
+            });
+          });
+        }).catch(function() {});
+        var hadController = !!navigator.serviceWorker.controller;
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          if (!hadController) { hadController = true; return; }
+          window.location.reload();
+        });
       });
     }
   </script>

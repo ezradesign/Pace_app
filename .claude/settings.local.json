@@ -74,7 +74,13 @@
       "PowerShell(\"BreatheSession.jsx: $\\(\\(Get-Content app/breathe/BreatheSession.jsx | Measure-Object -Line\\).Lines\\) lineas\")",
       "Bash(cp PACE_standalone.html \"backups/PACE_standalone_v0.44.0_20260710.html\")",
       "Bash(rm backups/PACE_standalone_v0.32.1_20260518.html)",
-      "WebFetch(domain:www.youtube.com)"
+      "WebFetch(domain:www.youtube.com)",
+      "PowerShell(Remove-Item manifest.json -Confirm:$false)",
+      "PowerShell(\\(Get-Content 'app\\\\focus\\\\FocusTimer.jsx' | Measure-Object -Line\\).Lines; \\(Get-Content 'app\\\\tweaks\\\\TweaksPanel.jsx' | Measure-Object -Line\\).Lines; \\(Get-Content 'app\\\\ui\\\\UpdatePrompt.jsx' | Measure-Object -Line\\).Lines; \\(Get-Content 'app\\\\focus\\\\FocusTimer.support.jsx' | Measure-Object -Line\\).Lines; Get-Content '.claude\\\\launch.json' -ErrorAction SilentlyContinue)",
+      "PowerShell(Copy-Item PACE_standalone.html backups\\\\PACE_standalone_v0.46.0_20260713.html && Remove-Item backups\\\\PACE_standalone_v0.33.1_20260523.html -Confirm:$false && \\(Get-ChildItem backups | Measure-Object\\).Count)",
+      "PowerShell(\\(Select-String -Path index.html -Pattern 'rel=\"manifest\"'\\).Line.Trim\\(\\); \"-- standalone:\"; \\(Select-String -Path PACE_standalone.html -Pattern 'rel=\"manifest\"' | Measure-Object\\).Count; \"-- title:\"; \\(Select-String -Path PACE_standalone.html -Pattern '<title>'\\).Line.Trim\\(\\))",
+      "PowerShell(foreach \\($f in 'app\\\\main.jsx','app\\\\focus\\\\useCountdown.jsx','sw.js','app\\\\state-core.jsx','app\\\\i18n\\\\strings\\\\ui.js','PACE.html'\\) { \"$f = $\\(\\(Get-Content $f | Measure-Object -Line\\).Lines\\)\" })",
+      "PowerShell(foreach \\($f in 'app\\\\main.jsx','app\\\\focus\\\\useCountdown.jsx','sw.js','app\\\\state-core.jsx','app\\\\i18n\\\\strings\\\\ui.js','app\\\\tweaks\\\\TweaksPanel.jsx','app\\\\focus\\\\FocusTimer.jsx','app\\\\ui\\\\UpdatePrompt.jsx','app\\\\focus\\\\FocusTimer.support.jsx'\\) { \"$f = $\\(\\(Get-Content $f\\).Count\\)\" })"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
