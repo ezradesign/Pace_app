@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.48.0** | 2026-07-13 | build: **Etapa A — precompilado Babel + React production** (plan maestro s103, 1ª de 2) -- los 74 scripts `text/babel` se **compilan en build** (`@babel/core` 7.29 en memoria, sourceType script + retainLines; IIFE por archivo + re-exposición AST de function/var top-level = semántica exacta del eval de Babel standalone) · **React 18.3.1 production UMD self-hosted** (vendor/ desde npm) e inlineado en ambos artefactos · **@babel/standalone fuera del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga), standalone 100 % autocontenido en JS por primera vez · dev (PACE.html) intacto · pins deliberados Babel 7 / TypeScript 5 · fuentes self-hosted → s104 | #103 | [abajo](#v0480----2026-07-13----build-etapa-a--precompilado-babel--react-production) |
 | **v0.47.0** | 2026-07-13 | feat(pwa): **PWA completa** (plan maestro s102) -- **manifest.webmanifest** completo (id, 4 **shortcuts** con deep links `/?go=`, launch_handler, colores alineados a `--paper #F2EDE0`) · **fix despliegue**: `index.html` se servía SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal) → la PWA no era instalable; el build re-inserta el link solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → worker en waiting + aviso discreto "Actualizar/Luego" via `UpdatePrompt.jsx`; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle en Ajustes, permiso al activar, solo pestaña oculta, silent; click enfoca la app) · enlaces **Seguridad · Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` fuera de pace.state; reanuda solo si sigue vivo, expirado se descarta sin acreditar — cierra el fork s96) | #102 | [abajo](#v0470----2026-07-13----featpwa-pwa-completa) |
-| **v0.46.0** | 2026-07-10 | feat(stats): **stats a fondo** (P2 del usuario) -- auditoría completa del tracking (mapa escritores→lectores, 8 hallazgos) + **stats vivos**: nuevo `state-history.jsx` con `getHistoryWithToday` memoizado (reutiliza `archiveDayToHistory`) → **Mes/Año/totales incluyen el día actual** (antes ciegos hasta el rollover); state-core 511→407 ln (sale de deuda) · **WeekDots del sidebar con criterio s69** (focus\|breath\|move>0; antes solo foco) · fila "Mueve" → **"Cuerpo"** (moveMinutes = Mueve+Estira, la etiqueta mentía) · **racha de Caminos viva** (cuenta desde ayer si hoy no hay) · fix DST en hydrate.week.perfect · WeeklyStats.jsx muerto borrado · páginas estáticas **/safety + /privacy** (autocontenidas, ES+EN, rama oscura) | #101 | [abajo](#v0460----2026-07-10----featstats-stats-a-fondo--safetyprivacy) |
+| **v0.46.0** | 2026-07-10 | feat(stats): **stats a fondo** (P2 del usuario) -- auditoría completa del tracking (mapa escritores→lectores, 8 hallazgos) + **stats vivos**: nuevo `state-history.jsx` con `getHistoryWithToday` memoizado (reutiliza `archiveDayToHistory`) → **Mes/Año/totales incluyen el día actual** (antes ciegos hasta el rollover); state-core 511→407 ln (sale de deuda) · **WeekDots del sidebar con criterio s69** (focus\|breath\|move>0; antes solo foco) · fila "Mueve" → **"Cuerpo"** (moveMinutes = Mueve+Estira, la etiqueta mentía) · **racha de Caminos viva** (cuenta desde ayer si hoy no hay) · fix DST en hydrate.week.perfect · WeeklyStats.jsx muerto borrado · páginas estáticas **/safety + /privacy** (autocontenidas, ES+EN, rama oscura) | #101 | [session-101](./docs/sessions/session-101-stats-a-fondo.md) |
 | **v0.45.0** | 2026-07-10 | feat(paths): **remate premium de Caminos** (los 3 pendientes de feedback de s99) -- **OutroCard eliminada** (duplicaba la CompletionScreen; el último paso pasa DIRECTO a "Camino completado", PathRunner pierde la fase `outro` y `pendingComplete`, decisión s77 actualizada) · **CompletionScreen "ceremonia editorial"** (fuera el check genérico; kicker + nombre del Camino protagonista + meta "IV pasos · 24 min" con hairline + **sendero héroe con draw-in** (prop `drawIn` de SenderoBar: el trazo se dibuja y los hitos entran escalonados) + recorrido sin caja + logros como sellos) · **banding de atmósfera suavizado** (hint de interpolación 22% + capa de grano SVG ~4% como dither; arregla steps, transiciones y completado a la vez) | #100 | [session-100](./docs/sessions/session-100-remate-caminos.md) |
 | **v0.44.0** | 2026-07-09 | feat(ui+paths): **pulido global + overhaul premium de Caminos** -- pack de microinteracciones (glow del aro Pomodoro cuando corre, hover TopBar/CTA, entrada de modulos, modales scale+fade, scrollbar Firefox) · **Caminos**: fix "Volver al inicio" -> **"Siguiente"** en Respira/Mueve/Foco (SessionDone recibe `inPath`) · **PathFocusStep/PathHydrateStep** adoptan el SessionShell compartido (coherencia total con Respira/Mueve) · **timer "aro de marcas de minuto"** + numero protagonista · **botones del Foco por color** (verde/naranja/gris, revisa s79) · **atmosfera por paso** (wash tenue del acento del modulo, solo en Caminos) · cards de transicion editoriales (kicker romano) + sendero con hito actual acentuado · CompletionScreen rediseñada · bola del timer home -50% | #99 | [session-99](./docs/sessions/session-99-pulido-caminos-premium.md) |
 | **v0.43.0** | 2026-07-09 | fix(breathe): **tiempo activo en Respira** -- `BreatheSession` mide un `activeTime` timestamp-based (excluye pausas manuales; inmune al estrangulamiento de timers en background) que sustituye al wall-clock/nominal en 3 sitios: **fin de sesion no-rounds** (`getActiveSec() >= routine.min*60`, las pausas ya no acercan el final), **barra de progreso no-rounds** (mismo reloj) y **credito a stats/logros** (`completeBreathSession` recibe minutos activos reales, no `routine.min` -> arregla el sobre-credito al pulsar "Terminar" pronto; firma intacta, cero cambios en state) · pantalla "done" muestra tiempo activo · retira estado muerto `cycle`/`startTime`/`doneInCycle` | #98 | [session-98](./docs/sessions/session-98-tiempo-activo-breathe.md) |
@@ -123,6 +124,60 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.48.0] -- 2026-07-13 -- build: Etapa A — precompilado Babel + React production
+
+Sesión 103. Plan maestro "Camino a v1.0", fila s103-104 (primera de las dos
+sesiones; **las fuentes self-hosted quedan para s104**, bifurcaciones ya
+decididas: solo EB Garamond + Inter Tight, data URIs en el standalone).
+Cuatro bifurcaciones decididas por el usuario antes de tocar. Cero cambios
+de arquitectura: `app/` intacto, window globals intactos, `PACE.html` dev
+sigue con CDN development + Babel standalone. Diario:
+[session-103](./docs/sessions/session-103-build-etapa-a.md).
+
+### Qué cambia en los artefactos generados
+
+- Los **74 scripts `text/babel`** (73 archivos + mount loop) se compilan EN
+  BUILD con `@babel/core` (misma major.minor 7.29 que el @babel/standalone
+  del navegador): `sourceType: 'script'`, preset-env targets evergreen
+  (conserva `?.`/`??` nativos), `retainLines` (stack traces → línea real).
+- **Semántica de scope reproducida con fidelidad**: Babel standalone ejecuta
+  cada archivo vía eval indirecto (function/var top-level → window
+  automático; const/let privados). El build envuelve cada archivo en una
+  **IIFE** (los `const {useState}=React` / `GLYPH_SVG` repetidos ya no
+  chocan) y **re-expone por AST** los function/var top-level (así viajan
+  `RoutineCard` y otros globals implícitos que nunca pasaron por
+  Object.assign).
+- **React 18.3.1 production UMD** inlineado en standalone + index.html
+  (origen: paquete npm verificado por lockfile, copiado a `vendor/`);
+  **@babel/standalone retirado** del output.
+- Invariantes nuevas del build: sin tags text/babel residuales, sin
+  unpkg.com, sin `</script>` en JS inlineado, sanity post-escritura.
+
+### Resultado
+
+**Cero JS por CDN y cero compile en el navegador** (antes: React dev +
+ReactDOM dev + Babel ~2,9 MB desde unpkg y 1-3 s de compile por carga; el
+"standalone offline" no era offline de verdad). Standalone 774 KB → 924 KB
+(React inline + JSX compilado) pero autocontenido en JS por primera vez.
+Referencias externas restantes: SOLO el @import de Google Fonts (cae en
+s104). `index.html` conserva el `<link rel="manifest">` (s102).
+
+### Verificación
+
+Preview :8765, protocolo s93 + seed fresco. Checklist funcional COMPLETO
+sobre el compilado (Welcome, Respira/Mueve/Estira, Hidrátate + persistencia,
+logro + toast visible, paleta, deep links `?go=`, pomodoro s102 en ambas
+ramas con BreakMenu y crédito) · equivalencia dev=compilado · **pareja SW
+s89+s102 con dos SW reales**: waiting + barra "Hay una versión nueva" →
+Actualizar → activación + purga del cache viejo + reload con estado intacto;
+primer install sin bucle. Trap de errores en vivo: cero errores. Backup
+`v0.47.0_20260713` desde git HEAD (rotado `v0.33.2_20260523`, cap 20).
+Pins deliberados: **Babel 7 / TypeScript 5** (npm sin pin trae Babel 8
+ESM-only y TS 7 Go sin la API del validador — ambos rompen el build; no
+subir de major sin sesión propia).
+
+---
+
 ## [v0.47.0] -- 2026-07-13 -- feat(pwa): PWA completa
 
 Sesión 102. Plan maestro "Camino a v1.0", fila s102. Cuatro bifurcaciones
@@ -198,68 +253,8 @@ UpdatePrompt.jsx y FocusTimer.support.jsx). Backup
 
 ---
 
-## [v0.46.0] -- 2026-07-10 -- feat(stats): stats a fondo + safety/privacy
-
-Sesion 101. Ataca el feedback P2 del usuario en s100 ("los paneles no
-trackean el progreso de forma adecuada") con AUDITORIA previa verificada
-contra el repo y plan aprobado antes de tocar (4 bifurcaciones decididas por
-el usuario). Diario: [session-101](./docs/sessions/session-101-stats-a-fondo.md).
-
-### Auditoria (8 hallazgos)
-
-Mapa escritores→lectores: todo escribe en `weeklyStats[hoy]`; `history` solo
-se alimentaba en el rollover → **Mes/Año eran ciegos al dia actual** (H1).
-Ademas: WeekDots del sidebar solo miraba foco (H2), Estira comparte cubo
-`moveMinutes` con Mueve y la fila "Mueve" mentia (H3), la racha de Caminos
-moria a medianoche (H4), DST rompia hydrate.week.perfect (H5), WeeklyStats.jsx
-muerto desde s43 (H6). Diferidos: credito solo-al-completar de Mueve/Estira
-(H7, plan maestro "Move timer: bajo") y proxies del Sendero del dia (H8, s106).
-
-### Stats vivos (F1) + split state-history
-
-Nuevo **`app/state-history.jsx`** (160 ln; carga ANTES de state-core, que
-resuelve los helpers via window en `loadState()`): absorbe utils de fecha +
-helpers de history y añade **`getHistoryWithToday(state)`** — selector
-memoizado por identidad que reutiliza `archiveDayToHistory(h, hoy,
-weeklyStats)` (overwrite idempotente + recompute de mes/año; cero logica
-nueva). `StatsPanel` lo consume: celda de HOY, totales del mes, dias
-activos/racha max/acciones del Año, todo vivo. El estado persistido NO
-cambia; el rollover sigue siendo el unico escritor. state-core 511→**407 ln**
-(sale de la deuda de tamaño).
-
-### Resto de fixes
-
-- **WeekDots criterio s69** (F2): activo = focus|breath|move>0; agua sola no.
-- **"Cuerpo"** (F3/H3 → F6): key `stats.label.body` ES/EN + totales y tooltip
-  del mes; el usuario eligio etiqueta honesta sobre serie propia (cero
-  migracion; extraMinutes descartado por ahora).
-- **Racha de Caminos viva** (F3): `computePathStreaks` cuenta desde ayer si
-  hoy aun no hay Camino (iguala la semantica del streak principal).
-- **DST** (F4): `Math.round(diff/86400000)` en checkHydrateWeekPerfect.
-- **WeeklyStats.jsx borrado** (F5): 118 ln muertas, no se cargaba.
-
-### /safety + /privacy
-
-`safety.html` + `privacy.html` en la raiz (Cloudflare Pages → `/safety`,
-`/privacy`). Autocontenidas (cero peticiones externas), ES+EN, paleta crema
-+ rama oscura via prefers-color-scheme, Georgia display, sin emojis ni JS.
-Safety reusa el copy del modal in-app (`breathe.safety.*`); privacy documenta
-local-first/export/CDN/BMC con honestidad. Pendiente: enlazarlas desde la UI.
-
-### Verificacion + build
-
-Preview :8765 propio, protocolo s93 (purga SW+caches por tanda) + **seed de
-`pace.state.v2`** con historial conocido. Capa de datos (selector memo-estable,
-mes vivo, racha 1) + montaje aislado de StatsPanel (dia 10 HOY relleno en Mes,
-"3 dias activos" en Año, "Cuerpo" en Semana) + WeekDots `off off ON ON ON off
-off` (jueves solo-Respira enciende) verificado en dev Y standalone. Consola
-limpia. Incidente instructivo: interaccion fantasma de la pestaña estrangulada
-(re-seed + reposo → cero auto-disparos; los cambios s101 son lectores puros).
-Standalone **756 KB, 71 archivos** (entra state-history, sale WeeklyStats) +
-index.html. Backup `v0.45.0_20260710` (rotado `v0.33.0_20260519`, cap 20).
-
----
-
+> **v0.46.0** (s101) detallada en
+> [session-101](./docs/sessions/session-101-stats-a-fondo.md).
 > **v0.45.0** (s100) detallada en
 > [session-100](./docs/sessions/session-100-remate-caminos.md).
 > **v0.44.0** (s99) detallada en

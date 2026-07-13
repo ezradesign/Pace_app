@@ -80,7 +80,12 @@
       "PowerShell(Copy-Item PACE_standalone.html backups\\\\PACE_standalone_v0.46.0_20260713.html && Remove-Item backups\\\\PACE_standalone_v0.33.1_20260523.html -Confirm:$false && \\(Get-ChildItem backups | Measure-Object\\).Count)",
       "PowerShell(\\(Select-String -Path index.html -Pattern 'rel=\"manifest\"'\\).Line.Trim\\(\\); \"-- standalone:\"; \\(Select-String -Path PACE_standalone.html -Pattern 'rel=\"manifest\"' | Measure-Object\\).Count; \"-- title:\"; \\(Select-String -Path PACE_standalone.html -Pattern '<title>'\\).Line.Trim\\(\\))",
       "PowerShell(foreach \\($f in 'app\\\\main.jsx','app\\\\focus\\\\useCountdown.jsx','sw.js','app\\\\state-core.jsx','app\\\\i18n\\\\strings\\\\ui.js','PACE.html'\\) { \"$f = $\\(\\(Get-Content $f | Measure-Object -Line\\).Lines\\)\" })",
-      "PowerShell(foreach \\($f in 'app\\\\main.jsx','app\\\\focus\\\\useCountdown.jsx','sw.js','app\\\\state-core.jsx','app\\\\i18n\\\\strings\\\\ui.js','app\\\\tweaks\\\\TweaksPanel.jsx','app\\\\focus\\\\FocusTimer.jsx','app\\\\ui\\\\UpdatePrompt.jsx','app\\\\focus\\\\FocusTimer.support.jsx'\\) { \"$f = $\\(\\(Get-Content $f\\).Count\\)\" })"
+      "PowerShell(foreach \\($f in 'app\\\\main.jsx','app\\\\focus\\\\useCountdown.jsx','sw.js','app\\\\state-core.jsx','app\\\\i18n\\\\strings\\\\ui.js','app\\\\tweaks\\\\TweaksPanel.jsx','app\\\\focus\\\\FocusTimer.jsx','app\\\\ui\\\\UpdatePrompt.jsx','app\\\\focus\\\\FocusTimer.support.jsx'\\) { \"$f = $\\(\\(Get-Content $f\\).Count\\)\" })",
+      "Bash(npm install *)",
+      "Bash(mkdir -p vendor)",
+      "Bash(cp node_modules/react/umd/react.production.min.js node_modules/react-dom/umd/react-dom.production.min.js vendor/)",
+      "Bash(npm uninstall *)",
+      "Bash(node -e \"console.log\\('babel', require\\('@babel/core'\\).version\\); console.log\\('ts', require\\('typescript'\\).version\\)\")"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
