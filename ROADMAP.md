@@ -106,7 +106,7 @@ fricción, y quiere volver mañana.*
 | **s106** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
 | **s107-108** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
 | pre-venta | Iteración glifos D-4 → **revisión COMPLETA del set** (feedback s101-cierre, patrón s84) · **trial 7 días explícito** (no auto-start; `premiumUnlocked` derivado de licencia‖trial) · **licencia firmada offline ECDSA P-256** (guardar la clave y revalidar en arranque, no un booleano) — requiere **cambiar formalmente la decisión F3b** · landing `/` separada de `/app` · pricing/terms · **estrategia de venta: revisar A FONDO el canal Starter Story** (youtube.com/@starterstory — pedido s101-cierre; casos con cifras reales, playbooks de apps indie, pricing/lanzamiento/distribución; destilar comparables ANTES de fijar pricing/landing; memoria `premium-strategy-sources`) |
-| post-venta | Vite/ESM real (Etapa B) · Path Builder (reuso F7) · Modo Estudio · sonidos procedurales premium · CTB completa · Android Capacitor (notificaciones/hápticos/widget/billing) · Wrapped · extensión Chrome · IndexedDB via localForage (antes: `navigator.storage.persist()` tras onboarding, barato) |
+| post-venta | Vite/ESM real (Etapa B) · Path Builder (reuso F7) · Modo Estudio · sonidos procedurales premium · CTB completa · **Android + iOS via Capacitor** (notificaciones/hápticos/widget/billing; iOS "cuando corresponda" — feedback s102-cierre) · Wrapped · extensión Chrome · IndexedDB via localForage (antes: `navigator.storage.persist()` tras onboarding, barato) |
 
 **Principios del plan:** local-first ≠ cero servicios (infra de
 compra/licencias OK; backend de producto y tracking NO) · no abrir más
@@ -180,6 +180,38 @@ planificar. Persistido en memoria `ux-refinement-backlog`.
   `breathe-content-sources`: Breathe With Sandy → respiración "muy premium,
   especial y pulida" · Tom Woodfin → sesiones largas premium CTB ·
   Strengthside → pulir Estira premium. Inspiración, no copy literal.
+- **[feedback s102-cierre — Pomodoro] Subtítulo dinámico por duración.**
+  Hoy `focus.subtitle.focus` es FIJO ("Concentración profunda") para
+  cualquier preset. Pedido: frase según duración (ej. 15' → "Foco corto",
+  45' → "Concentración profunda"), estilo PACE relajado y original, con
+  **≥2 variantes por duración rotando aleatoriamente**. ES+EN. Decidir
+  criterio para "Otro" (custom 1-180: por rangos). Sesión de pulido pequeña;
+  puede agruparse con el CTA y el scroll de Ritmo.
+- **[feedback s102-cierre — CTA] "Comenzar" del pomodoro poco atractivo.**
+  El botón/tipografía del CTA principal "no es demasiado atractivo o
+  bonito". Abrir exploración de opciones y que el usuario ELIJA (bifurcación
+  de diseño): presencia/tamaño, serif italic vs sans actual, pill vs recto,
+  microinteracción de press. OJO: su token es `--focus-cta` (s77b) y el
+  glow del aro ya existe (`pace-dial-glow`, s99) — coherencia con ambos.
+- **[feedback s102-cierre — Stats] Ritmo sin scroll vertical en web.**
+  Reapareció la barra de scroll derecha del panel en la versión web
+  (s61-s63 ya lo dejaron sin scroll en 1080p; la fila "Cuerpo" de s101
+  añadió una fila a Semana). Reformular la ventana para que quepa sin
+  scroll — compactar, no amputar.
+- **[feedback s102-cierre — Gamificación SUAVE].** "Gamificar un poco más
+  la app para que los usuarios se enganchen y les ayude a ser constantes
+  — suave pero bien pensada, que sea divertido usarla". Video de referencia
+  (solo para ideas): **"I built a habit system as addicting as a casino"
+  (SpoonFedStudy)** — youtube.com/watch?v=Qji8_5XgMW4. MATIZA el "sin
+  gamificación agresiva" de CLAUDE.md: agresiva no, suave sí. Necesita
+  **sesión de diseño propia ANTES de código** (qué mecánicas, qué NO);
+  base ya existente: 106 logros + rachas + heatmaps + "Retos semanales"
+  (Medio plazo). Principios del usuario para TODO lo visual: bonita,
+  simple, útil, profesional, vistosa y sobre todo sencilla y fácil de usar.
+- **[feedback s102-cierre — Plataformas] Web + Android + iOS.** iOS entra
+  en el mapa ("cuando corresponda"; antes el plan decía v1.0 web+Chrome,
+  v2.0 Android). Capacitor cubre Android e iOS con el mismo wrapper → ver
+  línea post-venta.
 
 ---
 

@@ -384,3 +384,14 @@ Recogido con capturas al cerrar s96. Lista completa en `ROADMAP.md` ->
   CONTENIDO: titulos de ejercicios en ingles dificiles de entender →
   auditoria de nomenclatura ES (mapea a s107-108; OJO name ES = key de
   glifo/i18n custom, s93). Detalle en ROADMAP "Backlog de pulido".
+- **[Feedback s102-cierre]** POMODORO: subtitulo dinamico por duracion
+  (15/25/35/45, ≥2 frases estilo PACE rotando aleatorio por preset; hoy
+  `focus.subtitle.focus` es fijo) · CTA: "Comenzar" poco atractivo →
+  explorar opciones y que el usuario ELIJA · STATS: panel Ritmo SIN scroll
+  vertical en web (reaparecio; la fila "Cuerpo" s101 sumo una fila) ·
+  **GAMIFICACION SUAVE** (matiza CLAUDE.md: agresiva no, suave si; video
+  ref "I built a habit system as addicting as a casino" de SpoonFedStudy;
+  sesion de DISEÑO propia antes de codigo) · PLATAFORMAS: web + Android +
+  **iOS** cuando corresponda (Capacitor cubre ambos, post-venta). Principios
+  transversales del usuario: bonita, simple, util, profesional, vistosa,
+  sencilla y facil de usar. Detalle en ROADMAP "Backlog de pulido".
