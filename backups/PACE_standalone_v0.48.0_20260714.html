@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.49.0</title>
-  <link rel="manifest" href="/manifest.webmanifest">
+  <title>PACE · Foco · Cuerpo — v0.48.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -484,79 +483,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 @keyframes pace-sendero-dot-in {
   from { opacity: 0; }
   to   { opacity: 1; }
-}
-
-/* ============================================================
-   ESCENA DE CAMINO (s104 · arte D-4) — PathIllustration full-bleed
-   Hitos vivos anclados sobre los puntos pintados del arte. Misma
-   gramática que el SenderoBar (pulso/orbe/draw-in); reutiliza los
-   keyframes pace-sendero-pulse / pace-sendero-dot-in. Todo decorativo
-   -> el kill global de reduced-motion lo congela.
-   ============================================================ */
-[data-pace-path-scene] { color: var(--ink); }
-/* La escena es capa de fondo: fuera del rise escalonado del reveal
-   (entra con el fade de la card / de la Completion). */
-[data-pace-reveal] > [data-pace-path-scene] { animation: none !important; }
-[data-pace-path-scene] .scene-pulse-ring {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pace-sendero-pulse 2.6s var(--ease) infinite;
-}
-/* Pop de relleno (s104c): la bola recién terminada se llena con el color
-   de su actividad (StepIntro: una; Completion: todas, escalonadas — el
-   delay lo pone el JSX inline por bola). */
-[data-pace-path-scene] .scene-fill-in {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pace-scene-fill 600ms var(--ease) both;
-}
-@keyframes pace-scene-fill {
-  from { opacity: 0; transform: scale(0.25); }
-  to   { opacity: 1; transform: scale(1); }
-}
-/* Eco de latido tras el pop (s104c bis): UNA onda que sale de la bola
-   recién rellenada. opacity 0 de base + forwards -> invisible durante el
-   delay (el pulso de pace-sendero-pulse gobierna solo mientras corre). */
-[data-pace-path-scene] .scene-echo-ring {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  transform-box: fill-box;
-  transform-origin: center;
-  opacity: 0;
-  animation: pace-sendero-pulse 1100ms var(--ease) forwards;
-}
-/* En oscuro el papel crema del arte deslumbra: brightness sutil
-   (decisión s104 "lámina tal cual", sin invertir ni teñir). */
-[data-palette="oscuro"] [data-pace-path-scene] img {
-  filter: brightness(0.95);
-}
-/* "Sobre el arte siempre es de día" (s104): el arte es papel claro FIJO
-   (no se tematiza). En paleta oscura los --ink-* claros serían ilegibles
-   encima y el velo --paper se volvería noche -> dentro de las superficies
-   ilustradas (data-pace-scene-card) se re-mapean tinta/papel/línea a sus
-   valores de la paleta crema. Son COPIAS literales de la paleta día
-   (DESIGN_SYSTEM); si se recalibra la crema, actualizar también aquí.
-   Los acentos de módulo NO se re-mapean (legibles en ambas). */
-[data-palette="oscuro"] [data-pace-scene-card] {
-  --paper: #F2EDE0;
-  --paper-2: #EAE4D4;
-  --paper-3: #DFD8C4;
-  --ink: #1F1C17;
-  --ink-2: #4A453C;
-  --ink-3: #8A8372;
-  --line: #C9C0A8;
-  --line-2: #B8AD8E;
-  /* s104c: también los acentos de actividad — el relleno de las bolas y
-     los puntos del recorrido usan el color CANÓNICO (día) sobre el arte. */
-  --focus: #3E5A3A;
-  --breathe: #C97A5D;
-  --move: #9A7B4F;
-  --hydrate: #5F8A9B;
-  --extra: #6B7A8F;
 }
 
 /* ============================================================
@@ -2999,10 +2925,7 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-/* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
-   mentían la versión). Entra al checklist de bump de cada cierre junto a
-   <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.49.0';
+const PACE_VERSION = 'v0.46.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -14216,400 +14139,10 @@ Object.assign(window, { SenderoBar });
 ;Object.assign(window, { sbToRoman, sbHitoX, sbSegmentPath, SenderoBarBase });
 })();
 </script>
-  <!-- Caminos - Laminas (sesion 104, arte D-4) - indice + PathIllustration.
-       Fallback a SenderoBar -> cargar TRAS SenderoBar y ANTES de
-       PathTransitions/CompletionScreen que lo consumen. -->
-  <script>
-;(function () {
-/* PACE · Caminos · Índice de láminas (sesión 104 / v0.49.0)
-   Mapa pathId -> escena editorial (arte D-4 entregado por el usuario,
-   se porta literal). Despliegue INCREMENTAL: los caminos sin entrada
-   aquí caen al SenderoBar clásico (el fallback vive en los padres:
-   TransitionCardBase y CompletionScreen).
-
-   Metadatos por lámina (espacio de imagen, px sobre w x h):
-     dots  — centro {x,y}, radio r y color de las bolas PINTADAS en el
-             arte, en orden de paso (medidos por escaneo de canvas, no
-             a ojo). Cada arte debe traer EXACTAMENTE tantas bolas como
-             pasos. El color pintado queda siempre CUBIERTO por el
-             casquete (s104c) — solo posiciones/radios importan.
-     paper — color del papel del arte (muestreado del cielo).
-     focusY— altura focal del encuadre cover (franja del sendero).
-     finish— x del encuadre de la Completion (el FINAL del camino).
-
-   Pipeline decidido en s104: la web (PACE.html / index.html) sirve los
-   .webp como archivos (+ PRECACHE en sw.js); el build los inlinea como
-   data URIs SOLO en el standalone (file://, autocontenido). OJO build:
-   el replace busca el literal del campo src -- no escribir esa ruta
-   completa en comentarios. */
-
-const PATH_ILLUSTRATIONS = {
-  'path.dawn': {
-    src: 'app/paths/illustrations/assets/dawn.webp',
-    w: 1365, h: 768,
-    paper: '#f2e9d5',
-    focusY: 0.64,
-    /* Encuadre de la Completion: el FINAL del camino (tramo punteado
-       hacia el sol y el cartel), no el último hito. Bien a la derecha:
-       las bolas completadas quedan a la izquierda/atrás (s104c bis). */
-    finish: { x: 1230 },
-    /* Bolas pintadas: centro/radio/color EXACTOS (bbox por distancia de
-       color + crecimiento radial, no a ojo). El velo y el latido se
-       calculan de estos valores. */
-    dots: [
-    { x: 303, y: 511, r: 14, color: '#c0714e' },
-    { x: 617, y: 506, r: 14, color: '#d0a152' },
-    { x: 892, y: 489, r: 13, color: '#a4a67d' }]
-
-  },
-  'path.midday': {
-    src: 'app/paths/illustrations/assets/midday.webp',
-    w: 1365, h: 768,
-    paper: '#ece4cc',
-    focusY: 0.72,
-    finish: { x: 1240 }, /* el camino serpentea al horizonte junto al monolito */
-    dots: [
-    { x: 347, y: 587, r: 9, color: '#be754b' },
-    { x: 707, y: 543, r: 9, color: '#c69c46' },
-    { x: 943, y: 525, r: 9, color: '#798587' }]
-
-  },
-  'path.afternoon': {
-    src: 'app/paths/illustrations/assets/afternoon.webp',
-    w: 1365, h: 768,
-    paper: '#ece4cc',
-    focusY: 0.68,
-    finish: { x: 1220 }, /* el sol bajo tras el banco */
-    dots: [
-    { x: 390, y: 533, r: 13, color: '#cb865e' },
-    { x: 644, y: 513, r: 12, color: '#cea767' },
-    { x: 866, y: 512, r: 12, color: '#a6a176' }]
-
-  },
-  'path.tea': {
-    src: 'app/paths/illustrations/assets/tea.webp',
-    w: 1365, h: 768,
-    paper: '#f4ecd4',
-    focusY: 0.64,
-    finish: { x: 1240 }, /* la tetera humeante */
-    dots: [
-    { x: 344, y: 515, r: 11, color: '#bd6a44' },
-    { x: 648, y: 450, r: 11, color: '#c3964a' },
-    { x: 897, y: 501, r: 11, color: '#849063' }]
-
-  },
-  'path.dusk': {
-    src: 'app/paths/illustrations/assets/dusk.webp',
-    w: 1365, h: 768,
-    paper: '#ecdcc4',
-    focusY: 0.67,
-    finish: { x: 1240 }, /* el farol encendido bajo la luna */
-    dots: [
-    { x: 289, y: 471, r: 14, color: '#c24c28' },
-    { x: 611, y: 516, r: 14, color: '#da8e41' },
-    { x: 839, y: 566, r: 14, color: '#525f38' }]
-
-  },
-  'path.weekend': {
-    src: 'app/paths/illustrations/assets/weekend.webp',
-    w: 1365, h: 768,
-    paper: '#ece4cc',
-    focusY: 0.64,
-    finish: { x: 1230 }, /* la cabaña con humo en la colina */
-    dots: [
-    { x: 275, y: 473, r: 13, color: '#c07951' },
-    { x: 621, y: 510, r: 13, color: '#d0a14d' },
-    { x: 989, y: 489, r: 13, color: '#909773' }]
-
-  },
-  'path.breath': {
-    src: 'app/paths/illustrations/assets/breath.webp',
-    w: 1365, h: 768,
-    paper: '#f4ecd4',
-    focusY: 0.59,
-    finish: { x: 1210 }, /* la flor de loto */
-    dots: [
-    { x: 458, y: 452, r: 16, color: '#c27e5d' },
-    { x: 751, y: 452, r: 16, color: '#bf7c5c' }]
-
-  }
-};
-
-function getPathIllustration(pathId) {
-  return PATH_ILLUSTRATIONS[pathId] || null;
-}
-
-window.PATH_ILLUSTRATIONS = PATH_ILLUSTRATIONS;
-window.getPathIllustration = getPathIllustration;
-;Object.assign(window, { getPathIllustration });
-})();
-</script>
-  <script>
-;(function () {
-/* PACE · Caminos · PathIllustration (sesión 104 / v0.49.0)
-   Escena editorial FULL-BLEED del Camino (arte D-4). Sustituye al
-   SenderoBar SOLO en el runner; los caminos sin lámina en el índice
-   siguen con el SenderoBar clásico (el fallback lo deciden los padres
-   con getPathIllustration).
-
-   Lenguaje de marcadores (iteración s104c con el usuario):
-     Las bolas pintadas del arte quedan SIEMPRE cubiertas por un
-     casquete neutro ("socket"): todas GRISES hasta rellenarse.
-       pending — casquete gris (var(--line), borde --line-2).
-       current — casquete gris + latido que emana desde debajo en el
-                 COLOR DE LA ACTIVIDAD del paso (anticipa lo que toca).
-       done    — la bola se RELLENA con el color exacto de su actividad
-                 (--breathe/--focus/--move/--hydrate, mapa de siempre).
-     El "viaje" entre módulos (el orbe se retiró, s104c): al entrar la
-     StepIntro, la bola del paso recién terminado hace un POP de color
-     (scene-fill-in) mientras la cámara viaja al siguiente hito (pan
-     2s). Completion: encuadre en el FINAL del camino (ill.finish) y
-     todas las bolas se rellenan escalonadas.
-
-   Alineación img+SVG: wrapper dimensionado al cover exacto contiene
-   ambos (SVG viewBox = espacio de imagen) -> los casquetes caen
-   SIEMPRE sobre las bolas pintadas (centros medidos por escaneo).
-
-   A11y: decorativa (aria-hidden); el título de la card anuncia el
-   Camino. Reduced-motion: kill global congela pulso/pop/pan (CSS). */
-
-const { useState: useStatePI, useEffect: useEffectPI, useRef: useRefPI } = React;
-
-/* Color de actividad por kind — mismo mapa que CS_KIND_COLOR /
-   PT_KIND_ACCENT. En oscuro, dentro de data-pace-scene-card estos
-   tokens se re-mapean a sus valores de DÍA (tokens.css). */
-const PI_KIND_COLOR = {
-  breathe: 'var(--breathe)',
-  focus: 'var(--focus)',
-  body: 'var(--move)',
-  hydrate: 'var(--hydrate)'
-};
-
-/* rgba del papel del arte (para la placa de la etiqueta). */
-function pathIllustrationPaperRgba(hex, a) {
-  const h = (hex || '#F2EDE0').replace('#', '');
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')';
-}
-
-function pathIllustrationCover(w, h, iw, ih, fx, fy) {
-  const scale = Math.max(w / iw, h / ih);
-  const sw = iw * scale,sh = ih * scale;
-  const ox = Math.min(0, Math.max(w - sw, w / 2 - fx * sw));
-  const oy = Math.min(0, Math.max(h - sh, h / 2 - fy * sh));
-  return { sw, sh, ox, oy };
-}
-
-function PathIllustration(_ref) {let { pathId, currentIndex, orbVisible, accent, drawIn, fixed, label, labelKicker } = _ref;
-  const ill = typeof getPathIllustration === 'function' ?
-  getPathIllustration(pathId) :
-  null;
-
-  const wrapRef = useRefPI(null);
-  const [dim, setDim] = useStatePI(null);
-
-  const dots = ill && ill.dots || [];
-  const total = dots.length;
-  const cur = Math.max(0, Math.min(currentIndex, total - 1));
-
-  /* Cámara: durante StepIntro arranca encuadrada en el hito ANTERIOR y
-     viaja al actual (pan 2s = el "viaje" entre módulos). En Intro queda
-     fija en el hito actual; en Completion, en el final del camino. */
-  const camStart = orbVisible && currentIndex > 0 ? cur - 1 : cur;
-  const [camIdx, setCamIdx] = useStatePI(camStart);
-
-  useEffectPI(function () {
-    if (!ill) return;
-    function measure() {
-      const el = wrapRef.current;
-      if (!el) return;
-      setDim({ w: el.clientWidth, h: el.clientHeight });
-    }
-    measure();
-    window.addEventListener('resize', measure);
-    return function () {window.removeEventListener('resize', measure);};
-  }, [!!ill]);
-
-  useEffectPI(function () {
-    if (camIdx === cur) return;
-    /* Doble rAF (patrón TransitionCardBase): asegura un frame pintado en
-       el encuadre de salida antes de arrancar el pan. */
-    const r1 = requestAnimationFrame(function () {
-      const r2 = requestAnimationFrame(function () {setCamIdx(cur);});
-      return function () {cancelAnimationFrame(r2);};
-    });
-    return function () {cancelAnimationFrame(r1);};
-  }, [cur]);
-
-  if (!ill || total === 0) return null;
-
-  /* Kinds de los pasos -> color de actividad por bola. */
-  const pathDef = typeof getPath === 'function' ? getPath(pathId) : null;
-  const stepKinds = pathDef && pathDef.steps ?
-  pathDef.steps.map(function (s) {return s.kind;}) :
-  [];
-  function fillColor(i) {
-    return PI_KIND_COLOR[stepKinds[i]] || accent || 'var(--focus)';
-  }
-
-  const iw = ill.w,ih = ill.h;
-  const cam = dots[Math.max(0, Math.min(camIdx, total - 1))];
-  const focalX = drawIn && ill.finish ? ill.finish.x : cam.x;
-  const fx = focalX / iw;
-  const fy = typeof ill.focusY === 'number' ? ill.focusY : cam.y / ih;
-  const box = dim ? pathIllustrationCover(dim.w, dim.h, iw, ih, fx, fy) : null;
-
-  return (/*#__PURE__*/
-    React.createElement("div", {
-      ref: wrapRef,
-      "aria-hidden": "true",
-      "data-pace-path-scene": "",
-      className: drawIn ? 'draw-in' : undefined,
-      style: {
-        position: fixed ? 'fixed' : 'absolute',
-        inset: 0,
-        overflow: 'hidden',
-        zIndex: -1
-      } },
-
-    box && /*#__PURE__*/
-    React.createElement("div", { style: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: box.sw,
-        height: box.sh,
-        transform: 'translate(' + box.ox + 'px, ' + box.oy + 'px)',
-        transition: 'transform 2000ms var(--ease)'
-      } }, /*#__PURE__*/
-    React.createElement("img", {
-      src: ill.src,
-      alt: "",
-      draggable: false,
-      style: {
-        position: 'absolute', inset: 0,
-        width: '100%', height: '100%', display: 'block'
-      } }
-    ), /*#__PURE__*/
-    React.createElement("svg", {
-      viewBox: '0 0 ' + iw + ' ' + ih,
-      preserveAspectRatio: "none",
-      style: {
-        position: 'absolute', inset: 0,
-        width: '100%', height: '100%',
-        overflow: 'visible'
-      } },
-
-    dots.map(function (dt, i) {
-      const rr = dt.r + 2; /* cubre la bola pintada por completo */
-      const isDone = drawIn || i < currentIndex;
-      const isCurrent = !drawIn && i === currentIndex;
-      /* Pop de color: la bola recién terminada al entrar la
-         StepIntro; en Completion, todas escalonadas. */
-      const justFilled = !drawIn && !!orbVisible && i === currentIndex - 1;
-      const popDelay = drawIn ?
-      250 + i * 180 + 'ms' :
-      justFilled ? '250ms' : null;
-      return (/*#__PURE__*/
-        React.createElement("g", { key: i }, /*#__PURE__*/
-        React.createElement("circle", {
-          cx: dt.x, cy: dt.y, r: rr,
-          fill: "var(--line)",
-          stroke: "var(--line-2)",
-          strokeWidth: "1" }
-        ),
-        isDone && /*#__PURE__*/
-        React.createElement("circle", {
-          className: popDelay ? 'scene-fill-in' : undefined,
-          style: popDelay ? { animationDelay: popDelay } : undefined,
-          cx: dt.x, cy: dt.y, r: rr,
-          fill: fillColor(i) }
-        ),
-
-
-
-        justFilled && /*#__PURE__*/
-        React.createElement("g", { style: { color: fillColor(i) } }, /*#__PURE__*/
-        React.createElement("circle", {
-          className: "scene-echo-ring",
-          cx: dt.x, cy: dt.y, r: rr,
-          style: { animationDelay: '900ms' } }
-        )
-        ),
-
-        isCurrent && /*#__PURE__*/
-        React.createElement("g", { style: { color: fillColor(i) } }, /*#__PURE__*/
-        React.createElement("circle", { className: "scene-pulse-ring", cx: dt.x, cy: dt.y, r: rr })
-        )
-
-        ));
-
-    })
-    ),
-
-
-
-
-
-    label && !drawIn && /*#__PURE__*/
-    React.createElement("div", { style: {
-        position: 'absolute',
-        left: dots[cur].x / iw * 100 + '%',
-        top: (dots[cur].y + dots[cur].r + 14) / ih * 100 + '%',
-        transform: 'translateX(-50%)',
-        textAlign: 'center',
-        whiteSpace: 'nowrap'
-      } }, /*#__PURE__*/
-
-
-
-
-    React.createElement("div", { style: {
-        display: 'inline-block',
-        background: pathIllustrationPaperRgba(ill.paper, 0.86),
-        border: '1px solid rgba(184, 173, 142, 0.55)',
-        borderRadius: 'var(--r-md)',
-        padding: '7px 20px 6px',
-        backdropFilter: 'blur(3px)',
-        WebkitBackdropFilter: 'blur(3px)'
-      } }, /*#__PURE__*/
-    React.createElement("div", { style: {
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        fontWeight: 500,
-        fontSize: 'clamp(24px, 3.5vw, 36px)',
-        lineHeight: 1.15,
-        color: 'var(--ink-2)'
-      } }, label),
-    labelKicker ? /*#__PURE__*/
-    React.createElement("div", { style: {
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        fontSize: 14,
-        letterSpacing: '0.14em',
-        color: 'var(--ink-3)',
-        marginTop: 2
-      } }, labelKicker) :
-    null
-    )
-    )
-
-    )
-
-    ));
-
-}
-
-Object.assign(window, { PathIllustration });
-;Object.assign(window, { pathIllustrationPaperRgba, pathIllustrationCover, PathIllustration });
-})();
-</script>
   <!-- Caminos - PathTransitions (sesion 77) - debe cargarse ANTES de PathRunner que lo consume -->
   <script>
 ;(function () {
-function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);} /* PACE - Caminos - PathTransitions (sesion 77 / v0.31.0)
+/* PACE - Caminos - PathTransitions (sesion 77 / v0.31.0)
    Cards de transicion entre pantallas del Camino:
 
      - IntroCard:  al abrir el Camino (SenderoBar 0/N + nombre del Camino).
@@ -14672,19 +14205,9 @@ function TransitionCardBase(_ref)
 
 
 
-
-
-
-
-
-{let { pathId, // s104: id del Camino -> lámina editorial (o fallback SenderoBar)
-    blocks, // array para SenderoBar
+{let { blocks, // array para SenderoBar
     currentIndex, // hito activo (intro=0, transition=next)
     title, // texto grande centrado en vertical
-    tagline, // s104: beneficio del Camino bajo el título (IntroCard)
-    dotLabel, // s104d: nombre del paso anclado BAJO la bola actual (IntroCard)
-    dotKicker, // s104d: numeral del paso para esa etiqueta
-    titleAtDot, // s104d (StepIntro): con escena, el título entero va a la bola
     orbVisible, // true solo en StepIntro
     durationVar, // 'intro' | 'step'
     fadeMsFallback, // ms para entrada/salida (--path-card-fade-ms)
@@ -14693,7 +14216,7 @@ function TransitionCardBase(_ref)
     atmosphere, // s99: token *-soft para el wash de fondo (o undefined)
     kicker, // s99: eyebrow editorial sobre el titulo (numeral romano)
     accent // s99: color del hito actual del SenderoBar (o undefined)
-  } = _ref;const { t } = useT(); /* s104: ¿este Camino tiene escena ilustrada? (arte D-4, incremental) */const hasIllustration = typeof getPathIllustration === 'function' && !!getPathIllustration(pathId) && typeof PathIllustration === 'function'; /* Arranca invisible (decision 5: fade + scale 0.96 -> 1.0). */const [visible, setVisible] = useStatePT(false);const [exiting, setExiting] = useStatePT(false);const exitedRef = useRefPT(false);const enterRafRef = useRefPT(null);const holdTimerRef = useRefPT(null);const exitTimerRef = useRefPT(null);useEffectPT(function () {var fadeMs = pathTransitionReadMs('--path-card-fade-ms', fadeMsFallback);
+  } = _ref;const { t } = useT(); /* Arranca invisible (decision 5: fade + scale 0.96 -> 1.0). */const [visible, setVisible] = useStatePT(false);const [exiting, setExiting] = useStatePT(false);const exitedRef = useRefPT(false);const enterRafRef = useRefPT(null);const holdTimerRef = useRefPT(null);const exitTimerRef = useRefPT(null);useEffectPT(function () {var fadeMs = pathTransitionReadMs('--path-card-fade-ms', fadeMsFallback);
       var holdMs = pathTransitionReadMs(
         durationVar === 'intro' ? '--path-intro-ms' : '--path-step-ms',
         totalMsFallback
@@ -14756,34 +14279,20 @@ function TransitionCardBase(_ref)
   {opacity = 0;scale = scaleFrom;}
 
   return (/*#__PURE__*/
-    React.createElement("div", _extends({
+    React.createElement("div", {
       onClick: handleTap,
       onKeyDown: handleKey,
       role: "button",
       tabIndex: 0,
       "aria-label": title,
-      "data-pace-reveal": true },
-    hasIllustration ? { 'data-pace-scene-card': '' } : {}, {
+      "data-pace-reveal": true,
       style: Object.assign({}, pathTransitionStyles.card, {
         background: atmosphere && window.sessionAtmosphere ?
         window.sessionAtmosphere(atmosphere) :
         pathTransitionStyles.card.background,
         opacity: opacity,
         transform: 'scale(' + scale + ')'
-      }) }),
-
-
-
-
-    hasIllustration ? /*#__PURE__*/
-    React.createElement(PathIllustration, {
-      pathId: pathId,
-      currentIndex: currentIndex,
-      orbVisible: orbVisible,
-      accent: accent,
-      label: titleAtDot ? title : dotLabel,
-      labelKicker: titleAtDot ? kicker : dotKicker }
-    ) : /*#__PURE__*/
+      }) }, /*#__PURE__*/
 
     React.createElement("div", { style: pathTransitionStyles.senderoSlot }, /*#__PURE__*/
     React.createElement(SenderoBar, {
@@ -14795,73 +14304,26 @@ function TransitionCardBase(_ref)
     )
     ), /*#__PURE__*/
 
-
-
-
-
-    React.createElement("div", { style: Object.assign({}, pathTransitionStyles.titleWrap,
-      hasIllustration ? pathTransitionStyles.titleWrapScene : null) },
-    !(hasIllustration && titleAtDot) && /*#__PURE__*/
+    React.createElement("div", { style: pathTransitionStyles.titleWrap }, /*#__PURE__*/
     React.createElement("div", null,
-    kicker ? /*#__PURE__*/
-    React.createElement("div", { style: Object.assign({}, pathTransitionStyles.kicker,
-      hasIllustration ? pathTransitionStyles.textHaloScene : null) },
-    kicker
-    ) :
-    null, /*#__PURE__*/
-    React.createElement("h2", { style: Object.assign({}, pathTransitionStyles.title,
-      hasIllustration ? pathTransitionStyles.textHaloScene : null) },
-    title
-    ),
-
-
-    tagline ? /*#__PURE__*/
-    React.createElement("div", { style: Object.assign({}, pathTransitionStyles.tagline,
-      hasIllustration ? pathTransitionStyles.textHaloScene : null) },
-    tagline
-    ) :
-    null,
-
-
-    !hasIllustration && dotLabel ? /*#__PURE__*/
-    React.createElement("div", { style: pathTransitionStyles.subtitle },
-    (dotKicker ? dotKicker + ' · ' : '') + dotLabel
-    ) :
-    null
+    kicker ? /*#__PURE__*/React.createElement("div", { style: pathTransitionStyles.kicker }, kicker) : null, /*#__PURE__*/
+    React.createElement("h2", { style: pathTransitionStyles.title }, title)
     )
-
     ), /*#__PURE__*/
 
-    React.createElement("div", { style: Object.assign({}, pathTransitionStyles.hint,
-      hasIllustration ? pathTransitionStyles.textHaloScene : null) },
+    React.createElement("div", { style: pathTransitionStyles.hint },
     t('path.runner.transition.continue')
     )
     ));
 
 }
 
-function IntroCard(_ref2) {let { pathId, pathName, blocks, onContinue } = _ref2;
-  const { t } = useT();
-  /* s104c/d: la bola que late en la intro también se anuncia — antes era
-     el único hito sin nombre. Con escena, la etiqueta se ancla a la bola
-     (mockup del usuario); sin escena, línea bajo el título. */
-  const introPath = typeof getPath === 'function' ? getPath(pathId) : null;
-  const introFirst = introPath && introPath.steps && introPath.steps[0];
-  const introKindName = introFirst ?
-  t('paths.kind.' + introFirst.kind + '.name') || introFirst.kind :
-  null;
-  const introTagline = introPath && introPath.taglineKey ?
-  t(introPath.taglineKey) || null :
-  null;
+function IntroCard(_ref2) {let { pathName, blocks, onContinue } = _ref2;
   return (/*#__PURE__*/
     React.createElement(TransitionCardBase, {
-      pathId: pathId,
       blocks: blocks,
       currentIndex: 0,
       title: pathName,
-      tagline: introTagline,
-      dotLabel: introKindName,
-      dotKicker: introKindName ? PT_ROMAN[0] : null,
       orbVisible: false,
       durationVar: "intro",
       fadeMsFallback: 200,
@@ -14871,15 +14333,13 @@ function IntroCard(_ref2) {let { pathId, pathName, blocks, onContinue } = _ref2;
 
 }
 
-function StepIntro(_ref3) {let { pathId, kindName, kind, blocks, currentIndex, onContinue } = _ref3;
+function StepIntro(_ref3) {let { kindName, kind, blocks, currentIndex, onContinue } = _ref3;
   return (/*#__PURE__*/
     React.createElement(TransitionCardBase, {
-      pathId: pathId,
       blocks: blocks,
       currentIndex: currentIndex,
       title: kindName,
       kicker: PT_ROMAN[currentIndex] || String(currentIndex + 1),
-      titleAtDot: true,
       atmosphere: PT_KIND_SOFT[kind],
       accent: PT_KIND_ACCENT[kind],
       orbVisible: true,
@@ -14924,40 +14384,6 @@ const pathTransitionStyles = {
     padding: '0 12px',
     minHeight: 0
   },
-  /* s104b (escena): el título ancla ARRIBA, en el cielo del arte (el
-     padding 10vh de la card lo separa del borde). */
-  titleWrapScene: {
-    alignItems: 'flex-start'
-  },
-  /* Beneficio del Camino bajo el título (IntroCard). */
-  tagline: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 17,
-    color: 'var(--ink-2)',
-    lineHeight: 1.45,
-    letterSpacing: '0.02em',
-    maxWidth: 460,
-    margin: '12px auto 0',
-    textAlign: 'center'
-  },
-  /* Línea menor bajo el título de la IntroCard ("I · Respira"). */
-  subtitle: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 16,
-    color: 'var(--ink-2)',
-    letterSpacing: '0.05em',
-    marginTop: 12,
-    opacity: 0.9,
-    textAlign: 'center'
-  },
-  /* Halo de papel bajo el texto sobre el arte: legible en cualquier zona
-     del dibujo. --paper resuelve a crema también en oscuro dentro de
-     data-pace-scene-card (regla "sobre el arte siempre es de día"). */
-  textHaloScene: {
-    textShadow: '0 0 28px var(--paper), 0 0 12px var(--paper), 0 0 4px var(--paper)'
-  },
   /* Eyebrow editorial (numeral romano del paso) sobre el titulo. */
   kicker: {
     fontFamily: 'var(--font-display)',
@@ -14991,7 +14417,7 @@ const pathTransitionStyles = {
 };
 
 Object.assign(window, { IntroCard, StepIntro });
-;Object.assign(window, { _extends, pathTransitionReadMs, TransitionCardBase, IntroCard, StepIntro });
+;Object.assign(window, { pathTransitionReadMs, TransitionCardBase, IntroCard, StepIntro });
 })();
 </script>
   <!-- Caminos - Steps (sesion 80) - split de PathRunner.jsx en archivos hijos.
@@ -15523,7 +14949,7 @@ Object.assign(window, { PathTopBar, ExitConfirmModal, StepError, PathStepLocked 
   <!-- Caminos - CompletionScreen (sesion 80) - pantalla de Camino completado -->
   <script>
 ;(function () {
-function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);} /* PACE · Caminos · Pantalla de Camino completado · sesion 80 (split de PathRunner.jsx)
+/* PACE · Caminos · Pantalla de Camino completado · sesion 80 (split de PathRunner.jsx)
    s100: rediseno "ceremonia editorial" -- fuera el check generico en circulo;
    la ceremonia es tipografica: kicker + nombre del Camino en display grande +
    meta editorial (pasos en romano + minutos) + hairline + SenderoBar heroe
@@ -15557,26 +14983,6 @@ const csKickerStyle = {
   color: 'var(--ink-3)', marginBottom: 10
 };
 
-/* s104c: placa de papel translúcida bajo RECORRIDO+DESBLOQUEADO cuando
-   hay escena ilustrada — legibilidad sobre el dibujo. Crema FIJA en rgba
-   (el arte no se tematiza: "sobre el arte siempre es de día"). */
-const csPlateStyle = {
-  width: '100%', maxWidth: 380,
-  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-  background: 'rgba(242, 237, 224, 0.82)',
-  border: '1px solid rgba(184, 173, 142, 0.45)',
-  borderRadius: 'var(--r-lg)',
-  padding: '16px 22px 18px',
-  backdropFilter: 'blur(5px)',
-  WebkitBackdropFilter: 'blur(5px)',
-  margin: '6px 0 2px'
-};
-/* Sin escena: mismo agrupado, sin caja (aspecto s100 intacto). */
-const csGroupStyle = {
-  width: '100%',
-  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8
-};
-
 function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
   const [state] = usePace();
   const { t, tn } = useT();
@@ -15595,11 +15001,6 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
   }, [fadeIn]);
   const path = getPath(snapshot.pathId);
   const displayName = path ? t(path.nameKey) || snapshot.pathId : snapshot.pathId;
-  /* s104: ¿ceremonia con escena ilustrada? (arte D-4, incremental) */
-  const hasIll =
-  typeof getPathIllustration === 'function' &&
-  !!getPathIllustration(snapshot.pathId) &&
-  typeof PathIllustration === 'function';
   const elapsed = snapshot.startedAt ?
   Math.round((Date.now() - snapshot.startedAt) / 60000) :
   0;
@@ -15638,30 +15039,16 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
   filter(Boolean);
 
   return (/*#__PURE__*/
-    React.createElement("div", _extends({ "data-pace-reveal": true }, hasIll ? { 'data-pace-scene-card': '' } : {}, { style: {
+    React.createElement("div", { "data-pace-reveal": true, style: {
         flex: 1, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         padding: '40px 40px 48px', textAlign: 'center',
         overflowY: 'auto', gap: 8,
-        /* s104: con escena ilustrada el fondo lo pone la lámina full-bleed
-           (isolation crea el stacking context para su zIndex -1). */
-        isolation: 'isolate',
-        background: hasIll ? undefined :
-        typeof window !== 'undefined' && window.sessionAtmosphere ?
+        background: typeof window !== 'undefined' && window.sessionAtmosphere ?
         window.sessionAtmosphere('var(--focus-soft)') : undefined,
         opacity: opacity,
         transition: fadeIn ? 'opacity 400ms ease-out' : 'none'
-      } }),
-
-
-    hasIll && /*#__PURE__*/
-    React.createElement(PathIllustration, {
-      pathId: snapshot.pathId,
-      currentIndex: totalSteps,
-      drawIn: true,
-      fixed: true }
-    ), /*#__PURE__*/
-
+      } }, /*#__PURE__*/
 
 
     React.createElement("div", null, /*#__PURE__*/
@@ -15700,16 +15087,13 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
 
 
 
-    totalSteps > 0 && !hasIll && /*#__PURE__*/
+
+    totalSteps > 0 && /*#__PURE__*/
     React.createElement("div", { style: { width: '100%', maxWidth: 680, margin: '4px 0 0' } }, /*#__PURE__*/
     React.createElement(SenderoBar, { blocks: senderoBlocks, currentIndex: totalSteps, drawIn: true })
     ),
 
 
-
-
-    (totalSteps > 0 || achievementsDuring.length > 0) && /*#__PURE__*/
-    React.createElement("div", { style: hasIll ? csPlateStyle : csGroupStyle },
 
     totalSteps > 0 && /*#__PURE__*/
     React.createElement("div", { style: { maxWidth: 340, width: '100%', margin: '0 0 6px' } }, /*#__PURE__*/
@@ -15788,8 +15172,6 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
         ));
 
     })
-    )
-
     ), /*#__PURE__*/
 
 
@@ -15813,11 +15195,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
         background: 'transparent', border: 'none',
         color: 'var(--ink-3)', cursor: 'pointer',
         fontSize: 12, letterSpacing: '0.08em',
-        fontFamily: 'var(--font-display)', fontStyle: 'italic',
-        /* s104c: halo de papel sobre la escena (legibilidad) */
-        textShadow: hasIll ?
-        '0 0 20px var(--paper), 0 0 8px var(--paper)' :
-        'none'
+        fontFamily: 'var(--font-display)', fontStyle: 'italic'
       } },
 
     t('paths.runner.repeat') || 'Repetir camino'
@@ -15828,7 +15206,7 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
 }
 
 Object.assign(window, { CompletionScreen });
-;Object.assign(window, { _extends, CompletionScreen });
+;Object.assign(window, { CompletionScreen });
 })();
 </script>
   <!-- Caminos - PathRunner UI (sesion 50; split s80) - orquestador -->
@@ -16037,7 +15415,6 @@ function PathRunner() {
 
     phase === 'intro' && typeof IntroCard === 'function' && /*#__PURE__*/
     React.createElement(IntroCard, {
-      pathId: cur.id,
       pathName: displayPathName,
       blocks: senderoBlocks,
       onContinue: handleIntroDone }
@@ -16045,7 +15422,6 @@ function PathRunner() {
 
     phase === 'transition' && typeof StepIntro === 'function' && /*#__PURE__*/
     React.createElement(StepIntro, {
-      pathId: cur.id,
       kindName: transitionKindName,
       kind: step.kind,
       blocks: senderoBlocks,

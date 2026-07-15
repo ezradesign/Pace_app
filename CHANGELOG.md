@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.49.0** | 2026-07-14 | feat(paths): **escenas ilustradas de Caminos — arte D-4 completo** (entrega del usuario, iterado en vivo) -- las **7 láminas** editoriales como escena FULL-BLEED del runner (intro/transición/completion vía `PathIllustration`; sesiones activas intactas) · **casquetes**: las bolas pintadas van cubiertas en gris y se **RELLENAN con el color de su actividad** al completarse (pop + eco; el orbe s77 se retiró) · cámara cover que sigue al hito (pan 2s) y encuadra el **final del camino** en la Completion · etiqueta del paso **anclada a la bola** (placa de papel del arte) · **tagline del Camino en la intro** (beneficio visible) · placa translúcida tras RECORRIDO/DESBLOQUEADO · regla **"sobre el arte siempre es de día"** (re-mapeo de tinta/papel/acentos a paleta crema dentro de las superficies ilustradas en oscuro) · pipeline: **archivo+precache en web / data URI solo standalone** (2371 KB autocontenido; index.html 970 KB) · `scripts/ingest-lamina.js` (normaliza+mide, modo híbrido) · fix `PACE_VERSION` desincronizada (v0.46.0 desde s101) · fallback SenderoBar intacto para futuros caminos sin arte | #104 | [abajo](#v0490----2026-07-14----featpaths-escenas-ilustradas-de-caminos--arte-d-4-completo) |
 | **v0.48.0** | 2026-07-13 | build: **Etapa A — precompilado Babel + React production** (plan maestro s103, 1ª de 2) -- los 74 scripts `text/babel` se **compilan en build** (`@babel/core` 7.29 en memoria, sourceType script + retainLines; IIFE por archivo + re-exposición AST de function/var top-level = semántica exacta del eval de Babel standalone) · **React 18.3.1 production UMD self-hosted** (vendor/ desde npm) e inlineado en ambos artefactos · **@babel/standalone fuera del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga), standalone 100 % autocontenido en JS por primera vez · dev (PACE.html) intacto · pins deliberados Babel 7 / TypeScript 5 · fuentes self-hosted → s104 | #103 | [abajo](#v0480----2026-07-13----build-etapa-a--precompilado-babel--react-production) |
-| **v0.47.0** | 2026-07-13 | feat(pwa): **PWA completa** (plan maestro s102) -- **manifest.webmanifest** completo (id, 4 **shortcuts** con deep links `/?go=`, launch_handler, colores alineados a `--paper #F2EDE0`) · **fix despliegue**: `index.html` se servía SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal) → la PWA no era instalable; el build re-inserta el link solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → worker en waiting + aviso discreto "Actualizar/Luego" via `UpdatePrompt.jsx`; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle en Ajustes, permiso al activar, solo pestaña oculta, silent; click enfoca la app) · enlaces **Seguridad · Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` fuera de pace.state; reanuda solo si sigue vivo, expirado se descarta sin acreditar — cierra el fork s96) | #102 | [abajo](#v0470----2026-07-13----featpwa-pwa-completa) |
+| **v0.47.0** | 2026-07-13 | feat(pwa): **PWA completa** (plan maestro s102) -- **manifest.webmanifest** completo (id, 4 **shortcuts** con deep links `/?go=`, launch_handler, colores alineados a `--paper #F2EDE0`) · **fix despliegue**: `index.html` se servía SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal) → la PWA no era instalable; el build re-inserta el link solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → worker en waiting + aviso discreto "Actualizar/Luego" via `UpdatePrompt.jsx`; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle en Ajustes, permiso al activar, solo pestaña oculta, silent; click enfoca la app) · enlaces **Seguridad · Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` fuera de pace.state; reanuda solo si sigue vivo, expirado se descarta sin acreditar — cierra el fork s96) | #102 | [session-102](./docs/sessions/session-102-pwa-completa.md) |
 | **v0.46.0** | 2026-07-10 | feat(stats): **stats a fondo** (P2 del usuario) -- auditoría completa del tracking (mapa escritores→lectores, 8 hallazgos) + **stats vivos**: nuevo `state-history.jsx` con `getHistoryWithToday` memoizado (reutiliza `archiveDayToHistory`) → **Mes/Año/totales incluyen el día actual** (antes ciegos hasta el rollover); state-core 511→407 ln (sale de deuda) · **WeekDots del sidebar con criterio s69** (focus\|breath\|move>0; antes solo foco) · fila "Mueve" → **"Cuerpo"** (moveMinutes = Mueve+Estira, la etiqueta mentía) · **racha de Caminos viva** (cuenta desde ayer si hoy no hay) · fix DST en hydrate.week.perfect · WeeklyStats.jsx muerto borrado · páginas estáticas **/safety + /privacy** (autocontenidas, ES+EN, rama oscura) | #101 | [session-101](./docs/sessions/session-101-stats-a-fondo.md) |
 | **v0.45.0** | 2026-07-10 | feat(paths): **remate premium de Caminos** (los 3 pendientes de feedback de s99) -- **OutroCard eliminada** (duplicaba la CompletionScreen; el último paso pasa DIRECTO a "Camino completado", PathRunner pierde la fase `outro` y `pendingComplete`, decisión s77 actualizada) · **CompletionScreen "ceremonia editorial"** (fuera el check genérico; kicker + nombre del Camino protagonista + meta "IV pasos · 24 min" con hairline + **sendero héroe con draw-in** (prop `drawIn` de SenderoBar: el trazo se dibuja y los hitos entran escalonados) + recorrido sin caja + logros como sellos) · **banding de atmósfera suavizado** (hint de interpolación 22% + capa de grano SVG ~4% como dither; arregla steps, transiciones y completado a la vez) | #100 | [session-100](./docs/sessions/session-100-remate-caminos.md) |
 | **v0.44.0** | 2026-07-09 | feat(ui+paths): **pulido global + overhaul premium de Caminos** -- pack de microinteracciones (glow del aro Pomodoro cuando corre, hover TopBar/CTA, entrada de modulos, modales scale+fade, scrollbar Firefox) · **Caminos**: fix "Volver al inicio" -> **"Siguiente"** en Respira/Mueve/Foco (SessionDone recibe `inPath`) · **PathFocusStep/PathHydrateStep** adoptan el SessionShell compartido (coherencia total con Respira/Mueve) · **timer "aro de marcas de minuto"** + numero protagonista · **botones del Foco por color** (verde/naranja/gris, revisa s79) · **atmosfera por paso** (wash tenue del acento del modulo, solo en Caminos) · cards de transicion editoriales (kicker romano) + sendero con hito actual acentuado · CompletionScreen rediseñada · bola del timer home -50% | #99 | [session-99](./docs/sessions/session-99-pulido-caminos-premium.md) |
@@ -124,6 +125,72 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.49.0] -- 2026-07-14 -- feat(paths): escenas ilustradas de Caminos — arte D-4 completo
+
+Sesión 104. Planificada como "fuentes self-hosted", pero el usuario ENTREGÓ
+las 7 láminas del arte D-4 y las priorizó (las fuentes pasan a s105). Todo
+el diseño se iteró EN VIVO con él (2 tandas de AskUserQuestion + 4 rondas de
+feedback con mockups suyos). Diario:
+[session-104](./docs/sessions/session-104-arte-caminos.md).
+
+### La escena ilustrada (`app/paths/illustrations/`)
+
+- **`PathIllustration.jsx`** (nuevo): escena cover FULL-BLEED en las 3
+  pantallas del runner (IntroCard/StepIntro vía TransitionCardBase +
+  CompletionScreen), img+SVG en el mismo encuadre → los marcadores caen al
+  píxel sobre las bolas pintadas. Sesiones activas SIN arte (no distrae).
+- **Casquetes** (lenguaje final iterado): bolas cubiertas en gris
+  (`--line`/`--line-2`) hasta completarse → se RELLENAN con el color de SU
+  actividad (`--breathe`/`--focus`/`--move`/`--hydrate` según el kind real
+  del paso) con pop (`pace-scene-fill`) + eco de latido. El hito actual late
+  en el color de la actividad que toca. El orbe s77 se retiró.
+- **Cámara**: encuadre centrado en el hito actual con clamp; pan de 2 s
+  acompañando el avance donde el viewport recorta; la Completion encuadra
+  el **final del camino** (`finish`: el sol, el farol, la tetera, la
+  cabaña, el loto…).
+- **Tipografía sobre el arte**: título del Camino + **tagline** (beneficio
+  visible) arriba en el cielo; etiqueta del paso (nombre + numeral) en
+  **placa mini de papel del arte** anclada bajo la bola; placa translúcida
+  tras RECORRIDO/DESBLOQUEADO en la Completion.
+- **"Sobre el arte siempre es de día"**: en paleta oscura,
+  `[data-pace-scene-card]` re-mapea `--ink*`/`--paper*`/`--line*` y los
+  acentos de actividad a los valores CREMA (el arte no se tematiza; son
+  copias de la paleta día — actualizar si se recalibra).
+- **Fallback vivo**: un camino sin lámina en el índice renderiza el
+  SenderoBar clásico EXACTO (SenderoBar intocado, decisión s99 respetada).
+
+### Pipeline de assets
+
+- `paths.index.js`: metadatos por lámina (dots {x,y,r,color} medidos por
+  escaneo, paper, focusY, finish). `scripts/ingest-lamina.js` normaliza
+  (1365×768 WebP q82) y mide en **modo híbrido** (semillas visuales +
+  centroide local + crecimiento radial — el detector 100 % automático no es
+  fiable en láminas cálidas). `sharp` como devDependency (pins intactos).
+- **Web**: los .webp viajan como ARCHIVOS + PRECACHE en sw.js (offline
+  fiel; index.html se queda en 970 KB) · **standalone**: data URIs
+  (paso 6b del build, `inlineIllustrations`) → 2371 KB, 100 % autocontenido.
+  MIME .webp en static-server.
+
+### Además
+
+- Fix `PACE_VERSION` v0.46.0 → v0.49.0 (desincronizada desde s101; el
+  footer del sidebar y el export JSON mentían — entra al checklist de bump).
+- Análisis estratégico externo VERIFICADO contra el repo: "CowLogo
+  corrupto" FALSO · `todayISO()` en UTC **CIERTO** (7 sitios; tarea propia
+  s105) · destilado a ROADMAP (After Pomodoro, programas 7/14 días, ASO).
+- Hallazgo pre-existente: frame fantasma de fase 'step' en PathRunner
+  (warning React solo en dev; arreglar en sesión propia).
+
+### Verificación
+
+Protocolo s93 por tanda. Dev: los 7 caminos (imagen, nº de bolas — breath
+2 ✓, etiqueta por kind, pulso) + recorridos completos de dawn en claro/
+oscuro/móvil + fallback. Compilado: monta sin Babel, .webp 1 vez por red.
+Standalone: data URI, cero peticiones. Consola limpia en compilado. Backup
+`v0.48.0_20260714` desde git HEAD (rotado `v0.33.3_20260524`, cap 20).
+
+---
+
 ## [v0.48.0] -- 2026-07-13 -- build: Etapa A — precompilado Babel + React production
 
 Sesión 103. Plan maestro "Camino a v1.0", fila s103-104 (primera de las dos
@@ -177,91 +244,3 @@ ESM-only y TS 7 Go sin la API del validador — ambos rompen el build; no
 subir de major sin sesión propia).
 
 ---
-
-## [v0.47.0] -- 2026-07-13 -- feat(pwa): PWA completa
-
-Sesión 102. Plan maestro "Camino a v1.0", fila s102. Cuatro bifurcaciones
-decididas por el usuario antes de tocar: enlaces legales en Tweaks · toggle
-de notificación en Tweaks (permiso al activar) · 4 shortcuts · persistencia
-"solo si sigue vivo". Diario:
-[session-102](./docs/sessions/session-102-pwa-completa.md).
-
-### Hallazgo: la PWA desplegada no era instalable (desde s48c)
-
-El build elimina el `<link rel="manifest">` del standalone (CORS en
-`file://`) e `index.html` era copia literal → Cloudflare servía la app SIN
-manifest. Fix: el paso 9 del build re-inserta el link SOLO en la copia
-`index.html` (ancla `<link rel="icon">` + WARN); el standalone sigue igual.
-
-### manifest.webmanifest + shortcuts + deep links
-
-`manifest.json` renombrado a **`manifest.webmanifest`** y completado: `id`,
-categories, **4 shortcuts** (Foco/Respira/Mueve/Hidrátate → `/?go=...`,
-icono de la app, regla D-4) y `launch_handler focus-existing`. Colores del
-manifest y `<meta theme-color>` alineados al token real (`#F5EFE0` huérfano
-de s65 → `--paper #F2EDE0`; cero cambios en tokens.css). `main.jsx` consume
-`?go=` UNA vez al montar (breathe/move/hydrate abren su superficie; focus
-solo asegura el modo, sin auto-arrancar) y limpia la URL con replaceState.
-Preview con paridad: static-server sirve `.webmanifest` con su MIME y las
-rutas bonitas `/safety`/`/privacy`.
-
-### Update prompt (cambio de semántica del SW, consciente)
-
-`sw.js` retira el **skipWaiting incondicional** (nunca existía un worker en
-waiting → el prompt era imposible) y añade `message SKIP_WAITING` +
-`notificationclick`. El registro (PACE.html) detecta el waiting (updatefound
-+ el heredado de visitas anteriores) y lo anuncia
-(`window.__paceSwWaitingReg` + `pace:sw-waiting`); `controllerchange`
-recarga con guard del primer install. Nuevo **`app/ui/UpdatePrompt.jsx`**:
-barra discreta bottom-center "Hay una versión nueva de PACE · Actualizar ·
-Luego" (zIndex 150, bajo los toasts). Las **navegaciones siguen
-network-first (s89)** → el HTML fresco llega igual; el prompt gobierna la
-activación del worker y el precache offline. NO reintroducir el skipWaiting
-incondicional.
-
-### Notificación fin-pomodoro (opt-in)
-
-Default `notifyFocusEnd:false` + toggle "Aviso de fin de Foco" en Ajustes
-(permiso del navegador SOLO al activar; hint si está bloqueado). Nuevo
-`app/focus/FocusTimer.support.jsx`: `maybeNotifyFocusEnd` dispara solo con
-toggle activo + **pestaña oculta** (mirando la app, la campana y la pantalla
-de fin ya avisan) + permiso granted; vía `registration.showNotification`
-(PWA instalada) con fallback, `silent:true` (la campana de la app es el
-sonido), tag anti-duplicados; click → enfoca la app. Solo modo foco.
-
-### Enlaces legales + persistencia del Pomodoro (fork s96 resuelto)
-
-"Seguridad · Privacidad" al pie de Ajustes (`/safety` `/privacy`, _blank,
-solo http(s) — en file:// no resuelven). Y `useCountdown` gana
-`restore(endsAtMs)` + `endsAt` expuesto: clave **`pace.timer.v1`** (FUERA de
-pace.state.v2, el timer sigue local) escrita solo con foco running; al
-recargar reanuda si endsAt sigue vivo y modo/minutos coinciden; **expirado
-estando fuera → se descarta sin acreditar** (tracking honesto s101).
-
-### Verificación + build
-
-Preview :8765 propio, protocolo s93 + seed fresco por aserción, consola 0
-errores. Deep links (3 superficies + URL limpia) · rama real de permiso
-DENEGADO (pane embebido) · `/safety`+`/privacy` 200 · persistencia 3 casos
-(reanuda 01:14 / expirado descartado sin crédito / Comenzar-Pausar
-escribe-limpia) · **update prompt con DOS SW reales**: waiting + barra →
-"Luego" persiste el waiting y reaparece al recargar → "Actualizar" activa,
-borra el cache viejo y recarga sola · standalone OK (sin manifest, sin
-prompt) · index.html CON manifest. Build **774 KB, 73 archivos** (entran
-UpdatePrompt.jsx y FocusTimer.support.jsx). Backup
-`v0.46.0_20260713` (rotado `v0.33.1_20260523`, cap 20).
-
----
-
-> **v0.46.0** (s101) detallada en
-> [session-101](./docs/sessions/session-101-stats-a-fondo.md).
-> **v0.45.0** (s100) detallada en
-> [session-100](./docs/sessions/session-100-remate-caminos.md).
-> **v0.44.0** (s99) detallada en
-> [session-99](./docs/sessions/session-99-pulido-caminos-premium.md).
-> **v0.43.0** (s98) detallada en
-> [session-98](./docs/sessions/session-98-tiempo-activo-breathe.md).
-> **v0.42.0** (s97) detallada en
-> [session-97](./docs/sessions/session-97-pulido-oscuro-progreso.md).
-> **v0.41.0** (s96) detallada en
-> [session-96](./docs/sessions/session-96-timer-engine.md).

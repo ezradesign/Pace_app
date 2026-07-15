@@ -322,6 +322,42 @@ que se encienden con el color del aro según `progress`, + número protagonista
 (`numberHugeTicks`, `clamp(78px, 9vw, 128px)`). El Foco de Camino la usa; el home
 mantiene el aro clásico con arco + punto guía.
 
+### Escena ilustrada de Caminos (s104 · v0.49.0 · arte D-4)
+
+`PathIllustration` monta la lámina del Camino como escena cover FULL-BLEED
+**solo en el runner** (IntroCard/StepIntro/CompletionScreen; las sesiones
+activas no llevan arte). Bloque `[data-pace-path-scene]` en `tokens.css`:
+
+- **Casquetes**: las bolas pintadas del arte van SIEMPRE cubiertas en gris
+  (`--line` con borde `--line-2`); al completarse se RELLENAN con el color
+  de su actividad (`--breathe`/`--focus`/`--move`/`--hydrate` según el
+  `kind` real del paso) — pop `pace-scene-fill` + eco `scene-echo-ring`
+  (una onda, `pace-sendero-pulse` a 1 iteración). Hito actual:
+  `scene-pulse-ring` (latido infinito) en el color de la actividad que toca.
+- **Cámara**: encuadre cover centrado en el hito actual (clamp a los bordes
+  del arte); pan de 2 s (`--ease`) acompañando el avance en StepIntro; la
+  Completion encuadra el `finish` de la lámina (el final del camino).
+- **Tipografía sobre arte**: título + tagline arriba (franja del cielo) con
+  halo de papel (`textShadow` triple con `--paper`); etiqueta del paso
+  (nombre display + numeral romano) en **placa mini** del papel DEL ARTE
+  (rgba del `paper` medido + hairline + blur 3px), anclada bajo la bola.
+  En la Completion, RECORRIDO/DESBLOQUEADO van sobre placa translúcida
+  (`rgba(242,237,224,0.82)` + blur 5px + hairline + `--r-lg`).
+- **Reduced-motion**: todo decorativo → el kill global congela pulso, pop,
+  eco y pan.
+
+**Regla "sobre el arte siempre es de día":** el arte es papel claro FIJO.
+En `[data-palette="oscuro"]`, el selector `[data-pace-scene-card]` re-mapea
+`--ink*`, `--paper*`, `--line*` **y los acentos de actividad** a los valores
+de la paleta crema dentro de las superficies ilustradas. Son **copias
+literales** de la paleta día: si se recalibra la crema, actualizar también
+ese bloque (mismo aviso que las copias inline de safety/privacy.html).
+
+**Metadatos por lámina** (`app/paths/illustrations/paths.index.js`): `dots`
+{x,y,r,color} medidos por escaneo (`scripts/ingest-lamina.js`, modo híbrido),
+`paper` del cielo, `focusY` (franja del sendero) y `finish` (encuadre final).
+El arte se mide UNA vez, cuando es definitivo.
+
 ---
 
 ## Z-index layers

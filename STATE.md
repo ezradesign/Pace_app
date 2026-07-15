@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.48.0
-**Ultima sesion:** #103 -- 2026-07-13 - **Build Etapa A: precompilado Babel + React production** (plan maestro, fila s103-104, PRIMERA de las dos; 4 bifurcaciones decididas por el usuario ANTES de tocar). Los **74 scripts `text/babel`** (73 archivos + mount loop) se **compilan en build** con `@babel/core` 7.29 (misma major.minor que el @babel/standalone del navegador; sourceType script, targets evergreen, retainLines) y se inlinean como `<script>` planos. **Semantica de scope reproducida con fidelidad**: Babel standalone ejecuta via eval indirecto (function/var top-level → window automatico, const/let privados) → el build envuelve cada archivo en **IIFE** (los `const {useState}=React`/`GLYPH_SVG` repetidos ya no chocan) + **re-expone por AST** los function/var top-level (asi viajan `RoutineCard` y demas globals implicitos sin Object.assign). **React 18.3.1 production UMD** self-hosted (`vendor/`, desde el paquete npm) e inlineado en ambos artefactos; **@babel/standalone FUERA del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga). `app/` INTACTO (ni una linea); PACE.html dev sigue igual. Pins deliberados **Babel 7 / TypeScript 5** (los latest Babel 8 ESM-only y TS 7 Go rompen el build). **Fuentes self-hosted → s104** (bifurcaciones ya decididas: solo EB Garamond + Inter Tight; data URIs en el standalone). Diario: `docs/sessions/session-103-build-etapa-a.md`
-**Ultima actualizacion de este archivo:** 2026-07-13 - sesion 103
-**Build entregado:** `PACE_standalone.html` v0.48.0 (924 KB, compilado, autocontenido en JS) + `index.html` (idem + `<link rel="manifest">`)
+**Version actual:** v0.49.0
+**Ultima sesion:** #104 -- 2026-07-14 - **Arte D-4 completo: escenas ilustradas de Caminos** (el usuario ENTREGO las 7 laminas y las priorizo sobre las fuentes, que pasan a s105; diseño iterado EN VIVO: 2 tandas AskUserQuestion + 4 rondas de feedback con mockups suyos). Escena cover FULL-BLEED en las 3 pantallas del runner (`PathIllustration.jsx` + `paths.index.js` con dots/paper/focusY/finish medidos por escaneo, no a ojo); **casquetes** (las bolas pintadas van cubiertas en gris `--line` → se RELLENAN con el color de SU actividad al completarse, pop `pace-scene-fill` + eco de latido; el orbe s77 RETIRADO por feedback); camara que sigue al hito actual (pan 2s) y encuadra el FINAL del camino en la Completion (`finish`); etiqueta del paso ANCLADA a la bola (placa mini de papel del arte, tinta `--ink-2/-3`); **tagline en la IntroCard** (beneficio visible); placa translucida tras RECORRIDO/DESBLOQUEADO; regla **"sobre el arte siempre es de dia"** (`[data-pace-scene-card]` re-mapea tinta/papel/acentos a crema en oscuro); pipeline **archivo+precache web / data URI solo standalone**; `scripts/ingest-lamina.js` (normaliza+mide, MODO HIBRIDO con semillas visuales). Fix `PACE_VERSION` (v0.46.0 desde s101). Analisis estrategico externo VERIFICADO contra el repo: `todayISO()` en UTC = bug real (7 sitios) → tarea s105; CowLogo corrupto = FALSO. Fallback SenderoBar intacto. Diario: `docs/sessions/session-104-arte-caminos.md`
+**Ultima actualizacion de este archivo:** 2026-07-14 - sesion 104
+**Build entregado:** `PACE_standalone.html` v0.49.0 (2371 KB, 7 laminas inline, autocontenido) + `index.html` (970 KB, laminas como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,11 +21,15 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.48.0** (s103: solo bump del titulo -- dev INTACTO: CDN development + Babel standalone + .jsx fuente; s102: manifest + registro SW waiting/updatefound) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.48.0** (924 KB, 74 scripts COMPILADOS en IIFE + React production inline -- autocontenido en JS por primera vez, cero unpkg; solo queda el @import de Google Fonts → s104; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.48.0** (identico al standalone + `<link rel="manifest">` re-insertado por el paso del build -- s102) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.49.0** (s104: bump titulo + 2 scripts nuevos de laminas tras SenderoBar y ANTES de PathTransitions/CompletionScreen; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.49.0** (2371 KB, 76 scripts compilados + **7 laminas de Caminos como data URI** -- paso 6b del build; solo queda el @import de Google Fonts → s105; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.49.0** (970 KB -- las laminas van como ARCHIVOS `/app/paths/illustrations/assets/*.webp` + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
 | `vendor/` | React 18.3.1 production UMD self-hosted (react + react-dom .min.js) | **NUEVO s103** (copiados del paquete npm, verificados por integrity del lockfile; el build los inlinea -- NO se sirven como archivos) |
-| `package.json` + `package-lock.json` | Toolchain del build (devDependencies) | **s103**: `@babel/core`/`preset-env`/`preset-react` PINEADOS a major 7 + `typescript` a major 5 + react/react-dom 18.3.1 (fuente de vendor/). OJO: los latest (Babel 8 ESM-only, TS 7 Go) ROMPEN el build -- no subir de major sin sesion propia |
+| `package.json` + `package-lock.json` | Toolchain del build (devDependencies) | **s104**: + `sharp` (ingesta de laminas). s103: `@babel/core`/`preset-env`/`preset-react` PINEADOS a major 7 + `typescript` a major 5 + react/react-dom 18.3.1 (fuente de vendor/). OJO: los latest (Babel 8 ESM-only, TS 7 Go) ROMPEN el build -- no subir de major sin sesion propia |
+| `app/paths/illustrations/paths.index.js` | Indice de laminas: pathId → dots {x,y,r,color} + paper + focusY + finish (metadatos MEDIDOS por escaneo) | **NUEVO s104** (~110 ln; las 7 laminas dentro; el build busca el literal del campo src -- no escribir esa ruta en comentarios) |
+| `app/paths/illustrations/PathIllustration.jsx` | Escena cover full-bleed del runner: casquetes gris→color de actividad, pulso/pop/eco, camara con pan, etiqueta del paso en placa | **NUEVO s104** (~230 ln; fallback = los padres renderizan SenderoBar si getPathIllustration(pathId) es null) |
+| `app/paths/illustrations/assets/*.webp` | Las 7 laminas normalizadas (1365x768, WebP q82) | **NUEVO s104** (~1.1 MB total; web las sirve + precache, standalone las inlinea) |
+| `scripts/ingest-lamina.js` | Ingesta de laminas: normaliza + mide bolas/papel + emite bloque del indice | **NUEVO s104** (~200 ln; MODO HIBRIDO canonico: semillas visuales "x:y,..." 4º arg + centroide local + crecimiento radial -- el detector 100% automatico NO es fiable en laminas calidas) |
 | `safety.html` | Pagina estatica `/safety` (Cloudflare Pages) -- disclaimers respiracion/movilidad, ES+EN | **v0.46.0** (nueva s101, ~190 ln; autocontenida, rama oscura via prefers-color-scheme, paleta COPIADA de tokens.css; sin enlazar desde la UI aun) |
 | `privacy.html` | Pagina estatica `/privacy` (Cloudflare Pages) -- local-first, sin cuentas/analitica, ES+EN | **v0.46.0** (nueva s101, ~190 ln; misma base visual que safety.html) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
@@ -65,7 +69,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.46.0** (nuevo s101, 160 ln; extraido de state-core + selector memoizado por identidad que reutiliza `archiveDayToHistory`) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.47.0** (s102: + `notifyFocusEnd:false` en defaults (el merge `{...defaultState,...parsed}` cubre instalaciones existentes), 412 ln; s101: split a state-history.jsx, SALE de deuda; s93: customRoutines; s88: premiumUnlocked) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.49.0** (s104: fix `PACE_VERSION` -- llevaba v0.46.0 desde s101, el footer del sidebar y el export JSON mentian; ENTRA AL CHECKLIST de bump junto a titulo+CACHE_NAME. s102: notifyFocusEnd defaults, ~415 ln; s101: split state-history) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -89,28 +93,29 @@
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.37.0** (nuevo s92, 94 ln; split de strings-content.js al superar ~470 ln con F6) |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
-| `app/tokens.css` | Tokens CSS + base | **v0.45.0** (s100: + **draw-in del sendero** (`pace-sendero-draw`/`pace-sendero-dot-in` + delays nth 1-7) + retirado `--path-outro-ms`; OJO 514 ln -> entra en deuda. s99: bloque microinteracciones (module-in, modal-in, dial-glow, reveal-rise, sendero-pulse, plib-row, path-btn, scrollbar FF). s97: 2a recalibracion oscuro EN BLOQUE (`--ink-3 ->#B2A995`, `--line ->#4d4536`, `--line-2 ->#5f5544`). s89: reduced-motion excepcion `[data-pace-essential]`; s77b: --focus-cta) |
+| `app/tokens.css` | Tokens CSS + base | **v0.49.0** (s104: + bloque **ESCENA DE CAMINO** (`[data-pace-path-scene]`: scene-pulse-ring, scene-fill-in + keyframe pace-scene-fill, scene-echo-ring, exclusion del reveal) + regla **"sobre el arte siempre es de dia"** (`[data-palette="oscuro"] [data-pace-scene-card]` re-mapea ink/paper/line Y acentos a la paleta CREMA -- son COPIAS, actualizar si se recalibra la crema); OJO ~600 ln, deuda crece. s100: draw-in sendero; s99: microinteracciones; s97: recalibracion oscuro; s89: reduced-motion `[data-pace-essential]`) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** (s95: `tasting:true` en los 2 steps premium de path.weekend -- degustacion curada explicita para el guard; s78: catalogo cerrado a 7 con path.tea/path.breath) |
-| `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.45.0** (s100: fuera fase `'outro'` + `pendingComplete` -- ultimo paso: snapshot a `justCompleted` + advance INMEDIATO, 228 ln; s99: pasa `kind` a StepIntro; s80: split 835->244) |
+| `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.49.0** (s104: pasa `pathId` a IntroCard/StepIntro. OJO hallazgo: frame fantasma de fase 'step' antes del efecto que pone 'intro' -- warning React en dev, arreglar en sesion propia. s100: fuera 'outro', 230 ln; s80: split 835->244) |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del overlay) | **v0.40.0** (s95: + `PathStepLocked` -- auto-skip silencioso de un step premium inaccesible, dead code hoy; s94: boton confirmar tokenizado; ~142 ln) |
-| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (ceremonia editorial: kicker + titulo + meta + sendero drawIn + recorrido + logros) | **v0.45.0** (s100: **ceremonia editorial** -- fuera check generico y caja del recorrido; meta romana "IV pasos · N min" (`tn`) + hairline + `drawIn` + logros sellos, 257 ln; s99: punto de color por kind; CS_ROMAN local) |
+| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (ceremonia editorial sobre la escena ilustrada) | **v0.49.0** (s104: escena full-bleed de fondo (fixed, zIndex -1, isolation) encuadrada en el FINAL del camino + **placa translucida** tras RECORRIDO/DESBLOQUEADO (csPlateStyle, crema fija rgba) + halo en "Repetir camino"; SenderoBar drawIn queda como fallback sin arte; s100: ceremonia editorial, ~300 ln) |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** (nuevo s80, 23 ln) |
 | `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.44.0** (s99: pasa `inPath` a BreatheSession -> "Siguiente" + atmosfera; s95: guard `canAccessRoutine(id, {tasting})` -> PathStepLocked; nuevo s80) |
 | `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.44.0** (s99: reescrito sobre el **SessionShell compartido** + timer variante `ticks` + botones por color `--pfbtn` + done via SessionDone "Siguiente". s96: `useCountdown` + `completeFocusSession('path')`; contrato (step, onExit) intacto) |
 | `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.44.0** (s99: reescrito sobre el **SessionShell compartido** (header + footer + atmosfera azul); s80: firma (step, onExit)) |
 | `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.44.0** (s99: pasa `inPath` a MoveSession -> "Siguiente" + atmosfera; s95: guard -> PathStepLocked; nuevo s80) |
-| `app/paths/PathTransitions.jsx` | Cards intro/step entre pantallas del Camino | **v0.45.0** (s100: **OutroCard eliminada** (quedan IntroCard + StepIntro), 275 ln; s99: atmosfera por kind + kicker romano + accent al sendero; s94: tipografia tokenizada) |
-| `app/paths/SenderoBar.jsx` | Sendero visual del progreso interno | **v0.45.0** (s100: prop `drawIn` -- trazo done con `pathLength=1` que se dibuja + hitos/labels escalonados (solo CompletionScreen; pending intacto), 194 ln; s99: anillo pulsante + `accent` del hito actual; s77b: labels solo done) |
+| `app/paths/PathTransitions.jsx` | Cards intro/step entre pantallas del Camino | **v0.49.0** (s104: escena full-bleed detras del contenido (zIndex -1) + StepIntro con titulo ANCLADO a la bola (titleAtDot) + IntroCard con **tagline** del catalogo + dotLabel/dotKicker + halo de papel `textHaloScene`; sin arte, card clasica + linea "I · Respira" bajo el titulo; ~360 ln; s100: OutroCard eliminada) |
+| `app/paths/SenderoBar.jsx` | Sendero visual clasico -- FALLBACK vivo para caminos sin lamina (hoy los 7 tienen; queda para futuros) | **v0.45.0** (INTOCADO en s104, decision s99 respetada; s100: prop `drawIn`, 194 ln) |
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.48.0** (s103: SOLO bump de CACHE_NAME; logica intacta. s102: SIN skipWaiting incondicional -- el worker nuevo queda en WAITING hasta `message SKIP_WAITING` del UpdatePrompt; + `notificationclick`; s89: activate borra caches pace-* viejos + navegaciones network-first. Ciclo waiting→prompt→activate RE-VERIFICADO con el build compilado y dos SW reales) |
+| `sw.js` | Service Worker PWA | **v0.49.0** (s104: CACHE_NAME bump + las **7 laminas al PRECACHE** (offline fiel). s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; + notificationclick; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + persistencia `pace.timer.v1` | **v0.47.0** (nuevo s102, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
-| `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
-| `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.47.0** (s102: + MIME `.webmanifest` + rutas bonitas `/safety`→`safety.html` `/privacy`→`privacy.html`, paridad con Cloudflare; s93: `Cache-Control: no-store`) |
+| `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
+| `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.48.0_20260714.html` <- creado s104 (snapshot del v0.48.0 publicado en s103, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.47.0_20260713.html` <- creado s103 (snapshot del v0.47.0 publicado en s102, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.46.0_20260713.html` <- creado s102 (snapshot del v0.46.0 publicado en s101)
 - `backups/PACE_standalone_v0.45.0_20260710.html` <- creado s101 (snapshot del v0.45.0 publicado en s100)
@@ -130,118 +135,117 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.34.2_20260630.html` <- creado s87 (snapshot del v0.34.2 publicado en s86, desde git HEAD)
 - `backups/PACE_standalone_v0.34.1_20260605.html` <- creado s86 (snapshot del v0.34.1 publicado en s85)
 - `backups/PACE_standalone_v0.34.0_20260605.html` <- creado s85 (snapshot del v0.34.0 publicado en s84)
-- `backups/PACE_standalone_v0.33.3_20260524.html` <- creado s84 (copia del v0.33.3 publicado en s83)
-
-Nota s103: cap 20 mantenido rotando el mas antiguo (`v0.33.2_20260523.html`)
-al crear el backup del v0.47.0.
+Nota s104: cap 20 mantenido rotando el mas antiguo (`v0.33.3_20260524.html`)
+al crear el backup del v0.48.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 103 - v0.48.0 - Build Etapa A (1 de 2): precompilado Babel + React
-production.** Fila s103-104 del plan maestro. Cuatro bifurcaciones decididas
-por el usuario ANTES de tocar (AskUserQuestion): Build Etapa A confirmado
-(pulido s102-cierre detras) · React inlineado en AMBOS artefactos · fuentes
-(s104) solo EB Garamond + Inter Tight · standalone con fuentes data URIs
-(s104).
+**Sesion 104 - v0.49.0 - Arte D-4 completo: escenas ilustradas de Caminos.**
+Planificada como "fuentes self-hosted" pero el usuario ENTREGO las 7 laminas
+y las priorizo (fuentes → s105). Diseño iterado EN VIVO: 2 tandas de
+AskUserQuestion (lamina en las 3 cards · enmarcado en oscuro · SenderoBar
+fallback · pipeline archivo/data-URI + puntos anclados · cover con foco ·
+Completion full-bleed) + 4 rondas de feedback con mockups del usuario
+(full-bleed, casquetes, etiquetas en placa, encuadre final).
 
-### Que se hizo (s103)
+### Que se hizo (s104)
 
-- **Tarea 0**: s102 (`e8be7b5`, v0.47.0) commiteado y pusheado (+ commit de
-  docs del usuario `86f8be6`), working tree limpio.
-- **Toolchain**: devDependencies @babel/core + preset-env + preset-react
-  **PINEADOS a major 7** (7.29.x = misma major.minor que el @babel/standalone
-  del navegador) y typescript a major 5 (los latest -- Babel 8 ESM-only y
-  TS 7 Go sin ts.createSourceFile -- ROMPEN el build). react/react-dom
-  18.3.1 como devDeps; UMD production copiados del paquete npm a `vendor/`
-  (committeado). package-lock.json nuevo.
-- **build-standalone.js**: cada script text/babel se compila EN MEMORIA
-  (compileBabel: sourceType 'script', preset-env targets evergreen
-  chrome/edge/firefox 90 + safari 14.1, retainLines) y se inlinea como
-  script plano; el mount loop tambien. **Semantica de scope**: IIFE por
-  archivo (const/let privados como bajo el eval de Babel standalone; sin
-  ella, los `const {useState}=React` y GLYPH_SVG repetidos lanzan
-  "already declared" y el archivo entero no evalua) + `collectGlobalNames`
-  re-expone por AST los function/var top-level (RoutineCard,
-  getBreatheRoutine y demas globals implicitos que nunca pasaron por
-  Object.assign). React production inlineado desde vendor/ (replacement
-  como FUNCION: los patrones $ del minificado envenenan los replacement
-  strings de String.replace); @babel/standalone retirado.
-  replaceOutsideComments para los replaces (comentarios HTML con tags
-  literales). Invariantes: sin text/babel residual (solo tags reales), sin
-  unpkg.com, sin cierres de script en el JS inlineado, sanity
-  post-escritura de ambos artefactos.
-- **Version**: PACE.html titulo + sw.js CACHE_NAME a v0.48.0. NADA mas
-  cambio: app/ intacto (ni una linea), manifest/SW/registro intactos,
-  PACE.html dev identico (CDN development + Babel + .jsx).
+- **Escena** (`app/paths/illustrations/`): `PathIllustration.jsx` cover
+  full-bleed en IntroCard/StepIntro/CompletionScreen (img+SVG en el mismo
+  encuadre → marcadores al pixel sobre las bolas pintadas). Sesiones
+  activas SIN arte. **Casquetes**: bolas cubiertas en gris (`--line`) →
+  se RELLENAN con el color de SU actividad (kind real del paso) con pop +
+  eco; hito actual late en el color de la actividad que toca; el ORBE s77
+  se retiro (feedback: raro). **Camara**: centrada en el hito con clamp,
+  pan 2s acompañando el avance; la Completion encuadra `finish` (el final
+  del camino: sol/farol/tetera/cabaña/loto). Etiqueta del paso ANCLADA
+  bajo la bola (placa mini de papel del arte, tinta `--ink-2/-3`);
+  StepIntro sin titulo arriba; IntroCard con titulo + **tagline** del
+  catalogo. Placa translucida tras RECORRIDO/DESBLOQUEADO.
+- **"Sobre el arte siempre es de dia"**: `[data-palette="oscuro"]
+  [data-pace-scene-card]` re-mapea `--ink*`/`--paper*`/`--line*` y los
+  acentos de actividad a los valores CREMA (el arte no se tematiza).
+- **Pipeline**: `paths.index.js` (dots {x,y,r,color} MEDIDOS + paper +
+  focusY + finish por lamina) · `scripts/ingest-lamina.js` (normaliza
+  1365x768 WebP q82 + mide; MODO HIBRIDO canonico: semillas visuales +
+  centroide local + crecimiento radial) · web = archivos + PRECACHE en
+  sw.js · standalone = data URIs (paso 6b del build) · MIME .webp en
+  static-server · `sharp` como devDependency.
+- **Fix**: `PACE_VERSION` v0.46.0 → v0.49.0 (desincronizada desde s101;
+  entra al checklist de bump).
+- **Analisis estrategico externo VERIFICADO** contra el repo: CowLogo
+  corrupto FALSO · version desincronizada CIERTO (arreglado) ·
+  **`todayISO()` en UTC CIERTO** (rachas/history anotan el dia anterior
+  entre medianoche y ~2 AM; 7 sitios auditados) → tarea corta s105. Lo
+  valioso destilado a ROADMAP (After Pomodoro, programas, ASO).
 
 ### Verificacion + cierre
 
-Preview :8765 propio, protocolo s93 (purga SW+caches por tanda) + seed
-fresco por asercion. **Dev intacto** (Babel in-browser monta igual).
-**Compilado**: monta sin Babel, React 18.3.1 production, checklist COMPLETO
--- Welcome (intencion persiste) · Respira 20 tecnicas + sesion animada ·
-Mueve PASO 1 DE 5 + countdown vivo · Estira · Hidratate +/- + weeklyStats
-lunes-first + persiste recarga · logro + TOAST VISIBLE (viewport, opacity 1,
-z 200) · paleta Crema/Oscuro con tokens exactos · deep link ?go= consume y
-limpia · **pomodoro s102 en AMBAS ramas** (reanuda 00:06 a 00:04, completa,
-BreakMenu + ciclo + 25 min; y expirado-fuera = descarte SIN acreditar) ·
-equivalencia dev=compilado (Bhastrika directo en ambos; el modal de
-seguridad esta cableado a las Rondas, premium/Pronto en free). **Pareja SW
-s89+s102 con DOS SW reales**: primer install sin bucle, bump CACHE_NAME,
-worker en WAITING + barra "Hay una version nueva de PACE", Actualizar
-activa + borra cache viejo + reload solo + estado intacto. (OJO
-metodologico: el navigate del pane hace hard-reload, deja la pagina sin
-controlar y el SW nuevo activa directo -- falso negativo; probar el waiting
-con reg.update() sobre pagina controlada viva.) Trap de errores en vivo +
-render completo forzado + Estira/Ritmo/Logros abiertos: cero errores.
-Standalone servido: monta, sin manifest, cero CDN de JS. index.html CON
-manifest. Cierre: backup v0.47.0_20260713 desde git HEAD (rotado v0.33.2,
-cap 20), build final **924 KB / 74 scripts**, diario s103, CHANGELOG
-(detalle v0.48.0 + v0.47.0), STATE, ROADMAP, memorias. DESIGN_SYSTEM sin
-cambios (cero tokens).
+Protocolo s93 POR TANDA (leccion re-aprendida: el SW re-registrado sirve
+.jsx cache-first). Dev: los 7 caminos por DOM (imagen, nº bolas -- breath
+2 OK, etiqueta por kind: midday dice "Agua · I", pulso) + recorridos
+completos de dawn en claro/oscuro/movil + fallback SenderoBar verificado.
+Compilado: monta sin Babel, .webp servido 1 vez (precache). Standalone:
+data URI, cero peticiones. Consola limpia en compilado; en dev queda un
+warning PRE-EXISTENTE (frame fantasma de fase 'step' en PathRunner →
+BreatheSession monta 1 frame y escribe estado en render; en produccion no
+existe; ARREGLAR en sesion propia). OJO herramientas: los screenshots del
+pane de preview pueden salir con zoom/recorte -- verificar geometria por
+DOM. Cierre: backup v0.48.0_20260714 desde git HEAD (rotado v0.33.3, cap
+20), build final 2371 KB / index 970 KB, diario s104, CHANGELOG (detalle
+v0.49.0 + v0.48.0), STATE, DESIGN_SYSTEM (bloque escena), ROADMAP,
+memorias.
 
 ### Pendiente
 
-- **s104 = segunda mitad de la fila**: fuentes self-hosted (ver Proxima
-  sesion).
-- **Probar la notificacion y la instalacion PWA en un navegador REAL del
-  usuario** (desde s102; el usuario no confirmo al arrancar s103). Tras el
-  proximo deploy: Chrome ofrece "Instalar" + 4 shortcuts en el icono.
-- (Opcional, espera ARTE, patron s84/D-4) ilustracion por Camino + iconos
-  propios por shortcut.
-- `tokens.css` sigue en deuda de tamano (514 ln).
+- **s105**: fuentes self-hosted (cierra Etapa A, desplazada por el arte) +
+  **fix `todayISO()` a fecha local** (tarea corta ANTES del onboarding; 7
+  sitios: state-history, PathsLibrary, SuggestedPathCard, state-paths x2,
+  TweakSecretsWatcher; auditar tambien el rollover).
+- Probar instalacion + notificacion PWA en navegador REAL (desde s102).
+- Frame fantasma de fase en PathRunner (warning dev; sesion propia).
+- Tweak `data-font="cormorant"` quedara huerfano con las fuentes (decidir
+  en esa tarea: retirarlo o aceptar fallback Georgia).
+- `tokens.css` ~600 ln (deuda desde s100, crecio con el bloque escena).
+- Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- s104: fuentes self-hosted (cierra Etapa A)
+## Proxima sesion -- s105: fuentes self-hosted + todayISO local
 
-Bifurcaciones YA decididas en s103: **solo EB Garamond + Inter Tight**
-(Cormorant y JetBrains Mono caen a Georgia/ui-monospace) · **standalone las
-inlinea como data URIs** · web las referencia como archivos.
+1. **todayISO() a fecha LOCAL** (bug real verificado s104): sustituir
+   `new Date().toISOString().slice(0,10)` por construccion local en los 7
+   sitios; verificar rollover/rachas/heatmaps con cambio de dia simulado.
+2. **Fuentes self-hosted** (bifurcaciones YA decididas s103: solo EB
+   Garamond + Inter Tight subset latin; Cormorant y JetBrains Mono caen a
+   Georgia/ui-monospace): woff2 a `fonts/` + @font-face en tokens.css
+   (fuera el @import de Google) · index.html rutas `/fonts/*` + PRECACHE
+   en sw.js · standalone con data URIs · MIME woff2 en static-server ·
+   decidir el tweak cormorant · verificar cero peticiones a
+   fonts.googleapis en los 3 artefactos + acentos ES + ciclo SW
+   (reg.update() sobre pagina controlada, leccion s103).
+3. Bump v0.50.0 + CACHE_NAME + PACE_VERSION (checklist ampliado s104).
 
-1. Descargar los woff2 **subset latin** de Google a `fonts/` + sustituir el
-   @import de tokens.css por @font-face locales (el dev las usa igual).
-2. Build: index.html con rutas `/fonts/*.woff2` + **PRECACHE en sw.js**
-   (tipografia fiel offline); standalone con data URIs. MIME woff2 en
-   static-server.
-3. Bump version + re-check del ciclo waiting-activate (protocolo de esta
-   sesion: reg.update() sobre pagina controlada).
-4. Verificar cero peticiones a fonts.googleapis en los 3 artefactos.
-
-### Despues -- Plan maestro v1.0 (adoptado s93)
+### Despues -- Plan maestro v1.0 (adoptado s93, corrido +1 por el arte)
 
 Secuencia en `ROADMAP.md` ("Camino a v1.0"): ~~build Etapa A s103~~ ·
-fuentes s104 (cierra Etapa A) · onboarding (s105) · home Caminos al centro
-(s106) · taxonomia + filtros + sigilo (s107-108) · pre-venta: glifos
-(revision COMPLETA del set) + trial/licencia (cambiando formalmente la
-decision F3b) + landing + canal Starter Story A FONDO antes de pricing.
+~~arte D-4 Caminos s104~~ · fuentes + todayISO (s105, cierra Etapa A) ·
+onboarding (s106) · home Caminos al centro + After Pomodoro (s107) ·
+taxonomia + filtros + sigilo (s108-109) · pre-venta: glifos (revision
+COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO +
+Starter Story A FONDO antes de pricing.
 
 ---
+
 
 ## Decisiones activas
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Escena ilustrada de Caminos SOLO en el runner; SenderoBar = lenguaje fuera + fallback dentro | s104 | La escena full-bleed (PathIllustration) vive UNICAMENTE en IntroCard/StepIntro/CompletionScreen -- las sesiones activas NO llevan arte (distrae). SenderoBar queda INTOCADO (decision s99 respetada) como fallback vivo para cualquier camino sin lamina en el indice. Miniaturas para biblioteca/home = thumbs estaticos cuando toque (s107), sin coreografia. Si la escena se filtra fuera del runner con mas trucos de camara, se pierde la simplicidad -- frontera deliberada |
+| Marcadores "casquetes": gris → color de actividad; SIN orbe | s104 | Las bolas pintadas del arte van SIEMPRE cubiertas por un casquete gris (`--line`/`--line-2`); al completar un paso su bola se RELLENA con el color de SU actividad (kind real del paso → `--breathe`/`--focus`/`--move`/`--hydrate`) con pop + eco de latido; el hito actual late en el color de la actividad que toca. Los colores PINTADOS en el arte son IRRELEVANTES (van cubiertos): las laminas futuras solo necesitan posiciones/nº de bolas correctos. El orbe animateMotion s77 se RETIRO de la escena (feedback usuario); el "viaje" = pop de relleno + pan de camara 2s. En SenderoBar (fallback) el orbe sigue |
+| "Sobre el arte siempre es de dia" | s104 | El arte es papel claro FIJO (no se tematiza). En oscuro, `[data-pace-scene-card]` (tokens.css) re-mapea `--ink*`/`--paper*`/`--line*` Y los acentos de actividad a los valores CREMA -- sin esto el texto era ilegible y los rellenos salian pastel. Son COPIAS literales de la paleta dia: si se recalibra la crema, actualizar TAMBIEN ese bloque (mismo aviso que safety/privacy.html) |
+| Laminas: archivo+precache en WEB / data URI SOLO en standalone; el arte se mide UNA vez | s104 | index.html referencia los .webp como archivos (entran al PRECACHE de sw.js → offline fiel, HTML ~970 KB); el build (paso 6b) las inlinea SOLO en PACE_standalone.html (autocontencion, 2371 KB). Laminas futuras via `scripts/ingest-lamina.js` en MODO HIBRIDO (semillas visuales "x:y,..." + centroide local + crecimiento radial; el detector 100% automatico NO es fiable en laminas calidas). REGLA D-4: el arte se mide cuando es DEFINITIVO -- no iterar una lamina ya medida (las coordenadas se rompen en silencio) |
 | Build Etapa A: artefactos COMPILADOS con semantica de eval reproducida (IIFE + re-exposicion AST) | s103 | Los artefactos generados llevan JS plano compilado; el dev sigue en Babel standalone. La fidelidad de semantica la garantizan DOS piezas del build que van JUNTAS: la IIFE por archivo (const/let privados; sin ella los duplicados entre archivos lanzan "already declared") y la re-exposicion de function/var top-level via `collectGlobalNames` (los globals implicitos tipo `RoutineCard` siguen viajando). Regla para codigo nuevo: el canal EXPLICITO `Object.assign(window, ...)` sigue siendo la convencion (CLAUDE.md regla 2); los globals implicitos funcionan pero no añadir nuevos a proposito. Cualquier cambio al pipeline del build se verifica con el checklist funcional completo sobre el COMPILADO, no solo dev |
 | Toolchain del build PINEADO: Babel major 7 + TypeScript major 5 | s103 | `@babel/core`/`preset-env`/`preset-react` a ^7 (7.29.x, misma major.minor que el @babel/standalone 7.29.0 del navegador -- semantica identica dev/prod) y `typescript` a ^5 (API clasica `ts.createSourceFile` del validador s56). Los latest de 2026 ROMPEN el build: Babel 8 es ESM-only y TypeScript 7 (port Go) no expone la API via require. NO subir de major sin sesion propia que migre build-standalone.js. React/react-dom 18.3.1 en devDeps son la FUENTE de vendor/ (re-copiar de node_modules si se actualiza React) |
 | SW: updates con PROMPT (worker en waiting), nunca skipWaiting incondicional | s102 | El install de sw.js ya NO llama skipWaiting: el worker nuevo queda en waiting hasta que el usuario acepte en `UpdatePrompt.jsx` (postMessage SKIP_WAITING → controllerchange → reload, con guard del primer install) o cierre todas las pestañas. "Luego" respeta el waiting (reaparece en la proxima carga). Las NAVEGACIONES siguen network-first (s89 intacta): el HTML fresco llega sin esperar al SW; el prompt gobierna la activacion del worker y el precache offline. NO reintroducir el skipWaiting incondicional -- mata el prompt. Cualquier cambio de estrategia revisa la pareja s89+s102 |

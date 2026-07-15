@@ -15,7 +15,10 @@ const { useSyncExternalStore } = React;
 
 /* NOTA (sesion 37 · v0.19.0): clave bumpeada de v1 a v2. Hard reset intencional. */
 const LS_KEY = 'pace.state.v2';
-const PACE_VERSION = 'v0.46.0';
+/* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
+   mentían la versión). Entra al checklist de bump de cada cierre junto a
+   <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
+const PACE_VERSION = 'v0.49.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */

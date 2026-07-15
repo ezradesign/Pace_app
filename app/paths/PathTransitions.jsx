@@ -50,9 +50,14 @@ function pathTransitionReadMs(name, fallback) {
 /* TransitionCardBase - logica comun de entrada/salida + auto-advance.
    El padre (PathRunner) controla cuando se monta/desmonta cada variante. */
 function TransitionCardBase({
+  pathId,         // s104: id del Camino -> lámina editorial (o fallback SenderoBar)
   blocks,         // array para SenderoBar
   currentIndex,   // hito activo (intro=0, transition=next)
   title,          // texto grande centrado en vertical
+  tagline,        // s104: beneficio del Camino bajo el título (IntroCard)
+  dotLabel,       // s104d: nombre del paso anclado BAJO la bola actual (IntroCard)
+  dotKicker,      // s104d: numeral del paso para esa etiqueta
+  titleAtDot,     // s104d (StepIntro): con escena, el título entero va a la bola
   orbVisible,     // true solo en StepIntro
   durationVar,    // 'intro' | 'step'
   fadeMsFallback, // ms para entrada/salida (--path-card-fade-ms)
@@ -63,6 +68,11 @@ function TransitionCardBase({
   accent,         // s99: color del hito actual del SenderoBar (o undefined)
 }) {
   const { t } = useT();
+  /* s104: ¿este Camino tiene escena ilustrada? (arte D-4, incremental) */
+  const hasIllustration =
+    typeof getPathIllustration === 'function' &&
+    !!getPathIllustration(pathId) &&
+    typeof PathIllustration === 'function';
   /* Arranca invisible (decision 5: fade + scale 0.96 -> 1.0). */
   const [visible, setVisible] = useStatePT(false);
   const [exiting, setExiting] = useStatePT(false);
@@ -142,6 +152,7 @@ function TransitionCardBase({
       tabIndex={0}
       aria-label={title}
       data-pace-reveal
+      {...(hasIllustration ? { 'data-pace-scene-card': '' } : {})}
       style={Object.assign({}, pathTransitionStyles.card, {
         background: (atmosphere && window.sessionAtmosphere)
           ? window.sessionAtmosphere(atmosphere)
@@ -150,36 +161,96 @@ function TransitionCardBase({
         transform: 'scale(' + scale + ')',
       })}
     >
-      <div style={pathTransitionStyles.senderoSlot}>
-        <SenderoBar
-          blocks={blocks}
+      {/* s104: escena full-bleed del Camino (arte D-4) DETRÁS del contenido
+          (zIndex -1; el transform de la card crea el stacking context).
+          Caminos sin arte: SenderoBar clásico en su slot, como siempre. */}
+      {hasIllustration ? (
+        <PathIllustration
+          pathId={pathId}
           currentIndex={currentIndex}
-          size="lg"
           orbVisible={orbVisible}
           accent={accent}
+          label={titleAtDot ? title : dotLabel}
+          labelKicker={titleAtDot ? kicker : dotKicker}
         />
-      </div>
-
-      <div style={pathTransitionStyles.titleWrap}>
-        <div>
-          {kicker ? <div style={pathTransitionStyles.kicker}>{kicker}</div> : null}
-          <h2 style={pathTransitionStyles.title}>{title}</h2>
+      ) : (
+        <div style={pathTransitionStyles.senderoSlot}>
+          <SenderoBar
+            blocks={blocks}
+            currentIndex={currentIndex}
+            size="lg"
+            orbVisible={orbVisible}
+            accent={accent}
+          />
         </div>
+      )}
+
+      {/* s104b: con escena, el título sube a la franja del cielo. s104d:
+          en StepIntro con escena el título entero vive BAJO la bola (lo
+          renderiza PathIllustration) -> aquí queda solo el espaciador. */}
+      <div style={Object.assign({}, pathTransitionStyles.titleWrap,
+        hasIllustration ? pathTransitionStyles.titleWrapScene : null)}>
+        {!(hasIllustration && titleAtDot) && (
+          <div>
+            {kicker ? (
+              <div style={Object.assign({}, pathTransitionStyles.kicker,
+                hasIllustration ? pathTransitionStyles.textHaloScene : null)}>
+                {kicker}
+              </div>
+            ) : null}
+            <h2 style={Object.assign({}, pathTransitionStyles.title,
+              hasIllustration ? pathTransitionStyles.textHaloScene : null)}>
+              {title}
+            </h2>
+            {/* s104: el beneficio del Camino, visible bajo el nombre
+                (feedback estrategia: nombre poético + beneficio claro). */}
+            {tagline ? (
+              <div style={Object.assign({}, pathTransitionStyles.tagline,
+                hasIllustration ? pathTransitionStyles.textHaloScene : null)}>
+                {tagline}
+              </div>
+            ) : null}
+            {/* Sin escena, el primer paso se anuncia bajo el título
+                (los caminos con arte lo anclan a la bola). */}
+            {!hasIllustration && dotLabel ? (
+              <div style={pathTransitionStyles.subtitle}>
+                {(dotKicker ? dotKicker + ' · ' : '') + dotLabel}
+              </div>
+            ) : null}
+          </div>
+        )}
       </div>
 
-      <div style={pathTransitionStyles.hint}>
+      <div style={Object.assign({}, pathTransitionStyles.hint,
+        hasIllustration ? pathTransitionStyles.textHaloScene : null)}>
         {t('path.runner.transition.continue')}
       </div>
     </div>
   );
 }
 
-function IntroCard({ pathName, blocks, onContinue }) {
+function IntroCard({ pathId, pathName, blocks, onContinue }) {
+  const { t } = useT();
+  /* s104c/d: la bola que late en la intro también se anuncia — antes era
+     el único hito sin nombre. Con escena, la etiqueta se ancla a la bola
+     (mockup del usuario); sin escena, línea bajo el título. */
+  const introPath = (typeof getPath === 'function') ? getPath(pathId) : null;
+  const introFirst = introPath && introPath.steps && introPath.steps[0];
+  const introKindName = introFirst
+    ? (t('paths.kind.' + introFirst.kind + '.name') || introFirst.kind)
+    : null;
+  const introTagline = (introPath && introPath.taglineKey)
+    ? (t(introPath.taglineKey) || null)
+    : null;
   return (
     <TransitionCardBase
+      pathId={pathId}
       blocks={blocks}
       currentIndex={0}
       title={pathName}
+      tagline={introTagline}
+      dotLabel={introKindName}
+      dotKicker={introKindName ? PT_ROMAN[0] : null}
       orbVisible={false}
       durationVar="intro"
       fadeMsFallback={200}
@@ -189,13 +260,15 @@ function IntroCard({ pathName, blocks, onContinue }) {
   );
 }
 
-function StepIntro({ kindName, kind, blocks, currentIndex, onContinue }) {
+function StepIntro({ pathId, kindName, kind, blocks, currentIndex, onContinue }) {
   return (
     <TransitionCardBase
+      pathId={pathId}
       blocks={blocks}
       currentIndex={currentIndex}
       title={kindName}
       kicker={PT_ROMAN[currentIndex] || String(currentIndex + 1)}
+      titleAtDot
       atmosphere={PT_KIND_SOFT[kind]}
       accent={PT_KIND_ACCENT[kind]}
       orbVisible={true}
@@ -239,6 +312,40 @@ const pathTransitionStyles = {
     width: '100%',
     padding: '0 12px',
     minHeight: 0,
+  },
+  /* s104b (escena): el título ancla ARRIBA, en el cielo del arte (el
+     padding 10vh de la card lo separa del borde). */
+  titleWrapScene: {
+    alignItems: 'flex-start',
+  },
+  /* Beneficio del Camino bajo el título (IntroCard). */
+  tagline: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 17,
+    color: 'var(--ink-2)',
+    lineHeight: 1.45,
+    letterSpacing: '0.02em',
+    maxWidth: 460,
+    margin: '12px auto 0',
+    textAlign: 'center',
+  },
+  /* Línea menor bajo el título de la IntroCard ("I · Respira"). */
+  subtitle: {
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 16,
+    color: 'var(--ink-2)',
+    letterSpacing: '0.05em',
+    marginTop: 12,
+    opacity: 0.9,
+    textAlign: 'center',
+  },
+  /* Halo de papel bajo el texto sobre el arte: legible en cualquier zona
+     del dibujo. --paper resuelve a crema también en oscuro dentro de
+     data-pace-scene-card (regla "sobre el arte siempre es de día"). */
+  textHaloScene: {
+    textShadow: '0 0 28px var(--paper), 0 0 12px var(--paper), 0 0 4px var(--paper)',
   },
   /* Eyebrow editorial (numeral romano del paso) sobre el titulo. */
   kicker: {

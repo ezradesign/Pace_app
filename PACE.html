@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.48.0</title>
+  <title>PACE · Foco · Cuerpo — v0.49.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -217,6 +217,11 @@
   <script type="text/babel" data-presets="env,react" src="app/paths/PathsLibrary.jsx"></script>
   <!-- Caminos - SenderoBar (sesion 75) - debe cargarse ANTES de PathRunner que lo consume -->
   <script type="text/babel" data-presets="env,react" src="app/paths/SenderoBar.jsx"></script>
+  <!-- Caminos - Laminas (sesion 104, arte D-4) - indice + PathIllustration.
+       Fallback a SenderoBar -> cargar TRAS SenderoBar y ANTES de
+       PathTransitions/CompletionScreen que lo consumen. -->
+  <script type="text/babel" data-presets="env,react" src="app/paths/illustrations/paths.index.js"></script>
+  <script type="text/babel" data-presets="env,react" src="app/paths/illustrations/PathIllustration.jsx"></script>
   <!-- Caminos - PathTransitions (sesion 77) - debe cargarse ANTES de PathRunner que lo consume -->
   <script type="text/babel" data-presets="env,react" src="app/paths/PathTransitions.jsx"></script>
   <!-- Caminos - Steps (sesion 80) - split de PathRunner.jsx en archivos hijos.

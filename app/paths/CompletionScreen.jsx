@@ -32,6 +32,26 @@ const csKickerStyle = {
   color: 'var(--ink-3)', marginBottom: 10,
 };
 
+/* s104c: placa de papel translúcida bajo RECORRIDO+DESBLOQUEADO cuando
+   hay escena ilustrada — legibilidad sobre el dibujo. Crema FIJA en rgba
+   (el arte no se tematiza: "sobre el arte siempre es de día"). */
+const csPlateStyle = {
+  width: '100%', maxWidth: 380,
+  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+  background: 'rgba(242, 237, 224, 0.82)',
+  border: '1px solid rgba(184, 173, 142, 0.45)',
+  borderRadius: 'var(--r-lg)',
+  padding: '16px 22px 18px',
+  backdropFilter: 'blur(5px)',
+  WebkitBackdropFilter: 'blur(5px)',
+  margin: '6px 0 2px',
+};
+/* Sin escena: mismo agrupado, sin caja (aspecto s100 intacto). */
+const csGroupStyle = {
+  width: '100%',
+  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+};
+
 function CompletionScreen({ snapshot, onBack, fadeIn }) {
   const [state] = usePace();
   const { t, tn } = useT();
@@ -50,6 +70,11 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
   }, [fadeIn]);
   const path = getPath(snapshot.pathId);
   const displayName = path ? (t(path.nameKey) || snapshot.pathId) : snapshot.pathId;
+  /* s104: ¿ceremonia con escena ilustrada? (arte D-4, incremental) */
+  const hasIll =
+    typeof getPathIllustration === 'function' &&
+    !!getPathIllustration(snapshot.pathId) &&
+    typeof PathIllustration === 'function';
   const elapsed = snapshot.startedAt
     ? Math.round((Date.now() - snapshot.startedAt) / 60000)
     : 0;
@@ -88,16 +113,30 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
     .filter(Boolean);
 
   return (
-    <div data-pace-reveal style={{
+    <div data-pace-reveal {...(hasIll ? { 'data-pace-scene-card': '' } : {})} style={{
       flex: 1, display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       padding: '40px 40px 48px', textAlign: 'center',
       overflowY: 'auto', gap: 8,
-      background: (typeof window !== 'undefined' && window.sessionAtmosphere)
-        ? window.sessionAtmosphere('var(--focus-soft)') : undefined,
+      /* s104: con escena ilustrada el fondo lo pone la lámina full-bleed
+         (isolation crea el stacking context para su zIndex -1). */
+      isolation: 'isolate',
+      background: hasIll ? undefined
+        : ((typeof window !== 'undefined' && window.sessionAtmosphere)
+          ? window.sessionAtmosphere('var(--focus-soft)') : undefined),
       opacity: opacity,
       transition: fadeIn ? 'opacity 400ms ease-out' : 'none',
     }}>
+      {/* Escena full-bleed (s104): todos los hitos sellados, entrada
+          escalonada draw-in. fixed: no se desplaza con el scroll. */}
+      {hasIll && (
+        <PathIllustration
+          pathId={snapshot.pathId}
+          currentIndex={totalSteps}
+          drawIn
+          fixed
+        />
+      )}
       {/* Encabezado ceremonial: kicker + nombre del Camino protagonista.
           Un solo bloque -> entra junto en el reveal. */}
       <div>
@@ -134,15 +173,18 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
         </div>
       )}
 
-      {/* SenderoBar heroe: 100% done (currentIndex = totalSteps -> ningun
-          hito 'current') con draw-in ceremonial (el trazo se dibuja y los
-          hitos + labels entran escalonados detras). */}
-      {totalSteps > 0 && (
+      {/* SenderoBar heroe con draw-in: SOLO caminos sin escena ilustrada
+          (s104). Con arte, la celebración vive en la lámina de fondo. */}
+      {totalSteps > 0 && !hasIll && (
         <div style={{ width: '100%', maxWidth: 680, margin: '4px 0 0' }}>
           <SenderoBar blocks={senderoBlocks} currentIndex={totalSteps} drawIn />
         </div>
       )}
 
+      {/* s104c: RECORRIDO + DESBLOQUEADO agrupados; con escena, sobre la
+          placa translúcida. */}
+      {(totalSteps > 0 || achievementsDuring.length > 0) && (
+      <div style={hasIll ? csPlateStyle : csGroupStyle}>
       {/* Recorrido sin caja (s100): hairlines entre filas, respira mas. */}
       {totalSteps > 0 && (
         <div style={{ maxWidth: 340, width: '100%', margin: '0 0 6px' }}>
@@ -223,6 +265,8 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
           })}
         </div>
       )}
+      </div>
+      )}
 
       <div style={{ display: 'flex', gap: 12, flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
         <button
@@ -245,6 +289,10 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
             color: 'var(--ink-3)', cursor: 'pointer',
             fontSize: 12, letterSpacing: '0.08em',
             fontFamily: 'var(--font-display)', fontStyle: 'italic',
+            /* s104c: halo de papel sobre la escena (legibilidad) */
+            textShadow: hasIll
+              ? '0 0 20px var(--paper), 0 0 8px var(--paper)'
+              : 'none',
           }}
         >
           {t('paths.runner.repeat') || 'Repetir camino'}

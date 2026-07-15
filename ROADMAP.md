@@ -102,10 +102,11 @@ fricción, y quiere volver mañana.*
 | ~~s101~~ | ~~Stats a fondo~~ **hecho (v0.46.0)** — auditoría de tracking (mapa escritores→lectores, 8 hallazgos verificados, plan aprobado antes de tocar) + **stats vivos** (nuevo `state-history.jsx` con `getHistoryWithToday` memoizado → Mes/Año/totales con el día actual; state-core 511→407 ln, sale de deuda) + WeekDots del sidebar con criterio s69 + fila "Mueve"→**"Cuerpo"** (moveMinutes = Mueve+Estira) + racha de Caminos viva + fix DST hydrate.week.perfect + WeeklyStats.jsx muerto borrado + **`/safety` y `/privacy`** estáticas (autocontenidas, ES+EN; sin enlazar desde la UI aún). Diferidos: H7 crédito solo-al-completar de Mueve/Estira ("Move timer: bajo") y H8 proxies del Sendero del día (→s106) |
 | ~~s102~~ | ~~PWA completa~~ **hecho (v0.47.0)** — **manifest.webmanifest** completo (id, 4 shortcuts con deep links `/?go=` consumidos una vez, launch_handler, colores → `--paper #F2EDE0`) · **fix despliegue**: `index.html` iba SIN `<link rel="manifest">` desde s48c (no instalable); el build lo re-inserta solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → waiting + `UpdatePrompt.jsx` "Actualizar/Luego"; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle Ajustes, permiso al activar, solo pestaña oculta, silent) · enlaces **Seguridad·Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` local; reanuda solo si vivo, expirado sin acreditar — **cierra el fork s96**) |
 | ~~s103~~ | ~~Build Etapa A (1 de 2)~~ **hecho (v0.48.0)** — los 74 scripts text/babel **compilados en build** (`@babel/core` 7.29 en memoria: sourceType script, targets evergreen, retainLines; **IIFE por archivo + re-exposición AST de function/var top-level** = semántica exacta del eval indirecto de Babel standalone; hallazgo clave: `RoutineCard` y otros globals implícitos nunca pasaron por Object.assign) + **React 18.3.1 production UMD self-hosted** (vendor/ desde npm, inlineado en ambos artefactos) + **@babel/standalone fuera del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga) · dev intacto · pins deliberados Babel 7 / TS 5 (los latest rompen el build) · pareja SW s89+s102 re-verificada con dos SW reales · standalone 774→924 KB pero autocontenido en JS por primera vez |
-| **s104** | **Build Etapa A (2 de 2): fuentes self-hosted** (bifurcaciones decididas en s103): solo **EB Garamond + Inter Tight** woff2 subset latin → `fonts/` + @font-face en tokens.css (fuera el @import de Google; Cormorant Garamond y JetBrains Mono caen a fallbacks del sistema) · index.html con rutas `/fonts/*` que **entran al PRECACHE de sw.js** · standalone con **data URIs** (100 % autocontenido también en tipografía) · MIME woff2 en static-server · verificar cero peticiones a fonts.googleapis en los 3 artefactos |
-| **s105** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) |
-| **s106** | **Home: Caminos al centro** (SuggestedPathCard protagonista junto al Pomodoro) + `getSuggestedPath` v2 con scoring (timeOfDay + prioridad perfil + actividad faltante − repetición − premium bloqueado) |
-| **s107-108** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + modo **"No puedo levantarme"** (sigilo) |
+| ~~s104~~ | ~~(previsto: fuentes)~~ → **Arte D-4 completo: escenas ilustradas de Caminos** **hecho (v0.49.0)** — el usuario ENTREGÓ las 7 láminas y las priorizó; escena cover full-bleed en el runner (`PathIllustration` + `paths.index.js` medido por escaneo) · **casquetes** gris→color de actividad (orbe s77 retirado) · cámara con pan + encuadre del FINAL del camino en Completion · etiqueta del paso en placa anclada a la bola · tagline en la intro · regla "sobre el arte siempre es de día" · pipeline archivo+precache web / data URI standalone · `scripts/ingest-lamina.js` (modo híbrido) · fix `PACE_VERSION` · análisis estratégico externo verificado (todayISO UTC = bug real → s105) |
+| **s105** | **Fuentes self-hosted (cierra Etapa A) + todayISO local** — (a) fix `todayISO()` a fecha LOCAL (bug verificado s104: rachas/history anotan el día anterior entre medianoche y ~2 AM; 7 sitios) con verificación de rollover/rachas/heatmaps; (b) fuentes (bifurcaciones s103): **EB Garamond + Inter Tight** woff2 subset latin → `fonts/` + @font-face (fuera el @import de Google) · index.html `/fonts/*` al PRECACHE · standalone data URIs · MIME woff2 en static-server · decidir tweak `data-font="cormorant"` (quedará huérfano) · cero peticiones a fonts.googleapis en los 3 artefactos |
+| **s106** | **Onboarding 3 pantallas** (necesidad + tiempo + entorno → `profile`) + primer Camino automático (P1) — ampliado s103-cierre: bienvenida vistosa/cercana; las escenas ilustradas son material natural del onboarding |
+| **s107** | **Home: Caminos al centro** (SuggestedPathCard protagonista, ¿con thumb de su lámina?) + `getSuggestedPath` v2 con scoring + **"After Pomodoro"** (mini-Camino automático sugerido al terminar Foco, en el BreakMenu — análisis s104: materializa el loop trabajo→pausa→volver) + mini-Caminos de activación 2-3 min |
+| **s108-109** | **Taxonomía de metadatos** en las 3 bibliotecas (context/bodyZones/goals/intensity/noiseLevel) → **filtros** + categorías por RESULTADO en Respira (calmarme/volver al foco/dormir — análisis s104) + modo **"No puedo levantarme"** (sigilo) |
 | pre-venta | Iteración glifos D-4 → **revisión COMPLETA del set** (feedback s101-cierre, patrón s84) · **trial 7 días explícito** (no auto-start; `premiumUnlocked` derivado de licencia‖trial) · **licencia firmada offline ECDSA P-256** (guardar la clave y revalidar en arranque, no un booleano) — requiere **cambiar formalmente la decisión F3b** · landing `/` separada de `/app` · pricing/terms · **estrategia de venta: revisar A FONDO el canal Starter Story** (youtube.com/@starterstory — pedido s101-cierre; casos con cifras reales, playbooks de apps indie, pricing/lanzamiento/distribución; destilar comparables ANTES de fijar pricing/landing; memoria `premium-strategy-sources`) |
 | post-venta | Vite/ESM real (Etapa B) · Path Builder (reuso F7) · Modo Estudio · sonidos procedurales premium · CTB completa · **Android + iOS via Capacitor** (notificaciones/hápticos/widget/billing; iOS "cuando corresponda" — feedback s102-cierre) · Wrapped · extensión Chrome · IndexedDB via localForage (antes: `navigator.storage.persist()` tras onboarding, barato) |
 
@@ -285,6 +286,28 @@ planificar. Persistido en memoria `ux-refinement-backlog`.
   youtube.com/watch?v=Di973jC2Jio — "técnicas muy interesantes para
   monetizar la app". Revisar en la pasada de estrategia pre-venta junto a
   @starterstory + @StarterStoryBuild (memoria `premium-strategy-sources`).
+- **[s104 — análisis estratégico externo, VERIFICADO] Programas 7/14/30
+  días.** Empaquetar contenido EXISTENTE en planes con nombre y beneficio
+  ("7-Day Desk Reset", "Focus & Calm Week") — curación, no módulos nuevos;
+  capa premium natural sobre Caminos. Encaja en pre-venta.
+- **[s104 — análisis] Navegación comercial "Cuerpo".** Evaluar en la
+  sesión de diseño del home (s107): agrupar Mueve+Estira como "Cuerpo" en
+  UI (el state ya lo hace desde s101) y ActivityBar → "Pausas". Decisión
+  de IA/IU con propuestas, no de oídas.
+- **[s104 — análisis] ASO/naming/pricing.** Material destilado para la
+  pasada pre-venta: naming tipo "Pace: Focus & Wellness", subtítulo
+  "healthy Pomodoro breaks", screenshots de beneficios (con las escenas
+  ilustradas como identidad), pricing mensual/anual/lifetime early adopter,
+  manifest EN para mercado global. Decidir junto a Starter Story.
+- **[s104 — BUG pre-existente] Frame fantasma de fase en PathRunner.**
+  Al arrancar un Camino, PathRunner renderiza 1 frame con fase 'step'
+  (default del useState) antes de que el efecto ponga 'intro' →
+  BreatheSession monta un frame y escribe estado en render (warning React
+  en dev; en producción no hay warning pero el mount fantasma es real).
+  Fix candidato: derivar la fase inicial en el primer render. Sesión corta.
+- **[s104 — Ops] Automatizar bump de versión en build** (package.json
+  como fuente → título + CACHE_NAME + PACE_VERSION; el desajuste de
+  PACE_VERSION vivió 3 sesiones sin detectarse).
 
 ---
 

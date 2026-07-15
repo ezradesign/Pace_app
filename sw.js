@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.48.0';
+const CACHE_NAME = 'pace-v0.49.0';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -8,7 +8,16 @@ const PRECACHE = [
   '/icons/icon-512.png',
   '/icons/icon-192-maskable.png',
   '/icons/icon-512-maskable.png',
-  '/icons/apple-touch-icon.png'
+  '/icons/apple-touch-icon.png',
+  /* s104: láminas de Caminos (arte D-4) -- en la web viajan como archivo
+     (el standalone las inlinea como data URI); precache = offline fiel. */
+  '/app/paths/illustrations/assets/dawn.webp',
+  '/app/paths/illustrations/assets/midday.webp',
+  '/app/paths/illustrations/assets/afternoon.webp',
+  '/app/paths/illustrations/assets/tea.webp',
+  '/app/paths/illustrations/assets/dusk.webp',
+  '/app/paths/illustrations/assets/weekend.webp',
+  '/app/paths/illustrations/assets/breath.webp'
 ];
 
 /* s102 (PWA completa): el skipWaiting() incondicional del install se retiró.

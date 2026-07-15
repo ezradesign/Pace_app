@@ -471,6 +471,79 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 }
 
 /* ============================================================
+   ESCENA DE CAMINO (s104 · arte D-4) — PathIllustration full-bleed
+   Hitos vivos anclados sobre los puntos pintados del arte. Misma
+   gramática que el SenderoBar (pulso/orbe/draw-in); reutiliza los
+   keyframes pace-sendero-pulse / pace-sendero-dot-in. Todo decorativo
+   -> el kill global de reduced-motion lo congela.
+   ============================================================ */
+[data-pace-path-scene] { color: var(--ink); }
+/* La escena es capa de fondo: fuera del rise escalonado del reveal
+   (entra con el fade de la card / de la Completion). */
+[data-pace-reveal] > [data-pace-path-scene] { animation: none !important; }
+[data-pace-path-scene] .scene-pulse-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pace-sendero-pulse 2.6s var(--ease) infinite;
+}
+/* Pop de relleno (s104c): la bola recién terminada se llena con el color
+   de su actividad (StepIntro: una; Completion: todas, escalonadas — el
+   delay lo pone el JSX inline por bola). */
+[data-pace-path-scene] .scene-fill-in {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pace-scene-fill 600ms var(--ease) both;
+}
+@keyframes pace-scene-fill {
+  from { opacity: 0; transform: scale(0.25); }
+  to   { opacity: 1; transform: scale(1); }
+}
+/* Eco de latido tras el pop (s104c bis): UNA onda que sale de la bola
+   recién rellenada. opacity 0 de base + forwards -> invisible durante el
+   delay (el pulso de pace-sendero-pulse gobierna solo mientras corre). */
+[data-pace-path-scene] .scene-echo-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: pace-sendero-pulse 1100ms var(--ease) forwards;
+}
+/* En oscuro el papel crema del arte deslumbra: brightness sutil
+   (decisión s104 "lámina tal cual", sin invertir ni teñir). */
+[data-palette="oscuro"] [data-pace-path-scene] img {
+  filter: brightness(0.95);
+}
+/* "Sobre el arte siempre es de día" (s104): el arte es papel claro FIJO
+   (no se tematiza). En paleta oscura los --ink-* claros serían ilegibles
+   encima y el velo --paper se volvería noche -> dentro de las superficies
+   ilustradas (data-pace-scene-card) se re-mapean tinta/papel/línea a sus
+   valores de la paleta crema. Son COPIAS literales de la paleta día
+   (DESIGN_SYSTEM); si se recalibra la crema, actualizar también aquí.
+   Los acentos de módulo NO se re-mapean (legibles en ambas). */
+[data-palette="oscuro"] [data-pace-scene-card] {
+  --paper: #F2EDE0;
+  --paper-2: #EAE4D4;
+  --paper-3: #DFD8C4;
+  --ink: #1F1C17;
+  --ink-2: #4A453C;
+  --ink-3: #8A8372;
+  --line: #C9C0A8;
+  --line-2: #B8AD8E;
+  /* s104c: también los acentos de actividad — el relleno de las bolas y
+     los puntos del recorrido usan el color CANÓNICO (día) sobre el arte. */
+  --focus: #3E5A3A;
+  --breathe: #C97A5D;
+  --move: #9A7B4F;
+  --hydrate: #5F8A9B;
+  --extra: #6B7A8F;
+}
+
+/* ============================================================
    Variante lg (s77 / v0.31.0; ajustes labels en s77b)
    SenderoBar grande para las TransitionCards (Intro/StepIntro/Outro).
    Altura mayor: la curva se siente como un "sendero" que recorre la
