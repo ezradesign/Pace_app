@@ -115,11 +115,24 @@ Activa con `[data-palette="envejecido"]`.
 
 | Variable | Valor | Uso |
 |---|---|---|
-| `--font-display` | `'EB Garamond', 'Cormorant Garamond', Georgia, serif` | Títulos italic, identidad |
+| `--font-display` | `'EB Garamond', 'Cormorant Garamond', Georgia, serif` | Títulos italic (base; el default `data-font="cormorant"` la sobrescribe a Cormorant) |
 | `--font-ui` | `'Inter Tight', system-ui, -apple-system, sans-serif` | UI, texto descriptivo |
-| `--font-mono` | `'JetBrains Mono', ui-monospace, monospace` | Devtools, secretos |
+| `--font-mono` | `'JetBrains Mono', ui-monospace, monospace` | Devtools, secretos (JetBrains **ya no se carga** → cae a `ui-monospace`) |
 
-**Nota:** las cifras de identidad (`MM:SS` del timer, `0` de racha) están blindadas a `'EB Garamond', Georgia, serif` directamente en el JSX (sesión 20). No pasan por `--font-display`.
+> **Self-hosted desde s105 (v0.50.0).** Las fuentes ya no vienen del `@import`
+> de Google — copia LOCAL subset **latin** en `fonts/` (`@font-face` en
+> `tokens.css`, ruta absoluta `/fonts/…woff2`, `font-display:swap`,
+> `unicode-range` latin). Familias hospedadas: **Cormorant Garamond**
+> (400/500 romana+itálica), **EB Garamond** (400/500 romana+itálica; el **600
+> NO se hospeda**, no lo usa nadie), **Inter Tight** (300/400/500/600).
+> **JetBrains Mono retirada** (cae a `ui-monospace`). Web = archivos
+> `/fonts/*` + precache `sw.js`; standalone = data URIs (`inlineFonts` del
+> build). Cero peticiones a `fonts.googleapis`/`gstatic`. **La identidad real
+> de títulos es Cormorant** (default `font:'cormorant'`), no EB Garamond — ver
+> nota de tweaks abajo. Si se añade una fuente/peso: `@font-face` en
+> `tokens.css` + precache en `sw.js` (el build la inlinea sola).
+
+**Nota:** las cifras de identidad (`MM:SS` del timer, `0` de racha) están blindadas a `'EB Garamond', Georgia, serif` directamente en el JSX (sesión 20). No pasan por `--font-display`. (El `MM:SS` del `TimerDial` compartido sí usa `var(--font-display)` = Cormorant; el blindaje EB Garamond aplica a la racha del sidebar y a los steps de Camino.)
 
 ### Jerarquía de tamaños
 
@@ -154,7 +167,12 @@ Se activan por `[data-font="..."]` y sobrescriben las variables CSS. Forma parte
 | `[data-font="cormorant"]` | `--font-display` | `'Cormorant Garamond', Georgia, serif' |
 | `[data-font="mono"]` | `--font-display`, `--font-ui` | `'JetBrains Mono', ui-monospace, monospace' |
 
-Nota: `[data-font="mono"]` sobrescribe tanto display como UI, convirtiendo toda la interfaz a monoespaciada.
+Nota: `[data-font="cormorant"]` es el **default** (`defaultState.font='cormorant'`
+en `state-core.jsx`) — la identidad de títulos de PACE es Cormorant, no la base
+EB Garamond. No es un tweak huérfano (s105 preservó Cormorant self-hosted).
+`[data-font="mono"]` sobrescribe display y UI a monoespaciada; como JetBrains
+Mono ya no se carga (s105), cae a `ui-monospace` (mono del sistema). Ambos son
+ejes dormidos (sin control en la UI de Ajustes desde s20).
 
 ---
 

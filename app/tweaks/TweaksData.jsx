@@ -36,7 +36,7 @@ function TweaksDataSection() {
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      const yyyymmdd = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const yyyymmdd = toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
       a.href = url;
       a.download = `pace-backup-${yyyymmdd}.json`;
       document.body.appendChild(a);

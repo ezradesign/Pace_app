@@ -416,6 +416,38 @@ function main() {
     return out;
   }
 
+  // 6c. Fuentes self-hosted (s105) -> data URI SOLO en el standalone.
+  //     Gemelo de 6b: index.html las referencia como ARCHIVO (/fonts/*.woff2
+  //     + precache sw.js); el standalone file:// las inlinea para seguir 100%
+  //     autocontenido. La ruta en tokens.css es ABSOLUTA (/fonts/...): unica
+  //     que resuelve en dev (css en app/), index.html (css inline en root) y
+  //     aqui (se reescribe a data URI antes de servirse por file://).
+  var FONTS_DIR = path.join(ROOT, 'fonts');
+  function inlineFonts(src) {
+    if (!fs.existsSync(FONTS_DIR)) return src;
+    var out = src;
+    var count = 0;
+    fs.readdirSync(FONTS_DIR)
+      .filter(function (f) { return /\.woff2$/i.test(f); })
+      .forEach(function (f) {
+        var ref = '/fonts/' + f;
+        if (out.indexOf(ref) === -1) return; // fuente presente sin referencia: ok
+        var b64 = fs.readFileSync(path.join(FONTS_DIR, f)).toString('base64');
+        // split/join: sin regex ni replacement strings (regla s103 de los '$')
+        out = out.split(ref).join('data:font/woff2;base64,' + b64);
+        count++;
+      });
+    // Invariante: ninguna referencia /fonts/*.woff2 debe quedar sin inlinear.
+    // El '.woff2' evita el falso positivo con la mencion literal "/fonts/" del
+    // comentario de tokens.css (que tambien viaja inlineado en el <style>).
+    if (/\/fonts\/[\w-]+\.woff2/.test(out)) {
+      console.error('  [ERROR] El standalone referencia una fuente que no existe en /fonts/. Abortando.');
+      process.exit(1);
+    }
+    console.log('  [OK] ' + count + ' fuente(s) inlineada(s) como data URI (solo standalone).');
+    return out;
+  }
+
   // 7. Invariantes del bundle (s103): sin null bytes, sin text/babel
   //    residual, sin referencias a CDN.
   console.log('\n[4/7] Verificando bundle final ...');
@@ -444,7 +476,7 @@ function main() {
 
   // 8. Escribir (standalone = html base + laminas como data URI, s104)
   console.log('\n[5/7] Escribiendo PACE_standalone.html ...');
-  var standaloneHtml = inlineIllustrations(html);
+  var standaloneHtml = inlineFonts(inlineIllustrations(html));
   fs.writeFileSync(OUTPUT, standaloneHtml, 'utf8');
   var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
   console.log('=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');

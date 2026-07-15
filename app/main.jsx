@@ -152,6 +152,7 @@ function PaceApp() {
   const handleBreakChoice = (choice) => {
     setOpenBreakMenu(false);
     if (choice === 'breathe') setOpenLibrary('breathe');
+    else if (choice === 'extra') setOpenLibrary('extra'); // s105: Estira
     else if (choice === 'move') setOpenLibrary('move');
     else if (choice === 'water') setOpenHydrate(true);
   };

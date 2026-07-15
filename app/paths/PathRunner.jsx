@@ -37,25 +37,28 @@ function PathRunner() {
   const [justCompleted, setJustCompleted] = useStatePR(null);
   const [confirmExit, setConfirmExit] = useStatePR(false);
   const [phase, setPhase] = useStatePR('step');
+  const [seenPathId, setSeenPathId] = useStatePR(null);
+
+  /* s105 (#3): la fase 'intro' al abrir un Camino se fija en RENDER cuando
+     cambia el Camino (patron oficial de React "ajustar estado al cambiar una
+     prop"), NO en un efecto. Antes vivia en un useEffect([cur.id]) (s77): la
+     fase seguia en 'step' UN render al iniciar el Camino -> se montaba la
+     sesion (frame fantasma) hasta que el efecto la corregia a 'intro' ->
+     warning React "setState en render de otro componente" (BreatheSession).
+     Al fijarla en render, React re-renderiza PathRunner ANTES de montar el
+     step, asi la sesion nunca se monta en ese fotograma. "Recien iniciado" =
+     stepIndex 0 y <1500ms; al recargar el margen expiro -> 'step' (reanuda el
+     paso). El paso por cur=null entre Caminos garantiza que re-abrir el mismo
+     resetee a 'intro'. */
+  const curId = cur ? cur.id : null;
+  if (curId !== seenPathId) {
+    setSeenPathId(curId);
+    setPhase(cur && cur.stepIndex === 0 && (Date.now() - cur.startedAt) < 1500 ? 'intro' : 'step');
+  }
 
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
     if (cur) setJustCompleted(null);
-  }, [cur ? cur.id : null]);
-
-  /* s76: marca body cuando hay un Camino activo (no en CompletionScreen).
-     CSS en tokens.css empuja el padding-top del overlay y de SessionShell
-     para dejar sitio a la SenderoBar sticky superior. */
-  /* s77: phase = 'intro' al iniciar un Camino (volatil). Detecta "recien
-     iniciado" como (Date.now() - startedAt < 1500ms) sobre stepIndex 0.
-     Al recargar, este margen ya habra expirado y aterrizamos en 'step'. */
-  useEffectPR(() => {
-    if (!cur) { setPhase('step'); return; }
-    if (cur.stepIndex === 0 && (Date.now() - cur.startedAt) < 1500) {
-      setPhase('intro');
-    } else {
-      setPhase('step');
-    }
   }, [cur ? cur.id : null]);
 
   /* Escape:
@@ -82,6 +85,14 @@ function PathRunner() {
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [confirmExit, cur ? cur.stepIndex : null, phase]);
+
+  /* s105 (bug A): mientras haya UI de Camino (pasos, transiciones o la
+     CompletionScreen) los toasts de logro se aplazan para no taparse sobre
+     las pantallas; al cerrarse todo (vuelta a home) state-core los vuelca. */
+  const caminoUiOpen = !!(cur || justCompleted);
+  useEffectPR(() => {
+    if (typeof setCaminoUiActive === 'function') setCaminoUiActive(caminoUiOpen);
+  }, [caminoUiOpen]);
 
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
@@ -120,14 +131,22 @@ function PathRunner() {
   const handleStepExit = (reason) => {
     const isLast = cur.stepIndex >= path.steps.length - 1;
     if (isLast) {
-      const skipped = reason === 'skip'
-        ? [...cur.skippedSteps, cur.stepIndex]
-        : cur.skippedSteps;
-      setJustCompleted({
-        pathId: cur.id,
-        startedAt: cur.startedAt,
-        skippedSteps: skipped,
-      });
+      /* s105 (bug B): solo mostramos la ceremonia (CompletionScreen) si se
+         hizo >=1 paso DE VERDAD (reason 'done'). Si se salio/salto todo,
+         advancePathStep abandona el Camino sin completar y volvemos a home
+         sin celebracion -- coherente con no acreditar nada. La misma regla
+         (doneCount >= 1) decide el credito en advancePathStep. */
+      const doneNow = (cur.doneCount || 0) + (reason === 'done' ? 1 : 0);
+      if (doneNow >= 1) {
+        const skipped = reason === 'skip'
+          ? [...cur.skippedSteps, cur.stepIndex]
+          : cur.skippedSteps;
+        setJustCompleted({
+          pathId: cur.id,
+          startedAt: cur.startedAt,
+          skippedSteps: skipped,
+        });
+      }
       advancePathStep(reason);
     } else {
       advancePathStep(reason);

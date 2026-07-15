@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.49.0
-**Ultima sesion:** #104 -- 2026-07-14 - **Arte D-4 completo: escenas ilustradas de Caminos** (el usuario ENTREGO las 7 laminas y las priorizo sobre las fuentes, que pasan a s105; diseño iterado EN VIVO: 2 tandas AskUserQuestion + 4 rondas de feedback con mockups suyos). Escena cover FULL-BLEED en las 3 pantallas del runner (`PathIllustration.jsx` + `paths.index.js` con dots/paper/focusY/finish medidos por escaneo, no a ojo); **casquetes** (las bolas pintadas van cubiertas en gris `--line` → se RELLENAN con el color de SU actividad al completarse, pop `pace-scene-fill` + eco de latido; el orbe s77 RETIRADO por feedback); camara que sigue al hito actual (pan 2s) y encuadra el FINAL del camino en la Completion (`finish`); etiqueta del paso ANCLADA a la bola (placa mini de papel del arte, tinta `--ink-2/-3`); **tagline en la IntroCard** (beneficio visible); placa translucida tras RECORRIDO/DESBLOQUEADO; regla **"sobre el arte siempre es de dia"** (`[data-pace-scene-card]` re-mapea tinta/papel/acentos a crema en oscuro); pipeline **archivo+precache web / data URI solo standalone**; `scripts/ingest-lamina.js` (normaliza+mide, MODO HIBRIDO con semillas visuales). Fix `PACE_VERSION` (v0.46.0 desde s101). Analisis estrategico externo VERIFICADO contra el repo: `todayISO()` en UTC = bug real (7 sitios) → tarea s105; CowLogo corrupto = FALSO. Fallback SenderoBar intacto. Diario: `docs/sessions/session-104-arte-caminos.md`
-**Ultima actualizacion de este archivo:** 2026-07-14 - sesion 104
-**Build entregado:** `PACE_standalone.html` v0.49.0 (2371 KB, 7 laminas inline, autocontenido) + `index.html` (970 KB, laminas como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.50.0
+**Ultima sesion:** #105 -- 2026-07-15 - **Fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos + pulido** (7 arreglos: `todayISO()` a fecha LOCAL en 7 sitios via `toISODate()` -- bug UTC anotaba el dia anterior entre medianoche y ~2 AM; **fuentes self-hosted preservando Cormorant** -- hallazgo: el default real de titulos es Cormorant, no EB Garamond, decision s103 revisada; copia local subset-latin de Cormorant+EB Garamond+Inter Tight, 12 caras 520 KB en `fonts/`, `@font-face` ruta absoluta `/fonts/`, precache web + data URIs standalone via `inlineFonts`, JetBrains Mono retirada -> ui-monospace, MIME woff2, cero peticiones a Google en los 3 artefactos; **BreakMenu coherente** -- iconos `AB*` de la home + Estira, 4 actividades grid 2x2; **aro del pomodoro** alineado en Pausa/Larga (spacer que reserva la fila MIN); **frame fantasma de PathRunner** resuelto -- fase 'intro' fijada en render, no en efecto, sin warning; **toasts de logro aplazados** durante Caminos; **bug de integridad B** -- un Camino solo cuenta con >=1 paso hecho de verdad, antes saltarlo todo desbloqueaba "Cartografa"). Diario: `docs/sessions/session-105-fuentes-todayiso-caminos.md`. **Etapa A del build CERRADA** (precompilado s103 + fuentes s105). Historico previo: [`ARTE D-4 s104`](./CHANGELOG.md#v0490----2026-07-14----featpaths-escenas-ilustradas-de-caminos--arte-d-4-completo) (el usuario ENTREGO las 7 laminas y las priorizo sobre las fuentes, que pasan a s105; diseño iterado EN VIVO: 2 tandas AskUserQuestion + 4 rondas de feedback con mockups suyos). Escena cover FULL-BLEED en las 3 pantallas del runner (`PathIllustration.jsx` + `paths.index.js` con dots/paper/focusY/finish medidos por escaneo, no a ojo); **casquetes** (las bolas pintadas van cubiertas en gris `--line` → se RELLENAN con el color de SU actividad al completarse, pop `pace-scene-fill` + eco de latido; el orbe s77 RETIRADO por feedback); camara que sigue al hito actual (pan 2s) y encuadra el FINAL del camino en la Completion (`finish`); etiqueta del paso ANCLADA a la bola (placa mini de papel del arte, tinta `--ink-2/-3`); **tagline en la IntroCard** (beneficio visible); placa translucida tras RECORRIDO/DESBLOQUEADO; regla **"sobre el arte siempre es de dia"** (`[data-pace-scene-card]` re-mapea tinta/papel/acentos a crema en oscuro); pipeline **archivo+precache web / data URI solo standalone**; `scripts/ingest-lamina.js` (normaliza+mide, MODO HIBRIDO con semillas visuales). Fix `PACE_VERSION` (v0.46.0 desde s101). Analisis estrategico externo VERIFICADO contra el repo: `todayISO()` en UTC = bug real (7 sitios) → tarea s105; CowLogo corrupto = FALSO. Fallback SenderoBar intacto. Diario: `docs/sessions/session-104-arte-caminos.md`
+**Ultima actualizacion de este archivo:** 2026-07-15 - sesion 105
+**Build entregado:** `PACE_standalone.html` v0.50.0 (3052 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (~970 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -115,6 +115,7 @@
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.49.0_20260715.html` <- creado s105 (snapshot del v0.49.0 publicado en s104, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.48.0_20260714.html` <- creado s104 (snapshot del v0.48.0 publicado en s103, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.47.0_20260713.html` <- creado s103 (snapshot del v0.47.0 publicado en s102, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.46.0_20260713.html` <- creado s102 (snapshot del v0.46.0 publicado en s101)
@@ -134,106 +135,80 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.34.3_20260707.html` <- creado s88 (snapshot del v0.34.3 publicado en s87; renombrado en s89 al corregir la fecha real de s88)
 - `backups/PACE_standalone_v0.34.2_20260630.html` <- creado s87 (snapshot del v0.34.2 publicado en s86, desde git HEAD)
 - `backups/PACE_standalone_v0.34.1_20260605.html` <- creado s86 (snapshot del v0.34.1 publicado en s85)
-- `backups/PACE_standalone_v0.34.0_20260605.html` <- creado s85 (snapshot del v0.34.0 publicado en s84)
-Nota s104: cap 20 mantenido rotando el mas antiguo (`v0.33.3_20260524.html`)
-al crear el backup del v0.48.0.
+Nota s105: cap 20 mantenido rotando el mas antiguo (`v0.34.0_20260605.html`)
+al crear el backup del v0.49.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 104 - v0.49.0 - Arte D-4 completo: escenas ilustradas de Caminos.**
-Planificada como "fuentes self-hosted" pero el usuario ENTREGO las 7 laminas
-y las priorizo (fuentes → s105). Diseño iterado EN VIVO: 2 tandas de
-AskUserQuestion (lamina en las 3 cards · enmarcado en oscuro · SenderoBar
-fallback · pipeline archivo/data-URI + puntos anclados · cover con foco ·
-Completion full-bleed) + 4 rondas de feedback con mockups del usuario
-(full-bleed, casquetes, etiquetas en placa, encuadre final).
+**Sesion 105 - v0.50.0 - Fuentes self-hosted (cierra Etapa A) + todayISO
+local + integridad de Caminos + pulido.** Planificada como "fuentes +
+todayISO"; crecio con 4 arreglos pedidos en vivo (aro, BreakMenu, frame
+fantasma, y 2 bugs de Caminos). 7 arreglos, todos verificados en dev,
+compilado y standalone.
 
-### Que se hizo (s104)
+### Que se hizo (s105)
 
-- **Escena** (`app/paths/illustrations/`): `PathIllustration.jsx` cover
-  full-bleed en IntroCard/StepIntro/CompletionScreen (img+SVG en el mismo
-  encuadre → marcadores al pixel sobre las bolas pintadas). Sesiones
-  activas SIN arte. **Casquetes**: bolas cubiertas en gris (`--line`) →
-  se RELLENAN con el color de SU actividad (kind real del paso) con pop +
-  eco; hito actual late en el color de la actividad que toca; el ORBE s77
-  se retiro (feedback: raro). **Camara**: centrada en el hito con clamp,
-  pan 2s acompañando el avance; la Completion encuadra `finish` (el final
-  del camino: sol/farol/tetera/cabaña/loto). Etiqueta del paso ANCLADA
-  bajo la bola (placa mini de papel del arte, tinta `--ink-2/-3`);
-  StepIntro sin titulo arriba; IntroCard con titulo + **tagline** del
-  catalogo. Placa translucida tras RECORRIDO/DESBLOQUEADO.
-- **"Sobre el arte siempre es de dia"**: `[data-palette="oscuro"]
-  [data-pace-scene-card]` re-mapea `--ink*`/`--paper*`/`--line*` y los
-  acentos de actividad a los valores CREMA (el arte no se tematiza).
-- **Pipeline**: `paths.index.js` (dots {x,y,r,color} MEDIDOS + paper +
-  focusY + finish por lamina) · `scripts/ingest-lamina.js` (normaliza
-  1365x768 WebP q82 + mide; MODO HIBRIDO canonico: semillas visuales +
-  centroide local + crecimiento radial) · web = archivos + PRECACHE en
-  sw.js · standalone = data URIs (paso 6b del build) · MIME .webp en
-  static-server · `sharp` como devDependency.
-- **Fix**: `PACE_VERSION` v0.46.0 → v0.49.0 (desincronizada desde s101;
-  entra al checklist de bump).
-- **Analisis estrategico externo VERIFICADO** contra el repo: CowLogo
-  corrupto FALSO · version desincronizada CIERTO (arreglado) ·
-  **`todayISO()` en UTC CIERTO** (rachas/history anotan el dia anterior
-  entre medianoche y ~2 AM; 7 sitios auditados) → tarea corta s105. Lo
-  valioso destilado a ROADMAP (After Pomodoro, programas, ASO).
-
-### Verificacion + cierre
-
-Protocolo s93 POR TANDA (leccion re-aprendida: el SW re-registrado sirve
-.jsx cache-first). Dev: los 7 caminos por DOM (imagen, nº bolas -- breath
-2 OK, etiqueta por kind: midday dice "Agua · I", pulso) + recorridos
-completos de dawn en claro/oscuro/movil + fallback SenderoBar verificado.
-Compilado: monta sin Babel, .webp servido 1 vez (precache). Standalone:
-data URI, cero peticiones. Consola limpia en compilado; en dev queda un
-warning PRE-EXISTENTE (frame fantasma de fase 'step' en PathRunner →
-BreatheSession monta 1 frame y escribe estado en render; en produccion no
-existe; ARREGLAR en sesion propia). OJO herramientas: los screenshots del
-pane de preview pueden salir con zoom/recorte -- verificar geometria por
-DOM. Cierre: backup v0.48.0_20260714 desde git HEAD (rotado v0.33.3, cap
-20), build final 2371 KB / index 970 KB, diario s104, CHANGELOG (detalle
-v0.49.0 + v0.48.0), STATE, DESIGN_SYSTEM (bloque escena), ROADMAP,
-memorias.
+- **`todayISO()` a fecha LOCAL** (bug UTC verificado s104): 7 sitios pasan a
+  `toISODate()` (helper local ya existente en state-history) -- todayISO
+  canonico, 2 copias en cards de Caminos (via `window.todayISO()`), 2 walkers
+  de racha en state-paths, watcher de dia-oscuro, y el nombre del backup en
+  TweaksData (8º sitio; el `exportedAt` se queda en ISO, es timestamp). NO se
+  toco el parseo `new Date("YYYY-MM-DD")` (UTC, inocuo para offsets +).
+  Verificado en preview con TZ Europe/Madrid (00:30 daba ayer, ahora hoy).
+- **Fuentes self-hosted preservando Cormorant.** HALLAZGO clave: el default
+  real de titulos es **Cormorant Garamond** (`defaultState.font='cormorant'`),
+  no EB Garamond -> la decision s103 ("solo EB Garamond") se tomo por error;
+  con comparativa visual el usuario eligio **preservar Cormorant**. Copia
+  local subset-latin de Cormorant (titulos) + EB Garamond (cifras/glifos/logo,
+  el 600 recortado) + Inter Tight (UI) = 12 caras 520 KB en `fonts/`.
+  `@font-face` ruta ABSOLUTA `/fonts/` + unicode-range latin + font-display
+  swap (fuera el @import de Google). JetBrains Mono retirada -> ui-monospace.
+  Web = archivos + precache sw.js; standalone = data URIs (`inlineFonts`,
+  gemelo de inlineIllustrations); MIME woff2. Cero peticiones a Google en los
+  3 artefactos; ciclo SW completo verificado en vivo.
+- **BreakMenu coherente**: iconos `AB*` de la ActivityBar (expuestos a window
+  desde main/ActivityBar.jsx) + Estira -> 4 actividades, grid 2x2, atajo E,
+  cuenta para first.cycle. Iconos `BM*` genericos eliminados.
+- **Aro del pomodoro** en Pausa/Larga: spacer `height:26` que reserva la fila
+  MIN (solo existe en Foco) -> el aro no sube ~30 px. FocusTimer 493->498 ln.
+- **Frame fantasma PathRunner (#3)**: la fase 'intro' se fija en RENDER al
+  cambiar el Camino (patron oficial React `if (curId !== seenPathId)`), no en
+  un efecto -> React re-renderiza antes de montar el step, sin el warning.
+  (Descubierto: las cards de transicion auto-avanzan por diseño, ~2.8s.)
+- **Toasts aplazados (A)**: `setCaminoUiActive` + cola en state-core; mientras
+  hay UI de Camino (cur || justCompleted) los toasts de logro se aplazan y se
+  vuelcan al volver a home (no tapan las pantallas).
+- **Integridad de Caminos (B, bug de correccion)**: `advancePathStep` marcaba
+  el Camino completado aunque se saltara/saliera todo (desbloqueaba
+  "Cartografa" sin hacerlo). Ahora `current.doneCount` cuenta pasos hechos de
+  verdad (reason 'done') y **solo cuenta con >=1 paso hecho**; si no, se
+  abandona sin credito. PathRunner refleja la regla para la ceremonia.
 
 ### Pendiente
 
-- **s105**: fuentes self-hosted (cierra Etapa A, desplazada por el arte) +
-  **fix `todayISO()` a fecha local** (tarea corta ANTES del onboarding; 7
-  sitios: state-history, PathsLibrary, SuggestedPathCard, state-paths x2,
-  TweakSecretsWatcher; auditar tambien el rollover).
-- Probar instalacion + notificacion PWA en navegador REAL (desde s102).
-- Frame fantasma de fase en PathRunner (warning dev; sesion propia).
-- Tweak `data-font="cormorant"` quedara huerfano con las fuentes (decidir
-  en esa tarea: retirarlo o aceptar fallback Georgia).
-- `tokens.css` ~600 ln (deuda desde s100, crecio con el bloque escena).
+- **PWA en navegador REAL** (instalacion + notificacion): sigue del usuario
+  desde s102.
+- `tokens.css` crecio con los 12 @font-face (deuda; candidato a extraer).
+- `FocusTimer.jsx` a 498 ln (al borde; lo nuevo va a FocusTimer.support.jsx).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- s105: fuentes self-hosted + todayISO local
+## Proxima sesion -- s106: onboarding
 
-1. **todayISO() a fecha LOCAL** (bug real verificado s104): sustituir
-   `new Date().toISOString().slice(0,10)` por construccion local en los 7
-   sitios; verificar rollover/rachas/heatmaps con cambio de dia simulado.
-2. **Fuentes self-hosted** (bifurcaciones YA decididas s103: solo EB
-   Garamond + Inter Tight subset latin; Cormorant y JetBrains Mono caen a
-   Georgia/ui-monospace): woff2 a `fonts/` + @font-face en tokens.css
-   (fuera el @import de Google) · index.html rutas `/fonts/*` + PRECACHE
-   en sw.js · standalone con data URIs · MIME woff2 en static-server ·
-   decidir el tweak cormorant · verificar cero peticiones a
-   fonts.googleapis en los 3 artefactos + acentos ES + ciclo SW
-   (reg.update() sobre pagina controlada, leccion s103).
-3. Bump v0.50.0 + CACHE_NAME + PACE_VERSION (checklist ampliado s104).
+Etapa A del build CERRADA. Siguiente en el plan maestro (ROADMAP "Camino a
+v1.0"): **onboarding 3 pantallas** (necesidad + tiempo + entorno -> `profile`)
++ primer Camino automatico. La bienvenida vistosa/cercana era peticion del
+usuario (s103-cierre); las escenas ilustradas de Caminos (s104) son material
+natural del onboarding. Metrica guia: primer Camino completado en < 3 min.
 
-### Despues -- Plan maestro v1.0 (adoptado s93, corrido +1 por el arte)
+### Despues -- Plan maestro v1.0 (adoptado s93)
 
-Secuencia en `ROADMAP.md` ("Camino a v1.0"): ~~build Etapa A s103~~ ·
-~~arte D-4 Caminos s104~~ · fuentes + todayISO (s105, cierra Etapa A) ·
-onboarding (s106) · home Caminos al centro + After Pomodoro (s107) ·
-taxonomia + filtros + sigilo (s108-109) · pre-venta: glifos (revision
-COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO +
-Starter Story A FONDO antes de pricing.
+~~build Etapa A s103~~ · ~~arte D-4 s104~~ · ~~fuentes + todayISO s105~~ ·
+onboarding (s106) · home Caminos al centro + After Pomodoro (s107) · taxonomia
++ filtros + sigilo (s108-109) · pre-venta: glifos (revision COMPLETA) +
+trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A FONDO
+antes de pricing.
 
 ---
 
@@ -242,6 +217,9 @@ Starter Story A FONDO antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Identidad tipografica = **Cormorant** (titulos) + EB Garamond (cifras/glifos/logo) + Inter Tight (UI); todo self-hosted | s105 | HALLAZGO: el default real de titulos es Cormorant (`defaultState.font='cormorant'` + regla `[data-font="cormorant"]`), NO EB Garamond -- la decision s103 "solo EB Garamond" se tomo por error (asumia que EB Garamond ya era el display). Con la info completa el usuario eligio PRESERVAR Cormorant (cero cambio visual). Las 3 familias van self-hosted subset-latin en `fonts/` (12 caras; EB Garamond 600 recortado, no lo usa nadie). JetBrains Mono NO se hostea -> `--font-mono` cae a ui-monospace (solo devtools). Ruta ABSOLUTA `/fonts/` en tokens.css (unica que resuelve en dev/index/standalone). El build `inlineFonts` las mete como data URI SOLO en el standalone (gemelo de las laminas). Si se añade una fuente/peso, ampliar el set en tokens.css + precache sw.js + (el build las inlinea solas) |
+| Un Camino cuenta como completado solo con >=1 paso hecho de verdad | s105 | `advancePathStep` marcaba el Camino completado (count++, history, checkAllPathsCompleted -> "Cartografa") aunque se saliera/saltara TODO -> logros "sin hacerlo" (bug B). Ahora `current.doneCount` cuenta solo `reason==='done'` (salir/saltar no acredita, ya era asi a nivel actividad); si al terminar `doneCount<1` se abandona sin credito. `PathRunner.handleStepExit` aplica la MISMA regla para mostrar (o no) la CompletionScreen. "Hacer 1 paso y salir" SI cuenta (hiciste algo); "recorrerlo saltandolo entero" NO. Regla al añadir logros/creditos de Camino: colgar del completado real, no del mero avance |
+| Toasts de logro APLAZADOS durante un Camino | s105 | El toast (z 200) se dibujaba sobre el overlay de Camino (z 80) tapando las pantallas (bug A). `state-core` tiene cola `_deferredToasts` + flag `_caminoUiActive`; `showToast` aplaza si el flag esta activo. `PathRunner` marca la UI activa mientras haya `cur || justCompleted` (pasos + transiciones + CompletionScreen) via `setCaminoUiActive`; al volver a home se vuelcan (60ms de respiro). La CompletionScreen sigue mostrando sus propios logros. Regla: cualquier UI full-screen que no deba ser interrumpida por toasts reutiliza `setCaminoUiActive` |
 | Escena ilustrada de Caminos SOLO en el runner; SenderoBar = lenguaje fuera + fallback dentro | s104 | La escena full-bleed (PathIllustration) vive UNICAMENTE en IntroCard/StepIntro/CompletionScreen -- las sesiones activas NO llevan arte (distrae). SenderoBar queda INTOCADO (decision s99 respetada) como fallback vivo para cualquier camino sin lamina en el indice. Miniaturas para biblioteca/home = thumbs estaticos cuando toque (s107), sin coreografia. Si la escena se filtra fuera del runner con mas trucos de camara, se pierde la simplicidad -- frontera deliberada |
 | Marcadores "casquetes": gris → color de actividad; SIN orbe | s104 | Las bolas pintadas del arte van SIEMPRE cubiertas por un casquete gris (`--line`/`--line-2`); al completar un paso su bola se RELLENA con el color de SU actividad (kind real del paso → `--breathe`/`--focus`/`--move`/`--hydrate`) con pop + eco de latido; el hito actual late en el color de la actividad que toca. Los colores PINTADOS en el arte son IRRELEVANTES (van cubiertos): las laminas futuras solo necesitan posiciones/nº de bolas correctos. El orbe animateMotion s77 se RETIRO de la escena (feedback usuario); el "viaje" = pop de relleno + pan de camara 2s. En SenderoBar (fallback) el orbe sigue |
 | "Sobre el arte siempre es de dia" | s104 | El arte es papel claro FIJO (no se tematiza). En oscuro, `[data-pace-scene-card]` (tokens.css) re-mapea `--ink*`/`--paper*`/`--line*` Y los acentos de actividad a los valores CREMA -- sin esto el texto era ilegible y los rellenos salian pastel. Son COPIAS literales de la paleta dia: si se recalibra la crema, actualizar TAMBIEN ese bloque (mismo aviso que safety/privacy.html) |

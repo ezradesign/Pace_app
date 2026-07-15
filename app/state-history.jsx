@@ -17,7 +17,11 @@
    ============================ */
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  // Fecha LOCAL, no UTC (s105). new Date().toISOString() usa UTC: entre
+  // medianoche y el offset (~1-2 AM en Espana) devolvia el dia ANTERIOR,
+  // corrompiendo rachas/history/Caminos. toISODate formatea con getFullYear/
+  // getMonth/getDate locales -- unica fuente de verdad del dia de calendario.
+  return toISODate(new Date());
 }
 
 function toISODate(dateString) {

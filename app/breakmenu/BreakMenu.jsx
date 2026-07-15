@@ -11,6 +11,7 @@ const { useEffect: useEffectBM } = React;
 function computeScore(key, state) {
   const { plan, water } = state;
   if (key === 'breathe') return plan.respira ? 0 : 2;
+  if (key === 'extra') return plan.extra ? 0 : 2;
   if (key === 'move') return plan.muevete ? 0 : 2;
   if (key === 'water') {
     if (water.today === 0) return 3;
@@ -30,13 +31,13 @@ function BreakMenu({ open, onClose, onChoose }) {
      filosofía del logro es que se cierre el ciclo de verdad.
      Sesión 28. */
   const handleChoose = (key) => {
-    if (key === 'breathe' || key === 'move' || key === 'water') {
+    if (key === 'breathe' || key === 'extra' || key === 'move' || key === 'water') {
       try { unlockAchievement('first.cycle'); } catch (e) {}
     }
     onChoose(key);
   };
 
-  // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
+  // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
   // Los atajos siguen mapeados por actividad (no por posición visual),
   // así el reordenamiento inteligente no los rompe.
   useEffectBM(() => {
@@ -46,6 +47,7 @@ function BreakMenu({ open, onClose, onChoose }) {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       const k = e.key.toLowerCase();
       if (k === 'b') { e.preventDefault(); handleChoose('breathe'); }
+      else if (k === 'e') { e.preventDefault(); handleChoose('extra'); }
       else if (k === 'm') { e.preventDefault(); handleChoose('move'); }
       else if (k === 'h') { e.preventDefault(); handleChoose('water'); }
       else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
@@ -58,10 +60,15 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   const state = getState();
 
+  /* s105: mismos glifos que la ActivityBar de la home (AB*, expuestos desde
+     main/ActivityBar.jsx) + Estira anadido -> el menu ofrece las 4 actividades
+     de la home, coherencia total. Orden = el de la home (Respira/Estira/
+     Mueve/Hidratate); el score luego reordena poniendo primero "Para ti". */
   const baseOpts = [
-    { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <BMWindIcon /> },
-    { key: 'move',    label: t('break.move.label'),    desc: t('break.move.desc'),    color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <BMMoveIcon /> },
-    { key: 'water',   label: t('break.water.label'),   desc: t('break.water.desc'),   color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <BMDropIcon /> },
+    { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: <ABBreathe /> },
+    { key: 'extra',   label: t('break.stretch.label'), desc: t('break.stretch.desc'), color: 'var(--extra)',   bg: 'var(--extra-soft)',   icon: <ABStretch /> },
+    { key: 'move',    label: t('break.move.label'),    desc: t('break.move.desc'),    color: 'var(--move)',    bg: 'var(--move-soft)',    icon: <ABMove /> },
+    { key: 'water',   label: t('break.water.label'),   desc: t('break.water.desc'),   color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: <ABDrop /> },
   ];
 
   // Ordenar por score descendente; empate → orden original (sort estable).
@@ -73,7 +80,7 @@ function BreakMenu({ open, onClose, onChoose }) {
 
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('break.tag')} title={t('break.title')} subtitle={t('break.subtitle')} maxWidth={720}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, margin: '20px 0' }}>
         {opts.map((o, i) => {
           const done = o.score === 0;
           const recommended = i === 0 && topScore > 0;
@@ -127,36 +134,9 @@ function BreakMenu({ open, onClose, onChoose }) {
   );
 }
 
-/* Iconos locales del BreakMenu (prefijo BM* para distinguirlos de los AB*
-   de la ActivityBar en main.jsx: son metodologías visuales distintas para
-   los mismos tres conceptos — respira / mueve / gota — y en v0.11.6 se
-   renombraron para evitar confusión de lectura). */
-function BMWindIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9.6 4.6A2 2 0 1 1 11 8H2" />
-      <path d="M12.6 19.4A2 2 0 1 0 14 16H2" />
-      <path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" />
-    </svg>
-  );
-}
-function BMMoveIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="5" r="2" />
-      <path d="M12 7v8" />
-      <path d="M8 10l4 2 4-2" />
-      <path d="M9 20l3-5 3 5" />
-    </svg>
-  );
-}
-function BMDropIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z" />
-    </svg>
-  );
-}
+/* s105: los iconos locales BM* (viento / monigote / gota generica) se
+   retiraron -- el menu usa ahora los glifos AB* de la ActivityBar (pulmones /
+   puente / mancuerna / gota), importados via window desde main/ActivityBar.jsx. */
 
 /* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
 const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');

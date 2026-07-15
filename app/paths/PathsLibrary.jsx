@@ -107,7 +107,9 @@ function PathsLibrary() {
   if (!open) return null;
 
   const catalog = (typeof window.PATH_CATALOG !== 'undefined') ? window.PATH_CATALOG : [];
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = (typeof window.todayISO === 'function')
+    ? window.todayISO() // local, no UTC (s105)
+    : new Date().toISOString().slice(0, 10);
   const favId = state.paths && state.paths.favorite;
 
   /* Contador del header (s99 · Sesion B). Interpolo {n} a mano para no

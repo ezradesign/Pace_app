@@ -158,9 +158,15 @@ function FocusTimer({ onFinish }) {
       {/* NOTA: el ModeToggle Foco/Pausa/Larga vive ahora en TopBar
          (centrado arriba), por referencia del usuario (sesión 9). */}
 
-      {/* Selector minutos */}
-      {state.focusMode === 'foco' && (
+      {/* Selector minutos. En Pausa/Larga no hay presets, pero se RESERVA su
+         alto (s105): sin el spacer, el aro subia ~30px al desaparecer la fila
+         (timerWrap es flex:1 y recentra el aro). El spacer = 26px (height de
+         las pills de MinutesPicker); el gap:14 del root aplica igual a ambos,
+         asi el aro queda en la MISMA posicion en los tres modos. */}
+      {state.focusMode === 'foco' ? (
         <MinutesPicker value={state.focusMinutes} onChange={(v) => set({ focusMinutes: v })} />
+      ) : (
+        <div aria-hidden="true" style={{ height: 26 }} />
       )}
 
       {/* Visualización */}
