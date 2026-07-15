@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.49.0</title>
+  <title>PACE · Foco · Cuerpo — v0.50.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -19,7 +19,29 @@
    Cambios aquí se reflejan en toda la app.
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter+Tight:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
+/* TIPOGRAFIA self-hosted (s105 · cierra Etapa A). Copia LOCAL subset latin
+   de las 3 familias reales (fuera el @import de Google -> cero peticiones
+   externas, offline fiel). Cormorant = display/titulos (identidad), EB
+   Garamond = cifras/glifos/logo, Inter Tight = UI. JetBrains Mono se retiro:
+   --font-mono cae a ui-monospace. Archivos en /fonts/ (dev via static-server
+   + web via precache sw.js); el build los inlinea como data URI SOLO en el
+   standalone (paso inlineFonts). Ruta ABSOLUTA /fonts/ = unica que resuelve
+   en dev (css en app/), index.html (css inline en root) y standalone. El set
+   replica el @import salvo EB Garamond 600 (no lo usa nadie -> -93 KB) y
+   JetBrains Mono. unicode-range latin -> fallback gracil a Georgia/system
+   fuera de rango. Si crece el copy con simbolos raros, ampliar el set aqui. */
+@font-face { font-family:'EB Garamond'; font-style:italic; font-weight:400; font-display:swap; src:url('/fonts/ebgaramond-400-italic.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'EB Garamond'; font-style:italic; font-weight:500; font-display:swap; src:url('/fonts/ebgaramond-500-italic.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'EB Garamond'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/ebgaramond-400-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'EB Garamond'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/ebgaramond-500-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Inter Tight'; font-style:normal; font-weight:300; font-display:swap; src:url('/fonts/intertight-300-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Inter Tight'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/intertight-400-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Inter Tight'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/intertight-500-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Inter Tight'; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/intertight-600-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Cormorant Garamond'; font-style:italic; font-weight:400; font-display:swap; src:url('/fonts/cormorantgaramond-400-italic.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Cormorant Garamond'; font-style:italic; font-weight:500; font-display:swap; src:url('/fonts/cormorantgaramond-500-italic.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/cormorantgaramond-400-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:500; font-display:swap; src:url('/fonts/cormorantgaramond-500-normal.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 
 :root {
   /* PALETA · Crema día (default) */
@@ -1089,13 +1111,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'break.subtitle': 'Has cerrado un ciclo de foco. Elige tu micro-pausa.',
   'break.breathe.label': 'Respira',
   'break.breathe.desc': '2 min para volver al centro',
+  'break.stretch.label': 'Estira',
+  'break.stretch.desc': 'Afloja la tensión',
   'break.move.label': 'Muévete',
   'break.move.desc': 'Antídoto rápido a la silla',
   'break.water.label': 'Hidrátate',
   'break.water.desc': 'Un vaso ahora',
   'break.done': 'Ya hecho hoy · otra ronda si quieres',
   'break.recommended': 'Para ti',
-  'break.shortcut': 'Atajo: B · M · H · Esc',
+  'break.shortcut': 'Atajo: B · E · M · H · Esc',
   'break.skip': 'Saltar esta pausa',
 
   // Sidebar
@@ -1271,13 +1295,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'break.subtitle': "You've closed a focus cycle. Choose your micro-break.",
   'break.breathe.label': 'Breathe',
   'break.breathe.desc': '2 min to return to center',
+  'break.stretch.label': 'Stretch',
+  'break.stretch.desc': 'Loosen the tension',
   'break.move.label': 'Move',
   'break.move.desc': 'Quick antidote to the chair',
   'break.water.label': 'Hydrate',
   'break.water.desc': 'A glass right now',
   'break.done': 'Done today · another round if you like',
   'break.recommended': 'For you',
-  'break.shortcut': 'Shortcut: B · M · H · Esc',
+  'break.shortcut': 'Shortcut: B · E · M · H · Esc',
   'break.skip': 'Skip this break',
 
   // Sidebar
@@ -2836,7 +2862,11 @@ Object.assign(window, { useT, detectInitialLang });
    ============================ */
 
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  // Fecha LOCAL, no UTC (s105). new Date().toISOString() usa UTC: entre
+  // medianoche y el offset (~1-2 AM en Espana) devolvia el dia ANTERIOR,
+  // corrompiendo rachas/history/Caminos. toISODate formatea con getFullYear/
+  // getMonth/getDate locales -- unica fuente de verdad del dia de calendario.
+  return toISODate(new Date());
 }
 
 function toISODate(dateString) {
@@ -3002,7 +3032,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.49.0';
+const PACE_VERSION = 'v0.50.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3363,15 +3393,33 @@ function ensureDayFresh() {
    ============================ */
 
 const _toastListeners = new Set();
-const _pendingToasts = [];
+const _pendingToasts = []; // buffer pre-mount (aun sin listeners)
+const _deferredToasts = []; // s105: aplazados mientras hay UI de Camino
+let _caminoUiActive = false; // s105: lo fija PathRunner (pasos + Completion)
+
+function _emitToast(t) {
+  if (_toastListeners.size === 0) {_pendingToasts.push(t);return;}
+  _toastListeners.forEach((l) => l(t));
+}
 
 function showToast(toast) {
   const t = { ...toast, _id: Date.now() + Math.random() };
-  if (_toastListeners.size === 0) {
-    _pendingToasts.push(t);
-    return;
+  /* s105: durante un Camino (pasos, transiciones y CompletionScreen) los
+     toasts de logro se APLAZAN para no taparse sobre las pantallas del runner;
+     PathRunner marca la UI de Camino activa/inactiva via setCaminoUiActive y
+     al volver a home se vuelcan los pendientes. */
+  if (_caminoUiActive) {_deferredToasts.push(t);return;}
+  _emitToast(t);
+}
+
+function setCaminoUiActive(active) {
+  const was = _caminoUiActive;
+  _caminoUiActive = !!active;
+  if (was && !_caminoUiActive && _deferredToasts.length > 0) {
+    const drained = _deferredToasts.splice(0);
+    // pequeno respiro para que el runner desmonte antes del primer toast
+    setTimeout(() => {drained.forEach(_emitToast);}, 60);
   }
-  _toastListeners.forEach((l) => l(t));
 }
 
 function onToast(listener) {
@@ -3395,9 +3443,9 @@ Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
-  showToast, onToast
+  showToast, onToast, setCaminoUiActive
 });
-;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded, loadState, persistState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, showToast, onToast });
+;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded, loadState, persistState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
   <script>
@@ -3902,7 +3950,8 @@ function startPath(pathId) {
         id: pathId,
         stepIndex: 0,
         startedAt: Date.now(),
-        skippedSteps: []
+        skippedSteps: [],
+        doneCount: 0 // s105: pasos hechos DE VERDAD (reason 'done')
       }
     }
   }));
@@ -3922,8 +3971,19 @@ function advancePathStep(reason) {
     const newSkipped = reason === 'skip' ?
     [...c.skippedSteps, c.stepIndex] :
     c.skippedSteps;
+    /* s105: solo cuenta como paso HECHO el que se completa de verdad (reason
+       'done'); 'exit' (x Salir) y 'skip' (auto-skip) no acreditan actividad
+       ni deben contar para el completado del Camino. */
+    const doneCount = (c.doneCount || 0) + (reason === 'done' ? 1 : 0);
     const nextIndex = c.stepIndex + 1;
     if (nextIndex >= path.steps.length) {
+      /* s105 (bug B): un Camino recorrido saliendo/saltando TODOS los pasos
+         (doneCount === 0) NO cuenta como completado -> se abandona sin credito
+         (nada de count++, history ni master.path.all7). Antes se marcaba
+         completado siempre, desbloqueando logros "sin hacerlo". */
+      if (doneCount < 1) {
+        return { ...s, paths: { ...s.paths, current: null } };
+      }
       const prev = s.paths.completed[c.id] || { count: 0 };
       /* s78: tras cerrar un Camino, comprobar si el usuario ha completado
          ya los 7 -> desbloquea master.path.all7. Se llama fuera del setState
@@ -3953,7 +4013,7 @@ function advancePathStep(reason) {
       ...s,
       paths: {
         ...s.paths,
-        current: { ...c, stepIndex: nextIndex, skippedSteps: newSkipped }
+        current: { ...c, stepIndex: nextIndex, skippedSteps: newSkipped, doneCount }
       }
     };
   });
@@ -4076,13 +4136,13 @@ function computePathStreaks(history) {
   if (!days.has(check)) {
     const y = new Date(check);
     y.setDate(y.getDate() - 1);
-    check = y.toISOString().slice(0, 10);
+    check = toISODate(y); // local, no UTC (s105)
   }
   while (days.has(check)) {
     cs++;
     const d = new Date(check);
     d.setDate(d.getDate() - 1);
-    check = d.toISOString().slice(0, 10);
+    check = toISODate(d); // local, no UTC (s105)
   }
   return { currentStreak: cs, bestStreak: best };
 }
@@ -8438,8 +8498,14 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
 
 
 
-    state.focusMode === 'foco' && /*#__PURE__*/
-    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: (v) => set({ focusMinutes: v }) }), /*#__PURE__*/
+
+
+
+
+    state.focusMode === 'foco' ? /*#__PURE__*/
+    React.createElement(MinutesPicker, { value: state.focusMinutes, onChange: (v) => set({ focusMinutes: v }) }) : /*#__PURE__*/
+
+    React.createElement("div", { "aria-hidden": "true", style: { height: 26 } }), /*#__PURE__*/
 
 
 
@@ -11125,6 +11191,7 @@ const { useEffect: useEffectBM } = React;
 function computeScore(key, state) {
   const { plan, water } = state;
   if (key === 'breathe') return plan.respira ? 0 : 2;
+  if (key === 'extra') return plan.extra ? 0 : 2;
   if (key === 'move') return plan.muevete ? 0 : 2;
   if (key === 'water') {
     if (water.today === 0) return 3;
@@ -11144,13 +11211,13 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
      filosofía del logro es que se cierre el ciclo de verdad.
      Sesión 28. */
   const handleChoose = (key) => {
-    if (key === 'breathe' || key === 'move' || key === 'water') {
+    if (key === 'breathe' || key === 'extra' || key === 'move' || key === 'water') {
       try {unlockAchievement('first.cycle');} catch (e) {}
     }
     onChoose(key);
   };
 
-  // Atajos de teclado: B (Respira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
+  // Atajos: B (Respira) · E (Estira) · M (Muévete) · H (Hidrátate) · Esc (Saltar).
   // Los atajos siguen mapeados por actividad (no por posición visual),
   // así el reordenamiento inteligente no los rompe.
   useEffectBM(() => {
@@ -11160,6 +11227,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       const k = e.key.toLowerCase();
       if (k === 'b') {e.preventDefault();handleChoose('breathe');} else
+      if (k === 'e') {e.preventDefault();handleChoose('extra');} else
       if (k === 'm') {e.preventDefault();handleChoose('move');} else
       if (k === 'h') {e.preventDefault();handleChoose('water');} else
       if (e.key === 'Escape') {e.preventDefault();onClose();}
@@ -11172,10 +11240,15 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
 
   const state = getState();
 
+  /* s105: mismos glifos que la ActivityBar de la home (AB*, expuestos desde
+     main/ActivityBar.jsx) + Estira anadido -> el menu ofrece las 4 actividades
+     de la home, coherencia total. Orden = el de la home (Respira/Estira/
+     Mueve/Hidratate); el score luego reordena poniendo primero "Para ti". */
   const baseOpts = [
-  { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: /*#__PURE__*/React.createElement(BMWindIcon, null) },
-  { key: 'move', label: t('break.move.label'), desc: t('break.move.desc'), color: 'var(--move)', bg: 'var(--move-soft)', icon: /*#__PURE__*/React.createElement(BMMoveIcon, null) },
-  { key: 'water', label: t('break.water.label'), desc: t('break.water.desc'), color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: /*#__PURE__*/React.createElement(BMDropIcon, null) }];
+  { key: 'breathe', label: t('break.breathe.label'), desc: t('break.breathe.desc'), color: 'var(--breathe)', bg: 'var(--breathe-soft)', icon: /*#__PURE__*/React.createElement(ABBreathe, null) },
+  { key: 'extra', label: t('break.stretch.label'), desc: t('break.stretch.desc'), color: 'var(--extra)', bg: 'var(--extra-soft)', icon: /*#__PURE__*/React.createElement(ABStretch, null) },
+  { key: 'move', label: t('break.move.label'), desc: t('break.move.desc'), color: 'var(--move)', bg: 'var(--move-soft)', icon: /*#__PURE__*/React.createElement(ABMove, null) },
+  { key: 'water', label: t('break.water.label'), desc: t('break.water.desc'), color: 'var(--hydrate)', bg: 'var(--hydrate-soft)', icon: /*#__PURE__*/React.createElement(ABDrop, null) }];
 
 
   // Ordenar por score descendente; empate → orden original (sort estable).
@@ -11187,7 +11260,7 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
 
   return (/*#__PURE__*/
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('break.tag'), title: t('break.title'), subtitle: t('break.subtitle'), maxWidth: 720 }, /*#__PURE__*/
-    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '20px 0' } },
+    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, margin: '20px 0' } },
     opts.map((o, i) => {
       const done = o.score === 0;
       const recommended = i === 0 && topScore > 0;
@@ -11241,36 +11314,9 @@ function BreakMenu(_ref) {let { open, onClose, onChoose } = _ref;
 
 }
 
-/* Iconos locales del BreakMenu (prefijo BM* para distinguirlos de los AB*
-   de la ActivityBar en main.jsx: son metodologías visuales distintas para
-   los mismos tres conceptos — respira / mueve / gota — y en v0.11.6 se
-   renombraron para evitar confusión de lectura). */
-function BMWindIcon() {
-  return (/*#__PURE__*/
-    React.createElement("svg", { width: "28", height: "28", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
-    React.createElement("path", { d: "M9.6 4.6A2 2 0 1 1 11 8H2" }), /*#__PURE__*/
-    React.createElement("path", { d: "M12.6 19.4A2 2 0 1 0 14 16H2" }), /*#__PURE__*/
-    React.createElement("path", { d: "M17.5 8a2.5 2.5 0 1 1 2 4H2" })
-    ));
-
-}
-function BMMoveIcon() {
-  return (/*#__PURE__*/
-    React.createElement("svg", { width: "28", height: "28", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
-    React.createElement("circle", { cx: "12", cy: "5", r: "2" }), /*#__PURE__*/
-    React.createElement("path", { d: "M12 7v8" }), /*#__PURE__*/
-    React.createElement("path", { d: "M8 10l4 2 4-2" }), /*#__PURE__*/
-    React.createElement("path", { d: "M9 20l3-5 3 5" })
-    ));
-
-}
-function BMDropIcon() {
-  return (/*#__PURE__*/
-    React.createElement("svg", { width: "28", height: "28", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
-    React.createElement("path", { d: "M12 2.5c-3 4.5-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-6.5-6-11z" })
-    ));
-
-}
+/* s105: los iconos locales BM* (viento / monigote / gota generica) se
+   retiraron -- el menu usa ahora los glifos AB* de la ActivityBar (pulmones /
+   puente / mancuerna / gota), importados via window desde main/ActivityBar.jsx. */
 
 /* Responsive móvil — mismo patrón que SessionShell (sesión 27). */
 const _paceBreakResponsive = document.getElementById('pace-break-responsive-css');
@@ -11288,7 +11334,7 @@ if (!_paceBreakResponsive) {
 }
 
 Object.assign(window, { BreakMenu });
-;Object.assign(window, { computeScore, BreakMenu, BMWindIcon, BMMoveIcon, BMDropIcon });
+;Object.assign(window, { computeScore, BreakMenu });
 })();
 </script>
   <!-- Logros (s83): orden estricto. achievement-glyphs.jsx expone
@@ -12911,7 +12957,7 @@ function TweakSecretsWatcher() {
   useEffectSW(() => {
     if (state.palette !== 'oscuro') return;
     try {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = toISODate(new Date()); // local, no UTC (s105)
       const raw = localStorage.getItem(DARK_DAYS_KEY);
       let days;
       try {days = new Set(JSON.parse(raw || '[]'));} catch (e) {days = new Set();}
@@ -12974,7 +13020,7 @@ function TweaksDataSection() {
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      const yyyymmdd = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const yyyymmdd = toISODate(new Date()).replace(/-/g, ''); // local, no UTC (s105)
       a.href = url;
       a.download = `pace-backup-${yyyymmdd}.json`;
       document.body.appendChild(a);
@@ -13746,7 +13792,9 @@ function SuggestedPathCard() {
   // Si ya hay camino activo, PathRunner lo gestiona
   if (state.paths && state.paths.current) return null;
 
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = typeof window.todayISO === 'function' ?
+  window.todayISO() // local, no UTC (s105)
+  : new Date().toISOString().slice(0, 10);
 
   // Camino sugerido por hora del dia
   const suggestedId = typeof getSuggestedPath === 'function' ? getSuggestedPath() : null;
@@ -13931,7 +13979,9 @@ function PathsLibrary() {
   if (!open) return null;
 
   const catalog = typeof window.PATH_CATALOG !== 'undefined' ? window.PATH_CATALOG : [];
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = typeof window.todayISO === 'function' ?
+  window.todayISO() // local, no UTC (s105)
+  : new Date().toISOString().slice(0, 10);
   const favId = state.paths && state.paths.favorite;
 
   /* Contador del header (s99 · Sesion B). Interpolo {n} a mano para no
@@ -15873,25 +15923,28 @@ function PathRunner() {
   const [justCompleted, setJustCompleted] = useStatePR(null);
   const [confirmExit, setConfirmExit] = useStatePR(false);
   const [phase, setPhase] = useStatePR('step');
+  const [seenPathId, setSeenPathId] = useStatePR(null);
+
+  /* s105 (#3): la fase 'intro' al abrir un Camino se fija en RENDER cuando
+     cambia el Camino (patron oficial de React "ajustar estado al cambiar una
+     prop"), NO en un efecto. Antes vivia en un useEffect([cur.id]) (s77): la
+     fase seguia en 'step' UN render al iniciar el Camino -> se montaba la
+     sesion (frame fantasma) hasta que el efecto la corregia a 'intro' ->
+     warning React "setState en render de otro componente" (BreatheSession).
+     Al fijarla en render, React re-renderiza PathRunner ANTES de montar el
+     step, asi la sesion nunca se monta en ese fotograma. "Recien iniciado" =
+     stepIndex 0 y <1500ms; al recargar el margen expiro -> 'step' (reanuda el
+     paso). El paso por cur=null entre Caminos garantiza que re-abrir el mismo
+     resetee a 'intro'. */
+  const curId = cur ? cur.id : null;
+  if (curId !== seenPathId) {
+    setSeenPathId(curId);
+    setPhase(cur && cur.stepIndex === 0 && Date.now() - cur.startedAt < 1500 ? 'intro' : 'step');
+  }
 
   /* Limpiar justCompleted cuando arranca un nuevo camino */
   useEffectPR(() => {
     if (cur) setJustCompleted(null);
-  }, [cur ? cur.id : null]);
-
-  /* s76: marca body cuando hay un Camino activo (no en CompletionScreen).
-     CSS en tokens.css empuja el padding-top del overlay y de SessionShell
-     para dejar sitio a la SenderoBar sticky superior. */
-  /* s77: phase = 'intro' al iniciar un Camino (volatil). Detecta "recien
-     iniciado" como (Date.now() - startedAt < 1500ms) sobre stepIndex 0.
-     Al recargar, este margen ya habra expirado y aterrizamos en 'step'. */
-  useEffectPR(() => {
-    if (!cur) {setPhase('step');return;}
-    if (cur.stepIndex === 0 && Date.now() - cur.startedAt < 1500) {
-      setPhase('intro');
-    } else {
-      setPhase('step');
-    }
   }, [cur ? cur.id : null]);
 
   /* Escape:
@@ -15918,6 +15971,14 @@ function PathRunner() {
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [confirmExit, cur ? cur.stepIndex : null, phase]);
+
+  /* s105 (bug A): mientras haya UI de Camino (pasos, transiciones o la
+     CompletionScreen) los toasts de logro se aplazan para no taparse sobre
+     las pantallas; al cerrarse todo (vuelta a home) state-core los vuelca. */
+  const caminoUiOpen = !!(cur || justCompleted);
+  useEffectPR(() => {
+    if (typeof setCaminoUiActive === 'function') setCaminoUiActive(caminoUiOpen);
+  }, [caminoUiOpen]);
 
   /* Nada que mostrar: home visible */
   if (!cur && !justCompleted) return null;
@@ -15956,14 +16017,22 @@ function PathRunner() {
   const handleStepExit = (reason) => {
     const isLast = cur.stepIndex >= path.steps.length - 1;
     if (isLast) {
-      const skipped = reason === 'skip' ?
-      [...cur.skippedSteps, cur.stepIndex] :
-      cur.skippedSteps;
-      setJustCompleted({
-        pathId: cur.id,
-        startedAt: cur.startedAt,
-        skippedSteps: skipped
-      });
+      /* s105 (bug B): solo mostramos la ceremonia (CompletionScreen) si se
+         hizo >=1 paso DE VERDAD (reason 'done'). Si se salio/salto todo,
+         advancePathStep abandona el Camino sin completar y volvemos a home
+         sin celebracion -- coherente con no acreditar nada. La misma regla
+         (doneCount >= 1) decide el credito en advancePathStep. */
+      const doneNow = (cur.doneCount || 0) + (reason === 'done' ? 1 : 0);
+      if (doneNow >= 1) {
+        const skipped = reason === 'skip' ?
+        [...cur.skippedSteps, cur.stepIndex] :
+        cur.skippedSteps;
+        setJustCompleted({
+          pathId: cur.id,
+          startedAt: cur.startedAt,
+          skippedSteps: skipped
+        });
+      }
       advancePathStep(reason);
     } else {
       advancePathStep(reason);
@@ -16465,7 +16534,10 @@ function ABDrop() {
 
 }
 
-Object.assign(window, { ActivityBar });
+/* s105: los glifos AB* se exponen para que el BreakMenu (menu post-Pomodoro)
+   use EXACTAMENTE los mismos iconos que la ActivityBar de la home -- antes
+   llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual. */
+Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop });
 ;Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop });
 })();
 </script>
@@ -16625,7 +16697,8 @@ function PaceApp() {
   const handleBreakChoice = (choice) => {
     setOpenBreakMenu(false);
     if (choice === 'breathe') setOpenLibrary('breathe');else
-    if (choice === 'move') setOpenLibrary('move');else
+    if (choice === 'extra') setOpenLibrary('extra'); // s105: Estira
+    else if (choice === 'move') setOpenLibrary('move');else
     if (choice === 'water') setOpenHydrate(true);
   };
 

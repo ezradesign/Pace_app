@@ -167,4 +167,7 @@ function ABDrop() {
   );
 }
 
-Object.assign(window, { ActivityBar });
+/* s105: los glifos AB* se exponen para que el BreakMenu (menu post-Pomodoro)
+   use EXACTAMENTE los mismos iconos que la ActivityBar de la home -- antes
+   llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual. */
+Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop });

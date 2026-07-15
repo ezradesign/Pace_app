@@ -95,7 +95,18 @@
       "Bash(find \"/c/Users/ezrav/AppData/Local/Temp\" \"/c/Users/ezrav/Downloads\" \"/c/Users/ezrav/Desktop/Proyectos\" -maxdepth 2 -type f \\\\\\( -iname \"path_*\" -o -iname \"*camino*\" -o -iname \"*lamina*\" \\\\\\) 2>/dev/null | grep -v \"Pace_app\" | head; echo \"---\"; ls -la \"/c/Users/ezrav/AppData/Local/Temp/path_midday.webp\" 2>/dev/null)",
       "Bash(node scripts/ingest-lamina.js \"/c/Users/ezrav/Desktop/Proyectos/path_midday.webp\" midday 3 \"347:589,707:542,941:521\")",
       "Bash(node scripts/ingest-lamina.js \"/c/Users/ezrav/Desktop/Proyectos/path_afternoon.webp\" afternoon 3 \"390:533,644:513,866:508\")",
-      "Bash(node scripts/ingest-lamina.js \"/c/Users/ezrav/Desktop/Proyectos/path_tea.webp\" tea 3 \"345:515,649:451,898:500\")"
+      "Bash(node scripts/ingest-lamina.js \"/c/Users/ezrav/Desktop/Proyectos/path_tea.webp\" tea 3 \"345:515,649:451,898:500\")",
+      "PowerShell(git -C \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\" log --oneline -5)",
+      "PowerShell(git -C \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\" status -sb)",
+      "PowerShell(git -C $repo rev-parse HEAD)",
+      "PowerShell(git -C $repo rev-parse origin/main)",
+      "PowerShell(git -C $repo rev-list --left-right --count origin/main...HEAD)",
+      "PowerShell(git -C $repo diff --stat .claude/settings.local.json)",
+      "PowerShell($repo = \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\")",
+      "PowerShell(git -C \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\" diff .claude/settings.local.json)",
+      "PowerShell($ua = \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36\"; try { $r = Invoke-WebRequest -Uri \"https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400&display=swap\" -Headers @{ \"User-Agent\" = $ua } -UseBasicParsing -TimeoutSec 20; \"STATUS: $\\($r.StatusCode\\)\"; \"LEN: $\\($r.Content.Length\\)\"; \\($r.Content -split \"`n\" | Select-Object -First 12\\) -join \"`n\" } catch { \"ERROR: $\\($_.Exception.Message\\)\" }; \"NODE: $\\(node --version\\)\")",
+      "PowerShell(node \"C:\\\\Users\\\\ezrav\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app\\\\07ad9c8a-8068-4d97-b1ad-062db71fd78d\\\\scratchpad\\\\fetch-fonts.js\")",
+      "PowerShell(cd \"C:\\\\Users\\\\ezrav\\\\Desktop\\\\Proyectos\\\\Desarrollo de aplicaciones\\\\Pace_app\"; git diff --stat sw.js; echo \"--- verificar sin linea temporal ---\"; Select-String -Path sw.js -Pattern \"temporal|verificacion ciclo\" -SimpleMatch | ForEach-Object { $_.Line }; echo \"\\(vacio = limpio\\)\")"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

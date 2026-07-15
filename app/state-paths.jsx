@@ -18,6 +18,7 @@ function startPath(pathId) {
         stepIndex: 0,
         startedAt: Date.now(),
         skippedSteps: [],
+        doneCount: 0, // s105: pasos hechos DE VERDAD (reason 'done')
       },
     },
   }));
@@ -37,8 +38,19 @@ function advancePathStep(reason) {
     const newSkipped = reason === 'skip'
       ? [...c.skippedSteps, c.stepIndex]
       : c.skippedSteps;
+    /* s105: solo cuenta como paso HECHO el que se completa de verdad (reason
+       'done'); 'exit' (x Salir) y 'skip' (auto-skip) no acreditan actividad
+       ni deben contar para el completado del Camino. */
+    const doneCount = (c.doneCount || 0) + (reason === 'done' ? 1 : 0);
     const nextIndex = c.stepIndex + 1;
     if (nextIndex >= path.steps.length) {
+      /* s105 (bug B): un Camino recorrido saliendo/saltando TODOS los pasos
+         (doneCount === 0) NO cuenta como completado -> se abandona sin credito
+         (nada de count++, history ni master.path.all7). Antes se marcaba
+         completado siempre, desbloqueando logros "sin hacerlo". */
+      if (doneCount < 1) {
+        return { ...s, paths: { ...s.paths, current: null } };
+      }
       const prev = s.paths.completed[c.id] || { count: 0 };
       /* s78: tras cerrar un Camino, comprobar si el usuario ha completado
          ya los 7 -> desbloquea master.path.all7. Se llama fuera del setState
@@ -68,7 +80,7 @@ function advancePathStep(reason) {
       ...s,
       paths: {
         ...s.paths,
-        current: { ...c, stepIndex: nextIndex, skippedSteps: newSkipped },
+        current: { ...c, stepIndex: nextIndex, skippedSteps: newSkipped, doneCount },
       },
     };
   });
@@ -191,13 +203,13 @@ function computePathStreaks(history) {
   if (!days.has(check)) {
     const y = new Date(check);
     y.setDate(y.getDate() - 1);
-    check = y.toISOString().slice(0, 10);
+    check = toISODate(y); // local, no UTC (s105)
   }
   while (days.has(check)) {
     cs++;
     const d = new Date(check);
     d.setDate(d.getDate() - 1);
-    check = d.toISOString().slice(0, 10);
+    check = toISODate(d); // local, no UTC (s105)
   }
   return { currentStreak: cs, bestStreak: best };
 }

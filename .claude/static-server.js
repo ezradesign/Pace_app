@@ -19,6 +19,7 @@ var MIME = {
   '.svg':  'image/svg+xml',
   '.ico':  'image/x-icon',
   '.webp': 'image/webp',
+  '.woff2': 'font/woff2',
 };
 
 http.createServer(function (req, res) {

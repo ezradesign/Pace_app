@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.49.0';
+const CACHE_NAME = 'pace-v0.50.0';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -17,7 +17,21 @@ const PRECACHE = [
   '/app/paths/illustrations/assets/tea.webp',
   '/app/paths/illustrations/assets/dusk.webp',
   '/app/paths/illustrations/assets/weekend.webp',
-  '/app/paths/illustrations/assets/breath.webp'
+  '/app/paths/illustrations/assets/breath.webp',
+  /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
+     (el standalone las inlinea como data URI); precache = offline fiel. */
+  '/fonts/ebgaramond-400-italic.woff2',
+  '/fonts/ebgaramond-500-italic.woff2',
+  '/fonts/ebgaramond-400-normal.woff2',
+  '/fonts/ebgaramond-500-normal.woff2',
+  '/fonts/intertight-300-normal.woff2',
+  '/fonts/intertight-400-normal.woff2',
+  '/fonts/intertight-500-normal.woff2',
+  '/fonts/intertight-600-normal.woff2',
+  '/fonts/cormorantgaramond-400-italic.woff2',
+  '/fonts/cormorantgaramond-500-italic.woff2',
+  '/fonts/cormorantgaramond-400-normal.woff2',
+  '/fonts/cormorantgaramond-500-normal.woff2'
 ];
 
 /* s102 (PWA completa): el skipWaiting() incondicional del install se retiró.

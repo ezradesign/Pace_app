@@ -121,7 +121,9 @@ function SuggestedPathCard() {
   // Si ya hay camino activo, PathRunner lo gestiona
   if (state.paths && state.paths.current) return null;
 
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = (typeof window.todayISO === 'function')
+    ? window.todayISO() // local, no UTC (s105)
+    : new Date().toISOString().slice(0, 10);
 
   // Camino sugerido por hora del dia
   const suggestedId = (typeof getSuggestedPath === 'function') ? getSuggestedPath() : null;

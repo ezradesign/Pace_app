@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.49.0';
+const PACE_VERSION = 'v0.50.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -379,15 +379,33 @@ function ensureDayFresh() {
    ============================ */
 
 const _toastListeners = new Set();
-const _pendingToasts = [];
+const _pendingToasts = [];      // buffer pre-mount (aun sin listeners)
+const _deferredToasts = [];     // s105: aplazados mientras hay UI de Camino
+let _caminoUiActive = false;    // s105: lo fija PathRunner (pasos + Completion)
+
+function _emitToast(t) {
+  if (_toastListeners.size === 0) { _pendingToasts.push(t); return; }
+  _toastListeners.forEach(l => l(t));
+}
 
 function showToast(toast) {
   const t = { ...toast, _id: Date.now() + Math.random() };
-  if (_toastListeners.size === 0) {
-    _pendingToasts.push(t);
-    return;
+  /* s105: durante un Camino (pasos, transiciones y CompletionScreen) los
+     toasts de logro se APLAZAN para no taparse sobre las pantallas del runner;
+     PathRunner marca la UI de Camino activa/inactiva via setCaminoUiActive y
+     al volver a home se vuelcan los pendientes. */
+  if (_caminoUiActive) { _deferredToasts.push(t); return; }
+  _emitToast(t);
+}
+
+function setCaminoUiActive(active) {
+  const was = _caminoUiActive;
+  _caminoUiActive = !!active;
+  if (was && !_caminoUiActive && _deferredToasts.length > 0) {
+    const drained = _deferredToasts.splice(0);
+    // pequeno respiro para que el runner desmonte antes del primer toast
+    setTimeout(() => { drained.forEach(_emitToast); }, 60);
   }
-  _toastListeners.forEach(l => l(t));
 }
 
 function onToast(listener) {
@@ -411,5 +429,5 @@ Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
   detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
-  showToast, onToast,
+  showToast, onToast, setCaminoUiActive,
 });

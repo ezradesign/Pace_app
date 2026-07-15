@@ -40,7 +40,7 @@ function TweakSecretsWatcher() {
   useEffectSW(() => {
     if (state.palette !== 'oscuro') return;
     try {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = toISODate(new Date()); // local, no UTC (s105)
       const raw = localStorage.getItem(DARK_DAYS_KEY);
       let days;
       try { days = new Set(JSON.parse(raw || '[]')); } catch (e) { days = new Set(); }
