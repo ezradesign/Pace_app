@@ -201,6 +201,7 @@ function PathRunner() {
           patron defensivo que SenderoBar/TimerDial). */}
       {phase === 'intro' && typeof IntroCard === 'function' && (
         <IntroCard
+          pathId={cur.id}
           pathName={displayPathName}
           blocks={senderoBlocks}
           onContinue={handleIntroDone}
@@ -208,6 +209,7 @@ function PathRunner() {
       )}
       {phase === 'transition' && typeof StepIntro === 'function' && (
         <StepIntro
+          pathId={cur.id}
           kindName={transitionKindName}
           kind={step.kind}
           blocks={senderoBlocks}

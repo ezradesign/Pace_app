@@ -18,6 +18,7 @@ var MIME = {
   '.png':  'image/png',
   '.svg':  'image/svg+xml',
   '.ico':  'image/x-icon',
+  '.webp': 'image/webp',
 };
 
 http.createServer(function (req, res) {

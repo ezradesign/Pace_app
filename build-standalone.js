@@ -386,6 +386,36 @@ function main() {
     'src="data:image/png;base64,' + logoB64 + '"'
   );
 
+  // 6b. Laminas de Caminos (s104, arte D-4) -> data URI SOLO en el standalone.
+  //     Decision s104: la web (index.html) las sirve como ARCHIVOS (+ PRECACHE
+  //     en sw.js) para no engordar el HTML con base64 (~1.5 MB con las 7);
+  //     el standalone file:// las inlinea para seguir 100% autocontenido.
+  //     Se aplica en el paso 8 sobre la copia del standalone, NUNCA sobre el
+  //     html base del que sale index.html.
+  var ILLUST_DIR = path.join(ROOT, 'app/paths/illustrations/assets');
+  var ILLUST_REF_PREFIX = 'app/paths/illustrations/assets/';
+  function inlineIllustrations(src) {
+    if (!fs.existsSync(ILLUST_DIR)) return src;
+    var out = src;
+    var count = 0;
+    fs.readdirSync(ILLUST_DIR)
+      .filter(function (f) { return /\.webp$/i.test(f); })
+      .forEach(function (f) {
+        var ref = ILLUST_REF_PREFIX + f;
+        if (out.indexOf(ref) === -1) return; // asset presente sin referencia: ok (aun sin entrada en paths.index.js)
+        var b64 = fs.readFileSync(path.join(ILLUST_DIR, f)).toString('base64');
+        // split/join: sin regex ni replacement strings (regla s103 de los '$')
+        out = out.split(ref).join('data:image/webp;base64,' + b64);
+        count++;
+      });
+    if (out.indexOf(ILLUST_REF_PREFIX) !== -1) {
+      console.error('  [ERROR] El standalone referencia una lamina que no existe en ' + ILLUST_REF_PREFIX + '. Abortando.');
+      process.exit(1);
+    }
+    console.log('  [OK] ' + count + ' lamina(s) de Caminos inlineada(s) como data URI (solo standalone).');
+    return out;
+  }
+
   // 7. Invariantes del bundle (s103): sin null bytes, sin text/babel
   //    residual, sin referencias a CDN.
   console.log('\n[4/7] Verificando bundle final ...');
@@ -412,9 +442,10 @@ function main() {
     process.exit(1);
   }
 
-  // 8. Escribir
+  // 8. Escribir (standalone = html base + laminas como data URI, s104)
   console.log('\n[5/7] Escribiendo PACE_standalone.html ...');
-  fs.writeFileSync(OUTPUT, html, 'utf8');
+  var standaloneHtml = inlineIllustrations(html);
+  fs.writeFileSync(OUTPUT, standaloneHtml, 'utf8');
   var kb = (fs.statSync(OUTPUT).size / 1024).toFixed(0);
   console.log('=== Build completado: PACE_standalone.html -- ' + kb + ' KB ===');
 
