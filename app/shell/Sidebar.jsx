@@ -119,6 +119,8 @@ function Sidebar() {
 
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
+  /* B1: total real del catalogo (106), no el 100 hardcodeado de s12. */
+  const totalAchievements = (window.ACHIEVEMENT_CATALOG || []).length || 100;
   const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
@@ -191,14 +193,14 @@ function Sidebar() {
       <div style={sidebarStyles.section}>
         <div style={{ ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 }}>
           <Meta>{t('sidebar.section.achievements')}</Meta>
-          <span style={sidebarStyles.sectionAside}>{unlockedCount}/100</span>
+          <span style={sidebarStyles.sectionAside}>{unlockedCount}/{totalAchievements}</span>
         </div>
         <AchievementsPreview onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))} />
         <button
           onClick={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
           style={sidebarStyles.linkBtn}
         >
-          {tn('sidebar.achievements.discover', { n: 100 - unlockedCount })}
+          {tn('sidebar.achievements.discover', { n: Math.max(0, totalAchievements - unlockedCount) })}
         </button>
       </div>
 
@@ -214,6 +216,10 @@ function Sidebar() {
    Sendero del día — línea ondulada horizontal que representa
    el arco del día (6h → 22h). Los hitos son pomodoros y sesiones
    completadas hasta ahora; aparecen como puntos sobre la curva.
+   B1: el sendero es ABSTRACTO — los hitos se reparten equidistantes
+   como secuencia de lo hecho hoy, sin pretender cronología (antes
+   se les inventaban horas). Lo único cronológico real es el puntero
+   de "ahora" sobre el arco 6h→22h.
    ============================================================ */
 function SenderoDelDia({ state, compact }) {
   const { t, tn } = useT();
@@ -227,26 +233,21 @@ function SenderoDelDia({ state, compact }) {
   const end = 22;   // 22:00
   const fraction = Math.min(1, Math.max(0, (hNow - start) / (end - start)));
 
-  // Hitos del día: pomodoros + sesiones (proxy desde state)
+  // Hitos del día: pomodoros + sesiones (proxy desde state).
+  // B1: secuencia abstracta — puntos equidistantes a lo largo de todo el
+  // sendero, en orden fijo (foco → respira → cuerpo → agua). Sin horas
+  // inventadas: no sabemos CUÁNDO ocurrió cada uno, solo que ocurrió.
   const hitos = useMemoSB(() => {
     const out = [];
-    // Pomodoros: repartimos sus horas ficticiamente por el día hasta hNow
     const cycle = state.cycle || 0;
-    for (let i = 0; i < cycle; i++) {
-      const t = start + ((i + 1) / (cycle + 1)) * Math.max(0.1, hNow - start);
-      out.push({ t, kind: 'focus' });
-    }
-    // Actividades del plan también cuentan como hitos hoy
+    for (let i = 0; i < cycle; i++) out.push({ kind: 'focus' });
     /* Sesion 69 (v0.28.8): weeklyStats indexa lunes-primero. */
     const day = getDayIndexMondayFirst(new Date());
     const ws = state.weeklyStats || {};
-    if ((ws.breathMinutes?.[day] || 0) > 0) out.push({ t: hNow - 0.3, kind: 'breathe' });
-    if ((ws.moveMinutes?.[day] || 0) > 0) out.push({ t: hNow - 0.55, kind: 'move' });
-    if ((ws.waterGlasses?.[day] || 0) > 0) out.push({ t: hNow - 0.15, kind: 'water' });
-    // Clamp to path range
-    return out
-      .map(h => ({ ...h, x: Math.max(0, Math.min(1, (h.t - start) / (end - start))) }))
-      .sort((a, b) => a.x - b.x);
+    if ((ws.breathMinutes?.[day] || 0) > 0) out.push({ kind: 'breathe' });
+    if ((ws.moveMinutes?.[day] || 0) > 0) out.push({ kind: 'move' });
+    if ((ws.waterGlasses?.[day] || 0) > 0) out.push({ kind: 'water' });
+    return out.map((h, i) => ({ ...h, x: (i + 1) / (out.length + 1) }));
   }, [state.cycle, state.weeklyStats]);
 
   const W = compact ? 180 : 240;

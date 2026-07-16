@@ -184,8 +184,10 @@ function computePathStreaks(history) {
   const sorted = Array.from(days).sort();
   let best = 1, cur = 1;
   for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i - 1]);
-    const curr = new Date(sorted[i]);
+    // parseLocalDateKey (B1): new Date("YYYY-MM-DD") es UTC y rompia la
+    // racha en husos negativos al hacer round-trip con toISODate (local).
+    const prev = parseLocalDateKey(sorted[i - 1]);
+    const curr = parseLocalDateKey(sorted[i]);
     const diff = Math.round((curr - prev) / 86400000);
     if (diff === 1) {
       cur++;
@@ -201,13 +203,13 @@ function computePathStreaks(history) {
      terminado. Antes caia a 0 a medianoche aunque ayer se completara,
      divergiendo del streak principal (que aguanta hasta el rollover, s69). */
   if (!days.has(check)) {
-    const y = new Date(check);
+    const y = parseLocalDateKey(check);
     y.setDate(y.getDate() - 1);
     check = toISODate(y); // local, no UTC (s105)
   }
   while (days.has(check)) {
     cs++;
-    const d = new Date(check);
+    const d = parseLocalDateKey(check);
     d.setDate(d.getDate() - 1);
     check = toISODate(d); // local, no UTC (s105)
   }

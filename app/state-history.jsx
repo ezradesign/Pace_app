@@ -32,6 +32,15 @@ function toISODate(dateString) {
   return `${y}-${m}-${dd}`;
 }
 
+/* Parsea una clave "YYYY-MM-DD" como fecha LOCAL (B1). new Date("YYYY-MM-DD")
+   parsea medianoche UTC: en husos negativos el round-trip con toISODate
+   (local) retrocede un dia y rompe las rachas. PROHIBIDO new Date(iso) sobre
+   claves ISO en el proyecto -- usar siempre este helper. */
+function parseLocalDateKey(isoDate) {
+  const parts = String(isoDate).split('-');
+  return new Date(Number(parts[0]), Number(parts[1] || 1) - 1, Number(parts[2] || 1));
+}
+
 function zeroEntry() {
   return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
 }
@@ -156,7 +165,7 @@ function getHistoryWithToday(state) {
 }
 
 Object.assign(window, {
-  todayISO, toISODate, zeroEntry,
+  todayISO, toISODate, parseLocalDateKey, zeroEntry,
   getDayIndexMondayFirst, getMondayOf,
   recomputeMonthFromDays, recomputeYearFromDays, recomputeAllHistoryAggregates,
   archiveDayToHistory,

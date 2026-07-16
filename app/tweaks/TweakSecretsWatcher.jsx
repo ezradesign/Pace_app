@@ -9,7 +9,7 @@
    cuando el panel está abierto.
    ============================================================ */
 
-const { useEffect: useEffectSW } = React;
+const { useEffect: useEffectSW, useRef: useRefSW } = React;
 
 /* Días en paleta oscura — clave independiente de pace.state.v2.
    Solo alimenta secret.dark.mode; no engordar el state principal. */
@@ -28,6 +28,16 @@ function TweakSecretsWatcher() {
   useEffectSW(() => {
     if (state.font === 'mono') unlockAchievement('secret.mono');
   }, [state.font]);
+
+  /* secret.bilingual (B1, sustituto de apnea) — usar la app en los dos
+     idiomas: cualquier cambio de idioma tras el montaje implica haber
+     estado en ambos. El primer render solo siembra la referencia. */
+  const prevLangRef = useRefSW(null);
+  useEffectSW(() => {
+    const prev = prevLangRef.current;
+    prevLangRef.current = state.lang;
+    if (prev != null && prev !== state.lang) unlockAchievement('secret.bilingual');
+  }, [state.lang]);
 
   /* Logros de logoVariant — conservados por compat / easter eggs futuros. */
   useEffectSW(() => {

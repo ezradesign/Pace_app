@@ -37,38 +37,58 @@
 
 ## Plan de bloques (antes de s107; después sigue el plan maestro)
 
-### B1 · Saneamiento (1-2 sesiones) — SIGUIENTE
+### B1 · Saneamiento — B1.1 HECHO (s107 / v0.52.0) · B1.2 SIGUIENTE
 
-Fixes objetivos, cero decisiones de diseño nuevas:
+**B1.1 hecho** (s107, 2026-07-16; diario
+[session-107](../sessions/session-107-b1-saneamiento.md)):
+`parseLocalDateKey()` + fix `computePathStreaks` + regla #10 CLAUDE.md
+(migrar `lastActiveDay` a ISO sigue POSPUESTO) · contador de logros
+dinámico (/106) · «acciones» del año retirada → «días con ritmo» real
+(+ tooltip «intensidad {n}», coherencia no aprobada en bloque — revisable) ·
+sendero del día abstracto · acento de Estira por `kind` en MoveSession ·
+BreatheVisual transición = duración de fase (<2 s → 85 % + ease-in-out) ·
+7 duraciones recalibradas (2/4/3/4/5/4/2; CONTENT.md alineado) · apnea
+retirada (hold = guía calmada; sustitutos `secret.bilingual` /
+`secret.backup` / `secret.safety.read` con detector) · claims de Respira
+orientativos ES+EN.
 
-- `parseLocalDateKey()` + fix del round-trip UTC en `computePathStreaks`
-  ([state-paths.jsx:204-212]) — rachas de Caminos rotas en husos negativos.
-  Prohibir `new Date("YYYY-MM-DD")` en el proyecto. (Migrar `lastActiveDay`
-  a ISO queda POSPUESTO.)
-- Contador de logros `/100` → `ACHIEVEMENT_CATALOG.length` (Sidebar.jsx:194,201;
-  el catálogo tiene 106).
-- «Acciones» del año → «días con ritmo» o retirar la cifra (YearView.jsx:80,
-  es un score sintético).
-- Sendero del día declarado abstracto — sin pretender cronología
-  (Sidebar.jsx:233 reparte horas ficticias).
-- Acento por `kind` en MoveSession: Estira deja de vivir en `var(--move)`
-  (prep, glifo, contador, barra, done).
-- BreatheVisual: transición = duración de la fase (hoy fija 1800 ms), con
-  tratamiento propio para fases rápidas (<2 s).
-- Recalibrar las 7 duraciones desviadas ≥20 % (hang.bar −46 %, atg.knees
-  −33 %, push.ladder −31 %, legs.single, ancestral −25 %, shoulders.5 −22 %,
-  wall.sit −17 %).
-- Editorial de seguridad ES+EN: eliminar «al fallo», «al límite», «más bajo
-  si puedes», «indestructibles», «el hombro nace para colgar»; chin tuck sin
-  «papada»; tag `PULL`→empuje en fondos; anunciar suelo/pared/barra; «silla
-  estable y sin ruedas»; «barra diseñada para soportar peso»; Dead hang
-  fuera de Hombros·5 o marcado opcional.
-- Claims de Respira → lenguaje orientativo («pensada para favorecer…», sin
-  «baja ansiedad / equilibra hemisferios / armoniza HRV / sincroniza corazón
-  y mente / antesala del trance»).
-- Apnea (decisión 1).
+**B1.2 (siguiente sesión) — editorial de seguridad ES+EN:** eliminar «al
+fallo», «al límite», «más bajo si puedes», «indestructibles», «el hombro
+nace para colgar»; chin tuck sin «papada»; tag `PULL`→empuje en fondos;
+anunciar suelo/pared/barra; «silla estable y sin ruedas»; «barra diseñada
+para soportar peso»; Dead hang fuera de Hombros·5 o marcado opcional.
+Criterio del usuario (recordado al aprobar los textos de B1.1): copy de
+ejercicios **realista y explicativo** — hay ejercicios difíciles, marcar
+opcional/alternativa y verificar la técnica antes de escribir cues
+(memoria `feedback-realismo-ejercicios`; el lenguaje canónico está en
+[`BASE_MUEVE_ESTIRA.md`](./BASE_MUEVE_ESTIRA.md) §7-9).
+**+ curación Respira·Energía** (feedback s107-cierre): un pranayama
+(Bhastrika, tag PRA) vive en el grupo Energía — recolocar o re-etiquetar;
+y **`rounds.express` pasa a free** (si no, el grupo Energía queda sin nada
+usable en free).
+
+**Feedback s107-cierre pendiente de rutar** (registrado también en STATE):
+audio ON por defecto + aviso fin-de-foco por defecto (opt-out en Ajustes;
+OJO: el permiso de notificación exige gesto — «activado por defecto» =
+toggle on + pedir permiso en el primer momento razonable, decidir en la
+sesión que lo implemente) · **salir de un Camino a la home**: el «×» del
+paso avanza al siguiente (diseño s99) y en móvil no existe Esc → hace falta
+vía táctil explícita de abandono · visual de Respira **«Loto»** (PNG del
+usuario como estilo NUEVO de tweak, sin retirar «flor») · **láminas de
+Caminos en más resolución** (el usuario las tiene; re-ingesta con
+`ingest-lamina.js` — REGLA D-4: re-medir, jamás swap directo del asset).
 
 ### B2 · Fundamentos (2-3 sesiones)
+
+> **Base de conocimiento offline** (usuario, s107-cierre):
+> [`BASE_MUEVE_ESTIRA.md`](./BASE_MUEVE_ESTIRA.md) — NHS/ACSM/OMS
+> traducidas a reglas de PACE. Gobierna B2 y el editorial: unidad por tipo
+> (fuerza=reps · movilidad=ciclos · estático/isometría=tiempo por lado ·
+> postural=reps+retención) · duración CALCULADA (setup+activo+lados+
+> transiciones+descansos+cierre) · runner por modo (timer nunca arranca
+> mientras se lee la colocación; reps terminan en manual) · explicación
+> mínima de 6 partes · molestia≠esfuerzo≠dolor · rangos de producto ·
+> **auditoría ejercicio-a-ejercicio con ficha ANTES de tocar código**.
 
 - **`visualId` + mapa de alias**: los `step.name` ES actuales siguen
   resolviendo; NO se toca localStorage. Desbloquea el renombrado EN→ES de

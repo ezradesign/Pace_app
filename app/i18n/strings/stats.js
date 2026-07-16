@@ -41,14 +41,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'stats.month.hours.unit':          'h',
     // Vista anual — sesión 44
     'stats.year.empty':                'Aún no hay actividad en {year}',
-    'stats.year.totalActions':         '{n} acciones',
-    'stats.year.activeDays':           '{n} días activos',
+    'stats.year.activeDays':           '{n} días con ritmo',
     'stats.year.maxStreak':            'racha máx: {n} días',
     'stats.year.months.short':         'Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic',
     'stats.year.days.label':           'L,M,X,J,V,S,D',
     'stats.year.legend.less':          'menos',
     'stats.year.legend.more':          'más',
-    'stats.year.tooltip.score':        '{n} acciones',
+    'stats.year.tooltip.score':        'intensidad {n}',
 
     // Caminos stats -- sesion 54
     'stats.tab.paths':                 'Caminos',
@@ -94,14 +93,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'stats.month.hours.unit':          'h',
     // Year view — session 44
     'stats.year.empty':                'No activity yet in {year}',
-    'stats.year.totalActions':         '{n} actions',
-    'stats.year.activeDays':           '{n} active days',
+    'stats.year.activeDays':           '{n} days with rhythm',
     'stats.year.maxStreak':            'max streak: {n} days',
     'stats.year.months.short':         'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec',
     'stats.year.days.label':           'M,T,W,T,F,S,S',
     'stats.year.legend.less':          'less',
     'stats.year.legend.more':          'more',
-    'stats.year.tooltip.score':        '{n} actions',
+    'stats.year.tooltip.score':        'intensity {n}',
 
     // Paths stats -- session 54
     'stats.tab.paths':                 'Paths',

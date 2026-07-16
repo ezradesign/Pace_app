@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.52.0** | 2026-07-16 | fix+feat: **B1.1 saneamiento** (plan de evolución, 1ª sesión de código) -- **`parseLocalDateKey()`** + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos; regla #10 en CLAUDE.md: prohibido `new Date("YYYY-MM-DD")`) · **cifras honestas**: contador de logros `/100`→`/106` dinámico (Sidebar), «acciones» del año RETIRADA → **«{n} días con ritmo»** real (isActiveDay s69) + tooltip «intensidad {n}», sendero del día **abstracto** (secuencia equidistante, fuera las horas inventadas) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transición = duración de la fase** (antes fija 1800 ms; fases <2 s → 85 % + ease-in-out) · **7 duraciones recalibradas** (declarado ≈ suma de pasos; Colgarse 4→2 … Ancestral 6→5) · **apnea retirada** (decisión 1): fuera logros 60/90/120 s + cifra-récord 160 px → hold como guía calmada; sustitutos de exploración **Dos lenguas / Cuaderno a salvo / Letra pequeña** (con detectores) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance) | #107 | [abajo](#v0520----2026-07-16----fixfeat-b11-saneamiento-plan-de-evolución) |
 | **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [abajo](#v0510----2026-07-16----featonboarding-onboarding-de-primera-vez--3-preguntas--primer-camino) |
-| **v0.50.0** | 2026-07-15 | feat: **fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos** -- **`todayISO()` a fecha LOCAL** (bug UTC: rachas/history anotaban el día anterior entre medianoche y ~2 AM; 7 sitios, reutiliza `toISODate()`) · **fuentes self-hosted preservando Cormorant** (hallazgo: el default real de títulos es Cormorant, no EB Garamond → decisión s103 revisada): copia local subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en `fonts/`, `@font-face` con ruta absoluta `/fonts/` (fuera el @import de Google), precache web + **data URIs standalone** (`inlineFonts`), MIME woff2; **JetBrains Mono retirada** (→ ui-monospace) → **cero peticiones externas de fuente** en los 3 artefactos · **BreakMenu coherente**: iconos `AB*` de la home + **Estira** (4 actividades, grid 2×2) · **frame fantasma de PathRunner** resuelto (fase 'intro' fijada en render, no en efecto → sin warning) · **toasts de logro aplazados** durante Caminos (no tapan las pantallas; se vuelcan al salir) · **bug de integridad**: un Camino solo cuenta como completado con **≥1 paso hecho** (antes saltarlo todo desbloqueaba "Cartógrafa") · aro del pomodoro alineado en Pausa/Larga | #105 | [abajo](#v0500----2026-07-15----feat-fuentes-self-hosted-cierra-etapa-a--todayiso-local--integridad-de-caminos) |
+| **v0.50.0** | 2026-07-15 | feat: **fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos** -- **`todayISO()` a fecha LOCAL** (bug UTC: rachas/history anotaban el día anterior entre medianoche y ~2 AM; 7 sitios, reutiliza `toISODate()`) · **fuentes self-hosted preservando Cormorant** (hallazgo: el default real de títulos es Cormorant, no EB Garamond → decisión s103 revisada): copia local subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en `fonts/`, `@font-face` con ruta absoluta `/fonts/` (fuera el @import de Google), precache web + **data URIs standalone** (`inlineFonts`), MIME woff2; **JetBrains Mono retirada** (→ ui-monospace) → **cero peticiones externas de fuente** en los 3 artefactos · **BreakMenu coherente**: iconos `AB*` de la home + **Estira** (4 actividades, grid 2×2) · **frame fantasma de PathRunner** resuelto (fase 'intro' fijada en render, no en efecto → sin warning) · **toasts de logro aplazados** durante Caminos (no tapan las pantallas; se vuelcan al salir) · **bug de integridad**: un Camino solo cuenta como completado con **≥1 paso hecho** (antes saltarlo todo desbloqueaba "Cartógrafa") · aro del pomodoro alineado en Pausa/Larga | #105 | [session-105](./docs/sessions/session-105-fuentes-todayiso-caminos.md) |
 | **v0.49.0** | 2026-07-14 | feat(paths): **escenas ilustradas de Caminos — arte D-4 completo** (entrega del usuario, iterado en vivo) -- las **7 láminas** editoriales como escena FULL-BLEED del runner (intro/transición/completion vía `PathIllustration`; sesiones activas intactas) · **casquetes**: las bolas pintadas van cubiertas en gris y se **RELLENAN con el color de su actividad** al completarse (pop + eco; el orbe s77 se retiró) · cámara cover que sigue al hito (pan 2s) y encuadra el **final del camino** en la Completion · etiqueta del paso **anclada a la bola** (placa de papel del arte) · **tagline del Camino en la intro** (beneficio visible) · placa translúcida tras RECORRIDO/DESBLOQUEADO · regla **"sobre el arte siempre es de día"** (re-mapeo de tinta/papel/acentos a paleta crema dentro de las superficies ilustradas en oscuro) · pipeline: **archivo+precache en web / data URI solo standalone** (2371 KB autocontenido; index.html 970 KB) · `scripts/ingest-lamina.js` (normaliza+mide, modo híbrido) · fix `PACE_VERSION` desincronizada (v0.46.0 desde s101) · fallback SenderoBar intacto para futuros caminos sin arte | #104 | [session-104](./docs/sessions/session-104-arte-caminos.md) |
 | **v0.48.0** | 2026-07-13 | build: **Etapa A — precompilado Babel + React production** (plan maestro s103, 1ª de 2) -- los 74 scripts `text/babel` se **compilan en build** (`@babel/core` 7.29 en memoria, sourceType script + retainLines; IIFE por archivo + re-exposición AST de function/var top-level = semántica exacta del eval de Babel standalone) · **React 18.3.1 production UMD self-hosted** (vendor/ desde npm) e inlineado en ambos artefactos · **@babel/standalone fuera del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga), standalone 100 % autocontenido en JS por primera vez · dev (PACE.html) intacto · pins deliberados Babel 7 / TypeScript 5 · fuentes self-hosted → s104 | #103 | [session-103](./docs/sessions/session-103-build-etapa-a.md) |
 | **v0.47.0** | 2026-07-13 | feat(pwa): **PWA completa** (plan maestro s102) -- **manifest.webmanifest** completo (id, 4 **shortcuts** con deep links `/?go=`, launch_handler, colores alineados a `--paper #F2EDE0`) · **fix despliegue**: `index.html` se servía SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal) → la PWA no era instalable; el build re-inserta el link solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → worker en waiting + aviso discreto "Actualizar/Luego" via `UpdatePrompt.jsx`; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle en Ajustes, permiso al activar, solo pestaña oculta, silent; click enfoca la app) · enlaces **Seguridad · Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` fuera de pace.state; reanuda solo si sigue vivo, expirado se descarta sin acreditar — cierra el fork s96) | #102 | [session-102](./docs/sessions/session-102-pwa-completa.md) |
@@ -127,6 +128,66 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.52.0] -- 2026-07-16 -- fix+feat: B1.1 saneamiento (plan de evolución)
+
+Sesión 107. Primera sesión de código del plan de evolución (bloques B1-B4,
+[`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md)). Alcance
+pactado antes de tocar: B1.1 hoy; el editorial de seguridad ES+EN completo
+queda para B1.2. Textos aprobados en bloque por el usuario antes de aplicar.
+Diario: [session-107](./docs/sessions/session-107-b1-saneamiento.md).
+
+### Fixes técnicos objetivos
+
+- **Fechas**: `parseLocalDateKey()` nuevo en state-history (parse LOCAL de
+  claves ISO) + fix del round-trip UTC en `computePathStreaks` — las rachas
+  de Caminos saltaban días en husos negativos (`new Date("YYYY-MM-DD")` es
+  medianoche UTC). Regla #10 en CLAUDE.md: prohibido `new Date(iso)` sobre
+  claves de fecha. Verificado con round-trips incl. fechas DST.
+- **Contador de logros dinámico** (Sidebar): `/100` y «descubre 100−n»
+  hardcodeados desde s12 → `ACHIEVEMENT_CATALOG.length` (106).
+- **«Acciones» del año retirada** (YearView): era un score sintético
+  presentado como acciones. La cifra del año pasa a ser el conteo REAL de
+  días activos con la etiqueta **«{n} días con ritmo»** ES / EN; el tooltip
+  por día pasa de «{n} acciones» a **«intensidad {n}»** (lo que el color ya
+  codifica).
+- **Sendero del día abstracto** (Sidebar): los hitos dejan de llevar horas
+  inventadas; son una secuencia equidistante (foco→respira→cuerpo→agua). El
+  puntero de «ahora» sigue siendo lo único cronológico.
+- **Acento de Estira por `kind`** (MoveSession): prep, glifo, contador,
+  barra y done derivan de `kind` (`extra` → `--extra` azul-gris); Estira
+  deja de vivir en `var(--move)`. Verificado en sesión viva.
+- **BreatheVisual**: la transición dura lo que la FASE (antes fija 1800 ms
+  — una exhalación de 8 s animaba 1,8 s; Bhastrika nunca completaba).
+  Fases <2 s: 85 % de la fase + ease-in-out, suelo 300 ms. Medido en vivo:
+  5 s→`5s`, 2 s→`2s`, 1 s→`0.85s ease-in-out`.
+- **7 duraciones recalibradas** (declarado ≈ suma de pasos; auditoría §C):
+  Colgarse 4→2 · ATG·Rodillas 6→4 · Empuje·progresión 4→3 · Piernas·a una
+  5→4 · Ancestral 6→5 · Hombros·5 5→4 · Sentadilla en pared 3→2. El
+  crédito de minutos deja de sobre-acreditar. CONTENT.md alineado.
+
+### Apnea retirada + editorial de claims (decisión 1 de la auditoría)
+
+- Fuera `secret.breath.hold.60/90/120` (catálogo + IMPLEMENTED) y la
+  **cifra-récord de 160 px**: la retención es **guía calmada** (pulso
+  visual suave sin números + cue + salida siempre visible). Sustitutos de
+  exploración sin marca temporal, con detector real: **«Dos lenguas»**
+  (cambiar de idioma) · **«Cuaderno a salvo»** (exportar datos) · **«Letra
+  pequeña»** (marcar «lo he leído» en el modal de seguridad de Respira).
+- **Claims de Respira → lenguaje orientativo** ES+EN: fuera «baja
+  ansiedad», «equilibra hemisferios», «armoniza HRV», «sincroniza corazón
+  y mente», «antesala del trance consciente» (4·7·8, Nadi, aside Balance,
+  Coherente 5·5, Rondas profundas).
+
+### Verificación
+
+Preview :8765. Dev y standalone con consola limpia; claims nuevos visibles
+y cero claims viejos por búsqueda DOM; secretos y acentos probados en vivo
+(detalle en el diario). Bump v0.52.0 ×3. Backup `v0.51.0_20260716` desde
+git HEAD byte-idéntico (rotado `v0.34.2_20260630`, cap 20). Standalone
+3076 KB / index ~978 KB.
+
+---
+
 ## [v0.51.0] -- 2026-07-16 -- feat(onboarding): onboarding de primera vez — 3 preguntas + primer Camino
 
 Sesión 106. Plan maestro "Camino a v1.0", fila s106. Tres bifurcaciones
@@ -185,57 +246,5 @@ reaparece tras recargar · remonte completo del árbol con trap de errores:
 **cero errores** en dev y standalone. Bump v0.51.0 ×3 (título + CACHE_NAME
 + PACE_VERSION). Backup `v0.50.0_20260716` desde git HEAD (rotado
 `v0.34.1_20260605`, cap 20). Standalone 3073 KB / index ~955 KB.
-
----
-
-## [v0.50.0] -- 2026-07-15 -- feat: fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos
-
-Sesión 105. Planificada como "fuentes + todayISO" (2ª pieza de Etapa A);
-creció con cuatro arreglos pedidos en vivo. Diario:
-[session-105](./docs/sessions/session-105-fuentes-todayiso-caminos.md).
-
-### todayISO a fecha local (bug UTC verificado s104)
-
-`new Date().toISOString().slice(0,10)` usa UTC → entre medianoche y el offset
-(~1-2 AM en España) devolvía el **día anterior**. Se reutiliza `toISODate()`
-(local) en **7 sitios** (todayISO canónico, 2 copias en cards de Caminos, 2
-walkers de racha, watcher de secretos, nombre del backup). Verificado en
-preview con TZ Europe/Madrid.
-
-### Fuentes self-hosted — preservando Cormorant (cierra Etapa A)
-
-Hallazgo: el default real de títulos es **Cormorant Garamond**, no EB Garamond
-(decisión s103 revisada con el usuario tras comparativa visual). Copia local
-subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en
-`fonts/`; `@font-face` con ruta absoluta `/fonts/` (fuera el `@import` de
-Google) + `unicode-range` latin + `font-display:swap`. **JetBrains Mono
-retirada** (`--font-mono` → ui-monospace). Web: archivos + precache sw.js.
-Standalone: nuevo paso de build `inlineFonts` → data URIs. MIME woff2 en
-static-server. **Cero peticiones a fonts.googleapis/gstatic** en los 3
-artefactos; título/UI/cifras idénticos; ciclo SW completo verificado en vivo.
-
-### BreakMenu coherente + integridad de Caminos + pulido
-
-- **BreakMenu**: usa los glifos `AB*` de la ActivityBar (expuestos a window
-  desde `main/ActivityBar.jsx`) + añade **Estira** → las 4 actividades de la
-  home, grid 2×2, atajo E; iconos `BM*` genéricos eliminados.
-- **Bug B (integridad)**: `advancePathStep` marcaba el Camino completado
-  aunque se saltara/saliera todo → desbloqueaba logros "sin hacerlo". Ahora
-  `current.doneCount` cuenta los pasos hechos de verdad (`reason==='done'`) y
-  el Camino solo cuenta con **≥1 paso hecho**; si no, se abandona sin crédito.
-- **A (toasts)**: los toasts de logro se **aplazan** mientras hay UI de Camino
-  (`setCaminoUiActive` + cola en state-core) y se vuelcan al volver a home,
-  para no taparse sobre las pantallas.
-- **#3 (frame fantasma)**: la fase 'intro' se fija en RENDER al cambiar el
-  Camino (no en un efecto) → sin el warning React de setState-en-render.
-- **Aro del pomodoro**: spacer que reserva el alto de la fila MIN en Pausa/
-  Larga → el aro no se desplaza ~30 px.
-
-### Verificación
-
-Preview :8765, protocolo s93 + seed fresco. Verificado en dev, compilado
-(index.html) y standalone. Bump v0.50.0 (título ×3 + CACHE_NAME + PACE_VERSION).
-Backup `v0.49.0_20260715` desde git HEAD (rotado `v0.34.0_20260605`, cap 20).
-Standalone 3052 KB / index ~970 KB.
 
 ---

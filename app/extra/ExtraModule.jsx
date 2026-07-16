@@ -63,7 +63,7 @@ const EXTRA_ROUTINES = {
     aside: 'Antídoto al teclado',
     items: [
       { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
-        desc: 'Reset de hombros. Antídoto al teclado. Rotadores, pecho, trapecios.', min: 5,
+        desc: 'Reset de hombros. Antídoto al teclado. Rotadores, pecho, trapecios.', min: 4,
         steps: [
           { name: 'Scapular wall slides', dur: 50, cue: 'Espalda en pared, sube brazos.' },
           { name: 'Band pull-apart', dur: 50, cue: 'Si no tienes banda, brazos cruzados + abre.' },
@@ -123,7 +123,7 @@ const EXTRA_ROUTINES = {
           { name: 'Squat profundo', dur: 70, cue: 'Talones abajo, relaja al fondo.' },
         ]},
       { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
-        desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 6, access: 'premium',
+        desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 4, access: 'premium',
         steps: [
           { name: 'ATG split squat', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
           { name: 'Tibialis raise', dur: 45, cue: 'Contra pared, levanta pies.' },
@@ -156,7 +156,7 @@ const EXTRA_ROUTINES = {
           { name: 'Reset respiración', dur: 30, cue: '3 inhalaciones profundas para cerrar.' },
         ]},
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
-        desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 6, access: 'premium',
+        desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 5, access: 'premium',
         steps: [
           { name: 'Deep squat hold', dur: 60, cue: 'Talones abajo, relaja.' },
           { name: 'Crawling', dur: 60, cue: 'Contralateral, lento.' },

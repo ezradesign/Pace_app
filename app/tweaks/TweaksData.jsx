@@ -45,6 +45,8 @@ function TweaksDataSection() {
       URL.revokeObjectURL(url);
       setMsg({ kind: 'ok', text: t('tweaks.msg.exported') });
       setTimeout(() => setMsg(null), 2200);
+      /* secret.backup (B1, sustituto de apnea): exportar tus datos. */
+      unlockAchievement('secret.backup');
     } catch (e) {
       setMsg({ kind: 'err', text: t('tweaks.msg.export.err') });
       setTimeout(() => setMsg(null), 2600);
