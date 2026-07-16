@@ -30,7 +30,6 @@ function PaceApp() {
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
   const [openSupport, setOpenSupport] = useStateMain(false);
-  const [openWelcome, setOpenWelcome] = useStateMain(false);
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
@@ -82,17 +81,10 @@ function PaceApp() {
   // junto a la filosofía del módulo.
   useSupportAutoTrigger(setOpenSupport);
 
-  // Auto-trigger del WelcomeModal la primera vez que se abre la app
-  // (state.firstSeen == null). Mismo patrón que el anterior.
-  useFirstTimeWelcome(setOpenWelcome);
-
-  // Re-abrir welcome a mano (dev / curiosidad): evento global
-  // `pace:open-welcome`. Mismo patrón que `pace:open-support`.
-  useEffectMain(() => {
-    const h = () => setOpenWelcome(true);
-    window.addEventListener('pace:open-welcome', h);
-    return () => window.removeEventListener('pace:open-welcome', h);
-  }, []);
+  // Onboarding de primera vez (s106, sustituye al WelcomeModal s17): el
+  // componente se auto-gestiona (se muestra si state.firstSeen == null y
+  // escucha `pace:open-onboarding` para re-abrirse) — aquí solo se monta,
+  // ver el bloque de overlays del return.
 
   // Deep links de shortcuts PWA (s102): /?go=focus|breathe|move|hydrate abre
   // el módulo al arrancar (manifest.webmanifest → shortcuts). Se consume una
@@ -262,7 +254,10 @@ function PaceApp() {
         onChoose={handleBreakChoice}
       />
       <SupportModal open={openSupport} onClose={() => setOpenSupport(false)} />
-      <WelcomeModal open={openWelcome} onClose={() => setOpenWelcome(false)} />
+
+      {/* Onboarding de primera vez (s106) — full-screen sobre las láminas
+          de Caminos; retorna null en cuanto firstSeen queda fijado. */}
+      <Onboarding />
 
       {/* Observador de tweak-secrets — monta siempre, retorna null.
           Desbloquea secret.aged / dark.mode / mono / seal / illustrated

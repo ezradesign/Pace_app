@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.50.0';
+const PACE_VERSION = 'v0.51.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -86,6 +86,15 @@ const defaultState = {
 
   intention: '',
   firstSeen: null,
+
+  // Perfil del onboarding (s106). Capturado en la bienvenida de primera vez
+  // (app/onboarding/): need 'calm'|'focus'|'body'|'energy' · time 'short'|
+  // 'pause'|'block' · environment 'office'|'home'|'mixed'. Campo null =
+  // pregunta saltada; completedAt = cuándo se cerró el flujo. Hoy alimenta
+  // pickFirstPath (primer Camino); en s107 entrará al scoring de
+  // getSuggestedPath. Instalaciones previas lo reciben con nulls por el
+  // merge {...defaultState, ...parsed} de loadState (sin migración extra).
+  profile: { need: null, time: null, environment: null, completedAt: null },
   supportSeenAt: null,
   supportCopyVariant: 'pastar',
   reminders: [],

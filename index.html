@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.50.0</title>
+  <title>PACE · Foco · Cuerpo — v0.51.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -579,6 +579,10 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   --move: #9A7B4F;
   --hydrate: #5F8A9B;
   --extra: #6B7A8F;
+  /* s106: el onboarding (superficie ilustrada full-screen) usa además el
+     CTA "Comenzar" y el acento de Energía — mismos valores de día. */
+  --focus-cta: #50624D;
+  --achievement: #B8934A;
 }
 
 /* ============================================================
@@ -2080,6 +2084,123 @@ Object.assign(window.PACE_STRINGS.en, {
 </script>
   <script>
 ;(function () {
+/* PACE - strings i18n - onboarding (sesion 106 / v0.51.0)
+   Patches window.PACE_STRINGS.{es,en} con las keys del flujo de primera
+   vez (app/onboarding/). La pantalla de bienvenida REUTILIZA las keys
+   welcome.* de ui.js (tagline, lede, values, lang toggle); aqui viven
+   solo las nuevas: navegacion + 3 preguntas de perfil + primer Camino.
+   Carga DESPUES de _bootstrap.js y ANTES de useT.jsx.
+*/
+
+Object.assign(window.PACE_STRINGS.es, {
+  // Navegación del flujo
+  'onboarding.back': 'Atrás',
+  'onboarding.next': 'Continuar',
+  'onboarding.skip': 'prefiero saltarlo',
+  'onboarding.skip.question': 'saltar esta pregunta',
+
+  // Pantalla 0 — bienvenida (complementa welcome.* de ui.js)
+  'onboarding.welcome.cta': 'Comenzar',
+  'onboarding.welcome.hint': 'Tres preguntas breves. Medio minuto.',
+
+  // Pantalla 1 — necesidad
+  'onboarding.need.kicker': 'Conocerte · 1 de 3',
+  'onboarding.need.title': '¿Qué quieres cultivar?',
+  'onboarding.need.calm': 'Calma',
+  'onboarding.need.calm.sub': 'bajar el ritmo, soltar tensión',
+  'onboarding.need.focus': 'Foco',
+  'onboarding.need.focus.sub': 'concentrarme de verdad',
+  'onboarding.need.body': 'Cuerpo',
+  'onboarding.need.body.sub': 'moverme, deshacer la silla',
+  'onboarding.need.energy': 'Energía',
+  'onboarding.need.energy.sub': 'activarme, despejar la mente',
+  'onboarding.need.free.label': 'O dilo a tu manera',
+  'onboarding.need.free.optional': 'opcional',
+  'onboarding.need.free.placeholder': 'concentración, calma, movimiento…',
+
+  // Pantalla 2 — tiempo disponible
+  'onboarding.time.kicker': 'Conocerte · 2 de 3',
+  'onboarding.time.title': '¿Cuánto tiempo sueles tener?',
+  'onboarding.time.short': 'Un respiro',
+  'onboarding.time.short.sub': 'unos 5 minutos',
+  'onboarding.time.pause': 'Una pausa',
+  'onboarding.time.pause.sub': 'unos 15 minutos',
+  'onboarding.time.block': 'Un bloque',
+  'onboarding.time.block.sub': '25 minutos o más',
+
+  // Pantalla 3 — entorno
+  'onboarding.env.kicker': 'Conocerte · 3 de 3',
+  'onboarding.env.title': '¿Dónde trabajas?',
+  'onboarding.env.office': 'En la oficina',
+  'onboarding.env.office.sub': 'con gente cerca',
+  'onboarding.env.home': 'En casa',
+  'onboarding.env.home.sub': 'a mi aire',
+  'onboarding.env.mixed': 'Va cambiando',
+  'onboarding.env.mixed.sub': 'un poco de ambos',
+
+  // Pantalla 4 — tu primer Camino
+  'onboarding.first.kicker': 'Tu primer Camino',
+  'onboarding.first.lede': 'Pequeñas rutas guiadas que combinan foco, respiración y movimiento. Esta encaja contigo:',
+  'onboarding.first.cta': 'Ver mi Camino',
+  'onboarding.first.explore': 'prefiero explorar por mi cuenta'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
+  // Flow navigation
+  'onboarding.back': 'Back',
+  'onboarding.next': 'Continue',
+  'onboarding.skip': 'skip for now',
+  'onboarding.skip.question': 'skip this question',
+
+  // Screen 0 — welcome (complements welcome.* in ui.js)
+  'onboarding.welcome.cta': 'Begin',
+  'onboarding.welcome.hint': 'Three short questions. Half a minute.',
+
+  // Screen 1 — need
+  'onboarding.need.kicker': 'About you · 1 of 3',
+  'onboarding.need.title': 'What do you want to cultivate?',
+  'onboarding.need.calm': 'Calm',
+  'onboarding.need.calm.sub': 'slow down, release tension',
+  'onboarding.need.focus': 'Focus',
+  'onboarding.need.focus.sub': 'truly concentrate',
+  'onboarding.need.body': 'Body',
+  'onboarding.need.body.sub': 'move, undo the chair',
+  'onboarding.need.energy': 'Energy',
+  'onboarding.need.energy.sub': 'wake up, clear my head',
+  'onboarding.need.free.label': 'Or say it your way',
+  'onboarding.need.free.optional': 'optional',
+  'onboarding.need.free.placeholder': 'focus, calm, movement…',
+
+  // Screen 2 — available time
+  'onboarding.time.kicker': 'About you · 2 of 3',
+  'onboarding.time.title': 'How much time do you usually have?',
+  'onboarding.time.short': 'A breather',
+  'onboarding.time.short.sub': 'about 5 minutes',
+  'onboarding.time.pause': 'A pause',
+  'onboarding.time.pause.sub': 'about 15 minutes',
+  'onboarding.time.block': 'A block',
+  'onboarding.time.block.sub': '25 minutes or more',
+
+  // Screen 3 — environment
+  'onboarding.env.kicker': 'About you · 3 of 3',
+  'onboarding.env.title': 'Where do you work?',
+  'onboarding.env.office': 'At the office',
+  'onboarding.env.office.sub': 'people around',
+  'onboarding.env.home': 'At home',
+  'onboarding.env.home.sub': 'on my own terms',
+  'onboarding.env.mixed': 'It varies',
+  'onboarding.env.mixed.sub': 'a bit of both',
+
+  // Screen 4 — your first Path
+  'onboarding.first.kicker': 'Your first Path',
+  'onboarding.first.lede': 'Short guided routes that blend focus, breathing and movement. This one fits you:',
+  'onboarding.first.cta': 'See my Path',
+  'onboarding.first.explore': 'I’d rather explore on my own'
+});
+})();
+</script>
+  <script>
+;(function () {
 /* PACE · Traducciones EN de contenido — Respira
    Split de strings-content.js (s92, F6): el patch EN final de contenido se
    troceó por módulo visual (content/breathe + move + extra) al superar las
@@ -3032,7 +3153,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.50.0';
+const PACE_VERSION = 'v0.51.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3100,6 +3221,15 @@ const defaultState = {
 
   intention: '',
   firstSeen: null,
+
+  // Perfil del onboarding (s106). Capturado en la bienvenida de primera vez
+  // (app/onboarding/): need 'calm'|'focus'|'body'|'energy' · time 'short'|
+  // 'pause'|'block' · environment 'office'|'home'|'mixed'. Campo null =
+  // pregunta saltada; completedAt = cuándo se cerró el flujo. Hoy alimenta
+  // pickFirstPath (primer Camino); en s107 entrará al scoring de
+  // getSuggestedPath. Instalaciones previas lo reciben con nulls por el
+  // merge {...defaultState, ...parsed} de loadState (sin migración extra).
+  profile: { need: null, time: null, environment: null, completedAt: null },
   supportSeenAt: null,
   supportCopyVariant: 'pastar',
   reminders: [],
@@ -6880,353 +7010,6 @@ Object.assign(window, {
 })();
 </script>
 
-  <!-- Bienvenida de primera vez (sesión 17 / v0.12.0).
-       Se carga antes que main.jsx porque este la monta. -->
-  <script>
-;(function () {
-/* PACE · Welcome de primera vez
-   ============================================================
-   FILOSOFÍA — sesión 17 · v0.12.0
-
-   La primera vez que alguien abre PACE, merece una bienvenida
-   editorial corta — no un onboarding de 5 pantallas con tooltips.
-
-   Estructura (1 sola pantalla):
-     1. Logo + wordmark Pace.
-     2. Manifesto breve: "Antídoto a la silla. A tu ritmo."
-     3. 3 valores en positivo: todo local · sin cuentas · siempre gratis.
-     4. Campo opcional de intención — "¿Qué quieres cultivar hoy?"
-        Si el usuario escribe algo, se guarda en `state.intention`.
-        Si lo deja vacío, no pasa nada (no es obligatorio).
-     5. Botón primario "Empezar" — cierra el modal y marca
-        `state.firstSeen = timestamp`.
-
-   MECÁNICA:
-     - Se dispara una sola vez por instalación, cuando
-       `state.firstSeen == null`.
-     - Al cerrar (o terminar) se fija `firstSeen` a timestamp
-       para no volver a mostrarse nunca.
-     - Hook `useFirstTimeWelcome` replica el patrón de
-       `useSupportAutoTrigger`: mismo contrato, mismo tiempo de
-       espera (1.2s tras mount) para no competir con otros
-       modales de auto-trigger.
-     - Re-abrir manualmente es posible via evento
-       `pace:open-welcome` (para Tweaks dev o pruebas).
-
-   i18n sesión 35: strings migrados a useT(). Toggle pill ES·EN
-   en esquina superior derecha para cambiar idioma antes de empezar.
-============================================================ */
-
-const { useEffect: useEffectWEL, useState: useStateWEL, useRef: useRefWEL } = React;
-
-/* ============================================================
-   WelcomeModal — la pantalla de bienvenida
-   ============================================================ */
-function WelcomeModal(_ref) {let { open, onClose } = _ref;
-  const [state, set] = usePace();
-  const { t } = useT();
-  const [draft, setDraft] = useStateWEL('');
-  const inputRef = useRefWEL(null);
-
-  // Al abrir: precargar la intención actual si existía.
-  // Y enfocar el input después de la animación de entrada del modal
-  // (280ms según Primitives.jsx → pace-slide-up).
-  useEffectWEL(() => {
-    if (!open) return;
-    setDraft(state.intention || '');
-    // Autofocus SOLO con puntero fino (escritorio). En tactil, enfocar el input
-    // auto-abre el teclado sobre una bienvenida calmada de campo OPCIONAL
-    // (Android Chrome lo dispara; iOS lo ignora sin gesto — ni aporta): rompe el
-    // tono sin friccion. El usuario toca el campo cuando quiera escribir. (s95)
-    const coarse = typeof window.matchMedia === 'function' &&
-    window.matchMedia('(pointer: coarse)').matches;
-    if (coarse) return;
-    const timer = setTimeout(() => {
-      if (inputRef.current) inputRef.current.focus();
-    }, 320);
-    return () => clearTimeout(timer);
-  }, [open]);
-
-  if (!open) return null;
-
-  const finish = () => {
-    // Guardamos la intención si el usuario escribió algo; sino no tocamos.
-    // `firstSeen` se fija SIEMPRE al cerrar (por botón o por X) para que
-    // no vuelva a aparecer nunca — es una bienvenida, no un trámite.
-    const patch = { firstSeen: Date.now() };
-    const trimmed = draft.trim();
-    if (trimmed) patch.intention = trimmed.slice(0, 120); // cap defensivo
-    set(patch);
-    onClose && onClose();
-  };
-
-  const skip = () => {
-    // "No gracias" también marca firstSeen. Sin intención.
-    set({ firstSeen: Date.now() });
-    onClose && onClose();
-  };
-
-  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
-
-  return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: skip, maxWidth: 520 }, /*#__PURE__*/
-    React.createElement("div", { style: welcomeStyles.inner }, /*#__PURE__*/
-
-
-
-
-    React.createElement("div", { style: welcomeStyles.header }, /*#__PURE__*/
-    React.createElement("div", { style: welcomeStyles.headerLeft }, /*#__PURE__*/
-
-    React.createElement("button", {
-      onClick: toggleLang,
-      title: t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
-      style: welcomeStyles.langToggle,
-      onMouseEnter: (e) => {e.currentTarget.style.color = 'var(--ink)';},
-      onMouseLeave: (e) => {e.currentTarget.style.color = 'var(--ink-3)';} }, /*#__PURE__*/
-
-    React.createElement("span", { style: { fontWeight: state.lang === 'es' ? 600 : 400 } }, "ES"), /*#__PURE__*/
-    React.createElement("span", { style: { color: 'var(--line-2)' } }, " \xB7 "), /*#__PURE__*/
-    React.createElement("span", { style: { fontWeight: state.lang === 'en' ? 600 : 400 } }, "EN")
-    ), /*#__PURE__*/
-    React.createElement("div", { style: welcomeStyles.logoMini }, /*#__PURE__*/
-    React.createElement(PaceWordmark, { variant: state.logoVariant || 'pace' })
-    ), /*#__PURE__*/
-    React.createElement(Meta, { style: { marginTop: 10 } }, t('welcome.greeting'))
-    ), /*#__PURE__*/
-    React.createElement("div", { style: welcomeStyles.headerRight }, /*#__PURE__*/
-    React.createElement("h2", { style: welcomeStyles.title },
-    t('welcome.tagline'), ' ', /*#__PURE__*/
-    React.createElement("span", { style: { color: 'var(--ink-3)', fontStyle: 'italic' } }, t('welcome.tagline.sub'))
-    ), /*#__PURE__*/
-    React.createElement("p", { style: welcomeStyles.lede },
-    t('welcome.lede')
-    )
-    )
-    ), /*#__PURE__*/
-
-
-    React.createElement("div", { style: welcomeStyles.values }, /*#__PURE__*/
-    React.createElement(WValue, { label: t('welcome.value.local.label'), sub: t('welcome.value.local.sub') }), /*#__PURE__*/
-    React.createElement("span", { style: welcomeStyles.sep }), /*#__PURE__*/
-    React.createElement(WValue, { label: t('welcome.value.accounts.label'), sub: t('welcome.value.accounts.sub') }), /*#__PURE__*/
-    React.createElement("span", { style: welcomeStyles.sep }), /*#__PURE__*/
-    React.createElement(WValue, { label: t('welcome.value.free.label'), sub: t('welcome.value.free.sub') })
-    ), /*#__PURE__*/
-
-
-    React.createElement("div", { style: welcomeStyles.intentionBlock }, /*#__PURE__*/
-    React.createElement("label", { htmlFor: "pace-intention", style: welcomeStyles.intentionLabel },
-    t('welcome.intention.label'), /*#__PURE__*/
-    React.createElement("span", { style: welcomeStyles.optional }, t('welcome.intention.optional'))
-    ), /*#__PURE__*/
-    React.createElement("input", {
-      id: "pace-intention",
-      ref: inputRef,
-      type: "text",
-      value: draft,
-      onChange: (e) => setDraft(e.target.value),
-      onKeyDown: (e) => {if (e.key === 'Enter') finish();},
-      placeholder: t('welcome.intention.placeholder'),
-      maxLength: 120,
-      style: welcomeStyles.intentionInput }
-    )
-    ), /*#__PURE__*/
-
-
-    React.createElement("div", { style: welcomeStyles.actions }, /*#__PURE__*/
-    React.createElement("button", { onClick: skip, style: welcomeStyles.skip },
-    t('welcome.skip')
-    ), /*#__PURE__*/
-    React.createElement(Button, { variant: "primary", size: "md", onClick: finish },
-    t('welcome.cta')
-    )
-    )
-    )
-    ));
-
-}
-
-/* Valor individual — compacto: label + sub en una sola columna.
-   v0.12.1: tamaños reducidos ligeramente para que la fila de valores
-   quepa en ~48px de alto total. */
-function WValue(_ref2) {let { label, sub } = _ref2;
-  return (/*#__PURE__*/
-    React.createElement("div", { style: { flex: 1, textAlign: 'center', padding: '0 4px' } }, /*#__PURE__*/
-    React.createElement("div", { style: {
-        fontFamily: 'var(--font-display)',
-        fontStyle: 'italic',
-        fontSize: 13,
-        color: 'var(--ink)',
-        lineHeight: 1.1
-      } }, label), /*#__PURE__*/
-    React.createElement("div", { style: {
-        fontSize: 10,
-        color: 'var(--ink-3)',
-        marginTop: 2,
-        letterSpacing: 0.1
-      } }, sub)
-    ));
-
-}
-
-/* ============================================================
-   Hook — auto-trigger cuando firstSeen == null
-   ------------------------------------------------------------
-   Mismo patrón que useSupportAutoTrigger. La demora de 1.2s
-   evita que el modal compita con el mount de la app (logo
-   parpadeando, toasts de rollover, etc.).
-   ============================================================ */
-function useFirstTimeWelcome(setOpen) {
-  const [state] = usePace();
-  useEffectWEL(() => {
-    if (state.firstSeen == null) {
-      const t = setTimeout(() => setOpen(true), 1200);
-      return () => clearTimeout(t);
-    }
-  }, [state.firstSeen]);
-}
-
-/* ============================================================
-   Estilos — nombre único según regla CLAUDE.md
-   v0.12.1: layout de 2 columnas + tamaños ajustados para que el
-   modal completo quepa en ~440px de alto (sin scroll en 720p).
-   ============================================================ */
-const welcomeStyles = {
-  inner: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    gap: 16
-  },
-  langToggle: {
-    alignSelf: 'flex-start',
-    marginBottom: 8,
-    padding: '3px 8px',
-    fontSize: 10,
-    letterSpacing: '0.08em',
-    color: 'var(--ink-3)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-pill)',
-    cursor: 'pointer',
-    transition: 'color 180ms',
-    fontFamily: 'var(--font-ui, sans-serif)',
-    lineHeight: 1.6
-  },
-  header: {
-    display: 'grid',
-    gridTemplateColumns: '140px 1fr',
-    gap: 18,
-    alignItems: 'center'
-  },
-  headerLeft: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start'
-  },
-  headerRight: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 6
-  },
-  logoMini: {
-    width: '100%',
-    maxWidth: 140
-  },
-  title: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 24,
-    fontWeight: 500,
-    lineHeight: 1.1,
-    margin: 0,
-    color: 'var(--ink)'
-  },
-  lede: {
-    fontSize: 13,
-    lineHeight: 1.5,
-    color: 'var(--ink-2)',
-    margin: 0
-  },
-  values: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    padding: '10px 8px',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-md)'
-  },
-  sep: {
-    width: 1,
-    height: 24,
-    background: 'var(--line)',
-    flexShrink: 0
-  },
-  intentionBlock: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 6
-  },
-  intentionLabel: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 13,
-    color: 'var(--ink)',
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    gap: 8
-  },
-  optional: {
-    fontSize: 9,
-    color: 'var(--ink-3)',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    fontStyle: 'normal'
-  },
-  intentionInput: {
-    width: '100%',
-    padding: '9px 12px',
-    fontSize: 14,
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    color: 'var(--ink)',
-    background: 'var(--paper)',
-    border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
-    outline: 'none',
-    transition: 'border-color 180ms',
-    boxSizing: 'border-box'
-  },
-  actions: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 2
-  },
-  skip: {
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 12,
-    color: 'var(--ink-3)',
-    background: 'transparent',
-    border: 'none',
-    padding: '4px 8px',
-    cursor: 'pointer',
-    transition: 'color 180ms'
-  }
-};
-
-Object.assign(window, {
-  WelcomeModal, useFirstTimeWelcome
-});
-;Object.assign(window, { WelcomeModal, WValue, useFirstTimeWelcome });
-})();
-</script>
-
   <script>
 ;(function () {
 /* PACE · Sidebar izquierdo — colapsable
@@ -7237,9 +7020,10 @@ Object.assign(window, {
      - "Plan" del día — v0.11.2 (redundante con ActivityBar).
      - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
      - "Intención" — v0.12.1 (aporta poco valor; la misma pregunta se
-       hace al usuario nuevo en el WelcomeModal, que la guarda en
-       `state.intention`. Quitarla libera espacio vertical y deja que
-       el botón de Donar gane prominencia en el footer).
+       hace al usuario nuevo en la bienvenida — hoy el onboarding s106,
+       antes el WelcomeModal — que la guarda en `state.intention`.
+       Quitarla libera espacio vertical y deja que el botón de Donar
+       gane prominencia en el footer).
 
    RESPONSIVE (sesión 22 · v0.12.5):
      En ≤768px el sidebar se desacopla y pasa a ser un drawer
@@ -16137,6 +15921,684 @@ Object.assign(window, { PathRunner });
 })();
 </script>
 
+  <!-- Onboarding de primera vez (sesión 106 / v0.51.0) — sustituye al
+       WelcomeModule (s17, retirado). TRAS el bloque de Caminos: consume el
+       catálogo (registry) y las láminas (paths.index) para las escenas de
+       fondo y el primer Camino. Orden interno: helper → piezas → orquestador.
+       main.jsx lo monta. -->
+  <script>
+;(function () {
+/* PACE · Onboarding · pickFirstPath (sesión 106 / v0.51.0)
+   Elige el primer Camino a partir del perfil capturado en el onboarding.
+
+   Uso HONESTO para s106 (decisión de sesión): mapeo ligero need→Caminos
+   candidatos + sesgo por tiempo disponible, con getSuggestedPath() (hora
+   del día) como fallback cuando no hay perfil o ningún candidato existe.
+   El scoring completo perfil→Camino es s107 (getSuggestedPath v2) — este
+   helper NO toca esa jerarquía: solo se usa dentro del flujo de bienvenida.
+
+   `environment` se guarda pero aún no influye (no hay metadatos de ruido/
+   discreción en el catálogo hasta la taxonomía s108). Documentado aquí
+   para que nadie lo busque sin encontrarlo. */
+
+/* Candidatos por necesidad, en orden de preferencia. Los ids viven en
+   PATH_CATALOG (app/paths/registry.js); si alguno desaparece del catálogo
+   el filtro de existencia lo salta sin romper. */
+const PICK_BY_NEED = {
+  calm: ['path.breath', 'path.dusk', 'path.tea'],
+  focus: ['path.dawn', 'path.afternoon', 'path.midday'],
+  body: ['path.midday', 'path.weekend', 'path.dusk'],
+  energy: ['path.afternoon', 'path.midday', 'path.dawn']
+};
+
+/* Caminos cortos: si el usuario dijo "un respiro" (~5 min), estos suben
+   al frente de sus candidatos. path.breath = 2 pasos de respiración;
+   path.tea = el Foco más corto del catálogo (10 min). */
+const PICK_SHORT_PATHS = ['path.breath', 'path.tea'];
+
+function pickFirstPath(profile) {
+  const need = profile && profile.need;
+  const time = profile && profile.time;
+
+  const exists = (id) => !!(window.getPath && window.getPath(id));
+  const accessible = (id) =>
+  typeof window.canAccessPath !== 'function' || window.canAccessPath(id);
+
+  let candidates = need && PICK_BY_NEED[need] ? PICK_BY_NEED[need].slice() : [];
+
+  /* Sesgo por tiempo: con poco tiempo, los Caminos cortos primero
+     (reordenación estable: el resto conserva su orden de preferencia). */
+  if (time === 'short' && candidates.length > 0) {
+    const short = candidates.filter((id) => PICK_SHORT_PATHS.includes(id));
+    const rest = candidates.filter((id) => !PICK_SHORT_PATHS.includes(id));
+    candidates = short.concat(PICK_SHORT_PATHS.filter((id) => !short.includes(id) && exists(id)), rest);
+  }
+
+  for (let i = 0; i < candidates.length; i++) {
+    if (exists(candidates[i]) && accessible(candidates[i])) return candidates[i];
+  }
+
+  /* Sin perfil (todo saltado) o sin candidatos vivos: la sugerencia por
+     hora del día de siempre. */
+  return typeof window.getSuggestedPath === 'function' ?
+  window.getSuggestedPath() :
+  null;
+}
+
+Object.assign(window, { pickFirstPath });
+;Object.assign(window, { pickFirstPath });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Onboarding · piezas presentacionales (sesión 106 / v0.51.0)
+   Componentes puros del flujo de primera vez: escena de fondo, chip de
+   opción, puntos de progreso, logo y la definición de las 3 preguntas.
+   El orquestador (máquina de pasos + handlers) vive en Onboarding.jsx.
+
+   Arte: cada pantalla monta una lámina de Caminos como fondo cover
+   (getPathIllustration(id).src — la MISMA fuente que el runner, así el
+   build la sirve como archivo en web y data URI en el standalone sin
+   cableado nuevo). Sin casquetes ni cámara: aquí la lámina es paisaje,
+   no progreso. Regla s104 intacta: "sobre el arte siempre es de día" —
+   el orquestador pone data-pace-scene-card en la raíz y el velo usa
+   crema FIJA en rgba (como csPlateStyle). */
+
+const { useState: useStateONBS } = React;
+
+/* Definición de las 3 preguntas del perfil. `field` = key en profile;
+   `sceneId` = lámina de fondo; los acentos de NECESIDAD llevan el color
+   de su módulo (identidad); tiempo/entorno usan el verde CTA neutro. */
+const ONBOARDING_QUESTIONS = [
+{
+  field: 'need',
+  kickerKey: 'onboarding.need.kicker',
+  titleKey: 'onboarding.need.title',
+  sceneId: 'path.breath',
+  free: true,
+  options: [
+  { value: 'calm', labelKey: 'onboarding.need.calm', subKey: 'onboarding.need.calm.sub', accent: 'var(--breathe)' },
+  { value: 'focus', labelKey: 'onboarding.need.focus', subKey: 'onboarding.need.focus.sub', accent: 'var(--focus)' },
+  { value: 'body', labelKey: 'onboarding.need.body', subKey: 'onboarding.need.body.sub', accent: 'var(--move)' },
+  { value: 'energy', labelKey: 'onboarding.need.energy', subKey: 'onboarding.need.energy.sub', accent: 'var(--achievement)' }]
+
+},
+{
+  field: 'time',
+  kickerKey: 'onboarding.time.kicker',
+  titleKey: 'onboarding.time.title',
+  sceneId: 'path.tea',
+  options: [
+  { value: 'short', labelKey: 'onboarding.time.short', subKey: 'onboarding.time.short.sub', accent: 'var(--focus-cta)' },
+  { value: 'pause', labelKey: 'onboarding.time.pause', subKey: 'onboarding.time.pause.sub', accent: 'var(--focus-cta)' },
+  { value: 'block', labelKey: 'onboarding.time.block', subKey: 'onboarding.time.block.sub', accent: 'var(--focus-cta)' }]
+
+},
+{
+  field: 'environment',
+  kickerKey: 'onboarding.env.kicker',
+  titleKey: 'onboarding.env.title',
+  sceneId: 'path.midday',
+  options: [
+  { value: 'office', labelKey: 'onboarding.env.office', subKey: 'onboarding.env.office.sub', accent: 'var(--focus-cta)' },
+  { value: 'home', labelKey: 'onboarding.env.home', subKey: 'onboarding.env.home.sub', accent: 'var(--focus-cta)' },
+  { value: 'mixed', labelKey: 'onboarding.env.mixed', subKey: 'onboarding.env.mixed.sub', accent: 'var(--focus-cta)' }]
+
+}];
+
+
+/* Escena de fondo: lámina cover + velo radial de crema (más denso tras la
+   columna de contenido, se abre hacia los bordes para que el arte respire).
+   Sin lámina (id fuera del índice) cae a papel liso — nunca rompe. */
+function OnbScene(_ref) {let { pathId } = _ref;
+  const ill = typeof getPathIllustration === 'function' ?
+  getPathIllustration(pathId) :
+  null;
+  return (/*#__PURE__*/
+    React.createElement("div", { "aria-hidden": "true", style: { position: 'absolute', inset: 0, zIndex: -1, overflow: 'hidden' } },
+    ill && /*#__PURE__*/
+    React.createElement("img", {
+      src: ill.src,
+      alt: "",
+      draggable: false,
+      style: {
+        position: 'absolute', inset: 0,
+        width: '100%', height: '100%',
+        objectFit: 'cover',
+        objectPosition: '50% ' + Math.round((typeof ill.focusY === 'number' ? ill.focusY : 0.6) * 100) + '%',
+        display: 'block'
+      } }
+    ), /*#__PURE__*/
+
+
+    React.createElement("div", { style: {
+        position: 'absolute', inset: 0,
+        background: ill ?
+        'radial-gradient(ellipse 150% 120% at 50% 46%, rgba(242,237,224,0.92) 0%, rgba(242,237,224,0.72) 46%, rgba(242,237,224,0.34) 78%, rgba(242,237,224,0.16) 100%)' :
+        'var(--paper)'
+      } })
+    ));
+
+}
+
+/* Chip de opción — placa de papel translúcida (misma familia visual que
+   las placas del runner s104) con indicador de radio a la derecha. */
+function OnbChoice(_ref2) {let { label, sub, accent, selected, onSelect } = _ref2;
+  const [hover, setHover] = useStateONBS(false);
+  return (/*#__PURE__*/
+    React.createElement("button", {
+      type: "button",
+      role: "radio",
+      "aria-checked": selected,
+      onClick: onSelect,
+      onMouseEnter: () => setHover(true),
+      onMouseLeave: () => setHover(false),
+      style: {
+        display: 'flex', alignItems: 'center', gap: 14,
+        width: '100%', textAlign: 'left',
+        padding: '13px 18px',
+        background: selected ? 'rgba(242,237,224,0.96)' : 'rgba(242,237,224,0.82)',
+        border: '1px solid ' + (selected ? accent : hover ? 'var(--line-2)' : 'rgba(184,173,142,0.5)'),
+        borderRadius: 'var(--r-md)',
+        backdropFilter: 'blur(3px)',
+        WebkitBackdropFilter: 'blur(3px)',
+        cursor: 'pointer',
+        transform: hover && !selected ? 'translateY(-1px)' : 'translateY(0)',
+        boxShadow: selected ? 'var(--sh-soft)' : 'none',
+        transition: 'all 180ms var(--ease)'
+      } }, /*#__PURE__*/
+
+    React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /*#__PURE__*/
+    React.createElement("span", { style: {
+        display: 'block',
+        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        fontSize: 20, fontWeight: 500, lineHeight: 1.15,
+        color: selected ? accent : 'var(--ink)',
+        transition: 'color 180ms'
+      } }, label), /*#__PURE__*/
+    React.createElement("span", { style: {
+        display: 'block', fontSize: 12.5, color: 'var(--ink-3)',
+        marginTop: 2, lineHeight: 1.35
+      } }, sub)
+    ), /*#__PURE__*/
+
+    React.createElement("span", { "aria-hidden": "true", style: {
+        width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
+        border: '1.5px solid ' + (selected ? accent : 'var(--line-2)'),
+        display: 'grid', placeItems: 'center',
+        transition: 'border-color 180ms'
+      } }, /*#__PURE__*/
+    React.createElement("span", { style: {
+        width: 9, height: 9, borderRadius: '50%',
+        background: selected ? accent : 'transparent',
+        transition: 'background 180ms'
+      } })
+    )
+    ));
+
+}
+
+/* Progreso de las 3 preguntas: puntos finos, el activo en tinta. */
+function OnbDots(_ref3) {let { total, active } = _ref3;
+  const dots = [];
+  for (let i = 0; i < total; i++) {
+    dots.push(/*#__PURE__*/
+      React.createElement("span", { key: i, style: {
+          width: i === active ? 18 : 6, height: 6,
+          borderRadius: 'var(--r-pill)',
+          background: i === active ? 'var(--ink-2)' : i < active ? 'var(--ink-3)' : 'var(--line-2)',
+          transition: 'all 320ms var(--ease)'
+        } })
+    );
+  }
+  return (/*#__PURE__*/
+    React.createElement("div", { "aria-hidden": "true", style: { display: 'flex', alignItems: 'center', gap: 6 } },
+    dots
+    ));
+
+}
+
+/* Logo para la bienvenida. El PNG oficial lleva SIEMPRE el tratamiento de
+   día (multiply, sin invert): el arte de fondo es papel claro fijo, así
+   que el invert+screen de la paleta oscura (CowLogo) aquí quedaría mal
+   sobre crema. Mismo contrato de src que CowLogo (img#pace-logo-src
+   pre-cargado en el HTML → data URI en el standalone). Fallback
+   tipográfico si el PNG no carga (idéntico en espíritu al splash). */
+function OnbLogo() {
+  const [failed, setFailed] = useStateONBS(false);
+  const el = typeof document !== 'undefined' && document.getElementById('pace-logo-src');
+  const src = el && el.getAttribute('src') || null;
+  if (!src || failed) {
+    return (/*#__PURE__*/
+      React.createElement("div", { style: { textAlign: 'center' } }, /*#__PURE__*/
+      React.createElement("div", { style: {
+          fontFamily: 'var(--font-display)', fontStyle: 'italic',
+          fontSize: 64, fontWeight: 500, lineHeight: 1, color: 'var(--ink)'
+        } }, "Pace"), /*#__PURE__*/
+      React.createElement("div", { style: {
+          fontSize: 12, letterSpacing: '0.32em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', marginTop: 8
+        } }, "Foco \xB7 Cuerpo")
+      ));
+
+  }
+  return (/*#__PURE__*/
+    React.createElement("img", {
+      src: src,
+      alt: "Pace",
+      onError: () => setFailed(true),
+      draggable: false,
+      style: {
+        display: 'block', width: '100%', maxWidth: 300, height: 'auto',
+        margin: '0 auto', objectFit: 'contain', mixBlendMode: 'multiply'
+      } }
+    ));
+
+}
+
+Object.assign(window, {
+  ONBOARDING_QUESTIONS, OnbScene, OnbChoice, OnbDots, OnbLogo
+});
+;Object.assign(window, { OnbScene, OnbChoice, OnbDots, OnbLogo });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Onboarding de primera vez (sesión 106 / v0.51.0)
+   ============================================================
+   Sustituye al WelcomeModal (s17): la bienvenida deja de ser un modal
+   de una pantalla y pasa a un flujo full-screen de 5 pasos sobre las
+   láminas de Caminos (arte D-4, s104):
+
+     0. Bienvenida    — manifiesto + 3 valores (reusa welcome.* de ui.js).
+     1-3. Preguntas   — necesidad / tiempo / entorno → state.profile.
+     4. Primer Camino — pickFirstPath(profile); el CTA cierra a la HOME
+        con ese Camino destacado (setLastViewedPath → getSuggestedPath #1).
+        Decisión de sesión: sugerir, NO auto-arrancar el runner.
+
+   MECÁNICA (hereda el contrato del WelcomeModal):
+     - Se muestra una sola vez, cuando state.firstSeen == null; al cerrar
+       por cualquier vía se fija firstSeen (bienvenida, no trámite).
+     - Sin retraso de montaje: cubre la app entera desde el primer frame
+       (el modal antiguo esperaba 1.2s; aquí sería un flash feo).
+     - Cada pregunta se puede saltar (el campo queda null y pickFirstPath
+       cae a getSuggestedPath). "prefiero saltarlo" en la bienvenida
+       cierra el flujo entero.
+     - Sin Escape ni backdrop-click: cerrar por accidente = perder la
+       bienvenida para siempre. Salir es siempre un gesto explícito.
+     - Re-abrir a mano (dev / curiosidad): evento `pace:open-onboarding`.
+
+   Arte: raíz con data-pace-scene-card ("sobre el arte siempre es de
+   día", s104) — en paleta oscura la tinta/papel/acentos se re-mapean a
+   los valores crema dentro del flujo. Todo el motion es decorativo →
+   el kill global de prefers-reduced-motion lo congela.
+   ============================================================ */
+
+const { useState: useStateONB, useEffect: useEffectONB } = React;
+
+function Onboarding() {
+  const [state, set] = usePace();
+  const { t } = useT();
+  const [open, setOpen] = useStateONB(() => state.firstSeen == null);
+  const [step, setStep] = useStateONB(0);
+  const [draft, setDraft] = useStateONB({ need: null, time: null, environment: null });
+  const [freeText, setFreeText] = useStateONB('');
+  const [picked, setPicked] = useStateONB(null);
+
+  // Re-abrir a mano (dev / curiosidad) — mismo patrón que pace:open-support.
+  useEffectONB(() => {
+    const h = () => {setStep(0);setOpen(true);};
+    window.addEventListener('pace:open-onboarding', h);
+    return () => window.removeEventListener('pace:open-onboarding', h);
+  }, []);
+
+  if (!open) return null;
+
+  const questions = window.ONBOARDING_QUESTIONS || [];
+  const isQuestion = step >= 1 && step <= questions.length;
+  const q = isQuestion ? questions[step - 1] : null;
+  const isSummary = step === questions.length + 1;
+
+  const pickedPath = isSummary && picked && typeof getPath === 'function' ? getPath(picked) : null;
+  const sceneId = step === 0 ? 'path.dawn' :
+  isQuestion ? q.sceneId :
+  picked || 'path.dawn';
+
+  /* La pregunta actual cuenta como respondida si eligió chip — o, en la
+     de necesidad, si escribió algo en el campo libre. */
+  const answered = isQuestion && (
+  !!draft[q.field] || q.free && freeText.trim().length > 0);
+
+  const back = () => setStep((s) => Math.max(s - 1, 0));
+  const next = () => {
+    if (step === questions.length) {
+      /* El pick se congela al ENTRAR al resumen (no en render): así no
+         puede cambiar bajo el usuario si un re-render cruza un límite
+         horario de getSuggestedPath. */
+      setPicked(typeof pickFirstPath === 'function' ? pickFirstPath(draft) : null);
+    }
+    setStep((s) => s + 1);
+  };
+
+  const finish = (opts) => {
+    const now = Date.now();
+    const patch = {
+      firstSeen: now,
+      /* completedAt = "el flujo se cerró"; los campos null significan
+         pregunta saltada (pickFirstPath ya lo contempla). */
+      profile: { ...draft, completedAt: now }
+    };
+    const trimmed = freeText.trim();
+    if (trimmed) patch.intention = trimmed.slice(0, 120); // cap defensivo (s17)
+    set(patch);
+    if (opts && opts.pick && picked && typeof setLastViewedPath === 'function') {
+      /* La home destaca el Camino elegido: lastViewed es la prioridad #1
+         de getSuggestedPath ("la preferencia del usuario manda", s78).
+         El scoring perfil→Camino de verdad es s107. */
+      setLastViewedPath(picked);
+    }
+    setOpen(false);
+  };
+
+  const toggleLang = () => set({ lang: state.lang === 'es' ? 'en' : 'es' });
+
+  return (/*#__PURE__*/
+    React.createElement("div", {
+      "data-pace-scene-card": "",
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-label": t('welcome.greeting'),
+      style: onboardingStyles.root }, /*#__PURE__*/
+
+    React.createElement(OnbScene, { pathId: sceneId }), /*#__PURE__*/
+
+
+    React.createElement("div", { style: onboardingStyles.header }, /*#__PURE__*/
+    React.createElement("div", { style: { width: 86, display: 'flex' } },
+    step > 0 && /*#__PURE__*/
+    React.createElement("button", { onClick: back, style: onboardingStyles.ghostBtn }, "\u2190 ",
+    t('onboarding.back')
+    )
+
+    ),
+    isQuestion ? /*#__PURE__*/React.createElement(OnbDots, { total: questions.length, active: step - 1 }) : /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/
+    React.createElement("div", { style: { width: 86, display: 'flex', justifyContent: 'flex-end' } },
+    step === 0 && /*#__PURE__*/
+    React.createElement("button", {
+      onClick: toggleLang,
+      title: t(state.lang === 'es' ? 'welcome.lang.toggle.toEn' : 'welcome.lang.toggle.toEs'),
+      style: onboardingStyles.langToggle }, /*#__PURE__*/
+
+    React.createElement("span", { style: { fontWeight: state.lang === 'es' ? 600 : 400 } }, "ES"), /*#__PURE__*/
+    React.createElement("span", { style: { color: 'var(--line-2)' } }, " \xB7 "), /*#__PURE__*/
+    React.createElement("span", { style: { fontWeight: state.lang === 'en' ? 600 : 400 } }, "EN")
+    )
+
+    )
+    ), /*#__PURE__*/
+
+
+
+
+    React.createElement("div", { style: onboardingStyles.scroll }, /*#__PURE__*/
+    React.createElement("div", { key: step, "data-pace-reveal": true, style: onboardingStyles.column },
+
+
+    step === 0 && /*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(OnbLogo, null), /*#__PURE__*/
+    React.createElement("h1", { style: onboardingStyles.title },
+    t('welcome.tagline'), ' ', /*#__PURE__*/
+    React.createElement("span", { style: { color: 'var(--ink-3)' } }, t('welcome.tagline.sub'))
+    ), /*#__PURE__*/
+    React.createElement("p", { style: onboardingStyles.lede }, t('welcome.lede')), /*#__PURE__*/
+    React.createElement("div", { style: onboardingStyles.valuesPlate },
+    ['local', 'accounts', 'free'].map((k) => /*#__PURE__*/
+    React.createElement("div", { key: k, style: { flex: 1, padding: '0 6px' } }, /*#__PURE__*/
+    React.createElement("div", { style: {
+        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        fontSize: 14, color: 'var(--ink)', lineHeight: 1.15
+      } }, t('welcome.value.' + k + '.label')), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginTop: 3 } },
+    t('welcome.value.' + k + '.sub')
+    )
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-meta", style: { marginTop: 2 } },
+    t('onboarding.welcome.hint')
+    ), /*#__PURE__*/
+    React.createElement("button", { "data-pace-cta": true, onClick: next, style: onboardingStyles.cta },
+    t('onboarding.welcome.cta')
+    ), /*#__PURE__*/
+    React.createElement("button", { onClick: () => finish({ pick: false }), style: onboardingStyles.ghostBtn },
+    t('onboarding.skip')
+    )
+    ),
+
+
+
+    isQuestion && /*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-meta" }, t(q.kickerKey)), /*#__PURE__*/
+    React.createElement("h2", { style: onboardingStyles.title }, t(q.titleKey)), /*#__PURE__*/
+    React.createElement("div", { role: "radiogroup", "aria-label": t(q.titleKey), style: onboardingStyles.options },
+    q.options.map((o) => /*#__PURE__*/
+    React.createElement(OnbChoice, {
+      key: o.value,
+      label: t(o.labelKey),
+      sub: t(o.subKey),
+      accent: o.accent,
+      selected: draft[q.field] === o.value,
+      onSelect: () => setDraft((d) => ({ ...d, [q.field]: o.value })) }
+    )
+    )
+    ),
+    q.free && /*#__PURE__*/
+    React.createElement("div", { style: onboardingStyles.freeBlock }, /*#__PURE__*/
+    React.createElement("label", { htmlFor: "pace-onb-free", style: onboardingStyles.freeLabel },
+    t('onboarding.need.free.label'), /*#__PURE__*/
+    React.createElement("span", { style: onboardingStyles.freeOptional },
+    t('onboarding.need.free.optional')
+    )
+    ), /*#__PURE__*/
+    React.createElement("input", {
+      id: "pace-onb-free",
+      type: "text",
+      value: freeText,
+      onChange: (e) => setFreeText(e.target.value),
+      onKeyDown: (e) => {if (e.key === 'Enter' && answered) next();},
+      placeholder: t('onboarding.need.free.placeholder'),
+      maxLength: 120,
+      style: onboardingStyles.freeInput }
+    )
+    ), /*#__PURE__*/
+
+
+
+
+    React.createElement("button", {
+      "data-pace-cta": true,
+      onClick: next,
+      disabled: !answered,
+      style: {
+        ...onboardingStyles.cta,
+        ...(answered ? null : onboardingStyles.ctaDisabled)
+      } },
+
+    t('onboarding.next')
+    ),
+    !answered && /*#__PURE__*/
+    React.createElement("button", { onClick: next, style: onboardingStyles.ghostBtn },
+    t('onboarding.skip.question')
+    )
+
+    ),
+
+
+
+    isSummary && /*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { className: "pace-meta" }, t('onboarding.first.kicker')), /*#__PURE__*/
+    React.createElement("p", { style: onboardingStyles.lede }, t('onboarding.first.lede')), /*#__PURE__*/
+    React.createElement("h2", { style: onboardingStyles.pathName },
+    pickedPath ? t(pickedPath.nameKey) || picked : ''
+    ),
+    pickedPath && t(pickedPath.taglineKey) ? /*#__PURE__*/
+    React.createElement("p", { style: onboardingStyles.tagline }, t(pickedPath.taglineKey)) :
+    null,
+    pickedPath && /*#__PURE__*/
+    React.createElement("div", { style: onboardingStyles.kindsPlate },
+    pickedPath.steps.
+    map((s) => t('paths.kind.' + s.kind + '.name') || s.kind).
+    join(' · ')
+    ), /*#__PURE__*/
+
+    React.createElement("button", { "data-pace-cta": true, onClick: () => finish({ pick: true }), style: onboardingStyles.cta },
+    t('onboarding.first.cta')
+    ), /*#__PURE__*/
+    React.createElement("button", { onClick: () => finish({ pick: false }), style: onboardingStyles.ghostBtn },
+    t('onboarding.first.explore')
+    )
+    )
+
+
+    )
+    )
+    ));
+
+}
+
+/* Estilos — nombre único según regla CLAUDE.md. */
+const onboardingStyles = {
+  root: {
+    position: 'fixed', inset: 0, zIndex: 120,
+    /* Sobre los modales (100), bajo UpdatePrompt (150) y Toast (200). */
+    background: 'var(--paper)',
+    color: 'var(--ink)',
+    display: 'flex', flexDirection: 'column',
+    isolation: 'isolate',
+    overflow: 'hidden',
+    animation: 'pace-fade-in 320ms ease'
+  },
+  header: {
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '16px 20px', flexShrink: 0, minHeight: 56
+  },
+  scroll: {
+    flex: 1, overflowY: 'auto', display: 'flex',
+    padding: '0 24px'
+  },
+  column: {
+    margin: 'auto', width: '100%', maxWidth: 460,
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
+    gap: 16, textAlign: 'center', padding: '8px 0 30px'
+  },
+  title: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 'clamp(28px, 5.4vw, 38px)', fontWeight: 500,
+    lineHeight: 1.12, margin: 0, color: 'var(--ink)',
+    /* Halo de papel sobre el arte (mismo recurso que el runner s104). */
+    textShadow: '0 0 22px var(--paper), 0 0 10px var(--paper)'
+  },
+  lede: {
+    fontSize: 14, lineHeight: 1.55, color: 'var(--ink-2)',
+    margin: 0, maxWidth: 400,
+    textShadow: '0 0 16px var(--paper), 0 0 8px var(--paper)'
+  },
+  valuesPlate: {
+    display: 'flex', alignItems: 'center', width: '100%',
+    padding: '12px 10px',
+    background: 'rgba(242,237,224,0.82)',
+    border: '1px solid rgba(184,173,142,0.5)',
+    borderRadius: 'var(--r-md)',
+    backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)'
+  },
+  options: {
+    display: 'flex', flexDirection: 'column', gap: 10,
+    width: '100%', marginTop: 4
+  },
+  freeBlock: {
+    display: 'flex', flexDirection: 'column', gap: 6,
+    width: '100%', marginTop: 2
+  },
+  freeLabel: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 13, color: 'var(--ink)',
+    display: 'flex', alignItems: 'baseline',
+    justifyContent: 'space-between', gap: 8
+  },
+  freeOptional: {
+    fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.12em',
+    textTransform: 'uppercase', fontStyle: 'normal'
+  },
+  freeInput: {
+    width: '100%', padding: '10px 14px', fontSize: 14,
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    color: 'var(--ink)',
+    background: 'rgba(242,237,224,0.82)',
+    border: '1px solid rgba(184,173,142,0.6)',
+    borderRadius: 'var(--r-md)', outline: 'none',
+    backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)',
+    boxSizing: 'border-box'
+  },
+  pathName: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 'clamp(38px, 7vw, 54px)', fontWeight: 500,
+    lineHeight: 1.08, margin: 0, color: 'var(--ink)',
+    textShadow: '0 0 24px var(--paper), 0 0 10px var(--paper)'
+  },
+  tagline: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 16, color: 'var(--ink-2)', margin: 0,
+    textShadow: '0 0 16px var(--paper), 0 0 8px var(--paper)'
+  },
+  kindsPlate: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 14, color: 'var(--ink-2)',
+    padding: '9px 20px',
+    background: 'rgba(242,237,224,0.82)',
+    border: '1px solid rgba(184,173,142,0.5)',
+    borderRadius: 'var(--r-pill)',
+    backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)'
+  },
+  cta: {
+    marginTop: 6,
+    padding: '13px 44px', borderRadius: 'var(--r-pill)',
+    background: 'var(--focus-cta)', border: '1px solid var(--focus-cta)',
+    color: 'var(--paper)', cursor: 'pointer',
+    fontSize: 13, letterSpacing: '0.12em',
+    fontFamily: 'var(--font-ui)',
+    transition: 'all 180ms var(--ease)'
+  },
+  ctaDisabled: {
+    background: 'rgba(242,237,224,0.6)',
+    border: '1px solid var(--line-2)',
+    color: 'var(--ink-3)',
+    cursor: 'not-allowed'
+  },
+  ghostBtn: {
+    fontFamily: 'var(--font-display)', fontStyle: 'italic',
+    fontSize: 12.5, color: 'var(--ink-3)',
+    background: 'transparent', border: 'none',
+    padding: '4px 10px', cursor: 'pointer',
+    textShadow: '0 0 14px var(--paper), 0 0 6px var(--paper)'
+  },
+  langToggle: {
+    padding: '3px 8px', fontSize: 10, letterSpacing: '0.08em',
+    color: 'var(--ink-3)',
+    background: 'rgba(242,237,224,0.82)',
+    border: '1px solid rgba(184,173,142,0.5)',
+    borderRadius: 'var(--r-pill)', cursor: 'pointer',
+    fontFamily: 'var(--font-ui)', lineHeight: 1.6
+  }
+};
+
+Object.assign(window, { Onboarding });
+;Object.assign(window, { Onboarding });
+})();
+</script>
+
   <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
        _responsive.js inyecta el bloque <style> de reglas @media globales del
        layout (TopBar, ActivityBar, main content, sidebar handle, fallback dvh).
@@ -16575,7 +17037,6 @@ function PaceApp() {
   const [openTweaks, setOpenTweaks] = useStateMain(false);
   const [openBreakMenu, setOpenBreakMenu] = useStateMain(false);
   const [openSupport, setOpenSupport] = useStateMain(false);
-  const [openWelcome, setOpenWelcome] = useStateMain(false);
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
@@ -16627,17 +17088,10 @@ function PaceApp() {
   // junto a la filosofía del módulo.
   useSupportAutoTrigger(setOpenSupport);
 
-  // Auto-trigger del WelcomeModal la primera vez que se abre la app
-  // (state.firstSeen == null). Mismo patrón que el anterior.
-  useFirstTimeWelcome(setOpenWelcome);
-
-  // Re-abrir welcome a mano (dev / curiosidad): evento global
-  // `pace:open-welcome`. Mismo patrón que `pace:open-support`.
-  useEffectMain(() => {
-    const h = () => setOpenWelcome(true);
-    window.addEventListener('pace:open-welcome', h);
-    return () => window.removeEventListener('pace:open-welcome', h);
-  }, []);
+  // Onboarding de primera vez (s106, sustituye al WelcomeModal s17): el
+  // componente se auto-gestiona (se muestra si state.firstSeen == null y
+  // escucha `pace:open-onboarding` para re-abrirse) — aquí solo se monta,
+  // ver el bloque de overlays del return.
 
   // Deep links de shortcuts PWA (s102): /?go=focus|breathe|move|hydrate abre
   // el módulo al arrancar (manifest.webmanifest → shortcuts). Se consume una
@@ -16807,7 +17261,10 @@ function PaceApp() {
       onChoose: handleBreakChoice }
     ), /*#__PURE__*/
     React.createElement(SupportModal, { open: openSupport, onClose: () => setOpenSupport(false) }), /*#__PURE__*/
-    React.createElement(WelcomeModal, { open: openWelcome, onClose: () => setOpenWelcome(false) }), /*#__PURE__*/
+
+
+
+    React.createElement(Onboarding, null), /*#__PURE__*/
 
 
 
@@ -16885,7 +17342,14 @@ function mount(tries) {
   typeof TweaksPanel === 'function' &&
   typeof BreatheSession === 'function' &&
   typeof MoveSession === 'function' &&
-  typeof ToastHost === 'function';
+  typeof ToastHost === 'function' &&
+  /* Onboarding s106: el orquestador Y sus piezas (OnbScene basta
+     como centinela de OnboardingScreens.jsx — archivo atomico) +
+     pickFirstPath. Sin esto, la carrera de evaluacion (fix s38b)
+     puede montar PaceApp con <OnbScene/> aun undefined. */
+  typeof Onboarding === 'function' &&
+  typeof OnbScene === 'function' &&
+  typeof pickFirstPath === 'function';
 
   if (container && allReady) {
     var root = ReactDOM.createRoot(container);
