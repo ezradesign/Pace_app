@@ -128,6 +128,9 @@ function FocusTimer({ onFinish }) {
           // -> running). Pausar no suena; 'completed' es no-op (no re-credita).
           if (status !== 'running' && status !== 'completed') {
             try { playSound('pomodoro.start'); } catch (e) {}
+            // B1.2: permiso de notificación en el primer gesto real de foco
+            // (notifyFocusEnd es ON por defecto; ver FocusTimer.support.jsx).
+            if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
           }
           toggle();
         }}

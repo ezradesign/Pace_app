@@ -72,7 +72,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // ── Cuello y hombros ─────────────────────────────────────────────
   'custom.ex.Chin tucks.name':                      'Chin tucks',
-  'custom.ex.Chin tucks.cue':                       'Bring chin back, like a double chin.',
+  'custom.ex.Chin tucks.cue':                       'Glide your chin straight back; the back of your neck lengthens.',
   'custom.ex.Cuello y trapecios.name':              'Neck and traps',
   'custom.ex.Cuello y trapecios.cue':               'Ear to shoulder, gentle.',
   'custom.ex.Inclinación lateral.name':             'Lateral tilt',

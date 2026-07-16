@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.53.0** | 2026-07-16 | fix+feat: **B1.2 editorial de seguridad ES+EN** (CIERRA el bloque B1) -- lenguaje de riesgo fuera con copy realista y explicativo (BASE §7-9): «al fallo» / «al límite» / «más bajo si puedes» / «aguanta» secos / «al máximo» → reps limpias, respiración normal, mantener con condición técnica · claims fuera: «el hombro nace para colgar» (+ fuera «marco» de puerta), «indestructibles» (desc ATG + EN `Bulletproof` + logro), chin tuck sin «papada» (4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada en sincronía) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curación Respira·Energía**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` pasa a **FREE** (Energía tenía 0 entradas free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas; permiso de notificación pedido en el primer «Comenzar» de Foco vía `maybeRequestNotifyPermission`, denegar apaga el flag) | #108 | [abajo](#v0530----2026-07-16----fixfeat-b12-editorial-de-seguridad-esen-cierra-b1) |
 | **v0.52.0** | 2026-07-16 | fix+feat: **B1.1 saneamiento** (plan de evolución, 1ª sesión de código) -- **`parseLocalDateKey()`** + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos; regla #10 en CLAUDE.md: prohibido `new Date("YYYY-MM-DD")`) · **cifras honestas**: contador de logros `/100`→`/106` dinámico (Sidebar), «acciones» del año RETIRADA → **«{n} días con ritmo»** real (isActiveDay s69) + tooltip «intensidad {n}», sendero del día **abstracto** (secuencia equidistante, fuera las horas inventadas) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transición = duración de la fase** (antes fija 1800 ms; fases <2 s → 85 % + ease-in-out) · **7 duraciones recalibradas** (declarado ≈ suma de pasos; Colgarse 4→2 … Ancestral 6→5) · **apnea retirada** (decisión 1): fuera logros 60/90/120 s + cifra-récord 160 px → hold como guía calmada; sustitutos de exploración **Dos lenguas / Cuaderno a salvo / Letra pequeña** (con detectores) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance) | #107 | [abajo](#v0520----2026-07-16----fixfeat-b11-saneamiento-plan-de-evolución) |
-| **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [abajo](#v0510----2026-07-16----featonboarding-onboarding-de-primera-vez--3-preguntas--primer-camino) |
+| **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [session-106](./docs/sessions/session-106-onboarding.md) |
 | **v0.50.0** | 2026-07-15 | feat: **fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos** -- **`todayISO()` a fecha LOCAL** (bug UTC: rachas/history anotaban el día anterior entre medianoche y ~2 AM; 7 sitios, reutiliza `toISODate()`) · **fuentes self-hosted preservando Cormorant** (hallazgo: el default real de títulos es Cormorant, no EB Garamond → decisión s103 revisada): copia local subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en `fonts/`, `@font-face` con ruta absoluta `/fonts/` (fuera el @import de Google), precache web + **data URIs standalone** (`inlineFonts`), MIME woff2; **JetBrains Mono retirada** (→ ui-monospace) → **cero peticiones externas de fuente** en los 3 artefactos · **BreakMenu coherente**: iconos `AB*` de la home + **Estira** (4 actividades, grid 2×2) · **frame fantasma de PathRunner** resuelto (fase 'intro' fijada en render, no en efecto → sin warning) · **toasts de logro aplazados** durante Caminos (no tapan las pantallas; se vuelcan al salir) · **bug de integridad**: un Camino solo cuenta como completado con **≥1 paso hecho** (antes saltarlo todo desbloqueaba "Cartógrafa") · aro del pomodoro alineado en Pausa/Larga | #105 | [session-105](./docs/sessions/session-105-fuentes-todayiso-caminos.md) |
 | **v0.49.0** | 2026-07-14 | feat(paths): **escenas ilustradas de Caminos — arte D-4 completo** (entrega del usuario, iterado en vivo) -- las **7 láminas** editoriales como escena FULL-BLEED del runner (intro/transición/completion vía `PathIllustration`; sesiones activas intactas) · **casquetes**: las bolas pintadas van cubiertas en gris y se **RELLENAN con el color de su actividad** al completarse (pop + eco; el orbe s77 se retiró) · cámara cover que sigue al hito (pan 2s) y encuadra el **final del camino** en la Completion · etiqueta del paso **anclada a la bola** (placa de papel del arte) · **tagline del Camino en la intro** (beneficio visible) · placa translúcida tras RECORRIDO/DESBLOQUEADO · regla **"sobre el arte siempre es de día"** (re-mapeo de tinta/papel/acentos a paleta crema dentro de las superficies ilustradas en oscuro) · pipeline: **archivo+precache en web / data URI solo standalone** (2371 KB autocontenido; index.html 970 KB) · `scripts/ingest-lamina.js` (normaliza+mide, modo híbrido) · fix `PACE_VERSION` desincronizada (v0.46.0 desde s101) · fallback SenderoBar intacto para futuros caminos sin arte | #104 | [session-104](./docs/sessions/session-104-arte-caminos.md) |
 | **v0.48.0** | 2026-07-13 | build: **Etapa A — precompilado Babel + React production** (plan maestro s103, 1ª de 2) -- los 74 scripts `text/babel` se **compilan en build** (`@babel/core` 7.29 en memoria, sourceType script + retainLines; IIFE por archivo + re-exposición AST de function/var top-level = semántica exacta del eval de Babel standalone) · **React 18.3.1 production UMD self-hosted** (vendor/ desde npm) e inlineado en ambos artefactos · **@babel/standalone fuera del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga), standalone 100 % autocontenido en JS por primera vez · dev (PACE.html) intacto · pins deliberados Babel 7 / TypeScript 5 · fuentes self-hosted → s104 | #103 | [session-103](./docs/sessions/session-103-build-etapa-a.md) |
@@ -128,6 +129,71 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.53.0] -- 2026-07-16 -- fix+feat: B1.2 editorial de seguridad ES+EN (cierra B1)
+
+Sesión 108. Cierra el bloque B1 del plan de evolución
+([`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md)).
+Criterio: copy **realista y explicativo** + lenguaje de
+[`BASE_MUEVE_ESTIRA.md`](./docs/product/BASE_MUEVE_ESTIRA.md) §7-9; técnica
+verificada antes de cada cue. Textos ES+EN aprobados en bloque antes de
+aplicar. Decisiones del usuario: Dead hang opcional (no fuera) · extras §9
+dentro · defaults completos. Diario:
+[session-108](./docs/sessions/session-108-b1-2-editorial-seguridad.md).
+
+### Editorial de seguridad (ES + espejo EN)
+
+- **Lenguaje de riesgo fuera**: «Al fallo.» → «Última: 8 reps limpias.
+  Para si la técnica se rompe.» · «Al límite.» → «Última. Mantén mientras
+  la lumbar siga apoyada.» · «Más bajo si puedes.» → «Segunda tanda. Elige
+  una altura que te deje respirar tranquilo.» · isometrías sin «aguanta»
+  seco (→ mantener + respirar normal) · extras §9: «al máximo» fuera de
+  dedos/muñecas.
+- **Claims fuera**: «El hombro nace para colgar» y el «marco» de puerta →
+  «barra firme que soporte tu peso» · «indestructibles» fuera (desc ATG +
+  EN `ATG · Bulletproof Knees` → `ATG · Knees over toes` + logro «ATG
+  descubierto») · chin tuck sin «papada» → «Desliza la barbilla recta
+  hacia atrás; la nuca se alarga» (Cuello·3, registro, EN ×2).
+- **Tag `PULL` → `PUSH`** en Fondos en silla (es empuje de tríceps).
+- **Dead hang · opcional** (Hombros·5): anuncia barra firme + alternativa
+  concreta («Sin barra: repite las wall slides»). La key de glifo se
+  renombra en sincronía (name ES = key de glifo).
+- **12 descs anuncian material/superficie**: silla estable y sin ruedas
+  (Fondos, Sentadillas de silla, Piernas·a una) · pared (Wall sit,
+  Hombros·5, ATG) · barra firme (Colgarse, Ancestral) · suelo (Espalda de
+  oficina, Core·plancha, Columna·ondas, Caderas·5, Couch, Despertar
+  matinal, Antídoto silla).
+
+### Curación Respira · Energía (feedback s107-cierre)
+
+- **Bhastrika** (`breathe.bellows`, tag PRA) sale de Energía → grupo
+  **Pranayama** (tras Bhramari). `BREATH_ROUTINE_CATEGORIES` y
+  `explore.bhastrika` intactos (van por id).
+- **`rounds.express` → FREE** (conserva `safety: true`): Energía tenía 0
+  entradas usables en free. CONTENT.md alineado.
+
+### Defaults opt-out (audio + aviso fin-de-foco)
+
+- `soundOn: true` y `notifyFocusEnd: true` en defaultState — **solo
+  instalaciones nuevas** (el merge de loadState conserva lo persistido).
+- El permiso de notificación exige gesto: `maybeRequestNotifyPermission`
+  (FocusTimer.support) lo pide UNA vez por carga en el primer «Comenzar»
+  de Foco, solo web, solo con permiso `default`; **denegar baja el flag a
+  false** (el toggle de Ajustes no miente). El camino de Ajustes
+  (enableNotify) queda intacto.
+
+### Verificación
+
+Preview :60705 con SW+caches purgados: consola limpia · 30+ textos nuevos
+verificados en runtime (MOVE/EXTRA_ROUTINES, PACE_STRINGS.en, catálogo,
+registro) · glifo del Dead hang resuelve con la key nueva · biblioteca
+Respira correcta en UI (express sin sello, Bhastrika en Pranayama) ·
+primer arranque sin estado: `soundOn:true` + `notifyFocusEnd:true` ·
+`canAccessRoutine('breathe.rounds.express') === true`. Bump v0.53.0 ×3.
+Backup `v0.52.0_20260716` desde git HEAD byte-idéntico (rotado
+`v0.34.3_20260707`, cap 20). Standalone 3079 KB.
+
+---
+
 ## [v0.52.0] -- 2026-07-16 -- fix+feat: B1.1 saneamiento (plan de evolución)
 
 Sesión 107. Primera sesión de código del plan de evolución (bloques B1-B4,
@@ -185,66 +251,5 @@ y cero claims viejos por búsqueda DOM; secretos y acentos probados en vivo
 (detalle en el diario). Bump v0.52.0 ×3. Backup `v0.51.0_20260716` desde
 git HEAD byte-idéntico (rotado `v0.34.2_20260630`, cap 20). Standalone
 3076 KB / index ~978 KB.
-
----
-
-## [v0.51.0] -- 2026-07-16 -- feat(onboarding): onboarding de primera vez — 3 preguntas + primer Camino
-
-Sesión 106. Plan maestro "Camino a v1.0", fila s106. Tres bifurcaciones
-decididas por el usuario antes de tocar (AskUserQuestion, patrón s103/s104):
-**pantalla completa con arte** (no wizard en modal) · **sugerir en home**
-(no auto-arrancar el runner) · **chips + texto libre** en la necesidad.
-Diario: [session-106](./docs/sessions/session-106-onboarding.md).
-
-### El flujo (`app/onboarding/`, nuevo — sustituye a `app/welcome/`)
-
-- **5 pantallas full-screen** sobre las láminas de Caminos (arte D-4 s104,
-  vía `getPathIllustration` → mismo pipeline: archivo en web, data URI en el
-  standalone, cero cableado nuevo): **0 · Bienvenida** (manifiesto + 3
-  valores, reusa las keys `welcome.*`; lámina dawn) → **1 · Necesidad**
-  ("¿Qué quieres cultivar?": Calma/Foco/Cuerpo/Energía con acento de su
-  módulo + campo libre opcional → `intention`; lámina breath) → **2 ·
-  Tiempo** (respiro ~5' / pausa ~15' / bloque 25'+; lámina tea) → **3 ·
-  Entorno** (oficina/casa/va cambiando; lámina midday) → **4 · Tu primer
-  Camino** (nombre + tagline + pasos del pick; su propia lámina).
-- **`profile` en state** (`{ need, time, environment, completedAt }`):
-  pregunta saltada = campo null; instalaciones previas lo reciben por el
-  merge `{...defaultState, ...parsed}` sin migración extra. En s107 entra
-  al scoring de `getSuggestedPath`.
-- **`pickFirstPath(profile)`** (uso honesto pre-scoring): candidatos por
-  necesidad (calm→breath/dusk/tea · focus→dawn/afternoon/midday ·
-  body→midday/weekend/dusk · energy→afternoon/midday/dawn), los cortos
-  primero si time='short', filtro existencia+`canAccessPath`, fallback
-  `getSuggestedPath()`. El CTA final fija `paths.lastViewed` (prioridad #1
-  de la jerarquía s78) → la **home aterriza con ese Camino destacado**;
-  "prefiero explorar por mi cuenta" cierra sin tocarlo.
-- **WelcomeModal retirado** (s17): el contrato se hereda (una sola vez con
-  `firstSeen == null`; cerrar por cualquier vía lo fija — bienvenida, no
-  trámite; re-abrible vía `pace:open-onboarding`). Sin Escape ni
-  backdrop-click: salir es siempre gesto explícito.
-- **"Sobre el arte siempre es de día" ampliada**: el remap oscuro de
-  `[data-pace-scene-card]` suma `--focus-cta` y `--achievement` (copias
-  día, mismo aviso de recalibración). Velo radial de crema FIJA sobre la
-  lámina (más denso tras la columna, abierto a los bordes).
-- A11y: `role="dialog"` + `aria-modal`, radiogroup/radio con
-  `aria-checked`, todo el motion decorativo (reduced-motion lo congela).
-  Hallazgo: CTA deshabilitado por `opacity` inline PIERDE contra el
-  `forwards` de `pace-reveal-rise` en los hijos del reveal → se deshabilita
-  por contorno neutro, no por opacidad.
-- Mount loop de PACE.html: + `Onboarding`/`OnbScene`/`pickFirstPath` como
-  centinelas (carrera de evaluación, fix s38b).
-
-### Verificación
-
-Preview :8765, protocolo s93 + seed fresco (`firstSeen:null`). Flujo
-completo en dev Y compilado (perfil exacto en localStorage, lastViewed
-fijado, home con el pick destacado: focus+block→Morning Glory,
-calm+block→Hálito) · saltar las 3 preguntas → fallback horario ·
-"explorar" → sin lastViewed · claro/**oscuro** (remap día verificado por
-DOM: fondo crema con `data-palette="oscuro"`) · **móvil** 375px · no
-reaparece tras recargar · remonte completo del árbol con trap de errores:
-**cero errores** en dev y standalone. Bump v0.51.0 ×3 (título + CACHE_NAME
-+ PACE_VERSION). Backup `v0.50.0_20260716` desde git HEAD (rotado
-`v0.34.1_20260605`, cap 20). Standalone 3073 KB / index ~955 KB.
 
 ---

@@ -11,8 +11,10 @@ const BREATHE_ROUTINES = {
     label: 'Energía',
     aside: 'Despierta el sistema',
     items: [
-      { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
-      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true, access: 'premium' },
+      /* B1.2 (s108): Bhastrika (PRA) se mudó al grupo Pranayama — era el único
+         pranayama colado en Energía. rounds.express pasó a FREE para que el
+         grupo tenga entrada usable sin premium. */
+      { id: 'breathe.rounds.express', tag: 'ENE', code: 'Energía', name: 'Rondas express', desc: 'Versión corta: 2 rondas de 25 respiraciones. Para sesiones breves.', min: 4, pattern: 'rounds', rounds: 2, breaths: 25, safety: true },
       { id: 'breathe.rounds.full', tag: 'ENE', code: 'Energía', name: 'Respiración en rondas', desc: '30 respiraciones profundas → retención en vacío. 3 rondas.', min: 12, pattern: 'rounds', rounds: 3, breaths: 30, safety: true, access: 'premium' },
       { id: 'breathe.rounds.long', tag: 'ENE', code: 'Energía', name: 'Rondas profundas', desc: '5 rondas de 35 respiraciones. La práctica más larga e intensa.', min: 20, pattern: 'rounds', rounds: 5, breaths: 35, safety: true, access: 'premium' },
     ]
@@ -52,6 +54,7 @@ const BREATHE_ROUTINES = {
     items: [
       { id: 'breathe.ujjayi', tag: 'PRA', code: 'Pranayama', name: 'Ujjayi', desc: 'Respiración oceánica. Meditativa.', min: 6, pattern: 'ujjayi', cycle: [5,0,5,0] },
       { id: 'breathe.bhramari', tag: 'PRA', code: 'Pranayama', name: 'Bhramari · Abeja', desc: 'Exhala con un zumbido grave. La mente se aquieta.', min: 5, pattern: 'bhramari' },
+      { id: 'breathe.bellows', tag: 'PRA', code: 'Pranayama', name: 'Bhastrika · Fuelle', desc: 'Pranayama energizante rápido', min: 3, pattern: 'bhastrika' },
       { id: 'breathe.nadi.shodhana', tag: 'PRA', code: 'Pranayama', name: 'Nadi Shodhana', desc: 'Respiración alternada, de la tradición del yoga. Pensada para asentar la atención.', min: 8, pattern: 'nadi', access: 'premium' },
       { id: 'breathe.kapalabhati', tag: 'KRI', code: 'Kriya', name: 'Kapalabhati · Kriya', desc: 'Limpieza del cráneo. Enérgico.', min: 3, pattern: 'kapalabhati', safety: true, access: 'premium' },
       { id: 'breathe.kumbhaka', tag: 'PRA', code: 'Pranayama', name: 'Kumbhaka 1:4:2', desc: 'Inhala 4, sostén 16, exhala 8. Solo con experiencia.', min: 6, pattern: 'pattern', cycle: [4,16,8,0], safety: true, access: 'premium' },

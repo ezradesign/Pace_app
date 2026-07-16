@@ -37,7 +37,7 @@
 
 ## Plan de bloques (antes de s107; después sigue el plan maestro)
 
-### B1 · Saneamiento — B1.1 HECHO (s107 / v0.52.0) · B1.2 SIGUIENTE
+### B1 · Saneamiento — CERRADO (B1.1 s107/v0.52.0 · B1.2 s108/v0.53.0)
 
 **B1.1 hecho** (s107, 2026-07-16; diario
 [session-107](../sessions/session-107-b1-saneamiento.md)):
@@ -52,31 +52,34 @@ retirada (hold = guía calmada; sustitutos `secret.bilingual` /
 `secret.backup` / `secret.safety.read` con detector) · claims de Respira
 orientativos ES+EN.
 
-**B1.2 (siguiente sesión) — editorial de seguridad ES+EN:** eliminar «al
-fallo», «al límite», «más bajo si puedes», «indestructibles», «el hombro
-nace para colgar»; chin tuck sin «papada»; tag `PULL`→empuje en fondos;
-anunciar suelo/pared/barra; «silla estable y sin ruedas»; «barra diseñada
-para soportar peso»; Dead hang fuera de Hombros·5 o marcado opcional.
-Criterio del usuario (recordado al aprobar los textos de B1.1): copy de
-ejercicios **realista y explicativo** — hay ejercicios difíciles, marcar
-opcional/alternativa y verificar la técnica antes de escribir cues
-(memoria `feedback-realismo-ejercicios`; el lenguaje canónico está en
-[`BASE_MUEVE_ESTIRA.md`](./BASE_MUEVE_ESTIRA.md) §7-9).
-**+ curación Respira·Energía** (feedback s107-cierre): un pranayama
-(Bhastrika, tag PRA) vive en el grupo Energía — recolocar o re-etiquetar;
-y **`rounds.express` pasa a free** (si no, el grupo Energía queda sin nada
-usable en free).
+**B1.2 hecho** (s108, 2026-07-16; diario
+[session-108](../sessions/session-108-b1-2-editorial-seguridad.md)):
+editorial de seguridad ES+EN completo con criterio BASE §7-9 + memoria
+`feedback-realismo-ejercicios` — «al fallo»/«al límite»/«más bajo si
+puedes»/«aguanta» secos/«al máximo» reescritos (reps limpias, respiración
+normal, mantener con condición técnica) · «el hombro nace para colgar» y
+el «marco» de puerta → «barra firme que soporte tu peso» ·
+«indestructibles» fuera (desc ATG + EN `Knees over toes` + logro) · chin
+tuck sin «papada» (4 sitios) · tag `PULL`→`PUSH` en fondos · **Dead hang ·
+opcional** con alternativa en cue (decisión del usuario: opcional, no
+fuera; key de glifo renombrada en sincronía) · 12 descs anuncian
+suelo/pared/barra firme/silla estable sin ruedas · **curación
+Respira·Energía**: Bhastrika (PRA) → grupo Pranayama y `rounds.express` a
+FREE · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true`
+(instalaciones nuevas; permiso en el primer «Comenzar» de Foco, denegar
+apaga el flag). Extras §9 incluidos por decisión del usuario; el «Aguanta
+10 segundos, suelta» de Glúteos invisibles se conservó (estructura, no
+competición). **Regla viva: el contenido nuevo (B2+) nace ya con este
+lenguaje.**
 
 **Feedback s107-cierre pendiente de rutar** (registrado también en STATE):
-audio ON por defecto + aviso fin-de-foco por defecto (opt-out en Ajustes;
-OJO: el permiso de notificación exige gesto — «activado por defecto» =
-toggle on + pedir permiso en el primer momento razonable, decidir en la
-sesión que lo implemente) · **salir de un Camino a la home**: el «×» del
-paso avanza al siguiente (diseño s99) y en móvil no existe Esc → hace falta
-vía táctil explícita de abandono · visual de Respira **«Loto»** (PNG del
-usuario como estilo NUEVO de tweak, sin retirar «flor») · **láminas de
+**salir de un Camino a la home**: el «×» del paso avanza al siguiente
+(diseño s99) y en móvil no existe Esc → hace falta vía táctil explícita de
+abandono · visual de Respira **«Loto»** (PNG del usuario como estilo NUEVO
+de tweak, sin retirar «flor»; falta el PNG en el repo) · **láminas de
 Caminos en más resolución** (el usuario las tiene; re-ingesta con
 `ingest-lamina.js` — REGLA D-4: re-medir, jamás swap directo del asset).
+Los defaults de audio/aviso quedaron HECHOS en B1.2.
 
 ### B2 · Fundamentos (2-3 sesiones)
 

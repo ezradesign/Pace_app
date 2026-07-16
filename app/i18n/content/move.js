@@ -33,7 +33,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.desk.pushups.s4.cue':           '8 slow reps.',
 
   'extra.chair.dips.name':               'Chair Dips',
-  'extra.chair.dips.desc':               'Triceps in 3 sets.',
+  'extra.chair.dips.desc':               'Triceps in 3 sets. A stable chair with no wheels.',
   'extra.chair.dips.code':               'Triceps',
   'extra.chair.dips.s0.name':            'Chair dips',
   'extra.chair.dips.s0.cue':             '10–12 reps with good control.',
@@ -44,17 +44,17 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.dips.s3.name':            'Rest',
   'extra.chair.dips.s3.cue':             '',
   'extra.chair.dips.s4.name':            'Chair dips',
-  'extra.chair.dips.s4.cue':             'To failure.',
+  'extra.chair.dips.s4.cue':             'Last set: 8 clean reps. Stop if form breaks.',
 
   'extra.wall.sit.name':                 'Wall Sit',
-  'extra.wall.sit.desc':                 'Quadriceps isometric.',
+  'extra.wall.sit.desc':                 'Quadriceps isometric against a wall.',
   'extra.wall.sit.code':                 'Legs',
   'extra.wall.sit.s0.name':              'Wall sit',
-  'extra.wall.sit.s0.cue':               'Knees at 90°, hold.',
+  'extra.wall.sit.s0.cue':               'Knees at 90°, back on the wall. Breathe normally.',
   'extra.wall.sit.s1.name':              'Rest',
   'extra.wall.sit.s1.cue':               'Easy.',
   'extra.wall.sit.s2.name':              'Wall sit',
-  'extra.wall.sit.s2.cue':               'Lower if you can.',
+  'extra.wall.sit.s2.cue':               'Second round. Choose a height that lets you breathe easy.',
 
   'extra.calves.name':                   'Stealth Calf Raises',
   'extra.calves.desc':                   'Under the desk, no one notices.',
@@ -72,11 +72,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.core.stealth.s1.name':          'Rest',
   'extra.core.stealth.s1.cue':           '',
   'extra.core.stealth.s2.name':          'Seated hollow',
-  'extra.core.stealth.s2.cue':           'Hold.',
+  'extra.core.stealth.s2.cue':           'Hold. Breathe normally.',
   'extra.core.stealth.s3.name':          'Rest',
   'extra.core.stealth.s3.cue':           '',
   'extra.core.stealth.s4.name':          'Seated hollow',
-  'extra.core.stealth.s4.cue':           'To the limit.',
+  'extra.core.stealth.s4.cue':           'Last one. Hold while your lower back stays supported.',
 
   'extra.grip.squeeze.name':             'Grip + Forearms',
   'extra.grip.squeeze.desc':             'Squeeze and extend.',
@@ -84,7 +84,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.grip.squeeze.s0.name':          'Squeeze fist',
   'extra.grip.squeeze.s0.cue':           'Squeeze hard 20 times.',
   'extra.grip.squeeze.s1.name':          'Finger extension',
-  'extra.grip.squeeze.s1.cue':           'Stretch fingers to max.',
+  'extra.grip.squeeze.s1.cue':           'Spread your fingers wide, without forcing.',
   'extra.grip.squeeze.s2.name':          'Wrist stretch',
   'extra.grip.squeeze.s2.cue':           'Wrist flexion + extension.',
 
@@ -116,7 +116,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.push.ladder.s4.cue':            'Negatives: lower in 5 seconds, rise normally.',
 
   'extra.hang.bar.name':                 'Hanging',
-  'extra.hang.bar.desc':                 'From a bar or a frame. Shoulders were born to hang.',
+  'extra.hang.bar.desc':                 'From a sturdy bar that can take your weight. Gentle traction for shoulders and back.',
   'extra.hang.bar.code':                 'Traction',
   'extra.hang.bar.s0.name':              'Passive hang',
   'extra.hang.bar.s0.cue':               'Hang relaxed. Breathe.',
@@ -142,7 +142,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.glutes.stealth.s3.cue':         'Close with 20 gentle raises.',
 
   'extra.chair.squats.name':             'Chair Squats',
-  'extra.chair.squats.desc':             'Stand up, sit down. The most useful strength.',
+  'extra.chair.squats.desc':             'Stand up, sit down. The most useful strength. Stable chair, no wheels.',
   'extra.chair.squats.code':             'Legs',
   'extra.chair.squats.s0.name':          'Chair squat',
   'extra.chair.squats.s0.cue':           '10-12 reps: lower until you graze the chair, rise without momentum.',
@@ -156,7 +156,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.s4.cue':           'Last 8, full control.',
 
   'extra.legs.single.name':              'Legs · Single',
-  'extra.legs.single.desc':              'Single-leg strength. Balance and control.',
+  'extra.legs.single.desc':              'Single-leg strength. Balance, control, and a stable chair.',
   'extra.legs.single.code':              'Unilateral',
   'extra.legs.single.s0.name':           'Bulgarian squat',
   'extra.legs.single.s0.cue':            'Instep on the chair, lower vertically. 8 per leg.',
@@ -172,7 +172,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.single.s5.cue':            'Single leg, 12 per side.',
 
   'extra.back.desk.name':                'Office Back',
-  'extra.back.desk.desc':                'Wake up the back that holds your posture.',
+  'extra.back.desk.desc':                'Wake up the back that holds your posture. One step is on the floor.',
   'extra.back.desk.code':                'Back',
   'extra.back.desk.s0.name':             'Scapular squeeze',
   'extra.back.desk.s0.cue':              'Squeeze shoulder blades 12 times, 2 seconds each.',
@@ -184,7 +184,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.back.desk.s3.cue':              'Hands behind head, open elbows, look at ceiling.',
 
   'extra.core.plank.name':               'Core · Plank',
-  'extra.core.plank.desc':               'Planks and hollow. The center that holds everything.',
+  'extra.core.plank.desc':               'Planks and hollow, on the floor. The center that holds everything.',
   'extra.core.plank.code':               'Core',
   'extra.core.plank.s0.name':            'Plank',
   'extra.core.plank.s0.cue':             'Forearms, body in a line. Squeeze glutes.',

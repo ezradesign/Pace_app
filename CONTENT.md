@@ -86,14 +86,14 @@ pranayama 5.
 | `breathe.box.6` | Box 6·6·6·6 | equilibrio | 7 | — | free (variante larga, no avanzada) |
 | `breathe.coherent.66` | Coherente 6·6 | balance | 10 | — | free (variante larga, no avanzada) |
 | `breathe.ujjayi` | Ujjayi | pranayama | 6 | — | free (oceánica accesible) |
-| `breathe.bellows` | Bhastrika · Fuelle | energia | 3 | — | free (entrada de Energía) |
+| `breathe.bellows` | Bhastrika · Fuelle | pranayama | 3 | — | free (B1.2: mudado de Energía — es pranayama, tag PRA) |
 | `breathe.diaphragm` | Diafragmática | equilibrio | 5 | — | free (F4 — la base de todo) |
 | `breathe.exhale.46` | Exhalación 4·6 | relajacion | 6 | — | free (F4 — freno simple) |
 | `breathe.yin` | Rítmica yin | relajacion | 8 | — | free (F4 — meditativa accesible) |
 | `breathe.bhramari` | Bhramari · Abeja | pranayama | 5 | — | free (F4 — pranayama accesible) |
 | `breathe.nadi.shodhana` | Nadi Shodhana | pranayama | 8 | — | **premium** (pranayama avanzado) |
 | `breathe.kapalabhati` | Kapalabhati · Kriya | pranayama | 3 | ⚠ | **premium** (kriya avanzado) |
-| `breathe.rounds.express` | Rondas express (2×25) | energia | 4 | ⚠ | **premium** (rondas) |
+| `breathe.rounds.express` | Rondas express (2×25) | energia | 4 | ⚠ | free (B1.2: era premium; sin ella Energía quedaba sin entrada free) |
 | `breathe.rounds.full` | Respiración en rondas (3×30) | energia | 12 | ⚠ | **premium** (rondas) |
 | `breathe.coherent.432` | Coherente 432 | balance | 10 | — | **premium** (F4 — inmersiva, drone forzado) |
 | `breathe.kumbhaka` | Kumbhaka 1:4:2 | pranayama | 6 | ⚠ | **premium** (F4 — retención clásica) |

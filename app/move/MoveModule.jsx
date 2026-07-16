@@ -29,13 +29,13 @@ const MOVE_ROUTINES = {
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
           { name: 'Flexiones inclinadas', dur: 30, cue: '8 reps lentas.' },
         ]},
-      { id: 'extra.chair.dips', tag: 'PULL', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series.', min: 3,
+      { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
         steps: [
           { name: 'Fondos en silla', dur: 40, cue: '10-12 reps con buen control.' },
           { name: 'Descanso', dur: 30, cue: '' },
           { name: 'Fondos en silla', dur: 40, cue: '10 reps.' },
           { name: 'Descanso', dur: 30, cue: '' },
-          { name: 'Fondos en silla', dur: 40, cue: 'Al fallo.' },
+          { name: 'Fondos en silla', dur: 40, cue: 'Última: 8 reps limpias. Para si la técnica se rompe.' },
         ]},
       { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
         steps: [
@@ -45,7 +45,7 @@ const MOVE_ROUTINES = {
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
           { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
         ]},
-      { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra o un marco. El hombro nace para colgar.', min: 2, access: 'premium',
+      { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra firme que soporte tu peso. Tracción suave para hombros y espalda.', min: 2, access: 'premium',
         steps: [
           { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
           { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
@@ -67,7 +67,7 @@ const MOVE_ROUTINES = {
       { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
         steps: [
           { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte 20 veces.' },
-          { name: 'Finger extension', dur: 20, cue: 'Estira dedos al máximo.' },
+          { name: 'Finger extension', dur: 20, cue: 'Abre bien los dedos, sin forzar.' },
           { name: 'Wrist stretch', dur: 20, cue: 'Muñeca flexión + extensión.' },
         ]},
       { id: 'extra.glutes.stealth', tag: 'STEALTH', code: 'Glúteos', name: 'Glúteos invisibles', desc: 'Actívalos sentado. Invisible total.', min: 2,
@@ -81,9 +81,9 @@ const MOVE_ROUTINES = {
         steps: [
           { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
           { name: 'Descanso', dur: 20, cue: '' },
-          { name: 'Seated hollow', dur: 30, cue: 'Aguanta.' },
+          { name: 'Seated hollow', dur: 30, cue: 'Mantén. Respira normal.' },
           { name: 'Descanso', dur: 20, cue: '' },
-          { name: 'Seated hollow', dur: 30, cue: 'Al límite.' },
+          { name: 'Seated hollow', dur: 30, cue: 'Última. Mantén mientras la lumbar siga apoyada.' },
         ]},
     ]
   },
@@ -91,7 +91,7 @@ const MOVE_ROUTINES = {
     label: 'Piernas',
     aside: 'La base del cuerpo',
     items: [
-      { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil.', min: 3,
+      { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
         steps: [
           { name: 'Sentadilla a silla', dur: 40, cue: '10-12 reps: baja hasta rozar la silla, sube sin impulso.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -99,13 +99,13 @@ const MOVE_ROUTINES = {
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
           { name: 'Sentadilla a silla', dur: 40, cue: 'Últimas 8, control total.' },
         ]},
-      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 2, access: 'premium',
+      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
         steps: [
-          { name: 'Wall sit', dur: 60, cue: 'Rodillas 90°, aguanta.' },
+          { name: 'Wall sit', dur: 60, cue: 'Rodillas a 90°, espalda en la pared. Respira normal.' },
           { name: 'Descanso', dur: 30, cue: 'Suave.' },
-          { name: 'Wall sit', dur: 60, cue: 'Más bajo si puedes.' },
+          { name: 'Wall sit', dur: 60, cue: 'Segunda tanda. Elige una altura que te deje respirar tranquilo.' },
         ]},
-      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio y control.', min: 4, access: 'premium',
+      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
         steps: [
           { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -127,14 +127,14 @@ const MOVE_ROUTINES = {
           { name: 'Thoracic extension', dur: 30, cue: 'Arquea sobre silla.' },
           { name: 'Chest opener', dur: 30, cue: 'Brazos atrás, expande pecho.' },
         ]},
-      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura.', min: 3,
+      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
         steps: [
           { name: 'Scapular squeeze', dur: 40, cue: 'Junta omóplatos 12 veces, 2 segundos cada una.' },
           { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
           { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, 10 veces lentas.' },
           { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
         ]},
-      { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow. El centro que sostiene todo.', min: 4, access: 'premium',
+      { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
         steps: [
           { name: 'Plancha', dur: 45, cue: 'Antebrazos, cuerpo en línea. Aprieta glúteos.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
