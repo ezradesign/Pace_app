@@ -60,7 +60,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Reset rápido', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
   { id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: '5 pasos caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
   { id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: '5 pasos hombros', glyph: '⌢' },
-  { id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Rodillas indestructibles', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
+  { id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Rodillas en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
   { id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Crawl, hang, squat', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
   { id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: '3 min cuello', glyph: '~' },
   { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Sin levantarse', glyph: '⊡' },

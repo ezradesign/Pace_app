@@ -11,7 +11,7 @@
    app/i18n/content/custom.js con keys `custom.ex.<name>.{name,cue}` y
    `custom.cat.<key>.label` para los grupos.
 
-   Curación s93: 'Dead hang (si puedes)' queda fuera (duplica Hang
+   Curación s93: 'Dead hang · opcional' (antes 'Dead hang (si puedes)', renombrado B1.2) queda fuera (duplica Hang
    pasivo). Al crecer los catálogos en F8+, añadir aquí a mano los
    pasos nuevos que merezcan entrar al constructor. */
 
@@ -56,7 +56,7 @@ const EXERCISE_REGISTRY = {
   cuello: {
     label: 'Cuello y hombros',
     items: [
-      { name: 'Chin tucks', dur: 30, cue: 'Barbilla atrás, como doble papada.' },
+      { name: 'Chin tucks', dur: 30, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga.' },
       { name: 'Cuello y trapecios', dur: 40, cue: 'Oreja al hombro, suave.' },
       { name: 'Inclinación lateral', dur: 40, cue: 'Oreja al hombro, cada lado.' },
       { name: 'Rotación lenta', dur: 40, cue: 'Mira sobre el hombro, sin forzar.' },

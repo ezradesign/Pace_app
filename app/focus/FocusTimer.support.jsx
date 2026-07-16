@@ -25,6 +25,29 @@
 
 const PACE_TIMER_KEY = 'pace.timer.v1';
 
+/* B1.2 (s108): notifyFocusEnd arranca ON por defecto, pero el permiso del
+   navegador exige un gesto real. Se pide UNA vez por carga de página, en el
+   primer «Comenzar» de Foco (el otro punto de petición sigue siendo el
+   toggle de Ajustes, TweaksPanel.enableNotify). Con permiso ya resuelto
+   (granted/denied) o toggle apagado no hace nada; si el usuario deniega
+   aquí, el flag baja a false para que el toggle de Ajustes refleje la
+   realidad (cerrar el prompt sin responder lo deja en 'default' y se
+   re-intentará en otra carga). Solo en web: en file:// no hay aviso. */
+let _notifyPermissionAsked = false;
+function maybeRequestNotifyPermission(state, set) {
+  try {
+    if (_notifyPermissionAsked) return;
+    if (!state || !state.notifyFocusEnd) return;
+    if (typeof Notification === 'undefined' || !Notification.requestPermission) return;
+    if (!/^https?:$/.test(window.location.protocol)) return;
+    if (Notification.permission !== 'default') return;
+    _notifyPermissionAsked = true;
+    Notification.requestPermission().then((p) => {
+      if (p === 'denied') set({ notifyFocusEnd: false });
+    }).catch(() => {});
+  } catch (e) {}
+}
+
 function maybeNotifyFocusEnd(opts) {
   try {
     if (!opts || !opts.enabled) return;
@@ -86,4 +109,4 @@ function persistFocusTimer(runningFoco, endsAt, minutes) {
   } catch (e) {}
 }
 
-Object.assign(window, { maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer });
+Object.assign(window, { maybeNotifyFocusEnd, maybeRequestNotifyPermission, loadPersistedFocusTimer, persistFocusTimer });

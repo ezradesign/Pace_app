@@ -20,7 +20,7 @@ const EXTRA_ROUTINES = {
     aside: 'Antídoto al escritorio',
     items: [
       { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
-        desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello.', min: 5,
+        desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello. Pasarás por el suelo.', min: 5,
         steps: [
           { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
           { name: 'Rotación torácica', dur: 40, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
@@ -32,7 +32,7 @@ const EXTRA_ROUTINES = {
       { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
         desc: 'Micro-pausa para cervicales tensas.', min: 3,
         steps: [
-          { name: 'Chin tucks', dur: 40, cue: 'Lleva la barbilla atrás, como doble papada.' },
+          { name: 'Chin tucks', dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga.' },
           { name: 'Inclinación lateral', dur: 50, cue: 'Oreja al hombro, cada lado.' },
           { name: 'Rotación lenta', dur: 50, cue: 'Mira sobre el hombro, sin forzar.' },
           { name: 'Escalenos', dur: 40, cue: 'Lleva mano bajo glúteo, inclina cabeza al lado opuesto.' },
@@ -54,7 +54,7 @@ const EXTRA_ROUTINES = {
           { name: 'Wrist stretch', dur: 40, cue: 'Flexión y extensión, 20s por lado.' },
           { name: 'Palmas al suelo', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti. Suave.' },
           { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
-          { name: 'Finger extension', dur: 30, cue: 'Abre los dedos al máximo, 10 veces.' },
+          { name: 'Finger extension', dur: 30, cue: 'Abre bien los dedos, 10 veces.' },
         ]},
     ]
   },
@@ -63,12 +63,12 @@ const EXTRA_ROUTINES = {
     aside: 'Antídoto al teclado',
     items: [
       { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
-        desc: 'Reset de hombros. Antídoto al teclado. Rotadores, pecho, trapecios.', min: 4,
+        desc: 'Reset de hombros: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
         steps: [
           { name: 'Scapular wall slides', dur: 50, cue: 'Espalda en pared, sube brazos.' },
           { name: 'Band pull-apart', dur: 50, cue: 'Si no tienes banda, brazos cruzados + abre.' },
           { name: 'External rotation', dur: 50, cue: 'Codo a 90°, rota hacia fuera.' },
-          { name: 'Dead hang (si puedes)', dur: 45, cue: 'Cuelga de una barra relajado.' },
+          { name: 'Dead hang · opcional', dur: 45, cue: 'Solo con barra firme que soporte tu peso. Sin barra: repite las wall slides.' },
           { name: 'Thoracic extension', dur: 40, cue: 'Sobre foam roller o toalla enrollada.' },
         ]},
       { id: 'move.shoulder.circles', tag: 'SHLD', code: 'Hombros', name: 'Hombros · círculos',
@@ -81,7 +81,7 @@ const EXTRA_ROUTINES = {
           { name: 'Apertura de pecho', dur: 50, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
         ]},
       { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
-        desc: 'Ondas y puentes. La columna se mueve vértebra a vértebra.', min: 5, access: 'premium',
+        desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
         steps: [
           { name: 'Gato-camello', dur: 60, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
           { name: 'Onda espinal', dur: 60, cue: 'De pie: ola desde la pelvis hasta la cabeza, lenta.' },
@@ -96,7 +96,7 @@ const EXTRA_ROUTINES = {
     aside: 'Desbloquea la mitad inferior',
     items: [
       { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas · 5 pasos',
-        desc: '5 pasos para desbloquear caderas profundas.', min: 6,
+        desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
         steps: [
           { name: 'Cossack squat', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
           { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
@@ -105,7 +105,7 @@ const EXTRA_ROUTINES = {
           { name: 'Puente con marcha', dur: 60, cue: 'Activación de glúteo profundo.' },
         ]},
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
-        desc: 'Flexores profundos contra pared o silla. El estiramiento del sofá.', min: 5, access: 'premium',
+        desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 5, access: 'premium',
         steps: [
           { name: 'Flexor de cadera', dur: 50, cue: 'Rodilla al suelo, empuja pelvis adelante.' },
           { name: 'Couch stretch', dur: 70, cue: 'Empeine contra pared o silla, rodilla al fondo. 30s por lado.' },
@@ -123,7 +123,7 @@ const EXTRA_ROUTINES = {
           { name: 'Squat profundo', dur: 70, cue: 'Talones abajo, relaja al fondo.' },
         ]},
       { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
-        desc: 'Rodillas sobre los dedos. Tobillos y rodillas indestructibles.', min: 4, access: 'premium',
+        desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
         steps: [
           { name: 'ATG split squat', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
           { name: 'Tibialis raise', dur: 45, cue: 'Contra pared, levanta pies.' },
@@ -146,7 +146,7 @@ const EXTRA_ROUTINES = {
     aside: 'De pies a cabeza',
     items: [
       { id: 'move.morning.flow', tag: 'FLOW', code: 'Mañana', name: 'Despertar matinal',
-        desc: 'Flujo suave de cuerpo entero para empezar el día.', min: 5,
+        desc: 'Flujo suave de cuerpo entero para empezar el día. Empieza en el suelo.', min: 5,
         steps: [
           { name: 'Gato-camello', dur: 60, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
           { name: 'Rotación torácica', dur: 45, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
@@ -156,11 +156,11 @@ const EXTRA_ROUTINES = {
           { name: 'Reset respiración', dur: 30, cue: '3 inhalaciones profundas para cerrar.' },
         ]},
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
-        desc: 'Técnicas ancestrales. Crawl, hang, squat profundo. Full body reset.', min: 5, access: 'premium',
+        desc: 'Técnicas ancestrales: crawl, hang, squat profundo. Suelo y barra firme.', min: 5, access: 'premium',
         steps: [
           { name: 'Deep squat hold', dur: 60, cue: 'Talones abajo, relaja.' },
           { name: 'Crawling', dur: 60, cue: 'Contralateral, lento.' },
-          { name: 'Hang pasivo', dur: 45, cue: 'De una barra, suelta.' },
+          { name: 'Hang pasivo', dur: 45, cue: 'De una barra firme, suelta el peso.' },
           { name: 'Ground sitting transitions', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
           { name: 'Rib pull + respiración', dur: 45, cue: 'Movimiento de gato/vaca.' },
         ]},

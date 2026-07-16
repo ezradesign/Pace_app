@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.52.0';
+const PACE_VERSION = 'v0.53.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -33,13 +33,18 @@ const defaultState = {
   timerStyle: 'aro',
   breathStyle: 'flor',
   logoVariant: 'pace',
-  soundOn: false,
+  // B1.2 (s108): audio ON por defecto (opt-out en Ajustes). Solo afecta a
+  // instalaciones nuevas: el merge de loadState conserva el valor persistido.
+  soundOn: true,
   ambientOn: false,
 
   // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
-  // Opt-in desde Ajustes (el permiso se pide al activar el toggle); solo
-  // dispara con la pestaña en segundo plano. Ver FocusTimer.support.jsx.
-  notifyFocusEnd: false,
+  // B1.2 (s108): ON por defecto (opt-out en Ajustes). El permiso del navegador
+  // exige gesto: se pide en el primer «Comenzar» de Foco (o al encender el
+  // toggle en Ajustes); si se deniega, el flag baja a false para que el toggle
+  // refleje la realidad. Solo dispara con la pestaña en segundo plano.
+  // Ver FocusTimer.support.jsx (maybeRequestNotifyPermission).
+  notifyFocusEnd: true,
   lang: 'en',
 
   // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del

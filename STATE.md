@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.52.0
-**Ultima sesion:** #107 -- 2026-07-16 - **B1.1 Saneamiento** (1ª sesion de codigo del plan de evolucion; canonico en `docs/product/DECISIONES_PRODUCTO.md`). Alcance pactado antes de tocar: B1.1 hoy, **editorial de seguridad ES+EN completo → B1.2**. Textos aprobados en bloque antes de aplicar. Lo hecho: **`parseLocalDateKey()`** (state-history) + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos) + **regla #10 en CLAUDE.md** (prohibido `new Date("YYYY-MM-DD")`) · contador de logros del sidebar `/100` → **`ACHIEVEMENT_CATALOG.length`** (106) · **«acciones» del año RETIRADA** (score sintetico) → la cifra real «{n} dias con ritmo» (isActiveDay s69) + tooltip «intensidad {n}» · **sendero del dia ABSTRACTO** (hitos equidistantes en orden fijo, fuera las horas inventadas; el puntero de "ahora" sigue siendo lo unico cronologico) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transicion = duracion de la FASE** (antes fija 1800 ms; <2 s → 85% + ease-in-out, suelo 300 ms) · **7 duraciones recalibradas** (declarado ≈ suma de pasos: Colgarse 4→2, ATG 6→4, Empuje 4→3, Piernas·a una 5→4, Ancestral 6→5, Hombros·5 5→4, Wall sit 3→2; el credito de minutos deja de sobre-acreditar; CONTENT.md alineado) · **APNEA RETIRADA** (decision 1): fuera `secret.breath.hold.60/90/120` + ticker + cifra-record 160 px → hold = guia calmada (pulso suave + cue + salida visible); sustitutos de exploracion CON detector: `secret.bilingual` «Dos lenguas» (cambio de idioma), `secret.backup` «Cuaderno a salvo» (export), `secret.safety.read` «Letra pequeña» (checkbox del modal de seguridad) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance — cero claims medicos). Verificado en vivo dev + standalone (transiciones medidas por fase, acento por DOM, secretos disparando, round-trips DST). Diario: `docs/sessions/session-107-b1-saneamiento.md`. Historico previo: [`onboarding s106`](./CHANGELOG.md#v0510----2026-07-16----featonboarding-onboarding-de-primera-vez--3-preguntas--primer-camino).
-**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 107
-**Build entregado:** `PACE_standalone.html` v0.52.0 (3076 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (978 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.53.0
+**Ultima sesion:** #108 -- 2026-07-16 - **B1.2 Editorial de seguridad ES+EN** (CIERRA el bloque B1 del plan de evolucion; canonico en `docs/product/DECISIONES_PRODUCTO.md`). Metodo: desglose confirmado antes de tocar; textos ES+EN aprobados EN BLOQUE; decisiones del usuario (AskUserQuestion): Dead hang OPCIONAL con alternativa · extras BASE §9 DENTRO · defaults completos (propuesta A). Lo hecho: **lenguaje de riesgo fuera** («al fallo»/«al limite»/«mas bajo si puedes»/«aguanta» secos/«al maximo» → reps limpias + respiracion normal + mantener con condicion tecnica, BASE §7-9) · **claims fuera** («el hombro nace para colgar» + «marco» de puerta → barra firme que soporte tu peso; «indestructibles» fuera de desc ATG + EN `Bulletproof Knees`→`Knees over toes` + logro; chin tuck sin «papada» en 4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada EN SINCRONIA — name ES = key de glifo) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curacion Respira·Energia**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` a FREE (Energia tenia 0 free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas) + `maybeRequestNotifyPermission` (permiso en el primer «Comenzar» de Foco; denegar apaga el flag). Verificado en vivo (runtime + UI + primer arranque). Diario: `docs/sessions/session-108-b1-2-editorial-seguridad.md`. Historico previo: [`B1.1 s107`](./CHANGELOG.md#v0520----2026-07-16----fixfeat-b11-saneamiento-plan-de-evolución).
+**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 108
+**Build entregado:** `PACE_standalone.html` v0.53.0 (3079 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (~978 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.52.0** (s107: solo bump de titulo. s106: strings/onboarding.js + 3 scripts de `onboarding/` + 3 centinelas nuevos; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.52.0** (3076 KB, 79 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.52.0** (978 KB -- laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.53.0** (s108 y s107: solo bump de titulo. s106: strings/onboarding.js + 3 scripts de `onboarding/` + 3 centinelas nuevos; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.53.0** (3079 KB, 79 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.53.0** (~978 KB -- laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **NUEVO s106** (391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado; main.jsx solo lo monta) |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **NUEVO s106** (208 ln; las laminas via `getPathIllustration` → mismo pipeline archivo/data-URI, cero cableado nuevo) |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
@@ -37,12 +37,12 @@
 | `safety.html` | Pagina estatica `/safety` (Cloudflare Pages) -- disclaimers respiracion/movilidad, ES+EN | **v0.46.0** (nueva s101, ~190 ln; autocontenida, rama oscura via prefers-color-scheme, paleta COPIADA de tokens.css; sin enlazar desde la UI aun) |
 | `privacy.html` | Pagina estatica `/privacy` (Cloudflare Pages) -- local-first, sin cuentas/analitica, ES+EN | **v0.46.0** (nueva s101, ~190 ln; misma base visual que safety.html) |
 | `app/state-entitlement.jsx` | Guard central de entitlement: `canAccessRoutine`/`canAccessPath` -- UNICO punto de verdad del acceso | **v0.40.0** (nuevo s95, ~65 ln; hoy derivan de `premiumUnlocked`, con degustacion via `{tasting}`; EL sitio que cambiara con la licencia) |
-| `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.38.0** (nuevo s93, 136 ln; name = ES canonico = key de glifo) |
+| `app/custom/exercise-registry.js` | Registro interno de ejercicios (65 items / 8 grupos, curado a mano) + getExerciseDef -- alimenta el constructor, NO biblioteca navegable | **v0.53.0** (s108: cue de Chin tucks sin «papada». s93: nuevo, 136 ln; name = ES canonico = key de glifo) |
 | `app/custom/CustomRoutines.jsx` | Seccion "Tus rutinas" en MoveLibrary (locked/empty/cards + crear) + CustomRoutineCard con lapiz | **v0.38.0** (nuevo s93, 164 ln; superficie premium entera, RoutineCard intocado) |
 | `app/custom/CustomBuilder.jsx` | Modal constructor 2 vistas (editor con steppers/reordenar/borrar 2-toques + picker agrupado) | **v0.38.0** (nuevo s93, 259 ln; overlay singleton via CustomEvent pace:open-custom-builder) |
 | `app/state-custom.jsx` | CUSTOM_LIMITS + CRUD de customRoutines (sanitize + lectura defensiva) | **v0.38.0** (nuevo s93, 100 ln; split por dominio estilo s57) |
-| `app/i18n/content/custom.js` | Patch EN del registro: custom.ex.<name ES>.{name,cue} + custom.cat.*.label | **v0.38.0** (nuevo s93, 168 ln; reutiliza los EN de content/move+extra) |
-| `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.34.0** (s84: 28 ports + 18 mantenimientos -- iter cerrado 31/46 aprobados + 15 pendientes; 527 -> 554 ln) |
+| `app/i18n/content/custom.js` | Patch EN del registro: custom.ex.<name ES>.{name,cue} + custom.cat.*.label | **v0.53.0** (s108: cue EN de Chin tucks. s93: nuevo, 168 ln; reutiliza los EN de content/move+extra) |
+| `app/glyphs/exercise-glyphs.jsx` | 46 glifos SVG line-art para Move/Stretch (sistema 1) | **v0.53.0** (s108: key `Dead hang (si puedes)` → `Dead hang · opcional`, en sincronia con el rename del paso. s84: 28 ports + 18 mantenimientos -- iter cerrado 31/46 aprobados + 15 pendientes; 527 -> 554 ln) |
 | `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG, `Object.assign(window, { ACHIEVEMENT_GLYPHS })` | **v0.33.3** (nuevo s83, 68 ln) |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
@@ -54,18 +54,18 @@
 | `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.52.0** (s107: + `secret.backup` al exportar con exito. s89: nuevo, ~195 ln) |
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
 | `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.52.0** (s107: `BreathVisual` recibe **`phaseDuration`** -- la transicion dura la FASE (antes fija 1800 ms); <2 s → 85% + ease-in-out, suelo 300 ms; 9 usos comparten transitionDur/Ease. s90: +4 patrones F4; s89: data-pace-essential) |
-| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.52.0** (s107: **claims orientativos** en 4 descs + aside Balance (fuera ansiedad/hemisferios/HRV/corazon/trance) + `secret.safety.read` al marcar "lo he leido" en BreatheSafety. s95: guard central; s90: F4 20 tecnicas) |
+| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.53.0** (s108/B1.2: Bhastrika (PRA) mudada de Energia → Pranayama + `rounds.express` a FREE (conserva safety) -- BREATH_ROUTINE_CATEGORIES/explore.bhastrika intactos, van por id. s107: **claims orientativos** en 4 descs + aside Balance (fuera ansiedad/hemisferios/HRV/corazon/trance) + `secret.safety.read` al marcar "lo he leido" en BreatheSafety. s95: guard central; s90: F4 20 tecnicas) |
 | `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.52.0** (s107: **hold = guia calmada** -- fuera ticker de retencion + logros hold + cifra-record 160 px; pulso `pace-hold-pulse` + cue + salida visible (decision apnea B1); pasa `phaseDuration` a BreathVisual. s98: reloj de tiempo activo timestamp-based (el hold sigue sumando via activeMsRef). s97: barra segmentada) |
-| `app/move/MoveModule.jsx` | Modulo Mueve (MoveSession la comparten Mueve/Estira/custom) | **v0.52.0** (s107: **acento por `kind`** -- `accent`/`accentSoft` derivan de kind y gobiernan prep/StepGlyph(props)/contador/barra/done (Estira → `--extra`) + 4 duraciones recalibradas (hang.bar 2, push.ladder 3, wall.sit 2, legs.single 4). s99: inPath; s93: CustomRoutinesSection, ~445 ln) |
-| `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.52.0** (s107: 3 duraciones recalibradas -- shoulders.5 4, atg.knees 4, ancestral 5. s91: F5 7->14 rutinas agrupadas, 204 ln; s88: atg.knees + ancestral a premium) |
+| `app/move/MoveModule.jsx` | Modulo Mueve (MoveSession la comparten Mueve/Estira/custom) | **v0.53.0** (s108/B1.2: editorial en Fondos en silla (tag PULL→PUSH, silla estable, «al fallo» fuera), Core silencioso, Wall sit, Piernas·a una, Espalda de oficina, Core·plancha, Colgarse (barra firme, fuera «nace para colgar»), grip. s107: **acento por `kind`** -- `accent`/`accentSoft` derivan de kind y gobiernan prep/StepGlyph(props)/contador/barra/done (Estira → `--extra`) + 4 duraciones recalibradas (hang.bar 2, push.ladder 3, wall.sit 2, legs.single 4). s99: inPath; s93: CustomRoutinesSection, ~445 ln) |
+| `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.53.0** (s108/B1.2: editorial -- chin tuck sin «papada», Dead hang · opcional (name = key de glifo, renombrados JUNTOS), «indestructibles» fuera de ATG, descs anuncian suelo/pared/barra, «al maximo» fuera. s107: 3 duraciones recalibradas -- shoulders.5 4, atg.knees 4, ancestral 5. s91: F5 7->14 rutinas agrupadas, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** (s107: contador de logros dinamico `ACHIEVEMENT_CATALOG.length` (antes /100 hardcodeado s12) + **sendero ABSTRACTO** (hitos equidistantes orden fijo, sin horas inventadas); s101: WeekDots criterio s69; ~540 ln, sigue en deuda) |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.47.0** (s102: notificacion en onComplete rama foco + 2 efectos de persistencia (restore al montar / persist en running), 493 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.53.0** (s108: +3 ln, llamada a `maybeRequestNotifyPermission` en el arranque real (el helper vive en support). s102: notificacion en onComplete rama foco + 2 efectos de persistencia, 496 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.47.0** (s102: + `restore(endsAtMs)` -- reanuda desde idle con el endsAt ORIGINAL (el tiempo de la recarga cuenta como transcurrido) + expone `endsAt` solo en running, 158 ln. s97: idle deriva de durationSec. s96: nuevo, `endsAt` como verdad, `completed` terminal) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.44.0** (s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
-| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.52.0** (s107: fuera `secret.breath.hold.60/90/120` (apnea, decision B1); entran `secret.bilingual`/`secret.backup`/`secret.safety.read` (exploracion sin marca temporal, implementados); ids viejos en state de instalaciones antiguas = inofensivos. s83: nuevo, ~215 ln) |
+| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.53.0** (s108: desc de `explore.atg` «Rodillas indestructibles» → «Rodillas en rango profundo». s107: fuera `secret.breath.hold.60/90/120` (apnea, decision B1); entran `secret.bilingual`/`secret.backup`/`secret.safety.read` (exploracion sin marca temporal, implementados); ids viejos en state de instalaciones antiguas = inofensivos. s83: nuevo, ~215 ln) |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** (s64: overflowY:hidden en data-pyv-wrap -- fix scroll vertical) |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** (s63: titulo marginBottom 6->4) |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.52.0** (s107: fuera `totalActions` (score sintetico presentado como "acciones") -- el footer muestra «{n} dias con ritmo» real + racha; tooltip por celda «intensidad {n}». s69: isActiveDay = focus\|breath\|move>0, agua sola NO cuenta) |
@@ -73,7 +73,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.52.0** (s107: + **`parseLocalDateKey()`** -- parse LOCAL de claves "YYYY-MM-DD" (new Date(iso) es UTC y rompe rachas en husos negativos); regla #10 CLAUDE.md. s101: extraido de state-core, ~170 ln) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.52.0** (s107: solo bump PACE_VERSION. s106: + `profile` en defaultState; 442 ln. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.53.0** (s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true` -- SOLO instalaciones nuevas, el merge conserva lo persistido. s106: + `profile` en defaultState; 442 ln. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -95,8 +95,8 @@
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.52.0** (s107: fuera `stats.year.totalActions`; `activeDays` → «{n} dias con ritmo»/"days with rhythm" + `tooltip.score` → «intensidad {n}»/"intensity {n}". s101: label.body, ~115 ln) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.52.0** (s107: 5 claims EN a lenguaje orientativo, espejo del ES. s92: nuevo, 94 ln) |
-| `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
-| `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
+| `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.53.0** (s108: 13 keys al editorial B1.2, espejo del ES. s92: nuevo, 186 ln) |
+| `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.53.0** (s108: 12 keys al editorial B1.2 incl. `ATG · Knees over toes` y `Dead hang · optional`. s92: nuevo, 202 ln) |
 | `app/tokens.css` | Tokens CSS + base | **v0.51.0** (s106: el remap de `[data-pace-scene-card]` suma `--focus-cta` + `--achievement` (el onboarding usa CTA y acento Energia sobre arte; copias dia, mismo aviso); 613 ln, deuda crece. s104: bloque ESCENA DE CAMINO + regla "sobre el arte siempre es de dia"; s100: draw-in sendero; s99: microinteracciones; s97: recalibracion oscuro; s89: reduced-motion `[data-pace-essential]`) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** (s95: `tasting:true` en los 2 steps premium de path.weekend -- degustacion curada explicita para el guard; s78: catalogo cerrado a 7 con path.tea/path.breath) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.49.0** (s104: pasa `pathId` a IntroCard/StepIntro. OJO hallazgo: frame fantasma de fase 'step' antes del efecto que pone 'intro' -- warning React en dev, arreglar en sesion propia. s100: fuera 'outro', 230 ln; s80: split 835->244) |
@@ -112,13 +112,14 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.52.0** (s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.53.0** (s108 y s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
-| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + persistencia `pace.timer.v1` | **v0.47.0** (nuevo s102, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
+| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + `maybeRequestNotifyPermission` + persistencia `pace.timer.v1` | **v0.53.0** (s108: + `maybeRequestNotifyPermission(state, set)` -- permiso de notificacion en el primer «Comenzar» de Foco, 1 vez por carga, solo web, solo permiso 'default'; denegar → `notifyFocusEnd:false`, ~113 ln. s102: nuevo, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.52.0_20260716.html` <- creado s108 (snapshot del v0.52.0 publicado en s107, extraido de git HEAD -- patron s87, byte-identico verificado por hash)
 - `backups/PACE_standalone_v0.51.0_20260716.html` <- creado s107 (snapshot del v0.51.0 publicado en s106, extraido de git HEAD -- patron s87, byte-identico verificado por hash)
 - `backups/PACE_standalone_v0.50.0_20260716.html` <- creado s106 (snapshot del v0.50.0 publicado en s105, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.49.0_20260715.html` <- creado s105 (snapshot del v0.49.0 publicado en s104, extraido de git HEAD -- patron s87)
@@ -138,87 +139,77 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.35.0_20260707.html` <- creado s91 (snapshot del v0.35.0 publicado en s90)
 - `backups/PACE_standalone_v0.34.5_20260707.html` <- creado s90 (snapshot del v0.34.5 publicado en s89)
 - `backups/PACE_standalone_v0.34.4_20260707.html` <- creado s89 (snapshot del v0.34.4 publicado en s88)
-- `backups/PACE_standalone_v0.34.3_20260707.html` <- creado s88 (snapshot del v0.34.3 publicado en s87; renombrado en s89 al corregir la fecha real de s88)
-Nota s107: cap 20 mantenido rotando el mas antiguo (`v0.34.2_20260630.html`)
-al crear el backup del v0.51.0.
+Nota s108: cap 20 mantenido rotando el mas antiguo (`v0.34.3_20260707.html`)
+al crear el backup del v0.52.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 107 - v0.52.0 - B1.1 Saneamiento** (1ª sesion de codigo del plan
-de evolucion; el canonico del plan es `docs/product/DECISIONES_PRODUCTO.md`).
-Alcance pactado con el usuario ANTES de tocar (AskUserQuestion): B1.1 hoy;
-el editorial de seguridad ES+EN completo queda para **B1.2**. Los textos
-nuevos se aprobaron en bloque antes de aplicar. Verificado en vivo en dev
-y standalone (detalle en el diario).
+**Sesion 108 - v0.53.0 - B1.2 Editorial de seguridad ES+EN** (CIERRA el
+bloque B1; el canonico del plan es `docs/product/DECISIONES_PRODUCTO.md`).
+Metodo pactado: estado + desglose confirmados antes de tocar; textos ES+EN
+propuestos EN BLOQUE y aprobados antes de aplicar. Decisiones del usuario
+(AskUserQuestion): Dead hang OPCIONAL con alternativa (no fuera) · extras
+BASE §9 DENTRO · defaults completos (propuesta A). Criterio: copy realista
+y explicativo (memoria `feedback-realismo-ejercicios`) + lenguaje de
+`docs/product/BASE_MUEVE_ESTIRA.md` §7-9, tecnica verificada por cue.
 
-### Que se hizo (s107)
+### Que se hizo (s108)
 
-- **Fechas**: `parseLocalDateKey()` en state-history + fix round-trip UTC
-  en `computePathStreaks` (rachas de Caminos en husos negativos) + regla
-  #10 en CLAUDE.md (prohibido `new Date("YYYY-MM-DD")`).
-- **Cifras honestas**: contador de logros del sidebar dinamico (/106) ·
-  «acciones» del año retirada → «{n} dias con ritmo» real + tooltip
-  «intensidad {n}» · sendero del dia abstracto (sin horas inventadas).
-- **Acento de Estira por `kind`** en MoveSession (prep, glifo, contador,
-  barra, done → `--extra`).
-- **BreatheVisual**: transicion = duracion de la fase (fases <2 s: 85% +
-  ease-in-out). Medido en vivo: 5s→5s, 1s→0.85s.
-- **7 duraciones recalibradas** (declarado ≈ suma de pasos; CONTENT.md
-  alineado; el credito de minutos deja de sobre-acreditar).
-- **Apnea retirada** (decision 1 de la auditoria): fuera los 3 logros
-  hold + ticker + cifra-record; hold = guia calmada. Sustitutos con
-  detector: «Dos lenguas» (idioma), «Cuaderno a salvo» (export), «Letra
-  pequeña» (checkbox de la guia de seguridad).
-- **Claims de Respira orientativos** ES+EN (5 textos; cero claims
-  medicos).
+- **Lenguaje de riesgo fuera** (ES+EN): «al fallo» → reps limpias + parar
+  si la tecnica se rompe · «al limite» → mantener mientras la lumbar siga
+  apoyada · «mas bajo si puedes» → altura que deje respirar tranquilo ·
+  «aguanta» secos de isometrias → mantener + respirar normal · extras §9:
+  «al maximo» fuera de dedos/muñecas (el «Aguanta 10 segundos, suelta» de
+  Gluteos invisibles se CONSERVA: estructura clara, no competitivo).
+- **Claims fuera**: «el hombro nace para colgar» + «marco» de puerta →
+  «barra firme que soporte tu peso» · «indestructibles» fuera (desc ATG +
+  EN `Bulletproof Knees`→`Knees over toes` + logro explore.atg) · chin
+  tuck sin «papada» (Cuello·3 + registro + 2 EN).
+- **Tag `PULL`→`PUSH`** en Fondos en silla · **Dead hang · opcional** con
+  alternativa en el cue (key de glifo renombrada EN SINCRONIA).
+- **12 descs anuncian material/superficie** ES+EN: silla estable sin
+  ruedas · pared · barra firme · suelo.
+- **Curacion Respira·Energia**: Bhastrika (PRA) → grupo Pranayama ·
+  `rounds.express` a FREE (Energia tenia 0 free; conserva safety).
+  CONTENT.md alineado.
+- **Defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo
+  instalaciones nuevas) + `maybeRequestNotifyPermission` en el primer
+  «Comenzar» de Foco (denegar apaga el flag).
 
 ### Pendiente
 
-- **B1.2 — editorial de seguridad ES+EN completo** (ver "Proxima sesion").
-- **[Feedback s107-cierre]** (registrado en DECISIONES_PRODUCTO.md):
-  **base Mueve/Estira** entregada → `docs/product/BASE_MUEVE_ESTIRA.md`
-  (manual offline NHS/ACSM/OMS; gobierna B2 y el lenguaje de B1.2) ·
-  Respira·Energia: Bhastrika (PRA) colado en el grupo Energia +
-  `rounds.express` deberia ser FREE (si no, Energia free queda vacia) →
-  entra en B1.2 · audio ON por defecto + aviso fin-de-foco por defecto
-  (opt-out; el permiso de notificacion exige gesto — matiz de
-  implementacion) · **salir de un Camino a la home**: el «×» avanza al
-  siguiente paso (diseño s99) y en movil no hay Esc → falta via tactil
-  explicita de abandono total · visual Respira **«Loto»** (PNG del usuario
-  como estilo de tweak NUEVO, sin retirar la flor; falta el PNG en el
-  repo) · **laminas HQ de Caminos** (el usuario las tiene re-generadas; se
-  veian pixeladas en movil → re-ingesta con `ingest-lamina.js`, REGLA D-4:
-  re-MEDIR, nunca swap directo) · el original de la auditoria vive en
-  `C:\Users\ezrav\Desktop\Proyectos\Auditoría PACE 16-07.odt` (fuera del
-  repo; ya destilado en DECISIONES_PRODUCTO, no re-leer).
-- Tooltip «intensidad {n}» del año: no estaba en el bloque aprobado
-  (coherencia con retirar «acciones») — revisable si el usuario prefiere
-  otro copy.
-- **PWA en navegador REAL** (instalacion + notificacion): sigue del usuario
-  desde s102.
-- `tokens.css` 613 ln y `FocusTimer.jsx` ~493 ln (deuda, sin cambios s107).
+- **B2 — fundamentos** (ver "Proxima sesion").
+- **[Feedback s107-cierre] aun sin rutar**: salir de un Camino a la home
+  (via tactil explicita de abandono; el «×» avanza, diseño s99) · visual
+  Respira «Loto» (PNG del usuario como estilo de tweak NUEVO; falta el PNG
+  en el repo) · laminas HQ de Caminos (re-ingesta con `ingest-lamina.js`,
+  REGLA D-4: re-MEDIR, nunca swap directo) — el usuario dejara los PNG en
+  el repo cuando toque su sesion.
+- **PWA en navegador REAL** (instalacion + notificacion): sigue del
+  usuario desde s102. La notificacion ahora arranca ON por defecto en
+  instalaciones nuevas — probar el flujo de permiso real.
+- `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda, +3 ln en s108).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- B1.2: editorial de seguridad ES+EN
+## Proxima sesion -- B2: fundamentos (2-3 sesiones)
 
-Cierra el bloque B1 (DECISIONES_PRODUCTO.md): eliminar «al fallo», «al
-limite», «mas bajo si puedes», «indestructibles», «el hombro nace para
-colgar» · chin tuck sin «papada» · tag `PULL`→empuje en fondos · anunciar
-suelo/pared/barra · «silla estable y sin ruedas» · «barra diseñada para
-soportar peso» · Dead hang fuera de Hombros·5 o marcado opcional. Criterio
-del usuario (memoria `feedback-realismo-ejercicios`): copy realista y
-explicativo, hay ejercicios dificiles, verificar la tecnica antes de
-escribir cues. Despues: **B2 fundamentos** (visualId+alias, contrato de
-pasos v1, metadatos, duracion derivada, feedback «¿te ayudo?») en 2-3
-sesiones, y recien entonces el plan maestro (s107 original: home Caminos
-al centro + After Pomodoro + scoring v2).
+Gobernado por `docs/product/BASE_MUEVE_ESTIRA.md` (manual offline
+NHS/ACSM/OMS): **empieza por la auditoria ejercicio-a-ejercicio con ficha
+(§11), SIN tocar codigo, y se implementa solo tras aprobacion**. Alcance
+B2 (DECISIONES_PRODUCTO.md): `visualId` + mapa de alias (sin tocar
+localStorage) · contrato de pasos v1 (`mode: timed | reps | perSide |
+rest | transition | manual`, fallback total) pilotado en 4-6 rutinas ·
+metadatos (`position/equipment/requiresFloor/intensity/level/discrete`) ·
+duracion derivada + rangos honestos · feedback ligero «¿te ayudo?» ·
+diseñar (solo diseñar) el esquema de eventos. Despues: plan maestro (home
+Caminos al centro + After Pomodoro + scoring v2).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
 ~~build Etapa A s103~~ · ~~arte D-4 s104~~ · ~~fuentes + todayISO s105~~ ·
-~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · B1.2 editorial ·
+~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · ~~B1.2 editorial s108~~ ·
 B2 fundamentos (2-3 sesiones) · home Caminos al centro + After Pomodoro ·
 taxonomia + filtros + sigilo · pre-venta: glifos (revision COMPLETA) +
 trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A
@@ -231,8 +222,11 @@ FONDO antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Editorial de seguridad CERRADO (B1.2): sin lenguaje de fallo/limite/maximo, material anunciado, claims descriptivos | s108 | BASE_MUEVE_ESTIRA §7-9 gobierna el copy de ejercicios: nada de «al fallo»/«al limite»/«al maximo»/«aguanta» seco; isometrias con respiracion normal y condicion tecnica («mantén mientras...»); descs anuncian suelo/pared/«barra firme que soporte tu peso»/«silla estable y sin ruedas»; claims descriptivos, no promesas («traccion suave», no «el hombro nace para colgar»; «rangos profundos», no «indestructibles»). Patron para pasos con material no garantizado: **opcional-con-alternativa** en el cue (Dead hang · opcional → «Sin barra: repite las wall slides»). Contenido nuevo (B2+) nace ya con este lenguaje |
+| Renombrar un `name` de paso EXIGE renombrar su key de glifo EN EL MISMO cambio | s108 | name ES = key de glifo (s93) = key i18n custom. El rename `Dead hang (si puedes)` → `Dead hang · opcional` toco JUNTOS ExtraModule + exercise-glyphs.jsx + content/extra.js (posicional, solo valor). Si se olvida el glifo, cae en silencio a DefaultGlyph — verificar en runtime que la key nueva resuelve y la vieja no existe |
+| Defaults opt-out: `soundOn:true` + `notifyFocusEnd:true`; el permiso de notificacion se pide en el primer «Comenzar» de Foco | s108 | Solo instalaciones NUEVAS (el merge de loadState conserva lo persistido). `maybeRequestNotifyPermission` (FocusTimer.support): 1 vez por carga, solo web, solo permiso 'default'; **denegar → `notifyFocusEnd:false`** (el toggle de Ajustes nunca miente); cerrar el prompt sin responder re-intenta en otra carga. El camino de Ajustes (enableNotify s102) intacto. Colateral aceptado: `master.silent.day` pasa a requerir opt-out del audio. SUPERSEDE el «opt-in» de la fila s102 (el resto de esa fila — solo pestaña oculta, silent, solo foco — sigue vigente) |
 | Claves ISO de fecha SIEMPRE con `parseLocalDateKey()` (regla #10 CLAUDE.md) | s107 | `new Date("YYYY-MM-DD")` parsea medianoche UTC; el round-trip con `toISODate` (local) retrocede un dia en husos negativos (rompio `computePathStreaks`). Parse valido alternativo: `iso + 'T00:00:00'` (PathStats.jsx, local por spec). Cualquier walker/comparador de fechas nuevo usa el helper de state-history |
-| Apnea FUERA del producto: sin cronometro de retencion, sin logros por aguantar | s107 (decision auditoria 2026-07-16) | La retencion (hold de rondas) es guia calmada: pulso visual sin numeros + cue + salida siempre visible. NO reintroducir cifras/records/tiempos objetivo en pantallas de retencion ni logros con marca temporal de apnea. Los claims de Respira van en lenguaje orientativo («pensada para…»), nunca afirmacion medica (ansiedad/HRV/hemisferios/corazon/trance). Editorial de cues de ejercicio: realista y explicativo (memoria `feedback-realismo-ejercicios`), se completa en B1.2 |
+| Apnea FUERA del producto: sin cronometro de retencion, sin logros por aguantar | s107 (decision auditoria 2026-07-16) | La retencion (hold de rondas) es guia calmada: pulso visual sin numeros + cue + salida siempre visible. NO reintroducir cifras/records/tiempos objetivo en pantallas de retencion ni logros con marca temporal de apnea. Los claims de Respira van en lenguaje orientativo («pensada para…»), nunca afirmacion medica (ansiedad/HRV/hemisferios/corazon/trance). Editorial de cues de ejercicio: realista y explicativo (memoria `feedback-realismo-ejercicios`) — COMPLETADO en B1.2 (s108, ver fila propia) |
 | Onboarding = flujo FULL-SCREEN sobre las laminas; el WelcomeModal NO vuelve | s106 | 5 pantallas (bienvenida + 3 preguntas + primer Camino) elegidas por el usuario sobre "wizard dentro del modal". Contrato heredado: una sola vez (`firstSeen==null`), cerrar por cualquier via fija firstSeen (bienvenida, no tramite), re-abrible via `pace:open-onboarding`. SIN Escape ni backdrop-click (cerrar por accidente = perderla para siempre; salir es gesto explicito). Las laminas van via `getPathIllustration` (pipeline s104 intacto) con velo de crema FIJA + remap dia (`data-pace-scene-card`). Si se añade una pantalla, va a `ONBOARDING_QUESTIONS` (OnboardingScreens.jsx), no hardcodeada |
 | Cierre del onboarding SUGIERE en home (no auto-arranca el runner) | s106 | Decision del usuario (AskUserQuestion): el CTA "Ver mi Camino" fija `paths.lastViewed` (prioridad #1 de getSuggestedPath, s78) y cierra a la home con la card sugerida = el pick; el usuario decide arrancar. "Prefiero explorar por mi cuenta" NO toca lastViewed. Auto-arrancar el runner se descarto por intrusivo/no-PACE. `pickFirstPath` SOLO se usa dentro del onboarding: la jerarquia s78 queda intacta hasta el scoring v2 (s107, que consumira `profile`) |
 | `profile` en state: null = pregunta saltada; consumidor futuro = scoring s107 | s106 | `{ need, time, environment, completedAt }` en defaultState; el merge `{...defaultState, ...parsed}` de loadState cubre instalaciones previas (sin migracion). `need` tambien alimenta el campo libre → `intention` (cap 120, regla s17). `environment` se guarda pero NO influye hasta la taxonomia s108 (sin metadatos de ruido) — documentado en pickFirstPath.js. Regla: si una pantalla nueva captura algo, va DENTRO de profile, no como key suelta |
@@ -247,7 +241,7 @@ FONDO antes de pricing.
 | Build Etapa A: artefactos COMPILADOS con semantica de eval reproducida (IIFE + re-exposicion AST) | s103 | Los artefactos generados llevan JS plano compilado; el dev sigue en Babel standalone. La fidelidad de semantica la garantizan DOS piezas del build que van JUNTAS: la IIFE por archivo (const/let privados; sin ella los duplicados entre archivos lanzan "already declared") y la re-exposicion de function/var top-level via `collectGlobalNames` (los globals implicitos tipo `RoutineCard` siguen viajando). Regla para codigo nuevo: el canal EXPLICITO `Object.assign(window, ...)` sigue siendo la convencion (CLAUDE.md regla 2); los globals implicitos funcionan pero no añadir nuevos a proposito. Cualquier cambio al pipeline del build se verifica con el checklist funcional completo sobre el COMPILADO, no solo dev |
 | Toolchain del build PINEADO: Babel major 7 + TypeScript major 5 | s103 | `@babel/core`/`preset-env`/`preset-react` a ^7 (7.29.x, misma major.minor que el @babel/standalone 7.29.0 del navegador -- semantica identica dev/prod) y `typescript` a ^5 (API clasica `ts.createSourceFile` del validador s56). Los latest de 2026 ROMPEN el build: Babel 8 es ESM-only y TypeScript 7 (port Go) no expone la API via require. NO subir de major sin sesion propia que migre build-standalone.js. React/react-dom 18.3.1 en devDeps son la FUENTE de vendor/ (re-copiar de node_modules si se actualiza React) |
 | SW: updates con PROMPT (worker en waiting), nunca skipWaiting incondicional | s102 | El install de sw.js ya NO llama skipWaiting: el worker nuevo queda en waiting hasta que el usuario acepte en `UpdatePrompt.jsx` (postMessage SKIP_WAITING → controllerchange → reload, con guard del primer install) o cierre todas las pestañas. "Luego" respeta el waiting (reaparece en la proxima carga). Las NAVEGACIONES siguen network-first (s89 intacta): el HTML fresco llega sin esperar al SW; el prompt gobierna la activacion del worker y el precache offline. NO reintroducir el skipWaiting incondicional -- mata el prompt. Cualquier cambio de estrategia revisa la pareja s89+s102 |
-| Notificacion fin-pomodoro: opt-in, permiso solo al activar, solo pestaña oculta, silent | s102 | `notifyFocusEnd:false` por defecto. El permiso del navegador se pide UNICAMENTE al encender el toggle en Ajustes (gesto real; nunca al arrancar ni al terminar). Dispara solo si `document` NO esta visible (mirando la app, campana + pantalla de fin ya avisan) y solo en modo foco (pausa/larga no). `silent:true`: la campana pomodoro.end de la app es EL sonido; el SO no añade otro. Via `registration.showNotification` con fallback a `new Notification`; click enfoca la app (notificationclick, sw.js). Limitacion aceptada P1: con throttling de fondo puede llegar con ~1 min de retraso. Si se quiere notificar pausa/larga, es decision de producto nueva |
+| Notificacion fin-pomodoro: solo pestaña oculta, silent, solo foco — **default SUPERSEDED s108** (ON por defecto + permiso en el primer «Comenzar», ver fila s108) | s102 | ~~`notifyFocusEnd:false` por defecto~~ (s108: true en instalaciones nuevas). El permiso del navegador se pide con gesto real: toggle de Ajustes (s102) o primer «Comenzar» de Foco (s108); nunca al arrancar ni al terminar. Dispara solo si `document` NO esta visible (mirando la app, campana + pantalla de fin ya avisan) y solo en modo foco (pausa/larga no). `silent:true`: la campana pomodoro.end de la app es EL sonido; el SO no añade otro. Via `registration.showNotification` con fallback a `new Notification`; click enfoca la app (notificationclick, sw.js). Limitacion aceptada P1: con throttling de fondo puede llegar con ~1 min de retraso. Si se quiere notificar pausa/larga, es decision de producto nueva |
 | Pomodoro persiste la recarga via `pace.timer.v1`, FUERA de pace.state.v2 (cierra fork s96) | s102 | El timer sigue siendo LOCAL (decision s96): la clave aparte solo hace que sobreviva a la recarga. Se escribe SOLO con foco running (pausa/reset/fin/otros modos limpian). Al montar, FocusTimer reanuda via `useCountdown.restore(endsAt)` (endsAt ORIGINAL: el tiempo de la recarga cuenta como transcurrido) solo si endsAt sigue en el futuro Y modo/minutos coinciden con el state; **expirado estando fuera → se descarta en silencio SIN acreditar** (no se abonan minutos no presenciados, linea s101). Blindaje extra: `endsAt-now <= duracion` |
 | manifest.webmanifest unico; el build re-inserta el link SOLO en index.html | s102 | `manifest.json` se renombro (no hay dos manifests). El standalone sigue SIN `<link rel="manifest">` (CORS en file://, s48c vigente); el paso 9 del build lo re-inserta en la copia `index.html` desplegada (fix del hallazgo: Cloudflare servia la app sin manifest → no instalable). Shortcuts con deep links `/?go=` que main.jsx consume UNA vez (replaceState); `focus` NO auto-arranca el timer. Iconos de shortcut = icono de la app hasta que haya arte (regla D-4) |
 | Enlaces legales (/safety /privacy) viven en Ajustes, solo en web | s102 | Fila discreta al pie del panel, tras Reset ("Seguridad · Privacidad"), `_blank noopener` para no matar un timer corriendo. Gate `isWeb` (http/https): en el standalone file:// esas rutas no resuelven y NO se renderizan. El mismo gate cubre el bloque de notificacion; si aparece mas superficie solo-web en Tweaks, reutilizarlo. Decision de sitio de s101 CERRADA (se eligio Tweaks sobre footer del sidebar: el home queda limpio) |
@@ -334,7 +328,7 @@ FONDO antes de pricing.
 |---|---|---|
 | `app/tweaks/TweaksPanel.jsx` | 430 | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
 | `app/state-core.jsx` | 442 | BAJA (s106: +10 del profile con comentario de contrato; s101: split a state-history.jsx) |
-| `app/focus/FocusTimer.jsx` | 493 | **MEDIA** (s102: +37 ln de notificacion+persistencia lo dejan AL BORDE del tope; los helpers ya viven en FocusTimer.support.jsx -- la proxima adicion al modulo Foco debe ir alli o a un split del MinutesPicker) |
+| `app/focus/FocusTimer.jsx` | 496 | **MEDIA** (s108: +3 ln de la llamada al permiso; s102: +37 ln de notificacion+persistencia -- AL BORDE del tope; los helpers ya viven en FocusTimer.support.jsx, la proxima adicion al modulo Foco debe ir alli o a un split del MinutesPicker) |
 | `app/i18n/strings/ui.js` | 377 | BAJA (s102: +26 ln de keys PWA; dentro de limite, dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |

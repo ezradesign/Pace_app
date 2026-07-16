@@ -328,7 +328,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 28. Barra + 2 manos huecas + brazos rectos colgados (NEW). */
-  'Dead hang (si puedes)': ({ size, className }) => (
+  'Dead hang · opcional': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 8 H38" />
       <circle cx="14" cy="10" r="2.4" />

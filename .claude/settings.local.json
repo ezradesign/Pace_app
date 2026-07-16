@@ -113,7 +113,8 @@
       "PowerShell(\\(Get-Content \"app\\\\breathe\\\\BreatheVisual.jsx\" -Raw\\) -replace [regex]::Escape\\('transform ${transitionDur} var\\(--ease\\)'\\), 'transform ${transitionDur} ${transitionEase}' | Set-Content \"app\\\\breathe\\\\BreatheVisual.jsx\" -NoNewline)",
       "PowerShell(git hash-object backups\\\\PACE_standalone_v0.51.0_20260716.html)",
       "PowerShell($c = Get-Content CHANGELOG.md -Raw; $start = $c.IndexOf\\(\"## [v0.50.0] -- 2026-07-15\"\\); $end = $c.IndexOf\\(\"---\", $start\\); \"start=$start end=$end len=$\\($c.Length\\)\")",
-      "PowerShell($c = Get-Content CHANGELOG.md -Raw; $start = $c.IndexOf\\(\"## [v0.50.0] -- 2026-07-15\"\\); $new = $c.Substring\\(0, $start\\).TrimEnd\\(\\) + \"`n\"; Set-Content CHANGELOG.md -Value $new -NoNewline; \\(Get-Content CHANGELOG.md -Raw\\).Length)"
+      "PowerShell($c = Get-Content CHANGELOG.md -Raw; $start = $c.IndexOf\\(\"## [v0.50.0] -- 2026-07-15\"\\); $new = $c.Substring\\(0, $start\\).TrimEnd\\(\\) + \"`n\"; Set-Content CHANGELOG.md -Value $new -NoNewline; \\(Get-Content CHANGELOG.md -Raw\\).Length)",
+      "Bash(python -)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
