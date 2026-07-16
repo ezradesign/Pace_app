@@ -111,6 +111,7 @@ Tweaks visuales menores no regeneran standalone pero sí se anotan en `STATE.md`
 7. **Estado persistente** en `localStorage` bajo `pace.state.v2`
 8. **Variables en `.map()`** nunca deben coincidir con variables del scope externo (shadowing)
 9. **`playSound()` siempre en `try/catch`** — el sonido nunca debe romper la app
+10. **Prohibido `new Date("YYYY-MM-DD")`** — parsea medianoche UTC y rompe rachas en husos negativos. Claves ISO siempre con `parseLocalDateKey()` (state-history.jsx)
 
 ---
 

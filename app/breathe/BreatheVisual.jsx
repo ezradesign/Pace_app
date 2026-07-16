@@ -109,8 +109,14 @@ const breathVisualStyles = {
   },
 };
 
-function BreathVisual({ style, phase, progress, scale = 1.2 }) {
-  const transitionDur = '1800ms';
+function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }) {
+  /* B1: la transición dura lo que dura la FASE (antes fija 1800 ms — una
+     exhalación de 8 s animaba 1,8 s y quedaba estática; en fases de 1 s,
+     Bhastrika, nunca completaba). Fases rápidas (<2 s): 85% de la fase con
+     easing más directo, para que la forma asiente antes del cambio. */
+  const isFastPhase = phaseDuration < 2;
+  const transitionDur = `${Math.max(300, Math.round(phaseDuration * 1000 * (isFastPhase ? 0.85 : 1)))}ms`;
+  const transitionEase = isFastPhase ? 'ease-in-out' : 'var(--ease)';
 
   if (style === 'flor') {
     return (
@@ -121,7 +127,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
           borderRadius: '50%',
           opacity: 0.25,
           transform: `scale(${scale * 0.95})`,
-          transition: `transform ${transitionDur} var(--ease)`,
+          transition: `transform ${transitionDur} ${transitionEase}`,
         }} />
         <div style={{
           position: 'absolute', inset: -20,
@@ -129,12 +135,12 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
           borderRadius: '50%',
           opacity: 0.4,
           transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} var(--ease)`,
+          transition: `transform ${transitionDur} ${transitionEase}`,
         }} />
         <svg viewBox="-100 -100 200 200" style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
           transform: `scale(${scale * 0.85}) rotate(${progress * 40}deg)`,
-          transition: `transform ${transitionDur} var(--ease)`,
+          transition: `transform ${transitionDur} ${transitionEase}`,
         }}>
           {[0,1,2,3,4,5].map(i => (
             <ellipse key={i} cx="0" cy="-32" rx="14" ry="34"
@@ -148,7 +154,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
           background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 80%)',
           border: '1.5px solid var(--breathe)',
           transform: `scale(${scale * 0.7})`,
-          transition: `transform ${transitionDur} var(--ease)`,
+          transition: `transform ${transitionDur} ${transitionEase}`,
           position: 'relative',
         }} />
       </div>
@@ -165,7 +171,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
             borderRadius: '50%',
             opacity: 0.15 + i * 0.1,
             transform: `scale(${scale - i * 0.15})`,
-            transition: `transform ${transitionDur} var(--ease)`,
+            transition: `transform ${transitionDur} ${transitionEase}`,
           }} />
         ))}
         <div style={{ ...breathVisualStyles.core, background: 'var(--breathe-soft)' }} />
@@ -176,7 +182,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
   if (style === 'petalo') {
     return (
       <div data-pace-essential style={breathVisualStyles.wrap}>
-        <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} var(--ease)`, transform: `scale(${scale})` }}>
+        <svg viewBox="-100 -100 200 200" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transition: `transform ${transitionDur} ${transitionEase}`, transform: `scale(${scale})` }}>
           {[0,1,2,3,4,5].map(i => (
             <ellipse key={i} cx="0" cy="-40" rx="20" ry="45"
               fill="var(--breathe-soft)" stroke="var(--breathe)" strokeWidth="0.8"
@@ -195,7 +201,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
           ...breathVisualStyles.core,
           background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 70%)',
           transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} var(--ease)`,
+          transition: `transform ${transitionDur} ${transitionEase}`,
           borderRadius: `${42 + Math.sin(progress * Math.PI * 4) * 6}% ${58 - Math.sin(progress * Math.PI * 4) * 6}% ${46 + Math.cos(progress * Math.PI * 3) * 8}% ${54 - Math.cos(progress * Math.PI * 3) * 8}%`,
           border: '1px solid var(--breathe)',
         }} />
@@ -213,7 +219,7 @@ function BreathVisual({ style, phase, progress, scale = 1.2 }) {
         background: 'var(--breathe-soft)',
         border: '1.5px solid var(--breathe)',
         transform: `scale(${scale})`,
-        transition: `transform ${transitionDur} var(--ease)`,
+        transition: `transform ${transitionDur} ${transitionEase}`,
       }} />
       <div style={{
         position: 'absolute',

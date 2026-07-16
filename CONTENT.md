@@ -131,15 +131,15 @@ con los ids `move.*` de Estira).
 |---|---|---|---|---|
 | `extra.desk.pushups` | Flexiones de escritorio | empuje | 2 | **free** (inicial) |
 | `extra.chair.dips` | Fondos en silla | empuje | 3 | free |
-| `extra.push.ladder` | Empuje · progresión | empuje | 4 | **premium** (F6 — pica + negativas) |
-| `extra.hang.bar` | Colgarse | empuje | 4 | **premium** (F6 — requiere barra) |
+| `extra.push.ladder` | Empuje · progresión | empuje | 3 | **premium** (F6 — pica + negativas) |
+| `extra.hang.bar` | Colgarse | empuje | 2 | **premium** (F6 — requiere barra) |
 | `extra.calves` | Gemelos subrepticios | sigilo | 1 | free (micro de entrada) |
 | `extra.grip.squeeze` | Grip + antebrazos | sigilo | 1 | free (micro de entrada) |
 | `extra.glutes.stealth` | Glúteos invisibles | sigilo | 2 | free (F6 — micro discreto) |
 | `extra.core.stealth` | Core silencioso | sigilo | 2 | **premium** (hollow al límite) |
 | `extra.chair.squats` | Sentadillas de silla | piernas | 3 | free (F6 — el patrón más útil) |
-| `extra.wall.sit` | Sentadilla en pared | piernas | 3 | **premium** (isométrico exigente) |
-| `extra.legs.single` | Piernas · a una | piernas | 5 | **premium** (F6 — unilateral avanzado) |
+| `extra.wall.sit` | Sentadilla en pared | piernas | 2 | **premium** (isométrico exigente) |
+| `extra.legs.single` | Piernas · a una | piernas | 4 | **premium** (F6 — unilateral avanzado) |
 | `extra.posture.set` | Postura reset | espalda | 2 | **free** (inicial) |
 | `extra.back.desk` | Espalda de oficina | espalda | 3 | free (F6 — tracción accesible) |
 | `extra.core.plank` | Core · plancha | espalda | 4 | **premium** (F6 — isométricos de suelo) |
@@ -167,16 +167,16 @@ Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
 | `move.neck.3` | Cuello · 3 min | oficina | 3 | **free** (inicial) |
 | `move.desk.quick` | Escritorio express | oficina | 2 | free (2 min sin levantarse) |
 | `move.wrists` | Muñecas y manos | oficina | 3 | free (F5 — antídoto al teclado) |
-| `move.shoulders.5` | Hombros · 5 pasos | hombros | 5 | free (reset accesible) |
+| `move.shoulders.5` | Hombros · 5 pasos | hombros | 4 | free (reset accesible) |
 | `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
 | `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
 | `move.hips.5` | Caderas · 5 pasos | caderas | 6 | free |
 | `move.couch.stretch` | Couch stretch | caderas | 5 | **premium** (F5 — flexores profundos) |
 | `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
-| `move.atg.knees` | ATG · Rodillas a prueba | caderas | 6 | **premium** (ATG avanzado) |
+| `move.atg.knees` | ATG · Rodillas a prueba | caderas | 4 | **premium** (ATG avanzado) |
 | `move.hamstrings` | Cadena posterior | caderas | 5 | **premium** (F5 — isquios profundos) |
 | `move.morning.flow` | Despertar matinal | flujos | 5 | free (F5 — ancla de hábito diario) |
-| `move.ancestral` | Ancestral | flujos | 6 | **premium** (suelo/crawl/hang) |
+| `move.ancestral` | Ancestral | flujos | 5 | **premium** (suelo/crawl/hang) |
 
 > **Glifos (F5):** 11 pasos nuevos renderizan `DefaultGlyph` (tres arcos)
 > hasta que el usuario apruebe sus glifos — se suman a la cola D-4 de

@@ -70,15 +70,15 @@ function isActiveDay(entry) {
       || (entry.moveMinutes   || 0) > 0;
 }
 
-/* Totales del año iterando yearData una sola vez. */
+/* Totales del año iterando yearData una sola vez.
+   B1: fuera totalActions — era el score sintético (bloques de foco + presencias
+   + fracción de agua) redondeado y presentado como "acciones". La cifra del
+   año es activeDays: días con ritmo REALES (criterio isActiveDay s69). */
 function computeYearStats(yearData) {
-  let totalActions=0, activeDays=0, maxStreak=0, curStreak=0;
+  let activeDays=0, maxStreak=0, curStreak=0;
   for (const cell of yearData) {
     if (cell.isFuture) break;
     const active = isActiveDay(cell.entry);
-    if (cell.score > 0) {
-      totalActions += Math.round(cell.score);
-    }
     if (active) {
       activeDays++;
       curStreak++;
@@ -87,7 +87,7 @@ function computeYearStats(yearData) {
       curStreak = 0;
     }
   }
-  return { totalActions, activeDays, maxStreak };
+  return { activeDays, maxStreak };
 }
 
 /* Columna del grid donde empieza cada mes (para etiquetas). */
@@ -126,7 +126,7 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
   function nextYear() { if (canNext) setViewYear(availableYears[yearIdx+1]); }
 
   const yearData  = getYearData(history, viewYear, firstSeen);
-  const { totalActions, activeDays, maxStreak } = computeYearStats(yearData);
+  const { activeDays, maxStreak } = computeYearStats(yearData);
   const jan1Dow   = (new Date(viewYear,0,1).getDay()+6)%7;
   const totalCols = Math.ceil((yearData.length+jan1Dow)/7);
   const monthCols = getMonthColumns(viewYear, jan1Dow);
@@ -320,8 +320,6 @@ function YearView({ history, lang, firstSeen, onNavigateToMonth }) {
           marginTop:12,padding:'10px 14px',background:'var(--paper-2)',borderRadius:'var(--r-sm)',
           fontSize:12,color:'var(--ink-2)',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center',
         }}>
-          <span>{t('stats.year.totalActions').replace('{n}', totalActions)}</span>
-          <span style={{ color:'var(--ink-3)' }}>·</span>
           <span>{t('stats.year.activeDays').replace('{n}', activeDays)}</span>
           <span style={{ color:'var(--ink-3)' }}>·</span>
           <span>{t('stats.year.maxStreak').replace('{n}', maxStreak)}</span>

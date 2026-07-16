@@ -115,9 +115,14 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'secret.mono', cat: 'secretos', title: 'Editorial mono', desc: 'Tipografía mono', glyph: '?', secret: true },
   { id: 'secret.seal', cat: 'secretos', title: 'Sello clásico', desc: 'Logo sello', glyph: '?', secret: true },
   { id: 'secret.illustrated', cat: 'secretos', title: 'Campo y pradera', desc: 'Logo ilustrado', glyph: '?', secret: true },
-  { id: 'secret.breath.hold.60', cat: 'secretos', title: 'Apnea 60s', desc: '60 segundos de retención', glyph: '?', secret: true },
-  { id: 'secret.breath.hold.90', cat: 'secretos', title: 'Apnea 90s', desc: '90 segundos de retención', glyph: '?', secret: true },
-  { id: 'secret.breath.hold.120', cat: 'secretos', title: 'Apnea 2 min', desc: '120 segundos de retención', glyph: '?', secret: true },
+  /* B1 (decisión apnea): los 3 secretos de retención 60/90/120 s se retiran
+     — premiar aguantar sin aire contra el reloj contradice el tono de
+     seguridad. Sustitutos: exploración sin marca temporal. Los ids viejos
+     pueden seguir en state.achievements de instalaciones antiguas: inofensivo,
+     la UI solo pinta lo que está en el catálogo. */
+  { id: 'secret.bilingual', cat: 'secretos', title: 'Dos lenguas', desc: 'Usaste la app en los dos idiomas', glyph: '?', secret: true },
+  { id: 'secret.backup', cat: 'secretos', title: 'Cuaderno a salvo', desc: 'Exportaste tus datos', glyph: '?', secret: true },
+  { id: 'secret.safety.read', cat: 'secretos', title: 'Letra pequeña', desc: 'Leíste la guía de seguridad', glyph: '?', secret: true },
   { id: 'secret.zen', cat: 'secretos', title: 'Zen accidental', desc: '30 min respira en un día', glyph: '?', secret: true },
   /* Añadido en sesión 16 (v0.11.11) — activable por honor (botón "Ya doné"
      en el modal de apoyo). Sin verificación: no hay backend, confiar es
@@ -199,8 +204,9 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'explore.tweaks',
   // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
   // Sesión 17: +5 tweak-secrets (aged, dark.mode, mono, seal, illustrated).
-  'secret.cow.click', 'secret.breath.hold.60',
-  'secret.breath.hold.90', 'secret.breath.hold.120',
+  // B1: fuera los 3 breath.hold (apnea); entran bilingual/backup/safety.read.
+  'secret.cow.click', 'secret.bilingual',
+  'secret.backup', 'secret.safety.read',
   'secret.supporter',
   'secret.aged', 'secret.dark.mode', 'secret.mono',
   'secret.seal', 'secret.illustrated',

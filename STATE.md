@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.51.0
-**Ultima sesion:** #106 -- 2026-07-16 - **Onboarding de primera vez: 3 preguntas + primer Camino** (fila s106 del plan maestro). La bienvenida deja de ser un modal de 1 pantalla (WelcomeModal s17, RETIRADO) y pasa a un **flujo FULL-SCREEN de 5 pasos sobre las laminas de Caminos** (arte D-4 s104): 0-Bienvenida (manifiesto + 3 valores, reusa `welcome.*`; lamina dawn) → 1-Necesidad (Calma/Foco/Cuerpo/Energia con acento de modulo + campo libre → `intention`; lamina breath) → 2-Tiempo (respiro/pausa/bloque; lamina tea) → 3-Entorno (oficina/casa/cambia; lamina midday) → 4-**Tu primer Camino** (nombre+tagline+pasos del pick; su lamina). Guarda **`profile: {need,time,environment,completedAt}` en state** (pregunta saltada = null; instalaciones previas lo reciben por el merge de loadState). `pickFirstPath(profile)`: candidatos por necesidad + cortos primero si time='short' + fallback `getSuggestedPath` — el CTA final fija `paths.lastViewed` → la **home aterriza con ese Camino destacado** (sugerir, NO auto-arrancar; decision del usuario via AskUserQuestion junto a full-screen y chips+texto libre). Sin Escape/backdrop-click (cerrar accidental = perder la bienvenida); re-abrible via `pace:open-onboarding`. Remap "sobre el arte siempre es de dia" ampliado con `--focus-cta` + `--achievement`. Hallazgo: dentro de `[data-pace-reveal]`, `opacity` inline PIERDE contra el forwards del reveal → CTA disabled por contorno neutro. Verificado dev + compilado + standalone (flujo completo, saltar-todo → fallback, explorar → sin lastViewed, oscuro remap dia por DOM, movil 375, remonte con trap: cero errores). Diario: `docs/sessions/session-106-onboarding.md`. Historico previo: [`fuentes self-hosted + todayISO s105`](./CHANGELOG.md#v0500----2026-07-15----feat-fuentes-self-hosted-cierra-etapa-a--todayiso-local--integridad-de-caminos) (cierra Etapa A del build).
-**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 106
-**Build entregado:** `PACE_standalone.html` v0.51.0 (3073 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (~975 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.52.0
+**Ultima sesion:** #107 -- 2026-07-16 - **B1.1 Saneamiento** (1ª sesion de codigo del plan de evolucion; canonico en `docs/product/DECISIONES_PRODUCTO.md`). Alcance pactado antes de tocar: B1.1 hoy, **editorial de seguridad ES+EN completo → B1.2**. Textos aprobados en bloque antes de aplicar. Lo hecho: **`parseLocalDateKey()`** (state-history) + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos) + **regla #10 en CLAUDE.md** (prohibido `new Date("YYYY-MM-DD")`) · contador de logros del sidebar `/100` → **`ACHIEVEMENT_CATALOG.length`** (106) · **«acciones» del año RETIRADA** (score sintetico) → la cifra real «{n} dias con ritmo» (isActiveDay s69) + tooltip «intensidad {n}» · **sendero del dia ABSTRACTO** (hitos equidistantes en orden fijo, fuera las horas inventadas; el puntero de "ahora" sigue siendo lo unico cronologico) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transicion = duracion de la FASE** (antes fija 1800 ms; <2 s → 85% + ease-in-out, suelo 300 ms) · **7 duraciones recalibradas** (declarado ≈ suma de pasos: Colgarse 4→2, ATG 6→4, Empuje 4→3, Piernas·a una 5→4, Ancestral 6→5, Hombros·5 5→4, Wall sit 3→2; el credito de minutos deja de sobre-acreditar; CONTENT.md alineado) · **APNEA RETIRADA** (decision 1): fuera `secret.breath.hold.60/90/120` + ticker + cifra-record 160 px → hold = guia calmada (pulso suave + cue + salida visible); sustitutos de exploracion CON detector: `secret.bilingual` «Dos lenguas» (cambio de idioma), `secret.backup` «Cuaderno a salvo» (export), `secret.safety.read` «Letra pequeña» (checkbox del modal de seguridad) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance — cero claims medicos). Verificado en vivo dev + standalone (transiciones medidas por fase, acento por DOM, secretos disparando, round-trips DST). Diario: `docs/sessions/session-107-b1-saneamiento.md`. Historico previo: [`onboarding s106`](./CHANGELOG.md#v0510----2026-07-16----featonboarding-onboarding-de-primera-vez--3-preguntas--primer-camino).
+**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 107
+**Build entregado:** `PACE_standalone.html` v0.52.0 (3076 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (978 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.51.0** (s106: bump titulo + strings/onboarding.js tras achievements + 3 scripts de `onboarding/` TRAS el bloque de Caminos (consumen registry+paths.index) + mount loop con 3 centinelas nuevos (Onboarding/OnbScene/pickFirstPath); FUERA el script de WelcomeModule; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.51.0** (3073 KB, 79 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.51.0** (~975 KB -- laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.52.0** (s107: solo bump de titulo. s106: strings/onboarding.js + 3 scripts de `onboarding/` + 3 centinelas nuevos; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.52.0** (3076 KB, 79 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.52.0** (978 KB -- laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **NUEVO s106** (391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado; main.jsx solo lo monta) |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **NUEVO s106** (208 ln; las laminas via `getPathIllustration` → mismo pipeline archivo/data-URI, cero cableado nuevo) |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
@@ -49,35 +49,35 @@
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.35.0** (s90: `ambientDrone.start(force)` + flag interno `forced` -- bypasa ambientOn para Coherente 432, soundOn manda siempre; primera modificacion desde v0.21.0, ~10 ln) |
 | `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.45.0** (s100: `sessionAtmosphere` suavizado -- hint 22% + grano SVG feTurbulence 4% como dither anti-banding, 364 ln; s99: prop `atmosphere` + helper a window; s97: SessionPrep caption; s17 base) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** (s99: card del Modal entra con `pace-modal-in` scale+fade; s87: + `PremiumSeal`; s88: consumido por TweaksPanel) |
-| `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.22.0** |
+| `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.52.0** (s107: + `secret.bilingual` -- ref del idioma anterior, cualquier cambio de `state.lang` tras montar desbloquea; primera modificacion desde s41) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + notificacion + reset + legal; orquesta TweaksDataSection y PremiumSection) | **v0.47.0** (s102: + bloque "Aviso de fin de Foco" tras Audio (permiso al activar, hint blocked con re-render forzado) + enlaces Seguridad·Privacidad tras Reset (gate `isWeb` compartido), 430 ln. s89: split 519->351 + stepper agua) |
-| `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.34.5** (nuevo s89, 193 ln; logica de s17 intacta, extraida literal) |
+| `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.52.0** (s107: + `secret.backup` al exportar con exito. s89: nuevo, ~195 ln) |
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy honesto) | **v0.34.5** (nuevo s89, 47 ln; creada en s88 dentro del panel, extraida s89) |
-| `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.35.0** (s90: +4 patrones F4 en getSequence -- diaphragm/yin/bhramari/co2, 230 ln; s89: `data-pace-essential` en los 5 wrappers -- exime la guia de respiracion del kill de prefers-reduced-motion) |
-| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.40.0** (s95: `RoutineCard.isLocked = !canAccessRoutine(id)` -- gate real via guard central, equivalente exacto, `usePace()` para reactividad, `isPremium` sigue inline; s90: F4 12->20 tecnicas + free-first; s88: gating premiumUnlocked) |
-| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.44.0** (s99: recibe `inPath` -> SessionDone "Siguiente" + atmosfera por paso. s98: **reloj de tiempo activo timestamp-based** `activeMsRef`/`segStartRef`/`getActiveSec()` -- alimenta fin no-rounds + barra + credito (minutos activos, no `routine.min`); retira `startTime`/`cycle`/`doneInCycle`. s97: barra SEGMENTADA por bloques (tope 24). s90: +3 labels + drone; s67: playPhaseSound) |
-| `app/move/MoveModule.jsx` | Modulo Mueve | **v0.44.0** (s99: MoveSession recibe `inPath` -> SessionDone "Siguiente" + atmosfera. s97: countdown de paso centrado 22/22 + lineHeight 1.08. s93: CustomRoutinesSection + tStep, ~440 ln; s92: F6 7->14) |
-| `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.36.0** (s91: F5 7->14 rutinas + `EXTRA_ROUTINES` agrupado en 4 grupos como Respira + `getExtraRoutine` adaptado, 204 ln; s88: atg.knees + ancestral a premium) |
+| `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.52.0** (s107: `BreathVisual` recibe **`phaseDuration`** -- la transicion dura la FASE (antes fija 1800 ms); <2 s → 85% + ease-in-out, suelo 300 ms; 9 usos comparten transitionDur/Ease. s90: +4 patrones F4; s89: data-pace-essential) |
+| `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.52.0** (s107: **claims orientativos** en 4 descs + aside Balance (fuera ansiedad/hemisferios/HRV/corazon/trance) + `secret.safety.read` al marcar "lo he leido" en BreatheSafety. s95: guard central; s90: F4 20 tecnicas) |
+| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.52.0** (s107: **hold = guia calmada** -- fuera ticker de retencion + logros hold + cifra-record 160 px; pulso `pace-hold-pulse` + cue + salida visible (decision apnea B1); pasa `phaseDuration` a BreathVisual. s98: reloj de tiempo activo timestamp-based (el hold sigue sumando via activeMsRef). s97: barra segmentada) |
+| `app/move/MoveModule.jsx` | Modulo Mueve (MoveSession la comparten Mueve/Estira/custom) | **v0.52.0** (s107: **acento por `kind`** -- `accent`/`accentSoft` derivan de kind y gobiernan prep/StepGlyph(props)/contador/barra/done (Estira → `--extra`) + 4 duraciones recalibradas (hang.bar 2, push.ladder 3, wall.sit 2, legs.single 4). s99: inPath; s93: CustomRoutinesSection, ~445 ln) |
+| `app/extra/ExtraModule.jsx` | Modulo Estira | **v0.52.0** (s107: 3 duraciones recalibradas -- shoulders.5 4, atg.knees 4, ancestral 5. s91: F5 7->14 rutinas agrupadas, 204 ln; s88: atg.knees + ancestral a premium) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.46.0** (s101: WeekDots con criterio "dia activo" s69 -- focus\|breath\|move>0, antes solo foco encendia el punto; +6 ln -> 541, sigue en deuda; s94: clipPath unico por instancia) |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** (s107: contador de logros dinamico `ACHIEVEMENT_CATALOG.length` (antes /100 hardcodeado s12) + **sendero ABSTRACTO** (hitos equidistantes orden fijo, sin horas inventadas); s101: WeekDots criterio s69; ~540 ln, sigue en deuda) |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.47.0** (s102: notificacion en onComplete rama foco + 2 efectos de persistencia (restore al montar / persist en running), 493 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.47.0** (s102: + `restore(endsAtMs)` -- reanuda desde idle con el endsAt ORIGINAL (el tiempo de la recarga cuenta como transcurrido) + expone `endsAt` solo en running, 158 ln. s97: idle deriva de durationSec. s96: nuevo, `endsAt` como verdad, `completed` terminal) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.44.0** (s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
-| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.33.3** (nuevo s83, 209 ln; lee `window.ACHIEVEMENT_GLYPHS` para entradas con glyphSvg) |
+| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.52.0** (s107: fuera `secret.breath.hold.60/90/120` (apnea, decision B1); entran `secret.bilingual`/`secret.backup`/`secret.safety.read` (exploracion sin marca temporal, implementados); ids viejos en state de instalaciones antiguas = inofensivos. s83: nuevo, ~215 ln) |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** (s64: overflowY:hidden en data-pyv-wrap -- fix scroll vertical) |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** (s63: titulo marginBottom 6->4) |
-| `app/stats/YearView.jsx` | Heatmap anual | **v0.28.8** (s69: isActiveDay helper + computeYearStats unifica criterio "dia activo" = focus|breath|move>0, agua sola NO cuenta) |
+| `app/stats/YearView.jsx` | Heatmap anual | **v0.52.0** (s107: fuera `totalActions` (score sintetico presentado como "acciones") -- el footer muestra «{n} dias con ritmo» real + racha; tooltip por celda «intensidad {n}». s69: isActiveDay = focus\|breath\|move>0, agua sola NO cuenta) |
 | `app/stats/StatsPanel.jsx` | Panel stats | **v0.46.0** (s101: consume `getHistoryWithToday` -- Mes/Año/totales con el dia actual + fila "Cuerpo" (`stats.label.body`), 441 ln; s69: WeekBarRow lunes-primero) |
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
-| `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.46.0** (nuevo s101, 160 ln; extraido de state-core + selector memoizado por identidad que reutiliza `archiveDayToHistory`) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.51.0** (s106: + `profile {need,time,environment,completedAt}` en defaultState -- instalaciones previas lo reciben por el merge, sin migracion; 442 ln. s104: fix `PACE_VERSION` -- ENTRA AL CHECKLIST de bump junto a titulo+CACHE_NAME. s101: split state-history) |
+| `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.52.0** (s107: + **`parseLocalDateKey()`** -- parse LOCAL de claves "YYYY-MM-DD" (new Date(iso) es UTC y rompe rachas en husos negativos); regla #10 CLAUDE.md. s101: extraido de state-core, ~170 ln) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.52.0** (s107: solo bump PACE_VERSION. s106: + `profile` en defaultState; 442 ln. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
-| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.46.0** (s101: racha actual VIVA en computePathStreaks -- si hoy no hay Camino cuenta desde ayer, iguala la semantica del streak principal; s95: getSuggestedPath via guard; s78: jerarquia lastViewed>horario>anytime>catalog[0]) |
+| `app/state-paths.jsx` | Caminos CRUD + stats | **v0.52.0** (s107: `computePathStreaks` parsea claves ISO con `parseLocalDateKey` (fix husos negativos); s101: racha actual VIVA; s95: getSuggestedPath via guard; s78: jerarquia lastViewed>horario>anytime>catalog[0]) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
 | `app/state.jsx` | Indice — re-export consolidado | **v0.46.0** (s101: + `getHistoryWithToday` + orden de carga actualizado; s96: + `completeFocusSession`; s95: + `canAccessRoutine`/`canAccessPath`) |
 | ~~`app/welcome/WelcomeModule.jsx`~~ | ~~Welcome de primera vez~~ | **RETIRADO s106** (sustituido por `app/onboarding/`; el manifiesto migro a la pantalla 0 y la intencion a la pregunta de necesidad; `pace:open-welcome` → `pace:open-onboarding`) |
@@ -92,9 +92,9 @@
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium + pwa | **v0.47.0** (s102: + 13 keys ES+EN -- `tweaks.notify.*` (5) + `tweaks.legal.*` (2) + `notify.focus.*` (2) + `update.*` (4), 377 ln; s89: agua; s88: premium.tweaks) |
 | `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe (phases/sesion/safety) + lib breathe/move/extra + move + hydrate + custom | **v0.44.0** (s99: + `session.next` ("Siguiente"/"Next") + `session.focusDoneMeta/Copy` ES+EN; s93: +~33 keys `custom.*`, ~335 ln; nuevo s81) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.45.0** (s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN, 132 ln; s99: + `paths.library.count.one/many` ES+EN; nuevo s81) |
-| `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.46.0** (s101: + `stats.label.body` "Cuerpo"/"Body" + valores de `stats.month.total.move`/`.tooltip.move` a Cuerpo, 117 ln; nuevo s81) |
+| `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.52.0** (s107: fuera `stats.year.totalActions`; `activeDays` → «{n} dias con ritmo»/"days with rhythm" + `tooltip.score` → «intensidad {n}»/"intensity {n}". s101: label.body, ~115 ln) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
-| `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.37.0** (nuevo s92, 94 ln; split de strings-content.js al superar ~470 ln con F6) |
+| `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.52.0** (s107: 5 claims EN a lenguaje orientativo, espejo del ES. s92: nuevo, 94 ln) |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
 | `app/tokens.css` | Tokens CSS + base | **v0.51.0** (s106: el remap de `[data-pace-scene-card]` suma `--focus-cta` + `--achievement` (el onboarding usa CTA y acento Energia sobre arte; copias dia, mismo aviso); 613 ln, deuda crece. s104: bloque ESCENA DE CAMINO + regla "sobre el arte siempre es de dia"; s100: draw-in sendero; s99: microinteracciones; s97: recalibracion oscuro; s89: reduced-motion `[data-pace-essential]`) |
@@ -112,13 +112,14 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.51.0** (s106: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas al precache. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; + notificationclick; s89: activate borra caches viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.52.0** (s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + persistencia `pace.timer.v1` | **v0.47.0** (nuevo s102, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.51.0_20260716.html` <- creado s107 (snapshot del v0.51.0 publicado en s106, extraido de git HEAD -- patron s87, byte-identico verificado por hash)
 - `backups/PACE_standalone_v0.50.0_20260716.html` <- creado s106 (snapshot del v0.50.0 publicado en s105, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.49.0_20260715.html` <- creado s105 (snapshot del v0.49.0 publicado en s104, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.48.0_20260714.html` <- creado s104 (snapshot del v0.48.0 publicado en s103, extraido de git HEAD -- patron s87)
@@ -138,80 +139,90 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.34.5_20260707.html` <- creado s90 (snapshot del v0.34.5 publicado en s89)
 - `backups/PACE_standalone_v0.34.4_20260707.html` <- creado s89 (snapshot del v0.34.4 publicado en s88)
 - `backups/PACE_standalone_v0.34.3_20260707.html` <- creado s88 (snapshot del v0.34.3 publicado en s87; renombrado en s89 al corregir la fecha real de s88)
-- `backups/PACE_standalone_v0.34.2_20260630.html` <- creado s87 (snapshot del v0.34.2 publicado en s86, desde git HEAD)
-Nota s106: cap 20 mantenido rotando el mas antiguo (`v0.34.1_20260605.html`)
-al crear el backup del v0.50.0.
+Nota s107: cap 20 mantenido rotando el mas antiguo (`v0.34.2_20260630.html`)
+al crear el backup del v0.51.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 106 - v0.51.0 - Onboarding de primera vez: 3 preguntas + primer
-Camino.** Fila s106 del plan maestro. Tres bifurcaciones decididas por el
-usuario ANTES de tocar (AskUserQuestion): full-screen con arte · sugerir en
-home (no auto-arrancar) · chips + texto libre. Verificado en dev, compilado
-y standalone.
+**Sesion 107 - v0.52.0 - B1.1 Saneamiento** (1ª sesion de codigo del plan
+de evolucion; el canonico del plan es `docs/product/DECISIONES_PRODUCTO.md`).
+Alcance pactado con el usuario ANTES de tocar (AskUserQuestion): B1.1 hoy;
+el editorial de seguridad ES+EN completo queda para **B1.2**. Los textos
+nuevos se aprobaron en bloque antes de aplicar. Verificado en vivo en dev
+y standalone (detalle en el diario).
 
-### Que se hizo (s106)
+### Que se hizo (s107)
 
-- **`app/onboarding/` nuevo** (sustituye a `app/welcome/`, ELIMINADO):
-  `Onboarding.jsx` (orquestador de 5 pantallas, 391 ln) +
-  `OnboardingScreens.jsx` (piezas puras: preguntas/escena/chips/dots/logo,
-  208 ln) + `pickFirstPath.js` (58 ln) + `strings/onboarding.js` (ES+EN,
-  113 ln; la bienvenida reusa `welcome.*`).
-- **Flujo**: Bienvenida (manifiesto+valores, lamina dawn) → Necesidad
-  (chips Calma/Foco/Cuerpo/Energia con acento de modulo + campo libre →
-  `intention`; lamina breath) → Tiempo (respiro/pausa/bloque; tea) →
-  Entorno (oficina/casa/cambia; midday) → Tu primer Camino (pick + su
-  lamina). Cada pregunta saltable (campo null). Contrato del WelcomeModal
-  heredado: una vez con `firstSeen==null`, cerrar lo fija siempre,
-  re-abrible via `pace:open-onboarding`. SIN Escape/backdrop-click.
-- **`profile` en state** (`{need,time,environment,completedAt}`):
-  instalaciones previas lo reciben por el merge de loadState, sin
-  migracion. En s107 entra al scoring de getSuggestedPath.
-- **`pickFirstPath(profile)`**: candidatos por necesidad (calm→breath/
-  dusk/tea · focus→dawn/afternoon/midday · body→midday/weekend/dusk ·
-  energy→afternoon/midday/dawn), cortos primero si time='short', filtro
-  existencia+canAccessPath, fallback getSuggestedPath. El CTA "Ver mi
-  Camino" fija `paths.lastViewed` (prioridad #1 s78) → la home destaca el
-  pick; "prefiero explorar" no lo toca.
-- **Arte**: laminas via `getPathIllustration` (mismo pipeline: archivo web
-  / data URI standalone, cero cableado nuevo) + velo radial de crema FIJA.
-  El remap oscuro de `[data-pace-scene-card]` suma `--focus-cta` +
-  `--achievement` (copias dia).
-- **Hallazgo**: dentro de `[data-pace-reveal]` el `forwards` de
-  `pace-reveal-rise` (termina en opacity:1) GANA al `opacity` inline →
-  el CTA deshabilitado se señaliza por contorno neutro, no por opacidad.
-- Mount loop de PACE.html: 3 centinelas nuevos (Onboarding/OnbScene/
-  pickFirstPath — carrera de evaluacion s38b).
+- **Fechas**: `parseLocalDateKey()` en state-history + fix round-trip UTC
+  en `computePathStreaks` (rachas de Caminos en husos negativos) + regla
+  #10 en CLAUDE.md (prohibido `new Date("YYYY-MM-DD")`).
+- **Cifras honestas**: contador de logros del sidebar dinamico (/106) ·
+  «acciones» del año retirada → «{n} dias con ritmo» real + tooltip
+  «intensidad {n}» · sendero del dia abstracto (sin horas inventadas).
+- **Acento de Estira por `kind`** en MoveSession (prep, glifo, contador,
+  barra, done → `--extra`).
+- **BreatheVisual**: transicion = duracion de la fase (fases <2 s: 85% +
+  ease-in-out). Medido en vivo: 5s→5s, 1s→0.85s.
+- **7 duraciones recalibradas** (declarado ≈ suma de pasos; CONTENT.md
+  alineado; el credito de minutos deja de sobre-acreditar).
+- **Apnea retirada** (decision 1 de la auditoria): fuera los 3 logros
+  hold + ticker + cifra-record; hold = guia calmada. Sustitutos con
+  detector: «Dos lenguas» (idioma), «Cuaderno a salvo» (export), «Letra
+  pequeña» (checkbox de la guia de seguridad).
+- **Claims de Respira orientativos** ES+EN (5 textos; cero claims
+  medicos).
 
 ### Pendiente
 
+- **B1.2 — editorial de seguridad ES+EN completo** (ver "Proxima sesion").
+- **[Feedback s107-cierre]** (registrado en DECISIONES_PRODUCTO.md):
+  **base Mueve/Estira** entregada → `docs/product/BASE_MUEVE_ESTIRA.md`
+  (manual offline NHS/ACSM/OMS; gobierna B2 y el lenguaje de B1.2) ·
+  Respira·Energia: Bhastrika (PRA) colado en el grupo Energia +
+  `rounds.express` deberia ser FREE (si no, Energia free queda vacia) →
+  entra en B1.2 · audio ON por defecto + aviso fin-de-foco por defecto
+  (opt-out; el permiso de notificacion exige gesto — matiz de
+  implementacion) · **salir de un Camino a la home**: el «×» avanza al
+  siguiente paso (diseño s99) y en movil no hay Esc → falta via tactil
+  explicita de abandono total · visual Respira **«Loto»** (PNG del usuario
+  como estilo de tweak NUEVO, sin retirar la flor; falta el PNG en el
+  repo) · **laminas HQ de Caminos** (el usuario las tiene re-generadas; se
+  veian pixeladas en movil → re-ingesta con `ingest-lamina.js`, REGLA D-4:
+  re-MEDIR, nunca swap directo) · el original de la auditoria vive en
+  `C:\Users\ezrav\Desktop\Proyectos\Auditoría PACE 16-07.odt` (fuera del
+  repo; ya destilado en DECISIONES_PRODUCTO, no re-leer).
+- Tooltip «intensidad {n}» del año: no estaba en el bloque aprobado
+  (coherencia con retirar «acciones») — revisable si el usuario prefiere
+  otro copy.
 - **PWA en navegador REAL** (instalacion + notificacion): sigue del usuario
-  desde s102 (sin confirmar al arrancar s106).
-- Copys del onboarding iterables con feedback real (patron s104).
-- `tokens.css` 613 ln (deuda crece; candidato a extraer @font-face o CSS
-  del SenderoBar).
-- `FocusTimer.jsx` a 498 ln (al borde; lo nuevo va a FocusTimer.support.jsx).
+  desde s102.
+- `tokens.css` 613 ln y `FocusTimer.jsx` ~493 ln (deuda, sin cambios s107).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- s107: home Caminos al centro + After Pomodoro
+## Proxima sesion -- B1.2: editorial de seguridad ES+EN
 
-Siguiente en el plan maestro (ROADMAP "Camino a v1.0"): **home con Caminos
-al centro** (SuggestedPathCard protagonista, ¿thumb de su lamina?) +
-**`getSuggestedPath` v2 con scoring** (ahora hay `profile` capturado en el
-onboarding) + **After Pomodoro** (mini-Camino automatico sugerido al
-terminar Foco, en el BreakMenu) + mini-Caminos de activacion 2-3 min (ahi
-se completa la metrica "primer Camino en <3 min"). Encaja tambien la
-sidebar mas util (pregunta abierta s103).
+Cierra el bloque B1 (DECISIONES_PRODUCTO.md): eliminar «al fallo», «al
+limite», «mas bajo si puedes», «indestructibles», «el hombro nace para
+colgar» · chin tuck sin «papada» · tag `PULL`→empuje en fondos · anunciar
+suelo/pared/barra · «silla estable y sin ruedas» · «barra diseñada para
+soportar peso» · Dead hang fuera de Hombros·5 o marcado opcional. Criterio
+del usuario (memoria `feedback-realismo-ejercicios`): copy realista y
+explicativo, hay ejercicios dificiles, verificar la tecnica antes de
+escribir cues. Despues: **B2 fundamentos** (visualId+alias, contrato de
+pasos v1, metadatos, duracion derivada, feedback «¿te ayudo?») en 2-3
+sesiones, y recien entonces el plan maestro (s107 original: home Caminos
+al centro + After Pomodoro + scoring v2).
 
-### Despues -- Plan maestro v1.0 (adoptado s93)
+### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
 ~~build Etapa A s103~~ · ~~arte D-4 s104~~ · ~~fuentes + todayISO s105~~ ·
-~~onboarding s106~~ · home Caminos al centro + After Pomodoro (s107) ·
-taxonomia + filtros + sigilo (s108-109) · pre-venta: glifos (revision
-COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO + Starter
-Story A FONDO antes de pricing.
+~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · B1.2 editorial ·
+B2 fundamentos (2-3 sesiones) · home Caminos al centro + After Pomodoro ·
+taxonomia + filtros + sigilo · pre-venta: glifos (revision COMPLETA) +
+trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A
+FONDO antes de pricing.
 
 ---
 
@@ -220,6 +231,8 @@ Story A FONDO antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Claves ISO de fecha SIEMPRE con `parseLocalDateKey()` (regla #10 CLAUDE.md) | s107 | `new Date("YYYY-MM-DD")` parsea medianoche UTC; el round-trip con `toISODate` (local) retrocede un dia en husos negativos (rompio `computePathStreaks`). Parse valido alternativo: `iso + 'T00:00:00'` (PathStats.jsx, local por spec). Cualquier walker/comparador de fechas nuevo usa el helper de state-history |
+| Apnea FUERA del producto: sin cronometro de retencion, sin logros por aguantar | s107 (decision auditoria 2026-07-16) | La retencion (hold de rondas) es guia calmada: pulso visual sin numeros + cue + salida siempre visible. NO reintroducir cifras/records/tiempos objetivo en pantallas de retencion ni logros con marca temporal de apnea. Los claims de Respira van en lenguaje orientativo («pensada para…»), nunca afirmacion medica (ansiedad/HRV/hemisferios/corazon/trance). Editorial de cues de ejercicio: realista y explicativo (memoria `feedback-realismo-ejercicios`), se completa en B1.2 |
 | Onboarding = flujo FULL-SCREEN sobre las laminas; el WelcomeModal NO vuelve | s106 | 5 pantallas (bienvenida + 3 preguntas + primer Camino) elegidas por el usuario sobre "wizard dentro del modal". Contrato heredado: una sola vez (`firstSeen==null`), cerrar por cualquier via fija firstSeen (bienvenida, no tramite), re-abrible via `pace:open-onboarding`. SIN Escape ni backdrop-click (cerrar por accidente = perderla para siempre; salir es gesto explicito). Las laminas van via `getPathIllustration` (pipeline s104 intacto) con velo de crema FIJA + remap dia (`data-pace-scene-card`). Si se añade una pantalla, va a `ONBOARDING_QUESTIONS` (OnboardingScreens.jsx), no hardcodeada |
 | Cierre del onboarding SUGIERE en home (no auto-arranca el runner) | s106 | Decision del usuario (AskUserQuestion): el CTA "Ver mi Camino" fija `paths.lastViewed` (prioridad #1 de getSuggestedPath, s78) y cierra a la home con la card sugerida = el pick; el usuario decide arrancar. "Prefiero explorar por mi cuenta" NO toca lastViewed. Auto-arrancar el runner se descarto por intrusivo/no-PACE. `pickFirstPath` SOLO se usa dentro del onboarding: la jerarquia s78 queda intacta hasta el scoring v2 (s107, que consumira `profile`) |
 | `profile` en state: null = pregunta saltada; consumidor futuro = scoring s107 | s106 | `{ need, time, environment, completedAt }` en defaultState; el merge `{...defaultState, ...parsed}` de loadState cubre instalaciones previas (sin migracion). `need` tambien alimenta el campo libre → `intention` (cap 120, regla s17). `environment` se guarda pero NO influye hasta la taxonomia s108 (sin metadatos de ruido) — documentado en pickFirstPath.js. Regla: si una pantalla nueva captura algo, va DENTRO de profile, no como key suelta |

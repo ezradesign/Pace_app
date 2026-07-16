@@ -235,7 +235,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 
 /* REDUCED MOTION (recalibrado s89 · A-reduced de la auditoria v0.34.4).
    El kill global anterior tambien congelaba la guia visual de respiracion
-   (BreathVisual anima con transitions de 1800ms sobre transform): con
+   (BreathVisual anima con transitions de la duracion de la fase, B1): con
    reduced-motion activo el circulo saltaba en vez de expandirse y el
    breathwork guiado perdia su funcion. WCAG 2.3.3 exime el motion ESENCIAL
    a la funcionalidad. Convencion: un subtree marcado data-pace-essential

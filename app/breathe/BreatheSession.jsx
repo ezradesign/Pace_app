@@ -37,7 +37,6 @@ function BreatheSession({ routine, onExit, inPath }) {
   const [phaseTime, setPhaseTime] = useState(0);
   const [round, setRound] = useState(1);
   const [breathCount, setBreathCount] = useState(1);
-  const [holdSeconds, setHoldSeconds] = useState(0);
   const [paused, setPaused] = useState(false);
   const sessionStart = useRef(Date.now());   // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
   // Reloj de TIEMPO ACTIVO (s98): acumulador timestamp-based, local al modulo.
@@ -120,20 +119,9 @@ function BreatheSession({ routine, onExit, inPath }) {
     return () => clearInterval(intv);
   }, [phase, paused, routine, stage]);
 
-  // Ticker de retención (hold en rondas)
-  useEffect(() => {
-    if (stage !== 'hold' || paused) return;
-    const intv = setInterval(() => {
-      setHoldSeconds(s => {
-        const next = s + 1;
-        if (next === 60) unlockAchievement('secret.breath.hold.60');
-        if (next === 90) unlockAchievement('secret.breath.hold.90');
-        if (next === 120) unlockAchievement('secret.breath.hold.120');
-        return next;
-      });
-    }, 1000);
-    return () => clearInterval(intv);
-  }, [stage, paused]);
+  /* B1 (decisión apnea): fuera el ticker de retención — sin cronómetro ni
+     logros por aguantar. La retención es guía calmada con salida siempre
+     visible; el tiempo activo real lo sigue sumando activeMsRef. */
 
   // Drone ambiente — efecto paralelo sobre stage y paused
   useEffect(() => {
@@ -198,7 +186,6 @@ function BreatheSession({ routine, onExit, inPath }) {
       } else {
         try { playSound('breathe.session.end'); } catch (e) {}
         setStage('hold');
-        setHoldSeconds(0);
       }
     } else {
       // Fin no-rounds por TIEMPO ACTIVO (s98), no wall-clock: las pausas no
@@ -283,8 +270,9 @@ function BreatheSession({ routine, onExit, inPath }) {
   }
 
   if (stage === 'hold') {
-    const holdMins = Math.floor(holdSeconds / 60);
-    const holdSecs = holdSeconds % 60;
+    /* B1 (decisión apnea): fuera la cifra-récord de 160 px — invitaba a
+       competir contra el reloj. La retención es guía calmada: pulso visual
+       suave, el cue de salida y el botón siempre visible. */
     return (
       <SessionShell
         routine={displayRoutine}
@@ -294,21 +282,17 @@ function BreatheSession({ routine, onExit, inPath }) {
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
         <div style={{ textAlign: 'center', maxWidth: 520 }}>
-          <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 16, fontWeight: 500 }}>
+          <style>{`@keyframes pace-hold-pulse { from { transform: scale(0.96); opacity: 0.85; } to { transform: scale(1.05); opacity: 1; } }`}</style>
+          <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 30, fontWeight: 500 }}>
             {t('session.hold')}
           </div>
           <div style={{
-            ...displayItalic,
-            fontSize: 160, fontWeight: 400, lineHeight: 0.9,
-            color: 'var(--ink)',
-            fontVariantNumeric: 'tabular-nums',
-            letterSpacing: '-0.03em',
-          }}>
-            {holdMins > 0 ? `${holdMins}:${String(holdSecs).padStart(2,'0')}` : holdSecs}
-          </div>
-          <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            {holdMins > 0 ? t('session.minutes') : t('session.seconds')}
-          </div>
+            width: 140, height: 140, margin: '0 auto',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 78%)',
+            border: '1.5px solid var(--breathe)',
+            animation: 'pace-hold-pulse 4s ease-in-out infinite alternate',
+          }} />
           <p style={{
             ...displayItalic,
             fontSize: 18, color: 'var(--ink-2)',
@@ -380,6 +364,7 @@ function BreatheSession({ routine, onExit, inPath }) {
         phase={current.label}
         progress={progress}
         scale={current.scale}
+        phaseDuration={current.duration}
       />
       <div style={{ textAlign: 'center' }}>
         <div style={{

@@ -37,7 +37,7 @@ const MOVE_ROUTINES = {
           { name: 'Descanso', dur: 30, cue: '' },
           { name: 'Fondos en silla', dur: 40, cue: 'Al fallo.' },
         ]},
-      { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 4, access: 'premium',
+      { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
         steps: [
           { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -45,7 +45,7 @@ const MOVE_ROUTINES = {
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
           { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
         ]},
-      { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra o un marco. El hombro nace para colgar.', min: 4, access: 'premium',
+      { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra o un marco. El hombro nace para colgar.', min: 2, access: 'premium',
         steps: [
           { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
           { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
@@ -99,13 +99,13 @@ const MOVE_ROUTINES = {
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
           { name: 'Sentadilla a silla', dur: 40, cue: 'Últimas 8, control total.' },
         ]},
-      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 3, access: 'premium',
+      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico cuádriceps.', min: 2, access: 'premium',
         steps: [
           { name: 'Wall sit', dur: 60, cue: 'Rodillas 90°, aguanta.' },
           { name: 'Descanso', dur: 30, cue: 'Suave.' },
           { name: 'Wall sit', dur: 60, cue: 'Más bajo si puedes.' },
         ]},
-      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio y control.', min: 5, access: 'premium',
+      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio y control.', min: 4, access: 'premium',
         steps: [
           { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -181,6 +181,10 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
   // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
   // Estira azul-gris segun kind).
   const atmo = inPath ? (kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)') : undefined;
+  // B1: acento por kind en TODA la sesion (prep, glifo, contador, barra,
+  // done) — Estira deja de vivir en var(--move).
+  const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
+  const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   // Rutinas custom (F7 · s93): sin keys posicionales `<id>.sN.*` — el EN se
   // resuelve por nombre canónico de ejercicio (content/custom.js), con
@@ -282,7 +286,7 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
       <SessionPrep
         routine={displayRoutine}
         onExit={onExit}
-        accent="var(--move)"
+        accent={accent}
         prepCount={prepCount}
         copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
@@ -300,15 +304,15 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
       <SessionDone
         routine={displayRoutine}
         onExit={onExit}
-        accent="var(--move)"
-        accentSoft="var(--move-soft)"
+        accent={accent}
+        accentSoft={accentSoft}
         doneMeta={t('session.antidoteDone')}
         doneCopy={t('move.doneCopy')}
         stats={[
           { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
           { label: t('move.steps'),  value: String(routine.steps.length) },
         ]}
-        buttonStyle={{ background: 'var(--move)', borderColor: 'var(--move)' }}
+        buttonStyle={{ background: accent, borderColor: accent }}
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
       />
@@ -341,8 +345,8 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
       hint={t('move.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
-        <StepGlyph stepName={step.name} />
-        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--move)', marginBottom: 14, fontWeight: 500 }}>
+        <StepGlyph stepName={step.name} accent={accent} accentSoft={accentSoft} />
+        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: accent, marginBottom: 14, fontWeight: 500 }}>
           {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>
         <h1 style={{
@@ -372,7 +376,7 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
             <div key={i} style={{
               flex: s.dur,
               height: i === stepIdx ? 6 : 2,
-              background: i < stepIdx ? 'var(--move)' : i === stepIdx ? 'var(--line)' : 'var(--paper-3)',
+              background: i < stepIdx ? accent : i === stepIdx ? 'var(--line)' : 'var(--paper-3)',
               borderRadius: 2, position: 'relative', overflow: 'hidden',
               transition: 'height 220ms',
             }}>
@@ -380,7 +384,7 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
                 <div style={{
                   position: 'absolute', inset: 0,
                   width: `${progress * 100}%`,
-                  background: 'var(--move)',
+                  background: accent,
                   transition: 'width 1s linear',
                 }} />
               )}
@@ -401,15 +405,16 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
 
 /* Glifo por paso — círculo decorativo (moneda) con SVG canónico interior.
    La key es el step.name canónico en español (los datos viven en es-ES).
-   El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves. */
-function StepGlyph({ stepName }) {
+   El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves.
+   B1: acento por kind via props (Estira llega con --extra). */
+function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)' }) {
   return (
     <div style={{
       width: 72, height: 72, margin: '0 auto 20px',
       borderRadius: '50%',
-      background: 'var(--move-soft)',
+      background: accentSoft,
       display: 'grid', placeItems: 'center',
-      color: 'var(--move)',
+      color: accent,
     }}>
       <ExerciseGlyph id={stepName} size={44} />
     </div>
