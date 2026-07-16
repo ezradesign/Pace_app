@@ -6,9 +6,10 @@
      - "Plan" del día — v0.11.2 (redundante con ActivityBar).
      - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
      - "Intención" — v0.12.1 (aporta poco valor; la misma pregunta se
-       hace al usuario nuevo en el WelcomeModal, que la guarda en
-       `state.intention`. Quitarla libera espacio vertical y deja que
-       el botón de Donar gane prominencia en el footer).
+       hace al usuario nuevo en la bienvenida — hoy el onboarding s106,
+       antes el WelcomeModal — que la guarda en `state.intention`.
+       Quitarla libera espacio vertical y deja que el botón de Donar
+       gane prominencia en el footer).
 
    RESPONSIVE (sesión 22 · v0.12.5):
      En ≤768px el sidebar se desacopla y pasa a ser un drawer

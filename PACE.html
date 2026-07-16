@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.50.0</title>
+  <title>PACE · Foco · Cuerpo — v0.51.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -123,6 +123,7 @@
   <script type="text/babel" src="app/i18n/strings/paths.js"></script>
   <script type="text/babel" src="app/i18n/strings/stats.js"></script>
   <script type="text/babel" src="app/i18n/strings/achievements.js"></script>
+  <script type="text/babel" src="app/i18n/strings/onboarding.js"></script>
   <script type="text/babel" src="app/i18n/content/breathe.js"></script>
   <script type="text/babel" src="app/i18n/content/move.js"></script>
   <script type="text/babel" src="app/i18n/content/extra.js"></script>
@@ -167,10 +168,6 @@
   <!-- Apoya el proyecto (Buy Me a Coffee) — se carga antes que Sidebar
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
   <script type="text/babel" src="app/support/SupportModule.jsx"></script>
-
-  <!-- Bienvenida de primera vez (sesión 17 / v0.12.0).
-       Se carga antes que main.jsx porque este la monta. -->
-  <script type="text/babel" src="app/welcome/WelcomeModule.jsx"></script>
 
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
 
@@ -239,6 +236,15 @@
   <!-- Caminos - PathRunner UI (sesion 50; split s80) - orquestador -->
   <script type="text/babel" data-presets="env,react" src="app/paths/PathRunner.jsx"></script>
 
+  <!-- Onboarding de primera vez (sesión 106 / v0.51.0) — sustituye al
+       WelcomeModule (s17, retirado). TRAS el bloque de Caminos: consume el
+       catálogo (registry) y las láminas (paths.index) para las escenas de
+       fondo y el primer Camino. Orden interno: helper → piezas → orquestador.
+       main.jsx lo monta. -->
+  <script type="text/babel" data-presets="env,react" src="app/onboarding/pickFirstPath.js"></script>
+  <script type="text/babel" src="app/onboarding/OnboardingScreens.jsx"></script>
+  <script type="text/babel" src="app/onboarding/Onboarding.jsx"></script>
+
   <!-- Shell del main (sesion 82 / v0.33.2): split de main.jsx en main/.
        _responsive.js inyecta el bloque <style> de reglas @media globales del
        layout (TopBar, ActivityBar, main content, sidebar handle, fallback dvh).
@@ -271,7 +277,14 @@
         typeof TweaksPanel      === 'function' &&
         typeof BreatheSession   === 'function' &&
         typeof MoveSession      === 'function' &&
-        typeof ToastHost        === 'function'
+        typeof ToastHost        === 'function' &&
+        /* Onboarding s106: el orquestador Y sus piezas (OnbScene basta
+           como centinela de OnboardingScreens.jsx — archivo atomico) +
+           pickFirstPath. Sin esto, la carrera de evaluacion (fix s38b)
+           puede montar PaceApp con <OnbScene/> aun undefined. */
+        typeof Onboarding       === 'function' &&
+        typeof OnbScene         === 'function' &&
+        typeof pickFirstPath    === 'function'
       );
       if (container && allReady) {
         var root = ReactDOM.createRoot(container);

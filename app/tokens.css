@@ -563,6 +563,10 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   --move: #9A7B4F;
   --hydrate: #5F8A9B;
   --extra: #6B7A8F;
+  /* s106: el onboarding (superficie ilustrada full-screen) usa además el
+     CTA "Comenzar" y el acento de Energía — mismos valores de día. */
+  --focus-cta: #50624D;
+  --achievement: #B8934A;
 }
 
 /* ============================================================

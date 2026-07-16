@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.50.0
-**Ultima sesion:** #105 -- 2026-07-15 - **Fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos + pulido** (7 arreglos: `todayISO()` a fecha LOCAL en 7 sitios via `toISODate()` -- bug UTC anotaba el dia anterior entre medianoche y ~2 AM; **fuentes self-hosted preservando Cormorant** -- hallazgo: el default real de titulos es Cormorant, no EB Garamond, decision s103 revisada; copia local subset-latin de Cormorant+EB Garamond+Inter Tight, 12 caras 520 KB en `fonts/`, `@font-face` ruta absoluta `/fonts/`, precache web + data URIs standalone via `inlineFonts`, JetBrains Mono retirada -> ui-monospace, MIME woff2, cero peticiones a Google en los 3 artefactos; **BreakMenu coherente** -- iconos `AB*` de la home + Estira, 4 actividades grid 2x2; **aro del pomodoro** alineado en Pausa/Larga (spacer que reserva la fila MIN); **frame fantasma de PathRunner** resuelto -- fase 'intro' fijada en render, no en efecto, sin warning; **toasts de logro aplazados** durante Caminos; **bug de integridad B** -- un Camino solo cuenta con >=1 paso hecho de verdad, antes saltarlo todo desbloqueaba "Cartografa"). Diario: `docs/sessions/session-105-fuentes-todayiso-caminos.md`. **Etapa A del build CERRADA** (precompilado s103 + fuentes s105). Historico previo: [`ARTE D-4 s104`](./CHANGELOG.md#v0490----2026-07-14----featpaths-escenas-ilustradas-de-caminos--arte-d-4-completo) (el usuario ENTREGO las 7 laminas y las priorizo sobre las fuentes, que pasan a s105; diseño iterado EN VIVO: 2 tandas AskUserQuestion + 4 rondas de feedback con mockups suyos). Escena cover FULL-BLEED en las 3 pantallas del runner (`PathIllustration.jsx` + `paths.index.js` con dots/paper/focusY/finish medidos por escaneo, no a ojo); **casquetes** (las bolas pintadas van cubiertas en gris `--line` → se RELLENAN con el color de SU actividad al completarse, pop `pace-scene-fill` + eco de latido; el orbe s77 RETIRADO por feedback); camara que sigue al hito actual (pan 2s) y encuadra el FINAL del camino en la Completion (`finish`); etiqueta del paso ANCLADA a la bola (placa mini de papel del arte, tinta `--ink-2/-3`); **tagline en la IntroCard** (beneficio visible); placa translucida tras RECORRIDO/DESBLOQUEADO; regla **"sobre el arte siempre es de dia"** (`[data-pace-scene-card]` re-mapea tinta/papel/acentos a crema en oscuro); pipeline **archivo+precache web / data URI solo standalone**; `scripts/ingest-lamina.js` (normaliza+mide, MODO HIBRIDO con semillas visuales). Fix `PACE_VERSION` (v0.46.0 desde s101). Analisis estrategico externo VERIFICADO contra el repo: `todayISO()` en UTC = bug real (7 sitios) → tarea s105; CowLogo corrupto = FALSO. Fallback SenderoBar intacto. Diario: `docs/sessions/session-104-arte-caminos.md`
-**Ultima actualizacion de este archivo:** 2026-07-15 - sesion 105
-**Build entregado:** `PACE_standalone.html` v0.50.0 (3052 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (~970 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.51.0
+**Ultima sesion:** #106 -- 2026-07-16 - **Onboarding de primera vez: 3 preguntas + primer Camino** (fila s106 del plan maestro). La bienvenida deja de ser un modal de 1 pantalla (WelcomeModal s17, RETIRADO) y pasa a un **flujo FULL-SCREEN de 5 pasos sobre las laminas de Caminos** (arte D-4 s104): 0-Bienvenida (manifiesto + 3 valores, reusa `welcome.*`; lamina dawn) → 1-Necesidad (Calma/Foco/Cuerpo/Energia con acento de modulo + campo libre → `intention`; lamina breath) → 2-Tiempo (respiro/pausa/bloque; lamina tea) → 3-Entorno (oficina/casa/cambia; lamina midday) → 4-**Tu primer Camino** (nombre+tagline+pasos del pick; su lamina). Guarda **`profile: {need,time,environment,completedAt}` en state** (pregunta saltada = null; instalaciones previas lo reciben por el merge de loadState). `pickFirstPath(profile)`: candidatos por necesidad + cortos primero si time='short' + fallback `getSuggestedPath` — el CTA final fija `paths.lastViewed` → la **home aterriza con ese Camino destacado** (sugerir, NO auto-arrancar; decision del usuario via AskUserQuestion junto a full-screen y chips+texto libre). Sin Escape/backdrop-click (cerrar accidental = perder la bienvenida); re-abrible via `pace:open-onboarding`. Remap "sobre el arte siempre es de dia" ampliado con `--focus-cta` + `--achievement`. Hallazgo: dentro de `[data-pace-reveal]`, `opacity` inline PIERDE contra el forwards del reveal → CTA disabled por contorno neutro. Verificado dev + compilado + standalone (flujo completo, saltar-todo → fallback, explorar → sin lastViewed, oscuro remap dia por DOM, movil 375, remonte con trap: cero errores). Diario: `docs/sessions/session-106-onboarding.md`. Historico previo: [`fuentes self-hosted + todayISO s105`](./CHANGELOG.md#v0500----2026-07-15----feat-fuentes-self-hosted-cierra-etapa-a--todayiso-local--integridad-de-caminos) (cierra Etapa A del build).
+**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 106
+**Build entregado:** `PACE_standalone.html` v0.51.0 (3073 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (~975 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,13 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.49.0** (s104: bump titulo + 2 scripts nuevos de laminas tras SenderoBar y ANTES de PathTransitions/CompletionScreen; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.49.0** (2371 KB, 76 scripts compilados + **7 laminas de Caminos como data URI** -- paso 6b del build; solo queda el @import de Google Fonts → s105; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.49.0** (970 KB -- las laminas van como ARCHIVOS `/app/paths/illustrations/assets/*.webp` + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.51.0** (s106: bump titulo + strings/onboarding.js tras achievements + 3 scripts de `onboarding/` TRAS el bloque de Caminos (consumen registry+paths.index) + mount loop con 3 centinelas nuevos (Onboarding/OnbScene/pickFirstPath); FUERA el script de WelcomeModule; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.51.0** (3073 KB, 79 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.51.0** (~975 KB -- laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` re-insertado -- s102) |
+| `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **NUEVO s106** (391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado; main.jsx solo lo monta) |
+| `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **NUEVO s106** (208 ln; las laminas via `getPathIllustration` → mismo pipeline archivo/data-URI, cero cableado nuevo) |
+| `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
+| `app/i18n/strings/onboarding.js` | i18n del flujo: navegacion + 3 preguntas + primer Camino, ES+EN | **NUEVO s106** (113 ln; la bienvenida reusa las keys `welcome.*` de ui.js, que siguen vivas) |
 | `vendor/` | React 18.3.1 production UMD self-hosted (react + react-dom .min.js) | **NUEVO s103** (copiados del paquete npm, verificados por integrity del lockfile; el build los inlinea -- NO se sirven como archivos) |
 | `package.json` + `package-lock.json` | Toolchain del build (devDependencies) | **s104**: + `sharp` (ingesta de laminas). s103: `@babel/core`/`preset-env`/`preset-react` PINEADOS a major 7 + `typescript` a major 5 + react/react-dom 18.3.1 (fuente de vendor/). OJO: los latest (Babel 8 ESM-only, TS 7 Go) ROMPEN el build -- no subir de major sin sesion propia |
 | `app/paths/illustrations/paths.index.js` | Indice de laminas: pathId → dots {x,y,r,color} + paper + focusY + finish (metadatos MEDIDOS por escaneo) | **NUEVO s104** (~110 ln; las 7 laminas dentro; el build busca el literal del campo src -- no escribir esa ruta en comentarios) |
@@ -69,18 +73,18 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.46.0** (nuevo s101, 160 ln; extraido de state-core + selector memoizado por identidad que reutiliza `archiveDayToHistory`) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.49.0** (s104: fix `PACE_VERSION` -- llevaba v0.46.0 desde s101, el footer del sidebar y el export JSON mentian; ENTRA AL CHECKLIST de bump junto a titulo+CACHE_NAME. s102: notifyFocusEnd defaults, ~415 ln; s101: split state-history) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.51.0** (s106: + `profile {need,time,environment,completedAt}` en defaultState -- instalaciones previas lo reciben por el merge, sin migracion; 442 ln. s104: fix `PACE_VERSION` -- ENTRA AL CHECKLIST de bump junto a titulo+CACHE_NAME. s101: split state-history) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
 | `app/state-paths.jsx` | Caminos CRUD + stats | **v0.46.0** (s101: racha actual VIVA en computePathStreaks -- si hoy no hay Camino cuenta desde ayer, iguala la semantica del streak principal; s95: getSuggestedPath via guard; s78: jerarquia lastViewed>horario>anytime>catalog[0]) |
 | `app/state-settings.jsx` | setLang | **v0.27.5** (nuevo s57) |
 | `app/state.jsx` | Indice — re-export consolidado | **v0.46.0** (s101: + `getHistoryWithToday` + orden de carga actualizado; s96: + `completeFocusSession`; s95: + `canAccessRoutine`/`canAccessPath`) |
-| `app/welcome/WelcomeModule.jsx` | Welcome de primera vez | **v0.40.0** (s95: autofocus del input intencion enguardado tras `matchMedia('(pointer: coarse)')` -- solo escritorio, no auto-teclado en movil; s19: base) |
+| ~~`app/welcome/WelcomeModule.jsx`~~ | ~~Welcome de primera vez~~ | **RETIRADO s106** (sustituido por `app/onboarding/`; el manifiesto migro a la pantalla 0 y la intencion a la pregunta de necesidad; `pace:open-welcome` → `pace:open-onboarding`) |
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
-| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.47.0** (s102: + efecto deep links `?go=` (consume una vez + replaceState; focus NO auto-arranca) + monta `<UpdatePrompt/>` junto a ToastHost, 314 ln; s82: split variante B 600->279) |
+| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.51.0** (s106: FUERA openWelcome/useFirstTimeWelcome/listener pace:open-welcome; monta `<Onboarding/>` en overlays (se auto-gestiona), 310 ln. s102: deep links `?go=` + UpdatePrompt; s82: split variante B 600->279) |
 | `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con reglas @media globales (TopBar, ActivityBar, main content, sidebar handle, fallback vh/dvh) | **v0.33.2** (nuevo s82, 105 ln; literal de main.jsx 20-112) |
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent / Tweaks prop) + topBarStyles | **v0.33.2** (nuevo s82, 106 ln) |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
@@ -93,7 +97,7 @@
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.37.0** (nuevo s92, 94 ln; split de strings-content.js al superar ~470 ln con F6) |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 186 ln; incluye ~100 keys F6) |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.37.0** (nuevo s92, 202 ln) |
-| `app/tokens.css` | Tokens CSS + base | **v0.49.0** (s104: + bloque **ESCENA DE CAMINO** (`[data-pace-path-scene]`: scene-pulse-ring, scene-fill-in + keyframe pace-scene-fill, scene-echo-ring, exclusion del reveal) + regla **"sobre el arte siempre es de dia"** (`[data-palette="oscuro"] [data-pace-scene-card]` re-mapea ink/paper/line Y acentos a la paleta CREMA -- son COPIAS, actualizar si se recalibra la crema); OJO ~600 ln, deuda crece. s100: draw-in sendero; s99: microinteracciones; s97: recalibracion oscuro; s89: reduced-motion `[data-pace-essential]`) |
+| `app/tokens.css` | Tokens CSS + base | **v0.51.0** (s106: el remap de `[data-pace-scene-card]` suma `--focus-cta` + `--achievement` (el onboarding usa CTA y acento Energia sobre arte; copias dia, mismo aviso); 613 ln, deuda crece. s104: bloque ESCENA DE CAMINO + regla "sobre el arte siempre es de dia"; s100: draw-in sendero; s99: microinteracciones; s97: recalibracion oscuro; s89: reduced-motion `[data-pace-essential]`) |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** (s95: `tasting:true` en los 2 steps premium de path.weekend -- degustacion curada explicita para el guard; s78: catalogo cerrado a 7 con path.tea/path.breath) |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.49.0** (s104: pasa `pathId` a IntroCard/StepIntro. OJO hallazgo: frame fantasma de fase 'step' antes del efecto que pone 'intro' -- warning React en dev, arreglar en sesion propia. s100: fuera 'outro', 230 ln; s80: split 835->244) |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del overlay) | **v0.40.0** (s95: + `PathStepLocked` -- auto-skip silencioso de un step premium inaccesible, dead code hoy; s94: boton confirmar tokenizado; ~142 ln) |
@@ -108,13 +112,14 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.49.0** (s104: CACHE_NAME bump + las **7 laminas al PRECACHE** (offline fiel). s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; + notificationclick; s89: activate borra caches viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.51.0** (s106: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas al precache. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; + notificationclick; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + persistencia `pace.timer.v1` | **v0.47.0** (nuevo s102, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.50.0_20260716.html` <- creado s106 (snapshot del v0.50.0 publicado en s105, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.49.0_20260715.html` <- creado s105 (snapshot del v0.49.0 publicado en s104, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.48.0_20260714.html` <- creado s104 (snapshot del v0.48.0 publicado en s103, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.47.0_20260713.html` <- creado s103 (snapshot del v0.47.0 publicado en s102, extraido de git HEAD -- patron s87)
@@ -134,81 +139,79 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.34.4_20260707.html` <- creado s89 (snapshot del v0.34.4 publicado en s88)
 - `backups/PACE_standalone_v0.34.3_20260707.html` <- creado s88 (snapshot del v0.34.3 publicado en s87; renombrado en s89 al corregir la fecha real de s88)
 - `backups/PACE_standalone_v0.34.2_20260630.html` <- creado s87 (snapshot del v0.34.2 publicado en s86, desde git HEAD)
-- `backups/PACE_standalone_v0.34.1_20260605.html` <- creado s86 (snapshot del v0.34.1 publicado en s85)
-Nota s105: cap 20 mantenido rotando el mas antiguo (`v0.34.0_20260605.html`)
-al crear el backup del v0.49.0.
+Nota s106: cap 20 mantenido rotando el mas antiguo (`v0.34.1_20260605.html`)
+al crear el backup del v0.50.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 105 - v0.50.0 - Fuentes self-hosted (cierra Etapa A) + todayISO
-local + integridad de Caminos + pulido.** Planificada como "fuentes +
-todayISO"; crecio con 4 arreglos pedidos en vivo (aro, BreakMenu, frame
-fantasma, y 2 bugs de Caminos). 7 arreglos, todos verificados en dev,
-compilado y standalone.
+**Sesion 106 - v0.51.0 - Onboarding de primera vez: 3 preguntas + primer
+Camino.** Fila s106 del plan maestro. Tres bifurcaciones decididas por el
+usuario ANTES de tocar (AskUserQuestion): full-screen con arte · sugerir en
+home (no auto-arrancar) · chips + texto libre. Verificado en dev, compilado
+y standalone.
 
-### Que se hizo (s105)
+### Que se hizo (s106)
 
-- **`todayISO()` a fecha LOCAL** (bug UTC verificado s104): 7 sitios pasan a
-  `toISODate()` (helper local ya existente en state-history) -- todayISO
-  canonico, 2 copias en cards de Caminos (via `window.todayISO()`), 2 walkers
-  de racha en state-paths, watcher de dia-oscuro, y el nombre del backup en
-  TweaksData (8º sitio; el `exportedAt` se queda en ISO, es timestamp). NO se
-  toco el parseo `new Date("YYYY-MM-DD")` (UTC, inocuo para offsets +).
-  Verificado en preview con TZ Europe/Madrid (00:30 daba ayer, ahora hoy).
-- **Fuentes self-hosted preservando Cormorant.** HALLAZGO clave: el default
-  real de titulos es **Cormorant Garamond** (`defaultState.font='cormorant'`),
-  no EB Garamond -> la decision s103 ("solo EB Garamond") se tomo por error;
-  con comparativa visual el usuario eligio **preservar Cormorant**. Copia
-  local subset-latin de Cormorant (titulos) + EB Garamond (cifras/glifos/logo,
-  el 600 recortado) + Inter Tight (UI) = 12 caras 520 KB en `fonts/`.
-  `@font-face` ruta ABSOLUTA `/fonts/` + unicode-range latin + font-display
-  swap (fuera el @import de Google). JetBrains Mono retirada -> ui-monospace.
-  Web = archivos + precache sw.js; standalone = data URIs (`inlineFonts`,
-  gemelo de inlineIllustrations); MIME woff2. Cero peticiones a Google en los
-  3 artefactos; ciclo SW completo verificado en vivo.
-- **BreakMenu coherente**: iconos `AB*` de la ActivityBar (expuestos a window
-  desde main/ActivityBar.jsx) + Estira -> 4 actividades, grid 2x2, atajo E,
-  cuenta para first.cycle. Iconos `BM*` genericos eliminados.
-- **Aro del pomodoro** en Pausa/Larga: spacer `height:26` que reserva la fila
-  MIN (solo existe en Foco) -> el aro no sube ~30 px. FocusTimer 493->498 ln.
-- **Frame fantasma PathRunner (#3)**: la fase 'intro' se fija en RENDER al
-  cambiar el Camino (patron oficial React `if (curId !== seenPathId)`), no en
-  un efecto -> React re-renderiza antes de montar el step, sin el warning.
-  (Descubierto: las cards de transicion auto-avanzan por diseño, ~2.8s.)
-- **Toasts aplazados (A)**: `setCaminoUiActive` + cola en state-core; mientras
-  hay UI de Camino (cur || justCompleted) los toasts de logro se aplazan y se
-  vuelcan al volver a home (no tapan las pantallas).
-- **Integridad de Caminos (B, bug de correccion)**: `advancePathStep` marcaba
-  el Camino completado aunque se saltara/saliera todo (desbloqueaba
-  "Cartografa" sin hacerlo). Ahora `current.doneCount` cuenta pasos hechos de
-  verdad (reason 'done') y **solo cuenta con >=1 paso hecho**; si no, se
-  abandona sin credito. PathRunner refleja la regla para la ceremonia.
+- **`app/onboarding/` nuevo** (sustituye a `app/welcome/`, ELIMINADO):
+  `Onboarding.jsx` (orquestador de 5 pantallas, 391 ln) +
+  `OnboardingScreens.jsx` (piezas puras: preguntas/escena/chips/dots/logo,
+  208 ln) + `pickFirstPath.js` (58 ln) + `strings/onboarding.js` (ES+EN,
+  113 ln; la bienvenida reusa `welcome.*`).
+- **Flujo**: Bienvenida (manifiesto+valores, lamina dawn) → Necesidad
+  (chips Calma/Foco/Cuerpo/Energia con acento de modulo + campo libre →
+  `intention`; lamina breath) → Tiempo (respiro/pausa/bloque; tea) →
+  Entorno (oficina/casa/cambia; midday) → Tu primer Camino (pick + su
+  lamina). Cada pregunta saltable (campo null). Contrato del WelcomeModal
+  heredado: una vez con `firstSeen==null`, cerrar lo fija siempre,
+  re-abrible via `pace:open-onboarding`. SIN Escape/backdrop-click.
+- **`profile` en state** (`{need,time,environment,completedAt}`):
+  instalaciones previas lo reciben por el merge de loadState, sin
+  migracion. En s107 entra al scoring de getSuggestedPath.
+- **`pickFirstPath(profile)`**: candidatos por necesidad (calm→breath/
+  dusk/tea · focus→dawn/afternoon/midday · body→midday/weekend/dusk ·
+  energy→afternoon/midday/dawn), cortos primero si time='short', filtro
+  existencia+canAccessPath, fallback getSuggestedPath. El CTA "Ver mi
+  Camino" fija `paths.lastViewed` (prioridad #1 s78) → la home destaca el
+  pick; "prefiero explorar" no lo toca.
+- **Arte**: laminas via `getPathIllustration` (mismo pipeline: archivo web
+  / data URI standalone, cero cableado nuevo) + velo radial de crema FIJA.
+  El remap oscuro de `[data-pace-scene-card]` suma `--focus-cta` +
+  `--achievement` (copias dia).
+- **Hallazgo**: dentro de `[data-pace-reveal]` el `forwards` de
+  `pace-reveal-rise` (termina en opacity:1) GANA al `opacity` inline →
+  el CTA deshabilitado se señaliza por contorno neutro, no por opacidad.
+- Mount loop de PACE.html: 3 centinelas nuevos (Onboarding/OnbScene/
+  pickFirstPath — carrera de evaluacion s38b).
 
 ### Pendiente
 
 - **PWA en navegador REAL** (instalacion + notificacion): sigue del usuario
-  desde s102.
-- `tokens.css` crecio con los 12 @font-face (deuda; candidato a extraer).
+  desde s102 (sin confirmar al arrancar s106).
+- Copys del onboarding iterables con feedback real (patron s104).
+- `tokens.css` 613 ln (deuda crece; candidato a extraer @font-face o CSS
+  del SenderoBar).
 - `FocusTimer.jsx` a 498 ln (al borde; lo nuevo va a FocusTimer.support.jsx).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- s106: onboarding
+## Proxima sesion -- s107: home Caminos al centro + After Pomodoro
 
-Etapa A del build CERRADA. Siguiente en el plan maestro (ROADMAP "Camino a
-v1.0"): **onboarding 3 pantallas** (necesidad + tiempo + entorno -> `profile`)
-+ primer Camino automatico. La bienvenida vistosa/cercana era peticion del
-usuario (s103-cierre); las escenas ilustradas de Caminos (s104) son material
-natural del onboarding. Metrica guia: primer Camino completado en < 3 min.
+Siguiente en el plan maestro (ROADMAP "Camino a v1.0"): **home con Caminos
+al centro** (SuggestedPathCard protagonista, ¿thumb de su lamina?) +
+**`getSuggestedPath` v2 con scoring** (ahora hay `profile` capturado en el
+onboarding) + **After Pomodoro** (mini-Camino automatico sugerido al
+terminar Foco, en el BreakMenu) + mini-Caminos de activacion 2-3 min (ahi
+se completa la metrica "primer Camino en <3 min"). Encaja tambien la
+sidebar mas util (pregunta abierta s103).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93)
 
 ~~build Etapa A s103~~ · ~~arte D-4 s104~~ · ~~fuentes + todayISO s105~~ ·
-onboarding (s106) · home Caminos al centro + After Pomodoro (s107) · taxonomia
-+ filtros + sigilo (s108-109) · pre-venta: glifos (revision COMPLETA) +
-trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A FONDO
-antes de pricing.
+~~onboarding s106~~ · home Caminos al centro + After Pomodoro (s107) ·
+taxonomia + filtros + sigilo (s108-109) · pre-venta: glifos (revision
+COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO + Starter
+Story A FONDO antes de pricing.
 
 ---
 
@@ -217,6 +220,10 @@ antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Onboarding = flujo FULL-SCREEN sobre las laminas; el WelcomeModal NO vuelve | s106 | 5 pantallas (bienvenida + 3 preguntas + primer Camino) elegidas por el usuario sobre "wizard dentro del modal". Contrato heredado: una sola vez (`firstSeen==null`), cerrar por cualquier via fija firstSeen (bienvenida, no tramite), re-abrible via `pace:open-onboarding`. SIN Escape ni backdrop-click (cerrar por accidente = perderla para siempre; salir es gesto explicito). Las laminas van via `getPathIllustration` (pipeline s104 intacto) con velo de crema FIJA + remap dia (`data-pace-scene-card`). Si se añade una pantalla, va a `ONBOARDING_QUESTIONS` (OnboardingScreens.jsx), no hardcodeada |
+| Cierre del onboarding SUGIERE en home (no auto-arranca el runner) | s106 | Decision del usuario (AskUserQuestion): el CTA "Ver mi Camino" fija `paths.lastViewed` (prioridad #1 de getSuggestedPath, s78) y cierra a la home con la card sugerida = el pick; el usuario decide arrancar. "Prefiero explorar por mi cuenta" NO toca lastViewed. Auto-arrancar el runner se descarto por intrusivo/no-PACE. `pickFirstPath` SOLO se usa dentro del onboarding: la jerarquia s78 queda intacta hasta el scoring v2 (s107, que consumira `profile`) |
+| `profile` en state: null = pregunta saltada; consumidor futuro = scoring s107 | s106 | `{ need, time, environment, completedAt }` en defaultState; el merge `{...defaultState, ...parsed}` de loadState cubre instalaciones previas (sin migracion). `need` tambien alimenta el campo libre → `intention` (cap 120, regla s17). `environment` se guarda pero NO influye hasta la taxonomia s108 (sin metadatos de ruido) — documentado en pickFirstPath.js. Regla: si una pantalla nueva captura algo, va DENTRO de profile, no como key suelta |
+| Dentro de `[data-pace-reveal]`, NO señalizar estado con `opacity` inline | s106 | `pace-reveal-rise` corre con `forwards` sobre los hijos directos y su `to {opacity:1}` gana al estilo inline (hallazgo s106: el CTA "disabled 0.35" se veia opaco). Deshabilitados dentro de un reveal = contorno/fondo neutro (patron ctaDisabled de Onboarding.jsx), o sacar el elemento del nivel de hijos directos |
 | Identidad tipografica = **Cormorant** (titulos) + EB Garamond (cifras/glifos/logo) + Inter Tight (UI); todo self-hosted | s105 | HALLAZGO: el default real de titulos es Cormorant (`defaultState.font='cormorant'` + regla `[data-font="cormorant"]`), NO EB Garamond -- la decision s103 "solo EB Garamond" se tomo por error (asumia que EB Garamond ya era el display). Con la info completa el usuario eligio PRESERVAR Cormorant (cero cambio visual). Las 3 familias van self-hosted subset-latin en `fonts/` (12 caras; EB Garamond 600 recortado, no lo usa nadie). JetBrains Mono NO se hostea -> `--font-mono` cae a ui-monospace (solo devtools). Ruta ABSOLUTA `/fonts/` en tokens.css (unica que resuelve en dev/index/standalone). El build `inlineFonts` las mete como data URI SOLO en el standalone (gemelo de las laminas). Si se añade una fuente/peso, ampliar el set en tokens.css + precache sw.js + (el build las inlinea solas) |
 | Un Camino cuenta como completado solo con >=1 paso hecho de verdad | s105 | `advancePathStep` marcaba el Camino completado (count++, history, checkAllPathsCompleted -> "Cartografa") aunque se saliera/saltara TODO -> logros "sin hacerlo" (bug B). Ahora `current.doneCount` cuenta solo `reason==='done'` (salir/saltar no acredita, ya era asi a nivel actividad); si al terminar `doneCount<1` se abandona sin credito. `PathRunner.handleStepExit` aplica la MISMA regla para mostrar (o no) la CompletionScreen. "Hacer 1 paso y salir" SI cuenta (hiciste algo); "recorrerlo saltandolo entero" NO. Regla al añadir logros/creditos de Camino: colgar del completado real, no del mero avance |
 | Toasts de logro APLAZADOS durante un Camino | s105 | El toast (z 200) se dibujaba sobre el overlay de Camino (z 80) tapando las pantallas (bug A). `state-core` tiene cola `_deferredToasts` + flag `_caminoUiActive`; `showToast` aplaza si el flag esta activo. `PathRunner` marca la UI activa mientras haya `cur || justCompleted` (pasos + transiciones + CompletionScreen) via `setCaminoUiActive`; al volver a home se vuelcan (60ms de respiro). La CompletionScreen sigue mostrando sus propios logros. Regla: cualquier UI full-screen que no deba ser interrumpida por toasts reutiliza `setCaminoUiActive` |
@@ -313,7 +320,7 @@ antes de pricing.
 | Archivo | Lineas | Prioridad |
 |---|---|---|
 | `app/tweaks/TweaksPanel.jsx` | 430 | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
-| `app/state-core.jsx` | 412 | SALE (s101: split a state-history.jsx 511 -> 407; s102: +5 del default notifyFocusEnd) |
+| `app/state-core.jsx` | 442 | BAJA (s106: +10 del profile con comentario de contrato; s101: split a state-history.jsx) |
 | `app/focus/FocusTimer.jsx` | 493 | **MEDIA** (s102: +37 ln de notificacion+persistencia lo dejan AL BORDE del tope; los helpers ya viven en FocusTimer.support.jsx -- la proxima adicion al modulo Foco debe ir alli o a un split del MinutesPicker) |
 | `app/i18n/strings/ui.js` | 377 | BAJA (s102: +26 ln de keys PWA; dentro de limite, dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
@@ -321,7 +328,7 @@ antes de pricing.
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 279 | SALE (s82, antes 600 -- split en main/_responsive + TopBar + ActivityBar) |
 | `app/shell/Sidebar.jsx` | 541 | MEDIA (s101: +6 ln del criterio s69 en WeekDots; s94: re-entro; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
-| `app/tokens.css` | 514 | BAJA (s100: el bloque draw-in del sendero lo pasa de ~475 a 514; es CSS global, no JSX -- candidato natural si vuelve a crecer: extraer el CSS del SenderoBar (~110 ln) a un archivo propio cargado tras tokens) |
+| `app/tokens.css` | 613 | **MEDIA** (s105: +12 @font-face; s106: +4 del remap; es CSS global, no JSX -- candidatos naturales: extraer los @font-face (~90 ln) o el CSS del SenderoBar (~110 ln) a archivo propio cargado tras tokens) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 

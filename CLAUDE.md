@@ -80,7 +80,7 @@ Tweaks visuales menores no regeneran standalone pero sí se anotan en `STATE.md`
 │   ├── achievements/ Achievements.jsx
 │   ├── stats/     WeeklyStats.jsx
 │   ├── tweaks/    TweaksPanel.jsx
-│   ├── welcome/   WelcomeModule.jsx
+│   ├── onboarding/ Onboarding.jsx · OnboardingScreens.jsx · pickFirstPath.js
 │   ├── support/   SupportModule.jsx
 │   └── i18n/      strings.js · strings-content.js · useT.jsx
 └── backups/       PACE_standalone_vX.Y_YYYYMMDD.html (máx 20)

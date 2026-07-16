@@ -367,9 +367,24 @@ activas no llevan arte). Bloque `[data-pace-path-scene]` en `tokens.css`:
 **Regla "sobre el arte siempre es de día":** el arte es papel claro FIJO.
 En `[data-palette="oscuro"]`, el selector `[data-pace-scene-card]` re-mapea
 `--ink*`, `--paper*`, `--line*` **y los acentos de actividad** a los valores
-de la paleta crema dentro de las superficies ilustradas. Son **copias
-literales** de la paleta día: si se recalibra la crema, actualizar también
-ese bloque (mismo aviso que las copias inline de safety/privacy.html).
+de la paleta crema dentro de las superficies ilustradas — desde s106 también
+`--focus-cta` y `--achievement` (el onboarding usa el CTA y el acento de
+Energía sobre arte). Son **copias literales** de la paleta día: si se
+recalibra la crema, actualizar también ese bloque (mismo aviso que las
+copias inline de safety/privacy.html).
+
+### Onboarding sobre arte (s106 · v0.51.0)
+
+El flujo de primera vez (`app/onboarding/`) monta las láminas como fondo
+cover con un **velo radial de crema fija** (denso tras la columna de
+contenido `rgba(242,237,224,0.92)`, abierto hacia los bordes `0.16`) y
+placas translúcidas de la misma familia que las del runner
+(`rgba(242,237,224,0.82)` + hairline `rgba(184,173,142,0.5)` + blur 3px).
+La raíz lleva `data-pace-scene-card` (remap día en oscuro). El logo PNG va
+SIEMPRE en tratamiento día (multiply, sin invert). **Hallazgo s106:**
+dentro de `[data-pace-reveal]`, el `forwards` de `pace-reveal-rise` gana al
+`opacity` inline de los hijos directos → los estados deshabilitados se
+señalizan por contorno neutro, nunca por opacidad.
 
 **Metadatos por lámina** (`app/paths/illustrations/paths.index.js`): `dots`
 {x,y,r,color} medidos por escaneo (`scripts/ingest-lamina.js`, modo híbrido),

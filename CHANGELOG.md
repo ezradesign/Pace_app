@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [abajo](#v0510----2026-07-16----featonboarding-onboarding-de-primera-vez--3-preguntas--primer-camino) |
 | **v0.50.0** | 2026-07-15 | feat: **fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos** -- **`todayISO()` a fecha LOCAL** (bug UTC: rachas/history anotaban el día anterior entre medianoche y ~2 AM; 7 sitios, reutiliza `toISODate()`) · **fuentes self-hosted preservando Cormorant** (hallazgo: el default real de títulos es Cormorant, no EB Garamond → decisión s103 revisada): copia local subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en `fonts/`, `@font-face` con ruta absoluta `/fonts/` (fuera el @import de Google), precache web + **data URIs standalone** (`inlineFonts`), MIME woff2; **JetBrains Mono retirada** (→ ui-monospace) → **cero peticiones externas de fuente** en los 3 artefactos · **BreakMenu coherente**: iconos `AB*` de la home + **Estira** (4 actividades, grid 2×2) · **frame fantasma de PathRunner** resuelto (fase 'intro' fijada en render, no en efecto → sin warning) · **toasts de logro aplazados** durante Caminos (no tapan las pantallas; se vuelcan al salir) · **bug de integridad**: un Camino solo cuenta como completado con **≥1 paso hecho** (antes saltarlo todo desbloqueaba "Cartógrafa") · aro del pomodoro alineado en Pausa/Larga | #105 | [abajo](#v0500----2026-07-15----feat-fuentes-self-hosted-cierra-etapa-a--todayiso-local--integridad-de-caminos) |
-| **v0.49.0** | 2026-07-14 | feat(paths): **escenas ilustradas de Caminos — arte D-4 completo** (entrega del usuario, iterado en vivo) -- las **7 láminas** editoriales como escena FULL-BLEED del runner (intro/transición/completion vía `PathIllustration`; sesiones activas intactas) · **casquetes**: las bolas pintadas van cubiertas en gris y se **RELLENAN con el color de su actividad** al completarse (pop + eco; el orbe s77 se retiró) · cámara cover que sigue al hito (pan 2s) y encuadra el **final del camino** en la Completion · etiqueta del paso **anclada a la bola** (placa de papel del arte) · **tagline del Camino en la intro** (beneficio visible) · placa translúcida tras RECORRIDO/DESBLOQUEADO · regla **"sobre el arte siempre es de día"** (re-mapeo de tinta/papel/acentos a paleta crema dentro de las superficies ilustradas en oscuro) · pipeline: **archivo+precache en web / data URI solo standalone** (2371 KB autocontenido; index.html 970 KB) · `scripts/ingest-lamina.js` (normaliza+mide, modo híbrido) · fix `PACE_VERSION` desincronizada (v0.46.0 desde s101) · fallback SenderoBar intacto para futuros caminos sin arte | #104 | [abajo](#v0490----2026-07-14----featpaths-escenas-ilustradas-de-caminos--arte-d-4-completo) |
+| **v0.49.0** | 2026-07-14 | feat(paths): **escenas ilustradas de Caminos — arte D-4 completo** (entrega del usuario, iterado en vivo) -- las **7 láminas** editoriales como escena FULL-BLEED del runner (intro/transición/completion vía `PathIllustration`; sesiones activas intactas) · **casquetes**: las bolas pintadas van cubiertas en gris y se **RELLENAN con el color de su actividad** al completarse (pop + eco; el orbe s77 se retiró) · cámara cover que sigue al hito (pan 2s) y encuadra el **final del camino** en la Completion · etiqueta del paso **anclada a la bola** (placa de papel del arte) · **tagline del Camino en la intro** (beneficio visible) · placa translúcida tras RECORRIDO/DESBLOQUEADO · regla **"sobre el arte siempre es de día"** (re-mapeo de tinta/papel/acentos a paleta crema dentro de las superficies ilustradas en oscuro) · pipeline: **archivo+precache en web / data URI solo standalone** (2371 KB autocontenido; index.html 970 KB) · `scripts/ingest-lamina.js` (normaliza+mide, modo híbrido) · fix `PACE_VERSION` desincronizada (v0.46.0 desde s101) · fallback SenderoBar intacto para futuros caminos sin arte | #104 | [session-104](./docs/sessions/session-104-arte-caminos.md) |
 | **v0.48.0** | 2026-07-13 | build: **Etapa A — precompilado Babel + React production** (plan maestro s103, 1ª de 2) -- los 74 scripts `text/babel` se **compilan en build** (`@babel/core` 7.29 en memoria, sourceType script + retainLines; IIFE por archivo + re-exposición AST de function/var top-level = semántica exacta del eval de Babel standalone) · **React 18.3.1 production UMD self-hosted** (vendor/ desde npm) e inlineado en ambos artefactos · **@babel/standalone fuera del output** → cero CDN de JS, cero compile en el navegador (antes ~4 MB de unpkg + 1-3 s por carga), standalone 100 % autocontenido en JS por primera vez · dev (PACE.html) intacto · pins deliberados Babel 7 / TypeScript 5 · fuentes self-hosted → s104 | #103 | [session-103](./docs/sessions/session-103-build-etapa-a.md) |
 | **v0.47.0** | 2026-07-13 | feat(pwa): **PWA completa** (plan maestro s102) -- **manifest.webmanifest** completo (id, 4 **shortcuts** con deep links `/?go=`, launch_handler, colores alineados a `--paper #F2EDE0`) · **fix despliegue**: `index.html` se servía SIN `<link rel="manifest">` desde s48c (el build lo quitaba del standalone y copiaba literal) → la PWA no era instalable; el build re-inserta el link solo en la copia desplegada · **update prompt** (sw.js sin skipWaiting incondicional → worker en waiting + aviso discreto "Actualizar/Luego" via `UpdatePrompt.jsx`; navegaciones siguen network-first s89) · **notificación fin-pomodoro** opt-in (toggle en Ajustes, permiso al activar, solo pestaña oculta, silent; click enfoca la app) · enlaces **Seguridad · Privacidad** en Ajustes (solo web) · **Pomodoro persiste la recarga** (`pace.timer.v1` fuera de pace.state; reanuda solo si sigue vivo, expirado se descarta sin acreditar — cierra el fork s96) | #102 | [session-102](./docs/sessions/session-102-pwa-completa.md) |
 | **v0.46.0** | 2026-07-10 | feat(stats): **stats a fondo** (P2 del usuario) -- auditoría completa del tracking (mapa escritores→lectores, 8 hallazgos) + **stats vivos**: nuevo `state-history.jsx` con `getHistoryWithToday` memoizado (reutiliza `archiveDayToHistory`) → **Mes/Año/totales incluyen el día actual** (antes ciegos hasta el rollover); state-core 511→407 ln (sale de deuda) · **WeekDots del sidebar con criterio s69** (focus\|breath\|move>0; antes solo foco) · fila "Mueve" → **"Cuerpo"** (moveMinutes = Mueve+Estira, la etiqueta mentía) · **racha de Caminos viva** (cuenta desde ayer si hoy no hay) · fix DST en hydrate.week.perfect · WeeklyStats.jsx muerto borrado · páginas estáticas **/safety + /privacy** (autocontenidas, ES+EN, rama oscura) | #101 | [session-101](./docs/sessions/session-101-stats-a-fondo.md) |
@@ -126,6 +127,67 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.51.0] -- 2026-07-16 -- feat(onboarding): onboarding de primera vez — 3 preguntas + primer Camino
+
+Sesión 106. Plan maestro "Camino a v1.0", fila s106. Tres bifurcaciones
+decididas por el usuario antes de tocar (AskUserQuestion, patrón s103/s104):
+**pantalla completa con arte** (no wizard en modal) · **sugerir en home**
+(no auto-arrancar el runner) · **chips + texto libre** en la necesidad.
+Diario: [session-106](./docs/sessions/session-106-onboarding.md).
+
+### El flujo (`app/onboarding/`, nuevo — sustituye a `app/welcome/`)
+
+- **5 pantallas full-screen** sobre las láminas de Caminos (arte D-4 s104,
+  vía `getPathIllustration` → mismo pipeline: archivo en web, data URI en el
+  standalone, cero cableado nuevo): **0 · Bienvenida** (manifiesto + 3
+  valores, reusa las keys `welcome.*`; lámina dawn) → **1 · Necesidad**
+  ("¿Qué quieres cultivar?": Calma/Foco/Cuerpo/Energía con acento de su
+  módulo + campo libre opcional → `intention`; lámina breath) → **2 ·
+  Tiempo** (respiro ~5' / pausa ~15' / bloque 25'+; lámina tea) → **3 ·
+  Entorno** (oficina/casa/va cambiando; lámina midday) → **4 · Tu primer
+  Camino** (nombre + tagline + pasos del pick; su propia lámina).
+- **`profile` en state** (`{ need, time, environment, completedAt }`):
+  pregunta saltada = campo null; instalaciones previas lo reciben por el
+  merge `{...defaultState, ...parsed}` sin migración extra. En s107 entra
+  al scoring de `getSuggestedPath`.
+- **`pickFirstPath(profile)`** (uso honesto pre-scoring): candidatos por
+  necesidad (calm→breath/dusk/tea · focus→dawn/afternoon/midday ·
+  body→midday/weekend/dusk · energy→afternoon/midday/dawn), los cortos
+  primero si time='short', filtro existencia+`canAccessPath`, fallback
+  `getSuggestedPath()`. El CTA final fija `paths.lastViewed` (prioridad #1
+  de la jerarquía s78) → la **home aterriza con ese Camino destacado**;
+  "prefiero explorar por mi cuenta" cierra sin tocarlo.
+- **WelcomeModal retirado** (s17): el contrato se hereda (una sola vez con
+  `firstSeen == null`; cerrar por cualquier vía lo fija — bienvenida, no
+  trámite; re-abrible vía `pace:open-onboarding`). Sin Escape ni
+  backdrop-click: salir es siempre gesto explícito.
+- **"Sobre el arte siempre es de día" ampliada**: el remap oscuro de
+  `[data-pace-scene-card]` suma `--focus-cta` y `--achievement` (copias
+  día, mismo aviso de recalibración). Velo radial de crema FIJA sobre la
+  lámina (más denso tras la columna, abierto a los bordes).
+- A11y: `role="dialog"` + `aria-modal`, radiogroup/radio con
+  `aria-checked`, todo el motion decorativo (reduced-motion lo congela).
+  Hallazgo: CTA deshabilitado por `opacity` inline PIERDE contra el
+  `forwards` de `pace-reveal-rise` en los hijos del reveal → se deshabilita
+  por contorno neutro, no por opacidad.
+- Mount loop de PACE.html: + `Onboarding`/`OnbScene`/`pickFirstPath` como
+  centinelas (carrera de evaluación, fix s38b).
+
+### Verificación
+
+Preview :8765, protocolo s93 + seed fresco (`firstSeen:null`). Flujo
+completo en dev Y compilado (perfil exacto en localStorage, lastViewed
+fijado, home con el pick destacado: focus+block→Morning Glory,
+calm+block→Hálito) · saltar las 3 preguntas → fallback horario ·
+"explorar" → sin lastViewed · claro/**oscuro** (remap día verificado por
+DOM: fondo crema con `data-palette="oscuro"`) · **móvil** 375px · no
+reaparece tras recargar · remonte completo del árbol con trap de errores:
+**cero errores** en dev y standalone. Bump v0.51.0 ×3 (título + CACHE_NAME
++ PACE_VERSION). Backup `v0.50.0_20260716` desde git HEAD (rotado
+`v0.34.1_20260605`, cap 20). Standalone 3073 KB / index ~955 KB.
+
+---
+
 ## [v0.50.0] -- 2026-07-15 -- feat: fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos
 
 Sesión 105. Planificada como "fuentes + todayISO" (2ª pieza de Etapa A);
@@ -175,125 +237,5 @@ Preview :8765, protocolo s93 + seed fresco. Verificado en dev, compilado
 (index.html) y standalone. Bump v0.50.0 (título ×3 + CACHE_NAME + PACE_VERSION).
 Backup `v0.49.0_20260715` desde git HEAD (rotado `v0.34.0_20260605`, cap 20).
 Standalone 3052 KB / index ~970 KB.
-
----
-
-## [v0.49.0] -- 2026-07-14 -- feat(paths): escenas ilustradas de Caminos — arte D-4 completo
-
-Sesión 104. Planificada como "fuentes self-hosted", pero el usuario ENTREGÓ
-las 7 láminas del arte D-4 y las priorizó (las fuentes pasan a s105). Todo
-el diseño se iteró EN VIVO con él (2 tandas de AskUserQuestion + 4 rondas de
-feedback con mockups suyos). Diario:
-[session-104](./docs/sessions/session-104-arte-caminos.md).
-
-### La escena ilustrada (`app/paths/illustrations/`)
-
-- **`PathIllustration.jsx`** (nuevo): escena cover FULL-BLEED en las 3
-  pantallas del runner (IntroCard/StepIntro vía TransitionCardBase +
-  CompletionScreen), img+SVG en el mismo encuadre → los marcadores caen al
-  píxel sobre las bolas pintadas. Sesiones activas SIN arte (no distrae).
-- **Casquetes** (lenguaje final iterado): bolas cubiertas en gris
-  (`--line`/`--line-2`) hasta completarse → se RELLENAN con el color de SU
-  actividad (`--breathe`/`--focus`/`--move`/`--hydrate` según el kind real
-  del paso) con pop (`pace-scene-fill`) + eco de latido. El hito actual late
-  en el color de la actividad que toca. El orbe s77 se retiró.
-- **Cámara**: encuadre centrado en el hito actual con clamp; pan de 2 s
-  acompañando el avance donde el viewport recorta; la Completion encuadra
-  el **final del camino** (`finish`: el sol, el farol, la tetera, la
-  cabaña, el loto…).
-- **Tipografía sobre el arte**: título del Camino + **tagline** (beneficio
-  visible) arriba en el cielo; etiqueta del paso (nombre + numeral) en
-  **placa mini de papel del arte** anclada bajo la bola; placa translúcida
-  tras RECORRIDO/DESBLOQUEADO en la Completion.
-- **"Sobre el arte siempre es de día"**: en paleta oscura,
-  `[data-pace-scene-card]` re-mapea `--ink*`/`--paper*`/`--line*` y los
-  acentos de actividad a los valores CREMA (el arte no se tematiza; son
-  copias de la paleta día — actualizar si se recalibra).
-- **Fallback vivo**: un camino sin lámina en el índice renderiza el
-  SenderoBar clásico EXACTO (SenderoBar intocado, decisión s99 respetada).
-
-### Pipeline de assets
-
-- `paths.index.js`: metadatos por lámina (dots {x,y,r,color} medidos por
-  escaneo, paper, focusY, finish). `scripts/ingest-lamina.js` normaliza
-  (1365×768 WebP q82) y mide en **modo híbrido** (semillas visuales +
-  centroide local + crecimiento radial — el detector 100 % automático no es
-  fiable en láminas cálidas). `sharp` como devDependency (pins intactos).
-- **Web**: los .webp viajan como ARCHIVOS + PRECACHE en sw.js (offline
-  fiel; index.html se queda en 970 KB) · **standalone**: data URIs
-  (paso 6b del build, `inlineIllustrations`) → 2371 KB, 100 % autocontenido.
-  MIME .webp en static-server.
-
-### Además
-
-- Fix `PACE_VERSION` v0.46.0 → v0.49.0 (desincronizada desde s101; el
-  footer del sidebar y el export JSON mentían — entra al checklist de bump).
-- Análisis estratégico externo VERIFICADO contra el repo: "CowLogo
-  corrupto" FALSO · `todayISO()` en UTC **CIERTO** (7 sitios; tarea propia
-  s105) · destilado a ROADMAP (After Pomodoro, programas 7/14 días, ASO).
-- Hallazgo pre-existente: frame fantasma de fase 'step' en PathRunner
-  (warning React solo en dev; arreglar en sesión propia).
-
-### Verificación
-
-Protocolo s93 por tanda. Dev: los 7 caminos (imagen, nº de bolas — breath
-2 ✓, etiqueta por kind, pulso) + recorridos completos de dawn en claro/
-oscuro/móvil + fallback. Compilado: monta sin Babel, .webp 1 vez por red.
-Standalone: data URI, cero peticiones. Consola limpia en compilado. Backup
-`v0.48.0_20260714` desde git HEAD (rotado `v0.33.3_20260524`, cap 20).
-
----
-
-## [v0.48.0] -- 2026-07-13 -- build: Etapa A — precompilado Babel + React production
-
-Sesión 103. Plan maestro "Camino a v1.0", fila s103-104 (primera de las dos
-sesiones; **las fuentes self-hosted quedan para s104**, bifurcaciones ya
-decididas: solo EB Garamond + Inter Tight, data URIs en el standalone).
-Cuatro bifurcaciones decididas por el usuario antes de tocar. Cero cambios
-de arquitectura: `app/` intacto, window globals intactos, `PACE.html` dev
-sigue con CDN development + Babel standalone. Diario:
-[session-103](./docs/sessions/session-103-build-etapa-a.md).
-
-### Qué cambia en los artefactos generados
-
-- Los **74 scripts `text/babel`** (73 archivos + mount loop) se compilan EN
-  BUILD con `@babel/core` (misma major.minor 7.29 que el @babel/standalone
-  del navegador): `sourceType: 'script'`, preset-env targets evergreen
-  (conserva `?.`/`??` nativos), `retainLines` (stack traces → línea real).
-- **Semántica de scope reproducida con fidelidad**: Babel standalone ejecuta
-  cada archivo vía eval indirecto (function/var top-level → window
-  automático; const/let privados). El build envuelve cada archivo en una
-  **IIFE** (los `const {useState}=React` / `GLYPH_SVG` repetidos ya no
-  chocan) y **re-expone por AST** los function/var top-level (así viajan
-  `RoutineCard` y otros globals implícitos que nunca pasaron por
-  Object.assign).
-- **React 18.3.1 production UMD** inlineado en standalone + index.html
-  (origen: paquete npm verificado por lockfile, copiado a `vendor/`);
-  **@babel/standalone retirado** del output.
-- Invariantes nuevas del build: sin tags text/babel residuales, sin
-  unpkg.com, sin `</script>` en JS inlineado, sanity post-escritura.
-
-### Resultado
-
-**Cero JS por CDN y cero compile en el navegador** (antes: React dev +
-ReactDOM dev + Babel ~2,9 MB desde unpkg y 1-3 s de compile por carga; el
-"standalone offline" no era offline de verdad). Standalone 774 KB → 924 KB
-(React inline + JSX compilado) pero autocontenido en JS por primera vez.
-Referencias externas restantes: SOLO el @import de Google Fonts (cae en
-s104). `index.html` conserva el `<link rel="manifest">` (s102).
-
-### Verificación
-
-Preview :8765, protocolo s93 + seed fresco. Checklist funcional COMPLETO
-sobre el compilado (Welcome, Respira/Mueve/Estira, Hidrátate + persistencia,
-logro + toast visible, paleta, deep links `?go=`, pomodoro s102 en ambas
-ramas con BreakMenu y crédito) · equivalencia dev=compilado · **pareja SW
-s89+s102 con dos SW reales**: waiting + barra "Hay una versión nueva" →
-Actualizar → activación + purga del cache viejo + reload con estado intacto;
-primer install sin bucle. Trap de errores en vivo: cero errores. Backup
-`v0.47.0_20260713` desde git HEAD (rotado `v0.33.2_20260523`, cap 20).
-Pins deliberados: **Babel 7 / TypeScript 5** (npm sin pin trae Babel 8
-ESM-only y TS 7 Go sin la API del validador — ambos rompen el build; no
-subir de major sin sesión propia).
 
 ---
