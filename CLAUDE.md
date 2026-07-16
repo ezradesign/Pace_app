@@ -18,6 +18,18 @@ Antes de tocar **nada**:
 
 **Nunca reinventes componentes existentes.** Lee primero, edita después.
 
+### Lectura optimizada (ahorro de tokens sin perder contexto)
+
+- Si la sesión toca contenido, actividades, Caminos, stats o el plan de
+  evolución: lee también `docs/product/DECISIONES_PRODUCTO.md` (canónico
+  destilado; sustituye a re-leer los documentos largos de producto).
+- Lecturas dirigidas: en archivos >300 líneas usa Grep/offset-limit, no
+  lectura completa; no re-leas módulos que no vas a editar (la tabla "Red
+  de seguridad" de STATE.md ya dice qué hay en cada archivo).
+- No re-verifiques hallazgos ya marcados como verificados en
+  `docs/audits/audit-evolucion-v0.51.0.md` (tienen evidencia file:line);
+  no pidas ni pegues de nuevo los documentos de evolución originales.
+
 ---
 
 ## 🔒 Cierre de sesión (obligatorio tras cambios significativos)
