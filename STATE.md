@@ -10,9 +10,9 @@
 
 ---
 
-**Version actual:** v0.53.0
-**Ultima sesion:** #108 -- 2026-07-16 - **B1.2 Editorial de seguridad ES+EN** (CIERRA el bloque B1 del plan de evolucion; canonico en `docs/product/DECISIONES_PRODUCTO.md`). Metodo: desglose confirmado antes de tocar; textos ES+EN aprobados EN BLOQUE; decisiones del usuario (AskUserQuestion): Dead hang OPCIONAL con alternativa · extras BASE §9 DENTRO · defaults completos (propuesta A). Lo hecho: **lenguaje de riesgo fuera** («al fallo»/«al limite»/«mas bajo si puedes»/«aguanta» secos/«al maximo» → reps limpias + respiracion normal + mantener con condicion tecnica, BASE §7-9) · **claims fuera** («el hombro nace para colgar» + «marco» de puerta → barra firme que soporte tu peso; «indestructibles» fuera de desc ATG + EN `Bulletproof Knees`→`Knees over toes` + logro; chin tuck sin «papada» en 4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada EN SINCRONIA — name ES = key de glifo) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curacion Respira·Energia**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` a FREE (Energia tenia 0 free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas) + `maybeRequestNotifyPermission` (permiso en el primer «Comenzar» de Foco; denegar apaga el flag). Verificado en vivo (runtime + UI + primer arranque). Diario: `docs/sessions/session-108-b1-2-editorial-seguridad.md`. Historico previo: [`B1.1 s107`](./CHANGELOG.md#v0520----2026-07-16----fixfeat-b11-saneamiento-plan-de-evolución).
-**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 108
+**Version actual:** v0.53.0 (sin cambio en s109 — sesion solo-docs)
+**Ultima sesion:** #109 -- 2026-07-16 - **B2.1 Auditoria ejercicio a ejercicio** (CERO codigo; 1ª sesion del bloque B2, gobernada por `docs/product/BASE_MUEVE_ESTIRA.md` §11). Metodo: estado + desglose (14+14 rutinas · 62+71 steps · 65 registro · 5 steps body de Caminos) confirmados antes de escribir; usuario eligio **todo en una sesion** (AskUserQuestion). Entregable unico: [`audit-b2-ejercicios-v0.53.0.md`](./docs/audits/audit-b2-ejercicios-v0.53.0.md) — **R1-R5** del runner (prep 3s sin colocacion por paso · auto-avance sin «Terminé» · sin cambio de lado · **stats acreditan `routine.min` declarado, no real** MoveModule.jsx:206-209 · descansos = trabajo) + 5 hallazgos sistemicos de contenido + **15 casos peores** con file:line (estrella: Pigeon en `move.hips.5` «40s por lado» en `dur:60`, imposible, y en `path.midday` free) + **Tabla A** (28 rutinas: 0 retirar · 5 mantener · 21 cambiar temporizacion · 2 reescribir) + **Tabla B** (66 fichas: mantener 17 · cambiar temp. 37 · reescribir 4 · unificar visualId 4 · a `rest` 1 · **revisar con fisio 4** [Nordics, Sissy squat, Fondos en silla, Couch stretch] · retirar 0) + apendice (divergencias registro↔rutinas · mapa de duplicados visualId · leftover B1.2 «al maximo» en exercise-registry.js:117). **Piloto v1 propuesto** (6): diafragmatica + coherente 5·5 + desk.pushups + chair.squats + neck.3 + chair.antidote; suplente `move.hips.5`. NADA implementado (encargo §11: tabla primero, codigo tras aprobacion). Diario: `docs/sessions/session-109-b2-1-auditoria-ejercicios.md`. Historico previo: [`B1.2 s108`](./CHANGELOG.md#v0530----2026-07-16----fixfeat-b12-editorial-de-seguridad-esen-cierra-b1).
+**Ultima actualizacion de este archivo:** 2026-07-16 - sesion 109
 **Build entregado:** `PACE_standalone.html` v0.53.0 (3079 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (~978 KB, laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
@@ -146,41 +146,49 @@ al crear el backup del v0.52.0.
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 108 - v0.53.0 - B1.2 Editorial de seguridad ES+EN** (CIERRA el
-bloque B1; el canonico del plan es `docs/product/DECISIONES_PRODUCTO.md`).
-Metodo pactado: estado + desglose confirmados antes de tocar; textos ES+EN
-propuestos EN BLOQUE y aprobados antes de aplicar. Decisiones del usuario
-(AskUserQuestion): Dead hang OPCIONAL con alternativa (no fuera) · extras
-BASE §9 DENTRO · defaults completos (propuesta A). Criterio: copy realista
-y explicativo (memoria `feedback-realismo-ejercicios`) + lenguaje de
-`docs/product/BASE_MUEVE_ESTIRA.md` §7-9, tecnica verificada por cue.
+**Sesion 109 - v0.53.0 (sin cambio) - B2.1 Auditoria ejercicio a ejercicio**
+(CERO codigo; 1ª sesion de B2, gobernada por `BASE_MUEVE_ESTIRA.md` §11 y
+`DECISIONES_PRODUCTO.md`). Metodo pactado: estado + desglose (14+14 rutinas ·
+62+71 steps · 65 registro · 5 steps body de Caminos) confirmados antes de
+escribir; usuario eligio **todo en una sesion** (AskUserQuestion).
 
-### Que se hizo (s108)
+### Que se hizo (s109)
 
-- **Lenguaje de riesgo fuera** (ES+EN): «al fallo» → reps limpias + parar
-  si la tecnica se rompe · «al limite» → mantener mientras la lumbar siga
-  apoyada · «mas bajo si puedes» → altura que deje respirar tranquilo ·
-  «aguanta» secos de isometrias → mantener + respirar normal · extras §9:
-  «al maximo» fuera de dedos/muñecas (el «Aguanta 10 segundos, suelta» de
-  Gluteos invisibles se CONSERVA: estructura clara, no competitivo).
-- **Claims fuera**: «el hombro nace para colgar» + «marco» de puerta →
-  «barra firme que soporte tu peso» · «indestructibles» fuera (desc ATG +
-  EN `Bulletproof Knees`→`Knees over toes` + logro explore.atg) · chin
-  tuck sin «papada» (Cuello·3 + registro + 2 EN).
-- **Tag `PULL`→`PUSH`** en Fondos en silla · **Dead hang · opcional** con
-  alternativa en el cue (key de glifo renombrada EN SINCRONIA).
-- **12 descs anuncian material/superficie** ES+EN: silla estable sin
-  ruedas · pared · barra firme · suelo.
-- **Curacion Respira·Energia**: Bhastrika (PRA) → grupo Pranayama ·
-  `rounds.express` a FREE (Energia tenia 0 free; conserva safety).
-  CONTENT.md alineado.
-- **Defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo
-  instalaciones nuevas) + `maybeRequestNotifyPermission` en el primer
-  «Comenzar» de Foco (denegar apaga el flag).
+Entregable UNICO: [`audit-b2-ejercicios-v0.53.0.md`](./docs/audits/audit-b2-ejercicios-v0.53.0.md).
+
+- **R1-R5 del runner** (separados del contenido — se arreglan UNA vez en el
+  contrato v1 y liberan a las 28 rutinas): prep de 3s sin colocacion por paso
+  (MoveModule.jsx:218-223) · auto-avance sin «Terminé» (226-243) · el cambio
+  de lado no existe · **stats acreditan `routine.min` DECLARADO, no el real**
+  (206-209) · descansos indistinguibles de trabajo.
+- **5 hallazgos sistemicos de contenido**: reps encerradas en timer (100 % de
+  la fuerza de Mueve) · estaticos sin tiempo por lado (ningun bilateral lo
+  tiene) · transiciones invisibles (11 rutinas por suelo/pared/barra sin
+  contar) · declarado ≠ suma ≠ real (19/28) · avanzados sin escalon.
+- **15 casos peores** con file:line. Estrella: Pigeon en `move.hips.5` «40s
+  por lado» en `dur:60` (imposible), y en `path.midday` free. Patron «lado×2
+  = dur exacto» (cambio = 0s) en Isquio a una pierna, Plancha lateral, Wrist
+  stretch, Pigeon-en-couch.
+- **Tabla A** (28 rutinas, declarada vs suma vs activa vs total): 0 retirar ·
+  5 mantener · 21 cambiar temporizacion · 2 reescribir (`extra.legs.single`,
+  `move.atg.knees`).
+- **Tabla B** (66 fichas §11): mantener 17 · cambiar temp. 37 · reescribir 4
+  (Seated twist, Rib pull, WGS, Ground transitions) · unificar visualId 4 ·
+  a tipo `rest` 1 (Descanso) · **revisar con fisio 4** (Nordics, Sissy squat,
+  Fondos en silla, Couch stretch) · retirar 0.
+- **Apendice**: divergencias registro↔rutinas (el registro s93 quedo atras
+  tras B1.1/B1.2) · mapa de duplicados para visualId · **leftover B1.2**: «al
+  maximo» en exercise-registry.js:117 (el uso en rutina ya se saneo en s108).
+- **Piloto v1 propuesto** (6): diafragmatica + coherente 5·5 (fallback timed)
+  · desk.pushups (reps+rest, en path.afternoon) · chair.squats · neck.3
+  (perSide+postural, en path.dawn) · chair.antidote (mezcla, en path.dusk).
+  Suplente `move.hips.5` (caso Pigeon + Camino free).
 
 ### Pendiente
 
-- **B2 — fundamentos** (ver "Proxima sesion").
+- **B2.2 — implementacion** (ver "Proxima sesion"). REQUIERE aprobar la tabla
+  primero (§11); en especial las 4 fichas «revisar con fisio», la sustitucion
+  de Nordics y si `path.weekend` cambia de rutina degustada.
 - **[Feedback s107-cierre] aun sin rutar**: salir de un Camino a la home
   (via tactil explicita de abandono; el «×» avanza, diseño s99) · visual
   Respira «Loto» (PNG del usuario como estilo de tweak NUEVO; falta el PNG
@@ -190,30 +198,33 @@ y explicativo (memoria `feedback-realismo-ejercicios`) + lenguaje de
 - **PWA en navegador REAL** (instalacion + notificacion): sigue del
   usuario desde s102. La notificacion ahora arranca ON por defecto en
   instalaciones nuevas — probar el flujo de permiso real.
-- `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda, +3 ln en s108).
+- `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s109).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- B2: fundamentos (2-3 sesiones)
+## Proxima sesion -- B2.2: implementacion de fundamentos
 
-Gobernado por `docs/product/BASE_MUEVE_ESTIRA.md` (manual offline
-NHS/ACSM/OMS): **empieza por la auditoria ejercicio-a-ejercicio con ficha
-(§11), SIN tocar codigo, y se implementa solo tras aprobacion**. Alcance
-B2 (DECISIONES_PRODUCTO.md): `visualId` + mapa de alias (sin tocar
-localStorage) · contrato de pasos v1 (`mode: timed | reps | perSide |
-rest | transition | manual`, fallback total) pilotado en 4-6 rutinas ·
-metadatos (`position/equipment/requiresFloor/intensity/level/discrete`) ·
-duracion derivada + rangos honestos · feedback ligero «¿te ayudo?» ·
-diseñar (solo diseñar) el esquema de eventos. Despues: plan maestro (home
-Caminos al centro + After Pomodoro + scoring v2).
+**Requiere aprobar la tabla de `audit-b2-ejercicios-v0.53.0.md` PRIMERO**
+(§11: codigo solo tras aprobacion; decidir las 4 fichas de fisio, la
+sustitucion de Nordics en `move.atg.knees` y si `path.weekend` degusta otra
+rutina). Orden de implementacion propuesto por la auditoria: `visualId` +
+mapa de alias (sin tocar localStorage — desbloquea EN→ES de titulos) →
+**contrato de pasos v1** (`mode: timed | reps | perSide | rest | transition
+| manual`, fallback `sin mode → timed`) pilotado en las **6** rutinas
+propuestas (2 Respira + 4 cuerpo, que cubren biblioteca Y runner de Caminos)
+→ metadatos (`position/equipment/requiresFloor/intensity/level/discrete`) →
+duracion derivada + rangos honestos → feedback ligero «¿te ayudo?» → diseñar
+(solo diseñar) el esquema de eventos. El leftover «al maximo»
+(exercise-registry.js:117) entra aqui como 1 linea. Despues: plan maestro
+(home Caminos al centro + After Pomodoro + scoring v2).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
 ~~build Etapa A s103~~ · ~~arte D-4 s104~~ · ~~fuentes + todayISO s105~~ ·
 ~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · ~~B1.2 editorial s108~~ ·
-B2 fundamentos (2-3 sesiones) · home Caminos al centro + After Pomodoro ·
-taxonomia + filtros + sigilo · pre-venta: glifos (revision COMPLETA) +
-trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A
-FONDO antes de pricing.
+~~B2.1 auditoria s109~~ · B2.2-B2.3 implementacion (visualId + contrato v1 +
+metadatos) · home Caminos al centro + After Pomodoro · taxonomia + filtros +
+sigilo · pre-venta: glifos (revision COMPLETA) + trial/licencia + landing +
+programas 7/14 dias + ASO + Starter Story A FONDO antes de pricing.
 
 ---
 
