@@ -153,7 +153,20 @@ reps «objetivo suave + Terminé siempre» · corte «solo el método».
 - Solo `MoveSessionV1.jsx` + `strings/sessions.js` (4 keys). Runner legacy y
   `step.name` intactos.
 
-**B2.2b — PENDIENTE** (próxima sesión):
+**B2.2a.5 — PRÓXIMA (auditoría UX del runner; B2.2b EN PAUSA)** (decisión del
+usuario 2026-07-17, tras cierre s111): antes de añadir metadatos/duración/
+feedback/eventos hay que demostrar que el runner es una experiencia valiosa y
+comprensible. Gobierna
+[`CONTEXTO_UX_RUNNER_WELCOME.md`](./CONTEXTO_UX_RUNNER_WELCOME.md) (contexto,
+no orden de implementación). Alcance: auditoría runtime de pilotos + mapa de
+estados + evaluación `setup.mode: none|auto|ready` + jerarquía visual (3
+direcciones) + auditoría Welcome/onboarding + deudas a cuestionar (step.name=
+key de glifo · EN posicionales `sN` · `discrete` sin definir → preferir
+`execution.mode`+`completion`). B2.2b se re-ordena después en cortes: B2.2b-1
+contrato+duración (5 pilotos, + estiramiento bilateral pared/suelo) → B2.2b-2
+feedback → B2.2b-3 eventos (solo diseño).
+
+**B2.2b — EN PAUSA** (tras B2.2a.5; alcance original):
 
 - **Metadatos de rutina**: `position / equipment / requiresFloor /
   intensity / level / discrete` (base de la taxonomía s108).
