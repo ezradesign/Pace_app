@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.54.0** | 2026-07-17 | feat+refactor: **B2.2a — contrato de pasos v1 (pilotado) + visualId** (2ª sesión de B2, 1ª de código; gobernada por `BASE_MUEVE_ESTIRA.md`) -- **contrato de pasos v1** (`mode: timed \| reps \| perSide \| rest`; sin `mode` → runner **legacy** intacto) en nuevo `MoveSessionV1.jsx`; `MoveSession` pasa a dispatcher. Resuelve **R1-R5** de la auditoría B2.1 en 4 pilotos de cuerpo: **R1** placement gate por paso («Colócate»→«Empezar», el timer no arranca leyendo; absorbe el cambio de posición §6) · **R2** `reps` termina en «Terminé» (sin auto-avance) · **R3** `perSide` = Izquierda → gate «Cambia de lado» → Derecha con contador propio · **R4** la completion acredita **minutos REALES** (no `routine.min`; ambos runners) · **R5** `rest` tipado (apagado, «Saltar») · **visualId** (`exercise-aliases.js`): unifica 4 duplicados de glifo sin tocar `step.name`/localStorage (Chest opener→Apertura de pecho, Deep squat hold→Squat profundo, Deep breaths→Reset respiración, Dead hang→Hang pasivo) · pilotos: `desk.pushups`+`chair.squats` (reps+rest), `neck.3`+`chair.antidote` (perSide/postural), cubren biblioteca **y** Caminos · **split** `MOVE_ROUTINES`→`move.data.js` (MoveModule 451→331 ln) · **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado en `path.weekend`) + glifo/EN en sincronía · leftover B1.2 «al máximo»→«sin forzar» (registro:117) | #110 | [abajo](#v0540----2026-07-17----featrefactor-b22a-contrato-de-pasos-v1--visualid) |
 | **v0.53.0** | 2026-07-16 | fix+feat: **B1.2 editorial de seguridad ES+EN** (CIERRA el bloque B1) -- lenguaje de riesgo fuera con copy realista y explicativo (BASE §7-9): «al fallo» / «al límite» / «más bajo si puedes» / «aguanta» secos / «al máximo» → reps limpias, respiración normal, mantener con condición técnica · claims fuera: «el hombro nace para colgar» (+ fuera «marco» de puerta), «indestructibles» (desc ATG + EN `Bulletproof` + logro), chin tuck sin «papada» (4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada en sincronía) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curación Respira·Energía**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` pasa a **FREE** (Energía tenía 0 entradas free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas; permiso de notificación pedido en el primer «Comenzar» de Foco vía `maybeRequestNotifyPermission`, denegar apaga el flag) | #108 | [abajo](#v0530----2026-07-16----fixfeat-b12-editorial-de-seguridad-esen-cierra-b1) |
-| **v0.52.0** | 2026-07-16 | fix+feat: **B1.1 saneamiento** (plan de evolución, 1ª sesión de código) -- **`parseLocalDateKey()`** + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos; regla #10 en CLAUDE.md: prohibido `new Date("YYYY-MM-DD")`) · **cifras honestas**: contador de logros `/100`→`/106` dinámico (Sidebar), «acciones» del año RETIRADA → **«{n} días con ritmo»** real (isActiveDay s69) + tooltip «intensidad {n}», sendero del día **abstracto** (secuencia equidistante, fuera las horas inventadas) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transición = duración de la fase** (antes fija 1800 ms; fases <2 s → 85 % + ease-in-out) · **7 duraciones recalibradas** (declarado ≈ suma de pasos; Colgarse 4→2 … Ancestral 6→5) · **apnea retirada** (decisión 1): fuera logros 60/90/120 s + cifra-récord 160 px → hold como guía calmada; sustitutos de exploración **Dos lenguas / Cuaderno a salvo / Letra pequeña** (con detectores) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance) | #107 | [abajo](#v0520----2026-07-16----fixfeat-b11-saneamiento-plan-de-evolución) |
+| **v0.52.0** | 2026-07-16 | fix+feat: **B1.1 saneamiento** (plan de evolución, 1ª sesión de código) -- **`parseLocalDateKey()`** + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos; regla #10 en CLAUDE.md: prohibido `new Date("YYYY-MM-DD")`) · **cifras honestas**: contador de logros `/100`→`/106` dinámico (Sidebar), «acciones» del año RETIRADA → **«{n} días con ritmo»** real (isActiveDay s69) + tooltip «intensidad {n}», sendero del día **abstracto** (secuencia equidistante, fuera las horas inventadas) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transición = duración de la fase** (antes fija 1800 ms; fases <2 s → 85 % + ease-in-out) · **7 duraciones recalibradas** (declarado ≈ suma de pasos; Colgarse 4→2 … Ancestral 6→5) · **apnea retirada** (decisión 1): fuera logros 60/90/120 s + cifra-récord 160 px → hold como guía calmada; sustitutos de exploración **Dos lenguas / Cuaderno a salvo / Letra pequeña** (con detectores) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance) | #107 | [session-107](./docs/sessions/session-107-b1-saneamiento.md) |
 | **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [session-106](./docs/sessions/session-106-onboarding.md) |
 | **v0.50.0** | 2026-07-15 | feat: **fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos** -- **`todayISO()` a fecha LOCAL** (bug UTC: rachas/history anotaban el día anterior entre medianoche y ~2 AM; 7 sitios, reutiliza `toISODate()`) · **fuentes self-hosted preservando Cormorant** (hallazgo: el default real de títulos es Cormorant, no EB Garamond → decisión s103 revisada): copia local subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en `fonts/`, `@font-face` con ruta absoluta `/fonts/` (fuera el @import de Google), precache web + **data URIs standalone** (`inlineFonts`), MIME woff2; **JetBrains Mono retirada** (→ ui-monospace) → **cero peticiones externas de fuente** en los 3 artefactos · **BreakMenu coherente**: iconos `AB*` de la home + **Estira** (4 actividades, grid 2×2) · **frame fantasma de PathRunner** resuelto (fase 'intro' fijada en render, no en efecto → sin warning) · **toasts de logro aplazados** durante Caminos (no tapan las pantallas; se vuelcan al salir) · **bug de integridad**: un Camino solo cuenta como completado con **≥1 paso hecho** (antes saltarlo todo desbloqueaba "Cartógrafa") · aro del pomodoro alineado en Pausa/Larga | #105 | [session-105](./docs/sessions/session-105-fuentes-todayiso-caminos.md) |
 | **v0.49.0** | 2026-07-14 | feat(paths): **escenas ilustradas de Caminos — arte D-4 completo** (entrega del usuario, iterado en vivo) -- las **7 láminas** editoriales como escena FULL-BLEED del runner (intro/transición/completion vía `PathIllustration`; sesiones activas intactas) · **casquetes**: las bolas pintadas van cubiertas en gris y se **RELLENAN con el color de su actividad** al completarse (pop + eco; el orbe s77 se retiró) · cámara cover que sigue al hito (pan 2s) y encuadra el **final del camino** en la Completion · etiqueta del paso **anclada a la bola** (placa de papel del arte) · **tagline del Camino en la intro** (beneficio visible) · placa translúcida tras RECORRIDO/DESBLOQUEADO · regla **"sobre el arte siempre es de día"** (re-mapeo de tinta/papel/acentos a paleta crema dentro de las superficies ilustradas en oscuro) · pipeline: **archivo+precache en web / data URI solo standalone** (2371 KB autocontenido; index.html 970 KB) · `scripts/ingest-lamina.js` (normaliza+mide, modo híbrido) · fix `PACE_VERSION` desincronizada (v0.46.0 desde s101) · fallback SenderoBar intacto para futuros caminos sin arte | #104 | [session-104](./docs/sessions/session-104-arte-caminos.md) |
@@ -129,6 +130,74 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.54.0] -- 2026-07-17 -- feat+refactor: B2.2a contrato de pasos v1 + visualId
+
+Sesión 110. Segunda sesión del bloque B2 (la primera de código;
+[`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md) §B2),
+gobernada por [`BASE_MUEVE_ESTIRA.md`](./docs/product/BASE_MUEVE_ESTIRA.md)
+§3/§4/§6. Insumo directo:
+[`audit-b2-ejercicios-v0.53.0`](./docs/audits/audit-b2-ejercicios-v0.53.0.md)
+(B2.1). Decisiones aprobadas antes de tocar código (AskUserQuestion): fichas
+fisio aparcadas a B4 · Nordics sustituido, `path.weekend` intacto · 6 pilotos
+confirmados · corte visualId+contrato hoy / metadatos+duración+feedback
+mañana. Diario:
+[session-110](./docs/sessions/session-110-b2-2a-contrato-pasos.md).
+
+### visualId + mapa de alias
+
+- Nuevo `app/custom/exercise-aliases.js` (`VISUAL_ALIAS` + `resolveVisualId`):
+  colapsa 4 duplicados de nombre en una identidad visual **sin tocar
+  `step.name` ni localStorage** (swap s14 blindado). `ExerciseGlyph` resuelve
+  por visualId: Chest opener→Apertura de pecho · Deep squat hold→Squat
+  profundo · Deep breaths→Reset respiración · Dead hang·opcional→Hang pasivo.
+- **Rib pull ↔ Gato-camello NO se unifica** (decisión): es caso «reescribir»,
+  no duplicado limpio; su cue espera a la ola de contenido.
+
+### Contrato de pasos v1 (pilotado en 4 rutinas de cuerpo)
+
+- Nuevo `app/move/MoveSessionV1.jsx` — runner por MODO
+  (`timed | reps | perSide | rest`; sin `mode` → runner **legacy** intacto).
+  `MoveSession` pasa a **dispatcher** (elige v1/legacy según el dato). Resuelve
+  R1-R5 de la auditoría, activados por `mode`:
+  - **R1** placement gate por paso («Colócate» → «Empezar»): el timer no
+    arranca mientras se lee la colocación; absorbe el cambio de posición (§6).
+  - **R2** `reps` termina en «Terminé», nunca auto-avanza.
+  - **R3** `perSide` = lado Izquierda → gate «Cambia de lado» (manual) → lado
+    Derecha, cada lado con su contador.
+  - **R4** la completion acredita **minutos REALES** medidos, no `routine.min`
+    declarado (`completeMove/ExtraSession`; aplica a **ambos** runners).
+  - **R5** `rest` es tipo propio (apagado, sin glifo, «Saltar»).
+- **Pilotos**: `extra.desk.pushups` + `extra.chair.squats` (reps+rest) ·
+  `move.neck.3` (reps postural + perSide) · `move.chair.antidote` (timed +
+  perSide + rest). Cubren biblioteca **y** runner de Caminos (dawn/afternoon/
+  dusk). Respira (diafragmática, coherente 5·5) = control `timed`, sin cambio.
+- **Split**: `MOVE_ROUTINES` + `getMoveRoutine` → `app/move/move.data.js`
+  (`var` global, re-expuesto por el build). MoveModule 451→331 ln.
+- 13 keys i18n nuevas del contrato ES+EN (`session.place/sideChange/…`).
+
+### Contenido bundleado (nace con lenguaje BASE §8-9)
+
+- **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado
+  gratis en `path.weekend`): sustituto accesible + glifo nuevo en sincronía
+  (name = key de glifo) + EN. Nordics sigue en el registro (aparcado a fisio
+  con Sissy squat, Fondos en silla, Couch stretch).
+- Cues de los pilotos sin el número de reps encerrado (lo lleva el runner):
+  espejo EN en `content/move.js` + `content/extra.js`.
+- **Leftover B1.2** (auditoría caso 15): `exercise-registry.js:117` «Abre los
+  dedos al máximo» → «sin forzar» (+ EN en `content/custom.js`).
+
+### Verificación
+
+Preview :8765. **Dev**: R1-R5 confirmados en runtime paso a paso (place →
+reps «Terminé» → rest tipado en desk.pushups; reps postural → perSide
+Izquierda → «Cambia de lado» → Derecha en neck.3), consola limpia.
+**Standalone** regenerado (82 scripts compilados, sin invariantes rotas,
+3098 KB): monta limpio, el contrato v1 corre en el bundle. Bump v0.54.0 ×3.
+Backup `v0.53.0_20260717` desde el standalone publicado (rotado
+`v0.34.4_20260707`, cap 20).
+
+---
+
 ## [v0.53.0] -- 2026-07-16 -- fix+feat: B1.2 editorial de seguridad ES+EN (cierra B1)
 
 Sesión 108. Cierra el bloque B1 del plan de evolución
@@ -191,65 +260,5 @@ primer arranque sin estado: `soundOn:true` + `notifyFocusEnd:true` ·
 `canAccessRoutine('breathe.rounds.express') === true`. Bump v0.53.0 ×3.
 Backup `v0.52.0_20260716` desde git HEAD byte-idéntico (rotado
 `v0.34.3_20260707`, cap 20). Standalone 3079 KB.
-
----
-
-## [v0.52.0] -- 2026-07-16 -- fix+feat: B1.1 saneamiento (plan de evolución)
-
-Sesión 107. Primera sesión de código del plan de evolución (bloques B1-B4,
-[`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md)). Alcance
-pactado antes de tocar: B1.1 hoy; el editorial de seguridad ES+EN completo
-queda para B1.2. Textos aprobados en bloque por el usuario antes de aplicar.
-Diario: [session-107](./docs/sessions/session-107-b1-saneamiento.md).
-
-### Fixes técnicos objetivos
-
-- **Fechas**: `parseLocalDateKey()` nuevo en state-history (parse LOCAL de
-  claves ISO) + fix del round-trip UTC en `computePathStreaks` — las rachas
-  de Caminos saltaban días en husos negativos (`new Date("YYYY-MM-DD")` es
-  medianoche UTC). Regla #10 en CLAUDE.md: prohibido `new Date(iso)` sobre
-  claves de fecha. Verificado con round-trips incl. fechas DST.
-- **Contador de logros dinámico** (Sidebar): `/100` y «descubre 100−n»
-  hardcodeados desde s12 → `ACHIEVEMENT_CATALOG.length` (106).
-- **«Acciones» del año retirada** (YearView): era un score sintético
-  presentado como acciones. La cifra del año pasa a ser el conteo REAL de
-  días activos con la etiqueta **«{n} días con ritmo»** ES / EN; el tooltip
-  por día pasa de «{n} acciones» a **«intensidad {n}»** (lo que el color ya
-  codifica).
-- **Sendero del día abstracto** (Sidebar): los hitos dejan de llevar horas
-  inventadas; son una secuencia equidistante (foco→respira→cuerpo→agua). El
-  puntero de «ahora» sigue siendo lo único cronológico.
-- **Acento de Estira por `kind`** (MoveSession): prep, glifo, contador,
-  barra y done derivan de `kind` (`extra` → `--extra` azul-gris); Estira
-  deja de vivir en `var(--move)`. Verificado en sesión viva.
-- **BreatheVisual**: la transición dura lo que la FASE (antes fija 1800 ms
-  — una exhalación de 8 s animaba 1,8 s; Bhastrika nunca completaba).
-  Fases <2 s: 85 % de la fase + ease-in-out, suelo 300 ms. Medido en vivo:
-  5 s→`5s`, 2 s→`2s`, 1 s→`0.85s ease-in-out`.
-- **7 duraciones recalibradas** (declarado ≈ suma de pasos; auditoría §C):
-  Colgarse 4→2 · ATG·Rodillas 6→4 · Empuje·progresión 4→3 · Piernas·a una
-  5→4 · Ancestral 6→5 · Hombros·5 5→4 · Sentadilla en pared 3→2. El
-  crédito de minutos deja de sobre-acreditar. CONTENT.md alineado.
-
-### Apnea retirada + editorial de claims (decisión 1 de la auditoría)
-
-- Fuera `secret.breath.hold.60/90/120` (catálogo + IMPLEMENTED) y la
-  **cifra-récord de 160 px**: la retención es **guía calmada** (pulso
-  visual suave sin números + cue + salida siempre visible). Sustitutos de
-  exploración sin marca temporal, con detector real: **«Dos lenguas»**
-  (cambiar de idioma) · **«Cuaderno a salvo»** (exportar datos) · **«Letra
-  pequeña»** (marcar «lo he leído» en el modal de seguridad de Respira).
-- **Claims de Respira → lenguaje orientativo** ES+EN: fuera «baja
-  ansiedad», «equilibra hemisferios», «armoniza HRV», «sincroniza corazón
-  y mente», «antesala del trance consciente» (4·7·8, Nadi, aside Balance,
-  Coherente 5·5, Rondas profundas).
-
-### Verificación
-
-Preview :8765. Dev y standalone con consola limpia; claims nuevos visibles
-y cero claims viejos por búsqueda DOM; secretos y acentos probados en vivo
-(detalle en el diario). Bump v0.52.0 ×3. Backup `v0.51.0_20260716` desde
-git HEAD byte-idéntico (rotado `v0.34.2_20260630`, cap 20). Standalone
-3076 KB / index ~978 KB.
 
 ---

@@ -116,6 +116,21 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.finish':                     'Terminar',
     'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
 
+    // Contrato de pasos v1 (s110 · B2.2)
+    'session.place':                   'Colócate',
+    'session.beginStep':               'Empezar',
+    'session.sideLeft':                'Izquierda',
+    'session.sideRight':               'Derecha',
+    'session.sideChange':              'Cambia de lado',
+    'session.sideReady':               'Listo',
+    'session.sideNext':                'Ahora: {side}',
+    'session.skip':                    'Saltar',
+    'session.restLabel':               'Descanso',
+    'move.reps':                       'reps',
+    'move.repsDone':                   'Terminé',
+    'move.placeHint':                  'Colócate sin prisa · «Empezar» cuando estés listo',
+    'move.repsHint':                   'Haz menos si lo necesitas · «Terminé» para seguir',
+
     // Hydrate
     'hydrate.tag':                     'Hidratación',
     'hydrate.title':                   'Hidrátate',
@@ -274,6 +289,21 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.next.prefix':                'Next:',
     'move.finish':                     'Finish',
     'move.hint':                       '← → navigate · Space pause · Esc exit',
+
+    // Step contract v1 (s110 · B2.2)
+    'session.place':                   'Get set',
+    'session.beginStep':               'Begin',
+    'session.sideLeft':                'Left',
+    'session.sideRight':               'Right',
+    'session.sideChange':              'Switch sides',
+    'session.sideReady':               'Ready',
+    'session.sideNext':                'Now: {side}',
+    'session.skip':                    'Skip',
+    'session.restLabel':               'Rest',
+    'move.reps':                       'reps',
+    'move.repsDone':                   'Done',
+    'move.placeHint':                  'Get set, no rush · "Begin" when ready',
+    'move.repsHint':                   'Do fewer if you need to · "Done" to continue',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',

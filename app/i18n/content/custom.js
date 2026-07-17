@@ -156,7 +156,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Squeeze fist.name':                    'Squeeze fist',
   'custom.ex.Squeeze fist.cue':                     'Squeeze hard, release.',
   'custom.ex.Finger extension.name':                'Finger extension',
-  'custom.ex.Finger extension.cue':                 'Spread fingers wide.',
+  'custom.ex.Finger extension.cue':                 'Spread your fingers, without forcing.',
   'custom.ex.Ankle circles.name':                   'Ankle circles',
   'custom.ex.Ankle circles.cue':                    'Under the desk, each direction.',
   'custom.ex.Deep breaths.name':                    'Deep breaths',
