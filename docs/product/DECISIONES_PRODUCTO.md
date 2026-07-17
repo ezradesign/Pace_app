@@ -93,6 +93,27 @@ Los defaults de audio/aviso quedaron HECHOS en B1.2.
 > mínima de 6 partes · molestia≠esfuerzo≠dolor · rangos de producto ·
 > **auditoría ejercicio-a-ejercicio con ficha ANTES de tocar código**.
 
+**B2.1 auditoría — HECHA** (s109, 2026-07-16; diario
+[session-109](../sessions/session-109-b2-1-auditoria-ejercicios.md); tabla
+[`audit-b2-ejercicios-v0.53.0.md`](../audits/audit-b2-ejercicios-v0.53.0.md)).
+28 rutinas + 66 fichas §11 auditadas SIN tocar código. Hallazgos clave:
+**R1-R5 del runner** (prep sin colocación por paso · auto-avance sin
+«Terminé» · sin cambio de lado · **stats acreditan `routine.min` declarado,
+no el real** · descansos sin tipar) que se arreglan UNA vez en el contrato
+v1. Contenido: reps encerradas en timer (100 % de la fuerza de Mueve) ·
+estáticos sin tiempo por lado · transiciones invisibles (11 rutinas) ·
+declarado ≠ real (19/28) · el **Pigeon de `move.hips.5`** es imposible
+(«40s/lado» en `dur:60`) y vive en `path.midday` free. **Decisiones de la
+tabla:** 0 retirar · reescribir 4 cues + 2 rutinas (`legs.single`,
+`atg.knees`) · **revisar con fisioterapeuta 4** (Nordics, Sissy squat, Fondos
+en silla, Couch stretch) · unificar 4 duplicados vía `visualId` · **sustituir
+Nordics** en `move.atg.knees` (degustado gratis en `path.weekend`). **Piloto
+v1 propuesto (6):** diafragmática + coherente 5·5 + desk.pushups + chair.squats
++ neck.3 + chair.antidote (suplente `move.hips.5`) — cubren biblioteca Y runner
+de Caminos. **Pendiente de aprobación antes de B2.2:** la tabla completa, las
+4 fichas de fisio, la sustitución de Nordics y si `path.weekend` cambia de
+degustación.
+
 - **`visualId` + mapa de alias**: los `step.name` ES actuales siguen
   resolviendo; NO se toca localStorage. Desbloquea el renombrado EN→ES de
   títulos técnicos (feedback s101).
