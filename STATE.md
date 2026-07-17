@@ -199,16 +199,26 @@ contrato funciona pero era demasiado gatillado. Decisiones ANTES de codigo
 - `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s111).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- B2.2b: metadatos + duracion + feedback + esquema de eventos
+## Proxima sesion -- B2.2a.5: auditoria y afinado UX del runner (B2.2b EN PAUSA)
 
-Continuar el contrato v1 (base ya en `MoveSessionV1.jsx` + `move.data.js`):
-**metadatos por rutina** (`position/equipment/requiresFloor/intensity/level/
-discrete`) → **duracion derivada** de pasos + rangos honestos («3-5 min · a
-tu ritmo» para reps; la duracion declarada `min` sigue en el dato hoy) →
-**feedback ligero «¿te ayudo?»** (Mejor/Igual/No; contador `{done,helped}`
-por rutina, SIN sistema de eventos) → **diseñar** (solo diseñar) el esquema
-de eventos con `schemaVersion`. Despues: plan maestro (home Caminos al centro
-+ After Pomodoro + scoring v2).
+**Decision del usuario (2026-07-17, tras cierre s111):** B2.2b se PAUSA — no
+por mal planteamiento, sino porque metadatos/duracion/feedback/eventos no
+resuelven por si solos que el runner aun no aporte suficiente valor percibido.
+Gobierna `docs/product/CONTEXTO_UX_RUNNER_WELCOME.md` (contexto de producto
+entregado por el usuario; NO es orden de implementacion — todo se contrasta
+con runtime y se aprueba antes de codigo).
+
+**B2.2a.5** = auditoria en runtime de los 4 pilotos + mapa de estados
+(Preview/Setup/Execution/SideChange/Transition/Rest/Completion/Feedback) +
+evaluacion del placement gate (modelo `setup.mode: none|auto|ready` a evaluar
+frente al countdown uniforme de s111) + jerarquia visual (3 direcciones A/B/C)
++ auditoria de Welcome (= onboarding s106) + deudas a cuestionar (step.name=
+key de glifo, EN posicionales sN, `discrete` sin definir). Entregable ANTES de
+codigo; decisiones humanas agrupadas en max 3 preguntas (setup / direccion
+visual / alcance). Despues, B2.2b re-ordenado en cortes: B2.2b-1 contrato+
+duracion (5 pilotos, + un estiramiento bilateral pared/suelo) → B2.2b-2
+feedback → B2.2b-3 eventos (solo diseño). Despues: plan maestro (home Caminos
+al centro + After Pomodoro + scoring v2).
 
 ### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
