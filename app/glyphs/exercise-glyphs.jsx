@@ -291,6 +291,18 @@ const EXERCISE_GLYPHS = {
     </G>
   ),
 
+  /* 24b. Puente a una pierna: arco + pie apoyado + pierna elevada (s110,
+     sustituto de Nordics en move.atg.knees; canónico s60, sin aprobar). */
+  'Puente isquio a una pierna': ({ size, className }) => (
+    <G size={size} className={className}>
+      <path d="M6 30 Q22 12 38 30" />
+      <path d="M14 27 V34" />
+      <path d="M30 22 L36 14" opacity="0.6" />
+      <circle cx="36" cy="14" r="1.4" opacity="0.7" />
+      <path d="M4 34 H40" strokeDasharray="2 3" opacity="0.4" />
+    </G>
+  ),
+
   /* 25. Pared + 2 arcos ascendentes abstractos + eje (V8). */
   'Scapular wall slides': ({ size, className }) => (
     <G size={size} className={className}>
@@ -546,7 +558,12 @@ function DefaultGlyph({ size = 44, className = '' }) {
 }
 
 function ExerciseGlyph({ id, size = 88, className = '' }) {
-  const Glyph = EXERCISE_GLYPHS[id];
+  /* visualId (B2.2): los duplicados de nombre (Chest opener, Deep squat hold,
+     Deep breaths, Dead hang · opcional) resuelven al glifo canónico que
+     absorbe. resolveVisualId es identidad para nombres no aliasados; se lee
+     de window por si el orden de carga fallara (patrón defensivo del repo). */
+  const vid = (window.resolveVisualId ? window.resolveVisualId(id) : id);
+  const Glyph = EXERCISE_GLYPHS[vid] || EXERCISE_GLYPHS[id];
   if (!Glyph) return <DefaultGlyph size={size} className={className} />;
   return <Glyph size={size} className={className} />;
 }

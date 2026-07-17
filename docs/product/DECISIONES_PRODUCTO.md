@@ -114,13 +114,29 @@ de Caminos. **Pendiente de aprobación antes de B2.2:** la tabla completa, las
 4 fichas de fisio, la sustitución de Nordics y si `path.weekend` cambia de
 degustación.
 
-- **`visualId` + mapa de alias**: los `step.name` ES actuales siguen
-  resolviendo; NO se toca localStorage. Desbloquea el renombrado EN→ES de
-  títulos técnicos (feedback s101).
-- **Contrato de pasos v1**: `mode: timed | reps | perSide | rest |
-  transition | manual`, fallback `sin mode → timed`. Pilotar en 4-6 rutinas
-  (2 Respira · 2 Mueve · 2 Estira; candidatas: diafragmática, coherente 5·5,
-  flexiones de escritorio, sentadillas de silla, cuello·3, antídoto silla).
+**B2.2a — HECHA** (s110, 2026-07-17; v0.54.0; diario
+[session-110](../sessions/session-110-b2-2a-contrato-pasos.md)). Decisiones
+resueltas antes de código (AskUserQuestion): fichas fisio → B4 · **Nordics
+sustituido** por «Puente isquio a una pierna» en `move.atg.knees`,
+`path.weekend` **intacto** · 6 pilotos confirmados · corte visualId+contrato
+hoy / resto mañana.
+
+- **`visualId` + mapa de alias — HECHO**: `exercise-aliases.js`
+  (`resolveVisualId`) unifica 4 duplicados de glifo; `step.name` ES sigue
+  resolviendo, NO se toca localStorage. Rib pull NO unificado (caso
+  reescribir). El renombrado EN→ES de títulos queda para una ola de contenido.
+- **Contrato de pasos v1 — HECHO (pilotado)**: `mode: timed | reps | perSide
+  | rest`, fallback `sin mode → legacy`. `MoveSessionV1.jsx` (runner por modo)
+  + `MoveSession` dispatcher. **R1-R5** resueltos: placement gate por paso ·
+  reps con «Terminé» · cambio de lado real · **minutos reales** (no
+  `routine.min`, ambos runners) · rest tipado. Pilotos: `desk.pushups`,
+  `chair.squats`, `neck.3`, `chair.antidote` (2 Respira = control `timed`
+  conceptual). `transition`/`manual` reservados (ningún piloto los usa; el
+  cambio de posición lo absorbe el placement gate). Split `MOVE_ROUTINES` →
+  `move.data.js` (MoveModule 451→331 ln).
+
+**B2.2b — PENDIENTE** (próxima sesión):
+
 - **Metadatos de rutina**: `position / equipment / requiresFloor /
   intensity / level / discrete` (base de la taxonomía s108).
 - **Duración derivada** de pasos + rangos honestos («3–5 min · a tu ritmo»
@@ -129,6 +145,9 @@ degustación.
   helped}` por rutina, sin sistema de eventos. Alimenta Pausa PACE y el
   futuro «qué te ayuda» premium.
 - Diseñar (solo diseñar) el esquema de eventos con `schemaVersion`.
+- **B2.3** (olas siguientes): migrar las otras 22 rutinas al contrato +
+  reescribir 4 cues (Seated twist, Rib pull, WGS, Ground transitions) + 2
+  rutinas (`legs.single`, resto de `atg.knees`).
 
 ### B3 · s107-109 ampliadas (el plan maestro absorbe)
 

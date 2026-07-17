@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.53.0</title>
+  <title>PACE · Foco · Cuerpo — v0.54.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1557,6 +1557,21 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.finish': 'Terminar',
   'move.hint': '← → navegar · Espacio pausar · Esc salir',
 
+  // Contrato de pasos v1 (s110 · B2.2)
+  'session.place': 'Colócate',
+  'session.beginStep': 'Empezar',
+  'session.sideLeft': 'Izquierda',
+  'session.sideRight': 'Derecha',
+  'session.sideChange': 'Cambia de lado',
+  'session.sideReady': 'Listo',
+  'session.sideNext': 'Ahora: {side}',
+  'session.skip': 'Saltar',
+  'session.restLabel': 'Descanso',
+  'move.reps': 'reps',
+  'move.repsDone': 'Terminé',
+  'move.placeHint': 'Colócate sin prisa · «Empezar» cuando estés listo',
+  'move.repsHint': 'Haz menos si lo necesitas · «Terminé» para seguir',
+
   // Hydrate
   'hydrate.tag': 'Hidratación',
   'hydrate.title': 'Hidrátate',
@@ -1715,6 +1730,21 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.next.prefix': 'Next:',
   'move.finish': 'Finish',
   'move.hint': '← → navigate · Space pause · Esc exit',
+
+  // Step contract v1 (s110 · B2.2)
+  'session.place': 'Get set',
+  'session.beginStep': 'Begin',
+  'session.sideLeft': 'Left',
+  'session.sideRight': 'Right',
+  'session.sideChange': 'Switch sides',
+  'session.sideReady': 'Ready',
+  'session.sideNext': 'Now: {side}',
+  'session.skip': 'Skip',
+  'session.restLabel': 'Rest',
+  'move.reps': 'reps',
+  'move.repsDone': 'Done',
+  'move.placeHint': 'Get set, no rush · "Begin" when ready',
+  'move.repsHint': 'Do fewer if you need to · "Done" to continue',
 
   // Hydrate
   'hydrate.tag': 'Hydration',
@@ -2325,15 +2355,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.desk.pushups.desc': 'Inclined against desk. 3 sets.',
   'extra.desk.pushups.code': 'Strength',
   'extra.desk.pushups.s0.name': 'Incline push-ups',
-  'extra.desk.pushups.s0.cue': '12 reps against desk.',
+  'extra.desk.pushups.s0.cue': 'Against the desk, elbows close to the body.',
   'extra.desk.pushups.s1.name': 'Rest',
   'extra.desk.pushups.s1.cue': 'Breathe.',
   'extra.desk.pushups.s2.name': 'Incline push-ups',
-  'extra.desk.pushups.s2.cue': '10 reps.',
+  'extra.desk.pushups.s2.cue': 'Elbows close to the body, lower with control.',
   'extra.desk.pushups.s3.name': 'Rest',
   'extra.desk.pushups.s3.cue': 'Breathe.',
   'extra.desk.pushups.s4.name': 'Incline push-ups',
-  'extra.desk.pushups.s4.cue': '8 slow reps.',
+  'extra.desk.pushups.s4.cue': 'Last ones, slow. Stop if form breaks.',
 
   'extra.chair.dips.name': 'Chair Dips',
   'extra.chair.dips.desc': 'Triceps in 3 sets. A stable chair with no wheels.',
@@ -2448,15 +2478,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.desc': 'Stand up, sit down. The most useful strength. Stable chair, no wheels.',
   'extra.chair.squats.code': 'Legs',
   'extra.chair.squats.s0.name': 'Chair squat',
-  'extra.chair.squats.s0.cue': '10-12 reps: lower until you graze the chair, rise without momentum.',
+  'extra.chair.squats.s0.cue': 'Lower until you graze the chair, rise without momentum.',
   'extra.chair.squats.s1.name': 'Rest',
   'extra.chair.squats.s1.cue': 'Breathe.',
   'extra.chair.squats.s2.name': 'Chair squat',
-  'extra.chair.squats.s2.cue': '10 slower reps.',
+  'extra.chair.squats.s2.cue': 'Slower, full control.',
   'extra.chair.squats.s3.name': 'Rest',
   'extra.chair.squats.s3.cue': 'Breathe.',
   'extra.chair.squats.s4.name': 'Chair squat',
-  'extra.chair.squats.s4.cue': 'Last 8, full control.',
+  'extra.chair.squats.s4.cue': 'Last ones, no momentum.',
 
   'extra.legs.single.name': 'Legs · Single',
   'extra.legs.single.desc': 'Single-leg strength. Balance, control, and a stable chair.',
@@ -2534,7 +2564,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.s2.name': 'Hip flexor',
   'move.chair.antidote.s2.cue': 'Knee to floor, push pelvis forward.',
   'move.chair.antidote.s3.name': "World's greatest stretch",
-  'move.chair.antidote.s3.cue': 'Lunge + hand to floor + rotation.',
+  'move.chair.antidote.s3.cue': 'Lunge, hand to floor, open the chest in rotation.',
   'move.chair.antidote.s4.name': 'Neck and traps',
   'move.chair.antidote.s4.cue': 'Ear to shoulder, gentle.',
   'move.chair.antidote.s5.name': 'Breathing reset',
@@ -2575,8 +2605,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.atg.knees.s0.cue': 'Deep lunge. Knee goes past foot.',
   'move.atg.knees.s1.name': 'Tibialis raise',
   'move.atg.knees.s1.cue': 'Against wall, lift feet.',
-  'move.atg.knees.s2.name': 'Nordics',
-  'move.atg.knees.s2.cue': 'Assisted if needed. Controlled descent.',
+  'move.atg.knees.s2.name': 'Single-leg hamstring bridge',
+  'move.atg.knees.s2.cue': 'Lying down, one foot planted: raise and lower the hips with control. Switch legs halfway.',
   'move.atg.knees.s3.name': 'Sissy squat',
   'move.atg.knees.s3.cue': 'Supported. Knees forward, heels up.',
   'move.atg.knees.s4.name': 'Elephant walk',
@@ -2600,9 +2630,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.neck.3.desc': 'Micro-break for tense cervicals.',
   'move.neck.3.code': 'SIT',
   'move.neck.3.s0.name': 'Chin tucks',
-  'move.neck.3.s0.cue': 'Glide your chin straight back; the back of your neck lengthens.',
+  'move.neck.3.s0.cue': 'Glide your chin straight back; the back of your neck lengthens. Hold 3-5 s and relax.',
   'move.neck.3.s1.name': 'Lateral tilt',
-  'move.neck.3.s1.cue': 'Ear to shoulder, each side.',
+  'move.neck.3.s1.cue': 'Ear to shoulder, gentle.',
   'move.neck.3.s2.name': 'Slow rotation',
   'move.neck.3.s2.cue': "Look over shoulder, don't force.",
   'move.neck.3.s3.name': 'Scalenes',
@@ -2885,7 +2915,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Squeeze fist.name': 'Squeeze fist',
   'custom.ex.Squeeze fist.cue': 'Squeeze hard, release.',
   'custom.ex.Finger extension.name': 'Finger extension',
-  'custom.ex.Finger extension.cue': 'Spread fingers wide.',
+  'custom.ex.Finger extension.cue': 'Spread your fingers, without forcing.',
   'custom.ex.Ankle circles.name': 'Ankle circles',
   'custom.ex.Ankle circles.cue': 'Under the desk, each direction.',
   'custom.ex.Deep breaths.name': 'Deep breaths',
@@ -3160,7 +3190,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.53.0';
+const PACE_VERSION = 'v0.54.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7596,6 +7626,39 @@ Object.assign(window, { Sidebar });
 })();
 </script>
 
+  <!-- visualId + alias (B2.2 · s110): resolveVisualId enruta los duplicados
+       de nombre al glifo canónico. ANTES de exercise-glyphs (su consumidor). -->
+  <script>
+;(function () {
+/* PACE · Alias de identidad visual (visualId) · B2.2 · s110
+   Colapsa duplicados de NOMBRE en UNA identidad visual/de ficha, SIN tocar
+   `step.name` ni localStorage (swap s14 blindado; el ES sigue resolviendo).
+
+   El nombre canónico ES sigue siendo la clave de datos. `visualId` es solo
+   la identidad COMPARTIDA para el glifo (y, en B2.2b, la ficha de ejecución
+   y la duración derivada). El valor de cada alias es el nombre que ABSORBE
+   (el que conserva el glifo canónico).
+
+   Duplicados unificados (auditoría B2.1 §4.2). Rib pull ↔ Gato-camello queda
+   SEPARADO a propósito: es un caso «reescribir», no un duplicado visual
+   limpio (su reescritura de cue va a la ola de contenido). */
+var VISUAL_ALIAS = {
+  'Chest opener': 'Apertura de pecho',
+  'Deep squat hold': 'Squat profundo',
+  'Deep breaths': 'Reset respiración',
+  'Dead hang · opcional': 'Hang pasivo'
+};
+
+/* resolveVisualId(name) → identidad visual canónica (o el propio nombre). */
+function resolveVisualId(name) {
+  return VISUAL_ALIAS[name] || name;
+}
+
+window.VISUAL_ALIAS = VISUAL_ALIAS;
+window.resolveVisualId = resolveVisualId;
+;Object.assign(window, { VISUAL_ALIAS, resolveVisualId });
+})();
+</script>
   <!-- Glifos canónicos de ejercicio (sesión 59) — debe cargarse antes de MoveModule, BreatheSession y PathRunner -->
   <script>
 ;(function () {
@@ -7892,8 +7955,20 @@ const EXERCISE_GLYPHS = {
       ));},
 
 
+  /* 24b. Puente a una pierna: arco + pie apoyado + pierna elevada (s110,
+     sustituto de Nordics en move.atg.knees; canónico s60, sin aprobar). */
+  'Puente isquio a una pierna': (_ref24) => {let { size, className } = _ref24;return (/*#__PURE__*/
+      React.createElement(G, { size: size, className: className }, /*#__PURE__*/
+      React.createElement("path", { d: "M6 30 Q22 12 38 30" }), /*#__PURE__*/
+      React.createElement("path", { d: "M14 27 V34" }), /*#__PURE__*/
+      React.createElement("path", { d: "M30 22 L36 14", opacity: "0.6" }), /*#__PURE__*/
+      React.createElement("circle", { cx: "36", cy: "14", r: "1.4", opacity: "0.7" }), /*#__PURE__*/
+      React.createElement("path", { d: "M4 34 H40", strokeDasharray: "2 3", opacity: "0.4" })
+      ));},
+
+
   /* 25. Pared + 2 arcos ascendentes abstractos + eje (V8). */
-  'Scapular wall slides': (_ref24) => {let { size, className } = _ref24;return (/*#__PURE__*/
+  'Scapular wall slides': (_ref25) => {let { size, className } = _ref25;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 6 V38" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 28 Q22 22 30 28", opacity: "0.5", strokeDasharray: "1.5 2" }), /*#__PURE__*/
@@ -7903,7 +7978,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 26. Banda + 2 manos + líneas sutiles de tensión lateral (NEW). */
-  'Band pull-apart': (_ref25) => {let { size, className } = _ref25;return (/*#__PURE__*/
+  'Band pull-apart': (_ref26) => {let { size, className } = _ref26;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "12", cy: "22", r: "2.4" }), /*#__PURE__*/
       React.createElement("circle", { cx: "32", cy: "22", r: "2.4" }), /*#__PURE__*/
@@ -7918,7 +7993,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 27. Hombro (cabeza humeral) + antebrazo + arco de rotación (ALT). */
-  'External rotation': (_ref26) => {let { size, className } = _ref26;return (/*#__PURE__*/
+  'External rotation': (_ref27) => {let { size, className } = _ref27;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "14", r: "3" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 17 L20 22" }), /*#__PURE__*/
@@ -7929,7 +8004,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 28. Barra + 2 manos huecas + brazos rectos colgados (NEW). */
-  'Dead hang · opcional': (_ref27) => {let { size, className } = _ref27;return (/*#__PURE__*/
+  'Dead hang · opcional': (_ref28) => {let { size, className } = _ref28;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 8 H38" }), /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "10", r: "2.4" }), /*#__PURE__*/
@@ -7940,7 +8015,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 29. Zancada ATG: rodilla muy por delante del pie. */
-  'ATG split squat': (_ref28) => {let { size, className } = _ref28;return (/*#__PURE__*/
+  'ATG split squat': (_ref29) => {let { size, className } = _ref29;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "18", cy: "20", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M18 22 L34 18 L36 32" }), /*#__PURE__*/
@@ -7950,7 +8025,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 30. Pared + pierna + pie en flexión dorsal. */
-  'Tibialis raise': (_ref29) => {let { size, className } = _ref29;return (/*#__PURE__*/
+  'Tibialis raise': (_ref30) => {let { size, className } = _ref30;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 6 V38" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 38 H38" }), /*#__PURE__*/
@@ -7960,7 +8035,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 31. Cuerpo cayendo recto con pivote en las rodillas. */
-  'Nordics': (_ref30) => {let { size, className } = _ref30;return (/*#__PURE__*/
+  'Nordics': (_ref31) => {let { size, className } = _ref31;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "36", cy: "14", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M36 14 L14 30" }), /*#__PURE__*/
@@ -7970,7 +8045,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 32. Cuerpo inclinado atrás + rodillas adelante + talones arriba. */
-  'Sissy squat': (_ref31) => {let { size, className } = _ref31;return (/*#__PURE__*/
+  'Sissy squat': (_ref32) => {let { size, className } = _ref32;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "8", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 10 L28 30" }), /*#__PURE__*/
@@ -7982,7 +8057,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 33. Pike claro + 2 brazos cayendo + 2 manos en suelo (V7). */
-  'Elephant walk': (_ref32) => {let { size, className } = _ref32;return (/*#__PURE__*/
+  'Elephant walk': (_ref33) => {let { size, className } = _ref33;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M22 8 L8 32" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 8 L36 32" }), /*#__PURE__*/
@@ -7994,7 +8069,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 34. M profunda + tres puntos verticales (mantener el tiempo). */
-  'Deep squat hold': (_ref33) => {let { size, className } = _ref33;return (/*#__PURE__*/
+  'Deep squat hold': (_ref34) => {let { size, className } = _ref34;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M10 34 V20 L22 32 L34 20 V34" }), /*#__PURE__*/
       React.createElement("circle", { cx: "38", cy: "20", r: "1", opacity: "0.65" }), /*#__PURE__*/
@@ -8005,7 +8080,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 35. Cuadrupedia: espalda arqueada + cuatro patas dinámicas. */
-  'Crawling': (_ref34) => {let { size, className } = _ref34;return (/*#__PURE__*/
+  'Crawling': (_ref35) => {let { size, className } = _ref35;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 18 Q22 6 36 18" }), /*#__PURE__*/
       React.createElement("path", { d: "M10 18 Q8 24 10 32" }), /*#__PURE__*/
@@ -8017,7 +8092,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 36. Barra + 2 manos + cuerpo relajado en curva completa (ALT). */
-  'Hang pasivo': (_ref35) => {let { size, className } = _ref35;return (/*#__PURE__*/
+  'Hang pasivo': (_ref36) => {let { size, className } = _ref36;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 8 H38" }), /*#__PURE__*/
       React.createElement("circle", { cx: "16", cy: "10", r: "2" }), /*#__PURE__*/
@@ -8028,7 +8103,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 37. Sentado arriba + curva descendente + sentado abajo. */
-  'Ground sitting transitions': (_ref36) => {let { size, className } = _ref36;return (/*#__PURE__*/
+  'Ground sitting transitions': (_ref37) => {let { size, className } = _ref37;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "10", cy: "10", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M10 12 V18", opacity: "0.55" }), /*#__PURE__*/
@@ -8039,7 +8114,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 38. Gato/vaca: dos arcos opuestos + puntos de aire. */
-  'Rib pull + respiración': (_ref37) => {let { size, className } = _ref37;return (/*#__PURE__*/
+  'Rib pull + respiración': (_ref38) => {let { size, className } = _ref38;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 16 Q22 6 36 16" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 28 Q22 38 36 28" }), /*#__PURE__*/
@@ -8049,7 +8124,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 39. Cabeza inclinada lateral + cuerpo curvado en arco. */
-  'Inclinación lateral': (_ref38) => {let { size, className } = _ref38;return (/*#__PURE__*/
+  'Inclinación lateral': (_ref39) => {let { size, className } = _ref39;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "28", cy: "10", r: "3" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 36 Q30 22 28 13" }), /*#__PURE__*/
@@ -8058,7 +8133,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 40. Cabeza + elipse horizontal alrededor (rotación cervical). */
-  'Rotación lenta': (_ref39) => {let { size, className } = _ref39;return (/*#__PURE__*/
+  'Rotación lenta': (_ref40) => {let { size, className } = _ref40;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "14", r: "4" }), /*#__PURE__*/
       React.createElement("ellipse", { cx: "22", cy: "14", rx: "14", ry: "5", opacity: "0.5" }), /*#__PURE__*/
@@ -8067,7 +8142,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 41. Cabeza inclinada + brazo bajando + mano anclada. */
-  'Escalenos': (_ref40) => {let { size, className } = _ref40;return (/*#__PURE__*/
+  'Escalenos': (_ref41) => {let { size, className } = _ref41;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "12", r: "4" }), /*#__PURE__*/
       React.createElement("path", { d: "M16 15 L26 22 H30" }), /*#__PURE__*/
@@ -8077,7 +8152,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 42. Cabeza + hombros como 2 arcos + torso + 2 flechas verticales (V12). */
-  'Shrug + round': (_ref41) => {let { size, className } = _ref41;return (/*#__PURE__*/
+  'Shrug + round': (_ref42) => {let { size, className } = _ref42;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "20", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 26 Q14 12 22 16" }), /*#__PURE__*/
@@ -8091,7 +8166,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 43. Antebrazo + mano + círculo rotación — patrón 3 (parte aislada). */
-  'Wrist circles': (_ref42) => {let { size, className } = _ref42;return (/*#__PURE__*/
+  'Wrist circles': (_ref43) => {let { size, className } = _ref43;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M4 22 H20" }), /*#__PURE__*/
       React.createElement("path", { d: "M20 22 Q24 22 22 18" }), /*#__PURE__*/
@@ -8100,7 +8175,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 44. Silla + torso + arco amplio de rotación hacia el respaldo. */
-  'Seated twist': (_ref43) => {let { size, className } = _ref43;return (/*#__PURE__*/
+  'Seated twist': (_ref44) => {let { size, className } = _ref44;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M10 10 V30" }), /*#__PURE__*/
       React.createElement("path", { d: "M10 24 H24 V34" }), /*#__PURE__*/
@@ -8110,7 +8185,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 45. Pierna vertical + círculo en el tobillo (rotación). */
-  'Ankle circles': (_ref44) => {let { size, className } = _ref44;return (/*#__PURE__*/
+  'Ankle circles': (_ref45) => {let { size, className } = _ref45;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M22 4 V26" }), /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "32", r: "6" }), /*#__PURE__*/
@@ -8119,7 +8194,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 46. Pulmones + flecha de aire entrando + expansión lateral (NEW). */
-  'Deep breaths': (_ref45) => {let { size, className } = _ref45;return (/*#__PURE__*/
+  'Deep breaths': (_ref46) => {let { size, className } = _ref46;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M22 14 V32" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 18 Q12 18 12 26 Q12 32 18 32" }), /*#__PURE__*/
@@ -8135,7 +8210,7 @@ const EXERCISE_GLYPHS = {
 
 };
 
-function DefaultGlyph(_ref46) {let { size = 44, className = '' } = _ref46;
+function DefaultGlyph(_ref47) {let { size = 44, className = '' } = _ref47;
   return (/*#__PURE__*/
     React.createElement(G, { size: size, className: className }, /*#__PURE__*/
 
@@ -8146,8 +8221,13 @@ function DefaultGlyph(_ref46) {let { size = 44, className = '' } = _ref46;
 
 }
 
-function ExerciseGlyph(_ref47) {let { id, size = 88, className = '' } = _ref47;
-  const Glyph = EXERCISE_GLYPHS[id];
+function ExerciseGlyph(_ref48) {let { id, size = 88, className = '' } = _ref48;
+  /* visualId (B2.2): los duplicados de nombre (Chest opener, Deep squat hold,
+     Deep breaths, Dead hang · opcional) resuelven al glifo canónico que
+     absorbe. resolveVisualId es identidad para nombres no aliasados; se lee
+     de window por si el orden de carga fallara (patrón defensivo del repo). */
+  const vid = window.resolveVisualId ? window.resolveVisualId(id) : id;
+  const Glyph = EXERCISE_GLYPHS[vid] || EXERCISE_GLYPHS[id];
   if (!Glyph) return /*#__PURE__*/React.createElement(DefaultGlyph, { size: size, className: className });
   return /*#__PURE__*/React.createElement(Glyph, { size: size, className: className });
 }
@@ -9552,38 +9632,37 @@ Object.assign(window, { BreatheSession });
 ;Object.assign(window, { BreatheSession });
 })();
 </script>
+  <!-- Datos de Mueve (s110 · B2.2): MOVE_ROUTINES + getMoveRoutine. ANTES de
+       MoveModule (que referencia MOVE_ROUTINES como global via `var`). -->
   <script>
 ;(function () {
-/* PACE · Módulo Mueve (Calistenia / Fuerza)
-   Librería + Sesión con pasos + timer
+/* PACE · Datos de Mueve — MOVE_ROUTINES + getMoveRoutine
+   Extraído de MoveModule.jsx en s110 (B2.2) para dar aire al módulo cuando
+   crece con el contrato de pasos v1 (regla <500 ln). Sin cambio de estructura
+   salvo los 2 pilotos de Mueve, que estrenan `mode` (contrato v1).
 
-   v0.11.9 — SWAP de contenido (sesión 14):
-   Las rutinas de calistenia y fuerza pasaron a este módulo (antes vivían
-   en ExtraModule). Los estiramientos pasaron a ExtraModule (botón "Estira").
-   Los ids (`move.*` / `extra.*`) y funciones de state (completeMoveSession /
-   completeExtraSession) se conservan para no invalidar localStorage ni logros
-   de usuarios existentes — solo cambia qué contenedor visual los muestra.
+   `var` (no `const`) a propósito: el build re-expone function/var top-level
+   como global (collectGlobalNames, s103) → MoveModule referencia MOVE_ROUTINES
+   directamente sin `window.`, igual que antes. Carga ANTES de MoveModule.
 
-   F6 (s92): 7 → 14 rutinas, biblioteca agrupada como Respira/Estira
-   (4 grupos, free primero dentro de cada grupo). Inspiración: Strengthside
-   (progresiones de empuje, unilateral, colgarse) + Jess Martin (fuerza
-   discreta de oficina). Los pasos nuevos sin glifo aprobado renderizan
-   DefaultGlyph hasta el port (D-4). */
+   Contrato de pasos v1 (B2.2): un step puede declarar
+     mode: 'timed' | 'reps' | 'perSide' | 'rest'
+   Sin `mode` → el runner cae a legacy (comportamiento idéntico al de s109).
+   `reps` = nº objetivo (o {min,target,max}); `dur` se conserva como estimación
+   de reserva (lo usa la barra de progreso y el fallback legacy). */
 
-const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
-
-const MOVE_ROUTINES = {
+var MOVE_ROUTINES = {
   empuje: {
     label: 'Empuje y tracción',
     aside: 'Pecho, brazos, espalda alta',
     items: [
     { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
       steps: [
-      { name: 'Flexiones inclinadas', dur: 30, cue: '12 reps contra escritorio.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', dur: 30, cue: '10 reps.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', dur: 30, cue: '8 reps lentas.' }]
+      { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40, cue: 'Codos cerca del cuerpo, baja con control.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, lentas. Para si la técnica se rompe.' }]
     },
     { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
       steps: [
@@ -9649,11 +9728,11 @@ const MOVE_ROUTINES = {
     items: [
     { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
       steps: [
-      { name: 'Sentadilla a silla', dur: 40, cue: '10-12 reps: baja hasta rozar la silla, sube sin impulso.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Sentadilla a silla', dur: 40, cue: '10 reps más lentas.' },
-      { name: 'Descanso', dur: 20, cue: 'Respira.' },
-      { name: 'Sentadilla a silla', dur: 40, cue: 'Últimas 8, control total.' }]
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40, cue: 'Baja hasta rozar la silla, sube sin impulso.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40, cue: 'Más lentas, control total.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, sin impulso.' }]
     },
     { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
       steps: [
@@ -9703,6 +9782,42 @@ const MOVE_ROUTINES = {
   }
 };
 
+/* Sesión 49 — helper de lookup para Caminos (s92: adaptado a grupos) */
+function getMoveRoutine(id) {
+  for (const group of Object.values(MOVE_ROUTINES)) {
+    const found = group.items.find((r) => r.id === id);
+    if (found) return found;
+  }
+  return null;
+}
+window.getMoveRoutine = getMoveRoutine;
+window.MOVE_ROUTINES = MOVE_ROUTINES;
+;Object.assign(window, { MOVE_ROUTINES, getMoveRoutine });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Módulo Mueve (Calistenia / Fuerza)
+   Librería + Sesión con pasos + timer
+
+   v0.11.9 — SWAP de contenido (sesión 14):
+   Las rutinas de calistenia y fuerza pasaron a este módulo (antes vivían
+   en ExtraModule). Los estiramientos pasaron a ExtraModule (botón "Estira").
+   Los ids (`move.*` / `extra.*`) y funciones de state (completeMoveSession /
+   completeExtraSession) se conservan para no invalidar localStorage ni logros
+   de usuarios existentes — solo cambia qué contenedor visual los muestra.
+
+   F6 (s92): 7 → 14 rutinas, biblioteca agrupada como Respira/Estira.
+
+   s110 (B2.2): MOVE_ROUTINES + getMoveRoutine salieron a app/move/move.data.js
+   (regla <500 ln; el módulo crece con el contrato). MoveSession pasa a ser un
+   DISPATCHER: rutinas con algún step `mode` van al runner del contrato v1
+   (MoveSessionV1.jsx); el resto sigue el runner legacy (MoveSessionLegacy,
+   idéntico a s109). R4: la completion acredita minutos REALES, no `routine.min`
+   declarado (afecta a ambos runners; los declarados heredaban la mentira). */
+
+const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
+
 function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
   const { t, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
@@ -9732,7 +9847,19 @@ function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
 
 }
 
-function MoveSession(_ref3) {let { routine, onExit, kind = 'move', inPath } = _ref3;
+/* MoveSession — DISPATCHER (s110). Sin hooks propios: elige el runner según
+   el contrato del dato. Una rutina es "v1" si algún step declara `mode`; las
+   demás (22 de 28) siguen byte-idénticas en el runner legacy. El guard
+   `typeof MoveSessionV1` degrada con gracia a legacy si el archivo del
+   contrato aún no evaluó (ventana sub-segundo de la carrera de scripts). */
+function MoveSession(props) {
+  const { routine } = props;
+  const isV1 = routine && routine.steps && routine.steps.some((s) => s.mode);
+  if (isV1 && typeof MoveSessionV1 === 'function') return /*#__PURE__*/React.createElement(MoveSessionV1, props);
+  return /*#__PURE__*/React.createElement(MoveSessionLegacy, props);
+}
+
+function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath } = _ref3;
   const { t, tn, lang } = useT();
   // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
   // Estira azul-gris segun kind).
@@ -9758,10 +9885,13 @@ function MoveSession(_ref3) {let { routine, onExit, kind = 'move', inPath } = _r
   { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
   routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
-  // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
+  // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza
+  // este componente). R4 (s110): acredita minutos REALES medidos, no el
+  // `routine.min` declarado (las stats heredaban el número declarado).
   const dispatchComplete = () => {
-    if (kind === 'extra') completeExtraSession(routine.id, routine.min);else
-    completeMoveSession(routine.id, routine.min);
+    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    if (kind === 'extra') completeExtraSession(routine.id, realMin);else
+    completeMoveSession(routine.id, realMin);
   };
   const [prepCount, setPrepCount] = useStateMV(3);
   const [stepIdx, setStepIdx] = useStateMV(0);
@@ -9962,7 +10092,8 @@ function MoveSession(_ref3) {let { routine, onExit, kind = 'move', inPath } = _r
 /* Glifo por paso — círculo decorativo (moneda) con SVG canónico interior.
    La key es el step.name canónico en español (los datos viven en es-ES).
    El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves.
-   B1: acento por kind via props (Estira llega con --extra). */
+   B1: acento por kind via props (Estira llega con --extra).
+   s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
 function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)' } = _ref4;
   return (/*#__PURE__*/
     React.createElement("div", { style: {
@@ -9995,17 +10126,272 @@ if (!_paceMoveResponsive) {
   document.head.appendChild(s);
 }
 
-/* Sesión 49 — helper de lookup para Caminos (s92: adaptado a grupos) */
-function getMoveRoutine(id) {
-  for (const group of Object.values(MOVE_ROUTINES)) {
-    const found = group.items.find((r) => r.id === id);
-    if (found) return found;
-  }
-  return null;
+/* getMoveRoutine + MOVE_ROUTINES → app/move/move.data.js (split s110). */
+Object.assign(window, { MoveLibrary, MoveSession, StepGlyph });
+;Object.assign(window, { MoveLibrary, MoveSession, MoveSessionLegacy, StepGlyph });
+})();
+</script>
+  <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
+       MoveModule — comparte StepGlyph; el dispatcher de MoveSession lo elige
+       para rutinas con `mode` (guard typeof: degrada a legacy si no evaluó). -->
+  <script>
+;(function () {
+/* PACE · Runner del contrato de pasos v1 (B2.2 · s110)
+   =====================================================
+   Runner por MODO para las rutinas que estrenan el contrato. Comparte cáscara
+   (SessionShell/SessionPrep/SessionDone), glifo (StepGlyph) y acento por kind
+   con el runner legacy; lo que cambia es la máquina de fases.
+
+   Resuelve los hallazgos R1-R5 de la auditoría B2.1, activados por `mode`:
+     R1  placement gate POR PASO — el timer no arranca mientras se lee la
+         colocación (fase 'place' → «Empezar»). También absorbe el cambio de
+         posición (§6): recolocarse es tiempo del usuario, sin cronómetro.
+     R2  `reps` termina en «Terminé», nunca auto-avanza.
+     R3  `perSide` = lado 1 → aviso de cambio (gate manual «Listo») → lado 2,
+         cada lado con su propio contador.
+     R4  la completion acredita minutos REALES (dispatchComplete), no
+         `routine.min` declarado.
+     R5  `rest` es un tipo propio, visualmente distinto del trabajo.
+
+   Modos: 'timed' | 'reps' | 'perSide' | 'rest'. Un step sin `mode` no llega
+   aquí (el dispatcher de MoveModule lo manda al runner legacy).
+
+   Consume globales (StepGlyph, SessionShell*, complete*Session, playSound,
+   useT) por window/scope global — carga tras MoveModule. */
+
+const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
+
+/* Segundos de un segmento activo (timed/rest = dur; perSide = dur por lado). */
+function v1StepProgress(step, side, elapsed) {
+  if (step.mode === 'reps') return 0; // reps no tiene barra de tiempo
+  if (step.mode === 'perSide') return (side * step.dur + elapsed) / (2 * step.dur);
+  return step.dur ? elapsed / step.dur : 0;
 }
-window.getMoveRoutine = getMoveRoutine;
-Object.assign(window, { MoveLibrary, MoveSession });
-;Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, getMoveRoutine });
+/* Peso del step para la barra segmentada (estimación honesta por tipo). */
+function v1StepWeight(step) {
+  if (step.mode === 'reps') return (typeof step.reps === 'object' ? step.reps.target : step.reps || 8) * 4;
+  if (step.mode === 'perSide') return (step.dur || 20) * 2;
+  return step.dur || 20;
+}
+
+function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _ref;
+  const { t, tn, lang } = useT();
+  const atmo = inPath ? kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)' : undefined;
+  const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
+  const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
+  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const tStep = (idx, field) => tR(`${routine.id}.s${idx}.${field}`, routine.steps[idx][field]);
+  const displayRoutine = lang === 'en' ?
+  { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
+  routine;
+
+  const [stage, setStage] = useStateV1('prep'); // 'prep' | 'run' | 'done'
+  const [prepCount, setPrepCount] = useStateV1(3);
+  const [stepIdx, setStepIdx] = useStateV1(0);
+  const [phase, setPhase] = useStateV1('place'); // 'place' | 'work' | 'change'
+  const [side, setSide] = useStateV1(0); // 0 = 1er lado, 1 = 2º lado
+  const [elapsed, setElapsed] = useStateV1(0);
+  const [paused, setPaused] = useStateV1(false);
+  const sessionStart = useRefV1(Date.now());
+  const step = routine.steps[stepIdx];
+
+  const dispatchComplete = () => {
+    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    if (kind === 'extra') completeExtraSession(routine.id, realMin);else
+    completeMoveSession(routine.id, realMin);
+  };
+
+  const startStep = (idx) => {
+    const st = routine.steps[idx];
+    setStepIdx(idx);setElapsed(0);setSide(0);
+    setPhase(st.mode === 'rest' ? 'work' : 'place'); // rest arranca ya; el resto tras colocarse
+  };
+  const advanceStep = () => {
+    if (stepIdx + 1 >= routine.steps.length) {dispatchComplete();setStage('done');} else
+    startStep(stepIdx + 1);
+  };
+  const beginWork = () => {setPhase('work');setElapsed(0);};
+  const onSideReady = () => {setSide(1);setPhase('work');setElapsed(0);};
+
+  // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).
+  useEffectV1(() => {
+    if (stage !== 'prep' || paused) return;
+    if (prepCount <= 0) {sessionStart.current = Date.now();setStage('run');startStep(0);return;}
+    const to = setTimeout(() => setPrepCount((c) => Math.max(0, c - 1)), 1000);
+    return () => clearTimeout(to);
+  }, [stage, prepCount, paused]);
+
+  // Ticker: solo corre en fase 'work' de un segmento cronometrado
+  // (timed/perSide/rest). 'reps' no corre (R2); 'place'/'change' tampoco (R1/R3).
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'work' || paused) return;
+    if (step.mode === 'reps') return;
+    const segDur = step.dur;
+    const intv = setInterval(() => {
+      setElapsed((e) => {
+        if (e + 1 >= segDur) {
+          if (step.mode === 'perSide' && side === 0) {setPhase('change');return 0;}
+          advanceStep();
+          return 0;
+        }
+        return e + 1;
+      });
+    }, 1000);
+    return () => clearInterval(intv);
+  }, [stage, phase, paused, stepIdx, side, step]);
+
+  // Sonidos
+  useEffectV1(() => {if (stage === 'run') {try {playSound('move.start');} catch (e) {}}
+    if (stage === 'done') {try {playSound('move.end');} catch (e) {}}}, [stage]);
+  useEffectV1(() => {if (stage === 'run') {try {playSound('move.step');} catch (e) {}}}, [stepIdx]);
+
+  // Atajos
+  useEffectV1(() => {
+    const onKey = (e) => {
+      if (e.key === ' ') {e.preventDefault();if (step && step.mode !== 'reps' && phase === 'work') setPaused((p) => !p);}
+      if (e.key === 'Escape') onExit('exit');
+      if (e.key === 'Enter' && stage === 'done') onExit('done');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [stage, stepIdx, phase, step]);
+
+  // PREPARACIÓN
+  if (stage === 'prep') {
+    return (/*#__PURE__*/
+      React.createElement(SessionPrep, {
+        routine: displayRoutine, onExit: onExit, accent: accent, prepCount: prepCount,
+        copy: tn('move.prepCopy', { n: routine.steps.length }),
+        onSkip: () => {sessionStart.current = Date.now();setPrepCount(0);setStage('run');startStep(0);},
+        atmosphere: atmo }
+      ));
+
+  }
+
+  // COMPLETADO
+  if (stage === 'done') {
+    const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    return (/*#__PURE__*/
+      React.createElement(SessionDone, {
+        routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft,
+        doneMeta: t('session.antidoteDone'), doneCopy: t('move.doneCopy'),
+        stats: [
+        { label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` },
+        { label: t('move.steps'), value: String(routine.steps.length) }],
+
+        buttonStyle: { background: accent, borderColor: accent },
+        doneButtonLabel: inPath ? t('session.next') : undefined,
+        atmosphere: atmo }
+      ));
+
+  }
+
+  // ---- RUN: contenido central por fase/modo ----
+  const isRest = step.mode === 'rest';
+  const stepAccent = isRest ? 'var(--ink-3)' : accent; // R5: descanso apagado
+  const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
+  const remaining = Math.max(0, (step.dur || 0) - elapsed);
+  const repsTarget = typeof step.reps === 'object' ? step.reps.target : step.reps;
+
+  let bigNumber, bigLabel, kicker, primary, hint;
+  if (phase === 'place') {
+    kicker = t('session.place');
+    hint = t('move.placeHint');
+    primary = { label: t('session.beginStep'), onClick: beginWork };
+  } else if (phase === 'change') {
+    kicker = t('session.sideChange');
+    hint = tn('session.sideNext', { side: t('session.sideRight') });
+    primary = { label: t('session.sideReady'), onClick: onSideReady };
+  } else if (step.mode === 'reps') {
+    bigNumber = String(repsTarget);bigLabel = t('move.reps');
+    kicker = tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
+    hint = t('move.repsHint');
+    primary = { label: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.repsDone'), onClick: advanceStep };
+  } else {
+    // timed / perSide / rest — cronometrado
+    bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');
+    kicker = isRest ? t('session.restLabel') :
+    step.mode === 'perSide' ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
+    tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
+    primary = isRest ?
+    { label: t('session.skip'), onClick: advanceStep } :
+    { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
+        if (step.mode === 'perSide' && side === 0) {setPhase('change');setElapsed(0);} else advanceStep();
+      } };
+  }
+
+  const canPause = phase === 'work' && step.mode !== 'reps' && !isRest;
+  const footer = /*#__PURE__*/
+  React.createElement(React.Fragment, null, /*#__PURE__*/
+  React.createElement("button", { onClick: () => {if (stepIdx > 0) startStep(stepIdx - 1);}, disabled: stepIdx === 0, style: sessionShellStyles.ctrlBtn },
+  t('move.prev')
+  ),
+  canPause && /*#__PURE__*/
+  React.createElement("button", { onClick: () => setPaused((p) => !p), style: sessionShellStyles.ctrlBtn },
+  paused ? t('session.resume') : t('session.pause')
+  ), /*#__PURE__*/
+
+  React.createElement("button", { onClick: primary.onClick, style: { ...sessionShellStyles.ctrlBtn, borderColor: stepAccent, color: 'var(--ink)' } },
+  primary.label
+  )
+  );
+
+
+  return (/*#__PURE__*/
+    React.createElement(SessionShell, {
+      routine: displayRoutine, onExit: onExit, atmosphere: atmo,
+      headerExtra: /*#__PURE__*/React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
+      footer: footer, hint: hint || t('session.hint') }, /*#__PURE__*/
+
+    React.createElement("div", { style: { textAlign: 'center', maxWidth: 620 } },
+    !isRest && /*#__PURE__*/React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft }), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 14, fontWeight: 500 } },
+    kicker
+    ), /*#__PURE__*/
+    React.createElement("h1", { style: { ...displayItalic, fontSize: 56, fontWeight: 500, lineHeight: 1.05, margin: '0 0 20px' } },
+    tStep(stepIdx, 'name')
+    ), /*#__PURE__*/
+    React.createElement("p", { style: { fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 22px' } },
+    tStep(stepIdx, 'cue')
+    ),
+
+    bigNumber != null && /*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { "data-pace-move-timer": true, style: { ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08 } },
+    bigNumber
+    ), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 22 } }, bigLabel)
+    )
+
+    ), /*#__PURE__*/
+
+    React.createElement("div", { style: { margin: '28px auto 0', width: '100%', maxWidth: 640 } }, /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', gap: 4, alignItems: 'center', height: 10 } },
+    routine.steps.map((s, i) => /*#__PURE__*/
+    React.createElement("div", { key: i, style: {
+        flex: v1StepWeight(s),
+        height: i === stepIdx ? 6 : 2,
+        background: i < stepIdx ? accent : i === stepIdx ? 'var(--line)' : 'var(--paper-3)',
+        borderRadius: 2, position: 'relative', overflow: 'hidden', transition: 'height 220ms'
+      } },
+    i === stepIdx && /*#__PURE__*/
+    React.createElement("div", { style: { position: 'absolute', inset: 0, width: `${v1StepProgress(step, side, elapsed) * 100}%`, background: accent, transition: 'width 1s linear' } })
+
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { style: { textAlign: 'center', marginTop: 8, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' } },
+    routine.steps[stepIdx + 1] ? `${t('move.next.prefix')} ${tStep(stepIdx + 1, 'name')}` : t('move.lastStep')
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, { MoveSessionV1 });
+;Object.assign(window, { v1StepProgress, v1StepWeight, MoveSessionV1 });
 })();
 </script>
   <script>
@@ -10034,20 +10420,20 @@ const EXTRA_ROUTINES = {
     { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
       desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello. Pasarás por el suelo.', min: 5,
       steps: [
-      { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
-      { name: 'Rotación torácica', dur: 40, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
-      { name: 'Flexor de cadera', dur: 50, cue: 'Rodilla al suelo, empuja pelvis adelante.' },
-      { name: 'World\'s greatest stretch', dur: 60, cue: 'Zancada + mano al suelo + rotación.' },
-      { name: 'Cuello y trapecios', dur: 40, cue: 'Oreja al hombro, suave.' },
-      { name: 'Reset respiración', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
+      { name: 'Apertura de pecho', mode: 'timed', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
+      { name: 'Rotación torácica', mode: 'perSide', dur: 20, cue: 'Sentado: manos cruzadas, rota el tronco despacio.' },
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
+      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
+      { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, cue: 'Oreja al hombro, suave.' },
+      { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
     },
     { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
       desc: 'Micro-pausa para cervicales tensas.', min: 3,
       steps: [
-      { name: 'Chin tucks', dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga.' },
-      { name: 'Inclinación lateral', dur: 50, cue: 'Oreja al hombro, cada lado.' },
-      { name: 'Rotación lenta', dur: 50, cue: 'Mira sobre el hombro, sin forzar.' },
-      { name: 'Escalenos', dur: 40, cue: 'Lleva mano bajo glúteo, inclina cabeza al lado opuesto.' }]
+      { name: 'Chin tucks', mode: 'reps', reps: 5, dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga. Mantén 3-5 s y relaja.' },
+      { name: 'Inclinación lateral', mode: 'perSide', dur: 25, cue: 'Oreja al hombro, suave.' },
+      { name: 'Rotación lenta', mode: 'perSide', dur: 25, cue: 'Mira sobre el hombro, sin forzar.' },
+      { name: 'Escalenos', mode: 'perSide', dur: 20, cue: 'Mano bajo el glúteo, inclina la cabeza al lado opuesto.' }]
     },
     { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
       desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
@@ -10139,7 +10525,7 @@ const EXTRA_ROUTINES = {
       steps: [
       { name: 'ATG split squat', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
       { name: 'Tibialis raise', dur: 45, cue: 'Contra pared, levanta pies.' },
-      { name: 'Nordics', dur: 45, cue: 'Asistidos si hace falta. Bajada controlada.' },
+      { name: 'Puente isquio a una pierna', dur: 45, cue: 'Tumbado, un pie apoyado: sube y baja la cadera con control. Cambia de pierna a mitad.' },
       { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
       { name: 'Elephant walk', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' }]
     },
@@ -10338,7 +10724,7 @@ const EXERCISE_REGISTRY = {
     { name: 'Palmas al suelo', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti.' },
     { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
     { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte, suelta.' },
-    { name: 'Finger extension', dur: 20, cue: 'Abre los dedos al máximo.' },
+    { name: 'Finger extension', dur: 20, cue: 'Abre los dedos, sin forzar.' },
     { name: 'Ankle circles', dur: 20, cue: 'Bajo la mesa, cada sentido.' },
     { name: 'Deep breaths', dur: 20, cue: '3 inhalaciones completas.' },
     { name: 'Reset respiración', dur: 30, cue: 'Inhalaciones profundas para cerrar.' },

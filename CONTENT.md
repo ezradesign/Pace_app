@@ -19,11 +19,25 @@ visual, por compatibilidad de `localStorage` y logros:
 
 | Botón (lo que ve el usuario) | Archivo | Constante | ids | Contenido |
 |---|---|---|---|---|
-| **Mueve** | `app/move/MoveModule.jsx` | `MOVE_ROUTINES` | `extra.*` | Fuerza / calistenia |
+| **Mueve** | `app/move/move.data.js` (s110) | `MOVE_ROUTINES` | `extra.*` | Fuerza / calistenia |
 | **Estira** | `app/extra/ExtraModule.jsx` | `EXTRA_ROUTINES` | `move.*` | Movilidad / estiramiento |
 
 En este documento, "Mueve" y "Estira" se refieren siempre al **módulo
 visual** (el botón). No tocar los ids: están blindados por compat.
+
+> **Contrato de pasos v1 (s110 · B2.2a).** Un step puede declarar
+> `mode: timed | reps | perSide | rest`; sin `mode` corre el runner legacy
+> (idéntico a s109). Pilotado en 6 rutinas (2 Respira control + `desk.pushups`,
+> `chair.squats`, `neck.3`, `chair.antidote`). El runner `MoveSessionV1.jsx`
+> resuelve: colocación por paso (el timer no arranca leyendo), reps con
+> «Terminé», cambio de lado real, descanso tipado, y acredita **minutos
+> reales**. Las otras 22 rutinas migran en olas siguientes.
+>
+> **Sustitución s110:** en `move.atg.knees`, **Nordics → «Puente isquio a una
+> pierna»** (sustituto accesible; Nordics muy avanzado y con material de
+> anclaje no garantizado). Nordics sigue en el registro del constructor,
+> aparcado a revisión con fisioterapeuta (con Sissy squat, Fondos en silla,
+> Couch stretch) antes de v1.0.
 
 ---
 

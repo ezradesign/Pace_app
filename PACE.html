@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.53.0</title>
+  <title>PACE · Foco · Cuerpo — v0.54.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -171,6 +171,9 @@
 
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
 
+  <!-- visualId + alias (B2.2 · s110): resolveVisualId enruta los duplicados
+       de nombre al glifo canónico. ANTES de exercise-glyphs (su consumidor). -->
+  <script type="text/babel" data-presets="env,react" src="app/custom/exercise-aliases.js"></script>
   <!-- Glifos canónicos de ejercicio (sesión 59) — debe cargarse antes de MoveModule, BreatheSession y PathRunner -->
   <script type="text/babel" data-presets="env,react" src="app/glyphs/exercise-glyphs.jsx"></script>
 
@@ -178,7 +181,14 @@
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheLibrary.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheSession.jsx"></script>
+  <!-- Datos de Mueve (s110 · B2.2): MOVE_ROUTINES + getMoveRoutine. ANTES de
+       MoveModule (que referencia MOVE_ROUTINES como global via `var`). -->
+  <script type="text/babel" data-presets="env,react" src="app/move/move.data.js"></script>
   <script type="text/babel" src="app/move/MoveModule.jsx"></script>
+  <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
+       MoveModule — comparte StepGlyph; el dispatcher de MoveSession lo elige
+       para rutinas con `mode` (guard typeof: degrada a legacy si no evaluó). -->
+  <script type="text/babel" src="app/move/MoveSessionV1.jsx"></script>
   <script type="text/babel" src="app/extra/ExtraModule.jsx"></script>
   <!-- Constructor de rutinas premium (F7 · s93): registro de ejercicios +
        sección "Tus rutinas" (consumida por MoveLibrary en render) +

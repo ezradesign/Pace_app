@@ -114,7 +114,7 @@ const EXERCISE_REGISTRY = {
       { name: 'Palmas al suelo', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti.' },
       { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
       { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte, suelta.' },
-      { name: 'Finger extension', dur: 20, cue: 'Abre los dedos al máximo.' },
+      { name: 'Finger extension', dur: 20, cue: 'Abre los dedos, sin forzar.' },
       { name: 'Ankle circles', dur: 20, cue: 'Bajo la mesa, cada sentido.' },
       { name: 'Deep breaths', dur: 20, cue: '3 inhalaciones completas.' },
       { name: 'Reset respiración', dur: 30, cue: 'Inhalaciones profundas para cerrar.' },

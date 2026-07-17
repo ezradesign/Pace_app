@@ -8,144 +8,16 @@
    completeExtraSession) se conservan para no invalidar localStorage ni logros
    de usuarios existentes — solo cambia qué contenedor visual los muestra.
 
-   F6 (s92): 7 → 14 rutinas, biblioteca agrupada como Respira/Estira
-   (4 grupos, free primero dentro de cada grupo). Inspiración: Strengthside
-   (progresiones de empuje, unilateral, colgarse) + Jess Martin (fuerza
-   discreta de oficina). Los pasos nuevos sin glifo aprobado renderizan
-   DefaultGlyph hasta el port (D-4). */
+   F6 (s92): 7 → 14 rutinas, biblioteca agrupada como Respira/Estira.
+
+   s110 (B2.2): MOVE_ROUTINES + getMoveRoutine salieron a app/move/move.data.js
+   (regla <500 ln; el módulo crece con el contrato). MoveSession pasa a ser un
+   DISPATCHER: rutinas con algún step `mode` van al runner del contrato v1
+   (MoveSessionV1.jsx); el resto sigue el runner legacy (MoveSessionLegacy,
+   idéntico a s109). R4: la completion acredita minutos REALES, no `routine.min`
+   declarado (afecta a ambos runners; los declarados heredaban la mentira). */
 
 const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
-
-const MOVE_ROUTINES = {
-  empuje: {
-    label: 'Empuje y tracción',
-    aside: 'Pecho, brazos, espalda alta',
-    items: [
-      { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
-        steps: [
-          { name: 'Flexiones inclinadas', dur: 30, cue: '12 reps contra escritorio.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', dur: 30, cue: '10 reps.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', dur: 30, cue: '8 reps lentas.' },
-        ]},
-      { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
-        steps: [
-          { name: 'Fondos en silla', dur: 40, cue: '10-12 reps con buen control.' },
-          { name: 'Descanso', dur: 30, cue: '' },
-          { name: 'Fondos en silla', dur: 40, cue: '10 reps.' },
-          { name: 'Descanso', dur: 30, cue: '' },
-          { name: 'Fondos en silla', dur: 40, cue: 'Última: 8 reps limpias. Para si la técnica se rompe.' },
-        ]},
-      { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
-        steps: [
-          { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Pica en escritorio', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos. 8 reps.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
-        ]},
-      { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra firme que soporte tu peso. Tracción suave para hombros y espalda.', min: 2, access: 'premium',
-        steps: [
-          { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
-          { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
-          { name: 'Hang activo', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
-          { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
-          { name: 'Hang pasivo', dur: 30, cue: 'Suelta del todo. Deja que la espalda se abra.' },
-        ]},
-    ]
-  },
-  sigilo: {
-    label: 'Sigilo',
-    aside: 'Nadie se entera',
-    items: [
-      { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
-        steps: [
-          { name: 'Calf raises', dur: 30, cue: '25 reps controladas.' },
-          { name: 'Calf raises', dur: 30, cue: '20 reps más lentas.' },
-        ]},
-      { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
-        steps: [
-          { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte 20 veces.' },
-          { name: 'Finger extension', dur: 20, cue: 'Abre bien los dedos, sin forzar.' },
-          { name: 'Wrist stretch', dur: 20, cue: 'Muñeca flexión + extensión.' },
-        ]},
-      { id: 'extra.glutes.stealth', tag: 'STEALTH', code: 'Glúteos', name: 'Glúteos invisibles', desc: 'Actívalos sentado. Invisible total.', min: 2,
-        steps: [
-          { name: 'Apretar glúteos', dur: 30, cue: '20 apretones firmes, 2 segundos cada uno.' },
-          { name: 'Descanso', dur: 15, cue: 'Suelta.' },
-          { name: 'Apretar glúteos', dur: 30, cue: 'Aguanta 10 segundos, suelta. 3 veces.' },
-          { name: 'Calf raises', dur: 30, cue: 'Cierra con 20 elevaciones suaves.' },
-        ]},
-      { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
-        steps: [
-          { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
-          { name: 'Descanso', dur: 20, cue: '' },
-          { name: 'Seated hollow', dur: 30, cue: 'Mantén. Respira normal.' },
-          { name: 'Descanso', dur: 20, cue: '' },
-          { name: 'Seated hollow', dur: 30, cue: 'Última. Mantén mientras la lumbar siga apoyada.' },
-        ]},
-    ]
-  },
-  piernas: {
-    label: 'Piernas',
-    aside: 'La base del cuerpo',
-    items: [
-      { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
-        steps: [
-          { name: 'Sentadilla a silla', dur: 40, cue: '10-12 reps: baja hasta rozar la silla, sube sin impulso.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Sentadilla a silla', dur: 40, cue: '10 reps más lentas.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Sentadilla a silla', dur: 40, cue: 'Últimas 8, control total.' },
-        ]},
-      { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
-        steps: [
-          { name: 'Wall sit', dur: 60, cue: 'Rodillas a 90°, espalda en la pared. Respira normal.' },
-          { name: 'Descanso', dur: 30, cue: 'Suave.' },
-          { name: 'Wall sit', dur: 60, cue: 'Segunda tanda. Elige una altura que te deje respirar tranquilo.' },
-        ]},
-      { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
-        steps: [
-          { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'ATG split squat', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-          { name: 'Calf raises', dur: 40, cue: 'A una pierna, 12 por lado.' },
-        ]},
-    ]
-  },
-  espalda: {
-    label: 'Espalda y core',
-    aside: 'Sostén de la postura',
-    items: [
-      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
-        steps: [
-          { name: 'Chin tucks', dur: 30, cue: '10 reps, barbilla atrás.' },
-          { name: 'Scapular squeeze', dur: 30, cue: 'Junta omóplatos, 10 reps.' },
-          { name: 'Thoracic extension', dur: 30, cue: 'Arquea sobre silla.' },
-          { name: 'Chest opener', dur: 30, cue: 'Brazos atrás, expande pecho.' },
-        ]},
-      { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
-        steps: [
-          { name: 'Scapular squeeze', dur: 40, cue: 'Junta omóplatos 12 veces, 2 segundos cada una.' },
-          { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
-          { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, 10 veces lentas.' },
-          { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
-        ]},
-      { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
-        steps: [
-          { name: 'Plancha', dur: 45, cue: 'Antebrazos, cuerpo en línea. Aprieta glúteos.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Plancha lateral', dur: 60, cue: '30 segundos por lado, cadera alta.' },
-          { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Hollow hold', dur: 30, cue: 'Tumbado: lumbar al suelo, piernas y hombros arriba.' },
-          { name: 'Plancha', dur: 30, cue: 'Última. Respira dentro de la tensión.' },
-        ]},
-    ]
-  },
-};
 
 function MoveLibrary({ open, onClose, onStart }) {
   const { t, lang } = useT();
@@ -176,7 +48,19 @@ function MoveLibrary({ open, onClose, onStart }) {
   );
 }
 
-function MoveSession({ routine, onExit, kind = 'move', inPath }) {
+/* MoveSession — DISPATCHER (s110). Sin hooks propios: elige el runner según
+   el contrato del dato. Una rutina es "v1" si algún step declara `mode`; las
+   demás (22 de 28) siguen byte-idénticas en el runner legacy. El guard
+   `typeof MoveSessionV1` degrada con gracia a legacy si el archivo del
+   contrato aún no evaluó (ventana sub-segundo de la carrera de scripts). */
+function MoveSession(props) {
+  const { routine } = props;
+  const isV1 = routine && routine.steps && routine.steps.some(s => s.mode);
+  if (isV1 && typeof MoveSessionV1 === 'function') return <MoveSessionV1 {...props} />;
+  return <MoveSessionLegacy {...props} />;
+}
+
+function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   const { t, tn, lang } = useT();
   // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
   // Estira azul-gris segun kind).
@@ -202,10 +86,13 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
   const [stage, setStage] = useStateMV('prep'); // 'prep' | 'active' | 'done'
-  // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza este componente)
+  // Despacha la completion correcta según el tipo (Mueve vs. Extra reutiliza
+  // este componente). R4 (s110): acredita minutos REALES medidos, no el
+  // `routine.min` declarado (las stats heredaban el número declarado).
   const dispatchComplete = () => {
-    if (kind === 'extra') completeExtraSession(routine.id, routine.min);
-    else completeMoveSession(routine.id, routine.min);
+    const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    if (kind === 'extra') completeExtraSession(routine.id, realMin);
+    else completeMoveSession(routine.id, realMin);
   };
   const [prepCount, setPrepCount] = useStateMV(3);
   const [stepIdx, setStepIdx] = useStateMV(0);
@@ -406,7 +293,8 @@ function MoveSession({ routine, onExit, kind = 'move', inPath }) {
 /* Glifo por paso — círculo decorativo (moneda) con SVG canónico interior.
    La key es el step.name canónico en español (los datos viven en es-ES).
    El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves.
-   B1: acento por kind via props (Estira llega con --extra). */
+   B1: acento por kind via props (Estira llega con --extra).
+   s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
 function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)' }) {
   return (
     <div style={{
@@ -439,13 +327,5 @@ if (!_paceMoveResponsive) {
   document.head.appendChild(s);
 }
 
-/* Sesión 49 — helper de lookup para Caminos (s92: adaptado a grupos) */
-function getMoveRoutine(id) {
-  for (const group of Object.values(MOVE_ROUTINES)) {
-    const found = group.items.find(r => r.id === id);
-    if (found) return found;
-  }
-  return null;
-}
-window.getMoveRoutine = getMoveRoutine;
-Object.assign(window, { MoveLibrary, MoveSession });
+/* getMoveRoutine + MOVE_ROUTINES → app/move/move.data.js (split s110). */
+Object.assign(window, { MoveLibrary, MoveSession, StepGlyph });
