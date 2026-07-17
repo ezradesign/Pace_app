@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.55.0** | 2026-07-17 | fix(move): **B2 — método del runner v1: gate que fluye + reps a gusto** (feedback de cierre s110; gobernado por `BASE_MUEVE_ESTIRA.md` §3/§6) -- **(a) gate de colocación auto + condicional**: el placement gate deja de exigir tap → **cuenta-atrás que fluye sola** («Colócate… 5·4·3·2·1» → arranca el reloj al llegar a 0) con **«Empezar ya»** (salta) y **«Más tiempo»** (+5 s); y se aplica SOLO a pasos **con reloj** (`timed`/`perSide`) e **idx > 0** — `reps`/`rest` fluyen directos (no hay reloj que proteger, R2) y el paso 0 hereda el prep 3·2·1 de la sesión (evita la doble cuenta). El condicional se deriva del `mode`, sin metadatos nuevos. R1 intacto (esa cuenta es de colocación, no el timer del ejercicio) · **(b) reps a gusto**: el número deja de leerse como cuota — label `reps` → **«reps · a tu ritmo»**; «Terminé» avanza en cualquier momento (más o menos, sin culpa); sin botón +/− · 4 keys i18n ES+EN (`session.beginNow/moreTime/placeCountdown` + `move.repsTarget`) + `placeHint` actualizado · runner **legacy** (sin `mode`) intacto · solo `MoveSessionV1.jsx` + strings (sin tocar datos ni `step.name`) | #111 | [abajo](#v0550----2026-07-17----fixmove-b2--método-del-runner-v1-gate-que-fluye--reps-a-gusto) |
 | **v0.54.0** | 2026-07-17 | feat+refactor: **B2.2a — contrato de pasos v1 (pilotado) + visualId** (2ª sesión de B2, 1ª de código; gobernada por `BASE_MUEVE_ESTIRA.md`) -- **contrato de pasos v1** (`mode: timed \| reps \| perSide \| rest`; sin `mode` → runner **legacy** intacto) en nuevo `MoveSessionV1.jsx`; `MoveSession` pasa a dispatcher. Resuelve **R1-R5** de la auditoría B2.1 en 4 pilotos de cuerpo: **R1** placement gate por paso («Colócate»→«Empezar», el timer no arranca leyendo; absorbe el cambio de posición §6) · **R2** `reps` termina en «Terminé» (sin auto-avance) · **R3** `perSide` = Izquierda → gate «Cambia de lado» → Derecha con contador propio · **R4** la completion acredita **minutos REALES** (no `routine.min`; ambos runners) · **R5** `rest` tipado (apagado, «Saltar») · **visualId** (`exercise-aliases.js`): unifica 4 duplicados de glifo sin tocar `step.name`/localStorage (Chest opener→Apertura de pecho, Deep squat hold→Squat profundo, Deep breaths→Reset respiración, Dead hang→Hang pasivo) · pilotos: `desk.pushups`+`chair.squats` (reps+rest), `neck.3`+`chair.antidote` (perSide/postural), cubren biblioteca **y** Caminos · **split** `MOVE_ROUTINES`→`move.data.js` (MoveModule 451→331 ln) · **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado en `path.weekend`) + glifo/EN en sincronía · leftover B1.2 «al máximo»→«sin forzar» (registro:117) | #110 | [abajo](#v0540----2026-07-17----featrefactor-b22a-contrato-de-pasos-v1--visualid) |
-| **v0.53.0** | 2026-07-16 | fix+feat: **B1.2 editorial de seguridad ES+EN** (CIERRA el bloque B1) -- lenguaje de riesgo fuera con copy realista y explicativo (BASE §7-9): «al fallo» / «al límite» / «más bajo si puedes» / «aguanta» secos / «al máximo» → reps limpias, respiración normal, mantener con condición técnica · claims fuera: «el hombro nace para colgar» (+ fuera «marco» de puerta), «indestructibles» (desc ATG + EN `Bulletproof` + logro), chin tuck sin «papada» (4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada en sincronía) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curación Respira·Energía**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` pasa a **FREE** (Energía tenía 0 entradas free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas; permiso de notificación pedido en el primer «Comenzar» de Foco vía `maybeRequestNotifyPermission`, denegar apaga el flag) | #108 | [abajo](#v0530----2026-07-16----fixfeat-b12-editorial-de-seguridad-esen-cierra-b1) |
+| **v0.53.0** | 2026-07-16 | fix+feat: **B1.2 editorial de seguridad ES+EN** (CIERRA el bloque B1) -- lenguaje de riesgo fuera con copy realista y explicativo (BASE §7-9): «al fallo» / «al límite» / «más bajo si puedes» / «aguanta» secos / «al máximo» → reps limpias, respiración normal, mantener con condición técnica · claims fuera: «el hombro nace para colgar» (+ fuera «marco» de puerta), «indestructibles» (desc ATG + EN `Bulletproof` + logro), chin tuck sin «papada» (4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada en sincronía) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curación Respira·Energía**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` pasa a **FREE** (Energía tenía 0 entradas free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas; permiso de notificación pedido en el primer «Comenzar» de Foco vía `maybeRequestNotifyPermission`, denegar apaga el flag) | #108 | [session-108](./docs/sessions/session-108-b1-2-editorial-seguridad.md) |
 | **v0.52.0** | 2026-07-16 | fix+feat: **B1.1 saneamiento** (plan de evolución, 1ª sesión de código) -- **`parseLocalDateKey()`** + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos; regla #10 en CLAUDE.md: prohibido `new Date("YYYY-MM-DD")`) · **cifras honestas**: contador de logros `/100`→`/106` dinámico (Sidebar), «acciones» del año RETIRADA → **«{n} días con ritmo»** real (isActiveDay s69) + tooltip «intensidad {n}», sendero del día **abstracto** (secuencia equidistante, fuera las horas inventadas) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transición = duración de la fase** (antes fija 1800 ms; fases <2 s → 85 % + ease-in-out) · **7 duraciones recalibradas** (declarado ≈ suma de pasos; Colgarse 4→2 … Ancestral 6→5) · **apnea retirada** (decisión 1): fuera logros 60/90/120 s + cifra-récord 160 px → hold como guía calmada; sustitutos de exploración **Dos lenguas / Cuaderno a salvo / Letra pequeña** (con detectores) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance) | #107 | [session-107](./docs/sessions/session-107-b1-saneamiento.md) |
 | **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [session-106](./docs/sessions/session-106-onboarding.md) |
 | **v0.50.0** | 2026-07-15 | feat: **fuentes self-hosted (cierra Etapa A) + todayISO local + integridad de Caminos** -- **`todayISO()` a fecha LOCAL** (bug UTC: rachas/history anotaban el día anterior entre medianoche y ~2 AM; 7 sitios, reutiliza `toISODate()`) · **fuentes self-hosted preservando Cormorant** (hallazgo: el default real de títulos es Cormorant, no EB Garamond → decisión s103 revisada): copia local subset-latin de **Cormorant + EB Garamond + Inter Tight** (12 caras, 520 KB) en `fonts/`, `@font-face` con ruta absoluta `/fonts/` (fuera el @import de Google), precache web + **data URIs standalone** (`inlineFonts`), MIME woff2; **JetBrains Mono retirada** (→ ui-monospace) → **cero peticiones externas de fuente** en los 3 artefactos · **BreakMenu coherente**: iconos `AB*` de la home + **Estira** (4 actividades, grid 2×2) · **frame fantasma de PathRunner** resuelto (fase 'intro' fijada en render, no en efecto → sin warning) · **toasts de logro aplazados** durante Caminos (no tapan las pantallas; se vuelcan al salir) · **bug de integridad**: un Camino solo cuenta como completado con **≥1 paso hecho** (antes saltarlo todo desbloqueaba "Cartógrafa") · aro del pomodoro alineado en Pausa/Larga | #105 | [session-105](./docs/sessions/session-105-fuentes-todayiso-caminos.md) |
@@ -130,6 +131,56 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.55.0] -- 2026-07-17 -- fix(move): B2 método del runner v1 (gate que fluye + reps a gusto)
+
+Sesión 111. Tercera sesión del bloque B2 — refinamiento del **método** del
+runner v1 de s110 (no contenido nuevo), gobernada por
+[`BASE_MUEVE_ESTIRA.md`](./docs/product/BASE_MUEVE_ESTIRA.md) §3/§6. Feedback de
+cierre s110: el contrato funciona pero el método es **demasiado gatillado**.
+Decisiones aprobadas antes de tocar código (AskUserQuestion): (a) gate «auto +
+condicional» · (b) reps «objetivo suave + Terminé siempre» · corte «solo el
+método hoy». Diario:
+[session-111](./docs/sessions/session-111-b2-metodo-runner.md).
+
+### (a) Gate de colocación — auto-countdown + condicional por modo
+
+- El placement gate deja de exigir **tap**: pasa a **cuenta-atrás que fluye
+  sola** («Colócate… 5·4·3·2·1» → arranca el reloj al llegar a 0). Botones
+  **«Empezar ya»** (salta a trabajo) y **«Más tiempo»** (+5 s por toque).
+- **Condicional derivado del `mode`** (sin metadatos nuevos): el gate se aplica
+  SOLO a pasos **con reloj** (`timed`/`perSide`) e **idx > 0**. `reps`/`rest`
+  fluyen directos (no hay reloj que proteger, R2); el paso 0 hereda el prep
+  3·2·1 de la sesión → **evita la doble cuenta** que señaló el usuario.
+- **R1 intacto**: esa cuenta-atrás es de *colocación*, no el timer del
+  ejercicio. `V1_PLACE_SECONDS = 5`; `step.setup` opcional (sin uso hoy) para
+  colocaciones largas (suelo/pared), refinamiento reservado a B2.2b.
+
+### (b) Reps a gusto — objetivo suave
+
+- El número deja de leerse como cuota: label `reps` → **«reps · a tu ritmo»**.
+- «Terminé» avanza en cualquier momento (más o menos reps, sin culpa); hint
+  «Haz menos si lo necesitas» intacto. Sin botón +/− (decisión: redundante). R2
+  intacto (no hay cuenta atrás).
+
+### i18n + alcance
+
+- 4 keys nuevas ES+EN (`session.beginNow`, `session.moreTime`,
+  `session.placeCountdown`, `move.repsTarget`) + `move.placeHint` actualizado.
+- Solo `app/move/MoveSessionV1.jsx` + `strings/sessions.js`. **Sin tocar datos
+  ni `step.name`**; runner **legacy** (sin `mode`) intacto.
+
+### Verificación
+
+Preview :8765. **Dev** paso a paso: `desk.pushups` (reps sin gate + «reps · a
+tu ritmo» + «Terminé»; rest auto) · `neck.3` (gate perSide fluye 5→0 sin tap;
+«Más tiempo» ×2 → 14; «Empezar ya» salta) · `chair.antidote` (paso 0 timed sin
+gate, prep cubre). **Standalone** regenerado (82 scripts, 3100 KB, sanity OK):
+gate «Colócate»/«Cambia de lado» + reps suave + runner legacy («segundos») OK,
+consola limpia. Bump v0.55.0 ×3. Backup `v0.54.0_20260717` (rotado
+`v0.34.5_20260707`, cap 20).
+
+---
+
 ## [v0.54.0] -- 2026-07-17 -- feat+refactor: B2.2a contrato de pasos v1 + visualId
 
 Sesión 110. Segunda sesión del bloque B2 (la primera de código;
@@ -195,70 +246,5 @@ Izquierda → «Cambia de lado» → Derecha en neck.3), consola limpia.
 3098 KB): monta limpio, el contrato v1 corre en el bundle. Bump v0.54.0 ×3.
 Backup `v0.53.0_20260717` desde el standalone publicado (rotado
 `v0.34.4_20260707`, cap 20).
-
----
-
-## [v0.53.0] -- 2026-07-16 -- fix+feat: B1.2 editorial de seguridad ES+EN (cierra B1)
-
-Sesión 108. Cierra el bloque B1 del plan de evolución
-([`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md)).
-Criterio: copy **realista y explicativo** + lenguaje de
-[`BASE_MUEVE_ESTIRA.md`](./docs/product/BASE_MUEVE_ESTIRA.md) §7-9; técnica
-verificada antes de cada cue. Textos ES+EN aprobados en bloque antes de
-aplicar. Decisiones del usuario: Dead hang opcional (no fuera) · extras §9
-dentro · defaults completos. Diario:
-[session-108](./docs/sessions/session-108-b1-2-editorial-seguridad.md).
-
-### Editorial de seguridad (ES + espejo EN)
-
-- **Lenguaje de riesgo fuera**: «Al fallo.» → «Última: 8 reps limpias.
-  Para si la técnica se rompe.» · «Al límite.» → «Última. Mantén mientras
-  la lumbar siga apoyada.» · «Más bajo si puedes.» → «Segunda tanda. Elige
-  una altura que te deje respirar tranquilo.» · isometrías sin «aguanta»
-  seco (→ mantener + respirar normal) · extras §9: «al máximo» fuera de
-  dedos/muñecas.
-- **Claims fuera**: «El hombro nace para colgar» y el «marco» de puerta →
-  «barra firme que soporte tu peso» · «indestructibles» fuera (desc ATG +
-  EN `ATG · Bulletproof Knees` → `ATG · Knees over toes` + logro «ATG
-  descubierto») · chin tuck sin «papada» → «Desliza la barbilla recta
-  hacia atrás; la nuca se alarga» (Cuello·3, registro, EN ×2).
-- **Tag `PULL` → `PUSH`** en Fondos en silla (es empuje de tríceps).
-- **Dead hang · opcional** (Hombros·5): anuncia barra firme + alternativa
-  concreta («Sin barra: repite las wall slides»). La key de glifo se
-  renombra en sincronía (name ES = key de glifo).
-- **12 descs anuncian material/superficie**: silla estable y sin ruedas
-  (Fondos, Sentadillas de silla, Piernas·a una) · pared (Wall sit,
-  Hombros·5, ATG) · barra firme (Colgarse, Ancestral) · suelo (Espalda de
-  oficina, Core·plancha, Columna·ondas, Caderas·5, Couch, Despertar
-  matinal, Antídoto silla).
-
-### Curación Respira · Energía (feedback s107-cierre)
-
-- **Bhastrika** (`breathe.bellows`, tag PRA) sale de Energía → grupo
-  **Pranayama** (tras Bhramari). `BREATH_ROUTINE_CATEGORIES` y
-  `explore.bhastrika` intactos (van por id).
-- **`rounds.express` → FREE** (conserva `safety: true`): Energía tenía 0
-  entradas usables en free. CONTENT.md alineado.
-
-### Defaults opt-out (audio + aviso fin-de-foco)
-
-- `soundOn: true` y `notifyFocusEnd: true` en defaultState — **solo
-  instalaciones nuevas** (el merge de loadState conserva lo persistido).
-- El permiso de notificación exige gesto: `maybeRequestNotifyPermission`
-  (FocusTimer.support) lo pide UNA vez por carga en el primer «Comenzar»
-  de Foco, solo web, solo con permiso `default`; **denegar baja el flag a
-  false** (el toggle de Ajustes no miente). El camino de Ajustes
-  (enableNotify) queda intacto.
-
-### Verificación
-
-Preview :60705 con SW+caches purgados: consola limpia · 30+ textos nuevos
-verificados en runtime (MOVE/EXTRA_ROUTINES, PACE_STRINGS.en, catálogo,
-registro) · glifo del Dead hang resuelve con la key nueva · biblioteca
-Respira correcta en UI (express sin sello, Bhastrika en Pranayama) ·
-primer arranque sin estado: `soundOn:true` + `notifyFocusEnd:true` ·
-`canAccessRoutine('breathe.rounds.express') === true`. Bump v0.53.0 ×3.
-Backup `v0.52.0_20260716` desde git HEAD byte-idéntico (rotado
-`v0.34.3_20260707`, cap 20). Standalone 3079 KB.
 
 ---
