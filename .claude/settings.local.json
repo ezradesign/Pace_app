@@ -116,7 +116,8 @@
       "PowerShell($c = Get-Content CHANGELOG.md -Raw; $start = $c.IndexOf\\(\"## [v0.50.0] -- 2026-07-15\"\\); $new = $c.Substring\\(0, $start\\).TrimEnd\\(\\) + \"`n\"; Set-Content CHANGELOG.md -Value $new -NoNewline; \\(Get-Content CHANGELOG.md -Raw\\).Length)",
       "Bash(python -)",
       "Bash(git -C \"/c/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app\" show --stat --format=\"%h %s\" e4d7ac1)",
-      "Bash(xargs echo \"standalone v0.54.0 hits:\")"
+      "Bash(xargs echo \"standalone v0.54.0 hits:\")",
+      "Bash(awk '/## *B2|### *B2|# *B2/{f=1} f{print} /## *B3|## *B1|# B3/{if\\(f && !/B2/\\) exit}' docs/product/DECISIONES_PRODUCTO.md)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

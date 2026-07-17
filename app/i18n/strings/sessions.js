@@ -116,9 +116,12 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.finish':                     'Terminar',
     'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
 
-    // Contrato de pasos v1 (s110 · B2.2)
+    // Contrato de pasos v1 (s110 · B2.2 · método s111)
     'session.place':                   'Colócate',
     'session.beginStep':               'Empezar',
+    'session.beginNow':                'Empezar ya',
+    'session.moreTime':                'Más tiempo',
+    'session.placeCountdown':          'para empezar',
     'session.sideLeft':                'Izquierda',
     'session.sideRight':               'Derecha',
     'session.sideChange':              'Cambia de lado',
@@ -127,8 +130,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.skip':                    'Saltar',
     'session.restLabel':               'Descanso',
     'move.reps':                       'reps',
+    'move.repsTarget':                 'reps · a tu ritmo',
     'move.repsDone':                   'Terminé',
-    'move.placeHint':                  'Colócate sin prisa · «Empezar» cuando estés listo',
+    'move.placeHint':                  'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
     'move.repsHint':                   'Haz menos si lo necesitas · «Terminé» para seguir',
 
     // Hydrate
@@ -290,9 +294,12 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.finish':                     'Finish',
     'move.hint':                       '← → navigate · Space pause · Esc exit',
 
-    // Step contract v1 (s110 · B2.2)
+    // Step contract v1 (s110 · B2.2 · method s111)
     'session.place':                   'Get set',
     'session.beginStep':               'Begin',
+    'session.beginNow':                'Begin now',
+    'session.moreTime':                'More time',
+    'session.placeCountdown':          'to begin',
     'session.sideLeft':                'Left',
     'session.sideRight':               'Right',
     'session.sideChange':              'Switch sides',
@@ -301,8 +308,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.skip':                    'Skip',
     'session.restLabel':               'Rest',
     'move.reps':                       'reps',
+    'move.repsTarget':                 'reps · your pace',
     'move.repsDone':                   'Done',
-    'move.placeHint':                  'Get set, no rush · "Begin" when ready',
+    'move.placeHint':                  'Get set, no rush · starts on its own · "Begin now" to skip',
     'move.repsHint':                   'Do fewer if you need to · "Done" to continue',
 
     // Hydrate

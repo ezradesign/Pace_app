@@ -135,6 +135,24 @@ hoy / resto mañana.
   cambio de posición lo absorbe el placement gate). Split `MOVE_ROUTINES` →
   `move.data.js` (MoveModule 451→331 ln).
 
+**B2.2 método — HECHO** (s111, 2026-07-17; v0.55.0; diario
+[session-111](../sessions/session-111-b2-metodo-runner.md)). Refina el
+**método** del runner v1 (feedback de cierre s110: demasiado gatillado), sin
+contenido nuevo. Decisiones (AskUserQuestion): gate «auto + condicional» ·
+reps «objetivo suave + Terminé siempre» · corte «solo el método».
+
+- **Gate de colocación**: deja de exigir tap → **cuenta-atrás que fluye sola**
+  («Colócate… 5·4·3·2·1» → arranca el reloj al 0) con «Empezar ya» (salta) +
+  «Más tiempo» (+5 s). **Condicional derivado del `mode`** (sin metadatos):
+  solo `timed`/`perSide` e **idx>0** — `reps`/`rest` fluyen directos y el paso 0
+  hereda el prep 3·2·1 (evita la doble cuenta). **R1 intacto** (la cuenta es de
+  colocación, no el timer). `step.setup` por paso queda disponible (sin uso) para
+  colocaciones largas suelo/pared → refinar en B2.2b con los metadatos.
+- **Reps**: el número deja de leerse como cuota (label «reps · a tu ritmo»);
+  «Terminé» avanza en cualquier momento, sin botón +/−. **R2 intacto**.
+- Solo `MoveSessionV1.jsx` + `strings/sessions.js` (4 keys). Runner legacy y
+  `step.name` intactos.
+
 **B2.2b — PENDIENTE** (próxima sesión):
 
 - **Metadatos de rutina**: `position / equipment / requiresFloor /

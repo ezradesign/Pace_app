@@ -23,6 +23,11 @@
 
 const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
 
+/* Cuenta-atrás de colocación (s111): segundos que fluyen solos antes de que
+   arranque el reloj del ejercicio. NO es el timer del ejercicio (R1) — solo da
+   aire a colocarse. Un step puede pedir más con `setup` (ej. suelo/pared). */
+const V1_PLACE_SECONDS = 5;
+
 /* Segundos de un segmento activo (timed/rest = dur; perSide = dur por lado). */
 function v1StepProgress(step, side, elapsed) {
   if (step.mode === 'reps') return 0;                 // reps no tiene barra de tiempo
@@ -54,6 +59,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const [side, setSide] = useStateV1(0);           // 0 = 1er lado, 1 = 2º lado
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
+  const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const sessionStart = useRefV1(Date.now());
   const step = routine.steps[stepIdx];
 
@@ -66,13 +72,21 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const startStep = (idx) => {
     const st = routine.steps[idx];
     setStepIdx(idx); setElapsed(0); setSide(0);
-    setPhase(st.mode === 'rest' ? 'work' : 'place'); // rest arranca ya; el resto tras colocarse
+    // Gate de colocación CONDICIONAL (s111): solo pasos CON reloj (timed/perSide)
+    // y no el primero. reps/rest no tienen reloj que proteger (R2); el paso 0 ya
+    // tuvo su ventana en el prep 3·2·1 de la sesión → evita la doble cuenta.
+    // El gate es una cuenta-atrás que fluye sola (efecto abajo), no el timer del
+    // ejercicio: R1 intacto. `setup` opcional por step para colocaciones largas.
+    const clocked = st.mode === 'timed' || st.mode === 'perSide';
+    if (clocked && idx > 0) { setPhase('place'); setPlaceLeft(st.setup || V1_PLACE_SECONDS); }
+    else setPhase('work');
   };
   const advanceStep = () => {
     if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(); setStage('done'); }
     else startStep(stepIdx + 1);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
+  const addPlaceTime = () => setPlaceLeft(c => c + 5);   // «Más tiempo» en colocación
   const onSideReady = () => { setSide(1); setPhase('work'); setElapsed(0); };
 
   // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).
@@ -82,6 +96,18 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     const to = setTimeout(() => setPrepCount(c => Math.max(0, c - 1)), 1000);
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
+
+  // Colocación: cuenta-atrás que fluye sola en fase 'place' (s111). No es el
+  // timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
+  // el reloj. Al llegar a 0 → beginWork() automático. «Empezar ya» salta;
+  // «Más tiempo» suma 5 s. Sin tap obligatorio.
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'place') return;
+    const intv = setInterval(() => {
+      setPlaceLeft(c => { if (c <= 1) { beginWork(); return 0; } return c - 1; });
+    }, 1000);
+    return () => clearInterval(intv);
+  }, [stage, phase]);
 
   // Ticker: solo corre en fase 'work' de un segmento cronometrado
   // (timed/perSide/rest). 'reps' no corre (R2); 'place'/'change' tampoco (R1/R3).
@@ -159,15 +185,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   let bigNumber, bigLabel, kicker, primary, hint;
   if (phase === 'place') {
+    bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown');
     kicker = t('session.place');
     hint = t('move.placeHint');
-    primary = { label: t('session.beginStep'), onClick: beginWork };
+    primary = { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
     kicker = t('session.sideChange');
     hint = tn('session.sideNext', { side: t('session.sideRight') });
     primary = { label: t('session.sideReady'), onClick: onSideReady };
   } else if (step.mode === 'reps') {
-    bigNumber = String(repsTarget); bigLabel = t('move.reps');
+    bigNumber = String(repsTarget); bigLabel = t('move.repsTarget');
     kicker = tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
     hint = t('move.repsHint');
     primary = { label: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.repsDone'), onClick: advanceStep };
@@ -190,6 +217,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       <button onClick={() => { if (stepIdx > 0) startStep(stepIdx - 1); }} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
         {t('move.prev')}
       </button>
+      {phase === 'place' && (
+        <button onClick={addPlaceTime} style={sessionShellStyles.ctrlBtn}>
+          {t('session.moreTime')}
+        </button>
+      )}
       {canPause && (
         <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn}>
           {paused ? t('session.resume') : t('session.pause')}
