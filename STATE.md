@@ -200,8 +200,9 @@ micro-fix Welcome) → corte aprobado → implementacion.
 
 ### Pendiente
 
-- **B2.2b-1 — proxima** (ver "Proxima sesion"): contrato minimo + duracion
-  derivada sobre los 5 pilotos.
+- **GIRO post-s112 (2026-07-18)**: la proxima sesion de codigo es el corte
+  **«runner guiado»** (ver "Proxima sesion"); B2.2b-1 pasa a despues,
+  alimentado por el comportamiento real.
 - **Diseño pendiente del corte s112**: diagramas de dos poses (los itera el
   usuario, regla D-4; candidatos Flexiones inclinadas + Flexor de cadera).
 - **Deuda registrada s112**: SW dev puede servir version vieja · a11y
@@ -220,19 +221,36 @@ micro-fix Welcome) → corte aprobado → implementacion.
 - `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s112).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- B2.2b-1: contrato minimo + duracion derivada
+## Proxima sesion -- s113: corte «runner guiado» (motor; B2.2b-1 DESPUES)
 
-Sobre los **5 pilotos** ya en contrato (desk.pushups · chair.squats · neck.3 ·
-chair.antidote · couch.stretch): esquema minimo de metadatos + **duracion
-derivada** (preparacion + ejecucion + reps×tempo + lados + series + cambios +
-descansos + transiciones; en dev comparar declarada vs calculada, en prod UNA
-sola promesa «X-Y min · a tu ritmo»; derivedDuration prioridad, min legacy
-fallback) + validadores + evaluacion de `step.id/nameKey` (los EN posicionales
-sN son deuda que NO se amplia). SIN `discrete` (preferir `execution.mode` +
-`completion`). Despues: **B2.2b-2 feedback** («¿Te ayudo esta pausa? Si · Un
-poco · No · Ahora no» en SessionDone, opcional y no bloqueante) → **B2.2b-3
-eventos** (solo documento de decision, `schemaVersion`). Despues: plan maestro
-(home Caminos al centro + After Pomodoro + scoring v2).
+**Decision del usuario (2026-07-18, post-s112; capturas + auditoria externa
+que verifico repo=deploy en v0.56.0):** el cuello de botella no son los datos
+sino que el runner exige OPERAR la interfaz durante una practica corporal
+(scrollbar en pasos de ejercicio · gate «Listo» entre lados · «Termine» como
+unica salida de reps · cues demasiado escuetos). Principio rector nuevo: **«el
+usuario toca para empezar, pausar o adaptar; NO para empujar la rutina hacia
+delante»**. Canonico de las decisiones en DECISIONES_PRODUCTO.md §B2 (incluye
+las ENMIENDAS a R2/R3/BASE §3-A que esto conlleva — registrarlas por escrito).
+
+**s113 — motor guiado** (comportamiento primero): reps guiadas con cadencia
+(~4 s/rep fuerza, pulso visual + contador «n de 12», avance AUTO al objetivo,
+«Terminar antes» siempre visible, solo se acreditan reps guiadas reales) ·
+transicion AUTO de lado (señal → pantalla con cue del lado siguiente → 8-12 s
+→ empieza solo; botones opcionales) · prep 5 s (antes 3) con colocacion util
+visible ANTES de arrancar · rest 30 s por defecto TIPADO (betweenSets vs
+cierre; el ajuste de Tweaks NO toca cierres) · layout compacto por ALTURA sin
+scrollbar (1280×600 · 1024×512 · landscape movil; scroll solo red de
+seguridad) · `min` editorial rapido de desk.pushups. **s114 — capa editorial**:
+instrucciones por capas de los 5 pilotos (setup/accion/cuidate/shortCue, lado
+INTEGRADO en el texto) + pantalla final por modulo con stats honestas + ajuste
+Tweaks de descanso (Breve 20/Tranquilo 30/Amplio 45) + señales de audio
+simples SIN voz. Despues: **B2.2b-1 contrato + duracion derivada** (formaliza
+completion.mode/tempo/transition/restKind/instruction.*, setup {mode,
+estimatedSeconds} con ready≠0s, perSide sin doble conteo — dur es POR LADO en
+pilotos) → B2.2b-2 feedback → B2.2b-3 eventos (solo diseño). Despues: plan
+maestro (home Caminos al centro + After Pomodoro + scoring v2). Deuda a11y
+señalada por la auditoria externa (Card sin teclado · onboarding sin focus
+trap) → sesion propia tras B2.2b-1.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
@@ -240,8 +258,9 @@ eventos** (solo documento de decision, `schemaVersion`). Despues: plan maestro
 ~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · ~~B1.2 editorial s108~~ ·
 ~~B2.1 auditoria s109~~ · ~~B2.2a visualId + contrato v1 pilotado s110~~ ·
 ~~B2.2 metodo s111~~ · ~~B2.2a.5 auditoria + afinado UX s112~~ ·
-B2.2b re-ordenado (b-1 contrato+duracion · b-2 feedback · b-3 eventos solo
-diseño) · B2.3 migrar
+**runner guiado s113-s114** (motor hands-free + capa editorial; giro
+2026-07-18) · B2.2b re-ordenado (b-1 contrato+duracion · b-2 feedback · b-3
+eventos solo diseño) · B2.3 migrar
 resto de rutinas al contrato + reescrituras · home Caminos al centro + After
 Pomodoro · taxonomia + filtros + sigilo · pre-venta: glifos (revision
 COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO + Starter

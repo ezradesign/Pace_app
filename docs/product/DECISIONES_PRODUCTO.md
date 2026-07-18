@@ -173,9 +173,55 @@ destino invisible) + corte aprobado por AskUserQuestion:
 - Diseño pendiente: diagramas de dos poses (los itera el usuario, D-4;
   candidatos Flexiones inclinadas + Flexor de cadera).
 
-**B2.2b — PRÓXIMA, re-ordenada en cortes** (B2.2b-1 contrato+duración sobre
-los 5 pilotos → B2.2b-2 feedback → B2.2b-3 eventos solo diseño; alcance
-original abajo):
+**GIRO — runner guiado (s113-s114, PRÓXIMO; decisión del usuario 2026-07-18,
+post-s112)**. Origen: capturas del usuario + auditoría externa con navegación
+(verificó repo=deploy en v0.56.0, commit `2bda34c`). Hallazgos: scrollbar
+vertical en pasos de ejercicio (el centro scrollable de s112 desborda en
+alturas ~600 px) · el runner exige tocar la pantalla continuamente (gate
+«Listo» entre lados, «Terminé» como única salida de reps — inviable en
+suelo/pared/manos ocupadas) · cues demasiado escuetos para ejecutar con
+confianza. **Principio rector nuevo: «el usuario toca para empezar, pausar o
+adaptar; NO para empujar la rutina hacia delante»**. B2.2b-1 pasa a DESPUÉS,
+alimentado por el comportamiento real.
+
+- **ENMIENDAS registradas** (el usuario es la autoridad; precedente s111
+  «matizar BASE por comodidad»):
+  - **R2 / BASE §3-A** («las reps nunca auto-avanzan») se matiza: en modo
+    guiado, las reps avanzan SOLAS al completar el objetivo con cadencia. Lo
+    que se preserva del espíritu: el pacer NO es cuenta atrás competitiva,
+    «Terminar antes» siempre visible, y solo se acreditan las reps realmente
+    guiadas (nunca el objetivo como resultado).
+  - **R3** (gate manual «Cambia de lado» → «Listo», s110): pasa a transición
+    AUTOMÁTICA de 8–12 s con señal sonora, pantalla con el cue del lado
+    siguiente, y botones opcionales («Empezar ya» / «Más tiempo» / «Pausar»).
+  - **«Terminé» (s111)**: deja de ser la única salida; queda como salida
+    anticipada dentro del modo guiado.
+- **s113 — motor guiado**: reps guiadas (~4 s/rep fuerza: 2 bajar + 2 subir,
+  ref. ACE 2–8 s; pulso visual + contador «n de N» + avance auto) · transición
+  auto de lado · prep 5 s (antes 3) con colocación útil visible ANTES de
+  arrancar el contador (`ready` de s112 sigue siendo el único gate manual,
+  para colocaciones complejas) · rest 30 s por defecto TIPADO (betweenSets vs
+  cierre respiratorio — el «Reset respiración» de chair.antidote es cierre y
+  NO lo toca ningún ajuste) · layout compacto por ALTURA sin scrollbar
+  (1280×600 · 1024×512 · landscape móvil; reducción progresiva espacios →
+  glifo → decorativo, NUNCA instrucciones/controles; scroll solo red de
+  seguridad) · `min` editorial rápido de desk.pushups (2 no es creíble).
+- **s114 — capa editorial**: instrucciones por capas de los 5 pilotos
+  (setup completo en colocación · shortCue en ejecución · cue del lado
+  INTEGRADO en el texto · capa de adaptación «Cuídate»; tono PACE: frases
+  cortas, verbos suaves, 1 instrucción por línea, sin anatomía innecesaria) ·
+  pantalla final por módulo (fuera «ANTÍDOTO COMPLETADO» en fuerza) con stats
+  honestas (tiempo · series · reps guiadas REALES) · ajuste de Tweaks del
+  descanso entre series (Breve 20 / Tranquilo 30 recomendado / Amplio 45; v1
+  solo 3 presets) · señales de audio simples **SIN voz** (inicio · aviso de
+  fin · cambio de lado · fin; todo funciona en silencio).
+
+**B2.2b — DESPUÉS del runner guiado, re-ordenada en cortes** (B2.2b-1
+contrato+duración sobre los 5 pilotos — formaliza además `completion.mode`,
+`tempo`, `transition`, `restKind`, `instruction.*`, `setup {mode:
+none|auto|ready, estimatedSeconds}` con ready≠0 s, y `perSide` sin doble
+conteo (dur = POR LADO en los pilotos) → B2.2b-2 feedback → B2.2b-3 eventos
+solo diseño; alcance original abajo):
 
 - **Metadatos de rutina**: `position / equipment / requiresFloor /
   intensity / level` (base de la taxonomía s108). **SIN `discrete`**
