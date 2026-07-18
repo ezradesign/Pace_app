@@ -165,11 +165,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.couch.stretch.s0.name':          'Hip flexor',
   'move.couch.stretch.s0.cue':           'Knee to floor, push pelvis forward.',
   'move.couch.stretch.s1.name':          'Couch stretch',
-  'move.couch.stretch.s1.cue':           'Instep against wall or chair, knee deep back. 30s per side.',
+  'move.couch.stretch.s1.cue':           'Instep against wall or chair, knee deep back.',
   'move.couch.stretch.s2.name':          '90/90',
   'move.couch.stretch.s2.cue':           'Rotate between sides slowly.',
   'move.couch.stretch.s3.name':          'Pigeon',
-  'move.couch.stretch.s3.cue':           'Shin forward, weight forward. 30s per side.',
+  'move.couch.stretch.s3.cue':           'Shin forward, weight forward.',
   'move.couch.stretch.s4.name':          'Bridge with march',
   'move.couch.stretch.s4.cue':           'Deep glute activation.',
 

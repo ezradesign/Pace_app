@@ -286,7 +286,10 @@ const onboardingStyles = {
   column: {
     margin: 'auto', width: '100%', maxWidth: 460,
     display: 'flex', flexDirection: 'column', alignItems: 'center',
-    gap: 16, textAlign: 'center', padding: '8px 0 30px',
+    /* paddingBottom 30 → 16 (s112): la pregunta 1 (4 chips + campo libre +
+       CTA + saltar) desbordaba ~35px en 360×640; junto al ajuste de chips
+       (OnbChoice) vuelve a caber sin scroll. */
+    gap: 16, textAlign: 'center', padding: '8px 0 16px',
   },
   title: {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
@@ -309,7 +312,7 @@ const onboardingStyles = {
     backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)',
   },
   options: {
-    display: 'flex', flexDirection: 'column', gap: 10,
+    display: 'flex', flexDirection: 'column', gap: 8,
     width: '100%', marginTop: 4,
   },
   freeBlock: {

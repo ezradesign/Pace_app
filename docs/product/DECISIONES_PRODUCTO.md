@@ -153,26 +153,38 @@ reps «objetivo suave + Terminé siempre» · corte «solo el método».
 - Solo `MoveSessionV1.jsx` + `strings/sessions.js` (4 keys). Runner legacy y
   `step.name` intactos.
 
-**B2.2a.5 — PRÓXIMA (auditoría UX del runner; B2.2b EN PAUSA)** (decisión del
-usuario 2026-07-17, tras cierre s111): antes de añadir metadatos/duración/
-feedback/eventos hay que demostrar que el runner es una experiencia valiosa y
-comprensible. Gobierna
-[`CONTEXTO_UX_RUNNER_WELCOME.md`](./CONTEXTO_UX_RUNNER_WELCOME.md) (contexto,
-no orden de implementación). Alcance: auditoría runtime de pilotos + mapa de
-estados + evaluación `setup.mode: none|auto|ready` + jerarquía visual (3
-direcciones) + auditoría Welcome/onboarding + deudas a cuestionar (step.name=
-key de glifo · EN posicionales `sN` · `discrete` sin definir → preferir
-`execution.mode`+`completion`). B2.2b se re-ordena después en cortes: B2.2b-1
-contrato+duración (5 pilotos, + estiramiento bilateral pared/suelo) → B2.2b-2
-feedback → B2.2b-3 eventos (solo diseño).
+**B2.2a.5 — HECHA** (s112, 2026-07-18; v0.56.0; diario
+[session-112](../sessions/session-112-b2-2a5-afinado-ux-runner.md)). Auditoría
+runtime con entregable ANTES de código (3×P1: primaria recortada sin scroll en
+poca altura · copy funcional oculto en móvil por el hint del shell · lado
+destino invisible) + corte aprobado por AskUserQuestion:
 
-**B2.2b — EN PAUSA** (tras B2.2a.5; alcance original):
+- **Setup con tres modos** (aprobado): `setup:'ready'` por paso = «Colócate»
+  SIN cuenta + única primaria «Estoy listo» → directo a work (cualquier mode,
+  incluso paso 0); `setup:número` = segundos del gate auto; sin `setup` →
+  derivación s111. `ready` declarado en Flexor/WGS de `chair.antidote`.
+- **Jerarquía visual B** (aprobada): kicker único · copy funcional VISIBLE
+  («Empiezas por: {lado}» / «Ahora: Derecha») · gate con identidad propia ·
+  glifo escalado por altura · UNA primaria rellena · SessionShell con centro
+  scrollable (footer siempre accesible) · toasts aplazados en sesiones.
+- **5º piloto**: `move.couch.stretch` (estático pared/suelo, perSide+ready).
+- **Welcome auditada: CUMPLE el contrato** («Entiendo → Me sirve → Empiezo»);
+  solo micro-fix de espaciado (pregunta 1 en 360×640). Sin más cambios.
+- Diseño pendiente: diagramas de dos poses (los itera el usuario, D-4;
+  candidatos Flexiones inclinadas + Flexor de cadera).
+
+**B2.2b — PRÓXIMA, re-ordenada en cortes** (B2.2b-1 contrato+duración sobre
+los 5 pilotos → B2.2b-2 feedback → B2.2b-3 eventos solo diseño; alcance
+original abajo):
 
 - **Metadatos de rutina**: `position / equipment / requiresFloor /
-  intensity / level / discrete` (base de la taxonomía s108).
+  intensity / level` (base de la taxonomía s108). **SIN `discrete`**
+  (decisión s112: semántica ambigua — preferir `execution.mode` +
+  `completion`).
 - **Duración derivada** de pasos + rangos honestos («3–5 min · a tu ritmo»
-  para reps).
-- **Feedback ligero «¿te ayudó?»** (Mejor/Igual/No): contador `{done,
+  para reps); en dev comparar declarada vs calculada, en prod UNA promesa.
+- **Feedback ligero «¿Te ayudó esta pausa?»** (Sí · Un poco · No · Ahora no —
+  pregunta y respuestas semánticamente alineadas, s112): contador `{done,
   helped}` por rutina, sin sistema de eventos. Alimenta Pausa PACE y el
   futuro «qué te ayuda» premium.
 - Diseñar (solo diseñar) el esquema de eventos con `schemaVersion`.

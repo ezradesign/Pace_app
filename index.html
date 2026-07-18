@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.55.0</title>
+  <title>PACE · Foco · Cuerpo — v0.56.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1575,6 +1575,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.repsDone': 'Terminé',
   'move.placeHint': 'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
   'move.repsHint': 'Haz menos si lo necesitas · «Terminé» para seguir',
+  'session.imReady': 'Estoy listo',
+  'session.sideFirst': 'Empiezas por: {side}',
+  'move.placeReadyHint': 'Sin prisa · el ejercicio espera a que estés en posición',
 
   // Hydrate
   'hydrate.tag': 'Hidratación',
@@ -1753,6 +1756,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.repsDone': 'Done',
   'move.placeHint': 'Get set, no rush · starts on its own · "Begin now" to skip',
   'move.repsHint': 'Do fewer if you need to · "Done" to continue',
+  'session.imReady': 'I\'m ready',
+  'session.sideFirst': 'Start with: {side}',
+  'move.placeReadyHint': 'No rush · the exercise waits until you\'re in position',
 
   // Hydrate
   'hydrate.tag': 'Hydration',
@@ -2711,11 +2717,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.couch.stretch.s0.name': 'Hip flexor',
   'move.couch.stretch.s0.cue': 'Knee to floor, push pelvis forward.',
   'move.couch.stretch.s1.name': 'Couch stretch',
-  'move.couch.stretch.s1.cue': 'Instep against wall or chair, knee deep back. 30s per side.',
+  'move.couch.stretch.s1.cue': 'Instep against wall or chair, knee deep back.',
   'move.couch.stretch.s2.name': '90/90',
   'move.couch.stretch.s2.cue': 'Rotate between sides slowly.',
   'move.couch.stretch.s3.name': 'Pigeon',
-  'move.couch.stretch.s3.cue': 'Shin forward, weight forward. 30s per side.',
+  'move.couch.stretch.s3.cue': 'Shin forward, weight forward.',
   'move.couch.stretch.s4.name': 'Bridge with march',
   'move.couch.stretch.s4.cue': 'Deep glute activation.',
 
@@ -3198,7 +3204,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.55.0';
+const PACE_VERSION = 'v0.56.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4968,8 +4974,17 @@ const sessionShellStyles = {
     padding: '6px 10px'
   },
   center: {
-    flex: 1, display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'center'
+    /* s112: minHeight 0 + overflowY auto — en pantallas de poca altura el
+       contenido central hace scroll y el footer (acción primaria) queda
+       SIEMPRE accesible. El centrado vive en centerBody (margin auto: centra
+       cuando cabe, alinea arriba cuando desborda — el justify-center clásico
+       recorta el inicio del contenido al desbordar). */
+    flex: '1 1 0%', minHeight: 0, overflowY: 'auto',
+    display: 'flex', flexDirection: 'column'
+  },
+  centerBody: {
+    margin: 'auto', width: '100%',
+    display: 'flex', flexDirection: 'column', alignItems: 'center'
   },
   centerGap: {
     gap: 32
@@ -5024,11 +5039,13 @@ function SessionShell(_ref) {let { routine, onExit, headerExtra, children, foote
   return (/*#__PURE__*/
     React.createElement("div", { "data-pace-session-root": true, style: rootStyle }, /*#__PURE__*/
     React.createElement(SessionHeader, { routine: routine, onExit: onExit, extra: headerExtra }), /*#__PURE__*/
-    React.createElement("div", { "data-pace-session-center": true, style: centerGap ?
-      { ...sessionShellStyles.center, ...sessionShellStyles.centerGap } :
-      sessionShellStyles.center },
+    React.createElement("div", { "data-pace-session-center": true, style: sessionShellStyles.center }, /*#__PURE__*/
+    React.createElement("div", { "data-pace-session-center-body": true, style: centerGap ?
+      { ...sessionShellStyles.centerBody, ...sessionShellStyles.centerGap } :
+      sessionShellStyles.centerBody },
 
     children
+    )
     ),
     footer && /*#__PURE__*/
     React.createElement("div", { "data-pace-session-footer": true, style: { ...sessionShellStyles.footer, gap: footerGap } },
@@ -10102,16 +10119,18 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
    El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves.
    B1: acento por kind via props (Estira llega con --extra).
    s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
-function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)' } = _ref4;
+/* s112: prop `size` opcional — el runner v1 lo escala a visual instructivo
+   (~150-240px según altura); el default 72/44 deja el legacy byte-idéntico. */
+function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72 } = _ref4;
   return (/*#__PURE__*/
     React.createElement("div", { style: {
-        width: 72, height: 72, margin: '0 auto 20px',
+        width: size, height: size, margin: '0 auto 20px',
         borderRadius: '50%',
         background: accentSoft,
         display: 'grid', placeItems: 'center',
         color: accent
       } }, /*#__PURE__*/
-    React.createElement(ExerciseGlyph, { id: stepName, size: 44 })
+    React.createElement(ExerciseGlyph, { id: stepName, size: Math.round(size * 44 / 72) })
     ));
 
 }
@@ -10171,7 +10190,12 @@ const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React
 
 /* Cuenta-atrás de colocación (s111): segundos que fluyen solos antes de que
    arranque el reloj del ejercicio. NO es el timer del ejercicio (R1) — solo da
-   aire a colocarse. Un step puede pedir más con `setup` (ej. suelo/pared). */
+   aire a colocarse.
+   s112 — `step.setup` tiene dos formas:
+     · número        → segundos del gate automático (sustituye a los 5 default)
+     · 'ready'       → colocación compleja (suelo/pared/material): SIN cuenta,
+                       el paso espera «Estoy listo» y pasa directo a work
+                       (sin segunda cuenta — el botón ES la confirmación). */
 const V1_PLACE_SECONDS = 5;
 
 /* Segundos de un segmento activo (timed/rest = dur; perSide = dur por lado). */
@@ -10218,13 +10242,17 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const startStep = (idx) => {
     const st = routine.steps[idx];
     setStepIdx(idx);setElapsed(0);setSide(0);
-    // Gate de colocación CONDICIONAL (s111): solo pasos CON reloj (timed/perSide)
-    // y no el primero. reps/rest no tienen reloj que proteger (R2); el paso 0 ya
-    // tuvo su ventana en el prep 3·2·1 de la sesión → evita la doble cuenta.
-    // El gate es una cuenta-atrás que fluye sola (efecto abajo), no el timer del
-    // ejercicio: R1 intacto. `setup` opcional por step para colocaciones largas.
+    // Gate de colocación (s111/s112), tres modos:
+    //   ready — declarado por paso (`setup:'ready'`, suelo/pared): espera al
+    //           usuario SIN cuenta, en cualquier mode e incluso en el paso 0.
+    //   auto  — derivado del mode (s111): pasos CON reloj (timed/perSide) e
+    //           idx>0 → cuenta-atrás que fluye sola (efecto abajo).
+    //   none  — reps/rest (sin reloj que proteger, R2) y paso 0 (su ventana
+    //           es el prep 3·2·1) → directo a work. Evita la doble cuenta.
+    // El gate nunca es el timer del ejercicio: R1 intacto.
     const clocked = st.mode === 'timed' || st.mode === 'perSide';
-    if (clocked && idx > 0) {setPhase('place');setPlaceLeft(st.setup || V1_PLACE_SECONDS);} else
+    if (st.setup === 'ready') {setPhase('place');setPlaceLeft(0);} else
+    if (clocked && idx > 0) {setPhase('place');setPlaceLeft(typeof st.setup === 'number' ? st.setup : V1_PLACE_SECONDS);} else
     setPhase('work');
   };
   const advanceStep = () => {
@@ -10243,17 +10271,19 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
 
-  // Colocación: cuenta-atrás que fluye sola en fase 'place' (s111). No es el
-  // timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
+  // Colocación AUTO: cuenta-atrás que fluye sola en fase 'place' (s111). No es
+  // el timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
   // el reloj. Al llegar a 0 → beginWork() automático. «Empezar ya» salta;
   // «Más tiempo» suma 5 s. Sin tap obligatorio.
+  // s112: en 'ready' NO corre cuenta — el paso espera «Estoy listo».
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
+    if (step && step.setup === 'ready') return;
     const intv = setInterval(() => {
       setPlaceLeft((c) => {if (c <= 1) {beginWork();return 0;}return c - 1;});
     }, 1000);
     return () => clearInterval(intv);
-  }, [stage, phase]);
+  }, [stage, phase, stepIdx]);
 
   // Ticker: solo corre en fase 'work' de un segmento cronometrado
   // (timed/perSide/rest). 'reps' no corre (R2); 'place'/'change' tampoco (R1/R3).
@@ -10277,6 +10307,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // Sonidos
   useEffectV1(() => {if (stage === 'run') {try {playSound('move.start');} catch (e) {}}
     if (stage === 'done') {try {playSound('move.end');} catch (e) {}}}, [stage]);
+
+  // Toasts de logro APLAZADOS durante la sesión (s112, regla s105): la
+  // completion dispara logros que se apilaban sobre la ceremonia de cierre.
+  // Reutiliza el flag de Camino; dentro de un Camino lo gobierna PathRunner.
+  useEffectV1(() => {
+    if (inPath || typeof setCaminoUiActive !== 'function') return;
+    setCaminoUiActive(true);
+    return () => setCaminoUiActive(false);
+  }, []);
   useEffectV1(() => {if (stage === 'run') {try {playSound('move.step');} catch (e) {}}}, [stepIdx]);
 
   // Atajos
@@ -10323,33 +10362,46 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   }
 
   // ---- RUN: contenido central por fase/modo ----
+  // s112 · jerarquía B: contexto secundario SOLO en el header (Meta) — el
+  // kicker del cuerpo se reserva a información propia del momento (colócate /
+  // lado / cambio). El copy funcional del método (objetivo suave, lado
+  // siguiente, colocación) vive VISIBLE en el contenido (support), nunca en el
+  // hint del shell (oculto en móvil ≤640px, solo atajos de teclado).
   const isRest = step.mode === 'rest';
   const stepAccent = isRest ? 'var(--ink-3)' : accent; // R5: descanso apagado
   const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
   const remaining = Math.max(0, (step.dur || 0) - elapsed);
   const repsTarget = typeof step.reps === 'object' ? step.reps.target : step.reps;
+  const placeReady = step.setup === 'ready';
 
-  let bigNumber, bigLabel, kicker, primary, hint;
+  // Visual instructivo: escala por ALTURA de viewport (~150-240px) — el glifo
+  // deja de ser insignia; el default 72 del legacy no cambia.
+  const vpH = typeof window !== 'undefined' && window.innerHeight || 800;
+  const glyphSize = Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
+
+  let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   if (phase === 'place') {
-    bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');
     kicker = t('session.place');
-    hint = t('move.placeHint');
-    primary = { label: t('session.beginNow'), onClick: beginWork };
+    if (!placeReady) {bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');}
+    if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
+    support = placeReady ? t('move.placeReadyHint') : t('move.placeHint');
+    primary = placeReady ?
+    { label: t('session.imReady'), onClick: beginWork } :
+    { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
     kicker = t('session.sideChange');
-    hint = tn('session.sideNext', { side: t('session.sideRight') });
+    supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     primary = { label: t('session.sideReady'), onClick: onSideReady };
   } else if (step.mode === 'reps') {
     bigNumber = String(repsTarget);bigLabel = t('move.repsTarget');
-    kicker = tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
-    hint = t('move.repsHint');
+    support = t('move.repsHint');
     primary = { label: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.repsDone'), onClick: advanceStep };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');
-    kicker = isRest ? t('session.restLabel') :
+    kicker = isRest ? null :
     step.mode === 'perSide' ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
-    tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
+    null;
     primary = isRest ?
     { label: t('session.skip'), onClick: advanceStep } :
     { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
@@ -10363,7 +10415,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   React.createElement("button", { onClick: () => {if (stepIdx > 0) startStep(stepIdx - 1);}, disabled: stepIdx === 0, style: sessionShellStyles.ctrlBtn },
   t('move.prev')
   ),
-  phase === 'place' && /*#__PURE__*/
+  phase === 'place' && !placeReady && /*#__PURE__*/
   React.createElement("button", { onClick: addPlaceTime, style: sessionShellStyles.ctrlBtn },
   t('session.moreTime')
   ),
@@ -10373,7 +10425,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   paused ? t('session.resume') : t('session.pause')
   ), /*#__PURE__*/
 
-  React.createElement("button", { onClick: primary.onClick, style: { ...sessionShellStyles.ctrlBtn, borderColor: stepAccent, color: 'var(--ink)' } },
+
+
+  React.createElement("button", { onClick: primary.onClick, style: {
+      ...sessionShellStyles.ctrlBtn,
+      background: stepAccent, borderColor: stepAccent,
+      color: 'var(--paper)', fontWeight: 500
+    } },
   primary.label
   )
   );
@@ -10383,26 +10441,51 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     React.createElement(SessionShell, {
       routine: displayRoutine, onExit: onExit, atmosphere: atmo,
       headerExtra: /*#__PURE__*/React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
-      footer: footer, hint: hint || t('session.hint') }, /*#__PURE__*/
+      footer: footer, hint: t('session.hint') }, /*#__PURE__*/
 
     React.createElement("div", { style: { textAlign: 'center', maxWidth: 620 } },
-    !isRest && /*#__PURE__*/React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft }), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 14, fontWeight: 500 } },
+    !isRest && /*#__PURE__*/React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize }),
+    kicker && /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 } },
     kicker
     ), /*#__PURE__*/
-    React.createElement("h1", { style: { ...displayItalic, fontSize: 56, fontWeight: 500, lineHeight: 1.05, margin: '0 0 20px' } },
+
+    React.createElement("h1", { style: { ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' } },
     tStep(stepIdx, 'name')
     ), /*#__PURE__*/
-    React.createElement("p", { style: { fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 22px' } },
+    React.createElement("p", { style: { fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' } },
     tStep(stepIdx, 'cue')
     ),
 
-    bigNumber != null && /*#__PURE__*/
+
+
+    bigNumber != null && phase === 'place' && /*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("div", { style: { ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 } },
+    bigNumber
+    ), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 } }, bigLabel)
+    ),
+
+    bigNumber != null && phase !== 'place' && /*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
     React.createElement("div", { "data-pace-move-timer": true, style: { ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08 } },
     bigNumber
     ), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 22 } }, bigLabel)
+    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 } }, bigLabel)
+    ),
+
+
+
+
+    supportStrong && /*#__PURE__*/
+    React.createElement("div", { style: { ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 } },
+    supportStrong
+    ),
+
+    support && /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 } },
+    support
     )
 
     ), /*#__PURE__*/
@@ -10462,8 +10545,8 @@ const EXTRA_ROUTINES = {
       steps: [
       { name: 'Apertura de pecho', mode: 'timed', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
       { name: 'Rotación torácica', mode: 'perSide', dur: 20, cue: 'Sentado: manos cruzadas, rota el tronco despacio.' },
-      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
-      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
+      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
       { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, cue: 'Oreja al hombro, suave.' },
       { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
     },
@@ -10544,12 +10627,17 @@ const EXTRA_ROUTINES = {
     },
     { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
       desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 5, access: 'premium',
+      /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
+         pared/suelo — valida setup:'ready' + retención por lado + cambio de
+         lado + duración real. Solo se AÑADEN campos (mode/setup) y se quitan
+         los «30s por lado» de los cues (ahora los lleva el runner): los EN
+         posicionales sN no se reindexan. dur en perSide = segundos POR LADO. */
       steps: [
-      { name: 'Flexor de cadera', dur: 50, cue: 'Rodilla al suelo, empuja pelvis adelante.' },
-      { name: 'Couch stretch', dur: 70, cue: 'Empeine contra pared o silla, rodilla al fondo. 30s por lado.' },
-      { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
-      { name: 'Pigeon', dur: 60, cue: 'Tibia adelante, peso adelante. 30s por lado.' },
-      { name: 'Puente con marcha', dur: 60, cue: 'Activación de glúteo profundo.' }]
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja pelvis adelante.' },
+      { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Empeine contra pared o silla, rodilla al fondo.' },
+      { name: '90/90', mode: 'timed', dur: 60, cue: 'Rota entre lados despacio.' },
+      { name: 'Pigeon', mode: 'perSide', dur: 30, cue: 'Tibia adelante, peso adelante.' },
+      { name: 'Puente con marcha', mode: 'timed', dur: 60, cue: 'Activación de glúteo profundo.' }]
     },
     { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
       desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
@@ -16580,7 +16668,7 @@ function OnbChoice(_ref2) {let { label, sub, accent, selected, onSelect } = _ref
       style: {
         display: 'flex', alignItems: 'center', gap: 14,
         width: '100%', textAlign: 'left',
-        padding: '13px 18px',
+        padding: '11px 16px',
         background: selected ? 'rgba(242,237,224,0.96)' : 'rgba(242,237,224,0.82)',
         border: '1px solid ' + (selected ? accent : hover ? 'var(--line-2)' : 'rgba(184,173,142,0.5)'),
         borderRadius: 'var(--r-md)',
@@ -16976,7 +17064,10 @@ const onboardingStyles = {
   column: {
     margin: 'auto', width: '100%', maxWidth: 460,
     display: 'flex', flexDirection: 'column', alignItems: 'center',
-    gap: 16, textAlign: 'center', padding: '8px 0 30px'
+    /* paddingBottom 30 → 16 (s112): la pregunta 1 (4 chips + campo libre +
+       CTA + saltar) desbordaba ~35px en 360×640; junto al ajuste de chips
+       (OnbChoice) vuelve a caber sin scroll. */
+    gap: 16, textAlign: 'center', padding: '8px 0 16px'
   },
   title: {
     fontFamily: 'var(--font-display)', fontStyle: 'italic',
@@ -16999,7 +17090,7 @@ const onboardingStyles = {
     backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)'
   },
   options: {
-    display: 'flex', flexDirection: 'column', gap: 10,
+    display: 'flex', flexDirection: 'column', gap: 8,
     width: '100%', marginTop: 4
   },
   freeBlock: {

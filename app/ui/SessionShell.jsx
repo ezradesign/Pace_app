@@ -52,8 +52,17 @@ const sessionShellStyles = {
     padding: '6px 10px',
   },
   center: {
-    flex: 1, display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'center',
+    /* s112: minHeight 0 + overflowY auto — en pantallas de poca altura el
+       contenido central hace scroll y el footer (acción primaria) queda
+       SIEMPRE accesible. El centrado vive en centerBody (margin auto: centra
+       cuando cabe, alinea arriba cuando desborda — el justify-center clásico
+       recorta el inicio del contenido al desbordar). */
+    flex: '1 1 0%', minHeight: 0, overflowY: 'auto',
+    display: 'flex', flexDirection: 'column',
+  },
+  centerBody: {
+    margin: 'auto', width: '100%',
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
   },
   centerGap: {
     gap: 32,
@@ -108,11 +117,13 @@ function SessionShell({ routine, onExit, headerExtra, children, footer, hint, fo
   return (
     <div data-pace-session-root style={rootStyle}>
       <SessionHeader routine={routine} onExit={onExit} extra={headerExtra} />
-      <div data-pace-session-center style={centerGap
-        ? { ...sessionShellStyles.center, ...sessionShellStyles.centerGap }
-        : sessionShellStyles.center
-      }>
-        {children}
+      <div data-pace-session-center style={sessionShellStyles.center}>
+        <div data-pace-session-center-body style={centerGap
+          ? { ...sessionShellStyles.centerBody, ...sessionShellStyles.centerGap }
+          : sessionShellStyles.centerBody
+        }>
+          {children}
+        </div>
       </div>
       {footer && (
         <div data-pace-session-footer style={{ ...sessionShellStyles.footer, gap: footerGap }}>

@@ -25,7 +25,12 @@ const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React
 
 /* Cuenta-atrás de colocación (s111): segundos que fluyen solos antes de que
    arranque el reloj del ejercicio. NO es el timer del ejercicio (R1) — solo da
-   aire a colocarse. Un step puede pedir más con `setup` (ej. suelo/pared). */
+   aire a colocarse.
+   s112 — `step.setup` tiene dos formas:
+     · número        → segundos del gate automático (sustituye a los 5 default)
+     · 'ready'       → colocación compleja (suelo/pared/material): SIN cuenta,
+                       el paso espera «Estoy listo» y pasa directo a work
+                       (sin segunda cuenta — el botón ES la confirmación). */
 const V1_PLACE_SECONDS = 5;
 
 /* Segundos de un segmento activo (timed/rest = dur; perSide = dur por lado). */
@@ -72,13 +77,17 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const startStep = (idx) => {
     const st = routine.steps[idx];
     setStepIdx(idx); setElapsed(0); setSide(0);
-    // Gate de colocación CONDICIONAL (s111): solo pasos CON reloj (timed/perSide)
-    // y no el primero. reps/rest no tienen reloj que proteger (R2); el paso 0 ya
-    // tuvo su ventana en el prep 3·2·1 de la sesión → evita la doble cuenta.
-    // El gate es una cuenta-atrás que fluye sola (efecto abajo), no el timer del
-    // ejercicio: R1 intacto. `setup` opcional por step para colocaciones largas.
+    // Gate de colocación (s111/s112), tres modos:
+    //   ready — declarado por paso (`setup:'ready'`, suelo/pared): espera al
+    //           usuario SIN cuenta, en cualquier mode e incluso en el paso 0.
+    //   auto  — derivado del mode (s111): pasos CON reloj (timed/perSide) e
+    //           idx>0 → cuenta-atrás que fluye sola (efecto abajo).
+    //   none  — reps/rest (sin reloj que proteger, R2) y paso 0 (su ventana
+    //           es el prep 3·2·1) → directo a work. Evita la doble cuenta.
+    // El gate nunca es el timer del ejercicio: R1 intacto.
     const clocked = st.mode === 'timed' || st.mode === 'perSide';
-    if (clocked && idx > 0) { setPhase('place'); setPlaceLeft(st.setup || V1_PLACE_SECONDS); }
+    if (st.setup === 'ready') { setPhase('place'); setPlaceLeft(0); }
+    else if (clocked && idx > 0) { setPhase('place'); setPlaceLeft(typeof st.setup === 'number' ? st.setup : V1_PLACE_SECONDS); }
     else setPhase('work');
   };
   const advanceStep = () => {
@@ -97,17 +106,19 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
 
-  // Colocación: cuenta-atrás que fluye sola en fase 'place' (s111). No es el
-  // timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
+  // Colocación AUTO: cuenta-atrás que fluye sola en fase 'place' (s111). No es
+  // el timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
   // el reloj. Al llegar a 0 → beginWork() automático. «Empezar ya» salta;
   // «Más tiempo» suma 5 s. Sin tap obligatorio.
+  // s112: en 'ready' NO corre cuenta — el paso espera «Estoy listo».
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
+    if (step && step.setup === 'ready') return;
     const intv = setInterval(() => {
       setPlaceLeft(c => { if (c <= 1) { beginWork(); return 0; } return c - 1; });
     }, 1000);
     return () => clearInterval(intv);
-  }, [stage, phase]);
+  }, [stage, phase, stepIdx]);
 
   // Ticker: solo corre en fase 'work' de un segmento cronometrado
   // (timed/perSide/rest). 'reps' no corre (R2); 'place'/'change' tampoco (R1/R3).
@@ -131,6 +142,15 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // Sonidos
   useEffectV1(() => { if (stage === 'run') { try { playSound('move.start'); } catch(e) {} }
                       if (stage === 'done') { try { playSound('move.end'); } catch(e) {} } }, [stage]);
+
+  // Toasts de logro APLAZADOS durante la sesión (s112, regla s105): la
+  // completion dispara logros que se apilaban sobre la ceremonia de cierre.
+  // Reutiliza el flag de Camino; dentro de un Camino lo gobierna PathRunner.
+  useEffectV1(() => {
+    if (inPath || typeof setCaminoUiActive !== 'function') return;
+    setCaminoUiActive(true);
+    return () => setCaminoUiActive(false);
+  }, []);
   useEffectV1(() => { if (stage === 'run') { try { playSound('move.step'); } catch(e) {} } }, [stepIdx]);
 
   // Atajos
@@ -177,33 +197,46 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   }
 
   // ---- RUN: contenido central por fase/modo ----
+  // s112 · jerarquía B: contexto secundario SOLO en el header (Meta) — el
+  // kicker del cuerpo se reserva a información propia del momento (colócate /
+  // lado / cambio). El copy funcional del método (objetivo suave, lado
+  // siguiente, colocación) vive VISIBLE en el contenido (support), nunca en el
+  // hint del shell (oculto en móvil ≤640px, solo atajos de teclado).
   const isRest = step.mode === 'rest';
   const stepAccent = isRest ? 'var(--ink-3)' : accent;         // R5: descanso apagado
   const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
   const remaining = Math.max(0, (step.dur || 0) - elapsed);
   const repsTarget = typeof step.reps === 'object' ? step.reps.target : step.reps;
+  const placeReady = step.setup === 'ready';
 
-  let bigNumber, bigLabel, kicker, primary, hint;
+  // Visual instructivo: escala por ALTURA de viewport (~150-240px) — el glifo
+  // deja de ser insignia; el default 72 del legacy no cambia.
+  const vpH = (typeof window !== 'undefined' && window.innerHeight) || 800;
+  const glyphSize = Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
+
+  let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   if (phase === 'place') {
-    bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown');
     kicker = t('session.place');
-    hint = t('move.placeHint');
-    primary = { label: t('session.beginNow'), onClick: beginWork };
+    if (!placeReady) { bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown'); }
+    if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
+    support = placeReady ? t('move.placeReadyHint') : t('move.placeHint');
+    primary = placeReady
+      ? { label: t('session.imReady'), onClick: beginWork }
+      : { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
     kicker = t('session.sideChange');
-    hint = tn('session.sideNext', { side: t('session.sideRight') });
+    supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
     primary = { label: t('session.sideReady'), onClick: onSideReady };
   } else if (step.mode === 'reps') {
     bigNumber = String(repsTarget); bigLabel = t('move.repsTarget');
-    kicker = tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
-    hint = t('move.repsHint');
+    support = t('move.repsHint');
     primary = { label: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.repsDone'), onClick: advanceStep };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds');
-    kicker = isRest ? t('session.restLabel')
+    kicker = isRest ? null
       : step.mode === 'perSide' ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
-      : tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length });
+      : null;
     primary = isRest
       ? { label: t('session.skip'), onClick: advanceStep }
       : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
@@ -217,7 +250,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       <button onClick={() => { if (stepIdx > 0) startStep(stepIdx - 1); }} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
         {t('move.prev')}
       </button>
-      {phase === 'place' && (
+      {phase === 'place' && !placeReady && (
         <button onClick={addPlaceTime} style={sessionShellStyles.ctrlBtn}>
           {t('session.moreTime')}
         </button>
@@ -227,7 +260,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
           {paused ? t('session.resume') : t('session.pause')}
         </button>
       )}
-      <button onClick={primary.onClick} style={{ ...sessionShellStyles.ctrlBtn, borderColor: stepAccent, color: 'var(--ink)' }}>
+      {/* s112: UNA acción primaria con peso real (rellena); las secundarias
+          quedan outline — «Saltar»/«Anterior» no compiten con «Terminé». */}
+      <button onClick={primary.onClick} style={{
+        ...sessionShellStyles.ctrlBtn,
+        background: stepAccent, borderColor: stepAccent,
+        color: 'var(--paper)', fontWeight: 500,
+      }}>
         {primary.label}
       </button>
     </React.Fragment>
@@ -237,27 +276,52 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     <SessionShell
       routine={displayRoutine} onExit={onExit} atmosphere={atmo}
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
-      footer={footer} hint={hint || t('session.hint')}
+      footer={footer} hint={t('session.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
-        {!isRest && <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} />}
-        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 14, fontWeight: 500 }}>
-          {kicker}
-        </div>
-        <h1 style={{ ...displayItalic, fontSize: 56, fontWeight: 500, lineHeight: 1.05, margin: '0 0 20px' }}>
+        {!isRest && <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />}
+        {kicker && (
+          <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>
+            {kicker}
+          </div>
+        )}
+        <h1 style={{ ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' }}>
           {tStep(stepIdx, 'name')}
         </h1>
-        <p style={{ fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 22px' }}>
+        <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' }}>
           {tStep(stepIdx, 'cue')}
         </p>
 
-        {bigNumber != null && (
+        {/* s112: el número del GATE no es el timer — más pequeño y en tinta
+            secundaria para que la colocación no se lea como ejercicio. */}
+        {bigNumber != null && phase === 'place' && (
+          <React.Fragment>
+            <div style={{ ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 }}>
+              {bigNumber}
+            </div>
+            <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>{bigLabel}</div>
+          </React.Fragment>
+        )}
+        {bigNumber != null && phase !== 'place' && (
           <React.Fragment>
             <div data-pace-move-timer style={{ ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08 }}>
               {bigNumber}
             </div>
-            <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 22 }}>{bigLabel}</div>
+            <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 }}>{bigLabel}</div>
           </React.Fragment>
+        )}
+
+        {/* s112: copy funcional VISIBLE (antes viajaba en el hint del shell,
+            oculto en móvil): lado siguiente/inicial y matices del método. */}
+        {supportStrong && (
+          <div style={{ ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 }}>
+            {supportStrong}
+          </div>
+        )}
+        {support && (
+          <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 }}>
+            {support}
+          </div>
         )}
       </div>
 

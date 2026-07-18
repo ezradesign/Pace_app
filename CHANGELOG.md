@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.56.0** | 2026-07-18 | feat+fix(ux): **B2.2a.5 — auditoría UX del runner + corte de afinado** (B2.2b EN PAUSA; gobernada por `CONTEXTO_UX_RUNNER_WELCOME.md`, entregable de auditoría ANTES de código y corte aprobado por AskUserQuestion: setup `none\|auto\|ready` · dirección visual B · runner + micro-fix Welcome) -- **auditoría runtime** de los pilotos en 5 viewports con evidencia medida por DOM (3×P1: primaria recortada sin scroll en alturas <~630px; copy funcional del método oculto en móvil por el `display:none` del hint ≤640px; cambio de lado sin lado destino en móvil) · **`setup: 'ready' \| número`** por paso: `ready` (suelo/pared) = «Colócate» SIN cuenta + única primaria **«Estoy listo»** → directo a work (sin segunda cuenta), aplica en cualquier mode incluso paso 0; número = segundos del gate auto; sin setup → derivación s111 intacta · **jerarquía B**: kicker único (el «PASO X DE N» duplicado fuera; el kicker del cuerpo solo Colócate/lado/cambio), copy funcional VISIBLE en contenido (`repsHint`/`placeHint` + **«Empiezas por: {lado}»** / **«Ahora: Derecha»** en acento), gate con identidad propia (56px `--ink-2`, ya no parece el timer), glifo escalado por altura (~150-240px, prop `size` de StepGlyph; legacy 72/44 intacto), UNA primaria RELLENA del acento, h1 `clamp` · **SessionShell**: centro `overflowY:auto` + wrapper `center-body` con margin auto → **la acción primaria SIEMPRE accesible en poca altura** (beneficia a los 4 tipos de sesión + legacy) · **toasts aplazados en sesiones sueltas** (reutiliza `setCaminoUiActive`, guard `!inPath`) — 0 toasts sobre la ceremonia · **5º piloto `move.couch.stretch`** (estático pared/suelo: perSide+ready ×2, timed, perSide; cues sin «30s por lado», EN espejado, sin reindexar sN) + `setup:'ready'` en Flexor/WGS de `chair.antidote` · 3 keys i18n ES+EN (`session.imReady/sideFirst` + `move.placeReadyHint`) · **Welcome micro-fix**: la pregunta 1 cabe en 360×640 (~36px de espaciado) · Welcome auditada: CUMPLE el contrato (titular promesa, CTA único, saltable, sin permisos, cabe en móvil — medido) | #112 | [abajo](#v0560----2026-07-18----featfixux-b22a5--auditoría-ux-del-runner--corte-de-afinado) |
 | **v0.55.0** | 2026-07-17 | fix(move): **B2 — método del runner v1: gate que fluye + reps a gusto** (feedback de cierre s110; gobernado por `BASE_MUEVE_ESTIRA.md` §3/§6) -- **(a) gate de colocación auto + condicional**: el placement gate deja de exigir tap → **cuenta-atrás que fluye sola** («Colócate… 5·4·3·2·1» → arranca el reloj al llegar a 0) con **«Empezar ya»** (salta) y **«Más tiempo»** (+5 s); y se aplica SOLO a pasos **con reloj** (`timed`/`perSide`) e **idx > 0** — `reps`/`rest` fluyen directos (no hay reloj que proteger, R2) y el paso 0 hereda el prep 3·2·1 de la sesión (evita la doble cuenta). El condicional se deriva del `mode`, sin metadatos nuevos. R1 intacto (esa cuenta es de colocación, no el timer del ejercicio) · **(b) reps a gusto**: el número deja de leerse como cuota — label `reps` → **«reps · a tu ritmo»**; «Terminé» avanza en cualquier momento (más o menos, sin culpa); sin botón +/− · 4 keys i18n ES+EN (`session.beginNow/moreTime/placeCountdown` + `move.repsTarget`) + `placeHint` actualizado · runner **legacy** (sin `mode`) intacto · solo `MoveSessionV1.jsx` + strings (sin tocar datos ni `step.name`) | #111 | [abajo](#v0550----2026-07-17----fixmove-b2--método-del-runner-v1-gate-que-fluye--reps-a-gusto) |
-| **v0.54.0** | 2026-07-17 | feat+refactor: **B2.2a — contrato de pasos v1 (pilotado) + visualId** (2ª sesión de B2, 1ª de código; gobernada por `BASE_MUEVE_ESTIRA.md`) -- **contrato de pasos v1** (`mode: timed \| reps \| perSide \| rest`; sin `mode` → runner **legacy** intacto) en nuevo `MoveSessionV1.jsx`; `MoveSession` pasa a dispatcher. Resuelve **R1-R5** de la auditoría B2.1 en 4 pilotos de cuerpo: **R1** placement gate por paso («Colócate»→«Empezar», el timer no arranca leyendo; absorbe el cambio de posición §6) · **R2** `reps` termina en «Terminé» (sin auto-avance) · **R3** `perSide` = Izquierda → gate «Cambia de lado» → Derecha con contador propio · **R4** la completion acredita **minutos REALES** (no `routine.min`; ambos runners) · **R5** `rest` tipado (apagado, «Saltar») · **visualId** (`exercise-aliases.js`): unifica 4 duplicados de glifo sin tocar `step.name`/localStorage (Chest opener→Apertura de pecho, Deep squat hold→Squat profundo, Deep breaths→Reset respiración, Dead hang→Hang pasivo) · pilotos: `desk.pushups`+`chair.squats` (reps+rest), `neck.3`+`chair.antidote` (perSide/postural), cubren biblioteca **y** Caminos · **split** `MOVE_ROUTINES`→`move.data.js` (MoveModule 451→331 ln) · **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado en `path.weekend`) + glifo/EN en sincronía · leftover B1.2 «al máximo»→«sin forzar» (registro:117) | #110 | [abajo](#v0540----2026-07-17----featrefactor-b22a-contrato-de-pasos-v1--visualid) |
+| **v0.54.0** | 2026-07-17 | feat+refactor: **B2.2a — contrato de pasos v1 (pilotado) + visualId** (2ª sesión de B2, 1ª de código; gobernada por `BASE_MUEVE_ESTIRA.md`) -- **contrato de pasos v1** (`mode: timed \| reps \| perSide \| rest`; sin `mode` → runner **legacy** intacto) en nuevo `MoveSessionV1.jsx`; `MoveSession` pasa a dispatcher. Resuelve **R1-R5** de la auditoría B2.1 en 4 pilotos de cuerpo: **R1** placement gate por paso («Colócate»→«Empezar», el timer no arranca leyendo; absorbe el cambio de posición §6) · **R2** `reps` termina en «Terminé» (sin auto-avance) · **R3** `perSide` = Izquierda → gate «Cambia de lado» → Derecha con contador propio · **R4** la completion acredita **minutos REALES** (no `routine.min`; ambos runners) · **R5** `rest` tipado (apagado, «Saltar») · **visualId** (`exercise-aliases.js`): unifica 4 duplicados de glifo sin tocar `step.name`/localStorage (Chest opener→Apertura de pecho, Deep squat hold→Squat profundo, Deep breaths→Reset respiración, Dead hang→Hang pasivo) · pilotos: `desk.pushups`+`chair.squats` (reps+rest), `neck.3`+`chair.antidote` (perSide/postural), cubren biblioteca **y** Caminos · **split** `MOVE_ROUTINES`→`move.data.js` (MoveModule 451→331 ln) · **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado en `path.weekend`) + glifo/EN en sincronía · leftover B1.2 «al máximo»→«sin forzar» (registro:117) | #110 | [session-110](./docs/sessions/session-110-b2-2a-contrato-pasos.md) |
 | **v0.53.0** | 2026-07-16 | fix+feat: **B1.2 editorial de seguridad ES+EN** (CIERRA el bloque B1) -- lenguaje de riesgo fuera con copy realista y explicativo (BASE §7-9): «al fallo» / «al límite» / «más bajo si puedes» / «aguanta» secos / «al máximo» → reps limpias, respiración normal, mantener con condición técnica · claims fuera: «el hombro nace para colgar» (+ fuera «marco» de puerta), «indestructibles» (desc ATG + EN `Bulletproof` + logro), chin tuck sin «papada» (4 sitios) · tag `PULL`→`PUSH` en Fondos en silla · **Dead hang · opcional** con alternativa en cue (key de glifo renombrada en sincronía) · **12 descs anuncian suelo/pared/barra firme/silla estable sin ruedas** ES+EN · **curación Respira·Energía**: Bhastrika (PRA) al grupo Pranayama + `rounds.express` pasa a **FREE** (Energía tenía 0 entradas free) · **defaults opt-out**: `soundOn:true` + `notifyFocusEnd:true` (solo instalaciones nuevas; permiso de notificación pedido en el primer «Comenzar» de Foco vía `maybeRequestNotifyPermission`, denegar apaga el flag) | #108 | [session-108](./docs/sessions/session-108-b1-2-editorial-seguridad.md) |
 | **v0.52.0** | 2026-07-16 | fix+feat: **B1.1 saneamiento** (plan de evolución, 1ª sesión de código) -- **`parseLocalDateKey()`** + fix round-trip UTC en `computePathStreaks` (rachas de Caminos rotas en husos negativos; regla #10 en CLAUDE.md: prohibido `new Date("YYYY-MM-DD")`) · **cifras honestas**: contador de logros `/100`→`/106` dinámico (Sidebar), «acciones» del año RETIRADA → **«{n} días con ritmo»** real (isActiveDay s69) + tooltip «intensidad {n}», sendero del día **abstracto** (secuencia equidistante, fuera las horas inventadas) · **acento de Estira por `kind`** en MoveSession (prep/glifo/contador/barra/done → `--extra`) · **BreatheVisual: transición = duración de la fase** (antes fija 1800 ms; fases <2 s → 85 % + ease-in-out) · **7 duraciones recalibradas** (declarado ≈ suma de pasos; Colgarse 4→2 … Ancestral 6→5) · **apnea retirada** (decisión 1): fuera logros 60/90/120 s + cifra-récord 160 px → hold como guía calmada; sustitutos de exploración **Dos lenguas / Cuaderno a salvo / Letra pequeña** (con detectores) · **claims de Respira orientativos** ES+EN (4·7·8, Nadi, Coherente 5·5, Rondas profundas, aside Balance) | #107 | [session-107](./docs/sessions/session-107-b1-saneamiento.md) |
 | **v0.51.0** | 2026-07-16 | feat(onboarding): **onboarding de primera vez — 3 preguntas + primer Camino** (plan maestro s106) -- flujo FULL-SCREEN de 5 pantallas sobre las **láminas de Caminos** (bienvenida manifiesto + necesidad/tiempo/entorno → **`profile` en state** + "Tu primer Camino") · **sustituye al WelcomeModal** (s17, retirado; el manifiesto y la intención migran a las pantallas 0-1) · `pickFirstPath(profile)`: candidatos por necesidad + sesgo por tiempo + fallback `getSuggestedPath` — el cierre fija `paths.lastViewed` → la **home destaca el Camino elegido** (sugerir, NO auto-arrancar) · cada pregunta saltable (campo null) · regla "sobre el arte siempre es de día" ampliada (`--focus-cta` + `--achievement` al remap oscuro) · ES+EN (`strings/onboarding.js`) · a11y: dialog + radiogroup, sin cierre accidental | #106 | [session-106](./docs/sessions/session-106-onboarding.md) |
@@ -131,6 +132,84 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.56.0] -- 2026-07-18 -- feat+fix(ux): B2.2a.5 — auditoría UX del runner + corte de afinado
+
+Sesión 112. B2.2b queda EN PAUSA (decisión del usuario post-s111, commit
+`22c5fd4`): antes de acumular metadatos/duración/feedback/eventos hay que
+demostrar que el runner aporta valor percibido. Gobernada por
+[`CONTEXTO_UX_RUNNER_WELCOME.md`](./docs/product/CONTEXTO_UX_RUNNER_WELCOME.md).
+Formato: **auditoría con entregable ANTES de código** → 3 decisiones agrupadas
+(AskUserQuestion) → corte aprobado → implementación. Diario:
+[session-112](./docs/sessions/session-112-b2-2a5-afinado-ux-runner.md).
+
+### Auditoría (runtime v0.55.0, 5 viewports, evidencia medida por DOM)
+
+- **3×P1**: acción primaria recortada SIN scroll posible en alturas <~630px
+  (overlay `fixed` + `overflow visible`); el copy funcional del método («Haz
+  menos si lo necesitas», «Ahora: Derecha», placeHint) viajaba en el hint del
+  shell, **oculto en móvil** por el `display:none` ≤640px (regla pre-v1 de
+  atajos de teclado); cambio de lado sin lado destino en móvil.
+- P2: kicker «PASO X DE N» duplicado · glifo-sello 72px que no enseña · gate
+  visualmente idéntico al timer · lado inicial sin anunciar · 5s uniformes
+  para colocaciones de suelo · toasts sobre la ceremonia · series invisibles y
+  duración declarada≠real (→ B2.2b-1).
+- **Welcome auditada y CUMPLE** el contrato (titular promesa, CTA único,
+  saltable, una vez, sin permisos, cabe en 375×812 y 360×640 — medido); único
+  defecto: la pregunta 1 desbordaba ~35px en 360×640.
+
+### Decisiones aprobadas (3 preguntas agrupadas)
+
+`setup: none|auto|ready` · dirección visual **B · Equilibrada** · alcance
+**runner + micro-fix Welcome**.
+
+### Corte implementado
+
+- **`setup: 'ready' | número`** por paso (`MoveSessionV1.jsx`): `ready` =
+  «Colócate» sin cuenta + única primaria «Estoy listo» → **directo a work**
+  (sin segunda cuenta; aplica en cualquier `mode`, incluso paso 0); número =
+  segundos del gate auto; sin `setup` → derivación por `mode` (s111) intacta.
+- **Jerarquía B**: kicker único (header manda; el del cuerpo solo
+  Colócate/Izquierda/Derecha/Cambia de lado; rest sin kicker) · copy funcional
+  VISIBLE (support + «Empiezas por: {lado}» / «Ahora: Derecha» en acento) ·
+  gate a 56px `--ink-2` (identidad propia) · glifo escalado por altura
+  (~150-240px vía prop `size` de `StepGlyph`; legacy 72/44 byte-igual) · UNA
+  primaria rellena del acento · h1 `clamp(30px, 6.5vh, 52px)`.
+- **SessionShell**: `center` con `minHeight:0 + overflowY:auto` + wrapper
+  `data-pace-session-center-body` (margin auto) → **footer siempre accesible**
+  en poca altura; beneficia a Respira/Foco/Agua/legacy.
+- **Toasts aplazados en sesiones sueltas** (reutiliza `setCaminoUiActive`,
+  guard `!inPath`): 0 toasts sobre SessionDone; se vuelcan al volver a home.
+- **Datos**: `setup:'ready'` en Flexor de cadera y World's greatest stretch de
+  `chair.antidote` · **5º piloto `move.couch.stretch`** (estático pared/suelo:
+  Flexor `perSide 25 ready` + Couch `perSide 30 ready` + 90/90 `timed` +
+  Pigeon `perSide 30` + Puente `timed`; cues sin «30s por lado», EN espejado;
+  solo campos añadidos, sin reindexar sN).
+- **i18n**: `session.imReady` · `session.sideFirst` · `move.placeReadyHint`
+  (ES+EN).
+- **Welcome micro-fix**: ~36px de espaciado (column padding, options gap,
+  chips) → la pregunta 1 cabe en 360×640 (584/584, antes 619).
+
+### Diseñado sin implementar (B2.2b re-ordenado)
+
+Metadatos+duración derivada (B2.2b-1, sobre los 5 pilotos) · feedback
+(B2.2b-2) · eventos `schemaVersion` (B2.2b-3, solo documento) · migración
+`step.id/nameKey/visualId` + EN posicionales · diagramas de dos poses (los
+itera el usuario, D-4; candidatos: Flexiones inclinadas + Flexor de cadera).
+
+### Verificación
+
+Preview :8765, consola limpia. **Dev**: neck.3 (kicker único, «Haz menos»
+visible en 360×640, «Empiezas por: Izquierda», «Ahora: Derecha») ·
+chair.antidote (ready sin cuenta → «Estoy listo» → reloj del lado) ·
+couch.stretch (ready en paso 0, lados, timed auto) · desk.pushups (reps +
+rest) · **1280×600: primaria visible + centro scrollable (P1 resuelto)** ·
+legacy desk.quick idéntico + hereda el fix · Respira OK sobre el shell ·
+toasts 0/ceremonia. **Standalone** regenerado UNA vez (3105 KB, sanity OK):
+v0.56.0, ready funcional, consola limpia. Bump ×3. Backup
+`v0.55.0_20260718` (rotado `v0.35.0_20260707`, cap 20).
+
+---
+
 ## [v0.55.0] -- 2026-07-17 -- fix(move): B2 método del runner v1 (gate que fluye + reps a gusto)
 
 Sesión 111. Tercera sesión del bloque B2 — refinamiento del **método** del
@@ -181,70 +260,3 @@ consola limpia. Bump v0.55.0 ×3. Backup `v0.54.0_20260717` (rotado
 
 ---
 
-## [v0.54.0] -- 2026-07-17 -- feat+refactor: B2.2a contrato de pasos v1 + visualId
-
-Sesión 110. Segunda sesión del bloque B2 (la primera de código;
-[`DECISIONES_PRODUCTO.md`](./docs/product/DECISIONES_PRODUCTO.md) §B2),
-gobernada por [`BASE_MUEVE_ESTIRA.md`](./docs/product/BASE_MUEVE_ESTIRA.md)
-§3/§4/§6. Insumo directo:
-[`audit-b2-ejercicios-v0.53.0`](./docs/audits/audit-b2-ejercicios-v0.53.0.md)
-(B2.1). Decisiones aprobadas antes de tocar código (AskUserQuestion): fichas
-fisio aparcadas a B4 · Nordics sustituido, `path.weekend` intacto · 6 pilotos
-confirmados · corte visualId+contrato hoy / metadatos+duración+feedback
-mañana. Diario:
-[session-110](./docs/sessions/session-110-b2-2a-contrato-pasos.md).
-
-### visualId + mapa de alias
-
-- Nuevo `app/custom/exercise-aliases.js` (`VISUAL_ALIAS` + `resolveVisualId`):
-  colapsa 4 duplicados de nombre en una identidad visual **sin tocar
-  `step.name` ni localStorage** (swap s14 blindado). `ExerciseGlyph` resuelve
-  por visualId: Chest opener→Apertura de pecho · Deep squat hold→Squat
-  profundo · Deep breaths→Reset respiración · Dead hang·opcional→Hang pasivo.
-- **Rib pull ↔ Gato-camello NO se unifica** (decisión): es caso «reescribir»,
-  no duplicado limpio; su cue espera a la ola de contenido.
-
-### Contrato de pasos v1 (pilotado en 4 rutinas de cuerpo)
-
-- Nuevo `app/move/MoveSessionV1.jsx` — runner por MODO
-  (`timed | reps | perSide | rest`; sin `mode` → runner **legacy** intacto).
-  `MoveSession` pasa a **dispatcher** (elige v1/legacy según el dato). Resuelve
-  R1-R5 de la auditoría, activados por `mode`:
-  - **R1** placement gate por paso («Colócate» → «Empezar»): el timer no
-    arranca mientras se lee la colocación; absorbe el cambio de posición (§6).
-  - **R2** `reps` termina en «Terminé», nunca auto-avanza.
-  - **R3** `perSide` = lado Izquierda → gate «Cambia de lado» (manual) → lado
-    Derecha, cada lado con su contador.
-  - **R4** la completion acredita **minutos REALES** medidos, no `routine.min`
-    declarado (`completeMove/ExtraSession`; aplica a **ambos** runners).
-  - **R5** `rest` es tipo propio (apagado, sin glifo, «Saltar»).
-- **Pilotos**: `extra.desk.pushups` + `extra.chair.squats` (reps+rest) ·
-  `move.neck.3` (reps postural + perSide) · `move.chair.antidote` (timed +
-  perSide + rest). Cubren biblioteca **y** runner de Caminos (dawn/afternoon/
-  dusk). Respira (diafragmática, coherente 5·5) = control `timed`, sin cambio.
-- **Split**: `MOVE_ROUTINES` + `getMoveRoutine` → `app/move/move.data.js`
-  (`var` global, re-expuesto por el build). MoveModule 451→331 ln.
-- 13 keys i18n nuevas del contrato ES+EN (`session.place/sideChange/…`).
-
-### Contenido bundleado (nace con lenguaje BASE §8-9)
-
-- **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado
-  gratis en `path.weekend`): sustituto accesible + glifo nuevo en sincronía
-  (name = key de glifo) + EN. Nordics sigue en el registro (aparcado a fisio
-  con Sissy squat, Fondos en silla, Couch stretch).
-- Cues de los pilotos sin el número de reps encerrado (lo lleva el runner):
-  espejo EN en `content/move.js` + `content/extra.js`.
-- **Leftover B1.2** (auditoría caso 15): `exercise-registry.js:117` «Abre los
-  dedos al máximo» → «sin forzar» (+ EN en `content/custom.js`).
-
-### Verificación
-
-Preview :8765. **Dev**: R1-R5 confirmados en runtime paso a paso (place →
-reps «Terminé» → rest tipado en desk.pushups; reps postural → perSide
-Izquierda → «Cambia de lado» → Derecha en neck.3), consola limpia.
-**Standalone** regenerado (82 scripts compilados, sin invariantes rotas,
-3098 KB): monta limpio, el contrato v1 corre en el bundle. Bump v0.54.0 ×3.
-Backup `v0.53.0_20260717` desde el standalone publicado (rotado
-`v0.34.4_20260707`, cap 20).
-
----
