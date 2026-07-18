@@ -24,8 +24,8 @@ const EXTRA_ROUTINES = {
         steps: [
           { name: 'Apertura de pecho', mode: 'timed', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
           { name: 'Rotación torácica', mode: 'perSide', dur: 20, cue: 'Sentado: manos cruzadas, rota el tronco despacio.' },
-          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
-          { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
+          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
+          { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
           { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, cue: 'Oreja al hombro, suave.' },
           { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' },
         ]},
@@ -106,12 +106,17 @@ const EXTRA_ROUTINES = {
         ]},
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
         desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 5, access: 'premium',
+        /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
+           pared/suelo — valida setup:'ready' + retención por lado + cambio de
+           lado + duración real. Solo se AÑADEN campos (mode/setup) y se quitan
+           los «30s por lado» de los cues (ahora los lleva el runner): los EN
+           posicionales sN no se reindexan. dur en perSide = segundos POR LADO. */
         steps: [
-          { name: 'Flexor de cadera', dur: 50, cue: 'Rodilla al suelo, empuja pelvis adelante.' },
-          { name: 'Couch stretch', dur: 70, cue: 'Empeine contra pared o silla, rodilla al fondo. 30s por lado.' },
-          { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
-          { name: 'Pigeon', dur: 60, cue: 'Tibia adelante, peso adelante. 30s por lado.' },
-          { name: 'Puente con marcha', dur: 60, cue: 'Activación de glúteo profundo.' },
+          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja pelvis adelante.' },
+          { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Empeine contra pared o silla, rodilla al fondo.' },
+          { name: '90/90', mode: 'timed', dur: 60, cue: 'Rota entre lados despacio.' },
+          { name: 'Pigeon', mode: 'perSide', dur: 30, cue: 'Tibia adelante, peso adelante.' },
+          { name: 'Puente con marcha', mode: 'timed', dur: 60, cue: 'Activación de glúteo profundo.' },
         ]},
       { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
         desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',

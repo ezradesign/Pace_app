@@ -103,7 +103,7 @@ function OnbChoice({ label, sub, accent, selected, onSelect }) {
       style={{
         display: 'flex', alignItems: 'center', gap: 14,
         width: '100%', textAlign: 'left',
-        padding: '13px 18px',
+        padding: '11px 16px',
         background: selected ? 'rgba(242,237,224,0.96)' : 'rgba(242,237,224,0.82)',
         border: '1px solid ' + (selected ? accent : (hover ? 'var(--line-2)' : 'rgba(184,173,142,0.5)')),
         borderRadius: 'var(--r-md)',

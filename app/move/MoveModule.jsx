@@ -295,16 +295,18 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
    El SVG viene de ExerciseGlyph; el fallback son tres arcos suaves.
    B1: acento por kind via props (Estira llega con --extra).
    s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
-function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)' }) {
+/* s112: prop `size` opcional — el runner v1 lo escala a visual instructivo
+   (~150-240px según altura); el default 72/44 deja el legacy byte-idéntico. */
+function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72 }) {
   return (
     <div style={{
-      width: 72, height: 72, margin: '0 auto 20px',
+      width: size, height: size, margin: '0 auto 20px',
       borderRadius: '50%',
       background: accentSoft,
       display: 'grid', placeItems: 'center',
       color: accent,
     }}>
-      <ExerciseGlyph id={stepName} size={44} />
+      <ExerciseGlyph id={stepName} size={Math.round(size * 44 / 72)} />
     </div>
   );
 }

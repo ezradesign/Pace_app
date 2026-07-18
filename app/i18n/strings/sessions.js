@@ -134,6 +134,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.repsDone':                   'Terminé',
     'move.placeHint':                  'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
     'move.repsHint':                   'Haz menos si lo necesitas · «Terminé» para seguir',
+    'session.imReady':                 'Estoy listo',
+    'session.sideFirst':               'Empiezas por: {side}',
+    'move.placeReadyHint':             'Sin prisa · el ejercicio espera a que estés en posición',
 
     // Hydrate
     'hydrate.tag':                     'Hidratación',
@@ -312,6 +315,9 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.repsDone':                   'Done',
     'move.placeHint':                  'Get set, no rush · starts on its own · "Begin now" to skip',
     'move.repsHint':                   'Do fewer if you need to · "Done" to continue',
+    'session.imReady':                 'I\'m ready',
+    'session.sideFirst':               'Start with: {side}',
+    'move.placeReadyHint':             'No rush · the exercise waits until you\'re in position',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',
