@@ -173,12 +173,12 @@ destino invisible) + corte aprobado por AskUserQuestion:
 - Diseño pendiente: diagramas de dos poses (los itera el usuario, D-4;
   candidatos Flexiones inclinadas + Flexor de cadera).
 
-**GIRO — runner guiado (s113-s114, PRÓXIMO; decisión del usuario 2026-07-18,
-post-s112)**. Origen: capturas del usuario + auditoría externa con navegación
-(verificó repo=deploy en v0.56.0, commit `2bda34c`). Hallazgos: scrollbar
-vertical en pasos de ejercicio (el centro scrollable de s112 desborda en
-alturas ~600 px) · el runner exige tocar la pantalla continuamente (gate
-«Listo» entre lados, «Terminé» como única salida de reps — inviable en
+**GIRO — runner guiado (s113 HECHA · s114 PRÓXIMA; decisión del usuario
+2026-07-18, post-s112)**. Origen: capturas del usuario + auditoría externa con
+navegación (verificó repo=deploy en v0.56.0, commit `2bda34c`). Hallazgos:
+scrollbar vertical en pasos de ejercicio (el centro scrollable de s112
+desborda en alturas ~600 px) · el runner exige tocar la pantalla continuamente
+(gate «Listo» entre lados, «Terminé» como única salida de reps — inviable en
 suelo/pared/manos ocupadas) · cues demasiado escuetos para ejecutar con
 confianza. **Principio rector nuevo: «el usuario toca para empezar, pausar o
 adaptar; NO para empujar la rutina hacia delante»**. B2.2b-1 pasa a DESPUÉS,
@@ -196,17 +196,26 @@ alimentado por el comportamiento real.
     siguiente, y botones opcionales («Empezar ya» / «Más tiempo» / «Pausar»).
   - **«Terminé» (s111)**: deja de ser la única salida; queda como salida
     anticipada dentro del modo guiado.
-- **s113 — motor guiado**: reps guiadas (~4 s/rep fuerza: 2 bajar + 2 subir,
-  ref. ACE 2–8 s; pulso visual + contador «n de N» + avance auto) · transición
-  auto de lado · prep 5 s (antes 3) con colocación útil visible ANTES de
-  arrancar el contador (`ready` de s112 sigue siendo el único gate manual,
-  para colocaciones complejas) · rest 30 s por defecto TIPADO (betweenSets vs
-  cierre respiratorio — el «Reset respiración» de chair.antidote es cierre y
-  NO lo toca ningún ajuste) · layout compacto por ALTURA sin scrollbar
-  (1280×600 · 1024×512 · landscape móvil; reducción progresiva espacios →
-  glifo → decorativo, NUNCA instrucciones/controles; scroll solo red de
-  seguridad) · `min` editorial rápido de desk.pushups (2 no es creíble).
-- **s114 — capa editorial**: instrucciones por capas de los 5 pilotos
+- **s113 — motor guiado — HECHA** (2026-07-20; v0.57.0; diario
+  [session-113](../sessions/session-113-runner-guiado-motor.md)). Decisiones
+  de arranque (AskUserQuestion): guiado **SUSTITUYE** al libre · pulso **+
+  tick suave** (familia actual, receta `tick`) · transición de lado **10 s**.
+  Implementado: reps guiadas (~4 s/rep fuerza; **`step.repSeconds` por paso**
+  — chin tucks de neck.3 = 8 s, retención postural; base del `tempo` de
+  B2.2b-1; pulso + tick + «n de N» + avance auto; «Terminar antes» + pausa;
+  **`repsGuidedRef` acredita solo reps guiadas reales** → lo consume la
+  pantalla final de s114) · transición auto de lado 10 s con lado siguiente
+  visible (`ready` de s112 sigue siendo el único gate manual) · prep 5 s
+  (legacy 3) · rest entre series 30 s + `restKind:'betweenSets'` SOLO pilotos
+  (el «Reset respiración» de chair.antidote quedó SIN tipar, con
+  comentario-guard) · layout compacto por ALTURA verificado sin scrollbar en
+  1280×600 · 1024×512 · 844×390 · 360×640 (tiers 700/560/430 + glifo oculto
+  ≤430; scroll solo red de seguridad) · `min` desk.pushups 2→3 (real medido
+  3:00-3:25). Extra: fix del warning React «setState durante render»
+  (side-effects fuera de los updaters; pre-existía desde s110) + split
+  `MoveSessionV1.support.jsx`. Verificado: desk.pushups completo SIN tocar la
+  pantalla · cambios de lado automáticos en vivo · reduced-motion · silencio.
+- **s114 — capa editorial (PRÓXIMA)**: instrucciones por capas de los 5 pilotos
   (setup completo en colocación · shortCue en ejecución · cue del lado
   INTEGRADO en el texto · capa de adaptación «Cuídate»; tono PACE: frases
   cortas, verbos suaves, 1 instrucción por línea, sin anatomía innecesaria) ·

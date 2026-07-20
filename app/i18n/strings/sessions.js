@@ -116,7 +116,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.finish':                     'Terminar',
     'move.hint':                       '← → navegar · Espacio pausar · Esc salir',
 
-    // Contrato de pasos v1 (s110 · B2.2 · método s111)
+    // Contrato de pasos v1 (s110 · B2.2 · método s111 · guiado s113)
     'session.place':                   'Colócate',
     'session.beginStep':               'Empezar',
     'session.beginNow':                'Empezar ya',
@@ -125,18 +125,19 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.sideLeft':                'Izquierda',
     'session.sideRight':               'Derecha',
     'session.sideChange':              'Cambia de lado',
-    'session.sideReady':               'Listo',
     'session.sideNext':                'Ahora: {side}',
     'session.skip':                    'Saltar',
     'session.restLabel':               'Descanso',
     'move.reps':                       'reps',
-    'move.repsTarget':                 'reps · a tu ritmo',
-    'move.repsDone':                   'Terminé',
     'move.placeHint':                  'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
-    'move.repsHint':                   'Haz menos si lo necesitas · «Terminé» para seguir',
     'session.imReady':                 'Estoy listo',
     'session.sideFirst':               'Empiezas por: {side}',
     'move.placeReadyHint':             'Sin prisa · el ejercicio espera a que estés en posición',
+    // Runner guiado (s113): reps con cadencia + transición auto de lado
+    'move.repsOf':                     'de {n} reps',
+    'move.repsGuidedHint':             'Sigue el pulso · haz menos si hoy lo necesitas',
+    'move.finishEarly':                'Terminar antes',
+    'move.sideAutoHint':               'El lado siguiente empieza solo',
 
     // Hydrate
     'hydrate.tag':                     'Hidratación',
@@ -297,7 +298,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.finish':                     'Finish',
     'move.hint':                       '← → navigate · Space pause · Esc exit',
 
-    // Step contract v1 (s110 · B2.2 · method s111)
+    // Step contract v1 (s110 · B2.2 · method s111 · guided s113)
     'session.place':                   'Get set',
     'session.beginStep':               'Begin',
     'session.beginNow':                'Begin now',
@@ -306,18 +307,19 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.sideLeft':                'Left',
     'session.sideRight':               'Right',
     'session.sideChange':              'Switch sides',
-    'session.sideReady':               'Ready',
     'session.sideNext':                'Now: {side}',
     'session.skip':                    'Skip',
     'session.restLabel':               'Rest',
     'move.reps':                       'reps',
-    'move.repsTarget':                 'reps · your pace',
-    'move.repsDone':                   'Done',
     'move.placeHint':                  'Get set, no rush · starts on its own · "Begin now" to skip',
-    'move.repsHint':                   'Do fewer if you need to · "Done" to continue',
     'session.imReady':                 'I\'m ready',
     'session.sideFirst':               'Start with: {side}',
     'move.placeReadyHint':             'No rush · the exercise waits until you\'re in position',
+    // Guided runner (s113): cadenced reps + auto side transition
+    'move.repsOf':                     'of {n} reps',
+    'move.repsGuidedHint':             'Follow the pulse · do fewer if you need to today',
+    'move.finishEarly':                'Finish early',
+    'move.sideAutoHint':               'The next side starts on its own',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',

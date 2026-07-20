@@ -27,12 +27,16 @@ const EXTRA_ROUTINES = {
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
           { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
           { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, cue: 'Oreja al hombro, suave.' },
+          /* CIERRE respiratorio — sin restKind a propósito (s113): NO es un
+             descanso entre series y el ajuste de Tweaks (s114) no lo toca. */
           { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' },
         ]},
       { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
         desc: 'Micro-pausa para cervicales tensas.', min: 3,
         steps: [
-          { name: 'Chin tucks', mode: 'reps', reps: 5, dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga. Mantén 3-5 s y relaja.' },
+          /* s113: repSeconds 8 — control postural con retención (desliza +
+             mantén 3-5 s + relaja), no cadencia de fuerza (4 s default). */
+          { name: 'Chin tucks', mode: 'reps', reps: 5, repSeconds: 8, dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga. Mantén 3-5 s y relaja.' },
           { name: 'Inclinación lateral', mode: 'perSide', dur: 25, cue: 'Oreja al hombro, suave.' },
           { name: 'Rotación lenta', mode: 'perSide', dur: 25, cue: 'Mira sobre el hombro, sin forzar.' },
           { name: 'Escalenos', mode: 'perSide', dur: 20, cue: 'Mano bajo el glúteo, inclina la cabeza al lado opuesto.' },

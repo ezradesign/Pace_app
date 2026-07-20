@@ -4,47 +4,34 @@
    (SessionShell/SessionPrep/SessionDone), glifo (StepGlyph) y acento por kind
    con el runner legacy; lo que cambia es la máquina de fases.
 
-   Resuelve los hallazgos R1-R5 de la auditoría B2.1, activados por `mode`:
+   Resuelve los hallazgos R1-R5 de la auditoría B2.1, activados por `mode`.
+   s113 (runner guiado) aplica las ENMIENDAS de DECISIONES_PRODUCTO §B2 a
+   R2/R3 — principio rector: «el usuario toca para empezar, pausar o adaptar;
+   NO para empujar la rutina hacia delante»:
      R1  placement gate POR PASO — el timer no arranca mientras se lee la
-         colocación (fase 'place' → «Empezar»). También absorbe el cambio de
-         posición (§6): recolocarse es tiempo del usuario, sin cronómetro.
-     R2  `reps` termina en «Terminé», nunca auto-avanza.
-     R3  `perSide` = lado 1 → aviso de cambio (gate manual «Listo») → lado 2,
-         cada lado con su propio contador.
+         colocación. `setup:'ready'` (s112) sigue siendo el ÚNICO gate manual
+         (colocación compleja suelo/pared/material).
+     R2  (enmendado s113) `reps` = GUIADAS con cadencia (~4 s/rep de fuerza,
+         `repSeconds` por paso): pulso visual + tick suave + contador
+         «n de N», avance AUTO al objetivo. No es cuenta atrás competitiva:
+         «Terminar antes» siempre visible y solo se acreditan las reps
+         realmente guiadas (repsGuidedRef), nunca el objetivo.
+     R3  (enmendado s113) `perSide` = lado 1 → señal suave → transición AUTO
+         (10 s, con el lado siguiente visible) → lado 2 empieza solo.
+         «Empezar ya» / «Más tiempo» / «Pausar» quedan opcionales.
      R4  la completion acredita minutos REALES (dispatchComplete), no
          `routine.min` declarado.
-     R5  `rest` es un tipo propio, visualmente distinto del trabajo.
+     R5  `rest` es un tipo propio, apagado; termina solo, «Saltar» opcional.
 
    Modos: 'timed' | 'reps' | 'perSide' | 'rest'. Un step sin `mode` no llega
    aquí (el dispatcher de MoveModule lo manda al runner legacy).
 
    Consume globales (StepGlyph, SessionShell*, complete*Session, playSound,
-   useT) por window/scope global — carga tras MoveModule. */
+   useT) por window/scope global — carga tras MoveModule. Las constantes del
+   método (V1_*_SECONDS) y los helpers de cadencia/progreso/tamaño viven en
+   MoveSessionV1.support.jsx (s113, patrón FocusTimer.support). */
 
 const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
-
-/* Cuenta-atrás de colocación (s111): segundos que fluyen solos antes de que
-   arranque el reloj del ejercicio. NO es el timer del ejercicio (R1) — solo da
-   aire a colocarse.
-   s112 — `step.setup` tiene dos formas:
-     · número        → segundos del gate automático (sustituye a los 5 default)
-     · 'ready'       → colocación compleja (suelo/pared/material): SIN cuenta,
-                       el paso espera «Estoy listo» y pasa directo a work
-                       (sin segunda cuenta — el botón ES la confirmación). */
-const V1_PLACE_SECONDS = 5;
-
-/* Segundos de un segmento activo (timed/rest = dur; perSide = dur por lado). */
-function v1StepProgress(step, side, elapsed) {
-  if (step.mode === 'reps') return 0;                 // reps no tiene barra de tiempo
-  if (step.mode === 'perSide') return (side * step.dur + elapsed) / (2 * step.dur);
-  return step.dur ? elapsed / step.dur : 0;
-}
-/* Peso del step para la barra segmentada (estimación honesta por tipo). */
-function v1StepWeight(step) {
-  if (step.mode === 'reps') return (typeof step.reps === 'object' ? step.reps.target : step.reps || 8) * 4;
-  if (step.mode === 'perSide') return (step.dur || 20) * 2;
-  return step.dur || 20;
-}
 
 function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const { t, tn, lang } = useT();
@@ -58,14 +45,18 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     : routine;
 
   const [stage, setStage] = useStateV1('prep');    // 'prep' | 'run' | 'done'
-  const [prepCount, setPrepCount] = useStateV1(3);
+  const [prepCount, setPrepCount] = useStateV1(5); // s113: prep 5 s (antes 3)
   const [stepIdx, setStepIdx] = useStateV1(0);
   const [phase, setPhase] = useStateV1('place');   // 'place' | 'work' | 'change'
   const [side, setSide] = useStateV1(0);           // 0 = 1er lado, 1 = 2º lado
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
+  const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
   const sessionStart = useRefV1(Date.now());
+  // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
+  // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
+  const repsGuidedRef = useRefV1(0);
   const step = routine.steps[stepIdx];
 
   const dispatchComplete = () => {
@@ -96,7 +87,19 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
   const addPlaceTime = () => setPlaceLeft(c => c + 5);   // «Más tiempo» en colocación
+  const addChangeTime = () => setChangeLeft(c => c + 5); // «Más tiempo» en transición
   const onSideReady = () => { setSide(1); setPhase('work'); setElapsed(0); };
+  // Entrada a la transición de lado (s113, enmienda R3): señal suave de la
+  // familia actual + cuenta que fluye sola (efecto abajo).
+  const enterChange = () => {
+    setPhase('change'); setElapsed(0); setChangeLeft(V1_CHANGE_SECONDS);
+    try { playSound('move.step'); } catch (e) {}
+  };
+  // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
+  const finishRepsEarly = () => {
+    repsGuidedRef.current += Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
+    advanceStep();
+  };
 
   // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).
   useEffectV1(() => {
@@ -106,38 +109,69 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
 
-  // Colocación AUTO: cuenta-atrás que fluye sola en fase 'place' (s111). No es
-  // el timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
-  // el reloj. Al llegar a 0 → beginWork() automático. «Empezar ya» salta;
-  // «Más tiempo» suma 5 s. Sin tap obligatorio.
-  // s112: en 'ready' NO corre cuenta — el paso espera «Estoy listo».
+  // Relojes por fase — patrón s113: los intervalos SOLO decrementan/incrementan
+  // su contador; los umbrales y side-effects (sonidos, avance, completion)
+  // viven en efectos aparte. Un updater de setState corre DURANTE el render:
+  // disparar ahí la completion (estado global → Sidebar) provocaba el warning
+  // «Cannot update a component while rendering» (pre-existía desde s110; el
+  // motor guiado lo hacía constante al auto-avanzar).
+
+  // Colocación AUTO (s111): aire para colocarse, no es el timer (R1).
+  // «Empezar ya» salta; «Más tiempo» suma 5 s. En 'ready' NO corre (s112).
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
     if (step && step.setup === 'ready') return;
-    const intv = setInterval(() => {
-      setPlaceLeft(c => { if (c <= 1) { beginWork(); return 0; } return c - 1; });
-    }, 1000);
+    const intv = setInterval(() => setPlaceLeft(c => Math.max(0, c - 1)), 1000);
     return () => clearInterval(intv);
   }, [stage, phase, stepIdx]);
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
+    if (step && step.setup === 'ready') return;
+    beginWork();
+  }, [placeLeft]);
 
-  // Ticker: solo corre en fase 'work' de un segmento cronometrado
-  // (timed/perSide/rest). 'reps' no corre (R2); 'place'/'change' tampoco (R1/R3).
+  // Ticker de trabajo (fase 'work', pausable). s113: las reps GUIADAS también
+  // corren — el tiempo marca la cadencia (enmienda R2).
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'work' || paused) return;
-    if (step.mode === 'reps') return;
-    const segDur = step.dur;
-    const intv = setInterval(() => {
-      setElapsed(e => {
-        if (e + 1 >= segDur) {
-          if (step.mode === 'perSide' && side === 0) { setPhase('change'); return 0; }
-          advanceStep();
-          return 0;
-        }
-        return e + 1;
-      });
-    }, 1000);
+    const intv = setInterval(() => setElapsed(e => e + 1), 1000);
     return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx, side, step]);
+  }, [stage, phase, paused, stepIdx, side]);
+  // Umbrales del trabajo: tick suave por rep + avance AUTO al objetivo (reps,
+  // acreditando solo las guiadas reales) · fin de segmento → cambio de lado
+  // (perSide lado 0) o siguiente paso. Deps [elapsed]: exactamente una
+  // evaluación por segundo de trabajo; las transiciones resetean elapsed a 0
+  // (guardado) así que no re-disparan.
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
+    if (step.mode === 'reps') {
+      const repSec = v1RepSeconds(step);
+      if (elapsed >= v1RepTarget(step) * repSec) {
+        repsGuidedRef.current += v1RepTarget(step);
+        advanceStep();
+      } else if (elapsed % repSec === 0) {
+        try { playSound('tick'); } catch (e) {}
+      }
+      return;
+    }
+    if (elapsed >= step.dur) {
+      if (step.mode === 'perSide' && side === 0) enterChange();
+      else advanceStep();
+    }
+  }, [elapsed]);
+
+  // Transición AUTO de lado (s113, enmienda R3): cuenta que fluye sola con el
+  // lado siguiente visible. Al llegar a 0 → el lado 2 empieza solo.
+  // «Empezar ya» salta, «Más tiempo» +5 s, «Pausar» disponible — opcionales.
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'change' || paused) return;
+    const intv = setInterval(() => setChangeLeft(c => Math.max(0, c - 1)), 1000);
+    return () => clearInterval(intv);
+  }, [stage, phase, paused, stepIdx]);
+  useEffectV1(() => {
+    if (stage !== 'run' || phase !== 'change' || changeLeft > 0) return;
+    onSideReady();
+  }, [changeLeft]);
 
   // Sonidos
   useEffectV1(() => { if (stage === 'run') { try { playSound('move.start'); } catch(e) {} }
@@ -153,10 +187,14 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   }, []);
   useEffectV1(() => { if (stage === 'run') { try { playSound('move.step'); } catch(e) {} } }, [stepIdx]);
 
-  // Atajos
+  // Atajos. s113: Espacio pausa también reps guiadas y la transición de lado
+  // (el descanso sigue sin pausa: termina solo, «Saltar» opcional).
   useEffectV1(() => {
     const onKey = (e) => {
-      if (e.key === ' ') { e.preventDefault(); if (step && step.mode !== 'reps' && phase === 'work') setPaused(p => !p); }
+      if (e.key === ' ') {
+        e.preventDefault();
+        if ((phase === 'work' && step && step.mode !== 'rest') || phase === 'change') setPaused(p => !p);
+      }
       if (e.key === 'Escape') onExit('exit');
       if (e.key === 'Enter' && stage === 'done') onExit('done');
     };
@@ -206,31 +244,42 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const stepAccent = isRest ? 'var(--ink-3)' : accent;         // R5: descanso apagado
   const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
   const remaining = Math.max(0, (step.dur || 0) - elapsed);
-  const repsTarget = typeof step.reps === 'object' ? step.reps.target : step.reps;
   const placeReady = step.setup === 'ready';
 
-  // Visual instructivo: escala por ALTURA de viewport (~150-240px) — el glifo
-  // deja de ser insignia; el default 72 del legacy no cambia.
+  // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
+  // insignia; en poca altura cede antes que instrucciones/controles (s113).
+  // El default 72 del legacy no cambia.
   const vpH = (typeof window !== 'undefined' && window.innerHeight) || 800;
-  const glyphSize = Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
+  const glyphSize = v1GlyphSize(vpH);
 
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
+  let gateNumber = false;   // place/change: número pequeño, no es el timer
+  let repPulseSec = 0;      // reps guiadas: duración del pulso de cadencia
   if (phase === 'place') {
     kicker = t('session.place');
-    if (!placeReady) { bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown'); }
+    if (!placeReady) { bigNumber = String(placeLeft); bigLabel = t('session.placeCountdown'); gateNumber = true; }
     if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
     support = placeReady ? t('move.placeReadyHint') : t('move.placeHint');
     primary = placeReady
       ? { label: t('session.imReady'), onClick: beginWork }
       : { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
+    // s113: la transición fluye sola — el número es de recolocación (gate),
+    // el lado siguiente queda VISIBLE y «Empezar ya» pasa a opcional.
     kicker = t('session.sideChange');
+    bigNumber = String(changeLeft); bigLabel = t('session.placeCountdown'); gateNumber = true;
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
-    primary = { label: t('session.sideReady'), onClick: onSideReady };
+    support = t('move.sideAutoHint');
+    primary = { label: t('session.beginNow'), onClick: onSideReady };
   } else if (step.mode === 'reps') {
-    bigNumber = String(repsTarget); bigLabel = t('move.repsTarget');
-    support = t('move.repsHint');
-    primary = { label: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.repsDone'), onClick: advanceStep };
+    // s113: reps guiadas — contador «n de N» con pulso de cadencia; avance
+    // auto al objetivo; «Terminar antes» siempre visible (enmienda R2).
+    const repSec = v1RepSeconds(step);
+    repPulseSec = repSec;
+    bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
+    bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
+    support = t('move.repsGuidedHint');
+    primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds');
@@ -240,18 +289,21 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     primary = isRest
       ? { label: t('session.skip'), onClick: advanceStep }
       : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
-          if (step.mode === 'perSide' && side === 0) { setPhase('change'); setElapsed(0); } else advanceStep();
+          if (step.mode === 'perSide' && side === 0) { enterChange(); } else advanceStep();
         } };
   }
 
-  const canPause = phase === 'work' && step.mode !== 'reps' && !isRest;
+  // s113: pausable todo lo que corre solo salvo el descanso (termina solo).
+  const canPause = (phase === 'work' && !isRest) || phase === 'change';
   const footer = (
     <React.Fragment>
-      <button onClick={() => { if (stepIdx > 0) startStep(stepIdx - 1); }} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
-        {t('move.prev')}
-      </button>
-      {phase === 'place' && !placeReady && (
-        <button onClick={addPlaceTime} style={sessionShellStyles.ctrlBtn}>
+      {phase !== 'change' && (
+        <button onClick={() => { if (stepIdx > 0) startStep(stepIdx - 1); }} disabled={stepIdx === 0} style={sessionShellStyles.ctrlBtn}>
+          {t('move.prev')}
+        </button>
+      )}
+      {((phase === 'place' && !placeReady) || phase === 'change') && (
+        <button onClick={phase === 'change' ? addChangeTime : addPlaceTime} style={sessionShellStyles.ctrlBtn}>
           {t('session.moreTime')}
         </button>
       )}
@@ -279,22 +331,26 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       footer={footer} hint={t('session.hint')}
     >
       <div style={{ textAlign: 'center', maxWidth: 620 }}>
-        {!isRest && <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />}
+        {!isRest && (
+          <div data-pace-v1-glyph>
+            <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />
+          </div>
+        )}
         {kicker && (
-          <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>
+          <div data-pace-v1-kicker style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>
             {kicker}
           </div>
         )}
-        <h1 style={{ ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' }}>
+        <h1 data-pace-v1-name style={{ ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' }}>
           {tStep(stepIdx, 'name')}
         </h1>
-        <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' }}>
+        <p data-pace-v1-cue style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' }}>
           {tStep(stepIdx, 'cue')}
         </p>
 
         {/* s112: el número del GATE no es el timer — más pequeño y en tinta
-            secundaria para que la colocación no se lea como ejercicio. */}
-        {bigNumber != null && phase === 'place' && (
+            secundaria. s113: la transición de lado usa el mismo trato. */}
+        {bigNumber != null && gateNumber && (
           <React.Fragment>
             <div style={{ ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 }}>
               {bigNumber}
@@ -302,9 +358,14 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
             <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>{bigLabel}</div>
           </React.Fragment>
         )}
-        {bigNumber != null && phase !== 'place' && (
+        {/* s113: en reps guiadas el número lleva el pulso de cadencia
+            (decorativo: reduced-motion lo congela y queda el contador). */}
+        {bigNumber != null && !gateNumber && (
           <React.Fragment>
-            <div data-pace-move-timer style={{ ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08 }}>
+            <div data-pace-move-timer style={{
+              ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
+              ...(repPulseSec ? { animation: `pace-rep-pulse ${repPulseSec}s ease-in-out infinite`, animationPlayState: paused ? 'paused' : 'running' } : {}),
+            }}>
               {bigNumber}
             </div>
             <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 }}>{bigLabel}</div>
@@ -314,18 +375,18 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         {/* s112: copy funcional VISIBLE (antes viajaba en el hint del shell,
             oculto en móvil): lado siguiente/inicial y matices del método. */}
         {supportStrong && (
-          <div style={{ ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 }}>
+          <div data-pace-v1-support-strong style={{ ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 }}>
             {supportStrong}
           </div>
         )}
         {support && (
-          <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 }}>
+          <div data-pace-v1-support style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 }}>
             {support}
           </div>
         )}
       </div>
 
-      <div style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
+      <div data-pace-v1-progress style={{ margin: '28px auto 0', width: '100%', maxWidth: 640 }}>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 10 }}>
           {routine.steps.map((s, i) => (
             <div key={i} style={{

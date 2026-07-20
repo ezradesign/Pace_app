@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.57.0</title>
+  <title>PACE · Foco · Cuerpo — v0.56.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1556,7 +1556,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.finish': 'Terminar',
   'move.hint': '← → navegar · Espacio pausar · Esc salir',
 
-  // Contrato de pasos v1 (s110 · B2.2 · método s111 · guiado s113)
+  // Contrato de pasos v1 (s110 · B2.2 · método s111)
   'session.place': 'Colócate',
   'session.beginStep': 'Empezar',
   'session.beginNow': 'Empezar ya',
@@ -1565,19 +1565,18 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.sideLeft': 'Izquierda',
   'session.sideRight': 'Derecha',
   'session.sideChange': 'Cambia de lado',
+  'session.sideReady': 'Listo',
   'session.sideNext': 'Ahora: {side}',
   'session.skip': 'Saltar',
   'session.restLabel': 'Descanso',
   'move.reps': 'reps',
+  'move.repsTarget': 'reps · a tu ritmo',
+  'move.repsDone': 'Terminé',
   'move.placeHint': 'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
+  'move.repsHint': 'Haz menos si lo necesitas · «Terminé» para seguir',
   'session.imReady': 'Estoy listo',
   'session.sideFirst': 'Empiezas por: {side}',
   'move.placeReadyHint': 'Sin prisa · el ejercicio espera a que estés en posición',
-  // Runner guiado (s113): reps con cadencia + transición auto de lado
-  'move.repsOf': 'de {n} reps',
-  'move.repsGuidedHint': 'Sigue el pulso · haz menos si hoy lo necesitas',
-  'move.finishEarly': 'Terminar antes',
-  'move.sideAutoHint': 'El lado siguiente empieza solo',
 
   // Hydrate
   'hydrate.tag': 'Hidratación',
@@ -1738,7 +1737,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.finish': 'Finish',
   'move.hint': '← → navigate · Space pause · Esc exit',
 
-  // Step contract v1 (s110 · B2.2 · method s111 · guided s113)
+  // Step contract v1 (s110 · B2.2 · method s111)
   'session.place': 'Get set',
   'session.beginStep': 'Begin',
   'session.beginNow': 'Begin now',
@@ -1747,19 +1746,18 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.sideLeft': 'Left',
   'session.sideRight': 'Right',
   'session.sideChange': 'Switch sides',
+  'session.sideReady': 'Ready',
   'session.sideNext': 'Now: {side}',
   'session.skip': 'Skip',
   'session.restLabel': 'Rest',
   'move.reps': 'reps',
+  'move.repsTarget': 'reps · your pace',
+  'move.repsDone': 'Done',
   'move.placeHint': 'Get set, no rush · starts on its own · "Begin now" to skip',
+  'move.repsHint': 'Do fewer if you need to · "Done" to continue',
   'session.imReady': 'I\'m ready',
   'session.sideFirst': 'Start with: {side}',
   'move.placeReadyHint': 'No rush · the exercise waits until you\'re in position',
-  // Guided runner (s113): cadenced reps + auto side transition
-  'move.repsOf': 'of {n} reps',
-  'move.repsGuidedHint': 'Follow the pulse · do fewer if you need to today',
-  'move.finishEarly': 'Finish early',
-  'move.sideAutoHint': 'The next side starts on its own',
 
   // Hydrate
   'hydrate.tag': 'Hydration',
@@ -3205,7 +3203,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.57.0';
+const PACE_VERSION = 'v0.56.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4991,10 +4989,7 @@ const sessionShellStyles = {
     gap: 32
   },
   footer: {
-    /* s113: wrap — en anchos estrechos los controles opcionales del runner
-       guiado (Más tiempo · Pausar · primaria) pasan a 2 filas en vez de
-       desbordar; el footer sigue siempre accesible (s112). */
-    display: 'flex', justifyContent: 'center', flexWrap: 'wrap'
+    display: 'flex', justifyContent: 'center'
   },
   ctrlBtn: {
     padding: '10px 22px',
@@ -5290,122 +5285,6 @@ if (!_paceSessionResponsive) {
       }
       [data-pace-session-hint] {
         display: none !important;
-      }
-    }
-
-    /* s113 — compactación por ALTURA (runner guiado, P1 del giro): el centro
-       scrollable de s112 queda como red de seguridad; en los viewports
-       objetivo (1280×600 · 1024×512 · 844×390 landscape) el contenido debe
-       CABER. Solo ≥641px de ancho: el bloque móvil de arriba sigue
-       gobernando el retrato estrecho (360×640 ya verificado en s112).
-       Orden de reducción: espacios → tipografía monumental (prep/done/timer,
-       decorativo-escalable) — NUNCA instrucciones ni controles. Los ajustes
-       específicos del runner v1 ([data-pace-v1-*]) viven en
-       MoveSessionV1.support.jsx. Tier 700 (no 720): a ≥701 px todo cabía ya
-       en s112 — las alturas estándar quedan idénticas. */
-    @media (min-width: 641px) and (max-height: 700px) {
-      [data-pace-session-root] {
-        padding: 18px 32px 20px !important;
-      }
-      [data-pace-session-prep-num] {
-        font-size: 140px !important;
-      }
-      [data-pace-session-prep-copy] {
-        margin-top: 24px !important;
-      }
-      [data-pace-session-done-hero] {
-        width: 88px !important;
-        height: 88px !important;
-        margin-bottom: 16px !important;
-      }
-      [data-pace-session-done-hero] svg {
-        width: 36px !important;
-        height: 36px !important;
-      }
-      [data-pace-session-done-title] {
-        font-size: 40px !important;
-        margin-bottom: 16px !important;
-      }
-      [data-pace-session-stats] {
-        margin-bottom: 20px !important;
-      }
-      [data-pace-session-done-copy] {
-        margin-bottom: 20px !important;
-      }
-      [data-pace-move-timer] {
-        font-size: 96px !important;
-      }
-    }
-    @media (min-width: 641px) and (max-height: 560px) {
-      [data-pace-session-root] {
-        padding: 12px 24px 14px !important;
-      }
-      [data-pace-session-title] {
-        font-size: 18px !important;
-      }
-      [data-pace-session-prep-num] {
-        font-size: 110px !important;
-      }
-      [data-pace-session-prep-copy] {
-        font-size: 16px !important;
-        margin-top: 16px !important;
-      }
-      [data-pace-session-done-hero] {
-        width: 68px !important;
-        height: 68px !important;
-        margin-bottom: 12px !important;
-      }
-      [data-pace-session-done-hero] svg {
-        width: 28px !important;
-        height: 28px !important;
-      }
-      [data-pace-session-done-title] {
-        font-size: 32px !important;
-        margin-bottom: 14px !important;
-      }
-      [data-pace-session-stat-num] {
-        font-size: 28px !important;
-      }
-      [data-pace-move-timer] {
-        font-size: 72px !important;
-      }
-      [data-pace-session-hint] {
-        display: none !important;
-      }
-    }
-    @media (min-width: 641px) and (max-height: 430px) {
-      [data-pace-session-root] {
-        padding: 10px 20px 12px !important;
-      }
-      [data-pace-session-prep-num] {
-        font-size: 84px !important;
-      }
-      [data-pace-session-prep-copy] {
-        font-size: 14px !important;
-        margin-top: 12px !important;
-      }
-      [data-pace-session-done-hero] {
-        width: 52px !important;
-        height: 52px !important;
-        margin-bottom: 10px !important;
-      }
-      [data-pace-session-done-hero] svg {
-        width: 22px !important;
-        height: 22px !important;
-      }
-      [data-pace-session-done-title] {
-        font-size: 24px !important;
-        margin-bottom: 12px !important;
-      }
-      [data-pace-session-done-copy] {
-        font-size: 13px !important;
-        margin-bottom: 14px !important;
-      }
-      [data-pace-session-stats] {
-        margin-bottom: 14px !important;
-      }
-      [data-pace-move-timer] {
-        font-size: 60px !important;
       }
     }
   `;
@@ -9794,25 +9673,19 @@ Object.assign(window, { BreatheSession });
      mode: 'timed' | 'reps' | 'perSide' | 'rest'
    Sin `mode` → el runner cae a legacy (comportamiento idéntico al de s109).
    `reps` = nº objetivo (o {min,target,max}); `dur` se conserva como estimación
-   de reserva (lo usa la barra de progreso y el fallback legacy).
-   s113 (runner guiado): los rest ENTRE SERIES de los pilotos pasan a 30 s y
-   estrenan `restKind: 'betweenSets'` — tipado mínimo, base del ajuste de
-   Tweaks de s114 (que NUNCA tocará los cierres respiratorios, sin restKind).
-   `repSeconds` (opcional) = segundos por rep guiada; sin él, 4 s (fuerza). */
+   de reserva (lo usa la barra de progreso y el fallback legacy). */
 
 var MOVE_ROUTINES = {
   empuje: {
     label: 'Empuje y tracción',
     aside: 'Pecho, brazos, espalda alta',
     items: [
-    /* s113: min 2→3 — con reps guiadas la ejecución real ronda 3:15-3:25
-       (la derivación formal de duración llega en B2.2b-1). */
-    { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 3,
+    { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
       steps: [
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40, cue: 'Codos cerca del cuerpo, baja con control.' },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, lentas. Para si la técnica se rompe.' }]
     },
     { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
@@ -9880,9 +9753,9 @@ var MOVE_ROUTINES = {
     { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
       steps: [
       { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40, cue: 'Baja hasta rozar la silla, sube sin impulso.' },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
       { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40, cue: 'Más lentas, control total.' },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+      { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
       { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, sin impulso.' }]
     },
     { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
@@ -10286,133 +10159,7 @@ Object.assign(window, { MoveLibrary, MoveSession, StepGlyph });
 </script>
   <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
        MoveModule — comparte StepGlyph; el dispatcher de MoveSession lo elige
-       para rutinas con `mode` (guard typeof: degrada a legacy si no evaluó).
-       s113: soporte sin UI (constantes del método + helpers de cadencia +
-       CSS del pulso y compactación por altura) ANTES de su consumidor. -->
-  <script>
-;(function () {
-/* PACE · Runner v1 — soporte sin UI (s113 · runner guiado)
-   =========================================================
-   Extraído de MoveSessionV1.jsx (patrón FocusTimer.support, regla <500 ln)
-   al crecer el runner con el motor guiado: constantes del método, helpers de
-   cadencia/progreso/tamaño y el CSS del pulso + compactación por ALTURA.
-   Carga ANTES de MoveSessionV1.jsx (su consumidor).
-
-   Principio rector del motor guiado (s113): «el usuario toca para empezar,
-   pausar o adaptar; NO para empujar la rutina hacia delante». */
-
-/* Constantes del método:
-     V1_PLACE_SECONDS   gate auto de colocación (s111/s112).
-     V1_REP_SECONDS     cadencia por defecto de reps de FUERZA (~4 s/rep:
-                        2 bajar + 2 subir, ref. ACE 2-8 s). Un paso puede
-                        declarar `repSeconds` propio (control postural con
-                        retención, p. ej. chin tucks 8 s); B2.2b-1 lo
-                        formaliza como `tempo`.
-     V1_CHANGE_SECONDS  transición AUTO de lado (enmienda R3, s113): señal
-                        suave → pantalla con el lado siguiente → empieza solo.
-                        Override por paso llega con los metadatos B2.2b-1. */
-const V1_PLACE_SECONDS = 5;
-const V1_REP_SECONDS = 4;
-const V1_CHANGE_SECONDS = 10;
-
-function v1RepSeconds(step) {
-  return typeof step.repSeconds === 'number' ? step.repSeconds : V1_REP_SECONDS;
-}
-function v1RepTarget(step) {
-  return (typeof step.reps === 'object' ? step.reps.target : step.reps) || 8;
-}
-
-/* Progreso 0..1 del step activo (barra segmentada). Reps guiadas (s113):
-   el progreso es tiempo guiado / tiempo objetivo — cadencia, no cuota. */
-function v1StepProgress(step, side, elapsed) {
-  if (step.mode === 'reps') {
-    const total = v1RepTarget(step) * v1RepSeconds(step);
-    return total ? Math.min(1, elapsed / total) : 0;
-  }
-  if (step.mode === 'perSide') return (side * step.dur + elapsed) / (2 * step.dur);
-  return step.dur ? elapsed / step.dur : 0;
-}
-/* Peso del step para la barra segmentada (estimación honesta por tipo). */
-function v1StepWeight(step) {
-  if (step.mode === 'reps') return v1RepTarget(step) * v1RepSeconds(step);
-  if (step.mode === 'perSide') return (step.dur || 20) * 2;
-  return step.dur || 20;
-}
-
-/* Tamaño del visual instructivo por ALTURA de viewport (s112). s113 añade el
-   tramo <720 px SIN el suelo de 150 y con pendiente menor (0.22): en poca
-   altura el glifo cede antes que las instrucciones o los controles
-   (medido: a 600 px, con 150 el paso de reps desbordaba 16 px; con 132 cabe). */
-function v1GlyphSize(vpH) {
-  if (vpH >= 720) return Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
-  return Math.max(72, Math.round(vpH * 0.22));
-}
-
-/* CSS del runner v1 (s113):
-   - pace-rep-pulse: pulso de cadencia de las reps guiadas (mitad «bajar» +
-     mitad «subir», ease-in-out; la duración real la fija el runner inline
-     con repSeconds). NO cuelga de data-pace-essential a propósito: el kill
-     global de prefers-reduced-motion (tokens.css) lo congela y queda el
-     contador sin animación — el fallback que pide el corte.
-   - Compactación por ALTURA, solo ≥641 px de ancho (el responsive móvil por
-     anchura de s27/SessionShell sigue gobernando el retrato estrecho, ya
-     verificado en 360×640). Orden de reducción: espacios → glifo →
-     decorativo; NUNCA instrucciones ni controles. El scroll del centro
-     (s112) queda solo como red de seguridad. Tiers: 720 (portátil bajo,
-     1280×600) · 560 (1024×512) · 430 (landscape móvil, 844×390 — el glifo
-     se oculta: espacios y glifo se agotan antes de tocar instrucciones). */
-const _paceMoveV1Css = document.getElementById('pace-move-v1-css');
-if (!_paceMoveV1Css) {
-  const s = document.createElement('style');
-  s.id = 'pace-move-v1-css';
-  s.textContent = `
-    @keyframes pace-rep-pulse {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(0.86); }
-      100% { transform: scale(1); }
-    }
-    @media (min-width: 641px) and (max-height: 700px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 12px !important; }
-      [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
-      [data-pace-v1-progress] { margin-top: 12px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 560px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 8px !important; }
-      [data-pace-v1-name] { font-size: 26px !important; }
-      [data-pace-v1-cue] { font-size: 14px !important; margin-bottom: 10px !important; }
-      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 10px !important; }
-      [data-pace-v1-support] { font-size: 12px !important; }
-      [data-pace-v1-progress] { margin-top: 10px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 430px) {
-      [data-pace-v1-glyph] { display: none !important; }
-      [data-pace-v1-name] { font-size: 22px !important; margin-bottom: 6px !important; }
-      [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 8px !important; }
-    }
-    /* Retrato estrecho con poca altura (360×640: el paso de reps desbordaba
-       18 px): SOLO espacios — la tipografía ya la gobierna el bloque móvil
-       por anchura de SessionShell/MoveModule (s27). */
-    @media (max-width: 640px) and (max-height: 700px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 12px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 8px !important; }
-      [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
-      [data-pace-v1-support-strong] { margin-top: 10px !important; }
-      [data-pace-v1-progress] { margin-top: 12px !important; }
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-Object.assign(window, {
-  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS,
-  v1RepSeconds, v1RepTarget, v1StepProgress, v1StepWeight, v1GlyphSize
-});
-;Object.assign(window, { v1RepSeconds, v1RepTarget, v1StepProgress, v1StepWeight, v1GlyphSize });
-})();
-</script>
+       para rutinas con `mode` (guard typeof: degrada a legacy si no evaluó). -->
   <script>
 ;(function () {
 /* PACE · Runner del contrato de pasos v1 (B2.2 · s110)
@@ -10421,34 +10168,47 @@ Object.assign(window, {
    (SessionShell/SessionPrep/SessionDone), glifo (StepGlyph) y acento por kind
    con el runner legacy; lo que cambia es la máquina de fases.
 
-   Resuelve los hallazgos R1-R5 de la auditoría B2.1, activados por `mode`.
-   s113 (runner guiado) aplica las ENMIENDAS de DECISIONES_PRODUCTO §B2 a
-   R2/R3 — principio rector: «el usuario toca para empezar, pausar o adaptar;
-   NO para empujar la rutina hacia delante»:
+   Resuelve los hallazgos R1-R5 de la auditoría B2.1, activados por `mode`:
      R1  placement gate POR PASO — el timer no arranca mientras se lee la
-         colocación. `setup:'ready'` (s112) sigue siendo el ÚNICO gate manual
-         (colocación compleja suelo/pared/material).
-     R2  (enmendado s113) `reps` = GUIADAS con cadencia (~4 s/rep de fuerza,
-         `repSeconds` por paso): pulso visual + tick suave + contador
-         «n de N», avance AUTO al objetivo. No es cuenta atrás competitiva:
-         «Terminar antes» siempre visible y solo se acreditan las reps
-         realmente guiadas (repsGuidedRef), nunca el objetivo.
-     R3  (enmendado s113) `perSide` = lado 1 → señal suave → transición AUTO
-         (10 s, con el lado siguiente visible) → lado 2 empieza solo.
-         «Empezar ya» / «Más tiempo» / «Pausar» quedan opcionales.
+         colocación (fase 'place' → «Empezar»). También absorbe el cambio de
+         posición (§6): recolocarse es tiempo del usuario, sin cronómetro.
+     R2  `reps` termina en «Terminé», nunca auto-avanza.
+     R3  `perSide` = lado 1 → aviso de cambio (gate manual «Listo») → lado 2,
+         cada lado con su propio contador.
      R4  la completion acredita minutos REALES (dispatchComplete), no
          `routine.min` declarado.
-     R5  `rest` es un tipo propio, apagado; termina solo, «Saltar» opcional.
+     R5  `rest` es un tipo propio, visualmente distinto del trabajo.
 
    Modos: 'timed' | 'reps' | 'perSide' | 'rest'. Un step sin `mode` no llega
    aquí (el dispatcher de MoveModule lo manda al runner legacy).
 
    Consume globales (StepGlyph, SessionShell*, complete*Session, playSound,
-   useT) por window/scope global — carga tras MoveModule. Las constantes del
-   método (V1_*_SECONDS) y los helpers de cadencia/progreso/tamaño viven en
-   MoveSessionV1.support.jsx (s113, patrón FocusTimer.support). */
+   useT) por window/scope global — carga tras MoveModule. */
 
 const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React;
+
+/* Cuenta-atrás de colocación (s111): segundos que fluyen solos antes de que
+   arranque el reloj del ejercicio. NO es el timer del ejercicio (R1) — solo da
+   aire a colocarse.
+   s112 — `step.setup` tiene dos formas:
+     · número        → segundos del gate automático (sustituye a los 5 default)
+     · 'ready'       → colocación compleja (suelo/pared/material): SIN cuenta,
+                       el paso espera «Estoy listo» y pasa directo a work
+                       (sin segunda cuenta — el botón ES la confirmación). */
+const V1_PLACE_SECONDS = 5;
+
+/* Segundos de un segmento activo (timed/rest = dur; perSide = dur por lado). */
+function v1StepProgress(step, side, elapsed) {
+  if (step.mode === 'reps') return 0; // reps no tiene barra de tiempo
+  if (step.mode === 'perSide') return (side * step.dur + elapsed) / (2 * step.dur);
+  return step.dur ? elapsed / step.dur : 0;
+}
+/* Peso del step para la barra segmentada (estimación honesta por tipo). */
+function v1StepWeight(step) {
+  if (step.mode === 'reps') return (typeof step.reps === 'object' ? step.reps.target : step.reps || 8) * 4;
+  if (step.mode === 'perSide') return (step.dur || 20) * 2;
+  return step.dur || 20;
+}
 
 function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _ref;
   const { t, tn, lang } = useT();
@@ -10462,18 +10222,14 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   routine;
 
   const [stage, setStage] = useStateV1('prep'); // 'prep' | 'run' | 'done'
-  const [prepCount, setPrepCount] = useStateV1(5); // s113: prep 5 s (antes 3)
+  const [prepCount, setPrepCount] = useStateV1(3);
   const [stepIdx, setStepIdx] = useStateV1(0);
   const [phase, setPhase] = useStateV1('place'); // 'place' | 'work' | 'change'
   const [side, setSide] = useStateV1(0); // 0 = 1er lado, 1 = 2º lado
   const [elapsed, setElapsed] = useStateV1(0);
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0); // cuenta-atrás de colocación
-  const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
   const sessionStart = useRefV1(Date.now());
-  // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
-  // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
-  const repsGuidedRef = useRefV1(0);
   const step = routine.steps[stepIdx];
 
   const dispatchComplete = () => {
@@ -10504,19 +10260,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
   const addPlaceTime = () => setPlaceLeft((c) => c + 5); // «Más tiempo» en colocación
-  const addChangeTime = () => setChangeLeft((c) => c + 5); // «Más tiempo» en transición
   const onSideReady = () => {setSide(1);setPhase('work');setElapsed(0);};
-  // Entrada a la transición de lado (s113, enmienda R3): señal suave de la
-  // familia actual + cuenta que fluye sola (efecto abajo).
-  const enterChange = () => {
-    setPhase('change');setElapsed(0);setChangeLeft(V1_CHANGE_SECONDS);
-    try {playSound('move.step');} catch (e) {}
-  };
-  // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
-  const finishRepsEarly = () => {
-    repsGuidedRef.current += Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    advanceStep();
-  };
 
   // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).
   useEffectV1(() => {
@@ -10526,69 +10270,38 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     return () => clearTimeout(to);
   }, [stage, prepCount, paused]);
 
-  // Relojes por fase — patrón s113: los intervalos SOLO decrementan/incrementan
-  // su contador; los umbrales y side-effects (sonidos, avance, completion)
-  // viven en efectos aparte. Un updater de setState corre DURANTE el render:
-  // disparar ahí la completion (estado global → Sidebar) provocaba el warning
-  // «Cannot update a component while rendering» (pre-existía desde s110; el
-  // motor guiado lo hacía constante al auto-avanzar).
-
-  // Colocación AUTO (s111): aire para colocarse, no es el timer (R1).
-  // «Empezar ya» salta; «Más tiempo» suma 5 s. En 'ready' NO corre (s112).
+  // Colocación AUTO: cuenta-atrás que fluye sola en fase 'place' (s111). No es
+  // el timer del ejercicio (R1) — solo aire para colocarse antes de que arranque
+  // el reloj. Al llegar a 0 → beginWork() automático. «Empezar ya» salta;
+  // «Más tiempo» suma 5 s. Sin tap obligatorio.
+  // s112: en 'ready' NO corre cuenta — el paso espera «Estoy listo».
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
     if (step && step.setup === 'ready') return;
-    const intv = setInterval(() => setPlaceLeft((c) => Math.max(0, c - 1)), 1000);
+    const intv = setInterval(() => {
+      setPlaceLeft((c) => {if (c <= 1) {beginWork();return 0;}return c - 1;});
+    }, 1000);
     return () => clearInterval(intv);
   }, [stage, phase, stepIdx]);
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
-    if (step && step.setup === 'ready') return;
-    beginWork();
-  }, [placeLeft]);
 
-  // Ticker de trabajo (fase 'work', pausable). s113: las reps GUIADAS también
-  // corren — el tiempo marca la cadencia (enmienda R2).
+  // Ticker: solo corre en fase 'work' de un segmento cronometrado
+  // (timed/perSide/rest). 'reps' no corre (R2); 'place'/'change' tampoco (R1/R3).
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'work' || paused) return;
-    const intv = setInterval(() => setElapsed((e) => e + 1), 1000);
+    if (step.mode === 'reps') return;
+    const segDur = step.dur;
+    const intv = setInterval(() => {
+      setElapsed((e) => {
+        if (e + 1 >= segDur) {
+          if (step.mode === 'perSide' && side === 0) {setPhase('change');return 0;}
+          advanceStep();
+          return 0;
+        }
+        return e + 1;
+      });
+    }, 1000);
     return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx, side]);
-  // Umbrales del trabajo: tick suave por rep + avance AUTO al objetivo (reps,
-  // acreditando solo las guiadas reales) · fin de segmento → cambio de lado
-  // (perSide lado 0) o siguiente paso. Deps [elapsed]: exactamente una
-  // evaluación por segundo de trabajo; las transiciones resetean elapsed a 0
-  // (guardado) así que no re-disparan.
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
-    if (step.mode === 'reps') {
-      const repSec = v1RepSeconds(step);
-      if (elapsed >= v1RepTarget(step) * repSec) {
-        repsGuidedRef.current += v1RepTarget(step);
-        advanceStep();
-      } else if (elapsed % repSec === 0) {
-        try {playSound('tick');} catch (e) {}
-      }
-      return;
-    }
-    if (elapsed >= step.dur) {
-      if (step.mode === 'perSide' && side === 0) enterChange();else
-      advanceStep();
-    }
-  }, [elapsed]);
-
-  // Transición AUTO de lado (s113, enmienda R3): cuenta que fluye sola con el
-  // lado siguiente visible. Al llegar a 0 → el lado 2 empieza solo.
-  // «Empezar ya» salta, «Más tiempo» +5 s, «Pausar» disponible — opcionales.
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'change' || paused) return;
-    const intv = setInterval(() => setChangeLeft((c) => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(intv);
-  }, [stage, phase, paused, stepIdx]);
-  useEffectV1(() => {
-    if (stage !== 'run' || phase !== 'change' || changeLeft > 0) return;
-    onSideReady();
-  }, [changeLeft]);
+  }, [stage, phase, paused, stepIdx, side, step]);
 
   // Sonidos
   useEffectV1(() => {if (stage === 'run') {try {playSound('move.start');} catch (e) {}}
@@ -10604,14 +10317,10 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   }, []);
   useEffectV1(() => {if (stage === 'run') {try {playSound('move.step');} catch (e) {}}}, [stepIdx]);
 
-  // Atajos. s113: Espacio pausa también reps guiadas y la transición de lado
-  // (el descanso sigue sin pausa: termina solo, «Saltar» opcional).
+  // Atajos
   useEffectV1(() => {
     const onKey = (e) => {
-      if (e.key === ' ') {
-        e.preventDefault();
-        if (phase === 'work' && step && step.mode !== 'rest' || phase === 'change') setPaused((p) => !p);
-      }
+      if (e.key === ' ') {e.preventDefault();if (step && step.mode !== 'reps' && phase === 'work') setPaused((p) => !p);}
       if (e.key === 'Escape') onExit('exit');
       if (e.key === 'Enter' && stage === 'done') onExit('done');
     };
@@ -10661,42 +10370,31 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const stepAccent = isRest ? 'var(--ink-3)' : accent; // R5: descanso apagado
   const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
   const remaining = Math.max(0, (step.dur || 0) - elapsed);
+  const repsTarget = typeof step.reps === 'object' ? step.reps.target : step.reps;
   const placeReady = step.setup === 'ready';
 
-  // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
-  // insignia; en poca altura cede antes que instrucciones/controles (s113).
-  // El default 72 del legacy no cambia.
+  // Visual instructivo: escala por ALTURA de viewport (~150-240px) — el glifo
+  // deja de ser insignia; el default 72 del legacy no cambia.
   const vpH = typeof window !== 'undefined' && window.innerHeight || 800;
-  const glyphSize = v1GlyphSize(vpH);
+  const glyphSize = Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
 
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
-  let gateNumber = false; // place/change: número pequeño, no es el timer
-  let repPulseSec = 0; // reps guiadas: duración del pulso de cadencia
   if (phase === 'place') {
     kicker = t('session.place');
-    if (!placeReady) {bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');gateNumber = true;}
+    if (!placeReady) {bigNumber = String(placeLeft);bigLabel = t('session.placeCountdown');}
     if (step.mode === 'perSide') supportStrong = tn('session.sideFirst', { side: t('session.sideLeft') });
     support = placeReady ? t('move.placeReadyHint') : t('move.placeHint');
     primary = placeReady ?
     { label: t('session.imReady'), onClick: beginWork } :
     { label: t('session.beginNow'), onClick: beginWork };
   } else if (phase === 'change') {
-    // s113: la transición fluye sola — el número es de recolocación (gate),
-    // el lado siguiente queda VISIBLE y «Empezar ya» pasa a opcional.
     kicker = t('session.sideChange');
-    bigNumber = String(changeLeft);bigLabel = t('session.placeCountdown');gateNumber = true;
     supportStrong = tn('session.sideNext', { side: t('session.sideRight') });
-    support = t('move.sideAutoHint');
-    primary = { label: t('session.beginNow'), onClick: onSideReady };
+    primary = { label: t('session.sideReady'), onClick: onSideReady };
   } else if (step.mode === 'reps') {
-    // s113: reps guiadas — contador «n de N» con pulso de cadencia; avance
-    // auto al objetivo; «Terminar antes» siempre visible (enmienda R2).
-    const repSec = v1RepSeconds(step);
-    repPulseSec = repSec;
-    bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
-    bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    support = t('move.repsGuidedHint');
-    primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
+    bigNumber = String(repsTarget);bigLabel = t('move.repsTarget');
+    support = t('move.repsHint');
+    primary = { label: stepIdx + 1 >= routine.steps.length ? t('move.finish') : t('move.repsDone'), onClick: advanceStep };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');
@@ -10706,21 +10404,18 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     primary = isRest ?
     { label: t('session.skip'), onClick: advanceStep } :
     { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
-        if (step.mode === 'perSide' && side === 0) {enterChange();} else advanceStep();
+        if (step.mode === 'perSide' && side === 0) {setPhase('change');setElapsed(0);} else advanceStep();
       } };
   }
 
-  // s113: pausable todo lo que corre solo salvo el descanso (termina solo).
-  const canPause = phase === 'work' && !isRest || phase === 'change';
+  const canPause = phase === 'work' && step.mode !== 'reps' && !isRest;
   const footer = /*#__PURE__*/
-  React.createElement(React.Fragment, null,
-  phase !== 'change' && /*#__PURE__*/
+  React.createElement(React.Fragment, null, /*#__PURE__*/
   React.createElement("button", { onClick: () => {if (stepIdx > 0) startStep(stepIdx - 1);}, disabled: stepIdx === 0, style: sessionShellStyles.ctrlBtn },
   t('move.prev')
   ),
-
-  (phase === 'place' && !placeReady || phase === 'change') && /*#__PURE__*/
-  React.createElement("button", { onClick: phase === 'change' ? addChangeTime : addPlaceTime, style: sessionShellStyles.ctrlBtn },
+  phase === 'place' && !placeReady && /*#__PURE__*/
+  React.createElement("button", { onClick: addPlaceTime, style: sessionShellStyles.ctrlBtn },
   t('session.moreTime')
   ),
 
@@ -10748,26 +10443,22 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
       footer: footer, hint: t('session.hint') }, /*#__PURE__*/
 
     React.createElement("div", { style: { textAlign: 'center', maxWidth: 620 } },
-    !isRest && /*#__PURE__*/
-    React.createElement("div", { "data-pace-v1-glyph": true }, /*#__PURE__*/
-    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize })
-    ),
-
+    !isRest && /*#__PURE__*/React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize }),
     kicker && /*#__PURE__*/
-    React.createElement("div", { "data-pace-v1-kicker": true, style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 } },
+    React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 } },
     kicker
     ), /*#__PURE__*/
 
-    React.createElement("h1", { "data-pace-v1-name": true, style: { ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' } },
+    React.createElement("h1", { style: { ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' } },
     tStep(stepIdx, 'name')
     ), /*#__PURE__*/
-    React.createElement("p", { "data-pace-v1-cue": true, style: { fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' } },
+    React.createElement("p", { style: { fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' } },
     tStep(stepIdx, 'cue')
     ),
 
 
 
-    bigNumber != null && gateNumber && /*#__PURE__*/
+    bigNumber != null && phase === 'place' && /*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
     React.createElement("div", { style: { ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 } },
     bigNumber
@@ -10775,14 +10466,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 } }, bigLabel)
     ),
 
-
-
-    bigNumber != null && !gateNumber && /*#__PURE__*/
+    bigNumber != null && phase !== 'place' && /*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { "data-pace-move-timer": true, style: {
-        ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
-        ...(repPulseSec ? { animation: `pace-rep-pulse ${repPulseSec}s ease-in-out infinite`, animationPlayState: paused ? 'paused' : 'running' } : {})
-      } },
+    React.createElement("div", { "data-pace-move-timer": true, style: { ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08 } },
     bigNumber
     ), /*#__PURE__*/
     React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 } }, bigLabel)
@@ -10792,18 +10478,18 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
     supportStrong && /*#__PURE__*/
-    React.createElement("div", { "data-pace-v1-support-strong": true, style: { ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 } },
+    React.createElement("div", { style: { ...displayItalic, fontSize: 21, color: stepAccent, marginTop: 16 } },
     supportStrong
     ),
 
     support && /*#__PURE__*/
-    React.createElement("div", { "data-pace-v1-support": true, style: { fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 } },
+    React.createElement("div", { style: { fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 } },
     support
     )
 
     ), /*#__PURE__*/
 
-    React.createElement("div", { "data-pace-v1-progress": true, style: { margin: '28px auto 0', width: '100%', maxWidth: 640 } }, /*#__PURE__*/
+    React.createElement("div", { style: { margin: '28px auto 0', width: '100%', maxWidth: 640 } }, /*#__PURE__*/
     React.createElement("div", { style: { display: 'flex', gap: 4, alignItems: 'center', height: 10 } },
     routine.steps.map((s, i) => /*#__PURE__*/
     React.createElement("div", { key: i, style: {
@@ -10827,7 +10513,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 }
 
 Object.assign(window, { MoveSessionV1 });
-;Object.assign(window, { MoveSessionV1 });
+;Object.assign(window, { v1StepProgress, v1StepWeight, MoveSessionV1 });
 })();
 </script>
   <script>
@@ -10861,16 +10547,12 @@ const EXTRA_ROUTINES = {
       { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
       { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
       { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, cue: 'Oreja al hombro, suave.' },
-      /* CIERRE respiratorio — sin restKind a propósito (s113): NO es un
-         descanso entre series y el ajuste de Tweaks (s114) no lo toca. */
       { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
     },
     { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
       desc: 'Micro-pausa para cervicales tensas.', min: 3,
       steps: [
-      /* s113: repSeconds 8 — control postural con retención (desliza +
-         mantén 3-5 s + relaja), no cadencia de fuerza (4 s default). */
-      { name: 'Chin tucks', mode: 'reps', reps: 5, repSeconds: 8, dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga. Mantén 3-5 s y relaja.' },
+      { name: 'Chin tucks', mode: 'reps', reps: 5, dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga. Mantén 3-5 s y relaja.' },
       { name: 'Inclinación lateral', mode: 'perSide', dur: 25, cue: 'Oreja al hombro, suave.' },
       { name: 'Rotación lenta', mode: 'perSide', dur: 25, cue: 'Mira sobre el hombro, sin forzar.' },
       { name: 'Escalenos', mode: 'perSide', dur: 20, cue: 'Mano bajo el glúteo, inclina la cabeza al lado opuesto.' }]

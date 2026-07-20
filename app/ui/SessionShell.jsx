@@ -68,7 +68,10 @@ const sessionShellStyles = {
     gap: 32,
   },
   footer: {
-    display: 'flex', justifyContent: 'center',
+    /* s113: wrap — en anchos estrechos los controles opcionales del runner
+       guiado (Más tiempo · Pausar · primaria) pasan a 2 filas en vez de
+       desbordar; el footer sigue siempre accesible (s112). */
+    display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
   },
   ctrlBtn: {
     padding: '10px 22px',
@@ -364,6 +367,122 @@ if (!_paceSessionResponsive) {
       }
       [data-pace-session-hint] {
         display: none !important;
+      }
+    }
+
+    /* s113 — compactación por ALTURA (runner guiado, P1 del giro): el centro
+       scrollable de s112 queda como red de seguridad; en los viewports
+       objetivo (1280×600 · 1024×512 · 844×390 landscape) el contenido debe
+       CABER. Solo ≥641px de ancho: el bloque móvil de arriba sigue
+       gobernando el retrato estrecho (360×640 ya verificado en s112).
+       Orden de reducción: espacios → tipografía monumental (prep/done/timer,
+       decorativo-escalable) — NUNCA instrucciones ni controles. Los ajustes
+       específicos del runner v1 ([data-pace-v1-*]) viven en
+       MoveSessionV1.support.jsx. Tier 700 (no 720): a ≥701 px todo cabía ya
+       en s112 — las alturas estándar quedan idénticas. */
+    @media (min-width: 641px) and (max-height: 700px) {
+      [data-pace-session-root] {
+        padding: 18px 32px 20px !important;
+      }
+      [data-pace-session-prep-num] {
+        font-size: 140px !important;
+      }
+      [data-pace-session-prep-copy] {
+        margin-top: 24px !important;
+      }
+      [data-pace-session-done-hero] {
+        width: 88px !important;
+        height: 88px !important;
+        margin-bottom: 16px !important;
+      }
+      [data-pace-session-done-hero] svg {
+        width: 36px !important;
+        height: 36px !important;
+      }
+      [data-pace-session-done-title] {
+        font-size: 40px !important;
+        margin-bottom: 16px !important;
+      }
+      [data-pace-session-stats] {
+        margin-bottom: 20px !important;
+      }
+      [data-pace-session-done-copy] {
+        margin-bottom: 20px !important;
+      }
+      [data-pace-move-timer] {
+        font-size: 96px !important;
+      }
+    }
+    @media (min-width: 641px) and (max-height: 560px) {
+      [data-pace-session-root] {
+        padding: 12px 24px 14px !important;
+      }
+      [data-pace-session-title] {
+        font-size: 18px !important;
+      }
+      [data-pace-session-prep-num] {
+        font-size: 110px !important;
+      }
+      [data-pace-session-prep-copy] {
+        font-size: 16px !important;
+        margin-top: 16px !important;
+      }
+      [data-pace-session-done-hero] {
+        width: 68px !important;
+        height: 68px !important;
+        margin-bottom: 12px !important;
+      }
+      [data-pace-session-done-hero] svg {
+        width: 28px !important;
+        height: 28px !important;
+      }
+      [data-pace-session-done-title] {
+        font-size: 32px !important;
+        margin-bottom: 14px !important;
+      }
+      [data-pace-session-stat-num] {
+        font-size: 28px !important;
+      }
+      [data-pace-move-timer] {
+        font-size: 72px !important;
+      }
+      [data-pace-session-hint] {
+        display: none !important;
+      }
+    }
+    @media (min-width: 641px) and (max-height: 430px) {
+      [data-pace-session-root] {
+        padding: 10px 20px 12px !important;
+      }
+      [data-pace-session-prep-num] {
+        font-size: 84px !important;
+      }
+      [data-pace-session-prep-copy] {
+        font-size: 14px !important;
+        margin-top: 12px !important;
+      }
+      [data-pace-session-done-hero] {
+        width: 52px !important;
+        height: 52px !important;
+        margin-bottom: 10px !important;
+      }
+      [data-pace-session-done-hero] svg {
+        width: 22px !important;
+        height: 22px !important;
+      }
+      [data-pace-session-done-title] {
+        font-size: 24px !important;
+        margin-bottom: 12px !important;
+      }
+      [data-pace-session-done-copy] {
+        font-size: 13px !important;
+        margin-bottom: 14px !important;
+      }
+      [data-pace-session-stats] {
+        margin-bottom: 14px !important;
+      }
+      [data-pace-move-timer] {
+        font-size: 60px !important;
       }
     }
   `;
