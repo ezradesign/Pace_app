@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.56.0 (s112 — B2.2a.5, auditoría UX del runner + corte de afinado)
-**Ultima sesion:** #112 -- 2026-07-18 - **B2.2a.5: auditoría UX del runner + corte de afinado** (B2.2b EN PAUSA, commit `22c5fd4`; gobernada por `docs/product/CONTEXTO_UX_RUNNER_WELCOME.md`). Formato: **auditoría runtime con entregable ANTES de codigo** (5 viewports, evidencia medida por DOM; 3×P1: primaria recortada sin scroll en alturas <~630px · copy funcional del método OCULTO en móvil por el `display:none` del hint ≤640px · cambio de lado sin lado destino) → 3 decisiones agrupadas (AskUserQuestion): setup **`none|auto|ready`** · dirección visual **B equilibrada** · alcance **runner + micro-fix Welcome** → implementación. **Corte**: `setup:'ready'|número` por paso (`ready` = «Colócate» SIN cuenta + única primaria «Estoy listo» → directo a work, cualquier mode incluso paso 0) · jerarquía B (kicker único, copy funcional VISIBLE con «Empiezas por: {lado}»/«Ahora: Derecha», gate 56px `--ink-2`, glifo escalado ~150-240px por altura vía prop `size`, UNA primaria RELLENA, h1 clamp) · SessionShell con centro scrollable + wrapper `center-body` (**footer siempre accesible en poca altura**, beneficia a los 4 tipos de sesión + legacy) · toasts aplazados en sesiones sueltas (`setCaminoUiActive`, guard `!inPath`) · `ready` en Flexor/WGS de chair.antidote + **5º piloto `move.couch.stretch`** (perSide+ready; cues sin «30s por lado», EN espejado, sin reindexar sN) · 3 keys i18n · Welcome micro-fix (~36px; la pregunta 1 cabe en 360×640). Welcome auditada: CUMPLE el contrato. Verificado dev (5 pilotos + legacy + Respira + 1280×600) + standalone. Diario: `docs/sessions/session-112-b2-2a5-afinado-ux-runner.md`. Historico previo: [`s111`](./CHANGELOG.md#v0550----2026-07-17----fixmove-b2--método-del-runner-v1-gate-que-fluye--reps-a-gusto).
-**Ultima actualizacion de este archivo:** 2026-07-18 - sesion 112
-**Build entregado:** `PACE_standalone.html` v0.56.0 (3105 KB, 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.57.0 (s113 — runner guiado · motor)
+**Ultima sesion:** #113 -- 2026-07-20 - **Runner guiado · motor** (GIRO post-s112, 1ª de 2: s113 motor · s114 capa editorial; aplica las ENMIENDAS R2/R3/BASE §3-A ya registradas — no se reabrieron). Principio rector: **«el usuario toca para empezar, pausar o adaptar; NO para empujar la rutina hacia delante»**. Decisiones (AskUserQuestion): guiado **sustituye** al libre · pulso **+ tick suave** (familia actual) · transición **10 s**. **Corte**: reps GUIADAS con cadencia (4 s/rep fuerza · `repSeconds` por paso — chin tucks 8 s; pulso `pace-rep-pulse` + tick + «n de N reps»; avance AUTO; «Terminar antes» + pausa; `repsGuidedRef` acredita solo lo guiado) · transición AUTO de lado (señal → cuenta 10 s gate + «Ahora: Derecha» → lado 2 solo; Empezar ya/Más tiempo/Pausar opcionales) · prep 5 s (legacy 3) · rest entre series 30 s + `restKind:'betweenSets'` (cierre de chair.antidote SIN tipar) · layout compacto por ALTURA (tiers 700/560/430 shell + `data-pace-v1-*`; glifo cede y se oculta ≤430; sin scrollbar en 1280×600·1024×512·844×390·360×640) · min desk.pushups 2→3 · fix side-effects fuera de updaters (warning React pre-s110) · split `MoveSessionV1.support.jsx`. Verificado dev+standalone: desk.pushups COMPLETO sin tocar la pantalla · cambios de lado automáticos (neck.3/couch.stretch, pausados y reanudados en vivo) · ready intacto · legacy idéntico · reduced-motion · silencio. Diario: `docs/sessions/session-113-runner-guiado-motor.md`. Historico previo: [`s112`](./CHANGELOG.md#v0560----2026-07-18----featfixux-b22a5--auditoría-ux-del-runner--corte-de-afinado).
+**Ultima actualizacion de este archivo:** 2026-07-20 - sesion 113
+**Build entregado:** `PACE_standalone.html` v0.57.0 (3119 KB, 83 scripts + 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.56.0** (s112: solo bump titulo. s110: + 3 tags -- `exercise-aliases.js` (antes de glifos), `move.data.js` (antes de MoveModule), `MoveSessionV1.jsx` (tras MoveModule). s106: onboarding; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.56.0** (3105 KB, 82 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.56.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.57.0** (s113: + tag `MoveSessionV1.support.jsx` ANTES de MoveSessionV1. s110: + 3 tags -- `exercise-aliases.js`, `move.data.js`, `MoveSessionV1.jsx`. s106: onboarding; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.57.0** (3119 KB, 83 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.57.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102) |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **v0.56.0** (s112 micro-fix: column paddingBottom 30→16 + options gap 10→8 — la pregunta 1 desbordaba ~35px en 360×640, ahora cabe (584/584). s106: nuevo, 391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado) |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **v0.56.0** (s112 micro-fix: padding de OnbChoice 13/18→11/16, pareja del ajuste de Onboarding.jsx. s106: nuevo, 208 ln; laminas via `getPathIllustration`) |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
@@ -47,7 +47,7 @@
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standalone |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.35.0** (s90: `ambientDrone.start(force)` + flag interno `forced` -- bypasa ambientOn para Coherente 432, soundOn manda siempre; primera modificacion desde v0.21.0, ~10 ln) |
-| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.56.0** (s112: `center` con `minHeight:0 + overflowY:auto` + wrapper `data-pace-session-center-body` (margin auto) → el footer con la accion primaria SIEMPRE accesible en poca altura; el hint sigue `display:none` ≤640px A PROPOSITO — desde s112 el hint es SOLO atajos de teclado, el copy funcional vive en el contenido de cada sesion. s100: atmosfera dither; s99: prop `atmosphere`; s17 base) |
+| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.57.0** (s113: **compactacion por ALTURA** — tiers `min-width:641px` + `max-height:700/560/430` (padding, prep-num 140/110/84, done compacto, `data-pace-move-timer` 96/72/60, hint oculto ≤560; tier a 700 y no 720: ≥701 ya cabia en s112) + footer `flexWrap:'wrap'`; **493 ln, ROZA el tope** — proximo cambio extrae el CSS. s112: centro scrollable + wrapper `center-body` (footer siempre accesible); hint `display:none` ≤640px A PROPOSITO (solo atajos). s100: atmosfera dither; s99: `atmosphere`; s17 base) |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** (s99: card del Modal entra con `pace-modal-in` scale+fade; s87: + `PremiumSeal`; s88: consumido por TweaksPanel) |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.52.0** (s107: + `secret.bilingual` -- ref del idioma anterior, cualquier cambio de `state.lang` tras montar desbloquea; primera modificacion desde s41) |
 | `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + notificacion + reset + legal; orquesta TweaksDataSection y PremiumSection) | **v0.47.0** (s102: + bloque "Aviso de fin de Foco" tras Audio (permiso al activar, hint blocked con re-render forzado) + enlaces Seguridad·Privacidad tras Reset (gate `isWeb` compartido), 430 ln. s89: split 519->351 + stepper agua) |
@@ -57,10 +57,11 @@
 | `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por los 3 modulos) | **v0.53.0** (s108/B1.2: Bhastrika (PRA) mudada de Energia → Pranayama + `rounds.express` a FREE (conserva safety) -- BREATH_ROUTINE_CATEGORIES/explore.bhastrika intactos, van por id. s107: **claims orientativos** en 4 descs + aside Balance (fuera ansiedad/hemisferios/HRV/corazon/trance) + `secret.safety.read` al marcar "lo he leido" en BreatheSafety. s95: guard central; s90: F4 20 tecnicas) |
 | `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.52.0** (s107: **hold = guia calmada** -- fuera ticker de retencion + logros hold + cifra-record 160 px; pulso `pace-hold-pulse` + cue + salida visible (decision apnea B1); pasa `phaseDuration` a BreathVisual. s98: reloj de tiempo activo timestamp-based (el hold sigue sumando via activeMsRef). s97: barra segmentada) |
 | `app/move/MoveModule.jsx` | MoveLibrary + **MoveSession dispatcher** (legacy vs v1) + StepGlyph. MoveSessionLegacy la comparten Mueve/Estira/custom sin `mode` | **v0.56.0** (s112: `StepGlyph` gana prop `size` (default 72, SVG = size×44/72 → legacy byte-igual; el v1 lo escala). s110/B2.2: split move.data.js + dispatcher + R4 minutos reales. s108: editorial. s107: acento por `kind`) |
-| `app/move/move.data.js` | `MOVE_ROUTINES` (14 rutinas) + `getMoveRoutine` — extraido de MoveModule | **NUEVO s110** (156 ln; `var` global re-expuesto por el build → MoveModule lo referencia bare; los 2 pilotos de Mueve (`desk.pushups`/`chair.squats`) ya con `mode: reps\|rest`) |
-| `app/move/MoveSessionV1.jsx` | Runner del **contrato de pasos v1** por MODO (place\|work\|change + side) | **v0.56.0** (s112/B2.2a.5: **`setup:'ready'\|número`** por paso — `ready` = place SIN cuenta + única primaria «Estoy listo» → `beginWork` directo (cualquier mode, incluso paso 0); número = segundos del gate auto · **jerarquía B**: kicker único (solo Colócate/lado/cambio; rest sin kicker — el header lleva PASO X DE N), copy funcional VISIBLE (`support`/`supportStrong`: repsHint/placeHint + «Empiezas por: {lado}»/«Ahora: Derecha»), gate a 56px `--ink-2`, glifo escalado por altura (~150-240px), primaria RELLENA del acento, h1 clamp, hint del shell = SOLO `session.hint` · toasts aplazados (`setCaminoUiActive` con guard `!inPath`). s111: countdown auto + reps a gusto. s110: nuevo; modos R1-R5) |
+| `app/move/move.data.js` | `MOVE_ROUTINES` (14 rutinas) + `getMoveRoutine` — extraido de MoveModule | **v0.57.0** (s113: rests de `desk.pushups`/`chair.squats` 20→**30 s** + **`restKind:'betweenSets'`** (base del ajuste Tweaks s114) + `min` desk.pushups 2→3; 162 ln. s110: nuevo, `var` global re-expuesto por el build; pilotos con `mode`) |
+| `app/move/MoveSessionV1.jsx` | Runner del **contrato de pasos v1** por MODO (place\|work\|change + side) | **v0.57.0** (s113/GUIADO — enmiendas R2/R3: **reps guiadas** (cadencia `repSeconds\|4s`, pulso + tick por rep, «n de N reps», avance AUTO, «Terminar antes», pausa, `repsGuidedRef` = solo reps guiadas → pantalla final s114) · **transición AUTO de lado** (`enterChange`: señal + 10 s en estilo gate + «Ahora: Derecha»; Empezar ya/Más tiempo/Pausar opcionales, sin Anterior) · prep 5 s · **PATRÓN relojes**: los intervalos SOLO mueven contadores, umbrales/side-effects en efectos (deps `[elapsed]/[placeLeft]/[changeLeft]`) — fix warning «Cannot update while rendering» (pre-s110) · ganchos `data-pace-v1-*`; 412 ln. s112: setup ready + jerarquía B. s111: countdown auto. s110: nuevo; R1-R5) |
+| `app/move/MoveSessionV1.support.jsx` | Soporte sin UI del runner v1: `V1_PLACE/REP/CHANGE_SECONDS` + `v1RepSeconds/v1RepTarget/v1StepProgress/v1StepWeight/v1GlyphSize` + CSS `pace-move-v1-css` (keyframes del pulso + tiers de altura v1 + tier de espacios en retrato estrecho) | **NUEVO s113** (119 ln, patrón FocusTimer.support; carga ANTES de MoveSessionV1; expone por `Object.assign(window)`. El pulso NO cuelga de `data-pace-essential` a propósito — reduced-motion lo congela y queda el contador) |
 | `app/custom/exercise-aliases.js` | `VISUAL_ALIAS` + `resolveVisualId` — identidad visual compartida (visualId) | **NUEVO s110** (unifica 4 duplicados de glifo sin tocar `step.name`/localStorage; carga ANTES de exercise-glyphs, que resuelve `EXERCISE_GLYPHS[vid]\|\|[id]`. Rib pull NO unificado (caso reescribir)) |
-| `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.56.0** (s112: `setup:'ready'` en Flexor de cadera + WGS de `chair.antidote` (suelo) + **5º piloto `move.couch.stretch`** con contrato completo (Flexor perSide 25 ready · Couch perSide 30 ready · 90/90 timed · Pigeon perSide 30 · Puente timed; cues sin «30s por lado» — solo campos añadidos, sN sin reindexar). s110: pilotos neck.3/chair.antidote + Nordics→Puente isquio. s108: editorial. s91: F5 7→14) |
+| `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.57.0** (s113: `repSeconds: 8` en Chin tucks de `neck.3` (control postural con retención ≠ cadencia de fuerza; 5×8 = 40 s = su dur) + comentario-guard en «Reset respiración» de `chair.antidote` (CIERRE, sin `restKind` — el ajuste Tweaks s114 no lo toca); 213 ln. s112: ready en Flexor/WGS + 5º piloto couch.stretch. s110: pilotos. s108: editorial. s91: F5 7→14) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** (s107: contador de logros dinamico `ACHIEVEMENT_CATALOG.length` (antes /100 hardcodeado s12) + **sendero ABSTRACTO** (hitos equidistantes orden fijo, sin horas inventadas); s101: WeekDots criterio s69; ~540 ln, sigue en deuda) |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.53.0** (s108: +3 ln, llamada a `maybeRequestNotifyPermission` en el arranque real (el helper vive en support). s102: notificacion en onComplete rama foco + 2 efectos de persistencia, 496 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
@@ -76,7 +77,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.52.0** (s107: + **`parseLocalDateKey()`** -- parse LOCAL de claves "YYYY-MM-DD" (new Date(iso) es UTC y rompe rachas en husos negativos); regla #10 CLAUDE.md. s101: extraido de state-core, ~170 ln) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.56.0** (s112/s111/s110: solo `PACE_VERSION` bump; los toasts aplazados de s112 REUTILIZAN `setCaminoUiActive` s105 sin cambio aqui. s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true`. s106: + `profile`; 442 ln. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.57.0** (s113/s112/s111/s110: solo `PACE_VERSION` bump; los toasts aplazados de s112 REUTILIZAN `setCaminoUiActive` s105 sin cambio aqui. s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true`. s106: + `profile`; 442 ln. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -93,7 +94,7 @@
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium + pwa | **v0.47.0** (s102: + 13 keys ES+EN -- `tweaks.notify.*` (5) + `tweaks.legal.*` (2) + `notify.focus.*` (2) + `update.*` (4), 377 ln; s89: agua; s88: premium.tweaks) |
-| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move + hydrate + custom | **v0.56.0** (s112: +3 keys ES+EN -- `session.imReady` «Estoy listo» + `session.sideFirst` «Empiezas por: {side}» + `move.placeReadyHint`. s111: +4 keys del método. s110: +13 keys del contrato v1. s99: session.next; s93: custom.*) |
+| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move + hydrate + custom | **v0.57.0** (s113: +4 keys ES+EN del guiado -- `move.repsOf` «de {n} reps» + `move.repsGuidedHint` «Sigue el pulso…» + `move.finishEarly` «Terminar antes» + `move.sideAutoHint`; RETIRADAS sin consumidores: `move.repsTarget/repsDone/repsHint` + `session.sideReady`; 381 ln. s112: +3 keys. s111: +4. s110: +13 del contrato v1) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.45.0** (s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN, 132 ln; s99: + `paths.library.count.one/many` ES+EN; nuevo s81) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.52.0** (s107: fuera `stats.year.totalActions`; `activeDays` → «{n} dias con ritmo»/"days with rhythm" + `tooltip.score` → «intensidad {n}»/"intensity {n}". s101: label.body, ~115 ln) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
@@ -115,13 +116,14 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.56.0** (s112/s111/s110/s108/s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.57.0** (s113/s112/s111/s110/s108/s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + `maybeRequestNotifyPermission` + persistencia `pace.timer.v1` | **v0.53.0** (s108: + `maybeRequestNotifyPermission(state, set)` -- permiso de notificacion en el primer «Comenzar» de Foco, 1 vez por carga, solo web, solo permiso 'default'; denegar → `notifyFocusEnd:false`, ~113 ln. s102: nuevo, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.56.0_20260720.html` <- creado s113 (snapshot del v0.56.0 publicado en s112, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.55.0_20260718.html` <- creado s112 (snapshot del v0.55.0 publicado en s111, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.54.0_20260717.html` <- creado s111 (snapshot del v0.54.0 publicado en s110, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.53.0_20260717.html` <- creado s110 (snapshot del v0.53.0 publicado en s109, copiado del standalone en disco antes de regenerar -- patron s87)
@@ -141,74 +143,80 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.39.0_20260708.html` <- creado s95 (snapshot del v0.39.0 publicado en s94)
 - `backups/PACE_standalone_v0.38.0_20260708.html` <- creado s94 (snapshot del v0.38.0 publicado en s93)
 - `backups/PACE_standalone_v0.37.0_20260708.html` <- creado s93 (snapshot del v0.37.0 publicado en s92)
-- `backups/PACE_standalone_v0.36.0_20260707.html` <- creado s92 (snapshot del v0.36.0 publicado en s91)
-Nota s112: cap 20 mantenido rotando el mas antiguo (`v0.35.0_20260707.html`)
-al crear el backup del v0.55.0.
+Nota s113: cap 20 mantenido rotando el mas antiguo (`v0.36.0_20260707.html`)
+al crear el backup del v0.56.0.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 112 - v0.56.0 - B2.2a.5: auditoria UX del runner + corte de afinado**
-(B2.2b EN PAUSA, commit `22c5fd4`; gobernada por
-`docs/product/CONTEXTO_UX_RUNNER_WELCOME.md`). Formato pedido por el usuario:
-auditoria con entregable ANTES de codigo → 3 decisiones agrupadas
-(AskUserQuestion: setup `none|auto|ready` · direccion visual B · runner +
-micro-fix Welcome) → corte aprobado → implementacion.
+**Sesion 113 - v0.57.0 - Runner guiado · motor** (GIRO post-s112, 1ª de 2;
+aplica las ENMIENDAS R2/R3/BASE §3-A registradas en DECISIONES_PRODUCTO §B2 —
+no se reabrieron). Principio rector: **«el usuario toca para empezar, pausar o
+adaptar; NO para empujar la rutina hacia delante»** — la rutina se completa
+SIN tocar la pantalla; el unico tap legitimo es el gate `ready`. Decisiones de
+arranque (AskUserQuestion): guiado SUSTITUYE al libre · pulso + tick suave
+(familia actual) · transicion 10 s.
 
-### Auditoria (runtime v0.55.0; evidencia medida por DOM — los screenshots del pane fallaron toda la sesion)
+### Que se hizo (s113)
 
-- **3×P1**: accion primaria recortada SIN scroll en alturas <~630px (overlay
-  `fixed` + overflow visible) · copy funcional del metodo (repsHint/placeHint/
-  sideNext) OCULTO en movil por el `display:none` del hint ≤640px (regla
-  pre-v1 de atajos) · cambio de lado sin lado destino en movil.
-- P2: kicker «PASO X DE N» duplicado · glifo-sello 72px que no enseña · gate
-  identico al timer · lado inicial sin anunciar · 5s uniformes para suelo ·
-  toasts sobre la ceremonia · series invisibles y duracion declarada≠real
-  (→ B2.2b-1).
-- **Welcome (=onboarding s106) CUMPLE el contrato** (titular promesa, CTA
-  unico, saltable, sin permisos, cabe en 375×812 y 360×640 — medido); unico
-  defecto: pregunta 1 desbordaba ~35px en 360×640.
-
-### Que se hizo (s112)
-
-- **`setup: 'ready' | numero`** (`MoveSessionV1.jsx`): `ready` = «Colocate»
-  SIN cuenta + unica primaria «Estoy listo» → directo a work (sin segunda
-  cuenta; cualquier mode, incluso paso 0); numero = segundos del gate auto;
-  sin `setup` → derivacion por `mode` (s111) intacta.
-- **Jerarquia B**: kicker unico (header manda; cuerpo solo Colocate/lado/
-  cambio; rest sin kicker) · copy funcional VISIBLE en contenido (support +
-  «Empiezas por: {lado}» / «Ahora: Derecha» en acento) · gate a 56px
-  `--ink-2` · glifo escalado por altura ~150-240px (prop `size` de StepGlyph;
-  legacy 72/44 intacto) · UNA primaria RELLENA del acento · h1 clamp.
-- **SessionShell**: centro `minHeight:0 + overflowY:auto` + wrapper
-  `data-pace-session-center-body` (margin auto) → footer SIEMPRE accesible en
-  poca altura; beneficia a los 4 tipos de sesion + legacy.
-- **Toasts aplazados en sesiones sueltas** (`setCaminoUiActive`, guard
-  `!inPath`): 0 toasts sobre SessionDone.
-- **Datos**: `setup:'ready'` en Flexor/WGS de `chair.antidote` + **5º piloto
-  `move.couch.stretch`** (perSide+ready ×2, timed, perSide 30, timed; cues sin
-  «30s por lado», EN espejado; solo campos añadidos, sN sin reindexar).
-- **i18n**: `session.imReady` + `session.sideFirst` + `move.placeReadyHint`.
-- **Welcome micro-fix**: ~36px de espaciado → pregunta 1 cabe en 360×640.
-- **Verificacion**: dev consola limpia — neck.3 (kicker unico, «Haz menos»
-  visible en movil, lados explicitos) · chair.antidote (ready sin cuenta) ·
-  couch.stretch (ready en paso 0; flag premium temporal del perfil dev,
-  restaurado) · desk.pushups · **1280×600 primaria visible + centro
-  scrollable** · legacy identico · Respira OK · toasts 0/ceremonia.
-  Standalone regenerado UNA vez (3105 KB, sanity OK, ready funcional).
+- **Reps guiadas (enmienda R2)**: cadencia `V1_REP_SECONDS = 4` (fuerza, 2
+  bajar + 2 subir) con `step.repSeconds` opcional (chin tucks de neck.3 = 8 s,
+  retencion postural; base del `tempo` B2.2b-1) · pulso `pace-rep-pulse`
+  (escala con la rep real; congelado en pausa) + tick suave por rep (receta
+  `tick`) + contador «n · de {N} reps» · **avance AUTO al objetivo** ·
+  «Terminar antes» primaria siempre visible · pausa (boton/Espacio) ·
+  **`repsGuidedRef` acredita solo reps guiadas reales** (→ pantalla final
+  s114; nunca el objetivo) · reduced-motion = contador sin animacion (el
+  pulso NO cuelga de `data-pace-essential`).
+- **Transicion AUTO de lado (enmienda R3)**: señal (`move.step`) → «Cambia de
+  lado» + cuenta 10 s estilo gate + «Ahora: Derecha» + «El lado siguiente
+  empieza solo» → lado 2 arranca solo. «Empezar ya» / «Más tiempo» (+5) /
+  «Pausar» opcionales; sin «Anterior» en la transicion.
+- **Prep 5 s** (legacy sigue 3) · **rest entre series 30 s +
+  `restKind:'betweenSets'`** en desk.pushups/chair.squats (cierre de
+  chair.antidote SIN tipar, comentario-guard en el dato) · `min` desk.pushups
+  2→3 (real medido 3:00-3:25).
+- **Layout compacto por ALTURA**: tiers shell 700/560/430 (`min-width:641px`;
+  700 y no 720 — ≥701 ya cabia en s112) + ganchos `data-pace-v1-*` (espacios →
+  glifo → decorativo; glifo oculto ≤430) + tier de SOLO espacios en retrato
+  estrecho + `v1GlyphSize` con pendiente 0.22 <720 + footer `flexWrap`.
+  **Sin scrollbar medido (delta 0)** en 1280×600 · 1024×512 · 844×390 ·
+  360×640; scroll del centro = red de seguridad.
+- **Fix**: side-effects fuera de los updaters de setState (warning React
+  «Cannot update Sidebar while rendering», pre-existente s110, constante con
+  el auto-avance): intervalos solo mueven contadores; umbrales en efectos.
+- **Split**: `MoveSessionV1.support.jsx` NUEVO (119 ln; constantes + helpers +
+  CSS; tag en PACE.html ANTES del runner). MoveSessionV1 412 ln.
+- **i18n**: +4 keys (`move.repsOf/repsGuidedHint/finishEarly/sideAutoHint`),
+  −4 sin consumidores (`move.repsTarget/repsDone/repsHint`,
+  `session.sideReady`). Campos nuevos sin keys sN; ningun step
+  insertado/borrado.
+- **Verificacion** (dev :8765 + standalone; SW purgado — sirvio version vieja
+  2 veces): desk.pushups COMPLETO sin tocar la pantalla (done 3:00 real, 0
+  toasts) · neck.3 (8 s/rep, 3 cambios auto, 3:22) · couch.stretch (ready
+  paso 0 espera; transicion pausada/reanudada; Más tiempo 10→15; lado 2 solo)
+  · chair.antidote (ready intacto, cierre sin tipar) · legacy Hombros (prep
+  3, glifo 72, sin v1) · reduced-motion · silencio · consola limpia (el
+  warning del buffer era el historico pre-fix, acotado con marcadores).
+  Standalone 3119 KB / 83 scripts, sanity OK. Bump ×3. Backup v0.56.0 (rotado
+  v0.36.0, cap 20).
 
 ### Pendiente
 
-- **GIRO post-s112 (2026-07-18)**: la proxima sesion de codigo es el corte
-  **«runner guiado»** (ver "Proxima sesion"); B2.2b-1 pasa a despues,
-  alimentado por el comportamiento real.
-- **Diseño pendiente del corte s112**: diagramas de dos poses (los itera el
-  usuario, regla D-4; candidatos Flexiones inclinadas + Flexor de cadera).
-- **Deuda registrada s112**: SW dev puede servir version vieja · a11y
-  (tarjetas de biblioteca sin teclado, onboarding sin focus trap) · «Serie X
-  de Y» inexistente (→ metadatos) · `session.antidoteDone` universal en el
-  done del v1 (P3) · timer de Move sigue setInterval (foreground, aceptado).
+- **s114 — capa editorial del runner guiado** (ver "Proxima sesion").
+- **Diseño pendiente**: diagramas de dos poses (los itera el usuario, regla
+  D-4; candidatos Flexiones inclinadas + Flexor de cadera).
+- **Deuda s113**: `SessionShell.jsx` 493 ln (ROZA el tope — proximo cambio
+  extrae el CSS inyectado) · `repsGuidedRef` registrado pero aun sin mostrar
+  (lo consume la pantalla final s114) · consola embebida del pane cuadruplica
+  mensajes y su buffer sobrevive recargas (verificar con marcadores en carga
+  fresca; React dedupe warnings por carga).
+- **Deuda s112 que sigue**: SW dev puede servir version vieja (reincidio ×2 en
+  s113: se re-registra tras purgar → purga + reload en el MISMO gesto) · a11y
+  (tarjetas sin teclado, onboarding sin focus trap) · «Serie X de Y»
+  inexistente (→ metadatos) · `session.antidoteDone` universal en el done del
+  v1 (P3) · timer de Move sigue setInterval (foreground, aceptado).
 - **[Feedback s107-cierre] aun sin rutar**: salir de un Camino a la home
   (via tactil explicita; el «×» avanza, diseño s99) · visual Respira «Loto»
   (PNG del usuario, falta en el repo) · laminas HQ de Caminos (re-ingesta con
@@ -218,39 +226,34 @@ micro-fix Welcome) → corte aprobado → implementacion.
 - **B2 pendiente tras B2.2b**: reescribir 4 cues (Seated twist, Rib pull, WGS,
   Ground transitions) · reescribir 2 rutinas (`legs.single`, resto de
   `atg.knees`) · migrar las otras 22 rutinas al contrato (olas siguientes).
-- `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s112).
+- `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s113).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- s113: corte «runner guiado» (motor; B2.2b-1 DESPUES)
+## Proxima sesion -- s114: runner guiado · capa editorial
 
-**Decision del usuario (2026-07-18, post-s112; capturas + auditoria externa
-que verifico repo=deploy en v0.56.0):** el cuello de botella no son los datos
-sino que el runner exige OPERAR la interfaz durante una practica corporal
-(scrollbar en pasos de ejercicio · gate «Listo» entre lados · «Termine» como
-unica salida de reps · cues demasiado escuetos). Principio rector nuevo: **«el
-usuario toca para empezar, pausar o adaptar; NO para empujar la rutina hacia
-delante»**. Canonico de las decisiones en DECISIONES_PRODUCTO.md §B2 (incluye
-las ENMIENDAS a R2/R3/BASE §3-A que esto conlleva — registrarlas por escrito).
+**Cierra el GIRO** (canonico en DECISIONES_PRODUCTO.md §B2). Sobre el motor de
+s113:
 
-**s113 — motor guiado** (comportamiento primero): reps guiadas con cadencia
-(~4 s/rep fuerza, pulso visual + contador «n de 12», avance AUTO al objetivo,
-«Terminar antes» siempre visible, solo se acreditan reps guiadas reales) ·
-transicion AUTO de lado (señal → pantalla con cue del lado siguiente → 8-12 s
-→ empieza solo; botones opcionales) · prep 5 s (antes 3) con colocacion util
-visible ANTES de arrancar · rest 30 s por defecto TIPADO (betweenSets vs
-cierre; el ajuste de Tweaks NO toca cierres) · layout compacto por ALTURA sin
-scrollbar (1280×600 · 1024×512 · landscape movil; scroll solo red de
-seguridad) · `min` editorial rapido de desk.pushups. **s114 — capa editorial**:
-instrucciones por capas de los 5 pilotos (setup/accion/cuidate/shortCue, lado
-INTEGRADO en el texto) + pantalla final por modulo con stats honestas + ajuste
-Tweaks de descanso (Breve 20/Tranquilo 30/Amplio 45) + señales de audio
-simples SIN voz. Despues: **B2.2b-1 contrato + duracion derivada** (formaliza
+- **Instrucciones por capas de los 5 pilotos**: setup completo en colocacion ·
+  shortCue en ejecucion · cue del lado INTEGRADO en el texto · capa de
+  adaptacion «Cuidate». Tono PACE: frases cortas, verbos suaves, 1 instruccion
+  por linea, sin anatomia innecesaria (memoria `feedback-realismo-ejercicios`).
+- **Pantalla final por modulo** (fuera «ANTÍDOTO COMPLETADO» en fuerza — el
+  P3 `session.antidoteDone` universal se resuelve aqui) con **stats honestas**:
+  tiempo · series · reps guiadas REALES (`repsGuidedRef` ya acumula en s113).
+- **Ajuste de Tweaks del descanso entre series** (Breve 20 / Tranquilo 30
+  recomendado / Amplio 45; v1 solo 3 presets) — el tipado
+  `restKind:'betweenSets'` de s113 es su base; los cierres (sin restKind) NO
+  se tocan.
+- **Señales de audio simples SIN voz** (inicio · aviso de fin · cambio de
+  lado · fin; todo funciona en silencio). Voz/TTS: NUNCA en esta fase.
+
+Despues: **B2.2b-1 contrato + duracion derivada** (formaliza
 completion.mode/tempo/transition/restKind/instruction.*, setup {mode,
 estimatedSeconds} con ready≠0s, perSide sin doble conteo — dur es POR LADO en
 pilotos) → B2.2b-2 feedback → B2.2b-3 eventos (solo diseño). Despues: plan
 maestro (home Caminos al centro + After Pomodoro + scoring v2). Deuda a11y
-señalada por la auditoria externa (Card sin teclado · onboarding sin focus
-trap) → sesion propia tras B2.2b-1.
+(Card sin teclado · onboarding sin focus trap) → sesion propia tras B2.2b-1.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
@@ -258,9 +261,9 @@ trap) → sesion propia tras B2.2b-1.
 ~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · ~~B1.2 editorial s108~~ ·
 ~~B2.1 auditoria s109~~ · ~~B2.2a visualId + contrato v1 pilotado s110~~ ·
 ~~B2.2 metodo s111~~ · ~~B2.2a.5 auditoria + afinado UX s112~~ ·
-**runner guiado s113-s114** (motor hands-free + capa editorial; giro
-2026-07-18) · B2.2b re-ordenado (b-1 contrato+duracion · b-2 feedback · b-3
-eventos solo diseño) · B2.3 migrar
+~~runner guiado MOTOR s113~~ · **runner guiado CAPA EDITORIAL s114** (cierra
+el giro 2026-07-18) · B2.2b re-ordenado (b-1 contrato+duracion · b-2 feedback
+· b-3 eventos solo diseño) · B2.3 migrar
 resto de rutinas al contrato + reescrituras · home Caminos al centro + After
 Pomodoro · taxonomia + filtros + sigilo · pre-venta: glifos (revision
 COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO + Starter
@@ -273,8 +276,9 @@ Story A FONDO antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| Runner GUIADO (enmiendas R2/R3): el usuario toca para empezar, pausar o adaptar — NO para empujar la rutina | s113 | **R2 enmendado**: `reps` = guiadas con cadencia (`V1_REP_SECONDS = 4` fuerza; `step.repSeconds` por paso para retencion postural — chin tucks 8 s), pulso + tick suave (familia actual, receta `tick`), avance AUTO al objetivo; NO es cuenta atras competitiva: «Terminar antes» siempre visible y **solo se acreditan reps guiadas reales** (`repsGuidedRef`; jamas el objetivo). **R3 enmendado**: `perSide` = transicion AUTO de 10 s (`V1_CHANGE_SECONDS`) con señal suave + lado siguiente visible; «Empezar ya»/«Más tiempo»/«Pausar» OPCIONALES. Prep 5 s (legacy 3). Rest entre series 30 s + `restKind:'betweenSets'` SOLO pilotos; los cierres respiratorios NO llevan restKind y el ajuste de Tweaks (s114) no los toca. Reduced-motion: el pulso es decorativo a proposito (kill global) — fallback contador. PATRON relojes: intervalos solo mueven contadores, side-effects en efectos (nunca en updaters). Al migrar mas rutinas: declarar `repSeconds` donde la rep no sea fuerza 4 s |
 | Gate de colocacion con TRES modos: `setup:'ready'` espera al usuario; auto deriva del `mode`; el hint del shell es SOLO atajos de teclado | s112 | `setup:'ready'` por paso (suelo/pared/material) → fase place SIN cuenta + unica primaria «Estoy listo» que pasa DIRECTO a work (sin segunda cuenta; cualquier mode, incluso paso 0). `setup:numero` = segundos del gate auto. Sin `setup` → derivacion s111 (auto en timed/perSide idx>0; none en reps/rest/paso 0). El copy funcional del runner (repsHint/placeHint/sideFirst/sideNext) vive VISIBLE en el contenido — NUNCA en el hint del shell, que esta `display:none` ≤640px a proposito (solo atajos). Jerarquia B vigente: kicker unico (el header lleva PASO X DE N), una primaria RELLENA por estado, gate a 56px ink-2, glifo escalado por altura. Al migrar mas rutinas: declarar `ready` en cualquier paso que exija suelo/pared/material |
-| Contrato de pasos v1: `mode` en el step elige runner; sin `mode` = legacy intacto | s110 | Un step con `mode: timed\|reps\|perSide\|rest` va a `MoveSessionV1.jsx`; `MoveSession` es un **dispatcher** (`isV1 = steps.some(mode)`, guard `typeof MoveSessionV1`) que si no cae a `MoveSessionLegacy` (byte-identico a s109). Las 22 rutinas sin `mode` NO cambian. Fases del runner v1: `place` (gate R1, timer parado) → `work` → `change` (gate perSide R3). `reps` no corre timer (R2). `rest` apagado sin glifo (R5). **R4**: la completion acredita minutos REALES (`Date.now()-sessionStart`), no `routine.min` — en AMBOS runners. `dur` se conserva en steps `reps`/`perSide` como estimacion (barra + fallback legacy). Al migrar mas rutinas: añadir `mode` al dato; sin insertar/borrar steps (los EN son posicionales `id.sN.*`) o re-indexar el EN en el mismo cambio |
+| Contrato de pasos v1: `mode` en el step elige runner; sin `mode` = legacy intacto | s110 | Un step con `mode: timed\|reps\|perSide\|rest` va a `MoveSessionV1.jsx`; `MoveSession` es un **dispatcher** (`isV1 = steps.some(mode)`, guard `typeof MoveSessionV1`) que si no cae a `MoveSessionLegacy` (byte-identico a s109). Las 22 rutinas sin `mode` NO cambian. Fases del runner v1: `place` (gate R1, timer parado) → `work` → `change` (transicion perSide; R3 ENMENDADO s113: auto 10 s, ver fila del runner guiado). `reps` corre como cadencia guiada (R2 ENMENDADO s113). `rest` apagado sin glifo (R5). **R4**: la completion acredita minutos REALES (`Date.now()-sessionStart`), no `routine.min` — en AMBOS runners. `dur` se conserva en steps `reps`/`perSide` como estimacion (barra + fallback legacy). Al migrar mas rutinas: añadir `mode` al dato; sin insertar/borrar steps (los EN son posicionales `id.sN.*`) o re-indexar el EN en el mismo cambio |
 | visualId: identidad visual compartida via alias, SIN tocar `step.name`/localStorage | s110 | `VISUAL_ALIAS` + `resolveVisualId` (`exercise-aliases.js`); `ExerciseGlyph` resuelve `EXERCISE_GLYPHS[vid]\|\|[id]`. 4 duplicados unificados (Chest opener/Deep squat hold/Deep breaths/Dead hang). El `step.name` ES sigue siendo la clave de datos (swap s14 blindado); visualId gobierna glifo y, en B2.2b, la ficha/duracion. **Rib pull NO se unifica** con Gato-camello (es «reescribir», no duplicado limpio). Nordics sigue en el registro (aparcado a fisio con Sissy/Fondos/Couch → B4) aunque salga de `move.atg.knees` |
 | Editorial de seguridad CERRADO (B1.2): sin lenguaje de fallo/limite/maximo, material anunciado, claims descriptivos | s108 | BASE_MUEVE_ESTIRA §7-9 gobierna el copy de ejercicios: nada de «al fallo»/«al limite»/«al maximo»/«aguanta» seco; isometrias con respiracion normal y condicion tecnica («mantén mientras...»); descs anuncian suelo/pared/«barra firme que soporte tu peso»/«silla estable y sin ruedas»; claims descriptivos, no promesas («traccion suave», no «el hombro nace para colgar»; «rangos profundos», no «indestructibles»). Patron para pasos con material no garantizado: **opcional-con-alternativa** en el cue (Dead hang · opcional → «Sin barra: repite las wall slides»). Contenido nuevo (B2+) nace ya con este lenguaje |
 | Renombrar un `name` de paso EXIGE renombrar su key de glifo EN EL MISMO cambio | s108 | name ES = key de glifo (s93) = key i18n custom. El rename `Dead hang (si puedes)` → `Dead hang · opcional` toco JUNTOS ExtraModule + exercise-glyphs.jsx + content/extra.js (posicional, solo valor). Si se olvida el glifo, cae en silencio a DefaultGlyph — verificar en runtime que la key nueva resuelve y la vieja no existe |
@@ -383,6 +387,7 @@ Story A FONDO antes de pricing.
 | `app/tweaks/TweaksPanel.jsx` | 430 | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
 | `app/state-core.jsx` | 442 | BAJA (s106: +10 del profile con comentario de contrato; s101: split a state-history.jsx) |
 | `app/focus/FocusTimer.jsx` | 496 | **MEDIA** (s108: +3 ln de la llamada al permiso; s102: +37 ln de notificacion+persistencia -- AL BORDE del tope; los helpers ya viven en FocusTimer.support.jsx, la proxima adicion al modulo Foco debe ir alli o a un split del MinutesPicker) |
+| `app/ui/SessionShell.jsx` | 493 | **MEDIA** (s113: +118 ln de tiers de altura -- AL BORDE del tope; el proximo cambio extrae el CSS inyectado a archivo propio, patron `main/_responsive.js`) |
 | `app/i18n/strings/ui.js` | 377 | BAJA (s102: +26 ln de keys PWA; dentro de limite, dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |

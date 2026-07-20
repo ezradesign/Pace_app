@@ -25,13 +25,18 @@ visual, por compatibilidad de `localStorage` y logros:
 En este documento, "Mueve" y "Estira" se refieren siempre al **módulo
 visual** (el botón). No tocar los ids: están blindados por compat.
 
-> **Contrato de pasos v1 (s110 · B2.2a).** Un step puede declarar
-> `mode: timed | reps | perSide | rest`; sin `mode` corre el runner legacy
-> (idéntico a s109). Pilotado en 6 rutinas (2 Respira control + `desk.pushups`,
-> `chair.squats`, `neck.3`, `chair.antidote`). El runner `MoveSessionV1.jsx`
-> resuelve: colocación por paso (el timer no arranca leyendo), reps con
-> «Terminé», cambio de lado real, descanso tipado, y acredita **minutos
-> reales**. Las otras 22 rutinas migran en olas siguientes.
+> **Contrato de pasos v1 (s110 · B2.2a; GUIADO desde s113).** Un step puede
+> declarar `mode: timed | reps | perSide | rest`; sin `mode` corre el runner
+> legacy (idéntico a s109). Pilotado en 7 rutinas (2 Respira control +
+> `desk.pushups`, `chair.squats`, `neck.3`, `chair.antidote`,
+> `couch.stretch` s112). El runner `MoveSessionV1.jsx` resuelve: colocación
+> por paso (el timer no arranca leyendo; `setup:'ready'` espera al usuario),
+> **reps GUIADAS con cadencia** (s113: `repSeconds` por paso, default 4 s
+> fuerza; avance auto + «Terminar antes»; se acreditan solo las reps
+> guiadas), **cambio de lado automático** (10 s con botones opcionales),
+> descanso tipado (`restKind:'betweenSets'`; los cierres respiratorios NO se
+> tipan) y acredita **minutos reales**. Las otras 22 rutinas migran en olas
+> siguientes.
 >
 > **Sustitución s110:** en `move.atg.knees`, **Nordics → «Puente isquio a una
 > pierna»** (sustituto accesible; Nordics muy avanzado y con material de
@@ -143,7 +148,7 @@ con los ids `move.*` de Estira).
 
 | ID | Nombre | Grupo | min | `access` (real, F6) |
 |---|---|---|---|---|
-| `extra.desk.pushups` | Flexiones de escritorio | empuje | 2 | **free** (inicial) |
+| `extra.desk.pushups` | Flexiones de escritorio | empuje | 3 (s113: 2→3, real guiado 3:00-3:25) | **free** (inicial) |
 | `extra.chair.dips` | Fondos en silla | empuje | 3 | free |
 | `extra.push.ladder` | Empuje · progresión | empuje | 3 | **premium** (F6 — pica + negativas) |
 | `extra.hang.bar` | Colgarse | empuje | 2 | **premium** (F6 — requiere barra) |

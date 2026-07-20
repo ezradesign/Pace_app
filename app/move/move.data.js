@@ -11,19 +11,25 @@
      mode: 'timed' | 'reps' | 'perSide' | 'rest'
    Sin `mode` → el runner cae a legacy (comportamiento idéntico al de s109).
    `reps` = nº objetivo (o {min,target,max}); `dur` se conserva como estimación
-   de reserva (lo usa la barra de progreso y el fallback legacy). */
+   de reserva (lo usa la barra de progreso y el fallback legacy).
+   s113 (runner guiado): los rest ENTRE SERIES de los pilotos pasan a 30 s y
+   estrenan `restKind: 'betweenSets'` — tipado mínimo, base del ajuste de
+   Tweaks de s114 (que NUNCA tocará los cierres respiratorios, sin restKind).
+   `repSeconds` (opcional) = segundos por rep guiada; sin él, 4 s (fuerza). */
 
 var MOVE_ROUTINES = {
   empuje: {
     label: 'Empuje y tracción',
     aside: 'Pecho, brazos, espalda alta',
     items: [
-      { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 2,
+      /* s113: min 2→3 — con reps guiadas la ejecución real ronda 3:15-3:25
+         (la derivación formal de duración llega en B2.2b-1). */
+      { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 3,
         steps: [
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40, cue: 'Codos cerca del cuerpo, baja con control.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, lentas. Para si la técnica se rompe.' },
         ]},
       { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
@@ -91,9 +97,9 @@ var MOVE_ROUTINES = {
       { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
         steps: [
           { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40, cue: 'Baja hasta rozar la silla, sube sin impulso.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
           { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40, cue: 'Más lentas, control total.' },
-          { name: 'Descanso', mode: 'rest', dur: 20, cue: 'Respira.' },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
           { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, sin impulso.' },
         ]},
       { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
