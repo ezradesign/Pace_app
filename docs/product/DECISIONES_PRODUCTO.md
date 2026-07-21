@@ -287,9 +287,20 @@ solo diseño; alcance original abajo):
   **NADA implementado** (cero `state-events.jsx`/EventStore/emisores/adaptadores/
   Capacitor/SQLite): la implementación (Fase 1 web → Fase Android/iOS) va **antes
   de stats premium / licencia**.
-- **B2.3** (olas siguientes): migrar las otras 22 rutinas al contrato +
-  reescribir 4 cues (Seated twist, Rib pull, WGS, Ground transitions) + 2
-  rutinas (`legs.single`, resto de `atg.knees`).
+- **B2.3 — multi-ola, EN CURSO**. Migrar las rutinas legacy al contrato + las
+  reescrituras. Decisión s118 (AskUserQuestion): migración **mecánica** en olas de
+  5–6 · **reescrituras aparte** en su propia ola editorial · glifos D-4 sin tocar.
+  - **OLA 1 — HECHA** (s118, 2026-07-22; v0.61.0; diario
+    [session-118](../sessions/session-118-b2-3-migracion-ola-1.md)): 5 rutinas
+    **Mueve** gratuitas sin suelo (`chair.dips`, `calves`, `grip.squeeze`,
+    `glutes.stealth`, `posture.set`) migradas — `mode` + `instruction.*` + `tempo`/
+    `completion` en reps + `restKind:'betweenSets'` + 5 metadatos; keys EN
+    `cue`→`instruction.*`; ningún `name` cambió (glifos intactos). Candidato
+    `couch.stretch.min` **5→6** aplicado. Cada `min` DENTRO del rango derivado (sin
+    drift). Conteo real: **23** legacy antes de OLA 1 (no 22), **18** tras ella.
+  - **Pendiente**: **18 rutinas legacy** (7 Mueve premium + 11 Estira) en olas
+    siguientes + **reescrituras** (4 cues: Seated twist, Rib pull, WGS, Ground
+    transitions · 2 rutinas: `legs.single`, resto de `atg.knees`) en ola editorial.
 
 ### B3 · s107-109 ampliadas (el plan maestro absorbe)
 

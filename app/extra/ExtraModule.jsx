@@ -157,14 +157,15 @@ const EXTRA_ROUTINES = {
           { name: 'Puente con marcha', dur: 60, cue: 'Activación de glúteo profundo.' },
         ]},
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
-        desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 5, access: 'premium',
+        desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
         position: ['halfKneeling', 'floor', 'supine'], equipment: ['wall', 'cushionOptional'], requiresFloor: true, intensity: 'strong', level: 'intermediate',
         /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
            pared/suelo. s115 (B2.2b-1): contrato formal — `instruction`
            {setup,action,care}, `setup:{mode:'ready',estimatedSeconds}` (los dos
            «setup» distintos: comportamiento vs copy), `transition.seconds` en
            los perSide. dur en perSide = segundos POR LADO (activo = dur×2 + 1
-           transición). */
+           transición). s118 (B2.3): `min` 5→6 — el dev-check calculaba 6–7 min y
+           5 quedaba fuera del rango mostrado (único piloto descuadrado, s115). */
         steps: [
           { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
