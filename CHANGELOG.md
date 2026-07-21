@@ -15,8 +15,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.59.0** | 2026-07-21 | feat(move): **B2.2b-1 — contrato formal + duración derivada** (los 5 pilotos; el GIRO del runner guiado quedó CERRADO en s114, aquí NO se reabre; comportamiento del runner INTACTO) -- **contrato formal por paso** (migración ATÓMICA, sin fallback dual): `instruction:{setup,action,care}` (consolida placeCue/cue/careCue de s114, misma copy) · `tempo:{down,hold,up}` (generaliza el rep-seconds; suma = seg/rep) · `transition:{seconds}` (cambio de lado perSide) · `completion:{mode:'guided'}` ('manual' reservado) · `setup:{mode:'ready',estimatedSeconds}` = **comportamiento** del runner, DISTINTO de `instruction.setup` = copy (los dos «setup» que pedía el corte; ready nunca es countdown, estimatedSeconds>0) · **metadatos** `position/equipment/requiresFloor/intensity/level` (sin consumidor UI) · **keys i18n EN nuevas** `id.sN.instruction.*`; se RETIRAN placeCue/cue/careCue de los 5 pilotos (dato + keys), `cue` de las 22 legacy INTACTO · **fuente ÚNICA de segundos efectivos** + fix de deuda real: `v1StepWeight` (peso de barra) pasa a `v1StepDur` → **peso = progreso = aviso 5 s = duración** (antes divergía con preset 20/45) · **duración DERIVADA**: helper PURO `estimateDuration(routine, rbs)→{minSec,maxSec,breakdown}` (perSide = dur POR LADO ×2 + UNA transición, sin cuádruple conteo; reps guided = target×tempo fijo; + prep + setup) → la **tarjeta** muestra el rango en rutinas v1 (legacy conserva `min`, premium «Pronto»); **dev-check** `min` vs rango de minutos mostrados (avisa solo fuera; sin ruido dentro) · **limpieza** `move.repsGuidedHint` retirada · **legacy byte-idéntico** (prep 3, sin atributos v1) | #115 | [abajo](#v0590----2026-07-21----featmove-b22b-1--contrato-formal--duración-derivada) |
 | **v0.58.0** | 2026-07-21 | feat(move): **runner guiado · capa editorial** (GIRO 2ª de 2 — **CIERRA el giro**; sobre el motor de s113; principio rector intacto) -- **instrucciones por CAPAS en los 5 pilotos**: `placeCue` (setup, se muestra en colocación) + `cue`=shortCue (ejecución) + `careCue` («Cuídate», adaptación **siempre visible** en trabajo; en altura baja se oculta el rótulo, nunca el contenido) — `cue` se conserva como fallback ⇒ **cero re-indexado** de las keys EN sN (solo keys NUEVAS `id.sN.placeCue`/`careCue`) · **colocación AUTO para el 1er set de fuerza** (step `reps` con `placeCue` no precedido por rest → ventana para leer el setup y ponerse en posición antes del pacer; sets 2/3 tras un rest van directos, sin doble espera; sigue 0 taps) · **lado integrado en el texto** (perSide: la palabra del lado abre el cue como `<strong>` del acento, no un kicker suelto) · **pantalla final por MÓDULO** (Mueve → «Movimiento completado» · Estira → «Estiramiento completado» — resuelve el P3 `antidoteDone` universal) con **stats honestas** que consumen `repsGuidedRef` (tiempo · series · **reps guiadas reales**, nunca el objetivo; mixtas → tiempo·pasos·reps; movilidad → tiempo·pasos; sin calorías/récords/comparaciones) · **Tweaks «Sesiones»**: descanso entre series **Breve 20 / Tranquilo 30 (recom., default) / Amplio 45** (`restBetweenSets`; helpers `v1RestSeconds`/`v1StepDur`) que SOLO afecta a `restKind:'betweenSets'` (el cierre respiratorio queda en 30) — el descanso GUÍA («Luego: {serie}» + aviso ~5 s) · **audio SIN voz** (familia move 432): `move.warn` (aviso único al cruzar ~5 s en descansos y pasos con reloj, no cuenta atrás) + `move.side` (cambio de lado); todo bajo `soundOn` + try/catch · CSS: tier ≤700 apretado por la línea «Cuídate» → **delta 0 mantenido** en 1280×600·1024×512·844×390·360×640 · legacy intacto (prep 3, sin atributos v1) | #114 | [abajo](#v0580----2026-07-21----featmove-runner-guiado--capa-editorial) |
-| **v0.57.0** | 2026-07-20 | feat(move): **runner guiado · motor** (GIRO post-s112, 1ª de 2: s113 motor · s114 capa editorial; aplica las ENMIENDAS R2/R3/BASE §3-A ya registradas; principio rector: «el usuario toca para empezar, pausar o adaptar; NO para empujar la rutina hacia delante» — la rutina se completa SIN tocar la pantalla salvo los gates `ready`) -- **reps GUIADAS con cadencia** (sustituyen al modo libre s111; ~4 s/rep de fuerza, `repSeconds` por paso — chin tucks 8 s; pulso visual `pace-rep-pulse` + tick suave por rep de la familia actual + contador «n de N reps»; **avance AUTO al objetivo**; «Terminar antes» siempre visible; pausa con Espacio/botón; `repsGuidedRef` acredita solo reps guiadas reales; reduced-motion → contador sin animación) · **transición AUTO de lado** (señal suave → «Cambia de lado» + cuenta 10 s estilo gate + **«Ahora: Derecha»** → el lado 2 empieza solo; «Empezar ya»/«Más tiempo»/«Pausar» opcionales) · **prep 5 s** (legacy sigue 3) · **rest entre series 30 s + `restKind:'betweenSets'`** en desk.pushups/chair.squats (el «Reset respiración» de chair.antidote NO se tipa: es cierre) · **layout compacto por ALTURA** (tiers 700/560/430 en shell + `data-pace-v1-*`; glifo cede antes que instrucciones y se oculta ≤430; tier de espacios en retrato estrecho; sin scrollbar en 1280×600 · 1024×512 · 844×390 · 360×640; scroll = red de seguridad) · `min` desk.pushups 2→3 · **fix**: side-effects fuera de los updaters de setState (warning «Cannot update while rendering», pre-existente s110) · split **`MoveSessionV1.support.jsx`** (constantes+helpers+CSS; patrón FocusTimer.support) · 4 keys i18n nuevas ES+EN, 4 retiradas | #113 | [abajo](#v0570----2026-07-20----featmove-runner-guiado--motor) |
+| **v0.57.0** | 2026-07-20 | feat(move): **runner guiado · motor** (GIRO post-s112, 1ª de 2: s113 motor · s114 capa editorial; aplica las ENMIENDAS R2/R3/BASE §3-A ya registradas; principio rector: «el usuario toca para empezar, pausar o adaptar; NO para empujar la rutina hacia delante» — la rutina se completa SIN tocar la pantalla salvo los gates `ready`) -- **reps GUIADAS con cadencia** (sustituyen al modo libre s111; ~4 s/rep de fuerza, `repSeconds` por paso — chin tucks 8 s; pulso visual `pace-rep-pulse` + tick suave por rep de la familia actual + contador «n de N reps»; **avance AUTO al objetivo**; «Terminar antes» siempre visible; pausa con Espacio/botón; `repsGuidedRef` acredita solo reps guiadas reales; reduced-motion → contador sin animación) · **transición AUTO de lado** (señal suave → «Cambia de lado» + cuenta 10 s estilo gate + **«Ahora: Derecha»** → el lado 2 empieza solo; «Empezar ya»/«Más tiempo»/«Pausar» opcionales) · **prep 5 s** (legacy sigue 3) · **rest entre series 30 s + `restKind:'betweenSets'`** en desk.pushups/chair.squats (el «Reset respiración» de chair.antidote NO se tipa: es cierre) · **layout compacto por ALTURA** (tiers 700/560/430 en shell + `data-pace-v1-*`; glifo cede antes que instrucciones y se oculta ≤430; tier de espacios en retrato estrecho; sin scrollbar en 1280×600 · 1024×512 · 844×390 · 360×640; scroll = red de seguridad) · `min` desk.pushups 2→3 · **fix**: side-effects fuera de los updaters de setState (warning «Cannot update while rendering», pre-existente s110) · split **`MoveSessionV1.support.jsx`** (constantes+helpers+CSS; patrón FocusTimer.support) · 4 keys i18n nuevas ES+EN, 4 retiradas | #113 | [session-113](./docs/sessions/session-113-runner-guiado-motor.md) |
 | **v0.56.0** | 2026-07-18 | feat+fix(ux): **B2.2a.5 — auditoría UX del runner + corte de afinado** (B2.2b EN PAUSA; gobernada por `CONTEXTO_UX_RUNNER_WELCOME.md`, entregable de auditoría ANTES de código y corte aprobado por AskUserQuestion: setup `none\|auto\|ready` · dirección visual B · runner + micro-fix Welcome) -- **auditoría runtime** de los pilotos en 5 viewports con evidencia medida por DOM (3×P1: primaria recortada sin scroll en alturas <~630px; copy funcional del método oculto en móvil por el `display:none` del hint ≤640px; cambio de lado sin lado destino en móvil) · **`setup: 'ready' \| número`** por paso: `ready` (suelo/pared) = «Colócate» SIN cuenta + única primaria **«Estoy listo»** → directo a work (sin segunda cuenta), aplica en cualquier mode incluso paso 0; número = segundos del gate auto; sin setup → derivación s111 intacta · **jerarquía B**: kicker único (el «PASO X DE N» duplicado fuera; el kicker del cuerpo solo Colócate/lado/cambio), copy funcional VISIBLE en contenido (`repsHint`/`placeHint` + **«Empiezas por: {lado}»** / **«Ahora: Derecha»** en acento), gate con identidad propia (56px `--ink-2`, ya no parece el timer), glifo escalado por altura (~150-240px, prop `size` de StepGlyph; legacy 72/44 intacto), UNA primaria RELLENA del acento, h1 `clamp` · **SessionShell**: centro `overflowY:auto` + wrapper `center-body` con margin auto → **la acción primaria SIEMPRE accesible en poca altura** (beneficia a los 4 tipos de sesión + legacy) · **toasts aplazados en sesiones sueltas** (reutiliza `setCaminoUiActive`, guard `!inPath`) — 0 toasts sobre la ceremonia · **5º piloto `move.couch.stretch`** (estático pared/suelo: perSide+ready ×2, timed, perSide; cues sin «30s por lado», EN espejado, sin reindexar sN) + `setup:'ready'` en Flexor/WGS de `chair.antidote` · 3 keys i18n ES+EN (`session.imReady/sideFirst` + `move.placeReadyHint`) · **Welcome micro-fix**: la pregunta 1 cabe en 360×640 (~36px de espaciado) · Welcome auditada: CUMPLE el contrato (titular promesa, CTA único, saltable, sin permisos, cabe en móvil — medido) | #112 | [session-112](./docs/sessions/session-112-b2-2a5-afinado-ux-runner.md) |
 | **v0.55.0** | 2026-07-17 | fix(move): **B2 — método del runner v1: gate que fluye + reps a gusto** (feedback de cierre s110; gobernado por `BASE_MUEVE_ESTIRA.md` §3/§6) -- **(a) gate de colocación auto + condicional**: el placement gate deja de exigir tap → **cuenta-atrás que fluye sola** («Colócate… 5·4·3·2·1» → arranca el reloj al llegar a 0) con **«Empezar ya»** (salta) y **«Más tiempo»** (+5 s); y se aplica SOLO a pasos **con reloj** (`timed`/`perSide`) e **idx > 0** — `reps`/`rest` fluyen directos (no hay reloj que proteger, R2) y el paso 0 hereda el prep 3·2·1 de la sesión (evita la doble cuenta). El condicional se deriva del `mode`, sin metadatos nuevos. R1 intacto (esa cuenta es de colocación, no el timer del ejercicio) · **(b) reps a gusto**: el número deja de leerse como cuota — label `reps` → **«reps · a tu ritmo»**; «Terminé» avanza en cualquier momento (más o menos, sin culpa); sin botón +/− · 4 keys i18n ES+EN (`session.beginNow/moreTime/placeCountdown` + `move.repsTarget`) + `placeHint` actualizado · runner **legacy** (sin `mode`) intacto · solo `MoveSessionV1.jsx` + strings (sin tocar datos ni `step.name`) | #111 | [session-111](./docs/sessions/session-111-b2-metodo-runner.md) |
 | **v0.54.0** | 2026-07-17 | feat+refactor: **B2.2a — contrato de pasos v1 (pilotado) + visualId** (2ª sesión de B2, 1ª de código; gobernada por `BASE_MUEVE_ESTIRA.md`) -- **contrato de pasos v1** (`mode: timed \| reps \| perSide \| rest`; sin `mode` → runner **legacy** intacto) en nuevo `MoveSessionV1.jsx`; `MoveSession` pasa a dispatcher. Resuelve **R1-R5** de la auditoría B2.1 en 4 pilotos de cuerpo: **R1** placement gate por paso («Colócate»→«Empezar», el timer no arranca leyendo; absorbe el cambio de posición §6) · **R2** `reps` termina en «Terminé» (sin auto-avance) · **R3** `perSide` = Izquierda → gate «Cambia de lado» → Derecha con contador propio · **R4** la completion acredita **minutos REALES** (no `routine.min`; ambos runners) · **R5** `rest` tipado (apagado, «Saltar») · **visualId** (`exercise-aliases.js`): unifica 4 duplicados de glifo sin tocar `step.name`/localStorage (Chest opener→Apertura de pecho, Deep squat hold→Squat profundo, Deep breaths→Reset respiración, Dead hang→Hang pasivo) · pilotos: `desk.pushups`+`chair.squats` (reps+rest), `neck.3`+`chair.antidote` (perSide/postural), cubren biblioteca **y** Caminos · **split** `MOVE_ROUTINES`→`move.data.js` (MoveModule 451→331 ln) · **Nordics → «Puente isquio a una pierna»** en `move.atg.knees` (degustado en `path.weekend`) + glifo/EN en sincronía · leftover B1.2 «al máximo»→«sin forzar» (registro:117) | #110 | [session-110](./docs/sessions/session-110-b2-2a-contrato-pasos.md) |
@@ -134,6 +135,79 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.59.0] -- 2026-07-21 -- feat(move): B2.2b-1 — contrato formal + duración derivada
+
+Sesión 115. Formaliza el **contrato de pasos** sobre los 5 pilotos ya
+guiados+editoriales (s113/s114) y **deriva la duración de los datos**. El GIRO
+del runner guiado quedó CERRADO en s114 — aquí NO se reabre ninguna decisión
+suya y el comportamiento del runner queda INTACTO. Diario:
+[session-115](./docs/sessions/session-115-b2-2b-1-contrato-duracion.md).
+
+### Decisiones de arranque (AskUserQuestion, 4)
+
+Migración **atómica** de `instruction.*` (sin fallback dual; verificado ES+EN y
+todos los consumidores v1 antes de retirar los aliases) · duración derivada
+**solo en la tarjeta** · esquema de etiqueta aprobado («ritmo guiado» / «a tu
+ritmo» para manual; forma corta «3–4 min» en la tarjeta compacta) · **5
+metadatos** completos.
+
+### Contrato formal (P0) — solo los 5 pilotos
+
+- **`instruction:{setup,action,care}`** consolida `placeCue`/`cue`/`careCue` de
+  s114 (misma copy). **`tempo:{down,hold,up}`** generaliza el rep-seconds (suma
+  = seg/rep; desk/chair `{2,0,2}`=4, chin tucks `{2,4,2}`=8). **`transition:
+  {seconds}`** = cambio de lado perSide (10 s, default s113). **`completion:
+  {mode:'guided'}`** ('manual' reservado, sin piloto).
+- **Los dos «setup» distintos** (lo pedía el corte): `setup:{mode:'ready',
+  estimatedSeconds}` = COMPORTAMIENTO del runner (espera al usuario, **nunca**
+  countdown; `ready ⇒ estimatedSeconds>0`) · `instruction.setup` = COPY de
+  colocación. `v1StepSetup(routine, idx)` es la ÚNICA fuente del gate (lee
+  `ready`, deriva auto/none como s111/s114) y la usan el runner y la duración.
+- **Migración ATÓMICA**: datos ES + keys i18n EN `id.sN.instruction.{setup,
+  action,care}` + lector `tInstr` a la vez; se **retiran** `placeCue/cue/careCue`
+  de los 5 pilotos (dato + keys EN). `cue` de las 22 legacy y el fallback
+  general de i18n INTACTOS. **Metadatos** `position/equipment/requiresFloor/
+  intensity/level` (vocabulario consistente, sin consumidor UI, sin `discrete`).
+
+### Fuente única de segundos + fix del criterio de aceptación (P0)
+
+- **Deuda real corregida**: `v1StepWeight` (peso de la barra segmentada) leía
+  `step.dur` crudo mientras el progreso, el `remaining` y el aviso de 5 s leían
+  `v1StepDur` (preset) → con descanso 20/45 el peso divergía del llenado. Ahora
+  la rama timed/rest usa `v1StepDur` → **peso = progreso = aviso 5 s = duración**
+  sobre la misma duración efectiva (verificado en 20/30/45).
+
+### Duración derivada (P0)
+
+- **`estimateDuration(routine, restBetweenSets) → {minSec,maxSec,breakdown}`** —
+  helper PURO en support (testable sin runner). `perSide` = **dur POR LADO ×2 +
+  UNA transición** (evita el cuádruple conteo); reps guided = `target×tempo`
+  FIJO (planificada, no real: «terminar antes» reduce el reloj, no la promesa);
+  rest betweenSets → preset, cierre → dur; + prep global + setup por paso (ready
+  fijo). No se guarda como dato canónico.
+- **Tarjeta (RoutineCard):** las rutinas v1 muestran el rango derivado; Respira +
+  22 legacy conservan `routine.min`; premium bloqueado sigue «Pronto». UNA sola
+  promesa. **Dev-check** (`_v1IsDev`): compara `routine.min` con el rango de
+  **minutos mostrados** [floor,ceil] (no en segundos — una rutina determinista
+  casi nunca es múltiplo exacto de 60); avisa solo fuera, sin ruido dentro.
+
+### Limpieza (P2) · Verificación
+
+- Retirada `move.repsGuidedHint` (sin consumidor tras s114).
+- Dev :8765 + standalone (SW purgado + reload MISMO gesto). Contrato migrado
+  (viejas keys/campos ausentes; EN resuelve); desk.pushups flujo real (prep 5 →
+  colocación `instruction.setup` → trabajo `instruction.action` + «CUÍDATE»);
+  neck.3 lado integrado + auto-cambio; criterio de aceptación alineado en
+  20/30/45; tarjetas v1 con rango, legacy con `min`; dev-check dentro ×4, avisa
+  **couch.stretch** (declarado 5 vs 6–7 min, único outlier → candidato B2.3);
+  **legacy Hombros byte-idéntico** (prep 3, sin atributos v1); consola limpia
+  (sin `[i18n] missing` ES+EN, sin «Cannot update while rendering»). Sin cambios
+  de layout (delta 0 heredado de s114). **Standalone** UNA vez (3148 KB, 82
+  archivos validados por el parser TS). Bump ×3. Backup `v0.58.0_20260721`
+  (rotado `v0.38.0_20260708`, cap 20).
+
+---
+
 ## [v0.58.0] -- 2026-07-21 -- feat(move): runner guiado · capa editorial
 
 Sesión 114. **Segunda de dos — CIERRA el GIRO «runner guiado»** (s113 motor ·
@@ -203,98 +277,3 @@ siguiente.
   intacto (prep 3, sin atributos v1) · consola limpia · standalone 3136 KB.
 
 Diario completo: [session-114](./docs/sessions/session-114-runner-guiado-editorial.md).
-
----
-
-## [v0.57.0] -- 2026-07-20 -- feat(move): runner guiado · motor
-
-Sesión 113. Primera de las dos sesiones del GIRO «runner guiado» (decisión del
-usuario 2026-07-18, post-s112, registrada en `bc12839`; s114 = capa
-editorial). Aplica las **ENMIENDAS a R2/R3/BASE §3-A** ya registradas en
-DECISIONES_PRODUCTO §B2 — no se reabrieron. Principio rector: **«el usuario
-toca para empezar, pausar o adaptar; NO para empujar la rutina hacia
-delante»**. Decisiones de arranque (AskUserQuestion): guiado **sustituye** al
-libre · pulso **+ tick suave** (familia actual) · transición de lado **10 s**.
-Diario: [session-113](./docs/sessions/session-113-runner-guiado-motor.md).
-
-### Reps guiadas con cadencia (enmienda R2)
-
-- `mode:'reps'`: el reloj marca la cadencia (`V1_REP_SECONDS = 4` — fuerza,
-  2 bajar + 2 subir, ref. ACE 2-8 s; `step.repSeconds` opcional — **chin
-  tucks de neck.3 declara 8 s**, control postural con retención; base del
-  `tempo` de B2.2b-1) · contador «n» + «de {N} reps» · **pulso visual**
-  (`pace-rep-pulse`, escala con la duración real de la rep; se congela en
-  pausa) + **tick suave por rep** (receta `tick` existente) · **avance AUTO
-  al completar el objetivo**.
-- **«Terminar antes» siempre visible** (primaria) · **pausa disponible**
-  (botón y Espacio) · copy «Sigue el pulso · haz menos si hoy lo necesitas».
-- **Acreditación honesta**: `repsGuidedRef` suma solo reps realmente guiadas
-  (objetivo al auto-completar, `floor(elapsed/repSeconds)` al salir antes);
-  lo consume la pantalla final de s114. Nunca se acredita el objetivo.
-- **Reduced-motion**: el pulso NO cuelga de `data-pace-essential` → el kill
-  global lo congela y queda el contador sin animación (fallback del corte).
-- Barra de progreso de reps determinista (`elapsed / (reps × repSeconds)`).
-
-### Transición AUTO de lado (enmienda R3)
-
-- Fin del lado 1 → señal suave (`move.step`) → pantalla de transición: kicker
-  «Cambia de lado» + cuenta **10 s** en estilo gate (56px `--ink-2`) +
-  **«Ahora: Derecha»** + «El lado siguiente empieza solo» → **el lado 2
-  arranca solo**. «Empezar ya» / «Más tiempo» (+5 s) / «Pausar» opcionales;
-  sin «Anterior» durante la transición. «Siguiente» en perSide lado 0 entra
-  en la transición (no salta el lado).
-
-### Prep · Rest · min · datos
-
-- **Prep 5 s** (antes 3) en el runner v1; legacy sigue en 3.
-- **Rest entre series 30 s** (antes 20) + **`restKind: 'betweenSets'`** en los
-  4 descansos de `desk.pushups`/`chair.squats` (base del ajuste de Tweaks
-  s114). El **«Reset respiración» de chair.antidote NO se toca ni se tipa**
-  (cierre; comentado en el dato). `desk.pushups` **min 2→3** (real medido
-  3:00-3:25). Campos nuevos (`restKind`/`repSeconds`) sin keys `sN` nuevas;
-  ningún step insertado/borrado.
-
-### Layout compacto por ALTURA (P1 del giro)
-
-- **Shell** (beneficia a los 4 tipos + legacy): tiers `min-width:641px` +
-  `max-height:700/560/430` — padding, prep-num 140/110/84, done compacto,
-  timer 96/72/60, hint oculto ≤560. Tier a **700** (no 720): ≥701px ya cabía
-  en s112, las alturas estándar quedan idénticas.
-- **v1** (`data-pace-v1-*` en MoveSessionV1.support): márgenes → tipografías
-  secundarias → **glifo oculto ≤430px**; retrato estrecho (`max-width:640` +
-  `max-height:700`) SOLO espacios. Orden respetado: espacios → glifo →
-  decorativo, NUNCA instrucciones/controles.
-- `v1GlyphSize(vpH)`: ≥720 fórmula s112 intacta; <720 pendiente 0.22 sin
-  suelo (600→132 · 512→113; medido: con 150 desbordaba 16px).
-- Footer del shell `flexWrap:'wrap'`. **Sin scrollbar en 1280×600 · 1024×512 ·
-  844×390 · 360×640** (delta 0 medido); el scroll del centro queda como red
-  de seguridad.
-
-### Fix + split
-
-- **Side-effects fuera de los updaters de setState** (warning React «Cannot
-  update Sidebar while rendering MoveSessionV1», pre-existente desde s110 y
-  constante con el auto-avance): los intervalos solo mueven contadores; los
-  umbrales (tick, avance, completion) viven en efectos.
-- **`MoveSessionV1.support.jsx` NUEVO** (119 ln; constantes + helpers + CSS
-  del pulso/altura; carga ANTES del runner — tag en PACE.html).
-  MoveSessionV1 412 ln.
-
-### i18n (ES+EN)
-
-Nuevas: `move.repsOf` · `move.repsGuidedHint` · `move.finishEarly` ·
-`move.sideAutoHint`. Retiradas (sin consumidores): `move.repsTarget` ·
-`move.repsDone` · `move.repsHint` · `session.sideReady`.
-
-### Verificación
-
-Dev :8765 (SW purgado; sirvió versión vieja 2 veces) + standalone.
-**desk.pushups completo SIN tocar la pantalla** (done «3:00 · 5 pasos» real,
-0 toasts) · neck.3 (8 s/rep + 3 cambios auto, «3:22») · couch.stretch (ready
-paso 0 espera; transición pausada/reanudada; «Más tiempo» 10→15; lado 2 solo)
-· chair.antidote (ready intacto, cierre sin tipar) · legacy Hombros (prep 3,
-glifo 72, sin v1) · 4 viewports delta 0 · reduced-motion (contrato) ·
-silencio OK · consola limpia (warning del buffer = histórico pre-fix, acotado
-con marcadores). **Standalone** regenerado UNA vez (3119 KB, 83 scripts):
-v0.57.0, pulso vivo, legacy intacto, consola limpia. Bump ×3. Backup
-`v0.56.0_20260720` (rotado `v0.36.0_20260707`, cap 20).

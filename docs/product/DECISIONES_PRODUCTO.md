@@ -241,6 +241,25 @@ none|auto|ready, estimatedSeconds}` con ready≠0 s, y `perSide` sin doble
 conteo (dur = POR LADO en los pilotos) → B2.2b-2 feedback → B2.2b-3 eventos
 solo diseño; alcance original abajo):
 
+- **B2.2b-1 contrato + duración derivada — HECHA** (s115, 2026-07-21; v0.59.0;
+  diario [session-115](../sessions/session-115-b2-2b-1-contrato-duracion.md)).
+  Decisiones (AskUserQuestion): migración **atómica** de `instruction.*` (sin
+  fallback dual) · duración **solo en la tarjeta** · esquema «ritmo guiado» / «a
+  tu ritmo» (manual) aprobado · **5 metadatos** completos. Los 5 pilotos migran
+  a `instruction:{setup,action,care}` + `tempo:{down,hold,up}` (suma = seg/rep) +
+  `transition:{seconds}` (perSide) + `completion:{mode:'guided'}` + **los dos
+  «setup» distintos** `setup:{mode:'ready',estimatedSeconds}` (comportamiento;
+  ready nunca countdown) vs `instruction.setup` (copy) + metadatos `position/
+  equipment/requiresFloor/intensity/level` (sin `discrete`). `v1StepSetup` es la
+  ÚNICA fuente del gate; se retiran placeCue/cue/careCue de los pilotos (`cue`
+  legacy intacto). **Fuente única de segundos**: `v1StepWeight` pasa a
+  `v1StepDur` (fix: peso de barra ya no diverge con preset 20/45). **Duración
+  derivada**: helper PURO `estimateDuration` (perSide dur×2+1 transición; reps
+  guided = target×tempo; NO se guarda como dato); la tarjeta muestra el rango en
+  rutinas v1, dev-check `min` vs rango de minutos. Retirada `move.repsGuidedHint`.
+  Legacy byte-idéntico. **Hallazgo (→ B2.3)**: `couch.stretch` declara min 5 pero
+  calcula 6–7 min (único fuera de rango; se conserva `min` como baseline).
+
 - **Metadatos de rutina**: `position / equipment / requiresFloor /
   intensity / level` (base de la taxonomía s108). **SIN `discrete`**
   (decisión s112: semántica ambigua — preferir `execution.mode` +

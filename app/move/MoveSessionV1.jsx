@@ -40,12 +40,19 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const tStep = (idx, field) => tR(`${routine.id}.s${idx}.${field}`, routine.steps[idx][field]);
+  // s115 (B2.2b-1): instruction {setup,action,care} — key i18n
+  // `id.sN.instruction.<k>`, fallback al dato anidado. Reemplaza los campos
+  // sueltos placeCue/cue/careCue de s114 (migración atómica; sin doble fuente).
+  const tInstr = (idx, key) => {
+    const st = routine.steps[idx];
+    return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+  };
   const displayRoutine = lang === 'en'
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
 
   const [stage, setStage] = useStateV1('prep');    // 'prep' | 'run' | 'done'
-  const [prepCount, setPrepCount] = useStateV1(5); // s113: prep 5 s (antes 3)
+  const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS); // s113: prep 5 s (antes 3)
   const [stepIdx, setStepIdx] = useStateV1(0);
   const [phase, setPhase] = useStateV1('place');   // 'place' | 'work' | 'change'
   const [side, setSide] = useStateV1(0);           // 0 = 1er lado, 1 = 2º lado
@@ -66,26 +73,17 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   };
 
   const startStep = (idx) => {
-    const st = routine.steps[idx];
     setStepIdx(idx); setElapsed(0); setSide(0);
-    // Gate de colocación (s111/s112), cuatro entradas:
-    //   ready — declarado por paso (`setup:'ready'`, suelo/pared): espera al
-    //           usuario SIN cuenta, en cualquier mode e incluso en el paso 0.
-    //   auto  — derivado del mode (s111): pasos CON reloj (timed/perSide) e
-    //           idx>0 → cuenta-atrás que fluye sola (efecto abajo).
-    //   reps  — (s114) el primer set de fuerza (reps con `placeCue` y NO
-    //           precedido por un rest) gana una colocación AUTO: ventana para
-    //           leer el setup y ponerse en posición antes de que arranque el
-    //           pacer. Los sets 2/3 vienen tras un rest (que ya recoloca y
-    //           guía qué viene) → directo a work, sin doble espera.
-    //   none  — resto de reps/rest y paso 0 sin placeCue → directo a work.
-    // El gate nunca es el timer del ejercicio: R1 intacto.
-    const clocked = st.mode === 'timed' || st.mode === 'perSide';
-    const prev = idx > 0 ? routine.steps[idx - 1] : null;
-    const afterRest = !!(prev && prev.mode === 'rest');
-    if (st.setup === 'ready') { setPhase('place'); setPlaceLeft(0); }
-    else if (clocked && idx > 0) { setPhase('place'); setPlaceLeft(typeof st.setup === 'number' ? st.setup : V1_PLACE_SECONDS); }
-    else if (st.mode === 'reps' && st.placeCue && !afterRest) { setPhase('place'); setPlaceLeft(V1_PLACE_SECONDS); }
+    // Gate de colocación (s115): la derivación vive en v1StepSetup (support),
+    //   ÚNICA fuente compartida con la duración estimada:
+    //   ready → espera al usuario SIN cuenta (placeLeft 0; NUNCA countdown).
+    //   auto  → cuenta que fluye sola (efecto abajo), estimatedSeconds s.
+    //   none  → directo a work. El gate nunca es el timer del ejercicio: R1
+    //   intacto. Comportamiento idéntico a s114 (ready / clocked idx>0 / 1er
+    //   set de fuerza con instruction.setup no tras rest → auto; resto none).
+    const su = v1StepSetup(routine, idx);
+    if (su.mode === 'ready') { setPhase('place'); setPlaceLeft(0); }
+    else if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); }
     else setPhase('work');
   };
   const advanceStep = () => {
@@ -99,7 +97,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // Entrada a la transición de lado (s113, enmienda R3): señal suave de la
   // familia actual + cuenta que fluye sola (efecto abajo).
   const enterChange = () => {
-    setPhase('change'); setElapsed(0); setChangeLeft(V1_CHANGE_SECONDS);
+    // s115: la duración de la transición sale del contrato (transition.seconds),
+    // con el default s113 (10 s) si el paso no la declara.
+    setPhase('change'); setElapsed(0); setChangeLeft(v1TransitionSeconds(step));
     // s114: señal propia de «cambio de lado» (familia move, distinguible del
     // avance de paso `move.step`). Silencio si soundOn está apagado.
     try { playSound('move.side'); } catch (e) {}
@@ -129,13 +129,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // «Empezar ya» salta; «Más tiempo» suma 5 s. En 'ready' NO corre (s112).
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (step && step.setup === 'ready') return;
+    if (step && step.setup && step.setup.mode === 'ready') return;
     const intv = setInterval(() => setPlaceLeft(c => Math.max(0, c - 1)), 1000);
     return () => clearInterval(intv);
   }, [stage, phase, stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
-    if (step && step.setup === 'ready') return;
+    if (step && step.setup && step.setup.mode === 'ready') return;
     beginWork();
   }, [placeLeft]);
 
@@ -155,7 +155,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
     if (step.mode === 'reps') {
       const repSec = v1RepSeconds(step);
-      if (elapsed >= v1RepTarget(step) * repSec) {
+      // s115: se respeta completion.mode — sólo 'guided' auto-avanza al objetivo
+      // ('manual' reservado, sin piloto: quedaría en «Terminar antes»). El pulso
+      // y el tick corren igual; los 5 pilotos son guided → comportamiento intacto.
+      const guided = v1CompletionMode(step) !== 'manual';
+      if (guided && elapsed >= v1RepTarget(step) * repSec) {
         repsGuidedRef.current += v1RepTarget(step);
         advanceStep();
       } else if (elapsed % repSec === 0) {
@@ -200,6 +204,10 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     setCaminoUiActive(true);
     return () => setCaminoUiActive(false);
   }, []);
+  // s115 · dev-check: duración declarada vs calculada (sólo dev; una vez por
+  // sesión, con el preset de descanso actual) — para comparar con la ejecución
+  // real medida. Invisible en prod; la promesa visible sale del helper puro.
+  useEffectV1(() => { try { v1DevCheckDuration(routine, v1RestSeconds()); } catch (e) {} }, []);
   useEffectV1(() => { if (stage === 'run') { try { playSound('move.step'); } catch(e) {} } }, [stepIdx]);
 
   // Atajos. s113: Espacio pausa también reps guiadas y la transición de lado
@@ -278,7 +286,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // s114: el descanso entre series toma su duración del preset de Ajustes
   // (v1StepDur → restBetweenSets); el resto de pasos usan su `dur`.
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
-  const placeReady = step.setup === 'ready';
+  const placeReady = !!(step.setup && step.setup.mode === 'ready');
 
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
   // insignia; en poca altura cede antes que instrucciones/controles (s113).
@@ -313,7 +321,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
     // s114: el hint genérico del pulso cede el sitio a la capa «Cuídate»
-    // (careCue, específica del ejercicio y siempre visible, abajo).
+    // (instruction.care, específica del ejercicio y siempre visible, abajo).
     primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
@@ -335,16 +343,16 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         } };
   }
 
-  // s114 · capa editorial — la instrucción es POR FASE:
-  //   colocación → placeCue (setup completo) · ejecución → cue (shortCue).
+  // s114 · capa editorial — la instrucción es POR FASE (s115: `instruction.*`):
+  //   colocación → instruction.setup · ejecución → instruction.action (shortCue).
   // El lado (perSide) se INTEGRA en el texto de trabajo (palabra del lado como
-  // apertura, no un kicker suelto). «Cuídate» (careCue) va como línea
+  // apertura, no un kicker suelto). «Cuídate» (instruction.care) va como línea
   // secundaria SIEMPRE visible bajo el cue de trabajo (decisión s114-A: en
   // altura baja se oculta el rótulo, nunca el contenido).
   const inWork = phase === 'work';
-  const stepPlaceCue = tStep(stepIdx, 'placeCue');
-  const cueText = (phase === 'place' && stepPlaceCue) ? stepPlaceCue : tStep(stepIdx, 'cue');
-  const careText = (inWork && !isRest) ? tStep(stepIdx, 'careCue') : undefined;
+  const stepSetupCue = tInstr(stepIdx, 'setup');
+  const cueText = (phase === 'place' && stepSetupCue) ? stepSetupCue : tInstr(stepIdx, 'action');
+  const careText = (inWork && !isRest) ? tInstr(stepIdx, 'care') : undefined;
   const sideLead = (inWork && step.mode === 'perSide')
     ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
     : null;

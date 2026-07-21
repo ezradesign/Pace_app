@@ -21,53 +21,73 @@ const EXTRA_ROUTINES = {
     items: [
       { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
         desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello. Pasarás por el suelo.', min: 5,
+        position: ['seated', 'halfKneeling', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'gentle', level: 'accessible',
         steps: [
+          /* s115 (B2.2b-1): contrato formal — `instruction` {setup,action,care}
+             (consolida cue/placeCue/careCue de s114); `transition.seconds` = el
+             cambio de lado (perSide), hoy 10 s uniformes (s113). OJO a los dos
+             «setup»: `setup:{mode:'ready',...}` = COMPORTAMIENTO del runner
+             (espera al usuario, nunca cuenta) · `instruction.setup` = COPY de
+             colocación. El cierre respiratorio no se toca (sin restKind). */
           { name: 'Apertura de pecho', mode: 'timed', dur: 40,
-            cue: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-            careCue: 'Abre solo hasta donde el pecho estire sin molestar.' },
-          { name: 'Rotación torácica', mode: 'perSide', dur: 20,
-            cue: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
-            placeCue: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
-            careCue: 'El giro nace del tronco, no del cuello.' },
-          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready',
-            cue: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
-            placeCue: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
-            careCue: 'Recorrido corto. No fuerces la zona lumbar.' },
-          { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready',
-            cue: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
-            placeCue: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
-            careCue: 'Apoya la mano en un libro si no llegas al suelo.' },
-          { name: 'Cuello y trapecios', mode: 'perSide', dur: 20,
-            cue: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
-            placeCue: 'Siéntate erguido, hombros abajo.',
-            careCue: 'Sin tirar con la mano. Solo el peso.' },
+            instruction: {
+              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+          { name: 'Rotación torácica', mode: 'perSide', dur: 20, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
+              action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
+              care: 'El giro nace del tronco, no del cuello.' } },
+          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+              action: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
+              care: 'Recorrido corto. No fuerces la zona lumbar.' } },
+          { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
+              action: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
+              care: 'Apoya la mano en un libro si no llegas al suelo.' } },
+          { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Siéntate erguido, hombros abajo.',
+              action: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
+              care: 'Sin tirar con la mano. Solo el peso.' } },
           /* CIERRE respiratorio — sin restKind a propósito (s113): NO es un
              descanso entre series y el ajuste de Tweaks (s114) no lo toca. */
-          { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' },
+          { name: 'Reset respiración', mode: 'rest', dur: 30,
+            instruction: { action: '3 inhalaciones profundas para cerrar.' } },
         ]},
       { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
         desc: 'Micro-pausa para cervicales tensas.', min: 3,
+        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          /* s113: repSeconds 8 — control postural con retención (desliza +
-             mantén 3-5 s + relaja), no cadencia de fuerza (4 s default).
-             s114: capa editorial — cue = ejecución, placeCue = colocación,
-             careCue = «Cuídate». En perSide el lado lo integra el runner. */
-          { name: 'Chin tucks', mode: 'reps', reps: 5, repSeconds: 8, dur: 40,
-            cue: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
-            placeCue: 'Siéntate erguido, hombros sueltos. Mira al frente.',
-            careCue: 'Sin tensar. Un recorrido pequeño ya trabaja.' },
-          { name: 'Inclinación lateral', mode: 'perSide', dur: 25,
-            cue: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
-            placeCue: 'Siéntate erguido, deja los hombros abajo.',
-            careCue: 'No empujes con la mano. Deja caer el peso de la cabeza.' },
-          { name: 'Rotación lenta', mode: 'perSide', dur: 25,
-            cue: 'Gira despacio a mirar sobre el hombro. Vuelve al centro.',
-            placeCue: 'Erguido, barbilla paralela al suelo.',
-            careCue: 'Gira solo hasta donde el cuello vaya suelto.' },
-          { name: 'Escalenos', mode: 'perSide', dur: 20,
-            cue: 'Inclina la cabeza al lado contrario y mira un poco arriba.',
-            placeCue: 'Siéntate sobre una mano para anclar ese hombro.',
-            careCue: 'Muy suave. La zona del cuello es delicada.' },
+          /* s113: control postural con retención (desliza + mantén 3-5 s +
+             relaja), no cadencia de fuerza. s115 (B2.2b-1): el `repSeconds:8`
+             pasa a `tempo:{down,hold,up}` (suma 8 s = misma cadencia); el resto
+             es el contrato formal (instruction + transición). En perSide el lado
+             lo integra el runner. */
+          { name: 'Chin tucks', mode: 'reps', reps: 5, dur: 40,
+            tempo: { down: 2, hold: 4, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Siéntate erguido, hombros sueltos. Mira al frente.',
+              action: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
+              care: 'Sin tensar. Un recorrido pequeño ya trabaja.' } },
+          { name: 'Inclinación lateral', mode: 'perSide', dur: 25, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Siéntate erguido, deja los hombros abajo.',
+              action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
+              care: 'No empujes con la mano. Deja caer el peso de la cabeza.' } },
+          { name: 'Rotación lenta', mode: 'perSide', dur: 25, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Erguido, barbilla paralela al suelo.',
+              action: 'Gira despacio a mirar sobre el hombro. Vuelve al centro.',
+              care: 'Gira solo hasta donde el cuello vaya suelto.' } },
+          { name: 'Escalenos', mode: 'perSide', dur: 20, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Siéntate sobre una mano para anclar ese hombro.',
+              action: 'Inclina la cabeza al lado contrario y mira un poco arriba.',
+              care: 'Muy suave. La zona del cuello es delicada.' } },
         ]},
       { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
         desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
@@ -138,32 +158,39 @@ const EXTRA_ROUTINES = {
         ]},
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
         desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 5, access: 'premium',
+        position: ['halfKneeling', 'floor', 'supine'], equipment: ['wall', 'cushionOptional'], requiresFloor: true, intensity: 'strong', level: 'intermediate',
         /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
-           pared/suelo — valida setup:'ready' + retención por lado + cambio de
-           lado + duración real. Solo se AÑADEN campos (mode/setup) y se quitan
-           los «30s por lado» de los cues (ahora los lleva el runner): los EN
-           posicionales sN no se reindexan. dur en perSide = segundos POR LADO. */
+           pared/suelo. s115 (B2.2b-1): contrato formal — `instruction`
+           {setup,action,care}, `setup:{mode:'ready',estimatedSeconds}` (los dos
+           «setup» distintos: comportamiento vs copy), `transition.seconds` en
+           los perSide. dur en perSide = segundos POR LADO (activo = dur×2 + 1
+           transición). */
         steps: [
-          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready',
-            cue: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
-            placeCue: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
-            careCue: 'Recorrido corto. Mantén el tronco erguido.' },
-          { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: 'ready',
-            cue: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
-            placeCue: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
-            careCue: 'Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.' },
+          { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+              action: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
+              care: 'Recorrido corto. Mantén el tronco erguido.' } },
+          { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
+              action: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
+              care: 'Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.' } },
           { name: '90/90', mode: 'timed', dur: 60,
-            cue: 'Gira despacio de un lado al otro. Tronco alto.',
-            placeCue: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
-            careCue: 'Apóyate en las manos por detrás para ir más cómodo.' },
-          { name: 'Pigeon', mode: 'perSide', dur: 30,
-            cue: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
-            placeCue: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
-            careCue: 'Pon un cojín bajo la cadera que quede en el aire.' },
+            instruction: {
+              setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
+              action: 'Gira despacio de un lado al otro. Tronco alto.',
+              care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
+          { name: 'Pigeon', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
+              action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
+              care: 'Pon un cojín bajo la cadera que quede en el aire.' } },
           { name: 'Puente con marcha', mode: 'timed', dur: 60,
-            cue: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-            placeCue: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
-            careCue: 'Baja el ritmo si la lumbar se queja.' },
+            instruction: {
+              setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+              action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+              care: 'Baja el ritmo si la lumbar se queja.' } },
         ]},
       { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
         desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',

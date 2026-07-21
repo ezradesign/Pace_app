@@ -116,6 +116,17 @@ function RoutineCard({ routine, color, onClick }) {
   const isLocked = window.canAccessRoutine
     ? !window.canAccessRoutine(routine.id)
     : (isPremium && !pace.premiumUnlocked);
+  // s115 (B2.2b-1): duración DERIVADA para rutinas del contrato v1 (algún step
+  // con `mode`) — UNA sola promesa vía helper puro `estimateDuration`, con el
+  // preset de descanso actual (reactivo: pace ya suscribe). El resto (Respira +
+  // las 22 rutinas legacy) conserva `routine.min`. Prod nunca muestra ambos.
+  const isV1 = !!(routine.steps && routine.steps.some(s => s && s.mode));
+  let durLabel = `${routine.min} min`;
+  if (isV1 && typeof window.estimateDuration === 'function') {
+    const est = window.estimateDuration(routine, pace.restBetweenSets);
+    const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
+    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
+  }
   return (
     <Card accent={isLocked ? undefined : color} onClick={isLocked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {routine.safety && (
@@ -143,7 +154,7 @@ function RoutineCard({ routine, color, onClick }) {
         {isLocked ? (
           <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
         ) : (
-          <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{routine.min} min</span>
+          <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{durLabel}</span>
         )}
       </div>
     </Card>

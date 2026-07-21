@@ -137,7 +137,6 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.placeReadyHint':             'Sin prisa · el ejercicio espera a que estés en posición',
     // Runner guiado (s113): reps con cadencia + transición auto de lado
     'move.repsOf':                     'de {n} reps',
-    'move.repsGuidedHint':             'Sigue el pulso · haz menos si hoy lo necesitas',
     'move.finishEarly':                'Terminar antes',
     'move.sideAutoHint':               'El lado siguiente empieza solo',
     // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
@@ -328,7 +327,6 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.placeReadyHint':             'No rush · the exercise waits until you\'re in position',
     // Guided runner (s113): cadenced reps + auto side transition
     'move.repsOf':                     'of {n} reps',
-    'move.repsGuidedHint':             'Follow the pulse · do fewer if you need to today',
     'move.finishEarly':                'Finish early',
     'move.sideAutoHint':               'The next side starts on its own',
     // Editorial layer (s114): «Take care» label + final-screen stat labels
