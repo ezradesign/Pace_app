@@ -167,10 +167,17 @@ function BreatheSession({ routine, onExit, inPath }) {
   // Atajos de teclado
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === ' ') { e.preventDefault(); setPaused(p => !p); }
+      if (e.key === ' ') {
+        // No robar Espacio a un control con foco (chips de feedback / CTA en
+        // 'done'): activación nativa en vez de preventDefault (guard s116).
+        if (sessionKeyOnControl(e)) return;
+        e.preventDefault(); setPaused(p => !p);
+      }
       if (e.key === 'Escape') onExit('exit');
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
-      if (e.key === 'Enter' && stage === 'done') onExit('done');
+      // Enter cierra el DONE salvo foco en un control / modificadores / IME —
+      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -265,6 +272,7 @@ function BreatheSession({ routine, onExit, inPath }) {
         buttonVariant="terracota"
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
+        feedback={inPath ? undefined : <SessionFeedback routineId={routine.id} kind="breathe" accent="var(--breathe)" />}
       />
     );
   }

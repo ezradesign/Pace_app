@@ -15,7 +15,8 @@
      5. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
      6. state-paths.jsx       (paths CRUD, stats)
      7. state-settings.jsx    (setLang)
-     8. state.jsx             (este archivo — re-export consolidado)
+     8. state-feedback.jsx    (recordRoutineFeedback, shouldPromptRoutineFeedback — s116)
+     9. state.jsx             (este archivo — re-export consolidado)
 
    Sesion 57 / v0.27.5 — split desde monolito de 1026 lineas.
 */
@@ -65,4 +66,8 @@ Object.assign(window, {
   // sesion 95 -- guard central de entitlement
   canAccessRoutine,
   canAccessPath,
+  // sesion 116 -- feedback ligero por rutina (B2.2b-2)
+  recordRoutineFeedback,
+  shouldPromptRoutineFeedback,
+  nextRoutineFeedback,
 });

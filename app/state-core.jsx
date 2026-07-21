@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.59.0';
+const PACE_VERSION = 'v0.60.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -124,6 +124,13 @@ const defaultState = {
   // state-custom.jsx; los helpers leen con fallback [] por si un import
   // viejo reintroduce un estado sin la key.
   customRoutines: [],
+
+  // Feedback ligero por rutina (s116 · B2.2b-2 · «¿Te ayudó esta pausa?»).
+  // { [routineId]: { yes, some, no, lastPromptDay } }. Solo CONTADOR: answered
+  // y helpScore se DERIVAN, nunca se persisten. Lógica en state-feedback.jsx.
+  // Instalaciones previas lo reciben con {} vía el merge {...defaultState,
+  // ...parsed} de loadState (sin migración; el slice se llena al primer voto).
+  routineFeedback: {},
 
   // Historico de actividad (sesion 43).
   // days: { "YYYY-MM-DD": {focusMinutes, breathMinutes, moveMinutes, waterGlasses} }

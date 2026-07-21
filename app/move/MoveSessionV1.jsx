@@ -215,11 +215,17 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   useEffectV1(() => {
     const onKey = (e) => {
       if (e.key === ' ') {
+        // No robar Espacio a un control con foco (chips de feedback / CTA en
+        // 'done'): que lo active nativamente en vez de hacer preventDefault (s116).
+        if (sessionKeyOnControl(e)) return;
         e.preventDefault();
         if ((phase === 'work' && step && step.mode !== 'rest') || phase === 'change') setPaused(p => !p);
       }
       if (e.key === 'Escape') onExit('exit');
-      if (e.key === 'Enter' && stage === 'done') onExit('done');
+      // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
+      // el propio CTA se activan por su onClick) o haya modificadores/IME —
+      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
+      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -270,6 +276,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         buttonStyle={{ background: accent, borderColor: accent }}
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
+        feedback={inPath ? undefined : <SessionFeedback routineId={routine.id} kind={kind} accent={accent} />}
       />
     );
   }

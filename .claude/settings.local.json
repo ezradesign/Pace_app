@@ -123,7 +123,8 @@
       "Bash(awk 'NR>=301 && NR<=304' CHANGELOG.md)",
       "Bash(awk 'NR>=296 && NR<=302 {printf \"%d: %s\\\\n\", NR, $0}' CHANGELOG.md)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(grep -n \"^| \\\\`app/move/MoveModule.jsx\\\\`\\\\|^| \\\\`app/move/MoveSessionV1.jsx\\\\`\\\\|^| \\\\`app/breathe/BreatheSession.jsx\\\\`\\\\|^| \\\\`app/i18n/strings/sessions.js\\\\`\\\\|^| \\\\`app/state-core.jsx\\\\`\\\\|^| \\\\`app/state.jsx\\\\`\\\\|^| \\\\`sw.js\\\\`\\\\|^| \\\\`PACE.html\\\\`\" STATE.md)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

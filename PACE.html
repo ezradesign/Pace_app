@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.59.0</title>
+  <title>PACE · Foco · Cuerpo — v0.60.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -144,10 +144,22 @@
   <script type="text/babel" src="app/state-paths.jsx"></script>
   <script type="text/babel" src="app/state-settings.jsx"></script>
   <script type="text/babel" src="app/state-custom.jsx"></script>
+  <!-- Feedback ligero por rutina (s116 · B2.2b-2): recordRoutineFeedback +
+       shouldPromptRoutineFeedback. Tras state-core (getState/setState) y
+       state-history (todayISO); antes de state.jsx (que lo re-exporta). -->
+  <script type="text/babel" src="app/state-feedback.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>
   <script type="text/babel" src="app/ui/SessionShell.jsx"></script>
+  <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
+       en s116 (el shell rozaba 500 ln). Solo inyecta un <style> idempotente;
+       carga tras el shell. -->
+  <script type="text/babel" data-presets="env,react" src="app/ui/SessionShell.responsive.js"></script>
+  <!-- Feedback ligero del cierre (s116 · B2.2b-2): SessionFeedback. Consume los
+       globales del slice (recordRoutineFeedback/shouldPromptRoutineFeedback) y
+       lo montan los runners de cuerpo/respiración vía el slot del SessionDone. -->
+  <script type="text/babel" src="app/ui/SessionFeedback.jsx"></script>
   <script type="text/babel" src="app/ui/CowLogo.jsx"></script>
   <script type="text/babel" src="app/ui/Sound.jsx"></script>
   <script type="text/babel" src="app/ui/Toast.jsx"></script>

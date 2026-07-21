@@ -267,10 +267,17 @@ solo diseño; alcance original abajo):
 - **Duración derivada** de pasos + rangos honestos («3–5 min · a tu ritmo»
   para reps); en dev comparar declarada vs calculada, en prod UNA promesa.
 - **Feedback ligero «¿Te ayudó esta pausa?»** (Sí · Un poco · No · Ahora no —
-  pregunta y respuestas semánticamente alineadas, s112): contador `{done,
-  helped}` por rutina, sin sistema de eventos. Alimenta Pausa PACE y el
-  futuro «qué te ayuda» premium.
-- Diseñar (solo diseñar) el esquema de eventos con `schemaVersion`.
+  pregunta y respuestas semánticamente alineadas, s112) — **HECHO s116 (v0.60.0,
+  B2.2b-2)**: bloque discreto DENTRO del DONE (fuera de Caminos, solo `stage:
+  'done'`), slice `routineFeedback:{[id]:{yes,some,no,lastPromptDay}}` — **conteos
+  completos** (NO `{done,helped}`: la decisión s116 supera el shape original para
+  conservar la señal «Un poco»; `answered`/`helpScore` se DERIVAN, nunca se
+  persisten). «Ahora no» no cuenta pero escribe el día; frecuencia 1×/rutina/día;
+  guard de teclado del done. SIN sistema de eventos y **SIN consumidor visible**
+  (nada de porcentajes). Alimentará la Pausa PACE y el «qué te ayuda» premium
+  cuando lleguen.
+- Diseñar (solo diseñar) el esquema de eventos con `schemaVersion` **(B2.2b-3,
+  SIGUIENTE)**.
 - **B2.3** (olas siguientes): migrar las otras 22 rutinas al contrato +
   reescribir 4 cues (Seated twist, Rib pull, WGS, Ground transitions) + 2
   rutinas (`legs.single`, resto de `atg.knees`).
