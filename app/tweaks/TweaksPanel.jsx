@@ -267,6 +267,39 @@ function TweaksPanel({ open, onClose }) {
         </div>
       )}
 
+      {/* Sesiones (s114) — descanso entre series de fuerza. SOLO afecta a los
+          rests con restKind:'betweenSets' del runner v1 (desk.pushups /
+          chair.squats); los cierres respiratorios (sin restKind) no cambian.
+          Bloque propio: es ritmo de sesión, no audio, y aloja los ajustes de
+          método que vienen (B2.2b). Default 30 = recomendado (pre-seleccionado). */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 4 }}>{t('tweaks.session.label')}</Meta>
+        <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('tweaks.session.rest.hint')}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 20, name: t('tweaks.rest.short') },
+            { v: 30, name: t('tweaks.rest.calm') },
+            { v: 45, name: t('tweaks.rest.wide') },
+          ].map(opt => {
+            const active = (state.restBetweenSets || 30) === opt.v;
+            return (
+              <button key={opt.v} onClick={() => set({ restBetweenSets: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: 'all 180ms',
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
       <Divider style={{ margin: '14px 0' }} />
 
       {ejes.map(eje => (

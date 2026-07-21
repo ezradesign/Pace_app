@@ -29,6 +29,21 @@ function v1RepTarget(step) {
   return (typeof step.reps === 'object' ? step.reps.target : step.reps) || 8;
 }
 
+/* Descanso entre series (s114): los rests con restKind:'betweenSets' toman su
+   duración del ajuste de Ajustes (state.restBetweenSets, presets 20/30/45); el
+   resto de pasos (incl. los cierres respiratorios sin restKind) usan su `dur`
+   declarado. Lee el store global (patrón de Sound.jsx) — el runner re-renderiza
+   cada segundo, así que un cambio del preset se refleja en ≤1 s. */
+function v1RestSeconds() {
+  var s = (typeof getState === 'function') ? getState() : null;
+  return (s && typeof s.restBetweenSets === 'number') ? s.restBetweenSets : 30;
+}
+function v1StepDur(step) {
+  if (!step) return 0;
+  if (step.mode === 'rest' && step.restKind === 'betweenSets') return v1RestSeconds();
+  return step.dur || 0;
+}
+
 /* Progreso 0..1 del step activo (barra segmentada). Reps guiadas (s113):
    el progreso es tiempo guiado / tiempo objetivo — cadencia, no cuota. */
 function v1StepProgress(step, side, elapsed) {
@@ -37,7 +52,8 @@ function v1StepProgress(step, side, elapsed) {
     return total ? Math.min(1, elapsed / total) : 0;
   }
   if (step.mode === 'perSide') return (side * step.dur + elapsed) / (2 * step.dur);
-  return step.dur ? elapsed / step.dur : 0;
+  const d = v1StepDur(step);   // rest betweenSets = preset de Ajustes (s114)
+  return d ? elapsed / d : 0;
 }
 /* Peso del step para la barra segmentada (estimación honesta por tipo). */
 function v1StepWeight(step) {
@@ -79,9 +95,12 @@ if (!_paceMoveV1Css) {
       100% { transform: scale(1); }
     }
     @media (min-width: 641px) and (max-height: 700px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 12px !important; }
+      /* s114: la capa «Cuídate» suma una línea — se recupera altura apretando
+         espacios (nunca instrucciones) para mantener el delta 0 de s113. */
+      [data-pace-v1-glyph] > div { margin-bottom: 8px !important; }
       [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
+      [data-pace-v1-cue] { margin-bottom: 6px !important; }
+      [data-pace-v1-care] { margin-top: 6px !important; }
       [data-pace-v1-progress] { margin-top: 12px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
@@ -91,12 +110,17 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-cue] { font-size: 14px !important; margin-bottom: 10px !important; }
       [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 10px !important; }
       [data-pace-v1-support] { font-size: 12px !important; }
+      /* s114: en poca altura se oculta el RÓTULO «Cuídate», nunca el contenido
+         (decisión A) — la adaptación sigue visible como línea secundaria. */
+      [data-pace-v1-care] { font-size: 12px !important; margin-top: 10px !important; }
+      [data-pace-v1-care-label] { display: none !important; }
       [data-pace-v1-progress] { margin-top: 10px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-v1-glyph] { display: none !important; }
       [data-pace-v1-name] { font-size: 22px !important; margin-bottom: 6px !important; }
       [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 8px !important; }
+      [data-pace-v1-care] { font-size: 11.5px !important; margin-top: 8px !important; }
     }
     /* Retrato estrecho con poca altura (360×640: el paso de reps desbordaba
        18 px): SOLO espacios — la tipografía ya la gobierna el bloque móvil
@@ -107,6 +131,7 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-name] { margin-bottom: 8px !important; }
       [data-pace-v1-cue] { margin-bottom: 10px !important; }
       [data-pace-v1-support-strong] { margin-top: 10px !important; }
+      [data-pace-v1-care] { margin-top: 8px !important; }
       [data-pace-v1-progress] { margin-top: 12px !important; }
     }
   `;
@@ -115,5 +140,5 @@ if (!_paceMoveV1Css) {
 
 Object.assign(window, {
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS,
-  v1RepSeconds, v1RepTarget, v1StepProgress, v1StepWeight, v1GlyphSize,
+  v1RepSeconds, v1RepTarget, v1RestSeconds, v1StepDur, v1StepProgress, v1StepWeight, v1GlyphSize,
 });

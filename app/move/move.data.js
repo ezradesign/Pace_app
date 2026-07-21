@@ -26,11 +26,21 @@ var MOVE_ROUTINES = {
          (la derivación formal de duración llega en B2.2b-1). */
       { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 3,
         steps: [
-          { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
+          /* s114: capa editorial — cue = ejecución (shortCue); placeCue =
+             setup (fase colocación, solo la 1ª serie la muestra); careCue =
+             adaptación «Cuídate» (siempre visible en trabajo). */
+          { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40,
+            cue: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
+            placeCue: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
+            careCue: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40, cue: 'Codos cerca del cuerpo, baja con control.' },
+          { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
+            cue: 'Baja con control, sin dejarte caer. Empuja y vuelve.',
+            careCue: 'Si la primera serie costó, sube un poco las manos.' },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-          { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, lentas. Para si la técnica se rompe.' },
+          { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40,
+            cue: 'Últimas. Lentas y limpias, empuja desde el pecho.',
+            careCue: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' },
         ]},
       { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
         steps: [
@@ -96,11 +106,18 @@ var MOVE_ROUTINES = {
     items: [
       { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
         steps: [
-          { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40, cue: 'Baja hasta rozar la silla, sube sin impulso.' },
+          { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40,
+            cue: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
+            placeCue: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
+            careCue: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-          { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40, cue: 'Más lentas, control total.' },
+          { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40,
+            cue: 'Más lentas. Roza la silla y sube con control.',
+            careCue: 'Baja solo hasta donde las rodillas vayan cómodas.' },
           { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-          { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, sin impulso.' },
+          { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40,
+            cue: 'Últimas, sin impulso. Aprieta arriba.',
+            careCue: 'Para si pierdes el control de la bajada.' },
         ]},
       { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
         steps: [

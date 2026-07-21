@@ -173,8 +173,8 @@ destino invisible) + corte aprobado por AskUserQuestion:
 - Diseño pendiente: diagramas de dos poses (los itera el usuario, D-4;
   candidatos Flexiones inclinadas + Flexor de cadera).
 
-**GIRO — runner guiado (s113 HECHA · s114 PRÓXIMA; decisión del usuario
-2026-07-18, post-s112)**. Origen: capturas del usuario + auditoría externa con
+**GIRO — runner guiado (s113 motor HECHA · s114 capa editorial HECHA →
+**GIRO CERRADO** 2026-07-21; decisión del usuario 2026-07-18, post-s112)**. Origen: capturas del usuario + auditoría externa con
 navegación (verificó repo=deploy en v0.56.0, commit `2bda34c`). Hallazgos:
 scrollbar vertical en pasos de ejercicio (el centro scrollable de s112
 desborda en alturas ~600 px) · el runner exige tocar la pantalla continuamente
@@ -215,15 +215,24 @@ alimentado por el comportamiento real.
   (side-effects fuera de los updaters; pre-existía desde s110) + split
   `MoveSessionV1.support.jsx`. Verificado: desk.pushups completo SIN tocar la
   pantalla · cambios de lado automáticos en vivo · reduced-motion · silencio.
-- **s114 — capa editorial (PRÓXIMA)**: instrucciones por capas de los 5 pilotos
-  (setup completo en colocación · shortCue en ejecución · cue del lado
-  INTEGRADO en el texto · capa de adaptación «Cuídate»; tono PACE: frases
-  cortas, verbos suaves, 1 instrucción por línea, sin anatomía innecesaria) ·
-  pantalla final por módulo (fuera «ANTÍDOTO COMPLETADO» en fuerza) con stats
-  honestas (tiempo · series · reps guiadas REALES) · ajuste de Tweaks del
-  descanso entre series (Breve 20 / Tranquilo 30 recomendado / Amplio 45; v1
-  solo 3 presets) · señales de audio simples **SIN voz** (inicio · aviso de
-  fin · cambio de lado · fin; todo funciona en silencio).
+- **s114 — capa editorial — HECHA (CIERRA el GIRO)** (2026-07-21; v0.58.0;
+  diario [session-114](../sessions/session-114-runner-guiado-editorial.md)). Las
+  4 decisiones abiertas se delegaron al criterio profesional (1A meta por
+  módulo · 2A aviso también en pasos con reloj · 3A bloque «Sesiones» · 4A
+  «Cuídate» siempre visible). Implementado: **instrucciones por capas** en los 5
+  pilotos (`placeCue` en colocación · `cue`=shortCue en ejecución · `careCue`
+  «Cuídate» siempre visible; `cue` fallback → cero re-indexado EN, solo keys
+  nuevas `id.sN.placeCue/careCue`; **colocación AUTO para el 1er set de fuerza**
+  —reps con placeCue no tras rest—; lado INTEGRADO en el cue perSide, no kicker)
+  · **pantalla final por módulo** (Mueve «Movimiento completado» · Estira
+  «Estiramiento completado» → resuelve el P3 `antidoteDone`) con stats honestas
+  consumiendo `repsGuidedRef` (tiempo · series · reps guiadas reales; nunca el
+  objetivo) · **Tweaks «Sesiones»** `restBetweenSets` 20/30/45 (default 30) SOLO
+  en `restKind:'betweenSets'` (cierre respiratorio en 30) + el descanso guía
+  («Luego: {serie}» + aviso ~5 s) · **audio SIN voz** (`move.warn` aviso único
+  ~5 s en descansos y clocked; `move.side` cambio de lado; familia move 432).
+  Verificado dev+standalone: 5 pilotos, delta 0 en los 4 viewports (RE-MEDIDOS),
+  legacy intacto, honestidad de reps (Series 3 · Reps 16, no 30).
 
 **B2.2b — DESPUÉS del runner guiado, re-ordenada en cortes** (B2.2b-1
 contrato+duración sobre los 5 pilotos — formaliza además `completion.mode`,
