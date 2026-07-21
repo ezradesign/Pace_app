@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.60.0</title>
+  <title>PACE · Foco · Cuerpo — v0.59.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1601,16 +1601,6 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.restNext': 'Luego: {name}',
   'move.restReady': 'Prepárate para seguir',
 
-  // Feedback ligero del cierre (s116 · B2.2b-2). Una sola pregunta al
-  // terminar, opcional y saltable; respuestas de igual peso semánticamente
-  // alineadas + «Ahora no» secundario + acuse mínimo. Sin porcentajes.
-  'session.feedback.question': '¿Te ayudó esta pausa?',
-  'session.feedback.yes': 'Sí',
-  'session.feedback.some': 'Un poco',
-  'session.feedback.no': 'No',
-  'session.feedback.later': 'Ahora no',
-  'session.feedback.thanks': 'Gracias',
-
   // Hydrate
   'hydrate.tag': 'Hidratación',
   'hydrate.title': 'Hidrátate',
@@ -1800,16 +1790,6 @@ Object.assign(window.PACE_STRINGS.en, {
   // The rest guides (s114): which set is next + heads-up as rest ends
   'move.restNext': 'Next: {name}',
   'move.restReady': 'Get ready to continue',
-
-  // Light closing feedback (s116 · B2.2b-2). One optional, skippable question
-  // at the end; equal-weight responses semantically aligned + secondary
-  // «Not now» + minimal acknowledgement. No percentages.
-  'session.feedback.question': 'Did this pause help?',
-  'session.feedback.yes': 'Yes',
-  'session.feedback.some': 'A little',
-  'session.feedback.no': 'No',
-  'session.feedback.later': 'Not now',
-  'session.feedback.thanks': 'Thank you',
 
   // Hydrate
   'hydrate.tag': 'Hydration',
@@ -3290,7 +3270,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.60.0';
+const PACE_VERSION = 'v0.59.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3396,13 +3376,6 @@ const defaultState = {
   // state-custom.jsx; los helpers leen con fallback [] por si un import
   // viejo reintroduce un estado sin la key.
   customRoutines: [],
-
-  // Feedback ligero por rutina (s116 · B2.2b-2 · «¿Te ayudó esta pausa?»).
-  // { [routineId]: { yes, some, no, lastPromptDay } }. Solo CONTADOR: answered
-  // y helpScore se DERIVAN, nunca se persisten. Lógica en state-feedback.jsx.
-  // Instalaciones previas lo reciben con {} vía el merge {...defaultState,
-  // ...parsed} de loadState (sin migración; el slice se llena al primer voto).
-  routineFeedback: {},
 
   // Historico de actividad (sesion 43).
   // days: { "YYYY-MM-DD": {focusMinutes, breathMinutes, moveMinutes, waterGlasses} }
@@ -4595,104 +4568,6 @@ Object.assign(window, {
 ;Object.assign(window, { getCustomRoutines, getCustomRoutine, sanitizeCustomRoutine, addCustomRoutine, updateCustomRoutine, deleteCustomRoutine });
 })();
 </script>
-  <!-- Feedback ligero por rutina (s116 · B2.2b-2): recordRoutineFeedback +
-       shouldPromptRoutineFeedback. Tras state-core (getState/setState) y
-       state-history (todayISO); antes de state.jsx (que lo re-exporta). -->
-  <script>
-;(function () {
-/* PACE · state-feedback.jsx
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   Feedback ligero por rutina (s116 · B2.2b-2 · «¿Te ayudó esta pausa?»).
-   Split por dominio (patrón s57: state-hydrate / state-custom / state-timer).
-   Depende de: state-core (getState, setState) · state-history (todayISO).
-   Carga DESPUÉS de state-core y state-history, ANTES de state.jsx (índice).
-
-   Modelo de datos — slice `routineFeedback` bajo pace.state.v2:
-     routineFeedback: {
-       [routineId]: { yes, some, no, lastPromptDay }
-     }
-   Conteos COMPLETOS (decisión s116): se guardan los tres contadores; `answered`
-   y cualquier `helpScore` se DERIVAN, NUNCA se persisten (evita fijar una
-   ponderación prematura). «Ahora no» (later) NO incrementa contadores pero SÍ
-   escribe lastPromptDay (control de frecuencia). Sin sistema de eventos: esto
-   es solo el CONTADOR; el consumidor (Pausa PACE / «qué te ayuda» premium)
-   llega en fases posteriores. Voz/TTS y porcentajes visibles: fuera de alcance.
-
-   Frecuencia: la pregunta se muestra como máximo UNA vez por rutina y DÍA LOCAL
-   (todayISO() — regla #10, prohibido new Date("YYYY-MM-DD")). Salir por el CTA
-   sin responder NO escribe lastPromptDay: la pregunta puede reaparecer tras
-   otra finalización válida de esa rutina el mismo día.
-*/
-
-const FEEDBACK_RESPONSES = ['yes', 'some', 'no', 'later'];
-
-/* Sanitiza la respuesta a uno de los cuatro tokens válidos, o null. */
-function sanitizeFeedbackResponse(response) {
-  return FEEDBACK_RESPONSES.indexOf(response) !== -1 ? response : null;
-}
-
-/* Sanitiza el id de rutina a un string no vacío, o ''. */
-function sanitizeRoutineId(routineId) {
-  return typeof routineId === 'string' ? routineId.trim() : '';
-}
-
-/* nextRoutineFeedback — helper PURO: dado el slice previo, devuelve el SLICE
-   siguiente sin mutar el argumento. No hace setState ni persiste (los efectos
-   viven en la acción pública). Escribe lastPromptDay = hoy en toda respuesta
-   válida (incluida «later»); solo yes/some/no incrementan su contador.
-   Entrada inválida (id vacío o respuesta desconocida) → devuelve el slice tal
-   cual (normalizado a objeto). */
-function nextRoutineFeedback(prev, routineId, response) {
-  const base = prev && typeof prev === 'object' ? prev : {};
-  const id = sanitizeRoutineId(routineId);
-  const resp = sanitizeFeedbackResponse(response);
-  if (!id || !resp) return base;
-  const cur = base[id] || {};
-  const nextEntry = {
-    yes: cur.yes || 0,
-    some: cur.some || 0,
-    no: cur.no || 0,
-    lastPromptDay: todayISO()
-  };
-  if (resp !== 'later') nextEntry[resp] = (nextEntry[resp] || 0) + 1;
-  return { ...base, [id]: nextEntry };
-}
-
-/* recordRoutineFeedback — acción pública. setState con updater FUNCIONAL (sin
-   side-effects dentro del updater: los sonidos/handlers viven en la UI). Ignora
-   silenciosamente id vacío o respuesta no reconocida. */
-function recordRoutineFeedback(routineId, response) {
-  const id = sanitizeRoutineId(routineId);
-  const resp = sanitizeFeedbackResponse(response);
-  if (!id || !resp) return;
-  setState((prev) => ({
-    ...prev,
-    routineFeedback: nextRoutineFeedback(prev.routineFeedback, id, resp)
-  }));
-}
-
-/* shouldPromptRoutineFeedback — ¿mostrar la pregunta para esta rutina AHORA?
-   true si no se preguntó hoy (lastPromptDay !== día local). Lectura defensiva:
-   un state previo SIN el slice devuelve true (primera vez). id vacío → false. */
-function shouldPromptRoutineFeedback(routineId) {
-  const id = sanitizeRoutineId(routineId);
-  if (!id) return false;
-  const fb = getState().routineFeedback || {};
-  const entry = fb[id];
-  if (!entry) return true;
-  return entry.lastPromptDay !== todayISO();
-}
-
-Object.assign(window, {
-  nextRoutineFeedback,
-  recordRoutineFeedback,
-  shouldPromptRoutineFeedback
-});
-;Object.assign(window, { sanitizeFeedbackResponse, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, shouldPromptRoutineFeedback });
-})();
-</script>
   <script>
 ;(function () {
 /* PACE · state.jsx — INDICE
@@ -4712,8 +4587,7 @@ Object.assign(window, {
      5. state-achievements.jsx (unlockAchievement, complete*Session, updateStreak)
      6. state-paths.jsx       (paths CRUD, stats)
      7. state-settings.jsx    (setLang)
-     8. state-feedback.jsx    (recordRoutineFeedback, shouldPromptRoutineFeedback — s116)
-     9. state.jsx             (este archivo — re-export consolidado)
+     8. state.jsx             (este archivo — re-export consolidado)
 
    Sesion 57 / v0.27.5 — split desde monolito de 1026 lineas.
 */
@@ -4762,11 +4636,7 @@ Object.assign(window, {
   getPathStats,
   // sesion 95 -- guard central de entitlement
   canAccessRoutine,
-  canAccessPath,
-  // sesion 116 -- feedback ligero por rutina (B2.2b-2)
-  recordRoutineFeedback,
-  shouldPromptRoutineFeedback,
-  nextRoutineFeedback
+  canAccessPath
 });
 })();
 </script>
@@ -5350,16 +5220,12 @@ function SessionDone(_ref4)
 
 
 
-{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback } = _ref4;
+{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere } = _ref4;
   const { t } = useT();
   /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
      sesion pasa t('session.next') ("Siguiente") -- onExit('done') ya avanza
      el Camino; sin el override el label por defecto es "Volver al inicio"
-     (home). Bug de coherencia reportado por el usuario.
-     feedback (s116 · B2.2b-2): slot OPCIONAL bajo el copy de cierre — los
-     runners de cuerpo/respiración pasan <SessionFeedback/> (fuera de Caminos);
-     undefined = sin bloque (Foco de Camino, PathFocusStep). El bloque decide
-     por sí mismo si mostrarse (gate por-día) y no altera el CTA de regreso. */
+     (home). Bug de coherencia reportado por el usuario. */
   const label = doneButtonLabel || t('session.backToHome');
   const btn = buttonVariant ? /*#__PURE__*/
   React.createElement(Button, { variant: buttonVariant, onClick: () => onExit('done') }, label) : /*#__PURE__*/
@@ -5399,8 +5265,7 @@ function SessionDone(_ref4)
         ...displayItalic,
         fontSize: 18, color: 'var(--ink-2)',
         maxWidth: 400, margin: '0 auto 36px', lineHeight: 1.5
-      } }, doneCopy),
-    feedback
+      } }, doneCopy)
     )
     ));
 
@@ -5427,63 +5292,6 @@ function SessionStat(_ref5) {let { label, value } = _ref5;
 }
 
 /* ============================================================
-   Guards de teclado de las sesiones (s116 · B2.2b-2)
-   ------------------------------------------------------------
-   Los runners (MoveSessionV1 / MoveSessionLegacy / BreatheSession) escuchan
-   `keydown` a nivel de window. Al añadir el bloque de feedback en el DONE con
-   botones interactivos, esos atajos globales NO deben interferir con los
-   controles enfocados:
-
-   - sessionKeyOnControl(e): el foco está en un control interactivo (botón,
-     enlace, campo, contenteditable). Se usa `closest` —no `matches`— porque el
-     target puede ser un <span> hijo del botón. Sirve para dejar que Espacio
-     active nativamente el chip/CTA en vez de robarlo con preventDefault.
-   - sessionDoneKeyBlocked(e): el atajo global de DONE (Enter → onExit('done'))
-     debe ignorarse si hay foco en un control (evita una SEGUNDA salida cuando
-     el botón ya se activa por su onClick), si el evento fue preventDefault,
-     durante composición IME, o con modificadores Ctrl/Meta/Alt.
-
-   El CSS responsive de las pantallas de sesión vive ahora en
-   SessionShell.responsive.js (extraído en s116 para no rebasar 500 líneas).
-   ============================================================ */
-function sessionKeyOnControl(e) {
-  const t = e && e.target;
-  return !!(t && t.closest && t.closest('button,a,input,select,textarea,[contenteditable="true"]'));
-}
-function sessionDoneKeyBlocked(e) {
-  if (!e) return false;
-  return !!(e.isComposing || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || sessionKeyOnControl(e));
-}
-
-Object.assign(window, {
-  SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
-  sessionShellStyles, sessionAtmosphere,
-  sessionKeyOnControl, sessionDoneKeyBlocked
-});
-;Object.assign(window, { sessionAtmosphere, SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
-})();
-</script>
-  <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
-       en s116 (el shell rozaba 500 ln). Solo inyecta un <style> idempotente;
-       carga tras el shell. -->
-  <script>
-;(function () {
-/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   SessionShell.responsive — CSS responsive inyectado de las pantallas de sesión
-   ============================================================================
-   Extraído de SessionShell.jsx en la sesión 116 (v0.60.0): el shell rozaba las
-   500 líneas (regla CLAUDE.md «archivos < 500 líneas») y añadir el slot de
-   feedback lo habría empujado por encima. El bloque es autocontenido —solo
-   referencia `document`— y su inyección es idempotente (comprueba el id antes
-   de insertar), así que basta con cargarlo tras SessionShell.jsx.
-
-   El responsive específico del bloque de feedback vive en SessionFeedback.jsx
-   (no aquí): cada superficie gobierna su propia compactación.
-
-   ============================================================
    CSS responsive de SessionShell (sesión 27 · v0.12.10).
 
    Patrón coherente con Primitives.Modal: selectores [data-*]
@@ -5508,9 +5316,8 @@ Object.assign(window, {
 
    No se mueve la estructura; las tipografías sólo reescalan.
    ============================================================ */
-(function () {
-  const _paceSessionResponsive = document.getElementById('pace-session-responsive-css');
-  if (_paceSessionResponsive) return;
+const _paceSessionResponsive = document.getElementById('pace-session-responsive-css');
+if (!_paceSessionResponsive) {
   const s = document.createElement('style');
   s.id = 'pace-session-responsive-css';
   s.textContent = `
@@ -5649,13 +5456,10 @@ Object.assign(window, {
         font-size: 14px !important;
         margin-top: 12px !important;
       }
-      /* s116: en el DONE, ocultar el HERO decorativo (el check de ceremonia)
-         al llegar a este tier — reclama ~62px para que la fila de feedback
-         (pregunta + respuestas + «Ahora no») y el CTA final quepan sin que el
-         footer tape «Ahora no». Paso 2 del orden de compactación del corte
-         (tras reducir espacios). El prep conserva su hero (no lo tiene). */
       [data-pace-session-done-hero] {
-        display: none !important;
+        width: 52px !important;
+        height: 52px !important;
+        margin-bottom: 10px !important;
       }
       [data-pace-session-done-hero] svg {
         width: 22px !important;
@@ -5678,192 +5482,13 @@ Object.assign(window, {
     }
   `;
   document.head.appendChild(s);
-})();
-})();
-</script>
-  <!-- Feedback ligero del cierre (s116 · B2.2b-2): SessionFeedback. Consume los
-       globales del slice (recordRoutineFeedback/shouldPromptRoutineFeedback) y
-       lo montan los runners de cuerpo/respiración vía el slot del SessionDone. -->
-  <script>
-;(function () {
-/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   SessionFeedback — feedback ligero del cierre de sesión (s116 · B2.2b-2)
-   ======================================================================
-   Bloque OPCIONAL bajo el copy de cierre del DONE (SessionDone gana un slot
-   `feedback`). Una sola pregunta calmada —«¿Te ayudó esta pausa?»— con tres
-   respuestas de igual peso (Sí · Un poco · No) + «Ahora no» como salida
-   secundaria. Coherente con el tono PACE: opcional, saltable, sin porcentajes,
-   sin gamificación. El CTA de regreso del DONE sigue SIEMPRE disponible: no
-   hace falta responder para salir.
-
-   Autogestión (el runner solo lo monta cuando NO está en un Camino):
-   - Gate por-día capturado UNA vez en el mount (shouldPromptRoutineFeedback):
-     si ya se preguntó por esta rutina hoy, el bloque no se muestra (render
-     null). Se captura en el inicializador de useState para que NO desaparezca
-     al re-renderizar tras registrar (recordRoutineFeedback escribe lastPromptDay
-     → shouldPrompt pasaría a false, pero el acuse «Gracias» debe permanecer).
-   - Idempotencia: guard SÍNCRONO (lockRef) bloquea reenvíos antes de que React
-     re-renderice (doble clic / doble Enter); al decidir, el bloque se sustituye
-     por el acuse efímero «Gracias», así los controles dejan de existir.
-
-   Props: routineId (clave del conteo) · kind ('move'|'extra'|'breathe', informa
-   el acento) · accent (color CSS var del módulo, para el hover de los chips).
-*/
-
-const { useState: useStateSF, useRef: useRefSF } = React;
-
-function SessionFeedback(_ref) {let { routineId, kind = 'move', accent = 'var(--move)' } = _ref;
-  const { t } = useT();
-  // Gate por-día CAPTURADO en el mount (no reactivo — ver cabecera).
-  const [shouldShow] = useStateSF(() => {
-    try {return shouldPromptRoutineFeedback(routineId);} catch (e) {return false;}
-  });
-  const [decided, setDecided] = useStateSF(false);
-  const lockRef = useRefSF(false);
-
-  if (!shouldShow) return null;
-
-  const answer = (response) => {
-    if (lockRef.current) return; // guard SÍNCRONO: máx UNA decisión
-    lockRef.current = true;
-    try {recordRoutineFeedback(routineId, response);} catch (e) {}
-    setDecided(true);
-  };
-
-  const wrapStyle = {
-    ...sessionFeedbackStyles.wrap,
-    // El hover de los chips toma el acento del módulo vía esta custom prop.
-    '--pace-fb-accent': accent
-  };
-
-  return (/*#__PURE__*/
-    React.createElement("div", { "data-pace-session-feedback": true, "data-pace-fb-kind": kind, style: wrapStyle }, /*#__PURE__*/
-    React.createElement("div", { "data-pace-fb-rule": true, style: sessionFeedbackStyles.rule }),
-    decided ? /*#__PURE__*/
-    React.createElement("div", { "data-pace-fb-thanks": true, style: sessionFeedbackStyles.thanks },
-    t('session.feedback.thanks')
-    ) : /*#__PURE__*/
-
-    React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { "data-pace-fb-question": true, style: sessionFeedbackStyles.question },
-    t('session.feedback.question')
-    ), /*#__PURE__*/
-    React.createElement("div", { "data-pace-fb-chips": true, style: sessionFeedbackStyles.chips }, /*#__PURE__*/
-    React.createElement("button", { type: "button", "data-pace-fb-chip": true, disabled: decided,
-      onClick: () => answer('yes'), style: sessionFeedbackStyles.chip },
-    t('session.feedback.yes')
-    ), /*#__PURE__*/
-    React.createElement("button", { type: "button", "data-pace-fb-chip": true, disabled: decided,
-      onClick: () => answer('some'), style: sessionFeedbackStyles.chip },
-    t('session.feedback.some')
-    ), /*#__PURE__*/
-    React.createElement("button", { type: "button", "data-pace-fb-chip": true, disabled: decided,
-      onClick: () => answer('no'), style: sessionFeedbackStyles.chip },
-    t('session.feedback.no')
-    )
-    ), /*#__PURE__*/
-    React.createElement("button", { type: "button", "data-pace-fb-ghost": true, disabled: decided,
-      onClick: () => answer('later'), style: sessionFeedbackStyles.ghost },
-    t('session.feedback.later')
-    )
-    )
-
-    ));
-
-}
-
-const sessionFeedbackStyles = {
-  wrap: {
-    marginTop: 4,
-    display: 'flex', flexDirection: 'column', alignItems: 'center'
-  },
-  rule: {
-    width: 40, height: 1,
-    background: 'var(--line-2)', opacity: 0.7,
-    margin: '0 auto 18px'
-  },
-  question: {
-    ...displayItalic,
-    fontSize: 16, color: 'var(--ink-2)',
-    marginBottom: 14
-  },
-  chips: {
-    display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 10
-  },
-  chip: {
-    padding: '9px 18px', fontSize: 13,
-    border: '1px solid var(--line-2)',
-    borderRadius: 'var(--r-md)',
-    background: 'var(--paper-2)', color: 'var(--ink)',
-    transition: 'border-color 160ms ease, color 160ms ease, background 160ms ease'
-  },
-  ghost: {
-    marginTop: 12, fontSize: 12, color: 'var(--ink-3)',
-    background: 'none', border: 'none', padding: '4px 10px',
-    letterSpacing: '0.04em',
-    transition: 'color 160ms ease'
-  },
-  thanks: {
-    ...displayItalic,
-    fontSize: 16, color: 'var(--ink-3)',
-    paddingTop: 2
-  }
-};
-
-/* ============================================================
-   CSS del bloque de feedback: hover (acento del módulo) + compactación
-   responsive propia (vive AQUÍ, no en el shell — cada superficie gobierna la
-   suya). El bloque es contenido FUNCIONAL: sus espacios se reducen con la
-   altura pero la pregunta, las respuestas y «Ahora no» NUNCA se ocultan; solo
-   el filete decorativo desaparece en el tier más bajo. El centro del shell es
-   scrollable (red de seguridad de s112) si aun así no cupiese.
-   ============================================================ */
-const _paceSessionFeedbackCss = document.getElementById('pace-session-feedback-css');
-if (!_paceSessionFeedbackCss) {
-  const s = document.createElement('style');
-  s.id = 'pace-session-feedback-css';
-  s.textContent = `
-    [data-pace-fb-chip]:hover:not(:disabled) {
-      border-color: var(--pace-fb-accent) !important;
-      color: var(--pace-fb-accent) !important;
-    }
-    [data-pace-fb-chip]:disabled { opacity: 0.6; cursor: default; }
-    [data-pace-fb-ghost]:hover:not(:disabled) {
-      color: var(--ink-2) !important;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    @media (max-width: 640px) {
-      [data-pace-session-feedback] { margin-top: 2px !important; }
-      [data-pace-fb-rule] { margin-bottom: 14px !important; }
-      [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 12px !important; }
-      [data-pace-fb-chip] { padding: 8px 15px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 560px) {
-      [data-pace-fb-rule] { margin-bottom: 12px !important; }
-      [data-pace-fb-question] { font-size: 15px !important; margin-bottom: 10px !important; }
-      [data-pace-fb-chip] { padding: 8px 16px !important; }
-      [data-pace-fb-ghost] { margin-top: 8px !important; }
-    }
-    @media (min-width: 641px) and (max-height: 430px) {
-      [data-pace-session-feedback] { margin-top: 0 !important; }
-      [data-pace-fb-rule] { display: none !important; }
-      [data-pace-fb-question] { font-size: 14px !important; margin-bottom: 8px !important; }
-      [data-pace-fb-chip] { padding: 7px 14px !important; font-size: 12px !important; }
-      [data-pace-fb-ghost] { margin-top: 6px !important; }
-    }
-  `;
-  document.head.appendChild(s);
 }
 
 Object.assign(window, {
-  SessionFeedback, sessionFeedbackStyles
+  SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
+  sessionShellStyles, sessionAtmosphere
 });
-;Object.assign(window, { SessionFeedback });
+;Object.assign(window, { sessionAtmosphere, SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat });
 })();
 </script>
   <script>
@@ -9994,17 +9619,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   // Atajos de teclado
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === ' ') {
-        // No robar Espacio a un control con foco (chips de feedback / CTA en
-        // 'done'): activación nativa en vez de preventDefault (guard s116).
-        if (sessionKeyOnControl(e)) return;
-        e.preventDefault();setPaused((p) => !p);
-      }
+      if (e.key === ' ') {e.preventDefault();setPaused((p) => !p);}
       if (e.key === 'Escape') onExit('exit');
       if (e.key === 'Enter' && stage === 'hold') releaseHold();
-      // Enter cierra el DONE salvo foco en un control / modificadores / IME —
-      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done') onExit('done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -10098,8 +9716,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
         stats: stats,
         buttonVariant: "terracota",
         doneButtonLabel: inPath ? t('session.next') : undefined,
-        atmosphere: atmo,
-        feedback: inPath ? undefined : /*#__PURE__*/React.createElement(SessionFeedback, { routineId: routine.id, kind: "breathe", accent: "var(--breathe)" }) }
+        atmosphere: atmo }
       ));
 
   }
@@ -10610,18 +10227,11 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
   // Atajos de teclado
   useEffectMV(() => {
     const onKey = (e) => {
-      if (e.key === ' ') {
-        // No robar Espacio a un control con foco (chips de feedback / CTA en
-        // 'done'): activación nativa en vez de preventDefault (guard s116).
-        if (sessionKeyOnControl(e)) return;
-        e.preventDefault();setPaused((p) => !p);
-      }
+      if (e.key === ' ') {e.preventDefault();setPaused((p) => !p);}
       if (e.key === 'Escape') onExit('exit');
       if (e.key === 'ArrowRight') goNext();
       if (e.key === 'ArrowLeft') goPrev();
-      // Enter cierra el DONE salvo foco en un control / modificadores / IME —
-      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done') onExit('done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -10686,8 +10296,7 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
 
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
-        atmosphere: atmo,
-        feedback: inPath ? undefined : /*#__PURE__*/React.createElement(SessionFeedback, { routineId: routine.id, kind: kind, accent: accent }) }
+        atmosphere: atmo }
       ));
 
   }
@@ -11301,17 +10910,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   useEffectV1(() => {
     const onKey = (e) => {
       if (e.key === ' ') {
-        // No robar Espacio a un control con foco (chips de feedback / CTA en
-        // 'done'): que lo active nativamente en vez de hacer preventDefault (s116).
-        if (sessionKeyOnControl(e)) return;
         e.preventDefault();
         if (phase === 'work' && step && step.mode !== 'rest' || phase === 'change') setPaused((p) => !p);
       }
       if (e.key === 'Escape') onExit('exit');
-      // Enter cierra el DONE, salvo que el foco esté en un control (feedback o
-      // el propio CTA se activan por su onClick) o haya modificadores/IME —
-      // guard P0 s116 (evita una SEGUNDA salida desde el listener global).
-      if (e.key === 'Enter' && stage === 'done' && !sessionDoneKeyBlocked(e)) onExit('done');
+      if (e.key === 'Enter' && stage === 'done') onExit('done');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -11361,8 +10964,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
         stats: stats,
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
-        atmosphere: atmo,
-        feedback: inPath ? undefined : /*#__PURE__*/React.createElement(SessionFeedback, { routineId: routine.id, kind: kind, accent: accent }) }
+        atmosphere: atmo }
       ));
 
   }

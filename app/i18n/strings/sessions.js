@@ -147,6 +147,16 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.restNext':                   'Luego: {name}',
     'move.restReady':                  'Prepárate para seguir',
 
+    // Feedback ligero del cierre (s116 · B2.2b-2). Una sola pregunta al
+    // terminar, opcional y saltable; respuestas de igual peso semánticamente
+    // alineadas + «Ahora no» secundario + acuse mínimo. Sin porcentajes.
+    'session.feedback.question':       '¿Te ayudó esta pausa?',
+    'session.feedback.yes':            'Sí',
+    'session.feedback.some':           'Un poco',
+    'session.feedback.no':             'No',
+    'session.feedback.later':          'Ahora no',
+    'session.feedback.thanks':         'Gracias',
+
     // Hydrate
     'hydrate.tag':                     'Hidratación',
     'hydrate.title':                   'Hidrátate',
@@ -336,6 +346,16 @@ Object.assign(window.PACE_STRINGS.en, {
     // The rest guides (s114): which set is next + heads-up as rest ends
     'move.restNext':                   'Next: {name}',
     'move.restReady':                  'Get ready to continue',
+
+    // Light closing feedback (s116 · B2.2b-2). One optional, skippable question
+    // at the end; equal-weight responses semantically aligned + secondary
+    // «Not now» + minimal acknowledgement. No percentages.
+    'session.feedback.question':       'Did this pause help?',
+    'session.feedback.yes':            'Yes',
+    'session.feedback.some':           'A little',
+    'session.feedback.no':             'No',
+    'session.feedback.later':          'Not now',
+    'session.feedback.thanks':         'Thank you',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',
