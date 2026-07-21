@@ -13,6 +13,18 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s117 (2026-07-21): sesión SOLO-DOCUMENTAL, sin versión nueva** (patrón
+> s109). Se diseñó la capa de eventos local `pace.events.v1` en
+> [`docs/product/EVENTOS_SCHEMA.md`](./docs/product/EVENTOS_SCHEMA.md) (rev. 1→5;
+> **arquitectura por adaptadores**, P0 single-writer resuelto; **Android e iOS via
+> Capacitor previstos**) — **DISEÑO aprobado, NO implementado** (cero código, cero
+> bump, cero build/standalone). Se guardaron además dos propuestas pendientes de
+> valorar: [`HOME_REDISENO_PROPUESTA.md`](./docs/product/HOME_REDISENO_PROPUESTA.md)
+> (solapamiento editorial + jerarquía del home) e
+> [`I18N_EXPANSION_PROPUESTA.md`](./docs/product/I18N_EXPANSION_PROPUESTA.md)
+> (detección automática + expansión comercial). Diario:
+> [session-117](./docs/sessions/session-117-b2-2b-3-eventos-diseno.md).
+
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
 | **v0.60.0** | 2026-07-21 | feat: **B2.2b-2 — feedback ligero «¿te ayudó esta pausa?»** (captura + almacenamiento, SIN consumidor visible; 5 decisiones por AskUserQuestion, todas la recomendación) -- una sola pregunta CALMADA al alcanzar `stage:'done'` en Mueve/Estira (v1 y legacy) + Respira, **fuera de Caminos** (gate `inPath`) y nunca al pulsar «× Salir» · 3 respuestas de igual peso (**Sí · Un poco · No**) + **«Ahora no»** ghost secundario → la fila se sustituye por acuse «Gracias»; el CTA de regreso SIEMPRE disponible (no hace falta responder para salir) · **slice `routineFeedback`** bajo pace.state.v2 (`{[id]:{yes,some,no,lastPromptDay}}`, conteos COMPLETOS; `answered`/`helpScore` **DERIVADOS**, nunca persistidos; «Ahora no» no cuenta) con helper **PURO** `nextRoutineFeedback` + acción `recordRoutineFeedback` (setState funcional, sanitiza `yes\|some\|no\|later`, rechaza id vacío, merge defensivo en loadState) + `shouldPromptRoutineFeedback` · **frecuencia**: máx 1 vez por rutina y **DÍA LOCAL** (`lastPromptDay=todayISO()`; «Ahora no» también suprime el resto del día sin sumar; salir por el CTA sin responder NO escribe el día → puede reaparecer) · **guard de teclado P0** en los 3 runners: `Enter` en done ignora el atajo global de salida si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores Ctrl/Meta/Alt — evita una 2ª salida (el CTA/chip se activan por su onClick); Espacio tampoco se roba a un control con foco · componente NUEVO `SessionFeedback.jsx` (gate por-día capturado en el mount + guard SÍNCRONO de idempotencia + disabled) · `SessionDone` gana slot `feedback` · **CSS responsive del shell EXTRAÍDO** a `SessionShell.responsive.js` (495→336 ln) + en el tier ≤430 el HERO decorativo del done se oculta para que la fila de feedback y el CTA quepan sin solape · i18n `session.feedback.*` ES+EN · **legacy byte-idéntico** salvo el render del DONE + guard de teclado (motor/timers/completion/navegación intactos); contrato s115 intacto | #116 | [abajo](#v0600----2026-07-21----feat-b22b-2--feedback-ligero-te-ayudó-esta-pausa) |
