@@ -68,17 +68,24 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const startStep = (idx) => {
     const st = routine.steps[idx];
     setStepIdx(idx); setElapsed(0); setSide(0);
-    // Gate de colocación (s111/s112), tres modos:
+    // Gate de colocación (s111/s112), cuatro entradas:
     //   ready — declarado por paso (`setup:'ready'`, suelo/pared): espera al
     //           usuario SIN cuenta, en cualquier mode e incluso en el paso 0.
     //   auto  — derivado del mode (s111): pasos CON reloj (timed/perSide) e
     //           idx>0 → cuenta-atrás que fluye sola (efecto abajo).
-    //   none  — reps/rest (sin reloj que proteger, R2) y paso 0 (su ventana
-    //           es el prep 3·2·1) → directo a work. Evita la doble cuenta.
+    //   reps  — (s114) el primer set de fuerza (reps con `placeCue` y NO
+    //           precedido por un rest) gana una colocación AUTO: ventana para
+    //           leer el setup y ponerse en posición antes de que arranque el
+    //           pacer. Los sets 2/3 vienen tras un rest (que ya recoloca y
+    //           guía qué viene) → directo a work, sin doble espera.
+    //   none  — resto de reps/rest y paso 0 sin placeCue → directo a work.
     // El gate nunca es el timer del ejercicio: R1 intacto.
     const clocked = st.mode === 'timed' || st.mode === 'perSide';
+    const prev = idx > 0 ? routine.steps[idx - 1] : null;
+    const afterRest = !!(prev && prev.mode === 'rest');
     if (st.setup === 'ready') { setPhase('place'); setPlaceLeft(0); }
     else if (clocked && idx > 0) { setPhase('place'); setPlaceLeft(typeof st.setup === 'number' ? st.setup : V1_PLACE_SECONDS); }
+    else if (st.mode === 'reps' && st.placeCue && !afterRest) { setPhase('place'); setPlaceLeft(V1_PLACE_SECONDS); }
     else setPhase('work');
   };
   const advanceStep = () => {
@@ -93,7 +100,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // familia actual + cuenta que fluye sola (efecto abajo).
   const enterChange = () => {
     setPhase('change'); setElapsed(0); setChangeLeft(V1_CHANGE_SECONDS);
-    try { playSound('move.step'); } catch (e) {}
+    // s114: señal propia de «cambio de lado» (familia move, distinguible del
+    // avance de paso `move.step`). Silencio si soundOn está apagado.
+    try { playSound('move.side'); } catch (e) {}
   };
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
   const finishRepsEarly = () => {
@@ -154,7 +163,13 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       }
       return;
     }
-    if (elapsed >= step.dur) {
+    const effDur = v1StepDur(step);
+    // s114 · aviso sonoro ÚNICO al cruzar los últimos ~5 s (decisión 2A):
+    // descansos + pasos con reloj (timed/perSide). Una sola señal en el
+    // umbral, NO una cuenta atrás sonora; el tick de reps es aparte y más
+    // suave. Silencio total si soundOn está apagado (playSound lo respeta).
+    if (effDur > 6 && elapsed === effDur - 5) { try { playSound('move.warn'); } catch (e) {} }
+    if (elapsed >= effDur) {
       if (step.mode === 'perSide' && side === 0) enterChange();
       else advanceStep();
     }
@@ -219,14 +234,31 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
+    // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):
+    // Mueve → «Movimiento completado» · Estira → «Estiramiento completado».
+    // Stats HONESTAS: tiempo siempre; en rutinas de fuerza, series (nº de sets
+    // de reps) + reps GUIADAS reales (repsGuidedRef — jamás el objetivo); en
+    // mixtas, pasos (ejercicios sin descansos) + reps; en movilidad, pasos.
+    // Sin calorías, récords ni comparaciones.
+    const exerciseSteps = routine.steps.filter(s => s.mode !== 'rest').length;
+    const repsSteps = routine.steps.filter(s => s.mode === 'reps').length;
+    const guided = repsGuidedRef.current;
+    const stats = [{ label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` }];
+    if (repsSteps > 0 && repsSteps === exerciseSteps) {
+      stats.push({ label: t('move.series'), value: String(repsSteps) });
+      stats.push({ label: t('move.repsCount'), value: String(guided) });
+    } else if (repsSteps > 0) {
+      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
+      stats.push({ label: t('move.repsCount'), value: String(guided) });
+    } else {
+      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
+    }
+    const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (
       <SessionDone
         routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft}
-        doneMeta={t('session.antidoteDone')} doneCopy={t('move.doneCopy')}
-        stats={[
-          { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
-          { label: t('move.steps'),  value: String(routine.steps.length) },
-        ]}
+        doneMeta={doneMeta} doneCopy={t('move.doneCopy')}
+        stats={stats}
         buttonStyle={{ background: accent, borderColor: accent }}
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
@@ -243,7 +275,9 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const isRest = step.mode === 'rest';
   const stepAccent = isRest ? 'var(--ink-3)' : accent;         // R5: descanso apagado
   const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
-  const remaining = Math.max(0, (step.dur || 0) - elapsed);
+  // s114: el descanso entre series toma su duración del preset de Ajustes
+  // (v1StepDur → restBetweenSets); el resto de pasos usan su `dur`.
+  const remaining = Math.max(0, v1StepDur(step) - elapsed);
   const placeReady = step.setup === 'ready';
 
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
@@ -278,20 +312,42 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     repPulseSec = repSec;
     bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    support = t('move.repsGuidedHint');
+    // s114: el hint genérico del pulso cede el sitio a la capa «Cuídate»
+    // (careCue, específica del ejercicio y siempre visible, abajo).
     primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0'); bigLabel = t('session.seconds');
-    kicker = isRest ? null
-      : step.mode === 'perSide' ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
-      : null;
+    // s114: el lado ya NO es un kicker suelto — se INTEGRA en el cue de
+    // trabajo (abajo). El kicker del cuerpo queda solo para place/change.
+    kicker = null;
+    if (isRest && routine.steps[stepIdx + 1]) {
+      // s114: el descanso GUÍA — anuncia la serie que viene y avisa en los
+      // últimos ~5 s (el aviso sonoro corre en paralelo, decisión 2A). El
+      // cierre respiratorio (sin paso siguiente) no muestra nada de esto.
+      supportStrong = tn('move.restNext', { name: tStep(stepIdx + 1, 'name') });
+      if (remaining > 0 && remaining <= 5) support = t('move.restReady');
+    }
     primary = isRest
       ? { label: t('session.skip'), onClick: advanceStep }
       : { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
           if (step.mode === 'perSide' && side === 0) { enterChange(); } else advanceStep();
         } };
   }
+
+  // s114 · capa editorial — la instrucción es POR FASE:
+  //   colocación → placeCue (setup completo) · ejecución → cue (shortCue).
+  // El lado (perSide) se INTEGRA en el texto de trabajo (palabra del lado como
+  // apertura, no un kicker suelto). «Cuídate» (careCue) va como línea
+  // secundaria SIEMPRE visible bajo el cue de trabajo (decisión s114-A: en
+  // altura baja se oculta el rótulo, nunca el contenido).
+  const inWork = phase === 'work';
+  const stepPlaceCue = tStep(stepIdx, 'placeCue');
+  const cueText = (phase === 'place' && stepPlaceCue) ? stepPlaceCue : tStep(stepIdx, 'cue');
+  const careText = (inWork && !isRest) ? tStep(stepIdx, 'careCue') : undefined;
+  const sideLead = (inWork && step.mode === 'perSide')
+    ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight')
+    : null;
 
   // s113: pausable todo lo que corre solo salvo el descanso (termina solo).
   const canPause = (phase === 'work' && !isRest) || phase === 'change';
@@ -345,7 +401,10 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
           {tStep(stepIdx, 'name')}
         </h1>
         <p data-pace-v1-cue style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' }}>
-          {tStep(stepIdx, 'cue')}
+          {sideLead && (
+            <strong style={{ color: stepAccent, fontWeight: 600 }}>{sideLead}. </strong>
+          )}
+          {cueText}
         </p>
 
         {/* s112: el número del GATE no es el timer — más pequeño y en tinta
@@ -382,6 +441,15 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         {support && (
           <div data-pace-v1-support style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 }}>
             {support}
+          </div>
+        )}
+        {/* s114 · capa «Cuídate» (adaptación): siempre visible en ejecución
+            (decisión A). El rótulo puede ocultarse en altura baja
+            (data-pace-v1-care-label), el contenido NUNCA. */}
+        {careText && (
+          <div data-pace-v1-care style={{ fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' }}>
+            <span data-pace-v1-care-label style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 }}>{t('move.careLabel')} · </span>
+            {careText}
           </div>
         )}
       </div>

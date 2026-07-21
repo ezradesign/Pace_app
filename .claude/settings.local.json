@@ -117,7 +117,11 @@
       "Bash(python -)",
       "Bash(git -C \"/c/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app\" show --stat --format=\"%h %s\" e4d7ac1)",
       "Bash(xargs echo \"standalone v0.54.0 hits:\")",
-      "Bash(awk '/## *B2|### *B2|# *B2/{f=1} f{print} /## *B3|## *B1|# B3/{if\\(f && !/B2/\\) exit}' docs/product/DECISIONES_PRODUCTO.md)"
+      "Bash(awk '/## *B2|### *B2|# *B2/{f=1} f{print} /## *B3|## *B1|# B3/{if\\(f && !/B2/\\) exit}' docs/product/DECISIONES_PRODUCTO.md)",
+      "Bash(awk 'NR>=304 && NR<=306' CHANGELOG.md)",
+      "Bash(awk -F: '$1>304')",
+      "Bash(awk 'NR>=301 && NR<=304' CHANGELOG.md)",
+      "Bash(awk 'NR>=296 && NR<=302 {printf \"%d: %s\\\\n\", NR, $0}' CHANGELOG.md)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

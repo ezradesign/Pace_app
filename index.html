@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.57.0</title>
+  <title>PACE · Foco · Cuerpo — v0.58.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1235,6 +1235,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'tweaks.notify.blocked': 'El navegador tiene las notificaciones bloqueadas para este sitio.',
   'tweaks.legal.safety': 'Seguridad',
   'tweaks.legal.privacy': 'Privacidad',
+
+  // Sesiones (s114) — descanso entre series de fuerza (runner v1)
+  'tweaks.session.label': 'Sesiones',
+  'tweaks.session.rest.hint': 'Descanso entre series en las rutinas de fuerza.',
+  'tweaks.rest.short': 'Breve · 20s',
+  'tweaks.rest.calm': 'Tranquilo · 30s',
+  'tweaks.rest.wide': 'Amplio · 45s',
   'notify.focus.title': 'Foco completado',
   'notify.focus.body': 'Ciclo cerrado. Elige tu micro-pausa.',
   'update.msg': 'Hay una versión nueva de PACE',
@@ -1419,6 +1426,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'tweaks.notify.blocked': 'Notifications are blocked for this site in your browser.',
   'tweaks.legal.safety': 'Safety',
   'tweaks.legal.privacy': 'Privacy',
+
+  // Sessions (s114) — rest between strength sets (v1 runner)
+  'tweaks.session.label': 'Sessions',
+  'tweaks.session.rest.hint': 'Rest between sets in strength routines.',
+  'tweaks.rest.short': 'Short · 20s',
+  'tweaks.rest.calm': 'Calm · 30s',
+  'tweaks.rest.wide': 'Wide · 45s',
   'notify.focus.title': 'Focus complete',
   'notify.focus.body': 'Cycle closed. Choose your micro-break.',
   'update.msg': 'A new version of PACE is ready',
@@ -1468,6 +1482,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'session.focusDoneCopy': 'Un tramo de atención sostenida.',
   'session.doneMeta': 'Sesión completada',
   'session.antidoteDone': 'Antídoto completado',
+  'session.moveDone': 'Movimiento completado',
+  'session.stretchDone': 'Estiramiento completado',
   'session.hold': 'Retén sin aire',
   'session.breatheAgain': 'Respirar de nuevo',
   'session.holdCue': 'Pulsa cuando sientas la necesidad de respirar.',
@@ -1579,6 +1595,13 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.repsGuidedHint': 'Sigue el pulso · haz menos si hoy lo necesitas',
   'move.finishEarly': 'Terminar antes',
   'move.sideAutoHint': 'El lado siguiente empieza solo',
+  // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
+  'move.careLabel': 'Cuídate',
+  'move.series': 'Series',
+  'move.repsCount': 'Reps',
+  // El descanso guía (s114): qué serie viene + aviso al final del descanso
+  'move.restNext': 'Luego: {name}',
+  'move.restReady': 'Prepárate para seguir',
 
   // Hydrate
   'hydrate.tag': 'Hidratación',
@@ -1650,6 +1673,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'session.focusDoneCopy': 'A stretch of sustained attention.',
   'session.doneMeta': 'Session completed',
   'session.antidoteDone': 'Antidote completed',
+  'session.moveDone': 'Movement completed',
+  'session.stretchDone': 'Stretch completed',
   'session.hold': 'Hold your breath',
   'session.breatheAgain': 'Breathe again',
   'session.holdCue': 'Press when you feel the need to breathe.',
@@ -1761,6 +1786,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.repsGuidedHint': 'Follow the pulse · do fewer if you need to today',
   'move.finishEarly': 'Finish early',
   'move.sideAutoHint': 'The next side starts on its own',
+  // Editorial layer (s114): «Take care» label + final-screen stat labels
+  'move.careLabel': 'Take care',
+  'move.series': 'Sets',
+  'move.repsCount': 'Reps',
+  // The rest guides (s114): which set is next + heads-up as rest ends
+  'move.restNext': 'Next: {name}',
+  'move.restReady': 'Get ready to continue',
 
   // Hydrate
   'hydrate.tag': 'Hydration',
@@ -2371,15 +2403,19 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.desk.pushups.desc': 'Inclined against desk. 3 sets.',
   'extra.desk.pushups.code': 'Strength',
   'extra.desk.pushups.s0.name': 'Incline push-ups',
-  'extra.desk.pushups.s0.cue': 'Against the desk, elbows close to the body.',
+  'extra.desk.pushups.s0.cue': 'Lower your chest toward the edge. Elbows close to the body. Push and return.',
+  'extra.desk.pushups.s0.placeCue': 'Place your hands on the edge of the desk, a little wider than your shoulders. Step back until your body is at a diagonal, kept straight.',
+  'extra.desk.pushups.s0.careCue': 'The more upright you are, the gentler it is. Pick a height that lets you reach 12 with good form.',
   'extra.desk.pushups.s1.name': 'Rest',
   'extra.desk.pushups.s1.cue': 'Breathe.',
   'extra.desk.pushups.s2.name': 'Incline push-ups',
-  'extra.desk.pushups.s2.cue': 'Elbows close to the body, lower with control.',
+  'extra.desk.pushups.s2.cue': 'Lower with control, without dropping. Push and return.',
+  'extra.desk.pushups.s2.careCue': 'If the first set was hard, raise your hands a little.',
   'extra.desk.pushups.s3.name': 'Rest',
   'extra.desk.pushups.s3.cue': 'Breathe.',
   'extra.desk.pushups.s4.name': 'Incline push-ups',
-  'extra.desk.pushups.s4.cue': 'Last ones, slow. Stop if form breaks.',
+  'extra.desk.pushups.s4.cue': 'Last ones. Slow and clean, push from the chest.',
+  'extra.desk.pushups.s4.careCue': 'Stop if your form breaks. Better 6 good ones than 8 forced.',
 
   'extra.chair.dips.name': 'Chair Dips',
   'extra.chair.dips.desc': 'Triceps in 3 sets. A stable chair with no wheels.',
@@ -2494,15 +2530,19 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.desc': 'Stand up, sit down. The most useful strength. Stable chair, no wheels.',
   'extra.chair.squats.code': 'Legs',
   'extra.chair.squats.s0.name': 'Chair squat',
-  'extra.chair.squats.s0.cue': 'Lower until you graze the chair, rise without momentum.',
+  'extra.chair.squats.s0.cue': 'Lower until you graze the chair. Rise without momentum, chest up.',
+  'extra.chair.squats.s0.placeCue': 'Stand facing the chair, feet hip-width apart. Stable chair, no wheels.',
+  'extra.chair.squats.s0.careCue': 'Rest your hands on your thighs to help yourself if you need to.',
   'extra.chair.squats.s1.name': 'Rest',
   'extra.chair.squats.s1.cue': 'Breathe.',
   'extra.chair.squats.s2.name': 'Chair squat',
-  'extra.chair.squats.s2.cue': 'Slower, full control.',
+  'extra.chair.squats.s2.cue': 'Slower. Graze the chair and rise with control.',
+  'extra.chair.squats.s2.careCue': 'Only go down as far as your knees feel comfortable.',
   'extra.chair.squats.s3.name': 'Rest',
   'extra.chair.squats.s3.cue': 'Breathe.',
   'extra.chair.squats.s4.name': 'Chair squat',
-  'extra.chair.squats.s4.cue': 'Last ones, no momentum.',
+  'extra.chair.squats.s4.cue': 'Last ones, no momentum. Squeeze at the top.',
+  'extra.chair.squats.s4.careCue': 'Stop if you lose control of the way down.',
 
   'extra.legs.single.name': 'Legs · Single',
   'extra.legs.single.desc': 'Single-leg strength. Balance, control, and a stable chair.',
@@ -2574,15 +2614,24 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.desc': 'Exact antidote to 4h seated. Hips, lumbar, neck. You\'ll spend time on the floor.',
   'move.chair.antidote.code': 'SIT',
   'move.chair.antidote.s0.name': 'Chest opening',
-  'move.chair.antidote.s0.cue': 'Hands behind head, open elbows, look at ceiling.',
+  'move.chair.antidote.s0.cue': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
+  'move.chair.antidote.s0.careCue': 'Only open as far as your chest stretches without discomfort.',
   'move.chair.antidote.s1.name': 'Thoracic rotation',
-  'move.chair.antidote.s1.cue': 'Seated: crossed hands, rotate trunk slowly.',
+  'move.chair.antidote.s1.cue': 'Rotate your trunk slowly to one side. Return to center.',
+  'move.chair.antidote.s1.placeCue': 'Sit tall, feet planted. Cross your hands over your chest.',
+  'move.chair.antidote.s1.careCue': 'The turn comes from the trunk, not the neck.',
   'move.chair.antidote.s2.name': 'Hip flexor',
-  'move.chair.antidote.s2.cue': 'Knee to floor, push pelvis forward.',
+  'move.chair.antidote.s2.cue': 'Push your pelvis forward. Gentle stretch in the groin of the back leg.',
+  'move.chair.antidote.s2.placeCue': 'Rest one knee on the floor, the other leg in front at an angle. A cushion under the knee if it bothers you.',
+  'move.chair.antidote.s2.careCue': "Short range. Don't force your lower back.",
   'move.chair.antidote.s3.name': "World's greatest stretch",
-  'move.chair.antidote.s3.cue': 'Lunge, hand to floor, open the chest in rotation.',
+  'move.chair.antidote.s3.cue': 'Open your chest and reach the other arm to the ceiling. Follow your hand with your eyes.',
+  'move.chair.antidote.s3.placeCue': 'Take a long step into a lunge. Lower your inside hand toward the floor.',
+  'move.chair.antidote.s3.careCue': "Rest your hand on a book if you can't reach the floor.",
   'move.chair.antidote.s4.name': 'Neck and traps',
-  'move.chair.antidote.s4.cue': 'Ear to shoulder, gentle.',
+  'move.chair.antidote.s4.cue': 'Bring your ear toward your shoulder. Let the weight of your head fall.',
+  'move.chair.antidote.s4.placeCue': 'Sit tall, shoulders down.',
+  'move.chair.antidote.s4.careCue': 'No pulling with your hand. Just the weight.',
   'move.chair.antidote.s5.name': 'Breathing reset',
   'move.chair.antidote.s5.cue': '3 deep inhales to close.',
 
@@ -2646,13 +2695,21 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.neck.3.desc': 'Micro-break for tense cervicals.',
   'move.neck.3.code': 'SIT',
   'move.neck.3.s0.name': 'Chin tucks',
-  'move.neck.3.s0.cue': 'Glide your chin straight back; the back of your neck lengthens. Hold 3-5 s and relax.',
+  'move.neck.3.s0.cue': 'Glide your chin straight back. The back of your neck lengthens. Hold and release.',
+  'move.neck.3.s0.placeCue': 'Sit tall, shoulders loose. Look straight ahead.',
+  'move.neck.3.s0.careCue': 'No tension. A small range already works.',
   'move.neck.3.s1.name': 'Lateral tilt',
-  'move.neck.3.s1.cue': 'Ear to shoulder, gentle.',
+  'move.neck.3.s1.cue': 'Bring your ear toward your shoulder, slowly. Feel the stretch on the other side.',
+  'move.neck.3.s1.placeCue': 'Sit tall, let your shoulders drop.',
+  'move.neck.3.s1.careCue': 'Don\'t push with your hand. Let the weight of your head fall.',
   'move.neck.3.s2.name': 'Slow rotation',
-  'move.neck.3.s2.cue': "Look over shoulder, don't force.",
+  'move.neck.3.s2.cue': 'Turn slowly to look over your shoulder. Return to center.',
+  'move.neck.3.s2.placeCue': 'Tall, chin parallel to the floor.',
+  'move.neck.3.s2.careCue': 'Only turn as far as your neck stays loose.',
   'move.neck.3.s3.name': 'Scalenes',
-  'move.neck.3.s3.cue': 'Hand under glute, tilt head to opposite side.',
+  'move.neck.3.s3.cue': 'Tilt your head to the opposite side and look up slightly.',
+  'move.neck.3.s3.placeCue': 'Sit on one hand to anchor that shoulder.',
+  'move.neck.3.s3.careCue': 'Very gentle. The neck is a delicate area.',
 
   'move.desk.quick.name': 'Desk Express',
   'move.desk.quick.desc': 'Without standing up. 6 movements in the chair.',
@@ -2717,15 +2774,25 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.couch.stretch.desc': 'Deep hip flexors against a wall or chair, knee on the floor. The couch stretch.',
   'move.couch.stretch.code': 'Hips',
   'move.couch.stretch.s0.name': 'Hip flexor',
-  'move.couch.stretch.s0.cue': 'Knee to floor, push pelvis forward.',
+  'move.couch.stretch.s0.cue': 'Push your pelvis forward. Gentle stretch in the groin of the back leg.',
+  'move.couch.stretch.s0.placeCue': 'Rest one knee on the floor, the other leg in front at an angle. A cushion under the knee if it bothers you.',
+  'move.couch.stretch.s0.careCue': 'Short range. Keep your trunk upright.',
   'move.couch.stretch.s1.name': 'Couch stretch',
-  'move.couch.stretch.s1.cue': 'Instep against wall or chair, knee deep back.',
+  'move.couch.stretch.s1.cue': 'Rise up through your trunk slowly. Squeeze the back glute.',
+  'move.couch.stretch.s1.placeCue': 'Rest the back instep against the wall or a chair, knee deep at the bottom.',
+  'move.couch.stretch.s1.careCue': "Move your knee away from the wall to lower the intensity. It's a strong stretch.",
   'move.couch.stretch.s2.name': '90/90',
-  'move.couch.stretch.s2.cue': 'Rotate between sides slowly.',
+  'move.couch.stretch.s2.cue': 'Rotate slowly from one side to the other. Trunk tall.',
+  'move.couch.stretch.s2.placeCue': 'Sit on the floor, one leg in front and one to the side, both at 90°.',
+  'move.couch.stretch.s2.careCue': 'Lean on your hands behind you to go more comfortably.',
   'move.couch.stretch.s3.name': 'Pigeon',
-  'move.couch.stretch.s3.cue': 'Shin forward, weight forward.',
+  'move.couch.stretch.s3.cue': 'Walk your weight forward. Lower your chest little by little.',
+  'move.couch.stretch.s3.placeCue': 'Bring one shin to the front, the other leg stretched back.',
+  'move.couch.stretch.s3.careCue': 'Put a cushion under the hip that stays in the air.',
   'move.couch.stretch.s4.name': 'Bridge with march',
-  'move.couch.stretch.s4.cue': 'Deep glute activation.',
+  'move.couch.stretch.s4.cue': 'Lift your hips and hold. Raise one knee, then the other.',
+  'move.couch.stretch.s4.placeCue': 'Lie on your back, feet planted close to your glutes.',
+  'move.couch.stretch.s4.careCue': 'Slow the pace if your lower back complains.',
 
   'move.hips.ground.name': 'Hips · Ground',
   'move.hips.ground.desc': 'Ground flow: frog, 90/90, transitions. Free hips.',
@@ -3206,7 +3273,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.57.0';
+const PACE_VERSION = 'v0.58.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3225,6 +3292,13 @@ const defaultState = {
   // instalaciones nuevas: el merge de loadState conserva el valor persistido.
   soundOn: true,
   ambientOn: false,
+
+  // Descanso entre series de fuerza (s114). SOLO afecta a los rests con
+  // restKind:'betweenSets' del runner v1 (desk.pushups / chair.squats); los
+  // cierres respiratorios (sin restKind) NO se tocan. Presets de Ajustes:
+  // Breve 20 / Tranquilo 30 (recomendado, default) / Amplio 45. Instalaciones
+  // previas heredan 30 vía el merge de loadState (sin migración).
+  restBetweenSets: 30,
 
   // Aviso de fin de Pomodoro vía notificación del navegador (s102 · PWA).
   // B1.2 (s108): ON por defecto (opt-out en Ajustes). El permiso del navegador
@@ -5919,12 +5993,28 @@ var SOUND_RECIPES = {
     chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.70, 0.10, 'sine');
   },
 
-  /* --- MUEVE --- */
+  /* --- MUEVE ---
+     Familia del runner guiado: misma afinación 432 y primitivas. Emparentadas
+     (comparten timbre) pero distinguibles por FUNCIÓN:
+       move.start  ascenso    → «empieza»
+       move.step   toque único→ avance de paso
+       move.warn   descenso   → aviso ÚNICO de fin de intervalo (~5 s, s114);
+                                espejo del ascenso de start, no una cuenta atrás
+       move.side   dos toques → cambio de lado (s114), gesto de «giro»
+       move.end    acorde     → cierre
+     El tick de reps (arriba, alias legacy) queda aparte y más suave. */
   'move.start': function (ctx, t0) {
     glide(ctx, ctx.destination, note('C4'), note('G4'), t0, 0.22, 0.07, 'sine');
   },
   'move.step': function (ctx, t0) {
     tone(ctx, ctx.destination, note('A4'), t0, 0.06, 0.04, 'triangle');
+  },
+  'move.warn': function (ctx, t0) {
+    glide(ctx, ctx.destination, note('G4'), note('D4'), t0, 0.22, 0.05, 'sine');
+  },
+  'move.side': function (ctx, t0) {
+    tone(ctx, ctx.destination, note('E4'), t0, 0.07, 0.045, 'triangle');
+    tone(ctx, ctx.destination, note('B4'), t0 + 0.09, 0.10, 0.045, 'triangle');
   },
   'move.end': function (ctx, t0) {
     chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.60, 0.09, 'sine');
@@ -9810,11 +9900,21 @@ var MOVE_ROUTINES = {
        (la derivación formal de duración llega en B2.2b-1). */
     { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 3,
       steps: [
-      { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
+      /* s114: capa editorial — cue = ejecución (shortCue); placeCue =
+         setup (fase colocación, solo la 1ª serie la muestra); careCue =
+         adaptación «Cuídate» (siempre visible en trabajo). */
+      { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40,
+        cue: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
+        placeCue: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
+        careCue: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40, cue: 'Codos cerca del cuerpo, baja con control.' },
+      { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
+        cue: 'Baja con control, sin dejarte caer. Empuja y vuelve.',
+        careCue: 'Si la primera serie costó, sube un poco las manos.' },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-      { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, lentas. Para si la técnica se rompe.' }]
+      { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40,
+        cue: 'Últimas. Lentas y limpias, empuja desde el pecho.',
+        careCue: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' }]
     },
     { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
       steps: [
@@ -9880,11 +9980,18 @@ var MOVE_ROUTINES = {
     items: [
     { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
       steps: [
-      { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40, cue: 'Baja hasta rozar la silla, sube sin impulso.' },
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40,
+        cue: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
+        placeCue: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
+        careCue: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-      { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40, cue: 'Más lentas, control total.' },
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40,
+        cue: 'Más lentas. Roza la silla y sube con control.',
+        careCue: 'Baja solo hasta donde las rodillas vayan cómodas.' },
       { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
-      { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40, cue: 'Últimas, sin impulso.' }]
+      { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40,
+        cue: 'Últimas, sin impulso. Aprieta arriba.',
+        careCue: 'Para si pierdes el control de la bajada.' }]
     },
     { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
       steps: [
@@ -10323,6 +10430,21 @@ function v1RepTarget(step) {
   return (typeof step.reps === 'object' ? step.reps.target : step.reps) || 8;
 }
 
+/* Descanso entre series (s114): los rests con restKind:'betweenSets' toman su
+   duración del ajuste de Ajustes (state.restBetweenSets, presets 20/30/45); el
+   resto de pasos (incl. los cierres respiratorios sin restKind) usan su `dur`
+   declarado. Lee el store global (patrón de Sound.jsx) — el runner re-renderiza
+   cada segundo, así que un cambio del preset se refleja en ≤1 s. */
+function v1RestSeconds() {
+  var s = typeof getState === 'function' ? getState() : null;
+  return s && typeof s.restBetweenSets === 'number' ? s.restBetweenSets : 30;
+}
+function v1StepDur(step) {
+  if (!step) return 0;
+  if (step.mode === 'rest' && step.restKind === 'betweenSets') return v1RestSeconds();
+  return step.dur || 0;
+}
+
 /* Progreso 0..1 del step activo (barra segmentada). Reps guiadas (s113):
    el progreso es tiempo guiado / tiempo objetivo — cadencia, no cuota. */
 function v1StepProgress(step, side, elapsed) {
@@ -10331,7 +10453,8 @@ function v1StepProgress(step, side, elapsed) {
     return total ? Math.min(1, elapsed / total) : 0;
   }
   if (step.mode === 'perSide') return (side * step.dur + elapsed) / (2 * step.dur);
-  return step.dur ? elapsed / step.dur : 0;
+  const d = v1StepDur(step); // rest betweenSets = preset de Ajustes (s114)
+  return d ? elapsed / d : 0;
 }
 /* Peso del step para la barra segmentada (estimación honesta por tipo). */
 function v1StepWeight(step) {
@@ -10373,9 +10496,12 @@ if (!_paceMoveV1Css) {
       100% { transform: scale(1); }
     }
     @media (min-width: 641px) and (max-height: 700px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 12px !important; }
+      /* s114: la capa «Cuídate» suma una línea — se recupera altura apretando
+         espacios (nunca instrucciones) para mantener el delta 0 de s113. */
+      [data-pace-v1-glyph] > div { margin-bottom: 8px !important; }
       [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 10px !important; }
+      [data-pace-v1-cue] { margin-bottom: 6px !important; }
+      [data-pace-v1-care] { margin-top: 6px !important; }
       [data-pace-v1-progress] { margin-top: 12px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
@@ -10385,12 +10511,17 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-cue] { font-size: 14px !important; margin-bottom: 10px !important; }
       [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 10px !important; }
       [data-pace-v1-support] { font-size: 12px !important; }
+      /* s114: en poca altura se oculta el RÓTULO «Cuídate», nunca el contenido
+         (decisión A) — la adaptación sigue visible como línea secundaria. */
+      [data-pace-v1-care] { font-size: 12px !important; margin-top: 10px !important; }
+      [data-pace-v1-care-label] { display: none !important; }
       [data-pace-v1-progress] { margin-top: 10px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-v1-glyph] { display: none !important; }
       [data-pace-v1-name] { font-size: 22px !important; margin-bottom: 6px !important; }
       [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 8px !important; }
+      [data-pace-v1-care] { font-size: 11.5px !important; margin-top: 8px !important; }
     }
     /* Retrato estrecho con poca altura (360×640: el paso de reps desbordaba
        18 px): SOLO espacios — la tipografía ya la gobierna el bloque móvil
@@ -10401,6 +10532,7 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-name] { margin-bottom: 8px !important; }
       [data-pace-v1-cue] { margin-bottom: 10px !important; }
       [data-pace-v1-support-strong] { margin-top: 10px !important; }
+      [data-pace-v1-care] { margin-top: 8px !important; }
       [data-pace-v1-progress] { margin-top: 12px !important; }
     }
   `;
@@ -10409,9 +10541,9 @@ if (!_paceMoveV1Css) {
 
 Object.assign(window, {
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS,
-  v1RepSeconds, v1RepTarget, v1StepProgress, v1StepWeight, v1GlyphSize
+  v1RepSeconds, v1RepTarget, v1RestSeconds, v1StepDur, v1StepProgress, v1StepWeight, v1GlyphSize
 });
-;Object.assign(window, { v1RepSeconds, v1RepTarget, v1StepProgress, v1StepWeight, v1GlyphSize });
+;Object.assign(window, { v1RepSeconds, v1RepTarget, v1RestSeconds, v1StepDur, v1StepProgress, v1StepWeight, v1GlyphSize });
 })();
 </script>
   <script>
@@ -10486,17 +10618,24 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const startStep = (idx) => {
     const st = routine.steps[idx];
     setStepIdx(idx);setElapsed(0);setSide(0);
-    // Gate de colocación (s111/s112), tres modos:
+    // Gate de colocación (s111/s112), cuatro entradas:
     //   ready — declarado por paso (`setup:'ready'`, suelo/pared): espera al
     //           usuario SIN cuenta, en cualquier mode e incluso en el paso 0.
     //   auto  — derivado del mode (s111): pasos CON reloj (timed/perSide) e
     //           idx>0 → cuenta-atrás que fluye sola (efecto abajo).
-    //   none  — reps/rest (sin reloj que proteger, R2) y paso 0 (su ventana
-    //           es el prep 3·2·1) → directo a work. Evita la doble cuenta.
+    //   reps  — (s114) el primer set de fuerza (reps con `placeCue` y NO
+    //           precedido por un rest) gana una colocación AUTO: ventana para
+    //           leer el setup y ponerse en posición antes de que arranque el
+    //           pacer. Los sets 2/3 vienen tras un rest (que ya recoloca y
+    //           guía qué viene) → directo a work, sin doble espera.
+    //   none  — resto de reps/rest y paso 0 sin placeCue → directo a work.
     // El gate nunca es el timer del ejercicio: R1 intacto.
     const clocked = st.mode === 'timed' || st.mode === 'perSide';
+    const prev = idx > 0 ? routine.steps[idx - 1] : null;
+    const afterRest = !!(prev && prev.mode === 'rest');
     if (st.setup === 'ready') {setPhase('place');setPlaceLeft(0);} else
     if (clocked && idx > 0) {setPhase('place');setPlaceLeft(typeof st.setup === 'number' ? st.setup : V1_PLACE_SECONDS);} else
+    if (st.mode === 'reps' && st.placeCue && !afterRest) {setPhase('place');setPlaceLeft(V1_PLACE_SECONDS);} else
     setPhase('work');
   };
   const advanceStep = () => {
@@ -10511,7 +10650,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // familia actual + cuenta que fluye sola (efecto abajo).
   const enterChange = () => {
     setPhase('change');setElapsed(0);setChangeLeft(V1_CHANGE_SECONDS);
-    try {playSound('move.step');} catch (e) {}
+    // s114: señal propia de «cambio de lado» (familia move, distinguible del
+    // avance de paso `move.step`). Silencio si soundOn está apagado.
+    try {playSound('move.side');} catch (e) {}
   };
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
   const finishRepsEarly = () => {
@@ -10572,7 +10713,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
       }
       return;
     }
-    if (elapsed >= step.dur) {
+    const effDur = v1StepDur(step);
+    // s114 · aviso sonoro ÚNICO al cruzar los últimos ~5 s (decisión 2A):
+    // descansos + pasos con reloj (timed/perSide). Una sola señal en el
+    // umbral, NO una cuenta atrás sonora; el tick de reps es aparte y más
+    // suave. Silencio total si soundOn está apagado (playSound lo respeta).
+    if (effDur > 6 && elapsed === effDur - 5) {try {playSound('move.warn');} catch (e) {}}
+    if (elapsed >= effDur) {
       if (step.mode === 'perSide' && side === 0) enterChange();else
       advanceStep();
     }
@@ -10637,14 +10784,31 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     const totalSec = Math.round((Date.now() - sessionStart.current) / 1000);
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
+    // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):
+    // Mueve → «Movimiento completado» · Estira → «Estiramiento completado».
+    // Stats HONESTAS: tiempo siempre; en rutinas de fuerza, series (nº de sets
+    // de reps) + reps GUIADAS reales (repsGuidedRef — jamás el objetivo); en
+    // mixtas, pasos (ejercicios sin descansos) + reps; en movilidad, pasos.
+    // Sin calorías, récords ni comparaciones.
+    const exerciseSteps = routine.steps.filter((s) => s.mode !== 'rest').length;
+    const repsSteps = routine.steps.filter((s) => s.mode === 'reps').length;
+    const guided = repsGuidedRef.current;
+    const stats = [{ label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` }];
+    if (repsSteps > 0 && repsSteps === exerciseSteps) {
+      stats.push({ label: t('move.series'), value: String(repsSteps) });
+      stats.push({ label: t('move.repsCount'), value: String(guided) });
+    } else if (repsSteps > 0) {
+      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
+      stats.push({ label: t('move.repsCount'), value: String(guided) });
+    } else {
+      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
+    }
+    const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (/*#__PURE__*/
       React.createElement(SessionDone, {
         routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft,
-        doneMeta: t('session.antidoteDone'), doneCopy: t('move.doneCopy'),
-        stats: [
-        { label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` },
-        { label: t('move.steps'), value: String(routine.steps.length) }],
-
+        doneMeta: doneMeta, doneCopy: t('move.doneCopy'),
+        stats: stats,
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
         atmosphere: atmo }
@@ -10661,7 +10825,9 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const isRest = step.mode === 'rest';
   const stepAccent = isRest ? 'var(--ink-3)' : accent; // R5: descanso apagado
   const stepAccentSoft = isRest ? 'var(--paper-3)' : accentSoft;
-  const remaining = Math.max(0, (step.dur || 0) - elapsed);
+  // s114: el descanso entre series toma su duración del preset de Ajustes
+  // (v1StepDur → restBetweenSets); el resto de pasos usan su `dur`.
+  const remaining = Math.max(0, v1StepDur(step) - elapsed);
   const placeReady = step.setup === 'ready';
 
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
@@ -10696,20 +10862,42 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     repPulseSec = repSec;
     bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
-    support = t('move.repsGuidedHint');
+    // s114: el hint genérico del pulso cede el sitio a la capa «Cuídate»
+    // (careCue, específica del ejercicio y siempre visible, abajo).
     primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
     bigNumber = String(remaining).padStart(2, '0');bigLabel = t('session.seconds');
-    kicker = isRest ? null :
-    step.mode === 'perSide' ? t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
-    null;
+    // s114: el lado ya NO es un kicker suelto — se INTEGRA en el cue de
+    // trabajo (abajo). El kicker del cuerpo queda solo para place/change.
+    kicker = null;
+    if (isRest && routine.steps[stepIdx + 1]) {
+      // s114: el descanso GUÍA — anuncia la serie que viene y avisa en los
+      // últimos ~5 s (el aviso sonoro corre en paralelo, decisión 2A). El
+      // cierre respiratorio (sin paso siguiente) no muestra nada de esto.
+      supportStrong = tn('move.restNext', { name: tStep(stepIdx + 1, 'name') });
+      if (remaining > 0 && remaining <= 5) support = t('move.restReady');
+    }
     primary = isRest ?
     { label: t('session.skip'), onClick: advanceStep } :
     { label: stepIdx + 1 >= routine.steps.length && !(step.mode === 'perSide' && side === 0) ? t('move.finish') : t('move.next'), onClick: () => {
         if (step.mode === 'perSide' && side === 0) {enterChange();} else advanceStep();
       } };
   }
+
+  // s114 · capa editorial — la instrucción es POR FASE:
+  //   colocación → placeCue (setup completo) · ejecución → cue (shortCue).
+  // El lado (perSide) se INTEGRA en el texto de trabajo (palabra del lado como
+  // apertura, no un kicker suelto). «Cuídate» (careCue) va como línea
+  // secundaria SIEMPRE visible bajo el cue de trabajo (decisión s114-A: en
+  // altura baja se oculta el rótulo, nunca el contenido).
+  const inWork = phase === 'work';
+  const stepPlaceCue = tStep(stepIdx, 'placeCue');
+  const cueText = phase === 'place' && stepPlaceCue ? stepPlaceCue : tStep(stepIdx, 'cue');
+  const careText = inWork && !isRest ? tStep(stepIdx, 'careCue') : undefined;
+  const sideLead = inWork && step.mode === 'perSide' ?
+  t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
+  null;
 
   // s113: pausable todo lo que corre solo salvo el descanso (termina solo).
   const canPause = phase === 'work' && !isRest || phase === 'change';
@@ -10763,7 +10951,10 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     tStep(stepIdx, 'name')
     ), /*#__PURE__*/
     React.createElement("p", { "data-pace-v1-cue": true, style: { fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)', maxWidth: 460, margin: '0 auto 18px' } },
-    tStep(stepIdx, 'cue')
+    sideLead && /*#__PURE__*/
+    React.createElement("strong", { style: { color: stepAccent, fontWeight: 600 } }, sideLead, ". "),
+
+    cueText
     ),
 
 
@@ -10800,6 +10991,15 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     support && /*#__PURE__*/
     React.createElement("div", { "data-pace-v1-support": true, style: { fontSize: 13, color: 'var(--ink-3)', marginTop: supportStrong ? 6 : 14 } },
     support
+    ),
+
+
+
+
+    careText && /*#__PURE__*/
+    React.createElement("div", { "data-pace-v1-care": true, style: { fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' } }, /*#__PURE__*/
+    React.createElement("span", { "data-pace-v1-care-label": true, style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 } }, t('move.careLabel'), " \xB7 "),
+    careText
     )
 
     ), /*#__PURE__*/
@@ -10857,11 +11057,25 @@ const EXTRA_ROUTINES = {
     { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
       desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello. Pasarás por el suelo.', min: 5,
       steps: [
-      { name: 'Apertura de pecho', mode: 'timed', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
-      { name: 'Rotación torácica', mode: 'perSide', dur: 20, cue: 'Sentado: manos cruzadas, rota el tronco despacio.' },
-      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
-      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Zancada, mano al suelo, abre el pecho en rotación.' },
-      { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, cue: 'Oreja al hombro, suave.' },
+      { name: 'Apertura de pecho', mode: 'timed', dur: 40,
+        cue: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+        careCue: 'Abre solo hasta donde el pecho estire sin molestar.' },
+      { name: 'Rotación torácica', mode: 'perSide', dur: 20,
+        cue: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
+        placeCue: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
+        careCue: 'El giro nace del tronco, no del cuello.' },
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready',
+        cue: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
+        placeCue: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+        careCue: 'Recorrido corto. No fuerces la zona lumbar.' },
+      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready',
+        cue: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
+        placeCue: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
+        careCue: 'Apoya la mano en un libro si no llegas al suelo.' },
+      { name: 'Cuello y trapecios', mode: 'perSide', dur: 20,
+        cue: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
+        placeCue: 'Siéntate erguido, hombros abajo.',
+        careCue: 'Sin tirar con la mano. Solo el peso.' },
       /* CIERRE respiratorio — sin restKind a propósito (s113): NO es un
          descanso entre series y el ajuste de Tweaks (s114) no lo toca. */
       { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
@@ -10870,11 +11084,25 @@ const EXTRA_ROUTINES = {
       desc: 'Micro-pausa para cervicales tensas.', min: 3,
       steps: [
       /* s113: repSeconds 8 — control postural con retención (desliza +
-         mantén 3-5 s + relaja), no cadencia de fuerza (4 s default). */
-      { name: 'Chin tucks', mode: 'reps', reps: 5, repSeconds: 8, dur: 40, cue: 'Desliza la barbilla recta hacia atrás; la nuca se alarga. Mantén 3-5 s y relaja.' },
-      { name: 'Inclinación lateral', mode: 'perSide', dur: 25, cue: 'Oreja al hombro, suave.' },
-      { name: 'Rotación lenta', mode: 'perSide', dur: 25, cue: 'Mira sobre el hombro, sin forzar.' },
-      { name: 'Escalenos', mode: 'perSide', dur: 20, cue: 'Mano bajo el glúteo, inclina la cabeza al lado opuesto.' }]
+         mantén 3-5 s + relaja), no cadencia de fuerza (4 s default).
+         s114: capa editorial — cue = ejecución, placeCue = colocación,
+         careCue = «Cuídate». En perSide el lado lo integra el runner. */
+      { name: 'Chin tucks', mode: 'reps', reps: 5, repSeconds: 8, dur: 40,
+        cue: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
+        placeCue: 'Siéntate erguido, hombros sueltos. Mira al frente.',
+        careCue: 'Sin tensar. Un recorrido pequeño ya trabaja.' },
+      { name: 'Inclinación lateral', mode: 'perSide', dur: 25,
+        cue: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
+        placeCue: 'Siéntate erguido, deja los hombros abajo.',
+        careCue: 'No empujes con la mano. Deja caer el peso de la cabeza.' },
+      { name: 'Rotación lenta', mode: 'perSide', dur: 25,
+        cue: 'Gira despacio a mirar sobre el hombro. Vuelve al centro.',
+        placeCue: 'Erguido, barbilla paralela al suelo.',
+        careCue: 'Gira solo hasta donde el cuello vaya suelto.' },
+      { name: 'Escalenos', mode: 'perSide', dur: 20,
+        cue: 'Inclina la cabeza al lado contrario y mira un poco arriba.',
+        placeCue: 'Siéntate sobre una mano para anclar ese hombro.',
+        careCue: 'Muy suave. La zona del cuello es delicada.' }]
     },
     { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
       desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
@@ -10951,11 +11179,26 @@ const EXTRA_ROUTINES = {
          los «30s por lado» de los cues (ahora los lleva el runner): los EN
          posicionales sN no se reindexan. dur en perSide = segundos POR LADO. */
       steps: [
-      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready', cue: 'Rodilla al suelo, empuja pelvis adelante.' },
-      { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: 'ready', cue: 'Empeine contra pared o silla, rodilla al fondo.' },
-      { name: '90/90', mode: 'timed', dur: 60, cue: 'Rota entre lados despacio.' },
-      { name: 'Pigeon', mode: 'perSide', dur: 30, cue: 'Tibia adelante, peso adelante.' },
-      { name: 'Puente con marcha', mode: 'timed', dur: 60, cue: 'Activación de glúteo profundo.' }]
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready',
+        cue: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
+        placeCue: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+        careCue: 'Recorrido corto. Mantén el tronco erguido.' },
+      { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: 'ready',
+        cue: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
+        placeCue: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
+        careCue: 'Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.' },
+      { name: '90/90', mode: 'timed', dur: 60,
+        cue: 'Gira despacio de un lado al otro. Tronco alto.',
+        placeCue: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
+        careCue: 'Apóyate en las manos por detrás para ir más cómodo.' },
+      { name: 'Pigeon', mode: 'perSide', dur: 30,
+        cue: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
+        placeCue: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
+        careCue: 'Pon un cojín bajo la cadera que quede en el aire.' },
+      { name: 'Puente con marcha', mode: 'timed', dur: 60,
+        cue: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+        placeCue: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+        careCue: 'Baja el ritmo si la lumbar se queja.' }]
     },
     { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
       desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
@@ -14174,6 +14417,39 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
 
     ), /*#__PURE__*/
 
+
+
+
+
+
+
+    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
+    React.createElement(Meta, { style: { marginBottom: 4 } }, t('tweaks.session.label')), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 } }, t('tweaks.session.rest.hint')), /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
+    [
+    { v: 20, name: t('tweaks.rest.short') },
+    { v: 30, name: t('tweaks.rest.calm') },
+    { v: 45, name: t('tweaks.rest.wide') }].
+    map((opt) => {
+      const active = (state.restBetweenSets || 30) === opt.v;
+      return (/*#__PURE__*/
+        React.createElement("button", { key: opt.v, onClick: () => set({ restBetweenSets: opt.v }),
+          style: {
+            padding: '6px 10px',
+            fontSize: 11,
+            fontWeight: active ? 500 : 400,
+            background: active ? 'var(--ink)' : 'var(--paper-2)',
+            color: active ? 'var(--paper)' : 'var(--ink-2)',
+            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+            borderRadius: 'var(--r-sm)',
+            transition: 'all 180ms',
+            letterSpacing: 0.2
+          } }, opt.name));
+
+    })
+    )
+    ), /*#__PURE__*/
 
     React.createElement(Divider, { style: { margin: '14px 0' } }),
 

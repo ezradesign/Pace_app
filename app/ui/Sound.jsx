@@ -198,12 +198,28 @@ var SOUND_RECIPES = {
     chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.70, 0.10, 'sine');
   },
 
-  /* --- MUEVE --- */
+  /* --- MUEVE ---
+     Familia del runner guiado: misma afinación 432 y primitivas. Emparentadas
+     (comparten timbre) pero distinguibles por FUNCIÓN:
+       move.start  ascenso    → «empieza»
+       move.step   toque único→ avance de paso
+       move.warn   descenso   → aviso ÚNICO de fin de intervalo (~5 s, s114);
+                                espejo del ascenso de start, no una cuenta atrás
+       move.side   dos toques → cambio de lado (s114), gesto de «giro»
+       move.end    acorde     → cierre
+     El tick de reps (arriba, alias legacy) queda aparte y más suave. */
   'move.start': function(ctx, t0) {
     glide(ctx, ctx.destination, note('C4'), note('G4'), t0, 0.22, 0.07, 'sine');
   },
   'move.step': function(ctx, t0) {
     tone(ctx, ctx.destination, note('A4'), t0, 0.06, 0.04, 'triangle');
+  },
+  'move.warn': function(ctx, t0) {
+    glide(ctx, ctx.destination, note('G4'), note('D4'), t0, 0.22, 0.05, 'sine');
+  },
+  'move.side': function(ctx, t0) {
+    tone(ctx, ctx.destination, note('E4'), t0,        0.07, 0.045, 'triangle');
+    tone(ctx, ctx.destination, note('B4'), t0 + 0.09, 0.10, 0.045, 'triangle');
   },
   'move.end': function(ctx, t0) {
     chord(ctx, ctx.destination, [note('C5'), note('E5'), note('G5')], t0, 0.60, 0.09, 'sine');

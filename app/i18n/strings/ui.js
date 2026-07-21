@@ -179,6 +179,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'tweaks.notify.blocked':         'El navegador tiene las notificaciones bloqueadas para este sitio.',
     'tweaks.legal.safety':           'Seguridad',
     'tweaks.legal.privacy':          'Privacidad',
+
+    // Sesiones (s114) — descanso entre series de fuerza (runner v1)
+    'tweaks.session.label':          'Sesiones',
+    'tweaks.session.rest.hint':      'Descanso entre series en las rutinas de fuerza.',
+    'tweaks.rest.short':             'Breve · 20s',
+    'tweaks.rest.calm':              'Tranquilo · 30s',
+    'tweaks.rest.wide':              'Amplio · 45s',
     'notify.focus.title':            'Foco completado',
     'notify.focus.body':             'Ciclo cerrado. Elige tu micro-pausa.',
     'update.msg':                    'Hay una versión nueva de PACE',
@@ -363,6 +370,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'tweaks.notify.blocked':         'Notifications are blocked for this site in your browser.',
     'tweaks.legal.safety':           'Safety',
     'tweaks.legal.privacy':          'Privacy',
+
+    // Sessions (s114) — rest between strength sets (v1 runner)
+    'tweaks.session.label':          'Sessions',
+    'tweaks.session.rest.hint':      'Rest between sets in strength routines.',
+    'tweaks.rest.short':             'Short · 20s',
+    'tweaks.rest.calm':              'Calm · 30s',
+    'tweaks.rest.wide':              'Wide · 45s',
     'notify.focus.title':            'Focus complete',
     'notify.focus.body':             'Cycle closed. Choose your micro-break.',
     'update.msg':                    'A new version of PACE is ready',

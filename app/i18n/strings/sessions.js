@@ -27,6 +27,8 @@ Object.assign(window.PACE_STRINGS.es, {
     'session.focusDoneCopy':           'Un tramo de atención sostenida.',
     'session.doneMeta':                'Sesión completada',
     'session.antidoteDone':            'Antídoto completado',
+    'session.moveDone':                'Movimiento completado',
+    'session.stretchDone':             'Estiramiento completado',
     'session.hold':                    'Retén sin aire',
     'session.breatheAgain':            'Respirar de nuevo',
     'session.holdCue':                 'Pulsa cuando sientas la necesidad de respirar.',
@@ -138,6 +140,13 @@ Object.assign(window.PACE_STRINGS.es, {
     'move.repsGuidedHint':             'Sigue el pulso · haz menos si hoy lo necesitas',
     'move.finishEarly':                'Terminar antes',
     'move.sideAutoHint':               'El lado siguiente empieza solo',
+    // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
+    'move.careLabel':                  'Cuídate',
+    'move.series':                     'Series',
+    'move.repsCount':                  'Reps',
+    // El descanso guía (s114): qué serie viene + aviso al final del descanso
+    'move.restNext':                   'Luego: {name}',
+    'move.restReady':                  'Prepárate para seguir',
 
     // Hydrate
     'hydrate.tag':                     'Hidratación',
@@ -209,6 +218,8 @@ Object.assign(window.PACE_STRINGS.en, {
     'session.focusDoneCopy':           'A stretch of sustained attention.',
     'session.doneMeta':                'Session completed',
     'session.antidoteDone':            'Antidote completed',
+    'session.moveDone':                'Movement completed',
+    'session.stretchDone':             'Stretch completed',
     'session.hold':                    'Hold your breath',
     'session.breatheAgain':            'Breathe again',
     'session.holdCue':                 'Press when you feel the need to breathe.',
@@ -320,6 +331,13 @@ Object.assign(window.PACE_STRINGS.en, {
     'move.repsGuidedHint':             'Follow the pulse · do fewer if you need to today',
     'move.finishEarly':                'Finish early',
     'move.sideAutoHint':               'The next side starts on its own',
+    // Editorial layer (s114): «Take care» label + final-screen stat labels
+    'move.careLabel':                  'Take care',
+    'move.series':                     'Sets',
+    'move.repsCount':                  'Reps',
+    // The rest guides (s114): which set is next + heads-up as rest ends
+    'move.restNext':                   'Next: {name}',
+    'move.restReady':                  'Get ready to continue',
 
     // Hydrate
     'hydrate.tag':                     'Hydration',
