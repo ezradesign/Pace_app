@@ -10,9 +10,9 @@
 
 ---
 
-**Version actual:** v0.60.0 (s116 — B2.2b-2 · feedback ligero «¿te ayudó esta pausa?»)
-**Ultima sesion:** #116 -- 2026-07-21 - **B2.2b-2 · feedback ligero**. Feedback CALMADO y opcional al terminar una pausa: una sola pregunta al `stage:'done'`, respuestas semánticamente alineadas, siempre saltable, sin gamificación ni consumidor prematuro. Solo **captura + almacenamiento** (el consumidor —Pausa PACE / «qué te ayuda» premium— llega en fases posteriores). NO se reabren el GIRO (s113/s114) ni el contrato B2.2b-1 (s115). 5 decisiones (AskUserQuestion, todas la recomendación): módulos = Mueve+Estira+Respira **v1 y legacy** · datos = conteos completos `{yes,some,no}` (`answered`/`helpScore` DERIVADOS) · presentación = bloque DENTRO del DONE · consumidor = NINGUNO en s116 · frecuencia = 1×/rutina/día. **Corte**: (1) **`SessionFeedback.jsx`** (NUEVO) — pregunta «¿Te ayudó esta pausa?» + 3 respuestas de igual peso (Sí·Un poco·No) + «Ahora no» ghost → acuse EFÍMERO «Gracias»; gate por-día capturado en el MOUNT (no reactivo → «Gracias» no desaparece al escribir el día) + guard SÍNCRONO de idempotencia (`lockRef`). `SessionDone` gana slot `feedback`; los 3 runners lo pasan `inPath ? undefined : <SessionFeedback/>` (fuera de Caminos). (2) **`state-feedback.jsx`** (NUEVO) — slice `routineFeedback:{[id]:{yes,some,no,lastPromptDay}}`; helper PURO `nextRoutineFeedback` (no muta; `later` escribe día sin sumar) + acción `recordRoutineFeedback` (setState funcional, sanitiza `yes|some|no|later`) + `shouldPromptRoutineFeedback` (`lastPromptDay!==todayISO()`); `answered`/`helpScore` DERIVADOS nunca persistidos; merge defensivo. (3) **guard de teclado P0** en los 3 runners: `Enter` en done ignora el atajo global si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores; Espacio no se roba a controles; `Enter` fuera de control sigue cerrando. (4) **CSS del shell EXTRAÍDO** a `SessionShell.responsive.js` (495→336 ln) + hero del done oculto en el tier ≤430 (para que la fila y el CTA quepan sin tapar «Ahora no»). (5) i18n `session.feedback.*` ES+EN. Verificado dev+standalone: aparece en done v1 (desk.pushups) + legacy (chair.dips, desk.quick) + Respira (rounds.express, acento breathe); responder registra + «Gracias»; «Ahora no» escribe día sin sumar; NO en rutina respondida hoy ni tras «× Salir»; guard OK (Enter en chip no cierra/duplica, doble clic no duplica); persistencia + merge pre-s116 → `{}`; layout 1280×600·1024×512·360×640 sin scroll, 844×390 cabe tras ocultar hero; consola limpia sin `[i18n] missing`. Diario: `docs/sessions/session-116-b2-2b-2-feedback-ligero.md`. Historico previo: [`s115`](./CHANGELOG.md#v0590----2026-07-21----featmove-b22b-1--contrato-formal--duración-derivada).
-**Ultima actualizacion de este archivo:** 2026-07-21 - sesion 116
+**Version actual:** v0.60.0 (s116 — B2.2b-2 · feedback ligero). **s117 fue solo-docs, SIN bump**: diseño del esquema de eventos `pace.events.v1` (ARQUITECTURA APROBADA, no implementada — ver «Ultima sesion»).
+**Ultima sesion:** #117 -- 2026-07-21 - **B2.2b-3 · esquema de eventos (SOLO DISEÑO, sin bump)**. Sesión **solo-docs** (patrón s109, sin código ni versión nueva): diseño de la capa de eventos local `pace.events.v1` en [`docs/product/EVENTOS_SCHEMA.md`](./docs/product/EVENTOS_SCHEMA.md) (evolucionado rev. 1→5). El P0 de escritura única (single-writer) quedó **resuelto con ARQUITECTURA POR ADAPTADORES** (modelo canónico backend-independiente + un adaptador por runtime): Web/PWA con **Web Locks** (sin fallback inseguro) · **`file://` NO emite** (la app legacy sigue intacta) · **Android e iOS (Capacitor) como runtimes previstos** con backend transaccional nativo (SQLite + Preferences/UserDefaults). Es **ARQUITECTURA APROBADA, NO implementada** (cero `state-events.jsx`, cero EventStore/emisores/adaptadores/Capacitor/SQLite). Se guardaron además dos propuestas PENDIENTES de valorar: [`HOME_REDISENO_PROPUESTA.md`](./docs/product/HOME_REDISENO_PROPUESTA.md) (solapamiento editorial + jerarquía del home) e [`I18N_EXPANSION_PROPUESTA.md`](./docs/product/I18N_EXPANSION_PROPUESTA.md) (detección automática + expansión comercial). Diario: `docs/sessions/session-117-b2-2b-3-eventos-diseno.md`. Historico previo: [`s116`](./CHANGELOG.md#historial-completo).
+**Ultima actualizacion de este archivo:** 2026-07-21 - sesion 117
 **Build entregado:** `PACE_standalone.html` v0.60.0 (3166 KB, 86 scripts + 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
@@ -22,8 +22,8 @@
 | Archivo | Rol | Estado |
 |---|---|---|
 | `PACE.html` | Entry point de desarrollo modular | **v0.60.0** (s116: + 3 tags (`state-feedback.jsx`, `SessionShell.responsive.js`, `SessionFeedback.jsx`) + título bump. s115/s114: solo título bump; sin tags nuevos. s113: + tag `MoveSessionV1.support.jsx`. s110: + 3 tags. s106: onboarding; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.59.0** (3148 KB, 83 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.59.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.60.0** (3166 KB, 86 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://; s117 NO lo regeneró) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.60.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102) |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **v0.56.0** (s112 micro-fix: column paddingBottom 30→16 + options gap 10→8 — la pregunta 1 desbordaba ~35px en 360×640, ahora cabe (584/584). s106: nuevo, 391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado) |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **v0.56.0** (s112 micro-fix: padding de OnbChoice 13/18→11/16, pareja del ajuste de Onboarding.jsx. s106: nuevo, 208 ln; laminas via `getPathIllustration`) |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
@@ -153,63 +153,61 @@ al crear el backup del v0.59.0.
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 116 - v0.60.0 - B2.2b-2 · feedback ligero**. Feedback CALMADO y
-opcional al terminar una pausa: una sola pregunta al `stage:'done'`, respuestas
-semánticamente alineadas, siempre saltable, sin gamificación ni consumidor
-prematuro. Solo **captura + almacenamiento** — el consumidor (Pausa PACE / «qué
-te ayuda» premium) llega en fases posteriores. NO se reabren el GIRO (s113/s114)
-ni el contrato B2.2b-1 (s115). 5 decisiones (AskUserQuestion, todas la
-recomendación): módulos = Mueve+Estira+Respira **v1 y legacy** · datos = conteos
-completos `{yes,some,no}` (`answered`/`helpScore` DERIVADOS) · presentación =
-bloque DENTRO del DONE · consumidor = NINGUNO en s116 · frecuencia = 1×/rutina/día.
+**Sesion 117 - solo-docs (SIN bump) - B2.2b-3 · esquema de eventos (SOLO
+DISEÑO)**. Corte documental (patrón s109): el entregable es el diseño canónico de
+la capa de eventos local `pace.events.v1`, NO su implementación. **Cero código de
+app** (nada de `state-events.jsx`, EventStore, emisores, adaptadores, Capacitor ni
+SQLite), cero bump, cero build. PACE local-first: eventos en el dispositivo, sin
+red, sin PII. NO se reabren el GIRO (s113/s114), el contrato B2.2b-1 (s115) ni el
+feedback B2.2b-2 (s116). 5 decisiones de arranque (AskUserQuestion, todas la
+recomendación): alcance = D1–D5 completo · almacenamiento = clave/backend propios
+fuera de `pace.state.v2` · puente = conservar y puentear (sin backfill ficticio) ·
+retención = 120 días + agregados permanentes · cierre = solo-docs sin bump.
 
-### Que se hizo (s116)
+### Que se hizo (s117)
 
-- **`SessionFeedback.jsx` (NUEVO, P0)**: pregunta «¿Te ayudó esta pausa?» + 3
-  respuestas de igual peso (Sí·Un poco·No) + «Ahora no» ghost secundario → acuse
-  EFÍMERO «Gracias»; el CTA de regreso SIEMPRE disponible. **Gate por-día
-  capturado en el MOUNT** (`useState(()=>shouldPromptRoutineFeedback(id))`, no
-  reactivo → «Gracias» no desaparece cuando `recordRoutineFeedback` escribe
-  `lastPromptDay`). **Idempotencia**: guard SÍNCRONO `lockRef` + al decidir el
-  bloque se sustituye por «Gracias». `SessionDone` gana slot `feedback`; los 3
-  runners lo pasan `inPath ? undefined : <SessionFeedback/>` (**nunca en Caminos**).
-- **`state-feedback.jsx` (NUEVO, P0)**: slice `routineFeedback:{[id]:{yes,some,
-  no,lastPromptDay}}` bajo pace.state.v2. Helper PURO `nextRoutineFeedback` (no
-  muta; `later` escribe día sin sumar; solo yes/some/no incrementan) + acción
-  `recordRoutineFeedback` (setState FUNCIONAL, sanitiza `yes|some|no|later`,
-  rechaza id vacío) + `shouldPromptRoutineFeedback` (`lastPromptDay!==todayISO()`).
-  `answered = yes+some+no` y `helpScore` se DERIVAN, nunca se persisten. Merge
-  defensivo en loadState (`{...defaultState,...parsed}` → state pre-s116 = `{}`).
-- **Guard de teclado (P0) — los 3 runners**: `Enter` en done IGNORA el atajo
-  global de salida si el foco está en un control (`event.target.closest('button,
-  a,input,select,textarea,[contenteditable="true"]')` — `closest`, NO `matches`),
-  `isComposing`, `defaultPrevented` o modificadores Ctrl/Meta/Alt (helpers
-  `sessionKeyOnControl`/`sessionDoneKeyBlocked` en SessionShell). El CTA/chip se
-  activan por su onClick → el guard solo evita una 2ª salida. Espacio tampoco se
-  roba a un control con foco. `Enter` fuera de control sigue cerrando (intacto).
-- **Shell / layout**: CSS responsive del shell EXTRAÍDO a
-  `SessionShell.responsive.js` (**495→336 ln**, sale del borde de 500 antes del
-  slot). En el tier **≤430** de altura el HERO decorativo del done se oculta
-  (paso 2 del orden de compactación) → la fila de feedback y el CTA caben sin que
-  el footer tape «Ahora no». i18n `session.feedback.*` ES+EN.
-- **Verificacion** (dev :8765 + standalone; SW purgado + reload MISMO gesto):
-  aparece en done **v1** (desk.pushups) + **legacy** (chair.dips, desk.quick) +
-  **Respira** (rounds.express, acento `var(--breathe)`); responder registra +
-  «Gracias»; «Ahora no» escribe `lastPromptDay` sin sumar; NO en rutina
-  respondida hoy (gate en done real) ni tras «× Salir» · teclado: guard con
-  eventos reales (Enter en chip no cierra/duplica; Enter fuera de control cierra;
-  Escape cierra; **doble clic no duplica** — `move.wrists {no:1}`, no 2). El
-  inyector CDP entrega `key:""` para Enter → la activación nativa se validó por
-  clic + helper puro · persistencia sobrevive recarga + merge pre-s116 → `{}` ·
-  layout 1280×600·1024×512·360×640 sin scroll, 844×390 cabe tras ocultar hero ·
-  consola limpia sin `[i18n] missing` ES+EN. Standalone 3166 KB / 86 scripts,
-  sanity OK, legacy registra `move.wrists`. Bump ×3. Backup v0.59.0 (rotado
-  v0.39.0, cap 20).
+- **`docs/product/EVENTOS_SCHEMA.md` (NUEVO)** — diseño canónico, evolucionado en
+  5 revisiones por auditorías del usuario: **rev.1** blueprint D1–D5 · **rev.2**
+  `runId`, perímetros de duración, `activatedAt`+baseline, UUIDv4 · **rev.3**
+  import = reemplazo total, correlación tipada, comparador de poda, medición por
+  `TextEncoder`, zona horaria estacional, modelo single-writer (dejó 1 P0 abierto)
+  · **rev.4 ARQUITECTURA POR ADAPTADORES** (resuelve el P0) · **rev.5** +iOS.
+- **P0 single-writer + resolución**: dos operaciones read-modify-write
+  simultáneas sobre un mismo almacén pueden perder un evento crudo → se exige
+  **un solo escritor**. En rev.3 no había mecanismo de propiedad viable en TODOS
+  los runtimes (`file://` incluido) → quedó **NO APTO**. Rev.4 lo resuelve
+  separando **modelo canónico** (envelope/tipos/orden/baseline/retención/export,
+  backend-independiente) de **backend de persistencia** (un **adaptador por
+  runtime**): el mecanismo de exclusión deja de ser un invariante universal.
+- **Decisiones por runtime**: **Web/PWA** `localStorage` + **Web Locks** (sin
+  fallback inseguro con `storage`/heartbeat/`BroadcastChannel`) · **`file://`
+  NO emite** (`READ_ONLY`/`UNAVAILABLE`; la app legacy —Foco/Respira/Mueve/
+  Estira/Hidrátate/Caminos/logros/ajustes— sigue intacta) · **Android e iOS
+  (Capacitor)** con **SQLite** nativo (log) + **Preferences/UserDefaults**
+  (config), transacciones nativas, migración legacy idempotente, lifecycle
+  propio; **una única fuente de verdad por dominio y runtime**; detección por la
+  API de Capacitor (no caer al adaptador web). Matriz de **capacidades**
+  (`READ_WRITE`/`READ_ONLY`/`UNAVAILABLE`) + contrato conceptual **EventStore**.
+- **Dos propuestas guardadas (PENDIENTES de valorar, no implementar)**:
+  `docs/product/HOME_REDISENO_PROPUESTA.md` (solapamiento editorial del Camino
+  sobre el aro + jerarquía Caminos > accesos manuales, con invariantes responsive)
+  e `docs/product/I18N_EXPANSION_PROPUESTA.md` (detección BCP 47 web+Capacitor,
+  override manual, fallback inglés + expansión comercial: alemán → pt-BR →
+  francés, japonés premium).
+- **Verificacion** (no hay preview/standalone — es diseño): coherencia interna
+  (cada evento con tipo/envelope/versión/retención/consumidor), regla #10 en los
+  ejemplos, local-first sin red/PII, barridos dirigidos limpios (sin merge en
+  import, sin `runId` universal, sin «según el runner», sin lock por `storage`,
+  offsets con estación, `file://` no emite). **git status**: solo los 3 docs
+  nuevos, cero cambios bajo `app/` ni en artefactos. **Veredicto: APTO PARA
+  CIERRE** (P0 resuelto por adaptadores).
 
 ### Pendiente
 
-- **B2.2b-3 eventos** (solo diseño, `schemaVersion`) → **B2.3** (migrar las
-  otras 22 rutinas al contrato + reescrituras). Ver "Proxima sesion".
+- **B2.2b-3 eventos (solo diseño) — HECHO s117** (`EVENTOS_SCHEMA.md` rev.5,
+  arquitectura por adaptadores; APTO). Siguiente = **B2.3** (migrar las otras 22
+  rutinas al contrato + reescrituras). La IMPLEMENTACIÓN de eventos (EventStore +
+  adaptadores web/Capacitor + emisores) es de fases futuras. Ver "Proxima sesion".
 - **Consumidor del feedback** (Pausa PACE / recomendador scoring v2 / «qué te
   ayuda» premium): queda para su fase — hoy solo se ALMACENA (nada de
   porcentajes ni comparaciones, decisión s116).
@@ -240,25 +238,60 @@ bloque DENTRO del DONE · consumidor = NINGUNO en s116 · frecuencia = 1×/rutin
 - `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s114).
 - Automatizar el bump de version en el build (package.json como fuente).
 
-## Proxima sesion -- B2.2b-3: eventos (solo diseño)
+### Backlog registrado en s117 (propuestas + multiplataforma; docs-only, SIN implementar)
 
-**B2.2b-2 (feedback ligero) quedó CERRADO en s116.** Lo siguiente es B2.2b-3
-(canonico en DECISIONES_PRODUCTO.md §B2):
+Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 
-- **Diseñar (solo diseñar) el esquema de eventos** con `schemaVersion` —
-  retención 90-180 días, agregados permanentes; implementar antes de stats
-  premium / licencia. NO codificar todavía: entregable de diseño.
-- El slice `routineFeedback` de s116 (conteos por rutina) + el contrato formal
-  de s115 (`instruction.*`, `tempo`, `transition`, `completion`, metadatos,
-  `estimateDuration`) son la base sobre la que se apoyan los eventos y B2.3.
-- El **consumidor** del feedback (Pausa PACE / recomendador scoring v2 / «qué te
-  ayuda» premium) sigue pospuesto — s116 solo almacena.
+**Visual / UX** (propuesta: [`HOME_REDISENO_PROPUESTA.md`](./docs/product/HOME_REDISENO_PROPUESTA.md)):
+- Pills **Breve / Tranquilo / Amplio** de Tweaks: corregir el tratamiento visual.
+- **Estadísticas**: dimensiones estables de la carcasa al alternar Semana/Mes/Año
+  (responsive entre viewports OK, no entre pestañas del mismo viewport).
+- **Jerarquía del Home**: Caminos / Camino sugerido POR ENCIMA de los accesos
+  manuales (Respira/Mueve/Estira/Hidrátate).
+- **Solapamiento editorial** intencional y responsive (margen negativo con
+  `clamp()`, círculo `aspect-ratio:1`, nunca tapar timer/controles/ciclo).
 
-Despues: **B2.3** (migrar las otras 22 rutinas al contrato + reescribir 4 cues
-+ 2 rutinas; candidato de contenido: alinear `move.couch.stretch.min` 5→6,
-hallazgo del dev-check s115) → plan maestro (home Caminos al centro + After
-Pomodoro + scoring v2). Deuda a11y (Card sin teclado · onboarding sin focus
-trap) → sesion propia.
+**Multiplataforma** (arquitectura aprobada en `EVENTOS_SCHEMA.md`; implementación PENDIENTE):
+- **Capacitor compartido Android/iOS**: build dedicado, detección de runtime,
+  adaptadores nativos (SQLite log + Preferences/UserDefaults), lifecycle,
+  notificaciones, safe areas, export/import; pruebas en dispositivo real +
+  TestFlight iOS.
+- **`PurchaseAdapter`**: web · Google Play Billing · StoreKit (tiendas = fuente de
+  verdad de precio/moneda; no hardcodear importes en traducciones).
+- **Timer de Mueve multiplataforma basado en timestamps** (hoy `setInterval`
+  foreground; deuda menor ya registrada en plan-maestro).
+
+**i18n** (propuesta: [`I18N_EXPANSION_PROPUESTA.md`](./docs/product/I18N_EXPANSION_PROPUESTA.md)):
+- **I18N-1** modo Automático (detección BCP 47 web+Capacitor, override manual
+  persistente, fallback inglés).
+- **I18N-2** robustez (paridad de claves, pseudolocalización, pluralización).
+- **I18N-3** expansión comercial (validar alemán · pt-BR volumen · francés).
+- **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
+  capturas de tienda).
+
+## Proxima sesion -- B2.3: migrar las 22 rutinas legacy al contrato
+
+**B2.2b-3 (esquema de eventos, SOLO DISEÑO) quedó CERRADO en s117** — diseño
+canónico en `docs/product/EVENTOS_SCHEMA.md` (rev.5, arquitectura por adaptadores;
+APTO). **Arquitectura APROBADA, sin una línea de código**: la implementación
+(EventStore + adaptadores web/Capacitor + emisores) es de fases futuras, no de
+B2.3. Lo siguiente en la secuencia es **B2.3** (canonico en
+DECISIONES_PRODUCTO.md §B2):
+
+- **Migrar las otras 22 rutinas legacy al contrato de pasos v1** (`instruction.*`
+  + `tempo` + (perSide) `transition` + `setup:{mode:'ready'}` donde exija
+  suelo/pared/material; sin re-indexar los EN posicionales `id.sN.*`).
+- **Reescribir 4 cues** (Seated twist, Rib pull, WGS, Ground transitions) + **2
+  rutinas** (`legs.single`, resto de `atg.knees`).
+- **Candidato de contenido**: alinear `move.couch.stretch.min` 5→6 (hallazgo del
+  dev-check s115, único piloto fuera del rango). NO tocar antes de B2.3.
+- Riesgo de producto principal = la brecha entre los 5 pilotos v1 y las 22 legacy
+  (ya NO el runner).
+
+Despues: plan maestro (home Caminos al centro + After Pomodoro + scoring v2 que
+consume `profile`). La **implementación de eventos** (Fase 1 web + Fase Android/
+iOS Capacitor de EVENTOS_SCHEMA.md) llega antes de stats premium / licencia.
+Deuda a11y (Card sin teclado · onboarding sin focus trap) → sesion propia.
 
 ### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
 
@@ -281,6 +314,7 @@ Story A FONDO antes de pricing.
 
 | Decision | Desde | Detalle |
 |---|---|---|
+| **Arquitectura de eventos APROBADA (solo DISEÑO), NO implementada** — `pace.events.v1` por ADAPTADORES | s117 | Canonico en `docs/product/EVENTOS_SCHEMA.md` (rev.5, APTO PARA CIERRE). **Modelo canónico backend-independiente** (envelope `{id=UUIDv4, v, type, occurredAt, localDay, timezoneOffsetMin, context, runId?, pathRunId?, payload}` · tipos `session.completed`/`feedback.answered`/`path.step.completed`/`path.completed` · correlación TIPADA por tipo · orden canónico `{occurredAt asc, id lexicográfico}` · baseline + retención **120 d** · export/import = **REEMPLAZO TOTAL** validado, sin merge) **SEPARADO** del **backend de persistencia** (un **adaptador por runtime** que cumple el contrato **EventStore**; resultados `committed`/`rejected`/`interrupted`/`unavailable`; nada de `setItem`/`storage`/`navigator.locks`/SQLite como invariante universal). **Single-writer** obligatorio (evita perder un evento crudo en RMW concurrente). **Web/PWA**: `localStorage` + **Web Locks** (sin fallback inseguro). **`file://` NO emite** (`READ_ONLY`/`UNAVAILABLE`; la app legacy —Foco/Respira/Mueve/Estira/Hidrátate/Caminos/logros/ajustes— sigue intacta). **Android e iOS (Capacitor)**: **SQLite** nativo (log) + Preferences/UserDefaults (config), transacciones nativas, migración legacy idempotente, lifecycle propio; **una única fuente de verdad por dominio y runtime**; detección por la API de Capacitor (no caer al adaptador web). Matriz de capacidades `READ_WRITE`/`READ_ONLY`/`UNAVAILABLE`. **NADA implementado** (cero `state-events.jsx`, EventStore, emisores, adaptadores, Capacitor, SQLite): implementar en fases (Fase 1 web → Fase Android/iOS) **antes de stats premium / licencia**. Local-first estricto: sin red, sin PII, sin telemetría. Deuda del puente registrada: normalizar `routineFeedback` (`cur.yes\|\|0` sin coacción → microfix junto a B2.3). **Voz/TTS: n/a** |
 | Feedback ligero por rutina (B2.2b-2): «¿Te ayudó esta pausa?» — solo captura + almacenamiento, SIN consumidor visible | s116 | Bloque discreto DENTRO del DONE (slot `feedback` de `SessionDone`), SOLO al `stage:'done'` válido, **fuera de Caminos** (`inPath ? undefined : <SessionFeedback/>`) y nunca tras «× Salir». Pregunta única + 3 respuestas de igual peso (Sí·Un poco·No) + «Ahora no» ghost secundario → acuse EFÍMERO «Gracias»; el CTA de regreso SIEMPRE disponible (no hay que responder para salir). **Datos**: slice `routineFeedback:{[id]:{yes,some,no,lastPromptDay}}` — conteos COMPLETOS; `answered=yes+some+no` y `helpScore=(yes+some*0.5)/answered` se DERIVAN, **NUNCA se persisten**; «Ahora no» (`later`) NO incrementa contadores pero SÍ escribe `lastPromptDay`. Helper PURO `nextRoutineFeedback` (no muta) + acción `recordRoutineFeedback` (setState FUNCIONAL, side-effects fuera del updater) + `shouldPromptRoutineFeedback`. **Frecuencia**: máx 1×/rutina/DÍA LOCAL (`lastPromptDay=todayISO()`, regla #10); gate capturado en el MOUNT de SessionFeedback (no reactivo); salir por el CTA sin responder NO escribe el día → puede reaparecer. **Idempotencia**: guard SÍNCRONO `lockRef` + swap a «Gracias». **Guard de teclado P0** (SessionShell `sessionKeyOnControl`/`sessionDoneKeyBlocked`): `Enter` en done ignora el atajo global de salida si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores — evita 2ª salida; Espacio no se roba a controles; `Enter` fuera de control sigue cerrando. **NINGÚN consumidor visible en s116** (nada de porcentajes/comparaciones — interpretación prematura). Al migrar B2.3: las rutinas nuevas heredan el bloque por su `routine.id`, sin cambios. **Voz/TTS: NUNCA** |
 | Contrato formal de pasos v1 (B2.2b-1): `instruction.*` + `tempo` + `transition` + `completion` + `setup.mode` + metadatos; duración DERIVADA de los datos; migración ATÓMICA | s115 | Sobre los 5 pilotos: cada paso lleva `instruction:{setup,action,care}` (consolida placeCue/cue/careCue de s114), `tempo:{down,hold,up}` (suma = seg/rep guiada; generaliza el rep-seconds), `transition:{seconds}` (cambio de lado perSide), `completion:{mode:'guided'\|'manual'}` ('manual' reservado, sin piloto), y **DOS «setup» distintos**: `setup:{mode:'ready',estimatedSeconds}` = COMPORTAMIENTO del runner (ready espera al usuario, **NUNCA** countdown, estimatedSeconds>0) vs `instruction.setup` = COPY de colocación. `v1StepSetup(routine,idx)` es la ÚNICA fuente del gate (lee `ready`, DERIVA auto/none como s111/s114) — la usan el runner y la duración. Metadatos `position/equipment/requiresFloor/intensity/level` (sin consumidor UI, **sin `discrete`**). Migración ATÓMICA: dato + keys EN `id.sN.instruction.*` + lector `tInstr` a la vez; se RETIRAN placeCue/cue/careCue de los 5 pilotos; `cue` de las 22 legacy y el fallback general de i18n INTACTOS. **Fuente ÚNICA de segundos efectivos**: `v1StepWeight`/`v1StepProgress`/aviso 5 s/`remaining` y `estimateDuration` salen todos de `v1StepDur`/`tempo`/`transition` (fix de la deuda: el peso de barra ya no diverge con preset 20/45). `estimateDuration(routine,rbs)→{minSec,maxSec,breakdown}` es PURO (perSide = dur POR LADO ×2 + UNA transición; reps guided = target×tempo FIJO = duración PLANIFICADA, «terminar antes» no la baja; NO se guarda como dato canónico). Prod: UNA promesa (tarjeta muestra el rango en rutinas v1; legacy `min`; premium «Pronto»). Dev: `v1DevCheckDuration` avisa solo si `min` cae fuera del rango de MINUTOS mostrados. `routine.min` queda como baseline de auditoría. Al migrar más rutinas: nacen con `instruction.*` + `tempo` + (perSide) `transition`; declarar `setup:{mode:'ready'}` donde exija suelo/pared/material; **prohibido `discrete`** y escribir dos formatos canónicos a la vez. **Voz/TTS: NUNCA** |
 | CAPA EDITORIAL del runner (CIERRA el GIRO): instrucción por CAPAS · pantalla final por módulo · descanso configurable · audio sin voz | s114 | **Capas** — 3 campos de paso: `placeCue` (setup, se muestra en COLOCACIÓN) · `cue`=shortCue (ejecución, TRABAJO) · `careCue` («Cuídate», adaptación, línea secundaria SIEMPRE visible en trabajo; en altura baja se oculta el RÓTULO, nunca el contenido). `cue` se conserva como fallback → **JAMÁS re-indexar las keys EN sN**: los campos nuevos son keys NUEVAS `id.sN.placeCue`/`careCue`. Un step `reps` con `placeCue` y NO precedido por rest gana **colocación AUTO** (1er set de fuerza; sets tras rest van directos). En perSide el lado se **integra en el cue** (`<strong>` del acento), NO es un kicker suelto. Tono: frases cortas, verbos suaves, sin anatomía innecesaria (memoria `feedback-realismo-ejercicios`). **Pantalla final por `kind`**: Mueve «Movimiento completado» · Estira «Estiramiento completado» (retira el `session.antidoteDone` universal, P3). Stats HONESTAS con `repsGuidedRef` (fuerza tiempo·series·reps guiadas reales / mixta pasos·reps / movilidad pasos; NUNCA el objetivo; sin calorías/récords/comparaciones). **Descanso** `restBetweenSets` (Tweaks «Sesiones», 20/30/45, default 30) SOLO afecta a `restKind:'betweenSets'` vía `v1StepDur`; el cierre respiratorio queda en su `dur`. El descanso GUÍA (serie siguiente + aviso ~5 s). **Audio SIN voz** (familia move 432): `move.warn` = aviso ÚNICO al cruzar `effDur-5` (descansos + clocked; no cuenta atrás) · `move.side` = cambio de lado. Voz/TTS: NUNCA. Al migrar más rutinas: nacen con las 3 capas; el contrato formal (`instruction.*`) llega en B2.2b-1 |

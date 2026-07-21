@@ -276,8 +276,17 @@ solo diseño; alcance original abajo):
   guard de teclado del done. SIN sistema de eventos y **SIN consumidor visible**
   (nada de porcentajes). Alimentará la Pausa PACE y el «qué te ayuda» premium
   cuando lleguen.
-- Diseñar (solo diseñar) el esquema de eventos con `schemaVersion` **(B2.2b-3,
-  SIGUIENTE)**.
+- **B2.2b-3 — esquema de eventos (solo DISEÑO) HECHA** (s117, 2026-07-21;
+  **solo-docs, sin bump**; diseño canónico [`EVENTOS_SCHEMA.md`](./EVENTOS_SCHEMA.md),
+  rev.5, APTO). El P0 de escritura única (single-writer) se resolvió con
+  **arquitectura por adaptadores**: modelo canónico backend-independiente
+  (envelope/tipos/correlación tipada/orden `{occurredAt,id}`/baseline/retención
+  120 d/export = **reemplazo total**) + un **adaptador por runtime** (contrato
+  EventStore) — Web/PWA con **Web Locks**, **`file://` no emite** (legacy intacto),
+  **Android e iOS (Capacitor)** con **SQLite** nativo + Preferences/UserDefaults.
+  **NADA implementado** (cero `state-events.jsx`/EventStore/emisores/adaptadores/
+  Capacitor/SQLite): la implementación (Fase 1 web → Fase Android/iOS) va **antes
+  de stats premium / licencia**.
 - **B2.3** (olas siguientes): migrar las otras 22 rutinas al contrato +
   reescribir 4 cues (Seated twist, Rib pull, WGS, Ground transitions) + 2
   rutinas (`legs.single`, resto de `atg.knees`).
@@ -313,8 +322,10 @@ enseñar). SVG animado SOLO si el estático valida.
 
 ## Pospuesto (no abrir hasta su fase)
 
-- **Eventos** (`schemaVersion`, retención 90-180 días, agregados
-  permanentes): implementar antes de stats premium / licencia.
+- **Eventos** (`schemaVersion`, retención 120 días, agregados permanentes):
+  **DISEÑO CERRADO en s117** — [`EVENTOS_SCHEMA.md`](./EVENTOS_SCHEMA.md) (rev.5,
+  arquitectura por adaptadores; APTO). Falta **IMPLEMENTAR** (Fase 1 web + Fase
+  Android/iOS Capacitor): antes de stats premium / licencia.
 - **Re-gating de stats** (decisión 3): sesión de licencia.
 - **Sidebar Ahora/Hoy/Repetir/Mis pausas**: necesita feedback+eventos; la
   racha compacta y «Hoy» pueden adelantarse en una sesión de pulido.
