@@ -23,7 +23,13 @@
      setup: { mode: 'ready', estimatedSeconds } — SOLO ready; auto/none se derivan.
      position/equipment/requiresFloor/intensity/level — metadatos sin consumidor UI.
    La duración efectiva sale de una única fuente (support: v1StepDur / tempo /
-   transición); `dur` en `reps` queda SOLO como reserva del fallback legacy. */
+   transición); `dur` en `reps` queda SOLO como reserva del fallback legacy.
+   s118 (B2.3 · OLA 1): migradas al contrato v1 las 5 primeras rutinas legacy
+   de Mueve — chair.dips · calves · grip.squeeze · glutes.stealth · posture.set
+   (todas gratuitas, sin suelo → sin gate `ready`). Migración MECÁNICA: `mode` +
+   `instruction.*` (consolida el `cue`) + `tempo`/`completion` en reps + los 5
+   metadatos; ningún `name` cambia (glifos intactos). Las 7 rutinas restantes de
+   Mueve (premium + legs.single a reescribir) siguen LEGACY byte-idénticas. */
 
 var MOVE_ROUTINES = {
   empuje: {
@@ -62,13 +68,32 @@ var MOVE_ROUTINES = {
               action: 'Últimas. Lentas y limpias, empuja desde el pecho.',
               care: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' } },
         ]},
+      /* s118 (B2.3 OLA 1): migrado al contrato v1 — gemelo de desk.pushups
+         (3 series de fuerza + rests betweenSets). Copy = consolidación del cue
+         legacy (action) + colocación (setup, 1er set) + cuidado (care). */
       { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
+        position: ['seated'], equipment: ['stableChair'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
-          { name: 'Fondos en silla', dur: 40, cue: '10-12 reps con buen control.' },
-          { name: 'Descanso', dur: 30, cue: '' },
-          { name: 'Fondos en silla', dur: 40, cue: '10 reps.' },
-          { name: 'Descanso', dur: 30, cue: '' },
-          { name: 'Fondos en silla', dur: 40, cue: 'Última: 8 reps limpias. Para si la técnica se rompe.' },
+          { name: 'Fondos en silla', mode: 'reps', reps: 12, dur: 40,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Siéntate al borde de una silla estable y sin ruedas. Manos en el borde, a los lados de las caderas. Desliza la cadera fuera del asiento.',
+              action: 'Baja doblando los codos hacia atrás. Sube empujando con los brazos.',
+              care: 'Codos apuntando atrás, no hacia fuera. Baja solo hasta donde el hombro vaya cómodo.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
+          { name: 'Fondos en silla', mode: 'reps', reps: 10, dur: 40,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Baja con control, sin dejarte caer. Empuja y sube.',
+              care: 'Mantén los hombros lejos de las orejas.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
+          { name: 'Fondos en silla', mode: 'reps', reps: 8, dur: 40,
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Últimas. Lentas y limpias, empuja desde el tríceps.',
+              care: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' } },
         ]},
       { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
         steps: [
@@ -92,23 +117,65 @@ var MOVE_ROUTINES = {
     label: 'Sigilo',
     aside: 'Nadie se entera',
     items: [
+      /* s118 (B2.3 OLA 1): migrado — fuerza ligera de gemelo, 2 series de reps
+         guiadas (cadencia rápida 2 s/rep). */
       { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
+        position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Calf raises', dur: 30, cue: '25 reps controladas.' },
-          { name: 'Calf raises', dur: 30, cue: '20 reps más lentas.' },
+          { name: 'Calf raises', mode: 'reps', reps: 25, dur: 30,
+            tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Sentado o de pie, pies apoyados en el suelo al ancho de las caderas.',
+              action: 'Sube los talones lo más alto que puedas. Baja con control.',
+              care: 'Movimiento pequeño y controlado. Apóyate en la mesa si lo necesitas.' } },
+          { name: 'Calf raises', mode: 'reps', reps: 20, dur: 30,
+            tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Más lentas ahora. Nota el gemelo en cada subida.' } },
         ]},
+      /* s118 (B2.3 OLA 1): migrado — dos series de reps (grip + extensión) y un
+         estiramiento de muñeca `timed` (ambas manos, no hay lado). */
       { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
+        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Squeeze fist', dur: 20, cue: 'Aprieta fuerte 20 veces.' },
-          { name: 'Finger extension', dur: 20, cue: 'Abre bien los dedos, sin forzar.' },
-          { name: 'Wrist stretch', dur: 20, cue: 'Muñeca flexión + extensión.' },
+          { name: 'Squeeze fist', mode: 'reps', reps: 20, dur: 20,
+            tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Brazos relajados, manos abiertas.',
+              action: 'Cierra el puño con fuerza y ábrelo del todo. Repite a buen ritmo.',
+              care: 'Firme, pero sin llegar al calambre.' } },
+          { name: 'Finger extension', mode: 'reps', reps: 10, dur: 20,
+            tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Abre bien los dedos, estíralos y relaja.',
+              care: 'Sin forzar las articulaciones.' } },
+          { name: 'Wrist stretch', mode: 'timed', dur: 20,
+            instruction: {
+              action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano.',
+              care: 'Presión ligera. Nunca hasta el dolor.' } },
         ]},
+      /* s118 (B2.3 OLA 1): migrado — reps de apretón + descanso corto (NO
+         betweenSets: es actividad suave, conserva su dur 15) + un bloque
+         isométrico `timed` (3 aguantes de ~10 s, BASE §D) + cierre de gemelo. */
       { id: 'extra.glutes.stealth', tag: 'STEALTH', code: 'Glúteos', name: 'Glúteos invisibles', desc: 'Actívalos sentado. Invisible total.', min: 2,
+        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Apretar glúteos', dur: 30, cue: '20 apretones firmes, 2 segundos cada uno.' },
-          { name: 'Descanso', dur: 15, cue: 'Suelta.' },
-          { name: 'Apretar glúteos', dur: 30, cue: 'Aguanta 10 segundos, suelta. 3 veces.' },
-          { name: 'Calf raises', dur: 30, cue: 'Cierra con 20 elevaciones suaves.' },
+          { name: 'Apretar glúteos', mode: 'reps', reps: 20, dur: 30,
+            tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Sentado erguido, pies apoyados.',
+              action: 'Aprieta los glúteos con fuerza dos segundos y suelta. Repite.',
+              care: 'Nadie tiene que notarlo. Respira con normalidad.' } },
+          { name: 'Descanso', mode: 'rest', dur: 15,
+            instruction: { action: 'Suelta.' } },
+          { name: 'Apretar glúteos', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Ahora aguanta el apretón unos diez segundos y suelta. Tres veces.',
+              care: 'Mantén la respiración suelta durante el aguante.' } },
+          { name: 'Calf raises', mode: 'reps', reps: 20, dur: 30,
+            tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Cierra subiendo y bajando los talones, suave.' } },
         ]},
       { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
         steps: [
@@ -169,12 +236,30 @@ var MOVE_ROUTINES = {
     label: 'Espalda y core',
     aside: 'Sostén de la postura',
     items: [
+      /* s118 (B2.3 OLA 1): migrado — control postural (chin tucks + scapular con
+         retención → reps con hold) y dos movilizaciones suaves `timed` (§B). */
       { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
+        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Chin tucks', dur: 30, cue: '10 reps, barbilla atrás.' },
-          { name: 'Scapular squeeze', dur: 30, cue: 'Junta omóplatos, 10 reps.' },
-          { name: 'Thoracic extension', dur: 30, cue: 'Arquea sobre silla.' },
-          { name: 'Chest opener', dur: 30, cue: 'Brazos atrás, expande pecho.' },
+          { name: 'Chin tucks', mode: 'reps', reps: 8, dur: 30,
+            tempo: { down: 2, hold: 2, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Siéntate erguido, hombros sueltos, mirada al frente.',
+              action: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
+              care: 'Recorrido pequeño, sin tensar. Llevas la cabeza atrás, no abajo.' } },
+          { name: 'Scapular squeeze', mode: 'reps', reps: 10, dur: 30,
+            tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Thoracic extension', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Apoya la espalda alta en el respaldo y arquea suave, abriendo el pecho al techo.',
+              care: 'El arco nace del pecho, no de la zona lumbar.' } },
+          { name: 'Chest opener', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
+              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
         ]},
       { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
         steps: [

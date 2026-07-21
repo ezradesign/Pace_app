@@ -190,7 +190,7 @@ Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
 | `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
 | `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
 | `move.hips.5` | Caderas · 5 pasos | caderas | 6 | free |
-| `move.couch.stretch` | Couch stretch | caderas | 5 | **premium** (F5 — flexores profundos) |
+| `move.couch.stretch` | Couch stretch | caderas | 6 | **premium** (F5 — flexores profundos) |
 | `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
 | `move.atg.knees` | ATG · Rodillas a prueba | caderas | 4 | **premium** (ATG avanzado) |
 | `move.hamstrings` | Cadena posterior | caderas | 5 | **premium** (F5 — isquios profundos) |
