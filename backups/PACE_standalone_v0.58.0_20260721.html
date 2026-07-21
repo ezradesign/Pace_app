@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.59.0</title>
+  <title>PACE · Foco · Cuerpo — v0.58.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -1591,6 +1591,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'move.placeReadyHint': 'Sin prisa · el ejercicio espera a que estés en posición',
   // Runner guiado (s113): reps con cadencia + transición auto de lado
   'move.repsOf': 'de {n} reps',
+  'move.repsGuidedHint': 'Sigue el pulso · haz menos si hoy lo necesitas',
   'move.finishEarly': 'Terminar antes',
   'move.sideAutoHint': 'El lado siguiente empieza solo',
   // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
@@ -1781,6 +1782,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.placeReadyHint': 'No rush · the exercise waits until you\'re in position',
   // Guided runner (s113): cadenced reps + auto side transition
   'move.repsOf': 'of {n} reps',
+  'move.repsGuidedHint': 'Follow the pulse · do fewer if you need to today',
   'move.finishEarly': 'Finish early',
   'move.sideAutoHint': 'The next side starts on its own',
   // Editorial layer (s114): «Take care» label + final-screen stat labels
@@ -2400,19 +2402,19 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.desk.pushups.desc': 'Inclined against desk. 3 sets.',
   'extra.desk.pushups.code': 'Strength',
   'extra.desk.pushups.s0.name': 'Incline push-ups',
-  'extra.desk.pushups.s0.instruction.setup': 'Place your hands on the edge of the desk, a little wider than your shoulders. Step back until your body is at a diagonal, kept straight.',
-  'extra.desk.pushups.s0.instruction.action': 'Lower your chest toward the edge. Elbows close to the body. Push and return.',
-  'extra.desk.pushups.s0.instruction.care': 'The more upright you are, the gentler it is. Pick a height that lets you reach 12 with good form.',
+  'extra.desk.pushups.s0.cue': 'Lower your chest toward the edge. Elbows close to the body. Push and return.',
+  'extra.desk.pushups.s0.placeCue': 'Place your hands on the edge of the desk, a little wider than your shoulders. Step back until your body is at a diagonal, kept straight.',
+  'extra.desk.pushups.s0.careCue': 'The more upright you are, the gentler it is. Pick a height that lets you reach 12 with good form.',
   'extra.desk.pushups.s1.name': 'Rest',
-  'extra.desk.pushups.s1.instruction.action': 'Breathe.',
+  'extra.desk.pushups.s1.cue': 'Breathe.',
   'extra.desk.pushups.s2.name': 'Incline push-ups',
-  'extra.desk.pushups.s2.instruction.action': 'Lower with control, without dropping. Push and return.',
-  'extra.desk.pushups.s2.instruction.care': 'If the first set was hard, raise your hands a little.',
+  'extra.desk.pushups.s2.cue': 'Lower with control, without dropping. Push and return.',
+  'extra.desk.pushups.s2.careCue': 'If the first set was hard, raise your hands a little.',
   'extra.desk.pushups.s3.name': 'Rest',
-  'extra.desk.pushups.s3.instruction.action': 'Breathe.',
+  'extra.desk.pushups.s3.cue': 'Breathe.',
   'extra.desk.pushups.s4.name': 'Incline push-ups',
-  'extra.desk.pushups.s4.instruction.action': 'Last ones. Slow and clean, push from the chest.',
-  'extra.desk.pushups.s4.instruction.care': 'Stop if your form breaks. Better 6 good ones than 8 forced.',
+  'extra.desk.pushups.s4.cue': 'Last ones. Slow and clean, push from the chest.',
+  'extra.desk.pushups.s4.careCue': 'Stop if your form breaks. Better 6 good ones than 8 forced.',
 
   'extra.chair.dips.name': 'Chair Dips',
   'extra.chair.dips.desc': 'Triceps in 3 sets. A stable chair with no wheels.',
@@ -2527,19 +2529,19 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.squats.desc': 'Stand up, sit down. The most useful strength. Stable chair, no wheels.',
   'extra.chair.squats.code': 'Legs',
   'extra.chair.squats.s0.name': 'Chair squat',
-  'extra.chair.squats.s0.instruction.setup': 'Stand facing the chair, feet hip-width apart. Stable chair, no wheels.',
-  'extra.chair.squats.s0.instruction.action': 'Lower until you graze the chair. Rise without momentum, chest up.',
-  'extra.chair.squats.s0.instruction.care': 'Rest your hands on your thighs to help yourself if you need to.',
+  'extra.chair.squats.s0.cue': 'Lower until you graze the chair. Rise without momentum, chest up.',
+  'extra.chair.squats.s0.placeCue': 'Stand facing the chair, feet hip-width apart. Stable chair, no wheels.',
+  'extra.chair.squats.s0.careCue': 'Rest your hands on your thighs to help yourself if you need to.',
   'extra.chair.squats.s1.name': 'Rest',
-  'extra.chair.squats.s1.instruction.action': 'Breathe.',
+  'extra.chair.squats.s1.cue': 'Breathe.',
   'extra.chair.squats.s2.name': 'Chair squat',
-  'extra.chair.squats.s2.instruction.action': 'Slower. Graze the chair and rise with control.',
-  'extra.chair.squats.s2.instruction.care': 'Only go down as far as your knees feel comfortable.',
+  'extra.chair.squats.s2.cue': 'Slower. Graze the chair and rise with control.',
+  'extra.chair.squats.s2.careCue': 'Only go down as far as your knees feel comfortable.',
   'extra.chair.squats.s3.name': 'Rest',
-  'extra.chair.squats.s3.instruction.action': 'Breathe.',
+  'extra.chair.squats.s3.cue': 'Breathe.',
   'extra.chair.squats.s4.name': 'Chair squat',
-  'extra.chair.squats.s4.instruction.action': 'Last ones, no momentum. Squeeze at the top.',
-  'extra.chair.squats.s4.instruction.care': 'Stop if you lose control of the way down.',
+  'extra.chair.squats.s4.cue': 'Last ones, no momentum. Squeeze at the top.',
+  'extra.chair.squats.s4.careCue': 'Stop if you lose control of the way down.',
 
   'extra.legs.single.name': 'Legs · Single',
   'extra.legs.single.desc': 'Single-leg strength. Balance, control, and a stable chair.',
@@ -2611,26 +2613,26 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.desc': 'Exact antidote to 4h seated. Hips, lumbar, neck. You\'ll spend time on the floor.',
   'move.chair.antidote.code': 'SIT',
   'move.chair.antidote.s0.name': 'Chest opening',
-  'move.chair.antidote.s0.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
-  'move.chair.antidote.s0.instruction.care': 'Only open as far as your chest stretches without discomfort.',
+  'move.chair.antidote.s0.cue': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
+  'move.chair.antidote.s0.careCue': 'Only open as far as your chest stretches without discomfort.',
   'move.chair.antidote.s1.name': 'Thoracic rotation',
-  'move.chair.antidote.s1.instruction.setup': 'Sit tall, feet planted. Cross your hands over your chest.',
-  'move.chair.antidote.s1.instruction.action': 'Rotate your trunk slowly to one side. Return to center.',
-  'move.chair.antidote.s1.instruction.care': 'The turn comes from the trunk, not the neck.',
+  'move.chair.antidote.s1.cue': 'Rotate your trunk slowly to one side. Return to center.',
+  'move.chair.antidote.s1.placeCue': 'Sit tall, feet planted. Cross your hands over your chest.',
+  'move.chair.antidote.s1.careCue': 'The turn comes from the trunk, not the neck.',
   'move.chair.antidote.s2.name': 'Hip flexor',
-  'move.chair.antidote.s2.instruction.setup': 'Rest one knee on the floor, the other leg in front at an angle. A cushion under the knee if it bothers you.',
-  'move.chair.antidote.s2.instruction.action': 'Push your pelvis forward. Gentle stretch in the groin of the back leg.',
-  'move.chair.antidote.s2.instruction.care': "Short range. Don't force your lower back.",
+  'move.chair.antidote.s2.cue': 'Push your pelvis forward. Gentle stretch in the groin of the back leg.',
+  'move.chair.antidote.s2.placeCue': 'Rest one knee on the floor, the other leg in front at an angle. A cushion under the knee if it bothers you.',
+  'move.chair.antidote.s2.careCue': "Short range. Don't force your lower back.",
   'move.chair.antidote.s3.name': "World's greatest stretch",
-  'move.chair.antidote.s3.instruction.setup': 'Take a long step into a lunge. Lower your inside hand toward the floor.',
-  'move.chair.antidote.s3.instruction.action': 'Open your chest and reach the other arm to the ceiling. Follow your hand with your eyes.',
-  'move.chair.antidote.s3.instruction.care': "Rest your hand on a book if you can't reach the floor.",
+  'move.chair.antidote.s3.cue': 'Open your chest and reach the other arm to the ceiling. Follow your hand with your eyes.',
+  'move.chair.antidote.s3.placeCue': 'Take a long step into a lunge. Lower your inside hand toward the floor.',
+  'move.chair.antidote.s3.careCue': "Rest your hand on a book if you can't reach the floor.",
   'move.chair.antidote.s4.name': 'Neck and traps',
-  'move.chair.antidote.s4.instruction.setup': 'Sit tall, shoulders down.',
-  'move.chair.antidote.s4.instruction.action': 'Bring your ear toward your shoulder. Let the weight of your head fall.',
-  'move.chair.antidote.s4.instruction.care': 'No pulling with your hand. Just the weight.',
+  'move.chair.antidote.s4.cue': 'Bring your ear toward your shoulder. Let the weight of your head fall.',
+  'move.chair.antidote.s4.placeCue': 'Sit tall, shoulders down.',
+  'move.chair.antidote.s4.careCue': 'No pulling with your hand. Just the weight.',
   'move.chair.antidote.s5.name': 'Breathing reset',
-  'move.chair.antidote.s5.instruction.action': '3 deep inhales to close.',
+  'move.chair.antidote.s5.cue': '3 deep inhales to close.',
 
   'move.hips.5.name': 'Hips · 5 steps',
   'move.hips.5.desc': '5 steps to unlock deep hips. Mostly on the floor.',
@@ -2692,21 +2694,21 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.neck.3.desc': 'Micro-break for tense cervicals.',
   'move.neck.3.code': 'SIT',
   'move.neck.3.s0.name': 'Chin tucks',
-  'move.neck.3.s0.instruction.setup': 'Sit tall, shoulders loose. Look straight ahead.',
-  'move.neck.3.s0.instruction.action': 'Glide your chin straight back. The back of your neck lengthens. Hold and release.',
-  'move.neck.3.s0.instruction.care': 'No tension. A small range already works.',
+  'move.neck.3.s0.cue': 'Glide your chin straight back. The back of your neck lengthens. Hold and release.',
+  'move.neck.3.s0.placeCue': 'Sit tall, shoulders loose. Look straight ahead.',
+  'move.neck.3.s0.careCue': 'No tension. A small range already works.',
   'move.neck.3.s1.name': 'Lateral tilt',
-  'move.neck.3.s1.instruction.setup': 'Sit tall, let your shoulders drop.',
-  'move.neck.3.s1.instruction.action': 'Bring your ear toward your shoulder, slowly. Feel the stretch on the other side.',
-  'move.neck.3.s1.instruction.care': 'Don\'t push with your hand. Let the weight of your head fall.',
+  'move.neck.3.s1.cue': 'Bring your ear toward your shoulder, slowly. Feel the stretch on the other side.',
+  'move.neck.3.s1.placeCue': 'Sit tall, let your shoulders drop.',
+  'move.neck.3.s1.careCue': 'Don\'t push with your hand. Let the weight of your head fall.',
   'move.neck.3.s2.name': 'Slow rotation',
-  'move.neck.3.s2.instruction.setup': 'Tall, chin parallel to the floor.',
-  'move.neck.3.s2.instruction.action': 'Turn slowly to look over your shoulder. Return to center.',
-  'move.neck.3.s2.instruction.care': 'Only turn as far as your neck stays loose.',
+  'move.neck.3.s2.cue': 'Turn slowly to look over your shoulder. Return to center.',
+  'move.neck.3.s2.placeCue': 'Tall, chin parallel to the floor.',
+  'move.neck.3.s2.careCue': 'Only turn as far as your neck stays loose.',
   'move.neck.3.s3.name': 'Scalenes',
-  'move.neck.3.s3.instruction.setup': 'Sit on one hand to anchor that shoulder.',
-  'move.neck.3.s3.instruction.action': 'Tilt your head to the opposite side and look up slightly.',
-  'move.neck.3.s3.instruction.care': 'Very gentle. The neck is a delicate area.',
+  'move.neck.3.s3.cue': 'Tilt your head to the opposite side and look up slightly.',
+  'move.neck.3.s3.placeCue': 'Sit on one hand to anchor that shoulder.',
+  'move.neck.3.s3.careCue': 'Very gentle. The neck is a delicate area.',
 
   'move.desk.quick.name': 'Desk Express',
   'move.desk.quick.desc': 'Without standing up. 6 movements in the chair.',
@@ -2771,25 +2773,25 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.couch.stretch.desc': 'Deep hip flexors against a wall or chair, knee on the floor. The couch stretch.',
   'move.couch.stretch.code': 'Hips',
   'move.couch.stretch.s0.name': 'Hip flexor',
-  'move.couch.stretch.s0.instruction.setup': 'Rest one knee on the floor, the other leg in front at an angle. A cushion under the knee if it bothers you.',
-  'move.couch.stretch.s0.instruction.action': 'Push your pelvis forward. Gentle stretch in the groin of the back leg.',
-  'move.couch.stretch.s0.instruction.care': 'Short range. Keep your trunk upright.',
+  'move.couch.stretch.s0.cue': 'Push your pelvis forward. Gentle stretch in the groin of the back leg.',
+  'move.couch.stretch.s0.placeCue': 'Rest one knee on the floor, the other leg in front at an angle. A cushion under the knee if it bothers you.',
+  'move.couch.stretch.s0.careCue': 'Short range. Keep your trunk upright.',
   'move.couch.stretch.s1.name': 'Couch stretch',
-  'move.couch.stretch.s1.instruction.setup': 'Rest the back instep against the wall or a chair, knee deep at the bottom.',
-  'move.couch.stretch.s1.instruction.action': 'Rise up through your trunk slowly. Squeeze the back glute.',
-  'move.couch.stretch.s1.instruction.care': "Move your knee away from the wall to lower the intensity. It's a strong stretch.",
+  'move.couch.stretch.s1.cue': 'Rise up through your trunk slowly. Squeeze the back glute.',
+  'move.couch.stretch.s1.placeCue': 'Rest the back instep against the wall or a chair, knee deep at the bottom.',
+  'move.couch.stretch.s1.careCue': "Move your knee away from the wall to lower the intensity. It's a strong stretch.",
   'move.couch.stretch.s2.name': '90/90',
-  'move.couch.stretch.s2.instruction.setup': 'Sit on the floor, one leg in front and one to the side, both at 90°.',
-  'move.couch.stretch.s2.instruction.action': 'Rotate slowly from one side to the other. Trunk tall.',
-  'move.couch.stretch.s2.instruction.care': 'Lean on your hands behind you to go more comfortably.',
+  'move.couch.stretch.s2.cue': 'Rotate slowly from one side to the other. Trunk tall.',
+  'move.couch.stretch.s2.placeCue': 'Sit on the floor, one leg in front and one to the side, both at 90°.',
+  'move.couch.stretch.s2.careCue': 'Lean on your hands behind you to go more comfortably.',
   'move.couch.stretch.s3.name': 'Pigeon',
-  'move.couch.stretch.s3.instruction.setup': 'Bring one shin to the front, the other leg stretched back.',
-  'move.couch.stretch.s3.instruction.action': 'Walk your weight forward. Lower your chest little by little.',
-  'move.couch.stretch.s3.instruction.care': 'Put a cushion under the hip that stays in the air.',
+  'move.couch.stretch.s3.cue': 'Walk your weight forward. Lower your chest little by little.',
+  'move.couch.stretch.s3.placeCue': 'Bring one shin to the front, the other leg stretched back.',
+  'move.couch.stretch.s3.careCue': 'Put a cushion under the hip that stays in the air.',
   'move.couch.stretch.s4.name': 'Bridge with march',
-  'move.couch.stretch.s4.instruction.setup': 'Lie on your back, feet planted close to your glutes.',
-  'move.couch.stretch.s4.instruction.action': 'Lift your hips and hold. Raise one knee, then the other.',
-  'move.couch.stretch.s4.instruction.care': 'Slow the pace if your lower back complains.',
+  'move.couch.stretch.s4.cue': 'Lift your hips and hold. Raise one knee, then the other.',
+  'move.couch.stretch.s4.placeCue': 'Lie on your back, feet planted close to your glutes.',
+  'move.couch.stretch.s4.careCue': 'Slow the pace if your lower back complains.',
 
   'move.hips.ground.name': 'Hips · Ground',
   'move.hips.ground.desc': 'Ground flow: frog, 90/90, transitions. Free hips.',
@@ -3270,7 +3272,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.59.0';
+const PACE_VERSION = 'v0.58.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -9338,17 +9340,6 @@ function RoutineCard(_ref3) {let { routine, color, onClick } = _ref3;
   const isLocked = window.canAccessRoutine ?
   !window.canAccessRoutine(routine.id) :
   isPremium && !pace.premiumUnlocked;
-  // s115 (B2.2b-1): duración DERIVADA para rutinas del contrato v1 (algún step
-  // con `mode`) — UNA sola promesa vía helper puro `estimateDuration`, con el
-  // preset de descanso actual (reactivo: pace ya suscribe). El resto (Respira +
-  // las 22 rutinas legacy) conserva `routine.min`. Prod nunca muestra ambos.
-  const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
-  let durLabel = `${routine.min} min`;
-  if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
-    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
-  }
   return (/*#__PURE__*/
     React.createElement(Card, { accent: isLocked ? undefined : color, onClick: isLocked ? undefined : onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
     routine.safety && /*#__PURE__*/
@@ -9376,7 +9367,7 @@ function RoutineCard(_ref3) {let { routine, color, onClick } = _ref3;
     isLocked ? /*#__PURE__*/
     React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, t('premium.soon')) : /*#__PURE__*/
 
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: color, fontWeight: 500 } }, durLabel)
+    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: color, fontWeight: 500 } }, routine.min, " min")
 
     )
     ));
@@ -9897,15 +9888,7 @@ Object.assign(window, { BreatheSession });
    s113 (runner guiado): los rest ENTRE SERIES de los pilotos pasan a 30 s y
    estrenan `restKind: 'betweenSets'` — tipado mínimo, base del ajuste de
    Tweaks de s114 (que NUNCA tocará los cierres respiratorios, sin restKind).
-   s115 (B2.2b-1 · contrato formal, SOLO los 5 pilotos):
-     instruction: { setup, action, care }  — consolida placeCue/cue/careCue.
-     tempo: { down, hold, up }              — generaliza el rep-seconds (suma).
-     completion: { mode: 'guided' }         — 'manual' reservado, sin piloto.
-     transition: { seconds }                — cambio de lado (perSide, ExtraModule).
-     setup: { mode: 'ready', estimatedSeconds } — SOLO ready; auto/none se derivan.
-     position/equipment/requiresFloor/intensity/level — metadatos sin consumidor UI.
-   La duración efectiva sale de una única fuente (support: v1StepDur / tempo /
-   transición); `dur` en `reps` queda SOLO como reserva del fallback legacy. */
+   `repSeconds` (opcional) = segundos por rep guiada; sin él, 4 s (fuerza). */
 
 var MOVE_ROUTINES = {
   empuje: {
@@ -9915,34 +9898,22 @@ var MOVE_ROUTINES = {
     /* s113: min 2→3 — con reps guiadas la ejecución real ronda 3:15-3:25
        (la derivación formal de duración llega en B2.2b-1). */
     { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 3,
-      position: ['standing'], equipment: ['stableDesk'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
       steps: [
-      /* s115 (B2.2b-1): contrato formal — `instruction` {setup,action,care}
-         consolida placeCue/cue(shortCue)/careCue de s114 (misma copy); `tempo`
-         generaliza el repSeconds implícito de fuerza (2 baja + 0 pausa + 2
-         sube = 4 s/rep); `completion.mode:'guided'` = avance auto guiado. El
-         1er set gana colocación AUTO (reps con instruction.setup y NO tras
-         rest). `dur` se conserva SOLO como reserva del fallback legacy. */
+      /* s114: capa editorial — cue = ejecución (shortCue); placeCue =
+         setup (fase colocación, solo la 1ª serie la muestra); careCue =
+         adaptación «Cuídate» (siempre visible en trabajo). */
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          setup: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
-          action: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
-          care: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' } },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
-        instruction: { action: 'Respira.' } },
+        cue: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
+        placeCue: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
+        careCue: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' },
+      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          action: 'Baja con control, sin dejarte caer. Empuja y vuelve.',
-          care: 'Si la primera serie costó, sube un poco las manos.' } },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
-        instruction: { action: 'Respira.' } },
+        cue: 'Baja con control, sin dejarte caer. Empuja y vuelve.',
+        careCue: 'Si la primera serie costó, sube un poco las manos.' },
+      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
       { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          action: 'Últimas. Lentas y limpias, empuja desde el pecho.',
-          care: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' } }]
+        cue: 'Últimas. Lentas y limpias, empuja desde el pecho.',
+        careCue: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' }]
     },
     { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
       steps: [
@@ -10007,28 +9978,19 @@ var MOVE_ROUTINES = {
     aside: 'La base del cuerpo',
     items: [
     { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
-      position: ['standing'], equipment: ['stableChair'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
       steps: [
       { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          setup: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
-          action: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
-          care: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' } },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
-        instruction: { action: 'Respira.' } },
+        cue: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
+        placeCue: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
+        careCue: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' },
+      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
       { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          action: 'Más lentas. Roza la silla y sube con control.',
-          care: 'Baja solo hasta donde las rodillas vayan cómodas.' } },
-      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
-        instruction: { action: 'Respira.' } },
+        cue: 'Más lentas. Roza la silla y sube con control.',
+        careCue: 'Baja solo hasta donde las rodillas vayan cómodas.' },
+      { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
       { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40,
-        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          action: 'Últimas, sin impulso. Aprieta arriba.',
-          care: 'Para si pierdes el control de la bajada.' } }]
+        cue: 'Últimas, sin impulso. Aprieta arriba.',
+        careCue: 'Para si pierdes el control de la bajada.' }]
     },
     { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
       steps: [
@@ -10459,37 +10421,12 @@ Object.assign(window, { MoveLibrary, MoveSession, StepGlyph });
 const V1_PLACE_SECONDS = 5;
 const V1_REP_SECONDS = 4;
 const V1_CHANGE_SECONDS = 10;
-const V1_PREP_SECONDS = 5; // cuenta 5·4·3·2·1 antes del paso 0 (s113)
 
-/* isDev: localhost / 127.0.0.1 / file:// (mismo criterio que useT.jsx). Sólo
-   activa el dev-check de duración declarada vs calculada — invisible en prod. */
-const _v1IsDev = typeof location !== 'undefined' && (
-['localhost', '127.0.0.1'].includes(location.hostname) || location.protocol === 'file:');
-
-/* tempo (s115/B2.2b-1): generaliza el rep-seconds. Objeto {down,hold,up} → suma;
-   número → valor; `repSeconds` legacy y V1_REP_SECONDS como respaldo. ÚNICA
-   fuente de la cadencia de una rep guiada. */
-function v1TempoSeconds(step) {
-  const tm = step && step.tempo;
-  if (tm && typeof tm === 'object') return (tm.down || 0) + (tm.hold || 0) + (tm.up || 0);
-  if (typeof tm === 'number') return tm;
-  if (step && typeof step.repSeconds === 'number') return step.repSeconds;
-  return V1_REP_SECONDS;
+function v1RepSeconds(step) {
+  return typeof step.repSeconds === 'number' ? step.repSeconds : V1_REP_SECONDS;
 }
-function v1RepSeconds(step) {return v1TempoSeconds(step);}
 function v1RepTarget(step) {
   return (typeof step.reps === 'object' ? step.reps.target : step.reps) || 8;
-}
-/* transición de lado (perSide): segundos declarados o el default s113 (10 s). */
-function v1TransitionSeconds(step) {
-  return step && step.transition && typeof step.transition.seconds === 'number' ?
-  step.transition.seconds : V1_CHANGE_SECONDS;
-}
-/* completion: 'guided' (avance auto) por defecto en reps; 'manual' reservado
-   (sin piloto). El runner respeta el modo; la duración de guided es fija. */
-function v1CompletionMode(step) {
-  if (step && step.completion && step.completion.mode) return step.completion.mode;
-  return step && step.mode === 'reps' ? 'guided' : 'timed';
 }
 
 /* Descanso entre series (s114): los rests con restKind:'betweenSets' toman su
@@ -10507,31 +10444,6 @@ function v1StepDur(step) {
   return step.dur || 0;
 }
 
-/* Gate de colocación (s115): comportamiento del runner + estimación de duración
-   en UNA sola fuente. `setup:{mode:'ready',estimatedSeconds}` declarado (espera
-   al usuario, NUNCA cuenta) — floor/pared/material. El resto se DERIVA como en
-   s111/s114:
-     auto — pasos con reloj (timed/perSide) e idx>0, o el 1er set de fuerza
-            (reps con instruction.setup y NO tras un rest) → gate auto de 5 s.
-     none — resto. `setup:número` (s112) sigue siendo un gate auto explícito.
-   `ready` aporta estimatedSeconds>0 SÓLO para la duración; jamás es countdown. */
-function v1StepSetup(routine, idx) {
-  const st = routine.steps[idx];
-  if (!st) return { mode: 'none', estimatedSeconds: 0 };
-  if (st.setup && st.setup.mode === 'ready') {
-    return { mode: 'ready', estimatedSeconds: st.setup.estimatedSeconds || V1_PLACE_SECONDS };
-  }
-  if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
-  const clocked = st.mode === 'timed' || st.mode === 'perSide';
-  const prev = idx > 0 ? routine.steps[idx - 1] : null;
-  const afterRest = !!(prev && prev.mode === 'rest');
-  if (clocked && idx > 0) return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
-  if (st.mode === 'reps' && st.instruction && st.instruction.setup && !afterRest) {
-    return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
-  }
-  return { mode: 'none', estimatedSeconds: 0 };
-}
-
 /* Progreso 0..1 del step activo (barra segmentada). Reps guiadas (s113):
    el progreso es tiempo guiado / tiempo objetivo — cadencia, no cuota. */
 function v1StepProgress(step, side, elapsed) {
@@ -10543,14 +10455,11 @@ function v1StepProgress(step, side, elapsed) {
   const d = v1StepDur(step); // rest betweenSets = preset de Ajustes (s114)
   return d ? elapsed / d : 0;
 }
-/* Peso del step para la barra segmentada (estimación honesta por tipo).
-   s115: la rama timed/rest usa v1StepDur — MISMA fuente efectiva que el
-   progreso, el aviso de 5 s y el remaining (antes leía step.dur crudo → con el
-   preset 20/45 el peso divergía del llenado; deuda del criterio de aceptación). */
+/* Peso del step para la barra segmentada (estimación honesta por tipo). */
 function v1StepWeight(step) {
   if (step.mode === 'reps') return v1RepTarget(step) * v1RepSeconds(step);
   if (step.mode === 'perSide') return (step.dur || 20) * 2;
-  return v1StepDur(step) || 20;
+  return step.dur || 20;
 }
 
 /* Tamaño del visual instructivo por ALTURA de viewport (s112). s113 añade el
@@ -10560,59 +10469,6 @@ function v1StepWeight(step) {
 function v1GlyphSize(vpH) {
   if (vpH >= 720) return Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
   return Math.max(72, Math.round(vpH * 0.22));
-}
-
-/* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
-   descanso, devuelve {minSec,maxSec,breakdown} sin tocar el runner ni el reloj.
-     reps guiadas → target × tempo (FIJO; 'manual' añadiría banda, sin piloto).
-     perSide      → dur POR LADO × 2 + UNA transición (evita el cuádruple conteo).
-     rest         → betweenSets: preset; cierre: su dur.
-     timed        → dur.
-   + prep global v1 + setup por paso (estimatedSeconds; ready FIJO, nunca cuenta).
-   NO se guarda como dato canónico: se recalcula al vuelo (tarjeta, dev-check).
-   DURACIÓN PLANIFICADA (no real): «terminar antes» reduce el reloj real, no la
-   promesa. La banda del rango nace SÓLO de tiempos variables del contrato
-   (completion manual); en los 5 pilotos actuales min===max (guided/timed). */
-function estimateDuration(routine, restBetweenSets) {
-  const rbs = typeof restBetweenSets === 'number' ? restBetweenSets : 30;
-  const steps = routine && routine.steps || [];
-  const breakdown = [{ label: 'prep', sec: V1_PREP_SECONDS }];
-  let minSec = V1_PREP_SECONDS,maxSec = V1_PREP_SECONDS;
-  steps.forEach((st, idx) => {
-    const setupSec = v1StepSetup(routine, idx).estimatedSeconds || 0;
-    let lo = 0,hi = 0;
-    if (st.mode === 'reps') {
-      const active = v1RepTarget(st) * v1RepSeconds(st);
-      lo = active;hi = v1CompletionMode(st) === 'manual' ? Math.round(active * 1.5) : active;
-    } else if (st.mode === 'perSide') {
-      lo = hi = (st.dur || 0) * 2 + v1TransitionSeconds(st);
-    } else if (st.mode === 'rest') {
-      lo = hi = st.restKind === 'betweenSets' ? rbs : st.dur || 0;
-    } else {
-      lo = hi = st.dur || 0; // timed
-    }
-    breakdown.push({ i: idx, name: st.name, mode: st.mode, setup: setupSec, active: lo, activeMax: hi });
-    minSec += setupSec + lo;maxSec += setupSec + hi;
-  });
-  return { minSec, maxSec, breakdown };
-}
-
-/* Dev-check (s115): compara routine.min DECLARADO con el rango CALCULADO. La
-   comparación es a NIVEL de MINUTOS mostrados [floor(min),ceil(max)] — no en
-   segundos: una rutina determinista casi nunca cae en un múltiplo exacto de 60,
-   así que un umbral en segundos avisaría siempre (ruido). Avisa SÓLO si los
-   minutos declarados quedan fuera del rango que ve el usuario (umbral
-   verificable, sin ruido para valores dentro). Prod muestra UNA sola promesa
-   (la tarjeta usa el derivado); esto es diagnóstico y sólo corre en dev.
-   routine.min queda como baseline de auditoría. */
-function v1DevCheckDuration(routine, restBetweenSets) {
-  if (!_v1IsDev || !routine) return;
-  const est = estimateDuration(routine, restBetweenSets);
-  const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
-  const outside = routine.min < lo || routine.min > hi;
-  const head = `[dur] ${routine.id}: declarado ${routine.min}min vs calculado ${est.minSec}–${est.maxSec}s (rango ${lo}–${hi}min)`;
-  if (outside) console.warn(head + ' — DECLARADO fuera del rango mostrado', est.breakdown);else
-  console.log(head + ' — dentro', est.breakdown);
 }
 
 /* CSS del runner v1 (s113):
@@ -10683,12 +10539,10 @@ if (!_paceMoveV1Css) {
 }
 
 Object.assign(window, {
-  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
-  v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
-  v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
-  estimateDuration, v1DevCheckDuration
+  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS,
+  v1RepSeconds, v1RepTarget, v1RestSeconds, v1StepDur, v1StepProgress, v1StepWeight, v1GlyphSize
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, estimateDuration, v1DevCheckDuration });
+;Object.assign(window, { v1RepSeconds, v1RepTarget, v1RestSeconds, v1StepDur, v1StepProgress, v1StepWeight, v1GlyphSize });
 })();
 </script>
   <script>
@@ -10735,19 +10589,12 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const tStep = (idx, field) => tR(`${routine.id}.s${idx}.${field}`, routine.steps[idx][field]);
-  // s115 (B2.2b-1): instruction {setup,action,care} — key i18n
-  // `id.sN.instruction.<k>`, fallback al dato anidado. Reemplaza los campos
-  // sueltos placeCue/cue/careCue de s114 (migración atómica; sin doble fuente).
-  const tInstr = (idx, key) => {
-    const st = routine.steps[idx];
-    return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
-  };
   const displayRoutine = lang === 'en' ?
   { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
   routine;
 
   const [stage, setStage] = useStateV1('prep'); // 'prep' | 'run' | 'done'
-  const [prepCount, setPrepCount] = useStateV1(V1_PREP_SECONDS); // s113: prep 5 s (antes 3)
+  const [prepCount, setPrepCount] = useStateV1(5); // s113: prep 5 s (antes 3)
   const [stepIdx, setStepIdx] = useStateV1(0);
   const [phase, setPhase] = useStateV1('place'); // 'place' | 'work' | 'change'
   const [side, setSide] = useStateV1(0); // 0 = 1er lado, 1 = 2º lado
@@ -10768,17 +10615,26 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   };
 
   const startStep = (idx) => {
+    const st = routine.steps[idx];
     setStepIdx(idx);setElapsed(0);setSide(0);
-    // Gate de colocación (s115): la derivación vive en v1StepSetup (support),
-    //   ÚNICA fuente compartida con la duración estimada:
-    //   ready → espera al usuario SIN cuenta (placeLeft 0; NUNCA countdown).
-    //   auto  → cuenta que fluye sola (efecto abajo), estimatedSeconds s.
-    //   none  → directo a work. El gate nunca es el timer del ejercicio: R1
-    //   intacto. Comportamiento idéntico a s114 (ready / clocked idx>0 / 1er
-    //   set de fuerza con instruction.setup no tras rest → auto; resto none).
-    const su = v1StepSetup(routine, idx);
-    if (su.mode === 'ready') {setPhase('place');setPlaceLeft(0);} else
-    if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);} else
+    // Gate de colocación (s111/s112), cuatro entradas:
+    //   ready — declarado por paso (`setup:'ready'`, suelo/pared): espera al
+    //           usuario SIN cuenta, en cualquier mode e incluso en el paso 0.
+    //   auto  — derivado del mode (s111): pasos CON reloj (timed/perSide) e
+    //           idx>0 → cuenta-atrás que fluye sola (efecto abajo).
+    //   reps  — (s114) el primer set de fuerza (reps con `placeCue` y NO
+    //           precedido por un rest) gana una colocación AUTO: ventana para
+    //           leer el setup y ponerse en posición antes de que arranque el
+    //           pacer. Los sets 2/3 vienen tras un rest (que ya recoloca y
+    //           guía qué viene) → directo a work, sin doble espera.
+    //   none  — resto de reps/rest y paso 0 sin placeCue → directo a work.
+    // El gate nunca es el timer del ejercicio: R1 intacto.
+    const clocked = st.mode === 'timed' || st.mode === 'perSide';
+    const prev = idx > 0 ? routine.steps[idx - 1] : null;
+    const afterRest = !!(prev && prev.mode === 'rest');
+    if (st.setup === 'ready') {setPhase('place');setPlaceLeft(0);} else
+    if (clocked && idx > 0) {setPhase('place');setPlaceLeft(typeof st.setup === 'number' ? st.setup : V1_PLACE_SECONDS);} else
+    if (st.mode === 'reps' && st.placeCue && !afterRest) {setPhase('place');setPlaceLeft(V1_PLACE_SECONDS);} else
     setPhase('work');
   };
   const advanceStep = () => {
@@ -10792,9 +10648,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // Entrada a la transición de lado (s113, enmienda R3): señal suave de la
   // familia actual + cuenta que fluye sola (efecto abajo).
   const enterChange = () => {
-    // s115: la duración de la transición sale del contrato (transition.seconds),
-    // con el default s113 (10 s) si el paso no la declara.
-    setPhase('change');setElapsed(0);setChangeLeft(v1TransitionSeconds(step));
+    setPhase('change');setElapsed(0);setChangeLeft(V1_CHANGE_SECONDS);
     // s114: señal propia de «cambio de lado» (familia move, distinguible del
     // avance de paso `move.step`). Silencio si soundOn está apagado.
     try {playSound('move.side');} catch (e) {}
@@ -10824,13 +10678,13 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // «Empezar ya» salta; «Más tiempo» suma 5 s. En 'ready' NO corre (s112).
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place') return;
-    if (step && step.setup && step.setup.mode === 'ready') return;
+    if (step && step.setup === 'ready') return;
     const intv = setInterval(() => setPlaceLeft((c) => Math.max(0, c - 1)), 1000);
     return () => clearInterval(intv);
   }, [stage, phase, stepIdx]);
   useEffectV1(() => {
     if (stage !== 'run' || phase !== 'place' || placeLeft > 0) return;
-    if (step && step.setup && step.setup.mode === 'ready') return;
+    if (step && step.setup === 'ready') return;
     beginWork();
   }, [placeLeft]);
 
@@ -10850,11 +10704,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     if (stage !== 'run' || phase !== 'work' || elapsed === 0) return;
     if (step.mode === 'reps') {
       const repSec = v1RepSeconds(step);
-      // s115: se respeta completion.mode — sólo 'guided' auto-avanza al objetivo
-      // ('manual' reservado, sin piloto: quedaría en «Terminar antes»). El pulso
-      // y el tick corren igual; los 5 pilotos son guided → comportamiento intacto.
-      const guided = v1CompletionMode(step) !== 'manual';
-      if (guided && elapsed >= v1RepTarget(step) * repSec) {
+      if (elapsed >= v1RepTarget(step) * repSec) {
         repsGuidedRef.current += v1RepTarget(step);
         advanceStep();
       } else if (elapsed % repSec === 0) {
@@ -10899,10 +10749,6 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     setCaminoUiActive(true);
     return () => setCaminoUiActive(false);
   }, []);
-  // s115 · dev-check: duración declarada vs calculada (sólo dev; una vez por
-  // sesión, con el preset de descanso actual) — para comparar con la ejecución
-  // real medida. Invisible en prod; la promesa visible sale del helper puro.
-  useEffectV1(() => {try {v1DevCheckDuration(routine, v1RestSeconds());} catch (e) {}}, []);
   useEffectV1(() => {if (stage === 'run') {try {playSound('move.step');} catch (e) {}}}, [stepIdx]);
 
   // Atajos. s113: Espacio pausa también reps guiadas y la transición de lado
@@ -10981,7 +10827,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // s114: el descanso entre series toma su duración del preset de Ajustes
   // (v1StepDur → restBetweenSets); el resto de pasos usan su `dur`.
   const remaining = Math.max(0, v1StepDur(step) - elapsed);
-  const placeReady = !!(step.setup && step.setup.mode === 'ready');
+  const placeReady = step.setup === 'ready';
 
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
   // insignia; en poca altura cede antes que instrucciones/controles (s113).
@@ -11016,7 +10862,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     bigNumber = String(Math.min(v1RepTarget(step), Math.floor(elapsed / repSec) + 1));
     bigLabel = tn('move.repsOf', { n: v1RepTarget(step) });
     // s114: el hint genérico del pulso cede el sitio a la capa «Cuídate»
-    // (instruction.care, específica del ejercicio y siempre visible, abajo).
+    // (careCue, específica del ejercicio y siempre visible, abajo).
     primary = { label: t('move.finishEarly'), onClick: finishRepsEarly };
   } else {
     // timed / perSide / rest — cronometrado
@@ -11038,16 +10884,16 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
       } };
   }
 
-  // s114 · capa editorial — la instrucción es POR FASE (s115: `instruction.*`):
-  //   colocación → instruction.setup · ejecución → instruction.action (shortCue).
+  // s114 · capa editorial — la instrucción es POR FASE:
+  //   colocación → placeCue (setup completo) · ejecución → cue (shortCue).
   // El lado (perSide) se INTEGRA en el texto de trabajo (palabra del lado como
-  // apertura, no un kicker suelto). «Cuídate» (instruction.care) va como línea
+  // apertura, no un kicker suelto). «Cuídate» (careCue) va como línea
   // secundaria SIEMPRE visible bajo el cue de trabajo (decisión s114-A: en
   // altura baja se oculta el rótulo, nunca el contenido).
   const inWork = phase === 'work';
-  const stepSetupCue = tInstr(stepIdx, 'setup');
-  const cueText = phase === 'place' && stepSetupCue ? stepSetupCue : tInstr(stepIdx, 'action');
-  const careText = inWork && !isRest ? tInstr(stepIdx, 'care') : undefined;
+  const stepPlaceCue = tStep(stepIdx, 'placeCue');
+  const cueText = phase === 'place' && stepPlaceCue ? stepPlaceCue : tStep(stepIdx, 'cue');
+  const careText = inWork && !isRest ? tStep(stepIdx, 'careCue') : undefined;
   const sideLead = inWork && step.mode === 'perSide' ?
   t(side === 0 ? 'session.sideLeft' : 'session.sideRight') :
   null;
@@ -11209,73 +11055,53 @@ const EXTRA_ROUTINES = {
     items: [
     { id: 'move.chair.antidote', tag: 'SIT', code: 'Antídoto a estar sentado', name: 'Antídoto silla',
       desc: 'Antídoto exacto a 4 h sentado. Caderas, lumbar, cuello. Pasarás por el suelo.', min: 5,
-      position: ['seated', 'halfKneeling', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'gentle', level: 'accessible',
       steps: [
-      /* s115 (B2.2b-1): contrato formal — `instruction` {setup,action,care}
-         (consolida cue/placeCue/careCue de s114); `transition.seconds` = el
-         cambio de lado (perSide), hoy 10 s uniformes (s113). OJO a los dos
-         «setup»: `setup:{mode:'ready',...}` = COMPORTAMIENTO del runner
-         (espera al usuario, nunca cuenta) · `instruction.setup` = COPY de
-         colocación. El cierre respiratorio no se toca (sin restKind). */
       { name: 'Apertura de pecho', mode: 'timed', dur: 40,
-        instruction: {
-          action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
-          care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
-      { name: 'Rotación torácica', mode: 'perSide', dur: 20, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
-          action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
-          care: 'El giro nace del tronco, no del cuello.' } },
-      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
-          action: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
-          care: 'Recorrido corto. No fuerces la zona lumbar.' } },
-      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
-          action: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
-          care: 'Apoya la mano en un libro si no llegas al suelo.' } },
-      { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Siéntate erguido, hombros abajo.',
-          action: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
-          care: 'Sin tirar con la mano. Solo el peso.' } },
+        cue: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+        careCue: 'Abre solo hasta donde el pecho estire sin molestar.' },
+      { name: 'Rotación torácica', mode: 'perSide', dur: 20,
+        cue: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
+        placeCue: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
+        careCue: 'El giro nace del tronco, no del cuello.' },
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready',
+        cue: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
+        placeCue: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+        careCue: 'Recorrido corto. No fuerces la zona lumbar.' },
+      { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: 'ready',
+        cue: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
+        placeCue: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
+        careCue: 'Apoya la mano en un libro si no llegas al suelo.' },
+      { name: 'Cuello y trapecios', mode: 'perSide', dur: 20,
+        cue: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
+        placeCue: 'Siéntate erguido, hombros abajo.',
+        careCue: 'Sin tirar con la mano. Solo el peso.' },
       /* CIERRE respiratorio — sin restKind a propósito (s113): NO es un
          descanso entre series y el ajuste de Tweaks (s114) no lo toca. */
-      { name: 'Reset respiración', mode: 'rest', dur: 30,
-        instruction: { action: '3 inhalaciones profundas para cerrar.' } }]
+      { name: 'Reset respiración', mode: 'rest', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
     },
     { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
       desc: 'Micro-pausa para cervicales tensas.', min: 3,
-      position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
-      /* s113: control postural con retención (desliza + mantén 3-5 s +
-         relaja), no cadencia de fuerza. s115 (B2.2b-1): el `repSeconds:8`
-         pasa a `tempo:{down,hold,up}` (suma 8 s = misma cadencia); el resto
-         es el contrato formal (instruction + transición). En perSide el lado
-         lo integra el runner. */
-      { name: 'Chin tucks', mode: 'reps', reps: 5, dur: 40,
-        tempo: { down: 2, hold: 4, up: 2 }, completion: { mode: 'guided' },
-        instruction: {
-          setup: 'Siéntate erguido, hombros sueltos. Mira al frente.',
-          action: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
-          care: 'Sin tensar. Un recorrido pequeño ya trabaja.' } },
-      { name: 'Inclinación lateral', mode: 'perSide', dur: 25, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Siéntate erguido, deja los hombros abajo.',
-          action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
-          care: 'No empujes con la mano. Deja caer el peso de la cabeza.' } },
-      { name: 'Rotación lenta', mode: 'perSide', dur: 25, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Erguido, barbilla paralela al suelo.',
-          action: 'Gira despacio a mirar sobre el hombro. Vuelve al centro.',
-          care: 'Gira solo hasta donde el cuello vaya suelto.' } },
-      { name: 'Escalenos', mode: 'perSide', dur: 20, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Siéntate sobre una mano para anclar ese hombro.',
-          action: 'Inclina la cabeza al lado contrario y mira un poco arriba.',
-          care: 'Muy suave. La zona del cuello es delicada.' } }]
+      /* s113: repSeconds 8 — control postural con retención (desliza +
+         mantén 3-5 s + relaja), no cadencia de fuerza (4 s default).
+         s114: capa editorial — cue = ejecución, placeCue = colocación,
+         careCue = «Cuídate». En perSide el lado lo integra el runner. */
+      { name: 'Chin tucks', mode: 'reps', reps: 5, repSeconds: 8, dur: 40,
+        cue: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
+        placeCue: 'Siéntate erguido, hombros sueltos. Mira al frente.',
+        careCue: 'Sin tensar. Un recorrido pequeño ya trabaja.' },
+      { name: 'Inclinación lateral', mode: 'perSide', dur: 25,
+        cue: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
+        placeCue: 'Siéntate erguido, deja los hombros abajo.',
+        careCue: 'No empujes con la mano. Deja caer el peso de la cabeza.' },
+      { name: 'Rotación lenta', mode: 'perSide', dur: 25,
+        cue: 'Gira despacio a mirar sobre el hombro. Vuelve al centro.',
+        placeCue: 'Erguido, barbilla paralela al suelo.',
+        careCue: 'Gira solo hasta donde el cuello vaya suelto.' },
+      { name: 'Escalenos', mode: 'perSide', dur: 20,
+        cue: 'Inclina la cabeza al lado contrario y mira un poco arriba.',
+        placeCue: 'Siéntate sobre una mano para anclar ese hombro.',
+        careCue: 'Muy suave. La zona del cuello es delicada.' }]
     },
     { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
       desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
@@ -11346,39 +11172,32 @@ const EXTRA_ROUTINES = {
     },
     { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
       desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 5, access: 'premium',
-      position: ['halfKneeling', 'floor', 'supine'], equipment: ['wall', 'cushionOptional'], requiresFloor: true, intensity: 'strong', level: 'intermediate',
       /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
-         pared/suelo. s115 (B2.2b-1): contrato formal — `instruction`
-         {setup,action,care}, `setup:{mode:'ready',estimatedSeconds}` (los dos
-         «setup» distintos: comportamiento vs copy), `transition.seconds` en
-         los perSide. dur en perSide = segundos POR LADO (activo = dur×2 + 1
-         transición). */
+         pared/suelo — valida setup:'ready' + retención por lado + cambio de
+         lado + duración real. Solo se AÑADEN campos (mode/setup) y se quitan
+         los «30s por lado» de los cues (ahora los lleva el runner): los EN
+         posicionales sN no se reindexan. dur en perSide = segundos POR LADO. */
       steps: [
-      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
-          action: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
-          care: 'Recorrido corto. Mantén el tronco erguido.' } },
-      { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
-          action: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
-          care: 'Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.' } },
+      { name: 'Flexor de cadera', mode: 'perSide', dur: 25, setup: 'ready',
+        cue: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
+        placeCue: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
+        careCue: 'Recorrido corto. Mantén el tronco erguido.' },
+      { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: 'ready',
+        cue: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
+        placeCue: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
+        careCue: 'Aleja la rodilla de la pared para bajar la intensidad. Es un estiramiento fuerte.' },
       { name: '90/90', mode: 'timed', dur: 60,
-        instruction: {
-          setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
-          action: 'Gira despacio de un lado al otro. Tronco alto.',
-          care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
-      { name: 'Pigeon', mode: 'perSide', dur: 30, transition: { seconds: 10 },
-        instruction: {
-          setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
-          action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
-          care: 'Pon un cojín bajo la cadera que quede en el aire.' } },
+        cue: 'Gira despacio de un lado al otro. Tronco alto.',
+        placeCue: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
+        careCue: 'Apóyate en las manos por detrás para ir más cómodo.' },
+      { name: 'Pigeon', mode: 'perSide', dur: 30,
+        cue: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
+        placeCue: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
+        careCue: 'Pon un cojín bajo la cadera que quede en el aire.' },
       { name: 'Puente con marcha', mode: 'timed', dur: 60,
-        instruction: {
-          setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
-          action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
-          care: 'Baja el ritmo si la lumbar se queja.' } }]
+        cue: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+        placeCue: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+        careCue: 'Baja el ritmo si la lumbar se queja.' }]
     },
     { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
       desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',

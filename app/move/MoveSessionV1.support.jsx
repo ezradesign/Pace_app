@@ -21,12 +21,37 @@
 const V1_PLACE_SECONDS = 5;
 const V1_REP_SECONDS = 4;
 const V1_CHANGE_SECONDS = 10;
+const V1_PREP_SECONDS = 5;   // cuenta 5·4·3·2·1 antes del paso 0 (s113)
 
-function v1RepSeconds(step) {
-  return typeof step.repSeconds === 'number' ? step.repSeconds : V1_REP_SECONDS;
+/* isDev: localhost / 127.0.0.1 / file:// (mismo criterio que useT.jsx). Sólo
+   activa el dev-check de duración declarada vs calculada — invisible en prod. */
+const _v1IsDev = (typeof location !== 'undefined') &&
+  (['localhost', '127.0.0.1'].includes(location.hostname) || location.protocol === 'file:');
+
+/* tempo (s115/B2.2b-1): generaliza el rep-seconds. Objeto {down,hold,up} → suma;
+   número → valor; `repSeconds` legacy y V1_REP_SECONDS como respaldo. ÚNICA
+   fuente de la cadencia de una rep guiada. */
+function v1TempoSeconds(step) {
+  const tm = step && step.tempo;
+  if (tm && typeof tm === 'object') return (tm.down || 0) + (tm.hold || 0) + (tm.up || 0);
+  if (typeof tm === 'number') return tm;
+  if (step && typeof step.repSeconds === 'number') return step.repSeconds;
+  return V1_REP_SECONDS;
 }
+function v1RepSeconds(step) { return v1TempoSeconds(step); }
 function v1RepTarget(step) {
   return (typeof step.reps === 'object' ? step.reps.target : step.reps) || 8;
+}
+/* transición de lado (perSide): segundos declarados o el default s113 (10 s). */
+function v1TransitionSeconds(step) {
+  return (step && step.transition && typeof step.transition.seconds === 'number')
+    ? step.transition.seconds : V1_CHANGE_SECONDS;
+}
+/* completion: 'guided' (avance auto) por defecto en reps; 'manual' reservado
+   (sin piloto). El runner respeta el modo; la duración de guided es fija. */
+function v1CompletionMode(step) {
+  if (step && step.completion && step.completion.mode) return step.completion.mode;
+  return step && step.mode === 'reps' ? 'guided' : 'timed';
 }
 
 /* Descanso entre series (s114): los rests con restKind:'betweenSets' toman su
@@ -44,6 +69,31 @@ function v1StepDur(step) {
   return step.dur || 0;
 }
 
+/* Gate de colocación (s115): comportamiento del runner + estimación de duración
+   en UNA sola fuente. `setup:{mode:'ready',estimatedSeconds}` declarado (espera
+   al usuario, NUNCA cuenta) — floor/pared/material. El resto se DERIVA como en
+   s111/s114:
+     auto — pasos con reloj (timed/perSide) e idx>0, o el 1er set de fuerza
+            (reps con instruction.setup y NO tras un rest) → gate auto de 5 s.
+     none — resto. `setup:número` (s112) sigue siendo un gate auto explícito.
+   `ready` aporta estimatedSeconds>0 SÓLO para la duración; jamás es countdown. */
+function v1StepSetup(routine, idx) {
+  const st = routine.steps[idx];
+  if (!st) return { mode: 'none', estimatedSeconds: 0 };
+  if (st.setup && st.setup.mode === 'ready') {
+    return { mode: 'ready', estimatedSeconds: st.setup.estimatedSeconds || V1_PLACE_SECONDS };
+  }
+  if (typeof st.setup === 'number') return { mode: 'auto', estimatedSeconds: st.setup };
+  const clocked = st.mode === 'timed' || st.mode === 'perSide';
+  const prev = idx > 0 ? routine.steps[idx - 1] : null;
+  const afterRest = !!(prev && prev.mode === 'rest');
+  if (clocked && idx > 0) return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
+  if (st.mode === 'reps' && st.instruction && st.instruction.setup && !afterRest) {
+    return { mode: 'auto', estimatedSeconds: V1_PLACE_SECONDS };
+  }
+  return { mode: 'none', estimatedSeconds: 0 };
+}
+
 /* Progreso 0..1 del step activo (barra segmentada). Reps guiadas (s113):
    el progreso es tiempo guiado / tiempo objetivo — cadencia, no cuota. */
 function v1StepProgress(step, side, elapsed) {
@@ -55,11 +105,14 @@ function v1StepProgress(step, side, elapsed) {
   const d = v1StepDur(step);   // rest betweenSets = preset de Ajustes (s114)
   return d ? elapsed / d : 0;
 }
-/* Peso del step para la barra segmentada (estimación honesta por tipo). */
+/* Peso del step para la barra segmentada (estimación honesta por tipo).
+   s115: la rama timed/rest usa v1StepDur — MISMA fuente efectiva que el
+   progreso, el aviso de 5 s y el remaining (antes leía step.dur crudo → con el
+   preset 20/45 el peso divergía del llenado; deuda del criterio de aceptación). */
 function v1StepWeight(step) {
   if (step.mode === 'reps') return v1RepTarget(step) * v1RepSeconds(step);
   if (step.mode === 'perSide') return (step.dur || 20) * 2;
-  return step.dur || 20;
+  return v1StepDur(step) || 20;
 }
 
 /* Tamaño del visual instructivo por ALTURA de viewport (s112). s113 añade el
@@ -69,6 +122,59 @@ function v1StepWeight(step) {
 function v1GlyphSize(vpH) {
   if (vpH >= 720) return Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
   return Math.max(72, Math.round(vpH * 0.22));
+}
+
+/* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
+   descanso, devuelve {minSec,maxSec,breakdown} sin tocar el runner ni el reloj.
+     reps guiadas → target × tempo (FIJO; 'manual' añadiría banda, sin piloto).
+     perSide      → dur POR LADO × 2 + UNA transición (evita el cuádruple conteo).
+     rest         → betweenSets: preset; cierre: su dur.
+     timed        → dur.
+   + prep global v1 + setup por paso (estimatedSeconds; ready FIJO, nunca cuenta).
+   NO se guarda como dato canónico: se recalcula al vuelo (tarjeta, dev-check).
+   DURACIÓN PLANIFICADA (no real): «terminar antes» reduce el reloj real, no la
+   promesa. La banda del rango nace SÓLO de tiempos variables del contrato
+   (completion manual); en los 5 pilotos actuales min===max (guided/timed). */
+function estimateDuration(routine, restBetweenSets) {
+  const rbs = (typeof restBetweenSets === 'number') ? restBetweenSets : 30;
+  const steps = (routine && routine.steps) || [];
+  const breakdown = [{ label: 'prep', sec: V1_PREP_SECONDS }];
+  let minSec = V1_PREP_SECONDS, maxSec = V1_PREP_SECONDS;
+  steps.forEach((st, idx) => {
+    const setupSec = v1StepSetup(routine, idx).estimatedSeconds || 0;
+    let lo = 0, hi = 0;
+    if (st.mode === 'reps') {
+      const active = v1RepTarget(st) * v1RepSeconds(st);
+      lo = active; hi = v1CompletionMode(st) === 'manual' ? Math.round(active * 1.5) : active;
+    } else if (st.mode === 'perSide') {
+      lo = hi = (st.dur || 0) * 2 + v1TransitionSeconds(st);
+    } else if (st.mode === 'rest') {
+      lo = hi = (st.restKind === 'betweenSets') ? rbs : (st.dur || 0);
+    } else {
+      lo = hi = st.dur || 0;   // timed
+    }
+    breakdown.push({ i: idx, name: st.name, mode: st.mode, setup: setupSec, active: lo, activeMax: hi });
+    minSec += setupSec + lo; maxSec += setupSec + hi;
+  });
+  return { minSec, maxSec, breakdown };
+}
+
+/* Dev-check (s115): compara routine.min DECLARADO con el rango CALCULADO. La
+   comparación es a NIVEL de MINUTOS mostrados [floor(min),ceil(max)] — no en
+   segundos: una rutina determinista casi nunca cae en un múltiplo exacto de 60,
+   así que un umbral en segundos avisaría siempre (ruido). Avisa SÓLO si los
+   minutos declarados quedan fuera del rango que ve el usuario (umbral
+   verificable, sin ruido para valores dentro). Prod muestra UNA sola promesa
+   (la tarjeta usa el derivado); esto es diagnóstico y sólo corre en dev.
+   routine.min queda como baseline de auditoría. */
+function v1DevCheckDuration(routine, restBetweenSets) {
+  if (!_v1IsDev || !routine) return;
+  const est = estimateDuration(routine, restBetweenSets);
+  const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
+  const outside = routine.min < lo || routine.min > hi;
+  const head = `[dur] ${routine.id}: declarado ${routine.min}min vs calculado ${est.minSec}–${est.maxSec}s (rango ${lo}–${hi}min)`;
+  if (outside) console.warn(head + ' — DECLARADO fuera del rango mostrado', est.breakdown);
+  else console.log(head + ' — dentro', est.breakdown);
 }
 
 /* CSS del runner v1 (s113):
@@ -139,6 +245,8 @@ if (!_paceMoveV1Css) {
 }
 
 Object.assign(window, {
-  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS,
-  v1RepSeconds, v1RepTarget, v1RestSeconds, v1StepDur, v1StepProgress, v1StepWeight, v1GlyphSize,
+  V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
+  v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
+  v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
+  estimateDuration, v1DevCheckDuration,
 });

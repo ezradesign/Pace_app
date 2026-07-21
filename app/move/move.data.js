@@ -15,7 +15,15 @@
    s113 (runner guiado): los rest ENTRE SERIES de los pilotos pasan a 30 s y
    estrenan `restKind: 'betweenSets'` — tipado mínimo, base del ajuste de
    Tweaks de s114 (que NUNCA tocará los cierres respiratorios, sin restKind).
-   `repSeconds` (opcional) = segundos por rep guiada; sin él, 4 s (fuerza). */
+   s115 (B2.2b-1 · contrato formal, SOLO los 5 pilotos):
+     instruction: { setup, action, care }  — consolida placeCue/cue/careCue.
+     tempo: { down, hold, up }              — generaliza el rep-seconds (suma).
+     completion: { mode: 'guided' }         — 'manual' reservado, sin piloto.
+     transition: { seconds }                — cambio de lado (perSide, ExtraModule).
+     setup: { mode: 'ready', estimatedSeconds } — SOLO ready; auto/none se derivan.
+     position/equipment/requiresFloor/intensity/level — metadatos sin consumidor UI.
+   La duración efectiva sale de una única fuente (support: v1StepDur / tempo /
+   transición); `dur` en `reps` queda SOLO como reserva del fallback legacy. */
 
 var MOVE_ROUTINES = {
   empuje: {
@@ -25,22 +33,34 @@ var MOVE_ROUTINES = {
       /* s113: min 2→3 — con reps guiadas la ejecución real ronda 3:15-3:25
          (la derivación formal de duración llega en B2.2b-1). */
       { id: 'extra.desk.pushups', tag: 'PUSH', code: 'Fuerza', name: 'Flexiones de escritorio', desc: 'Inclinado contra mesa. 3 series.', min: 3,
+        position: ['standing'], equipment: ['stableDesk'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
-          /* s114: capa editorial — cue = ejecución (shortCue); placeCue =
-             setup (fase colocación, solo la 1ª serie la muestra); careCue =
-             adaptación «Cuídate» (siempre visible en trabajo). */
+          /* s115 (B2.2b-1): contrato formal — `instruction` {setup,action,care}
+             consolida placeCue/cue(shortCue)/careCue de s114 (misma copy); `tempo`
+             generaliza el repSeconds implícito de fuerza (2 baja + 0 pausa + 2
+             sube = 4 s/rep); `completion.mode:'guided'` = avance auto guiado. El
+             1er set gana colocación AUTO (reps con instruction.setup y NO tras
+             rest). `dur` se conserva SOLO como reserva del fallback legacy. */
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 12, dur: 40,
-            cue: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
-            placeCue: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
-            careCue: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Apoya las manos en el borde del escritorio, algo más anchas que los hombros. Da unos pasos atrás hasta quedar en diagonal, con el cuerpo recto.',
+              action: 'Baja el pecho hacia el borde. Codos cerca del cuerpo. Empuja y vuelve.',
+              care: 'Cuanto más de pie, más suave. Elige la altura que te deje llegar a 12 con buena técnica.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 10, dur: 40,
-            cue: 'Baja con control, sin dejarte caer. Empuja y vuelve.',
-            careCue: 'Si la primera serie costó, sube un poco las manos.' },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Baja con control, sin dejarte caer. Empuja y vuelve.',
+              care: 'Si la primera serie costó, sube un poco las manos.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
           { name: 'Flexiones inclinadas', mode: 'reps', reps: 8, dur: 40,
-            cue: 'Últimas. Lentas y limpias, empuja desde el pecho.',
-            careCue: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Últimas. Lentas y limpias, empuja desde el pecho.',
+              care: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' } },
         ]},
       { id: 'extra.chair.dips', tag: 'PUSH', code: 'Tríceps', name: 'Fondos en silla', desc: 'Tríceps en 3 series. Silla estable y sin ruedas.', min: 3,
         steps: [
@@ -105,19 +125,28 @@ var MOVE_ROUTINES = {
     aside: 'La base del cuerpo',
     items: [
       { id: 'extra.chair.squats', tag: 'LEG', code: 'Piernas', name: 'Sentadillas de silla', desc: 'Levántate y siéntate. La fuerza más útil. Silla estable, sin ruedas.', min: 3,
+        position: ['standing'], equipment: ['stableChair'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
           { name: 'Sentadilla a silla', mode: 'reps', reps: 12, dur: 40,
-            cue: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
-            placeCue: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
-            careCue: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'De pie frente a la silla, pies al ancho de las caderas. Silla estable y sin ruedas.',
+              action: 'Baja hasta rozar la silla. Sube sin impulso, pecho arriba.',
+              care: 'Apoya las manos en los muslos para ayudarte si lo necesitas.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
           { name: 'Sentadilla a silla', mode: 'reps', reps: 10, dur: 40,
-            cue: 'Más lentas. Roza la silla y sube con control.',
-            careCue: 'Baja solo hasta donde las rodillas vayan cómodas.' },
-          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30, cue: 'Respira.' },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Más lentas. Roza la silla y sube con control.',
+              care: 'Baja solo hasta donde las rodillas vayan cómodas.' } },
+          { name: 'Descanso', mode: 'rest', restKind: 'betweenSets', dur: 30,
+            instruction: { action: 'Respira.' } },
           { name: 'Sentadilla a silla', mode: 'reps', reps: 8, dur: 40,
-            cue: 'Últimas, sin impulso. Aprieta arriba.',
-            careCue: 'Para si pierdes el control de la bajada.' },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Últimas, sin impulso. Aprieta arriba.',
+              care: 'Para si pierdes el control de la bajada.' } },
         ]},
       { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
         steps: [
