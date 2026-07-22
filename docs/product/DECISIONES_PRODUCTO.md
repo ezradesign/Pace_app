@@ -298,7 +298,19 @@ solo diseño; alcance original abajo):
     `cue`→`instruction.*`; ningún `name` cambió (glifos intactos). Candidato
     `couch.stretch.min` **5→6** aplicado. Cada `min` DENTRO del rango derivado (sin
     drift). Conteo real: **23** legacy antes de OLA 1 (no 22), **18** tras ella.
-  - **Pendiente**: **18 rutinas legacy** (7 Mueve premium + 11 Estira) en olas
+  - **OLA 2 — HECHA** (s119, 2026-07-22; v0.62.0; diario
+    [session-119](../sessions/session-119-layout-runner-y-b2-3-ola-2.md)): 5 rutinas
+    **Estira** gratuitas (`wrists`, `shoulders.5`, `shoulder.circles`, `hips.5`,
+    `morning.flow`). Clasificación BASE §3: movilidad/estático central → `timed`,
+    estiramiento bilateral → `perSide`+`transition`, fuerza → `reps`, flujo →
+    `timed`+`rest` de cierre; **gate `ready`** en pasos de suelo/pared/barra (wall
+    slides, dead hang, 90/90, Gato-camello). Migración atómica `instruction.*` +
+    keys EN `cue`→`instruction.*`; ningún `name` cambió. Cada `min` dentro de rango
+    (dev-check «dentro»). Nota: **precedió FASE A** (pulido de layout del runner v1
+    — barra fantasma, anclaje del glifo, warning rep-pulse) para que perSide+copy
+    variable de Estira naciera sobre layout estable. **18 → 13** legacy tras OLA 2.
+  - **Pendiente**: **13 rutinas legacy** (7 Mueve premium + 6 Estira: `desk.quick`,
+    `spine.waves`, `hips.ground`, `atg.knees`, `hamstrings`, `ancestral`) en olas
     siguientes + **reescrituras** (4 cues: Seated twist, Rib pull, WGS, Ground
     transitions · 2 rutinas: `legs.single`, resto de `atg.knees`) en ola editorial.
 

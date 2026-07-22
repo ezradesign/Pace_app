@@ -115,13 +115,17 @@ function v1StepWeight(step) {
   return v1StepDur(step) || 20;
 }
 
-/* Tamaño del visual instructivo por ALTURA de viewport (s112). s113 añade el
-   tramo <720 px SIN el suelo de 150 y con pendiente menor (0.22): en poca
-   altura el glifo cede antes que las instrucciones o los controles
-   (medido: a 600 px, con 150 el paso de reps desbordaba 16 px; con 132 cabe). */
+/* Tamaño del visual instructivo por ALTURA de viewport (s112/s113). s119: curva
+   CONTINUA de una sola pendiente (0.22) con techo 210. El pre-s119 tenía dos
+   ramas con un SALTO en vpH=720 (0.22→0.25 → glifo 158→180, +22 px de golpe):
+   como los tiers de compactación de altura empiezan en ≤700, quedaba una banda
+   701–~760 px sin compactar y con el glifo ya grande → el bloque rebasaba el
+   centro scrollable por pocos px y salía la barra fantasma (medido: 7 px de
+   desborde → scrollbar de 15 px; típico en portátiles 1366×768). Una sola
+   pendiente elimina la discontinuidad; el suelo 72 conserva el comportamiento
+   de poca altura (el glifo cede antes que instrucciones/controles). */
 function v1GlyphSize(vpH) {
-  if (vpH >= 720) return Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
-  return Math.max(72, Math.round(vpH * 0.22));
+  return Math.max(72, Math.min(210, Math.round(vpH * 0.22)));
 }
 
 /* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
@@ -187,9 +191,10 @@ function v1DevCheckDuration(routine, restBetweenSets) {
      anchura de s27/SessionShell sigue gobernando el retrato estrecho, ya
      verificado en 360×640). Orden de reducción: espacios → glifo →
      decorativo; NUNCA instrucciones ni controles. El scroll del centro
-     (s112) queda solo como red de seguridad. Tiers: 720 (portátil bajo,
-     1280×600) · 560 (1024×512) · 430 (landscape móvil, 844×390 — el glifo
-     se oculta: espacios y glifo se agotan antes de tocar instrucciones). */
+     (s112) queda solo como red de seguridad. Tiers: 768 (banda portátil
+     701–768, solo aprieta número/espacios) · 700 (portátil bajo, 1280×600) ·
+     560 (1024×512) · 430 (landscape móvil, 844×390 — el glifo se oculta:
+     espacios y glifo se agotan antes de tocar instrucciones). */
 const _paceMoveV1Css = document.getElementById('pace-move-v1-css');
 if (!_paceMoveV1Css) {
   const s = document.createElement('style');
@@ -200,27 +205,67 @@ if (!_paceMoveV1Css) {
       50%  { transform: scale(0.86); }
       100% { transform: scale(1); }
     }
+    /* s119 · ALTURAS RESERVADAS (anclaje del glifo, sin saltos tipográficos).
+       El bloque de contenido mantiene alto CONSTANTE entre pasos de TRABAJO: el
+       cue reserva 2 líneas (la acción más larga medida) y «Cuídate» reserva 2
+       líneas SIEMPRE, aunque el paso no la tenga. Así un paso con cue/care corto
+       (o sin care) no sube el glifo respecto a sus vecinos — el footer ya estaba
+       pinneado; lo que se movía era el glifo por el centrado del bloque de alto
+       variable. em → escala con el tamaño de cada tier (2 líneas exactas). El
+       min-height es SUELO: la colocación (setup de 3 líneas) sigue creciendo.
+       SOLO ≥641 px: en móvil (≤640) el slack de centrado es pequeño (~12 px de
+       salto potencial, ya presente pre-s119) y el coste de las reservas —con el
+       nombre a 2 líneas y fuentes grandes— desbordaba el retrato; ahí se
+       renuncia a la reserva y se conserva el ajuste móvil previo (que cabía). */
+    @media (min-width: 641px) {
+      [data-pace-v1-cue]  { min-height: 3.1em; }   /* 2 líneas × 1.55 */
+      [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
+    }
+
+    /* s119 · banda de portátil 701–768 px: con el glifo ya continuo (v1GlyphSize
+       sin salto en 720) pero SIN compactar, el bloque con reservas rebasa el
+       centro por pocos px → barra fantasma (1366×768). Se recupera altura
+       apretando el número y los espacios; NUNCA instrucciones. min-height:701
+       para no pisar el tier ≤700 (más agresivo, gobierna por debajo). */
+    @media (min-width: 641px) and (min-height: 701px) and (max-height: 768px) {
+      [data-pace-v1-timer] { font-size: 104px !important; }   /* v1 only, no legacy */
+      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
+      [data-pace-v1-name] { margin-bottom: 10px !important; }
+      [data-pace-v1-cue] { margin-bottom: 10px !important; }
+      [data-pace-v1-care] { margin-top: 10px !important; }
+      [data-pace-v1-progress] { margin-top: 16px !important; }
+    }
     @media (min-width: 641px) and (max-height: 700px) {
       /* s114: la capa «Cuídate» suma una línea — se recupera altura apretando
-         espacios (nunca instrucciones) para mantener el delta 0 de s113. */
-      [data-pace-v1-glyph] > div { margin-bottom: 8px !important; }
-      [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 6px !important; }
-      [data-pace-v1-care] { margin-top: 6px !important; }
-      [data-pace-v1-progress] { margin-top: 12px !important; }
+         espacios (nunca instrucciones) para mantener el delta 0 de s113.
+         s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
+         rebasaba ~21 px a 1280×600 — se recupera apretando MÁRGENES y el NÚMERO
+         (nunca instrucciones ni las reservas). */
+      [data-pace-v1-timer] { font-size: 82px !important; }   /* v1 only, no legacy */
+      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
+      [data-pace-v1-name] { margin-bottom: 4px !important; }
+      [data-pace-v1-cue] { margin-bottom: 4px !important; }
+      [data-pace-v1-care] { margin-top: 4px !important; }
+      [data-pace-v1-progress] { margin-top: 10px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 8px !important; }
-      [data-pace-v1-name] { font-size: 26px !important; }
-      [data-pace-v1-cue] { font-size: 14px !important; margin-bottom: 10px !important; }
-      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 10px !important; }
+      /* s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
+         rebasaba ~35 px a 1024×512 — se recupera apretando MÁRGENES, NÚMERO y
+         bajando un punto las fuentes ya reducidas (nunca instrucciones ni las
+         propias reservas). Es un viewport muy corto: la compactación es fuerte
+         a propósito. */
+      [data-pace-v1-timer] { font-size: 58px !important; }   /* v1 only, no legacy */
+      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
+      [data-pace-v1-kicker] { margin-bottom: 6px !important; }
+      [data-pace-v1-name] { font-size: 24px !important; margin-bottom: 4px !important; }
+      [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 4px !important; }
+      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 8px !important; }
       [data-pace-v1-support] { font-size: 12px !important; }
       /* s114: en poca altura se oculta el RÓTULO «Cuídate», nunca el contenido
          (decisión A) — la adaptación sigue visible como línea secundaria. */
-      [data-pace-v1-care] { font-size: 12px !important; margin-top: 10px !important; }
+      [data-pace-v1-care] { font-size: 11px !important; margin-top: 4px !important; }
       [data-pace-v1-care-label] { display: none !important; }
-      [data-pace-v1-progress] { margin-top: 10px !important; }
+      [data-pace-v1-progress] { margin-top: 8px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-v1-glyph] { display: none !important; }

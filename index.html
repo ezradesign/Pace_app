@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.61.0</title>
+  <title>PACE · Foco · Cuerpo — v0.62.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2677,29 +2677,45 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hips.5.desc': '5 steps to unlock deep hips. Mostly on the floor.',
   'move.hips.5.code': 'HIP',
   'move.hips.5.s0.name': 'Cossack squat',
-  'move.hips.5.s0.cue': 'Weight to one side, other leg straight. 5 per side.',
+  'move.hips.5.s0.instruction.action': 'Feet very wide. Shift your weight to this side, the other leg straight. Rise slowly.',
+  'move.hips.5.s0.instruction.care': 'Heel down. Only go as low as you can control.',
   'move.hips.5.s1.name': '90/90',
-  'move.hips.5.s1.cue': 'Rotate between sides slowly.',
+  'move.hips.5.s1.instruction.setup': 'Sit on the floor, one leg in front and one to the side, both at 90°.',
+  'move.hips.5.s1.instruction.action': 'Rotate slowly from one side to the other. Trunk tall.',
+  'move.hips.5.s1.instruction.care': 'Lean on your hands behind you to go more comfortably.',
   'move.hips.5.s2.name': 'Pigeon',
-  'move.hips.5.s2.cue': 'Shin forward, weight forward. 40s per side.',
+  'move.hips.5.s2.instruction.setup': 'Bring one shin to the front, the other leg stretched back.',
+  'move.hips.5.s2.instruction.action': 'Walk your weight forward. Lower your chest little by little.',
+  'move.hips.5.s2.instruction.care': 'Put a cushion under the hip that stays in the air.',
   'move.hips.5.s3.name': 'Deep squat',
-  'move.hips.5.s3.cue': 'Heels down, elbows inside knees.',
+  'move.hips.5.s3.instruction.action': 'Drop into a deep squat, heels on the floor, elbows inside your knees.',
+  'move.hips.5.s3.instruction.care': 'Lean on something if you lose your balance.',
   'move.hips.5.s4.name': 'Bridge with march',
-  'move.hips.5.s4.cue': 'Deep glute activation.',
+  'move.hips.5.s4.instruction.setup': 'Lie on your back, feet planted close to your glutes.',
+  'move.hips.5.s4.instruction.action': 'Lift your hips and hold. Raise one knee, then the other.',
+  'move.hips.5.s4.instruction.care': 'Slow the pace if your lower back complains.',
 
   'move.shoulders.5.name': 'Shoulders · 5 steps',
   'move.shoulders.5.desc': 'Shoulder reset: rotators, chest, traps. You\'ll need a wall; bar optional.',
   'move.shoulders.5.code': 'SHLD',
   'move.shoulders.5.s0.name': 'Scapular wall slides',
-  'move.shoulders.5.s0.cue': 'Back against wall, raise arms.',
+  'move.shoulders.5.s0.instruction.setup': 'Stand with your back to the wall, arms out against it.',
+  'move.shoulders.5.s0.instruction.action': 'Slide your arms up and down along the wall, like wings.',
+  'move.shoulders.5.s0.instruction.care': 'Keep your lower back close to the wall.',
   'move.shoulders.5.s1.name': 'Band pull-apart',
-  'move.shoulders.5.s1.cue': 'Without band: crossed arms + open.',
+  'move.shoulders.5.s1.instruction.action': 'Open your arms in front, squeezing your shoulder blades. No band? Cross your arms and open them.',
+  'move.shoulders.5.s1.instruction.care': 'Shoulders down, away from your ears.',
   'move.shoulders.5.s2.name': 'External rotation',
-  'move.shoulders.5.s2.cue': 'Elbow at 90°, rotate outward.',
+  'move.shoulders.5.s2.instruction.action': 'Elbows tucked at 90°. Open your forearms outward and return.',
+  'move.shoulders.5.s2.instruction.care': 'Small, controlled movement.',
   'move.shoulders.5.s3.name': 'Dead hang · optional',
-  'move.shoulders.5.s3.cue': 'Only with a sturdy bar that takes your weight. No bar? Repeat the wall slides.',
+  'move.shoulders.5.s3.instruction.setup': 'Find a sturdy bar that takes your weight and grip it. No bar? Repeat the wall slides.',
+  'move.shoulders.5.s3.instruction.action': 'Hang with straight arms and let the weight off your shoulders.',
+  'move.shoulders.5.s3.instruction.care': 'Gentle traction. Come down if you feel discomfort.',
   'move.shoulders.5.s4.name': 'Thoracic extension',
-  'move.shoulders.5.s4.cue': 'Over foam roller or rolled towel.',
+  'move.shoulders.5.s4.instruction.setup': 'Rest your upper back over a foam roller or rolled towel.',
+  'move.shoulders.5.s4.instruction.action': 'Arch, opening your chest to the ceiling.',
+  'move.shoulders.5.s4.instruction.care': 'The arch comes from the chest, not the lower back.',
 
   'move.atg.knees.name': 'ATG · Knees over toes',
   'move.atg.knees.desc': 'Knees over toes, through deep ranges. You\'ll need a wall and the floor.',
@@ -2770,29 +2786,40 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.wrists.desc': 'The keyboard antidote. Loose wrists in 3 minutes.',
   'move.wrists.code': 'Wrists',
   'move.wrists.s0.name': 'Wrist circles',
-  'move.wrists.s0.cue': '10 each direction, loose wrists.',
+  'move.wrists.s0.instruction.action': 'Circle your wrists wide, in both directions.',
+  'move.wrists.s0.instruction.care': 'Loose wrists, no gripping.',
   'move.wrists.s1.name': 'Wrist stretch',
-  'move.wrists.s1.cue': 'Flexion and extension, 20s per side.',
+  'move.wrists.s1.instruction.action': 'Stretch your wrist into flexion then extension, helping with your other hand. Switch hands halfway.',
+  'move.wrists.s1.instruction.care': 'Light pressure. Never to the point of pain.',
   'move.wrists.s2.name': 'Palms down',
-  'move.wrists.s2.cue': 'Palms on the desk, fingers toward you. Gentle.',
+  'move.wrists.s2.instruction.setup': 'Rest your palms on the desk, fingers pointing toward you.',
+  'move.wrists.s2.instruction.action': 'Shift your weight back slowly until you feel the stretch in your forearm.',
+  'move.wrists.s2.instruction.care': 'Gentle. Ease off if it bothers you.',
   'move.wrists.s3.name': 'Reverse prayer',
-  'move.wrists.s3.cue': 'Backs of hands together at chest height.',
+  'move.wrists.s3.instruction.action': 'Bring the backs of your hands together at your chest and lower your wrists slowly.',
+  'move.wrists.s3.instruction.care': "Gentle stretch on the inner side. Don't force it.",
   'move.wrists.s4.name': 'Finger extension',
-  'move.wrists.s4.cue': 'Spread fingers wide, 10 times.',
+  'move.wrists.s4.instruction.action': 'Spread your fingers wide, stretch them, and relax.',
+  'move.wrists.s4.instruction.care': "Don't force the joints.",
 
   'move.shoulder.circles.name': 'Shoulders · Circles',
   'move.shoulder.circles.desc': 'Wide, controlled circles. Frees desk-bound shoulders.',
   'move.shoulder.circles.code': 'Shoulders',
   'move.shoulder.circles.s0.name': 'Shoulder circles',
-  'move.shoulder.circles.s0.cue': 'Slow, wide circles with a straight arm. 5 each way, each side.',
+  'move.shoulder.circles.s0.instruction.action': 'Slow, wide circles with a straight arm, in both directions.',
+  'move.shoulder.circles.s0.instruction.care': 'Wide, but without tensing your neck.',
   'move.shoulder.circles.s1.name': 'Shrug + round',
-  'move.shoulder.circles.s1.cue': 'Shoulders up, back and down. Round out the circle.',
+  'move.shoulder.circles.s1.instruction.action': 'Lift your shoulders, take them back and down, rounding out the circle.',
+  'move.shoulder.circles.s1.instruction.care': 'Smooth movement, no rush.',
   'move.shoulder.circles.s2.name': 'External rotation',
-  'move.shoulder.circles.s2.cue': 'Elbow at 90°, rotate outward.',
+  'move.shoulder.circles.s2.instruction.action': 'Elbows tucked at 90°. Open your forearms outward and return.',
+  'move.shoulder.circles.s2.instruction.care': 'Small, controlled movement.',
   'move.shoulder.circles.s3.name': 'Band pull-apart',
-  'move.shoulder.circles.s3.cue': 'Without band: crossed arms + open.',
+  'move.shoulder.circles.s3.instruction.action': 'Open your arms in front, squeezing your shoulder blades. No band? Cross your arms and open them.',
+  'move.shoulder.circles.s3.instruction.care': 'Shoulders down, away from your ears.',
   'move.shoulder.circles.s4.name': 'Chest opening',
-  'move.shoulder.circles.s4.cue': 'Hands behind head, open elbows, look at ceiling.',
+  'move.shoulder.circles.s4.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
+  'move.shoulder.circles.s4.instruction.care': 'Only open as far as your chest stretches without discomfort.',
 
   'move.spine.waves.name': 'Spine · Waves',
   'move.spine.waves.desc': 'Waves and bridges, partly on the floor. The spine, vertebra by vertebra.',
@@ -2862,17 +2889,25 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.morning.flow.desc': 'Gentle full-body flow to start the day. It begins on the floor.',
   'move.morning.flow.code': 'Morning',
   'move.morning.flow.s0.name': 'Cat-camel',
-  'move.morning.flow.s0.cue': 'On all fours: arch and round, vertebra by vertebra.',
+  'move.morning.flow.s0.instruction.setup': 'Get on all fours, hands under shoulders and knees under hips.',
+  'move.morning.flow.s0.instruction.action': 'Arch and round your back slowly, vertebra by vertebra.',
+  'move.morning.flow.s0.instruction.care': 'Slow movement, following your breath.',
   'move.morning.flow.s1.name': 'Thoracic rotation',
-  'move.morning.flow.s1.cue': 'Seated: crossed hands, rotate trunk slowly.',
+  'move.morning.flow.s1.instruction.setup': 'Sit tall, hands crossed over your chest.',
+  'move.morning.flow.s1.instruction.action': 'Rotate your trunk slowly to one side and the other.',
+  'move.morning.flow.s1.instruction.care': 'The turn comes from the trunk, not the neck.',
   'move.morning.flow.s2.name': 'Deep squat',
-  'move.morning.flow.s2.cue': 'Heels down, elbows inside knees.',
+  'move.morning.flow.s2.instruction.action': 'Drop into a deep squat, heels on the floor, elbows inside your knees.',
+  'move.morning.flow.s2.instruction.care': 'Lean on something if you lose your balance.',
   'move.morning.flow.s3.name': 'Chest opening',
-  'move.morning.flow.s3.cue': 'Hands behind head, open elbows, look at ceiling.',
+  'move.morning.flow.s3.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
+  'move.morning.flow.s3.instruction.care': 'Only open as far as your chest stretches without discomfort.',
   'move.morning.flow.s4.name': 'Neck and traps',
-  'move.morning.flow.s4.cue': 'Ear to shoulder, gentle.',
+  'move.morning.flow.s4.instruction.setup': 'Sit tall, shoulders down.',
+  'move.morning.flow.s4.instruction.action': 'Bring your ear toward your shoulder. Let the weight of your head fall.',
+  'move.morning.flow.s4.instruction.care': 'No pulling with your hand. Just the weight.',
   'move.morning.flow.s5.name': 'Breathing reset',
-  'move.morning.flow.s5.cue': '3 deep inhales to close.'
+  'move.morning.flow.s5.instruction.action': '3 deep inhales to close.'
 });
 })();
 </script>
@@ -3311,7 +3346,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.61.0';
+const PACE_VERSION = 'v0.62.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -11050,13 +11085,17 @@ function v1StepWeight(step) {
   return v1StepDur(step) || 20;
 }
 
-/* Tamaño del visual instructivo por ALTURA de viewport (s112). s113 añade el
-   tramo <720 px SIN el suelo de 150 y con pendiente menor (0.22): en poca
-   altura el glifo cede antes que las instrucciones o los controles
-   (medido: a 600 px, con 150 el paso de reps desbordaba 16 px; con 132 cabe). */
+/* Tamaño del visual instructivo por ALTURA de viewport (s112/s113). s119: curva
+   CONTINUA de una sola pendiente (0.22) con techo 210. El pre-s119 tenía dos
+   ramas con un SALTO en vpH=720 (0.22→0.25 → glifo 158→180, +22 px de golpe):
+   como los tiers de compactación de altura empiezan en ≤700, quedaba una banda
+   701–~760 px sin compactar y con el glifo ya grande → el bloque rebasaba el
+   centro scrollable por pocos px y salía la barra fantasma (medido: 7 px de
+   desborde → scrollbar de 15 px; típico en portátiles 1366×768). Una sola
+   pendiente elimina la discontinuidad; el suelo 72 conserva el comportamiento
+   de poca altura (el glifo cede antes que instrucciones/controles). */
 function v1GlyphSize(vpH) {
-  if (vpH >= 720) return Math.max(150, Math.min(240, Math.round(vpH * 0.25)));
-  return Math.max(72, Math.round(vpH * 0.22));
+  return Math.max(72, Math.min(210, Math.round(vpH * 0.22)));
 }
 
 /* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
@@ -11122,9 +11161,10 @@ function v1DevCheckDuration(routine, restBetweenSets) {
      anchura de s27/SessionShell sigue gobernando el retrato estrecho, ya
      verificado en 360×640). Orden de reducción: espacios → glifo →
      decorativo; NUNCA instrucciones ni controles. El scroll del centro
-     (s112) queda solo como red de seguridad. Tiers: 720 (portátil bajo,
-     1280×600) · 560 (1024×512) · 430 (landscape móvil, 844×390 — el glifo
-     se oculta: espacios y glifo se agotan antes de tocar instrucciones). */
+     (s112) queda solo como red de seguridad. Tiers: 768 (banda portátil
+     701–768, solo aprieta número/espacios) · 700 (portátil bajo, 1280×600) ·
+     560 (1024×512) · 430 (landscape móvil, 844×390 — el glifo se oculta:
+     espacios y glifo se agotan antes de tocar instrucciones). */
 const _paceMoveV1Css = document.getElementById('pace-move-v1-css');
 if (!_paceMoveV1Css) {
   const s = document.createElement('style');
@@ -11135,27 +11175,67 @@ if (!_paceMoveV1Css) {
       50%  { transform: scale(0.86); }
       100% { transform: scale(1); }
     }
+    /* s119 · ALTURAS RESERVADAS (anclaje del glifo, sin saltos tipográficos).
+       El bloque de contenido mantiene alto CONSTANTE entre pasos de TRABAJO: el
+       cue reserva 2 líneas (la acción más larga medida) y «Cuídate» reserva 2
+       líneas SIEMPRE, aunque el paso no la tenga. Así un paso con cue/care corto
+       (o sin care) no sube el glifo respecto a sus vecinos — el footer ya estaba
+       pinneado; lo que se movía era el glifo por el centrado del bloque de alto
+       variable. em → escala con el tamaño de cada tier (2 líneas exactas). El
+       min-height es SUELO: la colocación (setup de 3 líneas) sigue creciendo.
+       SOLO ≥641 px: en móvil (≤640) el slack de centrado es pequeño (~12 px de
+       salto potencial, ya presente pre-s119) y el coste de las reservas —con el
+       nombre a 2 líneas y fuentes grandes— desbordaba el retrato; ahí se
+       renuncia a la reserva y se conserva el ajuste móvil previo (que cabía). */
+    @media (min-width: 641px) {
+      [data-pace-v1-cue]  { min-height: 3.1em; }   /* 2 líneas × 1.55 */
+      [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
+    }
+
+    /* s119 · banda de portátil 701–768 px: con el glifo ya continuo (v1GlyphSize
+       sin salto en 720) pero SIN compactar, el bloque con reservas rebasa el
+       centro por pocos px → barra fantasma (1366×768). Se recupera altura
+       apretando el número y los espacios; NUNCA instrucciones. min-height:701
+       para no pisar el tier ≤700 (más agresivo, gobierna por debajo). */
+    @media (min-width: 641px) and (min-height: 701px) and (max-height: 768px) {
+      [data-pace-v1-timer] { font-size: 104px !important; }   /* v1 only, no legacy */
+      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
+      [data-pace-v1-name] { margin-bottom: 10px !important; }
+      [data-pace-v1-cue] { margin-bottom: 10px !important; }
+      [data-pace-v1-care] { margin-top: 10px !important; }
+      [data-pace-v1-progress] { margin-top: 16px !important; }
+    }
     @media (min-width: 641px) and (max-height: 700px) {
       /* s114: la capa «Cuídate» suma una línea — se recupera altura apretando
-         espacios (nunca instrucciones) para mantener el delta 0 de s113. */
-      [data-pace-v1-glyph] > div { margin-bottom: 8px !important; }
-      [data-pace-v1-name] { margin-bottom: 8px !important; }
-      [data-pace-v1-cue] { margin-bottom: 6px !important; }
-      [data-pace-v1-care] { margin-top: 6px !important; }
-      [data-pace-v1-progress] { margin-top: 12px !important; }
+         espacios (nunca instrucciones) para mantener el delta 0 de s113.
+         s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
+         rebasaba ~21 px a 1280×600 — se recupera apretando MÁRGENES y el NÚMERO
+         (nunca instrucciones ni las reservas). */
+      [data-pace-v1-timer] { font-size: 82px !important; }   /* v1 only, no legacy */
+      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
+      [data-pace-v1-name] { margin-bottom: 4px !important; }
+      [data-pace-v1-cue] { margin-bottom: 4px !important; }
+      [data-pace-v1-care] { margin-top: 4px !important; }
+      [data-pace-v1-progress] { margin-top: 10px !important; }
     }
     @media (min-width: 641px) and (max-height: 560px) {
-      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 8px !important; }
-      [data-pace-v1-name] { font-size: 26px !important; }
-      [data-pace-v1-cue] { font-size: 14px !important; margin-bottom: 10px !important; }
-      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 10px !important; }
+      /* s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
+         rebasaba ~35 px a 1024×512 — se recupera apretando MÁRGENES, NÚMERO y
+         bajando un punto las fuentes ya reducidas (nunca instrucciones ni las
+         propias reservas). Es un viewport muy corto: la compactación es fuerte
+         a propósito. */
+      [data-pace-v1-timer] { font-size: 58px !important; }   /* v1 only, no legacy */
+      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
+      [data-pace-v1-kicker] { margin-bottom: 6px !important; }
+      [data-pace-v1-name] { font-size: 24px !important; margin-bottom: 4px !important; }
+      [data-pace-v1-cue] { font-size: 13px !important; margin-bottom: 4px !important; }
+      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 8px !important; }
       [data-pace-v1-support] { font-size: 12px !important; }
       /* s114: en poca altura se oculta el RÓTULO «Cuídate», nunca el contenido
          (decisión A) — la adaptación sigue visible como línea secundaria. */
-      [data-pace-v1-care] { font-size: 12px !important; margin-top: 10px !important; }
+      [data-pace-v1-care] { font-size: 11px !important; margin-top: 4px !important; }
       [data-pace-v1-care-label] { display: none !important; }
-      [data-pace-v1-progress] { margin-top: 10px !important; }
+      [data-pace-v1-progress] { margin-top: 8px !important; }
     }
     @media (min-width: 641px) and (max-height: 430px) {
       [data-pace-v1-glyph] { display: none !important; }
@@ -11628,9 +11708,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
     bigNumber != null && !gateNumber && /*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { "data-pace-move-timer": true, style: {
+    React.createElement("div", { "data-pace-move-timer": true, "data-pace-v1-timer": true, style: {
         ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
-        ...(repPulseSec ? { animation: `pace-rep-pulse ${repPulseSec}s ease-in-out infinite`, animationPlayState: paused ? 'paused' : 'running' } : {})
+        /* s119: longhand (no el shorthand `animation`) para no mezclarlo con
+           `animationPlayState` → silencia el warning de React. Delta 0. */
+        ...(repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: paused ? 'paused' : 'running' } : {})
       } },
     bigNumber
     ), /*#__PURE__*/
@@ -11653,10 +11735,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
-    careText && /*#__PURE__*/
-    React.createElement("div", { "data-pace-v1-care": true, style: { fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' } }, /*#__PURE__*/
-    React.createElement("span", { "data-pace-v1-care-label": true, style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 } }, t('move.careLabel'), " \xB7 "),
-    careText
+
+
+    inWork && !isRest && /*#__PURE__*/
+    React.createElement("div", { "data-pace-v1-care": true, style: { fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' } },
+    careText && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", { "data-pace-v1-care-label": true, style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 } }, t('move.careLabel'), " \xB7 "), careText)
     )
 
     ), /*#__PURE__*/
@@ -11791,14 +11874,36 @@ const EXTRA_ROUTINES = {
       { name: 'Chin tucks', dur: 20, cue: 'Barbilla atrás 5 veces.' },
       { name: 'Deep breaths', dur: 20, cue: '3 inhalaciones completas.' }]
     },
+    /* s119 (B2.3 OLA 2): migración mecánica al contrato v1 (s115). Movilidad
+       de muñecas → `timed` (exploratorio, BASE §3-B); Finger extension →
+       `reps` (consistente con grip.squeeze de OLA 1). Sin suelo/pared → sin
+       gate `ready`. `name` intactos → glifos sin tocar. */
     { id: 'move.wrists', tag: 'WRST', code: 'Muñecas', name: 'Muñecas y manos',
       desc: 'El antídoto al teclado. Muñecas sueltas en 3 minutos.', min: 3,
+      position: ['seated', 'standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Wrist circles', dur: 30, cue: '10 en cada sentido, muñecas sueltas.' },
-      { name: 'Wrist stretch', dur: 40, cue: 'Flexión y extensión, 20s por lado.' },
-      { name: 'Palmas al suelo', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti. Suave.' },
-      { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
-      { name: 'Finger extension', dur: 30, cue: 'Abre bien los dedos, 10 veces.' }]
+      { name: 'Wrist circles', mode: 'timed', dur: 30,
+        instruction: {
+          action: 'Gira las muñecas en círculos amplios, en los dos sentidos.',
+          care: 'Muñecas sueltas, sin apretar.' } },
+      { name: 'Wrist stretch', mode: 'timed', dur: 40,
+        instruction: {
+          action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano. Cambia de mano a mitad.',
+          care: 'Presión ligera. Nunca hasta el dolor.' } },
+      { name: 'Palmas al suelo', mode: 'timed', dur: 40,
+        instruction: {
+          setup: 'Apoya las palmas en la mesa, dedos apuntando hacia ti.',
+          action: 'Lleva el peso atrás despacio hasta notar el estirón en el antebrazo.',
+          care: 'Suave. Reduce el peso si molesta.' } },
+      { name: 'Rezo invertido', mode: 'timed', dur: 40,
+        instruction: {
+          action: 'Junta los dorsos de las manos frente al pecho y baja las muñecas despacio.',
+          care: 'Estirón suave en la cara interna. Sin forzar.' } },
+      { name: 'Finger extension', mode: 'reps', reps: 10, dur: 30,
+        tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+        instruction: {
+          action: 'Abre bien los dedos, estíralos y relaja.',
+          care: 'Sin forzar las articulaciones.' } }]
     }]
 
   },
@@ -11806,23 +11911,66 @@ const EXTRA_ROUTINES = {
     label: 'Hombros y columna',
     aside: 'Antídoto al teclado',
     items: [
+    /* s119 (B2.3 OLA 2): migración al contrato v1. Movilidad/isometría de
+       hombros → `timed` (BASE §3-B/D). Gate `ready` en los pasos que exigen
+       PARED (wall slides) o BARRA (dead hang); el resto auto (s112). `name`
+       intactos. Dead hang conserva su nombre «· opcional» (glifo intacto). */
     { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
       desc: 'Reset de hombros: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
+      position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Scapular wall slides', dur: 50, cue: 'Espalda en pared, sube brazos.' },
-      { name: 'Band pull-apart', dur: 50, cue: 'Si no tienes banda, brazos cruzados + abre.' },
-      { name: 'External rotation', dur: 50, cue: 'Codo a 90°, rota hacia fuera.' },
-      { name: 'Dead hang · opcional', dur: 45, cue: 'Solo con barra firme que soporte tu peso. Sin barra: repite las wall slides.' },
-      { name: 'Thoracic extension', dur: 40, cue: 'Sobre foam roller o toalla enrollada.' }]
+      { name: 'Scapular wall slides', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
+          action: 'Sube y baja los brazos pegados a la pared, como alas.',
+          care: 'Mantén la zona lumbar cerca de la pared.' } },
+      { name: 'Band pull-apart', mode: 'timed', dur: 50,
+        instruction: {
+          action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
+          care: 'Hombros abajo, lejos de las orejas.' } },
+      { name: 'External rotation', mode: 'timed', dur: 50,
+        instruction: {
+          action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+          care: 'Movimiento pequeño y controlado.' } },
+      { name: 'Dead hang · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides.',
+          action: 'Cuelga con los brazos estirados y suelta el peso de los hombros.',
+          care: 'Tracción suave. Baja si notas molestia.' } },
+      { name: 'Thoracic extension', mode: 'timed', dur: 40,
+        instruction: {
+          setup: 'Apoya la espalda alta sobre un foam roller o una toalla enrollada.',
+          action: 'Arquea abriendo el pecho al techo.',
+          care: 'El arco nace del pecho, no de la lumbar.' } }]
     },
+    /* s119 (B2.3 OLA 2): migración al contrato v1. Todo movilidad → `timed`
+       (BASE §3-B). Sin material → sin gate. External rotation / Band pull-apart
+       / Apertura de pecho comparten copy con shoulders.5 y chair.antidote
+       (mismo ejercicio, mismo glifo). */
     { id: 'move.shoulder.circles', tag: 'SHLD', code: 'Hombros', name: 'Hombros · círculos',
       desc: 'Círculos amplios y controlados. Libera hombros de escritorio.', min: 4,
+      position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Círculos de hombro', dur: 60, cue: 'Círculos lentos y amplios, brazo estirado. 5 por sentido y lado.' },
-      { name: 'Shrug + round', dur: 40, cue: 'Hombros arriba, atrás y abajo. Redondea el círculo.' },
-      { name: 'External rotation', dur: 45, cue: 'Codo a 90°, rota hacia fuera.' },
-      { name: 'Band pull-apart', dur: 45, cue: 'Sin banda: brazos cruzados + abre.' },
-      { name: 'Apertura de pecho', dur: 50, cue: 'Manos tras la nuca, abre codos, mira al techo.' }]
+      { name: 'Círculos de hombro', mode: 'timed', dur: 60,
+        instruction: {
+          action: 'Círculos lentos y amplios con el brazo estirado, en los dos sentidos.',
+          care: 'Amplios, pero sin tensar el cuello.' } },
+      { name: 'Shrug + round', mode: 'timed', dur: 40,
+        instruction: {
+          action: 'Sube los hombros, llévalos atrás y bájalos redondeando el círculo.',
+          care: 'Movimiento fluido, sin prisa.' } },
+      { name: 'External rotation', mode: 'timed', dur: 45,
+        instruction: {
+          action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+          care: 'Movimiento pequeño y controlado.' } },
+      { name: 'Band pull-apart', mode: 'timed', dur: 45,
+        instruction: {
+          action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
+          care: 'Hombros abajo, lejos de las orejas.' } },
+      { name: 'Apertura de pecho', mode: 'timed', dur: 50,
+        instruction: {
+          action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+          care: 'Abre solo hasta donde el pecho estire sin molestar.' } }]
     },
     { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
       desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
@@ -11839,14 +11987,38 @@ const EXTRA_ROUTINES = {
     label: 'Caderas y piernas',
     aside: 'Desbloquea la mitad inferior',
     items: [
+    /* s119 (B2.3 OLA 2): migración al contrato v1. Estiramientos bilaterales
+       (Cossack, Pigeon) → `perSide` con transición (BASE §3-C); movilidad de
+       suelo (90/90, Squat, Puente) → `timed`. Gate `ready` en el PRIMER paso
+       de suelo (90/90). 90/90, Pigeon y Puente con marcha comparten copy con
+       couch.stretch (mismo ejercicio/glifo). `min` 6 dentro de rango. */
     { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas · 5 pasos',
       desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
+      position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
       steps: [
-      { name: 'Cossack squat', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
-      { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
-      { name: 'Pigeon', dur: 60, cue: 'Tibia adelante, peso adelante. 40s por lado.' },
-      { name: 'Squat profundo', dur: 60, cue: 'Talones abajo, codos dentro de rodillas.' },
-      { name: 'Puente con marcha', dur: 60, cue: 'Activación de glúteo profundo.' }]
+      { name: 'Cossack squat', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+        instruction: {
+          action: 'Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio.',
+          care: 'Talón apoyado. Baja solo hasta donde controles.' } },
+      { name: '90/90', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
+          action: 'Gira despacio de un lado al otro. Tronco alto.',
+          care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
+      { name: 'Pigeon', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+        instruction: {
+          setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
+          action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
+          care: 'Pon un cojín bajo la cadera que quede en el aire.' } },
+      { name: 'Squat profundo', mode: 'timed', dur: 60,
+        instruction: {
+          action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+          care: 'Apóyate en algo si pierdes el equilibrio.' } },
+      { name: 'Puente con marcha', mode: 'timed', dur: 60,
+        instruction: {
+          setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+          action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+          care: 'Baja el ritmo si la lumbar se queja.' } }]
     },
     { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
       desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
@@ -11917,15 +12089,41 @@ const EXTRA_ROUTINES = {
     label: 'Flujos',
     aside: 'De pies a cabeza',
     items: [
+    /* s119 (B2.3 OLA 2): migración al contrato v1. Flujo → mezcla `timed`
+       (movilidad) + `perSide` (Cuello y trapecios, bilateral) + `rest` de
+       cierre respiratorio (SIN restKind, s113 — no es descanso entre series).
+       Gate `ready` en el PRIMER paso de suelo (Gato-camello). Gato-camello,
+       Squat, Apertura de pecho, Cuello y trapecios y Reset respiración
+       comparten copy con spine.waves/chair.antidote (mismo glifo). */
     { id: 'move.morning.flow', tag: 'FLOW', code: 'Mañana', name: 'Despertar matinal',
       desc: 'Flujo suave de cuerpo entero para empezar el día. Empieza en el suelo.', min: 5,
+      position: ['floor', 'seated', 'standing'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Gato-camello', dur: 60, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
-      { name: 'Rotación torácica', dur: 45, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
-      { name: 'Squat profundo', dur: 60, cue: 'Talones abajo, codos dentro de rodillas.' },
-      { name: 'Apertura de pecho', dur: 45, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
-      { name: 'Cuello y trapecios', dur: 45, cue: 'Oreja al hombro, suave.' },
-      { name: 'Reset respiración', dur: 30, cue: '3 inhalaciones profundas para cerrar.' }]
+      { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
+          action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
+          care: 'Movimiento lento, siguiendo la respiración.' } },
+      { name: 'Rotación torácica', mode: 'timed', dur: 45,
+        instruction: {
+          setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
+          action: 'Gira el tronco despacio a un lado y al otro.',
+          care: 'El giro nace del tronco, no del cuello.' } },
+      { name: 'Squat profundo', mode: 'timed', dur: 60,
+        instruction: {
+          action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+          care: 'Apóyate en algo si pierdes el equilibrio.' } },
+      { name: 'Apertura de pecho', mode: 'timed', dur: 45,
+        instruction: {
+          action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+          care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+      { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
+        instruction: {
+          setup: 'Siéntate erguido, hombros abajo.',
+          action: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
+          care: 'Sin tirar con la mano. Solo el peso.' } },
+      { name: 'Reset respiración', mode: 'rest', dur: 30,
+        instruction: { action: '3 inhalaciones profundas para cerrar.' } }]
     },
     { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
       desc: 'Técnicas ancestrales: crawl, hang, squat profundo. Suelo y barra firme.', min: 5, access: 'premium',
