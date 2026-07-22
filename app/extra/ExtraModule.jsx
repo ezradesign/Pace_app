@@ -99,14 +99,36 @@ const EXTRA_ROUTINES = {
           { name: 'Chin tucks', dur: 20, cue: 'Barbilla atrás 5 veces.' },
           { name: 'Deep breaths', dur: 20, cue: '3 inhalaciones completas.' },
         ]},
+      /* s119 (B2.3 OLA 2): migración mecánica al contrato v1 (s115). Movilidad
+         de muñecas → `timed` (exploratorio, BASE §3-B); Finger extension →
+         `reps` (consistente con grip.squeeze de OLA 1). Sin suelo/pared → sin
+         gate `ready`. `name` intactos → glifos sin tocar. */
       { id: 'move.wrists', tag: 'WRST', code: 'Muñecas', name: 'Muñecas y manos',
         desc: 'El antídoto al teclado. Muñecas sueltas en 3 minutos.', min: 3,
+        position: ['seated', 'standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Wrist circles', dur: 30, cue: '10 en cada sentido, muñecas sueltas.' },
-          { name: 'Wrist stretch', dur: 40, cue: 'Flexión y extensión, 20s por lado.' },
-          { name: 'Palmas al suelo', dur: 40, cue: 'Palmas sobre la mesa, dedos hacia ti. Suave.' },
-          { name: 'Rezo invertido', dur: 40, cue: 'Dorsos de las manos juntos frente al pecho.' },
-          { name: 'Finger extension', dur: 30, cue: 'Abre bien los dedos, 10 veces.' },
+          { name: 'Wrist circles', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Gira las muñecas en círculos amplios, en los dos sentidos.',
+              care: 'Muñecas sueltas, sin apretar.' } },
+          { name: 'Wrist stretch', mode: 'timed', dur: 40,
+            instruction: {
+              action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano. Cambia de mano a mitad.',
+              care: 'Presión ligera. Nunca hasta el dolor.' } },
+          { name: 'Palmas al suelo', mode: 'timed', dur: 40,
+            instruction: {
+              setup: 'Apoya las palmas en la mesa, dedos apuntando hacia ti.',
+              action: 'Lleva el peso atrás despacio hasta notar el estirón en el antebrazo.',
+              care: 'Suave. Reduce el peso si molesta.' } },
+          { name: 'Rezo invertido', mode: 'timed', dur: 40,
+            instruction: {
+              action: 'Junta los dorsos de las manos frente al pecho y baja las muñecas despacio.',
+              care: 'Estirón suave en la cara interna. Sin forzar.' } },
+          { name: 'Finger extension', mode: 'reps', reps: 10, dur: 30,
+            tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              action: 'Abre bien los dedos, estíralos y relaja.',
+              care: 'Sin forzar las articulaciones.' } },
         ]},
     ]
   },
@@ -114,23 +136,66 @@ const EXTRA_ROUTINES = {
     label: 'Hombros y columna',
     aside: 'Antídoto al teclado',
     items: [
+      /* s119 (B2.3 OLA 2): migración al contrato v1. Movilidad/isometría de
+         hombros → `timed` (BASE §3-B/D). Gate `ready` en los pasos que exigen
+         PARED (wall slides) o BARRA (dead hang); el resto auto (s112). `name`
+         intactos. Dead hang conserva su nombre «· opcional» (glifo intacto). */
       { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
         desc: 'Reset de hombros: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
+        position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Scapular wall slides', dur: 50, cue: 'Espalda en pared, sube brazos.' },
-          { name: 'Band pull-apart', dur: 50, cue: 'Si no tienes banda, brazos cruzados + abre.' },
-          { name: 'External rotation', dur: 50, cue: 'Codo a 90°, rota hacia fuera.' },
-          { name: 'Dead hang · opcional', dur: 45, cue: 'Solo con barra firme que soporte tu peso. Sin barra: repite las wall slides.' },
-          { name: 'Thoracic extension', dur: 40, cue: 'Sobre foam roller o toalla enrollada.' },
+          { name: 'Scapular wall slides', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
+              action: 'Sube y baja los brazos pegados a la pared, como alas.',
+              care: 'Mantén la zona lumbar cerca de la pared.' } },
+          { name: 'Band pull-apart', mode: 'timed', dur: 50,
+            instruction: {
+              action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'External rotation', mode: 'timed', dur: 50,
+            instruction: {
+              action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+              care: 'Movimiento pequeño y controlado.' } },
+          { name: 'Dead hang · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides.',
+              action: 'Cuelga con los brazos estirados y suelta el peso de los hombros.',
+              care: 'Tracción suave. Baja si notas molestia.' } },
+          { name: 'Thoracic extension', mode: 'timed', dur: 40,
+            instruction: {
+              setup: 'Apoya la espalda alta sobre un foam roller o una toalla enrollada.',
+              action: 'Arquea abriendo el pecho al techo.',
+              care: 'El arco nace del pecho, no de la lumbar.' } },
         ]},
+      /* s119 (B2.3 OLA 2): migración al contrato v1. Todo movilidad → `timed`
+         (BASE §3-B). Sin material → sin gate. External rotation / Band pull-apart
+         / Apertura de pecho comparten copy con shoulders.5 y chair.antidote
+         (mismo ejercicio, mismo glifo). */
       { id: 'move.shoulder.circles', tag: 'SHLD', code: 'Hombros', name: 'Hombros · círculos',
         desc: 'Círculos amplios y controlados. Libera hombros de escritorio.', min: 4,
+        position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Círculos de hombro', dur: 60, cue: 'Círculos lentos y amplios, brazo estirado. 5 por sentido y lado.' },
-          { name: 'Shrug + round', dur: 40, cue: 'Hombros arriba, atrás y abajo. Redondea el círculo.' },
-          { name: 'External rotation', dur: 45, cue: 'Codo a 90°, rota hacia fuera.' },
-          { name: 'Band pull-apart', dur: 45, cue: 'Sin banda: brazos cruzados + abre.' },
-          { name: 'Apertura de pecho', dur: 50, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
+          { name: 'Círculos de hombro', mode: 'timed', dur: 60,
+            instruction: {
+              action: 'Círculos lentos y amplios con el brazo estirado, en los dos sentidos.',
+              care: 'Amplios, pero sin tensar el cuello.' } },
+          { name: 'Shrug + round', mode: 'timed', dur: 40,
+            instruction: {
+              action: 'Sube los hombros, llévalos atrás y bájalos redondeando el círculo.',
+              care: 'Movimiento fluido, sin prisa.' } },
+          { name: 'External rotation', mode: 'timed', dur: 45,
+            instruction: {
+              action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
+              care: 'Movimiento pequeño y controlado.' } },
+          { name: 'Band pull-apart', mode: 'timed', dur: 45,
+            instruction: {
+              action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Apertura de pecho', mode: 'timed', dur: 50,
+            instruction: {
+              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
         ]},
       { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
         desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
@@ -147,14 +212,38 @@ const EXTRA_ROUTINES = {
     label: 'Caderas y piernas',
     aside: 'Desbloquea la mitad inferior',
     items: [
+      /* s119 (B2.3 OLA 2): migración al contrato v1. Estiramientos bilaterales
+         (Cossack, Pigeon) → `perSide` con transición (BASE §3-C); movilidad de
+         suelo (90/90, Squat, Puente) → `timed`. Gate `ready` en el PRIMER paso
+         de suelo (90/90). 90/90, Pigeon y Puente con marcha comparten copy con
+         couch.stretch (mismo ejercicio/glifo). `min` 6 dentro de rango. */
       { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas · 5 pasos',
         desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
+        position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
-          { name: 'Cossack squat', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
-          { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
-          { name: 'Pigeon', dur: 60, cue: 'Tibia adelante, peso adelante. 40s por lado.' },
-          { name: 'Squat profundo', dur: 60, cue: 'Talones abajo, codos dentro de rodillas.' },
-          { name: 'Puente con marcha', dur: 60, cue: 'Activación de glúteo profundo.' },
+          { name: 'Cossack squat', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+            instruction: {
+              action: 'Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio.',
+              care: 'Talón apoyado. Baja solo hasta donde controles.' } },
+          { name: '90/90', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
+              action: 'Gira despacio de un lado al otro. Tronco alto.',
+              care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
+          { name: 'Pigeon', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
+              action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
+              care: 'Pon un cojín bajo la cadera que quede en el aire.' } },
+          { name: 'Squat profundo', mode: 'timed', dur: 60,
+            instruction: {
+              action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+              care: 'Apóyate en algo si pierdes el equilibrio.' } },
+          { name: 'Puente con marcha', mode: 'timed', dur: 60,
+            instruction: {
+              setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+              action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+              care: 'Baja el ritmo si la lumbar se queja.' } },
         ]},
       { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
         desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
@@ -225,15 +314,41 @@ const EXTRA_ROUTINES = {
     label: 'Flujos',
     aside: 'De pies a cabeza',
     items: [
+      /* s119 (B2.3 OLA 2): migración al contrato v1. Flujo → mezcla `timed`
+         (movilidad) + `perSide` (Cuello y trapecios, bilateral) + `rest` de
+         cierre respiratorio (SIN restKind, s113 — no es descanso entre series).
+         Gate `ready` en el PRIMER paso de suelo (Gato-camello). Gato-camello,
+         Squat, Apertura de pecho, Cuello y trapecios y Reset respiración
+         comparten copy con spine.waves/chair.antidote (mismo glifo). */
       { id: 'move.morning.flow', tag: 'FLOW', code: 'Mañana', name: 'Despertar matinal',
         desc: 'Flujo suave de cuerpo entero para empezar el día. Empieza en el suelo.', min: 5,
+        position: ['floor', 'seated', 'standing'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Gato-camello', dur: 60, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
-          { name: 'Rotación torácica', dur: 45, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
-          { name: 'Squat profundo', dur: 60, cue: 'Talones abajo, codos dentro de rodillas.' },
-          { name: 'Apertura de pecho', dur: 45, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
-          { name: 'Cuello y trapecios', dur: 45, cue: 'Oreja al hombro, suave.' },
-          { name: 'Reset respiración', dur: 30, cue: '3 inhalaciones profundas para cerrar.' },
+          { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
+              action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
+              care: 'Movimiento lento, siguiendo la respiración.' } },
+          { name: 'Rotación torácica', mode: 'timed', dur: 45,
+            instruction: {
+              setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
+              action: 'Gira el tronco despacio a un lado y al otro.',
+              care: 'El giro nace del tronco, no del cuello.' } },
+          { name: 'Squat profundo', mode: 'timed', dur: 60,
+            instruction: {
+              action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+              care: 'Apóyate en algo si pierdes el equilibrio.' } },
+          { name: 'Apertura de pecho', mode: 'timed', dur: 45,
+            instruction: {
+              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
+          { name: 'Cuello y trapecios', mode: 'perSide', dur: 20, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Siéntate erguido, hombros abajo.',
+              action: 'Lleva la oreja hacia el hombro. Deja caer el peso de la cabeza.',
+              care: 'Sin tirar con la mano. Solo el peso.' } },
+          { name: 'Reset respiración', mode: 'rest', dur: 30,
+            instruction: { action: '3 inhalaciones profundas para cerrar.' } },
         ]},
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
         desc: 'Técnicas ancestrales: crawl, hang, squat profundo. Suelo y barra firme.', min: 5, access: 'premium',

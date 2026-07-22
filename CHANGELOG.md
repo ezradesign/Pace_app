@@ -27,8 +27,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.62.0** | 2026-07-22 | feat(move): **estabilidad de layout del runner v1 + B2.3 OLA 2** (sesión FUSIONADA 2 fases; FASE A cerrada y verificada ANTES de FASE B) -- **FASE A · pulido de layout** (delta 0 de comportamiento; ámbito confinado a `MoveSessionV1.jsx`+`MoveSessionV1.support.jsx`, **SessionShell intacto**): **(1) barra fantasma RESUELTA** — `v1GlyphSize` saltaba `0.22→0.25·vpH` en vpH=720 (glifo +22px) sin tier de compactación hasta ≤700 → banda muerta 701–760 desbordaba ~7px y disparaba scrollbar de 15px (portátiles 1366×768); ahora **curva continua** `min(210, round(vpH·0.22))` + **tier de banda 701–768** (aprieta número/espacios) → sin barra en 1280×600/720/760, 1024×512, 844×390, 360×640; **(2) glifo/botones anclados RESUELTO** — `centerBody` centra el bloque con `margin:auto` y su alto variaba por paso (+12.4px medido); ahora **alturas reservadas** (cue 2 líneas + «Cuídate» 2 líneas SIEMPRE en trabajo aunque el paso no la tenga, solo ≥641px; móvil conserva su ajuste previo) → `glyph_top` idéntico entre pasos, footer clavado; **(3) warning rep-pulse RESUELTO** — shorthand `animation` → longhand + `animationPlayState`; **(4) aislamiento del timer v1** (`data-pace-v1-timer`) para que las reglas de número no encojan el runner **legacy** (compartían `data-pace-move-timer`). **FASE B · B2.3 OLA 2** (4+... decisiones AskUserQuestion, todas la recomendación: Estira · 5 gratuitas sin reescritura · reescrituras aparte · glifos intactos): **5 rutinas de Estira** migradas al contrato v1 (`wrists` · `shoulders.5` · `shoulder.circles` · `hips.5` · `morning.flow`) — clasificación BASE §3: movilidad/estático central → `timed`, estiramiento bilateral → `perSide`+transición (Cossack, Pigeon), fuerza/control → `reps` (Finger extension), flujo → `timed`+`rest` de cierre; **gate `ready`** en pasos de suelo/pared/barra (wall slides, dead hang, 90/90, Gato-camello) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion` + `transition:{seconds:10}` + `setup:{mode:'ready'}` + 5 metadatos (sin `discrete`); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos; copy reutilizado consistente con los pilotos · **cero drift de `min`** (las 5 dentro de rango: dev-check «dentro») · **13 legacy restantes** (7 Mueve premium + 6 Estira) + ola editorial | #119 | [abajo](#v0620----2026-07-22----featmove-estabilidad-de-layout-del-runner-v1--b23-ola-2) |
 | **v0.61.0** | 2026-07-22 | feat(move): **B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116 y diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **5 rutinas Mueve gratuitas** migradas (`chair.dips` · `calves` · `grip.squeeze` · `glutes.stealth` · `posture.set`; todas sin suelo → sin gate `ready`) añadiendo por paso `mode` (aquí reps/rest/timed) + `instruction:{setup,action,care}` (consolida el `cue` legacy → `action`; `setup` de colocación en el 1er set de fuerza → colocación AUTO; `care` con la adaptación ya implícita) + `tempo`/`completion:{mode:'guided'}` en reps + `restKind:'betweenSets'` en rests de fuerza + 5 metadatos (`position/equipment/requiresFloor/intensity/level`, **sin `discrete`**) · keys EN nuevas `id.sN.instruction.*` (mismo valor traducido); `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos (cola D-4 sin tocar) · **candidato** `move.couch.stretch.min` **5→6** (dev-check s115 calculaba 6–7 min, único piloto descuadrado, ahora alineado) · **duración**: con los tempos elegidos cada rutina conserva su `min` DENTRO del rango derivado (`estimateDuration`), sin drift · las **7 rutinas Mueve restantes** (premium + `legs.single` a reescribir) y las **14 de Estira** siguen **LEGACY byte-idénticas** · reescrituras (4 cues + 2 rutinas) y el resto de olas → siguientes · deuda nueva observada: warning React `animation`/`animationPlayState` en `MoveSessionV1.jsx:441` (rep-pulse s113, no tocado → NO regresión; fix trivial al reabrir el runner) | #118 | [abajo](#v0610----2026-07-22----featmove-b23--migración-de-rutinas-legacy-al-contrato-v1-ola-1) |
-| **v0.60.0** | 2026-07-21 | feat: **B2.2b-2 — feedback ligero «¿te ayudó esta pausa?»** (captura + almacenamiento, SIN consumidor visible; 5 decisiones por AskUserQuestion, todas la recomendación) -- una sola pregunta CALMADA al alcanzar `stage:'done'` en Mueve/Estira (v1 y legacy) + Respira, **fuera de Caminos** (gate `inPath`) y nunca al pulsar «× Salir» · 3 respuestas de igual peso (**Sí · Un poco · No**) + **«Ahora no»** ghost secundario → la fila se sustituye por acuse «Gracias»; el CTA de regreso SIEMPRE disponible (no hace falta responder para salir) · **slice `routineFeedback`** bajo pace.state.v2 (`{[id]:{yes,some,no,lastPromptDay}}`, conteos COMPLETOS; `answered`/`helpScore` **DERIVADOS**, nunca persistidos; «Ahora no» no cuenta) con helper **PURO** `nextRoutineFeedback` + acción `recordRoutineFeedback` (setState funcional, sanitiza `yes\|some\|no\|later`, rechaza id vacío, merge defensivo en loadState) + `shouldPromptRoutineFeedback` · **frecuencia**: máx 1 vez por rutina y **DÍA LOCAL** (`lastPromptDay=todayISO()`; «Ahora no» también suprime el resto del día sin sumar; salir por el CTA sin responder NO escribe el día → puede reaparecer) · **guard de teclado P0** en los 3 runners: `Enter` en done ignora el atajo global de salida si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores Ctrl/Meta/Alt — evita una 2ª salida (el CTA/chip se activan por su onClick); Espacio tampoco se roba a un control con foco · componente NUEVO `SessionFeedback.jsx` (gate por-día capturado en el mount + guard SÍNCRONO de idempotencia + disabled) · `SessionDone` gana slot `feedback` · **CSS responsive del shell EXTRAÍDO** a `SessionShell.responsive.js` (495→336 ln) + en el tier ≤430 el HERO decorativo del done se oculta para que la fila de feedback y el CTA quepan sin solape · i18n `session.feedback.*` ES+EN · **legacy byte-idéntico** salvo el render del DONE + guard de teclado (motor/timers/completion/navegación intactos); contrato s115 intacto | #116 | [abajo](#v0600----2026-07-21----feat-b22b-2--feedback-ligero-te-ayudó-esta-pausa) |
+| **v0.60.0** | 2026-07-21 | feat: **B2.2b-2 — feedback ligero «¿te ayudó esta pausa?»** (captura + almacenamiento, SIN consumidor visible; 5 decisiones por AskUserQuestion, todas la recomendación) -- una sola pregunta CALMADA al alcanzar `stage:'done'` en Mueve/Estira (v1 y legacy) + Respira, **fuera de Caminos** (gate `inPath`) y nunca al pulsar «× Salir» · 3 respuestas de igual peso (**Sí · Un poco · No**) + **«Ahora no»** ghost secundario → la fila se sustituye por acuse «Gracias»; el CTA de regreso SIEMPRE disponible (no hace falta responder para salir) · **slice `routineFeedback`** bajo pace.state.v2 (`{[id]:{yes,some,no,lastPromptDay}}`, conteos COMPLETOS; `answered`/`helpScore` **DERIVADOS**, nunca persistidos; «Ahora no» no cuenta) con helper **PURO** `nextRoutineFeedback` + acción `recordRoutineFeedback` (setState funcional, sanitiza `yes\|some\|no\|later`, rechaza id vacío, merge defensivo en loadState) + `shouldPromptRoutineFeedback` · **frecuencia**: máx 1 vez por rutina y **DÍA LOCAL** (`lastPromptDay=todayISO()`; «Ahora no» también suprime el resto del día sin sumar; salir por el CTA sin responder NO escribe el día → puede reaparecer) · **guard de teclado P0** en los 3 runners: `Enter` en done ignora el atajo global de salida si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores Ctrl/Meta/Alt — evita una 2ª salida (el CTA/chip se activan por su onClick); Espacio tampoco se roba a un control con foco · componente NUEVO `SessionFeedback.jsx` (gate por-día capturado en el mount + guard SÍNCRONO de idempotencia + disabled) · `SessionDone` gana slot `feedback` · **CSS responsive del shell EXTRAÍDO** a `SessionShell.responsive.js` (495→336 ln) + en el tier ≤430 el HERO decorativo del done se oculta para que la fila de feedback y el CTA quepan sin solape · i18n `session.feedback.*` ES+EN · **legacy byte-idéntico** salvo el render del DONE + guard de teclado (motor/timers/completion/navegación intactos); contrato s115 intacto | #116 | [session-116](./docs/sessions/session-116-b2-2b-2-feedback-ligero.md) |
 | **v0.59.0** | 2026-07-21 | feat(move): **B2.2b-1 — contrato formal + duración derivada** (los 5 pilotos; el GIRO del runner guiado quedó CERRADO en s114, aquí NO se reabre; comportamiento del runner INTACTO) -- **contrato formal por paso** (migración ATÓMICA, sin fallback dual): `instruction:{setup,action,care}` (consolida placeCue/cue/careCue de s114, misma copy) · `tempo:{down,hold,up}` (generaliza el rep-seconds; suma = seg/rep) · `transition:{seconds}` (cambio de lado perSide) · `completion:{mode:'guided'}` ('manual' reservado) · `setup:{mode:'ready',estimatedSeconds}` = **comportamiento** del runner, DISTINTO de `instruction.setup` = copy (los dos «setup» que pedía el corte; ready nunca es countdown, estimatedSeconds>0) · **metadatos** `position/equipment/requiresFloor/intensity/level` (sin consumidor UI) · **keys i18n EN nuevas** `id.sN.instruction.*`; se RETIRAN placeCue/cue/careCue de los 5 pilotos (dato + keys), `cue` de las 22 legacy INTACTO · **fuente ÚNICA de segundos efectivos** + fix de deuda real: `v1StepWeight` (peso de barra) pasa a `v1StepDur` → **peso = progreso = aviso 5 s = duración** (antes divergía con preset 20/45) · **duración DERIVADA**: helper PURO `estimateDuration(routine, rbs)→{minSec,maxSec,breakdown}` (perSide = dur POR LADO ×2 + UNA transición, sin cuádruple conteo; reps guided = target×tempo fijo; + prep + setup) → la **tarjeta** muestra el rango en rutinas v1 (legacy conserva `min`, premium «Pronto»); **dev-check** `min` vs rango de minutos mostrados (avisa solo fuera; sin ruido dentro) · **limpieza** `move.repsGuidedHint` retirada · **legacy byte-idéntico** (prep 3, sin atributos v1) | #115 | [session-115](./docs/sessions/session-115-b2-2b-1-contrato-duracion.md) |
 | **v0.58.0** | 2026-07-21 | feat(move): **runner guiado · capa editorial** (GIRO 2ª de 2 — **CIERRA el giro**; sobre el motor de s113; principio rector intacto) -- **instrucciones por CAPAS en los 5 pilotos**: `placeCue` (setup, se muestra en colocación) + `cue`=shortCue (ejecución) + `careCue` («Cuídate», adaptación **siempre visible** en trabajo; en altura baja se oculta el rótulo, nunca el contenido) — `cue` se conserva como fallback ⇒ **cero re-indexado** de las keys EN sN (solo keys NUEVAS `id.sN.placeCue`/`careCue`) · **colocación AUTO para el 1er set de fuerza** (step `reps` con `placeCue` no precedido por rest → ventana para leer el setup y ponerse en posición antes del pacer; sets 2/3 tras un rest van directos, sin doble espera; sigue 0 taps) · **lado integrado en el texto** (perSide: la palabra del lado abre el cue como `<strong>` del acento, no un kicker suelto) · **pantalla final por MÓDULO** (Mueve → «Movimiento completado» · Estira → «Estiramiento completado» — resuelve el P3 `antidoteDone` universal) con **stats honestas** que consumen `repsGuidedRef` (tiempo · series · **reps guiadas reales**, nunca el objetivo; mixtas → tiempo·pasos·reps; movilidad → tiempo·pasos; sin calorías/récords/comparaciones) · **Tweaks «Sesiones»**: descanso entre series **Breve 20 / Tranquilo 30 (recom., default) / Amplio 45** (`restBetweenSets`; helpers `v1RestSeconds`/`v1StepDur`) que SOLO afecta a `restKind:'betweenSets'` (el cierre respiratorio queda en 30) — el descanso GUÍA («Luego: {serie}» + aviso ~5 s) · **audio SIN voz** (familia move 432): `move.warn` (aviso único al cruzar ~5 s en descansos y pasos con reloj, no cuenta atrás) + `move.side` (cambio de lado); todo bajo `soundOn` + try/catch · CSS: tier ≤700 apretado por la línea «Cuídate» → **delta 0 mantenido** en 1280×600·1024×512·844×390·360×640 · legacy intacto (prep 3, sin atributos v1) | #114 | [session-114](./docs/sessions/session-114-runner-guiado-editorial.md) |
 | **v0.57.0** | 2026-07-20 | feat(move): **runner guiado · motor** (GIRO post-s112, 1ª de 2: s113 motor · s114 capa editorial; aplica las ENMIENDAS R2/R3/BASE §3-A ya registradas; principio rector: «el usuario toca para empezar, pausar o adaptar; NO para empujar la rutina hacia delante» — la rutina se completa SIN tocar la pantalla salvo los gates `ready`) -- **reps GUIADAS con cadencia** (sustituyen al modo libre s111; ~4 s/rep de fuerza, `repSeconds` por paso — chin tucks 8 s; pulso visual `pace-rep-pulse` + tick suave por rep de la familia actual + contador «n de N reps»; **avance AUTO al objetivo**; «Terminar antes» siempre visible; pausa con Espacio/botón; `repsGuidedRef` acredita solo reps guiadas reales; reduced-motion → contador sin animación) · **transición AUTO de lado** (señal suave → «Cambia de lado» + cuenta 10 s estilo gate + **«Ahora: Derecha»** → el lado 2 empieza solo; «Empezar ya»/«Más tiempo»/«Pausar» opcionales) · **prep 5 s** (legacy sigue 3) · **rest entre series 30 s + `restKind:'betweenSets'`** en desk.pushups/chair.squats (el «Reset respiración» de chair.antidote NO se tipa: es cierre) · **layout compacto por ALTURA** (tiers 700/560/430 en shell + `data-pace-v1-*`; glifo cede antes que instrucciones y se oculta ≤430; tier de espacios en retrato estrecho; sin scrollbar en 1280×600 · 1024×512 · 844×390 · 360×640; scroll = red de seguridad) · `min` desk.pushups 2→3 · **fix**: side-effects fuera de los updaters de setState (warning «Cannot update while rendering», pre-existente s110) · split **`MoveSessionV1.support.jsx`** (constantes+helpers+CSS; patrón FocusTimer.support) · 4 keys i18n nuevas ES+EN, 4 retiradas | #113 | [session-113](./docs/sessions/session-113-runner-guiado-motor.md) |
@@ -149,6 +150,81 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.62.0] -- 2026-07-22 -- feat(move): estabilidad de layout del runner v1 + B2.3 OLA 2
+
+Sesión FUSIONADA en 2 fases. **Orden obligatorio:** FASE A (layout) cerrada y
+verificada ANTES de FASE B (contenido). Bump v0.61.0 → v0.62.0.
+
+### FASE A · Estabilidad de layout (delta 0 de comportamiento)
+
+Ámbito confinado (decisión del usuario): `MoveSessionV1.jsx` +
+`MoveSessionV1.support.jsx` (`pace-move-v1-css`). **SessionShell intacto.**
+
+- **Barra fantasma — causa raíz + fix.** `v1GlyphSize` saltaba de `0.22·vpH` a
+  `0.25·vpH` en vpH=720 (glifo 158→180, +22px) mientras los tiers de
+  compactación empezaban en ≤700 → banda muerta ~701–760 con glifo grande sin
+  compactar. Medido a 1280×720: desborde de 7px → scrollbar de 15px (portátiles
+  1366×768). Fix: **curva continua** `Math.max(72, Math.min(210, round(vpH·0.22)))`
+  + **tier de banda 701–768** (número 104px + espacios) + compactación reforzada
+  ≤700 (número 82) / ≤560 (número 58 + fuentes −1).
+- **Glifo/botones sin anclar — cuantificado + fix.** `centerBody` centra el
+  bloque con `margin:auto`; su alto variaba por paso → `glyph_top` se movía
+  (+12.4px medido a 900px entre 2 pasos por el nº de líneas del cue). Fix:
+  **alturas reservadas** (`pace-move-v1-css`, solo ≥641px): cue `min-height 3.1em`
+  + «Cuídate» `min-height 3em` **SIEMPRE renderizada en trabajo** (JSX `inWork &&
+  !isRest`, contenido condicional) → bloque de alto constante → glifo anclado. En
+  móvil (≤640) se renuncia a las reservas (slack pequeño, ya presente pre-s119).
+- **Aislamiento del timer v1.** `data-pace-move-timer` lo comparten v1 y el
+  runner **legacy** (`MoveModule.jsx:260`) → añadido `data-pace-v1-timer` al div
+  v1; las 3 reglas de número apuntan ahí → legacy conserva su número (96px).
+- **rep-pulse** (`MoveSessionV1.jsx:441`): shorthand `animation` → longhand.
+
+Verificación por DOM: sin barra en los 4 viewports + banda; `glyph_top` idéntico
+entre pasos (600→83.6, 720→94.6, 900→128.9); paso SIN care ancla igual (care
+reservada vacía); legacy Estira y Respira sin regresión.
+
+### FASE B · B2.3 OLA 2 — 5 rutinas de Estira al contrato v1
+
+Decisiones (AskUserQuestion, todas la recomendación): Estira · 5 gratuitas sin
+cue de reescritura · reescrituras aparte · glifos D-4 intactos.
+
+Migradas: `move.wrists` (min 3) · `move.shoulders.5` (4) · `move.shoulder.circles`
+(4) · `move.hips.5` (6) · `move.morning.flow` (5). Clasificación BASE §3:
+
+- **timed** — movilidad/estático central (círculos, wall slides, band pull-apart,
+  external rotation, apertura de pecho, 90/90, squat profundo, palmas, rezo).
+- **perSide** + `transition:{seconds:10}` — estiramiento bilateral (Cossack,
+  Pigeon, Cuello y trapecios).
+- **reps** + `tempo`/`completion` — Finger extension (consistente con OLA 1).
+- **rest** de cierre respiratorio (SIN restKind) — morning.flow s5.
+- **gate `ready`** — pasos de suelo/pared/barra (wall slides, dead hang, 90/90 —
+  1er suelo, Gato-camello — 1er suelo).
+
+Migración ATÓMICA por rutina: `instruction:{setup,action,care}` + `tempo`/
+`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos
+`position/equipment/requiresFloor/intensity/level` (**sin `discrete`**). Keys EN
+`id.sN.instruction.*` nuevas + `id.sN.cue` retiradas en el MISMO cambio; **ningún
+`name` cambió** → glifos intactos. Copy reutilizado consistente con los pilotos
+(Apertura de pecho, 90/90, Pigeon, Cuello y trapecios, Puente con marcha…).
+
+Verificación (dev + standalone): `estimateDuration` — las 5 **dentro de rango**
+(wrists 200s [3–4], shoulders.5 285s [4–5], shoulder.circles 265s [4–5], hips.5
+355s [5–6], morning.flow 330s [5–6]); dev-check «dentro» en las 5. Sin `[i18n]
+missing` ES+EN, sin `cue` residual. Runtime: hips.5 completo (perSide con lado
+integrado + transición + gate `ready` + timed; cabe 1280×720 Y 360×640),
+morning.flow completo (ready+timed+perSide+rest+DONE «Estiramiento completado» +
+stats honestas + feedback), wrists (reps «1 de 10 reps»), shoulders.5 (ready en
+idx0), shoulder.circles (timed), EN resuelve. Standalone v0.62.0, 3192 KB,
+autocontenido, longhand rep-pulse en el compilado.
+
+**Estado B2.3:** 23 → 18 (OLA 1) → **13 legacy** tras OLA 2 (7 Mueve premium +
+6 Estira: desk.quick, spine.waves, hips.ground, atg.knees, hamstrings, ancestral)
++ ola editorial (4 cues + 2 rutinas).
+
+Diario completo: [session-119](./docs/sessions/session-119-layout-runner-y-b2-3-ola-2.md).
+
+---
+
 ## [v0.61.0] -- 2026-07-22 -- feat(move): B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)
 
 Sesión 118. Primera ola de **B2.3**: migrar rutinas **legacy** de Mueve al
@@ -220,105 +296,3 @@ exploratoria → `timed` (§D/§B).
   regresión**; fix al reabrir el runner (fuera de alcance).
 
 Diario completo: [session-118](./docs/sessions/session-118-b2-3-migracion-ola-1.md).
-
-## [v0.60.0] -- 2026-07-21 -- feat: B2.2b-2 — feedback ligero «¿te ayudó esta pausa?»
-
-Feedback CALMADO y opcional al terminar una pausa, coherente con el tono PACE:
-una sola pregunta, respuestas semánticamente alineadas, siempre saltable, sin
-gamificación ni consumidor prematuro (nada de porcentajes). **Captura +
-almacenamiento** solo: el consumidor (Pausa PACE / «qué te ayuda» premium) llega
-en fases posteriores. El GIRO (s113/s114) y el contrato B2.2b-1 (s115) NO se
-reabren.
-
-### Decisiones de arranque (AskUserQuestion, 5 — todas la recomendación)
-
-1. **Módulos**: Mueve + Estira + Respira, runner v1 **y** legacy (el futuro
-   recomendador aprende de TODO el catálogo, no solo de los 5 pilotos).
-2. **Datos**: conteos completos `{yes, some, no}` (+`lastPromptDay`); `answered`
-   y `helpScore` DERIVADOS, nunca persistidos (supera el `{done,helped}` que
-   figuraba en DECISIONES_PRODUCTO — conserva la señal «Un poco»).
-3. **Presentación**: bloque discreto DENTRO del DONE (no pantalla nueva).
-4. **Consumidor**: NINGUNO en s116 (solo se almacena).
-5. **Frecuencia**: máx 1 vez por rutina y día local.
-
-### Captura + almacenamiento (P0)
-
-- **Superficie** SOLO al alcanzar `stage:'done'` (finalización válida). NUNCA al
-  salir con «× Salir» (`onExit('exit')` no llega a done) ni dentro de Caminos
-  (los runners pasan `feedback={inPath ? undefined : <SessionFeedback/>}`).
-- **Componente NUEVO `app/ui/SessionFeedback.jsx`** (`routineId` + `kind` +
-  `accent`): pregunta «¿Te ayudó esta pausa?» + 3 respuestas de igual peso
-  (Sí · Un poco · No) + «Ahora no» ghost secundario. Al responder (o «Ahora no»)
-  la fila se sustituye por el acuse EFÍMERO «Gracias»; el CTA de regreso del
-  DONE sigue SIEMPRE disponible. Sin emojis, sin porcentajes.
-- **`SessionDone` gana un slot `feedback`** (afterContent, bajo el copy de
-  cierre); los runners lo rellenan.
-- **Slice `routineFeedback`** bajo `pace.state.v2` en `app/state-feedback.jsx`:
-  `{ [routineId]: { yes, some, no, lastPromptDay } }`. Helper **PURO**
-  `nextRoutineFeedback(prev, id, resp)` (no muta; escribe `lastPromptDay` en toda
-  respuesta válida incluida `later`; solo yes/some/no incrementan) + acción
-  `recordRoutineFeedback` (setState con updater FUNCIONAL; sanitiza a
-  `yes|some|no|later`, rechaza id vacío) + `shouldPromptRoutineFeedback`.
-  `answered = yes+some+no` y `helpScore = (yes+some*0.5)/answered` se DERIVAN,
-  nunca se persisten. Merge defensivo en `loadState` (`{...defaultState,
-  ...parsed}`; un state pre-s116 recibe `{}`).
-
-### Idempotencia + frecuencia
-
-- **Idempotencia**: cada montaje acepta como máximo UNA decisión — guard
-  SÍNCRONO (`lockRef`) bloquea reenvíos antes del re-render, y al decidir el
-  bloque se sustituye por «Gracias» (los controles dejan de existir). Doble clic
-  / doble Enter no duplican conteos.
-- **Frecuencia**: la pregunta se muestra como máximo UNA vez por rutina y DÍA
-  LOCAL (`lastPromptDay = todayISO()` — regla #10, prohibido `new
-  Date("YYYY-MM-DD")`). El gate se captura en el **mount** de SessionFeedback
-  (no reactivo → «Gracias» no desaparece al escribir `lastPromptDay`). «Ahora
-  no» (`later`) NO incrementa contadores pero SÍ escribe el día. Salir por el
-  CTA sin responder NO escribe el día → la pregunta puede reaparecer tras otra
-  finalización válida el mismo día.
-
-### Guard de teclado (P0) — los 3 runners
-
-- MoveSessionV1 + MoveSessionLegacy + BreatheSession interpretaban `Enter` en
-  `stage:'done'` como salir (`onExit('done')`). Con botones de feedback, el
-  atajo global de DONE se IGNORA si el foco está en un control
-  (`event.target.closest('button,a,input,select,textarea,[contenteditable]')`
-  — `closest`, no `matches`), `event.isComposing`, `event.defaultPrevented` o
-  hay modificadores Ctrl/Meta/Alt (helpers `sessionKeyOnControl` /
-  `sessionDoneKeyBlocked` en SessionShell). El CTA/chip se activan por su propio
-  onClick — el guard solo evita una SEGUNDA salida desde el listener global.
-  Espacio tampoco se roba a un control con foco (activación nativa en vez de
-  `preventDefault`). Enter fuera de un control sigue cerrando el DONE (intacto).
-
-### Layout + límites
-
-- **CSS responsive del shell EXTRAÍDO** a `app/ui/SessionShell.responsive.js`
-  (SessionShell.jsx 495→336 ln, sale del borde de 500). El responsive del bloque
-  de feedback vive en `SessionFeedback.jsx`. En el tier `≤430` de altura el
-  **HERO decorativo del done se oculta** (paso 2 del orden de compactación) para
-  que la fila de feedback (pregunta + respuestas + «Ahora no») y el CTA quepan
-  sin que el footer tape «Ahora no». La pregunta, las respuestas, «Ahora no» y el
-  CTA NUNCA se ocultan; el centro scrollable queda como red de seguridad.
-- i18n `session.feedback.*` (question/yes/some/no/later/thanks) ES+EN, explícitas.
-- Legacy: solo el render del DONE + guard de teclado (motor/timers/completion/
-  navegación byte-idénticos). Contrato s115 intacto.
-
-### Verificación (dev :8765 + standalone)
-
-- Feedback aparece en el done de **v1** (desk.pushups), **legacy** (chair.dips,
-  office.express) y **Respira** (rounds.express, acento `var(--breathe)`);
-  responder registra + «Gracias»; «Ahora no» registra `lastPromptDay` sin sumar
-  conteo; NO aparece en rutina ya respondida hoy (gate) ni tras «× Salir».
-- Teclado: guard verificado con eventos reales — `Enter` sobre un chip NO cierra
-  ni duplica; `Enter` fuera de un control cierra; Escape cierra; doble clic no
-  duplica (guard síncrono; `move.wrists {no:1}`, no 2). (El inyector CDP entrega
-  `key:""` para Enter, así que la activación nativa de botón se validó por clic +
-  helper puro.)
-- Persistencia: `routineFeedback` en pace.state.v2 sobrevive a la recarga; merge
-  de un state pre-s116 → `{}` sin romper; grabación funciona tras el merge.
-- Layout re-medido: 1280×600 · 1024×512 · 360×640 sin scroll; 844×390 cabe tras
-  ocultar el hero en ≤430 (pregunta/respuestas/«Ahora no»/CTA visibles, sin
-  scroll horizontal). Consola limpia, sin `[i18n] missing` ES+EN. Standalone
-  3166 KB / 86 scripts (verificado: monta, globales presentes, legacy registra).
-
-Diario completo: [session-116](./docs/sessions/session-116-b2-2b-2-feedback-ligero.md).

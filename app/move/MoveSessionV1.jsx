@@ -436,9 +436,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
             (decorativo: reduced-motion lo congela y queda el contador). */}
         {bigNumber != null && !gateNumber && (
           <React.Fragment>
-            <div data-pace-move-timer style={{
+            <div data-pace-move-timer data-pace-v1-timer style={{
               ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
-              ...(repPulseSec ? { animation: `pace-rep-pulse ${repPulseSec}s ease-in-out infinite`, animationPlayState: paused ? 'paused' : 'running' } : {}),
+              /* s119: longhand (no el shorthand `animation`) para no mezclarlo con
+                 `animationPlayState` → silencia el warning de React. Delta 0. */
+              ...(repPulseSec ? { animationName: 'pace-rep-pulse', animationDuration: `${repPulseSec}s`, animationTimingFunction: 'ease-in-out', animationIterationCount: 'infinite', animationPlayState: paused ? 'paused' : 'running' } : {}),
             }}>
               {bigNumber}
             </div>
@@ -458,13 +460,14 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
             {support}
           </div>
         )}
-        {/* s114 · capa «Cuídate» (adaptación): siempre visible en ejecución
-            (decisión A). El rótulo puede ocultarse en altura baja
-            (data-pace-v1-care-label), el contenido NUNCA. */}
-        {careText && (
+        {/* s114 · capa «Cuídate» (adaptación): visible en ejecución (decisión A);
+            el rótulo puede ocultarse en altura baja, el contenido NUNCA.
+            s119 · la ZONA se reserva SIEMPRE en trabajo (min-height 2 líneas en
+            pace-move-v1-css) aunque el paso no tenga care — así un paso sin care
+            no sube el glifo respecto a sus vecinos (anclaje). */}
+        {inWork && !isRest && (
           <div data-pace-v1-care style={{ fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-3)', maxWidth: 440, margin: '16px auto 0' }}>
-            <span data-pace-v1-care-label style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 }}>{t('move.careLabel')} · </span>
-            {careText}
+            {careText && <React.Fragment><span data-pace-v1-care-label style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: stepAccent, fontWeight: 600 }}>{t('move.careLabel')} · </span>{careText}</React.Fragment>}
           </div>
         )}
       </div>
