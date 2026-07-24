@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.64.0</title>
+  <title>PACE · Foco · Cuerpo — v0.63.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -2454,20 +2454,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.dips.s4.instruction.action': 'Last ones. Slow and clean, push from the triceps.',
   'extra.chair.dips.s4.instruction.care': 'Stop if your form breaks. Better 6 good ones than 8 forced.',
 
-  // s121 (B2.3 OLA 4): claves EN migradas a `sN.instruction.{setup,action,care}`;
-  // `sN.cue` retiradas. `sN.name` intacto (glifos). Dosis legacy conservada.
   'extra.wall.sit.name': 'Wall Sit',
   'extra.wall.sit.desc': 'Quadriceps isometric against a wall.',
   'extra.wall.sit.code': 'Legs',
   'extra.wall.sit.s0.name': 'Wall sit',
-  'extra.wall.sit.s0.instruction.setup': 'Rest your back against a wall and slide down until your knees are at 90°.',
-  'extra.wall.sit.s0.instruction.action': 'Back flat on the wall, knees at 90°. Breathe normally.',
-  'extra.wall.sit.s0.instruction.care': 'Pick a height that lets you breathe; the less you sink, the gentler it is.',
+  'extra.wall.sit.s0.cue': 'Knees at 90°, back on the wall. Breathe normally.',
   'extra.wall.sit.s1.name': 'Rest',
-  'extra.wall.sit.s1.instruction.action': 'Easy.',
+  'extra.wall.sit.s1.cue': 'Easy.',
   'extra.wall.sit.s2.name': 'Wall sit',
-  'extra.wall.sit.s2.instruction.action': 'Second round. Return to the position and hold.',
-  'extra.wall.sit.s2.instruction.care': 'Choose a height that lets you breathe easy.',
+  'extra.wall.sit.s2.cue': 'Second round. Choose a height that lets you breathe easy.',
 
   'extra.calves.name': 'Stealth Calf Raises',
   'extra.calves.desc': 'Under the desk, no one notices.',
@@ -2636,29 +2631,21 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.back.desk.s3.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
   'extra.back.desk.s3.instruction.care': 'Only open as far as your chest stretches without discomfort.',
 
-  // s121 (B2.3 OLA 4): claves EN migradas a `sN.instruction.{setup,action,care}`;
-  // `sN.cue` retiradas. `sN.name` intacto (glifos). Dosis legacy conservada
-  // (Plancha lateral 30 s/lado → perSide; el «per side» lo integra el runner).
   'extra.core.plank.name': 'Core · Plank',
   'extra.core.plank.desc': 'Planks and hollow, on the floor. The center that holds everything.',
   'extra.core.plank.code': 'Core',
   'extra.core.plank.s0.name': 'Plank',
-  'extra.core.plank.s0.instruction.setup': 'Lie face down on the floor and rest your forearms under your shoulders.',
-  'extra.core.plank.s0.instruction.action': 'Body in a straight line from head to heels. Squeeze glutes and abs. Breathe.',
-  'extra.core.plank.s0.instruction.care': 'Rest your knees on the floor to make it gentler.',
+  'extra.core.plank.s0.cue': 'Forearms, body in a line. Squeeze glutes.',
   'extra.core.plank.s1.name': 'Rest',
-  'extra.core.plank.s1.instruction.action': 'Breathe.',
+  'extra.core.plank.s1.cue': 'Breathe.',
   'extra.core.plank.s2.name': 'Side plank',
-  'extra.core.plank.s2.instruction.action': 'Prop up on one forearm, body sideways in a line. Lift your hip and hold.',
-  'extra.core.plank.s2.instruction.care': 'Lower your bottom knee to the floor if you need less intensity.',
+  'extra.core.plank.s2.cue': '30 seconds per side, hips high.',
   'extra.core.plank.s3.name': 'Rest',
-  'extra.core.plank.s3.instruction.action': 'Breathe.',
+  'extra.core.plank.s3.cue': 'Breathe.',
   'extra.core.plank.s4.name': 'Hollow hold',
-  'extra.core.plank.s4.instruction.action': 'Lying on your back: press your lower back down and lift your legs and shoulders.',
-  'extra.core.plank.s4.instruction.care': 'Lower your feet to make it gentler.',
+  'extra.core.plank.s4.cue': 'Lying down: lower back to the floor, legs and shoulders up.',
   'extra.core.plank.s5.name': 'Plank',
-  'extra.core.plank.s5.instruction.action': 'Last one. Back to the plank, body in a line. Breathe inside the tension.',
-  'extra.core.plank.s5.instruction.care': 'Rest your knees if the line breaks.'
+  'extra.core.plank.s5.cue': 'Last one. Breathe inside the tension.'
 });
 })();
 </script>
@@ -3402,7 +3389,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.64.0';
+const PACE_VERSION = 'v0.63.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -10628,28 +10615,11 @@ var MOVE_ROUTINES = {
           action: 'Últimas, sin impulso. Aprieta arriba.',
           care: 'Para si pierdes el control de la bajada.' } }]
     },
-    /* s121 (B2.3 OLA 4): migrado al contrato v1 — CIERRE de la migración
-       mecánica. Aguantes isométricos de cuádriceps → `timed` con **dosis legacy
-       CONSERVADA** (60 s cada tanda; el care gradúa la ALTURA, NO la dosis). El
-       descanso entre holds es SUAVE (sin restKind, conserva dur 30; cue legacy
-       «Suave.» preservado verbatim). Gate `ready` en el 1er wall sit (colocarse
-       contra la pared). La 2ª tanda reparte el cue legacy: acción + care («elige
-       una altura»). `name` intactos → glifos sin tocar. Acceso premium SIN
-       cambios. */
     { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
-      position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
       steps: [
-      { name: 'Wall sit', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
-        instruction: {
-          setup: 'Apoya la espalda en una pared y desliza hacia abajo hasta que las rodillas queden a 90°.',
-          action: 'Espalda pegada a la pared, rodillas a 90°. Respira normal.',
-          care: 'Elige una altura que te deje respirar; cuanto menos bajes, más suave.' } },
-      { name: 'Descanso', mode: 'rest', dur: 30,
-        instruction: { action: 'Suave.' } },
-      { name: 'Wall sit', mode: 'timed', dur: 60,
-        instruction: {
-          action: 'Segunda tanda. Vuelve a la posición y mantén.',
-          care: 'Elige una altura que te deje respirar tranquilo.' } }]
+      { name: 'Wall sit', dur: 60, cue: 'Rodillas a 90°, espalda en la pared. Respira normal.' },
+      { name: 'Descanso', dur: 30, cue: 'Suave.' },
+      { name: 'Wall sit', dur: 60, cue: 'Segunda tanda. Elige una altura que te deje respirar tranquilo.' }]
     },
     { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
       steps: [
@@ -10723,39 +10693,14 @@ var MOVE_ROUTINES = {
           action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
           care: 'Abre solo hasta donde el pecho estire sin molestar.' } }]
     },
-    /* s121 (B2.3 OLA 4): migrado al contrato v1 — CIERRE de la migración
-       mecánica. Aguantes isométricos (Plancha, Hollow hold) → `timed` con care
-       de rodillas (adaptación DERIVADA, no cambia dosis); Plancha lateral «30 s
-       por lado» en dur:60 → `perSide` dur:30 POR LADO (2×30=60 = dosis legacy) +
-       `transition:{seconds:10}` (patrón Isquio de OLA 3; solo separa lo que el
-       cue ya decía). Rests entre holds SUAVES (sin restKind, conservan dur 20;
-       el cue legacy «Respira.» se preserva verbatim). Gate `ready` en el 1er
-       paso de suelo (Plancha), la bajada al suelo cuenta vía estimatedSeconds.
-       `name` intactos → glifos sin tocar. Acceso premium SIN cambios. */
     { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
-      position: ['floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
       steps: [
-      { name: 'Plancha', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
-        instruction: {
-          setup: 'Ponte boca abajo en el suelo y apoya los antebrazos bajo los hombros.',
-          action: 'Cuerpo en línea recta de la cabeza a los talones. Aprieta glúteos y abdomen. Respira.',
-          care: 'Apoya las rodillas en el suelo para hacerla más suave.' } },
-      { name: 'Descanso', mode: 'rest', dur: 20,
-        instruction: { action: 'Respira.' } },
-      { name: 'Plancha lateral', mode: 'perSide', dur: 30, transition: { seconds: 10 },
-        instruction: {
-          action: 'Apóyate en un antebrazo, cuerpo de lado en línea. Sube la cadera y mantén.',
-          care: 'Baja la rodilla de abajo al suelo si necesitas menos intensidad.' } },
-      { name: 'Descanso', mode: 'rest', dur: 20,
-        instruction: { action: 'Respira.' } },
-      { name: 'Hollow hold', mode: 'timed', dur: 30,
-        instruction: {
-          action: 'Tumbado boca arriba: pega la lumbar al suelo y eleva piernas y hombros.',
-          care: 'Baja los pies para que sea más suave.' } },
-      { name: 'Plancha', mode: 'timed', dur: 30,
-        instruction: {
-          action: 'Última. Vuelve a la plancha, cuerpo en línea. Respira dentro de la tensión.',
-          care: 'Apoya las rodillas si la línea se rompe.' } }]
+      { name: 'Plancha', dur: 45, cue: 'Antebrazos, cuerpo en línea. Aprieta glúteos.' },
+      { name: 'Descanso', dur: 20, cue: 'Respira.' },
+      { name: 'Plancha lateral', dur: 60, cue: '30 segundos por lado, cadera alta.' },
+      { name: 'Descanso', dur: 20, cue: 'Respira.' },
+      { name: 'Hollow hold', dur: 30, cue: 'Tumbado: lumbar al suelo, piernas y hombros arriba.' },
+      { name: 'Plancha', dur: 30, cue: 'Última. Respira dentro de la tensión.' }]
     }]
 
   }
