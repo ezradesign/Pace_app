@@ -27,16 +27,29 @@ visual** (el botón). No tocar los ids: están blindados por compat.
 
 > **Contrato de pasos v1 (s110 · B2.2a; GUIADO desde s113).** Un step puede
 > declarar `mode: timed | reps | perSide | rest`; sin `mode` corre el runner
-> legacy (idéntico a s109). Pilotado en 7 rutinas (2 Respira control +
-> `desk.pushups`, `chair.squats`, `neck.3`, `chair.antidote`,
-> `couch.stretch` s112). El runner `MoveSessionV1.jsx` resuelve: colocación
+> legacy (idéntico a s109). El runner `MoveSessionV1.jsx` resuelve: colocación
 > por paso (el timer no arranca leyendo; `setup:'ready'` espera al usuario),
-> **reps GUIADAS con cadencia** (s113: `repSeconds` por paso, default 4 s
+> **reps GUIADAS con cadencia** (s113: `tempo`/`repSeconds` por paso, default 4 s
 > fuerza; avance auto + «Terminar antes»; se acreditan solo las reps
 > guiadas), **cambio de lado automático** (10 s con botones opcionales),
-> descanso tipado (`restKind:'betweenSets'`; los cierres respiratorios NO se
-> tipan) y acredita **minutos reales**. Las otras 22 rutinas migran en olas
-> siguientes.
+> descanso tipado (`restKind:'betweenSets'`; los descansos suaves entre holds y
+> los cierres respiratorios NO se tipan) y acredita **minutos reales**.
+>
+> **Cobertura del contrato v1 (B2.3 en curso):** de las 28 rutinas de cuerpo
+> (14 Mueve + 14 Estira), **20 están en el contrato v1** — 5 pilotos
+> (`desk.pushups`, `chair.squats`, `neck.3`, `chair.antidote`, `couch.stretch`) +
+> **OLA 1** s118 (chair.dips, calves, grip.squeeze, glutes.stealth, posture.set) +
+> **OLA 2** s119 (wrists, shoulders.5, shoulder.circles, hips.5, morning.flow) +
+> **OLA 3** s120 (hang.bar, core.stealth, back.desk, spine.waves, hamstrings). Las
+> **8 restantes** siguen LEGACY byte-idénticas (4 Mueve premium: push.ladder,
+> wall.sit, legs.single, core.plank + 4 Estira: desk.quick, hips.ground, atg.knees,
+> ancestral) y migran en olas siguientes + una ola editorial de reescrituras.
+> Duración: las v1 muestran el rango derivado (`estimateDuration`); las legacy, su
+> `min`. **Acceso sin cambios en B2.3**: las migraciones son mecánicas, no tocan
+> `access` (en s120 se evaluó un intercambio core.stealth↔back.desk para elegir la
+> rutina Mueve de entrada y se descartó — la cifra «1 free + 6 premium» describía
+> solo el subconjunto legacy, no el catálogo real de 8 Mueve free / 6 premium; queda
+> como decisión de producto aparte).
 >
 > **Sustitución s110:** en `move.atg.knees`, **Nordics → «Puente isquio a una
 > pierna»** (sustituto accesible; Nordics muy avanzado y con material de

@@ -27,8 +27,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.63.0** | 2026-07-22 | feat(move): **B2.3 OLA 3 — 5 rutinas mixtas al contrato v1** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **SIN intercambio de acceso**: el corte proponía core.stealth premium→FREE / back.desk FREE→premium, pero su cifra «1 free + 6 premium» describía solo el subconjunto de 7 Mueve **legacy**, no un objetivo de catálogo (el catálogo real = 8 Mueve free / 6 premium); a petición del usuario **NO se aplicó** ningún cambio de `access` (core.stealth sigue premium, back.desk free); el posible cambio de rutina de entrada se evalúa aparte como decisión de producto -- **5 rutinas mixtas Mueve+Estira** migradas: `extra.hang.bar`(P) · `extra.core.stealth`(P) · `extra.back.desk`(free) · `move.spine.waves`(P) · `move.hamstrings`(P) — clasificación BASE §3: aguantes isométricos y movilidad de columna/hombro → `timed`; estiramiento bilateral (Isquio a una pierna) → `perSide`+`transition:{seconds:10}`; fuerza (Scapular squeeze, Superman) → `reps`+`tempo`/`completion:{mode:'guided'}`; **rests entre holds SUAVES** (sin `restKind`, patrón glutes.stealth, conservan `dur`) · **gate `ready`** en suelo/barra: **Superman (suelo, `reps`+`ready` — 1ª combinación del catálogo)**, Gato-camello, Puente con marcha (suelo), Hang pasivo (barra) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas en el MISMO cambio; **ningún `name` cambió** → glifos intactos · copy reutilizado de OLA 1/2 (Band pull-apart, Apertura de pecho, Gato-camello, Rotación torácica, Puente con marcha, Scapular squeeze) + rests con cue vacío → «Suelta.»/«Let go.» (literal de glutes.stealth) · Puente torácico (spine.waves): su ESCALÓN de regresión (audit) queda a la ola editorial · **cero drift de `min`** (las 5 dentro de rango) · **13 → 8 legacy** (4 Mueve premium: push.ladder/wall.sit/legs.single/core.plank + 4 Estira: desk.quick/hips.ground/atg.knees/ancestral) + ola editorial | #120 | [abajo](#v0630----2026-07-22----featmove-b23-ola-3--5-rutinas-mixtas-al-contrato-v1) |
 | **v0.62.0** | 2026-07-22 | feat(move): **estabilidad de layout del runner v1 + B2.3 OLA 2** (sesión FUSIONADA 2 fases; FASE A cerrada y verificada ANTES de FASE B) -- **FASE A · pulido de layout** (delta 0 de comportamiento; ámbito confinado a `MoveSessionV1.jsx`+`MoveSessionV1.support.jsx`, **SessionShell intacto**): **(1) barra fantasma RESUELTA** — `v1GlyphSize` saltaba `0.22→0.25·vpH` en vpH=720 (glifo +22px) sin tier de compactación hasta ≤700 → banda muerta 701–760 desbordaba ~7px y disparaba scrollbar de 15px (portátiles 1366×768); ahora **curva continua** `min(210, round(vpH·0.22))` + **tier de banda 701–768** (aprieta número/espacios) → sin barra en 1280×600/720/760, 1024×512, 844×390, 360×640; **(2) glifo/botones anclados RESUELTO** — `centerBody` centra el bloque con `margin:auto` y su alto variaba por paso (+12.4px medido); ahora **alturas reservadas** (cue 2 líneas + «Cuídate» 2 líneas SIEMPRE en trabajo aunque el paso no la tenga, solo ≥641px; móvil conserva su ajuste previo) → `glyph_top` idéntico entre pasos, footer clavado; **(3) warning rep-pulse RESUELTO** — shorthand `animation` → longhand + `animationPlayState`; **(4) aislamiento del timer v1** (`data-pace-v1-timer`) para que las reglas de número no encojan el runner **legacy** (compartían `data-pace-move-timer`). **FASE B · B2.3 OLA 2** (4+... decisiones AskUserQuestion, todas la recomendación: Estira · 5 gratuitas sin reescritura · reescrituras aparte · glifos intactos): **5 rutinas de Estira** migradas al contrato v1 (`wrists` · `shoulders.5` · `shoulder.circles` · `hips.5` · `morning.flow`) — clasificación BASE §3: movilidad/estático central → `timed`, estiramiento bilateral → `perSide`+transición (Cossack, Pigeon), fuerza/control → `reps` (Finger extension), flujo → `timed`+`rest` de cierre; **gate `ready`** en pasos de suelo/pared/barra (wall slides, dead hang, 90/90, Gato-camello) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion` + `transition:{seconds:10}` + `setup:{mode:'ready'}` + 5 metadatos (sin `discrete`); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos; copy reutilizado consistente con los pilotos · **cero drift de `min`** (las 5 dentro de rango: dev-check «dentro») · **13 legacy restantes** (7 Mueve premium + 6 Estira) + ola editorial | #119 | [abajo](#v0620----2026-07-22----featmove-estabilidad-de-layout-del-runner-v1--b23-ola-2) |
-| **v0.61.0** | 2026-07-22 | feat(move): **B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116 y diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **5 rutinas Mueve gratuitas** migradas (`chair.dips` · `calves` · `grip.squeeze` · `glutes.stealth` · `posture.set`; todas sin suelo → sin gate `ready`) añadiendo por paso `mode` (aquí reps/rest/timed) + `instruction:{setup,action,care}` (consolida el `cue` legacy → `action`; `setup` de colocación en el 1er set de fuerza → colocación AUTO; `care` con la adaptación ya implícita) + `tempo`/`completion:{mode:'guided'}` en reps + `restKind:'betweenSets'` en rests de fuerza + 5 metadatos (`position/equipment/requiresFloor/intensity/level`, **sin `discrete`**) · keys EN nuevas `id.sN.instruction.*` (mismo valor traducido); `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos (cola D-4 sin tocar) · **candidato** `move.couch.stretch.min` **5→6** (dev-check s115 calculaba 6–7 min, único piloto descuadrado, ahora alineado) · **duración**: con los tempos elegidos cada rutina conserva su `min` DENTRO del rango derivado (`estimateDuration`), sin drift · las **7 rutinas Mueve restantes** (premium + `legs.single` a reescribir) y las **14 de Estira** siguen **LEGACY byte-idénticas** · reescrituras (4 cues + 2 rutinas) y el resto de olas → siguientes · deuda nueva observada: warning React `animation`/`animationPlayState` en `MoveSessionV1.jsx:441` (rep-pulse s113, no tocado → NO regresión; fix trivial al reabrir el runner) | #118 | [abajo](#v0610----2026-07-22----featmove-b23--migración-de-rutinas-legacy-al-contrato-v1-ola-1) |
+| **v0.61.0** | 2026-07-22 | feat(move): **B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116 y diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **5 rutinas Mueve gratuitas** migradas (`chair.dips` · `calves` · `grip.squeeze` · `glutes.stealth` · `posture.set`; todas sin suelo → sin gate `ready`) añadiendo por paso `mode` (aquí reps/rest/timed) + `instruction:{setup,action,care}` (consolida el `cue` legacy → `action`; `setup` de colocación en el 1er set de fuerza → colocación AUTO; `care` con la adaptación ya implícita) + `tempo`/`completion:{mode:'guided'}` en reps + `restKind:'betweenSets'` en rests de fuerza + 5 metadatos (`position/equipment/requiresFloor/intensity/level`, **sin `discrete`**) · keys EN nuevas `id.sN.instruction.*` (mismo valor traducido); `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos (cola D-4 sin tocar) · **candidato** `move.couch.stretch.min` **5→6** (dev-check s115 calculaba 6–7 min, único piloto descuadrado, ahora alineado) · **duración**: con los tempos elegidos cada rutina conserva su `min` DENTRO del rango derivado (`estimateDuration`), sin drift · las **7 rutinas Mueve restantes** (premium + `legs.single` a reescribir) y las **14 de Estira** siguen **LEGACY byte-idénticas** · reescrituras (4 cues + 2 rutinas) y el resto de olas → siguientes · deuda nueva observada: warning React `animation`/`animationPlayState` en `MoveSessionV1.jsx:441` (rep-pulse s113, no tocado → NO regresión; resuelto en s119) | #118 | [session-118](./docs/sessions/session-118-b2-3-migracion-ola-1.md) |
 | **v0.60.0** | 2026-07-21 | feat: **B2.2b-2 — feedback ligero «¿te ayudó esta pausa?»** (captura + almacenamiento, SIN consumidor visible; 5 decisiones por AskUserQuestion, todas la recomendación) -- una sola pregunta CALMADA al alcanzar `stage:'done'` en Mueve/Estira (v1 y legacy) + Respira, **fuera de Caminos** (gate `inPath`) y nunca al pulsar «× Salir» · 3 respuestas de igual peso (**Sí · Un poco · No**) + **«Ahora no»** ghost secundario → la fila se sustituye por acuse «Gracias»; el CTA de regreso SIEMPRE disponible (no hace falta responder para salir) · **slice `routineFeedback`** bajo pace.state.v2 (`{[id]:{yes,some,no,lastPromptDay}}`, conteos COMPLETOS; `answered`/`helpScore` **DERIVADOS**, nunca persistidos; «Ahora no» no cuenta) con helper **PURO** `nextRoutineFeedback` + acción `recordRoutineFeedback` (setState funcional, sanitiza `yes\|some\|no\|later`, rechaza id vacío, merge defensivo en loadState) + `shouldPromptRoutineFeedback` · **frecuencia**: máx 1 vez por rutina y **DÍA LOCAL** (`lastPromptDay=todayISO()`; «Ahora no» también suprime el resto del día sin sumar; salir por el CTA sin responder NO escribe el día → puede reaparecer) · **guard de teclado P0** en los 3 runners: `Enter` en done ignora el atajo global de salida si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores Ctrl/Meta/Alt — evita una 2ª salida (el CTA/chip se activan por su onClick); Espacio tampoco se roba a un control con foco · componente NUEVO `SessionFeedback.jsx` (gate por-día capturado en el mount + guard SÍNCRONO de idempotencia + disabled) · `SessionDone` gana slot `feedback` · **CSS responsive del shell EXTRAÍDO** a `SessionShell.responsive.js` (495→336 ln) + en el tier ≤430 el HERO decorativo del done se oculta para que la fila de feedback y el CTA quepan sin solape · i18n `session.feedback.*` ES+EN · **legacy byte-idéntico** salvo el render del DONE + guard de teclado (motor/timers/completion/navegación intactos); contrato s115 intacto | #116 | [session-116](./docs/sessions/session-116-b2-2b-2-feedback-ligero.md) |
 | **v0.59.0** | 2026-07-21 | feat(move): **B2.2b-1 — contrato formal + duración derivada** (los 5 pilotos; el GIRO del runner guiado quedó CERRADO en s114, aquí NO se reabre; comportamiento del runner INTACTO) -- **contrato formal por paso** (migración ATÓMICA, sin fallback dual): `instruction:{setup,action,care}` (consolida placeCue/cue/careCue de s114, misma copy) · `tempo:{down,hold,up}` (generaliza el rep-seconds; suma = seg/rep) · `transition:{seconds}` (cambio de lado perSide) · `completion:{mode:'guided'}` ('manual' reservado) · `setup:{mode:'ready',estimatedSeconds}` = **comportamiento** del runner, DISTINTO de `instruction.setup` = copy (los dos «setup» que pedía el corte; ready nunca es countdown, estimatedSeconds>0) · **metadatos** `position/equipment/requiresFloor/intensity/level` (sin consumidor UI) · **keys i18n EN nuevas** `id.sN.instruction.*`; se RETIRAN placeCue/cue/careCue de los 5 pilotos (dato + keys), `cue` de las 22 legacy INTACTO · **fuente ÚNICA de segundos efectivos** + fix de deuda real: `v1StepWeight` (peso de barra) pasa a `v1StepDur` → **peso = progreso = aviso 5 s = duración** (antes divergía con preset 20/45) · **duración DERIVADA**: helper PURO `estimateDuration(routine, rbs)→{minSec,maxSec,breakdown}` (perSide = dur POR LADO ×2 + UNA transición, sin cuádruple conteo; reps guided = target×tempo fijo; + prep + setup) → la **tarjeta** muestra el rango en rutinas v1 (legacy conserva `min`, premium «Pronto»); **dev-check** `min` vs rango de minutos mostrados (avisa solo fuera; sin ruido dentro) · **limpieza** `move.repsGuidedHint` retirada · **legacy byte-idéntico** (prep 3, sin atributos v1) | #115 | [session-115](./docs/sessions/session-115-b2-2b-1-contrato-duracion.md) |
 | **v0.58.0** | 2026-07-21 | feat(move): **runner guiado · capa editorial** (GIRO 2ª de 2 — **CIERRA el giro**; sobre el motor de s113; principio rector intacto) -- **instrucciones por CAPAS en los 5 pilotos**: `placeCue` (setup, se muestra en colocación) + `cue`=shortCue (ejecución) + `careCue` («Cuídate», adaptación **siempre visible** en trabajo; en altura baja se oculta el rótulo, nunca el contenido) — `cue` se conserva como fallback ⇒ **cero re-indexado** de las keys EN sN (solo keys NUEVAS `id.sN.placeCue`/`careCue`) · **colocación AUTO para el 1er set de fuerza** (step `reps` con `placeCue` no precedido por rest → ventana para leer el setup y ponerse en posición antes del pacer; sets 2/3 tras un rest van directos, sin doble espera; sigue 0 taps) · **lado integrado en el texto** (perSide: la palabra del lado abre el cue como `<strong>` del acento, no un kicker suelto) · **pantalla final por MÓDULO** (Mueve → «Movimiento completado» · Estira → «Estiramiento completado» — resuelve el P3 `antidoteDone` universal) con **stats honestas** que consumen `repsGuidedRef` (tiempo · series · **reps guiadas reales**, nunca el objetivo; mixtas → tiempo·pasos·reps; movilidad → tiempo·pasos; sin calorías/récords/comparaciones) · **Tweaks «Sesiones»**: descanso entre series **Breve 20 / Tranquilo 30 (recom., default) / Amplio 45** (`restBetweenSets`; helpers `v1RestSeconds`/`v1StepDur`) que SOLO afecta a `restKind:'betweenSets'` (el cierre respiratorio queda en 30) — el descanso GUÍA («Luego: {serie}» + aviso ~5 s) · **audio SIN voz** (familia move 432): `move.warn` (aviso único al cruzar ~5 s en descansos y pasos con reloj, no cuenta atrás) + `move.side` (cambio de lado); todo bajo `soundOn` + try/catch · CSS: tier ≤700 apretado por la línea «Cuídate» → **delta 0 mantenido** en 1280×600·1024×512·844×390·360×640 · legacy intacto (prep 3, sin atributos v1) | #114 | [session-114](./docs/sessions/session-114-runner-guiado-editorial.md) |
@@ -150,6 +151,82 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.63.0] -- 2026-07-22 -- feat(move): B2.3 OLA 3 — 5 rutinas mixtas al contrato v1
+
+Sesión 120. Tercera ola de **B2.3**: migrar rutinas **legacy** mixtas (Mueve +
+Estira) al **contrato de pasos v1** (s115), gobernada por `BASE_MUEVE_ESTIRA.md`.
+Principio rector: **migrar CONTENIDO al contrato existente, NO rediseñar el
+runner**. El GIRO (s113/s114), el contrato (s115), el feedback (s116) y el diseño
+de eventos (s117) están CERRADOS y no se reabren; la capa de eventos NO se
+implementa; el layout del runner (FASE A s119) NO se toca. Bump v0.62.0 → v0.63.0.
+
+### Alcance del acceso — decisión del usuario
+
+El corte proponía, dentro del mismo dominio de contenido, un intercambio 1×1 de
+acceso (`extra.core.stealth` premium→FREE / `extra.back.desk` FREE→premium) para
+elegir la rutina Mueve de entrada. Al arrancar se detectó que su justificación
+(«mantener 1 free + 6 premium») describía **solo el subconjunto de 7 Mueve aún
+legacy**, no una distribución de catálogo: el catálogo real tiene **8 Mueve free /
+6 premium**. Consultado, el usuario decidió **NO aplicar ningún cambio de `access`
+en s120** (core.stealth sigue premium, back.desk sigue free) y limitar la sesión a
+la migración mecánica; el posible cambio de rutina gratuita de entrada se evaluará
+aparte como decisión de producto. `canAccessRoutine` intacto.
+
+### 5 rutinas mixtas al contrato v1
+
+Migradas (todas conservan su `access`): `extra.hang.bar` (premium, min 2) ·
+`extra.core.stealth` (premium, 2) · `extra.back.desk` (free, 3) · `move.spine.waves`
+(premium, 5) · `move.hamstrings` (premium, 5). Clasificación BASE §3:
+
+- **timed** — aguantes isométricos (hang pasivo/activo, seated hollow) y movilidad
+  de columna/hombro (gato-camello, onda espinal, rotación torácica, puente
+  torácico, rodar hacia abajo, elephant walk, pliegue adelante).
+- **reps** + `tempo`/`completion:{mode:'guided'}` — fuerza con **dosis legacy
+  conservada**: Scapular squeeze (**12 reps**, «2 segundos cada una» → tempo 1-2-1
+  con 2 s de retención) y **Superman** (10 reps, tempo 2-0-2). Ninguna dosis
+  reducida.
+- **perSide** + `transition:{seconds:10}` — Isquio a una pierna (fix del «40s por
+  lado» en `dur:80` → `dur:40` POR LADO + transición, §6).
+- **rests entre holds SUAVES** (hang.bar, core.stealth) — sin `restKind`, conservan
+  `dur:20`, patrón `glutes.stealth`; los cue vacíos de core.stealth reutilizan el
+  literal «Suelta.» / «Let go.» (sin redactar copy nuevo).
+- **gate `ready`** — suelo/barra: **Superman** (`reps`+`ready` sobre suelo — 1ª
+  combinación del catálogo), Gato-camello y Puente con marcha (suelo), Hang pasivo
+  (barra). El gate cuenta la transición al suelo/barra vía `estimatedSeconds`.
+
+Migración ATÓMICA por rutina: `instruction:{setup,action,care}` +
+`tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5
+metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**).
+Keys EN `id.sN.instruction.*` nuevas + `id.sN.cue` retiradas en el MISMO cambio;
+**ningún `name` cambió** → glifos intactos. Copy reutilizado de OLA 1/2 para
+ejercicios compartidos (Band pull-apart, Apertura de pecho, Gato-camello, Rotación
+torácica, Puente con marcha, Scapular squeeze). El **escalón de regresión** de
+Puente torácico (`spine.waves`, marcado por la auditoría) queda para la **ola
+editorial**, no para esta migración mecánica.
+
+Verificación (dev + standalone): `estimateDuration` — las 5 **dentro de rango**
+(hang.bar 160s [2–3], core.stealth 145s [2–3], back.desk 203s [3–4], spine.waves
+325s [5–6], hamstrings 330s [5–6]); dev-check «dentro» en las 5, **cero drift de
+`min`**. i18n: **52 keys EN** `instruction.*`/`name` resuelven, 0 faltantes, 0
+`.cue` residual (ES+EN). `canAccessRoutine` correcto (4 premium + back.desk free,
+inalterado). Runtime: **back.desk completo** (reps 1er set + timed auto-place +
+**Superman reps+ready sobre suelo** + «MOVIMIENTO COMPLETADO» + stats honestas +
+feedback), **hamstrings** (dispatch v1 + timed + **perSide place «Izquierda» +
+transición «Ahora: Derecha»**); tarjetas premium muestran su rango al desbloquear
+(y «Pronto» bloqueadas), legacy con `min` único. Sin errores de consola.
+`premiumUnlocked` restaurado a su valor original tras las pruebas. **Standalone**
+regenerado (v0.63.0, 3200 KB), montado y verificado (versión + rutinas migradas +
+`access` inalterado + 0 cue residual). Backup `v0.62.0_20260722` (rotado `v0.42.0`,
+cap 20).
+
+**Estado B2.3:** 13 → **8 legacy** (4 Mueve premium: `push.ladder`, `wall.sit`,
+`legs.single`, `core.plank` + 4 Estira: `desk.quick`, `hips.ground`, `atg.knees`,
+`ancestral`) + ola editorial (4 cues + 2 rutinas; + escalón de Puente torácico).
+
+Diario completo: [session-120](./docs/sessions/session-120-b2-3-ola-3.md).
+
+---
+
 ## [v0.62.0] -- 2026-07-22 -- feat(move): estabilidad de layout del runner v1 + B2.3 OLA 2
 
 Sesión FUSIONADA en 2 fases. **Orden obligatorio:** FASE A (layout) cerrada y
@@ -222,77 +299,3 @@ autocontenido, longhand rep-pulse en el compilado.
 + ola editorial (4 cues + 2 rutinas).
 
 Diario completo: [session-119](./docs/sessions/session-119-layout-runner-y-b2-3-ola-2.md).
-
----
-
-## [v0.61.0] -- 2026-07-22 -- feat(move): B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)
-
-Sesión 118. Primera ola de **B2.3**: migrar rutinas **legacy** de Mueve al
-**contrato de pasos v1** (s115), gobernada por `BASE_MUEVE_ESTIRA.md`. Principio
-rector: **migrar CONTENIDO al contrato existente, NO rediseñar el runner**. El GIRO
-(s113/s114), el contrato B2.2b-1 (s115), el feedback B2.2b-2 (s116) y el DISEÑO de
-eventos B2.2b-3 (s117) están CERRADOS y no se reabren; la capa de eventos no se
-implementa aquí. Diario:
-[session-118](./docs/sessions/session-118-b2-3-migracion-ola-1.md).
-
-### Decisiones de arranque (AskUserQuestion, 4 + 1)
-
-Tamaño de ola = **5–6 rutinas** · orden = **Mueve primero** (fuerza, tempo claro) ·
-reescrituras (4 cues + 2 rutinas) = **aparte, su propia ola** · candidato
-`couch.stretch.min` 5→6 = **ahora** · glifos D-4 = **no tocar**. Lista exacta
-confirmada tras proponerla.
-
-### Migración mecánica — 5 rutinas Mueve gratuitas, sin suelo
-
-`chair.dips` (reps/rest/reps/rest/reps) · `calves` (reps/reps) · `grip.squeeze`
-(reps/reps/timed) · `glutes.stealth` (reps/rest/timed/reps) · `posture.set`
-(reps/reps/timed/timed). A cada paso: `mode` + `instruction:{setup,action,care}`
-(consolida el `cue` legacy → `action`; `setup` de colocación solo en el 1er set de
-fuerza → colocación AUTO; `care` con la adaptación/seguridad ya implícita, patrón
-de los pilotos) + `tempo`/`completion:{mode:'guided'}` en reps +
-`restKind:'betweenSets'` en los rests entre series de fuerza (el descanso suave de
-`glutes.stealth` NO se tipa) + 5 metadatos `position/equipment/requiresFloor/
-intensity/level` (**sin `discrete`**). Clasificación por `BASE_MUEVE_ESTIRA.md` §3:
-fuerza/postural → reps (con retención vía `tempo.hold`), isometría/movilidad
-exploratoria → `timed` (§D/§B).
-
-### i18n y contenido
-
-- Keys EN nuevas `id.sN.instruction.{setup,action,care}` (mismo valor traducido);
-  `id.sN.cue` retiradas de las 5 rutinas. `id.sN.name` intacto → **glifos sin
-  tocar** (cola D-4 pendiente sigue con DefaultGlyph). ES desde el dato.
-- `move.couch.stretch.min` **5→6** (piloto ya migrado): el dev-check s115 calculaba
-  6–7 min y 5 quedaba fuera del rango mostrado — único piloto descuadrado, ahora
-  alineado.
-
-### Invariantes respetados
-
-- **Migración ATÓMICA** por rutina (dato + keys EN a la vez; sin fallback dual).
-- **7 rutinas Mueve restantes** (premium + `legs.single`) y **14 de Estira**:
-  **LEGACY byte-idénticas** (sin `mode`, `cue` intacto).
-- Ningún paso insertado/borrado ni EN posicional re-indexado. `MoveSessionV1.jsx`
-  (runner) sin cambios. El feedback s116 se hereda por `routine.id` (nada que
-  cablear).
-
-### Verificación (dev :8765 + standalone)
-
-- **dev-check** en el mount: `chair.dips` «3min vs 190–190s (3–4min) — dentro» y
-  `posture.set` «2min vs 168–168s (2–3min) — dentro»; los 5 dentro de rango vía
-  `estimateDuration` (dev y standalone), **cero drift de `min`**.
-- **Tarjetas**: las 5 migradas muestran el rango derivado (3–4 / 1–2 / 1–2 / 2–3 /
-  2–3 min); legacy conservan `min` único.
-- **`chair.dips` de principio a fin**: reps con cadencia + «de 12 reps» + capa
-  «Cuídate» + rest `betweenSets` + pantalla «Movimiento completado» + stats
-  honestas (`repsGuidedRef`) + bloque «¿Te ayudó esta pausa?» (fuera de Caminos,
-  por `routine.id`) → `routineFeedback['extra.chair.dips']={yes:1}`; completion
-  acreditó minutos y logros (sin crash de Toast). `posture.set`: reps de retención
-  + `timed` renderizan, sin scroll.
-- Consola sin `[i18n] missing` ES+EN; claves `instruction.*` resuelven; `sN.cue`
-  retiradas. **Standalone** regenerado (v0.61.0, 3175 KB), mismo comportamiento;
-  versión embebida verificada. Backup `v0.60.0_20260721` (rotado `v0.40.0`, cap 20).
-- **Deuda nueva**: warning React de estilo en `MoveSessionV1.jsx:441` (el rep-pulse
-  mezcla `animation` shorthand + `animationPlayState` longhand) — código s113 no
-  tocado, dispara para cualquier rutina de reps (pilotos incluidos), **no es
-  regresión**; fix al reabrir el runner (fuera de alcance).
-
-Diario completo: [session-118](./docs/sessions/session-118-b2-3-migracion-ola-1.md).

@@ -197,14 +197,41 @@ const EXTRA_ROUTINES = {
               action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
               care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
         ]},
+      /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Toda movilidad de
+         columna → `timed` (BASE §3-B/F). Gate `ready` en el 1er paso de suelo
+         (Gato-camello). Gato-camello y Rotación torácica reutilizan el copy de
+         morning.flow (mismo glifo). Puente torácico: se consolida el cue existente
+         + care ligero; su ESCALÓN de regresión (audit B2.1) queda para la ola
+         editorial. `name` intactos. Acceso premium SIN cambios. */
       { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
         desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
+        position: ['floor', 'standing', 'seated'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
-          { name: 'Gato-camello', dur: 60, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
-          { name: 'Onda espinal', dur: 60, cue: 'De pie: ola desde la pelvis hasta la cabeza, lenta.' },
-          { name: 'Rotación torácica', dur: 45, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
-          { name: 'Puente torácico', dur: 60, cue: 'Desde sentado, eleva cadera y abre el pecho al techo.' },
-          { name: 'Rodar hacia abajo', dur: 60, cue: 'De pie, baja vértebra a vértebra hasta colgar. Sube igual.' },
+          { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
+              action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
+              care: 'Movimiento lento, siguiendo la respiración.' } },
+          { name: 'Onda espinal', mode: 'timed', dur: 60,
+            instruction: {
+              setup: 'Ponte de pie, rodillas sueltas.',
+              action: 'Recorre una ola lenta desde la pelvis hasta la cabeza.',
+              care: 'Movimiento fluido, sin prisa.' } },
+          { name: 'Rotación torácica', mode: 'timed', dur: 45,
+            instruction: {
+              setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
+              action: 'Gira el tronco despacio a un lado y al otro.',
+              care: 'El giro nace del tronco, no del cuello.' } },
+          { name: 'Puente torácico', mode: 'timed', dur: 60,
+            instruction: {
+              setup: 'Siéntate en el suelo, manos apoyadas detrás.',
+              action: 'Eleva la cadera y abre el pecho al techo. Baja despacio.',
+              care: 'Sube solo hasta donde el pecho abra sin forzar.' } },
+          { name: 'Rodar hacia abajo', mode: 'timed', dur: 60,
+            instruction: {
+              setup: 'Ponte de pie, pies al ancho de las caderas.',
+              action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
+              care: 'Rodillas suaves. Sube despacio para no marearte.' } },
         ]},
     ]
   },
@@ -300,13 +327,34 @@ const EXTRA_ROUTINES = {
           { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
           { name: 'Elephant walk', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' },
         ]},
+      /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Elephant walk y
+         Pliegue adelante → `timed`; Isquio a una pierna → `perSide` (fix del «40s
+         por lado» en dur:80 → dur POR LADO + transición, §3-C/§6); Puente con
+         marcha → `timed` sobre SUELO (reutiliza el copy de hips.5/couch) con gate
+         `ready` (entrada al suelo). `name` intactos → glifos sin tocar. `min` 5
+         dentro de rango. Acceso premium SIN cambios. */
       { id: 'move.hamstrings', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior',
         desc: 'Isquios y cadena posterior. Piernas largas otra vez.', min: 5, access: 'premium',
+        position: ['standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
-          { name: 'Elephant walk', dur: 70, cue: 'Camina tocando suelo, piernas estiradas.' },
-          { name: 'Pliegue adelante', dur: 70, cue: 'Pies juntos, cuelga el tronco. Rodillas suaves.' },
-          { name: 'Isquio a una pierna', dur: 80, cue: 'Talón apoyado delante, cadera atrás. 40s por lado.' },
-          { name: 'Puente con marcha', dur: 70, cue: 'Activación de glúteo profundo.' },
+          { name: 'Elephant walk', mode: 'timed', dur: 70,
+            instruction: {
+              action: 'Camina con las manos por el suelo, piernas lo más estiradas posible.',
+              care: 'Dobla algo las rodillas si los isquios tiran.' } },
+          { name: 'Pliegue adelante', mode: 'timed', dur: 70,
+            instruction: {
+              action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
+              care: 'Apoya las manos en las rodillas si lo necesitas.' } },
+          { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
+            instruction: {
+              setup: 'Apoya un talón adelante, con esa pierna estirada.',
+              action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+              care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
+          { name: 'Puente con marcha', mode: 'timed', dur: 70, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+              action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+              care: 'Baja el ritmo si la lumbar se queja.' } },
         ]},
     ]
   },

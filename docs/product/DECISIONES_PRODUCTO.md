@@ -309,10 +309,33 @@ solo diseño; alcance original abajo):
     (dev-check «dentro»). Nota: **precedió FASE A** (pulido de layout del runner v1
     — barra fantasma, anclaje del glifo, warning rep-pulse) para que perSide+copy
     variable de Estira naciera sobre layout estable. **18 → 13** legacy tras OLA 2.
-  - **Pendiente**: **13 rutinas legacy** (7 Mueve premium + 6 Estira: `desk.quick`,
-    `spine.waves`, `hips.ground`, `atg.knees`, `hamstrings`, `ancestral`) en olas
-    siguientes + **reescrituras** (4 cues: Seated twist, Rib pull, WGS, Ground
-    transitions · 2 rutinas: `legs.single`, resto de `atg.knees`) en ola editorial.
+  - **OLA 3 — HECHA** (s120, 2026-07-22; v0.63.0; diario
+    [session-120](../sessions/session-120-b2-3-ola-3.md)): 5 rutinas **mixtas**
+    (Mueve + Estira): `hang.bar`(P), `core.stealth`(P), `back.desk`(free),
+    `spine.waves`(P), `hamstrings`(P). Clasificación BASE §3: aguantes isométricos
+    + movilidad → `timed`; estiramiento bilateral (Isquio a una pierna) → `perSide`+
+    `transition`; fuerza (Scapular squeeze, **Superman**) → `reps`+`tempo`. Novedad:
+    **rests entre holds SUAVES** (sin `restKind`, conservan `dur`, patrón
+    glutes.stealth; cue vacío de core.stealth → literal «Suelta.» reutilizado) y
+    **Superman `reps`+`ready` sobre suelo — 1ª combinación del catálogo**. Copy
+    reutilizado de OLA 1/2 para ejercicios compartidos. Puente torácico
+    (`spine.waves`): su escalón de regresión queda a la ola editorial. Cada `min`
+    dentro de rango. **13 → 8** legacy tras OLA 3.
+    - **Acceso — NO se aplicó intercambio (decisión del usuario, s120).** El corte
+      proponía `core.stealth` premium→FREE / `back.desk` FREE→premium para elegir la
+      rutina Mueve de entrada, justificándolo con «mantener 1 Mueve free + 6
+      premium». Esa cifra describía **solo el subconjunto de 7 Mueve todavía
+      legacy**, no el catálogo (real: **8 Mueve free / 6 premium**). El usuario
+      decidió **no tocar `access` en s120** (core.stealth sigue premium, back.desk
+      free); `canAccessRoutine` intacto; sin cambios en IDs/historial/logros. El
+      posible cambio de rutina de entrada se evalúa **aparte** como decisión de
+      producto. La distribución del catálogo permanece inalterada.
+  - **Pendiente**: **8 rutinas legacy** (4 Mueve premium: `push.ladder`, `wall.sit`,
+    `core.plank`, `legs.single` + 4 Estira: `desk.quick`, `hips.ground`, `atg.knees`,
+    `ancestral`) en olas siguientes + **reescrituras** (4 cues: Seated twist, Rib
+    pull, WGS, Ground transitions · 2 rutinas: `legs.single`, resto de `atg.knees` ·
+    escalón de Puente torácico de `spine.waves`) en ola editorial. **OJO tamaño**:
+    `ExtraModule.jsx` a 447 ln → trocear los datos de Estira antes de la próxima ola.
 
 ### B3 · s107-109 ampliadas (el plan maestro absorbe)
 

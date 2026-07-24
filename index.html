@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.62.0</title>
+  <title>PACE · Foco · Cuerpo — v0.63.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2475,19 +2475,25 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.calves.s1.name': 'Calf raises',
   'extra.calves.s1.instruction.action': 'Slower now. Feel the calf on each lift.',
 
+  // s120 (B2.3 OLA 3): claves EN migradas a `sN.instruction.{action,care}`;
+  // `sN.cue` retiradas (los rests tenían cue vacío → «Let go.», patrón
+  // glutes.stealth). `sN.name` intacto (glifos).
   'extra.core.stealth.name': 'Silent Core',
   'extra.core.stealth.desc': 'Hollow hold in chair.',
   'extra.core.stealth.code': 'Core',
   'extra.core.stealth.s0.name': 'Seated hollow',
-  'extra.core.stealth.s0.cue': 'Raise legs, support lower back.',
+  'extra.core.stealth.s0.instruction.action': 'Raise your legs and hold, keeping your lower back supported.',
+  'extra.core.stealth.s0.instruction.care': 'Lower your feet to make it gentler. Breathe normally.',
   'extra.core.stealth.s1.name': 'Rest',
-  'extra.core.stealth.s1.cue': '',
+  'extra.core.stealth.s1.instruction.action': 'Let go.',
   'extra.core.stealth.s2.name': 'Seated hollow',
-  'extra.core.stealth.s2.cue': 'Hold. Breathe normally.',
+  'extra.core.stealth.s2.instruction.action': 'Hold the position. Breathe normally.',
+  'extra.core.stealth.s2.instruction.care': 'If your lower back lifts off, lower your legs a little.',
   'extra.core.stealth.s3.name': 'Rest',
-  'extra.core.stealth.s3.cue': '',
+  'extra.core.stealth.s3.instruction.action': 'Let go.',
   'extra.core.stealth.s4.name': 'Seated hollow',
-  'extra.core.stealth.s4.cue': 'Last one. Hold while your lower back stays supported.',
+  'extra.core.stealth.s4.instruction.action': 'Last one. Hold while your lower back stays supported.',
+  'extra.core.stealth.s4.instruction.care': 'Finish early if you lose the support of your back.',
 
   'extra.grip.squeeze.name': 'Grip + Forearms',
   'extra.grip.squeeze.desc': 'Squeeze and extend.',
@@ -2535,19 +2541,25 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.push.ladder.s4.name': 'Incline push-ups',
   'extra.push.ladder.s4.cue': 'Negatives: lower in 5 seconds, rise normally.',
 
+  // s120 (B2.3 OLA 3): claves EN migradas a `sN.instruction.{setup,action,care}`;
+  // `sN.cue` retiradas. `sN.name` intacto (glifos).
   'extra.hang.bar.name': 'Hanging',
   'extra.hang.bar.desc': 'From a sturdy bar that can take your weight. Gentle traction for shoulders and back.',
   'extra.hang.bar.code': 'Traction',
   'extra.hang.bar.s0.name': 'Passive hang',
-  'extra.hang.bar.s0.cue': 'Hang relaxed. Breathe.',
+  'extra.hang.bar.s0.instruction.setup': 'Grip a sturdy bar that can take your weight, hands shoulder-width apart.',
+  'extra.hang.bar.s0.instruction.action': 'Hang relaxed, arms straight. Breathe.',
+  'extra.hang.bar.s0.instruction.care': 'Come down if you feel discomfort. Rest your feet lightly if you need to.',
   'extra.hang.bar.s1.name': 'Rest',
-  'extra.hang.bar.s1.cue': 'Shake out your arms.',
+  'extra.hang.bar.s1.instruction.action': 'Shake out your arms.',
   'extra.hang.bar.s2.name': 'Active hang',
-  'extra.hang.bar.s2.cue': 'Shoulders down and back, elbows straight.',
+  'extra.hang.bar.s2.instruction.action': 'Hang taking your shoulders down and back. Elbows straight.',
+  'extra.hang.bar.s2.instruction.care': 'Gentle traction, without shrugging your neck.',
   'extra.hang.bar.s3.name': 'Rest',
-  'extra.hang.bar.s3.cue': 'Shake out your arms.',
+  'extra.hang.bar.s3.instruction.action': 'Shake out your arms.',
   'extra.hang.bar.s4.name': 'Passive hang',
-  'extra.hang.bar.s4.cue': 'Let go completely. Let the back open up.',
+  'extra.hang.bar.s4.instruction.action': 'Let go completely. Let the back open up.',
+  'extra.hang.bar.s4.instruction.care': 'Breathe deep and loosen your shoulders.',
 
   'extra.glutes.stealth.name': 'Invisible Glutes',
   'extra.glutes.stealth.desc': 'Activate them seated. Fully invisible.',
@@ -2598,17 +2610,27 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.legs.single.s5.name': 'Calf raises',
   'extra.legs.single.s5.cue': 'Single leg, 12 per side.',
 
+  // s120 (B2.3 OLA 3): claves EN migradas a `sN.instruction.{setup,action,care}`;
+  // `sN.cue` retiradas. Band pull-apart y Chest opening reutilizan el copy EN de
+  // OLA 2 (shoulder.circles/chair.antidote); Scapular squeeze el de posture.set.
+  // `sN.name` intacto (glifos).
   'extra.back.desk.name': 'Office Back',
   'extra.back.desk.desc': 'Wake up the back that holds your posture. One step is on the floor.',
   'extra.back.desk.code': 'Back',
   'extra.back.desk.s0.name': 'Scapular squeeze',
-  'extra.back.desk.s0.cue': 'Squeeze shoulder blades 12 times, 2 seconds each.',
+  'extra.back.desk.s0.instruction.setup': 'Sit up tall or stand, shoulders loose.',
+  'extra.back.desk.s0.instruction.action': 'Draw your shoulder blades toward the center and hold a moment. Release.',
+  'extra.back.desk.s0.instruction.care': 'Shoulders down, away from your ears.',
   'extra.back.desk.s1.name': 'Band pull-apart',
-  'extra.back.desk.s1.cue': 'Without band: crossed arms + open with tension.',
+  'extra.back.desk.s1.instruction.action': 'Open your arms in front, squeezing your shoulder blades. No band? Cross your arms and open them.',
+  'extra.back.desk.s1.instruction.care': 'Shoulders down, away from your ears.',
   'extra.back.desk.s2.name': 'Superman',
-  'extra.back.desk.s2.cue': 'Face down: lift chest and arms, 10 slow reps.',
+  'extra.back.desk.s2.instruction.setup': 'Lie face down on the floor, arms stretched out in front.',
+  'extra.back.desk.s2.instruction.action': 'Lift your chest and arms off the floor, slowly. Lower with control.',
+  'extra.back.desk.s2.instruction.care': "Small movement. Don't force your lower back.",
   'extra.back.desk.s3.name': 'Chest opening',
-  'extra.back.desk.s3.cue': 'Hands behind head, open elbows, look at ceiling.',
+  'extra.back.desk.s3.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
+  'extra.back.desk.s3.instruction.care': 'Only open as far as your chest stretches without discomfort.',
 
   'extra.core.plank.name': 'Core · Plank',
   'extra.core.plank.desc': 'Planks and hollow, on the floor. The center that holds everything.',
@@ -2821,19 +2843,32 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.shoulder.circles.s4.instruction.action': 'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
   'move.shoulder.circles.s4.instruction.care': 'Only open as far as your chest stretches without discomfort.',
 
+  // s120 (B2.3 OLA 3): claves EN migradas a `sN.instruction.{setup,action,care}`;
+  // `sN.cue` retiradas. Cat-camel y Thoracic rotation reutilizan el copy EN de
+  // morning.flow (mismo glifo). `sN.name` intacto (glifos).
   'move.spine.waves.name': 'Spine · Waves',
   'move.spine.waves.desc': 'Waves and bridges, partly on the floor. The spine, vertebra by vertebra.',
   'move.spine.waves.code': 'Spine',
   'move.spine.waves.s0.name': 'Cat-camel',
-  'move.spine.waves.s0.cue': 'On all fours: arch and round, vertebra by vertebra.',
+  'move.spine.waves.s0.instruction.setup': 'Get on all fours, hands under shoulders and knees under hips.',
+  'move.spine.waves.s0.instruction.action': 'Arch and round your back slowly, vertebra by vertebra.',
+  'move.spine.waves.s0.instruction.care': 'Slow movement, following your breath.',
   'move.spine.waves.s1.name': 'Spinal wave',
-  'move.spine.waves.s1.cue': 'Standing: a slow wave from pelvis to head.',
+  'move.spine.waves.s1.instruction.setup': 'Stand up, knees loose.',
+  'move.spine.waves.s1.instruction.action': 'Run a slow wave from your pelvis to your head.',
+  'move.spine.waves.s1.instruction.care': 'Fluid movement, no rush.',
   'move.spine.waves.s2.name': 'Thoracic rotation',
-  'move.spine.waves.s2.cue': 'Seated: crossed hands, rotate trunk slowly.',
+  'move.spine.waves.s2.instruction.setup': 'Sit tall, hands crossed over your chest.',
+  'move.spine.waves.s2.instruction.action': 'Rotate your trunk slowly to one side and the other.',
+  'move.spine.waves.s2.instruction.care': 'The turn comes from the trunk, not the neck.',
   'move.spine.waves.s3.name': 'Thoracic bridge',
-  'move.spine.waves.s3.cue': 'From seated, lift hips and open chest to the ceiling.',
+  'move.spine.waves.s3.instruction.setup': 'Sit on the floor, hands planted behind you.',
+  'move.spine.waves.s3.instruction.action': 'Lift your hips and open your chest to the ceiling. Lower slowly.',
+  'move.spine.waves.s3.instruction.care': 'Only rise as far as your chest opens without forcing.',
   'move.spine.waves.s4.name': 'Roll down',
-  'move.spine.waves.s4.cue': 'Standing, lower vertebra by vertebra until you hang. Rise the same way.',
+  'move.spine.waves.s4.instruction.setup': 'Stand up, feet hip-width apart.',
+  'move.spine.waves.s4.instruction.action': 'Lower vertebra by vertebra until your trunk hangs. Rise the same way, slowly.',
+  'move.spine.waves.s4.instruction.care': 'Soft knees. Rise slowly to avoid dizziness.',
 
   'move.couch.stretch.name': 'Couch Stretch',
   'move.couch.stretch.desc': 'Deep hip flexors against a wall or chair, knee on the floor. The couch stretch.',
@@ -2873,17 +2908,26 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hips.ground.s4.name': 'Deep squat',
   'move.hips.ground.s4.cue': 'Heels down, relax at the bottom.',
 
+  // s120 (B2.3 OLA 3): claves EN migradas a `sN.instruction.{setup,action,care}`;
+  // `sN.cue` retiradas. Bridge with march reutiliza el copy EN de hips.5/couch
+  // (mismo glifo). `sN.name` intacto (glifos).
   'move.hamstrings.name': 'Posterior Chain',
   'move.hamstrings.desc': 'Hamstrings and posterior chain. Long legs again.',
   'move.hamstrings.code': 'Hamstrings',
   'move.hamstrings.s0.name': 'Elephant walk',
-  'move.hamstrings.s0.cue': 'Walk touching floor, legs straight.',
+  'move.hamstrings.s0.instruction.action': 'Walk with your hands on the floor, legs as straight as possible.',
+  'move.hamstrings.s0.instruction.care': 'Bend your knees a little if your hamstrings pull.',
   'move.hamstrings.s1.name': 'Forward fold',
-  'move.hamstrings.s1.cue': 'Feet together, hang the trunk. Soft knees.',
+  'move.hamstrings.s1.instruction.action': 'Feet together, let your trunk hang down. Soft knees.',
+  'move.hamstrings.s1.instruction.care': 'Rest your hands on your knees if you need to.',
   'move.hamstrings.s2.name': 'Single-leg hamstring',
-  'move.hamstrings.s2.cue': 'Heel planted ahead, hips back. 40s per side.',
+  'move.hamstrings.s2.instruction.setup': 'Plant one heel ahead, that leg straight.',
+  'move.hamstrings.s2.instruction.action': 'Take your hips back, trunk long. Feel the stretch behind your thigh.',
+  'move.hamstrings.s2.instruction.care': 'Keep the supporting knee slightly bent. No bouncing.',
   'move.hamstrings.s3.name': 'Bridge with march',
-  'move.hamstrings.s3.cue': 'Deep glute activation.',
+  'move.hamstrings.s3.instruction.setup': 'Lie on your back, feet planted close to your glutes.',
+  'move.hamstrings.s3.instruction.action': 'Lift your hips and hold. Raise one knee, then the other.',
+  'move.hamstrings.s3.instruction.care': 'Slow the pace if your lower back complains.',
 
   'move.morning.flow.name': 'Morning Wake-up',
   'move.morning.flow.desc': 'Gentle full-body flow to start the day. It begins on the floor.',
@@ -3346,7 +3390,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.62.0';
+const PACE_VERSION = 'v0.63.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -10424,13 +10468,31 @@ var MOVE_ROUTINES = {
       { name: 'Descanso', dur: 20, cue: 'Respira.' },
       { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' }]
     },
+    /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de barra
+       → `timed`; los rests entre holds son SUAVES (sin restKind, patrón
+       glutes.stealth, conservan su dur 20). Gate `ready` en el 1er hang
+       (agarrar la barra, material). `name` intactos → glifos sin tocar.
+       Acceso premium SIN cambios. */
     { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra firme que soporte tu peso. Tracción suave para hombros y espalda.', min: 2, access: 'premium',
+      position: ['standing'], equipment: ['bar'], requiresFloor: false, intensity: 'gentle', level: 'intermediate',
       steps: [
-      { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
-      { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
-      { name: 'Hang activo', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
-      { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
-      { name: 'Hang pasivo', dur: 30, cue: 'Suelta del todo. Deja que la espalda se abra.' }]
+      { name: 'Hang pasivo', mode: 'timed', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros.',
+          action: 'Cuelga relajado, con los brazos estirados. Respira.',
+          care: 'Baja si notas molestia. Apoya un poco los pies si lo necesitas.' } },
+      { name: 'Descanso', mode: 'rest', dur: 20,
+        instruction: { action: 'Sacude los brazos.' } },
+      { name: 'Hang activo', mode: 'timed', dur: 30,
+        instruction: {
+          action: 'Cuelga llevando los hombros abajo y atrás. Codos rectos.',
+          care: 'Tracción suave, sin encoger el cuello.' } },
+      { name: 'Descanso', mode: 'rest', dur: 20,
+        instruction: { action: 'Sacude los brazos.' } },
+      { name: 'Hang pasivo', mode: 'timed', dur: 30,
+        instruction: {
+          action: 'Suelta del todo. Deja que la espalda se abra.',
+          care: 'Respira hondo y afloja los hombros.' } }]
     }]
 
   },
@@ -10498,13 +10560,31 @@ var MOVE_ROUTINES = {
         instruction: {
           action: 'Cierra subiendo y bajando los talones, suave.' } }]
     },
+    /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de hollow
+       en silla → `timed`; rests entre holds SUAVES (sin restKind, patrón
+       glutes.stealth, conservan dur 20). Sentado, sin suelo ni material → sin
+       gate `ready`. Los cue de los rests estaban VACÍOS: se reutiliza el
+       literal del rest suave de glutes.stealth («Suelta.» / «Let go.»), sin
+       redactar copy nuevo. Acceso premium SIN cambios. */
     { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
+      position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
       steps: [
-      { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
-      { name: 'Descanso', dur: 20, cue: '' },
-      { name: 'Seated hollow', dur: 30, cue: 'Mantén. Respira normal.' },
-      { name: 'Descanso', dur: 20, cue: '' },
-      { name: 'Seated hollow', dur: 30, cue: 'Última. Mantén mientras la lumbar siga apoyada.' }]
+      { name: 'Seated hollow', mode: 'timed', dur: 30,
+        instruction: {
+          action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
+          care: 'Baja los pies para que sea más suave. Respira normal.' } },
+      { name: 'Descanso', mode: 'rest', dur: 20,
+        instruction: { action: 'Suelta.' } },
+      { name: 'Seated hollow', mode: 'timed', dur: 30,
+        instruction: {
+          action: 'Mantén la posición. Respira normal.',
+          care: 'Si la lumbar se despega, baja un poco las piernas.' } },
+      { name: 'Descanso', mode: 'rest', dur: 20,
+        instruction: { action: 'Suelta.' } },
+      { name: 'Seated hollow', mode: 'timed', dur: 30,
+        instruction: {
+          action: 'Última. Mantén mientras la lumbar siga apoyada.',
+          care: 'Termina antes si pierdes el apoyo de la espalda.' } }]
     }]
 
   },
@@ -10582,12 +10662,37 @@ var MOVE_ROUTINES = {
           action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
           care: 'Abre solo hasta donde el pecho estire sin molestar.' } }]
     },
+    /* s120 (B2.3 OLA 3): migrado al contrato v1. Scapular squeeze → `reps` con
+       **dosis legacy CONSERVADA** (12 reps, «2 segundos cada una» → tempo 1-2-1
+       con 2 s de retención; posturalControl, audit B2.1 «cue ya trae reps y
+       retención»); Band pull-apart y Apertura de pecho → `timed` (reutilizan el
+       copy de OLA 2 —shoulder.circles/chair.antidote—, mismo glifo); Superman →
+       `reps` (10, dosis legacy) sobre SUELO con gate `ready` (cuenta la bajada al
+       suelo vía estimatedSeconds, §6). `name` intactos → glifos sin tocar.
+       Acceso free SIN cambios. */
     { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
+      position: ['seated', 'standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
       steps: [
-      { name: 'Scapular squeeze', dur: 40, cue: 'Junta omóplatos 12 veces, 2 segundos cada una.' },
-      { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
-      { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, 10 veces lentas.' },
-      { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' }]
+      { name: 'Scapular squeeze', mode: 'reps', reps: 12, dur: 40,
+        tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+        instruction: {
+          setup: 'Siéntate erguido o ponte de pie, hombros sueltos.',
+          action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
+          care: 'Hombros abajo, lejos de las orejas.' } },
+      { name: 'Band pull-apart', mode: 'timed', dur: 40,
+        instruction: {
+          action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
+          care: 'Hombros abajo, lejos de las orejas.' } },
+      { name: 'Superman', mode: 'reps', reps: 10, dur: 40, setup: { mode: 'ready', estimatedSeconds: 15 },
+        tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+        instruction: {
+          setup: 'Túmbate boca abajo en el suelo, con los brazos estirados al frente.',
+          action: 'Eleva el pecho y los brazos del suelo, despacio. Baja con control.',
+          care: 'Movimiento pequeño. No fuerces la zona lumbar.' } },
+      { name: 'Apertura de pecho', mode: 'timed', dur: 40,
+        instruction: {
+          action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+          care: 'Abre solo hasta donde el pecho estire sin molestar.' } }]
     },
     { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
       steps: [
@@ -11972,14 +12077,41 @@ const EXTRA_ROUTINES = {
           action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
           care: 'Abre solo hasta donde el pecho estire sin molestar.' } }]
     },
+    /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Toda movilidad de
+       columna → `timed` (BASE §3-B/F). Gate `ready` en el 1er paso de suelo
+       (Gato-camello). Gato-camello y Rotación torácica reutilizan el copy de
+       morning.flow (mismo glifo). Puente torácico: se consolida el cue existente
+       + care ligero; su ESCALÓN de regresión (audit B2.1) queda para la ola
+       editorial. `name` intactos. Acceso premium SIN cambios. */
     { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
       desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
+      position: ['floor', 'standing', 'seated'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
       steps: [
-      { name: 'Gato-camello', dur: 60, cue: 'A cuatro patas: arquea y redondea, vértebra a vértebra.' },
-      { name: 'Onda espinal', dur: 60, cue: 'De pie: ola desde la pelvis hasta la cabeza, lenta.' },
-      { name: 'Rotación torácica', dur: 45, cue: 'Sentado: manos cruzadas, rota tronco despacio.' },
-      { name: 'Puente torácico', dur: 60, cue: 'Desde sentado, eleva cadera y abre el pecho al techo.' },
-      { name: 'Rodar hacia abajo', dur: 60, cue: 'De pie, baja vértebra a vértebra hasta colgar. Sube igual.' }]
+      { name: 'Gato-camello', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Ponte a cuatro patas, manos bajo los hombros y rodillas bajo las caderas.',
+          action: 'Arquea y redondea la espalda despacio, vértebra a vértebra.',
+          care: 'Movimiento lento, siguiendo la respiración.' } },
+      { name: 'Onda espinal', mode: 'timed', dur: 60,
+        instruction: {
+          setup: 'Ponte de pie, rodillas sueltas.',
+          action: 'Recorre una ola lenta desde la pelvis hasta la cabeza.',
+          care: 'Movimiento fluido, sin prisa.' } },
+      { name: 'Rotación torácica', mode: 'timed', dur: 45,
+        instruction: {
+          setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
+          action: 'Gira el tronco despacio a un lado y al otro.',
+          care: 'El giro nace del tronco, no del cuello.' } },
+      { name: 'Puente torácico', mode: 'timed', dur: 60,
+        instruction: {
+          setup: 'Siéntate en el suelo, manos apoyadas detrás.',
+          action: 'Eleva la cadera y abre el pecho al techo. Baja despacio.',
+          care: 'Sube solo hasta donde el pecho abra sin forzar.' } },
+      { name: 'Rodar hacia abajo', mode: 'timed', dur: 60,
+        instruction: {
+          setup: 'Ponte de pie, pies al ancho de las caderas.',
+          action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
+          care: 'Rodillas suaves. Sube despacio para no marearte.' } }]
     }]
 
   },
@@ -12075,13 +12207,34 @@ const EXTRA_ROUTINES = {
       { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
       { name: 'Elephant walk', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' }]
     },
+    /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Elephant walk y
+       Pliegue adelante → `timed`; Isquio a una pierna → `perSide` (fix del «40s
+       por lado» en dur:80 → dur POR LADO + transición, §3-C/§6); Puente con
+       marcha → `timed` sobre SUELO (reutiliza el copy de hips.5/couch) con gate
+       `ready` (entrada al suelo). `name` intactos → glifos sin tocar. `min` 5
+       dentro de rango. Acceso premium SIN cambios. */
     { id: 'move.hamstrings', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior',
       desc: 'Isquios y cadena posterior. Piernas largas otra vez.', min: 5, access: 'premium',
+      position: ['standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
       steps: [
-      { name: 'Elephant walk', dur: 70, cue: 'Camina tocando suelo, piernas estiradas.' },
-      { name: 'Pliegue adelante', dur: 70, cue: 'Pies juntos, cuelga el tronco. Rodillas suaves.' },
-      { name: 'Isquio a una pierna', dur: 80, cue: 'Talón apoyado delante, cadera atrás. 40s por lado.' },
-      { name: 'Puente con marcha', dur: 70, cue: 'Activación de glúteo profundo.' }]
+      { name: 'Elephant walk', mode: 'timed', dur: 70,
+        instruction: {
+          action: 'Camina con las manos por el suelo, piernas lo más estiradas posible.',
+          care: 'Dobla algo las rodillas si los isquios tiran.' } },
+      { name: 'Pliegue adelante', mode: 'timed', dur: 70,
+        instruction: {
+          action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
+          care: 'Apoya las manos en las rodillas si lo necesitas.' } },
+      { name: 'Isquio a una pierna', mode: 'perSide', dur: 40, transition: { seconds: 10 },
+        instruction: {
+          setup: 'Apoya un talón adelante, con esa pierna estirada.',
+          action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+          care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
+      { name: 'Puente con marcha', mode: 'timed', dur: 70, setup: { mode: 'ready', estimatedSeconds: 15 },
+        instruction: {
+          setup: 'Túmbate boca arriba, pies apoyados cerca del glúteo.',
+          action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
+          care: 'Baja el ritmo si la lumbar se queja.' } }]
     }]
 
   },
