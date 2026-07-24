@@ -56,15 +56,20 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.chair.dips.s4.instruction.action':   'Last ones. Slow and clean, push from the triceps.',
   'extra.chair.dips.s4.instruction.care':     'Stop if your form breaks. Better 6 good ones than 8 forced.',
 
+  // s121 (B2.3 OLA 4): claves EN migradas a `sN.instruction.{setup,action,care}`;
+  // `sN.cue` retiradas. `sN.name` intacto (glifos). Dosis legacy conservada.
   'extra.wall.sit.name':                 'Wall Sit',
   'extra.wall.sit.desc':                 'Quadriceps isometric against a wall.',
   'extra.wall.sit.code':                 'Legs',
   'extra.wall.sit.s0.name':              'Wall sit',
-  'extra.wall.sit.s0.cue':               'Knees at 90°, back on the wall. Breathe normally.',
+  'extra.wall.sit.s0.instruction.setup': 'Rest your back against a wall and slide down until your knees are at 90°.',
+  'extra.wall.sit.s0.instruction.action':'Back flat on the wall, knees at 90°. Breathe normally.',
+  'extra.wall.sit.s0.instruction.care':  'Pick a height that lets you breathe; the less you sink, the gentler it is.',
   'extra.wall.sit.s1.name':              'Rest',
-  'extra.wall.sit.s1.cue':               'Easy.',
+  'extra.wall.sit.s1.instruction.action':'Easy.',
   'extra.wall.sit.s2.name':              'Wall sit',
-  'extra.wall.sit.s2.cue':               'Second round. Choose a height that lets you breathe easy.',
+  'extra.wall.sit.s2.instruction.action':'Second round. Return to the position and hold.',
+  'extra.wall.sit.s2.instruction.care':  'Choose a height that lets you breathe easy.',
 
   'extra.calves.name':                        'Stealth Calf Raises',
   'extra.calves.desc':                        'Under the desk, no one notices.',
@@ -233,19 +238,27 @@ Object.assign(window.PACE_STRINGS.en, {
   'extra.back.desk.s3.instruction.action':      'Hands behind your head. Open your elbows and look at the ceiling. Breathe wide.',
   'extra.back.desk.s3.instruction.care':        'Only open as far as your chest stretches without discomfort.',
 
+  // s121 (B2.3 OLA 4): claves EN migradas a `sN.instruction.{setup,action,care}`;
+  // `sN.cue` retiradas. `sN.name` intacto (glifos). Dosis legacy conservada
+  // (Plancha lateral 30 s/lado → perSide; el «per side» lo integra el runner).
   'extra.core.plank.name':               'Core · Plank',
   'extra.core.plank.desc':               'Planks and hollow, on the floor. The center that holds everything.',
   'extra.core.plank.code':               'Core',
   'extra.core.plank.s0.name':            'Plank',
-  'extra.core.plank.s0.cue':             'Forearms, body in a line. Squeeze glutes.',
+  'extra.core.plank.s0.instruction.setup': 'Lie face down on the floor and rest your forearms under your shoulders.',
+  'extra.core.plank.s0.instruction.action':'Body in a straight line from head to heels. Squeeze glutes and abs. Breathe.',
+  'extra.core.plank.s0.instruction.care': 'Rest your knees on the floor to make it gentler.',
   'extra.core.plank.s1.name':            'Rest',
-  'extra.core.plank.s1.cue':             'Breathe.',
+  'extra.core.plank.s1.instruction.action':'Breathe.',
   'extra.core.plank.s2.name':            'Side plank',
-  'extra.core.plank.s2.cue':             '30 seconds per side, hips high.',
+  'extra.core.plank.s2.instruction.action':'Prop up on one forearm, body sideways in a line. Lift your hip and hold.',
+  'extra.core.plank.s2.instruction.care': 'Lower your bottom knee to the floor if you need less intensity.',
   'extra.core.plank.s3.name':            'Rest',
-  'extra.core.plank.s3.cue':             'Breathe.',
+  'extra.core.plank.s3.instruction.action':'Breathe.',
   'extra.core.plank.s4.name':            'Hollow hold',
-  'extra.core.plank.s4.cue':             'Lying down: lower back to the floor, legs and shoulders up.',
+  'extra.core.plank.s4.instruction.action':'Lying on your back: press your lower back down and lift your legs and shoulders.',
+  'extra.core.plank.s4.instruction.care': 'Lower your feet to make it gentler.',
   'extra.core.plank.s5.name':            'Plank',
-  'extra.core.plank.s5.cue':             'Last one. Breathe inside the tension.',
+  'extra.core.plank.s5.instruction.action':'Last one. Back to the plank, body in a line. Breathe inside the tension.',
+  'extra.core.plank.s5.instruction.care': 'Rest your knees if the line breaks.',
 });

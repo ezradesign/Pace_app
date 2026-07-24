@@ -330,12 +330,39 @@ solo diseño; alcance original abajo):
       free); `canAccessRoutine` intacto; sin cambios en IDs/historial/logros. El
       posible cambio de rutina de entrada se evalúa **aparte** como decisión de
       producto. La distribución del catálogo permanece inalterada.
-  - **Pendiente**: **8 rutinas legacy** (4 Mueve premium: `push.ladder`, `wall.sit`,
-    `core.plank`, `legs.single` + 4 Estira: `desk.quick`, `hips.ground`, `atg.knees`,
-    `ancestral`) en olas siguientes + **reescrituras** (4 cues: Seated twist, Rib
-    pull, WGS, Ground transitions · 2 rutinas: `legs.single`, resto de `atg.knees` ·
-    escalón de Puente torácico de `spine.waves`) en ola editorial. **OJO tamaño**:
-    `ExtraModule.jsx` a 447 ln → trocear los datos de Estira antes de la próxima ola.
+  - **OLA 4 — HECHA (s121, 2026-07-24; v0.64.0; diario
+    [session-121](../sessions/session-121-b2-3-ola-4-cierre-mecanico.md)): CIERRA la
+    migración MECÁNICA.** Las **2 ÚNICAS** rutinas legacy que quedaban mecánicamente
+    tractables sin tocar copy, dosis, estructura, lateralidad ni escalones:
+    `core.plank`(P, min 4) y `wall.sit`(P, 2), ambas **Mueve premium**. Clasificación
+    BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit) → `timed` con
+    `care` de rodillas/altura (adaptación **DERIVADA**, NO cambia dosis); Plancha
+    lateral «30 s por lado» en `dur:60` → `perSide` `dur:30` POR LADO (2×30 = 60 =
+    **dosis legacy conservada**) + `transition:{seconds:10}`; **rests entre holds
+    SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.»
+    preservados **verbatim** — no estaban vacíos); **gate `ready`** en el 1er paso de
+    suelo (Plancha) / de pared (Wall sit). **Disciplina de dosis (lección s120):**
+    wall.sit conserva **60 s** por tanda; el `care` gradúa la altura, NO la dosis.
+    Migración atómica `instruction.*` + keys EN `cue`→`instruction.*`; ningún `name`
+    cambió. **Acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios).
+    Cada `min` dentro de rango (dev-check «dentro»: core.plank 250 s [4–5], wall.sit
+    175 s [2–3]). **8 → 6** legacy tras OLA 4.
+  - **MIGRACIÓN MECÁNICA DE B2.3 CERRADA (s121).** Quedan **6 rutinas legacy
+    BLOQUEADAS** por reescritura editorial / progresión técnica / revisión fisio.
+    **No son deuda mecánica**; no se abrirá una OLA 5 mecánica salvo que una auditoría
+    NUEVA demuestre que alguna puede migrarse sin cambiar copy, dosis, estructura,
+    lateralidad ni escalones. Bloqueador concreto por rutina:
+    - `push.ladder` → editorial: negativas sin nº de reps + Pica sin escalón.
+    - `legs.single` → editorial: reescribir (aritmética imposible + 3/4 avanzados).
+    - `desk.quick` → editorial: Seated twist (falta 2º lado).
+    - `hips.ground` → editorial: Ground transitions (alternativa «con manos»).
+    - `ancestral` → editorial: Ground transitions + Rib pull (identidad).
+    - `atg.knees` → editorial + **BLOQUEADA por revisión FISIO de Sissy squat** (B4).
+    - \+ pendiente heredado: escalón de regresión de Puente torácico (`spine.waves`).
+
+    **La siguiente sesión (s122) NO es migración**: es CLARIDAD UX de la home
+    (HOME_REDISENO_PROPUESTA.md). La ola editorial es s123. **OJO tamaño**:
+    `ExtraModule.jsx` a 447 ln → trocear los datos de Estira antes de retomar Estira.
 
 ### B3 · s107-109 ampliadas (el plan maestro absorbe)
 
