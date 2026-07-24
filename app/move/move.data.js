@@ -103,13 +103,31 @@ var MOVE_ROUTINES = {
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
           { name: 'Flexiones inclinadas', dur: 45, cue: 'Negativas: baja en 5 segundos, sube normal.' },
         ]},
+      /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de barra
+         → `timed`; los rests entre holds son SUAVES (sin restKind, patrón
+         glutes.stealth, conservan su dur 20). Gate `ready` en el 1er hang
+         (agarrar la barra, material). `name` intactos → glifos sin tocar.
+         Acceso premium SIN cambios. */
       { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra firme que soporte tu peso. Tracción suave para hombros y espalda.', min: 2, access: 'premium',
+        position: ['standing'], equipment: ['bar'], requiresFloor: false, intensity: 'gentle', level: 'intermediate',
         steps: [
-          { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
-          { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
-          { name: 'Hang activo', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
-          { name: 'Descanso', dur: 20, cue: 'Sacude los brazos.' },
-          { name: 'Hang pasivo', dur: 30, cue: 'Suelta del todo. Deja que la espalda se abra.' },
+          { name: 'Hang pasivo', mode: 'timed', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
+            instruction: {
+              setup: 'Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros.',
+              action: 'Cuelga relajado, con los brazos estirados. Respira.',
+              care: 'Baja si notas molestia. Apoya un poco los pies si lo necesitas.' } },
+          { name: 'Descanso', mode: 'rest', dur: 20,
+            instruction: { action: 'Sacude los brazos.' } },
+          { name: 'Hang activo', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Cuelga llevando los hombros abajo y atrás. Codos rectos.',
+              care: 'Tracción suave, sin encoger el cuello.' } },
+          { name: 'Descanso', mode: 'rest', dur: 20,
+            instruction: { action: 'Sacude los brazos.' } },
+          { name: 'Hang pasivo', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Suelta del todo. Deja que la espalda se abra.',
+              care: 'Respira hondo y afloja los hombros.' } },
         ]},
     ]
   },
@@ -177,13 +195,31 @@ var MOVE_ROUTINES = {
             instruction: {
               action: 'Cierra subiendo y bajando los talones, suave.' } },
         ]},
+      /* s120 (B2.3 OLA 3): migrado al contrato v1. Aguantes isométricos de hollow
+         en silla → `timed`; rests entre holds SUAVES (sin restKind, patrón
+         glutes.stealth, conservan dur 20). Sentado, sin suelo ni material → sin
+         gate `ready`. Los cue de los rests estaban VACÍOS: se reutiliza el
+         literal del rest suave de glutes.stealth («Suelta.» / «Let go.»), sin
+         redactar copy nuevo. Acceso premium SIN cambios. */
       { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
+        position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
-          { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya baja espalda.' },
-          { name: 'Descanso', dur: 20, cue: '' },
-          { name: 'Seated hollow', dur: 30, cue: 'Mantén. Respira normal.' },
-          { name: 'Descanso', dur: 20, cue: '' },
-          { name: 'Seated hollow', dur: 30, cue: 'Última. Mantén mientras la lumbar siga apoyada.' },
+          { name: 'Seated hollow', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
+              care: 'Baja los pies para que sea más suave. Respira normal.' } },
+          { name: 'Descanso', mode: 'rest', dur: 20,
+            instruction: { action: 'Suelta.' } },
+          { name: 'Seated hollow', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Mantén la posición. Respira normal.',
+              care: 'Si la lumbar se despega, baja un poco las piernas.' } },
+          { name: 'Descanso', mode: 'rest', dur: 20,
+            instruction: { action: 'Suelta.' } },
+          { name: 'Seated hollow', mode: 'timed', dur: 30,
+            instruction: {
+              action: 'Última. Mantén mientras la lumbar siga apoyada.',
+              care: 'Termina antes si pierdes el apoyo de la espalda.' } },
         ]},
     ]
   },
@@ -261,12 +297,37 @@ var MOVE_ROUTINES = {
               action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
               care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
         ]},
+      /* s120 (B2.3 OLA 3): migrado al contrato v1. Scapular squeeze → `reps` con
+         **dosis legacy CONSERVADA** (12 reps, «2 segundos cada una» → tempo 1-2-1
+         con 2 s de retención; posturalControl, audit B2.1 «cue ya trae reps y
+         retención»); Band pull-apart y Apertura de pecho → `timed` (reutilizan el
+         copy de OLA 2 —shoulder.circles/chair.antidote—, mismo glifo); Superman →
+         `reps` (10, dosis legacy) sobre SUELO con gate `ready` (cuenta la bajada al
+         suelo vía estimatedSeconds, §6). `name` intactos → glifos sin tocar.
+         Acceso free SIN cambios. */
       { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
+        position: ['seated', 'standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Scapular squeeze', dur: 40, cue: 'Junta omóplatos 12 veces, 2 segundos cada una.' },
-          { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
-          { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, 10 veces lentas.' },
-          { name: 'Apertura de pecho', dur: 40, cue: 'Manos tras la nuca, abre codos, mira al techo.' },
+          { name: 'Scapular squeeze', mode: 'reps', reps: 12, dur: 40,
+            tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Siéntate erguido o ponte de pie, hombros sueltos.',
+              action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Band pull-apart', mode: 'timed', dur: 40,
+            instruction: {
+              action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
+              care: 'Hombros abajo, lejos de las orejas.' } },
+          { name: 'Superman', mode: 'reps', reps: 10, dur: 40, setup: { mode: 'ready', estimatedSeconds: 15 },
+            tempo: { down: 2, hold: 0, up: 2 }, completion: { mode: 'guided' },
+            instruction: {
+              setup: 'Túmbate boca abajo en el suelo, con los brazos estirados al frente.',
+              action: 'Eleva el pecho y los brazos del suelo, despacio. Baja con control.',
+              care: 'Movimiento pequeño. No fuerces la zona lumbar.' } },
+          { name: 'Apertura de pecho', mode: 'timed', dur: 40,
+            instruction: {
+              action: 'Manos tras la nuca. Abre los codos y mira al techo. Respira ancho.',
+              care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
         ]},
       { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
         steps: [
