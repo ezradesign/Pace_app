@@ -1,6 +1,6 @@
 /* PACE - Caminos - SuggestedPathCard - sesion 53 / v0.27.0
    Sugiere el camino del momento o el favorito del usuario (prioritario).
-   Boton "Ver todos" abre PathsLibrary via CustomEvent.
+   Boton "Ver caminos" abre PathsLibrary via CustomEvent.
 
    Sesion 61 (v0.28.2): compactado en movil. El bug previo era que la regla
    CSS `[data-pace-spc] > div { flex-direction: column !important }` aplicaba
@@ -10,6 +10,16 @@
      - PathMiniCard se identifica con data-pace-spc-card y reduce padding,
        tipos y oculta el tagline en movil para acercarse al layout web
        horizontal (nombre + iconos + boton en una fila).
+
+   Sesion 122 (CLARIDAD UX de la home): la tarjeta se explica MEJOR sin dejar
+   de ser compacta (decision del usuario: conservar el diseno original, con la
+   secuencia en ICONOS pequenos, no en palabras).
+     - Eyebrow SIEMPRE visible: "Camino sugerido" / "Camino favorito" +
+       duracion aproximada (~N min) leyendo los .min de cada paso. Da la senal
+       "esto es un Camino" y su tiempo sin abrirlo.
+     - La secuencia sigue en iconos de paso (respira/foco/cuerpo/agua).
+     - CTA "Iniciar camino" (antes "Comenzar", que colisionaba con el verbo
+       del timer). Relleno, como el original.
 */
 
 const { useState: useStateSPC } = React;
@@ -20,13 +30,44 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
   const s = document.createElement('style');
   s.id = 'pace-spc-responsive-css';
   s.textContent = `
+    /* Solapamiento editorial "sol amaneciendo" (s122, petición del usuario):
+       la tarjeta sube y tapa el arco INFERIOR del círculo del timer hasta rozar
+       los puntos de CICLO, para que el aro se lea como un sol saliendo tras la
+       tarjeta y no como un círculo entero.
+       Se hace con "transform: translateY" NEGATIVO (NO margin): un margen
+       negativo libera hueco del flujo y, como el timer es flex:1, este lo
+       reclama y RECENTRA el aro hacia abajo en vez de que la tarjeta suba. El
+       transform no toca el flujo, el aro se queda quieto y la tarjeta pinta
+       por encima (orden del DOM + z-index). Se sube también la ActivityBar el
+       mismo desplazamiento para que la sigan sin abrir un hueco entre ambas
+       (el espacio sobrante queda al fondo de la pantalla, inocuo).
+       La distancia CICLO→tarjeta es ~130px de forma estable entre ~760 y
+       ~1080px de alto (el aro escala con la altura y el hueco lo acompaña), así
+       que un desplazamiento fijo aterriza ~10-20px por debajo del CICLO en ese
+       rango, sin taparlo ni tapar el botón. GATE a alturas ≥760px: por debajo,
+       el aro ya desborda y la tarjeta ya solapa (caso corto, diferido a §0). */
+    [data-pace-spc] { position: relative; z-index: 2; }
+    @media (min-height: 760px) {
+      [data-pace-spc] { transform: translateY(-118px); }
+      [data-pace-activitybar] { transform: translateY(-118px); }
+    }
+    /* Por debajo del gate NO hay solapamiento; además se RESTAURA el orden
+       seguro Actividades→Camino (via flex order), para que la tarjeta NO
+       quede pegada directamente bajo el aro grande (que a poca altura desborda)
+       y colisione con sus controles. Actividades vuelven a hacer de colchón,
+       como en el layout original. Es la degradación honesta del caso short-viewport
+       (§0 completo pendiente). */
+    @media (min-width: 700px) and (max-height: 759px) {
+      [data-pace-activitybar] { order: 2; }
+      [data-pace-spc] { order: 3; }
+    }
     @media (max-width: 640px) {
       [data-pace-spc] { padding: 0 14px 10px !important; }
       /* Solo el contenedor dual se apila; la card unica queda en row */
       [data-pace-spc-dual] { flex-direction: column !important; gap: 8px !important; }
       [data-pace-spc-card] { padding: 10px 12px !important; gap: 10px !important; }
       [data-pace-spc-card] [data-pace-spc-bar] { display: none !important; }
-      [data-pace-spc-card] [data-pace-spc-label] { font-size: 8px !important; margin-bottom: 2px !important; }
+      [data-pace-spc-card] [data-pace-spc-label] { font-size: 9px !important; margin-bottom: 2px !important; }
       [data-pace-spc-card] [data-pace-spc-name] { font-size: 15px !important; }
       [data-pace-spc-card] [data-pace-spc-tagline] { display: none !important; }
       [data-pace-spc-card] [data-pace-spc-steps] { margin-top: 4px !important; gap: 4px !important; }
@@ -35,6 +76,34 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
     }
   `;
   document.head.appendChild(s);
+}
+
+/* Duracion aproximada de un Camino en minutos: suma los .min de cada paso.
+   - focus: step.min directo.
+   - breathe / body: se resuelve la rutina (getBreatheRoutine / resolveBodyRoutine)
+     y se lee su .min (todas las rutinas lo conservan, incluso las migradas al
+     contrato v1 — "cero drift de min").
+   - hydrate / opcional: tiempo despreciable, no suma.
+   Solo LEE datos ya expuestos a window; no toca el runner ni los Caminos. */
+function pathDurationMin(pathObj) {
+  if (!pathObj || !pathObj.steps) return 0;
+  let total = 0;
+  for (let i = 0; i < pathObj.steps.length; i++) {
+    const st = pathObj.steps[i];
+    if (st.kind === 'focus') { total += st.min || 0; continue; }
+    if (st.kind === 'breathe') {
+      const r = (typeof window.getBreatheRoutine === 'function') ? window.getBreatheRoutine(st.routineId) : null;
+      total += (r && r.min) || 0;
+      continue;
+    }
+    if (st.kind === 'body') {
+      const res = (typeof window.resolveBodyRoutine === 'function') ? window.resolveBodyRoutine(st.routineId) : null;
+      total += (res && res.routine && res.routine.min) || 0;
+      continue;
+    }
+    /* hydrate / desconocido: no suma */
+  }
+  return total;
 }
 
 /* Iconos de paso: stroke fino 14x14 */
@@ -58,6 +127,10 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
   const { t } = useT();
   const name = t(pathObj.nameKey) || pathObj.id;
   const tagline = t(pathObj.taglineKey) || '';
+  const durMin = pathDurationMin(pathObj);
+  const eyebrow = durMin > 0
+    ? label + ' · ' + (t('paths.suggested.approxMin') || '~{n} min').replace('{n}', durMin)
+    : label;
 
   return (
     <div data-pace-spc-card style={{
@@ -79,9 +152,9 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
       <div data-pace-spc-bar style={{ width: 3, height: 40, background: 'linear-gradient(180deg, var(--focus), var(--focus-cta))', borderRadius: 2, flexShrink: 0 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        {label && (
-          <div data-pace-spc-label style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{label}</div>
-        )}
+        {/* Eyebrow: contexto (Camino sugerido/favorito) + duracion aprox.
+            SIEMPRE presente (antes se ocultaba en el caso sugerido simple). */}
+        <div data-pace-spc-label style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 4 }}>{eyebrow}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span data-pace-spc-name style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.1 }}>{name}</span>
           {doneToday && (
@@ -91,20 +164,31 @@ function PathMiniCard({ pathObj, label, doneToday, onStart }) {
           )}
         </div>
         <div data-pace-spc-tagline style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.2 }}>{tagline}</div>
-        <div data-pace-spc-steps style={{ display: 'flex', gap: 6, marginTop: 8, alignItems: 'center' }}>
-          {pathObj.steps.map(function(step, i) {
-            const Icon = SPC_STEP_ICONS[step.kind] || null;
-            return <span key={i} data-pace-spc-step style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
-          })}
+        {/* Secuencia EN TEXTO (no solo iconos): explica que un Camino es una
+            rutina guiada y de cuántos pasos, para cumplir el criterio de
+            claridad sin depender de interpretar los iconos. Los iconos quedan
+            como acento visual de la secuencia. */}
+        <div data-pace-spc-steps style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <span data-pace-spc-guided style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.2 }}>
+            {(t('paths.suggested.guidedSteps') || 'Rutina guiada · {n} pasos').replace('{n}', pathObj.steps.length)}
+          </span>
+          <span style={{ display: 'inline-flex', gap: 5, alignItems: 'center' }}>
+            {pathObj.steps.map(function(step, i) {
+              const Icon = SPC_STEP_ICONS[step.kind] || null;
+              return <span key={i} data-pace-spc-step style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 18, height: 18, color: 'var(--ink-3)' }}>{Icon ? <Icon /> : null}</span>;
+            })}
+          </span>
         </div>
       </div>
 
       {!doneToday && (
         <button data-pace-spc-cta
           onClick={function(e) { e.stopPropagation(); onStart(); }}
-          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.1em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'var(--focus-cta)', color: 'var(--paper)', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'opacity var(--dur-quick) var(--ease)' }}
+          style={{ padding: '8px 16px', fontSize: 12, letterSpacing: '0.06em', fontFamily: 'var(--font-display)', fontStyle: 'italic', background: 'transparent', color: 'var(--focus-cta)', border: '1px solid var(--focus-cta)', borderRadius: 'var(--r-sm)', cursor: 'pointer', flexShrink: 0, transition: 'all var(--dur-quick) var(--ease)' }}
+          onMouseEnter={function(e) { e.currentTarget.style.background = 'var(--focus-soft)'; }}
+          onMouseLeave={function(e) { e.currentTarget.style.background = 'transparent'; }}
         >
-          {t('path.card.start') || 'Comenzar'}
+          {t('path.card.start') || 'Iniciar camino'}
         </button>
       )}
       {doneToday && (
@@ -159,13 +243,13 @@ function SuggestedPathCard() {
         <div data-pace-spc-dual style={{ display: 'flex', gap: 10 }}>
           <PathMiniCard
             pathObj={favorite}
-            label={t('paths.suggested.favorite') || 'Tu favorito'}
+            label={t('paths.suggested.favorite') || 'Camino favorito'}
             doneToday={isDoneToday(favoriteId)}
             onStart={function() { handleStart(favoriteId); }}
           />
           <PathMiniCard
             pathObj={suggested}
-            label={t('paths.suggested.label') || 'Sugerido ahora'}
+            label={t('paths.suggested.label') || 'Camino sugerido'}
             doneToday={isDoneToday(suggestedId)}
             onStart={function() { handleStart(suggestedId); }}
           />
@@ -173,19 +257,19 @@ function SuggestedPathCard() {
       ) : (
         <PathMiniCard
           pathObj={favorite || suggested}
-          label={favorite ? (t('paths.suggested.favorite') || 'Tu favorito') : null}
+          label={favorite ? (t('paths.suggested.favorite') || 'Camino favorito') : (t('paths.suggested.label') || 'Camino sugerido')}
           doneToday={isDoneToday(favorite ? favoriteId : suggestedId)}
           onStart={function() { handleStart(favorite ? favoriteId : suggestedId); }}
         />
       )}
 
-      {/* Enlace Ver todos */}
+      {/* Enlace a la biblioteca de Caminos */}
       <div style={{ textAlign: 'right', marginTop: 6 }}>
         <button
           onClick={handleOpenLibrary}
           style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-3)', fontFamily: 'var(--font-display)', fontStyle: 'italic', padding: '2px 0', textDecoration: 'underline', textUnderlineOffset: 3 }}
         >
-          {t('paths.library.viewAll') || 'Ver todos'}
+          {t('paths.library.viewAll') || 'Ver caminos'}
         </button>
       </div>
     </div>

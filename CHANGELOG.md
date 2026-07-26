@@ -27,8 +27,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.65.0** | 2026-07-26 | feat(home): **claridad UX de la home** (sesión de CÓDIGO; pieza A de `HOME_REDISENO_PROPUESTA.md` §1/§3/§4/§5/§6 + §0 solapamiento por decisión del usuario; NO catálogo, NO migración, NO runner, NO eventos) -- **sistema verbal** que rompe la colisión «Comenzar»/«Comenzar»: timer **«Empezar foco»**/«Start focus», Camino **«Iniciar camino»**/«Start path», biblioteca **«Ver caminos»**/«Browse paths» (cada verbo = su consecuencia; paridad ES+EN) · **«FOCO MANUAL»/«MANUAL FOCUS» DENTRO del círculo** (`modeLabel` solo en modo foco; se descartó el kicker suelto que robaba altura al aro — decisión del usuario) → el aro conserva su tamaño «sol amaneciendo» · **tarjeta de Camino compacta que se explica sola**: eyebrow SIEMPRE visible «CAMINO SUGERIDO/FAVORITO · ~N min» (duración calculada leyendo el `.min` de cada paso, solo lectura de window) + secuencia en **TEXTO** «Rutina guiada · N pasos» + iconos de acento + CTA «Iniciar camino» en **contorno** (único primario = timer) · **jerarquía §1**: Camino POR ENCIMA de Actividades · **solapamiento editorial «sol» LIMITADO/PROVISIONAL (NO §0 completo, autorizado por el usuario)**: la tarjeta sube con `transform: translateY(-118px)` (NO margin — un margen negativo hace que el `flex:1` reclame el hueco y recentre el aro) y tapa el arco inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; sube también la ActivityBar el mismo delta; **gate ≥760px de alto** (por debajo, caso corto diferido a §0) · nuevas claves i18n `focus.manual.label`, `paths.suggested.approxMin` + reetiquetadas `paths.suggested.label`/`.favorite` · verificado 360×640/390×844/1280×900/1440×900 ES+EN, sin `[i18n] missing`, consola limpia, standalone 3209 KB · **diferido**: §0 short-viewport (<720px), §7, y **hallazgo NO tocado**: scrollbar del runner v1 (`data-pace-session-center` desborda ~17px a ≤~660px en pasos `perSide` de texto largo; chip de tarea creado) | #122 | [abajo](#v0650----2026-07-26----feathome-claridad-ux-de-la-home) |
 | **v0.64.0** | 2026-07-24 | feat(move): **B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **2 rutinas Mueve premium** migradas al contrato v1: `extra.core.plank`(P, min 4) · `extra.wall.sit`(P, 2) — las 2 ÚNICAS rutinas legacy mecánicamente tractables sin tocar copy, dosis, estructura, lateralidad ni escalones · clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit) → `timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis); Plancha lateral «30 s por lado» en `dur:60` → `perSide` `dur:30` POR LADO (2×30=60 = **dosis legacy conservada**) + `transition:{seconds:10}` · **rests entre holds SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.» preservados verbatim) · **gate `ready`** en el 1er paso de suelo (Plancha) / de pared (Wall sit), cuenta la colocación vía `estimatedSeconds` · **DISCIPLINA DE DOSIS** (lección s120): wall.sit conserva **60 s** por tanda (el `care` gradúa la altura, no la dosis) · migración ATÓMICA `instruction:{setup,action,care}` + `transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos · **acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios) · cero drift de `min` (core.plank 250s [4–5], wall.sit 175s [2–3]; dev-check «dentro») · **migración MECÁNICA de B2.3 CERRADA**: **8 → 6 legacy**, las 6 restantes NO son deuda mecánica — quedan BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio (`atg.knees` espera la revisión de Sissy squat) | #121 | [abajo](#v0640----2026-07-24----featmove-b23-ola-4--cierre-de-la-migración-mecánica-coreplank--wallsit) |
-| **v0.63.0** | 2026-07-22 | feat(move): **B2.3 OLA 3 — 5 rutinas mixtas al contrato v1** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **SIN intercambio de acceso**: el corte proponía core.stealth premium→FREE / back.desk FREE→premium, pero su cifra «1 free + 6 premium» describía solo el subconjunto de 7 Mueve **legacy**, no un objetivo de catálogo (el catálogo real = 8 Mueve free / 6 premium); a petición del usuario **NO se aplicó** ningún cambio de `access` (core.stealth sigue premium, back.desk free); el posible cambio de rutina de entrada se evalúa aparte como decisión de producto -- **5 rutinas mixtas Mueve+Estira** migradas: `extra.hang.bar`(P) · `extra.core.stealth`(P) · `extra.back.desk`(free) · `move.spine.waves`(P) · `move.hamstrings`(P) — clasificación BASE §3: aguantes isométricos y movilidad de columna/hombro → `timed`; estiramiento bilateral (Isquio a una pierna) → `perSide`+`transition:{seconds:10}`; fuerza (Scapular squeeze, Superman) → `reps`+`tempo`/`completion:{mode:'guided'}`; **rests entre holds SUAVES** (sin `restKind`, patrón glutes.stealth, conservan `dur`) · **gate `ready`** en suelo/barra: **Superman (suelo, `reps`+`ready` — 1ª combinación del catálogo)**, Gato-camello, Puente con marcha (suelo), Hang pasivo (barra) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas en el MISMO cambio; **ningún `name` cambió** → glifos intactos · copy reutilizado de OLA 1/2 (Band pull-apart, Apertura de pecho, Gato-camello, Rotación torácica, Puente con marcha, Scapular squeeze) + rests con cue vacío → «Suelta.»/«Let go.» (literal de glutes.stealth) · Puente torácico (spine.waves): su ESCALÓN de regresión (audit) queda a la ola editorial · **cero drift de `min`** (las 5 dentro de rango) · **13 → 8 legacy** (4 Mueve premium: push.ladder/wall.sit/legs.single/core.plank + 4 Estira: desk.quick/hips.ground/atg.knees/ancestral) + ola editorial | #120 | [abajo](#v0630----2026-07-22----featmove-b23-ola-3--5-rutinas-mixtas-al-contrato-v1) |
+| **v0.63.0** | 2026-07-22 | feat(move): **B2.3 OLA 3 — 5 rutinas mixtas al contrato v1** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **SIN intercambio de acceso**: el corte proponía core.stealth premium→FREE / back.desk FREE→premium, pero su cifra «1 free + 6 premium» describía solo el subconjunto de 7 Mueve **legacy**, no un objetivo de catálogo (el catálogo real = 8 Mueve free / 6 premium); a petición del usuario **NO se aplicó** ningún cambio de `access` (core.stealth sigue premium, back.desk free); el posible cambio de rutina de entrada se evalúa aparte como decisión de producto -- **5 rutinas mixtas Mueve+Estira** migradas: `extra.hang.bar`(P) · `extra.core.stealth`(P) · `extra.back.desk`(free) · `move.spine.waves`(P) · `move.hamstrings`(P) — clasificación BASE §3: aguantes isométricos y movilidad de columna/hombro → `timed`; estiramiento bilateral (Isquio a una pierna) → `perSide`+`transition:{seconds:10}`; fuerza (Scapular squeeze, Superman) → `reps`+`tempo`/`completion:{mode:'guided'}`; **rests entre holds SUAVES** (sin `restKind`, patrón glutes.stealth, conservan `dur`) · **gate `ready`** en suelo/barra: **Superman (suelo, `reps`+`ready` — 1ª combinación del catálogo)**, Gato-camello, Puente con marcha (suelo), Hang pasivo (barra) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas en el MISMO cambio; **ningún `name` cambió** → glifos intactos · copy reutilizado de OLA 1/2 (Band pull-apart, Apertura de pecho, Gato-camello, Rotación torácica, Puente con marcha, Scapular squeeze) + rests con cue vacío → «Suelta.»/«Let go.» (literal de glutes.stealth) · Puente torácico (spine.waves): su ESCALÓN de regresión (audit) queda a la ola editorial · **cero drift de `min`** (las 5 dentro de rango) · **13 → 8 legacy** (4 Mueve premium: push.ladder/wall.sit/legs.single/core.plank + 4 Estira: desk.quick/hips.ground/atg.knees/ancestral) + ola editorial | #120 | [session-120](./docs/sessions/session-120-b2-3-ola-3.md) |
 | **v0.62.0** | 2026-07-22 | feat(move): **estabilidad de layout del runner v1 + B2.3 OLA 2** (sesión FUSIONADA 2 fases; FASE A cerrada y verificada ANTES de FASE B) -- **FASE A · pulido de layout** (delta 0 de comportamiento; ámbito confinado a `MoveSessionV1.jsx`+`MoveSessionV1.support.jsx`, **SessionShell intacto**): **(1) barra fantasma RESUELTA** — `v1GlyphSize` saltaba `0.22→0.25·vpH` en vpH=720 (glifo +22px) sin tier de compactación hasta ≤700 → banda muerta 701–760 desbordaba ~7px y disparaba scrollbar de 15px (portátiles 1366×768); ahora **curva continua** `min(210, round(vpH·0.22))` + **tier de banda 701–768** (aprieta número/espacios) → sin barra en 1280×600/720/760, 1024×512, 844×390, 360×640; **(2) glifo/botones anclados RESUELTO** — `centerBody` centra el bloque con `margin:auto` y su alto variaba por paso (+12.4px medido); ahora **alturas reservadas** (cue 2 líneas + «Cuídate» 2 líneas SIEMPRE en trabajo aunque el paso no la tenga, solo ≥641px; móvil conserva su ajuste previo) → `glyph_top` idéntico entre pasos, footer clavado; **(3) warning rep-pulse RESUELTO** — shorthand `animation` → longhand + `animationPlayState`; **(4) aislamiento del timer v1** (`data-pace-v1-timer`) para que las reglas de número no encojan el runner **legacy** (compartían `data-pace-move-timer`). **FASE B · B2.3 OLA 2** (4+... decisiones AskUserQuestion, todas la recomendación: Estira · 5 gratuitas sin reescritura · reescrituras aparte · glifos intactos): **5 rutinas de Estira** migradas al contrato v1 (`wrists` · `shoulders.5` · `shoulder.circles` · `hips.5` · `morning.flow`) — clasificación BASE §3: movilidad/estático central → `timed`, estiramiento bilateral → `perSide`+transición (Cossack, Pigeon), fuerza/control → `reps` (Finger extension), flujo → `timed`+`rest` de cierre; **gate `ready`** en pasos de suelo/pared/barra (wall slides, dead hang, 90/90, Gato-camello) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion` + `transition:{seconds:10}` + `setup:{mode:'ready'}` + 5 metadatos (sin `discrete`); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos; copy reutilizado consistente con los pilotos · **cero drift de `min`** (las 5 dentro de rango: dev-check «dentro») · **13 legacy restantes** (7 Mueve premium + 6 Estira) + ola editorial | #119 | [session-119](./docs/sessions/session-119-layout-runner-y-b2-3-ola-2.md) |
 | **v0.61.0** | 2026-07-22 | feat(move): **B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116 y diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **5 rutinas Mueve gratuitas** migradas (`chair.dips` · `calves` · `grip.squeeze` · `glutes.stealth` · `posture.set`; todas sin suelo → sin gate `ready`) añadiendo por paso `mode` (aquí reps/rest/timed) + `instruction:{setup,action,care}` (consolida el `cue` legacy → `action`; `setup` de colocación en el 1er set de fuerza → colocación AUTO; `care` con la adaptación ya implícita) + `tempo`/`completion:{mode:'guided'}` en reps + `restKind:'betweenSets'` en rests de fuerza + 5 metadatos (`position/equipment/requiresFloor/intensity/level`, **sin `discrete`**) · keys EN nuevas `id.sN.instruction.*` (mismo valor traducido); `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos (cola D-4 sin tocar) · **candidato** `move.couch.stretch.min` **5→6** (dev-check s115 calculaba 6–7 min, único piloto descuadrado, ahora alineado) · **duración**: con los tempos elegidos cada rutina conserva su `min` DENTRO del rango derivado (`estimateDuration`), sin drift · las **7 rutinas Mueve restantes** (premium + `legs.single` a reescribir) y las **14 de Estira** siguen **LEGACY byte-idénticas** · reescrituras (4 cues + 2 rutinas) y el resto de olas → siguientes · deuda nueva observada: warning React `animation`/`animationPlayState` en `MoveSessionV1.jsx:441` (rep-pulse s113, no tocado → NO regresión; resuelto en s119) | #118 | [session-118](./docs/sessions/session-118-b2-3-migracion-ola-1.md) |
 | **v0.60.0** | 2026-07-21 | feat: **B2.2b-2 — feedback ligero «¿te ayudó esta pausa?»** (captura + almacenamiento, SIN consumidor visible; 5 decisiones por AskUserQuestion, todas la recomendación) -- una sola pregunta CALMADA al alcanzar `stage:'done'` en Mueve/Estira (v1 y legacy) + Respira, **fuera de Caminos** (gate `inPath`) y nunca al pulsar «× Salir» · 3 respuestas de igual peso (**Sí · Un poco · No**) + **«Ahora no»** ghost secundario → la fila se sustituye por acuse «Gracias»; el CTA de regreso SIEMPRE disponible (no hace falta responder para salir) · **slice `routineFeedback`** bajo pace.state.v2 (`{[id]:{yes,some,no,lastPromptDay}}`, conteos COMPLETOS; `answered`/`helpScore` **DERIVADOS**, nunca persistidos; «Ahora no» no cuenta) con helper **PURO** `nextRoutineFeedback` + acción `recordRoutineFeedback` (setState funcional, sanitiza `yes\|some\|no\|later`, rechaza id vacío, merge defensivo en loadState) + `shouldPromptRoutineFeedback` · **frecuencia**: máx 1 vez por rutina y **DÍA LOCAL** (`lastPromptDay=todayISO()`; «Ahora no» también suprime el resto del día sin sumar; salir por el CTA sin responder NO escribe el día → puede reaparecer) · **guard de teclado P0** en los 3 runners: `Enter` en done ignora el atajo global de salida si el foco está en un control (`closest`, no `matches`), IME, `defaultPrevented` o modificadores Ctrl/Meta/Alt — evita una 2ª salida (el CTA/chip se activan por su onClick); Espacio tampoco se roba a un control con foco · componente NUEVO `SessionFeedback.jsx` (gate por-día capturado en el mount + guard SÍNCRONO de idempotencia + disabled) · `SessionDone` gana slot `feedback` · **CSS responsive del shell EXTRAÍDO** a `SessionShell.responsive.js` (495→336 ln) + en el tier ≤430 el HERO decorativo del done se oculta para que la fila de feedback y el CTA quepan sin solape · i18n `session.feedback.*` ES+EN · **legacy byte-idéntico** salvo el render del DONE + guard de teclado (motor/timers/completion/navegación intactos); contrato s115 intacto | #116 | [session-116](./docs/sessions/session-116-b2-2b-2-feedback-ligero.md) |
@@ -152,6 +153,88 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.65.0] -- 2026-07-26 -- feat(home): claridad UX de la home
+
+Sesión 122. Hacer **comprensible** la home: que una persona, sin explicaciones,
+distinga **Foco manual** de **Camino guiado**, sepa qué es un Camino y cuál es la
+acción principal. Trabajo de **jerarquía + copy + affordance**, gobernado por
+`docs/product/HOME_REDISENO_PROPUESTA.md` (§1/§3/§4/§5/§6). NO más catálogo, NO
+migración de rutinas, NO runner, NO eventos. Bump v0.64.0 → v0.65.0.
+
+### Sistema verbal (rompe la colisión «Comenzar»)
+
+Timer y Camino usaban el MISMO verbo genérico. Ahora cada botón nombra su
+consecuencia: timer `focus.start` **«Empezar foco»**/«Start focus», Camino
+`path.card.start` **«Iniciar camino»**/«Start path», biblioteca
+`paths.library.viewAll` **«Ver caminos»**/«Browse paths». Actividades ya usaban
+nombre directo. Paridad ES+EN, sin `[i18n] missing`.
+
+### «FOCO MANUAL» dentro del círculo
+
+Primera iteración: un kicker «FOCO MANUAL» como línea suelta sobre el timer —
+**rechazado por el usuario** (robaba altura al aro, redundante con el «FOCO» del
+círculo). Solución: el rótulo DENTRO del círculo pasa a **«FOCO MANUAL»/«MANUAL
+FOCUS»** (`modeLabel = focus.manual.label` solo en modo foco; Pausa/Larga sin
+cambio) y se elimina la línea suelta → el aro conserva su tamaño de siempre
+(«sol amaneciendo», ~70-80% visible).
+
+### Tarjeta de Camino: compacta que se explica sola
+
+Se conserva el diseño **original compacto** con **iconos** de paso pequeños
+(petición del usuario: iconos, no palabras). Añadido: **eyebrow SIEMPRE visible**
+«CAMINO SUGERIDO/FAVORITO · ~N min» (`paths.suggested.label`/`.favorite`
+reetiquetadas + `paths.suggested.approxMin`), con **duración aproximada**
+calculada leyendo el `.min` de cada paso (`pathDurationMin`: focus→`step.min`;
+breathe→`getBreatheRoutine().min`; body→`resolveBodyRoutine().routine.min`;
+hydrate/opcional no suma — SOLO lee window, no toca runner ni Caminos). CTA
+**«Iniciar camino»** relleno.
+
+### Jerarquía §1 + solapamiento «sol» (§0, decisión del usuario)
+
+**Reorden:** Camino POR ENCIMA de Actividades (Timer → Camino → Actividades).
+**Solapamiento editorial «sol amaneciendo»:** la tarjeta sube y tapa el arco
+inferior del círculo hasta rozar el CICLO. Se hace con
+`transform: translateY(-118px)` (NO margin: un margen negativo hace que el
+`flex:1` del timer reclame el hueco y RECENTRE el aro hacia abajo; medido, el gap
+CICLO→tarjeta solo bajaba 127→68). El transform no toca el flujo → el aro queda
+quieto y la tarjeta pinta por encima (`z-index:2`); la ActivityBar sube el mismo
+delta para no abrir hueco. **Gate ≥760px de alto** (la distancia CICLO→tarjeta es
+~130px estable entre ~760 y ~1080px; -118px aterriza 9-19px por debajo del CICLO,
+sin taparlo ni tapar el botón). **Es una excepción editorial LIMITADA/PROVISIONAL,
+NO la implementación de §0** (la geometría robusta —círculo responsive por altura,
+safe-zones, svh/dvh, zoom, matriz §8— sigue diferida; el `transform` no sustituye el
+diseño canónico de §0). Por debajo de 760px NO se aplica; en ancho+corto
+(`min-width:700px and max-height:759px`) un **swap de orden** (flex `order`) restaura
+Actividades→Camino de colchón para que la tarjeta no colisione con el aro grande.
+
+### Auditoría de coherencia pre-commit
+
+Tres correcciones con código antes de cerrar: (1) **Camino explicado en TEXTO** no
+solo iconos → línea «Rutina guiada · N pasos» (`paths.suggested.guidedSteps`); (2)
+**un único CTA primario** → el del Camino a **contorno** (secundario), el timer
+«Empezar foco» es el único relleno; (3) el swap de orden anterior. Matriz responsive
+medida en 360×640 · 390×844 · 844×390 · 1024×512 · 1280×600 · 1440×900 (ES+EN): sin
+scroll H, CTA sin truncar, tarjeta↔timer sin superposición, «FOCO MANUAL» dentro, un
+único primario. Casos §0 preexistentes (timer↔actividades a alturas muy cortas, aro
+clipado a 844×390) documentados como tales, NO regresión.
+
+### Verificación y diferidos
+
+Verificado 360×640 / 390×844 / 1280×900 / 1440×900 en ES y EN (sun overlap activo
+≥760px; móvil vertical y escritorio sin colisión; CTA/CICLO libres); consola
+limpia; standalone v0.65.0 (3209 KB) montado y verificado. **Diferido:** §0
+short-viewport (<720px, círculo responsive), §7 (Tweaks/Estadísticas), y un
+**hallazgo NO tocado**: el runner v1 (`data-pace-session-center`, `overflowY:auto`)
+DESBORDA ~17px a alturas ≤~660px en pasos `perSide` de texto largo (el glifo v1
+escala con la altura; el legacy no desborda) → scrollbar a la derecha en
+«determinados ejercicios»; el usuario pidió NO compactar copy/glifos/tipografía ni
+ocultar el overflow → sesión corta propia de runner responsive (chip de tarea
+creado).
+
+Diario completo: [session-122](./docs/sessions/session-122-claridad-ux-home.md).
+
+---
+
 ## [v0.64.0] -- 2026-07-24 -- feat(move): B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)
 
 Sesión 121. Cuarta y **última** ola mecánica de **B2.3**: migrar al **contrato de
@@ -222,80 +305,3 @@ No se abrirá una OLA 5 mecánica salvo que una auditoría NUEVA demuestre que a
 rutina puede migrarse sin cambiar copy, dosis, estructura, lateralidad ni escalones.
 
 Diario completo: [session-121](./docs/sessions/session-121-b2-3-ola-4-cierre-mecanico.md).
-
----
-
-## [v0.63.0] -- 2026-07-22 -- feat(move): B2.3 OLA 3 — 5 rutinas mixtas al contrato v1
-
-Sesión 120. Tercera ola de **B2.3**: migrar rutinas **legacy** mixtas (Mueve +
-Estira) al **contrato de pasos v1** (s115), gobernada por `BASE_MUEVE_ESTIRA.md`.
-Principio rector: **migrar CONTENIDO al contrato existente, NO rediseñar el
-runner**. El GIRO (s113/s114), el contrato (s115), el feedback (s116) y el diseño
-de eventos (s117) están CERRADOS y no se reabren; la capa de eventos NO se
-implementa; el layout del runner (FASE A s119) NO se toca. Bump v0.62.0 → v0.63.0.
-
-### Alcance del acceso — decisión del usuario
-
-El corte proponía, dentro del mismo dominio de contenido, un intercambio 1×1 de
-acceso (`extra.core.stealth` premium→FREE / `extra.back.desk` FREE→premium) para
-elegir la rutina Mueve de entrada. Al arrancar se detectó que su justificación
-(«mantener 1 free + 6 premium») describía **solo el subconjunto de 7 Mueve aún
-legacy**, no una distribución de catálogo: el catálogo real tiene **8 Mueve free /
-6 premium**. Consultado, el usuario decidió **NO aplicar ningún cambio de `access`
-en s120** (core.stealth sigue premium, back.desk sigue free) y limitar la sesión a
-la migración mecánica; el posible cambio de rutina gratuita de entrada se evaluará
-aparte como decisión de producto. `canAccessRoutine` intacto.
-
-### 5 rutinas mixtas al contrato v1
-
-Migradas (todas conservan su `access`): `extra.hang.bar` (premium, min 2) ·
-`extra.core.stealth` (premium, 2) · `extra.back.desk` (free, 3) · `move.spine.waves`
-(premium, 5) · `move.hamstrings` (premium, 5). Clasificación BASE §3:
-
-- **timed** — aguantes isométricos (hang pasivo/activo, seated hollow) y movilidad
-  de columna/hombro (gato-camello, onda espinal, rotación torácica, puente
-  torácico, rodar hacia abajo, elephant walk, pliegue adelante).
-- **reps** + `tempo`/`completion:{mode:'guided'}` — fuerza con **dosis legacy
-  conservada**: Scapular squeeze (**12 reps**, «2 segundos cada una» → tempo 1-2-1
-  con 2 s de retención) y **Superman** (10 reps, tempo 2-0-2). Ninguna dosis
-  reducida.
-- **perSide** + `transition:{seconds:10}` — Isquio a una pierna (fix del «40s por
-  lado» en `dur:80` → `dur:40` POR LADO + transición, §6).
-- **rests entre holds SUAVES** (hang.bar, core.stealth) — sin `restKind`, conservan
-  `dur:20`, patrón `glutes.stealth`; los cue vacíos de core.stealth reutilizan el
-  literal «Suelta.» / «Let go.» (sin redactar copy nuevo).
-- **gate `ready`** — suelo/barra: **Superman** (`reps`+`ready` sobre suelo — 1ª
-  combinación del catálogo), Gato-camello y Puente con marcha (suelo), Hang pasivo
-  (barra). El gate cuenta la transición al suelo/barra vía `estimatedSeconds`.
-
-Migración ATÓMICA por rutina: `instruction:{setup,action,care}` +
-`tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5
-metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**).
-Keys EN `id.sN.instruction.*` nuevas + `id.sN.cue` retiradas en el MISMO cambio;
-**ningún `name` cambió** → glifos intactos. Copy reutilizado de OLA 1/2 para
-ejercicios compartidos (Band pull-apart, Apertura de pecho, Gato-camello, Rotación
-torácica, Puente con marcha, Scapular squeeze). El **escalón de regresión** de
-Puente torácico (`spine.waves`, marcado por la auditoría) queda para la **ola
-editorial**, no para esta migración mecánica.
-
-Verificación (dev + standalone): `estimateDuration` — las 5 **dentro de rango**
-(hang.bar 160s [2–3], core.stealth 145s [2–3], back.desk 203s [3–4], spine.waves
-325s [5–6], hamstrings 330s [5–6]); dev-check «dentro» en las 5, **cero drift de
-`min`**. i18n: **52 keys EN** `instruction.*`/`name` resuelven, 0 faltantes, 0
-`.cue` residual (ES+EN). `canAccessRoutine` correcto (4 premium + back.desk free,
-inalterado). Runtime: **back.desk completo** (reps 1er set + timed auto-place +
-**Superman reps+ready sobre suelo** + «MOVIMIENTO COMPLETADO» + stats honestas +
-feedback), **hamstrings** (dispatch v1 + timed + **perSide place «Izquierda» +
-transición «Ahora: Derecha»**); tarjetas premium muestran su rango al desbloquear
-(y «Pronto» bloqueadas), legacy con `min` único. Sin errores de consola.
-`premiumUnlocked` restaurado a su valor original tras las pruebas. **Standalone**
-regenerado (v0.63.0, 3200 KB), montado y verificado (versión + rutinas migradas +
-`access` inalterado + 0 cue residual). Backup `v0.62.0_20260722` (rotado `v0.42.0`,
-cap 20).
-
-**Estado B2.3:** 13 → **8 legacy** (4 Mueve premium: `push.ladder`, `wall.sit`,
-`legs.single`, `core.plank` + 4 Estira: `desk.quick`, `hips.ground`, `atg.knees`,
-`ancestral`) + ola editorial (4 cues + 2 rutinas; + escalón de Puente torácico).
-
-Diario completo: [session-120](./docs/sessions/session-120-b2-3-ola-3.md).
-

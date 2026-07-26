@@ -258,6 +258,42 @@ PACE usa un enfoque móvil-primero con **dos breakpoints principales**:
 - **`100vh` + `100dvh`** (fallback + override): usado en `app/main.jsx` raíz y `app/shell/Sidebar.jsx`.
 - **Scroll asimétrico** (sesión 24): home usa `100dvh` puro (4 botones siempre visibles); sidebar usa `min-height: calc(100dvh + 1px)` con `height: auto` para activar auto-hide de la barra del navegador.
 
+### Solapamiento «sol amaneciendo» de la home (s122 · v0.65.0)
+
+> **PROVISIONAL / LIMITADO — NO es la implementación de §0.** Se implementó, por
+> autorización expresa del usuario en s122, un solapamiento editorial **limitado**
+> para alturas **≥760 px**. La geometría robusta de §0 (círculo responsive por
+> altura, safe-zones, `svh`/`dvh`, zoom 80-200%, barras móviles, toda la matriz de
+> viewports del §8) **permanece diferida**. El patrón `transform` de abajo es una
+> solución provisional para el rango donde funciona, **no un sustituto de §0**: §0
+> sigue proponiendo flujo normal + margen negativo controlado como diseño canónico.
+
+La tarjeta de Camino sugerido se superpone al arco INFERIOR del círculo del timer
+hasta rozar los puntos de CICLO, para que el aro se lea como un sol saliendo por
+detrás y no como un círculo entero. Reglas aprendidas (útiles para la sesión de §0):
+
+- **`transform: translateY()`, NUNCA `margin-top` negativo.** El área del timer es
+  `flex:1`; un margen negativo en la tarjeta LIBERA hueco del flujo y el `flex:1` lo
+  reclama, RECENTRANDO el aro hacia abajo (medido: el gap CICLO→tarjeta solo baja a
+  la mitad, no se solapa). El `transform` no toca el flujo → el aro queda quieto y
+  la tarjeta pinta por encima (orden del DOM + `z-index`).
+- Se desplaza la tarjeta **y** la `ActivityBar` el mismo delta para no abrir hueco;
+  el espacio sobrante cae al fondo de la pantalla (inocuo).
+- **Gate por altura** (`@media (min-height: 760px)`): la distancia CICLO→tarjeta es
+  ~130px estable entre ~760 y ~1080px; un desplazamiento fijo (−118px) aterriza
+  9-19px por debajo del CICLO, sin taparlo ni tapar el botón.
+- **Degradación honesta por debajo del gate**: a alturas <760 px NO hay solapamiento
+  y, en viewports **ancho+corto** (`@media (min-width:700px) and (max-height:759px)`
+  — p.ej. 1280×600, 1024×512), se RESTAURA el orden seguro Actividades→Camino con
+  flex `order`, para que la tarjeta no quede pegada bajo el aro grande (que a poca
+  altura desborda) y colisione con sus controles. En portrait estrecho (<700 px de
+  ancho) el aro es pequeño y la tarjeta puede ir arriba sin colisión. **Casos aún no
+  resueltos (§0)**: 844×390 y similares apaisados-bajos, donde el aro grande fijo no
+  cabe de ninguna forma sin el círculo responsive.
+- **Invariante:** la tarjeta NUNCA tapa el tiempo, el botón ni el indicador de CICLO
+  (verificado en la matriz; el timer↔actividades a alturas muy cortas es el problema
+  §0 preexistente, no un solapamiento tarjeta↔timer).
+
 ---
 
 ## 📋 Clases utilitarias

@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.64.0 (s121 — B2.3 OLA 4: cierre de la migración mecánica, core.plank + wall.sit). **s117 fue solo-docs, SIN bump**: diseño del esquema de eventos `pace.events.v1` (ARQUITECTURA APROBADA, no implementada — ver decisiones activas).
-**Ultima sesion:** #121 -- 2026-07-24 - **B2.3 OLA 4 · cierre de la migración mecánica (core.plank + wall.sit)**. Sesión de **CÓDIGO** (un solo dominio: contenido, Mueve-only). Migradas al contrato v1 (s115) las **2 ÚNICAS** rutinas legacy que quedaban mecánicamente tractables sin tocar copy, dosis, estructura, lateralidad ni escalones: `extra.core.plank`(P, min 4) · `extra.wall.sit`(P, 2). Clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit)→`timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis); Plancha lateral «30s por lado» en `dur:60`→`perSide` `dur:30` POR LADO (2×30=60 = **dosis legacy conservada**)+`transition:{10}`; **rests entre holds SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.» preservados verbatim); **gate `ready`** en el 1er paso de suelo (Plancha) / de pared (Wall sit). **DISCIPLINA DE DOSIS** (lección s120): wall.sit conserva **60s** por tanda (el `care` gradúa la altura, no la dosis). Migración ATÓMICA `instruction:{setup,action,care}`+`transition`/`setup:ready`+5 metadatos (sin `discrete`); keys EN `id.sN.instruction.*`, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos; **acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios); cero drift de `min` (core.plank 250s [4–5], wall.sit 175s [2–3]). **Migración MECÁNICA de B2.3 CERRADA (s121)**: 8 → **6 legacy**, las 6 restantes NO son deuda mecánica — quedan BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio (`atg.knees` espera la revisión de Sissy squat). Diario: [session-121](./docs/sessions/session-121-b2-3-ola-4-cierre-mecanico.md). Historico previo: [`s120`/`s119`](./CHANGELOG.md#historial-completo).
-**Ultima actualizacion de este archivo:** 2026-07-24 - sesion 121
-**Build entregado:** `PACE_standalone.html` v0.64.0 (3205 KB, 86 scripts + 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.65.0 (s122 — claridad UX de la home: sistema verbal, «FOCO MANUAL» dentro del círculo, tarjeta de Camino que se explica sola, jerarquía §1 + solapamiento «sol»). **s117 fue solo-docs, SIN bump**: diseño del esquema de eventos `pace.events.v1` (ARQUITECTURA APROBADA, no implementada — ver decisiones activas).
+**Ultima sesion:** #122 -- 2026-07-26 - **Claridad UX de la home**. Sesión de **CÓDIGO** (confinada a la home). Pieza A de `HOME_REDISENO_PROPUESTA.md` (§1/§3/§4/§5/§6) + §0 solapamiento por decisión del usuario. **Sistema verbal** que rompe la colisión «Comenzar»/«Comenzar»: timer «Empezar foco»/«Start focus», Camino «Iniciar camino»/«Start path», biblioteca «Ver caminos»/«Browse paths». **«FOCO MANUAL»/«MANUAL FOCUS» dentro del círculo** (`modeLabel` solo en modo foco; se descartó el kicker suelto — decisión del usuario — para que el aro conserve su tamaño «sol»). **Tarjeta de Camino compacta que se explica sola**: eyebrow «CAMINO SUGERIDO/FAVORITO · ~N min» (duración leída del `.min` de cada paso) + secuencia en iconos (no palabras) + CTA «Iniciar camino». **Jerarquía §1**: Camino por encima de Actividades. **Solapamiento «sol amaneciendo»** (§0): la tarjeta sube con `transform: translateY(-118px)` (NO margin — el `flex:1` reclamaría el hueco y recentraría el aro) y tapa el arco inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; sube también la ActivityBar; gate ≥760px de alto. Diario: [session-122](./docs/sessions/session-122-claridad-ux-home.md). Historico previo: [`s121`/`s120`](./CHANGELOG.md#historial-completo).
+**Ultima actualizacion de este archivo:** 2026-07-26 - sesion 122
+**Build entregado:** `PACE_standalone.html` v0.65.0 (3209 KB, 86 scripts + 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.64.0** (s121: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s120: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s119: solo título bump; sin tags nuevos (layout + migración de datos/i18n, no de módulos). s118: solo título bump; s116: + 3 tags (`state-feedback.jsx`, `SessionShell.responsive.js`, `SessionFeedback.jsx`) + título bump. s115/s114: solo título bump; sin tags nuevos. s113: + tag `MoveSessionV1.support.jsx`. s110: + 3 tags. s106: onboarding; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.64.0** (3205 KB, 86 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://; s121 lo regeneró tras OLA 4; verificado en navegador: monta, core.plank perSide+ready, wall.sit ready pared, access premium intacto, 0 cue residual) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.64.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102; regenerado por el build en s121) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.65.0** (s122: solo título bump; sin tags nuevos (cambios en datos/i18n/CSS de la home, no en módulos). s121: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s120: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s119: solo título bump; sin tags nuevos (layout + migración de datos/i18n, no de módulos). s118: solo título bump; s116: + 3 tags (`state-feedback.jsx`, `SessionShell.responsive.js`, `SessionFeedback.jsx`) + título bump. s115/s114: solo título bump; sin tags nuevos. s113: + tag `MoveSessionV1.support.jsx`. s110: + 3 tags. s106: onboarding; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.65.0** (3209 KB, 86 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://; s122 lo regeneró tras la claridad de la home; verificado en navegador: monta, «FOCO MANUAL» dentro del círculo, «Iniciar camino», solapamiento «sol» (tarjeta 9-19px bajo CICLO), 0 errores de consola) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.65.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102; regenerado por el build en s122) |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **v0.56.0** (s112 micro-fix: column paddingBottom 30→16 + options gap 10→8 — la pregunta 1 desbordaba ~35px en 360×640, ahora cabe (584/584). s106: nuevo, 391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado) |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **v0.56.0** (s112 micro-fix: padding de OnbChoice 13/18→11/16, pareja del ajuste de Onboarding.jsx. s106: nuevo, 208 ln; laminas via `getPathIllustration`) |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
@@ -66,7 +66,7 @@
 | `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.63.0** (s120/B2.3 OLA 3: `spine.waves`·`hamstrings` migradas — movilidad de columna→`timed` (Puente torácico consolida el cue, su escalón queda a la editorial), Isquio a una pierna→`perSide` (fix «40s/lado» en dur:80→dur:40+transición), Puente con marcha→`timed` con `ready` de suelo; copy compartido reutilizado de morning.flow/hips.5/couch; ningún `name` cambió; **399→447 ln (cerca del techo 500 → trocear en la próxima ola de Estira)**. s119/B2.3 OLA 2: **5 rutinas de Estira migradas al contrato v1** — `wrists`·`shoulders.5`·`shoulder.circles`·`hips.5`·`morning.flow`: por paso `mode` (timed/perSide/reps/rest) + `instruction:{setup,action,care}` (consolida el `cue`→`action`) + `tempo`/`completion` (reps) + `transition:{seconds:10}` (perSide) + `setup:{mode:'ready',estimatedSeconds:15}` en pasos de suelo/pared/barra + 5 metadatos (sin `discrete`); `name` intactos → glifos sin tocar; cero drift de `min`; 399 ln. **6 Estira legacy restantes** (desk.quick, spine.waves, hips.ground, atg.knees, hamstrings, ancestral — varias con cue de reescritura → ola editorial). s118/B2.3: `move.couch.stretch.min` **5→6** (candidato aprobado; el dev-check s115 calculaba 6–7 min, 5 quedaba fuera del rango — ahora alineado); las 14 rutinas de Estira siguen LEGACY (migración en olas siguientes). s115/B2.2b-1: `neck.3`/`chair.antidote`/`couch.stretch` estrenan el contrato formal — `instruction:{setup,action,care}` (consolida cue/placeCue/careCue), `tempo` en chin tucks (`{2,4,2}`=8), `transition:{seconds:10}` en perSide, `setup:{mode:'ready',estimatedSeconds:15}` en Flexor/WGS/Couch, 5 metadatos; cue/placeCue/careCue RETIRADOS; el cierre respiratorio de chair.antidote sin tocar; 283 ln. s114: capas editoriales. s113: `repSeconds: 8` en Chin tucks de `neck.3` (control postural con retención ≠ cadencia de fuerza; 5×8 = 40 s = su dur) + comentario-guard en «Reset respiración» de `chair.antidote` (CIERRE, sin `restKind` — el ajuste Tweaks s114 no lo toca); 213 ln. s112: ready en Flexor/WGS + 5º piloto couch.stretch. s110: pilotos. s108: editorial. s91: F5 7→14) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** (s107: contador de logros dinamico `ACHIEVEMENT_CATALOG.length` (antes /100 hardcodeado s12) + **sendero ABSTRACTO** (hitos equidistantes orden fijo, sin horas inventadas); s101: WeekDots criterio s69; ~540 ln, sigue en deuda) |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.53.0** (s108: +3 ln, llamada a `maybeRequestNotifyPermission` en el arranque real (el helper vive en support). s102: notificacion en onComplete rama foco + 2 efectos de persistencia, 496 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.65.0** (s122: `modeLabel` en modo foco → `focus.manual.label` («Foco manual»/«Manual focus») = rótulo DENTRO del círculo; se descartó el kicker suelto —decisión del usuario— para que el aro conserve su tamaño. s108: +3 ln, llamada a `maybeRequestNotifyPermission` en el arranque real (el helper vive en support). s102: notificacion en onComplete rama foco + 2 efectos de persistencia, 496 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.47.0** (s102: + `restore(endsAtMs)` -- reanuda desde idle con el endsAt ORIGINAL (el tiempo de la recarga cuenta como transcurrido) + expone `endsAt` solo en running, 158 ln. s97: idle deriva de durationSec. s96: nuevo, `endsAt` como verdad, `completed` terminal) |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.44.0** (s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
@@ -79,7 +79,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.52.0** (s107: + **`parseLocalDateKey()`** -- parse LOCAL de claves "YYYY-MM-DD" (new Date(iso) es UTC y rompe rachas en husos negativos); regla #10 CLAUDE.md. s101: extraido de state-core, ~170 ln) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.64.0** (s121/s120/s119/s118: solo `PACE_VERSION` bump. s116/B2.2b-2: + `routineFeedback: {}` en defaultState (merge `{...defaultState,...parsed}` cubre instalaciones previas) + `PACE_VERSION` bump. s115: solo `PACE_VERSION` bump. s114: + `restBetweenSets: 30` en defaultState (descanso entre series, `betweenSets` únicamente; merge de loadState cubre instalaciones previas); 448 ln. s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true`. s106: + `profile`. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.65.0** (s122/s121/s120/s119/s118: solo `PACE_VERSION` bump. s116/B2.2b-2: + `routineFeedback: {}` en defaultState (merge `{...defaultState,...parsed}` cubre instalaciones previas) + `PACE_VERSION` bump. s115: solo `PACE_VERSION` bump. s114: + `restBetweenSets: 30` en defaultState (descanso entre series, `betweenSets` únicamente; merge de loadState cubre instalaciones previas); 448 ln. s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true`. s106: + `profile`. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -91,14 +91,14 @@
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** (s79: fade-out aditivo 300ms via estado exiting + opacity transition; visible TOAST_DURATION_MS sin cambios; s77b: TOAST_DURATION_MS de window con fallback 3000ms) |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** (s71: PaceLogoImage invert+screen en oscuro) |
-| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.51.0** (s106: FUERA openWelcome/useFirstTimeWelcome/listener pace:open-welcome; monta `<Onboarding/>` en overlays (se auto-gestiona), 310 ln. s102: deep links `?go=` + UpdatePrompt; s82: split variante B 600->279) |
+| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.65.0** (s122: reorden §1 — `<SuggestedPathCard/>` ANTES de `<ActivityBar/>` (Timer → Camino → Actividades). s106: FUERA openWelcome/useFirstTimeWelcome/listener pace:open-welcome; monta `<Onboarding/>` en overlays (se auto-gestiona), 310 ln. s102: deep links `?go=` + UpdatePrompt; s82: split variante B 600->279) |
 | `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con reglas @media globales (TopBar, ActivityBar, main content, sidebar handle, fallback vh/dvh) | **v0.33.2** (nuevo s82, 105 ln; literal de main.jsx 20-112) |
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent / Tweaks prop) + topBarStyles | **v0.33.2** (nuevo s82, 106 ln) |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium + pwa | **v0.58.0** (s114: + 5 keys ES+EN del bloque «Sesiones» — `tweaks.session.label`/`.rest.hint` + `tweaks.rest.short`/`.calm`/`.wide`. s102: + 13 keys PWA/notify/legal; s89: agua) |
-| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move + hydrate + custom | **v0.60.0** (s116/B2.2b-2: +6 keys ES+EN `session.feedback.{question,yes,some,no,later,thanks}`. s115/B2.2b-1: −2 `move.repsGuidedHint` (ES+EN; sin consumidor tras s114); 391 ln. s114: +9 keys ES+EN — `session.moveDone`/`stretchDone` + `move.careLabel` + `move.series`/`repsCount` + `move.restNext`/`restReady`. s113: +4/−4. s112: +3. s110: +13 del contrato v1) |
-| `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.45.0** (s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN, 132 ln; s99: + `paths.library.count.one/many` ES+EN; nuevo s81) |
+| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move + hydrate + custom | **v0.65.0** (s122/claridad: `focus.start` «Comenzar»→«Empezar foco»/«Start focus» + nueva `focus.manual.label` «Foco manual»/«Manual focus» —rótulo dentro del círculo— ES+EN. s116/B2.2b-2: +6 keys ES+EN `session.feedback.{question,yes,some,no,later,thanks}`. s115/B2.2b-1: −2 `move.repsGuidedHint` (ES+EN; sin consumidor tras s114); 391 ln. s114: +9 keys ES+EN — `session.moveDone`/`stretchDone` + `move.careLabel` + `move.series`/`repsCount` + `move.restNext`/`restReady`. s113: +4/−4. s112: +3. s110: +13 del contrato v1) |
+| `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.65.0** (s122/claridad: `path.card.start` «Comenzar»→«Iniciar camino»/«Start path» · `paths.library.viewAll` «Ver todos»→«Ver caminos»/«Browse paths» · `paths.suggested.label`/`.favorite` reetiquetadas a «Camino sugerido/favorito»/«Suggested/Favorite path» · nuevas `paths.suggested.approxMin` «~{n} min» + `paths.suggested.guidedSteps` «Rutina guiada · {n} pasos»/«Guided routine · {n} steps» ES+EN. s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN; s99: + `paths.library.count.one/many`; nuevo s81) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.52.0** (s107: fuera `stats.year.totalActions`; `activeDays` → «{n} dias con ritmo»/"days with rhythm" + `tooltip.score` → «intensidad {n}»/"intensity {n}". s101: label.body, ~115 ln) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20 tecnicas | **v0.52.0** (s107: 5 claims EN a lenguaje orientativo, espejo del ES. s92: nuevo, 94 ln) |
@@ -116,16 +116,17 @@
 | `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.44.0** (s99: pasa `inPath` a MoveSession -> "Siguiente" + atmosfera; s95: guard -> PathStepLocked; nuevo s80) |
 | `app/paths/PathTransitions.jsx` | Cards intro/step entre pantallas del Camino | **v0.49.0** (s104: escena full-bleed detras del contenido (zIndex -1) + StepIntro con titulo ANCLADO a la bola (titleAtDot) + IntroCard con **tagline** del catalogo + dotLabel/dotKicker + halo de papel `textHaloScene`; sin arte, card clasica + linea "I · Respira" bajo el titulo; ~360 ln; s100: OutroCard eliminada) |
 | `app/paths/SenderoBar.jsx` | Sendero visual clasico -- FALLBACK vivo para caminos sin lamina (hoy los 7 tienen; queda para futuros) | **v0.45.0** (INTOCADO en s104, decision s99 respetada; s100: prop `drawIn`, 194 ln) |
-| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.44.0** (s99: acento en gradiente `--focus`->`--focus-cta` + hover con halo `--focus-soft`; s94: huerfanas -> tokens reales; ~195 ln) |
+| `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.65.0** (s122/claridad: la tarjeta se explica sola sin dejar de ser compacta — **eyebrow SIEMPRE visible** «CAMINO SUGERIDO/FAVORITO · ~N min» (`paths.suggested.label`/`.favorite` reetiquetadas + `paths.suggested.approxMin`) con **duración** leída del `.min` de cada paso (`pathDurationMin`, solo lee window: getBreatheRoutine/resolveBodyRoutine/step.min) · secuencia en **TEXTO** «Rutina guiada · N pasos» (`paths.suggested.guidedSteps`) + iconos de acento · CTA `path.card.start` «Iniciar camino» en **CONTORNO** (secundario; único primario = timer) · **solapamiento «sol» LIMITADO/PROVISIONAL (NO §0 completo)**: el bloque `[data-pace-spc]` sube con `transform: translateY(-118px)` + `z-index:2` (NO margin — el `flex:1` reclamaría el hueco y recentraría el aro) y la ActivityBar el mismo delta, GATE `@media (min-height:760px)`; **swap de orden** (flex `order`) en `min-width:700px and max-height:759px` restaura Actividades→Camino de colchón bajo el gate; tapa el arco inferior del círculo sin tapar CICLO/botón (~230 ln). s99: acento gradiente; s94: huerfanas -> tokens) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.64.0** (s121/s120/s119/s118/s116/s115/s114/s113/s112/s111/s110/s108/s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.65.0** (s122/s121/s120/s119/s118/s116/s115/s114/s113/s112/s111/s110/s108/s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + `maybeRequestNotifyPermission` + persistencia `pace.timer.v1` | **v0.53.0** (s108: + `maybeRequestNotifyPermission(state, set)` -- permiso de notificacion en el primer «Comenzar» de Foco, 1 vez por carga, solo web, solo permiso 'default'; denegar → `notifyFocusEnd:false`, ~113 ln. s102: nuevo, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.64.0_20260725.html` <- creado s122 (snapshot del v0.64.0 publicado en s121, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.63.0_20260724.html` <- creado s121 (snapshot del v0.63.0 publicado en s120, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.62.0_20260722.html` <- creado s120 (snapshot del v0.62.0 publicado en s119, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.61.0_20260722.html` <- creado s119 (snapshot del v0.61.0 publicado en s118, copiado del standalone en disco antes de regenerar -- patron s87)
@@ -145,61 +146,107 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.47.0_20260713.html` <- creado s103 (snapshot del v0.47.0 publicado en s102, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.46.0_20260713.html` <- creado s102 (snapshot del v0.46.0 publicado en s101)
 - `backups/PACE_standalone_v0.45.0_20260710.html` <- creado s101 (snapshot del v0.45.0 publicado en s100)
-- `backups/PACE_standalone_v0.44.0_20260710.html` <- creado s100 (snapshot del v0.44.0 publicado en s99)
-Nota s121: cap 20 mantenido rotando el mas antiguo (`v0.43.0_20260709.html`)
-al crear el backup del v0.63.0. El mas antiguo vigente es ahora `v0.44.0_20260710`.
+Nota s122: cap 20 mantenido rotando el mas antiguo (`v0.44.0_20260710.html`)
+al crear el backup del v0.64.0. El mas antiguo vigente es ahora `v0.45.0_20260710`.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 121 - CÓDIGO (bump v0.63.0→v0.64.0) - B2.3 OLA 4 · cierre de la migración
-mecánica (core.plank + wall.sit)**. Un solo dominio (contenido, Mueve-only). Migrar
-CONTENIDO legacy al contrato existente (s115), NO rediseñar el runner: el GIRO
-(s113/s114), el contrato (s115), el feedback (s116), el diseño de eventos (s117) y el
-layout (FASE A s119) NO se tocan; eventos NO se implementan; voz/TTS NUNCA; glifos
-D-4 no se tocan. Alcance A (mínima) fijado de antemano, no re-preguntado.
+**Sesion 122 - CÓDIGO (bump v0.64.0→v0.65.0) - Claridad UX de la home**. Confinada a
+la home. Pieza A de `HOME_REDISENO_PROPUESTA.md` (§1/§3/§4/§5/§6) + §0 solapamiento
+por decisión explícita del usuario. NO catálogo, NO migración de rutinas, NO runner
+por dentro, NO eventos, NO §7. Auditoría previa + 4 decisiones por AskUserQuestion +
+una reelaboración completa a raíz del feedback del usuario en vivo.
 
-### Migración — 2 rutinas Mueve premium (las últimas mecánicamente tractables)
+### Cambios entregados
 
-- **Migradas** (`move.data.js` + `content/move.js`): `extra.core.plank`(P, min 4:
-  timed(suelo,ready)+rest suave+**perSide**+rest suave+timed+timed) ·
-  `extra.wall.sit`(P, 2: timed(pared,ready)+rest suave+timed).
-- Clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit)→
-  `timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis);
-  Plancha lateral «30s por lado» en `dur:60`→`perSide` `dur:30` POR LADO (2×30=60 =
-  **dosis legacy conservada**)+`transition:{seconds:10}`. **Rests entre holds
-  SUAVES** (sin `restKind`, conservan `dur`; los cue legacy «Respira.»/«Suave.» NO
-  estaban vacíos → se preservan **verbatim**). **DISCIPLINA DE DOSIS** (lección
-  s120): wall.sit conserva **60s** por tanda; el `care` gradúa la altura, NO la dosis.
-- **Gate `ready`** en el 1er paso de suelo (Plancha) y de pared (Wall sit),
-  `estimatedSeconds:15`. Ninguna rutina trae reps a inventar (todo timed/perSide/rest).
-- Migración **ATÓMICA**: `instruction:{setup,action,care}` + `transition:{seconds:10}`
-  (perSide) + `setup:{mode:'ready',estimatedSeconds:15}` (suelo/pared) + 5 metadatos
-  (**sin `discrete`**); keys EN `id.sN.instruction.*`, `id.sN.cue` retiradas; **ningún
-  `name` cambió** → glifos intactos. **Acceso INTACTO** (ambas siguen premium;
-  `canAccessRoutine` sin cambios). `move.data.js` 352→396 ln (bajo 500 → sin split;
-  `ExtraModule.jsx` no se toca).
-- Verificación (dev + standalone): dev-check «dentro» (core.plank 250s [4–5],
-  wall.sit 175s [2–3]); i18n keys EN resuelven, 0 faltantes, 0 `.cue` residual;
-  `canAccessRoutine` correcto (acceso inalterado). Runtime: **core.plank completo**
-  (gate `ready` suelo «Colócate» + timed con acción+«Cuídate» care + **Plancha
-  lateral perSide con «Izquierda.» integrado**; sin overflow 1280×720); **wall.sit**
-  (gate `ready` pared «Colócate»). Tarjetas premium con rango al desbloquear
-  («4–5 min»/«2–3 min»). `premiumUnlocked` (`false`) restaurado tras las pruebas.
-  Standalone v0.64.0, 3205 KB, montado y verificado.
-- **Migración MECÁNICA de B2.3 CERRADA (s121)**: 8 → **6 legacy**. Las 6 restantes
-  NO son deuda mecánica → backlog editorial/técnico/fisio (ver "Pendiente" y §B2).
-- **git**: `move.data.js`, `content/move.js` + los 5 de bump/build (state-core,
-  PACE.html, sw.js, PACE_standalone, index) + docs; NADA de
+- **Sistema verbal** (rompe la colisión «Comenzar»/«Comenzar»): timer `focus.start`
+  «Empezar foco»/«Start focus» · Camino `path.card.start` «Iniciar camino»/«Start
+  path» · biblioteca `paths.library.viewAll` «Ver caminos»/«Browse paths». Cada
+  verbo = su consecuencia. Paridad ES+EN, sin `[i18n] missing`.
+- **«FOCO MANUAL» dentro del círculo**: `modeLabel = focus.manual.label` solo en
+  modo foco (Pausa/Larga sin cambio). La 1ª iteración puso un kicker suelto sobre el
+  timer → **rechazado por el usuario** (robaba altura al aro, redundante con «FOCO»);
+  solución final = rótulo dentro del círculo, el aro conserva su tamaño «sol».
+- **Tarjeta de Camino compacta que se explica sola**: eyebrow SIEMPRE visible
+  «CAMINO SUGERIDO/FAVORITO · ~N min» (duración leída del `.min` de cada paso vía
+  `pathDurationMin`, solo lee window) + secuencia en **iconos** de paso (no palabras,
+  petición del usuario) + CTA «Iniciar camino». `paths.suggested.label`/`.favorite`
+  reetiquetadas + nueva `paths.suggested.approxMin`.
+- **Jerarquía §1**: `main.jsx` reordena Camino POR ENCIMA de Actividades.
+- **Solapamiento editorial «sol amaneciendo»** (§0, decisión del usuario): el bloque
+  `[data-pace-spc]` sube con `transform: translateY(-118px)` + `z-index:2` (NO
+  margin: un margen negativo hace que el `flex:1` del timer reclame el hueco y
+  RECENTRE el aro; medido, el gap CICLO→tarjeta solo bajaba 127→68) y tapa el arco
+  inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; la
+  ActivityBar sube el mismo delta para no abrir hueco. **Gate `@media (min-height:
+  760px)`** (~130px estable entre 760–1080; -118px aterriza 9-19px bajo el CICLO).
+  **Es una excepción LIMITADA/PROVISIONAL, NO §0 completo** (la geometría robusta —
+  círculo responsive por altura, safe-zones, svh/dvh, zoom, matriz §8 — sigue
+  diferida; el `transform` no sustituye el diseño canónico de §0).
+- **Auditoría de coherencia pre-commit (3 correcciones con código):** (1) Camino
+  explicado en TEXTO, no solo iconos → línea **«Rutina guiada · N pasos»**
+  (`paths.suggested.guidedSteps`); (2) **un único CTA primario** → el del Camino a
+  **contorno** (el timer «Empezar foco» es el único relleno); (3) **swap de orden**
+  con flex `order` en ancho+corto (`min-width:700px and max-height:759px`) para
+  restaurar Actividades→Camino de colchón bajo el gate y evitar que la tarjeta quede
+  pegada al aro grande.
+- Bug propio cazado y arreglado: backticks en comentarios del CSS de
+  `SuggestedPathCard` cerraban el template literal → la app no montaba; resuelto (×2).
+
+### Verificación
+
+Matriz responsive medida (getBoundingClientRect) en **360×640 · 390×844 · 844×390 ·
+1024×512 · 1280×600 · 1440×900**, ES y EN: sin scroll horizontal, CTA sin truncar,
+«FOCO MANUAL»/«MANUAL FOCUS» dentro, tarjeta↔timer sin superposición, un único CTA
+primario, solapamiento correctamente ON ≥760px / off + swap ancho+corto <760px.
+**Casos §0 preexistentes (NO regresión):** timer↔actividades a 1280×600/1024×512
+(aro grande obscurece controles) y aro CLIPADO a 844×390 (no cabe a 390px). Consola
+limpia, sin `[i18n] missing`. Tabla de evidencia completa en el diario. **Standalone
+v0.65.0** (3209 KB) montado y verificado (0 errores; «Guided routine · 3 steps» + CTA
+contorno presentes).
+
+### Diferido (documentado, NO ejecutado)
+
+- **§0 short-viewport** (<720px de alto): el aro grande fijo + tarjeta no caben sin
+  la geometría responsive de §0 (círculo que encoge por altura). Sesión propia.
+- **§7**: pills Tweaks + estabilidad del contenedor de Estadísticas.
+- **Scrollbar del runner v1** (HALLAZGO de s122, NO tocado): `data-pace-session-center`
+  (`overflowY:auto`) desborda ~17px a alturas ≤~660px en pasos v1 `perSide` de texto
+  largo (el glifo v1 escala con la altura; el legacy no desborda). El usuario pidió NO
+  compactar copy/glifos/tipografía ni ocultar el overflow → sesión corta propia de
+  runner responsive (MoveSessionV1.support / SessionShell.responsive; verificar
+  ready/timed/reps/perSide/descansos/DONE en 360×640, 390×660, 412×667, ES/EN).
+  **Chip de tarea creado.**
+- **git**: `main.jsx`, `FocusTimer.jsx`, `SuggestedPathCard.jsx`,
+  `i18n/strings/sessions.js`, `i18n/strings/paths.js` + los 5 de bump/build
+  (state-core, PACE.html, sw.js, PACE_standalone, index) + docs; NADA de
   `.claude/settings.local.json`.
 
 ### Pendiente
 
+- **Diferidos de s122 (claridad de la home)**:
+  - **§0 solapamiento responsive a alturas <720px**: el aro grande fijo + la
+    tarjeta no caben sin la geometría responsive de §0 (círculo que encoge por
+    altura, safe-zones). El solapamiento «sol» de s122 va con GATE ≥760px; por
+    debajo NO se aplica. Sesión propia de §0 (círculo responsive + solapamiento
+    controlado en todos los viewports del §8).
+  - **§7**: pills «Breve/Tranquilo/Amplio» de Tweaks + estabilidad del contenedor
+    de Estadísticas entre pestañas Semana/Mes/Año.
+  - **Scrollbar del runner v1 (HALLAZGO s122)**: `data-pace-session-center`
+    (`overflowY:auto`) desborda **~17px a alturas ≤~660px** en pasos v1 `perSide`
+    de texto largo (glifo v1 escala con la altura → contenido crece con el
+    viewport; legacy NO desborda). Restricción del usuario: NO compactar
+    copy/glifos/tipografía ni ocultar el overflow → sesión corta de runner
+    responsive (`MoveSessionV1.support` / `SessionShell.responsive`; verificar
+    ready/timed/reps/perSide/descansos/DONE en 360×640, 390×660, 412×667, ES/EN).
+    **Chip de tarea creado.**
 - **Las 3 deudas de layout del runner v1 — RESUELTAS s119** (FASE A): barra de
   scroll fantasma (curva de glifo continua + tier de banda 701–768), glifo/botones
   sin anclar (alturas reservadas) y warning rep-pulse (`MoveSessionV1.jsx:441`,
-  shorthand→longhand). Ya NO son deuda.
+  shorthand→longhand). Ya NO son deuda. (NOTA s122: la barra fantasma reaparece por
+  otra vía en pasos `perSide` de texto largo ≤660px — ver diferido arriba.)
 - **Migración MECÁNICA de B2.3 CERRADA (s121)** con OLA 4 (core.plank + wall.sit).
   **Quedan 6 rutinas legacy BLOQUEADAS por reescritura editorial / progresión
   técnica / revisión fisio** (`atg.knees` espera la revisión de Sissy squat). **No
@@ -210,8 +257,9 @@ D-4 no se tocan. Alcance A (mínima) fijado de antemano, no re-preguntado.
   (Seated twist, falta 2º lado) · `hips.ground` (Ground transitions «con manos») ·
   `ancestral` (Ground transitions + Rib pull identidad) · `atg.knees` (editorial +
   FISIO Sissy squat, B4). + escalón de regresión de Puente torácico (`spine.waves`,
-  s120). **La SIGUIENTE sesión NO es migración**: es s122 CLARIDAD UX (ver "Proxima
-  sesion"). La IMPLEMENTACIÓN de eventos (EventStore + adaptadores web/Capacitor +
+  s120). **s122 (claridad UX de la home) HECHA**; la migración editorial de las 6
+  legacy sigue condicionada a la validación real de la home (ver "Proxima sesion").
+  La IMPLEMENTACIÓN de eventos (EventStore + adaptadores web/Capacitor +
   emisores; diseño `EVENTOS_SCHEMA.md` rev.5, s117) es de fases futuras, antes de
   stats premium / licencia.
 - **Consumidor del feedback** (Pausa PACE / recomendador scoring v2 / «qué te
@@ -286,20 +334,22 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- s122 CLARIDAD UX de la home (NO más migración)
+## Proxima sesion -- CONDICIONADA a la validación real de la home
 
-**La migración MECÁNICA de B2.3 quedó CERRADA en s121** (OLA 4: core.plank +
-wall.sit). PACE **no necesita más catálogo disponible**; necesita que una persona
-entienda qué hacer con el que ya tiene. La secuencia posterior está fijada (no
-re-derivarla):
+**s122 (claridad UX de la home) HECHA.** La prueba «con una persona sin
+explicaciones» la hace el **usuario** tras el deploy — no es un trámite: puede
+cambiar el plan. Candidatas, por prioridad según lo que aparezca en esa prueba:
 
-- **s122 — CLARIDAD UX de la home** (ANTES de la editorial; 1ª parte de
-  [`HOME_REDISENO_PROPUESTA.md`](./docs/product/HOME_REDISENO_PROPUESTA.md)):
-  diferenciar **Foco manual** de **Camino guiado** · renombrar CTAs ambiguos ·
-  explicar qué es un Camino · un único CTA dominante · navegación móvil · **probar
-  con una persona sin explicaciones**. Motivo: el problema ya no es el catálogo ni
-  el runner, es la comprensión de qué hacer.
-- **s123 — OLA EDITORIAL** (con el modelo de interacción ya más claro): Seated twist
+- **Si la prueba revela bloqueos de comprensión o una regresión** → PRIMERO un
+  **ajuste corto de claridad** de la home antes de nada más.
+- **Sesión corta de runner responsive** (chip creado): eliminar el scrollbar del
+  runner v1 a alturas ≤~660px en pasos `perSide` de texto largo, SIN compactar
+  copy/glifos/tipografía (ver "Pendiente"). Bug real de móvil, independiente de la
+  prueba de la home.
+- **§0 solapamiento responsive**: solo si sigue aportando valor tras validar la
+  claridad (círculo responsive + solapamiento controlado a alturas <720px, hoy
+  fuera del gate ≥760px). Sesión propia.
+- **s123 — OLA EDITORIAL** (condicionada; con el modelo de interacción validado): Seated twist
   2º lado · Ground transitions con manos · Rib pull identidad · escalón de Puente
   torácico; luego, por separado, las complejas (`push.ladder`, `legs.single`,
   `atg.knees`). **`atg.knees` BLOQUEADA** hasta resolver la revisión FISIO de Sissy

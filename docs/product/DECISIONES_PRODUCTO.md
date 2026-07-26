@@ -35,6 +35,53 @@
 
 ---
 
+## Home · claridad UX (s122 · v0.65.0)
+
+Pieza **A (claridad)** de [`HOME_REDISENO_PROPUESTA.md`](./HOME_REDISENO_PROPUESTA.md).
+Objetivo: que una persona entienda la home sin explicaciones. Lo APLICADO:
+
+- **§1 jerarquía:** Camino sugerido POR ENCIMA de Actividades (Timer → Camino →
+  Actividades); actividades como accesos manuales secundarios.
+- **§3 tarjeta de Camino:** eyebrow «CAMINO SUGERIDO/FAVORITO · ~N min» (duración
+  aproximada calculada de los pasos) + **línea de texto «Rutina guiada · N pasos»**
+  (explica qué es un Camino y su composición sin depender de iconos) + iconos de
+  acento + CTA propio «Iniciar camino» en **contorno** (secundario; el único CTA
+  primario es el timer). La auditoría de coherencia añadió el texto y bajó el CTA a
+  contorno; el usuario había pedido iconos para la secuencia, no eliminar el texto.
+- **§4 timer:** rótulo **«FOCO MANUAL»/«MANUAL FOCUS» DENTRO del círculo** (no una
+  línea suelta — decisión del usuario, para no encoger el aro); el aro conserva su
+  tamaño «sol amaneciendo» (~70-80% visible).
+- **§5 actividades:** ya eran botones de ancho completo; quedan al fondo como
+  secundarias.
+- **§6 a11y:** los 3 iconos superiores ya tenían `aria-label`; `:focus-visible`
+  global; áreas táctiles de las tarjetas OK.
+- **Sistema verbal** (rompe la colisión «Comenzar»): timer «Empezar foco», Camino
+  «Iniciar camino», biblioteca «Ver caminos». EN: «Start focus / Start path /
+  Browse paths». Cada verbo = su consecuencia.
+- **§0 solapamiento editorial «sol» — LIMITADO/PROVISIONAL, NO §0 completo** (el
+  usuario autorizó incluir una versión limitada, aunque el corte daba §0 fuera): la
+  tarjeta sube con `transform: translateY(-118px)` (NO margin — el `flex:1`
+  reclamaría el hueco) y tapa el arco inferior del círculo hasta rozar el CICLO.
+  **GATE ≥760px de alto**; en ancho+corto (`min-width:700px and max-height:759px`) un
+  **swap de orden** restaura Actividades→Camino de colchón. El patrón `transform` es
+  una solución provisional para el rango donde funciona, **no sustituye el diseño
+  canónico de §0** (flujo normal + margen negativo controlado + círculo responsive
+  por altura para toda la matriz de viewports/zoom/barras móviles).
+
+**PENDIENTE explícito:**
+- **§0 completo** (short-viewport <720px): círculo responsive + solapamiento
+  controlado en TODOS los viewports del §8. Sesión propia.
+- **§7**: pills Tweaks + estabilidad del contenedor de Estadísticas.
+- **Prueba real** con una persona sin explicaciones (la hace el usuario tras el
+  deploy; puede cambiar el plan).
+- **Bug de runner (fuera de la home):** scrollbar del runner v1 a alturas ≤660px en
+  pasos `perSide` de texto largo → sesión corta de runner responsive.
+
+Sustituye a re-leer HOME_REDISENO para saber qué se aplicó; HOME_REDISENO sigue
+siendo el canónico del DISEÑO (§0 completo aún pendiente).
+
+---
+
 ## Plan de bloques (antes de s107; después sigue el plan maestro)
 
 ### B1 · Saneamiento — CERRADO (B1.1 s107/v0.52.0 · B1.2 s108/v0.53.0)
