@@ -215,14 +215,20 @@ function PaceApp() {
           <FocusTimer onFinish={handleFocusFinish} />
         </div>
 
+        {/* Jerarquía de la home (§1 · s122): Foco (timer) → Camino sugerido
+            (experiencia guiada recomendada) → Actividades (accesos manuales
+            secundarios). El Camino va POR ENCIMA de la ActivityBar. La tarjeta
+            se mantiene COMPACTA (nombre + secuencia en iconos + CTA) para no
+            robar altura al aro; el timer conserva su tamaño de siempre. */}
+
+        {/* Camino sugerido del momento (sesion 51) */}
+        <SuggestedPathCard />
+
         {/* Actividades footer */}
         <ActivityBar
           onOpenLibrary={(kind) => setOpenLibrary(kind)}
           onOpenHydrate={() => setOpenHydrate(true)}
         />
-
-        {/* Camino sugerido del momento (sesion 51) */}
-        <SuggestedPathCard />
       </main>
 
       {/* ========== MODALS ========== */}

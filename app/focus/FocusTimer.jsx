@@ -92,7 +92,11 @@ function FocusTimer({ onFinish }) {
   const totalSec = durationSec;
   const progress = 1 - (remaining / totalSec);
 
-  const modeLabel = state.focusMode === 'foco' ? t('focus.mode.focus')
+  /* Rótulo DENTRO del círculo. En modo foco es "Foco manual" (s122): etiqueta
+     el temporizador como el flujo MANUAL, distinto del Camino guiado, sin
+     ocupar una línea extra fuera del aro (decisión del usuario: la etiqueta
+     vive dentro del círculo, no como kicker suelto). Pausa/Larga sin cambio. */
+  const modeLabel = state.focusMode === 'foco' ? t('focus.manual.label')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
   const subtitle = state.focusMode === 'foco' ? t('focus.subtitle.focus')
