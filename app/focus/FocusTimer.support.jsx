@@ -25,6 +25,23 @@
 
 const PACE_TIMER_KEY = 'pace.timer.v1';
 
+/* getFocusDescriptorKey(minutes) — descriptor editorial del Foco por DURACIÓN
+   (s124). PURA y TOTAL: convierte a Number, cae a 25 si no es finito, y
+   devuelve ÚNICAMENTE la KEY i18n (el consumidor hace t(...)). NO traduce.
+   Tramos (min, inclusive): 1–19 breve · 20–29 profunda · 30–44 sostenida ·
+   45–59 profundidad · 60+ extendida. Compartida por FocusTimer (subtítulo
+   del aro/barra/analógico, solo modo foco) y PathFocusStep (routine.name).
+   Las PAUSAS conservan su copy propio (focus.subtitle.pause/.long). */
+function getFocusDescriptorKey(minutes) {
+  const m = Number(minutes);
+  const mins = Number.isFinite(m) ? m : 25;
+  if (mins <= 19) return 'focus.subtitle.short';
+  if (mins <= 29) return 'focus.subtitle.deep';
+  if (mins <= 44) return 'focus.subtitle.sustained';
+  if (mins <= 59) return 'focus.subtitle.deepWork';
+  return 'focus.subtitle.extended';
+}
+
 /* B1.2 (s108): notifyFocusEnd arranca ON por defecto, pero el permiso del
    navegador exige un gesto real. Se pide UNA vez por carga de página, en el
    primer «Comenzar» de Foco (el otro punto de petición sigue siendo el
@@ -109,4 +126,4 @@ function persistFocusTimer(runningFoco, endsAt, minutes) {
   } catch (e) {}
 }
 
-Object.assign(window, { maybeNotifyFocusEnd, maybeRequestNotifyPermission, loadPersistedFocusTimer, persistFocusTimer });
+Object.assign(window, { getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission, loadPersistedFocusTimer, persistFocusTimer });

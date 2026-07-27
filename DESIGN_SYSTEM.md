@@ -388,6 +388,34 @@ que se encienden con el color del aro según `progress`, + número protagonista
 (`numberHugeTicks`, `clamp(78px, 9vw, 128px)`). El Foco de Camino la usa; el home
 mantiene el aro clásico con arco + punto guía.
 
+### Timer de Foco · controles y estados (s124 · v0.67.0)
+
+Controles del timer de Foco de la home (`FocusTimer`, viven DENTRO del aro vía el
+slot `inner` de `TimerDial`; no cambian su geometría ni el atardecer de s123).
+
+- **Subtítulo = descriptor por DURACIÓN** en modo foco (`getFocusDescriptorKey` →
+  `focus.subtitle.short|deep|sustained|deepWork|extended`, serif itálica `--ink-3`,
+  `subtitleItalic` de `TimerDial`). En `status==='completed'` el mismo slot muestra
+  «Ciclo completado» (feedback), sin añadir un bloque nuevo. Pausa/larga conservan su
+  copy. Los tres estilos (aro/barra/analógico) leen el mismo `subtitle`; el analógico
+  lo pinta discreto bajo la cifra (`<text>` fontSize 3.6, sin tocar el reloj).
+- **CTA principal** (`startBtnPrimary`): cápsula RELLENA `--focus-cta`, `--r-pill`,
+  `var(--font-display)` itálica 16px, `min-height:44px` (a11y), **sin glifos**.
+  Running usa `startBtnSecondary` (contorno `--line-2`, fondo `--paper`). Etiqueta y
+  acción se derivan de `status` (idle «Empezar foco» · paused «Continuar» · completed
+  «Empezar otro ciclo» · running «Pausar»), no de `remaining`.
+- **Reset** (`resetTextBtn`): solo en paused. Acción TEXTUAL subrayada (`--ink-3`,
+  itálica 13px, `min-height:44px`), NO botón circular. Va **EN FILA junto al CTA**
+  (`controlsTight` = row `nowrap` + `flexShrink:0`, la fila desborda centrada el
+  `maxWidth:70%` del interior del dial) → mostrarlo NO añade altura al interior del aro
+  y no desplaza el «CICLO N/4» ni el solapamiento. Copy `focus.restartBlock`
+  («Reiniciar bloque»); el `focus.restart` del Foco de Camino es independiente.
+- **Indicador de ciclo** (`cycleDots`): 4 puntos + «CICLO N / 4» (uppercase, `--ink-3`,
+  10px, tracking 0.18em); completed → «SIGUIENTE · CICLO N / 4». N = `(state.cycle%4)+1`.
+- **a11y**: `aria-live="polite"` en el subtítulo del `TimerDial` (anuncia «Ciclo
+  completado»/descriptor, no el contador). `prefers-reduced-motion` respetado (solo
+  transiciones de estado 180ms, sin animación de entrada nueva).
+
 ### Escena ilustrada de Caminos (s104 · v0.49.0 · arte D-4)
 
 `PathIllustration` monta la lámina del Camino como escena cover FULL-BLEED

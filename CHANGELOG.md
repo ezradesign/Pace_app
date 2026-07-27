@@ -27,8 +27,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.67.0** | 2026-07-28 | feat(focus): **timer editorial — descriptor por duración, controles/estados y fix del `completed` inerte** (sesión de CÓDIGO; el corte desplazado desde s123; NO responsive de la home —s123—, NO scrollbar del runner —s125—, **delta CERO de contabilidad**: créditos/`state.cycle`/logros/notificaciones/menú post-Pomodoro/persistencia/`useCountdown` intactos) -- **descriptor de Foco por DURACIÓN** (sustituye al fijo «Concentración profunda»): helper PURO y TOTAL `getFocusDescriptorKey(minutes)` en `FocusTimer.support.jsx` (Number + fallback 25 si no finito; devuelve SOLO la key i18n; tramos 1–19 `short`/20–29 `deep`/30–44 `sustained`/45–59 `deepWork`/60+ `extended`) consumido por `FocusTimer` (subtítulo de aro/barra/analógico, solo modo foco) y `PathFocusStep` (`routine.name`, `step.min||25` coherente con `totalSec`); 5 keys `focus.subtitle.short|deep|sustained|deepWork|extended` ES+EN, `focus.subtitle.focus` retirada (0 consumidores runtime); las pausas conservan su copy · **CTA SIN glifos** `▶`/`❚❚` → cápsula RELLENA serif itálica; **running** «Pausar» a CONTORNO; etiqueta por `status` (idle «Empezar foco» / paused «Continuar» / completed «Empezar otro ciclo» / running «Pausar») · **fix del `completed` inerte** (hoy `toggle()` es no-op en completed): handler DEDICADO `handleStartAnotherCycle = () => { startFocusVisual(); reset(); start(); }` (desestructura `start`; motor `completed`-terminal INTACTO; reset/start NO acreditan, `state.cycle` no cambia al iniciar, el 2º bloque arranca en `durationSec`, persistencia vuelve solo al quedar running) + **inicio VISUAL centralizado** `startFocusVisual` (sonido `pomodoro.start` + `maybeRequestNotifyPermission`) compartido por arranque normal y «Empezar otro ciclo» · **feedback «Ciclo completado»/«Cycle complete»** REEMPLAZA el descriptor en el slot de subtítulo cuando `status==='completed'` (SIN añadir altura estructural → atardecer s123 intacto) · **reset re-jerarquizado**: oculto en idle/running/completed; en **paused** = acción TEXTUAL «Reiniciar bloque»/«Restart focus» (key NUEVA `focus.restartBlock`; `focus.restart` INTACTA, la comparte `PathFocusStep`) **EN FILA junto al CTA** (nowrap+flexShrink:0, desborda el maxWidth:70% del interior centrada) para NO desplazar el CICLO/atardecer · **indicador de ciclo explícito** «CICLO N / 4» (N=`(state.cycle%4)+1`; completed → «SIGUIENTE · CICLO N / 4»; solo presentación) · **analógico** ahora muestra el descriptor (recibía `subtitle` sin renderizarlo) discreto bajo la cifra, geometría del reloj intacta · **a11y**: CTA/reset `min-height:44px` verificable + `aria-live="polite"` en el subtítulo (anuncia «Ciclo completado», no el contador) · **split de 500 ln**: `MinutesPicker` + su CSS extraídos a `app/focus/FocusTimer.parts.jsx` (refs de hooks propias; carga tras React, antes de FocusTimer.jsx) → **FocusTimer.jsx 507→449 ln** · verificado ES+EN (15/25/35/45 + 10/22/40/50/90, 3 estilos, 4 estados, Camino min 10/15/25, delta cero por completación real de 25 = +25 min/+1 ciclo/BreakMenu, no-regresión atardecer 1440×900·1024×512·844×390), consola limpia, standalone 3222 KB | #124 | [abajo](#v0670----2026-07-28----featfocus-timer-editorial-descriptor-por-duracion-controles-estados-y-fix-del-completed-inerte) |
 | **v0.66.0** | 2026-07-27 | feat(home): **modelo «atardecer» responsive de la home** (sesión de CÓDIGO; corrección de una regresión de s122 + geometría §0 sensible a la altura; NO timer editorial —eso es s124—, NO scrollbar del runner —s125—, NO contabilidad/créditos/logros) -- **regresión s122 corregida**: el **swap por `order`** (`min-width:700px and max-height:759px`) colocaba Actividades ANTES que Camino en ancho+corto y, junto al `overflow:hidden`, la base del aro (bolas/CICLO/CTA) se recortaba → **eliminado el swap**; la jerarquía **Timer → Camino → Actividades** es ahora el ORDEN del DOM, invariante en todo viewport (prohibido `order` para intercambiar) · **aro sensible a la altura ÚTIL** con mínimo GENEROSO: `--pace-home-timer-size = min(86vw, 520px, max(300px, 58dvh))` (fallback vh→dvh vía `@supports`) — NO se encoge agresivamente; el aro llega a 520 en pantallas altas y no baja de 300 en las bajas · **solapamiento «atardecer» SIEMPRE presente y PROGRESIVO** (sustituye al gate binario ≥760px de s122): `margin-top` NEGATIVO de la tarjeta = `max(6px, min(0.19·D, (D−244)/2 − 6px))` → hasta **19% del diámetro** donde hay holgura, limitado por el arco decorativo real bajo las bolas en aros pequeños (nunca tapa CTA/CICLO; ≥8px de holgura medida) · **composición** en `data-pace-home-stack` con `margin:auto` (centra si cabe, **scrollea** si no) — se retira el `overflow:hidden` que recortaba; `FocusTimer.root`/`timerWrap` pasan a altura de CONTENIDO · **barra de scroll OCULTA** en `[data-pace-home-body]` (`scrollbar-width:none` + `::-webkit-scrollbar{display:none}` + `-ms-overflow-style:none`) conservando scroll por rueda/trackpad/gesto/teclado (foco de teclado autodesplaza; `gutterV=0` en los 7) · variante aditiva `fitHeight` de `TimerDial` (Caminos byte-idéntico al no pasarla) · **verificado ES+EN** en 1440×900 · 1280×768 · 1280×600 · 1024×512 · 844×390 · 390×844 · 360×640 (jerarquía, 4 bolas + CICLO, CTA libres, sin scroll horizontal, sin truncamiento), consola limpia, standalone 3216 KB · **deuda anotada**: `FocusTimer.jsx` en 506 ln (PRE-existente 505 en HEAD; trocear en sesión propia) | #123 | [abajo](#v0660----2026-07-27----feathome-modelo-atardecer-responsive-de-la-home) |
-| **v0.65.0** | 2026-07-26 | feat(home): **claridad UX de la home** (sesión de CÓDIGO; pieza A de `HOME_REDISENO_PROPUESTA.md` §1/§3/§4/§5/§6 + §0 solapamiento por decisión del usuario; NO catálogo, NO migración, NO runner, NO eventos) -- **sistema verbal** que rompe la colisión «Comenzar»/«Comenzar»: timer **«Empezar foco»**/«Start focus», Camino **«Iniciar camino»**/«Start path», biblioteca **«Ver caminos»**/«Browse paths» (cada verbo = su consecuencia; paridad ES+EN) · **«FOCO MANUAL»/«MANUAL FOCUS» DENTRO del círculo** (`modeLabel` solo en modo foco; se descartó el kicker suelto que robaba altura al aro — decisión del usuario) → el aro conserva su tamaño «sol amaneciendo» · **tarjeta de Camino compacta que se explica sola**: eyebrow SIEMPRE visible «CAMINO SUGERIDO/FAVORITO · ~N min» (duración calculada leyendo el `.min` de cada paso, solo lectura de window) + secuencia en **TEXTO** «Rutina guiada · N pasos» + iconos de acento + CTA «Iniciar camino» en **contorno** (único primario = timer) · **jerarquía §1**: Camino POR ENCIMA de Actividades · **solapamiento editorial «sol» LIMITADO/PROVISIONAL (NO §0 completo, autorizado por el usuario)**: la tarjeta sube con `transform: translateY(-118px)` (NO margin — un margen negativo hace que el `flex:1` reclame el hueco y recentre el aro) y tapa el arco inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; sube también la ActivityBar el mismo delta; **gate ≥760px de alto** (por debajo, caso corto diferido a §0) · nuevas claves i18n `focus.manual.label`, `paths.suggested.approxMin` + reetiquetadas `paths.suggested.label`/`.favorite` · verificado 360×640/390×844/1280×900/1440×900 ES+EN, sin `[i18n] missing`, consola limpia, standalone 3209 KB · **diferido**: §0 short-viewport (<720px), §7, y **hallazgo NO tocado**: scrollbar del runner v1 (`data-pace-session-center` desborda ~17px a ≤~660px en pasos `perSide` de texto largo; chip de tarea creado) | #122 | [abajo](#v0650----2026-07-26----feathome-claridad-ux-de-la-home) |
+| **v0.65.0** | 2026-07-26 | feat(home): **claridad UX de la home** (sesión de CÓDIGO; pieza A de `HOME_REDISENO_PROPUESTA.md` §1/§3/§4/§5/§6 + §0 solapamiento por decisión del usuario; NO catálogo, NO migración, NO runner, NO eventos) -- **sistema verbal** que rompe la colisión «Comenzar»/«Comenzar»: timer **«Empezar foco»**/«Start focus», Camino **«Iniciar camino»**/«Start path», biblioteca **«Ver caminos»**/«Browse paths» (cada verbo = su consecuencia; paridad ES+EN) · **«FOCO MANUAL»/«MANUAL FOCUS» DENTRO del círculo** (`modeLabel` solo en modo foco; se descartó el kicker suelto que robaba altura al aro — decisión del usuario) → el aro conserva su tamaño «sol amaneciendo» · **tarjeta de Camino compacta que se explica sola**: eyebrow SIEMPRE visible «CAMINO SUGERIDO/FAVORITO · ~N min» (duración calculada leyendo el `.min` de cada paso, solo lectura de window) + secuencia en **TEXTO** «Rutina guiada · N pasos» + iconos de acento + CTA «Iniciar camino» en **contorno** (único primario = timer) · **jerarquía §1**: Camino POR ENCIMA de Actividades · **solapamiento editorial «sol» LIMITADO/PROVISIONAL (NO §0 completo, autorizado por el usuario)**: la tarjeta sube con `transform: translateY(-118px)` (NO margin — un margen negativo hace que el `flex:1` reclame el hueco y recentre el aro) y tapa el arco inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; sube también la ActivityBar el mismo delta; **gate ≥760px de alto** (por debajo, caso corto diferido a §0) · nuevas claves i18n `focus.manual.label`, `paths.suggested.approxMin` + reetiquetadas `paths.suggested.label`/`.favorite` · verificado 360×640/390×844/1280×900/1440×900 ES+EN, sin `[i18n] missing`, consola limpia, standalone 3209 KB · **diferido**: §0 short-viewport (<720px), §7, y **hallazgo NO tocado**: scrollbar del runner v1 (`data-pace-session-center` desborda ~17px a ≤~660px en pasos `perSide` de texto largo; chip de tarea creado) | #122 | [session-122](./docs/sessions/session-122-claridad-ux-home.md) |
 | **v0.64.0** | 2026-07-24 | feat(move): **B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **2 rutinas Mueve premium** migradas al contrato v1: `extra.core.plank`(P, min 4) · `extra.wall.sit`(P, 2) — las 2 ÚNICAS rutinas legacy mecánicamente tractables sin tocar copy, dosis, estructura, lateralidad ni escalones · clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit) → `timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis); Plancha lateral «30 s por lado» en `dur:60` → `perSide` `dur:30` POR LADO (2×30=60 = **dosis legacy conservada**) + `transition:{seconds:10}` · **rests entre holds SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.» preservados verbatim) · **gate `ready`** en el 1er paso de suelo (Plancha) / de pared (Wall sit), cuenta la colocación vía `estimatedSeconds` · **DISCIPLINA DE DOSIS** (lección s120): wall.sit conserva **60 s** por tanda (el `care` gradúa la altura, no la dosis) · migración ATÓMICA `instruction:{setup,action,care}` + `transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos · **acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios) · cero drift de `min` (core.plank 250s [4–5], wall.sit 175s [2–3]; dev-check «dentro») · **migración MECÁNICA de B2.3 CERRADA**: **8 → 6 legacy**, las 6 restantes NO son deuda mecánica — quedan BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio (`atg.knees` espera la revisión de Sissy squat) | #121 | [session-121](./docs/sessions/session-121-b2-3-ola-4-cierre-mecanico.md) |
 | **v0.63.0** | 2026-07-22 | feat(move): **B2.3 OLA 3 — 5 rutinas mixtas al contrato v1** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **SIN intercambio de acceso**: el corte proponía core.stealth premium→FREE / back.desk FREE→premium, pero su cifra «1 free + 6 premium» describía solo el subconjunto de 7 Mueve **legacy**, no un objetivo de catálogo (el catálogo real = 8 Mueve free / 6 premium); a petición del usuario **NO se aplicó** ningún cambio de `access` (core.stealth sigue premium, back.desk free); el posible cambio de rutina de entrada se evalúa aparte como decisión de producto -- **5 rutinas mixtas Mueve+Estira** migradas: `extra.hang.bar`(P) · `extra.core.stealth`(P) · `extra.back.desk`(free) · `move.spine.waves`(P) · `move.hamstrings`(P) — clasificación BASE §3: aguantes isométricos y movilidad de columna/hombro → `timed`; estiramiento bilateral (Isquio a una pierna) → `perSide`+`transition:{seconds:10}`; fuerza (Scapular squeeze, Superman) → `reps`+`tempo`/`completion:{mode:'guided'}`; **rests entre holds SUAVES** (sin `restKind`, patrón glutes.stealth, conservan `dur`) · **gate `ready`** en suelo/barra: **Superman (suelo, `reps`+`ready` — 1ª combinación del catálogo)**, Gato-camello, Puente con marcha (suelo), Hang pasivo (barra) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas en el MISMO cambio; **ningún `name` cambió** → glifos intactos · copy reutilizado de OLA 1/2 (Band pull-apart, Apertura de pecho, Gato-camello, Rotación torácica, Puente con marcha, Scapular squeeze) + rests con cue vacío → «Suelta.»/«Let go.» (literal de glutes.stealth) · Puente torácico (spine.waves): su ESCALÓN de regresión (audit) queda a la ola editorial · **cero drift de `min`** (las 5 dentro de rango) · **13 → 8 legacy** (4 Mueve premium: push.ladder/wall.sit/legs.single/core.plank + 4 Estira: desk.quick/hips.ground/atg.knees/ancestral) + ola editorial | #120 | [session-120](./docs/sessions/session-120-b2-3-ola-3.md) |
 | **v0.62.0** | 2026-07-22 | feat(move): **estabilidad de layout del runner v1 + B2.3 OLA 2** (sesión FUSIONADA 2 fases; FASE A cerrada y verificada ANTES de FASE B) -- **FASE A · pulido de layout** (delta 0 de comportamiento; ámbito confinado a `MoveSessionV1.jsx`+`MoveSessionV1.support.jsx`, **SessionShell intacto**): **(1) barra fantasma RESUELTA** — `v1GlyphSize` saltaba `0.22→0.25·vpH` en vpH=720 (glifo +22px) sin tier de compactación hasta ≤700 → banda muerta 701–760 desbordaba ~7px y disparaba scrollbar de 15px (portátiles 1366×768); ahora **curva continua** `min(210, round(vpH·0.22))` + **tier de banda 701–768** (aprieta número/espacios) → sin barra en 1280×600/720/760, 1024×512, 844×390, 360×640; **(2) glifo/botones anclados RESUELTO** — `centerBody` centra el bloque con `margin:auto` y su alto variaba por paso (+12.4px medido); ahora **alturas reservadas** (cue 2 líneas + «Cuídate» 2 líneas SIEMPRE en trabajo aunque el paso no la tenga, solo ≥641px; móvil conserva su ajuste previo) → `glyph_top` idéntico entre pasos, footer clavado; **(3) warning rep-pulse RESUELTO** — shorthand `animation` → longhand + `animationPlayState`; **(4) aislamiento del timer v1** (`data-pace-v1-timer`) para que las reglas de número no encojan el runner **legacy** (compartían `data-pace-move-timer`). **FASE B · B2.3 OLA 2** (4+... decisiones AskUserQuestion, todas la recomendación: Estira · 5 gratuitas sin reescritura · reescrituras aparte · glifos intactos): **5 rutinas de Estira** migradas al contrato v1 (`wrists` · `shoulders.5` · `shoulder.circles` · `hips.5` · `morning.flow`) — clasificación BASE §3: movilidad/estático central → `timed`, estiramiento bilateral → `perSide`+transición (Cossack, Pigeon), fuerza/control → `reps` (Finger extension), flujo → `timed`+`rest` de cierre; **gate `ready`** en pasos de suelo/pared/barra (wall slides, dead hang, 90/90, Gato-camello) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion` + `transition:{seconds:10}` + `setup:{mode:'ready'}` + 5 metadatos (sin `discrete`); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos; copy reutilizado consistente con los pilotos · **cero drift de `min`** (las 5 dentro de rango: dev-check «dentro») · **13 legacy restantes** (7 Mueve premium + 6 Estira) + ola editorial | #119 | [session-119](./docs/sessions/session-119-layout-runner-y-b2-3-ola-2.md) |
@@ -154,6 +155,102 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.67.0] -- 2026-07-28 -- feat(focus): timer editorial — descriptor por duración, controles/estados y fix del `completed` inerte
+
+Sesión 124. El corte que se **desplazó desde s123** (que se reencuadró a la geometría
+«atardecer»). El descriptor de Foco era FIJO («Concentración profunda») para toda
+duración, el CTA llevaba glifos `▶`/`❚❚`, el reset estaba mal jerarquizado y el estado
+`completed` dejaba un botón **inerte** (`toggle()` es no-op en `completed`). Bump v0.66.0
+→ v0.67.0. Sesión de CÓDIGO confinada a `FocusTimer` + `PathFocusStep` + `TimerDial`
+(analógico) + i18n: **DELTA CERO de contabilidad** (mismos minutos acreditados, mismo
+`state.cycle`, mismos logros/notificaciones/menú post-Pomodoro, misma persistencia
+`pace.timer.v1`, motor `useCountdown` intacto — solo cambian presentación, copy y la
+recuperación correcta desde `completed`).
+
+### Descriptor de Foco por DURACIÓN
+
+Helper PURO y TOTAL `getFocusDescriptorKey(minutes)` en `FocusTimer.support.jsx` (a
+`window`, carga :178 antes que `PathFocusStep` :254): convierte a `Number`, cae a **25**
+si no es finito, y devuelve **ÚNICAMENTE la key** i18n (no traduce). Tramos inclusivos:
+**1–19** `short` («Foco breve»/«Quick focus») · **20–29** `deep` («Concentración
+profunda»/«Deep focus») · **30–44** `sustained` («Atención sostenida»/«Sustained
+attention») · **45–59** `deepWork` («Trabajo en profundidad»/«Deep work») · **60+**
+`extended` («Sesión extendida»/«Extended session»). Consumidores: `FocusTimer` (subtítulo
+del aro/barra/analógico, SOLO modo foco) y `PathFocusStep` (`routine.name`, con
+`step.min || 25` coherente para `totalSec` y el descriptor). Las **pausas** conservan su
+copy propio (`focus.subtitle.pause`/`.long`). Se retira `focus.subtitle.focus` (0
+consumidores runtime tras migrar los dos; `deep` la reemplaza con el mismo valor).
+
+### CTA, estados y fix del `completed` inerte
+
+- **CTA sin glifos** `▶`/`❚❚` → **cápsula RELLENA serif itálica**; **running** «Pausar»
+  a **contorno** (estado menos primario). Etiqueta/acción por `status` (no por
+  `remaining===totalSec`, para que pausar en el 1er segundo diga «Continuar»): idle
+  «Empezar foco» · paused «Continuar» · completed «Empezar otro ciclo» · running «Pausar».
+- **Fix del `completed` inerte**: handler DEDICADO `handleStartAnotherCycle = () => {
+  startFocusVisual(); reset(); start(); }` (desestructura `start` del hook; NO toca
+  `useCountdown` —`completed` sigue terminal—, NO `setTimeout`, NO cambia de preset).
+  Verificado: reset/start **NO acreditan**, `state.cycle` **no cambia** al pulsarlo, el
+  2º bloque arranca en `durationSec` completo, la persistencia vuelve a `pace.timer.v1`
+  solo al quedar running.
+- **Inicio VISUAL centralizado** `startFocusVisual` (sonido `pomodoro.start` +
+  `maybeRequestNotifyPermission`) compartido por un arranque/reanudación normal y
+  «Empezar otro ciclo» → misma semántica sin tocar el motor.
+- **Feedback «Ciclo completado»/«Cycle complete»** REEMPLAZA temporalmente el descriptor
+  en el slot de subtítulo cuando `status==='completed'` (modo foco) → **no añade altura
+  estructural** (atardecer s123 intacto). Pausa/larga conservan su subtítulo.
+
+### Reset re-jerarquizado + indicador de ciclo
+
+- **Reset**: oculto en idle/running/completed; en **paused** es una acción **TEXTUAL**
+  «Reiniciar bloque»/«Restart focus» (key NUEVA `focus.restartBlock`; `focus.restart`
+  INTACTA, la comparte `PathFocusStep`). Va **EN FILA junto al CTA** (nowrap +
+  `flexShrink:0`, desborda centrado el `maxWidth:70%` del interior del dial) → mostrarlo
+  **no desplaza** el CICLO ni el atardecer (medido: holgado ciclo↔tarjeta idéntico a
+  idle). Una fila en columna habría empujado el CICLO tras la tarjeta a alturas cortas.
+- **Indicador de ciclo explícito** «CICLO N / 4» (N = `(state.cycle % 4) + 1`; antes del
+  1º = 1/4); completed → «SIGUIENTE · CICLO N / 4». Solo presentación; los puntos siguen
+  marcando los ciclos completados del cuarteto.
+
+### Analógico, a11y y split de 500 ln
+
+- **Analógico**: recibía `subtitle` **sin renderizarlo** → ahora muestra el descriptor
+  (y «Ciclo completado») discreto bajo la cifra, sin tocar la geometría del reloj.
+- **a11y**: CTA principal/secundario y reset textual con `min-height:44px` verificable +
+  `aria-live="polite"` en el subtítulo (anuncia «Ciclo completado», el contador vive en
+  otro nodo → no se lee cada segundo).
+- **Split**: `MinutesPicker` + su CSS de input extraídos a
+  `app/focus/FocusTimer.parts.jsx` (declara sus PROPIAS refs de hooks; carga tras React,
+  antes de `FocusTimer.jsx`) → **FocusTimer.jsx 507 → 449 ln** (holgado bajo 500). Split
+  mecánico, sin cambios visuales/funcionales del selector (Enter/Escape/blur/presets/
+  custom 1–180 verificados).
+
+### Verificación
+
+Descriptor correcto en 15/25/35/45 + «Otro» de cada rango (10/22/40/50/90), modo foco,
+**ES y EN**; los 3 estilos (aro/barra/analógico) lo muestran; los 4 estados con CTA/reset/
+ciclo correctos. Tras completar: BreakMenu abre → al cerrarlo «Ciclo completado» +
+«SIGUIENTE · CICLO N/4»; «Empezar otro ciclo» arranca el mismo preset desde su duración
+completa. **Delta cero medido**: completar un foco de 25 acredita 25 min, +1 ciclo, abre
+BreakMenu; los archivos de contabilidad (`state-timer`, `state-achievements`,
+`useCountdown`, `BreakMenu`, `state-core`) **sin diff** y el callback `onComplete` sin
+cambios (prueba acelerada solo por DevTools con `Date.now` mockeado, no persistida).
+Foco en Caminos: min 15 → «Foco breve», min 25 → «Concentración profunda», `focus.restart`
+intacta. **No-regresión atardecer** reverificada en 1440×900 (aro 520, solap 99), 1024×512
+(aro 300, solap 22, ciclo +10) y 844×390 (aro 300, solap 22, ciclo +13), barra oculta, sin
+scroll-H. Consola limpia, sin `[i18n] missing`. Standalone v0.67.0 (3222 KB) montado y
+verificado.
+
+### Deuda / notas
+
+- La colisión CTA↔tarjeta en los estilos **barra/analógico** (no-default) es
+  **pre-existente** (s123 dimensiona el solapamiento para el aro; los controles de esos
+  estilos van fuera del aro) — fuera de s124.
+- Pausa/larga en `completed` reutilizan el mismo fix de botón (no inerte) con etiqueta
+  «Empezar foco»; el feedback «Ciclo completado» y el «SIGUIENTE» son solo modo foco.
+
+---
+
 ## [v0.66.0] -- 2026-07-27 -- feat(home): modelo «atardecer» responsive de la home
 
 Sesión 123. La prueba real de la home (s122) destapó una **regresión bloqueante**: en
@@ -222,84 +319,3 @@ horizontal, sin barra vertical visible, sin truncamiento ES/EN. Consola limpia, 
   invadir controles— en el tramo bajo, tal como permitía la regla del usuario («el
   solapamiento se reduce o desaparece, pero la jerarquía no cambia»).
 
----
-
-## [v0.65.0] -- 2026-07-26 -- feat(home): claridad UX de la home
-
-Sesión 122. Hacer **comprensible** la home: que una persona, sin explicaciones,
-distinga **Foco manual** de **Camino guiado**, sepa qué es un Camino y cuál es la
-acción principal. Trabajo de **jerarquía + copy + affordance**, gobernado por
-`docs/product/HOME_REDISENO_PROPUESTA.md` (§1/§3/§4/§5/§6). NO más catálogo, NO
-migración de rutinas, NO runner, NO eventos. Bump v0.64.0 → v0.65.0.
-
-### Sistema verbal (rompe la colisión «Comenzar»)
-
-Timer y Camino usaban el MISMO verbo genérico. Ahora cada botón nombra su
-consecuencia: timer `focus.start` **«Empezar foco»**/«Start focus», Camino
-`path.card.start` **«Iniciar camino»**/«Start path», biblioteca
-`paths.library.viewAll` **«Ver caminos»**/«Browse paths». Actividades ya usaban
-nombre directo. Paridad ES+EN, sin `[i18n] missing`.
-
-### «FOCO MANUAL» dentro del círculo
-
-Primera iteración: un kicker «FOCO MANUAL» como línea suelta sobre el timer —
-**rechazado por el usuario** (robaba altura al aro, redundante con el «FOCO» del
-círculo). Solución: el rótulo DENTRO del círculo pasa a **«FOCO MANUAL»/«MANUAL
-FOCUS»** (`modeLabel = focus.manual.label` solo en modo foco; Pausa/Larga sin
-cambio) y se elimina la línea suelta → el aro conserva su tamaño de siempre
-(«sol amaneciendo», ~70-80% visible).
-
-### Tarjeta de Camino: compacta que se explica sola
-
-Se conserva el diseño **original compacto** con **iconos** de paso pequeños
-(petición del usuario: iconos, no palabras). Añadido: **eyebrow SIEMPRE visible**
-«CAMINO SUGERIDO/FAVORITO · ~N min» (`paths.suggested.label`/`.favorite`
-reetiquetadas + `paths.suggested.approxMin`), con **duración aproximada**
-calculada leyendo el `.min` de cada paso (`pathDurationMin`: focus→`step.min`;
-breathe→`getBreatheRoutine().min`; body→`resolveBodyRoutine().routine.min`;
-hydrate/opcional no suma — SOLO lee window, no toca runner ni Caminos). CTA
-**«Iniciar camino»** relleno.
-
-### Jerarquía §1 + solapamiento «sol» (§0, decisión del usuario)
-
-**Reorden:** Camino POR ENCIMA de Actividades (Timer → Camino → Actividades).
-**Solapamiento editorial «sol amaneciendo»:** la tarjeta sube y tapa el arco
-inferior del círculo hasta rozar el CICLO. Se hace con
-`transform: translateY(-118px)` (NO margin: un margen negativo hace que el
-`flex:1` del timer reclame el hueco y RECENTRE el aro hacia abajo; medido, el gap
-CICLO→tarjeta solo bajaba 127→68). El transform no toca el flujo → el aro queda
-quieto y la tarjeta pinta por encima (`z-index:2`); la ActivityBar sube el mismo
-delta para no abrir hueco. **Gate ≥760px de alto** (la distancia CICLO→tarjeta es
-~130px estable entre ~760 y ~1080px; -118px aterriza 9-19px por debajo del CICLO,
-sin taparlo ni tapar el botón). **Es una excepción editorial LIMITADA/PROVISIONAL,
-NO la implementación de §0** (la geometría robusta —círculo responsive por altura,
-safe-zones, svh/dvh, zoom, matriz §8— sigue diferida; el `transform` no sustituye el
-diseño canónico de §0). Por debajo de 760px NO se aplica; en ancho+corto
-(`min-width:700px and max-height:759px`) un **swap de orden** (flex `order`) restaura
-Actividades→Camino de colchón para que la tarjeta no colisione con el aro grande.
-
-### Auditoría de coherencia pre-commit
-
-Tres correcciones con código antes de cerrar: (1) **Camino explicado en TEXTO** no
-solo iconos → línea «Rutina guiada · N pasos» (`paths.suggested.guidedSteps`); (2)
-**un único CTA primario** → el del Camino a **contorno** (secundario), el timer
-«Empezar foco» es el único relleno; (3) el swap de orden anterior. Matriz responsive
-medida en 360×640 · 390×844 · 844×390 · 1024×512 · 1280×600 · 1440×900 (ES+EN): sin
-scroll H, CTA sin truncar, tarjeta↔timer sin superposición, «FOCO MANUAL» dentro, un
-único primario. Casos §0 preexistentes (timer↔actividades a alturas muy cortas, aro
-clipado a 844×390) documentados como tales, NO regresión.
-
-### Verificación y diferidos
-
-Verificado 360×640 / 390×844 / 1280×900 / 1440×900 en ES y EN (sun overlap activo
-≥760px; móvil vertical y escritorio sin colisión; CTA/CICLO libres); consola
-limpia; standalone v0.65.0 (3209 KB) montado y verificado. **Diferido:** §0
-short-viewport (<720px, círculo responsive), §7 (Tweaks/Estadísticas), y un
-**hallazgo NO tocado**: el runner v1 (`data-pace-session-center`, `overflowY:auto`)
-DESBORDA ~17px a alturas ≤~660px en pasos `perSide` de texto largo (el glifo v1
-escala con la altura; el legacy no desborda) → scrollbar a la derecha en
-«determinados ejercicios»; el usuario pidió NO compactar copy/glifos/tipografía ni
-ocultar el overflow → sesión corta propia de runner responsive (chip de tarea
-creado).
-
-Diario completo: [session-122](./docs/sessions/session-122-claridad-ux-home.md).

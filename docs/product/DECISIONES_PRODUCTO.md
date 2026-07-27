@@ -94,8 +94,52 @@ Detalle técnico (variables, fórmulas, el porqué del `margin` negativo ahora s
 `DESIGN_SYSTEM.md` → «Modelo atardecer de la home». HOME_REDISENO_PROPUESTA sigue siendo
 el canónico del DISEÑO editorial; §0 «sensible a la altura» ya implementado en s123.
 
-**PENDIENTE (tras s123):** **s124** timer editorial · **s125** scrollbar del runner v1 ·
-§7 · trocear `FocusTimer.jsx` (506 ln, pre-existente).
+**PENDIENTE (tras s123):** ~~**s124** timer editorial~~ (HECHO) · **s125** scrollbar del
+runner v1 · §7 · ~~trocear `FocusTimer.jsx`~~ (hecho en s124, 449 ln).
+
+---
+
+## Foco · timer editorial (s124 · v0.67.0)
+
+El temporizador de Foco deja de ser un cronómetro mudo con un descriptor fijo y pasa a
+tener **voz editorial por duración** y **estados coherentes**, SIN tocar la contabilidad
+(delta cero: minutos, `state.cycle`, logros, notificaciones, menú post-Pomodoro,
+persistencia y el motor `useCountdown` intactos). Decisiones canónicas:
+
+- **Descriptor de Foco por DURACIÓN** (sustituye al fijo «Concentración profunda»): el
+  subtítulo del timer nombra el TIPO de sesión según los minutos elegidos, dando intención
+  a cada duración. Mapa editorial (ES / EN), tramos inclusivos:
+
+  | Duración   | ES                     | EN                  |
+  |------------|------------------------|---------------------|
+  | 1–19 min   | Foco breve             | Quick focus         |
+  | 20–29 min  | Concentración profunda | Deep focus          |
+  | 30–44 min  | Atención sostenida     | Sustained attention |
+  | 45–59 min  | Trabajo en profundidad | Deep work           |
+  | 60+ min    | Sesión extendida       | Extended session    |
+
+  La lógica vive en un helper PURO `getFocusDescriptorKey(minutes)` (devuelve solo la key
+  i18n; fallback 25 si no es finito) compartido por el timer de la home y el Foco dentro de
+  un Camino (que ya lo usa como nombre del paso, según `step.min`). Las PAUSAS conservan su
+  copy propio (el descriptor solo aplica a modo foco).
+- **CTA sin iconos**: cápsula RELLENA serif itálica, coherente con el tono artesanal (fuera
+  los glifos `▶`/`❚❚`). El estado running («Pausar») baja a contorno (menos primario).
+- **El ciclo terminado ya no deja un botón muerto**: al completar, «Empezar otro ciclo»
+  arranca un bloque nuevo del mismo preset (feedback «Ciclo completado» en el propio slot
+  del subtítulo, sin añadir bloques que empujen el layout). Es presentación + recuperación,
+  NO contabilidad: iniciar otro ciclo no acredita ni incrementa nada.
+- **Reset como acción secundaria discreta**: solo aparece cuando tiene sentido (en pausa),
+  como texto («Reiniciar bloque»), nunca como botón que compita con el CTA. El «Reiniciar»
+  del Foco dentro de un Camino es independiente y no cambia.
+- **Ritmo Pomodoro explícito**: «CICLO N / 4» (y «SIGUIENTE · CICLO N / 4» al terminar)
+  hace legible dónde estás en el cuarteto, sin gamificación (solo presentación; N derivado
+  de `state.cycle`, sin tocar la lógica).
+
+Detalle de controles/estados/tokens en `DESIGN_SYSTEM.md` → «Timer de Foco · controles y
+estados».
+
+**PENDIENTE (tras s124):** **s125** scrollbar del runner v1 · §0 solapamiento responsive
+<720px · §7 · ola editorial de las 6 rutinas legacy.
 
 ---
 

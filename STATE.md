@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.66.0 (s123 — modelo «atardecer» responsive de la home: corrección de la regresión del swap de s122 + aro sensible a la altura útil + solapamiento adaptativo siempre presente + barra de scroll oculta). **s117 fue solo-docs, SIN bump**: diseño del esquema de eventos `pace.events.v1` (ARQUITECTURA APROBADA, no implementada — ver decisiones activas).
-**Ultima sesion:** #123 -- 2026-07-27 - **Modelo «atardecer» responsive de la home**. Sesión de **CÓDIGO** (confinada a la home; núcleo de §0). La prueba real de s122 destapó una regresión: el swap por `order` ponía Actividades antes que Camino en ancho+corto y el `overflow:hidden` recortaba la base del aro. **Corrección estructural**: (1) **swap eliminado** → jerarquía Timer→Camino→Actividades es el orden del DOM, invariante; (2) **aro por altura útil** `--pace-home-timer-size = min(86vw,520px,max(300px,58dvh))` con mínimo generoso (no achica agresivo, prefiere scroll; `TimerDial` gana `fitHeight`, Caminos intacto); (3) **«atardecer» SIEMPRE presente y PROGRESIVO** vía `margin-top` negativo `max(6px, min(0.19·D, (D−244)/2−6px))` → hasta 19% del diámetro, limitado por el arco bajo las bolas en aros pequeños (≥8px holgura, nunca tapa CTA/CICLO); (4) `data-pace-home-stack` con `margin:auto` (centra o scrollea), sin `overflow:hidden`, root/timerWrap a altura de contenido; (5) **barra de scroll oculta** conservando el scroll funcional. Verificado ES+EN en 7 viewports. El timer editorial se movió a **s124** y el scrollbar del runner a **s125**. Diario: [session-123](./docs/sessions/session-123-atardecer-responsive-home.md). Historico previo: [`s122`/`s121`](./CHANGELOG.md#historial-completo).
-**Ultima actualizacion de este archivo:** 2026-07-27 - sesion 123
-**Build entregado:** `PACE_standalone.html` v0.66.0 (3216 KB, 86 scripts + 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
+**Version actual:** v0.67.0 (s124 — timer editorial: descriptor de Foco por duración + CTA cápsula serif sin glifos + reset re-jerarquizado + indicador «CICLO N/4» + fix del `completed` inerte; delta CERO de contabilidad). **s117 fue solo-docs, SIN bump**: diseño del esquema de eventos `pace.events.v1` (ARQUITECTURA APROBADA, no implementada — ver decisiones activas).
+**Ultima sesion:** #124 -- 2026-07-28 - **Timer editorial (descriptor por duración + estados del CTA + fix del `completed` inerte)**. Sesión de **CÓDIGO** confinada a `FocusTimer`+`PathFocusStep`+`TimerDial`(analógico)+i18n; **delta CERO de contabilidad** (créditos/`state.cycle`/logros/notificaciones/menú post-Pomodoro/persistencia/`useCountdown` intactos). **(1)** descriptor por DURACIÓN vía helper puro `getFocusDescriptorKey` (1–19 breve · 20–29 profunda · 30–44 sostenida · 45–59 profundidad · 60+ extendida; fallback 25); sustituye al fijo, consumido por FocusTimer (subtítulo) y PathFocusStep (`routine.name`); `focus.subtitle.focus` retirada; **(2)** CTA cápsula RELLENA serif itálica SIN glifos `▶`/`❚❚`, running «Pausar» a contorno, etiqueta por `status`; **(3)** fix del `completed` inerte con handler dedicado `handleStartAnotherCycle` (reset+start; no acredita, no toca cycle, motor terminal intacto) + inicio visual centralizado `startFocusVisual`; feedback «Ciclo completado» reemplaza el descriptor en el slot (sin altura extra); **(4)** reset re-jerarquizado: solo en paused, TEXTUAL «Reiniciar bloque» (`focus.restartBlock`; `focus.restart` intacta) EN FILA junto al CTA (no desplaza el CICLO/atardecer); **(5)** indicador «CICLO N/4» / completed «SIGUIENTE · CICLO N/4»; **(6)** analógico ahora muestra el descriptor; a11y 44px + `aria-live`. **Split:** `MinutesPicker`→`FocusTimer.parts.jsx` (FocusTimer.jsx 507→449 ln). Verificado ES+EN, 3 estilos, 4 estados, Camino min 10/15/25, delta cero por completación real de 25, no-regresión atardecer 1440×900/1024×512/844×390. Diario: [session-124](./docs/sessions/session-124-timer-editorial-descriptor.md). Historico previo: [`s123`/`s122`](./CHANGELOG.md#historial-completo).
+**Ultima actualizacion de este archivo:** 2026-07-28 - sesion 124
+**Build entregado:** `PACE_standalone.html` v0.67.0 (3222 KB, 87 scripts + 7 laminas + 12 fuentes inline, 100% autocontenido, cero peticiones externas) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
 
@@ -21,9 +21,9 @@
 
 | Archivo | Rol | Estado |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.66.0** (s123: solo título bump; sin tags nuevos (cambios en CSS/JSX de la home, no en módulos). s122: solo título bump; sin tags nuevos (cambios en datos/i18n/CSS de la home, no en módulos). s121: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s120: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s119: solo título bump; sin tags nuevos (layout + migración de datos/i18n, no de módulos). s118: solo título bump; s116: + 3 tags (`state-feedback.jsx`, `SessionShell.responsive.js`, `SessionFeedback.jsx`) + título bump. s115/s114: solo título bump; sin tags nuevos. s113: + tag `MoveSessionV1.support.jsx`. s110: + 3 tags. s106: onboarding; dev sigue CDN development + Babel standalone) |
-| `PACE_standalone.html` | Bundle offline autocontenido | **v0.66.0** (3216 KB, 86 scripts compilados + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://; s123 lo regeneró tras el modelo «atardecer»; verificado en navegador: monta, aro por altura útil, tarjeta cruzando el arco inferior, barra de scroll oculta con scroll funcional, 0 errores de consola) |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.66.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102; regenerado por el build en s123) |
+| `PACE.html` | Entry point de desarrollo modular | **v0.67.0** (s124: **+ tag `FocusTimer.parts.jsx`** (tras `FocusTimer.support.jsx` :178, antes de `FocusTimer.jsx`) + título bump. s123: solo título bump; sin tags nuevos (cambios en CSS/JSX de la home, no en módulos). s122: solo título bump; sin tags nuevos (cambios en datos/i18n/CSS de la home, no en módulos). s121: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s120: solo título bump; sin tags nuevos (migración de datos/i18n, no de módulos). s119: solo título bump; sin tags nuevos (layout + migración de datos/i18n, no de módulos). s118: solo título bump; s116: + 3 tags (`state-feedback.jsx`, `SessionShell.responsive.js`, `SessionFeedback.jsx`) + título bump. s115/s114: solo título bump; sin tags nuevos. s113: + tag `MoveSessionV1.support.jsx`. s110: + 3 tags. s106: onboarding; dev sigue CDN development + Babel standalone) |
+| `PACE_standalone.html` | Bundle offline autocontenido | **v0.67.0** (3222 KB, 87 scripts compilados —+`FocusTimer.parts.jsx`— + 7 laminas + 12 fuentes como data URI; cero peticiones externas; sigue SIN link de manifest, file://; s124 lo regeneró tras el timer editorial; verificado en navegador: monta, `getFocusDescriptorKey` presente, descriptor por duración, CTA sin glifos, «CICLO N/4», 0 errores de consola) |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.67.0** (laminas y fuentes como ARCHIVOS + precache, NO data URIs; + `<link rel="manifest">` -- s102; regenerado por el build en s124) |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome (atras/progreso/ES·EN), finish (profile+firstSeen+lastViewed) | **v0.56.0** (s112 micro-fix: column paddingBottom 30→16 + options gap 10→8 — la pregunta 1 desbordaba ~35px en 360×640, ahora cabe (584/584). s106: nuevo, 391 ln; se auto-gestiona con `state.firstSeen == null` + evento `pace:open-onboarding`; sin Escape/backdrop-click deliberado) |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene (lamina cover + velo crema) + OnbChoice (chip-radio placa) + OnbDots + OnbLogo (PNG siempre en tratamiento dia) | **v0.56.0** (s112 micro-fix: padding de OnbChoice 13/18→11/16, pareja del ajuste de Onboarding.jsx. s106: nuevo, 208 ln; laminas via `getPathIllustration`) |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo + fallback getSuggestedPath | **NUEVO s106** (58 ln; SOLO se usa dentro del onboarding — la jerarquia s78 de getSuggestedPath queda intacta; environment aun no influye, documentado; el scoring real es s107) |
@@ -66,9 +66,9 @@
 | `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.63.0** (s120/B2.3 OLA 3: `spine.waves`·`hamstrings` migradas — movilidad de columna→`timed` (Puente torácico consolida el cue, su escalón queda a la editorial), Isquio a una pierna→`perSide` (fix «40s/lado» en dur:80→dur:40+transición), Puente con marcha→`timed` con `ready` de suelo; copy compartido reutilizado de morning.flow/hips.5/couch; ningún `name` cambió; **399→447 ln (cerca del techo 500 → trocear en la próxima ola de Estira)**. s119/B2.3 OLA 2: **5 rutinas de Estira migradas al contrato v1** — `wrists`·`shoulders.5`·`shoulder.circles`·`hips.5`·`morning.flow`: por paso `mode` (timed/perSide/reps/rest) + `instruction:{setup,action,care}` (consolida el `cue`→`action`) + `tempo`/`completion` (reps) + `transition:{seconds:10}` (perSide) + `setup:{mode:'ready',estimatedSeconds:15}` en pasos de suelo/pared/barra + 5 metadatos (sin `discrete`); `name` intactos → glifos sin tocar; cero drift de `min`; 399 ln. **6 Estira legacy restantes** (desk.quick, spine.waves, hips.ground, atg.knees, hamstrings, ancestral — varias con cue de reescritura → ola editorial). s118/B2.3: `move.couch.stretch.min` **5→6** (candidato aprobado; el dev-check s115 calculaba 6–7 min, 5 quedaba fuera del rango — ahora alineado); las 14 rutinas de Estira siguen LEGACY (migración en olas siguientes). s115/B2.2b-1: `neck.3`/`chair.antidote`/`couch.stretch` estrenan el contrato formal — `instruction:{setup,action,care}` (consolida cue/placeCue/careCue), `tempo` en chin tucks (`{2,4,2}`=8), `transition:{seconds:10}` en perSide, `setup:{mode:'ready',estimatedSeconds:15}` en Flexor/WGS/Couch, 5 metadatos; cue/placeCue/careCue RETIRADOS; el cierre respiratorio de chair.antidote sin tocar; 283 ln. s114: capas editoriales. s113: `repSeconds: 8` en Chin tucks de `neck.3` (control postural con retención ≠ cadencia de fuerza; 5×8 = 40 s = su dur) + comentario-guard en «Reset respiración» de `chair.antidote` (CIERRE, sin `restKind` — el ajuste Tweaks s114 no lo toca); 213 ln. s112: ready en Flexor/WGS + 5º piloto couch.stretch. s110: pilotos. s108: editorial. s91: F5 7→14) |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** (s107: contador de logros dinamico `ACHIEVEMENT_CATALOG.length` (antes /100 hardcodeado s12) + **sendero ABSTRACTO** (hitos equidistantes orden fijo, sin horas inventadas); s101: WeekDots criterio s69; ~540 ln, sigue en deuda) |
-| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.66.0** (s123/atardecer: `fitHeight={isAro}` a `TimerVisualization`→`TimerDial` (aro dimensionado por altura útil); `focusStyles.root` a `height:auto` y `timerWrap` a `flex:0 0 auto` (altura de contenido dentro de `data-pace-home-stack`; `flex:1`=basis 0% colapsaba el aro). **506 ln** (ya 505 en HEAD, sobre 500 ANTES de s123; trocear en sesión propia). s122: `modeLabel` en modo foco → `focus.manual.label` («Foco manual»/«Manual focus») = rótulo DENTRO del círculo; se descartó el kicker suelto —decisión del usuario— para que el aro conserve su tamaño. s108: +3 ln, llamada a `maybeRequestNotifyPermission` en el arranque real (el helper vive en support). s102: notificacion en onComplete rama foco + 2 efectos de persistencia, 496 ln -- OJO al borde del tope, helpers nuevos van a FocusTimer.support.jsx. s99: glow + data-pace-cta. s96: useCountdown) |
+| `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.67.0** (s124/timer editorial, **507→449 ln** —bajo 500—: **subtítulo por DURACIÓN** vía `t(getFocusDescriptorKey(state.focusMinutes))` en modo foco (pausa/larga conservan su copy), `status==='completed'`→`focus.cycleComplete` REEMPLAZA el descriptor en el slot (sin altura extra); **CTA por `status`** (idle «Empezar foco»/paused «Continuar»/completed «Empezar otro ciclo»/running «Pausar» contorno), cápsula RELLENA serif itálica SIN glifos; **`handleStartAnotherCycle`** (desestructura `start`; `startFocusVisual()`+reset+start — fix del `completed` inerte, no acredita, no toca cycle) + **`startFocusVisual`** (sonido+permiso, compartido); **reset TEXTUAL «Reiniciar bloque»** solo en paused, EN FILA junto al CTA (`controlsTight` row nowrap+flexShrink:0 → no desplaza CICLO/atardecer); **«CICLO N/4»** (`(cycle%4)+1`, `tn` con `focus.cycleOf`/`.cycleNext`); **analógico** (`TimerAnalog`) ahora renderiza el descriptor discreto bajo la cifra; `aria-live` lo pone TimerDial; **`MinutesPicker`+CSS EXTRAÍDOS a `FocusTimer.parts.jsx`** (huérfano `useStateFT` limpiado). s123/atardecer: `fitHeight={isAro}`; `root` height:auto / `timerWrap` flex:0 0 auto. s122: `modeLabel`→`focus.manual.label` dentro del círculo. s102: persistencia/notificación. s96: useCountdown) |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home + PathFocusStep Camino) | **v0.47.0** (s102: + `restore(endsAtMs)` -- reanuda desde idle con el endsAt ORIGINAL (el tiempo de la recarga cuenta como transcurrido) + expone `endsAt` solo en running, 158 ln. s97: idle deriva de durationSec. s96: nuevo, `endsAt` como verdad, `completed` terminal) |
-| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.66.0** (s123/atardecer: variante ADITIVA `fitHeight` → el marco usa `data-pace-dial-fit` + `timerDialStyles.frameFit` (height por `var(--pace-home-timer-size)` en `_responsive.js`, `maxWidth:100%`); geometría del anillo (viewBox/R/C/SVG) INTACTA. Caminos NO pasa la prop → marco clásico `min(56vh,86vw,520px)`, byte-idéntico. s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
+| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.67.0** (s124: `aria-live="polite"` en el div del subtítulo (`subtitleItalic`) → anuncia el descriptor y «Ciclo completado» de forma cortés; el contador vive en otro nodo (no se lee cada segundo) y en Caminos `subtitle=null` (el nodo ni existe). s123/atardecer: variante ADITIVA `fitHeight` → el marco usa `data-pace-dial-fit` + `timerDialStyles.frameFit` (height por `var(--pace-home-timer-size)` en `_responsive.js`, `maxWidth:100%`); geometría del anillo (viewBox/R/C/SVG) INTACTA. Caminos NO pasa la prop → marco clásico `min(56vh,86vw,520px)`, byte-idéntico. s99: prop `running` -> `data-pace-dial-running` (glow) + **variante `ticks`** (60 marcas tipo reloj + numero protagonista, la usa el Foco de Camino) + punto guia home -50%; s76 base, sigue presentacional) |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph + isImplemented) | **v0.33.3** (s83: split mecanico variante B, 409 ln -> 184 ln, -55% -- DATA migrada a catalog.js + glifos a app/glyphs/achievement-glyphs.jsx; lee globales como `const X = window.X || fallback`) |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) + IMPLEMENTED_ACHIEVEMENTS (Set 69 ids) -- expone los 3 a window | **v0.53.0** (s108: desc de `explore.atg` «Rodillas indestructibles» → «Rodillas en rango profundo». s107: fuera `secret.breath.hold.60/90/120` (apnea, decision B1); entran `secret.bilingual`/`secret.backup`/`secret.safety.read` (exploracion sin marca temporal, implementados); ids viejos en state de instalaciones antiguas = inofensivos. s83: nuevo, ~215 ln) |
@@ -79,7 +79,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** (nuevo s58) |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** (nuevo s58) |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)** -- carga ANTES de state-core (loadState los resuelve via window) | **v0.52.0** (s107: + **`parseLocalDateKey()`** -- parse LOCAL de claves "YYYY-MM-DD" (new Date(iso) es UTC y rompe rachas en husos negativos); regla #10 CLAUDE.md. s101: extraido de state-core, ~170 ln) |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.66.0** (s123/s122/s121/s120/s119/s118: solo `PACE_VERSION` bump. s116/B2.2b-2: + `routineFeedback: {}` en defaultState (merge `{...defaultState,...parsed}` cubre instalaciones previas) + `PACE_VERSION` bump. s115: solo `PACE_VERSION` bump. s114: + `restBetweenSets: 30` en defaultState (descanso entre series, `betweenSets` únicamente; merge de loadState cubre instalaciones previas); 448 ln. s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true`. s106: + `profile`. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.67.0** (s124/s123/s122/s121/s120/s119/s118: solo `PACE_VERSION` bump. s116/B2.2b-2: + `routineFeedback: {}` en defaultState (merge `{...defaultState,...parsed}` cubre instalaciones previas) + `PACE_VERSION` bump. s115: solo `PACE_VERSION` bump. s114: + `restBetweenSets: 30` en defaultState (descanso entre series, `betweenSets` únicamente; merge de loadState cubre instalaciones previas); 448 ln. s108: defaults opt-out `soundOn:true` + `notifyFocusEnd:true`. s106: + `profile`. s104: PACE_VERSION en el checklist de bump junto a titulo+CACHE_NAME) |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** (s96: + `completeFocusSession(context, opts)` -- dispatcher que preserva la distincion home(completePomodoro)/path(addFocusMinutes+updateStreak); s69: getDayIndexMondayFirst en addFocusMinutes + checkFocusDayAchievement) |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** (s101: fix DST en checkHydrateWeekPerfect -- `Math.round(diff/86400000)`, la igualdad exacta a 24h rompia la cadena en cambios de hora; s69: getDayIndexMondayFirst) |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** (s78: + checkAllPathsCompleted + export a window; s69: getDayIndexMondayFirst en 4 escritores de weeklyStats + checkRetreatAchievement) |
@@ -97,7 +97,7 @@
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline (ABBreathe/ABStretch/ABMove/ABDrop) + responsive grid | **v0.33.2** (nuevo s82, 170 ln) |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** (nuevo s81, 15 ln) |
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings + tweaks + break + premium + pwa | **v0.58.0** (s114: + 5 keys ES+EN del bloque «Sesiones» — `tweaks.session.label`/`.rest.hint` + `tweaks.rest.short`/`.calm`/`.wide`. s102: + 13 keys PWA/notify/legal; s89: agua) |
-| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move + hydrate + custom | **v0.65.0** (s122/claridad: `focus.start` «Comenzar»→«Empezar foco»/«Start focus» + nueva `focus.manual.label` «Foco manual»/«Manual focus» —rótulo dentro del círculo— ES+EN. s116/B2.2b-2: +6 keys ES+EN `session.feedback.{question,yes,some,no,later,thanks}`. s115/B2.2b-1: −2 `move.repsGuidedHint` (ES+EN; sin consumidor tras s114); 391 ln. s114: +9 keys ES+EN — `session.moveDone`/`stretchDone` + `move.careLabel` + `move.series`/`repsCount` + `move.restNext`/`restReady`. s113: +4/−4. s112: +3. s110: +13 del contrato v1) |
+| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move + hydrate + custom | **v0.67.0** (s124/timer editorial: **descriptor por duración** `focus.subtitle.short\|deep\|sustained\|deepWork\|extended` ES+EN (reemplazan al fijo `focus.subtitle.focus`, RETIRADO) + `focus.cycleOf` «Ciclo {n} / 4» + `focus.cycleNext` «Siguiente · Ciclo {n} / 4» + `focus.restartBlock` «Reiniciar bloque»/«Restart focus» + `focus.startAnother` «Empezar otro ciclo»/«Start another cycle» + `focus.cycleComplete` «Ciclo completado»/«Cycle complete» ES+EN (`focus.restart`/`focus.cycle` intactas). s122/claridad: `focus.start` «Empezar foco» + `focus.manual.label` «Foco manual». s116/B2.2b-2: +6 keys ES+EN `session.feedback.{question,yes,some,no,later,thanks}`. s115/B2.2b-1: −2 `move.repsGuidedHint` (ES+EN; sin consumidor tras s114); 391 ln. s114: +9 keys ES+EN — `session.moveDone`/`stretchDone` + `move.careLabel` + `move.series`/`repsCount` + `move.restNext`/`restReady`. s113: +4/−4. s112: +3. s110: +13 del contrato v1) |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate + error + card | **v0.65.0** (s122/claridad: `path.card.start` «Comenzar»→«Iniciar camino»/«Start path» · `paths.library.viewAll` «Ver todos»→«Ver caminos»/«Browse paths» · `paths.suggested.label`/`.favorite` reetiquetadas a «Camino sugerido/favorito»/«Suggested/Favorite path» · nuevas `paths.suggested.approxMin` «~{n} min» + `paths.suggested.guidedSteps` «Rutina guiada · {n} pasos»/«Guided routine · {n} steps» ES+EN. s100: + `path.runner.complete.steps` "{n} pasos" + `.achievements` "Desbloqueado" ES+EN; s99: + `paths.library.count.one/many`; nuevo s81) |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.52.0** (s107: fuera `stats.year.totalActions`; `activeDays` → «{n} dias con ritmo»/"days with rhythm" + `tooltip.score` → «intensidad {n}»/"intensity {n}". s101: label.body, ~115 ln) |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** (nuevo s81, 40 ln; 16 ES + 16 EN) |
@@ -111,7 +111,7 @@
 | `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (ceremonia editorial sobre la escena ilustrada) | **v0.49.0** (s104: escena full-bleed de fondo (fixed, zIndex -1, isolation) encuadrada en el FINAL del camino + **placa translucida** tras RECORRIDO/DESBLOQUEADO (csPlateStyle, crema fija rgba) + halo en "Repetir camino"; SenderoBar drawIn queda como fallback sin arte; s100: ceremonia editorial, ~300 ln) |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** (nuevo s80, 23 ln) |
 | `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.44.0** (s99: pasa `inPath` a BreatheSession -> "Siguiente" + atmosfera; s95: guard `canAccessRoutine(id, {tasting})` -> PathStepLocked; nuevo s80) |
-| `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.44.0** (s99: reescrito sobre el **SessionShell compartido** + timer variante `ticks` + botones por color `--pfbtn` + done via SessionDone "Siguiente". s96: `useCountdown` + `completeFocusSession('path')`; contrato (step, onExit) intacto) |
+| `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.67.0** (s124: `routine.name` = `t(getFocusDescriptorKey(stepMin))` —descriptor por DURACIÓN del paso, sustituye al fijo `focus.subtitle.focus`; `stepMin = step.min || 25` usado COHERENTEMENTE para `totalSec` y el descriptor; min 10/15→«Foco breve», 25→«Concentración profunda». `focus.restart` («Reiniciar») del footer INTACTA. s99: SessionShell + timer `ticks` + botones por color. s96: `useCountdown` + `completeFocusSession('path')`; contrato (step, onExit) intacto) |
 | `app/paths/steps/PathHydrateStep.jsx` | Step Hidratacion | **v0.44.0** (s99: reescrito sobre el **SessionShell compartido** (header + footer + atmosfera azul); s80: firma (step, onExit)) |
 | `app/paths/steps/PathBodyStep.jsx` | Step Cuerpo (dispatcher Move/Extra via resolveBodyRoutine) | **v0.44.0** (s99: pasa `inPath` a MoveSession -> "Siguiente" + atmosfera; s95: guard -> PathStepLocked; nuevo s80) |
 | `app/paths/PathTransitions.jsx` | Cards intro/step entre pantallas del Camino | **v0.49.0** (s104: escena full-bleed detras del contenido (zIndex -1) + StepIntro con titulo ANCLADO a la bola (titleAtDot) + IntroCard con **tagline** del catalogo + dotLabel/dotKicker + halo de papel `textHaloScene`; sin arte, card clasica + linea "I · Respira" bajo el titulo; ~360 ln; s100: OutroCard eliminada) |
@@ -119,13 +119,15 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.66.0** (s123/atardecer: se ELIMINA el swap por `order` de s122 (rompía la jerarquía en ancho+corto); el solapamiento pasa de `transform`/gate binario ≥760px a **`margin-top` NEGATIVO adaptativo** `= max(6px, min(0.19·D, (D−244)/2−6px))` sobre `[data-pace-spc]` (var `--pace-home-sunset-overlap`), SIEMPRE presente, cruza el arco inferior sin tapar CTA/CICLO; `z-index:2`; la ActivityBar la sigue en flujo (sin transform). s122/claridad: la tarjeta se explica sola sin dejar de ser compacta — **eyebrow SIEMPRE visible** «CAMINO SUGERIDO/FAVORITO · ~N min» (`paths.suggested.label`/`.favorite` reetiquetadas + `paths.suggested.approxMin`) con **duración** leída del `.min` de cada paso (`pathDurationMin`, solo lee window: getBreatheRoutine/resolveBodyRoutine/step.min) · secuencia en **TEXTO** «Rutina guiada · N pasos» (`paths.suggested.guidedSteps`) + iconos de acento · CTA `path.card.start` «Iniciar camino» en **CONTORNO** (secundario; único primario = timer) · **solapamiento «sol» LIMITADO/PROVISIONAL (NO §0 completo)**: el bloque `[data-pace-spc]` sube con `transform: translateY(-118px)` + `z-index:2` (NO margin — el `flex:1` reclamaría el hueco y recentraría el aro) y la ActivityBar el mismo delta, GATE `@media (min-height:760px)`; **swap de orden** (flex `order`) en `min-width:700px and max-height:759px` restaura Actividades→Camino de colchón bajo el gate; tapa el arco inferior del círculo sin tapar CICLO/botón (~230 ln). s99: acento gradiente; s94: huerfanas -> tokens) |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** (s99: header editorial con **contador** (`paths.library.count.one/many`) + filas `data-pace-plib-row` (hover halo+lift) + acento gradiente; s94: huerfanas -> tokens; ~200 ln) |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** (s102: id "/", categories, 4 shortcuts con `/?go=`, launch_handler focus-existing, colores → `--paper #F2EDE0`; s65 base) |
-| `sw.js` | Service Worker PWA | **v0.66.0** (s123/s122/s121/s120/s119/s118/s116/s115/s114/s113/s112/s111/s110/s108/s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
+| `sw.js` | Service Worker PWA | **v0.67.0** (s124/s123/s122/s121/s120/s119/s118/s116/s115/s114/s113/s112/s111/s110/s108/s107: solo CACHE_NAME bump. s105: 12 fuentes al precache; s104: 7 laminas. s102: SIN skipWaiting incondicional -- worker en WAITING hasta SKIP_WAITING del UpdatePrompt; s89: activate borra caches viejos + navegaciones network-first) |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** (nuevo s102, 118 ln; escucha `pace:sw-waiting` + `window.__paceSwWaitingReg` del registro en PACE.html; wrapper flex centrador sin transform para no pelear con pace-slide-up; zIndex 150, bajo Toast 200; en file:// retorna null) |
-| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `maybeNotifyFocusEnd` + `maybeRequestNotifyPermission` + persistencia `pace.timer.v1` | **v0.53.0** (s108: + `maybeRequestNotifyPermission(state, set)` -- permiso de notificacion en el primer «Comenzar» de Foco, 1 vez por carga, solo web, solo permiso 'default'; denegar → `notifyFocusEnd:false`, ~113 ln. s102: nuevo, 89 ln; notificacion solo con toggle activo + pestaña oculta + permiso granted, via SW showNotification con fallback, silent; persistencia solo running-foco, expirado se descarta sin acreditar) |
+| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd` + `maybeRequestNotifyPermission` + persistencia `pace.timer.v1` | **v0.67.0** (s124: + **`getFocusDescriptorKey(minutes)`** —PURO y TOTAL: `Number`+fallback 25, devuelve SOLO la key i18n `focus.subtitle.short\|deep\|sustained\|deepWork\|extended` por tramos 1–19/20–29/30–44/45–59/60+; a `window`, carga :178 antes que PathFocusStep :254; el consumidor hace `t(...)`; ~130 ln. s108: `maybeRequestNotifyPermission`. s102: nuevo; notificación + persistencia running-foco) |
+| `app/focus/FocusTimer.parts.jsx` | Piezas de UI del Pomodoro extraídas: `MinutesPicker` (selector de duración 15/25/35/45+Otro 1–180) + CSS de spinners del input | **NUEVO s124** (161 ln; split MECÁNICO para bajar FocusTimer.jsx del tope de 500; declara sus PROPIAS refs de hooks `useStateFP/useEffectFP/useRefFP`; carga en PACE.html tras React y ANTES de FocusTimer.jsx; se consume como global `window.MinutesPicker`; sin cambios visuales/funcionales — Enter/Escape/blur/presets/custom 1–180 verificados) |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.48.0** (s103: `compileBabel` en memoria (sourceType script + retainLines + targets evergreen) + **IIFE por archivo + `collectGlobalNames` re-expone function/var top-level por AST** (semantica exacta del eval de Babel standalone) + React production inlineado desde vendor/ + @babel/standalone retirado + `replaceOutsideComments` + invariantes (sin text/babel residual, sin unpkg, sin `</script>` en JS, sanity post-escritura). **s104: paso 6b `inlineIllustrations`** -- las laminas van como data URI SOLO en el standalone (index.html conserva rutas de archivo; invariante de referencia huerfana). s102: re-inserta manifest solo en index.html. OJO: los replacement de String.replace con JS minificado van como FUNCION ($& envenena strings) |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** (s104: + MIME `.webp`; s102: + `.webmanifest` + rutas bonitas /safety /privacy; s93: `Cache-Control: no-store`) |
 
 Backups vigentes (20):
+- `backups/PACE_standalone_v0.66.0_20260728.html` <- creado s124 (snapshot del v0.66.0 publicado en s123, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.65.0_20260727.html` <- creado s123 (snapshot del v0.65.0 publicado en s122, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.64.0_20260725.html` <- creado s122 (snapshot del v0.64.0 publicado en s121, copiado del standalone en disco antes de regenerar -- patron s87)
 - `backups/PACE_standalone_v0.63.0_20260724.html` <- creado s121 (snapshot del v0.63.0 publicado en s120, copiado del standalone en disco antes de regenerar -- patron s87)
@@ -145,83 +147,79 @@ Backups vigentes (20):
 - `backups/PACE_standalone_v0.49.0_20260715.html` <- creado s105 (snapshot del v0.49.0 publicado en s104, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.48.0_20260714.html` <- creado s104 (snapshot del v0.48.0 publicado en s103, extraido de git HEAD -- patron s87)
 - `backups/PACE_standalone_v0.47.0_20260713.html` <- creado s103 (snapshot del v0.47.0 publicado en s102, extraido de git HEAD -- patron s87)
-- `backups/PACE_standalone_v0.46.0_20260713.html` <- creado s102 (snapshot del v0.46.0 publicado en s101)
-Nota s123: cap 20 mantenido rotando el mas antiguo (`v0.45.0_20260710.html`)
-al crear el backup del v0.65.0. El mas antiguo vigente es ahora `v0.46.0_20260713`.
+Nota s124: cap 20 mantenido rotando el mas antiguo (`v0.46.0_20260713.html`)
+al crear el backup del v0.66.0. El mas antiguo vigente es ahora `v0.47.0_20260713`.
 
 ---
 
 ## Ultima sesion (resumen operativo)
 
-**Sesion 123 - CÓDIGO (bump v0.65.0→v0.66.0) - Modelo «atardecer» responsive de la
-home**. Confinada a la home; **núcleo de §0**. Reencuadre: iba a ser el timer
-editorial, pero la prueba real de s122 destapó una **regresión bloqueante** (el swap
-por `order` ponía Actividades antes que Camino en ancho+corto y el `overflow:hidden`
-recortaba la base del aro). El timer editorial se movió a **s124** y el scrollbar del
-runner a **s125**. 1 decisión por AskUserQuestion (encoger+scroll) + una 2ª ronda
-completa a raíz del feedback del usuario (el 1er intento encogía el aro y dejaba un
-hueco → rompía el «atardecer») + petición de subir el solapamiento a ~19% + petición
-de ocultar la barra de scroll.
+**Sesion 124 - CÓDIGO (bump v0.66.0→v0.67.0) - Timer editorial**. El corte que se
+**desplazó desde s123**. Confinada a `FocusTimer` + `PathFocusStep` + `TimerDial`
+(analógico) + i18n. **INVARIANTE cumplido: delta CERO de contabilidad** (créditos,
+`state.cycle`, logros, notificaciones, menú post-Pomodoro, persistencia `pace.timer.v1`,
+motor `useCountdown` — todo intacto; los archivos `state-timer`/`state-achievements`/
+`useCountdown`/`BreakMenu`/`state-core` SIN diff; el callback `onComplete` sin cambios,
+solo se añadió `start` a la desestructuración). **No-regresión del atardecer s123**
+reverificada.
 
 ### Cambios entregados
 
-- **Jerarquía invariante**: se ELIMINA el swap por `order`. Timer → Camino →
-  Actividades es ahora el orden del DOM en TODO viewport. Prohibido `order` para
-  intercambiar secciones.
-- **Aro por altura ÚTIL con mínimo GENEROSO**: variable `--pace-home-timer-size =
-  min(86vw, 520px, max(300px, 58dvh))` (fallback vh→dvh vía `@supports (height:1dvh)`
-  — los custom properties no admiten doble declaración) sobre `[data-pace-dial-fit]`.
-  NO se encoge agresivo (520 en alto, suelo 300 en bajo); se PREFIERE scroll. `TimerDial`
-  gana la variante ADITIVA `fitHeight` (Caminos byte-idéntico con `min(56vh,86vw,520px)`).
-- **«Atardecer» SIEMPRE presente y PROGRESIVO** (sustituye al gate binario ≥760px de
-  s122, que dejaba hueco en pantallas bajas): `[data-pace-spc]` sube con `margin-top`
-  NEGATIVO `= max(6px, min(0.19·D, (D−244)/2 − 6px))`. Hasta **19% del diámetro** donde
-  hay holgura; LIMITADO por el arco decorativo real bajo las bolas en aros pequeños (el
-  contenido del aro mide ~224–250px casi fijo → arco = (D−244)/2), con ≥8px de holgura
-  bajo el CICLO — nunca tapa CTA/CICLO. La ActivityBar la sigue en flujo (sin transform).
-- **Composición + scroll**: `data-pace-home-stack` con `margin-top/bottom:auto` (centra
-  si cabe, scrollea si no, patrón centrar-o-scrollear); se retira el `overflow:hidden`
-  que recortaba; `FocusTimer.root` a `height:auto` y `timerWrap` a `flex:0 0 auto`
-  (`flex:1`=basis 0% colapsaba el aro en altura de contenido).
-- **Barra de scroll OCULTA** en `[data-pace-home-body]` (`scrollbar-width:none` +
-  `-ms-overflow-style:none` + `::-webkit-scrollbar{display:none}`) SIN tocar
-  `overflow-y:auto` → scroll por rueda/trackpad/gesto/teclado disponible (el foco de
-  teclado autodesplaza; `gutterV=0` en los 7 viewports). Un ÚNICO contenedor scrollable.
-- Bug propio cazado y arreglado: backticks en un comentario del template literal CSS de
-  `SuggestedPathCard` lo cerraban (mismo patrón que ya mordió en s122).
+- **Descriptor de Foco por DURACIÓN** (sustituye al fijo «Concentración profunda»):
+  helper PURO `getFocusDescriptorKey(minutes)` en `FocusTimer.support.jsx` (Number +
+  fallback 25; devuelve SOLO la key; tramos 1–19/20–29/30–44/45–59/60+ →
+  `short/deep/sustained/deepWork/extended`). Consumido por FocusTimer (subtítulo aro/
+  barra/analógico, solo foco) y PathFocusStep (`routine.name`, `step.min||25` coherente
+  con `totalSec`). `focus.subtitle.focus` RETIRADA (0 consumidores runtime).
+- **CTA sin glifos `▶`/`❚❚`** → cápsula RELLENA serif itálica; running «Pausar» a
+  contorno; etiqueta/acción por `status` (idle «Empezar foco»/paused «Continuar»/completed
+  «Empezar otro ciclo»/running «Pausar»).
+- **Fix del `completed` inerte**: `handleStartAnotherCycle = () => { startFocusVisual();
+  reset(); start(); }` (desestructura `start`; motor `completed`-terminal INTACTO; no
+  acredita, `state.cycle` no cambia al iniciar, el 2º bloque arranca en `durationSec`).
+  Inicio VISUAL centralizado `startFocusVisual` (sonido + permiso) compartido por arranque
+  normal y «Empezar otro ciclo». Feedback «Ciclo completado» REEMPLAZA el descriptor en el
+  slot de subtítulo (sin altura extra → atardecer intacto).
+- **Reset re-jerarquizado**: oculto en idle/running/completed; en paused = acción TEXTUAL
+  «Reiniciar bloque» (`focus.restartBlock`; `focus.restart` INTACTA en Camino). Va **EN
+  FILA junto al CTA** (nowrap+flexShrink:0, desborda centrado el maxWidth:70% del interior)
+  → mostrarlo NO desplaza el CICLO/atardecer (una columna sí empujaba el CICLO tras la
+  tarjeta a alturas cortas — medido y descartado).
+- **Indicador «CICLO N / 4»** (N=`(cycle%4)+1`; completed → «SIGUIENTE · CICLO N/4»). Solo
+  presentación.
+- **Analógico**: `TimerAnalog` recibía `subtitle` sin renderizarlo → ahora muestra el
+  descriptor discreto bajo la cifra, geometría del reloj intacta. a11y: 44px verificable +
+  `aria-live="polite"` en el subtítulo del TimerDial.
+- **Split de 500 ln**: `MinutesPicker`+CSS extraídos a `FocusTimer.parts.jsx` (refs de
+  hooks propias) → **FocusTimer.jsx 507→449 ln**.
 
 ### Verificación
 
-Matriz medida (getBoundingClientRect) en **1440×900 · 1280×768 · 1280×600 · 1024×512 ·
-844×390 · 390×844 · 360×640**, ES y EN: jerarquía Camino→Actividades correcta, 4 bolas +
-CICLO visibles, CTA pulsable, `suggestedPath.top < circle.bottom` (cruza el arco) y a la
-vez `> cta.bottom`/`> cycleDots.bottom`; atardecer **19% (alto) → 7% (bajo) adaptativo**
-con ≥8px de holgura; sin scroll horizontal; **barra vertical oculta** (`gutterV=0`); foco
-de teclado autodesplaza; sin truncamiento ES/EN. Consola limpia, sin `[i18n] missing`.
-**Capturas reales** de los 7 viewports + **Artifact** de reproducción a escala entregados.
-**Standalone v0.66.0** (3216 KB) montado y verificado (0 errores; aro por altura útil +
-atardecer + barra oculta).
+Descriptor correcto en 15/25/35/45 + «Otro» 10/22/40/50/90, ES y EN; helper exhaustivo
+(tramos+límites+fallback). Los 3 estilos (aro/barra/analógico) lo muestran. 4 estados con
+CTA/reset/ciclo correctos. Completación real de 25 (Date.now mockeado por DevTools, no
+persistido) → +25 min, cycle 0→1, weeklyStats[0]=25, BreakMenu abre; cerrarlo → completed;
+«Empezar otro ciclo» → cycle 1→1, min 25→25, 25:00 running, `pace.timer.v1` set. Foco en
+Caminos: min 15→«Foco breve», min 25→«Concentración profunda», `focus.restart` intacta.
+**No-regresión atardecer** en 1440×900 (aro 520, solap 99), 1024×512 (aro 300, solap 22,
+ciclo +10), 844×390 (aro 300, solap 22, ciclo +13), barra oculta, sin scroll-H. `MinutesPicker`
+extraído verificado (Enter/Escape/presets/custom 1–180). Consola limpia, sin `[i18n]
+missing` ES+EN. **Standalone v0.67.0** (3222 KB) montado y verificado.
 
 ### Diferido (documentado, NO ejecutado)
 
-- **s124 — TIMER EDITORIAL** (el corte original de s123, desplazado): descriptor de
-  Foco por DURACIÓN (`getFocusDescriptorKey`), controles/estados del CTA sin iconos,
-  fix del `completed` inerte, reset re-jerarquizado, «CICLO N / 4». Ver el prompt
-  original de s123 (mapa editorial de descriptores, P0 1–4).
 - **s125 — scrollbar del runner v1** (HALLAZGO s122, sigue sin tocar):
-  `data-pace-session-center` (`overflowY:auto`) desborda ~17px a alturas ≤~660px en
-  pasos v1 `perSide` de texto largo. NO compactar copy/glifos/tipografía → sesión corta
-  de runner responsive. **Chip de tarea creado.** (Nota: el patrón de ocultar la barra
-  de scroll conservando el scroll —`scrollbar-width:none` + `::-webkit-scrollbar`— que
-  s123 aplicó a la home podría reutilizarse aquí.)
-- **§7**: pills «Breve/Tranquilo/Amplio» de Tweaks + estabilidad del contenedor de
-  Estadísticas entre pestañas.
-- **`FocusTimer.jsx` en 506 ln** (ya 505 en HEAD, sobre 500 ANTES de s123): trocear en
-  sesión propia (extraer `MinutesPicker` o `TimerBar`/`TimerAnalog`). Decisión del
-  usuario en s123: dejarlo por ahora.
-- **git**: `SuggestedPathCard.jsx`, `main.jsx`, `main/_responsive.js`, `ui/TimerDial.jsx`,
-  `focus/FocusTimer.jsx` + los 5 de bump/build (state-core, PACE.html, sw.js,
-  PACE_standalone, index) + docs; NADA de `.claude/settings.local.json`.
+  `data-pace-session-center` (`overflowY:auto`) desborda ~17px a alturas ≤~660px en pasos
+  v1 `perSide` de texto largo. NO compactar copy/glifos/tipografía → sesión corta de runner
+  responsive. **Chip de tarea creado.** (El patrón de ocultar la barra de scroll de s123
+  puede reutilizarse.)
+- **Colisión CTA↔tarjeta en estilos barra/analógico** (no-default): PRE-existente de s123
+  (el solapamiento se dimensiona para el aro; los controles de esos estilos van fuera del
+  aro). Fuera de s124.
+- **git**: `focus/FocusTimer.jsx`, `focus/FocusTimer.support.jsx`, `focus/FocusTimer.parts.jsx`
+  (nuevo), `paths/steps/PathFocusStep.jsx`, `ui/TimerDial.jsx`, `i18n/strings/sessions.js` +
+  los de bump/build (state-core, PACE.html, sw.js, PACE_standalone, index) + docs; NADA de
+  `.claude/settings.local.json`.
 
 ### Pendiente
 
@@ -333,32 +331,28 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- s124 TIMER EDITORIAL
+## Proxima sesion -- s125 SCROLLBAR DEL RUNNER v1
 
-**s123 (modelo «atardecer» responsive de la home) HECHA y aprobada visualmente por el
-usuario** (regresión del swap de s122 corregida + geometría §0 sensible a la altura +
-solapamiento adaptativo + barra de scroll oculta; 7 viewports ES+EN). El reencuadre de
-s123 fijó el orden:
+**s124 (timer editorial) HECHA** (descriptor por duración + CTA cápsula serif sin glifos +
+reset re-jerarquizado + «CICLO N/4» + fix del `completed` inerte; delta cero de
+contabilidad verificado; `FocusTimer.jsx` troceado a 449 ln con `FocusTimer.parts.jsx`;
+no-regresión atardecer). Orden:
 
-- **s124 — TIMER EDITORIAL** (el corte original de s123, desplazado; PRÓXIMA): descriptor
-  de Foco por DURACIÓN (`getFocusDescriptorKey(minutes)` → `focus.subtitle.short|deep|
-  sustained|deepWork|extended`, en `FocusTimer.support.jsx`, expuesta a window; consumido
-  por `FocusTimer` y `PathFocusStep`) · controles del CTA sin iconos `▶`/`❚❚`, cápsula
-  serif itálica · **fix del `completed` inerte** (handler explícito `reset()`+`start()`
-  en «Empezar otro ciclo», SOLO home) · reset re-jerarquizado (textual en paused, key
-  nueva `focus.restartBlock`; `focus.restart` INTACTA por PathFocusStep) · indicador
-  «CICLO N / 4» (N = (state.cycle % 4) + 1) · **INVARIANTE: delta cero de contabilidad**
-  (mismos minutos/cycle/logros/BreakMenu/persistencia; `useCountdown` intacto). Los 3
-  estilos (aro·barra·analógico) muestran el descriptor. Ver el prompt original de s123.
-- **s125 — scrollbar del runner v1** (chip creado): overflow ~17px a ≤~660px en pasos v1
-  `perSide` de texto largo, SIN compactar copy/glifos/tipografía. Reutilizar el patrón de
-  ocultar-barra-conservando-scroll de s123 si aplica.
+- **s125 — scrollbar del runner v1** (chip creado; PRÓXIMA): `data-pace-session-center`
+  (`overflowY:auto`) desborda **~17px a alturas ≤~660px** en pasos v1 `perSide` de texto
+  largo (el glifo v1 escala con la altura; legacy NO desborda). Restricción del usuario: NO
+  compactar copy/glifos/tipografía ni ocultar el overflow. Reutilizar el patrón de
+  ocultar-barra-conservando-scroll de s123 SOLO si aplica (aquí el problema es el
+  DESBORDE, no solo la barra visible → puede requerir geometría, no solo `scrollbar-width`).
+  Verificar ready/timed/reps/perSide/descansos/DONE en 360×640, 390×660, 412×667, ES/EN.
+- **§0 solapamiento responsive a alturas <720px** (diferido de s122): círculo que encoge
+  por altura + safe-zones (el solapamiento «sol» va con gate; §0 completo sigue en
+  `HOME_REDISENO_PROPUESTA.md`).
 - **§7**: pills «Breve/Tranquilo/Amplio» de Tweaks + estabilidad de Estadísticas.
 - **OLA EDITORIAL** de las 6 rutinas legacy (Seated twist 2º lado · Ground transitions con
   manos · Rib pull identidad · escalón de Puente torácico; luego `push.ladder`/
   `legs.single`; `atg.knees` BLOQUEADA por revisión FISIO de Sissy squat, B4). **NO abrir
-  OLA 5 mecánica** salvo auditoría nueva.
-- **`FocusTimer.jsx` en 506 ln** (pre-existente): trocear en sesión propia.
+  OLA 5 mecánica** salvo auditoría nueva. Condicionada a la validación real de la home.
 
 Despues: plan maestro (home Caminos al centro + After Pomodoro + scoring v2 que
 consume `profile`). La **implementación de eventos** (Fase 1 web + Fase Android/
@@ -378,8 +372,9 @@ rutinas al contrato + reescrituras (~~OLA 1: 5 Mueve + couch.min s118~~ · ~~OLA
 5 Estira s119~~ · ~~OLA 3: 5 mixtas s120~~ · ~~OLA 4: core.plank + wall.sit s121 —
 **migración MECÁNICA CERRADA**~~; 6 legacy restantes = editorial/fisio, NO mecánica)
 · ~~s122 CLARIDAD UX de la home~~ · ~~s123 modelo «atardecer» responsive de la home
-(regresión del swap corregida + §0 por altura)~~ · **s124 TIMER EDITORIAL SIGUIENTE** ·
-s125 scrollbar runner · ola editorial · home Caminos al centro + After Pomodoro ·
+(regresión del swap corregida + §0 por altura)~~ · ~~s124 TIMER EDITORIAL (descriptor por
+duración + estados del CTA + fix del `completed` inerte)~~ · **s125 scrollbar runner
+SIGUIENTE** · ola editorial · home Caminos al centro + After Pomodoro ·
 taxonomia + filtros + sigilo · pre-venta: glifos (revision
 COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A
 FONDO antes de pricing.
