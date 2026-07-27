@@ -188,6 +188,7 @@ function FocusTimer({ onFinish }) {
           subtitle={subtitle}
           inner={isAro ? innerForAro : null}
           running={running}
+          fitHeight={isAro}
         />
       </div>
 
@@ -362,10 +363,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
    Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
    para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
    ahora en TimerDial.jsx. */
-function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner, running }) {
+function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight }) {
   if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
   if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} running={running} />;
+  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} running={running} fitHeight={fitHeight} />;
 }
 
 function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
@@ -440,12 +441,12 @@ const focusStyles = {
        para no ahogar el aro en 375×812. (Sesión 22.) */
     padding: '8px clamp(0px, 4vw, 40px) 0',
     width: '100%',
-    height: '100%',
+    height: 'auto', // s123: a su contenido; lo centra data-pace-home-stack (margin:auto)
     minHeight: 0,
   },
   timerWrap: {
     display: 'grid', placeItems: 'center',
-    flex: 1,
+    flex: '0 0 auto', // s123: aro a su tamaño propio (var); flex:1 lo colapsaría (basis 0%)
     minHeight: 0,
     width: '100%',
   },

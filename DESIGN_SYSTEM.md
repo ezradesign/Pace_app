@@ -258,41 +258,53 @@ PACE usa un enfoque móvil-primero con **dos breakpoints principales**:
 - **`100vh` + `100dvh`** (fallback + override): usado en `app/main.jsx` raíz y `app/shell/Sidebar.jsx`.
 - **Scroll asimétrico** (sesión 24): home usa `100dvh` puro (4 botones siempre visibles); sidebar usa `min-height: calc(100dvh + 1px)` con `height: auto` para activar auto-hide de la barra del navegador.
 
-### Solapamiento «sol amaneciendo» de la home (s122 · v0.65.0)
+### Modelo «atardecer» de la home (s123 · v0.66.0 — REEMPLAZA el «sol» provisional de s122)
 
-> **PROVISIONAL / LIMITADO — NO es la implementación de §0.** Se implementó, por
-> autorización expresa del usuario en s122, un solapamiento editorial **limitado**
-> para alturas **≥760 px**. La geometría robusta de §0 (círculo responsive por
-> altura, safe-zones, `svh`/`dvh`, zoom 80-200%, barras móviles, toda la matriz de
-> viewports del §8) **permanece diferida**. El patrón `transform` de abajo es una
-> solución provisional para el rango donde funciona, **no un sustituto de §0**: §0
-> sigue proponiendo flujo normal + margen negativo controlado como diseño canónico.
+El aro del timer es el **sol**; la tarjeta de Camino sugerido es el **horizonte** que
+cruza su arco INFERIOR. s123 sustituyó el patrón `transform` + gate binario de s122 (que
+apagaba el solapamiento en pantallas bajas y dejaba un hueco, y cuyo swap por `order`
+rompía la jerarquía) por una geometría **estructural, proporcional y sin gate**. Es la
+implementación de la parte §0 sensible a la altura.
 
-La tarjeta de Camino sugerido se superpone al arco INFERIOR del círculo del timer
-hasta rozar los puntos de CICLO, para que el aro se lea como un sol saliendo por
-detrás y no como un círculo entero. Reglas aprendidas (útiles para la sesión de §0):
+**Jerarquía invariante:** Timer → Camino → Actividades = orden del DOM en TODO viewport.
+**Prohibido `order`** para intercambiar secciones bajo ningún breakpoint.
 
-- **`transform: translateY()`, NUNCA `margin-top` negativo.** El área del timer es
-  `flex:1`; un margen negativo en la tarjeta LIBERA hueco del flujo y el `flex:1` lo
-  reclama, RECENTRANDO el aro hacia abajo (medido: el gap CICLO→tarjeta solo baja a
-  la mitad, no se solapa). El `transform` no toca el flujo → el aro queda quieto y
-  la tarjeta pinta por encima (orden del DOM + `z-index`).
-- Se desplaza la tarjeta **y** la `ActivityBar` el mismo delta para no abrir hueco;
-  el espacio sobrante cae al fondo de la pantalla (inocuo).
-- **Gate por altura** (`@media (min-height: 760px)`): la distancia CICLO→tarjeta es
-  ~130px estable entre ~760 y ~1080px; un desplazamiento fijo (−118px) aterriza
-  9-19px por debajo del CICLO, sin taparlo ni tapar el botón.
-- **Degradación honesta por debajo del gate**: a alturas <760 px NO hay solapamiento
-  y, en viewports **ancho+corto** (`@media (min-width:700px) and (max-height:759px)`
-  — p.ej. 1280×600, 1024×512), se RESTAURA el orden seguro Actividades→Camino con
-  flex `order`, para que la tarjeta no quede pegada bajo el aro grande (que a poca
-  altura desborda) y colisione con sus controles. En portrait estrecho (<700 px de
-  ancho) el aro es pequeño y la tarjeta puede ir arriba sin colisión. **Casos aún no
-  resueltos (§0)**: 844×390 y similares apaisados-bajos, donde el aro grande fijo no
-  cabe de ninguna forma sin el círculo responsive.
-- **Invariante:** la tarjeta NUNCA tapa el tiempo, el botón ni el indicador de CICLO
-  (verificado en la matriz; el timer↔actividades a alturas muy cortas es el problema
-  §0 preexistente, no un solapamiento tarjeta↔timer).
+**Tamaño del aro (por altura útil, mínimo generoso):**
+- `--pace-home-timer-size = min(86vw, 520px, max(300px, 58dvh))` (definida en
+  `_responsive.js` sobre `[data-pace-home-body]`; fallback `vh`→`dvh` vía
+  `@supports (height:1dvh)` porque los custom properties NO admiten el patrón de doble
+  declaración). Consumida por `[data-pace-dial-fit]` (variante `fitHeight` de `TimerDial`;
+  Caminos conserva `min(56vh,86vw,520px)`, byte-idéntico).
+- NO se encoge agresivamente: 520 en pantallas altas, suelo de **300 px** en las bajas.
+  Se **prefiere scroll** antes que achicar el aro / la tipografía / el CTA.
+
+**Solapamiento «atardecer» (SIEMPRE presente, adaptativo — SÍ `margin-top` negativo):**
+- `--pace-home-sunset-overlap = max(6px, min(0.19·D, (D−244)/2 − 6px))`, aplicado como
+  `margin-top` NEGATIVO a `[data-pace-spc]` (`z-index:2`). Llega al **19% del diámetro**
+  donde hay holgura y se limita por el **arco decorativo real bajo las bolas** en aros
+  pequeños (el contenido del aro mide ~224–250px casi fijo → arco ≈ (D−244)/2),
+  garantizando **≥8px de holgura bajo el CICLO**. La ActivityBar la sigue en flujo (el
+  margin negativo arrastra lo posterior) — SIN transform propio.
+- **Por qué ahora SÍ funciona el margen negativo** (s122 lo descartó): el timer ya NO es
+  `flex:1`. `FocusTimer.root` es `height:auto` y `timerWrap` es `flex:0 0 auto` (altura de
+  contenido); la composición se centra con `margin:auto` en `data-pace-home-stack`. Sin
+  `flex:1` que reclame el hueco, el margen negativo solapa de verdad y de forma estable.
+
+**Scroll de la home (centrar-o-scrollear, barra oculta):**
+- `data-pace-home-stack` con `margin-top/bottom:auto` centra el bloque cuando cabe; cuando
+  no, los márgenes colapsan y `data-pace-home-body` (`overflow-y:auto`, `-x:hidden`) hace
+  scroll vertical natural. **Nunca `overflow:hidden`** que recorte contenido.
+- **Barra de scroll OCULTA** conservando el desplazamiento: sobre `[data-pace-home-body]`,
+  `scrollbar-width:none` (Firefox) + `-ms-overflow-style:none` + `::-webkit-scrollbar{
+  display:none}` (Chromium/WebKit), con `overflow-y:auto` intacto → rueda/trackpad/gesto/
+  teclado siguen funcionando (el foco de teclado autodesplaza) y la barra no consume
+  layout (`gutterV=0`). Patrón reutilizable en otros contenedores scrollables (p.ej. el
+  runner v1, s125).
+
+**Invariante:** la tarjeta NUNCA tapa el tiempo, el botón, las 4 bolas ni el CICLO.
+Verificado ES+EN en 1440×900 · 1280×768 · 1280×600 · 1024×512 · 844×390 · 390×844 ·
+360×640 (atardecer 19%→7% adaptativo, ≥8px de holgura, sin scroll horizontal, sin barra
+visible).
 
 ---
 

@@ -27,8 +27,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.66.0** | 2026-07-27 | feat(home): **modelo «atardecer» responsive de la home** (sesión de CÓDIGO; corrección de una regresión de s122 + geometría §0 sensible a la altura; NO timer editorial —eso es s124—, NO scrollbar del runner —s125—, NO contabilidad/créditos/logros) -- **regresión s122 corregida**: el **swap por `order`** (`min-width:700px and max-height:759px`) colocaba Actividades ANTES que Camino en ancho+corto y, junto al `overflow:hidden`, la base del aro (bolas/CICLO/CTA) se recortaba → **eliminado el swap**; la jerarquía **Timer → Camino → Actividades** es ahora el ORDEN del DOM, invariante en todo viewport (prohibido `order` para intercambiar) · **aro sensible a la altura ÚTIL** con mínimo GENEROSO: `--pace-home-timer-size = min(86vw, 520px, max(300px, 58dvh))` (fallback vh→dvh vía `@supports`) — NO se encoge agresivamente; el aro llega a 520 en pantallas altas y no baja de 300 en las bajas · **solapamiento «atardecer» SIEMPRE presente y PROGRESIVO** (sustituye al gate binario ≥760px de s122): `margin-top` NEGATIVO de la tarjeta = `max(6px, min(0.19·D, (D−244)/2 − 6px))` → hasta **19% del diámetro** donde hay holgura, limitado por el arco decorativo real bajo las bolas en aros pequeños (nunca tapa CTA/CICLO; ≥8px de holgura medida) · **composición** en `data-pace-home-stack` con `margin:auto` (centra si cabe, **scrollea** si no) — se retira el `overflow:hidden` que recortaba; `FocusTimer.root`/`timerWrap` pasan a altura de CONTENIDO · **barra de scroll OCULTA** en `[data-pace-home-body]` (`scrollbar-width:none` + `::-webkit-scrollbar{display:none}` + `-ms-overflow-style:none`) conservando scroll por rueda/trackpad/gesto/teclado (foco de teclado autodesplaza; `gutterV=0` en los 7) · variante aditiva `fitHeight` de `TimerDial` (Caminos byte-idéntico al no pasarla) · **verificado ES+EN** en 1440×900 · 1280×768 · 1280×600 · 1024×512 · 844×390 · 390×844 · 360×640 (jerarquía, 4 bolas + CICLO, CTA libres, sin scroll horizontal, sin truncamiento), consola limpia, standalone 3216 KB · **deuda anotada**: `FocusTimer.jsx` en 506 ln (PRE-existente 505 en HEAD; trocear en sesión propia) | #123 | [abajo](#v0660----2026-07-27----feathome-modelo-atardecer-responsive-de-la-home) |
 | **v0.65.0** | 2026-07-26 | feat(home): **claridad UX de la home** (sesión de CÓDIGO; pieza A de `HOME_REDISENO_PROPUESTA.md` §1/§3/§4/§5/§6 + §0 solapamiento por decisión del usuario; NO catálogo, NO migración, NO runner, NO eventos) -- **sistema verbal** que rompe la colisión «Comenzar»/«Comenzar»: timer **«Empezar foco»**/«Start focus», Camino **«Iniciar camino»**/«Start path», biblioteca **«Ver caminos»**/«Browse paths» (cada verbo = su consecuencia; paridad ES+EN) · **«FOCO MANUAL»/«MANUAL FOCUS» DENTRO del círculo** (`modeLabel` solo en modo foco; se descartó el kicker suelto que robaba altura al aro — decisión del usuario) → el aro conserva su tamaño «sol amaneciendo» · **tarjeta de Camino compacta que se explica sola**: eyebrow SIEMPRE visible «CAMINO SUGERIDO/FAVORITO · ~N min» (duración calculada leyendo el `.min` de cada paso, solo lectura de window) + secuencia en **TEXTO** «Rutina guiada · N pasos» + iconos de acento + CTA «Iniciar camino» en **contorno** (único primario = timer) · **jerarquía §1**: Camino POR ENCIMA de Actividades · **solapamiento editorial «sol» LIMITADO/PROVISIONAL (NO §0 completo, autorizado por el usuario)**: la tarjeta sube con `transform: translateY(-118px)` (NO margin — un margen negativo hace que el `flex:1` reclame el hueco y recentre el aro) y tapa el arco inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; sube también la ActivityBar el mismo delta; **gate ≥760px de alto** (por debajo, caso corto diferido a §0) · nuevas claves i18n `focus.manual.label`, `paths.suggested.approxMin` + reetiquetadas `paths.suggested.label`/`.favorite` · verificado 360×640/390×844/1280×900/1440×900 ES+EN, sin `[i18n] missing`, consola limpia, standalone 3209 KB · **diferido**: §0 short-viewport (<720px), §7, y **hallazgo NO tocado**: scrollbar del runner v1 (`data-pace-session-center` desborda ~17px a ≤~660px en pasos `perSide` de texto largo; chip de tarea creado) | #122 | [abajo](#v0650----2026-07-26----feathome-claridad-ux-de-la-home) |
-| **v0.64.0** | 2026-07-24 | feat(move): **B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **2 rutinas Mueve premium** migradas al contrato v1: `extra.core.plank`(P, min 4) · `extra.wall.sit`(P, 2) — las 2 ÚNICAS rutinas legacy mecánicamente tractables sin tocar copy, dosis, estructura, lateralidad ni escalones · clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit) → `timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis); Plancha lateral «30 s por lado» en `dur:60` → `perSide` `dur:30` POR LADO (2×30=60 = **dosis legacy conservada**) + `transition:{seconds:10}` · **rests entre holds SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.» preservados verbatim) · **gate `ready`** en el 1er paso de suelo (Plancha) / de pared (Wall sit), cuenta la colocación vía `estimatedSeconds` · **DISCIPLINA DE DOSIS** (lección s120): wall.sit conserva **60 s** por tanda (el `care` gradúa la altura, no la dosis) · migración ATÓMICA `instruction:{setup,action,care}` + `transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos · **acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios) · cero drift de `min` (core.plank 250s [4–5], wall.sit 175s [2–3]; dev-check «dentro») · **migración MECÁNICA de B2.3 CERRADA**: **8 → 6 legacy**, las 6 restantes NO son deuda mecánica — quedan BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio (`atg.knees` espera la revisión de Sissy squat) | #121 | [abajo](#v0640----2026-07-24----featmove-b23-ola-4--cierre-de-la-migración-mecánica-coreplank--wallsit) |
+| **v0.64.0** | 2026-07-24 | feat(move): **B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **2 rutinas Mueve premium** migradas al contrato v1: `extra.core.plank`(P, min 4) · `extra.wall.sit`(P, 2) — las 2 ÚNICAS rutinas legacy mecánicamente tractables sin tocar copy, dosis, estructura, lateralidad ni escalones · clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit) → `timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis); Plancha lateral «30 s por lado» en `dur:60` → `perSide` `dur:30` POR LADO (2×30=60 = **dosis legacy conservada**) + `transition:{seconds:10}` · **rests entre holds SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.» preservados verbatim) · **gate `ready`** en el 1er paso de suelo (Plancha) / de pared (Wall sit), cuenta la colocación vía `estimatedSeconds` · **DISCIPLINA DE DOSIS** (lección s120): wall.sit conserva **60 s** por tanda (el `care` gradúa la altura, no la dosis) · migración ATÓMICA `instruction:{setup,action,care}` + `transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos · **acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios) · cero drift de `min` (core.plank 250s [4–5], wall.sit 175s [2–3]; dev-check «dentro») · **migración MECÁNICA de B2.3 CERRADA**: **8 → 6 legacy**, las 6 restantes NO son deuda mecánica — quedan BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio (`atg.knees` espera la revisión de Sissy squat) | #121 | [session-121](./docs/sessions/session-121-b2-3-ola-4-cierre-mecanico.md) |
 | **v0.63.0** | 2026-07-22 | feat(move): **B2.3 OLA 3 — 5 rutinas mixtas al contrato v1** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **SIN intercambio de acceso**: el corte proponía core.stealth premium→FREE / back.desk FREE→premium, pero su cifra «1 free + 6 premium» describía solo el subconjunto de 7 Mueve **legacy**, no un objetivo de catálogo (el catálogo real = 8 Mueve free / 6 premium); a petición del usuario **NO se aplicó** ningún cambio de `access` (core.stealth sigue premium, back.desk free); el posible cambio de rutina de entrada se evalúa aparte como decisión de producto -- **5 rutinas mixtas Mueve+Estira** migradas: `extra.hang.bar`(P) · `extra.core.stealth`(P) · `extra.back.desk`(free) · `move.spine.waves`(P) · `move.hamstrings`(P) — clasificación BASE §3: aguantes isométricos y movilidad de columna/hombro → `timed`; estiramiento bilateral (Isquio a una pierna) → `perSide`+`transition:{seconds:10}`; fuerza (Scapular squeeze, Superman) → `reps`+`tempo`/`completion:{mode:'guided'}`; **rests entre holds SUAVES** (sin `restKind`, patrón glutes.stealth, conservan `dur`) · **gate `ready`** en suelo/barra: **Superman (suelo, `reps`+`ready` — 1ª combinación del catálogo)**, Gato-camello, Puente con marcha (suelo), Hang pasivo (barra) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion`/`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos `position/equipment/requiresFloor/intensity/level` (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas en el MISMO cambio; **ningún `name` cambió** → glifos intactos · copy reutilizado de OLA 1/2 (Band pull-apart, Apertura de pecho, Gato-camello, Rotación torácica, Puente con marcha, Scapular squeeze) + rests con cue vacío → «Suelta.»/«Let go.» (literal de glutes.stealth) · Puente torácico (spine.waves): su ESCALÓN de regresión (audit) queda a la ola editorial · **cero drift de `min`** (las 5 dentro de rango) · **13 → 8 legacy** (4 Mueve premium: push.ladder/wall.sit/legs.single/core.plank + 4 Estira: desk.quick/hips.ground/atg.knees/ancestral) + ola editorial | #120 | [session-120](./docs/sessions/session-120-b2-3-ola-3.md) |
 | **v0.62.0** | 2026-07-22 | feat(move): **estabilidad de layout del runner v1 + B2.3 OLA 2** (sesión FUSIONADA 2 fases; FASE A cerrada y verificada ANTES de FASE B) -- **FASE A · pulido de layout** (delta 0 de comportamiento; ámbito confinado a `MoveSessionV1.jsx`+`MoveSessionV1.support.jsx`, **SessionShell intacto**): **(1) barra fantasma RESUELTA** — `v1GlyphSize` saltaba `0.22→0.25·vpH` en vpH=720 (glifo +22px) sin tier de compactación hasta ≤700 → banda muerta 701–760 desbordaba ~7px y disparaba scrollbar de 15px (portátiles 1366×768); ahora **curva continua** `min(210, round(vpH·0.22))` + **tier de banda 701–768** (aprieta número/espacios) → sin barra en 1280×600/720/760, 1024×512, 844×390, 360×640; **(2) glifo/botones anclados RESUELTO** — `centerBody` centra el bloque con `margin:auto` y su alto variaba por paso (+12.4px medido); ahora **alturas reservadas** (cue 2 líneas + «Cuídate» 2 líneas SIEMPRE en trabajo aunque el paso no la tenga, solo ≥641px; móvil conserva su ajuste previo) → `glyph_top` idéntico entre pasos, footer clavado; **(3) warning rep-pulse RESUELTO** — shorthand `animation` → longhand + `animationPlayState`; **(4) aislamiento del timer v1** (`data-pace-v1-timer`) para que las reglas de número no encojan el runner **legacy** (compartían `data-pace-move-timer`). **FASE B · B2.3 OLA 2** (4+... decisiones AskUserQuestion, todas la recomendación: Estira · 5 gratuitas sin reescritura · reescrituras aparte · glifos intactos): **5 rutinas de Estira** migradas al contrato v1 (`wrists` · `shoulders.5` · `shoulder.circles` · `hips.5` · `morning.flow`) — clasificación BASE §3: movilidad/estático central → `timed`, estiramiento bilateral → `perSide`+transición (Cossack, Pigeon), fuerza/control → `reps` (Finger extension), flujo → `timed`+`rest` de cierre; **gate `ready`** en pasos de suelo/pared/barra (wall slides, dead hang, 90/90, Gato-camello) · migración ATÓMICA `instruction:{setup,action,care}` + `tempo`/`completion` + `transition:{seconds:10}` + `setup:{mode:'ready'}` + 5 metadatos (sin `discrete`); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos; copy reutilizado consistente con los pilotos · **cero drift de `min`** (las 5 dentro de rango: dev-check «dentro») · **13 legacy restantes** (7 Mueve premium + 6 Estira) + ola editorial | #119 | [session-119](./docs/sessions/session-119-layout-runner-y-b2-3-ola-2.md) |
 | **v0.61.0** | 2026-07-22 | feat(move): **B2.3 — migración de rutinas legacy al contrato v1 (OLA 1)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116 y diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **5 rutinas Mueve gratuitas** migradas (`chair.dips` · `calves` · `grip.squeeze` · `glutes.stealth` · `posture.set`; todas sin suelo → sin gate `ready`) añadiendo por paso `mode` (aquí reps/rest/timed) + `instruction:{setup,action,care}` (consolida el `cue` legacy → `action`; `setup` de colocación en el 1er set de fuerza → colocación AUTO; `care` con la adaptación ya implícita) + `tempo`/`completion:{mode:'guided'}` en reps + `restKind:'betweenSets'` en rests de fuerza + 5 metadatos (`position/equipment/requiresFloor/intensity/level`, **sin `discrete`**) · keys EN nuevas `id.sN.instruction.*` (mismo valor traducido); `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos (cola D-4 sin tocar) · **candidato** `move.couch.stretch.min` **5→6** (dev-check s115 calculaba 6–7 min, único piloto descuadrado, ahora alineado) · **duración**: con los tempos elegidos cada rutina conserva su `min` DENTRO del rango derivado (`estimateDuration`), sin drift · las **7 rutinas Mueve restantes** (premium + `legs.single` a reescribir) y las **14 de Estira** siguen **LEGACY byte-idénticas** · reescrituras (4 cues + 2 rutinas) y el resto de olas → siguientes · deuda nueva observada: warning React `animation`/`animationPlayState` en `MoveSessionV1.jsx:441` (rep-pulse s113, no tocado → NO regresión; resuelto en s119) | #118 | [session-118](./docs/sessions/session-118-b2-3-migracion-ola-1.md) |
@@ -153,6 +154,76 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.66.0] -- 2026-07-27 -- feat(home): modelo «atardecer» responsive de la home
+
+Sesión 123. La prueba real de la home (s122) destapó una **regresión bloqueante**: en
+viewports anchos pero bajos, el intercambio responsive por `order` colocaba Actividades
+antes que Camino y la base del aro (4 bolas / CICLO / CTA) se recortaba. La sesión, que
+iba a ser el «timer editorial», se **reencuadró** (con el usuario) a **corregir la
+jerarquía y la geometría responsive de la home** — el núcleo de §0 diferido en s122. El
+timer editorial pasa a **s124** y el scrollbar del runner a **s125**. Bump v0.65.0 →
+v0.66.0. Sesión de CÓDIGO confinada a la home: cero cambios en contabilidad, créditos,
+logros, motor `useCountdown`, persistencia, Caminos ni el runner.
+
+### Causa raíz (medida con getBoundingClientRect)
+
+1. **Swap por `order`** (`SuggestedPathCard.jsx`, `@media (min-width:700px) and
+   (max-height:759px)`): `[data-pace-activitybar]{order:2}` + `[data-pace-spc]{order:3}`
+   → Actividades ANTES que Camino (rompía la jerarquía aprobada Timer→Camino→Actividades).
+2. **Aro dimensionado por `56vh`** (viewport), ignorando que TopBar+Camino+Actividades ya
+   consumieron alto → el aro (336px fijos) desbordaba `main-content`.
+3. **`overflow:hidden`** en `main`/`main-content` → **recortaba** la base del aro en vez
+   de permitir scroll.
+
+### Corrección estructural (no un parche)
+
+- **Jerarquía invariante**: eliminado el swap. El orden del DOM (Timer → Camino →
+  Actividades) manda en TODO viewport. Prohibido `order` para intercambiar secciones.
+- **Aro sensible a la altura útil, con mínimo GENEROSO**: variable
+  `--pace-home-timer-size = min(86vw, 520px, max(300px, 58dvh))` (fallback vh→dvh vía
+  `@supports (height:1dvh)`, porque los custom properties no admiten doble declaración).
+  NO se encoge agresivamente: 520 en pantallas altas, suelo de 300 en las bajas; se
+  **prefiere scroll** antes que achicar. `TimerDial` gana la variante aditiva `fitHeight`
+  (Caminos conserva el marco clásico `min(56vh,86vw,520px)`, byte-idéntico).
+- **«Atardecer» SIEMPRE presente y PROGRESIVO** (sustituye al gate binario ≥760px de
+  s122, que apagaba el solapamiento en pantallas bajas dejando un hueco): la tarjeta sube
+  con `margin-top` NEGATIVO `= max(6px, min(0.19·D, (D−244)/2 − 6px))`. Llega al **19% del
+  diámetro** donde hay holgura (aros grandes) y se **limita por el arco decorativo real
+  bajo las bolas** en aros pequeños (el contenido del aro mide ~224–250px casi fijo, así
+  que el arco = (D−244)/2), garantizando ≥8px de holgura bajo el CICLO — nunca tapa
+  controles. La ActivityBar la sigue en flujo normal (el margin negativo arrastra lo
+  posterior), sin transform propio.
+- **Composición + scroll**: `data-pace-home-stack` con `margin-top/bottom:auto` centra el
+  bloque cuando cabe y, cuando no, los márgenes colapsan y `data-pace-home-body` hace
+  **scroll vertical natural** (patrón centrar-o-scrollear). Se retira el `overflow:hidden`
+  que recortaba; `FocusTimer.root`/`timerWrap` pasan a **altura de contenido** (root
+  `height:auto`, timerWrap `flex:0 0 auto` para que `flex:1`=basis 0% no colapse el aro).
+- **Barra de scroll OCULTA sin tocar el desplazamiento**: sobre `[data-pace-home-body]`,
+  `scrollbar-width:none` (Firefox) + `-ms-overflow-style:none` + `::-webkit-scrollbar{
+  display:none}` (Chromium/WebKit), con `overflow-y:auto` intacto → scroll por
+  rueda/trackpad/gesto/teclado disponible (el foco de teclado autodesplaza el viewport) y
+  `gutterV=0` en los 7 viewports. Un ÚNICO contenedor scrollable (sin doble scroll).
+
+### Verificación
+
+Matriz medida en **1440×900 · 1280×768 · 1280×600 · 1024×512 · 844×390 · 390×844 ·
+360×640**, ES y EN: jerarquía Camino→Actividades correcta, 4 bolas + CICLO visibles, CTA
+completamente pulsable, `suggestedPath.top < circle.bottom` (cruza el arco) y a la vez por
+debajo de CTA/CICLO, atardecer 19%→7% adaptativo con ≥8px de holgura, sin scroll
+horizontal, sin barra vertical visible, sin truncamiento ES/EN. Consola limpia, sin
+`[i18n] missing`. Standalone v0.66.0 (3216 KB) montado y verificado.
+
+### Deuda / notas
+
+- `FocusTimer.jsx` queda en **506 ln** (ya estaba en **505 en HEAD**, sobre el límite de
+  500 ANTES de esta sesión; mi delta neto es +1). Trocearlo (extraer `MinutesPicker` o
+  `TimerBar`/`TimerAnalog`) queda como refactor de sesión propia — decisión del usuario.
+- El «sol amaneciendo» de s122 se conserva pleno en pantallas altas y se atenúa —sin
+  invadir controles— en el tramo bajo, tal como permitía la regla del usuario («el
+  solapamiento se reduce o desaparece, pero la jerarquía no cambia»).
+
+---
+
 ## [v0.65.0] -- 2026-07-26 -- feat(home): claridad UX de la home
 
 Sesión 122. Hacer **comprensible** la home: que una persona, sin explicaciones,
@@ -232,76 +303,3 @@ ocultar el overflow → sesión corta propia de runner responsive (chip de tarea
 creado).
 
 Diario completo: [session-122](./docs/sessions/session-122-claridad-ux-home.md).
-
----
-
-## [v0.64.0] -- 2026-07-24 -- feat(move): B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)
-
-Sesión 121. Cuarta y **última** ola mecánica de **B2.3**: migrar al **contrato de
-pasos v1** (s115) las **2 únicas** rutinas legacy que quedaban mecánicamente
-tractables sin tocar copy, dosis, estructura, lateralidad ni escalones. Principio
-rector idéntico a OLA 1/2/3: **migrar CONTENIDO al contrato existente, NO rediseñar
-el runner**. El GIRO (s113/s114), el contrato (s115), el feedback (s116) y el diseño
-de eventos (s117) están CERRADOS y no se reabren; la capa de eventos NO se implementa;
-el layout del runner (FASE A s119) NO se toca. Bump v0.63.0 → v0.64.0.
-
-### 2 rutinas Mueve premium al contrato v1
-
-Migradas (ambas conservan su `access` premium): `extra.core.plank` (premium, min 4)
-· `extra.wall.sit` (premium, 2). Clasificación BASE §3:
-
-- **timed** — aguantes isométricos (Plancha, Hollow hold, Wall sit), con `care`
-  DERIVADA: rodillas apoyadas (plancha/hollow) o graduar la ALTURA (wall sit). La
-  adaptación NO cambia la dosis.
-- **perSide** + `transition:{seconds:10}` — Plancha lateral: el legacy decía «30
-  segundos por lado» en `dur:60`; ahora `dur:30` POR LADO (2×30 = 60 = **dosis
-  legacy conservada**), el «por lado» lo integra el runner (patrón Isquio de OLA 3).
-- **rests entre holds SUAVES** — sin `restKind`, conservan `dur`; los cue legacy
-  «Respira.» (core.plank) y «Suave.» (wall.sit) se preservan **verbatim** (no
-  aplica el «Respira.» tipado de `betweenSets`; ninguno estaba vacío).
-- **gate `ready`** — en el 1er paso de suelo (Plancha) y de pared (Wall sit); el
-  gate cuenta la colocación vía `estimatedSeconds:15`, nunca es countdown.
-
-**Disciplina de dosis (lección s120):** wall.sit conserva **60 s** por tanda. El
-`care` gradúa la altura/intensidad, pero NO convierte indirectamente la dosis en
-30–40 s. Ninguna rutina trae reps a inventar (todo timed/perSide/rest).
-
-Migración ATÓMICA por rutina: `instruction:{setup,action,care}` +
-`transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos
-`position/equipment/requiresFloor/intensity/level` (**sin `discrete`**). Keys EN
-`id.sN.instruction.*` nuevas + `id.sN.cue` retiradas en el MISMO cambio; **ningún
-`name` cambió** → glifos intactos. **Acceso INTACTO** (ambas siguen premium;
-`canAccessRoutine` sin cambios). `move.data.js` 352 → 396 ln (bajo 500 → sin split,
-`ExtraModule.jsx` no se toca, sigue a 447 ln).
-
-Verificación (dev + standalone): `estimateDuration` — **dentro de rango** (core.plank
-250s [4–5], wall.sit 175s [2–3]); dev-check «dentro», **cero drift de `min`**. i18n:
-keys EN `instruction.*`/`name` resuelven, 0 faltantes, 0 `.cue` residual (ES+EN).
-`canAccessRoutine` correcto (ambas premium, inalterado). Runtime: **core.plank**
-completo (gate `ready` de suelo «Colócate» → timed con acción + «Cuídate» care →
-**Plancha lateral perSide con «Izquierda.» integrado**; sin overflow a 1280×720),
-**wall.sit** (dispatch v1 + gate `ready` de pared «Colócate»); tarjetas premium
-muestran su rango al desbloquear (core.plank «4–5 min», wall.sit «2–3 min»). Sin
-errores de consola. `premiumUnlocked` (`false`) restaurado tras las pruebas.
-**Standalone** regenerado (v0.64.0, 3205 KB), montado y verificado (versión +
-rutinas migradas + `access` inalterado + 0 cue residual). Backup `v0.63.0_20260724`
-(rotado `v0.43.0`, cap 20).
-
-### Migración MECÁNICA de B2.3 CERRADA
-
-Con estas dos, la migración **mecánica** de B2.3 queda **cerrada** (s121). **8 → 6
-legacy.** Las 6 rutinas legacy restantes **NO son deuda mecánica**: quedan
-BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio.
-
-- `push.ladder` → editorial: negativas sin nº de reps + Pica sin escalón.
-- `legs.single` → editorial: reescribir (aritmética imposible + 3/4 avanzados).
-- `desk.quick` → editorial: Seated twist (falta 2º lado).
-- `hips.ground` → editorial: Ground transitions (alternativa «con manos»).
-- `ancestral` → editorial: Ground transitions + Rib pull (identidad).
-- `atg.knees` → editorial + **BLOQUEADA por revisión FISIO de Sissy squat** (B4).
-
-\+ Pendiente heredado: escalón de regresión de Puente torácico (`spine.waves`, s120).
-No se abrirá una OLA 5 mecánica salvo que una auditoría NUEVA demuestre que alguna
-rutina puede migrarse sin cambiar copy, dosis, estructura, lateralidad ni escalones.
-
-Diario completo: [session-121](./docs/sessions/session-121-b2-3-ola-4-cierre-mecanico.md).

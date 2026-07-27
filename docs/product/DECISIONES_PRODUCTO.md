@@ -58,27 +58,44 @@ Objetivo: que una persona entienda la home sin explicaciones. Lo APLICADO:
 - **Sistema verbal** (rompe la colisión «Comenzar»): timer «Empezar foco», Camino
   «Iniciar camino», biblioteca «Ver caminos». EN: «Start focus / Start path /
   Browse paths». Cada verbo = su consecuencia.
-- **§0 solapamiento editorial «sol» — LIMITADO/PROVISIONAL, NO §0 completo** (el
-  usuario autorizó incluir una versión limitada, aunque el corte daba §0 fuera): la
-  tarjeta sube con `transform: translateY(-118px)` (NO margin — el `flex:1`
-  reclamaría el hueco) y tapa el arco inferior del círculo hasta rozar el CICLO.
-  **GATE ≥760px de alto**; en ancho+corto (`min-width:700px and max-height:759px`) un
-  **swap de orden** restaura Actividades→Camino de colchón. El patrón `transform` es
-  una solución provisional para el rango donde funciona, **no sustituye el diseño
-  canónico de §0** (flujo normal + margen negativo controlado + círculo responsive
-  por altura para toda la matriz de viewports/zoom/barras móviles).
+- **§0 solapamiento editorial «sol» (s122) — SUPERADO por el modelo «atardecer» de
+  s123.** En s122 fue un `transform: translateY(-118px)` con gate binario ≥760px + un
+  swap por `order` en ancho+corto. La prueba real destapó que ese swap rompía la
+  jerarquía y el `overflow:hidden` recortaba el aro → ver la sección s123.
 
-**PENDIENTE explícito:**
-- **§0 completo** (short-viewport <720px): círculo responsive + solapamiento
-  controlado en TODOS los viewports del §8. Sesión propia.
+**PENDIENTE (tras s122):**
+- **Prueba real** con una persona sin explicaciones (la hizo el usuario tras s122 → el
+  modelo responsive de s123 salió de ahí).
 - **§7**: pills Tweaks + estabilidad del contenedor de Estadísticas.
-- **Prueba real** con una persona sin explicaciones (la hace el usuario tras el
-  deploy; puede cambiar el plan).
-- **Bug de runner (fuera de la home):** scrollbar del runner v1 a alturas ≤660px en
-  pasos `perSide` de texto largo → sesión corta de runner responsive.
 
-Sustituye a re-leer HOME_REDISENO para saber qué se aplicó; HOME_REDISENO sigue
-siendo el canónico del DISEÑO (§0 completo aún pendiente).
+---
+
+## Home · modelo «atardecer» responsive (s123 · v0.66.0)
+
+La prueba real de s122 destapó una **regresión bloqueante** (el swap por `order` ponía
+Actividades antes que Camino en ancho+corto; el `overflow:hidden` recortaba la base del
+aro). s123 reencuadró la sesión (el timer editorial pasa a s124) y resolvió la parte de
+§0 **sensible a la altura**. Decisiones canónicas:
+
+- **Jerarquía INVARIANTE** Timer → Camino → Actividades = orden del DOM. **Prohibido
+  `order`** para intercambiar secciones en cualquier viewport (el swap de s122 se eliminó).
+- **Aro por altura útil, mínimo GENEROSO** (`min(86vw, 520px, max(300px, 58dvh))`): NO se
+  encoge agresivamente para que todo entre por encima del fold — se **prefiere scroll
+  vertical**. Nunca reducir aro/tipografía/CTA/objetivos táctiles para evitar scroll.
+- **«Atardecer» SIEMPRE presente y PROGRESIVO** (no un gate binario): la tarjeta cruza el
+  arco inferior del aro con `margin-top` negativo adaptativo hasta el **19% del diámetro**
+  donde hay holgura, **mínimo pero visible** en pantallas bajas, **nunca tapando** CTA /
+  bolas / CICLO (≥8px de holgura). El «sol/horizonte» existe en todos los viewports.
+- **Barra de scroll OCULTA** en la home conservando el scroll funcional (rueda/trackpad/
+  gesto/teclado; el foco de teclado autodesplaza). Ninguna barra vertical antiestética;
+  ningún `overflow:hidden` que oculte contenido; un solo contenedor scrollable.
+
+Detalle técnico (variables, fórmulas, el porqué del `margin` negativo ahora sí) en
+`DESIGN_SYSTEM.md` → «Modelo atardecer de la home». HOME_REDISENO_PROPUESTA sigue siendo
+el canónico del DISEÑO editorial; §0 «sensible a la altura» ya implementado en s123.
+
+**PENDIENTE (tras s123):** **s124** timer editorial · **s125** scrollbar del runner v1 ·
+§7 · trocear `FocusTimer.jsx` (506 ln, pre-existente).
 
 ---
 

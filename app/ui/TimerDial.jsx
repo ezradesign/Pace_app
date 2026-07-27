@@ -65,11 +65,19 @@ function TimerTicks({ progress, color }) {
   return <React.Fragment>{marks}</React.Fragment>;
 }
 
-function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks }) {
+function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight }) {
   const R = 47.5;
   const C = 2 * Math.PI * R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
   const ringColor = interpolateRingColor(progress, mode);
+
+  /* fitHeight (s123, SOLO home): el aro se dimensiona por la ALTURA ÚTIL de su
+     contenedor (no por 56vh del viewport), encogiéndose en pantallas bajas hasta
+     un mínimo legible, para no desbordar main-content y recortar bolas/CICLO. La
+     geometría del anillo (viewBox/R/C/SVG) NO cambia: solo cambia el tamaño del
+     marco, que el SVG ya escala a 100%. El clamp real (con fallback vh→dvh) vive
+     en _responsive.js sobre [data-pace-dial-fit]. Caminos NO pasa la prop → usa
+     el marco clásico min(56vh,86vw,520px), byte-idéntico. */
 
   return (
     /* data-pace-dial-running: gancho para el halo "respirando" del aro
@@ -78,7 +86,9 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
        en reposo. Puramente presentacional; el padre decide `running`.
        `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
        es el aro clasico con arco + punto guia (FocusTimer home). */
-    <div data-pace-dial-running={running ? '' : undefined} style={timerDialStyles.frame}>
+    <div data-pace-dial-running={running ? '' : undefined}
+         data-pace-dial-fit={fitHeight ? '' : undefined}
+         style={fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame}>
       {ticks ? (
         <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
@@ -130,6 +140,18 @@ const timerDialStyles = {
     flexShrink: 0,
     display: 'grid',
     placeItems: 'center',
+  },
+  /* Variante fitHeight (s123, home). height/width los fija _responsive.js con
+     [data-pace-dial-fit] (clamp por altura útil + fallback vh→dvh); aquí solo el
+     resto del marco. aspect-ratio 1/1 + height del CSS → width cuadrado; el
+     maxWidth:100% blinda contra desbordes horizontales en ancho+corto. */
+  frameFit: {
+    position: 'relative',
+    aspectRatio: '1 / 1',
+    flexShrink: 0,
+    display: 'grid',
+    placeItems: 'center',
+    maxWidth: '100%',
   },
   inner: {
     position: 'relative',

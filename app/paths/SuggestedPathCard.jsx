@@ -46,21 +46,28 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
        que un desplazamiento fijo aterriza ~10-20px por debajo del CICLO en ese
        rango, sin taparlo ni tapar el botón. GATE a alturas ≥760px: por debajo,
        el aro ya desborda y la tarjeta ya solapa (caso corto, diferido a §0). */
-    [data-pace-spc] { position: relative; z-index: 2; }
-    @media (min-height: 760px) {
-      [data-pace-spc] { transform: translateY(-118px); }
-      [data-pace-activitybar] { transform: translateY(-118px); }
+    /* Solapamiento "atardecer" (s123): la tarjeta de Camino sube el 12% del
+       DIÁMETRO del aro (var --pace-home-sunset-overlap, definida en _responsive.js
+       sobre [data-pace-home-body]) mediante margin-top NEGATIVO, cruzando el
+       tramo inferior decorativo del aro (el "horizonte" bajo un "sol"). SIEMPRE
+       presente y progresivo: más aro => más solapamiento, sin gate binario ni
+       breakpoints. z-index:2 la pinta SOBRE el aro. El margin negativo arrastra
+       también a la ActivityBar (flujo normal), así que Camino y Actividades
+       quedan pegadas sin abrir hueco — sin necesidad de mover la ActivityBar.
+       Los controles del aro (CTA, bolas, CICLO) viven en su centro, muy por
+       encima del 12% inferior, así que el solapamiento nunca los tapa. */
+    [data-pace-spc] {
+      position: relative;
+      z-index: 2;
+      margin-top: calc(var(--pace-home-sunset-overlap, 0px) * -1);
     }
-    /* Por debajo del gate NO hay solapamiento; además se RESTAURA el orden
-       seguro Actividades→Camino (via flex order), para que la tarjeta NO
-       quede pegada directamente bajo el aro grande (que a poca altura desborda)
-       y colisione con sus controles. Actividades vuelven a hacer de colchón,
-       como en el layout original. Es la degradación honesta del caso short-viewport
-       (§0 completo pendiente). */
-    @media (min-width: 700px) and (max-height: 759px) {
-      [data-pace-activitybar] { order: 2; }
-      [data-pace-spc] { order: 3; }
-    }
+    /* s123: el SWAP por flex-order que había aquí (Actividades vs Camino en
+       ancho+corto) ROMPIA la jerarquia invariante Timer -> Camino -> Actividades
+       y fue eliminado. En su lugar, la geometria del aro es sensible a la altura
+       util (se encoge por altura, ver [data-pace-dial-fit] en _responsive.js) y
+       la region de la home hace scroll de ultimo recurso (data-pace-home-body en
+       main.jsx). Por debajo de 760px simplemente NO hay solapamiento; el orden
+       del DOM se respeta en todos los viewports. */
     @media (max-width: 640px) {
       [data-pace-spc] { padding: 0 14px 10px !important; }
       /* Solo el contenedor dual se apila; la card unica queda en row */

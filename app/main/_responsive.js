@@ -38,6 +38,62 @@
       max-height: 100vh;
       max-height: 100dvh;
     }
+    /* Modelo "atardecer" de la HOME (s123). El tamaño del aro y la profundidad
+       del solapamiento derivan de UNA sola variable, para que la tarjeta de
+       Camino cruce SIEMPRE el tramo inferior del aro (nunca un gate binario que
+       lo apague en pantallas bajas).
+
+       Tamaño del aro: por ANCHO y ALTURA, con un MÍNIMO legible GENEROSO. NO se
+       encoge agresivamente para que toda la home entre en pantalla — en alturas
+       bajas se prefiere SCROLL vertical (data-pace-home-body). 58vh mantiene el
+       aro grande (identidad "sol") sin que domine; el suelo de 300px evita que se
+       vuelva diminuto; 86vw/520px son los topes de ancho y absoluto de siempre.
+
+       Solapamiento "atardecer": ADAPTATIVO, aplicado como margin-top NEGATIVO a
+       la tarjeta (ver SuggestedPathCard). Llega hasta el 19% del diámetro donde
+       hay holgura (aros grandes), pero se LIMITA por el arco decorativo real bajo
+       las bolas en aros pequeños para no tapar nunca el CICLO. El contenido del
+       aro (modeLabel+número+subtítulo+CTA+bolas) mide ~224-250px casi fijo, así
+       que el arco bajo las bolas = (diámetro - ~244)/2; el solapamiento = ese
+       arco menos 6px de holgura, o el 19% si es menor. Progresivo por
+       construcción: más aro => más atardecer (amplio arriba, mínimo pero visible
+       abajo), garantizando >=8px de holgura bajo las bolas en todo el rango. El
+       suelo de 6px evita hueco en anchos extremos (<~270px).
+
+       Fallback vh -> dvh vía @supports: los custom properties NO admiten el
+       patrón de doble declaración (una var inválida por dvh no cae a la anterior,
+       queda "invalid at computed value time"), así que se re-declara bajo
+       @supports (height:1dvh). Solo la home lleva estas variables y
+       [data-pace-dial-fit]; Caminos conserva el marco clásico. */
+    [data-pace-home-body] {
+      --pace-home-timer-size: min(86vw, 520px, max(300px, 58vh));
+      --pace-home-sunset-overlap: max(6px, min(calc(var(--pace-home-timer-size) * 0.19), calc((var(--pace-home-timer-size) - 244px) / 2 - 6px)));
+    }
+    @supports (height: 1dvh) {
+      [data-pace-home-body] {
+        --pace-home-timer-size: min(86vw, 520px, max(300px, 58dvh));
+      }
+    }
+    [data-pace-dial-fit] {
+      width: auto;
+      height: var(--pace-home-timer-size);
+    }
+    /* Barra de scroll OCULTA en el contenedor vertical de la home (s123), sin
+       tocar el desplazamiento: overflow-y sigue en 'auto' (rueda/trackpad/gesto
+       táctil/teclado funcionan, y el foco de teclado autodesplaza el viewport).
+       Solo se oculta la BARRA visual: scrollbar-width:none (Firefox),
+       -ms-overflow-style:none (Edge/IE antiguos) y ::-webkit-scrollbar
+       display:none (Chromium/WebKit). NO se usa overflow:hidden — el contenido
+       siempre es alcanzable. Solo este contenedor; no hay scrolls internos. */
+    [data-pace-home-body] {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    [data-pace-home-body]::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
     @media (max-width: 768px) {
       [data-pace-topbar] {
         padding: 10px 12px !important;
@@ -54,9 +110,12 @@
         width: 40px !important;
         height: 40px !important;
       }
-      /* Main content: menos padding para ganar ancho del aro */
+      /* Main content: menos padding para ganar ancho del aro. Sin padding
+         INFERIOR (s123): la base del aro debe quedar adyacente a la tarjeta de
+         Camino para que el margin-top negativo del "atardecer" mida desde el
+         borde del aro, no desde un padding intermedio. */
       [data-pace-main-content] {
-        padding: 4px 12px !important;
+        padding: 4px 12px 0 !important;
       }
       /* ActivityBar en móvil: grid 2×2, chips compactos verticales */
       [data-pace-activitybar] {
