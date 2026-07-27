@@ -123,7 +123,11 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
         <div style={ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
-        {subtitle ? <div style={timerDialStyles.subtitleItalic}>{subtitle}</div> : null}
+        {/* aria-live: anuncia el cambio del subtítulo (descriptor por duración
+            y, en el home, «Ciclo completado») de forma cortés. El número del
+            contador vive en otro div sin live → no se lee cada segundo. En
+            Caminos subtitle=null, así que este nodo ni existe. */}
+        {subtitle ? <div style={timerDialStyles.subtitleItalic} aria-live="polite">{subtitle}</div> : null}
         {inner ? <div style={timerDialStyles.innerDivider} /> : null}
         {inner}
       </div>

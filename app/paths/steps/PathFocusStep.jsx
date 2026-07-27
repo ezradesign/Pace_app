@@ -19,7 +19,8 @@ const { useState: useStateFS } = React;
 
 function PathFocusStep({ step, onExit }) {
   const { t } = useT();
-  const totalSec = (step.min || 25) * 60;
+  const stepMin = step.min || 25;
+  const totalSec = stepMin * 60;
   const [done, setDone] = useStateFS(false);
 
   /* Motor timestamp-based compartido (s96). El foco de un Camino es
@@ -29,7 +30,7 @@ function PathFocusStep({ step, onExit }) {
     setDone(true);
     try {
       if (typeof completeFocusSession === 'function') {
-        completeFocusSession('path', { minutes: step.min || 25 });
+        completeFocusSession('path', { minutes: stepMin });
       }
     } catch (e) {}
   });
@@ -43,7 +44,9 @@ function PathFocusStep({ step, onExit }) {
      -> el TimerDial va sin modeLabel/subtitle para no duplicar el texto. */
   const routine = {
     code: t('topbar.mode.focus'),
-    name: t('focus.subtitle.focus'),
+    // Descriptor por DURACIÓN del paso (s124): coherente con totalSec (mismo
+    // stepMin). 10/15 → «Foco breve»; 25 → «Concentración profunda».
+    name: t(getFocusDescriptorKey(stepMin)),
   };
 
   /* Pantalla de completado: mismo SessionDone que Respira/Mueve. El Foco de

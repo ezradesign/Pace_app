@@ -2,11 +2,11 @@
    Temporizador funcional real. 4 estilos visuales de tweaks.
 */
 
-const { useState: useStateFT, useEffect: useEffectFT, useRef: useRefFT } = React;
+const { useEffect: useEffectFT, useRef: useRefFT } = React;
 
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
-  const { t } = useT();
+  const { t, tn } = useT();
 
   /* Motor de cuenta atras basado en timestamps (s96 · app/focus/useCountdown).
      `remaining` se deriva del reloj real, no de un contador que se decrementa:
@@ -17,7 +17,7 @@ function FocusTimer({ onFinish }) {
                      : state.focusMode === 'pausa' ? 5
                      : 15) * 60;
 
-  const { remaining, running, status, endsAt, toggle, reset, restore } = useCountdown(durationSec, () => {
+  const { remaining, running, status, endsAt, start, toggle, reset, restore } = useCountdown(durationSec, () => {
     /* Sonido de cierre — campana suave (do+sol+do6) que marca el fin del
        bloque, sea foco, pausa o larga. Respeta soundOn (noop si apagado). */
     try { playSound('pomodoro.end'); } catch (e) {}
@@ -99,16 +99,70 @@ function FocusTimer({ onFinish }) {
   const modeLabel = state.focusMode === 'foco' ? t('focus.manual.label')
                   : state.focusMode === 'pausa' ? t('focus.mode.pause')
                   : t('focus.mode.long');
-  const subtitle = state.focusMode === 'foco' ? t('focus.subtitle.focus')
-                 : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
-                 : t('focus.subtitle.long');
+
+  const isFocoMode = state.focusMode === 'foco';
+  const isCompleted = status === 'completed';
+
+  /* Subtítulo del aro/barra/analógico (s124):
+     - modo foco: DESCRIPTOR editorial por DURACIÓN (getFocusDescriptorKey);
+       en 'completed' el feedback «Ciclo completado» REEMPLAZA temporalmente al
+       descriptor en el MISMO slot (no añade altura estructural → no toca el
+       atardecer de s123).
+     - pausa/larga: conservan su copy propio (invariante: copys de pausa). */
+  const subtitle = isFocoMode
+    ? (isCompleted ? t('focus.cycleComplete') : t(getFocusDescriptorKey(state.focusMinutes)))
+    : state.focusMode === 'pausa' ? t('focus.subtitle.pause')
+    : t('focus.subtitle.long');
 
   const isAro = state.timerStyle === 'aro';
-  const runningLabel = running ? t('focus.pause') : (remaining === totalSec ? t('focus.start') : t('focus.continue'));
 
-  /* Dots de ciclo (4 puntitos + etiqueta CICLO).
+  /* Inicio VISUAL centralizado (s124): sonido de arranque + petición de
+     permiso de notificación. Lo comparten un arranque/reanudación normal y
+     «Empezar otro ciclo», para idéntica semántica sin tocar el motor. */
+  const startFocusVisual = () => {
+    try { playSound('pomodoro.start'); } catch (e) {}
+    if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
+  };
+  // Arranque/reanudación normal (idle|paused -> running). Pausar no pasa por aquí.
+  const handleNormalStart = () => { startFocusVisual(); toggle(); };
+  /* Fix del 'completed' inerte (s124): handler DEDICADO — reset + start. El
+     motor sigue con 'completed' TERMINAL (toggle() ahí es no-op). reset NO
+     acredita, start NO acredita: el 2º bloque empieza en durationSec completo
+     sin tocar state.cycle. */
+  const handleStartAnotherCycle = () => { startFocusVisual(); reset(); start(); };
+
+  /* Etiqueta + acción del botón principal por ESTADO del motor (s124, SIN
+     glifos). Basado en `status` (no en remaining===totalSec) para que pausar
+     dentro del primer segundo muestre «Continuar» y no «Empezar foco»:
+       running   -> «Pausar» (contorno)
+       completed -> arranca otro bloque (fix del inerte)
+       paused    -> «Continuar»
+       idle      -> «Empezar foco». */
+  let ctaLabel, ctaAction;
+  if (running) {
+    ctaLabel = t('focus.pause');
+    ctaAction = toggle;
+  } else if (isCompleted) {
+    ctaLabel = isFocoMode ? t('focus.startAnother') : t('focus.start');
+    ctaAction = handleStartAnotherCycle;
+  } else if (status === 'paused') {
+    ctaLabel = t('focus.continue');
+    ctaAction = handleNormalStart;
+  } else {
+    ctaLabel = t('focus.start');
+    ctaAction = handleNormalStart;
+  }
+
+  /* Dots de ciclo (4 puntitos + etiqueta «CICLO N / 4»).
      En estilo 'aro' viven DENTRO del aro, debajo del botón de comenzar.
-     En otros estilos se renderizan en su bloque propio fuera del timer. */
+     En otros estilos se renderizan en su bloque propio fuera del timer.
+     N = (state.cycle % 4) + 1 (SOLO presentación; no toca la lógica Pomodoro).
+     completed en foco muestra «SIGUIENTE · CICLO N / 4». Los puntos marcan los
+     ciclos completados del cuarteto actual (delta cero). */
+  const cycleN = (state.cycle % 4) + 1;
+  const cycleLabel = (isFocoMode && isCompleted)
+    ? tn('focus.cycleNext', { n: cycleN })
+    : tn('focus.cycleOf', { n: cycleN });
   const cycleDotsEl = (
     <div style={focusStyles.cycleDots}>
       {[0,1,2,3].map(i => (
@@ -117,7 +171,7 @@ function FocusTimer({ onFinish }) {
           background: (state.cycle % 4) > i ? 'var(--focus)' : 'var(--line-2)',
         }} />
       ))}
-      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{t('focus.cycle')}</span>
+      <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginLeft: 10 }}>{cycleLabel}</span>
     </div>
   );
 
@@ -127,28 +181,26 @@ function FocusTimer({ onFinish }) {
     <div style={focusStyles.controlsTight}>
       <button
         data-pace-cta
-        onClick={() => {
-          // Sonido de inicio solo en un arranque/reanudacion real (idle|paused
-          // -> running). Pausar no suena; 'completed' es no-op (no re-credita).
-          if (status !== 'running' && status !== 'completed') {
-            try { playSound('pomodoro.start'); } catch (e) {}
-            // B1.2: permiso de notificación en el primer gesto real de foco
-            // (notifyFocusEnd es ON por defecto; ver FocusTimer.support.jsx).
-            if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
-          }
-          toggle();
-        }}
+        onClick={ctaAction}
         style={running ? focusStyles.startBtnSecondary : focusStyles.startBtnPrimary}
       >
-        <span style={{ fontSize: 11, lineHeight: 1 }}>{running ? '❚❚' : '▶'}</span>
-        <span>{runningLabel}</span>
+        {ctaLabel}
       </button>
-      <button onClick={reset} style={focusStyles.resetCircle} title={t('focus.restart')} aria-label={t('focus.restart')}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 12a9 9 0 1 0 3-6.7" />
-          <polyline points="3 4 3 10 9 10" />
-        </svg>
-      </button>
+      {/* Reset RE-JERARQUIZADO (s124): oculto en idle/running/completed; en
+          paused es una acción TEXTUAL secundaria «Reiniciar bloque» (no botón
+          circular). Va EN FILA junto al CTA para NO añadir altura al interior
+          del aro (la fila mide lo que el CTA = 44px) → el atardecer/CICLO de
+          s123 no se desplazan. focus.restart queda intacta (PathFocusStep). */}
+      {status === 'paused' && (
+        <button
+          onClick={reset}
+          style={focusStyles.resetTextBtn}
+          title={t('focus.restartBlock')}
+          aria-label={t('focus.restartBlock')}
+        >
+          {t('focus.restartBlock')}
+        </button>
+      )}
     </div>
   );
 
@@ -206,154 +258,9 @@ function FocusTimer({ onFinish }) {
 /* NOTA: el antiguo ModeToggle interno (Foco/Pausa/Larga) se eliminó en v0.11.6.
    Los tabs viven ahora en TopBar (app/main.jsx), centrados arriba (v0.11.4). */
 
-/* ===================== */
-/* MINUTES PICKER */
-/* ===================== */
-/* Presets 15/25/35/45 + "Otro" con input inline (1–180 min).
-   La pill "Otro" se expande a un input al hacer click. Al confirmar
-   (Enter o blur) aplica el valor y colapsa. Si el value actual no es
-   preset, la pill muestra el número en lugar de "Otro" (estado activo).
-   Rango 1–180 para cubrir desde pomodoros ultra-cortos hasta sesiones
-   deep-work sin volverse absurdo. */
-function MinutesPicker({ value, onChange }) {
-  const { t } = useT();
-  const presets = [15, 25, 35, 45];
-  const isCustom = !presets.includes(value);
-  const [editing, setEditing] = useStateFT(false);
-  const [draft, setDraft] = useStateFT(String(value));
-  const inputRef = useRefFT(null);
-
-  useEffectFT(() => {
-    if (editing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [editing]);
-
-  // Mantén el draft sincronizado si el value externo cambia mientras no edita
-  useEffectFT(() => {
-    if (!editing) setDraft(String(value));
-  }, [value, editing]);
-
-  const commit = () => {
-    const n = parseInt(draft, 10);
-    if (Number.isFinite(n) && n >= 1 && n <= 180) {
-      onChange(n);
-    } else {
-      setDraft(String(value)); // revert
-    }
-    setEditing(false);
-  };
-
-  const cancel = () => {
-    setDraft(String(value));
-    setEditing(false);
-  };
-
-  const pillBase = {
-    padding: '4px 12px',
-    minWidth: 34,
-    height: 26,
-    fontSize: 13,
-    fontVariantNumeric: 'tabular-nums',
-    borderRadius: 'var(--r-pill)',
-    border: '1px solid transparent',
-    transition: 'all 180ms',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  return (
-    <div style={{ display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
-      <span style={{
-        fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginRight: 10, fontWeight: 500,
-      }}>{t('focus.min')}</span>
-      {presets.map(m => (
-        <button key={m} onClick={() => { onChange(m); setEditing(false); }}
-          style={{
-            ...pillBase,
-            fontWeight: value === m ? 600 : 400,
-            color: value === m ? 'var(--ink)' : 'var(--ink-3)',
-            background: value === m ? 'var(--paper-3)' : 'transparent',
-          }}>{m}</button>
-      ))}
-      {editing ? (
-        <input
-          ref={inputRef}
-          type="number"
-          min={1}
-          max={180}
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commit}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') commit();
-            else if (e.key === 'Escape') cancel();
-          }}
-          style={{
-            ...pillBase,
-            width: 52,
-            textAlign: 'center',
-            fontWeight: 600,
-            color: 'var(--ink)',
-            background: 'var(--paper)',
-            border: '1px solid var(--line-2)',
-            outline: 'none',
-            MozAppearance: 'textfield',
-          }}
-        />
-      ) : isCustom ? (
-        <button
-          onClick={() => setEditing(true)}
-          title={t('focus.minutes.custom.title')}
-          style={{
-            ...pillBase,
-            fontWeight: 600,
-            color: 'var(--ink)',
-            background: 'var(--paper-3)',
-          }}>
-          {value}
-        </button>
-      ) : (
-        <button
-          onClick={() => setEditing(true)}
-          title={t('focus.minutes.custom.title')}
-          style={{
-            ...pillBase,
-            marginLeft: 6,
-            padding: '4px 4px',
-            minWidth: 0,
-            fontSize: 10,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'var(--ink-3)',
-            background: 'transparent',
-            fontWeight: 500,
-          }}>
-          {t('focus.other')}
-        </button>
-      )}
-    </div>
-  );
-}
-
-/* Oculta los spinners del <input type="number"> en WebKit.
-   Sin esto, la pill de minutos personalizados muestra flechitas
-   horribles que rompen la densidad calmada de la línea de presets. */
-if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minutes-css')) {
-  const s = document.createElement('style');
-  s.id = 'pace-focus-minutes-css';
-  s.textContent = `
-    input[type=number]::-webkit-outer-spin-button,
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-  `;
-  document.head.appendChild(s);
-}
+/* NOTA s124: MinutesPicker y su CSS de input se extrajeron a
+   app/focus/FocusTimer.parts.jsx (split mecánico para bajar del tope de
+   500 ln). Se consume aquí como global (window.MinutesPicker). */
 
 /* ===================== */
 /* TIMER VISUALIZATIONS */
@@ -422,9 +329,15 @@ function TimerAnalog({ mins, secs, progress, modeLabel, subtitle }) {
         <circle cx="50" cy="50" r="1.2" fill="var(--focus)" />
         {/* Texto */}
         <text x="50" y="32" textAnchor="middle" fontSize="3.5" letterSpacing="0.5" fill="var(--ink-3)" style={{ textTransform: 'uppercase' }}>{modeLabel}</text>
-        <text x="50" y="72" textAnchor="middle" fontSize="10" fontFamily="EB Garamond" fontStyle="italic" fill="var(--ink)">
+        <text x="50" y="70" textAnchor="middle" fontSize="10" fontFamily="EB Garamond" fontStyle="italic" fill="var(--ink)">
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </text>
+        {/* Descriptor por duración (s124): discreto bajo la cifra, sin tocar la
+            geometría del reloj (círculo/marcas/aguja). También muestra «Ciclo
+            completado» cuando llega vía subtitle. */}
+        {subtitle ? (
+          <text x="50" y="80" textAnchor="middle" fontSize="3.6" fontFamily="EB Garamond" fontStyle="italic" fill="var(--ink-3)">{subtitle}</text>
+        ) : null}
       </svg>
     </div>
   );
@@ -456,46 +369,76 @@ const focusStyles = {
      app/ui/TimerDial.jsx (timerDialStyles), compartidos con
      PathFocusStep. */
 
-  /* ===== Controles (compactos, estilo referencia) ===== */
+  /* ===== Controles (s124) =====
+     Bloque en FILA (una sola línea, nowrap): CTA principal + (solo en paused)
+     el reset textual A SU LADO. La fila mide lo que el CTA (44px) → mostrar el
+     reset NO añade altura al interior del aro y no desplaza el CICLO/atardecer
+     de s123. flexShrink:0 permite que la fila DESBORDE el maxWidth:70% del
+     interior del dial, centrada, sin partir (cabe holgada dentro del aro). */
   controls: {
-    display: 'flex', alignItems: 'center', gap: 10, marginTop: 10,
+    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, marginTop: 10, flexWrap: 'nowrap', flexShrink: 0,
   },
   controlsTight: {
-    display: 'flex', alignItems: 'center', gap: 8,
+    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, flexWrap: 'nowrap', flexShrink: 0,
   },
+  /* CTA cápsula RELLENA serif itálica, sin glifos (s124). minHeight 44 = piso
+     de hit-area a11y (el padding visual queda holgado dentro). */
   startBtnPrimary: {
-    display: 'inline-flex', alignItems: 'center', gap: 7,
-    padding: '7px 16px 7px 14px',
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: 44,
+    padding: '8px 24px',
+    whiteSpace: 'nowrap',
     background: 'var(--focus-cta)',
     color: 'var(--paper)',
-    borderRadius: 'var(--r-xs)',
-    fontSize: 12,
-    letterSpacing: 0.3,
-    fontWeight: 500,
+    borderRadius: 'var(--r-pill)',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 16,
+    letterSpacing: '0.01em',
+    fontWeight: 400,
     border: '1px solid var(--focus-cta)',
     boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
     transition: 'all 180ms',
+    cursor: 'pointer',
   },
+  /* Contorno para «Pausar» (running): estado menos primario. */
   startBtnSecondary: {
-    display: 'inline-flex', alignItems: 'center', gap: 7,
-    padding: '7px 16px 7px 14px',
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: 44,
+    padding: '8px 24px',
+    whiteSpace: 'nowrap',
     background: 'var(--paper)',
     color: 'var(--ink)',
-    borderRadius: 'var(--r-xs)',
-    fontSize: 12,
-    letterSpacing: 0.3,
-    fontWeight: 500,
+    borderRadius: 'var(--r-pill)',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 16,
+    letterSpacing: '0.01em',
+    fontWeight: 400,
     border: '1px solid var(--line-2)',
     transition: 'all 180ms',
+    cursor: 'pointer',
   },
-  resetCircle: {
-    width: 28, height: 28,
-    borderRadius: '50%',
-    border: '1px solid var(--line-2)',
-    background: 'var(--paper)',
-    color: 'var(--ink-2)',
-    display: 'grid', placeItems: 'center',
-    transition: 'all 180ms',
+  /* Reset como acción TEXTUAL secundaria (solo paused, s124). minHeight 44
+     asegura la hit-area aunque el texto sea pequeño. */
+  resetTextBtn: {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: 44,
+    padding: '0 10px',
+    whiteSpace: 'nowrap',
+    background: 'transparent',
+    border: 'none',
+    color: 'var(--ink-3)',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 13,
+    letterSpacing: '0.02em',
+    textDecoration: 'underline',
+    textUnderlineOffset: '3px',
+    cursor: 'pointer',
+    transition: 'color 180ms',
   },
 
   cycleDots: {
