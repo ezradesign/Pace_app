@@ -203,32 +203,59 @@ function PaceApp() {
           onOpenTweaks={() => setOpenTweaks(true)}
         />
 
-        {/* Content */}
-        <div data-pace-main-content style={{
+        {/* Región scrollable de la home (s123). Contiene los TRES bloques en
+            el orden de la jerarquía §1 (s122): Foco (timer) → Camino sugerido →
+            Actividades. El orden del DOM es la jerarquía y es INVARIANTE en todo
+            viewport (se eliminó el swap por `order` de s122). En pantallas bajas
+            el aro se encoge por altura útil (data-pace-dial-fit) y, si aun así
+            el conjunto no cabe, ESTA región hace scroll vertical natural en vez
+            de recortar contenido (regla del caso short-viewport). overflow-x
+            oculto para que nunca aparezca scroll horizontal. */}
+        <div data-pace-home-body style={{
           flex: 1,
-          display: 'grid',
-          placeItems: 'center',
-          padding: '10px 40px',
           minHeight: 0,
-          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          overflowX: 'hidden',
         }}>
-          <FocusTimer onFinish={handleFocusFinish} />
+          {/* Bloque "atardecer" (s123): Timer + Camino + Actividades como una
+              composición. margin-top/bottom:auto lo CENTRA verticalmente cuando
+              hay espacio y, cuando desborda, los márgenes colapsan a 0 y la
+              región (home-body) SCROLLEA sin recortar (patrón centrar-o-scrollear
+              fiable en flex). El orden del DOM es la jerarquía, invariante. */}
+          <div data-pace-home-stack style={{
+            marginTop: 'auto',
+            marginBottom: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            flexShrink: 0,
+          }}>
+            {/* Content — el aro. Altura de CONTENIDO (no crece): su base queda
+                adyacente a la tarjeta, sin espacio de centrado variable, para que
+                el solapamiento del "atardecer" (margin-top negativo de la tarjeta)
+                sea estable. Sin padding inferior por el mismo motivo. */}
+            <div data-pace-main-content style={{
+              flexShrink: 0,
+              display: 'grid',
+              placeItems: 'center',
+              padding: '10px 40px 0',
+            }}>
+              <FocusTimer onFinish={handleFocusFinish} />
+            </div>
+
+            {/* Camino sugerido — cruza el tramo inferior del aro (el "horizonte"),
+                POR ENCIMA de Actividades */}
+            <SuggestedPathCard />
+
+            {/* Actividades footer — flujo normal tras Camino */}
+            <ActivityBar
+              onOpenLibrary={(kind) => setOpenLibrary(kind)}
+              onOpenHydrate={() => setOpenHydrate(true)}
+            />
+          </div>
         </div>
-
-        {/* Jerarquía de la home (§1 · s122): Foco (timer) → Camino sugerido
-            (experiencia guiada recomendada) → Actividades (accesos manuales
-            secundarios). El Camino va POR ENCIMA de la ActivityBar. La tarjeta
-            se mantiene COMPACTA (nombre + secuencia en iconos + CTA) para no
-            robar altura al aro; el timer conserva su tamaño de siempre. */}
-
-        {/* Camino sugerido del momento (sesion 51) */}
-        <SuggestedPathCard />
-
-        {/* Actividades footer */}
-        <ActivityBar
-          onOpenLibrary={(kind) => setOpenLibrary(kind)}
-          onOpenHydrate={() => setOpenHydrate(true)}
-        />
       </main>
 
       {/* ========== MODALS ========== */}

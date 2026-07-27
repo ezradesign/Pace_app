@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.65.0</title>
+  <title>PACE · Foco · Cuerpo — v0.66.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3409,7 +3409,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.65.0';
+const PACE_VERSION = 'v0.66.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -6947,11 +6947,19 @@ function TimerTicks(_ref) {let { progress, color } = _ref;
   return /*#__PURE__*/React.createElement(React.Fragment, null, marks);
 }
 
-function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks } = _ref2;
+function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight } = _ref2;
   const R = 47.5;
   const C = 2 * Math.PI * R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
   const ringColor = interpolateRingColor(progress, mode);
+
+  /* fitHeight (s123, SOLO home): el aro se dimensiona por la ALTURA ÚTIL de su
+     contenedor (no por 56vh del viewport), encogiéndose en pantallas bajas hasta
+     un mínimo legible, para no desbordar main-content y recortar bolas/CICLO. La
+     geometría del anillo (viewBox/R/C/SVG) NO cambia: solo cambia el tamaño del
+     marco, que el SVG ya escala a 100%. El clamp real (con fallback vh→dvh) vive
+     en _responsive.js sobre [data-pace-dial-fit]. Caminos NO pasa la prop → usa
+     el marco clásico min(56vh,86vw,520px), byte-idéntico. */
 
   return (/*#__PURE__*/
     /* data-pace-dial-running: gancho para el halo "respirando" del aro
@@ -6960,7 +6968,9 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
        en reposo. Puramente presentacional; el padre decide `running`.
        `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
        es el aro clasico con arco + punto guia (FocusTimer home). */
-    React.createElement("div", { "data-pace-dial-running": running ? '' : undefined, style: timerDialStyles.frame },
+    React.createElement("div", { "data-pace-dial-running": running ? '' : undefined,
+      "data-pace-dial-fit": fitHeight ? '' : undefined,
+      style: fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame },
     ticks ? /*#__PURE__*/
     React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } }, /*#__PURE__*/
@@ -7012,6 +7022,18 @@ const timerDialStyles = {
     flexShrink: 0,
     display: 'grid',
     placeItems: 'center'
+  },
+  /* Variante fitHeight (s123, home). height/width los fija _responsive.js con
+     [data-pace-dial-fit] (clamp por altura útil + fallback vh→dvh); aquí solo el
+     resto del marco. aspect-ratio 1/1 + height del CSS → width cuadrado; el
+     maxWidth:100% blinda contra desbordes horizontales en ancho+corto. */
+  frameFit: {
+    position: 'relative',
+    aspectRatio: '1 / 1',
+    flexShrink: 0,
+    display: 'grid',
+    placeItems: 'center',
+    maxWidth: '100%'
   },
   inner: {
     position: 'relative',
@@ -9155,7 +9177,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       modeLabel: modeLabel,
       subtitle: subtitle,
       inner: isAro ? innerForAro : null,
-      running: running }
+      running: running,
+      fitHeight: isAro }
     )
     ),
 
@@ -9330,10 +9353,10 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-focus-minu
    Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
    para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
    ahora en TimerDial.jsx. */
-function TimerVisualization(_ref3) {let { style, mins, secs, progress, mode, modeLabel, subtitle, inner, running } = _ref3;
+function TimerVisualization(_ref3) {let { style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight } = _ref3;
   if (style === 'barra') return /*#__PURE__*/React.createElement(TimerBar, { mins: mins, secs: secs, progress: progress, modeLabel: modeLabel, subtitle: subtitle });
   if (style === 'analogico') return /*#__PURE__*/React.createElement(TimerAnalog, { mins: mins, secs: secs, progress: progress, modeLabel: modeLabel, subtitle: subtitle });
-  return /*#__PURE__*/React.createElement(TimerDial, { mins: mins, secs: secs, progress: progress, mode: mode, modeLabel: modeLabel, subtitle: subtitle, inner: inner, running: running });
+  return /*#__PURE__*/React.createElement(TimerDial, { mins: mins, secs: secs, progress: progress, mode: mode, modeLabel: modeLabel, subtitle: subtitle, inner: inner, running: running, fitHeight: fitHeight });
 }
 
 function TimerBar(_ref4) {let { mins, secs, progress, modeLabel, subtitle } = _ref4;
@@ -9408,12 +9431,12 @@ const focusStyles = {
        para no ahogar el aro en 375×812. (Sesión 22.) */
     padding: '8px clamp(0px, 4vw, 40px) 0',
     width: '100%',
-    height: '100%',
+    height: 'auto', // s123: a su contenido; lo centra data-pace-home-stack (margin:auto)
     minHeight: 0
   },
   timerWrap: {
     display: 'grid', placeItems: 'center',
-    flex: 1,
+    flex: '0 0 auto', // s123: aro a su tamaño propio (var); flex:1 lo colapsaría (basis 0%)
     minHeight: 0,
     width: '100%'
   },
@@ -15768,21 +15791,28 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
        que un desplazamiento fijo aterriza ~10-20px por debajo del CICLO en ese
        rango, sin taparlo ni tapar el botón. GATE a alturas ≥760px: por debajo,
        el aro ya desborda y la tarjeta ya solapa (caso corto, diferido a §0). */
-    [data-pace-spc] { position: relative; z-index: 2; }
-    @media (min-height: 760px) {
-      [data-pace-spc] { transform: translateY(-118px); }
-      [data-pace-activitybar] { transform: translateY(-118px); }
+    /* Solapamiento "atardecer" (s123): la tarjeta de Camino sube el 12% del
+       DIÁMETRO del aro (var --pace-home-sunset-overlap, definida en _responsive.js
+       sobre [data-pace-home-body]) mediante margin-top NEGATIVO, cruzando el
+       tramo inferior decorativo del aro (el "horizonte" bajo un "sol"). SIEMPRE
+       presente y progresivo: más aro => más solapamiento, sin gate binario ni
+       breakpoints. z-index:2 la pinta SOBRE el aro. El margin negativo arrastra
+       también a la ActivityBar (flujo normal), así que Camino y Actividades
+       quedan pegadas sin abrir hueco — sin necesidad de mover la ActivityBar.
+       Los controles del aro (CTA, bolas, CICLO) viven en su centro, muy por
+       encima del 12% inferior, así que el solapamiento nunca los tapa. */
+    [data-pace-spc] {
+      position: relative;
+      z-index: 2;
+      margin-top: calc(var(--pace-home-sunset-overlap, 0px) * -1);
     }
-    /* Por debajo del gate NO hay solapamiento; además se RESTAURA el orden
-       seguro Actividades→Camino (via flex order), para que la tarjeta NO
-       quede pegada directamente bajo el aro grande (que a poca altura desborda)
-       y colisione con sus controles. Actividades vuelven a hacer de colchón,
-       como en el layout original. Es la degradación honesta del caso short-viewport
-       (§0 completo pendiente). */
-    @media (min-width: 700px) and (max-height: 759px) {
-      [data-pace-activitybar] { order: 2; }
-      [data-pace-spc] { order: 3; }
-    }
+    /* s123: el SWAP por flex-order que había aquí (Actividades vs Camino en
+       ancho+corto) ROMPIA la jerarquia invariante Timer -> Camino -> Actividades
+       y fue eliminado. En su lugar, la geometria del aro es sensible a la altura
+       util (se encoge por altura, ver [data-pace-dial-fit] en _responsive.js) y
+       la region de la home hace scroll de ultimo recurso (data-pace-home-body en
+       main.jsx). Por debajo de 760px simplemente NO hay solapamiento; el orden
+       del DOM se respeta en todos los viewports. */
     @media (max-width: 640px) {
       [data-pace-spc] { padding: 0 14px 10px !important; }
       /* Solo el contenedor dual se apila; la card unica queda en row */
@@ -19001,6 +19031,62 @@ Object.assign(window, { Onboarding });
       max-height: 100vh;
       max-height: 100dvh;
     }
+    /* Modelo "atardecer" de la HOME (s123). El tamaño del aro y la profundidad
+       del solapamiento derivan de UNA sola variable, para que la tarjeta de
+       Camino cruce SIEMPRE el tramo inferior del aro (nunca un gate binario que
+       lo apague en pantallas bajas).
+
+       Tamaño del aro: por ANCHO y ALTURA, con un MÍNIMO legible GENEROSO. NO se
+       encoge agresivamente para que toda la home entre en pantalla — en alturas
+       bajas se prefiere SCROLL vertical (data-pace-home-body). 58vh mantiene el
+       aro grande (identidad "sol") sin que domine; el suelo de 300px evita que se
+       vuelva diminuto; 86vw/520px son los topes de ancho y absoluto de siempre.
+
+       Solapamiento "atardecer": ADAPTATIVO, aplicado como margin-top NEGATIVO a
+       la tarjeta (ver SuggestedPathCard). Llega hasta el 19% del diámetro donde
+       hay holgura (aros grandes), pero se LIMITA por el arco decorativo real bajo
+       las bolas en aros pequeños para no tapar nunca el CICLO. El contenido del
+       aro (modeLabel+número+subtítulo+CTA+bolas) mide ~224-250px casi fijo, así
+       que el arco bajo las bolas = (diámetro - ~244)/2; el solapamiento = ese
+       arco menos 6px de holgura, o el 19% si es menor. Progresivo por
+       construcción: más aro => más atardecer (amplio arriba, mínimo pero visible
+       abajo), garantizando >=8px de holgura bajo las bolas en todo el rango. El
+       suelo de 6px evita hueco en anchos extremos (<~270px).
+
+       Fallback vh -> dvh vía @supports: los custom properties NO admiten el
+       patrón de doble declaración (una var inválida por dvh no cae a la anterior,
+       queda "invalid at computed value time"), así que se re-declara bajo
+       @supports (height:1dvh). Solo la home lleva estas variables y
+       [data-pace-dial-fit]; Caminos conserva el marco clásico. */
+    [data-pace-home-body] {
+      --pace-home-timer-size: min(86vw, 520px, max(300px, 58vh));
+      --pace-home-sunset-overlap: max(6px, min(calc(var(--pace-home-timer-size) * 0.19), calc((var(--pace-home-timer-size) - 244px) / 2 - 6px)));
+    }
+    @supports (height: 1dvh) {
+      [data-pace-home-body] {
+        --pace-home-timer-size: min(86vw, 520px, max(300px, 58dvh));
+      }
+    }
+    [data-pace-dial-fit] {
+      width: auto;
+      height: var(--pace-home-timer-size);
+    }
+    /* Barra de scroll OCULTA en el contenedor vertical de la home (s123), sin
+       tocar el desplazamiento: overflow-y sigue en 'auto' (rueda/trackpad/gesto
+       táctil/teclado funcionan, y el foco de teclado autodesplaza el viewport).
+       Solo se oculta la BARRA visual: scrollbar-width:none (Firefox),
+       -ms-overflow-style:none (Edge/IE antiguos) y ::-webkit-scrollbar
+       display:none (Chromium/WebKit). NO se usa overflow:hidden — el contenido
+       siempre es alcanzable. Solo este contenedor; no hay scrolls internos. */
+    [data-pace-home-body] {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    [data-pace-home-body]::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
     @media (max-width: 768px) {
       [data-pace-topbar] {
         padding: 10px 12px !important;
@@ -19017,9 +19103,12 @@ Object.assign(window, { Onboarding });
         width: 40px !important;
         height: 40px !important;
       }
-      /* Main content: menos padding para ganar ancho del aro */
+      /* Main content: menos padding para ganar ancho del aro. Sin padding
+         INFERIOR (s123): la base del aro debe quedar adyacente a la tarjeta de
+         Camino para que el margin-top negativo del "atardecer" mida desde el
+         borde del aro, no desde un padding intermedio. */
       [data-pace-main-content] {
-        padding: 4px 12px !important;
+        padding: 4px 12px 0 !important;
       }
       /* ActivityBar en móvil: grid 2×2, chips compactos verticales */
       [data-pace-activitybar] {
@@ -19565,21 +19654,46 @@ function PaceApp() {
     ), /*#__PURE__*/
 
 
-    React.createElement("div", { "data-pace-main-content": true, style: {
+
+
+
+
+
+
+
+    React.createElement("div", { "data-pace-home-body": true, style: {
         flex: 1,
+        minHeight: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        overflowY: 'auto',
+        overflowX: 'hidden'
+      } }, /*#__PURE__*/
+
+
+
+
+
+    React.createElement("div", { "data-pace-home-stack": true, style: {
+        marginTop: 'auto',
+        marginBottom: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        flexShrink: 0
+      } }, /*#__PURE__*/
+
+
+
+
+    React.createElement("div", { "data-pace-main-content": true, style: {
+        flexShrink: 0,
         display: 'grid',
         placeItems: 'center',
-        padding: '10px 40px',
-        minHeight: 0,
-        overflow: 'hidden'
+        padding: '10px 40px 0'
       } }, /*#__PURE__*/
     React.createElement(FocusTimer, { onFinish: handleFocusFinish })
     ), /*#__PURE__*/
-
-
-
-
-
 
 
 
@@ -19589,6 +19703,8 @@ function PaceApp() {
     React.createElement(ActivityBar, {
       onOpenLibrary: (kind) => setOpenLibrary(kind),
       onOpenHydrate: () => setOpenHydrate(true) }
+    )
+    )
     )
     ), /*#__PURE__*/
 
