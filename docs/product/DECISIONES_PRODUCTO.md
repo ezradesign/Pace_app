@@ -8,6 +8,12 @@
 > de evolución leen **este archivo**, no los documentos originales ni la
 > auditoría completa. Se actualiza al cerrar cada sesión del plan
 > (sustituir, no acumular — mismo contrato que STATE.md).
+>
+> **Jerarquía:** la dirección integral de producto vive en
+> [`AUDITORIA_SISTEMA_PACE.md`](./AUDITORIA_SISTEMA_PACE.md) (nivel 1, el «qué/por
+> qué»); este archivo destila el «cómo/cuándo» ejecutable (nivel 2); `STATE.md` fija
+> el presente + siguiente sesión (nivel 3). Si el audit y este archivo divergen en una
+> decisión de producto, gana el audit; en detalle de ejecución, gana este archivo.
 
 ---
 
