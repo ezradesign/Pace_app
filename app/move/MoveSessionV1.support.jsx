@@ -205,6 +205,29 @@ if (!_paceMoveV1Css) {
       50%  { transform: scale(0.86); }
       100% { transform: scale(1); }
     }
+    /* s125 · BARRA DE SCROLL OCULTA en el centro del runner v1 (patrón s123).
+       Diagnóstico medido: en el régimen ANCHO (≥641px) el centro NO desborda
+       (las reservas cue/care de s119 absorben las 2 líneas; ningún string lo
+       supera). En MÓVIL (≤640px, sin reservas), un paso de NOMBRE largo —p. ej.
+       «World's greatest stretch», <h1> clamp que envuelve a 2 líneas a 360px—
+       rebasa el centro por pocos px a alturas ≤~624px (medido: 360×620 = 3 px de
+       desborde). El scroll es LEGÍTIMO (a alturas más cortas crece), pero la
+       barra CLÁSICA de Windows (17 px) para 3 px de recorrido es antiestética.
+       Se oculta la BARRA conservando el overflow-y:auto (contenido 100%
+       alcanzable por rueda/gesto/teclado; los controles viven en el footer,
+       siempre visible). CONFINADO al runner v1 vía :has([data-pace-v1-progress])
+       — el progreso se renderiza SIEMPRE en v1 y es exclusivo suyo (Respira y el
+       runner LEGACY no lo tienen, verificado): no altera ninguna otra superficie
+       con [data-pace-session-center]. Sin media query: en ancho no hay barra
+       que ocultar, así que la regla es inocua ahí. NO toca instrucciones,
+       glifos, tipografía ni el anclaje de s119. */
+    [data-pace-session-center]:has([data-pace-v1-progress]) {
+      scrollbar-width: none;          /* Firefox */
+      -ms-overflow-style: none;       /* Edge/IE legacy */
+    }
+    [data-pace-session-center]:has([data-pace-v1-progress])::-webkit-scrollbar {
+      display: none;                  /* WebKit / Blink */
+    }
     /* s119 · ALTURAS RESERVADAS (anclaje del glifo, sin saltos tipográficos).
        El bloque de contenido mantiene alto CONSTANTE entre pasos de TRABAJO: el
        cue reserva 2 líneas (la acción más larga medida) y «Cuídate» reserva 2

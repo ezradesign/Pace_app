@@ -1233,8 +1233,8 @@ privacidad;
 cuidado editorial.
 23. Orden de trabajo recomendado
 Bloque 0 · Consolidación actual
-Cerrar pendientes visuales del timer.
-Corregir scrollbar del runner.
+Cerrar pendientes visuales del timer. (HECHO s124 · v0.67.0)
+Corregir scrollbar del runner. (HECHO s125 · v0.68.0 — diagnóstico medido: en ancho ≥641px NO desborda; en móvil ≤640px desborde mínimo de 3px a ≤~624px por el NOMBRE del ejercicio a 2 líneas; fix = ocultar la barra conservando el scroll, CONFINADO al runner v1 vía `:has([data-pace-v1-progress])`, sin compactar copy/glifos/tipografía)
 Salida táctil de Caminos.
 Estabilidad de Stats.
 Revisar pills.
