@@ -81,9 +81,12 @@ PACE puede proponer ritmo, pero no castigar.
 
 3. Estado técnico relevante
 3.1. Base actual
-Versión analizada: v0.66.0.
+Versión analizada: v0.66.0. (Actualizado: el repositorio va por **v0.70.0**; el resto de
+este apartado sigue siendo válido salvo donde se indique.)
 Rama: main.
-Home “atardecer” responsive implementada.
+Home “atardecer” responsive implementada. (En Desktop la sustituye desde s126/v0.69.0 la
+composición proporcional con horizonte — §32.6; el modelo «atardecer» sigue vigente en
+móvil/tablet.)
 Aplicación React 18 con Babel standalone.
 Web, PWA, extensión y futuro empaquetado móvil.
 Estado local persistente.
@@ -1235,11 +1238,11 @@ cuidado editorial.
 Bloque 0 · Consolidación actual
 Cerrar pendientes visuales del timer. (HECHO s124 · v0.67.0)
 Corregir scrollbar del runner. (HECHO s125 · v0.68.0 — diagnóstico medido: en ancho ≥641px NO desborda; en móvil ≤640px desborde mínimo de 3px a ≤~624px por el NOMBRE del ejercicio a 2 líneas; fix = ocultar la barra conservando el scroll, CONFINADO al runner v1 vía `:has([data-pace-v1-progress])`, sin compactar copy/glifos/tipografía)
-Salida táctil de Caminos.
-Estabilidad de Stats.
-Revisar pills.
-Trocear archivos que superan límites.
-Reparar glifos en las bolas de logros.
+Salida táctil de Caminos. (HECHO s127 · v0.70.0 — definido por el usuario: «cuando pulsas salir no sale al home, simplemente va a la siguiente actividad». Causa: el botón «Salir» de SessionShell emite `onExit('exit')`, los runners lo pasan tal cual a `PathRunner.handleStepExit` y ese motivo NO estaba contemplado → caía en `advancePathStep` = siguiente paso. Fix: `handleStepExit` intercepta `'exit'` y delega en el `handleRequestExit` ya existente —una sola política de salida: paso opcional sale directo, el resto confirma—. Escape emitía el mismo motivo, así que también queda arreglado. Contabilidad intacta: salir no acredita)
+Estabilidad de Stats. (DEFINIDO por el usuario, PENDIENTE: las pestañas **semana / mes / año / caminos tienen alturas distintas** y al cambiar de pestaña el salto visual queda muy raro. Trabajo = igualar/estabilizar la altura del panel entre pestañas, no rehacer las stats)
+~~Revisar pills.~~ **CERRADO** (eran las del timer, ya implementadas). **Sustituido por: bibliotecas de Respira/Mueve/Estira** (DEFINIDO por el usuario, PENDIENTE): reorganizarlas para **reducir el scroll hacia abajo, sobre todo en móvil**, y **sacar el selector de rutinas premium a Mueve Y Estira a la vez** en lugar de hundido al final de la lista — es una función premium e interesante y ahora no se ve.
+Trocear archivos que superan límites. (PENDIENTE — inventario real a v0.70.0: solo DOS archivos pasan de 500 líneas, `app/glyphs/exercise-glyphs.jsx` (571) y `app/shell/Sidebar.jsx` (543). Troceo mecánico, delta cero)
+Reparar glifos en las bolas de logros. (PENDIENTE — §15.1. La maquinaria ya existe: `AchGlyph` en `app/achievements/Achievements.jsx` con `glyphSvg` y fallback unicode; el sendero y la vista previa de logros viven en `app/shell/Sidebar.jsx`, que es además uno de los dos archivos a trocear → conviene hacer ambos en la misma sesión)
 Bloque 1 · Respira y Loto
 Optimizar asset.
 Integrar Loto.
