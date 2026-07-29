@@ -151,7 +151,9 @@
       "Bash(grep -n \"^| \\\\`PACE.html\\\\`\\\\|^| \\\\`PACE_standalone.html\\\\`\\\\|^| \\\\`index.html\\\\`\\\\|_responsive.js\\\\|TimerDial.jsx\\\\|home-geometry\" STATE.md)",
       "Bash(grep -o \"INCUMPLIMIENTO REPORTADO.\\\\{0,200\\\\}\" CHANGELOG.md)",
       "Bash(awk '$1>500 && $2!=\"total\" {print $1\" \"$2}')",
-      "Bash(grep -vE \"^[+-]\\\\s*\\(/\\\\*|\\\\*|//\\)\")"
+      "Bash(grep -vE \"^[+-]\\\\s*\\(/\\\\*|\\\\*|//\\)\")",
+      "Bash(git -C \"C:/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app\" log --oneline -15 -- manifest.json sw.js PACE.html)",
+      "Bash(file icons/*.png)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

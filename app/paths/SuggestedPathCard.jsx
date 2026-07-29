@@ -59,7 +59,12 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
     [data-pace-spc] {
       position: relative;
       z-index: 2;
-      margin-top: calc(var(--pace-home-sunset-overlap, 0px) * -1);
+      /* s128: el solapamiento lo mide AHORA el motor (home-geometry.js) desde el
+         CICLO real y lo publica en --pace-activities-overlap (la MISMA var que en
+         Desktop). --pace-home-sunset-overlap (estimación CSS) queda de fallback
+         pre-JS. La tarjeta es el "horizonte" del móvil: sube y el aro se recorta en
+         su borde superior (clip en [data-pace-dial-fit], _responsive.js). */
+      margin-top: calc(var(--pace-activities-overlap, var(--pace-home-sunset-overlap, 0px)) * -1);
     }
     /* s123: el SWAP por flex-order que había aquí (Actividades vs Camino en
        ancho+corto) ROMPIA la jerarquia invariante Timer -> Camino -> Actividades

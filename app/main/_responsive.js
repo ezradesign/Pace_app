@@ -76,7 +76,21 @@
     }
     [data-pace-dial-fit] {
       width: auto;
-      height: var(--pace-home-timer-size);
+      /* s128: el aro lo dimensiona el motor (home-geometry.js) también en móvil,
+         vía --pace-timer-d; --pace-home-timer-size queda de FALLBACK (pre-JS y sin
+         JS, con su @supports dvh de arriba). En Desktop este height lo pisa el
+         bloque min-width:769px con !important. */
+      height: var(--pace-timer-d, var(--pace-home-timer-size));
+      /* HORIZONTE en móvil/tablet (s128): el aro se RECORTA por abajo en la línea
+         donde sube la tarjeta de Camino — el "amanecer" del Desktop (s126) pero con
+         Caminos. Reutiliza --pace-activities-overlap (que el motor mide desde el
+         CICLO real) → recorte y solapamiento nunca se desincronizan. Recorta el
+         MARCO (no el <svg>, que va rotado) y cubre el halo ::after. Con la var sin
+         definir (pre-JS) el inset es 0 → aro entero, sin recorte. En Desktop lo
+         pisa el bloque min-width:769px (mismo valor). Caminos NO lleva
+         [data-pace-dial-fit] → intacto. */
+      -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+      clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
     }
     /* Barra de scroll OCULTA en el contenedor vertical de la home (s123), sin
        tocar el desplazamiento: overflow-y sigue en 'auto' (rueda/trackpad/gesto
@@ -95,9 +109,14 @@
       display: none;
     }
     @media (max-width: 768px) {
+      /* s128: en móvil el motor (home-geometry.js) también publica --pace-home-squeeze
+         (0→1, progresivo bajo 700px de alto). El AIRE exterior se comprime con él
+         ANTES de que el bucle encoja el aro, para que el aro siga grande. Solo se
+         toca padding/hueco/min-height; ningún texto ni tamaño de fuente. Con
+         squeeze=0 los valores son los base de siempre. */
       [data-pace-topbar] {
-        padding: 10px 12px !important;
-        min-height: 48px !important;
+        padding: calc(10px - 4px * var(--pace-home-squeeze, 0)) 12px !important;
+        min-height: calc(48px - 8px * var(--pace-home-squeeze, 0)) !important;
         gap: 4px !important;
       }
       /* Tabs Foco/Pausa/Larga: ocultos en móvil (s46 · v0.25.0)
@@ -117,9 +136,17 @@
       [data-pace-main-content] {
         padding: 4px 12px 0 !important;
       }
+      /* s128: la raíz de FocusTimer (único hijo de main-content) — sus dos huecos
+         alrededor del selector de minutos (padding-top:8 y gap:14) son el mayor aire
+         comprimible en móvil. Se comprimen con squeeze; el aro (que el motor encoge
+         solo si aún no cabe) se mantiene grande. */
+      [data-pace-home-body] [data-pace-main-content] > div {
+        padding-top: calc(8px - 4px * var(--pace-home-squeeze, 0)) !important;
+        gap: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
+      }
       /* ActivityBar en móvil: grid 2×2, chips compactos verticales */
       [data-pace-activitybar] {
-        padding: 4px 12px 14px !important;
+        padding: calc(4px - 2px * var(--pace-home-squeeze, 0)) 12px calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
       }
       [data-pace-activitybar-grid] {
         display: grid !important;
