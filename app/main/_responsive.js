@@ -159,6 +159,144 @@
         display: none !important;
       }
     }
+
+    /* ===================================================================
+       HOME DESKTOP — sistema proporcional único (s126). ENCAPSULADO aquí:
+       todo bajo min-width:769px; mobile/tablet (≤768) no recibe nada. Las
+       variables --pace-timer-d y --pace-activities-overlap las publica en
+       :root el ayudante app/main/home-geometry.js SOLO en Desktop (y las
+       borra fuera). Reproduce la composición de la captura v0.64 (Timer →
+       Actividades solapando el aro bajo el CICLO → Camino ancho al fondo) y
+       la mantiene constante en toda resolución de escritorio.
+       =================================================================== */
+    @media (min-width: 769px) {
+      /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). En
+         Desktop reemplaza a --pace-home-timer-size; el aspect-ratio 1/1 del
+         marco da el ancho. Fallback 360px mientras el ayudante no ha corrido. */
+      [data-pace-dial-fit] {
+        height: var(--pace-timer-d, 360px) !important;
+        /* HORIZONTE (s126): el aro se CORTA por abajo en la línea donde
+           empiezan las Actividades — el «sol saliendo» de la referencia v0.64.
+           Sin esto el arco se veía entero: [data-pace-activitybar] no tiene
+           fondo, así que sube sobre el aro pero el SVG se pinta detrás y
+           atraviesa la banda transparente (padding + rótulo ACTIVIDADES).
+
+           Se REUTILIZA --pace-activities-overlap, que ya vale exactamente
+           dialBottom − cicloBottom − 4px = distancia del horizonte al fondo
+           del aro. Una sola fuente → recorte y solapamiento no pueden
+           desincronizarse nunca.
+
+           Se recorta el MARCO, no el svg: ese svg lleva rotate(-90deg)
+           inline y clip-path rota con el elemento (un inset inferior le
+           cortaría el lado izquierdo en pantalla). Recortar el marco además
+           cubre el halo [data-pace-dial-running]::after (círculo inset:6% de
+           tokens.css), que si no asomaría bajo el horizonte.
+
+           El CONTENIDO nunca se corta por construcción: la línea se define
+           desde el bottom del CICLO, que es el último hijo del interior del
+           aro, así que se mueve con él (idioma, alto del CTA, descriptor).
+
+           Efecto asumido (decisión del usuario, = v0.64): con el timer en
+           marcha el arco de progreso y el punto guía quedan ocultos bajo el
+           horizonte (~94° de aro). El corte DURO es deliberado: un
+           desvanecido dejaría arco y punto atenuados flotando en la banda
+           transparente, a los lados de «ACTIVIDADES». */
+        -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+        clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+      }
+      /* Interior PROPORCIONAL a D (ratios medidos en la referencia). !important
+         para ganar a los estilos inline de TimerDial. El botón conserva 44px
+         (a11y); las Actividades se anclan al CICLO MEDIDO, así que estos
+         tamaños son cosméticos (aspecto «escalado»), no críticos. */
+      [data-pace-dial-fit] [data-pace-dial-label] {
+        font-size: clamp(9px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
+        margin-bottom: clamp(4px, calc(var(--pace-timer-d, 360px) * 0.026), 15px) !important;
+      }
+      [data-pace-dial-fit] [data-pace-dial-number] {
+        font-size: clamp(40px, calc(var(--pace-timer-d, 360px) * 0.255), 135px) !important;
+      }
+      [data-pace-dial-fit] [data-pace-dial-subtitle] {
+        font-size: clamp(11px, calc(var(--pace-timer-d, 360px) * 0.036), 19px) !important;
+        margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.077), 42px) !important;
+      }
+      [data-pace-dial-fit] [data-pace-dial-divider] {
+        width: clamp(80px, calc(var(--pace-timer-d, 360px) * 0.28), 150px) !important;
+        margin-top: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.03), 16px) !important;
+        margin-bottom: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.026), 14px) !important;
+      }
+      /* Reorden VISUAL (DOM intacto: main-content → Camino → Actividades):
+         Actividades tras el aro, Camino al fondo. */
+      [data-pace-activitybar] {
+        order: 1 !important;
+        position: relative;
+        z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
+        margin-top: calc(var(--pace-activities-overlap, 0px) * -1) !important;
+      }
+      [data-pace-spc] {
+        order: 2 !important;
+        margin-top: 0 !important;   /* anula el solapamiento «atardecer» de s123 */
+        /* recupera alto vertical → aro un poco mayor (sin tocar contenido ni
+           botón). En alturas cortas se va a 0 vía --pace-home-squeeze. */
+        padding-bottom: calc(4px - 4px * var(--pace-home-squeeze, 0)) !important;
+      }
+      /* Enlace «Ver caminos» (último hijo de [data-pace-spc]): más pegado a la
+         tarjeta para recuperar unos px sin quitar el enlace. */
+      [data-pace-spc] > div:last-child {
+        margin-top: calc(2px - 2px * var(--pace-home-squeeze, 0)) !important;
+      }
+
+      /* -----------------------------------------------------------------
+         COMPACTACIÓN EN ALTURAS CORTAS (s126b). --pace-home-squeeze (0→1) lo
+         publica home-geometry.js: 0 por encima de 700px de alto (la altura de
+         la captura de referencia queda BYTE-IDÉNTICA) y 1 a 610px, progresivo
+         en medio — no es un breakpoint.
+
+         Solo se toca AIRE exterior: ningún texto, ningún tamaño de fuente,
+         ningún glifo, y el CTA conserva su suelo de 44px. Libera ~62px que
+         van íntegros al diámetro del aro, que es lo que devuelve la
+         estructura del diseño («el aro se veía reducido a 1366×768, donde el
+         viewport real es ~610px por el chrome del navegador»).
+
+         Ámbito: [data-pace-main-content] y los bloques de Actividades/Camino
+         viven dentro de [data-pace-home-body] → confinados por selector.
+
+         El TopBar NO cuelga de la home y NO se puede confinar por selector:
+         [data-pace-home-body] se renderiza SIEMPRE (los módulos abren como
+         overlay ENCIMA, no lo desmontan), así que un :has([data-pace-home-body])
+         daría una falsa sensación de confinamiento — matchea siempre. Se deja
+         el selector plano y el confinamiento es DE FACTO: los overlays tapan el
+         TopBar con [data-pace-modal-backdrop] (verificado), así que solo se ve
+         en la home. Y aunque se viera, 48px siguen conteniendo sus ~45px de
+         contenido sin apretar nada.
+         ----------------------------------------------------------------- */
+      [data-pace-topbar] {
+        padding-top: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
+        padding-bottom: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
+        /* El min-height es el que manda de verdad: sin bajarlo, recortar el
+           padding no gana nada. 48px es el mismo suelo que ya usa el tier
+           móvil y el contenido real del TopBar mide ~45px, así que no aprieta
+           nada (tabs e iconos conservan su tamaño). */
+        min-height: calc(56px - 8px * var(--pace-home-squeeze, 0)) !important;
+      }
+      [data-pace-home-body] [data-pace-main-content] {
+        padding-top: calc(10px - 8px * var(--pace-home-squeeze, 0)) !important;
+      }
+      /* Único hijo de main-content en la home = la raíz de FocusTimer. Su
+         padding-top y su gap:14 son los dos huecos que rodean al selector de
+         minutos (TopBar↔selector y selector↔aro). */
+      [data-pace-home-body] [data-pace-main-content] > div {
+        padding-top: calc(8px - 4px * var(--pace-home-squeeze, 0)) !important;
+        gap: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
+      }
+      [data-pace-activitybar] {
+        padding-top: calc(6px - 2px * var(--pace-home-squeeze, 0)) !important;
+        padding-bottom: calc(20px - 14px * var(--pace-home-squeeze, 0)) !important;
+      }
+      [data-pace-spc-card] {
+        padding-top: calc(14px - 4px * var(--pace-home-squeeze, 0)) !important;
+        padding-bottom: calc(14px - 4px * var(--pace-home-squeeze, 0)) !important;
+      }
+    }
   `;
   document.head.appendChild(s);
 })();

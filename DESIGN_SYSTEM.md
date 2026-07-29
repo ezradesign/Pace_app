@@ -258,7 +258,99 @@ PACE usa un enfoque móvil-primero con **dos breakpoints principales**:
 - **`100vh` + `100dvh`** (fallback + override): usado en `app/main.jsx` raíz y `app/shell/Sidebar.jsx`.
 - **Scroll asimétrico** (sesión 24): home usa `100dvh` puro (4 botones siempre visibles); sidebar usa `min-height: calc(100dvh + 1px)` con `height: auto` para activar auto-hide de la barra del navegador.
 
+### Home Desktop ≥769px — composición proporcional y horizonte (s126 · v0.69.0)
+
+> **Ámbito.** Este bloque rige **solo en Desktop (≥769px)** y **sustituye ahí** al modelo
+> «atardecer» de s123 descrito justo debajo. En **móvil/tablet (≤768px) manda s123**, sin
+> cambios: el ayudante borra sus variables fuera de Desktop y el CSS entero vive bajo la
+> misma media query.
+
+El aro sigue siendo el **sol**, pero en Desktop el **horizonte** es la fila de Actividades,
+y el aro se **recorta** en esa línea en lugar de quedar dibujado entero por detrás.
+
+**Fuente única de geometría:** `app/main/home-geometry.js` mide y publica en `:root`
+
+- `--pace-timer-d` → diámetro D del aro
+- `--pace-activities-overlap` → solapamiento **y** recorte (mismo valor, una sola fuente)
+
+**Tamaño del aro (D lo manda la ALTURA):** arranca en `min(0.42·W, 520px)` y **encoge hasta
+caber** (`overflowV ≤ 1`, 8 pasadas, suelo 205px) ⇒ D es el mayor círculo sin scroll.
+Dimensionarlo por ancho confundía causa con efecto: en la referencia v0.64 la proporción
+0.255·W era CONSECUENCIA de la altura (`flex:1 + 56vh`).
+
+**Interior proporcional a D:** rótulo, número, descriptor y separador escalan con
+`clamp(min, calc(var(--pace-timer-d) * k), max)` sobre los hooks `data-pace-dial-*`. El CTA
+conserva su suelo de **44×44 px** (a11y) — es el motivo de que el interior no pueda ser
+100 % proporcional.
+
+**Solapamiento = 16 % nominal de D**, aceptación **0.14–0.17**:
+`overlap = min(round(0.16·D), dialBottom − cicloBottom − 4px)`. El segundo término es un
+**techo de seguridad**: el horizonte nunca sube por encima de los puntos de CICLO.
+
+**Horizonte (recorte del aro):**
+```css
+[data-pace-dial-fit] {
+  -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+  clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+}
+```
+- Se recorta el **MARCO, no el `<svg>`**: el svg lleva `rotate(-90deg)` inline y `clip-path`
+  rota con el elemento (un inset inferior le cortaría el lado izquierdo en pantalla).
+  Recortar el marco cubre además el halo `[data-pace-dial-running]::after`.
+- El **contenido no se recorta por construcción**: la línea nace del bottom del CICLO,
+  último hijo del interior, y se mueve con él (idioma, alto del CTA, descriptor).
+- `clip-path` es puramente visual ⇒ **cero impacto en layout**.
+- Consecuencia asumida: en marcha, arco de progreso y punto guía quedan bajo el horizonte
+  (~94° de aro). Decisión explícita (corte duro), igual que en v0.64.
+
+**Compactación en alturas cortas — `--pace-home-squeeze` (0→1).** Por debajo de ~672px de
+alto el 16 % no cabe (interior con ~72px fijos ⇒ haría falta D ≥ 413). La única salida sin
+tocar contenido ni accesibilidad es recuperar presupuesto vertical EXTERIOR, y eso hace el
+squeeze, que el ayudante calcula **progresivamente, no por breakpoint**:
+
+```js
+sq = clamp(0, (700 - innerHeight) / (700 - 610), 1)
+```
+
+- **≥700px ⇒ sq = 0**: compactación CERO, nada cambia respecto a un viewport alto.
+- **610px ⇒ sq = 1**: ~66px liberados, que van **íntegros al diámetro del aro**.
+
+El CSS interpola cada hueco con `calc(base - delta * var(--pace-home-squeeze, 0))`:
+
+| Propiedad | Base | A sq=1 |
+|---|---:|---:|
+| `[data-pace-topbar]` padding vertical | 14 | 6 |
+| `[data-pace-topbar]` **min-height** | 56 | 48 |
+| `[data-pace-home-body] [data-pace-main-content]` padding-top | 10 | 2 |
+| raíz de FocusTimer: padding-top / `gap` | 8 / 14 | 4 / 6 |
+| `[data-pace-activitybar]` padding sup. / inf. | 6 / 20 | 4 / 6 |
+| `[data-pace-spc-card]` padding vertical | 14 | 10 |
+| `[data-pace-spc]` padding-bottom + enlace | 4 + 2 | 0 + 0 |
+
+**El `min-height` del TopBar es el que manda**: bajar solo su padding no gana nada (suelo de
+56px con ~45px de contenido). 48px es el mismo suelo que ya usa el tier móvil.
+
+**Solo se toca AIRE**: ningún texto, tamaño de fuente ni glifo cambia, y el CTA conserva su
+suelo de 44px. Efecto a 1366×610 (1366×768 con el chrome del navegador): el aro pasa de 256
+a 349 y el solapamiento de 0.078 a 0.143.
+
+**Ámbito.** `[data-pace-main-content]` y los bloques de Actividades/Camino cuelgan de
+`[data-pace-home-body]` → confinados por selector. **El TopBar no se puede confinar así**:
+`[data-pace-home-body]` se renderiza SIEMPRE (los módulos abren como overlay encima, no lo
+desmontan), así que `:has([data-pace-home-body])` matchearía siempre. Selector plano y
+confinamiento **de facto**: los overlays lo tapan con `[data-pace-modal-backdrop]`.
+
+**Límite residual:** 1280×600 y 1024×600 quedan en 0.137 (3 milésimas bajo el suelo) y las
+alturas ≤512px muy por debajo. Ver `docs/product/AUDITORIA_SISTEMA_PACE.md` §32.6.
+
+**Trampa de mantenimiento:** el CSS de `_responsive.js` vive en un **template literal JS** ⇒
+**prohibidos los backticks en los comentarios** (rompen el build con «';' expected»).
+
+---
+
 ### Modelo «atardecer» de la home (s123 · v0.66.0 — REEMPLAZA el «sol» provisional de s122)
+
+> **Vigente en ≤768px.** En Desktop lo sustituye el bloque de s126 de arriba.
 
 El aro del timer es el **sol**; la tarjeta de Camino sugerido es el **horizonte** que
 cruza su arco INFERIOR. s123 sustituyó el patrón `transform` + gate binario de s122 (que

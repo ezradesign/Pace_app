@@ -2033,9 +2033,57 @@ no comprimir en exceso las Actividades.
 El aro debe ser el elemento flexible principal.
 
 32.5. Estado de decisión
-Pendiente de confirmación explícita antes de implementar.
+RESUELTO en s126 / v0.69.0 (2026-07-29). Lo anterior queda como HISTORIA del hallazgo; la
+decisión ejecutable vigente es 32.6.
 
-La recomendación de producto es eliminar ese pequeño scroll inicial en desktop ancho y bajo.
+32.6. Decisión aprobada (s126 / v0.69.0)
+
+Home Desktop sin scroll, timer proporcional y metáfora del sol amaneciendo, con estas
+invariantes:
+
+- **Home completa sin scroll** en Desktop (≥769px) con altura útil ≳672px:
+  `overflowV ≤ 2px` y `overflowH ≤ 2px`, a zoom 100 % y tamaño de fuente normal.
+- **Timer proporcional**: el diámetro D es la unidad base y el interior del aro escala con
+  él. D lo manda la ALTURA disponible (arranca en `min(0.42·W, 520)` y encoge hasta caber),
+  no el ancho — como en la referencia v0.64, donde salía de `flex:1 + 56vh`.
+- **Sol amaneciendo**: las Actividades solapan el arco inferior del círculo y el aro se
+  RECORTA en esa línea (`clip-path` sobre el marco). No es un accidente de `overflow:hidden`
+  como en v0.64: es la composición buscada. El horizonte nunca sube por encima de los
+  puntos de CICLO.
+- **Solapamiento nominal 16 % de D**, tolerancia 0.14–0.17, medido como
+  `(circleRect.bottom − activitiesRect.top) / circleRect.height`.
+- **Excepción de zoom de accesibilidad**: a 150–200 % puede aparecer scroll vertical. En
+  ese caso nada puede cortarse, no puede aparecer scroll horizontal, el orden se mantiene y
+  el contenido sigue operable. No se deforma el diseño para evitarlo.
+- **Suelo de accesibilidad**: el CTA conserva 44×44 CSS px. No se sacrifica para ganar
+  altura.
+
+- **Compactación en alturas cortas**: por debajo de 700px de alto el presupuesto vertical
+  EXTERIOR (TopBar, huecos del selector de minutos, paddings de Actividades y de la tarjeta
+  de Camino) se compacta de forma **progresiva** —no por breakpoint— y lo liberado va
+  íntegro al diámetro del aro. Solo se toca AIRE: ningún texto, tamaño de fuente ni glifo
+  cambia, y el CTA conserva sus 44px. Por encima de 700px la compactación es CERO.
+
+**Límite conocido y aceptado (medido, tras la compactación).** El interior del aro tiene
+~72px fijos (CTA 44px + fila de CICLO); el hueco bajo el CICLO vale `(D − H)/2 − 4` con
+`H ≈ 0.485·D + 72`, así que `0.16·D` exige D ≥ 413 y `0.14·D` exige D ≥ 342. Con la
+compactación, el contrato se cumple hasta **~610px de altura de viewport** (1366×610 —el
+caso real de una pantalla 1366×768 con el chrome del navegador— da ratio 0.1433 sin scroll).
+
+Queda fuera:
+
+- **1280×600 y 1024×600: 0.1373**, tres milésimas bajo el suelo. Cerrarlo exigiría tocar
+  densidad de chips o contenido de la tarjeta, fuera del paquete aprobado por el usuario.
+- **1024×512 (0.0429) y 844×390 (0.0341, con 119px de scroll)**: alturas extremas donde la
+  aritmética no da.
+
+En ese régimen la degradación es gradual y segura: el aro encoge, el solapamiento se reduce
+y **nunca tapa el CICLO**. Subir el solapamiento lo taparía (§5 lo prohíbe) y encoger el CTA
+rompería accesibilidad (§7).
+
+**Ámbito.** Todo lo anterior es Desktop (≥769px). En móvil/tablet sigue vigente el modelo
+«atardecer» de s123: la tarjeta de Camino, opaca y casi de ancho completo, ya corta el aro
+por su borde superior.
 
 33. Comunicación para beta testers
 33.1. Mensaje de WhatsApp
