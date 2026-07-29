@@ -55,6 +55,12 @@
                                // negativo» en monitores grandes
   var D_FLOOR = 205;           // suelo con interior aún legible; por debajo, scroll
                                // de seguridad en viewports extremos
+  /* s128: el motor corre también en móvil/tablet (≤768). Constantes propias de
+     esa piel: el aro arranca por ANCHO ≈86vw (su identidad de siempre) y el mismo
+     bucle lo encoge solo si no cabe; suelo un poco mayor por legibilidad en
+     pantalla pequeña. La rama Desktop (arriba) NO cambia. */
+  var WIDTH_CAP_MOBILE = 0.86;
+  var D_FLOOR_MOBILE = 240;
   var CICLO_GAP = 4;           // px de aire MÍNIMO entre CICLO y el borde de Actividades
   var OVERLAP_TARGET = 0.16;   // solapamiento nominal del contrato (§0): 16 % de D
   var MAX_FIT_PASSES = 8;      // iteraciones de ajuste «encoger hasta caber»
@@ -81,11 +87,9 @@
   var ro = null;
   var rootStyle = document.documentElement.style;
 
-  function clearVars() {
-    if (rootStyle.getPropertyValue('--pace-timer-d')) rootStyle.removeProperty('--pace-timer-d');
-    if (rootStyle.getPropertyValue('--pace-activities-overlap')) rootStyle.removeProperty('--pace-activities-overlap');
-    if (rootStyle.getPropertyValue('--pace-home-squeeze')) rootStyle.removeProperty('--pace-home-squeeze');
-  }
+  /* s128: `clearVars()` (borraba las 3 vars fuera de Desktop) se retiró junto con
+     el guard: el motor publica geometría en TODO viewport, así que ya no hay
+     estado en el que haya que devolver el CSS a sus fallbacks. */
 
   function setVar(name, val) {
     if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
@@ -132,16 +136,20 @@
 
   function compute() {
     rafId = 0;
-    // Guard Desktop: en mobile/tablet no tocamos nada (vars fuera → CSS actual).
-    if (!window.matchMedia || !window.matchMedia(DESKTOP_MQ).matches) {
-      clearVars();
-      return;
-    }
+    /* s128: el motor corre AHORA también en móvil/tablet. isDesktop solo elige las
+       CONSTANTES (la rama Desktop queda byte-idéntica); el resto del cálculo es
+       común. El «horizonte» (clip + solapamiento) lo aplica el CSS al elemento que
+       toca en cada piel — Desktop: Actividades; móvil: tarjeta de Camino —, así
+       que el motor no sabe de pieles: solo mide y publica D, solapamiento y squeeze. */
+    var isDesktop = !!(window.matchMedia && window.matchMedia(DESKTOP_MQ).matches);
     var body = document.querySelector('[data-pace-home-body]');
     var dial = document.querySelector('[data-pace-dial-fit]');
     var spc = document.querySelector('[data-pace-spc]');
     var act = document.querySelector('[data-pace-activitybar]');
     if (!body || !dial || !spc || !act) return;
+
+    var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
+    var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
 
     /* La compactación va ANTES de medir: cambia el presupuesto exterior y, por
        tanto, la altura útil que le queda al aro. Depende solo de innerHeight
@@ -162,17 +170,17 @@
     // Medir la altura fija por partes es frágil (paddings del root, tarjeta de
     // Camino más alta con el eyebrow s122…), así que se mide el desbordamiento
     // real y se corrige — robusto ante idioma/contenido.
-    var D = Math.min(WIDTH_CAP * w, D_MAX);
-    if (D < D_FLOOR) D = D_FLOOR;
+    var D = Math.min(widthCap * w, D_MAX);
+    if (D < dFloor) D = dFloor;
     D = Math.round(D);
     applyD(D, dial);
 
     for (var i = 0; i < MAX_FIT_PASSES; i++) {
       var over = body.scrollHeight - body.clientHeight;
-      if (over <= 1 || D <= D_FLOOR) break;
+      if (over <= 1 || D <= dFloor) break;
       // reducir D: la huella vertical del aro tras solapar es ~0.84·D, así que
       // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
-      D = Math.max(D_FLOOR, D - Math.ceil(over / 0.84));
+      D = Math.max(dFloor, D - Math.ceil(over / 0.84));
       applyD(D, dial);
     }
   }
