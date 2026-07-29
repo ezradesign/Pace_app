@@ -11,8 +11,10 @@
 ---
 
 **Version actual:** v0.71.0 (s128 — **home móvil universal · «amanecer del Camino»**: el motor de geometría de la home (`home-geometry.js`) corre AHORA también en móvil/tablet garantizando CERO scroll, y la **tarjeta de Camino hace de «horizonte»** recortando el arco inferior del aro —el «amanecer» del Desktop s126 pero con Caminos—; se conserva el orden móvil Timer→Camino→Actividades. Desktop **byte-idéntico**). «Salir» de Caminos a la home es de s127/v0.70.0.
-**Ultima sesion:** #128 -- 2026-07-29 - **Home móvil universal · «amanecer del Camino»**. Sesión de **CÓDIGO (layout responsive)**. Arrancó como diagnóstico de 3 síntomas móviles: (1) **icono blanco** + (2) **instalada sin pantalla completa** = **instalar desde `/PACE_standalone.html`** (sin `<link rel="manifest">`, confirmado 0 coincidencias) en vez de la raíz `/` (`index.html` sí lo tiene) → acceso directo con chrome + icono autogenerado; manifest/iconos SIN cambios desde mayo; los botones ⇄□← son la barra del **sistema Android**, no de la app en `standalone`; **solución de uso, sin código**. (3) **scroll leve** = decisión explícita de s123 («móvil prefiere scroll») que el usuario pidió revertir. **Decisión**: la home **igual en cualquier resolución móvil, sin scroll**, con el sistema que hace universal a la Desktop, pero **conservando el orden móvil** (Timer→Camino→Actividades) y usando la **tarjeta de Camino como «horizonte»** (sube y recorta el arco inferior del aro; el «amanecer» de s126 pero con Caminos). **Un motor, dos pieles**: `home-geometry.js` corre ahora también en ≤768 (`isDesktop` solo elige constantes: rama Desktop **byte-idéntica**; móvil `WIDTH_CAP 0.86`/`D_FLOOR 240`), publica `--pace-timer-d`/`--pace-activities-overlap` (medido del **CICLO real**)/`--pace-home-squeeze` y el mismo bucle `scrollHeight≤clientHeight` (el aro solo encoge en último recurso). CSS: clip del aro en móvil (`inset(0 0 var(--pace-activities-overlap) 0)` sobre `[data-pace-dial-fit]`), squeeze móvil (TopBar/FocusTimer root/ActivityBar), aro por `var(--pace-timer-d, --pace-home-timer-size)`. `SuggestedPathCard` repunta el solapamiento a `--pace-activities-overlap`. `TimerDial` SIN tocar. **Verificado** (dev + bundle construido, ES+EN, 5 viewports 360×640→1366×768): **scrollDelta 0** en todos, horizonte a CICLO+5px sin taparlo, Desktop byte-idéntico, consola limpia. **Follow-up acordado (NO en v0.71.0)**: tabs Foco/Pausa/Larga en móviles altos (2ª fila gateada por `min-height`; no es simple des-ocultar —colisionan con los iconos—; «aterrizar núcleo y luego tabs»). Diario: [session-128](./docs/sessions/session-128-home-movil-universal.md). Historico previo: [`s127`/`s126`](./CHANGELOG.md#historial-completo).
-**Ultima actualizacion de este archivo:** 2026-07-29 - sesion 128
+**Ultima sesion:** #129 -- 2026-07-30 - **Stats destino · especificación de diseño**. Sesión **SOLO-DOCUMENTAL** (patrón s117/s109): **sin versión nueva, cero código, cero build, cero standalone**. Arrancó para ejecutar «Estabilidad de Stats» (Bloque 0 · §23) — se recomendó ese frente por valor/riesgo frente a bibliotecas (abren el campo `kind` de rutinas propias) y glifos+troceo (chocan con el repensado §14) — y el usuario **paró la sesión** para auditar primero qué dice el sistema completo. **Hallazgo: el audit no pide reestilizar el panel, decide un panel DISTINTO** — §37.4 fija el contenido en **Hoy y Semana**, §31.6 manda **Mes y Año a premium** (re-gating atado a la sesión de licencia), la pestaña **Hoy no existe** ([stats.js:26-53](app/i18n/strings/stats.js)), y §37.3 sustituye **dos mecanismos vivos**: el color por volumen de `computeDayScore` ([YearView.jsx:11-24](app/stats/YearView.jsx)) y las **rachas** de PathStats ([PathStats.jsx:74-84](app/stats/PathStats.jsx)) ⇒ estabilizar las 4 pestañas de hoy habría sido trabajo sobre **vistas condenadas**. Entregable: **[`STATS_DESTINO_PROPUESTA.md`](docs/product/STATS_DESTINO_PROPUESTA.md)** (vistas Free/premium · contenido de Hoy y Semana · **ritmo semanal** reutilizando el criterio de día activo de s69 · taxonomía de **tipos de jornada** con «Con Camino» como MARCA superpuesta, no tipo · qué se retira · **gap de datos** · 4 fases). **Decisiones del usuario**: tipos de jornada **DEDUCIDOS** de lo que hubo (cualitativos, sin puntuar, aplican al histórico ya guardado) · la pestaña **Caminos se INTEGRA** en Hoy y Semana (progreso profundo → premium) · **sidebar** se decide al repensarla (§14), Stats como fuente única · alcance = destino completo por fases. **Medición conservada** (runtime v0.71.0, peor caso: año completo + 7 Caminos): chrome **221px** (209 móvil) · contenido Semana 397 / Mes 368 / Año 226 / **Caminos 529** ⇒ la card salta de **448 a 751px** y su techo **152px** (la mitad del delta, por `placeItems:'center'`); hueco útil **298px** en 1366×610 y 407 en 360×640 ⇒ el exceso es de **VOLUMEN**, no de CSS. **Dos suposiciones corregidas por la medida**: la pestaña más alta es **Caminos**, no Semana; y la cuadrícula de **Año NO puede crecer** porque la limita el **ANCHO** (53 semanas × 13px = 689 de 756 útiles) — Mes sí (celda 48→~60). **Fases**: 0 marco de altura estable (agnóstico al contenido, ejecutable ya) · 1 Hoy+Semana sin eventos · 2 `pace.events.v1` · 3 licencia. Diario: [session-129](./docs/sessions/session-129-stats-destino-diseno.md). Historico previo: [`s128`/`s127`](./CHANGELOG.md#historial-completo).
+
+**Sesion anterior:** #128 -- 2026-07-29 - **Home móvil universal · «amanecer del Camino»**. Sesión de **CÓDIGO (layout responsive)**. Arrancó como diagnóstico de 3 síntomas móviles: (1) **icono blanco** + (2) **instalada sin pantalla completa** = **instalar desde `/PACE_standalone.html`** (sin `<link rel="manifest">`, confirmado 0 coincidencias) en vez de la raíz `/` (`index.html` sí lo tiene) → acceso directo con chrome + icono autogenerado; manifest/iconos SIN cambios desde mayo; los botones ⇄□← son la barra del **sistema Android**, no de la app en `standalone`; **solución de uso, sin código**. (3) **scroll leve** = decisión explícita de s123 («móvil prefiere scroll») que el usuario pidió revertir. **Decisión**: la home **igual en cualquier resolución móvil, sin scroll**, con el sistema que hace universal a la Desktop, pero **conservando el orden móvil** (Timer→Camino→Actividades) y usando la **tarjeta de Camino como «horizonte»** (sube y recorta el arco inferior del aro; el «amanecer» de s126 pero con Caminos). **Un motor, dos pieles**: `home-geometry.js` corre ahora también en ≤768 (`isDesktop` solo elige constantes: rama Desktop **byte-idéntica**; móvil `WIDTH_CAP 0.86`/`D_FLOOR 240`), publica `--pace-timer-d`/`--pace-activities-overlap` (medido del **CICLO real**)/`--pace-home-squeeze` y el mismo bucle `scrollHeight≤clientHeight` (el aro solo encoge en último recurso). CSS: clip del aro en móvil (`inset(0 0 var(--pace-activities-overlap) 0)` sobre `[data-pace-dial-fit]`), squeeze móvil (TopBar/FocusTimer root/ActivityBar), aro por `var(--pace-timer-d, --pace-home-timer-size)`. `SuggestedPathCard` repunta el solapamiento a `--pace-activities-overlap`. `TimerDial` SIN tocar. **Verificado** (dev + bundle construido, ES+EN, 5 viewports 360×640→1366×768): **scrollDelta 0** en todos, horizonte a CICLO+5px sin taparlo, Desktop byte-idéntico, consola limpia. **Follow-up acordado (NO en v0.71.0)**: tabs Foco/Pausa/Larga en móviles altos (2ª fila gateada por `min-height`; no es simple des-ocultar —colisionan con los iconos—; «aterrizar núcleo y luego tabs»). Diario: [session-128](./docs/sessions/session-128-home-movil-universal.md). Historico previo: [`s127`/`s126`](./CHANGELOG.md#historial-completo).
+**Ultima actualizacion de este archivo:** 2026-07-30 - sesion 129 (**solo-documental: la version sigue en v0.71.0**)
 **Build entregado:** `PACE_standalone.html` v0.71.0 (88 scripts + 7 laminas + 12 fuentes inline, 3247 KB, 100% autocontenido, cero peticiones externas; **sigue SIN link de manifest**, file://) + `index.html` (laminas + fuentes como archivo + precache + `<link rel="manifest">`)
 
 ---
@@ -339,10 +341,28 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 Caminos» CERRADA en s127/v0.70.0.** **Home móvil universal («amanecer del Camino») CERRADA en
 s128/v0.71.0.**
 
-**RUMBO fijado por el usuario al cierre de s128:** la próxima sesión arranca con **soluciones y
-mejoras del sistema más TANGIBLES** según [`docs/product/AUDITORIA_SISTEMA_PACE.md`](docs/product/AUDITORIA_SISTEMA_PACE.md)
-(los ítems de Bloque 0 de abajo). El pulido fino de **relaciones de aspecto** (tabs Foco/Pausa/Larga
-en móviles altos, y demás afinado proporcional) queda **DIFERIDO a más adelante**.
+**RUMBO tras s129:** el ítem «Estabilidad de Stats» está **REENCUADRADO** — su destino se
+especificó en [`STATS_DESTINO_PROPUESTA.md`](docs/product/STATS_DESTINO_PROPUESTA.md) y ahora va
+por fases. **La siguiente sesión elige entre dos arranques naturales:**
+
+- **FASE 0 · marco de altura estable de Stats** (sesión CORTA, ~40 líneas de CSS): altura del
+  panel independiente de la vista que lleve dentro + scroll en el cuerpo con cabecera y pestañas
+  fijas, confinado con `:has([data-pace-stats-body])` (patrón s125) y **sin tocar
+  `Primitives.jsx`**. Es lo **único agnóstico al contenido**: cualquier juego de pestañas futuro
+  lo hereda y de la medición de s129 solo habría que reajustar una constante. Mata el salto
+  medido (303px de alto, 152px de techo). **NO elimina el scroll** en viewports de 610px de alto:
+  eso lo resuelve la Fase 1 al bajar el volumen de contenido.
+- **FASE 1 · Hoy + Semana** (sesión de CÓDIGO grande, sin eventos): nueva vista **Hoy** como
+  entrada, **Semana** con ritmo semanal y tira de 7 días tipada, integración de Caminos, retirada
+  de las rachas. Todo lo NO derivable del dato actual (conteo de pausas por día, prácticas
+  valoradas de la semana, cierre de jornada) se deja fuera declaradamente — lo habilita la Fase 2.
+
+**Decisión pendiente que gana urgencia:** `pace.events.v1` (Fase 2) es lo que desbloquea la mitad
+de Hoy/Semana y todo «Qué te ayuda». Diseño CERRADO en s117, sin implementar, y **el histórico que
+no se emite no se puede reconstruir** (ver §5.2 del documento destino).
+
+El pulido fino de **relaciones de aspecto** (tabs Foco/Pausa/Larga en móviles altos, y demás
+afinado proporcional) sigue **DIFERIDO**.
 
 - **[DIFERIDO — más adelante] Tabs Foco/Pausa/Larga en móviles altos**: en teléfonos altos (p.ej.
   390×844) sobran ~90px de aire arriba/abajo; el usuario planteó meter la pastilla de modo del
@@ -361,9 +381,10 @@ Bloque 0 TANGIBLE (definición real del usuario en s127, §23 del audit):
   `app/shell/Sidebar.jsx` (543 ln), que es uno de los dos a trocear junto con
   `app/glyphs/exercise-glyphs.jsx` (571 ln). Requisitos §15.1: glifo visible al desbloquear,
   color heredado, el estado bloqueado NO revela secretos, tamaño válido en sidebar y móvil.
-- **Estabilidad de Stats**: las pestañas **semana / mes / año / caminos tienen alturas
-  distintas** y al cambiar de pestaña el salto visual queda muy raro. Trabajo = estabilizar
-  la altura del panel entre pestañas, NO rehacer las stats.
+- ~~**Estabilidad de Stats**~~ → **REENCUADRADO en s129**: no era un ítem de CSS. Ver
+  [`STATS_DESTINO_PROPUESTA.md`](docs/product/STATS_DESTINO_PROPUESTA.md) y las fases 0/1 de
+  arriba. Lo medido: chrome 221px · Semana 397 / Mes 368 / Año 226 / **Caminos 529** ⇒ salto de
+  303px de alto y 152px de techo; hueco útil 298px en 1366×610.
 - **Bibliotecas de Respira/Mueve/Estira** (sustituye a «revisar pills», CERRADO — eran las
   del timer, ya implementadas): reorganizarlas para **reducir el scroll hacia abajo, sobre
   todo en móvil**, y **sacar el selector de rutinas premium a Mueve Y Estira a la vez** en

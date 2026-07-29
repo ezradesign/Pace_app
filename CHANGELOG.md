@@ -13,6 +13,28 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s129 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva** (patrón
+> s117/s109). Se iba a ejecutar «Estabilidad de Stats» (Bloque 0 · §23) y el usuario
+> paró la sesión para auditar primero qué dice el sistema completo sobre Stats. El
+> hallazgo: **el audit no pide reestilizar el panel, decide un panel distinto** —
+> §37.4 fija el contenido en **Hoy y Semana**, §31.6 manda **Mes y Año a premium**, la
+> pestaña **Hoy no existe**, y §37.3 sustituye dos mecanismos vivos (el color por
+> volumen de `computeDayScore` y las **rachas** de PathStats) ⇒ estabilizar las 4
+> pestañas de hoy habría sido trabajo sobre vistas condenadas. Se especificó el destino
+> completo en [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md)
+> (vistas Free/premium, contenido de Hoy y Semana, **ritmo semanal** en vez de racha,
+> taxonomía de **tipos de jornada** deducidos, qué se retira, **gap de datos** y 4
+> fases). Decisiones nuevas del usuario: tipos de jornada **deducidos** de lo que hubo ·
+> la pestaña **Caminos se integra** en Hoy y Semana (progreso profundo → premium) · la
+> **sidebar** se decide al repensarla (§14). **Medición conservada** (v0.71.0, peor
+> caso): chrome 221px · Semana 397 / Mes 368 / Año 226 / **Caminos 529** ⇒ la card salta
+> de 448 a 751px y su techo 152px; en 1366×610 el hueco útil es 298px ⇒ el exceso es de
+> **volumen**, no de CSS. Dos suposiciones corregidas por la medida: la pestaña más alta
+> es **Caminos**, no Semana; y la cuadrícula de **Año no puede crecer** porque la limita
+> el ANCHO (53 semanas × 13px = 689 de 756 útiles). **Cero código, cero bump, cero
+> build/standalone.** Diario:
+> [session-129](./docs/sessions/session-129-stats-destino-diseno.md).
+
 > **Nota — s117 (2026-07-21): sesión SOLO-DOCUMENTAL, sin versión nueva** (patrón
 > s109). Se diseñó la capa de eventos local `pace.events.v1` en
 > [`docs/product/EVENTOS_SCHEMA.md`](./docs/product/EVENTOS_SCHEMA.md) (rev. 1→5;
