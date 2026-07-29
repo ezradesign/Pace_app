@@ -33,6 +33,16 @@
    comparaciones contigo mismo. Premium bloquea interpretación, nunca
    propiedad de los datos. Copy: «Free te ayuda hoy · Premium te ayuda a
    entender tu ritmo».
+   **AMPLIADO s129** → el destino completo del panel está especificado en
+   [`STATS_DESTINO_PROPUESTA.md`](./STATS_DESTINO_PROPUESTA.md) (diseño, docs-only).
+   Decisiones nuevas del usuario: **tipos de jornada DEDUCIDOS** de lo que hubo
+   (cualitativos, sin puntuar, aplicables al histórico ya guardado) · la **pestaña
+   Caminos se INTEGRA** en Hoy y Semana y su progreso profundo va a premium · la
+   **sidebar** se decide al repensarla (§14), con Stats como fuente única. Fases:
+   **0** marco de altura estable (agnóstico al contenido, ejecutable ya) · **1** Hoy
+   + Semana sin eventos · **2** `pace.events.v1` · **3** licencia (re-gating de
+   Mes/Año + «Qué te ayuda»). Se retiran `computeDayScore` como criterio de color y
+   las rachas de PathStats (§37.3).
 4. **Descartado definitivamente:** renombrar `extra.*`→`stretch.*` (IDs
    persistidos, swap s14 blindado) · vídeo/fotografía de ejercicios · IA en
    producto · Travesías (12-21 etapas) por ahora.

@@ -153,7 +153,9 @@
       "Bash(awk '$1>500 && $2!=\"total\" {print $1\" \"$2}')",
       "Bash(grep -vE \"^[+-]\\\\s*\\(/\\\\*|\\\\*|//\\)\")",
       "Bash(git -C \"C:/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app\" log --oneline -15 -- manifest.json sw.js PACE.html)",
-      "Bash(file icons/*.png)"
+      "Bash(file icons/*.png)",
+      "PowerShell(Get-ChildItem -Recurse -File \"app\" | Select-Object @{n='p';e={$_.FullName.Replace\\(\\(Get-Location\\).Path+'\\\\',''\\)}}, @{n='ln';e={\\(Get-Content $_.FullName | Measure-Object -Line\\).Lines}} | Sort-Object p | Format-Table -AutoSize | Out-String -Width 200)",
+      "PowerShell(Get-ChildItem \"PACE_standalone.html\",\"index.html\",\"PACE.html\",\"docs\\\\product\\\\AUDITORIA_SISTEMA_PACE.md\" | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize | Out-String -Width 120; \"---\"; \\(Get-Content \"docs\\\\product\\\\AUDITORIA_SISTEMA_PACE.md\" | Measure-Object -Line\\).Lines)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"
