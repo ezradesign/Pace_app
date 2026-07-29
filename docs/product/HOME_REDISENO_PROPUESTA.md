@@ -1,13 +1,34 @@
 # Propuesta de revisión de la home de PACE
 
-> **Estado: PENDIENTE DE VALORAR — NO implementar como parte de la sesión actual.**
-> Capturada en s117 para no perderla. Dirección conceptual **aprobada** (solapamiento
-> editorial intencional, opción A); la implementación se tratará como una **fase
-> propia de responsive + jerarquía del home**, no como un ajuste rápido de CSS.
-> Antes de tocar código: inspeccionar la estructura real del timer y del Camino,
-> fijar la invariante de solapamiento y resolver una **única fuente de geometría
-> responsive** (para no arreglar la captura actual y que vuelva a romperse en Safari
-> móvil o a otra altura).
+> ## Historia de este documento (leer antes que nada)
+>
+> | Etapa | Qué fue | Estado |
+> |---|---|---|
+> | **Propuesta inicial (s117)** | Documento capturado para no perder la dirección: solapamiento editorial intencional (opción A), jerarquía y una única fuente de geometría responsive | **HISTÓRICA** — dirección conceptual aprobada; el texto de abajo se conserva como razonamiento fundacional |
+> | **Implementación s122 (v0.65.0)** | Claridad UX: sistema verbal, «FOCO MANUAL» dentro del círculo, tarjeta que se explica sola, jerarquía §1, solapamiento por `transform` con gate ≥760px | **VIGENTE** en lo editorial; el gate binario de solapamiento fue sustituido en s123 |
+> | **Implementación s123 (v0.66.0)** | Modelo «atardecer»: aro por altura útil `min(86vw,520px,max(300px,58dvh))`, solapamiento por `margin-top` negativo adaptativo hasta el 19 % de D, jerarquía = orden del DOM, barra de scroll oculta | **VIGENTE SOLO EN MÓVIL/TABLET (≤768px)**; superada en Desktop por s126 |
+> | **Revisión actual s126 (v0.69.0)** | Home **Desktop**: composición proporcional (D por ALTURA), solapamiento nominal **16 %** de D y **recorte real del aro** en la línea del horizonte (`clip-path` sobre el marco) | **VIGENTE** en Desktop (≥769px) |
+>
+> **Regla anterior SUPERADA (no borrada).** El §0 de abajo describe el solapamiento como
+> «margen negativo responsive con `clamp()`» y s123 lo implementó con un limitador que
+> reducía progresivamente el solapamiento hasta ~7–12 % en pantallas bajas. **En Desktop esa
+> regla ejecutable ya no rige**: el solapamiento es 16 % nominal de D (tolerancia 0.14–0.17)
+> con el CICLO como techo de seguridad, y el aro se **recorta** en el horizonte en lugar de
+> quedar dibujado entero por detrás. La invariante conceptual —la tarjeta/las Actividades
+> entran sobre la zona decorativa inferior del círculo y **nunca** tapan timer, controles ni
+> indicador de ciclo— **sigue intacta**: es justo lo que garantiza el techo de seguridad.
+>
+> **Regla anterior SUPERADA (scroll).** s123 fijó «se prefiere scroll vertical antes que
+> encoger el aro». En Desktop con altura útil ≳672px el criterio vigente es **sin scroll**
+> (`overflowV ≤ 2px`), logrado dimensionando D por la altura disponible y **sin** tocar el
+> suelo de 44px del CTA. Por debajo de ~672px se degrada el solapamiento (nunca el CICLO) y
+> se conserva el scroll de seguridad.
+>
+> Contrato ejecutable vigente: `DECISIONES_PRODUCTO.md` → «Home Desktop · composición
+> proporcional y horizonte (s126)» y `AUDITORIA_SISTEMA_PACE.md` §32.6.
+> Implementación: [`session-126`](../sessions/session-126-home-desktop-horizonte.md).
+>
+> Lo que sigue por debajo es el documento original de s117, **conservado como historia**.
 
 ---
 

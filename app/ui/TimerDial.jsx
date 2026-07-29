@@ -119,16 +119,20 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
       )}
 
       <div style={timerDialStyles.inner}>
-        {modeLabel ? <div style={timerDialStyles.modeLabel}>{modeLabel}</div> : null}
-        <div style={ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge}>
+        {/* data-pace-dial-* (s126): hooks PRESENTACIONALES para el escalado
+            proporcional del interior en Desktop (app/main/_responsive.js los
+            usa SOLO bajo min-width:769px). No cambian estructura ni lógica y
+            son inertes en mobile/tablet y en Caminos (marco clásico). */}
+        {modeLabel ? <div data-pace-dial-label style={timerDialStyles.modeLabel}>{modeLabel}</div> : null}
+        <div data-pace-dial-number style={ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge}>
           {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
         </div>
         {/* aria-live: anuncia el cambio del subtítulo (descriptor por duración
             y, en el home, «Ciclo completado») de forma cortés. El número del
             contador vive en otro div sin live → no se lee cada segundo. En
             Caminos subtitle=null, así que este nodo ni existe. */}
-        {subtitle ? <div style={timerDialStyles.subtitleItalic} aria-live="polite">{subtitle}</div> : null}
-        {inner ? <div style={timerDialStyles.innerDivider} /> : null}
+        {subtitle ? <div data-pace-dial-subtitle style={timerDialStyles.subtitleItalic} aria-live="polite">{subtitle}</div> : null}
+        {inner ? <div data-pace-dial-divider style={timerDialStyles.innerDivider} /> : null}
         {inner}
       </div>
     </div>

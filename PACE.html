@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.68.0</title>
+  <title>PACE · Foco · Cuerpo — v0.69.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -284,6 +284,10 @@
   <script type="text/babel" src="app/main/TopBar.jsx"></script>
   <script type="text/babel" src="app/main/ActivityBar.jsx"></script>
   <script type="text/babel" src="app/main.jsx"></script>
+  <!-- Ayudante de geometría de la HOME DESKTOP (s126): dimensiona el aro (D) y
+       ancla las Actividades bajo el CICLO para reproducir la composición v0.64
+       constante en Desktop. Encapsulado en Desktop; inerte en mobile/tablet. -->
+  <script type="text/babel" src="app/main/home-geometry.js"></script>
 
   <!-- Monta la app
        Los <script type="text/babel" src> se fetchean y compilan async,

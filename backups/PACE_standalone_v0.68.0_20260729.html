@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.69.0</title>
+  <title>PACE · Foco · Cuerpo — v0.68.0</title>
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -3430,7 +3430,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.69.0';
+const PACE_VERSION = 'v0.68.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7022,20 +7022,16 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
 
 
     React.createElement("div", { style: timerDialStyles.inner },
-
-
-
-
-    modeLabel ? /*#__PURE__*/React.createElement("div", { "data-pace-dial-label": true, style: timerDialStyles.modeLabel }, modeLabel) : null, /*#__PURE__*/
-    React.createElement("div", { "data-pace-dial-number": true, style: ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge },
+    modeLabel ? /*#__PURE__*/React.createElement("div", { style: timerDialStyles.modeLabel }, modeLabel) : null, /*#__PURE__*/
+    React.createElement("div", { style: ticks ? timerDialStyles.numberHugeTicks : timerDialStyles.numberHuge },
     String(mins).padStart(2, '0'), ":", String(secs).padStart(2, '0')
     ),
 
 
 
 
-    subtitle ? /*#__PURE__*/React.createElement("div", { "data-pace-dial-subtitle": true, style: timerDialStyles.subtitleItalic, "aria-live": "polite" }, subtitle) : null,
-    inner ? /*#__PURE__*/React.createElement("div", { "data-pace-dial-divider": true, style: timerDialStyles.innerDivider }) : null,
+    subtitle ? /*#__PURE__*/React.createElement("div", { style: timerDialStyles.subtitleItalic, "aria-live": "polite" }, subtitle) : null,
+    inner ? /*#__PURE__*/React.createElement("div", { style: timerDialStyles.innerDivider }) : null,
     inner
     )
     ));
@@ -19336,144 +19332,6 @@ Object.assign(window, { Onboarding });
         display: none !important;
       }
     }
-
-    /* ===================================================================
-       HOME DESKTOP — sistema proporcional único (s126). ENCAPSULADO aquí:
-       todo bajo min-width:769px; mobile/tablet (≤768) no recibe nada. Las
-       variables --pace-timer-d y --pace-activities-overlap las publica en
-       :root el ayudante app/main/home-geometry.js SOLO en Desktop (y las
-       borra fuera). Reproduce la composición de la captura v0.64 (Timer →
-       Actividades solapando el aro bajo el CICLO → Camino ancho al fondo) y
-       la mantiene constante en toda resolución de escritorio.
-       =================================================================== */
-    @media (min-width: 769px) {
-      /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). En
-         Desktop reemplaza a --pace-home-timer-size; el aspect-ratio 1/1 del
-         marco da el ancho. Fallback 360px mientras el ayudante no ha corrido. */
-      [data-pace-dial-fit] {
-        height: var(--pace-timer-d, 360px) !important;
-        /* HORIZONTE (s126): el aro se CORTA por abajo en la línea donde
-           empiezan las Actividades — el «sol saliendo» de la referencia v0.64.
-           Sin esto el arco se veía entero: [data-pace-activitybar] no tiene
-           fondo, así que sube sobre el aro pero el SVG se pinta detrás y
-           atraviesa la banda transparente (padding + rótulo ACTIVIDADES).
-
-           Se REUTILIZA --pace-activities-overlap, que ya vale exactamente
-           dialBottom − cicloBottom − 4px = distancia del horizonte al fondo
-           del aro. Una sola fuente → recorte y solapamiento no pueden
-           desincronizarse nunca.
-
-           Se recorta el MARCO, no el svg: ese svg lleva rotate(-90deg)
-           inline y clip-path rota con el elemento (un inset inferior le
-           cortaría el lado izquierdo en pantalla). Recortar el marco además
-           cubre el halo [data-pace-dial-running]::after (círculo inset:6% de
-           tokens.css), que si no asomaría bajo el horizonte.
-
-           El CONTENIDO nunca se corta por construcción: la línea se define
-           desde el bottom del CICLO, que es el último hijo del interior del
-           aro, así que se mueve con él (idioma, alto del CTA, descriptor).
-
-           Efecto asumido (decisión del usuario, = v0.64): con el timer en
-           marcha el arco de progreso y el punto guía quedan ocultos bajo el
-           horizonte (~94° de aro). El corte DURO es deliberado: un
-           desvanecido dejaría arco y punto atenuados flotando en la banda
-           transparente, a los lados de «ACTIVIDADES». */
-        -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
-        clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
-      }
-      /* Interior PROPORCIONAL a D (ratios medidos en la referencia). !important
-         para ganar a los estilos inline de TimerDial. El botón conserva 44px
-         (a11y); las Actividades se anclan al CICLO MEDIDO, así que estos
-         tamaños son cosméticos (aspecto «escalado»), no críticos. */
-      [data-pace-dial-fit] [data-pace-dial-label] {
-        font-size: clamp(9px, calc(var(--pace-timer-d, 360px) * 0.028), 15px) !important;
-        margin-bottom: clamp(4px, calc(var(--pace-timer-d, 360px) * 0.026), 15px) !important;
-      }
-      [data-pace-dial-fit] [data-pace-dial-number] {
-        font-size: clamp(40px, calc(var(--pace-timer-d, 360px) * 0.255), 135px) !important;
-      }
-      [data-pace-dial-fit] [data-pace-dial-subtitle] {
-        font-size: clamp(11px, calc(var(--pace-timer-d, 360px) * 0.036), 19px) !important;
-        margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.077), 42px) !important;
-      }
-      [data-pace-dial-fit] [data-pace-dial-divider] {
-        width: clamp(80px, calc(var(--pace-timer-d, 360px) * 0.28), 150px) !important;
-        margin-top: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.03), 16px) !important;
-        margin-bottom: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.026), 14px) !important;
-      }
-      /* Reorden VISUAL (DOM intacto: main-content → Camino → Actividades):
-         Actividades tras el aro, Camino al fondo. */
-      [data-pace-activitybar] {
-        order: 1 !important;
-        position: relative;
-        z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
-        margin-top: calc(var(--pace-activities-overlap, 0px) * -1) !important;
-      }
-      [data-pace-spc] {
-        order: 2 !important;
-        margin-top: 0 !important;   /* anula el solapamiento «atardecer» de s123 */
-        /* recupera alto vertical → aro un poco mayor (sin tocar contenido ni
-           botón). En alturas cortas se va a 0 vía --pace-home-squeeze. */
-        padding-bottom: calc(4px - 4px * var(--pace-home-squeeze, 0)) !important;
-      }
-      /* Enlace «Ver caminos» (último hijo de [data-pace-spc]): más pegado a la
-         tarjeta para recuperar unos px sin quitar el enlace. */
-      [data-pace-spc] > div:last-child {
-        margin-top: calc(2px - 2px * var(--pace-home-squeeze, 0)) !important;
-      }
-
-      /* -----------------------------------------------------------------
-         COMPACTACIÓN EN ALTURAS CORTAS (s126b). --pace-home-squeeze (0→1) lo
-         publica home-geometry.js: 0 por encima de 700px de alto (la altura de
-         la captura de referencia queda BYTE-IDÉNTICA) y 1 a 610px, progresivo
-         en medio — no es un breakpoint.
-
-         Solo se toca AIRE exterior: ningún texto, ningún tamaño de fuente,
-         ningún glifo, y el CTA conserva su suelo de 44px. Libera ~62px que
-         van íntegros al diámetro del aro, que es lo que devuelve la
-         estructura del diseño («el aro se veía reducido a 1366×768, donde el
-         viewport real es ~610px por el chrome del navegador»).
-
-         Ámbito: [data-pace-main-content] y los bloques de Actividades/Camino
-         viven dentro de [data-pace-home-body] → confinados por selector.
-
-         El TopBar NO cuelga de la home y NO se puede confinar por selector:
-         [data-pace-home-body] se renderiza SIEMPRE (los módulos abren como
-         overlay ENCIMA, no lo desmontan), así que un :has([data-pace-home-body])
-         daría una falsa sensación de confinamiento — matchea siempre. Se deja
-         el selector plano y el confinamiento es DE FACTO: los overlays tapan el
-         TopBar con [data-pace-modal-backdrop] (verificado), así que solo se ve
-         en la home. Y aunque se viera, 48px siguen conteniendo sus ~45px de
-         contenido sin apretar nada.
-         ----------------------------------------------------------------- */
-      [data-pace-topbar] {
-        padding-top: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
-        padding-bottom: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
-        /* El min-height es el que manda de verdad: sin bajarlo, recortar el
-           padding no gana nada. 48px es el mismo suelo que ya usa el tier
-           móvil y el contenido real del TopBar mide ~45px, así que no aprieta
-           nada (tabs e iconos conservan su tamaño). */
-        min-height: calc(56px - 8px * var(--pace-home-squeeze, 0)) !important;
-      }
-      [data-pace-home-body] [data-pace-main-content] {
-        padding-top: calc(10px - 8px * var(--pace-home-squeeze, 0)) !important;
-      }
-      /* Único hijo de main-content en la home = la raíz de FocusTimer. Su
-         padding-top y su gap:14 son los dos huecos que rodean al selector de
-         minutos (TopBar↔selector y selector↔aro). */
-      [data-pace-home-body] [data-pace-main-content] > div {
-        padding-top: calc(8px - 4px * var(--pace-home-squeeze, 0)) !important;
-        gap: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
-      }
-      [data-pace-activitybar] {
-        padding-top: calc(6px - 2px * var(--pace-home-squeeze, 0)) !important;
-        padding-bottom: calc(20px - 14px * var(--pace-home-squeeze, 0)) !important;
-      }
-      [data-pace-spc-card] {
-        padding-top: calc(14px - 4px * var(--pace-home-squeeze, 0)) !important;
-        padding-bottom: calc(14px - 4px * var(--pace-home-squeeze, 0)) !important;
-      }
-    }
   `;
   document.head.appendChild(s);
 })();
@@ -20114,225 +19972,6 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   root.render(/*#__PURE__*/React.createElement(PaceApp, null));
 }
 ;Object.assign(window, { PaceApp });
-})();
-</script>
-  <!-- Ayudante de geometría de la HOME DESKTOP (s126): dimensiona el aro (D) y
-       ancla las Actividades bajo el CICLO para reproducir la composición v0.64
-       constante en Desktop. Encapsulado en Desktop; inerte en mobile/tablet. -->
-  <script>
-;(function () {
-/* PACE · Foco · Cuerpo
-   Copyright © 2026 ezradesign
-   Licensed under the Elastic License 2.0 — see LICENSE
-
-   Ayudante de geometría de la HOME DESKTOP (s126).
-
-   OBJETIVO. Reproducir la composición de la captura de referencia (v0.64 a
-   1920×1080 · Windows 125 % → viewport CSS efectivo 1536×700) y mantenerla
-   IDÉNTICA en cualquier resolución de escritorio, como un único lienzo
-   proporcional:
-     - el círculo del Pomodoro es la unidad base D (diámetro);
-     - la fila de Actividades SOLAPA el arco inferior del círculo, quedando
-       justo bajo los puntos CICLO (el «solapamiento de las actividades en el
-       Pomodoro» de la referencia, ≈16.8 %·D);
-     - el Camino queda como tarjeta ancha al fondo;
-     - todo llena el alto sin scroll.
-
-   POR QUÉ JS. En v0.64 ese solapamiento era un accidente de `flex:1 + 56vh`
-   que solo ocurría cerca de 700 px de alto. Para que sea CONSTANTE hay que
-   elegir D en función del espacio y anclar las Actividades bajo el CICLO real
-   — cosas que CSS no puede expresar. El ayudante publica dos custom
-   properties en :root y el resto lo deriva el CSS (app/main/_responsive.js):
-     --pace-timer-d            → tamaño del aro y escalas interiores (calc)
-     --pace-activities-overlap → cuánto suben las Actividades sobre el círculo
-
-   ENCAPSULADO EN DESKTOP. Solo actúa con `min-width: 769px`. En mobile/tablet
-   BORRA las dos variables y sale → el comportamiento actual queda intacto (el
-   CSS de esas variables vive todo bajo la misma media query).
-
-   SIN lógica de temporizador, sin estado de negocio, sin eventos. Solo mide y
-   publica geometría. SIN bucle de layout: observa los hermanos que NO contienen
-   el aro (Actividades, Camino) y el alto útil (fijado por el flex del padre);
-   cambiar las variables reescala el aro y reubica Actividades, pero no altera
-   esas medidas → converge en una pasada. */
-
-(function paceHomeGeometry() {
-  if (typeof document === 'undefined') return;
-
-  var DESKTOP_MQ = '(min-width: 769px)';
-  /* D lo manda la ALTURA, no el ancho — como en la referencia v0.64, donde el
-     aro salía de `flex:1 + 56vh`. Se arranca del mayor aro admisible y el bucle
-     de abajo lo ENCOGE hasta que no haya scroll: así D es siempre el círculo
-     más grande que cabe, que es lo que lo mantiene protagonista (§6).
-      Antes se arrancaba de 0.255·W (la proporción medida en la captura de
-     referencia, 1536×700 → 392). Reproducía el ancho de la referencia pero
-     confundía causa con efecto: en la referencia ese 0.255 era CONSECUENCIA de
-     la altura disponible. Al fijarlo por ancho, a 1280×720 salía D=326 —
-     dejando altura sin usar y, sobre todo, rompiendo el contrato de
-     solapamiento: el interior tiene ~72px FIJOS (CTA 44px por a11y + fila de
-     CICLO) y a D pequeño esos fijos se comen el 16 % (ratio real 0.135).
-     Con D por altura, a 1536×700 sale D≈378 ≈ la referencia. */
-
-  var WIDTH_CAP = 0.42; // techo por ancho: el aro nunca acapara la fila
-  var D_MAX = 520; // tope absoluto del aro (identidad); deja «espacio
-  // negativo» en monitores grandes
-  var D_FLOOR = 205; // suelo con interior aún legible; por debajo, scroll
-  // de seguridad en viewports extremos
-  var CICLO_GAP = 4; // px de aire MÍNIMO entre CICLO y el borde de Actividades
-  var OVERLAP_TARGET = 0.16; // solapamiento nominal del contrato (§0): 16 % de D
-  var MAX_FIT_PASSES = 8; // iteraciones de ajuste «encoger hasta caber»
-
-  /* COMPACTACIÓN EN ALTURAS CORTAS (s126b). Publica --pace-home-squeeze de 0 a 1;
-     el CSS interpola con calc() los paddings/huecos EXTERIORES de la home (TopBar,
-     selector de minutos, Actividades, tarjeta de Camino). Libera ~62px a squeeze=1,
-     que van al aro: a 1366×610 el aro pasa de 256 a ~343 y el solapamiento de
-     0.078 a ~0.14.
-      Por qué hace falta: por debajo de ~672px de alto el 16 % es inalcanzable porque
-     el interior del aro tiene ~72px FIJOS (CTA 44px por a11y + fila de CICLO) —
-     ver AUDITORIA_SISTEMA_PACE.md §32.6. La única salida sin tocar contenido ni
-     accesibilidad es recuperar presupuesto vertical EXTERIOR (§7 del corte).
-      La curva es PROGRESIVA, no un breakpoint: cero por encima de 700px (la altura
-     de la captura de referencia del usuario queda BYTE-IDÉNTICA) y completa a 610.
-     No se compacta nunca por debajo de 610 más de lo ya alcanzado. */
-
-
-  var SQUEEZE_START = 700; // ≥ esta altura: compactación CERO
-  var SQUEEZE_FULL = 610; // ≤ esta altura: compactación COMPLETA
-  var CICLO_RE = /\b(ciclo|cycle)\b/i;
-
-  var rafId = 0;
-  var ro = null;
-  var rootStyle = document.documentElement.style;
-
-  function clearVars() {
-    if (rootStyle.getPropertyValue('--pace-timer-d')) rootStyle.removeProperty('--pace-timer-d');
-    if (rootStyle.getPropertyValue('--pace-activities-overlap')) rootStyle.removeProperty('--pace-activities-overlap');
-    if (rootStyle.getPropertyValue('--pace-home-squeeze')) rootStyle.removeProperty('--pace-home-squeeze');
-  }
-
-  function setVar(name, val) {
-    if (rootStyle.getPropertyValue(name) !== val) rootStyle.setProperty(name, val);
-  }
-
-  function cicloBottomWithin(dial) {
-    // Localiza los puntos CICLO por texto (i18n: «Ciclo N/4» / «Cycle N/4»),
-    // toma el borde inferior más bajo entre las coincidencias. Sin hook JSX.
-    var best = null;
-    var nodes = dial.querySelectorAll('span, div');
-    for (var i = 0; i < nodes.length; i++) {
-      if (CICLO_RE.test(nodes[i].textContent || '')) {
-        var b = nodes[i].getBoundingClientRect().bottom;
-        if (best == null || b > best) best = b;
-      }
-    }
-    return best;
-  }
-
-  // Fija D y, con D ya aplicado (getBoundingClientRect fuerza layout), ancla las
-  // Actividades JUSTO bajo el CICLO real → solapamiento seguro y constante,
-  // independientemente de la altura del botón (a11y 44px) o del interior.
-  function applyD(D, dial) {
-    setVar('--pace-timer-d', D + 'px');
-    var dialBottom = dial.getBoundingClientRect().bottom;
-    var cicloBottom = cicloBottomWithin(dial);
-    /* El solapamiento es el 16 % de D (contrato §0). El CICLO medido NO fija el
-       valor: solo actúa de TECHO de seguridad, para que el horizonte no suba
-       nunca por encima de los puntos de ciclo.
-        Por qué hace falta el techo: el interior no puede ser 100 % proporcional
-       a D — el CTA tiene un suelo de 44px por accesibilidad. A D pequeño ese
-       suelo empuja el CICLO hacia abajo y deja menos del 16 % libre; ahí el
-       techo recorta el objetivo (ratio real ~0.147, dentro de la tolerancia
-       0.14–0.17) en lugar de tapar el ciclo. A D grande manda el 16 % exacto.
-       Antes se usaba el techo como valor: el ratio variaba 0.147→0.176 y a
-       1920×1080 se salía del contrato. */
-
-    var maxOverlap = cicloBottom != null ?
-    Math.max(0, Math.round(dialBottom - cicloBottom - CICLO_GAP)) :
-    Math.round(D * OVERLAP_TARGET); // fallback si no se encuentra el CICLO
-    var overlap = Math.min(Math.round(D * OVERLAP_TARGET), maxOverlap);
-    setVar('--pace-activities-overlap', overlap + 'px');
-  }
-
-  function compute() {
-    rafId = 0;
-    // Guard Desktop: en mobile/tablet no tocamos nada (vars fuera → CSS actual).
-    if (!window.matchMedia || !window.matchMedia(DESKTOP_MQ).matches) {
-      clearVars();
-      return;
-    }
-    var body = document.querySelector('[data-pace-home-body]');
-    var dial = document.querySelector('[data-pace-dial-fit]');
-    var spc = document.querySelector('[data-pace-spc]');
-    var act = document.querySelector('[data-pace-activitybar]');
-    if (!body || !dial || !spc || !act) return;
-
-    /* La compactación va ANTES de medir: cambia el presupuesto exterior y, por
-       tanto, la altura útil que le queda al aro. Depende solo de innerHeight
-       (no de lo que medimos después) → sin circularidad. */
-    var vh = window.innerHeight || body.clientHeight;
-    var sq = (SQUEEZE_START - vh) / (SQUEEZE_START - SQUEEZE_FULL);
-    sq = Math.max(0, Math.min(1, sq));
-    setVar('--pace-home-squeeze', String(Math.round(sq * 1000) / 1000));
-
-    var hUtil = body.clientHeight;
-    var w = body.clientWidth;
-    if (!hUtil || !w) return;
-
-    // Estimación GENEROSA por ancho (proporción de la referencia); luego se
-    // ENCOGE hasta que no haya scroll. Así D es el mayor círculo que cabe:
-    //  - viewport alto → limita el ancho (0.255·W), sobra alto (se centra);
-    //  - viewport bajo → encoge hasta caber, sin recortar contenido.
-    // Medir la altura fija por partes es frágil (paddings del root, tarjeta de
-    // Camino más alta con el eyebrow s122…), así que se mide el desbordamiento
-    // real y se corrige — robusto ante idioma/contenido.
-    var D = Math.min(WIDTH_CAP * w, D_MAX);
-    if (D < D_FLOOR) D = D_FLOOR;
-    D = Math.round(D);
-    applyD(D, dial);
-
-    for (var i = 0; i < MAX_FIT_PASSES; i++) {
-      var over = body.scrollHeight - body.clientHeight;
-      if (over <= 1 || D <= D_FLOOR) break;
-      // reducir D: la huella vertical del aro tras solapar es ~0.84·D, así que
-      // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
-      D = Math.max(D_FLOOR, D - Math.ceil(over / 0.84));
-      applyD(D, dial);
-    }
-  }
-
-  function schedule() {
-    if (!rafId) rafId = requestAnimationFrame(compute);
-  }
-
-  function attach() {
-    var body = document.querySelector('[data-pace-home-body]');
-    if (!body) {requestAnimationFrame(attach);return;}
-    if (window.ResizeObserver) {
-      ro = new ResizeObserver(schedule);
-      ro.observe(body);
-      var spc = document.querySelector('[data-pace-spc]');
-      var act = document.querySelector('[data-pace-activitybar]');
-      if (spc) ro.observe(spc); // Camino: altura varía con contenido/idioma
-      if (act) ro.observe(act); // Actividades: idem
-    }
-    window.addEventListener('resize', schedule);
-    window.addEventListener('orientationchange', schedule);
-    window.addEventListener('pace:home-relayout', schedule);
-    if (window.matchMedia) {
-      // recalcular al cruzar el umbral mobile/desktop
-      var mq = window.matchMedia(DESKTOP_MQ);
-      if (mq.addEventListener) mq.addEventListener('change', schedule);else
-      if (mq.addListener) mq.addListener(schedule);
-    }
-    schedule();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', attach);
-  } else {
-    attach();
-  }
-})();
 })();
 </script>
 

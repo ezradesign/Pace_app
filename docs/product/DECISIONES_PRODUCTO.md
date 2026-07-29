@@ -100,8 +100,55 @@ Detalle técnico (variables, fórmulas, el porqué del `margin` negativo ahora s
 `DESIGN_SYSTEM.md` → «Modelo atardecer de la home». HOME_REDISENO_PROPUESTA sigue siendo
 el canónico del DISEÑO editorial; §0 «sensible a la altura» ya implementado en s123.
 
-**PENDIENTE (tras s123):** ~~**s124** timer editorial~~ (HECHO) · **s125** scrollbar del
-runner v1 · §7 · ~~trocear `FocusTimer.jsx`~~ (hecho en s124, 449 ln).
+**PENDIENTE (tras s123):** ~~**s124** timer editorial~~ (HECHO) · ~~**s125** scrollbar del
+runner v1~~ (HECHO) · §7 · ~~trocear `FocusTimer.jsx`~~ (hecho en s124, 449 ln).
+
+> **Vigencia (s126 · v0.69.0):** en **Desktop (≥769px)** las reglas ejecutables de arriba
+> quedan **SUPERADAS** por «Home Desktop · composición proporcional y horizonte» (más
+> abajo): el aro ya no se dimensiona con `min(86vw,520px,max(300px,58dvh))` sino por altura
+> disponible, y el solapamiento deja de ser el `margin-top` negativo adaptativo hasta el
+> 19 % para ser un 16 % nominal con recorte del aro. **En móvil/tablet (≤768px) el modelo
+> «atardecer» de s123 sigue INTACTO y vigente tal cual está descrito aquí.** La jerarquía
+> invariante y la barra de scroll oculta siguen vigentes en todos los viewports.
+
+---
+
+## Home Desktop · composición proporcional y horizonte (s126 · v0.69.0)
+
+Contrato **ejecutable** para la home en Desktop (≥769px). En móvil/tablet manda s123.
+
+- **Jerarquía invariante** (heredada de s123): Timer → Camino → Actividades es el orden del
+  DOM. En Desktop la composición de referencia coloca las Actividades bajo el aro y el
+  Camino al fondo mediante `order` **visual**, sin alterar el DOM.
+- **El Pomodoro es una composición proporcional.** D (diámetro) es la unidad base y el
+  interior escala con él. **D lo manda la ALTURA disponible**: arranca en
+  `min(0.42·W, 520px)` y encoge hasta que no hay scroll (suelo 205px). Fijarlo por ancho
+  confundía causa con efecto — en la referencia v0.64 la proporción 0.255·W era
+  CONSECUENCIA de la altura (`flex:1 + 56vh`).
+- **Sol amaneciendo, con recorte real.** Las Actividades solapan el arco inferior y el aro
+  se **recorta** en esa línea (`clip-path` sobre el marco del aro, no sobre el `<svg>`, que
+  va rotado). Es la composición buscada, no el accidente de `overflow:hidden` de v0.64 que
+  s123 corrigió.
+- **Solapamiento nominal 16 % de D**, aceptación 0.14–0.17, medido como
+  `(circleRect.bottom − activitiesRect.top) / circleRect.height`. El CICLO medido actúa solo
+  de **techo de seguridad**: el horizonte nunca sube por encima de los puntos de ciclo.
+- **Suelo de accesibilidad intocable**: CTA de 44×44 CSS px. Nunca se encoge para ganar
+  altura; antes se degrada el solapamiento que tapar el CICLO o achicar el botón.
+- **En alturas cortas se recupera AIRE, no contenido.** Por debajo de 700px de alto se
+  compacta progresivamente el presupuesto vertical exterior (TopBar, huecos del selector de
+  minutos, paddings de Actividades y de la tarjeta) y lo liberado va íntegro al diámetro del
+  aro. **Nunca se tocan textos, tamaños de fuente ni glifos.** Por encima de 700px la
+  compactación es cero. Esto es lo que hace que una pantalla de 1366×768 —cuyo viewport real
+  ronda los 610px por el chrome del navegador— conserve la composición. Límite residual en
+  `AUDITORIA_SISTEMA_PACE.md` §32.6.
+- **Consecuencia asumida**: con el timer en marcha, el arco de progreso y el punto guía
+  quedan ocultos bajo el horizonte (~94° de aro, ~37–63 % de la sesión). Decisión explícita
+  del usuario (corte duro, descartado el desvanecido), igual que en la referencia v0.64.
+- **El copy NO se revierte**: de la captura v0.64 se toma SOLO la geometría. Siguen vigentes
+  las decisiones de s122/s124 («FOCO MANUAL», «Empezar foco», «CICLO 1 / 4», «Ver caminos»,
+  eyebrow «CAMINO SUGERIDO»).
+
+Detalle e implementación en [`session-126`](../sessions/session-126-home-desktop-horizonte.md).
 
 ---
 

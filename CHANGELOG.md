@@ -27,8 +27,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.69.0** | 2026-07-29 | fix(home): **composición proporcional del timer y horizonte del aro (Desktop)** (sesión de CÓDIGO; geometría de la home; NO motor del temporizador, NO contabilidad, NO persistencia, NO Caminos/PathRunner, NO Respira, NO runners, NO stats/logros/entitlement/eventos) -- cierra el WIP interrumpido de s126 (ya construido y sin documentar) y resuelve lo que el usuario señaló comparando su build con el backup v0.64.0: **«que no se vea el aro completo del pomodoro»** · **causa medida**: `[data-pace-activitybar]` NO tiene fondo — subía y se anclaba 4px bajo el CICLO, pero el arco SVG se pinta detrás y atraviesa la banda transparente de ~40px (padding + rótulo «ACTIVIDADES»); en v0.64 el aro estaba literalmente RECORTADO por el `overflow:hidden` del contenedor, lo que s123 registró como regresión y corrigió — la captura de referencia ES ese recorte · **fix del horizonte**: `clip-path: inset(0 0 var(--pace-activities-overlap) 0)` (+ `-webkit-`) sobre `[data-pace-dial-fit]` dentro del bloque `min-width:769px`, **reutilizando** la variable que ya vale `dialBottom − cicloBottom − 4px` (una sola fuente ⇒ recorte y solapamiento no se desincronizan); se recorta el **MARCO y no el `<svg>`** porque ese svg lleva `rotate(-90deg)` inline y `clip-path` rota con el elemento (un inset inferior le cortaría el lado izquierdo), y así se cubre también el halo `[data-pace-dial-running]::after`; el CONTENIDO no se recorta **por construcción** (la línea nace del bottom del CICLO, último hijo del interior) y `clip-path` es puramente visual ⇒ **cero impacto en layout** · **solapamiento nominal 16 %**: el WIP lo derivaba del CICLO medido y el ratio variaba **0.135→0.176** (a 1920×1080 fuera del contrato 0.14–0.17); ahora `overlap = min(0.16·D, techoCICLO)` — el techo hace falta porque el interior NO puede ser 100 % proporcional (CTA con suelo de **44px** por a11y) y evita tapar los puntos de ciclo · **D lo manda la ALTURA, no el ancho**: `WIDTH_RATIO 0.255` → `WIDTH_CAP 0.42` como mero techo + bucle «encoger hasta caber» (`MAX_FIT_PASSES` 6→8); fijar D por ancho confundía causa con efecto (en v0.64 ese 0.255 era CONSECUENCIA de `flex:1 + 56vh`) y a 1280×720 daba D=326 / ratio 0.135 → ahora **D=408 / ratio 0.159**; en el viewport de la referencia (1536×700) sale **D=381** vs 392 medidos en la captura (3 %) · **decisiones del usuario por AskUserQuestion**: corte DURO (no desvanecido — dejaría arco y punto guía atenuados y visibles en la banda transparente), **solo Desktop** (en móvil la tarjeta de Camino, opaca y casi de ancho completo, ya corta el aro; el modelo «atardecer» de s123 queda intacto) y **copy INTACTO** (de v0.64 solo se toma la geometría: siguen «FOCO MANUAL», «Empezar foco», «CICLO 1 / 4», «Ver caminos», eyebrow) · **consecuencia asumida**: con el timer en marcha el arco y el punto guía quedan ocultos bajo el horizonte (~94°, ~37–63 % de la sesión), igual que en v0.64 · **verificado por medición DOM** (el preview embebido NO sirve: pane nativo 735×307): ratio **0.152–0.161** y `overflowV/H = 0` en 1920×1080 · 1440×900 · 1536×700 · 1366×768 · 1280×720 · 1024×768, con 4 Actividades en 1 fila; móvil sin regresión (`clip:none`, D/W 0.859–0.860, 2×2, sin scroll salvo los 9px preexistentes de 360×640); EN + paleta oscura idénticos; estados running/paused sin mover el horizonte; consola limpia; standalone 3236 KB · **CORTE 2 · compactación en alturas cortas**: el usuario reportó que a **1366×768 el aro se ve reducido y pierde la estructura** — no era un caso nuevo sino el régimen incumplido, porque su **viewport real es ~610px** (pestañas + barra de direcciones + marcadores se comen ~110px de los 768); ahí el aro colapsaba a D=256 y el solapamiento a 0.078 · preguntó si bastaba compactar al 50 % el hueco entre el selector de modo y el de minutos y se le respondió con números que **NO** (mide 18px → liberaría 9 → aro 272, ratio 0.110), eligiendo con la tabla de paquetes delante **«aire puro + tarjeta»** · **`--pace-home-squeeze`** (0→1) publicado por el ayudante, **progresivo y NO un breakpoint** (`clamp(0,(700−innerHeight)/90,1)`): **CERO por encima de 700px** ⇒ la captura de referencia del usuario (~704px) y todo lo superior quedan **byte-idénticos** (verificado), completo a 610px; el CSS interpola con `calc(base − delta·var())` el padding y el **min-height** del TopBar (56→48 — **el min-height era el que mandaba**, bajar solo el padding no ganaba nada), el padding de `main-content`, el padding-top y el `gap` de la raíz de FocusTimer (los dos huecos del selector), los paddings de Actividades, el padding vertical de la tarjeta y la zona del enlace ⇒ **~66px liberados, todos al diámetro**, sin tocar textos, tamaños de fuente, glifos ni el suelo de 44px del CTA · **ámbito con honestidad**: `main-content` y Actividades/Camino cuelgan de `[data-pace-home-body]` (confinados por selector) pero **el TopBar NO se puede confinar así** porque `[data-pace-home-body]` se renderiza SIEMPRE (los módulos abren como overlay encima, no lo desmontan) ⇒ un `:has([data-pace-home-body])` matchearía siempre y daría falsa sensación de confinamiento; **se escribió primero así y se corrigió** a selector plano con confinamiento **de facto** (los overlays tapan el TopBar con `[data-pace-modal-backdrop]`, verificado en runtime) · **resultado en el caso del usuario (1366×610): D 256→349 (+36 %), ratio 0.078→0.1433 ✓, sin scroll y D/W 0.255 = el de su captura de referencia**; 1024×512 además **pierde el scroll** (63→0) y 844×390 lo baja de 185 a 119px · **INCUMPLIMIENTO RESIDUAL**: 1280×600 y 1024×600 en **0.1373** (3 milésimas bajo el suelo; cerrarlo exige knobs que el usuario excluyó —densidad de chips, contenido de la tarjeta— y **no se excede el paquete aprobado en silencio**) y las alturas extremas 1024×512 (0.0429) · 844×390 (0.0341 + 119px de scroll), donde la aritmética no da (con ~72px fijos de interior harían falta D≥413 para 0.16 y D≥342 para 0.14; subir el solapamiento taparía el CICLO y encoger el CTA rompe a11y) | #126 | [abajo](#v0690----2026-07-29----fixhome-composicion-proporcional-del-timer-y-horizonte-del-aro-desktop) |
 | **v0.68.0** | 2026-07-28 | fix(move): **barra de scroll del runner v1 — ocultar conservando el scroll (confinada)** (sesión de CÓDIGO; CSS puramente ADITIVO, sin motor/geometría/contabilidad; el HALLAZGO abierto desde s122 y 2º punto del Bloque 0 del audit; NO responsive de la home —§32 PENDIENTE—, NO compacta copy/glifos/tipografía, NO clipea) -- **diagnóstico MEDIDO** (device-independent `overflowV = scrollHeight − clientHeight`, no por el título del corte): en el **régimen ANCHO (≥641px, matriz 768/844/1024 × 620–720) NO hay desborde** (`overflowV=0` en todos; Cossack perSide barrido 620–720 con holgura 36–77px; los **184 strings** `instruction.action`/`care` ES+EN medidos offscreen con prefijo de lado NO superan 2 líneas → las reservas `cue` 3.1em/`care` 3em de s119 nunca se exceden) · en el **régimen MÓVIL (≤640px, sin reservas, número del timer ya a 72px por `MoveModule.jsx:332`) desborde MÍNIMO**: 360×620 World's greatest stretch (perSide, EN) = **3px** (umbral ≈624px; a ≥641px = 0) — **causa raíz medida: NO el cue/care sino el NOMBRE del ejercicio** `<h1 clamp(30,6.5vh,52)>` que a 360px envuelve a **2 líneas (85px vs ~42px)** → +43px; a alturas más cortas (360×600=35px) el scroll ya es LEGÍTIMO. Es el caso (b)/(d) del corte: barra CLÁSICA de 17px (Windows) para 3px de recorrido, fea e inútil · **decisión por AskUserQuestion → enfoque A** (con la medición delante; B descartado: el driver es el nombre a 2 líneas, no los márgenes) · **fix**: en `MoveSessionV1.support.jsx` (bloque `pace-move-v1-css`, tras el keyframe) `[data-pace-session-center]:has([data-pace-v1-progress]){scrollbar-width:none;-ms-overflow-style:none}` + `::-webkit-scrollbar{display:none}` — **conserva `overflow-y:auto`** (scroll por rueda/gesto/teclado; controles en el footer siempre visible; contenido del centro no interactivo → nada inalcanzable), **CONFINADO al runner v1** vía `:has([data-pace-v1-progress])` (el progreso se renderiza SIEMPRE en v1 y es marcador EXCLUSIVO suyo; `:has()` verificado en el runtime), **sin media query** (en ancho no hay barra que ocultar → inocuo), **cero JSX/motor** · **verificado**: regla aplica en centro v1 (`scrollbar-width:none`+`overflow-y:auto`), WGS 360×620 barra oculta con 3px alcanzables (maxScrollTop 2.4, último hijo visible tras scroll), gate con 31px de desborde scroll conservado (maxScrollTop 30.4); **confinamiento** Respira (sesión real) y Legacy (Desk Express, paso real) `scrollbar-width:auto` sin cambio; FASE A (glifo/footer/banda 720) intacta por construcción; standalone v0.68.0 (3224 KB) montado (bundle compilado, regla presente), consola sin errores nuevos | #125 | [abajo](#v0680----2026-07-28----fixmove-barra-de-scroll-del-runner-v1-ocultar-conservando-el-scroll-confinada) |
-| **v0.67.0** | 2026-07-28 | feat(focus): **timer editorial — descriptor por duración, controles/estados y fix del `completed` inerte** (sesión de CÓDIGO; el corte desplazado desde s123; NO responsive de la home —s123—, NO scrollbar del runner —s125—, **delta CERO de contabilidad**: créditos/`state.cycle`/logros/notificaciones/menú post-Pomodoro/persistencia/`useCountdown` intactos) -- **descriptor de Foco por DURACIÓN** (sustituye al fijo «Concentración profunda»): helper PURO y TOTAL `getFocusDescriptorKey(minutes)` en `FocusTimer.support.jsx` (Number + fallback 25 si no finito; devuelve SOLO la key i18n; tramos 1–19 `short`/20–29 `deep`/30–44 `sustained`/45–59 `deepWork`/60+ `extended`) consumido por `FocusTimer` (subtítulo de aro/barra/analógico, solo modo foco) y `PathFocusStep` (`routine.name`, `step.min||25` coherente con `totalSec`); 5 keys `focus.subtitle.short|deep|sustained|deepWork|extended` ES+EN, `focus.subtitle.focus` retirada (0 consumidores runtime); las pausas conservan su copy · **CTA SIN glifos** `▶`/`❚❚` → cápsula RELLENA serif itálica; **running** «Pausar» a CONTORNO; etiqueta por `status` (idle «Empezar foco» / paused «Continuar» / completed «Empezar otro ciclo» / running «Pausar») · **fix del `completed` inerte** (hoy `toggle()` es no-op en completed): handler DEDICADO `handleStartAnotherCycle = () => { startFocusVisual(); reset(); start(); }` (desestructura `start`; motor `completed`-terminal INTACTO; reset/start NO acreditan, `state.cycle` no cambia al iniciar, el 2º bloque arranca en `durationSec`, persistencia vuelve solo al quedar running) + **inicio VISUAL centralizado** `startFocusVisual` (sonido `pomodoro.start` + `maybeRequestNotifyPermission`) compartido por arranque normal y «Empezar otro ciclo» · **feedback «Ciclo completado»/«Cycle complete»** REEMPLAZA el descriptor en el slot de subtítulo cuando `status==='completed'` (SIN añadir altura estructural → atardecer s123 intacto) · **reset re-jerarquizado**: oculto en idle/running/completed; en **paused** = acción TEXTUAL «Reiniciar bloque»/«Restart focus» (key NUEVA `focus.restartBlock`; `focus.restart` INTACTA, la comparte `PathFocusStep`) **EN FILA junto al CTA** (nowrap+flexShrink:0, desborda el maxWidth:70% del interior centrada) para NO desplazar el CICLO/atardecer · **indicador de ciclo explícito** «CICLO N / 4» (N=`(state.cycle%4)+1`; completed → «SIGUIENTE · CICLO N / 4»; solo presentación) · **analógico** ahora muestra el descriptor (recibía `subtitle` sin renderizarlo) discreto bajo la cifra, geometría del reloj intacta · **a11y**: CTA/reset `min-height:44px` verificable + `aria-live="polite"` en el subtítulo (anuncia «Ciclo completado», no el contador) · **split de 500 ln**: `MinutesPicker` + su CSS extraídos a `app/focus/FocusTimer.parts.jsx` (refs de hooks propias; carga tras React, antes de FocusTimer.jsx) → **FocusTimer.jsx 507→449 ln** · verificado ES+EN (15/25/35/45 + 10/22/40/50/90, 3 estilos, 4 estados, Camino min 10/15/25, delta cero por completación real de 25 = +25 min/+1 ciclo/BreakMenu, no-regresión atardecer 1440×900·1024×512·844×390), consola limpia, standalone 3222 KB | #124 | [abajo](#v0670----2026-07-28----featfocus-timer-editorial-descriptor-por-duracion-controles-estados-y-fix-del-completed-inerte) |
+| **v0.67.0** | 2026-07-28 | feat(focus): **timer editorial — descriptor por duración, controles/estados y fix del `completed` inerte** (sesión de CÓDIGO; el corte desplazado desde s123; NO responsive de la home —s123—, NO scrollbar del runner —s125—, **delta CERO de contabilidad**: créditos/`state.cycle`/logros/notificaciones/menú post-Pomodoro/persistencia/`useCountdown` intactos) -- **descriptor de Foco por DURACIÓN** (sustituye al fijo «Concentración profunda»): helper PURO y TOTAL `getFocusDescriptorKey(minutes)` en `FocusTimer.support.jsx` (Number + fallback 25 si no finito; devuelve SOLO la key i18n; tramos 1–19 `short`/20–29 `deep`/30–44 `sustained`/45–59 `deepWork`/60+ `extended`) consumido por `FocusTimer` (subtítulo de aro/barra/analógico, solo modo foco) y `PathFocusStep` (`routine.name`, `step.min||25` coherente con `totalSec`); 5 keys `focus.subtitle.short|deep|sustained|deepWork|extended` ES+EN, `focus.subtitle.focus` retirada (0 consumidores runtime); las pausas conservan su copy · **CTA SIN glifos** `▶`/`❚❚` → cápsula RELLENA serif itálica; **running** «Pausar» a CONTORNO; etiqueta por `status` (idle «Empezar foco» / paused «Continuar» / completed «Empezar otro ciclo» / running «Pausar») · **fix del `completed` inerte** (hoy `toggle()` es no-op en completed): handler DEDICADO `handleStartAnotherCycle = () => { startFocusVisual(); reset(); start(); }` (desestructura `start`; motor `completed`-terminal INTACTO; reset/start NO acreditan, `state.cycle` no cambia al iniciar, el 2º bloque arranca en `durationSec`, persistencia vuelve solo al quedar running) + **inicio VISUAL centralizado** `startFocusVisual` (sonido `pomodoro.start` + `maybeRequestNotifyPermission`) compartido por arranque normal y «Empezar otro ciclo» · **feedback «Ciclo completado»/«Cycle complete»** REEMPLAZA el descriptor en el slot de subtítulo cuando `status==='completed'` (SIN añadir altura estructural → atardecer s123 intacto) · **reset re-jerarquizado**: oculto en idle/running/completed; en **paused** = acción TEXTUAL «Reiniciar bloque»/«Restart focus» (key NUEVA `focus.restartBlock`; `focus.restart` INTACTA, la comparte `PathFocusStep`) **EN FILA junto al CTA** (nowrap+flexShrink:0, desborda el maxWidth:70% del interior centrada) para NO desplazar el CICLO/atardecer · **indicador de ciclo explícito** «CICLO N / 4» (N=`(state.cycle%4)+1`; completed → «SIGUIENTE · CICLO N / 4»; solo presentación) · **analógico** ahora muestra el descriptor (recibía `subtitle` sin renderizarlo) discreto bajo la cifra, geometría del reloj intacta · **a11y**: CTA/reset `min-height:44px` verificable + `aria-live="polite"` en el subtítulo (anuncia «Ciclo completado», no el contador) · **split de 500 ln**: `MinutesPicker` + su CSS extraídos a `app/focus/FocusTimer.parts.jsx` (refs de hooks propias; carga tras React, antes de FocusTimer.jsx) → **FocusTimer.jsx 507→449 ln** · verificado ES+EN (15/25/35/45 + 10/22/40/50/90, 3 estilos, 4 estados, Camino min 10/15/25, delta cero por completación real de 25 = +25 min/+1 ciclo/BreakMenu, no-regresión atardecer 1440×900·1024×512·844×390), consola limpia, standalone 3222 KB | #124 | [session-124](./docs/sessions/session-124-timer-editorial-descriptor.md) |
 | **v0.66.0** | 2026-07-27 | feat(home): **modelo «atardecer» responsive de la home** (sesión de CÓDIGO; corrección de una regresión de s122 + geometría §0 sensible a la altura; NO timer editorial —eso es s124—, NO scrollbar del runner —s125—, NO contabilidad/créditos/logros) -- **regresión s122 corregida**: el **swap por `order`** (`min-width:700px and max-height:759px`) colocaba Actividades ANTES que Camino en ancho+corto y, junto al `overflow:hidden`, la base del aro (bolas/CICLO/CTA) se recortaba → **eliminado el swap**; la jerarquía **Timer → Camino → Actividades** es ahora el ORDEN del DOM, invariante en todo viewport (prohibido `order` para intercambiar) · **aro sensible a la altura ÚTIL** con mínimo GENEROSO: `--pace-home-timer-size = min(86vw, 520px, max(300px, 58dvh))` (fallback vh→dvh vía `@supports`) — NO se encoge agresivamente; el aro llega a 520 en pantallas altas y no baja de 300 en las bajas · **solapamiento «atardecer» SIEMPRE presente y PROGRESIVO** (sustituye al gate binario ≥760px de s122): `margin-top` NEGATIVO de la tarjeta = `max(6px, min(0.19·D, (D−244)/2 − 6px))` → hasta **19% del diámetro** donde hay holgura, limitado por el arco decorativo real bajo las bolas en aros pequeños (nunca tapa CTA/CICLO; ≥8px de holgura medida) · **composición** en `data-pace-home-stack` con `margin:auto` (centra si cabe, **scrollea** si no) — se retira el `overflow:hidden` que recortaba; `FocusTimer.root`/`timerWrap` pasan a altura de CONTENIDO · **barra de scroll OCULTA** en `[data-pace-home-body]` (`scrollbar-width:none` + `::-webkit-scrollbar{display:none}` + `-ms-overflow-style:none`) conservando scroll por rueda/trackpad/gesto/teclado (foco de teclado autodesplaza; `gutterV=0` en los 7) · variante aditiva `fitHeight` de `TimerDial` (Caminos byte-idéntico al no pasarla) · **verificado ES+EN** en 1440×900 · 1280×768 · 1280×600 · 1024×512 · 844×390 · 390×844 · 360×640 (jerarquía, 4 bolas + CICLO, CTA libres, sin scroll horizontal, sin truncamiento), consola limpia, standalone 3216 KB · **deuda anotada**: `FocusTimer.jsx` en 506 ln (PRE-existente 505 en HEAD; trocear en sesión propia) | #123 | [session-123](./docs/sessions/session-123-atardecer-responsive-home.md) |
 | **v0.65.0** | 2026-07-26 | feat(home): **claridad UX de la home** (sesión de CÓDIGO; pieza A de `HOME_REDISENO_PROPUESTA.md` §1/§3/§4/§5/§6 + §0 solapamiento por decisión del usuario; NO catálogo, NO migración, NO runner, NO eventos) -- **sistema verbal** que rompe la colisión «Comenzar»/«Comenzar»: timer **«Empezar foco»**/«Start focus», Camino **«Iniciar camino»**/«Start path», biblioteca **«Ver caminos»**/«Browse paths» (cada verbo = su consecuencia; paridad ES+EN) · **«FOCO MANUAL»/«MANUAL FOCUS» DENTRO del círculo** (`modeLabel` solo en modo foco; se descartó el kicker suelto que robaba altura al aro — decisión del usuario) → el aro conserva su tamaño «sol amaneciendo» · **tarjeta de Camino compacta que se explica sola**: eyebrow SIEMPRE visible «CAMINO SUGERIDO/FAVORITO · ~N min» (duración calculada leyendo el `.min` de cada paso, solo lectura de window) + secuencia en **TEXTO** «Rutina guiada · N pasos» + iconos de acento + CTA «Iniciar camino» en **contorno** (único primario = timer) · **jerarquía §1**: Camino POR ENCIMA de Actividades · **solapamiento editorial «sol» LIMITADO/PROVISIONAL (NO §0 completo, autorizado por el usuario)**: la tarjeta sube con `transform: translateY(-118px)` (NO margin — un margen negativo hace que el `flex:1` reclame el hueco y recentre el aro) y tapa el arco inferior del círculo hasta rozar el CICLO, sin taparlo ni tapar el botón; sube también la ActivityBar el mismo delta; **gate ≥760px de alto** (por debajo, caso corto diferido a §0) · nuevas claves i18n `focus.manual.label`, `paths.suggested.approxMin` + reetiquetadas `paths.suggested.label`/`.favorite` · verificado 360×640/390×844/1280×900/1440×900 ES+EN, sin `[i18n] missing`, consola limpia, standalone 3209 KB · **diferido**: §0 short-viewport (<720px), §7, y **hallazgo NO tocado**: scrollbar del runner v1 (`data-pace-session-center` desborda ~17px a ≤~660px en pasos `perSide` de texto largo; chip de tarea creado) | #122 | [session-122](./docs/sessions/session-122-claridad-ux-home.md) |
 | **v0.64.0** | 2026-07-24 | feat(move): **B2.3 OLA 4 — cierre de la migración mecánica (core.plank + wall.sit)** (sesión de CÓDIGO; migrar CONTENIDO al contrato s115, NO rediseñar el runner —GIRO s113/s114, contrato s115, feedback s116, diseño de eventos s117 CERRADOS, no reabiertos; eventos NO se implementan) -- **2 rutinas Mueve premium** migradas al contrato v1: `extra.core.plank`(P, min 4) · `extra.wall.sit`(P, 2) — las 2 ÚNICAS rutinas legacy mecánicamente tractables sin tocar copy, dosis, estructura, lateralidad ni escalones · clasificación BASE §3: aguantes isométricos (Plancha, Hollow hold, Wall sit) → `timed` con `care` de rodillas/altura (adaptación DERIVADA, NO cambia dosis); Plancha lateral «30 s por lado» en `dur:60` → `perSide` `dur:30` POR LADO (2×30=60 = **dosis legacy conservada**) + `transition:{seconds:10}` · **rests entre holds SUAVES** (sin `restKind`, conservan `dur`; cues legacy «Respira.»/«Suave.» preservados verbatim) · **gate `ready`** en el 1er paso de suelo (Plancha) / de pared (Wall sit), cuenta la colocación vía `estimatedSeconds` · **DISCIPLINA DE DOSIS** (lección s120): wall.sit conserva **60 s** por tanda (el `care` gradúa la altura, no la dosis) · migración ATÓMICA `instruction:{setup,action,care}` + `transition`/`setup:{mode:'ready',estimatedSeconds:15}` + 5 metadatos (**sin `discrete`**); keys EN `id.sN.instruction.*` nuevas, `id.sN.cue` retiradas; **ningún `name` cambió** → glifos intactos · **acceso INTACTO** (ambas siguen premium; `canAccessRoutine` sin cambios) · cero drift de `min` (core.plank 250s [4–5], wall.sit 175s [2–3]; dev-check «dentro») · **migración MECÁNICA de B2.3 CERRADA**: **8 → 6 legacy**, las 6 restantes NO son deuda mecánica — quedan BLOQUEADAS por reescritura editorial / progresión técnica / revisión fisio (`atg.knees` espera la revisión de Sissy squat) | #121 | [session-121](./docs/sessions/session-121-b2-3-ola-4-cierre-mecanico.md) |
@@ -156,6 +157,132 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.69.0] -- 2026-07-29 -- fix(home): composición proporcional del timer y horizonte del aro (Desktop)
+
+Sesión 126. Cierra el WIP de s126 que había quedado interrumpido por límite de uso —ya
+construido en disco y sin documentar— y resuelve el punto que el usuario señaló comparando
+su build con el backup v0.64.0: **«que no se vea el aro completo del pomodoro»**.
+Bump v0.68.0 → v0.69.0. Sin motor del temporizador, contabilidad, persistencia, Caminos,
+PathRunner, Respira, runners, stats, logros, entitlement, gating ni eventos.
+
+### Diagnóstico medido
+
+`[data-pace-activitybar]` **no tiene fondo**. El WIP la subía y la anclaba 4px bajo el
+CICLO, pero el arco SVG se pinta detrás y atraviesa la banda transparente de ~40px (padding
+del bloque + rótulo «ACTIVIDADES»). En v0.64 el aro estaba literalmente **recortado** por el
+`overflow:hidden` del contenedor — lo que s123 registró como regresión y corrigió. La
+captura de referencia del usuario ES ese recorte.
+
+Artefacto de entorno que despistó al intento anterior: el **service worker servía un
+`_responsive.js` cacheado**. El archivo en disco tenía el bloque nuevo, pero el CSS
+inyectado en la página medía 3678 chars y terminaba en el bloque s123 — de ahí la
+conclusión errónea de que «las reglas no se aplican». Se resolvió desregistrando el SW y
+borrando la caché `pace-v0.69.0`; la verificación se hizo sobre el standalone con
+cache-bust (un único archivo, sin subrecursos).
+
+### Decisiones del usuario (AskUserQuestion)
+
+1. **Corte duro**, no desvanecido: se le expuso que un desvanecido dejaría el arco y el
+   punto guía atenuados y *visibles* en la banda transparente, a los lados de
+   «ACTIVIDADES»; respondió que quedaría raro y eligió el corte.
+2. **Solo Desktop (≥769px)**: en móvil la tarjeta de Camino (opaca, casi de ancho completo)
+   ya corta el aro por su borde superior. El modelo «atardecer» de s123 queda intacto.
+3. **Copy intacto**: de la captura v0.64 se toma SOLO la geometría. Siguen «FOCO MANUAL»,
+   «Empezar foco», «CICLO 1 / 4», «Ver caminos» y el eyebrow «CAMINO SUGERIDO» (s122/s124).
+
+**Consecuencia asumida:** con el timer en marcha, el arco de progreso y el punto guía
+quedan ocultos bajo el horizonte (~94° de aro, ~37–63 % de la sesión). Es el comportamiento
+de v0.64, documentado como decisión y no como defecto.
+
+### Cambios
+
+**1 · Horizonte del aro** (`app/main/_responsive.js`, dentro de `@media (min-width:769px)`):
+`clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0)` (+ `-webkit-clip-path`) sobre
+`[data-pace-dial-fit]`.
+
+- **Reutiliza** `--pace-activities-overlap`, que ya vale `dialBottom − cicloBottom − 4px` =
+  distancia del horizonte al fondo del aro ⇒ recorte y solapamiento no pueden
+  desincronizarse.
+- Se recorta el **MARCO, no el `<svg>`**: ese svg lleva `rotate(-90deg)` inline y
+  `clip-path` rota con el elemento (un inset inferior le habría cortado el lado izquierdo).
+  Recortar el marco cubre además el halo `[data-pace-dial-running]::after`.
+- El **contenido nunca se recorta por construcción**: la línea nace del bottom del CICLO,
+  último hijo del interior del aro, y se mueve con él (idioma, alto del CTA, descriptor).
+- `clip-path` es puramente visual ⇒ **cero impacto en layout**.
+
+**2 · Solapamiento nominal 16 %** (`app/main/home-geometry.js`): el WIP lo derivaba del
+CICLO medido y el ratio variaba **0.135 → 0.176** (a 1920×1080, fuera del contrato
+0.14–0.17). Ahora `overlap = min(round(0.16·D), techoCICLO)`. El techo hace falta porque el
+interior **no puede ser 100 % proporcional** — el CTA tiene suelo de 44px por accesibilidad
+— y evita que el horizonte tape los puntos de ciclo.
+
+**3 · D lo manda la ALTURA, no el ancho** (`app/main/home-geometry.js`): `WIDTH_RATIO=0.255`
+→ `WIDTH_CAP=0.42` como mero techo, arrancando del mayor aro admisible y dejando que el
+bucle «encoger hasta caber» (`MAX_FIT_PASSES` 6→8) encuentre el mayor D sin scroll. Fijar D
+por ancho confundía causa con efecto: en v0.64 ese 0.255 era CONSECUENCIA de la altura
+disponible (`flex:1 + 56vh`). A 1280×720 se pasa de D=326 / ratio 0.135 a **D=408 / ratio
+0.159**; en el viewport de la referencia (1536×700) sale **D=381** frente a los 392 medidos
+en la captura (3 %), con D/W 0.248 vs 0.255.
+
+### Verificación (medición DOM; el preview embebido no sirve — pane nativo 735×307)
+
+Desktop en contrato: 1920×1080 (0.1596) · 1440×900 (0.1596) · 1366×768 (0.1595) · 1024×768
+(0.1605) · 1536×704 (0.1550) · 1366×655 (0.1484, squeeze 0.5) · **1366×610 (0.1433, el caso
+del usuario)**, todos con `overflowV/H ≤ 1`, 4 Actividades en 1 fila y CTA de 44px. Móvil
+**sin regresión**: `--pace-home-squeeze` ausente, `clip:none`, D/W 0.86, 2×2, solapamiento
+de la tarjeta 0.121, sin scroll salvo los **9px preexistentes** de 360×640 (medidos igual en
+el baseline v0.68.0). EN + paleta oscura idénticos. Estados running/paused sin mover el
+horizonte. Ambos entry points (`PACE.html` y standalone). Consola limpia. `git diff --check`
+limpio. Standalone 3236 KB, `CACHE_NAME='pace-v0.69.0'`.
+
+### Corte 2 · compactación en alturas cortas (`--pace-home-squeeze`)
+
+Tras la primera entrega el usuario reportó que **a 1366×768 el aro se ve reducido y pierde
+la estructura**. No era un caso nuevo: su **viewport real es ~610px** (pestañas + barra de
+direcciones + marcadores se comen ~110px de los 768), justo el régimen incumplido. Ahí el
+aro colapsaba a D=256 y el solapamiento a 0.078.
+
+Preguntó si bastaba con compactar al 50 % el hueco entre el selector de modo y el de
+minutos; se le respondió con números que **no** (ese hueco mide 18px → liberaría 9 → aro
+272, ratio 0.110). Con la tabla de paquetes delante eligió **«aire puro + tarjeta»**.
+
+`home-geometry.js` publica ahora `--pace-home-squeeze`, un factor **progresivo (no un
+breakpoint)**: `clamp(0, (700 − innerHeight)/90, 1)`. **Cero por encima de 700px** — la
+captura de referencia del usuario (~704px) y todo lo superior quedan **byte-idénticos**,
+verificado — y completo a 610px. El CSS interpola con `calc(base − delta * var(...))` el
+padding/min-height del TopBar (56→48; **el `min-height` era el que mandaba**, bajar solo el
+padding no ganaba nada), el padding de `main-content`, el padding-top y el `gap` de la raíz
+de FocusTimer (los dos huecos del selector de minutos), los paddings de Actividades, el
+padding vertical de la tarjeta de Camino y la zona del enlace. **~66px liberados, todos al
+diámetro del aro. Ningún texto, tamaño de fuente ni glifo cambia, y el CTA conserva 44px.**
+
+Ámbito, con honestidad: `main-content` y los bloques de Actividades/Camino cuelgan de
+`[data-pace-home-body]` → confinados por selector. **El TopBar no**: `[data-pace-home-body]`
+se renderiza SIEMPRE (los módulos abren como overlay encima, no lo desmontan), así que un
+`:has([data-pace-home-body])` matchearía siempre y daría falsa sensación de confinamiento —
+se escribió primero así y **se corrigió**. Selector plano, confinamiento **de facto**: los
+overlays tapan el TopBar con `[data-pace-modal-backdrop]` (verificado en runtime) y, aunque
+se viera, 48px contienen sus ~45px de contenido sin apretar nada.
+
+**Resultado en el caso del usuario (1366×610): D 256 → 349 (+36 %), ratio 0.078 → 0.1433
+✓ en contrato, sin scroll, y D/W = 0.255 — idéntico al de su captura de referencia.**
+1024×512 además **pierde el scroll** (63 → 0) y 844×390 lo baja de 185 a 119px.
+
+### Incumplimiento residual
+
+- **1280×600 y 1024×600: ratio 0.1373**, tres milésimas bajo el suelo. Cerrarlo exige ~3px
+  más y solo quedan knobs que el usuario excluyó (densidad de chips, contenido de la
+  tarjeta): **no se excede el paquete aprobado en silencio**.
+- **1024×512 (0.0429) y 844×390 (0.0341 + 119px de scroll)**: alturas extremas donde la
+  aritmética no da — el interior tiene ~72px FIJOS (CTA 44px + fila de CICLO), el hueco bajo
+  el CICLO vale `(D − H)/2 − 4` con `H ≈ 0.485·D + 72`, y `0.16·D` exige **D ≥ 413**
+  (**D ≥ 342** para 0.14). Subir el solapamiento **taparía el CICLO** y encoger el CTA rompe
+  accesibilidad. Degradación gradual y segura, aceptada como excepción documentada.
+
+Diario: [session-126](./docs/sessions/session-126-home-desktop-horizonte.md).
+
+---
+
 ## [v0.68.0] -- 2026-07-28 -- fix(move): barra de scroll del runner v1 — ocultar conservando el scroll (confinada)
 
 Sesión 125. El HALLAZGO abierto desde s122 (chip de tarea) y 2º punto del «Bloque 0 ·
@@ -239,99 +366,3 @@ errores nuevos.
   (decisión de producto, fuera del corte).
 - `move.chair.antidote.s0.instruction.setup` emite `[i18n] missing` (fallback benigno,
   PRE-existente; el paso 0 timed no tiene `setup`) — no lo introduce s125.
-
----
-
-## [v0.67.0] -- 2026-07-28 -- feat(focus): timer editorial — descriptor por duración, controles/estados y fix del `completed` inerte
-
-Sesión 124. El corte que se **desplazó desde s123** (que se reencuadró a la geometría
-«atardecer»). El descriptor de Foco era FIJO («Concentración profunda») para toda
-duración, el CTA llevaba glifos `▶`/`❚❚`, el reset estaba mal jerarquizado y el estado
-`completed` dejaba un botón **inerte** (`toggle()` es no-op en `completed`). Bump v0.66.0
-→ v0.67.0. Sesión de CÓDIGO confinada a `FocusTimer` + `PathFocusStep` + `TimerDial`
-(analógico) + i18n: **DELTA CERO de contabilidad** (mismos minutos acreditados, mismo
-`state.cycle`, mismos logros/notificaciones/menú post-Pomodoro, misma persistencia
-`pace.timer.v1`, motor `useCountdown` intacto — solo cambian presentación, copy y la
-recuperación correcta desde `completed`).
-
-### Descriptor de Foco por DURACIÓN
-
-Helper PURO y TOTAL `getFocusDescriptorKey(minutes)` en `FocusTimer.support.jsx` (a
-`window`, carga :178 antes que `PathFocusStep` :254): convierte a `Number`, cae a **25**
-si no es finito, y devuelve **ÚNICAMENTE la key** i18n (no traduce). Tramos inclusivos:
-**1–19** `short` («Foco breve»/«Quick focus») · **20–29** `deep` («Concentración
-profunda»/«Deep focus») · **30–44** `sustained` («Atención sostenida»/«Sustained
-attention») · **45–59** `deepWork` («Trabajo en profundidad»/«Deep work») · **60+**
-`extended` («Sesión extendida»/«Extended session»). Consumidores: `FocusTimer` (subtítulo
-del aro/barra/analógico, SOLO modo foco) y `PathFocusStep` (`routine.name`, con
-`step.min || 25` coherente para `totalSec` y el descriptor). Las **pausas** conservan su
-copy propio (`focus.subtitle.pause`/`.long`). Se retira `focus.subtitle.focus` (0
-consumidores runtime tras migrar los dos; `deep` la reemplaza con el mismo valor).
-
-### CTA, estados y fix del `completed` inerte
-
-- **CTA sin glifos** `▶`/`❚❚` → **cápsula RELLENA serif itálica**; **running** «Pausar»
-  a **contorno** (estado menos primario). Etiqueta/acción por `status` (no por
-  `remaining===totalSec`, para que pausar en el 1er segundo diga «Continuar»): idle
-  «Empezar foco» · paused «Continuar» · completed «Empezar otro ciclo» · running «Pausar».
-- **Fix del `completed` inerte**: handler DEDICADO `handleStartAnotherCycle = () => {
-  startFocusVisual(); reset(); start(); }` (desestructura `start` del hook; NO toca
-  `useCountdown` —`completed` sigue terminal—, NO `setTimeout`, NO cambia de preset).
-  Verificado: reset/start **NO acreditan**, `state.cycle` **no cambia** al pulsarlo, el
-  2º bloque arranca en `durationSec` completo, la persistencia vuelve a `pace.timer.v1`
-  solo al quedar running.
-- **Inicio VISUAL centralizado** `startFocusVisual` (sonido `pomodoro.start` +
-  `maybeRequestNotifyPermission`) compartido por un arranque/reanudación normal y
-  «Empezar otro ciclo» → misma semántica sin tocar el motor.
-- **Feedback «Ciclo completado»/«Cycle complete»** REEMPLAZA temporalmente el descriptor
-  en el slot de subtítulo cuando `status==='completed'` (modo foco) → **no añade altura
-  estructural** (atardecer s123 intacto). Pausa/larga conservan su subtítulo.
-
-### Reset re-jerarquizado + indicador de ciclo
-
-- **Reset**: oculto en idle/running/completed; en **paused** es una acción **TEXTUAL**
-  «Reiniciar bloque»/«Restart focus» (key NUEVA `focus.restartBlock`; `focus.restart`
-  INTACTA, la comparte `PathFocusStep`). Va **EN FILA junto al CTA** (nowrap +
-  `flexShrink:0`, desborda centrado el `maxWidth:70%` del interior del dial) → mostrarlo
-  **no desplaza** el CICLO ni el atardecer (medido: holgado ciclo↔tarjeta idéntico a
-  idle). Una fila en columna habría empujado el CICLO tras la tarjeta a alturas cortas.
-- **Indicador de ciclo explícito** «CICLO N / 4» (N = `(state.cycle % 4) + 1`; antes del
-  1º = 1/4); completed → «SIGUIENTE · CICLO N / 4». Solo presentación; los puntos siguen
-  marcando los ciclos completados del cuarteto.
-
-### Analógico, a11y y split de 500 ln
-
-- **Analógico**: recibía `subtitle` **sin renderizarlo** → ahora muestra el descriptor
-  (y «Ciclo completado») discreto bajo la cifra, sin tocar la geometría del reloj.
-- **a11y**: CTA principal/secundario y reset textual con `min-height:44px` verificable +
-  `aria-live="polite"` en el subtítulo (anuncia «Ciclo completado», el contador vive en
-  otro nodo → no se lee cada segundo).
-- **Split**: `MinutesPicker` + su CSS de input extraídos a
-  `app/focus/FocusTimer.parts.jsx` (declara sus PROPIAS refs de hooks; carga tras React,
-  antes de `FocusTimer.jsx`) → **FocusTimer.jsx 507 → 449 ln** (holgado bajo 500). Split
-  mecánico, sin cambios visuales/funcionales del selector (Enter/Escape/blur/presets/
-  custom 1–180 verificados).
-
-### Verificación
-
-Descriptor correcto en 15/25/35/45 + «Otro» de cada rango (10/22/40/50/90), modo foco,
-**ES y EN**; los 3 estilos (aro/barra/analógico) lo muestran; los 4 estados con CTA/reset/
-ciclo correctos. Tras completar: BreakMenu abre → al cerrarlo «Ciclo completado» +
-«SIGUIENTE · CICLO N/4»; «Empezar otro ciclo» arranca el mismo preset desde su duración
-completa. **Delta cero medido**: completar un foco de 25 acredita 25 min, +1 ciclo, abre
-BreakMenu; los archivos de contabilidad (`state-timer`, `state-achievements`,
-`useCountdown`, `BreakMenu`, `state-core`) **sin diff** y el callback `onComplete` sin
-cambios (prueba acelerada solo por DevTools con `Date.now` mockeado, no persistida).
-Foco en Caminos: min 15 → «Foco breve», min 25 → «Concentración profunda», `focus.restart`
-intacta. **No-regresión atardecer** reverificada en 1440×900 (aro 520, solap 99), 1024×512
-(aro 300, solap 22, ciclo +10) y 844×390 (aro 300, solap 22, ciclo +13), barra oculta, sin
-scroll-H. Consola limpia, sin `[i18n] missing`. Standalone v0.67.0 (3222 KB) montado y
-verificado.
-
-### Deuda / notas
-
-- La colisión CTA↔tarjeta en los estilos **barra/analógico** (no-default) es
-  **pre-existente** (s123 dimensiona el solapamiento para el aro; los controles de esos
-  estilos van fuera del aro) — fuera de s124.
-- Pausa/larga en `completed` reutilizan el mismo fix de botón (no inerte) con etiqueta
-  «Empezar foco»; el feedback «Ciclo completado» y el «SIGUIENTE» son solo modo foco.
