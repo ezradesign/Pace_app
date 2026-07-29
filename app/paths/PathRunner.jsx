@@ -122,6 +122,16 @@ function PathRunner() {
   const step = path.steps[cur.stepIndex];
   const totalSteps = path.steps.length;
 
+  /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar.
+     Declarado ANTES de handleStepExit porque este lo reutiliza (s127). */
+  const handleRequestExit = () => {
+    if (step.optional) {
+      abandonPath();
+    } else {
+      setConfirmExit(true);
+    }
+  };
+
   /* Callback de paso: dispara transition o completa el Camino.
      - Intermedio: avanza AHORA (decision 3) + phase='transition'.
      - Ultimo (s100, sin OutroCard): snapshot local a justCompleted +
@@ -129,6 +139,21 @@ function PathRunner() {
        (El snapshot sigue siendo necesario: tras el advance,
        paths.current es null y la pantalla renderiza desde el.) */
   const handleStepExit = (reason) => {
+    /* s127 — BUG: «Salir» avanzaba de actividad en vez de volver a la home.
+       El boton visible de SessionShell emite onExit('exit') y los runners lo
+       pasan tal cual (PathBodyStep/PathBreatheStep se lo entregan a este
+       callback), pero 'exit' no estaba contemplado y caia en advancePathStep
+       -> siguiente paso. La semantica correcta ya estaba escrita en el
+       comentario de PathFocusStep ("onExit('exit') = misma semantica que
+       Respira/Mueve") pero nunca implementada aqui.
+
+       Se delega en handleRequestExit para tener UNA sola politica de salida:
+       paso opcional sale directo, el resto confirma. Escape emite el mismo
+       'exit' en los tres runners, asi que queda arreglado por la misma via.
+       La contabilidad no se toca: salir NO acredita (no se llama a
+       advancePathStep), que es justo lo coherente con la regla de s105. */
+    if (reason === 'exit') { handleRequestExit(); return; }
+
     const isLast = cur.stepIndex >= path.steps.length - 1;
     if (isLast) {
       /* s105 (bug B): solo mostramos la ceremonia (CompletionScreen) si se
@@ -156,15 +181,6 @@ function PathRunner() {
 
   const handleIntroDone = () => { setPhase('step'); };
   const handleTransitionDone = () => { setPhase('step'); };
-
-  /* Boton de salida: si el paso es opcional, salir directo; si no, confirmar */
-  const handleRequestExit = () => {
-    if (step.optional) {
-      abandonPath();
-    } else {
-      setConfirmExit(true);
-    }
-  };
 
   const displayPathName = t(path.nameKey) || cur.id;
   const senderoBlocks = path.steps.map(function(s, idx) {
