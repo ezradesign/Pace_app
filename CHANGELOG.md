@@ -13,6 +13,27 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s137 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Recorrido sistemático:
+> 10 bloques del audit × 16 fases.** Motivado por dos huecos seguidos que destapó la lista del
+> usuario y no la auditoría (Respira en s134, logros en s136). Se cruzaron los Bloques 0–9, los 4
+> backlogs vivos de `STATE.md`, la deuda técnica y las deudas semánticas: **8 de 10 bloques ya
+> estaban cubiertos**. **Convergencia**: las pills «Breve/Tranquilo/Amplio» del backlog de s117 son
+> los botones del descanso entre series ⇒ el bug del botón fantasma, ya en la 1.6. **11 huecos
+> colocados**: **§17 «Pausa PACE»** —el BreakMenu debe RECOMENDAR una acción concreta y es el
+> **consumidor del feedback capturado desde s116 sin usar**, además de responder al problema D del
+> §27.3— → **FASE 3.5** · trocear >500 líneas (**`tokens.css` 613**, `exercise-glyphs.jsx` ~513,
+> `Sidebar.jsx` ~510), **a11y**, **tests del state (A-6)**, **import sanitizado (A-7)**, **i18n
+> I18N-2 + deudas D-1/D-2/D-3**, bump automático y timer de Mueve por timestamps → **FASE 8.5
+> saneamiento** · **onboarding contextual** → Fase 8 · **logros de Caminos y Travesías** → Fases 6
+> y 7. **DECISIÓN: Android ENTRA en v1** (Fase 9) con el coste asumido: el envoltorio de Capacitor
+> es barato, pero **Play Billing obliga a un segundo camino de entitlement** que choca con la
+> licencia offline sin cuentas ⇒ ~4–6 sesiones y ciclos de revisión de Google. Se recomendó web
+> primero; el usuario eligió Android igualmente. **iOS fuera de v1.** Consecuencia: la Fase 3 debe
+> respetar la arquitectura por adaptadores desde el día uno. **Limpieza**: marcadas **2 entradas
+> obsoletas de `STATE.md`** que contradecían la realidad (scrollbar del runner y §0 de alturas
+> <720px, resueltos en s125 y s126/s128). Diario:
+> [session-137](./docs/sessions/session-137-recorrido-sistematico.md).
+
 > **Nota — s136 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Fase 2.5 definida:
 > logros (Bloque 6).** **Segundo hueco del plan destapado por la lista del usuario y no por la
 > auditoría** (el primero fue Respira en s134): el Bloque 6 no estaba en ninguna fase, porque las

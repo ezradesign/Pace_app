@@ -248,6 +248,22 @@ y media pestaña Semana. Diseño cerrado y aprobado desde s117: no se rediseña,
 Criterio de cierre: se emiten eventos en web/PWA con single-writer, `file://` no emite, y el
 export/import sigue siendo reemplazo total.
 
+### FASE 3.5 · Pausa PACE (§17)
+
+**Hueco detectado en el recorrido sistemático de s137**: no estaba en ninguna fase, y es el bucle
+que hace útil la app a diario.
+
+Hoy el BreakMenu solo **ordena** módulos según lo hecho en el día. Debe **recomendar una acción
+concreta**: *«Llevas 50 minutos sentado. Te propongo Hombros ligeros, 4 minutos y sin material.»*
+Usa duración del Foco · actividades del día · hora · contexto habitual · última pausa · zona
+corporal · tiempo disponible · **feedback anterior**.
+
+Aquí es donde el **feedback ligero «¿te ayudó esta pausa?»**, que se captura desde s116 **sin
+ningún consumidor**, empieza por fin a servir para algo. Y responde al **problema D** del
+posicionamiento (§27.3): «sé que debería parar, pero no sé qué me conviene».
+
+Va después de eventos porque la recomendación necesita historial real, no contadores agregados.
+
 ### FASE 4 · Stats
 
 Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy + Semana), según
@@ -270,27 +286,72 @@ Los 7 actuales se reescriben como **experiencias editoriales** (Bloque 3 del aud
 demasiado contenido, casi todos tienen 3 pasos y se sienten como playlists). Formatos
 Semilla/Pausa/Ritual · pasos editoriales propios · motor de hitos variables · transiciones y
 cierres · revisión de duración · láminas nuevas donde haga falta.
+**+ logros de Caminos** (Bloque 6): nacen aquí, con los Caminos ya reescritos, no antes.
 Va **antes** de las Travesías porque las Travesías se construyen encima.
 
 ### FASE 7 · Travesías de 3, 7 y 14 capítulos
 
 El argumento de compra. Contrato de datos · capítulos flexibles · progreso y reanudación ·
-primera de 3 · primera de 7 · mapa visual. Ritmo propuesto pero **nunca obligatorio**: saltarse un
+primera de 3 · primera de 7 · mapa visual · **logros de Travesías** (Bloque 6, nacen con ellas).
+Ritmo propuesto pero **nunca obligatorio**: saltarse un
 día no rompe nada ni culpabiliza.
 
 ### FASE 8 · Descubrimiento
+
+**Onboarding contextual** (Bloque 2, hueco detectado en s137): capturar el contexto habitual —sentado, si puede levantarse, suelo, espacio, ruido, material— de forma opcional y editable con chips. Sin esto, los filtros y la recomendación no tienen con qué filtrar.
 
 Taxonomía de necesidades y contexto · filtros · previews · reorganización de las tres bibliotecas
 para reducir scroll · «Déjate guiar» discreto · Caminos al centro de la home + After Pomodoro (lo
 que quedó huérfano del plan anterior).
 
-### FASE 9 · Venta
+### FASE 8.5 · Saneamiento (antes de vender)
+
+Agrupado a propósito justo antes de la venta: vender una app con el onboarding sin focus trap y
+sin tests del estado es un riesgo que se paga en soporte.
+
+- **Trocear lo que pasa de 500 líneas** (regla propia): **`tokens.css` 613** — el peor y el que
+  nadie miraba —, `exercise-glyphs.jsx` ~513 y `Sidebar.jsx` ~510. Candidatos ya anotados:
+  extraer los `@font-face` (~90 ln) y el CSS del SenderoBar (~110 ln) de `tokens.css`; extraer
+  `SenderoDelDia` + `StatusBar` de `Sidebar.jsx`.
+- **Accesibilidad** (Bloque 9): tarjetas sin acceso por teclado · onboarding sin focus trap.
+- **Tests del state (A-6)** e **import sanitizado (A-7)**, del P2 de `audit-producto-v0.34.4.md`.
+- **i18n robustez (I18N-2)**: paridad de claves ES/EN, pseudolocalización, pluralización — una
+  clave que falta es un **bug visible** en una app de pago. Más las deudas semánticas **D-1**
+  (override silencioso en `content/breathe.js`), **D-2** («Hecho hoy» duplicado) y **D-3**
+  (namespaces `path.*` / `paths.*` mezclados).
+- **Automatizar el bump de versión** en el build (`package.json` como fuente).
+- **Timer de Mueve por timestamps** (hoy `setInterval` en foreground) — necesario de todos modos
+  para el ciclo de vida en Android.
+
+### FASE 9 · Capacitor Android
+
+**Decisión del usuario (s137): Android entra en v1**, con el coste asumido (~4–6 sesiones y
+dependencia de los ciclos de revisión de Google).
+
+- Build de Capacitor y detección de runtime. La app ya es estática y sin servidor, así que el
+  envoltorio es la parte barata.
+- **Adaptadores nativos de `pace.events.v1`** (SQLite log + Preferences), que la arquitectura por
+  adaptadores de s117 ya contempla: por eso la Fase 3 debe respetarla desde el día uno y no
+  cablear `localStorage` directamente.
+- Notificaciones, safe areas, ciclo de vida, export/import.
+- Pruebas en dispositivo real.
+
+**Lo caro no es el envoltorio: es la facturación.** Google Play **obliga a usar Play Billing** para
+vender funciones dentro de la app, y eso choca de frente con la licencia offline sin cuentas ni
+backend. Implica un **segundo camino de entitlement** (`PurchaseAdapter`: web · Play) reconciliado
+con el de la clave firmada — y el entitlement debe seguir pasando por
+`app/state-entitlement.jsx` como **punto único**, o el reparto se vuelve inmanejable.
+
+### FASE 10 · Venta
 
 Licencia firmada offline ECDSA P-256 **con `expiresAt` opcional** + **trial explícito** (hoy el
-acceso es un booleano `premiumUnlocked`; exige cambiar formalmente la decisión F3b) · proveedor /
-Merchant of Record · landing separada de la app · **Términos y Privacidad revisados por un
-profesional** · revisión profesional del contenido corporal · **Starter Story a fondo** para
-validar el precio ya fijado y la estrategia de distribución · ASO.
+acceso es un booleano `premiumUnlocked`; exige cambiar formalmente la decisión F3b) ·
+**`PurchaseAdapter` web + Play Billing** (las tiendas son la fuente de verdad de precio y moneda:
+**no hardcodear importes en las traducciones**) · proveedor / Merchant of Record para la web ·
+landing separada de la app · **Términos y Privacidad revisados por un profesional** · revisión
+profesional del contenido corporal · **Starter Story a fondo** para validar el precio ya fijado y
+la estrategia de distribución · ficha de Play y **ASO** · QA de compra, reinstalación y cambio de
+fecha.
 
 ### Reglas del plan
 
@@ -305,7 +366,7 @@ validar el precio ya fijado y la estrategia de distribución · ASO.
 
 ### Fuera de v1 (explícito)
 
-Viajes de respiración con voz/música/facilitadores y CTB · Android e iOS (Capacitor) · extensión
+Viajes de respiración con voz/música/facilitadores y CTB · **iOS** (Android SÍ entra, Fase 9) · extensión
 Chrome · Vite/ESM real (Etapa B del build) · Path Builder público · Modo Retiro · temporadas ·
 versión para empresas · Wrapped.
 
