@@ -1,3 +1,8 @@
+> **ARCHIVADO (s130). Decia que no habia archivo de licencia en el repo: FALSO desde v0.12.9 — LICENSE (Elastic 2.0) esta en la raiz. La decision ya se tomo. NO gobierna.**
+> Indice de autoridad: docs/product/AUDITORIA_DOCUMENTAL.md
+
+---
+
 # PACE · Análisis de opciones de licencia
 
 > **Estado:** propuesta para decisión del usuario. Ningún archivo de

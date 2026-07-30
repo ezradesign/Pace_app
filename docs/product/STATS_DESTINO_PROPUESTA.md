@@ -2,6 +2,17 @@ PACE · Stats destino — especificación de diseño
 
 Estado: DISEÑO. Docs-only, sin bump, CERO código (patrón s117/s109).
 Fecha: 2026-07-30 · sesión 129.
+
+REVISIÓN s130 — el §37 del audit (ronda M1–M4) pasó a **PROVISIONAL** por decisión del
+usuario. Consecuencia exacta para este documento:
+  · AGUANTA la columna vertebral, porque se apoya en **§31.4 y §31.6**, que son ANTERIORES a
+    esa ronda (están ya en el documento original del 2026-07-27): vistas Hoy · Semana ·
+    Mes · «Qué te ayuda», Free = Hoy + tira de 7 días, Premium = mes/año/patrones. También
+    aguantan el gap de datos (§5), las fases (§6) y la medición (§7), que son técnicos.
+  · QUEDAN CONDICIONADOS a la re-decisión del §37: **§4.4 (ritmo semanal)**, **§4.5 (tipos
+    de jornada)** y la parte de §4.6 que retira las rachas, más el check-in de la Fase 2.
+  · La **Fase 0 (marco de altura estable) no está afectada**: es agnóstica al contenido.
+Ver `AUDITORIA_DOCUMENTAL.md` §5.
 Referencia técnica: v0.71.0 · main · commit 6769203.
 Propósito: fijar QUÉ debe ser el panel de Stats antes de tocarlo, para no invertir
 trabajo en vistas que el sistema ya ha decidido mover, re-gatear o cambiar de criterio.

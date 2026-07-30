@@ -13,6 +13,26 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s130 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** Auditoría
+> **documental**: el usuario aportó una copia del audit desde su escritorio como «las
+> decisiones más actualizadas» y el diff línea a línea demostró que es un **snapshot
+> ANTERIOR** (2.200 vs 2.309 líneas; sus 12 líneas exclusivas son la versión sin anotar de
+> líneas ya actualizadas en el repo; al repo le sobran el §37, el §32.6 y el bloque de
+> jerarquía) ⇒ **ninguna decisión existe solo en esa copia**. Entregable:
+> [`AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md) — cadena de autoridad
+> única (audit → DECISIONES → STATE → CHANGELOG/diarios), inventario de **20 documentos + 7
+> auditorías etiquetados** con evidencia, drift detectado en `CONTENT.md`/`ROADMAP.md`, y la
+> regla **«un documento que no declare su estado no gobierna»**. **Ejecutado**: 4 documentos
+> a `docs/archive/` con banner (`PACE_EVOLUTION_CONTEXT` ya destilado · `CONTEXTO_UX_RUNNER_WELCOME`
+> gobernaba B2.2a.5 cerrada en s112 · `license-analysis` afirmaba que no había LICENSE, que
+> existe desde v0.12.9 · `smoke-tests` de v0.27.2) + READMEs en `docs/archive/` y
+> `docs/audits/` + cabeceras de autoridad + fila nueva en `CLAUDE.md`. **Decisión del
+> usuario: el §37 (ronda M1–M4) pasa a PROVISIONAL** y sus 5 preguntas vuelven a §36;
+> §31.4/§31.6 no están afectados, así que el spec de Stats de s129 conserva su columna
+> vertebral (solo quedan condicionados sus §4.4 y §4.5). **Pendiente**: adelgazar `STATE.md`
+> (150 KB) y `CHANGELOG.md` (94 KB) con el método de §4. Diario:
+> [session-130](./docs/sessions/session-130-auditoria-documental.md).
+
 > **Nota — s129 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva** (patrón
 > s117/s109). Se iba a ejecutar «Estabilidad de Stats» (Bloque 0 · §23) y el usuario
 > paró la sesión para auditar primero qué dice el sistema completo sobre Stats. El
