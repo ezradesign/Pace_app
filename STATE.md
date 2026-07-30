@@ -303,7 +303,22 @@ los senalo dos veces («el doble circulo simple funciona pero se puede mejorar»
 halo, loto de fondo contrarrotando y respiracion asimetrica, pero **siguen siendo dos hairlines**.
 Falta direccion suya sobre que quiere en su lugar — no es un bug, es criterio visual (regla D-4).
 
-**DOS REPORTES DEL USUARIO tras cerrar s138** (van con lo anterior, mismo bloque de Respira):
+**TRES REPORTES DEL USUARIO tras cerrar s138** (van con lo anterior, mismo bloque de Respira):
+
+0. **REGRESION de s138 — el visual de Respira no cabe.** Reportado como tres sintomas que son UN
+   solo hecho: (a) el circulo y el loto «estan muy arriba», (b) aparecio una barra de scroll dentro
+   de la actividad, (c) con el scroll bajado el aro exterior se corta por arriba. Medido:
+   `BreatheVisual.jsx:127` paso el wrap de 260x260 fijos a `min(400px, 84vw, 56vh)` => 400 px de
+   visual sin descontar header + texto de fase + contador + footer; `SessionShell.jsx:60` tiene
+   `overflowY:auto` desde s112 (red de seguridad, correcta) => al desbordar sale la barra; y
+   `SessionShell.jsx:64` centra con `margin:auto`, que **alinea ARRIBA al desbordar** => de ahi
+   «muy arriba». El invariante de s138 (el wrap reserva el maximo) protege al visual de recortarse
+   contra SU PROPIA caja, no contra el presupuesto vertical de la pantalla.
+   **Regla de scroll que fija el usuario:** nada de barra en el home ni DENTRO de una actividad en
+   curso; en los submenus de seleccion de actividad si se acepta de momento (se optimizaran aparte).
+   Precedente a seguir: s125 oculto la BARRA conservando el overflow, confinada con `:has()`
+   (`MoveSessionV1.support.jsx:216-229`). Ocultar la barra es el cinturon; el arreglo real es que el
+   visual se dimensione contra la altura disponible del centro, no contra `vh` en crudo.
 
 1. **La 2a capa del loto lee como «solo un zoom».** Peticion: que su TRANSPARENCIA tambien se mueva
    (girar / contragirar), no solo escalar. Ojo al diagnosticar: el loto de fondo YA contragira
