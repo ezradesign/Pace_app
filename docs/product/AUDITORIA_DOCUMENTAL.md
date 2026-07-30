@@ -104,7 +104,26 @@ Total a archivar: **~245 KB** de documentación que hoy compite por autoridad si
   aporta el detalle técnico de licencia (`expiresAt`, validación offline).
 
 --------------------------------------------------------------------------------
-4. Los dos documentos que incumplen su propio contrato
+4. Los dos documentos que incumplían su propio contrato — **RESUELTO en s131**
+
+RESULTADO MEDIDO:
+
+| Archivo | Antes | Después | Qué se hizo |
+|---|---|---|---|
+| `STATE.md` | 153 KB | **57 KB** | La Red de seguridad conserva archivo · rol · **versión actual** (105 filas); su historial por archivo → `docs/archive/RED_DE_SEGURIDAD_HISTORICO.md`. «Decisiones activas» (62 KB, 108 filas) → **`docs/product/DECISIONES_TECNICAS_VIGENTES.md`**, que GOBIERNA; STATE conserva el índice de títulos. El informe operativo de la sesión anterior → puntero a su diario. |
+| `CHANGELOG.md` | 95 KB | **41 KB** | Las 106 filas de la tabla conservan su **titular**; el texto largo → `docs/archive/CHANGELOG_TABLA_HISTORICA.md`. El detalle de las 2 últimas versiones queda intacto, como manda la convención. |
+
+Las decisiones técnicas **NO se archivaron**: son reglas vigentes que evitan reintroducir
+regresiones ya resueltas. Solo cambiaron de casa, porque vivían en el archivo que se lee en
+cada arranque y debe ser ligero.
+
+Queda margen para una segunda pasada (STATE sigue con ~21 KB de secciones «Pendiente»,
+«Próxima sesión» y backlogs que conviene revisar una por una), pero ya no incumple su
+contrato de forma estructural.
+
+Texto original del diagnóstico, conservado:
+
+4bis. Los dos documentos que incumplen su propio contrato
 
 **`STATE.md` — 150 KB.** Su cabecera dice literalmente «Este archivo no debe crecer» y
 `CLAUDE.md` prohíbe «acumular historia en STATE.md». Causa medida: la tabla «Red de
@@ -148,10 +167,13 @@ se apoya en ellos, así que su columna vertebral aguanta; lo que queda condicion
 --------------------------------------------------------------------------------
 6. Qué queda por hacer
 
-1. **Archivar** los 11 documentos de la tabla ARCHIVAR a `docs/archive/`, cada uno con una
-   cabecera de una línea que diga por qué se archivó y qué lo sustituye.
+1. ~~**Archivar** los documentos de la tabla ARCHIVAR~~ **HECHO s130** (4 documentos + READMEs
+   en `docs/archive/` y `docs/audits/`).
 2. **Cabecera de estado** en los documentos que gobiernan, con el formato de
    `HOME_REDISENO_PROPUESTA.md` (tabla de etapas con vigencia), empezando por añadirle s128.
-3. **Adelgazar** `STATE.md` y `CHANGELOG.md` con el método de §4.
+   Hecho en el audit y en DECISIONES_PRODUCTO; **falta** en CONTENT, ROADMAP, MONETIZATION,
+   DESIGN_SYSTEM, EVENTOS_SCHEMA y BASE_MUEVE_ESTIRA.
+3. ~~**Adelgazar** `STATE.md` y `CHANGELOG.md`~~ **HECHO s131**: 153→57 KB y 95→41 KB (ver §4).
+   Segunda pasada opcional sobre las secciones de backlog de STATE.
 4. **Re-decidir el §37** en una ronda propia, con las cinco preguntas de §5 sobre la mesa.
 5. **Verificar el drift** de `CONTENT.md` y `ROADMAP.md` contra el código.

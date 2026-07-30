@@ -58,7 +58,8 @@ Tweaks visuales menores no regeneran standalone pero sí se anotan en `STATE.md`
 |---|---|
 | **Qué documento gobierna y qué es historia** | **`docs/product/AUDITORIA_DOCUMENTAL.md`** (índice de autoridad — consúltalo si dudas de si un documento manda) |
 | Estado actual del proyecto | `STATE.md` (se reescribe cada sesión) |
-| Backlog + decisiones vigentes | `STATE.md` |
+| **Decisiones técnicas vigentes** (reglas que evitan regresiones) | **`docs/product/DECISIONES_TECNICAS_VIGENTES.md`** — leer la fila del subsistema ANTES de tocarlo; `STATE.md` solo lleva el índice |
+| Backlog | `STATE.md` |
 | Historial por versión | `CHANGELOG.md` (tabla + 2 últimas) |
 | Diario de sesiones | `docs/sessions/session-NN-xxx.md` |
 | Tokens / paleta / tipografía | `DESIGN_SYSTEM.md` |

@@ -13,6 +13,13 @@ primero su banner: dice por qué se archivó y qué lo sustituye.
 | `CONTEXTO_UX_RUNNER_WELCOME.md` | s130 | Gobernaba la sesión B2.2a.5, cerrada en s112/v0.56.0 | `STATE.md` (Red de seguridad) + `docs/sessions/session-119` |
 | `license-analysis.md` | s130 | Afirmaba que no había licencia en el repo; `LICENSE` existe desde v0.12.9 | `LICENSE` (Elastic 2.0) |
 | `smoke-tests.md` | s130 | Referencia v0.27.2, más de 40 versiones atrás | Checklist de cierre de `CLAUDE.md` |
+| `RED_DE_SEGURIDAD_HISTORICO.md` | s131 | Historial por archivo que engordaba `STATE.md` (53 KB) | Tabla compacta de `STATE.md` + `CHANGELOG.md` + diarios |
+| `CHANGELOG_TABLA_HISTORICA.md` | s131 | Celdas de la tabla de hasta 4.000+ caracteres (78 KB) | `CHANGELOG.md` con titulares + diarios de sesión |
+
+**Nota:** las **decisiones técnicas vigentes** que salieron de `STATE.md` en s131 **NO están
+aquí**: son reglas en vigor y viven en
+[`docs/product/DECISIONES_TECNICAS_VIGENTES.md`](../product/DECISIONES_TECNICAS_VIGENTES.md),
+que GOBIERNA. Mudarse de archivo no es archivarse.
 
 Las auditorías históricas siguen en [`docs/audits/`](../audits/) con su propio aviso; no se
 movieron para no romper la cita de `CLAUDE.md` a `audit-evolucion-v0.51.0.md`, que sigue
