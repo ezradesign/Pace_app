@@ -13,6 +13,23 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s135 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Fase 1.6 definida:
+> ajustes y dos retiradas.** El usuario pidió ocultar el estilo de timer y el círculo «orgánico»,
+> arreglar un flash al cambiar el descanso entre sesiones y añadir un «Auto» de idioma. **Tres
+> hallazgos al verificarlo cambiaron el trabajo**: (1) **el idioma YA se auto-configura** en la
+> primera apertura (`detectInitialLang()` desde s35, usado por `loadState()`) — lo que falta es la
+> opción **«Auto» persistente** que re-evalúe en cada arranque; (2) el **botón fantasma** tiene
+> sospechoso concreto: `transition:'all 180ms'` con `fontWeight` entre las propiedades que cambian
+> (`TweaksPanel.jsx:290-295`) ⇒ **anima el peso de la fuente**; hipótesis SIN confirmar, hay que
+> medir, y el patrón se repite en `statsPanelTabStyles.tab`; (3) **ocultar sin migrar dejaría gente
+> atrapada**: el default de `timerStyle` ya es `'aro'` pero `FocusTimer.jsx:117` lee el valor
+> guardado y `BreatheVisual.jsx:197` conserva su rama de `organico`, así que quien los eligió no
+> podría salir sin resetear. **Decisiones**: migrar los valores huérfanos al cargar · ocultar con
+> **una constante en un solo sitio** sin borrar y con la razón anotada en
+> `DECISIONES_TECNICAS_VIGENTES.md` · «Auto» como default de instalaciones nuevas verificando que no
+> dispare `secret.bilingual` · y **repartir los 8 ítems de pulido en dos sesiones** (1.5 visual,
+> 1.6 ajustes). Diario: [session-135](./docs/sessions/session-135-fase-1-6-ajustes.md).
+
 > **Nota — s134 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Precio, artefactos y
 > plan de 9 fases.** **PRECIO CERRADO** (`MONETIZATION.md`): **19,99 € lifetime como único plan al
 > lanzamiento**, con `expiresAt` **opcional en la licencia desde el día uno** (añadir un pase
