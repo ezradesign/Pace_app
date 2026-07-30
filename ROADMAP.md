@@ -200,6 +200,46 @@ el mapa completo rompe claves de glifo en silencio.
 Criterio de cierre: una persona que nunca ha hecho el ejercicio sabe **qué va a hacer, cómo y
 cómo cuidarse** sin salir de la app — y ningún nombre está en inglés en la versión española.
 
+### FASE 2.5 · Logros: curva, entrega y miniaturas
+
+**Bloque 6 del audit**, que faltaba en el plan hasta s136 — hueco destapado por la lista del
+usuario, no por la auditoría. Va aquí porque la **matriz de logros (§15.2)** y la **matriz de
+ejercicios (§19.2)** de la Fase 2 son el mismo tipo de trabajo y sus glifos comparten criterio
+visual: hacerlas seguidas evita repetir la discusión.
+
+El problema, en palabras del usuario: *«con hacer media cosa o incluso saltando algo ya consigues
+4 logros seguidos»*. Es literalmente lo que ya anotaban §3.4 («desbloqueos iniciales demasiado
+juntos») y §15.3 («no deben desbloquearse todos juntos»).
+
+1. **Matriz de los 106 logros** (§15.2), sin código: id · categoría · nombre · promesa · condición
+   · dificultad · momento de desbloqueo · free/premium · visible/secreto · **detector real** ·
+   estado · glifo. Sirve además para detectar los «inalcanzables presentados como implementados»
+   que señala §3.4.
+2. **Curva de progresión** (§15.3): umbrales más altos y basados en repetición o variedad real, no
+   en la primera vez. Los primeros deben enseñar el sistema y conducir a la siguiente acción.
+3. **Entrega escalonada**: como máximo **un logro nuevo por sesión y por día**; el resto espera en
+   cola. Precedente directo: los toasts de logro ya se aplazan durante un Camino (s105).
+4. **Recálculo completo con las reglas nuevas** — **decisión del usuario, EXCEPCIÓN CONSCIENTE** a
+   §2.5 («progreso sin culpa») y §2.2 («nada de pérdida punitiva de progreso»): alguien puede
+   abrir la app y ver que ha perdido logros que tenía. Se ejecuta así por decisión explícita; al
+   implementarlo hay que **decidir cómo se comunica** (aviso único que explique el recálculo) para
+   que no se lea como un bug. Contrasta con el precedente de s107, donde los ids retirados se
+   dejaron como inofensivos.
+5. **Miniaturas de la sidebar**: la lógica de «las 5 últimas sustituyendo a las antiguas» **ya
+   existe** (`Sidebar.jsx:376-379` ordena por `unlockedAt` descendente y toma 5). Lo que falta es
+   el glifo: hoy **toda miniatura desbloqueada pinta un `'✦'` fijo** (`Sidebar.jsx:403`), por eso
+   parece que no se activan. Se sustituye por el glifo real reutilizando `AchGlyph` y
+   `ACHIEVEMENT_GLYPHS`.
+6. **Cobertura de glifos: 34 de 106.** **Sello por categoría como solución de transición** para
+   los que falten (`CAT_META` ya define las 7 categorías) **+ entrada de los glifos que el usuario
+   ya tiene diseñados**, que se portan **LITERALES** (regla s84: el usuario dibuja o aprueba, se
+   porta tal cual, sin inventar versiones). El resto del set queda como cola de dibujo.
+7. **Denominadores únicos** (§15.4): sidebar, modal, stats y toasts deben contar lo mismo — §3.4
+   dice que hoy no lo hacen.
+
+Criterio de cierre: ningún logro cae en ráfaga, cada miniatura de la sidebar se distingue de las
+demás, y las cuatro superficies cuentan la misma cifra.
+
 ### FASE 3 · Eventos, fase 1 web (`pace.events.v1`)
 
 Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se

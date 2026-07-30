@@ -13,6 +13,24 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s136 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Fase 2.5 definida:
+> logros (Bloque 6).** **Segundo hueco del plan destapado por la lista del usuario y no por la
+> auditoría** (el primero fue Respira en s134): el Bloque 6 no estaba en ninguna fase, porque las
+> fases se construyeron desde el feedback beta y los bloqueantes de venta sin recorrer
+> sistemáticamente los Bloques 0–9 — **queda pendiente ese recorrido completo**. **Corrección al
+> item de las miniaturas**: la lógica de «las 5 últimas sustituyendo a las antiguas» **YA existe**
+> (`Sidebar.jsx:376-379` ordena por `unlockedAt` desc y toma 5); lo que falta es el **glifo** —
+> hoy toda miniatura desbloqueada pinta un **`'✦'` fijo** (`Sidebar.jsx:403`), por eso parecen
+> inactivas. **Muro**: solo **34 glifos para 106 logros**. **Decisiones**: graduar con **entrega
+> escalonada** (máx 1 por sesión y día, resto en cola; precedente s105) **y** condiciones al alza
+> (§15.3) · **recalcular todo con las reglas nuevas**, **EXCEPCIÓN CONSCIENTE a §2.5 y §2.2**
+> —puede hacer que alguien pierda logros, avisado y elegido igualmente; al implementarlo hay que
+> decidir cómo se comunica— · **sello por categoría como transición** para los ~72 sin glifo
+> (`CAT_META`, 7 categorías) **+ entrada de los glifos ya diseñados por el usuario**, portados
+> **literales** (regla s84) · **fase propia tras Mueve y Estira**, porque la matriz §15.2 y la
+> §19.2 son el mismo trabajo. Diario:
+> [session-136](./docs/sessions/session-136-fase-2-5-logros.md).
+
 > **Nota — s135 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Fase 1.6 definida:
 > ajustes y dos retiradas.** El usuario pidió ocultar el estilo de timer y el círculo «orgánico»,
 > arreglar un flash al cambiar el descanso entre sesiones y añadir un «Auto» de idioma. **Tres
