@@ -158,5 +158,5 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ## 📐 Versionado
 
-`v0.X` pre-lanzamiento · **`v1.0` = primera version PAGADA** (web/PWA, licencia offline; decision s132) · `v2.0` Android e iOS via Capacitor.
-Orden de trabajo vigente: seccion «Camino a v1.0» de `ROADMAP.md` (9 fases).
+`v0.X` pre-lanzamiento · **`v1.0` = primera version PAGADA** (web/PWA con licencia offline **+ Android via Capacitor con Play Billing**; decisiones s132/s137) · **iOS despues de v1**.
+Orden de trabajo vigente: seccion «Camino a v1.0» de `ROADMAP.md` (16 fases, de la 1 a la 10 con intermedias).
