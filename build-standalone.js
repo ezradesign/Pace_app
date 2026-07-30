@@ -392,27 +392,36 @@ function main() {
   //     el standalone file:// las inlinea para seguir 100% autocontenido.
   //     Se aplica en el paso 8 sobre la copia del standalone, NUNCA sobre el
   //     html base del que sale index.html.
-  var ILLUST_DIR = path.join(ROOT, 'app/paths/illustrations/assets');
-  var ILLUST_REF_PREFIX = 'app/paths/illustrations/assets/';
+  //     s138: deja de estar cableado al directorio de laminas. El loto de
+  //     Respira (app/breathe/assets/loto.webp) sigue exactamente la misma
+  //     convencion, asi que el inliner pasa a recorrer una LISTA de carpetas de
+  //     arte. Añadir arte nuevo = añadir una fila aqui + su precache en sw.js.
+  var CARPETAS_DE_ARTE = [
+    { prefijo: 'app/paths/illustrations/assets/', que: 'lamina(s) de Caminos' },
+    { prefijo: 'app/breathe/assets/',             que: 'arte de Respira' },
+  ];
   function inlineIllustrations(src) {
-    if (!fs.existsSync(ILLUST_DIR)) return src;
     var out = src;
-    var count = 0;
-    fs.readdirSync(ILLUST_DIR)
-      .filter(function (f) { return /\.webp$/i.test(f); })
-      .forEach(function (f) {
-        var ref = ILLUST_REF_PREFIX + f;
-        if (out.indexOf(ref) === -1) return; // asset presente sin referencia: ok (aun sin entrada en paths.index.js)
-        var b64 = fs.readFileSync(path.join(ILLUST_DIR, f)).toString('base64');
-        // split/join: sin regex ni replacement strings (regla s103 de los '$')
-        out = out.split(ref).join('data:image/webp;base64,' + b64);
-        count++;
-      });
-    if (out.indexOf(ILLUST_REF_PREFIX) !== -1) {
-      console.error('  [ERROR] El standalone referencia una lamina que no existe en ' + ILLUST_REF_PREFIX + '. Abortando.');
-      process.exit(1);
-    }
-    console.log('  [OK] ' + count + ' lamina(s) de Caminos inlineada(s) como data URI (solo standalone).');
+    CARPETAS_DE_ARTE.forEach(function (carpeta) {
+      var dir = path.join(ROOT, carpeta.prefijo);
+      if (!fs.existsSync(dir)) return;
+      var count = 0;
+      fs.readdirSync(dir)
+        .filter(function (f) { return /\.webp$/i.test(f); })
+        .forEach(function (f) {
+          var ref = carpeta.prefijo + f;
+          if (out.indexOf(ref) === -1) return; // asset presente sin referencia: ok
+          var b64 = fs.readFileSync(path.join(dir, f)).toString('base64');
+          // split/join: sin regex ni replacement strings (regla s103 de los '$')
+          out = out.split(ref).join('data:image/webp;base64,' + b64);
+          count++;
+        });
+      if (out.indexOf(carpeta.prefijo) !== -1) {
+        console.error('  [ERROR] El standalone referencia arte inexistente en ' + carpeta.prefijo + '. Abortando.');
+        process.exit(1);
+      }
+      console.log('  [OK] ' + count + ' ' + carpeta.que + ' inlineado(s) como data URI (solo standalone).');
+    });
     return out;
   }
 

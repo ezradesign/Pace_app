@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.72.0** | 2026-07-30 | fix+feat: **Fase 1.5 · pulido visible** — desfase del punto guía MEDIDO y a 0 ms · atmósfera fuera de Caminos · constructor en Mueve **y** Estira · **loto de Respira** | #138 | [abajo](#v0720----2026-07-30----fixfeat-fase-15--pulido-visible) |
 | **v0.71.0** | 2026-07-29 | feat(home): **home móvil universal · «amanecer del Camino»** | #128 | [abajo](#v0710----2026-07-29----feathome-home-movil-universal--amanecer-del-camino) |
-| **v0.70.0** | 2026-07-29 | fix(paths): **«Salir» de un Camino vuelve a la home en vez de avanzar** | #127 | [abajo](#v0700----2026-07-29----fixpaths-salir-de-un-camino-vuelve-a-la-home-en-vez-de-avanzar) |
+| **v0.70.0** | 2026-07-29 | fix(paths): **«Salir» de un Camino vuelve a la home en vez de avanzar** | #127 | [session-127](./docs/sessions/session-127-salida-caminos.md) |
 | **v0.69.0** | 2026-07-29 | fix(home): **composición proporcional del timer y horizonte del aro (Desktop)** | #126 | [session-126](./docs/sessions/session-126-home-desktop-horizonte.md) |
 | **v0.68.0** | 2026-07-28 | fix(move): **barra de scroll del runner v1…** | #125 | [session-125](./docs/sessions/session-125-scrollbar-runner-v1.md) |
 | **v0.67.0** | 2026-07-28 | feat(focus): **timer editorial — descriptor por duración, controles/estados y fix del `completed` inerte** | #124 | [session-124](./docs/sessions/session-124-timer-editorial-descriptor.md) |
@@ -331,6 +332,98 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.72.0] -- 2026-07-30 -- fix+feat: Fase 1.5 · pulido visible
+
+Sesión 138. Primera sesión de **CÓDIGO** tras nueve solo-documentales (s129–s137). Ejecuta la
+**Fase 1.5** de «Camino a v1.0». Bump v0.71.0 → v0.72.0.
+
+**Decisión de entrada: el pomodoro-sol de s134 NO entra** — sigue siendo propuesta no aprobada y
+pasa a sesión propia por detrás de la Fase 2. Cuatro motivos, y el que pesa: **habría impedido
+medir el ítem 1**, que es un desfase de milisegundos en ese mismo aro.
+
+### 1 · Punto guía del pomodoro — MEDIDO
+
+Instrumentado con `MutationObserver` sobre el SVG (el muestreo por `rAF` salió inservible: el panel
+de preview pinta a ~3 fps, así que se observaron los **renders de React**).
+
+| Preset | Arco avanza | Punto monta | Desfase |
+|---|---|---|---|
+| 25 min | 1025 ms | 2028 ms | **1003 ms** |
+| 45 min | 1014 ms | 3013 ms | **1999 ms** |
+
+**Causa confirmada por predicción:** el gate `progress > 0.001` (`TimerDial.jsx:110`) equivale a un
+número de segundos distinto según la duración (`0.001 × 1500 s = 1,5 s` ⇒ segundo 2;
+`0.001 × 2700 s = 2,7 s` ⇒ segundo 3), mientras el arco avanza siempre en el segundo 1. Se predijo
+2000 ms para 45 min y salieron 1999. Como `progress` es `1 - remaining/totalSec` —aritmética exacta,
+0 clavado en reposo—, el umbral no protegía de nada: se compara contra `0`.
+**Verificado: desfase 0 ms en los cuatro presets.**
+
+### 2 · Atmósfera fuera de Caminos — cambia la decisión s99
+
+Se retira el gate `inPath ?` en `BreatheSession.jsx:29`, `MoveModule.jsx:67` y
+`MoveSessionV1.jsx:38`. El color sigue saliendo del `kind`. **Verificado:** Respira
+`--breathe-soft` · Mueve `--move-soft` · Estira `--extra-soft`.
+
+**Segunda pasada de banding** (reportado en PC, no en móvil): la misma rampa repartida entre más
+píxeles hace visible cada peldaño de 8 bits. Respetando la regla de s100 de no subir alphas, se
+actúa sobre el dither (grano `baseFrequency` 0.9 → 1.4, opacidad 0.04 → 0.055) y sobre la forma:
+**cinco paradas explícitas** en vez de dos + hint.
+
+### 3 · Constructor premium en Mueve Y Estira
+
+`CustomRoutinesSection` gana prop `accent` (5 sitios con `var(--move)` fijo), entra en
+`ExtraLibrary` y **sube al primer lugar** en ambas bibliotecas — estaba al final, tras 4 grupos de
+tarjetas. **SIN campo de módulo** (decisión del usuario): el registro de ejercicios ya mezcla los 8
+grupos de Mueve y Estira, así que una rutina propia no pertenece a un módulo. Aside: «En Mueve y en
+Estira».
+
+**Hallazgo corregido:** `handleStartExtra` marcaba `kind:'extra'`, que acredita por
+`completeExtraSession` — y esa **no incrementa `moveSessionsTotal`**, así que quien hiciera sus
+rutinas propias desde Estira nunca progresaría hacia `move.sessions.25`. Se enrutan al crédito de
+s93.
+
+### 4 · Loto de Respira
+
+**Máscara, no imagen.** Medido: el alfa del PNG es solo la silueta (bimodal), el dibujo vive en la
+luminancia. `scripts/ingest-loto.js` reconstruye la máscara desde la **densidad de tinta** y aplana
+el RGB; el color lo pone un token, lo que resuelve de raíz el contraste (crema sobre crema era
+invisible). 959 KB → **146 KB**. El primer intento pesaba 59 KB y se veía pixelado: comprimir con
+pérdida el canal donde vive el dibujo lo motea por bloques ⇒ **alfa sin pérdida**.
+
+Sustituye al estilo `flor` (mismo id, cero migración; el default ya era una flor). El build deja de
+estar cableado al directorio de láminas y recorre una lista de carpetas de arte; `sw.js` lo
+precachea.
+
+**Cinco correcciones del feedback en vivo:** el wrap declaraba 260 px mientras las capas pintaban
+420 y se recortaban → wrap propio con invariante `0,72 × 1,35 = 0,972` · cada capa tenía base y
+factor propios y los huecos crecían **+44 %** al inhalar → un solo `scale` · el giro iba montado
+sobre `progress`, que avanza una vez por segundo, con transición de la fase entera → **animación
+CSS continua** · en claro la tinta pasa a `--breathe-2` por paleta vía CSS · y profundidad con halo
++ **loto de fondo girando al revés** y **respiración asimétrica** (vertical al 100 %, horizontal al
+88 %, con elevación) y curva **easeInOutSine**.
+
+**Reduced motion:** el giro se detiene desde el JSX (el kill de CSS pondría `0.01ms` y dispararía
+la rotación infinita); la escala, que es la guía, sigue viva. Verificado.
+
+### Extra · Salto de texto en Suspiro fisiológico
+
+`showCountdown = duration >= 4` montaba y desmontaba el contador, y como el bloque va centrado
+movía todo el texto: **21 px medidos**. Fix por altura reservada (decisión s119) con
+`visibility:hidden`. **Verificado: 0 px.**
+
+### Verificación
+
+Punto guía 0 ms en 15/25/35/45 · atmósfera correcta en los 3 módulos · constructor primero y con
+acento por módulo · loto sin desbordar a escala 1.35 en 735×694, 375×812 y 1024×560, sin scroll ·
+los 5 estilos de respiración renderizan · `index.html` regenerado y verificado en el artefacto
+(loto y láminas como archivo, cero data URIs, manifest presente) · **`PACE_standalone.html` NO
+regenerado** (s134). Consola limpia salvo un warning **preexistente** de s116
+(`Sidebar`/`BreatheSession`), anotado para la Fase 8.5.
+
+Diario: [session-138](./docs/sessions/session-138-pulido-visible.md).
+
+---
+
 ## [v0.71.0] -- 2026-07-29 -- feat(home): home móvil universal · «amanecer del Camino»
 
 Sesión de **CÓDIGO** (layout responsive de la home). Diario:
@@ -423,71 +516,3 @@ los 3 iconos top-right (por eso s46 las ocultó); requiere fila propia gateada p
 `min-height`. Eso y el resto del afinado de **relaciones de aspecto** quedan para más
 adelante: la próxima sesión va a **mejoras tangibles del sistema** según
 `docs/product/AUDITORIA_SISTEMA_PACE.md`.
-
----
-
-## [v0.70.0] -- 2026-07-29 -- fix(paths): «Salir» de un Camino vuelve a la home en vez de avanzar
-
-Sesión 127. Sesión de CÓDIGO **corta y confinada**: el ítem «Salida táctil de Caminos» del
-Bloque 0 · §23. Bump v0.69.0 → v0.70.0. Sin tocar contabilidad, motor de pasos, runners ni
-la geometría de la home cerrada en s126.
-
-### El bug, tal y como lo definió el usuario
-
-> «Cuando pulsas salir no sale al home, simplemente va a la siguiente actividad.»
-
-### Causa (cadena completa)
-
-El botón visible «Salir» emite `onExit('exit')` desde `SessionShell.jsx:161`. Los runners lo
-pasan tal cual y `PathBodyStep` / `PathBreatheStep` lo entregan a
-`PathRunner.handleStepExit`, que **no contemplaba ese motivo** y caía en
-`advancePathStep(reason)` → siguiente paso. `Escape` emite el mismo `'exit'` en los tres
-runners (`MoveSessionV1.jsx:224`, `BreatheSession.jsx:176`, `MoveModule.jsx:141`), así que
-arrastraba el mismo fallo.
-
-Lo llamativo: **la semántica correcta ya estaba escrita y nunca implementada**.
-`PathFocusStep.jsx:16` dice literalmente *«onExit('exit') (header "Salir") = misma semántica
-que Respira/Mueve»*, y la función que hace lo correcto (`handleRequestExit`) ya vivía 30
-líneas más abajo en el mismo archivo, usada solo por la cabecera del runner.
-
-### Fix
-
-En `app/paths/PathRunner.jsx`: `handleRequestExit` se **mueve** por encima de
-`handleStepExit` (cuerpo **byte-idéntico**, solo cambia de sitio) y `handleStepExit`
-intercepta el motivo antes de la lógica de avance:
-
-```js
-if (reason === 'exit') { handleRequestExit(); return; }
-```
-
-**Una sola política de salida** en todo el runner: paso `optional` abandona directo, el resto
-pide confirmación. **Diff funcional total: 1 línea nueva.** `advancePathStep`,
-`completePath`, `abandonPath` y la contabilidad quedan **intactos** — el fix solo decide a
-cuál se llama; `'done'` y `'skip'` son byte-idénticos por debajo del early return.
-
-### Verificación (runtime, standalone v0.70.0)
-
-Con `path.dawn` (breathe → focus → body) iniciado desde el CTA real de la home: «Salir» en
-el paso 1 **ya no avanza** (`stepIndex` sigue en 0; antes pasaba a 1), aparece la
-confirmación «¿Salir del camino?», y al confirmar vuelve a la **home** con
-`paths.current = null`, sesión desmontada y **sin acreditar nada** (`totalFocusMin` 0,
-`breatheSessionsTotal` 0). Sin regresión fuera de Caminos **por construcción**: `PathRunner`
-solo se monta dentro de un Camino, así que ninguna sesión suelta atraviesa el código
-modificado. Consola limpia, `git diff --check` limpio.
-
-### Registro documental del Bloque 0
-
-El usuario definió los ítems que en el audit eran una línea suelta; quedan escritos en §23:
-**Stats** = las pestañas semana/mes/año/caminos tienen alturas distintas y el salto es
-brusco (estabilizar altura, no rehacer stats) · **«Revisar pills»** = CERRADO (eran las del
-timer), sustituido por **reorganizar las bibliotecas** de Respira/Mueve/Estira para reducir
-scroll en móvil y **sacar el selector de rutinas premium a Mueve Y Estira** en vez de
-hundido al final · **Sidebar** = repensado de §14, no un parche · **trocear** = solo
-`exercise-glyphs.jsx` (571) y `Sidebar.jsx` (543) · **glifos de logros** = `AchGlyph` ya
-existe y el sendero vive en `Sidebar.jsx`, conviene hacerlo junto al troceado. Además se
-refresca §3.1, que seguía diciendo «Versión analizada: v0.66.0».
-
-Diario: [session-127](./docs/sessions/session-127-salida-caminos.md).
-
----
-

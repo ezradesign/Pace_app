@@ -107,9 +107,25 @@ const sessionShellStyles = {
    desaturado, opacity 0.04, tile 160px) como dither que rompe la
    cuantizacion. El grano lee como fibra de papel: coherente con el tono.
    Solo se usa dentro de Caminos (los steps pasan el token; el home no). */
-const SESSION_ATMOS_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`;
+/* s138 — SEGUNDA pasada de banding. El remedio de s100 bastaba en el tamaño en
+   que se veía entonces (dentro de Caminos), pero al llevar la atmósfera a las
+   sesiones sueltas se ve en pantallas grandes, donde la MISMA rampa se reparte
+   entre muchos más píxeles: cada peldaño de 8 bits ocupa más ancho y los
+   anillos se hacen visibles (reportado en PC, no en móvil — coherente con la
+   causa). Se respeta la regla de s100 de NO subir alphas; se actúa sobre el
+   dither y sobre la forma de la rampa:
+     - grano más FINO (baseFrequency 0.9 -> 1.4) y algo más presente
+       (0.04 -> 0.055): es ruido desaturado, sigue leyéndose como fibra de papel;
+     - la rampa deja de ser dos paradas + hint y pasa a CINCO paradas explícitas
+       siguiendo una caída tipo ease-out. Con más puntos de control el
+       compositor interpola tramos cortos y no hay ningún tramo largo donde el
+       redondeo a 8 bits produzca un salto visible. */
+const SESSION_ATMOS_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E")`;
 function sessionAtmosphere(soft) {
-  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, 22%, transparent 55%)`;
+  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, ${soft} 12%, `
+          + `color-mix(in srgb, ${soft} 62%, transparent) 26%, `
+          + `color-mix(in srgb, ${soft} 28%, transparent) 38%, `
+          + `color-mix(in srgb, ${soft} 9%, transparent) 47%, transparent 56%)`;
   return `${SESSION_ATMOS_GRAIN}, ${g}, ${g}, var(--paper)`;
 }
 

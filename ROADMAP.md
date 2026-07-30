@@ -119,26 +119,28 @@ vender packs cuyos pasos rendericen `DefaultGlyph`»). Tres razones que apuntan 
 Criterio de cierre **cumplido**: ninguna sesión posterior necesita adivinar el orden ni reabrir
 el §37 ni el precio.
 
-### FASE 1.5 · Pulido visible — ⏭ SIGUIENTE
+### FASE 1.5 · Pulido visible — ✅ HECHA (s138, v0.72.0)
 
-Una sola sesión, intercalada a propósito: cuatro cosas de **bajo riesgo y efecto inmediato**,
-tres de ellas con el código ya escrito.
+Los cuatro ítems, cerrados y verificados en runtime:
 
-1. **BUG del punto del pomodoro.** El punto guía del aro arranca más tarde que el relleno del
-   arco, que sí sale de cero. Reproducir, **medir el desfase** y corregir — sin dar por buena
-   ninguna causa antes de medirla.
-2. **Color de atmósfera en los ejercicios sueltos.** Los colores de la parte superior que hoy
-   solo se ven dentro de Caminos son el `atmosphere` del `SessionShell`, limitado a Caminos por
-   **decisión explícita de s99**. Llevarlo a Mueve, Estira y Respira es cambiar esa decisión y
-   pasar el color por `kind`: el código ya existe.
-3. **Constructor premium visible en Mueve Y Estira.** Hoy vive solo en Mueve y al final de la
-   lista. Entra en los dos módulos y en un sitio visible. Decisión pendiente al ejecutarlo: hoy
-   las rutinas propias **no tienen campo de módulo**, así que aparecerían las mismas en ambos
-   sitios; separarlas exige añadir el campo y un default para los datos existentes.
-4. **Integrar el loto de Respira** (`app/breathe/Loto_png.png`, ahí desde hace tiempo):
-   optimizar y convertir, integrarlo en el visual, contraste, día/noche y reduced motion.
+1. **BUG del punto del pomodoro — MEDIDO.** Desfase real **1003 ms a 25 min** y **1999 ms a 45**.
+   Causa confirmada por predicción: el gate `progress > 0.001` equivale a segundos distintos según
+   la duración, mientras el arco avanza siempre en el segundo 1. Fix: comparar contra `0`.
+   **Verificado a 0 ms en los cuatro presets.**
+2. **Atmósfera en los ejercicios sueltos** — se levanta la restricción de s99. Obligó a una
+   **segunda pasada anti-banding**: la misma rampa repartida entre más píxeles se ve en PC.
+3. **Constructor premium en Mueve Y Estira**, y **al principio** de ambas bibliotecas. **Sin campo
+   de módulo** (decisión del usuario). De paso se cerró un agujero de crédito: las rutinas propias
+   lanzadas desde Estira no sumaban a `moveSessionsTotal`.
+4. **Loto de Respira** integrado como **máscara CSS** con el color por token — que es lo que
+   resuelve el contraste. 959 KB → 146 KB.
 
-### FASE 1.6 · Ajustes y dos retiradas
+**Cinco correcciones más** salieron del feedback del usuario durante la sesión (recorte del visual,
+capas a distinta velocidad, giro a tirones, tinta lavada en claro y salto de texto de 21 px en
+Suspiro fisiológico). **Abierto**: los aros del visual siguen siendo dos hairlines y el usuario
+quiere otra cosa; falta su dirección.
+
+### FASE 1.6 · Ajustes y dos retiradas — ⏭ SIGUIENTE
 
 Separada de la 1.5 a propósito: son ocho ítems de pulido en total y la regla es un frente por
 sesión, cerrado y verificado.

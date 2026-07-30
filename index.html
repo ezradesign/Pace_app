@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.71.0</title>
+  <title>PACE · Foco · Cuerpo — v0.72.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1198,7 +1198,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'tweaks.timer.aro': 'Aro (default)',
   'tweaks.timer.barra': 'Barra',
   'tweaks.timer.analogico': 'Analógico',
-  'tweaks.breath.flor': 'Flor (default)',
+  'tweaks.breath.flor': 'Loto (default)',
   'tweaks.breath.pulso': 'Pulso',
   'tweaks.breath.petalo': 'Pétalo',
   'tweaks.breath.ondas': 'Ondas',
@@ -1389,7 +1389,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'tweaks.timer.aro': 'Ring (default)',
   'tweaks.timer.barra': 'Bar',
   'tweaks.timer.analogico': 'Analog',
-  'tweaks.breath.flor': 'Flower (default)',
+  'tweaks.breath.flor': 'Lotus (default)',
   'tweaks.breath.pulso': 'Pulse',
   'tweaks.breath.petalo': 'Petal',
   'tweaks.breath.ondas': 'Waves',
@@ -1652,7 +1652,7 @@ Object.assign(window.PACE_STRINGS.es, {
 
   // Constructor de rutinas (F7 · s93)
   'custom.section.title': 'Tus rutinas',
-  'custom.section.aside': 'A tu medida',
+  'custom.section.aside': 'En Mueve y en Estira',
   'custom.locked.copy': 'Combina ejercicios del catálogo y guarda tus propias rutinas. Parte del contenido premium.',
   'custom.empty.copy': 'Combina ejercicios del catálogo y guarda tu propia rutina.',
   'custom.create': 'Crear rutina',
@@ -1864,7 +1864,7 @@ Object.assign(window.PACE_STRINGS.en, {
 
   // Routine builder (F7 · s93)
   'custom.section.title': 'Your routines',
-  'custom.section.aside': 'Made to measure',
+  'custom.section.aside': 'In Move and Stretch',
   'custom.locked.copy': 'Combine exercises from the catalog and save your own routines. Part of the premium content.',
   'custom.empty.copy': 'Combine exercises from the catalog and save your own routine.',
   'custom.create': 'Create routine',
@@ -3431,7 +3431,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.71.0';
+const PACE_VERSION = 'v0.72.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5373,9 +5373,25 @@ const sessionShellStyles = {
    desaturado, opacity 0.04, tile 160px) como dither que rompe la
    cuantizacion. El grano lee como fibra de papel: coherente con el tono.
    Solo se usa dentro de Caminos (los steps pasan el token; el home no). */
-const SESSION_ATMOS_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`;
+/* s138 — SEGUNDA pasada de banding. El remedio de s100 bastaba en el tamaño en
+   que se veía entonces (dentro de Caminos), pero al llevar la atmósfera a las
+   sesiones sueltas se ve en pantallas grandes, donde la MISMA rampa se reparte
+   entre muchos más píxeles: cada peldaño de 8 bits ocupa más ancho y los
+   anillos se hacen visibles (reportado en PC, no en móvil — coherente con la
+   causa). Se respeta la regla de s100 de NO subir alphas; se actúa sobre el
+   dither y sobre la forma de la rampa:
+     - grano más FINO (baseFrequency 0.9 -> 1.4) y algo más presente
+       (0.04 -> 0.055): es ruido desaturado, sigue leyéndose como fibra de papel;
+     - la rampa deja de ser dos paradas + hint y pasa a CINCO paradas explícitas
+       siguiendo una caída tipo ease-out. Con más puntos de control el
+       compositor interpola tramos cortos y no hay ningún tramo largo donde el
+       redondeo a 8 bits produzca un salto visible. */
+const SESSION_ATMOS_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E")`;
 function sessionAtmosphere(soft) {
-  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, 22%, transparent 55%)`;
+  const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, ${soft} 12%, ` +
+  `color-mix(in srgb, ${soft} 62%, transparent) 26%, ` +
+  `color-mix(in srgb, ${soft} 28%, transparent) 38%, ` +
+  `color-mix(in srgb, ${soft} 9%, transparent) 47%, transparent 56%)`;
   return `${SESSION_ATMOS_GRAIN}, ${g}, ${g}, var(--paper)`;
 }
 
@@ -7011,7 +7027,19 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
       strokeDasharray: C, strokeDashoffset: C * (1 - progress),
       style: { transition: 'stroke-dashoffset 1s linear, stroke 1s linear' } }),
 
-    progress > 0.001 && /*#__PURE__*/
+
+
+
+
+
+
+
+
+
+
+
+
+    progress > 0 && /*#__PURE__*/
     React.createElement("g", { transform: `rotate(${progress * 360} 50 50)`,
       style: { transition: 'transform 1s linear' } }, /*#__PURE__*/
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "1.7", fill: ringColor, opacity: "0.22" }), /*#__PURE__*/
@@ -9757,7 +9785,54 @@ function getSequence(routine) {
   return [{ label: 'Respira', duration: 4, scale: 1.2 }];
 }
 
+/* LOTO (s138) — arte del usuario integrado como MÁSCARA CSS, no como imagen.
+   Motivo medido: el PNG original es línea CREMA sobre transparente y sobre el
+   papel crema (`--paper #F2EDE0`) era casi invisible. Además su ALFA es solo la
+   silueta (histograma bimodal), mientras el dibujo vive en la LUMINANCIA; por
+   eso `scripts/ingest-loto.js` reconstruye la máscara desde la densidad de
+   tinta. Aquí el color lo pone `--breathe`, así que el contraste queda
+   garantizado en las tres paletas sin tocar el arte: en crema se lee como tinta
+   terracota, en oscuro como línea encendida.
+   La ruta relativa es la MISMA convención que las láminas de Caminos
+   (`paths.index.js`): archivo en web (+ precache en `sw.js`) y el build la
+   sustituye por data URI solo en el standalone. */
+const LOTO_SRC = 'app/breathe/assets/loto.webp';
+
+/* Escala máxima declarada por getSequence (physiological, «Inhala más»). El
+   wrap del loto reserva el tamaño a ESTA escala, no en reposo. */
+const BREATH_MAX_SCALE = 1.35;
+
 const breathVisualStyles = {
+  /* s138 — wrap PROPIO del loto. El wrap compartido mide 260x260 fijos mientras
+     sus capas pintaban 420x420 por los insets negativos: el aro exterior se
+     salía 6 px por encima del área de scroll de la sesión y se RECORTABA (medido
+     en runtime: capa exterior en y=60, `data-pace-session-center` empieza en
+     y=66). Aquí las capas viven DENTRO del wrap con insets en %, y el wrap se
+     dimensiona por el viewport, así que el layout reserva exactamente lo que se
+     dibuja a escala máxima y nada se recorta en ninguna altura de pantalla.
+     Los otros cuatro estilos siguen con el wrap compartido, sin tocar. */
+  wrapLoto: {
+    position: 'relative',
+    width: 'min(400px, 84vw, 56vh)',
+    aspectRatio: '1 / 1',
+    flexShrink: 0,
+    display: 'grid', placeItems: 'center'
+  },
+  aroLoto: {
+    position: 'absolute',
+    border: '1px solid var(--breathe)',
+    borderRadius: '50%'
+  },
+  loto: {
+    position: 'absolute', inset: 0,
+    /* El color NO va aquí: lo pone la hoja inyectada abajo, por paleta
+       (`[data-pace-loto]`). Un `background` inline ganaría a la hoja. */
+    WebkitMaskImage: `url(${LOTO_SRC})`,
+    maskImage: `url(${LOTO_SRC})`,
+    WebkitMaskSize: 'contain', maskSize: 'contain',
+    WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+    WebkitMaskPosition: 'center', maskPosition: 'center'
+  },
   wrap: {
     position: 'relative',
     width: 260, height: 260,
@@ -9779,45 +9854,112 @@ function BreathVisual(_ref) {let { style, phase, progress, scale = 1.2, phaseDur
   const transitionDur = `${Math.max(300, Math.round(phaseDuration * 1000 * (isFastPhase ? 0.85 : 1)))}ms`;
   const transitionEase = isFastPhase ? 'ease-in-out' : 'var(--ease)';
 
+  /* s138 — reduced motion, matiz FINO: el subtree lleva `data-pace-essential`,
+     que lo exime ENTERO del kill global de tokens.css (s89). Correcto para la
+     ESCALA, que es la guía de respiración, pero el GIRO del loto es decorativo
+     y no debería moverse con reduced-motion. No se puede separar por CSS (van
+     en el mismo `transform`), así que se anula aquí. Se lee en cada render —el
+     visual re-renderiza a cada fase— y por eso no necesita listener. */
+  const sinMovimiento = typeof window !== 'undefined' && typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   if (style === 'flor') {
+    /* s138 — el loto del usuario sustituye a los 6 pétalos SVG y al núcleo con
+       degradado: el mandala trae su propio centro (la semilla de la vida), así
+       que un círculo encima competía con él. Los dos aros se conservan: son el
+       aura que respira.
+        TRES ARREGLOS DE ANIMACIÓN, los tres medidos:
+        (1) UN SOLO FACTOR DE ESCALA. Antes cada capa combinaba una base y un
+           factor distintos (340x0,95·s · 300x1,0·s · 260x0,85·s), así que los
+           huecos entre ellas pasaban de 10/36 px en reposo a 15/51 px a tope:
+           se ensanchaban un 44 % al inhalar y cada capa parecía ir a su
+           velocidad. Ahora las tres comparten `scale` y el tamaño se fija solo
+           con el `inset` en %, así que la proporción es constante y la
+           composición respira como UN objeto.
+        (2) EL GIRO SALE DE `progress`. `progress` solo avanza una vez por
+           segundo y llevaba encima una transición de la duración de la FASE:
+           cada paso arrancaba una transición de ~4 s que no terminaba antes del
+           siguiente => tirones cada segundo. Y al cambiar de fase `progress`
+           volvía de 1 a 0, así que además contragiraba. El giro pasa a ser una
+           animación CSS continua (`pace-loto-giro`, 180 s por vuelta, linear,
+           infinita) en un elemento APARTE: no depende de ningún tick, no se
+           reinicia entre fases y no compite con la transición de la escala.
+        (3) EL WRAP RESERVA EL MÁXIMO. Ver `wrapLoto`.
+        Y TRES CAPAS DE PROFUNDIDAD, para que no sea «una imagen que escala»:
+       un halo de luz que se recoge y se abre con el aire, un loto de FONDO
+       algo mayor girando MUY despacio y AL REVÉS (dos mandalas iguales a
+       velocidades opuestas producen un brillo lento que lee como volumen; a
+       opacidad 0,10 se intuye, no se mira), y el loto principal encima. */
+
+
+
+
+
+    /* RESPIRACIÓN ASIMÉTRICA (idea del usuario, s138). Un círculo que escala
+       igual en los dos ejes lee como «una imagen que crece»; un pecho que se
+       llena sube y se ensancha MENOS de lo que se alarga. Así que el eje
+       vertical recorre la excursión entera y el horizontal solo el 88 %, y el
+       conjunto se eleva un poco al llenarse. Es sutil a propósito: guía sin
+       convertirse en el espectáculo.
+       El desplazamiento va ANTES de la escala para que no lo multiplique, y los
+       `inset` suben un punto (14/16,5/20/25,5 %) para dejarle sitio dentro del
+       invariante del wrap: 1 − 2×0,14 = 0,72 y 0,72 × 1,35 = 0,972, o sea ~11 px
+       de holgura en un wrap de 389 para un desplazamiento máximo de 2,7 px. */
+    const sx = 1 + (scale - 1) * 0.88;
+    const subida = -(scale - 0.9) * 6;
+    const respira = `translateY(${subida.toFixed(2)}px) scale(${sx.toFixed(4)}, ${scale})`;
+    /* Curva: `--ease` es cubic-bezier(0.4,0,0.2,1), la curva de UI de Material
+       —sale rápido y frena largo—, que para un CTA está bien y para un pulmón
+       no. Una respiración acelera y frena de forma simétrica, así que la fase
+       lenta usa easeInOutSine. Local al loto: no se toca el token compartido. */
+    const curva = isFastPhase ? 'ease-in-out' : 'cubic-bezier(0.37, 0, 0.63, 1)';
+    const trans = `transform ${transitionDur} ${curva}, opacity ${transitionDur} ${curva}`;
+    /* La tinta gana cuerpo al llenarse y lo suelta al vaciarse: refuerza la
+       guía sin añadir movimiento. Normalizado sobre el recorrido real de
+       `scale` (0,9 a 1,35). */
+    const llenado = Math.min(1, Math.max(0, (scale - 0.9) / (BREATH_MAX_SCALE - 0.9)));
+    const gira = (seg, sentido) => sinMovimiento ?
+    'none' :
+    `pace-loto-giro ${seg}s linear infinite${sentido < 0 ? ' reverse' : ''}`;
     return (/*#__PURE__*/
-      React.createElement("div", { "data-pace-essential": true, style: breathVisualStyles.wrap }, /*#__PURE__*/
+      React.createElement("div", { "data-pace-essential": true, style: breathVisualStyles.wrapLoto }, /*#__PURE__*/
+
+
+
+
       React.createElement("div", { style: {
-          position: 'absolute', inset: -40,
-          border: '1px solid var(--breathe)',
+          position: 'absolute', inset: '14%',
           borderRadius: '50%',
-          opacity: 0.25,
-          transform: `scale(${scale * 0.95})`,
-          transition: `transform ${transitionDur} ${transitionEase}`
+          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 74%)',
+          opacity: 0.45 + 0.55 * llenado,
+          transform: respira, transition: trans
         } }), /*#__PURE__*/
       React.createElement("div", { style: {
-          position: 'absolute', inset: -20,
-          border: '1px solid var(--breathe)',
-          borderRadius: '50%',
-          opacity: 0.4,
-          transform: `scale(${scale})`,
-          transition: `transform ${transitionDur} ${transitionEase}`
+          ...breathVisualStyles.aroLoto, inset: '14%',
+          opacity: 0.18 + 0.10 * llenado,
+          transform: respira, transition: trans
         } }), /*#__PURE__*/
-      React.createElement("svg", { viewBox: "-100 -100 200 200", style: {
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          transform: `scale(${scale * 0.85}) rotate(${progress * 40}deg)`,
-          transition: `transform ${transitionDur} ${transitionEase}`
-        } },
-      [0, 1, 2, 3, 4, 5].map((i) => /*#__PURE__*/
-      React.createElement("ellipse", { key: i, cx: "0", cy: "-32", rx: "14", ry: "34",
-        fill: "var(--breathe-soft)", stroke: "var(--breathe)", strokeWidth: "0.6",
-        transform: `rotate(${i * 60})`, opacity: "0.5" })
-      )
+      React.createElement("div", { style: {
+          ...breathVisualStyles.aroLoto, inset: '16.5%',
+          opacity: 0.30 + 0.14 * llenado,
+          transform: respira, transition: trans
+        } }), /*#__PURE__*/
+
+
+      React.createElement("div", { style: {
+          position: 'absolute', inset: '20%',
+          opacity: 0.10 + 0.06 * llenado,
+          transform: respira, transition: trans
+        } }, /*#__PURE__*/
+      React.createElement("div", { "data-pace-loto": true, style: { ...breathVisualStyles.loto, animation: gira(450, -1) } })
       ), /*#__PURE__*/
       React.createElement("div", { style: {
-          width: 80, height: 80,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 80%)',
-          border: '1.5px solid var(--breathe)',
-          transform: `scale(${scale * 0.7})`,
-          transition: `transform ${transitionDur} ${transitionEase}`,
-          position: 'relative'
-        } })
+          position: 'absolute', inset: '25.5%',
+          opacity: 0.80 + 0.20 * llenado,
+          transform: respira, transition: trans
+        } }, /*#__PURE__*/
+      React.createElement("div", { "data-pace-loto": true, style: { ...breathVisualStyles.loto, animation: gira(180, 1) } })
+      )
       ));
 
   }
@@ -9893,6 +10035,33 @@ function BreathVisual(_ref) {let { style, phase, progress, scale = 1.2, phaseDur
     ));
 
 }
+
+/* s138 — keyframes del giro continuo del loto. Se inyectan desde aquí (patrón
+   IIFE de `app/main/_responsive.js` y `SessionShell.responsive.js`) en vez de
+   añadirlos a `tokens.css`: ese archivo ya está en 613 líneas, marcado como
+   deuda MEDIA y con un troceo pendiente en la Fase 8.5, y esta animación la usa
+   un solo componente.
+   OJO reduced-motion: el kill global de `tokens.css` NO sirve aquí — pone
+   `animation-duration: 0.01ms`, que en una rotación infinita la dispararía a
+   velocidad absurda en vez de pararla. Por eso el freno vive en el JSX
+   (`animation: 'none'`), y además este subtree es `data-pace-essential`. */
+(function inyectaGiroDelLoto() {
+  var ID = 'pace-breathe-loto-css';
+  if (typeof document === 'undefined' || document.getElementById(ID)) return;
+  var el = document.createElement('style');
+  el.id = ID;
+  /* Tinta del loto POR PALETA. En crema, `--breathe` (#C97A5D) sobre papel
+     `#F2EDE0` y con la densidad baja de la máscara quedaba lavado —el usuario lo
+     leyó como «poco premium»—; `--breathe-2` (#A85E43) es el mismo terracota más
+     profundo y devuelve la sensación de TINTA sobre papel. En oscuro se conserva
+     `--breathe`, que ya se lee como línea encendida y con la variante profunda
+     perdería brillo. Va en CSS y no en el JSX porque el componente no debe
+     saber qué paleta hay puesta: manda el atributo del documento. */
+  el.textContent = '@keyframes pace-loto-giro{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}' +
+  '[data-pace-loto]{background:var(--breathe-2)}' +
+  '[data-palette="oscuro"] [data-pace-loto]{background:var(--breathe)}';
+  document.head.appendChild(el);
+})();
 
 Object.assign(window, { BreathVisual, getSequence });
 ;Object.assign(window, { getSequence, BreathVisual });
@@ -10158,7 +10327,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   const [state] = usePace();
   const { t, lang } = useT();
   // Atmosfera del step (s99): tinte terracota muy sutil SOLO en Camino.
-  const atmo = inPath ? 'var(--breathe-soft)' : undefined;
+  /* s138: la atmosfera deja de estar confinada a Caminos (revisa s99). El wash
+     del modulo se ve tambien en la sesion suelta -- misma cascara, mismo color,
+     la identidad del modulo no depende de por donde entraste. */
+  const atmo = 'var(--breathe-soft)';
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const displayRoutine = lang === 'en' ?
   { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
@@ -10511,14 +10683,21 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
         ...displayItalic,
         fontSize: 44, fontWeight: 500, color: 'var(--ink)',
         marginBottom: 8, lineHeight: 1
-      } }, displayLabel),
-    showCountdown && /*#__PURE__*/
+      } }, displayLabel), /*#__PURE__*/
+
+
+
+
+
+
+
+
     React.createElement("div", { style: {
         ...displayItalic,
         fontSize: 28, color: 'var(--breathe)',
-        fontVariantNumeric: 'tabular-nums', marginTop: 4
-      } }, remaining),
-
+        fontVariantNumeric: 'tabular-nums', marginTop: 4,
+        visibility: showCountdown ? 'visible' : 'hidden'
+      } }, showCountdown ? remaining : '0'),
 
 
 
@@ -10996,6 +11175,13 @@ function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
   return (/*#__PURE__*/
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('lib.tag'), title: t('lib.move.title'), subtitle: t('lib.move.subtitle'), maxWidth: 860 }, /*#__PURE__*/
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 } },
+
+
+
+
+    typeof CustomRoutinesSection !== 'undefined' && /*#__PURE__*/
+    React.createElement(CustomRoutinesSection, { onStart: onStart, accent: "var(--move)" }),
+
     Object.entries(MOVE_ROUTINES).map((_ref2) => {let [key, group] = _ref2;return (/*#__PURE__*/
         React.createElement("div", { key: key }, /*#__PURE__*/
         React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 } }, /*#__PURE__*/
@@ -11008,12 +11194,7 @@ function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
         )
         )
         ));}
-    ),
-
-
-    typeof CustomRoutinesSection !== 'undefined' && /*#__PURE__*/
-    React.createElement(CustomRoutinesSection, { onStart: onStart })
-
+    )
     )
     ));
 
@@ -11033,9 +11214,10 @@ function MoveSession(props) {
 
 function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath } = _ref3;
   const { t, tn, lang } = useT();
-  // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
-  // Estira azul-gris segun kind).
-  const atmo = inPath ? kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)' : undefined;
+  // Atmosfera del step: tinte del modulo por kind (Mueve tan / Estira
+  // azul-gris). s138: deja de estar confinada a Caminos (revisa s99) -- se ve
+  // igual en la sesion suelta.
+  const atmo = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   // B1: acento por kind en TODA la sesion (prep, glifo, contador, barra,
   // done) — Estira deja de vivir en var(--move).
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
@@ -11682,7 +11864,9 @@ const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React
 
 function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _ref;
   const { t, tn, lang } = useT();
-  const atmo = inPath ? kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)' : undefined;
+  // s138: atmosfera tambien fuera de Caminos (revisa s99); el color sigue
+  // saliendo del kind, como en el runner legacy.
+  const atmo = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
   const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
@@ -12567,6 +12751,13 @@ function ExtraLibrary(_ref) {let { open, onClose, onStart } = _ref;
   return (/*#__PURE__*/
     React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('lib.tag'), title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle'), maxWidth: 860 }, /*#__PURE__*/
     React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 } },
+
+
+
+
+    typeof CustomRoutinesSection !== 'undefined' && /*#__PURE__*/
+    React.createElement(CustomRoutinesSection, { onStart: onStart, accent: "var(--extra)" }),
+
     Object.entries(EXTRA_ROUTINES).map((_ref2) => {let [key, group] = _ref2;return (/*#__PURE__*/
         React.createElement("div", { key: key }, /*#__PURE__*/
         React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 } }, /*#__PURE__*/
@@ -12759,7 +12950,16 @@ window.getExerciseDef = getExerciseDef;
    MoveLibrary (handleStartMove → MoveSession kind='move' →
    completeMoveSession). */
 
-function CustomRoutinesSection(_ref) {let { onStart } = _ref;
+/* s138 — la seccion vive AHORA en las DOS bibliotecas (Mueve y Estira) y ya no
+   al final de la lista, sino arriba: el constructor era invisible (ultimo
+   bloque tras 4 grupos de tarjetas) y esa era la queja.
+   `accent` = color del modulo anfitrion (`--move` en Mueve, `--extra` en
+   Estira). Las rutinas LISTADAS son las mismas en ambos sitios: una rutina
+   propia NO pertenece a un modulo (el registro de ejercicios ya mezcla los 8
+   grupos de Mueve y de Estira), asi que separarlas exigiria un campo nuevo e
+   inventaria una taxonomia falsa. El aside lo dice en voz alta para que ver la
+   misma lista dos veces no se lea como un bug. */
+function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = _ref;
   const { t, tn } = useT();
   const [pace] = usePace();
   const unlocked = !!pace.premiumUnlocked;
@@ -12797,7 +12997,7 @@ function CustomRoutinesSection(_ref) {let { onStart } = _ref;
     )
     ),
     routines.map((r) => /*#__PURE__*/
-    React.createElement(CustomRoutineCard, { key: r.id, routine: r, locked: true })
+    React.createElement(CustomRoutineCard, { key: r.id, routine: r, accent: accent, locked: true })
     )
     ) : /*#__PURE__*/
 
@@ -12806,6 +13006,7 @@ function CustomRoutinesSection(_ref) {let { onStart } = _ref;
     React.createElement(CustomRoutineCard, {
       key: r.id,
       routine: r,
+      accent: accent,
       onClick: () => startRoutine(r),
       onEdit: () => openBuilder(r.id) }
     )
@@ -12814,11 +13015,11 @@ function CustomRoutinesSection(_ref) {let { onStart } = _ref;
     React.createElement("div", {
       onClick: () => openBuilder(null),
       style: customRoutinesStyles.createCard,
-      onMouseEnter: (e) => {e.currentTarget.style.borderColor = 'var(--move)';e.currentTarget.style.color = 'var(--ink)';},
+      onMouseEnter: (e) => {e.currentTarget.style.borderColor = accent;e.currentTarget.style.color = 'var(--ink)';},
       onMouseLeave: (e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.color = 'var(--ink-2)';} }, /*#__PURE__*/
 
     React.createElement("div", { style: { textAlign: 'center', padding: '8px 14px' } }, /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 24, lineHeight: 1, marginBottom: 6, color: 'var(--move)' } }, "+"), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent } }, "+"), /*#__PURE__*/
     React.createElement("div", { style: { ...displayItalic, fontSize: 17, fontWeight: 500 } }, t('custom.create')),
     routines.length === 0 && /*#__PURE__*/
     React.createElement("p", { style: { fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 } },
@@ -12840,13 +13041,13 @@ function CustomRoutinesSection(_ref) {let { onStart } = _ref;
 
 /* Card de rutina propia — gemela visual de RoutineCard (que no se toca:
    es parte del mecanismo de gating) con lápiz de edición añadido. */
-function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit } = _ref2;
+function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit, accent = 'var(--move)' } = _ref2;
   const { t, tn } = useT();
   const stepsLabel = routine.steps.length === 1 ?
   t('custom.steps.one') :
   tn('custom.steps.many', { n: routine.steps.length });
   return (/*#__PURE__*/
-    React.createElement(Card, { accent: locked ? undefined : 'var(--move)', onClick: locked ? undefined : onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
+    React.createElement(Card, { accent: locked ? undefined : accent, onClick: locked ? undefined : onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
     !locked && /*#__PURE__*/
     React.createElement("button", {
       onClick: (e) => {e.stopPropagation();onEdit();},
@@ -12862,7 +13063,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit } = _r
     ), /*#__PURE__*/
 
     React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' } }, /*#__PURE__*/
-    React.createElement(Tag, { color: "var(--move)" }, t('custom.tag'))
+    React.createElement(Tag, { color: accent }, t('custom.tag'))
     ), /*#__PURE__*/
     React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } }, routine.name), /*#__PURE__*/
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, stepsLabel), /*#__PURE__*/
@@ -12876,7 +13077,7 @@ function CustomRoutineCard(_ref2) {let { routine, locked, onClick, onEdit } = _r
     locked ? /*#__PURE__*/
     React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, t('premium.soon')) : /*#__PURE__*/
 
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--move)', fontWeight: 500 } }, routine.min, " min")
+    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: accent, fontWeight: 500 } }, routine.min, " min")
 
     )
     ));
@@ -19952,9 +20153,21 @@ function PaceApp() {
   };
   const handleStartExtra = (routine) => {
     setOpenLibrary(null);
-    // Reutiliza MoveSession pero marca kind='extra' para que la completion
-    // dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
-    setView({ type: 'move-session', routine, kind: 'extra' });
+    /* Reutiliza MoveSession pero marca kind='extra' para que la completion
+       dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
+       EXCEPCION s138 — las rutinas propias: desde que la seccion "Tus rutinas"
+       aparece TAMBIEN en Estira, la misma rutina se puede lanzar por dos
+       puertas, y las dos completions NO son equivalentes: `completeExtraSession`
+       no incrementa `moveSessionsTotal` (state-achievements.jsx:214), asi que
+       quien hiciera sus rutinas propias desde Estira nunca progresaria hacia
+       `move.sessions.25`, y ademas desbloquearia `first.extra` en vez de
+       `first.stretch`. Una rutina propia es UNA cosa y no pertenece a un modulo
+       (por eso no lleva campo de modulo), asi que acredita igual entre a la
+       puerta que entre: se conserva el credito via completeMoveSession que fijo
+       la decision s93. Consecuencia visible y aceptada: la sesion se pinta con
+       el acento de Mueve aunque hayas entrado por Estira. */
+    const esPropia = typeof routine.id === 'string' && routine.id.indexOf('custom.') === 0;
+    setView({ type: 'move-session', routine, kind: esPropia ? 'move' : 'extra' });
   };
 
   const handleFocusFinish = () => {

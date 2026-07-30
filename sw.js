@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.71.0';
+const CACHE_NAME = 'pace-v0.72.0';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -18,6 +18,11 @@ const PRECACHE = [
   '/app/paths/illustrations/assets/dusk.webp',
   '/app/paths/illustrations/assets/weekend.webp',
   '/app/paths/illustrations/assets/breath.webp',
+  /* s138: loto de Respira (arte D-4). Mismo trato que las láminas: archivo en
+     web + precache, data URI solo en el standalone. Es una MÁSCARA CSS -- si
+     no está, el visual `flor` se queda sin dibujo (el fondo se recorta a nada),
+     así que va en el precache y no bajo demanda. */
+  '/app/breathe/assets/loto.webp',
   /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
      (el standalone las inlinea como data URI); precache = offline fiel. */
   '/fonts/ebgaramond-400-italic.woff2',
