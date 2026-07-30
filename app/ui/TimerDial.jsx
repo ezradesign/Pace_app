@@ -119,7 +119,22 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
               umbral no protegia de ruido de coma flotante. Comparar contra 0
               monta el punto en el MISMO tick en que el arco arranca, con
               cualquier duracion (incluida la de "Otro"). */}
-          {progress > 0 && (
+          {/* s139 — ENMIENDA al gate de s138. Comparar contra 0 alineó el punto
+              con el arco, pero `progress` vale 0 exacto durante todo el primer
+              segundo, así que el punto seguía sin EXISTIR ahí: montaba en el
+              primer tick ya rotado. Medido con MutationObserver a 25 min:
+              aparece a t=1039 ms directamente en **0,24°** = 360/1500 clavado,
+              o sea nunca pasa por las 12 (reportado por el usuario como «no
+              empieza exactamente en 0, sino un poco más adelantado»); no es que
+              se adelante al avanzar, es que nace desplazado y sin transición
+              desde el origen.
+              Con `running` el punto existe desde el instante del arranque, donde
+              `progress` es 0 y el ángulo por tanto 0: sale de las 12 y avanza
+              con su transición. Lo que s138 protegía —que no haya punto en
+              reposo— lo sigue cubriendo `progress > 0`: en idle a cero no corre
+              nada. Pausado a mitad y completado conservan el punto por esa misma
+              rama. */}
+          {(running || progress > 0) && (
             <g transform={`rotate(${progress * 360} 50 50)`}
                style={{ transition: 'transform 1s linear' }}>
               <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />

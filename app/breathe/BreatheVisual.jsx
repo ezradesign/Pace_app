@@ -122,11 +122,38 @@ const breathVisualStyles = {
      dimensiona por el viewport, así que el layout reserva exactamente lo que se
      dibuja a escala máxima y nada se recorta en ninguna altura de pantalla.
      Los otros cuatro estilos siguen con el wrap compartido, sin tocar. */
+  /* s139 — REGRESIÓN de s138 corregida: manda el ALTO y el ancho lo deriva la
+     proporción. El ancho salía de `min(400px, 84vw, 56vh)`, y ahí `vh` es la
+     VENTANA, no el hueco real donde vive el visual: el centro es la ventana
+     MENOS header, footer y padding, y encima comparte ese hueco con el texto de
+     fase, el contador y la barra de progreso. Medido a 1280×740: el centro
+     ofrecía 584,4 px y el contenido pedía 587,5 (400 de visual + 187,6 de
+     texto/barra/gaps) ⇒ desborde, barra de 15 px, y el `margin:auto` del body
+     —que centra al caber y alinea ARRIBA al desbordar— dejaba el círculo pegado
+     al header. Umbral del modelo: por debajo de ~743 px de alto SIEMPRE
+     desbordaba.
+     El invariante de s138 sigue intacto y era correcto: el wrap reserva lo que
+     se pinta a escala máxima. Lo que faltaba es que ese wrap se midiera contra
+     el presupuesto vertical real, y eso no lo sabe ninguna unidad `vh`: lo sabe
+     el flex del centro. Por eso el visual es ahora `flex: 0 1 auto` —el ÚNICO
+     elemento que encoge— y la hoja de abajo hace que el body mida exactamente
+     el hueco disponible. `min-height` es el suelo: por debajo vuelve el scroll
+     (red de seguridad de s112, con la barra oculta). */
   wrapLoto: {
     position: 'relative',
-    width: 'min(400px, 84vw, 56vh)',
+    height: 'min(400px, 84vw)',
+    /* Suelo: 160 px, el mismo tamaño que el `core` de los otros estilos de
+       Respira. Por debajo de esto NO se sigue encogiendo la guía —dejaría de
+       leerse como respiración— y entra la red de seguridad de s112: el centro
+       hace scroll (con la barra oculta por la regla de s139) y el footer con la
+       acción primaria sigue siempre accesible. Medido: con este suelo cabe
+       hasta 1280×420; por debajo empieza el scroll invisible. */
+    minHeight: 160,
     aspectRatio: '1 / 1',
-    flexShrink: 0,
+    flex: '0 1 auto',
+    /* El margen inferior negativo que reclama el hueco muerto NO va aquí sino en
+       la hoja inyectada: depende del `gap`, que cambia por tier de altura.
+       Explicación completa y aritmética del tope, abajo. */
     display: 'grid', placeItems: 'center',
   },
   aroLoto: {
@@ -229,22 +256,61 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
        guía sin añadir movimiento. Normalizado sobre el recorrido real de
        `scale` (0,9 a 1,35). */
     const llenado = Math.min(1, Math.max(0, (scale - 0.9) / (BREATH_MAX_SCALE - 0.9)));
-    const gira = (seg, sentido) => sinMovimiento
+    const gira = (seg, sentido) =>
+      `pace-loto-giro ${seg}s linear infinite${sentido < 0 ? ' reverse' : ''}`;
+    /* s139 — «la 2ª capa lee como un simple zoom». El diagnóstico NO era que
+       faltara giro: el loto de fondo ya contragiraba desde s138. Era que no se
+       NOTABA, y por dos motivos medibles a la vez:
+         · a 450 s por vuelta una hoja del mandala (16 hojas ⇒ 22,5°) tarda 28 s
+           en ocupar el sitio de la anterior — más que la sesión entera de una
+           fase, así que el ojo no tiene referencia de movimiento;
+         · a opacidad 0,10–0,16 sobre papel crema la capa es un susurro, y un
+           susurro que se mueve despacio no se ve moverse.
+       Se atacan los dos, sin tocar el loto principal (la 2ª capa es la que el
+       usuario señaló) y sin subir el techo de opacidad:
+         (1) contrarrotación 450 s → 300 s: una hoja cada 18,8 s en absoluto,
+             pero lo que el ojo percibe es la velocidad RELATIVA entre los dos
+             mandalas (2 + 1,2 = 3,2 °/s ⇒ una hoja cada ~7 s), que es el brillo
+             lento que da volumen.
+         (2) `pace-loto-vela`: la TRANSPARENCIA también se mueve, que es lo que
+             pidió el usuario. Multiplica la opacidad de fase por 0,62–1, así que
+             el techo sigue siendo el 0,16 de antes y solo baja el suelo. Su
+             periodo (17 s) NO es múltiplo de ningún ciclo de respiración del
+             catálogo (4, 8, 10, 12 s): así nunca se sincroniza con la fase y lee
+             como profundidad propia, no como parte de la guía. Va en el elemento
+             INTERNO para no pisar la opacidad de fase del contenedor, que es
+             inline — dos animaciones sobre propiedades distintas (transform y
+             opacity) no compiten.
+       Invariante de s138 intacto: sigue siendo animación CSS continua, nada sale
+       de `progress`, y el freno de reduced-motion vive aquí (el kill global de
+       tokens.css pondría `0.01ms`, que en una animación infinita la dispara en
+       vez de pararla) y ahora corta las DOS de una sola vez. */
+    const animFondo = sinMovimiento
       ? 'none'
-      : `pace-loto-giro ${seg}s linear infinite${sentido < 0 ? ' reverse' : ''}`;
+      : `${gira(300, -1)}, pace-loto-vela 17s ease-in-out infinite`;
+    const animFrente = sinMovimiento ? 'none' : gira(180, 1);
     return (
-      <div data-pace-essential style={breathVisualStyles.wrapLoto}>
+      <div data-pace-essential data-pace-breathe-visual style={breathVisualStyles.wrapLoto}>
         {/* halo: la luz que se junta al llenarse. Va a 13% como el aro exterior
             —no más ancho— porque el invariante del wrap es que NINGUNA capa lo
             rebase a escala máxima: 1 − 2×0,13 = 0,74 y 0,74 × 1,35 = 1,0 justo.
             A 6% se iba a 445 px con el wrap en 389 y volvía el recorte. */}
+        {/* s139 — banding: era un radial de DOS paradas y sin dither, el más
+            visible de los dos que quedaban sin tratar (medido: ~6,8 px por banda
+            a 1920×880, contra 3,5 del círculo de retención — el halo es el
+            elemento grande, y el banding crece con los píxeles por banda).
+            Pasa a la rampa compartida de cinco paradas + la capa de grano, la
+            misma receta de la atmósfera de s138. Regla de s100 intacta: el alpha
+            de `--breathe-soft` no se toca. */}
         <div style={{
           position: 'absolute', inset: '14%',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 74%)',
+          background: paceGlowRamp('var(--breathe-soft)', 74),
           opacity: 0.45 + 0.55 * llenado,
           transform: respira, transition: trans,
-        }} />
+        }}>
+          <PaceDither edge={74} />
+        </div>
         <div style={{
           ...breathVisualStyles.aroLoto, inset: '14%',
           opacity: 0.18 + 0.10 * llenado,
@@ -255,21 +321,21 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
           opacity: 0.30 + 0.14 * llenado,
           transform: respira, transition: trans,
         }} />
-        {/* loto de fondo: mayor, casi invisible, girando al reves y 2,5x mas
-            despacio -> profundidad sin ruido */}
+        {/* loto de FONDO: mayor, contragirando y con la transparencia viva
+            (s139, ver `animFondo` arriba) -> profundidad sin ruido */}
         <div style={{
           position: 'absolute', inset: '20%',
           opacity: 0.10 + 0.06 * llenado,
           transform: respira, transition: trans,
         }}>
-          <div data-pace-loto style={{ ...breathVisualStyles.loto, animation: gira(450, -1) }} />
+          <div data-pace-loto style={{ ...breathVisualStyles.loto, animation: animFondo }} />
         </div>
         <div style={{
           position: 'absolute', inset: '25.5%',
           opacity: 0.80 + 0.20 * llenado,
           transform: respira, transition: trans,
         }}>
-          <div data-pace-loto style={{ ...breathVisualStyles.loto, animation: gira(180, 1) }} />
+          <div data-pace-loto style={{ ...breathVisualStyles.loto, animation: animFrente }} />
         </div>
       </div>
     );
@@ -347,31 +413,9 @@ function BreathVisual({ style, phase, progress, scale = 1.2, phaseDuration = 4 }
   );
 }
 
-/* s138 — keyframes del giro continuo del loto. Se inyectan desde aquí (patrón
-   IIFE de `app/main/_responsive.js` y `SessionShell.responsive.js`) en vez de
-   añadirlos a `tokens.css`: ese archivo ya está en 613 líneas, marcado como
-   deuda MEDIA y con un troceo pendiente en la Fase 8.5, y esta animación la usa
-   un solo componente.
-   OJO reduced-motion: el kill global de `tokens.css` NO sirve aquí — pone
-   `animation-duration: 0.01ms`, que en una rotación infinita la dispararía a
-   velocidad absurda en vez de pararla. Por eso el freno vive en el JSX
-   (`animation: 'none'`), y además este subtree es `data-pace-essential`. */
-(function inyectaGiroDelLoto() {
-  var ID = 'pace-breathe-loto-css';
-  if (typeof document === 'undefined' || document.getElementById(ID)) return;
-  var el = document.createElement('style');
-  el.id = ID;
-  /* Tinta del loto POR PALETA. En crema, `--breathe` (#C97A5D) sobre papel
-     `#F2EDE0` y con la densidad baja de la máscara quedaba lavado —el usuario lo
-     leyó como «poco premium»—; `--breathe-2` (#A85E43) es el mismo terracota más
-     profundo y devuelve la sensación de TINTA sobre papel. En oscuro se conserva
-     `--breathe`, que ya se lee como línea encendida y con la variante profunda
-     perdería brillo. Va en CSS y no en el JSX porque el componente no debe
-     saber qué paleta hay puesta: manda el atributo del documento. */
-  el.textContent = '@keyframes pace-loto-giro{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}'
-    + '[data-pace-loto]{background:var(--breathe-2)}'
-    + '[data-palette="oscuro"] [data-pace-loto]{background:var(--breathe)}';
-  document.head.appendChild(el);
-})();
+/* La hoja inyectada del loto (keyframes del giro y de la vela, tinta por paleta,
+   reparto de alto del centro y reclamo del hueco muerto) vive en
+   `BreatheVisual.support.jsx` — extraída en s139 al rebasar este archivo las 500
+   líneas de CLAUDE.md. Se carga JUSTO DESPUÉS de este archivo en PACE.html. */
 
 Object.assign(window, { BreathVisual, getSequence });

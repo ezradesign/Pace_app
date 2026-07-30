@@ -297,13 +297,22 @@ function BreatheSession({ routine, onExit, inPath }) {
           <div style={{ fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--breathe)', marginBottom: 30, fontWeight: 500 }}>
             {t('session.hold')}
           </div>
+          {/* s139 — banding: esta es LA pantalla de la captura del usuario
+              («Retén sin aire», Rondas express, paleta clara, PC). Era un radial
+              de DOS paradas y sin dither ⇒ ~3,5 px por banda con los 15,72
+              niveles que recorre `--breathe-soft` sobre `--paper`. Rampa
+              compartida de cinco paradas + capa de grano, la receta de s138.
+              `position:relative` es NECESARIO: el dither va absoluto dentro. */}
           <div style={{
+            position: 'relative',
             width: 140, height: 140, margin: '0 auto',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, var(--breathe-soft) 0%, transparent 78%)',
+            background: paceGlowRamp('var(--breathe-soft)', 78),
             border: '1.5px solid var(--breathe)',
             animation: 'pace-hold-pulse 4s ease-in-out infinite alternate',
-          }} />
+          }}>
+            <PaceDither edge={78} />
+          </div>
           <p style={{
             ...displayItalic,
             fontSize: 18, color: 'var(--ink-2)',
@@ -377,7 +386,11 @@ function BreatheSession({ routine, onExit, inPath }) {
         scale={current.scale}
         phaseDuration={current.duration}
       />
-      <div style={{ textAlign: 'center' }}>
+      {/* s139 — `flexShrink:0` en el texto y en la barra: cuando el centro va
+          justo, el déficit debe absorberlo el VISUAL (elástico por diseño) y no
+          repartirse. Sin esto el reparto depende del tamaño base de cada ítem y
+          del mínimo automático de contenido — funciona, pero por accidente. */}
+      <div style={{ textAlign: 'center', flexShrink: 0 }}>
         <div style={{
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
@@ -411,7 +424,7 @@ function BreatheSession({ routine, onExit, inPath }) {
           (un segmento por ciclo/ronda; el activo se llena por dentro). Ver
           calculo arriba: segTotal / segFilled / segActiveProgress. */}
       <div style={{
-        display: 'flex', gap: 3, alignItems: 'center',
+        display: 'flex', gap: 3, alignItems: 'center', flexShrink: 0,
         width: '100%', maxWidth: 260, height: 5, margin: '0 auto',
       }}>
         {Array.from({ length: segTotal }).map((_, i) => {

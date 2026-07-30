@@ -37,6 +37,17 @@
 
 const { useEffect: useEffectTW } = React;
 
+/* s139 · BUG DEL BOTÓN FANTASMA — transición EXPLÍCITA, nunca `all`.
+   Las cinco filas de pastillas de este panel cambian `fontWeight` 400↔500 al
+   activarse, y con `transition:'all'` la transición ANIMABA EL PESO. Medido: el
+   peso recorría 41 valores fraccionarios mientras el ancho solo tomaba DOS ⇒ con
+   las caras ESTÁTICAS de Inter Tight (s105) el trazo saltaba a mitad de vuelo y
+   la pastilla daba un tirón de ~2 px que desplazaba a su vecina.
+   REGLA: si el estado cambia el `fontWeight`, se listan las propiedades. El peso
+   es señal de estado, no movimiento. Mismo fix en `statsPanelTabStyles.tab`.
+   Detalle medido en docs/sessions/session-139. */
+const TWEAKS_PILL_TRANSITION = 'background-color 180ms, border-color 180ms, color 180ms';
+
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
   const { t, tn } = useT();
@@ -93,17 +104,27 @@ function TweaksPanel({ open, onClose }) {
       { v: 'crema', name: t('tweaks.palette.crema') },
       { v: 'oscuro', name: t('tweaks.palette.oscuro') },
     ]},
-    { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
-      { v: 'aro', name: t('tweaks.timer.aro') },
-      { v: 'barra', name: t('tweaks.timer.barra') },
-      { v: 'analogico', name: t('tweaks.timer.analogico') },
-    ]},
+    /* s139 · Fase 1.6 — el eje de estilo de timer se OCULTA entero (queda
+       siempre «aro») y 'organico' sale de la lista de Respira. Las dos cosas
+       cuelgan de `app/flags.js`; el código de ambas variantes sigue vivo y la
+       migración de los valores huérfanos vive en `loadState`. NO borrar: leer
+       la cabecera de flags.js. Se filtra en vez de comentar el bloque para que
+       devolver la bandera a true no exija tocar este archivo. */
+    ...(window.SHOW_TIMER_STYLE === false ? [] : [
+      { key: 'timerStyle', label: t('tweaks.eje.timer'), options: [
+        { v: 'aro', name: t('tweaks.timer.aro') },
+        { v: 'barra', name: t('tweaks.timer.barra') },
+        { v: 'analogico', name: t('tweaks.timer.analogico') },
+      ]},
+    ]),
     { key: 'breathStyle', label: t('tweaks.eje.breath'), options: [
       { v: 'flor', name: t('tweaks.breath.flor') },
       { v: 'pulso', name: t('tweaks.breath.pulso') },
       { v: 'petalo', name: t('tweaks.breath.petalo') },
       { v: 'ondas', name: t('tweaks.breath.ondas') },
-      { v: 'organico', name: t('tweaks.breath.organico') },
+      ...(window.SHOW_BREATH_ORGANICO === false ? [] : [
+        { v: 'organico', name: t('tweaks.breath.organico') },
+      ]),
     ]},
     { key: 'layout', label: t('tweaks.eje.layout'), options: [
       { v: 'sidebar', name: t('tweaks.layout.sidebar') },
@@ -144,13 +165,22 @@ function TweaksPanel({ open, onClose }) {
       <div style={{ marginBottom: 16 }}>
         <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.lang')}</Meta>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {/* s139 · Fase 1.6 — tercera opción «Auto». `state.lang` sigue siendo
+              siempre un idioma real; el modo vive en `state.langAuto` y
+              `loadState` lo resuelve en cada arranque. Al elegir Auto se
+              resuelve YA para que el panel cambie de idioma en el momento, sin
+              esperar a una recarga. */}
           {[
+            { v: 'auto', name: t('tweaks.lang.auto') },
             { v: 'es', name: t('tweaks.lang.es') },
             { v: 'en', name: t('tweaks.lang.en') },
           ].map(opt => {
-            const active = state.lang === opt.v;
+            const esAuto = opt.v === 'auto';
+            const active = esAuto ? !!state.langAuto : (!state.langAuto && state.lang === opt.v);
             return (
-              <button key={opt.v} onClick={() => set({ lang: opt.v })}
+              <button key={opt.v} onClick={() => set(esAuto
+                ? { langAuto: true, lang: detectInitialLang() }
+                : { langAuto: false, lang: opt.v })}
                 style={{
                   padding: '6px 10px',
                   fontSize: 11,
@@ -159,7 +189,7 @@ function TweaksPanel({ open, onClose }) {
                   color: active ? 'var(--paper)' : 'var(--ink-2)',
                   border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
                   borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
+                  transition: TWEAKS_PILL_TRANSITION,
                   letterSpacing: 0.2,
                 }}>{opt.name}</button>
             );
@@ -189,7 +219,7 @@ function TweaksPanel({ open, onClose }) {
                   color: active ? 'var(--paper)' : 'var(--ink-2)',
                   border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
                   borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
+                  transition: TWEAKS_PILL_TRANSITION,
                   letterSpacing: 0.2,
                 }}>{opt.name}</button>
             );
@@ -255,7 +285,7 @@ function TweaksPanel({ open, onClose }) {
                     color: active ? 'var(--paper)' : 'var(--ink-2)',
                     border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
                     borderRadius: 'var(--r-sm)',
-                    transition: 'all 180ms',
+                    transition: TWEAKS_PILL_TRANSITION,
                     letterSpacing: 0.2,
                   }}>{opt.name}</button>
               );
@@ -292,7 +322,7 @@ function TweaksPanel({ open, onClose }) {
                   color: active ? 'var(--paper)' : 'var(--ink-2)',
                   border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
                   borderRadius: 'var(--r-sm)',
-                  transition: 'all 180ms',
+                  transition: TWEAKS_PILL_TRANSITION,
                   letterSpacing: 0.2,
                 }}>{opt.name}</button>
             );
@@ -318,7 +348,7 @@ function TweaksPanel({ open, onClose }) {
                     color: active ? 'var(--paper)' : 'var(--ink-2)',
                     border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
                     borderRadius: 'var(--r-sm)',
-                    transition: 'all 180ms',
+                    transition: TWEAKS_PILL_TRANSITION,
                     letterSpacing: 0.2,
                   }}>{opt.name}</button>
               );

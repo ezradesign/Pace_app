@@ -10,9 +10,11 @@
 
 ---
 
-**Version actual:** v0.72.0 (s138 — **Fase 1.5 · pulido visible**: desfase del punto guía del pomodoro MEDIDO (1003 ms a 25 min, 1999 a 45) y corregido a **0 ms** · **atmósfera** del `SessionShell` fuera de Caminos (revisa s99) + 2ª pasada de banding · **constructor premium en Mueve Y Estira** y al principio de la lista · **loto de Respira** integrado como máscara CSS con el color por token. Detalle abajo.)
-**Version anterior:** v0.71.0 (s128 — **home móvil universal · «amanecer del Camino»**: el motor de geometría de la home (`home-geometry.js`) corre AHORA también en móvil/tablet garantizando CERO scroll, y la **tarjeta de Camino hace de «horizonte»** recortando el arco inferior del aro —el «amanecer» del Desktop s126 pero con Caminos—; se conserva el orden móvil Timer→Camino→Actividades. Desktop **byte-idéntico**). «Salir» de Caminos a la home es de s127/v0.70.0.
-**Ultima sesion:** #138 -- 2026-07-30 - **FASE 1.5 · PULIDO VISIBLE**. Sesión de **CÓDIGO**, la primera tras nueve solo-documentales (s129–s137). Bump **v0.71.0 → v0.72.0**. **Decisión de entrada: el pomodoro-sol de s134 NO entra** —sigue sin aprobar y pasa a sesión propia por detrás de la Fase 2—; el motivo que pesó sobre los otros tres es que **habría impedido medir el ítem 1**, un desfase de milisegundos en ese mismo aro. **(1) Punto guía MEDIDO, no supuesto**: instrumentado con `MutationObserver` sobre el SVG (el muestreo por `rAF` salió inservible, el panel pinta a ~3 fps). Arco avanza en 1025 ms / punto monta en 2028 → **1003 ms** a 25 min; 1014 / 3013 → **1999 ms** a 45. **Causa confirmada por PREDICCIÓN**: el gate `progress > 0.001` ([TimerDial.jsx:110](app/ui/TimerDial.jsx)) equivale a segundos distintos según duración (1,5 s a 25 min ⇒ segundo 2; 2,7 s a 45 ⇒ segundo 3) mientras el arco avanza siempre en el segundo 1 — se predijo 2000 ms para 45 min y salieron 1999. Como `progress` es `1 - remaining/totalSec`, aritmética exacta, el umbral no protegía de nada ⇒ comparar contra `0`. **Verificado: 0 ms en los 4 presets.** **(2) Atmósfera fuera de Caminos** (revisa s99): el código estaba entero, solo había un gate `inPath ?` en tres sitios. **Consecuencia medida**: el banding se hace visible en pantallas grandes (misma rampa, más píxeles); 2ª pasada respetando la regla de s100 de no subir alphas — grano más fino y **cinco paradas** en vez de dos + hint. **(3) Constructor en Mueve Y Estira**, con prop de acento y **al principio** de ambas bibliotecas (estaba al final, tras 4 grupos: por eso no lo encontraba nadie). **SIN campo de módulo** (decisión del usuario, con un argumento que apareció leyendo el código: el registro ya mezcla los 8 grupos de ambos módulos). **Hallazgo corregido**: `handleStartExtra` marcaba `kind:'extra'` y `completeExtraSession` **no incrementa `moveSessionsTotal`** ⇒ quien hiciera sus rutinas propias desde Estira nunca progresaría hacia `move.sessions.25`. **(4) Loto**: se integra como **MÁSCARA CSS**, no como imagen — medido que el alfa del PNG es solo la silueta y el dibujo vive en la luminancia, así que la máscara se reconstruye desde la densidad de tinta y **el color lo pone un token**, que es lo que resuelve el contraste (crema sobre crema era invisible). 959 KB → **146 KB**; el primer intento pesaba 59 KB y se veía pixelado porque el alfa iba con pérdida. Sustituye al estilo `flor` (cero migración: el default ya era una flor). **Cinco correcciones del feedback en vivo**: wrap que reserva el máximo (las capas pintaban 420 con el wrap en 260 y se recortaban), un solo factor de escala (los huecos crecían **+44 %** al inhalar), giro como **animación CSS continua** (iba sobre `progress`, que avanza 1 vez/s ⇒ tirones), tinta `--breathe-2` en claro por paleta, y profundidad con halo + loto de fondo girando al revés + **respiración asimétrica**. **Extra**: salto de texto de **21 px** en Suspiro fisiológico porque `showCountdown` montaba y desmontaba el contador ⇒ altura reservada (s119), **0 px**. Consola limpia salvo un warning **PREEXISTENTE** de s116 (`Sidebar`/`BreatheSession`) → Fase 8.5. Diario: [session-138](./docs/sessions/session-138-pulido-visible.md).
+**Version actual:** v0.73.0 (s139 — **regresion de encaje de Respira + Fase 1.6**: el visual se dimensiona contra el HUECO REAL del centro y no contra `vh` (desbordaba en todo viewport <~743 px de alto) · **ninguna actividad en curso ensena barra de scroll** (regla de producto, amplia s125) · **vela del loto** (la transparencia tambien respira, sin subir el techo) · **banderas con migracion** para retirar estilo de timer y «organico» sin dejar a nadie atrapado · **boton fantasma MEDIDO** (`transition:'all'` animaba el `fontWeight`) · **idioma «Auto»** · punto guia del aro que nace en 0 · «Para ti» del BreakMenu ya no descuadra su fila. **PENDIENTE: el banding de la ATMOSFERA sigue abierto** — ver abajo. Detalle abajo.)
+**Version anterior:** v0.72.0 (s138 — **Fase 1.5 · pulido visible**: desfase del punto guía del pomodoro MEDIDO (1003 ms a 25 min, 1999 a 45) y corregido a **0 ms** · **atmósfera** del `SessionShell` fuera de Caminos (revisa s99) + 2ª pasada de banding · **constructor premium en Mueve Y Estira** y al principio de la lista · **loto de Respira** integrado como máscara CSS con el color por token. Detalle abajo.)
+**Ultima sesion:** #139 -- 2026-07-30 - **REGRESION DE ENCAJE DE RESPIRA + FASE 1.6**. Sesion de CODIGO. Bump **v0.72.0 -> v0.73.0**. **(1) La regresion de s138, resuelta atacando la unidad equivocada**: el wrap pedia `min(400px, 84vw, 56vh)` y `vh` es la VENTANA, no el hueco donde vive el visual. Modelo medido en 4 alturas y validado por PREDICCION (3 px predichos, 4 medidos a 1280x740): `centerH = vh - 155,6` contra `contenido = visual + 187,6` => **por debajo de ~743 px de alto SIEMPRE desbordaba** (un 1366x768 con barra de navegador cae dentro). El invariante de s138 protegia al visual contra su propia caja, no contra el presupuesto de la pantalla. Arreglo: el visual manda por ALTO y es el UNICO elastico del centro (suelo 160), los hermanos con `flexShrink:0`, `centerBody` a `flex:1 1 auto` + **`justify-content: safe center`** confinado con `:has()` (patron s125; el runner v1 y las reservas de s119 intactos) y **12 px de aire minimo** sin los cuales el visual se quedaba a tope pegado al header (2,4 px medidos a 1280x720). Verificado a 1920x880 / 1280x720 / 1366x660 / 1280x560 / 360x800 con el **peor caso muestreado** (Suspiro fisiologico, escala 1,35, las 3 fases): cero desborde, cero barra, holgura minima aro-texto 11,1 px. **En movil el tamano NO cambia** (lo capa `84vw`) -- coherente con que el usuario reportara el movil como perfecto. **(2) Regla de scroll del PRODUCTO**: ninguna actividad en curso ensena barra; la regla de s125 se **mudo** de `MoveSessionV1.support.jsx` a `SessionShell.responsive.js` para todo `[data-pace-session-center]`, dejando alli el diagnostico y el aviso de no reintroducirla. **(3) Hueco muerto reclamado** (feedback en vivo: «el icono sigue un poco arriba» + «has bajado demasiado las barras» = el MISMO hueco): margen negativo INFERIOR, con tope **aritmetico** `N <= gap - 2,4` y por eso **atado al tier** (-28/-16/-10); con 28 fijo la holgura caia a 6,4 px y el aro rozaba el texto. **(4) Vela del loto**: el problema no era que faltara giro (contragiraba desde s138) sino que no se notaba; 450->300 s (medido 23,68 grados en 20 s frente a 24 predichos) + `pace-loto-vela`, que mueve la TRANSPARENCIA multiplicando la opacidad de fase, asi que el techo **no sube** (0,066-0,153 contra el 0,16 de s138: solo se abre el suelo). **(5) Fase 1.6 completa**: `app/flags.js` nuevo con la bandera que gobierna **la UI Y la migracion** a la vez (devolverla a true reabre el selector y detiene la migracion en el mismo gesto; verificado con una instalacion ATRAPADA sembrada a mano) · **boton fantasma CONFIRMADO midiendo antes de tocar** (el peso recorria **41 valores fraccionarios** mientras el ancho tomaba **dos** => con las caras estaticas de Inter Tight el trazo saltaba a mitad de vuelo; corregido en las 5 filas + `statsPanelTabStyles.tab`, verificado por prediccion: 41 -> 2 valores y el peso pasa a cambiar en t=24 ms) · **idioma «Auto»** con `state.lang` siempre real y el modo aparte, 3 casos verificados y **`secret.bilingual` con su control** (Auto NO da el logro, elegir el otro idioma a mano SI). **(6) Dos reportes del usuario en vivo**: el punto guia del aro **no nacia en 0** (medido: montaba a t=1039 ms ya en 0,24 grados = 360/1500 clavado; enmienda del gate de s138 a `running || progress > 0`, ahora nace en angulo 0 a t=148 ms) y la tarjeta «Para ti» del BreakMenu **descuadraba su fila** (altura reservada s119; los 4 titulos a 102 px, dispersion 0). **PENDIENTE Y HONESTO: el banding de la ATMOSFERA sigue abierto** y es el peor de los tres (11,9 px por banda). Se trataron los dos radiales que faltaban, pero la receta que medía mejor (tile opaco en sRGB con `overlay`, sigma 1,641 contra 0,639) **se REVIRTIO porque rompia el loto** -- `mix-blend-mode` dentro de un subarbol con `opacity` no tiene backdrop. Hallazgos que quedan medidos: el grano de s138 tiene sigma 0,639, por DEBAJO del escalon de 1 nivel; los filtros SVG van en **linearRGB** y forzar sRGB duplica sigma; el `baseFrequency` **no influye**. **Bug propio introducido y corregido**: un comentario con backticks DENTRO de un template literal rompio `MoveSessionV1`; verificado con centinela que separa lo stale del buffer del pane. **Deuda atendida**: `BreatheVisual.jsx` llego a 512 ln y se troceo a `BreatheVisual.support.jsx` (queda en 421). Diario: [session-139](./docs/sessions/session-139-respira-y-ajustes.md).
+
+**Sesion anterior:** #138 -- 2026-07-30 - **FASE 1.5 · PULIDO VISIBLE**. Sesión de **CÓDIGO**, la primera tras nueve solo-documentales (s129–s137). Bump **v0.71.0 → v0.72.0**. **Decisión de entrada: el pomodoro-sol de s134 NO entra** —sigue sin aprobar y pasa a sesión propia por detrás de la Fase 2—; el motivo que pesó sobre los otros tres es que **habría impedido medir el ítem 1**, un desfase de milisegundos en ese mismo aro. **(1) Punto guía MEDIDO, no supuesto**: instrumentado con `MutationObserver` sobre el SVG (el muestreo por `rAF` salió inservible, el panel pinta a ~3 fps). Arco avanza en 1025 ms / punto monta en 2028 → **1003 ms** a 25 min; 1014 / 3013 → **1999 ms** a 45. **Causa confirmada por PREDICCIÓN**: el gate `progress > 0.001` ([TimerDial.jsx:110](app/ui/TimerDial.jsx)) equivale a segundos distintos según duración (1,5 s a 25 min ⇒ segundo 2; 2,7 s a 45 ⇒ segundo 3) mientras el arco avanza siempre en el segundo 1 — se predijo 2000 ms para 45 min y salieron 1999. Como `progress` es `1 - remaining/totalSec`, aritmética exacta, el umbral no protegía de nada ⇒ comparar contra `0`. **Verificado: 0 ms en los 4 presets.** **(2) Atmósfera fuera de Caminos** (revisa s99): el código estaba entero, solo había un gate `inPath ?` en tres sitios. **Consecuencia medida**: el banding se hace visible en pantallas grandes (misma rampa, más píxeles); 2ª pasada respetando la regla de s100 de no subir alphas — grano más fino y **cinco paradas** en vez de dos + hint. **(3) Constructor en Mueve Y Estira**, con prop de acento y **al principio** de ambas bibliotecas (estaba al final, tras 4 grupos: por eso no lo encontraba nadie). **SIN campo de módulo** (decisión del usuario, con un argumento que apareció leyendo el código: el registro ya mezcla los 8 grupos de ambos módulos). **Hallazgo corregido**: `handleStartExtra` marcaba `kind:'extra'` y `completeExtraSession` **no incrementa `moveSessionsTotal`** ⇒ quien hiciera sus rutinas propias desde Estira nunca progresaría hacia `move.sessions.25`. **(4) Loto**: se integra como **MÁSCARA CSS**, no como imagen — medido que el alfa del PNG es solo la silueta y el dibujo vive en la luminancia, así que la máscara se reconstruye desde la densidad de tinta y **el color lo pone un token**, que es lo que resuelve el contraste (crema sobre crema era invisible). 959 KB → **146 KB**; el primer intento pesaba 59 KB y se veía pixelado porque el alfa iba con pérdida. Sustituye al estilo `flor` (cero migración: el default ya era una flor). **Cinco correcciones del feedback en vivo**: wrap que reserva el máximo (las capas pintaban 420 con el wrap en 260 y se recortaban), un solo factor de escala (los huecos crecían **+44 %** al inhalar), giro como **animación CSS continua** (iba sobre `progress`, que avanza 1 vez/s ⇒ tirones), tinta `--breathe-2` en claro por paleta, y profundidad con halo + loto de fondo girando al revés + **respiración asimétrica**. **Extra**: salto de texto de **21 px** en Suspiro fisiológico porque `showCountdown` montaba y desmontaba el contador ⇒ altura reservada (s119), **0 px**. Consola limpia salvo un warning **PREEXISTENTE** de s116 (`Sidebar`/`BreatheSession`) → Fase 8.5. Diario: [session-138](./docs/sessions/session-138-pulido-visible.md).
 
 **Sesion anterior:** #137 -- 2026-07-30 - **Recorrido sistemático: 10 bloques del audit × 16 fases**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). Se cruzaron los **Bloques 0–9** del audit, los **4 backlogs vivos de STATE**, la deuda técnica y las deudas semánticas contra el plan. **8 de 10 bloques ya estaban cubiertos.** **Convergencia encontrada**: las pills «Breve/Tranquilo/Amplio» que el backlog de s117 pedía revisar **son los botones del descanso entre series**, es decir el bug del botón fantasma → ya cubierto en 1.6, mismo ítem con dos nombres. **11 HUECOS colocados**: **§17 «Pausa PACE»** (el más importante: el BreakMenu debe RECOMENDAR una acción concreta y es el **consumidor del feedback ligero** que se captura desde s116 sin usar; responde al problema D del §27.3) → **FASE 3.5** · trocear >500 líneas —**`tokens.css` 613**, `exercise-glyphs.jsx` ~513, `Sidebar.jsx` ~510—, **a11y** (tarjetas sin teclado, onboarding sin focus trap), **tests del state (A-6)**, **import sanitizado (A-7)**, **i18n robustez I18N-2** + deudas **D-1/D-2/D-3**, **bump automático** y **timer de Mueve por timestamps** → **FASE 8.5 saneamiento** · **onboarding contextual** (Bloque 2; sin él los filtros no tienen con qué filtrar) → Fase 8 · **logros de Caminos y de Travesías** → nacen en sus Fases 6 y 7. **DECISIÓN GRANDE: Android ENTRA en v1** (Fase 9), con el coste asumido tras dárselo medido: el envoltorio de Capacitor es barato porque la app ya es estática, pero **Play Billing obliga a un SEGUNDO camino de entitlement** que choca con la licencia offline sin cuentas ⇒ ~4–6 sesiones más y dependencia de los ciclos de revisión de Google. Recomendé web primero; el usuario eligió Android igualmente. **iOS queda fuera de v1.** Consecuencia: la Fase 3 debe respetar la **arquitectura por adaptadores** desde el día uno y el entitlement seguir pasando por `state-entitlement.jsx` como punto único, o Android obliga a reescribir. **Limpieza**: se marcaron **2 entradas OBSOLETAS de STATE** que contradecían la realidad (el scrollbar del runner figuraba como «sigue sin tocar» cuando s125 lo resolvió; el §0 de alturas <720px seguía pendiente cuando s126/s128 lo cerraron). Diario: [session-137](./docs/sessions/session-137-recorrido-sistematico.md).
 
@@ -21,7 +23,7 @@
 **Sesion anterior:** #135 -- 2026-07-30 - **Fase 1.6 definida: ajustes y dos retiradas**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). El usuario aportó 4 ítems nuevos de Ajustes y **tres hallazgos al verificarlos cambiaron el trabajo**: (1) **el idioma YA se auto-configura** en la primera apertura —`detectInitialLang()` existe desde s35 y `loadState()` lo usa ([useT.jsx:8](app/i18n/useT.jsx))—, lo que falta es la opción **«Auto» persistente** que re-evalúe en cada arranque (hoy `state.lang` queda fijo al guardarse); (2) el **botón fantasma** del descanso entre series tiene sospechoso: `transition:'all 180ms'` con `fontWeight` entre las propiedades que cambian ([TweaksPanel.jsx:290-295](app/tweaks/TweaksPanel.jsx)) ⇒ la transición **anima el peso de la fuente**; **hipótesis SIN confirmar**, hay que medir, y el mismo patrón está en `statsPanelTabStyles.tab`; (3) **ocultar el estilo de timer y «orgánico» dejaría gente ATRAPADA**: el default de `timerStyle` ya es `'aro'` ([state-core.jsx:33](app/state-core.jsx)) pero `FocusTimer.jsx:117` sigue leyendo el valor guardado y `BreatheVisual.jsx:197` conserva su rama de `organico`, así que quien los eligió no podría salir. **Decisiones del usuario**: **migrar** los valores huérfanos al cargar · ocultar con **una constante en un solo sitio** (`SHOW_TIMER_STYLE`/`SHOW_BREATH_ORGANICO`), sin borrar y con la razón anotada en `DECISIONES_TECNICAS_VIGENTES.md` para que nadie lo tome por código muerto · **«Auto» como default de instalaciones nuevas**, conservando la elección explícita de las actuales y verificando que no dispare el logro `secret.bilingual` · y **repartir los 8 ítems de pulido en dos sesiones** (1.5 visual, 1.6 ajustes) respetando la regla de un frente por sesión. Diario: [session-135](./docs/sessions/session-135-fase-1-6-ajustes.md).
 
 **Ultima actualizacion de este archivo:** 2026-07-30 - sesion 138 (v0.72.0; se retiraron del encabezado las sesiones s134-s128, que siguen en `CHANGELOG.md` y en sus diarios — este archivo no debe crecer)
-**Build entregado:** `index.html` **v0.72.0** (artefacto CANONICO de web/PWA: 7 laminas + **loto de Respira** + fuentes como ARCHIVO + precache en `sw.js` + `<link rel="manifest">`; verificado en el artefacto, cero data URIs). **`PACE_standalone.html` sigue en v0.71.0 A PROPOSITO** — decision s134: es un export BAJO DEMANDA y ya no se regenera en cada cierre; se restauro tras el build. Para regenerarlo: `node build-standalone.js` y rotar a `backups/`.
+**Build entregado:** `index.html` **v0.73.0** (regenerado en s139; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `061967ee...` antes y despues, decision s134). Antes: `index.html` **v0.72.0** (artefacto CANONICO de web/PWA: 7 laminas + **loto de Respira** + fuentes como ARCHIVO + precache en `sw.js` + `<link rel="manifest">`; verificado en el artefacto, cero data URIs). **`PACE_standalone.html` sigue en v0.71.0 A PROPOSITO** — decision s134: es un export BAJO DEMANDA y ya no se regenera en cada cierre; se restauro tras el build. Para regenerarlo: `node build-standalone.js` y rotar a `backups/`.
 
 ---
 
@@ -33,9 +35,9 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.72.0** |
+| `PACE.html` | Entry point de desarrollo modular | **v0.73.0** |
 | `PACE_standalone.html` | Bundle offline autocontenido | **v0.69.0** |
-| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.72.0** |
+| `index.html` | Copia de PACE_standalone.html para Cloudflare Pages root | **v0.73.0** |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome… | **v0.56.0** |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene… | **v0.56.0** |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo +… | **NUEVO s106** |
@@ -59,19 +61,21 @@
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standal… |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.58.0** |
-| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas | **v0.72.0** |
+| `app/ui/SessionShell.jsx` | Cascara compartida de sesiones activas (+ `paceGlowRamp`/`PaceDither`, dither compartido s139) | **v0.73.0** |
 | `app/ui/SessionShell.responsive.js` | CSS responsive de las sesiones (IIFE que inyecta… | **NUEVO s116** |
 | `app/ui/SessionFeedback.jsx` | Bloque de feedback del cierre («¿Te ayudó esta pausa?») — B2.2b-2 | **NUEVO s116** |
 | `app/ui/Primitives.jsx` | Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, displayItalic | **v0.44.0** |
 | `app/tweaks/TweakSecretsWatcher.jsx` | Detectores de secretos | **v0.52.0** |
-| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + notificacion + **Sesiones** + reset + legal… | **v0.58.0** |
+| `app/tweaks/TweaksPanel.jsx` | Panel de Ajustes (ejes + agua + notificacion + **Sesiones** + reset + legal… | **v0.73.0** |
 | `app/tweaks/TweaksData.jsx` | Seccion "Tus datos" -- Export/Import JSON + msg + iconos + tweaksDataStyles | **v0.52.0** |
 | `app/tweaks/PremiumSection.jsx` | Superficie premium display-only (sello + input licencia disabled + copy… | **v0.34.5** |
-| `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.72.0** |
+| `app/breathe/BreatheVisual.jsx` | Respiracion - visual + getSequence | **v0.73.0** |
+| `app/flags.js` | **Banderas de superficie** (Fase 1.6): `SHOW_TIMER_STYLE` / `SHOW_BREATH_ORGANICO`. La MISMA bandera oculta la opcion y gobierna la migracion del valor huerfano en `loadState`. NO es codigo muerto: leer su cabecera | **NUEVO s139** |
+| `app/breathe/BreatheVisual.support.jsx` | Hoja inyectada del loto: keyframes de giro y **vela**, tinta por paleta, reparto de alto del centro y reclamo del hueco muerto. Extraido al rebasar BreatheVisual las 500 ln | **NUEVO s139** |
 | `app/breathe/assets/loto.webp` | Loto de Respira como **MASCARA CSS** (640x640, 146 KB, alfa = densidad de tinta; el color lo pone el token) | **NUEVO s138** |
 | `scripts/ingest-loto.js` | Ingesta del loto: recorte + mascara desde luminancia + WebP con alfa SIN perdida. Regla D-4: si llega arte nuevo se RE-CORRE, no se sustituye el .webp a mano | **NUEVO s138** |
 | `app/breathe/BreatheLibrary.jsx` | Respiracion - biblioteca + seguridad (define `RoutineCard`, compartido por… | **v0.59.0** |
-| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.72.0** |
+| `app/breathe/BreatheSession.jsx` | Respiracion - sesion guiada | **v0.73.0** |
 | `app/move/MoveModule.jsx` | MoveLibrary + **MoveSession dispatcher** (legacy vs v1) + StepGlyph… | **v0.72.0** |
 | `app/move/move.data.js` | `MOVE_ROUTINES` (14 rutinas) + `getMoveRoutine` — extraido de MoveModule | **v0.64.0** |
 | `app/move/MoveSessionV1.jsx` | Runner del **contrato de pasos v1** por MODO (place/work/change + side) | **v0.72.0** |
@@ -82,8 +86,8 @@
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.67.0** |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
-| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.72.0** |
-| `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.15.0** |
+| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.73.0** |
+| `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph +… | **v0.33.3** |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) +… | **v0.53.0** |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** |
@@ -93,7 +97,7 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)**… | **v0.52.0** |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.72.0** |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.73.0** |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** |
 | `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** |
@@ -134,7 +138,7 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.66.0** |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** |
-| `sw.js` | Service Worker PWA | **v0.72.0** |
+| `sw.js` | Service Worker PWA | **v0.73.0** |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd`… | **v0.67.0** |
 | `app/focus/FocusTimer.parts.jsx` | Piezas de UI del Pomodoro extraídas: `MinutesPicker` (selector de duración… | **NUEVO s124** |
@@ -272,67 +276,65 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- FASE 1.6: AJUSTES Y DOS RETIRADAS
+## Proxima sesion -- BANDING DE LA ATMOSFERA + FASE 2 (auditoria de Mueve/Estira)
 
 > Orden de trabajo vigente: seccion «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
-> **FASE 1 cerrada** (plan + §37 + precio + artefactos). **FASE 1.5 cerrada en s138/v0.72.0.**
+> **FASE 1 cerrada** · **FASE 1.5 cerrada en s138/v0.72.0** · **FASE 1.6 CERRADA en s139/v0.73.0**.
 
-Cuatro items, ya definidos en el ROADMAP:
+### 1. HEREDADO DE s139 (empezar por aqui): el banding de la ATMOSFERA
 
-1. **Ocultar el estilo de timer** (queda siempre «aro») y **ocultar «organico»** del circulo de
-   respiracion. **Sin borrar**: una constante por opcion en un solo sitio (`SHOW_TIMER_STYLE`,
-   `SHOW_BREATH_ORGANICO`), reversible en una linea, con la razon anotada en
-   `DECISIONES_TECNICAS_VIGENTES.md` para que nadie lo borre creyendo que es codigo muerto.
-2. **Migracion de valores huerfanos** — la parte que no se ve y sin la cual lo anterior rompe.
-   `FocusTimer.jsx:117` sigue leyendo `state.timerStyle` y `BreatheVisual.jsx` conserva su rama de
-   `organico`, asi que quien los eligio **queda atrapado** si solo se ocultan de la UI.
-3. **BUG del boton fantasma** del descanso entre series. Sospechoso: `transition:'all 180ms'` con
-   `fontWeight` entre lo que cambia (`TweaksPanel.jsx:290-295`) ⇒ **anima el peso de la fuente**.
-   **Hipotesis SIN confirmar: MEDIR antes de tocar** (en s138 la causa «evidente» del punto guia si
-   se confirmo, pero solo despues de predecir su comportamiento en otro preset). Mismo patron en
-   `statsPanelTabStyles.tab`: revisarlo de paso.
-4. **Idioma «Auto»**: tercera opcion del selector y default de instalaciones NUEVAS, reevaluando en
-   cada arranque con `detectInitialLang()` (`useT.jsx:8`). Las instalaciones actuales conservan su
-   eleccion explicita. **Verificar** que no dispare el logro secreto `secret.bilingual`.
+Lo unico que quedo sin resolver de s139, y el usuario lo ve en PC (en movil no).
+**No re-diagnosticar desde cero: ya esta medido.**
 
-**Criterio de cierre:** ninguna opcion retirada deja a nadie atrapado, el bug medido antes de
-tocarlo, y el «Auto» verificado cambiando de verdad el idioma del sistema.
+- **Es el peor de los tres radiales** y es el que NO se toco en s139: la atmosfera apila el MISMO
+  degradado **dos veces** (`sessionAtmosphere`, `SessionShell.jsx`) ⇒ alpha efectivo
+  `1−(1−0,12)² = 0,2256` ⇒ recorre **29,6 niveles** de 8 bits sobre una rampa de ~353 px ⇒
+  **11,9 px por banda**, casi el doble que el halo del loto (6,8) y 3,4× el circulo de retencion
+  (3,5), que son los dos que s139 si arreglo.
+- **El grano de s138 no dithera**: sigma medido **0,639 niveles**, por DEBAJO del escalon de 1 nivel
+  que tiene que enmascarar, y baja la media 1,18 (es un velo oscuro, no ruido de media cero).
+- **Causa de fondo encontrada**: los filtros SVG operan en **linearRGB** por defecto. Forzar
+  `color-interpolation-filters='sRGB'` sube sigma de 0,639 a **1,004** con la misma opacidad. Y el
+  `baseFrequency` **no influye** en la amplitud (0,639 a 1,4 contra 0,636 a 0,9): el ajuste de
+  frecuencia de s138 no movio la aguja.
+- **VIA YA PROBADA Y REVERTIDA — no repetirla a ciegas**: tile OPACO de ruido centrado en gris medio
+  en sRGB compuesto con `overlay` medía **mucho** mejor (sigma 1,641, sin tenir el papel, verificado
+  en ambas paletas) pero **rompio el loto**: el contenedor del halo lleva `opacity` variable ⇒
+  stacking context AISLADO ⇒ un `mix-blend-mode` sin backdrop pinta el gris tal cual. Un tile opaco
+  solo sirve entre capas de `background` del MISMO elemento. Y ojo: el `background-blend-mode` en la
+  atmosfera **si** se aplico y no resolvio lo que se ve, asi que la hipotesis tampoco esta cerrada —
+  **hay que medir los pixeles REALES de la pagina**, no solo el tile en canvas.
+- Regla de s100 vigente: **NO subir alphas de tinte**. Se actua sobre dither y forma de rampa.
+- Las mediciones completas viven en el comentario de `SessionShell.jsx` y en
+  [session-139](./docs/sessions/session-139-respira-y-ajustes.md).
 
-**ABIERTO de s138 (decision del usuario pendiente):** los **aros** del visual de Respira. El usuario
-los senalo dos veces («el doble circulo simple funciona pero se puede mejorar»); s138 les anadio
-halo, loto de fondo contrarrotando y respiracion asimetrica, pero **siguen siendo dos hairlines**.
-Falta direccion suya sobre que quiere en su lugar — no es un bug, es criterio visual (regla D-4).
+### 2. Tambien abierto de Respira (decision del usuario, ya medida)
 
-**TRES REPORTES DEL USUARIO tras cerrar s138** (van con lo anterior, mismo bloque de Respira):
+**Quitar el aro y dejar el loto grande.** En s139 el usuario descarto las tres direcciones nuevas de
+aro —«uno parece un reloj, otro tapa el loto como con una cuenta atras»— y se quedo el doble
+hairline actual, pero dejo esto explicitamente **para mas adelante**. Ya esta medido: el loto puede
+subir de `inset 25,5 %` a **`14 %`** (el sitio que ocupa hoy el aro) y crece **+46,9 % de diametro**
+sin romper el invariante `(1 − 2·inset) × 1,35 ≤ 1`. Consecuencia a tener en cuenta: el `inset 14 %`
+lo fija HOY el aro, asi que quitarlo cambia el hueco muerto y con el el reclamo atado al tier
+(−28/−16/−10) de `BreatheVisual.support.jsx`. El usuario tambien pregunto si entonces los petalos
+podrian girar mas rapido: la recomendacion dada fue **crecer primero y juzgar despues**, porque un
+loto un 47 % mayor ya recorre un 47 % mas de pixeles con el mismo giro.
 
-0. **REGRESION de s138 — el visual de Respira no cabe.** Reportado como tres sintomas que son UN
-   solo hecho: (a) el circulo y el loto «estan muy arriba», (b) aparecio una barra de scroll dentro
-   de la actividad, (c) con el scroll bajado el aro exterior se corta por arriba. Medido:
-   `BreatheVisual.jsx:127` paso el wrap de 260x260 fijos a `min(400px, 84vw, 56vh)` => 400 px de
-   visual sin descontar header + texto de fase + contador + footer; `SessionShell.jsx:60` tiene
-   `overflowY:auto` desde s112 (red de seguridad, correcta) => al desbordar sale la barra; y
-   `SessionShell.jsx:64` centra con `margin:auto`, que **alinea ARRIBA al desbordar** => de ahi
-   «muy arriba». El invariante de s138 (el wrap reserva el maximo) protege al visual de recortarse
-   contra SU PROPIA caja, no contra el presupuesto vertical de la pantalla.
-   **Regla de scroll que fija el usuario:** nada de barra en el home ni DENTRO de una actividad en
-   curso; en los submenus de seleccion de actividad si se acepta de momento (se optimizaran aparte).
-   Precedente a seguir: s125 oculto la BARRA conservando el overflow, confinada con `:has()`
-   (`MoveSessionV1.support.jsx:216-229`). Ocultar la barra es el cinturon; el arreglo real es que el
-   visual se dimensione contra la altura disponible del centro, no contra `vh` en crudo.
+**Criterio del usuario que conviene recordar al proponer aros**: descarto marcas y enso porque los
+dos **miden** —una escala graduada y un arco con principio y fin— y en una guia de respiracion eso
+invita a mirar la medida en vez de a respirar. Mismo criterio por el que s107 saco el cronometro de
+la retencion.
 
-1. **La 2a capa del loto lee como «solo un zoom».** Peticion: que su TRANSPARENCIA tambien se mueva
-   (girar / contragirar), no solo escalar. Ojo al diagnosticar: el loto de fondo YA contragira
-   (`BreatheVisual.jsx:265`, `gira(450, -1)`), pero a 450 s/vuelta y opacidad 0,10-0,16 el
-   movimiento es **imperceptible** — por eso se percibe como zoom. Lo que falta no es el giro sino
-   que se NOTE: modular la opacidad en el tiempo, acelerar la contrarrotacion, o ambas.
-2. **Siguen viendose las lineas del degradado** (captura en PC, pantalla «Reten sin aire» de Rondas
-   express, paleta clara). La 2a pasada de s138 solo toco `sessionAtmosphere`
-   (`SessionShell.jsx:123-130`). Quedan **sin tratar** los radiales de 2 paradas y sin grano:
-   `BreatheSession.jsx:303` (circulo de retencion, el de la captura) y `BreatheVisual.jsx:244`
-   (halo del visual «flor»). `BreatheVisual.jsx:316` es de `organico`, que la Fase 1.6 retira.
+### 3. FASE 2 — Mueve y Estira (el frente grande que toca)
 
-**Lo que NO entra:** nada de la Fase 2 (nombres, glifos, descripciones, nivel/intensidad,
-preview) — esa arranca con su sesion de AUDITORIA y matriz §19.2 de los 92 pasos.
+Arranca con **su propia sesion de AUDITORIA** y la **matriz §19.2** de los 92 pasos. Es lo que el
+feedback beta real puso por delante: **37 % de nombres en ingles**, ~mitad de los ejercicios sin
+glifo, y metadatos sin consumidor. NO se colo nada de esto en s139 a proposito.
+
+**Lo que NO entra en la Fase 2**: los logros son la **Fase 2.5** (ya definida en s136: las 5 ultimas
+miniaturas ya se calculan, falta el glifo — hoy un `✦` fijo—, 34 glifos para 106 logros, escalonar
+entrega y subir umbrales, y el recalculo como **excepcion consciente** a §2.5).
+
 
 ## Decisiones activas -- indice
 
@@ -343,6 +345,13 @@ preview) — esa arranca con su sesion de AUDITORIA y matriz §19.2 de los 92 pa
 
 | Decision | Desde |
 |---|---|
+| **Ninguna actividad EN CURSO ensena barra de scroll** — AMPLIA s125 | s139 |
+| **Un visual elastico se mide contra el HUECO del centro, nunca contra `vh`** | s139 |
+| **Si el estado de un elemento cambia el `fontWeight`, NUNCA `transition:'all'`** | s139 |
+| **Retirar una opcion de la UI exige bandera UNICA que gobierne tambien la migracion** | s139 |
+| **El idioma «Auto» es un MODO aparte; `state.lang` siempre es un idioma real** | s139 |
+| **El punto guia del aro existe desde el ARRANQUE (`running`)** — ENMIENDA s138 | s139 |
+| **Un tile de dither OPACO solo es viable donde haya backdrop garantizado** | s139 |
 | **Atmosfera del `SessionShell` en TODA sesion, no solo en Camino** — REVISA s99 | s138 |
 | **El arte de linea del usuario se integra como MASCARA CSS, no como imagen** | s138 |
 | **Un visual que respira reserva su MAXIMO en el wrap y escala con UN SOLO factor** | s138 |
@@ -462,14 +471,14 @@ preview) — esa arranca con su sesion de AUDITORIA y matriz §19.2 de los 92 pa
 
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/tweaks/TweaksPanel.jsx` | 430 | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
-| `app/state-core.jsx` | 461 | BAJA (s138: solo el string de version; s106: +10 del profile; s101: split a state-history.jsx) |
+| `app/tweaks/TweaksPanel.jsx` | **492** | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
+| `app/state-core.jsx` | **494** | BAJA (s138: solo el string de version; s106: +10 del profile; s101: split a state-history.jsx) |
 | `app/focus/FocusTimer.jsx` | 496 | **MEDIA** (s108: +3 ln de la llamada al permiso; s102: +37 ln de notificacion+persistencia -- AL BORDE del tope; los helpers ya viven en FocusTimer.support.jsx, la proxima adicion al modulo Foco debe ir alli o a un split del MinutesPicker) |
-| `app/ui/SessionShell.jsx` | 352 | BAJA (s138: +16 ln de la 2a pasada anti-banding del wash; s116: CSS responsive EXTRAIDO a `SessionShell.responsive.js`) |
+| `app/ui/SessionShell.jsx` | 456 | BAJA (s138: +16 ln de la 2a pasada anti-banding del wash; s116: CSS responsive EXTRAIDO a `SessionShell.responsive.js`) |
 | `app/move/MoveSessionV1.jsx` | **500** | **ALTA -- EN EL TOPE** (s138: +2 ln del comentario de atmosfera y llega EXACTO al limite de 500 de CLAUDE.md; el proximo anadido va SI O SI a `MoveSessionV1.support.jsx`) |
 | `app/i18n/strings/ui.js` | 395 | BAJA (s138: etiqueta del visual Flor -> Loto, ES+EN; dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
-| `app/breathe/BreatheVisual.jsx` | 377 | BAJA (s138: 236 -> 377 por el loto -- 5 capas, keyframes inyectados y el porque de cada medida; margen amplio) |
+| `app/breathe/BreatheVisual.jsx` | 421 | BAJA (s139: llego a **512** con el encaje, el banding y la vela ⇒ TROCEADO a `BreatheVisual.support.jsx` (117 ln) con el patron `*.support.jsx`; queda en 421) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 355 | BAJA (s138: +14 ln del enrutado de credito de las rutinas propias; s82: split en main/_responsive + TopBar + ActivityBar) |

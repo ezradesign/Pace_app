@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.72.0';
+const PACE_VERSION = 'v0.73.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -53,6 +53,15 @@ const defaultState = {
   // Ver FocusTimer.support.jsx (maybeRequestNotifyPermission).
   notifyFocusEnd: true,
   lang: 'en',
+
+  /* Idioma AUTOMÁTICO (s139 · Fase 1.6). `lang` sigue siendo SIEMPRE un idioma
+     real ('es'|'en'), nunca 'auto': si valiera 'auto', `useT` buscaría
+     PACE_STRINGS['auto'] y caería a inglés en cada clave. El modo va aparte y
+     `loadState` lo RESUELVE en cada arranque.
+     FALSE aquí a propósito, aunque las instalaciones nuevas nazcan en Auto: el
+     merge `{...defaultState, ...parsed}` pasaría a Auto a TODA instalación
+     existente y borraría su elección. El true va solo en la rama sin `raw`. */
+  langAuto: false,
 
   // Premium (s88 · bloque Contenido+Premium F3b). Flag de desbloqueo del
   // contenido premium. Sin ruta de compra real hasta v1.0: permanece false y
@@ -288,6 +297,9 @@ function loadState() {
     if (!raw) {
       return {
         ...defaultState,
+        /* s139: las instalaciones NUEVAS nacen en Auto. Solo aquí — ver la nota
+           de `langAuto` en defaultState sobre por qué no puede ir allí. */
+        langAuto: true,
         lang: _detectLang(),
         palette: detectInitialPalette(),
         lastActiveDay: new Date().toDateString(),
@@ -298,6 +310,14 @@ function loadState() {
     }
     const parsed = JSON.parse(raw);
     if (!parsed.lang) parsed.lang = _detectLang();
+
+    /* s139 · idioma AUTO: se re-evalua en CADA arranque. Esto es lo que faltaba
+       —`detectInitialLang` existe desde s35, pero solo corria en la primera
+       apertura y despues `lang` quedaba congelado en lo que se guardo—. Al
+       resolverse aqui, ANTES de que monte nada, el cambio no lo ve el watcher de
+       `secret.bilingual` (su referencia se siembra en el primer render con el
+       valor ya resuelto): cambiar el idioma del sistema no regala el logro. */
+    if (parsed.langAuto === true) parsed.lang = _detectLang();
     /* Migracion defensiva s49: paths ausente en instalaciones pre-v0.26. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
     /* Migracion defensiva s54: paths.history ausente. */
@@ -336,6 +356,19 @@ function loadState() {
     /* Sesion 71 / v0.28.9: paleta 'envejecido' retirada; migrar a 'crema'. */
     if (parsed.palette === 'envejecido') {
       parsed.palette = 'crema';
+    }
+
+    /* Sesion 139 / Fase 1.6: valores HUERFANOS de las opciones retiradas. Sin
+       esto, ocultar el selector deja ATRAPADO a quien eligiera 'barra'/
+       'analogico' u 'organico'. La condicion cuelga de la MISMA bandera que
+       oculta la opcion (`app/flags.js`), asi que devolverla a true reabre el
+       selector Y detiene la migracion en el mismo gesto. Se lee por `window`:
+       si flags.js no cargara, NO se migra nada. */
+    if (window.SHOW_TIMER_STYLE === false && parsed.timerStyle !== 'aro') {
+      parsed.timerStyle = 'aro';
+    }
+    if (window.SHOW_BREATH_ORGANICO === false && parsed.breathStyle === 'organico') {
+      parsed.breathStyle = 'flor';
     }
 
     const merged = rolloverIfNeeded({ ...defaultState, ...parsed });

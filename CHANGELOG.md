@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.73.0** | 2026-07-30 | fix+feat: **regresión de encaje de Respira + Fase 1.6** — el visual se mide contra el hueco REAL · nada de barra en actividad en curso · vela del loto · banderas con migración · botón fantasma MEDIDO · idioma «Auto» | #139 | [abajo](#v0730----2026-07-30----fixfeat-regresion-de-encaje-de-respira--fase-16) |
 | **v0.72.0** | 2026-07-30 | fix+feat: **Fase 1.5 · pulido visible** — desfase del punto guía MEDIDO y a 0 ms · atmósfera fuera de Caminos · constructor en Mueve **y** Estira · **loto de Respira** | #138 | [abajo](#v0720----2026-07-30----fixfeat-fase-15--pulido-visible) |
 | **v0.71.0** | 2026-07-29 | feat(home): **home móvil universal · «amanecer del Camino»** | #128 | [abajo](#v0710----2026-07-29----feathome-home-movil-universal--amanecer-del-camino) |
 | **v0.70.0** | 2026-07-29 | fix(paths): **«Salir» de un Camino vuelve a la home en vez de avanzar** | #127 | [session-127](./docs/sessions/session-127-salida-caminos.md) |
@@ -329,6 +330,103 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.73.0] -- 2026-07-30 -- fix+feat: regresión de encaje de Respira + Fase 1.6
+
+Sesión **#139**. Diario: [session-139](./docs/sessions/session-139-respira-y-ajustes.md).
+
+### Corregido
+
+- **REGRESIÓN de s138: el visual de Respira no cabía.** Tres síntomas reportados —círculo «muy
+  arriba», barra de scroll dentro de la actividad, aro cortado al bajar el scroll— que eran **un
+  solo hecho**: el wrap pedía `min(400px, 84vw, 56vh)` y `vh` es la VENTANA, no el hueco donde vive
+  el visual (la ventana menos header, footer y padding, compartido además con el texto de fase, el
+  contador y la barra). **Modelo medido en cuatro alturas y validado por predicción** (a 1280×740
+  predijo ~3 px de desborde y midió 4): `centerH = vh − 155,6` frente a `contenido = visual +
+  187,6` ⇒ **por debajo de ~743 px de alto SIEMPRE desbordaba** (un 1366×768 con barra de navegador
+  cae dentro). El invariante de s138 protegía al visual contra su propia caja, no contra el
+  presupuesto de la pantalla. **Arreglo**: el visual se dimensiona por ALTO y el ancho lo deriva
+  `aspect-ratio`, es el único elemento **elástico** del centro (suelo 160 px) y el texto/barra
+  llevan `flexShrink:0` para que el déficit caiga siempre en el círculo; `centerBody` pasa a
+  `flex:1 1 auto` + `justify-content: safe center` **confinado con `:has()`** (patrón s125, el
+  runner v1 y las reservas de s119 intactos); y 12 px de **aire mínimo garantizado**, sin los cuales
+  el visual se quedaba a tamaño máximo pegado al header (2,4 px de aire medidos a 1280×720).
+  Verificado a 1920×880 · 1280×720 · 1366×660 · 1280×560 · 360×800 con el **peor caso muestreado**
+  (Suspiro fisiológico, el único patrón a escala 1,35, con las tres fases): cero desborde, cero
+  barra y holgura mínima aro↔texto de 11,1 px. **En móvil el tamaño no cambia** (lo capa `84vw`).
+- **Hueco muerto del visual reclamado** (feedback en vivo: «el icono sigue un poco arriba» + «has
+  bajado demasiado las barras de progreso» — el MISMO hueco). El wrap reserva su tamaño completo
+  pero el aro pinta el 72 % y oscila entre el 65 % y el 94 %: ~42 px vacíos por lado de media. Se
+  reclaman con un margen negativo **inferior**, que baja el círculo y sube la barra a partes
+  iguales. El tope es **aritmético** (`N ≤ gap − 2,4`, porque a escala máxima al aro le sobran
+  `0,014·W`), así que el reclamo va **atado al tier** (−28/−16/−10): con 28 fijo la holgura caía a
+  6,4 px y el aro rozaba el texto en el patrón fisiológico.
+- **BUG del botón fantasma · hipótesis de s135 CONFIRMADA con matiz.** `transition:'all'` animaba el
+  `fontWeight`: medido, el peso recorría **41 valores fraccionarios** mientras el ancho solo tomaba
+  **dos**. Con las caras estáticas de Inter Tight (s105) no hay peso intermedio que pintar, así que
+  el trazo saltaba a mitad de vuelo y la pastilla daba un tirón de ~2 px que desplazaba a su vecina.
+  Corregido con transición explícita en las **cinco** filas del panel y en `statsPanelTabStyles.tab`.
+  Verificado por predicción: 41 valores → **2**, y el peso pasa a cambiar en **t = 24 ms** (clic en
+  t = 20), el mismo instante que el ancho.
+- **El punto guía del aro no nacía en cero.** Enmienda al gate de s138: comparar contra 0 lo alineó
+  con el arco, pero `progress` vale 0 exacto todo el primer segundo y el punto no EXISTÍA ahí —
+  medido, montaba a t = 1039 ms directamente en **0,24° = 360/1500** clavado. Con `running` el punto
+  existe desde el arranque, en ángulo **0** (verificado a t = 148 ms) y sale de las 12 con su
+  transición. En reposo sigue sin haber punto.
+- **BreakMenu: la tarjeta «Para ti» descuadraba su fila.** El `<Tag>` se montaba solo en la
+  recomendada y la tarjeta es flex column con `gap:12`, así que empujaba glifo y título respecto a
+  la vecina. **Altura reservada** (s119). Medido: los cuatro títulos a 102 px del borde de su
+  tarjeta, dispersión **0**.
+
+### Añadido
+
+- **Regla de scroll del producto** (decisión del usuario): ninguna actividad EN CURSO enseña barra.
+  Se retira la barra conservando el `overflow-y:auto` de s112 —la red de seguridad que mantiene el
+  footer accesible—. **Amplía** el patrón de s125, cuya regla se mudó de `MoveSessionV1.support.jsx`
+  a `SessionShell.responsive.js` aplicada a todo `[data-pace-session-center]`; en su sitio original
+  queda el diagnóstico y el aviso de no reintroducirla. Las bibliotecas son modales y conservan su
+  barra (submenús, se optimizan aparte).
+- **La 2ª capa del loto deja de leerse como zoom.** El diagnóstico no era que faltara giro
+  (contragiraba desde s138) sino que no se notaba: a 450 s/vuelta una hoja tarda 28 s en ocupar el
+  sitio de la anterior, y a opacidad 0,10–0,16 la capa es un susurro. Contrarrotación **450 → 300 s**
+  (medido 23,68° en 20 s frente a 24 predichos; la velocidad RELATIVA entre los dos mandalas da una
+  hoja cada ~7 s) + **`pace-loto-vela`**: la transparencia también respira, multiplicando la
+  opacidad de fase, así que el **techo no sube** (medido 0,066–0,153 contra el 0,16 de s138: solo se
+  abre el suelo). Periodo 17 s, no múltiplo de ningún ciclo del catálogo, para que nunca se
+  sincronice con la fase.
+- **`app/flags.js`** — sitio único para las banderas de superficie. `SHOW_TIMER_STYLE` y
+  `SHOW_BREATH_ORGANICO` en `false` ocultan el estilo de timer (queda «aro») y el círculo
+  «orgánico», **sin borrar** su código y con la razón en la cabecera. La clave: **la misma bandera
+  gobierna la UI y la migración** de los valores huérfanos en `loadState`, así que devolverla a
+  `true` reabre el selector Y detiene la migración en el mismo gesto. Verificado con una instalación
+  ATRAPADA sembrada a mano y con la ida y vuelta de las banderas.
+- **Idioma «Auto»** — tercera opción y default de instalaciones NUEVAS, re-evaluado en cada arranque
+  con `detectInitialLang()`. `state.lang` sigue siendo siempre un idioma real; el modo vive en
+  `state.langAuto` (default `false` a propósito: el merge de `loadState` habría pasado a Auto a toda
+  instalación existente). Tres casos verificados —existente conserva su elección, nueva nace en Auto,
+  y Auto con `lang` obsoleto se re-evalúa—. **`secret.bilingual` verificado con su control**: elegir
+  «Auto» cambia el idioma y NO da el logro; elegir después el otro idioma a mano SÍ lo da.
+
+### Deuda
+
+- `BreatheVisual.jsx` llegó a **512 líneas** con los cambios de Respira; troceado con el patrón
+  `*.support.jsx` ya existente → **`app/breathe/BreatheVisual.support.jsx`** (hoja inyectada) y el
+  componente queda en 421.
+
+### Pendiente / no resuelto
+
+- **El banding de la ATMÓSFERA sigue abierto** y es el peor de los tres (11,9 px por banda: apila el
+  mismo degradado dos veces ⇒ 29,6 niveles sobre 353 px). Se trataron los dos radiales que faltaban
+  (círculo de retención y halo, a rampa de 5 paradas + dither, alpha máximo intacto en 0,12) y se
+  extrajo el grano a un sitio reutilizable. Pero se **intentó y REVIRTIÓ** una receta mejor —tile
+  opaco de ruido centrado en sRGB con `overlay`, σ 1,641 contra 0,639 y sin teñir— porque **rompía
+  el loto**: el contenedor del halo tiene `opacity` variable ⇒ stacking context aislado ⇒ un
+  `mix-blend-mode` sin backdrop pinta el gris opaco. Hallazgos que quedan medidos para retomarlo: el
+  grano de s138 tiene σ **0,639**, por debajo del escalón de 1 nivel que debe enmascarar; los
+  filtros SVG operan en **linearRGB** por defecto y forzar `sRGB` duplica σ; y el `baseFrequency`
+  **no influye** en la amplitud (el ajuste de s138 no movió la aguja).
 
 ---
 
