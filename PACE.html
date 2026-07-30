@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.72.0</title>
+  <title>PACE · Foco · Cuerpo — v0.73.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -133,6 +133,11 @@
        state-core -- loadState() resuelve archiveDayToHistory/getMondayOf/
        recomputeAllHistoryAggregates via window al evaluarse. -->
   <script type="text/babel" src="app/state-history.jsx"></script>
+  <!-- flags (s139 · Fase 1.6): banderas de superficie. ANTES de state-core --
+       loadState() lee SHOW_TIMER_STYLE / SHOW_BREATH_ORGANICO para migrar los
+       valores huérfanos de quien eligió una opción ya retirada. NO es código
+       muerto: ver la cabecera del archivo antes de tocar nada. -->
+  <script type="text/babel" src="app/flags.js"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <script type="text/babel" src="app/state-timer.jsx"></script>
   <script type="text/babel" src="app/state-hydrate.jsx"></script>
@@ -195,6 +200,11 @@
 
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>
+  <!-- Hoja inyectada del loto (s139): keyframes de giro y vela, tinta por
+       paleta y el reparto de alto del centro de Respira. Extraída de
+       BreatheVisual.jsx al rebasar este las 500 líneas. Es una IIFE idempotente
+       sin exports: basta con cargarla DESPUÉS de su componente. -->
+  <script type="text/babel" src="app/breathe/BreatheVisual.support.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheLibrary.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheSession.jsx"></script>
   <!-- Datos de Mueve (s110 · B2.2): MOVE_ROUTINES + getMoveRoutine. ANTES de

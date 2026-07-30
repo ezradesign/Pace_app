@@ -110,10 +110,20 @@ function BreakMenu({ open, onClose, onChoose }) {
                   background: o.color, opacity: 0.6,
                 }} />
               )}
-              {/* Tag "Para ti" en la opción recomendada */}
-              {recommended && (
+              {/* Tag "Para ti" en la opción recomendada.
+                  s139 · ALTURA RESERVADA (decisión s119, mismo arreglo que el
+                  contador de Respira). El Tag se montaba SOLO en la
+                  recomendada y la tarjeta es flex column con `gap:12`, así que
+                  esa tarjeta empujaba su glifo, su título y su descripción
+                  —altura del Tag + 12 px— respecto a la vecina de la MISMA
+                  fila: las dos columnas dejaban de cuadrar (reportado por el
+                  usuario). Ahora el hueco existe siempre y solo se oculta el
+                  contenido. `visibility:hidden` lo saca además del árbol de
+                  accesibilidad, así que «Para ti» no se anuncia en las tres
+                  tarjetas que no lo son. */}
+              <div style={{ visibility: recommended ? 'visible' : 'hidden' }}>
                 <Tag color="var(--focus)">{t('break.recommended')}</Tag>
-              )}
+              </div>
               <div style={{ color: o.color, fontSize: 28 }}>{o.icon}</div>
               <div>
                 <div style={{ ...displayItalic, fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{o.label}</div>

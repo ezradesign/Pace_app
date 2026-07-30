@@ -120,7 +120,110 @@ const sessionShellStyles = {
        siguiendo una caída tipo ease-out. Con más puntos de control el
        compositor interpola tramos cortos y no hay ningún tramo largo donde el
        redondeo a 8 bits produzca un salto visible. */
-const SESSION_ATMOS_GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E")`;
+/* ============================================================
+   s139 · DITHER COMPARTIDO — una sola receta de grano para toda la app
+   ------------------------------------------------------------
+   El grano vivía como constante privada de este archivo mientras dos radiales
+   más (el halo del loto y el círculo de retención de Respira) bandeaban SIN
+   tratar. Duplicar la cadena del SVG en cada sitio garantizaba que divergieran,
+   así que la receta se extrae aquí y se expone a `window`.
+
+   POR QUÉ EL GRANO Y NO MÁS PARADAS. El banding tiene una causa aritmética
+   medida: el número de escalones lo fija el color, no la forma de la rampa.
+   `--breathe-soft` (rgba(201,122,93,0.12)) sobre `--paper` (#F2EDE0) recorre
+   `(224−93)×0,12 = 15,72` niveles de 8 bits en el canal azul (verificado contra
+   el DOM). Repartidos sobre el radio de la rampa dan **3,5 px por banda** en el
+   círculo de retención (140 px) y **6,8 px** en el halo (288 px): visibles los
+   dos. Añadir paradas NO cambia esos 15,72 niveles —solo mueve dónde caen los
+   saltos—; lo que rompe el contorno es ruido de amplitud comparable a un
+   escalón. De ahí que el remedio principal sea el dither y las paradas el
+   acompañamiento. Y explica lo ya observado en s138 y confirmado por el usuario
+   en su móvil: a más píxeles por banda, más visible ⇒ se ve en PC y no en el
+   teléfono.
+
+   POR QUÉ LA RECETA DE s100/s138 NO BASTABA (medido en s139, tras un reporte del
+   usuario de que en PC se seguían viendo las bandas). Se instrumentó el tile real
+   rasterizándolo en un canvas y midiendo su desviación típica en niveles de
+   8 bits, y se midió el banding con una métrica directa: la longitud de las
+   MESETAS (píxeles consecutivos con el mismo valor de 8 bits) a lo largo de la
+   rampa. Tres hallazgos:
+
+     1. La atmósfera es el peor caso, no el halo: apila el MISMO degradado DOS
+        veces, así que su alpha efectivo es 1−(1−0,12)² = 0,2256 y recorre 29,6
+        niveles sobre una rampa de ~353 px ⇒ **11,9 px por banda**, casi el doble
+        que el halo (6,8) y 3,4× el círculo de retención (3,5).
+     2. El grano tenía σ = 0,639 niveles: POR DEBAJO del escalón de 1 nivel que
+        debía enmascarar. Era más un velo oscuro (bajaba la media 1,18 niveles)
+        que un dither.
+     3. La causa de fondo: los filtros SVG operan por defecto en **linearRGB**.
+        Forzar `color-interpolation-filters='sRGB'` sube σ de 0,639 a 1,004 con
+        la MISMA opacidad — la mitad del dither se perdía en la conversión. Y el
+        `baseFrequency` no influye en la amplitud (σ 0,639 a 1,4 contra 0,636 a
+        0,9), así que el ajuste de frecuencia de s138 no movió la aguja.
+
+   LO QUE SE INTENTÓ Y SE REVIRTIÓ (s139): un tile OPACO de ruido centrado en
+   gris medio en sRGB, compuesto en `overlay`. Medía mucho mejor —σ 1,641 contra
+   0,639 y sin teñir el papel (desvío −0,47), verificado en ambas paletas— pero
+   **rompía el loto** y se deshizo. Motivo, para no repetirlo: el contenedor del
+   halo lleva `opacity` variable ⇒ stacking context AISLADO ⇒ un
+   `mix-blend-mode` sin backdrop pinta el gris opaco tal cual, y aparecía un
+   disco gris sobre el mandala. Además el `background-blend-mode` de la atmósfera
+   sí se aplicó y NO resolvió el banding que se ve en pantalla, así que la
+   hipótesis tampoco estaba cerrada.
+
+   ESTADO REAL: **el banding de la atmósfera sigue SIN resolver** y es el peor de
+   los tres (11,9 px por banda). Lo que sí quedó de s139 es la rampa de cinco
+   paradas compartida y el dither aplicado a los dos radiales que no lo tenían.
+   Las mediciones de arriba son el punto de partida para quien lo retome; la vía
+   del tile opaco solo es viable donde haya backdrop garantizado (entre capas de
+   `background` del MISMO elemento), nunca dentro de subárboles con opacidad.
+   ============================================================ */
+/* RECETA DE s138, CONSERVADA. En s139 se intentó sustituirla por un tile OPACO
+   de ruido centrado en gris medio compuesto en `overlay` (que medía σ 1,641 en
+   vez de 0,639 y sin teñir) y **se revirtió: rompía el loto**. Motivo, para que
+   nadie lo reintente a ciegas: el contenedor del halo lleva `opacity` variable,
+   y eso crea un stacking context AISLADO; dentro de un grupo aislado un
+   `mix-blend-mode` no tiene backdrop contra el que fusionarse, así que el gris
+   opaco se pinta tal cual y aparece un disco gris sobre el mandala. Un tile
+   opaco solo es viable donde haya backdrop garantizado (p. ej. entre capas de
+   `background` del MISMO elemento), no dentro de subárboles con opacidad.
+   Ver la nota de banding pendiente en STATE.md antes de volver a intentarlo. */
+function paceGrainUrl(opacity = 0.055, baseFrequency = 1.4, tile = 160) {
+  return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${tile}' height='${tile}'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${baseFrequency}' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='${tile}' height='${tile}' filter='url(%23n)' opacity='${opacity}'/%3E%3C/svg%3E")`;
+}
+
+/* paceGlowRamp — resplandor circular con la MISMA forma de caída que la
+   atmósfera de s138, reescalada a cualquier borde. Las cinco paradas de la
+   atmósfera, normalizadas sobre su propio borde (56%), caen en 0 · 0,214 ·
+   0,464 · 0,679 · 0,839 · 1: se reutilizan tal cual para no inventar una curva
+   nueva por superficie. Sustituye a los radiales de DOS paradas. */
+function paceGlowRamp(soft, edge) {
+  const at = f => `${(edge * f).toFixed(1)}%`;
+  return `radial-gradient(circle, ${soft} 0%, ${soft} ${at(0.214)}, `
+       + `color-mix(in srgb, ${soft} 62%, transparent) ${at(0.464)}, `
+       + `color-mix(in srgb, ${soft} 28%, transparent) ${at(0.679)}, `
+       + `color-mix(in srgb, ${soft} 9%, transparent) ${at(0.839)}, transparent ${edge}%)`;
+}
+
+/* PaceDither — capa de grano para una superficie CIRCULAR.
+   El grano se enmascara con la misma caída que el resplandor: sin la máscara
+   el ruido cubriría el cuadrado entero del elemento y, como el degradado ya es
+   transparente pasado `edge`, se vería un disco de ruido con borde duro contra
+   el papel. La máscara es un degradado más, pero un degradado que modula RUIDO
+   no bandea: no hay estructura suave que contornear. Misma técnica de máscara
+   que ya gobierna el loto (decisión s138). */
+function PaceDither({ edge = 74, opacity = 0.055 }) {
+  const fade = `radial-gradient(#000 0%, #000 ${(edge * 0.5).toFixed(1)}%, transparent ${edge}%)`;
+  return (
+    <div aria-hidden="true" style={{
+      position: 'absolute', inset: 0, borderRadius: '50%', pointerEvents: 'none',
+      backgroundImage: paceGrainUrl(opacity),
+      WebkitMaskImage: fade, maskImage: fade,
+    }} />
+  );
+}
+
+const SESSION_ATMOS_GRAIN = paceGrainUrl();
 function sessionAtmosphere(soft) {
   const g = `radial-gradient(130% 70% at 50% -8%, ${soft} 0%, ${soft} 12%, `
           + `color-mix(in srgb, ${soft} 62%, transparent) 26%, `
@@ -349,5 +452,6 @@ function sessionDoneKeyBlocked(e) {
 Object.assign(window, {
   SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
   sessionShellStyles, sessionAtmosphere,
+  paceGrainUrl, paceGlowRamp, PaceDither,
   sessionKeyOnControl, sessionDoneKeyBlocked,
 });

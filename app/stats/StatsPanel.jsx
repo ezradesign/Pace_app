@@ -390,7 +390,12 @@ const statsPanelTabStyles = {
     background: active ? 'var(--paper)' : 'transparent',
     color: active ? 'var(--ink)' : 'var(--ink-3)',
     boxShadow: active ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-    transition: 'all 160ms var(--ease)',
+    /* s139 — mismo bug que las pastillas de Ajustes: `all` animaba el
+       `fontWeight` (400↔600). Aquí no se notaba el tirón de ancho porque los
+       tabs son `flex:1`, pero el trazo saltaba igual a mitad de la transición.
+       Se listan las propiedades; el peso cambia instantáneo, que es lo correcto
+       para una señal de estado. Ver la nota larga en TweaksPanel.jsx. */
+    transition: 'background-color 160ms var(--ease), color 160ms var(--ease), box-shadow 160ms var(--ease)',
   }),
 };
 

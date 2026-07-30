@@ -32,11 +32,21 @@ function TweakSecretsWatcher() {
   /* secret.bilingual (B1, sustituto de apnea) — usar la app en los dos
      idiomas: cualquier cambio de idioma tras el montaje implica haber
      estado en ambos. El primer render solo siembra la referencia. */
+  /* s139 — guard del modo AUTO. El logro premia haber USADO la app en los dos
+     idiomas, que es un gesto deliberado; en Auto el idioma lo elige el sistema,
+     no la persona. Sin este guard, elegir «Auto» estando en el idioma contrario
+     al del sistema cambiaría `state.lang` y regalaría el secreto por tocar un
+     ajuste. Los arranques en Auto ya son inofensivos por otra vía (se resuelven
+     en `loadState`, antes de montar, así que `prevLangRef` nace con el valor
+     final). Casos que SÍ siguen contando: es↔en explícitos, y salir de Auto
+     eligiendo el otro idioma a mano —ahí `langAuto` ya es false—. */
   const prevLangRef = useRefSW(null);
   useEffectSW(() => {
     const prev = prevLangRef.current;
     prevLangRef.current = state.lang;
-    if (prev != null && prev !== state.lang) unlockAchievement('secret.bilingual');
+    if (prev != null && prev !== state.lang && state.langAuto !== true) {
+      unlockAchievement('secret.bilingual');
+    }
   }, [state.lang]);
 
   /* Logros de logoVariant — conservados por compat / easter eggs futuros. */

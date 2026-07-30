@@ -44,6 +44,31 @@
   const s = document.createElement('style');
   s.id = 'pace-session-responsive-css';
   s.textContent = `
+    /* s139 · REGLA DE SCROLL DEL PRODUCTO (decisión del usuario): dentro de una
+       actividad EN CURSO no asoma barra de scroll. Nunca en el home; en los
+       submenús de selección (bibliotecas) se acepta de momento y se optimizarán
+       aparte.
+       Lo que se retira es la BARRA, no el scroll: el \`overflow-y:auto\` de s112
+       se conserva íntegro porque es la red de seguridad que mantiene el footer
+       —donde vive la acción primaria— accesible en pantallas bajas. El contenido
+       sigue alcanzable por rueda, gesto y teclado.
+       AMPLÍA el patrón de s125, que hacía exactamente esto confinado al runner
+       v1 con \`:has([data-pace-v1-progress])\`. Aquel confinamiento era correcto
+       entonces —solo v1 desbordaba, y globalizarlo habría sido un efecto
+       colateral sin diagnóstico— pero la regla es del PRODUCTO, no de un runner,
+       así que ahora vive aquí y la de v1 se retira (ver MoveSessionV1.support).
+       Alcance real de \`[data-pace-session-center]\`: solo existe mientras hay
+       una sesión en marcha (prep · activo · retención · done de Respira, Mueve y
+       Estira, y los 4 tipos de paso de Camino). Las bibliotecas son modales de
+       Primitives y NO llevan este hook: conservan su barra, como se quiere. */
+    [data-pace-session-center] {
+      scrollbar-width: none;          /* Firefox */
+      -ms-overflow-style: none;       /* Edge/IE legacy */
+    }
+    [data-pace-session-center]::-webkit-scrollbar {
+      display: none;                  /* WebKit / Blink */
+    }
+
     @media (max-width: 640px) {
       [data-pace-session-root] {
         padding: 16px 20px 24px !important;
