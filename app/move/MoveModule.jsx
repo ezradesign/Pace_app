@@ -25,6 +25,13 @@ function MoveLibrary({ open, onClose, onStart }) {
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} maxWidth={860}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
+        {/* Tus rutinas — constructor premium (F7 · s93). s138: sube al PRIMER
+            lugar (estaba al final, tras 4 grupos de tarjetas, y por eso no lo
+            encontraba nadie) y aparece igual en Estira. Guard defensivo por si
+            el orden de carga fallara (patrón s83). */}
+        {typeof CustomRoutinesSection !== 'undefined' && (
+          <CustomRoutinesSection onStart={onStart} accent="var(--move)" />
+        )}
         {Object.entries(MOVE_ROUTINES).map(([key, group]) => (
           <div key={key}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
@@ -38,11 +45,6 @@ function MoveLibrary({ open, onClose, onStart }) {
             </div>
           </div>
         ))}
-        {/* Tus rutinas — constructor premium (F7 · s93). Guard defensivo
-            por si el orden de carga fallara (patrón s83). */}
-        {typeof CustomRoutinesSection !== 'undefined' && (
-          <CustomRoutinesSection onStart={onStart} />
-        )}
       </div>
     </Modal>
   );
@@ -62,9 +64,10 @@ function MoveSession(props) {
 
 function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   const { t, tn, lang } = useT();
-  // Atmosfera del step (s99): tinte del modulo SOLO en Camino (Mueve tan /
-  // Estira azul-gris segun kind).
-  const atmo = inPath ? (kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)') : undefined;
+  // Atmosfera del step: tinte del modulo por kind (Mueve tan / Estira
+  // azul-gris). s138: deja de estar confinada a Caminos (revisa s99) -- se ve
+  // igual en la sesion suelta.
+  const atmo = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   // B1: acento por kind en TODA la sesion (prep, glifo, contador, barra,
   // done) — Estira deja de vivir en var(--move).
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';

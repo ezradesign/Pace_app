@@ -26,7 +26,10 @@ function BreatheSession({ routine, onExit, inPath }) {
   const [state] = usePace();
   const { t, lang } = useT();
   // Atmosfera del step (s99): tinte terracota muy sutil SOLO en Camino.
-  const atmo = inPath ? 'var(--breathe-soft)' : undefined;
+  /* s138: la atmosfera deja de estar confinada a Caminos (revisa s99). El wash
+     del modulo se ve tambien en la sesion suelta -- misma cascara, mismo color,
+     la identidad del modulo no depende de por donde entraste. */
+  const atmo = 'var(--breathe-soft)';
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const displayRoutine = lang === 'en'
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
@@ -380,13 +383,20 @@ function BreatheSession({ routine, onExit, inPath }) {
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
           marginBottom: 8, lineHeight: 1,
         }}>{displayLabel}</div>
-        {showCountdown && (
-          <div style={{
-            ...displayItalic,
-            fontSize: 28, color: 'var(--breathe)',
-            fontVariantNumeric: 'tabular-nums', marginTop: 4,
-          }}>{remaining}</div>
-        )}
+        {/* s138 — ALTURA RESERVADA (decision s119). Antes este nodo se montaba y
+            desmontaba segun `showCountdown` (duracion >= 4 s), asi que en
+            Suspiro fisiologico —«Inhala» 2 s, «Inhala mas» 1 s, «Exhala» 5 s—
+            aparecia solo en la exhalacion. Como el bloque central va centrado
+            con `margin:auto`, montarlo y desmontarlo movia TODO el texto:
+            medido, 21 px de salto entre fases. Ahora el hueco existe siempre y
+            solo se oculta el numero; `visibility:hidden` ademas lo saca del
+            arbol de accesibilidad, asi que no se anuncia cuando no aplica. */}
+        <div style={{
+          ...displayItalic,
+          fontSize: 28, color: 'var(--breathe)',
+          fontVariantNumeric: 'tabular-nums', marginTop: 4,
+          visibility: showCountdown ? 'visible' : 'hidden',
+        }}>{showCountdown ? remaining : '0'}</div>
         {/* En rounds el contador de respiraciones ES el progreso de la ronda
             (util, Wim Hof). En no-rounds se retira el "Ns/Ns": era redundante
             con el numeral grande de arriba (mismo dato de fase) -> menos ruido,

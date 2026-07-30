@@ -417,6 +417,13 @@ function ExtraLibrary({ open, onClose, onStart }) {
   return (
     <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.extra.title')} subtitle={t('lib.extra.subtitle')} maxWidth={860}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
+        {/* Tus rutinas — s138: el constructor premium vivia SOLO en Mueve.
+            Espejo de MoveLibrary con el acento de Estira; la lista es la misma
+            (una rutina propia no pertenece a un modulo). Guard defensivo por
+            el orden de carga (patron s83). */}
+        {typeof CustomRoutinesSection !== 'undefined' && (
+          <CustomRoutinesSection onStart={onStart} accent="var(--extra)" />
+        )}
         {Object.entries(EXTRA_ROUTINES).map(([key, group]) => (
           <div key={key}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>

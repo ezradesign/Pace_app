@@ -106,8 +106,20 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
             strokeLinecap="round"
             strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
             style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
-          {/* Punto guia en la punta del progreso (halo + nucleo). */}
-          {progress > 0.001 && (
+          {/* Punto guia en la punta del progreso (halo + nucleo).
+              s138 — el gate era `progress > 0.001` y hacia que el punto
+              montara MAS TARDE que el primer avance del arco. Medido con
+              MutationObserver sobre el SVG: el umbral se traduce en segundos
+              distintos segun la duracion (0.001 x 1500 s = 1,5 s -> el punto
+              espera al segundo 2; 0.001 x 2700 s = 2,7 s -> al segundo 3),
+              mientras el arco avanza SIEMPRE en el segundo 1. Desfase real
+              1003 ms a 25 min y 1999 ms a 45 min (0 s a 15, 2 s a 35).
+              `progress` es `1 - remaining/totalSec` (FocusTimer.jsx:93):
+              aritmetica exacta que vale 0 clavado en reposo, asi que el
+              umbral no protegia de ruido de coma flotante. Comparar contra 0
+              monta el punto en el MISMO tick en que el arco arranca, con
+              cualquier duracion (incluida la de "Otro"). */}
+          {progress > 0 && (
             <g transform={`rotate(${progress * 360} 50 50)`}
                style={{ transition: 'transform 1s linear' }}>
               <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />

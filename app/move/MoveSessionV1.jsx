@@ -35,7 +35,9 @@ const { useState: useStateV1, useEffect: useEffectV1, useRef: useRefV1 } = React
 
 function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const { t, tn, lang } = useT();
-  const atmo = inPath ? (kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)') : undefined;
+  // s138: atmosfera tambien fuera de Caminos (revisa s99); el color sigue
+  // saliendo del kind, como en el runner legacy.
+  const atmo = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
   const accentSoft = kind === 'extra' ? 'var(--extra-soft)' : 'var(--move-soft)';
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };

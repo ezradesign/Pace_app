@@ -13,7 +13,16 @@
    MoveLibrary (handleStartMove → MoveSession kind='move' →
    completeMoveSession). */
 
-function CustomRoutinesSection({ onStart }) {
+/* s138 — la seccion vive AHORA en las DOS bibliotecas (Mueve y Estira) y ya no
+   al final de la lista, sino arriba: el constructor era invisible (ultimo
+   bloque tras 4 grupos de tarjetas) y esa era la queja.
+   `accent` = color del modulo anfitrion (`--move` en Mueve, `--extra` en
+   Estira). Las rutinas LISTADAS son las mismas en ambos sitios: una rutina
+   propia NO pertenece a un modulo (el registro de ejercicios ya mezcla los 8
+   grupos de Mueve y de Estira), asi que separarlas exigiria un campo nuevo e
+   inventaria una taxonomia falsa. El aside lo dice en voz alta para que ver la
+   misma lista dos veces no se lea como un bug. */
+function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const { t, tn } = useT();
   const [pace] = usePace();
   const unlocked = !!pace.premiumUnlocked;
@@ -51,7 +60,7 @@ function CustomRoutinesSection({ onStart }) {
             </div>
           </Card>
           {routines.map(r => (
-            <CustomRoutineCard key={r.id} routine={r} locked />
+            <CustomRoutineCard key={r.id} routine={r} accent={accent} locked />
           ))}
         </div>
       ) : (
@@ -60,6 +69,7 @@ function CustomRoutinesSection({ onStart }) {
             <CustomRoutineCard
               key={r.id}
               routine={r}
+              accent={accent}
               onClick={() => startRoutine(r)}
               onEdit={() => openBuilder(r.id)}
             />
@@ -68,11 +78,11 @@ function CustomRoutinesSection({ onStart }) {
             <div
               onClick={() => openBuilder(null)}
               style={customRoutinesStyles.createCard}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--move)'; e.currentTarget.style.color = 'var(--ink)'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = accent; e.currentTarget.style.color = 'var(--ink)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-2)'; }}
             >
               <div style={{ textAlign: 'center', padding: '8px 14px' }}>
-                <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 6, color: 'var(--move)' }}>+</div>
+                <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 6, color: accent }}>+</div>
                 <div style={{ ...displayItalic, fontSize: 17, fontWeight: 500 }}>{t('custom.create')}</div>
                 {routines.length === 0 && (
                   <p style={{ fontSize: 12, color: 'var(--ink-3)', margin: '8px 0 0', lineHeight: 1.5 }}>
@@ -94,13 +104,13 @@ function CustomRoutinesSection({ onStart }) {
 
 /* Card de rutina propia — gemela visual de RoutineCard (que no se toca:
    es parte del mecanismo de gating) con lápiz de edición añadido. */
-function CustomRoutineCard({ routine, locked, onClick, onEdit }) {
+function CustomRoutineCard({ routine, locked, onClick, onEdit, accent = 'var(--move)' }) {
   const { t, tn } = useT();
   const stepsLabel = routine.steps.length === 1
     ? t('custom.steps.one')
     : tn('custom.steps.many', { n: routine.steps.length });
   return (
-    <Card accent={locked ? undefined : 'var(--move)'} onClick={locked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
+    <Card accent={locked ? undefined : accent} onClick={locked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
       {!locked && (
         <button
           onClick={(e) => { e.stopPropagation(); onEdit(); }}
@@ -116,7 +126,7 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit }) {
         </button>
       )}
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
-        <Tag color="var(--move)">{t('custom.tag')}</Tag>
+        <Tag color={accent}>{t('custom.tag')}</Tag>
       </div>
       <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{routine.name}</h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{stepsLabel}</p>
@@ -130,7 +140,7 @@ function CustomRoutineCard({ routine, locked, onClick, onEdit }) {
         {locked ? (
           <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
         ) : (
-          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--move)', fontWeight: 500 }}>{routine.min} min</span>
+          <span style={{ ...displayItalic, fontSize: 16, color: accent, fontWeight: 500 }}>{routine.min} min</span>
         )}
       </div>
     </Card>

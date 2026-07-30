@@ -155,7 +155,12 @@
       "Bash(git -C \"C:/Users/ezrav/Desktop/Proyectos/Desarrollo de aplicaciones/Pace_app\" log --oneline -15 -- manifest.json sw.js PACE.html)",
       "Bash(file icons/*.png)",
       "PowerShell(Get-ChildItem -Recurse -File \"app\" | Select-Object @{n='p';e={$_.FullName.Replace\\(\\(Get-Location\\).Path+'\\\\',''\\)}}, @{n='ln';e={\\(Get-Content $_.FullName | Measure-Object -Line\\).Lines}} | Sort-Object p | Format-Table -AutoSize | Out-String -Width 200)",
-      "PowerShell(Get-ChildItem \"PACE_standalone.html\",\"index.html\",\"PACE.html\",\"docs\\\\product\\\\AUDITORIA_SISTEMA_PACE.md\" | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize | Out-String -Width 120; \"---\"; \\(Get-Content \"docs\\\\product\\\\AUDITORIA_SISTEMA_PACE.md\" | Measure-Object -Line\\).Lines)"
+      "PowerShell(Get-ChildItem \"PACE_standalone.html\",\"index.html\",\"PACE.html\",\"docs\\\\product\\\\AUDITORIA_SISTEMA_PACE.md\" | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize | Out-String -Width 120; \"---\"; \\(Get-Content \"docs\\\\product\\\\AUDITORIA_SISTEMA_PACE.md\" | Measure-Object -Line\\).Lines)",
+      "Bash(node \"C:/Users/ezrav/AppData/Local/Temp/claude/C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app/1e4aafee-79d7-444c-aff5-7b5cf3ebe307/scratchpad/analiza-loto.js\")",
+      "Bash(node \"C:/Users/ezrav/AppData/Local/Temp/claude/C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app/1e4aafee-79d7-444c-aff5-7b5cf3ebe307/scratchpad/convierte-loto.js\")",
+      "Bash(node \"C:/Users/ezrav/AppData/Local/Temp/claude/C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app/1e4aafee-79d7-444c-aff5-7b5cf3ebe307/scratchpad/variantes-loto.js\")",
+      "Bash(node \"C:/Users/ezrav/AppData/Local/Temp/claude/C--Users-ezrav-Desktop-Proyectos-Desarrollo-de-aplicaciones-Pace-app/1e4aafee-79d7-444c-aff5-7b5cf3ebe307/scratchpad/afina-loto.js\")",
+      "Bash(node scripts/ingest-loto.js)"
     ],
     "additionalDirectories": [
       "c:\\c\\Users\\ezrav\\Desktop\\Proyectos\\Desarrollo de aplicaciones\\Pace_app"

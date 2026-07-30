@@ -131,9 +131,21 @@ function PaceApp() {
   };
   const handleStartExtra = (routine) => {
     setOpenLibrary(null);
-    // Reutiliza MoveSession pero marca kind='extra' para que la completion
-    // dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
-    setView({ type: 'move-session', routine, kind: 'extra' });
+    /* Reutiliza MoveSession pero marca kind='extra' para que la completion
+       dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
+       EXCEPCION s138 — las rutinas propias: desde que la seccion "Tus rutinas"
+       aparece TAMBIEN en Estira, la misma rutina se puede lanzar por dos
+       puertas, y las dos completions NO son equivalentes: `completeExtraSession`
+       no incrementa `moveSessionsTotal` (state-achievements.jsx:214), asi que
+       quien hiciera sus rutinas propias desde Estira nunca progresaria hacia
+       `move.sessions.25`, y ademas desbloquearia `first.extra` en vez de
+       `first.stretch`. Una rutina propia es UNA cosa y no pertenece a un modulo
+       (por eso no lleva campo de modulo), asi que acredita igual entre a la
+       puerta que entre: se conserva el credito via completeMoveSession que fijo
+       la decision s93. Consecuencia visible y aceptada: la sesion se pinta con
+       el acento de Mueve aunque hayas entrado por Estira. */
+    const esPropia = typeof routine.id === 'string' && routine.id.indexOf('custom.') === 0;
+    setView({ type: 'move-session', routine, kind: esPropia ? 'move' : 'extra' });
   };
 
   const handleFocusFinish = () => {

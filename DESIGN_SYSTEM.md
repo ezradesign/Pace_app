@@ -400,6 +400,58 @@ visible).
 
 ---
 
+## 🪷 Arte de línea como máscara (s138 · v0.72.0)
+
+Regla nacida con el **loto de Respira** (`app/breathe/assets/loto.webp`) y aplicable a cualquier
+arte de línea que aporte el usuario.
+
+**El arte no transporta color.** El PNG original era línea *crema sobre transparente*, y sobre el
+papel crema (`--paper #F2EDE0`) resultaba prácticamente invisible. En vez de retocar el arte, se
+usa como **máscara CSS** y el color lo pone un token — así el contraste queda garantizado en las
+tres paletas sin tocar el original.
+
+Dos mediciones gobiernan cómo se construye la máscara:
+
+| Medición | Consecuencia |
+|---|---|
+| El **alfa** del PNG es solo la SILUETA (histograma bimodal: 112 985 px a ~0 y 146 964 a 224+) | Enmascarar por alfa da **una mancha sólida** y pierde todo el dibujo |
+| El **dibujo** (capas de pétalos, semilla de la vida) vive en la **LUMINANCIA** (L 76–255, media 219) | La máscara se reconstruye desde la **densidad de tinta**: `(255 − L) / (255 − L_min)`, acotada por el alfa original |
+
+Reglas derivadas:
+
+- **El RGB se aplana a blanco.** Solo importa el alfa; además el WebP comprime mucho mejor.
+- **El alfa se comprime SIN pérdida** (`alphaQuality: 100`). Es donde vive el dibujo: con pérdida
+  se motea por bloques en las venas finas. Se reportó como «pixelado» y **no era resolución**.
+- **El color va en CSS por paleta, nunca inline.** `[data-pace-loto]` usa `--breathe-2` (#A85E43,
+  terracota profundo) en las paletas claras y `--breathe` en oscuro, donde ya se lee como línea
+  encendida. Un `background` inline ganaría a la hoja, y el componente no debe saber qué paleta
+  hay puesta.
+- **Ingesta reproducible**: `scripts/ingest-loto.js`. Regla D-4 — si el usuario aporta arte nuevo
+  se **re-corre el script**, nunca se sustituye el `.webp` a mano.
+- **Distribución** igual que las láminas de Caminos: archivo en web + precache en `sw.js`, data URI
+  solo en el standalone (el inliner del build recorre una lista de carpetas de arte).
+
+### Geometría de un visual que respira
+
+- **El wrap declara lo que se pinta a ESCALA MÁXIMA**, no en reposo. Invariante:
+  `(1 − 2·inset) × MAX_SCALE ≤ 1` — hoy `0,72 × 1,35 = 0,972`. `BREATH_MAX_SCALE` es la escala
+  mayor que declara `getSequence` (**1,35**, patrón fisiológico): si se añade un patrón con una
+  escala mayor, **hay que subir esa constante**.
+- **Todas las capas comparten el mismo factor de escala**; el tamaño se fija solo con el `inset`.
+  Con bases y factores distintos los huecos entre capas crecían un **44 %** al inhalar y cada capa
+  parecía ir a su velocidad.
+- **La curva es `easeInOutSine`** (`cubic-bezier(0.37, 0, 0.63, 1)`), no `--ease`: esa es la curva
+  de UI de Material —sale rápido y frena largo—, buena para un CTA y mala para un pulmón.
+- **Respiración asimétrica**: el eje vertical recorre la excursión entera y el horizontal el 88 %,
+  con una elevación pequeña al llenarse. Un círculo que escala igual en los dos ejes lee como «una
+  imagen que crece».
+- **El movimiento continuo va en `@keyframes`**, nunca derivado de `progress` (que avanza una vez
+  por segundo y se reinicia en cada fase). Ojo con reduced-motion: el kill global pone
+  `animation-duration: 0.01ms`, que sobre una rotación infinita la **acelera** en vez de pararla,
+  así que el freno vive en el JSX.
+
+---
+
 ## 📋 Clases utilitarias
 
 Definidas en `app/tokens.css`, se aplican con `className`:
