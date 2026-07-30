@@ -140,10 +140,16 @@ capas a distinta velocidad, giro a tirones, tinta lavada en claro y salto de tex
 Suspiro fisiológico). **Abierto**: los aros del visual siguen siendo dos hairlines y el usuario
 quiere otra cosa; falta su dirección.
 
-### FASE 1.6 · Ajustes y dos retiradas — ⏭ SIGUIENTE
+### FASE 1.6 · Ajustes y dos retiradas — ✅ HECHA (s139, v0.73.0)
 
 Separada de la 1.5 a propósito: son ocho ítems de pulido en total y la regla es un frente por
-sesión, cerrado y verificado.
+sesión, cerrado y verificado. Los cuatro entregados en s139; detalle en
+[session-139](./docs/sessions/session-139-respira-y-ajustes.md).
+
+> **Cola de la 1.5/1.6, cerrada en s140 (v0.73.1):** el **banding de la atmósfera**, que arrastraba
+> desde s100. Causa real —medida sobre los píxeles de la página, no sobre el tile— : el grano no
+> ditheraba (solo tapaba, y por debajo de lo necesario) y apilar el mismo degradado dos veces
+> duplicaba el escalón. Diario: [session-140](./docs/sessions/session-140-banding-atmosfera.md).
 
 1. **Ocultar el estilo de timer** (queda siempre «aro») y **ocultar «orgánico»** del círculo de
    respiración. **Sin borrar**: una constante por opción en un solo sitio (`SHOW_TIMER_STYLE`,
@@ -171,7 +177,7 @@ sesión, cerrado y verificado.
 Criterio de cierre: ninguna opción retirada deja a nadie atrapado, el bug medido antes de
 tocarlo, y el «Auto» verificado cambiando de verdad el idioma del sistema.
 
-### FASE 2 · Que Mueve y Estira se entiendan
+### FASE 2 · Que Mueve y Estira se entiendan — ⏭ SIGUIENTE
 
 El bloque del feedback beta. La más importante.
 
