@@ -13,6 +13,23 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s132 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Dirección**: había
+> **dos órdenes de trabajo compitiendo** (la secuencia de `ROADMAP.md`, que llevaba 23 sesiones
+> mostrando como «siguiente» la fila «s107 Caminos al centro» nunca ejecutada, y los Bloques 0–9
+> del audit) y las sesiones s107→s131 no siguieron ninguno. La sección «Camino a v1.0» se
+> reescribió como **PLAN OPERATIVO ÚNICO de 7 fases** (38→15 KB; la anterior en
+> [`ROADMAP_CAMINO_V1_HISTORICO.md`](./docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md)). Reparto:
+> **audit = qué/por qué · ROADMAP = ORDEN · STATE = presente**. Marco del usuario: **v1.0 =
+> primera versión PAGADA · Travesías SÍ (argumento principal de compra) · Viajes de respiración
+> NO · sin fecha**. **Llegó el feedback beta real** y reordenó el plan: los 5 puntos caen en el
+> mismo sitio —**Mueve y Estira no se entienden**— y la verificación contra el código lo confirma:
+> **34 de 93 nombres (37 %) llevan inglés** en la versión española · **46 glifos para 92 nombres
+> de paso** (~la mitad cae en `DefaultGlyph`) · **`level`/`intensity` declarados 44 veces y con
+> CERO consumidores en la UI**. Por eso la comprensibilidad de Mueve/Estira pasa a **FASE 2**,
+> por delante de eventos, Stats y Travesías. **La FASE 1 no está cerrada**: faltan la re-decisión
+> del §37 y las preguntas comerciales de §36. Diario:
+> [session-132](./docs/sessions/session-132-direccion-plan-unico.md).
+
 > **Nota — s131 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** Limpieza
 > estructural que ejecuta el §4 de [`AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md):
 > **`STATE.md` 153→57 KB** y **este archivo 95→41 KB**. Los pesos gordos de STATE eran
