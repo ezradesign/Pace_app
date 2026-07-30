@@ -1,3 +1,8 @@
+> **ARCHIVADO (s130). Version de referencia v0.27.2, mas de 40 versiones atras. Lo sustituyo el checklist de cierre de CLAUDE.md. NO gobierna.**
+> Indice de autoridad: docs/product/AUDITORIA_DOCUMENTAL.md
+
+---
+
 # PACE · Smoke Tests manuales
 
 > Version de referencia: v0.27.2+

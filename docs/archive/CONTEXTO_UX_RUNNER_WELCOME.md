@@ -1,3 +1,8 @@
+> **ARCHIVADO (s130). Su encargo era gobernar la sesion B2.2a.5, CERRADA en s112/v0.56.0. NO gobierna. Reglas de layout del runner vigentes: STATE.md (Red de seguridad) y docs/sessions/session-119.**
+> Indice de autoridad: docs/product/AUDITORIA_DOCUMENTAL.md
+
+---
+
 # PACE — Contexto para el afinado del runner de Mueve/Estira y Welcome
 
 > **Entregado por el responsable del producto** (2026-07-17, tras el cierre de

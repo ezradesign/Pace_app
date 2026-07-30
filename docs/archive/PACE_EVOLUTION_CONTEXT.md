@@ -1,3 +1,8 @@
+> **ARCHIVADO (s130). Volcado de conversacion de 2026-07; su contenido esta DESTILADO en docs/product/DECISIONES_PRODUCTO.md, que es lo que las sesiones leen. NO gobierna: no tomar decisiones desde aqui.**
+> Indice de autoridad: docs/product/AUDITORIA_DOCUMENTAL.md
+
+---
+
 Entendido. Lo que necesitas no es otra auditoría ni una lista resumida, sino una **memoria completa de producto**, redactada para que Claude Code conozca todas las ideas surgidas, entienda su razonamiento y pueda contrastarlas con la aplicación antes de decidir qué integrar.
 
 Puedes guardar el siguiente documento como:

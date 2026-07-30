@@ -1,9 +1,18 @@
 PACE · Auditoría y diseño del sistema de producto
-Estado: documento de trabajo canónico.
+Estado: GOBIERNA — nivel 1 (dirección integral de producto).
+Índice de autoridad documental: docs/product/AUDITORIA_DOCUMENTAL.md.
 Fecha de creación: 2026-07-27.
+AVISO (s130): existe una copia anterior de este documento fuera del repositorio
+(«AUDITORIA_SISTEMA_PACE_PRE_REPO_2026-07-27.md»). Es un snapshot PREVIO: le faltan el §37,
+el §32.6 y todas las anotaciones de sesión. Este archivo es su superconjunto y el único que
+gobierna. No hay ninguna decisión que exista solo en esa copia (verificado por diff en s130).
 Referencia técnica inicial: v0.66.0 · main · commit 9a126257d69e5d50d0ac71f3400e81743a6f2a05.
 Estado técnico revisado: v0.67.0 · main · commit 43417f34727f1ff306cca20a5aa77cebb48cdbcb.
 Última actualización de decisiones: ronda M1–M4 (métricas, check-in, ritmo y arquitectura de Stats) — ver §37.
+ATENCIÓN (s130): el §37 queda marcado **PROVISIONAL — pendiente de re-decisión** por el usuario
+(se añadió sin repensarse del todo). Sus cuatro decisiones vuelven a estar ABIERTAS en §36. El
+resto del documento NO está afectado: §31.4 y §31.6 (Hoy/Semana, Free/Premium) son anteriores a
+esa ronda y siguen vigentes.
 Propósito: reunir las decisiones de producto, UX, gamificación, Caminos, Travesías, Respira, premium, logros y dirección visual para que no dependan del contexto de una conversación.
 Importante: este documento describe decisiones y propuestas. No implica que todas estén implementadas.
 
@@ -2259,7 +2268,24 @@ Catálogo corporal
 ¿Cómo se explicarán las regresiones?
 ¿Quién revisará el contenido corporal antes del lanzamiento?
 
-37. Decisiones cerradas · ronda M1–M4 (métricas, check-in, ritmo y Stats)
+37. Ronda M1–M4 (métricas, check-in, ritmo y Stats) — **PROVISIONAL, PENDIENTE DE RE-DECISIÓN**
+
+ESTADO (s130, decisión del usuario): esta ronda **NO cuenta como cerrada**. Se añadió al
+documento sin repensarse del todo, así que sus decisiones quedan **PROVISIONALES** y las
+preguntas que decía resolver **vuelven a estar abiertas en §36**. Lo que sigue se conserva
+como PROPUESTA de partida para esa re-decisión, no como canon.
+
+Cuatro decisiones afectadas: tipos de jornada (§37.3) · racha → ritmo semanal (§37.3) · sin
+puntuación de equilibrio (§37.3) · check-in de cierre (§37.1), más la comparación
+retrospectiva (§37.2) y el «Hoy y Semana primero» de §37.4.
+
+NO afectado: §31.4 (estructura Hoy · Semana · Mes · «Qué te ayuda») y §31.6 (Free = Hoy +
+tira de 7 días; Premium = mes, año, patrones, «qué te ayuda») son ANTERIORES a esta ronda —
+están ya en el documento original del 2026-07-27 — y siguen vigentes. Es sobre ellos, y no
+sobre el §37, donde se apoya `STATS_DESTINO_PROPUESTA.md`.
+
+Texto original de la ronda, conservado como propuesta:
+
 Esta ronda consolida y RESUELVE varias preguntas abiertas de §31.5 (check-in de cierre) y
 §36 (métricas, Stats, racha, días imperfectos). Es dirección de producto; no implica código
 todavía. Donde se marca "provisional", la estructura podrá ajustarse al implementar Stats y

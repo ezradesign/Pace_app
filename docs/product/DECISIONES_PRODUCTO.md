@@ -1,7 +1,11 @@
 # PACE · Decisiones de evolución de producto
 
+> **GOBIERNA — nivel 2 (ejecución destilada).** Índice de autoridad:
+> [`AUDITORIA_DOCUMENTAL.md`](./AUDITORIA_DOCUMENTAL.md).
+>
 > **Canónico de la evolución post-v0.51.0.** Destilado de los documentos de
-> evolución (`PACE_EVOLUTION_CONTEXT.md` + 2 bloques de ideas, 2026-07)
+> evolución ([`docs/archive/PACE_EVOLUTION_CONTEXT.md`](../archive/PACE_EVOLUTION_CONTEXT.md)
+> —ARCHIVADO en s130, no gobierna— + 2 bloques de ideas, 2026-07)
 > contrastados con el código real en
 > [`audit-evolucion-v0.51.0`](../audits/audit-evolucion-v0.51.0.md).
 > Las sesiones que toquen contenido, actividades, Caminos, stats o el plan
