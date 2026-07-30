@@ -11,7 +11,9 @@
 ---
 
 **Version actual:** v0.71.0 (s128 — **home móvil universal · «amanecer del Camino»**: el motor de geometría de la home (`home-geometry.js`) corre AHORA también en móvil/tablet garantizando CERO scroll, y la **tarjeta de Camino hace de «horizonte»** recortando el arco inferior del aro —el «amanecer» del Desktop s126 pero con Caminos—; se conserva el orden móvil Timer→Camino→Actividades. Desktop **byte-idéntico**). «Salir» de Caminos a la home es de s127/v0.70.0.
-**Ultima sesion:** #133 -- 2026-07-30 - **§37 re-decidido y CERRADO · FASE 1 completa**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). El §37 estaba PROVISIONAL desde s130; se cerró decisión a decisión con las alternativas y sus costes delante, y queda como **§37 bis** del audit (el texto original se conserva como historia). **Las cuatro decisiones**: (1) **constancia = RITMO SEMANAL** — fuera racha actual y mejor racha (`PathStats.jsx:74-84`, `computePathStreaks`), entran «días con ritmo» sobre la tira de 7 con el criterio de día activo de s69 y hueco neutro, sin récord ni rojo; (2) **equilibrio = TRES MARCAS foco·cuerpo·respiración, SIN nota agregada** (la hidratación acompaña, no es ámbito) — **esto es NUEVO, no estaba en el spec de Stats**; (3) **calendario de Mes y Año por TIPOS DE JORNADA, no por volumen**: `computeDayScore` ([YearView.jsx:11-24](app/stats/YearView.jsx)) deja de ser el criterio de color, y los tipos —con pausas · de foco sin pausas · de cuerpo · sin registro, con «con Camino» como MARCA superpuesta— se deducen de lo que hubo, así que aplican a todo el histórico sin necesitar eventos; (4) **check-in de cierre SÍ, ocasional** en cierres naturales, máx 1/día, opcional, nunca tras cada sesión ni para vender premium ⇒ requiere eventos, llega en la Fase 3. La quinta (comparación retrospectiva) se mantuvo **sin preguntar** porque no añade nada a lo que ya prohíbe §2.2. **§36 actualizado**: 5 preguntas de Métricas y Stats marcadas RESUELTAS, 1 pendiente editorial (formulación de las respuestas del check-in) y 1 abierta a propósito (qué pasa de Stats a la sidebar → §14). **`STATS_DESTINO_PROPUESTA.md` queda SIN condicionantes.** **Comerciales de §36 reasignadas a la FASE 7 con motivo escrito**: el precio no se decide antes de revisar Starter Story a fondo, y móvil y empresas caen fuera de v1. **FASE 1 CERRADA.** Diario: [session-133](./docs/sessions/session-133-cierre-fase-1.md).
+**Ultima sesion:** #134 -- 2026-07-30 - **Precio, artefactos y plan de 9 fases**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). **PRECIO CERRADO**: **19,99 € lifetime como único plan al lanzamiento**, con `expiresAt` **opcional en el formato de licencia desde el día uno** (añadir un pase temporal después = cambio de DATOS, no de arquitectura) · **mensual DESCARTADO** (sin cuentas ni auto-renovación obligaría a pegar clave nueva cada mes: 12 fricciones/año por 2,99 €) · si algún día llega anual va a **9,99 €, no 4,99** (a 4,99 sale al 25 % del lifetime y lo canibaliza) · todos los planes desbloquean lo mismo, sin packs aparte. **ARTEFACTOS**: **web y Capacitor son los objetivos canónicos** y el standalone baja a **export BAJO DEMANDA** — deja de regenerarse en cada cierre (checklist de `CLAUDE.md` actualizado). Motivos medidos: no comparte `localStorage` con la web (otro origen), **`file://` no emite eventos** por diseño, instalar desde él causó el bug de icono/pantalla completa de s128 (no lleva `manifest`), cuesta en cada cierre y condiciona la arquitectura; y con CTB de 20–60 min es **ininlineable** (1 h en Opus 48 kbps ≈ 21 MB, +33 % en base64). **AUDIO**: como **archivos** en web y Capacitor (patrón ya usado por láminas y fuentes), fondo cacheado al usarlo y no en el precache; **una sesión CTB completa empaquetada** (cumple el «al menos un Viaje completo gratuito» de §20.5) y **el resto bajo demanda** desde hosting estático — compatible con «local-first ≠ cero servicios», que solo prohíbe backend de producto y tracking. Si el material se genera con IA, **verificar y guardar constancia de los términos de uso comercial**; **voz/TTS sigue prohibido** (esto es aire y música, no locución). **HUECO DEL PLAN RECONOCIDO**: las 7 fases de s132 se dejaron fuera el **Bloque 1 del audit (Respira y Loto)**; el plan pasa a **9 fases + una 1.5**. **Respira troceada** por decisión del usuario: el **loto entra ya** en la 1.5 y **sonido + catálogo** son la Fase 5. **Caminos ANTES de Travesías** (las Travesías se construyen encima). **PROPUESTA, no aprobada aún**: enriquecer el pomodoro-sol reutilizando el horizonte ya construido (el aro sube 2–3 % de D por `translateY`), luz interior que gana temperatura, arco más grueso en el tramo final («más completo, no más urgente», §13.3), bolas del CICLO como soles completados y remate cálido antes del BreakMenu. Diario: [session-134](./docs/sessions/session-134-precio-artefactos-plan.md).
+
+**Sesion anterior:** #133 -- 2026-07-30 - **§37 re-decidido y CERRADO · FASE 1 completa**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). El §37 estaba PROVISIONAL desde s130; se cerró decisión a decisión con las alternativas y sus costes delante, y queda como **§37 bis** del audit (el texto original se conserva como historia). **Las cuatro decisiones**: (1) **constancia = RITMO SEMANAL** — fuera racha actual y mejor racha (`PathStats.jsx:74-84`, `computePathStreaks`), entran «días con ritmo» sobre la tira de 7 con el criterio de día activo de s69 y hueco neutro, sin récord ni rojo; (2) **equilibrio = TRES MARCAS foco·cuerpo·respiración, SIN nota agregada** (la hidratación acompaña, no es ámbito) — **esto es NUEVO, no estaba en el spec de Stats**; (3) **calendario de Mes y Año por TIPOS DE JORNADA, no por volumen**: `computeDayScore` ([YearView.jsx:11-24](app/stats/YearView.jsx)) deja de ser el criterio de color, y los tipos —con pausas · de foco sin pausas · de cuerpo · sin registro, con «con Camino» como MARCA superpuesta— se deducen de lo que hubo, así que aplican a todo el histórico sin necesitar eventos; (4) **check-in de cierre SÍ, ocasional** en cierres naturales, máx 1/día, opcional, nunca tras cada sesión ni para vender premium ⇒ requiere eventos, llega en la Fase 3. La quinta (comparación retrospectiva) se mantuvo **sin preguntar** porque no añade nada a lo que ya prohíbe §2.2. **§36 actualizado**: 5 preguntas de Métricas y Stats marcadas RESUELTAS, 1 pendiente editorial (formulación de las respuestas del check-in) y 1 abierta a propósito (qué pasa de Stats a la sidebar → §14). **`STATS_DESTINO_PROPUESTA.md` queda SIN condicionantes.** **Comerciales de §36 reasignadas a la FASE 7 con motivo escrito**: el precio no se decide antes de revisar Starter Story a fondo, y móvil y empresas caen fuera de v1. **FASE 1 CERRADA.** Diario: [session-133](./docs/sessions/session-133-cierre-fase-1.md).
 
 **Sesion anterior:** #132 -- 2026-07-30 - **Dirección: un solo plan operativo, con el feedback beta al frente**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). **Problema resuelto: había DOS órdenes de trabajo** —la secuencia de `ROADMAP.md` (que llevaba 23 sesiones mostrando como «siguiente» la fila «s107 Caminos al centro», nunca ejecutada) y los Bloques 0–9 del audit— y las sesiones s107→s131 no siguieron ninguno. La sección «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) se reescribió como **PLAN OPERATIVO ÚNICO de 7 fases** (38→15 KB; la anterior en `docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`). Reparto: **audit = qué/por qué · ROADMAP = ORDEN · STATE = presente**. **Marco del usuario**: v1.0 = **primera versión PAGADA** · **Travesías SÍ** y son el argumento principal de compra · **Viajes de respiración NO** · sin fecha. **FEEDBACK BETA REAL** (aportado por el usuario, antes solo estaba el mensaje sin respuestas): los 5 puntos caen en el mismo sitio —**Mueve y Estira no se entienden**: no está claro cómo hacer el ejercicio · glifos flojos · descripciones vagas · **nombres en inglés en la versión española** · complejos mezclados con sencillos—. **Verificado contra el código**: **34 de 93 nombres (37 %)** llevan inglés (`Dead hang`, `Chin tucks`, `Hollow hold`, `Wall sit`, `Cossack squat`, `Superman`…) · **46 glifos para 92 nombres de paso** ⇒ ~la mitad cae en `DefaultGlyph` · **`level`/`intensity` declarados 44 veces en los datos y CERO consumidores en UI** (la info para separar fácil de complejo ya existe y no se muestra). **Consecuencia de orden**: la comprensibilidad de Mueve/Estira pasa a **FASE 2**, por delante de eventos, Stats y Travesías — es el núcleo diferencial, las Travesías se construyen ENCIMA de estos ejercicios, y los glifos placeholder ya eran bloqueante de venta declarado. Fases: **1** dirección · **2** Mueve/Estira se entiendan · **3** eventos web · **4** Stats · **5** Travesías · **6** descubrimiento · **7** venta. **FASE 1 NO está cerrada**: faltan la re-decisión del **§37** (5 preguntas) y las **comerciales de §36** (precio, precio fundador, empresas, Android/iOS). Diario: [session-132](./docs/sessions/session-132-direccion-plan-unico.md).
 
@@ -272,45 +274,33 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- FASE 2, sesion 1: AUDITORIA de nombres y glifos (sin codigo)
+## Proxima sesion -- FASE 1.5: PULIDO VISIBLE (una sola sesion)
 
-> El orden de trabajo vigente vive en la seccion «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md)
-> (7 fases, reescrita en s132). **FASE 1 cerrada en s133.** Este apartado solo dice cual es la
-> proxima sesion y con que criterio se cierra.
+> Orden de trabajo vigente: seccion «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (9 fases).
+> **FASE 1 cerrada** (plan + §37 + precio + artefactos). Esta es la 1.5, intercalada a proposito.
 
-**Por que esta y no otra.** El feedback beta real dijo cinco cosas y las cinco caen en Mueve y
-Estira: no se entiende como hacer el ejercicio, los glifos son flojos, las descripciones son
-vagas, en espanol se mezclan nombres en ingles, y hay ejercicios muy complejos junto a otros muy
-sencillos. Verificado contra el codigo en s132: **34 de 93 nombres (37 %) llevan ingles** · **46
-glifos para 92 nombres de paso** (~la mitad cae en `DefaultGlyph`) · **`level` e `intensity`
-declarados 44 veces y con CERO consumidores en la UI**.
+Cuatro cosas de **bajo riesgo y efecto inmediato**; tres tienen el codigo ya escrito.
 
-**Entregable: la matriz §19.2 completa**, docs-only, para los 92 nombres de paso:
+1. **BUG del punto del pomodoro.** El punto guia del aro arranca mas tarde que el relleno del
+   arco, que si sale de cero. Reproducir, **MEDIR el desfase** y corregir — sin dar por buena
+   ninguna causa antes de medirla (en esta app la causa «evidente» ya fallo dos veces).
+2. **Color de atmosfera en los ejercicios sueltos.** Los colores de la franja superior que hoy
+   solo se ven en Caminos son el `atmosphere` del `SessionShell`, limitado a Caminos por
+   **decision explicita de s99**. Llevarlo a Mueve, Estira y Respira = cambiar esa decision y
+   pasar el color por `kind`. El codigo existe.
+3. **Constructor premium visible en Mueve Y Estira.** Hoy solo en Mueve y al final de la lista.
+   Insertarlo en `ExtraLibrary` son ~3 lineas espejo de `MoveModule.jsx:43` + un prop de acento
+   (5 sitios con `var(--move)` hardcodeado). **Decision pendiente al ejecutarlo**: las rutinas
+   propias NO tienen campo de modulo (`state-custom.jsx`), asi que apareceran las MISMAS en
+   ambos sitios; separarlas exige campo nuevo + default para los datos existentes.
+4. **Integrar el loto de Respira** (`app/breathe/Loto_png.png`): optimizar y convertir a WebP,
+   integrar en el visual, contraste, dia/noche y reduced motion (§3.2 del audit).
 
-| Columna | Qué recoge |
-|---|---|
-| Nombre actual | tal cual esta en los datos (`name` ES) |
-| Nombre propuesto en espanol | solo si hoy lleva ingles; con el termino tecnico entre parentesis si aporta |
-| Glifo | existe / placeholder / ausente (cae en `DefaultGlyph`) |
-| Alias | si `VISUAL_ALIAS` lo unifica con otro |
-| Poses | una o dos, y si necesita flecha o apoyo |
-| Zona corporal | para agrupar y para los filtros de la Fase 6 |
-| Nivel tecnico e intensidad | los ya declarados en los datos, mas si el valor es correcto |
-| Revision tecnica | si necesita fisio antes de tocarlo (p. ej. `atg.knees` / Sissy squat) |
+**Criterio de cierre:** el bug medido y corregido, los tres cambios visibles verificados en
+runtime, y ninguna decision de alcance tomada en silencio (la del campo de modulo se pregunta).
 
-**Trampa que obliga a auditar antes de escribir.** `name` en espanol es **la clave del glifo** y
-de la i18n del constructor (decision s93), asi que renombrar exige tocar `exercise-glyphs.jsx` y
-`app/i18n/content/*.js` **en el mismo cambio** (decision s108). Si se olvida, el glifo cae **en
-silencio** a `DefaultGlyph` — es decir, arreglar el idioma empeoraria justo la queja numero 2.
-Por eso la matriz va primero y las olas despues.
-
-**Criterio de cierre de la sesion:** existe la matriz con los 92 pasos, y de ella sale el corte
-de las olas siguientes (renombrado + glifos, dos niveles visuales, descripciones, nivel e
-intensidad visibles, preview). Cero codigo.
-
-**Lo que NO se toca en esa sesion:** dosis, estructura de pasos, lateralidad, escalones ni
-`access` de ninguna rutina. Y los glifos que el usuario dibuje o apruebe se portan **literales**
-(regla s84).
+**Lo que NO entra:** nada de la Fase 2 (nombres, glifos, descripciones, nivel/intensidad,
+preview) — esa arranca con su sesion de AUDITORIA y matriz §19.2 de los 92 pasos.
 
 ## Decisiones activas -- indice
 

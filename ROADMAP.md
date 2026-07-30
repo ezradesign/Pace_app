@@ -101,7 +101,7 @@ vender packs cuyos pasos rendericen `DefaultGlyph`»). Tres razones que apuntan 
 
 ### Fases
 
-### FASE 1 · Dirección cerrada — ✅ HECHA (s132–s133)
+### FASE 1 · Dirección cerrada — ✅ HECHA (s132–s134)
 
 - **Plan operativo único** (este apartado) — s132.
 - **§37 re-decidido y CERRADO** — s133, audit §37 bis: constancia = **ritmo semanal** (fuera
@@ -109,17 +109,38 @@ vender packs cuyos pasos rendericen `DefaultGlyph`»). Tres razones que apuntan 
   **por tipos de jornada**, no por volumen (`computeDayScore` deja de colorear) · **check-in de
   cierre ocasional** en cierres naturales (requiere eventos ⇒ Fase 3) · comparación
   retrospectiva sin cambios.
-- **Preguntas comerciales de §36 → reasignadas a la FASE 7, con motivo**: el precio objetivo, el
-  precio fundador, la prueba empresarial y el orden Android/iOS **no se deciden aquí** porque el
-  propio plan exige revisar Starter Story **a fondo antes** de fijar pricing, y porque móvil y
-  empresas caen fuera de v1. Decidirlas sin esos datos sería inventárselas.
+- **Precio y estructura comercial CERRADOS** — s134, ver `MONETIZATION.md`: **19,99 € lifetime
+  como único plan al lanzamiento**, formato de licencia con `expiresAt` **opcional desde el día
+  uno** · **mensual descartado** · si algún día llega un pase anual, **9,99 €** (a 4,99 €
+  canibaliza el lifetime al 25 %) · todos los planes desbloquean lo mismo.
+- **Reparto de artefactos CERRADO** — s134: **web y Capacitor son los objetivos canónicos**; el
+  standalone baja a **export bajo demanda**.
 
 Criterio de cierre **cumplido**: ninguna sesión posterior necesita adivinar el orden ni reabrir
-el §37.
+el §37 ni el precio.
+
+### FASE 1.5 · Pulido visible — ⏭ SIGUIENTE
+
+Una sola sesión, intercalada a propósito: cuatro cosas de **bajo riesgo y efecto inmediato**,
+tres de ellas con el código ya escrito.
+
+1. **BUG del punto del pomodoro.** El punto guía del aro arranca más tarde que el relleno del
+   arco, que sí sale de cero. Reproducir, **medir el desfase** y corregir — sin dar por buena
+   ninguna causa antes de medirla.
+2. **Color de atmósfera en los ejercicios sueltos.** Los colores de la parte superior que hoy
+   solo se ven dentro de Caminos son el `atmosphere` del `SessionShell`, limitado a Caminos por
+   **decisión explícita de s99**. Llevarlo a Mueve, Estira y Respira es cambiar esa decisión y
+   pasar el color por `kind`: el código ya existe.
+3. **Constructor premium visible en Mueve Y Estira.** Hoy vive solo en Mueve y al final de la
+   lista. Entra en los dos módulos y en un sitio visible. Decisión pendiente al ejecutarlo: hoy
+   las rutinas propias **no tienen campo de módulo**, así que aparecerían las mismas en ambos
+   sitios; separarlas exige añadir el campo y un default para los datos existentes.
+4. **Integrar el loto de Respira** (`app/breathe/Loto_png.png`, ahí desde hace tiempo):
+   optimizar y convertir, integrarlo en el visual, contraste, día/noche y reduced motion.
 
 ### FASE 2 · Que Mueve y Estira se entiendan
 
-**SIGUIENTE.** El bloque del feedback beta. La más importante.
+El bloque del feedback beta. La más importante.
 
 **Arranca por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
 de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,
@@ -127,13 +148,13 @@ qué glifo existe · si está aprobado o es placeholder · si hay alias · una o
 corporal · si el nombre lleva inglés y cuál sería su nombre en español · nivel técnico e
 intensidad declarados. De esa matriz salen las olas de trabajo, y no antes: renombrar sin tener
 el mapa completo rompe claves de glifo en silencio.
+
 1. **Nombres en español.** Los 34 nombres con inglés. Ojo: `name` ES es la **clave del glifo** y
    de la i18n del constructor ⇒ renombrar exige tocar `exercise-glyphs.jsx` y
    `content/*.js` **en el mismo cambio** (decisión s108); si se olvida, cae en silencio a
    `DefaultGlyph`. Migración por olas con verificación en runtime de que la clave nueva resuelve.
-2. **Glifos: inventario y set completo.** Matriz §19.2 (existe / aprobado / revisar / placeholder
-   / alias / una o dos poses / zona corporal / revisión técnica) y cierre de la cola D-4. Los
-   glifos que dibuje o apruebe el usuario se portan **literales** (regla s84).
+2. **Glifos: inventario y set completo.** Matriz §19.2 y cierre de la cola D-4. Los glifos que
+   dibuje o apruebe el usuario se portan **literales** (regla s84).
 3. **Dos niveles visuales** (§19.3): el glifo de 44×44 **identifica**; el **diagrama de ejecución**
    del runner **enseña**. Hoy se le pide al pequeño que explique la técnica y por eso se percibe
    flojo. Es la respuesta directa al «no sé cómo hacerlo».
@@ -144,54 +165,68 @@ el mapa completo rompe claves de glifo en silencio.
    **intensidad** de **nivel técnico** (§29.2) y dejar de recomendar contenido avanzado por
    defecto (§29.4: Sissy squat, Nordics y compañía llevan requisitos y regresión).
 6. **Preview antes de empezar** (§18.3): qué necesitas, posición, duración, pasos, adaptación.
+
 Criterio de cierre: una persona que nunca ha hecho el ejercicio sabe **qué va a hacer, cómo y
 cómo cuidarse** sin salir de la app — y ningún nombre está en inglés en la versión española.
 
 ### FASE 3 · Eventos, fase 1 web (`pace.events.v1`)
+
 Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se
-emite no se reconstruye, y de él dependen «Qué te ayuda», las comparaciones y media pestaña
-Semana. Diseño cerrado y aprobado desde s117: no se rediseña, se implementa.
+emite no se reconstruye, y de él dependen «Qué te ayuda», las comparaciones, el check-in de cierre
+y media pestaña Semana. Diseño cerrado y aprobado desde s117: no se rediseña, se implementa.
 Criterio de cierre: se emiten eventos en web/PWA con single-writer, `file://` no emite, y el
 export/import sigue siendo reemplazo total.
 
 ### FASE 4 · Stats
 
-Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy +
-Semana), según [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md).
-Por qué aquí: es el escaparate del *free*, y con eventos ya emitiendo puede nacer completa en vez
-de a medias. Requiere el §37 cerrado en la Fase 1.
+Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy + Semana), según
+[`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md), ya sin condicionantes
+tras el cierre del §37. Es el escaparate del *free*: con eventos emitiendo puede nacer completa.
 
-### FASE 5 · Travesías
+### FASE 5 · Respira: sonido real y catálogo
 
-el argumento de compra.
-Contrato de datos · capítulos flexibles · progreso y reanudación · primera Travesía de 3
-capítulos · primera de 7 · mapa visual. Reutiliza el motor de Caminos y la capa de hitos
-dinámicos. Va **después** de la Fase 2 a propósito: una Travesía de 7 capítulos construida sobre
-ejercicios que no se entienden multiplica el problema por siete.
+- **Sonido**: inhalaciones y exhalaciones reales + fondo meditativo tipo hang drum. **Como
+  archivos** en web y Capacitor; el standalone conserva el motor sintetizado. La pista de fondo se
+  cachea al usarla, no en el precache. Si el material se genera con IA, **verificar y guardar
+  constancia de los términos de uso comercial**. La regla **voz/TTS: NUNCA** sigue en pie: esto es
+  aire y música, no locución.
+- **Catálogo**: revisión de las 20 técnicas y **separar Técnicas de Viajes** (§9.1).
+- El **loto** ya entró en la Fase 1.5.
 
-### FASE 6 · Descubrimiento
+### FASE 6 · Caminos repensados
 
-taxonomía de necesidades y contexto · filtros · previews ·
-reorganización de las tres bibliotecas para reducir scroll y **sacar el constructor a Mueve Y
-Estira** (ítem pendiente del Bloque 0) · «Déjate guiar» discreto · Caminos al centro de la home +
-After Pomodoro (lo que quedó huérfano del plan anterior).
+Los 7 actuales se reescriben como **experiencias editoriales** (Bloque 3 del audit: hoy reutilizan
+demasiado contenido, casi todos tienen 3 pasos y se sienten como playlists). Formatos
+Semilla/Pausa/Ritual · pasos editoriales propios · motor de hitos variables · transiciones y
+cierres · revisión de duración · láminas nuevas donde haga falta.
+Va **antes** de las Travesías porque las Travesías se construyen encima.
 
-### FASE 7 · Venta
+### FASE 7 · Travesías de 3, 7 y 14 capítulos
 
-los bloqueantes duros y la pre-venta.
-Licencia firmada offline ECDSA P-256 + **trial explícito** (hoy el acceso es un booleano
-`premiumUnlocked`; exige cambiar formalmente la decisión F3b) · proveedor / Merchant of Record ·
-landing separada de la app · **Términos y Privacidad revisados por un profesional** · revisión
-profesional del contenido corporal · **Starter Story a fondo ANTES de fijar pricing** · ASO.
-Nota: el precio que aparece más abajo en este archivo (~20 € Lifetime, 3,99 € Pase, ~5 €
-Temporadas) es **provisional** hasta esa investigación.
+El argumento de compra. Contrato de datos · capítulos flexibles · progreso y reanudación ·
+primera de 3 · primera de 7 · mapa visual. Ritmo propuesto pero **nunca obligatorio**: saltarse un
+día no rompe nada ni culpabiliza.
+
+### FASE 8 · Descubrimiento
+
+Taxonomía de necesidades y contexto · filtros · previews · reorganización de las tres bibliotecas
+para reducir scroll · «Déjate guiar» discreto · Caminos al centro de la home + After Pomodoro (lo
+que quedó huérfano del plan anterior).
+
+### FASE 9 · Venta
+
+Licencia firmada offline ECDSA P-256 **con `expiresAt` opcional** + **trial explícito** (hoy el
+acceso es un booleano `premiumUnlocked`; exige cambiar formalmente la decisión F3b) · proveedor /
+Merchant of Record · landing separada de la app · **Términos y Privacidad revisados por un
+profesional** · revisión profesional del contenido corporal · **Starter Story a fondo** para
+validar el precio ya fijado y la estrategia de distribución · ASO.
 
 ### Reglas del plan
 
 - **Un solo frente por sesión.** Se cierra con verificación y documentación antes de abrir otro.
 - **Auditoría antes de código** en cualquier sesión que toque un subsistema con reglas propias:
   leer su fila en [`DECISIONES_TECNICAS_VIGENTES.md`](./docs/product/DECISIONES_TECNICAS_VIGENTES.md).
-- **El standalone sigue vivo** como artefacto de exportación en todas las fases.
+- **Web y Capacitor son los objetivos canonicos** (decision s134). El standalone pasa a **export bajo demanda**: se genera cuando se pide, no en cada cierre, y no condiciona la arquitectura (nada de inlinear audio en el). Motivos medidos: no comparte `localStorage` con la web (otro origen), `file://` **no emite eventos** por diseno, instalar desde el produjo el bug de icono/pantalla completa de s128 (sin `manifest`), y el catalogo de sesiones largas es imposible de inlinear (1 hora en Opus 48 kbps = ~21 MB, +33 % en base64).
 - **local-first ≠ cero servicios**: infraestructura de compra y licencias sí; backend de producto
   y tracking no.
 - Las fases 3 y 4 pueden adelantarse a la 2 **solo** si una sesión de la Fase 2 queda bloqueada
