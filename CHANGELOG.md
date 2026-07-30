@@ -13,6 +13,26 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ## Historial completo
 
+> **Nota — s134 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **Precio, artefactos y
+> plan de 9 fases.** **PRECIO CERRADO** (`MONETIZATION.md`): **19,99 € lifetime como único plan al
+> lanzamiento**, con `expiresAt` **opcional en la licencia desde el día uno** (añadir un pase
+> temporal después = cambio de datos, no de arquitectura) · **mensual DESCARTADO**: sin cuentas ni
+> auto-renovación obligaría a pegar clave nueva cada mes, 12 fricciones/año por 2,99 € · si llega
+> anual, **9,99 € y no 4,99** (a 4,99 sale al 25 % del lifetime y lo canibaliza) · todos los planes
+> desbloquean lo mismo. **ARTEFACTOS**: **web y Capacitor pasan a ser los objetivos canónicos** y
+> el standalone baja a **export BAJO DEMANDA** — deja de regenerarse en cada cierre (checklist,
+> árbol y versionado de `CLAUDE.md` actualizados). Evidencia: no comparte `localStorage` con la web
+> (otro origen) · **`file://` no emite eventos** por diseño · instalar desde él causó el bug de
+> icono y pantalla completa de s128 (sin `manifest`) · y con CTB de 20–60 min es **ininlineable**
+> (1 h en Opus 48 kbps ≈ 21 MB, +33 % en base64). **AUDIO**: como archivos en web y Capacitor
+> (patrón de láminas y fuentes), fondo cacheado al usarlo; **una sesión CTB completa empaquetada**
+> —cumple el «al menos un Viaje completo gratuito» de §20.5— y el resto **bajo demanda** desde
+> hosting estático, compatible con «local-first ≠ cero servicios». Voz/TTS sigue prohibido.
+> **HUECO RECONOCIDO**: las 7 fases de s132 omitían el Bloque 1 (Respira y Loto) ⇒ el plan pasa a
+> **9 fases + una 1.5**; el **loto entra ya** en la 1.5 y **sonido + catálogo** son la Fase 5.
+> **Caminos se repiensa ANTES de Travesías.** Diario:
+> [session-134](./docs/sessions/session-134-precio-artefactos-plan.md).
+
 > **Nota — s133 (2026-07-30): sesión SOLO-DOCUMENTAL, sin versión nueva.** **§37 re-decidido y
 > CERRADO · FASE 1 completa.** Estaba PROVISIONAL desde s130 («se añadió sin pensarse bien»); se
 > cerró decisión a decisión y queda como **§37 bis** del audit, conservando el texto original como

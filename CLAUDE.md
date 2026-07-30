@@ -13,7 +13,7 @@ Antes de tocar **nada**:
 2. Lee `STATE.md` — versión, última sesión, backlog, decisiones activas
 3. Lee `DESIGN_SYSTEM.md` — tokens, paletas, tipografía
 4. Lista `app/` para ver la estructura real
-5. Verifica que `PACE_standalone.html` existe
+5. Verifica que `index.html` (artefacto web/PWA) y `PACE_standalone.html` existen
 6. **Confirma al usuario el estado antes de tocar nada**
 
 **Nunca reinventes componentes existentes.** Lee primero, edita después.
@@ -37,18 +37,22 @@ Antes de tocar **nada**:
 Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
 
 1. Verificar que la app carga limpia en consola (sin errores)
-2. Rotar standalone anterior → `backups/PACE_standalone_vX.Y_YYYYMMDD.html` (máx **20 backups**)
-3. Regenerar `PACE_standalone.html` con `node build-standalone.js`
-4. Verificar el nuevo standalone
-5. Escribir diario en `docs/sessions/session-NN-titulo-corto.md`
-6. Actualizar `CHANGELOG.md`: fila en tabla + detalle de las 2 últimas versiones
-7. **Reescribir** (no añadir) sección "Última sesión" de `STATE.md`
-8. Actualizar backlog/decisiones activas de `STATE.md` si aplica
-9. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
-10. Dar el mensaje exacto de commit sugerido para GitHub
+2. **Regenerar `index.html`** (el artefacto de web/PWA) con `node build-standalone.js` y verificarlo
+3. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
+   objetivos canónicos y `PACE_standalone.html` pasa a **export bajo demanda**. Se regenera (y se
+   rota a `backups/`, máx 20) **solo si el usuario lo pide** o antes de publicar una release.
+   Motivos: no comparte `localStorage` con la web (otro origen), `file://` no emite eventos por
+   diseño, instalar desde él causó el bug de icono y pantalla completa de s128 (no lleva
+   `manifest`), y el catálogo de audio largo es ininlineable
+4. Escribir diario en `docs/sessions/session-NN-titulo-corto.md`
+5. Actualizar `CHANGELOG.md`: fila en tabla + detalle de las 2 ultimas versiones
+6. **Reescribir** (no anadir) seccion "Ultima sesion" de `STATE.md`
+7. Actualizar el backlog de `STATE.md` si aplica; una **decision tecnica nueva** va a `docs/product/DECISIONES_TECNICAS_VIGENTES.md` + su titulo al indice de `STATE.md`
+8. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
+9. Dar el mensaje exacto de commit sugerido para GitHub
 
 **Cambio significativo:** cualquier cambio funcional, de diseño notable o estructural.
-Tweaks visuales menores no regeneran standalone pero sí se anotan en `STATE.md`.
+Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ---
 
@@ -78,8 +82,9 @@ Tweaks visuales menores no regeneran standalone pero sí se anotan en `STATE.md`
 ├── CLAUDE.md / STATE.md / CHANGELOG.md / DESIGN_SYSTEM.md
 ├── CONTENT.md / ROADMAP.md / README.md
 ├── PACE.html                    ← entry point desarrollo
-├── PACE_standalone.html         ← bundle offline (regenerado cada sesión)
-├── build-standalone.js          ← genera el standalone
+├── index.html                   ← artefacto WEB/PWA (canonico, con manifest)
+├── PACE_standalone.html         ← export offline BAJO DEMANDA (s134, ya no cada sesion)
+├── build-standalone.js          ← genera ambos artefactos
 ├── manifest.json / sw.js        ← PWA
 ├── app/
 │   ├── tokens.css / state.jsx / main.jsx
@@ -151,4 +156,7 @@ Tweaks visuales menores no regeneran standalone pero sí se anotan en `STATE.md`
 
 ---
 
-## 📐 Versionado: `v0.X` pre-lanzamiento · `v1.0` web+Chrome · `v2.0` Android
+## 📐 Versionado
+
+`v0.X` pre-lanzamiento · **`v1.0` = primera version PAGADA** (web/PWA, licencia offline; decision s132) · `v2.0` Android e iOS via Capacitor.
+Orden de trabajo vigente: seccion «Camino a v1.0» de `ROADMAP.md` (9 fases).

@@ -1,5 +1,35 @@
 # PACE · Modelo de monetización
 
+> **GOBIERNA el detalle comercial y técnico de la licencia**, subordinado al §20 del
+> [audit](./docs/product/AUDITORIA_SISTEMA_PACE.md), que fija la dirección. Índice de autoridad:
+> [`docs/product/AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md).
+
+## PRECIO Y ESTRUCTURA — CERRADO en s134 (esto manda sobre todo lo de abajo)
+
+**Al lanzamiento hay UN solo plan: Lifetime 19,99 €.**
+
+- **Formato de licencia con `expiresAt` OPCIONAL desde el día uno.** Si a los ~3 meses la
+  monetización no funciona, añadir un pase temporal es **un cambio de datos, no de
+  arquitectura**. Esa previsión es el seguro; no implica construir nada más ahora.
+- **Mensual DESCARTADO.** Sin cuentas y sin renovación automática —las dos cosas que el proyecto
+  se niega a tener— un mensual obliga a **volver a comprar y pegar una clave nueva cada mes**:
+  doce fricciones al año por 2,99 €. No es un plan de precios, es una fuga.
+- **Si algún día llega un pase anual, va a 9,99 €, no a 4,99 €.** A 4,99 € sale al 25 % del
+  lifetime y se lo canibaliza: cualquiera hace la cuenta y coge el anual. A 9,99 € el lifetime se
+  amortiza en dos años y sigue teniendo sentido.
+- **Todos los planes desbloquean lo mismo**: las funciones premium implementadas. **Sin eventos
+  especiales ni packs de pago aparte**; las mejoras, ejercicios o sesiones que se añadan
+  puntualmente entran en lo ya comprado.
+- El precio queda fijado, pero **la estrategia de distribución y el posicionamiento del precio se
+  validan en la Fase 9** con la revisión a fondo de Starter Story. Fijado ≠ blindado: si esa
+  revisión aporta evidencia contraria, se revisa **antes** de publicar la tienda.
+
+Lo que sigue es el modelo histórico de s21/s26. Su detalle técnico de licencia (clave firmada,
+`expiresAt`, validación offline) **sigue vigente**; su abanico de vías queda **reducido** por la
+decisión de arriba.
+
+---
+
 > **Decidido en sesión 21 (2026-04-23).** Modelo C: pago único lifetime
 > + temporadas opcionales + donaciones. La app sigue 100% local, sin
 > backend propio, sin cuentas.
