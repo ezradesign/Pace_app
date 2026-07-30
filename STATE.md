@@ -303,6 +303,19 @@ los senalo dos veces («el doble circulo simple funciona pero se puede mejorar»
 halo, loto de fondo contrarrotando y respiracion asimetrica, pero **siguen siendo dos hairlines**.
 Falta direccion suya sobre que quiere en su lugar — no es un bug, es criterio visual (regla D-4).
 
+**DOS REPORTES DEL USUARIO tras cerrar s138** (van con lo anterior, mismo bloque de Respira):
+
+1. **La 2a capa del loto lee como «solo un zoom».** Peticion: que su TRANSPARENCIA tambien se mueva
+   (girar / contragirar), no solo escalar. Ojo al diagnosticar: el loto de fondo YA contragira
+   (`BreatheVisual.jsx:265`, `gira(450, -1)`), pero a 450 s/vuelta y opacidad 0,10-0,16 el
+   movimiento es **imperceptible** — por eso se percibe como zoom. Lo que falta no es el giro sino
+   que se NOTE: modular la opacidad en el tiempo, acelerar la contrarrotacion, o ambas.
+2. **Siguen viendose las lineas del degradado** (captura en PC, pantalla «Reten sin aire» de Rondas
+   express, paleta clara). La 2a pasada de s138 solo toco `sessionAtmosphere`
+   (`SessionShell.jsx:123-130`). Quedan **sin tratar** los radiales de 2 paradas y sin grano:
+   `BreatheSession.jsx:303` (circulo de retencion, el de la captura) y `BreatheVisual.jsx:244`
+   (halo del visual «flor»). `BreatheVisual.jsx:316` es de `organico`, que la Fase 1.6 retira.
+
 **Lo que NO entra:** nada de la Fase 2 (nombres, glifos, descripciones, nivel/intensidad,
 preview) — esa arranca con su sesion de AUDITORIA y matriz §19.2 de los 92 pasos.
 
