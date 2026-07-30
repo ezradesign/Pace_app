@@ -9,10 +9,8 @@ gobierna. No hay ninguna decisión que exista solo en esa copia (verificado por 
 Referencia técnica inicial: v0.66.0 · main · commit 9a126257d69e5d50d0ac71f3400e81743a6f2a05.
 Estado técnico revisado: v0.67.0 · main · commit 43417f34727f1ff306cca20a5aa77cebb48cdbcb.
 Última actualización de decisiones: ronda M1–M4 (métricas, check-in, ritmo y arquitectura de Stats) — ver §37.
-ATENCIÓN (s130): el §37 queda marcado **PROVISIONAL — pendiente de re-decisión** por el usuario
-(se añadió sin repensarse del todo). Sus cuatro decisiones vuelven a estar ABIERTAS en §36. El
-resto del documento NO está afectado: §31.4 y §31.6 (Hoy/Semana, Free/Premium) son anteriores a
-esa ronda y siguen vigentes.
+§37 RE-DECIDIDO Y CERRADO en s133 (ver §37 bis). Estuvo marcado PROVISIONAL entre s130 y s133
+porque se había añadido sin repensarse; el usuario lo cerró decisión a decisión.
 Propósito: reunir las decisiones de producto, UX, gamificación, Caminos, Travesías, Respira, premium, logros y dirección visual para que no dependan del contexto de una conversación.
 Importante: este documento describe decisiones y propuestas. No implica que todas estén implementadas.
 
@@ -2237,14 +2235,14 @@ Stats debe medir actividad, resultado percibido, retorno y equilibrio.
 El número de Pomodoros no será la medida principal del éxito.
 El WhatsApp para beta testers utilizará el lema oficial confirmado.
 36. Preguntas abiertas para la próxima conversación
-Métricas y Stats
-¿PACE debe preguntar “¿Cómo terminas hoy?”?
-¿Qué respuestas debería ofrecer?
-¿Debe mostrar un equilibrio diario o evitar convertir el bienestar en una puntuación?
-¿Cómo representar días imperfectos sin transmitir fracaso?
-¿Qué debe verse primero al abrir Stats?
-¿La racha actual se conserva, se transforma en ritmo o se elimina?
-¿Qué información debe pasar de Stats a la sidebar?
+Métricas y Stats — TODAS RESUELTAS en s133 (§37 bis), salvo la última
+[RESUELTA] ¿PACE debe preguntar “¿Cómo terminas hoy?”? → SÍ, ocasional y en cierres naturales (§37bis.4)
+[PENDIENTE, editorial] ¿Qué respuestas debería ofrecer? → formulación exacta en la sesión que lo implemente (Fase 3); las candidatas están en §31.5
+[RESUELTA] ¿Equilibrio diario o evitar la puntuación? → tres marcas foco·cuerpo·respiración, SIN nota (§37bis.2)
+[RESUELTA] ¿Cómo representar días imperfectos sin transmitir fracaso? → tipos de jornada descriptivos + hueco neutro (§37bis.3)
+[RESUELTA] ¿Qué debe verse primero al abrir Stats? → Hoy (§31.4 + STATS_DESTINO_PROPUESTA.md)
+[RESUELTA] ¿La racha se conserva, se transforma o se elimina? → transformada en RITMO SEMANAL (§37bis.1)
+[ABIERTA A PROPÓSITO] ¿Qué información debe pasar de Stats a la sidebar? → se decide al repensar la sidebar (§14); Stats es la fuente única
 Home
 ¿Se confirma la invariante de no-scroll en escritorio ancho y bajo?
 ¿Dónde se integra exactamente “Déjate guiar”?
@@ -2268,23 +2266,54 @@ Catálogo corporal
 ¿Cómo se explicarán las regresiones?
 ¿Quién revisará el contenido corporal antes del lanzamiento?
 
-37. Ronda M1–M4 (métricas, check-in, ritmo y Stats) — **PROVISIONAL, PENDIENTE DE RE-DECISIÓN**
+37 bis. RONDA M1–M4 RE-DECIDIDA · CERRADA (s133)
 
-ESTADO (s130, decisión del usuario): esta ronda **NO cuenta como cerrada**. Se añadió al
-documento sin repensarse del todo, así que sus decisiones quedan **PROVISIONALES** y las
-preguntas que decía resolver **vuelven a estar abiertas en §36**. Lo que sigue se conserva
-como PROPUESTA de partida para esa re-decisión, no como canon.
+Estuvo PROVISIONAL entre s130 y s133 por decisión del usuario (se había añadido sin
+repensarse). Cerrada ahora decisión a decisión, con las alternativas y sus costes sobre la
+mesa. **Esto es canon.** Cada punto sustituye a lo que decía la ronda original, que se
+conserva debajo como historia.
 
-Cuatro decisiones afectadas: tipos de jornada (§37.3) · racha → ritmo semanal (§37.3) · sin
-puntuación de equilibrio (§37.3) · check-in de cierre (§37.1), más la comparación
-retrospectiva (§37.2) y el «Hoy y Semana primero» de §37.4.
+37bis.1 · CONSTANCIA = RITMO SEMANAL. Se retiran la racha de días consecutivos y el récord
+de mejor racha (hoy en `PathStats.jsx:74-84`, vía `computePathStreaks`). Se sustituyen por
+«días con ritmo» sobre la tira de 7 días: sin récord, sin racha perdida, sin rojo; un día sin
+registro es un hueco neutro. Reutiliza el criterio de día activo ya vigente (s69: foco,
+respiración o cuerpo > 0; el agua sola NO cuenta), que ya usan `YearView` y las WeekDots de
+la sidebar. Motivo: la racha choca con §2.2 (nada de rachas punitivas) y con §2.5 (progreso
+sin culpa).
 
-NO afectado: §31.4 (estructura Hoy · Semana · Mes · «Qué te ayuda») y §31.6 (Free = Hoy +
-tira de 7 días; Premium = mes, año, patrones, «qué te ayuda») son ANTERIORES a esta ronda —
-están ya en el documento original del 2026-07-27 — y siguen vigentes. Es sobre ellos, y no
-sobre el §37, donde se apoya `STATS_DESTINO_PROPUESTA.md`.
+37bis.2 · EQUILIBRIO = TRES MARCAS, SIN NOTA. El equilibrio del día se representa con un
+indicador visual de qué ámbitos se tocaron —**foco · cuerpo · respiración**— sin número, sin
+nivel y sin orden de mérito. La hidratación acompaña pero no es un ámbito (coherente con s69:
+el agua sola no hace día activo). Se descarta explícitamente cualquier nota agregada de
+equilibrio. Motivo: cualitativo como exige el principio, pero legible de un vistazo — la
+alternativa de solo texto se ignora en la práctica.
 
-Texto original de la ronda, conservado como propuesta:
+37bis.3 · CALENDARIO POR TIPOS DE JORNADA, NO POR VOLUMEN. Mes y Año dejan de colorear por
+intensidad: `computeDayScore` (`YearView.jsx:11-24`), que agrega foco + respiración + cuerpo
++ agua en un número, deja de ser el criterio de color. Cada día se colorea por el TIPO de
+jornada que fue —**con pausas · de foco sin pausas · de cuerpo · sin registro**— con **«con
+Camino» como MARCA superpuesta**, no como tipo (puede coexistir con cualquiera). Los tipos se
+DEDUCEN de lo que hubo (decisión del usuario en s129), así que aplican a todo el histórico ya
+guardado y no necesitan eventos. Motivo: el heatmap por volumen premia visualmente el día de
+más cantidad, que es lo que §31.2 prohíbe.
+
+37bis.4 · CHECK-IN DE CIERRE: SÍ, OCASIONAL. Máximo una vez al día, siempre opcional, nunca
+bloquea, ligado a cierres naturales (fin de jornada o cierre de una experiencia); nunca tras
+cada sesión y nunca para vender premium. Es la única vía para saber si alguien «termina el día
+mejor», que es una de las dos métricas principales de §31.1. Requiere eventos ⇒ llega en la
+Fase 3 del plan, no antes.
+
+37bis.5 · COMPARACIÓN RETROSPECTIVA (sin cambios). Contigo mismo, mirando atrás; nunca
+competitiva ni social; copy editorial y neutral. Se mantiene sin re-preguntar porque no añade
+nada a lo que ya prohíbe §2.2 (sin rankings, sin presión social).
+
+NO afectado por nada de esto: §31.4 (estructura Hoy · Semana · Mes · «Qué te ayuda») y §31.6
+(Free = Hoy + tira de 7 días; Premium = mes, año, patrones, «qué te ayuda») son ANTERIORES a
+la ronda M1–M4 —están ya en el documento original del 2026-07-27— y siguen vigentes. Es sobre
+ellos, y no sobre el §37, donde se apoya `STATS_DESTINO_PROPUESTA.md`.
+
+--------------------------------------------------------------------------------
+Texto original de la ronda M1–M4, conservado como HISTORIA (superado por §37 bis):
 
 Esta ronda consolida y RESUELVE varias preguntas abiertas de §31.5 (check-in de cierre) y
 §36 (métricas, Stats, racha, días imperfectos). Es dirección de producto; no implica código

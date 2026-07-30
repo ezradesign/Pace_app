@@ -11,7 +11,9 @@
 ---
 
 **Version actual:** v0.71.0 (s128 — **home móvil universal · «amanecer del Camino»**: el motor de geometría de la home (`home-geometry.js`) corre AHORA también en móvil/tablet garantizando CERO scroll, y la **tarjeta de Camino hace de «horizonte»** recortando el arco inferior del aro —el «amanecer» del Desktop s126 pero con Caminos—; se conserva el orden móvil Timer→Camino→Actividades. Desktop **byte-idéntico**). «Salir» de Caminos a la home es de s127/v0.70.0.
-**Ultima sesion:** #132 -- 2026-07-30 - **Dirección: un solo plan operativo, con el feedback beta al frente**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). **Problema resuelto: había DOS órdenes de trabajo** —la secuencia de `ROADMAP.md` (que llevaba 23 sesiones mostrando como «siguiente» la fila «s107 Caminos al centro», nunca ejecutada) y los Bloques 0–9 del audit— y las sesiones s107→s131 no siguieron ninguno. La sección «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) se reescribió como **PLAN OPERATIVO ÚNICO de 7 fases** (38→15 KB; la anterior en `docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`). Reparto: **audit = qué/por qué · ROADMAP = ORDEN · STATE = presente**. **Marco del usuario**: v1.0 = **primera versión PAGADA** · **Travesías SÍ** y son el argumento principal de compra · **Viajes de respiración NO** · sin fecha. **FEEDBACK BETA REAL** (aportado por el usuario, antes solo estaba el mensaje sin respuestas): los 5 puntos caen en el mismo sitio —**Mueve y Estira no se entienden**: no está claro cómo hacer el ejercicio · glifos flojos · descripciones vagas · **nombres en inglés en la versión española** · complejos mezclados con sencillos—. **Verificado contra el código**: **34 de 93 nombres (37 %)** llevan inglés (`Dead hang`, `Chin tucks`, `Hollow hold`, `Wall sit`, `Cossack squat`, `Superman`…) · **46 glifos para 92 nombres de paso** ⇒ ~la mitad cae en `DefaultGlyph` · **`level`/`intensity` declarados 44 veces en los datos y CERO consumidores en UI** (la info para separar fácil de complejo ya existe y no se muestra). **Consecuencia de orden**: la comprensibilidad de Mueve/Estira pasa a **FASE 2**, por delante de eventos, Stats y Travesías — es el núcleo diferencial, las Travesías se construyen ENCIMA de estos ejercicios, y los glifos placeholder ya eran bloqueante de venta declarado. Fases: **1** dirección · **2** Mueve/Estira se entiendan · **3** eventos web · **4** Stats · **5** Travesías · **6** descubrimiento · **7** venta. **FASE 1 NO está cerrada**: faltan la re-decisión del **§37** (5 preguntas) y las **comerciales de §36** (precio, precio fundador, empresas, Android/iOS). Diario: [session-132](./docs/sessions/session-132-direccion-plan-unico.md).
+**Ultima sesion:** #133 -- 2026-07-30 - **§37 re-decidido y CERRADO · FASE 1 completa**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). El §37 estaba PROVISIONAL desde s130; se cerró decisión a decisión con las alternativas y sus costes delante, y queda como **§37 bis** del audit (el texto original se conserva como historia). **Las cuatro decisiones**: (1) **constancia = RITMO SEMANAL** — fuera racha actual y mejor racha (`PathStats.jsx:74-84`, `computePathStreaks`), entran «días con ritmo» sobre la tira de 7 con el criterio de día activo de s69 y hueco neutro, sin récord ni rojo; (2) **equilibrio = TRES MARCAS foco·cuerpo·respiración, SIN nota agregada** (la hidratación acompaña, no es ámbito) — **esto es NUEVO, no estaba en el spec de Stats**; (3) **calendario de Mes y Año por TIPOS DE JORNADA, no por volumen**: `computeDayScore` ([YearView.jsx:11-24](app/stats/YearView.jsx)) deja de ser el criterio de color, y los tipos —con pausas · de foco sin pausas · de cuerpo · sin registro, con «con Camino» como MARCA superpuesta— se deducen de lo que hubo, así que aplican a todo el histórico sin necesitar eventos; (4) **check-in de cierre SÍ, ocasional** en cierres naturales, máx 1/día, opcional, nunca tras cada sesión ni para vender premium ⇒ requiere eventos, llega en la Fase 3. La quinta (comparación retrospectiva) se mantuvo **sin preguntar** porque no añade nada a lo que ya prohíbe §2.2. **§36 actualizado**: 5 preguntas de Métricas y Stats marcadas RESUELTAS, 1 pendiente editorial (formulación de las respuestas del check-in) y 1 abierta a propósito (qué pasa de Stats a la sidebar → §14). **`STATS_DESTINO_PROPUESTA.md` queda SIN condicionantes.** **Comerciales de §36 reasignadas a la FASE 7 con motivo escrito**: el precio no se decide antes de revisar Starter Story a fondo, y móvil y empresas caen fuera de v1. **FASE 1 CERRADA.** Diario: [session-133](./docs/sessions/session-133-cierre-fase-1.md).
+
+**Sesion anterior:** #132 -- 2026-07-30 - **Dirección: un solo plan operativo, con el feedback beta al frente**. SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). **Problema resuelto: había DOS órdenes de trabajo** —la secuencia de `ROADMAP.md` (que llevaba 23 sesiones mostrando como «siguiente» la fila «s107 Caminos al centro», nunca ejecutada) y los Bloques 0–9 del audit— y las sesiones s107→s131 no siguieron ninguno. La sección «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) se reescribió como **PLAN OPERATIVO ÚNICO de 7 fases** (38→15 KB; la anterior en `docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`). Reparto: **audit = qué/por qué · ROADMAP = ORDEN · STATE = presente**. **Marco del usuario**: v1.0 = **primera versión PAGADA** · **Travesías SÍ** y son el argumento principal de compra · **Viajes de respiración NO** · sin fecha. **FEEDBACK BETA REAL** (aportado por el usuario, antes solo estaba el mensaje sin respuestas): los 5 puntos caen en el mismo sitio —**Mueve y Estira no se entienden**: no está claro cómo hacer el ejercicio · glifos flojos · descripciones vagas · **nombres en inglés en la versión española** · complejos mezclados con sencillos—. **Verificado contra el código**: **34 de 93 nombres (37 %)** llevan inglés (`Dead hang`, `Chin tucks`, `Hollow hold`, `Wall sit`, `Cossack squat`, `Superman`…) · **46 glifos para 92 nombres de paso** ⇒ ~la mitad cae en `DefaultGlyph` · **`level`/`intensity` declarados 44 veces en los datos y CERO consumidores en UI** (la info para separar fácil de complejo ya existe y no se muestra). **Consecuencia de orden**: la comprensibilidad de Mueve/Estira pasa a **FASE 2**, por delante de eventos, Stats y Travesías — es el núcleo diferencial, las Travesías se construyen ENCIMA de estos ejercicios, y los glifos placeholder ya eran bloqueante de venta declarado. Fases: **1** dirección · **2** Mueve/Estira se entiendan · **3** eventos web · **4** Stats · **5** Travesías · **6** descubrimiento · **7** venta. **FASE 1 NO está cerrada**: faltan la re-decisión del **§37** (5 preguntas) y las **comerciales de §36** (precio, precio fundador, empresas, Android/iOS). Diario: [session-132](./docs/sessions/session-132-direccion-plan-unico.md).
 
 **Sesion anterior:** #131 -- 2026-07-30 - **Limpieza estructural: STATE 153→57 KB y CHANGELOG 95→41 KB**. Sesión SOLO-DOCUMENTAL (sin bump; sigue v0.71.0). Ejecuta el §4 de [`AUDITORIA_DOCUMENTAL.md`](docs/product/AUDITORIA_DOCUMENTAL.md). **Los dos pesos gordos de STATE eran «Decisiones activas» (62 KB, 108 filas) y «Red de seguridad» (53 KB, 105 filas) = 115 de los 153 KB.** Las **decisiones técnicas NO se archivan** —son reglas vigentes que evitan reintroducir regresiones— así que se mudan a **[`DECISIONES_TECNICAS_VIGENTES.md`](docs/product/DECISIONES_TECNICAS_VIGENTES.md) (GOBIERNA)** y STATE conserva el ÍNDICE de títulos; el historial por archivo de la Red de seguridad sí es historia → `docs/archive/RED_DE_SEGURIDAD_HISTORICO.md`, y la tabla viva queda en archivo · rol · **versión actual**. En el CHANGELOG las 106 filas conservan su **titular** y el texto largo (hasta 4.000+ caracteres por celda) → `docs/archive/CHANGELOG_TABLA_HISTORICA.md`; **el detalle de las 2 últimas versiones queda intacto**. Verificado: 105/108 filas migradas sin pérdida, las 2 secciones de detalle presentes, y el texto completo de cada decisión localizable en su archivo nuevo. **Trampa encontrada**: en PowerShell `$C` y `$c` son **la misma variable** (no distingue mayúsculas) — el script sobrescribía el contenido del archivo con las celdas de la fila y generaba un CHANGELOG truncado; se detectó comparando el conteo de líneas antes de instalar nada (el fichero nunca se dañó, `git status` limpio). Es el mismo tipo de bug que la regla #8 de CLAUDE.md prohíbe en `.map()`. Diario: [session-131](./docs/sessions/session-131-limpieza-estructural.md).
 
@@ -270,135 +272,45 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- RESTO DEL BLOQUE 0 (definido por el usuario en s127)
+## Proxima sesion -- FASE 2, sesion 1: AUDITORIA de nombres y glifos (sin codigo)
 
-**§32 (home responsive) CERRADO en s126/v0.69.0** (§32.6 del audit). **«Salida táctil de
-Caminos» CERRADA en s127/v0.70.0.** **Home móvil universal («amanecer del Camino») CERRADA en
-s128/v0.71.0.**
+> El orden de trabajo vigente vive en la seccion «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md)
+> (7 fases, reescrita en s132). **FASE 1 cerrada en s133.** Este apartado solo dice cual es la
+> proxima sesion y con que criterio se cierra.
 
-**RUMBO tras s130.** Hay tres frentes abiertos y el orden lo decides tú:
+**Por que esta y no otra.** El feedback beta real dijo cinco cosas y las cinco caen en Mueve y
+Estira: no se entiende como hacer el ejercicio, los glifos son flojos, las descripciones son
+vagas, en espanol se mezclan nombres en ingles, y hay ejercicios muy complejos junto a otros muy
+sencillos. Verificado contra el codigo en s132: **34 de 93 nombres (37 %) llevan ingles** · **46
+glifos para 92 nombres de paso** (~la mitad cae en `DefaultGlyph`) · **`level` e `intensity`
+declarados 44 veces y con CERO consumidores en la UI**.
 
-- **A · Terminar la auditoría documental** (lo que quedó fuera del alcance «completa»):
-  adelgazar `STATE.md` de 150 KB a ≲25 KB moviendo el historial por archivo de la Red de
-  seguridad a `docs/archive/RED_DE_SEGURIDAD_HISTORICO.md`, y recortar las celdas de la tabla
-  del `CHANGELOG.md` (94 KB) a una o dos líneas por versión, con el detalle ya en los diarios.
-  Método exacto en §4 de [`AUDITORIA_DOCUMENTAL.md`](docs/product/AUDITORIA_DOCUMENTAL.md).
-  También pendiente: verificar el **drift** de `CONTENT.md` y `ROADMAP.md` contra el código.
-- **B · Re-decidir el §37** (ronda M1–M4, ahora PROVISIONAL): las 5 preguntas de §5 del
-  entregable. Desbloquea los §4.4 y §4.5 del spec de Stats (ritmo semanal y tipos de jornada).
-- **C · Código: Fase 0 de Stats**, que **no depende de ninguna de las dos anteriores** porque
-  es agnóstica al contenido (ver abajo).
+**Entregable: la matriz §19.2 completa**, docs-only, para los 92 nombres de paso:
 
-**Fases de Stats** (de [`STATS_DESTINO_PROPUESTA.md`](docs/product/STATS_DESTINO_PROPUESTA.md)):
+| Columna | Qué recoge |
+|---|---|
+| Nombre actual | tal cual esta en los datos (`name` ES) |
+| Nombre propuesto en espanol | solo si hoy lleva ingles; con el termino tecnico entre parentesis si aporta |
+| Glifo | existe / placeholder / ausente (cae en `DefaultGlyph`) |
+| Alias | si `VISUAL_ALIAS` lo unifica con otro |
+| Poses | una o dos, y si necesita flecha o apoyo |
+| Zona corporal | para agrupar y para los filtros de la Fase 6 |
+| Nivel tecnico e intensidad | los ya declarados en los datos, mas si el valor es correcto |
+| Revision tecnica | si necesita fisio antes de tocarlo (p. ej. `atg.knees` / Sissy squat) |
 
-- **FASE 0 · marco de altura estable de Stats** (sesión CORTA, ~40 líneas de CSS): altura del
-  panel independiente de la vista que lleve dentro + scroll en el cuerpo con cabecera y pestañas
-  fijas, confinado con `:has([data-pace-stats-body])` (patrón s125) y **sin tocar
-  `Primitives.jsx`**. Es lo **único agnóstico al contenido**: cualquier juego de pestañas futuro
-  lo hereda y de la medición de s129 solo habría que reajustar una constante. Mata el salto
-  medido (303px de alto, 152px de techo). **NO elimina el scroll** en viewports de 610px de alto:
-  eso lo resuelve la Fase 1 al bajar el volumen de contenido.
-- **FASE 1 · Hoy + Semana** (sesión de CÓDIGO grande, sin eventos): nueva vista **Hoy** como
-  entrada, **Semana** con ritmo semanal y tira de 7 días tipada, integración de Caminos, retirada
-  de las rachas. Todo lo NO derivable del dato actual (conteo de pausas por día, prácticas
-  valoradas de la semana, cierre de jornada) se deja fuera declaradamente — lo habilita la Fase 2.
+**Trampa que obliga a auditar antes de escribir.** `name` en espanol es **la clave del glifo** y
+de la i18n del constructor (decision s93), asi que renombrar exige tocar `exercise-glyphs.jsx` y
+`app/i18n/content/*.js` **en el mismo cambio** (decision s108). Si se olvida, el glifo cae **en
+silencio** a `DefaultGlyph` — es decir, arreglar el idioma empeoraria justo la queja numero 2.
+Por eso la matriz va primero y las olas despues.
 
-**Decisión pendiente que gana urgencia:** `pace.events.v1` (Fase 2) es lo que desbloquea la mitad
-de Hoy/Semana y todo «Qué te ayuda». Diseño CERRADO en s117, sin implementar, y **el histórico que
-no se emite no se puede reconstruir** (ver §5.2 del documento destino).
+**Criterio de cierre de la sesion:** existe la matriz con los 92 pasos, y de ella sale el corte
+de las olas siguientes (renombrado + glifos, dos niveles visuales, descripciones, nivel e
+intensidad visibles, preview). Cero codigo.
 
-El pulido fino de **relaciones de aspecto** (tabs Foco/Pausa/Larga en móviles altos, y demás
-afinado proporcional) sigue **DIFERIDO**.
-
-- **[DIFERIDO — más adelante] Tabs Foco/Pausa/Larga en móviles altos**: en teléfonos altos (p.ej.
-  390×844) sobran ~90px de aire arriba/abajo; el usuario planteó meter la pastilla de modo del
-  Desktop «si procede». NO es un simple des-ocultar: las tabs son `position:absolute` centradas
-  ([TopBar.jsx:46](app/main/TopBar.jsx#L46)) y en anchos de móvil (390–430px) **colisionan** con
-  los 3 iconos top-right (por eso s46 las ocultó). Requiere **fila propia** gateada por
-  `min-height` + decisión consciente de reintroducir en móvil la selección de modo que hoy vive
-  en BreakMenu.
-
-Bloque 0 TANGIBLE (definición real del usuario en s127, §23 del audit):
-
-- **Glifos de las bolas de logros (§15.1)** + **trocear los 2 archivos que pasan de 500
-  líneas**. **CANDIDATA RECOMENDADA**: convergen en el mismo sitio. La maquinaria de glifos
-  ya existe (`AchGlyph` con `glyphSvg` + fallback unicode en
-  `app/achievements/Achievements.jsx`) y el sendero/preview de logros vive en
-  `app/shell/Sidebar.jsx` (543 ln), que es uno de los dos a trocear junto con
-  `app/glyphs/exercise-glyphs.jsx` (571 ln). Requisitos §15.1: glifo visible al desbloquear,
-  color heredado, el estado bloqueado NO revela secretos, tamaño válido en sidebar y móvil.
-- ~~**Estabilidad de Stats**~~ → **REENCUADRADO en s129**: no era un ítem de CSS. Ver
-  [`STATS_DESTINO_PROPUESTA.md`](docs/product/STATS_DESTINO_PROPUESTA.md) y las fases 0/1 de
-  arriba. Lo medido: chrome 221px · Semana 397 / Mes 368 / Año 226 / **Caminos 529** ⇒ salto de
-  303px de alto y 152px de techo; hueco útil 298px en 1366×610.
-- **Bibliotecas de Respira/Mueve/Estira** (sustituye a «revisar pills», CERRADO — eran las
-  del timer, ya implementadas): reorganizarlas para **reducir el scroll hacia abajo, sobre
-  todo en móvil**, y **sacar el selector de rutinas premium a Mueve Y Estira a la vez** en
-  lugar de hundido al final de la lista (es una función premium e interesante y hoy no se ve).
-- **Sidebar (§14)**: debe cumplir las funciones de §14; requiere un **repensado**, no un
-  parche. Sus preguntas de §36 (función principal, qué sobra, qué acción sin abrir modal,
-  cómo representar logros) siguen **sin responder** — conviene responderlas ANTES de trocear
-  `Sidebar.jsx`, para que el troceado nazca alineado y no haya que rehacerlo.
-
-**Decisión pendiente, no bloqueante — adelantar `pace.events.v1` (Bloque 9).** Diseñado en
-s117, sin implementar. No es urgencia visible sino **tiempo de espera**: es la única tarea
-cuyo valor depende de haberla hecho pronto, porque las decisiones M4 («Qué te ayuda» con
-umbrales variables, Stats de Mes/Año, comparación retrospectiva de M2) necesitan histórico
-acumulado que hoy NO se está registrando. Los contadores agregados de `pace.state.v2` no
-permiten reconstruirlo hacia atrás.
-
----
-
-<!-- Contexto histórico de sesiones anteriores -->
-
-**s125 (scrollbar del runner v1) HECHA** (diagnóstico medido: régimen ancho ≥641px NO
-desborda —s119 sostiene—; en móvil ≤640px desborde MÍNIMO de 3px a ≤~624px cuyo driver es el
-NOMBRE del ejercicio a 2 líneas, no el cue/care; enfoque A por AskUserQuestion: ocultar la
-barra conservando el scroll, CONFINADA a v1 vía `:has([data-pace-v1-progress])`; CSS aditivo,
-FASE A intacta, confinamiento verificado en Respira + legacy). El HALLAZGO del chip queda
-CERRADO. Candidatos (sin orden fijado; el usuario decide el corte):
-
-- **§32 home ancho+bajo** (PENDIENTE de CONFIRMACIÓN EXPLÍCITA del usuario — NO tocar hasta
-  entonces): comportamiento de la home en viewports anchos y de poca altura; sigue en
-  `AUDITORIA_SISTEMA_PACE.md` §32 y `HOME_REDISENO_PROPUESTA.md` (§0 completo).
-- **Resto del Bloque 0 · Consolidación** (audit): salida TÁCTIL de Caminos · estabilidad de
-  Stats · pills «Breve/Tranquilo/Amplio» de Tweaks · **reparar glifos en las bolas de logros
-  del sendero** (§15.1/§3.4).
-- **§0 solapamiento responsive a alturas <720px** (diferido de s122): círculo que encoge por
-  altura + safe-zones (§0 completo en `HOME_REDISENO_PROPUESTA.md`).
-- **OLA EDITORIAL** de las 6 rutinas legacy (Seated twist 2º lado · Ground transitions con
-  manos · Rib pull identidad · escalón de Puente torácico; luego `push.ladder`/
-  `legs.single`; `atg.knees` BLOQUEADA por revisión FISIO de Sissy squat, B4). **NO abrir
-  OLA 5 mecánica** salvo auditoría nueva. Condicionada a la validación real de la home.
-
-Despues: plan maestro (home Caminos al centro + After Pomodoro + scoring v2 que
-consume `profile`). La **implementación de eventos** (Fase 1 web + Fase Android/
-iOS Capacitor de EVENTOS_SCHEMA.md) llega antes de stats premium / licencia.
-Deuda a11y (Card sin teclado · onboarding sin focus trap) → sesion propia.
-
-### Despues -- Plan maestro v1.0 (adoptado s93; B1-B2 insertados 2026-07-16)
-
-~~build Etapa A s103~~ · ~~arte D-4 s104~~ · ~~fuentes + todayISO s105~~ ·
-~~onboarding s106~~ · ~~B1.1 saneamiento s107~~ · ~~B1.2 editorial s108~~ ·
-~~B2.1 auditoria s109~~ · ~~B2.2a visualId + contrato v1 pilotado s110~~ ·
-~~B2.2 metodo s111~~ · ~~B2.2a.5 auditoria + afinado UX s112~~ ·
-~~runner guiado MOTOR s113~~ · ~~runner guiado CAPA EDITORIAL s114~~ (**GIRO
-CERRADO** 2026-07-21) · B2.2b re-ordenado (~~b-1 contrato+duracion s115~~ ·
-~~b-2 feedback s116~~ · ~~b-3 eventos solo diseño s117~~) · B2.3 migrar resto de
-rutinas al contrato + reescrituras (~~OLA 1: 5 Mueve + couch.min s118~~ · ~~OLA 2:
-5 Estira s119~~ · ~~OLA 3: 5 mixtas s120~~ · ~~OLA 4: core.plank + wall.sit s121 —
-**migración MECÁNICA CERRADA**~~; 6 legacy restantes = editorial/fisio, NO mecánica)
-· ~~s122 CLARIDAD UX de la home~~ · ~~s123 modelo «atardecer» responsive de la home
-(regresión del swap corregida + §0 por altura)~~ · ~~s124 TIMER EDITORIAL (descriptor por
-duración + estados del CTA + fix del `completed` inerte)~~ · ~~s125 scrollbar del runner v1
-(ocultar barra conservando scroll, confinada a v1)~~ · **resto Bloque 0 / §32 SIGUIENTE** ·
-ola editorial · home Caminos al centro + After Pomodoro ·
-taxonomia + filtros + sigilo · pre-venta: glifos (revision
-COMPLETA) + trial/licencia + landing + programas 7/14 dias + ASO + Starter Story A
-FONDO antes de pricing.
-
----
-
+**Lo que NO se toca en esa sesion:** dosis, estructura de pasos, lateralidad, escalones ni
+`access` de ninguna rutina. Y los glifos que el usuario dibuje o apruebe se portan **literales**
+(regla s84).
 
 ## Decisiones activas -- indice
 
