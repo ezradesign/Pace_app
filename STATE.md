@@ -168,6 +168,24 @@
 
 ### Pendiente
 
+- **[PRESENCIA PUBLICA — reportado por el usuario al cerrar s139]** Dos cosas del repo de GitHub,
+  ambas ya diagnosticadas con datos:
+  - **`README.md` MUY desactualizado**: dice **v0.27.6** y no se toca desde hace **89 commits**
+    (`4554b05`, 2026-05-11) mientras la app va por v0.73.0 — 46 versiones menores de desfase. No
+    menciona nada de lo construido desde entonces (Caminos con laminas, contrato de pasos v1,
+    onboarding, PWA/SW, premium/entitlement, loto de Respira, i18n troceado…). Encaja natural con
+    el bloque de **presentacion publica pre-venta** (README es el escaparate del repo, y hay
+    `landing` pendiente en la estrategia premium).
+  - **Claude aparece en «Contributors»**: NINGUN commit esta AUTORIZADO por Claude —los 166 son de
+    `ezradesign`, con dos correos (personal y el `noreply` de GitHub)—. Sale de **4 commits con
+    trailer `Co-Authored-By`**: `b1118a3` (v0.34.1), `97431ea` (s97), `0ac5707` (s115) y `6acd1e2`
+    (s119), **los cuatro ANTERIORES a la decision s127** que prohibio la coautoria; desde s127 el
+    historial esta limpio. **OJO al coste**: quitarlos exige REESCRIBIR EL HISTORIAL
+    (`git filter-repo` o rebase) y **force-push**, y como el mas antiguo es de v0.34.1 cambiarian
+    los hashes de mas de 100 commits — destructivo sobre un repo ya publicado. Decision del
+    usuario: (a) dejarlo y que los 4 queden como historia, (b) reescribir y forzar el push
+    asumiendo el riesgo, o (c) reescribir solo si algun dia se hace limpieza mayor del repo.
+
 - **Diferidos de s122 (claridad de la home)**:
   - ~~**§0 solapamiento responsive a alturas <720px**~~ **RESUELTO en s126/v0.69.0 y s128/v0.71.0** (composicion proporcional + horizonte + squeeze, y motor universal en movil). Entrada OBSOLETA detectada en s137: el aro grande fijo + la
     tarjeta no caben sin la geometría responsive de §0 (círculo que encoge por
