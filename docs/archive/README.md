@@ -15,6 +15,7 @@ primero su banner: dice por qué se archivó y qué lo sustituye.
 | `smoke-tests.md` | s130 | Referencia v0.27.2, más de 40 versiones atrás | Checklist de cierre de `CLAUDE.md` |
 | `RED_DE_SEGURIDAD_HISTORICO.md` | s131 | Historial por archivo que engordaba `STATE.md` (53 KB) | Tabla compacta de `STATE.md` + `CHANGELOG.md` + diarios |
 | `CHANGELOG_TABLA_HISTORICA.md` | s131 | Celdas de la tabla de hasta 4.000+ caracteres (78 KB) | `CHANGELOG.md` con titulares + diarios de sesión |
+| `ROADMAP_CAMINO_V1_HISTORICO.md` | s132 | Secuencia de s93 que llevaba 23 sesiones mostrando como «siguiente» algo que nunca se hizo | Sección «Camino a v1.0» de `ROADMAP.md` (plan operativo único) |
 
 **Nota:** las **decisiones técnicas vigentes** que salieron de `STATE.md` en s131 **NO están
 aquí**: son reglas en vigor y viven en

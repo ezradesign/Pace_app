@@ -96,9 +96,11 @@ Total a archivar: **~245 KB** de documentación que hoy compite por autoridad si
 - **`CONTENT.md`** declara reflejar el catálogo «a fecha de v0.37.0». Después hubo cambios
   reales de contenido: B2.3 olas 1–4 (migración al contrato v1) y `couch.stretch.min` 5→6
   en s118. Hay que verificar si el catálogo documentado sigue coincidiendo.
-- **`ROADMAP.md`** se recreó en s85 declarando como «plan vigente» el bloque
-  Contenido+Premium, **cerrado en s99/v0.39.0**. Su visión larga sirve; su sección de plan
-  vigente hay que reemplazarla por el plan maestro real.
+- ~~**`ROADMAP.md`** declaraba como «plan vigente» un bloque cerrado en s99~~ **RESUELTO s132**:
+  su sección «Camino a v1.0» se reescribió como **PLAN OPERATIVO ÚNICO** (7 fases, con el
+  feedback beta al frente) y la secuencia anterior se archivó en
+  `docs/archive/ROADMAP_CAMINO_V1_HISTORICO.md`. 38 → 15 KB. Ahora declara `GOBIERNA el ORDEN`
+  en su cabecera, y el audit conserva el qué/por qué. **Deja de haber dos órdenes de trabajo.**
 - **`MONETIZATION.md`** (s21/s26) no contradice al audit §20 —las cuatro vías coinciden—
   pero su autoridad se solapa. Queda subordinado: el audit §20 fija dirección, MONETIZATION
   aporta el detalle técnico de licencia (`expiresAt`, validación offline).
