@@ -101,18 +101,32 @@ vender packs cuyos pasos rendericen `DefaultGlyph`»). Tres razones que apuntan 
 
 ### Fases
 
-### FASE 1 · Dirección cerrada
+### FASE 1 · Dirección cerrada — ✅ HECHA (s132–s133)
 
-docs, sin código.
-Qué entra: este plan · re-decisión del **§37** (tipos de jornada · racha→ritmo · puntuación de
-equilibrio · check-in de cierre · comparación retrospectiva) · respuestas a las preguntas
-**comerciales** de §36 que siguen abiertas (precio objetivo de Lifetime, precio fundador, si hay
-prueba empresarial, Android o iOS primero).
-Criterio de cierre: ninguna sesión posterior necesita adivinar el orden ni reabrir el §37.
+- **Plan operativo único** (este apartado) — s132.
+- **§37 re-decidido y CERRADO** — s133, audit §37 bis: constancia = **ritmo semanal** (fuera
+  racha y récord) · equilibrio = **tres marcas foco·cuerpo·respiración, sin nota** · calendario
+  **por tipos de jornada**, no por volumen (`computeDayScore` deja de colorear) · **check-in de
+  cierre ocasional** en cierres naturales (requiere eventos ⇒ Fase 3) · comparación
+  retrospectiva sin cambios.
+- **Preguntas comerciales de §36 → reasignadas a la FASE 7, con motivo**: el precio objetivo, el
+  precio fundador, la prueba empresarial y el orden Android/iOS **no se deciden aquí** porque el
+  propio plan exige revisar Starter Story **a fondo antes** de fijar pricing, y porque móvil y
+  empresas caen fuera de v1. Decidirlas sin esos datos sería inventárselas.
+
+Criterio de cierre **cumplido**: ninguna sesión posterior necesita adivinar el orden ni reabrir
+el §37.
 
 ### FASE 2 · Que Mueve y Estira se entiendan
 
-el bloque del feedback beta. La más importante.
+**SIGUIENTE.** El bloque del feedback beta. La más importante.
+
+**Arranca por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
+de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,
+qué glifo existe · si está aprobado o es placeholder · si hay alias · una o dos poses · zona
+corporal · si el nombre lleva inglés y cuál sería su nombre en español · nivel técnico e
+intensidad declarados. De esa matriz salen las olas de trabajo, y no antes: renombrar sin tener
+el mapa completo rompe claves de glifo en silencio.
 1. **Nombres en español.** Los 34 nombres con inglés. Ojo: `name` ES es la **clave del glifo** y
    de la i18n del constructor ⇒ renombrar exige tocar `exercise-glyphs.jsx` y
    `content/*.js` **en el mismo cambio** (decisión s108); si se olvida, cae en silencio a

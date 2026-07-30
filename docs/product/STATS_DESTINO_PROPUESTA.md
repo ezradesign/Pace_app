@@ -3,16 +3,21 @@ PACE · Stats destino — especificación de diseño
 Estado: DISEÑO. Docs-only, sin bump, CERO código (patrón s117/s109).
 Fecha: 2026-07-30 · sesión 129.
 
-REVISIÓN s130 — el §37 del audit (ronda M1–M4) pasó a **PROVISIONAL** por decisión del
-usuario. Consecuencia exacta para este documento:
-  · AGUANTA la columna vertebral, porque se apoya en **§31.4 y §31.6**, que son ANTERIORES a
-    esa ronda (están ya en el documento original del 2026-07-27): vistas Hoy · Semana ·
-    Mes · «Qué te ayuda», Free = Hoy + tira de 7 días, Premium = mes/año/patrones. También
-    aguantan el gap de datos (§5), las fases (§6) y la medición (§7), que son técnicos.
-  · QUEDAN CONDICIONADOS a la re-decisión del §37: **§4.4 (ritmo semanal)**, **§4.5 (tipos
-    de jornada)** y la parte de §4.6 que retira las rachas, más el check-in de la Fase 2.
-  · La **Fase 0 (marco de altura estable) no está afectada**: es agnóstica al contenido.
-Ver `AUDITORIA_DOCUMENTAL.md` §5.
+REVISIÓN s133 — **el §37 se RE-DECIDIÓ y está CERRADO** (audit §37 bis). Este documento queda
+**sin condicionantes** y sus §4.4/§4.5 se confirman. Dos precisiones que vienen de esa ronda:
+
+  · **§4.4 ritmo semanal — CONFIRMADO.** Se retiran racha actual y mejor racha; «días con
+    ritmo» sobre la tira de 7, criterio de día activo de s69, hueco neutro.
+  · **§4.5 tipos de jornada — CONFIRMADOS** (deducidos, «con Camino» como marca superpuesta) y
+    **son el criterio de color de Mes y Año**: `computeDayScore` deja de colorear.
+  · **NUEVO, no estaba en este documento**: el equilibrio del día se representa con **tres
+    marcas —foco · cuerpo · respiración— SIN nota agregada**; la hidratación acompaña pero no
+    es un ámbito. Va en Hoy (§4.2) y alimenta el «equilibrio entre módulos» de Semana (§4.3).
+  · **Check-in de cierre CONFIRMADO** como ocasional y ligado a cierres naturales ⇒ sigue en
+    la Fase 2 de este documento (requiere eventos).
+
+Historia: entre s130 y s133 el §37 estuvo PROVISIONAL y estas secciones quedaron condicionadas;
+la columna vertebral nunca lo estuvo, porque se apoya en §31.4/§31.6, anteriores a esa ronda.
 Referencia técnica: v0.71.0 · main · commit 6769203.
 Propósito: fijar QUÉ debe ser el panel de Stats antes de tocarlo, para no invertir
 trabajo en vistas que el sistema ya ha decidido mover, re-gatear o cambiar de criterio.
