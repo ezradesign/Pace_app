@@ -138,6 +138,37 @@ tres de ellas con el código ya escrito.
 4. **Integrar el loto de Respira** (`app/breathe/Loto_png.png`, ahí desde hace tiempo):
    optimizar y convertir, integrarlo en el visual, contraste, día/noche y reduced motion.
 
+### FASE 1.6 · Ajustes y dos retiradas
+
+Separada de la 1.5 a propósito: son ocho ítems de pulido en total y la regla es un frente por
+sesión, cerrado y verificado.
+
+1. **Ocultar el estilo de timer** (queda siempre «aro») y **ocultar «orgánico»** del círculo de
+   respiración. **Sin borrar**: una constante por opción en un solo sitio (`SHOW_TIMER_STYLE`,
+   `SHOW_BREATH_ORGANICO`) que retira la opción de la UI y deja el motor intacto. Reversible en
+   una línea, y la razón se anota en `DECISIONES_TECNICAS_VIGENTES.md` para que nadie lo borre
+   más adelante creyendo que es código muerto.
+2. **Migración de valores huérfanos** — la parte que no se ve y sin la cual lo anterior rompe.
+   Al cargar, si el `timerStyle` o el estilo de respiración guardados son de los que se ocultan,
+   se reescriben al que queda. Sin esto quien eligió el analógico **queda atrapado**:
+   `FocusTimer.jsx:117` sigue leyendo `state.timerStyle` y `BreatheVisual.jsx:197` conserva su
+   rama de `organico`. El default de `timerStyle` ya es `'aro'` (`state-core.jsx:33`), así que
+   solo afecta a instalaciones antiguas que lo cambiaron a mano.
+3. **BUG del botón fantasma** al cambiar el descanso entre series. Sospechoso identificado: esos
+   botones llevan `transition: 'all 180ms'` y entre lo que cambia al activarse está el
+   **`fontWeight`** (`TweaksPanel.jsx:290-295`), así que la transición anima el peso de la fuente.
+   **Es una hipótesis, no está confirmada**: reproducir y medir antes de tocar. Si se confirma, el
+   fix es declarar la transición solo de `background`, `color` y `border-color`. El mismo patrón
+   aparece en `statsPanelTabStyles.tab`: revisarlo de paso.
+4. **Idioma «Auto»**: tercera opción del selector y **default de las instalaciones nuevas**.
+   Resuelve con el idioma del dispositivo **en cada arranque**, reutilizando `detectInitialLang()`
+   (`useT.jsx:8`), que hoy solo se consulta una vez dentro de `loadState()`. Las instalaciones
+   actuales conservan su elección explícita. **Verificar** que no dispare el logro secreto
+   `secret.bilingual`, que se desbloquea con cualquier cambio de `state.lang` tras montar.
+
+Criterio de cierre: ninguna opción retirada deja a nadie atrapado, el bug medido antes de
+tocarlo, y el «Auto» verificado cambiando de verdad el idioma del sistema.
+
 ### FASE 2 · Que Mueve y Estira se entiendan
 
 El bloque del feedback beta. La más importante.
