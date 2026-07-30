@@ -514,17 +514,46 @@ ganar a estilos inline.
 `-plib-row`, `-path-btn`. Los botones del Foco fijan `--pfbtn` (color de relleno
 en hover, uno por botón: verde/naranja/gris).
 
-### Atmósfera por paso (Caminos)
-`SessionShell` acepta `atmosphere` (token `*-soft` del módulo del paso). El helper
+### Atmósfera de sesión (wash del módulo)
+`SessionShell` acepta `atmosphere` (token `*-soft` del módulo). El helper
 `sessionAtmosphere(soft)` (en `app/ui/SessionShell.jsx`, expuesto a window) devuelve
-un `radial-gradient` **doble capa** muy tenue concentrado arriba y desvanecido a
-`paper`. Solo se aplica dentro de Caminos (Respira terracota / Foco verde / Cuerpo
-tan / Agua azul). **Banding resuelto (s100):** la rampa lineal de 2 stops con
-alphas ~0.10 producía anillos de cuantización de 8 bits (peor en oscuro) → hint
-de interpolación al 22% (caída ease-out) + **capa de grano SVG** casi invisible
-(feTurbulence desaturado, `opacity` 0.04, tile 160px, data-URI inline) como
-dither. El grano lee como fibra de papel. Regla: si un wash futuro banda, mismo
-remedio — no subir los alphas de los tokens `*-soft`.
+un `radial-gradient` muy tenue concentrado arriba y desvanecido a `paper`. Desde
+s138 se aplica en **toda** sesión, no solo dentro de Caminos (Respira terracota /
+Foco verde / Cuerpo tan / Agua azul).
+
+**Banding — resuelto en s140, midiendo los píxeles reales de la página.** s100 y
+s138 lo trataron a base de paradas y grano, sobre dos premisas que resultaron
+falsas al medir la pantalla en vez del tile:
+
+- **El grano no dithera, solo tapa.** La escalera vale igual con grano (0,314) que
+  sin él (0,318): se compone cuando el degradado **ya** está redondeado a 8 bits, y
+  un dither tiene que entrar antes de la cuantización. ⇒ **Añadir paradas no sirve**
+  (el número de escalones lo fija el color, no la forma de la rampa) y
+  `baseFrequency` tampoco cambia la amplitud.
+- **Apilar el mismo degradado dos veces duplica el escalón**, porque los dos
+  redondeos caen en los mismos radios: usaba **17 de 24** niveles del recorrido
+  (escalón 1,41) contra **22 de 23** con una sola capa (escalón 1,05).
+
+Reglas vigentes para cualquier wash nuevo:
+
+1. **Una sola capa.** Si hace falta más tinte del que da el token, se compone el
+   alpha —`1−(1−a)² = a·(2−a)`— con **color relativo** sobre el propio token
+   (`rgb(from C r g b / calc(alpha * (2 - alpha)))`), nunca repitiendo la capa. Así
+   cada módulo y cada paleta conservan su alpha y **no se sube ninguno** (regla
+   s100 intacta). Con caída a la receta antigua vía `CSS.supports`.
+2. **El grano se calibra por el ratio σ ÷ escalón**, no a ojo: 0,48 antes, **1,16**
+   ahora. Para subir σ sin ensuciar el papel — `color-interpolation-filters='sRGB'`
+   (por defecto los filtros SVG van en linearRGB y pierden la mitad), **alpha
+   constante** en vez de ruidosa, y curva de contraste estirada alrededor del mismo
+   centro. La opacidad vive en `PACE_GRAIN_OPACITY`, constante única que gobierna
+   también `PaceDither` (halo del loto y círculo de retención).
+3. **En fondos claros el ruido va por composición normal, nunca por blend.** Sobre
+   papel casi blanco, `overlay` amplifica lo oscuro (≈1,86) y aplasta lo claro
+   (≈0,14): convierte un ruido simétrico en un velo oscuro.
+
+El grano sigue leyéndose como fibra de papel, y ahora el papel no se desvía en
+tono: el desvío es parejo en los tres canales (antes −1,79 rojo contra −0,93 azul,
+que lo desaturaba; en oscuro llegaba a **aclararlo un 14 %**).
 
 ### Timer — variante `ticks`
 `TimerDial` con prop `ticks` renderiza 60 marcas radiales tipo reloj (cada 5 mayor)

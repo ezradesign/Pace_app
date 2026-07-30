@@ -199,9 +199,10 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.73.1** | 2026-07-30 | fix(ui): **banding de la atmósfera, medido en los píxeles de la página** — el grano NO ditheraba (0,314 con él / 0,318 sin él) y apilar el mismo degradado dos veces DUPLICABA el escalón (17 de 24 niveles) · una capa con alpha compuesto + grano en sRGB | #140 | [abajo](#v0731----2026-07-30----fixui-banding-de-la-atmósfera-medido-en-los-píxeles-de-la-página) |
 | **v0.73.0** | 2026-07-30 | fix+feat: **regresión de encaje de Respira + Fase 1.6** — el visual se mide contra el hueco REAL · nada de barra en actividad en curso · vela del loto · banderas con migración · botón fantasma MEDIDO · idioma «Auto» | #139 | [abajo](#v0730----2026-07-30----fixfeat-regresion-de-encaje-de-respira--fase-16) |
-| **v0.72.0** | 2026-07-30 | fix+feat: **Fase 1.5 · pulido visible** — desfase del punto guía MEDIDO y a 0 ms · atmósfera fuera de Caminos · constructor en Mueve **y** Estira · **loto de Respira** | #138 | [abajo](#v0720----2026-07-30----fixfeat-fase-15--pulido-visible) |
-| **v0.71.0** | 2026-07-29 | feat(home): **home móvil universal · «amanecer del Camino»** | #128 | [abajo](#v0710----2026-07-29----feathome-home-movil-universal--amanecer-del-camino) |
+| **v0.72.0** | 2026-07-30 | fix+feat: **Fase 1.5 · pulido visible** — desfase del punto guía MEDIDO y a 0 ms · atmósfera fuera de Caminos · constructor en Mueve **y** Estira · **loto de Respira** | #138 | [session-138](./docs/sessions/session-138-pulido-visible.md) |
+| **v0.71.0** | 2026-07-29 | feat(home): **home móvil universal · «amanecer del Camino»** | #128 | [session-128](./docs/sessions/session-128-home-movil-universal.md) |
 | **v0.70.0** | 2026-07-29 | fix(paths): **«Salir» de un Camino vuelve a la home en vez de avanzar** | #127 | [session-127](./docs/sessions/session-127-salida-caminos.md) |
 | **v0.69.0** | 2026-07-29 | fix(home): **composición proporcional del timer y horizonte del aro (Desktop)** | #126 | [session-126](./docs/sessions/session-126-home-desktop-horizonte.md) |
 | **v0.68.0** | 2026-07-28 | fix(move): **barra de scroll del runner v1…** | #125 | [session-125](./docs/sessions/session-125-scrollbar-runner-v1.md) |
@@ -333,6 +334,74 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.73.1] -- 2026-07-30 -- fix(ui): banding de la atmósfera, medido en los píxeles de la página
+
+Sesión **#140**. Diario: [session-140](./docs/sessions/session-140-banding-atmosfera.md).
+
+Un solo frente: lo único que s139 dejó abierto. Se cierra **desmintiendo las dos hipótesis** con
+las que s100, s138 y s139 venían trabajando — las tres midieron el tile de ruido rasterizado en un
+`canvas`, que es una medida real de la pieza equivocada. Medido esta vez donde ocurre: captura PNG
+sin pérdida de una sesión de Respira real por CDP, promediando **a lo largo del contorno elíptico
+del propio degradado**, que es como lo integra el ojo.
+
+### Corregido
+
+- **El grano NO ditheraba, solo tapaba.** La escalera mide igual con grano (**0,314**) que sin él
+  (**0,318**): cuando el grano se compone encima, el degradado **ya** está redondeado a 8 bits, y
+  un dither tiene que entrar ANTES de la cuantización. Todo lo que s100 y s138 ajustaron ahí
+  —paradas, `baseFrequency`— actuaba sobre una variable que no gobierna el fenómeno. Y como
+  enmascarador tampoco llegaba: σ **0,678** contra un escalón de **1,41** niveles.
+- **Apilar el mismo degradado dos veces DUPLICA el escalón.** `sessionAtmosphere` pintaba el mismo
+  `g` dos veces (s99, para que el tinte se notara sin subir el alpha del token): los dos redondeos
+  caen en los MISMOS radios y se suman. Medido sin depender de la geometría, contando qué niveles
+  enteros existen de verdad: **17 de 24** (escalón 1,41) — siete niveles del recorrido no llegaban
+  a existir. Con **una** capa del color ya compuesto: **22 de 23** (escalón **1,05**). Ahí estaba
+  por qué la atmósfera era la peor de las tres superficies, y no era lo que s139 supuso.
+- **Alpha compuesto con SINTAXIS DE COLOR RELATIVO**: componer un color consigo mismo con alpha `a`
+  da exactamente `1−(1−a)² = a·(2−a)`, y se pide sobre el propio token, así que cada módulo y cada
+  paleta conservan el suyo (Foco 0,10 · Respira 0,12 · oscuro 0,14). **No se sube ningún alpha de
+  tinte** —regla de s100 intacta—, se deja de redondear dos veces. `CSS.supports` comprueba una vez
+  el soporte (Chromium 119 · Safari 16.4 · Firefox 128) y si no, cae a las dos capas de siempre.
+  De propina: el doble redondeo sesgaba el wash hasta **1 nivel más oscuro** que el color pedido.
+- **Grano que sí enmascara** (σ 0,678 → **1,22**), con tres cambios y ninguno sobre un tinte:
+  `color-interpolation-filters='sRGB'` (los filtros SVG van en linearRGB por defecto y se comían la
+  mitad — hallazgo de s139, aquí aplicado) · **alpha constante** en vez de ruidosa (la de s138
+  gastaba media, o sea oscurecía, sin aportar σ) · curva estirada alrededor del mismo centro.
+- **El papel deja de desaturarse.** El grano de s138 lo desviaba desigual por canal (−1,79 rojo
+  contra −0,93 azul); ahora el desvío es parejo (−1,5). En **oscuro** el efecto era mayor: aquel
+  velo gris **aclaraba el papel un 14 %** (+4,2 niveles sobre un papel de 29); ahora +1,5.
+
+### Medido
+
+| Sesión de Respira real, 1280×720, dpr 1,25 | Antes | Después |
+|---|---|---|
+| Escalón | 1,41 (17 de 24 niveles) | **1,05** (22 de 23) |
+| Escalera RMS · pico | 0,314 · 1,51 | **0,225 · 0,82** |
+| Grano (σ) | 0,678 | **1,22** |
+| **σ ÷ escalón** (lo que tapa) | 0,48 | **1,16** |
+
+En oscuro: escalón 1,15 → **1,05**, escalera 0,148 → **0,113**. Verificado además con el contraste
+estirado ×10 y ×20 (el «antes» enseña los arcos con borde duro; el «después», ninguno), en las
+**tres paletas** y con los **seis tokens** de módulo. **El usuario confirmó en vivo que ya no lo
+percibe en su PC.**
+
+### Banco de medición (reutilizable)
+
+Sin dependencias nuevas: Node 24 trae `WebSocket` global ⇒ **CDP** directo contra Chromium
+headless, y `sharp` —ya en el toolchain— lee los PNG. Tres trampas del propio banco, encontradas y
+corregidas antes de concluir: promediar por columnas rectas (las bandas son **arcos**, no líneas:
+daba σ 8,3 que era variación lateral, no grano) · una «meseta» de 158 bins que caía en el tramo
+0–12 %, plano por diseño · y **código stale** (dos tandas con cifras idénticas hasta el último
+decimal, por una instancia de Edge superviviente cuyo SW servía lo precacheado) ⇒ puerto nuevo por
+tanda, `Network.setBypassServiceWorker` y **centinela** de huella del código vivo.
+
+### Sin tocar
+
+`PACE_standalone.html` no se regenera (decisión s134): restaurado **byte-idéntico** tras el build,
+hash `998e3e358d689036` antes y después.
+
+---
+
 ## [v0.73.0] -- 2026-07-30 -- fix+feat: regresión de encaje de Respira + Fase 1.6
 
 Sesión **#139**. Diario: [session-139](./docs/sessions/session-139-respira-y-ajustes.md).
@@ -430,187 +499,4 @@ Sesión **#139**. Diario: [session-139](./docs/sessions/session-139-respira-y-aj
 
 ---
 
-## [v0.72.0] -- 2026-07-30 -- fix+feat: Fase 1.5 · pulido visible
 
-Sesión 138. Primera sesión de **CÓDIGO** tras nueve solo-documentales (s129–s137). Ejecuta la
-**Fase 1.5** de «Camino a v1.0». Bump v0.71.0 → v0.72.0.
-
-**Decisión de entrada: el pomodoro-sol de s134 NO entra** — sigue siendo propuesta no aprobada y
-pasa a sesión propia por detrás de la Fase 2. Cuatro motivos, y el que pesa: **habría impedido
-medir el ítem 1**, que es un desfase de milisegundos en ese mismo aro.
-
-### 1 · Punto guía del pomodoro — MEDIDO
-
-Instrumentado con `MutationObserver` sobre el SVG (el muestreo por `rAF` salió inservible: el panel
-de preview pinta a ~3 fps, así que se observaron los **renders de React**).
-
-| Preset | Arco avanza | Punto monta | Desfase |
-|---|---|---|---|
-| 25 min | 1025 ms | 2028 ms | **1003 ms** |
-| 45 min | 1014 ms | 3013 ms | **1999 ms** |
-
-**Causa confirmada por predicción:** el gate `progress > 0.001` (`TimerDial.jsx:110`) equivale a un
-número de segundos distinto según la duración (`0.001 × 1500 s = 1,5 s` ⇒ segundo 2;
-`0.001 × 2700 s = 2,7 s` ⇒ segundo 3), mientras el arco avanza siempre en el segundo 1. Se predijo
-2000 ms para 45 min y salieron 1999. Como `progress` es `1 - remaining/totalSec` —aritmética exacta,
-0 clavado en reposo—, el umbral no protegía de nada: se compara contra `0`.
-**Verificado: desfase 0 ms en los cuatro presets.**
-
-### 2 · Atmósfera fuera de Caminos — cambia la decisión s99
-
-Se retira el gate `inPath ?` en `BreatheSession.jsx:29`, `MoveModule.jsx:67` y
-`MoveSessionV1.jsx:38`. El color sigue saliendo del `kind`. **Verificado:** Respira
-`--breathe-soft` · Mueve `--move-soft` · Estira `--extra-soft`.
-
-**Segunda pasada de banding** (reportado en PC, no en móvil): la misma rampa repartida entre más
-píxeles hace visible cada peldaño de 8 bits. Respetando la regla de s100 de no subir alphas, se
-actúa sobre el dither (grano `baseFrequency` 0.9 → 1.4, opacidad 0.04 → 0.055) y sobre la forma:
-**cinco paradas explícitas** en vez de dos + hint.
-
-### 3 · Constructor premium en Mueve Y Estira
-
-`CustomRoutinesSection` gana prop `accent` (5 sitios con `var(--move)` fijo), entra en
-`ExtraLibrary` y **sube al primer lugar** en ambas bibliotecas — estaba al final, tras 4 grupos de
-tarjetas. **SIN campo de módulo** (decisión del usuario): el registro de ejercicios ya mezcla los 8
-grupos de Mueve y Estira, así que una rutina propia no pertenece a un módulo. Aside: «En Mueve y en
-Estira».
-
-**Hallazgo corregido:** `handleStartExtra` marcaba `kind:'extra'`, que acredita por
-`completeExtraSession` — y esa **no incrementa `moveSessionsTotal`**, así que quien hiciera sus
-rutinas propias desde Estira nunca progresaría hacia `move.sessions.25`. Se enrutan al crédito de
-s93.
-
-### 4 · Loto de Respira
-
-**Máscara, no imagen.** Medido: el alfa del PNG es solo la silueta (bimodal), el dibujo vive en la
-luminancia. `scripts/ingest-loto.js` reconstruye la máscara desde la **densidad de tinta** y aplana
-el RGB; el color lo pone un token, lo que resuelve de raíz el contraste (crema sobre crema era
-invisible). 959 KB → **146 KB**. El primer intento pesaba 59 KB y se veía pixelado: comprimir con
-pérdida el canal donde vive el dibujo lo motea por bloques ⇒ **alfa sin pérdida**.
-
-Sustituye al estilo `flor` (mismo id, cero migración; el default ya era una flor). El build deja de
-estar cableado al directorio de láminas y recorre una lista de carpetas de arte; `sw.js` lo
-precachea.
-
-**Cinco correcciones del feedback en vivo:** el wrap declaraba 260 px mientras las capas pintaban
-420 y se recortaban → wrap propio con invariante `0,72 × 1,35 = 0,972` · cada capa tenía base y
-factor propios y los huecos crecían **+44 %** al inhalar → un solo `scale` · el giro iba montado
-sobre `progress`, que avanza una vez por segundo, con transición de la fase entera → **animación
-CSS continua** · en claro la tinta pasa a `--breathe-2` por paleta vía CSS · y profundidad con halo
-+ **loto de fondo girando al revés** y **respiración asimétrica** (vertical al 100 %, horizontal al
-88 %, con elevación) y curva **easeInOutSine**.
-
-**Reduced motion:** el giro se detiene desde el JSX (el kill de CSS pondría `0.01ms` y dispararía
-la rotación infinita); la escala, que es la guía, sigue viva. Verificado.
-
-### Extra · Salto de texto en Suspiro fisiológico
-
-`showCountdown = duration >= 4` montaba y desmontaba el contador, y como el bloque va centrado
-movía todo el texto: **21 px medidos**. Fix por altura reservada (decisión s119) con
-`visibility:hidden`. **Verificado: 0 px.**
-
-### Verificación
-
-Punto guía 0 ms en 15/25/35/45 · atmósfera correcta en los 3 módulos · constructor primero y con
-acento por módulo · loto sin desbordar a escala 1.35 en 735×694, 375×812 y 1024×560, sin scroll ·
-los 5 estilos de respiración renderizan · `index.html` regenerado y verificado en el artefacto
-(loto y láminas como archivo, cero data URIs, manifest presente) · **`PACE_standalone.html` NO
-regenerado** (s134). Consola limpia salvo un warning **preexistente** de s116
-(`Sidebar`/`BreatheSession`), anotado para la Fase 8.5.
-
-Diario: [session-138](./docs/sessions/session-138-pulido-visible.md).
-
----
-
-## [v0.71.0] -- 2026-07-29 -- feat(home): home móvil universal · «amanecer del Camino»
-
-Sesión de **CÓDIGO** (layout responsive de la home). Diario:
-[session-128](./docs/sessions/session-128-home-movil-universal.md).
-
-### Origen: 3 síntomas móviles, solo uno era regresión
-
-El usuario reportó que en móvil (1) el **icono** era blanco cuando antes era terracota suave
-con el logo cabiendo en el cuadrado, (2) al **instalar** ya no se veía en pantalla completa y
-(3) había un **scroll leve** que descentra y oculta/muestra los iconos superiores.
-
-**(1) y (2) NO eran regresión de código.** Instalaba desde **`/PACE_standalone.html`**, que
-**no lleva `<link rel="manifest">`** (verificado: 0 coincidencias), mientras la raíz `/`
-(`index.html`) **sí** lo tiene. Sin manifest, Android/Brave no puede hacer un WebAPK: crea un
-**acceso directo** que abre con chrome del navegador y **autogenera** el icono a partir del
-logo sobre fondo blanco. `manifest.webmanifest` y `icons/` **no cambian desde mayo** (git lo
-confirma). Los botones ⇄□← son la barra del **sistema Android** (depende del modo de
-navegación del teléfono), no de la app: en `display:standalone` Android siempre las muestra.
-**Solución de uso**, sin tocar código: instalar desde `paceweb.pages.dev/`. Queda anotado
-como opción futura añadir el `<link rel="manifest">` también al standalone.
-
-**(3) sí venía de s123**, que dejó la home móvil sin motor con el comentario explícito
-*«en alturas bajas se prefiere SCROLL vertical»*, mientras la Desktop sí tenía uno que mide y
-encoge el aro hasta que no hay scroll.
-
-### Decisión del usuario
-
-Tras ver la composición Desktop en su propio móvil (activó «sitio de escritorio» en Brave) le
-convenció, y pidió la home **igual en cualquier resolución móvil y sin scroll**. Refinamientos
-suyos: **conservar el orden móvil** Timer→Camino→Actividades (no reordenar como Desktop;
-respeta la jerarquía de s122) y usar la **tarjeta de Camino como «horizonte»** — el «amanecer»
-de s126 pero con **Caminos** en vez de Actividades, porque la tarjeta es ancha y opaca y da
-una línea de horizonte más fuerte que los chips.
-
-### Un motor, dos pieles
-
-`app/main/home-geometry.js` corre **ahora también en móvil/tablet** (≤768). `isDesktop` solo
-elige las **constantes** — `WIDTH_CAP` 0.42 vs **0.86** en móvil (arranque por ancho ≈ el 86vw
-de identidad de siempre) y `D_FLOOR` 205 vs **240** —, de modo que **la rama Desktop queda
-byte-idéntica**. El resto del cálculo es común: publica `--pace-timer-d`,
-`--pace-activities-overlap` (**medido desde el CICLO real** vía `applyD`/`cicloBottomWithin`,
-no la estimación CSS `(D−244)/2` que usaba móvil) y `--pace-home-squeeze`, con el mismo bucle
-`scrollHeight ≤ clientHeight` ⇒ **el aro solo encoge como último recurso**, después de
-comprimir el aire exterior y de ocultarse tras el Camino, así que sigue grande.
-
-`app/main/_responsive.js`: `[data-pace-dial-fit]` global pasa a
-`height: var(--pace-timer-d, var(--pace-home-timer-size))` (fallback pre-JS, con su `@supports`
-dvh) **+ `clip-path: inset(0 0 var(--pace-activities-overlap,0px) 0)`** (+`-webkit-`) — el
-HORIZONTE, ahora también en móvil. Se recorta el **MARCO y no el `<svg>`** (lleva
-`rotate(-90deg)` inline y `clip-path` rota con el elemento), lo que además cubre el halo
-`[data-pace-dial-running]::after`; con la variable sin definir el inset es 0 ⇒ aro entero. En
-Desktop lo pisa el bloque `min-width:769px` con el mismo valor, y Caminos no lleva
-`[data-pace-dial-fit]` ⇒ intacto. El **squeeze móvil** (dentro de `max-width:768px`) interpola
-con `calc(base − delta·var(--pace-home-squeeze,0))` el TopBar (padding vertical y `min-height`
-48→40), la raíz de FocusTimer (`padding-top` 8→4 y `gap` 14→6, los dos huecos del selector de
-minutos) y ActivityBar (padding vertical): **solo AIRE**, ningún texto, tamaño de fuente ni
-glifo, y el CTA conserva su suelo de 44px. Se **omite deliberadamente** el escalado
-proporcional del interior (`data-pace-dial-*`) en móvil: el rango de D es estrecho y bastan
-los `clamp()` inline de TimerDial ⇒ menos riesgo.
-
-`app/paths/SuggestedPathCard.jsx` repunta su margen negativo a
-`calc(var(--pace-activities-overlap, var(--pace-home-sunset-overlap,0px)) * -1)`: usa el valor
-**medido** por el motor, con la estimación CSS de fallback. La tarjeta ya era opaca y
-`z-index:2` sobre el aro, así que al recortar el aro en su borde superior el arco inferior
-desaparece limpio. **`TimerDial.jsx` sin tocar** (los hooks ya existían).
-
-**Limpieza:** `clearVars()` (borraba las 3 variables fuera de Desktop) quedó **sin uso** al
-retirar el guard y **se eliminó**, dejando un comentario que explica por qué ya no hace falta.
-
-### Verificación (medición DOM en dev y en el bundle construido; ES + EN)
-
-| Viewport | timerD | overlap | squeeze | scrollDelta | nota |
-|---|---|---|---|---|---|
-| 360×640 (Doogee) | 310 | 36 | 0.667 | **0** | horizonte a CICLO+5px |
-| 390×844 | 335 | 49 | 0 | **0** | stack centrado 90/90 |
-| 412×915 (EN) | 354 | 57 | 0 | **0** | CYCLE+5px, «Start focus» |
-| 768×1024 tablet | 520 (cap) | 83 | 0 | **0** | piel móvil: orden DOM, tabs off |
-| 1366×768 Desktop | 465 | 74 | 0 | **0** | order 1/2 — **byte-idéntico** |
-
-Consola limpia en ambos entornos; standalone regenerado (3246 KB) con los markers presentes.
-**Trampa reconfirmada (s126):** el SW servía `app/*` cacheado en dev y hubo que desregistrarlo
-y borrar la caché `pace-vX.Y.Z`; además la captura del navegador embebido escala la vertical
-de forma no lineal, así que `getBoundingClientRect` es la fuente de verdad del layout.
-
-### Diferido por decisión del usuario
-
-**Tabs Foco/Pausa/Larga en móviles altos** (en 390×844 sobran ~90px de aire): no es un simple
-des-ocultar — son `position:absolute` centradas y en anchos de 390–430px **colisionan** con
-los 3 iconos top-right (por eso s46 las ocultó); requiere fila propia gateada por
-`min-height`. Eso y el resto del afinado de **relaciones de aspecto** quedan para más
-adelante: la próxima sesión va a **mejoras tangibles del sistema** según
-`docs/product/AUDITORIA_SISTEMA_PACE.md`.
