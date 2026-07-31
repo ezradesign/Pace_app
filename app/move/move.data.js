@@ -140,13 +140,13 @@ var MOVE_ROUTINES = {
       { id: 'extra.calves', tag: 'STEALTH', code: 'Gemelos', name: 'Gemelos subrepticios', desc: 'Bajo la mesa, nadie se entera.', min: 1,
         position: ['seated', 'standing'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Calf raises', mode: 'reps', reps: 25, dur: 30,
+          { name: 'Elevación de talones', mode: 'reps', reps: 25, dur: 30,
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Sentado o de pie, pies apoyados en el suelo al ancho de las caderas.',
               action: 'Sube los talones lo más alto que puedas. Baja con control.',
               care: 'Movimiento pequeño y controlado. Apóyate en la mesa si lo necesitas.' } },
-          { name: 'Calf raises', mode: 'reps', reps: 20, dur: 30,
+          { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Más lentas ahora. Nota el gemelo en cada subida.' } },
@@ -156,18 +156,18 @@ var MOVE_ROUTINES = {
       { id: 'extra.grip.squeeze', tag: 'GRIP', code: 'Antebrazos', name: 'Grip + antebrazos', desc: 'Apretar, estirar.', min: 1,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Squeeze fist', mode: 'reps', reps: 20, dur: 20,
+          { name: 'Abrir y cerrar el puño', mode: 'reps', reps: 20, dur: 20,
             tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Brazos relajados, manos abiertas.',
               action: 'Cierra el puño con fuerza y ábrelo del todo. Repite a buen ritmo.',
               care: 'Firme, pero sin llegar al calambre.' } },
-          { name: 'Finger extension', mode: 'reps', reps: 10, dur: 20,
+          { name: 'Extensión de dedos', mode: 'reps', reps: 10, dur: 20,
             tempo: { down: 1, hold: 1, up: 0 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Abre bien los dedos, estíralos y relaja.',
               care: 'Sin forzar las articulaciones.' } },
-          { name: 'Wrist stretch', mode: 'timed', dur: 20,
+          { name: 'Estiramiento de muñeca', mode: 'timed', dur: 20,
             instruction: {
               action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
@@ -190,7 +190,7 @@ var MOVE_ROUTINES = {
             instruction: {
               action: 'Ahora aguanta el apretón unos diez segundos y suelta. Tres veces.',
               care: 'Mantén la respiración suelta durante el aguante.' } },
-          { name: 'Calf raises', mode: 'reps', reps: 20, dur: 30,
+          { name: 'Elevación de talones', mode: 'reps', reps: 20, dur: 30,
             tempo: { down: 1, hold: 0, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Cierra subiendo y bajando los talones, suave.' } },
@@ -262,14 +262,14 @@ var MOVE_ROUTINES = {
       { id: 'extra.wall.sit', tag: 'LEG', code: 'Piernas', name: 'Sentadilla en pared', desc: 'Isométrico de cuádriceps contra una pared.', min: 2, access: 'premium',
         position: ['standing'], equipment: ['wall'], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
-          { name: 'Wall sit', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
+          { name: 'Silla en la pared', mode: 'timed', dur: 60, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Apoya la espalda en una pared y desliza hacia abajo hasta que las rodillas queden a 90°.',
               action: 'Espalda pegada a la pared, rodillas a 90°. Respira normal.',
               care: 'Elige una altura que te deje respirar; cuanto menos bajes, más suave.' } },
           { name: 'Descanso', mode: 'rest', dur: 30,
             instruction: { action: 'Suave.' } },
-          { name: 'Wall sit', mode: 'timed', dur: 60,
+          { name: 'Silla en la pared', mode: 'timed', dur: 60,
             instruction: {
               action: 'Segunda tanda. Vuelve a la posición y mantén.',
               care: 'Elige una altura que te deje respirar tranquilo.' } },
@@ -278,10 +278,10 @@ var MOVE_ROUTINES = {
         steps: [
           { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'ATG split squat', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
+          { name: 'Zancada profunda', dur: 50, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
-          { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-          { name: 'Calf raises', dur: 40, cue: 'A una pierna, 12 por lado.' },
+          { name: 'Sentadilla de cuádriceps', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+          { name: 'Elevación de talones', dur: 40, cue: 'A una pierna, 12 por lado.' },
         ]},
     ]
   },
@@ -294,22 +294,22 @@ var MOVE_ROUTINES = {
       { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Chin tucks', mode: 'reps', reps: 8, dur: 30,
+          { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
             tempo: { down: 2, hold: 2, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Siéntate erguido, hombros sueltos, mirada al frente.',
               action: 'Desliza la barbilla recta hacia atrás. La nuca se alarga. Mantén y suelta.',
               care: 'Recorrido pequeño, sin tensar. Llevas la cabeza atrás, no abajo.' } },
-          { name: 'Scapular squeeze', mode: 'reps', reps: 10, dur: 30,
+          { name: 'Juntar omóplatos', mode: 'reps', reps: 10, dur: 30,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
               care: 'Hombros abajo, lejos de las orejas.' } },
-          { name: 'Thoracic extension', mode: 'timed', dur: 30,
+          { name: 'Extensión torácica', mode: 'timed', dur: 30,
             instruction: {
               action: 'Apoya la espalda alta en el respaldo y arquea suave, abriendo el pecho al techo.',
               care: 'El arco nace del pecho, no de la zona lumbar.' } },
-          { name: 'Chest opener', mode: 'timed', dur: 30,
+          { name: 'Apertura de pecho sentado', mode: 'timed', dur: 30,
             instruction: {
               action: 'Lleva los brazos atrás, junta los omóplatos y abre el pecho. Respira ancho.',
               care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
@@ -325,13 +325,13 @@ var MOVE_ROUTINES = {
       { id: 'extra.back.desk', tag: 'BACK', code: 'Espalda', name: 'Espalda de oficina', desc: 'Despierta la espalda que sostiene tu postura. Un paso pasa por el suelo.', min: 3,
         position: ['seated', 'standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Scapular squeeze', mode: 'reps', reps: 12, dur: 40,
+          { name: 'Juntar omóplatos', mode: 'reps', reps: 12, dur: 40,
             tempo: { down: 1, hold: 2, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Siéntate erguido o ponte de pie, hombros sueltos.',
               action: 'Junta los omóplatos hacia el centro y mantén un instante. Suelta.',
               care: 'Hombros abajo, lejos de las orejas.' } },
-          { name: 'Band pull-apart', mode: 'timed', dur: 40,
+          { name: 'Apertura con banda', mode: 'timed', dur: 40,
             instruction: {
               action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
               care: 'Hombros abajo, lejos de las orejas.' } },

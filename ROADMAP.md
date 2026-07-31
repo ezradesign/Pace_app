@@ -187,7 +187,10 @@ El bloque del feedback beta. La más importante.
 > no «la mitad» (*mejor*) · `level`/`intensity` viven en la **rutina**, no en el paso. Además, los
 > glifos son **dos problemas distintos** (20 que no existen · 15 que existen sin aprobar) y **41 de
 > 47 dibujan una sola pose estática**, que es la evidencia dura del punto 3.
-> **Siguiente: ola B**, los 20 dibujos que faltan.
+> **s142 · ola C entregada**: 30 nombres más ⇒ de 36 con término inglés queda **1** (`Superman`,
+> por decisión). Hallazgo: **5 de los 47 dibujos no se pintan nunca** — cuatro tapados por su
+> propio alias (`ExerciseGlyph` resuelve el alias primero) más `Nordics`, sin uso.
+> **Siguiente: ola B**, los 20 dibujos que faltan — **EN PAUSA hasta que llegue el arte**.
 
 **Arrancó por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
 de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,

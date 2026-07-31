@@ -43,7 +43,7 @@ const EXTRA_ROUTINES = {
               setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
               action: 'Empuja la pelvis hacia delante. Estirón suave en la ingle de atrás.',
               care: 'Recorrido corto. No fuerces la zona lumbar.' } },
-          { name: 'World\'s greatest stretch', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
+          { name: 'Zancada con apertura', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
               setup: 'Da un paso largo a una zancada. Baja la mano de dentro hacia el suelo.',
               action: 'Abre el pecho y lleva el otro brazo al techo. Sigue la mano con la mirada.',
@@ -67,7 +67,7 @@ const EXTRA_ROUTINES = {
              pasa a `tempo:{down,hold,up}` (suma 8 s = misma cadencia); el resto
              es el contrato formal (instruction + transición). En perSide el lado
              lo integra el runner. */
-          { name: 'Chin tucks', mode: 'reps', reps: 5, dur: 40,
+          { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 40,
             tempo: { down: 2, hold: 4, up: 2 }, completion: { mode: 'guided' },
             instruction: {
               setup: 'Siéntate erguido, hombros sueltos. Mira al frente.',
@@ -92,12 +92,12 @@ const EXTRA_ROUTINES = {
       { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
         desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
         steps: [
-          { name: 'Shrug + round', dur: 20, cue: 'Hombros arriba, luego relaja.' },
-          { name: 'Wrist circles', dur: 20, cue: '10 en cada sentido.' },
-          { name: 'Seated twist', dur: 20, cue: 'Rota hacia el respaldo.' },
-          { name: 'Ankle circles', dur: 20, cue: 'Bajo la mesa.' },
-          { name: 'Chin tucks', dur: 20, cue: 'Barbilla atrás 5 veces.' },
-          { name: 'Deep breaths', dur: 20, cue: '3 inhalaciones completas.' },
+          { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
+          { name: 'Círculos de muñeca', dur: 20, cue: '10 en cada sentido.' },
+          { name: 'Giro sentado', dur: 20, cue: 'Rota hacia el respaldo.' },
+          { name: 'Círculos de tobillo', dur: 20, cue: 'Bajo la mesa.' },
+          { name: 'Barbilla atrás', dur: 20, cue: 'Barbilla atrás 5 veces.' },
+          { name: 'Respiraciones profundas', dur: 20, cue: '3 inhalaciones completas.' },
         ]},
       /* s119 (B2.3 OLA 2): migración mecánica al contrato v1 (s115). Movilidad
          de muñecas → `timed` (exploratorio, BASE §3-B); Finger extension →
@@ -107,11 +107,11 @@ const EXTRA_ROUTINES = {
         desc: 'El antídoto al teclado. Muñecas sueltas en 3 minutos.', min: 3,
         position: ['seated', 'standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Wrist circles', mode: 'timed', dur: 30,
+          { name: 'Círculos de muñeca', mode: 'timed', dur: 30,
             instruction: {
               action: 'Gira las muñecas en círculos amplios, en los dos sentidos.',
               care: 'Muñecas sueltas, sin apretar.' } },
-          { name: 'Wrist stretch', mode: 'timed', dur: 40,
+          { name: 'Estiramiento de muñeca', mode: 'timed', dur: 40,
             instruction: {
               action: 'Estira la muñeca en flexión y luego en extensión, ayudándote con la otra mano. Cambia de mano a mitad.',
               care: 'Presión ligera. Nunca hasta el dolor.' } },
@@ -124,7 +124,7 @@ const EXTRA_ROUTINES = {
             instruction: {
               action: 'Junta los dorsos de las manos frente al pecho y baja las muñecas despacio.',
               care: 'Estirón suave en la cara interna. Sin forzar.' } },
-          { name: 'Finger extension', mode: 'reps', reps: 10, dur: 30,
+          { name: 'Extensión de dedos', mode: 'reps', reps: 10, dur: 30,
             tempo: { down: 1, hold: 1, up: 1 }, completion: { mode: 'guided' },
             instruction: {
               action: 'Abre bien los dedos, estíralos y relaja.',
@@ -144,25 +144,25 @@ const EXTRA_ROUTINES = {
         desc: 'Reset de hombros: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
         position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
-          { name: 'Scapular wall slides', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
+          { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Ponte de espaldas a la pared, brazos en cruz apoyados en ella.',
               action: 'Sube y baja los brazos pegados a la pared, como alas.',
               care: 'Mantén la zona lumbar cerca de la pared.' } },
-          { name: 'Band pull-apart', mode: 'timed', dur: 50,
+          { name: 'Apertura con banda', mode: 'timed', dur: 50,
             instruction: {
               action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
               care: 'Hombros abajo, lejos de las orejas.' } },
-          { name: 'External rotation', mode: 'timed', dur: 50,
+          { name: 'Rotación externa', mode: 'timed', dur: 50,
             instruction: {
               action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
               care: 'Movimiento pequeño y controlado.' } },
-          { name: 'Dead hang · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
+          { name: 'Suspensión pasiva · opcional', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Busca una barra firme que soporte tu peso y agárrala. Sin barra, repite las wall slides.',
               action: 'Cuelga con los brazos estirados y suelta el peso de los hombros.',
               care: 'Tracción suave. Baja si notas molestia.' } },
-          { name: 'Thoracic extension', mode: 'timed', dur: 40,
+          { name: 'Extensión torácica', mode: 'timed', dur: 40,
             instruction: {
               setup: 'Apoya la espalda alta sobre un foam roller o una toalla enrollada.',
               action: 'Arquea abriendo el pecho al techo.',
@@ -180,15 +180,15 @@ const EXTRA_ROUTINES = {
             instruction: {
               action: 'Círculos lentos y amplios con el brazo estirado, en los dos sentidos.',
               care: 'Amplios, pero sin tensar el cuello.' } },
-          { name: 'Shrug + round', mode: 'timed', dur: 40,
+          { name: 'Encogimiento de hombros', mode: 'timed', dur: 40,
             instruction: {
               action: 'Sube los hombros, llévalos atrás y bájalos redondeando el círculo.',
               care: 'Movimiento fluido, sin prisa.' } },
-          { name: 'External rotation', mode: 'timed', dur: 45,
+          { name: 'Rotación externa', mode: 'timed', dur: 45,
             instruction: {
               action: 'Codos pegados al cuerpo a 90°. Abre los antebrazos hacia fuera y vuelve.',
               care: 'Movimiento pequeño y controlado.' } },
-          { name: 'Band pull-apart', mode: 'timed', dur: 45,
+          { name: 'Apertura con banda', mode: 'timed', dur: 45,
             instruction: {
               action: 'Abre los brazos al frente juntando los omóplatos. Sin banda, cruza los brazos y ábrelos.',
               care: 'Hombros abajo, lejos de las orejas.' } },
@@ -248,7 +248,7 @@ const EXTRA_ROUTINES = {
         desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
         position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
-          { name: 'Cossack squat', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+          { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
               action: 'Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio.',
               care: 'Talón apoyado. Baja solo hasta donde controles.' } },
@@ -257,12 +257,12 @@ const EXTRA_ROUTINES = {
               setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
               action: 'Gira despacio de un lado al otro. Tronco alto.',
               care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
-          { name: 'Pigeon', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+          { name: 'Paloma', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
               setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
               action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
               care: 'Pon un cojín bajo la cadera que quede en el aire.' } },
-          { name: 'Squat profundo', mode: 'timed', dur: 60,
+          { name: 'Sentadilla profunda', mode: 'timed', dur: 60,
             instruction: {
               action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
               care: 'Apóyate en algo si pierdes el equilibrio.' } },
@@ -298,7 +298,7 @@ const EXTRA_ROUTINES = {
               setup: 'Siéntate en el suelo, una pierna delante y otra al lado, ambas a 90°.',
               action: 'Gira despacio de un lado al otro. Tronco alto.',
               care: 'Apóyate en las manos por detrás para ir más cómodo.' } },
-          { name: 'Pigeon', mode: 'perSide', dur: 30, transition: { seconds: 10 },
+          { name: 'Paloma', mode: 'perSide', dur: 30, transition: { seconds: 10 },
             instruction: {
               setup: 'Lleva una espinilla al frente, la otra pierna estirada atrás.',
               action: 'Camina el peso hacia delante. Baja el pecho poco a poco.',
@@ -314,18 +314,18 @@ const EXTRA_ROUTINES = {
         steps: [
           { name: 'Rana', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
           { name: '90/90', dur: 70, cue: 'Rota entre lados despacio.' },
-          { name: 'Cossack squat', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
-          { name: 'Ground sitting transitions', dur: 80, cue: 'Siéntate al suelo y levántate sin manos.' },
-          { name: 'Squat profundo', dur: 70, cue: 'Talones abajo, relaja al fondo.' },
+          { name: 'Sentadilla lateral', dur: 60, cue: 'Peso a un lado, otra pierna estirada. 5 por lado.' },
+          { name: 'Sentarse y levantarse del suelo', dur: 80, cue: 'Siéntate al suelo y levántate sin manos.' },
+          { name: 'Sentadilla profunda', dur: 70, cue: 'Talones abajo, relaja al fondo.' },
         ]},
       { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
         desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
         steps: [
-          { name: 'ATG split squat', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
-          { name: 'Tibialis raise', dur: 45, cue: 'Contra pared, levanta pies.' },
+          { name: 'Zancada profunda', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
+          { name: 'Elevación de puntas', dur: 45, cue: 'Contra pared, levanta pies.' },
           { name: 'Puente isquio a una pierna', dur: 45, cue: 'Tumbado, un pie apoyado: sube y baja la cadera con control. Cambia de pierna a mitad.' },
-          { name: 'Sissy squat', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
-          { name: 'Elephant walk', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' },
+          { name: 'Sentadilla de cuádriceps', dur: 45, cue: 'Apoyado. Rodillas adelante, talones arriba.' },
+          { name: 'Marcha del elefante', dur: 45, cue: 'Camina tocando suelo, piernas estiradas.' },
         ]},
       /* s120 (B2.3 OLA 3): migración mecánica al contrato v1. Elephant walk y
          Pliegue adelante → `timed`; Isquio a una pierna → `perSide` (fix del «40s
@@ -337,7 +337,7 @@ const EXTRA_ROUTINES = {
         desc: 'Isquios y cadena posterior. Piernas largas otra vez.', min: 5, access: 'premium',
         position: ['standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
-          { name: 'Elephant walk', mode: 'timed', dur: 70,
+          { name: 'Marcha del elefante', mode: 'timed', dur: 70,
             instruction: {
               action: 'Camina con las manos por el suelo, piernas lo más estiradas posible.',
               care: 'Dobla algo las rodillas si los isquios tiran.' } },
@@ -382,7 +382,7 @@ const EXTRA_ROUTINES = {
               setup: 'Siéntate erguido, manos cruzadas sobre el pecho.',
               action: 'Gira el tronco despacio a un lado y al otro.',
               care: 'El giro nace del tronco, no del cuello.' } },
-          { name: 'Squat profundo', mode: 'timed', dur: 60,
+          { name: 'Sentadilla profunda', mode: 'timed', dur: 60,
             instruction: {
               action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
               care: 'Apóyate en algo si pierdes el equilibrio.' } },
@@ -401,11 +401,11 @@ const EXTRA_ROUTINES = {
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
         desc: 'Técnicas ancestrales: crawl, hang, squat profundo. Suelo y barra firme.', min: 5, access: 'premium',
         steps: [
-          { name: 'Deep squat hold', dur: 60, cue: 'Talones abajo, relaja.' },
-          { name: 'Crawling', dur: 60, cue: 'Contralateral, lento.' },
+          { name: 'Sentadilla profunda sostenida', dur: 60, cue: 'Talones abajo, relaja.' },
+          { name: 'Gateo', dur: 60, cue: 'Contralateral, lento.' },
           { name: 'Suspensión pasiva', dur: 45, cue: 'De una barra firme, suelta el peso.' },
-          { name: 'Ground sitting transitions', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
-          { name: 'Rib pull + respiración', dur: 45, cue: 'Movimiento de gato/vaca.' },
+          { name: 'Sentarse y levantarse del suelo', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
+          { name: 'Apertura de costillas + respiración', dur: 45, cue: 'Movimiento de gato/vaca.' },
         ]},
     ]
   },

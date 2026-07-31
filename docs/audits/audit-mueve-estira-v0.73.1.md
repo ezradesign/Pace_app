@@ -282,9 +282,51 @@ después** — ninguna clave caída.
 
 ---
 
-## 10 · Matriz §19.2 — estado tras la ola A
+> *(La matriz intermedia tras la ola A se retiró: la del §12 la sustituye.)*
 
-Misma leyenda que arriba. Regenerable con `node scripts/audit/inventario.js > inventario.json`,
+---
+## 11 · Ola C — EJECUTADA (s142, v0.75.0)
+
+**30 renombrados: de 31 nombres con término inglés a 1** (`Superman`, por decisión). La
+tabla completa está en [session-142](../sessions/session-142-ola-c-nombres.md). El usuario
+cambió dos de las propuestas: `Cossack squat` → **Sentadilla lateral** y `Sissy squat` →
+**Sentadilla de cuádriceps**.
+
+### Hallazgo: 5 de los 47 dibujos no se pintan nunca
+
+`ExerciseGlyph` resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`, o
+sea **el alias primero**. Cuatro nombres tienen alias **y** entrada propia de glifo, así
+que su dibujo está **tapado**: `Chest opener` · `Deep squat hold` · `Deep breaths` ·
+`Dead hang · opcional`. Con `Nordics` (sin uso ni como destino), son **5 dibujos muertos**
+de 47 — un 11 % del set.
+
+Esto corrige el §2 de esta auditoría, que solo contaba como huérfano lo que ningún paso
+usaba: **un alias también deja huérfano un dibujo**, y de forma menos visible.
+
+**Consecuencia inmediata para el renombrado**: al cambiar el nombre, el nuevo no tendría
+alias ⇒ resolvería a sí mismo ⇒ su dibujo tapado **se habría activado solo**, cambiando lo
+que se ve sin pedirlo. Se evitó dando al nombre nuevo el mismo destino que tenía el viejo.
+
+**Decisión de catálogo pendiente**: o se borran esos 5 dibujos, o se quita su alias para
+que cada ejercicio use el suyo. Es criterio visual del usuario.
+
+### Estado tras la ola C
+
+| | Auditoría (v0.73.1) | Tras olas A y C |
+|---|---|---|
+| Nombres únicos | 65 | **65** |
+| Con término inglés | 36 (55 %) | **1** (1,5 %) |
+| Sin glifo | 20 (31 %) | **20** (31 %) |
+| Entradas de `VISUAL_ALIAS` | 4 | **39** |
+
+La cifra que abrió la Fase 2 —el 37 % declarado, 55 % real— queda **cerrada**. Lo que
+sigue abierto es el dibujo (ola B, esperando arte) y el segundo nivel visual (§19.3).
+
+---
+
+## 12 · Matriz §19.2 — estado tras las olas A y C
+
+Misma leyenda. Regenerable con `node scripts/audit/inventario.js > inventario.json`,
 `node scripts/audit/glifos.js > glifos.json` y `node scripts/audit/matriz.js`.
 
 | Ejercicio | Glifo | Vía | Poses | Flecha | Apoyo | Iter | Inglés | Zona corporal | Módulo | Rut. | Contrato |
@@ -310,47 +352,47 @@ Misma leyenda que arriba. Regenerable con `node scripts/audit/inventario.js > in
 | Superman | **NO** |  | — | — | — | — | sí | Espalda y core | Mueve | 1 | v1 |
 | Suspensión activa | **NO** |  | — | — | — | — | · | Empuje y tracción | Mueve | 1 | v1 |
 | 90/90 | sí |  | 1 | · | · | ALT | · | Caderas y piernas | Estira | 3 | mixto |
-| Ankle circles | sí |  | 1 | · | · | s60 | sí | Oficina | Estira | 1 | legacy |
+| Abrir y cerrar el puño | sí |  | 1 | · | · | V9 | · | Sigilo | Mueve | 1 | v1 |
+| Apertura con banda | sí |  | 2 | · | · | NEW | · | Espalda y core / Hombros y columna | Mueve+Estira | 3 | v1 |
+| Apertura de costillas + respiración | sí |  | 1 | · | · | s60 | · | Flujos | Estira | 1 | legacy |
 | Apertura de pecho | sí |  | 1 | · | · | V8 | · | Espalda y core / Oficina / Hombros y columna / Flujos | Mueve+Estira | 4 | v1 |
-| ATG split squat | sí |  | 1 | · | · | s60 | sí | Piernas / Caderas y piernas | Mueve+Estira | 2 | legacy |
-| Band pull-apart | sí |  | 2 | · | · | NEW | sí | Espalda y core / Hombros y columna | Mueve+Estira | 3 | v1 |
-| Calf raises | sí |  | 1 | sí | · | ALT | sí | Sigilo / Piernas | Mueve | 3 | mixto |
-| Chest opener | sí |  | 1 | sí | · | NEW | sí | Espalda y core | Mueve | 1 | v1 |
-| Chin tucks | sí |  | 1 | · | · | V8 | sí | Espalda y core / Oficina | Mueve+Estira | 3 | mixto |
-| Cossack squat | sí |  | 1 | · | · | s60 | sí | Caderas y piernas | Estira | 2 | mixto |
-| Crawling | sí |  | 1 | · | · | s60 | sí | Flujos | Estira | 1 | legacy |
+| Apertura de pecho sentado | sí |  | 1 | sí | · | NEW | · | Espalda y core | Mueve | 1 | v1 |
+| Barbilla atrás | sí |  | 1 | · | · | V8 | · | Espalda y core / Oficina | Mueve+Estira | 3 | mixto |
+| Círculos de muñeca | sí |  | 1 | · | · | s60 | · | Oficina | Estira | 2 | mixto |
+| Círculos de tobillo | sí |  | 1 | · | · | s60 | · | Oficina | Estira | 1 | legacy |
 | Cuello y trapecios | sí |  | 1 | · | · | V6 | · | Oficina / Flujos | Estira | 2 | v1 |
-| Dead hang · opcional | sí |  | 2 | · | sí | NEW | sí | Hombros y columna | Estira | 1 | v1 |
-| Deep breaths | sí |  | 1 | sí | · | NEW | sí | Oficina | Estira | 1 | legacy |
-| Deep squat hold | sí |  | 1 | · | · | s60 | sí | Flujos | Estira | 1 | legacy |
 | Descanso | sí |  | 1 | · | · | NEW | · | Empuje y tracción / Piernas | Mueve | 2 | legacy |
-| Elephant walk | sí |  | 1 | · | sí | V7 | sí | Caderas y piernas | Estira | 2 | mixto |
+| Deslizamientos en pared | sí |  | 1 | · | sí | V8 | · | Hombros y columna | Estira | 1 | v1 |
+| Elevación de puntas | sí |  | 1 | · | sí | s60 | · | Caderas y piernas | Estira | 1 | legacy |
+| Elevación de talones | sí |  | 1 | sí | · | ALT | · | Sigilo / Piernas | Mueve | 3 | mixto |
+| Encogimiento de hombros | sí |  | 1 | sí | · | V12 | · | Oficina / Hombros y columna | Estira | 2 | mixto |
 | Escalenos | sí |  | 1 | · | · | s60 | · | Oficina | Estira | 1 | v1 |
-| External rotation | sí |  | 1 | · | · | ALT | sí | Hombros y columna | Estira | 2 | v1 |
-| Finger extension | sí |  | 1 | · | · | V9 | sí | Sigilo / Oficina | Mueve+Estira | 2 | v1 |
+| Estiramiento de muñeca | sí |  | 1 | · | · | V5 | · | Sigilo / Oficina | Mueve+Estira | 2 | v1 |
+| Extensión de dedos | sí |  | 1 | · | · | V9 | · | Sigilo / Oficina | Mueve+Estira | 2 | v1 |
+| Extensión torácica | sí |  | 1 | · | · | NEW | · | Espalda y core / Hombros y columna | Mueve+Estira | 2 | v1 |
 | Flexiones inclinadas | sí |  | 1 | · | sí | v0 | · | Empuje y tracción | Mueve | 2 | mixto |
 | Flexor de cadera | sí |  | 1 | · | · | V8 | · | Oficina / Caderas y piernas | Estira | 2 | v1 |
 | Fondos en silla | sí |  | 1 | · | sí | s60 | · | Empuje y tracción | Mueve | 1 | v1 |
-| Ground sitting transitions | sí |  | 2 | · | · | s60 | sí | Caderas y piernas / Flujos | Estira | 2 | legacy |
+| Gateo | sí |  | 1 | · | · | s60 | · | Flujos | Estira | 1 | legacy |
+| Giro sentado | sí |  | 1 | · | sí | s60 | · | Oficina | Estira | 1 | legacy |
 | Hueco en silla | sí |  | 1 | · | · | V5 | · | Sigilo | Mueve | 1 | v1 |
 | Inclinación lateral | sí |  | 1 | · | · | s60 | · | Oficina | Estira | 1 | v1 |
-| Pigeon | sí |  | 1 | · | · | s60 | sí | Caderas y piernas | Estira | 2 | v1 |
+| Juntar omóplatos | sí |  | 1 | · | · | NEW | · | Espalda y core | Mueve | 2 | v1 |
+| Marcha del elefante | sí |  | 1 | · | sí | V7 | · | Caderas y piernas | Estira | 2 | mixto |
+| Paloma | sí |  | 1 | · | · | s60 | · | Caderas y piernas | Estira | 2 | v1 |
 | Puente con marcha | sí |  | 1 | · | · | NEW | · | Caderas y piernas | Estira | 3 | v1 |
 | Puente isquio a una pierna | sí |  | 1 | · | · | s60 | · | Caderas y piernas | Estira | 1 | legacy |
-| Rib pull + respiración | sí |  | 1 | · | · | s60 | sí | Flujos | Estira | 1 | legacy |
+| Respiraciones profundas | sí |  | 1 | sí | · | NEW | · | Oficina | Estira | 1 | legacy |
+| Rotación externa | sí |  | 1 | · | · | ALT | · | Hombros y columna | Estira | 2 | v1 |
 | Rotación lenta | sí |  | 1 | · | · | s60 | · | Oficina | Estira | 1 | v1 |
 | Rotación torácica | sí |  | 1 | · | · | NEW | · | Oficina / Hombros y columna / Flujos | Estira | 3 | v1 |
-| Scapular squeeze | sí |  | 1 | · | · | NEW | sí | Espalda y core | Mueve | 2 | v1 |
-| Scapular wall slides | sí |  | 1 | · | sí | V8 | sí | Hombros y columna | Estira | 1 | v1 |
-| Seated twist | sí |  | 1 | · | sí | s60 | sí | Oficina | Estira | 1 | legacy |
-| Shrug + round | sí |  | 1 | sí | · | V12 | sí | Oficina / Hombros y columna | Estira | 2 | mixto |
-| Sissy squat | sí |  | 2 | · | · | s60 | sí | Piernas / Caderas y piernas | Mueve+Estira | 2 | legacy |
-| Squat profundo | sí |  | 1 | · | · | ALT | sí | Caderas y piernas / Flujos | Estira | 3 | mixto |
-| Squeeze fist | sí |  | 1 | · | · | V9 | sí | Sigilo | Mueve | 1 | v1 |
+| Sentadilla de cuádriceps | sí |  | 2 | · | · | s60 | · | Piernas / Caderas y piernas | Mueve+Estira | 2 | legacy |
+| Sentadilla lateral | sí |  | 1 | · | · | s60 | · | Caderas y piernas | Estira | 2 | mixto |
+| Sentadilla profunda | sí |  | 1 | · | · | ALT | · | Caderas y piernas / Flujos | Estira | 3 | mixto |
+| Sentadilla profunda sostenida | sí |  | 1 | · | · | s60 | · | Flujos | Estira | 1 | legacy |
+| Sentarse y levantarse del suelo | sí |  | 2 | · | · | s60 | · | Caderas y piernas / Flujos | Estira | 2 | legacy |
+| Silla en la pared | sí |  | 1 | · | sí | NEW | · | Piernas | Mueve | 1 | v1 |
 | Suspensión pasiva | sí |  | 2 | · | sí | ALT | · | Empuje y tracción / Flujos | Mueve+Estira | 2 | mixto |
-| Thoracic extension | sí |  | 1 | · | · | NEW | sí | Espalda y core / Hombros y columna | Mueve+Estira | 2 | v1 |
-| Tibialis raise | sí |  | 1 | · | sí | s60 | sí | Caderas y piernas | Estira | 1 | legacy |
-| Wall sit | sí |  | 1 | · | sí | NEW | sí | Piernas | Mueve | 1 | v1 |
-| World's greatest stretch | sí |  | 1 | · | · | s60 | sí | Oficina | Estira | 1 | v1 |
-| Wrist circles | sí |  | 1 | · | · | s60 | sí | Oficina | Estira | 2 | mixto |
-| Wrist stretch | sí |  | 1 | · | · | V5 | sí | Sigilo / Oficina | Mueve+Estira | 2 | v1 |
+| Suspensión pasiva · opcional | sí |  | 2 | · | sí | NEW | · | Hombros y columna | Estira | 1 | v1 |
+| Zancada con apertura | sí |  | 1 | · | · | s60 | · | Oficina | Estira | 1 | v1 |
+| Zancada profunda | sí |  | 1 | · | · | s60 | · | Piernas / Caderas y piernas | Mueve+Estira | 2 | legacy |
