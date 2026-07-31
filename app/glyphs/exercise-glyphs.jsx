@@ -66,7 +66,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 4. Pared + cabeza apoyada + asiento horizontal + tibia vertical (NEW). */
-  'Wall sit': ({ size, className }) => (
+  'Silla en la pared': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 6 V36" />
       <circle cx="13" cy="11" r="2.2" />
@@ -75,7 +75,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 5. Vista frontal: 2 pies en puntillas + flecha arriba (ALT). */
-  'Calf raises': ({ size, className }) => (
+  'Elevación de talones': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M14 30 V36" />
       <path d="M18 30 V36" />
@@ -97,7 +97,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 7. Núcleo + dos arcos abrazando hacia él (V9). */
-  'Squeeze fist': ({ size, className }) => (
+  'Abrir y cerrar el puño': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="22" r="5" />
       <path d="M10 14 Q6 22 10 30" />
@@ -106,7 +106,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 8. 5 líneas radiando desde un punto pivote (V9). */
-  'Finger extension': ({ size, className }) => (
+  'Extensión de dedos': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="32" r="1.5" />
       <path d="M22 30 L14 8" />
@@ -118,7 +118,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 9. Antebrazo + abanico de 5 trazos de movimiento (V5). */
-  'Wrist stretch': ({ size, className }) => (
+  'Estiramiento de muñeca': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 22 H22" />
       <path d="M22 22 L30 12" opacity="0.4" />
@@ -130,7 +130,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 10. 3 líneas horizontales decrecientes (retracción progresiva) (V8). */
-  'Chin tucks': ({ size, className }) => (
+  'Barbilla atrás': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M16 14 H32" opacity="0.35" strokeDasharray="1.5 2" />
       <path d="M12 22 H28" />
@@ -139,7 +139,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 11. Dos omóplatos curvos + eje espinal punteado + línea de convergencia (NEW). */
-  'Scapular squeeze': ({ size, className }) => (
+  'Juntar omóplatos': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M10 10 Q16 18 18 30" />
       <path d="M34 10 Q28 18 26 30" />
@@ -149,7 +149,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 12. Arco torácico amplio sobre soporte (puente) (NEW). */
-  'Thoracic extension': ({ size, className }) => (
+  'Extensión torácica': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 28 Q22 6 38 28" />
       <path d="M14 28 H30" opacity="0.55" />
@@ -157,7 +157,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 13. Caja torácica expandiéndose: 3 costillas + flechas laterales (NEW). */
-  'Chest opener': ({ size, className }) => (
+  'Apertura de pecho sentado': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M14 12 Q22 14 30 12" />
       <path d="M12 20 Q22 24 32 20" />
@@ -205,7 +205,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 17. Zancada profunda + arco amplio de rotación superior. */
-  "World's greatest stretch": ({ size, className }) => (
+  'Zancada con apertura': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="20" r="1.8" />
       <path d="M22 22 V30 L16 38" />
@@ -238,7 +238,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 20. Una pierna doblada lateral + otra extendida al lado opuesto. */
-  'Cossack squat': ({ size, className }) => (
+  'Sentadilla lateral': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="14" r="2" />
       <path d="M22 16 L34 26 L30 36" />
@@ -260,7 +260,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 22. Cadera + tibia cruzada + pierna trasera extendida. */
-  'Pigeon': ({ size, className }) => (
+  'Paloma': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="18" cy="16" r="2" />
       <path d="M18 18 L32 22 L34 30" />
@@ -270,7 +270,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 23. Squat M-pure: piernas dibujando M perfecta (ALT). */
-  'Squat profundo': ({ size, className }) => (
+  'Sentadilla profunda': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="8" r="2" />
       <path d="M22 10 V14" />
@@ -304,7 +304,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 25. Pared + 2 arcos ascendentes abstractos + eje (V8). */
-  'Scapular wall slides': ({ size, className }) => (
+  'Deslizamientos en pared': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 6 V38" />
       <path d="M14 28 Q22 22 30 28" opacity="0.5" strokeDasharray="1.5 2" />
@@ -314,7 +314,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 26. Banda + 2 manos + líneas sutiles de tensión lateral (NEW). */
-  'Band pull-apart': ({ size, className }) => (
+  'Apertura con banda': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="12" cy="22" r="2.4" />
       <circle cx="32" cy="22" r="2.4" />
@@ -329,7 +329,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 27. Hombro (cabeza humeral) + antebrazo + arco de rotación (ALT). */
-  'External rotation': ({ size, className }) => (
+  'Rotación externa': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="14" cy="14" r="3" />
       <path d="M14 17 L20 22" />
@@ -340,7 +340,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 28. Barra + 2 manos huecas + brazos rectos colgados (NEW). */
-  'Dead hang · opcional': ({ size, className }) => (
+  'Suspensión pasiva · opcional': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 8 H38" />
       <circle cx="14" cy="10" r="2.4" />
@@ -351,7 +351,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 29. Zancada ATG: rodilla muy por delante del pie. */
-  'ATG split squat': ({ size, className }) => (
+  'Zancada profunda': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="18" cy="20" r="2" />
       <path d="M18 22 L34 18 L36 32" />
@@ -361,7 +361,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 30. Pared + pierna + pie en flexión dorsal. */
-  'Tibialis raise': ({ size, className }) => (
+  'Elevación de puntas': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 6 V38" />
       <path d="M8 38 H38" />
@@ -381,7 +381,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 32. Cuerpo inclinado atrás + rodillas adelante + talones arriba. */
-  'Sissy squat': ({ size, className }) => (
+  'Sentadilla de cuádriceps': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="14" cy="8" r="2" />
       <path d="M14 10 L28 30" />
@@ -393,7 +393,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 33. Pike claro + 2 brazos cayendo + 2 manos en suelo (V7). */
-  'Elephant walk': ({ size, className }) => (
+  'Marcha del elefante': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M22 8 L8 32" />
       <path d="M22 8 L36 32" />
@@ -405,7 +405,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 34. M profunda + tres puntos verticales (mantener el tiempo). */
-  'Deep squat hold': ({ size, className }) => (
+  'Sentadilla profunda sostenida': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M10 34 V20 L22 32 L34 20 V34" />
       <circle cx="38" cy="20" r="1" opacity="0.65" />
@@ -416,7 +416,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 35. Cuadrupedia: espalda arqueada + cuatro patas dinámicas. */
-  'Crawling': ({ size, className }) => (
+  'Gateo': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 18 Q22 6 36 18" />
       <path d="M10 18 Q8 24 10 32" />
@@ -439,7 +439,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 37. Sentado arriba + curva descendente + sentado abajo. */
-  'Ground sitting transitions': ({ size, className }) => (
+  'Sentarse y levantarse del suelo': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="10" cy="10" r="2" />
       <path d="M10 12 V18" opacity="0.55" />
@@ -450,7 +450,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 38. Gato/vaca: dos arcos opuestos + puntos de aire. */
-  'Rib pull + respiración': ({ size, className }) => (
+  'Apertura de costillas + respiración': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M8 16 Q22 6 36 16" />
       <path d="M8 28 Q22 38 36 28" />
@@ -488,7 +488,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 42. Cabeza + hombros como 2 arcos + torso + 2 flechas verticales (V12). */
-  'Shrug + round': ({ size, className }) => (
+  'Encogimiento de hombros': ({ size, className }) => (
     <G size={size} className={className}>
       <circle cx="22" cy="20" r="2" />
       <path d="M8 26 Q14 12 22 16" />
@@ -502,7 +502,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 43. Antebrazo + mano + círculo rotación — patrón 3 (parte aislada). */
-  'Wrist circles': ({ size, className }) => (
+  'Círculos de muñeca': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M4 22 H20" />
       <path d="M20 22 Q24 22 22 18" />
@@ -511,7 +511,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 44. Silla + torso + arco amplio de rotación hacia el respaldo. */
-  'Seated twist': ({ size, className }) => (
+  'Giro sentado': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M10 10 V30" />
       <path d="M10 24 H24 V34" />
@@ -521,7 +521,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 45. Pierna vertical + círculo en el tobillo (rotación). */
-  'Ankle circles': ({ size, className }) => (
+  'Círculos de tobillo': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M22 4 V26" />
       <circle cx="22" cy="32" r="6" />
@@ -530,7 +530,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 46. Pulmones + flecha de aire entrando + expansión lateral (NEW). */
-  'Deep breaths': ({ size, className }) => (
+  'Respiraciones profundas': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M22 14 V32" />
       <path d="M22 18 Q12 18 12 26 Q12 32 18 32" />

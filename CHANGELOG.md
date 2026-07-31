@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [abajo](#v0750----2026-07-31----featcontent-ola-c--el-inglés-fuera-del-español) |
 | **v0.74.0** | 2026-07-31 | feat+docs: **Fase 2 arranca — matriz §19.2 y ola A de nombres** — 3 de las 4 premisas del plan NO reproducen (65 nombres, no 92; **55 %** con inglés, no 37 %; 20 sin glifo, no ~46) · 41 de 47 glifos son una sola pose estática · 5 renombrados con migración por `VISUAL_ALIAS` | #141 | [abajo](#v0740----2026-07-31----featdocs-fase-2-arranca--matriz-192-y-ola-a-de-nombres) |
-| **v0.73.1** | 2026-07-30 | fix(ui): **banding de la atmósfera, medido en los píxeles de la página** — el grano NO ditheraba (0,314 con él / 0,318 sin él) y apilar el mismo degradado dos veces DUPLICABA el escalón (17 de 24 niveles) · una capa con alpha compuesto + grano en sRGB | #140 | [abajo](#v0731----2026-07-30----fixui-banding-de-la-atmósfera-medido-en-los-píxeles-de-la-página) |
+| **v0.73.1** | 2026-07-30 | fix(ui): **banding de la atmósfera, medido en los píxeles de la página** — el grano NO ditheraba (0,314 con él / 0,318 sin él) y apilar el mismo degradado dos veces DUPLICABA el escalón (17 de 24 niveles) · una capa con alpha compuesto + grano en sRGB | #140 | [session-140](./docs/sessions/session-140-banding-atmosfera.md) |
 | **v0.73.0** | 2026-07-30 | fix+feat: **regresión de encaje de Respira + Fase 1.6** — el visual se mide contra el hueco REAL · nada de barra en actividad en curso · vela del loto · banderas con migración · botón fantasma MEDIDO · idioma «Auto» | #139 | [session-139](./docs/sessions/session-139-respira-y-ajustes.md) |
 | **v0.72.0** | 2026-07-30 | fix+feat: **Fase 1.5 · pulido visible** — desfase del punto guía MEDIDO y a 0 ms · atmósfera fuera de Caminos · constructor en Mueve **y** Estira · **loto de Respira** | #138 | [session-138](./docs/sessions/session-138-pulido-visible.md) |
 | **v0.71.0** | 2026-07-29 | feat(home): **home móvil universal · «amanecer del Camino»** | #128 | [session-128](./docs/sessions/session-128-home-movil-universal.md) |
@@ -335,6 +336,56 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.75.0] -- 2026-07-31 -- feat(content): ola C — el inglés fuera del español
+
+Sesión **#142**. Diario: [session-142](./docs/sessions/session-142-ola-c-nombres.md) ·
+Auditoría actualizada: [audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md) §11.
+
+La ola B (dibujar los 20 glifos que faltan) queda **en pausa**: depende del arte del usuario
+(regla D-4). Se ejecuta la ola C, que es la que más mueve la queja beta y no depende de nadie.
+
+### Cambiado
+
+- **30 nombres de ejercicio renombrados**: de **31 con término inglés a 1** (`Superman`, que se
+  mantiene por decisión: es nombre propio legible en español y lo reportado eran términos
+  ilegibles). Propuestos con la técnica real de cada ejercicio delante, no por traducción
+  automática; el usuario cambió dos: `Cossack squat` → **Sentadilla lateral** y `Sissy squat` →
+  **Sentadilla de cuádriceps**.
+- `Elevación de talones` y `Elevación de puntas` quedan como pareja simétrica —gemelo y tibial—,
+  que es lo que son.
+- **`VISUAL_ALIAS` regenerado**: 39 entradas, sin duplicados. Cada nombre viejo resuelve al nuevo,
+  que es lo que salva las rutinas propias ya guardadas (decisión s141).
+
+### Hallazgo: 5 de los 47 dibujos no se pintan NUNCA
+
+`ExerciseGlyph` resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`, o sea **el
+alias primero**. Cuatro nombres tienen alias **y** entrada propia de glifo, así que su dibujo está
+**tapado**: `Chest opener` · `Deep squat hold` · `Deep breaths` · `Dead hang · opcional`. Con
+`Nordics` (sin uso ni como destino de alias), son **5 dibujos muertos de 47**.
+
+Corrige el §2 de la auditoría, que solo contaba como huérfano lo que ningún paso usaba: **un alias
+también deja huérfano un dibujo**, y de forma menos visible. Y era urgente ahora: al renombrarlos,
+el nombre nuevo no tendría alias ⇒ resolvería a sí mismo ⇒ **su dibujo tapado se habría activado
+solo**, cambiando lo que se ve sin pedirlo. Se evitó dando al nombre nuevo el mismo destino.
+Queda pendiente la decisión de catálogo: borrar esos dibujos o quitarles el alias.
+
+### Verificado
+
+Con SW y cachés purgados: **65 nombres únicos y 20 sin glifo antes y después** (ninguna clave
+caída) · los 30 nombres viejos resuelven por alias y llegan a su glifo · los 4 tapados resuelven
+**al mismo destino que antes** · los `.js` tocados pasan `node --check` · el runner pinta
+«Encogimiento de hombros» con su glifo. Consola sin errores.
+
+### Método
+
+Script de reemplazos **con contexto** y guardarraíl de conteo, que **falló dos veces sin escribir
+nada**: el mismo nombre se escribe con comilla simple escapada en un archivo y con dobles en otro
+(`World's greatest stretch`, tercera vez que ese apóstrofo muerde), y añadir líneas a
+`VISUAL_ALIAS` creaba **claves duplicadas** —en JS gana la última— justo en los cuatro casos
+delicados; se corrigió regenerando el objeto entero desde un mapa calculado.
+
+---
+
 ## [v0.74.0] -- 2026-07-31 -- feat+docs: Fase 2 arranca — matriz §19.2 y ola A de nombres
 
 Sesión **#141**. Diario: [session-141](./docs/sessions/session-141-fase-2-auditoria.md) ·
@@ -394,71 +445,4 @@ dobles, y un «7» contado a ojo que eran 4.
 
 ---
 
-## [v0.73.1] -- 2026-07-30 -- fix(ui): banding de la atmósfera, medido en los píxeles de la página
-
-Sesión **#140**. Diario: [session-140](./docs/sessions/session-140-banding-atmosfera.md).
-
-Un solo frente: lo único que s139 dejó abierto. Se cierra **desmintiendo las dos hipótesis** con
-las que s100, s138 y s139 venían trabajando — las tres midieron el tile de ruido rasterizado en un
-`canvas`, que es una medida real de la pieza equivocada. Medido esta vez donde ocurre: captura PNG
-sin pérdida de una sesión de Respira real por CDP, promediando **a lo largo del contorno elíptico
-del propio degradado**, que es como lo integra el ojo.
-
-### Corregido
-
-- **El grano NO ditheraba, solo tapaba.** La escalera mide igual con grano (**0,314**) que sin él
-  (**0,318**): cuando el grano se compone encima, el degradado **ya** está redondeado a 8 bits, y
-  un dither tiene que entrar ANTES de la cuantización. Todo lo que s100 y s138 ajustaron ahí
-  —paradas, `baseFrequency`— actuaba sobre una variable que no gobierna el fenómeno. Y como
-  enmascarador tampoco llegaba: σ **0,678** contra un escalón de **1,41** niveles.
-- **Apilar el mismo degradado dos veces DUPLICA el escalón.** `sessionAtmosphere` pintaba el mismo
-  `g` dos veces (s99, para que el tinte se notara sin subir el alpha del token): los dos redondeos
-  caen en los MISMOS radios y se suman. Medido sin depender de la geometría, contando qué niveles
-  enteros existen de verdad: **17 de 24** (escalón 1,41) — siete niveles del recorrido no llegaban
-  a existir. Con **una** capa del color ya compuesto: **22 de 23** (escalón **1,05**). Ahí estaba
-  por qué la atmósfera era la peor de las tres superficies, y no era lo que s139 supuso.
-- **Alpha compuesto con SINTAXIS DE COLOR RELATIVO**: componer un color consigo mismo con alpha `a`
-  da exactamente `1−(1−a)² = a·(2−a)`, y se pide sobre el propio token, así que cada módulo y cada
-  paleta conservan el suyo (Foco 0,10 · Respira 0,12 · oscuro 0,14). **No se sube ningún alpha de
-  tinte** —regla de s100 intacta—, se deja de redondear dos veces. `CSS.supports` comprueba una vez
-  el soporte (Chromium 119 · Safari 16.4 · Firefox 128) y si no, cae a las dos capas de siempre.
-  De propina: el doble redondeo sesgaba el wash hasta **1 nivel más oscuro** que el color pedido.
-- **Grano que sí enmascara** (σ 0,678 → **1,22**), con tres cambios y ninguno sobre un tinte:
-  `color-interpolation-filters='sRGB'` (los filtros SVG van en linearRGB por defecto y se comían la
-  mitad — hallazgo de s139, aquí aplicado) · **alpha constante** en vez de ruidosa (la de s138
-  gastaba media, o sea oscurecía, sin aportar σ) · curva estirada alrededor del mismo centro.
-- **El papel deja de desaturarse.** El grano de s138 lo desviaba desigual por canal (−1,79 rojo
-  contra −0,93 azul); ahora el desvío es parejo (−1,5). En **oscuro** el efecto era mayor: aquel
-  velo gris **aclaraba el papel un 14 %** (+4,2 niveles sobre un papel de 29); ahora +1,5.
-
-### Medido
-
-| Sesión de Respira real, 1280×720, dpr 1,25 | Antes | Después |
-|---|---|---|
-| Escalón | 1,41 (17 de 24 niveles) | **1,05** (22 de 23) |
-| Escalera RMS · pico | 0,314 · 1,51 | **0,225 · 0,82** |
-| Grano (σ) | 0,678 | **1,22** |
-| **σ ÷ escalón** (lo que tapa) | 0,48 | **1,16** |
-
-En oscuro: escalón 1,15 → **1,05**, escalera 0,148 → **0,113**. Verificado además con el contraste
-estirado ×10 y ×20 (el «antes» enseña los arcos con borde duro; el «después», ninguno), en las
-**tres paletas** y con los **seis tokens** de módulo. **El usuario confirmó en vivo que ya no lo
-percibe en su PC.**
-
-### Banco de medición (reutilizable)
-
-Sin dependencias nuevas: Node 24 trae `WebSocket` global ⇒ **CDP** directo contra Chromium
-headless, y `sharp` —ya en el toolchain— lee los PNG. Tres trampas del propio banco, encontradas y
-corregidas antes de concluir: promediar por columnas rectas (las bandas son **arcos**, no líneas:
-daba σ 8,3 que era variación lateral, no grano) · una «meseta» de 158 bins que caía en el tramo
-0–12 %, plano por diseño · y **código stale** (dos tandas con cifras idénticas hasta el último
-decimal, por una instancia de Edge superviviente cuyo SW servía lo precacheado) ⇒ puerto nuevo por
-tanda, `Network.setBypassServiceWorker` y **centinela** de huella del código vivo.
-
-### Sin tocar
-
-`PACE_standalone.html` no se regenera (decisión s134): restaurado **byte-idéntico** tras el build,
-hash `998e3e358d689036` antes y después.
-
----
 
