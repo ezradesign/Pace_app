@@ -14,7 +14,21 @@ var VISUAL_ALIAS = {
   'Chest opener':       'Apertura de pecho',
   'Deep squat hold':    'Squat profundo',
   'Deep breaths':       'Reset respiración',
-  'Dead hang · opcional': 'Hang pasivo',
+  'Dead hang · opcional': 'Suspensión pasiva',
+
+  /* OLA A de la Fase 2 (s141) — nombres RETIRADOS del inglés. Estas entradas no
+     son cosmética: el constructor COPIA el nombre del ejercicio dentro de la
+     rutina propia que se guarda en `localStorage` (`state-custom.jsx`), así que
+     una rutina creada antes del renombrado sigue pidiendo el nombre viejo. Sin
+     alias perdería su glifo en silencio, que es justo lo que prohíbe s108.
+     Al dibujar los glifos que faltan (ola B), estas rutinas antiguas los heredan
+     solas. NO borrar: mientras exista una instalación con datos previos, hacen
+     falta. */
+  'Hang pasivo':        'Suspensión pasiva',
+  'Hang activo':        'Suspensión activa',
+  'Hollow hold':        'Hueco abdominal',
+  'Seated hollow':      'Hueco en silla',
+  'Couch stretch':      'Cuádriceps en pared',
 };
 
 /* resolveVisualId(name) → identidad visual canónica (o el propio nombre). */
