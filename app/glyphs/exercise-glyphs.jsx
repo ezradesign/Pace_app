@@ -89,7 +89,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 6. Crescent / boat pose puro (línea única) (V5). */
-  'Seated hollow': ({ size, className }) => (
+  'Hueco en silla': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 18 Q22 34 38 18" />
       <path d="M6 18 Q22 24 38 18" opacity="0.5" />
@@ -428,7 +428,7 @@ const EXERCISE_GLYPHS = {
   ),
 
   /* 36. Barra + 2 manos + cuerpo relajado en curva completa (ALT). */
-  'Hang pasivo': ({ size, className }) => (
+  'Suspensión pasiva': ({ size, className }) => (
     <G size={size} className={className}>
       <path d="M6 8 H38" />
       <circle cx="16" cy="10" r="2" />

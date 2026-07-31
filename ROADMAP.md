@@ -177,11 +177,19 @@ sesión, cerrado y verificado. Los cuatro entregados en s139; detalle en
 Criterio de cierre: ninguna opción retirada deja a nadie atrapado, el bug medido antes de
 tocarlo, y el «Auto» verificado cambiando de verdad el idioma del sistema.
 
-### FASE 2 · Que Mueve y Estira se entiendan — ⏭ SIGUIENTE
+### FASE 2 · Que Mueve y Estira se entiendan — 🔄 EN CURSO (s141)
 
 El bloque del feedback beta. La más importante.
 
-**Arranca por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
+> **s141 · auditoría HECHA y ola A entregada** ([audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md)).
+> **Tres de las cuatro cifras de abajo NO reproducen** contra el árbol y se corrigen aquí: son
+> **65** nombres únicos y no 92 · **55 %** con inglés y no 37 % (*peor*) · **20 sin glifo = 31 %* y
+> no «la mitad» (*mejor*) · `level`/`intensity` viven en la **rutina**, no en el paso. Además, los
+> glifos son **dos problemas distintos** (20 que no existen · 15 que existen sin aprobar) y **41 de
+> 47 dibujan una sola pose estática**, que es la evidencia dura del punto 3.
+> **Siguiente: ola B**, los 20 dibujos que faltan.
+
+**Arrancó por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
 de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,
 qué glifo existe · si está aprobado o es placeholder · si hay alias · una o dos poses · zona
 corporal · si el nombre lleva inglés y cuál sería su nombre en español · nivel técnico e

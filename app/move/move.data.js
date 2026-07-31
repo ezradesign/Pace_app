@@ -111,20 +111,20 @@ var MOVE_ROUTINES = {
       { id: 'extra.hang.bar', tag: 'HANG', code: 'Tracción', name: 'Colgarse', desc: 'De una barra firme que soporte tu peso. Tracción suave para hombros y espalda.', min: 2, access: 'premium',
         position: ['standing'], equipment: ['bar'], requiresFloor: false, intensity: 'gentle', level: 'intermediate',
         steps: [
-          { name: 'Hang pasivo', mode: 'timed', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
+          { name: 'Suspensión pasiva', mode: 'timed', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 },
             instruction: {
               setup: 'Agárrate a una barra firme que soporte tu peso, con las manos al ancho de los hombros.',
               action: 'Cuelga relajado, con los brazos estirados. Respira.',
               care: 'Baja si notas molestia. Apoya un poco los pies si lo necesitas.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Sacude los brazos.' } },
-          { name: 'Hang activo', mode: 'timed', dur: 30,
+          { name: 'Suspensión activa', mode: 'timed', dur: 30,
             instruction: {
               action: 'Cuelga llevando los hombros abajo y atrás. Codos rectos.',
               care: 'Tracción suave, sin encoger el cuello.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Sacude los brazos.' } },
-          { name: 'Hang pasivo', mode: 'timed', dur: 30,
+          { name: 'Suspensión pasiva', mode: 'timed', dur: 30,
             instruction: {
               action: 'Suelta del todo. Deja que la espalda se abra.',
               care: 'Respira hondo y afloja los hombros.' } },
@@ -201,22 +201,22 @@ var MOVE_ROUTINES = {
          gate `ready`. Los cue de los rests estaban VACÍOS: se reutiliza el
          literal del rest suave de glutes.stealth («Suelta.» / «Let go.»), sin
          redactar copy nuevo. Acceso premium SIN cambios. */
-      { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hollow hold en silla.', min: 2, access: 'premium',
+      { id: 'extra.core.stealth', tag: 'CORE', code: 'Core', name: 'Core silencioso', desc: 'Hueco abdominal en silla.', min: 2, access: 'premium',
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'moderate', level: 'accessible',
         steps: [
-          { name: 'Seated hollow', mode: 'timed', dur: 30,
+          { name: 'Hueco en silla', mode: 'timed', dur: 30,
             instruction: {
               action: 'Eleva las piernas y mantén, con la baja espalda apoyada.',
               care: 'Baja los pies para que sea más suave. Respira normal.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Suelta.' } },
-          { name: 'Seated hollow', mode: 'timed', dur: 30,
+          { name: 'Hueco en silla', mode: 'timed', dur: 30,
             instruction: {
               action: 'Mantén la posición. Respira normal.',
               care: 'Si la lumbar se despega, baja un poco las piernas.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Suelta.' } },
-          { name: 'Seated hollow', mode: 'timed', dur: 30,
+          { name: 'Hueco en silla', mode: 'timed', dur: 30,
             instruction: {
               action: 'Última. Mantén mientras la lumbar siga apoyada.',
               care: 'Termina antes si pierdes el apoyo de la espalda.' } },
@@ -347,7 +347,7 @@ var MOVE_ROUTINES = {
               care: 'Abre solo hasta donde el pecho estire sin molestar.' } },
         ]},
       /* s121 (B2.3 OLA 4): migrado al contrato v1 — CIERRE de la migración
-         mecánica. Aguantes isométricos (Plancha, Hollow hold) → `timed` con care
+         mecánica. Aguantes isométricos (Plancha, Hueco abdominal) → `timed` con care
          de rodillas (adaptación DERIVADA, no cambia dosis); Plancha lateral «30 s
          por lado» en dur:60 → `perSide` dur:30 POR LADO (2×30=60 = dosis legacy) +
          `transition:{seconds:10}` (patrón Isquio de OLA 3; solo separa lo que el
@@ -371,7 +371,7 @@ var MOVE_ROUTINES = {
               care: 'Baja la rodilla de abajo al suelo si necesitas menos intensidad.' } },
           { name: 'Descanso', mode: 'rest', dur: 20,
             instruction: { action: 'Respira.' } },
-          { name: 'Hollow hold', mode: 'timed', dur: 30,
+          { name: 'Hueco abdominal', mode: 'timed', dur: 30,
             instruction: {
               action: 'Tumbado boca arriba: pega la lumbar al suelo y eleva piernas y hombros.',
               care: 'Baja los pies para que sea más suave.' } },

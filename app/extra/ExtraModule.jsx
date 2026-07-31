@@ -272,7 +272,7 @@ const EXTRA_ROUTINES = {
               action: 'Sube la cadera y aguanta. Levanta una rodilla, luego la otra.',
               care: 'Baja el ritmo si la lumbar se queja.' } },
         ]},
-      { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Couch stretch',
+      { id: 'move.couch.stretch', tag: 'HIP', code: 'Caderas', name: 'Estiramiento del sofá',
         desc: 'Flexores profundos contra pared o silla, rodilla al suelo. El estiramiento del sofá.', min: 6, access: 'premium',
         position: ['halfKneeling', 'floor', 'supine'], equipment: ['wall', 'cushionOptional'], requiresFloor: true, intensity: 'strong', level: 'intermediate',
         /* 5º piloto del contrato v1 (s112, B2.2a.5): estiramiento estático de
@@ -288,7 +288,7 @@ const EXTRA_ROUTINES = {
               setup: 'Apoya una rodilla en el suelo, la otra pierna delante en ángulo. Un cojín bajo la rodilla si molesta.',
               action: 'Empuja la pelvis adelante. Estirón suave en la ingle de atrás.',
               care: 'Recorrido corto. Mantén el tronco erguido.' } },
-          { name: 'Couch stretch', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
+          { name: 'Cuádriceps en pared', mode: 'perSide', dur: 30, setup: { mode: 'ready', estimatedSeconds: 15 }, transition: { seconds: 10 },
             instruction: {
               setup: 'Apoya el empeine de atrás contra la pared o una silla, con la rodilla al fondo.',
               action: 'Sube el tronco despacio. Aprieta el glúteo de atrás.',
@@ -403,7 +403,7 @@ const EXTRA_ROUTINES = {
         steps: [
           { name: 'Deep squat hold', dur: 60, cue: 'Talones abajo, relaja.' },
           { name: 'Crawling', dur: 60, cue: 'Contralateral, lento.' },
-          { name: 'Hang pasivo', dur: 45, cue: 'De una barra firme, suelta el peso.' },
+          { name: 'Suspensión pasiva', dur: 45, cue: 'De una barra firme, suelta el peso.' },
           { name: 'Ground sitting transitions', dur: 60, cue: 'Siéntate al suelo y levántate sin manos.' },
           { name: 'Rib pull + respiración', dur: 45, cue: 'Movimiento de gato/vaca.' },
         ]},

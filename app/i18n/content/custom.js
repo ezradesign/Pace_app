@@ -27,6 +27,13 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Pica en escritorio.cue':               'Hips up, head between the arms.',
   'custom.ex.Fondos en silla.name':                 'Chair dips',
   'custom.ex.Fondos en silla.cue':                  'Lower with control, elbows back.',
+  'custom.ex.Suspensión pasiva.name':               'Passive hang',
+  'custom.ex.Suspensión pasiva.cue':                'Hang relaxed. Breathe.',
+  'custom.ex.Suspensión activa.name':               'Active hang',
+  'custom.ex.Suspensión activa.cue':                'Shoulders down and back, elbows straight.',
+  /* s141 · OLA A — claves VIEJAS conservadas a propósito: la clave es el nombre
+     ES y las rutinas propias ya guardadas lo llevan copiado dentro. Sin esto, en
+     inglés verían el nombre español. Se retiran cuando se retire su alias. */
   'custom.ex.Hang pasivo.name':                     'Passive hang',
   'custom.ex.Hang pasivo.cue':                      'Hang relaxed. Breathe.',
   'custom.ex.Hang activo.name':                     'Active hang',
@@ -57,7 +64,11 @@ Object.assign(window.PACE_STRINGS.en, {
   'custom.ex.Plancha.cue':                          'Forearms, body in a line. Squeeze glutes.',
   'custom.ex.Plancha lateral.name':                 'Side plank',
   'custom.ex.Plancha lateral.cue':                  'Hips high, body in a line.',
-  'custom.ex.Hollow hold.name':                     'Hollow hold',
+  'custom.ex.Hueco abdominal.name':                 'Hollow hold',
+  'custom.ex.Hueco abdominal.cue':                  'Lower back to the floor, legs and shoulders up.',
+  'custom.ex.Hueco en silla.name':                  'Seated hollow',
+  'custom.ex.Hueco en silla.cue':                   'Raise legs, support lower back.',
+  'custom.ex.Hollow hold.name':                     'Hollow hold',     /* s141: claves viejas */
   'custom.ex.Hollow hold.cue':                      'Lower back to the floor, legs and shoulders up.',
   'custom.ex.Seated hollow.name':                   'Seated hollow',
   'custom.ex.Seated hollow.cue':                    'Raise legs, support lower back.',
@@ -115,7 +126,9 @@ Object.assign(window.PACE_STRINGS.en, {
   // ── Caderas ──────────────────────────────────────────────────────
   'custom.ex.Flexor de cadera.name':                'Hip flexor',
   'custom.ex.Flexor de cadera.cue':                 'Knee to floor, push pelvis forward.',
-  'custom.ex.Couch stretch.name':                   'Couch stretch',
+  'custom.ex.Cuádriceps en pared.name':             'Couch stretch',
+  'custom.ex.Cuádriceps en pared.cue':              'Instep against wall or chair, knee deep back.',
+  'custom.ex.Couch stretch.name':                   'Couch stretch',   /* s141: clave vieja, ver arriba */
   'custom.ex.Couch stretch.cue':                    'Instep against wall or chair, knee deep back.',
   'custom.ex.90/90.name':                           '90/90',
   'custom.ex.90/90.cue':                            'Rotate between sides slowly.',

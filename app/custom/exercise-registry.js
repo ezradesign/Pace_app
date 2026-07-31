@@ -22,8 +22,8 @@ const EXERCISE_REGISTRY = {
       { name: 'Flexiones inclinadas', dur: 40, cue: 'Contra el escritorio, codos cerca del cuerpo.' },
       { name: 'Pica en escritorio', dur: 40, cue: 'Cadera arriba, cabeza entre los brazos.' },
       { name: 'Fondos en silla', dur: 40, cue: 'Baja con control, codos atrás.' },
-      { name: 'Hang pasivo', dur: 30, cue: 'Cuelga relajado. Respira.' },
-      { name: 'Hang activo', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
+      { name: 'Suspensión pasiva', dur: 30, cue: 'Cuelga relajado. Respira.' },
+      { name: 'Suspensión activa', dur: 30, cue: 'Hombros abajo y atrás, codos rectos.' },
     ]
   },
   piernas: {
@@ -45,8 +45,8 @@ const EXERCISE_REGISTRY = {
     items: [
       { name: 'Plancha', dur: 40, cue: 'Antebrazos, cuerpo en línea. Aprieta glúteos.' },
       { name: 'Plancha lateral', dur: 40, cue: 'Cadera alta, cuerpo en línea.' },
-      { name: 'Hollow hold', dur: 30, cue: 'Lumbar al suelo, piernas y hombros arriba.' },
-      { name: 'Seated hollow', dur: 30, cue: 'Eleva piernas, apoya la baja espalda.' },
+      { name: 'Hueco abdominal', dur: 30, cue: 'Lumbar al suelo, piernas y hombros arriba.' },
+      { name: 'Hueco en silla', dur: 30, cue: 'Eleva piernas, apoya la baja espalda.' },
       { name: 'Superman', dur: 40, cue: 'Boca abajo: eleva pecho y brazos, lento.' },
       { name: 'Scapular squeeze', dur: 30, cue: 'Junta omóplatos, 2 segundos cada vez.' },
       { name: 'Band pull-apart', dur: 40, cue: 'Sin banda: brazos cruzados + abre con tensión.' },
@@ -86,7 +86,7 @@ const EXERCISE_REGISTRY = {
     label: 'Caderas',
     items: [
       { name: 'Flexor de cadera', dur: 45, cue: 'Rodilla al suelo, empuja la pelvis adelante.' },
-      { name: 'Couch stretch', dur: 60, cue: 'Empeine contra pared o silla, rodilla al fondo.' },
+      { name: 'Cuádriceps en pared', dur: 60, cue: 'Empeine contra pared o silla, rodilla al fondo.' },
       { name: '90/90', dur: 60, cue: 'Rota entre lados despacio.' },
       { name: 'Pigeon', dur: 50, cue: 'Tibia adelante, peso adelante.' },
       { name: 'Rana', dur: 60, cue: 'Rodillas anchas, empuja la cadera atrás. Mece suave.' },
