@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.76.0</title>
+  <title>PACE · Foco · Cuerpo — v0.77.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1591,6 +1591,30 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.level.intermediate': 'Intermedio',
   'lib.level.advanced': 'Avanzado',
 
+  /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
+     dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
+     ruedas», «Necesitas pared; barra opcional»— porque no tenian sitio. Este
+     es el sitio. */
+  'preview.tag': 'Antes de empezar',
+  'preview.need': 'Qué necesitas',
+  'preview.need.none': 'Nada. Solo tú y donde estás.',
+  'preview.position': 'Posición',
+  'preview.steps': 'Los pasos',
+  'preview.start': 'Empezar',
+  'preview.eq.stableDesk': 'Una mesa estable',
+  'preview.eq.stableChair': 'Una silla estable, sin ruedas',
+  'preview.eq.bar': 'Una barra firme',
+  'preview.eq.wall': 'Una pared libre',
+  'preview.eq.cushionOptional': 'Un cojín, si lo necesitas',
+  'preview.eq.deskOptional': 'Una mesa, si la necesitas',
+  'preview.eq.barOptional': 'Una barra, si la tienes',
+  'preview.eq.floor': 'Sitio para tumbarte en el suelo',
+  'preview.pos.standing': 'De pie',
+  'preview.pos.seated': 'Sentado',
+  'preview.pos.floor': 'En el suelo',
+  'preview.pos.halfKneeling': 'Media rodilla',
+  'preview.pos.supine': 'Boca arriba',
+
   // Move Session (additional)
   'move.steps': 'Pasos',
   'move.prepCopy': 'De pie. Sin prisa. {n} pasos.',
@@ -1808,6 +1832,26 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.intensity.strong': 'Strong',
   'lib.level.intermediate': 'Intermediate',
   'lib.level.advanced': 'Advanced',
+
+  'preview.tag': 'Before you start',
+  'preview.need': 'What you need',
+  'preview.need.none': 'Nothing. Just you and wherever you are.',
+  'preview.position': 'Position',
+  'preview.steps': 'The steps',
+  'preview.start': 'Start',
+  'preview.eq.stableDesk': 'A stable desk',
+  'preview.eq.stableChair': 'A stable chair, no wheels',
+  'preview.eq.bar': 'A sturdy bar',
+  'preview.eq.wall': 'A clear wall',
+  'preview.eq.cushionOptional': 'A cushion, if you need one',
+  'preview.eq.deskOptional': 'A desk, if you need one',
+  'preview.eq.barOptional': 'A bar, if you have one',
+  'preview.eq.floor': 'Room to lie on the floor',
+  'preview.pos.standing': 'Standing',
+  'preview.pos.seated': 'Seated',
+  'preview.pos.floor': 'On the floor',
+  'preview.pos.halfKneeling': 'Half kneeling',
+  'preview.pos.supine': 'Lying face up',
 
   // Move Session (additional)
   'move.steps': 'Steps',
@@ -3575,7 +3619,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.76.0';
+const PACE_VERSION = 'v0.77.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -9595,6 +9639,164 @@ Object.assign(window, { ExerciseGlyph, EXERCISE_GLYPHS, DefaultGlyph });
 ;Object.assign(window, { G, DefaultGlyph, ExerciseGlyph });
 })();
 </script>
+  <!-- Preview «antes de empezar» (§18.3, s144). DESPUÉS de exercise-glyphs y de
+       Primitives: consume ExerciseGlyph, Modal y Tag. Lo monta main.jsx. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   RoutinePreview — «antes de empezar» (§18.3 del audit) · s144
+   ============================================================
+   QUÉ RESUELVE. Hasta ahora, tocar una tarjeta te metía DIRECTO en la sesión:
+   el 3-2-1 de `SessionPrep`, o el gate de colocación del runner v1. Si te
+   faltaba la silla, la pared o sitio en el suelo, te enterabas a mitad. Y §29.3
+   es explícito: los requisitos «deben indicarse antes de comenzar».
+
+   POR QUÉ ESTABA ESCONDIDO. Los datos existían desde s115 —`equipment`,
+   `position`, `requiresFloor` en 22 de las 28 rutinas— y no los leía nadie,
+   igual que pasaba con `level`/`intensity` antes de la ola E. La prueba de que
+   faltaba el sitio: **16 de las 28 descripciones llevaban el requisito escrito
+   A MANO** («Silla estable y sin ruedas», «Necesitas pared; barra opcional»,
+   «Pasarás por el suelo»). Este componente es ese sitio, y por eso desbloquea
+   la reescritura editorial: saca el requisito de la descripción.
+
+   DÓNDE SALE, Y DÓNDE NO. Solo al lanzar desde la BIBLIOTECA. Dentro de un
+   Camino la rutina ya viene elegida y el ritmo manda, así que `PathBodyStep`
+   monta el runner directamente y no pasa por aquí — por construcción: el
+   preview vive en los handlers de main.jsx, que son la puerta de la biblioteca.
+   Precedente exacto de esta forma: el modal de seguridad de Respira (s90).
+
+   El gate `setup:'ready'` del runner v1 NO hace este trabajo: es por PASO
+   («colócate para este ejercicio»), no de rutina, y llega cuando ya entraste.
+   ============================================================ */
+
+function RoutinePreview(_ref) {let { routine, kind = 'move', onStart, onClose } = _ref;
+  const { t, lang } = useT();
+  const [pace] = usePace();
+  if (!routine) return null;
+
+  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const accent = kind === 'extra' ? 'var(--extra)' : 'var(--move)';
+
+  /* Requisitos. `requiresFloor` es un booleano aparte del material porque el
+     suelo no es material: es sitio. Se muestra como una necesidad más. */
+  const equipo = Array.isArray(routine.equipment) ? routine.equipment : [];
+  const necesita = equipo.map((e) => t(`preview.eq.${e}`));
+  if (routine.requiresFloor) necesita.push(t('preview.eq.floor'));
+
+  const posiciones = (Array.isArray(routine.position) ? routine.position : []).
+  map((p) => t(`preview.pos.${p}`));
+
+  /* Duración: MISMA fuente que la tarjeta (s115) — `estimateDuration` para el
+     contrato v1, `min` para el resto. Nunca las dos. */
+  const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
+  let durLabel = `${routine.min} min`;
+  if (isV1 && typeof window.estimateDuration === 'function') {
+    const est = window.estimateDuration(routine, pace.restBetweenSets);
+    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
+    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
+  }
+
+  const intensidad = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ?
+  t(`lib.intensity.${routine.intensity}`) : null;
+  const nivel = ['intermediate', 'advanced'].includes(routine.level) ?
+  t(`lib.level.${routine.level}`) : null;
+
+  /* Los pasos, sin descansos: lo que vas a HACER. El glifo es el mismo que
+     verás dentro, así que la lista ya te va enseñando el vocabulario visual. */
+  /* OJO al índice: las claves EN son POSICIONALES sobre el array COMPLETO
+     (`<id>.s4.name` cuenta los descansos), así que se conserva el índice
+     original al filtrar o el inglés se desplaza. */
+  const sinDescansos = (routine.steps || []).
+  map((s, idx) => ({ s, idx })).
+  filter((_ref2) => {let { s } = _ref2;return s && s.mode !== 'rest' && s.name !== 'Descanso';});
+  /* Series del MISMO ejercicio se agrupan: «Fondos en silla» tres veces
+     seguidas es ruido, no información. Se colapsan las repeticiones
+     CONSECUTIVAS y se anota el número; si el ejercicio vuelve más tarde en la
+     rutina, vuelve a aparecer, que es lo que de verdad pasa. */
+  const pasos = [];
+  for (const p of sinDescansos) {
+    const ult = pasos[pasos.length - 1];
+    if (ult && ult.s.name === p.s.name) {ult.veces++;continue;}
+    pasos.push({ ...p, veces: 1 });
+  }
+
+  const Seccion = (_ref3) => {let { titulo, children } = _ref3;return (/*#__PURE__*/
+      React.createElement("div", { style: { marginBottom: 18 } }, /*#__PURE__*/
+      React.createElement("div", { className: "pace-meta", style: { marginBottom: 8 } }, titulo),
+      children
+      ));};
+
+
+  return (/*#__PURE__*/
+    React.createElement(Modal, { open: true, onClose: onClose, maxWidth: 560,
+      tagLabel: t('preview.tag'), title: tR(`${routine.id}.name`, routine.name) }, /*#__PURE__*/
+    React.createElement("div", { style: { marginTop: 4 } }, /*#__PURE__*/
+    React.createElement("p", { style: { fontSize: 13.5, color: 'var(--ink-2)', lineHeight: 1.6, margin: '0 0 18px' } },
+    tR(`${routine.id}.desc`, routine.desc)
+    ), /*#__PURE__*/
+
+    React.createElement("div", { style: { display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 } }, /*#__PURE__*/
+    React.createElement(Tag, { color: accent }, durLabel),
+    intensidad && /*#__PURE__*/React.createElement(Tag, { muted: true }, intensidad),
+    nivel && /*#__PURE__*/React.createElement(Tag, { muted: true }, nivel)
+    ), /*#__PURE__*/
+
+    React.createElement(Seccion, { titulo: t('preview.need') },
+    necesita.length === 0 ? /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 14, color: 'var(--ink-2)' } }, t('preview.need.none')) : /*#__PURE__*/
+
+    React.createElement("ul", { style: { margin: 0, paddingLeft: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-2)' } },
+    necesita.map((n) => /*#__PURE__*/React.createElement("li", { key: n }, n))
+    )
+
+    ),
+
+    posiciones.length > 0 && /*#__PURE__*/
+    React.createElement(Seccion, { titulo: t('preview.position') }, /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 14, color: 'var(--ink-2)' } }, posiciones.join(' · '))
+    ),
+
+
+    pasos.length > 0 && /*#__PURE__*/
+    React.createElement(Seccion, { titulo: t('preview.steps') }, /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 2 } },
+    pasos.map((_ref4) => {let { s, idx, veces } = _ref4;return (/*#__PURE__*/
+        React.createElement("div", { key: `${s.name}-${idx}`, style: { display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' } }, /*#__PURE__*/
+        React.createElement("span", { style: { color: accent, flexShrink: 0, display: 'grid', placeItems: 'center', width: 30, height: 30 } },
+        typeof ExerciseGlyph === 'function' ? /*#__PURE__*/
+        React.createElement(ExerciseGlyph, { id: s.name, size: 30 }) :
+        null
+        ), /*#__PURE__*/
+        React.createElement("span", { style: { fontSize: 14, color: 'var(--ink)' } },
+        tR(`${routine.id}.s${idx}.name`, s.name),
+        veces > 1 && /*#__PURE__*/
+        React.createElement("span", { style: { color: 'var(--ink-3)', fontSize: 12 } }, ` ×${veces}`)
+
+        )
+        ));}
+    )
+    )
+    ), /*#__PURE__*/
+
+
+    React.createElement("button", { onClick: onStart, "data-pace-cta": true, style: {
+        width: '100%', marginTop: 6, padding: '13px 20px',
+        background: accent, color: 'var(--paper)', border: 'none',
+        borderRadius: 'var(--r-pill)', cursor: 'pointer', minHeight: 44,
+        fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, fontWeight: 500
+      } }, t('preview.start'))
+    )
+    ));
+
+}
+
+Object.assign(window, { RoutinePreview });
+;Object.assign(window, { RoutinePreview });
+})();
+</script>
 
   <script>
 ;(function () {
@@ -11410,6 +11612,7 @@ var MOVE_ROUTINES = {
     },
     { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
       intensity: 'moderate', level: 'intermediate',
+      position: ['standing'], equipment: ['stableDesk'], requiresFloor: false,
       steps: [
       { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
       { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -11590,6 +11793,7 @@ var MOVE_ROUTINES = {
     },
     { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
       intensity: 'strong', level: 'advanced',
+      position: ['standing'], equipment: ['stableChair'], requiresFloor: false,
       steps: [
       { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
       { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -12986,6 +13190,7 @@ const EXTRA_ROUTINES = {
     },
     { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
       intensity: 'gentle', level: 'accessible',
+      position: ['seated'], equipment: [], requiresFloor: false,
       desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
       steps: [
       { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
@@ -13207,6 +13412,7 @@ const EXTRA_ROUTINES = {
     },
     { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
       intensity: 'moderate', level: 'intermediate',
+      position: ['floor'], equipment: [], requiresFloor: true,
       desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
       steps: [
       { name: 'Rana', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
@@ -13217,6 +13423,7 @@ const EXTRA_ROUTINES = {
     },
     { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
       intensity: 'strong', level: 'advanced',
+      position: ['standing', 'floor'], equipment: ['wall'], requiresFloor: true,
       desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
       steps: [
       { name: 'Zancada profunda', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
@@ -13298,6 +13505,7 @@ const EXTRA_ROUTINES = {
     },
     { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
       intensity: 'moderate', level: 'intermediate',
+      position: ['floor', 'standing'], equipment: ['bar'], requiresFloor: true,
       desc: 'Gateo, suspensión y sentadilla profunda. Suelo y barra firme.', min: 5, access: 'premium',
       steps: [
       { name: 'Sentadilla profunda sostenida', dur: 60, cue: 'Talones abajo, relaja.' },
@@ -20767,12 +20975,25 @@ function PaceApp() {
     }
   };
 
-  const handleStartMove = (routine) => {
+  /* Preview antes de empezar (§18.3 · s144). Estos dos handlers son la puerta
+     de la BIBLIOTECA — los Caminos montan el runner por su cuenta en
+     `PathBodyStep` —, así que interceptar aquí deja el preview fuera del Camino
+     POR CONSTRUCCIÓN, que es lo que se decidió: dentro de un Camino la rutina
+     ya viene elegida y el ritmo manda. La biblioteca se queda ABIERTA detrás:
+     cerrar el preview te devuelve a ella, no a la home. */
+  const [previewRoutine, setPreviewRoutine] = useState(null);
+  const lanzarDesdePreview = () => {
+    const p = previewRoutine;
+    setPreviewRoutine(null);
+    if (!p) return;
     setOpenLibrary(null);
-    setView({ type: 'move-session', routine });
+    setView({ type: 'move-session', routine: p.routine, kind: p.kind });
+  };
+
+  const handleStartMove = (routine) => {
+    setPreviewRoutine({ routine, kind: 'move' });
   };
   const handleStartExtra = (routine) => {
-    setOpenLibrary(null);
     /* Reutiliza MoveSession pero marca kind='extra' para que la completion
        dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
        EXCEPCION s138 — las rutinas propias: desde que la seccion "Tus rutinas"
@@ -20787,7 +21008,7 @@ function PaceApp() {
        la decision s93. Consecuencia visible y aceptada: la sesion se pinta con
        el acento de Mueve aunque hayas entrado por Estira. */
     const esPropia = typeof routine.id === 'string' && routine.id.indexOf('custom.') === 0;
-    setView({ type: 'move-session', routine, kind: esPropia ? 'move' : 'extra' });
+    setPreviewRoutine({ routine, kind: esPropia ? 'move' : 'extra' });
   };
 
   const handleFocusFinish = () => {
@@ -20956,6 +21177,17 @@ function PaceApp() {
       routine: safetyRoutine,
       onAccept: (r) => {setSafetyRoutine(null);setView({ type: 'breathe-session', routine: r });},
       onCancel: () => setSafetyRoutine(null) }
+    ),
+
+
+
+
+    previewRoutine && typeof RoutinePreview === 'function' && /*#__PURE__*/
+    React.createElement(RoutinePreview, {
+      routine: previewRoutine.routine,
+      kind: previewRoutine.kind,
+      onStart: lanzarDesdePreview,
+      onClose: () => setPreviewRoutine(null) }
     ),
 
 

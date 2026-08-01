@@ -91,6 +91,7 @@ const EXTRA_ROUTINES = {
         ]},
       { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
         intensity: 'gentle', level: 'accessible',
+        position: ['seated'], equipment: [], requiresFloor: false,
         desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
         steps: [
           { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
@@ -312,6 +313,7 @@ const EXTRA_ROUTINES = {
         ]},
       { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
         intensity: 'moderate', level: 'intermediate',
+        position: ['floor'], equipment: [], requiresFloor: true,
         desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
         steps: [
           { name: 'Rana', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
@@ -322,6 +324,7 @@ const EXTRA_ROUTINES = {
         ]},
       { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
         intensity: 'strong', level: 'advanced',
+        position: ['standing', 'floor'], equipment: ['wall'], requiresFloor: true,
         desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
         steps: [
           { name: 'Zancada profunda', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
@@ -403,6 +406,7 @@ const EXTRA_ROUTINES = {
         ]},
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
         intensity: 'moderate', level: 'intermediate',
+        position: ['floor', 'standing'], equipment: ['bar'], requiresFloor: true,
         desc: 'Gateo, suspensión y sentadilla profunda. Suelo y barra firme.', min: 5, access: 'premium',
         steps: [
           { name: 'Sentadilla profunda sostenida', dur: 60, cue: 'Talones abajo, relaja.' },

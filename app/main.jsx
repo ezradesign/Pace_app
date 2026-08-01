@@ -125,12 +125,25 @@ function PaceApp() {
     }
   };
 
-  const handleStartMove = (routine) => {
+  /* Preview antes de empezar (§18.3 · s144). Estos dos handlers son la puerta
+     de la BIBLIOTECA — los Caminos montan el runner por su cuenta en
+     `PathBodyStep` —, así que interceptar aquí deja el preview fuera del Camino
+     POR CONSTRUCCIÓN, que es lo que se decidió: dentro de un Camino la rutina
+     ya viene elegida y el ritmo manda. La biblioteca se queda ABIERTA detrás:
+     cerrar el preview te devuelve a ella, no a la home. */
+  const [previewRoutine, setPreviewRoutine] = useState(null);
+  const lanzarDesdePreview = () => {
+    const p = previewRoutine;
+    setPreviewRoutine(null);
+    if (!p) return;
     setOpenLibrary(null);
-    setView({ type: 'move-session', routine });
+    setView({ type: 'move-session', routine: p.routine, kind: p.kind });
+  };
+
+  const handleStartMove = (routine) => {
+    setPreviewRoutine({ routine, kind: 'move' });
   };
   const handleStartExtra = (routine) => {
-    setOpenLibrary(null);
     /* Reutiliza MoveSession pero marca kind='extra' para que la completion
        dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).
        EXCEPCION s138 — las rutinas propias: desde que la seccion "Tus rutinas"
@@ -145,7 +158,7 @@ function PaceApp() {
        la decision s93. Consecuencia visible y aceptada: la sesion se pinta con
        el acento de Mueve aunque hayas entrado por Estira. */
     const esPropia = typeof routine.id === 'string' && routine.id.indexOf('custom.') === 0;
-    setView({ type: 'move-session', routine, kind: esPropia ? 'move' : 'extra' });
+    setPreviewRoutine({ routine, kind: esPropia ? 'move' : 'extra' });
   };
 
   const handleFocusFinish = () => {
@@ -314,6 +327,17 @@ function PaceApp() {
           routine={safetyRoutine}
           onAccept={(r) => { setSafetyRoutine(null); setView({ type: 'breathe-session', routine: r }); }}
           onCancel={() => setSafetyRoutine(null)}
+        />
+      )}
+
+      {/* Preview §18.3 (s144). Va DESPUÉS de la biblioteca en el árbol para
+          quedar por encima, igual que el modal de seguridad de Respira. */}
+      {previewRoutine && typeof RoutinePreview === 'function' && (
+        <RoutinePreview
+          routine={previewRoutine.routine}
+          kind={previewRoutine.kind}
+          onStart={lanzarDesdePreview}
+          onClose={() => setPreviewRoutine(null)}
         />
       )}
 

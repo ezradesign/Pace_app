@@ -194,6 +194,10 @@ El bloque del feedback beta. La más importante.
 > 9 intermedias · **2 avanzadas**), visibles en la tarjeta y **sin mezclar los dos ejes**. Dos
 > hallazgos: `advanced` **no existía** en los datos, y **«no recomendar avanzado por defecto» no
 > tiene consumidor** — nace con el recomendador de la Fase 3.5.
+> **s144 · ítem 6 entregado**: **Preview «antes de empezar»** entre la tarjeta y la sesión (qué
+> necesitas · posición · duración · intensidad · pasos con glifo), solo desde la biblioteca. Las
+> 28 rutinas declaran ya sus requisitos. **Desbloquea la reescritura editorial**: los requisitos
+> salen de la descripción, que era el motivo de que 16 de 28 sonaran a lista de la compra.
 > **Sigue pendiente: ola B**, los 20 dibujos — **EN PAUSA hasta que llegue el arte**.
 
 **Arrancó por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes

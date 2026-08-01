@@ -134,6 +134,30 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.level.intermediate':          'Intermedio',
     'lib.level.advanced':              'Avanzado',
 
+    /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
+       dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
+       ruedas», «Necesitas pared; barra opcional»— porque no tenian sitio. Este
+       es el sitio. */
+    'preview.tag':                     'Antes de empezar',
+    'preview.need':                    'Qué necesitas',
+    'preview.need.none':               'Nada. Solo tú y donde estás.',
+    'preview.position':                'Posición',
+    'preview.steps':                   'Los pasos',
+    'preview.start':                   'Empezar',
+    'preview.eq.stableDesk':           'Una mesa estable',
+    'preview.eq.stableChair':          'Una silla estable, sin ruedas',
+    'preview.eq.bar':                  'Una barra firme',
+    'preview.eq.wall':                 'Una pared libre',
+    'preview.eq.cushionOptional':      'Un cojín, si lo necesitas',
+    'preview.eq.deskOptional':         'Una mesa, si la necesitas',
+    'preview.eq.barOptional':          'Una barra, si la tienes',
+    'preview.eq.floor':                'Sitio para tumbarte en el suelo',
+    'preview.pos.standing':            'De pie',
+    'preview.pos.seated':              'Sentado',
+    'preview.pos.floor':               'En el suelo',
+    'preview.pos.halfKneeling':        'Media rodilla',
+    'preview.pos.supine':              'Boca arriba',
+
     // Move Session (additional)
     'move.steps':                      'Pasos',
     'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
@@ -351,6 +375,26 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.intensity.strong':            'Strong',
     'lib.level.intermediate':          'Intermediate',
     'lib.level.advanced':              'Advanced',
+
+    'preview.tag':                     'Before you start',
+    'preview.need':                    'What you need',
+    'preview.need.none':               'Nothing. Just you and wherever you are.',
+    'preview.position':                'Position',
+    'preview.steps':                   'The steps',
+    'preview.start':                   'Start',
+    'preview.eq.stableDesk':           'A stable desk',
+    'preview.eq.stableChair':          'A stable chair, no wheels',
+    'preview.eq.bar':                  'A sturdy bar',
+    'preview.eq.wall':                 'A clear wall',
+    'preview.eq.cushionOptional':      'A cushion, if you need one',
+    'preview.eq.deskOptional':         'A desk, if you need one',
+    'preview.eq.barOptional':          'A bar, if you have one',
+    'preview.eq.floor':                'Room to lie on the floor',
+    'preview.pos.standing':            'Standing',
+    'preview.pos.seated':              'Seated',
+    'preview.pos.floor':               'On the floor',
+    'preview.pos.halfKneeling':        'Half kneeling',
+    'preview.pos.supine':              'Lying face up',
 
     // Move Session (additional)
     'move.steps':                      'Steps',
