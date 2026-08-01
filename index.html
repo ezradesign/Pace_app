@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.75.0</title>
+  <title>PACE · Foco · Cuerpo — v0.76.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1580,6 +1580,17 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.extra.subtitle': 'Movilidad y estiramientos. Antídoto a la silla.',
   'lib.extra.meta': 'Afloja tensión',
 
+  /* Intensidad y nivel tecnico (§29.2 del audit). Son DOS ejes distintos y
+     no se mezclan: un ejercicio puede ser tecnicamente sencillo pero intenso,
+     o tecnicamente complejo y fisicamente suave. La intensidad la dicen
+     TODAS las rutinas; el nivel solo se ensena cuando NO es basico, para no
+     llenar de pastillas las 16 tarjetas accesibles. */
+  'lib.intensity.gentle': 'Suave',
+  'lib.intensity.moderate': 'Medio',
+  'lib.intensity.strong': 'Intenso',
+  'lib.level.intermediate': 'Intermedio',
+  'lib.level.advanced': 'Avanzado',
+
   // Move Session (additional)
   'move.steps': 'Pasos',
   'move.prepCopy': 'De pie. Sin prisa. {n} pasos.',
@@ -1791,6 +1802,12 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.extra.title': 'Stretch',
   'lib.extra.subtitle': 'Mobility and stretching. Antidote to the chair.',
   'lib.extra.meta': 'Release tension',
+
+  'lib.intensity.gentle': 'Gentle',
+  'lib.intensity.moderate': 'Moderate',
+  'lib.intensity.strong': 'Strong',
+  'lib.level.intermediate': 'Intermediate',
+  'lib.level.advanced': 'Advanced',
 
   // Move Session (additional)
   'move.steps': 'Steps',
@@ -3558,7 +3575,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.75.0';
+const PACE_VERSION = 'v0.76.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -10709,6 +10726,14 @@ function RoutineCard(_ref3) {let { routine, color, onClick } = _ref3;
   // con `mode`) — UNA sola promesa vía helper puro `estimateDuration`, con el
   // preset de descanso actual (reactivo: pace ya suscribe). El resto (Respira +
   // las 22 rutinas legacy) conserva `routine.min`. Prod nunca muestra ambos.
+  /* s143 (ola E) — los metadatos existian en los datos desde s115 y NADIE los
+     consumia. Se leen defensivamente: Respira comparte esta tarjeta y sus
+     rutinas no los declaran, asi que sin dato no se pinta nada. El nivel
+     `accessible` se omite a proposito (ver el Tag de abajo). */
+  const intensityKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ?
+  routine.intensity : null;
+  const levelKey = ['intermediate', 'advanced'].includes(routine.level) ?
+  routine.level : null;
   const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
   let durLabel = `${routine.min} min`;
   if (isV1 && typeof window.estimateDuration === 'function') {
@@ -10729,7 +10754,13 @@ function RoutineCard(_ref3) {let { routine, color, onClick } = _ref3;
 
     React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' } }, /*#__PURE__*/
     React.createElement(Tag, { color: color }, routine.tag),
-    isPremium && /*#__PURE__*/React.createElement(PremiumSeal, null)
+    isPremium && /*#__PURE__*/React.createElement(PremiumSeal, null),
+
+
+
+
+
+    levelKey && /*#__PURE__*/React.createElement(Tag, { muted: true }, t(`lib.level.${levelKey}`))
     ), /*#__PURE__*/
     React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } }, tR(`${routine.id}.name`, routine.name)), /*#__PURE__*/
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, tR(`${routine.id}.desc`, routine.desc)), /*#__PURE__*/
@@ -10738,7 +10769,9 @@ function RoutineCard(_ref3) {let { routine, color, onClick } = _ref3;
         borderTop: '1px dashed var(--line)', paddingTop: 8
       } }, /*#__PURE__*/
     React.createElement("span", { style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' } },
-    tR(`${routine.id}.code`, routine.code)
+    tR(`${routine.id}.code`, routine.code),
+    intensityKey && /*#__PURE__*/React.createElement("span", { style: { color: 'var(--line-2)' } }, " \xB7 "),
+    intensityKey && t(`lib.intensity.${intensityKey}`)
     ),
     isLocked ? /*#__PURE__*/
     React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, t('premium.soon')) : /*#__PURE__*/
@@ -11376,6 +11409,7 @@ var MOVE_ROUTINES = {
           care: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' } }]
     },
     { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
+      intensity: 'moderate', level: 'intermediate',
       steps: [
       { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
       { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -11555,6 +11589,7 @@ var MOVE_ROUTINES = {
           care: 'Elige una altura que te deje respirar tranquilo.' } }]
     },
     { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
+      intensity: 'strong', level: 'advanced',
       steps: [
       { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
       { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -11571,7 +11606,7 @@ var MOVE_ROUTINES = {
     items: [
     /* s118 (B2.3 OLA 1): migrado — control postural (chin tucks + scapular con
        retención → reps con hold) y dos movilizaciones suaves `timed` (§B). */
-    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
+    { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
       position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
@@ -11635,7 +11670,7 @@ var MOVE_ROUTINES = {
        el cue legacy «Respira.» se preserva verbatim). Gate `ready` en el 1er
        paso de suelo (Plancha), la bajada al suelo cuenta vía estimatedSeconds.
        `name` intactos → glifos sin tocar. Acceso premium SIN cambios. */
-    { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
+    { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hueco abdominal, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
       position: ['floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
       steps: [
       { name: 'Plancha', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },
@@ -12950,6 +12985,7 @@ const EXTRA_ROUTINES = {
           care: 'Muy suave. La zona del cuello es delicada.' } }]
     },
     { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
+      intensity: 'gentle', level: 'accessible',
       desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
       steps: [
       { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
@@ -13001,7 +13037,7 @@ const EXTRA_ROUTINES = {
        PARED (wall slides) o BARRA (dead hang); el resto auto (s112). `name`
        intactos. Dead hang conserva su nombre «· opcional» (glifo intacto). */
     { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
-      desc: 'Reset de hombros: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
+      desc: 'Hombros a punto: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
       position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
       { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
@@ -13170,6 +13206,7 @@ const EXTRA_ROUTINES = {
           care: 'Baja el ritmo si la lumbar se queja.' } }]
     },
     { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
+      intensity: 'moderate', level: 'intermediate',
       desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
       steps: [
       { name: 'Rana', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
@@ -13179,6 +13216,7 @@ const EXTRA_ROUTINES = {
       { name: 'Sentadilla profunda', dur: 70, cue: 'Talones abajo, relaja al fondo.' }]
     },
     { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
+      intensity: 'strong', level: 'advanced',
       desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
       steps: [
       { name: 'Zancada profunda', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
@@ -13259,7 +13297,8 @@ const EXTRA_ROUTINES = {
         instruction: { action: '3 inhalaciones profundas para cerrar.' } }]
     },
     { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
-      desc: 'Técnicas ancestrales: crawl, hang, squat profundo. Suelo y barra firme.', min: 5, access: 'premium',
+      intensity: 'moderate', level: 'intermediate',
+      desc: 'Gateo, suspensión y sentadilla profunda. Suelo y barra firme.', min: 5, access: 'premium',
       steps: [
       { name: 'Sentadilla profunda sostenida', dur: 60, cue: 'Talones abajo, relaja.' },
       { name: 'Gateo', dur: 60, cue: 'Contralateral, lento.' },

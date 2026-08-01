@@ -123,6 +123,17 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.extra.subtitle':              'Movilidad y estiramientos. Antídoto a la silla.',
     'lib.extra.meta':                  'Afloja tensión',
 
+    /* Intensidad y nivel tecnico (§29.2 del audit). Son DOS ejes distintos y
+       no se mezclan: un ejercicio puede ser tecnicamente sencillo pero intenso,
+       o tecnicamente complejo y fisicamente suave. La intensidad la dicen
+       TODAS las rutinas; el nivel solo se ensena cuando NO es basico, para no
+       llenar de pastillas las 16 tarjetas accesibles. */
+    'lib.intensity.gentle':            'Suave',
+    'lib.intensity.moderate':          'Medio',
+    'lib.intensity.strong':            'Intenso',
+    'lib.level.intermediate':          'Intermedio',
+    'lib.level.advanced':              'Avanzado',
+
     // Move Session (additional)
     'move.steps':                      'Pasos',
     'move.prepCopy':                   'De pie. Sin prisa. {n} pasos.',
@@ -334,6 +345,12 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.extra.title':                 'Stretch',
     'lib.extra.subtitle':              'Mobility and stretching. Antidote to the chair.',
     'lib.extra.meta':                  'Release tension',
+
+    'lib.intensity.gentle':            'Gentle',
+    'lib.intensity.moderate':          'Moderate',
+    'lib.intensity.strong':            'Strong',
+    'lib.level.intermediate':          'Intermediate',
+    'lib.level.advanced':              'Advanced',
 
     // Move Session (additional)
     'move.steps':                      'Steps',

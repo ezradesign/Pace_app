@@ -90,6 +90,7 @@ const EXTRA_ROUTINES = {
               care: 'Muy suave. La zona del cuello es delicada.' } },
         ]},
       { id: 'move.desk.quick', tag: 'SIT', code: 'Escritorio', name: 'Escritorio express',
+        intensity: 'gentle', level: 'accessible',
         desc: 'Sin levantarse. 6 movimientos en la silla.', min: 2,
         steps: [
           { name: 'Encogimiento de hombros', dur: 20, cue: 'Hombros arriba, luego relaja.' },
@@ -141,7 +142,7 @@ const EXTRA_ROUTINES = {
          PARED (wall slides) o BARRA (dead hang); el resto auto (s112). `name`
          intactos. Dead hang conserva su nombre «· opcional» (glifo intacto). */
       { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
-        desc: 'Reset de hombros: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
+        desc: 'Hombros a punto: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
         position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Deslizamientos en pared', mode: 'timed', dur: 50, setup: { mode: 'ready', estimatedSeconds: 15 },
@@ -310,6 +311,7 @@ const EXTRA_ROUTINES = {
               care: 'Baja el ritmo si la lumbar se queja.' } },
         ]},
       { id: 'move.hips.ground', tag: 'GRND', code: 'Suelo', name: 'Caderas · suelo',
+        intensity: 'moderate', level: 'intermediate',
         desc: 'Flujo de suelo: rana, 90/90, transiciones. Caderas libres.', min: 6, access: 'premium',
         steps: [
           { name: 'Rana', dur: 70, cue: 'Rodillas anchas, empuja cadera atrás. Mece suave.' },
@@ -319,6 +321,7 @@ const EXTRA_ROUTINES = {
           { name: 'Sentadilla profunda', dur: 70, cue: 'Talones abajo, relaja al fondo.' },
         ]},
       { id: 'move.atg.knees', tag: 'ATG', code: 'Rodillas', name: 'ATG · Rodillas a prueba',
+        intensity: 'strong', level: 'advanced',
         desc: 'Rodillas sobre los dedos, en rangos profundos. Necesitas pared y suelo.', min: 4, access: 'premium',
         steps: [
           { name: 'Zancada profunda', dur: 60, cue: 'Zancada profunda. Rodilla va por delante del pie.' },
@@ -399,7 +402,8 @@ const EXTRA_ROUTINES = {
             instruction: { action: '3 inhalaciones profundas para cerrar.' } },
         ]},
       { id: 'move.ancestral', tag: 'ANC', code: 'Ancestral', name: 'Ancestral',
-        desc: 'Técnicas ancestrales: crawl, hang, squat profundo. Suelo y barra firme.', min: 5, access: 'premium',
+        intensity: 'moderate', level: 'intermediate',
+        desc: 'Gateo, suspensión y sentadilla profunda. Suelo y barra firme.', min: 5, access: 'premium',
         steps: [
           { name: 'Sentadilla profunda sostenida', dur: 60, cue: 'Talones abajo, relaja.' },
           { name: 'Gateo', dur: 60, cue: 'Contralateral, lento.' },

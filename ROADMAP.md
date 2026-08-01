@@ -190,7 +190,11 @@ El bloque del feedback beta. La más importante.
 > **s142 · ola C entregada**: 30 nombres más ⇒ de 36 con término inglés queda **1** (`Superman`,
 > por decisión). Hallazgo: **5 de los 47 dibujos no se pintan nunca** — cuatro tapados por su
 > propio alias (`ExerciseGlyph` resuelve el alias primero) más `Nordics`, sin uso.
-> **Siguiente: ola B**, los 20 dibujos que faltan — **EN PAUSA hasta que llegue el arte**.
+> **s143 · ola E entregada**: las 28 rutinas declaran ya intensidad y nivel técnico (17 básicas ·
+> 9 intermedias · **2 avanzadas**), visibles en la tarjeta y **sin mezclar los dos ejes**. Dos
+> hallazgos: `advanced` **no existía** en los datos, y **«no recomendar avanzado por defecto» no
+> tiene consumidor** — nace con el recomendador de la Fase 3.5.
+> **Sigue pendiente: ola B**, los 20 dibujos — **EN PAUSA hasta que llegue el arte**.
 
 **Arrancó por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
 de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,
