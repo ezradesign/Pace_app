@@ -120,6 +120,14 @@ function RoutineCard({ routine, color, onClick }) {
   // con `mode`) — UNA sola promesa vía helper puro `estimateDuration`, con el
   // preset de descanso actual (reactivo: pace ya suscribe). El resto (Respira +
   // las 22 rutinas legacy) conserva `routine.min`. Prod nunca muestra ambos.
+  /* s143 (ola E) — los metadatos existian en los datos desde s115 y NADIE los
+     consumia. Se leen defensivamente: Respira comparte esta tarjeta y sus
+     rutinas no los declaran, asi que sin dato no se pinta nada. El nivel
+     `accessible` se omite a proposito (ver el Tag de abajo). */
+  const intensityKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity)
+    ? routine.intensity : null;
+  const levelKey = ['intermediate', 'advanced'].includes(routine.level)
+    ? routine.level : null;
   const isV1 = !!(routine.steps && routine.steps.some(s => s && s.mode));
   let durLabel = `${routine.min} min`;
   if (isV1 && typeof window.estimateDuration === 'function') {
@@ -141,6 +149,12 @@ function RoutineCard({ routine, color, onClick }) {
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
         <Tag color={color}>{routine.tag}</Tag>
         {isPremium && <PremiumSeal />}
+        {/* Nivel TECNICO (§29.2), eje distinto de la intensidad: se ensena solo
+            cuando NO es basico. Marcarlo en las 16 accesibles seria ruido —lo
+            normal no necesita etiqueta— y ademas apagaria la senal justo donde
+            importa, que es lo intermedio y lo avanzado. `muted` a proposito:
+            informa, no reclama. */}
+        {levelKey && <Tag muted>{t(`lib.level.${levelKey}`)}</Tag>}
       </div>
       <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{tR(`${routine.id}.name`, routine.name)}</h4>
       <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{tR(`${routine.id}.desc`, routine.desc)}</p>
@@ -150,6 +164,8 @@ function RoutineCard({ routine, color, onClick }) {
       }}>
         <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {tR(`${routine.id}.code`, routine.code)}
+          {intensityKey && <span style={{ color: 'var(--line-2)' }}> · </span>}
+          {intensityKey && t(`lib.intensity.${intensityKey}`)}
         </span>
         {isLocked ? (
           <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>

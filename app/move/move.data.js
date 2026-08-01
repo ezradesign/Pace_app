@@ -96,6 +96,7 @@ var MOVE_ROUTINES = {
               care: 'Para si la técnica se rompe. Mejor 6 buenas que 8 forzadas.' } },
         ]},
       { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
+        intensity: 'moderate', level: 'intermediate',
         steps: [
           { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -275,6 +276,7 @@ var MOVE_ROUTINES = {
               care: 'Elige una altura que te deje respirar tranquilo.' } },
         ]},
       { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
+        intensity: 'strong', level: 'advanced',
         steps: [
           { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -291,7 +293,7 @@ var MOVE_ROUTINES = {
     items: [
       /* s118 (B2.3 OLA 1): migrado — control postural (chin tucks + scapular con
          retención → reps con hold) y dos movilizaciones suaves `timed` (§B). */
-      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Chin tucks, scapular squeeze, thoracic ext.', min: 2,
+      { id: 'extra.posture.set', tag: 'POST', code: 'Postura', name: 'Postura reset', desc: 'Barbilla, omóplatos y pecho. Tres gestos contra la silla.', min: 2,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
           { name: 'Barbilla atrás', mode: 'reps', reps: 8, dur: 30,
@@ -355,7 +357,7 @@ var MOVE_ROUTINES = {
          el cue legacy «Respira.» se preserva verbatim). Gate `ready` en el 1er
          paso de suelo (Plancha), la bajada al suelo cuenta vía estimatedSeconds.
          `name` intactos → glifos sin tocar. Acceso premium SIN cambios. */
-      { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hollow, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
+      { id: 'extra.core.plank', tag: 'CORE', code: 'Core', name: 'Core · plancha', desc: 'Planchas y hueco abdominal, en el suelo. El centro que sostiene todo.', min: 4, access: 'premium',
         position: ['floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
           { name: 'Plancha', mode: 'timed', dur: 45, setup: { mode: 'ready', estimatedSeconds: 15 },

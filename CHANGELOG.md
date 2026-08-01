@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [abajo](#v0760----2026-07-31----featcontent-ola-e--nivel-e-intensidad-visibles) |
 | **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [abajo](#v0750----2026-07-31----featcontent-ola-c--el-inglés-fuera-del-español) |
-| **v0.74.0** | 2026-07-31 | feat+docs: **Fase 2 arranca — matriz §19.2 y ola A de nombres** — 3 de las 4 premisas del plan NO reproducen (65 nombres, no 92; **55 %** con inglés, no 37 %; 20 sin glifo, no ~46) · 41 de 47 glifos son una sola pose estática · 5 renombrados con migración por `VISUAL_ALIAS` | #141 | [abajo](#v0740----2026-07-31----featdocs-fase-2-arranca--matriz-192-y-ola-a-de-nombres) |
+| **v0.74.0** | 2026-07-31 | feat+docs: **Fase 2 arranca — matriz §19.2 y ola A de nombres** — 3 de las 4 premisas del plan NO reproducen (65 nombres, no 92; **55 %** con inglés, no 37 %; 20 sin glifo, no ~46) · 41 de 47 glifos son una sola pose estática · 5 renombrados con migración por `VISUAL_ALIAS` | #141 | [session-141](./docs/sessions/session-141-fase-2-auditoria.md) |
 | **v0.73.1** | 2026-07-30 | fix(ui): **banding de la atmósfera, medido en los píxeles de la página** — el grano NO ditheraba (0,314 con él / 0,318 sin él) y apilar el mismo degradado dos veces DUPLICABA el escalón (17 de 24 niveles) · una capa con alpha compuesto + grano en sRGB | #140 | [session-140](./docs/sessions/session-140-banding-atmosfera.md) |
 | **v0.73.0** | 2026-07-30 | fix+feat: **regresión de encaje de Respira + Fase 1.6** — el visual se mide contra el hueco REAL · nada de barra en actividad en curso · vela del loto · banderas con migración · botón fantasma MEDIDO · idioma «Auto» | #139 | [session-139](./docs/sessions/session-139-respira-y-ajustes.md) |
 | **v0.72.0** | 2026-07-30 | fix+feat: **Fase 1.5 · pulido visible** — desfase del punto guía MEDIDO y a 0 ms · atmósfera fuera de Caminos · constructor en Mueve **y** Estira · **loto de Respira** | #138 | [session-138](./docs/sessions/session-138-pulido-visible.md) |
@@ -336,6 +337,51 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.76.0] -- 2026-07-31 -- feat(content): ola E — nivel e intensidad visibles
+
+Sesión **#143**. Diario: [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md).
+
+La ola B sigue en pausa esperando arte, así que se ejecuta la E: consumir los metadatos que
+llevaban en los datos desde s115 **sin que nadie los mirara**.
+
+### Añadido
+
+- **Intensidad en el pie de cada tarjeta** (`CADERAS · MEDIO`): la declaran **todas** las rutinas,
+  que es lo que pide §29.2.
+- **Nivel técnico como pastilla apagada arriba, solo cuando NO es básico** (`INTERMEDIO`,
+  `AVANZADO`). Marcar las 17 accesibles sería ruido —lo normal no necesita etiqueta— y apagaría
+  la señal justo donde importa. Son **dos ejes y no se mezclan**: un ejercicio puede ser
+  técnicamente sencillo pero intenso.
+- Etiquetas i18n ES+EN (`lib.intensity.*`, `lib.level.*`). La tarjeta es compartida por las tres
+  bibliotecas, así que la lectura es defensiva: **Respira no cambia**.
+
+### Corregido
+
+- **Los datos estaban incompletos justo donde importaba**: 22 de 28 rutinas declaraban los
+  metadatos, y las 6 que no eran **exactamente las 6 legacy bloqueadas** — que contienen los dos
+  casos que §29.4 nombra por su nombre. Etiquetadas leyendo su contenido real.
+- **`advanced` no existía en los datos** (solo `accessible`/`intermediate`), así que la regla del
+  audit era inaplicable **por falta de dato, no de código**. Entra con 2 rutinas: `Piernas · a
+  una` y `ATG · Rodillas a prueba`, las que llevan `Sentadilla de cuádriceps` (ex Sissy squat) y
+  las progresiones profundas de rodilla.
+- **Cierre de la ola C en el copy de RUTINA**, que las olas A y C nunca miraron (solo renombraron
+  nombres de PASO): **3 descripciones citaban ejercicios que ya no existen** —«Chin tucks,
+  scapular squeeze», «hollow», «crawl, hang, squat profundo»—. Corregidas; **0 descripciones
+  citan ya un nombre retirado**. Lo que queda es inglés en **nombres de rutina**, que es decisión
+  de producto, no bug.
+
+### No entra, y conviene saber por qué
+
+**«No recomendar contenido avanzado por defecto» no tiene a quién aplicarse**: el BreakMenu
+recomienda ACTIVIDAD (no rutina) y los Caminos llevan la suya escrita en el paso. El primer
+recomendador real de rutinas es la **Pausa PACE de la Fase 3.5** — ahí nace esa regla, y ahora ya
+tendrá el dato para cumplirla.
+
+La **reescritura editorial** de las 28 descripciones se propuso y **el usuario la rechazó**:
+queda aparcada sin más intentos a ciegas, a la espera de su referencia de tono.
+
+---
+
 ## [v0.75.0] -- 2026-07-31 -- feat(content): ola C — el inglés fuera del español
 
 Sesión **#142**. Diario: [session-142](./docs/sessions/session-142-ola-c-nombres.md) ·
@@ -385,64 +431,3 @@ nada**: el mismo nombre se escribe con comilla simple escapada en un archivo y c
 delicados; se corrigió regenerando el objeto entero desde un mapa calculado.
 
 ---
-
-## [v0.74.0] -- 2026-07-31 -- feat+docs: Fase 2 arranca — matriz §19.2 y ola A de nombres
-
-Sesión **#141**. Diario: [session-141](./docs/sessions/session-141-fase-2-auditoria.md) ·
-Auditoría: [audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md).
-
-Arranca la **FASE 2** con su sesión de auditoría, y se ejecuta la primera ola porque salía sin
-riesgo.
-
-### Auditado
-
-- **Tres de las cuatro premisas del plan NO reproducen** contra el árbol: **65** nombres únicos y
-  no 92 · **36 de 65 = 55 %** con término inglés y no 37 % (*peor* de lo que decía) · **20 sin
-  glifo = 31 %** y no «la mitad» (*mejor*) · `level`/`intensity` están en la **rutina**, nunca en
-  el paso (22 de 28), y su falta de consumidor queda **confirmada**. El orden de la Fase 2 no
-  cambia; el reparto de esfuerzo sí.
-- **Los glifos son DOS problemas**: **20 no existen** y **15 existen sin aprobar**. Suman los 35 de
-  la deuda D-4 y encajan con su desglose exacto (11 de s91 + 9 de s92 · 15 de s84).
-- **41 de 47 glifos dibujan una sola postura estática**, sin dirección (6 con dos poses, 5 con
-  flecha, 9 con apoyo): evidencia dura de la §19.3 — el «no sé cómo hacerlo» no se arregla
-  redibujando el glifo de 44×44.
-- **`window.APPROVED` no existe en el código** (concepto de s84 que nunca se materializó) ⇒ las
-  columnas «Aprobado/Revisar/Placeholder» no se pueden derivar del árbol.
-- Un glifo huérfano real (`Nordics`); `Reset respiración` lo parecía pero es destino del alias
-  `Deep breaths`. `Descanso` es un **nombre de ejercicio con glifo** en vez de un paso `rest`.
-
-### Cambiado — ola A (5 renombrados)
-
-`Hang pasivo` → **Suspensión pasiva** · `Hang activo` → **Suspensión activa** · `Hollow hold` →
-**Hueco abdominal** · `Seated hollow` → **Hueco en silla** · `Couch stretch` → **Cuádriceps en
-pared** (paso) y **Estiramiento del sofá** (rutina). **`Superman` se queda** por decisión: es
-nombre propio legible en español y el problema reportado eran términos ilegibles.
-
-**Las parejas se renombran juntas**: dos candidatos tenían pareja con glifo, y renombrar media
-pareja deja «Suspensión activa» al lado de «Hang pasivo» en la misma biblioteca.
-
-### Hallazgo: el renombrado tiene una TERCERA pata
-
-s108 exigía `name` + glifo + i18n. Falta `localStorage`: **el constructor copia el nombre del
-ejercicio dentro de la rutina propia guardada**, así que una rutina anterior al cambio se quedaría
-sin glifo **en silencio**. Se resuelve con `VISUAL_ALIAS` (contrato s110: el nombre viejo se
-absorbe en la identidad nueva) + conservar las claves i18n viejas. Cuando la ola B dibuje los
-glifos que faltan, esas rutinas los heredan solas.
-
-### Verificado
-
-Con SW y cachés purgados: los 5 nombres nuevos resuelven, los 2 con glifo lo conservan, los 5
-viejos llegan por alias, el inglés sigue diciendo `Hollow hold`/`Passive hang`/`Couch stretch`, y
-el recuento **no se mueve** (65 nombres y 20 sin glifo antes y después) ⇒ ninguna clave caída.
-Nombres con inglés: **36 → 31**.
-
-### Añadido
-
-`scripts/audit/` (inventario · glifos · matriz): la matriz se regenera con un comando, para que no
-vuelva a haber cifras contadas a ojo. Dos errores propios corregidos en el camino, los dos
-detectados por contradicción entre dos medidas: una regex que ignoraba las claves con comillas
-dobles, y un «7» contado a ojo que eran 4.
-
----
-
-
