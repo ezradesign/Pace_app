@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [abajo](#v0770----2026-07-31----featui-preview-antes-de-empezar-183) |
 | **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [abajo](#v0760----2026-07-31----featcontent-ola-e--nivel-e-intensidad-visibles) |
-| **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [abajo](#v0750----2026-07-31----featcontent-ola-c--el-inglés-fuera-del-español) |
+| **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [session-142](./docs/sessions/session-142-ola-c-nombres.md) |
 | **v0.74.0** | 2026-07-31 | feat+docs: **Fase 2 arranca — matriz §19.2 y ola A de nombres** — 3 de las 4 premisas del plan NO reproducen (65 nombres, no 92; **55 %** con inglés, no 37 %; 20 sin glifo, no ~46) · 41 de 47 glifos son una sola pose estática · 5 renombrados con migración por `VISUAL_ALIAS` | #141 | [session-141](./docs/sessions/session-141-fase-2-auditoria.md) |
 | **v0.73.1** | 2026-07-30 | fix(ui): **banding de la atmósfera, medido en los píxeles de la página** — el grano NO ditheraba (0,314 con él / 0,318 sin él) y apilar el mismo degradado dos veces DUPLICABA el escalón (17 de 24 niveles) · una capa con alpha compuesto + grano en sRGB | #140 | [session-140](./docs/sessions/session-140-banding-atmosfera.md) |
 | **v0.73.0** | 2026-07-30 | fix+feat: **regresión de encaje de Respira + Fase 1.6** — el visual se mide contra el hueco REAL · nada de barra en actividad en curso · vela del loto · banderas con migración · botón fantasma MEDIDO · idioma «Auto» | #139 | [session-139](./docs/sessions/session-139-respira-y-ajustes.md) |
@@ -337,6 +338,42 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.77.0] -- 2026-07-31 -- feat(ui): Preview «antes de empezar» (§18.3)
+
+Sesión **#144**. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
+
+Ítem 6 de la Fase 2, elegido porque los datos **ya existían sin consumidor** (igual que en la ola
+E), el audit lo pide explícitamente y **desbloquea la reescritura editorial** aparcada en s143.
+
+### Añadido
+
+- **`RoutinePreview`**: modal entre la tarjeta y la sesión con **qué necesitas**, **posición**,
+  **duración**, **intensidad y nivel** y **los pasos con su glifo**.
+- **Sale solo desde la BIBLIOTECA, no dentro de un Camino** —ahí la rutina ya viene elegida y el
+  ritmo manda—, y sale gratis **por construcción**: se engancha en los handlers de `main.jsx`,
+  que son la puerta de la biblioteca. La biblioteca **se queda abierta detrás**: cerrar el
+  preview te devuelve a ella. Misma forma que el modal de seguridad de Respira (s90).
+- **Las series del mismo ejercicio se agrupan** (`Fondos en silla ×3`): tres veces el mismo
+  nombre seguido es ruido, no información. Solo repeticiones CONSECUTIVAS.
+- **Requisitos completados en las 6 rutinas que no los declaraban**; en dos casos el valor salía
+  de su propia descripción («Necesitas pared y suelo»). **Las 28 los declaran ya** (11 de suelo).
+
+### Por qué ahora
+
+**16 de las 28 descripciones llevaban el requisito escrito a mano** —«Silla estable y sin
+ruedas», «Necesitas pared; barra opcional», «Pasarás por el suelo»— porque no tenía dónde ir.
+Ese es el mismo síntoma que hacía sonar desiguales a las descripciones (s143), y por eso este
+ítem iba **antes** que la reescritura. Los datos estaban desde s115 en 22 de 28 rutinas, sin
+que los leyera nadie.
+
+### Corregido antes de llegar a pantalla
+
+La lista de pasos filtra los descansos, pero las claves EN son **posicionales sobre el array
+completo** (`<id>.s4.name` cuenta los descansos): usar el índice nuevo habría desplazado todos
+los nombres en inglés. Se conserva el índice original.
+
+---
+
 ## [v0.76.0] -- 2026-07-31 -- feat(content): ola E — nivel e intensidad visibles
 
 Sesión **#143**. Diario: [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md).
@@ -379,55 +416,5 @@ tendrá el dato para cumplirla.
 
 La **reescritura editorial** de las 28 descripciones se propuso y **el usuario la rechazó**:
 queda aparcada sin más intentos a ciegas, a la espera de su referencia de tono.
-
----
-
-## [v0.75.0] -- 2026-07-31 -- feat(content): ola C — el inglés fuera del español
-
-Sesión **#142**. Diario: [session-142](./docs/sessions/session-142-ola-c-nombres.md) ·
-Auditoría actualizada: [audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md) §11.
-
-La ola B (dibujar los 20 glifos que faltan) queda **en pausa**: depende del arte del usuario
-(regla D-4). Se ejecuta la ola C, que es la que más mueve la queja beta y no depende de nadie.
-
-### Cambiado
-
-- **30 nombres de ejercicio renombrados**: de **31 con término inglés a 1** (`Superman`, que se
-  mantiene por decisión: es nombre propio legible en español y lo reportado eran términos
-  ilegibles). Propuestos con la técnica real de cada ejercicio delante, no por traducción
-  automática; el usuario cambió dos: `Cossack squat` → **Sentadilla lateral** y `Sissy squat` →
-  **Sentadilla de cuádriceps**.
-- `Elevación de talones` y `Elevación de puntas` quedan como pareja simétrica —gemelo y tibial—,
-  que es lo que son.
-- **`VISUAL_ALIAS` regenerado**: 39 entradas, sin duplicados. Cada nombre viejo resuelve al nuevo,
-  que es lo que salva las rutinas propias ya guardadas (decisión s141).
-
-### Hallazgo: 5 de los 47 dibujos no se pintan NUNCA
-
-`ExerciseGlyph` resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`, o sea **el
-alias primero**. Cuatro nombres tienen alias **y** entrada propia de glifo, así que su dibujo está
-**tapado**: `Chest opener` · `Deep squat hold` · `Deep breaths` · `Dead hang · opcional`. Con
-`Nordics` (sin uso ni como destino de alias), son **5 dibujos muertos de 47**.
-
-Corrige el §2 de la auditoría, que solo contaba como huérfano lo que ningún paso usaba: **un alias
-también deja huérfano un dibujo**, y de forma menos visible. Y era urgente ahora: al renombrarlos,
-el nombre nuevo no tendría alias ⇒ resolvería a sí mismo ⇒ **su dibujo tapado se habría activado
-solo**, cambiando lo que se ve sin pedirlo. Se evitó dando al nombre nuevo el mismo destino.
-Queda pendiente la decisión de catálogo: borrar esos dibujos o quitarles el alias.
-
-### Verificado
-
-Con SW y cachés purgados: **65 nombres únicos y 20 sin glifo antes y después** (ninguna clave
-caída) · los 30 nombres viejos resuelven por alias y llegan a su glifo · los 4 tapados resuelven
-**al mismo destino que antes** · los `.js` tocados pasan `node --check` · el runner pinta
-«Encogimiento de hombros» con su glifo. Consola sin errores.
-
-### Método
-
-Script de reemplazos **con contexto** y guardarraíl de conteo, que **falló dos veces sin escribir
-nada**: el mismo nombre se escribe con comilla simple escapada en un archivo y con dobles en otro
-(`World's greatest stretch`, tercera vez que ese apóstrofo muerde), y añadir líneas a
-`VISUAL_ALIAS` creaba **claves duplicadas** —en JS gana la última— justo en los cuatro casos
-delicados; se corrigió regenerando el objeto entero desde un mapa calculado.
 
 ---

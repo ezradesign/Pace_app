@@ -97,6 +97,7 @@ var MOVE_ROUTINES = {
         ]},
       { id: 'extra.push.ladder', tag: 'PUSH', code: 'Empuje', name: 'Empuje · progresión', desc: 'Del escritorio a la pica. Empuje completo.', min: 3, access: 'premium',
         intensity: 'moderate', level: 'intermediate',
+        position: ['standing'], equipment: ['stableDesk'], requiresFloor: false,
         steps: [
           { name: 'Flexiones inclinadas', dur: 40, cue: '10 reps profundas, codos cerca del cuerpo.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },
@@ -277,6 +278,7 @@ var MOVE_ROUTINES = {
         ]},
       { id: 'extra.legs.single', tag: 'LEG', code: 'Unilateral', name: 'Piernas · a una', desc: 'Fuerza a una pierna. Equilibrio, control y una silla estable.', min: 4, access: 'premium',
         intensity: 'strong', level: 'advanced',
+        position: ['standing'], equipment: ['stableChair'], requiresFloor: false,
         steps: [
           { name: 'Sentadilla búlgara', dur: 50, cue: 'Empeine sobre la silla, baja vertical. 8 por pierna.' },
           { name: 'Descanso', dur: 20, cue: 'Respira.' },

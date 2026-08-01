@@ -52,7 +52,14 @@ const push = (modulo, groupKey, group) => {
   for (const r of (group.items || [])) {
     routines.push({
       modulo, grupo: groupKey, grupoLabel: group.label, id: r.id, nombre: r.name,
-      premium: !!r.premium, level: r.level || null, intensity: r.intensity || null,
+      /* OJO: el campo de pago es `access: 'premium'`, no un booleano `premium`
+         (s143: un recuento anterior dio «todas free» por leer el que no era). */
+      access: r.access || 'free', premium: r.access === 'premium',
+      level: r.level || null, intensity: r.intensity || null,
+      /* requisitos de §18.3 — declarados en la RUTINA, no en el paso */
+      desc: r.desc || '', min: r.min ?? null, tag: r.tag || null, code: r.code || null,
+      position: r.position || null, equipment: r.equipment || null,
+      requiresFloor: r.requiresFloor ?? null, safety: !!r.safety,
       steps: (r.steps || []).map(s => ({
         name: s.name, mode: s.mode || 'legacy', dur: s.dur ?? null, reps: s.reps ?? null,
         level: s.level || null, intensity: s.intensity || null,
