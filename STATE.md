@@ -10,11 +10,11 @@
 
 ---
 
-**Version actual:** v0.78.0 (s145 — **FASE 2.5: los logros dejan de regalarse de cuatro en cuatro**. Medido: una primera sesion de Respira a las 6:50 desbloqueaba **CUATRO logros de golpe** con sus toasts en cascada. Ahora **uno por sesion**, el resto en cola invisible. **Lo que NO cambia**: el logro se GANA al instante y se registra en `achievements`; solo se aplaza el AVISO, asi que §2.5 «progreso sin culpa» queda INTACTA. Detalle abajo.)
-**Version anterior:** v0.77.0 (s144 — **PREVIEW «ANTES DE EMPEZAR» (§18.3)**: entre la tarjeta y la sesion, con **que necesitas · posicion · duracion · intensidad · los pasos con su glifo**. Motivo medido: **16 de las 28 descripciones llevaban el requisito escrito A MANO** porque no tenia sitio — el mismo sintoma que hacia sonar desiguales a las descripciones, y por eso este item iba ANTES de reescribirlas. Sale **solo desde la BIBLIOTECA, nunca dentro de un Camino**, y eso sale gratis por construccion. Las 28 rutinas declaran ya sus requisitos. Detalle abajo.)
-**Version previa:** v0.76.0 (s143 — **FASE 2, OLA E: nivel e intensidad VISIBLES**. Los metadatos llevaban en los datos desde s115 sin que nadie los mirara. Ahora las **28 rutinas declaran los dos ejes** (17 basicas · 9 intermedias · **2 avanzadas** · 13 suaves · 12 medias · 3 intensas): intensidad en el pie de la tarjeta —la dicen TODAS— y nivel tecnico como pastilla solo cuando NO es basico. **Dos hallazgos**: `advanced` **no existia** en los datos, asi que la regla de §29.4 era inaplicable por falta de DATO; y **«no recomendar avanzado por defecto» no tiene consumidor** —el BreakMenu recomienda ACTIVIDAD y los Caminos llevan su rutina escrita—, asi que nace con la Pausa PACE de la Fase 3.5. **Cierre de la ola C en el copy de RUTINA**: 3 descripciones citaban ejercicios que ya no existen. Detalle abajo.)
+**Version actual:** v0.79.0 (s146 — **LA WEB VOLVIO A ABRIR, Y LA CURVA DE LOGROS DEJO DE DESPLOMARSE**. Un `useState` pelado en `main.jsx` rompia el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE). Y con banco de medicion propio: el dia 1 daba el **35 % de lo que da un año**, ahora el **18 %**. **AMNISTIA**: nadie pierde un logro — se ANULA la excepcion consciente a §2.5 de s136. Detalle abajo.)
+**Version anterior:** v0.78.0 (s145 — **FASE 2.5: los logros dejan de regalarse de cuatro en cuatro**. Medido: una primera sesion de Respira a las 6:50 desbloqueaba **CUATRO logros de golpe** con sus toasts en cascada. Ahora **uno por sesion**, el resto en cola invisible. **Lo que NO cambia**: el logro se GANA al instante y se registra en `achievements`; solo se aplaza el AVISO, asi que §2.5 «progreso sin culpa» queda INTACTA. Detalle abajo.)
+**Version previa:** v0.77.0 (s144 — **PREVIEW «ANTES DE EMPEZAR» (§18.3)**: entre la tarjeta y la sesion, con **que necesitas · posicion · duracion · intensidad · los pasos con su glifo**. Motivo medido: **16 de las 28 descripciones llevaban el requisito escrito A MANO** porque no tenia sitio. Sale **solo desde la BIBLIOTECA, nunca dentro de un Camino**. Las 28 rutinas declaran ya sus requisitos.)
 
-**Ultima sesion:** #145 -- 2026-08-02 - **FASE 2.5: ENTREGA ESCALONADA DE LOGROS**. Sesion de CODIGO. Bump **v0.77.0 -> v0.78.0**. **(1) La queja del usuario, medida en el codigo**: una primera sesion de Respira a las 6:50 daba **CUATRO logros de golpe** — `first.breath` (siempre) + `explore.<tipo>` (lo tienen **12 de las 20** rutinas) + `master.dawn` (antes de las 7) + `first.day` (`updateStreak` lo da con `current >= 1`) — y con el plan del dia completo entraban ademas `first.ritual` y `first.plan`; `unlockAchievement` llamaba a `showToast` en el acto, asi que salian pisandose. **(2) Decision del usuario entre tres opciones: UNO POR SESION**, cola invisible; descarto «1 por sesion y dia» (lento para quien arranca fuerte) y «todos en fila» (arregla el solape, no la sensacion de regalo). **(3) LO QUE NO CAMBIA y es lo importante**: el logro se GANA en el momento y entra en `achievements` al instante — solo se aplaza el AVISO, asi que nadie ve progreso retroceder y **§2.5 queda intacta**. El recalculo de umbrales, que SI es excepcion consciente, es otro trabajo y NO se ha tocado. **(4) Tres detalles de implementacion**: la cola se **PERSISTE** (`achievementQueue`) porque en memoria una recarga se comeria las celebraciones pendientes; `flushAchievementToast()` drena **gane o no gane** logro nuevo, o una cola de tres esperaria para siempre a un cuarto; y **el agua necesita drenaje propio** porque `addWaterGlass` acredita sin pasar por un cierre de sesion. **(5) Verificado** con estado sembrado limpio: sesion 1 gana 3 y anuncia 1 (quedan 2), sesion 2 gana 1 mas y anuncia 1 (el mas antiguo, FIFO). Diario: [session-145](./docs/sessions/session-145-logros-entrega-escalonada.md).
+**Ultima sesion:** #146 -- 2026-08-02 - **CURVA DE LOGROS + HOTFIX DE ARRANQUE**. Auditoria **y** codigo. Bump **v0.78.0 -> v0.79.0**. **(0) EL CRASH, y no era de s145**: el usuario reporto a media sesion que la app no abria. `ReferenceError: useState is not defined` en `PaceApp`. `main.jsx` aliasa los hooks A PROPOSITO (`const { useState: useStateMain, useEffect: useEffectMain } = React;`) y sus 12 llamadas usan `useStateMain`; la linea 134, entrada con el Preview de s144, usaba el **`useState` pelado** — y un destructuring con alias **NO crea ese binding**. **En `PACE.html` no rompe y en el compilado si** (el build de Etapa A envuelve cada modulo en un IIFE), asi que el `index.html` de **v0.77.0 ya lo traia**: la web llevaba **dos versiones rota**. Barrido de la clase entera sobre los 90 archivos de `app/`: **un solo caso**. Trampa propia: la 1a version del escaner dio **0 problemas** por contar la propiedad `useState:` del destructuring como declaracion. **(1) BANCO DE MEDICION NUEVO** (`scripts/audit/logros.js`): inventario estatico de los `unlockAchievement` (tres vias — literal, mapa con id calculado, y **tabla recorrida en bucle**) + **simulacion sobre los modulos de estado reales con reloj controlable**. Valido cruzado: reprodujo solo el hallazgo de s145. **(2) LO QUE MIDIO**: el dia 1 daba **11 logros = 35 % de lo que da un año entero** (31) y la semana 1 el **55 %** — la curva no subia, se desplomaba · **52 % de los implementados (36 de 69) eran de UNA SOLA VEZ**, con «primeros» 10/10 y «exploracion» 16/16 sin pedir repeticion nunca · **37 de 106 no los podia ganar NADIE** (sin detector), y **11 eran SECRETOS**, que se pintan identicos a los alcanzables · **`master.collector.full` era IMPOSIBLE por aritmetica**: pedia 100 logros existiendo 69 con detector (el §3.4 en estado puro). Lo que NO estaba roto: `IMPLEMENTED_ACHIEVEMENTS` y los detectores cuadraban exacto (69 y 69). **(3) DECISION DEL USUARIO — AMNISTIA, y es la grande**: puesto delante de las cifras eligio que **nadie pierda un logro ya concedido**, lo que **ANULA la excepcion consciente a §2.5/§2.2 aceptada en s136**. No hay excepcion, no hay perdida y no hay nada que comunicar. **Sale gratis POR CONSTRUCCION**: la unica escritura sobre `state.achievements` es el spread aditivo de `unlockAchievement` ⇒ un logro ganado no se puede retirar ni queriendo, cero codigo de migracion. **(4) LA CURVA** (alcance elegido: completa hasta el año): `explore.*` de 1 a **3 sesiones** · `first.day` de «primera sesion de la vida» a **dia con 2 actividades** · `first.plan`, que tenia la **condicion IDENTICA** a `first.ritual`, a **3 dias** · `dawn`/`dusk`/`silent.day` de 1 a **5 dias** · `long.focus` de 1 bloque a **5** · `box`/`coherent`/`rounds` de 10 a **15** · `collector.half/full` de 50/100 a **30/60** · `stats.month.focus` de 600 min/mes (caia en 6 dias) a **1200**. **(5) 23 DETECTORES IMPLEMENTADOS y 6 RETIRADOS** (los inviables; ninguno tenia detector ⇒ nadie podia tenerlos ⇒ la amnistia no se rompe): catalogo **106 -> 100**, con detector **69 -> 92**, sin detector **37 (35 %) -> 8 (8 %)** y **secretos fantasma 11 -> 0**. **(6) BUG PROPIO CAZADO POR EL BANCO**: `first.day` colgaba de `updateStreak`, que **retorna pronto si el dia ya esta marcado** ⇒ solo corria en la primera actividad de la jornada, con UNA marca en el plan, asi que la condicion de dos **no se cumplia nunca**; no se ganaba ni con un año exhaustivo. Movido a `checkPlanAchievements`. **(7) RESULTADO MEDIDO**: primera sesion 4 -> **2** · primer dia 11 -> **8** · 365 dias 31 -> **44** · **dia 1 como % del año: 35 % -> 18 %**. Verificado en la app real (no solo en el simulador): tres Box seguidas y `explore.box` salta **solo en la tercera**; amnistia probada en vivo sembrando un logro viejo con contador nuevo a 0. Diario: [session-146](./docs/sessions/session-146-curva-de-logros.md).
 
 **Sesion anterior:** #144 -- 2026-07-31 - **PREVIEW «ANTES DE EMPEZAR» (§18.3)**. Sesion de CODIGO. Bump **v0.76.0 -> v0.77.0**. Item 6 de la Fase 2, elegido porque los datos **ya existian sin consumidor** (igual que en la ola E), el audit lo pide y **desbloquea la reescritura editorial** aparcada en s143. **(1) La prueba de que faltaba el sitio**: **16 de las 28 descripciones llevan el requisito escrito A MANO** («Silla estable y sin ruedas», «Necesitas pared; barra opcional», «Pasaras por el suelo»). No es que esten mal escritas: es que el requisito no tenia donde ir. **(2) `RoutinePreview` NUEVO**: modal con que necesitas · posicion · duracion · intensidad y nivel · los pasos con su glifo · CTA. **(3) Sale SOLO desde la BIBLIOTECA, nunca dentro de un Camino** —ahi la rutina ya viene elegida y el ritmo manda—, y sale gratis **POR CONSTRUCCION**: se engancha en los handlers de `main.jsx`, que son la puerta de la biblioteca, mientras `PathBodyStep` monta el runner por su cuenta. La biblioteca **se queda abierta detras**. Misma forma que el modal de seguridad de Respira (s90). **El gate `setup:'ready'` del runner v1 NO hacia este trabajo**: es por PASO y llega cuando ya entraste. **(4) Las series del mismo ejercicio se AGRUPAN** (`Fondos en silla x3`): tres veces el mismo nombre seguido es ruido. **(5) Requisitos completados en las 6 rutinas** que no los declaraban; en dos casos el valor salia de su propia descripcion. **Las 28 los declaran ya** (11 de suelo). **(6) Bug propio cazado antes de pantalla**: las claves EN son POSICIONALES sobre el array completo (`<id>.s4.name` cuenta los descansos), asi que filtrar descansos y usar el indice nuevo habria desplazado TODOS los nombres en ingles. **(7) Hallazgo anotado y NO tocado**: la pantalla de preparacion dice «De pie. Sin prisa» tambien en rutinas SENTADAS; ahora que `position` esta en las 28 se puede derivar, y va a la ola editorial. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
 
@@ -27,8 +27,8 @@
 
 
 
-**Ultima actualizacion de este archivo:** 2026-07-31 - sesion 145 (v0.78.0; se retiro del encabezado la sesion s137, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
-**Build entregado:** `index.html` **v0.78.0** (regenerado en s145; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). El artefacto CANONICO de web/PWA lleva 7 laminas + **loto de Respira** + fuentes como ARCHIVO + precache en `sw.js` + `<link rel="manifest">`; cero data URIs. **`PACE_standalone.html` sigue en v0.71.0 A PROPOSITO** — decision s134: es un export BAJO DEMANDA y ya no se regenera en cada cierre; se restaura tras cada build. Para regenerarlo de verdad: `node build-standalone.js` y rotar a `backups/`.
+**Ultima actualizacion de este archivo:** 2026-08-02 - sesion 146 (v0.79.0; se retiro del encabezado la sesion s143, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
+**Build entregado:** `index.html` **v0.79.0** (regenerado en s146; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). **OJO**: el `index.html` publicado en s144 y s145 **no arrancaba** (`useState` pelado en `main.jsx`, corregido en s146) — verificar el cierre cargando `index.html`, no solo `PACE.html`, porque el build envuelve cada modulo en un IIFE y el fallo solo sale ahi. `PACE_standalone.html` sigue en v0.71.0 A PROPOSITO (export bajo demanda, s134).
 
 ---
 
@@ -40,9 +40,9 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.78.0** |
+| `PACE.html` | Entry point de desarrollo modular | **v0.79.0** |
 | `PACE_standalone.html` | Bundle offline autocontenido — export BAJO DEMANDA (s134), NO se regenera al cerrar | **v0.71.0** |
-| `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`) | **v0.78.0** |
+| `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`) | **v0.79.0** |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome… | **v0.56.0** |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene… | **v0.56.0** |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo +… | **NUEVO s106** |
@@ -95,7 +95,7 @@
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.73.0** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph +… | **v0.33.3** |
-| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (106 entradas) + CAT_META (7 categorias) +… | **v0.53.0** |
+| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**100** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**92**) | **v0.79.0** |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.52.0** |
@@ -103,10 +103,12 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)**… | **v0.52.0** |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.78.0** |
-| `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** |
-| `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** |
-| `app/state-achievements.jsx` | unlockAchievement (ENCOLA, no avisa) + `flushAchievementToast` + detectores + complete*Session | **v0.78.0** |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.79.0** |
+| `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.79.0** |
+| `app/state-hydrate.jsx` | addWaterGlass | **v0.79.0** |
+| `app/state-achievements.jsx` | unlockAchievement (ENCOLA, no avisa) + `flushAchievementToast` + detectores + complete*Session | **v0.79.0** |
+| `app/state-achievements.support.jsx` | Soporte sin UI de los logros: contadores generalizados (`bumpCount`/`getCount`/`contarHoy`/`contarRutina`) + los 23 detectores que faltaban (volumen, exploracion completa, efemerides, secretos de hora) | **NUEVO s146** |
+| `scripts/audit/logros.js` | Banco de medicion de la CURVA de logros: inventario estatico de `unlockAchievement` + simulacion con reloj controlable. `node scripts/audit/logros.js` | **NUEVO s146** |
 | `app/state-paths.jsx` | Caminos CRUD + stats | **v0.52.0** |
 | `app/state-settings.jsx` | setLang | **v0.27.5** |
 | `app/state-feedback.jsx` | Feedback ligero por rutina (B2.2b-2): slice `routineFeedback` + acciones | **NUEVO s116** |
@@ -115,7 +117,7 @@
 | `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** |
-| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.72.0** |
+| `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.79.0** |
 | `app/main/home-geometry.js` | Ayudante de geometría de la HOME **Desktop**: mide y publica en `:root`… | **v0.71.0** |
 | `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con reglas @media… | **v0.71.0** |
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent /… | **v0.33.2** |
@@ -144,7 +146,7 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.66.0** |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** |
-| `sw.js` | Service Worker PWA | **v0.78.0** |
+| `sw.js` | Service Worker PWA | **v0.79.0** |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd`… | **v0.67.0** |
 | `app/focus/FocusTimer.parts.jsx` | Piezas de UI del Pomodoro extraídas: `MinutesPicker` (selector de duración… | **NUEVO s124** |
@@ -300,32 +302,33 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- FASE 2.5: umbrales y recalculo (la mitad delicada)
+## Proxima sesion -- FASE 2.5: lo que queda (glifos y denominadores)
 
 > Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
 > **FASE 2**: auditoria (s141) · ola A (s141) · ola C (s142) · ola E (s143) · Preview §18.3
 > (s144). **Falta la ola B**: los 20 glifos, EN PAUSA esperando arte del usuario.
-> **FASE 2.5**: entrega escalonada HECHA (s145). Falta lo de abajo.
+> **FASE 2.5**: entrega escalonada (s145) + **curva, detectores y amnistia (s146)** HECHAS.
+> Falta lo de abajo.
 
-### 1. Subir umbrales (§15.3) y RECALCULAR — la excepcion consciente
+### 1. ~~Subir umbrales y RECALCULAR~~ — HECHO en s146, y sin excepcion
 
-La entrega escalonada quita el atracon, pero **no cambia lo facil que es ganarlos**. Queda
-la otra mitad que el usuario decidio en s136:
+La curva se subio con banco de medicion (`node scripts/audit/logros.js`): dia 1 del **35 %
+al 18 %** de lo que da un año, catalogo **106 -> 100**, con detector **69 -> 92**, secretos
+fantasma **11 -> 0**.
 
-- **Revisar condiciones al alza** (§15.3).
-- **RECALCULAR todo con las reglas nuevas**, que es **EXCEPCION CONSCIENTE a §2.5
-  «progreso sin culpa» y §2.2 «nada de perdida punitiva»**: avisada y elegida igualmente
-  en s136. Alguien puede ver que **ha perdido logros**, asi que **hay que decidir COMO se
-  le comunica** para que no parezca un bug. Esa decision de copy/UX es lo primero que
-  toca, antes de tocar umbral ninguno.
+**La «excepcion consciente a §2.5/§2.2» de s136 queda ANULADA**: el usuario eligio
+**AMNISTIA** — nadie pierde un logro ya concedido, las reglas nuevas rigen solo para lo aun
+no ganado. Sale gratis por construccion (nada borra logros). **No queda ninguna decision de
+copy/UX pendiente por este frente.**
 
-**OJO — no confundir con lo de s145**: alli lo que se aplaza es el AVISO y el logro se
-gana igual (§2.5 intacta). Aqui se retira un logro ya concedido. Son cosas distintas y la
-segunda necesita permiso explicito del usuario en el momento de implementarla.
+**Lo que si quedo anotado y NO se hizo**: los **8 logros sin detector** que sobreviven
+(`master.extra.all.week`, `master.midnight.never` y las 6 estacionales de estacion entera)
+son viables pero caros — piden seguimiento semanal o de estacion completa. Se pintan
+«Pronto», que es honesto.
 
 ### 2. Los glifos de logro — necesita arte
 
-**34 glifos para 106 logros** y hoy **toda miniatura desbloqueada pinta un `✦` fijo**
+**34 glifos para 100 logros** y hoy **toda miniatura desbloqueada pinta un `✦` fijo**
 (`Sidebar.jsx`), por eso parecen inactivas aunque la logica de «las 5 ultimas» ya
 funcione (s136). Transicion decidida: **sello por categoria** (`CAT_META`, 7 categorias)
 para los ~72 sin glifo, mas los que el usuario ya tenga dibujados, portados **literales**
@@ -337,9 +340,15 @@ para los ~72 sin glifo, mas los que el usuario ya tenga dibujados, portados **li
   los requisitos ya tienen su sitio y pueden salir de la descripcion. Pero sigue faltando
   **la referencia de tono del usuario** (rechazo la muestra de s143 en bloque). Pedirle
   dos o tres descripciones que de por buenas ANTES de escribir nada.
-- **README**: dice v0.27.6 y lleva ~90 commits sin tocarse, con la app en v0.78.0.
+- **README**: dice v0.27.6 y lleva ~90 commits sin tocarse, con la app en v0.79.0.
 - **Fase 8.5 saneamiento**: `tokens.css` 613 ln · `Sidebar.jsx` 543 · a11y (tarjetas sin
   teclado, onboarding sin focus trap) · tests del state.
+- **Denominadores unicos (§15.4)**: sidebar, modal, stats y toasts deben contar lo mismo;
+  §3.4 dice que hoy no. Es el ultimo punto de la Fase 2.5 que no depende de arte.
+- **[HALLAZGO s146, no tocado] Los titulos y descripciones de logro son SOLO espanol**,
+  tambien en la version inglesa: salen literales de `catalog.js` sin pasar por i18n (solo
+  se traducen las etiquetas de categoria y el chrome, `ach.*`). Detectado al comprobar el
+  coste de cambiar una descripcion — que por eso es de una linea. Encaja con I18N-2.
 
 ### Decisiones de catalogo abiertas (Fase 2)
 
@@ -366,6 +375,11 @@ a `MoveSessionV1.support.jsx`; `ExtraModule.jsx` ronda las 460, asi que al retom
 
 | Decision | Desde |
 |---|---|
+| **AMNISTIA: un logro concedido NO se retira nunca** — ANULA la excepcion consciente de s136 | s146 |
+| **Un hook con alias NO crea el binding pelado; el compilado no perdona lo que `PACE.html` si** | s146 |
+| **Un secreto sin detector es indistinguible de uno alcanzable: o se implementa o sale del catalogo** | s146 |
+| **Un umbral que cuenta LOGROS se mide contra el techo real de detectores** | s146 |
+| **La curva de logros se decide MIDIENDO** — banco en `scripts/audit/logros.js` | s146 |
 | **Un logro se GANA al instante; lo que se escalona es el AVISO (uno por sesion)** | s145 |
 | **El Preview de §18.3 sale desde la BIBLIOTECA, nunca dentro de un Camino** | s144 |
 | **Intensidad y nivel tecnico son DOS ejes; el nivel solo se ensena cuando NO es basico** | s143 |
@@ -511,7 +525,8 @@ a `MoveSessionV1.support.jsx`; `ExtraModule.jsx` ronda las 460, asi que al retom
 | `app/breathe/BreatheVisual.jsx` | 421 | BAJA (s139: llego a **512** con el encaje, el banding y la vela ⇒ TROCEADO a `BreatheVisual.support.jsx` (117 ln) con el patron `*.support.jsx`; queda en 421) |
 | `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
-| `app/main.jsx` | 355 | BAJA (s138: +14 ln del enrutado de credito de las rutinas propias; s82: split en main/_responsive + TopBar + ActivityBar) |
+| `app/main.jsx` | 380 | BAJA (s138: +14 ln del enrutado de credito de las rutinas propias; s82: split en main/_responsive + TopBar + ActivityBar) |
+| `app/state-achievements.jsx` | **397** | BAJA (s146: la curva nueva no cabia bajo 500 ⇒ los contadores y los 23 detectores nuevos viven en `state-achievements.support.jsx` (179 ln), patron `*.support`) |
 | `app/shell/Sidebar.jsx` | 541 | MEDIA (s101: +6 ln del criterio s69 en WeekDots; s94: re-entro; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
 | `app/tokens.css` | 613 | **MEDIA** (s105: +12 @font-face; s106: +4 del remap; es CSS global, no JSX -- candidatos naturales: extraer los @font-face (~90 ln) o el CSS del SenderoBar (~110 ln) a archivo propio cargado tras tokens) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |

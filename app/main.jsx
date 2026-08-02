@@ -131,7 +131,7 @@ function PaceApp() {
      POR CONSTRUCCIÓN, que es lo que se decidió: dentro de un Camino la rutina
      ya viene elegida y el ritmo manda. La biblioteca se queda ABIERTA detrás:
      cerrar el preview te devuelve a ella, no a la home. */
-  const [previewRoutine, setPreviewRoutine] = useState(null);
+  const [previewRoutine, setPreviewRoutine] = useStateMain(null);
   const lanzarDesdePreview = () => {
     const p = previewRoutine;
     setPreviewRoutine(null);

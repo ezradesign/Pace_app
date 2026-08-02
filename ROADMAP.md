@@ -246,12 +246,14 @@ juntos») y §15.3 («no deben desbloquearse todos juntos»).
    en la primera vez. Los primeros deben enseñar el sistema y conducir a la siguiente acción.
 3. **Entrega escalonada**: como máximo **un logro nuevo por sesión y por día**; el resto espera en
    cola. Precedente directo: los toasts de logro ya se aplazan durante un Camino (s105).
-4. **Recálculo completo con las reglas nuevas** — **decisión del usuario, EXCEPCIÓN CONSCIENTE** a
-   §2.5 («progreso sin culpa») y §2.2 («nada de pérdida punitiva de progreso»): alguien puede
-   abrir la app y ver que ha perdido logros que tenía. Se ejecuta así por decisión explícita; al
-   implementarlo hay que **decidir cómo se comunica** (aviso único que explique el recálculo) para
-   que no se lea como un bug. Contrasta con el precedente de s107, donde los ids retirados se
-   dejaron como inofensivos.
+4. ~~**Recálculo completo con las reglas nuevas** — EXCEPCIÓN CONSCIENTE a §2.5 y §2.2~~
+   **ANULADO en s146: AMNISTÍA.** Puesto delante de la decisión con las cifras medidas, el usuario
+   eligió que **nadie pierda un logro ya concedido**. Las reglas nuevas rigen solo para lo aún no
+   ganado, así que **§2.5 y §2.2 quedan intactas y no hay excepción que registrar**. Sale gratis
+   por construcción: la única escritura sobre `state.achievements` es el spread aditivo de
+   `unlockAchievement`, o sea que un logro ya ganado no se puede retirar ni queriendo — cero código
+   de migración y nada que comunicar al usuario final. Los 6 logros retirados del catálogo no
+   rompen la amnistía porque **ninguno tenía detector**: nadie podía tenerlos.
 5. **Miniaturas de la sidebar**: la lógica de «las 5 últimas sustituyendo a las antiguas» **ya
    existe** (`Sidebar.jsx:376-379` ordena por `unlockedAt` descendente y toma 5). Lo que falta es
    el glifo: hoy **toda miniatura desbloqueada pinta un `'✦'` fijo** (`Sidebar.jsx:403`), por eso

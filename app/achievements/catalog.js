@@ -27,8 +27,8 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
   { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
   { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
-  { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: '1 día de uso', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
-  { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
+  { id: 'first.day', cat: 'primeros', title: 'Primer día', desc: 'Un día con dos actividades distintas', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
+  { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día tres veces', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
   { id: 'first.return', cat: 'primeros', title: 'Regresas', desc: 'Abre la app al día siguiente', glyph: '↻' },
 
   // Constancia (11-25)
@@ -49,34 +49,33 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'morning.5', cat: 'constancia', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
 
   // Exploración (26-45)
-  { id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
-  { id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Respiración relajante', glyph: '4·7·8' },
-  { id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'HRV sincronizado', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
-  { id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Respiración en rondas', glyph: '◴', glyphSvg: GLYPH_SVG['explore.rounds'] },
-  { id: 'explore.bhastrika', cat: 'exploracion', title: 'Bhastrika', desc: 'Pranayama energizante', glyph: '※' },
-  { id: 'explore.nadi', cat: 'exploracion', title: 'Nadi Shodhana', desc: 'Respiración alternada', glyph: '∞', glyphSvg: GLYPH_SVG['explore.nadi'] },
-  { id: 'explore.ujjayi', cat: 'exploracion', title: 'Ujjayi', desc: 'Oceánica', glyph: '≈' },
-  { id: 'explore.kapalabhati', cat: 'exploracion', title: 'Kapalabhati', desc: 'Kriya del cráneo', glyph: '✦' },
-  { id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Reset rápido', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
-  { id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: '5 pasos caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
-  { id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: '5 pasos hombros', glyph: '⌢' },
-  { id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Rodillas en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
-  { id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Crawl, hang, squat', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
-  { id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: '3 min cuello', glyph: '~' },
-  { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Sin levantarse', glyph: '⊡' },
+  { id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
+  { id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Tres sesiones de la relajante', glyph: '4·7·8' },
+  { id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'Tres sesiones de coherencia', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
+  { id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Tres sesiones en rondas', glyph: '◴', glyphSvg: GLYPH_SVG['explore.rounds'] },
+  { id: 'explore.bhastrika', cat: 'exploracion', title: 'Bhastrika', desc: 'Tres sesiones del pranayama energizante', glyph: '※' },
+  { id: 'explore.nadi', cat: 'exploracion', title: 'Nadi Shodhana', desc: 'Tres sesiones de alternada', glyph: '∞', glyphSvg: GLYPH_SVG['explore.nadi'] },
+  { id: 'explore.ujjayi', cat: 'exploracion', title: 'Ujjayi', desc: 'Tres sesiones de oceánica', glyph: '≈' },
+  { id: 'explore.kapalabhati', cat: 'exploracion', title: 'Kapalabhati', desc: 'Tres sesiones del kriya', glyph: '✦' },
+  { id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Tres suspiros fisiológicos', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
+  { id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: 'Tres sesiones de caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
+  { id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: 'Tres sesiones de hombros', glyph: '⌢' },
+  { id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Tres sesiones en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
+  { id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Tres sesiones ancestrales', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
+  { id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: 'Tres sesiones de cuello', glyph: '~' },
+  { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Tres sesiones sin levantarse', glyph: '⊡' },
   { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
   { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
   { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
-  { id: 'explore.chrome', cat: 'exploracion', title: 'Pestaña abierta', desc: 'Extensión Chrome instalada', glyph: '◩' },
   { id: 'explore.tweaks', cat: 'exploracion', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙' },
 
   // Maestría (46-70) - placeholders
   { id: 'master.pomodoro.8', cat: 'maestria', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
   { id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 Pomodoros', glyph: 'XII' },
-  { id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: '45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
-  { id: 'master.box.10', cat: 'maestria', title: 'Caja maestra', desc: '10 sesiones Box', glyph: '▣' },
-  { id: 'master.coherent.10', cat: 'maestria', title: 'Corazón sincronizado', desc: '10 sesiones coherente', glyph: '♥' },
-  { id: 'master.rounds.10', cat: 'maestria', title: 'Rondas maestra', desc: '10 sesiones', glyph: '◶' },
+  { id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de 45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
+  { id: 'master.box.10', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
+  { id: 'master.coherent.10', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
+  { id: 'master.rounds.10', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
   { id: 'master.atg.20', cat: 'maestria', title: 'Rodillas de acero', desc: '20 sesiones ATG', glyph: '△' },
   { id: 'master.hips.20', cat: 'maestria', title: 'Caderas libres', desc: '20 sesiones caderas', glyph: '◇' },
   { id: 'master.shoulders.20', cat: 'maestria', title: 'Hombros libres', desc: '20 sesiones hombros', glyph: '⌢' },
@@ -84,9 +83,9 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.hydrate.30', cat: 'maestria', title: 'Río constante', desc: '30 días 8 vasos', glyph: '≈' },
   { id: 'master.hydrate.90', cat: 'maestria', title: 'Manantial', desc: '90 días 8 vasos', glyph: '∿' },
   { id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todos los Extra en 1 semana', glyph: '✧' },
-  { id: 'master.silent.day', cat: 'maestria', title: 'Día silencioso', desc: '1 día modo silencio', glyph: '𝇇' },
-  { id: 'master.dawn', cat: 'maestria', title: 'Amanecer', desc: 'Sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
-  { id: 'master.dusk', cat: 'maestria', title: 'Ocaso', desc: 'Sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
+  { id: 'master.silent.day', cat: 'maestria', title: 'Día silencioso', desc: '5 días en modo silencio', glyph: '𝇇' },
+  { id: 'master.dawn', cat: 'maestria', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
+  { id: 'master.dusk', cat: 'maestria', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
   { id: 'master.midnight.never', cat: 'maestria', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
   { id: 'master.focus.day', cat: 'maestria', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
   { id: 'master.retreat', cat: 'maestria', title: 'Retiro personal', desc: '2h respira + mueve en día', glyph: '❖', glyphSvg: GLYPH_SVG['master.retreat'] },
@@ -94,22 +93,17 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
   { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
   { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
-  { id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '50 logros', glyph: 'L' },
-  { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '100 logros', glyph: 'C' },
+  { id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '30 logros', glyph: 'L' },
+  { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '60 logros', glyph: 'C' },
   { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
 
   // Secretos (71-90)
   { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
-  { id: 'secret.konami', cat: 'secretos', title: 'Código oculto', desc: '↑↑↓↓←→←→BA', glyph: '?', secret: true },
   { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
   { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
   { id: 'secret.rain', cat: 'secretos', title: 'Lluvia mental', desc: '3 respiraciones seguidas', glyph: '?', secret: true },
-  { id: 'secret.pause.long', cat: 'secretos', title: 'Pausa larga perfecta', desc: '3 Pomodoros + pausa larga', glyph: '?', secret: true },
-  { id: 'secret.skip.none', cat: 'secretos', title: 'Sin saltarse', desc: 'Semana sin saltar pausas', glyph: '?', secret: true },
   { id: 'secret.first.monday', cat: 'secretos', title: 'Primer lunes', desc: 'Primer lunes del mes', glyph: '?', secret: true },
   { id: 'secret.new.year', cat: 'secretos', title: 'Año nuevo', desc: '1 de enero', glyph: '?', secret: true },
-  { id: 'secret.birthday', cat: 'secretos', title: 'Regalo', desc: 'Tu cumpleaños', glyph: '?', secret: true },
-  { id: 'secret.tweak.all', cat: 'secretos', title: 'Explorador de estilo', desc: 'Prueba cada tweak', glyph: '?', secret: true },
   { id: 'secret.dark.mode', cat: 'secretos', title: 'Modo oscuro', desc: '7 días en oscuro', glyph: '?', secret: true },
   { id: 'secret.aged', cat: 'secretos', title: 'Papel envejecido', desc: 'Paleta envejecida', glyph: '?', secret: true },
   { id: 'secret.mono', cat: 'secretos', title: 'Editorial mono', desc: 'Tipografía mono', glyph: '?', secret: true },
@@ -132,7 +126,7 @@ const ACHIEVEMENT_CATALOG = [
 
   // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
   { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
-  { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Diez horas de foco en un mes', glyph: '✦' },
+  { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
   { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
   { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Un mes seguido sin perder el ritmo', glyph: '✦' },
 
@@ -202,14 +196,33 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',
-  // Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
+  // Secretos — los secretos con trigger se siguen pintando como secretos.
   // Sesión 17: +5 tweak-secrets (aged, dark.mode, mono, seal, illustrated).
   // B1: fuera los 3 breath.hold (apnea); entran bilingual/backup/safety.read.
+  // s146: entran los 6 que se implementan; los 5 que no tenían forma razonable
+  // de detectarse (konami, birthday, skip.none, tweak.all, pause.long) SALEN
+  // del catálogo. Motivo medido: un secreto sin detector se pinta EXACTAMENTE
+  // igual que uno alcanzable, así que 11 de los 21 eran decoración
+  // indistinguible. Tras este cambio, todos los secretos del catálogo se
+  // pueden descubrir.
   'secret.cow.click', 'secret.bilingual',
   'secret.backup', 'secret.safety.read',
   'secret.supporter',
   'secret.aged', 'secret.dark.mode', 'secret.mono',
   'secret.seal', 'secret.illustrated',
+  'secret.night.owl', 'secret.lunch', 'secret.zen',
+  'secret.first.monday', 'secret.new.year', 'secret.rain',
+  // s146 — maestrías que estaban en el catálogo SIN detector (nadie podía
+  // ganarlas). Cuelgan de contadores nuevos en state-achievements.support.
+  'master.pomodoro.12', 'master.centurion', 'master.marathon',
+  'master.gardener', 'master.hips.20', 'master.shoulders.20',
+  'master.ancestral.10', 'master.antidote',
+  'master.hydrate.30', 'master.hydrate.90',
+  // s146 — exploración completa por módulo
+  'explore.all.breathe', 'explore.all.move', 'explore.all.extra',
+  // s146 — efemérides de fecha civil (el logro celebra el día, no el instante)
+  'season.solstice.summer', 'season.solstice.winter',
+  'season.equinox.spring', 'season.equinox.autumn',
 ]);
 
 Object.assign(window, { ACHIEVEMENT_CATALOG, CAT_META, IMPLEMENTED_ACHIEVEMENTS });
