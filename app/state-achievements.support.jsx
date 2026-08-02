@@ -22,6 +22,43 @@
    ---------------------------------------------------------------------------
 */
 
+/* ---------------------------------------------------------------------------
+   IDS QUE YA NO DECIAN LA VERDAD (s146b)
+   ---------------------------------------------------------------------------
+   `master.box.10` pasó a pedir 15 y el id seguía diciendo 10. El id es la clave
+   de persistencia, así que renombrarlo a secas BORRA el logro de quien lo
+   tuviera: desaparece de la colección porque la UI solo pinta lo que está en el
+   catálogo. Se renombra Y se migra, y así la amnistía sigue intacta sin tener
+   que avisar a nadie.
+
+   Corre AQUI y no en `loadState` a propósito: `state-core` ya está por encima
+   de las 500 líneas, y esto es asunto de logros. El módulo carga después de
+   state-core, así que el store ya existe. Idempotente: si el id viejo no está,
+   no hace nada. */
+const LOGRO_RENOMBRADO = {
+  'master.box.10':      'master.box.15',
+  'master.coherent.10': 'master.coherent.15',
+  'master.rounds.10':   'master.rounds.15',
+};
+
+function migrarIdsDeLogro() {
+  const s = getState();
+  const antes = s.achievements || {};
+  const next = { ...antes };
+  let cambia = false;
+  for (const [viejo, nuevo] of Object.entries(LOGRO_RENOMBRADO)) {
+    if (!next[viejo]) continue;
+    if (!next[nuevo]) next[nuevo] = next[viejo];   // conserva su unlockedAt
+    delete next[viejo];
+    cambia = true;
+  }
+  if (!cambia) return;
+  setState({
+    achievements: next,
+    achievementQueue: (s.achievementQueue || []).map(id => LOGRO_RENOMBRADO[id] || id),
+  });
+}
+
 /* Cuantas veces hay que repetir algo para que deje de ser «lo probe una vez».
    Tres es el numero: una es azar, dos es repetir, tres ya es habito naciente.
    §15.3 pide «repeticion significativa» para lo avanzado y que los primeros
@@ -53,11 +90,65 @@ function contarHoy(campo) {
   return n;
 }
 
+/* ---------------------------------------------------------------------------
+   A QUE MODULO PERTENECE CADA LOGRO (s146b)
+   ---------------------------------------------------------------------------
+   El problema, reportado por el usuario y reproducido: al acabar una sesion de
+   4·7·8 el aviso decia «Primer estiron». La cola de s145 es FIFO y drena gane o
+   no gane algo nuevo, asi que **el aviso hablaba siempre de la actividad
+   ANTERIOR** — y el logro que si habias ganado respirando se quedaba dentro.
+
+   Regla: **un logro DE MODULO solo se anuncia en una sesion de ese modulo.**
+   Los que no son de modulo (rachas, horas del dia, hitos de coleccion,
+   efemerides) valen en cualquier sesion: no prometen relacion con lo que
+   acabas de hacer, asi que no pueden contradecirla.
+
+   Se declara por PREFIJO y con las excepciones a mano, no por categoria del
+   catalogo: `first.breath` y `master.centurion` son de Respira aunque vivan en
+   categorias distintas, y `explore.hips` es de Estira pese a llamarse `move.*`
+   en los datos (el cruce historico de s15). */
+const LOGRO_MODULO = {
+  breathe: ['first.breath', 'breathe.sessions.10', 'breathe.sessions.50',
+    'master.centurion', 'master.box.15', 'master.coherent.15', 'master.rounds.15',
+    'explore.box', 'explore.478', 'explore.coherent', 'explore.rounds',
+    'explore.bhastrika', 'explore.nadi', 'explore.ujjayi', 'explore.kapalabhati',
+    'explore.physiological', 'explore.all.breathe', 'secret.rain', 'secret.zen'],
+  move: ['first.stretch', 'move.sessions.25', 'explore.all.extra'],
+  extra: ['first.extra', 'explore.hips', 'explore.shoulders', 'explore.atg',
+    'explore.ancestral', 'explore.neck', 'explore.desk', 'explore.all.move',
+    'master.atg.20', 'master.hips.20', 'master.shoulders.20',
+    'master.ancestral.10', 'master.antidote'],
+  focus: ['first.step', 'focus.hours.10', 'focus.hours.50', 'focus.hours.100',
+    'master.pomodoro.8', 'master.pomodoro.12', 'master.long.focus',
+    'master.focus.day', 'stats.month.focus'],
+  hydrate: ['first.sip', 'hydrate.week.perfect', 'master.hydrate.30',
+    'master.hydrate.90', 'master.gardener'],
+};
+
+/* id -> modulo, invertido una sola vez */
+const MODULO_DE_LOGRO = {};
+for (const [mod, ids] of Object.entries(LOGRO_MODULO)) {
+  for (const id of ids) MODULO_DE_LOGRO[id] = mod;
+}
+
+/* ¿Se puede anunciar `id` al cerrar una sesion de `modulo`? Sin modulo
+   declarado, el logro es transversal y vale siempre. */
+function encajaEnSesion(id, modulo) {
+  const suyo = MODULO_DE_LOGRO[id];
+  return !suyo || suyo === modulo;
+}
+
 /* Cuenta una rutina concreta: su id (para «todas las de Mueve») y su etiqueta
    (para `master.antidote`, 50 sesiones SIT). La etiqueta hay que ir a buscarla
    al catalogo porque las acciones de sesion solo reciben el id. */
 function contarRutina(routineId) {
   if (!routineId) return;
+  /* Las rutinas PROPIAS llevan id `custom.<Date.now()>`, o sea uno distinto por
+     rutina creada y para siempre. Contarlas metia una clave nueva en
+     `routineCounts` cada vez —crecimiento SIN TECHO dentro de localStorage— y
+     encima no servia para nada: `explore.all.extra` se mide contra el catalogo
+     de Mueve, donde una rutina propia no esta. Ni cuentan ni deben. */
+  if (routineId.indexOf('custom.') === 0) return;
   bumpCount('rutina.' + routineId);
   const buscar = [window.getMoveRoutine, window.getExtraRoutine];
   for (const fn of buscar) {
@@ -170,7 +261,12 @@ function checkMaestriasDeVolumen() {
   if (getCount('tag.SIT') >= 50) unlockAchievement('master.antidote');
 }
 
+/* Una sola vez, al cargar: los ids viejos se llevan su logro al nombre nuevo. */
+migrarIdsDeLogro();
+
 Object.assign(window, {
+  LOGRO_RENOMBRADO, migrarIdsDeLogro,
+  MODULO_DE_LOGRO, encajaEnSesion,
   EXPLORE_REPS, bumpCount, getCount, contarHoy, contarRutina, minutosDeVida,
   EXPLORE_BREATHE, EXPLORE_CUERPO,
   checkExploreCompleto, checkFechasSenaladas, checkSecretosDeHora, checkZen,

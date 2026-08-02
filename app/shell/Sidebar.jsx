@@ -120,7 +120,12 @@ function Sidebar() {
   const collapsed = !!state.sidebarCollapsed;
   const unlockedCount = Object.keys(state.achievements || {}).length;
   /* B1: total real del catalogo (106), no el 100 hardcodeado de s12. */
-  const totalAchievements = (window.ACHIEVEMENT_CATALOG || []).length || 100;
+  /* §15.4 · denominador ÚNICO, compartido con el modal (`catalog.js`). Antes
+     esto era `ACHIEVEMENT_CATALOG.length` y contaba los que NO tienen detector:
+     la sidebar dividía entre 96 y el modal entre 88, y el «por descubrir»
+     prometía 8 que nadie puede ganar. */
+  const totalAchievements = window.ACHIEVEMENTS_AVAILABLE
+    || (window.ACHIEVEMENT_CATALOG || []).length;
   const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
@@ -369,6 +374,28 @@ function WeekDots({ weeklyStats, compact }) {
   );
 }
 
+/* Miniatura de un logro desbloqueado (s146). Antes las cinco pintaban un `✦`
+   FIJO: cambiaban de color pero se veian identicas, y por eso parecian
+   inactivas. Reutiliza `renderGlyph` de Achievements —la misma funcion, no una
+   copia— asi que un glifo nuevo entra en las dos superficies a la vez. Sin SVG
+   propio cae al caracter del catalogo (`☾`, `III`, `VII`...), que ya distingue.
+   Lectura defensiva: Achievements.jsx carga DESPUES que este archivo. */
+function achMini(id) {
+  const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === id);
+  if (!a) return { title: id, nodo: '✦' };
+  const dibuja = window.renderGlyph;
+  /* Cada rama quiere un estilo distinto. Al SVG se le da TAMAÑO (escala solo).
+     Al CARACTER no: `renderGlyph` lo devuelve en un span SIN grid, así que un
+     width/height lo convierte en una caja con la letra pegada arriba a la
+     izquierda — se veía diminuta y descolocada. Lo que necesita es cuerpo de
+     letra; centrarlo ya lo hace el `placeItems:center` del botón. */
+  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '2em' };
+  return {
+    title: a.secret ? '?' : a.title,
+    nodo: dibuja ? dibuja(a, estilo) : (a.glyph || '✦'),
+  };
+}
+
 function AchievementsPreview({ onOpen }) {
   const [state] = usePace();
   const { t } = useT(); // sesión 37 hotfix v0.19.1: faltaba tras migración i18n
@@ -398,9 +425,9 @@ function AchievementsPreview({ onOpen }) {
               cursor: 'pointer',
               transition: 'all 180ms',
             }}
-            title={id || t('ach.seal.discover')}
+            title={(id && achMini(id).title) || t('ach.seal.discover')}
           >
-            {id ? '✦' : '·'}
+            {id ? achMini(id).nodo : '·'}
           </button>
         );
       })}

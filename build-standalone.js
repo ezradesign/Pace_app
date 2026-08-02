@@ -399,6 +399,7 @@ function main() {
   var CARPETAS_DE_ARTE = [
     { prefijo: 'app/paths/illustrations/assets/', que: 'lamina(s) de Caminos' },
     { prefijo: 'app/breathe/assets/',             que: 'arte de Respira' },
+    { prefijo: 'app/glyphs/assets/logros/',        que: 'glifo(s) de logro' },
   ];
   function inlineIllustrations(src) {
     var out = src;

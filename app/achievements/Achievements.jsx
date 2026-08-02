@@ -16,6 +16,25 @@ const IMPLEMENTED_ACHIEVEMENTS = window.IMPLEMENTED_ACHIEVEMENTS || new Set();
    via dangerouslySetInnerHTML. Fallback: glyph unicode en italic. El wrapper hereda
    currentColor del contenedor padre, así el mismo SVG funciona en cualquier paleta. */
 function renderGlyph(a, style) {
+  /* s146 — el arte del usuario entra como MÁSCARA y GANA al SVG heráldico, para
+     que la tanda pueda llegar por partes sin dejar huecos: lo que aún no tiene
+     dibujo sigue con el sistema viejo. `currentColor` de fondo es lo que
+     conserva el tintado por estado, igual que en la rama SVG. */
+  const mask = window.achievementMaskUrl && window.achievementMaskUrl(a.id);
+  if (mask) {
+    const url = `url("${mask}")`;
+    return (
+      <span style={{
+        display: 'block', width: '100%', height: '100%',
+        backgroundColor: 'currentColor',
+        WebkitMaskImage: url, maskImage: url,
+        WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center', maskPosition: 'center',
+        WebkitMaskSize: 'contain', maskSize: 'contain',
+        ...style,
+      }} />
+    );
+  }
   if (a.glyphSvg) {
     return (
       <span
@@ -27,6 +46,8 @@ function renderGlyph(a, style) {
   return <span style={{ fontStyle: 'italic', ...style }}>{a.glyph}</span>;
 }
 
+/* §15.4: la regla vive en catalog.js y la comparten sidebar y modal. Se
+   conserva el nombre local para no tocar los tres puntos de uso. */
 function isImplemented(a) {
   // Los secretos siempre se pintan como secretos (revelen o no).
   // El estado "Pronto" es para logros visibles no-secretos sin trigger.
@@ -40,7 +61,8 @@ function Achievements({ open, onClose }) {
   const unlockedCount = Object.keys(unlocked).length;
   // Clasificación sesión 15: disponibles = con trigger hoy; próximamente = sin trigger.
   // Los secretos se cuentan como disponibles (su mecánica es "intriga", no "pronto").
-  const availableCount = ACHIEVEMENT_CATALOG.filter(isImplemented).length;
+  const availableCount = window.ACHIEVEMENTS_AVAILABLE
+    || ACHIEVEMENT_CATALOG.filter(isImplemented).length;
   const comingSoonCount = ACHIEVEMENT_CATALOG.length - availableCount;
 
   return (
@@ -181,4 +203,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
   );
 }
 
-Object.assign(window, { Achievements });
+/* `renderGlyph` sale a window (s146) para que la MINIATURA del sidebar pinte el
+   glifo real en vez de un `✦` fijo. Es la misma funcion, no una copia: si un
+   glifo cambia, cambian las dos superficies a la vez. */
+Object.assign(window, { Achievements, renderGlyph });
