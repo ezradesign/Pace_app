@@ -124,14 +124,45 @@ function checkRetreatAchievement() {
   if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
 }
 
+/* ENTREGA ESCALONADA (s145 · Fase 2.5) — decisión del usuario: **uno por
+   sesión**, el resto en cola invisible.
+
+   EL PROBLEMA, MEDIDO: una primera sesión de Respira a las 6:50 desbloqueaba
+   CUATRO logros de golpe, con sus cuatro toasts en cascada — `first.breath`
+   (siempre) + `explore.<tipo>` (lo tienen 12 de las 20 rutinas) + `master.dawn`
+   (antes de las 7) + `first.day` (`updateStreak` lo da con `current >= 1`). Con
+   el plan del día completo entraban además `first.ritual` y `first.plan`. Es
+   literalmente el «con hacer media cosa ya consigues 4 logros seguidos» que
+   reportó el usuario.
+
+   LO QUE NO CAMBIA: el logro se GANA en el momento y queda registrado en
+   `achievements` al instante. Solo se aplaza el AVISO. Nada se pierde, nadie
+   ve progreso retroceder — la regla §2.5 «progreso sin culpa» queda intacta.
+
+   La cola se PERSISTE (`achievementQueue`) porque si viviera en memoria, una
+   recarga se comería las celebraciones pendientes: el logro seguiría ahí, pero
+   nunca se anunciaría. Se drena en los cierres de sesión, UNO por vez.
+   Precedente: los toasts aplazados durante un Camino (s105). */
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
   setState({
-    achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } }
+    achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } },
+    achievementQueue: [...(s.achievementQueue || []), id],
   });
-  showToast({ id, type: 'achievement' });
   checkCollectorAchievements();
+  return true;
+}
+
+/* Saca UNO de la cola y lo celebra. Se llama al cerrar una sesión, gane o no
+   gane un logro nuevo: si no drenara también sin desbloqueos, una cola de tres
+   se quedaría esperando para siempre a que hubiera un cuarto. */
+function flushAchievementToast() {
+  const q = getState().achievementQueue || [];
+  if (!q.length) return false;
+  const [siguiente, ...resto] = q;
+  setState({ achievementQueue: resto });
+  showToast({ id: siguiente, type: 'achievement' });
   return true;
 }
 
@@ -200,6 +231,7 @@ function completeBreathSession(routineId, durationMin) {
     checkRoutineCountAchievements(breathCat);
   }
   updateStreak();
+  flushAchievementToast();
 }
 
 function completeMoveSession(routineId, durationMin) {
@@ -220,6 +252,7 @@ function completeMoveSession(routineId, durationMin) {
   checkRetreatAchievement();
   checkSilentDayAchievement();
   updateStreak();
+  flushAchievementToast();
 }
 
 function completeExtraSession(routineId, durationMin) {
@@ -255,10 +288,12 @@ function completeExtraSession(routineId, durationMin) {
     checkRoutineCountAchievements('atg');
   }
   updateStreak();
+  flushAchievementToast();
 }
 
 Object.assign(window, {
   unlockAchievement,
+  flushAchievementToast,
   completeBreathSession,
   completeMoveSession,
   completeExtraSession,
