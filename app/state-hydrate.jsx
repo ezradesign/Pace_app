@@ -47,6 +47,10 @@ function addWaterGlass(delta) {
         checkHydrateWeekPerfect();
       }
     }
+    /* s145: el vaso de agua es la única acción que acredita SIN pasar por un
+       cierre de sesión, así que drena aquí su propia cola. Sin esto, quien solo
+       bebe agua no vería nunca lo que se ha ganado. */
+    flushAchievementToast();
   }
 }
 

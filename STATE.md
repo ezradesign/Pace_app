@@ -10,11 +10,13 @@
 
 ---
 
-**Version actual:** v0.77.0 (s144 — **PREVIEW «ANTES DE EMPEZAR» (§18.3)**: entre la tarjeta y la sesion, con **que necesitas · posicion · duracion · intensidad · los pasos con su glifo**. Motivo medido: **16 de las 28 descripciones llevaban el requisito escrito A MANO** porque no tenia sitio — el mismo sintoma que hacia sonar desiguales a las descripciones, y por eso este item iba ANTES de reescribirlas. Sale **solo desde la BIBLIOTECA, nunca dentro de un Camino**, y eso sale gratis por construccion. Las 28 rutinas declaran ya sus requisitos. Detalle abajo.)
-**Version anterior:** v0.76.0 (s143 — **FASE 2, OLA E: nivel e intensidad VISIBLES**. Los metadatos llevaban en los datos desde s115 sin que nadie los mirara. Ahora las **28 rutinas declaran los dos ejes** (17 basicas · 9 intermedias · **2 avanzadas** · 13 suaves · 12 medias · 3 intensas): intensidad en el pie de la tarjeta —la dicen TODAS— y nivel tecnico como pastilla solo cuando NO es basico. **Dos hallazgos**: `advanced` **no existia** en los datos, asi que la regla de §29.4 era inaplicable por falta de DATO; y **«no recomendar avanzado por defecto» no tiene consumidor** —el BreakMenu recomienda ACTIVIDAD y los Caminos llevan su rutina escrita—, asi que nace con la Pausa PACE de la Fase 3.5. **Cierre de la ola C en el copy de RUTINA**: 3 descripciones citaban ejercicios que ya no existen. Detalle abajo.)
-**Version previa:** v0.75.0 (s142 — **ola C: el ingles fuera del espanol**. 30 nombres renombrados, de 31 con termino ingles a UNO. Hallazgo: **5 de los 47 dibujos NO se pintan nunca** — cuatro tapados por su propio alias.)
+**Version actual:** v0.78.0 (s145 — **FASE 2.5: los logros dejan de regalarse de cuatro en cuatro**. Medido: una primera sesion de Respira a las 6:50 desbloqueaba **CUATRO logros de golpe** con sus toasts en cascada. Ahora **uno por sesion**, el resto en cola invisible. **Lo que NO cambia**: el logro se GANA al instante y se registra en `achievements`; solo se aplaza el AVISO, asi que §2.5 «progreso sin culpa» queda INTACTA. Detalle abajo.)
+**Version anterior:** v0.77.0 (s144 — **PREVIEW «ANTES DE EMPEZAR» (§18.3)**: entre la tarjeta y la sesion, con **que necesitas · posicion · duracion · intensidad · los pasos con su glifo**. Motivo medido: **16 de las 28 descripciones llevaban el requisito escrito A MANO** porque no tenia sitio — el mismo sintoma que hacia sonar desiguales a las descripciones, y por eso este item iba ANTES de reescribirlas. Sale **solo desde la BIBLIOTECA, nunca dentro de un Camino**, y eso sale gratis por construccion. Las 28 rutinas declaran ya sus requisitos. Detalle abajo.)
+**Version previa:** v0.76.0 (s143 — **FASE 2, OLA E: nivel e intensidad VISIBLES**. Los metadatos llevaban en los datos desde s115 sin que nadie los mirara. Ahora las **28 rutinas declaran los dos ejes** (17 basicas · 9 intermedias · **2 avanzadas** · 13 suaves · 12 medias · 3 intensas): intensidad en el pie de la tarjeta —la dicen TODAS— y nivel tecnico como pastilla solo cuando NO es basico. **Dos hallazgos**: `advanced` **no existia** en los datos, asi que la regla de §29.4 era inaplicable por falta de DATO; y **«no recomendar avanzado por defecto» no tiene consumidor** —el BreakMenu recomienda ACTIVIDAD y los Caminos llevan su rutina escrita—, asi que nace con la Pausa PACE de la Fase 3.5. **Cierre de la ola C en el copy de RUTINA**: 3 descripciones citaban ejercicios que ya no existen. Detalle abajo.)
 
-**Ultima sesion:** #144 -- 2026-07-31 - **PREVIEW «ANTES DE EMPEZAR» (§18.3)**. Sesion de CODIGO. Bump **v0.76.0 -> v0.77.0**. Item 6 de la Fase 2, elegido porque los datos **ya existian sin consumidor** (igual que en la ola E), el audit lo pide y **desbloquea la reescritura editorial** aparcada en s143. **(1) La prueba de que faltaba el sitio**: **16 de las 28 descripciones llevan el requisito escrito A MANO** («Silla estable y sin ruedas», «Necesitas pared; barra opcional», «Pasaras por el suelo»). No es que esten mal escritas: es que el requisito no tenia donde ir. **(2) `RoutinePreview` NUEVO**: modal con que necesitas · posicion · duracion · intensidad y nivel · los pasos con su glifo · CTA. **(3) Sale SOLO desde la BIBLIOTECA, nunca dentro de un Camino** —ahi la rutina ya viene elegida y el ritmo manda—, y sale gratis **POR CONSTRUCCION**: se engancha en los handlers de `main.jsx`, que son la puerta de la biblioteca, mientras `PathBodyStep` monta el runner por su cuenta. La biblioteca **se queda abierta detras**. Misma forma que el modal de seguridad de Respira (s90). **El gate `setup:'ready'` del runner v1 NO hacia este trabajo**: es por PASO y llega cuando ya entraste. **(4) Las series del mismo ejercicio se AGRUPAN** (`Fondos en silla x3`): tres veces el mismo nombre seguido es ruido. **(5) Requisitos completados en las 6 rutinas** que no los declaraban; en dos casos el valor salia de su propia descripcion. **Las 28 los declaran ya** (11 de suelo). **(6) Bug propio cazado antes de pantalla**: las claves EN son POSICIONALES sobre el array completo (`<id>.s4.name` cuenta los descansos), asi que filtrar descansos y usar el indice nuevo habria desplazado TODOS los nombres en ingles. **(7) Hallazgo anotado y NO tocado**: la pantalla de preparacion dice «De pie. Sin prisa» tambien en rutinas SENTADAS; ahora que `position` esta en las 28 se puede derivar, y va a la ola editorial. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
+**Ultima sesion:** #145 -- 2026-08-02 - **FASE 2.5: ENTREGA ESCALONADA DE LOGROS**. Sesion de CODIGO. Bump **v0.77.0 -> v0.78.0**. **(1) La queja del usuario, medida en el codigo**: una primera sesion de Respira a las 6:50 daba **CUATRO logros de golpe** — `first.breath` (siempre) + `explore.<tipo>` (lo tienen **12 de las 20** rutinas) + `master.dawn` (antes de las 7) + `first.day` (`updateStreak` lo da con `current >= 1`) — y con el plan del dia completo entraban ademas `first.ritual` y `first.plan`; `unlockAchievement` llamaba a `showToast` en el acto, asi que salian pisandose. **(2) Decision del usuario entre tres opciones: UNO POR SESION**, cola invisible; descarto «1 por sesion y dia» (lento para quien arranca fuerte) y «todos en fila» (arregla el solape, no la sensacion de regalo). **(3) LO QUE NO CAMBIA y es lo importante**: el logro se GANA en el momento y entra en `achievements` al instante — solo se aplaza el AVISO, asi que nadie ve progreso retroceder y **§2.5 queda intacta**. El recalculo de umbrales, que SI es excepcion consciente, es otro trabajo y NO se ha tocado. **(4) Tres detalles de implementacion**: la cola se **PERSISTE** (`achievementQueue`) porque en memoria una recarga se comeria las celebraciones pendientes; `flushAchievementToast()` drena **gane o no gane** logro nuevo, o una cola de tres esperaria para siempre a un cuarto; y **el agua necesita drenaje propio** porque `addWaterGlass` acredita sin pasar por un cierre de sesion. **(5) Verificado** con estado sembrado limpio: sesion 1 gana 3 y anuncia 1 (quedan 2), sesion 2 gana 1 mas y anuncia 1 (el mas antiguo, FIFO). Diario: [session-145](./docs/sessions/session-145-logros-entrega-escalonada.md).
+
+**Sesion anterior:** #144 -- 2026-07-31 - **PREVIEW «ANTES DE EMPEZAR» (§18.3)**. Sesion de CODIGO. Bump **v0.76.0 -> v0.77.0**. Item 6 de la Fase 2, elegido porque los datos **ya existian sin consumidor** (igual que en la ola E), el audit lo pide y **desbloquea la reescritura editorial** aparcada en s143. **(1) La prueba de que faltaba el sitio**: **16 de las 28 descripciones llevan el requisito escrito A MANO** («Silla estable y sin ruedas», «Necesitas pared; barra opcional», «Pasaras por el suelo»). No es que esten mal escritas: es que el requisito no tenia donde ir. **(2) `RoutinePreview` NUEVO**: modal con que necesitas · posicion · duracion · intensidad y nivel · los pasos con su glifo · CTA. **(3) Sale SOLO desde la BIBLIOTECA, nunca dentro de un Camino** —ahi la rutina ya viene elegida y el ritmo manda—, y sale gratis **POR CONSTRUCCION**: se engancha en los handlers de `main.jsx`, que son la puerta de la biblioteca, mientras `PathBodyStep` monta el runner por su cuenta. La biblioteca **se queda abierta detras**. Misma forma que el modal de seguridad de Respira (s90). **El gate `setup:'ready'` del runner v1 NO hacia este trabajo**: es por PASO y llega cuando ya entraste. **(4) Las series del mismo ejercicio se AGRUPAN** (`Fondos en silla x3`): tres veces el mismo nombre seguido es ruido. **(5) Requisitos completados en las 6 rutinas** que no los declaraban; en dos casos el valor salia de su propia descripcion. **Las 28 los declaran ya** (11 de suelo). **(6) Bug propio cazado antes de pantalla**: las claves EN son POSICIONALES sobre el array completo (`<id>.s4.name` cuenta los descansos), asi que filtrar descansos y usar el indice nuevo habria desplazado TODOS los nombres en ingles. **(7) Hallazgo anotado y NO tocado**: la pantalla de preparacion dice «De pie. Sin prisa» tambien en rutinas SENTADAS; ahora que `position` esta en las 28 se puede derivar, y va a la ola editorial. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
 
 **Sesion anterior:** #143 -- 2026-07-31 - **FASE 2, OLA E: NIVEL E INTENSIDAD VISIBLES**. Sesion de CODIGO. Bump **v0.75.0 -> v0.76.0**. **(1) Los metadatos existian desde s115 y NADIE los consumia**; ahora la tarjeta compartida los pinta: **intensidad en el pie** junto al codigo (`CADERAS · MEDIO`), que la declaran TODAS las rutinas, y **nivel tecnico como pastilla apagada arriba SOLO cuando no es basico** — etiquetar las 17 accesibles seria ruido y apagaria la senal justo donde importa. Son **dos ejes que no se mezclan** (§29.2): un ejercicio puede ser tecnicamente sencillo pero intenso. Lectura DEFENSIVA porque la tarjeta la comparten las tres bibliotecas: **Respira no cambia**. **(2) Los datos estaban incompletos justo donde importaba**: 22 de 28 declaraban, y las 6 que no eran **exactamente las 6 legacy bloqueadas** de s121 — que contienen los dos casos que §29.4 nombra por su nombre. Etiquetadas leyendo su contenido real. **(3) `advanced` NO EXISTIA en los datos** (solo `accessible`/`intermediate`): la regla del audit era inaplicable **por falta de dato, no de codigo**. Entra con 2 rutinas: `Piernas · a una` y `ATG · Rodillas a prueba`. **(4) «No recomendar avanzado por defecto» NO TIENE CONSUMIDOR**: el BreakMenu recomienda ACTIVIDAD (no rutina) y los Caminos llevan la suya escrita en el paso; el primer recomendador real es la **Pausa PACE de la Fase 3.5**, que ya tendra el dato. **(5) Cierre de la ola C en el copy de RUTINA** —lo vio el usuario a ojo y se confirmo midiendo—: las olas A y C solo renombraron nombres de PASO, asi que **3 descripciones citaban ejercicios que ya no existen** («Chin tucks, scapular squeeze», «hollow», «crawl, hang, squat profundo»). Corregidas: **0 descripciones citan ya un nombre retirado**. Queda ingles en 5 NOMBRES de rutina (`Grip`, `Core` x2, `reset`, `ATG`), que es decision de producto. **(6) La reescritura editorial de las 28 descripciones se propuso y el usuario la RECHAZO**: aparcada sin mas intentos a ciegas, a la espera de que el de su referencia de tono. **(7) Trampa propia**: la primera verificacion busco «Suave» y dio 0 porque el CSS lo pinta en MAYUSCULAS; y `MEDIO` es subcadena de `INTERMEDIO`. No fallaba el codigo, fallaba la comprobacion. Diario: [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md).
 
@@ -22,13 +24,11 @@
 
 **Sesion anterior:** #141 -- 2026-07-31 - **FASE 2 ARRANCA: MATRIZ §19.2 + OLA A DE NOMBRES**. Auditoria **y** codigo. Bump **v0.73.1 -> v0.74.0**. **(1) Tres de las cuatro premisas del plan NO reproducen** contra el arbol, y una apunta a un problema MAYOR: **65** nombres unicos de paso y no 92 (117 pasos con nombre; ni sumando modulos por separado y duplicando los 9 compartidos sale 92) · **36 de 65 = 55 %** llevan termino ingles, no el 37 % declarado (**PEOR**) · **20 sin glifo = 31 %**, no «la mitad» (**mejor**: el bloque de dibujo es un tercio mas pequeno de lo previsto) · `level`/`intensity` estan en la **RUTINA**, nunca en el paso (22 de 28), y su falta de consumidor UI queda **confirmada**. **El orden de la Fase 2 no cambia** —sigue siendo el frente correcto—, pero el reparto de esfuerzo si. **(2) Los glifos son DOS problemas**, no una bolsa: **20 NO EXISTEN** (hay que dibujarlos) y **15 EXISTEN SIN APROBAR** (los que el usuario llama flojos). Suman los 35 de la deuda D-4 y encajan con su desglose exacto (11 de s91 + 9 de s92 · 15 de s84). **(3) 41 de 47 glifos dibujan UNA SOLA POSTURA ESTATICA** sin direccion (6 con dos poses, 5 con flecha, 9 con apoyo): evidencia dura de la §19.3 — el «no se como hacerlo» no se arregla redibujando el glifo de 44x44, sino anadiendo el segundo nivel visual. **(4) `window.APPROVED` NO EXISTE en el codigo**: concepto de las decisiones de s84 que nunca se materializo ⇒ las columnas «Aprobado/Revisar/Placeholder» de la §19.2 **no se pueden derivar del arbol**; la matriz usa la version anotada en el comentario de cada glifo (28 de 47 la llevan). **(5) OLA A EJECUTADA** — 5 renombrados: `Hang pasivo`→**Suspension pasiva** · `Hang activo`→**Suspension activa** · `Hollow hold`→**Hueco abdominal** · `Seated hollow`→**Hueco en silla** · `Couch stretch`→**Cuadriceps en pared** (paso) y **Estiramiento del sofa** (rutina). **`Superman` se queda** por decision: es nombre propio legible en espanol y lo que reportaron los beta testers eran terminos ILEGIBLES (`Chin tucks`, `Dead hang`). **Las parejas se renombran juntas**: dos candidatos tenian pareja CON glifo, y renombrar media pareja deja «Suspension activa» junto a «Hang pasivo» en la misma biblioteca. **(6) HALLAZGO: el renombrado tiene una TERCERA pata**. s108 exigia `name` + glifo + i18n; falta **`localStorage`**, porque el constructor **COPIA el nombre** del ejercicio dentro de la rutina propia guardada (`state-custom.jsx`) y una rutina anterior al cambio se quedaria sin glifo EN SILENCIO. Se resuelve con la pieza que ya existia, **`VISUAL_ALIAS`** (contrato s110: el nombre viejo se absorbe en la identidad nueva) + conservar las claves i18n viejas; cuando la ola B dibuje los glifos que faltan, esas rutinas los **heredan solas**. **(7) Verificado** con SW y caches purgados: los 5 nombres nuevos resuelven, los 2 que tenian glifo lo conservan, los 5 viejos llegan por alias, el ingles sigue diciendo `Hollow hold`/`Passive hang`/`Couch stretch` (se retira el ingles DEL ESPANOL, no la traduccion) y el recuento **no se mueve** (65 nombres y 20 sin glifo antes y despues) ⇒ ninguna clave caida. Ingles: **36 -> 31** (55 % -> 48 %). **(8) Dos errores propios corregidos**, los dos detectados por CONTRADICCION entre dos medidas: una regex que ignoraba las claves con comillas dobles (`"World's greatest stretch"` salia como inexistente) y un «7» contado A OJO que eran 4. El renombrado se hizo con guardarrail de conteo esperado: fallo a la primera y **no escribio nada** hasta cuadrar. Auditoria: [audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md) · Diario: [session-141](./docs/sessions/session-141-fase-2-auditoria.md).
 
-**Sesion anterior:** #140 -- 2026-07-30 - **EL BANDING DE LA ATMOSFERA, CERRADO**. Sesion de CODIGO, un solo frente. Bump **v0.73.0 -> v0.73.1**. **(1) Por que no salia en tres intentos**: s100, s138 y s139 midieron el tile de ruido rasterizandolo en un `canvas` — medida real de la PIEZA EQUIVOCADA, porque no dice que hace el compositor con ella sobre un degradado ya rasterizado. El encargo de esta sesion era medir los PIXELES DE LA PAGINA y ahi aparecen las dos causas. **(2) El grano NO dithera, solo tapa**: la escalera mide igual con grano (**0,314**) que sin el (**0,318**) — cuando el grano se compone encima, el degradado YA esta redondeado a 8 bits, y un dither tiene que entrar ANTES de la cuantizacion. Corolario: **anadir paradas no sirve** (el numero de escalones lo fija el COLOR, no la forma de la rampa) y `baseFrequency` tampoco, o sea que lo ajustado en s100 y s138 actuaba sobre una variable que no gobierna el fenomeno. Y como enmascarador tampoco llegaba: sigma **0,678** contra un escalon de **1,41**. **(3) Apilar el mismo degradado dos veces DUPLICA el escalon**: los dos redondeos caen en los MISMOS radios y se suman. Medido sin depender de la geometria, contando que niveles enteros existen de verdad: **17 de 24** (siete niveles del recorrido no llegaban a existir) contra **22 de 23** con una capa del color ya compuesto. Ahi estaba por que la atmosfera era la peor de las tres superficies — no por repartir la rampa entre mas pixeles, como supuso s139, sino porque **su escalon valia el doble**. **(4) Arreglo en dos mitades y el orden importa** (primero partir el escalon, luego tapar lo que queda): **alpha compuesto en UNA capa** —`1−(1−a)² = a·(2−a)` pedido con **sintaxis de color relativo sobre el propio token**, asi que cada modulo y cada paleta conservan su alpha (Foco 0,10 · Respira 0,12 · oscuro 0,14) y **no se sube ningun alpha de tinte**, regla s100 intacta; con caida via `CSS.supports`— y **grano que si tapa** (`color-interpolation-filters='sRGB'` + alpha CONSTANTE + curva estirada: sigma **0,678 -> 1,22**). **Ratio sigma/escalon: 0,48 -> 1,16**, que es el numero que decide. **(5) De propina**: el doble redondeo sesgaba el wash hasta **1 nivel mas oscuro** que el color pedido, y el grano viejo **desaturaba el papel** (desvio desigual −1,79 rojo / −0,93 azul) y en oscuro lo **aclaraba un 14 %** (+4,2 niveles sobre un papel de 29); ahora el desvio es parejo (±1,5). **(6) Verificado** en las tres paletas y con los seis tokens de modulo, con el contraste estirado x10 y x20 (el «antes» ensena los arcos con borde duro; el «despues», ninguno) y **confirmado en vivo por el usuario en su PC**. **(7) Banco de medicion reutilizable y sus tres trampas**: CDP directo contra Chromium headless (Node 24 trae `WebSocket` global) + `sharp`, ambos ya en el toolchain; corregidas antes de concluir **promediar por columnas rectas** cuando las bandas son ARCOS (daba sigma 8,3 que era variacion lateral), medir mesetas **en el tramo plano por diseno** (0–12 %) y **codigo stale** (dos tandas con cifras identicas hasta el ultimo decimal, por una instancia superviviente del navegador cuyo SW servia lo precacheado) => puerto nuevo por tanda, `Network.setBypassServiceWorker` y **centinela** de huella del codigo vivo. **(8) Decision del usuario en sesion: el aro de Respira SE QUEDA** — se anula el pendiente de s139 de quitarlo y subir el loto. Diario: [session-140](./docs/sessions/session-140-banding-atmosfera.md).
 
 
 
-
-**Ultima actualizacion de este archivo:** 2026-07-31 - sesion 144 (v0.77.0; se retiro del encabezado la sesion s137, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
-**Build entregado:** `index.html` **v0.77.0** (regenerado en s144; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). El artefacto CANONICO de web/PWA lleva 7 laminas + **loto de Respira** + fuentes como ARCHIVO + precache en `sw.js` + `<link rel="manifest">`; cero data URIs. **`PACE_standalone.html` sigue en v0.71.0 A PROPOSITO** — decision s134: es un export BAJO DEMANDA y ya no se regenera en cada cierre; se restaura tras cada build. Para regenerarlo de verdad: `node build-standalone.js` y rotar a `backups/`.
+**Ultima actualizacion de este archivo:** 2026-07-31 - sesion 145 (v0.78.0; se retiro del encabezado la sesion s137, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
+**Build entregado:** `index.html` **v0.78.0** (regenerado en s145; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). El artefacto CANONICO de web/PWA lleva 7 laminas + **loto de Respira** + fuentes como ARCHIVO + precache en `sw.js` + `<link rel="manifest">`; cero data URIs. **`PACE_standalone.html` sigue en v0.71.0 A PROPOSITO** — decision s134: es un export BAJO DEMANDA y ya no se regenera en cada cierre; se restaura tras cada build. Para regenerarlo de verdad: `node build-standalone.js` y rotar a `backups/`.
 
 ---
 
@@ -40,9 +40,9 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.77.0** |
+| `PACE.html` | Entry point de desarrollo modular | **v0.78.0** |
 | `PACE_standalone.html` | Bundle offline autocontenido — export BAJO DEMANDA (s134), NO se regenera al cerrar | **v0.71.0** |
-| `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`) | **v0.77.0** |
+| `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`) | **v0.78.0** |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome… | **v0.56.0** |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene… | **v0.56.0** |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo +… | **NUEVO s106** |
@@ -103,10 +103,10 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)**… | **v0.52.0** |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.77.0** |
+| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.78.0** |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.41.0** |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.46.0** |
-| `app/state-achievements.jsx` | unlockAchievement, detectores, complete*Session | **v0.32.0** |
+| `app/state-achievements.jsx` | unlockAchievement (ENCOLA, no avisa) + `flushAchievementToast` + detectores + complete*Session | **v0.78.0** |
 | `app/state-paths.jsx` | Caminos CRUD + stats | **v0.52.0** |
 | `app/state-settings.jsx` | setLang | **v0.27.5** |
 | `app/state-feedback.jsx` | Feedback ligero por rutina (B2.2b-2): slice `routineFeedback` + acciones | **NUEVO s116** |
@@ -144,7 +144,7 @@
 | `app/paths/SuggestedPathCard.jsx` | Tarjeta sugerida home | **v0.66.0** |
 | `app/paths/PathsLibrary.jsx` | Overlay biblioteca de caminos | **v0.44.0** |
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** |
-| `sw.js` | Service Worker PWA | **v0.77.0** |
+| `sw.js` | Service Worker PWA | **v0.78.0** |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd`… | **v0.67.0** |
 | `app/focus/FocusTimer.parts.jsx` | Piezas de UI del Pomodoro extraídas: `MinutesPicker` (selector de duración… | **NUEVO s124** |
@@ -300,65 +300,62 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- FASE 2: la OLA B sigue esperando arte (item 6 HECHO en s144)
+## Proxima sesion -- FASE 2.5: umbrales y recalculo (la mitad delicada)
 
-> Orden de trabajo vigente: seccion «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
-> **FASE 2 EN CURSO**: auditoria (s141) · **ola A** 5 nombres (s141) · **ola C** 30 nombres (s142) ·
-> **ola E** nivel e intensidad (s143). De 36 nombres con ingles queda **1** (`Superman`, por
-> decision) y las 28 rutinas declaran ya los dos ejes.
+> Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
+> **FASE 2**: auditoria (s141) · ola A (s141) · ola C (s142) · ola E (s143) · Preview §18.3
+> (s144). **Falta la ola B**: los 20 glifos, EN PAUSA esperando arte del usuario.
+> **FASE 2.5**: entrega escalonada HECHA (s145). Falta lo de abajo.
 
-### OLA B — los 20 glifos que faltan · EN PAUSA, espera arte del usuario
+### 1. Subir umbrales (§15.3) y RECALCULAR — la excepcion consciente
 
-Es lo unico que queda de la Fase 2 con peso, y **no avanza sin el**: los glifos que dibuje o
-apruebe se portan **LITERALES** (regla s84). La lista con zona corporal y rutina esta en la matriz
-§19.2 de [audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md).
+La entrega escalonada quita el atracon, pero **no cambia lo facil que es ganarlos**. Queda
+la otra mitad que el usuario decidio en s136:
 
-**OJO a los nombres**: 5 de esos 20 cambiaron en las olas A y C, asi que la clave del glifo nuevo
-es el nombre de HOY (`Suspension activa`, `Hueco abdominal`, `Cuadriceps en pared`…), no el de la
-lista original.
+- **Revisar condiciones al alza** (§15.3).
+- **RECALCULAR todo con las reglas nuevas**, que es **EXCEPCION CONSCIENTE a §2.5
+  «progreso sin culpa» y §2.2 «nada de perdida punitiva»**: avisada y elegida igualmente
+  en s136. Alguien puede ver que **ha perdido logros**, asi que **hay que decidir COMO se
+  le comunica** para que no parezca un bug. Esa decision de copy/UX es lo primero que
+  toca, antes de tocar umbral ninguno.
 
-**No confundir con los 15 «flojos»**: esos SI existen y lo que necesitan es que el usuario cierre
-su iteracion. Dos trabajos distintos (hallazgo de s141).
+**OJO — no confundir con lo de s145**: alli lo que se aplaza es el AVISO y el logro se
+gana igual (§2.5 intacta). Aqui se retira un logro ya concedido. Son cosas distintas y la
+segunda necesita permiso explicito del usuario en el momento de implementarla.
 
-### Aparcado a proposito: la reescritura editorial de las 28 descripciones
+### 2. Los glifos de logro — necesita arte
 
-Se propuso una muestra de 3 y **el usuario la rechazo en bloque**. **No servir otra ronda a
-ciegas**: lo que hace falta primero es SU referencia —dos o tres descripciones actuales que de por
-buenas— para derivar el patron en vez de proponerlo.
+**34 glifos para 106 logros** y hoy **toda miniatura desbloqueada pinta un `✦` fijo**
+(`Sidebar.jsx`), por eso parecen inactivas aunque la logica de «las 5 ultimas» ya
+funcione (s136). Transicion decidida: **sello por categoria** (`CAT_META`, 7 categorias)
+para los ~72 sin glifo, mas los que el usuario ya tenga dibujados, portados **literales**
+(regla s84).
 
-Y un argumento que conviene recordar al retomarlo: hoy las descripciones hacen **tres trabajos
-mezclados** —prometer una sensacion, enumerar contenido y declarar requisitos— y **§29.3 dice que
-los requisitos deben verse ANTES de empezar**, cuyo sitio es el **Preview de §18.3** (item 6 de la
-Fase 2, sin hacer). Reescribirlas antes de decidir eso es escribir dos veces.
+### 3. Sin depender de nadie, si se quiere avanzar ya
 
-### Sin depender de nadie, si se quiere avanzar ya
+- **Reescritura editorial de las 28 descripciones**: el Preview de s144 la DESBLOQUEO —
+  los requisitos ya tienen su sitio y pueden salir de la descripcion. Pero sigue faltando
+  **la referencia de tono del usuario** (rechazo la muestra de s143 en bloque). Pedirle
+  dos o tres descripciones que de por buenas ANTES de escribir nada.
+- **README**: dice v0.27.6 y lleva ~90 commits sin tocarse, con la app en v0.78.0.
+- **Fase 8.5 saneamiento**: `tokens.css` 613 ln · `Sidebar.jsx` 543 · a11y (tarjetas sin
+  teclado, onboarding sin focus trap) · tests del state.
 
-- **Item 6 (Preview §18.3) HECHO en s144.** Y con el **se desbloquea la reescritura editorial**: los requisitos ya tienen su sitio, asi que sacarlos de las descripciones deja de ser trabajo perdido. Sigue faltando la REFERENCIA DE TONO del usuario.
-- **Copy de preparacion**: la pantalla de prep dice «De pie. Sin prisa» tambien en rutinas SENTADAS; `position` esta ya declarado en las 28, asi que se puede derivar. Va a la ola editorial.
+### Decisiones de catalogo abiertas (Fase 2)
 
-- **Ola D — segundo nivel visual (§19.3)**: depende de arte, pero la medida que lo justifica ya
-  esta (**41 de 47 glifos son una sola pose estatica sin direccion**).
+- **5 de los 47 dibujos de ejercicio no se pintan nunca** (s142): cuatro **tapados por su
+  propio alias** y `Nordics`, sin uso. O se borran, o se les quita el alias.
+- **Ingles en 5 NOMBRES de rutina**: `Grip + antebrazos` · `Core silencioso` · `Postura
+  reset` · `Core · plancha` · `ATG · Rodillas a prueba`. Propuestas dadas: **Agarre +
+  antebrazos**, **Postura a punto**, **Rodillas a prueba**; con `Core` la recomendacion
+  fue NO tocarlo.
+- **`Superman`**: unico nombre de PASO con ingles, mantenido a proposito.
+- **`Descanso` es un nombre de EJERCICIO con glifo propio** en vez de un paso `rest`.
+- **`Sentadilla de cuadriceps`** (ex `Sissy squat`) espera **revision FISIO** (B4).
 
-### Decisiones de catalogo que la Fase 2 dejo sobre la mesa
-
-- **5 de los 47 dibujos no se pintan nunca** (s142): cuatro **tapados por su propio alias** y
-  `Nordics`, que no usa nadie. O se borran, o se les quita el alias.
-- **Ingles en 5 NOMBRES de rutina** (s143): `Grip + antebrazos` · `Core silencioso` · `Postura
-  reset` · `Core · plancha` · `ATG · Rodillas a prueba`. Propuestas dadas: **Agarre + antebrazos**,
-  **Postura a punto**, **Rodillas a prueba**. Con `Core` la recomendacion fue NO tocarlo (en
-  espanol de gimnasio esta asentado y «centro» pierde precision).
-- **`Superman`**: unico nombre de PASO con termino ingles que queda, mantenido a proposito.
-- **`Descanso` es un nombre de EJERCICIO con glifo propio** en vez de un paso `mode:'rest'`.
-- **`90/90`** funciona como clave pero no dice nada a quien no conoce la postura.
-- **`window.APPROVED` no existe**: la frontera «aprobado / por revisar» de la §19.2 habria que
-  crearla.
-- **`Sentadilla de cuadriceps`** (ex `Sissy squat`) sigue esperando **revision FISIO** (B4).
-
-**Lo que NO entra en la Fase 2**: los logros son la **Fase 2.5** (definida en s136).
-
-**Restricciones vivas**: `MoveSessionV1.jsx` esta **exactamente en 500 ln**, el tope de CLAUDE.md
-⇒ cualquier anadido va a `MoveSessionV1.support.jsx`; y `ExtraModule.jsx` esta en 456, asi que al
-retomar Estira **se trocean los datos ANTES** de tocar nada.
+**Restricciones vivas**: `MoveSessionV1.jsx` esta **exactamente en 500 ln** ⇒ lo nuevo va
+a `MoveSessionV1.support.jsx`; `ExtraModule.jsx` ronda las 460, asi que al retomar Estira
+**se trocean los datos ANTES**.
 
 ## Decisiones activas -- indice
 
@@ -369,6 +366,7 @@ retomar Estira **se trocean los datos ANTES** de tocar nada.
 
 | Decision | Desde |
 |---|---|
+| **Un logro se GANA al instante; lo que se escalona es el AVISO (uno por sesion)** | s145 |
 | **El Preview de §18.3 sale desde la BIBLIOTECA, nunca dentro de un Camino** | s144 |
 | **Intensidad y nivel tecnico son DOS ejes; el nivel solo se ensena cuando NO es basico** | s143 |
 | **Un alias TAPA el glifo propio: `ExerciseGlyph` resuelve el alias PRIMERO** | s142 |

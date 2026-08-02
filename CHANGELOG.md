@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [abajo](#v0780----2026-08-02----featlogros-entrega-escalonada--uno-por-sesión) |
 | **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [abajo](#v0770----2026-07-31----featui-preview-antes-de-empezar-183) |
-| **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [abajo](#v0760----2026-07-31----featcontent-ola-e--nivel-e-intensidad-visibles) |
+| **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md) |
 | **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [session-142](./docs/sessions/session-142-ola-c-nombres.md) |
 | **v0.74.0** | 2026-07-31 | feat+docs: **Fase 2 arranca — matriz §19.2 y ola A de nombres** — 3 de las 4 premisas del plan NO reproducen (65 nombres, no 92; **55 %** con inglés, no 37 %; 20 sin glifo, no ~46) · 41 de 47 glifos son una sola pose estática · 5 renombrados con migración por `VISUAL_ALIAS` | #141 | [session-141](./docs/sessions/session-141-fase-2-auditoria.md) |
 | **v0.73.1** | 2026-07-30 | fix(ui): **banding de la atmósfera, medido en los píxeles de la página** — el grano NO ditheraba (0,314 con él / 0,318 sin él) y apilar el mismo degradado dos veces DUPLICABA el escalón (17 de 24 niveles) · una capa con alpha compuesto + grano en sRGB | #140 | [session-140](./docs/sessions/session-140-banding-atmosfera.md) |
@@ -338,6 +339,44 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.78.0] -- 2026-08-02 -- feat(logros): entrega escalonada — uno por sesión
+
+Sesión **#145**. Diario: [session-145](./docs/sessions/session-145-logros-entrega-escalonada.md).
+
+Primera mitad de la **Fase 2.5**, la que no necesita glifos.
+
+### Corregido
+
+- **La queja del usuario, medida en el código**: una primera sesión de Respira a las 6:50
+  desbloqueaba **cuatro logros de golpe** con sus cuatro toasts en cascada — `first.breath`
+  (siempre) + `explore.<tipo>` (lo tienen **12 de las 20** rutinas) + `master.dawn` (antes de
+  las 7) + `first.day` (`updateStreak` lo da con `current >= 1`). Con el plan del día completo
+  entraban además `first.ritual` y `first.plan`.
+- **Entrega escalonada: uno por sesión**, el resto en **cola invisible**. Decisión del usuario
+  entre tres opciones; descartó «1 por sesión y día» (lento para quien arranca fuerte) y «todos
+  en fila» (arregla el solapamiento, no la sensación de regalo).
+
+### Lo que NO cambia
+
+El logro se **gana** en el momento y se registra en `achievements` al instante: solo se aplaza
+el **aviso**. Nadie ve progreso retroceder ⇒ **§2.5 «progreso sin culpa» queda intacta**. (El
+recálculo de umbrales, que sí es una excepción consciente, va aparte y no se ha tocado.)
+
+### Detalles que importan
+
+- La cola se **persiste** (`achievementQueue`): en memoria, una recarga se comería las
+  celebraciones pendientes — el logro seguiría ahí, pero no se anunciaría nunca.
+- `flushAchievementToast()` drena **gane o no gane** un logro nuevo: si solo drenara al
+  desbloquear, una cola de tres esperaría para siempre a que hubiera un cuarto.
+- **El agua tiene drenaje propio**: `addWaterGlass` acredita sin pasar por un cierre de sesión.
+
+### Verificado
+
+Con estado sembrado limpio: sesión 1 gana 3 y anuncia **1** (quedan 2); sesión 2 gana 1 más y
+anuncia **1**, el más antiguo. FIFO, y el recuento de `achievements` sube en el instante.
+
+---
+
 ## [v0.77.0] -- 2026-07-31 -- feat(ui): Preview «antes de empezar» (§18.3)
 
 Sesión **#144**. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
@@ -371,50 +410,5 @@ que los leyera nadie.
 La lista de pasos filtra los descansos, pero las claves EN son **posicionales sobre el array
 completo** (`<id>.s4.name` cuenta los descansos): usar el índice nuevo habría desplazado todos
 los nombres en inglés. Se conserva el índice original.
-
----
-
-## [v0.76.0] -- 2026-07-31 -- feat(content): ola E — nivel e intensidad visibles
-
-Sesión **#143**. Diario: [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md).
-
-La ola B sigue en pausa esperando arte, así que se ejecuta la E: consumir los metadatos que
-llevaban en los datos desde s115 **sin que nadie los mirara**.
-
-### Añadido
-
-- **Intensidad en el pie de cada tarjeta** (`CADERAS · MEDIO`): la declaran **todas** las rutinas,
-  que es lo que pide §29.2.
-- **Nivel técnico como pastilla apagada arriba, solo cuando NO es básico** (`INTERMEDIO`,
-  `AVANZADO`). Marcar las 17 accesibles sería ruido —lo normal no necesita etiqueta— y apagaría
-  la señal justo donde importa. Son **dos ejes y no se mezclan**: un ejercicio puede ser
-  técnicamente sencillo pero intenso.
-- Etiquetas i18n ES+EN (`lib.intensity.*`, `lib.level.*`). La tarjeta es compartida por las tres
-  bibliotecas, así que la lectura es defensiva: **Respira no cambia**.
-
-### Corregido
-
-- **Los datos estaban incompletos justo donde importaba**: 22 de 28 rutinas declaraban los
-  metadatos, y las 6 que no eran **exactamente las 6 legacy bloqueadas** — que contienen los dos
-  casos que §29.4 nombra por su nombre. Etiquetadas leyendo su contenido real.
-- **`advanced` no existía en los datos** (solo `accessible`/`intermediate`), así que la regla del
-  audit era inaplicable **por falta de dato, no de código**. Entra con 2 rutinas: `Piernas · a
-  una` y `ATG · Rodillas a prueba`, las que llevan `Sentadilla de cuádriceps` (ex Sissy squat) y
-  las progresiones profundas de rodilla.
-- **Cierre de la ola C en el copy de RUTINA**, que las olas A y C nunca miraron (solo renombraron
-  nombres de PASO): **3 descripciones citaban ejercicios que ya no existen** —«Chin tucks,
-  scapular squeeze», «hollow», «crawl, hang, squat profundo»—. Corregidas; **0 descripciones
-  citan ya un nombre retirado**. Lo que queda es inglés en **nombres de rutina**, que es decisión
-  de producto, no bug.
-
-### No entra, y conviene saber por qué
-
-**«No recomendar contenido avanzado por defecto» no tiene a quién aplicarse**: el BreakMenu
-recomienda ACTIVIDAD (no rutina) y los Caminos llevan la suya escrita en el paso. El primer
-recomendador real de rutinas es la **Pausa PACE de la Fase 3.5** — ahí nace esa regla, y ahora ya
-tendrá el dato para cumplirla.
-
-La **reescritura editorial** de las 28 descripciones se propuso y **el usuario la rechazó**:
-queda aparcada sin más intentos a ciegas, a la espera de su referencia de tono.
 
 ---

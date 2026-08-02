@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.77.0</title>
+  <title>PACE · Foco · Cuerpo — v0.78.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3619,7 +3619,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.77.0';
+const PACE_VERSION = 'v0.78.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3686,6 +3686,13 @@ const defaultState = {
 
   // Logros
   achievements: {},
+
+  // Cola de CELEBRACION de logros (s145 · Fase 2.5). El logro se gana y se
+  // registra en `achievements` al instante; aqui solo esperan su AVISO, que
+  // sale de uno en uno al cerrar sesion. Se persiste porque una recarga se
+  // comeria las celebraciones pendientes. Instalaciones previas lo reciben
+  // vacio por el merge {...defaultState, ...parsed} de loadState.
+  achievementQueue: [],
 
   // Stats semanales — INDICE LUNES-PRIMERO (sesion 69 / v0.28.8).
   // [0]=lunes ... [6]=domingo. Antes de v0.28.8 era getDay()-style (0=dom).
@@ -4143,6 +4150,7 @@ function completePomodoro() {
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
+  flushAchievementToast();
 }
 
 /* completeFocusSession(context, opts) — punto de entrada unificado del fin de
@@ -4225,6 +4233,10 @@ function addWaterGlass(delta) {
         checkHydrateWeekPerfect();
       }
     }
+    /* s145: el vaso de agua es la única acción que acredita SIN pasar por un
+       cierre de sesión, así que drena aquí su propia cola. Sin esto, quien solo
+       bebe agua no vería nunca lo que se ha ganado. */
+    flushAchievementToast();
   }
 }
 
@@ -4362,14 +4374,45 @@ function checkRetreatAchievement() {
   if (todayBreath + todayMove >= 120) unlockAchievement('master.retreat');
 }
 
+/* ENTREGA ESCALONADA (s145 · Fase 2.5) — decisión del usuario: **uno por
+   sesión**, el resto en cola invisible.
+
+   EL PROBLEMA, MEDIDO: una primera sesión de Respira a las 6:50 desbloqueaba
+   CUATRO logros de golpe, con sus cuatro toasts en cascada — `first.breath`
+   (siempre) + `explore.<tipo>` (lo tienen 12 de las 20 rutinas) + `master.dawn`
+   (antes de las 7) + `first.day` (`updateStreak` lo da con `current >= 1`). Con
+   el plan del día completo entraban además `first.ritual` y `first.plan`. Es
+   literalmente el «con hacer media cosa ya consigues 4 logros seguidos» que
+   reportó el usuario.
+
+   LO QUE NO CAMBIA: el logro se GANA en el momento y queda registrado en
+   `achievements` al instante. Solo se aplaza el AVISO. Nada se pierde, nadie
+   ve progreso retroceder — la regla §2.5 «progreso sin culpa» queda intacta.
+
+   La cola se PERSISTE (`achievementQueue`) porque si viviera en memoria, una
+   recarga se comería las celebraciones pendientes: el logro seguiría ahí, pero
+   nunca se anunciaría. Se drena en los cierres de sesión, UNO por vez.
+   Precedente: los toasts aplazados durante un Camino (s105). */
 function unlockAchievement(id, note) {
   const s = getState();
   if (s.achievements[id]) return false;
   setState({
-    achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } }
+    achievements: { ...s.achievements, [id]: { unlockedAt: Date.now(), note } },
+    achievementQueue: [...(s.achievementQueue || []), id]
   });
-  showToast({ id, type: 'achievement' });
   checkCollectorAchievements();
+  return true;
+}
+
+/* Saca UNO de la cola y lo celebra. Se llama al cerrar una sesión, gane o no
+   gane un logro nuevo: si no drenara también sin desbloqueos, una cola de tres
+   se quedaría esperando para siempre a que hubiera un cuarto. */
+function flushAchievementToast() {
+  const q = getState().achievementQueue || [];
+  if (!q.length) return false;
+  const [siguiente, ...resto] = q;
+  setState({ achievementQueue: resto });
+  showToast({ id: siguiente, type: 'achievement' });
   return true;
 }
 
@@ -4438,6 +4481,7 @@ function completeBreathSession(routineId, durationMin) {
     checkRoutineCountAchievements(breathCat);
   }
   updateStreak();
+  flushAchievementToast();
 }
 
 function completeMoveSession(routineId, durationMin) {
@@ -4458,6 +4502,7 @@ function completeMoveSession(routineId, durationMin) {
   checkRetreatAchievement();
   checkSilentDayAchievement();
   updateStreak();
+  flushAchievementToast();
 }
 
 function completeExtraSession(routineId, durationMin) {
@@ -4493,10 +4538,12 @@ function completeExtraSession(routineId, durationMin) {
     checkRoutineCountAchievements('atg');
   }
   updateStreak();
+  flushAchievementToast();
 }
 
 Object.assign(window, {
   unlockAchievement,
+  flushAchievementToast,
   completeBreathSession,
   completeMoveSession,
   completeExtraSession,
@@ -4504,7 +4551,7 @@ Object.assign(window, {
   checkStatsAchievements,
   checkAllPathsCompleted
 });
-;Object.assign(window, { checkPlanAchievements, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkRetreatAchievement, unlockAchievement, updateStreak, completeBreathSession, completeMoveSession, completeExtraSession });
+;Object.assign(window, { checkPlanAchievements, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, completeBreathSession, completeMoveSession, completeExtraSession });
 })();
 </script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
