@@ -22,6 +22,19 @@ function checkHydrateWeekPerfect() {
   unlockAchievement('hydrate.week.perfect');
 }
 
+/* master.hydrate.30 / master.hydrate.90 — s146: estaban en el catalogo sin
+   detector. Cuentan DIAS con el objetivo cumplido, no dias seguidos: §15.3 pide
+   «constancia sin castigar interrupciones», asi que un dia flojo no borra los
+   veintinueve anteriores. Por eso NO reutilizan `waterGoalDates`, que solo
+   guarda los ultimos 14 para la racha semanal. */
+function checkHydrateVolumen() {
+  const dias = getCount('agua.diasObjetivo');
+  if (dias >= 30) unlockAchievement('master.hydrate.30');
+  if (dias >= 90) unlockAchievement('master.hydrate.90');
+  /* master.gardener — 200 vasos acumulados en toda la vida de la libreta */
+  if (getCount('agua.vasos') >= 200) unlockAchievement('master.gardener');
+}
+
 function addWaterGlass(delta) {
   if (delta === undefined) delta = 1;
   ensureDayFresh();
@@ -37,6 +50,7 @@ function addWaterGlass(delta) {
   });
   if (delta > 0) {
     unlockAchievement('first.sip');
+    bumpCount('agua.vasos', delta);
     checkPlanAchievements();
     checkSilentDayAchievement();
     if (getState().water.today >= getState().water.goal) {
@@ -44,9 +58,12 @@ function addWaterGlass(delta) {
       const goalDates = Array.isArray(getState().waterGoalDates) ? getState().waterGoalDates : [];
       if (!goalDates.includes(today)) {
         setState({ waterGoalDates: [...goalDates, today].slice(-14) });
+        /* el contador acumulado va aparte de `waterGoalDates`, que se poda a 14 */
+        bumpCount('agua.diasObjetivo');
         checkHydrateWeekPerfect();
       }
     }
+    checkHydrateVolumen();
     /* s145: el vaso de agua es la única acción que acredita SIN pasar por un
        cierre de sesión, así que drena aquí su propia cola. Sin esto, quien solo
        bebe agua no vería nunca lo que se ha ganado. */

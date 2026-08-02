@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [abajo](#v0790----2026-08-02----fixfeatlogros-la-curva-de-logros-y-la-amnistía) |
 | **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [abajo](#v0780----2026-08-02----featlogros-entrega-escalonada--uno-por-sesión) |
 | **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [abajo](#v0770----2026-07-31----featui-preview-antes-de-empezar-183) |
 | **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md) |
@@ -336,6 +337,82 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.79.0] -- 2026-08-02 -- fix+feat(logros): la curva de logros, y la amnistía
+
+Sesión **#146**. Diario: [session-146](./docs/sessions/session-146-curva-de-logros.md).
+
+### Fixed — la web llevaba rota desde s144, no desde el último push
+
+- **`ReferenceError: useState is not defined`** al abrir el artefacto compilado.
+  `main.jsx` aliasa los hooks a propósito (`const { useState: useStateMain, ... } = React`)
+  y sus 12 llamadas usan `useStateMain`; la línea 134, que entró con el Preview de s144,
+  usaba el **`useState` pelado**. Un destructuring con alias **no crea** ese binding.
+- **Por qué no se vio**: en `PACE.html` no rompe y en el compilado sí — el build de Etapa A
+  envuelve cada módulo en un IIFE. Verificado que el `index.html` de **v0.77.0 ya lo traía**.
+- **Barrido de la clase entera** sobre los 90 archivos de `app/`: **un solo caso**.
+
+### Added — `scripts/audit/logros.js`, banco de medición de la curva
+
+Inventario estático de los `unlockAchievement` (llamada literal · mapa con id calculado ·
+tabla recorrida en bucle) + **simulación sobre los módulos de estado reales con reloj
+controlable**. Reprodujo de forma independiente el hallazgo de s145 (primera sesión = 4
+logros, 1 avisado, 3 en cola).
+
+**Lo que midió antes de tocar nada:** el día 1 entregaba **11 logros, el 35 % de lo que da
+un año entero** (31), y la primera semana el 55 % · **52 % de los implementados (36 de 69)
+eran de una sola vez**, con «primeros» (10/10) y «exploración» (16/16) sin pedir repetición
+nunca · **37 de 106 no los podía ganar nadie** por no tener detector, y **11 de ellos eran
+secretos**, que se pintan idénticos a los alcanzables · **`master.collector.full` era
+imposible por aritmética**: pedía 100 logros existiendo 69 con detector (§3.4).
+
+### Changed — la curva (§15.3)
+
+`explore.*` (16) de 1 a **3 sesiones** · `first.day` de «primera sesión de la vida» a **día
+con 2 actividades distintas** · `first.plan`, que tenía la **condición idéntica** a
+`first.ritual`, pasa a **3 días** · `master.dawn`/`dusk`/`silent.day` de 1 a **5 días** ·
+`master.long.focus` de 1 bloque a **5** · `master.box`/`coherent`/`rounds` de 10 a **15** ·
+`master.collector.half`/`full` de 50/100 a **30/60** · `stats.month.focus` de 600 min/mes
+(caía en 6 días) a **1200**.
+
+**Resultado medido:** primera sesión 4 → **2** · primer día 11 → **8** · 365 días 31 → **44**
+· **día 1 como % del año: 35 % → 18 %**.
+
+### Changed — AMNISTÍA: se anula la excepción consciente de s136
+
+Puesto delante de las cifras, el usuario eligió que **nadie pierda un logro ya concedido**.
+**§2.5 «progreso sin culpa» y §2.2 «nada de pérdida punitiva» quedan intactas** y no hay
+nada que comunicar. **Sale gratis por construcción**: la única escritura sobre
+`state.achievements` es el spread aditivo de `unlockAchievement`, así que un logro ganado no
+se puede retirar ni queriendo — cero código de migración.
+
+### Added — 23 detectores que faltaban · Removed — 6 inviables
+
+Implementados: `master.pomodoro.12` · `centurion` · `marathon` · `gardener` · `hips.20` ·
+`shoulders.20` · `ancestral.10` · `antidote` (contador por etiqueta SIT) · `hydrate.30/90` ·
+`explore.all.breathe/move/extra` · 6 secretos (`night.owl`, `lunch`, `zen`, `first.monday`,
+`new.year`, `rain`) · los 4 solsticios y equinoccios, a **fecha civil**.
+
+Retirados por no tener forma razonable de detectarse: `explore.chrome`, `secret.konami`,
+`secret.birthday`, `secret.skip.none`, `secret.tweak.all`, `secret.pause.long`. **Ninguno
+tenía detector ⇒ nadie podía tenerlos ⇒ la amnistía no se rompe.**
+
+Catálogo **106 → 100**, con detector **69 → 92**, sin detector **37 (35 %) → 8 (8 %)**, y
+**secretos fantasma 11 → 0**: todos los secretos del catálogo se pueden descubrir ya.
+
+### Added — `app/state-achievements.support.jsx` (179 ln)
+
+Contadores generalizados y los detectores nuevos. Nace porque `state-achievements.jsx` no
+cabía bajo las 500 líneas con la curva. Mismo patrón que `MoveSessionV1.support.jsx`.
+
+### Fixed — bug propio cazado por el banco
+
+`first.day` colgaba de `updateStreak`, que **retorna pronto si el día ya está marcado**: solo
+corría en la primera actividad de la jornada, con una marca en el plan, así que la condición
+de dos **no se cumplía nunca**. No se ganaba ni con un año exhaustivo. Movido a
+`checkPlanAchievements`.
 
 ---
 

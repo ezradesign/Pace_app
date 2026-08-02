@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.78.0</title>
+  <title>PACE · Foco · Cuerpo — v0.79.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3619,7 +3619,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.78.0';
+const PACE_VERSION = 'v0.79.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4103,6 +4103,192 @@ Object.assign(window, {
 ;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded, loadState, persistState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
+  <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
+       los detectores que faltaban. ANTES de state-timer y state-hydrate, que
+       usan bumpCount/getCount para los logros de volumen. -->
+  <script>
+;(function () {
+/* PACE · state-achievements.support.jsx
+   Soporte sin UI de los logros (s146 · Fase 2.5, mitad 2): contadores
+   generalizados + detectores que antes no existian.
+
+   Por que nace este archivo: `state-achievements.jsx` iba por 303 ln y la
+   curva nueva (§15.3) mas los detectores que faltaban lo pasaban del limite
+   de 500 de CLAUDE.md. Mismo patron que `MoveSessionV1.support.jsx`.
+
+   ---------------------------------------------------------------------------
+   AMNISTIA (decision s146). Los umbrales SUBEN pero **nadie pierde un logro
+   ya concedido**: la unica escritura sobre `state.achievements` es el spread
+   aditivo de `unlockAchievement`, asi que un logro ya ganado no se puede
+   retirar ni queriendo. Las reglas nuevas rigen solo para lo aun no ganado.
+   Esto ANULA la «excepcion consciente a §2.5/§2.2» que se habia aceptado en
+   s136: no hay excepcion, no hay perdida y no hay nada que comunicar.
+
+   Consecuencia practica de la amnistia sobre los contadores: los contadores
+   NUEVOS arrancan en cero para todo el mundo. A quien ya tuviera el logro no
+   le afecta (lo conserva); a quien no lo tuviera le cuenta desde hoy. Por eso
+   los contadores legacy (`box`/`coherent`/`rounds`/`atg`) se siguen
+   alimentando: hay progreso vivo colgando de ellos.
+   ---------------------------------------------------------------------------
+*/
+
+/* Cuantas veces hay que repetir algo para que deje de ser «lo probe una vez».
+   Tres es el numero: una es azar, dos es repetir, tres ya es habito naciente.
+   §15.3 pide «repeticion significativa» para lo avanzado y que los primeros
+   «no se desbloqueen todos juntos» — con 1 sesion, los 16 de exploracion caian
+   el mismo dia que el modulo que los contiene. */
+const EXPLORE_REPS = 3;
+
+/* Suma un contador con nombre. Los contadores viven todos en `routineCounts`
+   para no abrir un slice nuevo del estado por cada familia. */
+function bumpCount(clave, n) {
+  const c = getState().routineCounts || {};
+  const next = { ...c, [clave]: (c[clave] || 0) + (n === undefined ? 1 : n) };
+  setState({ routineCounts: next });
+  return next[clave];
+}
+
+function getCount(clave) {
+  return (getState().routineCounts || {})[clave] || 0;
+}
+
+/* Contador que solo vale para HOY. No usa `routineCounts` a proposito: una
+   clave por dia lo haria crecer sin techo dentro de localStorage. Guarda
+   {fecha, n} y se reinicia solo al cambiar el dia. */
+function contarHoy(campo) {
+  const hoy = new Date().toDateString();
+  const prev = getState()[campo] || {};
+  const n = (prev.fecha === hoy ? prev.n || 0 : 0) + 1;
+  setState({ [campo]: { fecha: hoy, n } });
+  return n;
+}
+
+/* Cuenta una rutina concreta: su id (para «todas las de Mueve») y su etiqueta
+   (para `master.antidote`, 50 sesiones SIT). La etiqueta hay que ir a buscarla
+   al catalogo porque las acciones de sesion solo reciben el id. */
+function contarRutina(routineId) {
+  if (!routineId) return;
+  bumpCount('rutina.' + routineId);
+  const buscar = [window.getMoveRoutine, window.getExtraRoutine];
+  for (const fn of buscar) {
+    if (typeof fn !== 'function') continue;
+    let r = null;
+    try {r = fn(routineId);} catch (e) {r = null;}
+    if (r && r.tag) {bumpCount('tag.' + r.tag);return;}
+  }
+}
+
+/* --- minutos de vida, para master.marathon ---------------------------------
+   No hay un contador acumulado de minutos: `totalFocusMin` solo cuenta foco, y
+   respira/cuerpo viven en la semana en curso y en los agregados de `history`.
+   Se suma desde `history.years` (que ya agrega meses) + la semana viva, que
+   todavia no ha pasado por el rollover. */
+function minutosDeVida() {
+  const s = getState();
+  const years = s.history && s.history.years || {};
+  let total = 0;
+  for (const y of Object.values(years)) {
+    total += (y.focusMinutes || 0) + (y.breathMinutes || 0) + (y.moveMinutes || 0);
+  }
+  const w = s.weeklyStats || {};
+  const suma = (arr) => Array.isArray(arr) ? arr.reduce((a, b) => a + (b || 0), 0) : 0;
+  total += suma(w.focusMinutes) + suma(w.breathMinutes) + suma(w.moveMinutes);
+  return total;
+}
+
+/* --- exploracion completa de un modulo -------------------------------------
+   «Todas las respiraciones» / «todas las movilidades» / «todos los Extra» se
+   resuelven contra los logros `explore.*` que SI tienen detector, no contra el
+   numero de rutinas del catalogo: si manana entra una rutina sin logro propio,
+   el objetivo no debe moverse solo. */
+const EXPLORE_BREATHE = ['explore.box', 'explore.478', 'explore.coherent',
+'explore.rounds', 'explore.bhastrika', 'explore.nadi', 'explore.ujjayi',
+'explore.kapalabhati', 'explore.physiological'];
+/* Ojo con los nombres: los ids `move.*` son de ESTIRA y los `extra`/`mueve` se
+   cruzaron historicamente (nota de s15 en state-achievements). Estas dos listas
+   siguen la etiqueta que ve el usuario, no el prefijo del id. */
+const EXPLORE_CUERPO = ['explore.hips', 'explore.shoulders', 'explore.atg',
+'explore.ancestral', 'explore.neck', 'explore.desk'];
+
+function checkExploreCompleto() {
+  const a = getState().achievements || {};
+  if (EXPLORE_BREATHE.every((id) => a[id])) unlockAchievement('explore.all.breathe');
+  if (EXPLORE_CUERPO.every((id) => a[id])) unlockAchievement('explore.all.move');
+
+  /* «Todos los Extra» no se puede medir con logros `explore.*`: las 6 que hay
+     salen TODAS de `completeExtraSession` (Estira) y Mueve no tiene ni uno.
+     Se mide entonces contra las rutinas de Mueve realmente completadas, que se
+     cuentan una a una en `completeMoveSession`. Guard como el de
+     `checkAllPathsCompleted`: si el catalogo aun no ha cargado, no se dispara. */
+  const mueve = typeof window !== 'undefined' && window.MOVE_ROUTINES || null;
+  if (!mueve) return;
+  const ids = [];
+  for (const grupo of Object.values(mueve)) {
+    for (const r of grupo.items || []) ids.push(r.id);
+  }
+  if (ids.length && ids.every((id) => getCount('rutina.' + id) > 0)) {
+    unlockAchievement('explore.all.extra');
+  }
+}
+
+/* --- fechas señaladas ------------------------------------------------------
+   Solsticios y equinoccios se fijan a fecha civil (no astronomica): el logro
+   celebra el dia, no el instante exacto, y una efemeride que cambia de dia
+   segun el año seria imposible de explicar en una descripcion de una linea. */
+const FECHAS_SENALADAS = {
+  'season.solstice.summer': [5, 21], // 21 de junio
+  'season.solstice.winter': [11, 21], // 21 de diciembre
+  'season.equinox.spring': [2, 20], // 20 de marzo
+  'season.equinox.autumn': [8, 22], // 22 de septiembre
+  'secret.new.year': [0, 1] // 1 de enero
+};
+
+function checkFechasSenaladas() {
+  const d = new Date();
+  const mes = d.getMonth();
+  const dia = d.getDate();
+  for (const [id, [m, dd]] of Object.entries(FECHAS_SENALADAS)) {
+    if (mes === m && dia === dd) unlockAchievement(id);
+  }
+  /* primer lunes del mes: lunes y el dia cae en la primera semana */
+  if (d.getDay() === 1 && dia <= 7) unlockAchievement('secret.first.monday');
+}
+
+/* --- secretos de hora y de dosis ------------------------------------------ */
+function checkSecretosDeHora() {
+  const h = new Date().getHours();
+  if (h >= 2 && h < 4) unlockAchievement('secret.night.owl');
+  if (h === 14) unlockAchievement('secret.lunch');
+}
+
+/* secret.zen — 30 min de respiracion en un mismo dia */
+function checkZen() {
+  const s = getState();
+  const day = getDayIndexMondayFirst(new Date());
+  const hoy = (s.weeklyStats.breathMinutes || [])[day] || 0;
+  if (hoy >= 30) unlockAchievement('secret.zen');
+}
+
+/* --- maestrias que colgaban de contadores inexistentes -------------------- */
+function checkMaestriasDeVolumen() {
+  const s = getState();
+  if ((s.breatheSessionsTotal || 0) >= 100) unlockAchievement('master.centurion');
+  if (minutosDeVida() >= 2000) unlockAchievement('master.marathon');
+  if (getCount('explore.hips') >= 20) unlockAchievement('master.hips.20');
+  if (getCount('explore.shoulders') >= 20) unlockAchievement('master.shoulders.20');
+  if (getCount('explore.ancestral') >= 10) unlockAchievement('master.ancestral.10');
+  if (getCount('tag.SIT') >= 50) unlockAchievement('master.antidote');
+}
+
+Object.assign(window, {
+  EXPLORE_REPS, bumpCount, getCount, contarHoy, contarRutina, minutosDeVida,
+  EXPLORE_BREATHE, EXPLORE_CUERPO,
+  checkExploreCompleto, checkFechasSenaladas, checkSecretosDeHora, checkZen,
+  checkMaestriasDeVolumen
+});
+;Object.assign(window, { bumpCount, getCount, contarHoy, contarRutina, minutosDeVida, checkExploreCompleto, checkFechasSenaladas, checkSecretosDeHora, checkZen, checkMaestriasDeVolumen });
+})();
+</script>
   <script>
 ;(function () {
 /* PACE · state-timer.jsx
@@ -4146,7 +4332,14 @@ function completePomodoro() {
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
-  if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
+  /* s146: `master.pomodoro.12` estaba en el catalogo SIN detector — nadie podia
+     ganarlo. Cuelga del mismo contador diario que el de 8. */
+  if (getState().cycle >= 12) unlockAchievement('master.pomodoro.12');
+  /* s146: «Larga sesion» se daba con UN bloque de 45. Ahora cinco: un bloque
+     largo es una tarde, cinco es una forma de trabajar. */
+  if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
+    unlockAchievement('master.long.focus');
+  }
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
@@ -4208,6 +4401,19 @@ function checkHydrateWeekPerfect() {
   unlockAchievement('hydrate.week.perfect');
 }
 
+/* master.hydrate.30 / master.hydrate.90 — s146: estaban en el catalogo sin
+   detector. Cuentan DIAS con el objetivo cumplido, no dias seguidos: §15.3 pide
+   «constancia sin castigar interrupciones», asi que un dia flojo no borra los
+   veintinueve anteriores. Por eso NO reutilizan `waterGoalDates`, que solo
+   guarda los ultimos 14 para la racha semanal. */
+function checkHydrateVolumen() {
+  const dias = getCount('agua.diasObjetivo');
+  if (dias >= 30) unlockAchievement('master.hydrate.30');
+  if (dias >= 90) unlockAchievement('master.hydrate.90');
+  /* master.gardener — 200 vasos acumulados en toda la vida de la libreta */
+  if (getCount('agua.vasos') >= 200) unlockAchievement('master.gardener');
+}
+
 function addWaterGlass(delta) {
   if (delta === undefined) delta = 1;
   ensureDayFresh();
@@ -4223,6 +4429,7 @@ function addWaterGlass(delta) {
   });
   if (delta > 0) {
     unlockAchievement('first.sip');
+    bumpCount('agua.vasos', delta);
     checkPlanAchievements();
     checkSilentDayAchievement();
     if (getState().water.today >= getState().water.goal) {
@@ -4230,9 +4437,12 @@ function addWaterGlass(delta) {
       const goalDates = Array.isArray(getState().waterGoalDates) ? getState().waterGoalDates : [];
       if (!goalDates.includes(today)) {
         setState({ waterGoalDates: [...goalDates, today].slice(-14) });
+        /* el contador acumulado va aparte de `waterGoalDates`, que se poda a 14 */
+        bumpCount('agua.diasObjetivo');
         checkHydrateWeekPerfect();
       }
     }
+    checkHydrateVolumen();
     /* s145: el vaso de agua es la única acción que acredita SIN pasar por un
        cierre de sesión, así que drena aquí su propia cola. Sin esto, quien solo
        bebe agua no vería nunca lo que se ha ganado. */
@@ -4243,7 +4453,7 @@ function addWaterGlass(delta) {
 Object.assign(window, {
   addWaterGlass
 });
-;Object.assign(window, { checkHydrateWeekPerfect, addWaterGlass });
+;Object.assign(window, { checkHydrateWeekPerfect, checkHydrateVolumen, addWaterGlass });
 })();
 </script>
   <script>
@@ -4264,21 +4474,57 @@ const BREATH_ROUTINE_CATEGORIES = {
   'breathe.rounds.express': 'rounds'
 };
 
+/* first.ritual (4 modulos en un dia) y first.plan (completar el plan) tenian
+   la MISMA condicion — s146 lo midio: caian siempre juntos y eran dos de los
+   once del primer dia. Ahora `first.plan` pide sostenerlo TRES dias, que es lo
+   que distingue «lo hice» de «asi es como uso esto». */
+const PLAN_DIAS_PARA_LOGRO = 3;
+
 function checkPlanAchievements() {
   const s = getState();
   const p = s.plan || {};
-  if (p.muevete && p.respira && p.extra && p.hidratate) {
-    unlockAchievement('first.ritual');
+  /* `first.day` se comprueba AQUI y no en `updateStreak`: updateStreak retorna
+     pronto cuando el dia ya esta marcado, asi que solo corria en la primera
+     actividad de la jornada — momento en el que el plan tiene UNA marca y la
+     condicion de dos nunca se cumplia. El banco de `scripts/audit/logros.js` lo
+     cazo: el logro no se ganaba ni con un año de uso exhaustivo. */
+  checkPrimerDiaDeVerdad();
+  if (!(p.muevete && p.respira && p.extra && p.hidratate)) return;
+  unlockAchievement('first.ritual');
+  const hoy = new Date().toDateString();
+  const list = Array.isArray(s.planDates) ? s.planDates : [];
+  if (!list.includes(hoy)) {
+    const next = [...list, hoy].slice(-30);
+    setState({ planDates: next });
+    if (next.length >= PLAN_DIAS_PARA_LOGRO) unlockAchievement('first.plan');
+  } else if (list.length >= PLAN_DIAS_PARA_LOGRO) {
     unlockAchievement('first.plan');
   }
 }
 
-/* master.dawn / master.dusk / morning.5 */
+/* master.dawn / master.dusk / morning.5 + secretos de hora.
+   s146: `dawn` y `dusk` estaban en «maestria» pidiendo UNA sesion — una sola
+   sesion no es maestria de nada. Pasan a 5 dias distintos, el mismo criterio
+   que ya usaba `morning.5` a su lado. Se cuentan DIAS, no sesiones: tres
+   respiraciones seguidas a las 6:50 son una madrugada, no tres. */
+const DAWN_DIAS = 5;
+const DUSK_DIAS = 5;
+
+function marcaDia(campo, limite) {
+  const hoy = new Date().toDateString();
+  const s = getState();
+  const list = Array.isArray(s[campo]) ? s[campo] : [];
+  if (list.includes(hoy)) return list.length;
+  const next = [...list, hoy].slice(-limite * 3);
+  setState({ [campo]: next });
+  return next.length;
+}
+
 function checkTimeOfDayAchievements() {
   const now = new Date();
   const h = now.getHours();
-  if (h < 7) unlockAchievement('master.dawn');
-  if (h >= 21) unlockAchievement('master.dusk');
+  if (h < 7 && marcaDia('dawnDates', DAWN_DIAS) >= DAWN_DIAS) unlockAchievement('master.dawn');
+  if (h >= 21 && marcaDia('duskDates', DUSK_DIAS) >= DUSK_DIAS) unlockAchievement('master.dusk');
   if (h < 9) {
     const today = now.toDateString();
     const s = getState();
@@ -4289,33 +4535,56 @@ function checkTimeOfDayAchievements() {
       if (next.length >= 5) unlockAchievement('morning.5');
     }
   }
+  checkSecretosDeHora();
+  checkFechasSenaladas();
 }
 
-/* master.collector.half / master.collector.full */
+/* master.collector.half / master.collector.full.
+   s146 MIDIO que `full` era IMPOSIBLE: pedia 100 logros y solo 69 tenian
+   detector, asi que estaba declarado como implementado sin poder ganarse nunca
+   (el caso exacto del §3.4). Los umbrales siguen siendo FIJOS —decision s90:
+   un denominador por catalogo se distorsiona al crecer— pero ahora por debajo
+   del techo real. Si algun dia se añaden detectores, estos numeros suben con
+   ellos A MANO: es el precio de que sean fijos, y esta anotado a proposito. */
+const COLLECTOR_HALF = 30;
+const COLLECTOR_FULL = 60;
+
 function checkCollectorAchievements() {
   const count = Object.keys(getState().achievements).length;
-  if (count >= 50) unlockAchievement('master.collector.half');
-  if (count >= 100) unlockAchievement('master.collector.full');
+  if (count >= COLLECTOR_HALF) unlockAchievement('master.collector.half');
+  if (count >= COLLECTOR_FULL) unlockAchievement('master.collector.full');
 }
 
-/* master.silent.day */
+/* master.silent.day — s146: pedia UN dia con el sonido apagado, que es un
+   ajuste, no una maestria. Ahora cinco. */
+const SILENT_DIAS = 5;
+
 function checkSilentDayAchievement() {
   const s = getState();
   if (s.soundOn) return;
   const today = new Date().toDateString();
   const list = Array.isArray(s.silentDates) ? s.silentDates : [];
   if (!list.includes(today)) {
-    setState({ silentDates: [...list, today].slice(-30) });
+    const next = [...list, today].slice(-30);
+    setState({ silentDates: next });
+    if (next.length >= SILENT_DIAS) unlockAchievement('master.silent.day');
+  } else if (list.length >= SILENT_DIAS) {
     unlockAchievement('master.silent.day');
   }
 }
 
-/* Contadores por tipo de rutina (master.box.10, coherent.10, rounds.10, atg.20). */
+/* Contadores por tipo de rutina (master.box.15, coherent.15, rounds.15, atg.20).
+   s146: los tres de respiracion suben de 10 a 15. Con uso diario de una tecnica
+   los 10 caian dentro del primer mes, a la vez que media categoria de
+   constancia; 15 los separa sin volverlos remotos. `atg.20` se queda: ya pedia
+   repeticion de verdad. */
+const MASTER_BREATH_REPS = 15;
+
 function checkRoutineCountAchievements(category) {
   const c = getState().routineCounts || {};
-  if (category === 'box' && (c.box || 0) >= 10) unlockAchievement('master.box.10');
-  if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
-  if (category === 'rounds' && (c.rounds || 0) >= 10) unlockAchievement('master.rounds.10');
+  if (category === 'box' && (c.box || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.box.10');
+  if (category === 'coherent' && (c.coherent || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.coherent.10');
+  if (category === 'rounds' && (c.rounds || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.rounds.10');
   if (category === 'atg' && (c.atg || 0) >= 20) unlockAchievement('master.atg.20');
 }
 
@@ -4335,7 +4604,11 @@ function checkStatsAchievements() {
     unlockAchievement('stats.month.first');
   }
 
-  if (Object.values(months).some((m) => m.focusMinutes >= 600)) {
+  /* s146: 600 min/mes («diez horas») se alcanzaban en SEIS dias con cuatro
+     pomodoros diarios — un logro mensual que caia dentro de la primera semana.
+     1200 (veinte horas) lo devuelve a la escala de un mes. La descripcion del
+     catalogo se corrige en el mismo cambio. */
+  if (Object.values(months).some((m) => m.focusMinutes >= 1200)) {
     unlockAchievement('stats.month.focus');
   }
 
@@ -4363,6 +4636,15 @@ function checkAllPathsCompleted() {
     if (!entry || (entry.count || 0) < 1) return;
   }
   unlockAchievement('master.path.all7');
+}
+
+/* first.day — un dia con DOS actividades distintas del plan. Antes bastaba con
+   existir; el nombre del logro («Primer dia») no cambia, cambia lo que cuenta
+   como dia. */
+function checkPrimerDiaDeVerdad() {
+  const p = getState().plan || {};
+  const hechas = ['muevete', 'respira', 'extra', 'hidratate'].filter((k) => p[k]).length;
+  if (hechas >= 2) unlockAchievement('first.day');
 }
 
 /* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
@@ -4427,7 +4709,10 @@ function updateStreak() {
   current = 1;
   const longest = Math.max(s.streak.longest, current);
   setState({ streak: { current, longest, lastActiveDate: today } });
-  if (current >= 1) unlockAchievement('first.day');
+  /* s146: `first.day` ya no cuelga de aqui. Se daba con `current >= 1`, o sea
+     en la PRIMERA sesion de la vida, cayendo junto a `first.breath` sin
+     significar nada distinto. Ahora pide un dia de verdad (dos actividades) y
+     se comprueba en `checkPlanAchievements`, que es quien ve el plan al dia. */
   if (current >= 3) unlockAchievement('streak.3');
   if (current >= 7) unlockAchievement('streak.7');
   if (current >= 14) unlockAchievement('streak.14');
@@ -4471,7 +4756,17 @@ function completeBreathSession(routineId, durationMin) {
     'breathe.kapalabhati': 'explore.kapalabhati',
     'breathe.physiological': 'explore.physiological'
   };
-  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  /* s146: explorar deja de ser «lo probe una vez». El logro de una tecnica
+     llega a la TERCERA sesion de esa tecnica — asi `explore.*` deja de caer el
+     mismo dia que `first.breath` y la categoria de exploracion (16 de 16 eran
+     de un solo uso) empieza a pedir algo. */
+  const exploreId = explorationMap[routineId];
+  if (exploreId && bumpCount(exploreId) >= EXPLORE_REPS) unlockAchievement(exploreId);
+  checkExploreCompleto();
+  checkMaestriasDeVolumen();
+  checkZen();
+  /* secret.rain — tres respiraciones el mismo dia */
+  if (contarHoy('respiraHoy') >= 3) unlockAchievement('secret.rain');
   checkRetreatAchievement();
   checkSilentDayAchievement();
   const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
@@ -4497,8 +4792,11 @@ function completeMoveSession(routineId, durationMin) {
   });
   unlockAchievement('first.stretch');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
+  contarRutina(routineId);
   checkPlanAchievements();
   checkTimeOfDayAchievements();
+  checkExploreCompleto();
+  checkMaestriasDeVolumen();
   checkRetreatAchievement();
   checkSilentDayAchievement();
   updateStreak();
@@ -4517,6 +4815,7 @@ function completeExtraSession(routineId, durationMin) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week }
   });
   unlockAchievement('first.extra');
+  contarRutina(routineId);
   checkPlanAchievements();
   checkTimeOfDayAchievements();
   /* NOTA (sesion 15): rutinas de movilidad pasaron de MOVE a EXTRA_ROUTINES.
@@ -4529,7 +4828,11 @@ function completeExtraSession(routineId, durationMin) {
     'move.neck.3': 'explore.neck',
     'move.desk.quick': 'explore.desk'
   };
-  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  /* misma regla que en Respira: tercera vez, no primera (s146) */
+  const exploreId = exploreMap[routineId];
+  if (exploreId && bumpCount(exploreId) >= EXPLORE_REPS) unlockAchievement(exploreId);
+  checkExploreCompleto();
+  checkMaestriasDeVolumen();
   checkRetreatAchievement();
   checkSilentDayAchievement();
   if (routineId === 'move.atg.knees') {
@@ -4551,7 +4854,7 @@ Object.assign(window, {
   checkStatsAchievements,
   checkAllPathsCompleted
 });
-;Object.assign(window, { checkPlanAchievements, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, completeBreathSession, completeMoveSession, completeExtraSession });
+;Object.assign(window, { checkPlanAchievements, marcaDia, checkTimeOfDayAchievements, checkCollectorAchievements, checkSilentDayAchievement, checkRoutineCountAchievements, checkStatsAchievements, checkAllPathsCompleted, checkPrimerDiaDeVerdad, checkRetreatAchievement, unlockAchievement, flushAchievementToast, updateStreak, completeBreathSession, completeMoveSession, completeExtraSession });
 })();
 </script>
   <!-- Guard central de entitlement (s95): canAccessRoutine/canAccessPath.
@@ -14683,8 +14986,8 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'first.extra', cat: 'primeros', title: 'Primera calistenia', desc: 'Tu primer ejercicio Extra', glyph: '✕', glyphSvg: GLYPH_SVG['first.extra'] },
 { id: 'first.cycle', cat: 'primeros', title: 'Ciclo completo', desc: 'Un Pomodoro + pausa activa', glyph: '◯', glyphSvg: GLYPH_SVG['first.cycle'] },
 { id: 'first.ritual', cat: 'primeros', title: 'Primer ritual', desc: 'Usa los 4 módulos en un día', glyph: '✧', glyphSvg: GLYPH_SVG['first.ritual'] },
-{ id: 'first.day', cat: 'primeros', title: 'Primer día', desc: '1 día de uso', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
-{ id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
+{ id: 'first.day', cat: 'primeros', title: 'Primer día', desc: 'Un día con dos actividades distintas', glyph: '☾', glyphSvg: GLYPH_SVG['first.day'] },
+{ id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día tres veces', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
 { id: 'first.return', cat: 'primeros', title: 'Regresas', desc: 'Abre la app al día siguiente', glyph: '↻' },
 
 // Constancia (11-25)
@@ -14705,34 +15008,33 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'morning.5', cat: 'constancia', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
 
 // Exploración (26-45)
-{ id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
-{ id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Respiración relajante', glyph: '4·7·8' },
-{ id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'HRV sincronizado', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
-{ id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Respiración en rondas', glyph: '◴', glyphSvg: GLYPH_SVG['explore.rounds'] },
-{ id: 'explore.bhastrika', cat: 'exploracion', title: 'Bhastrika', desc: 'Pranayama energizante', glyph: '※' },
-{ id: 'explore.nadi', cat: 'exploracion', title: 'Nadi Shodhana', desc: 'Respiración alternada', glyph: '∞', glyphSvg: GLYPH_SVG['explore.nadi'] },
-{ id: 'explore.ujjayi', cat: 'exploracion', title: 'Ujjayi', desc: 'Oceánica', glyph: '≈' },
-{ id: 'explore.kapalabhati', cat: 'exploracion', title: 'Kapalabhati', desc: 'Kriya del cráneo', glyph: '✦' },
-{ id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Reset rápido', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
-{ id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: '5 pasos caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
-{ id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: '5 pasos hombros', glyph: '⌢' },
-{ id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Rodillas en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
-{ id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Crawl, hang, squat', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
-{ id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: '3 min cuello', glyph: '~' },
-{ id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Sin levantarse', glyph: '⊡' },
+{ id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
+{ id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Tres sesiones de la relajante', glyph: '4·7·8' },
+{ id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'Tres sesiones de coherencia', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
+{ id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Tres sesiones en rondas', glyph: '◴', glyphSvg: GLYPH_SVG['explore.rounds'] },
+{ id: 'explore.bhastrika', cat: 'exploracion', title: 'Bhastrika', desc: 'Tres sesiones del pranayama energizante', glyph: '※' },
+{ id: 'explore.nadi', cat: 'exploracion', title: 'Nadi Shodhana', desc: 'Tres sesiones de alternada', glyph: '∞', glyphSvg: GLYPH_SVG['explore.nadi'] },
+{ id: 'explore.ujjayi', cat: 'exploracion', title: 'Ujjayi', desc: 'Tres sesiones de oceánica', glyph: '≈' },
+{ id: 'explore.kapalabhati', cat: 'exploracion', title: 'Kapalabhati', desc: 'Tres sesiones del kriya', glyph: '✦' },
+{ id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Tres suspiros fisiológicos', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
+{ id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: 'Tres sesiones de caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
+{ id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: 'Tres sesiones de hombros', glyph: '⌢' },
+{ id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Tres sesiones en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
+{ id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Tres sesiones ancestrales', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
+{ id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: 'Tres sesiones de cuello', glyph: '~' },
+{ id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Tres sesiones sin levantarse', glyph: '⊡' },
 { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
 { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
 { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
-{ id: 'explore.chrome', cat: 'exploracion', title: 'Pestaña abierta', desc: 'Extensión Chrome instalada', glyph: '◩' },
 { id: 'explore.tweaks', cat: 'exploracion', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙' },
 
 // Maestría (46-70) - placeholders
 { id: 'master.pomodoro.8', cat: 'maestria', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
 { id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 Pomodoros', glyph: 'XII' },
-{ id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: '45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
-{ id: 'master.box.10', cat: 'maestria', title: 'Caja maestra', desc: '10 sesiones Box', glyph: '▣' },
-{ id: 'master.coherent.10', cat: 'maestria', title: 'Corazón sincronizado', desc: '10 sesiones coherente', glyph: '♥' },
-{ id: 'master.rounds.10', cat: 'maestria', title: 'Rondas maestra', desc: '10 sesiones', glyph: '◶' },
+{ id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de 45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
+{ id: 'master.box.10', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
+{ id: 'master.coherent.10', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
+{ id: 'master.rounds.10', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
 { id: 'master.atg.20', cat: 'maestria', title: 'Rodillas de acero', desc: '20 sesiones ATG', glyph: '△' },
 { id: 'master.hips.20', cat: 'maestria', title: 'Caderas libres', desc: '20 sesiones caderas', glyph: '◇' },
 { id: 'master.shoulders.20', cat: 'maestria', title: 'Hombros libres', desc: '20 sesiones hombros', glyph: '⌢' },
@@ -14740,9 +15042,9 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'master.hydrate.30', cat: 'maestria', title: 'Río constante', desc: '30 días 8 vasos', glyph: '≈' },
 { id: 'master.hydrate.90', cat: 'maestria', title: 'Manantial', desc: '90 días 8 vasos', glyph: '∿' },
 { id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todos los Extra en 1 semana', glyph: '✧' },
-{ id: 'master.silent.day', cat: 'maestria', title: 'Día silencioso', desc: '1 día modo silencio', glyph: '𝇇' },
-{ id: 'master.dawn', cat: 'maestria', title: 'Amanecer', desc: 'Sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
-{ id: 'master.dusk', cat: 'maestria', title: 'Ocaso', desc: 'Sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
+{ id: 'master.silent.day', cat: 'maestria', title: 'Día silencioso', desc: '5 días en modo silencio', glyph: '𝇇' },
+{ id: 'master.dawn', cat: 'maestria', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
+{ id: 'master.dusk', cat: 'maestria', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
 { id: 'master.midnight.never', cat: 'maestria', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
 { id: 'master.focus.day', cat: 'maestria', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
 { id: 'master.retreat', cat: 'maestria', title: 'Retiro personal', desc: '2h respira + mueve en día', glyph: '❖', glyphSvg: GLYPH_SVG['master.retreat'] },
@@ -14750,22 +15052,17 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
 { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
 { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
-{ id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '50 logros', glyph: 'L' },
-{ id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '100 logros', glyph: 'C' },
+{ id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '30 logros', glyph: 'L' },
+{ id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '60 logros', glyph: 'C' },
 { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
 
 // Secretos (71-90)
 { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
-{ id: 'secret.konami', cat: 'secretos', title: 'Código oculto', desc: '↑↑↓↓←→←→BA', glyph: '?', secret: true },
 { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
 { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
 { id: 'secret.rain', cat: 'secretos', title: 'Lluvia mental', desc: '3 respiraciones seguidas', glyph: '?', secret: true },
-{ id: 'secret.pause.long', cat: 'secretos', title: 'Pausa larga perfecta', desc: '3 Pomodoros + pausa larga', glyph: '?', secret: true },
-{ id: 'secret.skip.none', cat: 'secretos', title: 'Sin saltarse', desc: 'Semana sin saltar pausas', glyph: '?', secret: true },
 { id: 'secret.first.monday', cat: 'secretos', title: 'Primer lunes', desc: 'Primer lunes del mes', glyph: '?', secret: true },
 { id: 'secret.new.year', cat: 'secretos', title: 'Año nuevo', desc: '1 de enero', glyph: '?', secret: true },
-{ id: 'secret.birthday', cat: 'secretos', title: 'Regalo', desc: 'Tu cumpleaños', glyph: '?', secret: true },
-{ id: 'secret.tweak.all', cat: 'secretos', title: 'Explorador de estilo', desc: 'Prueba cada tweak', glyph: '?', secret: true },
 { id: 'secret.dark.mode', cat: 'secretos', title: 'Modo oscuro', desc: '7 días en oscuro', glyph: '?', secret: true },
 { id: 'secret.aged', cat: 'secretos', title: 'Papel envejecido', desc: 'Paleta envejecida', glyph: '?', secret: true },
 { id: 'secret.mono', cat: 'secretos', title: 'Editorial mono', desc: 'Tipografía mono', glyph: '?', secret: true },
@@ -14788,7 +15085,7 @@ const ACHIEVEMENT_CATALOG = [
 
 // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
 { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
-{ id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Diez horas de foco en un mes', glyph: '✦' },
+{ id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
 { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
 { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Un mes seguido sin perder el ritmo', glyph: '✦' },
 
@@ -14858,14 +15155,33 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
 'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
 // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
 'explore.tweaks',
-// Secretos (10/21) — los secretos con trigger se siguen pintando como secretos.
+// Secretos — los secretos con trigger se siguen pintando como secretos.
 // Sesión 17: +5 tweak-secrets (aged, dark.mode, mono, seal, illustrated).
 // B1: fuera los 3 breath.hold (apnea); entran bilingual/backup/safety.read.
+// s146: entran los 6 que se implementan; los 5 que no tenían forma razonable
+// de detectarse (konami, birthday, skip.none, tweak.all, pause.long) SALEN
+// del catálogo. Motivo medido: un secreto sin detector se pinta EXACTAMENTE
+// igual que uno alcanzable, así que 11 de los 21 eran decoración
+// indistinguible. Tras este cambio, todos los secretos del catálogo se
+// pueden descubrir.
 'secret.cow.click', 'secret.bilingual',
 'secret.backup', 'secret.safety.read',
 'secret.supporter',
 'secret.aged', 'secret.dark.mode', 'secret.mono',
-'secret.seal', 'secret.illustrated']
+'secret.seal', 'secret.illustrated',
+'secret.night.owl', 'secret.lunch', 'secret.zen',
+'secret.first.monday', 'secret.new.year', 'secret.rain',
+// s146 — maestrías que estaban en el catálogo SIN detector (nadie podía
+// ganarlas). Cuelgan de contadores nuevos en state-achievements.support.
+'master.pomodoro.12', 'master.centurion', 'master.marathon',
+'master.gardener', 'master.hips.20', 'master.shoulders.20',
+'master.ancestral.10', 'master.antidote',
+'master.hydrate.30', 'master.hydrate.90',
+// s146 — exploración completa por módulo
+'explore.all.breathe', 'explore.all.move', 'explore.all.extra',
+// s146 — efemérides de fecha civil (el logro celebra el día, no el instante)
+'season.solstice.summer', 'season.solstice.winter',
+'season.equinox.spring', 'season.equinox.autumn']
 );
 
 Object.assign(window, { ACHIEVEMENT_CATALOG, CAT_META, IMPLEMENTED_ACHIEVEMENTS });
@@ -21028,7 +21344,7 @@ function PaceApp() {
      POR CONSTRUCCIÓN, que es lo que se decidió: dentro de un Camino la rutina
      ya viene elegida y el ritmo manda. La biblioteca se queda ABIERTA detrás:
      cerrar el preview te devuelve a ella, no a la home. */
-  const [previewRoutine, setPreviewRoutine] = useState(null);
+  const [previewRoutine, setPreviewRoutine] = useStateMain(null);
   const lanzarDesdePreview = () => {
     const p = previewRoutine;
     setPreviewRoutine(null);

@@ -39,7 +39,14 @@ function completePomodoro() {
   addFocusMinutes(focusMinsAtCompletion);
   unlockAchievement('first.step');
   if (getState().cycle >= 8) unlockAchievement('master.pomodoro.8');
-  if (focusMinsAtCompletion >= 45) unlockAchievement('master.long.focus');
+  /* s146: `master.pomodoro.12` estaba en el catalogo SIN detector — nadie podia
+     ganarlo. Cuelga del mismo contador diario que el de 8. */
+  if (getState().cycle >= 12) unlockAchievement('master.pomodoro.12');
+  /* s146: «Larga sesion» se daba con UN bloque de 45. Ahora cinco: un bloque
+     largo es una tarde, cinco es una forma de trabajar. */
+  if (focusMinsAtCompletion >= 45 && bumpCount('foco.largo') >= 5) {
+    unlockAchievement('master.long.focus');
+  }
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.78.0</title>
+  <title>PACE · Foco · Cuerpo — v0.79.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -139,6 +139,10 @@
        muerto: ver la cabecera del archivo antes de tocar nada. -->
   <script type="text/babel" src="app/flags.js"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
+  <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
+       los detectores que faltaban. ANTES de state-timer y state-hydrate, que
+       usan bumpCount/getCount para los logros de volumen. -->
+  <script type="text/babel" src="app/state-achievements.support.jsx"></script>
   <script type="text/babel" src="app/state-timer.jsx"></script>
   <script type="text/babel" src="app/state-hydrate.jsx"></script>
   <script type="text/babel" src="app/state-achievements.jsx"></script>

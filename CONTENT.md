@@ -308,9 +308,19 @@ hombro, gato-camello. Más activar los **15 glifos pendientes** (D-4 de
 ## 🏆 Logros — taxonomía
 
 > **Fuente de verdad = código:** la lista completa vive en
-> `app/achievements/catalog.js` (`ACHIEVEMENT_CATALOG`, **106 entradas**;
-> `IMPLEMENTED_ACHIEVEMENTS`, **69 activos**). Aquí solo el mapa de
+> `app/achievements/catalog.js` (`ACHIEVEMENT_CATALOG`, **100 entradas**;
+> `IMPLEMENTED_ACHIEVEMENTS`, **92 activos**). Aquí solo el mapa de
 > categorías para no duplicar (y desincronizar) la lista.
+>
+> **s146 (v0.79.0)** — de 106/69 a 100/92: se retiraron **6 sin forma razonable
+> de detectarse** (`explore.chrome`, `secret.konami`, `secret.birthday`,
+> `secret.skip.none`, `secret.tweak.all`, `secret.pause.long`) y se
+> implementaron **23** que estaban en el catálogo sin detector. **Todos los
+> secretos del catálogo se pueden descubrir ya**: antes 11 de 21 eran
+> indistinguibles de los reales porque un secreto sin detector se pinta igual
+> que uno alcanzable. Los 8 que siguen sin detector son **no-secretos** y se
+> pintan «Pronto», que es honesto. Medición reproducible:
+> `node scripts/audit/logros.js`.
 
 Estética: sello circular, tinta oliva/terracota sobre crema, glifo
 heráldico (`app/glyphs/achievement-glyphs.jsx`) + texto en mayúsculas.

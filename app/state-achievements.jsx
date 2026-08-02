@@ -14,21 +14,57 @@ const BREATH_ROUTINE_CATEGORIES = {
   'breathe.rounds.express': 'rounds',
 };
 
+/* first.ritual (4 modulos en un dia) y first.plan (completar el plan) tenian
+   la MISMA condicion — s146 lo midio: caian siempre juntos y eran dos de los
+   once del primer dia. Ahora `first.plan` pide sostenerlo TRES dias, que es lo
+   que distingue «lo hice» de «asi es como uso esto». */
+const PLAN_DIAS_PARA_LOGRO = 3;
+
 function checkPlanAchievements() {
   const s = getState();
   const p = s.plan || {};
-  if (p.muevete && p.respira && p.extra && p.hidratate) {
-    unlockAchievement('first.ritual');
+  /* `first.day` se comprueba AQUI y no en `updateStreak`: updateStreak retorna
+     pronto cuando el dia ya esta marcado, asi que solo corria en la primera
+     actividad de la jornada — momento en el que el plan tiene UNA marca y la
+     condicion de dos nunca se cumplia. El banco de `scripts/audit/logros.js` lo
+     cazo: el logro no se ganaba ni con un año de uso exhaustivo. */
+  checkPrimerDiaDeVerdad();
+  if (!(p.muevete && p.respira && p.extra && p.hidratate)) return;
+  unlockAchievement('first.ritual');
+  const hoy = new Date().toDateString();
+  const list = Array.isArray(s.planDates) ? s.planDates : [];
+  if (!list.includes(hoy)) {
+    const next = [...list, hoy].slice(-30);
+    setState({ planDates: next });
+    if (next.length >= PLAN_DIAS_PARA_LOGRO) unlockAchievement('first.plan');
+  } else if (list.length >= PLAN_DIAS_PARA_LOGRO) {
     unlockAchievement('first.plan');
   }
 }
 
-/* master.dawn / master.dusk / morning.5 */
+/* master.dawn / master.dusk / morning.5 + secretos de hora.
+   s146: `dawn` y `dusk` estaban en «maestria» pidiendo UNA sesion — una sola
+   sesion no es maestria de nada. Pasan a 5 dias distintos, el mismo criterio
+   que ya usaba `morning.5` a su lado. Se cuentan DIAS, no sesiones: tres
+   respiraciones seguidas a las 6:50 son una madrugada, no tres. */
+const DAWN_DIAS = 5;
+const DUSK_DIAS = 5;
+
+function marcaDia(campo, limite) {
+  const hoy = new Date().toDateString();
+  const s = getState();
+  const list = Array.isArray(s[campo]) ? s[campo] : [];
+  if (list.includes(hoy)) return list.length;
+  const next = [...list, hoy].slice(-limite * 3);
+  setState({ [campo]: next });
+  return next.length;
+}
+
 function checkTimeOfDayAchievements() {
   const now = new Date();
   const h = now.getHours();
-  if (h < 7)  unlockAchievement('master.dawn');
-  if (h >= 21) unlockAchievement('master.dusk');
+  if (h < 7 && marcaDia('dawnDates', DAWN_DIAS) >= DAWN_DIAS) unlockAchievement('master.dawn');
+  if (h >= 21 && marcaDia('duskDates', DUSK_DIAS) >= DUSK_DIAS) unlockAchievement('master.dusk');
   if (h < 9) {
     const today = now.toDateString();
     const s = getState();
@@ -39,33 +75,56 @@ function checkTimeOfDayAchievements() {
       if (next.length >= 5) unlockAchievement('morning.5');
     }
   }
+  checkSecretosDeHora();
+  checkFechasSenaladas();
 }
 
-/* master.collector.half / master.collector.full */
+/* master.collector.half / master.collector.full.
+   s146 MIDIO que `full` era IMPOSIBLE: pedia 100 logros y solo 69 tenian
+   detector, asi que estaba declarado como implementado sin poder ganarse nunca
+   (el caso exacto del §3.4). Los umbrales siguen siendo FIJOS —decision s90:
+   un denominador por catalogo se distorsiona al crecer— pero ahora por debajo
+   del techo real. Si algun dia se añaden detectores, estos numeros suben con
+   ellos A MANO: es el precio de que sean fijos, y esta anotado a proposito. */
+const COLLECTOR_HALF = 30;
+const COLLECTOR_FULL = 60;
+
 function checkCollectorAchievements() {
   const count = Object.keys(getState().achievements).length;
-  if (count >= 50)  unlockAchievement('master.collector.half');
-  if (count >= 100) unlockAchievement('master.collector.full');
+  if (count >= COLLECTOR_HALF) unlockAchievement('master.collector.half');
+  if (count >= COLLECTOR_FULL) unlockAchievement('master.collector.full');
 }
 
-/* master.silent.day */
+/* master.silent.day — s146: pedia UN dia con el sonido apagado, que es un
+   ajuste, no una maestria. Ahora cinco. */
+const SILENT_DIAS = 5;
+
 function checkSilentDayAchievement() {
   const s = getState();
   if (s.soundOn) return;
   const today = new Date().toDateString();
   const list = Array.isArray(s.silentDates) ? s.silentDates : [];
   if (!list.includes(today)) {
-    setState({ silentDates: [...list, today].slice(-30) });
+    const next = [...list, today].slice(-30);
+    setState({ silentDates: next });
+    if (next.length >= SILENT_DIAS) unlockAchievement('master.silent.day');
+  } else if (list.length >= SILENT_DIAS) {
     unlockAchievement('master.silent.day');
   }
 }
 
-/* Contadores por tipo de rutina (master.box.10, coherent.10, rounds.10, atg.20). */
+/* Contadores por tipo de rutina (master.box.15, coherent.15, rounds.15, atg.20).
+   s146: los tres de respiracion suben de 10 a 15. Con uso diario de una tecnica
+   los 10 caian dentro del primer mes, a la vez que media categoria de
+   constancia; 15 los separa sin volverlos remotos. `atg.20` se queda: ya pedia
+   repeticion de verdad. */
+const MASTER_BREATH_REPS = 15;
+
 function checkRoutineCountAchievements(category) {
   const c = getState().routineCounts || {};
-  if (category === 'box'      && (c.box      || 0) >= 10) unlockAchievement('master.box.10');
-  if (category === 'coherent' && (c.coherent || 0) >= 10) unlockAchievement('master.coherent.10');
-  if (category === 'rounds'   && (c.rounds   || 0) >= 10) unlockAchievement('master.rounds.10');
+  if (category === 'box'      && (c.box      || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.box.10');
+  if (category === 'coherent' && (c.coherent || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.coherent.10');
+  if (category === 'rounds'   && (c.rounds   || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.rounds.10');
   if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
 }
 
@@ -85,7 +144,11 @@ function checkStatsAchievements() {
     unlockAchievement('stats.month.first');
   }
 
-  if (Object.values(months).some(m => m.focusMinutes >= 600)) {
+  /* s146: 600 min/mes («diez horas») se alcanzaban en SEIS dias con cuatro
+     pomodoros diarios — un logro mensual que caia dentro de la primera semana.
+     1200 (veinte horas) lo devuelve a la escala de un mes. La descripcion del
+     catalogo se corrige en el mismo cambio. */
+  if (Object.values(months).some(m => m.focusMinutes >= 1200)) {
     unlockAchievement('stats.month.focus');
   }
 
@@ -113,6 +176,15 @@ function checkAllPathsCompleted() {
     if (!entry || (entry.count || 0) < 1) return;
   }
   unlockAchievement('master.path.all7');
+}
+
+/* first.day — un dia con DOS actividades distintas del plan. Antes bastaba con
+   existir; el nombre del logro («Primer dia») no cambia, cambia lo que cuenta
+   como dia. */
+function checkPrimerDiaDeVerdad() {
+  const p = getState().plan || {};
+  const hechas = ['muevete', 'respira', 'extra', 'hidratate'].filter(k => p[k]).length;
+  if (hechas >= 2) unlockAchievement('first.day');
 }
 
 /* master.retreat — breathMinutes[day] + moveMinutes[day] >= 120 */
@@ -177,7 +249,10 @@ function updateStreak() {
   else current = 1;
   const longest = Math.max(s.streak.longest, current);
   setState({ streak: { current, longest, lastActiveDate: today } });
-  if (current >= 1)   unlockAchievement('first.day');
+  /* s146: `first.day` ya no cuelga de aqui. Se daba con `current >= 1`, o sea
+     en la PRIMERA sesion de la vida, cayendo junto a `first.breath` sin
+     significar nada distinto. Ahora pide un dia de verdad (dos actividades) y
+     se comprueba en `checkPlanAchievements`, que es quien ve el plan al dia. */
   if (current >= 3)   unlockAchievement('streak.3');
   if (current >= 7)   unlockAchievement('streak.7');
   if (current >= 14)  unlockAchievement('streak.14');
@@ -221,7 +296,17 @@ function completeBreathSession(routineId, durationMin) {
     'breathe.kapalabhati':    'explore.kapalabhati',
     'breathe.physiological':  'explore.physiological',
   };
-  if (explorationMap[routineId]) unlockAchievement(explorationMap[routineId]);
+  /* s146: explorar deja de ser «lo probe una vez». El logro de una tecnica
+     llega a la TERCERA sesion de esa tecnica — asi `explore.*` deja de caer el
+     mismo dia que `first.breath` y la categoria de exploracion (16 de 16 eran
+     de un solo uso) empieza a pedir algo. */
+  const exploreId = explorationMap[routineId];
+  if (exploreId && bumpCount(exploreId) >= EXPLORE_REPS) unlockAchievement(exploreId);
+  checkExploreCompleto();
+  checkMaestriasDeVolumen();
+  checkZen();
+  /* secret.rain — tres respiraciones el mismo dia */
+  if (contarHoy('respiraHoy') >= 3) unlockAchievement('secret.rain');
   checkRetreatAchievement();
   checkSilentDayAchievement();
   const breathCat = BREATH_ROUTINE_CATEGORIES[routineId];
@@ -247,8 +332,11 @@ function completeMoveSession(routineId, durationMin) {
   });
   unlockAchievement('first.stretch');
   if (getState().moveSessionsTotal >= 25) unlockAchievement('move.sessions.25');
+  contarRutina(routineId);
   checkPlanAchievements();
   checkTimeOfDayAchievements();
+  checkExploreCompleto();
+  checkMaestriasDeVolumen();
   checkRetreatAchievement();
   checkSilentDayAchievement();
   updateStreak();
@@ -267,6 +355,7 @@ function completeExtraSession(routineId, durationMin) {
     weeklyStats: { ...s.weeklyStats, moveMinutes: week },
   });
   unlockAchievement('first.extra');
+  contarRutina(routineId);
   checkPlanAchievements();
   checkTimeOfDayAchievements();
   /* NOTA (sesion 15): rutinas de movilidad pasaron de MOVE a EXTRA_ROUTINES.
@@ -279,7 +368,11 @@ function completeExtraSession(routineId, durationMin) {
     'move.neck.3':      'explore.neck',
     'move.desk.quick':  'explore.desk',
   };
-  if (exploreMap[routineId]) unlockAchievement(exploreMap[routineId]);
+  /* misma regla que en Respira: tercera vez, no primera (s146) */
+  const exploreId = exploreMap[routineId];
+  if (exploreId && bumpCount(exploreId) >= EXPLORE_REPS) unlockAchievement(exploreId);
+  checkExploreCompleto();
+  checkMaestriasDeVolumen();
   checkRetreatAchievement();
   checkSilentDayAchievement();
   if (routineId === 'move.atg.knees') {
