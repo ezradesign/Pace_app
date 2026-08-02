@@ -194,3 +194,118 @@ estación completa.
 - **Títulos y descripciones de logro son solo español**, también en inglés: salen
   literales de `catalog.js` sin pasar por i18n. Hueco pre-existente, detectado al
   comprobar el coste de cambiar una descripción.
+
+---
+
+# Segunda mitad de la s146 — v0.79.1
+
+> Continuación de la misma sesión, tras el cierre de v0.79.0. Cambia de tema:
+> del **umbral** al **aviso** y al **arte**.
+
+## 1. El aviso hablaba de la actividad anterior
+
+Lo reportó el usuario en dos frases: «hago respira y me dice calistenia» y «en
+4·7·8 acabo y es primer estirón». Reproducido con una traza sobre el artefacto
+compilado — el aviso iba **siempre un paso por detrás**, y lo que sí habías
+ganado se quedaba en la cola.
+
+Dos causas encadenadas, ambas del diseño de s145: la cola drenaba **FIFO** (lo
+más antiguo) y drenaba **aunque la sesión no ganara nada**. Y v0.79.0 lo agravó:
+23 detectores nuevos, varios de ellos oportunistas (secretos de hora,
+efemérides), metían más retraso.
+
+**La regla que faltaba:** un logro de módulo solo se anuncia en una sesión de ese
+módulo. Los transversales valen en cualquier sitio porque no prometen relación
+con lo que acabas de hacer. Necesitó **dos pasadas** en `flushAchievementToast`:
+con una sola, los transversales se colaban por delante por ser más antiguos y
+Respira seguía anunciando «Primer día».
+
+**Medido de paso:** con la curva de v0.79.0 una sesión gana **1 logro**, no 4. El
+escalonado ya casi no tiene trabajo; lo poco que hacía era desincronizar.
+
+## 2. Revisión crítica del propio trabajo
+
+A petición del usuario. Tres defectos reales, míos:
+
+- **Crecimiento sin techo en localStorage**: `contarRutina` creaba una clave por
+  rutina propia (`custom.<timestamp>`), para siempre, y sin servir para nada —
+  `explore.all.extra` se mide contra el catálogo de Mueve.
+- **Cuatro claves de estado sin declarar** en `defaultState`, rompiendo la
+  convención del archivo.
+- **`state-core.jsx` por encima de 500 líneas.** Dato que corrige la
+  documentación: **ya estaba en 501 antes de esta sesión**; la tabla de deuda
+  decía 494.
+
+Y una trampa de medición: la primera comprobación dio «el fix no funciona»
+porque **el estado no se había limpiado** —la página anterior lo re-persistió
+antes de navegar— y estaba midiendo restos. Primo hermano del buffer de consola.
+
+## 3. Cuatro secretos más eran fantasma, y corrigen una cifra mía
+
+`secret.aged`, `secret.mono`, `secret.seal`, `secret.illustrated`: tienen
+detector, pero **la palanca que los dispara ya no existe en la UI**. La paleta
+«envejecido» se retiró en s71 y `loadState` la migra a crema; la tipografía no
+tiene control desde s20; `logoVariant` salió de Tweaks.
+
+Así que **«secretos fantasma 11 → 0» era falso: eran 11 → 4**. Punto ciego del
+banco: da por «alcanzable» todo detector que viva en un componente, sin poder
+saber si el control sigue ahí.
+
+## 4. §15.4 · denominador único
+
+Medido: sidebar **96**, modal **88**. La sidebar contaba los 8 sin detector, así
+que su «por descubrir» prometía de más. La regla pasa a `catalog.js`, que es el
+único punto que ven las dos superficies.
+
+## 5. Los 55 glifos
+
+El usuario aportó **91 archivos = 58 dibujos distintos** (verificado por hash de
+contenido, no por nombre). Ingestados 55 como **máscara CSS**.
+
+### Lo que se midió antes de decidir
+
+- **El peso no era problema**, al contrario de lo que se avisó primero: a tamaño
+  de sello cada máscara pesa ~5 KB. Los 200 MB de origen son lienzo de imprenta.
+- **A 56 px se reconocen.** La predicción de «mancha gris» era falsa para este
+  arte; valía para el ejemplo denso de la gota.
+- **El problema real era el contraste**: dibujos pálidos (L 171-187) sobre papel
+  L 237. La máscara lo iguala porque el color lo pone el token.
+
+### Tres intentos para quitar el marco
+
+1. Pico de densidad por radio → en los motivos grandes el pico **es** el motivo.
+   3 de 10.
+2. Cobertura angular a radio fijo → **0 de 50**. Medido el perfil: **el marco no
+   está centrado ni es un círculo**; a radio fijo aparece en el 41 % de los
+   ángulos. Y aflojar el umbral detecta la textura del papel.
+3. **Por ángulo, el trazo más exterior.** 50 de 50.
+
+### Y el encuadre son dos decisiones, no una
+
+- **Centrar** sigue a la tinta **visible**: una sombra tenue a un lado desplazaba
+  el dibujo sin que el ojo la viera.
+- **Dimensionar** cubre **toda** la tinta, y por el **máximo**, no por percentil:
+  con el percentil 99.5 el 0,5 % extremo es exactamente el que asoma — 17 de 50
+  con tinta fuera del sello.
+
+### Trampas de herramienta
+
+- **`.sharpen()` devuelve 3 canales aunque entre 1** (1.048.576 → 3.145.728
+  bytes). Leerlo como gris desplaza cada fila: la primera tanda salió en tiras.
+- **sharp aplica `extract` ANTES de `extend`** aunque se encadenen al revés. El
+  recorte se hace sobre el búfer.
+- **El inliner del build sustituye cadenas literales**: las rutas van enteras en
+  el mapa, y **ni siquiera se pueden mencionar en un comentario** — el
+  guardarrail comprueba que no queda rastro del prefijo y aborta el build.
+- **El mapeo iba por posición.** Al subir 8 dibujos más, con nombre en mayúscula,
+  **0 de 50 posiciones seguían coincidiendo**: los 50 glifos se habrían
+  reasignado sin dar un error. Pasa a clave estable.
+
+## 6. Lo que queda abierto
+
+- **9 apuestas del mapeo** sin revisar por el usuario, y **3 dibujos liberados**
+  (bambú, vasija, llave) esperando destino.
+- **4 glifos por debajo del 75 % de la mediana de tinta** — y medido, no es
+  opacidad: su techo con toda la tinta opaca ya está por debajo. Solo lo
+  arreglaría engordar el trazo, que sería retocar el arte.
+- **41 logros sin arte propio** de los 96.

@@ -86,8 +86,8 @@ function checkTimeOfDayAchievements() {
    un denominador por catalogo se distorsiona al crecer— pero ahora por debajo
    del techo real. Si algun dia se añaden detectores, estos numeros suben con
    ellos A MANO: es el precio de que sean fijos, y esta anotado a proposito. */
-const COLLECTOR_HALF = 30;
-const COLLECTOR_FULL = 60;
+const COLLECTOR_HALF = 45;
+const COLLECTOR_FULL = 75;
 
 function checkCollectorAchievements() {
   const count = Object.keys(getState().achievements).length;
@@ -122,9 +122,9 @@ const MASTER_BREATH_REPS = 15;
 
 function checkRoutineCountAchievements(category) {
   const c = getState().routineCounts || {};
-  if (category === 'box'      && (c.box      || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.box.10');
-  if (category === 'coherent' && (c.coherent || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.coherent.10');
-  if (category === 'rounds'   && (c.rounds   || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.rounds.10');
+  if (category === 'box'      && (c.box      || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.box.15');
+  if (category === 'coherent' && (c.coherent || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.coherent.15');
+  if (category === 'rounds'   && (c.rounds   || 0) >= MASTER_BREATH_REPS) unlockAchievement('master.rounds.15');
   if (category === 'atg'      && (c.atg      || 0) >= 20) unlockAchievement('master.atg.20');
 }
 
@@ -228,12 +228,31 @@ function unlockAchievement(id, note) {
 
 /* Saca UNO de la cola y lo celebra. Se llama al cerrar una sesión, gane o no
    gane un logro nuevo: si no drenara también sin desbloqueos, una cola de tres
-   se quedaría esperando para siempre a que hubiera un cuarto. */
-function flushAchievementToast() {
+   se quedaría esperando para siempre a que hubiera un cuarto.
+
+   s146b — EL AVISO TIENE QUE HABLAR DE ESTA SESIÓN. Reportado por el usuario y
+   reproducido: al acabar 4·7·8 salía «Primer estirón», porque la cola es FIFO y
+   drenaba lo más antiguo — el logro de la sesión anterior. Ahora se recorre la
+   cola y se coge **el primero que encaje con el módulo**; lo que no encaja NO se
+   pierde ni se adelanta, se queda esperando a una sesión suya. Los logros
+   transversales (rachas, horas del día, hitos de colección) no declaran módulo y
+   siguen valiendo en cualquier sesión: no prometen relación con la actividad.
+
+   `modulo` sin valor = superficie que no es de módulo (agua desde la home): se
+   comporta como antes y drena lo más antiguo que encaje. */
+function flushAchievementToast(modulo) {
   const q = getState().achievementQueue || [];
   if (!q.length) return false;
-  const [siguiente, ...resto] = q;
-  setState({ achievementQueue: resto });
+  /* DOS PASADAS, y el orden importa. Primero lo que es DE ESTE modulo; solo si
+     no hay nada suyo, un transversal. Con una sola pasada FIFO los transversales
+     —que son mas antiguos y encajan en todo— se colaban por delante: al acabar
+     4·7·8 salia «Primer dia» y «Primer aliento» se quedaba en la cola. Sigue
+     habiendo un solo aviso por sesion (§16.2); lo que cambia es cual. */
+  let i = modulo ? q.findIndex(id => MODULO_DE_LOGRO[id] === modulo) : -1;
+  if (i === -1) i = q.findIndex(id => encajaEnSesion(id, modulo));
+  if (i === -1) return false;
+  const siguiente = q[i];
+  setState({ achievementQueue: q.filter((_, n) => n !== i) });
   showToast({ id: siguiente, type: 'achievement' });
   return true;
 }
@@ -316,7 +335,7 @@ function completeBreathSession(routineId, durationMin) {
     checkRoutineCountAchievements(breathCat);
   }
   updateStreak();
-  flushAchievementToast();
+  flushAchievementToast('breathe');
 }
 
 function completeMoveSession(routineId, durationMin) {
@@ -340,7 +359,7 @@ function completeMoveSession(routineId, durationMin) {
   checkRetreatAchievement();
   checkSilentDayAchievement();
   updateStreak();
-  flushAchievementToast();
+  flushAchievementToast('move');
 }
 
 function completeExtraSession(routineId, durationMin) {
@@ -381,7 +400,7 @@ function completeExtraSession(routineId, durationMin) {
     checkRoutineCountAchievements('atg');
   }
   updateStreak();
-  flushAchievementToast();
+  flushAchievementToast('extra');
 }
 
 Object.assign(window, {

@@ -50,7 +50,7 @@ function completePomodoro() {
   checkTimeOfDayAchievements();
   checkSilentDayAchievement();
   updateStreak();
-  flushAchievementToast();
+  flushAchievementToast('focus');
 }
 
 /* completeFocusSession(context, opts) — punto de entrada unificado del fin de

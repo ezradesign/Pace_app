@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [abajo](#v0791----2026-08-03----fixfeatlogros-el-aviso-coherente-y-los-sellos-dibujados) |
 | **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [abajo](#v0790----2026-08-02----fixfeatlogros-la-curva-de-logros-y-la-amnistía) |
 | **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [abajo](#v0780----2026-08-02----featlogros-entrega-escalonada--uno-por-sesión) |
 | **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [abajo](#v0770----2026-07-31----featui-preview-antes-de-empezar-183) |
@@ -337,6 +338,83 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.79.1] -- 2026-08-03 -- fix+feat(logros): el aviso coherente, y los sellos dibujados
+
+### El aviso hablaba de la actividad anterior
+
+Reportado por el usuario: *«hago respira y me dice calistenia»*, *«en 4·7·8 acabo
+y es primer estirón»*. Reproducido con traza:
+
+| Sesión | Anunciaba | Debía |
+|---|---|---|
+| Mueve | Primer estirón | correcto |
+| Estira | **Pausa de mediodía** | Primera calistenia |
+| Respira 4·7·8 | **Primera calistenia** | Primer aliento |
+
+La cola de s145 era **FIFO** y drenaba **gane o no gane** algo nuevo, así que el
+aviso iba siempre un paso por detrás; «Primer aliento» se quedaba dentro sin
+anunciarse. Los 23 detectores de v0.79.0 lo agravaron: secretos de hora y
+efemérides engordaban la cola.
+
+**Regla nueva:** un logro **de módulo** solo se anuncia en una sesión de ese
+módulo, y dentro de la sesión tiene prioridad lo suyo sobre lo transversal
+(rachas, horas del día, hitos de colección). Hicieron falta **dos pasadas**: con
+una sola, los transversales se colaban por delante por ser más antiguos.
+
+### §15.4 · denominador único
+
+Medido: la sidebar dividía entre **96** (catálogo entero) y el modal entre **88**
+(solo lo que tiene detector). El «por descubrir» de la sidebar prometía 8 logros
+que nadie puede ganar. La regla vive ahora en un único punto de `catalog.js` que
+consumen las dos superficies.
+
+### Cuatro secretos más eran fantasma
+
+`secret.aged`, `secret.mono`, `secret.seal` y `secret.illustrated` tenían
+detector pero **su palanca ya no existe en la UI** (la paleta «envejecido» se
+retiró en s71 y `loadState` la migra; la tipografía no tiene control desde s20;
+`logoVariant` salió de Tweaks). Corrige la cifra de v0.79.0: los secretos
+fantasma eran **11 → 4**, no 11 → 0. Retirados; los detectores se quedan por si
+vuelve la opción. Catálogo **100 → 96**, con detector **92 → 88**.
+
+### Contenido
+
+- **«Repertorio»** sustituye a «Exploración»: la categoría premia repetir, no
+  descubrir. También «Box asentada» y «ATG asentado».
+- **«Cuarenta y cinco sellos» / «Setenta y cinco sellos»** (45 y 75) en lugar de
+  «Media colección» / «Colección completa», que prometían proporciones falsas.
+- Ids veraces: `master.box.15`, `.coherent.15`, `.rounds.15` — **con migración**,
+  así que nadie pierde el logro y no hay que avisar a los testers.
+
+### Los 55 glifos del usuario
+
+Arte propio ingestado como **máscara CSS** (`scripts/ingest-glifos-logro.js`):
+la forma la pone el dibujo y el color el token, así que se conserva el tintado
+por estado y el contraste queda al nivel de los 34 glifos heráldicos. Medido:
+**91 archivos = 58 dibujos distintos** por hash; 55 mapeados, **297 KB**.
+
+Lo que costó tres intentos: **el marco del arte no es un círculo centrado**. A un
+radio fijo aparece solo en el 41 % de los ángulos. Se detecta buscando, para cada
+ángulo, el trazo más exterior. Y el encuadre separa dos decisiones que quieren
+umbrales distintos: **centrar** sigue a la tinta visible, **dimensionar** cubre
+toda la tinta o el dibujo asoma fuera del sello.
+
+### Miniaturas de la sidebar
+
+Dejan de pintar un `✦` fijo: usan `renderGlyph` de Achievements, la misma
+función, no una copia.
+
+### Corregido en el propio código
+
+- `contarRutina` creaba una clave por rutina propia (`custom.<timestamp>`):
+  **crecimiento sin techo** en localStorage, y no servía para nada.
+- `dawnDates`, `duskDates`, `planDates` y `respiraHoy` nacían al vuelo; ahora
+  declaradas en `defaultState`.
+- El mapeo de glifos iba **por posición**: al subir el usuario 8 dibujos más,
+  **0 de 50 posiciones seguían coincidiendo**. Pasa a clave estable.
 
 ---
 

@@ -49,7 +49,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'morning.5', cat: 'constancia', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
 
   // Exploración (26-45)
-  { id: 'explore.box', cat: 'exploracion', title: 'Box descubierta', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
+  { id: 'explore.box', cat: 'exploracion', title: 'Box asentada', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
   { id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Tres sesiones de la relajante', glyph: '4·7·8' },
   { id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'Tres sesiones de coherencia', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
   { id: 'explore.rounds', cat: 'exploracion', title: 'Rondas', desc: 'Tres sesiones en rondas', glyph: '◴', glyphSvg: GLYPH_SVG['explore.rounds'] },
@@ -60,7 +60,7 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.physiological', cat: 'exploracion', title: 'Suspiro fisiológico', desc: 'Tres suspiros fisiológicos', glyph: '⟿', glyphSvg: GLYPH_SVG['explore.physiological'] },
   { id: 'explore.hips', cat: 'exploracion', title: 'Caderas libres', desc: 'Tres sesiones de caderas', glyph: '◇', glyphSvg: GLYPH_SVG['explore.hips'] },
   { id: 'explore.shoulders', cat: 'exploracion', title: 'Hombros resetados', desc: 'Tres sesiones de hombros', glyph: '⌢' },
-  { id: 'explore.atg', cat: 'exploracion', title: 'ATG descubierto', desc: 'Tres sesiones en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
+  { id: 'explore.atg', cat: 'exploracion', title: 'ATG asentado', desc: 'Tres sesiones en rango profundo', glyph: '△', glyphSvg: GLYPH_SVG['explore.atg'] },
   { id: 'explore.ancestral', cat: 'exploracion', title: 'Ancestral', desc: 'Tres sesiones ancestrales', glyph: '☖', glyphSvg: GLYPH_SVG['explore.ancestral'] },
   { id: 'explore.neck', cat: 'exploracion', title: 'Cuello atendido', desc: 'Tres sesiones de cuello', glyph: '~' },
   { id: 'explore.desk', cat: 'exploracion', title: 'Escritorio express', desc: 'Tres sesiones sin levantarse', glyph: '⊡' },
@@ -73,9 +73,9 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.pomodoro.8', cat: 'maestria', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
   { id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 Pomodoros', glyph: 'XII' },
   { id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de 45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
-  { id: 'master.box.10', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
-  { id: 'master.coherent.10', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
-  { id: 'master.rounds.10', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
+  { id: 'master.box.15', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
+  { id: 'master.coherent.15', cat: 'maestria', title: 'Corazón sincronizado', desc: '15 sesiones coherente', glyph: '♥' },
+  { id: 'master.rounds.15', cat: 'maestria', title: 'Rondas maestra', desc: '15 sesiones', glyph: '◶' },
   { id: 'master.atg.20', cat: 'maestria', title: 'Rodillas de acero', desc: '20 sesiones ATG', glyph: '△' },
   { id: 'master.hips.20', cat: 'maestria', title: 'Caderas libres', desc: '20 sesiones caderas', glyph: '◇' },
   { id: 'master.shoulders.20', cat: 'maestria', title: 'Hombros libres', desc: '20 sesiones hombros', glyph: '⌢' },
@@ -93,8 +93,8 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
   { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
   { id: 'master.antidote', cat: 'maestria', title: 'Antídoto completo', desc: '50 sesiones SIT', glyph: '✚' },
-  { id: 'master.collector.half', cat: 'maestria', title: 'Media colección', desc: '30 logros', glyph: 'L' },
-  { id: 'master.collector.full', cat: 'maestria', title: 'Colección completa', desc: '60 logros', glyph: 'C' },
+  { id: 'master.collector.half', cat: 'maestria', title: 'Cuarenta y cinco sellos', desc: '45 sellos reunidos', glyph: 'L' },
+  { id: 'master.collector.full', cat: 'maestria', title: 'Setenta y cinco sellos', desc: '75 sellos reunidos', glyph: 'C' },
   { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
 
   // Secretos (71-90)
@@ -105,10 +105,6 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'secret.first.monday', cat: 'secretos', title: 'Primer lunes', desc: 'Primer lunes del mes', glyph: '?', secret: true },
   { id: 'secret.new.year', cat: 'secretos', title: 'Año nuevo', desc: '1 de enero', glyph: '?', secret: true },
   { id: 'secret.dark.mode', cat: 'secretos', title: 'Modo oscuro', desc: '7 días en oscuro', glyph: '?', secret: true },
-  { id: 'secret.aged', cat: 'secretos', title: 'Papel envejecido', desc: 'Paleta envejecida', glyph: '?', secret: true },
-  { id: 'secret.mono', cat: 'secretos', title: 'Editorial mono', desc: 'Tipografía mono', glyph: '?', secret: true },
-  { id: 'secret.seal', cat: 'secretos', title: 'Sello clásico', desc: 'Logo sello', glyph: '?', secret: true },
-  { id: 'secret.illustrated', cat: 'secretos', title: 'Campo y pradera', desc: 'Logo ilustrado', glyph: '?', secret: true },
   /* B1 (decisión apnea): los 3 secretos de retención 60/90/120 s se retiran
      — premiar aguantar sin aire contra el reloj contradice el tono de
      seguridad. Sustitutos: exploración sin marca temporal. Los ids viejos
@@ -189,7 +185,7 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'master.long.focus', 'master.dawn', 'master.dusk',
   'master.collector.half', 'master.collector.full',
   'master.silent.day', 'master.retreat',
-  'master.box.10', 'master.coherent.10', 'master.rounds.10', 'master.atg.20',
+  'master.box.15', 'master.coherent.15', 'master.rounds.15', 'master.atg.20',
   // Caminos (1/1) — sesión 78
   'master.path.all7',
   // Estadísticas (4/4) — sesión 46
@@ -208,8 +204,7 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'secret.cow.click', 'secret.bilingual',
   'secret.backup', 'secret.safety.read',
   'secret.supporter',
-  'secret.aged', 'secret.dark.mode', 'secret.mono',
-  'secret.seal', 'secret.illustrated',
+  'secret.dark.mode',
   'secret.night.owl', 'secret.lunch', 'secret.zen',
   'secret.first.monday', 'secret.new.year', 'secret.rain',
   // s146 — maestrías que estaban en el catálogo SIN detector (nadie podía
@@ -225,4 +220,21 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'season.equinox.spring', 'season.equinox.autumn',
 ]);
 
-Object.assign(window, { ACHIEVEMENT_CATALOG, CAT_META, IMPLEMENTED_ACHIEVEMENTS });
+/* §15.4 · DENOMINADOR ÚNICO (s146b). Medido antes de existir esto: la sidebar
+   dividía entre 96 (el catálogo entero) y el modal entre 88 (solo lo que tiene
+   detector), así que el «por descubrir» de la sidebar prometía 8 logros que
+   nadie puede ganar. El bueno es el del modal: se cuenta lo CONSEGUIBLE.
+
+   Vive aquí y no en `Achievements.jsx` porque `catalog.js` carga ANTES que
+   Achievements y que Sidebar — es el único punto que las dos superficies ven.
+   Cualquier consumidor nuevo (stats, toasts, Camino) debe usar esto y no
+   recontar por su cuenta: recontar es exactamente como se separaron. */
+function achievementIsAvailable(a) {
+  return !!(a && (a.secret || IMPLEMENTED_ACHIEVEMENTS.has(a.id)));
+}
+const ACHIEVEMENTS_AVAILABLE = ACHIEVEMENT_CATALOG.filter(achievementIsAvailable).length;
+
+Object.assign(window, {
+  ACHIEVEMENT_CATALOG, CAT_META, IMPLEMENTED_ACHIEVEMENTS,
+  achievementIsAvailable, ACHIEVEMENTS_AVAILABLE,
+});

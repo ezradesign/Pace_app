@@ -20,6 +20,14 @@ function TweakSecretsWatcher() {
 
   // secret.aged — paleta 'envejecido' activa.
   useEffectSW(() => {
+    /* s146b — `secret.aged` SALIO del catalogo: la paleta 'envejecido' se
+       retiró de Ajustes en s71 y `loadState` la migra a 'crema', así que nadie
+       podía llegar aquí. Mismo caso que `secret.mono` (tipografía sin control
+       desde s20) y `secret.seal`/`secret.illustrated` (`logoVariant` retirado
+       de Tweaks). El detector se queda A PROPÓSITO: si algún día vuelve la
+       opción, devolver el logro al catálogo es una línea y esto ya funciona.
+       Llamar a `unlockAchievement` con un id fuera del catálogo es inofensivo
+       —la UI solo pinta lo que está en él—, igual que los ids de apnea de s107. */
     if (state.palette === 'envejecido') unlockAchievement('secret.aged');
   }, [state.palette]);
 
