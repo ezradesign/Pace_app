@@ -3,40 +3,49 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.27.6 · Pre-lanzamiento · Iteración de diseño
-**Build entregado:** `PACE_standalone.html` (standalone autocontenido)
+**Estado:** v0.84.0 · Pre-lanzamiento
+**Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
-
----
-
-## Estado actual (v0.27.6)
-
-| Area | Estado |
-|---|---|
-| Modulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
-| Caminos (Paths) | Sistema completo: PathsLibrary, PathRunner, SuggestedPathCard, PathStats, PathYearView |
-| Logros | 100 sellos coleccionables con deteccion automatica |
-| Stats | Semana · Mes · Año (heatmap) · Caminos — con rachas y tabla por camino |
-| i18n | ES/EN completo — 321 claves, 0 diff |
-| Estado (state) | Dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) |
-| Build | Validacion sintactica con TypeScript parser real; bundle ~540 KB |
-| Infraestructura | Protocolo de cierre Git en [`docs/WORKFLOW.md`](./docs/WORKFLOW.md) · Script [`scripts/check-session.ps1`](./scripts/check-session.ps1) |
+**English:** [`README_EN.md`](./README_EN.md)
 
 ---
 
 ## 🎯 Qué es
 
-PACE es un "todo en uno" de bienestar para trabajo de oficina y remoto. Combina:
+PACE es un "todo en uno" de bienestar para trabajo de oficina y remoto: ciclos de
+foco y micro-pausas de respiración, movilidad e hidratación, encadenadas en rutinas
+guiadas.
 
 | Módulo | Qué hace |
 |---|---|
-| **Foco** | Pomodoro configurable (15 / 25 / 35 / 45 min) |
-| **Respira** | 12 técnicas de breathwork (coherencia, box, 4-7-8, Wim Hof-like, pranayama) |
-| **Mueve** | 7 rutinas de movilidad (caderas, hombros, ATG, ancestral, cuello, escritorio) |
-| **Estira** | 7 ejercicios de calistenia discreta de oficina |
+| **Foco** | Pomodoro configurable (15 / 25 / 35 / 45 min) con ciclos y pausas |
+| **Respira** | 20 técnicas de breathwork (coherencia, box, 4-7-8, Wim Hof-like, pranayama) |
+| **Mueve** | 14 rutinas de movilidad (caderas, hombros, ATG, ancestral, cuello, escritorio) |
+| **Estira** | 14 rutinas de calistenia discreta de oficina |
 | **Hidrátate** | Tracker de vasos de agua |
-| **Logros** | 100 sellos coleccionables estilo libreta de campo |
+| **Caminos** | 7 recorridos guiados que encadenan pasos de foco, respiración, cuerpo e hidratación sobre una lámina ilustrada |
+| **Logros** | 96 sellos coleccionables estilo libreta de campo |
+| **Ritmo** | Estadísticas por semana · mes · año (heatmap) · Caminos |
+
+Además: **onboarding** de primera vez que propone tu primer Camino, **constructor de
+rutinas propias**, y **PWA** instalable que funciona sin conexión.
+
+---
+
+## 📊 Estado actual (v0.84.0)
+
+| Área | Estado |
+|---|---|
+| Módulos principales | Foco · Respira · Mueve · Estira · Hidrátate — estables |
+| Caminos | Sistema completo: biblioteca, runner por pasos, pantalla de cierre, stats y heatmap anual |
+| Contenido de cuerpo | Contrato de pasos v1 (modo, lateralidad, dosis, requisitos) + preview «antes de empezar» |
+| Logros | 96 en catálogo · 88 con detector activo · 58 con arte propio |
+| i18n | ES/EN completo, catálogos troceados por dominio |
+| PWA | `manifest.webmanifest` + service worker con precache; fuentes self-hosted, cero peticiones externas |
+| Premium | Guard central de entitlement listo; la licencia real aún no existe |
+| Código | 97 archivos en `app/`, ninguno por encima de 500 líneas |
+| Red de seguridad | `npm run verify` — sintaxis, build, análisis de ámbito del artefacto y coherencia de versión |
 
 ---
 
@@ -45,31 +54,47 @@ PACE es un "todo en uno" de bienestar para trabajo de oficina y remoto. Combina:
 - **Calmado, artesanal, cuidado.** No gamificado agresivo.
 - **Sin emojis** en la UI. Sin tipografías trilladas. Sin gradientes llamativos.
 - Paleta tierra: crema, verde oliva, terracota, ocre.
-- Tipografía serif italic (EB Garamond / Cormorant) para títulos.
+- Tipografía serif italic (Cormorant Garamond) para títulos.
 - Copy corto, en español, tono cálido y literario.
+- Tus datos viven en tu dispositivo. Sin cuentas, sin analytics, sin cookies.
 - *Antídoto a la silla* como frame mental.
 
 ---
 
 ## 🚀 Cómo abrir el proyecto
 
-### Desarrollo (modular, recomendado)
-Abre `PACE.html` en cualquier navegador moderno. Carga cada JSX por separado desde `app/`.
+### Desarrollo (modular)
+Abre `PACE.html` con un servidor estático. Carga cada JSX por separado desde `app/`
+y transpila en el navegador con Babel standalone.
 
-### Offline (un solo archivo)
-Abre `PACE_standalone.html`. Contiene todo inlineado y funciona sin servidor.
+### Web / PWA (lo que se publica)
+`index.html` es el artefacto canónico: todo compilado e inlineado, sin Babel en
+tiempo de ejecución. Sírvelo por HTTP para que el service worker y la instalación
+funcionen — abrirlo con `file://` desactiva las dos cosas.
+
+### Compilar
+```bash
+npm install && npm run build
+```
+
+### Antes de publicar
+```bash
+npm run verify
+```
 
 ### Requisitos
-Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
+Chrome/Edge 90+, Firefox 90+, Safari 14+. Node 18+ solo para compilar.
 
 ---
 
 ## 🏗️ Stack técnico
 
-- **React 18.3.1** (UMD pinneado con SRI hashes)
-- **Babel standalone 7.29.0** (transpila JSX en navegador)
-- **Sin bundler, sin backend, sin dependencias npm**
-- **Persistencia 100% en `localStorage`** — zero tracking
+- **React 18.3.1** (UMD de producción, self-hosted en `vendor/`)
+- **Babel standalone 7.29.0** — **solo en desarrollo**; el build compila el JSX a JS
+  plano por adelantado y retira Babel del artefacto
+- **Sin bundler y sin backend.** npm solo aporta el toolchain de compilación
+- **Persistencia en `localStorage`** — sin servidor de datos, sin tracking
+- **Fuentes self-hosted** (Cormorant Garamond, EB Garamond, Inter Tight)
 
 ---
 
@@ -78,50 +103,69 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 ```
 /
 ├── PACE.html                ← entry point de desarrollo
-├── PACE_standalone.html     ← bundle offline (inline, ~349 KB)
+├── index.html               ← artefacto WEB/PWA canónico
+├── PACE_standalone.html     ← export offline de un solo archivo, bajo demanda
+├── build-standalone.js      ← genera ambos artefactos
+├── manifest.webmanifest · sw.js
 ├── LICENSE                  ← Elastic License 2.0
-├── CLAUDE.md                ← protocolo y arquitectura
-├── STATE.md                 ← estado actual y próximos pasos
-├── CHANGELOG.md             ← historial por versión
-├── DESIGN_SYSTEM.md         ← tokens, paleta, tipografía
-├── CONTENT.md               ← catálogo de rutinas + 100 logros
-├── ROADMAP.md               ← visión a medio/largo plazo
-├── HANDOFF.md               ← snapshot histórico v0.9 (referencia)
+├── CLAUDE.md · STATE.md · CHANGELOG.md
+├── DESIGN_SYSTEM.md · CONTENT.md · ROADMAP.md · MONETIZATION.md
 │
 ├── docs/
-│   ├── porting.md           ← cómo portar a Next.js / Chrome / Android
-│   └── sessions/            ← diario completo de cada sesión
+│   ├── BUILD.md             ← cómo funciona el build
+│   ├── WORKFLOW.md          ← protocolo de cierre Git
+│   ├── product/             ← decisiones vigentes de producto y técnicas
+│   ├── audits/              ← auditorías con evidencia
+│   └── sessions/            ← diario de trabajo, una entrada por sesión
+│
+├── scripts/                 ← verify, ingesta de arte, utilidades
+├── vendor/                  ← React UMD self-hosted
+├── fonts/                   ← subsets latin self-hosted
 │
 └── app/
-    ├── tokens.css · state.jsx · main.jsx
-    ├── ui/          (Primitives, CowLogo, Toast)
+    ├── tokens.css · state*.jsx · main.jsx · flags.js
+    ├── ui/          (Primitives, SessionShell, CowLogo, Toast, TimerDial…)
     ├── shell/       (Sidebar)
-    ├── focus/       (FocusTimer)
-    ├── breathe/     (BreatheModule)
-    ├── move/        (MoveModule)
-    ├── extra/       (ExtraModule)
-    ├── hydrate/     (HydrateModule)
-    ├── breakmenu/   (BreakMenu)
-    ├── achievements/(Achievements)
-    ├── stats/       (WeeklyStats)
-    └── tweaks/      (TweaksPanel)
+    ├── focus/       (Pomodoro)
+    ├── breathe/     (visual, biblioteca, sesión guiada)
+    ├── move/ · extra/   (Mueve y Estira + runner de pasos v1)
+    ├── hydrate/ · breakmenu/ · achievements/ · stats/
+    ├── paths/       (Caminos: registro, runner, láminas, pasos)
+    ├── custom/      (constructor de rutinas propias)
+    ├── onboarding/ · support/ · tweaks/
+    ├── glyphs/      (arte de ejercicios y de logros)
+    └── i18n/        (catálogos ES/EN por dominio)
 ```
 
 ---
 
-## 🎛️ 5 ejes de personalización (Tweaks)
+## 🎛️ Personalización
 
 | Eje | Opciones |
 |---|---|
-| Paleta | crema · oscuro · envejecido |
-| Tipografía | garamond · cormorant · mono |
-| Layout | sidebar · minimal · editorial |
-| Timer | aro (default) · círculo · barra · número · analógico |
-| Círculo respiración | flor (default) · pulso · pétalo · ondas · orgánico |
+| Paleta | crema (día) · oscuro (noche) · papel envejecido |
+| Idioma | español · inglés |
 
-> El logo y el copy del botón de apoyo eran tweaks configurables hasta
-> v0.12.1. Desde v0.12.2 quedan fijos en la variante oficial para
-> reforzar la identidad del producto.
+La paleta oscura se autodetecta del sistema en el primer arranque; la elección
+manual persiste y siempre gana después.
+
+> **Ejes dormidos.** Estilos de timer (barra, analógico) y el círculo «orgánico» de
+> Respira existen en el código pero están **apagados por bandera** en
+> [`app/flags.js`](./app/flags.js): se retiraron por criterio visual, no porque
+> estorben, y la bandera los devuelve en una línea. Los ejes de tipografía y layout
+> tampoco tienen control en Ajustes. No borres esas ramas sin leer la cabecera del
+> archivo.
+
+---
+
+## 💛 Gratuito y Premium
+
+El **núcleo de PACE es gratuito** y seguirá estándolo: los cinco módulos, los ciclos
+de foco, los logros y las estadísticas.
+
+**Premium** ampliará rutinas, técnicas y Caminos mediante una **compra única** —
+sin suscripción y sin cuenta obligatoria. **v1.0 será la primera versión pagada**;
+hasta entonces el sistema de licencia no existe y todo lo construido es accesible.
 
 ---
 
@@ -130,6 +174,10 @@ Chrome/Edge 90+, Firefox 90+, Safari 14+. Nada de build step, nada de npm.
 - **Respiración:** [Breathe With Sandy](https://www.youtube.com/@BreatheWithSandy)
 - **Movilidad / ATG:** [Strengthside](https://www.youtube.com/@Strengthside)
 - **Calistenia oficina:** [Jess Martin](https://www.youtube.com/@jessmartinm)
+
+Los contenidos de Mueve y Estira se apoyan en material público de NHS, ACSM y OMS.
+**No son consejo médico.** Las técnicas con retención de aire llevan siempre un
+aviso de seguridad antes de empezar.
 
 ---
 
@@ -144,21 +192,17 @@ El **código fuente** de PACE se publica bajo la [Elastic License 2.0](./LICENSE
 
 **No puedes:**
 - Ofrecer PACE (o una versión modificada) **como servicio alojado o administrado** a terceros.
-- **Eludir, desactivar o saltarte** el sistema de validación de licencia Lifetime / Pase.
+- **Eludir, desactivar o saltarte** el sistema de validación de licencia.
 - **Retirar** los avisos de licencia, copyright o marca.
 
 ### La licencia comercial ≠ la licencia del código
 
-La Elastic License 2.0 cubre el **código fuente** del repositorio. La licencia **Premium Lifetime**
-es una licencia comercial **separada**, aplicada sobre el producto compilado para habilitar
-contenido y funciones premium. Ver [`MONETIZATION.md`](./MONETIZATION.md) para el detalle del
-modelo de monetización.
-
-> **Corregido en s149.** Esta sección hablaba de «Lifetime + **Pase mensual** + **Temporadas**»:
-> el modelo de cuatro vías quedó **descartado en s134** —al lanzamiento hay **un solo plan**— y
-> está marcado como histórico en `MONETIZATION.md`. El resto de este README sigue **muy
-> desactualizado** (dice v0.27.6 con la app en v0.82.0); se corrige entero en el frente de
-> presentación pública.
+La Elastic License 2.0 cubre el **código fuente** del repositorio. La licencia
+**Premium** es una licencia comercial **separada**, aplicada sobre el producto
+compilado para habilitar contenido y funciones premium. Ver
+[`MONETIZATION.md`](./MONETIZATION.md) para el detalle del modelo — con la
+advertencia de que su parte histórica está marcada como tal: al lanzamiento hay
+**un solo plan**, no cuatro vías.
 
 ### Otros usos
 
@@ -168,9 +212,9 @@ Para licencias comerciales alternativas (por ejemplo, uso interno de una organiz
 
 ## 🤝 Continuidad
 
-El proyecto está diseñado para iterarse en múltiples sesiones con ayuda de asistentes de diseño. Para retomar el proyecto:
+El proyecto se itera en sesiones sucesivas con ayuda de asistentes de diseño. Para retomarlo:
 
-1. [`STATE.md`](./STATE.md) — estado actual y próximos pasos
+1. [`STATE.md`](./STATE.md) — estado actual, backlog y próximos pasos
 2. [`CLAUDE.md`](./CLAUDE.md) — protocolo de trabajo y arquitectura
-3. [`docs/sessions/`](./docs/sessions/) — diario detallado de cada sesión
-4. [`HANDOFF.md`](./HANDOFF.md) — snapshot histórico v0.9 (filosofía de base)
+3. [`ROADMAP.md`](./ROADMAP.md) — el camino a v1.0
+4. [`docs/sessions/`](./docs/sessions/) — diario detallado de cada sesión

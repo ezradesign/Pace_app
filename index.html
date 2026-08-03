@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.83.0</title>
+  <title>PACE · Foco · Cuerpo — v0.84.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1148,8 +1148,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'welcome.value.local.sub': 'en tu navegador',
   'welcome.value.accounts.label': 'Sin cuentas',
   'welcome.value.accounts.sub': 'sin registro',
-  'welcome.value.free.label': 'Siempre gratis',
-  'welcome.value.free.sub': 'sin paywall',
+  'welcome.value.free.label': 'Núcleo gratuito',
+  'welcome.value.free.sub': 'disponible',
   'welcome.intention.label': '¿Qué quieres cultivar hoy?',
   'welcome.intention.optional': 'opcional',
   'welcome.intention.placeholder': 'concentración, calma, movimiento…',
@@ -1159,9 +1159,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'support.meta': 'Apoya el proyecto',
   'support.title.main': 'El núcleo de PACE es gratis.',
   'support.title.sub': 'Y lo seguirá siendo.',
-  'support.lede': 'No hay cuentas. No hay servidor. No te sigue nadie. Todo vive en tu navegador — y así queremos que siga.',
+  'support.lede': 'No hay cuentas. Tus datos no salen de aquí. No te sigue nadie. Todo vive en tu navegador — y así queremos que siga.',
   'support.value.local.label': 'Todo local',
-  'support.value.local.sub': 'localStorage únicamente',
+  'support.value.local.sub': 'en tu dispositivo',
   'support.value.tracking.label': 'Sin tracking',
   'support.value.tracking.sub': 'sin analytics, sin cookies',
   'support.value.forever.label': 'Para siempre',
@@ -1340,8 +1340,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'welcome.value.local.sub': 'in your browser',
   'welcome.value.accounts.label': 'No accounts',
   'welcome.value.accounts.sub': 'no sign-up',
-  'welcome.value.free.label': 'Always free',
-  'welcome.value.free.sub': 'no paywall',
+  'welcome.value.free.label': 'Free core',
+  'welcome.value.free.sub': 'available',
   'welcome.intention.label': 'What do you want to cultivate today?',
   'welcome.intention.optional': 'optional',
   'welcome.intention.placeholder': 'focus, calm, movement…',
@@ -1351,9 +1351,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'support.meta': 'Support the project',
   'support.title.main': "PACE's core is free.",
   'support.title.sub': 'And it always will be.',
-  'support.lede': 'No accounts. No server. No tracking. Everything lives in your browser — and we want to keep it that way.',
+  'support.lede': 'No accounts. Your data stays with you. No tracking. Everything lives in your browser — and we want to keep it that way.',
   'support.value.local.label': 'Fully local',
-  'support.value.local.sub': 'localStorage only',
+  'support.value.local.sub': 'on your device',
   'support.value.tracking.label': 'No tracking',
   'support.value.tracking.sub': 'no analytics, no cookies',
   'support.value.forever.label': 'Forever',
@@ -3907,7 +3907,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.83.0';
+const PACE_VERSION = 'v0.84.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -20997,10 +20997,18 @@ function Onboarding() {
     React.createElement("p", { style: onboardingStyles.lede }, t('welcome.lede')), /*#__PURE__*/
     React.createElement("div", { style: onboardingStyles.valuesPlate },
     ['local', 'accounts', 'free'].map((k) => /*#__PURE__*/
-    React.createElement("div", { key: k, style: { flex: 1, padding: '0 6px' } }, /*#__PURE__*/
+    /* Columna en flex-column con el label creciendo (s151). La
+       columna solo da 85px de texto a 360px de ancho, asi que un
+       label largo envuelve a DOS lineas y, con el `center` que
+       tenia la placa, arrastraba su sub 8px por debajo del de sus
+       hermanas (medido). El label absorbe el alto sobrante y los
+       tres subs quedan a la misma altura, sin aire de mas cuando
+       ninguno envuelve. Misma regla de alturas reservadas que el
+       sello de s147. */
+    React.createElement("div", { key: k, style: { flex: 1, padding: '0 6px', display: 'flex', flexDirection: 'column' } }, /*#__PURE__*/
     React.createElement("div", { style: {
         fontFamily: 'var(--font-display)', fontStyle: 'italic',
-        fontSize: 14, color: 'var(--ink)', lineHeight: 1.15
+        fontSize: 14, color: 'var(--ink)', lineHeight: 1.15, flexGrow: 1
       } }, t('welcome.value.' + k + '.label')), /*#__PURE__*/
     React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginTop: 3 } },
     t('welcome.value.' + k + '.sub')
@@ -21153,7 +21161,9 @@ const onboardingStyles = {
     textShadow: '0 0 16px var(--paper), 0 0 8px var(--paper)'
   },
   valuesPlate: {
-    display: 'flex', alignItems: 'center', width: '100%',
+    /* stretch, no center: las tres columnas comparten alto y sus subs se
+       alinean solas aunque un label envuelva (s151). */
+    display: 'flex', alignItems: 'stretch', width: '100%',
     padding: '12px 10px',
     background: 'rgba(242,237,224,0.82)',
     border: '1px solid rgba(184,173,142,0.5)',
