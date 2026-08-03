@@ -131,15 +131,30 @@ function compileBabel(content, sourceLabel) {
 }
 
 /* ---------------------------------------------------------------------------
-   readFileClean: lee un archivo, elimina BOM UTF-8/UTF-16 y null bytes.
-   Pre-filtro necesario antes de parsear.
+   readFileClean: lee un archivo, elimina BOM UTF-8/UTF-16 y null bytes, y
+   NORMALIZA LOS FINALES DE LINEA A LF.
+
+   Lo de los finales de linea NO es cosmetica (s153): sin ello el artefacto
+   depende del worktree de quien lo genera. `.gitattributes` guarda todo el
+   texto en LF, pero en un worktree de Windows varios fuentes acaban en CRLF, y
+   Babel emite entonces una indentacion distinta en los comentarios que
+   conserva ⇒ el `index.html` generado en Windows y el generado en Linux
+   difieren. Reproducido: **una linea, un espacio** — suficiente para que el CI
+   se ponga rojo sin causa visible, que es exactamente lo que paso en el primer
+   run de `.github/workflows/ci.yml`.
+
+   Es semanticamente NEUTRO: ECMAScript ya normaliza CRLF a LF dentro de los
+   template literals, y fuera de ellos el salto de linea no cambia el programa
+   (el CRLF cuenta como un solo terminador). Con esto el artefacto es
+   REPRODUCIBLE en cualquier plataforma, que es lo que un CI necesita para que
+   su rojo signifique algo.
    --------------------------------------------------------------------------- */
 function readFileClean(filePath) {
   var buf = fs.readFileSync(filePath);
 
   // BOM UTF-16 LE (FF FE)
   if (buf.length >= 2 && buf[0] === 0xFF && buf[1] === 0xFE) {
-    return buf.slice(2).toString('utf16le').replace(/\x00/g, '');
+    return buf.slice(2).toString('utf16le').replace(/\x00/g, '').replace(/\r\n/g, '\n');
   }
 
   // BOM UTF-8 (EF BB BF)
@@ -155,7 +170,7 @@ function readFileClean(filePath) {
                  ' (' + (original - s.length) + ' bytes)');
   }
 
-  return s;
+  return s.replace(/\r\n/g, '\n');
 }
 
 /* ---------------------------------------------------------------------------

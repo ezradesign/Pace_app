@@ -3,7 +3,7 @@
 **Fecha:** 2026-08-04
 **Versión:** v0.85.0 → **v0.86.0**
 **Frente:** CI — lo único que quedaba detrás de la red de seguridad
-**Artefacto verificado:** `index.html` v0.86.0 (`2568923F5BF90ADA`) · `PACE_standalone.html` intacto (`998E3E358D689036`)
+**Artefacto verificado:** `index.html` v0.86.0 (`8F65BD6C57592B00`, regenerado tras el fix del §8) · `PACE_standalone.html` intacto (`998E3E358D689036`)
 
 ---
 
@@ -176,7 +176,64 @@ señales de alarma nuevas.
 
 ---
 
-## 8. Estado al cerrar
+## 8. EL PRIMER RUN SE PUSO ROJO, Y LA CAUSA NO ERA EL YAML
+
+Tras el push se comprobó el run en GitHub en vez de darlo por bueno. **Falló.** `npm run verify`
+**pasó en Linux** —la red de seguridad es portable, que era la duda razonable— y lo que rompió fue
+**mi** paso de frescura, el único que el workflow añade por su cuenta.
+
+Y falló pese a que la secuencia completa se había simulado en local y salía verde. Esa
+contradicción es el hallazgo.
+
+### Reproducido en local, no deducido
+
+Se convirtieron a LF los 5 fuentes que en este worktree están en CRLF —que es exactamente lo que
+ve un checkout de Linux, porque `.gitattributes` guarda todo en LF— y se rebuildeó. El diff contra
+el artefacto committeado: **una sola línea**, y la diferencia es **un espacio**.
+
+```
+-       Ese archivo AÑADE sus entradas a ESTE MISMO objeto (`Object.assign` sobre
++      Ese archivo AÑADE sus entradas a ESTE MISMO objeto (`Object.assign` sobre
+```
+
+**Con CRLF, Babel emite otra indentación en los comentarios que conserva.** O sea: **el build no
+producía el mismo artefacto desde fuentes CRLF que desde fuentes LF**, y por tanto el `index.html`
+committeado **dependía del worktree de quien lo generó**. La afirmación del §1 («el build es
+determinista») era cierta *dada la misma entrada* — y la entrada **no** es la misma entre Windows
+y Linux. Eso es justo lo que no se había medido.
+
+### Arreglado en el build, no en el YAML
+
+Se podría haber normalizado los 5 archivos a mano, pero eso es un parche: **`git checkout` NO los
+devuelve a LF** (comprobado — git no los ve modificados porque su filtro los normaliza al
+comparar, así que los deja como estén), y cualquier edición futura con una herramienta que escriba
+CRLF volvería a romper el CI con un diff de un espacio, que es de lo más difícil de diagnosticar.
+
+El arreglo va en `readFileClean` de `build-standalone.js`: **normaliza a LF al leer**. Es
+semánticamente neutro —ECMAScript ya normaliza CRLF a LF dentro de los template literals, y fuera
+de ellos el salto de línea no cambia el programa— y **todo el texto que entra en el artefacto pasa
+por esa función** (comprobado uno por uno: el HTML de entrada, el CSS, los módulos y el React
+vendor; las lecturas crudas restantes son binarias a base64).
+
+**Prueba de aceptación, y es la que importa**: con el arreglo, las mismas fuentes **en CRLF y en
+LF producen el mismo `index.html` byte a byte** (`8F65BD6C57592B00…` en los dos casos), y el
+artefacto ya no contiene **ni un solo CR**. El artefacto es reproducible en cualquier plataforma,
+que es lo que un CI necesita para que su rojo signifique algo.
+
+### Lo que esto enseña sobre el CI
+
+Sirvió para exactamente aquello para lo que se puso: **cazó un defecto real de reproducibilidad
+que llevaba tiempo en el repo y que ninguna red local podía ver**, porque en local las dos mitades
+del descuadre se cancelan (`git diff` normaliza, y el artefacto y las fuentes comparten worktree).
+Un CI que solo confirma lo que ya sabes no vale nada; este falló la primera vez y tenía razón.
+
+**Y una lección de método**: la simulación local del CI daba verde y el runner rojo. **Simular no
+es ejecutar.** Comprobar el run de verdad —vía la API pública, porque `gh` no está instalado— fue
+lo que impidió cerrar la sesión afirmando algo falso.
+
+---
+
+## 9. Estado al cerrar
 
 El frente CI queda **abierto y con su primera pieza dentro**. Existe `.github/`, que era
 justo lo que no existía desde siempre.
