@@ -134,7 +134,19 @@ function Seal({ achievement, unlocked, implemented, color }) {
     <div
       style={{
         aspectRatio: '1/1.15',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        /* s147 — el sello se anclaba al CENTRO de la tarjeta, así que flotaba con
+           el largo de la descripción: reportado por el usuario con «Setenta y
+           cinco sellos» (1 línea) al lado de «Cartógrafa» (3 líneas). Medido
+           sobre los 96 sellos, tres posiciones distintas —15, 20 y 26 px del
+           borde— y 11 px de deriva dentro de la misma fila.
+
+           Se ancla ARRIBA, que es la regla de alturas reservadas de s119: la
+           tarjeta ya tiene alto FIJO (`aspectRatio`) y el círculo alto fijo, así
+           que con el ancla arriba se alinean los sellos Y los títulos, y lo que
+           varía —la descripción— cae hacia el hueco de abajo. Es seguro porque
+           está medido: 0 de 96 tarjetas desbordan su alto, y a la más cargada le
+           sobran 16 px. */
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
         padding: '14px 8px',
         border: `1px ${borderStyle} ${borderColor}`,
         borderRadius: 'var(--r-md)',

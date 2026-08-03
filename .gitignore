@@ -11,3 +11,6 @@ node_modules/
 # Archivos de backup de editores
 *.bak
 *~
+
+# Hojas de revision generadas (scripts/audit/*): se regeneran, no se versionan
+_revision-*.html

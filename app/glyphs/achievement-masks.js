@@ -40,6 +40,7 @@
    los comentarios. */
 const ACHIEVEMENT_MASKS = {
   'breathe.sessions.10':      'app/glyphs/assets/logros/breathe.sessions.10.webp',
+  'explore.478':              'app/glyphs/assets/logros/explore.478.webp',
   'explore.all.breathe':      'app/glyphs/assets/logros/explore.all.breathe.webp',
   'explore.bhastrika':        'app/glyphs/assets/logros/explore.bhastrika.webp',
   'explore.coherent':         'app/glyphs/assets/logros/explore.coherent.webp',
@@ -61,7 +62,6 @@ const ACHIEVEMENT_MASKS = {
   'focus.hours.10':           'app/glyphs/assets/logros/focus.hours.10.webp',
   'focus.hours.100':          'app/glyphs/assets/logros/focus.hours.100.webp',
   'focus.hours.50':           'app/glyphs/assets/logros/focus.hours.50.webp',
-  'hydrate.week.perfect':     'app/glyphs/assets/logros/hydrate.week.perfect.webp',
   'master.antidote':          'app/glyphs/assets/logros/master.antidote.webp',
   'master.centurion':         'app/glyphs/assets/logros/master.centurion.webp',
   'master.coherent.15':       'app/glyphs/assets/logros/master.coherent.15.webp',
@@ -86,14 +86,17 @@ const ACHIEVEMENT_MASKS = {
   'season.spring':            'app/glyphs/assets/logros/season.spring.webp',
   'season.winter':            'app/glyphs/assets/logros/season.winter.webp',
   'secret.backup':            'app/glyphs/assets/logros/secret.backup.webp',
+  'secret.bilingual':         'app/glyphs/assets/logros/secret.bilingual.webp',
   'secret.night.owl':         'app/glyphs/assets/logros/secret.night.owl.webp',
   'secret.safety.read':       'app/glyphs/assets/logros/secret.safety.read.webp',
   'secret.supporter':         'app/glyphs/assets/logros/secret.supporter.webp',
+  'stats.month.first':        'app/glyphs/assets/logros/stats.month.first.webp',
   'stats.year.first':         'app/glyphs/assets/logros/stats.year.first.webp',
   'streak.100':               'app/glyphs/assets/logros/streak.100.webp',
   'streak.3':                 'app/glyphs/assets/logros/streak.3.webp',
   'streak.30':                'app/glyphs/assets/logros/streak.30.webp',
   'streak.365':               'app/glyphs/assets/logros/streak.365.webp',
+  'streak.60':                'app/glyphs/assets/logros/streak.60.webp',
 };
 
 function achievementMaskUrl(id) {

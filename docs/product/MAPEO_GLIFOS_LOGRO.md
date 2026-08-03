@@ -1,87 +1,109 @@
-# Mapeo de los 50 glifos de logro — propuesta s146
+# Mapeo del arte de logro — vigente desde s147
 
-> Hoja numerada: `glifos-50.png`. Origen: `Glifos_logros/` (83 archivos = **50
-> dibujos distintos**, 31 duplicados byte-idénticos).
+> **La fuente de verdad es el objeto `MAPEO` de `scripts/ingest-glifos-logro.js`.**
+> Este documento explica el porqué de cada fila; el mapeo mecánico vive ahí y se
+> indexa por **clave estable** del archivo, nunca por posición en la carpeta.
 >
-> **Certeza**: ● el dibujo lo dice solo · ◐ encaja bien pero hay alternativa ·
-> ○ es una apuesta, revísala.
+> Origen: `../Glifos_logros` (91 archivos = **58 dibujos distintos** por hash de
+> contenido). Destino: `app/glyphs/assets/logros/*.webp`, máscaras CSS.
+> Regla D-4: si llega arte nuevo se **re-corre el script**, nunca se retoca un
+> `.webp` a mano.
 
-## Los que el dibujo dice solo (●)
+**Estado: 58 logros con arte · 38 sin.** Los 38 siguen con el sistema heráldico
+de s83 o con su carácter — la tanda entra sin dejar huecos, porque la máscara
+gana al SVG solo donde existe.
 
-| # | Dibujo | Logro | Por qué |
-|---|---|---|---|
-| 5 | Mapa enrollado con lacre | `master.path.all7` | «Cartógrafa» — recorre los siete caminos |
-| 21 | Corazón anatómico | `explore.coherent` | «Coherente», coherencia cardíaca |
-| 22 | Gota de agua | `first.sip` | «Primer sorbo» |
-| 31 | Libreta abierta | `secret.backup` | «Cuaderno a salvo» — exportar tus datos |
-| 35 | Fuelle | `explore.bhastrika` | Bhastrika **es** «fuelle»; la rutina se llama `breathe.bellows` |
-| 38 | Copo de nieve | `season.winter` | Invierno |
-| 39 | Lupa | `explore.tweaks` | «Curiosidad» — abrir los Ajustes |
-| 45 | Tres plumas | `streak.3` | «Tres como una», tres días |
-| 13 | Silla plegable | `master.antidote` | «Antídoto completo» — 50 sesiones SIT, la silla es el enemigo |
-| 11 | Brote con semilla | `first.step` | «Primer paso» |
-| 40 | Balanza con piedras | `season.equinox.spring` | Equinoccio = equilibrio de luz |
-| 48 | Sol con rayos | `streak.365` | «Vuelta al sol» |
-| 20 | Rama con hojas nuevas | `season.spring` | Primavera |
+---
 
-## Encajan bien, con alternativa (◐)
+## Cómo se decide una fila
 
-| # | Dibujo | Propuesta | Alternativa |
-|---|---|---|---|
-| 7 | Reloj de arena (arena abajo) | `focus.hours.10` | `focus.hours.50` |
-| 19 | Reloj de arena lleno | `focus.hours.50` | `focus.hours.10` |
-| 30 | Reloj de arena casi vacío | `focus.hours.100` | — |
-| 17 | Monumento con laurel y reloj | `master.marathon` | `master.collector.full` |
-| 25 | Luna creciente gruesa | `master.dusk` | `first.day` |
-| 4 | Luna creciente fina | `first.day` | `master.dusk` |
-| 23 | Luna con estrellas | `secret.night.owl` | `master.dusk` |
-| 43 | Fases lunares + concha | `season.cycle` | `streak.30` |
-| 16 | Reloj de sol | `master.dawn` | `morning.5` |
-| 41 | Cuentas en diagonal con destellos | `morning.5` | `master.dawn` |
-| 27 | Sello de lacre con monograma | `secret.supporter` | `master.collector.full` |
-| 33 | Pergamino atado con semillas | `first.plan` | `first.ritual` |
-| 32 | Círculo con puntos alrededor | `first.ritual` | `first.cycle` |
-| 10 | Círculo tenue vacío | `first.cycle` | — |
-| 12 | Pesa con runas | `first.extra` | `move.sessions.25` |
-| 42 | Pesa redonda | `move.sessions.25` | `first.extra` |
-| 1 | Columna vertebral | `first.stretch` | `explore.neck` |
-| 14 | Piedras apiladas | `master.retreat` | `master.silent.day` |
-| 24 | Montañas con sol | `master.focus.day` | `season.summer` |
-| 44 | Cima con bandera | `master.pomodoro.12` | `master.focus.day` |
-| 46 | Sendero serpenteante | `first.return` | `streak.7` |
-| 50 | Corazón anatómico (2.º) | `master.coherent.15` | `explore.coherent` |
-| 36 | Constelación | `master.collector.half` | `stats.year.first` |
-| 37 | Bambú | `streak.30` | `streak.60` |
-| 6 | Órbita con esfera | `stats.year.first` | `season.cycle` |
-| 47 | Aguja con gota | `hydrate.week.perfect` | `master.gardener` |
-| 15 | Cuenco humeante | `master.silent.day` | `explore.ujjayi` |
-| 26 | Vasija humeante | `explore.ujjayi` | `explore.kapalabhati` |
+Tres grados de certeza, y el tercero es el que hay que revisar con el usuario
+mirando el dibujo al tamaño real del sello:
 
-## Apuestas — revísalas (○)
+- **●** el dibujo lo dice solo
+- **◐** encaja bien, pero hay alternativa
+- **○** es una apuesta
 
-| # | Dibujo | Propuesta |
+Para revisarlas: `node scripts/audit/revision-glifos.js` genera
+`_revision-glifos.html`, que se sirve con el preview y pinta cada sello **con el
+mecanismo real** (`mask-image` sobre `currentColor`, 56 px, borde y anillo de su
+categoría) a tamaño real y a 3×. No vale una hoja de contacto en PNG: reproduce
+el dibujo, no el mecanismo.
+
+---
+
+## Las nueve apuestas — CONFIRMADAS por el usuario en s147
+
+| Dibujo | Logro | Por qué |
 |---|---|---|
-| 2 | Llave ornamentada | `master.collector.full` |
-| 3 | Semilla con cola | `first.breath` |
-| 8 | Elipse plana | `explore.nadi` |
-| 9 | Espiral con cuentas | `streak.100` |
-| 18 | Vara con hojas | `explore.hips` |
-| 28 | Cáliz con llama | `master.centurion` |
-| 29 | Capullo | `explore.physiological` |
-| 34 | Pluma escribiendo | `secret.safety.read` |
-| 49 | Rosa de los vientos | `explore.all.breathe` |
+| Semilla con cola | `first.breath` | «Empieza algo». No dice aliento, pero no hay mejor candidato |
+| Elipse plana | `explore.nadi` | El lazo del infinito ≈ alternar fosa |
+| Espiral con cuentas | `streak.100` | Cuentas = días contados; espiral = que no para |
+| Vara con hojas | `explore.hips` | Por «flexible». La más floja de las nueve |
+| Cáliz con llama | `master.centurion` | Llama sostenida = 100 sesiones |
+| Capullo | `explore.physiological` | El doble golpe de aire antes de soltar |
+| Pluma escribiendo | `secret.safety.read` | Pluma = letra pequeña leída. La mejor de las nueve |
+| Rosa de los vientos | `explore.all.breathe` | Todas las direcciones = todas las respiraciones |
+| Prensa tipográfica | `master.collector.full` | Una prensa hace impresiones, y el logro son 75 sellos |
 
-## Lo que queda sin dibujo
+---
 
-96 logros − 50 dibujos = **46 sin arte propio**. Siguen con el sistema
-heráldico existente (los 34 SVG de s83) o, si no lo tienen, con su carácter.
-Es decir: **la tanda entra sin dejar huecos** — la máscara gana al SVG cuando
-existe, y donde no existe no cambia nada.
+## Los tres que quedaron sueltos — colocados en s147
 
-## Dos huecos que se ven al cruzar el mapeo
+Al llegar los 8 dibujos nuevos, tres se quedaron sin logro:
 
-- **Sobran lunas y relojes de arena**: hay 4 lunas (4, 23, 25, 43) y 3 relojes
-  (7, 19, 30) para menos logros de esa familia. Alguno acabará sin usar.
-- **No hay dibujo evidente** para las familias de racha larga (`streak.7`,
-  `streak.14`, `streak.60`), ni para `first.ritual`/`first.plan` más allá de
-  las apuestas de arriba.
+| Dibujo | Logro | Por qué |
+|---|---|---|
+| Bambú | `streak.60` «Estación» | Crece por NUDOS, un tramo cada vez: lo lento que no se detiene |
+| Vasija humeante | `explore.478` | El humo sube lento y largo, como la exhalación más larga del catálogo |
+| Llave ornamentada | `secret.bilingual` «Dos lenguas» | Abre lo que estaba cerrado. Y al ser **secreto**, el sello sale «?» hasta ganarlo: la llave aparece como recompensa |
+
+---
+
+## Una corrección de s146, y la lección
+
+`hydrate.week.perfect` «Semana hidratada» tenía asignado un dibujo que el mapeo
+de s146 anotó como **«aguja con gota»**. El usuario lo rechazó mirándolo: *«no
+cuadra para nada, el glifo es un pincel con tinta»*. Y tenía razón — es un
+**pincel de caligrafía con una gota a punto de caer**.
+
+**El error fue de LECTURA, no de criterio.** Una descripción equivocada del
+dibujo propaga una asignación equivocada sin que nada la detecte: los
+guardarraíles del script comprueban que el id exista y que ningún dibujo se use
+dos veces, pero **no pueden saber qué hay pintado**. De ahí que la revisión con
+el usuario delante del sello a tamaño real no sea opcional.
+
+Consecuencias:
+
+- El pincel pasa a `stats.month.first` «Mes habitado» —la marca que se hace, y el
+  logro son veinte marcas en el mismo mes—, **de forma TEMPORAL**. Alternativa
+  anotada: `secret.zen` «Zen accidental».
+- **`hydrate.week.perfect` se queda SIN máscara** hasta que haya un dibujo de
+  agua. Cae a su carácter, y eso es preferible a llevar el dibujo equivocado.
+
+---
+
+## Lo que hay que saber al añadir arte nuevo
+
+- **Índice por clave estable, jamás por posición.** Al subir el usuario 8 dibujos
+  con nombre en mayúscula, ordenaron ANTES que el lote original: **0 de 50
+  posiciones seguían coincidiendo**. Los 50 glifos se habrían reasignado a logros
+  equivocados sin dar un solo error.
+- **Las rutas van enteras y literales** en `achievement-masks.js`, y **tampoco
+  pueden mencionarse en un comentario**: el inliner del build sustituye
+  referencias textuales y su guardarraíl aborta si queda rastro del prefijo.
+- **El peso de tinta se iguala en dos pasadas** contra la mediana del conjunto, y
+  desde s147 esa mediana se mide sobre tinta REAL (fuera el tramado del papel).
+  Por eso hay 8 glifos por debajo del 75 % de la mediana y antes parecían 4: no
+  han empeorado, es que antes cuadraban con relleno que no era suyo. El usuario
+  los revisó en s147 y decidió **dejarlos como están**.
+
+---
+
+## Huecos conocidos
+
+- **38 logros sin arte**, entre ellos `hydrate.week.perfect`, que perdió el suyo a
+  propósito y necesita un **dibujo de agua**.
+- **Sobran lunas y relojes de arena** para los logros de esa familia; alguno
+  acabará sin usar.
+- **No hay dibujo evidente** para `streak.7` ni `streak.14`.

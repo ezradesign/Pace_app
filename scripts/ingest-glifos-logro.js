@@ -62,6 +62,10 @@ const LADO = 224;
    docs/product/MAPEO_GLIFOS_LOGRO.md */
 const MAPEO = {
   "breathe.sessions.10":      "Premium_editorial_zen_seal_a_long_continuous_sinu-1785706786272.png",
+  /* s147 — los tres que quedaron sueltos al entrar los 8 dibujos nuevos, con
+     destino aprobado por el usuario. Vasija: el humo sube lento y largo, que es
+     la exhalacion mas larga del catalogo. */
+  "explore.478":              "jzqt6vqb4",
   "explore.all.breathe":      "yjl0jwbpd",
   "explore.bhastrika":        "pk3ofac34",
   "explore.coherent":         "gxf37kpls",
@@ -83,7 +87,6 @@ const MAPEO = {
   "focus.hours.10":           "n55fliod2",
   "focus.hours.100":          "52sg9sikn",
   "focus.hours.50":           "gf29cfrnv",
-  "hydrate.week.perfect":     "y41fjy57b",
   "master.antidote":          "dqqv7gxom",
   "master.centurion":         "l8pyi6cg6",
   "master.coherent.15":       "ysv9o9wsr",
@@ -108,14 +111,27 @@ const MAPEO = {
   "season.spring":            "gu806iwct",
   "season.winter":            "taaeioi3e",
   "secret.backup":            "ns6eokage",
+  /* Llave: abre lo que estaba cerrado. Y es SECRETO, asi que el sello sale «?»
+     hasta ganarlo y la llave aparece como recompensa, que es su mejor momento. */
+  "secret.bilingual":         "26csd6y16",
   "secret.night.owl":         "j2tkqas66",
   "secret.safety.read":       "p627xvvdx",
   "secret.supporter":         "knqug1tzj",
+  /* s147 — era `hydrate.week.perfect`, y el usuario lo rechazo: «no cuadra para
+     nada, el glifo es un pincel con tinta». Tenia razon y el error es de lectura,
+     no de criterio: el mapeo de s146 lo anoto como «aguja con gota», y de ahi
+     salio a parar a hidratacion. Es un pincel de caligrafia con una gota a punto
+     de caer, o sea LA MARCA que se hace — y «Mes habitado» son veinte marcas en
+     el mismo mes. `hydrate.week.perfect` se queda sin mascara (cae a su caracter)
+     hasta que haya un dibujo de agua: mejor sin arte que con el equivocado. */
+  "stats.month.first":        "y41fjy57b",
   "stats.year.first":         "4zz3a6hlr",
   "streak.100":               "799gphldi",
   "streak.3":                 "x1l37xssb",
   "streak.30":                "Premium_editorial_zen_seal_full_moon_disk_encircl-1785709239515.png",
   "streak.365":               "y4hlfp12j",
+  /* Bambu: crece por NUDOS, un tramo cada vez. «Estacion» son 60 dias seguidos. */
+  "streak.60":                "rgi1ck55q",
 };
 
 /* Guardarrail: un id que no exista en el catálogo produciría una máscara que no

@@ -199,10 +199,11 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [abajo](#v0800----2026-08-03----fixlogros-el-papel-deja-de-contar-como-tinta) |
 | **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [abajo](#v0791----2026-08-03----fixfeatlogros-el-aviso-coherente-y-los-sellos-dibujados) |
-| **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [abajo](#v0790----2026-08-02----fixfeatlogros-la-curva-de-logros-y-la-amnistía) |
-| **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [abajo](#v0780----2026-08-02----featlogros-entrega-escalonada--uno-por-sesión) |
-| **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [abajo](#v0770----2026-07-31----featui-preview-antes-de-empezar-183) |
+| **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
+| **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [session-145](./docs/sessions/session-145-logros-escalonados.md) |
+| **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md) |
 | **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md) |
 | **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [session-142](./docs/sessions/session-142-ola-c-nombres.md) |
 | **v0.74.0** | 2026-07-31 | feat+docs: **Fase 2 arranca — matriz §19.2 y ola A de nombres** — 3 de las 4 premisas del plan NO reproducen (65 nombres, no 92; **55 %** con inglés, no 37 %; 20 sin glifo, no ~46) · 41 de 47 glifos son una sola pose estática · 5 renombrados con migración por `VISUAL_ALIAS` | #141 | [session-141](./docs/sessions/session-141-fase-2-auditoria.md) |
@@ -341,6 +342,92 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.80.0] -- 2026-08-03 -- fix(logros): el papel deja de contar como tinta
+
+Sesión de revisión de arte con el usuario. El plan era enseñarle tres cosas para
+que decidiera —las 9 apuestas del mapeo, los 3 dibujos sueltos y los 4 glifos
+flojos— y de las tres revisiones salieron **tres defectos que no estaban en el
+plan**. Los tres los vio él mirando, no el código.
+
+### El moteado era tramado de semitono, y entraba como tinta
+
+Reportado: *«Primer aliento tiene como un fondo raro visible»*, y el Búho igual.
+Comparado con su PNG original: **el moteado no está en el dibujo**.
+
+El fondo de los PNG no es plano, viene **ditherado** entre ~240 y ~254 (modas 241
+y 254, 25 % de los píxeles cada una), y `SUELO` está en 238, justo debajo de esa
+banda:
+
+| Paso del procesado | Píxeles bajo el suelo | Mínimo |
+|---|---|---|
+| gris a resolución nativa | **2,0 %** | 0 |
+| tras reducir a 1024 | 2,7 % | 0 |
+| tras reducir a 224 | 5,7 % | 122 |
+| tras `sharpen(0,5)` | **12,4 %** | **78** |
+
+La textura del papel entraba como TINTA y la gamma de igualación la levantaba
+más. Pesaba tanto como el trazo real.
+
+**Dos intentos fallidos antes del bueno.** (1) *Umbral solo*: aplanar a 255 lo
+que ya estaba sobre el suelo quita el tramado limpio, pero la banda del dither
+**se solapa con el tono del trazo más pálido** — la mediana de tinta se hundió de
+2,35 % a 1,1 % y `esMarco` dejó de detectar el aro en **los 58**. Borraba dibujo.
+(2) *`median(3)`*: un filtro espacial ataca ruido ALEATORIO, y esto es una trama
+REGULAR; sobrevivió entera y encima perdió el aro de «Primer ritual». `blur()` es
+peor que no hacer nada (velo del 18 % al 66 %).
+
+**Lo que funciona: dos buffers.** El umbral era correcto, el error era aplicarlo a
+todo. El **marco** se busca sobre el original y **todo lo demás** sobre la copia
+aplanada a resolución nativa. Marco detectado en **58 de 58**, peso mediano
+intacto (2,35 % → 2,17 %) y **248 KB las 58** contra 297 KB que pesaban 55: más
+de la mitad del archivo era tramado.
+
+Volvió a morder una trampa ya documentada en ese mismo archivo para `.sharpen()`:
+**sharp promueve el buffer raw de 1 canal a 3 al remuestrearlo**. Sin
+`.toColourspace('b-w')` los 58 sellos salieron **idénticos** —un fragmento del
+aro ampliado— con el dibujo perdido. Ahora lleva la conversión y un assert.
+
+Efecto colateral honesto: la mediana se mide ya sobre tinta REAL, así que **los
+flojos pasan de 4 a 8**. No han empeorado; antes cuadraban con relleno que no era
+suyo. El usuario los revisó y decidió dejarlos.
+
+### El aviso pintaba el glifo viejo, y eran DOS superficies
+
+`Toast.jsx` tenía una **tercera copia** del render de glifo y `CompletionScreen.jsx`
+una **cuarta**. La s146 sacó `renderGlyph` a `window` justo para compartirlo, pero
+solo unificó el modal y la sidebar, así que las máscaras del usuario no llegaban
+al aviso ni a la pantalla de Camino completado. Las dos delegan ya en la misma
+función. Verificado en el artefacto compilado (lección de s144: en `PACE.html` no
+se ve).
+
+### El sello flotaba con el largo de la descripción
+
+Reportado con captura: «Setenta y cinco sellos» y «Cartógrafa» no alineaban. No
+era el dibujo, era la tarjeta: `Seal` anclaba el contenido al **centro**, así que
+un texto más alto empujaba el círculo. Medido sobre los 96 sellos, **tres
+posiciones distintas (15, 20 y 26 px) y 11 px de deriva** en la misma fila, según
+la descripción ocupara 1, 2 o 3 líneas.
+
+Se ancla arriba (regla de alturas reservadas de s119): la tarjeta tiene alto fijo
+y el círculo también, así que se alinean sellos **y** títulos. Seguro porque se
+midió antes: **0 de 96 tarjetas desbordan** y a la más cargada le sobran 16 px.
+Después, **deriva 0**.
+
+### Mapeo
+
+Las **9 apuestas** confirmadas. Los **3 sueltos** colocados: bambú → `streak.60`
+«Estación» · vasija → `explore.478` · llave → `secret.bilingual` «Dos lenguas».
+**`hydrate.week.perfect` rechazado** por el usuario —*«el glifo es un pincel con
+tinta»*—: el error era de LECTURA, el mapeo de s146 lo anotó como «aguja con
+gota». El pincel va a `stats.month.first` «Mes habitado» de forma TEMPORAL, y
+`hydrate.week.perfect` se queda **sin máscara** hasta que haya un dibujo de agua.
+
+**58 logros con arte, 38 sin.**
+
+Diario: [session-147](./docs/sessions/session-147-tramado-y-alineacion.md).
+
+---
+
 ## [v0.79.1] -- 2026-08-03 -- fix+feat(logros): el aviso coherente, y los sellos dibujados
 
 ### El aviso hablaba de la actividad anterior
@@ -415,155 +502,5 @@ función, no una copia.
   declaradas en `defaultState`.
 - El mapeo de glifos iba **por posición**: al subir el usuario 8 dibujos más,
   **0 de 50 posiciones seguían coincidiendo**. Pasa a clave estable.
-
----
-
-## [v0.79.0] -- 2026-08-02 -- fix+feat(logros): la curva de logros, y la amnistía
-
-Sesión **#146**. Diario: [session-146](./docs/sessions/session-146-curva-de-logros.md).
-
-### Fixed — la web llevaba rota desde s144, no desde el último push
-
-- **`ReferenceError: useState is not defined`** al abrir el artefacto compilado.
-  `main.jsx` aliasa los hooks a propósito (`const { useState: useStateMain, ... } = React`)
-  y sus 12 llamadas usan `useStateMain`; la línea 134, que entró con el Preview de s144,
-  usaba el **`useState` pelado**. Un destructuring con alias **no crea** ese binding.
-- **Por qué no se vio**: en `PACE.html` no rompe y en el compilado sí — el build de Etapa A
-  envuelve cada módulo en un IIFE. Verificado que el `index.html` de **v0.77.0 ya lo traía**.
-- **Barrido de la clase entera** sobre los 90 archivos de `app/`: **un solo caso**.
-
-### Added — `scripts/audit/logros.js`, banco de medición de la curva
-
-Inventario estático de los `unlockAchievement` (llamada literal · mapa con id calculado ·
-tabla recorrida en bucle) + **simulación sobre los módulos de estado reales con reloj
-controlable**. Reprodujo de forma independiente el hallazgo de s145 (primera sesión = 4
-logros, 1 avisado, 3 en cola).
-
-**Lo que midió antes de tocar nada:** el día 1 entregaba **11 logros, el 35 % de lo que da
-un año entero** (31), y la primera semana el 55 % · **52 % de los implementados (36 de 69)
-eran de una sola vez**, con «primeros» (10/10) y «exploración» (16/16) sin pedir repetición
-nunca · **37 de 106 no los podía ganar nadie** por no tener detector, y **11 de ellos eran
-secretos**, que se pintan idénticos a los alcanzables · **`master.collector.full` era
-imposible por aritmética**: pedía 100 logros existiendo 69 con detector (§3.4).
-
-### Changed — la curva (§15.3)
-
-`explore.*` (16) de 1 a **3 sesiones** · `first.day` de «primera sesión de la vida» a **día
-con 2 actividades distintas** · `first.plan`, que tenía la **condición idéntica** a
-`first.ritual`, pasa a **3 días** · `master.dawn`/`dusk`/`silent.day` de 1 a **5 días** ·
-`master.long.focus` de 1 bloque a **5** · `master.box`/`coherent`/`rounds` de 10 a **15** ·
-`master.collector.half`/`full` de 50/100 a **30/60** · `stats.month.focus` de 600 min/mes
-(caía en 6 días) a **1200**.
-
-**Resultado medido:** primera sesión 4 → **2** · primer día 11 → **8** · 365 días 31 → **44**
-· **día 1 como % del año: 35 % → 18 %**.
-
-### Changed — AMNISTÍA: se anula la excepción consciente de s136
-
-Puesto delante de las cifras, el usuario eligió que **nadie pierda un logro ya concedido**.
-**§2.5 «progreso sin culpa» y §2.2 «nada de pérdida punitiva» quedan intactas** y no hay
-nada que comunicar. **Sale gratis por construcción**: la única escritura sobre
-`state.achievements` es el spread aditivo de `unlockAchievement`, así que un logro ganado no
-se puede retirar ni queriendo — cero código de migración.
-
-### Added — 23 detectores que faltaban · Removed — 6 inviables
-
-Implementados: `master.pomodoro.12` · `centurion` · `marathon` · `gardener` · `hips.20` ·
-`shoulders.20` · `ancestral.10` · `antidote` (contador por etiqueta SIT) · `hydrate.30/90` ·
-`explore.all.breathe/move/extra` · 6 secretos (`night.owl`, `lunch`, `zen`, `first.monday`,
-`new.year`, `rain`) · los 4 solsticios y equinoccios, a **fecha civil**.
-
-Retirados por no tener forma razonable de detectarse: `explore.chrome`, `secret.konami`,
-`secret.birthday`, `secret.skip.none`, `secret.tweak.all`, `secret.pause.long`. **Ninguno
-tenía detector ⇒ nadie podía tenerlos ⇒ la amnistía no se rompe.**
-
-Catálogo **106 → 100**, con detector **69 → 92**, sin detector **37 (35 %) → 8 (8 %)**, y
-**secretos fantasma 11 → 0**: todos los secretos del catálogo se pueden descubrir ya.
-
-### Added — `app/state-achievements.support.jsx` (179 ln)
-
-Contadores generalizados y los detectores nuevos. Nace porque `state-achievements.jsx` no
-cabía bajo las 500 líneas con la curva. Mismo patrón que `MoveSessionV1.support.jsx`.
-
-### Fixed — bug propio cazado por el banco
-
-`first.day` colgaba de `updateStreak`, que **retorna pronto si el día ya está marcado**: solo
-corría en la primera actividad de la jornada, con una marca en el plan, así que la condición
-de dos **no se cumplía nunca**. No se ganaba ni con un año exhaustivo. Movido a
-`checkPlanAchievements`.
-
----
-
-## [v0.78.0] -- 2026-08-02 -- feat(logros): entrega escalonada — uno por sesión
-
-Sesión **#145**. Diario: [session-145](./docs/sessions/session-145-logros-entrega-escalonada.md).
-
-Primera mitad de la **Fase 2.5**, la que no necesita glifos.
-
-### Corregido
-
-- **La queja del usuario, medida en el código**: una primera sesión de Respira a las 6:50
-  desbloqueaba **cuatro logros de golpe** con sus cuatro toasts en cascada — `first.breath`
-  (siempre) + `explore.<tipo>` (lo tienen **12 de las 20** rutinas) + `master.dawn` (antes de
-  las 7) + `first.day` (`updateStreak` lo da con `current >= 1`). Con el plan del día completo
-  entraban además `first.ritual` y `first.plan`.
-- **Entrega escalonada: uno por sesión**, el resto en **cola invisible**. Decisión del usuario
-  entre tres opciones; descartó «1 por sesión y día» (lento para quien arranca fuerte) y «todos
-  en fila» (arregla el solapamiento, no la sensación de regalo).
-
-### Lo que NO cambia
-
-El logro se **gana** en el momento y se registra en `achievements` al instante: solo se aplaza
-el **aviso**. Nadie ve progreso retroceder ⇒ **§2.5 «progreso sin culpa» queda intacta**. (El
-recálculo de umbrales, que sí es una excepción consciente, va aparte y no se ha tocado.)
-
-### Detalles que importan
-
-- La cola se **persiste** (`achievementQueue`): en memoria, una recarga se comería las
-  celebraciones pendientes — el logro seguiría ahí, pero no se anunciaría nunca.
-- `flushAchievementToast()` drena **gane o no gane** un logro nuevo: si solo drenara al
-  desbloquear, una cola de tres esperaría para siempre a que hubiera un cuarto.
-- **El agua tiene drenaje propio**: `addWaterGlass` acredita sin pasar por un cierre de sesión.
-
-### Verificado
-
-Con estado sembrado limpio: sesión 1 gana 3 y anuncia **1** (quedan 2); sesión 2 gana 1 más y
-anuncia **1**, el más antiguo. FIFO, y el recuento de `achievements` sube en el instante.
-
----
-
-## [v0.77.0] -- 2026-07-31 -- feat(ui): Preview «antes de empezar» (§18.3)
-
-Sesión **#144**. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
-
-Ítem 6 de la Fase 2, elegido porque los datos **ya existían sin consumidor** (igual que en la ola
-E), el audit lo pide explícitamente y **desbloquea la reescritura editorial** aparcada en s143.
-
-### Añadido
-
-- **`RoutinePreview`**: modal entre la tarjeta y la sesión con **qué necesitas**, **posición**,
-  **duración**, **intensidad y nivel** y **los pasos con su glifo**.
-- **Sale solo desde la BIBLIOTECA, no dentro de un Camino** —ahí la rutina ya viene elegida y el
-  ritmo manda—, y sale gratis **por construcción**: se engancha en los handlers de `main.jsx`,
-  que son la puerta de la biblioteca. La biblioteca **se queda abierta detrás**: cerrar el
-  preview te devuelve a ella. Misma forma que el modal de seguridad de Respira (s90).
-- **Las series del mismo ejercicio se agrupan** (`Fondos en silla ×3`): tres veces el mismo
-  nombre seguido es ruido, no información. Solo repeticiones CONSECUTIVAS.
-- **Requisitos completados en las 6 rutinas que no los declaraban**; en dos casos el valor salía
-  de su propia descripción («Necesitas pared y suelo»). **Las 28 los declaran ya** (11 de suelo).
-
-### Por qué ahora
-
-**16 de las 28 descripciones llevaban el requisito escrito a mano** —«Silla estable y sin
-ruedas», «Necesitas pared; barra opcional», «Pasarás por el suelo»— porque no tenía dónde ir.
-Ese es el mismo síntoma que hacía sonar desiguales a las descripciones (s143), y por eso este
-ítem iba **antes** que la reescritura. Los datos estaban desde s115 en 22 de 28 rutinas, sin
-que los leyera nadie.
-
-### Corregido antes de llegar a pantalla
-
-La lista de pasos filtra los descansos, pero las claves EN son **posicionales sobre el array
-completo** (`<id>.s4.name` cuenta los descansos): usar el índice nuevo habría desplazado todos
-los nombres en inglés. Se conserva el índice original.
 
 ---
