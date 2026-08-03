@@ -68,8 +68,15 @@ function ToastHost() {
             fontStyle: 'italic',
             fontSize: 18,
           }}>
-            {toast.glyphSvg
-              ? <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: toast.glyphSvg }} />
+            {/* s147: el aviso pintaba el glifo VIEJO. Este bloque era una TERCERA
+                copia del render de glifo, y s146 solo unificó modal y sidebar, así
+                que las máscaras del usuario no llegaban aquí: desbloquear un logro
+                con dibujo nuevo seguía anunciando el SVG heráldico. Ahora delega en
+                el `renderGlyph` compartido —la misma función, no una copia—, que
+                resuelve máscara → SVG → carácter. `toast` ya lleva id/glyph/glyphSvg,
+                que es todo lo que esa función lee. */}
+            {window.renderGlyph
+              ? window.renderGlyph(toast)
               : <span style={{ fontStyle: 'italic' }}>{toast.glyph}</span>
             }
           </div>

@@ -428,6 +428,15 @@ Reglas derivadas:
   hay puesta.
 - **Ingesta reproducible**: `scripts/ingest-loto.js`. Regla D-4 — si el usuario aporta arte nuevo
   se **re-corre el script**, nunca se sustituye el `.webp` a mano.
+- **El suelo de papel se aplica ANTES de remuestrear** (s147, arte de logro). El fondo de los PNG
+  del usuario no es plano: viene **ditherado** entre ~240 y ~254, justo por encima del suelo de
+  238. Declarar el papel *después* de reducir de tamaño no sirve, porque el remuestreo ya ha
+  hundido parches del tramado por debajo del suelo y el afilado los amplifica — medido, del
+  **2,0 % al 12,4 %** de píxeles «con tinta», y el resultado es un campo de puntos alrededor del
+  motivo que no está en el dibujo. Dos avisos que salieron de ahí: **no vale un filtro espacial**
+  (`median` no quita una trama regular y se come trazo fino; `blur` la reparte), y **la detección
+  del marco necesita el buffer SIN aplanar**, porque el aplanado hace que la línea fina promedie
+  más clara y deje de detectarse. Un buffer para el marco, otro para el resto.
 - **Distribución** igual que las láminas de Caminos: archivo en web + precache en `sw.js`, data URI
   solo en el standalone (el inliner del build recorre una lista de carpetas de arte).
 

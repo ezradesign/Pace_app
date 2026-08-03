@@ -251,8 +251,10 @@ function CompletionScreen({ snapshot, onBack, fadeIn }) {
                   fontFamily: 'var(--font-display)', fontStyle: 'italic',
                   fontSize: 12,
                 }}>
-                  {a.glyphSvg
-                    ? <span style={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: a.glyphSvg }} />
+                  {/* s147: misma corrección que en Toast.jsx — era la CUARTA copia
+                      del render de glifo y se quedó sin las máscaras del usuario. */}
+                  {window.renderGlyph
+                    ? window.renderGlyph(a)
                     : <span>{a.glyph}</span>
                   }
                 </span>

@@ -269,6 +269,20 @@ juntos») y §15.3 («no deben desbloquearse todos juntos»).
 Criterio de cierre: ningún logro cae en ráfaga, cada miniatura de la sidebar se distingue de las
 demás, y las cuatro superficies cuentan la misma cifra.
 
+> **Estado tras s147 — CERRADA SALVO ARTE.** Los 7 puntos están hechos: matriz y curva medidas con
+> banco propio (s146, día 1 del 35 % al 18 % de lo que da un año) · entrega escalonada (s145) ·
+> amnistía en vez de recálculo (s146) · miniaturas pintando el glifo real (s146) · denominador
+> único (s146) · **58 de 96 logros con arte propio** (s146 + s147).
+>
+> Lo que queda es **material, no diseño**: **38 logros sin dibujo**. El usuario avisa cuando tenga
+> arte nuevo y se re-corre `scripts/ingest-glifos-logro.js`. Prioridad dentro de esa tanda:
+> **`hydrate.week.perfect`**, único que perdió su dibujo a propósito en s147 —llevaba un pincel de
+> caligrafía— y hoy cae a su carácter; necesita un dibujo de agua.
+>
+> El punto 6 anotaba «sello por categoría como solución de transición» y **no hizo falta**: la
+> precedencia máscara → SVG heráldico → carácter deja entrar el arte por partes sin huecos, así
+> que lo que aún no tiene dibujo conserva el sistema viejo en vez de aplanarse a su categoría.
+
 ### FASE 3 · Eventos, fase 1 web (`pace.events.v1`)
 
 Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se

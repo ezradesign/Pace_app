@@ -174,12 +174,64 @@ async function procesar(src, v2, lado) {
     for (let i = 0; i < d.length; i++) alfa[i] = d[i] >= SUELO ? 0 : Math.round(Math.min(1, (SUELO - d[i]) / rango) * 255);
     return { alfa, w: r.info.width, h: r.info.height, marco: null };
   }
-  /* medir y limpiar a resolucion intermedia: 1024 basta y va 8x mas rapido */
+  /* EL DITHER DEL PAPEL SE QUITA A RESOLUCION NATIVA (s147), y con un filtro
+     ESPACIAL, no con un umbral. Lo reporto el usuario mirando «Primer aliento» y
+     el «Buho»: un campo de puntos alrededor del motivo que NO esta en su dibujo.
+
+     Medido el recorrido de un PNG: el fondo no es plano, viene DITHERADO entre
+     ~240 y ~254 (modas 241 y 254, 25 % de los pixeles cada una). A resolucion
+     nativa solo el 2,0 % cae bajo SUELO. Pero al reducir a 224 el promediado del
+     dither hunde parches enteros por debajo del suelo (5,7 %) y el `sharpen`
+     posterior los amplifica hasta el 12,4 %, con minimos de L 78 — o sea que la
+     textura del papel entraba como TINTA, y la gamma de igualacion la levantaba
+     todavia mas.
+
+     POR QUE NO UN UMBRAL, que fue el primer intento y hubo que revertirlo:
+     aplanar a 255 todo lo que ya estaba sobre SUELO parece la respuesta obvia
+     —el suelo se estaba aplicando DESPUES del remuestreo que se lo lleva por
+     delante—, pero la banda del dither SE SOLAPA con el tono del trazo mas
+     palido, que es casi todo en estos dibujos a lapiz. Medido: la mediana de
+     tinta del conjunto se hundio de 2,35 % a 1,1 % y `esMarco` dejo de detectar
+     el aro en los 58 (al subir el fondo local a blanco, la linea fina promedia
+     mas clara y se sale de TINTA_CLARA). Borraba dibujo, no solo papel.
+
+     Tampoco lo arregla un filtro espacial, que fue el segundo intento: el
+     moteado NO es ruido aleatorio sino un TRAMADO DE SEMITONO regular del propio
+     PNG. Con `median(3)` a resolucion nativa el tramado sobrevive entero, y
+     ademas `esMarco` empieza a fallar (perdio el aro de «Primer ritual», que
+     salio con el circulo pintado dentro del sello). `blur()` es peor todavia:
+     reparte el tramado en vez de quitarlo.
+
+     Lo que si funciona es el umbral — el problema era DONDE se aplicaba, no el
+     umbral. La deteccion del marco necesita el original (la linea del aro es
+     fina y palida, y aplanar el fondo a blanco la hace promediar aun mas clara,
+     que es lo que la sacaba de TINTA_CLARA). Asi que van por separado: el MARCO
+     se busca sobre el original, y todo lo demas sobre la copia aplanada. Cada
+     paso con el buffer que necesita. */
   const g = await sharp(src).greyscale().resize(1024, 1024, { fit: 'inside' })
     .raw().toBuffer({ resolveWithObject: true });
-  const data = Buffer.from(g.data), w = g.info.width, h = g.info.height;
-  const c = contornoExterior(data, w, h);
+  const w = g.info.width, h = g.info.height;
+
+  /* el marco, sobre el ORIGINAL */
+  const c = contornoExterior(g.data, w, h);
   const marco = esMarco(c);
+
+  /* y el resto sobre la copia SIN tramado: se aplana a resolucion nativa, que es
+     donde el papel todavia esta por encima del suelo (2,0 % bajo suelo, contra
+     el 5,7 % que hay ya despues de reducir). */
+  const nat = await sharp(src).greyscale().raw().toBuffer({ resolveWithObject: true });
+  const plano = Buffer.from(nat.data);
+  for (let i = 0; i < plano.length; i++) if (plano[i] >= SUELO) plano[i] = 255;
+  /* `.toColourspace('b-w')` NO es decorativo: sharp promueve el buffer raw de 1
+     canal a 3 al remuestrearlo, igual que hace `.sharpen()` mas abajo. Sin esto,
+     leer el resultado como gris desplaza cada fila y los 58 sellos salieron
+     IDENTICOS —un fragmento del aro ampliado— con el dibujo entero perdido. */
+  const p = await sharp(plano, { raw: { width: nat.info.width, height: nat.info.height, channels: 1 } })
+    .resize(1024, 1024, { fit: 'inside' })
+    .toColourspace('b-w')
+    .raw().toBuffer({ resolveWithObject: true });
+  if (p.info.channels !== 1) throw new Error('el aplanado esperaba 1 canal y son ' + p.info.channels);
+  const data = Buffer.from(p.data);
   if (marco) borrarMarco(data, w, h, c);
   const bb = encuadre(data, w, h);
 

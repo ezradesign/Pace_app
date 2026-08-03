@@ -10,11 +10,11 @@
 
 ---
 
-**Version actual:** v0.79.0 (s146 — **LA WEB VOLVIO A ABRIR, Y LA CURVA DE LOGROS DEJO DE DESPLOMARSE**. Un `useState` pelado en `main.jsx` rompia el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE). Y con banco de medicion propio: el dia 1 daba el **35 % de lo que da un año**, ahora el **18 %**. **AMNISTIA**: nadie pierde un logro — se ANULA la excepcion consciente a §2.5 de s136. Detalle abajo.)
-**Version anterior:** v0.78.0 (s145 — **FASE 2.5: los logros dejan de regalarse de cuatro en cuatro**. Medido: una primera sesion de Respira a las 6:50 desbloqueaba **CUATRO logros de golpe** con sus toasts en cascada. Ahora **uno por sesion**, el resto en cola invisible. **Lo que NO cambia**: el logro se GANA al instante y se registra en `achievements`; solo se aplaza el AVISO, asi que §2.5 «progreso sin culpa» queda INTACTA. Detalle abajo.)
-**Version previa:** v0.77.0 (s144 — **PREVIEW «ANTES DE EMPEZAR» (§18.3)**: entre la tarjeta y la sesion, con **que necesitas · posicion · duracion · intensidad · los pasos con su glifo**. Motivo medido: **16 de las 28 descripciones llevaban el requisito escrito A MANO** porque no tenia sitio. Sale **solo desde la BIBLIOTECA, nunca dentro de un Camino**. Las 28 rutinas declaran ya sus requisitos.)
+**Version actual:** v0.80.0 (s147 — **EL PAPEL DEJA DE CONTAR COMO TINTA, Y EL SELLO DEJA DE FLOTAR**. Sesion de revision de arte con el usuario: de las tres revisiones previstas salieron **tres defectos que no estaban en el plan**, y los tres los vio el usuario mirando. El moteado alrededor de los dibujos era **tramado de semitono del PNG** y el suelo de papel se aplicaba DESPUES del remuestreo que lo viola (2,0 % -> 5,7 % -> **12,4 %** de pixeles «con tinta»). El aviso pintaba el glifo VIEJO porque habia **cuatro copias** del render de glifo y s146 solo unifico dos. Y el sello flotaba **11 px** con el largo de la descripcion. Detalle abajo.)
+**Version anterior:** v0.79.1 (s146 — **EL AVISO VUELVE A HABLAR DE LO QUE ACABAS DE HACER, Y LOS SELLOS SON DIBUJOS**. La cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salia «Primer estiron»); regla nueva: un logro DE MODULO solo se anuncia en una sesion de ese modulo. **§15.4 denominador unico**. **55 glifos del usuario** como mascara CSS.)
+**Version previa:** v0.79.0 (s146 — **LA WEB VOLVIO A ABRIR, Y LA CURVA DEJO DE DESPLOMARSE**. Un `useState` pelado en `main.jsx` rompia el artefacto compilado **desde s144**. Con banco de medicion propio, el dia 1 pasa del **35 %** al **18 %** de lo que da un año. **AMNISTIA**: nadie pierde un logro.)
 
-**Ultima sesion:** #146 -- 2026-08-03 - **LOGROS: CURVA, AVISO COHERENTE Y 55 SELLOS DIBUJADOS**. Sesion larga, en dos mitades. Bump **v0.78.0 -> v0.79.1**. **(A) v0.79.0 -- la curva y la amnistia** (detalle en el diario): el artefacto compilado llevaba roto **desde s144** por un `useState` pelado en `main.jsx`, que en `PACE.html` no rompe y en el build si (IIFE) ⇒ **dos versiones publicadas rotas** · banco nuevo `scripts/audit/logros.js` · el dia 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTIA**: nadie pierde un logro ya concedido, lo que **ANULA la excepcion consciente a §2.5/§2.2 de s136**; sale gratis por construccion (la unica escritura sobre `state.achievements` es el spread aditivo de `unlockAchievement`) · 23 detectores implementados y 6 retirados. **(B) v0.79.1 -- el aviso y el arte.** **EL AVISO HABLABA DE LA ACTIVIDAD ANTERIOR**: reportado por el usuario («en 4·7·8 acabo y es primer estiron») y reproducido con traza -- la cola de s145 era **FIFO** y drenaba **gane o no gane** algo nuevo, asi que iba siempre un paso por detras y lo que si habias ganado se quedaba dentro; los 23 detectores nuevos lo agravaron. Regla que faltaba: **un logro DE MODULO solo se anuncia en una sesion de ese modulo**, con prioridad de lo propio sobre lo transversal, y hicieron falta **dos pasadas** (con una sola, los transversales se colaban por delante por ser mas antiguos). Medido de paso: con la curva nueva una sesion gana **1** logro, no 4. **§15.4 DENOMINADOR UNICO**: la sidebar dividia entre 96 y el modal entre 88 ⇒ la regla pasa a un unico punto de `catalog.js`. **CORRIGE UNA CIFRA PROPIA DE v0.79.0**: los secretos fantasma eran **11 -> 4**, no 11 -> 0 — `secret.aged`, `secret.mono`, `secret.seal` y `secret.illustrated` tienen detector pero **su palanca ya no existe en la UI** (paleta «envejecido» retirada en s71 y migrada por `loadState`, tipografia sin control desde s20, `logoVariant` fuera de Tweaks). Retirados: catalogo **100 -> 96**, con detector **92 -> 88**. Contenido: **«Repertorio»** sustituye a «Exploracion» (la categoria premia repetir, no descubrir), **«Cuarenta y cinco / Setenta y cinco sellos»** en vez de «Media coleccion / Coleccion completa» (30 de 100 no es media), e ids veraces `master.box.15` / `.coherent.15` / `.rounds.15` **con migracion** ⇒ nadie pierde nada y no hay que avisar a los testers. **55 GLIFOS DEL USUARIO** como **MASCARA CSS** (`scripts/ingest-glifos-logro.js`): 91 archivos = **58 dibujos distintos por hash de contenido**; ~5 KB por mascara, **297 KB** las 55, cobertura **55 de 96**. Miniaturas de la sidebar: fuera el asterisco fijo, ahora pintan el glifo real via `renderGlyph`. **AUTOCRITICA, encontrada revisando a peticion del usuario**: `contarRutina` creaba una clave por rutina propia (`custom.<timestamp>`) ⇒ **crecimiento SIN TECHO** en localStorage y sin servir para nada; 4 claves de estado nacian al vuelo sin estar en `defaultState`; y `state-core.jsx` **ya estaba en 501 lineas ANTES de esta sesion** (la tabla de deuda decia 494, cifra vieja). Diario: [session-146](./docs/sessions/session-146-curva-de-logros.md).
+**Ultima sesion:** #147 -- 2026-08-03 - **EL TRAMADO DEL PAPEL, EL AVISO QUE FALTABA, Y EL SELLO QUE FLOTABA**. Bump **v0.79.1 -> v0.80.0**. Sesion de REVISION DE ARTE: el plan era enseñar al usuario las 9 apuestas del mapeo, los 3 dibujos sueltos y los 4 glifos flojos para que decidiera. Se cumplio, y ademas salieron tres defectos que no estaban previstos. **(1) EL MOTEADO ERA TRAMADO DE SEMITONO, y entraba como TINTA.** Reportado por el usuario («Primer aliento tiene como un fondo raro visible», y el Buho igual) y confirmado comparando con su PNG original: **no esta en el dibujo**. El fondo de los PNG viene **ditherado** entre ~240 y ~254 (modas 241 y 254, 25 % de los pixeles cada una) y `SUELO` esta en 238, justo debajo: a resolucion nativa solo el **2,0 %** cae bajo el suelo, reducir a 224 lo sube al **5,7 %** y el `sharpen` lo remata en **12,4 %**, con minimos de L 78. **DOS INTENTOS FALLIDOS antes del bueno, y enseñan mas que el bueno**: (a) *umbral solo* — aplanar a 255 lo que ya estaba sobre el suelo quita el tramado limpio, pero **la banda del dither se solapa con el tono del trazo mas palido**: la mediana de tinta se hundio de 2,35 % a 1,1 % y `esMarco` dejo de detectar el aro en **los 58**; (b) *`median(3)`* — un filtro espacial ataca ruido ALEATORIO y esto es una **trama REGULAR de imprenta**: sobrevivio entera y encima perdio el aro de «Primer ritual». `blur()` es peor que no hacer nada. **Lo que funciona: DOS BUFFERS** — el marco se busca sobre el original y todo lo demas sobre la copia aplanada a resolucion nativa. Marco detectado en **58 de 58**, peso mediano intacto (2,35 % -> 2,17 %) y **248 KB las 58** contra 297 KB que pesaban 55: **mas de la mitad del archivo era tramado**. Volvio a morder una trampa ya documentada en ese archivo para `.sharpen()`: **sharp promueve el buffer raw de 1 canal a 3 al remuestrearlo**; sin `.toColourspace('b-w')` los 58 sellos salieron **identicos** —un fragmento del aro ampliado— con el dibujo perdido. **(2) EL AVISO PINTABA EL GLIFO VIEJO, y eran DOS superficies.** `Toast.jsx` tenia una **tercera copia** del render de glifo y `CompletionScreen.jsx` una **cuarta**; s146 saco `renderGlyph` a `window` justo para compartirlo pero solo unifico modal y sidebar. **(3) EL SELLO FLOTABA CON EL LARGO DE LA DESCRIPCION.** Reportado con captura («Setenta y cinco sellos» junto a «Cartografa»). No era el dibujo, era la tarjeta: `Seal` anclaba al CENTRO, asi que un texto mas alto empujaba el circulo — medido sobre los 96 sellos, **tres posiciones (15, 20 y 26 px) y 11 px de deriva** en la misma fila. Se ancla arriba (regla de alturas reservadas de s119), seguro porque se midio antes: **0 de 96 tarjetas desbordan**. Despues, **deriva 0**. **(4) MAPEO**: las 9 apuestas CONFIRMADAS · los 3 sueltos colocados (bambu -> `streak.60`, vasija -> `explore.478`, llave -> `secret.bilingual`) · **`hydrate.week.perfect` RECHAZADO** por el usuario —«el glifo es un pincel con tinta»—, y **el error era de LECTURA**: el mapeo de s146 lo anoto como «aguja con gota». El pincel pasa a `stats.month.first` de forma TEMPORAL y `hydrate.week.perfect` se queda **sin mascara** hasta que haya dibujo de agua. **Los 8 flojos se quedan como estan** (decision del usuario). **58 logros con arte, 38 sin.** Diario: [session-147](./docs/sessions/session-147-tramado-y-alineacion.md).
 
 **Sesion anterior:** #144 -- 2026-07-31 - **PREVIEW «ANTES DE EMPEZAR» (§18.3)**. Sesion de CODIGO. Bump **v0.76.0 -> v0.77.0**. Item 6 de la Fase 2, elegido porque los datos **ya existian sin consumidor** (igual que en la ola E), el audit lo pide y **desbloquea la reescritura editorial** aparcada en s143. **(1) La prueba de que faltaba el sitio**: **16 de las 28 descripciones llevan el requisito escrito A MANO** («Silla estable y sin ruedas», «Necesitas pared; barra opcional», «Pasaras por el suelo»). No es que esten mal escritas: es que el requisito no tenia donde ir. **(2) `RoutinePreview` NUEVO**: modal con que necesitas · posicion · duracion · intensidad y nivel · los pasos con su glifo · CTA. **(3) Sale SOLO desde la BIBLIOTECA, nunca dentro de un Camino** —ahi la rutina ya viene elegida y el ritmo manda—, y sale gratis **POR CONSTRUCCION**: se engancha en los handlers de `main.jsx`, que son la puerta de la biblioteca, mientras `PathBodyStep` monta el runner por su cuenta. La biblioteca **se queda abierta detras**. Misma forma que el modal de seguridad de Respira (s90). **El gate `setup:'ready'` del runner v1 NO hacia este trabajo**: es por PASO y llega cuando ya entraste. **(4) Las series del mismo ejercicio se AGRUPAN** (`Fondos en silla x3`): tres veces el mismo nombre seguido es ruido. **(5) Requisitos completados en las 6 rutinas** que no los declaraban; en dos casos el valor salia de su propia descripcion. **Las 28 los declaran ya** (11 de suelo). **(6) Bug propio cazado antes de pantalla**: las claves EN son POSICIONALES sobre el array completo (`<id>.s4.name` cuenta los descansos), asi que filtrar descansos y usar el indice nuevo habria desplazado TODOS los nombres en ingles. **(7) Hallazgo anotado y NO tocado**: la pantalla de preparacion dice «De pie. Sin prisa» tambien en rutinas SENTADAS; ahora que `position` esta en las 28 se puede derivar, y va a la ola editorial. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
 
@@ -22,13 +22,8 @@
 
 **Sesion anterior:** #142 -- 2026-07-31 - **FASE 2, OLA C: EL INGLES FUERA DEL ESPANOL**. Sesion de CODIGO. Bump **v0.74.0 -> v0.75.0**. La **ola B queda EN PAUSA** (los 20 dibujos dependen del arte del usuario, regla D-4), asi que se ejecuta la C, que es la que mas mueve la queja beta y no depende de nadie. **(1) 30 nombres renombrados: de 31 con termino ingles a UNO** (`Superman`, que se mantiene por decision de s141). Propuestos con la tecnica real de cada ejercicio delante, no por traduccion automatica; el usuario cambio dos: `Cossack squat` -> **Sentadilla lateral** y `Sissy squat` -> **Sentadilla de cuadriceps**. `Elevacion de talones` y `Elevacion de puntas` quedan como pareja simetrica —gemelo y tibial—, que es lo que son. **(2) HALLAZGO: 5 de los 47 dibujos NO SE PINTAN NUNCA.** `ExerciseGlyph` resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`, o sea **el alias primero**, y cuatro nombres tienen alias **Y** entrada propia de glifo: `Chest opener`, `Deep squat hold`, `Deep breaths` y `Dead hang · opcional` estan **tapados**. Con `Nordics` (sin uso ni como destino), son 5 muertos de 47. Corrige el §2 de la auditoria, que solo contaba como huerfano lo que ningun paso usaba: **un alias tambien deja huerfano un dibujo**, y de forma menos visible. **Era urgente ahora**: al renombrarlos, el nombre nuevo no tendria alias => resolveria a si mismo => **su dibujo tapado se habria activado solo**, cambiando lo que se ve sin pedirlo. Se evito dando al nombre nuevo el MISMO destino. **Decision de catalogo pendiente**: borrar esos dibujos o quitarles el alias. **(3) `VISUAL_ALIAS` REGENERADO** entero desde un mapa: 39 entradas, sin duplicados ni cadenas de dos saltos (verificado). **(4) Verificado** con SW y caches purgados: **65 nombres unicos y 20 sin glifo antes y despues** (ninguna clave caida) · los 30 nombres viejos resuelven por alias y llegan a su glifo · los 4 tapados resuelven al mismo destino que antes · los `.js` tocados pasan `node --check` · el runner pinta «Encogimiento de hombros» con su glifo y anuncia «SIGUIENTE: CIRCULOS DE MUNECA». Consola sin errores. **(5) El script fallo DOS veces sin escribir nada**, y las dos por lo mismo que ya mordio en s141: el mismo nombre va con comilla simple ESCAPADA en un archivo y con DOBLES en otro (`World's greatest stretch`), y anadir lineas a `VISUAL_ALIAS` creaba **claves DUPLICADAS** —en JS gana la ultima— justo en los cuatro casos delicados. Se corrigio regenerando el objeto entero. Diario: [session-142](./docs/sessions/session-142-ola-c-nombres.md).
 
-**Sesion anterior:** #141 -- 2026-07-31 - **FASE 2 ARRANCA: MATRIZ §19.2 + OLA A DE NOMBRES**. Auditoria **y** codigo. Bump **v0.73.1 -> v0.74.0**. **(1) Tres de las cuatro premisas del plan NO reproducen** contra el arbol, y una apunta a un problema MAYOR: **65** nombres unicos de paso y no 92 (117 pasos con nombre; ni sumando modulos por separado y duplicando los 9 compartidos sale 92) · **36 de 65 = 55 %** llevan termino ingles, no el 37 % declarado (**PEOR**) · **20 sin glifo = 31 %**, no «la mitad» (**mejor**: el bloque de dibujo es un tercio mas pequeno de lo previsto) · `level`/`intensity` estan en la **RUTINA**, nunca en el paso (22 de 28), y su falta de consumidor UI queda **confirmada**. **El orden de la Fase 2 no cambia** —sigue siendo el frente correcto—, pero el reparto de esfuerzo si. **(2) Los glifos son DOS problemas**, no una bolsa: **20 NO EXISTEN** (hay que dibujarlos) y **15 EXISTEN SIN APROBAR** (los que el usuario llama flojos). Suman los 35 de la deuda D-4 y encajan con su desglose exacto (11 de s91 + 9 de s92 · 15 de s84). **(3) 41 de 47 glifos dibujan UNA SOLA POSTURA ESTATICA** sin direccion (6 con dos poses, 5 con flecha, 9 con apoyo): evidencia dura de la §19.3 — el «no se como hacerlo» no se arregla redibujando el glifo de 44x44, sino anadiendo el segundo nivel visual. **(4) `window.APPROVED` NO EXISTE en el codigo**: concepto de las decisiones de s84 que nunca se materializo ⇒ las columnas «Aprobado/Revisar/Placeholder» de la §19.2 **no se pueden derivar del arbol**; la matriz usa la version anotada en el comentario de cada glifo (28 de 47 la llevan). **(5) OLA A EJECUTADA** — 5 renombrados: `Hang pasivo`→**Suspension pasiva** · `Hang activo`→**Suspension activa** · `Hollow hold`→**Hueco abdominal** · `Seated hollow`→**Hueco en silla** · `Couch stretch`→**Cuadriceps en pared** (paso) y **Estiramiento del sofa** (rutina). **`Superman` se queda** por decision: es nombre propio legible en espanol y lo que reportaron los beta testers eran terminos ILEGIBLES (`Chin tucks`, `Dead hang`). **Las parejas se renombran juntas**: dos candidatos tenian pareja CON glifo, y renombrar media pareja deja «Suspension activa» junto a «Hang pasivo» en la misma biblioteca. **(6) HALLAZGO: el renombrado tiene una TERCERA pata**. s108 exigia `name` + glifo + i18n; falta **`localStorage`**, porque el constructor **COPIA el nombre** del ejercicio dentro de la rutina propia guardada (`state-custom.jsx`) y una rutina anterior al cambio se quedaria sin glifo EN SILENCIO. Se resuelve con la pieza que ya existia, **`VISUAL_ALIAS`** (contrato s110: el nombre viejo se absorbe en la identidad nueva) + conservar las claves i18n viejas; cuando la ola B dibuje los glifos que faltan, esas rutinas los **heredan solas**. **(7) Verificado** con SW y caches purgados: los 5 nombres nuevos resuelven, los 2 que tenian glifo lo conservan, los 5 viejos llegan por alias, el ingles sigue diciendo `Hollow hold`/`Passive hang`/`Couch stretch` (se retira el ingles DEL ESPANOL, no la traduccion) y el recuento **no se mueve** (65 nombres y 20 sin glifo antes y despues) ⇒ ninguna clave caida. Ingles: **36 -> 31** (55 % -> 48 %). **(8) Dos errores propios corregidos**, los dos detectados por CONTRADICCION entre dos medidas: una regex que ignoraba las claves con comillas dobles (`"World's greatest stretch"` salia como inexistente) y un «7» contado A OJO que eran 4. El renombrado se hizo con guardarrail de conteo esperado: fallo a la primera y **no escribio nada** hasta cuadrar. Auditoria: [audit-mueve-estira-v0.73.1](./docs/audits/audit-mueve-estira-v0.73.1.md) · Diario: [session-141](./docs/sessions/session-141-fase-2-auditoria.md).
-
-
-
-
-**Ultima actualizacion de este archivo:** 2026-08-02 - sesion 146 (v0.79.0; se retiro del encabezado la sesion s143, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
-**Build entregado:** `index.html` **v0.79.0** (regenerado en s146; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). **OJO**: el `index.html` publicado en s144 y s145 **no arrancaba** (`useState` pelado en `main.jsx`, corregido en s146) — verificar el cierre cargando `index.html`, no solo `PACE.html`, porque el build envuelve cada modulo en un IIFE y el fallo solo sale ahi. `PACE_standalone.html` sigue en v0.71.0 A PROPOSITO (export bajo demanda, s134).
+**Ultima actualizacion de este archivo:** 2026-08-03 - sesion 147 (v0.80.0; se retiro del encabezado la sesion s141, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
+**Build entregado:** `index.html` **v0.80.0** (regenerado en s147; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). **OJO**: verificar SIEMPRE el cierre cargando `index.html`, no solo `PACE.html` — el build envuelve cada modulo en un IIFE y hay fallos que solo salen ahi (el `useState` pelado de s144 estuvo DOS versiones publicado). `PACE_standalone.html` sigue en v0.71.0 A PROPOSITO (export bajo demanda, s134).
 
 ---
 
@@ -63,6 +58,11 @@
 | `app/i18n/content/custom.js` | Patch EN del registro: custom.ex.<name ES>.{name,cue} + custom.cat.*.label | **v0.54.0** |
 | `app/glyphs/exercise-glyphs.jsx` | 47 glifos SVG line-art para Move/Stretch (sistema 1) + `ExerciseGlyph` | **v0.54.0** |
 | `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG… | **v0.33.3** |
+| `app/glyphs/achievement-masks.js` | Mapa `id de logro -> archivo de mascara` (**58**, sistema 3). Solo el mapa: el arte vive en `assets/logros/`. **Las rutas van enteras y literales, ni en comentarios** — el inliner del build sustituye cadenas | **NUEVO s146** |
+| `app/glyphs/assets/logros/*.webp` | Las 58 mascaras (224 px, alfa = densidad de tinta; el color lo pone el token). **248 KB** | **s147** |
+| `scripts/ingest-glifos-logro.js` | Ingesta del arte de logro: mapeo por **clave estable** (nunca por posicion) + igualacion de peso de tinta + reescribe mapa y precache. Regla D-4: se RE-CORRE, no se retoca un `.webp` | **s147** |
+| `scripts/audit/glifos-v2.js` | Procesado compartido con la ingesta: deteccion y borrado del marco por angulo + encuadre + **suelo de papel ANTES del remuestreo, marco sobre el ORIGINAL** (s147) | **s147** |
+| `scripts/audit/revision-glifos.js` | Hoja de revision del arte de logro -> `_revision-glifos.html` (ignorado por git). Pinta con el mecanismo REAL, a tamaño de sello y a 3x | **NUEVO s147** |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standal… |
 | `app/ui/Sound.jsx` | Sonidos sintetizados Web Audio | **v0.58.0** |
@@ -94,8 +94,8 @@
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.73.0** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
-| `app/achievements/Achievements.jsx` | UI pura del catalogo (Achievements modal + Seal componente + renderGlyph +… | **v0.33.3** |
-| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**100** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**92**) | **v0.79.0** |
+| `app/achievements/Achievements.jsx` | UI pura del catalogo (modal + `Seal` + **`renderGlyph`, unico resolutor de glifo de logro**: mascara -> SVG -> caracter). El sello se ancla ARRIBA en la tarjeta (s147) | **v0.80.0** |
+| `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**96** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**88**) + la regla de denominador unico de §15.4 | **v0.79.1** |
 | `app/stats/PathYearView.jsx` | Heatmap anual de Caminos | **v0.28.5** |
 | `app/stats/PathStats.jsx` | Seccion Caminos en Stats | **v0.28.4** |
 | `app/stats/YearView.jsx` | Heatmap anual | **v0.52.0** |
@@ -114,7 +114,7 @@
 | `app/state-feedback.jsx` | Feedback ligero por rutina (B2.2b-2): slice `routineFeedback` + acciones | **NUEVO s116** |
 | `app/state.jsx` | Indice — re-export consolidado | **v0.60.0** |
 | ~~`app/welcome/WelcomeModule.jsx`~~ | ~~Welcome de primera vez~~ | **RETIRADO s106** |
-| `app/ui/Toast.jsx` | Notificaciones de logros | **v0.32.1** |
+| `app/ui/Toast.jsx` | Notificaciones de logros — delega el glifo en `renderGlyph` (s147; era la 3.a copia del render) | **v0.80.0** |
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** |
 | `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.79.0** |
@@ -135,7 +135,7 @@
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.49.0** |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del… | **v0.40.0** |
-| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (ceremonia editorial sobre la escena ilustrada) | **v0.49.0** |
+| `app/paths/CompletionScreen.jsx` | Pantalla de Camino completado (ceremonia editorial sobre la escena ilustrada) — glifos via `renderGlyph` (s147; era la 4.a copia) | **v0.80.0** |
 | `app/paths/steps/_shared.js` | window.pathStepStyles = { btnTypography, btnOutline } | **v0.33.0** |
 | `app/paths/steps/PathBreatheStep.jsx` | Step Respira + SafetyGate | **v0.44.0** |
 | `app/paths/steps/PathFocusStep.jsx` | Step Foco (Pomodoro contextual de Camino) | **v0.67.0** |
@@ -302,53 +302,49 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- FASE 2.5: lo que queda (glifos y denominadores)
+## Proxima sesion -- ESPERANDO ARTE (el usuario avisa)
 
 > Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
 > **FASE 2**: auditoria (s141) · ola A (s141) · ola C (s142) · ola E (s143) · Preview §18.3
-> (s144). **Falta la ola B**: los 20 glifos, EN PAUSA esperando arte del usuario.
-> **FASE 2.5**: entrega escalonada (s145) + **curva, detectores y amnistia (s146)** HECHAS.
-> Falta lo de abajo.
+> (s144). **Falta la ola B**: los 20 glifos de ejercicio, EN PAUSA esperando arte.
+> **FASE 2.5**: entrega escalonada (s145) · curva, detectores y amnistia (s146) · **denominador
+> unico §15.4 (s146)** · arte de logro y sus tres defectos (s147). **Cerrada salvo arte.**
 
-### 1. ~~Subir umbrales y RECALCULAR~~ — HECHO en s146, y sin excepcion
+### El usuario avisa cuando tenga arte nuevo
 
-La curva se subio con banco de medicion (`node scripts/audit/logros.js`): dia 1 del **35 %
-al 18 %** de lo que da un año, catalogo **106 -> 100**, con detector **69 -> 92**, secretos
-fantasma **11 -> 0**.
+Decision de cierre de s147: la siguiente sesion de glifos **la dispara el usuario** cuando
+tenga los dibujos que faltan. Dos tandas posibles, independientes entre si:
 
-**La «excepcion consciente a §2.5/§2.2» de s136 queda ANULADA**: el usuario eligio
-**AMNISTIA** — nadie pierde un logro ya concedido, las reglas nuevas rigen solo para lo aun
-no ganado. Sale gratis por construccion (nada borra logros). **No queda ninguna decision de
-copy/UX pendiente por este frente.**
+- **Glifos de LOGRO** (38 sin arte). Prioridad dentro de esa tanda:
+  **`hydrate.week.perfect`** primero — es el unico que **perdio** su dibujo a proposito en
+  s147 (llevaba un pincel de caligrafia, que no pinta nada en hidratacion) y hoy cae a su
+  caracter. Necesita un dibujo de AGUA. Despues, las familias sin dibujo evidente:
+  `streak.7`, `streak.14`, y los 11 de `explore.*` que siguen con el sistema heraldico.
+- **Glifos de EJERCICIO — ola B** (20 sin dibujo, Mueve/Estira). Es lo unico que falta para
+  cerrar la Fase 2. Sale de la matriz §19.2 de
+  [`audit-mueve-estira-v0.73.1`](./docs/audits/audit-mueve-estira-v0.73.1.md).
 
-**Lo que si quedo anotado y NO se hizo**: los **8 logros sin detector** que sobreviven
-(`master.extra.all.week`, `master.midnight.never` y las 6 estacionales de estacion entera)
-son viables pero caros — piden seguimiento semanal o de estacion completa. Se pintan
-«Pronto», que es honesto.
+**Al re-correr la ingesta de logro no hay que tocar nada mas**: `ingest-glifos-logro.js`
+reescribe solo el mapa y el precache, y valida contra el catalogo. Solo se añade la fila al
+objeto `MAPEO` (por **clave estable**, jamas por posicion) y se anota el porque en
+[`MAPEO_GLIFOS_LOGRO.md`](./docs/product/MAPEO_GLIFOS_LOGRO.md).
 
-### 2. Los glifos de logro — necesita arte
+### Sin depender de arte, si se quiere avanzar ya
 
-**34 glifos para 100 logros** y hoy **toda miniatura desbloqueada pinta un `✦` fijo**
-(`Sidebar.jsx`), por eso parecen inactivas aunque la logica de «las 5 ultimas» ya
-funcione (s136). Transicion decidida: **sello por categoria** (`CAT_META`, 7 categorias)
-para los ~72 sin glifo, mas los que el usuario ya tenga dibujados, portados **literales**
-(regla s84).
-
-### 3. Sin depender de nadie, si se quiere avanzar ya
-
-- **Reescritura editorial de las 28 descripciones**: el Preview de s144 la DESBLOQUEO —
-  los requisitos ya tienen su sitio y pueden salir de la descripcion. Pero sigue faltando
-  **la referencia de tono del usuario** (rechazo la muestra de s143 en bloque). Pedirle
-  dos o tres descripciones que de por buenas ANTES de escribir nada.
-- **README**: dice v0.27.6 y lleva ~90 commits sin tocarse, con la app en v0.79.0.
-- **Fase 8.5 saneamiento**: `tokens.css` 613 ln · `Sidebar.jsx` 543 · a11y (tarjetas sin
+- **README**: dice v0.27.6 y lleva ~90 commits sin tocarse, con la app en v0.80.0. Es el
+  escaparate del repo y encaja con el bloque de presentacion publica pre-venta.
+- **Reescritura editorial de las 28 descripciones**: el Preview de s144 la desbloqueo, pero
+  sigue faltando **la referencia de tono del usuario** (rechazo la muestra de s143 en bloque).
+  **No proponer otra ronda a ciegas**: pedirle dos o tres descripciones que de por buenas.
+- **Fase 8.5 saneamiento**: `tokens.css` 613 ln · `Sidebar.jsx` 543 · **`state-core.jsx` 501**
+  (hallazgo de s146: ya estaba por encima del limite antes de esa sesion) · a11y (tarjetas sin
   teclado, onboarding sin focus trap) · tests del state.
-- **Denominadores unicos (§15.4)**: sidebar, modal, stats y toasts deben contar lo mismo;
-  §3.4 dice que hoy no. Es el ultimo punto de la Fase 2.5 que no depende de arte.
-- **[HALLAZGO s146, no tocado] Los titulos y descripciones de logro son SOLO espanol**,
-  tambien en la version inglesa: salen literales de `catalog.js` sin pasar por i18n (solo
-  se traducen las etiquetas de categoria y el chrome, `ach.*`). Detectado al comprobar el
-  coste de cambiar una descripcion — que por eso es de una linea. Encaja con I18N-2.
+- **[HALLAZGO s146, no tocado] Los titulos y descripciones de logro son SOLO espanol**, tambien
+  en la version inglesa: salen literales de `catalog.js` sin pasar por i18n (solo se traducen
+  las etiquetas de categoria y el chrome, `ach.*`). Encaja con I18N-2.
+- **Los 8 logros sin detector** que sobreviven (`master.extra.all.week`, `master.midnight.never`
+  y las 6 estacionales de estacion entera): viables pero caros, piden seguimiento semanal o de
+  estacion completa. Se pintan «Pronto», que es honesto.
 
 ### Decisiones de catalogo abiertas (Fase 2)
 
@@ -356,15 +352,15 @@ para los ~72 sin glifo, mas los que el usuario ya tenga dibujados, portados **li
   propio alias** y `Nordics`, sin uso. O se borran, o se les quita el alias.
 - **Ingles en 5 NOMBRES de rutina**: `Grip + antebrazos` · `Core silencioso` · `Postura
   reset` · `Core · plancha` · `ATG · Rodillas a prueba`. Propuestas dadas: **Agarre +
-  antebrazos**, **Postura a punto**, **Rodillas a prueba**; con `Core` la recomendacion
-  fue NO tocarlo.
+  antebrazos**, **Postura a punto**, **Rodillas a prueba**; con `Core` la recomendacion fue
+  NO tocarlo.
 - **`Superman`**: unico nombre de PASO con ingles, mantenido a proposito.
-- **`Descanso` es un nombre de EJERCICIO con glifo propio** en vez de un paso `rest`.
 - **`Sentadilla de cuadriceps`** (ex `Sissy squat`) espera **revision FISIO** (B4).
+- **El pincel en `stats.month.first` es TEMPORAL** (s147). Alternativa anotada: `secret.zen`.
 
-**Restricciones vivas**: `MoveSessionV1.jsx` esta **exactamente en 500 ln** ⇒ lo nuevo va
-a `MoveSessionV1.support.jsx`; `ExtraModule.jsx` ronda las 460, asi que al retomar Estira
-**se trocean los datos ANTES**.
+**Restricciones vivas**: `MoveSessionV1.jsx` esta **exactamente en 500 ln** => lo nuevo va a
+`MoveSessionV1.support.jsx`; `ExtraModule.jsx` ronda las 460, asi que al retomar Estira **se
+trocean los datos ANTES**.
 
 ## Decisiones activas -- indice
 
@@ -375,6 +371,9 @@ a `MoveSessionV1.support.jsx`; `ExtraModule.jsx` ronda las 460, asi que al retom
 
 | Decision | Desde |
 |---|---|
+| **El glifo de un logro se pinta SIEMPRE desde `renderGlyph`; ninguna superficie lo resuelve por su cuenta** | s147 |
+| **El suelo de papel se aplica ANTES del remuestreo, y el marco se busca sobre el ORIGINAL** | s147 |
+| **En una rejilla de sellos, el sello se ancla ARRIBA, nunca al centro de su tarjeta** — aplica s119 | s147 |
 | **AMNISTIA: un logro concedido NO se retira nunca** — ANULA la excepcion consciente de s136 | s146 |
 | **Un hook con alias NO crea el binding pelado; el compilado no perdona lo que `PACE.html` si** | s146 |
 | **Un secreto sin detector es indistinguible de uno alcanzable: o se implementa o sale del catalogo** | s146 |

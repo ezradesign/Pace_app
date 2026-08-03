@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.79.1';
+const CACHE_NAME = 'pace-v0.80.0';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -28,6 +28,7 @@ const PRECACHE = [
   /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
      (el standalone las inlinea como data URI); precache = offline fiel. */
   '/app/glyphs/assets/logros/breathe.sessions.10.webp',
+  '/app/glyphs/assets/logros/explore.478.webp',
   '/app/glyphs/assets/logros/explore.all.breathe.webp',
   '/app/glyphs/assets/logros/explore.bhastrika.webp',
   '/app/glyphs/assets/logros/explore.coherent.webp',
@@ -49,7 +50,6 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/focus.hours.10.webp',
   '/app/glyphs/assets/logros/focus.hours.100.webp',
   '/app/glyphs/assets/logros/focus.hours.50.webp',
-  '/app/glyphs/assets/logros/hydrate.week.perfect.webp',
   '/app/glyphs/assets/logros/master.antidote.webp',
   '/app/glyphs/assets/logros/master.centurion.webp',
   '/app/glyphs/assets/logros/master.coherent.15.webp',
@@ -74,14 +74,17 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/season.spring.webp',
   '/app/glyphs/assets/logros/season.winter.webp',
   '/app/glyphs/assets/logros/secret.backup.webp',
+  '/app/glyphs/assets/logros/secret.bilingual.webp',
   '/app/glyphs/assets/logros/secret.night.owl.webp',
   '/app/glyphs/assets/logros/secret.safety.read.webp',
   '/app/glyphs/assets/logros/secret.supporter.webp',
+  '/app/glyphs/assets/logros/stats.month.first.webp',
   '/app/glyphs/assets/logros/stats.year.first.webp',
   '/app/glyphs/assets/logros/streak.100.webp',
   '/app/glyphs/assets/logros/streak.3.webp',
   '/app/glyphs/assets/logros/streak.30.webp',
   '/app/glyphs/assets/logros/streak.365.webp',
+  '/app/glyphs/assets/logros/streak.60.webp',
   '/fonts/ebgaramond-400-italic.woff2',
   '/fonts/ebgaramond-500-italic.woff2',
   '/fonts/ebgaramond-400-normal.woff2',

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.79.1</title>
+  <title>PACE · Foco · Cuerpo — v0.80.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3619,7 +3619,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.79.1';
+const PACE_VERSION = 'v0.80.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7587,8 +7587,15 @@ function ToastHost() {
         fontStyle: 'italic',
         fontSize: 18
       } },
-    toast.glyphSvg ? /*#__PURE__*/
-    React.createElement("span", { style: { display: 'grid', placeItems: 'center', width: '100%', height: '100%' }, dangerouslySetInnerHTML: { __html: toast.glyphSvg } }) : /*#__PURE__*/
+
+
+
+
+
+
+
+    window.renderGlyph ?
+    window.renderGlyph(toast) : /*#__PURE__*/
     React.createElement("span", { style: { fontStyle: 'italic' } }, toast.glyph)
 
     ), /*#__PURE__*/
@@ -15152,6 +15159,7 @@ Object.assign(window, { ACHIEVEMENT_GLYPHS: GLYPH_SVG });
    los comentarios. */
 const ACHIEVEMENT_MASKS = {
   'breathe.sessions.10': 'app/glyphs/assets/logros/breathe.sessions.10.webp',
+  'explore.478': 'app/glyphs/assets/logros/explore.478.webp',
   'explore.all.breathe': 'app/glyphs/assets/logros/explore.all.breathe.webp',
   'explore.bhastrika': 'app/glyphs/assets/logros/explore.bhastrika.webp',
   'explore.coherent': 'app/glyphs/assets/logros/explore.coherent.webp',
@@ -15173,7 +15181,6 @@ const ACHIEVEMENT_MASKS = {
   'focus.hours.10': 'app/glyphs/assets/logros/focus.hours.10.webp',
   'focus.hours.100': 'app/glyphs/assets/logros/focus.hours.100.webp',
   'focus.hours.50': 'app/glyphs/assets/logros/focus.hours.50.webp',
-  'hydrate.week.perfect': 'app/glyphs/assets/logros/hydrate.week.perfect.webp',
   'master.antidote': 'app/glyphs/assets/logros/master.antidote.webp',
   'master.centurion': 'app/glyphs/assets/logros/master.centurion.webp',
   'master.coherent.15': 'app/glyphs/assets/logros/master.coherent.15.webp',
@@ -15198,14 +15205,17 @@ const ACHIEVEMENT_MASKS = {
   'season.spring': 'app/glyphs/assets/logros/season.spring.webp',
   'season.winter': 'app/glyphs/assets/logros/season.winter.webp',
   'secret.backup': 'app/glyphs/assets/logros/secret.backup.webp',
+  'secret.bilingual': 'app/glyphs/assets/logros/secret.bilingual.webp',
   'secret.night.owl': 'app/glyphs/assets/logros/secret.night.owl.webp',
   'secret.safety.read': 'app/glyphs/assets/logros/secret.safety.read.webp',
   'secret.supporter': 'app/glyphs/assets/logros/secret.supporter.webp',
+  'stats.month.first': 'app/glyphs/assets/logros/stats.month.first.webp',
   'stats.year.first': 'app/glyphs/assets/logros/stats.year.first.webp',
   'streak.100': 'app/glyphs/assets/logros/streak.100.webp',
   'streak.3': 'app/glyphs/assets/logros/streak.3.webp',
   'streak.30': 'app/glyphs/assets/logros/streak.30.webp',
-  'streak.365': 'app/glyphs/assets/logros/streak.365.webp'
+  'streak.365': 'app/glyphs/assets/logros/streak.365.webp',
+  'streak.60': 'app/glyphs/assets/logros/streak.60.webp'
 };
 
 function achievementMaskUrl(id) {
@@ -15599,7 +15609,19 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
     React.createElement("div", {
       style: {
         aspectRatio: '1/1.15',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        /* s147 — el sello se anclaba al CENTRO de la tarjeta, así que flotaba con
+           el largo de la descripción: reportado por el usuario con «Setenta y
+           cinco sellos» (1 línea) al lado de «Cartógrafa» (3 líneas). Medido
+           sobre los 96 sellos, tres posiciones distintas —15, 20 y 26 px del
+           borde— y 11 px de deriva dentro de la misma fila.
+            Se ancla ARRIBA, que es la regla de alturas reservadas de s119: la
+           tarjeta ya tiene alto FIJO (`aspectRatio`) y el círculo alto fijo, así
+           que con el ancla arriba se alinean los sellos Y los títulos, y lo que
+           varía —la descripción— cae hacia el hueco de abajo. Es seguro porque
+           está medido: 0 de 96 tarjetas desbordan su alto, y a la más cargada le
+           sobran 16 px. */
+
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
         padding: '14px 8px',
         border: `1px ${borderStyle} ${borderColor}`,
         borderRadius: 'var(--r-md)',
@@ -19880,8 +19902,10 @@ function CompletionScreen(_ref) {let { snapshot, onBack, fadeIn } = _ref;
             fontFamily: 'var(--font-display)', fontStyle: 'italic',
             fontSize: 12
           } },
-        a.glyphSvg ? /*#__PURE__*/
-        React.createElement("span", { style: { display: 'grid', placeItems: 'center', width: '100%', height: '100%' }, dangerouslySetInnerHTML: { __html: a.glyphSvg } }) : /*#__PURE__*/
+
+
+        window.renderGlyph ?
+        window.renderGlyph(a) : /*#__PURE__*/
         React.createElement("span", null, a.glyph)
 
         ), /*#__PURE__*/
