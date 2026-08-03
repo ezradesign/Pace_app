@@ -37,19 +37,27 @@ Antes de tocar **nada**:
 Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
 
 1. Verificar que la app carga limpia en consola (sin errores)
-2. **Regenerar `index.html`** (el artefacto de web/PWA) con `node build-standalone.js` y verificarlo
-3. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
+2. **`npm run verify`** — red de seguridad local (s150). Corre `node --check` sobre todos los
+   `.js` (también los que el build no mira: `sw.js`, `scripts/`), ejecuta el build entero y
+   analiza el **ámbito del artefacto compilado**: un identificador que en `PACE.html` resolvía
+   por el ámbito global de Babel standalone y dentro de la IIFE del build queda sin ligar
+   **es el crash de s144**, que estuvo dos versiones publicado. Devuelve **código de salida**:
+   si falla, no se sigue. Va ANTES de regenerar porque su aviso «index.html difiere de las
+   fuentes» es justo la señal de que toca el paso 3. **No cubre** comportamiento, catálogos,
+   i18n, precache, glifos ni CSS — los declara en cada pasada (segunda tanda, D5 de s149)
+3. **Regenerar `index.html`** (el artefacto de web/PWA) con `node build-standalone.js` y verificarlo
+4. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
    objetivos canónicos y `PACE_standalone.html` pasa a **export bajo demanda**. Se regenera (y se
    rota a `backups/`, máx 20) **solo si el usuario lo pide** o antes de publicar una release.
    Motivos: no comparte `localStorage` con la web (otro origen), `file://` no emite eventos por
    diseño, instalar desde él causó el bug de icono y pantalla completa de s128 (no lleva
    `manifest`), y el catálogo de audio largo es ininlineable
-4. Escribir diario en `docs/sessions/session-NN-titulo-corto.md`
-5. Actualizar `CHANGELOG.md`: fila en tabla + detalle de las 2 ultimas versiones
-6. **Reescribir** (no anadir) seccion "Ultima sesion" de `STATE.md`
-7. Actualizar el backlog de `STATE.md` si aplica; una **decision tecnica nueva** va a `docs/product/DECISIONES_TECNICAS_VIGENTES.md` + su titulo al indice de `STATE.md`
-8. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
-9. Dar el mensaje exacto de commit sugerido para GitHub
+5. Escribir diario en `docs/sessions/session-NN-titulo-corto.md`
+6. Actualizar `CHANGELOG.md`: fila en tabla + detalle de las 2 ultimas versiones
+7. **Reescribir** (no anadir) seccion "Ultima sesion" de `STATE.md`
+8. Actualizar el backlog de `STATE.md` si aplica; una **decision tecnica nueva** va a `docs/product/DECISIONES_TECNICAS_VIGENTES.md` + su titulo al indice de `STATE.md`
+9. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
+10. Dar el mensaje exacto de commit sugerido para GitHub
 
 **Cambio significativo:** cualquier cambio funcional, de diseño notable o estructural.
 Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.

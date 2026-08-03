@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.83.0** | 2026-08-03 | chore(tooling): **`npm run verify`, y el listón era ponerlo rojo con el crash de s144** — fase A de la auditoría (D1), alcance de D5: build + artefacto + `node --check`. El enunciado decía que ninguna pieza de `scripts/audit/` devuelve código de salida; medido, **diez de trece salen con 1** — lo que no hay es **ningún aserto**, así que no se reaprovecha ninguna · el crash de s144 tiene sintaxis impecable y solo revienta **al renderizar**, así que lo caza el **análisis de ámbito del compilado**: sobre el artefacto sano hay **38** identificadores sin ligar y los 38 son de plataforma, **cero ruido de la app** ⇒ un `useState` pelado es el nombre 39 · reproducido a propósito, sale `app/main.jsx:23` (la primera versión dijo **24**: el patrón se comía un salto de línea) · **cuatro rojos más**: módulo declarado inexistente (el build solo avisa), versión descuadrada, sintaxis en `sw.js` (**el build no lo mira jamás**) y archivo de `app/` sin declarar — este último salió de medir la **biyección 97 = 97** · el script **imprime sus propios huecos en cada pasada** y no deja rastro: restaura los dos artefactos byte a byte | #150 | [abajo](#v0830----2026-08-03----choretooling-npm-run-verify-la-red-de-seguridad-local) |
 | **v0.82.0** | 2026-08-03 | chore(sw)+fix(entitlement)+docs: **el service worker dejaba diez versiones de retraso en la caché de cada usuario** — triaje de la auditoría integral externa contra el código real: de lo verificable, **cero afirmaciones falsas**, y **cuatro contradicciones** de las que **tres son del repo consigo mismo** (el onboarding promete «Siempre gratis», la sidebar sigue siendo racha + récord contra §37-bis, y Desktop reordena con `order` contra la letra de s123) · el precache soltaba el export congelado en v0.71.0, servido **cache-first para siempre**; el cleanup del `activate` lo borra solo al bumpear · el pegado de la auditoría había perdido **todos** los marcadores markdown desde la línea 233, no solo la valla · **cuatro de las nueve decisiones cerradas en el mismo cierre**: A–K se **fusiona** (no sustituye), el `verify` v1 = build + artefacto + `node --check`, el guard gana **`hasPremiumEntitlement()`** para superficies de pago, y el modelo de cuatro vías queda **marcado como histórico** en `MONETIZATION.md` / `ROADMAP.md` / `README.md` | #149 | [abajo](#v0820----2026-08-03----choresw-el-standalone-sale-del-precache) |
-| **v0.81.0** | 2026-08-03 | chore(estructura): **cinco archivos por encima del límite, y dos no estaban en la lista** — Fase 8.5, troceo sin cambio de comportamiento. La tabla de deuda daba `exercise-glyphs.jsx` por «dentro de límite» con **571 ln** y no registraba `sessions.js` (**502**) · `tokens.css` 613→**386**, `Sidebar.jsx` 570→**141**, `state-core.jsx` 510→**402**, `exercise-glyphs.jsx` 571→**209**, `sessions.js` 502→**353** · el build solo sabía inlinear `tokens.css`: generalizado a todas las hojas de `app/` · **`first.return` no se desbloquea NUNCA** (preexistente, confirmado contra el artefacto de v0.80.0) | #148 | [abajo](#v0810----2026-08-03----choreestructura-cinco-archivos-por-encima-del-límite) |
+| **v0.81.0** | 2026-08-03 | chore(estructura): **cinco archivos por encima del límite, y dos no estaban en la lista** — Fase 8.5, troceo sin cambio de comportamiento. La tabla de deuda daba `exercise-glyphs.jsx` por «dentro de límite» con **571 ln** y no registraba `sessions.js` (**502**) · `tokens.css` 613→**386**, `Sidebar.jsx` 570→**141**, `state-core.jsx` 510→**402**, `exercise-glyphs.jsx` 571→**209**, `sessions.js` 502→**353** · el build solo sabía inlinear `tokens.css`: generalizado a todas las hojas de `app/` · **`first.return` no se desbloquea NUNCA** (preexistente, confirmado contra el artefacto de v0.80.0) | #148 | [session-148](./docs/sessions/session-148-saneamiento-fase-8-5.md) |
 | **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [session-147](./docs/sessions/session-147-tramado-y-alineacion.md) |
 | **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
 | **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
@@ -344,6 +345,88 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.83.0] -- 2026-08-03 -- chore(tooling): `npm run verify`, la red de seguridad local
+
+Fase **A** de la auditoría integral, adoptada como frente inmediato por **D1** de s149, con
+el alcance que fijó **D5**: **build + artefacto + `node --check`**. Un solo frente, y
+empezando por el script local, no por el YAML.
+
+### El punto de partida no era el que decía el plan
+
+`scripts/audit/` tiene trece piezas y la premisa era que **ninguna devuelve código de
+salida**. Medido: **diez de las trece** terminan en `main().catch(e => process.exit(1))`.
+La carencia real es otra y es más de fondo — **ninguna tiene un aserto**: son bancos de
+medición que imprimen y terminan en 0 tanto si el número es bueno como si es desastroso.
+Un checker no es un medidor con `exit(1)` al final, es un medidor que sabe qué valor es
+inaceptable. Por eso no se reaprovecha ninguna tal cual; lo que sí se hereda es la tesis de
+`inventario.js`: si el dato está en el árbol, se saca del árbol, compilando con el Babel
+del build en vez de leer a ojo.
+
+### El listón: ponerse rojo con el crash de s144
+
+`useState` pelado en `main.jsx` tiene **sintaxis impecable** —el parser del build lo da por
+bueno— y solo revienta **al renderizar**, y solo en el artefacto, porque el build envuelve
+cada módulo en su IIFE y el `const { useState } = React` de otro archivo deja de alcanzar.
+Estuvo **dos versiones publicado**.
+
+Lo caza el **análisis de ámbito del compilado**: se parsea cada bloque IIFE y se piden los
+identificadores referenciados y **no ligados en ningún ámbito**. La calibración es lo que
+decidió que la idea servía — sobre el artefacto sano de v0.82.0:
+
+| Medición | Valor |
+|---|---:|
+| Bloques IIFE = módulos declarados | **98 = 98** |
+| Nombres publicados en `window` | **336** |
+| Identificadores sin ligar, distintos | **225** |
+| …no publicados en `window` | **38** — y los 38 son de plataforma |
+
+**Cero ruido de la app**, así que un `useState` pelado aparece como el nombre 39.
+Reproducido a propósito, el verify lo señala en **`app/main.jsx:23`** y sale con 1.
+
+**Trampa propia, cazada por esa misma prueba:** la primera versión dijo `main.jsx:24`. El
+patrón capturaba el salto de línea de detrás de `;(function () {` y corría **todas** las
+líneas en +1. Con `retainLines`, la línea del compilado *es* la del fuente. Si la prueba
+negativa se hubiera conformado con «falla, bien», el error se queda dentro.
+
+### Cuatro rojos más, y uno salió de medir
+
+| Prueba | Por qué importa |
+|---|---|
+| Módulo declarado que no existe | El build solo emite `[WARN]`: el módulo **desaparece del artefacto en silencio** |
+| Versión descuadrada | Tres sitios a mano cada sesión: `state-core.jsx`, `sw.js`, `<title>` |
+| Sintaxis rota en `sw.js` | **El build no mira `sw.js` jamás**, ni `scripts/`, ni él mismo |
+| Archivo de `app/` sin declarar | La trampa de s148: se trocea, existe en disco y **no carga nunca** |
+
+La última no estaba prevista: al comprobar si merecía la pena salió que `app/` tiene **97**
+archivos y `PACE.html` declara **97**, biyección exacta y sin excepciones. Con un invariante
+así, asertarlo es gratis.
+
+### Falsos verdes
+
+El script **imprime sus propios huecos en cada pasada**, también en verde: no cubre
+comportamiento, ni catálogos/i18n/precache/glifos (D5 los deja para la segunda tanda), ni
+orden de carga, ni CSS, ni contenido, ni el standalone. Y **cero bloques reconocidos es un
+FALLO explícito**, no un verde silencioso.
+
+### Dos decisiones de comportamiento
+
+**No deja rastro**: corre el build de verdad, guarda los bytes de los dos artefactos y los
+restaura en un `finally` (y en `SIGINT`) — `PACE_standalone.html` vuelve a
+`998E3E358D689036`, el hash congelado de s134. Y **la deriva de `index.html` es un aviso,
+no un fallo**: el paso vive justo antes de regenerar, o sea en el momento en que el
+artefacto *tiene* que estar desactualizado.
+
+### El checklist, al final
+
+`npm run verify` entra como **paso 2** del cierre de `CLAUDE.md`, entre «la app carga
+limpia» y «regenerar `index.html`» (los pasos 2–9 pasan a 3–10) — añadido **después** de
+que el verify existiera y se hubiera puesto rojo cinco veces, porque un protocolo que llama
+a un script inexistente es peor que ninguno.
+
+Diario: [session-150](./docs/sessions/session-150-verify-red-de-seguridad.md).
+
+---
+
 ## [v0.82.0] -- 2026-08-03 -- chore(sw): el standalone sale del precache
 
 Sesión de **triaje**, un solo frente. La auditoría integral externa aportada al cerrar
@@ -464,96 +547,3 @@ falla no es el resultado visible sino que el contrato medido de s126 no se está
 Encaja con el §10.2 de la auditoría, que pedía auditar el contrato geométrico sin poder medirlo.
 
 Diario: [session-149](./docs/sessions/session-149-triaje-auditoria-integral.md).
-
----
-
-## [v0.81.0] -- 2026-08-03 -- chore(estructura): cinco archivos por encima del límite
-
-Fase 8.5 · saneamiento. No llegó arte, así que tocaba la primera opción del orden
-acordado: trocear lo que incumple la regla nº 1 de `CLAUDE.md` (< 500 líneas)
-usando los patrones que el repo ya tiene, **sin tocar comportamiento**.
-
-### La deuda es mayor de lo anotado: cinco archivos, no tres
-
-La instrucción era medir en vez de leer la tabla, y fue lo que dio el hallazgo:
-
-| Archivo | Real | Lo que decía `STATE.md` |
-|---|---:|---|
-| `app/tokens.css` | 613 | 613 ✓ |
-| `app/glyphs/exercise-glyphs.jsx` | **571** | 554 · «BAJA, **dentro de límite**» |
-| `app/shell/Sidebar.jsx` | 570 | 541 |
-| `app/state-core.jsx` | 510 | 494 |
-| `app/i18n/strings/sessions.js` | **502** | **no aparecía en la tabla** |
-
-Los dos que faltaban son justo los que nadie vigilaba: `exercise-glyphs.jsx`
-estaba catalogado como sano **desde s84**, cuando ya no lo estaba, y `sessions.js`
-nunca entró en la tabla pese a ser el dominio mayor del split de s81. Una tabla
-que se mantiene a mano deja de medir.
-
-### Los cinco cortes, cada uno por una frontera que ya existía
-
-| Archivo | Antes | Después | Hermano(s) |
-|---|---:|---:|---|
-| `tokens.css` | 613 | **386** | `paths/paths.css` 284 |
-| `exercise-glyphs.jsx` | 571 | **209** | `.extra.jsx` 406 |
-| `Sidebar.jsx` | 570 | **141** | `.parts.jsx` 277 · `.support.jsx` 218 |
-| `state-core.jsx` | 510 | **402** | `.support.jsx` 160 |
-| `strings/sessions.js` | 502 | **353** | `sessions.body.js` 158 |
-
-De `tokens.css` salió el **CSS de Caminos** (no eran tokens: eran reglas de un
-módulo). De `exercise-glyphs.jsx`, **Estira** — el corte por el separador que el
-propio archivo dibujaba. `Sidebar` adopta el reparto de Foco (`support` + `parts`
-+ orquestador). De `state-core` salió **«cómo un estado guardado se convierte en
-el de hoy»**. Y de `sessions.js`, el dominio **CUERPO**, que era contiguo y con la
-misma frontera en ES y EN — que siguen juntos (decisión s81).
-
-**Ningún archivo de `app/` pasa ya de 500.** El techo queda en
-`MoveSessionV1.jsx`, **exactamente en 500**: sigue igual y sigue valiendo su
-restricción.
-
-### Tres cosas que el troceo obligó a resolver
-
-- **El build solo sabía inlinear `tokens.css`** (ruta cableada): un CSS nuevo se
-  habría quedado fuera del artefacto en silencio. Generalizado a todas las hojas
-  de `app/`, sustituyendo cada enlace **en su sitio** para conservar la cascada, y
-  abortando si falta una o si no inlinea ninguna.
-- **Un `const` no cruza de archivo en el compilado** (cada uno va en su IIFE), así
-  que `sidebarStyles` se publica a `window` como ya hace `pathStepStyles` desde
-  s80 — y se referencia pelado, para resolver al renderizar y no al evaluar.
-  `function` y `var` top-level **sí** viajan solos: por eso las once piezas
-  extraídas de Sidebar y state-core no necesitaron nada.
-- **Un orden de carga que no es negociable**: `state-core.jsx` hace
-  `let _state = loadState()` en el cuerpo del archivo, no al montar, y `loadState`
-  llama a cuatro de las cinco funciones extraídas ⇒ su `.support` carga antes.
-  `exercise-glyphs.extra.jsx` **muta** el mapa del hermano (el componente cierra
-  sobre esa referencia) y lleva guard que aborta si se invierte el orden.
-
-### Verificación
-
-Cargando **`index.html`** tras **cada** troceo, con SW y cachés purgados y estado
-limpiado desde la página viva. Consola limpia en todos. `state-core` se probó por
-sus **dos ramas** prediciendo antes de mirar: **7 de 7** en el estado viejo
-(rotación lunes-primero, paletas y estilos huérfanos migrados) y **9 de 9** en el
-rollover completo (semana a cero, racha 5→0 con `longest` intacto, 7 días
-archivados). i18n comparado **clave a clave contra `HEAD`** en un sandbox:
-**195 ES y 195 EN, cero perdidas, cero nuevas, cero distintas**. 47 glifos de
-ejercicio, los mismos. `PACE_standalone.html` restaurado byte a byte las cinco
-veces (hash `998e3e35…`, decisión s134).
-
-### Tres hallazgos que no venían en el encargo
-
-- **`first.return` («Regresas») NO SE DESBLOQUEA NUNCA.** El rollover lo concede
-  con `setTimeout(…, 0)` para esperar a `state-achievements.jsx`, pero 0 ms llega
-  antes de que ese archivo evalúe: `unlockAchievement` es `undefined` y el
-  `try/catch` se lo traga. **Confirmado preexistente** contra el artefacto
-  committeado de v0.80.0, que se comporta idéntico. No se tocó (el encargo era no
-  cambiar comportamiento). Hay arte para un logro que nadie puede ganar.
-- **`sw.js` tenía el comentario de s146 sin cerrar** y se había tragado el de
-  fuentes de s105. No era prosa: `reescribirPrecache()` avanza hasta el primer
-  `*/` para decidir dónde insertar, así que metía los 58 glifos **debajo** del
-  bloque equivocado. Reparado y verificado simulando la búsqueda del script.
-- **`PACE.html.bak.pre-fix`**, copia trackeada de `PACE.html` en **v0.25.0** (7 de
-  mayo), eliminada.
-
-Diario: [session-148](./docs/sessions/session-148-saneamiento-fase-8-5.md).
-
