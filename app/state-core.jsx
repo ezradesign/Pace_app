@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.80.0';
+const PACE_VERSION = 'v0.81.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -181,126 +181,17 @@ const defaultState = {
 };
 
 /* ============================
-   UTILS
-   ============================ */
+   UTILS · MIGRACIONES · ROLLOVER  ->  state-core.support.jsx
+   ============================
+   Extraídos en s148 al rebasar este archivo las 500 líneas de CLAUDE.md:
+   `isMobileViewport`, `detectInitialPalette`, `migrateWeeklyStatsToHistory`,
+   `reindexWeeklyStatsMondayFirst` y `rolloverIfNeeded`. Son «cómo un estado
+   guardado se convierte en el de hoy»; aquí queda el store.
 
-function isMobileViewport() {
-  return typeof window !== 'undefined' && window.matchMedia &&
-         window.matchMedia('(max-width: 768px)').matches;
-}
-
-/* Paleta inicial (s89 · P0 auditoria): respeta prefers-color-scheme del
-   sistema SOLO en el primer arranque (sin estado guardado). La eleccion
-   manual de Tweaks persiste en localStorage y siempre gana en cargas
-   posteriores — esto no re-sigue cambios del SO en caliente. */
-function detectInitialPalette() {
-  try {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'oscuro' : 'crema';
-  } catch (e) { return 'crema'; }
-}
-
-/* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
-   rollover post-upgrade. Solo se ejecuta una vez (_historyMigrated === false). */
-function migrateWeeklyStatsToHistory(state) {
-  if (state._historyMigrated) return state;
-  if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
-  let h = state.history || { days: {}, months: {}, years: {} };
-  const lastDate = new Date(state.lastActiveDay);
-  for (let offset = 0; offset < 7; offset++) {
-    const d = new Date(lastDate.getTime() - offset * 86400000);
-    h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
-  }
-  return { ...state, history: h, _historyMigrated: true };
-}
-
-/* Sesion 69 / v0.28.8: re-indexa weeklyStats de la convencion vieja
-   (0=domingo, 1=lunes ... 6=sabado, indexado por getDay()) a la nueva
-   (0=lunes, 1=martes ... 6=domingo). Mapping: nuevo[i] = viejo[(i+1)%7]. */
-function reindexWeeklyStatsMondayFirst(ws) {
-  const rot = (arr) => Array.isArray(arr) && arr.length === 7
-    ? [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]]
-    : [0,0,0,0,0,0,0];
-  return {
-    focusMinutes:  rot(ws && ws.focusMinutes),
-    breathMinutes: rot(ws && ws.breathMinutes),
-    moveMinutes:   rot(ws && ws.moveMinutes),
-    waterGlasses:  rot(ws && ws.waterGlasses),
-  };
-}
-
-/* ============================
-   ROLLOVER
-   ============================ */
-
-function rolloverIfNeeded(state) {
-  const today = new Date();
-  const todayStr = today.toDateString();
-  if (state.lastActiveDay === todayStr) return state;
-
-  /* Detectar si la migracion s43 esta por ejecutarse en esta llamada.
-     Si _historyMigrated era false al entrar, migrateWeeklyStatsToHistory
-     ya archivara lastActiveDay y NO debemos volver a archivarlo aqui (C2). */
-  const wasAlreadyMigrated = !!state._historyMigrated;
-  let migratedState = migrateWeeklyStatsToHistory(state);
-  let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
-
-  /* Archivar el dia previo solo si NO acaba de migrar (la migracion ya lo cubrio). */
-  if (migratedState.lastActiveDay && wasAlreadyMigrated) {
-    nextHistory = archiveDayToHistory(
-      nextHistory, migratedState.lastActiveDay, migratedState.weeklyStats
-    );
-  }
-
-  /* FIX C1 (sesion 69): si entramos en una nueva semana lunes-domingo,
-     resetear weeklyStats por completo. */
-  let nextWeekly = migratedState.weeklyStats;
-  if (migratedState.lastActiveDay) {
-    const prevMonday  = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
-    const todayMonday = getMondayOf(today).getTime();
-    if (todayMonday !== prevMonday) {
-      nextWeekly = {
-        focusMinutes:  [0,0,0,0,0,0,0],
-        breathMinutes: [0,0,0,0,0,0,0],
-        moveMinutes:   [0,0,0,0,0,0,0],
-        waterGlasses:  [0,0,0,0,0,0,0],
-      };
-    }
-  }
-
-  /* FIX A2 (sesion 69): rotura proactiva del streak. Si la ultima sesion
-     fue antes de ayer, current=0 inmediatamente (sin esperar a la siguiente). */
-  let nextStreak = migratedState.streak;
-  if (nextStreak && nextStreak.lastActiveDate) {
-    const lastActive = new Date(nextStreak.lastActiveDate);
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday.setHours(0, 0, 0, 0);
-    lastActive.setHours(0, 0, 0, 0);
-    if (lastActive.getTime() < yesterday.getTime()) {
-      nextStreak = { ...nextStreak, current: 0 };
-    }
-  }
-
-  /* Trigger first.return — abrir la app un dia distinto al ultimo.
-     Deferred via setTimeout para no llamar a unlockAchievement desde
-     dentro de loadState (achievements aun no cargado en este punto). */
-  if (migratedState.lastActiveDay) {
-    setTimeout(() => {
-      try { unlockAchievement('first.return'); } catch (e) {}
-    }, 0);
-  }
-  return {
-    ...migratedState,
-    history: nextHistory,
-    weeklyStats: nextWeekly,
-    streak: nextStreak,
-    cycle: 0,
-    plan: { muevete: false, respira: false, extra: false, hidratate: false },
-    water: { ...migratedState.water, today: 0, lastReset: todayStr },
-    lastActiveDay: todayStr,
-  };
-}
+   ESE ARCHIVO CARGA ANTES QUE ESTE, y no es negociable: `loadState()` corre
+   más abajo EN EL CUERPO de este archivo (`let _state = loadState()`), no al
+   montar, y llama a cuatro de esas cinco funciones. Si el orden se invierte,
+   revienta el primer arranque de cada pestaña. */
 
 /* ============================
    STORE PRIMITIVO
@@ -502,9 +393,10 @@ applyTheme();
 /* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
    MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-
    Today) los expone state-history.jsx (s101). */
+/* `detectInitialPalette` ya no se re-exporta aquí: vive y se publica en
+   `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
-  detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast, setCaminoUiActive,
 });

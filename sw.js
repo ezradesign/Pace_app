@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.80.0';
+const CACHE_NAME = 'pace-v0.81.0';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -25,8 +25,13 @@ const PRECACHE = [
   '/app/breathe/assets/loto.webp',
   /* s146: glifos de logro del usuario, MASCARAS CSS.
      Mismo trato que el loto: archivo en web + precache, data URI solo en el
-  /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
-     (el standalone las inlinea como data URI); precache = offline fiel. */
+     standalone.
+     ESTAS FILAS LAS REESCRIBE scripts/ingest-glifos-logro.js — no se editan a
+     mano. El script localiza esta cabecera por su primera linea y avanza hasta
+     el PRIMER cierre de comentario para saber donde insertar. s148: ese cierre
+     faltaba, asi que la busqueda se pasaba de largo hasta el del bloque de
+     fuentes de abajo y metia los glifos DEBAJO de el, dejando las fuentes sin
+     cabecera. Si se toca este comentario, que siga cerrandose aqui. */
   '/app/glyphs/assets/logros/breathe.sessions.10.webp',
   '/app/glyphs/assets/logros/explore.478.webp',
   '/app/glyphs/assets/logros/explore.all.breathe.webp',
@@ -85,6 +90,8 @@ const PRECACHE = [
   '/app/glyphs/assets/logros/streak.30.webp',
   '/app/glyphs/assets/logros/streak.365.webp',
   '/app/glyphs/assets/logros/streak.60.webp',
+  /* s105: fuentes self-hosted (subset latin). En la web viajan como archivo
+     (el standalone las inlinea como data URI); precache = offline fiel. */
   '/fonts/ebgaramond-400-italic.woff2',
   '/fonts/ebgaramond-500-italic.woff2',
   '/fonts/ebgaramond-400-normal.woff2',

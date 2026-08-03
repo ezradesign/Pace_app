@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.80.0</title>
+  <title>PACE · Foco · Cuerpo — v0.81.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -14,6 +14,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Pace">
   <link rel="stylesheet" href="app/tokens.css" />
+  <!-- CSS de Caminos (s148): SenderoBar + escena ilustrada + variante lg +
+       orbe. Extraídos de tokens.css al rebasar este las 500 líneas de la
+       regla nº 1 de CLAUDE.md; no eran tokens sino el lenguaje visual de un
+       módulo. VA DESPUÉS de tokens.css a propósito: la regla que saca la
+       escena del rise escalonado de [data-pace-reveal] gana por ORDEN, no
+       por especificidad. El build inlinea las hojas de app/ una por una y en
+       su sitio, así que este orden se conserva en index.html y en el
+       standalone. -->
+  <link rel="stylesheet" href="app/paths/paths.css" />
   <style id="pace-paths-css">
     .path-runner-overlay {
       position: fixed; inset: 0;
@@ -120,6 +129,10 @@
   <script type="text/babel" src="app/i18n/strings/_bootstrap.js"></script>
   <script type="text/babel" src="app/i18n/strings/ui.js"></script>
   <script type="text/babel" src="app/i18n/strings/sessions.js"></script>
+  <!-- Cuerpo (Mueve/Estira) s148: extraido de sessions.js, que iba por 502 ln.
+       Entre dominios el orden da igual (no comparten claves); lo que no puede
+       moverse es content/*, que patchea EN y debe seguir cargando al final. -->
+  <script type="text/babel" src="app/i18n/strings/sessions.body.js"></script>
   <script type="text/babel" src="app/i18n/strings/paths.js"></script>
   <script type="text/babel" src="app/i18n/strings/stats.js"></script>
   <script type="text/babel" src="app/i18n/strings/achievements.js"></script>
@@ -138,6 +151,13 @@
        valores huérfanos de quien eligió una opción ya retirada. NO es código
        muerto: ver la cabecera del archivo antes de tocar nada. -->
   <script type="text/babel" src="app/flags.js"></script>
+  <!-- state-core.support (s148): deteccion de entorno + MIGRACIONES + rollover,
+       extraidos de state-core.jsx al rebasar este las 500 lineas. ANTES de
+       state-core y NO ES NEGOCIABLE: `let _state = loadState()` corre en el
+       CUERPO de state-core (no al montar) y llama a rolloverIfNeeded,
+       detectInitialPalette, isMobileViewport y reindexWeeklyStatsMondayFirst.
+       Si se invierte el orden, revienta el primer arranque de cada pestana. -->
+  <script type="text/babel" src="app/state-core.support.jsx"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
        los detectores que faltaban. ANTES de state-timer y state-hydrate, que
@@ -194,6 +214,13 @@
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
   <script type="text/babel" src="app/support/SupportModule.jsx"></script>
 
+  <!-- Sidebar troceado en s148 (llegó a 570 ln). Orden estricto:
+       support (hoja responsive + `sidebarStyles`, que viaja por window porque
+       el build encierra cada archivo en su IIFE) → parts (las secciones de UI)
+       → Sidebar.jsx (orquestador). `parts` monta <SupportButton/>, así que va
+       también DESPUÉS de SupportModule.jsx, que ya carga justo arriba. -->
+  <script type="text/babel" src="app/shell/Sidebar.support.jsx"></script>
+  <script type="text/babel" src="app/shell/Sidebar.parts.jsx"></script>
   <script type="text/babel" src="app/shell/Sidebar.jsx"></script>
 
   <!-- visualId + alias (B2.2 · s110): resolveVisualId enruta los duplicados
@@ -201,6 +228,12 @@
   <script type="text/babel" data-presets="env,react" src="app/custom/exercise-aliases.js"></script>
   <!-- Glifos canónicos de ejercicio (sesión 59) — debe cargarse antes de MoveModule, BreatheSession y PathRunner -->
   <script type="text/babel" data-presets="env,react" src="app/glyphs/exercise-glyphs.jsx"></script>
+  <!-- Glifos de ESTIRA (s148): extraidos de exercise-glyphs.jsx, que iba por
+       571 lineas. DESPUES del anterior y NO al reves: este anade sus entradas
+       al MISMO objeto EXERCISE_GLYPHS que aquel declara y publica (el
+       componente cierra sobre esa referencia). Lleva un guard que aborta si el
+       orden se invierte, en vez de dejar Estira sin dibujos en silencio. -->
+  <script type="text/babel" data-presets="env,react" src="app/glyphs/exercise-glyphs.extra.jsx"></script>
   <!-- Preview «antes de empezar» (§18.3, s144). DESPUÉS de exercise-glyphs y de
        Primitives: consume ExerciseGlyph, Modal y Tag. Lo monta main.jsx. -->
   <script type="text/babel" src="app/ui/RoutinePreview.jsx"></script>

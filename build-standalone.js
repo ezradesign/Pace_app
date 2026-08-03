@@ -301,12 +301,35 @@ function main() {
   console.log('\n[3/7] Inlineando assets ...');
   html = html.replace(/\s*<link rel="manifest"[^>]*>\s*/, '\n  ');
 
-  // 4. Inline tokens.css
-  var tokensCss = readFileClean(path.join(ROOT, 'app/tokens.css'));
-  html = html.replace(
-    /<link rel="stylesheet" href="app\/tokens\.css"\s*\/>/,
-    '<style>\n' + tokensCss + '\n  </style>'
+  // 4. Inline las hojas de estilo de app/ (s148: antes solo tokens.css).
+  //    Cada <link> se sustituye EN SU SITIO por su <style>, así que el orden
+  //    del head de PACE.html se conserva tal cual -> la cascada del artefacto
+  //    es la misma que en dev. Importa: el CSS de Caminos anula por ORDEN una
+  //    regla de tokens.css (el rise escalonado de la escena).
+  //    Va por replaceOutsideComments para que una mención en prosa de un
+  //    <link> dentro de un comentario no se inlinee (mismo motivo que 5/5b).
+  //    Añadir un CSS nuevo bajo app/ = añadir su <link> a PACE.html y nada más.
+  var cssCount = 0;
+  html = replaceOutsideComments(
+    html,
+    /<link rel="stylesheet" href="(app\/[^"]+\.css)"\s*\/>/g,
+    function(match, href) {
+      var full = path.join(ROOT, href);
+      if (!fs.existsSync(full)) {
+        console.error('  [ERROR] Hoja de estilo no encontrada: ' + href + '. Abortando.');
+        process.exit(1);
+      }
+      cssCount++;
+      // Función (no string): el CSS puede llevar '$' y activaría los
+      // patrones $&/$' de String.replace (misma regla que 5c).
+      return '<style>\n' + readFileClean(full) + '\n  </style>';
+    }
   );
+  if (cssCount === 0) {
+    console.error('  [ERROR] No se inlineó ninguna hoja de app/. Abortando.');
+    process.exit(1);
+  }
+  console.log('  [OK] ' + cssCount + ' hoja(s) de estilo de app/ inlineada(s).');
 
   // 5. Cada <script type="text/babel" src="..."> -> COMPILADO e inlineado
   //    como <script> plano (s103). Los scripts planos se ejecutan sincronos
