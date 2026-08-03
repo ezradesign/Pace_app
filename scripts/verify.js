@@ -2,16 +2,16 @@
  * verify.js - PACE · red de seguridad LOCAL (v1, s150)
  * Uso: npm run verify
  *
- * QUE HACE, en tres tandas y con CODIGO DE SALIDA (0 = pasa, 1 = falla):
+ * QUE HACE, en cuatro tandas y con CODIGO DE SALIDA (0 = pasa, 1 = falla):
  *
- *   [1/3] SINTAXIS  - `node --check` real sobre cada .js del arbol (incluidos
+ *   [1/4] SINTAXIS  - `node --check` real sobre cada .js del arbol (incluidos
  *                     los que el build NO mira: sw.js, scripts/, el propio
  *                     build) + parser JSX sobre cada .jsx de app/.
- *   [2/3] BUILD     - corre `node build-standalone.js` y exige salida 0.
+ *   [2/4] BUILD     - corre `node build-standalone.js` y exige salida 0.
  *                     Restaura los DOS artefactos byte a byte (el standalone
  *                     no se regenera, decision s134) y compara el index.html
  *                     recien construido con el del disco.
- *   [3/3] ARTEFACTO - analisis de AMBITO del compilado: cada modulo viaja
+ *   [3/4] ARTEFACTO - analisis de AMBITO del compilado: cada modulo viaja
  *                     dentro de su IIFE, asi que un identificador que en dev
  *                     resolvia por el ambito global compartido de Babel
  *                     standalone aqui queda SIN LIGAR. Ese es exactamente el
@@ -19,12 +19,15 @@
  *                     seguia funcionando, index.html no, y estuvo DOS
  *                     versiones publicado). Mas coherencia de version y
  *                     recuento de modulos.
+ *   [4/4] INTEGRIDAD- segunda tanda (s152), en `verify.integridad.js`: i18n,
+ *                     precache, glifos y catalogos. Vive en un archivo hermano
+ *                     por tamaño (limite de 500 lineas de CLAUDE.md), pero NO
+ *                     es un script suelto: corre en cada `npm run verify`.
  *
  * QUE **NO** HACE (leelo antes de fiarte del verde -- ver tambien el bloque
  * NO_CUBRE al final del archivo, que se imprime en cada pasada):
- *   integridad de catalogos, i18n, precache ni glifos (D5 lo deja para la
- *   segunda tanda), nada de runtime real (no abre navegador), nada de CSS,
- *   y ninguna comprobacion de comportamiento.
+ *   nada de runtime real (no abre navegador), nada de CSS, y ninguna
+ *   comprobacion de comportamiento.
  */
 
 'use strict';
@@ -36,6 +39,7 @@ var crypto = require('crypto');
 
 var ROOT  = path.resolve(__dirname, '..');
 var babel = require(path.join(ROOT, 'node_modules', '@babel', 'core'));
+var integridad = require('./verify.integridad.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -99,7 +103,7 @@ function rel(p) { return path.relative(ROOT, p).replace(/\\/g, '/'); }
    [1/3] SINTAXIS
    ========================================================================== */
 function tandaSintaxis() {
-  console.log('\n[1/3] Sintaxis ...');
+  console.log('\n[1/4] Sintaxis ...');
 
   var js  = listar(ROOT, /\.js$/, []);
   var jsx = listar(ROOT, /\.jsx$/, []);
@@ -141,7 +145,7 @@ var INDEX      = path.join(ROOT, 'index.html');
 var STANDALONE = path.join(ROOT, 'PACE_standalone.html');
 
 function tandaBuild() {
-  console.log('\n[2/3] Build ...');
+  console.log('\n[2/4] Build ...');
 
   var previoIndex = fs.existsSync(INDEX) ? fs.readFileSync(INDEX) : null;
   var previoStand = fs.existsSync(STANDALONE) ? fs.readFileSync(STANDALONE) : null;
@@ -289,11 +293,10 @@ function sinLigar(code) {
   return encontrados;
 }
 
-function tandaArtefacto(html) {
-  console.log('\n[3/3] Artefacto ...');
+function tandaArtefacto(html, fuentes) {
+  console.log('\n[3/4] Artefacto ...');
   if (!html) { falla('no hay artefacto que analizar (el build no produjo index.html)'); return; }
 
-  var fuentes = modulosDeclarados();
   var bloques = bloquesDelArtefacto(html);
 
   if (fuentes.length !== bloques.length) {
@@ -379,20 +382,22 @@ function tandaVersion() {
    ========================================================================== */
 var NO_CUBRE = [
   'comportamiento: no abre navegador, no monta la app, no pulsa nada',
-  'integridad de catalogos, i18n, precache y glifos (D5: segunda tanda)',
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
-  'contenido: copy, traducciones y datos de rutinas',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-];
+].concat(integridad.NO_CUBRE);
 
 function main() {
-  console.log('=== PACE verify v1 (s150) — build + artefacto + node --check ===');
+  console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
   var t0 = Date.now();
 
   tandaSintaxis();
   var html = tandaBuild();
-  tandaArtefacto(html);
+  /* Una sola lectura de PACE.html para las dos tandas que la necesitan: si
+     declara un modulo inexistente, se reporta una vez y no dos. */
+  var declarados = modulosDeclarados();
+  tandaArtefacto(html, declarados);
+  integridad.tandaIntegridad({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');
