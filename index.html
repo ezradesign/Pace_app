@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.80.0</title>
+  <title>PACE · Foco · Cuerpo — v0.81.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -385,6 +385,74 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   color: var(--paper) !important;
 }
 [data-pace-path-btn]:active { transform: scale(0.97); }
+
+/* ============================================================
+   CSS DE CAMINOS -> app/paths/paths.css  (extraído en s148)
+   ============================================================
+   Aquí vivían el SenderoBar, la escena ilustrada, la variante `lg` y el
+   orbe: 241 líneas que dejaban este archivo en 613 y lo ponían por encima
+   del límite de 500 de CLAUDE.md. No eran tokens (valores que consume toda
+   la app) sino el lenguaje visual de UN módulo, así que se movieron enteras
+   sin tocar una sola declaración.
+
+   Su `<link>` va DESPUÉS del de este archivo en PACE.html, y eso es parte
+   del contrato: allí hay una regla que anula el rise escalonado que declara
+   `[data-pace-reveal] > *` aquí arriba, y gana por ORDEN. Si se reordenan
+   los dos `<link>`, la escena del Camino vuelve a entrar con el escalonado.
+   ============================================================ */
+
+  </style>
+  <!-- CSS de Caminos (s148): SenderoBar + escena ilustrada + variante lg +
+       orbe. Extraídos de tokens.css al rebasar este las 500 líneas de la
+       regla nº 1 de CLAUDE.md; no eran tokens sino el lenguaje visual de un
+       módulo. VA DESPUÉS de tokens.css a propósito: la regla que saca la
+       escena del rise escalonado de [data-pace-reveal] gana por ORDEN, no
+       por especificidad. El build inlinea las hojas de app/ una por una y en
+       su sitio, así que este orden se conserva en index.html y en el
+       standalone. -->
+  <style>
+/* ============================================================
+   PACE · CSS de Caminos — extraído de `app/tokens.css` en s148
+   ============================================================
+   POR QUÉ ESTÁ AQUÍ Y NO EN tokens.css
+   ------------------------------------
+   `tokens.css` llegó a 613 líneas (regla nº 1 de CLAUDE.md: < 500) y más de
+   un tercio no eran tokens: era el lenguaje visual del módulo Caminos
+   (SenderoBar, escena ilustrada, variante `lg` y orbe). Un token es un valor
+   que consume toda la app; esto son reglas de UN módulo. Se movieron enteras,
+   sin tocar una sola declaración.
+
+   ORDEN DE CARGA — IMPORTA, y por dos motivos concretos
+   ----------------------------------------------------
+   El `<link>` de este archivo va DESPUÉS del de `tokens.css` en PACE.html.
+   No es cosmético: aquí hay dos reglas que ganan por ORDEN, no por
+   especificidad, y si el link se adelanta dejan de aplicarse.
+
+     1. `[data-pace-reveal] > [data-pace-path-scene] { animation: none }`
+        anula el rise escalonado que declara `[data-pace-reveal] > *` en
+        tokens.css. Misma especificidad de partida; manda el que va después.
+        (Lleva `!important`, así que sobreviviría — pero la regla de al lado
+        no, y depender de eso es frágil.)
+     2. Los keyframes `pace-sendero-pulse` / `pace-sendero-dot-in` se declaran
+        AQUÍ y se consumen AQUÍ (SenderoBar y escena). Si algún día los
+        necesita otro módulo, suben a tokens.css — no se duplican.
+
+   EL BUILD LO INLINEA SOLO. `build-standalone.js` recorre todas las hojas de
+   estilo de `app/` que declara PACE.html y sustituye cada enlace por su
+   bloque de estilos EN SU SITIO, así que el orden del head se conserva tal
+   cual en `index.html` y en el standalone. Añadir otro CSS bajo `app/` =
+   declararlo en PACE.html y nada más.
+
+   OJO CON ESTE COMENTARIO: viaja inlineado dentro del bloque de estilos del
+   artefacto, así que no puede llevar escrita una etiqueta de cierre de
+   estilos (rompería el HTML ahí mismo) ni la ruta de un enlace en prosa —
+   misma regla, y por el mismo motivo, que la cabecera de
+   `app/glyphs/achievement-masks.js`.
+
+   NO va en el precache de `sw.js`: en la web este archivo no se pide nunca
+   (viaja inlineado dentro de index.html). Solo lo fetchea `PACE.html` en
+   desarrollo.
+   ============================================================ */
 
 /* ============================================================
    SENDERO BAR (sesion 75 / v0.29.0)
@@ -1570,86 +1638,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.breathe.title': 'Respiración',
   'lib.breathe.subtitle': 'Breathwork guiado: pranayamas, coherencia, rondas.',
 
-  // Move Library
-  'lib.move.title': 'Mueve',
-  'lib.move.subtitle': 'Calistenia y fuerza. Corto, discreto, sin equipo.',
-  'lib.move.meta': 'Cuerpo activo',
+  // CUERPO (Mueve/Estira) -> strings/sessions.body.js  (s148)
+  // lib.move.* · lib.extra.* · move.* de sesión · contrato v1 · runner
+  // guiado · capa editorial · el descanso que guía. Salieron de aquí al
+  // rebasar este archivo las 500 líneas; su archivo lleva ES y EN juntos,
+  // como manda la decisión s81.
 
-  // Extra Library
-  'lib.extra.title': 'Estira',
-  'lib.extra.subtitle': 'Movilidad y estiramientos. Antídoto a la silla.',
-  'lib.extra.meta': 'Afloja tensión',
-
-  /* Intensidad y nivel tecnico (§29.2 del audit). Son DOS ejes distintos y
-     no se mezclan: un ejercicio puede ser tecnicamente sencillo pero intenso,
-     o tecnicamente complejo y fisicamente suave. La intensidad la dicen
-     TODAS las rutinas; el nivel solo se ensena cuando NO es basico, para no
-     llenar de pastillas las 16 tarjetas accesibles. */
-  'lib.intensity.gentle': 'Suave',
-  'lib.intensity.moderate': 'Medio',
-  'lib.intensity.strong': 'Intenso',
-  'lib.level.intermediate': 'Intermedio',
-  'lib.level.advanced': 'Avanzado',
-
-  /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
-     dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
-     ruedas», «Necesitas pared; barra opcional»— porque no tenian sitio. Este
-     es el sitio. */
-  'preview.tag': 'Antes de empezar',
-  'preview.need': 'Qué necesitas',
-  'preview.need.none': 'Nada. Solo tú y donde estás.',
-  'preview.position': 'Posición',
-  'preview.steps': 'Los pasos',
-  'preview.start': 'Empezar',
-  'preview.eq.stableDesk': 'Una mesa estable',
-  'preview.eq.stableChair': 'Una silla estable, sin ruedas',
-  'preview.eq.bar': 'Una barra firme',
-  'preview.eq.wall': 'Una pared libre',
-  'preview.eq.cushionOptional': 'Un cojín, si lo necesitas',
-  'preview.eq.deskOptional': 'Una mesa, si la necesitas',
-  'preview.eq.barOptional': 'Una barra, si la tienes',
-  'preview.eq.floor': 'Sitio para tumbarte en el suelo',
-  'preview.pos.standing': 'De pie',
-  'preview.pos.seated': 'Sentado',
-  'preview.pos.floor': 'En el suelo',
-  'preview.pos.halfKneeling': 'Media rodilla',
-  'preview.pos.supine': 'Boca arriba',
-
-  // Move Session (additional)
-  'move.steps': 'Pasos',
-  'move.prepCopy': 'De pie. Sin prisa. {n} pasos.',
-  'move.next.prefix': 'Siguiente:',
-  'move.finish': 'Terminar',
-  'move.hint': '← → navegar · Espacio pausar · Esc salir',
-
-  // Contrato de pasos v1 (s110 · B2.2 · método s111 · guiado s113)
-  'session.place': 'Colócate',
-  'session.beginStep': 'Empezar',
-  'session.beginNow': 'Empezar ya',
-  'session.moreTime': 'Más tiempo',
-  'session.placeCountdown': 'para empezar',
-  'session.sideLeft': 'Izquierda',
-  'session.sideRight': 'Derecha',
-  'session.sideChange': 'Cambia de lado',
-  'session.sideNext': 'Ahora: {side}',
-  'session.skip': 'Saltar',
-  'session.restLabel': 'Descanso',
-  'move.reps': 'reps',
-  'move.placeHint': 'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
-  'session.imReady': 'Estoy listo',
-  'session.sideFirst': 'Empiezas por: {side}',
-  'move.placeReadyHint': 'Sin prisa · el ejercicio espera a que estés en posición',
-  // Runner guiado (s113): reps con cadencia + transición auto de lado
-  'move.repsOf': 'de {n} reps',
-  'move.finishEarly': 'Terminar antes',
-  'move.sideAutoHint': 'El lado siguiente empieza solo',
-  // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
-  'move.careLabel': 'Cuídate',
-  'move.series': 'Series',
-  'move.repsCount': 'Reps',
-  // El descanso guía (s114): qué serie viene + aviso al final del descanso
-  'move.restNext': 'Luego: {name}',
-  'move.restReady': 'Prepárate para seguir',
 
   // Feedback ligero del cierre (s116 · B2.2b-2). Una sola pregunta al
   // terminar, opcional y saltable; respuestas de igual peso semánticamente
@@ -1817,6 +1811,197 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.breathe.title': 'Breathing',
   'lib.breathe.subtitle': 'Guided breathwork: pranayamas, coherence, rounds.',
 
+  // BODY (Move/Stretch) -> strings/sessions.body.js  (s148)
+  // Mirror of the Spanish block above: both languages travel together.
+
+
+  // Light closing feedback (s116 · B2.2b-2). One optional, skippable question
+  // at the end; equal-weight responses semantically aligned + secondary
+  // «Not now» + minimal acknowledgement. No percentages.
+  'session.feedback.question': 'Did this pause help?',
+  'session.feedback.yes': 'Yes',
+  'session.feedback.some': 'A little',
+  'session.feedback.no': 'No',
+  'session.feedback.later': 'Not now',
+  'session.feedback.thanks': 'Thank you',
+
+  // Hydrate
+  'hydrate.tag': 'Hydration',
+  'hydrate.title': 'Hydrate',
+  'hydrate.subtitle': "A sip now, a gift to your 5 o'clock self.",
+  'hydrate.glasses.today': 'Glasses today',
+  'hydrate.less': 'One less glass',
+  'hydrate.more': 'One more glass',
+  'hydrate.tip.label': 'Tip:',
+  'hydrate.tip': 'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
+
+  // BreatheLibrary safety modal
+  'breathe.safety.before': 'Before you start',
+  'breathe.safety.check': 'I have read this and accept responsibility',
+  'breathe.safety.cancel': 'Cancel',
+  'breathe.safety.start': 'Start session',
+  'breathe.safety.required': 'Safety briefing required',
+  'breathe.safety.body.intro.pre': 'This technique involves ',
+  'breathe.safety.body.intro.bold': 'controlled hyperventilation and breath holds',
+  'breathe.safety.body.intro.post': '. It can cause dizziness, tingling or fainting.',
+  'breathe.safety.body.rule1.pre': 'Practice it ',
+  'breathe.safety.body.rule1.bold': 'sitting or lying down',
+  'breathe.safety.body.rule1.post': ', never standing',
+  'breathe.safety.body.rule2': 'Never in water, while driving or at height',
+  'breathe.safety.body.rule3': 'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
+  'breathe.safety.body.rule4': 'Stop if you feel dizzy or uncomfortable',
+
+  // Routine builder (F7 · s93)
+  'custom.section.title': 'Your routines',
+  'custom.section.aside': 'In Move and Stretch',
+  'custom.locked.copy': 'Combine exercises from the catalog and save your own routines. Part of the premium content.',
+  'custom.empty.copy': 'Combine exercises from the catalog and save your own routine.',
+  'custom.create': 'Create routine',
+  'custom.limit': 'You have reached {n} routines.',
+  'custom.tag': 'YOURS',
+  'custom.code': 'Your routine',
+  'custom.steps.one': '1 exercise',
+  'custom.steps.many': '{n} exercises',
+  'custom.card.edit': 'Edit',
+  'custom.builder.tag': 'Builder',
+  'custom.builder.title.new': 'New routine',
+  'custom.builder.title.edit': 'Edit routine',
+  'custom.builder.subtitle': 'Pick exercises and adjust their duration.',
+  'custom.builder.name.label': 'Name',
+  'custom.builder.name.placeholder': 'My routine',
+  'custom.builder.steps.label': 'Exercises',
+  'custom.builder.empty': 'No exercises yet. Add the first one.',
+  'custom.builder.add': 'Add exercise',
+  'custom.builder.approx': '≈ {min} min',
+  'custom.builder.save': 'Save',
+  'custom.builder.cancel': 'Cancel',
+  'custom.builder.delete': 'Delete routine',
+  'custom.builder.delete.confirm': 'Tap again to delete',
+  'custom.picker.title': 'Pick an exercise',
+  'custom.picker.back': '← Back',
+  'custom.step.up': 'Move up',
+  'custom.step.down': 'Move down',
+  'custom.step.remove': 'Remove'
+});
+})();
+</script>
+  <!-- Cuerpo (Mueve/Estira) s148: extraido de sessions.js, que iba por 502 ln.
+       Entre dominios el orden da igual (no comparten claves); lo que no puede
+       moverse es content/*, que patchea EN y debe seguir cargando al final. -->
+  <script>
+;(function () {
+/* PACE · strings i18n — CUERPO (Mueve / Estira) · s148
+   Extraído de `strings/sessions.js`, que llegó a 502 líneas. Es el dominio más
+   grande del split de s81 y el único que había vuelto a pasarse del límite de
+   CLAUDE.md sin que la tabla de deuda lo registrara.
+
+   Qué se lleva: todo lo del runner de cuerpo, que era un bloque contiguo en los
+   dos idiomas y con la misma frontera en ambos.
+     - lib.move.* / lib.extra.*  (bibliotecas de Mueve y Estira)
+     - move.* de sesión           (pasos extra, contrato v1, método, cadencia)
+     - runner guiado              (reps con tempo, transición de lado)
+     - capa editorial s114        (rótulo «Cuídate» + labels de pantalla final)
+     - el descanso que guía s114  (qué serie viene + aviso al acabar)
+
+   Qué NO se lleva y sigue en `sessions.js`: session.* · common.* · focus.* ·
+   breathe.* · lib.breathe.* · hydrate.* · el modal de seguridad · el
+   constructor de rutinas · el feedback del cierre.
+
+   ES Y EN VAN JUNTOS, en este mismo archivo. Es la decisión s81 y no es
+   estética: separar por idioma obliga a tocar dos archivos por cada clave y es
+   así como aparecen las claves huérfanas que I18N-2 quiere cazar.
+
+   ORDEN DE CARGA: después de `_bootstrap.js` (que crea PACE_STRINGS vacío) y
+   antes de `useT.jsx`. Va justo detrás de `sessions.js`, aunque entre dominios
+   el orden da igual: no hay claves compartidas. Lo que SÍ tiene que seguir
+   cargando al final es `content/*`, que patchea inglés y depende de ir último
+   para conservar el override de `breathe.phase.*` (deuda D-1).
+*/
+
+Object.assign(window.PACE_STRINGS.es, {
+  // Move Library
+  'lib.move.title': 'Mueve',
+  'lib.move.subtitle': 'Calistenia y fuerza. Corto, discreto, sin equipo.',
+  'lib.move.meta': 'Cuerpo activo',
+
+  // Extra Library
+  'lib.extra.title': 'Estira',
+  'lib.extra.subtitle': 'Movilidad y estiramientos. Antídoto a la silla.',
+  'lib.extra.meta': 'Afloja tensión',
+
+  /* Intensidad y nivel tecnico (§29.2 del audit). Son DOS ejes distintos y
+     no se mezclan: un ejercicio puede ser tecnicamente sencillo pero intenso,
+     o tecnicamente complejo y fisicamente suave. La intensidad la dicen
+     TODAS las rutinas; el nivel solo se ensena cuando NO es basico, para no
+     llenar de pastillas las 16 tarjetas accesibles. */
+  'lib.intensity.gentle': 'Suave',
+  'lib.intensity.moderate': 'Medio',
+  'lib.intensity.strong': 'Intenso',
+  'lib.level.intermediate': 'Intermedio',
+  'lib.level.advanced': 'Avanzado',
+
+  /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
+     dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
+     ruedas», «Necesitas pared; barra opcional»— porque no tenian sitio. Este
+     es el sitio. */
+  'preview.tag': 'Antes de empezar',
+  'preview.need': 'Qué necesitas',
+  'preview.need.none': 'Nada. Solo tú y donde estás.',
+  'preview.position': 'Posición',
+  'preview.steps': 'Los pasos',
+  'preview.start': 'Empezar',
+  'preview.eq.stableDesk': 'Una mesa estable',
+  'preview.eq.stableChair': 'Una silla estable, sin ruedas',
+  'preview.eq.bar': 'Una barra firme',
+  'preview.eq.wall': 'Una pared libre',
+  'preview.eq.cushionOptional': 'Un cojín, si lo necesitas',
+  'preview.eq.deskOptional': 'Una mesa, si la necesitas',
+  'preview.eq.barOptional': 'Una barra, si la tienes',
+  'preview.eq.floor': 'Sitio para tumbarte en el suelo',
+  'preview.pos.standing': 'De pie',
+  'preview.pos.seated': 'Sentado',
+  'preview.pos.floor': 'En el suelo',
+  'preview.pos.halfKneeling': 'Media rodilla',
+  'preview.pos.supine': 'Boca arriba',
+
+  // Move Session (additional)
+  'move.steps': 'Pasos',
+  'move.prepCopy': 'De pie. Sin prisa. {n} pasos.',
+  'move.next.prefix': 'Siguiente:',
+  'move.finish': 'Terminar',
+  'move.hint': '← → navegar · Espacio pausar · Esc salir',
+
+  // Contrato de pasos v1 (s110 · B2.2 · método s111 · guiado s113)
+  'session.place': 'Colócate',
+  'session.beginStep': 'Empezar',
+  'session.beginNow': 'Empezar ya',
+  'session.moreTime': 'Más tiempo',
+  'session.placeCountdown': 'para empezar',
+  'session.sideLeft': 'Izquierda',
+  'session.sideRight': 'Derecha',
+  'session.sideChange': 'Cambia de lado',
+  'session.sideNext': 'Ahora: {side}',
+  'session.skip': 'Saltar',
+  'session.restLabel': 'Descanso',
+  'move.reps': 'reps',
+  'move.placeHint': 'Colócate sin prisa · arranca solo · «Empezar ya» para saltar',
+  'session.imReady': 'Estoy listo',
+  'session.sideFirst': 'Empiezas por: {side}',
+  'move.placeReadyHint': 'Sin prisa · el ejercicio espera a que estés en posición',
+  // Runner guiado (s113): reps con cadencia + transición auto de lado
+  'move.repsOf': 'de {n} reps',
+  'move.finishEarly': 'Terminar antes',
+  'move.sideAutoHint': 'El lado siguiente empieza solo',
+  // Capa editorial (s114): rótulo «Cuídate» + labels de la pantalla final
+  'move.careLabel': 'Cuídate',
+  'move.series': 'Series',
+  'move.repsCount': 'Reps',
+  // El descanso guía (s114): qué serie viene + aviso al final del descanso
+  'move.restNext': 'Luego: {name}',
+  'move.restReady': 'Prepárate para seguir'
+});
+
+Object.assign(window.PACE_STRINGS.en, {
   // Move Library
   'lib.move.title': 'Move',
   'lib.move.subtitle': 'Calisthenics and strength. Short, discreet, no equipment.',
@@ -1887,75 +2072,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.repsCount': 'Reps',
   // The rest guides (s114): which set is next + heads-up as rest ends
   'move.restNext': 'Next: {name}',
-  'move.restReady': 'Get ready to continue',
-
-  // Light closing feedback (s116 · B2.2b-2). One optional, skippable question
-  // at the end; equal-weight responses semantically aligned + secondary
-  // «Not now» + minimal acknowledgement. No percentages.
-  'session.feedback.question': 'Did this pause help?',
-  'session.feedback.yes': 'Yes',
-  'session.feedback.some': 'A little',
-  'session.feedback.no': 'No',
-  'session.feedback.later': 'Not now',
-  'session.feedback.thanks': 'Thank you',
-
-  // Hydrate
-  'hydrate.tag': 'Hydration',
-  'hydrate.title': 'Hydrate',
-  'hydrate.subtitle': "A sip now, a gift to your 5 o'clock self.",
-  'hydrate.glasses.today': 'Glasses today',
-  'hydrate.less': 'One less glass',
-  'hydrate.more': 'One more glass',
-  'hydrate.tip.label': 'Tip:',
-  'hydrate.tip': 'Fill a 500 ml bottle in the morning and another after lunch. Two bottles = 4 glasses. Done.',
-
-  // BreatheLibrary safety modal
-  'breathe.safety.before': 'Before you start',
-  'breathe.safety.check': 'I have read this and accept responsibility',
-  'breathe.safety.cancel': 'Cancel',
-  'breathe.safety.start': 'Start session',
-  'breathe.safety.required': 'Safety briefing required',
-  'breathe.safety.body.intro.pre': 'This technique involves ',
-  'breathe.safety.body.intro.bold': 'controlled hyperventilation and breath holds',
-  'breathe.safety.body.intro.post': '. It can cause dizziness, tingling or fainting.',
-  'breathe.safety.body.rule1.pre': 'Practice it ',
-  'breathe.safety.body.rule1.bold': 'sitting or lying down',
-  'breathe.safety.body.rule1.post': ', never standing',
-  'breathe.safety.body.rule2': 'Never in water, while driving or at height',
-  'breathe.safety.body.rule3': 'Do not practice if you have epilepsy, hypertension or heart disease, or if pregnant',
-  'breathe.safety.body.rule4': 'Stop if you feel dizzy or uncomfortable',
-
-  // Routine builder (F7 · s93)
-  'custom.section.title': 'Your routines',
-  'custom.section.aside': 'In Move and Stretch',
-  'custom.locked.copy': 'Combine exercises from the catalog and save your own routines. Part of the premium content.',
-  'custom.empty.copy': 'Combine exercises from the catalog and save your own routine.',
-  'custom.create': 'Create routine',
-  'custom.limit': 'You have reached {n} routines.',
-  'custom.tag': 'YOURS',
-  'custom.code': 'Your routine',
-  'custom.steps.one': '1 exercise',
-  'custom.steps.many': '{n} exercises',
-  'custom.card.edit': 'Edit',
-  'custom.builder.tag': 'Builder',
-  'custom.builder.title.new': 'New routine',
-  'custom.builder.title.edit': 'Edit routine',
-  'custom.builder.subtitle': 'Pick exercises and adjust their duration.',
-  'custom.builder.name.label': 'Name',
-  'custom.builder.name.placeholder': 'My routine',
-  'custom.builder.steps.label': 'Exercises',
-  'custom.builder.empty': 'No exercises yet. Add the first one.',
-  'custom.builder.add': 'Add exercise',
-  'custom.builder.approx': '≈ {min} min',
-  'custom.builder.save': 'Save',
-  'custom.builder.cancel': 'Cancel',
-  'custom.builder.delete': 'Delete routine',
-  'custom.builder.delete.confirm': 'Tap again to delete',
-  'custom.picker.title': 'Pick an exercise',
-  'custom.picker.back': '← Back',
-  'custom.step.up': 'Move up',
-  'custom.step.down': 'Move down',
-  'custom.step.remove': 'Remove'
+  'move.restReady': 'Get ready to continue'
 });
 })();
 </script>
@@ -3597,6 +3714,177 @@ const SHOW_BREATH_ORGANICO = false;
 Object.assign(window, { SHOW_TIMER_STYLE, SHOW_BREATH_ORGANICO });
 })();
 </script>
+  <!-- state-core.support (s148): deteccion de entorno + MIGRACIONES + rollover,
+       extraidos de state-core.jsx al rebasar este las 500 lineas. ANTES de
+       state-core y NO ES NEGOCIABLE: `let _state = loadState()` corre en el
+       CUERPO de state-core (no al montar) y llama a rolloverIfNeeded,
+       detectInitialPalette, isMobileViewport y reindexWeeklyStatsMondayFirst.
+       Si se invierte el orden, revienta el primer arranque de cada pestana. -->
+  <script>
+;(function () {
+/* PACE · Foco · Cuerpo
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   state-core.support.jsx — detección de entorno, MIGRACIONES y ROLLOVER.
+   Extraído de `state-core.jsx` en s148, que llegó a 510 líneas (el límite de
+   CLAUDE.md es 500). Mismo patrón `*.support` que `state-achievements.support`
+   (s146), `MoveSessionV1.support` y `FocusTimer.support`.
+
+   Qué vive aquí: todo lo que convierte un estado GUARDADO (posiblemente de una
+   versión vieja) en un estado de HOY. `state-core.jsx` se queda con el store,
+   `loadState`, el tema y los toasts.
+
+   ============================================================
+   ESTE ARCHIVO CARGA **ANTES** QUE state-core.jsx. NO ES OPCIONAL.
+   ============================================================
+   `state-core.jsx` hace `let _state = loadState();` en el cuerpo del archivo,
+   o sea que `loadState` corre AL EVALUARSE, no al montar. Y `loadState` llama
+   a `rolloverIfNeeded`, `detectInitialPalette`, `isMobileViewport` y
+   `reindexWeeklyStatsMondayFirst`, que están aquí. Si este archivo cargara
+   después, `loadState` reventaría en el primer arranque de cada pestaña.
+
+   Es la misma razón por la que `state-history.jsx` y `flags.js` van antes que
+   `state-core.jsx`: `rolloverIfNeeded` resuelve `archiveDayToHistory` y
+   `getMondayOf` por window, y `loadState` lee las banderas de superficie.
+   El orden completo en PACE.html es:
+     i18n → state-history → flags → state-core.support → state-core → …
+
+   `unlockAchievement` es la excepción y ya lo era: se llama DIFERIDO con
+   `setTimeout` porque `state-achievements.jsx` carga después. Ver el comentario
+   en `rolloverIfNeeded`.
+*/
+
+/* ============================
+   UTILS
+   ============================ */
+
+function isMobileViewport() {
+  return typeof window !== 'undefined' && window.matchMedia &&
+  window.matchMedia('(max-width: 768px)').matches;
+}
+
+/* Paleta inicial (s89 · P0 auditoria): respeta prefers-color-scheme del
+   sistema SOLO en el primer arranque (sin estado guardado). La eleccion
+   manual de Tweaks persiste en localStorage y siempre gana en cargas
+   posteriores — esto no re-sigue cambios del SO en caliente. */
+function detectInitialPalette() {
+  try {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ?
+    'oscuro' : 'crema';
+  } catch (e) {return 'crema';}
+}
+
+/* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
+   rollover post-upgrade. Solo se ejecuta una vez (_historyMigrated === false). */
+function migrateWeeklyStatsToHistory(state) {
+  if (state._historyMigrated) return state;
+  if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
+  let h = state.history || { days: {}, months: {}, years: {} };
+  const lastDate = new Date(state.lastActiveDay);
+  for (let offset = 0; offset < 7; offset++) {
+    const d = new Date(lastDate.getTime() - offset * 86400000);
+    h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
+  }
+  return { ...state, history: h, _historyMigrated: true };
+}
+
+/* Sesion 69 / v0.28.8: re-indexa weeklyStats de la convencion vieja
+   (0=domingo, 1=lunes ... 6=sabado, indexado por getDay()) a la nueva
+   (0=lunes, 1=martes ... 6=domingo). Mapping: nuevo[i] = viejo[(i+1)%7]. */
+function reindexWeeklyStatsMondayFirst(ws) {
+  const rot = (arr) => Array.isArray(arr) && arr.length === 7 ?
+  [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]] :
+  [0, 0, 0, 0, 0, 0, 0];
+  return {
+    focusMinutes: rot(ws && ws.focusMinutes),
+    breathMinutes: rot(ws && ws.breathMinutes),
+    moveMinutes: rot(ws && ws.moveMinutes),
+    waterGlasses: rot(ws && ws.waterGlasses)
+  };
+}
+
+/* ============================
+   ROLLOVER
+   ============================ */
+
+function rolloverIfNeeded(state) {
+  const today = new Date();
+  const todayStr = today.toDateString();
+  if (state.lastActiveDay === todayStr) return state;
+
+  /* Detectar si la migracion s43 esta por ejecutarse en esta llamada.
+     Si _historyMigrated era false al entrar, migrateWeeklyStatsToHistory
+     ya archivara lastActiveDay y NO debemos volver a archivarlo aqui (C2). */
+  const wasAlreadyMigrated = !!state._historyMigrated;
+  let migratedState = migrateWeeklyStatsToHistory(state);
+  let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
+
+  /* Archivar el dia previo solo si NO acaba de migrar (la migracion ya lo cubrio). */
+  if (migratedState.lastActiveDay && wasAlreadyMigrated) {
+    nextHistory = archiveDayToHistory(
+      nextHistory, migratedState.lastActiveDay, migratedState.weeklyStats
+    );
+  }
+
+  /* FIX C1 (sesion 69): si entramos en una nueva semana lunes-domingo,
+     resetear weeklyStats por completo. */
+  let nextWeekly = migratedState.weeklyStats;
+  if (migratedState.lastActiveDay) {
+    const prevMonday = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
+    const todayMonday = getMondayOf(today).getTime();
+    if (todayMonday !== prevMonday) {
+      nextWeekly = {
+        focusMinutes: [0, 0, 0, 0, 0, 0, 0],
+        breathMinutes: [0, 0, 0, 0, 0, 0, 0],
+        moveMinutes: [0, 0, 0, 0, 0, 0, 0],
+        waterGlasses: [0, 0, 0, 0, 0, 0, 0]
+      };
+    }
+  }
+
+  /* FIX A2 (sesion 69): rotura proactiva del streak. Si la ultima sesion
+     fue antes de ayer, current=0 inmediatamente (sin esperar a la siguiente). */
+  let nextStreak = migratedState.streak;
+  if (nextStreak && nextStreak.lastActiveDate) {
+    const lastActive = new Date(nextStreak.lastActiveDate);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+    lastActive.setHours(0, 0, 0, 0);
+    if (lastActive.getTime() < yesterday.getTime()) {
+      nextStreak = { ...nextStreak, current: 0 };
+    }
+  }
+
+  /* Trigger first.return — abrir la app un dia distinto al ultimo.
+     Deferred via setTimeout para no llamar a unlockAchievement desde
+     dentro de loadState (achievements aun no cargado en este punto). */
+  if (migratedState.lastActiveDay) {
+    setTimeout(() => {
+      try {unlockAchievement('first.return');} catch (e) {}
+    }, 0);
+  }
+  return {
+    ...migratedState,
+    history: nextHistory,
+    weeklyStats: nextWeekly,
+    streak: nextStreak,
+    cycle: 0,
+    plan: { muevete: false, respira: false, extra: false, hidratate: false },
+    water: { ...migratedState.water, today: 0, lastReset: todayStr },
+    lastActiveDay: todayStr
+  };
+}
+
+Object.assign(window, {
+  isMobileViewport, detectInitialPalette,
+  migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst,
+  rolloverIfNeeded
+});
+;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded });
+})();
+</script>
   <script>
 ;(function () {
 /* PACE · Foco · Cuerpo
@@ -3619,7 +3907,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.80.0';
+const PACE_VERSION = 'v0.81.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -3782,126 +4070,17 @@ const defaultState = {
 };
 
 /* ============================
-   UTILS
-   ============================ */
+   UTILS · MIGRACIONES · ROLLOVER  ->  state-core.support.jsx
+   ============================
+   Extraídos en s148 al rebasar este archivo las 500 líneas de CLAUDE.md:
+   `isMobileViewport`, `detectInitialPalette`, `migrateWeeklyStatsToHistory`,
+   `reindexWeeklyStatsMondayFirst` y `rolloverIfNeeded`. Son «cómo un estado
+   guardado se convierte en el de hoy»; aquí queda el store.
 
-function isMobileViewport() {
-  return typeof window !== 'undefined' && window.matchMedia &&
-  window.matchMedia('(max-width: 768px)').matches;
-}
-
-/* Paleta inicial (s89 · P0 auditoria): respeta prefers-color-scheme del
-   sistema SOLO en el primer arranque (sin estado guardado). La eleccion
-   manual de Tweaks persiste en localStorage y siempre gana en cargas
-   posteriores — esto no re-sigue cambios del SO en caliente. */
-function detectInitialPalette() {
-  try {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ?
-    'oscuro' : 'crema';
-  } catch (e) {return 'crema';}
-}
-
-/* Migration guard (sesion 43): copia weeklyStats → history.days en el primer
-   rollover post-upgrade. Solo se ejecuta una vez (_historyMigrated === false). */
-function migrateWeeklyStatsToHistory(state) {
-  if (state._historyMigrated) return state;
-  if (!state.lastActiveDay) return { ...state, _historyMigrated: true };
-  let h = state.history || { days: {}, months: {}, years: {} };
-  const lastDate = new Date(state.lastActiveDay);
-  for (let offset = 0; offset < 7; offset++) {
-    const d = new Date(lastDate.getTime() - offset * 86400000);
-    h = archiveDayToHistory(h, d.toDateString(), state.weeklyStats);
-  }
-  return { ...state, history: h, _historyMigrated: true };
-}
-
-/* Sesion 69 / v0.28.8: re-indexa weeklyStats de la convencion vieja
-   (0=domingo, 1=lunes ... 6=sabado, indexado por getDay()) a la nueva
-   (0=lunes, 1=martes ... 6=domingo). Mapping: nuevo[i] = viejo[(i+1)%7]. */
-function reindexWeeklyStatsMondayFirst(ws) {
-  const rot = (arr) => Array.isArray(arr) && arr.length === 7 ?
-  [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]] :
-  [0, 0, 0, 0, 0, 0, 0];
-  return {
-    focusMinutes: rot(ws && ws.focusMinutes),
-    breathMinutes: rot(ws && ws.breathMinutes),
-    moveMinutes: rot(ws && ws.moveMinutes),
-    waterGlasses: rot(ws && ws.waterGlasses)
-  };
-}
-
-/* ============================
-   ROLLOVER
-   ============================ */
-
-function rolloverIfNeeded(state) {
-  const today = new Date();
-  const todayStr = today.toDateString();
-  if (state.lastActiveDay === todayStr) return state;
-
-  /* Detectar si la migracion s43 esta por ejecutarse en esta llamada.
-     Si _historyMigrated era false al entrar, migrateWeeklyStatsToHistory
-     ya archivara lastActiveDay y NO debemos volver a archivarlo aqui (C2). */
-  const wasAlreadyMigrated = !!state._historyMigrated;
-  let migratedState = migrateWeeklyStatsToHistory(state);
-  let nextHistory = migratedState.history || { days: {}, months: {}, years: {} };
-
-  /* Archivar el dia previo solo si NO acaba de migrar (la migracion ya lo cubrio). */
-  if (migratedState.lastActiveDay && wasAlreadyMigrated) {
-    nextHistory = archiveDayToHistory(
-      nextHistory, migratedState.lastActiveDay, migratedState.weeklyStats
-    );
-  }
-
-  /* FIX C1 (sesion 69): si entramos en una nueva semana lunes-domingo,
-     resetear weeklyStats por completo. */
-  let nextWeekly = migratedState.weeklyStats;
-  if (migratedState.lastActiveDay) {
-    const prevMonday = getMondayOf(new Date(migratedState.lastActiveDay)).getTime();
-    const todayMonday = getMondayOf(today).getTime();
-    if (todayMonday !== prevMonday) {
-      nextWeekly = {
-        focusMinutes: [0, 0, 0, 0, 0, 0, 0],
-        breathMinutes: [0, 0, 0, 0, 0, 0, 0],
-        moveMinutes: [0, 0, 0, 0, 0, 0, 0],
-        waterGlasses: [0, 0, 0, 0, 0, 0, 0]
-      };
-    }
-  }
-
-  /* FIX A2 (sesion 69): rotura proactiva del streak. Si la ultima sesion
-     fue antes de ayer, current=0 inmediatamente (sin esperar a la siguiente). */
-  let nextStreak = migratedState.streak;
-  if (nextStreak && nextStreak.lastActiveDate) {
-    const lastActive = new Date(nextStreak.lastActiveDate);
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday.setHours(0, 0, 0, 0);
-    lastActive.setHours(0, 0, 0, 0);
-    if (lastActive.getTime() < yesterday.getTime()) {
-      nextStreak = { ...nextStreak, current: 0 };
-    }
-  }
-
-  /* Trigger first.return — abrir la app un dia distinto al ultimo.
-     Deferred via setTimeout para no llamar a unlockAchievement desde
-     dentro de loadState (achievements aun no cargado en este punto). */
-  if (migratedState.lastActiveDay) {
-    setTimeout(() => {
-      try {unlockAchievement('first.return');} catch (e) {}
-    }, 0);
-  }
-  return {
-    ...migratedState,
-    history: nextHistory,
-    weeklyStats: nextWeekly,
-    streak: nextStreak,
-    cycle: 0,
-    plan: { muevete: false, respira: false, extra: false, hidratate: false },
-    water: { ...migratedState.water, today: 0, lastReset: todayStr },
-    lastActiveDay: todayStr
-  };
-}
+   ESE ARCHIVO CARGA ANTES QUE ESTE, y no es negociable: `loadState()` corre
+   más abajo EN EL CUERPO de este archivo (`let _state = loadState()`), no al
+   montar, y llama a cuatro de esas cinco funciones. Si el orden se invierte,
+   revienta el primer arranque de cada pestaña. */
 
 /* ============================
    STORE PRIMITIVO
@@ -4103,13 +4282,14 @@ applyTheme();
 /* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
    MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-
    Today) los expone state-history.jsx (s101). */
+/* `detectInitialPalette` ya no se re-exporta aquí: vive y se publica en
+   `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
-  detectInitialPalette,
   getState, setState, subscribe, usePace, ensureDayFresh,
   showToast, onToast, setCaminoUiActive
 });
-;Object.assign(window, { isMobileViewport, detectInitialPalette, migrateWeeklyStatsToHistory, reindexWeeklyStatsMondayFirst, rolloverIfNeeded, loadState, persistState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
+;Object.assign(window, { loadState, persistState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
@@ -8910,32 +9090,42 @@ Object.assign(window, {
 })();
 </script>
 
+  <!-- Sidebar troceado en s148 (llegó a 570 ln). Orden estricto:
+       support (hoja responsive + `sidebarStyles`, que viaja por window porque
+       el build encierra cada archivo en su IIFE) → parts (las secciones de UI)
+       → Sidebar.jsx (orquestador). `parts` monta <SupportButton/>, así que va
+       también DESPUÉS de SupportModule.jsx, que ya carga justo arriba. -->
   <script>
 ;(function () {
-/* PACE · Sidebar izquierdo — colapsable
-   Secciones: Ritmo (racha), Sendero (línea del día con hitos), Logros.
-   Footer: StatusBar con botón destacado Donar café.
+/* PACE · Soporte sin UI del Sidebar — extraído de `Sidebar.jsx` en s148
+   ============================================================
+   `Sidebar.jsx` llegó a 570 líneas (regla nº 1 de CLAUDE.md: < 500) y crecía
+   sola: la tabla de deuda la anotaba en 541 y ya iba por 570. Se parte en tres
+   con el patrón que el repo ya usa en Foco (`FocusTimer` + `.support` +
+   `.parts`):
 
-   Historial de lo eliminado (no revivir sin justificación de producto):
-     - "Plan" del día — v0.11.2 (redundante con ActivityBar).
-     - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
-     - "Intención" — v0.12.1 (aporta poco valor; la misma pregunta se
-       hace al usuario nuevo en la bienvenida — hoy el onboarding s106,
-       antes el WelcomeModal — que la guarda en `state.intention`.
-       Quitarla libera espacio vertical y deja que el botón de Donar
-       gane prominencia en el footer).
+     · Sidebar.support.jsx  (este) → hoja responsive inyectada + `sidebarStyles`
+     · Sidebar.parts.jsx           → las piezas de UI (Sendero, WeekDots,
+                                     miniaturas de logro, StatusBar, chevron)
+     · Sidebar.jsx                 → el orquestador y nada más
 
-   RESPONSIVE (sesión 22 · v0.12.5):
-     En ≤768px el sidebar se desacopla y pasa a ser un drawer
-     fullscreen por encima del main (position:fixed; inset:0;
-     width:100vw). El bug previo era width:280px que dejaba un
-     trozo del main visible a la derecha en móvil. Ahora el main
-     sigue ocupando 100vw debajo pero el sidebar lo tapa entero
-     cuando se abre. Se añade un chevron grande (hit target
-     ≥44px) en esquina superior derecha para cerrar.
-*/
+   Aquí no hay JSX ni componentes: solo la hoja de estilos que se inyecta una
+   vez y el objeto de estilos inline que comparten los tres archivos.
 
-const { useState: useStateSB, useMemo: useMemoSB, useId: useIdSidebar } = React;
+   POR QUÉ `sidebarStyles` SE EXPONE A window
+   ------------------------------------------
+   Es un `const`, y en el artefacto compilado cada archivo va envuelto en su
+   propia IIFE: un `const` de este archivo NO lo ve `Sidebar.parts.jsx`. El
+   build solo re-expone automáticamente `function` y `var` top-level. Así que
+   se publica a mano, que es la misma solución que `window.pathStepStyles`
+   (decisión s80) para los estilos compartidos entre los Steps de Camino.
+   Los consumidores lo referencian PELADO (`sidebarStyles.root`), no
+   `window.sidebarStyles`: la resolución ocurre al RENDERIZAR, no al evaluar el
+   archivo, así que no depende de quién evalúe antes — que en dev (PACE.html)
+   no está garantizado, solo en el compilado.
+
+   ORDEN DE CARGA: este archivo ANTES de `Sidebar.parts.jsx` y de `Sidebar.jsx`.
+   ============================================================ */
 
 /* Inyecta reglas responsive del sidebar una sola vez.
    Patrón ya usado en FocusTimer para spinners de number input.
@@ -9027,109 +9217,146 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
   document.head.appendChild(s);
 }
 
-function Sidebar() {
-  const [state, set] = usePace();
-  const { t, tn } = useT();
+const sidebarStyles = {
+  root: {
+    position: 'relative', // contexto para toggleFloating (v0.11.7)
+    width: 280,
+    height: '100vh',
+    maxHeight: '100vh',
+    background: 'var(--paper-2)',
+    borderRight: '1px solid var(--line)',
+    padding: '18px 18px',
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 0,
+    overflowY: 'auto',
+    transition: 'width 260ms var(--ease), padding 260ms var(--ease)'
+  },
+  /* v0.11.7 · "barra horizontal" del logo: el logo llena todo el ancho
+     del sidebar (sin competencia lateral), los márgenes negativos dejan
+     que invada el padding lateral de 18px para ganar más tamaño aparente.
+     El chevron de colapsar sale de aquí y vive como botón flotante. */
+  logoBar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: -14,
+    marginRight: -14,
+    marginTop: -4,
+    marginBottom: 4,
+    minHeight: 96
+  },
+  logo: { width: '100%', minWidth: 0, display: 'flex', justifyContent: 'center' },
+  toggleFloating: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 22, height: 22,
+    display: 'grid', placeItems: 'center',
+    color: 'var(--ink-3)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--r-sm)',
+    background: 'var(--paper)',
+    cursor: 'pointer',
+    zIndex: 2,
+    opacity: 0.7,
+    transition: 'opacity 180ms, color 180ms'
+  },
+  /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
+     se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4.
+     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7.
+     cycles/cycleCount/cycleItem/cycleNum/cycleSep eliminados en v0.28.2 (sesión 61)
+     junto con el bloque de contadores. */
+  section: {},
+  sectionHeader: {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+    marginBottom: 10
+  },
+  sectionAside: {
+    fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+    color: 'var(--ink-3)'
+  },
+  streakNum: {
+    // Forzamos EB Garamond explícitamente (no pasa por --font-display)
+    // para que este glifo — firma visual de la racha — no cambie si el
+    // usuario elige otra tipografía display en Tweaks. La cifra del
+    // contador es el único anclaje tipográfico de identidad del
+    // sidebar; mantenerla estable es intencional. (Sesión 20.)
+    fontFamily: "'EB Garamond', Georgia, serif",
+    fontStyle: 'italic',
+    fontSize: 44,
+    fontWeight: 500,
+    lineHeight: 0.9,
+    color: 'var(--ink)'
+  },
+  streakLabel: { fontSize: 12, color: 'var(--ink-2)', fontStyle: 'italic', fontFamily: 'var(--font-display)' },
+  streakSub: { fontSize: 10, color: 'var(--ink-3)', marginTop: 2 },
+  linkBtn: {
+    fontSize: 11,
+    color: 'var(--ink-3)',
+    textDecoration: 'none',
+    padding: 0,
+    marginTop: 4
+  },
+  /* NOTA histórica: los estilos de Recordatorios (v0.11.6) e Intención
+     (v0.12.1) se eliminaron aquí cuando esas secciones se quitaron del
+     sidebar. Los campos `state.reminders` y `state.intention` siguen
+     existiendo en state.jsx (retro-compat + captura en Welcome). */
+  footer: {
+    marginTop: 14,
+    paddingTop: 12,
+    borderTop: '1px solid var(--line)',
+    display: 'flex', flexDirection: 'column', gap: 10
+  },
 
-  const collapsed = !!state.sidebarCollapsed;
-  const unlockedCount = Object.keys(state.achievements || {}).length;
-  /* B1: total real del catalogo (106), no el 100 hardcodeado de s12. */
-  /* §15.4 · denominador ÚNICO, compartido con el modal (`catalog.js`). Antes
-     esto era `ACHIEVEMENT_CATALOG.length` y contaba los que NO tienen detector:
-     la sidebar dividía entre 96 y el modal entre 88, y el «por descubrir»
-     prometía 8 que nadie puede ganar. */
-  const totalAchievements = window.ACHIEVEMENTS_AVAILABLE ||
-  (window.ACHIEVEMENT_CATALOG || []).length;
-  const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+  footerRow: {
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+  }
+};
 
-  const toggle = () => set({ sidebarCollapsed: !collapsed });
+Object.assign(window, { sidebarStyles });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Piezas de UI del Sidebar — extraídas de `Sidebar.jsx` en s148
+   ============================================================
+   Las secciones que el sidebar compone, cada una autónoma y sin estado
+   propio más allá del store: Sendero del día, WeekDots, miniaturas de logro y
+   StatusBar, más el chevron. `Sidebar.jsx` queda como orquestador.
 
-  /* Colapsado → ocultar TOTALMENTE.
-     La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
-     (Antes era un rail de 56px con iconos; se quitó por petición del usuario
-     para tener pantalla limpia como la referencia del 2026-04-22 / sesión 9.) */
-  if (collapsed) return null;
+   Mismo patrón que `FocusTimer.parts.jsx` (s124) y `PathRunner.parts.jsx`
+   (s80). Ver la cabecera de `Sidebar.support.jsx` para el reparto completo y
+   para por qué `sidebarStyles` se referencia PELADO (viaja por window).
 
+   ORDEN DE CARGA: después de `Sidebar.support.jsx` (usa `sidebarStyles`) y de
+   `SupportModule.jsx` (StatusBar monta `<SupportButton/>`); antes de
+   `Sidebar.jsx`, que compone estas piezas.
+
+   OJO CON LOS ALIAS DE HOOKS. `useMemoSB` / `useIdSidebar` conservan su nombre
+   raro a propósito: en dev, Babel standalone evalúa cada archivo con un eval
+   INDIRECTO, así que un `const { useMemo } = React` top-level cae en el ámbito
+   léxico GLOBAL y choca con el de cualquier otro archivo que haga lo mismo
+   («Identifier already declared», y ese archivo entero deja de evaluar).
+   ============================================================ */
+
+const { useMemo: useMemoSB, useId: useIdSidebar } = React;
+
+function ChevronLeftIcon() {
   return (/*#__PURE__*/
-    React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true }, /*#__PURE__*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') }, /*#__PURE__*/
-    React.createElement(ChevronLeftIcon, null)
-    ), /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.logoBar, "data-pace-sidebar-logobar": true }, /*#__PURE__*/
-    React.createElement("div", {
-      style: { ...sidebarStyles.logo, cursor: 'pointer' },
-      "data-pace-sidebar-logo": true,
-      onClick: () => window.dispatchEvent(new CustomEvent('pace:cow-click')),
-      title: t('sidebar.logo.title') }, /*#__PURE__*/
-
-    React.createElement(PaceWordmark, { variant: state.logoVariant, color: "var(--ink)" })
-    )
-    ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '14px 0 16px' } }), /*#__PURE__*/
-
-
-    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
-    React.createElement("div", { style: { ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 } }, /*#__PURE__*/
-    React.createElement(Meta, null, t('sidebar.section.rhythm')), /*#__PURE__*/
-    React.createElement("span", { style: sidebarStyles.sectionAside }, state.streak.longest)
-    ), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', alignItems: 'baseline', gap: 10 } }, /*#__PURE__*/
-    React.createElement("span", { style: { ...sidebarStyles.streakNum, fontSize: isMob ? 32 : 44 } }, state.streak.current), /*#__PURE__*/
-    React.createElement("div", null, /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.streakLabel }, state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')), /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.streakSub }, tn('sidebar.streak.best', { n: state.streak.longest }))
-    )
-    ), /*#__PURE__*/
-    React.createElement(WeekDots, { weeklyStats: state.weeklyStats, compact: isMob })
-    ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '16px 0 14px' } }), /*#__PURE__*/
-
-
-    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
-    React.createElement(SenderoDelDia, { state: state, compact: isMob })
-    ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '16px 0 14px' } }), /*#__PURE__*/
-
-
-    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
-    React.createElement("div", { style: { ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 } }, /*#__PURE__*/
-    React.createElement(Meta, null, t('sidebar.section.achievements')), /*#__PURE__*/
-    React.createElement("span", { style: sidebarStyles.sectionAside }, unlockedCount, "/", totalAchievements)
-    ), /*#__PURE__*/
-    React.createElement(AchievementsPreview, { onOpen: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')) }), /*#__PURE__*/
-    React.createElement("button", {
-      onClick: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')),
-      style: sidebarStyles.linkBtn },
-
-    tn('sidebar.achievements.discover', { n: Math.max(0, totalAchievements - unlockedCount) })
-    )
-    ), /*#__PURE__*/
-
-    React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1 } }), /*#__PURE__*/
-
-
-    React.createElement(StatusBar, { compact: isMob })
+    React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
+    React.createElement("polyline", { points: "15 18 9 12 15 6" })
     ));
 
 }
+
+/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
+   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
+   contadores que los usaba. Si en el futuro vuelve algún contador
+   en otra ubicación, recuperar de git history.
+   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
+   ya no es un rail con chevron, vuelve a abrirse con el handle flotante
+   que vive en main.jsx (≡). */
 
 /* ============================================================
    Sendero del día — línea ondulada horizontal que representa
@@ -9237,22 +9464,6 @@ function SenderoDelDia(_ref) {let { state, compact } = _ref;
     ));
 
 }
-
-function ChevronLeftIcon() {
-  return (/*#__PURE__*/
-    React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
-    React.createElement("polyline", { points: "15 18 9 12 15 6" })
-    ));
-
-}
-
-/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
-   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
-   contadores que los usaba. Si en el futuro vuelve algún contador
-   en otra ubicación, recuperar de git history.
-   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
-   ya no es un rail con chevron, vuelve a abrirse con el handle flotante
-   que vive en main.jsx (≡). */
 
 function WeekDots(_ref2) {let { weeklyStats, compact } = _ref2;
   const { t } = useT();
@@ -9384,105 +9595,154 @@ function StatusBar(_ref5) {let { compact } = _ref5;
 
 }
 
-const sidebarStyles = {
-  root: {
-    position: 'relative', // contexto para toggleFloating (v0.11.7)
-    width: 280,
-    height: '100vh',
-    maxHeight: '100vh',
-    background: 'var(--paper-2)',
-    borderRight: '1px solid var(--line)',
-    padding: '18px 18px',
-    display: 'flex',
-    flexDirection: 'column',
-    flexShrink: 0,
-    overflowY: 'auto',
-    transition: 'width 260ms var(--ease), padding 260ms var(--ease)'
-  },
-  /* v0.11.7 · "barra horizontal" del logo: el logo llena todo el ancho
-     del sidebar (sin competencia lateral), los márgenes negativos dejan
-     que invada el padding lateral de 18px para ganar más tamaño aparente.
-     El chevron de colapsar sale de aquí y vive como botón flotante. */
-  logoBar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: -14,
-    marginRight: -14,
-    marginTop: -4,
-    marginBottom: 4,
-    minHeight: 96
-  },
-  logo: { width: '100%', minWidth: 0, display: 'flex', justifyContent: 'center' },
-  toggleFloating: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 22, height: 22,
-    display: 'grid', placeItems: 'center',
-    color: 'var(--ink-3)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    background: 'var(--paper)',
-    cursor: 'pointer',
-    zIndex: 2,
-    opacity: 0.7,
-    transition: 'opacity 180ms, color 180ms'
-  },
-  /* NOTA: los estilos del modo colapsado (toggleCollapsed/railItem/railBtn/railDivider)
-     se eliminaron en v0.11.6. El sidebar colapsado renderiza null desde v0.11.4.
-     logoRow/toggleExpanded reemplazados por logoBar/toggleFloating en v0.11.7.
-     cycles/cycleCount/cycleItem/cycleNum/cycleSep eliminados en v0.28.2 (sesión 61)
-     junto con el bloque de contadores. */
-  section: {},
-  sectionHeader: {
-    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-    marginBottom: 10
-  },
-  sectionAside: {
-    fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
-    color: 'var(--ink-3)'
-  },
-  streakNum: {
-    // Forzamos EB Garamond explícitamente (no pasa por --font-display)
-    // para que este glifo — firma visual de la racha — no cambie si el
-    // usuario elige otra tipografía display en Tweaks. La cifra del
-    // contador es el único anclaje tipográfico de identidad del
-    // sidebar; mantenerla estable es intencional. (Sesión 20.)
-    fontFamily: "'EB Garamond', Georgia, serif",
-    fontStyle: 'italic',
-    fontSize: 44,
-    fontWeight: 500,
-    lineHeight: 0.9,
-    color: 'var(--ink)'
-  },
-  streakLabel: { fontSize: 12, color: 'var(--ink-2)', fontStyle: 'italic', fontFamily: 'var(--font-display)' },
-  streakSub: { fontSize: 10, color: 'var(--ink-3)', marginTop: 2 },
-  linkBtn: {
-    fontSize: 11,
-    color: 'var(--ink-3)',
-    textDecoration: 'none',
-    padding: 0,
-    marginTop: 4
-  },
-  /* NOTA histórica: los estilos de Recordatorios (v0.11.6) e Intención
-     (v0.12.1) se eliminaron aquí cuando esas secciones se quitaron del
-     sidebar. Los campos `state.reminders` y `state.intention` siguen
-     existiendo en state.jsx (retro-compat + captura en Welcome). */
-  footer: {
-    marginTop: 14,
-    paddingTop: 12,
-    borderTop: '1px solid var(--line)',
-    display: 'flex', flexDirection: 'column', gap: 10
-  },
+Object.assign(window, { ChevronLeftIcon, SenderoDelDia, WeekDots, achMini, AchievementsPreview, StatusBar });
+;Object.assign(window, { ChevronLeftIcon, SenderoDelDia, WeekDots, achMini, AchievementsPreview, StatusBar });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Sidebar izquierdo — colapsable
+   Secciones: Ritmo (racha), Sendero (línea del día con hitos), Logros.
+   Footer: StatusBar con botón destacado Donar café.
 
-  footerRow: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-  }
-};
+   TROCEADO EN s148 (llegó a 570 ln; el límite de CLAUDE.md es 500). Este
+   archivo queda como ORQUESTADOR: compone las secciones y no dibuja
+   ninguna por dentro. Lo demás vive en dos hermanos, con el mismo patrón
+   que Foco (`FocusTimer` + `.support` + `.parts`):
+
+     · `Sidebar.support.jsx` → hoja responsive inyectada + `sidebarStyles`
+                               (que viaja por window: leer su cabecera)
+     · `Sidebar.parts.jsx`   → SenderoDelDia · WeekDots · AchievementsPreview
+                               · achMini · StatusBar · ChevronLeftIcon
+
+   Los dos cargan ANTES que este archivo en PACE.html.
+
+   Historial de lo eliminado (no revivir sin justificación de producto):
+     - "Plan" del día — v0.11.2 (redundante con ActivityBar).
+     - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
+     - "Intención" — v0.12.1 (aporta poco valor; la misma pregunta se
+       hace al usuario nuevo en la bienvenida — hoy el onboarding s106,
+       antes el WelcomeModal — que la guarda en `state.intention`.
+       Quitarla libera espacio vertical y deja que el botón de Donar
+       gane prominencia en el footer).
+
+   RESPONSIVE (sesión 22 · v0.12.5):
+     En ≤768px el sidebar se desacopla y pasa a ser un drawer
+     fullscreen por encima del main (position:fixed; inset:0;
+     width:100vw). El bug previo era width:280px que dejaba un
+     trozo del main visible a la derecha en móvil. Ahora el main
+     sigue ocupando 100vw debajo pero el sidebar lo tapa entero
+     cuando se abre. Se añade un chevron grande (hit target
+     ≥44px) en esquina superior derecha para cerrar. Las reglas
+     viven en `Sidebar.support.jsx`.
+*/
+
+function Sidebar() {
+  const [state, set] = usePace();
+  const { t, tn } = useT();
+
+  const collapsed = !!state.sidebarCollapsed;
+  const unlockedCount = Object.keys(state.achievements || {}).length;
+  /* B1: total real del catalogo (106), no el 100 hardcodeado de s12. */
+  /* §15.4 · denominador ÚNICO, compartido con el modal (`catalog.js`). Antes
+     esto era `ACHIEVEMENT_CATALOG.length` y contaba los que NO tienen detector:
+     la sidebar dividía entre 96 y el modal entre 88, y el «por descubrir»
+     prometía 8 que nadie puede ganar. */
+  const totalAchievements = window.ACHIEVEMENTS_AVAILABLE ||
+  (window.ACHIEVEMENT_CATALOG || []).length;
+  const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+
+  const toggle = () => set({ sidebarCollapsed: !collapsed });
+
+  /* Colapsado → ocultar TOTALMENTE.
+     La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
+     (Antes era un rail de 56px con iconos; se quitó por petición del usuario
+     para tener pantalla limpia como la referencia del 2026-04-22 / sesión 9.) */
+  if (collapsed) return null;
+
+  return (/*#__PURE__*/
+    React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true }, /*#__PURE__*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') }, /*#__PURE__*/
+    React.createElement(ChevronLeftIcon, null)
+    ), /*#__PURE__*/
+    React.createElement("div", { style: sidebarStyles.logoBar, "data-pace-sidebar-logobar": true }, /*#__PURE__*/
+    React.createElement("div", {
+      style: { ...sidebarStyles.logo, cursor: 'pointer' },
+      "data-pace-sidebar-logo": true,
+      onClick: () => window.dispatchEvent(new CustomEvent('pace:cow-click')),
+      title: t('sidebar.logo.title') }, /*#__PURE__*/
+
+    React.createElement(PaceWordmark, { variant: state.logoVariant, color: "var(--ink)" })
+    )
+    ), /*#__PURE__*/
+
+    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '14px 0 16px' } }), /*#__PURE__*/
+
+
+    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
+    React.createElement("div", { style: { ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 } }, /*#__PURE__*/
+    React.createElement(Meta, null, t('sidebar.section.rhythm')), /*#__PURE__*/
+    React.createElement("span", { style: sidebarStyles.sectionAside }, state.streak.longest)
+    ), /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', alignItems: 'baseline', gap: 10 } }, /*#__PURE__*/
+    React.createElement("span", { style: { ...sidebarStyles.streakNum, fontSize: isMob ? 32 : 44 } }, state.streak.current), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { style: sidebarStyles.streakLabel }, state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')), /*#__PURE__*/
+    React.createElement("div", { style: sidebarStyles.streakSub }, tn('sidebar.streak.best', { n: state.streak.longest }))
+    )
+    ), /*#__PURE__*/
+    React.createElement(WeekDots, { weeklyStats: state.weeklyStats, compact: isMob })
+    ), /*#__PURE__*/
+
+    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '16px 0 14px' } }), /*#__PURE__*/
+
+
+    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
+    React.createElement(SenderoDelDia, { state: state, compact: isMob })
+    ), /*#__PURE__*/
+
+    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '16px 0 14px' } }), /*#__PURE__*/
+
+
+    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
+    React.createElement("div", { style: { ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 } }, /*#__PURE__*/
+    React.createElement(Meta, null, t('sidebar.section.achievements')), /*#__PURE__*/
+    React.createElement("span", { style: sidebarStyles.sectionAside }, unlockedCount, "/", totalAchievements)
+    ), /*#__PURE__*/
+    React.createElement(AchievementsPreview, { onOpen: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')) }), /*#__PURE__*/
+    React.createElement("button", {
+      onClick: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')),
+      style: sidebarStyles.linkBtn },
+
+    tn('sidebar.achievements.discover', { n: Math.max(0, totalAchievements - unlockedCount) })
+    )
+    ), /*#__PURE__*/
+
+    React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1 } }), /*#__PURE__*/
+
+
+    React.createElement(StatusBar, { compact: isMob })
+    ));
+
+}
 
 Object.assign(window, { Sidebar });
-;Object.assign(window, { Sidebar, SenderoDelDia, ChevronLeftIcon, WeekDots, achMini, AchievementsPreview, StatusBar });
+;Object.assign(window, { Sidebar });
 })();
 </script>
 
@@ -9741,15 +10001,93 @@ const EXERCISE_GLYPHS = {
       React.createElement("path", { d: "M6 20 L3 22", opacity: "0.55" }), /*#__PURE__*/
       React.createElement("path", { d: "M38 20 L41 18", opacity: "0.55" }), /*#__PURE__*/
       React.createElement("path", { d: "M38 20 L41 22", opacity: "0.55" })
-      ));},
+      ));}
 
 
   /* ============================================================
-     ESTIRA — movilidad / estiramientos (var(--extra))
+     ESTIRA — movilidad / estiramientos  ->  exercise-glyphs.extra.jsx
+     ============================================================
+     Los ~25 glifos de Estira salieron de aquí en s148: el archivo iba por 571
+     líneas, 71 por encima del límite de CLAUDE.md (y la tabla de deuda lo daba
+     por sano desde s84). El corte respeta la frontera que ya marcaba este
+     separador — Mueve arriba, Estira en el hermano.
+       Ese archivo AÑADE sus entradas a ESTE MISMO objeto (`Object.assign` sobre
+     `window.EXERCISE_GLYPHS`) y carga DESPUÉS. No las mete en un mapa aparte a
+     propósito: `ExerciseGlyph`, aquí abajo, cierra sobre la referencia local de
+     `EXERCISE_GLYPHS`, así que un segundo mapa exigiría cambiar su resolución.
      ============================================================ */
 
+};
+
+function DefaultGlyph(_ref13) {let { size = 44, className = '' } = _ref13;
+  return (/*#__PURE__*/
+    React.createElement(G, { size: size, className: className }, /*#__PURE__*/
+
+    React.createElement("path", { d: "M14 22 Q22 14 30 22" }), /*#__PURE__*/
+    React.createElement("path", { d: "M12 26 Q22 16 32 26" }), /*#__PURE__*/
+    React.createElement("path", { d: "M16 18 Q22 14 28 18" })
+    ));
+
+}
+
+function ExerciseGlyph(_ref14) {let { id, size = 88, className = '' } = _ref14;
+  /* visualId (B2.2): los duplicados de nombre (Chest opener, Deep squat hold,
+     Deep breaths, Dead hang · opcional) resuelven al glifo canónico que
+     absorbe. resolveVisualId es identidad para nombres no aliasados; se lee
+     de window por si el orden de carga fallara (patrón defensivo del repo). */
+  const vid = window.resolveVisualId ? window.resolveVisualId(id) : id;
+  const Glyph = EXERCISE_GLYPHS[vid] || EXERCISE_GLYPHS[id];
+  if (!Glyph) return /*#__PURE__*/React.createElement(DefaultGlyph, { size: size, className: className });
+  return /*#__PURE__*/React.createElement(Glyph, { size: size, className: className });
+}
+
+Object.assign(window, { ExerciseGlyph, EXERCISE_GLYPHS, DefaultGlyph });
+;Object.assign(window, { G, DefaultGlyph, ExerciseGlyph });
+})();
+</script>
+  <!-- Glifos de ESTIRA (s148): extraidos de exercise-glyphs.jsx, que iba por
+       571 lineas. DESPUES del anterior y NO al reves: este anade sus entradas
+       al MISMO objeto EXERCISE_GLYPHS que aquel declara y publica (el
+       componente cierra sobre esa referencia). Lleva un guard que aborta si el
+       orden se invierte, en vez de dejar Estira sin dibujos en silencio. -->
+  <script>
+;(function () {
+/* PACE · Glifos de ESTIRA — extraídos de `exercise-glyphs.jsx` en s148
+   ============================================================
+   Segunda mitad del sistema 1 (line-art de ejercicio). El archivo original
+   llegó a 571 líneas —71 por encima del límite de CLAUDE.md— y venía marcado
+   en la tabla de deuda como «dentro de límite» desde s84, cuando ya no lo
+   estaba. El corte es por MÓDULO, que es la frontera que el propio archivo ya
+   dibujaba con un separador: Mueve se queda allí, Estira viene aquí.
+
+   Mismas reglas de dibujo, sin tocar una ruta: viewBox 0 0 44 44, `fill=none`,
+   `stroke=currentColor`, strokeWidth 1.8 vía el wrapper `G`, linecap/linejoin
+   redondos y las opacidades tal cual las dejó el usuario.
+
+   ESTE ARCHIVO **MUTA** EL MAPA, NO CREA UNO NUEVO
+   ------------------------------------------------
+   `EXERCISE_GLYPHS` se declara en `exercise-glyphs.jsx` y allí se publica a
+   window; aquí se le AÑADEN las entradas de Estira sobre ese mismo objeto. Es
+   deliberado: `ExerciseGlyph` cierra sobre la referencia local del otro
+   archivo, así que un objeto aparte no lo vería y habría que cambiar su
+   resolución — justo el comportamiento que este troceo no debe tocar. Como el
+   componente solo lee el mapa al RENDERIZAR, para entonces los dos archivos
+   llevan mucho evaluados.
+
+   ORDEN DE CARGA: DESPUÉS de `exercise-glyphs.jsx` (que declara el mapa y el
+   wrapper `G`) y antes de sus consumidores (MoveModule, ExtraModule,
+   PathRunner, RoutinePreview). El guard de abajo aborta con un mensaje claro
+   en vez de dejar 25 ejercicios de Estira cayendo al glifo por defecto sin que
+   nadie se entere.
+   ============================================================ */
+
+if (!window.EXERCISE_GLYPHS) {
+  throw new Error('exercise-glyphs.extra.jsx cargó ANTES que exercise-glyphs.jsx: revisa el orden en PACE.html');
+}
+
+Object.assign(window.EXERCISE_GLYPHS, {
   /* 14. Arco abriéndose: curva esternón + 2 extensiones + arco inferior (V8). */
-  'Apertura de pecho': (_ref13) => {let { size, className } = _ref13;return (/*#__PURE__*/
+  'Apertura de pecho': (_ref) => {let { size, className } = _ref;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 22 Q22 14 38 22" }), /*#__PURE__*/
       React.createElement("path", { d: "M6 22 L2 20", opacity: "0.6" }), /*#__PURE__*/
@@ -9759,7 +10097,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 15. Hombros rotados + esternón + caderas estables + arco rotación (NEW). */
-  'Rotación torácica': (_ref14) => {let { size, className } = _ref14;return (/*#__PURE__*/
+  'Rotación torácica': (_ref2) => {let { size, className } = _ref2;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 16 L34 12" }), /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "20", r: "1.4" }), /*#__PURE__*/
@@ -9771,7 +10109,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 16. Dos líneas formando ángulo agudo (zancada abstracta) (V8). */
-  'Flexor de cadera': (_ref15) => {let { size, className } = _ref15;return (/*#__PURE__*/
+  'Flexor de cadera': (_ref3) => {let { size, className } = _ref3;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 36 L22 14" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 14 L36 36", opacity: "0.55" }), /*#__PURE__*/
@@ -9780,7 +10118,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 17. Zancada profunda + arco amplio de rotación superior. */
-  'Zancada con apertura': (_ref16) => {let { size, className } = _ref16;return (/*#__PURE__*/
+  'Zancada con apertura': (_ref4) => {let { size, className } = _ref4;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "20", r: "1.8" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 22 V30 L16 38" }), /*#__PURE__*/
@@ -9791,7 +10129,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 18. Cabeza + trapecio triangular + mano contraria anclando (V6). */
-  'Cuello y trapecios': (_ref17) => {let { size, className } = _ref17;return (/*#__PURE__*/
+  'Cuello y trapecios': (_ref5) => {let { size, className } = _ref5;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "12", r: "3.5" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 16 L14 28" }), /*#__PURE__*/
@@ -9803,7 +10141,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 19. 3 ondas horizontales decrecientes + flecha (corriente de aire) (NEW). */
-  'Reset respiración': (_ref18) => {let { size, className } = _ref18;return (/*#__PURE__*/
+  'Reset respiración': (_ref6) => {let { size, className } = _ref6;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 16 Q22 12 36 16" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 22 Q22 18 36 22", opacity: "0.7" }), /*#__PURE__*/
@@ -9813,7 +10151,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 20. Una pierna doblada lateral + otra extendida al lado opuesto. */
-  'Sentadilla lateral': (_ref19) => {let { size, className } = _ref19;return (/*#__PURE__*/
+  'Sentadilla lateral': (_ref7) => {let { size, className } = _ref7;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "14", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 16 L34 26 L30 36" }), /*#__PURE__*/
@@ -9823,7 +10161,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 21. 2 L con pies marcados + eje vertical sutil (ALT). */
-  '90/90': (_ref20) => {let { size, className } = _ref20;return (/*#__PURE__*/
+  '90/90': (_ref8) => {let { size, className } = _ref8;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "22", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 22 H32 V32" }), /*#__PURE__*/
@@ -9835,7 +10173,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 22. Cadera + tibia cruzada + pierna trasera extendida. */
-  'Paloma': (_ref21) => {let { size, className } = _ref21;return (/*#__PURE__*/
+  'Paloma': (_ref9) => {let { size, className } = _ref9;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "18", cy: "16", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M18 18 L32 22 L34 30" }), /*#__PURE__*/
@@ -9845,7 +10183,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 23. Squat M-pure: piernas dibujando M perfecta (ALT). */
-  'Sentadilla profunda': (_ref22) => {let { size, className } = _ref22;return (/*#__PURE__*/
+  'Sentadilla profunda': (_ref0) => {let { size, className } = _ref0;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "8", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 10 V14" }), /*#__PURE__*/
@@ -9856,7 +10194,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 24. Arco puente + pierna elevada en curva + pies (NEW). */
-  'Puente con marcha': (_ref23) => {let { size, className } = _ref23;return (/*#__PURE__*/
+  'Puente con marcha': (_ref1) => {let { size, className } = _ref1;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 30 Q22 10 38 30" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 14 Q28 8 32 4" }), /*#__PURE__*/
@@ -9868,7 +10206,7 @@ const EXERCISE_GLYPHS = {
 
   /* 24b. Puente a una pierna: arco + pie apoyado + pierna elevada (s110,
      sustituto de Nordics en move.atg.knees; canónico s60, sin aprobar). */
-  'Puente isquio a una pierna': (_ref24) => {let { size, className } = _ref24;return (/*#__PURE__*/
+  'Puente isquio a una pierna': (_ref10) => {let { size, className } = _ref10;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 30 Q22 12 38 30" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 27 V34" }), /*#__PURE__*/
@@ -9879,7 +10217,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 25. Pared + 2 arcos ascendentes abstractos + eje (V8). */
-  'Deslizamientos en pared': (_ref25) => {let { size, className } = _ref25;return (/*#__PURE__*/
+  'Deslizamientos en pared': (_ref11) => {let { size, className } = _ref11;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 6 V38" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 28 Q22 22 30 28", opacity: "0.5", strokeDasharray: "1.5 2" }), /*#__PURE__*/
@@ -9889,7 +10227,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 26. Banda + 2 manos + líneas sutiles de tensión lateral (NEW). */
-  'Apertura con banda': (_ref26) => {let { size, className } = _ref26;return (/*#__PURE__*/
+  'Apertura con banda': (_ref12) => {let { size, className } = _ref12;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "12", cy: "22", r: "2.4" }), /*#__PURE__*/
       React.createElement("circle", { cx: "32", cy: "22", r: "2.4" }), /*#__PURE__*/
@@ -9904,7 +10242,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 27. Hombro (cabeza humeral) + antebrazo + arco de rotación (ALT). */
-  'Rotación externa': (_ref27) => {let { size, className } = _ref27;return (/*#__PURE__*/
+  'Rotación externa': (_ref13) => {let { size, className } = _ref13;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "14", r: "3" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 17 L20 22" }), /*#__PURE__*/
@@ -9915,7 +10253,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 28. Barra + 2 manos huecas + brazos rectos colgados (NEW). */
-  'Suspensión pasiva · opcional': (_ref28) => {let { size, className } = _ref28;return (/*#__PURE__*/
+  'Suspensión pasiva · opcional': (_ref14) => {let { size, className } = _ref14;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 8 H38" }), /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "10", r: "2.4" }), /*#__PURE__*/
@@ -9926,7 +10264,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 29. Zancada ATG: rodilla muy por delante del pie. */
-  'Zancada profunda': (_ref29) => {let { size, className } = _ref29;return (/*#__PURE__*/
+  'Zancada profunda': (_ref15) => {let { size, className } = _ref15;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "18", cy: "20", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M18 22 L34 18 L36 32" }), /*#__PURE__*/
@@ -9936,7 +10274,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 30. Pared + pierna + pie en flexión dorsal. */
-  'Elevación de puntas': (_ref30) => {let { size, className } = _ref30;return (/*#__PURE__*/
+  'Elevación de puntas': (_ref16) => {let { size, className } = _ref16;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 6 V38" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 38 H38" }), /*#__PURE__*/
@@ -9946,7 +10284,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 31. Cuerpo cayendo recto con pivote en las rodillas. */
-  'Nordics': (_ref31) => {let { size, className } = _ref31;return (/*#__PURE__*/
+  'Nordics': (_ref17) => {let { size, className } = _ref17;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "36", cy: "14", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M36 14 L14 30" }), /*#__PURE__*/
@@ -9956,7 +10294,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 32. Cuerpo inclinado atrás + rodillas adelante + talones arriba. */
-  'Sentadilla de cuádriceps': (_ref32) => {let { size, className } = _ref32;return (/*#__PURE__*/
+  'Sentadilla de cuádriceps': (_ref18) => {let { size, className } = _ref18;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "8", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M14 10 L28 30" }), /*#__PURE__*/
@@ -9968,7 +10306,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 33. Pike claro + 2 brazos cayendo + 2 manos en suelo (V7). */
-  'Marcha del elefante': (_ref33) => {let { size, className } = _ref33;return (/*#__PURE__*/
+  'Marcha del elefante': (_ref19) => {let { size, className } = _ref19;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M22 8 L8 32" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 8 L36 32" }), /*#__PURE__*/
@@ -9980,7 +10318,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 34. M profunda + tres puntos verticales (mantener el tiempo). */
-  'Sentadilla profunda sostenida': (_ref34) => {let { size, className } = _ref34;return (/*#__PURE__*/
+  'Sentadilla profunda sostenida': (_ref20) => {let { size, className } = _ref20;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M10 34 V20 L22 32 L34 20 V34" }), /*#__PURE__*/
       React.createElement("circle", { cx: "38", cy: "20", r: "1", opacity: "0.65" }), /*#__PURE__*/
@@ -9991,7 +10329,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 35. Cuadrupedia: espalda arqueada + cuatro patas dinámicas. */
-  'Gateo': (_ref35) => {let { size, className } = _ref35;return (/*#__PURE__*/
+  'Gateo': (_ref21) => {let { size, className } = _ref21;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 18 Q22 6 36 18" }), /*#__PURE__*/
       React.createElement("path", { d: "M10 18 Q8 24 10 32" }), /*#__PURE__*/
@@ -10003,7 +10341,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 36. Barra + 2 manos + cuerpo relajado en curva completa (ALT). */
-  'Suspensión pasiva': (_ref36) => {let { size, className } = _ref36;return (/*#__PURE__*/
+  'Suspensión pasiva': (_ref22) => {let { size, className } = _ref22;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M6 8 H38" }), /*#__PURE__*/
       React.createElement("circle", { cx: "16", cy: "10", r: "2" }), /*#__PURE__*/
@@ -10014,7 +10352,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 37. Sentado arriba + curva descendente + sentado abajo. */
-  'Sentarse y levantarse del suelo': (_ref37) => {let { size, className } = _ref37;return (/*#__PURE__*/
+  'Sentarse y levantarse del suelo': (_ref23) => {let { size, className } = _ref23;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "10", cy: "10", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M10 12 V18", opacity: "0.55" }), /*#__PURE__*/
@@ -10025,7 +10363,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 38. Gato/vaca: dos arcos opuestos + puntos de aire. */
-  'Apertura de costillas + respiración': (_ref38) => {let { size, className } = _ref38;return (/*#__PURE__*/
+  'Apertura de costillas + respiración': (_ref24) => {let { size, className } = _ref24;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M8 16 Q22 6 36 16" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 28 Q22 38 36 28" }), /*#__PURE__*/
@@ -10035,7 +10373,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 39. Cabeza inclinada lateral + cuerpo curvado en arco. */
-  'Inclinación lateral': (_ref39) => {let { size, className } = _ref39;return (/*#__PURE__*/
+  'Inclinación lateral': (_ref25) => {let { size, className } = _ref25;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "28", cy: "10", r: "3" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 36 Q30 22 28 13" }), /*#__PURE__*/
@@ -10044,7 +10382,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 40. Cabeza + elipse horizontal alrededor (rotación cervical). */
-  'Rotación lenta': (_ref40) => {let { size, className } = _ref40;return (/*#__PURE__*/
+  'Rotación lenta': (_ref26) => {let { size, className } = _ref26;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "14", r: "4" }), /*#__PURE__*/
       React.createElement("ellipse", { cx: "22", cy: "14", rx: "14", ry: "5", opacity: "0.5" }), /*#__PURE__*/
@@ -10053,7 +10391,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 41. Cabeza inclinada + brazo bajando + mano anclada. */
-  'Escalenos': (_ref41) => {let { size, className } = _ref41;return (/*#__PURE__*/
+  'Escalenos': (_ref27) => {let { size, className } = _ref27;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "14", cy: "12", r: "4" }), /*#__PURE__*/
       React.createElement("path", { d: "M16 15 L26 22 H30" }), /*#__PURE__*/
@@ -10063,7 +10401,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 42. Cabeza + hombros como 2 arcos + torso + 2 flechas verticales (V12). */
-  'Encogimiento de hombros': (_ref42) => {let { size, className } = _ref42;return (/*#__PURE__*/
+  'Encogimiento de hombros': (_ref28) => {let { size, className } = _ref28;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "20", r: "2" }), /*#__PURE__*/
       React.createElement("path", { d: "M8 26 Q14 12 22 16" }), /*#__PURE__*/
@@ -10077,7 +10415,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 43. Antebrazo + mano + círculo rotación — patrón 3 (parte aislada). */
-  'Círculos de muñeca': (_ref43) => {let { size, className } = _ref43;return (/*#__PURE__*/
+  'Círculos de muñeca': (_ref29) => {let { size, className } = _ref29;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M4 22 H20" }), /*#__PURE__*/
       React.createElement("path", { d: "M20 22 Q24 22 22 18" }), /*#__PURE__*/
@@ -10086,7 +10424,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 44. Silla + torso + arco amplio de rotación hacia el respaldo. */
-  'Giro sentado': (_ref44) => {let { size, className } = _ref44;return (/*#__PURE__*/
+  'Giro sentado': (_ref30) => {let { size, className } = _ref30;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M10 10 V30" }), /*#__PURE__*/
       React.createElement("path", { d: "M10 24 H24 V34" }), /*#__PURE__*/
@@ -10096,7 +10434,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 45. Pierna vertical + círculo en el tobillo (rotación). */
-  'Círculos de tobillo': (_ref45) => {let { size, className } = _ref45;return (/*#__PURE__*/
+  'Círculos de tobillo': (_ref31) => {let { size, className } = _ref31;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M22 4 V26" }), /*#__PURE__*/
       React.createElement("circle", { cx: "22", cy: "32", r: "6" }), /*#__PURE__*/
@@ -10105,7 +10443,7 @@ const EXERCISE_GLYPHS = {
 
 
   /* 46. Pulmones + flecha de aire entrando + expansión lateral (NEW). */
-  'Respiraciones profundas': (_ref46) => {let { size, className } = _ref46;return (/*#__PURE__*/
+  'Respiraciones profundas': (_ref32) => {let { size, className } = _ref32;return (/*#__PURE__*/
       React.createElement(G, { size: size, className: className }, /*#__PURE__*/
       React.createElement("path", { d: "M22 14 V32" }), /*#__PURE__*/
       React.createElement("path", { d: "M22 18 Q12 18 12 26 Q12 32 18 32" }), /*#__PURE__*/
@@ -10118,33 +10456,7 @@ const EXERCISE_GLYPHS = {
       React.createElement("path", { d: "M37 22 L35 24 L37 26", opacity: "0.5" })
       ));}
 
-
-};
-
-function DefaultGlyph(_ref47) {let { size = 44, className = '' } = _ref47;
-  return (/*#__PURE__*/
-    React.createElement(G, { size: size, className: className }, /*#__PURE__*/
-
-    React.createElement("path", { d: "M14 22 Q22 14 30 22" }), /*#__PURE__*/
-    React.createElement("path", { d: "M12 26 Q22 16 32 26" }), /*#__PURE__*/
-    React.createElement("path", { d: "M16 18 Q22 14 28 18" })
-    ));
-
-}
-
-function ExerciseGlyph(_ref48) {let { id, size = 88, className = '' } = _ref48;
-  /* visualId (B2.2): los duplicados de nombre (Chest opener, Deep squat hold,
-     Deep breaths, Dead hang · opcional) resuelven al glifo canónico que
-     absorbe. resolveVisualId es identidad para nombres no aliasados; se lee
-     de window por si el orden de carga fallara (patrón defensivo del repo). */
-  const vid = window.resolveVisualId ? window.resolveVisualId(id) : id;
-  const Glyph = EXERCISE_GLYPHS[vid] || EXERCISE_GLYPHS[id];
-  if (!Glyph) return /*#__PURE__*/React.createElement(DefaultGlyph, { size: size, className: className });
-  return /*#__PURE__*/React.createElement(Glyph, { size: size, className: className });
-}
-
-Object.assign(window, { ExerciseGlyph, EXERCISE_GLYPHS, DefaultGlyph });
-;Object.assign(window, { G, DefaultGlyph, ExerciseGlyph });
+});
 })();
 </script>
   <!-- Preview «antes de empezar» (§18.3, s144). DESPUÉS de exercise-glyphs y de

@@ -461,6 +461,32 @@ Reglas derivadas:
 
 ---
 
+## 🗂️ Dónde vive cada hoja de estilos (s148)
+
+`app/tokens.css` llegó a **613 líneas** y más de un tercio no eran tokens: era el
+lenguaje visual del módulo Caminos. En s148 se separó — un token es un valor que
+consume toda la app; aquello eran reglas de un módulo.
+
+| Hoja | Qué gobierna | Líneas |
+|---|---|---:|
+| `app/tokens.css` | Paletas · tipografía · espaciado · radios/sombras/transiciones · reset · utilidades · scrollbar · focus · reduced-motion · microinteracciones globales | 386 |
+| `app/paths/paths.css` | **Caminos**: SenderoBar · escena ilustrada · variante `lg` · orbe, con sus keyframes | 284 |
+
+Dos reglas que hay que respetar al tocarlas:
+
+- **El orden de los `<link>` es parte del contrato.** `paths.css` va **después** de
+  `tokens.css`: la regla que saca la escena del rise escalonado
+  (`[data-pace-reveal] > [data-pace-path-scene] { animation: none }`) gana por
+  **ORDEN**, no por especificidad. Verificado en el artefacto compilado.
+- **El build las inlinea todas**, cada una en su sitio, así que la cascada del
+  `index.html` y del standalone es la misma que en dev. Añadir un CSS bajo `app/`
+  = declararlo en `PACE.html` y nada más. Ninguna ruta va cableada en el build.
+
+Ninguna de las dos entra en el precache de `sw.js`: en la web viajan inlineadas
+dentro de `index.html` y solo las pide `PACE.html` en desarrollo.
+
+---
+
 ## 📋 Clases utilitarias
 
 Definidas en `app/tokens.css`, se aplican con `className`:
@@ -602,7 +628,8 @@ slot `inner` de `TimerDial`; no cambian su geometría ni el atardecer de s123).
 
 `PathIllustration` monta la lámina del Camino como escena cover FULL-BLEED
 **solo en el runner** (IntroCard/StepIntro/CompletionScreen; las sesiones
-activas no llevan arte). Bloque `[data-pace-path-scene]` en `tokens.css`:
+activas no llevan arte). Bloque `[data-pace-path-scene]` en `app/paths/paths.css`
+(vivía en `tokens.css` hasta s148):
 
 - **Casquetes**: las bolas pintadas del arte van SIEMPRE cubiertas en gris
   (`--line` con borde `--line-2`); al completarse se RELLENAN con el color

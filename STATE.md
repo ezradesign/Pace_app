@@ -10,11 +10,13 @@
 
 ---
 
-**Version actual:** v0.80.0 (s147 — **EL PAPEL DEJA DE CONTAR COMO TINTA, Y EL SELLO DEJA DE FLOTAR**. Sesion de revision de arte con el usuario: de las tres revisiones previstas salieron **tres defectos que no estaban en el plan**, y los tres los vio el usuario mirando. El moteado alrededor de los dibujos era **tramado de semitono del PNG** y el suelo de papel se aplicaba DESPUES del remuestreo que lo viola (2,0 % -> 5,7 % -> **12,4 %** de pixeles «con tinta»). El aviso pintaba el glifo VIEJO porque habia **cuatro copias** del render de glifo y s146 solo unifico dos. Y el sello flotaba **11 px** con el largo de la descripcion. Detalle abajo.)
-**Version anterior:** v0.79.1 (s146 — **EL AVISO VUELVE A HABLAR DE LO QUE ACABAS DE HACER, Y LOS SELLOS SON DIBUJOS**. La cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salia «Primer estiron»); regla nueva: un logro DE MODULO solo se anuncia en una sesion de ese modulo. **§15.4 denominador unico**. **55 glifos del usuario** como mascara CSS.)
-**Version previa:** v0.79.0 (s146 — **LA WEB VOLVIO A ABRIR, Y LA CURVA DEJO DE DESPLOMARSE**. Un `useState` pelado en `main.jsx` rompia el artefacto compilado **desde s144**. Con banco de medicion propio, el dia 1 pasa del **35 %** al **18 %** de lo que da un año. **AMNISTIA**: nadie pierde un logro.)
+**Version actual:** v0.81.0 (s148 — **CINCO ARCHIVOS POR ENCIMA DEL LIMITE, Y DOS NO ESTABAN EN LA LISTA**. Fase 8.5, troceo SIN cambio de comportamiento. Medir en vez de leer la tabla dio el hallazgo: no eran tres archivos sino **cinco** — `exercise-glyphs.jsx` figuraba como «dentro de limite» con **571 ln** desde s84, y `sessions.js` (**502**) no estaba ni anotado. `tokens.css` 613→**386** · `Sidebar.jsx` 570→**141** · `state-core.jsx` 510→**402** · `exercise-glyphs.jsx` 571→**209** · `sessions.js` 502→**353**. **Ningun archivo de `app/` pasa ya de 500.** El build solo sabia inlinear `tokens.css` con la ruta cableada: generalizado a todas las hojas de `app/`. Y aparecio que **`first.return` no se desbloquea NUNCA** — preexistente, confirmado contra el artefacto de v0.80.0. Detalle abajo.)
+**Version anterior:** v0.80.0 (s147 — **EL PAPEL DEJA DE CONTAR COMO TINTA, Y EL SELLO DEJA DE FLOTAR**. Sesion de revision de arte con el usuario: de las tres revisiones previstas salieron **tres defectos que no estaban en el plan**, y los tres los vio el usuario mirando. El moteado alrededor de los dibujos era **tramado de semitono del PNG** y el suelo de papel se aplicaba DESPUES del remuestreo que lo viola (2,0 % -> 5,7 % -> **12,4 %** de pixeles «con tinta»). El aviso pintaba el glifo VIEJO porque habia **cuatro copias** del render de glifo y s146 solo unifico dos. Y el sello flotaba **11 px** con el largo de la descripcion. Detalle abajo.)
+**Version previa:** v0.79.1 (s146 — **EL AVISO VUELVE A HABLAR DE LO QUE ACABAS DE HACER, Y LOS SELLOS SON DIBUJOS**. La cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salia «Primer estiron»); regla nueva: un logro DE MODULO solo se anuncia en una sesion de ese modulo. **§15.4 denominador unico**. **55 glifos del usuario** como mascara CSS.)
 
-**Ultima sesion:** #147 -- 2026-08-03 - **EL TRAMADO DEL PAPEL, EL AVISO QUE FALTABA, Y EL SELLO QUE FLOTABA**. Bump **v0.79.1 -> v0.80.0**. Sesion de REVISION DE ARTE: el plan era enseñar al usuario las 9 apuestas del mapeo, los 3 dibujos sueltos y los 4 glifos flojos para que decidiera. Se cumplio, y ademas salieron tres defectos que no estaban previstos. **(1) EL MOTEADO ERA TRAMADO DE SEMITONO, y entraba como TINTA.** Reportado por el usuario («Primer aliento tiene como un fondo raro visible», y el Buho igual) y confirmado comparando con su PNG original: **no esta en el dibujo**. El fondo de los PNG viene **ditherado** entre ~240 y ~254 (modas 241 y 254, 25 % de los pixeles cada una) y `SUELO` esta en 238, justo debajo: a resolucion nativa solo el **2,0 %** cae bajo el suelo, reducir a 224 lo sube al **5,7 %** y el `sharpen` lo remata en **12,4 %**, con minimos de L 78. **DOS INTENTOS FALLIDOS antes del bueno, y enseñan mas que el bueno**: (a) *umbral solo* — aplanar a 255 lo que ya estaba sobre el suelo quita el tramado limpio, pero **la banda del dither se solapa con el tono del trazo mas palido**: la mediana de tinta se hundio de 2,35 % a 1,1 % y `esMarco` dejo de detectar el aro en **los 58**; (b) *`median(3)`* — un filtro espacial ataca ruido ALEATORIO y esto es una **trama REGULAR de imprenta**: sobrevivio entera y encima perdio el aro de «Primer ritual». `blur()` es peor que no hacer nada. **Lo que funciona: DOS BUFFERS** — el marco se busca sobre el original y todo lo demas sobre la copia aplanada a resolucion nativa. Marco detectado en **58 de 58**, peso mediano intacto (2,35 % -> 2,17 %) y **248 KB las 58** contra 297 KB que pesaban 55: **mas de la mitad del archivo era tramado**. Volvio a morder una trampa ya documentada en ese archivo para `.sharpen()`: **sharp promueve el buffer raw de 1 canal a 3 al remuestrearlo**; sin `.toColourspace('b-w')` los 58 sellos salieron **identicos** —un fragmento del aro ampliado— con el dibujo perdido. **(2) EL AVISO PINTABA EL GLIFO VIEJO, y eran DOS superficies.** `Toast.jsx` tenia una **tercera copia** del render de glifo y `CompletionScreen.jsx` una **cuarta**; s146 saco `renderGlyph` a `window` justo para compartirlo pero solo unifico modal y sidebar. **(3) EL SELLO FLOTABA CON EL LARGO DE LA DESCRIPCION.** Reportado con captura («Setenta y cinco sellos» junto a «Cartografa»). No era el dibujo, era la tarjeta: `Seal` anclaba al CENTRO, asi que un texto mas alto empujaba el circulo — medido sobre los 96 sellos, **tres posiciones (15, 20 y 26 px) y 11 px de deriva** en la misma fila. Se ancla arriba (regla de alturas reservadas de s119), seguro porque se midio antes: **0 de 96 tarjetas desbordan**. Despues, **deriva 0**. **(4) MAPEO**: las 9 apuestas CONFIRMADAS · los 3 sueltos colocados (bambu -> `streak.60`, vasija -> `explore.478`, llave -> `secret.bilingual`) · **`hydrate.week.perfect` RECHAZADO** por el usuario —«el glifo es un pincel con tinta»—, y **el error era de LECTURA**: el mapeo de s146 lo anoto como «aguja con gota». El pincel pasa a `stats.month.first` de forma TEMPORAL y `hydrate.week.perfect` se queda **sin mascara** hasta que haya dibujo de agua. **Los 8 flojos se quedan como estan** (decision del usuario). **58 logros con arte, 38 sin.** Diario: [session-147](./docs/sessions/session-147-tramado-y-alineacion.md).
+**Ultima sesion:** #148 -- 2026-08-03 - **CINCO ARCHIVOS POR ENCIMA DEL LIMITE, Y DOS NO ESTABAN EN LA LISTA**. Bump **v0.80.0 -> v0.81.0**. Sesion de FASE 8.5 (saneamiento), sin arte que procesar. Troceo **sin cambio de comportamiento**, con los patrones que el repo ya usa. **(1) MEDIR EN VEZ DE LEER LA TABLA fue el hallazgo.** No eran tres archivos por encima de 500 sino **CINCO**: a `tokens.css` 613, `Sidebar.jsx` 570 y `state-core.jsx` 510 se suman **`exercise-glyphs.jsx` 571** —catalogado como «BAJA, dentro de limite» **desde s84**, cuando ya con 554 estaba fuera— y **`sessions.js` 502**, que **nunca entro en la tabla de deuda** pese a ser el dominio mayor del split de s81. Una tabla que se mantiene a mano deja de medir. Trampa de metodo anotada: `Measure-Object -Line` **no cuenta lineas en blanco** y daba 41 de menos; solo cuadro con `(Get-Content x).Count`. **(2) LOS CINCO CORTES, cada uno por una frontera que ya existia**: de `tokens.css` salio el **CSS de Caminos** (no eran tokens: eran reglas de UN modulo, y el archivo ya lo separaba con un banner) -> `paths/paths.css` 284 · de `exercise-glyphs.jsx` salio **Estira**, por el separador que el propio archivo dibujaba -> `.extra.jsx` 406 · `Sidebar` adopta el reparto de Foco -> `.support.jsx` 218 + `.parts.jsx` 277 · de `state-core` salio **«como un estado guardado se convierte en el de hoy»** (deteccion de entorno + migraciones + rollover) -> `.support.jsx` 160 · de `sessions.js` salio el dominio **CUERPO**, contiguo y con la misma frontera en los dos idiomas, que siguen juntos (s81) -> `sessions.body.js` 158. Resultado: **386 / 209 / 141 / 402 / 353**, y **ningun archivo de `app/` pasa ya de 500**. **(3) EL BUILD SOLO SABIA INLINEAR `tokens.css`**, con la ruta cableada: un CSS nuevo se habria quedado fuera del artefacto en silencio. Generalizado a todas las hojas de `app/`, sustituyendo cada enlace EN SU SITIO para conservar la cascada, y abortando si falta una o si no inlinea ninguna. **(4) DOS REGLAS DEL COMPILADO que el troceo obligo a aplicar**: un **`const` no cruza de archivo** (cada uno va en su IIFE) => `sidebarStyles` se publica a `window`, como `pathStepStyles` desde s80, y se referencia PELADO para resolver al renderizar y no al evaluar; en cambio `function` y `var` top-level **si viajan solos**, y por eso las once piezas extraidas de Sidebar y state-core no necesitaron nada. **(5) UN ORDEN DE CARGA NO NEGOCIABLE**: `state-core.jsx` hace `let _state = loadState()` **en el cuerpo del archivo**, no al montar, y `loadState` llama a cuatro de las cinco funciones extraidas => su `.support` carga ANTES. Y `exercise-glyphs.extra.jsx` **muta** el mapa del hermano (el componente cierra sobre esa referencia), con guard que aborta si se invierte el orden en vez de dejar 25 ejercicios sin dibujo en silencio. **(6) VERIFICADO cargando `index.html` tras CADA troceo**, no solo al final, con SW y caches purgados y estado limpiado desde la pagina viva: `state-core` por sus **dos ramas** prediciendo antes de mirar —**7 de 7** en el estado viejo (rotacion lunes-primero, paletas y estilos huerfanos migrados) y **9 de 9** en el rollover completo (semana a cero, racha 5->0 con `longest` intacto, 7 dias archivados)— · i18n comparado **clave a clave contra HEAD** en un sandbox: **195 ES y 195 EN, cero perdidas, cero nuevas, cero distintas** · **47 glifos de ejercicio**, los mismos, con siete claves de Estira pintando su propio dibujo y no el fallback · standalone restaurado byte a byte las cinco veces. **(7) TRES HALLAZGOS FUERA DE ENCARGO**: **`first.return` («Regresas») NO SE DESBLOQUEA NUNCA** —el rollover lo concede con `setTimeout(...,0)` para esperar a `state-achievements.jsx`, pero 0 ms llega antes de que evalue, `unlockAchievement` es `undefined` y el `try/catch` se lo traga—, **confirmado PREEXISTENTE** contra el artefacto committeado de v0.80.0, que se comporta identico; NO se toco · **`sw.js` tenia el comentario de s146 sin cerrar** y se habia tragado el de fuentes de s105, y no era prosa: `reescribirPrecache()` avanza hasta el primer `*/` para decidir donde insertar, asi que metia los 58 glifos DEBAJO del bloque equivocado (reparado y verificado simulando la busqueda del script) · **`PACE.html.bak.pre-fix`**, copia trackeada de `PACE.html` en **v0.25.0** (7 de mayo), eliminada. **(8) DATO CORREGIDO**: los `explore.*` sin dibujo son **10**, no 11. Diario: [session-148](./docs/sessions/session-148-saneamiento-fase-8-5.md).
+
+**Sesion anterior:** #147 -- 2026-08-03 - **EL TRAMADO DEL PAPEL, EL AVISO QUE FALTABA, Y EL SELLO QUE FLOTABA**. Bump **v0.79.1 -> v0.80.0**. Sesion de REVISION DE ARTE: el plan era enseñar al usuario las 9 apuestas del mapeo, los 3 dibujos sueltos y los 4 glifos flojos para que decidiera. Se cumplio, y ademas salieron tres defectos que no estaban previstos. **(1) EL MOTEADO ERA TRAMADO DE SEMITONO, y entraba como TINTA.** Reportado por el usuario («Primer aliento tiene como un fondo raro visible», y el Buho igual) y confirmado comparando con su PNG original: **no esta en el dibujo**. El fondo de los PNG viene **ditherado** entre ~240 y ~254 (modas 241 y 254, 25 % de los pixeles cada una) y `SUELO` esta en 238, justo debajo: a resolucion nativa solo el **2,0 %** cae bajo el suelo, reducir a 224 lo sube al **5,7 %** y el `sharpen` lo remata en **12,4 %**, con minimos de L 78. **DOS INTENTOS FALLIDOS antes del bueno, y enseñan mas que el bueno**: (a) *umbral solo* — aplanar a 255 lo que ya estaba sobre el suelo quita el tramado limpio, pero **la banda del dither se solapa con el tono del trazo mas palido**: la mediana de tinta se hundio de 2,35 % a 1,1 % y `esMarco` dejo de detectar el aro en **los 58**; (b) *`median(3)`* — un filtro espacial ataca ruido ALEATORIO y esto es una **trama REGULAR de imprenta**: sobrevivio entera y encima perdio el aro de «Primer ritual». `blur()` es peor que no hacer nada. **Lo que funciona: DOS BUFFERS** — el marco se busca sobre el original y todo lo demas sobre la copia aplanada a resolucion nativa. Marco detectado en **58 de 58**, peso mediano intacto (2,35 % -> 2,17 %) y **248 KB las 58** contra 297 KB que pesaban 55: **mas de la mitad del archivo era tramado**. Volvio a morder una trampa ya documentada en ese archivo para `.sharpen()`: **sharp promueve el buffer raw de 1 canal a 3 al remuestrearlo**; sin `.toColourspace('b-w')` los 58 sellos salieron **identicos** —un fragmento del aro ampliado— con el dibujo perdido. **(2) EL AVISO PINTABA EL GLIFO VIEJO, y eran DOS superficies.** `Toast.jsx` tenia una **tercera copia** del render de glifo y `CompletionScreen.jsx` una **cuarta**; s146 saco `renderGlyph` a `window` justo para compartirlo pero solo unifico modal y sidebar. **(3) EL SELLO FLOTABA CON EL LARGO DE LA DESCRIPCION.** Reportado con captura («Setenta y cinco sellos» junto a «Cartografa»). No era el dibujo, era la tarjeta: `Seal` anclaba al CENTRO, asi que un texto mas alto empujaba el circulo — medido sobre los 96 sellos, **tres posiciones (15, 20 y 26 px) y 11 px de deriva** en la misma fila. Se ancla arriba (regla de alturas reservadas de s119), seguro porque se midio antes: **0 de 96 tarjetas desbordan**. Despues, **deriva 0**. **(4) MAPEO**: las 9 apuestas CONFIRMADAS · los 3 sueltos colocados (bambu -> `streak.60`, vasija -> `explore.478`, llave -> `secret.bilingual`) · **`hydrate.week.perfect` RECHAZADO** por el usuario —«el glifo es un pincel con tinta»—, y **el error era de LECTURA**: el mapeo de s146 lo anoto como «aguja con gota». El pincel pasa a `stats.month.first` de forma TEMPORAL y `hydrate.week.perfect` se queda **sin mascara** hasta que haya dibujo de agua. **Los 8 flojos se quedan como estan** (decision del usuario). **58 logros con arte, 38 sin.** Diario: [session-147](./docs/sessions/session-147-tramado-y-alineacion.md).
 
 **Sesion anterior:** #144 -- 2026-07-31 - **PREVIEW «ANTES DE EMPEZAR» (§18.3)**. Sesion de CODIGO. Bump **v0.76.0 -> v0.77.0**. Item 6 de la Fase 2, elegido porque los datos **ya existian sin consumidor** (igual que en la ola E), el audit lo pide y **desbloquea la reescritura editorial** aparcada en s143. **(1) La prueba de que faltaba el sitio**: **16 de las 28 descripciones llevan el requisito escrito A MANO** («Silla estable y sin ruedas», «Necesitas pared; barra opcional», «Pasaras por el suelo»). No es que esten mal escritas: es que el requisito no tenia donde ir. **(2) `RoutinePreview` NUEVO**: modal con que necesitas · posicion · duracion · intensidad y nivel · los pasos con su glifo · CTA. **(3) Sale SOLO desde la BIBLIOTECA, nunca dentro de un Camino** —ahi la rutina ya viene elegida y el ritmo manda—, y sale gratis **POR CONSTRUCCION**: se engancha en los handlers de `main.jsx`, que son la puerta de la biblioteca, mientras `PathBodyStep` monta el runner por su cuenta. La biblioteca **se queda abierta detras**. Misma forma que el modal de seguridad de Respira (s90). **El gate `setup:'ready'` del runner v1 NO hacia este trabajo**: es por PASO y llega cuando ya entraste. **(4) Las series del mismo ejercicio se AGRUPAN** (`Fondos en silla x3`): tres veces el mismo nombre seguido es ruido. **(5) Requisitos completados en las 6 rutinas** que no los declaraban; en dos casos el valor salia de su propia descripcion. **Las 28 los declaran ya** (11 de suelo). **(6) Bug propio cazado antes de pantalla**: las claves EN son POSICIONALES sobre el array completo (`<id>.s4.name` cuenta los descansos), asi que filtrar descansos y usar el indice nuevo habria desplazado TODOS los nombres en ingles. **(7) Hallazgo anotado y NO tocado**: la pantalla de preparacion dice «De pie. Sin prisa» tambien en rutinas SENTADAS; ahora que `position` esta en las 28 se puede derivar, y va a la ola editorial. Diario: [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md).
 
@@ -22,8 +24,8 @@
 
 **Sesion anterior:** #142 -- 2026-07-31 - **FASE 2, OLA C: EL INGLES FUERA DEL ESPANOL**. Sesion de CODIGO. Bump **v0.74.0 -> v0.75.0**. La **ola B queda EN PAUSA** (los 20 dibujos dependen del arte del usuario, regla D-4), asi que se ejecuta la C, que es la que mas mueve la queja beta y no depende de nadie. **(1) 30 nombres renombrados: de 31 con termino ingles a UNO** (`Superman`, que se mantiene por decision de s141). Propuestos con la tecnica real de cada ejercicio delante, no por traduccion automatica; el usuario cambio dos: `Cossack squat` -> **Sentadilla lateral** y `Sissy squat` -> **Sentadilla de cuadriceps**. `Elevacion de talones` y `Elevacion de puntas` quedan como pareja simetrica —gemelo y tibial—, que es lo que son. **(2) HALLAZGO: 5 de los 47 dibujos NO SE PINTAN NUNCA.** `ExerciseGlyph` resuelve `EXERCISE_GLYPHS[resolveVisualId(id)] || EXERCISE_GLYPHS[id]`, o sea **el alias primero**, y cuatro nombres tienen alias **Y** entrada propia de glifo: `Chest opener`, `Deep squat hold`, `Deep breaths` y `Dead hang · opcional` estan **tapados**. Con `Nordics` (sin uso ni como destino), son 5 muertos de 47. Corrige el §2 de la auditoria, que solo contaba como huerfano lo que ningun paso usaba: **un alias tambien deja huerfano un dibujo**, y de forma menos visible. **Era urgente ahora**: al renombrarlos, el nombre nuevo no tendria alias => resolveria a si mismo => **su dibujo tapado se habria activado solo**, cambiando lo que se ve sin pedirlo. Se evito dando al nombre nuevo el MISMO destino. **Decision de catalogo pendiente**: borrar esos dibujos o quitarles el alias. **(3) `VISUAL_ALIAS` REGENERADO** entero desde un mapa: 39 entradas, sin duplicados ni cadenas de dos saltos (verificado). **(4) Verificado** con SW y caches purgados: **65 nombres unicos y 20 sin glifo antes y despues** (ninguna clave caida) · los 30 nombres viejos resuelven por alias y llegan a su glifo · los 4 tapados resuelven al mismo destino que antes · los `.js` tocados pasan `node --check` · el runner pinta «Encogimiento de hombros» con su glifo y anuncia «SIGUIENTE: CIRCULOS DE MUNECA». Consola sin errores. **(5) El script fallo DOS veces sin escribir nada**, y las dos por lo mismo que ya mordio en s141: el mismo nombre va con comilla simple ESCAPADA en un archivo y con DOBLES en otro (`World's greatest stretch`), y anadir lineas a `VISUAL_ALIAS` creaba **claves DUPLICADAS** —en JS gana la ultima— justo en los cuatro casos delicados. Se corrigio regenerando el objeto entero. Diario: [session-142](./docs/sessions/session-142-ola-c-nombres.md).
 
-**Ultima actualizacion de este archivo:** 2026-08-03 - sesion 147 (v0.80.0; se retiro del encabezado la sesion s141, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
-**Build entregado:** `index.html` **v0.80.0** (regenerado en s147; `PACE_standalone.html` restaurado **byte-identico** tras el build — hash `998e3e35...` antes y despues, decision s134). **OJO**: verificar SIEMPRE el cierre cargando `index.html`, no solo `PACE.html` — el build envuelve cada modulo en un IIFE y hay fallos que solo salen ahi (el `useState` pelado de s144 estuvo DOS versiones publicado). `PACE_standalone.html` sigue en v0.71.0 A PROPOSITO (export bajo demanda, s134).
+**Ultima actualizacion de este archivo:** 2026-08-03 - sesion 148 (v0.81.0; se retiro del encabezado la version v0.79.0, que sigue en `CHANGELOG.md` y en su diario — este archivo no debe crecer)
+**Build entregado:** `index.html` **v0.81.0** (regenerado en s148; `PACE_standalone.html` restaurado **byte-identico** tras cada uno de los cinco builds — hash `998e3e35...` antes y despues, decision s134). **OJO**: verificar SIEMPRE el cierre cargando `index.html`, no solo `PACE.html` — el build envuelve cada modulo en un IIFE y hay fallos que solo salen ahi (el `useState` pelado de s144 estuvo DOS versiones publicado). `PACE_standalone.html` sigue en v0.71.0 A PROPOSITO (export bajo demanda, s134).
 
 ---
 
@@ -35,9 +37,9 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
-| `PACE.html` | Entry point de desarrollo modular | **v0.79.0** |
+| `PACE.html` | Entry point de desarrollo modular | **v0.81.0** |
 | `PACE_standalone.html` | Bundle offline autocontenido — export BAJO DEMANDA (s134), NO se regenera al cerrar | **v0.71.0** |
-| `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`) | **v0.79.0** |
+| `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`) | **v0.81.0** |
 | `app/onboarding/Onboarding.jsx` | Orquestador del onboarding de primera vez: maquina de pasos 0-4, chrome… | **v0.56.0** |
 | `app/onboarding/OnboardingScreens.jsx` | Piezas puras: ONBOARDING_QUESTIONS (definicion de las 3 preguntas) + OnbScene… | **v0.56.0** |
 | `app/onboarding/pickFirstPath.js` | Primer Camino desde el perfil: candidatos por necesidad + sesgo por tiempo +… | **NUEVO s106** |
@@ -56,7 +58,8 @@
 | `app/custom/CustomBuilder.jsx` | Modal constructor 2 vistas (editor con steppers/reordenar/borrar 2-toques +… | **v0.38.0** |
 | `app/state-custom.jsx` | CUSTOM_LIMITS + CRUD de customRoutines (sanitize + lectura defensiva) | **v0.38.0** |
 | `app/i18n/content/custom.js` | Patch EN del registro: custom.ex.<name ES>.{name,cue} + custom.cat.*.label | **v0.54.0** |
-| `app/glyphs/exercise-glyphs.jsx` | 47 glifos SVG line-art para Move/Stretch (sistema 1) + `ExerciseGlyph` | **v0.54.0** |
+| `app/glyphs/exercise-glyphs.jsx` | Sistema 1 (line-art): wrapper `G` + glifos de **MUEVE** + `DefaultGlyph` + `ExerciseGlyph`. Estira salio en s148 | **v0.81.0** |
+| `app/glyphs/exercise-glyphs.extra.jsx` | Glifos de **ESTIRA** del sistema 1. **MUTA** `window.EXERCISE_GLYPHS` en vez de crear otro mapa (el componente cierra sobre esa referencia); carga DESPUES y lleva **guard que aborta** si se invierte el orden. Entre los dos, **47** | **NUEVO s148** |
 | `app/glyphs/achievement-glyphs.jsx` | 34 glifos SVG heraldica para Logros (sistema 2) -- strings de SVG… | **v0.33.3** |
 | `app/glyphs/achievement-masks.js` | Mapa `id de logro -> archivo de mascara` (**58**, sistema 3). Solo el mapa: el arte vive en `assets/logros/`. **Las rutas van enteras y literales, ni en comentarios** — el inliner del build sustituye cadenas | **NUEVO s146** |
 | `app/glyphs/assets/logros/*.webp` | Las 58 mascaras (224 px, alfa = densidad de tinta; el color lo pone el token). **248 KB** | **s147** |
@@ -89,7 +92,9 @@
 | `app/custom/exercise-aliases.js` | `VISUAL_ALIAS` + `resolveVisualId` — identidad visual compartida (visualId) | **NUEVO s110** |
 | `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.72.0** |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable | **v0.52.0** |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable — **solo ORQUESTADOR** desde s148 (compone secciones, no dibuja ninguna) | **v0.81.0** |
+| `app/shell/Sidebar.support.jsx` | Soporte sin UI del sidebar: hoja responsive inyectada + `sidebarStyles`. **`sidebarStyles` viaja por `window`** (un `const` no cruza la IIFE del build; misma solucion que `pathStepStyles`) y se referencia PELADO. **Carga ANTES** de `.parts` y de `Sidebar.jsx` | **NUEVO s148** |
+| `app/shell/Sidebar.parts.jsx` | Piezas de UI del sidebar: `SenderoDelDia` · `WeekDots` · `AchievementsPreview` · `achMini` · `StatusBar` · `ChevronLeftIcon`. Tras `.support` y tras `SupportModule` (monta `<SupportButton/>`) | **NUEVO s148** |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro) | **v0.67.0** |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
 | `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.73.0** |
@@ -103,7 +108,8 @@
 | `docs/WORKFLOW.md` | Protocolo de cierre de sesion Git | **v0.27.6** |
 | `scripts/check-session.ps1` | Diagnostico Git solo lectura | **v0.27.6** |
 | `app/state-history.jsx` | Utils de fecha + helpers de history + **`getHistoryWithToday` (stats vivos)**… | **v0.52.0** |
-| `app/state-core.jsx` | Store, loadState, rollover, migraciones, toast | **v0.79.0** |
+| `app/state-core.jsx` | Store, `loadState`, tema y toast. El rollover y las migraciones **salieron en s148** | **v0.81.0** |
+| `app/state-core.support.jsx` | Deteccion de entorno + MIGRACIONES + rollover (`isMobileViewport`, `detectInitialPalette`, `migrateWeeklyStatsToHistory`, `reindexWeeklyStatsMondayFirst`, `rolloverIfNeeded`). **CARGA ANTES de `state-core.jsx` y NO ES NEGOCIABLE**: `let _state = loadState()` corre en el CUERPO del archivo, no al montar, y llama a cuatro de las cinco | **NUEVO s148** |
 | `app/state-timer.jsx` | addFocusMinutes, completePomodoro, completeFocusSession | **v0.79.0** |
 | `app/state-hydrate.jsx` | addWaterGlass | **v0.79.0** |
 | `app/state-achievements.jsx` | unlockAchievement (ENCOLA, no avisa) + `flushAchievementToast` + detectores + complete*Session | **v0.79.0** |
@@ -124,14 +130,16 @@
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline… | **v0.33.2** |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** |
 | `app/i18n/strings/ui.js` | i18n shell UI: welcome + support + sidebar + topbar + activity + settings +… | **v0.72.0** |
-| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + lib + focus + breathe + move +… | **v0.72.0** |
+| `app/i18n/strings/sessions.js` | i18n actividades vivas: session + common + focus + breathe + lib.breathe + hydrate + seguridad + constructor + feedback. **El dominio CUERPO salio en s148** | **v0.81.0** |
+| `app/i18n/strings/sessions.body.js` | i18n del CUERPO (Mueve/Estira): `lib.move.*` · `lib.extra.*` · `move.*` de sesion · contrato v1 · runner guiado · capa editorial · el descanso que guia. **ES y EN juntos** (s81). Antes de `useT.jsx`; `content/*` debe seguir cargando al final (override D-1) | **NUEVO s148** |
 | `app/i18n/strings/paths.js` | i18n Caminos: path runner + names + kind + library + suggested + hydrate +… | **v0.65.0** |
 | `app/i18n/strings/stats.js` | i18n panel Ritmo: stats base + tabs + heatmap mensual + vista anual + caminos | **v0.52.0** |
 | `app/i18n/strings/achievements.js` | i18n catalogo de logros: ach.cat/seal/toast | **v0.33.1** |
 | `app/i18n/content/breathe.js` | Patch EN de contenido Respira: fases (con override D-1) + categorias + 20… | **v0.52.0** |
 | `app/i18n/content/move.js` | Patch EN de contenido Mueve (ids extra.*): grupos mueve.cat.* + 14 rutinas | **v0.64.0** |
 | `app/i18n/content/extra.js` | Patch EN de contenido Estira (ids move.*): grupos extra.cat.* + 14 rutinas | **v0.63.0** |
-| `app/tokens.css` | Tokens CSS + base | **v0.51.0** |
+| `app/tokens.css` | Tokens CSS + base + microinteracciones. El CSS de Caminos salio en s148 | **v0.81.0** |
+| `app/paths/paths.css` | CSS de Caminos: SenderoBar + escena ilustrada + variante `lg` + orbe. **Su `<link>` va DESPUES del de `tokens.css`**: la regla que saca la escena del rise escalonado gana por ORDEN, no por especificidad. NO va en el precache (viaja inlineado en `index.html`) | **NUEVO s148** |
 | `app/paths/registry.js` | Catalogo PATH_CATALOG + helpers | **v0.40.0** |
 | `app/paths/PathRunner.jsx` | Runner de caminos -- SOLO orquestador (maquina de fases + dispatcher) | **v0.49.0** |
 | `app/paths/PathRunner.parts.jsx` | PathTopBar + ExitConfirmModal + StepError + PathStepLocked (chrome del… | **v0.40.0** |
@@ -150,7 +158,7 @@
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** |
 | `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd`… | **v0.67.0** |
 | `app/focus/FocusTimer.parts.jsx` | Piezas de UI del Pomodoro extraídas: `MinutesPicker` (selector de duración… | **NUEVO s124** |
-| `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A) | **v0.72.0** |
+| `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A). **s148: el inlineado de CSS deja de estar cableado a `tokens.css`** y recorre TODAS las hojas de `app/`, cada una en su sitio (conserva la cascada), abortando si falta o si no inlinea ninguna | **v0.81.0** |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80) | **v0.49.0** |
 
 ## Ultima sesion -- lo que sigue vivo
@@ -268,8 +276,16 @@
   (`spine.waves`); `atg.knees` además espera la revisión FISIO de Sissy squat (B4).
   (Conteo: 23 pre-OLA-1 → 18 tras s118 → 13 tras s119 → 8 tras s120 → **6 tras
   s121**.)
-- `tokens.css` 613 ln y `FocusTimer.jsx` 496 ln (deuda; sin cambio en s114).
+- ~~`tokens.css` 613 ln y `FocusTimer.jsx` 496 ln~~ **OBSOLETO**: s148 dejo `tokens.css` en 386
+  y el recuento real de `FocusTimer.jsx` es 450 (la cifra 496 era anterior al split de s124).
 - Automatizar el bump de version en el build (package.json como fuente).
+- **[HALLAZGO s148, NO tocado] `first.return` («Regresas») no se desbloquea NUNCA.** El rollover
+  lo concede con `setTimeout(unlockAchievement, 0)` para esperar a `state-achievements.jsx`, pero
+  0 ms llega **antes** de que ese archivo evalue: la funcion es `undefined` y el `try/catch` se lo
+  traga en silencio. **Confirmado PREEXISTENTE** contra el artefacto committeado de v0.80.0, que
+  se comporta identico — no lo introdujo el troceo. Hay `.webp` para un logro que nadie puede
+  ganar. Arreglo probable: diferir con `requestIdleCallback`, o concederlo desde
+  `state-achievements.jsx` al evaluar en vez de desde el rollover.
 
 ### Backlog registrado en s117 (propuestas + multiplataforma; docs-only, SIN implementar)
 
@@ -309,6 +325,8 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > (s144). **Falta la ola B**: los 20 glifos de ejercicio, EN PAUSA esperando arte.
 > **FASE 2.5**: entrega escalonada (s145) · curva, detectores y amnistia (s146) · **denominador
 > unico §15.4 (s146)** · arte de logro y sus tres defectos (s147). **Cerrada salvo arte.**
+> **FASE 8.5**: el troceo de >500 lineas **HECHO en s148** (cinco archivos, no tres). Siguen
+> pendientes a11y, tests del state, import sanitizado, I18N-2 y el bump automatico.
 
 ### El usuario avisa cuando tenga arte nuevo
 
@@ -319,7 +337,9 @@ tenga los dibujos que faltan. Dos tandas posibles, independientes entre si:
   **`hydrate.week.perfect`** primero — es el unico que **perdio** su dibujo a proposito en
   s147 (llevaba un pincel de caligrafia, que no pinta nada en hidratacion) y hoy cae a su
   caracter. Necesita un dibujo de AGUA. Despues, las familias sin dibujo evidente:
-  `streak.7`, `streak.14`, y los 11 de `explore.*` que siguen con el sistema heraldico.
+  `streak.7`, `streak.14`, y los **10** de `explore.*` que siguen con el sistema heraldico
+  (s148 recuento: eran 10, no 11 — `box`, `rounds`, `kapalabhati`, `shoulders`, `atg`,
+  `ancestral`, `neck`, `desk`, `all.move`, `all.extra`).
 - **Glifos de EJERCICIO — ola B** (20 sin dibujo, Mueve/Estira). Es lo unico que falta para
   cerrar la Fase 2. Sale de la matriz §19.2 de
   [`audit-mueve-estira-v0.73.1`](./docs/audits/audit-mueve-estira-v0.73.1.md).
@@ -329,6 +349,26 @@ reescribe solo el mapa y el precache, y valida contra el catalogo. Solo se añad
 objeto `MAPEO` (por **clave estable**, jamas por posicion) y se anota el porque en
 [`MAPEO_GLIFOS_LOGRO.md`](./docs/product/MAPEO_GLIFOS_LOGRO.md).
 
+### AUDITORIA INTEGRAL EXTERNA — llegada al cierre de s148, SIN TRIAR
+
+El usuario aporto una auditoria integral (producto, UX, infraestructura y camino a v1) al
+cerrar s148. Copiada a [`docs/audits/audit-integral-v0.80.0.md`](./docs/audits/audit-integral-v0.80.0.md).
+**No se ha ejecutado nada de ella**: su propia instruccion nº 10 pide presentar contradicciones,
+decisiones nuevas y cambios de roadmap **antes** de tocar los documentos canonicos, y la nº 5
+prohibe abrir varios frentes en una sesion.
+
+- **Aviso de formato**: el archivo trae una **llave de codigo sin cerrar** hacia la linea 233
+  (restos de `Copy` de un pegado) que **se traga la estructura de titulos de §4.6 en adelante**.
+  El texto se lee, pero los encabezados no se parsean. Arreglarlo antes de trabajarlo.
+- **Tres afirmaciones suyas, VERIFICADAS en s148**: (1) **`sw.js:5` precachea
+  `/PACE_standalone.html`** — cierto, y es una **contradiccion real con la decision s134**: el
+  standalone esta deliberadamente congelado en v0.71.0, asi que el SW mete en la cache de cada
+  usuario un artefacto **diez versiones viejo**; (2) `package.json` solo expone el script `build`;
+  (3) **no existe `.github/workflows`** (sin CI).
+- Su tesis central —**red de seguridad automatica antes de cobrar**— encaja con lo que ya pedia
+  la Fase 8.5 (tests del state A-6) y con lo que s144 demostro por las malas (un crash publicado
+  durante dos versiones). **Candidata natural a proximo frente.**
+
 ### Sin depender de arte, si se quiere avanzar ya
 
 - **README**: dice v0.27.6 y lleva ~90 commits sin tocarse, con la app en v0.80.0. Es el
@@ -336,9 +376,11 @@ objeto `MAPEO` (por **clave estable**, jamas por posicion) y se anota el porque 
 - **Reescritura editorial de las 28 descripciones**: el Preview de s144 la desbloqueo, pero
   sigue faltando **la referencia de tono del usuario** (rechazo la muestra de s143 en bloque).
   **No proponer otra ronda a ciegas**: pedirle dos o tres descripciones que de por buenas.
-- **Fase 8.5 saneamiento**: `tokens.css` 613 ln · `Sidebar.jsx` 543 · **`state-core.jsx` 501**
-  (hallazgo de s146: ya estaba por encima del limite antes de esa sesion) · a11y (tarjetas sin
-  teclado, onboarding sin focus trap) · tests del state.
+- ~~**Fase 8.5 · trocear >500 lineas**~~ **HECHO en s148/v0.81.0**: eran **cinco**, no tres
+  (`exercise-glyphs.jsx` 571 y `sessions.js` 502 no estaban en la lista). Ningun archivo de
+  `app/` pasa ya de 500. **Lo que SIGUE pendiente de la Fase 8.5**: a11y (tarjetas sin teclado,
+  onboarding sin focus trap) · tests del state (A-6) · import sanitizado (A-7) · I18N-2 y las
+  deudas D-1/D-2/D-3 · bump automatico de version en el build · timer de Mueve por timestamps.
 - **[HALLAZGO s146, no tocado] Los titulos y descripciones de logro son SOLO espanol**, tambien
   en la version inglesa: salen literales de `catalog.js` sin pasar por i18n (solo se traducen
   las etiquetas de categoria y el chrome, `ach.*`). Encaja con I18N-2.
@@ -371,6 +413,10 @@ trocean los datos ANTES**.
 
 | Decision | Desde |
 |---|---|
+| **Un `const` NO cruza de archivo en el compilado: los estilos compartidos se publican a `window` y se leen PELADOS** — amplia s80 | s148 |
+| **Si un archivo llama a algo AL EVALUARSE, quien se lo da carga antes; y si no puede garantizarse, guard que aborte** | s148 |
+| **La deuda de tamaño se MIDE antes de tocarla; la tabla de `STATE.md` es un indice, no la fuente** | s148 |
+| **El build inlinea TODAS las hojas de `app/`, cada una en su sitio; ninguna ruta cableada** | s148 |
 | **El glifo de un logro se pinta SIEMPRE desde `renderGlyph`; ninguna superficie lo resuelve por su cuenta** | s147 |
 | **El suelo de papel se aplica ANTES del remuestreo, y el marco se busca sobre el ORIGINAL** | s147 |
 | **En una rejilla de sellos, el sello se ancla ARRIBA, nunca al centro de su tarjeta** — aplica s119 | s147 |
@@ -512,26 +558,41 @@ trocean los datos ANTES**.
 
 ## Deuda tecnica activa
 
+> **RECONTADA ENTERA EN s148, y por eso hay que desconfiar de ella.** Esta tabla se
+> mantiene a mano y **se habia desincronizado en silencio**: daba `exercise-glyphs.jsx`
+> por «dentro de limite» con **571 lineas reales**, y `sessions.js` (**502**) no
+> figuraba. Antes de trocear nada, **MEDIR**, no leer esta tabla.
+>
+> **Trampa de medicion**: `Get-Content x | Measure-Object -Line` **no cuenta lineas en
+> blanco** (41 de menos en `tokens.css`). Usar `(Get-Content x).Count`.
+>
+> **Estado tras s148: ningun archivo de `app/` pasa de 500.** El techo es
+> `MoveSessionV1.jsx`, EXACTAMENTE en 500.
+
 | Archivo | Lineas | Prioridad |
 |---|---|---|
-| `app/tweaks/TweaksPanel.jsx` | **492** | BAJA (s102: +79 ln de notificacion+legal; re-crece pero dentro de limite. Si vuelve a crecer, candidato natural: extraer el bloque de notificacion a seccion propia como TweaksData/PremiumSection) |
-| `app/state-core.jsx` | **494** | BAJA (s138: solo el string de version; s106: +10 del profile; s101: split a state-history.jsx) |
-| `app/focus/FocusTimer.jsx` | **450** | BAJA (s140: recontado — la tabla arrastraba **496**, cifra anterior al split de `FocusTimer.parts.jsx` en s124; el margen es mayor de lo que decia. Los helpers viven en `FocusTimer.support.jsx` y las piezas de UI en `FocusTimer.parts.jsx`) |
-| `app/ui/SessionShell.jsx` | **451** | BAJA (s140: el bloque de comentario del banding se REESCRIBIO con lo medido y quedan 6 ln menos que en s139; s116: CSS responsive EXTRAIDO a `SessionShell.responsive.js`) |
-| `app/move/MoveSessionV1.jsx` | **500** | **ALTA -- EN EL TOPE** (s138: +2 ln del comentario de atmosfera y llega EXACTO al limite de 500 de CLAUDE.md; el proximo anadido va SI O SI a `MoveSessionV1.support.jsx`) |
+| `app/move/MoveSessionV1.jsx` | **500** | **ALTA -- EN EL TOPE** (sin cambios en s148: no esta POR ENCIMA, pero es el proximo en caer. Lo que se añada va SI O SI a `MoveSessionV1.support.jsx`) |
+| `app/tweaks/TweaksPanel.jsx` | **493** | MEDIA (s148: recontado; el candidato natural sigue siendo extraer el bloque de notificacion a seccion propia) |
+| `app/extra/ExtraModule.jsx` | **462** | MEDIA (s148: recontado. Al retomar Estira, trocear los DATOS antes) |
+| `app/breathe/BreatheSession.jsx` | **454** | BAJA (s148: recontado, no estaba en la tabla) |
+| `app/ui/SessionShell.jsx` | **451** | BAJA (s148: recontado) |
+| `app/focus/FocusTimer.jsx` | **450** | BAJA (s148: recontado; helpers en `.support`, piezas de UI en `.parts`) |
+| `app/glyphs/exercise-glyphs.extra.jsx` | 406 | BAJA (**NUEVO s148**) |
+| `app/state-core.jsx` | 402 | BAJA (**s148: 510 -> 402**, migraciones y rollover a `.support`) |
+| `app/tokens.css` | 386 | BAJA (**s148: 613 -> 386**, el CSS de Caminos a `paths/paths.css`) |
+| `app/i18n/strings/sessions.js` | 353 | BAJA (**s148: 502 -> 353**, el dominio CUERPO a `sessions.body.js`) |
+| `app/glyphs/exercise-glyphs.jsx` | 209 | SALE (**s148: 571 -> 209**, Estira a `.extra.jsx`; la fila vieja lo daba por sano desde s84) |
+| `app/shell/Sidebar.jsx` | 141 | SALE (**s148: 570 -> 141**, reparto `.support` + `.parts` + orquestador) |
 | `app/i18n/strings/ui.js` | 395 | BAJA (s138: etiqueta del visual Flor -> Loto, ES+EN; dominio mas grande del split) |
 | `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
 | `app/breathe/BreatheVisual.jsx` | 421 | BAJA (s139: llego a **512** con el encaje, el banding y la vela ⇒ TROCEADO a `BreatheVisual.support.jsx` (117 ln) con el patron `*.support.jsx`; queda en 421) |
-| `app/glyphs/exercise-glyphs.jsx` | 554 | BAJA (s84, dentro de limite tras port; iter cerrado 31/46 aprobados) |
 | `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
 | `app/main.jsx` | 380 | BAJA (s138: +14 ln del enrutado de credito de las rutinas propias; s82: split en main/_responsive + TopBar + ActivityBar) |
 | `app/state-achievements.jsx` | **397** | BAJA (s146: la curva nueva no cabia bajo 500 ⇒ los contadores y los 23 detectores nuevos viven en `state-achievements.support.jsx` (179 ln), patron `*.support`) |
-| `app/shell/Sidebar.jsx` | 541 | MEDIA (s101: +6 ln del criterio s69 en WeekDots; s94: re-entro; candidato natural: extraer SenderoDelDia + StatusBar a `shell/`) |
-| `app/tokens.css` | 613 | **MEDIA** (s105: +12 @font-face; s106: +4 del remap; es CSS global, no JSX -- candidatos naturales: extraer los @font-face (~90 ln) o el CSS del SenderoBar (~110 ln) a archivo propio cargado tras tokens) |
 | `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
 | `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
-**Backlog tecnico MEDIA:** FocusTimer.jsx a 493 ln (ver tabla). Del P2 de
+**Backlog tecnico MEDIA:** ver la tabla recontada arriba. Del P2 de
 la auditoria (`docs/audits/audit-producto-v0.34.4.md`): build precompilado
 (A-5) **HECHO en s103 salvo fuentes (s104)**; quedan tests del state (A-6)
 e import sanitizado (A-7). El "manifest rico" del P2 quedo HECHO en s102.
