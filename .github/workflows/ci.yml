@@ -76,19 +76,26 @@ jobs:
       #     version actual. En el runner da igual —es efimero y no se committea
       #     nada—, pero el diff tiene que ignorarlo.
       #
-      #  2. Se compara con `git diff`, NUNCA con un hash SHA-256 del archivo.
-      #     `.gitattributes` normaliza el texto a LF *en el repo*, pero en un
-      #     worktree de Windows varios fuentes estan en CRLF y el build los
-      #     inlinea tal cual (`readFileClean` quita el BOM, no normaliza saltos),
-      #     asi que el `index.html` de Windows sale con finales MIXTOS —medido:
-      #     500 bytes CR— y su SHA-256 no puede coincidir con el de Linux aunque
-      #     el contenido sea el mismo. `git diff` aplica la normalizacion en los
-      #     dos lados; un hash de archivo no. Medido tambien lo contrario, que es
-      #     lo que sostiene esta comprobacion: el build ES determinista —dos
-      #     pasadas seguidas dan el mismo `index.html`, y su unico recorrido de
+      #  2. Esta comprobacion solo tiene sentido si el artefacto es REPRODUCIBLE
+      #     entre plataformas, y al principio NO lo era: el primer run de este
+      #     workflow se puso rojo aqui. La causa no era el YAML sino el build —
+      #     `.gitattributes` guarda el texto en LF, pero en un worktree de
+      #     Windows varios fuentes acaban en CRLF y `readFileClean` los inlineaba
+      #     tal cual, y con CRLF **Babel emite otra indentacion** en los
+      #     comentarios que conserva: **una linea de diferencia, un espacio**,
+      #     invisible en local y roja en el runner. Arreglado en el build (s153),
+      #     que ahora normaliza a LF al leer — comprobado: las mismas fuentes en
+      #     CRLF y en LF producen el MISMO `index.html`, byte a byte.
+      #
+      #     Aun asi se compara con `git diff` y no con un hash: es la
+      #     comparacion correcta contra lo COMMITTEADO, y no depende de como
+      #     tenga el worktree los finales de linea quien la ejecute.
+      #
+      #     Lo demas que sostiene la reproducibilidad, tambien medido: dos
+      #     pasadas seguidas dan el mismo artefacto, y el unico recorrido de
       #     directorio que podria depender del orden del sistema de archivos
-      #     (`validateAppFiles`) va con `.sort()` y ademas no emite nada al
-      #     artefacto.
+      #     (`validateAppFiles`, cuyo orden difiere entre NTFS y ext4) va con
+      #     `.sort()` y ademas no emite nada al artefacto.
       - name: El index.html committeado es el build de las fuentes
         run: |
           node build-standalone.js
