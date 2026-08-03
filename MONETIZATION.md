@@ -30,6 +30,23 @@ decisión de arriba.
 
 ---
 
+# ⚠️ A PARTIR DE AQUÍ: HISTÓRICO — NO GOBIERNA (marcado en s149)
+
+> **Nada de lo que sigue describe lo que se va a vender.** Al lanzamiento hay **un solo plan,
+> Lifetime 19,99 €** (bloque de arriba, cerrado en s134). Este apartado se conserva **entero y sin
+> recortar** porque su ingeniería de licencia —clave firmada, `expiresAt` opcional, validación
+> offline sin backend— es la que se va a construir, y porque un pase temporal futuro sería «un
+> cambio de datos, no de arquitectura». Pero **las cuatro vías, los precios y la tabla de
+> convivencia son historia**: el Pase mensual está **descartado** y las Temporadas **no entran en
+> v1**.
+>
+> Se marca en s149 al triar la auditoría integral, que lo señaló como contradicción documental: el
+> archivo abría con la decisión correcta y a los treinta renglones vendía cuatro vías como si
+> estuvieran vivas. **Se marca, no se borra** (misma regla que
+> [`AUDITORIA_DOCUMENTAL.md`](./docs/product/AUDITORIA_DOCUMENTAL.md)).
+
+---
+
 > **Decidido en sesión 21 (2026-04-23).** Modelo C: pago único lifetime
 > + temporadas opcionales + donaciones. La app sigue 100% local, sin
 > backend propio, sin cuentas.
@@ -60,9 +77,13 @@ un servicio del que depender.
 
 ---
 
-## 💰 Modelo · 4 vías
+## 💰 Modelo · 4 vías · **HISTÓRICO**
 
-### 1. Pago único · **Lifetime**
+> Al lanzamiento se vende **solo la vía 1**, a **19,99 €** (no «~20 €»). Las vías 2 y 3 están
+> retiradas; la 4 (donaciones BMC) sigue viva y es la única de este bloque que describe el
+> presente.
+
+### 1. Pago único · **Lifetime** — **la única vigente**, a 19,99 €
 **~20 €** — compra una vez, desbloquea todo el contenido actual
 premium de por vida. Sin renovaciones, sin expiraciones.
 
@@ -81,7 +102,12 @@ Incluye:
 > discontinúe. Esta es la razón por la que podemos ofrecer Lifetime
 > con tranquilidad legal.
 
-### 2. Pago puntual · **Pase mensual**
+### 2. Pago puntual · **Pase mensual** — ❌ **DESCARTADO en s134**
+
+> No se lanza. Motivo en el bloque de arriba: sin cuentas y sin renovación automática obliga a
+> recomprar y pegar clave cada mes — doce fricciones al año. **Su ingeniería sí sobrevive**: es la
+> que hace barato añadir un pase temporal si algún día hiciera falta.
+
 **3,99 €** — compra puntual que desbloquea el contenido premium
 durante **30 días** desde la activación. Sin renovación automática,
 sin cargo recurrente, sin cancelación que gestionar. Cuando expira,
@@ -103,7 +129,11 @@ Pensado para:
   siempre (filosofía de "lo que ganas no se pierde"). Lo que expira
   es el acceso a contenido premium que no se completó.
 
-### 3. Pago puntual · **Temporadas**
+### 3. Pago puntual · **Temporadas** — ❌ **FUERA de v1**
+
+> Choca con la decisión de s134 de que **todos los planes desbloquean lo mismo**, sin packs de pago
+> aparte. `ROADMAP.md` las mantiene en «más allá de v1».
+
 **~5 €** puntuales — packs estacionales añadidos a lo largo del
 año. Ejemplo: *"Invierno 2026: 10 rutinas nuevas + 5 sesiones CTB"*.
 
@@ -125,7 +155,11 @@ decisión activa en [`STATE.md`](./STATE.md).
 
 ---
 
-## 🔀 Cómo conviven las 4 vías
+## 🔀 Cómo conviven las 4 vías — **HISTÓRICO**
+
+> **Esta tabla NO describe lo que se va a vender.** En el lanzamiento solo existen dos filas:
+> «Nada» (núcleo gratuito) y «Lifetime» (todo, para siempre). Las filas de Pase y Temporada se
+> conservan porque documentan cómo tendrían que convivir **si** volvieran.
 
 | Si tienes… | Acceso a contenido premium | Acceso a temporadas |
 |---|---|---|

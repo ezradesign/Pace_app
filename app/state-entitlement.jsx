@@ -59,4 +59,18 @@ function canAccessPath(pathId) {
   return !!(s && s.premiumUnlocked);
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath });
+/* hasPremiumEntitlement() -> boolean   (s149)
+     No todo lo premium es CONTENIDO. El constructor de rutinas propias es una
+     SUPERFICIE entera de pago (s93): no hay `routineId` ni `pathId` que pasarle
+     a los dos guards de arriba, asi que `CustomRoutines.jsx` leia
+     `premiumUnlocked` directo — la unica lectura del booleano fuera de este
+     archivo que NO era un fallback defensivo, y justo la excepcion que el audit
+     integral señalaba por su nombre.
+     Con esta tercera funcion la promesa de la cabecera vuelve a cumplirse: al
+     llegar la licencia real SOLO cambia este archivo. */
+function hasPremiumEntitlement() {
+  const s = getState && getState();
+  return !!(s && s.premiumUnlocked);
+}
+
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement });

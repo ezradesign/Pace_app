@@ -446,14 +446,29 @@ persistencia vía `chrome.storage`.
 
 ## 🌲 Largo plazo — v1.0+
 
-### Lanzamiento pagado v1.0
-Ver [`MONETIZATION.md`](./MONETIZATION.md). Lifetime ~20 € + Pase mensual
-3,99 € + Temporadas ~5 € + donaciones BMC. Validación de **clave firmada
+### ~~Lanzamiento pagado v1.0~~ · **HISTÓRICO — lo gobierna «Camino a v1.0»** (marcado s149)
+
+> **Este apartado ya no manda.** El lanzamiento pagado **es v1.0** y su plan vivo es la sección
+> «Camino a v1.0» de este mismo archivo (15 fases, s137). Se conserva por sus pre-requisitos, que
+> siguen siendo correctos.
+>
+> **Lo que quedó obsoleto**: el precio es **19,99 € Lifetime y UN SOLO PLAN** (s134) — el «~20 € +
+> Pase mensual 3,99 € + Temporadas ~5 €» de abajo describe el modelo de cuatro vías **descartado**,
+> hoy marcado como histórico en [`MONETIZATION.md`](./MONETIZATION.md).
+
+Ver [`MONETIZATION.md`](./MONETIZATION.md). ~~Lifetime ~20 € + Pase mensual
+3,99 € + Temporadas ~5 €~~ + donaciones BMC. Validación de **clave firmada
 offline** (sin backend, sin cuentas). Pre-requisitos: bloque
 Contenido+Premium cerrado, ≥2 CTB grabadas, constructor de rutinas
 funcional, Términos + Privacidad redactados por abogado.
 
-### App Android (v2.0)
+### ~~App Android (v2.0)~~ · **HISTÓRICO — Android entra DENTRO de v1** (marcado s149)
+
+> **Superado por la decisión de s137**: Android no es v2, es parte de v1, y su coste real está
+> asumido — el envoltorio de Capacitor es barato, pero **Play Billing obliga a un segundo camino de
+> entitlement** que choca con la licencia offline sin cuentas. Ver «Camino a v1.0». **iOS sí queda
+> fuera de v1.**
+
 Wrapping (Capacitor/Expo), layout móvil heredado del responsive, widget
 de inicio (próximo break + vasos).
 

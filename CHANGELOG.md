@@ -199,9 +199,10 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.82.0** | 2026-08-03 | chore(sw)+fix(entitlement)+docs: **el service worker dejaba diez versiones de retraso en la caché de cada usuario** — triaje de la auditoría integral externa contra el código real: de lo verificable, **cero afirmaciones falsas**, y **cuatro contradicciones** de las que **tres son del repo consigo mismo** (el onboarding promete «Siempre gratis», la sidebar sigue siendo racha + récord contra §37-bis, y Desktop reordena con `order` contra la letra de s123) · el precache soltaba el export congelado en v0.71.0, servido **cache-first para siempre**; el cleanup del `activate` lo borra solo al bumpear · el pegado de la auditoría había perdido **todos** los marcadores markdown desde la línea 233, no solo la valla · **cuatro de las nueve decisiones cerradas en el mismo cierre**: A–K se **fusiona** (no sustituye), el `verify` v1 = build + artefacto + `node --check`, el guard gana **`hasPremiumEntitlement()`** para superficies de pago, y el modelo de cuatro vías queda **marcado como histórico** en `MONETIZATION.md` / `ROADMAP.md` / `README.md` | #149 | [abajo](#v0820----2026-08-03----choresw-el-standalone-sale-del-precache) |
 | **v0.81.0** | 2026-08-03 | chore(estructura): **cinco archivos por encima del límite, y dos no estaban en la lista** — Fase 8.5, troceo sin cambio de comportamiento. La tabla de deuda daba `exercise-glyphs.jsx` por «dentro de límite» con **571 ln** y no registraba `sessions.js` (**502**) · `tokens.css` 613→**386**, `Sidebar.jsx` 570→**141**, `state-core.jsx` 510→**402**, `exercise-glyphs.jsx` 571→**209**, `sessions.js` 502→**353** · el build solo sabía inlinear `tokens.css`: generalizado a todas las hojas de `app/` · **`first.return` no se desbloquea NUNCA** (preexistente, confirmado contra el artefacto de v0.80.0) | #148 | [abajo](#v0810----2026-08-03----choreestructura-cinco-archivos-por-encima-del-límite) |
-| **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [abajo](#v0800----2026-08-03----fixlogros-el-papel-deja-de-contar-como-tinta) |
-| **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [abajo](#v0791----2026-08-03----fixfeatlogros-el-aviso-coherente-y-los-sellos-dibujados) |
+| **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [session-147](./docs/sessions/session-147-tramado-y-alineacion.md) |
+| **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
 | **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
 | **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [session-145](./docs/sessions/session-145-logros-escalonados.md) |
 | **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md) |
@@ -343,6 +344,129 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.82.0] -- 2026-08-03 -- chore(sw): el standalone sale del precache
+
+Sesión de **triaje**, un solo frente. La auditoría integral externa aportada al cerrar
+s148 (1569 líneas, escrita contra v0.80.0) se contrastó **contra el código real, no
+contra la documentación**, y se entregó un documento de decisión. Solo se ejecutó su
+§4.7, autorizado expresamente.
+
+### El precache llevaba diez versiones de retraso
+
+`sw.js` precacheaba el export offline. La decisión s134 lo congeló **a propósito** en
+v0.71.0 y nadie revisó esa fila: con la app en v0.81.0, el service worker metía en la
+caché de cada usuario un artefacto **diez versiones viejo**, y la rama de no-navegación
+de `fetch` lo servía **cache-first para siempre**. No lo enlaza nadie — esa fila era la
+única referencia en runtime de todo el árbol.
+
+Verificado con el servidor de preview **parado**, sembrando el caso real (un usuario que
+ya venía de `pace-v0.81.0` con el standalone dentro):
+
+| Comprobación | Resultado |
+|---|---|
+| Cachés tras activar el SW nuevo | **solo `pace-v0.82.0`** — el cleanup del `activate` borró la anterior entera |
+| Caché nueva | **86 entradas, standalone ausente**; y `PRECACHE` tiene **86 filas** ⇒ `addAll` (atómico) no falló ninguna ruta |
+| PWA offline | `manifest.webmanifest` sirve `200` desde caché ⇒ sigue instalable |
+| Home, Respira, Mueve, Logros (54 sellos con máscara), paleta, Pomodoro | todo funciona sin red |
+| Hidrátate | +2/−1 → 1→3→2, y **persiste tras recargar** |
+| Consola | **cero errores** (los avisos de Babel son del buffer stale: en el documento vivo `typeof Babel === 'undefined'`) |
+
+Dos trampas propias en un cambio de seis líneas: el comentario nuevo escribía la ruta
+**literal y entrecomillada** y un comprobador que lee `sw.js` por líneas la contaba como
+fila de precache (regla de s146 aplicada a otro archivo); y hubo que simular
+`reescribirPrecache()` de la ingesta de glifos, que localiza su ancla **por línea**.
+
+### El triaje: cero afirmaciones falsas, y cuatro contradicciones
+
+De lo verificable contra código, la auditoría **acierta en todo**: `package.json` solo
+expone `build`, no existe `.github/`, el standalone está congelado, y su §4.1 —«hubo una
+regresión real que rompió `index.html` durante varias versiones»— es el crash de s144.
+Solo una afirmación **no reproduce** (§7.2: «standalone» no aparece ni una vez en
+`app/i18n/`) y otra ya estaba corregida (`ROADMAP.md:73` ya dice que v1 no es «la web
+pulida»).
+
+Lo valioso son **cuatro contradicciones, y tres son del repo consigo mismo**:
+
+| # | Qué | Evidencia | Contra qué |
+|---|---|---|---|
+| C1 | El onboarding promete «Siempre gratis / sin paywall», ES y EN | `app/i18n/strings/ui.js:27-28`, `:219-220` | v1.0 = versión **pagada** (s132/s134) |
+| C2 | La sidebar es panel de racha **y récord** | `app/shell/Sidebar.jsx:97,100,103` | §37-bis: ritmo semanal, sin récord (s133) |
+| C3 | Desktop reordena con `order` | `app/main/_responsive.js:254-263` | s123: «prohibido `order` bajo ningún breakpoint» |
+| C4 | El SW precacheaba el standalone | `sw.js:5` | s134 — **resuelta aquí** |
+
+**C3 es la instructiva**: s126 lo hizo a propósito, el usuario validó el resultado, y
+nadie enmendó la decisión escrita — la misma clase de fallo que la tabla de deuda de s148.
+
+Confirmada también la acusación de su §6.4, y exactamente donde decía:
+`app/custom/CustomRoutines.jsx:28` lee `premiumUnlocked` directo, sin pasar por el guard
+central de s95. En cambio `BreatheLibrary.jsx:118` **no** es una excepción: es el fallback
+defensivo de un ternario que consulta `canAccessRoutine` primero.
+
+Y su §10.2 acierta en algo pequeño y exacto: `home-geometry.js:26` dice «solo actúa con
+`min-width:769px`, en móvil borra las variables y sale» mientras `:58` dice «s128: el
+motor corre **también** en móvil». La cabecera miente sobre su propio archivo.
+
+### El formato de la auditoría: no era una valla, eran todos los marcadores
+
+Desde la línea 233 el pegado había perdido **títulos, viñetas, vallas y las dos tablas**,
+y arrastraba el texto del botón «Copy» pegado al primer token de cada bloque. Se reparó
+comparando el **flujo de palabras** contra HEAD: **4533 tokens antes y después, cero
+divergencias**. Los encabezados que parsean pasan de 19 a **133**.
+
+### Nueve decisiones presentadas · cuatro cerradas en el mismo cierre
+
+Detalle en [`triaje-audit-integral-s149.md`](./docs/audits/triaje-audit-integral-s149.md).
+
+- **D1 · fusionar, no sustituir.** A–K **no** reemplaza las 15 fases: se adoptan su **A**
+  (red de seguridad) como frente inmediato y su **B** (copy) detrás; **C** (Capacitor
+  temprano) e **I** (Travesías con mapa) esperan a D7 y D6.
+- **D5 · el `verify` v1 cubre build + artefacto + `node --check`.** Exactamente lo que
+  habría cazado el crash de s144. La integridad de catálogos/i18n/precache/glifos va en
+  una segunda tanda.
+- **D8 · el guard gana una tercera función.** `canAccessRoutine`/`canAccessPath` piden un
+  id, y el constructor **no es contenido: es una superficie entera de pago**, así que no
+  había guard al que preguntar. Entra `hasPremiumEntitlement()` en `state-entitlement.jsx`
+  y `CustomRoutines.jsx` la consume con fallback defensivo, conservando `usePace()` para la
+  reactividad. **Verificado en las dos direcciones** sobre `index.html`: con
+  `premiumUnlocked:false` la sección pinta «PREMIUM · … · **Pronto**» sin CTA; con `true`,
+  «**+ Crear rutina**» y sin «Pronto». La promesa de la cabecera de s95 —«al llegar la
+  licencia real solo cambia este archivo»— vuelve a ser cierta.
+- **D9 · marcado, no borrado.** `MONETIZATION.md` gana un banner **⚠️ HISTÓRICO — NO
+  GOBIERNA** antes del modelo de s21/s26, más marcas en la vía 2 (descartada en s134), la
+  vía 3 (fuera de v1) y la tabla de convivencia. `ROADMAP.md` marca «Lanzamiento pagado
+  v1.0» y «App Android (v2.0)» — Android entra **dentro** de v1 desde s137. Y `README.md`
+  corrige su sección de licencia, que vendía «Lifetime + Pase mensual + Temporadas».
+
+- **D4 · acotar la frase, no revertir el código.** `DESIGN_SYSTEM.md` deja de decir «prohibido
+  `order` bajo ningún breakpoint» y dice lo que rige: la jerarquía del DOM es una e
+  invariante, pero **Desktop reordena visualmente desde s126** y está validado — mientras que
+  en ≤768px la regla **sigue viva**, porque el modelo «atardecer» necesita el flujo del DOM
+  para que el margen negativo solape. Verificado por DOM: orden `timer → camino →
+  actividades`, `order` computado `1` y `2`. Corregida también la cabecera de
+  `home-geometry.js`, que desde s128 decía que el ayudante «solo actúa en Desktop».
+
+Siguen **abiertas cuatro**: D2 (copy del onboarding, va en el frente B) · D3 (sidebar contra
+§37-bis) · D6 (Travesías con mapa) · D7 (spike de Capacitor).
+
+### Hallazgo fuera de encargo: el ayudante de geometría no publica nada
+
+Salió al verificar que la corrección de la cabecera era **inerte**. A **1280×720**, estado
+limpio y SW purgado: `--pace-timer-d`, `--pace-activities-overlap`, `--pace-home-squeeze`,
+`--pace-home-timer-size` y `--pace-home-sunset-overlap` **vacías**, `documentElement` **sin
+atributo `style`**, aro de **360 px** —el fallback exacto de `var(--pace-timer-d, 360px)`—,
+solapamiento de **10 px = 0,028·D** contra el 0,16 nominal (banda 0,14–0,17) y **17 px de
+scroll**, cuando el modelo de s126 encoge D hasta `overflowV ≤ 1`.
+
+**Confirmado preexistente**: se extrajo `index.html` de HEAD (v0.81.0), se sirvió desde el
+mismo servidor y dio lo mismo. **No se tocó** — y ojo con dos cosas antes de perseguirlo: está
+medido en el panel de vista previa, no en un navegador real, y la home **se ve bien**. Lo que
+falla no es el resultado visible sino que el contrato medido de s126 no se está aplicando.
+Encaja con el §10.2 de la auditoría, que pedía auditar el contrato geométrico sin poder medirlo.
+
+Diario: [session-149](./docs/sessions/session-149-triaje-auditoria-integral.md).
+
+---
+
 ## [v0.81.0] -- 2026-08-03 -- chore(estructura): cinco archivos por encima del límite
 
 Fase 8.5 · saneamiento. No llegó arte, así que tocaba la primera opción del orden
@@ -433,167 +557,3 @@ veces (hash `998e3e35…`, decisión s134).
 
 Diario: [session-148](./docs/sessions/session-148-saneamiento-fase-8-5.md).
 
----
-
-## [v0.80.0] -- 2026-08-03 -- fix(logros): el papel deja de contar como tinta
-
-Sesión de revisión de arte con el usuario. El plan era enseñarle tres cosas para
-que decidiera —las 9 apuestas del mapeo, los 3 dibujos sueltos y los 4 glifos
-flojos— y de las tres revisiones salieron **tres defectos que no estaban en el
-plan**. Los tres los vio él mirando, no el código.
-
-### El moteado era tramado de semitono, y entraba como tinta
-
-Reportado: *«Primer aliento tiene como un fondo raro visible»*, y el Búho igual.
-Comparado con su PNG original: **el moteado no está en el dibujo**.
-
-El fondo de los PNG no es plano, viene **ditherado** entre ~240 y ~254 (modas 241
-y 254, 25 % de los píxeles cada una), y `SUELO` está en 238, justo debajo de esa
-banda:
-
-| Paso del procesado | Píxeles bajo el suelo | Mínimo |
-|---|---|---|
-| gris a resolución nativa | **2,0 %** | 0 |
-| tras reducir a 1024 | 2,7 % | 0 |
-| tras reducir a 224 | 5,7 % | 122 |
-| tras `sharpen(0,5)` | **12,4 %** | **78** |
-
-La textura del papel entraba como TINTA y la gamma de igualación la levantaba
-más. Pesaba tanto como el trazo real.
-
-**Dos intentos fallidos antes del bueno.** (1) *Umbral solo*: aplanar a 255 lo
-que ya estaba sobre el suelo quita el tramado limpio, pero la banda del dither
-**se solapa con el tono del trazo más pálido** — la mediana de tinta se hundió de
-2,35 % a 1,1 % y `esMarco` dejó de detectar el aro en **los 58**. Borraba dibujo.
-(2) *`median(3)`*: un filtro espacial ataca ruido ALEATORIO, y esto es una trama
-REGULAR; sobrevivió entera y encima perdió el aro de «Primer ritual». `blur()` es
-peor que no hacer nada (velo del 18 % al 66 %).
-
-**Lo que funciona: dos buffers.** El umbral era correcto, el error era aplicarlo a
-todo. El **marco** se busca sobre el original y **todo lo demás** sobre la copia
-aplanada a resolución nativa. Marco detectado en **58 de 58**, peso mediano
-intacto (2,35 % → 2,17 %) y **248 KB las 58** contra 297 KB que pesaban 55: más
-de la mitad del archivo era tramado.
-
-Volvió a morder una trampa ya documentada en ese mismo archivo para `.sharpen()`:
-**sharp promueve el buffer raw de 1 canal a 3 al remuestrearlo**. Sin
-`.toColourspace('b-w')` los 58 sellos salieron **idénticos** —un fragmento del
-aro ampliado— con el dibujo perdido. Ahora lleva la conversión y un assert.
-
-Efecto colateral honesto: la mediana se mide ya sobre tinta REAL, así que **los
-flojos pasan de 4 a 8**. No han empeorado; antes cuadraban con relleno que no era
-suyo. El usuario los revisó y decidió dejarlos.
-
-### El aviso pintaba el glifo viejo, y eran DOS superficies
-
-`Toast.jsx` tenía una **tercera copia** del render de glifo y `CompletionScreen.jsx`
-una **cuarta**. La s146 sacó `renderGlyph` a `window` justo para compartirlo, pero
-solo unificó el modal y la sidebar, así que las máscaras del usuario no llegaban
-al aviso ni a la pantalla de Camino completado. Las dos delegan ya en la misma
-función. Verificado en el artefacto compilado (lección de s144: en `PACE.html` no
-se ve).
-
-### El sello flotaba con el largo de la descripción
-
-Reportado con captura: «Setenta y cinco sellos» y «Cartógrafa» no alineaban. No
-era el dibujo, era la tarjeta: `Seal` anclaba el contenido al **centro**, así que
-un texto más alto empujaba el círculo. Medido sobre los 96 sellos, **tres
-posiciones distintas (15, 20 y 26 px) y 11 px de deriva** en la misma fila, según
-la descripción ocupara 1, 2 o 3 líneas.
-
-Se ancla arriba (regla de alturas reservadas de s119): la tarjeta tiene alto fijo
-y el círculo también, así que se alinean sellos **y** títulos. Seguro porque se
-midió antes: **0 de 96 tarjetas desbordan** y a la más cargada le sobran 16 px.
-Después, **deriva 0**.
-
-### Mapeo
-
-Las **9 apuestas** confirmadas. Los **3 sueltos** colocados: bambú → `streak.60`
-«Estación» · vasija → `explore.478` · llave → `secret.bilingual` «Dos lenguas».
-**`hydrate.week.perfect` rechazado** por el usuario —*«el glifo es un pincel con
-tinta»*—: el error era de LECTURA, el mapeo de s146 lo anotó como «aguja con
-gota». El pincel va a `stats.month.first` «Mes habitado» de forma TEMPORAL, y
-`hydrate.week.perfect` se queda **sin máscara** hasta que haya un dibujo de agua.
-
-**58 logros con arte, 38 sin.**
-
-Diario: [session-147](./docs/sessions/session-147-tramado-y-alineacion.md).
-
----
-
-## [v0.79.1] -- 2026-08-03 -- fix+feat(logros): el aviso coherente, y los sellos dibujados
-
-### El aviso hablaba de la actividad anterior
-
-Reportado por el usuario: *«hago respira y me dice calistenia»*, *«en 4·7·8 acabo
-y es primer estirón»*. Reproducido con traza:
-
-| Sesión | Anunciaba | Debía |
-|---|---|---|
-| Mueve | Primer estirón | correcto |
-| Estira | **Pausa de mediodía** | Primera calistenia |
-| Respira 4·7·8 | **Primera calistenia** | Primer aliento |
-
-La cola de s145 era **FIFO** y drenaba **gane o no gane** algo nuevo, así que el
-aviso iba siempre un paso por detrás; «Primer aliento» se quedaba dentro sin
-anunciarse. Los 23 detectores de v0.79.0 lo agravaron: secretos de hora y
-efemérides engordaban la cola.
-
-**Regla nueva:** un logro **de módulo** solo se anuncia en una sesión de ese
-módulo, y dentro de la sesión tiene prioridad lo suyo sobre lo transversal
-(rachas, horas del día, hitos de colección). Hicieron falta **dos pasadas**: con
-una sola, los transversales se colaban por delante por ser más antiguos.
-
-### §15.4 · denominador único
-
-Medido: la sidebar dividía entre **96** (catálogo entero) y el modal entre **88**
-(solo lo que tiene detector). El «por descubrir» de la sidebar prometía 8 logros
-que nadie puede ganar. La regla vive ahora en un único punto de `catalog.js` que
-consumen las dos superficies.
-
-### Cuatro secretos más eran fantasma
-
-`secret.aged`, `secret.mono`, `secret.seal` y `secret.illustrated` tenían
-detector pero **su palanca ya no existe en la UI** (la paleta «envejecido» se
-retiró en s71 y `loadState` la migra; la tipografía no tiene control desde s20;
-`logoVariant` salió de Tweaks). Corrige la cifra de v0.79.0: los secretos
-fantasma eran **11 → 4**, no 11 → 0. Retirados; los detectores se quedan por si
-vuelve la opción. Catálogo **100 → 96**, con detector **92 → 88**.
-
-### Contenido
-
-- **«Repertorio»** sustituye a «Exploración»: la categoría premia repetir, no
-  descubrir. También «Box asentada» y «ATG asentado».
-- **«Cuarenta y cinco sellos» / «Setenta y cinco sellos»** (45 y 75) en lugar de
-  «Media colección» / «Colección completa», que prometían proporciones falsas.
-- Ids veraces: `master.box.15`, `.coherent.15`, `.rounds.15` — **con migración**,
-  así que nadie pierde el logro y no hay que avisar a los testers.
-
-### Los 55 glifos del usuario
-
-Arte propio ingestado como **máscara CSS** (`scripts/ingest-glifos-logro.js`):
-la forma la pone el dibujo y el color el token, así que se conserva el tintado
-por estado y el contraste queda al nivel de los 34 glifos heráldicos. Medido:
-**91 archivos = 58 dibujos distintos** por hash; 55 mapeados, **297 KB**.
-
-Lo que costó tres intentos: **el marco del arte no es un círculo centrado**. A un
-radio fijo aparece solo en el 41 % de los ángulos. Se detecta buscando, para cada
-ángulo, el trazo más exterior. Y el encuadre separa dos decisiones que quieren
-umbrales distintos: **centrar** sigue a la tinta visible, **dimensionar** cubre
-toda la tinta o el dibujo asoma fuera del sello.
-
-### Miniaturas de la sidebar
-
-Dejan de pintar un `✦` fijo: usan `renderGlyph` de Achievements, la misma
-función, no una copia.
-
-### Corregido en el propio código
-
-- `contarRutina` creaba una clave por rutina propia (`custom.<timestamp>`):
-  **crecimiento sin techo** en localStorage, y no servía para nada.
-- `dawnDates`, `duskDates`, `planDates` y `respiraHoy` nacían al vuelo; ahora
-  declaradas en `defaultState`.
-- El mapeo de glifos iba **por posición**: al subir el usuario 8 dibujos más,
-  **0 de 50 posiciones seguían coincidiendo**. Pasa a clave estable.
-
----

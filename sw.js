@@ -1,8 +1,16 @@
-const CACHE_NAME = 'pace-v0.81.0';
+const CACHE_NAME = 'pace-v0.82.0';
+/* s149: el export offline (PACE_standalone) SALE del precache. Es un export
+   BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
+   app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
+   cache de cada usuario, y ademas lo servia cache-first para siempre. No lo
+   enlaza nadie desde la app (verificado: la unica referencia en runtime era
+   esta fila). Quien lo tenga cacheado lo pierde solo: el cleanup del `activate`
+   borra ENTERA la cache `pace-` de la version anterior.
+   Su ruta NO se escribe literal aqui (regla s146: las rutas literales, ni en
+   comentarios — hay scripts que leen este archivo por lineas). */
 const PRECACHE = [
   '/',
   '/index.html',
-  '/PACE_standalone.html',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',

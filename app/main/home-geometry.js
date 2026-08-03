@@ -23,9 +23,14 @@
      --pace-timer-d            → tamaño del aro y escalas interiores (calc)
      --pace-activities-overlap → cuánto suben las Actividades sobre el círculo
 
-   ENCAPSULADO EN DESKTOP. Solo actúa con `min-width: 769px`. En mobile/tablet
-   BORRA las dos variables y sale → el comportamiento actual queda intacto (el
-   CSS de esas variables vive todo bajo la misma media query).
+   UN MOTOR, DOS PIELES (corregido en s149; hasta aquí esta cabecera seguía
+   diciendo «encapsulado en Desktop, en mobile/tablet borra las dos variables y
+   sale», y **eso dejó de ser cierto en s128**). El motor corre en TODO viewport
+   y publica las dos variables siempre; lo que cambia por debajo de 769px son las
+   CONSTANTES de la piel —el aro arranca por ANCHO (~86vw) en vez de por altura,
+   y su suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
+   existiendo para elegir piel y para reaccionar al cruce del breakpoint, no para
+   apagarse. Ver la nota de s128 junto a `WIDTH_CAP_MOBILE`, más abajo.
 
    SIN lógica de temporizador, sin estado de negocio, sin eventos. Solo mide y
    publica geometría. SIN bucle de layout: observa los hermanos que NO contienen
