@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node build-standalone.js"
+    "build": "node build-standalone.js",
+    "verify": "node scripts/verify.js"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
