@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.85.0';
+const CACHE_NAME = 'pace-v0.86.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la

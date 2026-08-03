@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.86.0** | 2026-08-04 | chore(ci): **el CI no comprueba nada que no corra en local** — primera pieza del frente CI, lo único que quedaba detrás de la red de seguridad. Nace `.github/`, que no existía: un job en `ubuntu-latest` con Node 24 que hace `npm ci` e **invoca `npm run verify` tal cual**, sin reinterpretarlo — así lo que sale rojo en GitHub se reproduce con un comando, y vigilancia nueva se añade al `verify`, no al YAML · lo **único** que el workflow añade por su cuenta es que **`index.html` sea el build de las fuentes**, porque el `verify` no puede: corre justo ANTES de regenerarlo, así que su aviso de deriva es `[INFO]` **a propósito** y nunca se pondrá rojo · el diff va **acotado a `index.html`** o el CI sería rojo permanente por `PACE_standalone.html`, congelado desde s134 y que el build acaba de reescribir · y se compara con **`git diff`, nunca con un hash**: el worktree de Windows deja **500 bytes CR** dentro del artefacto (5 fuentes en CRLF que `readFileClean` no normaliza) y su SHA-256 no puede igualar al de Linux · **medido antes de escribir una línea**, porque el runner es Linux: el build es determinista, las **190** rutas declaradas coinciden **exactas** con el repo (Linux distingue mayúsculas y Windows no) y el lock trae `sharp-linux-x64` · probado en **verde y en rojo** con el escenario real —una fuente cambia y nadie regenera el artefacto—, restaurado byte a byte · **proteger `main` no se puede hacer desde aquí** (`gh` no instalado) y la opción «exigir el check sin requerir PR» **es contradictoria**: requerir checks bloquea el push directo · `WORKFLOW.md` seguía exigiendo regenerar el standalone en cada cierre, falso desde s134 | #153 | [abajo](#v0860----2026-08-04----choreci-el-ci-no-comprueba-nada-que-no-corra-en-local) |
 | **v0.85.0** | 2026-08-03 | chore(tooling): **cinco sellos no se pintan nunca, y eso no era un bug** — segunda tanda de la red de seguridad, lo que **D5 aparcó** del `verify` v1: integridad de **i18n, precache, glifos y catálogos**, dentro de `npm run verify` y con **asertos**. Antes de escribir uno solo hubo que resolver un número que no cuadraba: el mapa tiene **58** máscaras, s150 contó **53** sellos y s151 **54** — y las tres cifras son correctas, porque **un logro secreto y bloqueado pinta una `?` en vez de su glifo** y 5 de las 58 son de secretos; s151 vio 54 porque midió en inglés y eso desbloquea `secret.bilingual`. Se asertan **las dos mitades** (53 + 5) para que el número deje de sorprender · **dos clases de comprobación que no se mezclan**: relacionales (no caducan) y **censo** (números esperados en un solo sitio, con el mensaje diciendo que subirlos es un acto deliberado) · el dato se saca del árbol **compilando cada archivo en su propia IIFE**, porque `GLYPH_SVG` es `const` en **dos** archivos y en ámbito compartido el catálogo sale vacío sin quejarse · **un hueco salió de una prueba negativa fallida**: un secreto **sin detector** entra en el denominador de §15.4 sin que nadie pueda ganarlo · **26 rojos verificados**, EXIT=1 y 15 archivos restaurados byte a byte · la caché real del navegador trae **86 entradas**, las mismas que aserta el checker | #152 | [abajo](#v0850----2026-08-03----choretooling-cinco-sellos-no-se-pintan-nunca) |
 | **v0.84.0** | 2026-08-03 | docs+fix(copy): **la promesa estaba en tres sitios, y el tercero no lo miró nadie** — frente B de la auditoría (D1), copy y presencia pública. El onboarding prometía «Siempre gratis / sin paywall» en los dos idiomas contra v1.0 = versión **pagada**: pasa a «**Núcleo gratuito / disponible**» · los claims de servidor se reformulan **ya** para que sobrevivan al Worker de licencia («No hay servidor» → «Tus datos no salen de aquí», «localStorage únicamente» → «en tu dispositivo»); `tweaks.data.note` **se deja** porque su claim está acotado al backup · el copy elegido destapó un defecto que **no era del copy**: `valuesPlate` centraba cada columna por su cuenta, así que un label de dos líneas arrastraba su sub **8 px** — mismo defecto que el sello de s147, arreglado con alturas reservadas (s119) en vez de recortando texto · **existe un `README_EN.md`** que nadie había mirado: estaba en **v0.18.0** y **seguía vendiendo «Lifetime, Pase and Seasons»**, el modelo de cuatro vías descartado en s134 que s149 creyó cerrar — corrigió solo el español · los dos README enlazaban a **`HANDOFF.md` y `docs/porting.md`, que no existen**, y anunciaban **5 ejes de personalización de los que solo uno tiene control** (dos apagados por bandera, dos dormidos desde s20) | #151 | [diario](./docs/sessions/session-151-frente-b-copy-y-presencia.md) |
 | **v0.83.0** | 2026-08-03 | chore(tooling): **`npm run verify`, y el listón era ponerlo rojo con el crash de s144** — fase A de la auditoría (D1), alcance de D5: build + artefacto + `node --check`. El enunciado decía que ninguna pieza de `scripts/audit/` devuelve código de salida; medido, **diez de trece salen con 1** — lo que no hay es **ningún aserto**, así que no se reaprovecha ninguna · el crash de s144 tiene sintaxis impecable y solo revienta **al renderizar**, así que lo caza el **análisis de ámbito del compilado**: sobre el artefacto sano hay **38** identificadores sin ligar y los 38 son de plataforma, **cero ruido de la app** ⇒ un `useState` pelado es el nombre 39 · reproducido a propósito, sale `app/main.jsx:23` (la primera versión dijo **24**: el patrón se comía un salto de línea) · **cuatro rojos más**: módulo declarado inexistente (el build solo avisa), versión descuadrada, sintaxis en `sw.js` (**el build no lo mira jamás**) y archivo de `app/` sin declarar — este último salió de medir la **biyección 97 = 97** · el script **imprime sus propios huecos en cada pasada** y no deja rastro: restaura los dos artefactos byte a byte | #150 | [session-150](./docs/sessions/session-150-verify-red-de-seguridad.md) |
@@ -347,6 +348,87 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.86.0] -- 2026-08-04 -- chore(ci): el CI no comprueba nada que no corra en local
+
+Primera pieza del frente **CI**, lo único que quedaba detrás de la red de seguridad. La razón
+por la que estaba aparcado —«el YAML tiene que invocar algo que ya funcione en local»— dejó de
+aplicar en s152: ese algo son las 4 tandas y 32 comprobaciones de `npm run verify`.
+
+**Alcance cerrado con el usuario antes de tocar nada**, porque las cuatro piezas del frente son
+de tamaños muy distintos: entra el workflow y la frescura del artefacto; **Playwright y Wrangler
+quedan fuera**, anotados como siguiente paso; proteger `main` entra **solo como instrucciones**.
+
+### La tesis: el CI invoca, no reinterpreta
+
+`.github/workflows/ci.yml` — un job, `verify`, en `ubuntu-latest` con Node 24 (el del desarrollo
+local): `npm ci` → `npm run verify` → frescura del artefacto. **No comprueba nada que no corra en
+local**, así que lo que sale rojo en GitHub se reproduce con un solo comando. Vigilancia nueva se
+añade al `verify`, no al YAML — si no, el CI se vuelve un oráculo que nadie sabe interrogar.
+
+### Lo único que el workflow añade por su cuenta
+
+El `verify` **avisa** de que `index.html` difiere de las fuentes, pero como `[INFO]` y **a
+propósito**: corre justo ANTES de regenerarlo en el cierre, o sea en el único momento en que el
+artefacto TIENE que estar desactualizado. Esperar que se ponga rojo no funciona. Dos cosas que no
+se pueden «simplificar» en ese paso:
+
+- **El diff va ACOTADO a `index.html`.** Un `git diff --exit-code` a secas sería rojo **siempre**
+  por `PACE_standalone.html`, congelado en v0.71.0 desde s134 y que el build acaba de reescribir
+  (medido: pasa de `998E3E35…` a `5C310793…`).
+- **Se compara con `git diff`, nunca con un hash SHA-256.** `.gitattributes` normaliza a LF *en el
+  repo*, pero en el worktree de Windows hay 5 fuentes en CRLF y el build los inlinea tal cual
+  (`readFileClean` quita el BOM, **no** normaliza saltos) ⇒ el `index.html` de Windows sale con
+  finales mixtos y su hash no puede igualar al de Linux. El propio git lo avisa durante la prueba.
+
+### Cinco riesgos medidos antes de escribir una línea
+
+El runner es Linux y el desarrollo es Windows; cualquiera de los cinco habría dejado el CI rojo
+desde el primer run.
+
+| Riesgo | Resultado |
+|---|---|
+| ¿Build determinista? | **Sí** — dos pasadas repiten el hash de HEAD |
+| ¿Y entre plataformas? | El único recorrido de directorio (`validateAppFiles`) va con `.sort()` y **no emite nada al artefacto** |
+| Finales de línea | **Ningún archivo del repo se desvía de LF**; `.gitattributes` ya cubre `*.yml` |
+| Mayúsculas (Linux distingue) | Las **190** rutas de `PACE.html` (104) y del `PRECACHE` (86) coinciden **exactas** con `git ls-files` |
+| `npm ci` | Lock v3 **sincronizado**, y trae `sharp-linux-x64` (`sharp` no la usan ni build ni verify) |
+
+### Probado en verde y en rojo, con el escenario real
+
+El script probado **se extrajo del YAML parseado**, no se reescribió a mano. El rojo se provocó
+con el descuido que esto tiene que cazar —**una fuente cambia y nadie regenera el artefacto**—,
+no con uno cómodo: tocar `index.html` directamente no sirve, porque el paso **regenera antes de
+comparar**. Salida `::error` + `index.html | 1 +` + **EXIT=1**, y restaurado byte a byte con los
+tres hashes comprobados.
+
+### Proteger `main`: no se puede desde aquí, y la opción elegida estaba mal planteada
+
+**`gh` no está instalado**, así que la afirmación de la auditoría integral de que `main` está sin
+proteger **sigue sin verificar**. Y al redactar las instrucciones apareció que **«exigir que el
+check pase sin requerir PR» es contradictorio**: un check solo puede pasar DESPUÉS de que el
+commit exista, así que requerirlo **bloquea el push directo**. `WORKFLOW.md` §8 entrega el ruleset
+que sí preserva el flujo (**Restrict deletions** + **Block force pushes**) y documenta la
+alternativa, que no es una casilla sino cambiar el cierre entero a rama → PR → merge.
+
+### Un tercer sitio que decía lo contrario
+
+`docs/WORKFLOW.md` seguía exigiendo regenerar `PACE_standalone.html` en cada cierre y tratando su
+fecha antigua como señal de alarma. **Falso desde s134**, y más caro aquí porque contradecía al
+YAML que se estaba escribiendo. Corregido, más el `verify` en el checklist y dos alarmas nuevas.
+
+### El instrumento mintió tres veces, ninguna era el código
+
+Reporté que el onboarding no aparecía con estado limpio —lo que habría contradicho a s152— y era
+falso: leí `innerText` **recortado a 120 caracteres** y el onboarding se monta **al final del
+DOM**, detrás de la home. Lo zanjó buscar la placa de valores de s151 en el HTML. Además, el
+`grep` mostró `//` como `\` en `main.jsx:89`, o sea un archivo imposible que el `verify` acababa
+de aprobar; leído directo, intacto. Cuando dos instrumentos se contradicen, el que miente no es el
+que tiene asertos.
+
+Diario: [session-153](./docs/sessions/session-153-ci-github-actions.md).
+
+---
+
 ## [v0.85.0] -- 2026-08-03 -- chore(tooling): cinco sellos no se pintan nunca
 
 Segunda tanda de la red de seguridad: exactamente lo que **D5 de s149** aparcó del `verify`
@@ -430,74 +512,4 @@ completado y estaba leyendo el documento anterior. Igual que el 55 vs 54 (mi sel
 también el **toast**). El instrumento miente antes que el código.
 
 Diario: [session-152](./docs/sessions/session-152-red-seguridad-segunda-tanda.md).
-
----
-
-## [v0.84.0] -- 2026-08-03 -- docs+fix(copy): la promesa estaba en tres sitios
-
-Frente **B** de la auditoría integral (adoptado por **D1** de s149), justo detrás del frente A.
-Dos piezas: el copy que contradice el lanzamiento pagado (**D2**) y el README entero.
-
-### D2 — el onboarding prometía lo contrario de lo que se va a hacer
-
-Las cuatro líneas señaladas existen y **las dos superficies están vivas**: la placa de tres
-columnas de `Onboarding.jsx:150` y el modal de `SupportModule.jsx`. Dos datos corrigieron el
-plan antes de escribir nada: las claves EN de `ui.js` son **literales**, no posicionales (la
-trampa de s144 no aplicaba aquí), y de los tres slots que la auditoría proponía reescribir
-**dos seguían siendo ciertos y más cortos** que sus sustitutos.
-
-Lo que no sobrevive a v1.0 pagada no es la gratuidad del núcleo —`support.title` ya decía «El
-núcleo de PACE es gratis. Y lo seguirá siendo.»— sino el **absoluto**:
-
-| | Antes | Ahora |
-|---|---|---|
-| ES | Siempre gratis / sin paywall | **Núcleo gratuito / disponible** |
-| EN | Always free / no paywall | **Free core / available** |
-| `support.lede` ES | No hay cuentas. **No hay servidor**. | No hay cuentas. **Tus datos no salen de aquí**. |
-| `support.lede` EN | No accounts. **No server**. | No accounts. **Your data stays with you**. |
-| `support.value.local.sub` | localStorage únicamente / only | **en tu dispositivo** / **on your device** |
-
-Los claims de servidor se reformulan **ya**, no cuando exista el Worker, para no volver a
-tocarlos. **`tweaks.data.note` se deja intacto**: su «sin servidor» modifica al *backup* y
-seguirá siendo cierto con la licencia puesta.
-
-### El copy destapó un defecto de layout que no era del copy
-
-Medido por DOM a 360 px (el suelo documentado): la columna da **85 px** y la primera opción
-elegida medía **87,9 px** (ES) y **91 px** (EN) ⇒ envolvía, y al envolver su `sub` caía **8 px**
-por debajo del de sus hermanas. La causa era `valuesPlate` con `alignItems:'center'`: cada
-columna se centraba por su cuenta. **Es el mismo defecto que el sello de s147**, en otra
-superficie. Arreglado con **alturas reservadas** (s119) en vez de recortando texto — `stretch`
-+ columna flex + `flexGrow` en el label —, así que los tres subs se alinean solos y **no se
-añade aire cuando ninguno envuelve**. Se conserva aunque el copy final ya no envuelva.
-
-### El README — y el que no estaba en el encargo
-
-- **Existe un `README_EN.md`** que el frente no contemplaba. Estaba en **v0.18.0** y **seguía
-  vendiendo «Lifetime, Pase and Seasons»**: s149 corrigió la sección de licencia **solo en el
-  español**, así que el modelo de cuatro vías descartado en s134 seguía publicado en inglés.
-- **Dos enlaces rotos en los dos escaparates**: `HANDOFF.md` y `docs/porting.md` no existen.
-- **La tabla de «5 ejes de personalización» era falsa en cuatro filas**: Timer y círculo
-  «orgánico» están **apagados por bandera** (`app/flags.js`), y Tipografía y Layout son ejes
-  dormidos **sin control en Ajustes desde s20**. Solo la Paleta tiene control.
-- Otras afirmaciones caducadas: «nada de build step, nada de npm» (hay `build` y `verify`),
-  «Babel transpila en navegador» (**solo en desarrollo**), el artefacto entregado (es
-  `index.html` desde s134), y los conteos — Respira **12 → 20**, Mueve **7 → 14**, Estira
-  **7 → 14**, Logros **100 → 96**. **Todos medidos del árbol**, no copiados de `STATE.md`.
-
-Reescritos los dos en paridad. **18 enlaces relativos comprobados, 0 rotos.**
-
-### Verificación
-
-`npm run verify` **PASA en 4,2 s** (versión coherente en los tres sitios; standalone restaurado
-a `998E3E358D689036`). El diff de `ui.js` se reduce a **4 claves × 2 idiomas**, cada una una vez
-como `-` y una vez como `+` ⇒ **paridad ES/EN intacta por construcción**. Sobre `index.html` con
-SW y cachés purgados: onboarding con los tres subs al **mismo `top`** en ES y EN a 360 px ·
-Pomodoro 25:00 → 24:58 · Hidrátate **2/8 y persiste** · **`first.sip` se desbloquea** · Logros
-con **54 sellos** · paleta oscuro correcta · **consola sin errores**.
-
-**Trampa propia:** estuve a punto de reportar Hidrátate roto por dos falsos negativos seguidos
-(un `.click()` sintético que no dispara y un click por `ref` que aterrizó **fuera** del botón).
-`addWaterGlass()` llamado directo funcionaba ⇒ no había bug. Si el síntoma dice «roto» y la
-causa no aparece, sospechar del instrumento antes que del código.
 

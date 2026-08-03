@@ -1,0 +1,100 @@
+# PACE · integracion continua
+#
+# La red de seguridad LOCAL vive en `npm run verify` (s150 la creo, s152 la
+# completo: 4 tandas, 32 comprobaciones). Este workflow no la duplica ni la
+# reinterpreta: la INVOCA. Si algo hay que vigilar, se anade al verify y aqui
+# no se toca nada — de ese modo lo que falla en CI se reproduce en local con
+# un solo comando, que es la unica forma de que un CI no se vuelva un oraculo.
+#
+# Lo unico que este archivo anade por su cuenta es lo que el verify NO PUEDE
+# comprobar por diseno: que el `index.html` committeado sea el build de las
+# fuentes. El verify corre justo ANTES de regenerarlo en el cierre de sesion,
+# o sea en el momento en que el artefacto TIENE que estar desactualizado, asi
+# que su aviso de deriva es `[INFO]` a proposito y jamas se pondra rojo.
+# Esperar que lo haga no funciona: hay que comprobarlo aparte, y aqui es donde.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Solo lectura: este workflow no publica nada ni escribe en el repo.
+permissions:
+  contents: read
+
+# Un push encima de otro cancela el anterior: interesa el ultimo estado.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 24 = el del desarrollo local (v24.15.0). `package.json` no declara
+      # `engines`, asi que la version vive aqui: si algun dia se anade ese campo,
+      # este numero se alinea con el.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      # `npm ci` y no `npm install`: instala EXACTAMENTE el lockfile y falla si
+      # se ha desincronizado de package.json, en vez de arreglarlo por su cuenta.
+      # (`sharp` es nativa y no la usan ni el build ni el verify —solo la ingesta
+      # de arte y los scripts de audit—, pero el lock v3 trae su binario de
+      # linux-x64, asi que se instala sin incidencias.)
+      - name: Instalar dependencias
+        run: npm ci
+
+      # LA red de seguridad. Devuelve codigo de salida: si falla, no se sigue.
+      # 4 tandas — node --check de todos los .js (tambien sw.js y scripts/, que
+      # el build no mira jamas) · build con salida 0 · analisis de AMBITO del
+      # artefacto compilado (el crash de s144) · integridad de i18n, precache,
+      # glifos y catalogos. Restaura los dos artefactos en su `finally`.
+      - name: npm run verify
+        run: npm run verify
+
+      # Frescura del artefacto. Va DESPUES del verify a proposito: el verify
+      # corre el build de verdad y reescribe los dos artefactos antes de
+      # restaurarlos, asi que comparar mientras corre no mide nada.
+      #
+      # DOS COSAS QUE NO SE PUEDEN "SIMPLIFICAR" AQUI:
+      #
+      #  1. El diff va ACOTADO a index.html. Un `git diff --exit-code` a secas
+      #     se pondria rojo SIEMPRE por `PACE_standalone.html`, que esta
+      #     congelado en v0.71.0 a proposito (s134: export bajo demanda, ya no
+      #     se regenera en cada cierre) y que el build acaba de reescribir a la
+      #     version actual. En el runner da igual —es efimero y no se committea
+      #     nada—, pero el diff tiene que ignorarlo.
+      #
+      #  2. Se compara con `git diff`, NUNCA con un hash SHA-256 del archivo.
+      #     `.gitattributes` normaliza el texto a LF *en el repo*, pero en un
+      #     worktree de Windows varios fuentes estan en CRLF y el build los
+      #     inlinea tal cual (`readFileClean` quita el BOM, no normaliza saltos),
+      #     asi que el `index.html` de Windows sale con finales MIXTOS —medido:
+      #     500 bytes CR— y su SHA-256 no puede coincidir con el de Linux aunque
+      #     el contenido sea el mismo. `git diff` aplica la normalizacion en los
+      #     dos lados; un hash de archivo no. Medido tambien lo contrario, que es
+      #     lo que sostiene esta comprobacion: el build ES determinista —dos
+      #     pasadas seguidas dan el mismo `index.html`, y su unico recorrido de
+      #     directorio que podria depender del orden del sistema de archivos
+      #     (`validateAppFiles`) va con `.sort()` y ademas no emite nada al
+      #     artefacto.
+      - name: El index.html committeado es el build de las fuentes
+        run: |
+          node build-standalone.js
+          if ! git diff --quiet -- index.html; then
+            echo "::error file=index.html::index.html no esta al dia con las fuentes. Regeneralo con 'node build-standalone.js' y committealo (paso 3 del cierre de sesion en CLAUDE.md)."
+            git diff --stat -- index.html
+            exit 1
+          fi
+          echo "index.html coincide byte a byte con el build de las fuentes."
