@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.85.0** | 2026-08-03 | chore(tooling): **cinco sellos no se pintan nunca, y eso no era un bug** — segunda tanda de la red de seguridad, lo que **D5 aparcó** del `verify` v1: integridad de **i18n, precache, glifos y catálogos**, dentro de `npm run verify` y con **asertos**. Antes de escribir uno solo hubo que resolver un número que no cuadraba: el mapa tiene **58** máscaras, s150 contó **53** sellos y s151 **54** — y las tres cifras son correctas, porque **un logro secreto y bloqueado pinta una `?` en vez de su glifo** y 5 de las 58 son de secretos; s151 vio 54 porque midió en inglés y eso desbloquea `secret.bilingual`. Se asertan **las dos mitades** (53 + 5) para que el número deje de sorprender · **dos clases de comprobación que no se mezclan**: relacionales (no caducan) y **censo** (números esperados en un solo sitio, con el mensaje diciendo que subirlos es un acto deliberado) · el dato se saca del árbol **compilando cada archivo en su propia IIFE**, porque `GLYPH_SVG` es `const` en **dos** archivos y en ámbito compartido el catálogo sale vacío sin quejarse · **un hueco salió de una prueba negativa fallida**: un secreto **sin detector** entra en el denominador de §15.4 sin que nadie pueda ganarlo · **26 rojos verificados**, EXIT=1 y 15 archivos restaurados byte a byte · la caché real del navegador trae **86 entradas**, las mismas que aserta el checker | #152 | [abajo](#v0850----2026-08-03----choretooling-cinco-sellos-no-se-pintan-nunca) |
 | **v0.84.0** | 2026-08-03 | docs+fix(copy): **la promesa estaba en tres sitios, y el tercero no lo miró nadie** — frente B de la auditoría (D1), copy y presencia pública. El onboarding prometía «Siempre gratis / sin paywall» en los dos idiomas contra v1.0 = versión **pagada**: pasa a «**Núcleo gratuito / disponible**» · los claims de servidor se reformulan **ya** para que sobrevivan al Worker de licencia («No hay servidor» → «Tus datos no salen de aquí», «localStorage únicamente» → «en tu dispositivo»); `tweaks.data.note` **se deja** porque su claim está acotado al backup · el copy elegido destapó un defecto que **no era del copy**: `valuesPlate` centraba cada columna por su cuenta, así que un label de dos líneas arrastraba su sub **8 px** — mismo defecto que el sello de s147, arreglado con alturas reservadas (s119) en vez de recortando texto · **existe un `README_EN.md`** que nadie había mirado: estaba en **v0.18.0** y **seguía vendiendo «Lifetime, Pase and Seasons»**, el modelo de cuatro vías descartado en s134 que s149 creyó cerrar — corrigió solo el español · los dos README enlazaban a **`HANDOFF.md` y `docs/porting.md`, que no existen**, y anunciaban **5 ejes de personalización de los que solo uno tiene control** (dos apagados por bandera, dos dormidos desde s20) | #151 | [diario](./docs/sessions/session-151-frente-b-copy-y-presencia.md) |
-| **v0.83.0** | 2026-08-03 | chore(tooling): **`npm run verify`, y el listón era ponerlo rojo con el crash de s144** — fase A de la auditoría (D1), alcance de D5: build + artefacto + `node --check`. El enunciado decía que ninguna pieza de `scripts/audit/` devuelve código de salida; medido, **diez de trece salen con 1** — lo que no hay es **ningún aserto**, así que no se reaprovecha ninguna · el crash de s144 tiene sintaxis impecable y solo revienta **al renderizar**, así que lo caza el **análisis de ámbito del compilado**: sobre el artefacto sano hay **38** identificadores sin ligar y los 38 son de plataforma, **cero ruido de la app** ⇒ un `useState` pelado es el nombre 39 · reproducido a propósito, sale `app/main.jsx:23` (la primera versión dijo **24**: el patrón se comía un salto de línea) · **cuatro rojos más**: módulo declarado inexistente (el build solo avisa), versión descuadrada, sintaxis en `sw.js` (**el build no lo mira jamás**) y archivo de `app/` sin declarar — este último salió de medir la **biyección 97 = 97** · el script **imprime sus propios huecos en cada pasada** y no deja rastro: restaura los dos artefactos byte a byte | #150 | [abajo](#v0830----2026-08-03----choretooling-npm-run-verify-la-red-de-seguridad-local) |
+| **v0.83.0** | 2026-08-03 | chore(tooling): **`npm run verify`, y el listón era ponerlo rojo con el crash de s144** — fase A de la auditoría (D1), alcance de D5: build + artefacto + `node --check`. El enunciado decía que ninguna pieza de `scripts/audit/` devuelve código de salida; medido, **diez de trece salen con 1** — lo que no hay es **ningún aserto**, así que no se reaprovecha ninguna · el crash de s144 tiene sintaxis impecable y solo revienta **al renderizar**, así que lo caza el **análisis de ámbito del compilado**: sobre el artefacto sano hay **38** identificadores sin ligar y los 38 son de plataforma, **cero ruido de la app** ⇒ un `useState` pelado es el nombre 39 · reproducido a propósito, sale `app/main.jsx:23` (la primera versión dijo **24**: el patrón se comía un salto de línea) · **cuatro rojos más**: módulo declarado inexistente (el build solo avisa), versión descuadrada, sintaxis en `sw.js` (**el build no lo mira jamás**) y archivo de `app/` sin declarar — este último salió de medir la **biyección 97 = 97** · el script **imprime sus propios huecos en cada pasada** y no deja rastro: restaura los dos artefactos byte a byte | #150 | [session-150](./docs/sessions/session-150-verify-red-de-seguridad.md) |
 | **v0.82.0** | 2026-08-03 | chore(sw)+fix(entitlement)+docs: **el service worker dejaba diez versiones de retraso en la caché de cada usuario** — triaje de la auditoría integral externa contra el código real: de lo verificable, **cero afirmaciones falsas**, y **cuatro contradicciones** de las que **tres son del repo consigo mismo** (el onboarding promete «Siempre gratis», la sidebar sigue siendo racha + récord contra §37-bis, y Desktop reordena con `order` contra la letra de s123) · el precache soltaba el export congelado en v0.71.0, servido **cache-first para siempre**; el cleanup del `activate` lo borra solo al bumpear · el pegado de la auditoría había perdido **todos** los marcadores markdown desde la línea 233, no solo la valla · **cuatro de las nueve decisiones cerradas en el mismo cierre**: A–K se **fusiona** (no sustituye), el `verify` v1 = build + artefacto + `node --check`, el guard gana **`hasPremiumEntitlement()`** para superficies de pago, y el modelo de cuatro vías queda **marcado como histórico** en `MONETIZATION.md` / `ROADMAP.md` / `README.md` | #149 | [session-149](./docs/sessions/session-149-triaje-auditoria-integral.md) |
 | **v0.81.0** | 2026-08-03 | chore(estructura): **cinco archivos por encima del límite, y dos no estaban en la lista** — Fase 8.5, troceo sin cambio de comportamiento. La tabla de deuda daba `exercise-glyphs.jsx` por «dentro de límite» con **571 ln** y no registraba `sessions.js` (**502**) · `tokens.css` 613→**386**, `Sidebar.jsx` 570→**141**, `state-core.jsx` 510→**402**, `exercise-glyphs.jsx` 571→**209**, `sessions.js` 502→**353** · el build solo sabía inlinear `tokens.css`: generalizado a todas las hojas de `app/` · **`first.return` no se desbloquea NUNCA** (preexistente, confirmado contra el artefacto de v0.80.0) | #148 | [session-148](./docs/sessions/session-148-saneamiento-fase-8-5.md) |
 | **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [session-147](./docs/sessions/session-147-tramado-y-alineacion.md) |
@@ -346,6 +347,92 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.85.0] -- 2026-08-03 -- chore(tooling): cinco sellos no se pintan nunca
+
+Segunda tanda de la red de seguridad: exactamente lo que **D5 de s149** aparcó del `verify`
+v1 — integridad de **catálogos, i18n, precache y glifos**. Dentro de `npm run verify`, y
+cada comprobación con su **aserto**, no una impresión.
+
+### El número que no cuadraba, resuelto antes de asertarlo
+
+El mapa `achievement-masks.js` tiene **58** entradas, s150 contó **53** sellos pintando
+máscara y s151 contó **54**. Las tres cifras son correctas a la vez. La causa está en
+`Achievements.jsx:126,192` — `isSecret = a.secret && !unlocked` ⇒ **un logro secreto y
+todavía bloqueado pinta una `?`, no su glifo**— y **5 de las 58 máscaras son de secretos**
+(`secret.backup`, `secret.bilingual`, `secret.night.owl`, `secret.safety.read`,
+`secret.supporter`):
+
+> **máscaras pintadas = 58 − (secretos con máscara aún bloqueados)** ⇒ **53 de salida**
+
+s151 vio 54 porque **midió el onboarding en inglés**, y cambiar de idioma desbloquea
+`secret.bilingual`. **No hubo regresión entre sesiones: hubo un secreto desbloqueado.**
+Comprobado por DOM sobre el artefacto y se asertan **las dos mitades** (53 visibles + 5 tras
+secreto), no solo el 58.
+
+### Dos clases de comprobación, y no se mezclan
+
+**Relacionales** — sin número y sin caducidad: toda máscara tiene su `.webp`, todo detector
+existe en el catálogo, ES y EN declaran las mismas claves, toda fila del precache resuelve a
+un archivo real. **Censo** — los números esperados, juntos en una constante, para cazar la
+desaparición silenciosa; el mensaje de fallo dice las dos salidas: *«o se ha perdido algo por
+el camino, o el contenido creció a propósito y toca subir el número en CENSO»*.
+
+Asertar 509 claves de i18n como invariante daría un rojo cada vez que alguien escribe copy;
+asertar solo la biyección dejaría pasar que se caiga un archivo entero de strings.
+
+| Familia | Relacional | Censo |
+|---|---|---|
+| **i18n** | biyección ES↔EN en las dos direcciones · `content/*` **no toca ES** · carga **después** de `strings/*` (D-1) · el desequilibrio global (509 / 1274) lo explican los patches | **509** claves por idioma |
+| **precache** | fila ↔ archivo en disco · sin duplicados · **cero rutas entrecomilladas en comentarios** (s146) · mapa de máscaras ↔ precache | **86** filas |
+| **glifos** | `.extra.jsx` carga tras el mapa que muta | **47** · **58** · **53** · **5** |
+| **logros** | sin ids duplicados · detectores, máscaras y categorías ⊆ catálogo · sin `.webp` huérfanos · **todo secreto tiene detector** | **96** · **88** · **88** (§15.4) · **12** · **7** |
+| **contenido** | — | **20** · **14** · **14** · **7** |
+
+El dato se saca del árbol compilando cada archivo **en su propia IIFE**, como viaja en el
+artefacto. No es estilo: `GLYPH_SVG` es `const` en **dos** archivos y en ámbito compartido el
+catálogo sale **vacío sin quejarse**.
+
+### Un hueco salió de una prueba negativa fallida
+
+Quitarle el detector a un **secreto** no movía el denominador de §15.4: `achievementIsAvailable`
+cuenta los secretos como disponibles tengan detector o no. Es decir, **un secreto sin detector
+vuelve a prometer un logro que nadie puede ganar** — el bug que s146b arregló, por la puerta de
+atrás. Asertado y probado en rojo.
+
+### 26 rojos, EXIT=1, byte a byte
+
+Se mantiene el listón de s150: cada comprobación se puso **roja a propósito** con un driver que
+guarda los bytes, rompe, corre el verify entero, restaura en un `finally` y **comprueba el
+hash**. Entre ellos, las ramas «nunca un verde silencioso» (array de precache irreconocible,
+catálogo vacío, `strings/*` sin declarar) y el fallo de evaluación, que dice «no se pudo
+evaluar» en vez de contar cero. **Dos redes se solaparon donde debían**: el build ya abortaba
+solo por el asset inexistente, y el análisis de ámbito de s150 cazó el símbolo inventado.
+
+### El verify declara sus huecos nuevos
+
+Sale de `NO_CUBRE` la línea de la segunda tanda y entran cinco: i18n comprueba que la clave
+**exista**, no que esté traducida ni que **quepa** (s151: 85 px por columna) · los catálogos se
+cuentan, no se validan · el precache mira el **disco**, no el navegador · de los glifos no se
+mira **un píxel** · y el censo hay que subirlo a mano cuando el contenido crece.
+
+### Verificación
+
+`npm run verify` **PASA en 4,8 s** con 4 tandas y 23 comprobaciones nuevas. `index.html`
+difiere de HEAD en **2 líneas** (`<title>` y `PACE_VERSION`); ningún archivo de `app/` cambió.
+Sobre el artefacto con SW y cachés purgados: Logros con **53** máscaras y ninguna secreta, **54
+en el modal** tras desbloquear `secret.bilingual` · Pomodoro 25:00 → **24:58** · Hidrátate 2 y
+**persiste** · `first.sip` desbloqueado, sidebar **1/88** · paleta oscuro correcta · **consola
+sin errores**. Y el contraste que el checker estático no puede hacer: la caché real es
+`pace-v0.85.0` con **86 entradas** —las mismas 86 filas que aserta— y **58** bajo `/logros/`.
+
+**Trampa propia:** reporté «el onboarding no aparece» y era falso — mi `reload()` no había
+completado y estaba leyendo el documento anterior. Igual que el 55 vs 54 (mi selector contaba
+también el **toast**). El instrumento miente antes que el código.
+
+Diario: [session-152](./docs/sessions/session-152-red-seguridad-segunda-tanda.md).
+
+---
+
 ## [v0.84.0] -- 2026-08-03 -- docs+fix(copy): la promesa estaba en tres sitios
 
 Frente **B** de la auditoría integral (adoptado por **D1** de s149), justo detrás del frente A.
@@ -413,86 +500,4 @@ con **54 sellos** · paleta oscuro correcta · **consola sin errores**.
 (un `.click()` sintético que no dispara y un click por `ref` que aterrizó **fuera** del botón).
 `addWaterGlass()` llamado directo funcionaba ⇒ no había bug. Si el síntoma dice «roto» y la
 causa no aparece, sospechar del instrumento antes que del código.
-
----
-
-## [v0.83.0] -- 2026-08-03 -- chore(tooling): `npm run verify`, la red de seguridad local
-
-Fase **A** de la auditoría integral, adoptada como frente inmediato por **D1** de s149, con
-el alcance que fijó **D5**: **build + artefacto + `node --check`**. Un solo frente, y
-empezando por el script local, no por el YAML.
-
-### El punto de partida no era el que decía el plan
-
-`scripts/audit/` tiene trece piezas y la premisa era que **ninguna devuelve código de
-salida**. Medido: **diez de las trece** terminan en `main().catch(e => process.exit(1))`.
-La carencia real es otra y es más de fondo — **ninguna tiene un aserto**: son bancos de
-medición que imprimen y terminan en 0 tanto si el número es bueno como si es desastroso.
-Un checker no es un medidor con `exit(1)` al final, es un medidor que sabe qué valor es
-inaceptable. Por eso no se reaprovecha ninguna tal cual; lo que sí se hereda es la tesis de
-`inventario.js`: si el dato está en el árbol, se saca del árbol, compilando con el Babel
-del build en vez de leer a ojo.
-
-### El listón: ponerse rojo con el crash de s144
-
-`useState` pelado en `main.jsx` tiene **sintaxis impecable** —el parser del build lo da por
-bueno— y solo revienta **al renderizar**, y solo en el artefacto, porque el build envuelve
-cada módulo en su IIFE y el `const { useState } = React` de otro archivo deja de alcanzar.
-Estuvo **dos versiones publicado**.
-
-Lo caza el **análisis de ámbito del compilado**: se parsea cada bloque IIFE y se piden los
-identificadores referenciados y **no ligados en ningún ámbito**. La calibración es lo que
-decidió que la idea servía — sobre el artefacto sano de v0.82.0:
-
-| Medición | Valor |
-|---|---:|
-| Bloques IIFE = módulos declarados | **98 = 98** |
-| Nombres publicados en `window` | **336** |
-| Identificadores sin ligar, distintos | **225** |
-| …no publicados en `window` | **38** — y los 38 son de plataforma |
-
-**Cero ruido de la app**, así que un `useState` pelado aparece como el nombre 39.
-Reproducido a propósito, el verify lo señala en **`app/main.jsx:23`** y sale con 1.
-
-**Trampa propia, cazada por esa misma prueba:** la primera versión dijo `main.jsx:24`. El
-patrón capturaba el salto de línea de detrás de `;(function () {` y corría **todas** las
-líneas en +1. Con `retainLines`, la línea del compilado *es* la del fuente. Si la prueba
-negativa se hubiera conformado con «falla, bien», el error se queda dentro.
-
-### Cuatro rojos más, y uno salió de medir
-
-| Prueba | Por qué importa |
-|---|---|
-| Módulo declarado que no existe | El build solo emite `[WARN]`: el módulo **desaparece del artefacto en silencio** |
-| Versión descuadrada | Tres sitios a mano cada sesión: `state-core.jsx`, `sw.js`, `<title>` |
-| Sintaxis rota en `sw.js` | **El build no mira `sw.js` jamás**, ni `scripts/`, ni él mismo |
-| Archivo de `app/` sin declarar | La trampa de s148: se trocea, existe en disco y **no carga nunca** |
-
-La última no estaba prevista: al comprobar si merecía la pena salió que `app/` tiene **97**
-archivos y `PACE.html` declara **97**, biyección exacta y sin excepciones. Con un invariante
-así, asertarlo es gratis.
-
-### Falsos verdes
-
-El script **imprime sus propios huecos en cada pasada**, también en verde: no cubre
-comportamiento, ni catálogos/i18n/precache/glifos (D5 los deja para la segunda tanda), ni
-orden de carga, ni CSS, ni contenido, ni el standalone. Y **cero bloques reconocidos es un
-FALLO explícito**, no un verde silencioso.
-
-### Dos decisiones de comportamiento
-
-**No deja rastro**: corre el build de verdad, guarda los bytes de los dos artefactos y los
-restaura en un `finally` (y en `SIGINT`) — `PACE_standalone.html` vuelve a
-`998E3E358D689036`, el hash congelado de s134. Y **la deriva de `index.html` es un aviso,
-no un fallo**: el paso vive justo antes de regenerar, o sea en el momento en que el
-artefacto *tiene* que estar desactualizado.
-
-### El checklist, al final
-
-`npm run verify` entra como **paso 2** del cierre de `CLAUDE.md`, entre «la app carga
-limpia» y «regenerar `index.html`» (los pasos 2–9 pasan a 3–10) — añadido **después** de
-que el verify existiera y se hubiera puesto rojo cinco veces, porque un protocolo que llama
-a un script inexistente es peor que ninguno.
-
-Diario: [session-150](./docs/sessions/session-150-verify-red-de-seguridad.md).
 
