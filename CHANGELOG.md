@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.84.0** | 2026-08-03 | docs+fix(copy): **la promesa estaba en tres sitios, y el tercero no lo miró nadie** — frente B de la auditoría (D1), copy y presencia pública. El onboarding prometía «Siempre gratis / sin paywall» en los dos idiomas contra v1.0 = versión **pagada**: pasa a «**Núcleo gratuito / disponible**» · los claims de servidor se reformulan **ya** para que sobrevivan al Worker de licencia («No hay servidor» → «Tus datos no salen de aquí», «localStorage únicamente» → «en tu dispositivo»); `tweaks.data.note` **se deja** porque su claim está acotado al backup · el copy elegido destapó un defecto que **no era del copy**: `valuesPlate` centraba cada columna por su cuenta, así que un label de dos líneas arrastraba su sub **8 px** — mismo defecto que el sello de s147, arreglado con alturas reservadas (s119) en vez de recortando texto · **existe un `README_EN.md`** que nadie había mirado: estaba en **v0.18.0** y **seguía vendiendo «Lifetime, Pase and Seasons»**, el modelo de cuatro vías descartado en s134 que s149 creyó cerrar — corrigió solo el español · los dos README enlazaban a **`HANDOFF.md` y `docs/porting.md`, que no existen**, y anunciaban **5 ejes de personalización de los que solo uno tiene control** (dos apagados por bandera, dos dormidos desde s20) | #151 | [diario](./docs/sessions/session-151-frente-b-copy-y-presencia.md) |
 | **v0.83.0** | 2026-08-03 | chore(tooling): **`npm run verify`, y el listón era ponerlo rojo con el crash de s144** — fase A de la auditoría (D1), alcance de D5: build + artefacto + `node --check`. El enunciado decía que ninguna pieza de `scripts/audit/` devuelve código de salida; medido, **diez de trece salen con 1** — lo que no hay es **ningún aserto**, así que no se reaprovecha ninguna · el crash de s144 tiene sintaxis impecable y solo revienta **al renderizar**, así que lo caza el **análisis de ámbito del compilado**: sobre el artefacto sano hay **38** identificadores sin ligar y los 38 son de plataforma, **cero ruido de la app** ⇒ un `useState` pelado es el nombre 39 · reproducido a propósito, sale `app/main.jsx:23` (la primera versión dijo **24**: el patrón se comía un salto de línea) · **cuatro rojos más**: módulo declarado inexistente (el build solo avisa), versión descuadrada, sintaxis en `sw.js` (**el build no lo mira jamás**) y archivo de `app/` sin declarar — este último salió de medir la **biyección 97 = 97** · el script **imprime sus propios huecos en cada pasada** y no deja rastro: restaura los dos artefactos byte a byte | #150 | [abajo](#v0830----2026-08-03----choretooling-npm-run-verify-la-red-de-seguridad-local) |
-| **v0.82.0** | 2026-08-03 | chore(sw)+fix(entitlement)+docs: **el service worker dejaba diez versiones de retraso en la caché de cada usuario** — triaje de la auditoría integral externa contra el código real: de lo verificable, **cero afirmaciones falsas**, y **cuatro contradicciones** de las que **tres son del repo consigo mismo** (el onboarding promete «Siempre gratis», la sidebar sigue siendo racha + récord contra §37-bis, y Desktop reordena con `order` contra la letra de s123) · el precache soltaba el export congelado en v0.71.0, servido **cache-first para siempre**; el cleanup del `activate` lo borra solo al bumpear · el pegado de la auditoría había perdido **todos** los marcadores markdown desde la línea 233, no solo la valla · **cuatro de las nueve decisiones cerradas en el mismo cierre**: A–K se **fusiona** (no sustituye), el `verify` v1 = build + artefacto + `node --check`, el guard gana **`hasPremiumEntitlement()`** para superficies de pago, y el modelo de cuatro vías queda **marcado como histórico** en `MONETIZATION.md` / `ROADMAP.md` / `README.md` | #149 | [abajo](#v0820----2026-08-03----choresw-el-standalone-sale-del-precache) |
+| **v0.82.0** | 2026-08-03 | chore(sw)+fix(entitlement)+docs: **el service worker dejaba diez versiones de retraso en la caché de cada usuario** — triaje de la auditoría integral externa contra el código real: de lo verificable, **cero afirmaciones falsas**, y **cuatro contradicciones** de las que **tres son del repo consigo mismo** (el onboarding promete «Siempre gratis», la sidebar sigue siendo racha + récord contra §37-bis, y Desktop reordena con `order` contra la letra de s123) · el precache soltaba el export congelado en v0.71.0, servido **cache-first para siempre**; el cleanup del `activate` lo borra solo al bumpear · el pegado de la auditoría había perdido **todos** los marcadores markdown desde la línea 233, no solo la valla · **cuatro de las nueve decisiones cerradas en el mismo cierre**: A–K se **fusiona** (no sustituye), el `verify` v1 = build + artefacto + `node --check`, el guard gana **`hasPremiumEntitlement()`** para superficies de pago, y el modelo de cuatro vías queda **marcado como histórico** en `MONETIZATION.md` / `ROADMAP.md` / `README.md` | #149 | [session-149](./docs/sessions/session-149-triaje-auditoria-integral.md) |
 | **v0.81.0** | 2026-08-03 | chore(estructura): **cinco archivos por encima del límite, y dos no estaban en la lista** — Fase 8.5, troceo sin cambio de comportamiento. La tabla de deuda daba `exercise-glyphs.jsx` por «dentro de límite» con **571 ln** y no registraba `sessions.js` (**502**) · `tokens.css` 613→**386**, `Sidebar.jsx` 570→**141**, `state-core.jsx` 510→**402**, `exercise-glyphs.jsx` 571→**209**, `sessions.js` 502→**353** · el build solo sabía inlinear `tokens.css`: generalizado a todas las hojas de `app/` · **`first.return` no se desbloquea NUNCA** (preexistente, confirmado contra el artefacto de v0.80.0) | #148 | [session-148](./docs/sessions/session-148-saneamiento-fase-8-5.md) |
 | **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [session-147](./docs/sessions/session-147-tramado-y-alineacion.md) |
 | **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
@@ -345,6 +346,76 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.84.0] -- 2026-08-03 -- docs+fix(copy): la promesa estaba en tres sitios
+
+Frente **B** de la auditoría integral (adoptado por **D1** de s149), justo detrás del frente A.
+Dos piezas: el copy que contradice el lanzamiento pagado (**D2**) y el README entero.
+
+### D2 — el onboarding prometía lo contrario de lo que se va a hacer
+
+Las cuatro líneas señaladas existen y **las dos superficies están vivas**: la placa de tres
+columnas de `Onboarding.jsx:150` y el modal de `SupportModule.jsx`. Dos datos corrigieron el
+plan antes de escribir nada: las claves EN de `ui.js` son **literales**, no posicionales (la
+trampa de s144 no aplicaba aquí), y de los tres slots que la auditoría proponía reescribir
+**dos seguían siendo ciertos y más cortos** que sus sustitutos.
+
+Lo que no sobrevive a v1.0 pagada no es la gratuidad del núcleo —`support.title` ya decía «El
+núcleo de PACE es gratis. Y lo seguirá siendo.»— sino el **absoluto**:
+
+| | Antes | Ahora |
+|---|---|---|
+| ES | Siempre gratis / sin paywall | **Núcleo gratuito / disponible** |
+| EN | Always free / no paywall | **Free core / available** |
+| `support.lede` ES | No hay cuentas. **No hay servidor**. | No hay cuentas. **Tus datos no salen de aquí**. |
+| `support.lede` EN | No accounts. **No server**. | No accounts. **Your data stays with you**. |
+| `support.value.local.sub` | localStorage únicamente / only | **en tu dispositivo** / **on your device** |
+
+Los claims de servidor se reformulan **ya**, no cuando exista el Worker, para no volver a
+tocarlos. **`tweaks.data.note` se deja intacto**: su «sin servidor» modifica al *backup* y
+seguirá siendo cierto con la licencia puesta.
+
+### El copy destapó un defecto de layout que no era del copy
+
+Medido por DOM a 360 px (el suelo documentado): la columna da **85 px** y la primera opción
+elegida medía **87,9 px** (ES) y **91 px** (EN) ⇒ envolvía, y al envolver su `sub` caía **8 px**
+por debajo del de sus hermanas. La causa era `valuesPlate` con `alignItems:'center'`: cada
+columna se centraba por su cuenta. **Es el mismo defecto que el sello de s147**, en otra
+superficie. Arreglado con **alturas reservadas** (s119) en vez de recortando texto — `stretch`
++ columna flex + `flexGrow` en el label —, así que los tres subs se alinean solos y **no se
+añade aire cuando ninguno envuelve**. Se conserva aunque el copy final ya no envuelva.
+
+### El README — y el que no estaba en el encargo
+
+- **Existe un `README_EN.md`** que el frente no contemplaba. Estaba en **v0.18.0** y **seguía
+  vendiendo «Lifetime, Pase and Seasons»**: s149 corrigió la sección de licencia **solo en el
+  español**, así que el modelo de cuatro vías descartado en s134 seguía publicado en inglés.
+- **Dos enlaces rotos en los dos escaparates**: `HANDOFF.md` y `docs/porting.md` no existen.
+- **La tabla de «5 ejes de personalización» era falsa en cuatro filas**: Timer y círculo
+  «orgánico» están **apagados por bandera** (`app/flags.js`), y Tipografía y Layout son ejes
+  dormidos **sin control en Ajustes desde s20**. Solo la Paleta tiene control.
+- Otras afirmaciones caducadas: «nada de build step, nada de npm» (hay `build` y `verify`),
+  «Babel transpila en navegador» (**solo en desarrollo**), el artefacto entregado (es
+  `index.html` desde s134), y los conteos — Respira **12 → 20**, Mueve **7 → 14**, Estira
+  **7 → 14**, Logros **100 → 96**. **Todos medidos del árbol**, no copiados de `STATE.md`.
+
+Reescritos los dos en paridad. **18 enlaces relativos comprobados, 0 rotos.**
+
+### Verificación
+
+`npm run verify` **PASA en 4,2 s** (versión coherente en los tres sitios; standalone restaurado
+a `998E3E358D689036`). El diff de `ui.js` se reduce a **4 claves × 2 idiomas**, cada una una vez
+como `-` y una vez como `+` ⇒ **paridad ES/EN intacta por construcción**. Sobre `index.html` con
+SW y cachés purgados: onboarding con los tres subs al **mismo `top`** en ES y EN a 360 px ·
+Pomodoro 25:00 → 24:58 · Hidrátate **2/8 y persiste** · **`first.sip` se desbloquea** · Logros
+con **54 sellos** · paleta oscuro correcta · **consola sin errores**.
+
+**Trampa propia:** estuve a punto de reportar Hidrátate roto por dos falsos negativos seguidos
+(un `.click()` sintético que no dispara y un click por `ref` que aterrizó **fuera** del botón).
+`addWaterGlass()` llamado directo funcionaba ⇒ no había bug. Si el síntoma dice «roto» y la
+causa no aparece, sospechar del instrumento antes que del código.
+
+---
+
 ## [v0.83.0] -- 2026-08-03 -- chore(tooling): `npm run verify`, la red de seguridad local
 
 Fase **A** de la auditoría integral, adoptada como frente inmediato por **D1** de s149, con
@@ -425,125 +496,3 @@ a un script inexistente es peor que ninguno.
 
 Diario: [session-150](./docs/sessions/session-150-verify-red-de-seguridad.md).
 
----
-
-## [v0.82.0] -- 2026-08-03 -- chore(sw): el standalone sale del precache
-
-Sesión de **triaje**, un solo frente. La auditoría integral externa aportada al cerrar
-s148 (1569 líneas, escrita contra v0.80.0) se contrastó **contra el código real, no
-contra la documentación**, y se entregó un documento de decisión. Solo se ejecutó su
-§4.7, autorizado expresamente.
-
-### El precache llevaba diez versiones de retraso
-
-`sw.js` precacheaba el export offline. La decisión s134 lo congeló **a propósito** en
-v0.71.0 y nadie revisó esa fila: con la app en v0.81.0, el service worker metía en la
-caché de cada usuario un artefacto **diez versiones viejo**, y la rama de no-navegación
-de `fetch` lo servía **cache-first para siempre**. No lo enlaza nadie — esa fila era la
-única referencia en runtime de todo el árbol.
-
-Verificado con el servidor de preview **parado**, sembrando el caso real (un usuario que
-ya venía de `pace-v0.81.0` con el standalone dentro):
-
-| Comprobación | Resultado |
-|---|---|
-| Cachés tras activar el SW nuevo | **solo `pace-v0.82.0`** — el cleanup del `activate` borró la anterior entera |
-| Caché nueva | **86 entradas, standalone ausente**; y `PRECACHE` tiene **86 filas** ⇒ `addAll` (atómico) no falló ninguna ruta |
-| PWA offline | `manifest.webmanifest` sirve `200` desde caché ⇒ sigue instalable |
-| Home, Respira, Mueve, Logros (54 sellos con máscara), paleta, Pomodoro | todo funciona sin red |
-| Hidrátate | +2/−1 → 1→3→2, y **persiste tras recargar** |
-| Consola | **cero errores** (los avisos de Babel son del buffer stale: en el documento vivo `typeof Babel === 'undefined'`) |
-
-Dos trampas propias en un cambio de seis líneas: el comentario nuevo escribía la ruta
-**literal y entrecomillada** y un comprobador que lee `sw.js` por líneas la contaba como
-fila de precache (regla de s146 aplicada a otro archivo); y hubo que simular
-`reescribirPrecache()` de la ingesta de glifos, que localiza su ancla **por línea**.
-
-### El triaje: cero afirmaciones falsas, y cuatro contradicciones
-
-De lo verificable contra código, la auditoría **acierta en todo**: `package.json` solo
-expone `build`, no existe `.github/`, el standalone está congelado, y su §4.1 —«hubo una
-regresión real que rompió `index.html` durante varias versiones»— es el crash de s144.
-Solo una afirmación **no reproduce** (§7.2: «standalone» no aparece ni una vez en
-`app/i18n/`) y otra ya estaba corregida (`ROADMAP.md:73` ya dice que v1 no es «la web
-pulida»).
-
-Lo valioso son **cuatro contradicciones, y tres son del repo consigo mismo**:
-
-| # | Qué | Evidencia | Contra qué |
-|---|---|---|---|
-| C1 | El onboarding promete «Siempre gratis / sin paywall», ES y EN | `app/i18n/strings/ui.js:27-28`, `:219-220` | v1.0 = versión **pagada** (s132/s134) |
-| C2 | La sidebar es panel de racha **y récord** | `app/shell/Sidebar.jsx:97,100,103` | §37-bis: ritmo semanal, sin récord (s133) |
-| C3 | Desktop reordena con `order` | `app/main/_responsive.js:254-263` | s123: «prohibido `order` bajo ningún breakpoint» |
-| C4 | El SW precacheaba el standalone | `sw.js:5` | s134 — **resuelta aquí** |
-
-**C3 es la instructiva**: s126 lo hizo a propósito, el usuario validó el resultado, y
-nadie enmendó la decisión escrita — la misma clase de fallo que la tabla de deuda de s148.
-
-Confirmada también la acusación de su §6.4, y exactamente donde decía:
-`app/custom/CustomRoutines.jsx:28` lee `premiumUnlocked` directo, sin pasar por el guard
-central de s95. En cambio `BreatheLibrary.jsx:118` **no** es una excepción: es el fallback
-defensivo de un ternario que consulta `canAccessRoutine` primero.
-
-Y su §10.2 acierta en algo pequeño y exacto: `home-geometry.js:26` dice «solo actúa con
-`min-width:769px`, en móvil borra las variables y sale» mientras `:58` dice «s128: el
-motor corre **también** en móvil». La cabecera miente sobre su propio archivo.
-
-### El formato de la auditoría: no era una valla, eran todos los marcadores
-
-Desde la línea 233 el pegado había perdido **títulos, viñetas, vallas y las dos tablas**,
-y arrastraba el texto del botón «Copy» pegado al primer token de cada bloque. Se reparó
-comparando el **flujo de palabras** contra HEAD: **4533 tokens antes y después, cero
-divergencias**. Los encabezados que parsean pasan de 19 a **133**.
-
-### Nueve decisiones presentadas · cuatro cerradas en el mismo cierre
-
-Detalle en [`triaje-audit-integral-s149.md`](./docs/audits/triaje-audit-integral-s149.md).
-
-- **D1 · fusionar, no sustituir.** A–K **no** reemplaza las 15 fases: se adoptan su **A**
-  (red de seguridad) como frente inmediato y su **B** (copy) detrás; **C** (Capacitor
-  temprano) e **I** (Travesías con mapa) esperan a D7 y D6.
-- **D5 · el `verify` v1 cubre build + artefacto + `node --check`.** Exactamente lo que
-  habría cazado el crash de s144. La integridad de catálogos/i18n/precache/glifos va en
-  una segunda tanda.
-- **D8 · el guard gana una tercera función.** `canAccessRoutine`/`canAccessPath` piden un
-  id, y el constructor **no es contenido: es una superficie entera de pago**, así que no
-  había guard al que preguntar. Entra `hasPremiumEntitlement()` en `state-entitlement.jsx`
-  y `CustomRoutines.jsx` la consume con fallback defensivo, conservando `usePace()` para la
-  reactividad. **Verificado en las dos direcciones** sobre `index.html`: con
-  `premiumUnlocked:false` la sección pinta «PREMIUM · … · **Pronto**» sin CTA; con `true`,
-  «**+ Crear rutina**» y sin «Pronto». La promesa de la cabecera de s95 —«al llegar la
-  licencia real solo cambia este archivo»— vuelve a ser cierta.
-- **D9 · marcado, no borrado.** `MONETIZATION.md` gana un banner **⚠️ HISTÓRICO — NO
-  GOBIERNA** antes del modelo de s21/s26, más marcas en la vía 2 (descartada en s134), la
-  vía 3 (fuera de v1) y la tabla de convivencia. `ROADMAP.md` marca «Lanzamiento pagado
-  v1.0» y «App Android (v2.0)» — Android entra **dentro** de v1 desde s137. Y `README.md`
-  corrige su sección de licencia, que vendía «Lifetime + Pase mensual + Temporadas».
-
-- **D4 · acotar la frase, no revertir el código.** `DESIGN_SYSTEM.md` deja de decir «prohibido
-  `order` bajo ningún breakpoint» y dice lo que rige: la jerarquía del DOM es una e
-  invariante, pero **Desktop reordena visualmente desde s126** y está validado — mientras que
-  en ≤768px la regla **sigue viva**, porque el modelo «atardecer» necesita el flujo del DOM
-  para que el margen negativo solape. Verificado por DOM: orden `timer → camino →
-  actividades`, `order` computado `1` y `2`. Corregida también la cabecera de
-  `home-geometry.js`, que desde s128 decía que el ayudante «solo actúa en Desktop».
-
-Siguen **abiertas cuatro**: D2 (copy del onboarding, va en el frente B) · D3 (sidebar contra
-§37-bis) · D6 (Travesías con mapa) · D7 (spike de Capacitor).
-
-### Hallazgo fuera de encargo: el ayudante de geometría no publica nada
-
-Salió al verificar que la corrección de la cabecera era **inerte**. A **1280×720**, estado
-limpio y SW purgado: `--pace-timer-d`, `--pace-activities-overlap`, `--pace-home-squeeze`,
-`--pace-home-timer-size` y `--pace-home-sunset-overlap` **vacías**, `documentElement` **sin
-atributo `style`**, aro de **360 px** —el fallback exacto de `var(--pace-timer-d, 360px)`—,
-solapamiento de **10 px = 0,028·D** contra el 0,16 nominal (banda 0,14–0,17) y **17 px de
-scroll**, cuando el modelo de s126 encoge D hasta `overflowV ≤ 1`.
-
-**Confirmado preexistente**: se extrajo `index.html` de HEAD (v0.81.0), se sirvió desde el
-mismo servidor y dio lo mismo. **No se tocó** — y ojo con dos cosas antes de perseguirlo: está
-medido en el panel de vista previa, no en un navegador real, y la home **se ve bien**. Lo que
-falla no es el resultado visible sino que el contrato medido de s126 no se está aplicando.
-Encaja con el §10.2 de la auditoría, que pedía auditar el contrato geométrico sin poder medirlo.
-
-Diario: [session-149](./docs/sessions/session-149-triaje-auditoria-integral.md).

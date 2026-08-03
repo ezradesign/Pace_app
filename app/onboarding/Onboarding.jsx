@@ -148,10 +148,18 @@ function Onboarding() {
               <p style={onboardingStyles.lede}>{t('welcome.lede')}</p>
               <div style={onboardingStyles.valuesPlate}>
                 {['local', 'accounts', 'free'].map((k) => (
-                  <div key={k} style={{ flex: 1, padding: '0 6px' }}>
+                  /* Columna en flex-column con el label creciendo (s151). La
+                     columna solo da 85px de texto a 360px de ancho, asi que un
+                     label largo envuelve a DOS lineas y, con el `center` que
+                     tenia la placa, arrastraba su sub 8px por debajo del de sus
+                     hermanas (medido). El label absorbe el alto sobrante y los
+                     tres subs quedan a la misma altura, sin aire de mas cuando
+                     ninguno envuelve. Misma regla de alturas reservadas que el
+                     sello de s147. */
+                  <div key={k} style={{ flex: 1, padding: '0 6px', display: 'flex', flexDirection: 'column' }}>
                     <div style={{
                       fontFamily: 'var(--font-display)', fontStyle: 'italic',
-                      fontSize: 14, color: 'var(--ink)', lineHeight: 1.15,
+                      fontSize: 14, color: 'var(--ink)', lineHeight: 1.15, flexGrow: 1,
                     }}>{t('welcome.value.' + k + '.label')}</div>
                     <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginTop: 3 }}>
                       {t('welcome.value.' + k + '.sub')}
@@ -304,7 +312,9 @@ const onboardingStyles = {
     textShadow: '0 0 16px var(--paper), 0 0 8px var(--paper)',
   },
   valuesPlate: {
-    display: 'flex', alignItems: 'center', width: '100%',
+    /* stretch, no center: las tres columnas comparten alto y sus subs se
+       alinean solas aunque un label envuelva (s151). */
+    display: 'flex', alignItems: 'stretch', width: '100%',
     padding: '12px 10px',
     background: 'rgba(242,237,224,0.82)',
     border: '1px solid rgba(184,173,142,0.5)',

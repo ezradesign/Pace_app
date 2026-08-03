@@ -686,6 +686,19 @@ dentro de `[data-pace-reveal]`, el `forwards` de `pace-reveal-rise` gana al
 `opacity` inline de los hijos directos → los estados deshabilitados se
 señalizan por contorno neutro, nunca por opacidad.
 
+**La placa de valores se alinea por abajo, no por el centro (s151).** Las tres columnas
+(`Todo local` · `Sin cuentas` · `Núcleo gratuito`) van en `alignItems:'stretch'`, cada
+una en columna flex y con el **label creciendo** (`flexGrow:1`). Con el `center` que
+tenía, un label que envolviera a dos líneas arrastraba su `sub` **8 px por debajo** del
+de sus hermanas — el mismo defecto que el sello de Logros en s147, en otra superficie.
+Así los tres subs se alinean solos y **no se añade aire cuando ninguno envuelve**.
+**Presupuesto real de texto: 85 px por columna a 360 px de ancho** (el suelo
+documentado) — a 14px Cormorant itálica eso son ~12 caracteres. Cualquier copy nuevo
+para esta placa se **mide antes de aprobarlo**: «Lo esencial, gratis» daba 87,9 px y
+«The essentials, free» 91. Ojo también con el `sub`: un valor a menos de ~1 px del
+límite envuelve durante la ventana de `font-display:swap`, porque Georgia es más ancha
+que Cormorant.
+
 **Metadatos por lámina** (`app/paths/illustrations/paths.index.js`): `dots`
 {x,y,r,color} medidos por escaneo (`scripts/ingest-lamina.js`, modo híbrido),
 `paper` del cielo, `focusY` (franja del sendero) y `finish` (encuadre final).
