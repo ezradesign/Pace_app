@@ -59,6 +59,12 @@ Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
 9. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
 10. Dar el mensaje exacto de commit sugerido para GitHub
 
+> **Tras el push, el CI repite los pasos 2 y 3 en GitHub** (`.github/workflows/ci.yml`, s153):
+> corre `npm run verify` **tal cual** y comprueba lo único que el verify no puede — que el
+> `index.html` **committeado** sea el build de las fuentes (su aviso de deriva es `[INFO]` a
+> propósito, porque el paso 2 vive justo antes del 3). **El CI no comprueba nada que no corra
+> en local**: si hace falta vigilar algo nuevo, se añade al `verify`, no al YAML.
+
 **Cambio significativo:** cualquier cambio funcional, de diseño notable o estructural.
 Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
