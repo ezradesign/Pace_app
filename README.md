@@ -147,9 +147,18 @@ El **código fuente** de PACE se publica bajo la [Elastic License 2.0](./LICENSE
 - **Eludir, desactivar o saltarte** el sistema de validación de licencia Lifetime / Pase.
 - **Retirar** los avisos de licencia, copyright o marca.
 
-### Lifetime, Pase y Temporadas ≠ licencia del código
+### La licencia comercial ≠ la licencia del código
 
-La Elastic License 2.0 cubre el **código fuente** del repositorio. El **Lifetime**, el **Pase mensual** y las **Temporadas** son licencias comerciales **separadas**, aplicadas sobre el producto compilado (`PACE_standalone.html`) para habilitar contenido y funciones premium. Ver [`MONETIZATION.md`](./MONETIZATION.md) para el detalle del modelo de monetización.
+La Elastic License 2.0 cubre el **código fuente** del repositorio. La licencia **Premium Lifetime**
+es una licencia comercial **separada**, aplicada sobre el producto compilado para habilitar
+contenido y funciones premium. Ver [`MONETIZATION.md`](./MONETIZATION.md) para el detalle del
+modelo de monetización.
+
+> **Corregido en s149.** Esta sección hablaba de «Lifetime + **Pase mensual** + **Temporadas**»:
+> el modelo de cuatro vías quedó **descartado en s134** —al lanzamiento hay **un solo plan**— y
+> está marcado como histórico en `MONETIZATION.md`. El resto de este README sigue **muy
+> desactualizado** (dice v0.27.6 con la app en v0.82.0); se corrige entero en el frente de
+> presentación pública.
 
 ### Otros usos
 

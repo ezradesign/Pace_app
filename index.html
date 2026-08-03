@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.81.0</title>
+  <title>PACE · Foco · Cuerpo — v0.82.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3907,7 +3907,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.81.0';
+const PACE_VERSION = 'v0.82.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5227,8 +5227,22 @@ function canAccessPath(pathId) {
   return !!(s && s.premiumUnlocked);
 }
 
-Object.assign(window, { canAccessRoutine, canAccessPath });
-;Object.assign(window, { resolveAnyRoutine, canAccessRoutine, canAccessPath });
+/* hasPremiumEntitlement() -> boolean   (s149)
+     No todo lo premium es CONTENIDO. El constructor de rutinas propias es una
+     SUPERFICIE entera de pago (s93): no hay `routineId` ni `pathId` que pasarle
+     a los dos guards de arriba, asi que `CustomRoutines.jsx` leia
+     `premiumUnlocked` directo — la unica lectura del booleano fuera de este
+     archivo que NO era un fallback defensivo, y justo la excepcion que el audit
+     integral señalaba por su nombre.
+     Con esta tercera funcion la promesa de la cabecera vuelve a cumplirse: al
+     llegar la licencia real SOLO cambia este archivo. */
+function hasPremiumEntitlement() {
+  const s = getState && getState();
+  return !!(s && s.premiumUnlocked);
+}
+
+Object.assign(window, { canAccessRoutine, canAccessPath, hasPremiumEntitlement });
+;Object.assign(window, { resolveAnyRoutine, canAccessRoutine, canAccessPath, hasPremiumEntitlement });
 })();
 </script>
   <script>
@@ -14554,8 +14568,15 @@ window.getExerciseDef = getExerciseDef;
    misma lista dos veces no se lea como un bug. */
 function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = _ref;
   const { t, tn } = useT();
-  const [pace] = usePace();
-  const unlocked = !!pace.premiumUnlocked;
+  const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
+  // premiumUnlocked la seccion re-renderiza y el guard relee el store.
+  // s149: el acceso pasa por el guard central de entitlement (s95), como el
+  // resto de superficies premium. Equivalente EXACTO al antiguo
+  // `!!pace.premiumUnlocked`, con fallback defensivo por si el guard no
+  // estuviera cargado. Mismo patron que `RoutineCard` en BreatheLibrary.
+  const unlocked = window.hasPremiumEntitlement ?
+  window.hasPremiumEntitlement() :
+  !!pace.premiumUnlocked;
   const routines = Array.isArray(pace.customRoutines) ? pace.customRoutines : [];
   const limits = window.CUSTOM_LIMITS || { maxRoutines: 10 };
   const atLimit = routines.length >= limits.maxRoutines;
@@ -22266,9 +22287,14 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
      --pace-timer-d            → tamaño del aro y escalas interiores (calc)
      --pace-activities-overlap → cuánto suben las Actividades sobre el círculo
 
-   ENCAPSULADO EN DESKTOP. Solo actúa con `min-width: 769px`. En mobile/tablet
-   BORRA las dos variables y sale → el comportamiento actual queda intacto (el
-   CSS de esas variables vive todo bajo la misma media query).
+   UN MOTOR, DOS PIELES (corregido en s149; hasta aquí esta cabecera seguía
+   diciendo «encapsulado en Desktop, en mobile/tablet borra las dos variables y
+   sale», y **eso dejó de ser cierto en s128**). El motor corre en TODO viewport
+   y publica las dos variables siempre; lo que cambia por debajo de 769px son las
+   CONSTANTES de la piel —el aro arranca por ANCHO (~86vw) en vez de por altura,
+   y su suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
+   existiendo para elegir piel y para reaccionar al cruce del breakpoint, no para
+   apagarse. Ver la nota de s128 junto a `WIDTH_CAP_MOBILE`, más abajo.
 
    SIN lógica de temporizador, sin estado de negocio, sin eventos. Solo mide y
    publica geometría. SIN bucle de layout: observa los hermanos que NO contienen

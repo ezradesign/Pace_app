@@ -358,8 +358,23 @@ apagaba el solapamiento en pantallas bajas y dejaba un hueco, y cuyo swap por `o
 rompía la jerarquía) por una geometría **estructural, proporcional y sin gate**. Es la
 implementación de la parte §0 sensible a la altura.
 
-**Jerarquía invariante:** Timer → Camino → Actividades = orden del DOM en TODO viewport.
-**Prohibido `order`** para intercambiar secciones bajo ningún breakpoint.
+**Jerarquía invariante:** Timer → Camino → Actividades = **el orden del DOM, en todo viewport**.
+Eso no cambia: el DOM es uno solo y esa es su jerarquía.
+
+**Prohibido `order` en ≤768px** para intercambiar secciones — *acotado en s149; s123 lo escribió
+como «bajo ningún breakpoint», y eso ya no es cierto*. En **Desktop (≥769px) s126 SÍ reordena
+visualmente**: `[data-pace-activitybar] { order: 1 }` y `[data-pace-spc] { order: 2 }`
+(`app/main/_responsive.js:254-263`), de modo que las Actividades van tras el aro y el Camino al
+fondo. Es **deliberado y está validado**: la fila de Actividades es el horizonte del modelo de
+s126, y el usuario aprobó esa composición mirándola.
+
+> **Por qué se acota en vez de revertirse.** La auditoría integral de s148 lo señaló como una
+> incoherencia (§8.1) y al comprobarlo resultó ser del repo consigo mismo: s126 introdujo el
+> `order` a propósito y **nadie enmendó la frase**. Se corrige la frase, no el código — pero la
+> regla original **sigue viva donde nació**: en móvil y tablet, donde el modelo «atardecer» de
+> este bloque necesita que el flujo sea el del DOM para que el margen negativo solape de verdad.
+> Cambiar el orden visual en Desktop es una decisión de composición; hacerlo en ≤768px rompe la
+> geometría.
 
 **Tamaño del aro (por altura útil, mínimo generoso):**
 - `--pace-home-timer-size = min(86vw, 520px, max(300px, 58dvh))` (definida en
