@@ -283,13 +283,21 @@ demás, y las cuatro superficies cuentan la misma cifra.
 > precedencia máscara → SVG heráldico → carácter deja entrar el arte por partes sin huecos, así
 > que lo que aún no tiene dibujo conserva el sistema viejo en vez de aplanarse a su categoría.
 
-### FASE 3 · Eventos, fase 1 web (`pace.events.v1`)
+### FASE 3 · Eventos, fase 1 web (`pace.events.v1`) — 🔄 EN CURSO (s155, v0.88.0)
 
 Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se
 emite no se reconstruye, y de él dependen «Qué te ayuda», las comparaciones, el check-in de cierre
 y media pestaña Semana. Diseño cerrado y aprobado desde s117: no se rediseña, se implementa.
 Criterio de cierre: se emiten eventos en web/PWA con single-writer, `file://` no emite, y el
 export/import sigue siendo reemplazo total.
+
+**s155 cerró la Fase 1 del esquema** —modelo canónico, adaptador web, Web Locks, baseline,
+export/import/reset, recuperación y pruebas multi-pestaña— **sin emisores**, porque §25 prohíbe
+emitir antes de estar en `READ_WRITE`. El single-writer está probado con **dos pestañas de verdad**
+(20 emisiones concurrentes, cero pérdidas) y `file://` selecciona el adaptador inerte. **Queda la
+Fase 2 del esquema**: los cuatro emisores, con la condición de entrada de que el export de «Tus
+datos» lleve la sección de eventos —lo exige el `verify`—. Diario:
+[session-155](./docs/sessions/session-155-eventos-fase-1.md).
 
 ### FASE 3.5 · Pausa PACE (§17)
 

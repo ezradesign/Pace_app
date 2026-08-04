@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.87.0</title>
+  <title>PACE · Foco · Cuerpo — v0.88.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -177,6 +177,23 @@
        shouldPromptRoutineFeedback. Tras state-core (getState/setState) y
        state-history (todayISO); antes de state.jsx (que lo re-exporta). -->
   <script type="text/babel" src="app/state-feedback.jsx"></script>
+  <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
+       uso. Memoria del usuario sobre su progreso, NO telemetria — no sale del
+       dispositivo y no hay una sola llamada de red en los cuatro archivos.
+       Orden OBLIGATORIO y por que:
+         · el MODELO va primero (§5, backend-independiente) y necesita
+           todayISO/toISODate/parseLocalDateKey de state-history (regla #10);
+         · los ADAPTADORES despues, porque consumen el modelo por window (un
+           `const` no cruza la IIFE del build: la trampa de s144);
+         · la FACHADA la ultima: se inicializa sola al cargar y lee getState()
+           para capturar el baseline, asi que state-core TIENE que estar ya.
+       Sin emisores: la Fase 2 del esquema es la que emite, y §25 prohibe
+       emitir antes de que el adaptador este en READ_WRITE. -->
+  <script type="text/babel" src="app/events/events-payloads.js"></script>
+  <script type="text/babel" src="app/events/events-model.js"></script>
+  <script type="text/babel" src="app/events/events-adapter-web.js"></script>
+  <script type="text/babel" src="app/events/events-adapter-null.js"></script>
+  <script type="text/babel" src="app/events/events-store.js"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>

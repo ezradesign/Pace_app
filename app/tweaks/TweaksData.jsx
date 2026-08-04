@@ -81,8 +81,24 @@ function TweaksDataSection() {
         const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
-        // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+        /* Escribimos y recargamos para estado limpio.
+           s155 — el estado legacy y `pace.events.v1` son DOS almacenes y entre
+           ellos NO hay atomicidad, asi que la escritura pasa por la barrera:
+           marcador -> estado legacy (la verdad canonica va primero) ->
+           contenedor de eventos REINICIADO con `activatedAt` nuevo y el
+           baseline recapturado del estado que acaba de entrar.
+           Por que reiniciar y no conservar: un backup de PACE no trae seccion
+           de eventos, y dejar el contenedor de antes junto a un estado
+           importado seria exactamente la MEZCLA de historial anterior con
+           estado nuevo que hay que evitar — el baseline se habria capturado de
+           unos contadores que ya no son los de este estado.
+           La recarga de 900 ms no es la garantia: si el proceso muriera antes
+           de que la barrera termine, el MARCADOR sobrevive y la siguiente
+           inicializacion completa el reinicio (§22), que es idempotente. */
+        const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+        try {
+          paceEventsStoreBarrier('import', writeLegacy, incoming);
+        } catch (e) { writeLegacy(); }
         setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {

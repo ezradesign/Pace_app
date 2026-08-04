@@ -395,9 +395,10 @@ function TweaksPanel({ open, onClose }) {
 
       <Divider style={{ margin: '14px 0' }} />
 
-      {/* Reset */}
+      {/* Reset — s155: `paceEventsWipeAll` borra los DOS almacenes por la
+          barrera; sin eso `privacy.html` mentiria al prometer borrado total. */}
       <button
-        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) { localStorage.removeItem('pace.state.v2'); location.reload(); } }}
+        onClick={() => { if (confirm(t('tweaks.confirm.reset'))) paceEventsWipeAll(() => location.reload()); }}
         style={{
           width: '100%',
           padding: '8px',
