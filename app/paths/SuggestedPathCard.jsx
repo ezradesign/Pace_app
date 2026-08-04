@@ -60,11 +60,13 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
       position: relative;
       z-index: 2;
       /* s128: el solapamiento lo mide AHORA el motor (home-geometry.js) desde el
-         CICLO real y lo publica en --pace-activities-overlap (la MISMA var que en
-         Desktop). --pace-home-sunset-overlap (estimación CSS) queda de fallback
-         pre-JS. La tarjeta es el "horizonte" del móvil: sube y el aro se recorta en
-         su borde superior (clip en [data-pace-dial-fit], _responsive.js). */
-      margin-top: calc(var(--pace-activities-overlap, var(--pace-home-sunset-overlap, 0px)) * -1);
+         CICLO real. La tarjeta es el "horizonte" del móvil: sube y el aro se
+         recorta en su borde superior (clip en [data-pace-dial-fit]).
+         s156: se consume --pace-horizon, el token que resuelve motor-o-fallback
+         en UN solo sitio (_responsive.js). Antes esta regla traía su propia
+         cadena de fallbacks y el recorte del aro traía otra distinta, así que
+         con el motor apagado la tarjeta subía sobre un aro sin recortar. */
+      margin-top: calc(var(--pace-horizon) * -1);
     }
     /* s123: el SWAP por flex-order que había aquí (Actividades vs Camino en
        ancho+corto) ROMPIA la jerarquia invariante Timer -> Camino -> Actividades
