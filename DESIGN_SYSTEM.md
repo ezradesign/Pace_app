@@ -43,6 +43,8 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--focus-2` | `#2A3E27` | Acento Foco oscuro |
 | `--focus-soft` | `rgba(62,90,58,0.10)` | Fondos sutiles Foco |
 | `--focus-cta` | `#50624D` | **CTAs "Comenzar"** principales (s77b): Pomodoro home + Camino sugerido + cada Camino en la biblioteca. Verde apagado equilibrado (mas gris que `--focus` puro). NO usar para acciones secundarias |
+| `--dawn-soft` | `rgba(191,140,92,0.13)` | **Amanecer de la home** (s156): halo detrás del aro del Pomodoro. Ámbar tierra desaturado, con tono PROPIO — no se reutilizan `--breathe` ni `--move`, que son colores de MÓDULO y harían leer la home como si señalara una actividad |
+| `--dawn-line` | `rgba(178,128,82,0.34)` | **Línea de alba** (s156): el horizonte, desvanecido por los dos extremos |
 | `--breathe` | `#C97A5D` | Acento Respira |
 | `--breathe-2` | `#A85E43` | Acento Respira oscuro |
 | `--breathe-soft` | `rgba(201,122,93,0.12)` | Fondos sutiles Respira |
@@ -90,6 +92,8 @@ como estética noche, no se reemplaza).
 | `--breathe` | `#D99477` |
 | `--breathe-2` | `#E8A98F` |
 | `--breathe-soft` | `rgba(217,148,119,0.14)` |
+| `--dawn-soft` | `rgba(214,165,116,0.16)` | Amanecer (s156). Sobre papel oscuro la misma luz necesita algo mas de cuerpo para no desaparecer, pero se mantiene por debajo del umbral en que competiria con el numero |
+| `--dawn-line` | `rgba(222,176,128,0.30)` | Linea de alba (s156) |
 
 ### Papel envejecido
 
@@ -345,6 +349,43 @@ alturas ≤512px muy por debajo. Ver `docs/product/AUDITORIA_SISTEMA_PACE.md` §
 
 **Trampa de mantenimiento:** el CSS de `_responsive.js` vive en un **template literal JS** ⇒
 **prohibidos los backticks en los comentarios** (rompen el build con «';' expected»).
+
+---
+
+### Amanecer del Pomodoro (s156 · v0.89.0)
+
+La home tiene atmosfera propia: **halo detras del aro** y **linea de alba en el
+horizonte**. Dos reglas y ni una mas.
+
+**Fuente unica de la geometria.** Todo lo que dependa del diametro o del horizonte
+consume `--pace-dial-d` y `--pace-horizon`, definidas **solo** en `_responsive.js`
+sobre `[data-pace-home-body]`. Ahi, y solo ahi, se decide si manda el motor
+(`home-geometry.js`) o el fallback CSS. **No se escriben fallbacks en el punto de
+consumo**: cuando cada consumidor traia el suyo, con el motor apagado la tarjeta
+subia sobre un aro sin recortar (s156).
+
+**El halo se recorta con el aro.** Vive en `[data-pace-dial-fit]::before`, dentro
+del elemento que lleva el `clip-path`, de modo que la luz emerge **de detras del
+horizonte** en vez de flotar sobre el. z-index 0; el interior del dial va en 1.
+
+**No se inventa curva de luz.** El degradado sale de `paceGlowRamp()` y el grano de
+`paceGrainUrl()`, ambos en `app/ui/SessionShell.jsx` — la fuente canonica desde
+s140. `_responsive.js` los invoca al inyectar la hoja y hornea el resultado.
+Duplicar las paradas en CSS crearia una segunda curva que divergiria a la primera
+correccion. **El grano no es decoracion**: sobre papel plano un degradado de esta
+amplitud bandea, y va enmascarado con la MISMA caida que la luz.
+
+**Estados por atributo, intensidad por variable.** `data-pace-dial-running` y
+`data-pace-dial-paused` (declarativo, sin logica de temporizador) mueven
+`--pace-dawn` (0.72 / 1 / 0.42) y `--pace-alba` (0.8 / 1 / 0.45). **El color nunca
+es la unica señal**: el numero, el CTA y «Reiniciar bloque» ya dicen el estado. Las
+transiciones son decorativas y no cuelgan de `data-pace-essential`, asi que el kill
+de `prefers-reduced-motion` las neutraliza.
+
+**Reparto del sobrante en movil.** En telefonos el aro topa por ANCHO y sobra alto
+por construccion. `--pace-home-slack` lleva el sobrante REAL medido y el CSS lo
+reparte **38/62** en vez de centrarlo: masa alta y suelo bajo, que es la lectura de
+un amanecer. Con sobrante 0 degrada al centrado de siempre.
 
 ---
 
