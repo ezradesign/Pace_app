@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.89.0** | 2026-08-04 | feat(home): **un nodo opcional no puede decidir si hay geometria** — el motor de la home exigia los cuatro nodos y se callaba si faltaba uno; como `getSuggestedPath()` **nunca** devuelve null con catalogo no vacio, el unico estado real sin tarjeta —**un Camino en curso**— apagaba el motor entero y Desktop caia a un `360px` escrito a mano pintando el aro **sin horizonte**, sin recuperarse al salir (`attach()` corria una vez y el ResizeObserver seguia mirando un nodo que React ya habia sustituido) · **la evidencia de s149 no reproduce y sus dos mitades se excluyen**: 406×406 es justo lo que publica el motor, `[data-pace-timer-dial]` y `window.__PACE_HOME_GEOMETRY_VARS__` **no existen en el repo**, y las variables «vacias» salen de que **ninguna regla CSS las declara** — solo se escriben inline sobre `documentElement` · **el invariante que este repo declaraba era falso**: con el motor apagado la tarjeta subia 39,7 px sobre un aro **sin recortar** ⇒ ahora `--pace-dial-d` y `--pace-horizon` resuelven motor-o-CSS **en un solo sitio** y recorte y solapamiento salen del **mismo token** · **dos defectos mas que salieron al medir**: el arranque tardaba **1345 ms y dos frames** en publicar (el aro se pintaba al fallback y **saltaba**; ahora publica a 164 ms, sincrono) y —**previo y publicado**— con `prefers-reduced-motion` el aro salia a **244 px** en vez de 406 porque el bucle **encogia a ciegas** ocho pasadas sobre una medida congelada · **amanecer**: halo detras del aro recortado por el **mismo** horizonte y linea de alba anclada a `--pace-horizon`, **reutilizando** `paceGlowRamp` y `paceGrainUrl` de s140 en vez de duplicar la curva, con tokens `--dawn-soft`/`--dawn-line` en las dos paletas y **tres estados por atributo estable** que solo mueven intensidad · **ritmo movil** con el techo por ancho derivado del ancho **realmente usable** (0.86 → 0.92) y `--pace-home-slack` repartiendo el sobrante 38/62 ⇒ a 390×844 el aro pasa de 335 a 359 y el aire muerto de 91 a 62 px, **con escritorio sin una regresion** (406/65 · 456/73 · 487/78 · 520/83) · **12 rojos controlados y los 12 mordieron**; el instrumento mintio **cinco** veces, y una la cazo un **guard** que asertaba el media query antes de medir | #156 | [abajo](#v0890----2026-08-04----feathome-un-nodo-opcional-no-puede-decidir-si-hay-geometria) |
 | **v0.88.1** | 2026-08-04 | fix(events): **una operación de dos almacenes que no espera no es atómica** — tres defectos que el usuario encontró revisando v0.88.0, los tres confirmados contra el código. **P0**: el import lanzaba la barrera **sin esperarla** y el resultado de la escritura legacy **se descartaba** en el camino normal ⇒ con `setItem` fallando por cuota, el estado no se guardaba, el contenedor de eventos **se reiniciaba igual**, la UI decía «Importado» y la página recargaba — cuatro mentiras seguidas sobre una promesa de integridad que esta misma sesión había escrito. **Y el arreglo no era un `if`**: al abortar, el **marcador ya está escrito**, y como el arranque reinicia el contenedor en cuanto ve uno vivo, abortar sin limpiarlo habría dejado que el siguiente arranque hiciera justo lo que se evitaba ⇒ nace `eventsWebClearMarker`. Ahora se espera, se aborta a un estado conocido, el resultado lleva `legacyWritten` y la UI solo canta victoria con eso en `true`; copy nuevo ES+EN y **CENSO de i18n a 510**. Mismo trato en el reset: `wipeLocalState()` devuelve si pudo, y si no pudo **no se borra el historial de alguien cuyo estado sigue ahí**. **Segundo**: un contenedor de **versión FUTURA** se reescribía —el gate vivía solo en la ruta de import— y le tiraba en silencio los campos que esta versión no conoce; ahora `schemaVersion` mayor = **READ_ONLY**, comprobado **dos veces** (capacidad y **dentro del lock**, que es el autoritativo). **Tercero**: dos filas de la tabla de `STATE.md` seguían en v0.87.0. **Y un quinto aserto que no mordió**: el del contenedor futuro siguió **verde con el guard roto**, porque pasaba por la fachada —que corta antes en `canWrite()`— y el guard interior **no llegaba a ejecutarse**; se arregló llamando al adaptador a pelo. Trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de `page.on('dialog')`**, así que el `confirm()` del import devolvía false y la importación **ni empezaba** | #155 | [abajo](#v0881----2026-08-04----fixevents-una-operacion-de-dos-almacenes-que-no-espera-no-es-atomica) |
 | **v0.88.0** | 2026-08-04 | feat(events): **la memoria es del usuario, no nuestra** — FASE 3 del plan: nace **`pace.events.v1`**, el registro **local** de uso, en su **Fase 1** (modelo canónico + adaptador web + Web Locks + baseline + export/import/reset + recuperación + pruebas multi-pestaña) y **sin un solo emisor**, porque §25 prohíbe emitir antes de estar en `READ_WRITE` · **dos contradicciones con una página PÚBLICA**, las dos creadas por el mero hecho de existir una segunda clave: `privacy.html` promete que desde Ajustes «puedes borrarlo todo» y el reset solo quitaba `pace.state.v2` (**arreglado**: pasa por la barrera y borra los dos almacenes), y promete exportar «**todo** tu estado» cuando el backup no llevará eventos (**no se arregla hoy, se le pone un gate**: si aparece un emisor fuera de `app/events/` y el export no lleva la sección, el `verify` se pone **rojo**) · **capa A / capa B separadas** como exige §5 — el modelo canónico no nombra `localStorage` ni `navigator.locks`, y el **adaptador inerte** existe para que `file://` no emita y Capacitor **no caiga al web** por parecer `https://localhost` · **5 comprobaciones nuevas en el `verify`**, todas RELACIONALES, más el **guard de cero**; la de «cero red» tuvo que mirar el **código sin comentarios**, porque las cabeceras **nombran** `fetch` y `WebSocket` para prohibirlos y un `grep` a secas **se autoinculpa** (trampa de s146 por otra puerta) · **10 pruebas E2E**, entre ellas **DOS pestañas de verdad** emitiendo a la vez sin perder un evento (el **P0** del diseño), la lista permitida descartando `notaLibre`/`ip`/ruta de archivo, y seis snapshots inválidos rechazados dejando el contenedor **byte a byte** igual · **17 rojos, y los 17 mordieron a la primera** —frente a los cuatro que fallaron en s154— porque el banco ahora **exige que la cadena aparezca exactamente una vez** y calibra antes; el **guard de cero** necesitó banco propio, moviendo la carpeta de verdad y exigiendo **el mensaje**, no solo el exit 1 · el `verify` cazó **dos identificadores sin ligar** en código nuevo: `Uint8Array` faltaba en su lista de plataforma, y `chrome` estaba **mal en mi código** (solo existe en Chromium) | #155 | [abajo](#v0880----2026-08-04----featevents-la-memoria-es-del-usuario-no-nuestra) |
 | **v0.87.0** | 2026-08-04 | test(e2e): **un test que no has visto fallar no prueba nada** — segunda pieza del frente CI: **Playwright**, que cubre justo el **primer hueco que el `verify` declara e imprime en cada pasada** («no abre navegador, no monta la app, no pulsa nada»). Entra **el checklist de cierre de `CLAUDE.md` entero**, ejecutado: Pomodoro hasta el BreakMenu con el **reloj virtual** —viable porque `useCountdown` es *timestamp-based*—, Respira con su **modal de seguridad de apnea**, Mueve con Preview y pasos, Hidrátate, Logros con toast, Tweaks y persistencia · **13 tests, ~25 s** · **no se inventó un selector**: once bancos de reconocimiento condujeron el artefacto primero, y de ahí salió que las filas de rutina **no son `<button>`**, que la biblioteca de Mueve abre el **Preview de §18.3** y que el toast **no sale al desbloquear** sino cuando una sesión drena la cola (s145) · **21 rojos verificados**, los 21 restaurados **byte a byte con hash comprobado**, y **cuatro no mordieron a la primera**: tres eran **debilidad real de mis asertos** —`getByRole({name})` casa por **SUBCADENA**, así que renombrar «Pausar» a «PausarX» seguía pasando— y el cuarto rompía **la línea equivocada** (el artefacto tiene varias llamadas a `renderGlyph` y la miniatura del sidebar resuelve por `achMini`) · casi nada lleva número: el precache se aserta comparando lo **declarado en `sw.js`** con lo que el navegador tiene **de verdad** en su caché, y los sellos se **derivan del catálogo vivo** con la regla de s152 en vez de escribir 53, con **guard de cero** · **job `e2e` aparte** con `needs: verify`, porque la suite carga el `index.html` **committeado** y es el job de arriba el que acaba de probar que está al día · **el instrumento mintió cuatro veces**: `innerText` da el texto con el `text-transform` ya aplicado y los matchers comparan `textContent` (3 rojos), `addInitScript` corre en **cada** navegación y mi semilla machacaba el estado en la recarga, un `grep -c $'\r'` contó todas las líneas y casi reporto CR inexistentes, y un banco en segundo plano parcheaba el artefacto mientras yo medía | #154 | [session-154](./docs/sessions/session-154-playwright.md) |
@@ -348,6 +349,121 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.89.0] -- 2026-08-04 -- feat(home): un nodo opcional no puede decidir si hay geometría
+
+Sesión de **producto visible** con el orden impuesto por el usuario: **medir → entender →
+proponer → esperar elección → implementar**. Eventos Fase 2A queda **pospuesto**. La opción
+elegida fue **B, «amanecer contenido»**, con corrección estructural **antes** de la atmósfera.
+
+### La evidencia de partida no reproducía, y sus dos mitades se excluyen
+
+s149 anotó a 1280×720 un aro de ~406×406 **y** las variables de geometría **vacías**. Medido:
+**406 es exactamente lo que publica el motor** (los fallbacks dan 360 en Desktop y el clamp de
+58vh en móvil), así que un aro de 406 **prueba** que el motor gobernaba. Además,
+`[data-pace-timer-dial]` —el selector citado— **no existe en el repositorio** (el real es
+`[data-pace-dial-fit]`) y `window.__PACE_HOME_GEOMETRY_VARS__` **tampoco**: cero coincidencias en
+todo `.js/.jsx/.html/.md`. La causa del «vacías» está verificada en el código: **ninguna regla CSS
+declara esas variables**; solo las escribe `home-geometry.js` como estilo **inline sobre
+`documentElement`**, de modo que una sonda que las buscara en las hojas de estilo encontraría vacío
+con el motor funcionando perfectamente.
+
+### Pero el fallo existía, en otro estado
+
+`SuggestedPathCard` retorna `null` en dos ramas, y `getSuggestedPath()` **nunca** devuelve null con
+catálogo no vacío (`state-paths.jsx:169-174`), así que la única rama real es **un Camino en curso**.
+Con esa semilla —forma exacta de `startPath()`, **sin borrar un solo nodo del DOM**— el guard
+`if (!body || !dial || !spc || !act) return;` apagaba el motor en los **nueve** breakpoints. Y **no
+se recuperaba al salir**: `attach()` corría una vez y `ro.observe(spc)` seguía apuntando a un nodo
+que React ya había sustituido (medido: `mismoNodoTrasVolver: false`). Solo despertaba con un resize
+del usuario o un `pace:home-relayout` que nadie emite en ese camino.
+
+### El invariante que este repo declaraba era falso
+
+`_responsive.js` afirmaba que recorte y solapamiento salen de una sola fuente y «no pueden
+desincronizarse nunca». Con el motor apagado, a 390×844, la tarjeta subía **41,7 px** sobre un aro
+con `clip-path: inset(0px)`, o sea **sin recortar**: cada consumidor traía su propio fallback (la
+tarjeta caía a la estimación CSS, el recorte a `0px`). En Desktop el fallo era el complementario —
+solapamiento 0, Actividades sin subir, **círculo cerrado completo**.
+
+### Dos defectos más que solo salieron al medir
+
+**El arranque tardaba 1345 ms.** Cronometrado: DOM listo a **67 ms**, primera publicación a
+**1345 ms**, y solo **dos frames** por medio — `attach()` reintentaba por `requestAnimationFrame` y
+`schedule()` gastaba otro, y en el arranque los frames están hambrientos. El aro se pintaba al
+fallback y **saltaba** 360 → 406 en cada carga. Ahora la primera pasada es **síncrona**: publica a
+los 164 ms, con la home.
+
+**Y uno PREVIO y publicado**: con `prefers-reduced-motion: reduce` el aro salía a **244 px** en vez
+de 406. Sirviendo el `index.html` de HEAD en paralelo se confirmó que **no lo traía esta sesión**.
+Instrumentando el bucle se vio la mecánica: el alto medido se quedaba **clavado** mientras D bajaba
+de 420 a 322, así que el bucle **agotaba sus ocho pasadas restando a ciegas**. Se arregló el bucle
+—que es lo que estaba mal por construcción— sin llegar a la microcausa del congelamiento.
+
+### Lo implementado
+
+**Motor.** Guard reducido a **home + aro**; tarjeta y Actividades pasan a **opcionales**.
+**Observadores en dos fases**: uno espera al montaje y **se desconecta**; otro vigila el `childList`
+**directo** del stack —sin `subtree`, sin `attributes`, sin `characterData`— y re-suscribe el
+`ResizeObserver` a los nodos vivos. El aro nunca se observa: eso sí sería un bucle. **Nunca encoger
+a ciegas**: si una pasada no mejora la medida se vuelve al último D no desmentido, con **un**
+reintento por episodio.
+
+**Fallback único.** `--pace-dial-d` y `--pace-horizon` resuelven motor-o-CSS **en un solo sitio**;
+desaparece el `360px` escrito a mano. Recorte y solapamiento consumen **el mismo token**, así que
+la frase del comentario pasa a ser cierta **por construcción**. En móvil sin tarjeta, el horizonte
+lo hace Actividades vía hermano adyacente.
+
+**Amanecer.** Halo en `[data-pace-dial-fit]::before`, recortado por el **mismo** `clip-path` que
+corta el aro ⇒ la luz emerge **de detrás del horizonte**. **Reutiliza** `paceGlowRamp` y
+`paceGrainUrl` de `SessionShell.jsx` (s140) horneando su salida en la hoja: no se duplica ni la
+curva ni el grano antibanding, y hay fallback de dos paradas donde no exista `color-mix`. Línea de
+alba en `[data-pace-main-content]::after` anclada a `--pace-horizon`. Tokens `--dawn-soft` y
+`--dawn-line` en **las dos paletas**, con tono propio: no se reutilizan `--breathe` ni `--move`,
+que son colores de módulo. **Tres estados por atributo estable** —reposo, `data-pace-dial-running`
+y `data-pace-dial-paused` (nuevo, declarativo, sin tocar lógica del temporizador)— que solo mueven
+**intensidad**; el estado nunca se comunica solo con eso.
+
+**Ritmo móvil.** Techo por ancho **0.86 → 0.92**, derivado del ancho **realmente usable** (W−24 px
+por el padding lateral), no de gusto; y `--pace-home-slack` reparte el sobrante **38/62** en vez de
+centrarlo. A 390×844 el aro pasa de 335 a **359** y el aire muerto de arriba de 91 a **62 px**.
+`dial/alto` sube de 0.39-0.40 a **0.414-0.425**; la guía de 0.44-0.48 **no es alcanzable** a 390 px
+de ancho, donde el aro topa por ANCHO y 0.44 exigiría ~371 px sobre 366 usables.
+
+### Verificación
+
+`npm run verify` **pasa en 5,3 s** con v0.89.0 coherente en los tres sitios ·
+`npm run test:e2e` **pasa 39/39** contra el artefacto recién regenerado (25 previas + 14 nuevas,
+**sin una regresión**) · **12/12 rojos** controlados, con `index.html` restaurado byte a byte y
+hash comprobado (`9D5F6F8426ABB66A`) · `index.html` con **0 bytes CR** de 1 370 239 ·
+`PACE_standalone.html` restaurado a **`998E3E358D689036`** · navegador real con **SW y cachés
+purgados** en 9 breakpoints × ES/EN/claro/oscuro: **cero errores de consola**, cero desborde
+horizontal y **escritorio sin una regresión** (406/65 · 456/73 · 487/78 · 520/83).
+
+### El instrumento mintió cinco veces
+
+El spec leía `null` donde el banco medía 406 porque **el artefacto no se había regenerado** (la
+suite conduce `index.html`, nunca las fuentes) · **backticks dentro del template literal** de
+`_responsive.js` abortaron el build (la trampa de s139, otra vez) · el horizonte se eligió **por
+selector** en vez de por posición, y en Desktop el `order` pone Actividades ahí · se midió **durante
+la animación de entrada**, que desplaza `main-content` 10 px, y las diferencias salían de **10 px
+exactos** ⇒ casi se reporta una desincronización inexistente · y **`test.use({ reducedMotion })` no
+llegó a aplicarse**, lo que cazó un **guard** que asertaba el media query antes de medir: sin él, la
+prueba habría pasado en verde midiendo un navegador sin reduced-motion.
+
+### Deuda declarada
+
+**Orden DOM ≠ orden visual en escritorio** (WCAG 2.4.3, **previo**): el foco de teclado salta del
+aro a la tarjeta del fondo y después sube a Actividades. **No se arregla hoy y no se consagra en
+ningún aserto** — la prueba comprueba el orden **visual**, y la de controles solo que no haya
+duplicados y que todo acepte el foco. Queda propuesta para la sesión de ContinuityCard.
+Con `reduced-motion` a 1280×720 la home queda con **11 px de scroll** en vez de encajar exacta.
+Y en commit **aparte**, la deuda mecánica: `tests/eventos.spec.js` estaba en **502 líneas** y se
+partió en tres (46 · 273 · 216) sin tocar una línea de cuerpo — **39 verdes antes y después**.
+
+Diario: [session-156](./docs/sessions/session-156-home-amanecer.md).
 
 ---
 
