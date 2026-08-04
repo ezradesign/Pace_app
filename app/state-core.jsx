@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.88.0';
+const PACE_VERSION = 'v0.88.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -309,7 +309,7 @@ function persistState() {
    una unica fuente de verdad por dominio. No recarga ni avisa a nadie: de eso
    se encarga quien orquesta. */
 function wipeLocalState() {
-  try { localStorage.removeItem(LS_KEY); } catch (e) {}
+  try { localStorage.removeItem(LS_KEY); return true; } catch (e) { return false; }
 }
 
 function getState() { return _state; }

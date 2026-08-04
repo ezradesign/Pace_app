@@ -355,6 +355,117 @@ test('DOS pestañas emiten a la vez y no se pierde ni un evento', async ({ page,
   await otra.close();
 });
 
+test('si falla la escritura del estado, el import ABORTA sin tocar los eventos', async ({ page }) => {
+  /* El camino feliz ya estaba cubierto; este es el que faltaba y el que de
+     verdad prueba la promesa de integridad. Si `pace.state.v2` no se puede
+     escribir (cuota, almacenamiento bloqueado), lo que NO puede pasar es que el
+     contenedor de eventos se reinicie igual y la UI cante victoria. */
+  await irAlArtefacto(page);
+  await esperarInit(page);
+  await sembrarEventos(page, 4);
+
+  const antesEventos = await page.evaluate(() => localStorage.getItem('pace.events.v1'));
+  await page.evaluate(() => window.setState({ totalFocusMin: 1234 }));
+  const antesEstado = await page.evaluate(() => localStorage.getItem('pace.state.v2'));
+
+  /* Se rompe SOLO la escritura de la clave legacy: el contenedor de eventos
+     tiene que poder seguir escribiendose, o la prueba no distinguiria «aborto
+     bien» de «no habia almacenamiento». */
+  await page.evaluate(() => {
+    const real = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) {
+      if (k === 'pace.state.v2') throw new Error('QuotaExceededError simulado');
+      return real.call(this, k, v);
+    };
+  });
+
+  const backup = JSON.stringify({
+    app: 'PACE', version: 'v0.88.1', exportedAt: new Date().toISOString(),
+    state: { firstSeen: 1, lang: 'es', totalFocusMin: 999 },
+  });
+
+  /* Sin esto Playwright DESCARTA el confirm por defecto, el import devuelve
+     antes de empezar y la prueba falla por una razon que no es la que cree. */
+  page.on('dialog', d => d.accept());
+  await page.locator('button[aria-label="Abrir tweaks"]').click();
+  await page.locator('input[type="file"][accept="application/json,.json"]')
+    .setInputFiles({ name: 'pace-backup-rota.json', mimeType: 'application/json', buffer: Buffer.from(backup) });
+
+  /* El aviso de error tiene que aparecer — y no el de «Importado». */
+  await expect(page.getByText('No se pudo guardar. Tus datos siguen intactos.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Importado — recargando…', { exact: true })).toHaveCount(0);
+
+  /* Y lo esencial: NADA se movio. Los dos almacenes byte a byte, y sin
+     marcador colgando — vivo, el proximo arranque «recuperaria» una operacion
+     que nunca ocurrio y borraria el historial de todas formas. */
+  const trasEventos = await page.evaluate(() => localStorage.getItem('pace.events.v1'));
+  const trasEstado = await page.evaluate(() => localStorage.getItem('pace.state.v2'));
+  expect(trasEstado, 'el estado legacy cambio pese a fallar la escritura').toBe(antesEstado);
+  expect(JSON.parse(trasEstado).totalFocusMin).toBe(1234);
+  expect(trasEventos, 'el contenedor de eventos se movio con la escritura fallida').toBe(antesEventos);
+  expect(JSON.parse(trasEventos).events.length).toBe(4);
+  expect(JSON.parse(trasEventos).marker, 'quedo un marcador de una operacion que se abortó').toBeNull();
+});
+
+test('un contenedor de version FUTURA se lee pero no se reescribe', async ({ page }) => {
+  /* §9 y §18: una version antigua de PACE que normalizara un contenedor nuevo
+     le borraria en silencio los campos que no conoce. Con web, PWA y Android
+     compartiendo formato, esto deja de ser hipotetico. */
+  await irAlArtefacto(page);
+  await esperarInit(page);
+
+  const futuro = await page.evaluate(() => {
+    const c = {
+      schemaVersion: 99,
+      activatedAt: '2027-01-01T00:00:00.000Z',
+      events: [],
+      baseline: { capturedAt: null, feedback: {}, totalsByType: {} },
+      pruneCursor: null,
+      marker: null,
+      campoDelFuturo: 'algo que esta version no entiende',
+    };
+    localStorage.setItem('pace.events.v1', JSON.stringify(c));
+    return localStorage.getItem('pace.events.v1');
+  });
+
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+  await esperarInit(page);
+
+  const estado = await page.evaluate(async () => {
+    const cap = window.paceEventsCapability();
+    const puede = window.paceEventsCanWrite();
+    /* Se intentan las tres mutadoras: ninguna puede tocar el contenedor. */
+    const reset = await window.paceEventsReset(null);
+    const append = await window.paceEventsAppend(window.makeEvent({
+      type: 'path.completed', pathRunId: 'p1', payload: { pathId: 'dawn', stepsCount: 2 },
+    }));
+    /* Y AHORA EL ADAPTADOR A PELO, saltandose la fachada. Sin esto la prueba no
+       vale: `paceEventsReset` corta en `canWrite()` y el guard de DENTRO del
+       lock —el autoritativo— no llega a ejecutarse nunca. Se comprobo: rompiendo
+       ese guard, la prueba seguia verde. Y no es defensa redundante, es la que
+       cubre la ventana entre leer la capacidad y adquirir el lock, en la que
+       otra pestaña puede haber escrito un contenedor mas nuevo. */
+    const directo = await window.eventsWebReset(null);
+    const marcado = await window.eventsWebMark('import');
+    return { cap, puede, reset: reset.result, append: append.result,
+             directo: directo.result, marcado: marcado.result,
+             crudo: localStorage.getItem('pace.events.v1') };
+  });
+
+  expect(estado.cap).toBe('events.read_only');
+  expect(estado.puede).toBe(false);
+  expect(estado.reset).toBe('unavailable');
+  expect(estado.append).toBe('unavailable');
+  /* El guard de dentro del lock, alcanzado de verdad. */
+  expect(estado.directo).toBe('unavailable');
+  expect(estado.marcado).toBe('unavailable');
+  /* BYTE A BYTE: ni el arranque ni las mutadoras lo tocaron, y el campo que
+     esta version no entiende sigue ahi. */
+  expect(estado.crudo, 'se reescribio un contenedor de version futura').toBe(futuro);
+  expect(estado.crudo).toContain('campoDelFuturo');
+});
+
 test('una operacion interrumpida deja marcador y el arranque la completa', async ({ page }) => {
   /* §22: entre dos almacenes no hay atomicidad. Si el proceso muere despues de
      escribir el estado legacy y antes de reiniciar el contenedor, el marcador

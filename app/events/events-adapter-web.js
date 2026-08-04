@@ -173,6 +173,18 @@ function eventsWebRunExclusive(fn) {
   }
   return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
     const read = eventsWebRead();
+
+    /* CONTENEDOR DE UNA VERSION FUTURA -> NI UNA ESCRITURA (§9, §18).
+       Se comprueba DENTRO del lock, que es el unico sitio autoritativo. Una
+       version antigua de PACE que reescribiera un contenedor nuevo le borraria
+       los campos que todavia no conoce, en silencio y sin vuelta atras — y con
+       web, PWA y Android compartiendo formato eso deja de ser hipotetico. Leer
+       y exportar si (READ_ONLY); reescribir, jamas. */
+    if (!read.corrupt && read.container &&
+        read.container.schemaVersion > EVENTS_SCHEMA_VERSION) {
+      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+    }
+
     const current = read.corrupt ? emptyEventsContainer() : read.container;
     let out;
     try {
@@ -202,7 +214,39 @@ function eventsWebRunExclusive(fn) {
 function eventsWebCapability() {
   if (!eventsWebStorageUsable()) return EVENTS_UNAVAILABLE;
   if (!eventsWebLocksAvailable()) return EVENTS_READ_ONLY;
+  /* Un contenedor escrito por una version MAS NUEVA se puede leer y exportar,
+     pero no reescribir (§9): normalizarlo le quitaria los campos que esta
+     version no conoce. La comprobacion se repite dentro del lock, que es donde
+     manda; aqui sirve para que `paceEventsCanWrite()` diga la verdad. */
+  if (eventsWebStoredSchemaVersion() > EVENTS_SCHEMA_VERSION) return EVENTS_READ_ONLY;
   return EVENTS_READ_WRITE;
+}
+
+/* `schemaVersion` del contenedor guardado, o 0 si no hay contenedor legible. */
+function eventsWebStoredSchemaVersion() {
+  const read = eventsWebRead();
+  if (read.corrupt || !read.container) return 0;
+  const sv = read.container.schemaVersion;
+  return typeof sv === 'number' && isFinite(sv) ? sv : 0;
+}
+
+/* Deja el contenedor SIN marcador, sin tocar nada mas: es la vuelta a un estado
+   conocido cuando una operacion de dos almacenes se aborta a mitad (§22). Sin
+   esto, abortar seria peor que no abortar — el marcador vivo hace que el
+   siguiente arranque reinicie el contenedor, que es justo lo que se evitaba. */
+function eventsWebClearMarker() {
+  return eventsWebRunExclusive(function (current) {
+    if (!current.marker) return { container: current, result: EVENTS_COMMITTED };
+    const next = {
+      schemaVersion: current.schemaVersion,
+      activatedAt: current.activatedAt,
+      events: current.events,
+      baseline: current.baseline,
+      pruneCursor: current.pruneCursor,
+      marker: null,
+    };
+    return { container: next, result: EVENTS_COMMITTED };
+  });
 }
 
 /* Activacion + captura UNICA del baseline (§15.1), y recuperacion de una
@@ -345,6 +389,7 @@ Object.assign(window, {
   EVENTS_COMMITTED, EVENTS_REJECTED, EVENTS_INTERRUPTED, EVENTS_UNAVAILABLE_RESULT,
   eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite,
   eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability,
+  eventsWebStoredSchemaVersion, eventsWebClearMarker,
   eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot,
   eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark,
   eventsWebDiagnostics,

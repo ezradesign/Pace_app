@@ -96,11 +96,21 @@ function TweaksDataSection() {
            de que la barrera termine, el MARCADOR sobrevive y la siguiente
            inicializacion completa el reinicio (§22), que es idempotente. */
         const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-        try {
-          paceEventsStoreBarrier('import', writeLegacy, incoming);
-        } catch (e) { writeLegacy(); }
-        setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
-        setTimeout(() => location.reload(), 900);
+        /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
+           hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
+           por almacenamiento bloqueado, el estado nuevo no se guardaba, el
+           contenedor de eventos se reiniciaba igual, la UI decia «importado» y
+           la pagina recargaba. Cuatro mentiras seguidas sobre una promesa de
+           integridad. */
+        paceEventsStoreBarrier('import', writeLegacy, incoming).then((r) => {
+          if (!r || !r.legacyWritten) {
+            setMsg({ kind: 'err', text: t('tweaks.msg.import.storage.err') });
+            setTimeout(() => setMsg(null), 2600);
+            return;
+          }
+          setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
+          setTimeout(() => location.reload(), 900);
+        });
       } catch (e) {
         setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);
