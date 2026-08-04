@@ -381,7 +381,13 @@ function tandaVersion() {
    checker que no declara sus huecos invita a confiar de mas.
    ========================================================================== */
 var NO_CUBRE = [
-  'comportamiento: no abre navegador, no monta la app, no pulsa nada',
+  /* s154: este hueco SIGUE siendo del verify —aqui no se abre ningun
+     navegador—, pero ya no es del proyecto: lo cubre «npm run test:e2e»
+     (Playwright, el checklist de cierre de CLAUDE.md ejecutado). Es OTRA red y
+     se corre APARTE: el verify tiene que seguir costando ~5 s y no depender de
+     que haya navegadores instalados. */
+  'comportamiento: no abre navegador, no monta la app, no pulsa nada ' +
+    '-- lo cubre «npm run test:e2e» (s154), que se corre aparte',
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',

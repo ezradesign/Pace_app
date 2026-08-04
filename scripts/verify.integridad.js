@@ -439,8 +439,12 @@ var NO_CUBRE = [
   'i18n: que la clave EXISTA en los dos idiomas, no que el texto este traducido, ' +
     'sea correcto ni QUEPA (s151: 85 px por columna en la placa del onboarding)',
   'catalogos: se cuentan entradas, no se valida su contenido (dosis, cues, pasos, acceso)',
-  'precache: que el archivo exista en DISCO, no que el servidor lo sirva ni que la ' +
-    'cache real del navegador cuadre (eso sigue siendo medicion en vivo)',
+  /* s154: la segunda mitad de este hueco ya la cubre «npm run test:e2e», que
+     compara las rutas DECLARADAS aqui con las que el navegador tiene de verdad
+     en su cache. Lo que sigue sin cubrir este script es el disco contra el
+     servidor. */
+  'precache: que el archivo exista en DISCO, no que el navegador lo cachee ' +
+    '-- el contraste con la cache real lo hace «npm run test:e2e» (s154)',
   'glifos: se cuentan mapa y ficheros -- ni un pixel del dibujo se mira',
   'los numeros del CENSO son un censo: si el contenido crece a proposito, hay que subirlos a mano',
 ];
