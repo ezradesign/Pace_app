@@ -101,6 +101,8 @@ Ejecutar en orden antes de cerrar Claude Code:
 - [ ] `git worktree list` → identificar si hay worktrees activos
 - [ ] `npm run verify` en verde (paso 2 del cierre en `CLAUDE.md`; si falla, no se sigue)
 - [ ] `index.html` regenerado y verificado (`node build-standalone.js`)
+- [ ] `npm run test:e2e` en verde (paso 4 del cierre, s154) — **despues de regenerar**,
+      para que pruebe el artefacto que se va a commitear, no el anterior
 - [ ] `PACE_standalone.html` **NO** se regenera — congelado desde s134 (export bajo
       demanda). El `verify` lo restaura solo; si corriste el build a mano,
       `git checkout -- PACE_standalone.html` y comprobar el hash
@@ -123,7 +125,8 @@ Estas situaciones indican que el trabajo NO esta a salvo en GitHub:
 | `git log origin/main..HEAD` tiene lineas | Commits locales sin push | `git push origin main` |
 | `git status` muestra archivos modificados | Cambios sin commitear | Commitear primero |
 | `index.html` no coincide con el build de las fuentes | Artefacto sin regenerar tras tocar `app/` | `node build-standalone.js` y commitear. **El CI lo caza**: es el ultimo paso de `.github/workflows/ci.yml` |
-| El check `verify` sale rojo en GitHub | La red de seguridad no pasa | Reproducirlo en local con `npm run verify` — el CI no comprueba nada que no corra ahi |
+| El check `verify` sale rojo en GitHub | La red de seguridad estatica no pasa | Reproducirlo en local con `npm run verify` — el CI no comprueba nada que no corra ahi |
+| El check `e2e` sale rojo en GitHub | El **comportamiento** cambio (s154) | Reproducirlo con `npm run test:e2e`. Como corre con `needs: verify`, el artefacto ya esta probado al dia: el rojo **es** de comportamiento, no de frescura. El informe queda como artifact del run |
 | `STATE.md` muestra version anterior | Sesion no cerrada formalmente | Completar el cierre de sesion |
 
 ---
@@ -159,7 +162,9 @@ powershell -File scripts/check-session.ps1
 
 ### Que corre en GitHub
 
-`.github/workflows/ci.yml` — un solo job, `verify`, en `ubuntu-latest` con Node 24:
+`.github/workflows/ci.yml` — **dos jobs**, los dos en `ubuntu-latest` con Node 24.
+
+**Job `verify`** (la red ESTATICA):
 
 1. `npm ci` (instala el lockfile exacto; falla si se desincroniza de `package.json`)
 2. **`npm run verify`** — la misma red de seguridad local, invocada tal cual
@@ -167,9 +172,22 @@ powershell -File scripts/check-session.ps1
    cuenta, porque el `verify` no puede comprobarlo: corre justo ANTES de regenerar,
    asi que su aviso de deriva es `[INFO]` y nunca se pondra rojo
 
+**Job `e2e`** (la red de COMPORTAMIENTO, s154), con **`needs: verify`**:
+
+1. `npm ci`
+2. `npx playwright install --with-deps chromium`
+3. **`npm run test:e2e`** — el checklist de cierre de `CLAUDE.md` ejecutado sobre
+   `index.html` en un navegador real (13 tests, ~25 s)
+
+**Por que dos jobs y no uno**: el `verify` son ~5 s sin dependencias y es el paso 2 del
+cierre, del que depende «si falla, no se sigue»; el `e2e` descarga un Chromium de ~115 MB.
+Y **`needs: verify` no es orden estetico**: la suite carga el `index.html` **committeado**,
+y es el job de arriba el que acaba de probar que ese artefacto esta al dia — sin eso, un
+rojo en `e2e` podria significar «cambio el comportamiento» **o** «el artefacto esta viejo».
+
 **El CI no comprueba nada que no corra en local.** Si sale rojo, se reproduce con
-`npm run verify` (o `node build-standalone.js` para el tercer paso). Vigilancia nueva
-= se anade al `verify`, no al YAML.
+`npm run verify`, `npm run test:e2e` o `node build-standalone.js`. Vigilancia nueva se
+anade **al `verify` o a la suite, no al YAML**.
 
 ### Proteger `main` — lo hace el usuario, no Claude
 
