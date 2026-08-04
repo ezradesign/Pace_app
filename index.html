@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.88.1</title>
+  <title>PACE · Foco · Cuerpo — v0.89.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -66,6 +66,14 @@
   --breathe: #C97A5D;
   --breathe-2: #A85E43;
   --breathe-soft: rgba(201, 122, 93, 0.12);
+
+  /* AMANECER de la home (s156). Atmósfera del Pomodoro: halo detrás del aro y
+     línea de alba en el horizonte. Tono propio a propósito — NO se reutiliza
+     --breathe ni --move, que son colores de MÓDULO y harían leer la home como
+     si estuviera señalando una actividad. Ámbar tierra desaturado; el alfa bajo
+     es el que mantiene «luz contenida» en vez de degradado llamativo. */
+  --dawn-soft: rgba(191, 140, 92, 0.13);
+  --dawn-line: rgba(178, 128, 82, 0.34);
 
   --move: #9A7B4F;
   --move-soft: rgba(154, 123, 79, 0.12);
@@ -182,6 +190,11 @@
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
+  /* Amanecer (s156): sobre papel oscuro la misma luz necesita algo más de
+     cuerpo para no desaparecer, pero se mantiene por debajo del umbral en que
+     el halo competiría con el número. */
+  --dawn-soft: rgba(214, 165, 116, 0.16);
+  --dawn-line: rgba(222, 176, 128, 0.30);
 }
 
 /* TIPOGRAFÍAS ALT */
@@ -3909,7 +3922,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.88.1';
+const PACE_VERSION = 'v0.89.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -9405,7 +9418,7 @@ function TimerTicks(_ref) {let { progress, color } = _ref;
   return /*#__PURE__*/React.createElement(React.Fragment, null, marks);
 }
 
-function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight } = _ref2;
+function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused } = _ref2;
   const R = 47.5;
   const C = 2 * Math.PI * R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
@@ -9425,8 +9438,13 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
        Solo presente cuando running -> el selector [data-...] no matchea
        en reposo. Puramente presentacional; el padre decide `running`.
        `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
-       es el aro clasico con arco + punto guia (FocusTimer home). */
+       es el aro clasico con arco + punto guia (FocusTimer home).
+       data-pace-dial-paused (s156): gancho DECLARATIVO para que la atmosfera de
+       amanecer distinga «pausado» de «reposo» — dos estados que hasta ahora se
+       veian igual porque `running` es false en los dos. El padre decide; aqui no
+       hay ni una linea de logica de temporizador. */
     React.createElement("div", { "data-pace-dial-running": running ? '' : undefined,
+      "data-pace-dial-paused": paused ? '' : undefined,
       "data-pace-dial-fit": fitHeight ? '' : undefined,
       style: fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame },
     ticks ? /*#__PURE__*/
@@ -12277,7 +12295,8 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
       subtitle: subtitle,
       inner: isAro ? innerForAro : null,
       running: running,
-      fitHeight: isAro }
+      fitHeight: isAro,
+      paused: status === 'paused' }
     )
     ),
 
@@ -12307,10 +12326,10 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
    Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
    para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
    ahora en TimerDial.jsx. */
-function TimerVisualization(_ref2) {let { style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight } = _ref2;
+function TimerVisualization(_ref2) {let { style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight, paused } = _ref2;
   if (style === 'barra') return /*#__PURE__*/React.createElement(TimerBar, { mins: mins, secs: secs, progress: progress, modeLabel: modeLabel, subtitle: subtitle });
   if (style === 'analogico') return /*#__PURE__*/React.createElement(TimerAnalog, { mins: mins, secs: secs, progress: progress, modeLabel: modeLabel, subtitle: subtitle });
-  return /*#__PURE__*/React.createElement(TimerDial, { mins: mins, secs: secs, progress: progress, mode: mode, modeLabel: modeLabel, subtitle: subtitle, inner: inner, running: running, fitHeight: fitHeight });
+  return /*#__PURE__*/React.createElement(TimerDial, { mins: mins, secs: secs, progress: progress, mode: mode, modeLabel: modeLabel, subtitle: subtitle, inner: inner, running: running, fitHeight: fitHeight, paused: paused });
 }
 
 function TimerBar(_ref3) {let { mins, secs, progress, modeLabel, subtitle } = _ref3;
@@ -19469,11 +19488,13 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-spc-respon
       position: relative;
       z-index: 2;
       /* s128: el solapamiento lo mide AHORA el motor (home-geometry.js) desde el
-         CICLO real y lo publica en --pace-activities-overlap (la MISMA var que en
-         Desktop). --pace-home-sunset-overlap (estimación CSS) queda de fallback
-         pre-JS. La tarjeta es el "horizonte" del móvil: sube y el aro se recorta en
-         su borde superior (clip en [data-pace-dial-fit], _responsive.js). */
-      margin-top: calc(var(--pace-activities-overlap, var(--pace-home-sunset-overlap, 0px)) * -1);
+         CICLO real. La tarjeta es el "horizonte" del móvil: sube y el aro se
+         recorta en su borde superior (clip en [data-pace-dial-fit]).
+         s156: se consume --pace-horizon, el token que resuelve motor-o-fallback
+         en UN solo sitio (_responsive.js). Antes esta regla traía su propia
+         cadena de fallbacks y el recorte del aro traía otra distinta, así que
+         con el motor apagado la tarjeta subía sobre un aro sin recortar. */
+      margin-top: calc(var(--pace-horizon) * -1);
     }
     /* s123: el SWAP por flex-order que había aquí (Actividades vs Camino en
        ancho+corto) ROMPIA la jerarquia invariante Timer -> Camino -> Actividades
@@ -22714,6 +22735,36 @@ Object.assign(window, { Onboarding });
 (function injectPaceMainResponsiveCss() {
   if (typeof document === 'undefined') return;
   if (document.getElementById('pace-main-responsive-css')) return;
+
+  /* ATMÓSFERA DE AMANECER (s156) — se REUTILIZA el mecanismo de s140, no se
+     copia. `paceGlowRamp` y `paceGrainUrl` viven en app/ui/SessionShell.jsx y
+     son la fuente canónica de la caída de luz y del grano antibanding de este
+     producto; SessionShell.jsx carga ANTES que este archivo (PACE.html), así
+     que aquí ya están en window y su resultado se hornea en la hoja. Duplicar
+     las paradas del degradado en CSS habría creado una segunda curva que
+     divergiría de la de las sesiones a la primera corrección.
+      POR QUÉ EL GRANO: sobre papel plano un degradado suave de esta amplitud
+     BANDEA. Es el hallazgo de s140 — el grano no tapa el escalón, lo ditherea,
+     y va enmascarado con la MISMA caída que la luz para no dejar un disco de
+     ruido con borde duro contra el papel.
+      FALLBACK: `paceGlowRamp` usa color-mix(). Donde no exista, se cae a un
+     radial de dos paradas con el mismo token y el mismo borde: menos fino, pero
+     el amanecer sigue ahí y nada queda sin pintar. */
+
+
+  const HALO_BORDE = 74;
+  const DAWN = 'var(--dawn-soft)';
+  const puedeMezclar = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' &&
+  CSS.supports('background-image', 'radial-gradient(circle, color-mix(in srgb, red 50%, transparent) 0%, transparent 100%)');
+  const halo = puedeMezclar && typeof window.paceGlowRamp === 'function' ?
+  window.paceGlowRamp(DAWN, HALO_BORDE) :
+  'radial-gradient(circle, ' + DAWN + ' 0%, transparent ' + HALO_BORDE + '%)';
+  const grano = typeof window.paceGrainUrl === 'function' ? window.paceGrainUrl() : '';
+  const capas = (grano ? grano + ', ' : '') + halo;
+  /* Misma máscara que PaceDither (s140): opaca hasta la mitad del borde y
+     desvanecida hasta él. */
+  const caida = 'radial-gradient(#000 0%, #000 ' + (HALO_BORDE * 0.5).toFixed(1) + '%, transparent ' + HALO_BORDE + '%)';
+
   const s = document.createElement('style');
   s.id = 'pace-main-responsive-css';
   s.textContent = `
@@ -22761,6 +22812,23 @@ Object.assign(window, { Onboarding });
     [data-pace-home-body] {
       --pace-home-timer-size: min(86vw, 520px, max(300px, 58vh));
       --pace-home-sunset-overlap: max(6px, min(calc(var(--pace-home-timer-size) * 0.19), calc((var(--pace-home-timer-size) - 244px) / 2 - 6px)));
+
+      /* ==== RESOLUCIÓN ÚNICA (s156) ====================================
+         Estas dos son las que consume TODO el mundo. Aquí, y solo aquí, se
+         decide quién manda: el motor (app/main/home-geometry.js) si ya ha
+         publicado, y el fallback CSS si no.
+
+         Antes cada consumidor traía su propio fallback y no coincidían: el
+         Desktop caía a un 360px escrito a mano, el móvil al clamp de arriba,
+         la tarjeta a la estimación «atardecer» y el recorte del aro a 0px.
+         Con el motor apagado eso producía dos geometrías distintas por piel y,
+         peor, ROMPÍA el invariante que este archivo declaraba: a 390×844 la
+         tarjeta subía 39,7 px sobre un aro SIN recortar. Medido en s156.
+
+         Ahora recorte y solapamiento salen del MISMO token, así que la frase
+         «no pueden desincronizarse» pasa a ser cierta por construcción. */
+      --pace-dial-d: var(--pace-timer-d, var(--pace-home-timer-size));
+      --pace-horizon: var(--pace-activities-overlap, var(--pace-home-sunset-overlap));
     }
     @supports (height: 1dvh) {
       [data-pace-home-body] {
@@ -22769,11 +22837,11 @@ Object.assign(window, { Onboarding });
     }
     [data-pace-dial-fit] {
       width: auto;
-      /* s128: el aro lo dimensiona el motor (home-geometry.js) también en móvil,
-         vía --pace-timer-d; --pace-home-timer-size queda de FALLBACK (pre-JS y sin
-         JS, con su @supports dvh de arriba). En Desktop este height lo pisa el
-         bloque min-width:769px con !important. */
-      height: var(--pace-timer-d, var(--pace-home-timer-size));
+      /* s128: el aro lo dimensiona el motor (home-geometry.js) también en móvil.
+         s156: por --pace-dial-d, que ya resuelve motor-o-fallback arriba. En
+         Desktop este height lo pisa el bloque min-width:769px con !important
+         (mismo valor, distinta especificidad). */
+      height: var(--pace-dial-d);
       /* HORIZONTE en móvil/tablet (s128): el aro se RECORTA por abajo en la línea
          donde sube la tarjeta de Camino — el "amanecer" del Desktop (s126) pero con
          Caminos. Reutiliza --pace-activities-overlap (que el motor mide desde el
@@ -22781,9 +22849,72 @@ Object.assign(window, { Onboarding });
          MARCO (no el <svg>, que va rotado) y cubre el halo ::after. Con la var sin
          definir (pre-JS) el inset es 0 → aro entero, sin recorte. En Desktop lo
          pisa el bloque min-width:769px (mismo valor). Caminos NO lleva
-         [data-pace-dial-fit] → intacto. */
-      -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
-      clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+         [data-pace-dial-fit] → intacto. s156: por --pace-horizon, el MISMO token
+         que sube el bloque de abajo — no hay dos fallbacks que puedan divergir. */
+      -webkit-clip-path: inset(0 0 var(--pace-horizon) 0);
+      clip-path: inset(0 0 var(--pace-horizon) 0);
+    }
+    /* ===================================================================
+       AMANECER (s156) · las dos piezas visuales, comunes a las dos pieles.
+
+       1. HALO detrás del aro. Vive en el ::before del marco, así que lo recorta
+          el MISMO clip-path que corta el aro: la luz emerge de detrás del
+          horizonte en vez de flotar sobre él. z-index 0 y el interior del dial
+          en 1 (TimerDial) => nunca pasa por delante del número ni del CTA.
+       2. LÍNEA DE ALBA en el horizonte, anclada a --pace-horizon, o sea al
+          mismo sitio exacto por donde se corta el aro. Se desvanece por los dos
+          extremos: es luz en el horizonte, no una regla de separación.
+
+       INTENSIDAD POR ESTADO. --pace-dawn y --pace-alba son lo ÚNICO que cambia
+       entre reposo, activo y pausado; el estado nunca se comunica solo con
+       esto (el número, el texto del CTA y «Reiniciar bloque» ya lo dicen).
+       Las transiciones son decorativas y no cuelgan de data-pace-essential, así
+       que el kill de prefers-reduced-motion (tokens.css) las neutraliza.
+       =================================================================== */
+    [data-pace-dial-fit] {
+      --pace-dawn: 0.72;
+    }
+    [data-pace-dial-fit][data-pace-dial-running] {
+      --pace-dawn: 1;
+    }
+    [data-pace-dial-fit][data-pace-dial-paused] {
+      --pace-dawn: 0.42;
+    }
+    [data-pace-dial-fit]::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: ${capas};
+      -webkit-mask-image: ${caida};
+      mask-image: ${caida};
+      opacity: var(--pace-dawn, 0.72);
+      transition: opacity var(--dur-slow) var(--ease);
+    }
+    [data-pace-home-body] [data-pace-main-content] {
+      position: relative;
+      --pace-alba: 0.8;
+    }
+    [data-pace-home-body] [data-pace-main-content]:has([data-pace-dial-running]) {
+      --pace-alba: 1;
+    }
+    [data-pace-home-body] [data-pace-main-content]:has([data-pace-dial-paused]) {
+      --pace-alba: 0.45;
+    }
+    [data-pace-home-body] [data-pace-main-content]::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: var(--pace-horizon);
+      height: 1px;
+      pointer-events: none;
+      z-index: 0;
+      background-image: linear-gradient(90deg, transparent 0%, var(--dawn-line) 30%, var(--dawn-line) 70%, transparent 100%);
+      opacity: var(--pace-alba, 0.8);
+      transition: opacity var(--dur-slow) var(--ease);
     }
     /* Barra de scroll OCULTA en el contenedor vertical de la home (s123), sin
        tocar el desplazamiento: overflow-y sigue en 'auto' (rueda/trackpad/gesto
@@ -22837,6 +22968,25 @@ Object.assign(window, { Onboarding });
         padding-top: calc(8px - 4px * var(--pace-home-squeeze, 0)) !important;
         gap: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
       }
+      /* HORIZONTE EN MÓVIL CUANDO NO HAY TARJETA (s156). El bloque que hace de
+         horizonte es «el primero después del aro»: normalmente la tarjeta de
+         Camino, pero con un Camino EN CURSO la tarjeta no existe y ese papel
+         pasa a Actividades. El selector de hermano adyacente lo dice sin que
+         nadie tenga que saber por qué falta la tarjeta; con tarjeta, no casa. */
+      [data-pace-home-stack] > [data-pace-main-content] + [data-pace-activitybar] {
+        margin-top: calc(var(--pace-horizon) * -1) !important;
+      }
+      /* REPARTO DEL SOBRANTE (s156). En móvil el aro topa por ANCHO, así que
+         sobra alto por construcción y el margin:auto lo repartía a partes
+         iguales: la composición flotaba en medio con ~90 px muertos arriba y
+         otros ~90 abajo (medido a 390×844). Se le da MENOS aire arriba que
+         abajo — masa alta y suelo bajo, que es la lectura de un amanecer. El
+         motor publica el sobrante REAL; con 0 esto degrada al comportamiento
+         anterior. Solo mueve el bloque: no cambia ni un tamaño. */
+      [data-pace-home-body] > [data-pace-home-stack] {
+        margin-top: calc(var(--pace-home-slack, 0px) * 0.38) !important;
+        margin-bottom: auto !important;
+      }
       /* ActivityBar en móvil: grid 2×2, chips compactos verticales */
       [data-pace-activitybar] {
         padding: calc(4px - 2px * var(--pace-home-squeeze, 0)) 12px calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
@@ -22881,20 +23031,27 @@ Object.assign(window, { Onboarding });
     }
 
     /* ===================================================================
-       HOME DESKTOP — sistema proporcional único (s126). ENCAPSULADO aquí:
-       todo bajo min-width:769px; mobile/tablet (≤768) no recibe nada. Las
-       variables --pace-timer-d y --pace-activities-overlap las publica en
-       :root el ayudante app/main/home-geometry.js SOLO en Desktop (y las
-       borra fuera). Reproduce la composición de la captura v0.64 (Timer →
-       Actividades solapando el aro bajo el CICLO → Camino ancho al fondo) y
-       la mantiene constante en toda resolución de escritorio.
+       HOME DESKTOP — sistema proporcional único (s126). Solo lo de ESTE
+       bloque es exclusivo de ≥769px; las variables y el modelo «atardecer»
+       de arriba los comparten las dos pieles.
+
+       CORREGIDO EN s156. Esta cabecera decía «mobile/tablet (≤768) no recibe
+       nada» y que el ayudante publica «SOLO en Desktop (y las borra fuera)»:
+       las dos frases son FALSAS desde s128 —el motor corre en todo viewport y
+       clearVars() se retiró—, y era el tercer sitio del repo que describía
+       una arquitectura que ya no existía. Reproduce la composición de la
+       captura v0.64 (Timer → Actividades solapando el aro bajo el CICLO →
+       Camino ancho al fondo) y la mantiene constante en toda resolución de
+       escritorio.
        =================================================================== */
     @media (min-width: 769px) {
-      /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). En
-         Desktop reemplaza a --pace-home-timer-size; el aspect-ratio 1/1 del
-         marco da el ancho. Fallback 360px mientras el ayudante no ha corrido. */
+      /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). El
+         aspect-ratio 1/1 del marco da el ancho. s156: el fallback ya no se
+         escribe aquí — venía como 360px a mano y no coincidía con el del
+         móvil, de modo que un mismo fallo daba dos aros distintos según la
+         piel. Ahora los dos caen en --pace-dial-d. */
       [data-pace-dial-fit] {
-        height: var(--pace-timer-d, 360px) !important;
+        height: var(--pace-dial-d) !important;
         /* HORIZONTE (s126): el aro se CORTA por abajo en la línea donde
            empiezan las Actividades — el «sol saliendo» de la referencia v0.64.
            Sin esto el arco se veía entero: [data-pace-activitybar] no tiene
@@ -22921,8 +23078,8 @@ Object.assign(window, { Onboarding });
            horizonte (~94° de aro). El corte DURO es deliberado: un
            desvanecido dejaría arco y punto atenuados flotando en la banda
            transparente, a los lados de «ACTIVIDADES». */
-        -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
-        clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+        -webkit-clip-path: inset(0 0 var(--pace-horizon) 0);
+        clip-path: inset(0 0 var(--pace-horizon) 0);
       }
       /* Interior PROPORCIONAL a D (ratios medidos en la referencia). !important
          para ganar a los estilos inline de TimerDial. El botón conserva 44px
@@ -22950,7 +23107,7 @@ Object.assign(window, { Onboarding });
         order: 1 !important;
         position: relative;
         z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
-        margin-top: calc(var(--pace-activities-overlap, 0px) * -1) !important;
+        margin-top: calc(var(--pace-horizon) * -1) !important;
       }
       [data-pace-spc] {
         order: 2 !important;
@@ -23729,10 +23886,36 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
    diciendo «encapsulado en Desktop, en mobile/tablet borra las dos variables y
    sale», y **eso dejó de ser cierto en s128**). El motor corre en TODO viewport
    y publica las dos variables siempre; lo que cambia por debajo de 769px son las
-   CONSTANTES de la piel —el aro arranca por ANCHO (~86vw) en vez de por altura,
-   y su suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
+   CONSTANTES de la piel —el aro arranca por ANCHO en vez de por altura, y su
+   suelo es mayor por legibilidad—, no el algoritmo. `DESKTOP_MQ` sigue
    existiendo para elegir piel y para reaccionar al cruce del breakpoint, no para
    apagarse. Ver la nota de s128 junto a `WIDTH_CAP_MOBILE`, más abajo.
+
+   QUÉ NODOS SON OBLIGATORIOS Y CUÁLES NO (s156). Obligatorios: la región de la
+   home y el aro. **Actividades y la tarjeta de Camino son OPCIONALES**: se miden
+   si están y no se echan de menos si no. Hasta s156 el guard los exigía a los
+   cuatro, y como `getSuggestedPath()` nunca devuelve null con catálogo no vacío
+   (state-paths.jsx:169-174), el único estado real sin tarjeta —un Camino en
+   curso— **apagaba el motor entero**: Desktop caía al fallback y pintaba el aro
+   SIN horizonte. Un nodo opcional no puede decidir si hay geometría.
+
+   CÓMO SE RECUPERA ANTE MONTAJE/DESMONTAJE (s156). `attach()` corría UNA vez y
+   dejaba el ResizeObserver mirando el nodo de la tarjeta de ese momento; React
+   monta OTRO nodo al volver del Camino, así que el observador quedaba apuntando
+   a un nodo desconectado y la home no despertaba sin un resize del usuario.
+   Ahora hay dos fases: una espera al montaje de la home y se desconecta, y otra
+   vigila el `childList` DIRECTO del stack —los tres bloques son sus hijos
+   inmediatos— para re-suscribir el ResizeObserver a los nodos VIVOS. Sin
+   `subtree`, sin `attributes` y sin `characterData`: el número del Pomodoro
+   cambia por texto y no puede despertar a nadie.
+
+   CUÁNDO GOBIERNA JS Y CUÁL ES EL FALLBACK. Gobierna JS desde el primer montaje:
+   la primera pasada es SÍNCRONA a propósito. Antes salía por `requestAnimationFrame`
+   y en el arranque los frames están hambrientos (medido: DOM listo a 67 ms, primera
+   publicación a 1345 ms y solo DOS frames por medio), así que el aro se pintaba al
+   fallback y saltaba un segundo después. Mientras JS no haya publicado —y si no hay
+   JS— manda el fallback CSS, que es UNO SOLO para las dos pieles: ver
+   `--pace-dial-d` y `--pace-horizon` en app/main/_responsive.js.
 
    SIN lógica de temporizador, sin estado de negocio, sin eventos. Solo mide y
    publica geometría. SIN bucle de layout: observa los hermanos que NO contienen
@@ -23763,10 +23946,19 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   var D_FLOOR = 205; // suelo con interior aún legible; por debajo, scroll
   // de seguridad en viewports extremos
   /* s128: el motor corre también en móvil/tablet (≤768). Constantes propias de
-     esa piel: el aro arranca por ANCHO ≈86vw (su identidad de siempre) y el mismo
-     bucle lo encoge solo si no cabe; suelo un poco mayor por legibilidad en
-     pantalla pequeña. La rama Desktop (arriba) NO cambia. */
-  var WIDTH_CAP_MOBILE = 0.86;
+     esa piel: el aro arranca por ANCHO y el mismo bucle lo encoge solo si no
+     cabe; suelo un poco mayor por legibilidad en pantalla pequeña. La rama
+     Desktop (arriba) NO cambia.
+      s156: 0.86 → 0.92. NO es un número de gusto: es el ancho REALMENTE usable.
+     En móvil `[data-pace-main-content]` tiene 12 px de padding lateral
+     (_responsive.js), así que la caja del aro dispone de W−24 px, o sea 0.925·W
+     a 320 y 0.944·W a 430. El techo se queda JUSTO por debajo del más estrecho
+     de esos dos. El motivo es medido: en teléfonos el aro queda limitado por
+     ANCHO y sobraban 163-235 px verticales (a 390×844 el aro usaba el 40 % del
+     alto y el 22 % del viewport quedaba en vacío repartido arriba y abajo). Lo
+     que el techo no puede dar lo reparte `--pace-home-slack`, más abajo. */
+
+  var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
   var CICLO_GAP = 4; // px de aire MÍNIMO entre CICLO y el borde de Actividades
   var OVERLAP_TARGET = 0.16; // solapamiento nominal del contrato (§0): 16 % de D
@@ -23792,6 +23984,8 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
 
   var rafId = 0;
   var ro = null;
+  var mo = null;
+  var reintentos = 0; // ver «NUNCA ENCOGER A CIEGAS» en compute()
   var rootStyle = document.documentElement.style;
 
   /* s128: `clearVars()` (borraba las 3 vars fuera de Desktop) se retiró junto con
@@ -23851,9 +24045,10 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var isDesktop = !!(window.matchMedia && window.matchMedia(DESKTOP_MQ).matches);
     var body = document.querySelector('[data-pace-home-body]');
     var dial = document.querySelector('[data-pace-dial-fit]');
-    var spc = document.querySelector('[data-pace-spc]');
-    var act = document.querySelector('[data-pace-activitybar]');
-    if (!body || !dial || !spc || !act) return;
+    /* s156: SOLO estos dos. La tarjeta de Camino y Actividades son opcionales
+       (ver cabecera) y ninguno de los dos hace falta para calcular: el techo del
+       solapamiento sale del CICLO, que vive DENTRO del aro. */
+    if (!body || !dial) return;
 
     var widthCap = isDesktop ? WIDTH_CAP : WIDTH_CAP_MOBILE;
     var dFloor = isDesktop ? D_FLOOR : D_FLOOR_MOBILE;
@@ -23865,6 +24060,12 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     var sq = (SQUEEZE_START - vh) / (SQUEEZE_START - SQUEEZE_FULL);
     sq = Math.max(0, Math.min(1, sq));
     setVar('--pace-home-squeeze', String(Math.round(sq * 1000) / 1000));
+
+    /* El reparto del sobrante va a CERO antes de medir: si no, el bucle de
+       abajo mediría el desbordamiento con el sesgo de la pasada ANTERIOR y, al
+       encoger el viewport, encogería el aro más de la cuenta. Se vuelve a
+       publicar al final, ya con el aro fijado. */
+    setVar('--pace-home-slack', '0px');
 
     var hUtil = body.clientHeight;
     var w = body.clientWidth;
@@ -23882,13 +24083,66 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     D = Math.round(D);
     applyD(D, dial);
 
+    /* s156: el desbordamiento se mide sobre el STACK, no sobre `scrollHeight`
+       de la región. `scrollHeight` es la envolvente de TODO lo que sobresale —
+       incluida cualquier decoración absoluta o un hijo desplazado por
+       transform— y no vuelve a bajar aunque el aro encoja, así que el bucle
+       agotaba sus 8 pasadas restando de más.
+        No es teórico: con `prefers-reduced-motion: reduce` el aro salía a 244 px
+       en vez de 406 (v0.88.1, medido a 1280×720), o sea que quien pide menos
+       movimiento se llevaba además una home encogida un 40 %. El stack es
+       exactamente lo que este bucle controla, así que medirlo a él converge. */
+
+    var stackFit = document.querySelector('[data-pace-home-stack]');
+    var medirOver = function () {
+      return stackFit ?
+      stackFit.offsetHeight - body.clientHeight :
+      body.scrollHeight - body.clientHeight;
+    };
+    var overPrevio = null;
+    var dPrevio = D;
     for (var i = 0; i < MAX_FIT_PASSES; i++) {
-      var over = body.scrollHeight - body.clientHeight;
-      if (over <= 1 || D <= dFloor) break;
+      var over = medirOver();
+      if (over <= 1 || D <= dFloor) {reintentos = 0;break;}
+      /* NUNCA ENCOGER A CIEGAS (s156). Si la pasada anterior redujo D y el
+         desbordamiento no mejoró, la medida no está respondiendo al cambio y
+         seguir restando es dar palos: se vuelve al último D no desmentido y se
+         sale. Medido a 1280×720 con `prefers-reduced-motion: reduce`: el alto
+         del stack se quedaba clavado mientras D bajaba de 420 a 322, y el
+         bucle agotaba sus ocho pasadas — de ahí el aro de 244 px de v0.88.1.
+         Con esto, cuando no se puede medir manda el techo por ancho, que es la
+         respuesta correcta ante una medida que no informa: como mucho quedan
+         unos píxeles de scroll, que la región ya admite por diseño. */
+      if (overPrevio !== null && over >= overPrevio) {
+        D = dPrevio;
+        applyD(D, dial);
+        /* UN reintento, no más: en el siguiente frame el layout ya está
+           asentado y la medida vuelve a responder, así que la pasada de después
+           sí converge. El contador se reinicia solo cuando una pasada converge
+           de forma normal, de modo que esto no puede encadenarse. */
+        if (reintentos < 1) {reintentos++;schedule();}
+        break;
+      }
+      overPrevio = over;
+      dPrevio = D;
       // reducir D: la huella vertical del aro tras solapar es ~0.84·D, así que
       // ΔD ≈ over/0.84 acerca el ajuste en una pasada (converge en 1-2).
       D = Math.max(dFloor, D - Math.ceil(over / 0.84));
       applyD(D, dial);
+    }
+
+    /* SOBRANTE VERTICAL (s156). Con el aro ya fijado, lo que queda libre en la
+       región de la home. El CSS lo reparte en móvil dando MENOS aire arriba que
+       abajo: la composición deja de flotar centrada y se asienta como un
+       amanecer (masa alta, suelo bajo). Es una medida, no un número elegido: en
+       teléfonos el aro topa por ancho y el sobrante es estructural, así que la
+       única decisión de diseño es dónde ponerlo. Publicarlo NO realimenta —
+       mueve el stack, no lo redimensiona—, y con sobrante 0 el móvil vuelve al
+       centrado de siempre. */
+    var stack = document.querySelector('[data-pace-home-stack]');
+    if (stack) {
+      var libre = Math.max(0, Math.round(body.clientHeight - stack.offsetHeight));
+      setVar('--pace-home-slack', libre + 'px');
     }
   }
 
@@ -23896,34 +24150,81 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     if (!rafId) rafId = requestAnimationFrame(compute);
   }
 
-  function attach() {
-    var body = document.querySelector('[data-pace-home-body]');
-    if (!body) {requestAnimationFrame(attach);return;}
-    if (window.ResizeObserver) {
-      ro = new ResizeObserver(schedule);
-      ro.observe(body);
-      var spc = document.querySelector('[data-pace-spc]');
-      var act = document.querySelector('[data-pace-activitybar]');
-      if (spc) ro.observe(spc); // Camino: altura varía con contenido/idioma
-      if (act) ro.observe(act); // Actividades: idem
-    }
-    window.addEventListener('resize', schedule);
-    window.addEventListener('orientationchange', schedule);
-    window.addEventListener('pace:home-relayout', schedule);
-    if (window.matchMedia) {
-      // recalcular al cruzar el umbral mobile/desktop
-      var mq = window.matchMedia(DESKTOP_MQ);
-      if (mq.addEventListener) mq.addEventListener('change', schedule);else
-      if (mq.addListener) mq.addListener(schedule);
-    }
+  /* Recálculo pedido desde FUERA (resize, rotación, relayout, cruce de
+     breakpoint, montaje/desmontaje). Devuelve el reintento del bucle a su
+     estado inicial: el presupuesto de un reintento es por episodio, no uno
+     para toda la vida de la página. */
+  function reprogramar() {
+    reintentos = 0;
     schedule();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', attach);
-  } else {
-    attach();
+  /* Re-suscribe el ResizeObserver a los nodos QUE EXISTEN AHORA. Se llama al
+     arrancar y cada vez que cambian los hijos del stack. Nunca observa el
+     contenedor del aro: eso sí sería un bucle (cambiar D cambiaría su tamaño). */
+  function observarNodos() {
+    if (!ro) return;
+    ro.disconnect();
+    var body = document.querySelector('[data-pace-home-body]');
+    var spc = document.querySelector('[data-pace-spc]');
+    var act = document.querySelector('[data-pace-activitybar]');
+    if (body) ro.observe(body);
+    if (spc) ro.observe(spc); // Camino: altura varía con contenido/idioma
+    if (act) ro.observe(act); // Actividades: idem
   }
+
+  function attach(stack) {
+    if (window.ResizeObserver) {
+      ro = new ResizeObserver(schedule);
+      observarNodos();
+    }
+    /* Vigilancia de montaje/desmontaje. `childList` a secas sobre el stack: sus
+       hijos DIRECTOS son los tres bloques de la home, así que entrar y salir de
+       un Camino se ve aquí y nada más se ve. Sin `subtree`, `attributes` ni
+       `characterData` — el Pomodoro cambia texto cada segundo y con `subtree`
+       esto recalcularía sesenta veces por minuto. */
+    if (window.MutationObserver && stack) {
+      mo = new MutationObserver(function () {observarNodos();reprogramar();});
+      mo.observe(stack, { childList: true });
+    }
+    window.addEventListener('resize', reprogramar);
+    window.addEventListener('orientationchange', reprogramar);
+    window.addEventListener('pace:home-relayout', reprogramar);
+    if (window.matchMedia) {
+      // recalcular al cruzar el umbral mobile/desktop
+      var mq = window.matchMedia(DESKTOP_MQ);
+      if (mq.addEventListener) mq.addEventListener('change', reprogramar);else
+      if (mq.addListener) mq.addListener(reprogramar);
+    }
+    /* SÍNCRONA, no `schedule()`: ver la cabecera. En el arranque los frames
+       están hambrientos y esperar uno dejaba el aro al fallback ~1,3 s. */
+    compute();
+    /* Las métricas del CICLO —de donde sale el techo del solapamiento— cambian
+       cuando entra la fuente real. Una sola pasada más, sin sondeo. */
+    if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+      document.fonts.ready.then(schedule).catch(function () {});
+    }
+  }
+
+  /* Fase 1: esperar a que la home exista. React monta de forma asíncrona, así
+     que al cargar el script puede no haber nada todavía. Este observador se
+     desconecta en cuanto encuentra la home y NO vuelve a correr. */
+  function esperarHome() {
+    var stack = document.querySelector('[data-pace-home-stack]');
+    var body = document.querySelector('[data-pace-home-body]');
+    if (body && stack) {attach(stack);return;}
+    if (!window.MutationObserver) {requestAnimationFrame(esperarHome);return;}
+    var espera = new MutationObserver(function () {
+      var s = document.querySelector('[data-pace-home-stack]');
+      var b = document.querySelector('[data-pace-home-body]');
+      if (!b || !s) return;
+      espera.disconnect();
+      attach(s);
+    });
+    espera.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  esperarHome();
 })();
 })();
 </script>

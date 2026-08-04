@@ -51,6 +51,14 @@
   --breathe-2: #A85E43;
   --breathe-soft: rgba(201, 122, 93, 0.12);
 
+  /* AMANECER de la home (s156). Atmósfera del Pomodoro: halo detrás del aro y
+     línea de alba en el horizonte. Tono propio a propósito — NO se reutiliza
+     --breathe ni --move, que son colores de MÓDULO y harían leer la home como
+     si estuviera señalando una actividad. Ámbar tierra desaturado; el alfa bajo
+     es el que mantiene «luz contenida» en vez de degradado llamativo. */
+  --dawn-soft: rgba(191, 140, 92, 0.13);
+  --dawn-line: rgba(178, 128, 82, 0.34);
+
   --move: #9A7B4F;
   --move-soft: rgba(154, 123, 79, 0.12);
 
@@ -166,6 +174,11 @@
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
+  /* Amanecer (s156): sobre papel oscuro la misma luz necesita algo más de
+     cuerpo para no desaparecer, pero se mantiene por debajo del umbral en que
+     el halo competiría con el número. */
+  --dawn-soft: rgba(214, 165, 116, 0.16);
+  --dawn-line: rgba(222, 176, 128, 0.30);
 }
 
 /* TIPOGRAFÍAS ALT */

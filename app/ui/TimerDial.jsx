@@ -65,7 +65,7 @@ function TimerTicks({ progress, color }) {
   return <React.Fragment>{marks}</React.Fragment>;
 }
 
-function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight }) {
+function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused }) {
   const R = 47.5;
   const C = 2 * Math.PI * R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
@@ -85,8 +85,13 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
        Solo presente cuando running -> el selector [data-...] no matchea
        en reposo. Puramente presentacional; el padre decide `running`.
        `ticks`: variante aro de marcas de minuto (Caminos Foco); sin ticks
-       es el aro clasico con arco + punto guia (FocusTimer home). */
+       es el aro clasico con arco + punto guia (FocusTimer home).
+       data-pace-dial-paused (s156): gancho DECLARATIVO para que la atmosfera de
+       amanecer distinga «pausado» de «reposo» — dos estados que hasta ahora se
+       veian igual porque `running` es false en los dos. El padre decide; aqui no
+       hay ni una linea de logica de temporizador. */
     <div data-pace-dial-running={running ? '' : undefined}
+         data-pace-dial-paused={paused ? '' : undefined}
          data-pace-dial-fit={fitHeight ? '' : undefined}
          style={fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame}>
       {ticks ? (

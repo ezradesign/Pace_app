@@ -21,6 +21,36 @@
 (function injectPaceMainResponsiveCss() {
   if (typeof document === 'undefined') return;
   if (document.getElementById('pace-main-responsive-css')) return;
+
+  /* ATMÓSFERA DE AMANECER (s156) — se REUTILIZA el mecanismo de s140, no se
+     copia. `paceGlowRamp` y `paceGrainUrl` viven en app/ui/SessionShell.jsx y
+     son la fuente canónica de la caída de luz y del grano antibanding de este
+     producto; SessionShell.jsx carga ANTES que este archivo (PACE.html), así
+     que aquí ya están en window y su resultado se hornea en la hoja. Duplicar
+     las paradas del degradado en CSS habría creado una segunda curva que
+     divergiría de la de las sesiones a la primera corrección.
+
+     POR QUÉ EL GRANO: sobre papel plano un degradado suave de esta amplitud
+     BANDEA. Es el hallazgo de s140 — el grano no tapa el escalón, lo ditherea,
+     y va enmascarado con la MISMA caída que la luz para no dejar un disco de
+     ruido con borde duro contra el papel.
+
+     FALLBACK: `paceGlowRamp` usa color-mix(). Donde no exista, se cae a un
+     radial de dos paradas con el mismo token y el mismo borde: menos fino, pero
+     el amanecer sigue ahí y nada queda sin pintar. */
+  const HALO_BORDE = 74;
+  const DAWN = 'var(--dawn-soft)';
+  const puedeMezclar = typeof CSS !== 'undefined' && typeof CSS.supports === 'function'
+    && CSS.supports('background-image', 'radial-gradient(circle, color-mix(in srgb, red 50%, transparent) 0%, transparent 100%)');
+  const halo = (puedeMezclar && typeof window.paceGlowRamp === 'function')
+    ? window.paceGlowRamp(DAWN, HALO_BORDE)
+    : 'radial-gradient(circle, ' + DAWN + ' 0%, transparent ' + HALO_BORDE + '%)';
+  const grano = (typeof window.paceGrainUrl === 'function') ? window.paceGrainUrl() : '';
+  const capas = (grano ? grano + ', ' : '') + halo;
+  /* Misma máscara que PaceDither (s140): opaca hasta la mitad del borde y
+     desvanecida hasta él. */
+  const caida = 'radial-gradient(#000 0%, #000 ' + (HALO_BORDE * 0.5).toFixed(1) + '%, transparent ' + HALO_BORDE + '%)';
+
   const s = document.createElement('style');
   s.id = 'pace-main-responsive-css';
   s.textContent = `
@@ -68,6 +98,23 @@
     [data-pace-home-body] {
       --pace-home-timer-size: min(86vw, 520px, max(300px, 58vh));
       --pace-home-sunset-overlap: max(6px, min(calc(var(--pace-home-timer-size) * 0.19), calc((var(--pace-home-timer-size) - 244px) / 2 - 6px)));
+
+      /* ==== RESOLUCIÓN ÚNICA (s156) ====================================
+         Estas dos son las que consume TODO el mundo. Aquí, y solo aquí, se
+         decide quién manda: el motor (app/main/home-geometry.js) si ya ha
+         publicado, y el fallback CSS si no.
+
+         Antes cada consumidor traía su propio fallback y no coincidían: el
+         Desktop caía a un 360px escrito a mano, el móvil al clamp de arriba,
+         la tarjeta a la estimación «atardecer» y el recorte del aro a 0px.
+         Con el motor apagado eso producía dos geometrías distintas por piel y,
+         peor, ROMPÍA el invariante que este archivo declaraba: a 390×844 la
+         tarjeta subía 39,7 px sobre un aro SIN recortar. Medido en s156.
+
+         Ahora recorte y solapamiento salen del MISMO token, así que la frase
+         «no pueden desincronizarse» pasa a ser cierta por construcción. */
+      --pace-dial-d: var(--pace-timer-d, var(--pace-home-timer-size));
+      --pace-horizon: var(--pace-activities-overlap, var(--pace-home-sunset-overlap));
     }
     @supports (height: 1dvh) {
       [data-pace-home-body] {
@@ -76,11 +123,11 @@
     }
     [data-pace-dial-fit] {
       width: auto;
-      /* s128: el aro lo dimensiona el motor (home-geometry.js) también en móvil,
-         vía --pace-timer-d; --pace-home-timer-size queda de FALLBACK (pre-JS y sin
-         JS, con su @supports dvh de arriba). En Desktop este height lo pisa el
-         bloque min-width:769px con !important. */
-      height: var(--pace-timer-d, var(--pace-home-timer-size));
+      /* s128: el aro lo dimensiona el motor (home-geometry.js) también en móvil.
+         s156: por --pace-dial-d, que ya resuelve motor-o-fallback arriba. En
+         Desktop este height lo pisa el bloque min-width:769px con !important
+         (mismo valor, distinta especificidad). */
+      height: var(--pace-dial-d);
       /* HORIZONTE en móvil/tablet (s128): el aro se RECORTA por abajo en la línea
          donde sube la tarjeta de Camino — el "amanecer" del Desktop (s126) pero con
          Caminos. Reutiliza --pace-activities-overlap (que el motor mide desde el
@@ -88,9 +135,72 @@
          MARCO (no el <svg>, que va rotado) y cubre el halo ::after. Con la var sin
          definir (pre-JS) el inset es 0 → aro entero, sin recorte. En Desktop lo
          pisa el bloque min-width:769px (mismo valor). Caminos NO lleva
-         [data-pace-dial-fit] → intacto. */
-      -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
-      clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+         [data-pace-dial-fit] → intacto. s156: por --pace-horizon, el MISMO token
+         que sube el bloque de abajo — no hay dos fallbacks que puedan divergir. */
+      -webkit-clip-path: inset(0 0 var(--pace-horizon) 0);
+      clip-path: inset(0 0 var(--pace-horizon) 0);
+    }
+    /* ===================================================================
+       AMANECER (s156) · las dos piezas visuales, comunes a las dos pieles.
+
+       1. HALO detrás del aro. Vive en el ::before del marco, así que lo recorta
+          el MISMO clip-path que corta el aro: la luz emerge de detrás del
+          horizonte en vez de flotar sobre él. z-index 0 y el interior del dial
+          en 1 (TimerDial) => nunca pasa por delante del número ni del CTA.
+       2. LÍNEA DE ALBA en el horizonte, anclada a --pace-horizon, o sea al
+          mismo sitio exacto por donde se corta el aro. Se desvanece por los dos
+          extremos: es luz en el horizonte, no una regla de separación.
+
+       INTENSIDAD POR ESTADO. --pace-dawn y --pace-alba son lo ÚNICO que cambia
+       entre reposo, activo y pausado; el estado nunca se comunica solo con
+       esto (el número, el texto del CTA y «Reiniciar bloque» ya lo dicen).
+       Las transiciones son decorativas y no cuelgan de data-pace-essential, así
+       que el kill de prefers-reduced-motion (tokens.css) las neutraliza.
+       =================================================================== */
+    [data-pace-dial-fit] {
+      --pace-dawn: 0.72;
+    }
+    [data-pace-dial-fit][data-pace-dial-running] {
+      --pace-dawn: 1;
+    }
+    [data-pace-dial-fit][data-pace-dial-paused] {
+      --pace-dawn: 0.42;
+    }
+    [data-pace-dial-fit]::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: ${capas};
+      -webkit-mask-image: ${caida};
+      mask-image: ${caida};
+      opacity: var(--pace-dawn, 0.72);
+      transition: opacity var(--dur-slow) var(--ease);
+    }
+    [data-pace-home-body] [data-pace-main-content] {
+      position: relative;
+      --pace-alba: 0.8;
+    }
+    [data-pace-home-body] [data-pace-main-content]:has([data-pace-dial-running]) {
+      --pace-alba: 1;
+    }
+    [data-pace-home-body] [data-pace-main-content]:has([data-pace-dial-paused]) {
+      --pace-alba: 0.45;
+    }
+    [data-pace-home-body] [data-pace-main-content]::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: var(--pace-horizon);
+      height: 1px;
+      pointer-events: none;
+      z-index: 0;
+      background-image: linear-gradient(90deg, transparent 0%, var(--dawn-line) 30%, var(--dawn-line) 70%, transparent 100%);
+      opacity: var(--pace-alba, 0.8);
+      transition: opacity var(--dur-slow) var(--ease);
     }
     /* Barra de scroll OCULTA en el contenedor vertical de la home (s123), sin
        tocar el desplazamiento: overflow-y sigue en 'auto' (rueda/trackpad/gesto
@@ -144,6 +254,25 @@
         padding-top: calc(8px - 4px * var(--pace-home-squeeze, 0)) !important;
         gap: calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
       }
+      /* HORIZONTE EN MÓVIL CUANDO NO HAY TARJETA (s156). El bloque que hace de
+         horizonte es «el primero después del aro»: normalmente la tarjeta de
+         Camino, pero con un Camino EN CURSO la tarjeta no existe y ese papel
+         pasa a Actividades. El selector de hermano adyacente lo dice sin que
+         nadie tenga que saber por qué falta la tarjeta; con tarjeta, no casa. */
+      [data-pace-home-stack] > [data-pace-main-content] + [data-pace-activitybar] {
+        margin-top: calc(var(--pace-horizon) * -1) !important;
+      }
+      /* REPARTO DEL SOBRANTE (s156). En móvil el aro topa por ANCHO, así que
+         sobra alto por construcción y el margin:auto lo repartía a partes
+         iguales: la composición flotaba en medio con ~90 px muertos arriba y
+         otros ~90 abajo (medido a 390×844). Se le da MENOS aire arriba que
+         abajo — masa alta y suelo bajo, que es la lectura de un amanecer. El
+         motor publica el sobrante REAL; con 0 esto degrada al comportamiento
+         anterior. Solo mueve el bloque: no cambia ni un tamaño. */
+      [data-pace-home-body] > [data-pace-home-stack] {
+        margin-top: calc(var(--pace-home-slack, 0px) * 0.38) !important;
+        margin-bottom: auto !important;
+      }
       /* ActivityBar en móvil: grid 2×2, chips compactos verticales */
       [data-pace-activitybar] {
         padding: calc(4px - 2px * var(--pace-home-squeeze, 0)) 12px calc(14px - 8px * var(--pace-home-squeeze, 0)) !important;
@@ -188,20 +317,27 @@
     }
 
     /* ===================================================================
-       HOME DESKTOP — sistema proporcional único (s126). ENCAPSULADO aquí:
-       todo bajo min-width:769px; mobile/tablet (≤768) no recibe nada. Las
-       variables --pace-timer-d y --pace-activities-overlap las publica en
-       :root el ayudante app/main/home-geometry.js SOLO en Desktop (y las
-       borra fuera). Reproduce la composición de la captura v0.64 (Timer →
-       Actividades solapando el aro bajo el CICLO → Camino ancho al fondo) y
-       la mantiene constante en toda resolución de escritorio.
+       HOME DESKTOP — sistema proporcional único (s126). Solo lo de ESTE
+       bloque es exclusivo de ≥769px; las variables y el modelo «atardecer»
+       de arriba los comparten las dos pieles.
+
+       CORREGIDO EN s156. Esta cabecera decía «mobile/tablet (≤768) no recibe
+       nada» y que el ayudante publica «SOLO en Desktop (y las borra fuera)»:
+       las dos frases son FALSAS desde s128 —el motor corre en todo viewport y
+       clearVars() se retiró—, y era el tercer sitio del repo que describía
+       una arquitectura que ya no existía. Reproduce la composición de la
+       captura v0.64 (Timer → Actividades solapando el aro bajo el CICLO →
+       Camino ancho al fondo) y la mantiene constante en toda resolución de
+       escritorio.
        =================================================================== */
     @media (min-width: 769px) {
-      /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). En
-         Desktop reemplaza a --pace-home-timer-size; el aspect-ratio 1/1 del
-         marco da el ancho. Fallback 360px mientras el ayudante no ha corrido. */
+      /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). El
+         aspect-ratio 1/1 del marco da el ancho. s156: el fallback ya no se
+         escribe aquí — venía como 360px a mano y no coincidía con el del
+         móvil, de modo que un mismo fallo daba dos aros distintos según la
+         piel. Ahora los dos caen en --pace-dial-d. */
       [data-pace-dial-fit] {
-        height: var(--pace-timer-d, 360px) !important;
+        height: var(--pace-dial-d) !important;
         /* HORIZONTE (s126): el aro se CORTA por abajo en la línea donde
            empiezan las Actividades — el «sol saliendo» de la referencia v0.64.
            Sin esto el arco se veía entero: [data-pace-activitybar] no tiene
@@ -228,8 +364,8 @@
            horizonte (~94° de aro). El corte DURO es deliberado: un
            desvanecido dejaría arco y punto atenuados flotando en la banda
            transparente, a los lados de «ACTIVIDADES». */
-        -webkit-clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
-        clip-path: inset(0 0 var(--pace-activities-overlap, 0px) 0);
+        -webkit-clip-path: inset(0 0 var(--pace-horizon) 0);
+        clip-path: inset(0 0 var(--pace-horizon) 0);
       }
       /* Interior PROPORCIONAL a D (ratios medidos en la referencia). !important
          para ganar a los estilos inline de TimerDial. El botón conserva 44px
@@ -257,7 +393,7 @@
         order: 1 !important;
         position: relative;
         z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
-        margin-top: calc(var(--pace-activities-overlap, 0px) * -1) !important;
+        margin-top: calc(var(--pace-horizon) * -1) !important;
       }
       [data-pace-spc] {
         order: 2 !important;
