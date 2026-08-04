@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.87.0</title>
+  <title>PACE · Foco · Cuerpo — v0.88.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3907,7 +3907,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.87.0';
+const PACE_VERSION = 'v0.88.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4192,6 +4192,15 @@ function persistState() {
   try {localStorage.setItem(LS_KEY, JSON.stringify(_state));} catch (e) {}
 }
 
+/* Borra el almacen legacy. Vive AQUI porque `pace.state.v2` es de este modulo:
+   desde s155 hay un segundo almacen (`pace.events.v1`) y el «borrar todo» de
+   Ajustes lo orquesta `paceEventsWipeAll`, pero cada modulo borra LO SUYO —
+   una unica fuente de verdad por dominio. No recarga ni avisa a nadie: de eso
+   se encarga quien orquesta. */
+function wipeLocalState() {
+  try {localStorage.removeItem(LS_KEY);} catch (e) {}
+}
+
 function getState() {return _state;}
 
 function setState(patch) {
@@ -4286,10 +4295,10 @@ applyTheme();
    `state-core.support.jsx` (s148). Nadie fuera del par lo consumía. */
 Object.assign(window, {
   LS_KEY, PACE_VERSION, TOAST_DURATION_MS, defaultState,
-  getState, setState, subscribe, usePace, ensureDayFresh,
+  getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState,
   showToast, onToast, setCaminoUiActive
 });
-;Object.assign(window, { loadState, persistState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
+;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
@@ -5721,6 +5730,1320 @@ Object.assign(window, {
   shouldPromptRoutineFeedback
 });
 ;Object.assign(window, { sanitizeFeedbackResponse, sanitizeRoutineId, nextRoutineFeedback, recordRoutineFeedback, shouldPromptRoutineFeedback });
+})();
+</script>
+  <!-- pace.events.v1 (s155 · FASE 3, Fase 1 del esquema): registro LOCAL de
+       uso. Memoria del usuario sobre su progreso, NO telemetria — no sale del
+       dispositivo y no hay una sola llamada de red en los cuatro archivos.
+       Orden OBLIGATORIO y por que:
+         · el MODELO va primero (§5, backend-independiente) y necesita
+           todayISO/toISODate/parseLocalDateKey de state-history (regla #10);
+         · los ADAPTADORES despues, porque consumen el modelo por window (un
+           `const` no cruza la IIFE del build: la trampa de s144);
+         · la FACHADA la ultima: se inicializa sola al cargar y lee getState()
+           para capturar el baseline, asi que state-core TIENE que estar ya.
+       Sin emisores: la Fase 2 del esquema es la que emite, y §25 prohibe
+       emitir antes de que el adaptador este en READ_WRITE. -->
+  <script>
+;(function () {
+/* PACE · events-payloads.js
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   ESQUEMA DE PAYLOADS de `pace.events.v1` (s155) — la mitad de la capa A que
+   decide QUE campos lleva cada tipo de evento. Salio de `events-model.js` al
+   rebasar este las 500 lineas (regla 1 de CLAUDE.md), igual que s152 saco la
+   segunda tanda del verify.
+
+   AQUI VIVE LA MINIMIZACION, y por eso merece archivo propio: cada payload se
+   reconstruye CAMPO A CAMPO desde una LISTA PERMITIDA. No es una lista de
+   campos prohibidos —esa siempre se queda corta— sino lo contrario: lo que no
+   esta en el esquema no puede colarse aunque nadie lo haya previsto. Medido:
+   un payload con `notaLibre`, `ip` y una ruta de archivo sale con tres claves.
+
+   NUNCA entra aqui: texto libre del usuario, datos de salud, nombres de
+   archivo, IP, ubicacion, contactos, credenciales, portapapeles ni
+   identificador alguno de usuario, dispositivo, publicidad o fingerprint.
+
+   CARGA ANTES de `events-model.js`, que llama a `normalizeEventPayload` desde
+   `makeEvent` y usa `eventCount` en sus normalizadores.
+*/
+
+/* --- Payloads (§8) ------------------------------------------------------ */
+
+const EVENT_MODULES_SESSION = ['focus', 'breathe', 'move', 'stretch'];
+const EVENT_MODULES_FEEDBACK = ['move', 'stretch', 'breathe'];
+const EVENT_STEP_KINDS = ['focus', 'breathe', 'move', 'stretch', 'hydrate'];
+const EVENT_COMPLETION_REASONS = ['natural', 'early'];
+const EVENT_PLANNED_SOURCES = ['preset', 'derived', 'declared'];
+const EVENT_FEEDBACK_RESPONSES = ['yes', 'some', 'no']; // `later` NO emite (§15.2)
+const EVENT_VARIANTS = ['v1', 'legacy'];
+
+/* Entero finito >= 0. Cubre la deuda P1 de §15.3: un contador que llegue como
+   `"3"` no debe concatenarse ni propagarse como string. */
+function eventCount(n) {
+  const x = typeof n === 'string' ? Number(n) : n;
+  if (typeof x !== 'number' || !isFinite(x) || x < 0) return 0;
+  return Math.floor(x);
+}
+
+function eventSeconds(n) {
+  const x = typeof n === 'string' ? Number(n) : n;
+  if (typeof x !== 'number' || !isFinite(x) || x < 0) return null;
+  return Math.round(x);
+}
+
+function eventEnum(value, allowed) {
+  return allowed.indexOf(value) !== -1 ? value : null;
+}
+
+function eventId(value) {
+  return typeof value === 'string' && value.trim() ? value.trim() : null;
+}
+
+/* Devuelve el payload NORMALIZADO del tipo, o `null` si no cumple. Es el unico
+   sitio donde se decide que forma tiene cada payload. */
+function normalizeEventPayload(type, raw) {
+  const p = raw && typeof raw === 'object' ? raw : null;
+  if (!p) return null;
+
+  if (type === 'session.completed') {
+    const mod = eventEnum(p.module, EVENT_MODULES_SESSION);
+    const routineId = eventId(p.routineId);
+    const reason = eventEnum(p.completionReason, EVENT_COMPLETION_REASONS);
+    const elapsed = eventSeconds(p.elapsedSeconds);
+    const active = eventSeconds(p.activeSeconds);
+    if (!mod || !routineId || !reason || elapsed === null || active === null) return null;
+    /* `plannedSeconds` y su origen viajan JUNTOS: si uno es null, el otro
+       tambien (§6.4 — un Camino con un paso no planificable anula los dos). */
+    let planned = p.plannedSeconds === null || p.plannedSeconds === undefined ?
+    null : eventSeconds(p.plannedSeconds);
+    let source = eventEnum(p.plannedSecondsSource, EVENT_PLANNED_SOURCES);
+    if (planned === null || source === null) {planned = null;source = null;}
+    return {
+      module: mod, routineId: routineId, completionReason: reason,
+      elapsedSeconds: elapsed, activeSeconds: active,
+      plannedSeconds: planned, plannedSecondsSource: source,
+      variant: eventEnum(p.variant, EVENT_VARIANTS)
+    };
+  }
+
+  if (type === 'feedback.answered') {
+    const routineId = eventId(p.routineId);
+    const mod = eventEnum(p.module, EVENT_MODULES_FEEDBACK);
+    const response = eventEnum(p.response, EVENT_FEEDBACK_RESPONSES);
+    if (!routineId || !mod || !response) return null;
+    return { routineId: routineId, module: mod, response: response };
+  }
+
+  if (type === 'path.step.completed') {
+    const pathId = eventId(p.pathId);
+    const kind = eventEnum(p.stepKind, EVENT_STEP_KINDS);
+    const idx = eventCount(p.stepIndex);
+    if (!pathId || !kind || typeof p.stepIndex === 'undefined') return null;
+    return { pathId: pathId, stepIndex: idx, stepKind: kind };
+  }
+
+  if (type === 'path.completed') {
+    const pathId = eventId(p.pathId);
+    if (!pathId || typeof p.stepsCount === 'undefined') return null;
+    return { pathId: pathId, stepsCount: eventCount(p.stepsCount) };
+  }
+
+  return null;
+}
+
+Object.assign(window, {
+  EVENT_MODULES_SESSION, EVENT_MODULES_FEEDBACK, EVENT_STEP_KINDS,
+  EVENT_COMPLETION_REASONS, EVENT_PLANNED_SOURCES, EVENT_FEEDBACK_RESPONSES, EVENT_VARIANTS,
+  eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload
+});
+;Object.assign(window, { eventCount, eventSeconds, eventEnum, eventId, normalizeEventPayload });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · events-model.js
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   MODELO CANONICO de `pace.events.v1` (s155 · FASE 3 del plan, Fase 1 del
+   esquema). Implementa la capa A de `docs/product/EVENTOS_SCHEMA.md` §5-§17:
+   envelope, tipos, payloads, correlacion tipada, orden canonico, retencion,
+   baseline, presupuesto y export/import.
+
+   REGLA DURA (§5): este archivo es BACKEND-INDEPENDIENTE. Aqui no se nombra
+   `localStorage`, ni `setItem`, ni el evento `storage`, ni `navigator.locks`,
+   ni SQLite. Todo eso vive en un ADAPTADOR (`events-adapter-*.js`). Si algun
+   dia una funcion de este archivo necesita tocar el almacenamiento, esta en el
+   archivo equivocado.
+
+   Funciones puras salvo `newEventId()` y `makeEvent()` (que leen el reloj y el
+   generador de aleatorios). Ninguna persiste nada.
+
+   REGLA #10 de CLAUDE.md: el dia civil se calcula con `todayISO()` y las claves
+   ISO se interpretan con `parseLocalDateKey()` (state-history.jsx). NUNCA
+   `new Date("YYYY-MM-DD")`, que parsea medianoche UTC y rompe en husos
+   negativos. `occurredAt` SI es un instante absoluto y va con `toISOString()`.
+
+   Cruza la IIFE del build por el `Object.assign(window, …)` del final: el build
+   solo re-expone `function` y `var` top-level, asi que las CONSTANTES que otro
+   archivo necesita se publican a mano (misma solucion que `sidebarStyles`).
+*/
+
+/* Version del CONTENEDOR canonico (§9). El sufijo `v1` de la clave marca un
+   cambio INCOMPATIBLE; los compatibles suben este entero. */
+const EVENTS_SCHEMA_VERSION = 1;
+
+/* Ventana de crudos en dias (§12, rango aprobado 90-180). */
+const EVENTS_RETENTION_DAYS = 120;
+
+/* Presupuesto LOGICO de producto (§16): ~500 KB medidos sobre el JSON
+   serializado en UTF-8. No es la cuota fisica de ningun backend; existe para
+   que los backups sean comparables entre runtimes. */
+const EVENTS_BUDGET_BYTES = 500 * 1024;
+
+/* Tipos aprobados (§6.1). Anadir un `type` NO sube el `v` de los demas. */
+const EVENT_TYPES = ['session.completed', 'feedback.answered', 'path.step.completed', 'path.completed'];
+
+/* Correlacion TIPADA (§7.1) — no hay un `runId` universal, y no se inventan
+   `runId` ficticios para el tipo que no lo lleva.
+     req  = obligatorio · opt = opcional · no = no aplicable (null) */
+const EVENT_CORRELATION = {
+  'session.completed': { runId: 'req', pathRunId: 'opt' },
+  'feedback.answered': { runId: 'req', pathRunId: 'opt' },
+  'path.step.completed': { runId: 'opt', pathRunId: 'req' },
+  'path.completed': { runId: 'no', pathRunId: 'req' }
+};
+
+const EVENT_CONTEXTS = ['standalone', 'path'];
+
+/* --- Identidad (§7.2) -------------------------------------------------- */
+
+/* UUIDv4 canonico. Primario `crypto.randomUUID()`; donde no exista, 16 bytes
+   de `getRandomValues` con los bits de version (0100) y variante (10xx)
+   fijados a mano. NUNCA `Math.random` — no es un generador criptografico y el
+   `id` es tambien el desempate del orden de poda. */
+function newEventId() {
+  try {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+      const b = crypto.getRandomValues(new Uint8Array(16));
+      b[6] = b[6] & 0x0f | 0x40; // version 4
+      b[8] = b[8] & 0x3f | 0x80; // variante 10xx
+      const hex = [];
+      for (let i = 0; i < 16; i++) hex.push(b[i].toString(16).padStart(2, '0'));
+      const s = hex.join('');
+      return s.slice(0, 8) + '-' + s.slice(8, 12) + '-' + s.slice(12, 16) + '-' +
+      s.slice(16, 20) + '-' + s.slice(20);
+    }
+  } catch (e) {/* cae al fallo controlado de abajo */}
+  return null; // sin generador fiable no se fabrica un id: el emisor rechaza
+}
+
+const EVENT_UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isEventId(value) {
+  return typeof value === 'string' && EVENT_UUID_RE.test(value);
+}
+
+/* --- Envelope (§7) ------------------------------------------------------ */
+
+/* Construye un evento canonico. Devuelve `null` si el tipo, la correlacion o
+   el payload no cumplen el contrato: preferimos NO registrar a registrar algo
+   que un consumidor futuro tendria que adivinar.
+   `opts.occurredAt` existe para que las pruebas puedan fijar el instante; en
+   produccion se omite y se lee el reloj. */
+function makeEvent(opts) {
+  const o = opts || {};
+  if (EVENT_TYPES.indexOf(o.type) === -1) return null;
+
+  const id = newEventId();
+  if (!id) return null;
+
+  const occurredAt = typeof o.occurredAt === 'string' ? o.occurredAt : new Date().toISOString();
+  const when = new Date(occurredAt);
+  if (isNaN(when.getTime())) return null;
+
+  const context = EVENT_CONTEXTS.indexOf(o.context) !== -1 ? o.context : 'standalone';
+  const runId = typeof o.runId === 'string' && o.runId ? o.runId : null;
+  const pathRunId = typeof o.pathRunId === 'string' && o.pathRunId ? o.pathRunId : null;
+  if (!eventCorrelationOk(o.type, runId, pathRunId)) return null;
+
+  const payload = normalizeEventPayload(o.type, o.payload);
+  if (!payload) return null;
+
+  return {
+    id: id,
+    v: 1,
+    type: o.type,
+    occurredAt: occurredAt,
+    /* El dia civil se captura AL EMITIR; jamas se reconstruye despues desde
+       `occurredAt` con el huso vigente, que para un evento antiguo puede ser
+       otro (§7.3). Con `occurredAt` inyectado por una prueba, el dia sale de
+       ese instante y no de hoy. */
+    localDay: typeof o.occurredAt === 'string' ? toISODate(when) : todayISO(),
+    /* Offset PARA LA FECHA DEL EVENTO (§7.3): varia por zona y por DST, no es
+       una propiedad permanente del usuario. */
+    timezoneOffsetMin: when.getTimezoneOffset(),
+    context: context,
+    runId: runId,
+    pathRunId: pathRunId,
+    payload: payload
+  };
+}
+
+/* Cardinalidad de la correlacion por tipo (§7.1). */
+function eventCorrelationOk(type, runId, pathRunId) {
+  const rule = EVENT_CORRELATION[type];
+  if (!rule) return false;
+  if (rule.runId === 'req' && !runId) return false;
+  if (rule.runId === 'no' && runId) return false;
+  if (rule.pathRunId === 'req' && !pathRunId) return false;
+  if (rule.pathRunId === 'no' && pathRunId) return false;
+  return true;
+}
+
+/* Un evento leido del almacen (o de un backup) es VALIDO si tiene la forma del
+   envelope. Ojo: un `type`/`v` DESCONOCIDO no es invalido — se conserva y se
+   ignora en los reducers (§9, principio 5). Por eso aqui no se mira la tabla
+   de tipos, solo el envelope. */
+function isValidEventEnvelope(e) {
+  if (!e || typeof e !== 'object') return false;
+  if (!isEventId(e.id)) return false;
+  if (typeof e.v !== 'number' || !isFinite(e.v)) return false;
+  if (typeof e.type !== 'string' || !e.type) return false;
+  if (typeof e.occurredAt !== 'string' || isNaN(new Date(e.occurredAt).getTime())) return false;
+  if (typeof e.localDay !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(e.localDay)) return false;
+  if (typeof e.timezoneOffsetMin !== 'number' || !isFinite(e.timezoneOffsetMin)) return false;
+  if (EVENT_CONTEXTS.indexOf(e.context) === -1) return false;
+  if (e.runId !== null && typeof e.runId !== 'string') return false;
+  if (e.pathRunId !== null && typeof e.pathRunId !== 'string') return false;
+  if (!e.payload || typeof e.payload !== 'object') return false;
+  return true;
+}
+
+/* --- Orden canonico (§11) ----------------------------------------------- */
+
+/* UNICO comparador de orden del sistema: `occurredAt` ascendente y, a igualdad,
+   `id` lexicografico ascendente. `seq` NO participa: no es global ni estable
+   tras una importacion (§7.2). */
+function compareEvents(a, b) {
+  if (a.occurredAt < b.occurredAt) return -1;
+  if (a.occurredAt > b.occurredAt) return 1;
+  if (a.id < b.id) return -1;
+  if (a.id > b.id) return 1;
+  return 0;
+}
+
+/* ¿`e` va DESPUES del cursor de poda? Con cursor nulo, todo va despues. */
+function isAfterPruneCursor(e, cursor) {
+  if (!cursor) return true;
+  return compareEvents(e, cursor) > 0;
+}
+
+/* --- Contenedor canonico ------------------------------------------------ */
+
+function emptyEventsBaseline() {
+  return {
+    capturedAt: null,
+    /* Tally de `feedback.answered` puenteado desde `routineFeedback` (§15.1). */
+    feedback: {},
+    /* Totales consolidados por tipo al podar (§13). Vacio hasta la Fase 3. */
+    totalsByType: {}
+  };
+}
+
+function emptyEventsContainer() {
+  return {
+    schemaVersion: EVENTS_SCHEMA_VERSION,
+    activatedAt: null,
+    events: [],
+    baseline: emptyEventsBaseline(),
+    pruneCursor: null,
+    /* Marcador de operacion entre almacenes (§22). `null` = nada a medias. */
+    marker: null
+  };
+}
+
+/* Lectura DEFENSIVA: cualquier cosa que no encaje se normaliza en vez de
+   reventar (principio 5 y §23 — un contenedor ilegible se reinicia). Devuelve
+   siempre un contenedor con la forma canonica. */
+function normalizeEventsContainer(raw) {
+  const base = emptyEventsContainer();
+  if (!raw || typeof raw !== 'object') return base;
+
+  const sv = typeof raw.schemaVersion === 'number' ? raw.schemaVersion : null;
+  base.schemaVersion = sv === null ? EVENTS_SCHEMA_VERSION : sv;
+  base.activatedAt = typeof raw.activatedAt === 'string' ? raw.activatedAt : null;
+
+  const list = Array.isArray(raw.events) ? raw.events : [];
+  const seen = Object.create(null);
+  const kept = [];
+  for (let i = 0; i < list.length; i++) {
+    const e = list[i];
+    if (!isValidEventEnvelope(e)) continue;
+    if (seen[e.id]) continue; // el fold es keyed por id: sin repetidos
+    seen[e.id] = true;
+    kept.push(e);
+  }
+  kept.sort(compareEvents);
+  base.events = kept;
+
+  const b = raw.baseline && typeof raw.baseline === 'object' ? raw.baseline : {};
+  base.baseline = {
+    capturedAt: typeof b.capturedAt === 'string' ? b.capturedAt : null,
+    feedback: normalizeFeedbackTally(b.feedback),
+    totalsByType: normalizeTotalsByType(b.totalsByType)
+  };
+
+  const c = raw.pruneCursor;
+  base.pruneCursor = c && typeof c === 'object' && typeof c.occurredAt === 'string' && isEventId(c.id) ?
+  { occurredAt: c.occurredAt, id: c.id } : null;
+
+  const m = raw.marker;
+  base.marker = m && typeof m === 'object' && typeof m.op === 'string' ?
+  { op: m.op, startedAt: typeof m.startedAt === 'string' ? m.startedAt : null } :
+  null;
+
+  return base;
+}
+
+function normalizeFeedbackTally(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object') return out;
+  const ids = Object.keys(raw);
+  for (let i = 0; i < ids.length; i++) {
+    const entry = raw[ids[i]];
+    if (!entry || typeof entry !== 'object') continue;
+    out[ids[i]] = { yes: eventCount(entry.yes), some: eventCount(entry.some), no: eventCount(entry.no) };
+  }
+  return out;
+}
+
+function normalizeTotalsByType(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object') return out;
+  const keys = Object.keys(raw);
+  for (let i = 0; i < keys.length; i++) out[keys[i]] = eventCount(raw[keys[i]]);
+  return out;
+}
+
+/* --- Baseline (§13, §15.1) ---------------------------------------------- */
+
+/* Captura UNICA al activar: los contadores de `routineFeedback` pasan a ser el
+   tally inicial de `feedback.*`, para que el dia que haya consumidor no se
+   cuente dos veces lo que ya estaba contado antes de existir el log.
+   No migra ni borra nada: `routineFeedback` sigue siendo el agregado canonico
+   y el control de frecuencia (§15.2). */
+function captureEventsBaseline(legacyState, capturedAt) {
+  const out = emptyEventsBaseline();
+  out.capturedAt = typeof capturedAt === 'string' ? capturedAt : new Date().toISOString();
+  const rf = legacyState && typeof legacyState === 'object' ? legacyState.routineFeedback : null;
+  out.feedback = normalizeFeedbackTally(rf);
+  return out;
+}
+
+/* --- Retencion y poda (§12) --------------------------------------------- */
+
+/* Clave ISO del primer dia RETENIDO: hoy menos la ventana. Un evento con
+   `localDay` anterior a esta clave es candidato a poda. */
+function eventsRetentionFloorKey(todayKey) {
+  const base = parseLocalDateKey(todayKey || todayISO());
+  base.setDate(base.getDate() - EVENTS_RETENTION_DAYS);
+  return toISODate(base);
+}
+
+/* Lote a podar: eventos POSTERIORES al cursor y anteriores al suelo, en orden
+   canonico. La poda por lotes no salta ni reprocesa (§12). Las claves ISO se
+   comparan como cadenas: `YYYY-MM-DD` ordena lexicograficamente igual que
+   cronologicamente, asi que no hace falta construir fechas. */
+function selectEventsToPrune(container, todayKey) {
+  const floor = eventsRetentionFloorKey(todayKey);
+  const out = [];
+  const list = container && Array.isArray(container.events) ? container.events : [];
+  for (let i = 0; i < list.length; i++) {
+    const e = list[i];
+    if (!isAfterPruneCursor(e, container.pruneCursor)) continue;
+    if (e.localDay < floor) out.push(e);
+  }
+  out.sort(compareEvents);
+  return out;
+}
+
+/* Funde un lote en el baseline. IDEMPOTENTE por `id` respecto al cursor: un
+   evento que ya quedo detras del cursor no se vuelve a contar. Los tipos
+   DESCONOCIDOS no se consolidan (§9): al podarlos se pierde su detalle, y eso
+   es preferible a inventarles un agregado. */
+function foldEventsIntoBaseline(baseline, batch, cursor) {
+  const out = {
+    capturedAt: baseline ? baseline.capturedAt : null,
+    feedback: normalizeFeedbackTally(baseline ? baseline.feedback : null),
+    totalsByType: normalizeTotalsByType(baseline ? baseline.totalsByType : null)
+  };
+  const list = Array.isArray(batch) ? batch : [];
+  for (let i = 0; i < list.length; i++) {
+    const e = list[i];
+    if (!isAfterPruneCursor(e, cursor)) continue;
+    if (EVENT_TYPES.indexOf(e.type) === -1) continue;
+    out.totalsByType[e.type] = eventCount(out.totalsByType[e.type]) + 1;
+    if (e.type === 'feedback.answered') {
+      const id = e.payload && e.payload.routineId;
+      const resp = e.payload && e.payload.response;
+      if (id && EVENT_FEEDBACK_RESPONSES.indexOf(resp) !== -1) {
+        const cur = out.feedback[id] || { yes: 0, some: 0, no: 0 };
+        out.feedback[id] = {
+          yes: eventCount(cur.yes), some: eventCount(cur.some), no: eventCount(cur.no)
+        };
+        out.feedback[id][resp] = eventCount(out.feedback[id][resp]) + 1;
+      }
+    }
+  }
+  return out;
+}
+
+/* Cursor tras podar un lote: el ULTIMO evento consolidado y eliminado. */
+function nextPruneCursor(batch, prev) {
+  if (!Array.isArray(batch) || !batch.length) return prev || null;
+  const last = batch[batch.length - 1];
+  return { occurredAt: last.occurredAt, id: last.id };
+}
+
+/* --- Presupuesto logico (§16) ------------------------------------------- */
+
+/* Bytes del JSON canonico en UTF-8. NUNCA `string.length`, que cuenta unidades
+   UTF-16 y miente con cualquier acento (y este producto escribe en espanol). */
+function measureEventsBytes(container) {
+  const json = JSON.stringify(container);
+  try {
+    if (typeof TextEncoder !== 'undefined') return new TextEncoder().encode(json).byteLength;
+  } catch (e) {/* cae al recuento manual */}
+  return utf8ByteLength(json);
+}
+
+/* Equivalente UTF-8 sin `TextEncoder`: cuenta por punto de codigo, tratando
+   los pares suplentes como un solo caracter de 4 bytes. */
+function utf8ByteLength(str) {
+  let bytes = 0;
+  for (let i = 0; i < str.length; i++) {
+    const c = str.charCodeAt(i);
+    if (c < 0x80) bytes += 1;else
+    if (c < 0x800) bytes += 2;else
+    if (c >= 0xd800 && c <= 0xdbff) {bytes += 4;i++;} else
+    bytes += 3;
+  }
+  return bytes;
+}
+
+function isOverEventsBudget(container) {
+  return measureEventsBytes(container) > EVENTS_BUDGET_BYTES;
+}
+
+/* --- Export / import (§17) ---------------------------------------------- */
+
+/* Snapshot canonico. NO lleva detalles fisicos del backend: ni nombre de
+   clave, ni tablas, ni locks, ni el marcador (que es de recuperacion local y
+   no significa nada en otro dispositivo). */
+function buildEventsExport(container) {
+  const c = normalizeEventsContainer(container);
+  return {
+    schemaVersion: c.schemaVersion,
+    exportedAt: new Date().toISOString(),
+    activatedAt: c.activatedAt,
+    baseline: c.baseline,
+    events: c.events,
+    pruneCursor: c.pruneCursor,
+    retentionDays: EVENTS_RETENTION_DAYS
+  };
+}
+
+/* Valida un backup ENTERO antes de que nadie toque nada (§17). Devuelve
+   `{ ok, reason, container }`. Si `ok` es falso, el llamador tiene prohibido
+   modificar ningun almacen. */
+function validateEventsImport(raw) {
+  if (!raw || typeof raw !== 'object') return { ok: false, reason: 'shape', container: null };
+  if (typeof raw.schemaVersion !== 'number' || !isFinite(raw.schemaVersion)) {
+    return { ok: false, reason: 'schema-missing', container: null };
+  }
+  /* Version FUTURA: se rechaza sin tocar nada, porque no sabemos que campos
+     dejariamos a medias. Una version anterior si se acepta (compatible hacia
+     adelante) y la normalizacion rellena lo que falte. */
+  if (raw.schemaVersion > EVENTS_SCHEMA_VERSION) {
+    return { ok: false, reason: 'schema-newer', container: null };
+  }
+  if (!Array.isArray(raw.events)) return { ok: false, reason: 'events-missing', container: null };
+  for (let i = 0; i < raw.events.length; i++) {
+    if (!isValidEventEnvelope(raw.events[i])) {
+      return { ok: false, reason: 'event-invalid', container: null };
+    }
+  }
+  const container = normalizeEventsContainer({
+    schemaVersion: EVENTS_SCHEMA_VERSION,
+    activatedAt: raw.activatedAt,
+    events: raw.events,
+    baseline: raw.baseline,
+    pruneCursor: raw.pruneCursor,
+    marker: null
+  });
+  if (!container.activatedAt) return { ok: false, reason: 'activatedAt-missing', container: null };
+  if (isOverEventsBudget(container)) return { ok: false, reason: 'over-budget', container: null };
+  return { ok: true, reason: null, container: container };
+}
+
+/* ¿Este backup trae seccion de eventos? Un backup ANTERIOR a este subsistema
+   no la trae, y entonces la importacion REINICIA el contenedor vacio en vez de
+   conservar el actual (§17) — mezclar los eventos de aqui con un estado de
+   antes seria exactamente el doble conteo que el baseline evita. */
+function backupHasEventsSection(payload) {
+  return !!(payload && typeof payload === 'object' && payload.events && typeof payload.events === 'object');
+}
+
+Object.assign(window, {
+  EVENTS_SCHEMA_VERSION, EVENTS_RETENTION_DAYS, EVENTS_BUDGET_BYTES,
+  EVENT_TYPES, EVENT_CORRELATION, EVENT_CONTEXTS,
+  newEventId, isEventId, makeEvent, eventCorrelationOk,
+  isValidEventEnvelope, compareEvents, isAfterPruneCursor,
+  emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer,
+  normalizeFeedbackTally, normalizeTotalsByType, captureEventsBaseline,
+  eventsRetentionFloorKey, selectEventsToPrune, foldEventsIntoBaseline, nextPruneCursor,
+  measureEventsBytes, utf8ByteLength, isOverEventsBudget,
+  buildEventsExport, validateEventsImport, backupHasEventsSection
+});
+;Object.assign(window, { newEventId, isEventId, makeEvent, eventCorrelationOk, isValidEventEnvelope, compareEvents, isAfterPruneCursor, emptyEventsBaseline, emptyEventsContainer, normalizeEventsContainer, normalizeFeedbackTally, normalizeTotalsByType, captureEventsBaseline, eventsRetentionFloorKey, selectEventsToPrune, foldEventsIntoBaseline, nextPruneCursor, measureEventsBytes, utf8ByteLength, isOverEventsBudget, buildEventsExport, validateEventsImport, backupHasEventsSection });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · events-adapter-web.js
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   ADAPTADOR WEB / PWA del contrato EventStore (`docs/product/EVENTOS_SCHEMA.md`
+   §10, §19.1). Capa B: aqui SI se nombran `localStorage` y `navigator.locks`,
+   porque son detalles de ESTE backend. El modelo canonico
+   (`events-model.js`) no los conoce y no debe conocerlos.
+
+   NADA DE ESTE ARCHIVO SALE DEL DISPOSITIVO. No hay `fetch`, ni `XMLHttpRequest`,
+   ni `sendBeacon`, ni WebSocket, ni URL remota: el unico destino de una escritura
+   es `localStorage` del propio navegador. Si algun dia alguien anade aqui una
+   llamada de red, esta violando la premisa del subsistema, no ajustandolo.
+
+   EXCLUSION (§19.1). Toda read-modify-write —activacion, emision, consolidacion,
+   poda, reset, import y su recuperacion— corre DENTRO de
+   `navigator.locks.request('pace.events.writer.v1', {mode:'exclusive'})`.
+   Esta PROHIBIDO cualquier sucedaneo con `localStorage`, evento `storage`,
+   heartbeat, `BroadcastChannel` o `setTimeout`: comunican pestanas, pero no dan
+   exclusion mutua atomica. Sin `navigator.locks` NO se emite: se cae a
+   READ_ONLY (si el contenedor se puede leer) o UNAVAILABLE.
+
+   PROPIEDAD POR OPERACION, no liderazgo: pedir lock -> releer DENTRO del lock ->
+   validar -> una sola mutacion -> medir presupuesto -> escribir -> liberar.
+   Nunca leer fuera del lock y escribir esa copia dentro.
+*/
+
+const EVENTS_WEB_KEY = 'pace.events.v1';
+const EVENTS_WEB_LOCK = 'pace.events.writer.v1';
+
+/* Modos de capacidad (§18). Son tambien los estados diagnosticos, sin PII. */
+const EVENTS_READ_WRITE = 'events.read_write';
+const EVENTS_READ_ONLY = 'events.read_only';
+const EVENTS_UNAVAILABLE = 'events.unavailable';
+
+/* Resultado de toda operacion mutadora (§10). Exactamente uno; no existe
+   «probablemente escrito». */
+const EVENTS_COMMITTED = 'committed';
+const EVENTS_REJECTED = 'rejected';
+const EVENTS_INTERRUPTED = 'interrupted';
+const EVENTS_UNAVAILABLE_RESULT = 'unavailable';
+
+/* --- Sondas de entorno --------------------------------------------------- */
+
+/* ¿`localStorage` es utilizable? En modo restringido el mero ACCESO lanza
+   SecurityError, asi que la sonda escribe y borra una clave propia. */
+function eventsWebStorageUsable() {
+  try {
+    const probe = '__pace_events_probe__';
+    localStorage.setItem(probe, '1');
+    localStorage.removeItem(probe);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function eventsWebLocksAvailable() {
+  try {
+    return typeof navigator !== 'undefined' && !!navigator.locks &&
+    typeof navigator.locks.request === 'function';
+  } catch (e) {
+    return false;
+  }
+}
+
+/* --- Lectura / escritura crudas (siempre bajo lock las mutaciones) -------- */
+
+/* Devuelve `{ container, corrupt }`. Un contenedor ilegible NO revienta la app:
+   se reporta como corrupto y el llamador lo reinicia (§23). Un contenedor
+   ausente devuelve el vacio con `corrupt:false` — no es un error, es la primera
+   vez. */
+function eventsWebRead() {
+  let raw;
+  try {
+    raw = localStorage.getItem(EVENTS_WEB_KEY);
+  } catch (e) {
+    return { container: null, corrupt: true };
+  }
+  if (raw === null || raw === undefined) {
+    return { container: emptyEventsContainer(), corrupt: false };
+  }
+  try {
+    return { container: normalizeEventsContainer(JSON.parse(raw)), corrupt: false };
+  } catch (e) {
+    return { container: null, corrupt: true };
+  }
+}
+
+/* Escribe el contenedor ENTERO. `localStorage.setItem` de una clave escribe
+   todo o no cambia nada (WHATWG Web Storage), que es lo que permite que una RMW
+   dentro del lock no deje una «poda a medias».
+
+   Ante error de almacenamiento: poda una vez, consolidando en baseline, y
+   reintenta UNA sola vez (§16). Si vuelve a fallar se conserva el ultimo
+   contenedor valido y se devuelve error controlado — nunca un bucle, y nunca el
+   `catch(e){}` mudo de `persistState()`. */
+function eventsWebWrite(container) {
+  const attempt = function (c) {
+    try {
+      localStorage.setItem(EVENTS_WEB_KEY, JSON.stringify(c));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  let target = container;
+  if (isOverEventsBudget(target)) {
+    target = eventsWebPruneForBudget(target);
+  }
+  if (attempt(target)) return { result: EVENTS_COMMITTED, container: target };
+
+  const pruned = eventsWebPruneForBudget(target);
+  if (pruned !== target && attempt(pruned)) return { result: EVENTS_COMMITTED, container: pruned };
+
+  return { result: EVENTS_REJECTED, container: null };
+}
+
+/* Poda por PRESION DE PRESUPUESTO (§16), no por calendario.
+
+   OJO — esto no es la poda por retencion de §12, que es la que barre por
+   antiguedad y que en s155 NO se programa: la Fase 1 del esquema no tiene
+   emisores, asi que no hay nada que barrer, y §25 situa la consolidacion en la
+   Fase 3. Este camino existe solo para que el contenedor no pueda crecer sin
+   limite si algun dia se llena, y **destila antes de borrar**: el lote se funde
+   en `baseline` (totales por tipo + tallies de feedback), de modo que se pierde
+   el DETALLE por hecho pero nunca el total. La reconstruccion de agregados
+   sigue siendo `baseline + fold(retenidos)`.
+
+   Punto de extension declarado: cuando la Fase 3 programe la poda por
+   retencion, va aqui al lado reutilizando `selectEventsToPrune` +
+   `foldEventsIntoBaseline` + `nextPruneCursor`, y sin un segundo reloj (se
+   engancha al rollover diario, §12). */
+function eventsWebPruneForBudget(container) {
+  const c = normalizeEventsContainer(container);
+  if (!c.events.length) return c;
+
+  /* Suelo: nunca se vacia entero por presupuesto. Se poda de lo mas antiguo
+     hacia delante, por mitades, hasta caber. */
+  let kept = c.events.slice();
+  let baseline = c.baseline;
+  let cursor = c.pruneCursor;
+  let guard = 0;
+
+  while (guard++ < 24) {
+    const candidate = { schemaVersion: c.schemaVersion, activatedAt: c.activatedAt,
+      events: kept, baseline: baseline, pruneCursor: cursor, marker: c.marker };
+    if (!isOverEventsBudget(candidate)) return candidate;
+    if (!kept.length) return candidate;
+    const cut = Math.max(1, Math.floor(kept.length / 2));
+    const batch = kept.slice(0, cut);
+    baseline = foldEventsIntoBaseline(baseline, batch, cursor);
+    cursor = nextPruneCursor(batch, cursor);
+    kept = kept.slice(cut);
+  }
+  return { schemaVersion: c.schemaVersion, activatedAt: c.activatedAt,
+    events: kept, baseline: baseline, pruneCursor: cursor, marker: c.marker };
+}
+
+/* --- Exclusion ----------------------------------------------------------- */
+
+/* Ejecuta `fn(container)` DENTRO del lock exclusivo. `fn` recibe el contenedor
+   RELEIDO dentro del lock y devuelve `{ container, result }`; si devuelve
+   `container` nulo no se escribe nada.
+
+   Una excepcion dentro del callback libera el lock igualmente (lo garantiza la
+   API de Web Locks al rechazarse la promesa) y se traduce a `rejected`: la otra
+   pestana que espera no se queda colgada. */
+function eventsWebRunExclusive(fn) {
+  if (!eventsWebLocksAvailable() || !eventsWebStorageUsable()) {
+    return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
+  }
+  return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
+    const read = eventsWebRead();
+    const current = read.corrupt ? emptyEventsContainer() : read.container;
+    let out;
+    try {
+      out = fn(current, read.corrupt);
+    } catch (e) {
+      return { result: EVENTS_REJECTED, container: null };
+    }
+    if (!out || !out.container) {
+      return { result: out && out.result ? out.result : EVENTS_REJECTED, container: null };
+    }
+    const written = eventsWebWrite(out.container);
+    if (written.result !== EVENTS_COMMITTED) return written;
+    /* Verificacion de relectura: si lo escrito no se puede volver a leer, la
+       operacion NO se da por buena (§15.1 — nunca se habilita la emision sin
+       comprobar que el contenedor se relee). */
+    const back = eventsWebRead();
+    if (back.corrupt || !back.container) return { result: EVENTS_REJECTED, container: null };
+    return { result: out.result || EVENTS_COMMITTED, container: back.container };
+  }).catch(function () {
+    return { result: EVENTS_REJECTED, container: null };
+  });
+}
+
+/* --- Operaciones del contrato (§10) -------------------------------------- */
+
+/* Capacidad ACTUAL sin escribir nada (§18). */
+function eventsWebCapability() {
+  if (!eventsWebStorageUsable()) return EVENTS_UNAVAILABLE;
+  if (!eventsWebLocksAvailable()) return EVENTS_READ_ONLY;
+  return EVENTS_READ_WRITE;
+}
+
+/* Activacion + captura UNICA del baseline (§15.1), y recuperacion de una
+   operacion a medias (§22) — las dos dentro de la misma exclusion, porque las
+   dos son read-modify-write sobre el mismo contenedor.
+
+   `legacyState` es el estado vivo de `pace.state.v2`, del que sale el tally
+   inicial de feedback. Se pasa por parametro para que este archivo no dependa
+   del store: el adaptador no sabe de React ni de `getState`. */
+function eventsWebInitialize(legacyState) {
+  if (eventsWebCapability() !== EVENTS_READ_WRITE) {
+    return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
+  }
+  return eventsWebRunExclusive(function (current, wasCorrupt) {
+    let c = current;
+
+    /* Marcador vivo = una operacion quedo a medias. Se completa de forma
+       IDEMPOTENTE antes de nada mas: reiniciar el contenedor era justo el
+       destino declarado del import y del reset, asi que rehacerlo no duplica
+       nada (§22). */
+    if (c.marker) {
+      c = eventsWebFreshContainer(legacyState);
+      return { container: c, result: EVENTS_COMMITTED };
+    }
+
+    /* Contenedor ilegible: se reinicia en vez de arrastrar basura (§23). */
+    if (wasCorrupt) {
+      return { container: eventsWebFreshContainer(legacyState), result: EVENTS_COMMITTED };
+    }
+
+    /* `activatedAt` ya existe -> NO se recaptura el baseline. Esta es la
+       condicion que impide el doble conteo (§15.1 paso 3). */
+    if (c.activatedAt) {
+      return { container: c, result: EVENTS_COMMITTED };
+    }
+
+    return { container: eventsWebFreshContainer(legacyState), result: EVENTS_COMMITTED };
+  });
+}
+
+/* Contenedor recien nacido: `activatedAt` nuevo, sin eventos, con el baseline
+   capturado del estado legacy que haya EN ESE MOMENTO. */
+function eventsWebFreshContainer(legacyState) {
+  const now = new Date().toISOString();
+  const c = emptyEventsContainer();
+  c.activatedAt = now;
+  c.baseline = captureEventsBaseline(legacyState, now);
+  c.marker = null;
+  return c;
+}
+
+/* Lectura sin mutar. Devuelve el contenedor normalizado (o el vacio). */
+function eventsWebReadSnapshot() {
+  const read = eventsWebRead();
+  return read.corrupt || !read.container ? emptyEventsContainer() : read.container;
+}
+
+/* Anade un evento bajo exclusion. En s155 NO lo llama nadie: los emisores son
+   la Fase 2 del esquema y §25 prohibe emitir antes de estar en READ_WRITE.
+   Existe porque es el contrato, y porque las pruebas lo ejercitan. */
+function eventsWebAppend(event) {
+  if (!isValidEventEnvelope(event)) {
+    return Promise.resolve({ result: EVENTS_REJECTED, container: null });
+  }
+  return eventsWebRunExclusive(function (current) {
+    if (!current.activatedAt) return { result: EVENTS_REJECTED, container: null };
+    for (let i = 0; i < current.events.length; i++) {
+      if (current.events[i].id === event.id) {
+        /* Ya estaba: el fold es idempotente por id, asi que esto es un exito
+           sin cambio, no un error. */
+        return { container: current, result: EVENTS_COMMITTED };
+      }
+    }
+    const next = {
+      schemaVersion: current.schemaVersion,
+      activatedAt: current.activatedAt,
+      events: current.events.concat([event]).sort(compareEvents),
+      baseline: current.baseline,
+      pruneCursor: current.pruneCursor,
+      marker: current.marker
+    };
+    return { container: next, result: EVENTS_COMMITTED };
+  });
+}
+
+/* Vacia el contenedor y renueva `activatedAt` (§17). No toca el estado legacy:
+   quien quiera borrar `pace.state.v2` lo hace aparte y a proposito. */
+function eventsWebReset(legacyState) {
+  return eventsWebRunExclusive(function () {
+    return { container: eventsWebFreshContainer(legacyState), result: EVENTS_COMMITTED };
+  });
+}
+
+/* Reemplazo TOTAL desde un backup ya validado (§17). No mezcla ni deduplica, y
+   es idempotente: el mismo backup deja el mismo estado. */
+function eventsWebReplaceFromImport(rawSection) {
+  const check = validateEventsImport(rawSection);
+  if (!check.ok) {
+    return Promise.resolve({ result: EVENTS_REJECTED, container: null, reason: check.reason });
+  }
+  return eventsWebRunExclusive(function () {
+    return { container: check.container, result: EVENTS_COMMITTED };
+  });
+}
+
+/* Marca el inicio de una operacion que toca DOS almacenes (§22). Se escribe
+   ANTES de tocar `pace.state.v2`, para que un corte a mitad deje rastro. */
+function eventsWebMark(op) {
+  return eventsWebRunExclusive(function (current) {
+    const next = {
+      schemaVersion: current.schemaVersion,
+      activatedAt: current.activatedAt,
+      events: current.events,
+      baseline: current.baseline,
+      pruneCursor: current.pruneCursor,
+      marker: { op: String(op || 'unknown'), startedAt: new Date().toISOString() }
+    };
+    return { container: next, result: EVENTS_COMMITTED };
+  });
+}
+
+function eventsWebDiagnostics() {
+  const cap = eventsWebCapability();
+  const snap = cap === EVENTS_UNAVAILABLE ? null : eventsWebReadSnapshot();
+  return {
+    adapter: 'web',
+    capability: cap,
+    storage: eventsWebStorageUsable(),
+    locks: eventsWebLocksAvailable(),
+    activated: !!(snap && snap.activatedAt),
+    events: snap ? snap.events.length : 0,
+    pendingMarker: !!(snap && snap.marker),
+    bytes: snap ? measureEventsBytes(snap) : 0
+  };
+}
+
+Object.assign(window, {
+  EVENTS_WEB_KEY, EVENTS_WEB_LOCK,
+  EVENTS_READ_WRITE, EVENTS_READ_ONLY, EVENTS_UNAVAILABLE,
+  EVENTS_COMMITTED, EVENTS_REJECTED, EVENTS_INTERRUPTED, EVENTS_UNAVAILABLE_RESULT,
+  eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite,
+  eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability,
+  eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot,
+  eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark,
+  eventsWebDiagnostics
+});
+;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite, eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability, eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · events-adapter-null.js
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   ADAPTADOR INERTE del contrato EventStore: el que se selecciona cuando el
+   runtime NO puede emitir (`docs/product/EVENTOS_SCHEMA.md` §18, §19.2, §19.4,
+   §20). Cubre tres casos, y ninguno es un error de la app:
+
+     · `file://` (PACE_standalone.html) — §19.2. NO emite en v1 aunque el
+       navegador exponga Web Locks: sin origen compartido no hay coordinacion
+       entre pestanas que prometer. Se elige este adaptador A PROPOSITO.
+     · Capacitor (Android / iOS) — §20. Su adaptador nativo (SQLite +
+       Preferences/UserDefaults) es de la fase de porting y todavia no existe.
+       Mientras no exista, el runtime queda UNAVAILABLE: lo que esta PROHIBIDO
+       es que caiga al adaptador web porque la URL del WebView parezca
+       `https://localhost`.
+     · Almacenamiento bloqueado o ambiguedad — §20. Ante la duda, UNAVAILABLE;
+       nunca un adaptador «adivinado».
+
+   ALCANCE DE LA LIMITACION (§19.5), que es lo que de verdad importa: deshabilitar
+   el registro de eventos NO convierte la app en solo-lectura. Foco, Respira,
+   Mueve, Estira, Hidratate, Caminos, logros, ajustes y la persistencia de
+   `pace.state.v2` siguen funcionando igual. Solo queda apagado el registro
+   nuevo.
+
+   Y NO se acumulan eventos «en memoria para guardarlos luego»: produciria una
+   semantica distinta (eventos sin durabilidad) y riesgo de duplicacion. Lo que
+   no se puede escribir, no se registra.
+*/
+
+/* Todas las mutadoras devuelven `unavailable`, que es uno de los cuatro
+   resultados del contrato (§10) — no una excepcion ni un `false` ambiguo. */
+function eventsNullResult() {
+  return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
+}
+
+function eventsNullCapability(reason) {
+  /* READ_ONLY solo si de verdad hay algo legible que exportar; si ni eso,
+     UNAVAILABLE. En `file://` con localStorage permitido, un contenedor de una
+     sesion anterior servida por http SI podria leerse — pero no en el mismo
+     origen, asi que en la practica sale UNAVAILABLE. */
+  return reason === 'readable' ? EVENTS_READ_ONLY : EVENTS_UNAVAILABLE;
+}
+
+function eventsNullInitialize() {return eventsNullResult();}
+function eventsNullAppend() {return eventsNullResult();}
+function eventsNullReset() {return eventsNullResult();}
+function eventsNullReplaceFromImport() {return eventsNullResult();}
+function eventsNullMark() {return eventsNullResult();}
+function eventsNullReadSnapshot() {return emptyEventsContainer();}
+
+function eventsNullDiagnostics(runtime, capability) {
+  return {
+    adapter: 'null',
+    runtime: runtime || 'unknown',
+    capability: capability || EVENTS_UNAVAILABLE,
+    storage: false,
+    locks: false,
+    activated: false,
+    events: 0,
+    pendingMarker: false,
+    bytes: 0
+  };
+}
+
+Object.assign(window, {
+  eventsNullResult, eventsNullCapability, eventsNullInitialize, eventsNullAppend,
+  eventsNullReset, eventsNullReplaceFromImport, eventsNullMark,
+  eventsNullReadSnapshot, eventsNullDiagnostics
+});
+;Object.assign(window, { eventsNullResult, eventsNullCapability, eventsNullInitialize, eventsNullAppend, eventsNullReset, eventsNullReplaceFromImport, eventsNullMark, eventsNullReadSnapshot, eventsNullDiagnostics });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · events-store.js
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   FACHADA del subsistema `pace.events.v1` (s155): detecta el runtime, elige el
+   adaptador (`docs/product/EVENTOS_SCHEMA.md` §20) y publica el contrato
+   EventStore (§10) como un unico punto de entrada para el resto de la app.
+   Ningun modulo de producto debe hablar con un adaptador directamente.
+
+   ┌─ QUE ES ESTO, EN UNA FRASE ──────────────────────────────────────────────┐
+   │ Memoria LOCAL del propio usuario sobre su progreso. No es telemetria: no  │
+   │ se envia a ningun sitio, no identifica a nadie y no sale del dispositivo. │
+   └──────────────────────────────────────────────────────────────────────────┘
+
+   QUE GUARDA (y solo esto):
+     · `activatedAt` — cuando nacio el contenedor, para no contar dos veces lo
+       que ya estaba contado antes de existir.
+     · `events[]` — hechos con esquema CERRADO y lista permitida de campos
+       (§8): modulo, id de rutina del catalogo, motivo de finalizacion,
+       duraciones en segundos, indice de paso. En s155 esta SIEMPRE VACIO: los
+       emisores son la Fase 2 y §25 prohibe emitir antes de estar en READ_WRITE.
+     · `baseline` — totales consolidados. Al activar se copian los tallies que
+       YA existen en `routineFeedback` dentro de `pace.state.v2`.
+     · `pruneCursor` y `marker` — mecanica interna de poda y recuperacion.
+
+   QUE NO GUARDA, NUNCA: texto libre del usuario (el `routineId` de una rutina
+   personalizada es `custom.<timestamp>`, jamas el nombre que escribio) · datos
+   de salud o medicos · nombres de archivo · IP · ubicacion · contactos ·
+   credenciales · portapapeles · identificador de usuario, de dispositivo,
+   publicitario o de fingerprint · nada del navegador mas alla de lo de arriba.
+
+   DONDE: `localStorage`, clave `pace.events.v1`, en el dispositivo. FUERA de
+   `pace.state.v2` para que su ciclo de vida sea independiente.
+
+   NO HAY ENVIO REMOTO. En los cuatro archivos de `app/events/` no existe
+   `fetch`, `XMLHttpRequest`, `sendBeacon`, `WebSocket`, `EventSource`, `Image()`
+   de pixel ni ninguna URL. Anadir cualquiera de esas cosas aqui seria un cambio
+   de naturaleza del subsistema y una decision aparte, explicita y con el
+   consentimiento que corresponda — no un ajuste de implementacion.
+*/
+
+/* Runtime detectado y adaptador elegido. Se resuelven UNA vez al cargar. */
+let _paceEventsRuntime = null;
+let _paceEventsAdapter = null;
+let _paceEventsCapability = null;
+let _paceEventsReady = null; // Promise de la inicializacion en curso
+
+/* Deteccion de runtime (§20). NO se basa solo en `location.protocol`:
+   Capacitor se mira PRIMERO y de forma explicita, porque el WebView puede
+   presentarse como `https://localhost` y caer al adaptador web por accidente
+   esta prohibido. */
+function detectEventsRuntime() {
+  try {
+    const cap = typeof window !== 'undefined' ? window.Capacitor : null;
+    if (cap) {
+      let platform = null;
+      if (typeof cap.getPlatform === 'function') platform = cap.getPlatform();
+      if (platform === 'android') return 'capacitor-android';
+      if (platform === 'ios') return 'capacitor-ios';
+      if (platform && platform !== 'web') return 'capacitor-other';
+      if (typeof cap.isNativePlatform === 'function' && cap.isNativePlatform()) {
+        return 'capacitor-other';
+      }
+    }
+  } catch (e) {
+    return 'unknown';
+  }
+
+  try {
+    /* `window.chrome`, NO el identificador pelado: `chrome` solo existe en
+       navegadores basados en Chromium y una referencia suelta seria un global
+       sin ligar (lo caza el analisis de ambito del `verify`). */
+    const ext = typeof window !== 'undefined' ? window.chrome : null;
+    if (ext && ext.runtime && ext.runtime.id && location.protocol === 'chrome-extension:') {
+      return 'extension';
+    }
+  } catch (e) {/* no es una extension; seguimos */}
+
+  try {
+    if (location.protocol === 'file:') return 'file';
+    if (location.protocol === 'http:' || location.protocol === 'https:') return 'web';
+  } catch (e) {
+    return 'unknown';
+  }
+  return 'unknown';
+}
+
+/* Elige adaptador. Solo el runtime `web` puede acabar en READ_WRITE hoy: el
+   nativo de Capacitor es de la fase de porting y `file://` no emite por
+   diseno. Ante ambiguedad, el inerte. */
+function selectEventsAdapter(runtime) {
+  return runtime === 'web' ? 'web' : 'null';
+}
+
+function paceEventsRuntime() {
+  if (_paceEventsRuntime === null) _paceEventsRuntime = detectEventsRuntime();
+  return _paceEventsRuntime;
+}
+
+function paceEventsAdapter() {
+  if (_paceEventsAdapter === null) _paceEventsAdapter = selectEventsAdapter(paceEventsRuntime());
+  return _paceEventsAdapter;
+}
+
+/* Capacidad actual (§18), sin escribir. */
+function paceEventsCapability() {
+  if (paceEventsAdapter() === 'web') return eventsWebCapability();
+  return eventsNullCapability('none');
+}
+
+/* ¿Se puede emitir? Unica pregunta que un emisor futuro debe hacerse. */
+function paceEventsCanWrite() {
+  return _paceEventsCapability === EVENTS_READ_WRITE;
+}
+
+/* --- Contrato EventStore (§10) ------------------------------------------- */
+
+/* Inicializacion IDEMPOTENTE: crea o valida el contenedor, recupera una
+   operacion a medias y captura el baseline la PRIMERA vez (§15.1). Se puede
+   llamar mil veces; solo la primera captura.
+
+   Nunca lanza: un fallo deja el subsistema en UNAVAILABLE y la app entera
+   sigue funcionando por el sistema legacy (§19.5). */
+function paceEventsInitialize(legacyState) {
+  if (_paceEventsReady) return _paceEventsReady;
+  const state = legacyState || paceEventsLegacyState();
+  let run;
+  try {
+    run = paceEventsAdapter() === 'web' ?
+    eventsWebInitialize(state) :
+    eventsNullInitialize();
+  } catch (e) {
+    run = Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
+  }
+  _paceEventsReady = run.then(function (out) {
+    _paceEventsCapability = out && out.result === EVENTS_COMMITTED ?
+    paceEventsCapability() :
+    EVENTS_UNAVAILABLE;
+    return out;
+  }).catch(function () {
+    _paceEventsCapability = EVENTS_UNAVAILABLE;
+    return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+  });
+  return _paceEventsReady;
+}
+
+/* Estado legacy vivo, del que sale el baseline. Se lee de forma defensiva: si
+   `getState` aun no existe, el baseline queda vacio en vez de reventar. */
+function paceEventsLegacyState() {
+  try {
+    return typeof getState === 'function' ? getState() : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function paceEventsSnapshot() {
+  try {
+    return paceEventsAdapter() === 'web' ? eventsWebReadSnapshot() : eventsNullReadSnapshot();
+  } catch (e) {
+    return emptyEventsContainer();
+  }
+}
+
+/* Emision. En s155 no la llama ningun modulo de producto (Fase 2). */
+function paceEventsAppend(event) {
+  if (!paceEventsCanWrite()) return eventsNullResult();
+  return eventsWebAppend(event);
+}
+
+/* Export del snapshot canonico (§17). NO incluye detalles fisicos del backend
+   (clave, locks, marcador). En s155 no se cablea al backup publico de «Tus
+   datos»: el contenedor esta vacio y meter una seccion sin contenido en el JSON
+   del usuario seria superficie sin dato. El dia que entre el primer emisor, el
+   `verify` lo exige — ver `scripts/verify.integridad.js`. */
+function paceEventsExport() {
+  return buildEventsExport(paceEventsSnapshot());
+}
+
+/* Validacion INTEGRA antes de tocar nada (§17). Un JSON sintacticamente valido
+   no es un snapshot valido: se comprueban version, forma de cada envelope,
+   presencia de `activatedAt` y presupuesto. Si falla, ningun almacen cambia. */
+function paceEventsValidateImport(rawSection) {
+  return validateEventsImport(rawSection);
+}
+
+function paceEventsReplaceFromImport(rawSection) {
+  if (!paceEventsCanWrite()) return eventsNullResult();
+  return eventsWebReplaceFromImport(rawSection);
+}
+
+/* Vacia el contenedor y renueva `activatedAt`. No toca `pace.state.v2`. */
+function paceEventsReset(nextLegacyState) {
+  if (!paceEventsCanWrite()) return eventsNullResult();
+  return eventsWebReset(nextLegacyState || null);
+}
+
+function paceEventsDiagnostics() {
+  try {
+    if (paceEventsAdapter() === 'web') {
+      const d = eventsWebDiagnostics();
+      d.runtime = paceEventsRuntime();
+      return d;
+    }
+    return eventsNullDiagnostics(paceEventsRuntime(), paceEventsCapability());
+  } catch (e) {
+    return eventsNullDiagnostics('unknown', EVENTS_UNAVAILABLE);
+  }
+}
+
+/* --- Barrera entre almacenes (§17, §22) ---------------------------------- */
+
+/* `pace.state.v2` y `pace.events.v1` son DOS almacenes y entre ellos no hay
+   atomicidad. Toda operacion que escriba en los dos (importar un backup,
+   resetear desde Ajustes) pasa por aqui:
+
+     1. marcador `{op}` en el contenedor de eventos — ANTES de nada;
+     2. escritura del estado legacy (la verdad canonica va primero, §11);
+     3. contenedor de eventos REINICIADO con `activatedAt` nuevo y baseline
+        recapturado del estado que acaba de entrar, y marcador borrado.
+
+   Si el proceso muere entre 2 y 3, el marcador sobrevive y la siguiente
+   `paceEventsInitialize()` completa el paso 3 — que es idempotente, porque
+   reiniciar dos veces deja lo mismo. Nunca queda una MEZCLA de historial
+   anterior con estado importado, que es justo lo que hay que evitar.
+
+   Si el subsistema no puede escribir, `writeLegacy()` se ejecuta igual: el
+   import y el reset de Ajustes NO pueden depender de que los eventos
+   funcionen (§19.5). */
+function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState) {
+  const doLegacy = function () {
+    try {writeLegacy();return true;} catch (e) {return false;}
+  };
+
+  if (!paceEventsCanWrite()) {
+    const ok = doLegacy();
+    return Promise.resolve({ result: ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, container: null });
+  }
+
+  return eventsWebMark(op).
+  then(function (marked) {
+    if (!marked || marked.result !== EVENTS_COMMITTED) {
+      /* Sin marcador no hay red: se hace la escritura legacy igualmente (es
+         lo que el usuario pidio) y se reinicia lo que se pueda. */
+      doLegacy();
+      return eventsWebReset(nextLegacyState || null);
+    }
+    doLegacy();
+    return eventsWebReset(nextLegacyState || null);
+  }).
+  catch(function () {
+    doLegacy();
+    return { result: EVENTS_REJECTED, container: null };
+  });
+}
+
+/* Borrado TOTAL de los datos del usuario: los dos almacenes, por la barrera.
+   Vive aqui y no en el `onClick` de Ajustes porque «borrar todo» dejo de ser
+   una linea el dia que hubo dos almacenes, y quien sabe que hay que borrar es
+   este modulo. `privacy.html` promete que el borrado desde Ajustes es
+   «inmediato y definitivo»: esta funcion es esa promesa. */
+function paceEventsWipeAll(alTerminar) {
+  /* El almacen legacy lo borra SU dueño (`wipeLocalState`, state-core). Este
+     modulo orquesta la operacion de dos almacenes, pero no mete la mano en la
+     clave de otro dominio — lo aserta el `verify`, y de hecho lo cazo cuando
+     esta funcion nacio haciendo el `removeItem` ella misma. */
+  const wipe = function () {wipeLocalState();};
+  const fin = typeof alTerminar === 'function' ? alTerminar : function () {};
+  try {
+    paceEventsStoreBarrier('reset', wipe, null).then(fin, fin);
+  } catch (e) {
+    wipe();
+    fin();
+  }
+}
+
+/* --- Arranque ------------------------------------------------------------ */
+
+/* Se inicializa solo al cargar, sin bloquear el render (todo el contrato es
+   asincrono) y sin poder romper nada: cualquier fallo cae a UNAVAILABLE.
+   Se expone tambien como funcion para que las pruebas la conduzcan. */
+function paceEventsBoot() {
+  try {
+    paceEventsInitialize();
+  } catch (e) {/* la app no se entera */}
+}
+
+paceEventsBoot();
+
+Object.assign(window, {
+  detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter,
+  paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState,
+  paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
+  paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
+  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot
+});
+;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
 })();
 </script>
   <script>
@@ -17310,8 +18633,24 @@ function TweaksDataSection() {
         const ok = confirm(tn('tweaks.confirm.import', { logros: nLogros, foco: nFoco }));
         if (!ok) return;
 
-        // Escribimos y recargamos para estado limpio.
-        localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+        /* Escribimos y recargamos para estado limpio.
+           s155 — el estado legacy y `pace.events.v1` son DOS almacenes y entre
+           ellos NO hay atomicidad, asi que la escritura pasa por la barrera:
+           marcador -> estado legacy (la verdad canonica va primero) ->
+           contenedor de eventos REINICIADO con `activatedAt` nuevo y el
+           baseline recapturado del estado que acaba de entrar.
+           Por que reiniciar y no conservar: un backup de PACE no trae seccion
+           de eventos, y dejar el contenedor de antes junto a un estado
+           importado seria exactamente la MEZCLA de historial anterior con
+           estado nuevo que hay que evitar — el baseline se habria capturado de
+           unos contadores que ya no son los de este estado.
+           La recarga de 900 ms no es la garantia: si el proceso muriera antes
+           de que la barrera termine, el MARCADOR sobrevive y la siguiente
+           inicializacion completa el reinicio (§22), que es idempotente. */
+        const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
+        try {
+          paceEventsStoreBarrier('import', writeLegacy, incoming);
+        } catch (e) {writeLegacy();}
         setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
         setTimeout(() => location.reload(), 900);
       } catch (e) {
@@ -17877,8 +19216,9 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
 
 
+
     React.createElement("button", {
-      onClick: () => {if (confirm(t('tweaks.confirm.reset'))) {localStorage.removeItem('pace.state.v2');location.reload();}},
+      onClick: () => {if (confirm(t('tweaks.confirm.reset'))) paceEventsWipeAll(() => location.reload());},
       style: {
         width: '100%',
         padding: '8px',

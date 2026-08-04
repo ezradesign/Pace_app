@@ -71,6 +71,14 @@ var PLATAFORMA = new Set([
   'AbortController', 'Headers', 'Request', 'Response', 'FormData', 'DOMParser',
   'Element', 'HTMLElement', 'Node', 'Event', 'KeyboardEvent', 'MouseEvent',
   'SVGElement', 'Worker', 'caches', 'indexedDB', 'sessionStorage', 'crypto',
+  /* Arrays tipados (s155). `Uint8Array` entro con el fallback de UUIDv4 de
+     `events-model.js`; el resto de la familia va con el, porque son
+     intrinsecos del LENGUAJE y ningun identificador de PACE puede llamarse
+     asi. Ojo con el criterio: aqui solo entra lo que es del navegador o del
+     lenguaje -- meter un nombre de la app lo dejaria sin vigilar para siempre. */
+  'ArrayBuffer', 'SharedArrayBuffer', 'DataView', 'Uint8Array', 'Uint8ClampedArray',
+  'Int8Array', 'Uint16Array', 'Int16Array', 'Uint32Array', 'Int32Array',
+  'Float32Array', 'Float64Array', 'BigInt64Array', 'BigUint64Array',
 ]);
 
 /* Rutas que no se validan: dependencias, React vendorizado y los backups
