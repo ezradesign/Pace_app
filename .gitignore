@@ -14,3 +14,8 @@ node_modules/
 
 # Hojas de revision generadas (scripts/audit/*): se regeneran, no se versionan
 _revision-*.html
+
+# Salida de Playwright (s154): informes y trazas se regeneran en cada pasada
+test-results/
+playwright-report/
+blob-report/

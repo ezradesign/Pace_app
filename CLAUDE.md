@@ -46,24 +46,31 @@ Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
    fuentes» es justo la señal de que toca el paso 3. **No cubre** comportamiento, catálogos,
    i18n, precache, glifos ni CSS — los declara en cada pasada (segunda tanda, D5 de s149)
 3. **Regenerar `index.html`** (el artefacto de web/PWA) con `node build-standalone.js` y verificarlo
-4. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
+4. **`npm run test:e2e`** — comportamiento (s154). Abre un navegador de verdad sobre el
+   `index.html` **recién regenerado** y ejecuta el «Checklist de cierre» de más abajo. Va DESPUÉS
+   del paso 3 a propósito: así prueba el artefacto que se va a commitear, no el anterior. Es
+   **otra red** y se corre aparte del `verify`, que debe seguir costando ~5 s y no depender de
+   que haya navegadores instalados. **No cubre**: móvil, inglés, Caminos, premium ni un solo píxel
+5. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
    objetivos canónicos y `PACE_standalone.html` pasa a **export bajo demanda**. Se regenera (y se
    rota a `backups/`, máx 20) **solo si el usuario lo pide** o antes de publicar una release.
    Motivos: no comparte `localStorage` con la web (otro origen), `file://` no emite eventos por
    diseño, instalar desde él causó el bug de icono y pantalla completa de s128 (no lleva
    `manifest`), y el catálogo de audio largo es ininlineable
-5. Escribir diario en `docs/sessions/session-NN-titulo-corto.md`
-6. Actualizar `CHANGELOG.md`: fila en tabla + detalle de las 2 ultimas versiones
-7. **Reescribir** (no anadir) seccion "Ultima sesion" de `STATE.md`
-8. Actualizar el backlog de `STATE.md` si aplica; una **decision tecnica nueva** va a `docs/product/DECISIONES_TECNICAS_VIGENTES.md` + su titulo al indice de `STATE.md`
-9. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
-10. Dar el mensaje exacto de commit sugerido para GitHub
+6. Escribir diario en `docs/sessions/session-NN-titulo-corto.md`
+7. Actualizar `CHANGELOG.md`: fila en tabla + detalle de las 2 ultimas versiones
+8. **Reescribir** (no anadir) seccion "Ultima sesion" de `STATE.md`
+9. Actualizar el backlog de `STATE.md` si aplica; una **decision tecnica nueva** va a `docs/product/DECISIONES_TECNICAS_VIGENTES.md` + su titulo al indice de `STATE.md`
+10. Actualizar `DESIGN_SYSTEM.md` / `CONTENT.md` / `ROADMAP.md` si hubo cambios
+11. Dar el mensaje exacto de commit sugerido para GitHub
 
-> **Tras el push, el CI repite los pasos 2 y 3 en GitHub** (`.github/workflows/ci.yml`, s153):
-> corre `npm run verify` **tal cual** y comprueba lo único que el verify no puede — que el
-> `index.html` **committeado** sea el build de las fuentes (su aviso de deriva es `[INFO]` a
-> propósito, porque el paso 2 vive justo antes del 3). **El CI no comprueba nada que no corra
-> en local**: si hace falta vigilar algo nuevo, se añade al `verify`, no al YAML.
+> **Tras el push, el CI repite los pasos 2, 3 y 4 en GitHub** (`.github/workflows/ci.yml`):
+> el job **`verify`** corre `npm run verify` **tal cual** y comprueba lo único que el verify no
+> puede —que el `index.html` **committeado** sea el build de las fuentes; su aviso de deriva es
+> `[INFO]` a propósito, porque el paso 2 vive justo antes del 3—, y el job **`e2e`** (s154) corre
+> `npm run test:e2e` con `needs: verify`, de modo que el comportamiento se prueba sobre un
+> artefacto ya demostrado al día. **El CI no comprueba nada que no corra en local**: si hace
+> falta vigilar algo nuevo, se añade al `verify` o a la suite, **no al YAML**.
 
 **Cambio significativo:** cualquier cambio funcional, de diseño notable o estructural.
 Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
@@ -99,6 +106,8 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 ├── index.html                   ← artefacto WEB/PWA (canonico, con manifest)
 ├── PACE_standalone.html         ← export offline BAJO DEMANDA (s134, ya no cada sesion)
 ├── build-standalone.js          ← genera ambos artefactos
+├── playwright.config.js         ← suite E2E (s154): sirve index.html y lo conduce
+├── tests/                       ← helpers.js + specs del checklist de cierre
 ├── manifest.json / sw.js        ← PWA
 ├── app/
 │   ├── tokens.css / state.jsx / main.jsx
@@ -147,6 +156,11 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 ---
 
 ## 🧪 Checklist de cierre
+
+> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): 13 tests de Playwright
+> sobre `index.html` en un navegador real, ~25 s. Los siete puntos de abajo son lo que aserta,
+> uno a uno. **Sigue mereciendo una mirada humana** lo que la suite no cubre y declara: móvil,
+> inglés, Caminos, premium y cualquier cosa visual — no compara ni un píxel.
 
 - [ ] Pomodoro cuenta y termina → abre BreakMenu
 - [ ] Respira: librería · modal seguridad (Rondas) · sesión animada

@@ -12,6 +12,13 @@
 # o sea en el momento en que el artefacto TIENE que estar desactualizado, asi
 # que su aviso de deriva es `[INFO]` a proposito y jamas se pondra rojo.
 # Esperar que lo haga no funciona: hay que comprobarlo aparte, y aqui es donde.
+#
+# DOS JOBS (s154):
+#   verify -> `npm run verify` + frescura del artefacto.
+#   e2e    -> `npm run test:e2e`, el checklist de cierre EJECUTADO en un
+#             navegador de verdad. Cubre el primer hueco que el verify declara
+#             («no abre navegador, no monta la app, no pulsa nada»).
+# Los dos siguen la misma regla: INVOCAN un comando que corre igual en local.
 
 name: CI
 
@@ -105,3 +112,61 @@ jobs:
             exit 1
           fi
           echo "index.html coincide byte a byte con el build de las fuentes."
+
+  # ==========================================================================
+  # COMPORTAMIENTO (s154). Cubre el PRIMER hueco que el verify declara e
+  # imprime en cada pasada: «no abre navegador, no monta la app, no pulsa
+  # nada». Es el checklist de cierre de CLAUDE.md, ejecutado.
+  #
+  # POR QUE UN JOB APARTE Y NO PASOS DEL DE ARRIBA. La tesis de s153 sigue
+  # intacta —este YAML INVOCA un comando que corre igual en local,
+  # `npm run test:e2e`, y no reinterpreta nada—, pero las dos redes tienen
+  # naturaleza y coste distintos: el `verify` son ~5 s sin dependencias y es el
+  # paso 2 del cierre, mientras que esto descarga un Chromium de ~115 MB. Meter
+  # los navegadores dentro de `npm run verify` convertiria en minutos el unico
+  # comando del que depende «si falla, no se sigue». Separados, ademas, el rojo
+  # dice cual de las dos fallo sin abrir el log.
+  #
+  # `needs: verify` NO es por orden estetico: la suite carga el `index.html`
+  # COMMITTEADO, y es el job de arriba el que acaba de probar que ese artefacto
+  # es el build de las fuentes. Sin esa garantia, un rojo aqui podria significar
+  # «el comportamiento cambio» o «el artefacto esta viejo», que son dos cosas
+  # muy distintas de arreglar.
+  # ==========================================================================
+  e2e:
+    name: e2e
+    runs-on: ubuntu-latest
+    needs: verify
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Solo chromium: la suite declara ese unico proyecto en
+      # playwright.config.js. `--with-deps` trae las librerias de sistema que
+      # el runner de Linux no lleva de serie.
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
+      # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.
+      - name: npm run test:e2e
+        run: npm run test:e2e
+
+      # Diagnostico, no comprobacion: si algo se pone rojo, la traza dice donde
+      # sin tener que reproducirlo a ciegas.
+      - name: Guardar el informe si fallo
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
