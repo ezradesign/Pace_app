@@ -165,6 +165,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'tweaks.msg.imported':           'Importado — recargando…',
     'tweaks.msg.import.invalid':     'Archivo no reconocido.',
     'tweaks.msg.import.json.err':    'JSON inválido.',
+    'tweaks.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
     'tweaks.confirm.reset':          '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
     'tweaks.confirm.import':         '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
 
@@ -357,6 +358,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'tweaks.msg.imported':           'Imported — reloading…',
     'tweaks.msg.import.invalid':     'File not recognized.',
     'tweaks.msg.import.json.err':    'Invalid JSON.',
+    'tweaks.msg.import.storage.err': 'Could not save. Your data is untouched.',
     'tweaks.confirm.reset':          'Delete all your PACE data? This action cannot be undone.',
     'tweaks.confirm.import':        'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
 

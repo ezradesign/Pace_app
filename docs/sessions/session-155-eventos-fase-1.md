@@ -1,6 +1,6 @@
 # Sesión 155 — LA MEMORIA ES DEL USUARIO, NO NUESTRA
 
-> **v0.87.0 → v0.88.0.** FASE 3 del plan operativo: nace `pace.events.v1`, el
+> **v0.87.0 → v0.88.0 → v0.88.1.** FASE 3 del plan operativo: nace `pace.events.v1`, el
 > registro **local** de uso. Fase 1 del esquema de s117 —modelo canónico,
 > adaptador web, Web Locks, baseline, export/import/reset, recuperación y
 > pruebas multi-pestaña—, **sin un solo emisor**.
@@ -298,7 +298,7 @@ pasada también en verde.
 - **`npm run test:e2e` PASA: 23/23 en 29,2 s** contra el `index.html` v0.88.0
   **recién regenerado** — las 13 de s154 **sin una regresión** y las 10 nuevas.
 - **17/17 rojos**, los 16 archivos restaurados byte a byte con el hash comprobado.
-- `index.html` regenerado: hash `A5D814221AE5986C`, **0 bytes CR** de 1 348 564.
+- `index.html` regenerado: hash `54A04ABAFEE0E61C`, **0 bytes CR** de 1 353 478.
 - `PACE_standalone.html` restaurado byte-idéntico: **`998E3E358D689036`** (s134).
 - **En el navegador**, sobre `index.html` con SW y cachés purgados y estado
   limpiado desde la página viva: contenedor creado y `READ_WRITE`, 190 bytes ·
@@ -322,3 +322,78 @@ que nadie se acuerde:
 
 Del frente CI sigue quedando **Wrangler** (inerte sin secretos) y **proteger
 `main`** (acción del usuario, `gh` sin instalar).
+
+---
+
+## 11. Addendum — v0.88.1: tres defectos que el usuario encontró revisando
+
+Los tres se confirmaron contra el código antes de tocar nada. Ninguno era falso
+positivo, y el primero es el que importa.
+
+### 1. El import decía «hecho» sin haber esperado a nada (P0)
+
+`TweaksData.jsx` lanzaba `paceEventsStoreBarrier(...)` **sin esperar la promesa**,
+y dentro de la barrera el `true/false` de `doLegacy()` **solo se usaba en la rama
+`!canWrite`**: en el camino normal se descartaba. Con `localStorage.setItem`
+fallando por cuota, la secuencia era **cuatro mentiras seguidas**: el estado no
+se guardaba · el contenedor de eventos se reiniciaba igual · la UI decía
+«Importado» · la página recargaba.
+
+Contradecía de frente lo que esta misma sesión había escrito: «las operaciones
+deben ser atómicas o restaurar el estado anterior si fallan».
+
+**Y el arreglo no era un `if`.** Al abortar, el **marcador ya está escrito**, y
+`eventsWebInitialize` reinicia el contenedor en cuanto ve un marcador vivo — así
+que abortar sin más habría dejado que **el siguiente arranque hiciera justo lo
+que se acababa de evitar**. La barrera necesitaba una salida de «volver a un
+estado conocido» (`eventsWebClearMarker`), no solo una rama.
+
+Ahora: se espera · si no se puede ni marcar, se aborta sin tocar nada · si la
+escritura canónica falla, se limpia el marcador y se devuelve `rejected` · el
+resultado lleva `legacyWritten`, y la UI solo canta victoria con eso en `true`.
+Copy nuevo (ES+EN): **«No se pudo guardar. Tus datos siguen intactos.»** — el
+`CENSO` de i18n sube a 510, que es el acto deliberado que su propio mensaje pide.
+
+El mismo tratamiento en el reset: `wipeLocalState()` ahora **devuelve si pudo**, y
+si no pudo la barrera aborta — borrar el historial de alguien cuyo estado sigue
+ahí sería lo peor de los dos mundos.
+
+### 2. Un contenedor de versión futura se reescribía
+
+`validateEventsImport` rechazaba `schemaVersion` superior, pero **solo en la ruta
+de import**. La lectura normal lo conservaba y `eventsWebInitialize` lo
+**reescribía**, tirando en silencio los campos de nivel superior que esta versión
+no conoce. Con web, PWA y Android compartiendo formato, eso deja de ser
+hipotético. Ahora `schemaVersion > EVENTS_SCHEMA_VERSION` ⇒ **READ_ONLY**: se lee
+y se exporta, no se reescribe nunca. La comprobación va **dos veces**, y las dos
+hacen falta: en la capacidad, para que `canWrite()` no mienta, y **dentro del
+lock**, que es el único sitio autoritativo.
+
+### 3. Deuda documental
+
+Las filas de `PACE.html` e `index.html` en la tabla de `STATE.md` seguían en
+v0.87.0 mientras la cabecera decía v0.88.0. Corregidas.
+
+### Y un aserto que no mordió — el quinto de la serie
+
+De los cuatro rojos nuevos, **R3 siguió verde con el guard roto**. La causa:
+el aserto pasaba por `paceEventsReset`, que corta antes en `canWrite()`, así que
+**el guard de dentro del lock no llegaba a ejecutarse** — estaba probando dos
+veces la barrera exterior. Se arregló llamando al **adaptador a pelo**
+(`eventsWebReset` / `eventsWebMark`), que sí lo alcanza. No es defensa redundante:
+cubre la ventana entre leer la capacidad y adquirir el lock, en la que otra
+pestaña puede haber escrito un contenedor más nuevo.
+
+Es la misma lección de s154 por quinta vez: **un aserto que no has visto fallar
+no prueba lo que crees que prueba, aunque esté midiendo algo cierto.**
+
+Y una trampa de instrumento de propina: la prueba del fallo forzado falló primero
+por **falta de `page.on('dialog')`** — Playwright descarta los diálogos por
+defecto, así que el `confirm()` del import devolvía `false` y la importación **ni
+empezaba**. El rojo no era el que parecía.
+
+### Verificación de v0.88.1
+
+`npm run verify` **PASA** con v0.88.1 coherente en los tres sitios e i18n **510 =
+510** · **`npm run test:e2e` PASA 25/25** (23 + las dos nuevas) · **4/4 rojos**
+restaurados byte a byte con hash comprobado.

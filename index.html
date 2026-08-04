@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.88.0</title>
+  <title>PACE · Foco · Cuerpo — v0.88.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1289,6 +1289,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'tweaks.msg.imported': 'Importado — recargando…',
   'tweaks.msg.import.invalid': 'Archivo no reconocido.',
   'tweaks.msg.import.json.err': 'JSON inválido.',
+  'tweaks.msg.import.storage.err': 'No se pudo guardar. Tus datos siguen intactos.',
   'tweaks.confirm.reset': '¿Borrar todos tus datos de PACE? Esta acción no se puede deshacer.',
   'tweaks.confirm.import': '¿Sobreescribir tus datos con los del archivo?\n\nArchivo contiene: {logros} logros, {foco} min de foco.\nEsta acción no se puede deshacer.',
 
@@ -1481,6 +1482,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'tweaks.msg.imported': 'Imported — reloading…',
   'tweaks.msg.import.invalid': 'File not recognized.',
   'tweaks.msg.import.json.err': 'Invalid JSON.',
+  'tweaks.msg.import.storage.err': 'Could not save. Your data is untouched.',
   'tweaks.confirm.reset': 'Delete all your PACE data? This action cannot be undone.',
   'tweaks.confirm.import': 'Overwrite your data with the file?\n\nFile contains: {logros} achievements, {foco} focus min.\nThis action cannot be undone.',
 
@@ -3907,7 +3909,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.88.0';
+const PACE_VERSION = 'v0.88.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4198,7 +4200,7 @@ function persistState() {
    una unica fuente de verdad por dominio. No recarga ni avisa a nadie: de eso
    se encarga quien orquesta. */
 function wipeLocalState() {
-  try {localStorage.removeItem(LS_KEY);} catch (e) {}
+  try {localStorage.removeItem(LS_KEY);return true;} catch (e) {return false;}
 }
 
 function getState() {return _state;}
@@ -6491,6 +6493,18 @@ function eventsWebRunExclusive(fn) {
   }
   return navigator.locks.request(EVENTS_WEB_LOCK, { mode: 'exclusive' }, function () {
     const read = eventsWebRead();
+
+    /* CONTENEDOR DE UNA VERSION FUTURA -> NI UNA ESCRITURA (§9, §18).
+       Se comprueba DENTRO del lock, que es el unico sitio autoritativo. Una
+       version antigua de PACE que reescribiera un contenedor nuevo le borraria
+       los campos que todavia no conoce, en silencio y sin vuelta atras — y con
+       web, PWA y Android compartiendo formato eso deja de ser hipotetico. Leer
+       y exportar si (READ_ONLY); reescribir, jamas. */
+    if (!read.corrupt && read.container &&
+    read.container.schemaVersion > EVENTS_SCHEMA_VERSION) {
+      return { result: EVENTS_UNAVAILABLE_RESULT, container: null };
+    }
+
     const current = read.corrupt ? emptyEventsContainer() : read.container;
     let out;
     try {
@@ -6520,7 +6534,39 @@ function eventsWebRunExclusive(fn) {
 function eventsWebCapability() {
   if (!eventsWebStorageUsable()) return EVENTS_UNAVAILABLE;
   if (!eventsWebLocksAvailable()) return EVENTS_READ_ONLY;
+  /* Un contenedor escrito por una version MAS NUEVA se puede leer y exportar,
+     pero no reescribir (§9): normalizarlo le quitaria los campos que esta
+     version no conoce. La comprobacion se repite dentro del lock, que es donde
+     manda; aqui sirve para que `paceEventsCanWrite()` diga la verdad. */
+  if (eventsWebStoredSchemaVersion() > EVENTS_SCHEMA_VERSION) return EVENTS_READ_ONLY;
   return EVENTS_READ_WRITE;
+}
+
+/* `schemaVersion` del contenedor guardado, o 0 si no hay contenedor legible. */
+function eventsWebStoredSchemaVersion() {
+  const read = eventsWebRead();
+  if (read.corrupt || !read.container) return 0;
+  const sv = read.container.schemaVersion;
+  return typeof sv === 'number' && isFinite(sv) ? sv : 0;
+}
+
+/* Deja el contenedor SIN marcador, sin tocar nada mas: es la vuelta a un estado
+   conocido cuando una operacion de dos almacenes se aborta a mitad (§22). Sin
+   esto, abortar seria peor que no abortar — el marcador vivo hace que el
+   siguiente arranque reinicie el contenedor, que es justo lo que se evitaba. */
+function eventsWebClearMarker() {
+  return eventsWebRunExclusive(function (current) {
+    if (!current.marker) return { container: current, result: EVENTS_COMMITTED };
+    const next = {
+      schemaVersion: current.schemaVersion,
+      activatedAt: current.activatedAt,
+      events: current.events,
+      baseline: current.baseline,
+      pruneCursor: current.pruneCursor,
+      marker: null
+    };
+    return { container: next, result: EVENTS_COMMITTED };
+  });
 }
 
 /* Activacion + captura UNICA del baseline (§15.1), y recuperacion de una
@@ -6663,11 +6709,12 @@ Object.assign(window, {
   EVENTS_COMMITTED, EVENTS_REJECTED, EVENTS_INTERRUPTED, EVENTS_UNAVAILABLE_RESULT,
   eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite,
   eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability,
+  eventsWebStoredSchemaVersion, eventsWebClearMarker,
   eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot,
   eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark,
   eventsWebDiagnostics
 });
-;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite, eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability, eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
+;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite, eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability, eventsWebStoredSchemaVersion, eventsWebClearMarker, eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
 })();
 </script>
   <script>
@@ -6882,9 +6929,14 @@ function paceEventsInitialize(legacyState) {
     run = Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   }
   _paceEventsReady = run.then(function (out) {
-    _paceEventsCapability = out && out.result === EVENTS_COMMITTED ?
-    paceEventsCapability() :
-    EVENTS_UNAVAILABLE;
+    const cap = paceEventsCapability();
+    /* Si la inicializacion no confirmo, no se puede emitir — pero la capacidad
+       reportada tiene que seguir siendo la REAL: un contenedor de version
+       futura es READ_ONLY (se lee y se exporta), no UNAVAILABLE. Solo se
+       degrada a UNAVAILABLE el caso contradictorio: el adaptador dice que
+       podria escribir y aun asi la inicializacion fallo. */
+    _paceEventsCapability = out && out.result === EVENTS_COMMITTED ? cap :
+    cap === EVENTS_READ_WRITE ? EVENTS_UNAVAILABLE : cap;
     return out;
   }).catch(function () {
     _paceEventsCapability = EVENTS_UNAVAILABLE;
@@ -6977,29 +7029,51 @@ function paceEventsDiagnostics() {
    import y el reset de Ajustes NO pueden depender de que los eventos
    funcionen (§19.5). */
 function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState) {
+  /* `writeLegacy` puede fallar de verdad: cuota agotada, almacenamiento
+     bloqueado, modo privado. Su resultado NO se descarta — es la condicion de
+     la que depende todo lo que viene despues. */
   const doLegacy = function () {
     try {writeLegacy();return true;} catch (e) {return false;}
   };
+  const salida = function (result, legacyWritten) {
+    return { result: result, legacyWritten: !!legacyWritten, container: null };
+  };
 
+  /* Sin subsistema de eventos no hay contenedor que proteger: la escritura
+     legacy se hace igual (§19.5) y se informa de si salio bien. */
   if (!paceEventsCanWrite()) {
     const ok = doLegacy();
-    return Promise.resolve({ result: ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, container: null });
+    return Promise.resolve(salida(ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, ok));
   }
 
   return eventsWebMark(op).
   then(function (marked) {
+    /* Si no se puede ni marcar, no hay red de recuperacion: se ABORTA sin
+       tocar nada. Mas vale que el usuario reintente a dejar una operacion de
+       dos almacenes sin rastro de por donde iba. */
     if (!marked || marked.result !== EVENTS_COMMITTED) {
-      /* Sin marcador no hay red: se hace la escritura legacy igualmente (es
-         lo que el usuario pidio) y se reinicia lo que se pueda. */
-      doLegacy();
-      return eventsWebReset(nextLegacyState || null);
+      return salida(EVENTS_REJECTED, false);
     }
-    doLegacy();
-    return eventsWebReset(nextLegacyState || null);
+
+    if (!doLegacy()) {
+      /* LA ESCRITURA CANONICA FALLO -> se aborta y se vuelve a un estado
+         conocido. Reiniciar el contenedor aqui seria lo peor de los dos
+         mundos: el estado del usuario intacto y su historial borrado.
+         Y hay que QUITAR EL MARCADOR: vivo, el proximo arranque reiniciaria
+         el contenedor «recuperando» una operacion que nunca ocurrio. */
+      return eventsWebClearMarker().then(function () {
+        return salida(EVENTS_REJECTED, false);
+      }, function () {
+        return salida(EVENTS_INTERRUPTED, false);
+      });
+    }
+
+    return eventsWebReset(nextLegacyState || null).then(function (r) {
+      return salida(r && r.result === EVENTS_COMMITTED ? EVENTS_COMMITTED : EVENTS_INTERRUPTED, true);
+    });
   }).
   catch(function () {
-    doLegacy();
-    return { result: EVENTS_REJECTED, container: null };
+    return salida(EVENTS_REJECTED, false);
   });
 }
 
@@ -7012,14 +7086,18 @@ function paceEventsWipeAll(alTerminar) {
   /* El almacen legacy lo borra SU dueño (`wipeLocalState`, state-core). Este
      modulo orquesta la operacion de dos almacenes, pero no mete la mano en la
      clave de otro dominio — lo aserta el `verify`, y de hecho lo cazo cuando
-     esta funcion nacio haciendo el `removeItem` ella misma. */
-  const wipe = function () {wipeLocalState();};
+     esta funcion nacio haciendo el `removeItem` ella misma.
+     `wipeLocalState` devuelve si pudo: si NO pudo, la barrera aborta y el
+     contenedor de eventos se queda como estaba, en vez de borrar el historial
+     de alguien cuyo estado sigue ahi. */
+  const wipe = function () {
+    if (!wipeLocalState()) throw new Error('no se pudo borrar el estado local');
+  };
   const fin = typeof alTerminar === 'function' ? alTerminar : function () {};
   try {
     paceEventsStoreBarrier('reset', wipe, null).then(fin, fin);
   } catch (e) {
-    wipe();
-    fin();
+    fin({ result: EVENTS_REJECTED, legacyWritten: false, container: null });
   }
 }
 
@@ -18648,11 +18726,21 @@ function TweaksDataSection() {
            de que la barrera termine, el MARCADOR sobrevive y la siguiente
            inicializacion completa el reinicio (§22), que es idempotente. */
         const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
-        try {
-          paceEventsStoreBarrier('import', writeLegacy, incoming);
-        } catch (e) {writeLegacy();}
-        setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
-        setTimeout(() => location.reload(), 900);
+        /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
+           hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
+           por almacenamiento bloqueado, el estado nuevo no se guardaba, el
+           contenedor de eventos se reiniciaba igual, la UI decia «importado» y
+           la pagina recargaba. Cuatro mentiras seguidas sobre una promesa de
+           integridad. */
+        paceEventsStoreBarrier('import', writeLegacy, incoming).then((r) => {
+          if (!r || !r.legacyWritten) {
+            setMsg({ kind: 'err', text: t('tweaks.msg.import.storage.err') });
+            setTimeout(() => setMsg(null), 2600);
+            return;
+          }
+          setMsg({ kind: 'ok', text: t('tweaks.msg.imported') });
+          setTimeout(() => location.reload(), 900);
+        });
       } catch (e) {
         setMsg({ kind: 'err', text: t('tweaks.msg.import.json.err') });
         setTimeout(() => setMsg(null), 2600);

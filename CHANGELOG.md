@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.88.1** | 2026-08-04 | fix(events): **una operación de dos almacenes que no espera no es atómica** — tres defectos que el usuario encontró revisando v0.88.0, los tres confirmados contra el código. **P0**: el import lanzaba la barrera **sin esperarla** y el resultado de la escritura legacy **se descartaba** en el camino normal ⇒ con `setItem` fallando por cuota, el estado no se guardaba, el contenedor de eventos **se reiniciaba igual**, la UI decía «Importado» y la página recargaba — cuatro mentiras seguidas sobre una promesa de integridad que esta misma sesión había escrito. **Y el arreglo no era un `if`**: al abortar, el **marcador ya está escrito**, y como el arranque reinicia el contenedor en cuanto ve uno vivo, abortar sin limpiarlo habría dejado que el siguiente arranque hiciera justo lo que se evitaba ⇒ nace `eventsWebClearMarker`. Ahora se espera, se aborta a un estado conocido, el resultado lleva `legacyWritten` y la UI solo canta victoria con eso en `true`; copy nuevo ES+EN y **CENSO de i18n a 510**. Mismo trato en el reset: `wipeLocalState()` devuelve si pudo, y si no pudo **no se borra el historial de alguien cuyo estado sigue ahí**. **Segundo**: un contenedor de **versión FUTURA** se reescribía —el gate vivía solo en la ruta de import— y le tiraba en silencio los campos que esta versión no conoce; ahora `schemaVersion` mayor = **READ_ONLY**, comprobado **dos veces** (capacidad y **dentro del lock**, que es el autoritativo). **Tercero**: dos filas de la tabla de `STATE.md` seguían en v0.87.0. **Y un quinto aserto que no mordió**: el del contenedor futuro siguió **verde con el guard roto**, porque pasaba por la fachada —que corta antes en `canWrite()`— y el guard interior **no llegaba a ejecutarse**; se arregló llamando al adaptador a pelo. Trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de `page.on('dialog')`**, así que el `confirm()` del import devolvía false y la importación **ni empezaba** | #155 | [abajo](#v0881----2026-08-04----fixevents-una-operacion-de-dos-almacenes-que-no-espera-no-es-atomica) |
 | **v0.88.0** | 2026-08-04 | feat(events): **la memoria es del usuario, no nuestra** — FASE 3 del plan: nace **`pace.events.v1`**, el registro **local** de uso, en su **Fase 1** (modelo canónico + adaptador web + Web Locks + baseline + export/import/reset + recuperación + pruebas multi-pestaña) y **sin un solo emisor**, porque §25 prohíbe emitir antes de estar en `READ_WRITE` · **dos contradicciones con una página PÚBLICA**, las dos creadas por el mero hecho de existir una segunda clave: `privacy.html` promete que desde Ajustes «puedes borrarlo todo» y el reset solo quitaba `pace.state.v2` (**arreglado**: pasa por la barrera y borra los dos almacenes), y promete exportar «**todo** tu estado» cuando el backup no llevará eventos (**no se arregla hoy, se le pone un gate**: si aparece un emisor fuera de `app/events/` y el export no lleva la sección, el `verify` se pone **rojo**) · **capa A / capa B separadas** como exige §5 — el modelo canónico no nombra `localStorage` ni `navigator.locks`, y el **adaptador inerte** existe para que `file://` no emita y Capacitor **no caiga al web** por parecer `https://localhost` · **5 comprobaciones nuevas en el `verify`**, todas RELACIONALES, más el **guard de cero**; la de «cero red» tuvo que mirar el **código sin comentarios**, porque las cabeceras **nombran** `fetch` y `WebSocket` para prohibirlos y un `grep` a secas **se autoinculpa** (trampa de s146 por otra puerta) · **10 pruebas E2E**, entre ellas **DOS pestañas de verdad** emitiendo a la vez sin perder un evento (el **P0** del diseño), la lista permitida descartando `notaLibre`/`ip`/ruta de archivo, y seis snapshots inválidos rechazados dejando el contenedor **byte a byte** igual · **17 rojos, y los 17 mordieron a la primera** —frente a los cuatro que fallaron en s154— porque el banco ahora **exige que la cadena aparezca exactamente una vez** y calibra antes; el **guard de cero** necesitó banco propio, moviendo la carpeta de verdad y exigiendo **el mensaje**, no solo el exit 1 · el `verify` cazó **dos identificadores sin ligar** en código nuevo: `Uint8Array` faltaba en su lista de plataforma, y `chrome` estaba **mal en mi código** (solo existe en Chromium) | #155 | [abajo](#v0880----2026-08-04----featevents-la-memoria-es-del-usuario-no-nuestra) |
-| **v0.87.0** | 2026-08-04 | test(e2e): **un test que no has visto fallar no prueba nada** — segunda pieza del frente CI: **Playwright**, que cubre justo el **primer hueco que el `verify` declara e imprime en cada pasada** («no abre navegador, no monta la app, no pulsa nada»). Entra **el checklist de cierre de `CLAUDE.md` entero**, ejecutado: Pomodoro hasta el BreakMenu con el **reloj virtual** —viable porque `useCountdown` es *timestamp-based*—, Respira con su **modal de seguridad de apnea**, Mueve con Preview y pasos, Hidrátate, Logros con toast, Tweaks y persistencia · **13 tests, ~25 s** · **no se inventó un selector**: once bancos de reconocimiento condujeron el artefacto primero, y de ahí salió que las filas de rutina **no son `<button>`**, que la biblioteca de Mueve abre el **Preview de §18.3** y que el toast **no sale al desbloquear** sino cuando una sesión drena la cola (s145) · **21 rojos verificados**, los 21 restaurados **byte a byte con hash comprobado**, y **cuatro no mordieron a la primera**: tres eran **debilidad real de mis asertos** —`getByRole({name})` casa por **SUBCADENA**, así que renombrar «Pausar» a «PausarX» seguía pasando— y el cuarto rompía **la línea equivocada** (el artefacto tiene varias llamadas a `renderGlyph` y la miniatura del sidebar resuelve por `achMini`) · casi nada lleva número: el precache se aserta comparando lo **declarado en `sw.js`** con lo que el navegador tiene **de verdad** en su caché, y los sellos se **derivan del catálogo vivo** con la regla de s152 en vez de escribir 53, con **guard de cero** · **job `e2e` aparte** con `needs: verify`, porque la suite carga el `index.html` **committeado** y es el job de arriba el que acaba de probar que está al día · **el instrumento mintió cuatro veces**: `innerText` da el texto con el `text-transform` ya aplicado y los matchers comparan `textContent` (3 rojos), `addInitScript` corre en **cada** navegación y mi semilla machacaba el estado en la recarga, un `grep -c $'\r'` contó todas las líneas y casi reporto CR inexistentes, y un banco en segundo plano parcheaba el artefacto mientras yo medía | #154 | [abajo](#v0870----2026-08-04----teste2e-un-test-que-no-has-visto-fallar-no-prueba-nada) |
+| **v0.87.0** | 2026-08-04 | test(e2e): **un test que no has visto fallar no prueba nada** — segunda pieza del frente CI: **Playwright**, que cubre justo el **primer hueco que el `verify` declara e imprime en cada pasada** («no abre navegador, no monta la app, no pulsa nada»). Entra **el checklist de cierre de `CLAUDE.md` entero**, ejecutado: Pomodoro hasta el BreakMenu con el **reloj virtual** —viable porque `useCountdown` es *timestamp-based*—, Respira con su **modal de seguridad de apnea**, Mueve con Preview y pasos, Hidrátate, Logros con toast, Tweaks y persistencia · **13 tests, ~25 s** · **no se inventó un selector**: once bancos de reconocimiento condujeron el artefacto primero, y de ahí salió que las filas de rutina **no son `<button>`**, que la biblioteca de Mueve abre el **Preview de §18.3** y que el toast **no sale al desbloquear** sino cuando una sesión drena la cola (s145) · **21 rojos verificados**, los 21 restaurados **byte a byte con hash comprobado**, y **cuatro no mordieron a la primera**: tres eran **debilidad real de mis asertos** —`getByRole({name})` casa por **SUBCADENA**, así que renombrar «Pausar» a «PausarX» seguía pasando— y el cuarto rompía **la línea equivocada** (el artefacto tiene varias llamadas a `renderGlyph` y la miniatura del sidebar resuelve por `achMini`) · casi nada lleva número: el precache se aserta comparando lo **declarado en `sw.js`** con lo que el navegador tiene **de verdad** en su caché, y los sellos se **derivan del catálogo vivo** con la regla de s152 en vez de escribir 53, con **guard de cero** · **job `e2e` aparte** con `needs: verify`, porque la suite carga el `index.html` **committeado** y es el job de arriba el que acaba de probar que está al día · **el instrumento mintió cuatro veces**: `innerText` da el texto con el `text-transform` ya aplicado y los matchers comparan `textContent` (3 rojos), `addInitScript` corre en **cada** navegación y mi semilla machacaba el estado en la recarga, un `grep -c $'\r'` contó todas las líneas y casi reporto CR inexistentes, y un banco en segundo plano parcheaba el artefacto mientras yo medía | #154 | [session-154](./docs/sessions/session-154-playwright.md) |
 | **v0.86.0** | 2026-08-04 | chore(ci): **el CI no comprueba nada que no corra en local** — primera pieza del frente CI, lo único que quedaba detrás de la red de seguridad. Nace `.github/`, que no existía: un job en `ubuntu-latest` con Node 24 que hace `npm ci` e **invoca `npm run verify` tal cual**, sin reinterpretarlo — así lo que sale rojo en GitHub se reproduce con un comando, y vigilancia nueva se añade al `verify`, no al YAML · lo **único** que el workflow añade por su cuenta es que **`index.html` sea el build de las fuentes**, porque el `verify` no puede: corre justo ANTES de regenerarlo, así que su aviso de deriva es `[INFO]` **a propósito** y nunca se pondrá rojo · el diff va **acotado a `index.html`** o el CI sería rojo permanente por `PACE_standalone.html`, congelado desde s134 y que el build acaba de reescribir · y se compara con **`git diff`, nunca con un hash**: el worktree de Windows deja **500 bytes CR** dentro del artefacto (5 fuentes en CRLF que `readFileClean` no normaliza) y su SHA-256 no puede igualar al de Linux · **medido antes de escribir una línea**, porque el runner es Linux: el build es determinista, las **190** rutas declaradas coinciden **exactas** con el repo (Linux distingue mayúsculas y Windows no) y el lock trae `sharp-linux-x64` · probado en **verde y en rojo** con el escenario real —una fuente cambia y nadie regenera el artefacto—, restaurado byte a byte · **proteger `main` no se puede hacer desde aquí** (`gh` no instalado) y la opción «exigir el check sin requerir PR» **es contradictoria**: requerir checks bloquea el push directo · `WORKFLOW.md` seguía exigiendo regenerar el standalone en cada cierre, falso desde s134 · **y el primer run se puso ROJO y tenía razón**: `npm run verify` pasó en Linux, pero el artefacto **no era reproducible entre plataformas** — con CRLF **Babel indenta distinto los comentarios que conserva**, así que el `index.html` committeado **dependía del worktree de quien lo generó** (**una línea, un espacio**, invisible en local porque `git diff` normaliza y artefacto y fuentes comparten worktree). Arreglado **en el build**: `readFileClean` normaliza a LF al leer, y las mismas fuentes en CRLF y en LF dan ahora el mismo artefacto **byte a byte**. Un CI que solo confirma lo que ya sabes no vale nada | #153 | [session-153](./docs/sessions/session-153-ci-github-actions.md) |
 | **v0.85.0** | 2026-08-03 | chore(tooling): **cinco sellos no se pintan nunca, y eso no era un bug** — segunda tanda de la red de seguridad, lo que **D5 aparcó** del `verify` v1: integridad de **i18n, precache, glifos y catálogos**, dentro de `npm run verify` y con **asertos**. Antes de escribir uno solo hubo que resolver un número que no cuadraba: el mapa tiene **58** máscaras, s150 contó **53** sellos y s151 **54** — y las tres cifras son correctas, porque **un logro secreto y bloqueado pinta una `?` en vez de su glifo** y 5 de las 58 son de secretos; s151 vio 54 porque midió en inglés y eso desbloquea `secret.bilingual`. Se asertan **las dos mitades** (53 + 5) para que el número deje de sorprender · **dos clases de comprobación que no se mezclan**: relacionales (no caducan) y **censo** (números esperados en un solo sitio, con el mensaje diciendo que subirlos es un acto deliberado) · el dato se saca del árbol **compilando cada archivo en su propia IIFE**, porque `GLYPH_SVG` es `const` en **dos** archivos y en ámbito compartido el catálogo sale vacío sin quejarse · **un hueco salió de una prueba negativa fallida**: un secreto **sin detector** entra en el denominador de §15.4 sin que nadie pueda ganarlo · **26 rojos verificados**, EXIT=1 y 15 archivos restaurados byte a byte · la caché real del navegador trae **86 entradas**, las mismas que aserta el checker | #152 | [session-152](./docs/sessions/session-152-red-seguridad-segunda-tanda.md) |
 | **v0.84.0** | 2026-08-03 | docs+fix(copy): **la promesa estaba en tres sitios, y el tercero no lo miró nadie** — frente B de la auditoría (D1), copy y presencia pública. El onboarding prometía «Siempre gratis / sin paywall» en los dos idiomas contra v1.0 = versión **pagada**: pasa a «**Núcleo gratuito / disponible**» · los claims de servidor se reformulan **ya** para que sobrevivan al Worker de licencia («No hay servidor» → «Tus datos no salen de aquí», «localStorage únicamente» → «en tu dispositivo»); `tweaks.data.note` **se deja** porque su claim está acotado al backup · el copy elegido destapó un defecto que **no era del copy**: `valuesPlate` centraba cada columna por su cuenta, así que un label de dos líneas arrastraba su sub **8 px** — mismo defecto que el sello de s147, arreglado con alturas reservadas (s119) en vez de recortando texto · **existe un `README_EN.md`** que nadie había mirado: estaba en **v0.18.0** y **seguía vendiendo «Lifetime, Pase and Seasons»**, el modelo de cuatro vías descartado en s134 que s149 creyó cerrar — corrigió solo el español · los dos README enlazaban a **`HANDOFF.md` y `docs/porting.md`, que no existen**, y anunciaban **5 ejes de personalización de los que solo uno tiene control** (dos apagados por bandera, dos dormidos desde s20) | #151 | [diario](./docs/sessions/session-151-frente-b-copy-y-presencia.md) |
@@ -350,6 +351,69 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.88.1] -- 2026-08-04 -- fix(events): una operación de dos almacenes que no espera no es atómica
+
+Tres defectos que el usuario encontró **revisando** v0.88.0, los tres confirmados contra el código
+antes de tocar nada. Ninguno era falso positivo.
+
+### El P0: el import decía «hecho» sin haber esperado a nada
+
+`TweaksData.jsx` lanzaba `paceEventsStoreBarrier(...)` **sin esperar la promesa**, y dentro de la
+barrera el `true/false` de la escritura legacy **solo se usaba en la rama `!canWrite`**: en el
+camino normal se descartaba. Con `localStorage.setItem` fallando por cuota o por almacenamiento
+bloqueado, la secuencia eran **cuatro mentiras seguidas**: el estado no se guardaba · el contenedor
+de eventos se reiniciaba igual · la UI decía «Importado» · la página recargaba.
+
+Contradecía de frente lo que esta misma sesión había escrito y publicado: «las operaciones deben ser
+atómicas o restaurar el estado anterior si fallan».
+
+**El arreglo no era un `if`.** Al abortar, el **marcador ya está escrito**, y `eventsWebInitialize`
+reinicia el contenedor en cuanto ve un marcador vivo — así que abortar sin más habría dejado que
+**el siguiente arranque hiciera justo lo que se acababa de evitar**. Hizo falta una salida explícita
+de «volver a un estado conocido» (`eventsWebClearMarker`).
+
+Ahora: se espera · si no se puede ni marcar, se aborta sin tocar nada · si la escritura canónica
+falla, se limpia el marcador y se devuelve `rejected` · el resultado lleva `legacyWritten`, y la UI
+solo anuncia éxito con eso en `true`. Copy nuevo en ES y EN — **«No se pudo guardar. Tus datos
+siguen intactos.»** — y el `CENSO` de i18n sube a **510**, que es el acto deliberado que su propio
+mensaje de fallo pide.
+
+El mismo tratamiento en el reset: `wipeLocalState()` ahora **devuelve si pudo**, y si no pudo la
+barrera aborta. Borrar el historial de alguien cuyo estado sigue ahí sería lo peor de los dos mundos.
+
+### Un contenedor de versión futura se reescribía
+
+`validateEventsImport` rechazaba un `schemaVersion` superior, pero **solo en la ruta de import**. La
+lectura normal lo conservaba y el arranque lo **reescribía**, tirando en silencio los campos de nivel
+superior que esta versión no conoce. Con web, PWA y Android compartiendo formato, eso deja de ser
+hipotético. Ahora `schemaVersion > EVENTS_SCHEMA_VERSION` ⇒ **READ_ONLY**: se lee y se exporta, no se
+reescribe nunca. La comprobación va **dos veces** y las dos hacen falta: en la capacidad, para que
+`canWrite()` no mienta, y **dentro del lock**, que es el único sitio autoritativo — entre leer la
+capacidad y adquirir el lock, otra pestaña puede haber escrito.
+
+### El quinto aserto que no mordió
+
+De los cuatro rojos nuevos, el del contenedor futuro **siguió verde con el guard roto**. La causa:
+el aserto pasaba por `paceEventsReset`, que corta antes en `canWrite()`, así que **el guard de dentro
+del lock no llegaba a ejecutarse** — estaba probando dos veces la barrera exterior. Se arregló
+llamando al **adaptador a pelo** (`eventsWebReset` / `eventsWebMark`).
+
+Es la lección de s154 por quinta vez: **un aserto que no has visto fallar no prueba lo que crees,
+aunque esté midiendo algo cierto.**
+
+Y una trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de
+`page.on('dialog')`** — Playwright descarta los diálogos por defecto, así que el `confirm()` del
+import devolvía `false` y la importación **ni empezaba**. El rojo no era el que parecía.
+
+### Verificación
+
+`npm run verify` **pasa** con v0.88.1 coherente en los tres sitios e i18n **510 = 510** ·
+**`npm run test:e2e` pasa 25/25** · **4/4 rojos** restaurados byte a byte con el hash comprobado.
+
+Diario: [session-155 §11](./docs/sessions/session-155-eventos-fase-1.md).
+
+---
+
 ## [v0.88.0] -- 2026-08-04 -- feat(events): la memoria es del usuario, no nuestra
 
 **FASE 3** del plan operativo. Nace `pace.events.v1`, el registro **local** de uso, en la **Fase 1
@@ -448,79 +512,11 @@ contenedor válido). Declarado en el bloque `NO_CUBRE`.
 
 `npm run verify` **pasa en 7,4 s** con las 5 comprobaciones nuevas y v0.88.0 coherente en los tres
 sitios · **`npm run test:e2e` pasa 23/23 en 29,2 s** contra el artefacto recién regenerado, con las
-13 de s154 **sin una regresión** · **17/17 rojos** · `index.html` con **0 bytes CR** de 1 348 564 ·
+13 de s154 **sin una regresión** · **17/17 rojos** · `index.html` con **0 bytes CR** de 1 353 478 ·
 `PACE_standalone.html` restaurado byte-idéntico (`998E3E358D689036`) · en el navegador, con SW y
 cachés purgados: contenedor `READ_WRITE`, activación idempotente, **20 emisiones concurrentes sin
 perder una**, seis snapshots inválidos rechazados sin mover el contenedor, uno de 1,65 MB rechazado
 por presupuesto, **inglés sin regresión** y **consola sin errores**.
 
 Diario: [session-155](./docs/sessions/session-155-eventos-fase-1.md).
-
----
-
-## [v0.87.0] -- 2026-08-04 -- test(e2e): un test que no has visto fallar no prueba nada
-
-Segunda pieza del frente **CI**. Playwright cubre exactamente el **primer hueco que el `verify`
-declara e imprime en cada pasada**: *«comportamiento: no abre navegador, no monta la app, no
-pulsa nada»*.
-
-**Alcance cerrado con el usuario antes de tocar nada**, en tres decisiones: job **`e2e` aparte**
-con `needs: verify` · **el checklist de cierre de `CLAUDE.md` entero**, con `page.clock` para el
-Pomodoro · servido por **`.claude/static-server.js`**, que ya existía y está committeado.
-
-**Qué se ejecuta.** Los siete items del checklist, más el arranque del artefacto: Pomodoro que
-cuenta (25:00 → 24:58), se pausa —y el número **no se mueve** mientras el reloj corre—, se
-reanuda y **abre el BreakMenu** · Respira con su **modal de seguridad de apnea**, que es una
-obligación de producto y no un detalle · Mueve con Preview §18.3, cuenta atrás que **baja de
-verdad** y pasos del runner v1 · Hidrátate `+`/`−` y persistencia · el primer sello, su **toast**
-y su supervivencia a la recarga · Tweaks cambiando el color **computado** · y que `index.html`
-sea el **compilado** (Babel ausente, cero scripts `text/babel`, manifest presente, consola
-limpia). **13 tests en ~25 s.**
-
-**No se inventó ni un selector.** Once bancos de reconocimiento condujeron el artefacto antes
-de escribir un aserto, y de ahí salieron cosas que ninguna lectura del código habría dado: las
-filas de rutina **no son `<button>`** (son `div` con `cursor:pointer` y un `h4` dentro), la
-biblioteca de Mueve **no abre la sesión** sino el **Preview de §18.3** (s144), y el toast **no
-sale al desbloquear** — desde s145 `unlockAchievement` **encola** y el aviso lo drena un cierre
-de sesión; el vaso de agua es la única acción que acredita sin pasar por uno.
-
-**21 rojos, y los cuatro que no mordieron son el hallazgo.** Mismo listón que s150 y s152:
-romper algo real, exigir salida ≠ 0, restaurar en un `finally` **comprobando el hash**. Antes,
-**calibración**: cada `-g` tiene que apuntar a **un solo test** —la primera versión del banco dio
-cuatro «rojos» que eran `No tests found`, porque con `shell:true` los argumentos se concatenan
-**sin comillas**—. De los 21, cuatro siguieron verdes con la app rota: tres por **debilidad real
-de mis asertos** (`getByRole({name})` casa por **subcadena**, así que «PausarX» contiene
-«Pausar»; se arreglaron con `exact: true` y cambiando la rotura del toast por la regresión de
-verdad, que la cola no se drene), y el cuarto porque **rompí la línea equivocada**: el artefacto
-tiene **varias** llamadas a `renderGlyph` y la miniatura del sidebar resuelve por `achMini`. Lo
-dijo la **cadena de ancestros** de la máscara sobrante, no una deducción. **21 de 21 en rojo**,
-los 21 restaurados byte a byte.
-
-**Casi nada lleva número**, aplicando la decisión RELACIONAL vs CENSO de s152: el precache se
-aserta comparando las rutas **declaradas en `sw.js`** con las que el navegador tiene **de
-verdad** en su caché (`addAll` es atómico ⇒ mismo conjunto), y el nombre de la caché se deriva de
-`PACE_VERSION` — lo que el bump a v0.87.0 acaba de validar solo. Los sellos se **derivan del
-catálogo vivo** con la regla de s152 en vez de escribir 53, con **guard de cero**: si no hay ni
-una máscara es **fallo explícito**, y ese guard es el que cazó la rotura de `achievementMaskUrl`.
-Y la trampa de s152 se **aserta en vez de sortearse**: contar sobre la página tiene que dar
-**más** que dentro de `[data-pace-modal-backdrop]`.
-
-**El instrumento mintió cuatro veces, ninguna era el código.** `innerText` devuelve el texto con
-el `text-transform` de CSS ya aplicado y los matchers comparan `textContent` (`Foco manual`, no
-`FOCO MANUAL`) — tres rojos. `addInitScript` corre en **cada** navegación, así que mi semilla
-machacaba el estado en la recarga y la persistencia parecía rota con la app intacta. Un
-`grep -c $'\r'` contó **todas** las líneas y estuve a punto de reportar 22 589 CR en un artefacto
-que no tiene **ninguno**. Y un banco en segundo plano parcheaba `index.html` mientras yo corría
-el `verify`, que avisó de una deriva que no existía.
-
-**El CI pasa a dos jobs**, y la tesis de s153 sigue intacta: el YAML solo **invoca**
-`npm run test:e2e`, que corre igual en local. Va aparte porque el `verify` son ~5 s sin
-dependencias y es el paso 2 del cierre, mientras que esto descarga un Chromium de ~115 MB; y
-`needs: verify` no es orden estético — la suite carga el `index.html` **committeado**, y es el
-job de arriba el que acaba de probar que ese artefacto es el build de las fuentes.
-
-El `verify` sigue declarando sus huecos, pero **dos de ellos ya dicen dónde se cubren** en vez de
-quedarse en la queja.
-
-Diario: [session-154](./docs/sessions/session-154-playwright.md).
 

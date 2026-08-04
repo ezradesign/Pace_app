@@ -133,9 +133,14 @@ function paceEventsInitialize(legacyState) {
     run = Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
   }
   _paceEventsReady = run.then(function (out) {
-    _paceEventsCapability = (out && out.result === EVENTS_COMMITTED)
-      ? paceEventsCapability()
-      : EVENTS_UNAVAILABLE;
+    const cap = paceEventsCapability();
+    /* Si la inicializacion no confirmo, no se puede emitir — pero la capacidad
+       reportada tiene que seguir siendo la REAL: un contenedor de version
+       futura es READ_ONLY (se lee y se exporta), no UNAVAILABLE. Solo se
+       degrada a UNAVAILABLE el caso contradictorio: el adaptador dice que
+       podria escribir y aun asi la inicializacion fallo. */
+    _paceEventsCapability = (out && out.result === EVENTS_COMMITTED) ? cap
+      : (cap === EVENTS_READ_WRITE ? EVENTS_UNAVAILABLE : cap);
     return out;
   }).catch(function () {
     _paceEventsCapability = EVENTS_UNAVAILABLE;
@@ -228,29 +233,51 @@ function paceEventsDiagnostics() {
    import y el reset de Ajustes NO pueden depender de que los eventos
    funcionen (§19.5). */
 function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState) {
+  /* `writeLegacy` puede fallar de verdad: cuota agotada, almacenamiento
+     bloqueado, modo privado. Su resultado NO se descarta — es la condicion de
+     la que depende todo lo que viene despues. */
   const doLegacy = function () {
     try { writeLegacy(); return true; } catch (e) { return false; }
   };
+  const salida = function (result, legacyWritten) {
+    return { result: result, legacyWritten: !!legacyWritten, container: null };
+  };
 
+  /* Sin subsistema de eventos no hay contenedor que proteger: la escritura
+     legacy se hace igual (§19.5) y se informa de si salio bien. */
   if (!paceEventsCanWrite()) {
     const ok = doLegacy();
-    return Promise.resolve({ result: ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, container: null });
+    return Promise.resolve(salida(ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, ok));
   }
 
   return eventsWebMark(op)
     .then(function (marked) {
+      /* Si no se puede ni marcar, no hay red de recuperacion: se ABORTA sin
+         tocar nada. Mas vale que el usuario reintente a dejar una operacion de
+         dos almacenes sin rastro de por donde iba. */
       if (!marked || marked.result !== EVENTS_COMMITTED) {
-        /* Sin marcador no hay red: se hace la escritura legacy igualmente (es
-           lo que el usuario pidio) y se reinicia lo que se pueda. */
-        doLegacy();
-        return eventsWebReset(nextLegacyState || null);
+        return salida(EVENTS_REJECTED, false);
       }
-      doLegacy();
-      return eventsWebReset(nextLegacyState || null);
+
+      if (!doLegacy()) {
+        /* LA ESCRITURA CANONICA FALLO -> se aborta y se vuelve a un estado
+           conocido. Reiniciar el contenedor aqui seria lo peor de los dos
+           mundos: el estado del usuario intacto y su historial borrado.
+           Y hay que QUITAR EL MARCADOR: vivo, el proximo arranque reiniciaria
+           el contenedor «recuperando» una operacion que nunca ocurrio. */
+        return eventsWebClearMarker().then(function () {
+          return salida(EVENTS_REJECTED, false);
+        }, function () {
+          return salida(EVENTS_INTERRUPTED, false);
+        });
+      }
+
+      return eventsWebReset(nextLegacyState || null).then(function (r) {
+        return salida(r && r.result === EVENTS_COMMITTED ? EVENTS_COMMITTED : EVENTS_INTERRUPTED, true);
+      });
     })
     .catch(function () {
-      doLegacy();
-      return { result: EVENTS_REJECTED, container: null };
+      return salida(EVENTS_REJECTED, false);
     });
 }
 
@@ -263,14 +290,18 @@ function paceEventsWipeAll(alTerminar) {
   /* El almacen legacy lo borra SU dueño (`wipeLocalState`, state-core). Este
      modulo orquesta la operacion de dos almacenes, pero no mete la mano en la
      clave de otro dominio — lo aserta el `verify`, y de hecho lo cazo cuando
-     esta funcion nacio haciendo el `removeItem` ella misma. */
-  const wipe = function () { wipeLocalState(); };
+     esta funcion nacio haciendo el `removeItem` ella misma.
+     `wipeLocalState` devuelve si pudo: si NO pudo, la barrera aborta y el
+     contenedor de eventos se queda como estaba, en vez de borrar el historial
+     de alguien cuyo estado sigue ahi. */
+  const wipe = function () {
+    if (!wipeLocalState()) throw new Error('no se pudo borrar el estado local');
+  };
   const fin = typeof alTerminar === 'function' ? alTerminar : function () {};
   try {
     paceEventsStoreBarrier('reset', wipe, null).then(fin, fin);
   } catch (e) {
-    wipe();
-    fin();
+    fin({ result: EVENTS_REJECTED, legacyWritten: false, container: null });
   }
 }
 
