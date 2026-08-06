@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.90.0** | 2026-08-06 | feat(home): **la luz del Pomodoro** — cierra el frente que s157 y s158 dejaron en el árbol sin commit. **El Pomodoro no estaba centrado en móvil y el defecto era PREVIO**: medido contra HEAD servido en paralelo, +11,80 px a 320 y +12,09 a 390 en los dos; la atmósfera no lo introdujo, lo hizo visible. La causa son dos capas descontando padding sin saber la una de la otra, y una pista de grid que desborda y se alinea al START. Además: el máximo perceptual **se retima a la mitad del bloque** (estaba en 0,375), el enfriamiento pasa a ser continuo **sin repunte en p=1**, el parpadeo baja de **47 saltos ≥2 % a uno**, la cola recupera el reflejo bajo los chips y **el arco enterrado la tiñe**. Tres defectos más que encontró el usuario mirando, los tres del mismo tipo: transiciones que se pisan | 159 | [session-159](./docs/sessions/session-159-luz-del-pomodoro.md) |
 | **v0.89.0** | 2026-08-04 | feat(home): **un nodo opcional no puede decidir si hay geometria** — el motor de la home exigia los cuatro nodos y se callaba si faltaba uno; como `getSuggestedPath()` **nunca** devuelve null con catalogo no vacio, el unico estado real sin tarjeta —**un Camino en curso**— apagaba el motor entero y Desktop caia a un `360px` escrito a mano pintando el aro **sin horizonte**, sin recuperarse al salir (`attach()` corria una vez y el ResizeObserver seguia mirando un nodo que React ya habia sustituido) · **la evidencia de s149 no reproduce y sus dos mitades se excluyen**: 406×406 es justo lo que publica el motor, `[data-pace-timer-dial]` y `window.__PACE_HOME_GEOMETRY_VARS__` **no existen en el repo**, y las variables «vacias» salen de que **ninguna regla CSS las declara** — solo se escriben inline sobre `documentElement` · **el invariante que este repo declaraba era falso**: con el motor apagado la tarjeta subia 39,7 px sobre un aro **sin recortar** ⇒ ahora `--pace-dial-d` y `--pace-horizon` resuelven motor-o-CSS **en un solo sitio** y recorte y solapamiento salen del **mismo token** · **dos defectos mas que salieron al medir**: el arranque tardaba **1345 ms y dos frames** en publicar (el aro se pintaba al fallback y **saltaba**; ahora publica a 164 ms, sincrono) y —**previo y publicado**— con `prefers-reduced-motion` el aro salia a **244 px** en vez de 406 porque el bucle **encogia a ciegas** ocho pasadas sobre una medida congelada · **amanecer**: halo detras del aro recortado por el **mismo** horizonte y linea de alba anclada a `--pace-horizon`, **reutilizando** `paceGlowRamp` y `paceGrainUrl` de s140 en vez de duplicar la curva, con tokens `--dawn-soft`/`--dawn-line` en las dos paletas y **tres estados por atributo estable** que solo mueven intensidad · **ritmo movil** con el techo por ancho derivado del ancho **realmente usable** (0.86 → 0.92) y `--pace-home-slack` repartiendo el sobrante 38/62 ⇒ a 390×844 el aro pasa de 335 a 359 y el aire muerto de 91 a 62 px, **con escritorio sin una regresion** (406/65 · 456/73 · 487/78 · 520/83) · **12 rojos controlados y los 12 mordieron**; el instrumento mintio **cinco** veces, y una la cazo un **guard** que asertaba el media query antes de medir | #156 | [abajo](#v0890----2026-08-04----feathome-un-nodo-opcional-no-puede-decidir-si-hay-geometria) |
 | **v0.88.1** | 2026-08-04 | fix(events): **una operación de dos almacenes que no espera no es atómica** — tres defectos que el usuario encontró revisando v0.88.0, los tres confirmados contra el código. **P0**: el import lanzaba la barrera **sin esperarla** y el resultado de la escritura legacy **se descartaba** en el camino normal ⇒ con `setItem` fallando por cuota, el estado no se guardaba, el contenedor de eventos **se reiniciaba igual**, la UI decía «Importado» y la página recargaba — cuatro mentiras seguidas sobre una promesa de integridad que esta misma sesión había escrito. **Y el arreglo no era un `if`**: al abortar, el **marcador ya está escrito**, y como el arranque reinicia el contenedor en cuanto ve uno vivo, abortar sin limpiarlo habría dejado que el siguiente arranque hiciera justo lo que se evitaba ⇒ nace `eventsWebClearMarker`. Ahora se espera, se aborta a un estado conocido, el resultado lleva `legacyWritten` y la UI solo canta victoria con eso en `true`; copy nuevo ES+EN y **CENSO de i18n a 510**. Mismo trato en el reset: `wipeLocalState()` devuelve si pudo, y si no pudo **no se borra el historial de alguien cuyo estado sigue ahí**. **Segundo**: un contenedor de **versión FUTURA** se reescribía —el gate vivía solo en la ruta de import— y le tiraba en silencio los campos que esta versión no conoce; ahora `schemaVersion` mayor = **READ_ONLY**, comprobado **dos veces** (capacidad y **dentro del lock**, que es el autoritativo). **Tercero**: dos filas de la tabla de `STATE.md` seguían en v0.87.0. **Y un quinto aserto que no mordió**: el del contenedor futuro siguió **verde con el guard roto**, porque pasaba por la fachada —que corta antes en `canWrite()`— y el guard interior **no llegaba a ejecutarse**; se arregló llamando al adaptador a pelo. Trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de `page.on('dialog')`**, así que el `confirm()` del import devolvía false y la importación **ni empezaba** | #155 | [abajo](#v0881----2026-08-04----fixevents-una-operacion-de-dos-almacenes-que-no-espera-no-es-atomica) |
 | **v0.88.0** | 2026-08-04 | feat(events): **la memoria es del usuario, no nuestra** — FASE 3 del plan: nace **`pace.events.v1`**, el registro **local** de uso, en su **Fase 1** (modelo canónico + adaptador web + Web Locks + baseline + export/import/reset + recuperación + pruebas multi-pestaña) y **sin un solo emisor**, porque §25 prohíbe emitir antes de estar en `READ_WRITE` · **dos contradicciones con una página PÚBLICA**, las dos creadas por el mero hecho de existir una segunda clave: `privacy.html` promete que desde Ajustes «puedes borrarlo todo» y el reset solo quitaba `pace.state.v2` (**arreglado**: pasa por la barrera y borra los dos almacenes), y promete exportar «**todo** tu estado» cuando el backup no llevará eventos (**no se arregla hoy, se le pone un gate**: si aparece un emisor fuera de `app/events/` y el export no lleva la sección, el `verify` se pone **rojo**) · **capa A / capa B separadas** como exige §5 — el modelo canónico no nombra `localStorage` ni `navigator.locks`, y el **adaptador inerte** existe para que `file://` no emita y Capacitor **no caiga al web** por parecer `https://localhost` · **5 comprobaciones nuevas en el `verify`**, todas RELACIONALES, más el **guard de cero**; la de «cero red» tuvo que mirar el **código sin comentarios**, porque las cabeceras **nombran** `fetch` y `WebSocket` para prohibirlos y un `grep` a secas **se autoinculpa** (trampa de s146 por otra puerta) · **10 pruebas E2E**, entre ellas **DOS pestañas de verdad** emitiendo a la vez sin perder un evento (el **P0** del diseño), la lista permitida descartando `notaLibre`/`ip`/ruta de archivo, y seis snapshots inválidos rechazados dejando el contenedor **byte a byte** igual · **17 rojos, y los 17 mordieron a la primera** —frente a los cuatro que fallaron en s154— porque el banco ahora **exige que la cadena aparezca exactamente una vez** y calibra antes; el **guard de cero** necesitó banco propio, moviendo la carpeta de verdad y exigiendo **el mensaje**, no solo el exit 1 · el `verify` cazó **dos identificadores sin ligar** en código nuevo: `Uint8Array` faltaba en su lista de plataforma, y `chrome` estaba **mal en mi código** (solo existe en Chromium) | #155 | [abajo](#v0880----2026-08-04----featevents-la-memoria-es-del-usuario-no-nuestra) |
@@ -352,6 +353,92 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.90.0] -- 2026-08-06 -- feat(home): la luz del Pomodoro
+
+Cierra el frente que **s157 y s158 dejaron en el árbol sin commit y sin una línea de
+documentación**. Este commit publica las tres sesiones.
+
+### El centrado móvil era PREVIO, y estaba publicado
+
+Medido sirviendo los dos artefactos en paralelo (árbol y HEAD v0.89.0): **la desviación era
+idéntica** — +11,80 px a 320, +11,89 a 360, +12,00 a 375 y +12,09 a 390. La atmósfera de s158
+no lo introdujo: **lo hizo visible**, porque el halo cuelga del aro y arrastra el error a un
+campo de luz de 790 px de ancho.
+
+La causa, recorriendo la cadena de ancestros: el motor fija `--pace-dial-d` en **0,92 · W del
+viewport** y la raíz de `FocusTimer` añade **encima** un padding lateral de `clamp(0px, 4vw,
+40px)` que ese techo no descuenta. Su max-content queda en 390,19 px contra los 366 de ancho
+útil, y `[data-pace-main-content]` es un **grid de una sola pista `auto`**: la pista crece,
+**desborda y se coloca desde el START** en vez de centrarse. La mitad del desborde es la
+desviación exacta. Se arregla anulando ese padding en móvil (la causa) y con
+`justify-content: center` (el guard) — a 320 px la primera sola deja **2 px de holgura**, y el
+banco de rojos lo demuestra con un **control negativo** que deshace solo el padding y sigue verde.
+Resultado **0,00 px** en los cuatro anchos, sin tocar diámetro, arco ni `home-geometry.js`.
+
+### La curva respira desde la mitad
+
+Las cuatro paradas de color no se tocan; lo que deja de ser lineal es el **recorrido**. Y la
+meseta **sale de la curva** en vez de ser un tramo plano aparte: `curvaSuave` tiene pendiente
+cero en sus extremos, así que la subida se posa al llegar al pico. La mitad que baja usa **otra**
+curva (`curvaCaida`, x^1,5): conserva la meseta pero **llega al final bajando**, que es lo único
+que mata el repunte de p=1 — con la curva simétrica la luz se aplanaba en el minuto 25 mientras
+el color seguía subiendo.
+
+| | s158 | v0.90.0 |
+|---|---|---|
+| pico de presencia (noche) | p=0,375 | **p=0,495** |
+| pico de calor OKLab | p=0,52 | **p=0,495** |
+| rebotes tras el pico | 5 | **2** |
+| rebote en p=1 | sí | **eliminado** |
+| saltos por bloque | 50 (uno cada 30 s) | **197 (uno cada 7,6 s)** |
+| salto mayor | 4,47 % | **2,03 %** |
+| saltos ≥ 2 % | **47** | **1** |
+
+El parpadeo se arregla subiendo la resolución (k 24→96, i 30→120) y **no** con una transición de
+opacidad: esa no suavizaría el escalón de **color**, que vive dentro del degradado. Coste medido
+alternando tres modos en la misma pasada y separando trabajo real de protocolo: **+0,44 s** por
+bloque de 25 min, o sea 0,029 % del tiempo real.
+
+En la paleta **clara** la presencia compuesta sigue culminando tarde (p≈0,77), porque sobre papel
+crema el atardecer contrasta más que el mediodía; el **calor** sí culmina centrado. Medido,
+presentado y **no compensado**, por decisión explícita.
+
+### Tres defectos que encontró el usuario mirando, y los tres eran transiciones que se pisan
+
+**La sombra de los chips entraba a golpe**: el chip lleva `transition` de 0,22 s **inline sobre
+todas las propiedades** (su hover), así que su `filter` perseguía con 220 ms de retraso a un
+`--pace-on` que viajaba 1,6 s — con la luz al 60 %, la sombra iba por 0,01 de alfa, y al pararse
+daba un tirón de 0,09 a 0,17. Se muda al **grid**, que no lleva transición: misma forma
+proyectada, una declaración en vez de cuatro. `--sun-cast` baja además de 0,18 a **0,10**.
+
+**Pausar era un salto de un frame** (0,517 → 0,233): el 0,45 vivía dentro de `--pace-i`, que no se
+transiciona. Sale a un tercer mando, `--pace-pausado`, con su propio fundido de 500 ms. Y lo que
+publica el componente es el **interruptor**, no la profundidad: cuánto se recoge la luz es un
+valor **por paleta** (`--sun-pausa` 0,45 oscuro / 0,35 claro) y las paletas viven en CSS.
+
+**La cola no llevaba el color del arco.** Ahora sí: `--pace-arco` publica el tono del recorrido y
+las dos paradas finales del bloom lo mezclan al 25 %. Aislado con todo lo demás congelado, el eje
+rojo-verde de la cola sigue al arco (1,25 terracota → 0,95 ocre → 0,45 oliva) y la presencia solo
+sube un 5-7 %: **tiñe, no ilumina**. Solo la cola, no el limbo — s158 bajó la saturación un 10 %
+justo porque el halo llegaba a leerse como una ampliación del arco.
+
+### Verificación
+
+`npm run verify` **pasa** con v0.90.0 coherente en los tres sitios · **`npm run test:e2e` pasa
+55/55** contra el artefacto recién regenerado, con las 44 previas sin una regresión · **banco de
+rojos: 5 asertos en rojo con mutación controlada y restauración por hash, 1 control negativo verde
+y 1 declarado sin rojo**, y cuatro de los cinco **nacieron rojos contra el producto real** ·
+navegador real en 5 combinaciones de viewport y paleta con sesión y pausa: **consola limpia**,
+scroll horizontal 0 · **cambio día↔noche** a 25/50/75 % en los dos sentidos con el progreso y la
+geometría **idénticos** y sin fotograma de flash · `PACE_standalone.html` restaurado byte-idéntico.
+
+**Deuda mecánica**: `tests/home-geometria.spec.js` había llegado a 631 líneas (CLAUDE.md §1 fija
+500) y se parte en cuatro archivos sin tocar una línea de cuerpo.
+
+Diario: [session-159](./docs/sessions/session-159-luz-del-pomodoro.md).
+
+---
+
 ## [v0.89.0] -- 2026-08-04 -- feat(home): un nodo opcional no puede decidir si hay geometría
 
 Sesión de **producto visible** con el orden impuesto por el usuario: **medir → entender →
@@ -466,173 +553,4 @@ partió en tres (46 · 273 · 216) sin tocar una línea de cuerpo — **39 verde
 Diario: [session-156](./docs/sessions/session-156-home-amanecer.md).
 
 ---
-
-## [v0.88.1] -- 2026-08-04 -- fix(events): una operación de dos almacenes que no espera no es atómica
-
-Tres defectos que el usuario encontró **revisando** v0.88.0, los tres confirmados contra el código
-antes de tocar nada. Ninguno era falso positivo.
-
-### El P0: el import decía «hecho» sin haber esperado a nada
-
-`TweaksData.jsx` lanzaba `paceEventsStoreBarrier(...)` **sin esperar la promesa**, y dentro de la
-barrera el `true/false` de la escritura legacy **solo se usaba en la rama `!canWrite`**: en el
-camino normal se descartaba. Con `localStorage.setItem` fallando por cuota o por almacenamiento
-bloqueado, la secuencia eran **cuatro mentiras seguidas**: el estado no se guardaba · el contenedor
-de eventos se reiniciaba igual · la UI decía «Importado» · la página recargaba.
-
-Contradecía de frente lo que esta misma sesión había escrito y publicado: «las operaciones deben ser
-atómicas o restaurar el estado anterior si fallan».
-
-**El arreglo no era un `if`.** Al abortar, el **marcador ya está escrito**, y `eventsWebInitialize`
-reinicia el contenedor en cuanto ve un marcador vivo — así que abortar sin más habría dejado que
-**el siguiente arranque hiciera justo lo que se acababa de evitar**. Hizo falta una salida explícita
-de «volver a un estado conocido» (`eventsWebClearMarker`).
-
-Ahora: se espera · si no se puede ni marcar, se aborta sin tocar nada · si la escritura canónica
-falla, se limpia el marcador y se devuelve `rejected` · el resultado lleva `legacyWritten`, y la UI
-solo anuncia éxito con eso en `true`. Copy nuevo en ES y EN — **«No se pudo guardar. Tus datos
-siguen intactos.»** — y el `CENSO` de i18n sube a **510**, que es el acto deliberado que su propio
-mensaje de fallo pide.
-
-El mismo tratamiento en el reset: `wipeLocalState()` ahora **devuelve si pudo**, y si no pudo la
-barrera aborta. Borrar el historial de alguien cuyo estado sigue ahí sería lo peor de los dos mundos.
-
-### Un contenedor de versión futura se reescribía
-
-`validateEventsImport` rechazaba un `schemaVersion` superior, pero **solo en la ruta de import**. La
-lectura normal lo conservaba y el arranque lo **reescribía**, tirando en silencio los campos de nivel
-superior que esta versión no conoce. Con web, PWA y Android compartiendo formato, eso deja de ser
-hipotético. Ahora `schemaVersion > EVENTS_SCHEMA_VERSION` ⇒ **READ_ONLY**: se lee y se exporta, no se
-reescribe nunca. La comprobación va **dos veces** y las dos hacen falta: en la capacidad, para que
-`canWrite()` no mienta, y **dentro del lock**, que es el único sitio autoritativo — entre leer la
-capacidad y adquirir el lock, otra pestaña puede haber escrito.
-
-### El quinto aserto que no mordió
-
-De los cuatro rojos nuevos, el del contenedor futuro **siguió verde con el guard roto**. La causa:
-el aserto pasaba por `paceEventsReset`, que corta antes en `canWrite()`, así que **el guard de dentro
-del lock no llegaba a ejecutarse** — estaba probando dos veces la barrera exterior. Se arregló
-llamando al **adaptador a pelo** (`eventsWebReset` / `eventsWebMark`).
-
-Es la lección de s154 por quinta vez: **un aserto que no has visto fallar no prueba lo que crees,
-aunque esté midiendo algo cierto.**
-
-Y una trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de
-`page.on('dialog')`** — Playwright descarta los diálogos por defecto, así que el `confirm()` del
-import devolvía `false` y la importación **ni empezaba**. El rojo no era el que parecía.
-
-### Verificación
-
-`npm run verify` **pasa** con v0.88.1 coherente en los tres sitios e i18n **510 = 510** ·
-**`npm run test:e2e` pasa 25/25** · **4/4 rojos** restaurados byte a byte con el hash comprobado.
-
-Diario: [session-155 §11](./docs/sessions/session-155-eventos-fase-1.md).
-
----
-
-## [v0.88.0] -- 2026-08-04 -- feat(events): la memoria es del usuario, no nuestra
-
-**FASE 3** del plan operativo. Nace `pace.events.v1`, el registro **local** de uso, en la **Fase 1
-del esquema** cerrado en s117: modelo canónico, adaptador web, Web Locks, baseline, export /
-import / reset, recuperación y pruebas multi-pestaña. **Sin un solo emisor** — §25 prohíbe emitir
-antes de que el adaptador esté en `READ_WRITE`, y por tanto **no hay ningún cambio visible en la
-UI**.
-
-Se eligió este frente por encima de Wrangler (la última pieza del CI) porque Wrangler queda
-**inerte** hasta que existan los secretos de la cuenta, y porque los eventos son lo único cuyo
-valor **caduca**: el histórico que no se emite no se reconstruye.
-
-### Dos contradicciones con una página pública
-
-No las trajo el diseño ni el código nuevo: las crea **el mero hecho de que exista una segunda
-clave de almacenamiento**.
-
-| Dónde | Qué prometía | Qué pasaba |
-|---|---|---|
-| `privacy.html` ↔ `TweaksPanel.jsx` | «Puedes borrarlo todo desde Ajustes… el borrado es **definitivo**» | El reset quitaba `pace.state.v2` **y nada más** ⇒ el contenedor **sobrevivía** |
-| `privacy.html` ↔ `TweaksData.jsx` | «Puedes exportar **todo** tu estado» | El export lee solo `pace.state.v2` ⇒ falso **en cuanto haya emisores** |
-
-La primera **se arregla hoy**: el reset pasa por la barrera y borra los dos almacenes, bajo la
-misma exclusión que el resto de mutaciones. La alternativa era publicar a sabiendas una frase
-falsa.
-
-La segunda **tiene fecha de caducidad, no arreglo inmediato**, y ahí está lo interesante: una nota
-en el backlog es justo el mecanismo que ya falló en s149 y s151. En su lugar se instaló un **gate
-mecánico en el `verify`** — si aparece una llamada a `paceEventsAppend(` fuera de `app/events/` y
-el export no lleva la sección de eventos, **rojo**. RELACIONAL: no dice cuántos emisores hay ni
-cuándo llegan, solo que **los dos lados van juntos**.
-
-### Qué guarda, qué no, y dónde
-
-`localStorage`, clave `pace.events.v1`, **fuera** de `pace.state.v2`:
-`{ schemaVersion, activatedAt, events[], baseline{capturedAt,feedback,totalsByType}, pruneCursor, marker }`.
-
-**Guarda** el instante de activación, hechos con esquema **cerrado** y **lista permitida** de
-campos, totales consolidados y la mecánica de poda y recuperación. **No guarda** texto libre,
-datos médicos, nombres de archivo, IP, ubicación, contactos, credenciales, portapapeles ni
-identificador alguno de usuario, dispositivo, publicidad o fingerprint. **No hay envío remoto**:
-cero `fetch`/`XMLHttpRequest`/`sendBeacon`/`WebSocket`/`EventSource` y cero URLs en los cuatro
-archivos, asertado por el `verify` y medido en el cable por la suite.
-
-En Fase 1 el contenedor **no guarda ninguna categoría nueva de información**: `activatedAt`, un
-array **vacío** y una **copia** de tallies que ya viven en `routineFeedback`. Por eso
-`privacy.html` no se toca todavía.
-
-Verificado en vez de supuesto: el `routineId` de una rutina personalizada es
-`custom.<Date.now()>` — **el nombre que escribe el usuario no entra en el id**.
-
-### Capa A y capa B, separadas de verdad
-
-`events-model.js` es backend-independiente y **no nombra** `localStorage` ni `navigator.locks`;
-`events-adapter-web.js` sí, porque son detalles de ESE backend. El **adaptador inerte**
-(`events-adapter-null.js`) no es relleno: §20 prohíbe que Capacitor caiga al adaptador web porque
-el WebView se presente como `https://localhost`, y §19.2 que `file://` emita aunque el navegador
-exponga Web Locks.
-
-Antes de escribir una línea se leyó cómo el build cruza la IIFE: re-expone **`function` y `var`**,
-y un **`const` no cruza**. En desarrollo Babel los pone en un ámbito global compartido y todo
-*parece* ir; en el artefacto, no. Es el crash de s144. Aun así el `verify` mordió dos veces:
-**`Uint8Array`** faltaba en su lista de plataforma (entra, con toda la familia de arrays tipados) y
-**`chrome`** estaba **mal en mi código** — solo existe en Chromium, así que pasa a `window.chrome`.
-
-### La comprobación que se autoinculpaba
-
-Las cabeceras de `app/events/*` **nombran** `fetch`, `sendBeacon` y `WebSocket` precisamente para
-prohibirlos. Un `grep` a secas habría dado rojo **sobre su propia documentación** — la trampa de
-s146 (rutas entrecomilladas en comentarios) por otra puerta. La comprobación mira el **código sin
-comentarios**: cada fuente se compila con el Babel del build y `comments:false`.
-
-### 16 rojos, y los 17 mordieron a la primera
-
-6 del `verify` y 10 de la suite, todos restaurados **byte a byte con el hash comprobado**. Frente
-a s154, donde **cuatro no mordieron**, aquí ninguno falló, por dos endurecimientos del banco: se
-**exige que la cadena a sustituir aparezca exactamente una vez** (en s154 se rompió la línea
-equivocada) y se invoca el CLI **sin `shell:true`**, para que un `-g` con espacios no llegue
-partido. La calibración va antes de romper nada.
-
-El **guard de cero** necesitó banco propio: su escenario real no es «alguien borra los archivos»
-—eso lo caza la biyección— sino un **refactor legítimo** que mueve el subsistema y actualiza
-`PACE.html`, dejando las cinco comprobaciones mirando al vacío. Se reprodujo **moviendo la
-carpeta**, y se exigió **el mensaje del guard**, no solo el exit 1.
-
-### Retención: implementada, no programada
-
-La ventana de 120 días de §12 está cerrada desde s117 y **destila antes de podar** (el lote se
-funde en `baseline`, se pierde el detalle pero nunca el total). Lo que decide s155 es **cuándo
-corre**: la poda por **calendario** no se programa —sin emisores no hay nada que barrer, y §25 la
-sitúa en la Fase 3—, con el punto de extensión declarado en el código; la poda por **presión de
-presupuesto** sí existe (~500 KB lógicos con `TextEncoder`, reintento único, se conserva el último
-contenedor válido). Declarado en el bloque `NO_CUBRE`.
-
-### Verificación
-
-`npm run verify` **pasa en 7,4 s** con las 5 comprobaciones nuevas y v0.88.0 coherente en los tres
-sitios · **`npm run test:e2e` pasa 23/23 en 29,2 s** contra el artefacto recién regenerado, con las
-13 de s154 **sin una regresión** · **17/17 rojos** · `index.html` con **0 bytes CR** de 1 353 478 ·
-`PACE_standalone.html` restaurado byte-idéntico (`998E3E358D689036`) · en el navegador, con SW y
-cachés purgados: contenedor `READ_WRITE`, activación idempotente, **20 emisiones concurrentes sin
-perder una**, seis snapshots inválidos rechazados sin mover el contenedor, uno de 1,65 MB rechazado
-por presupuesto, **inglés sin regresión** y **consola sin errores**.
-
-Diario: [session-155](./docs/sessions/session-155-eventos-fase-1.md).
 
