@@ -51,13 +51,99 @@
   --breathe-2: #A85E43;
   --breathe-soft: rgba(201, 122, 93, 0.12);
 
-  /* AMANECER de la home (s156). Atmósfera del Pomodoro: halo detrás del aro y
-     línea de alba en el horizonte. Tono propio a propósito — NO se reutiliza
-     --breathe ni --move, que son colores de MÓDULO y harían leer la home como
-     si estuviera señalando una actividad. Ámbar tierra desaturado; el alfa bajo
-     es el que mantiene «luz contenida» en vez de degradado llamativo. */
-  --dawn-soft: rgba(191, 140, 92, 0.13);
-  --dawn-line: rgba(178, 128, 82, 0.34);
+  /* ===================================================================
+     LAS HORAS DEL SOL (s158) · el recorrido del día de la home.
+
+     El aro del Pomodoro no tiene una atmósfera: el aro ES una fuente de luz,
+     y la home lleva superficies que la reflejan. La hora la marcan los
+     segundos: `--pace-k` viaja 0 -> 1 con el avance de la sesión y la luz
+     interpola entre estas cuatro paradas EN OKLAB, que es donde una mezcla
+     azul->ámbar pasa por tonos creíbles en vez de por el gris muerto de sRGB.
+
+       k = 0.00   AMANECER    azul frío, con el núcleo rosa
+       k = 0.38   MEDIODÍA    el pico: crema luminosa sobre ámbar dorado
+       k = 0.72   ATARDECER   ámbar sobre terracota
+       k = 1.00   NOCHE       azul profundo, núcleo plata
+
+     EL FRÍO DEL AMANECER NO ES EL FRÍO DE LA NOCHE, y por eso son dos paradas
+     y no una reutilizada: el primero es un azul claro con un punto rosa (la
+     banda que sale por el horizonte antes de que salga el sol); el segundo es
+     azul profundo y sin nada rosa. Un solo token frío para los dos extremos
+     habría hecho que empezar y terminar se vieran igual.
+
+     CADA HORA SON DOS COLORES, no uno. `core` es el tono pegado al aro y
+     `body` el que se va hacia fuera; el núcleo es siempre un punto más pálido
+     que el cuerpo. Esa doble variación —en el tiempo Y en el espacio— es lo
+     que separa una LUZ de un tinte plano.
+
+     Tono propio a propósito: NO se reutilizan --breathe ni --move, que son
+     colores de MÓDULO y harían leer la home como si señalara una actividad.
+
+     El alfa es la PERILLA de presencia y se ajusta MIRANDO, no de memoria: con
+     0,13 (s156) el pico medido sobre el papel era de 15 unidades y el usuario
+     lo leyó como «no se distingue». --dawn-line se retiró con la línea de alba
+     de 1 px, que era el «filete técnico» que él detectó.
+     =================================================================== */
+  /* SOBRE PAPEL CLARO LA LUZ NO ES MÁS BRILLO, ES MÁS CALOR. Medido: un núcleo
+     crema casi blanco —(255,246,219), que es lo que pedía la regla «el núcleo
+     más pálido que el cuerpo»— produce sobre el papel (242,237,224) una
+     desviación de 7 sobre 255 aunque esté al 78 % de alfa: es invisible, porque
+     el papel YA es casi ese color. En una superficie reflectante no se puede
+     ser más luminoso que el papel; lo que lee como luz es la TEMPERATURA. Los
+     núcleos de la paleta clara son por eso tonos cálidos claros y saturados, no
+     blancos. En oscuro la regla original sí funciona y se conserva.
+
+     CROMA CONTENIDO (calibración de s158 con el usuario). Estos tonos pasaron
+     por una versión más cargada y se bajaron ~10 % de saturación por dos
+     encargos que apuntan al mismo sitio: el pico de mediodía dominaba la home,
+     y el halo llegaba a leerse como una AMPLIACIÓN DEL ARCO. El arco recorre
+     terracota -> ocre -> oliva (interpolateRingColor, TimerDial.jsx) y comparte
+     franja con estos ámbares; bajando su saturación el halo deja de competir y
+     pasa a acompañar. Arco = información; halo = ambiente. */
+  --sun-dawn-core: rgba(234, 172, 182, 0.50);
+  --sun-dawn-body: rgba(136, 152, 200, 0.42);
+  --sun-noon-core: rgba(252, 218, 158, 0.70);
+  --sun-noon-body: rgba(226, 170, 96, 0.62);
+  --sun-dusk-core: rgba(240, 162, 110, 0.58);
+  --sun-dusk-body: rgba(182, 104, 80, 0.46);
+  --sun-night-core: rgba(136, 156, 200, 0.48);
+  --sun-night-body: rgba(74, 96, 142, 0.45);
+  /* LA SOMBRA DEL SOL (s158). Solo la paleta clara la usa. Sobre papel crema no
+     se puede ser más luminoso que el papel, así que la única forma de que lo
+     iluminado LEA como iluminado es restar donde no llega el sol: es como se
+     pinta la luz. Tono de la familia de la tinta y ligeramente frío, para que
+     el contraste con el ámbar sea de temperatura además de valor. */
+  --sun-shade: rgba(84, 82, 72, 0.13);
+  /* EL BORDE FRÍO (s158). El aire dispersa el azul, así que la luz del sol se
+     enfría en su último tramo antes de morir. No es un quinto par de tokens: la
+     luz se MEZCLA hacia este tono, así que el borde sigue la hora sola — al
+     anochecer, cuando la luz ya es azul, esta mezcla no hace nada, que es
+     justo lo correcto. */
+  --sun-rim: rgba(118, 136, 174, 0.55);
+  /* CUÁNTA LUZ LLEGA ARRIBA (s158). El halo sigue siendo un círculo completo,
+     pero por encima del aro solo hay ~59 px hasta los chips de minutos y ahí la
+     luz competía con ellos. Esto es una caída vertical MUY larga —cruza los
+     536 px de la caja del limbo, o sea un 0,05 % por píxel—, así que atenúa sin
+     dejar frontera ni recorte visible. En oscuro se atenúa menos: allí el papel
+     absorbe y la luz superior no molesta igual. */
+  --sun-top: 0.72;
+  /* La sombra que la luz PROYECTA sobre chips y tarjeta. Fría a propósito: una
+     sombra es ausencia de luz cálida, no luz de otro color. Y muy baja — PACE
+     prohibe las sombras exageradas y el listón del usuario es «que se note si
+     comparas con y sin sesión, no si miras una sola pantalla».
+     s159: 0,18 -> 0,10, mirando las cuatro variantes a tamaño real. A 0,18 se
+     leía como sombra DIBUJADA («muy dura y visual», palabras del usuario); a
+     0,10 apoya los chips en la escena sin reclamar la mirada. Ojo: el otro
+     defecto que reportó a la vez —que entraba y salía de golpe— NO era este
+     valor sino una transición rival, y se arregló en _responsive.js moviendo el
+     drop-shadow del chip al grid. Bajar el alfa sin aquello habría tapado el
+     síntoma dejando el corte. */
+  --sun-cast: rgba(58, 54, 44, 0.10);
+  /* CUÁNTO SE RECOGE LA LUZ AL PAUSAR. Es un valor POR PALETA y no por gusto:
+     sobre papel claro la luz trabaja por temperatura y no por brillo, así que
+     la misma recogida se percibe menos. Mirando las cuatro variantes al 50 %
+     del bloque, 0,45 lee bien en oscuro y se queda corta en claro. */
+  --sun-pausa: 0.35;
 
   --move: #9A7B4F;
   --move-soft: rgba(154, 123, 79, 0.12);
@@ -174,11 +260,42 @@
   --breathe: #D99477;
   --breathe-2: #E8A98F;
   --breathe-soft: rgba(217, 148, 119, 0.14);
-  /* Amanecer (s156): sobre papel oscuro la misma luz necesita algo más de
-     cuerpo para no desaparecer, pero se mantiene por debajo del umbral en que
-     el halo competiría con el número. */
-  --dawn-soft: rgba(214, 165, 116, 0.16);
-  --dawn-line: rgba(222, 176, 128, 0.30);
+  /* Las horas del sol en oscuro (s158). Sobre papel oscuro la misma luz
+     necesita algo más de cuerpo para no desaparecer, y los tonos suben de
+     valor: un azul profundo de paleta clara sobre #1d1a14 sería un agujero
+     negro, no una luz. La noche se resuelve aquí con azules CLAROS y alfa
+     baja — luz de luna, no ausencia de luz.
+
+     La calibración de s158 toca aquí MENOS que en claro, a propósito: el
+     usuario valida esta atmósfera. Solo baja el ámbar del mediodía (~12 %,
+     porque seguía dominando) y SUBEN las dos paradas de la noche, para que el
+     final del ciclo no se quede en un aro verde aislado sobre fondo plano —lo
+     que paso con 0,23 y 0,25: el aro verde flotaba solo—. La noche es el unico
+     momento en que la luz SUBE respecto a la version anterior. */
+  --sun-dawn-core: rgba(233, 186, 188, 0.24);
+  --sun-dawn-body: rgba(150, 168, 208, 0.22);
+  --sun-noon-core: rgba(255, 248, 226, 0.30);
+  --sun-noon-body: rgba(238, 192, 124, 0.26);
+  --sun-dusk-core: rgba(240, 178, 126, 0.25);
+  --sun-dusk-body: rgba(204, 124, 90, 0.23);
+  --sun-night-core: rgba(180, 194, 222, 0.31);
+  --sun-night-body: rgba(124, 148, 192, 0.34);
+  /* En oscuro la luz de arriba molesta menos: el papel absorbe y los chips
+     tienen su propio relleno. Se atenua, pero menos que en claro. */
+  --sun-top: 0.80;
+  /* Sin sombra en oscuro, A PROPOSITO y no por olvido: aqui el contraste ya lo
+     da el papel, el usuario valida la atmosfera tal como esta, y restar sobre
+     #1d1a14 solo abriria agujeros negros alrededor del aro. */
+  --sun-shade: rgba(0, 0, 0, 0);
+  --sun-rim: rgba(150, 172, 208, 0.50);
+  /* La sombra proyectada vale cero aqui: sobre papel oscuro un chip no
+     puede proyectar mas oscuridad de la que ya hay. Lo que lo despega es el
+     FILO, que si funciona en las dos paletas. */
+  --sun-cast: rgba(0, 0, 0, 0);
+  /* En oscuro la recogida de la pausa se lee con menos caida: aqui la luz si
+     trabaja por brillo y 0,45 basta para que la sesion quede recogida sin
+     parecer terminada. */
+  --sun-pausa: 0.45;
 }
 
 /* TIPOGRAFÍAS ALT */
@@ -310,7 +427,11 @@ html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
    espectaculo (regla "sin sombras exageradas"). El color sale de
    --focus-soft (theme-aware; se ve verde en foco/larga y neutro-
    calido de fondo en pausa -- aceptable por lo tenue). */
-[data-pace-dial-running]::after {
+/* s157: EXCLUIDA la home. Medido, este glow aportaba 1,7/255 y solo en el
+   borde exterior — codigo vivo que no se veia. Donde hay corona (s.157) seria
+   ademas una segunda luz de otro color compitiendo con la del amanecer. Sigue
+   en Caminos, que no lleva [data-pace-dial-fit] y no tiene corona. */
+[data-pace-dial-running]:not([data-pace-dial-fit])::after {
   content: '';
   position: absolute;
   inset: 6%;

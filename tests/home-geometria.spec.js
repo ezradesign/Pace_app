@@ -1,5 +1,5 @@
-/* PACE · E2E · GEOMETRIA DE LA HOME (s156)
- * =========================================
+/* PACE · E2E · GEOMETRIA DE LA HOME (s156, troceado en s159)
+ * ==========================================================
  * Defiende el motor de geometria (`app/main/home-geometry.js`) y el contrato
  * que el CSS deriva de el (`app/main/_responsive.js`).
  *
@@ -17,101 +17,15 @@
  * comprueba que el motor gobierna, que recorte y solapamiento salen de la
  * MISMA fuente y que el orden visual es el canonico. Los unicos numeros son
  * los limites que el propio modulo declara.
+ *
+ * s159: la ATMOSFERA se va a `home-luz.spec.js` y las utilidades compartidas a
+ * `home.helpers.js` — el archivo habia llegado a 631 lineas.
  */
 'use strict';
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, capturarErrores, irAlArtefacto } = require('./helpers');
-
-/* Camino en curso, con la forma EXACTA que escribe `startPath()`
-   (state-paths.jsx:16-22). No se borra ningun nodo del DOM: el estado es real
-   y la tarjeta desaparece porque `SuggestedPathCard` retorna null (:218). */
-const CAMINO_ACTIVO = {
-  paths: {
-    current: { id: 'path.breath', stepIndex: 0, startedAt: 1, skippedSteps: [], doneCount: 0 },
-    lastViewed: 'path.breath',
-    completed: {},
-    favorite: null,
-  },
-};
-
-/* Sonda unica. Devuelve lo medido en la pagina, sin interpretar nada aqui.
-   GUARD DE CERO: si no hay ni un aro, `dial` viene a null y todo aserto que
-   lo use falla con mensaje propio en vez de pasar por vacio. */
-function sonda(page) {
-  return page.evaluate(() => {
-    const q = s => document.querySelector(s);
-    const caja = el => {
-      if (!el) return null;
-      const b = el.getBoundingClientRect();
-      return { w: +b.width.toFixed(1), h: +b.height.toFixed(1), top: +b.top.toFixed(1), bottom: +b.bottom.toFixed(1) };
-    };
-    const dial = q('[data-pace-dial-fit]');
-    const spc = q('[data-pace-spc]');
-    const act = q('[data-pace-activitybar]');
-    const body = q('[data-pace-home-body]');
-    const raiz = getComputedStyle(document.documentElement);
-
-    /* El recorte real, en px, leido del clip-path computado. */
-    let recorte = null;
-    if (dial) {
-      const m = /inset\(([^)]*)\)/.exec(getComputedStyle(dial).clipPath || '');
-      if (m) {
-        const partes = m[1].trim().split(/\s+/).map(parseFloat);
-        // inset(0px) => todos iguales; inset(a b c d) => c es el inferior
-        recorte = partes.length >= 3 ? partes[2] : partes[0];
-      }
-    }
-    /* El bloque que hace de HORIZONTE se elige por POSICION, no por selector:
-       es el primero que aparece debajo del aro. En movil es la tarjeta; en
-       Desktop el `order` de _responsive.js pone Actividades ahi y manda la
-       tarjeta al fondo. Elegir `spc || act` a secas mide contra el bloque
-       equivocado en Desktop — comprobado. */
-    const horizonte = [spc, act]
-      .filter(Boolean)
-      .map(el => [el, el.getBoundingClientRect().top])
-      .filter(([, t]) => dial && t > dial.getBoundingClientRect().top)
-      .sort((a, b) => a[1] - b[1])
-      .map(([el]) => el)[0] || null;
-
-    return {
-      hayDial: !!dial,
-      haySpc: !!spc,
-      hayAct: !!act,
-      D: raiz.getPropertyValue('--pace-timer-d').trim(),
-      solape: raiz.getPropertyValue('--pace-activities-overlap').trim(),
-      recorte,
-      // Solape REAL: cuanto del aro queda por debajo del borde superior del horizonte.
-      solapeReal: (dial && horizonte) ? +(caja(dial).bottom - caja(horizonte).top).toFixed(1) : null,
-      dial: caja(dial), spc: caja(spc), act: caja(act),
-      desbordeV: body ? body.scrollHeight - body.clientHeight : null,
-      desbordeH: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      ordenVisual: [
-        dial ? ['dial', caja(dial).top] : null,
-        spc ? ['spc', caja(spc).top] : null,
-        act ? ['act', caja(act).top] : null,
-      ].filter(Boolean).sort((a, b) => a[1] - b[1]).map(x => x[0]).join(' > '),
-    };
-  });
-}
-
-const px = v => (v === '' || v == null) ? null : parseFloat(v);
-
-/* TRAMPA MEDIDA (s156). `[data-pace-main-content]` entra con la animacion
-   `pace-module-in`, que lo desplaza 10 px durante 640 ms (tokens.css). Medir
-   rectangulos antes de que termine da diferencias de hasta 10 px EXACTOS entre
-   el aro y el bloque de abajo, y lleva a reportar una desincronizacion que no
-   existe. Se espera a que las animaciones acaben —no un timeout al azar— y a
-   dos frames, que es lo que tarda el motor en reaccionar a cualquier cambio. */
-async function asentar(page) {
-  await page.evaluate(async () => {
-    const mc = document.querySelector('[data-pace-main-content]');
-    if (mc && mc.getAnimations) {
-      await Promise.all(mc.getAnimations().map(a => a.finished.catch(() => {})));
-    }
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-  });
-}
+const { CAMINO_ACTIVO, sonda, px, asentar } = require('./home.helpers');
 
 test.describe('geometria de la home · el motor gobierna', () => {
   test('con la tarjeta presente publica diametro y solapamiento', async ({ page, context }) => {
@@ -175,7 +89,12 @@ test.describe('geometria de la home · recorte y solapamiento', () => {
      desincronizarse nunca». Hasta s156 era falso: los consumidores tenian
      fallbacks DISTINTOS (la tarjeta caia a la estimacion CSS, el clip-path a
      0px), asi que con el motor apagado la tarjeta subia 41,7 px sobre un aro
-     SIN recortar. Esto lo aserta en los dos estados. */
+     SIN recortar. Esto lo aserta en los dos estados.
+
+     s158: el aro ya no se CORTA en el horizonte, se DESVANECE ahi (el arco de
+     recorrido completa los 360 grados). El invariante no cambia ni un apice
+     —los dos siguen saliendo de --pace-horizon—, solo cambia de donde se lee:
+     antes del inset del clip-path, ahora de la parada central de la mascara. */
   for (const [nombre, extra] of [['con tarjeta', null], ['con Camino activo', CAMINO_ACTIVO]]) {
     test('van juntos ' + nombre, async ({ page, context }) => {
       await sembrar(context, extra);
@@ -187,8 +106,12 @@ test.describe('geometria de la home · recorte y solapamiento', () => {
       expect(m.hayDial, 'GUARD: no hay ningun aro en la home').toBe(true);
       const solape = px(m.solape);
       expect(solape, 'sin solapamiento publicado no hay nada que comparar').toBeGreaterThan(0);
-      expect(m.recorte, 'el aro no lleva recorte').not.toBeNull();
-      expect(Math.abs(m.recorte - solape), 'el recorte del aro no vale el solapamiento publicado').toBeLessThanOrEqual(1);
+      expect(m.recorte, 'el aro no lleva horizonte: no hay mascara con tres paradas').not.toBeNull();
+      /* GUARD de la lectura: si la rampa dejara de ser simetrica, la parada del
+         medio ya no seria el horizonte y el aserto de abajo compararia contra
+         un numero cualquiera de los tres. */
+      expect(m.rampaSimetrica, 'la rampa del horizonte no es simetrica: la lectura del medio no vale').toBe(true);
+      expect(Math.abs(m.recorte - solape), 'el horizonte del aro no vale el solapamiento publicado').toBeLessThanOrEqual(1);
       expect(Math.abs(m.solapeReal - solape), 'el bloque que hace de horizonte no sube el solapamiento publicado').toBeLessThanOrEqual(1);
     });
   }
@@ -249,82 +172,105 @@ test.describe('geometria de la home · composicion', () => {
   });
 });
 
-test.describe('geometria de la home · atmosfera de amanecer', () => {
-  /* Los estados se comprueban por ATRIBUTO, no por color: el aserto sigue
-     valiendo aunque manana se cambie el tono del amanecer. */
-  test('reposo, activo y pausado se distinguen por atributo estable', async ({ page, context }) => {
-    await sembrar(context);
-    await irAlArtefacto(page);
-    const dial = page.locator('[data-pace-dial-fit]');
+/* ===================================================================
+   EL CENTRO (s159) · aro, arco, numero y luz comparten centro, y ese
+   centro es el de la columna de la home.
 
-    /* TRAMPA MEDIDA (s156): la opacidad del halo se TRANSICIONA (640 ms), asi
-       que leerla justo tras el click devuelve un valor a medio camino — 0.78
-       entre 1 y 0.42, comprobado. Se leen las variables declarativas, que no se
-       animan, y aparte se comprueba UNA vez que el halo las consume de verdad
-       en reposo, donde no hay ninguna transicion en vuelo. */
-    const leerEstado = () => page.evaluate(() => {
-      const d = document.querySelector('[data-pace-dial-fit]');
-      const mc = document.querySelector('[data-pace-main-content]');
-      return {
-        running: d.hasAttribute('data-pace-dial-running'),
-        paused: d.hasAttribute('data-pace-dial-paused'),
-        halo: getComputedStyle(d).getPropertyValue('--pace-dawn').trim(),
-        alba: getComputedStyle(mc).getPropertyValue('--pace-alba').trim(),
-        haloPintado: getComputedStyle(d, '::before').opacity,
-      };
-    });
+   NACIO ROJO contra el producto — y tambien contra HEAD v0.89.0, servido
+   en paralelo: +11,80 px a 320, +11,89 a 360, +12,00 a 375 y +12,09 a
+   390. O sea que el defecto es PREVIO y estaba publicado; la atmosfera
+   de s158 solo lo hizo VISIBLE, porque el halo esta anclado al aro y
+   arrastra ese error a un campo de luz de 790 px de ancho.
 
-    const reposo = await leerEstado();
-    expect(reposo.running, 'en reposo no debe haber marca de «corriendo»').toBe(false);
-    expect(reposo.paused, 'en reposo no debe haber marca de «pausado»').toBe(false);
-    expect(Number(reposo.haloPintado), 'el halo no consume --pace-dawn').toBeCloseTo(Number(reposo.halo), 2);
+   LA CAUSA, medida y no deducida: el motor publica `--pace-dial-d` =
+   0,92 · W del VIEWPORT, y la raiz de FocusTimer suma ademas un padding
+   lateral de `clamp(0px, 4vw, 40px)` que ese techo no descuenta. Su
+   max-content (D + 2·4vw = 390,19 px a 390) no cabe en el ancho util de
+   [data-pace-main-content] (366 px), que es un grid de UNA sola pista
+   `auto`: la pista crece hasta 390,19, DESBORDA el contenedor y — por
+   defecto — se coloca desde el START en vez de centrarse. La mitad de
+   ese desborde es la desviacion.
 
-    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
-    await expect(dial).toHaveAttribute('data-pace-dial-running', '');
-    const activo = await leerEstado();
-    expect(activo.paused, 'corriendo no es pausado').toBe(false);
+   SE MIDE CONTRA LA COLUMNA, nunca contra el viewport: en escritorio la
+   home empieza despues del sidebar y su centro no es 50vw. Asi el mismo
+   aserto vale en las dos pieles sin un solo numero propio.
+   =================================================================== */
+const centros = (page) => page.evaluate(() => {
+  const cx = (sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return +(r.left + r.width / 2).toFixed(2);
+  };
+  const home = document.querySelector('[data-pace-home-body]').getBoundingClientRect();
+  return {
+    columna: +(home.left + home.width / 2).toFixed(2),
+    dial: cx('[data-pace-dial-fit]'),
+    arco: cx('[data-pace-dial-fit] svg'),
+    numero: cx('[data-pace-dial-number]'),
+    sol: cx('[data-pace-sun]'),
+    desbordeH: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  };
+});
 
-    await page.getByRole('button', { name: 'Pausar', exact: true }).click();
-    await expect(dial).toHaveAttribute('data-pace-dial-paused', '');
-    const pausado = await leerEstado();
-    expect(pausado.running, 'pausado no es corriendo').toBe(false);
+function asertarCentros(m, tolerancia) {
+  expect(m.dial, 'GUARD: no hay aro que medir').not.toBeNull();
+  expect(m.arco, 'GUARD: no hay arco que medir').not.toBeNull();
+  expect(m.numero, 'GUARD: no hay numero que medir').not.toBeNull();
+  expect(m.sol, 'GUARD: no existe el nodo de la luz').not.toBeNull();
+  /* Primero: las cuatro piezas van juntas. Si esto falla, el problema es
+     de anclaje y no de centrado, y el mensaje debe decirlo. */
+  expect(Math.abs(m.arco - m.dial), 'el arco no comparte centro con el aro').toBeLessThanOrEqual(tolerancia);
+  expect(Math.abs(m.numero - m.dial), 'el numero no comparte centro con el aro').toBeLessThanOrEqual(tolerancia);
+  expect(Math.abs(m.sol - m.dial), 'la luz no esta anclada al aro').toBeLessThanOrEqual(tolerancia);
+  // Y despues: ese centro comun es el de la columna.
+  expect(Math.abs(m.dial - m.columna),
+    'el bloque del Pomodoro no esta centrado en la columna (desviacion ' + (m.dial - m.columna).toFixed(2) + ' px)')
+    .toBeLessThanOrEqual(tolerancia);
+  expect(m.desbordeH, 'el documento desborda a lo ancho').toBeLessThanOrEqual(0);
+}
 
-    /* Los tres se ven distintos, y de forma ORDENADA: activo mas luz que
-       reposo, y pausado menos que reposo. Sin fijar los valores. */
-    expect(Number(activo.halo)).toBeGreaterThan(Number(reposo.halo));
-    expect(Number(pausado.halo)).toBeLessThan(Number(reposo.halo));
-    expect(Number(activo.alba)).toBeGreaterThan(Number(pausado.alba));
-  });
-
-  test('la linea de alba se ancla al mismo horizonte que el recorte', async ({ page, context }) => {
+test.describe('geometria de la home · el centro', () => {
+  test('escritorio: el aro se centra en su columna, no en el viewport', async ({ page, context }) => {
     await sembrar(context);
     await irAlArtefacto(page);
     await asentar(page);
-    const m = await sonda(page);
-    expect(m.hayDial, 'GUARD: no hay ningun aro en la home').toBe(true);
-    const alba = await page.evaluate(() =>
-      getComputedStyle(document.querySelector('[data-pace-main-content]'), '::after').bottom);
-    expect(parseFloat(alba), 'el alba no esta en la linea del horizonte').toBeCloseTo(px(m.solape), 0);
+    asertarCentros(await centros(page), 1);
   });
 
-  test.describe('reduced-motion', () => {
-    test('las transiciones decorativas quedan neutralizadas', async ({ page, context }) => {
-      /* `test.use({ reducedMotion })` NO llego a aplicarse aqui (comprobado con
-         el guard de abajo: el media query salia false), asi que se emula de
-         forma explicita sobre la pagina. */
-      await page.emulateMedia({ reducedMotion: 'reduce' });
+  /* Los cuatro anchos de telefono reales. La desviacion medida crecia con
+     el ancho (11,80 -> 12,09) porque es la mitad del padding sobrante, y
+     ese padding es 4vw: proporcional. Un solo ancho no lo habria contado. */
+  for (const ancho of [320, 360, 375, 390]) {
+    test.describe(ancho + ' px', () => {
+      test.use({ viewport: { width: ancho, height: 844 } });
+
+      test('el aro, su arco, su numero y su luz comparten centro', async ({ page, context }) => {
+        await sembrar(context);
+        await irAlArtefacto(page);
+        await asentar(page);
+        asertarCentros(await centros(page), 1);
+      });
+    });
+  }
+
+  test.describe('con la sesion viva', () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+
+    /* Con luz encendida, que es donde se ve: si el halo se descolgara del
+       aro solo al iluminarse, el aserto de arriba pasaria y el usuario
+       seguiria viendo el sol torcido. */
+    test('encender la luz no descoloca ni el aro ni el halo', async ({ page, context }) => {
       await sembrar(context);
       await irAlArtefacto(page);
-      const dur = await page.evaluate(() => ({
-        mq: matchMedia('(prefers-reduced-motion: reduce)').matches,
-        halo: getComputedStyle(document.querySelector('[data-pace-dial-fit]'), '::before').transitionDuration,
-        alba: getComputedStyle(document.querySelector('[data-pace-main-content]'), '::after').transitionDuration,
-      }));
-      // GUARD: sin el media query activo esta prueba no demuestra nada.
-      expect(dur.mq, 'el contexto no esta en prefers-reduced-motion: reduce').toBe(true);
-      // El kill global de tokens.css deja 0.01ms; lo que importa es que no sea perceptible.
-      expect(parseFloat(dur.halo), 'la transicion del halo sigue viva con reduced-motion').toBeLessThan(0.05);
-      expect(parseFloat(dur.alba), 'la transicion del alba sigue viva con reduced-motion').toBeLessThan(0.05);
+      await asentar(page);
+      const apagada = await centros(page);
+      await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+      await expect(page.locator('[data-pace-dial-fit]')).toHaveAttribute('data-pace-dial-running', '');
+      await asentar(page);
+      const encendida = await centros(page);
+      asertarCentros(encendida, 1);
+      expect(encendida.dial, 'encender la luz mueve el aro').toBeCloseTo(apagada.dial, 1);
     });
   });
 });

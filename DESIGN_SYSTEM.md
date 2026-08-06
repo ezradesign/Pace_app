@@ -43,8 +43,15 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--focus-2` | `#2A3E27` | Acento Foco oscuro |
 | `--focus-soft` | `rgba(62,90,58,0.10)` | Fondos sutiles Foco |
 | `--focus-cta` | `#50624D` | **CTAs "Comenzar"** principales (s77b): Pomodoro home + Camino sugerido + cada Camino en la biblioteca. Verde apagado equilibrado (mas gris que `--focus` puro). NO usar para acciones secundarias |
-| `--dawn-soft` | `rgba(191,140,92,0.13)` | **Amanecer de la home** (s156): halo detrás del aro del Pomodoro. Ámbar tierra desaturado, con tono PROPIO — no se reutilizan `--breathe` ni `--move`, que son colores de MÓDULO y harían leer la home como si señalara una actividad |
-| `--dawn-line` | `rgba(178,128,82,0.34)` | **Línea de alba** (s156): el horizonte, desvanecido por los dos extremos |
+| `--sun-dawn-core` / `-body` | `rgba(234,172,182,0.50)` / `rgba(136,152,200,0.42)` | **Las horas del sol** (s158/s159), la luz de la home. Tono PROPIO — no se reutilizan `--breathe` ni `--move`, que son colores de MÓDULO y harían leer la home como si señalara una actividad. **Amanecer**: azul frío con el núcleo rosa |
+| `--sun-noon-core` / `-body` | `rgba(252,218,158,0.70)` / `rgba(226,170,96,0.62)` | **Mediodía**, el pico. En la paleta clara el núcleo es cálido y saturado, **no blanco**: sobre papel crema no se puede ser más luminoso que el papel, y lo que lee como luz es la temperatura |
+| `--sun-dusk-core` / `-body` | `rgba(240,162,110,0.58)` / `rgba(182,104,80,0.46)` | **Atardecer**: ámbar sobre terracota |
+| `--sun-night-core` / `-body` | `rgba(136,156,200,0.48)` / `rgba(74,96,142,0.45)` | **Noche**: azul profundo, núcleo plata. **No es el frío del amanecer** — aquel lleva rosa; por eso son dos paradas y no una reutilizada |
+| `--sun-rim` | `rgba(118,136,174,0.55)` | **El borde frío**: el aire dispersa el azul, así que la luz se enfría en su último tramo. La luz se MEZCLA hacia este tono, así que al anochecer la mezcla no hace nada — que es lo correcto |
+| `--sun-shade` | `rgba(84,82,72,0.13)` | **La sombra del sol**, solo en la paleta clara: la única forma de que lo iluminado lea como iluminado sobre papel crema es **restar donde no llega el sol**. Vive DENTRO de la caída de la luz, así que muere donde ella y no puede tocar ningún borde |
+| `--sun-cast` | `rgba(58,54,44,0.10)` | La sombra que la luz **proyecta** sobre los chips. Fría a propósito —una sombra es ausencia de luz cálida, no luz de otro color— y muy baja: a 0,18 leía como sombra dibujada (s159) |
+| `--sun-top` | `0.72` | Cuánta luz llega **arriba**. Sobre el aro solo hay ~59 px hasta los chips; la caída cruza los 536 px de la caja del limbo, o sea un 0,05 % por píxel: atenúa sin dejar frontera |
+| `--sun-pausa` | `0.35` | Cuánto se recoge la luz al **pausar**. Valor por PALETA: sobre papel claro la misma recogida se percibe menos, así que en oscuro es 0,45 |
 | `--breathe` | `#C97A5D` | Acento Respira |
 | `--breathe-2` | `#A85E43` | Acento Respira oscuro |
 | `--breathe-soft` | `rgba(201,122,93,0.12)` | Fondos sutiles Respira |
@@ -92,8 +99,15 @@ como estética noche, no se reemplaza).
 | `--breathe` | `#D99477` |
 | `--breathe-2` | `#E8A98F` |
 | `--breathe-soft` | `rgba(217,148,119,0.14)` |
-| `--dawn-soft` | `rgba(214,165,116,0.16)` | Amanecer (s156). Sobre papel oscuro la misma luz necesita algo mas de cuerpo para no desaparecer, pero se mantiene por debajo del umbral en que competiria con el numero |
-| `--dawn-line` | `rgba(222,176,128,0.30)` | Linea de alba (s156) |
+| `--sun-dawn-core` / `-body` | `rgba(233,186,188,0.24)` / `rgba(150,168,208,0.22)` | **Las horas del sol en oscuro** (s158/s159). Los tonos SUBEN de valor: un azul profundo de paleta clara sobre `#1d1a14` seria un agujero negro, no una luz |
+| `--sun-noon-core` / `-body` | `rgba(255,248,226,0.30)` / `rgba(238,192,124,0.26)` | Mediodia. Aqui la regla «el nucleo mas palido que el cuerpo» SI funciona y se conserva |
+| `--sun-dusk-core` / `-body` | `rgba(240,178,126,0.25)` / `rgba(204,124,90,0.23)` | Atardecer |
+| `--sun-night-core` / `-body` | `rgba(180,194,222,0.31)` / `rgba(124,148,192,0.34)` | Noche: azules CLAROS con alfa baja — **luz de luna, no ausencia de luz**. Es el unico momento del ciclo cuya luz subio respecto a la version anterior: con 0,23 el final se quedaba en un aro verde flotando sobre fondo plano |
+| `--sun-rim` | `rgba(150,172,208,0.50)` | El borde frio |
+| `--sun-shade` | `rgba(0,0,0,0)` | **Cero A PROPOSITO, no por olvido**: aqui el contraste ya lo da el papel, y restar sobre `#1d1a14` solo abriria agujeros negros alrededor del aro |
+| `--sun-cast` | `rgba(0,0,0,0)` | Tambien cero: sobre papel oscuro un chip no puede proyectar mas oscuridad de la que ya hay. Lo que lo despega es el **filo**, que si funciona en las dos paletas |
+| `--sun-top` | `0.80` | Se atenua menos que en claro: el papel absorbe y la luz superior no molesta igual |
+| `--sun-pausa` | `0.45` | La recogida al pausar. Aqui la luz si trabaja por brillo y 0,45 basta para que la sesion quede recogida sin parecer terminada |
 
 ### Papel envejecido
 
@@ -352,10 +366,48 @@ alturas ≤512px muy por debajo. Ver `docs/product/AUDITORIA_SISTEMA_PACE.md` §
 
 ---
 
-### Amanecer del Pomodoro (s156 · v0.89.0)
+### La luz del Pomodoro (s159 · v0.90.0 — REEMPLAZA el amanecer de s156)
 
-La home tiene atmosfera propia: **halo detras del aro** y **linea de alba en el
-horizonte**. Dos reglas y ni una mas.
+**El aro no TIENE una atmosfera: el aro ES una fuente de luz**, y la home lleva
+superficies que la reflejan mientras hay sesion. Con el Pomodoro parado la home
+queda **limpia** — no «fria y tenue»: nada.
+
+**Dos capas, y las dos beben de los mismos tokens.** **LIMBO**
+(`[data-pace-sun]::before`): corona corta de 1,32 D que abraza el aro en los 360°,
+atenuada arriba por `--sun-top` porque sobre el aro solo hay ~59 px hasta los chips.
+**BLOOM** (`::after`): derrame de 2,2 × 1,42 D, direccional hacia abajo, con la luz
+muriendo a 0,84 D. Alcance largo **solo donde hay sitio**. Ninguna de las dos
+desborda el contenedor de scroll: **quien decide donde acaba la luz es el
+degradado**, nunca el borde de una caja.
+
+**Cuatro horas del dia, interpoladas en OKLAB**: amanecer (0) → mediodia (0,38) →
+atardecer (0,72) → noche (1). **El frio del amanecer NO es el frio de la noche** —el
+primero es azul con un punto rosa, el segundo azul profundo—, por eso son dos
+paradas y no una reutilizada. Cada hora son **dos** colores: `core` pegado al aro y
+`body` hacia fuera.
+
+**Cinco mandos, ninguno hace el trabajo de otro** (los publica `FocusTimer` en
+`[data-pace-home-body]`): `--pace-k` la hora · `--pace-i` la envolvente · `--pace-on`
+el interruptor (fundido 1,6 s) · `--pace-pausado` la pausa (fundido 500 ms) ·
+`--pace-arco` el tono del recorrido, que **tiñe la cola**: bajo el horizonte no hay
+tiempo, hay luz. **El estado nunca se comunica solo con la luz**: el numero, el CTA
+y «Reiniciar bloque» ya lo dicen.
+
+**El recorrido respira desde la mitad.** El maximo perceptual —presencia y calor—
+cae en **p=0,50**, con una meseta muy tendida entre 45 y 55 % que **sale de la
+curva** (pendiente cero en el pico) en vez de ser un tramo plano. La bajada usa otra
+curva que **llega al final descendiendo**, para que el residuo frio sea residuo y no
+un repunte.
+
+**Al calibrar, dos cosas que no son intuitivas.** Sobre **papel claro** la luz no es
+mas brillo: es mas **calor** —el papel ya es casi tan claro como cualquier nucleo—,
+asi que en la paleta crema los nucleos son tonos calidos saturados y no blancos, y
+hay una **sombra** (`--sun-shade`) porque la unica forma de que lo iluminado lea como
+iluminado es **restar donde no llega el sol**. Y la **saturacion del halo se mantiene
+por debajo de la del arco**: el arco es informacion y el halo ambiente; cuando se
+igualaron, el halo se leia como una ampliacion del arco.
+
+Lo que sigue vale igual para esta version:
 
 **Fuente unica de la geometria.** Todo lo que dependa del diametro o del horizonte
 consume `--pace-dial-d` y `--pace-horizon`, definidas **solo** en `_responsive.js`
@@ -364,9 +416,10 @@ sobre `[data-pace-home-body]`. Ahi, y solo ahi, se decide si manda el motor
 consumo**: cuando cada consumidor traia el suyo, con el motor apagado la tarjeta
 subia sobre un aro sin recortar (s156).
 
-**El halo se recorta con el aro.** Vive en `[data-pace-dial-fit]::before`, dentro
-del elemento que lleva el `clip-path`, de modo que la luz emerge **de detras del
-horizonte** en vez de flotar sobre el. z-index 0; el interior del dial va en 1.
+**La luz vive FUERA del elemento recortado** (s158, corrige a s156): en
+`[data-pace-sun]`, hermano del aro y sin `clip-path`. Metida dentro, el recorte la
+cortaba con una arista recta de 54-68 unidades en 1 px — lo que se leyo como «limite
+tecnico». z-index 0; el interior del dial va en 1.
 
 **No se inventa curva de luz.** El degradado sale de `paceGlowRamp()` y el grano de
 `paceGrainUrl()`, ambos en `app/ui/SessionShell.jsx` — la fuente canonica desde
@@ -375,12 +428,11 @@ Duplicar las paradas en CSS crearia una segunda curva que divergiria a la primer
 correccion. **El grano no es decoracion**: sobre papel plano un degradado de esta
 amplitud bandea, y va enmascarado con la MISMA caida que la luz.
 
-**Estados por atributo, intensidad por variable.** `data-pace-dial-running` y
-`data-pace-dial-paused` (declarativo, sin logica de temporizador) mueven
-`--pace-dawn` (0.72 / 1 / 0.42) y `--pace-alba` (0.8 / 1 / 0.45). **El color nunca
-es la unica señal**: el numero, el CTA y «Reiniciar bloque» ya dicen el estado. Las
-transiciones son decorativas y no cuelgan de `data-pace-essential`, asi que el kill
-de `prefers-reduced-motion` las neutraliza.
+**Las transiciones son decorativas** y no cuelgan de `data-pace-essential`, asi que
+el kill de `prefers-reduced-motion` las neutraliza. **Y ninguna puede perseguir a
+otra**: un efecto que cuelgue de la luz no puede vivir en un elemento que ya tenga
+`transition` propia — los chips llevan una de 0,22 s inline para su hover, y por eso
+la sombra proyectada se declara en el **grid**, no en el chip.
 
 **Reparto del sobrante en movil.** En telefonos el aro topa por ANCHO y sobra alto
 por construccion. `--pace-home-slack` lleva el sobrante REAL medido y el CSS lo

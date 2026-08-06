@@ -94,6 +94,18 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
          data-pace-dial-paused={paused ? '' : undefined}
          data-pace-dial-fit={fitHeight ? '' : undefined}
          style={fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame}>
+      {/* ENVOLTORIO DEL ANILLO (s158). Existe por una razon concreta: hasta
+          ahora el horizonte se hacia con `clip-path` sobre el MARCO, o sea con
+          un corte seco que se llevaba por delante el arco de recorrido. El
+          usuario pidio que el arco se COMPLETE los 360 grados aunque pase por
+          detras de los chips, atenuandose al cruzar el horizonte en vez de
+          desaparecer. Eso es una mascara con degradado, y no puede ir en el
+          <svg>: uno de los dos va ROTADO -90deg y la mascara rotaria con el.
+          Tampoco puede ir en el marco, que contiene el numero y el CTA. Va
+          aqui, en una capa que solo envuelve al anillo.
+          La regla la pone _responsive.js y SOLO bajo [data-pace-dial-fit]:
+          Caminos no lo lleva y su anillo queda intacto. */}
+      <div data-pace-dial-ring style={timerDialStyles.ringLayer}>
       {ticks ? (
         <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
@@ -149,6 +161,7 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
           )}
         </svg>
       )}
+      </div>
 
       <div style={timerDialStyles.inner}>
         {/* data-pace-dial-* (s126): hooks PRESENTACIONALES para el escalado
@@ -193,6 +206,14 @@ const timerDialStyles = {
     placeItems: 'center',
     maxWidth: '100%',
   },
+  /* s158: capa del anillo. Solo posiciona; el horizonte lo pinta
+     _responsive.js con una mascara, y solo en la home. */
+  ringLayer: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+  },
+
   inner: {
     position: 'relative',
     textAlign: 'center',
