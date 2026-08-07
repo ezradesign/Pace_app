@@ -396,6 +396,16 @@
       max-height: 100vh;
       max-height: 100dvh;
     }
+    /* QUÉ PIEL ESTÁ PUESTA (s160). La declara la hoja que YA tiene el
+       breakpoint, y main.jsx la lee para renderizar cada piel en su orden
+       canónico del DOM. Se publica aquí y no como una tercera copia del
+       "769px" en JavaScript por la razón de siempre en este archivo: dos
+       fuentes de verdad divergen a la primera corrección. Leyéndola de la
+       hoja, el orden del DOM y el orden visual no pueden desincronizarse
+       aunque alguien mueva el breakpoint, porque los mueve a la vez.
+       Móvil es el valor por defecto: si esta hoja no llegara a aplicarse,
+       el DOM se queda en el orden que tenía antes de s160. */
+    :root { --pace-skin: movil; }
     /* Modelo "atardecer" de la HOME (s123). El tamaño del aro y la profundidad
        del solapamiento derivan de UNA sola variable, para que la tarjeta de
        Camino cruce SIEMPRE el tramo inferior del aro (nunca un gate binario que
@@ -451,6 +461,30 @@
     }
     [data-pace-dial-fit] {
       width: auto;
+      /* EL TAMAÑO DEL ARO NO SE TRANSICIONA JAMÁS (s160). No es estética: es la
+         condición para que el motor pueda MEDIRLO.
+
+         El kill de prefers-reduced-motion (tokens.css) pone transition-duration
+         en 0,01 ms sobre todo lo que no sea esencial, y como el valor inicial de
+         transition-property es "all", eso convierte CUALQUIER cambio de
+         geometría en una transición. El valor de una transición aterriza en un
+         frame POSTERIOR, y home-geometry.js aplica D y mide en la MISMA tarea:
+         bajo reduced-motion medía siempre el tamaño anterior, el bucle encogía a
+         ciegas, disparaba su propio guard de s156 y salía con el techo por ancho
+         — el aro de 420 px y los 11 px de scroll a 1280x720, deuda desde s156.
+
+         Medido: con el bucle síncrono el desbordamiento se quedaba clavado en 11
+         mientras D bajaba de 420 a 322 (los números exactos que s156 anotó sin
+         explicar); con esta línea converge en dos pasadas a 406, igual que sin
+         reduced-motion. Y la prueba de que era una transición y no otra cosa:
+         dial.getAnimations() devolvía "height:running" y un height en línea con
+         !important NO ganaba — en la cascada solo una transición viva puede.
+
+         Sin reduced-motion no cambia nada: ahí la duración ya era 0 s. No toca
+         los pseudoelementos (::before lleva el halo del amanecer y
+         transition-property no se hereda), ni las animaciones, ni el fundido de
+         la luz, que viaja por --pace-on sobre [data-pace-home-body]. */
+      transition-property: none;
       /* s128: el aro lo dimensiona el motor (home-geometry.js) también en móvil.
          s156: por --pace-dial-d, que ya resuelve motor-o-fallback arriba. En
          Desktop este height lo pisa el bloque min-width:769px con !important
@@ -466,6 +500,21 @@
          [data-pace-dial-fit] → intacto. s156: por --pace-horizon, el MISMO token
          que sube el bloque de abajo — no hay dos fallbacks que puedan divergir.
          s158: el horizonte pasa del clip-path a la máscara de abajo. */
+    }
+    /* Y LOS CUATRO DE DENTRO, POR LA MISMA RAZÓN Y UN NIVEL MÁS ABAJO (s160).
+       applyD() no mide solo el aro: mide dónde acaba el CICLO DENTRO del aro
+       para anclar ahí las Actividades. Esos cuatro nodos llevan márgenes y
+       tamaños derivados de --pace-timer-d, así que bajo reduced-motion también
+       se volvían transiciones y el CICLO se medía en su sitio ANTERIOR: con el
+       aro ya corregido a 406 px, el solapamiento salía en 61 px en vez de 65 y
+       la home se quedaba con 3 px de scroll en lugar de encajar. Se nombran uno
+       a uno y NO se usa un selector de descendencia: dentro del aro vive el CTA,
+       cuya transición de hover es legítima y no se toca. */
+    [data-pace-dial-fit] [data-pace-dial-label],
+    [data-pace-dial-fit] [data-pace-dial-number],
+    [data-pace-dial-fit] [data-pace-dial-subtitle],
+    [data-pace-dial-fit] [data-pace-dial-divider] {
+      transition-property: none;
     }
     /* ===================================================================
        EL HORIZONTE (s158) — de corte seco a desvanecido.
@@ -911,6 +960,9 @@
        escritorio.
        =================================================================== */
     @media (min-width: 769px) {
+      /* La piel de escritorio, para el orden del DOM (s160). Ver la nota de
+         --pace-skin arriba: este es el ÚNICO sitio donde vive el breakpoint. */
+      :root { --pace-skin: escritorio; }
       /* Aro por D (el ayudante lo dimensiona para llenar sin scroll). El
          aspect-ratio 1/1 del marco da el ancho. s156: el fallback ya no se
          escribe aquí — venía como 360px a mano y no coincidía con el del
@@ -961,16 +1013,22 @@
         margin-top: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.03), 16px) !important;
         margin-bottom: clamp(6px, calc(var(--pace-timer-d, 360px) * 0.026), 14px) !important;
       }
-      /* Reorden VISUAL (DOM intacto: main-content → Camino → Actividades):
-         Actividades tras el aro, Camino al fondo. */
+      /* EL ORDEN LO TRAE EL DOM (s160). Hasta v0.90.0 estas dos reglas hacían el
+         reorden con "order: 1 / 2" y el DOM se quedaba en el orden de móvil, así
+         que en escritorio el orden visual y el del DOM no coincidían: el foco de
+         teclado bajaba del aro a la tarjeta del fondo (top 622 y 698) y luego
+         SUBÍA a los chips (top 496). Eso es WCAG 2.4.3, medido recorriendo con
+         Tab, y era previo. Ahora main.jsx renderiza cada piel en su orden
+         canónico —lo elige por --pace-skin, que publica ESTA hoja, así que el
+         breakpoint sigue viviendo en un solo sitio— y aquí no queda ningún
+         "order": el orden visual y el del DOM no PUEDEN divergir.
+         Lo demás de estas dos reglas no cambia. */
       [data-pace-activitybar] {
-        order: 1 !important;
         position: relative;
         z-index: 1;                 /* Actividades pintan SOBRE el arco del aro */
         margin-top: calc(var(--pace-horizon) * -1) !important;
       }
       [data-pace-spc] {
-        order: 2 !important;
         margin-top: 0 !important;   /* anula el solapamiento «atardecer» de s123 */
         /* recupera alto vertical → aro un poco mayor (sin tocar contenido ni
            botón). En alturas cortas se va a 0 vía --pace-home-squeeze. */

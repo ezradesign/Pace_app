@@ -53,8 +53,18 @@ test('el Pomodoro cuenta, se pausa, se reanuda y al terminar abre el BreakMenu',
   await page.clock.runFor(1000);
   await expect(numero).toHaveText('24:57');
 
-  /* TERMINA. */
-  await page.clock.runFor(25 * 60 * 1000);
+  /* TERMINA — CON UN SALTO, NO CON 1500 TICS (s160).
+     `runFor` ejecuta TODOS los callbacks intermedios: 1500 disparos del
+     intervalo con su re-render cada uno, y eso es trabajo de tiempo REAL aunque
+     el reloj sea virtual. Con la suite en 58 tests y 8 workers no cabia en el
+     plazo y este test se caia — medido que no era la app: la MISMA suite contra
+     el `index.html` de HEAD falla igual, y aislado pasa en 23,7 s.
+     `fastForward` salta el reloj y dispara los timers vencidos UNA vez, que es
+     todo lo que hace falta... y de paso prueba algo que antes no se probaba:
+     que el contador es TIMESTAMP-BASED (s96). Si dependiera de contar tics, con
+     un salto no terminaria — es exactamente lo que le pasa a la pestaña en
+     segundo plano, donde el navegador throttlea el intervalo a ~1/min. */
+  await page.clock.fastForward(25 * 60 * 1000);
 
   /* Y ABRE EL BREAKMENU, con sus cuatro salidas y su escape. */
   const menu = page.locator('[data-pace-modal-backdrop]').last();
