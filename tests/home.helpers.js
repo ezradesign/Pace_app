@@ -66,9 +66,11 @@ function sonda(page) {
     }
     /* El bloque que hace de HORIZONTE se elige por POSICION, no por selector:
        es el primero que aparece debajo del aro. En movil es la tarjeta; en
-       Desktop el `order` de _responsive.js pone Actividades ahi y manda la
-       tarjeta al fondo. Elegir `spc || act` a secas mide contra el bloque
-       equivocado en Desktop — comprobado. */
+       Desktop es Actividades, que va antes que la tarjeta. Elegir `spc || act`
+       a secas mide contra el bloque equivocado en Desktop — comprobado.
+       (Hasta s160 ese orden lo ponia el `order` del CSS y desde s160 lo trae el
+       DOM; elegir por posicion es justo lo que hace que esto no dependa de
+       cual de los dos mecanismos este puesto.) */
     const horizonte = [spc, act]
       .filter(Boolean)
       .map(el => [el, el.getBoundingClientRect().top])
@@ -116,4 +118,39 @@ async function asentar(page) {
   });
 }
 
-module.exports = { CAMINO_ACTIVO, sonda, px, asentar };
+/* ESPERAR A QUE LA GEOMETRIA CALLE (s160), que no es lo mismo que `asentar`.
+ *
+ * `asentar` espera a las animaciones de entrada y a dos frames. El motor, en
+ * cambio, puede publicar MAS DE UNA VEZ: hace una pasada sincrona, itera hasta
+ * ocho veces y desde s156 tiene UN reintento cuando la medida no responde. Con
+ * la maquina descargada eso cabe de sobra en dos frames; con la suite entera en
+ * 8 workers, NO — y entonces se mide a media convergencia. Medido en s160: el
+ * aro leido a destiempo daba 420 px, o sea el techo por ancho, que es justo el
+ * valor de partida del bucle.
+ *
+ * Se espera a que `--pace-timer-d` repita valor tres frames seguidos, con tope
+ * de 90 frames para no colgarse nunca.
+ *
+ * NO se mete dentro de `asentar` a proposito: `asentar` lo llaman veinte sitios,
+ * algunos con `page.clock` instalado, y ahi requestAnimationFrame SOLO corre
+ * cuando el reloj avanza — un bucle de frames se quedaria esperando hasta agotar
+ * el test. Este helper se usa donde no hay reloj virtual.
+ */
+async function asentarGeometria(page) {
+  await asentar(page);
+  await page.evaluate(async () => {
+    const frame = () => new Promise(r => requestAnimationFrame(r));
+    const leer = () => getComputedStyle(document.documentElement)
+      .getPropertyValue('--pace-timer-d').trim();
+    let previo = leer();
+    let iguales = 0;
+    for (let i = 0; i < 90 && iguales < 3; i++) {
+      await frame();
+      const ahora = leer();
+      iguales = (ahora === previo) ? iguales + 1 : 0;
+      previo = ahora;
+    }
+  });
+}
+
+module.exports = { CAMINO_ACTIVO, sonda, px, asentar, asentarGeometria };

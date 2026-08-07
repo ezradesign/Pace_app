@@ -25,7 +25,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { sembrar, capturarErrores, irAlArtefacto } = require('./helpers');
-const { CAMINO_ACTIVO, sonda, px, asentar } = require('./home.helpers');
+const { CAMINO_ACTIVO, sonda, px, asentar, asentarGeometria } = require('./home.helpers');
 
 test.describe('geometria de la home · el motor gobierna', () => {
   test('con la tarjeta presente publica diametro y solapamiento', async ({ page, context }) => {
@@ -275,12 +275,59 @@ test.describe('geometria de la home · el centro', () => {
   });
 });
 
+test.describe('geometria de la home · reduced-motion', () => {
+  /* PEDIR MENOS MOVIMIENTO NO PUEDE CAMBIAR LA GEOMETRIA (s160).
+     Era deuda desde s156: a 1280x720 con `prefers-reduced-motion: reduce` el
+     aro salia a 420 px en vez de 406 y la home se quedaba con 11 px de scroll.
+     La microcausa, medida en s160: el kill de tokens.css pone
+     transition-duration en 0,01 ms sobre TODO y el valor inicial de
+     transition-property es «all», asi que cada cambio de geometria pasaba a ser
+     una transicion — y el valor de una transicion aterriza en otro frame,
+     mientras `applyD()` mide en la MISMA tarea. El motor media el tamaño
+     anterior, encogia a ciegas y salia por su propio guard con el techo por
+     ancho.
+
+     EL ASERTO ES RELACIONAL: no dice 406 ni 65. Dice que la geometria con
+     reduced-motion es la MISMA que sin el, que es lo unico que tiene que ser
+     cierto pase lo que pase con el diseño. */
+  test('la geometria es identica con y sin el', async ({ page, context }) => {
+    await sembrar(context);
+    await irAlArtefacto(page);
+    /* `asentarGeometria` y no `asentar`: el motor converge en varias pasadas y
+       con la suite entera en paralelo no le caben en dos frames. Medido: leido a
+       destiempo el aro daba 420 px, el valor de PARTIDA del bucle, y esta misma
+       prueba se ponia roja con el producto correcto. */
+    await asentarGeometria(page);
+    const normal = await sonda(page);
+
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.reload();
+    await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+    await asentarGeometria(page);
+    const menos = await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
+    /* GUARD de s156: sin el media query activo esto compararia dos veces lo
+       mismo y pasaria siempre. `test.use({ reducedMotion })` no llego a
+       aplicarse alli, asi que se emula explicitamente y se comprueba. */
+    expect(menos, 'GUARD: el contexto no esta en prefers-reduced-motion: reduce').toBe(true);
+    const reducido = await sonda(page);
+
+    expect(Math.abs(reducido.dial.h - normal.dial.h),
+      'el aro mide distinto con reduced-motion (' + reducido.dial.h + ' vs ' + normal.dial.h + ')')
+      .toBeLessThanOrEqual(1);
+    expect(Math.abs(px(reducido.solape) - px(normal.solape)),
+      'el solapamiento cambia con reduced-motion (' + reducido.solape + ' vs ' + normal.solape + ')')
+      .toBeLessThanOrEqual(1);
+    expect(reducido.desbordeV - normal.desbordeV,
+      'con reduced-motion la home gana scroll vertical (' + reducido.desbordeV + ' vs ' + normal.desbordeV + ')')
+      .toBeLessThanOrEqual(1);
+  });
+});
+
 test.describe('geometria de la home · controles', () => {
-  /* NO se aserta el orden del DOM. Escritorio lo reordena con `order` y el
-     foco de teclado no sigue al ojo: es DEUDA de accesibilidad conocida
-     (s156), y consagrarla en un aserto la volveria intocable. Lo que si tiene
-     que ser cierto pase lo que pase es que los controles existan una sola vez
-     y se puedan alcanzar con el teclado. */
+  /* El ORDEN DE FOCO vive en `home-a11y.spec.js` desde s160, que es cuando dejo
+     de ser deuda: hasta entonces escritorio reordenaba con `order` y el foco no
+     seguia al ojo. Aqui se queda lo que tiene que ser cierto pase lo que pase:
+     que los controles existan una sola vez y se puedan alcanzar con el teclado. */
   test('sin duplicados y alcanzables con el teclado', async ({ page, context }) => {
     await sembrar(context);
     await irAlArtefacto(page);
@@ -315,6 +362,14 @@ test.describe('geometria de la home · el motor no recalcula sin motivo', () => 
   test('el contador del Pomodoro no dispara el observador de montaje', async ({ page, context }) => {
     await sembrar(context);
     await irAlArtefacto(page);
+    /* SE ESPERA A QUE EL MOTOR CALLE ANTES DE ESPIAR (s160). Sin esto, la
+       ventana de conteo empieza mientras el motor todavia converge y una
+       publicacion legitima del ARRANQUE cae dentro: la prueba se ponia roja
+       bajo carga diciendo «la geometria se reescribe mientras corre el
+       Pomodoro», que no es lo que quiere demostrar. Va ANTES de instalar el
+       reloj virtual: con el reloj puesto, requestAnimationFrame solo corre
+       cuando el reloj avanza. */
+    await asentarGeometria(page);
     await page.clock.install();
     await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
 
