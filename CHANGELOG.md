@@ -199,11 +199,12 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.92.0** | 2026-08-08 | feat(settings): **la paleta sigue al sistema, salvo cuando el aro es el sol** — nace el modo **Auto** de paleta, que REVISA la decisión de s89 («el sistema solo manda en el primer arranque»): esa fila sigue siendo cierta para quien elige a mano, y lo que cambia es que ahora se puede elegir **que mande el sistema**. Cuatro decisiones del usuario, cada una con su coste medido delante: **por sistema y no por hora** —esta app **ya tiene un día y dura 25 minutos**, `--pace-k` recorre amanecer→mediodía→noche dentro de cada bloque, así que una paleta por reloj metería un segundo ciclo a otra velocidad—, **suspender durante un bloque** —cambiar en vivo cuesta 32 de 66 frames, y sobre todo en oscuro `--sun-shade` y `--sun-cast` valen **cero** por decisión de s158, así que a mitad de sesión el sol perdería su sombra—, **tercera pill «Auto»** como el idioma, y **fundido de tokens por `@property`**. **El cambio de paleta no era un corte seco**: movía **1875 declaraciones** sobre 87 nodos, de las que **88 se fundían a cuatro velocidades a la vez** (180/200/220/320 ms) y **1787 saltaban**. Ahora los tokens interpolan solos —única vía que alcanza los estilos **inline**, que es como pinta esta app— y con el Pomodoro parado es **gratis**: 66 frames contra 67 del control negativo. **Dos defectos cazados antes de publicar**: el `transition` de 320 ms del `body` **perseguía** al token de 640 (una transición cuyo destino cambia cada frame **se reinicia cada frame**) y dejaba **188 unidades RGB** entre el fondo y unas tarjetas ya oscuras — el defecto de s159 en otra superficie, corregido de **237 a 15** de desviación contra una verdad de campo; y **registrar `--breathe` apagaba la atmósfera del Pomodoro**, porque un token registrado computa `rgb(...)` en vez de `#hex` y el `hexToRgb` de `interpolateRingColor` devolvía NaN ⇒ `--pace-arco` inválido ⇒ el bloom entero a `background-image: none`. Auditados los 15: solo `--breathe` y `--focus` tenían lector en JS, y **se arregló el lector** — `aRgb` acepta las dos formas y devuelve un respaldo en vez de NaN, así que entran los quince. Además, guard de Auto en `secret.dark.mode` (gemelo del de s139): el logro premia haber **elegido** el oscuro. **6 rojos y los 6 mordieron** | 161 | [abajo](#v0920----2026-08-08----featsettings-la-paleta-sigue-al-sistema-salvo-cuando-el-aro-es-el-sol) |
 | **v0.91.0** | 2026-08-07 | fix(home): **una transición de 0,01 ms sigue siendo una transición** — dos deudas de s156 cerradas y un tirón que **no reproduce**. **Reduced-motion**: el aro salía a 420 px con 11 px de scroll y la microcausa llevaba una sesión sin identificar; es que el kill de `tokens.css` pone `transition-duration` en 0,01 ms sobre TODO y, como el valor inicial de `transition-property` es **`all`**, cualquier cambio de geometría **pasa a ser una transición** — cuyo valor aterriza en otro frame, mientras `applyD()` mide en la MISMA tarea. Se demostró porque **ni un `height !important` en línea movía el aro**: en la cascada solo una transición viva gana a `!important`. Arreglo validado antes de proponerlo (`transition-property: none` en el aro **y en sus cuatro nodos interiores**, que es de donde salían los 3 px que quedaban): aro **406** y solapamiento **−65** con y sin reduced-motion, idénticos. **A11y**: en escritorio el `order` del CSS reordenaba con el DOM quieto, así que el foco bajaba a la tarjeta del fondo (622, 698) y **subía** a los chips (496) — WCAG 2.4.3, medido con Tab real. Ahora el DOM lleva el orden canónico de cada piel, leyendo `--pace-skin` **de la propia hoja** para no escribir una tercera copia del breakpoint, y con `key` estable para que React **mueva** en vez de remontar; el orden visual no cambia ni un píxel. **El tirón del arco NO reproduce**: la transición cubre el segundo entero (0 ms quieto) en v0.90.0 **y** en v0.89.0, y la sospecha de las publicaciones de s159 cae por ritmo (2 en 8 s) y por control positivo (forzando 60/s la transición sigue corriendo). El instrumento **sí** ve el defecto: con reduced-motion da 1 frame y 983 ms quieto | 160 | [abajo](#v0910----2026-08-07----fixhome-una-transicion-de-001-ms-sigue-siendo-una-transicion) |
 | **v0.90.0** | 2026-08-06 | feat(home): **la luz del Pomodoro** — cierra el frente que s157 y s158 dejaron en el árbol sin commit. **El Pomodoro no estaba centrado en móvil y el defecto era PREVIO**: medido contra HEAD servido en paralelo, +11,80 px a 320 y +12,09 a 390 en los dos; la atmósfera no lo introdujo, lo hizo visible. La causa son dos capas descontando padding sin saber la una de la otra, y una pista de grid que desborda y se alinea al START. Además: el máximo perceptual **se retima a la mitad del bloque** (estaba en 0,375), el enfriamiento pasa a ser continuo **sin repunte en p=1**, el parpadeo baja de **47 saltos ≥2 % a uno**, la cola recupera el reflejo bajo los chips y **el arco enterrado la tiñe**. Tres defectos más que encontró el usuario mirando, los tres del mismo tipo: transiciones que se pisan | 159 | [session-159](./docs/sessions/session-159-luz-del-pomodoro.md) |
 | **v0.89.0** | 2026-08-04 | feat(home): **un nodo opcional no puede decidir si hay geometria** — el motor de la home exigia los cuatro nodos y se callaba si faltaba uno; como `getSuggestedPath()` **nunca** devuelve null con catalogo no vacio, el unico estado real sin tarjeta —**un Camino en curso**— apagaba el motor entero y Desktop caia a un `360px` escrito a mano pintando el aro **sin horizonte**, sin recuperarse al salir (`attach()` corria una vez y el ResizeObserver seguia mirando un nodo que React ya habia sustituido) · **la evidencia de s149 no reproduce y sus dos mitades se excluyen**: 406×406 es justo lo que publica el motor, `[data-pace-timer-dial]` y `window.__PACE_HOME_GEOMETRY_VARS__` **no existen en el repo**, y las variables «vacias» salen de que **ninguna regla CSS las declara** — solo se escriben inline sobre `documentElement` · **el invariante que este repo declaraba era falso**: con el motor apagado la tarjeta subia 39,7 px sobre un aro **sin recortar** ⇒ ahora `--pace-dial-d` y `--pace-horizon` resuelven motor-o-CSS **en un solo sitio** y recorte y solapamiento salen del **mismo token** · **dos defectos mas que salieron al medir**: el arranque tardaba **1345 ms y dos frames** en publicar (el aro se pintaba al fallback y **saltaba**; ahora publica a 164 ms, sincrono) y —**previo y publicado**— con `prefers-reduced-motion` el aro salia a **244 px** en vez de 406 porque el bucle **encogia a ciegas** ocho pasadas sobre una medida congelada · **amanecer**: halo detras del aro recortado por el **mismo** horizonte y linea de alba anclada a `--pace-horizon`, **reutilizando** `paceGlowRamp` y `paceGrainUrl` de s140 en vez de duplicar la curva, con tokens `--dawn-soft`/`--dawn-line` en las dos paletas y **tres estados por atributo estable** que solo mueven intensidad · **ritmo movil** con el techo por ancho derivado del ancho **realmente usable** (0.86 → 0.92) y `--pace-home-slack` repartiendo el sobrante 38/62 ⇒ a 390×844 el aro pasa de 335 a 359 y el aire muerto de 91 a 62 px, **con escritorio sin una regresion** (406/65 · 456/73 · 487/78 · 520/83) · **12 rojos controlados y los 12 mordieron**; el instrumento mintio **cinco** veces, y una la cazo un **guard** que asertaba el media query antes de medir | #156 | [session-156](./docs/sessions/session-156-home-amanecer.md) |
-| **v0.88.1** | 2026-08-04 | fix(events): **una operación de dos almacenes que no espera no es atómica** — tres defectos que el usuario encontró revisando v0.88.0, los tres confirmados contra el código. **P0**: el import lanzaba la barrera **sin esperarla** y el resultado de la escritura legacy **se descartaba** en el camino normal ⇒ con `setItem` fallando por cuota, el estado no se guardaba, el contenedor de eventos **se reiniciaba igual**, la UI decía «Importado» y la página recargaba — cuatro mentiras seguidas sobre una promesa de integridad que esta misma sesión había escrito. **Y el arreglo no era un `if`**: al abortar, el **marcador ya está escrito**, y como el arranque reinicia el contenedor en cuanto ve uno vivo, abortar sin limpiarlo habría dejado que el siguiente arranque hiciera justo lo que se evitaba ⇒ nace `eventsWebClearMarker`. Ahora se espera, se aborta a un estado conocido, el resultado lleva `legacyWritten` y la UI solo canta victoria con eso en `true`; copy nuevo ES+EN y **CENSO de i18n a 510**. Mismo trato en el reset: `wipeLocalState()` devuelve si pudo, y si no pudo **no se borra el historial de alguien cuyo estado sigue ahí**. **Segundo**: un contenedor de **versión FUTURA** se reescribía —el gate vivía solo en la ruta de import— y le tiraba en silencio los campos que esta versión no conoce; ahora `schemaVersion` mayor = **READ_ONLY**, comprobado **dos veces** (capacidad y **dentro del lock**, que es el autoritativo). **Tercero**: dos filas de la tabla de `STATE.md` seguían en v0.87.0. **Y un quinto aserto que no mordió**: el del contenedor futuro siguió **verde con el guard roto**, porque pasaba por la fachada —que corta antes en `canWrite()`— y el guard interior **no llegaba a ejecutarse**; se arregló llamando al adaptador a pelo. Trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de `page.on('dialog')`**, así que el `confirm()` del import devolvía false y la importación **ni empezaba** | #155 | [abajo](#v0881----2026-08-04----fixevents-una-operacion-de-dos-almacenes-que-no-espera-no-es-atomica) |
-| **v0.88.0** | 2026-08-04 | feat(events): **la memoria es del usuario, no nuestra** — FASE 3 del plan: nace **`pace.events.v1`**, el registro **local** de uso, en su **Fase 1** (modelo canónico + adaptador web + Web Locks + baseline + export/import/reset + recuperación + pruebas multi-pestaña) y **sin un solo emisor**, porque §25 prohíbe emitir antes de estar en `READ_WRITE` · **dos contradicciones con una página PÚBLICA**, las dos creadas por el mero hecho de existir una segunda clave: `privacy.html` promete que desde Ajustes «puedes borrarlo todo» y el reset solo quitaba `pace.state.v2` (**arreglado**: pasa por la barrera y borra los dos almacenes), y promete exportar «**todo** tu estado» cuando el backup no llevará eventos (**no se arregla hoy, se le pone un gate**: si aparece un emisor fuera de `app/events/` y el export no lleva la sección, el `verify` se pone **rojo**) · **capa A / capa B separadas** como exige §5 — el modelo canónico no nombra `localStorage` ni `navigator.locks`, y el **adaptador inerte** existe para que `file://` no emita y Capacitor **no caiga al web** por parecer `https://localhost` · **5 comprobaciones nuevas en el `verify`**, todas RELACIONALES, más el **guard de cero**; la de «cero red» tuvo que mirar el **código sin comentarios**, porque las cabeceras **nombran** `fetch` y `WebSocket` para prohibirlos y un `grep` a secas **se autoinculpa** (trampa de s146 por otra puerta) · **10 pruebas E2E**, entre ellas **DOS pestañas de verdad** emitiendo a la vez sin perder un evento (el **P0** del diseño), la lista permitida descartando `notaLibre`/`ip`/ruta de archivo, y seis snapshots inválidos rechazados dejando el contenedor **byte a byte** igual · **17 rojos, y los 17 mordieron a la primera** —frente a los cuatro que fallaron en s154— porque el banco ahora **exige que la cadena aparezca exactamente una vez** y calibra antes; el **guard de cero** necesitó banco propio, moviendo la carpeta de verdad y exigiendo **el mensaje**, no solo el exit 1 · el `verify` cazó **dos identificadores sin ligar** en código nuevo: `Uint8Array` faltaba en su lista de plataforma, y `chrome` estaba **mal en mi código** (solo existe en Chromium) | #155 | [abajo](#v0880----2026-08-04----featevents-la-memoria-es-del-usuario-no-nuestra) |
+| **v0.88.1** | 2026-08-04 | fix(events): **una operación de dos almacenes que no espera no es atómica** — tres defectos que el usuario encontró revisando v0.88.0, los tres confirmados contra el código. **P0**: el import lanzaba la barrera **sin esperarla** y el resultado de la escritura legacy **se descartaba** en el camino normal ⇒ con `setItem` fallando por cuota, el estado no se guardaba, el contenedor de eventos **se reiniciaba igual**, la UI decía «Importado» y la página recargaba — cuatro mentiras seguidas sobre una promesa de integridad que esta misma sesión había escrito. **Y el arreglo no era un `if`**: al abortar, el **marcador ya está escrito**, y como el arranque reinicia el contenedor en cuanto ve uno vivo, abortar sin limpiarlo habría dejado que el siguiente arranque hiciera justo lo que se evitaba ⇒ nace `eventsWebClearMarker`. Ahora se espera, se aborta a un estado conocido, el resultado lleva `legacyWritten` y la UI solo canta victoria con eso en `true`; copy nuevo ES+EN y **CENSO de i18n a 510**. Mismo trato en el reset: `wipeLocalState()` devuelve si pudo, y si no pudo **no se borra el historial de alguien cuyo estado sigue ahí**. **Segundo**: un contenedor de **versión FUTURA** se reescribía —el gate vivía solo en la ruta de import— y le tiraba en silencio los campos que esta versión no conoce; ahora `schemaVersion` mayor = **READ_ONLY**, comprobado **dos veces** (capacidad y **dentro del lock**, que es el autoritativo). **Tercero**: dos filas de la tabla de `STATE.md` seguían en v0.87.0. **Y un quinto aserto que no mordió**: el del contenedor futuro siguió **verde con el guard roto**, porque pasaba por la fachada —que corta antes en `canWrite()`— y el guard interior **no llegaba a ejecutarse**; se arregló llamando al adaptador a pelo. Trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de `page.on('dialog')`**, así que el `confirm()` del import devolvía false y la importación **ni empezaba** | #155 | [session-155](./docs/sessions/session-155-eventos-fase-1.md) |
+| **v0.88.0** | 2026-08-04 | feat(events): **la memoria es del usuario, no nuestra** — FASE 3 del plan: nace **`pace.events.v1`**, el registro **local** de uso, en su **Fase 1** (modelo canónico + adaptador web + Web Locks + baseline + export/import/reset + recuperación + pruebas multi-pestaña) y **sin un solo emisor**, porque §25 prohíbe emitir antes de estar en `READ_WRITE` · **dos contradicciones con una página PÚBLICA**, las dos creadas por el mero hecho de existir una segunda clave: `privacy.html` promete que desde Ajustes «puedes borrarlo todo» y el reset solo quitaba `pace.state.v2` (**arreglado**: pasa por la barrera y borra los dos almacenes), y promete exportar «**todo** tu estado» cuando el backup no llevará eventos (**no se arregla hoy, se le pone un gate**: si aparece un emisor fuera de `app/events/` y el export no lleva la sección, el `verify` se pone **rojo**) · **capa A / capa B separadas** como exige §5 — el modelo canónico no nombra `localStorage` ni `navigator.locks`, y el **adaptador inerte** existe para que `file://` no emita y Capacitor **no caiga al web** por parecer `https://localhost` · **5 comprobaciones nuevas en el `verify`**, todas RELACIONALES, más el **guard de cero**; la de «cero red» tuvo que mirar el **código sin comentarios**, porque las cabeceras **nombran** `fetch` y `WebSocket` para prohibirlos y un `grep` a secas **se autoinculpa** (trampa de s146 por otra puerta) · **10 pruebas E2E**, entre ellas **DOS pestañas de verdad** emitiendo a la vez sin perder un evento (el **P0** del diseño), la lista permitida descartando `notaLibre`/`ip`/ruta de archivo, y seis snapshots inválidos rechazados dejando el contenedor **byte a byte** igual · **17 rojos, y los 17 mordieron a la primera** —frente a los cuatro que fallaron en s154— porque el banco ahora **exige que la cadena aparezca exactamente una vez** y calibra antes; el **guard de cero** necesitó banco propio, moviendo la carpeta de verdad y exigiendo **el mensaje**, no solo el exit 1 · el `verify` cazó **dos identificadores sin ligar** en código nuevo: `Uint8Array` faltaba en su lista de plataforma, y `chrome` estaba **mal en mi código** (solo existe en Chromium) | #155 | [session-155](./docs/sessions/session-155-eventos-fase-1.md) |
 | **v0.87.0** | 2026-08-04 | test(e2e): **un test que no has visto fallar no prueba nada** — segunda pieza del frente CI: **Playwright**, que cubre justo el **primer hueco que el `verify` declara e imprime en cada pasada** («no abre navegador, no monta la app, no pulsa nada»). Entra **el checklist de cierre de `CLAUDE.md` entero**, ejecutado: Pomodoro hasta el BreakMenu con el **reloj virtual** —viable porque `useCountdown` es *timestamp-based*—, Respira con su **modal de seguridad de apnea**, Mueve con Preview y pasos, Hidrátate, Logros con toast, Tweaks y persistencia · **13 tests, ~25 s** · **no se inventó un selector**: once bancos de reconocimiento condujeron el artefacto primero, y de ahí salió que las filas de rutina **no son `<button>`**, que la biblioteca de Mueve abre el **Preview de §18.3** y que el toast **no sale al desbloquear** sino cuando una sesión drena la cola (s145) · **21 rojos verificados**, los 21 restaurados **byte a byte con hash comprobado**, y **cuatro no mordieron a la primera**: tres eran **debilidad real de mis asertos** —`getByRole({name})` casa por **SUBCADENA**, así que renombrar «Pausar» a «PausarX» seguía pasando— y el cuarto rompía **la línea equivocada** (el artefacto tiene varias llamadas a `renderGlyph` y la miniatura del sidebar resuelve por `achMini`) · casi nada lleva número: el precache se aserta comparando lo **declarado en `sw.js`** con lo que el navegador tiene **de verdad** en su caché, y los sellos se **derivan del catálogo vivo** con la regla de s152 en vez de escribir 53, con **guard de cero** · **job `e2e` aparte** con `needs: verify`, porque la suite carga el `index.html` **committeado** y es el job de arriba el que acaba de probar que está al día · **el instrumento mintió cuatro veces**: `innerText` da el texto con el `text-transform` ya aplicado y los matchers comparan `textContent` (3 rojos), `addInitScript` corre en **cada** navegación y mi semilla machacaba el estado en la recarga, un `grep -c $'\r'` contó todas las líneas y casi reporto CR inexistentes, y un banco en segundo plano parcheaba el artefacto mientras yo medía | #154 | [session-154](./docs/sessions/session-154-playwright.md) |
 | **v0.86.0** | 2026-08-04 | chore(ci): **el CI no comprueba nada que no corra en local** — primera pieza del frente CI, lo único que quedaba detrás de la red de seguridad. Nace `.github/`, que no existía: un job en `ubuntu-latest` con Node 24 que hace `npm ci` e **invoca `npm run verify` tal cual**, sin reinterpretarlo — así lo que sale rojo en GitHub se reproduce con un comando, y vigilancia nueva se añade al `verify`, no al YAML · lo **único** que el workflow añade por su cuenta es que **`index.html` sea el build de las fuentes**, porque el `verify` no puede: corre justo ANTES de regenerarlo, así que su aviso de deriva es `[INFO]` **a propósito** y nunca se pondrá rojo · el diff va **acotado a `index.html`** o el CI sería rojo permanente por `PACE_standalone.html`, congelado desde s134 y que el build acaba de reescribir · y se compara con **`git diff`, nunca con un hash**: el worktree de Windows deja **500 bytes CR** dentro del artefacto (5 fuentes en CRLF que `readFileClean` no normaliza) y su SHA-256 no puede igualar al de Linux · **medido antes de escribir una línea**, porque el runner es Linux: el build es determinista, las **190** rutas declaradas coinciden **exactas** con el repo (Linux distingue mayúsculas y Windows no) y el lock trae `sharp-linux-x64` · probado en **verde y en rojo** con el escenario real —una fuente cambia y nadie regenera el artefacto—, restaurado byte a byte · **proteger `main` no se puede hacer desde aquí** (`gh` no instalado) y la opción «exigir el check sin requerir PR» **es contradictoria**: requerir checks bloquea el push directo · `WORKFLOW.md` seguía exigiendo regenerar el standalone en cada cierre, falso desde s134 · **y el primer run se puso ROJO y tenía razón**: `npm run verify` pasó en Linux, pero el artefacto **no era reproducible entre plataformas** — con CRLF **Babel indenta distinto los comentarios que conserva**, así que el `index.html` committeado **dependía del worktree de quien lo generó** (**una línea, un espacio**, invisible en local porque `git diff` normaliza y artefacto y fuentes comparten worktree). Arreglado **en el build**: `readFileClean` normaliza a LF al leer, y las mismas fuentes en CRLF y en LF dan ahora el mismo artefacto **byte a byte**. Un CI que solo confirma lo que ya sabes no vale nada | #153 | [session-153](./docs/sessions/session-153-ci-github-actions.md) |
 | **v0.85.0** | 2026-08-03 | chore(tooling): **cinco sellos no se pintan nunca, y eso no era un bug** — segunda tanda de la red de seguridad, lo que **D5 aparcó** del `verify` v1: integridad de **i18n, precache, glifos y catálogos**, dentro de `npm run verify` y con **asertos**. Antes de escribir uno solo hubo que resolver un número que no cuadraba: el mapa tiene **58** máscaras, s150 contó **53** sellos y s151 **54** — y las tres cifras son correctas, porque **un logro secreto y bloqueado pinta una `?` en vez de su glifo** y 5 de las 58 son de secretos; s151 vio 54 porque midió en inglés y eso desbloquea `secret.bilingual`. Se asertan **las dos mitades** (53 + 5) para que el número deje de sorprender · **dos clases de comprobación que no se mezclan**: relacionales (no caducan) y **censo** (números esperados en un solo sitio, con el mensaje diciendo que subirlos es un acto deliberado) · el dato se saca del árbol **compilando cada archivo en su propia IIFE**, porque `GLYPH_SVG` es `const` en **dos** archivos y en ámbito compartido el catálogo sale vacío sin quejarse · **un hueco salió de una prueba negativa fallida**: un secreto **sin detector** entra en el denominador de §15.4 sin que nadie pueda ganarlo · **26 rojos verificados**, EXIT=1 y 15 archivos restaurados byte a byte · la caché real del navegador trae **86 entradas**, las mismas que aserta el checker | #152 | [session-152](./docs/sessions/session-152-red-seguridad-segunda-tanda.md) |
@@ -214,7 +215,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 | **v0.80.0** | 2026-08-03 | fix(logros): **el papel deja de contar como tinta, y el sello deja de flotar** — el moteado alrededor de los dibujos era **tramado de semitono del PNG**, y el suelo de papel se aplicaba DESPUÉS del remuestreo que lo viola: 2,0 % → 5,7 % → **12,4 %** de píxeles «con tinta» · el aviso pintaba el glifo VIEJO porque `Toast.jsx` y `CompletionScreen.jsx` eran la **3.ª y 4.ª copia** del render, y s146 solo unificó dos · el sello se anclaba al centro de la tarjeta y flotaba **11 px** con el largo de la descripción | #147 | [session-147](./docs/sessions/session-147-tramado-y-alineacion.md) |
 | **v0.79.1** | 2026-08-03 | fix+feat(logros): **el aviso vuelve a hablar de lo que acabas de hacer, y los sellos son dibujos** — la cola FIFO de s145 anunciaba la actividad ANTERIOR (al acabar 4·7·8 salía «Primer estirón») · §15.4: sidebar dividía entre 96 y el modal entre 88, ahora **denominador único** · **55 glifos del usuario** como máscara CSS, con marco detectado y recortado · «Repertorio» sustituye a «Exploración» | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
 | **v0.79.0** | 2026-08-02 | fix+feat(logros): **la web volvió a abrir, y la curva dejó de desplomarse** — `useState` pelado en `main.jsx` rompía el artefacto compilado **desde s144** (en `PACE.html` no rompe: el build envuelve en IIFE) · curva medida con banco propio: el día 1 daba el **35 % de lo que da un año**, ahora el **18 %** · **AMNISTÍA**: nadie pierde un logro, se anula la excepción a §2.5 de s136 | #146 | [session-146](./docs/sessions/session-146-curva-de-logros.md) |
-| **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [session-145](./docs/sessions/session-145-logros-escalonados.md) |
+| **v0.78.0** | 2026-08-02 | feat(logros): **entrega escalonada — uno por sesión** — una primera sesión a las 6:50 daba **4 logros de golpe** (medido); ahora se gana igual y se **anuncia de uno en uno**, con cola persistida. §2.5 intacta: nada se pierde | #145 | [session-145](./docs/sessions/session-145-logros-entrega-escalonada.md) |
 | **v0.77.0** | 2026-07-31 | feat(ui): **Preview «antes de empezar» (§18.3)** — qué necesitas · posición · duración · intensidad · pasos con glifo, entre la tarjeta y la sesión. **16 de 28 descripciones llevaban el requisito escrito a mano** porque no tenía sitio; ahora lo tiene | #144 | [session-144](./docs/sessions/session-144-preview-antes-de-empezar.md) |
 | **v0.76.0** | 2026-07-31 | feat(content): **ola E — nivel e intensidad visibles** — las 28 rutinas declaran ya los dos ejes (17 básicas · 9 intermedias · **2 avanzadas**) · `advanced` **no existía** en los datos · «no recomendar avanzado por defecto» **no tiene consumidor**: nace en la Fase 3.5 | #143 | [session-143](./docs/sessions/session-143-ola-e-nivel-intensidad.md) |
 | **v0.75.0** | 2026-07-31 | feat(content): **ola C — el inglés fuera del español** — 30 nombres de ejercicio renombrados con migración por `VISUAL_ALIAS`: de **31 nombres con término inglés a 1** · hallazgo: **5 de 47 dibujos no se pintan nunca** (4 tapados por su alias + `Nordics`) | #142 | [session-142](./docs/sessions/session-142-ola-c-nombres.md) |
@@ -270,16 +271,16 @@ versiones anteriores, la tabla enlaza al diario completo en
 | **v0.33.1** | 2026-05-19 | refactor(i18n): split `app/i18n/strings.js` (791 ln) en `app/i18n/strings/` (_bootstrap + ui + sessions + paths + stats + achievements) | #81 | [session-81](./docs/sessions/session-81-strings-split.md) |
 | **v0.33.0** | 2026-05-18 | refactor(paths): split PathRunner.jsx en steps/ (Breathe/Focus/Hydrate/Body) | #80 | [session-80](./docs/sessions/session-80-split-pathrunner.md) |
 | **v0.32.1** | 2026-05-18 | fix(ui): pomodoro contextual en Camino (aro + pausa/reset/saltar) + fade-out toasts + oscuro +10% | #79 | [session-79](./docs/sessions/session-79-pomodoro-camino-fadeout-oscuro.md) |
-| **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime >… | #78 | [abajo](#v0320----2026-05-17----featcamino-catalogo-5--7) |
+| **v0.32.0** | 2026-05-17 | feat(camino): catalogo 5 -> 7 (path.tea + path.breath) + redisenio PathHydrateStep + getSuggestedPath jerarquica (lastViewed > horario > anytime >… | #78 | [session-78](./docs/sessions/session-78-catalogo-caminos.md) |
 | **v0.31.0** | 2026-05-17 | feat(camino): PathTransitions + fix SenderoBar visible + retirada de sticky + microcopia (Toast 3s, CTA verde musgo) | #77 + #77b | [session-77](./docs/sessions/session-77-path-transitions.md) + [s77b](./docs/sessions/session-77b-fix-microcopia.md) |
 | **v0.30.0** | 2026-05-16 | feat(camino): arquitectura overlay | #76 | [session-76](./docs/sessions/session-76-overlay-arquitectura.md) |
 | **v0.29.0** | 2026-05-16 | feat(camino): sendero hibrido + renombrado sensorial + fix dawn/dusk + foco interno suma a stats | #75 | [session-75](./docs/sessions/session-75-sendero-implementacion.md) |
-| **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [session-74](./docs/sessions/session-74-oscuro-recalibrado.md) |
-| **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [abajo](#v02811----2026-05-12----styleui-subir-luminosidad-y-escalonar-fondos-modo-oscuro) |
-| **v0.28.10** | 2026-05-12 | style(ui): marron oscuro calido + aro suavizado en modo oscuro | #72 | [abajo](#v02810----2026-05-12----styleui-marron-oscuro-calido--aro-suavizado) |
+| **v0.28.12** | 2026-05-12 | style(ui): recalibrar oscuro a negro calido sutil con escalonamiento reducido | #74 | [session-74](./docs/sessions/session-74-negro-calido-sutil.md) |
+| **v0.28.11** | 2026-05-12 | style(ui): subir luminosidad y escalonar fondos modo oscuro | #73 | [session-73](./docs/sessions/session-73-ajuste-luminosidad-oscuro.md) |
+| **v0.28.10** | 2026-05-12 | style(ui): marron oscuro calido + aro suavizado en modo oscuro | #72 | [session-72](./docs/sessions/session-72-pulido-modo-oscuro.md) |
 | **v0.28.9** | 2026-05-12 | feat(ux): aro dinamico + retira envejecido + logo modo oscuro + reorden tweaks | #71 | [session-71](./docs/sessions/session-71-aro-dinamico-limpieza-tweaks.md) |
-| **v0.28.8** | 2026-05-12 | fix(tracking): C1+C2+C3+A1+A2 weeklyStats reset semanal + history idempotente + streak proactivo + dia activo unificado | #69 | [session-69](./docs/sessions/session-69-fix-tracking-idempotente.md) |
-| **v0.28.7** | 2026-05-11 | fix(breathe): inhalacion suena en arranque y reinicio de ciclo | #67 | [session-67](./docs/sessions/session-67-fix-breathe-play-inhale.md) |
+| **v0.28.8** | 2026-05-12 | fix(tracking): C1+C2+C3+A1+A2 weeklyStats reset semanal + history idempotente + streak proactivo + dia activo unificado | #69 | [session-69](./docs/sessions/session-69-fixes-tracking-criticos.md) |
+| **v0.28.7** | 2026-05-11 | fix(breathe): inhalacion suena en arranque y reinicio de ciclo | #67 | [session-67](./docs/sessions/session-67-fix-respira-audio-inhalacion.md) |
 | **v0.28.6** | 2026-05-12 | fix(ui): logo completo + tagline sidebar movil + cache-bust iconos maskable safe zone | #66 | [session-66](./docs/sessions/session-66-fix-logo-tagline-movil.md) |
 | **v0.28.5** | 2026-05-11 | fix(deploy): index.html root + manifest PWA + iconos PNG vaca pastando (Cloudflare Pages) | #65 | [session-65](./docs/sessions/session-65-fix-cloudflare-pwa.md) |
 | **v0.28.5** | 2026-05-12 | fix(ui): logo movil cortado + hueco sidebar movil + scroll vertical heatmaps anuales + nota Semana restaurada (desktop only) | #64 | [session-64](./docs/sessions/session-64-fixes-ui-menores.md) |
@@ -287,15 +288,15 @@ versiones anteriores, la tabla enlaza al diario completo en
 | **v0.28.3** | 2026-05-11 | chore(ui): WeekView + PathStats compactacion segunda pasada | #61/62 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.2** | 2026-05-11 | chore(ui): sidebar mas limpio (eliminados 3 contadores hoy) + Ritmo web sin scroll en Semana/Mes/Ano/Caminos + camino sugerido compacto en movil +… | #61 | [session-61](./docs/sessions/session-61-cleanup-sidebar-ritmo.md) |
 | **v0.28.1** | 2026-05-11 | refactor(glyphs): iteracion parcial 13/46 glifos hacia lenguaje home (objeto/forma/parte aislada/metafora) | #60 | [session-60](./docs/sessions/session-60-glyphs-iter-incompleto.md) |
-| **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira | #59 | [abajo](#v0280----2026-05-11----featglyphs-46-glifos-canonicos-por-paso) |
-| **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | [abajo](#v0276----2026-05-11----choreworkflow-blindaje-git) |
+| **v0.28.0** | 2026-05-11 | feat(glyphs): 46 glifos canonicos por paso individual Mueve/Estira | #59 | [session-59](./docs/sessions/session-59-glifos-ejercicios.md) |
+| **v0.27.6** | 2026-05-11 | chore(workflow): blindaje Git -- WORKFLOW.md, check-session.ps1, README actualizado a version real, bump version | #58 | sin diario (s58 no lo dejo) |
 | **v0.27.5** | 2026-05-11 | refactor(state): state.jsx dividido en 6 modulos por dominio (core/timer/hydrate/achievements/paths/settings) sin cambios de comportamiento | #57 | [session-57](./docs/sessions/session-57-refactor-state.md) |
-| **v0.27.3** | 2026-05-09 | chore(build): blindaje build con parser sintactico real | #56 | [abajo](#v0273----2026-05-09----chorebuild-blindaje-build-con-parser-real) |
-| **v0.27.2** | 2026-05-09 | chore(polish): i18n sync ES/EN, a11y overlays (role/Escape/focus), mobile audit, smoke tests documentados | #55 | [abajo](#v0272----2026-05-09----chorpolish-i18n-sync-a11y-overlays-mobile-smoke-tests) |
+| **v0.27.3** | 2026-05-09 | chore(build): blindaje build con parser sintactico real | #56 | [session-56](./docs/sessions/session-56-blindaje-build.md) |
+| **v0.27.2** | 2026-05-09 | chore(polish): i18n sync ES/EN, a11y overlays (role/Escape/focus), mobile audit, smoke tests documentados | #55 | [session-55](./docs/sessions/session-55-polish.md) |
 | **v0.27.1b** | 2026-05-09 | fix(i18n): restaurar claves paths.path.*.name/tagline EN truncadas en s54 + refuerzo build check-d/e | #54b | (hotfix, sin seccion detalle) |
-| **v0.27.1** | 2026-05-09 | feat(stats): seccion Caminos en Stats | #54 | [abajo](#v0271--2026-05-09) |
-| **v0.27.0** | 2026-05-08 | feat(paths): Caminos parte 2 -- PathsLibrary overlay, sistema favorito, boton Repetir, sugerencia dual favorito+hora | #53 | [abajo](#v0270--2026-05-08) |
-| **v0.26.1** | 2026-05-08 | chore: saneamiento tecnico - encoding STATE.md, validateFileEnd en build, 0 WARN, audit deuda 5 archivos >500 lineas | #52 | [abajo](#v0261--2026-05-08--chore-saneamiento-tecnico) |
+| **v0.27.1** | 2026-05-09 | feat(stats): seccion Caminos en Stats | #54 | [session-54](./docs/sessions/session-54-estadisticas-caminos.md) |
+| **v0.27.0** | 2026-05-08 | feat(paths): Caminos parte 2 -- PathsLibrary overlay, sistema favorito, boton Repetir, sugerencia dual favorito+hora | #53 | [session-53](./docs/sessions/session-53-caminos-parte2.md) |
+| **v0.26.1** | 2026-05-08 | chore: saneamiento tecnico - encoding STATE.md, validateFileEnd en build, 0 WARN, audit deuda 5 archivos >500 lineas | #52 | [session-52](./docs/sessions/session-52-saneamiento.md) |
 | **v0.26.0** | 2026-05-08 | feat(paths): SuggestedPathCard -- tarjeta home que sugiere el camino del momento, 4 icons de paso, doneToday badge, 10 claves i18n -- cierra sistema… | #51 | [abajo ↓](#v0260--2026-05-08--featpaths-suggestedpathcard) |
 | **v0.26.0-beta** | 2026-05-08 | feat(paths): PathRunner UI — overlay full-screen, 4 kinds, modal in-app de salida, pantalla de completado, reanudacion tras recarga | #50 | [abajo ↓](#v0260-beta--2026-05-08--featpaths-pathrunner-ui) |
 | **v0.26.0-alpha** | 2026-05-08 | feat(paths): Caminos parte 1 — capa de datos (5 caminos canónicos, helpers lookup, funciones state, migración defensiva) | #49 | [abajo ↓](#v0260-alpha--2026-05-08--featpaths-caminos-parte-1--capa-de-datos) |
@@ -351,6 +352,159 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+
+---
+
+## [v0.92.0] -- 2026-08-08 -- feat(settings): la paleta sigue al sistema, salvo cuando el aro es el sol
+
+### Anadido
+
+- **MODO AUTO DE PALETA — y esto REVISA la decision de s89, no la anula.**
+  Aquella dijo que el sistema solo manda en el PRIMER arranque y que la eleccion
+  manual «no re-sigue cambios del SO en caliente»
+  (`state-core.support.jsx:43-46`). **Sigue siendo cierta para quien elige a
+  mano.** Lo que cambia es que ahora se puede elegir «que mande el sistema», y
+  entonces mandar es lo correcto. `palette` sigue valiendo SIEMPRE una paleta
+  real ('crema'|'oscuro'), nunca 'auto': el modo vive aparte en `paletteAuto`,
+  `loadState` lo resuelve en CADA arranque y un listener sobre
+  `prefers-color-scheme` lo sigue en caliente.
+- **`paletteAuto: false` en `defaultState`, y el `true` SOLO en la rama sin
+  `raw`** — el patron exacto de `langAuto` (s139) y por su misma razon: el merge
+  `{...defaultState, ...parsed}` pondria en Auto a **toda instalacion existente**
+  y le borraria su eleccion.
+- **Tercera pill «Automatico»** en Ajustes, con la misma gramatica que el
+  idioma. Tocar crema u oscuro **apaga Auto**, que es lo que hace que la pill no
+  necesite explicacion. `palette` **sale del array generico `ejes`** a bloque
+  propio: el mapeador generico hace `set({[key]: v})` y eso no sabe apagar un
+  modo. Misma cirugia que ya se le hizo a `lang`.
+- **`--dur-palette` (640 ms)**, perilla propia y no `--dur-slow` aunque hoy
+  valgan lo mismo: aquel gobierna la entrada de los modulos y este el cambio de
+  papel. `state-core.jsx` **lee** el token, asi que no hay un segundo numero en
+  JS que pueda quedarse viejo.
+
+### Medido antes de decidir
+
+- **EL CAMBIO DE PALETA NO ERA UN CORTE SECO.** 28 tokens cambian de valor entre
+  paletas (**no ~40**), y eso mueve **1875 declaraciones computadas** sobre 87
+  nodos: **88 se funden y 1787 saltan** (94 %). Las 88, a **cuatro velocidades a
+  la vez** — 180 ms (68), 200 (7), 220 (35) y los 320 del `body` (2). No era un
+  corte: era un borron. Medido con `getAnimations()`, que es lo unico que
+  distingue «salta» de «se funde», con **control positivo** (una cobaya de 900 ms
+  que tiene que aparecer, y aparece).
+- **COSTE DE LAS CUATRO ALTERNATIVAS**, con **control negativo** (misma ventana,
+  sin cambiar de paleta) para poder atribuir:
+
+  | | parado: frames / >32 ms | corriendo: frames / >32 ms |
+  |---|---|---|
+  | control sin cambio | 67 / 0 | 66 / 0 |
+  | corte seco (lo previo) | 66 / 0 | 52 / 10 |
+  | **@property** | **66 / 0** | 32 / 21 |
+  | View Transitions | 53 / 12 | 42 / 14 |
+  | velo superpuesto | 67 / 0 | 49 / 10 |
+
+  Con el Pomodoro parado, fundir los tokens es **gratis**. Con sesion viva
+  **cuesta hasta el corte seco**, y el coste no lo trae la transicion: lo trae
+  invalidar los `--sun-*` con el halo encendido. Registrar los tokens y **no
+  cambiar nada** cuesta **cero** (66 frames con sesion viva).
+- **POR QUE @property Y NO LAS OTRAS.** Es la unica que alcanza los estilos
+  **INLINE**, que es como pinta esta app. View Transitions paga 12 frames largos
+  con la app parada y **sigue pagando el snapshot bajo reduced-motion** aunque su
+  animacion este muerta; el velo solo funde el PAPEL y deja saltando tinta,
+  bordes y sellos por debajo — la mitad del problema, que es el error que s159
+  ya documento con la opacidad y el color del degradado.
+- **LA MEDIDA QUE DECIDIO LA SUSPENSION.** A la misma hora las dos paletas no
+  son el mismo sol con otro papel: `--sun-noon-core` va de alfa **0,70 a 0,30**,
+  y **`--sun-shade` y `--sun-cast` valen exactamente CERO en oscuro** (decision
+  de s158, con su porque escrito). En claro la sombra es *como se pinta la luz*.
+  Cambiar el papel a mitad de bloque no atenua el sol: **le quita la sombra**.
+- **REDUCED-MOTION no necesita nada**: el kill de `tokens.css:374` neutraliza el
+  cruce solo (16-33 ms). Y declarar una transicion en `:root` **no toca el motor
+  de geometria**: aro 406, `--pace-dial-d` 406px y `--pace-horizon` 65px con y
+  sin la hoja, con y sin reduce — con **control positivo** que reproduce la firma
+  exacta de s160 (420 px) forzando `transition: all` en el aro.
+
+### Arreglado
+
+- **EL DEFECTO DE s159 EN OTRA SUPERFICIE, cazado antes de publicar.** Con el
+  token fundiendose a 640 ms, cualquier nodo con transicion propia sobre color
+  **persigue a un valor que se mueve** — y una transicion cuyo destino cambia en
+  cada frame **se reinicia en cada frame**. Medido en el `body`: el token ya en
+  `rgb(29,26,20)` mientras el body pintaba `rgb(212,207,195)`, **188 unidades
+  RGB**; y como las tarjetas pintan **inline** (sin transicion, o sea siguiendo
+  al token exacto), quedaba **el fondo claro con las tarjetas ya oscuras**. Se
+  retira el fundido del `body` (ahora redundante) y **nadie persigue al lider
+  mientras cruza**. Contra una verdad de campo con todos los seguidores muertos:
+  desviacion **237 -> 15**, y el control —la regla sin marcar el flag— vuelve
+  exactamente a los numeros de antes, asi que lo que arregla es el mecanismo.
+  **No baja a cero a proposito**: los subarboles `data-pace-essential` quedan
+  fuera, misma excepcion que el kill de reduced-motion (WCAG 2.3.3).
+- **REGISTRAR `--breathe` APAGABA LA ATMOSFERA DEL POMODORO.** Lo cazo la suite
+  —dos tests de `home-luz` que pasaban en HEAD y fallaban con el cambio, y se
+  **confirmo que era regresion propia** sirviendo el `index.html` de HEAD—. Un
+  token registrado con `@property` deja de valer su texto literal y pasa a su
+  forma **canonica**: `--breathe` deja de leerse `#C97A5D` y se lee
+  `rgb(201, 122, 93)`. `interpolateRingColor` (`TimerDial.jsx:24-33`) le aplica
+  un `hexToRgb` que hace `slice()` sobre dos digitos por canal ⇒ **NaN** ⇒
+  `--pace-arco` invalido ⇒ **el degradado entero del bloom a
+  `background-image: none`**. Aislado bisecando el cambio en tres piezas, luego
+  familia a familia, luego token a token. **Auditados los 15 candidatos**: solo
+  `--breathe` y `--focus` tienen lector en JS en todo `app/`, y los dos en la
+  misma funcion; los otros 13 se registran sin riesgo. **Se arreglo el LECTOR**, no la lista: `aRgb` acepta hex y forma canonica y **devuelve un
+  respaldo en vez de NaN**, asi que entran los quince y el modo de fallo pasa de «se apaga media
+  home en silencio» a «el arco usa su color por defecto». `--move` y `--extra` siguen fuera a
+  proposito. **Aserto nuevo que lo consagra de frente** —antes solo se cazaba por rebote— con su
+  rojo comprobado revirtiendo el arreglo.
+- **GUARD DE AUTO EN `secret.dark.mode`**, gemelo del de `secret.bilingual`
+  (s139) y por su misma razon: el logro premia haber **ELEGIDO** el oscuro, que
+  es un gesto deliberado. Sin el, bastaria con tener el SO en oscuro siete dias
+  para que PACE regalara un secreto sin que nadie tocara nada. `paletteAuto` va
+  ademas en las dependencias del efecto: salir de Auto estando ya en oscuro no
+  cambia `palette`, y sin eso el dia no se apuntaria.
+- **EL PRIMER PAPEL ENTRA SECO.** El fundido se declara sobre
+  `:root[data-pace-palette-ready]`, atributo que `applyTheme` anade **tras la
+  primera aplicacion**. Necesario: en `PACE.html`, donde Babel procesa los
+  modulos y el tema se aplica mucho mas tarde, sin el guard el arranque daba
+  **15 cruces** (el primero a 1377 ms sobre `--ink-3`) y con el **0**. Demostrado
+  con **control fiel** —servir el mismo artefacto con el selector del guard
+  quitado—, despues de que dos intentos anteriores no valieran.
+- **Y EL GUARD, TAL COMO SE ESCRIBIO PRIMERO, NO ERA FIABLE.** Lo destapo la
+  suite: la prueba del arranque fallaba **solo con ocho workers** y pasaba
+  aislada, con los **trece** tokens compartiendo `startTime`. `data-palette` **no
+  cambia nunca** despues del arranque (comprobado con un `MutationObserver`
+  sobre `<html>`), asi que el cruce no venia de ahi: **es una carrera**. El guard
+  armaba la transicion en el frame siguiente al `setAttribute('data-palette')`, y
+  si el navegador no habia recalculado el estilo por su cuenta en ese hueco —bajo
+  carga **no lo hace**— el «estilo previo» que la transicion toma como origen
+  seguia siendo el de la paleta CLARA: armar la transicion y aterrizar el papel
+  oscuro caian en el **mismo recalculo**. Se arregla con **una linea que parece
+  inutil**: leer `--paper` antes de armar la transicion, lo que vacia el trabajo
+  de estilo pendiente. **La sonda con la que se buscaba el defecto leia estilo en
+  cada tick, o sea que forzaba ese recalculo y hacia desaparecer justo lo que
+  iba a medir.**
+
+### Verificacion
+
+- `npm run verify` **PASA** con v0.92.0 coherente en los 3 sitios. El **CENSO**
+  de i18n pidio subir 510 -> 511 a mano, que es exactamente para lo que existe:
+  la paridad ES/EN es **relacional** y paso (511 = 511, biyectiva).
+- **Banco de rojos: 6 de 6 mordieron**, cada uno corriendo **exactamente 1 test**
+  y con el artefacto restaurado **byte a byte**. Su primera version **mintio dos
+  veces**: las mutaciones de CSS buscaban la regla minificada (el artefacto
+  conserva el formato) y, con `shell:true`, `-g` con espacios se partia —
+  «1 failed · 24 passed» en un archivo de **seis** tests.
+
+### CI
+
+- **El CI llevaba DOS versiones en rojo** (#7 v0.90.0 y #8 v0.91.0) mientras s159
+  y s160 cerraron declarando verde: lo verde era **local**. Localizado sin
+  adivinar, porque el repositorio es publico y la API de *jobs* responde sin
+  auth: **`verify` verde y `e2e` ROJO** en los dos. Descartado midiendo que sean
+  los 2 workers (`CI=true` en local da **58/58 en 39,1 s**), las mayusculas de
+  rutas (**193 comprobadas** contra el disco, cero desajustes) o el lockfile. Es
+  **Linux**. Los *logs* dan 403 sin auth; `gh` se instalo en esta sesion pero
+  `gh auth login` es del usuario, asi que **queda abierto**.
+
+Diario: [session-161](./docs/sessions/session-161-paleta-automatica.md).
 
 ---
 
@@ -428,92 +582,3 @@ versiones anteriores, la tabla enlaza al diario completo en
   **`998E3E358D689036`**.
 
 Diario: [session-160](./docs/sessions/session-160-tiron-reduced-motion-y-foco.md).
-
----
-
-## [v0.90.0] -- 2026-08-06 -- feat(home): la luz del Pomodoro
-
-Cierra el frente que **s157 y s158 dejaron en el árbol sin commit y sin una línea de
-documentación**. Este commit publica las tres sesiones.
-
-### El centrado móvil era PREVIO, y estaba publicado
-
-Medido sirviendo los dos artefactos en paralelo (árbol y HEAD v0.89.0): **la desviación era
-idéntica** — +11,80 px a 320, +11,89 a 360, +12,00 a 375 y +12,09 a 390. La atmósfera de s158
-no lo introdujo: **lo hizo visible**, porque el halo cuelga del aro y arrastra el error a un
-campo de luz de 790 px de ancho.
-
-La causa, recorriendo la cadena de ancestros: el motor fija `--pace-dial-d` en **0,92 · W del
-viewport** y la raíz de `FocusTimer` añade **encima** un padding lateral de `clamp(0px, 4vw,
-40px)` que ese techo no descuenta. Su max-content queda en 390,19 px contra los 366 de ancho
-útil, y `[data-pace-main-content]` es un **grid de una sola pista `auto`**: la pista crece,
-**desborda y se coloca desde el START** en vez de centrarse. La mitad del desborde es la
-desviación exacta. Se arregla anulando ese padding en móvil (la causa) y con
-`justify-content: center` (el guard) — a 320 px la primera sola deja **2 px de holgura**, y el
-banco de rojos lo demuestra con un **control negativo** que deshace solo el padding y sigue verde.
-Resultado **0,00 px** en los cuatro anchos, sin tocar diámetro, arco ni `home-geometry.js`.
-
-### La curva respira desde la mitad
-
-Las cuatro paradas de color no se tocan; lo que deja de ser lineal es el **recorrido**. Y la
-meseta **sale de la curva** en vez de ser un tramo plano aparte: `curvaSuave` tiene pendiente
-cero en sus extremos, así que la subida se posa al llegar al pico. La mitad que baja usa **otra**
-curva (`curvaCaida`, x^1,5): conserva la meseta pero **llega al final bajando**, que es lo único
-que mata el repunte de p=1 — con la curva simétrica la luz se aplanaba en el minuto 25 mientras
-el color seguía subiendo.
-
-| | s158 | v0.90.0 |
-|---|---|---|
-| pico de presencia (noche) | p=0,375 | **p=0,495** |
-| pico de calor OKLab | p=0,52 | **p=0,495** |
-| rebotes tras el pico | 5 | **2** |
-| rebote en p=1 | sí | **eliminado** |
-| saltos por bloque | 50 (uno cada 30 s) | **197 (uno cada 7,6 s)** |
-| salto mayor | 4,47 % | **2,03 %** |
-| saltos ≥ 2 % | **47** | **1** |
-
-El parpadeo se arregla subiendo la resolución (k 24→96, i 30→120) y **no** con una transición de
-opacidad: esa no suavizaría el escalón de **color**, que vive dentro del degradado. Coste medido
-alternando tres modos en la misma pasada y separando trabajo real de protocolo: **+0,44 s** por
-bloque de 25 min, o sea 0,029 % del tiempo real.
-
-En la paleta **clara** la presencia compuesta sigue culminando tarde (p≈0,77), porque sobre papel
-crema el atardecer contrasta más que el mediodía; el **calor** sí culmina centrado. Medido,
-presentado y **no compensado**, por decisión explícita.
-
-### Tres defectos que encontró el usuario mirando, y los tres eran transiciones que se pisan
-
-**La sombra de los chips entraba a golpe**: el chip lleva `transition` de 0,22 s **inline sobre
-todas las propiedades** (su hover), así que su `filter` perseguía con 220 ms de retraso a un
-`--pace-on` que viajaba 1,6 s — con la luz al 60 %, la sombra iba por 0,01 de alfa, y al pararse
-daba un tirón de 0,09 a 0,17. Se muda al **grid**, que no lleva transición: misma forma
-proyectada, una declaración en vez de cuatro. `--sun-cast` baja además de 0,18 a **0,10**.
-
-**Pausar era un salto de un frame** (0,517 → 0,233): el 0,45 vivía dentro de `--pace-i`, que no se
-transiciona. Sale a un tercer mando, `--pace-pausado`, con su propio fundido de 500 ms. Y lo que
-publica el componente es el **interruptor**, no la profundidad: cuánto se recoge la luz es un
-valor **por paleta** (`--sun-pausa` 0,45 oscuro / 0,35 claro) y las paletas viven en CSS.
-
-**La cola no llevaba el color del arco.** Ahora sí: `--pace-arco` publica el tono del recorrido y
-las dos paradas finales del bloom lo mezclan al 25 %. Aislado con todo lo demás congelado, el eje
-rojo-verde de la cola sigue al arco (1,25 terracota → 0,95 ocre → 0,45 oliva) y la presencia solo
-sube un 5-7 %: **tiñe, no ilumina**. Solo la cola, no el limbo — s158 bajó la saturación un 10 %
-justo porque el halo llegaba a leerse como una ampliación del arco.
-
-### Verificación
-
-`npm run verify` **pasa** con v0.90.0 coherente en los tres sitios · **`npm run test:e2e` pasa
-55/55** contra el artefacto recién regenerado, con las 44 previas sin una regresión · **banco de
-rojos: 5 asertos en rojo con mutación controlada y restauración por hash, 1 control negativo verde
-y 1 declarado sin rojo**, y cuatro de los cinco **nacieron rojos contra el producto real** ·
-navegador real en 5 combinaciones de viewport y paleta con sesión y pausa: **consola limpia**,
-scroll horizontal 0 · **cambio día↔noche** a 25/50/75 % en los dos sentidos con el progreso y la
-geometría **idénticos** y sin fotograma de flash · `PACE_standalone.html` restaurado byte-idéntico.
-
-**Deuda mecánica**: `tests/home-geometria.spec.js` había llegado a 631 líneas (CLAUDE.md §1 fija
-500) y se parte en cuatro archivos sin tocar una línea de cuerpo.
-
-Diario: [session-159](./docs/sessions/session-159-luz-del-pomodoro.md).
-
----
-

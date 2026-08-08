@@ -65,7 +65,16 @@ function TweakSecretsWatcher() {
 
   /* secret.dark.mode — "7 días en oscuro" (días de calendario distintos,
      no necesariamente consecutivos). Cap de 30 fechas. */
+  /* s161 — guard del modo AUTO, gemelo del de `secret.bilingual` de arriba y
+     por la misma razón: el logro premia haber ELEGIDO el oscuro, que es un
+     gesto deliberado. Desde que la paleta puede seguir al sistema, sin este
+     guard bastaría con tener el SO en oscuro siete días para que PACE regalara
+     un secreto sin que nadie haya tocado nada. Los casos que SÍ siguen
+     contando: elegir 'oscuro' a mano en Ajustes —ahí `paletteAuto` ya es
+     false, porque `setPalette` lo apaga (state-settings.jsx)— y las
+     instalaciones que nunca han entrado en Auto. */
   useEffectSW(() => {
+    if (state.paletteAuto === true) return;
     if (state.palette !== 'oscuro') return;
     try {
       const today = toISODate(new Date()); // local, no UTC (s105)
@@ -81,7 +90,10 @@ function TweakSecretsWatcher() {
         unlockAchievement('secret.dark.mode');
       }
     } catch (e) { /* silencioso */ }
-  }, [state.palette]);
+    /* `paletteAuto` va en las dependencias, no solo en el guard: salir de Auto
+       estando ya en oscuro no cambia `palette`, así que sin esto el día no se
+       apuntaría hasta el siguiente cambio de paleta. */
+  }, [state.palette, state.paletteAuto]);
 
   return null;
 }

@@ -99,11 +99,13 @@ function TweaksPanel({ open, onClose }) {
      de layout, audio promovido al primer eje como pills separadas. */
   /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
      'envejecido' retirado en s71 / v0.28.9. */
+  /* s161 · `palette` SALE de esta lista y pasa a bloque propio (más abajo),
+     exactamente la misma cirugía que se le hizo a `lang` en s139 y por la misma
+     razón: gana una tercera opción «Auto» que no es un valor de `state.palette`
+     —que sigue siendo siempre 'crema' u 'oscuro'— sino un MODO que vive en
+     `state.paletteAuto`. El mapeador genérico de abajo hace `set({[key]: v})`,
+     y eso no sabe apagar un modo. */
   const ejes = [
-    { key: 'palette', label: t('tweaks.eje.palette'), options: [
-      { v: 'crema', name: t('tweaks.palette.crema') },
-      { v: 'oscuro', name: t('tweaks.palette.oscuro') },
-    ]},
     /* s139 · Fase 1.6 — el eje de estilo de timer se OCULTA entero (queda
        siempre «aro») y 'organico' sale de la lista de Respira. Las dos cosas
        cuelgan de `app/flags.js`; el código de ambas variantes sigue vivo y la
@@ -181,6 +183,44 @@ function TweaksPanel({ open, onClose }) {
               <button key={opt.v} onClick={() => set(esAuto
                 ? { langAuto: true, lang: detectInitialLang() }
                 : { langAuto: false, lang: opt.v })}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: 11,
+                  fontWeight: active ? 500 : 400,
+                  background: active ? 'var(--ink)' : 'var(--paper-2)',
+                  color: active ? 'var(--paper)' : 'var(--ink-2)',
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+                  borderRadius: 'var(--r-sm)',
+                  transition: TWEAKS_PILL_TRANSITION,
+                  letterSpacing: 0.2,
+                }}>{opt.name}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Divider style={{ margin: '14px 0' }} />
+
+      {/* Paleta — segundo eje. s161 · Fase día/noche.
+          Tres pills, con la MISMA gramática que el idioma: «Auto» es un modo y
+          las otras dos son valores. Tocar crema u oscuro APAGA Auto (lo hace
+          `setPalette`), que es lo que permite que la tercera pill no necesite
+          explicación: elegir una es decir «esta, y no la que diga el sistema».
+          Al entrar en Auto se resuelve YA, para que el panel cambie en el
+          momento y no al recargar. */}
+      <div style={{ marginBottom: 16 }}>
+        <Meta style={{ marginBottom: 6 }}>{t('tweaks.eje.palette')}</Meta>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {[
+            { v: 'auto', name: t('tweaks.palette.auto') },
+            { v: 'crema', name: t('tweaks.palette.crema') },
+            { v: 'oscuro', name: t('tweaks.palette.oscuro') },
+          ].map(opt => {
+            const esAuto = opt.v === 'auto';
+            const active = esAuto ? !!state.paletteAuto
+                                  : (!state.paletteAuto && state.palette === opt.v);
+            return (
+              <button key={opt.v} onClick={() => (esAuto ? setPaletteAuto(true) : setPalette(opt.v))}
                 style={{
                   padding: '6px 10px',
                   fontSize: 11,

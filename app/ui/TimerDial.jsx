@@ -15,7 +15,22 @@
 
 /* interpolateRingColor - gradiente terracota -> ocre -> oliva en modo
    foco. Estable en pausas (breathe) y larga (focus). Extraido de
-   FocusTimer en s76. */
+   FocusTimer en s76.
+
+   s161 · LEE TOKENS, ASI QUE NO PUEDE SUPONER QUE VALEN HEXADECIMAL.
+   Aqui habia un `hexToRgb` que hacia `slice()` sobre dos digitos por canal, y
+   eso solo funciona si el token se declara con `#rrggbb`. En cuanto un token de
+   color se registra con `@property` —lo que hace falta para que se FUNDA al
+   cambiar de paleta— su valor computado pasa a la forma CANONICA,
+   `rgb(201, 122, 93)`, y aquel parser devolvia **NaN**: el arco salia
+   `rgb(NaN, NaN, NaN)`, `--pace-arco` quedaba invalido y **el degradado entero
+   del bloom del sol caia a `background-image: none`**. Registrar un color de
+   modulo apagaba la atmosfera del Pomodoro. Se publico y lo cazo la suite.
+
+   `aRgb` acepta las dos formas y, si no reconoce ninguna, **devuelve el
+   respaldo en vez de NaN**: el modo de fallo pasa de «se apaga media home en
+   silencio» a «el arco usa su color por defecto». La misma cautela vale para
+   cualquier token que alguien decida escribir en `rgb()` o `oklch()` manana. */
 function interpolateRingColor(progress, mode) {
   if (mode === 'pausa') return 'var(--breathe)';
   if (mode === 'larga') return 'var(--focus)';
@@ -24,13 +39,25 @@ function interpolateRingColor(progress, mode) {
   const c1 = read('--breathe', '#C97A5D');
   const c2 = read('--move',    '#9A7B4F');
   const c3 = read('--focus',   '#6e7a4e');
-  const hexToRgb = (h) => {
-    const m = h.replace('#', '');
-    return [parseInt(m.slice(0,2),16), parseInt(m.slice(2,4),16), parseInt(m.slice(4,6),16)];
+  const aRgb = (valor, respaldo) => {
+    const s = String(valor || '').trim();
+    /* forma canonica de un token registrado: rgb(r, g, b) o rgba(r g b / a) */
+    const m = s.match(/^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i);
+    if (m) return [Math.round(+m[1]), Math.round(+m[2]), Math.round(+m[3])];
+    const h = s.replace('#', '');
+    if (/^[0-9a-f]{6}$/i.test(h)) {
+      return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+    }
+    if (/^[0-9a-f]{3}$/i.test(h)) {
+      return [parseInt(h[0]+h[0],16), parseInt(h[1]+h[1],16), parseInt(h[2]+h[2],16)];
+    }
+    return respaldo;
   };
   const lerp = (a, b, t) => Math.round(a + (b - a) * t);
   const blend = (r1, r2, t) => [lerp(r1[0],r2[0],t), lerp(r1[1],r2[1],t), lerp(r1[2],r2[2],t)];
-  const r1 = hexToRgb(c1), r2 = hexToRgb(c2), r3 = hexToRgb(c3);
+  /* Los respaldos son los MISMOS literales que los fallbacks de arriba, ya en
+     RGB: si el token no se reconoce, el arco sigue siendo el arco. */
+  const r1 = aRgb(c1, [201, 122, 93]), r2 = aRgb(c2, [154, 123, 79]), r3 = aRgb(c3, [110, 122, 78]);
   const t = Math.max(0, Math.min(1, progress));
   const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
   return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
