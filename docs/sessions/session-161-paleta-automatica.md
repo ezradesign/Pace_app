@@ -76,6 +76,11 @@ siempre 0, con el artefacto restaurado byte a byte.
 **Y cae una suposición heredada**: s159 anotó que `page.clock` congela el
 fundido de 1,6 s. Medida la curva con y sin reloj virtual, **es idéntica**.
 
+**Cerrado de verdad, y observado**: empujado el commit, el **run #9 termina en
+SUCCESS los dos jobs**. El conteo se lee **en el log** —`65 passed (56.0s)`— y
+no se infiere, que es justo la deuda que s154 dejó anotada: entonces el «13
+passed» del runner nunca llegó a verse porque los logs daban 403 sin auth.
+
 **La lección, que es de proceso**: «la suite pasa» es una frase sobre una
 máquina. Desde s153 el CI existe precisamente porque simular no es ejecutar —
 y dos sesiones seguidas cerraron sin mirarlo.
