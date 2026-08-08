@@ -157,7 +157,7 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ## 🧪 Checklist de cierre
 
-> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): 13 tests de Playwright
+> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): 65 tests de Playwright
 > sobre `index.html` en un navegador real, ~25 s. Los siete puntos de abajo son lo que aserta,
 > uno a uno. **Sigue mereciendo una mirada humana** lo que la suite no cubre y declara: móvil,
 > inglés, Caminos, premium y cualquier cosa visual — no compara ni un píxel.

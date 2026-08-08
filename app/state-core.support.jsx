@@ -43,7 +43,18 @@ function isMobileViewport() {
 /* Paleta inicial (s89 · P0 auditoria): respeta prefers-color-scheme del
    sistema SOLO en el primer arranque (sin estado guardado). La eleccion
    manual de Tweaks persiste en localStorage y siempre gana en cargas
-   posteriores — esto no re-sigue cambios del SO en caliente. */
+   posteriores.
+
+   s161 — LA FRASE QUE HABIA AQUI («esto no re-sigue cambios del SO en
+   caliente») YA NO ES CIERTA SIEMPRE, y se corrige en vez de borrarse.
+   Sigue siendo exacta para quien ELIGE A MANO, que es lo que s89 protegia.
+   Lo que se anadio es poder elegir «que mande el sistema»: con
+   `state.paletteAuto === true`, `loadState` vuelve a llamar aqui en CADA
+   arranque y ademas `state-settings.jsx` sigue al SO mientras la app esta
+   abierta —salvo con un bloque de Foco vivo, donde el cambio se aparca—.
+   Esta funcion no cambia: sigue respondiendo solo «que quiere el sistema
+   ahora», y es la UNICA que lo responde. Ver la fila de s161 en
+   DECISIONES_TECNICAS_VIGENTES.md. */
 function detectInitialPalette() {
   try {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches

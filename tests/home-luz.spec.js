@@ -147,6 +147,26 @@ test.describe('geometria de la home · la luz del Pomodoro', () => {
     const reposo = await leerLuz(page);
     await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
     await expect(dial).toHaveAttribute('data-pace-dial-running', '');
+    /* `--pace-on` NO ES UN BOOLEANO: es el interruptor de la luz y se FUNDE en
+       1,6 s (s159). Leerlo justo despues del atributo es muestrear el fundido
+       en su primer instante — medido en s161, ahi vale **0 exacto**, y solo
+       sube a 0,0039 a los 50 ms, 0,028 a los 100 y 0,37 a los 300.
+
+       Este test y el de abajo lo leian a pelo y exigian `> 0`, o sea que
+       pasaban o no segun si el viaje de ida y vuelta de Playwright dejaba pasar
+       un frame. En local casi siempre lo dejaba; **en el runner de Linux caia
+       en el MISMO frame y daba 0**, y eso puso el CI en rojo durante DOS
+       versiones (v0.90.0 y v0.91.0) mientras las dos sesiones cerraban
+       declarando verde en local.
+
+       Se espera a que encienda en vez de bajar el liston: el contrato que se
+       aserta sigue siendo «arrancar un bloque enciende la luz», y si no
+       encendiera nunca, esto seguiria fallando. Comprobado poniendolo rojo.
+
+       Y de paso corrige una suposicion heredada: `page.clock` **no** congela
+       este fundido — medida la curva con y sin reloj virtual, es identica. */
+    await expect.poll(async () => Number((await leerLuz(page)).on),
+      { timeout: 5000, message: 'corriendo no enciende la luz' }).toBeGreaterThan(0);
     const activo = await leerLuz(page);
     expect(activo.paused, 'corriendo no es pausado').toBe(false);
 
@@ -179,7 +199,11 @@ test.describe('geometria de la home · la luz del Pomodoro', () => {
     await irAlArtefacto(page);
     await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
     await expect(page.locator('[data-pace-dial-fit]')).toHaveAttribute('data-pace-dial-running', '');
-    expect(Number((await leerLuz(page)).on), 'no hay luz con el bloque corriendo').toBeGreaterThan(0);
+    /* Se ESPERA a que encienda, por lo mismo que el test de arriba: `--pace-on`
+       se funde en 1,6 s y justo tras el atributo vale 0 exacto. Este era el
+       segundo de los dos rojos del CI. */
+    await expect.poll(async () => Number((await leerLuz(page)).on),
+      { timeout: 5000, message: 'no hay luz con el bloque corriendo' }).toBeGreaterThan(0);
 
     /* `fastForward` y no `runFor`: el segundo dispara los ~1500 ticks del
        bloque UNO A UNO, con su re-render cada vez, y esta sola prueba costaba

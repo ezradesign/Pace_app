@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.91.0</title>
+  <title>PACE · Foco · Cuerpo — v0.92.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -228,6 +228,12 @@
   --dur-quick: 180ms;
   --dur-normal: 320ms;
   --dur-slow: 640ms;
+  /* El cruce entre paletas (s161). Perilla PROPIA y no `--dur-slow` aunque hoy
+     valgan lo mismo: aquel gobierna la entrada de los módulos y este el cambio
+     de papel, y son dos gestos distintos que se afinan mirando. `state-core.js`
+     LEE este token para saber cuánto dura la supresión de seguidores, así que
+     cambiarlo aquí basta — no hay un segundo número en JS. */
+  --dur-palette: 640ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Transiciones entre pantallas del Camino (s77).
@@ -314,6 +320,151 @@
   --sun-pausa: 0.45;
 }
 
+/* ============================================================
+   EL CRUCE ENTRE PALETAS (s161)
+
+   Cambiar de paleta es cambiar UN atributo en <html>, y eso llega a todas
+   partes a la vez. Medido en el artefacto real a 1280x720: mueve **1875
+   declaraciones computadas** sobre 87 nodos. De esas, hoy solo **88 se funden**
+   —y a CUATRO velocidades a la vez: 180 ms, 200, 220 y los 320 del body— y
+   **1787 saltan**. O sea que lo que habia no era un corte seco: era un borron.
+
+   POR QUE @property Y NO OTRA COSA. Esta app pinta con estilos INLINE
+   (`style={{ background: 'var(--paper)' }}` en Primitives, cards y chips), y a
+   un estilo inline no se le puede anadir una transicion desde una hoja. Lo
+   unico que alcanza a todos a la vez es hacer INTERPOLABLE la variable misma:
+   registrada con @property, `--paper` deja de ser un texto que se sustituye de
+   golpe y pasa a ser un color que viaja, y cada consumidor —inline incluido—
+   lee el valor de ese frame sin saber que hay una transicion.
+
+   Las otras tres se midieron y se descartaron con numero:
+     · View Transitions: 12 frames largos con la app parada y 14 con sesion
+       (peor frame 116,8 ms), y bajo reduced-motion SIGUE pagando el snapshot
+       (10 frames largos) aunque su animacion este neutralizada.
+     · Velo superpuesto que se funde: barato, pero solo funde el PAPEL — la
+       tinta, los bordes y los sellos siguen saltando por debajo. Es el error
+       que s159 ya documento con la opacidad y el color del degradado.
+     · Corte seco de verdad: exigiria QUITAR los fundidos que ya hay, no
+       dejarlos.
+
+   COSTE MEDIDO, con control negativo (misma ventana, sin cambiar de paleta):
+   con el Pomodoro parado el fundido entero cuesta **66 frames contra 67**, cero
+   frames por encima de 32 ms. Es gratis. Con una sesion viva costaria 32 de 66
+   — y por eso el cambio automatico se SUSPENDE durante un bloque
+   (state-settings.jsx). Registrar las 15 y no cambiar nada tambien se midio:
+   66 frames con sesion viva, identico al control.
+
+   LOS 11 TOKENS `--sun-*` NO ESTAN AQUI, y no es un olvido: el cambio
+   automatico solo ocurre fuera de bloque, y ahi no hay sol. Medido con el
+   Pomodoro parado: `--pace-on` vale 0, el halo computa `background-image: none`
+   y el grid no tiene ni filtro ni sombra. No hay nada que fundir.
+
+   EL `initial-value` ES TRANSPARENTE A PROPOSITO. La sintaxis `<color>` obliga
+   a declarar uno, pero `:root` declara las 15 siempre, asi que no se usa nunca.
+   Ponerle el valor real de la paleta clara crearia una SEGUNDA fuente de verdad
+   para cada color, que es justo lo que este proyecto no hace.
+
+   REDUCED-MOTION NO NECESITA NADA. El kill de mas abajo pone
+   `transition-duration` en 0,01 ms sobre todo lo que no sea
+   `data-pace-essential`, y estas transiciones no lo son: medido, el cruce cae a
+   16-33 ms. Comprobado ademas que declarar una transicion en `:root` NO toca el
+   motor de geometria de la home —aro 406, `--pace-dial-d` 406px y
+   `--pace-horizon` 65px con y sin la hoja, con y sin reduced-motion— con
+   control positivo: forzando `transition: all` en el aro reaparece la firma
+   exacta de s160 (420 px).
+   ============================================================ */
+/* REGISTRAR UN TOKEN CAMBIA LO QUE `getComputedStyle` DEVUELVE DE EL, y esta
+   lista solo puede crecer despues de comprobar quien lo PARSEA.
+
+   Un token registrado deja de valer su texto literal y pasa a valer su forma
+   CANONICA: `--breathe` deja de leerse «#C97A5D» y se lee «rgb(201, 122, 93)».
+   Cualquier JS que parsee ese texto se rompe — y habia uno:
+   `interpolateRingColor` (TimerDial.jsx) leia `--breathe` y `--focus` y les
+   aplicaba un `hexToRgb` que hacia `slice()` sobre dos digitos por canal.
+
+   NO ES TEORIA, se publico y lo cazo la suite: el parser devolvia NaN,
+   `--pace-arco` quedaba invalido y **el degradado entero del bloom del sol caia
+   a `background-image: none`** — o sea que registrar un color de MODULO apagaba
+   la atmosfera del Pomodoro. Aislado bisecando familia a familia y despues
+   token a token, contra el mismo artefacto servido, y confirmado que era
+   regresion propia sirviendo el `index.html` de HEAD.
+
+   AUDITADO: de los 15 candidatos, `--breathe` y `--focus` eran los UNICOS con
+   lector en JS en todo `app/`. Primero se dejaron fuera; despues se arreglo el
+   lector —`aRgb` acepta las dos formas y **devuelve un respaldo en vez de
+   NaN**— y entraron los quince. **La regla que queda**: antes de anadir un
+   token aqui, buscar su nombre entrecomillado en `app/`, que es como se le pide
+   a `getComputedStyle`. Si alguien lo parsea, se adapta el lector primero.
+
+   `--move` y `--extra` NO estan, y no por descuido: `interpolateRingColor`
+   tambien lee `--move`, y anadirlos exigiria repetir esa comprobacion. Son
+   colores de MODULO y no cambian con el papel tanto como para pagarlo. */
+@property --paper      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --paper-2    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --paper-3    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --ink        { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --ink-2      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --ink-3      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --line       { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --line-2     { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus-2    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus-soft { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus-cta  { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --breathe    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --breathe-2  { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --breathe-soft { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+
+/* EL GUARD DE ARRANQUE. Sin el, quien tenga el sistema en oscuro veria en CADA
+   carga un fundido de 640 ms desde la paleta clara: `:root` pinta crema, los
+   scripts evaluan y `applyTheme()` pone data-palette="oscuro" — y con la
+   transicion viva eso ES un cruce. El atributo lo pone `applyTheme` despues de
+   la primera aplicacion (state-core.jsx), asi que el primer papel entra seco y
+   solo los cambios POSTERIORES se funden. */
+:root[data-pace-palette-ready] {
+  transition:
+    --paper var(--dur-palette) var(--ease), --paper-2 var(--dur-palette) var(--ease),
+    --paper-3 var(--dur-palette) var(--ease),
+    --ink var(--dur-palette) var(--ease), --ink-2 var(--dur-palette) var(--ease),
+    --ink-3 var(--dur-palette) var(--ease),
+    --line var(--dur-palette) var(--ease), --line-2 var(--dur-palette) var(--ease),
+    --focus var(--dur-palette) var(--ease), --focus-2 var(--dur-palette) var(--ease),
+    --focus-soft var(--dur-palette) var(--ease), --focus-cta var(--dur-palette) var(--ease),
+    --breathe var(--dur-palette) var(--ease), --breathe-2 var(--dur-palette) var(--ease),
+    --breathe-soft var(--dur-palette) var(--ease);
+}
+
+/* NADIE PERSIGUE AL LIDER MIENTRAS CRUZA.
+
+   Este es el defecto que casi se publica, y es el de s159 otra vez: una
+   transición que persigue a otra. Con el token fundiéndose, cualquier nodo que
+   tenga ADEMÁS su propia `transition` sobre una propiedad de color persigue a
+   un valor que se mueve — y una transición cuyo destino cambia en cada frame
+   **se reinicia en cada frame**, así que deja de ser un fundido de 320 ms y
+   pasa a ser un filtro que se queda muy atrás. Medido en el body: el token ya
+   estaba en el papel oscuro mientras el body pintaba `rgb(212,207,195)`,
+   **188 unidades RGB** de separación. Y como las tarjetas pintan con estilo
+   INLINE —sin transición, o sea siguiendo al token exacto— el resultado era el
+   fondo claro con las tarjetas ya oscuras.
+
+   Medido contra una VERDAD DE CAMPO (una pasada con todos los seguidores
+   muertos, donde por construcción nadie se retrasa): tal cual estaba, 112
+   transiciones persiguiendo en el pico y **237** de desviación; con estas dos
+   declaraciones, **24 y 15**. El control —la misma regla con el atributo sin
+   poner— vuelve exactamente a los números de antes, así que lo que arregla es
+   el mecanismo y no la presencia de la regla.
+
+   NO BAJA A CERO A PROPÓSITO: los subárboles `data-pace-essential` quedan
+   fuera, la misma excepción que el kill de reduced-motion de más abajo y por la
+   misma razón (WCAG 2.3.3 — la guía visual de respiración es motion ESENCIAL y
+   no se toca nunca). De ahí los 15 que quedan.
+
+   El atributo lo pone y lo quita `applyTheme` (state-core.jsx), y solo cuando
+   la paleta cambia DE VERDAD y ya ha pasado el arranque. */
+:root[data-pace-palette-crossing] *:not([data-pace-essential], [data-pace-essential] *) {
+  transition-property: none !important;
+}
+
 /* TIPOGRAFÍAS ALT */
 [data-font="cormorant"] {
   --font-display: 'Cormorant Garamond', Georgia, serif;
@@ -335,7 +486,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color var(--dur-normal) var(--ease), color var(--dur-normal) var(--ease);
+  /* s161 — AQUÍ HABÍA UN FUNDIDO DE 320 ms de `background-color` y `color`, y
+     se retira. Existía para suavizar el cambio de paleta, que es justo lo que
+     ahora hace el token: `--paper` y `--ink` se funden solos y el body los lee.
+     Dejarlo era ponerle un perseguidor al líder — medido, 188 unidades RGB de
+     separación en mitad del cruce, con el fondo claro y las tarjetas ya
+     oscuras. Ver el bloque «EL CRUCE ENTRE PALETAS» de más arriba. */
 }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
 input, textarea { font-family: inherit; color: inherit; }
@@ -1393,6 +1549,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'tweaks.eje.timer': 'Estilo del timer',
   'tweaks.eje.breath': 'Círculo de respiración',
   'tweaks.eje.lang': 'Idioma',
+  /* s161 · «Automático» literal, el mismo que la pill de idioma: en Ajustes
+     las dos filas dicen lo mismo con la misma palabra. */
+  'tweaks.palette.auto': 'Automático',
   'tweaks.palette.crema': 'Crema día',
   'tweaks.palette.oscuro': 'Oscuro noche',
   'tweaks.layout.sidebar': 'Sidebar (default)',
@@ -1586,6 +1745,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'tweaks.eje.timer': 'Timer style',
   'tweaks.eje.breath': 'Breathing circle',
   'tweaks.eje.lang': 'Language',
+  'tweaks.palette.auto': 'Automatic',
   'tweaks.palette.crema': 'Day cream',
   'tweaks.palette.oscuro': 'Night dark',
   'tweaks.layout.sidebar': 'Sidebar (default)',
@@ -3903,7 +4063,18 @@ function isMobileViewport() {
 /* Paleta inicial (s89 · P0 auditoria): respeta prefers-color-scheme del
    sistema SOLO en el primer arranque (sin estado guardado). La eleccion
    manual de Tweaks persiste en localStorage y siempre gana en cargas
-   posteriores — esto no re-sigue cambios del SO en caliente. */
+   posteriores.
+
+   s161 — LA FRASE QUE HABIA AQUI («esto no re-sigue cambios del SO en
+   caliente») YA NO ES CIERTA SIEMPRE, y se corrige en vez de borrarse.
+   Sigue siendo exacta para quien ELIGE A MANO, que es lo que s89 protegia.
+   Lo que se anadio es poder elegir «que mande el sistema»: con
+   `state.paletteAuto === true`, `loadState` vuelve a llamar aqui en CADA
+   arranque y ademas `state-settings.jsx` sigue al SO mientras la app esta
+   abierta —salvo con un bloque de Foco vivo, donde el cambio se aparca—.
+   Esta funcion no cambia: sigue respondiendo solo «que quiere el sistema
+   ahora», y es la UNICA que lo responde. Ver la fila de s161 en
+   DECISIONES_TECNICAS_VIGENTES.md. */
 function detectInitialPalette() {
   try {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ?
@@ -4043,7 +4214,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.91.0';
+const PACE_VERSION = 'v0.92.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4052,6 +4223,19 @@ const TOAST_DURATION_MS = 3000;
 const defaultState = {
   // Settings / Tweaks
   palette: 'crema',
+
+  /* Paleta AUTOMÁTICA (s161). `palette` sigue siendo SIEMPRE una paleta real
+     ('crema'|'oscuro'), nunca 'auto': si valiera 'auto', `applyTheme` pondría
+     data-palette="auto" y ninguna regla de tokens.css casaría — la app entera
+     se quedaría con los valores de `:root`. El modo va aparte y `loadState` lo
+     RESUELVE en cada arranque; además, mientras la app está abierta lo re-sigue
+     en caliente (state-settings.jsx). Esto REVISA la decisión de s89, que solo
+     miraba el sistema en el primer arranque de la vida.
+     FALSE aquí a propósito, y por la misma razón que `langAuto`: el merge
+     `{...defaultState, ...parsed}` pasaría a Auto a TODA instalación existente
+     y borraría su elección. El true va solo en la rama sin `raw`. */
+  paletteAuto: false,
+
   font: 'cormorant',
   layout: 'sidebar',
   sidebarCollapsed: false,
@@ -4233,6 +4417,11 @@ function loadState() {
            de `langAuto` en defaultState sobre por qué no puede ir allí. */
         langAuto: true,
         lang: _detectLang(),
+        /* s161: y en Auto de PALETA, por lo mismo. Nacer en Auto es además lo
+           que ya hacía de facto esta rama desde s89 —llamaba a
+           `detectInitialPalette()`—; lo nuevo es que ahora queda DICHO, así que
+           el siguiente arranque puede volver a preguntarle al sistema. */
+        paletteAuto: true,
         palette: detectInitialPalette(),
         lastActiveDay: new Date().toDateString(),
         _weeklyStatsReindexed_v0_28_8: true,
@@ -4250,6 +4439,20 @@ function loadState() {
        `secret.bilingual` (su referencia se siembra en el primer render con el
        valor ya resuelto): cambiar el idioma del sistema no regala el logro. */
     if (parsed.langAuto === true) parsed.lang = _detectLang();
+
+    /* s161 · paleta AUTO: se re-evalua en CADA arranque, igual que el idioma y
+       en el mismo sitio. Sin esto, `detectInitialPalette()` solo corria en la
+       PRIMERA apertura de la vida (s89) y despues `palette` quedaba congelada
+       en lo que se guardo, aunque el sistema hubiera cambiado.
+        Resolverlo AQUI, antes de que monte nada, es lo que evita el parpadeo: la
+       primera pintura ya sale con la paleta buena. Y tiene el mismo efecto
+       lateral bueno que el idioma con `secret.bilingual` — el watcher de
+       `secret.dark.mode` nace con el valor ya resuelto, asi que un arranque en
+       oscuro por el sistema no cuenta como un dia elegido a mano (el guard
+       explicito vive en TweakSecretsWatcher.jsx). */
+
+    if (parsed.paletteAuto === true) parsed.palette = detectInitialPalette();
+
     /* Migracion defensiva s49: paths ausente en instalaciones pre-v0.26. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
     /* Migracion defensiva s54: paths.history ausente. */
@@ -4355,10 +4558,82 @@ function subscribe(listener) {
   return () => _listeners.delete(listener);
 }
 
+/* s161 · el primer papel entra SECO. `tokens.css` declara el fundido de 640 ms
+   entre paletas sobre `:root[data-pace-palette-ready]`, y este es quien pone
+   ese atributo: despues de la PRIMERA aplicacion, nunca antes. Sin el, quien
+   tenga el sistema en oscuro veria en cada carga un fundido desde la paleta
+   clara — `:root` pinta crema, este modulo evalua y pone data-palette="oscuro",
+   y con la transicion ya viva eso es un cruce de 640 ms en cada arranque.
+   Se marca en el frame SIGUIENTE (no en el mismo) para que el estilo inicial
+   llegue a computarse: puesto en la misma tarea, el navegador puede resolver
+   las dos cosas juntas y el guard no guardaria nada. */
+let _paletteReady = false;
+function _marcarPaletaLista() {
+  if (_paletteReady) return;
+  _paletteReady = true;
+  const root = document.documentElement;
+  /* FORZAR EL RECALCULO ANTES DE ARMAR LA TRANSICION. Esta linea parece inutil y
+     es justo la que hace el guard fiable: sin ella, el guard dependia de que el
+     navegador hubiera recalculado el estilo por su cuenta entre el
+     `setAttribute('data-palette')` de arriba y el frame siguiente. Cuando no lo
+     hacia —y bajo carga NO lo hace—, el «estilo previo» que la transicion toma
+     como origen seguia siendo el de la paleta CLARA, asi que armar la
+     transicion y aterrizar el papel oscuro ocurrian en el mismo recalculo: un
+     cruce de 640 ms en el arranque, con los TRECE tokens compartiendo
+     `startTime`. Leer aqui vacia el trabajo pendiente, de modo que el origen ya
+     es el papel definitivo y armar la transicion no mueve nada.
+     COMO SE ENCONTRO: en local no reproducia y en la suite con ocho workers si.
+     La sonda que lo buscaba leia estilo en cada tick — o sea que **forzaba el
+     recalculo y tapaba el defecto que iba a medir**. */
+  try {void getComputedStyle(root).getPropertyValue('--paper');} catch (e) {}
+  try {
+    requestAnimationFrame(() => {
+      root.setAttribute('data-pace-palette-ready', '');
+    });
+  } catch (e) {
+    root.setAttribute('data-pace-palette-ready', '');
+  }
+}
+
+/* s161 · MIENTRAS LA PALETA CRUZA, NADIE LA PERSIGUE.
+   Pone `data-pace-palette-crossing` en <html> durante el fundido; la regla que
+   lo consume vive en `tokens.css` y neutraliza la transicion propia de los
+   nodos que tienen una sobre color. Sin esto, cada seguidor persigue a un valor
+   que se mueve y se reinicia en cada frame: medido, 188 unidades RGB de
+   separacion entre el papel del body y el token.
+
+   La duracion se LEE de `--dur-palette`, que es donde vive: si alguien afina el
+   fundido en `tokens.css` no hay un segundo numero aqui que se quede viejo. El
+   margen extra cubre la cola de la interpolacion. */
+let _finDelCruce = null;
+function _marcarCruce() {
+  const root = document.documentElement;
+  let ms = 640;
+  try {
+    const leido = parseFloat(getComputedStyle(root).getPropertyValue('--dur-palette'));
+    if (leido > 0) ms = leido;
+  } catch (e) {/* con el valor por defecto basta */}
+  root.setAttribute('data-pace-palette-crossing', '');
+  if (_finDelCruce) clearTimeout(_finDelCruce);
+  _finDelCruce = setTimeout(() => {
+    root.removeAttribute('data-pace-palette-crossing');
+    _finDelCruce = null;
+  }, ms + 80);
+}
+
+let _paletaAplicada = null;
 function applyTheme() {
   const root = document.documentElement;
+  /* Solo hay CRUCE si la paleta cambia de verdad y el arranque ya paso: el
+     primer papel entra seco (ver `_marcarPaletaLista`) y un cambio de
+     tipografia no mueve un solo color. */
+  if (_paletteReady && _paletaAplicada !== null && _paletaAplicada !== _state.palette) {
+    _marcarCruce();
+  }
+  _paletaAplicada = _state.palette;
   root.setAttribute('data-palette', _state.palette);
   root.setAttribute('data-font', _state.font);
+  _marcarPaletaLista();
 }
 
 function usePace() {
@@ -4434,7 +4709,7 @@ Object.assign(window, {
   getState, setState, subscribe, usePace, ensureDayFresh, wipeLocalState,
   showToast, onToast, setCaminoUiActive
 });
-;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
+;Object.assign(window, { loadState, persistState, wipeLocalState, getState, setState, subscribe, _marcarPaletaLista, _marcarCruce, applyTheme, usePace, ensureDayFresh, _emitToast, showToast, setCaminoUiActive, onToast });
 })();
 </script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
@@ -5650,19 +5925,172 @@ Object.assign(window, {
   <script>
 ;(function () {
 /* PACE · state-settings.jsx
-   Configuracion: setLang y helpers de settings.
+   Configuracion: setLang, el modo AUTO de paleta y helpers de settings.
    Split de state.jsx (sesion 57 / v0.27.5).
-   Depende de: state-core (setState).
+   Depende de: state-core (getState, setState, detectInitialPalette).
 */
 
 function setLang(lang) {
   setState({ lang });
 }
 
+/* ============================================================
+   PALETA AUTOMATICA (s161) — seguir al sistema EN CALIENTE
+   ============================================================
+   REVISA la decision de s89, que no se borra: aquella dijo que el sistema solo
+   manda en el PRIMER arranque, y su razon sigue siendo buena — una eleccion
+   manual no puede perderse porque el SO cambie. Lo que cambia es que ahora esa
+   eleccion incluye «que mande el sistema», y entonces mandar es lo correcto.
+
+   POR SISTEMA Y NO POR HORA, y no es preferencia: esta app YA tiene un dia, y
+   dura 25 minutos. `--pace-k` recorre amanecer -> mediodia -> atardecer ->
+   noche DENTRO de cada bloque (FocusTimer.jsx). Una paleta por hora del reloj
+   mete un SEGUNDO ciclo de dia a otra velocidad: a las 19:00 el papel seria
+   noche mientras el aro amanece porque acabas de empezar. Ademas el SO ya trae
+   programacion horaria, asi que seguirlo INCLUYE la hora sin que PACE tenga que
+   decidir umbrales que dependen de latitud y estacion.
+
+   `palette` nunca vale 'auto' — ver la nota de `paletteAuto` en defaultState.
+   ============================================================ */
+
+/* La paleta que el sistema pide AHORA, o null si este navegador no sabe.
+   Reutiliza `detectInitialPalette` (state-core.support.jsx) en vez de repetir
+   el media query: una sola fuente de verdad para «que quiere el sistema». */
+function _paletaDelSistema() {
+  try {
+    if (!window.matchMedia) return null;
+    return detectInitialPalette();
+  } catch (e) {return null;}
+}
+
+/* ¿Hay un bloque VIVO en pantalla?
+
+   Se lee del DOM A PROPOSITO, y no es pereza: el estado vivo del contador no
+   esta en `pace.state.v2` —sale de `useCountdown`, que es estado de React
+   dentro de FocusTimer—, asi que la alternativa seria que el Pomodoro publicara
+   una bandera nueva en el store. `TimerDial` YA publica dos atributos
+   declarativos para esto mismo desde s156 (`data-pace-dial-running` y
+   `data-pace-dial-paused`, TimerDial.jsx:93-94), que es exactamente el
+   `haySesion = running || status === 'paused'` de FocusTimer expresado en el
+   DOM. Consumirlos no toca una linea del Pomodoro.
+
+   COBERTURA, dicha entera: `TimerDial` lo comparten la home y el paso de foco
+   de un Camino, asi que esto cubre las dos. NO cubre Respira ni Mueve, cuyas
+   sesiones montan `SessionShell` y no un aro; ahi la paleta si cambiaria en
+   vivo. Queda declarado, no resuelto: es otra decision de producto. */
+function _hayBloqueVivo() {
+  try {
+    return !!document.querySelector('[data-pace-dial-running], [data-pace-dial-paused]');
+  } catch (e) {return false;}
+}
+
+/* La paleta que el sistema pidio mientras corria un bloque y todavia no se ha
+   aplicado. null = no hay nada pendiente. Vive en memoria y NO se persiste a
+   proposito: si la app se cierra con algo pendiente, el `paletteAuto` de
+   `loadState` resuelve la paleta buena en el siguiente arranque. Persistirlo
+   seria guardar un estado transitorio que ya sabe reconstruirse solo. */
+let _paletaPendiente = null;
+let _vigilante = null;
+
+function _volcarPendiente() {
+  if (_vigilante) {_vigilante.disconnect();_vigilante = null;}
+  const destino = _paletaPendiente;
+  _paletaPendiente = null;
+  if (!destino) return;
+  /* Se relee el modo: entre que se aparco y ahora, la persona ha podido salir
+     de Auto tocando una pill — y entonces esto no tiene ningun derecho a
+     cambiarle el papel. */
+  const s = getState();
+  if (!s.paletteAuto) return;
+  if (s.palette !== destino) setState({ palette: destino });
+}
+
+/* Espera a que el bloque termine. El observador se instala SOLO mientras hay
+   algo pendiente y se desconecta al volcar, asi que en el caso normal —que es
+   el 100 % del tiempo— esto no observa nada.
+
+   `childList` ademas de los atributos porque el aro puede DESAPARECER entero
+   (salir de la home, cerrar el Camino) en vez de perder su atributo, y ese
+   final tambien cuenta. El filtro de atributos deja fuera todo lo demas: sin
+   el, las ~197 publicaciones de luz por bloque despertarian el observador. */
+function _esperarAlFinDelBloque() {
+  if (_vigilante) return;
+  try {
+    _vigilante = new MutationObserver(() => {
+      if (!_hayBloqueVivo()) _volcarPendiente();
+    });
+    _vigilante.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['data-pace-dial-running', 'data-pace-dial-paused']
+    });
+  } catch (e) {/* sin observador, lo resuelve el proximo arranque */}
+}
+
+/* El sistema ha cambiado de tema. */
+function _alCambiarElSistema() {
+  if (!getState().paletteAuto) return;
+  const destino = _paletaDelSistema();
+  if (!destino) return;
+  if (_hayBloqueVivo()) {
+    /* SUSPENDER Y APLICAR AL TERMINAR (decision s161). Dos motivos medidos:
+       cambiar en vivo cuesta 32 de 66 frames en la ventana del fundido, y sobre
+       todo NO cambia solo el papel — en la paleta oscura `--sun-shade` y
+       `--sun-cast` valen exactamente CERO por decision de s158, asi que a mitad
+       de bloque el sol perderia su sombra y su proyeccion. El aro ES el sol: no
+       se cambia el escenario a mitad de funcion. */
+    _paletaPendiente = destino;
+    _esperarAlFinDelBloque();
+    return;
+  }
+  if (getState().palette !== destino) setState({ palette: destino });
+}
+
+/* Entrar o salir de Auto. Al ENTRAR se resuelve ya, para que el panel cambie en
+   el momento y no al recargar — igual que hace la pill de idioma (s139). */
+function setPaletteAuto(auto) {
+  if (!auto) {
+    _paletaPendiente = null;
+    if (_vigilante) {_vigilante.disconnect();_vigilante = null;}
+    setState({ paletteAuto: false });
+    return;
+  }
+  const destino = _paletaDelSistema();
+  setState(destino ? { paletteAuto: true, palette: destino } : { paletteAuto: true });
+}
+
+/* Elegir una paleta a mano APAGA Auto. Es la misma salida que el idioma y la
+   que hace que la tercera pill no necesite explicacion: tocar una de las otras
+   dos es decir «esta, y no la que diga el sistema». */
+function setPalette(palette) {
+  _paletaPendiente = null;
+  if (_vigilante) {_vigilante.disconnect();_vigilante = null;}
+  setState({ paletteAuto: false, palette });
+}
+
+/* Se engancha al evaluar el modulo, como `applyTheme()` en state-core: el
+   listener no necesita DOM y el observador se instala solo si hace falta.
+   `addEventListener` con caida a `addListener` para WebViews viejos (Capacitor
+   es objetivo de v1.0). */
+function startPaletteAutoWatcher() {
+  try {
+    if (!window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', _alCambiarElSistema);else
+    if (mq.addListener) mq.addListener(_alCambiarElSistema);
+  } catch (e) {/* sin listener, cada arranque sigue resolviendo Auto */}
+}
+
+startPaletteAutoWatcher();
+
 Object.assign(window, {
-  setLang
+  setLang,
+  setPalette,
+  setPaletteAuto,
+  startPaletteAutoWatcher
 });
-;Object.assign(window, { setLang });
+;Object.assign(window, { setLang, _paletaDelSistema, _hayBloqueVivo, _volcarPendiente, _esperarAlFinDelBloque, _alCambiarElSistema, setPaletteAuto, setPalette, startPaletteAutoWatcher });
 })();
 </script>
   <script>
@@ -9489,7 +9917,22 @@ Object.assign(window, { UpdatePrompt });
 
 /* interpolateRingColor - gradiente terracota -> ocre -> oliva en modo
    foco. Estable en pausas (breathe) y larga (focus). Extraido de
-   FocusTimer en s76. */
+   FocusTimer en s76.
+
+   s161 · LEE TOKENS, ASI QUE NO PUEDE SUPONER QUE VALEN HEXADECIMAL.
+   Aqui habia un `hexToRgb` que hacia `slice()` sobre dos digitos por canal, y
+   eso solo funciona si el token se declara con `#rrggbb`. En cuanto un token de
+   color se registra con `@property` —lo que hace falta para que se FUNDA al
+   cambiar de paleta— su valor computado pasa a la forma CANONICA,
+   `rgb(201, 122, 93)`, y aquel parser devolvia **NaN**: el arco salia
+   `rgb(NaN, NaN, NaN)`, `--pace-arco` quedaba invalido y **el degradado entero
+   del bloom del sol caia a `background-image: none`**. Registrar un color de
+   modulo apagaba la atmosfera del Pomodoro. Se publico y lo cazo la suite.
+
+   `aRgb` acepta las dos formas y, si no reconoce ninguna, **devuelve el
+   respaldo en vez de NaN**: el modo de fallo pasa de «se apaga media home en
+   silencio» a «el arco usa su color por defecto». La misma cautela vale para
+   cualquier token que alguien decida escribir en `rgb()` o `oklch()` manana. */
 function interpolateRingColor(progress, mode) {
   if (mode === 'pausa') return 'var(--breathe)';
   if (mode === 'larga') return 'var(--focus)';
@@ -9498,13 +9941,25 @@ function interpolateRingColor(progress, mode) {
   const c1 = read('--breathe', '#C97A5D');
   const c2 = read('--move', '#9A7B4F');
   const c3 = read('--focus', '#6e7a4e');
-  const hexToRgb = (h) => {
-    const m = h.replace('#', '');
-    return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
+  const aRgb = (valor, respaldo) => {
+    const s = String(valor || '').trim();
+    /* forma canonica de un token registrado: rgb(r, g, b) o rgba(r g b / a) */
+    const m = s.match(/^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i);
+    if (m) return [Math.round(+m[1]), Math.round(+m[2]), Math.round(+m[3])];
+    const h = s.replace('#', '');
+    if (/^[0-9a-f]{6}$/i.test(h)) {
+      return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+    }
+    if (/^[0-9a-f]{3}$/i.test(h)) {
+      return [parseInt(h[0] + h[0], 16), parseInt(h[1] + h[1], 16), parseInt(h[2] + h[2], 16)];
+    }
+    return respaldo;
   };
   const lerp = (a, b, t) => Math.round(a + (b - a) * t);
   const blend = (r1, r2, t) => [lerp(r1[0], r2[0], t), lerp(r1[1], r2[1], t), lerp(r1[2], r2[2], t)];
-  const r1 = hexToRgb(c1),r2 = hexToRgb(c2),r3 = hexToRgb(c3);
+  /* Los respaldos son los MISMOS literales que los fallbacks de arriba, ya en
+     RGB: si el token no se reconoce, el arco sigue siendo el arco. */
+  const r1 = aRgb(c1, [201, 122, 93]),r2 = aRgb(c2, [154, 123, 79]),r3 = aRgb(c3, [110, 122, 78]);
   const t = Math.max(0, Math.min(1, progress));
   const rgb = t < 0.5 ? blend(r1, r2, t * 2) : blend(r2, r3, (t - 0.5) * 2);
   return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
@@ -18996,7 +19451,16 @@ function TweakSecretsWatcher() {
 
   /* secret.dark.mode — "7 días en oscuro" (días de calendario distintos,
      no necesariamente consecutivos). Cap de 30 fechas. */
+  /* s161 — guard del modo AUTO, gemelo del de `secret.bilingual` de arriba y
+     por la misma razón: el logro premia haber ELEGIDO el oscuro, que es un
+     gesto deliberado. Desde que la paleta puede seguir al sistema, sin este
+     guard bastaría con tener el SO en oscuro siete días para que PACE regalara
+     un secreto sin que nadie haya tocado nada. Los casos que SÍ siguen
+     contando: elegir 'oscuro' a mano en Ajustes —ahí `paletteAuto` ya es
+     false, porque `setPalette` lo apaga (state-settings.jsx)— y las
+     instalaciones que nunca han entrado en Auto. */
   useEffectSW(() => {
+    if (state.paletteAuto === true) return;
     if (state.palette !== 'oscuro') return;
     try {
       const today = toISODate(new Date()); // local, no UTC (s105)
@@ -19012,7 +19476,10 @@ function TweakSecretsWatcher() {
         unlockAchievement('secret.dark.mode');
       }
     } catch (e) {/* silencioso */}
-  }, [state.palette]);
+    /* `paletteAuto` va en las dependencias, no solo en el guard: salir de Auto
+       estando ya en oscuro no cambia `palette`, así que sin esto el día no se
+       apuntaría hasta el siguiente cambio de paleta. */
+  }, [state.palette, state.paletteAuto]);
 
   return null;
 }
@@ -19403,11 +19870,13 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
      de layout, audio promovido al primer eje como pills separadas. */
   /* Ejes orden: palette → timer → breath → layout (por frecuencia de uso).
      'envejecido' retirado en s71 / v0.28.9. */
+  /* s161 · `palette` SALE de esta lista y pasa a bloque propio (más abajo),
+     exactamente la misma cirugía que se le hizo a `lang` en s139 y por la misma
+     razón: gana una tercera opción «Auto» que no es un valor de `state.palette`
+     —que sigue siendo siempre 'crema' u 'oscuro'— sino un MODO que vive en
+     `state.paletteAuto`. El mapeador genérico de abajo hace `set({[key]: v})`,
+     y eso no sabe apagar un modo. */
   const ejes = [
-  { key: 'palette', label: t('tweaks.eje.palette'), options: [
-    { v: 'crema', name: t('tweaks.palette.crema') },
-    { v: 'oscuro', name: t('tweaks.palette.oscuro') }]
-  },
   /* s139 · Fase 1.6 — el eje de estilo de timer se OCULTA entero (queda
      siempre «aro») y 'organico' sale de la lista de Respira. Las dos cosas
      cuelgan de `app/flags.js`; el código de ambas variantes sigue vivo y la
@@ -19485,6 +19954,44 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
         React.createElement("button", { key: opt.v, onClick: () => set(esAuto ?
           { langAuto: true, lang: detectInitialLang() } :
           { langAuto: false, lang: opt.v }),
+          style: {
+            padding: '6px 10px',
+            fontSize: 11,
+            fontWeight: active ? 500 : 400,
+            background: active ? 'var(--ink)' : 'var(--paper-2)',
+            color: active ? 'var(--paper)' : 'var(--ink-2)',
+            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
+            borderRadius: 'var(--r-sm)',
+            transition: TWEAKS_PILL_TRANSITION,
+            letterSpacing: 0.2
+          } }, opt.name));
+
+    })
+    )
+    ), /*#__PURE__*/
+
+    React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
+
+
+
+
+
+
+
+
+    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
+    React.createElement(Meta, { style: { marginBottom: 6 } }, t('tweaks.eje.palette')), /*#__PURE__*/
+    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
+    [
+    { v: 'auto', name: t('tweaks.palette.auto') },
+    { v: 'crema', name: t('tweaks.palette.crema') },
+    { v: 'oscuro', name: t('tweaks.palette.oscuro') }].
+    map((opt) => {
+      const esAuto = opt.v === 'auto';
+      const active = esAuto ? !!state.paletteAuto :
+      !state.paletteAuto && state.palette === opt.v;
+      return (/*#__PURE__*/
+        React.createElement("button", { key: opt.v, onClick: () => esAuto ? setPaletteAuto(true) : setPalette(opt.v),
           style: {
             padding: '6px 10px',
             fontSize: 11,

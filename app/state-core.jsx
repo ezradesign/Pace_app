@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.91.0';
+const PACE_VERSION = 'v0.92.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -27,6 +27,19 @@ const TOAST_DURATION_MS = 3000;
 const defaultState = {
   // Settings / Tweaks
   palette: 'crema',
+
+  /* Paleta AUTOMÁTICA (s161). `palette` sigue siendo SIEMPRE una paleta real
+     ('crema'|'oscuro'), nunca 'auto': si valiera 'auto', `applyTheme` pondría
+     data-palette="auto" y ninguna regla de tokens.css casaría — la app entera
+     se quedaría con los valores de `:root`. El modo va aparte y `loadState` lo
+     RESUELVE en cada arranque; además, mientras la app está abierta lo re-sigue
+     en caliente (state-settings.jsx). Esto REVISA la decisión de s89, que solo
+     miraba el sistema en el primer arranque de la vida.
+     FALSE aquí a propósito, y por la misma razón que `langAuto`: el merge
+     `{...defaultState, ...parsed}` pasaría a Auto a TODA instalación existente
+     y borraría su elección. El true va solo en la rama sin `raw`. */
+  paletteAuto: false,
+
   font: 'cormorant',
   layout: 'sidebar',
   sidebarCollapsed: false,
@@ -208,6 +221,11 @@ function loadState() {
            de `langAuto` en defaultState sobre por qué no puede ir allí. */
         langAuto: true,
         lang: _detectLang(),
+        /* s161: y en Auto de PALETA, por lo mismo. Nacer en Auto es además lo
+           que ya hacía de facto esta rama desde s89 —llamaba a
+           `detectInitialPalette()`—; lo nuevo es que ahora queda DICHO, así que
+           el siguiente arranque puede volver a preguntarle al sistema. */
+        paletteAuto: true,
         palette: detectInitialPalette(),
         lastActiveDay: new Date().toDateString(),
         _weeklyStatsReindexed_v0_28_8: true,
@@ -225,6 +243,20 @@ function loadState() {
        `secret.bilingual` (su referencia se siembra en el primer render con el
        valor ya resuelto): cambiar el idioma del sistema no regala el logro. */
     if (parsed.langAuto === true) parsed.lang = _detectLang();
+
+    /* s161 · paleta AUTO: se re-evalua en CADA arranque, igual que el idioma y
+       en el mismo sitio. Sin esto, `detectInitialPalette()` solo corria en la
+       PRIMERA apertura de la vida (s89) y despues `palette` quedaba congelada
+       en lo que se guardo, aunque el sistema hubiera cambiado.
+
+       Resolverlo AQUI, antes de que monte nada, es lo que evita el parpadeo: la
+       primera pintura ya sale con la paleta buena. Y tiene el mismo efecto
+       lateral bueno que el idioma con `secret.bilingual` — el watcher de
+       `secret.dark.mode` nace con el valor ya resuelto, asi que un arranque en
+       oscuro por el sistema no cuenta como un dia elegido a mano (el guard
+       explicito vive en TweakSecretsWatcher.jsx). */
+    if (parsed.paletteAuto === true) parsed.palette = detectInitialPalette();
+
     /* Migracion defensiva s49: paths ausente en instalaciones pre-v0.26. */
     if (!parsed.paths) parsed.paths = defaultState.paths;
     /* Migracion defensiva s54: paths.history ausente. */
@@ -330,10 +362,82 @@ function subscribe(listener) {
   return () => _listeners.delete(listener);
 }
 
+/* s161 · el primer papel entra SECO. `tokens.css` declara el fundido de 640 ms
+   entre paletas sobre `:root[data-pace-palette-ready]`, y este es quien pone
+   ese atributo: despues de la PRIMERA aplicacion, nunca antes. Sin el, quien
+   tenga el sistema en oscuro veria en cada carga un fundido desde la paleta
+   clara — `:root` pinta crema, este modulo evalua y pone data-palette="oscuro",
+   y con la transicion ya viva eso es un cruce de 640 ms en cada arranque.
+   Se marca en el frame SIGUIENTE (no en el mismo) para que el estilo inicial
+   llegue a computarse: puesto en la misma tarea, el navegador puede resolver
+   las dos cosas juntas y el guard no guardaria nada. */
+let _paletteReady = false;
+function _marcarPaletaLista() {
+  if (_paletteReady) return;
+  _paletteReady = true;
+  const root = document.documentElement;
+  /* FORZAR EL RECALCULO ANTES DE ARMAR LA TRANSICION. Esta linea parece inutil y
+     es justo la que hace el guard fiable: sin ella, el guard dependia de que el
+     navegador hubiera recalculado el estilo por su cuenta entre el
+     `setAttribute('data-palette')` de arriba y el frame siguiente. Cuando no lo
+     hacia —y bajo carga NO lo hace—, el «estilo previo» que la transicion toma
+     como origen seguia siendo el de la paleta CLARA, asi que armar la
+     transicion y aterrizar el papel oscuro ocurrian en el mismo recalculo: un
+     cruce de 640 ms en el arranque, con los TRECE tokens compartiendo
+     `startTime`. Leer aqui vacia el trabajo pendiente, de modo que el origen ya
+     es el papel definitivo y armar la transicion no mueve nada.
+     COMO SE ENCONTRO: en local no reproducia y en la suite con ocho workers si.
+     La sonda que lo buscaba leia estilo en cada tick — o sea que **forzaba el
+     recalculo y tapaba el defecto que iba a medir**. */
+  try { void getComputedStyle(root).getPropertyValue('--paper'); } catch (e) {}
+  try {
+    requestAnimationFrame(() => {
+      root.setAttribute('data-pace-palette-ready', '');
+    });
+  } catch (e) {
+    root.setAttribute('data-pace-palette-ready', '');
+  }
+}
+
+/* s161 · MIENTRAS LA PALETA CRUZA, NADIE LA PERSIGUE.
+   Pone `data-pace-palette-crossing` en <html> durante el fundido; la regla que
+   lo consume vive en `tokens.css` y neutraliza la transicion propia de los
+   nodos que tienen una sobre color. Sin esto, cada seguidor persigue a un valor
+   que se mueve y se reinicia en cada frame: medido, 188 unidades RGB de
+   separacion entre el papel del body y el token.
+
+   La duracion se LEE de `--dur-palette`, que es donde vive: si alguien afina el
+   fundido en `tokens.css` no hay un segundo numero aqui que se quede viejo. El
+   margen extra cubre la cola de la interpolacion. */
+let _finDelCruce = null;
+function _marcarCruce() {
+  const root = document.documentElement;
+  let ms = 640;
+  try {
+    const leido = parseFloat(getComputedStyle(root).getPropertyValue('--dur-palette'));
+    if (leido > 0) ms = leido;
+  } catch (e) { /* con el valor por defecto basta */ }
+  root.setAttribute('data-pace-palette-crossing', '');
+  if (_finDelCruce) clearTimeout(_finDelCruce);
+  _finDelCruce = setTimeout(() => {
+    root.removeAttribute('data-pace-palette-crossing');
+    _finDelCruce = null;
+  }, ms + 80);
+}
+
+let _paletaAplicada = null;
 function applyTheme() {
   const root = document.documentElement;
+  /* Solo hay CRUCE si la paleta cambia de verdad y el arranque ya paso: el
+     primer papel entra seco (ver `_marcarPaletaLista`) y un cambio de
+     tipografia no mueve un solo color. */
+  if (_paletteReady && _paletaAplicada !== null && _paletaAplicada !== _state.palette) {
+    _marcarCruce();
+  }
+  _paletaAplicada = _state.palette;
   root.setAttribute('data-palette', _state.palette);
   root.setAttribute('data-font', _state.font);
+  _marcarPaletaLista();
 }
 
 function usePace() {

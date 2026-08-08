@@ -135,6 +135,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'tweaks.eje.timer':              'Estilo del timer',
     'tweaks.eje.breath':             'Círculo de respiración',
     'tweaks.eje.lang':               'Idioma',
+    /* s161 · «Automático» literal, el mismo que la pill de idioma: en Ajustes
+       las dos filas dicen lo mismo con la misma palabra. */
+    'tweaks.palette.auto':           'Automático',
     'tweaks.palette.crema':          'Crema día',
     'tweaks.palette.oscuro':         'Oscuro noche',
     'tweaks.layout.sidebar':         'Sidebar (default)',
@@ -328,6 +331,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'tweaks.eje.timer':              'Timer style',
     'tweaks.eje.breath':             'Breathing circle',
     'tweaks.eje.lang':               'Language',
+    'tweaks.palette.auto':           'Automatic',
     'tweaks.palette.crema':          'Day cream',
     'tweaks.palette.oscuro':         'Night dark',
     'tweaks.layout.sidebar':         'Sidebar (default)',
