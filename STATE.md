@@ -446,22 +446,48 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **DIAGNOSTICO DE RESPIRA**, luego el tiron del arco
+## Proxima sesion -- **LEER `docs/HANDOFF_s164.md` PRIMERO**, luego implementar Respira
+
+> **s164 fue SOLO diagnostico y documentos: ni una linea de `app/`.** Todo lo que
+> hay que saber para seguir esta en **[`docs/HANDOFF_s164.md`](docs/HANDOFF_s164.md)**
+> — leerlo antes de tocar Respira o los glifos.
+>
+> **RESPIRA · el diagnostico esta hecho y medido**
+> ([`diagnostico-respira-progreso-v0.94.0.md`](docs/audits/diagnostico-respira-progreso-v0.94.0.md)):
+> en las 3 rutinas de rondas, «RONDA n/N» + «RESPIRACION n DE N» + la barra son
+> **los mismos dos numeros tres veces**. El usuario ya eligio **4B** (barra
+> continua para las 17 rutinas por tiempo), **3A** (la barra va una respiracion
+> por delante: en «25 de 25» ya marca 100 %), **5A** (32 px reservados para una
+> cuenta atras que en rondas nunca aparece) y **6** (hooks `data-pace-breathe-*`:
+> hoy la sesion de Respira tiene CERO y nada del progreso es asertable).
+> **Quedan DOS abiertas**: la decision 1 —con las variantes montadas sobre la app
+> real en un artefacto publicado— y la 2, que trae una pregunta nueva del usuario:
+> **medir y trackear el tiempo de retencion**. Esa choca con B1/s89 (se retiro la
+> cifra-record de la apnea para no invitar a competir contra el reloj), asi que
+> hay que separar «guardarlo» de «mostrarlo durante la practica» y **preguntar**.
+>
+> **GLIFOS · el usuario va a generar arte y entregar PNG.** Dos encargos, dos
+> documentos: **38 logros sin arte** ([`GLIFOS_LOGROS_ENCARGO.md`](docs/product/GLIFOS_LOGROS_ENCARGO.md))
+> y **los 62 dibujos de ejercicio REHECHOS DESDE CERO**
+> ([`GLIFOS_EJERCICIOS_REDISENO.md`](docs/product/GLIFOS_EJERCICIOS_REDISENO.md)),
+> que es lo que el usuario eligio en vez de parchear los 20 huecos. **Implicacion
+> que hay que confirmar antes de empezar**: los de ejercicio son hoy SVG dibujado
+> en codigo y pasarian a MASCARAS como los logros — un solo mecanismo, pero hay
+> que escribir la ingesta, que no existe para ejercicios.
+>
+> **Cinco bancos nuevos** viven en `scripts/audit/` (pixeles HEAD-vs-arbol, huella
+> de CSS vivo, sonda de Respira y los dos censos de glifos), con sus trampas
+> medidas en la cabecera.
+>
+> **El tiron del arco** sigue esperando el banco en el telefono del usuario, y
+> **D3** (la sidebar con racha Y record) espera que se le monten las dos versiones
+> a tamaño real: eligio decidirlo mirando.
+
 
 > **EL CI ESTA VERDE** (s161 lo arreglo y s162 lo comprobo: los dos ultimos runs en
 > SUCCESS). `gh` esta **instalado y autenticado** (2.97.0), asi que `gh run list` y
 > `gh run view --log-failed` estan disponibles sin adivinar nada.
 >
-> **LA REGLA 1 ESTA PAGADA** (s163): los cinco archivos se trocearon y `DEUDA_500` esta
-> **vacia**, asi que el primer diente del trinquete es el unico que puede sonar — el que
-> rompa la regla la rompe de frente. El mayor del arbol es ahora `MoveSessionV1.jsx`, en
-> **exactamente 500**: lo que se le añada va SI O SI a `MoveSessionV1.support.jsx`, y el
-> verify lo canta en cada pasada.
->
-> **LO PRIMERO ES EL DIAGNOSTICO DE RESPIRA**, que lleva **cinco sesiones** aplazado y no
-> depende de nadie: leer el codigo real, identificar que representa cada barra del progreso
-> inferior, documentar las redundancias (fase, respiracion, ronda y total pueden estar
-> diciendo lo mismo tres veces) y traer un menu de decisiones, **sin implementar nada**.
 >
 > **Y queda sin abrir, por segunda sesion**, el **diagnostico de Respira**: leer el codigo real,
 > identificar que representa cada barra del progreso inferior, documentar las redundancias (fase,
