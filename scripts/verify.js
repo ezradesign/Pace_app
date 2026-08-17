@@ -40,6 +40,10 @@ var crypto = require('crypto');
 var ROOT  = path.resolve(__dirname, '..');
 var babel = require(path.join(ROOT, 'node_modules', '@babel', 'core'));
 var integridad = require('./verify.integridad.js');
+/* s162: la regla §1 («archivos < 500 lineas») vive en su propio archivo por la
+   misma razon que vigila — escrita aqui dentro, dejo este archivo en 544 lineas
+   y se puso roja sobre si misma en su primera pasada. */
+var tamano = require('./verify.tamano.js');
 
 /* --------------------------------------------------------------------------
    Identificadores de PLATAFORMA. Un nombre sin ligar que este aqui es del
@@ -368,6 +372,17 @@ function tandaVersion() {
     { archivo: 'app/state-core.jsx', re: /const PACE_VERSION = '(v[\d.]+)'/ },
     { archivo: 'sw.js',              re: /const CACHE_NAME = 'pace-(v[\d.]+)'/ },
     { archivo: 'PACE.html',          re: /<title>[^<]*—\s*(v[\d.]+)\s*<\/title>/ },
+    /* s162 · LOS DOS README ENTRAN AQUI, y no por pulcritud: se quedaron en
+       v0.84.0 mientras la app llegaba a v0.92.0 — OCHO versiones de deriva en el
+       escaparate del repo. s151 los reescribio precisamente por estar
+       desactualizados, asi que el arreglo a mano ya se demostro insuficiente:
+       nada los vigilaba. Cada uno declara la version en DOS sitios (la linea de
+       estado y el titulo de seccion) y los dos van en la lista, porque bumpear
+       uno y no el otro es el modo de fallo natural. */
+    { archivo: 'README.md',          re: /\*\*Estado:\*\*\s*(v[\d.]+)/ },
+    { archivo: 'README.md',          re: /Estado actual \((v[\d.]+)\)/ },
+    { archivo: 'README_EN.md',       re: /\*\*Status:\*\*\s*(v[\d.]+)/ },
+    { archivo: 'README_EN.md',       re: /Current state \((v[\d.]+)\)/ },
   ];
   var leidos = puntos.map(function (p) {
     var m = fs.readFileSync(path.join(ROOT, p.archivo), 'utf8').match(p.re);
@@ -399,7 +414,7 @@ var NO_CUBRE = [
   'orden de carga: un modulo que use algo publicado DESPUES sigue pasando',
   'CSS, tokens y layout: no se mira una sola regla',
   'el standalone: se restaura, no se analiza (index.html es el canonico, s134)',
-].concat(integridad.NO_CUBRE);
+].concat(tamano.NO_CUBRE).concat(integridad.NO_CUBRE);
 
 function main() {
   console.log('=== PACE verify v2 (s150 + s152) — build + artefacto + node --check + integridad ===');
@@ -412,6 +427,7 @@ function main() {
   var declarados = modulosDeclarados();
   tandaArtefacto(html, declarados);
   integridad.tandaIntegridad({ ROOT: ROOT, babel: babel, falla: falla, ok: ok, info: info }, declarados);
+  tamano.tandaTamano({ ROOT: ROOT, falla: falla, ok: ok, info: info, listar: listar, rel: rel });
   tandaVersion();
 
   console.log('\n--- lo que este verify NO cubre ---');

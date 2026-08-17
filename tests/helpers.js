@@ -42,6 +42,27 @@ async function sembrar(context, extra) {
   }, [CLAVE_ESTADO, Object.assign({}, SEMILLA, extra || {})]);
 }
 
+/* SIEMBRA QUE PISA (s162) · el efecto de segundo orden de la trampa de arriba.
+ *
+ * `sembrar` escribe SOLO SI FALTA, y eso es correcto por lo de s154. Pero en un
+ * archivo con `beforeEach(sembrar)` —checklist-estado.spec.js lo tiene—, una
+ * SEGUNDA llamada con estado extra NO ENTRA NUNCA: la primera ya dejo la clave
+ * puesta, asi que el `if` de la segunda es falso y el extra se descarta en
+ * silencio. Costo un rojo perfectamente enganoso: la app arrancaba bien, el
+ * estado extra no estaba, y el aserto fallaba como si el producto no funcionara
+ * («1/88» esperado, «0/88» recibido) cuando el producto ya estaba arreglado.
+ *
+ * Esta version escribe SIEMPRE, asi que se llama DESPUES del beforeEach y gana.
+ *
+ * NO SIRVE PARA PRUEBAS CON `reload()`: ahi machacaria lo que la app acaba de
+ * persistir, que es justo lo que `sembrar` evita. Si hace falta recargar,
+ * sembrar una vez y no pisar. */
+async function sembrarPisando(context, extra) {
+  await context.addInitScript(([clave, estado]) => {
+    localStorage.setItem(clave, JSON.stringify(estado));
+  }, [CLAVE_ESTADO, Object.assign({}, SEMILLA, extra || {})]);
+}
+
 /* TRAMPA MEDIDA (s154) · EL TEXTO QUE SE ASERTA ES `textContent`, NO EL QUE SE VE.
    Los matchers de Playwright (`toHaveText`, `getByText`) comparan contra
    `textContent`, o sea el texto del DOM SIN el `text-transform` de CSS. Un
@@ -110,6 +131,7 @@ module.exports = {
   RUTA_ARTEFACTO,
   SEMILLA,
   sembrar,
+  sembrarPisando,
   capturarErrores,
   irAlArtefacto,
   leerLogros,
