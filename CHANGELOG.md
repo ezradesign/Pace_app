@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.93.0** | 2026-08-17 | fix(home): **el test intermitente tenia razon** — sesion que empieza como AUDITORIA y acaba como saneamiento. La suite llevaba **un rojo cada dos pasadas** en reduced-motion («el aro mide distinto, 420 vs 406») y **no era el instrumento**: es el mecanismo de s160 **un nodo mas abajo**. El bloque que hace de horizonte consume `--pace-activities-overlap` como `margin-top` negativo y no estaba en la exencion de s160 (solo el aro y sus cuatro nodos interiores), asi que bajo el kill de reduced-motion ese margen **es una transicion**: el alto del stack aterriza en otro frame mientras el motor mide en la misma tarea, el desbordamiento se queda clavado en **11 px** —los de s156, dados por cerrados en s160—, el guard «nunca encoger a ciegas» revierte D a 420 y **gasta su unico reintento**; cuando el reintento corre la misma carrera, el motor **se rinde en 420 y ahi se queda**. El rojo sale en la maquina **rapida** y desaparece con la CPU frenada, y **un `resize` a mano lo baja a 406**: el motor podia medirlo y no lo volvio a medir. Arreglo acotado a la media query, con control (sin reduce el margen ya aterriza en la misma tarea y no hay transicion viva; con reduce, `margin-top:running`). Ademas: **«Regresas» (`first.return`) se perdia por una CARRERA**, no «nunca» como decia s148 — el artefacto son **109 etiquetas `<script>`** (tareas separadas) y `unlockAchievement` se referencia PELADA desde un modulo que corre antes del suyo, asi que el `setTimeout(0)` del rollover puede ganarle y el `try/catch` vacio entierra el ReferenceError; **lo decide la carga de la maquina**, y por eso dos sondas tranquilas dijeron «funciona» mientras la suite completa lo desmentia dos veces. Ahora la concesion va **dentro del estado que devuelve el rollover**; **la regla 1 pasa a estar vigilada** por `scripts/verify.tamano.js`, que **se cazo a si mismo** al dejar `verify.js` en 544 lineas, con un **trinquete** de tres dientes verificados en rojo; los dos README suben de v0.84.0 a v0.93.0 y **entran en la comprobacion de version**; y el CHANGELOG pierde sus **26** enlaces a diarios que nunca se escribieron. **2 asertos nuevos (65 -> 67) y los 2 mordieron** | 162 | [abajo](#v0930----2026-08-17----fixhome-el-test-intermitente-tenia-razon) |
 | **v0.92.0** | 2026-08-08 | feat(settings): **la paleta sigue al sistema, salvo cuando el aro es el sol** — nace el modo **Auto** de paleta, que REVISA la decisión de s89 («el sistema solo manda en el primer arranque»): esa fila sigue siendo cierta para quien elige a mano, y lo que cambia es que ahora se puede elegir **que mande el sistema**. Cuatro decisiones del usuario, cada una con su coste medido delante: **por sistema y no por hora** —esta app **ya tiene un día y dura 25 minutos**, `--pace-k` recorre amanecer→mediodía→noche dentro de cada bloque, así que una paleta por reloj metería un segundo ciclo a otra velocidad—, **suspender durante un bloque** —cambiar en vivo cuesta 32 de 66 frames, y sobre todo en oscuro `--sun-shade` y `--sun-cast` valen **cero** por decisión de s158, así que a mitad de sesión el sol perdería su sombra—, **tercera pill «Auto»** como el idioma, y **fundido de tokens por `@property`**. **El cambio de paleta no era un corte seco**: movía **1875 declaraciones** sobre 87 nodos, de las que **88 se fundían a cuatro velocidades a la vez** (180/200/220/320 ms) y **1787 saltaban**. Ahora los tokens interpolan solos —única vía que alcanza los estilos **inline**, que es como pinta esta app— y con el Pomodoro parado es **gratis**: 66 frames contra 67 del control negativo. **Dos defectos cazados antes de publicar**: el `transition` de 320 ms del `body` **perseguía** al token de 640 (una transición cuyo destino cambia cada frame **se reinicia cada frame**) y dejaba **188 unidades RGB** entre el fondo y unas tarjetas ya oscuras — el defecto de s159 en otra superficie, corregido de **237 a 15** de desviación contra una verdad de campo; y **registrar `--breathe` apagaba la atmósfera del Pomodoro**, porque un token registrado computa `rgb(...)` en vez de `#hex` y el `hexToRgb` de `interpolateRingColor` devolvía NaN ⇒ `--pace-arco` inválido ⇒ el bloom entero a `background-image: none`. Auditados los 15: solo `--breathe` y `--focus` tenían lector en JS, y **se arregló el lector** — `aRgb` acepta las dos formas y devuelve un respaldo en vez de NaN, así que entran los quince. Además, guard de Auto en `secret.dark.mode` (gemelo del de s139): el logro premia haber **elegido** el oscuro. **6 rojos y los 6 mordieron** | 161 | [abajo](#v0920----2026-08-08----featsettings-la-paleta-sigue-al-sistema-salvo-cuando-el-aro-es-el-sol) |
-| **v0.91.0** | 2026-08-07 | fix(home): **una transición de 0,01 ms sigue siendo una transición** — dos deudas de s156 cerradas y un tirón que **no reproduce**. **Reduced-motion**: el aro salía a 420 px con 11 px de scroll y la microcausa llevaba una sesión sin identificar; es que el kill de `tokens.css` pone `transition-duration` en 0,01 ms sobre TODO y, como el valor inicial de `transition-property` es **`all`**, cualquier cambio de geometría **pasa a ser una transición** — cuyo valor aterriza en otro frame, mientras `applyD()` mide en la MISMA tarea. Se demostró porque **ni un `height !important` en línea movía el aro**: en la cascada solo una transición viva gana a `!important`. Arreglo validado antes de proponerlo (`transition-property: none` en el aro **y en sus cuatro nodos interiores**, que es de donde salían los 3 px que quedaban): aro **406** y solapamiento **−65** con y sin reduced-motion, idénticos. **A11y**: en escritorio el `order` del CSS reordenaba con el DOM quieto, así que el foco bajaba a la tarjeta del fondo (622, 698) y **subía** a los chips (496) — WCAG 2.4.3, medido con Tab real. Ahora el DOM lleva el orden canónico de cada piel, leyendo `--pace-skin` **de la propia hoja** para no escribir una tercera copia del breakpoint, y con `key` estable para que React **mueva** en vez de remontar; el orden visual no cambia ni un píxel. **El tirón del arco NO reproduce**: la transición cubre el segundo entero (0 ms quieto) en v0.90.0 **y** en v0.89.0, y la sospecha de las publicaciones de s159 cae por ritmo (2 en 8 s) y por control positivo (forzando 60/s la transición sigue corriendo). El instrumento **sí** ve el defecto: con reduced-motion da 1 frame y 983 ms quieto | 160 | [abajo](#v0910----2026-08-07----fixhome-una-transicion-de-001-ms-sigue-siendo-una-transicion) |
+| **v0.91.0** | 2026-08-07 | fix(home): **una transición de 0,01 ms sigue siendo una transición** — dos deudas de s156 cerradas y un tirón que **no reproduce**. **Reduced-motion**: el aro salía a 420 px con 11 px de scroll y la microcausa llevaba una sesión sin identificar; es que el kill de `tokens.css` pone `transition-duration` en 0,01 ms sobre TODO y, como el valor inicial de `transition-property` es **`all`**, cualquier cambio de geometría **pasa a ser una transición** — cuyo valor aterriza en otro frame, mientras `applyD()` mide en la MISMA tarea. Se demostró porque **ni un `height !important` en línea movía el aro**: en la cascada solo una transición viva gana a `!important`. Arreglo validado antes de proponerlo (`transition-property: none` en el aro **y en sus cuatro nodos interiores**, que es de donde salían los 3 px que quedaban): aro **406** y solapamiento **−65** con y sin reduced-motion, idénticos. **A11y**: en escritorio el `order` del CSS reordenaba con el DOM quieto, así que el foco bajaba a la tarjeta del fondo (622, 698) y **subía** a los chips (496) — WCAG 2.4.3, medido con Tab real. Ahora el DOM lleva el orden canónico de cada piel, leyendo `--pace-skin` **de la propia hoja** para no escribir una tercera copia del breakpoint, y con `key` estable para que React **mueva** en vez de remontar; el orden visual no cambia ni un píxel. **El tirón del arco NO reproduce**: la transición cubre el segundo entero (0 ms quieto) en v0.90.0 **y** en v0.89.0, y la sospecha de las publicaciones de s159 cae por ritmo (2 en 8 s) y por control positivo (forzando 60/s la transición sigue corriendo). El instrumento **sí** ve el defecto: con reduced-motion da 1 frame y 983 ms quieto | 160 | [session-160](./docs/sessions/session-160-tiron-reduced-motion-y-foco.md) |
 | **v0.90.0** | 2026-08-06 | feat(home): **la luz del Pomodoro** — cierra el frente que s157 y s158 dejaron en el árbol sin commit. **El Pomodoro no estaba centrado en móvil y el defecto era PREVIO**: medido contra HEAD servido en paralelo, +11,80 px a 320 y +12,09 a 390 en los dos; la atmósfera no lo introdujo, lo hizo visible. La causa son dos capas descontando padding sin saber la una de la otra, y una pista de grid que desborda y se alinea al START. Además: el máximo perceptual **se retima a la mitad del bloque** (estaba en 0,375), el enfriamiento pasa a ser continuo **sin repunte en p=1**, el parpadeo baja de **47 saltos ≥2 % a uno**, la cola recupera el reflejo bajo los chips y **el arco enterrado la tiñe**. Tres defectos más que encontró el usuario mirando, los tres del mismo tipo: transiciones que se pisan | 159 | [session-159](./docs/sessions/session-159-luz-del-pomodoro.md) |
 | **v0.89.0** | 2026-08-04 | feat(home): **un nodo opcional no puede decidir si hay geometria** — el motor de la home exigia los cuatro nodos y se callaba si faltaba uno; como `getSuggestedPath()` **nunca** devuelve null con catalogo no vacio, el unico estado real sin tarjeta —**un Camino en curso**— apagaba el motor entero y Desktop caia a un `360px` escrito a mano pintando el aro **sin horizonte**, sin recuperarse al salir (`attach()` corria una vez y el ResizeObserver seguia mirando un nodo que React ya habia sustituido) · **la evidencia de s149 no reproduce y sus dos mitades se excluyen**: 406×406 es justo lo que publica el motor, `[data-pace-timer-dial]` y `window.__PACE_HOME_GEOMETRY_VARS__` **no existen en el repo**, y las variables «vacias» salen de que **ninguna regla CSS las declara** — solo se escriben inline sobre `documentElement` · **el invariante que este repo declaraba era falso**: con el motor apagado la tarjeta subia 39,7 px sobre un aro **sin recortar** ⇒ ahora `--pace-dial-d` y `--pace-horizon` resuelven motor-o-CSS **en un solo sitio** y recorte y solapamiento salen del **mismo token** · **dos defectos mas que salieron al medir**: el arranque tardaba **1345 ms y dos frames** en publicar (el aro se pintaba al fallback y **saltaba**; ahora publica a 164 ms, sincrono) y —**previo y publicado**— con `prefers-reduced-motion` el aro salia a **244 px** en vez de 406 porque el bucle **encogia a ciegas** ocho pasadas sobre una medida congelada · **amanecer**: halo detras del aro recortado por el **mismo** horizonte y linea de alba anclada a `--pace-horizon`, **reutilizando** `paceGlowRamp` y `paceGrainUrl` de s140 en vez de duplicar la curva, con tokens `--dawn-soft`/`--dawn-line` en las dos paletas y **tres estados por atributo estable** que solo mueven intensidad · **ritmo movil** con el techo por ancho derivado del ancho **realmente usable** (0.86 → 0.92) y `--pace-home-slack` repartiendo el sobrante 38/62 ⇒ a 390×844 el aro pasa de 335 a 359 y el aire muerto de 91 a 62 px, **con escritorio sin una regresion** (406/65 · 456/73 · 487/78 · 520/83) · **12 rojos controlados y los 12 mordieron**; el instrumento mintio **cinco** veces, y una la cazo un **guard** que asertaba el media query antes de medir | #156 | [session-156](./docs/sessions/session-156-home-amanecer.md) |
 | **v0.88.1** | 2026-08-04 | fix(events): **una operación de dos almacenes que no espera no es atómica** — tres defectos que el usuario encontró revisando v0.88.0, los tres confirmados contra el código. **P0**: el import lanzaba la barrera **sin esperarla** y el resultado de la escritura legacy **se descartaba** en el camino normal ⇒ con `setItem` fallando por cuota, el estado no se guardaba, el contenedor de eventos **se reiniciaba igual**, la UI decía «Importado» y la página recargaba — cuatro mentiras seguidas sobre una promesa de integridad que esta misma sesión había escrito. **Y el arreglo no era un `if`**: al abortar, el **marcador ya está escrito**, y como el arranque reinicia el contenedor en cuanto ve uno vivo, abortar sin limpiarlo habría dejado que el siguiente arranque hiciera justo lo que se evitaba ⇒ nace `eventsWebClearMarker`. Ahora se espera, se aborta a un estado conocido, el resultado lleva `legacyWritten` y la UI solo canta victoria con eso en `true`; copy nuevo ES+EN y **CENSO de i18n a 510**. Mismo trato en el reset: `wipeLocalState()` devuelve si pudo, y si no pudo **no se borra el historial de alguien cuyo estado sigue ahí**. **Segundo**: un contenedor de **versión FUTURA** se reescribía —el gate vivía solo en la ruta de import— y le tiraba en silencio los campos que esta versión no conoce; ahora `schemaVersion` mayor = **READ_ONLY**, comprobado **dos veces** (capacidad y **dentro del lock**, que es el autoritativo). **Tercero**: dos filas de la tabla de `STATE.md` seguían en v0.87.0. **Y un quinto aserto que no mordió**: el del contenedor futuro siguió **verde con el guard roto**, porque pasaba por la fachada —que corta antes en `canWrite()`— y el guard interior **no llegaba a ejecutarse**; se arregló llamando al adaptador a pelo. Trampa de instrumento de propina: la prueba del fallo forzado falló primero por **falta de `page.on('dialog')`**, así que el `confirm()` del import devolvía false y la importación **ni empezaba** | #155 | [session-155](./docs/sessions/session-155-eventos-fase-1.md) |
@@ -325,33 +326,145 @@ versiones anteriores, la tabla enlaza al diario completo en
 | **v0.14.0** | 2026-04-29 | Fruta fácil II: 6 logros nuevos cazables (`breathe.sessions.10/50`, `move.sessions.25`, `morning.5`, `master.long.focus`, `master.dawn`… | #29 | [session-29](./docs/sessions/session-29-logros-aplazados-glifos.md) |
 | **v0.13.0** | 2026-04-29 | Fruta fácil: 8 logros nuevos cazables (5 primeros pasos + 3 rachas largas) + módulo `Sound.jsx` con Web Audio sintetizado (4 tonos) cableado a fin de… | #28 | [session-28-fruta-facil-logros-sonidos.md](./docs/sessions/session-28-fruta-facil-logros-sonidos.md) |
 | **v0.12.10** | 2026-04-23 | Modales responsive en móvil: patrón `<style>` + `data-pace-*` + `!important` aplicado a Primitives.Modal (10 modales de golpe), SessionShell… | #27 | [session-27-modales-mobile.md](./docs/sessions/session-27-modales-mobile.md) |
-| **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización… | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
-| v0.12.8 | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | [session-26-refactor-fase2.md](./docs/sessions/session-26-refactor-fase2.md) |
+| **v0.12.9** | 2026-04-23 | Licencia: `LICENSE` (Elastic License 2.0) + cabeceras de copyright en fuentes principales + sección "Licencia" en README + 4ª vía de monetización… | #26 | (sin diario) |
+| v0.12.8 | 2026-04-23 | Refactor Fase 2: extracción de `SessionShell`, limpieza de Support, saneo de exports a `window`, helper `displayItalic` | #26 | (sin diario) |
 | **v0.12.7** | 2026-04-23 | Auditoría interna previa al refactor · sin cambios de código · informe en [`docs/audits/audit-v0.12.7.md`](./docs/audits/audit-v0.12.7.md) | #25 | [abajo ↓](#v0127--2026-04-23--auditoria-interna) |
-| v0.12.7 | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra… | #24 | [session-24-scroll-asimetrico.md](./docs/sessions/session-24-scroll-asimetrico.md) |
-| v0.12.6 | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | [session-23-dvh-fit.md](./docs/sessions/session-23-dvh-fit.md) |
-| v0.12.5 | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | [session-22-responsive-movil.md](./docs/sessions/session-22-responsive-movil.md) |
-| v0.12.4 | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | [session-21-briefing-direccion.md](./docs/sessions/session-21-briefing-direccion.md) |
-| v0.12.3 | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | [session-20-timer-aire-otro.md](./docs/sessions/session-20-timer-aire-otro.md) |
-| v0.12.2 | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | [session-19-pill-consolidada-standalone.md](./docs/sessions/session-19-pill-consolidada-standalone.md) |
-| v0.12.1 | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | [session-18-pulido-bugs-layout.md](./docs/sessions/session-18-pulido-bugs-layout.md) |
-| v0.12.0 | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | [session-17-welcome-export.md](./docs/sessions/session-17-welcome-export.md) |
-| v0.11.11 | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | [session-16-bmc-integracion.md](./docs/sessions/session-16-bmc-integracion.md) |
-| v0.11.10 | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | [session-15-logros-proximamente.md](./docs/sessions/session-15-logros-proximamente.md) |
-| v0.11.9 | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | [session-14-swap-mueve-estira.md](./docs/sessions/session-14-swap-mueve-estira.md) |
-| v0.11.8 | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | [session-13-backlog-robustez.md](./docs/sessions/session-13-backlog-robustez.md) |
-| v0.11.7 | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | [session-12-barra-horizontal.md](./docs/sessions/session-12-barra-horizontal.md) |
-| v0.11.6 | 2026-04-22 | Limpieza sin riesgo: dead code del backlog de auditoría | #11 | [session-11-limpieza.md](./docs/sessions/session-11-limpieza.md) |
-| v0.11.5 | 2026-04-22 | Auditoría: 7 bugs críticos + logo local | #10 | [session-10-auditoria.md](./docs/sessions/session-10-auditoria.md) |
-| v0.11.4 | 2026-04-22 | Timer "Aro" alineado a referencia visual | #9 | [session-09-timer-aro.md](./docs/sessions/session-09-timer-aro.md) |
-| v0.11.3 | 2026-04-22 | Logo oficial v2, Tweaks topbar-derecha, viewport 1920×1080 | #8 | [session-08-logo-oficial.md](./docs/sessions/session-08-logo-oficial.md) |
-| v0.11.2 | 2026-04-22 | Sidebar colapsable, Sendero, logo Pace. lockup | #7 | [session-07-sidebar-sendero.md](./docs/sessions/session-07-sidebar-sendero.md) |
-| v0.11.1 | 2026-04-22 | Iconos ActivityBar restaurados | #6 | [session-06-iconos-activitybar.md](./docs/sessions/session-06-iconos-activitybar.md) |
-| v0.11.0 | 2026-04-22 | Fortalecimiento del proyecto: README, CHANGELOG, ROADMAP | #5 | [session-05-fortalecimiento.md](./docs/sessions/session-05-fortalecimiento.md) |
-| v0.10.1 | 2026-04-22 | Reorganización modular post-GitHub | #4 | [session-04-reorganizacion.md](./docs/sessions/session-04-reorganizacion.md) |
-| v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | [session-03-pulido-core.md](./docs/sessions/session-03-pulido-core.md) |
-| v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | [session-02-refinamiento.md](./docs/sessions/session-02-refinamiento.md) |
-| v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | [session-01-base.md](./docs/sessions/session-01-base.md) |
+| v0.12.7 | 2026-04-23 | Scroll asimétrico: home con `100dvh` puro (4 botones siempre) + sidebar con `min-height: calc(100dvh + 1px)` que recupera el auto-hide de la barra… | #24 | (sin diario) |
+| v0.12.6 | 2026-04-23 | DVH fit: `100dvh` con fallback a `100vh` para que el móvil encaje con o sin barra de URL | #23 | (sin diario) |
+| v0.12.5 | 2026-04-23 | Responsive móvil: sidebar desacoplada fullscreen + home que cabe en 375×812 sin scroll | #22 | (sin diario) |
+| v0.12.4 | 2026-04-23 | Briefing de dirección: gating 2+2+2, modelo Lifetime, CTB, Ritmos, responsive móvil | #21 | (sin diario) |
+| v0.12.3 | 2026-04-22 | Timer: número gigante con más aire sobre el subtítulo + pill "Otro" para minutos personalizados | #20 | (sin diario) |
+| v0.12.2 | 2026-04-22 | Pill de apoyo consolidada + Tweaks de logo/copy retirados + standalone autocontenido | #19 | (sin diario) |
+| v0.12.1 | 2026-04-22 | Pulido: bugs de race condition, sidebar más limpio, Welcome compacto | #18 | (sin diario) |
+| v0.12.0 | 2026-04-22 | Welcome de primera vez + Export/Import JSON + 6 tweak-secrets | #17 | (sin diario) |
+| v0.11.11 | 2026-04-22 | Integración Buy Me a Coffee: frente 1 de monetización | #16 | (sin diario) |
+| v0.11.10 | 2026-04-22 | Logros: arreglo `explore.*` + estado "Próximamente" | #15 | (sin diario) |
+| v0.11.9 | 2026-04-22 | Swap Mueve ↔ Estira: contenido reubicado + título del modal | #14 | (sin diario) |
+| v0.11.8 | 2026-04-22 | Backlog de robustez: 6 bugs del informe de auditoría | #13 | (sin diario) |
+| v0.11.7 | 2026-04-22 | Barra horizontal del sidebar: logo 2.5× + iconos gráficos | #12 | (sin diario) |
+| v0.11.6 | 2026-04-22 | Limpieza sin riesgo: dead code del backlog de auditoría | #11 | (sin diario) |
+| v0.11.5 | 2026-04-22 | Auditoría: 7 bugs críticos + logo local | #10 | (sin diario) |
+| v0.11.4 | 2026-04-22 | Timer "Aro" alineado a referencia visual | #9 | (sin diario) |
+| v0.11.3 | 2026-04-22 | Logo oficial v2, Tweaks topbar-derecha, viewport 1920×1080 | #8 | (sin diario) |
+| v0.11.2 | 2026-04-22 | Sidebar colapsable, Sendero, logo Pace. lockup | #7 | (sin diario) |
+| v0.11.1 | 2026-04-22 | Iconos ActivityBar restaurados | #6 | (sin diario) |
+| v0.11.0 | 2026-04-22 | Fortalecimiento del proyecto: README, CHANGELOG, ROADMAP | #5 | (sin diario) |
+| v0.10.1 | 2026-04-22 | Reorganización modular post-GitHub | #4 | (sin diario) |
+| v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
+| v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
+| v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.93.0] -- 2026-08-17 -- fix(home): el test intermitente tenia razon
+
+### Arreglado
+
+- **LA CARRERA DE REDUCED-MOTION, que era el rojo intermitente de la suite.** El
+  bloque que hace de horizonte —Actividades en escritorio, Actividades tambien en
+  movil sin tarjeta, y la tarjeta de Camino cuando existe— consume
+  `--pace-activities-overlap` como `margin-top` negativo, y **ninguno de los tres
+  estaba en la exencion de s160**. Con el kill de `prefers-reduced-motion` ese
+  cambio de margen es una TRANSICION (duracion 0,01 ms, `transition-property`
+  valiendo `all` por defecto), asi que el alto del stack aterriza en otro frame
+  mientras `compute()` lo mide en la MISMA tarea: el desbordamiento se queda en
+  **11 px**, el guard «nunca encoger a ciegas» revierte D a 420 y gasta su unico
+  reintento, y cuando el reintento corre la misma carrera **el motor se rinde en
+  420**. Para quien pide menos movimiento eso son 11 px de desbordamiento
+  permanentes. Arreglo: `transition-property: none !important` sobre
+  `[data-pace-activitybar]` y `[data-pace-spc]` **dentro de la media query**, no
+  fuera — porque sin reduce la medida ya responde en la misma tarea (medido) y
+  esos dos nodos si tienen transiciones legitimas.
+  - **Como se encontro**: el sintoma no reproducia con contencion sintetica
+    (12/12 con 8 workers) y el primer banco **media otra cosa**, poniendo
+    `reducedMotion` en el contexto cuando el test carga normal y el reduce entra
+    por `emulateMedia` + `reload`. Espejado eso: **a 1x el aro se queda en 420 y
+    dos segundos despues sigue en 420** (o sea que el helper no miente), y con la
+    CPU frenada 4x, 10x y 20x da 406.
+  - **La medida que decidio**: un `resize` a mano lo baja a 406.
+  - **El control**: sin reduce, el margen aterriza en la misma tarea (-65 -> -51,
+    stack 655 -> 669) y `getAnimations()` no devuelve nada; con reduce, el margen
+    sigue en -65, el stack en 655 y hay `margin-top:running`.
+
+- **«REGRESAS» SE PERDIA POR UNA CARRERA, y llevaba 14 sesiones en el backlog como
+  «no se desbloquea NUNCA» (s148).** El rollover lo concedia con
+  `setTimeout(unlockAchievement, 0)` y un `try/catch` vacio. **El mecanismo, medido
+  en el artefacto**: `index.html` tiene **109 etiquetas `<script>`**, una por
+  modulo, asi que los modulos corren en TAREAS SEPARADAS; `unlockAchievement` vive
+  en `state-achievements.jsx`, que se evalua DESPUES, y aqui se referencia PELADA,
+  o sea que se resuelve contra `window` **al llamar**. Un `setTimeout(0)` armado
+  antes puede dispararse primero, y entonces salta un `ReferenceError` que el
+  `catch` vacio entierra sin dejar rastro. **Quien gana la carrera depende de la
+  CARGA**: en una pagina quieta el parser llega a los 109 scripts antes que el
+  timer y el logro se concede; con la maquina ocupada, se pierde. Ahora la
+  concesion va **dentro del estado que devuelve el rollover** — el unico sitio
+  donde se sabe que el dia ha cambiado —, sin timer, sin orden de carga y sin
+  `try/catch` que trague la prueba; retroactivo por construccion e idempotente.
+  **Lo unico que no corre es `checkCollectorAchievements()`** en esa concesion: si
+  fuera el logro nº 50 o nº 100, el hito de coleccion entra con el desbloqueo
+  siguiente, que lo recalcula igual.
+  - **Y la leccion del instrumento**: la primera conclusion de s162 fue que el
+    hallazgo era FALSO, apoyada en dos sondas tranquilas **y en un control** que
+    tambien pasaba. Ese control corria en una condicion **mas tranquila que el
+    fallo**, asi que no era un control: era una segunda opinion del mismo error.
+    La suite completa lo desmintio **dos veces**, y tenia razon.
+
+- **El `[OK]` que se imprimia detras de un `[FALLA]`** en la comprobacion nueva
+  de tamaño: cantaba «ninguna deuda ha crecido» en la linea siguiente a «tokens.css
+  CRECIO». Un checker que se contradice en dos lineas no se cree.
+
+- **Los dos README** decian v0.84.0 con la app en v0.92.0: ocho versiones de
+  deriva en el escaparate del repo. Y **26 filas del CHANGELOG** enlazaban a
+  diarios de las sesiones 1-26 que nunca se escribieron; pasan a «(sin diario)» y
+  quedan cero enlaces rotos.
+
+### Anadido
+
+- **`scripts/verify.tamano.js` — la regla 1 de `CLAUDE.md` pasa a estar vigilada.**
+  Nace porque la regla se rompio en TRES archivos a la vez en s159 y nadie se
+  entero durante tres versiones (`_responsive.js` de 465 a 1039 lineas en un solo
+  commit), mientras la tabla «Deuda tecnica activa» —mantenida a mano— seguia
+  dandolos por sanos. **Se cazo a si mismo**: escrito dentro de `verify.js` lo
+  dejo en 544 lineas y salio rojo sobre su propio autor, asi que se arreglo el
+  diseño y no el checker (la leccion de s155). `DEUDA_500` es un **TRINQUETE**:
+  un archivo nuevo por encima de 500 FALLA, uno registrado que crece FALLA, y uno
+  que baja del limite FALLA pidiendo que se borre su fila. Los tres dientes y el
+  guard de cero, **verificados en rojo**.
+- **Los dos README entran en la comprobacion de version del `verify`** (7 sitios
+  en vez de 3, dos por README porque bumpear uno y no el otro es el modo de fallo
+  natural). Verificado en rojo: el mensaje nombra el sitio exacto que derivo.
+- **Dos asertos de «Regresas»** en `tests/checklist-estado.spec.js` (65 -> 67),
+  cada uno rojo con SU mutacion: borrar el trigger del rollover da 1/88 -> 0/88, y
+  quitar el guard de idempotencia de `unlockAchievement` deja la cola con 3 avisos
+  en vez de vacia.
+- **`sembrarPisando()`** en `tests/helpers.js`: `sembrar` escribe «solo si falta»
+  (correcto, por la trampa de s154), pero en un archivo con `beforeEach(sembrar)`
+  una segunda siembra con estado extra **no entra nunca** y el aserto sale rojo
+  con el producto correcto.
+
+### Corregido en la documentacion
+
+- **El hallazgo de s148 sobre `first.return` era cierto en lo esencial**, pero no
+  era «nunca»: era una **carrera**, y esta arreglada (ver arriba).
+- **El hallazgo de s149** («el ayudante de geometria no publica ninguna variable»)
+  queda OBSOLETO: la suite lee `--pace-timer-d` = 406 px en navegador real.
+- **La nota sobre la cabecera de `home-geometry.js`** ya no aplica: dice lo
+  correcto desde s149.
+- **La tabla de deuda tecnica de STATE.md deja de ser la fuente de verdad** —
+  mentia en cinco filas — y apunta al trinquete del `verify`.
+
+### Medido y NO cambiado
+
+- **`loadState()` no persiste su resultado**: el rollover corre al construir el
+  estado y lo que devuelve vive en memoria hasta el primer `setState`. Es
+  preexistente y benigno (es idempotente), pero un aserto contra `localStorage`
+  justo despues de cargar sale rojo con el producto sano.
+- **Los cinco archivos siguen por encima de 500 lineas.** El trinquete los
+  congela; trocearlos es su propia sesion, y tres de los cinco son el sistema
+  visual de la home, que pide una pasada visual del usuario porque la suite **no
+  compara ni un pixel**.
+
+Diario: [session-162](./docs/sessions/session-162-carrera-reduced-motion-y-trinquete.md).
 
 ---
 
@@ -508,77 +621,3 @@ Diario: [session-161](./docs/sessions/session-161-paleta-automatica.md).
 
 ---
 
-## [v0.91.0] -- 2026-08-07 -- fix(home): una transicion de 0,01 ms sigue siendo una transicion
-
-### Arreglado
-
-- **REDUCED-MOTION: LA MICROCAUSA, Y ERA UN FRAME.** A 1280x720 con
-  `prefers-reduced-motion: reduce` el aro salia a **420 px** en vez de 406 y la
-  home quedaba con **11 px de scroll**; s156 anoto el sintoma («el alto se
-  quedaba clavado mientras D bajaba de 420 a 322») y dejo la causa sin
-  identificar. Es que el kill de `tokens.css` pone `transition-duration` en
-  0,01 ms sobre todo lo no esencial y el valor inicial de `transition-property`
-  es **`all`**: cualquier cambio de geometria pasa a ser una **transicion**, y su
-  valor aterriza en un frame POSTERIOR mientras `home-geometry.js` aplica D y
-  mide en la **misma tarea**. Se probo por eliminacion en la cascada: con reduce,
-  **ni un `height: 340px !important` en linea movia el aro**, y solo una
-  transicion viva gana a `!important` — `dial.getAnimations()` devolvia
-  `height:running`. **Arreglo**: `transition-property: none` en el aro y en sus
-  cuatro nodos interiores (`applyD()` no mide solo el aro, mide donde acaba el
-  CICLO **dentro** del aro, y esos nodos llevan margenes derivados de D: de ahi
-  los 3 px que quedaban tras el primer arreglo). Sin reduced-motion no cambia
-  nada, porque alli la duracion ya era 0 s. **Resultado**: aro **406** y
-  solapamiento **-65 px** con y sin reduced-motion, scroll -1 en los dos.
-- **EL ORDEN DE LECTURA DE LA HOME EN ESCRITORIO** (WCAG 2.4.3, previo). El
-  reorden lo hacia el CSS con `order: 1 / 2` sobre un DOM que se quedaba en el
-  orden de movil, asi que el foco de teclado bajaba del aro a la tarjeta del
-  fondo (**622**, **698**) y **subia** a los cuatro chips (**496**) — medido
-  recorriendo con Tab, no inferido. Ahora cada piel renderiza su orden canonico
-  en el DOM y **no queda ningun `order`**: orden visual y orden de lectura no
-  pueden divergir. La piel se lee de **`--pace-skin`**, que publica la propia
-  hoja de `_responsive.js`, para que el breakpoint de 769 px siga viviendo en un
-  solo sitio. Los tres bloques llevan **`key` estable**: sin ella React
-  reconcilia por posicion y **remonta** los dos bloques al cruzar el breakpoint
-  en vez de moverlos. El orden VISUAL no cambia ni un pixel (65 / 464 / 584).
-
-### Medido y no cambiado
-
-- **EL TIRON DEL ARCO NO REPRODUCE.** Reportado por el usuario en uso real. Las
-  dos hipotesis caen: la transicion **no termina antes** (0 ms quieto en todos
-  los tramos, en v0.90.0 **y** en v0.89.0, con 57-60 frames de movimiento por
-  segundo) y **nadie la interrumpe** — la sospecha de las ~197 publicaciones de
-  s159 cae por **ritmo** (2 en 8 s: el guard `if (valor !== actual)` ya las
-  filtra) y por **control positivo**: forzando una publicacion en **cada frame**,
-  460x el ritmo real, la transicion sigue corriendo. Comprobado tambien en
-  PIXELES: fotografiando el aro cada ~130 ms cambian pixeles en **todas** las
-  tomas; lo unico que cambia una vez por segundo son los digitos. **El
-  instrumento si ve el defecto**: con reduced-motion la medida da **1 frame de
-  movimiento y 983 ms quieto por segundo**, que es la firma exacta del sintoma —
-  y esa via esta descartada para el usuario (su sistema tiene las animaciones
-  activadas y en su movil la luz se funde). **Lo que si es de s159**, no
-  periodico: una rafaga de 13 frames a 33 ms al encender la luz, y 58,6 fps
-  contra los 60,3 de v0.89.0 (con CPU frenada 10x: **42,6 contra 57,4**).
-
-### Suite
-
-- **55 -> 58 tests.** Dos flakies que apareceron al subir la carga **no eran del
-  producto**: corriendo la MISMA suite contra el `index.html` de HEAD,
-  `checklist-foco` falla igual. Ese test pasa de `runFor(25 min)` —**1500
-  callbacks** con su re-render— a **`fastForward`**, que ademas prueba algo que
-  antes no se probaba: que el contador es **timestamp-based** (s96). Y nace
-  `asentarGeometria()`, que espera a que `--pace-timer-d` repita valor tres
-  frames seguidos, porque el motor converge en varias pasadas y con 8 workers no
-  le caben en dos frames: **no** se mete dentro de `asentar` porque lo llaman
-  veinte sitios, algunos con `page.clock`, y ahi rAF solo corre si el reloj
-  avanza.
-
-### Verificacion
-
-- `npm run verify` **PASA** (7,6 s) con v0.91.0 coherente en los 3 sitios ·
-  `npm run test:e2e` **PASA 58/58**, dos pasadas seguidas · **banco de rojos:
-  4/4 mordieron**, cada uno con su mensaje y no por un guard, restaurando el
-  artefacto byte a byte (`241DD403B5A1B84B`) en los cuatro · `index.html`
-  **0 bytes CR** de 1 434 106 · `PACE_standalone.html` restaurado
-  **`998E3E358D689036`**.
-
-Diario: [session-160](./docs/sessions/session-160-tiron-reduced-motion-y-foco.md).

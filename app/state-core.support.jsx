@@ -144,14 +144,48 @@ function rolloverIfNeeded(state) {
     }
   }
 
-  /* Trigger first.return — abrir la app un dia distinto al ultimo.
-     Deferred via setTimeout para no llamar a unlockAchievement desde
-     dentro de loadState (achievements aun no cargado en este punto). */
-  if (migratedState.lastActiveDay) {
-    setTimeout(() => {
-      try { unlockAchievement('first.return'); } catch (e) {}
-    }, 0);
-  }
+  /* first.return («Regresas») — abrir la app un dia distinto al ultimo.
+     ------------------------------------------------------------------
+     SE CONCEDE AQUI, DENTRO DEL ESTADO QUE ESTE ROLLOVER DEVUELVE (s162).
+
+     Hasta v0.92.0 esto era `setTimeout(() => unlockAchievement('first.return'), 0)`
+     con un `try/catch` vacio, y el logro **se perdia de forma INTERMITENTE**:
+     hallazgo de s148, que lo dio por «no se desbloquea NUNCA» y estuvo 14
+     sesiones en el backlog. Ni una cosa ni la otra — es una CARRERA, y por eso
+     costo tanto fijarla:
+
+       · `unlockAchievement` vive en `state-achievements.jsx`, que se evalua
+         DESPUES que este archivo, y aqui se referencia PELADA: en el artefacto
+         cada modulo viaja en su IIFE, asi que el nombre se resuelve contra
+         `window` **en el momento de la llamada**.
+       · el artefacto tiene **109 etiquetas `<script>`**, una por modulo, o sea
+         que los modulos corren en TAREAS SEPARADAS. Un `setTimeout(0)` armado
+         mientras corre este script puede dispararse **antes** de que el navegador
+         evalue el de logros: ahi el nombre no existe, salta un ReferenceError y
+         el `catch` vacio lo entierra sin dejar rastro.
+       · quien gana la carrera depende de la carga. En una pagina quieta el parser
+         llega a los 109 scripts antes que el timer y el logro SI se concede
+         (medido en `index.html` y en `PACE.html`); con la maquina ocupada —la
+         suite entera con ocho workers— el timer gana y el sello no aparece.
+         Dos sondas tranquilas dijeron «funciona» y la suite completa dijo lo
+         contrario **dos veces**: la suite tenia razon.
+
+     Concederlo en el objeto de vuelta quita la carrera de raiz: el rollover es el
+     UNICO sitio donde se sabe que el dia ha cambiado, y aqui ese hecho ya esta en
+     la mano. Sin timer, sin orden de carga, sin `try/catch` que trague la prueba.
+
+     Es RETROACTIVO por construccion: cualquiera que vuelva tras un dia de uso lo
+     gana en ese mismo regreso. Y es IDEMPOTENTE — si ya esta desbloqueado no se
+     toca, o la cola de avisos acumularia un duplicado por cada dia.
+
+     Se replica a mano lo que hace `unlockAchievement` (sello + cola) porque esa
+     funcion no es alcanzable desde aqui sin volver a la carrera. Lo unico que no
+     corre es `checkCollectorAchievements()`: si este fuera el logro nº 50 o nº
+     100, el hito de coleccion entraria con el desbloqueo siguiente, que lo
+     recalcula igual. Se acepta a proposito. */
+  const yaTiene = !!(migratedState.achievements || {})['first.return'];
+  const ganaRegreso = !!migratedState.lastActiveDay && !yaTiene;
+
   return {
     ...migratedState,
     history: nextHistory,
@@ -161,6 +195,12 @@ function rolloverIfNeeded(state) {
     plan: { muevete: false, respira: false, extra: false, hidratate: false },
     water: { ...migratedState.water, today: 0, lastReset: todayStr },
     lastActiveDay: todayStr,
+    achievements: ganaRegreso
+      ? { ...(migratedState.achievements || {}), 'first.return': { unlockedAt: Date.now() } }
+      : migratedState.achievements,
+    achievementQueue: ganaRegreso
+      ? [...(migratedState.achievementQueue || []), 'first.return']
+      : migratedState.achievementQueue,
   };
 }
 

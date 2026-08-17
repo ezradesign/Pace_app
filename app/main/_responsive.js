@@ -516,6 +516,41 @@
     [data-pace-dial-fit] [data-pace-dial-divider] {
       transition-property: none;
     }
+    /* Y EL HORIZONTE TAMPOCO — PERO SOLO BAJO REDUCED-MOTION (s162).
+       El mismo mecanismo de s160 un nodo más abajo, y era la causa del rojo
+       INTERMITENTE de la suite: 1 de cada 2 pasadas, «el aro mide distinto con
+       reduced-motion (420 vs 406)».
+
+       applyD() publica --pace-activities-overlap, y el bloque que hace de
+       horizonte lo consume como margin-top NEGATIVO: Actividades en escritorio,
+       Actividades también en móvil cuando no hay tarjeta, y la tarjeta de Camino
+       (SuggestedPathCard.jsx) cuando existe. Con el kill de reduced-motion ese
+       cambio de margen pasa a ser una TRANSICIÓN, así que el alto del stack
+       aterriza en otro frame mientras el motor lo mide en la MISMA tarea: el
+       desbordamiento se queda clavado en 11, el guard «nunca encoger a ciegas»
+       revierte D a 420
+       y gasta su único reintento. Cuando el reintento corre la misma carrera, el
+       motor SE RINDE EN 420 y ahí se queda: 11 px de desbordamiento permanentes
+       para quien pide menos movimiento — y un resize a mano lo baja a 406, que es
+       la prueba de que el motor podía medirlo y no lo volvió a medir.
+
+       Medido a 1280×720 sobre el artefacto, con control: SIN reduce el margen
+       aterriza en la misma tarea (-65 -> -51, stack 655 -> 669) y no hay ninguna
+       transición viva; CON reduce el margen sigue en -65, el stack en 655,
+       getAnimations() devuelve margin-top:running, y el valor llega dos frames
+       después.
+
+       Va ACOTADO a la media query a propósito, al contrario que la exención del
+       aro: fuera de reduced-motion la medida ya responde en la misma tarea, y
+       estos dos nodos sí tienen transiciones legítimas que no hay que tocar.
+       Dentro, ninguna lo es — el kill las deja en 0,01 ms precisamente para
+       matarlas; lo único que les sobrevive es la capacidad de aterrizar tarde. */
+    @media (prefers-reduced-motion: reduce) {
+      [data-pace-activitybar],
+      [data-pace-spc] {
+        transition-property: none !important;
+      }
+    }
     /* ===================================================================
        EL HORIZONTE (s158) — de corte seco a desvanecido.
 
