@@ -37,16 +37,16 @@
 
 const { useEffect: useEffectTW } = React;
 
-/* s139 · BUG DEL BOTÓN FANTASMA — transición EXPLÍCITA, nunca `all`.
-   Las cinco filas de pastillas de este panel cambian `fontWeight` 400↔500 al
-   activarse, y con `transition:'all'` la transición ANIMABA EL PESO. Medido: el
-   peso recorría 41 valores fraccionarios mientras el ancho solo tomaba DOS ⇒ con
-   las caras ESTÁTICAS de Inter Tight (s105) el trazo saltaba a mitad de vuelo y
-   la pastilla daba un tirón de ~2 px que desplazaba a su vecina.
-   REGLA: si el estado cambia el `fontWeight`, se listan las propiedades. El peso
-   es señal de estado, no movimiento. Mismo fix en `statsPanelTabStyles.tab`.
-   Detalle medido en docs/sessions/session-139. */
-const TWEAKS_PILL_TRANSITION = 'background-color 180ms, border-color 180ms, color 180ms';
+/* ============================
+   ESTILO SIN UI -> TweaksPanel.support.jsx
+   ============================
+   Extraido en s163 al rebasar este archivo las 500 lineas de CLAUDE.md §1:
+   `tweaksStyles`, la hoja responsive inyectada (el bottom sheet de s27) y
+   `TWEAKS_PILL_TRANSITION` con el porque del boton fantasma de s139.
+
+   ESE ARCHIVO CARGA ANTES QUE ESTE y sus dos nombres llegan por `window`:
+   un `const` suyo no cruzaria la IIFE del build (la trampa de s148 con
+   `sidebarStyles`). Aqui se referencian pelados a proposito. */
 
 function TweaksPanel({ open, onClose }) {
   const [state, set] = usePace();
@@ -462,73 +462,6 @@ function TweaksPanel({ open, onClose }) {
       )}
     </div>
   );
-}
-
-/* ============================================================
-   Estilos (nombres únicos). Los iconos Download/Upload y el
-   estilo dataBtn viven ahora en TweaksData.jsx (split s89).
-   ============================================================ */
-const tweaksStyles = {
-  legalLink: {
-    color: 'var(--ink-3)',
-    textDecoration: 'none',
-    borderBottom: '1px solid var(--line)',
-    paddingBottom: 1,
-  },
-  stepBtn: {
-    width: 26, height: 26,
-    display: 'grid', placeItems: 'center',
-    fontSize: 14,
-    color: 'var(--ink-2)',
-    background: 'var(--paper-2)',
-    border: '1px solid var(--line)',
-    borderRadius: 'var(--r-sm)',
-    cursor: 'pointer',
-  },
-};
-
-/* ============================================================
-   CSS responsive del TweaksPanel (sesión 27 · v0.12.10).
-
-   El TweaksPanel es el único "modal" que no usa <Modal> — es un
-   panel flotante 320×auto anclado bottom-right. En móvil eso
-   rompe: 320 de 375 tapa casi toda la pantalla con los bordes
-   pegados a la derecha, queda un rail de 31px inútil a la izq,
-   y la animación `slide-up` empuja contra el borde sin margen.
-
-   Patrón resuelto: bottom sheet. Pegado a bottom:0 left:0 right:0,
-   esquinas superiores redondeadas, sin border laterales (el border
-   superior actúa como handle visual), maxHeight 72vh para que el
-   backdrop oscuro de fondo (que no hay — TweaksPanel no tiene
-   overlay) deje ver que la home sigue viva detrás.
-
-   Nota: TweaksPanel no tiene backdrop, pero eso también es
-   coherente con que se use como "afinador" mientras la app sigue
-   funcionando. Se conserva la filosofía.
-   ============================================================ */
-const _paceTweaksResponsive = document.getElementById('pace-tweaks-responsive-css');
-if (!_paceTweaksResponsive) {
-  const s = document.createElement('style');
-  s.id = 'pace-tweaks-responsive-css';
-  s.textContent = `
-    @media (max-width: 640px) {
-      [data-pace-tweaks-panel] {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: auto !important;
-        max-height: 72vh !important;
-        max-height: 72dvh !important;
-        border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
-        border-left: 0 !important;
-        border-right: 0 !important;
-        border-bottom: 0 !important;
-        padding: 16px 18px 24px !important;
-        box-shadow: 0 -8px 32px rgba(31, 28, 23, 0.18) !important;
-      }
-    }
-  `;
-  document.head.appendChild(s);
 }
 
 Object.assign(window, { TweaksPanel });

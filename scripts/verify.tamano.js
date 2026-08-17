@@ -45,21 +45,29 @@ var path = require('path');
 var LIMITE_LINEAS = 500;
 var TAMANO_DIRS = ['app', 'tests', 'scripts'];
 
-/* DEUDA REGISTRADA · los cinco que ya estaban por encima cuando esto nacio.
+/* DEUDA REGISTRADA · VACIA DESDE s163, y eso es el estado deseado: hoy NINGUN
+   archivo de `app/`, `tests/` ni `scripts/` pasa de 500 lineas.
+
+   Nacio en s162 con los cinco que ya estaban por encima —`_responsive.js` 1132,
+   `FocusTimer.jsx` 686, `tokens.css` 676, `TweaksPanel.jsx` 534 y
+   `state-core.jsx` 515— y s163 los troceo todos. Las cinco filas se BORRARON, no
+   se comentaron: fue el tercer diente el que lo pidio, archivo a archivo, en cada
+   pasada del verify. El detalle de cada troceo esta en el diario de s163, que es
+   donde vive la historia; aqui solo el mecanismo.
+
    NO es una lista de perdon: es un TRINQUETE, y tiene tres dientes.
      · un archivo que NO esta aqui y pasa de 500  -> FALLA
      · un archivo de aqui que CRECE sobre su numero -> FALLA (no puede empeorar)
      · un archivo de aqui que baja de 500 -> FALLA pidiendo que se borre su fila,
        para que la lista no sobreviva a la deuda que describe
    Un archivo de aqui que ADELGAZA sin bajar de 500 no falla: se avisa con el
-   numero nuevo, que es el que hay que escribir para apretar el trinquete. */
-var DEUDA_500 = {
-  'app/main/_responsive.js':      1132,
-  'app/focus/FocusTimer.jsx':      686,
-  'app/tokens.css':                676,
-  'app/tweaks/TweaksPanel.jsx':    534,
-  'app/state-core.jsx':            515,
-};
+   numero nuevo, que es el que hay que escribir para apretar el trinquete.
+
+   ESTANDO VACIA, el primer diente es el unico que puede sonar, y eso es
+   exactamente lo que se quiere: el que rompa la regla la rompe de frente. Anadir
+   una fila aqui es admitir deuda A PROPOSITO -- y el mensaje del checker lo dice
+   con estas palabras: «trocear, no anadir a DEUDA_500». */
+var DEUDA_500 = {};
 
 function lineasDe(f) {
   var partes = fs.readFileSync(f, 'utf8').split(/\r?\n/);
@@ -128,10 +136,17 @@ function tandaTamano(io) {
     if (ahora < tope) io.info(ruta + ' adelgazo: ' + tope + ' -> ' + ahora + ' ln (apretar el trinquete)');
   });
 
+  /* El mensaje verde dice el ESTADO, no una plantilla: con la deuda vacia decir
+     «0 con deuda registrada y ninguna ha crecido» es verdad y no se entiende. */
   var deuda = Object.keys(DEUDA_500).length;
   if (!problemas) {
-    io.ok(archivos.length + ' archivos medidos en ' + TAMANO_DIRS.join('/') + ' · ninguno nuevo pasa de ' +
-      LIMITE_LINEAS + ' ln · ' + deuda + ' con deuda registrada y ninguna ha crecido');
+    var mayor = medidos.slice().sort(function (a, b) { return b.n - a.n; })[0];
+    io.ok(archivos.length + ' archivos medidos en ' + TAMANO_DIRS.join('/') + ' · ' +
+      (deuda
+        ? 'ninguno nuevo pasa de ' + LIMITE_LINEAS + ' ln · ' + deuda +
+          ' con deuda registrada y ninguna ha crecido'
+        : 'NINGUNO pasa de ' + LIMITE_LINEAS + ' ln y no queda deuda registrada · el mayor es ' +
+          mayor.f + ' con ' + mayor.n));
   }
 }
 
@@ -141,8 +156,10 @@ var NO_CUBRE = [
     'build-standalone.js tiene 567 ln (trocear el build es una decision, no una limpieza)',
   'regla §1: se cuentan LINEAS, no complejidad -- un archivo de 499 lineas ' +
     'ilegibles pasa, y un .css de 480 con tres dominios dentro tambien',
-  'regla §1: DEUDA_500 impide que la deuda crezca, NO que exista -- los cinco ' +
-    'archivos registrados siguen por encima del limite hasta que alguien los trocee',
+  /* s163: los cinco de DEUDA_500 se trocearon y la lista quedo vacia, asi que
+     este hueco dejo de ser cierto. Lo que queda declarado es el mecanismo. */
+  'regla §1: DEUDA_500 esta VACIA -- si alguien vuelve a meter una fila, la deuda ' +
+    'no podra crecer pero SI existira mientras la fila siga ahi',
 ];
 
 module.exports = { tandaTamano: tandaTamano, NO_CUBRE: NO_CUBRE, LIMITE_LINEAS: LIMITE_LINEAS };

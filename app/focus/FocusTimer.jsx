@@ -4,38 +4,9 @@
 
 const { useEffect: useEffectFT, useRef: useRefFT } = React;
 
-/* LA CURVA DE LA LUZ (s159) · smoothstep, 3t² − 2t³.
-   Su propiedad útil no es que sea suave «en general»: es que su PENDIENTE VALE
-   CERO en los dos extremos. Por eso las dos medias envolventes de la intensidad
-   se posan al llegar al pico en vez de doblar, y de ahí sale la meseta de
-   45-55 % sin escribir ningún tramo plano aparte. Con la versión lineal a trozos
-   de s158 el pico era una ESQUINA (pendiente +1,05 antes y −0,74 después).
-   Se declara con `function` a propósito: el build envuelve cada módulo en una
-   IIFE y solo re-expone `function` y `var` (la lección de s144). */
-function curvaSuave(t) {
-  var x = t < 0 ? 0 : (t > 1 ? 1 : t);
-  return x * x * (3 - 2 * x);
-}
-
-/* LA CAÍDA (s159) · x^1.5, y la mitad que baja NO usa la misma curva que la que
-   sube. No es una asimetría estética: es lo que hace que el enfriamiento sea de
-   verdad continuo.
-
-   El problema medido en s158: tras el pico la presencia REBOTABA —cinco veces a
-   1280x720 y cuatro a 390x844—, porque en oscuro los tokens de noche pesan más
-   que los del atardecer y la contribución de color sube x1,41 en el último
-   tercio. Si la envolvente no cae MÁS que eso, la home se ilumina al final. Con
-   `curvaSuave` en las dos mitades el rebote sobrevivía justo donde más se nota:
-   esa curva tiene pendiente cero también en t=1, o sea que la luz se aplanaba
-   en el minuto 25 mientras el color seguía subiendo.
-
-   x^1.5 conserva lo que hacía falta —pendiente cero en el pico, y por tanto la
-   meseta— pero llega al final BAJANDO (pendiente 1,5). Medido sobre el tramo
-   crítico: la intensidad cae x0,54 donde el color sube x1,41. */
-function curvaCaida(t) {
-  var x = t < 0 ? 0 : (t > 1 ? 1 : t);
-  return x * Math.sqrt(x);
-}
+/* LAS CURVAS DE LA LUZ -> FocusTimer.support.jsx (s163). `curvaSuave` y
+   `curvaCaida` salieron al trocear este archivo; su porque medido (la meseta
+   de 45-55 % y el enfriamiento sin repunte, s159) viaja con ellas. */
 
 function FocusTimer({ onFinish }) {
   const [state, set] = usePace();
@@ -497,190 +468,14 @@ function FocusTimer({ onFinish }) {
    app/focus/FocusTimer.parts.jsx (split mecánico para bajar del tope de
    500 ln). Se consume aquí como global (window.MinutesPicker). */
 
-/* ===================== */
-/* TIMER VISUALIZATIONS */
-/* ===================== */
-/* TimerVisualization — sesión 37: circle y numero eliminados (rotos).
-   Opciones válidas: aro (default), barra, analogico.
-   Sesion 76: el aro se renderiza via TimerDial compartido (ui/TimerDial.jsx)
-   para alinear pixel-a-pixel con PathFocusStep. interpolateRingColor vive
-   ahora en TimerDial.jsx. */
-function TimerVisualization({ style, mins, secs, progress, mode, modeLabel, subtitle, inner, running, fitHeight, paused }) {
-  if (style === 'barra') return <TimerBar mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  if (style === 'analogico') return <TimerAnalog mins={mins} secs={secs} progress={progress} modeLabel={modeLabel} subtitle={subtitle} />;
-  return <TimerDial mins={mins} secs={secs} progress={progress} mode={mode} modeLabel={modeLabel} subtitle={subtitle} inner={inner} running={running} fitHeight={fitHeight} paused={paused} />;
-}
+/* ============================
+   LO QUE SALIO EN s163 (686 -> 485 ln)
+   ============================
+   · barra, analogico y su dispatcher -> FocusTimer.parts.jsx
+   · la tabla `focusStyles`           -> FocusTimer.support.jsx
 
-function TimerBar({ mins, secs, progress, modeLabel, subtitle }) {
-  return (
-    <div style={{ width: 520, textAlign: 'center' }}>
-      <div style={{ fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 24 }}>{modeLabel}</div>
-      <div style={{
-        ...displayItalic,
-        fontSize: 140, fontWeight: 400, lineHeight: 0.9,
-        fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.04em',
-        marginBottom: 30,
-      }}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
-      <div style={{ height: 2, background: 'var(--line)', borderRadius: 2, position: 'relative', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          width: `${progress * 100}%`,
-          background: 'var(--focus)',
-          transition: 'width 1s linear',
-        }} />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-        <span>0:00</span>
-        <span style={{ fontStyle: 'italic', textTransform: 'none', fontFamily: 'var(--font-display)' }}>{subtitle}</span>
-        <span>{Math.floor(progress * 100)}%</span>
-      </div>
-    </div>
-  );
-}
-
-function TimerAnalog({ mins, secs, progress, modeLabel, subtitle }) {
-  // Reloj analógico con aguja de minutos en base a progress
-  const angle = progress * 360;
-  return (
-    <div style={{ position: 'relative', width: 380, height: 380, display: 'grid', placeItems: 'center' }}>
-      <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-        <circle cx="50" cy="50" r="48" fill="var(--paper)" stroke="var(--ink-2)" strokeWidth="0.4" />
-        {/* Marcas horarias */}
-        {Array.from({ length: 60 }).map((_, i) => {
-          const a = (i / 60) * 2 * Math.PI - Math.PI / 2;
-          const isMajor = i % 5 === 0;
-          const r1 = isMajor ? 42 : 44;
-          const r2 = 46;
-          return <line key={i}
-            x1={50 + r1 * Math.cos(a)} y1={50 + r1 * Math.sin(a)}
-            x2={50 + r2 * Math.cos(a)} y2={50 + r2 * Math.sin(a)}
-            stroke="var(--ink-2)" strokeWidth={isMajor ? 0.6 : 0.2} />;
-        })}
-        {/* Aguja */}
-        <line x1="50" y1="50"
-          x2={50 + 38 * Math.cos((angle - 90) * Math.PI / 180)}
-          y2={50 + 38 * Math.sin((angle - 90) * Math.PI / 180)}
-          stroke="var(--focus)" strokeWidth="1.2" strokeLinecap="round" />
-        <circle cx="50" cy="50" r="1.2" fill="var(--focus)" />
-        {/* Texto */}
-        <text x="50" y="32" textAnchor="middle" fontSize="3.5" letterSpacing="0.5" fill="var(--ink-3)" style={{ textTransform: 'uppercase' }}>{modeLabel}</text>
-        <text x="50" y="70" textAnchor="middle" fontSize="10" fontFamily="EB Garamond" fontStyle="italic" fill="var(--ink)">
-          {String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}
-        </text>
-        {/* Descriptor por duración (s124): discreto bajo la cifra, sin tocar la
-            geometría del reloj (círculo/marcas/aguja). También muestra «Ciclo
-            completado» cuando llega vía subtitle. */}
-        {subtitle ? (
-          <text x="50" y="80" textAnchor="middle" fontSize="3.6" fontFamily="EB Garamond" fontStyle="italic" fill="var(--ink-3)">{subtitle}</text>
-        ) : null}
-      </svg>
-    </div>
-  );
-}
-
-const focusStyles = {
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 14,
-    /* Padding lateral 40 en desktop; en móvil el <div data-pace-main-content>
-       ya reduce a 12 su propio padding, y éste se relaja con un clamp
-       para no ahogar el aro en 375×812. (Sesión 22.) */
-    padding: '8px clamp(0px, 4vw, 40px) 0',
-    width: '100%',
-    height: 'auto', // s123: a su contenido; lo centra data-pace-home-stack (margin:auto)
-    minHeight: 0,
-  },
-  timerWrap: {
-    display: 'grid', placeItems: 'center',
-    flex: '0 0 auto', // s123: aro a su tamaño propio (var); flex:1 lo colapsaría (basis 0%)
-    minHeight: 0,
-    width: '100%',
-    position: 'relative', // s157: ancla de [data-pace-sun]; su centro es el del aro
-  },
-
-  /* NOTA s76: los estilos aroFrame/aroInner/modeLabel/numberHuge/
-     subtitleItalic/innerDivider vivian aqui y ahora viven en
-     app/ui/TimerDial.jsx (timerDialStyles), compartidos con
-     PathFocusStep. */
-
-  /* ===== Controles (s124) =====
-     Bloque en FILA (una sola línea, nowrap): CTA principal + (solo en paused)
-     el reset textual A SU LADO. La fila mide lo que el CTA (44px) → mostrar el
-     reset NO añade altura al interior del aro y no desplaza el CICLO/atardecer
-     de s123. flexShrink:0 permite que la fila DESBORDE el maxWidth:70% del
-     interior del dial, centrada, sin partir (cabe holgada dentro del aro). */
-  controls: {
-    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, marginTop: 10, flexWrap: 'nowrap', flexShrink: 0,
-  },
-  controlsTight: {
-    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, flexWrap: 'nowrap', flexShrink: 0,
-  },
-  /* CTA cápsula RELLENA serif itálica, sin glifos (s124). minHeight 44 = piso
-     de hit-area a11y (el padding visual queda holgado dentro). */
-  startBtnPrimary: {
-    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    minHeight: 44,
-    padding: '8px 24px',
-    whiteSpace: 'nowrap',
-    background: 'var(--focus-cta)',
-    color: 'var(--paper)',
-    borderRadius: 'var(--r-pill)',
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 16,
-    letterSpacing: '0.01em',
-    fontWeight: 400,
-    border: '1px solid var(--focus-cta)',
-    boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
-    transition: 'all 180ms',
-    cursor: 'pointer',
-  },
-  /* Contorno para «Pausar» (running): estado menos primario. */
-  startBtnSecondary: {
-    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    minHeight: 44,
-    padding: '8px 24px',
-    whiteSpace: 'nowrap',
-    background: 'var(--paper)',
-    color: 'var(--ink)',
-    borderRadius: 'var(--r-pill)',
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 16,
-    letterSpacing: '0.01em',
-    fontWeight: 400,
-    border: '1px solid var(--line-2)',
-    transition: 'all 180ms',
-    cursor: 'pointer',
-  },
-  /* Reset como acción TEXTUAL secundaria (solo paused, s124). minHeight 44
-     asegura la hit-area aunque el texto sea pequeño. */
-  resetTextBtn: {
-    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    minHeight: 44,
-    padding: '0 10px',
-    whiteSpace: 'nowrap',
-    background: 'transparent',
-    border: 'none',
-    color: 'var(--ink-3)',
-    fontFamily: 'var(--font-display)',
-    fontStyle: 'italic',
-    fontSize: 13,
-    letterSpacing: '0.02em',
-    textDecoration: 'underline',
-    textUnderlineOffset: '3px',
-    cursor: 'pointer',
-    transition: 'color 180ms',
-  },
-
-  cycleDots: {
-    display: 'flex', alignItems: 'center', gap: 5,
-    marginTop: 4,
-  },
-};
+   Los dos archivos cargan ANTES que este. `focusStyles` llega por `window`
+   porque un `const` no cruza la IIFE del build; se referencia pelada. Lo
+   siguiente que crezca va a uno de los dos hermanos, no aqui. */
 
 Object.assign(window, { FocusTimer });

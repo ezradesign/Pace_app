@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.93.0</title>
+  <title>PACE · Foco · Cuerpo — v0.94.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -14,6 +14,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Pace">
   <link rel="stylesheet" href="app/tokens.css" />
+  <!-- Movimiento e interacción (s163): el cruce entre paletas (s161), el kill de
+       prefers-reduced-motion y los dos packs de microinteracciones de s99.
+       CORTADOS de tokens.css al rebasar este las 500 líneas — un corte por un
+       punto, no una extracción, para que la concatenación siga siendo la misma
+       byte a byte. VA INMEDIATAMENTE DESPUÉS de tokens.css: ahí estaba. -->
+  <link rel="stylesheet" href="app/motion.css" />
   <!-- CSS de Caminos (s148): SenderoBar + escena ilustrada + variante lg +
        orbe. Extraídos de tokens.css al rebasar este las 500 líneas de la
        regla nº 1 de CLAUDE.md; no eran tokens sino el lenguaje visual de un
@@ -158,6 +164,13 @@
        detectInitialPalette, isMobileViewport y reindexWeeklyStatsMondayFirst.
        Si se invierte el orden, revienta el primer arranque de cada pestana. -->
   <script type="text/babel" src="app/state-core.support.jsx"></script>
+  <!-- state-core.palette (s163): como la paleta llega al DOM y como se funde
+       (`applyTheme` + los marcadores `data-pace-palette-ready` y
+       `data-pace-palette-crossing` de s161), extraido de state-core.jsx al
+       rebasar este las 500 lineas. ANTES de state-core por la misma razon que
+       .support: `applyTheme(_state)` se llama en el CUERPO de state-core. El
+       estado va por PARAMETRO -- alli todavia no existe ningun store. -->
+  <script type="text/babel" src="app/state-core.palette.jsx"></script>
   <script type="text/babel" src="app/state-core.jsx"></script>
   <!-- state-achievements.support (s146 · Fase 2.5): contadores generalizados +
        los detectores que faltaban. ANTES de state-timer y state-hydrate, que
@@ -305,6 +318,12 @@
   <!-- Split s89: secciones del panel cargan antes que TweaksPanel (que las consume) -->
   <script type="text/babel" src="app/tweaks/TweaksData.jsx"></script>
   <script type="text/babel" src="app/tweaks/PremiumSection.jsx"></script>
+  <!-- TweaksPanel.support (s163): estilo SIN UI del panel -- `tweaksStyles`, la
+       hoja responsive del bottom sheet y `TWEAKS_PILL_TRANSITION`. Extraido al
+       rebasar TweaksPanel.jsx las 500 lineas. ANTES de TweaksPanel.jsx, su unico
+       consumidor: sus dos nombres viajan por `window` porque un `const` no cruza
+       la IIFE del build (trampa de s148 con `sidebarStyles`). -->
+  <script type="text/babel" src="app/tweaks/TweaksPanel.support.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweaksPanel.jsx"></script>
 
   <!-- Caminos - SuggestedPathCard UI (sesion 53) -->
@@ -349,8 +368,24 @@
        layout (TopBar, ActivityBar, main content, sidebar handle, fallback dvh).
        TopBar.jsx y ActivityBar.jsx son los dos componentes hijos puros que
        PaceApp compone en su return. Cargan ANTES de main.jsx -- el orquestador
-       los referencia en JSX. -->
+       los referencia en JSX.
+
+       TROCEADO EN s163 (1132 lineas, mas del doble del limite de CLAUDE.md §1).
+       LOS TRES VAN EN ESTE ORDEN Y ES CONTRATO, no estilo:
+         1. .atmosfera  compone los degradados de la luz en JS y los publica en
+                        `window.paceAtmosfera`. Antes que la hoja que los
+                        interpola, o esta se inyectaria con `undefined` dentro.
+         2. _responsive la hoja BASE + la atmosfera. Declara `--pace-skin: movil`.
+         3. .pieles     los @media de movil y escritorio. Declara
+                        `--pace-skin: escritorio`, con la MISMA especificidad que
+                        la linea de arriba: a >=769px gana la que se inyecta
+                        DESPUES. Al reves, la home de escritorio se cree movil y
+                        main.jsx (s160) renderiza el orden de lectura equivocado.
+       Se partio por UN punto y no sacando bloques de en medio para que el orden
+       de las reglas fuera identico; comprobado en navegador. -->
+  <script type="text/babel" src="app/main/_responsive.atmosfera.js"></script>
   <script type="text/babel" src="app/main/_responsive.js"></script>
+  <script type="text/babel" src="app/main/_responsive.pieles.js"></script>
   <script type="text/babel" src="app/main/TopBar.jsx"></script>
   <script type="text/babel" src="app/main/ActivityBar.jsx"></script>
   <script type="text/babel" src="app/main.jsx"></script>

@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.93.0';
+const PACE_VERSION = 'v0.94.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -353,7 +353,7 @@ function setState(patch) {
   _listeners.forEach(l => l());
   /* Aplicar tokens visuales solo cuando palette o font cambian realmente. */
   if (prev.palette !== _state.palette || prev.font !== _state.font) {
-    applyTheme();
+    applyTheme(_state);
   }
 }
 
@@ -362,83 +362,17 @@ function subscribe(listener) {
   return () => _listeners.delete(listener);
 }
 
-/* s161 · el primer papel entra SECO. `tokens.css` declara el fundido de 640 ms
-   entre paletas sobre `:root[data-pace-palette-ready]`, y este es quien pone
-   ese atributo: despues de la PRIMERA aplicacion, nunca antes. Sin el, quien
-   tenga el sistema en oscuro veria en cada carga un fundido desde la paleta
-   clara — `:root` pinta crema, este modulo evalua y pone data-palette="oscuro",
-   y con la transicion ya viva eso es un cruce de 640 ms en cada arranque.
-   Se marca en el frame SIGUIENTE (no en el mismo) para que el estilo inicial
-   llegue a computarse: puesto en la misma tarea, el navegador puede resolver
-   las dos cosas juntas y el guard no guardaria nada. */
-let _paletteReady = false;
-function _marcarPaletaLista() {
-  if (_paletteReady) return;
-  _paletteReady = true;
-  const root = document.documentElement;
-  /* FORZAR EL RECALCULO ANTES DE ARMAR LA TRANSICION. Esta linea parece inutil y
-     es justo la que hace el guard fiable: sin ella, el guard dependia de que el
-     navegador hubiera recalculado el estilo por su cuenta entre el
-     `setAttribute('data-palette')` de arriba y el frame siguiente. Cuando no lo
-     hacia —y bajo carga NO lo hace—, el «estilo previo» que la transicion toma
-     como origen seguia siendo el de la paleta CLARA, asi que armar la
-     transicion y aterrizar el papel oscuro ocurrian en el mismo recalculo: un
-     cruce de 640 ms en el arranque, con los TRECE tokens compartiendo
-     `startTime`. Leer aqui vacia el trabajo pendiente, de modo que el origen ya
-     es el papel definitivo y armar la transicion no mueve nada.
-     COMO SE ENCONTRO: en local no reproducia y en la suite con ocho workers si.
-     La sonda que lo buscaba leia estilo en cada tick — o sea que **forzaba el
-     recalculo y tapaba el defecto que iba a medir**. */
-  try { void getComputedStyle(root).getPropertyValue('--paper'); } catch (e) {}
-  try {
-    requestAnimationFrame(() => {
-      root.setAttribute('data-pace-palette-ready', '');
-    });
-  } catch (e) {
-    root.setAttribute('data-pace-palette-ready', '');
-  }
-}
+/* ============================
+   PALETA -> state-core.palette.jsx
+   ============================
+   Extraido en s163 al rebasar este archivo las 500 lineas de CLAUDE.md §1:
+   `applyTheme` y los dos marcadores del cruce (`data-pace-palette-ready` y
+   `data-pace-palette-crossing`, s161).
 
-/* s161 · MIENTRAS LA PALETA CRUZA, NADIE LA PERSIGUE.
-   Pone `data-pace-palette-crossing` en <html> durante el fundido; la regla que
-   lo consume vive en `tokens.css` y neutraliza la transicion propia de los
-   nodos que tienen una sobre color. Sin esto, cada seguidor persigue a un valor
-   que se mueve y se reinicia en cada frame: medido, 188 unidades RGB de
-   separacion entre el papel del body y el token.
-
-   La duracion se LEE de `--dur-palette`, que es donde vive: si alguien afina el
-   fundido en `tokens.css` no hay un segundo numero aqui que se quede viejo. El
-   margen extra cubre la cola de la interpolacion. */
-let _finDelCruce = null;
-function _marcarCruce() {
-  const root = document.documentElement;
-  let ms = 640;
-  try {
-    const leido = parseFloat(getComputedStyle(root).getPropertyValue('--dur-palette'));
-    if (leido > 0) ms = leido;
-  } catch (e) { /* con el valor por defecto basta */ }
-  root.setAttribute('data-pace-palette-crossing', '');
-  if (_finDelCruce) clearTimeout(_finDelCruce);
-  _finDelCruce = setTimeout(() => {
-    root.removeAttribute('data-pace-palette-crossing');
-    _finDelCruce = null;
-  }, ms + 80);
-}
-
-let _paletaAplicada = null;
-function applyTheme() {
-  const root = document.documentElement;
-  /* Solo hay CRUCE si la paleta cambia de verdad y el arranque ya paso: el
-     primer papel entra seco (ver `_marcarPaletaLista`) y un cambio de
-     tipografia no mueve un solo color. */
-  if (_paletteReady && _paletaAplicada !== null && _paletaAplicada !== _state.palette) {
-    _marcarCruce();
-  }
-  _paletaAplicada = _state.palette;
-  root.setAttribute('data-palette', _state.palette);
-  root.setAttribute('data-font', _state.font);
-  _marcarPaletaLista();
-}
+   ESE ARCHIVO CARGA ANTES QUE ESTE. `applyTheme(_state)` se llama mas abajo
+   EN EL CUERPO de este archivo, no al montar, asi que si el orden se
+   invierte el nombre no existe todavia. Y el estado va por PARAMETRO porque
+   alli no hay store: ver su cabecera. */
 
 function usePace() {
   const state = useSyncExternalStore(subscribe, getState);
@@ -501,7 +435,7 @@ function onToast(listener) {
 }
 
 // Aplicar tema al cargar
-applyTheme();
+applyTheme(_state);
 
 /* Los utils de fecha e history (zeroEntry, toISODate, todayISO, getDayIndex-
    MondayFirst, getMondayOf, recompute*, archiveDayToHistory, getHistoryWith-

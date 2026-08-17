@@ -126,4 +126,165 @@ function persistFocusTimer(runningFoco, endsAt, minutes) {
   } catch (e) {}
 }
 
-Object.assign(window, { getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission, loadPersistedFocusTimer, persistFocusTimer });
+
+/* ============================================================
+   AÑADIDO EN s163 al trocear FocusTimer.jsx (686 -> 485 ln).
+
+   Lo que entra aqui es lo que NO dibuja: las dos curvas de la luz (s159) y
+   la tabla de estilos del modulo. Las PIEZAS DE UI que salieron del mismo
+   troceo -- barra, analogico y su dispatcher -- viven en
+   `FocusTimer.parts.jsx`, que es su sitio por nombre.
+
+   `focusStyles` es un `const`, asi que NO cruza sola la IIFE del build (el
+   build solo re-expone `function` y `var` top-level): viaja por `window` y
+   en FocusTimer.jsx se referencia PELADA. Las dos curvas son `function` y se
+   re-exponen solas, pero se declaran igual en el export de abajo -- la regla
+   nº 2 de CLAUDE.md pide que cada archivo diga que publica, y depender del
+   automatismo dejaria el contrato escrito en el build y no aqui.
+   ============================================================ */
+
+/* LA CURVA DE LA LUZ (s159) · smoothstep, 3t² − 2t³.
+   Su propiedad útil no es que sea suave «en general»: es que su PENDIENTE VALE
+   CERO en los dos extremos. Por eso las dos medias envolventes de la intensidad
+   se posan al llegar al pico en vez de doblar, y de ahí sale la meseta de
+   45-55 % sin escribir ningún tramo plano aparte. Con la versión lineal a trozos
+   de s158 el pico era una ESQUINA (pendiente +1,05 antes y −0,74 después).
+   Se declara con `function` a propósito: el build envuelve cada módulo en una
+   IIFE y solo re-expone `function` y `var` (la lección de s144). */
+function curvaSuave(t) {
+  var x = t < 0 ? 0 : (t > 1 ? 1 : t);
+  return x * x * (3 - 2 * x);
+}
+
+/* LA CAÍDA (s159) · x^1.5, y la mitad que baja NO usa la misma curva que la que
+   sube. No es una asimetría estética: es lo que hace que el enfriamiento sea de
+   verdad continuo.
+
+   El problema medido en s158: tras el pico la presencia REBOTABA —cinco veces a
+   1280x720 y cuatro a 390x844—, porque en oscuro los tokens de noche pesan más
+   que los del atardecer y la contribución de color sube x1,41 en el último
+   tercio. Si la envolvente no cae MÁS que eso, la home se ilumina al final. Con
+   `curvaSuave` en las dos mitades el rebote sobrevivía justo donde más se nota:
+   esa curva tiene pendiente cero también en t=1, o sea que la luz se aplanaba
+   en el minuto 25 mientras el color seguía subiendo.
+
+   x^1.5 conserva lo que hacía falta —pendiente cero en el pico, y por tanto la
+   meseta— pero llega al final BAJANDO (pendiente 1,5). Medido sobre el tramo
+   crítico: la intensidad cae x0,54 donde el color sube x1,41. */
+function curvaCaida(t) {
+  var x = t < 0 ? 0 : (t > 1 ? 1 : t);
+  return x * Math.sqrt(x);
+}
+
+const focusStyles = {
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 14,
+    /* Padding lateral 40 en desktop; en móvil el <div data-pace-main-content>
+       ya reduce a 12 su propio padding, y éste se relaja con un clamp
+       para no ahogar el aro en 375×812. (Sesión 22.) */
+    padding: '8px clamp(0px, 4vw, 40px) 0',
+    width: '100%',
+    height: 'auto', // s123: a su contenido; lo centra data-pace-home-stack (margin:auto)
+    minHeight: 0,
+  },
+  timerWrap: {
+    display: 'grid', placeItems: 'center',
+    flex: '0 0 auto', // s123: aro a su tamaño propio (var); flex:1 lo colapsaría (basis 0%)
+    minHeight: 0,
+    width: '100%',
+    position: 'relative', // s157: ancla de [data-pace-sun]; su centro es el del aro
+  },
+
+  /* NOTA s76: los estilos aroFrame/aroInner/modeLabel/numberHuge/
+     subtitleItalic/innerDivider vivian aqui y ahora viven en
+     app/ui/TimerDial.jsx (timerDialStyles), compartidos con
+     PathFocusStep. */
+
+  /* ===== Controles (s124) =====
+     Bloque en FILA (una sola línea, nowrap): CTA principal + (solo en paused)
+     el reset textual A SU LADO. La fila mide lo que el CTA (44px) → mostrar el
+     reset NO añade altura al interior del aro y no desplaza el CICLO/atardecer
+     de s123. flexShrink:0 permite que la fila DESBORDE el maxWidth:70% del
+     interior del dial, centrada, sin partir (cabe holgada dentro del aro). */
+  controls: {
+    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, marginTop: 10, flexWrap: 'nowrap', flexShrink: 0,
+  },
+  controlsTight: {
+    display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, flexWrap: 'nowrap', flexShrink: 0,
+  },
+  /* CTA cápsula RELLENA serif itálica, sin glifos (s124). minHeight 44 = piso
+     de hit-area a11y (el padding visual queda holgado dentro). */
+  startBtnPrimary: {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: 44,
+    padding: '8px 24px',
+    whiteSpace: 'nowrap',
+    background: 'var(--focus-cta)',
+    color: 'var(--paper)',
+    borderRadius: 'var(--r-pill)',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 16,
+    letterSpacing: '0.01em',
+    fontWeight: 400,
+    border: '1px solid var(--focus-cta)',
+    boxShadow: '0 1px 2px rgba(31,28,23,0.08)',
+    transition: 'all 180ms',
+    cursor: 'pointer',
+  },
+  /* Contorno para «Pausar» (running): estado menos primario. */
+  startBtnSecondary: {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: 44,
+    padding: '8px 24px',
+    whiteSpace: 'nowrap',
+    background: 'var(--paper)',
+    color: 'var(--ink)',
+    borderRadius: 'var(--r-pill)',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 16,
+    letterSpacing: '0.01em',
+    fontWeight: 400,
+    border: '1px solid var(--line-2)',
+    transition: 'all 180ms',
+    cursor: 'pointer',
+  },
+  /* Reset como acción TEXTUAL secundaria (solo paused, s124). minHeight 44
+     asegura la hit-area aunque el texto sea pequeño. */
+  resetTextBtn: {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    minHeight: 44,
+    padding: '0 10px',
+    whiteSpace: 'nowrap',
+    background: 'transparent',
+    border: 'none',
+    color: 'var(--ink-3)',
+    fontFamily: 'var(--font-display)',
+    fontStyle: 'italic',
+    fontSize: 13,
+    letterSpacing: '0.02em',
+    textDecoration: 'underline',
+    textUnderlineOffset: '3px',
+    cursor: 'pointer',
+    transition: 'color 180ms',
+  },
+
+  cycleDots: {
+    display: 'flex', alignItems: 'center', gap: 5,
+    marginTop: 4,
+  },
+};
+
+Object.assign(window, {
+  /* s163 · lo que entro con el troceo de FocusTimer.jsx */
+  curvaSuave, curvaCaida, focusStyles,
+  /* s102 · los helpers con los que nacio este archivo */
+  getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
+  loadPersistedFocusTimer, persistFocusTimer,
+});
