@@ -1,0 +1,400 @@
+/* ============================================
+   PACE · Movimiento e interaccion
+   ============================================
+   Cortado de `tokens.css` en s163, al rebasar aquel las 500 lineas de la regla
+   nº 1 de CLAUDE.md. La division no es por tamaño, es por naturaleza:
+
+     · `tokens.css`  -> los VALORES. Tipografia self-hosted y las dos paletas.
+     · este archivo  -> el COMPORTAMIENTO. Como se pasa de un valor a otro y
+                        como responde la interfaz al tacto.
+
+   QUE VIVE AQUI, en el mismo orden en que estaba: el cruce entre paletas (s161,
+   con sus `@property` y los dos atributos que gobiernan el fundido), el kill de
+   `prefers-reduced-motion`, y los dos packs de microinteracciones de s99 -- el
+   global y el de Caminos.
+
+   FUE UN CORTE, NO UNA EXTRACCION, y eso es lo que hace el troceo seguro: sacar
+   un bloque de en medio y enlazarlo al final habria dejado las mismas reglas en
+   OTRO orden, que en CSS es otra cascada. Al cortar por un punto y enlazar esta
+   hoja INMEDIATAMENTE DESPUES de `tokens.css`, la concatenacion que ve el
+   navegador es la misma de antes byte a byte. Comprobado: la huella de reglas
+   (comentarios fuera) no cambio con el troceo.
+
+   EL ORDEN DE LOS TRES `<link>` ES CONTRATO, no estilo:
+     tokens.css  ->  motion.css  ->  paths/paths.css
+   `paths.css` tiene que ir DESPUES de este archivo porque anula por ORDEN el
+   rise escalonado que declara `[data-pace-reveal] > *` aqui abajo. Esa nota
+   vivia al final de `tokens.css` desde s148 y se ha venido con la regla que
+   describe, que es donde sirve de algo.
+   ============================================ */
+
+/* ============================================================
+   EL CRUCE ENTRE PALETAS (s161)
+
+   Cambiar de paleta es cambiar UN atributo en <html>, y eso llega a todas
+   partes a la vez. Medido en el artefacto real a 1280x720: mueve **1875
+   declaraciones computadas** sobre 87 nodos. De esas, hoy solo **88 se funden**
+   —y a CUATRO velocidades a la vez: 180 ms, 200, 220 y los 320 del body— y
+   **1787 saltan**. O sea que lo que habia no era un corte seco: era un borron.
+
+   POR QUE @property Y NO OTRA COSA. Esta app pinta con estilos INLINE
+   (`style={{ background: 'var(--paper)' }}` en Primitives, cards y chips), y a
+   un estilo inline no se le puede anadir una transicion desde una hoja. Lo
+   unico que alcanza a todos a la vez es hacer INTERPOLABLE la variable misma:
+   registrada con @property, `--paper` deja de ser un texto que se sustituye de
+   golpe y pasa a ser un color que viaja, y cada consumidor —inline incluido—
+   lee el valor de ese frame sin saber que hay una transicion.
+
+   Las otras tres se midieron y se descartaron con numero:
+     · View Transitions: 12 frames largos con la app parada y 14 con sesion
+       (peor frame 116,8 ms), y bajo reduced-motion SIGUE pagando el snapshot
+       (10 frames largos) aunque su animacion este neutralizada.
+     · Velo superpuesto que se funde: barato, pero solo funde el PAPEL — la
+       tinta, los bordes y los sellos siguen saltando por debajo. Es el error
+       que s159 ya documento con la opacidad y el color del degradado.
+     · Corte seco de verdad: exigiria QUITAR los fundidos que ya hay, no
+       dejarlos.
+
+   COSTE MEDIDO, con control negativo (misma ventana, sin cambiar de paleta):
+   con el Pomodoro parado el fundido entero cuesta **66 frames contra 67**, cero
+   frames por encima de 32 ms. Es gratis. Con una sesion viva costaria 32 de 66
+   — y por eso el cambio automatico se SUSPENDE durante un bloque
+   (state-settings.jsx). Registrar las 15 y no cambiar nada tambien se midio:
+   66 frames con sesion viva, identico al control.
+
+   LOS 11 TOKENS `--sun-*` NO ESTAN AQUI, y no es un olvido: el cambio
+   automatico solo ocurre fuera de bloque, y ahi no hay sol. Medido con el
+   Pomodoro parado: `--pace-on` vale 0, el halo computa `background-image: none`
+   y el grid no tiene ni filtro ni sombra. No hay nada que fundir.
+
+   EL `initial-value` ES TRANSPARENTE A PROPOSITO. La sintaxis `<color>` obliga
+   a declarar uno, pero `:root` declara las 15 siempre, asi que no se usa nunca.
+   Ponerle el valor real de la paleta clara crearia una SEGUNDA fuente de verdad
+   para cada color, que es justo lo que este proyecto no hace.
+
+   REDUCED-MOTION NO NECESITA NADA. El kill de mas abajo pone
+   `transition-duration` en 0,01 ms sobre todo lo que no sea
+   `data-pace-essential`, y estas transiciones no lo son: medido, el cruce cae a
+   16-33 ms. Comprobado ademas que declarar una transicion en `:root` NO toca el
+   motor de geometria de la home —aro 406, `--pace-dial-d` 406px y
+   `--pace-horizon` 65px con y sin la hoja, con y sin reduced-motion— con
+   control positivo: forzando `transition: all` en el aro reaparece la firma
+   exacta de s160 (420 px).
+   ============================================================ */
+/* REGISTRAR UN TOKEN CAMBIA LO QUE `getComputedStyle` DEVUELVE DE EL, y esta
+   lista solo puede crecer despues de comprobar quien lo PARSEA.
+
+   Un token registrado deja de valer su texto literal y pasa a valer su forma
+   CANONICA: `--breathe` deja de leerse «#C97A5D» y se lee «rgb(201, 122, 93)».
+   Cualquier JS que parsee ese texto se rompe — y habia uno:
+   `interpolateRingColor` (TimerDial.jsx) leia `--breathe` y `--focus` y les
+   aplicaba un `hexToRgb` que hacia `slice()` sobre dos digitos por canal.
+
+   NO ES TEORIA, se publico y lo cazo la suite: el parser devolvia NaN,
+   `--pace-arco` quedaba invalido y **el degradado entero del bloom del sol caia
+   a `background-image: none`** — o sea que registrar un color de MODULO apagaba
+   la atmosfera del Pomodoro. Aislado bisecando familia a familia y despues
+   token a token, contra el mismo artefacto servido, y confirmado que era
+   regresion propia sirviendo el `index.html` de HEAD.
+
+   AUDITADO: de los 15 candidatos, `--breathe` y `--focus` eran los UNICOS con
+   lector en JS en todo `app/`. Primero se dejaron fuera; despues se arreglo el
+   lector —`aRgb` acepta las dos formas y **devuelve un respaldo en vez de
+   NaN**— y entraron los quince. **La regla que queda**: antes de anadir un
+   token aqui, buscar su nombre entrecomillado en `app/`, que es como se le pide
+   a `getComputedStyle`. Si alguien lo parsea, se adapta el lector primero.
+
+   `--move` y `--extra` NO estan, y no por descuido: `interpolateRingColor`
+   tambien lee `--move`, y anadirlos exigiria repetir esa comprobacion. Son
+   colores de MODULO y no cambian con el papel tanto como para pagarlo. */
+@property --paper      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --paper-2    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --paper-3    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --ink        { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --ink-2      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --ink-3      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --line       { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --line-2     { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus      { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus-2    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus-soft { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --focus-cta  { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --breathe    { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --breathe-2  { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+@property --breathe-soft { syntax: '<color>'; inherits: true; initial-value: rgba(0,0,0,0); }
+
+/* EL GUARD DE ARRANQUE. Sin el, quien tenga el sistema en oscuro veria en CADA
+   carga un fundido de 640 ms desde la paleta clara: `:root` pinta crema, los
+   scripts evaluan y `applyTheme()` pone data-palette="oscuro" — y con la
+   transicion viva eso ES un cruce. El atributo lo pone `applyTheme` despues de
+   la primera aplicacion (state-core.jsx), asi que el primer papel entra seco y
+   solo los cambios POSTERIORES se funden. */
+:root[data-pace-palette-ready] {
+  transition:
+    --paper var(--dur-palette) var(--ease), --paper-2 var(--dur-palette) var(--ease),
+    --paper-3 var(--dur-palette) var(--ease),
+    --ink var(--dur-palette) var(--ease), --ink-2 var(--dur-palette) var(--ease),
+    --ink-3 var(--dur-palette) var(--ease),
+    --line var(--dur-palette) var(--ease), --line-2 var(--dur-palette) var(--ease),
+    --focus var(--dur-palette) var(--ease), --focus-2 var(--dur-palette) var(--ease),
+    --focus-soft var(--dur-palette) var(--ease), --focus-cta var(--dur-palette) var(--ease),
+    --breathe var(--dur-palette) var(--ease), --breathe-2 var(--dur-palette) var(--ease),
+    --breathe-soft var(--dur-palette) var(--ease);
+}
+
+/* NADIE PERSIGUE AL LIDER MIENTRAS CRUZA.
+
+   Este es el defecto que casi se publica, y es el de s159 otra vez: una
+   transición que persigue a otra. Con el token fundiéndose, cualquier nodo que
+   tenga ADEMÁS su propia `transition` sobre una propiedad de color persigue a
+   un valor que se mueve — y una transición cuyo destino cambia en cada frame
+   **se reinicia en cada frame**, así que deja de ser un fundido de 320 ms y
+   pasa a ser un filtro que se queda muy atrás. Medido en el body: el token ya
+   estaba en el papel oscuro mientras el body pintaba `rgb(212,207,195)`,
+   **188 unidades RGB** de separación. Y como las tarjetas pintan con estilo
+   INLINE —sin transición, o sea siguiendo al token exacto— el resultado era el
+   fondo claro con las tarjetas ya oscuras.
+
+   Medido contra una VERDAD DE CAMPO (una pasada con todos los seguidores
+   muertos, donde por construcción nadie se retrasa): tal cual estaba, 112
+   transiciones persiguiendo en el pico y **237** de desviación; con estas dos
+   declaraciones, **24 y 15**. El control —la misma regla con el atributo sin
+   poner— vuelve exactamente a los números de antes, así que lo que arregla es
+   el mecanismo y no la presencia de la regla.
+
+   NO BAJA A CERO A PROPÓSITO: los subárboles `data-pace-essential` quedan
+   fuera, la misma excepción que el kill de reduced-motion de más abajo y por la
+   misma razón (WCAG 2.3.3 — la guía visual de respiración es motion ESENCIAL y
+   no se toca nunca). De ahí los 15 que quedan.
+
+   El atributo lo pone y lo quita `applyTheme` (state-core.jsx), y solo cuando
+   la paleta cambia DE VERDAD y ya ha pasado el arranque. */
+:root[data-pace-palette-crossing] *:not([data-pace-essential], [data-pace-essential] *) {
+  transition-property: none !important;
+}
+
+/* TIPOGRAFÍAS ALT */
+[data-font="cormorant"] {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+}
+[data-font="mono"] {
+  --font-display: 'JetBrains Mono', ui-monospace, monospace;
+  --font-ui: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* RESET MÍNIMO */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-ui);
+  font-size: var(--size-body);
+  line-height: var(--lh-normal);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* s161 — AQUÍ HABÍA UN FUNDIDO DE 320 ms de `background-color` y `color`, y
+     se retira. Existía para suavizar el cambio de paleta, que es justo lo que
+     ahora hace el token: `--paper` y `--ink` se funden solos y el body los lee.
+     Dejarlo era ponerle un perseguidor al líder — medido, 188 unidades RGB de
+     separación en mitad del cruce, con el fondo claro y las tarjetas ya
+     oscuras. Ver el bloque «EL CRUCE ENTRE PALETAS» de más arriba. */
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
+input, textarea { font-family: inherit; color: inherit; }
+
+/* UTILIDADES */
+.pace-display { font-family: var(--font-display); }
+.pace-display-italic { font-family: var(--font-display); font-style: italic; }
+.pace-meta {
+  font-size: var(--size-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.pace-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 10px;
+  letter-spacing: var(--track-tag);
+  text-transform: uppercase;
+  border-radius: var(--r-pill);
+  border: 1px solid currentColor;
+  font-weight: 500;
+}
+
+/* SCROLLBAR SUTIL
+   WebKit/Blink via ::-webkit-scrollbar; Firefox via scrollbar-width/color
+   (s99 · pack de pulido A: antes Firefox caia al scrollbar por defecto).
+   Ambos leen los mismos tokens -> un solo sitio, sin duplicar el look. */
+html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; border: 3px solid var(--paper); }
+::-webkit-scrollbar-thumb:hover { background: var(--line-2); }
+
+/* FOCUS ACCESIBLE */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+/* REDUCED MOTION (recalibrado s89 · A-reduced de la auditoria v0.34.4).
+   El kill global anterior tambien congelaba la guia visual de respiracion
+   (BreathVisual anima con transitions de la duracion de la fase, B1): con
+   reduced-motion activo el circulo saltaba en vez de expandirse y el
+   breathwork guiado perdia su funcion. WCAG 2.3.3 exime el motion ESENCIAL
+   a la funcionalidad. Convencion: un subtree marcado data-pace-essential
+   queda exento del kill; todo lo decorativo (fades, slide-ups, pulsos,
+   anillos de timer) sigue congelado. */
+@media (prefers-reduced-motion: reduce) {
+  *:not([data-pace-essential], [data-pace-essential] *),
+  *:not([data-pace-essential], [data-pace-essential] *)::before,
+  *:not([data-pace-essential], [data-pace-essential] *)::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   MICROINTERACCIONES · pack de pulido global (s99 · Sesion A)
+   Vive aqui (config global de interaccion), no en un <style> nuevo.
+   Reutiliza los ganchos data-pace-* del source + dos nuevos
+   (data-pace-cta, data-pace-dial-running). Todo es DECORATIVO:
+   el kill global de prefers-reduced-motion (arriba) lo neutraliza
+   -- ninguno cuelga de data-pace-essential. Patron s22: cuando hay
+   que ganar a un estilo inline (hover/active), !important.
+   ============================================================ */
+
+/* Chips de la ActivityBar. El hover (lift + --sh-card) sigue inline
+   en ActivityBar.jsx; aqui solo el feedback de pulsacion. !important
+   para ganar al transform inline que fija el hover al presionar. */
+[data-pace-activitybar-chip]:active {
+  transform: translateY(0) scale(0.97) !important;
+}
+
+/* Iconos top-right (Stats / Logros / Tweaks). La base inline es
+   transparente y sin handler; el hover/active viven aqui. */
+[data-pace-topbar-icon]:hover {
+  background: var(--paper-2) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+[data-pace-topbar-icon]:active {
+  transform: scale(0.94);
+}
+
+/* CTA "Comenzar" (Pomodoro home; reservado tambien para los CTA de
+   Camino en la Sesion B). brightness es palette-agnostico -> no
+   hace falta un token --focus-cta-2. Sin inline en filter/transform,
+   asi que sin !important. */
+[data-pace-cta]:hover { filter: brightness(0.95); }
+[data-pace-cta]:active { transform: scale(0.98); }
+
+/* Entrada del area de contenido: fade + leve ascenso al montar
+   (una vez por carga; React no la remonta al abrir modales). */
+[data-pace-main-content] {
+  animation: pace-module-in var(--dur-slow) var(--ease) both;
+}
+
+/* Aro del TimerDial mientras corre. Halo que respira (glow) DETRAS
+   del numero: el ::after es un circulo suave con z-index 0 y el
+   inner del dial va en z-index 1. Amplitud baja: presencia, no
+   espectaculo (regla "sin sombras exageradas"). El color sale de
+   --focus-soft (theme-aware; se ve verde en foco/larga y neutro-
+   calido de fondo en pausa -- aceptable por lo tenue). */
+/* s157: EXCLUIDA la home. Medido, este glow aportaba 1,7/255 y solo en el
+   borde exterior — codigo vivo que no se veia. Donde hay corona (s.157) seria
+   ademas una segunda luz de otro color compitiendo con la del amanecer. Sigue
+   en Caminos, que no lleva [data-pace-dial-fit] y no tiene corona. */
+[data-pace-dial-running]:not([data-pace-dial-fit])::after {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: pace-dial-glow 3.2s var(--ease) infinite;
+}
+
+@keyframes pace-module-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pace-modal-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pace-dial-glow {
+  0%, 100% { box-shadow: 0 0 22px 4px var(--focus-soft); }
+  50%      { box-shadow: 0 0 46px 12px var(--focus-soft); }
+}
+
+/* ============================================================
+   MICROINTERACCIONES · Caminos (s99 · Sesion B)
+   Mismo criterio que el bloque A: decorativo, reduced-motion via
+   kill global; !important solo para ganar a estilos inline.
+   ============================================================ */
+
+/* Entrada escalonada reutilizable. Los hijos DIRECTOS del contenedor
+   marcado entran con un leve rise secuencial (nth-child). Lo usan las
+   TransitionCards (sendero/titulo/hint) y CompletionScreen (secciones).
+   nth-child se adapta a las secciones condicionales de Completion. */
+[data-pace-reveal] > * {
+  animation: pace-reveal-rise var(--dur-slow) var(--ease) both;
+}
+[data-pace-reveal] > *:nth-child(1) { animation-delay: 0ms; }
+[data-pace-reveal] > *:nth-child(2) { animation-delay: 70ms; }
+[data-pace-reveal] > *:nth-child(3) { animation-delay: 140ms; }
+[data-pace-reveal] > *:nth-child(4) { animation-delay: 210ms; }
+[data-pace-reveal] > *:nth-child(5) { animation-delay: 280ms; }
+[data-pace-reveal] > *:nth-child(6) { animation-delay: 350ms; }
+[data-pace-reveal] > *:nth-child(7) { animation-delay: 420ms; }
+[data-pace-reveal] > *:nth-child(8) { animation-delay: 490ms; }
+@keyframes pace-reveal-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards de la biblioteca de Caminos (PLPathCard): halo suave + leve
+   lift en hover. Sin inline en box-shadow -> sin !important. */
+[data-pace-plib-row] {
+  transition: box-shadow var(--dur-quick) var(--ease),
+              border-color var(--dur-quick) var(--ease),
+              transform var(--dur-quick) var(--ease);
+}
+[data-pace-plib-row]:hover {
+  border-color: var(--line-2);
+  box-shadow: 0 2px 18px var(--focus-soft);
+  transform: translateY(-1px);
+}
+
+/* Botones de PathFocusStep (s79 revisado s99: DIFERENCIADOS por color, ya no
+   mismo peso -- verde Empezar / naranja Reiniciar / gris Saltar). Cada boton
+   fija --pfbtn con su acento; en hover se rellena con ESE color (fill).
+   !important para ganar al estilo inline. */
+[data-pace-path-btn]:hover {
+  background: var(--pfbtn, var(--focus)) !important;
+  border-color: var(--pfbtn, var(--focus)) !important;
+  color: var(--paper) !important;
+}
+[data-pace-path-btn]:active { transform: scale(0.97); }
+
+/* ============================================================
+   CSS DE CAMINOS -> app/paths/paths.css  (extraído en s148)
+   ============================================================
+   Aquí vivían el SenderoBar, la escena ilustrada, la variante `lg` y el
+   orbe: 241 líneas que dejaban este archivo en 613 y lo ponían por encima
+   del límite de 500 de CLAUDE.md. No eran tokens (valores que consume toda
+   la app) sino el lenguaje visual de UN módulo, así que se movieron enteras
+   sin tocar una sola declaración.
+
+   Su `<link>` va DESPUÉS del de este archivo en PACE.html, y eso es parte
+   del contrato: allí hay una regla que anula el rise escalonado que declara
+   `[data-pace-reveal] > *` aquí arriba, y gana por ORDEN. Si se reordenan
+   los dos `<link>`, la escena del Camino vuelve a entrar con el escalonado.
+   ============================================================ */
