@@ -269,6 +269,62 @@ deuda crezca, no que exista. Los cinco archivos siguen por encima del límite.
 
 ---
 
+## 6 · El push, el CI rojo y los tres commits
+
+**El primer push (`ca9f3c1`) puso el CI rojo**, y esta vez se observo en vez de
+suponerlo. Un solo test: `home-luz-curva.spec.js:140`, con «GUARD: la luz se
+apago a mitad del recorrido». El job `verify` en verde.
+
+**Lo primero fue descartar que fuera mio**, y se pudo hacer sin medir nada: ese
+archivo **no siembra `lastActiveDay`** (mi cambio del rollover esta gateado en el)
+y **no usa reduced-motion** —los dos matches de «reduce» eran `Array.reduce`—, asi
+que ninguna de mis dos ediciones de producto puede alcanzarlo.
+
+**Es el defecto de s161 en el archivo que quedo pendiente.** s159 partio la suite
+de la luz en dos archivos y s161 reparo los dos asertos de `home-luz.spec.js` que
+entonces fallaban; este, en `home-luz-curva.spec.js`, tiene la misma debilidad.
+`--pace-on` no es un booleano: es el interruptor de la luz y se funde en 1,6 s,
+asi que en el instante en que aparece `data-pace-dial-running` vale **cero
+exacto**, y el guard de estas pruebas exige `on > 0` en las 21 paradas.
+
+**No reproducia en local** (8 workers, `--repeat-each=8`: 12/12; con `CI=true`:
+4/4), asi que se midio el valor directamente en el instante de la lectura, 10
+arranques:
+
+```
+0.0000  0.0000  0.0002  0.0002  0.0000  0.0002  0.0002  0.0002  0.0002  0.0002
+minimo 0.0000 · maximo 0.0002 · lecturas que NO son > 0: 3 de 10
+```
+
+La prueba vivia sobre el filo —margen de dos diezmilesimas— y en el runner cayo
+del lado malo. `abrirBloque` **espera ahora a que la luz encienda**, con
+`expect.poll`: se espera, no se baja el liston, y las 21 paradas siguen exigiendo
+luz viva. Comprobado que muerde saboteando `publicarLuz` para que `--pace-on`
+valga siempre 0 (los cuatro tests del archivo caen con el mensaje nuevo).
+
+**Y una torpeza propia, tercer commit.** El commit del arreglo se llevo
+`PACE_standalone.html` **regenerado a v0.93.0**, violando la decision s134. Lo
+regeneraron mis propias pasadas de `node build-standalone.js` al verificar la
+mutacion, y la trampa es esta: **el build reescribe los DOS artefactos, y
+`npm run verify` solo restaura el standalone alrededor de SU propia pasada**, no
+alrededor de las mias. Al commitear, en el arbol estaba el mio. Devuelto a
+v0.71.0 y comprobado **byte a byte** contra el arbol de antes de la sesion.
+
+**El CI, verde y OBSERVADO** en `513aa67`: los dos jobs en `success`, con el
+conteo leido del log —**`67 passed (57.6s)`**— y el paso propio del `verify`
+diciendo «index.html coincide byte a byte con el build de las fuentes». El run
+intermedio quedo `cancelled` porque el tercer push lo relevo.
+
+Los tres commits de la sesion:
+
+| Commit | Que |
+|---|---|
+| `ca9f3c1` | v0.93.0 — la carrera de reduced-motion, «Regresas», el trinquete y los documentos |
+| `79c06cc` | la espera de la luz en `home-luz-curva` (sin cambio de version: no toca `app/`) |
+| `513aa67` | `PACE_standalone.html` de vuelta a v0.71.0 |
+
+---
+
 ## 5 · Lo que NO se cubre
 
 - **Los cinco archivos siguen pasando de 500 líneas.** El trinquete los congela;
