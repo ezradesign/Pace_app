@@ -72,6 +72,25 @@ async function abrirBloque(page, context) {
   await irAlArtefacto(page);
   await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
   await expect(page.locator('[data-pace-dial-fit]')).toHaveAttribute('data-pace-dial-running', '');
+  /* Y SE ESPERA A QUE LA LUZ ENCIENDA, no solo a que el bloque arranque (s162).
+     Es el mismo defecto que s161 arreglo en `home-luz.spec.js`; aqui quedo
+     pendiente porque entonces no fallaba, y fallo en el CI de Linux con el
+     producto sano: «GUARD: la luz se apago a mitad del recorrido».
+
+     `--pace-on` NO ES UN BOOLEANO: es el interruptor de la luz y se funde en
+     1,6 s (s159), asi que en el instante en que aparece `data-pace-dial-running`
+     vale CERO EXACTO. El guard de estas pruebas exige `on > 0` en las 21 paradas,
+     y la primera se lee justo aqui ⇒ el resultado dependia de si el viaje de ida
+     y vuelta de Playwright dejaba pasar un frame. Medido en banco, 10 arranques:
+     **3 lecturas de 0,0000 y 7 de 0,0002**, o sea que la prueba vivia sobre el
+     filo y en el runner cayo del lado malo.
+
+     Se ESPERA, no se baja el liston: el contrato asertado sigue siendo «arrancar
+     un bloque enciende la luz», y las 21 paradas siguen exigiendo luz viva. */
+  await expect.poll(() => page.evaluate(() => parseFloat(getComputedStyle(
+    document.querySelector('[data-pace-home-body]')).getPropertyValue('--pace-on'))), {
+    message: 'la luz no ha encendido tras arrancar el bloque',
+  }).toBeGreaterThan(0);
 }
 
 /* NO HAY QUE CONVERTIR NADA, y darse cuenta ahorró una métrica inventada: como
