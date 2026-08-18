@@ -157,6 +157,11 @@ jobs:
       # y 672 s UNA vez, que resulto ser el run que se miro. O sea: la mediana
       # es ~24 s y lo que hubo fue un caso patologico, no un coste fijo.
       #
+      # ACTUALIZADO tras el primer push con esta cache (s168): ese run tardo
+      # **217 s**. O sea que la cola NO fue una anecdota de un dia: son 2 de 10
+      # runs por encima de los 3 minutos. La mediana sigue en ~25 s, pero la
+      # razon para cachear es mas fuerte de lo que decia el parrafo de arriba.
+      #
       # Se cachea igualmente, pero por lo que de verdad compra: quitar esa COLA.
       # El ahorro tipico son ~20 s por push; el que importa es el de 11 minutos
       # que puede repetirse cualquier dia sin avisar.

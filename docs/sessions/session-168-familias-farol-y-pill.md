@@ -185,6 +185,23 @@ El umbral existe, pero **no es una altura sola**: depende también del ancho —
 a 320, 736 a 375, 844 a 414—. Una media query por altura a secas elige mal en
 uno de los tres.
 
+### Y el gate obvio tampoco sobrevive a su medida
+
+La condición elegante parecía `--pace-home-squeeze == 0`: el motor lo sube de 0 a
+1 cuando empieza a comprimir aire, así que «0» suena a «hay sitio de sobra». Se
+imprimió en la tabla **para comprobarlo en vez de escribirlo en un handoff**:
+
+| alto | 568 | 667 | 736 | 844 | 932 |
+|---|---|---|---|---|---|
+| `squeeze` | 1 | 0,367 | **0** | **0** | **0** |
+
+`squeeze == 0` vale **exactamente cuando el alto ≥ 736**, así que no son dos
+condiciones sino una — y **deja pasar 414×736, donde el aro pierde 6 px igual**.
+El squeeze mide si hay que comprimir AIRE; no sabe si al aro le sobran 42 px. Las
+dos salidas honestas quedan escritas en el handoff: aceptar esos 6 px (el 1,6 %
+de un aro de 381) o subir a 844 y esconder la pill en tres combinaciones donde
+era gratis.
+
 > Un fallo del propio banco, por si vuelve: la tercera medida recibía la hoja CSS
 > en un parámetro que la función trataba como booleano (`mostrar ? MOSTRAR :
 > null`), así que la tiraba y medía **dos veces lo mismo**. La tabla salía toda
@@ -242,14 +259,29 @@ Chromium» tardó:
  28 s · 28 s · 25 s · 24 s · 24 s · 23 s · 23 s · 21 s
 ```
 
-Mediana **~24 s**. Hubo un caso patológico, no un coste fijo. Se cachea
-igualmente, pero por lo que de verdad compra: **quitar esa cola**. El ahorro
-típico son ~20 s por push; el que importa es el de 11 minutos que puede repetirse
-cualquier día. La clave lleva `package-lock.json`, y con acierto de caché hay que
-seguir poniendo las librerías de sistema con `install-deps` (apt no vive en
-`~/.cache/ms-playwright`).
+Mediana **~24 s**. Parecía un caso patológico y no un coste fijo, así que se
+cachea por lo que de verdad compra: **quitar esa cola**. La clave lleva
+`package-lock.json`, y con acierto de caché hay que seguir poniendo las
+librerías de sistema con `install-deps` (apt no vive en `~/.cache/ms-playwright`).
 
-**No verificado en local**: un cambio de YAML solo se prueba empujando.
+**Y la cola resultó ser más frecuente de lo que dije.** El push de cierre de esta
+misma sesión tardó **217 s** en ese paso: son **2 de 10 runs por encima de los
+tres minutos**, no uno de nueve. La mediana sigue en ~25 s, pero la razón para
+cachear es más fuerte de lo que escribí media hora antes.
+
+**Verificado en el push de cierre** (run `32167773908`, verde los dos jobs), y a
+medias a propósito, porque con la caché vacía no se puede ver otra cosa:
+
+```
+5. Cache de Chromium                      0 s   <- fallo esperado, no habia nada
+6. Instalar Chromium                    217 s   <- rama de descarga completa
+7. Librerias de sistema (cache)       omitido   <- correcto: no hubo acierto
+16. Post Cache de Chromium                4 s   <- LA CACHE SE GUARDO
+```
+
+Quedan **268,96 MiB** bajo la clave `playwright-Linux-<hash del lock>`. El ahorro
+se ve en el **siguiente** push: ahí el paso 5 debe acertar, el 6 omitirse y el 7
+correr en su lugar. Hasta entonces el frente no está cerrado.
 
 ---
 

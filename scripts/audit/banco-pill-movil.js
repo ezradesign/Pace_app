@@ -193,12 +193,17 @@ function loQueSeMueve(f) {
   }
   console.log('');
   console.log('  SI LA PILL TUVIERA SU PROPIA LINEA (fila +' + (filas[0].con.pillAlto + 8) + ' px)');
-  console.log('  ancho x alto | aro con->fila propia | desbordeV | encoge el aro');
-  console.log('  -------------+----------------------+-----------+---------------');
+  /* El squeeze va en la tabla porque es el candidato natural a GATE: el motor lo
+     sube de 0 a 1 cuando empieza a comprimir aire, asi que «squeeze == 0» suena
+     a «hay sitio de sobra». Se imprime para poder COMPROBAR esa intuicion en vez
+     de escribirla en un handoff y que alguien la implemente a ciegas. */
+  console.log('  ancho x alto | squeeze | aro con->fila propia | desbordeV | encoge el aro');
+  console.log('  -------------+---------+----------------------+-----------+---------------');
   for (const f of filas) {
     if (!f.fila) continue;
     const a1 = px(f.con.D), a2v = px(f.fila.D);
     console.log('  ' + String(f.ancho).padStart(5) + ' x' + String(f.alto).padStart(5) + ' |' +
+      String(f.con.squeeze || '(vacio)').padStart(8) + ' |' +
       String(a1).padStart(11) + ' ->' + String(a2v).padStart(8) + ' |' +
       String(f.fila.desbordeV).padStart(10) + ' | ' +
       (a1 === a2v ? 'no' : 'SI, ' + (a1 - a2v) + ' px menos'));
