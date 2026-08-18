@@ -157,10 +157,28 @@ jobs:
       # y 672 s UNA vez, que resulto ser el run que se miro. O sea: la mediana
       # es ~24 s y lo que hubo fue un caso patologico, no un coste fijo.
       #
-      # ACTUALIZADO tras el primer push con esta cache (s168): ese run tardo
-      # **217 s**. O sea que la cola NO fue una anecdota de un dia: son 2 de 10
-      # runs por encima de los 3 minutos. La mediana sigue en ~25 s, pero la
-      # razon para cachear es mas fuerte de lo que decia el parrafo de arriba.
+      # MEDIDO DE VERDAD, en los dos push de s168, y NO SALE COMO SE ESPERABA:
+      #
+      #   sin cache, 8 runs ........ 21-28 s   (`--with-deps`: descarga + apt)
+      #   sin cache, la cola ....... 217 s y 672 s  (2 de 10, o sea que RECURRE)
+      #   con FALLO de cache ....... 217 s + 4 s de guardar
+      #   con ACIERTO de cache ..... 3 s de restaurar + 94 s de `install-deps`
+      #
+      # O sea que el acierto cuesta **97 s** contra los ~24 s del camino rapido
+      # sin cache: **la cache empeora el caso mediano**. Lo que no se anticipo es
+      # que `install-deps` A SOLAS tarda 94 s, mientras que dentro de
+      # `--with-deps` no costaba casi nada -- la explicacion probable es que las
+      # librerias YA ESTAN en la imagen de ubuntu-latest y alli no habia nada que
+      # instalar.
+      #
+      # SE QUEDA, y a proposito: cambia un 24 s / 445 s bimodal por un 97 s
+      # estable, que en esperanza es igual o algo mejor y en varianza es mucho
+      # mejor. Pero NO es lo que prometia el backlog.
+      #
+      # LO SIGUIENTE, y esta sin hacer: quitar `install-deps` del camino de
+      # acierto y ver si Chromium arranca igual. Si las librerias estan en la
+      # imagen, el acierto baja a ~3 s y entonces la cache gana SIEMPRE. Es una
+      # medida de un push; hasta que se haga, esto es un empate y no una mejora.
       #
       # Se cachea igualmente, pero por lo que de verdad compra: quitar esa COLA.
       # El ahorro tipico son ~20 s por push; el que importa es el de 11 minutos

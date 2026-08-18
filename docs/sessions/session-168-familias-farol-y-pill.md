@@ -269,19 +269,38 @@ misma sesión tardó **217 s** en ese paso: son **2 de 10 runs por encima de los
 tres minutos**, no uno de nueve. La mediana sigue en ~25 s, pero la razón para
 cachear es más fuerte de lo que escribí media hora antes.
 
-**Verificado en el push de cierre** (run `32167773908`, verde los dos jobs), y a
-medias a propósito, porque con la caché vacía no se puede ver otra cosa:
+**Verificada en los dos push de la sesión**, y el resultado no es el que yo
+anuncié. Primero con la caché vacía (run `32167773908`), donde el cableado hizo
+lo correcto y guardó 268,96 MiB; después con acierto (run `32168727070`):
 
 ```
-5. Cache de Chromium                      0 s   <- fallo esperado, no habia nada
-6. Instalar Chromium                    217 s   <- rama de descarga completa
-7. Librerias de sistema (cache)       omitido   <- correcto: no hubo acierto
-16. Post Cache de Chromium                4 s   <- LA CACHE SE GUARDO
+5. Cache de Chromium                       3 s   <- ACIERTO
+6. Instalar Chromium                  omitido   <- correcto
+7. Librerias de sistema (cache)           94 s   <- corrio en su lugar
+8. npm run test:e2e                       70 s
 ```
 
-Quedan **268,96 MiB** bajo la clave `playwright-Linux-<hash del lock>`. El ahorro
-se ve en el **siguiente** push: ahí el paso 5 debe acertar, el 6 omitirse y el 7
-correr en su lugar. Hasta entonces el frente no está cerrado.
+El condicional funciona. El coste, no: **3 + 94 = 97 s** contra los **21–28 s**
+que tardaba `--with-deps` haciendo descarga *y* librerías. **La caché empeora el
+caso mediano.** Lo que no anticipé es que `install-deps` a solas tarda 94 s,
+mientras que dentro de `--with-deps` apenas costaba — lo más probable es que las
+librerías ya estén en la imagen de `ubuntu-latest` y allí no hubiera nada que
+instalar.
+
+| | sin caché (8 runs) | la cola (2 de 10) | con acierto |
+|---|---|---|---|
+| preparar navegador | 21–28 s | 217 y 672 s | **97 s** |
+
+Se queda porque cambia un 24 s / 445 s bimodal por un 97 s estable —en esperanza
+igual o algo mejor, en varianza mucho mejor—, pero **no es lo que prometía el
+backlog** y hay que decirlo así.
+
+> **Tres correcciones sobre el mismo punto, todas en la misma dirección.** Dije
+> «11 minutos por push» → eran 24 s de mediana. Dije «un caso patológico» → son
+> 2 de 10. Dije «ahorra ~20 s» → cuesta 70 s más en el caso común. Cada vez
+> concluí de más y cada vez lo corrigió una medida. Lo que queda por medir es si
+> `install-deps` hace falta en absoluto en el camino de acierto: si no, el
+> acierto baja a 3 s y la caché gana siempre.
 
 ---
 
