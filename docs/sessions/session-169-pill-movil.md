@@ -254,16 +254,83 @@ documento habría quedado afirmando un número que él mismo desmentía.
 - **Los suelos son de hoy.** Si la topbar o el botón de menú cambian de tamaño,
   el 390 y el 760 dejan de ser los buenos — y el spec lo dirá en rojo, que es
   justo para lo que está.
-- **D sigue sin hacer** (el `apt` del CI), por decisión: va en su propio commit
-  después de v0.99.0, para que un rojo tenga una sola causa posible. **Sólo se
-  verifica empujando.**
+- ~~**D sigue sin hacer**~~ **hecha después de v0.99.0**, en su propio commit
+  (`d14d2a2`) y observada en verde. Ver § 12.
 - **El encargo saneado NO prueba que los 19 dibujos sean buenos.** Cruza ids
   contra el mapa de máscaras; que una máscara exista no dice **nada** de si el
   dibujo se lee a 56 px — eso es la revisión a tamaño real, y es del usuario.
-- **El cruce del encargo no está en la red de seguridad.** Se corrió a mano en
-  esta sesión: si mañana se entregan glifos y nadie vuelve a marcar el
-  documento, **volverá a derivar exactamente igual**.
+- ~~**El cruce del encargo no está en la red de seguridad**~~ **ya lo está**:
+  `scripts/verify.encargo.js`, escrito justo después. Ver § 12.
 - Sigue vivo lo de siempre: los **19 logros sin arte**, los **glifos de
   ejercicio** (mecanismo listo desde s166, nunca corrido sobre arte real), el
   **tirón del arco**, **D3**, la **Fase 2 de `pace.events.v1`**, **Wrangler** y
   **proteger `main`** — que ahora es más fácil, porque `gh` está disponible.
+
+---
+
+## 12 · Después de v0.99.0 · D y el checker del encargo
+
+Dos commits sin bump, porque ninguno toca la app.
+
+### D · el `apt`, fuera de los dos caminos (`d14d2a2`)
+
+`npx playwright install --with-deps chromium` pierde el `--with-deps` y
+desaparece el paso «Librerías de sistema» condicionado a `cache-hit == 'true'`.
+El bloque de comentario se reescribe con la tabla medida.
+
+**Observado en verde, no supuesto.** Comparando el run de v0.99.0 (`05a113a`)
+con el de D (`d14d2a2`), los dos con acierto de caché:
+
+| paso | antes | después |
+|---|---:|---:|
+| Caché de Chromium | 6 s | 3 s |
+| Instalar Chromium | 0 s (acierto) | 0 s (saltado) |
+| **Librerías de sistema** | **14 s** | **no existe** |
+| `npm run test:e2e` | 92 s | 91 s |
+| **job entero** | **121 s** | **101 s** |
+
+Y una corrección al dato de s168 que sale de aquí: **el paso no era caro, era
+variable.** s168 lo midió en 94 s; en el run de v0.99.0 costó **14 s**. Lo que se
+quita no es un coste medio de 94 s sino la **varianza** — de 14 s a 10 min 49 s.
+El riesgo asumido se cumplió sin incidente: **Chromium arrancó sin las fuentes
+CJK ni cirílicas y los 92 tests pasaron.**
+
+**El hueco que queda, dicho y no tapado:** ese run fue **acierto** de caché, así
+que el camino de **fallo** —`npx playwright install chromium` ya sin
+`--with-deps`— **no se ha ejercitado nunca**, y es el arriesgado. Sólo ocurre al
+cambiar `package-lock.json`. Se fuerza borrando la caché y lanzando un
+`workflow_dispatch`.
+
+### El checker · `scripts/verify.encargo.js`
+
+C dejó el documento saneado **a mano**, y eso es exactamente lo que ya falló:
+nadie vuelve a mirar. Ahora lo mira el `verify`, con **cuatro comprobaciones
+relacionales** —ningún número vive dentro— y su **guard de cero**:
+
+1. **Ids fantasma**: filas que piden dibujar algo que ya no está en el catálogo.
+2. **El fallo por omisión**: un logro sin arte que el documento **no menciona**.
+   Éste no se ve leyendo la lista, y por eso hay una comprobación por sentido y
+   no una sola.
+3. **La marca contra el mapa real**, en las dos direcciones: fila sin marcar cuyo
+   dibujo ya existe, y fila marcada `ENTREGADO` sin máscara.
+4. **La cifra de la cabecera** contra los que faltan de verdad — la afirmación
+   del documento es lo que está bajo prueba, no la medida.
+
+El guard de cero no es adorno: la detección de filas es una expresión regular
+sobre la tabla, así que **cambiar el formato apagaría las cuatro en silencio**.
+
+**Los 7 rojos, verificados uno a uno**, cada uno con su mensaje propio y el
+documento restaurado después: guard de cero · id fantasma · logro sin arte no
+listado · fila sin marcar ya dibujada · marca falsa · cifra equivocada · cabecera
+sin cifra.
+
+Detalle de implementación con historia: `chequeaLogros()` devolvía sólo el mapa
+de máscaras y ahora devuelve `{ MASK, CAT }`. Se amplía el retorno en vez de
+cargar el sandbox otra vez desde el módulo nuevo — **duplicar la carga fue el
+defecto de `revision-glifos.js` que s168 tuvo que arreglar**.
+
+De paso se retira una cifra obsoleta: `STATE.md` y el YAML del CI decían que el
+verify tiene «**32 comprobaciones**», censo de s152 que **ya estaba mal en dos**
+antes de esta sesión (s168 añadió 2, s169 otras 4). Se quita el número en lugar
+de re-contarlo: es justo la clase de cifra que nadie mantiene, que es el mismo
+problema que acaba de arreglar el checker.

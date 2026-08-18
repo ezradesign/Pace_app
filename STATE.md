@@ -61,6 +61,7 @@
 | `tests/*.spec.js` | **13 tests**: `artefacto` (es el compilado, consola limpia, precache real ↔ declarado) · `onboarding` (con estado limpio arranca AHI, y montado **detras** de la home en el DOM — la trampa de s153, convertida en aserto) · `checklist-foco` (Pomodoro con **reloj virtual** hasta el BreakMenu) · `checklist-cuerpo` (Respira + **modal de seguridad de apnea** + Mueve) · `checklist-estado` (Hidratate, Logros con toast, Tweaks, persistencia). **Al anadir un aserto: se pone ROJO a proposito** y se comprueba que muerde — `getByRole({name})` casa por **SUBCADENA**, asi que sin `exact: true` un renombrado sigue pasando | **NUEVO s154** |
 | `app/events/events-payloads.js` | **ESQUEMA DE PAYLOADS (s155)** — la mitad de la capa A donde vive la **MINIMIZACION**: cada payload se reconstruye **campo a campo** desde una **LISTA PERMITIDA**, no desde una lista de campos prohibidos (que siempre se queda corta). Lo que no esta en el esquema **no puede colarse aunque nadie lo haya previsto** — medido: un payload con `notaLibre`, `ip` y una ruta de archivo sale con tres claves. **Carga ANTES de `events-model.js`** | **NUEVO s155 · 112 ln** |
 | `scripts/verify.eventos.js` | **Tanda de `pace.events.v1` en el verify (s155)**. Como `verify.integridad.js`, **no es un script suelto**: aquella lo invoca dentro de la tanda [4/4]. Cinco comprobaciones RELACIONALES + guard de cero, y **dos de ellas defienden frases de `privacy.html`** en vez de invariantes internos. `listaCorta` llega **por parametro**: un segundo formateador daria mensajes distintos para el mismo problema | **NUEVO s155 · 176 ln** |
+| `scripts/verify.encargo.js` | **EL ENCARGO DE ARTE DICE LA VERDAD (s169)**. Como `verify.eventos.js`, lo invoca `verify.integridad.js` en la tanda [4/4]. Cruza las filas de `docs/product/GLIFOS_LOGROS_ENCARGO.md` contra el mapa de máscaras REAL, **en las dos direcciones**: lo que sobra (ids que ya no existen) se ve leyendo, pero **lo que falta —un logro sin arte que el documento no menciona— NO**, y ése es el fallo por omisión. Cuatro comprobaciones **relacionales** (ningún número vive dentro; la cifra que compara es la que el propio documento afirma) más **guard de cero**, porque cambiar el formato de la tabla las apagaría todas en silencio. Nace porque el documento **pedía 38 dibujos cuando faltaban 19**: s167 entregó y nadie volvió a marcar la lista. **Los 7 rojos, verificados** | **NUEVO s169 · 162 ln** |
 | `app/events/events-model.js` | **MODELO CANONICO de `pace.events.v1` (s155)** — capa A de `EVENTOS_SCHEMA.md`: envelope, tipos, payloads con **lista permitida**, correlacion tipada, orden canonico, retencion, baseline, presupuesto y export/validacion. **REGLA DURA: no nombra `localStorage`, `setItem`, `navigator.locks` ni SQLite.** Si una funcion de aqui necesita tocar el almacenamiento, esta en el archivo equivocado | **NUEVO s155 · 448 ln** |
 | `app/events/events-adapter-web.js` | **ADAPTADOR WEB/PWA (s155)** — capa B: `localStorage` + **Web Locks**. Toda read-modify-write corre DENTRO del lock; esta **prohibido** cualquier sucedaneo con evento `storage`, heartbeat o `BroadcastChannel` (comunican pestañas, no dan exclusion). Sin `navigator.locks` **no se emite**. Trae la poda por **presion de presupuesto**, que **destila en `baseline` antes de borrar** — y el punto de extension declarado para la poda por calendario de la Fase 3 | **NUEVO s155 · 351 ln** |
 | `app/events/events-adapter-null.js` | **ADAPTADOR INERTE (s155)**. NO es relleno: §20 prohibe que Capacitor caiga al adaptador web porque el WebView parezca `https://localhost`, y §19.2 que `file://` emita aunque el navegador exponga Web Locks. Apagar el registro **NO** convierte la app en solo-lectura (§19.5), y **no** se acumulan eventos «en memoria para guardarlos luego» | **NUEVO s155 · 70 ln** |
@@ -200,36 +201,30 @@
 
 ### Diferido (documentado, NO ejecutado)
 
-- **[s169 · QUEDA SÓLO D]** De las cuatro decisiones que traía el handoff de s168,
-  **A y C están hechas** y **D sigue pendiente**. Medidas completas en
-  [`docs/HANDOFF_s169.md`](docs/HANDOFF_s169.md).
-  - ~~**C · el equinoccio de otoño sube en la cola de glifos**~~ **HECHO en v0.99.0**,
-    y creció al comprobarlo: el encargo decía **«los 38 glifos que faltan»** y ya sólo
-    faltan **19**, porque **s167 entregó 19 y nadie volvió a tocar esa lista** — quien
-    la abriera para dibujar se encontraría con **la mitad del trabajo ya hecho**. Ahora
-    las 19 entregadas van tachadas y marcadas `ENTREGADO`, cruzadas **id a id contra el
-    mapa de máscaras real**, con la cuenta cerrando por **biyección** (19 + 19 = 38, cero
-    ids fantasma, cero logros sin arte que el documento no liste). Y el equinoccio entra
-    de **Prioridad 1**, que estaba libre porque `hydrate.week.perfect` —su única fila—
-    también se entregó; el motivo no es que su sello falle (el `⚖` de texto aguanta) sino
-    **el par**: `season.equinox.spring` **sí** tiene balanza dibujada y los dos son
-    adyacentes en la misma familia. De paso, el bloque «estos dos van al final de la cola»
-    de la §5 **ya no aplicaba a nadie**: los dos están entregados.
-  - **D · quitar el `apt` de los DOS caminos del CI.** En `.github/workflows/ci.yml`, job
-    `e2e`: `npx playwright install --with-deps chromium` → **sin `--with-deps`**, **borrar**
-    el paso condicionado a `cache-hit == 'true'`, y **reescribir el comentario**, que hoy
-    afirma algo falso. **El diagnóstico de s168 estaba mal y lo corrigió el log**: la cola
-    no era la descarga de Chromium (**~10 s** en los 11 runs) sino **`apt` bajando 21,1 MB
-    de FUENTES** (CJK, cirílico, `xfonts-*`) — 10 min 49 s en el run de 672 s y 3 min 15 s
-    en el de 217, que fue un **fallo** de caché; las librerías del navegador ya están en la
-    imagen (`already the newest version`). Esperado: fallo ≈ 10 s, acierto ≈ 3 s, y la cola
-    desaparece de los dos caminos. Riesgo asumido: el Chromium del CI se queda sin fuentes
-    CJK/cirílicas, y no lo nota nadie porque la app sirve sus **propios woff2** con
-    `unicode-range` latino y la suite **nunca compara píxeles**. **Sólo se verifica
-    empujando.**
+- **[s169 · CERRADO, con UN hueco declarado]** Las cuatro decisiones del handoff de s168
+  están resueltas. Medidas en [`docs/HANDOFF_s169.md`](docs/HANDOFF_s169.md).
+  - ~~**A · la pill**~~ **v0.99.0** (`05a113a`) · ~~**B**~~ no pedía código ·
+    ~~**C · el encargo de glifos**~~ **v0.99.0**, y creció: decía 38 y faltaban 19.
+  - ~~**D · quitar el `apt` de los DOS caminos del CI**~~ **HECHO** (`d14d2a2`) **y
+    observado en verde**. El paso desaparece entero: con acierto de caché el job pasa de
+    **121 s a 101 s** (`Librerías de sistema` costaba 14 s en ese run) y **la varianza se
+    va con él** — era de 14 s a **10 min 49 s**. Chromium arrancó sin las fuentes CJK ni
+    cirílicas y los **92 tests pasaron**, que era el riesgo asumido.
+  - **HUECO ABIERTO, y es el arriesgado: el camino de FALLO de caché no se ha
+    ejercitado.** El run de verificación fue un **acierto**, así que
+    `npx playwright install chromium` —ya sin `--with-deps`— **nunca ha corrido**. Sólo
+    ocurre al cambiar `package-lock.json`. Se fuerza borrando la caché
+    (`gh cache delete`) y lanzando un `workflow_dispatch`: un run, reversible, la caché
+    se reconstruye sola.
+  - ~~**El cruce del encargo, a mano**~~ **HECHO**: `scripts/verify.encargo.js`, cuatro
+    comprobaciones relacionales más guard de cero, **los 7 rojos verificados**. Cierra el
+    bucle que dejó C: ahora entregar arte sin marcar la lista **pone el `verify` rojo**.
 
 - **[RED DE SEGURIDAD]** ~~tanda 1 (s150)~~ y ~~tanda 2 (s152)~~ **HECHAS y verificadas**: el
-  `verify` tiene 4 tandas y 32 comprobaciones, y las 26 nuevas se pusieron **rojas a propósito**.
+  `verify` tiene **4 tandas** y las 26 de entonces se pusieron **rojas a propósito**. (El «32
+  comprobaciones» que decía esta línea era el censo de s152 y **ya estaba obsoleto en dos**
+  cuando s169 lo miró: s168 añadió 2 y s169 otras 4. Se retira el número en vez de
+  re-contarlo cada vez — es justo la clase de cifra que nadie mantiene.)
   Queda:
   - ~~**CI: GitHub Actions / YAML**~~ **HECHO en s153** — `.github/workflows/ci.yml`, un job que
     invoca `npm run verify` tal cual y anade lo unico que el verify no puede: que el `index.html`
