@@ -43,7 +43,15 @@ de salida** (devuelve el de `tail`). Redirige a un archivo o usa `${PIPESTATUS[0
 
 ---
 
-## 3 · Lo que s164 deja abierto · RESPIRA
+## 3 · ~~Lo que s164 deja abierto · RESPIRA~~ · **CUMPLIDO EN s165**
+
+> **Esta sección entera está resuelta** (v0.95.0). Lo que se hizo, lo que el censo
+> corrigió de aquí y por qué 1C acabó en segmentos y no en puntos está en
+> [`session-165`](sessions/session-165-respira-progreso.md). **Del handoff solo
+> sigue vivo el §4, los glifos.** Se deja lo de abajo sin tocar como registro de
+> lo que se creía al empezar.
+
+### (registro histórico)
 
 Diagnóstico completo, medido:
 [`docs/audits/diagnostico-respira-progreso-v0.94.0.md`](audits/diagnostico-respira-progreso-v0.94.0.md).
@@ -75,8 +83,29 @@ fijada (decisión de seguridad B1: sin cronómetro ni récord). Así que hoy la
 homogeneidad es solo de forma. Opciones: **1A** (fuera la barra en rondas: un solo
 significado en toda la app) · **1C** (segmentada = bloques, continua = tiempo; una
 regla que ordena también Mueve, cuya barra de pasos es segmentada) · **1D** dejarlo.
-**Recomendación revisada en s164: 1C**, con su coste medido — con 2 rondas la barra
-va vacía media sesión. **El usuario no ha elegido todavía.**
+**DECIDIDO POR EL USUARIO al cerrar s164: 1C** — la barra deja de llevar el detalle
+de respiraciones. Con una precisión que llegó despues de elegir y que hay que
+respetar al implementar:
+
+> **1C se expresa con PUNTOS, no con segmentos de barra.** Su unica debilidad
+> medida era que dos segmentos vacios no comunican nada; **dos puntos vacios si**
+> («tienes dos rondas por delante»). Y no es una forma nueva: **el Pomodoro ya
+> pinta cuatro puntos de 4 px con su etiqueta al lado** para exactamente este
+> trabajo (`FocusTimer.jsx:170-180`, `focusStyles.cycleDots`; Caminos los tuvo y
+> los cambio por SenderoBar en s75). Vocabulario resultante: **puntos = bloques
+> pocos y contables** (Pomodoro, rondas de Respira) · **barra segmentada = pasos,
+> muchos** (Mueve) · **barra continua = tiempo** (las 17 rutinas por tiempo, 4B).
+> Es una regla de ESCALA, no una excepcion: los puntos escalan donde viven las
+> rondas (2 a 5) y no donde vive Mueve (10-20 pasos).
+
+**Y abre la simplificacion que el menu no tocaba**: hoy «RONDA n/N» vive en la
+CABECERA y «RESPIRACION n DE N» en el CENTRO. Si los puntos van en el centro junto
+al texto —como el Pomodoro, puntos y etiqueta juntos—, los tres sitios se vuelven
+UNO y la cabecera se queda solo con el nombre de la rutina.
+
+**SUB-PREGUNTA ABIERTA, para decidir mirandola**: si la cabecera conserva
+«RONDA n/N» o no. Recomendacion: quitarla (los puntos ya lo dicen y contar dos o
+cinco es inmediato). **No la resuelvas sin preguntar.**
 
 ### Abierto · decisión 2, y trae una pregunta nueva del usuario
 

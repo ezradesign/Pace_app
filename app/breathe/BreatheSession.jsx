@@ -289,7 +289,7 @@ function BreatheSession({ routine, onExit, inPath }) {
         routine={displayRoutine}
         onExit={onExit}
         atmosphere={atmo}
-        headerExtra={<div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
+        headerExtra={<div data-pace-breathe-round-label style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' }}>{t('session.round')} {round} / {routine.rounds}</div>}
         footer={<Button variant="terracota" onClick={releaseHold}>{t('session.breatheAgain')}</Button>}
       >
         <div style={{ textAlign: 'center', maxWidth: 520 }}>
@@ -331,27 +331,24 @@ function BreatheSession({ routine, onExit, inPath }) {
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
-  // Progreso de la sesion (s97): BARRA SEGMENTADA por bloques de respiracion.
-  // Un segmento por bloque -- rounds: una por ronda; no-rounds: una por CICLO
-  // del patron (el "grupo 4·4·4·4"). El segmento activo se rellena con el
-  // progreso DENTRO del bloque; los completados quedan llenos. Sintetiza "la
-  // barra" + "agrupar por bloques" (feedback usuario) y usa el mismo lenguaje
-  // que la barra segmentada de Mueve. Tope de 24 segmentos: en rutinas largas
-  // (Coherente 6·6 = ~50 ciclos) cada segmento agrupa varios y la barra no se
-  // astilla; en las cortas (Box 5min = ~19) es 1 segmento por ciclo exacto.
-  const cycleSec = sequence.reduce((sum, p) => sum + p.duration, 0) || 1;
-  // Progreso continuo 0..1. Rounds: por ronda/respiracion (ya inmune a pausas).
-  // No-rounds (s98): TIEMPO ACTIVO / duracion objetivo -> mismo reloj que decide
-  // el fin y el credito; las pausas no avanzan la barra. Al terminar (activo =
-  // routine.min*60) llega a 1 y los segTotal segmentos quedan llenos.
-  const sessionProgress = isRounds
-    ? Math.min(1, ((round - 1) + Math.min(1, breathCount / routine.breaths)) / routine.rounds)
-    : Math.min(1, getActiveSec() / (routine.min * 60));
-  const rawSegments = isRounds ? routine.rounds : Math.max(1, Math.round((routine.min * 60) / cycleSec));
-  const segTotal = Math.min(rawSegments, 24);
-  const filledExact = sessionProgress * segTotal;
-  const segFilled = Math.floor(filledExact);
-  const segActiveProgress = filledExact - segFilled;
+  /* 5A (s165) · el hueco de la cuenta atras se reserva POR RUTINA, no por fase.
+     s138 lo hizo permanente por una razon buena: en Suspiro fisiologico —2 s,
+     1 s, 5 s— montarlo y desmontarlo movia TODO el texto 21 px entre fases. Esa
+     razon vale DENTRO de una rutina que mezcla fases largas y cortas; en las 3
+     rutinas de rondas NINGUNA fase llega a 4 s, asi que ahi el hueco reservaba
+     28 px + 4 de margen para un numero que no aparece nunca (medido, s164). */
+  const anyLongPhase = sequence.some(p => p.duration >= 4);
+  /* 4B (s165) · BARRA CONTINUA, solo en las 17 rutinas por tiempo. La segmentada
+     de s97 hablaba tres idiomas: 2 segmentos en Rondas express, 19 en Box
+     (trazos de 11 px que se leen como linea de puntos) y 24 en Coherente, donde
+     el tope agrupaba ~2 ciclos por segmento; y su «1 segmento por ciclo exacto»
+     era aproximado (300/16 = 18,75 -> 19 de 15,79 s contra ciclos de 16 s). Aqui
+     lo que corre es TIEMPO, asi que se dibuja como tiempo; los bloques de verdad
+     —las rondas— los llevan los puntos. Relleno = TIEMPO ACTIVO / objetivo
+     (s98): mismo reloj que decide el fin y el credito, asi que las pausas no la
+     mueven. El desfase de una respiracion (D1, s164) vivia en la rama de rondas,
+     que ya no usa barra. */
+  const sessionProgress = Math.min(1, getActiveSec() / (routine.min * 60));
 
   const footer = (
     <React.Fragment>
@@ -364,6 +361,11 @@ function BreatheSession({ routine, onExit, inPath }) {
     </React.Fragment>
   );
 
+  /* s165: la cabecera de la pantalla ACTIVA ya no lleva «RONDA n / N» — no se le
+     pasa `headerExtra`. Lo cuenta la barra segmentada de abajo, y decirlo dos
+     veces en la misma pantalla era media redundancia de las que arrastraba s164.
+     En la RETENCION si se conserva, porque alli no hay barra (decision del
+     usuario) y es la unica referencia de ronda que queda. */
   return (
     <SessionShell
       routine={displayRoutine}
@@ -373,11 +375,6 @@ function BreatheSession({ routine, onExit, inPath }) {
       footerGap={16}
       footer={footer}
       hint={t('session.hint')}
-      headerExtra={isRounds ? (
-        <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {t('session.round')} {round} / {routine.rounds}
-        </div>
-      ) : null}
     >
       <BreathVisual
         style={state.breathStyle}
@@ -391,7 +388,7 @@ function BreatheSession({ routine, onExit, inPath }) {
           repartirse. Sin esto el reparto depende del tamaño base de cada ítem y
           del mínimo automático de contenido — funciona, pero por accidente. */}
       <div style={{ textAlign: 'center', flexShrink: 0 }}>
-        <div style={{
+        <div data-pace-breathe-phase={current.label} style={{
           ...displayItalic,
           fontSize: 44, fontWeight: 500, color: 'var(--ink)',
           marginBottom: 8, lineHeight: 1,
@@ -403,49 +400,79 @@ function BreatheSession({ routine, onExit, inPath }) {
             con `margin:auto`, montarlo y desmontarlo movia TODO el texto:
             medido, 21 px de salto entre fases. Ahora el hueco existe siempre y
             solo se oculta el numero; `visibility:hidden` ademas lo saca del
-            arbol de accesibilidad, asi que no se anuncia cuando no aplica. */}
-        <div style={{
-          ...displayItalic,
-          fontSize: 28, color: 'var(--breathe)',
-          fontVariantNumeric: 'tabular-nums', marginTop: 4,
-          visibility: showCountdown ? 'visible' : 'hidden',
-        }}>{showCountdown ? remaining : '0'}</div>
+            arbol de accesibilidad, asi que no se anuncia cuando no aplica.
+            s165 (5A): «siempre» pasa a ser «siempre EN ESTA RUTINA» — ver
+            `anyLongPhase` arriba. La razon de s138 queda intacta donde aplica. */}
+        {anyLongPhase && (
+          <div data-pace-breathe-countdown={showCountdown ? String(remaining) : ''} style={{
+            ...displayItalic,
+            fontSize: 28, color: 'var(--breathe)',
+            fontVariantNumeric: 'tabular-nums', marginTop: 4,
+            visibility: showCountdown ? 'visible' : 'hidden',
+          }}>{showCountdown ? remaining : '0'}</div>
+        )}
         {/* En rounds el contador de respiraciones ES el progreso de la ronda
             (util, Wim Hof). En no-rounds se retira el "Ns/Ns": era redundante
             con el numeral grande de arriba (mismo dato de fase) -> menos ruido,
-            la sesion la marca la barra (s97, feedback usuario). */}
+            la sesion la marca la barra (s97, feedback usuario).
+            s165: la ronda ya no se dice aqui ni en la cabecera — la cuenta la
+            barra. Cada indicador con UN trabajo: la barra cuenta rondas y este
+            texto cuenta respiraciones. */}
         {isRounds && (
-          <div style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>
+          <div data-pace-breathe-breath={breathCount} style={{
+            fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: 'var(--ink-3)', marginTop: 14,
+          }}>
             {`${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}`}
           </div>
         )}
       </div>
-      {/* Progreso de la SESION: barra SEGMENTADA por bloques de respiracion
-          (un segmento por ciclo/ronda; el activo se llena por dentro). Ver
-          calculo arriba: segTotal / segFilled / segActiveProgress. */}
-      <div style={{
-        display: 'flex', gap: 3, alignItems: 'center', flexShrink: 0,
-        width: '100%', maxWidth: 260, height: 5, margin: '0 auto',
-      }}>
-        {Array.from({ length: segTotal }).map((_, i) => {
-          const fill = i < segFilled ? 1 : (i === segFilled ? segActiveProgress : 0);
-          return (
+      {/* PROGRESO DE SESION — la MISMA barra, en el mismo sitio y con la misma
+          altura para las dos familias. Lo unico que cambia es si va partida, y
+          eso no es decoracion: es lo que la app SABE.
+          · Por TIEMPO (17 rutinas): continua. Terminan por reloj, asi que hay
+            una fraccion de sesion que existe de verdad (4B).
+          · Por BLOQUES (3 de rondas): un segmento por ronda. Estas NO terminan
+            por reloj — la retencion no tiene duracion fijada (B1), asi que sus
+            4/12/20 min son NOMINALES y una barra de tiempo aqui dibujaria una
+            duracion que nadie conoce. Medido en el censo de s165.
+          El segmento en curso se marca con CARRIL, no rellenandose por
+          respiraciones: ese detalle lo lleva el texto de arriba. Vocabulario
+          tomado de Mueve (MoveSessionV1.jsx:482), que ya marca asi su paso. */}
+      <div
+        data-pace-breathe-progress={isRounds
+          ? ((round - 1) / routine.rounds).toFixed(4)
+          : sessionProgress.toFixed(4)}
+        {...(isRounds ? { 'data-pace-breathe-round': round, 'data-pace-breathe-rounds': routine.rounds } : {})}
+        style={{
+          flexShrink: 0, display: 'flex', gap: 4, alignItems: 'center',
+          width: '100%', maxWidth: 260, height: 5, margin: '0 auto',
+        }}
+      >
+        {isRounds ? (
+          Array.from({ length: routine.rounds }).map((_, i) => (
             <div key={i} style={{
-              flex: 1, height: '100%',
+              flex: 1, borderRadius: 'var(--r-pill)',
+              height: i <= round - 1 ? 5 : 2,
+              background: i < round - 1 ? 'var(--breathe)'
+                : (i === round - 1 ? 'var(--line)' : 'var(--paper-3)'),
+              transition: 'height 220ms',
+            }} />
+          ))
+        ) : (
+          <div style={{
+            flex: 1, height: '100%', position: 'relative', overflow: 'hidden',
+            borderRadius: 'var(--r-pill)', background: 'var(--line)',
+          }}>
+            <div style={{
+              position: 'absolute', inset: 0,
+              width: `${sessionProgress * 100}%`,
+              background: 'var(--breathe)',
               borderRadius: 'var(--r-pill)',
-              background: 'var(--line)',
-              position: 'relative', overflow: 'hidden',
-            }}>
-              <div style={{
-                position: 'absolute', inset: 0,
-                width: `${fill * 100}%`,
-                background: 'var(--breathe)',
-                borderRadius: 'var(--r-pill)',
-                transition: 'width 1s linear',
-              }} />
-            </div>
-          );
-        })}
+              transition: 'width 1s linear',
+            }} />
+          </div>
+        )}
       </div>
     </SessionShell>
   );

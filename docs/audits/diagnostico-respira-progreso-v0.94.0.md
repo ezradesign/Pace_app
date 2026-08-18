@@ -7,6 +7,31 @@
 > **Este documento no cambia una línea de producto.** Las decisiones son del
 > usuario.
 
+> ## ⚠ CERRADO EN s165 · y con una corrección
+>
+> Las seis decisiones están **resueltas e implementadas** (v0.95.0): barra
+> **continua** en las 17 por tiempo y **segmentada por rondas** en las 3 de
+> bloques, sin relleno por respiraciones. Ver
+> [`session-165`](../sessions/session-165-respira-progreso.md).
+>
+> **Lo que este documento decía mal, corregido midiendo las 20 rutinas**
+> (`scripts/audit/censo-respira-ritmos.js`):
+>
+> - **D2 cuenta 3 rutinas con el hueco muerto de la cuenta atrás; son 5.**
+>   Bhastrika y Kapalabhati tienen fases de **1 s**, así que tampoco alcanzan
+>   nunca el umbral de 4 s y reservan los mismos 32 px para nada. El censo
+>   además separa una **tercera familia de ritmo** que aquí no aparece: el
+>   **bombeo** (esas dos, 90 ciclos en 3 min).
+> - **La familia por tiempo no es homogénea con la de rondas ni podría serlo**:
+>   las de rondas **no terminan por reloj** —la retención no tiene duración
+>   fijada (B1)— y sus 4/12/20 min son **nominales**. Ese, y no el gusto, es el
+>   motivo de que las dos familias no compartan forma.
+> - **1C se implementó con SEGMENTOS, no con puntos.** La precisión de «puntos»
+>   registrada al cerrar s164 no sobrevivió a verla a tamaño real.
+>
+> La **decisión 2** (medir el tiempo de retención) quedó **aprobada y aplazada**
+> a la sesión siguiente, con sus tres condiciones en `STATE.md`.
+
 Todo lo que sigue está **medido** conduciendo sesiones reales con reloj virtual y
 leyendo los indicadores a la vez, un muestreo por segundo. No es lectura de código.
 
@@ -138,8 +163,13 @@ Cada una es independiente y ninguna está tomada.
 | **1C** · que la barra diga OTRA cosa | Un segmento por ronda **sin** relleno interior: la barra cuenta rondas y el texto cuenta respiraciones. Cada indicador con un trabajo. |
 | **1D** · dejarlo | La redundancia es refuerzo, no ruido. |
 
-**Recomendación: 1A o 1C.** 1A si quieres menos elementos; 1C si quieres mantener
-un ancla gráfica. 1B es la única que quita información que un practicante usa.
+**ELEGIDA POR EL USUARIO: 1C**, y al confirmarla apareció la forma correcta de
+expresarla — **puntos, no segmentos de barra**. Dos segmentos vacíos no comunican
+nada (medido); dos puntos vacíos sí: «tienes dos rondas por delante». Y el
+Pomodoro **ya pinta cuatro puntos de 4 px con su etiqueta al lado** para este mismo
+trabajo (`FocusTimer.jsx:170-180`), así que no se inventa vocabulario: se reutiliza.
+Queda **una sub-pregunta abierta**: si la cabecera conserva «RONDA n/N» cuando los
+puntos ya lo dicen. 1B se descarta: quita información que un practicante usa.
 
 ### Decisión 2 — la retención sin progreso (D3)
 
