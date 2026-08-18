@@ -150,45 +150,47 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      # CACHE DEL NAVEGADOR (s168), con su medida al lado porque la razon que
-      # traia el backlog no era la real. Se decia que el CI gasta «11 de sus 13
-      # minutos» instalando Chromium en cada push; medido sobre los 9 ultimos
-      # runs con job e2e, este paso tardo 21, 23, 23, 24, 24, 25, 28, 28 s ...
-      # y 672 s UNA vez, que resulto ser el run que se miro. O sea: la mediana
-      # es ~24 s y lo que hubo fue un caso patologico, no un coste fijo.
+      # CACHE DEL NAVEGADOR (s168) — Y SIN `apt` (s169), QUE ERA LA COLA DE VERDAD.
       #
-      # MEDIDO DE VERDAD, en los dos push de s168, y NO SALE COMO SE ESPERABA:
+      # ESTE COMENTARIO AFIRMABA ALGO FALSO Y SE CORRIGE CON EL LOG DELANTE. Decia
+      # que la cache «compra quitar esa COLA» de 217 y 672 s. No la compra: la
+      # cola no la producia la descarga de Chromium sino `apt`, y `apt` corria en
+      # LOS DOS CAMINOS —con acierto de cache y sin el—, asi que cachear el
+      # navegador no podia tocarla. De hecho la cola volvio a salir en el run con
+      # FALLO de cache.
       #
-      #   sin cache, 8 runs ........ 21-28 s   (`--with-deps`: descarga + apt)
-      #   sin cache, la cola ....... 217 s y 672 s  (2 de 10, o sea que RECURRE)
-      #   con FALLO de cache ....... 217 s + 4 s de guardar
-      #   con ACIERTO de cache ..... 3 s de restaurar + 94 s de `install-deps`
+      # MEDIDO leyendo los logs paso a paso de los 11 ultimos runs con job e2e
+      # (`gh` esta instalado desde s161; s153 lo dio por ausente y la nota se
+      # arrastro hasta s169):
       #
-      # O sea que el acierto cuesta **97 s** contra los ~24 s del camino rapido
-      # sin cache: **la cache empeora el caso mediano**. Lo que no se anticipo es
-      # que `install-deps` A SOLAS tarda 94 s, mientras que dentro de
-      # `--with-deps` no costaba casi nada -- la explicacion probable es que las
-      # librerias YA ESTAN en la imagen de ubuntu-latest y alli no habia nada que
-      # instalar.
+      #                            descarga Chromium   `apt` bajando fuentes   paso
+      #   7 runs rapidos ........       ~10 s                0-6 s           21-28 s
+      #   el run de 672 s .......       ~11 s           10 min 49 s          672 s
+      #   el de 217 s (FALLO) ...        ~9 s            3 min 15 s          217 s
+      #   acierto ...............      omitida           1 min 21 s           97 s
+      #   acierto ...............      omitida              42 s             55 s
+      #   acierto (v0.99.0) .....      omitida              ~14 s            14 s
       #
-      # SE QUEDA, y a proposito: cambia un 24 s / 445 s bimodal por un 97 s
-      # estable, que en esperanza es igual o algo mejor y en varianza es mucho
-      # mejor. Pero NO es lo que prometia el backlog.
+      # Dos hechos que cierran el diagnostico. (1) Los MISMOS 9 paquetes de
+      # fuentes —CJK, cirilico, `xfonts-*`; 21,1 MB de descarga, 79,5 MB en
+      # disco— se instalan en TODOS los runs, con cache y sin ella. (2) Todas las
+      # librerias del NAVEGADOR dicen `already the newest version`: esas si estan
+      # en la imagen de `ubuntu-latest`, y por eso `install-deps` no instala nada
+      # util. Lo unico que hace es bajar fuentes.
       #
-      # LO SIGUIENTE, y esta sin hacer: quitar `install-deps` del camino de
-      # acierto y ver si Chromium arranca igual. Si las librerias estan en la
-      # imagen, el acierto baja a ~3 s y entonces la cache gana SIEMPRE. Es una
-      # medida de un push; hasta que se haga, esto es un empate y no una mejora.
+      # Y el paso no es CARO, es VARIABLE: 14 s en el run de v0.99.0 y 10 min 49 s
+      # en el peor. Lo que se quita aqui no es un coste medio, es la VARIANZA — el
+      # caso de 11 minutos que puede repetirse cualquier dia sin avisar.
       #
-      # Se cachea igualmente, pero por lo que de verdad compra: quitar esa COLA.
-      # El ahorro tipico son ~20 s por push; el que importa es el de 11 minutos
-      # que puede repetirse cualquier dia sin avisar.
+      # RIESGO ASUMIDO: el Chromium del CI se queda sin fuentes CJK ni cirilicas.
+      # No lo nota nadie, porque la app sirve sus PROPIOS woff2 con `unicode-range`
+      # latino y la suite no compara ni un pixel — no hay capturas de referencia.
+      # Si aun asi Chromium no arrancara, el rojo es inmediato e inequivoco y se
+      # revierte esta linea.
       #
       # La clave lleva `package-lock.json` porque de ahi sale la version de
       # Playwright: al subirla, el navegador cacheado ya no sirve y la clave
-      # cambia sola. `--with-deps` instala ademas librerias de sistema por apt,
-      # que NO viven en ~/.cache/ms-playwright y por tanto no se cachean: con
-      # acierto de cache hay que seguir poniendolas con `install-deps`.
+      # cambia sola.
       - name: Cache de Chromium
         id: cache-chromium
         uses: actions/cache@v4
@@ -197,14 +199,12 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       # Solo chromium: la suite declara ese unico proyecto en
-      # playwright.config.js.
+      # playwright.config.js. SIN `--with-deps` a proposito (ver arriba): las
+      # librerias del navegador ya estan en la imagen y lo unico que anadia era
+      # la descarga de fuentes.
       - name: Instalar Chromium
         if: steps.cache-chromium.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-
-      - name: Librerias de sistema (el navegador ya estaba en cache)
-        if: steps.cache-chromium.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+        run: npx playwright install chromium
 
       # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
       # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.
