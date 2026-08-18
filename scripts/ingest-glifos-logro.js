@@ -3,8 +3,9 @@
    `Glifos_logros/` (2880x2880, ~2,4 MB) en MÁSCARAS CSS dentro de
    `app/glyphs/assets/logros/`.
 
-   Uso:  node scripts/ingest-glifos-logro.js [--todos]
-         (sin --todos ingesta solo el subconjunto de prueba de abajo)
+   Uso:  node scripts/ingest-glifos-logro.js
+         (s167: el flag --todos que anunciaba esta cabecera NO EXISTE en el
+          codigo -- no hay un solo argv. Se ingesta SIEMPRE el MAPEO entero.)
 
    POR QUÉ MÁSCARA Y NO IMAGEN
    ---------------------------
@@ -43,7 +44,12 @@ const path = require('path');
 const sharp = require('sharp');
 
 const ROOT = path.resolve(__dirname, '..');
-const ORIGEN = path.resolve(ROOT, '..', 'Glifos_logros');
+/* s167: la ruta que este script traia (`../Glifos_logros`) NO EXISTE, y el arte
+   estaba repartido en dos carpetas. Decision del usuario: el archivo de disenos
+   vive en UNA sola carpeta fuera del repo (lo que la app consume son las
+   mascaras .webp de DESTINO, que si estan versionadas). Los 19 dibujos nuevos
+   se movieron aqui, y se reconocen por el prefijo `exlibris_handcraft`. */
+const ORIGEN = path.resolve(ROOT, '..', '.old', 'Glifos_logros');
 const DESTINO = path.join(ROOT, 'app', 'glyphs', 'assets', 'logros');
 
 const SUELO = 238;
@@ -132,6 +138,37 @@ const MAPEO = {
   "streak.365":               "y4hlfp12j",
   /* Bambu: crece por NUDOS, un tramo cada vez. «Estacion» son 60 dias seguidos. */
   "streak.60":                "rgi1ck55q",
+
+  /* ===== s167 · LOS 19 DIBUJOS DEL SEGUNDO LOTE =====================
+     Asignados por el usuario MIRANDO la hoja de contactos
+     (scripts/audit/hoja-glifos-logro-nuevos.js), que es como se decide esto:
+     los PNG vienen con nombre de timestamp y no se puede hablar de ellos sin
+     verlos. El razonamiento de cada fila vive en MAPEO_GLIFOS_LOGRO.md.
+
+     La clave es el NOMBRE COMPLETO del archivo, no su posicion en la carpeta
+     ni su numero en la hoja: el numero solo sirvio para conversar. Estos 19 no
+     llevan id de asset, asi que su nombre ES la clave estable.
+
+     Con estos, 77 de los 96 logros tienen mascara y quedan 19 sin arte. */
+  "explore.atg":              "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993928079.png",
+  "master.atg.20":            "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993961530.png",
+  "hydrate.week.perfect":     "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993968160.png",
+  "master.long.focus":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786993983560.png",
+  "explore.neck":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994002665.png",
+  "explore.desk":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994006895.png",
+  "explore.all.move":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994016561.png",
+  "master.rounds.15":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994024193.png",
+  "secret.dark.mode":         "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994220532.png",
+  "master.hips.20":           "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994228138.png",
+  "master.extra.all.week":    "Premium_editorial_zen_seal_exlibris_handcraft_A-1786994524540.png",
+  "explore.ancestral":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786996152945.png",
+  "master.hydrate.90":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786996160234.png",
+  "master.ancestral.10":      "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997887902.png",
+  "season.equinox.autumn":    "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997898447.png",
+  "master.midnight.never":    "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997907300.png",
+  "secret.lunch":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997912255.png",
+  "master.hydrate.30":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997917267.png",
+  "season.autumn":            "Premium_editorial_zen_seal_exlibris_handcraft_T-1786996555473.png",
 };
 
 /* Guardarrail: un id que no exista en el catálogo produciría una máscara que no
@@ -290,6 +327,20 @@ async function main() {
   const unicos = dibujosUnicos();
   console.log('origen: ' + ORIGEN + '  (' + unicos.size + ' dibujos distintos)');
   validarContraCatalogo(MAPEO);
+
+  /* PREVUELO (s167) — TODAS las claves del MAPEO tienen que resolver a un
+     archivo ANTES de borrar nada. Sin esto, el `ABORTADO` de mas abajo salta
+     con las mascaras YA borradas: el script se para dejando el destino vacio y
+     el mapa a medias. Es exactamente el escenario del que avisa el censo
+     («assets del MAPEO que NO se encuentran en disco»), y aqui deja de depender
+     de que alguien se acuerde de correrlo. */
+  const huerfanos = Object.entries(MAPEO).filter(([, clave]) => !unicos.has(clave));
+  if (huerfanos.length) {
+    console.error('ABORTADO ANTES DE BORRAR NADA — ' + huerfanos.length +
+      ' fila(s) del MAPEO no resuelven a un dibujo en ' + ORIGEN + ':');
+    huerfanos.forEach(([logro, clave]) => console.error('   ' + logro + ' -> ' + clave));
+    process.exit(1);
+  }
 
   /* limpiar máscaras de una pasada anterior: si un logro sale del mapeo, su
      archivo tiene que irse con él o queda referenciado sin estarlo */

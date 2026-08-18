@@ -3,7 +3,7 @@
 > Web app de productividad y salud para quien pasa muchas horas sentado.
 > Micro-intervenciones cuidadas a lo largo del día, no entrenamientos largos.
 
-**Estado:** v0.96.0 · Pre-lanzamiento
+**Estado:** v0.97.0 · Pre-lanzamiento
 **Build entregado:** `index.html` — artefacto web/PWA, instalable y offline
 **Autor:** [@ezradesign](https://github.com/ezradesign)
 **Licencia del código:** [Elastic License 2.0](./LICENSE) — ver [§ Licencia](#-licencia)
@@ -33,7 +33,7 @@ rutinas propias**, y **PWA** instalable que funciona sin conexión.
 
 ---
 
-## 📊 Estado actual (v0.96.0)
+## 📊 Estado actual (v0.97.0)
 
 | Área | Estado |
 |---|---|

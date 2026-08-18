@@ -121,7 +121,13 @@ function Achievements({ open, onClose }) {
    Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
    título "Secreto") — su mecánica es intriga, no señalización. */
 function Seal({ achievement, unlocked, implemented, color }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  /* s167 — hasta hoy el titulo y la descripcion salian CRUDOS del catalogo, asi
+     que en ingles se leian en español (hallazgo de s146, abierto dos versiones).
+     Mismo patron que Respira/Mueve/Extra: el castellano sigue viviendo SOLO en
+     `catalog.js` y el ingles llega de `i18n/content/achievements.js`; si falta
+     la clave, cae al dato. */
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const a = achievement;
   const isSecret = a.secret && !unlocked;
   const isComingSoon = !unlocked && !implemented && !a.secret;
@@ -132,20 +138,36 @@ function Seal({ achievement, unlocked, implemented, color }) {
 
   return (
     <div
+      /* s167 — el id en el DOM para que la suite pueda comparar sello a sello.
+         Sin el, un aserto de idioma solo puede mirar el texto ENTERO del panel
+         con `includes`, que casa por SUBCADENA: el ingles «Coherent» aparecia
+         dentro del castellano «Coherente» y daba un falso positivo. */
+      data-pace-ach={a.id}
       style={{
-        aspectRatio: '1/1.15',
         /* s147 — el sello se anclaba al CENTRO de la tarjeta, así que flotaba con
            el largo de la descripción: reportado por el usuario con «Setenta y
            cinco sellos» (1 línea) al lado de «Cartógrafa» (3 líneas). Medido
            sobre los 96 sellos, tres posiciones distintas —15, 20 y 26 px del
            borde— y 11 px de deriva dentro de la misma fila.
 
-           Se ancla ARRIBA, que es la regla de alturas reservadas de s119: la
-           tarjeta ya tiene alto FIJO (`aspectRatio`) y el círculo alto fijo, así
-           que con el ancla arriba se alinean los sellos Y los títulos, y lo que
-           varía —la descripción— cae hacia el hueco de abajo. Es seguro porque
-           está medido: 0 de 96 tarjetas desbordan su alto, y a la más cargada le
-           sobran 16 px. */
+           Se ancla ARRIBA, que es la regla de alturas reservadas de s119: con el
+           ancla arriba se alinean los sellos Y los títulos, y lo que varía —la
+           descripción— cae hacia el hueco de abajo.
+
+           s167 — AQUÍ VIVÍA `aspectRatio: '1/1.15'`, y era el defecto que el
+           usuario reportó como «mucho aire por debajo»: ataba el ALTO de la
+           tarjeta a su ANCHO. Con `minmax(128px, 1fr)`, al estrechar el viewport
+           caben menos columnas, cada tarjeta se ensancha y la proporción la
+           estira — mientras el texto sigue midiendo lo mismo. Medido sobre los
+           96 en siete anchos: a 1440 sobran 24 px bajo el último texto, pero a
+           320 la tarjeta mide 283 px y 157 son aire, el 55 % vacía.
+
+           Sin alto fijo lo marca el CONTENIDO, y la rejilla iguala por FILA
+           (`align-items: stretch` es el defecto del grid). La regla de s147
+           sigue en pie: su defecto era la deriva DENTRO de una fila, y el
+           estirado por fila la impide igual porque todas las tarjetas de una
+           fila siguen midiendo lo mismo. Se pierde la regularidad ENTRE filas;
+           se gana que la tarjeta deje de crecer sola en móvil. */
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
         padding: '14px 8px',
         border: `1px ${borderStyle} ${borderColor}`,
@@ -157,7 +179,7 @@ function Seal({ achievement, unlocked, implemented, color }) {
         cursor: 'default',
         textAlign: 'center',
       }}
-      title={isComingSoon ? t('ach.coming.soon') : a.desc}
+      title={isComingSoon ? t('ach.coming.soon') : tR('ach.item.' + a.id + '.desc', a.desc)}
     >
       {/* Badge "Pronto" — solo en estado coming-soon */}
       {isComingSoon && (
@@ -207,9 +229,9 @@ function Seal({ achievement, unlocked, implemented, color }) {
         lineHeight: 1.15,
         marginBottom: 4,
         color: unlocked ? 'var(--ink)' : 'var(--ink-3)',
-      }}>{isSecret ? t('ach.seal.secret') : a.title}</div>
+      }}>{isSecret ? t('ach.seal.secret') : tR('ach.item.' + a.id + '.title', a.title)}</div>
       <div style={{ fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 }}>
-        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : a.desc)}
+        {isSecret ? '?????' : (isComingSoon ? t('ach.seal.soon') : tR('ach.item.' + a.id + '.desc', a.desc))}
       </div>
     </div>
   );

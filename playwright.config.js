@@ -41,7 +41,22 @@ module.exports = defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
-  workers: process.env.CI ? 2 : undefined,
+  /* s167 — `undefined` daba 8 en una maquina de 16 hilos y la suite salia roja
+     2 de cada 3 pasadas, siempre por `Test timeout of 60000ms` y nunca por el
+     producto. Medido en la misma condicion del fallo, con los tests ya
+     abaratados (se retiro el `waitForTimeout` por segundo simulado): a 8 sigue
+     roja; a 4, TRES de tres en verde con el peor test a 49,6 s de 60. El CI
+     mantiene 2, que es donde lleva verde desde s154.
+
+     CORREGIDO EN LA MISMA SESION: aquel «3 de 3 en verde» a 4 workers fue una
+     ventana afortunada. Repetido mas tarde: rojo 3 de 3, y la pista es el RELOJ
+     -- el mismo trabajo pasaba de 49 s a 3,1 min. Medido: la CPU estaba al 6 %
+     y quedaban 5,8 GB de 15,7, o sea que el cuello NO es CPU sino MEMORIA, y
+     depende de cuanta tenga cogida el navegador del usuario en ese momento.
+     Cuatro Chromium encima de eso caben o no caben segun el dia. A 2: 81/81 en
+     1,2 y 1,5 min, dos de dos. Se fija 2 en los dos lados -- una red de
+     seguridad que falla segun lo que tengas abierto no es una red. */
+  workers: 2,
   reporter: process.env.CI ? [['github'], ['list']] : [['list']],
   timeout: 60_000,
   expect: { timeout: 10_000 },

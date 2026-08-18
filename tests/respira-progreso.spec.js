@@ -52,7 +52,7 @@ async function abrir(page, rutina) {
 
 /* De 1 s en 1 s: ver la cabecera. Un solo salto grande deja la sesion quieta. */
 async function segundos(page, n) {
-  for (let i = 0; i < n; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(12); }
+  for (let i = 0; i < n; i++) { await page.clock.fastForward(1000); }
 }
 
 /* TODO el estado del progreso en UNA sola llamada. No es cosmetica: la primera
