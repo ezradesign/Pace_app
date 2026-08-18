@@ -155,7 +155,55 @@ platos a la misma altura, una hoja en un plato y una espiga en el otro*.
 
 ---
 
-## 4 · Lo que NO está aquí
+## 4 · La caché de Chromium: funciona, y mide peor
+
+Entró en s168 y **está verificada en los dos sentidos**. Con la caché vacía
+(run `32167773908`) hizo lo correcto y guardó 268,96 MiB. Con acierto
+(run `32168727070`):
+
+```
+5. Cache de Chromium                       3 s   <- ACIERTO
+6. Instalar Chromium                  omitido   <- correcto
+7. Librerias de sistema (cache)           94 s   <- corrio en su lugar
+```
+
+El condicional hace lo que debe. El coste no acompaña:
+
+| | sin caché (8 runs) | la cola (2 de 10) | con acierto |
+|---|---|---|---|
+| preparar navegador | 21–28 s | 217 y 672 s | **97 s** |
+
+**La caché empeora el caso mediano**, cuatro de cada cinco veces. Lo que no
+anticipé es que `install-deps` a solas tarda 94 s, mientras que dentro de
+`--with-deps` apenas costaba: lo más probable es que las librerías ya estén en
+la imagen de `ubuntu-latest` y allí no hubiera nada que instalar.
+
+### Pregunta
+
+**¿Se quita `install-deps` del camino de acierto, se revierte la caché, o se
+deja como está?**
+
+### Sugerencia
+
+**Quitar `install-deps` y medirlo.** Si las librerías están en la imagen —y los
+ocho runs rápidos apuntan a que sí, porque `--with-deps` no gastaba tiempo en
+ellas—, el acierto baja a **3 s** y la caché gana siempre, no a veces. Cuesta un
+push: si Chromium no arranca, el rojo es inmediato e inequívoco y se revierte la
+línea.
+
+Mientras tanto **se queda**, porque cambia un 24 s / 445 s bimodal por un 97 s
+estable: en esperanza es igual o algo mejor, y en varianza mucho mejor. Pero no
+es la mejora que prometía el backlog, y conviene saberlo antes de dar el frente
+por cerrado.
+
+> **Tres correcciones sobre el mismo punto, todas en la misma dirección.** «11
+> minutos por push» → 24 s de mediana. «Un caso patológico» → 2 de 10. «Ahorra
+> ~20 s» → cuesta 70 s más en el caso común. Cada vez concluí de más, y cada vez
+> lo corrigió una medida.
+
+---
+
+## 5 · Lo que NO está aquí
 
 Sigue vivo y documentado en `STATE.md`: los **19 logros sin arte** (con su
 reparto nuevo por familia), los **glifos de ejercicio** (mecanismo listo desde
@@ -163,13 +211,5 @@ s166, nunca corrido sobre arte real), el **tirón del arco**, **D3**, la **Fase 
 de `pace.events.v1`**, **Wrangler**, **proteger `main`** y **«muy similar a web»
 en móvil** (solo queda la rejilla 2×2 contra la fila de cuatro).
 
-Y una que nace aquí, **ya medio cerrada**: la caché de Chromium entró y el push
-de cierre la verificó a medias. En el run `32167773908` el cableado hizo lo
-correcto con la caché vacía —fallo esperado, descarga completa (217 s), paso de
-`install-deps` omitido— y **guardó 268,96 MiB**. Falta ver el **acierto**: en el
-primer push de la sesión siguiente, «Cache de Chromium» debe acertar, «Instalar
-Chromium» debe omitirse y «Librerías de sistema» debe correr en su lugar.
-
-De paso, ese run corrigió una conclusión mía: dije que los 11 minutos fueron «un
-caso patológico» sobre 9 runs, y este tardó **217 s**. Son **2 de 10** por encima
-de los tres minutos — la cola recurre, así que la caché vale más de lo que dije.
+Y una que nace aquí y **ya no cabe en esta lista, porque es una decisión**: ver
+la § 4.
