@@ -142,18 +142,25 @@ function FocusTimer({ onFinish }) {
        completed -> arranca otro bloque (fix del inerte)
        paused    -> «Continuar»
        idle      -> «Empezar foco». */
+  /* s166: la etiqueta de ARRANQUE depende del MODO, no solo del motor. En
+     Pausa y Larga el boton decia 'Empezar foco' sobre un reloj que no es de
+     foco (lo vio el usuario en la web). Una sola constante para los dos sitios
+     donde se arranca -- idle y completed -- porque separarlas fue justo como
+     nacio el desajuste. */
+  const startLabel = isFocoMode ? t('focus.start') : t('focus.startPause');
+
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
     ctaAction = toggle;
   } else if (isCompleted) {
-    ctaLabel = isFocoMode ? t('focus.startAnother') : t('focus.start');
+    ctaLabel = isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
     ctaAction = handleNormalStart;
   } else {
-    ctaLabel = t('focus.start');
+    ctaLabel = startLabel;
     ctaAction = handleNormalStart;
   }
 

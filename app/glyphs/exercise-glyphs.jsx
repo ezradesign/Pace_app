@@ -196,6 +196,27 @@ function DefaultGlyph({ size = 44, className = '' }) {
 }
 
 function ExerciseGlyph({ id, size = 88, className = '' }) {
+  /* s166 · EL ARTE DEL USUARIO ENTRA COMO MASCARA Y GANA AL SVG, igual que
+     s146 hizo con los sellos de logro y por la misma razon: asi los 62
+     dibujos del rediseno pueden llegar POR PARTES sin dejar huecos -- lo que
+     todavia no tiene mascara sigue con su SVG. Hoy, con el mapa vacio, esta
+     rama no se toma ni una vez y la app pinta exactamente lo de ayer.
+     `currentColor` de fondo es lo que conserva el tintado por token del
+     modulo, que es justo lo que se perderia pintando el PNG como imagen. */
+  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id);
+  if (mask) {
+    const url = 'url("' + mask + '")';
+    return (
+      <span className={className} style={{
+        display: 'block', width: size, height: size,
+        backgroundColor: 'currentColor',
+        WebkitMaskImage: url, maskImage: url,
+        WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center', maskPosition: 'center',
+        WebkitMaskSize: 'contain', maskSize: 'contain',
+      }} />
+    );
+  }
   /* visualId (B2.2): los duplicados de nombre (Chest opener, Deep squat hold,
      Deep breaths, Dead hang · opcional) resuelven al glifo canónico que
      absorbe. resolveVisualId es identidad para nombres no aliasados; se lee

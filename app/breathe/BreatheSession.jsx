@@ -49,6 +49,10 @@ function BreatheSession({ routine, onExit, inPath }) {
   // el credito a stats/logros. Honra la decision s96 (timers nuevos = timestamp).
   const activeMsRef = useRef(0);      // ms activos acumulados entre pausas
   const segStartRef = useRef(null);   // inicio del segmento activo en curso, o null
+  /* s166 · el mismo tiempo, contado APARTE cuando es retencion. No cambia lo
+     que se acredita (activeMsRef ya sumaba 'hold' desde s98): saca un numero
+     que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
+  const relojHold = useHoldClock();
   const getActiveSec = () => {
     const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
     return (activeMsRef.current + open) / 1000;
@@ -68,6 +72,11 @@ function BreatheSession({ routine, onExit, inPath }) {
       activeMsRef.current += Date.now() - segStartRef.current;
       segStartRef.current = null;
     }
+    /* s166: en el MISMO efecto y no en uno propio, para que los dos relojes
+       abran y cierren en la misma tarea. Con dos efectos, pausar durante la
+       retencion los cerraria en ordenes distintos segun el orden de montaje
+       y los totales se separarian unos milisegundos por sesion. */
+    relojHold.marcar(stage === 'hold' && !paused);
   }, [stage, paused]);
 
   // Helper: reproduce el sonido de una fase por su label.
@@ -229,7 +238,14 @@ function BreatheSession({ routine, onExit, inPath }) {
     // rounds (retenciones incluidas -> mas honesto) que a no-rounds. Minimo 1
     // min si hubo practica (las sesiones muy cortas cuentan en stats/plan).
     const activeMin = Math.max(1, Math.round(getActiveSec() / 60));
-    completeBreathSession(routine.id, activeMin);
+    /* NO se cierra el reloj aqui, y es deliberado: `segundos()` ya cuenta el
+       segmento abierto —igual que `getActiveSec()` justo arriba—, asi que
+       cerrarlo antes de leer era una SEGUNDA forma de hacer lo mismo. El banco
+       de mutaciones de s166 lo destapo: con las dos puestas, romper cualquiera
+       de ellas dejaba los cuatro asertos en verde, o sea que no habia forma de
+       saber si alguna funcionaba. Con una sola, la mutacion muerde. El efecto
+       cierra el segmento al pasar a 'done', que es donde toca. */
+    completeBreathSession(routine.id, activeMin, relojHold.segundos());
     try { playSound('breathe.session.end'); } catch (e) {}
     setStage('done');
   };

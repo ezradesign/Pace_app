@@ -59,6 +59,12 @@ Object.assign(window.PACE_STRINGS.es, {
     'focus.restart':                   'Reiniciar',
     'focus.restartBlock':              'Reiniciar bloque',
     'focus.start':                     'Empezar foco',
+    /* s166: el CTA del Pomodoro dependia SOLO del estado del motor, nunca del
+       modo, asi que en Pausa y Larga invitaba a 'Empezar foco' encima de un
+       reloj de 5 min que no es foco. La etiqueta se elige por modo mas abajo
+       (FocusTimer.jsx); las dos pausas comparten palabra porque el tab de
+       arriba ya dice cual de las dos es. */
+    'focus.startPause':                'Empezar pausa',
     'focus.pause':                     'Pausar',
     'focus.continue':                  'Continuar',
     'focus.startAnother':              'Empezar otro ciclo',
@@ -232,6 +238,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'focus.restart':                   'Restart',
     'focus.restartBlock':              'Restart focus',
     'focus.start':                     'Start focus',
+    'focus.startPause':                'Start break',
     'focus.pause':                     'Pause',
     'focus.continue':                  'Continue',
     'focus.startAnother':              'Start another cycle',

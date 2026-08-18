@@ -84,6 +84,11 @@ function reindexWeeklyStatsMondayFirst(ws) {
     ? [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]]
     : [0,0,0,0,0,0,0];
   return {
+    /* s166 · holdSeconds va en la lista aunque hoy no pueda llegar aqui con
+       datos: esta funcion RECONSTRUYE el objeto, asi que toda clave que no
+       enumere se pierde en silencio. Enumerarla cuesta una linea y evita que
+       el dia que alguien reordene las migraciones se caiga sin ruido. */
+    holdSeconds:   rot(ws && ws.holdSeconds),
     focusMinutes:  rot(ws && ws.focusMinutes),
     breathMinutes: rot(ws && ws.breathMinutes),
     moveMinutes:   rot(ws && ws.moveMinutes),

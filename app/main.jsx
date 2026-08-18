@@ -133,32 +133,12 @@ function PaceApp() {
      cerrar el preview te devuelve a ella, no a la home. */
   const [previewRoutine, setPreviewRoutine] = useStateMain(null);
 
-  /* QUÉ PIEL ESTÁ PUESTA (s160), para que el DOM lleve el orden CANÓNICO.
-     La piel la declara la hoja de _responsive.js en --pace-skin, que es donde
-     ya vive el breakpoint de 769px: aquí no se escribe una tercera copia de ese
-     número. Se lee del estilo computado en vez de con matchMedia justamente por
-     eso — si mañana el breakpoint cambia, cambia en un sitio y esto lo sigue.
-     Un resize la revisa, coalescido a un frame: solo re-renderiza cuando el
-     valor CAMBIA de verdad, o sea al cruzar el breakpoint. */
-  const leerPiel = () => {
-    if (typeof window === 'undefined' || !window.getComputedStyle) return 'movil';
-    return getComputedStyle(document.documentElement)
-      .getPropertyValue('--pace-skin').trim() || 'movil';
-  };
-  const [piel, setPiel] = useStateMain(leerPiel);
-  useEffectMain(() => {
-    let raf = 0;
-    const revisar = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => { raf = 0; setPiel(leerPiel()); });
-    };
-    window.addEventListener('resize', revisar);
-    revisar(); // primera lectura ya con la hoja aplicada
-    return () => {
-      window.removeEventListener('resize', revisar);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+  /* s166: aquí vivía el lector de --pace-skin de s160, que existía SOLO para
+     elegir el orden del DOM. Con un orden único (abajo) se quedó sin consumidor
+     y se ha ido entero, con su listener de resize y su rAF: era un re-render de
+     la home entera cada vez que se cruzaba el breakpoint, a cambio de nada.
+     --pace-skin NO desaparece — lo sigue publicando _responsive.pieles.js y lo
+     siguen leyendo las hojas; lo que se va es la copia en JS. */
   const lanzarDesdePreview = () => {
     const p = previewRoutine;
     setPreviewRoutine(null);
@@ -256,11 +236,10 @@ function PaceApp() {
         />
 
         {/* Región scrollable de la home (s123). Contiene los TRES bloques de la
-            jerarquía §1 (s122): Foco (timer) → Camino sugerido → Actividades.
-            s160: el aro va SIEMPRE primero, y los otros dos van en el orden
-            VISUAL de cada piel — que es el mismo orden en que se leen y se
-            tabulan. Lo que se eliminó no es el orden del DOM sino el swap por
-            `order` del CSS, que hacía que en escritorio no coincidieran. En pantallas bajas
+            jerarquía §1 (s122). s166: el orden es UNO SOLO en todo el viewport
+            — Foco (timer) → Actividades → Camino sugerido —, que es también el
+            orden en que se lee y se tabula. Ni el DOM ni el CSS reordenan nada:
+            no queda un solo `order` ni un reparto por piel. En pantallas bajas
             el aro se encoge por altura útil (data-pace-dial-fit) y, si aun así
             el conjunto no cabe, ESTA región hace scroll vertical natural en vez
             de recortar contenido (regla del caso short-viewport). overflow-x
@@ -277,7 +256,7 @@ function PaceApp() {
               composición. margin-top/bottom:auto lo CENTRA verticalmente cuando
               hay espacio y, cuando desborda, los márgenes colapsan a 0 y la
               región (home-body) SCROLLEA sin recortar (patrón centrar-o-scrollear
-              fiable en flex). El orden del DOM lo pone la piel (s160, abajo). */}
+              fiable en flex). El orden del DOM es FIJO (s166, abajo). */}
           <div data-pace-home-stack style={{
             marginTop: 'auto',
             marginBottom: 'auto',
@@ -299,37 +278,30 @@ function PaceApp() {
               <FocusTimer onFinish={handleFocusFinish} />
             </div>
 
-            {/* EL ORDEN DE ESTOS DOS LO PONE LA PIEL (s160), y por eso ya no hay
-                ningún "order" en la hoja de escritorio.
+            {/* UN SOLO ORDEN PARA LAS DOS PIELES (s166): aro → Actividades →
+                Camino. Lo pidió el usuario mirando las dos pantallas al lado:
+                en móvil la tarjeta se colaba entre el aro y Actividades y la
+                home no se parecía a la de escritorio.
 
-                Las dos pieles tienen órdenes visuales genuinamente distintos:
-                en móvil la tarjeta de Camino cruza el horizonte del aro y
-                Actividades cierra abajo; en escritorio Actividades sube a
-                solapar el aro y la tarjeta se va al fondo. Hasta v0.90.0 eso lo
-                hacía "order: 1 / 2" con el DOM quieto, así que en escritorio el
-                foco de teclado bajaba a la tarjeta del fondo y después SUBÍA a
-                los chips (WCAG 2.4.3, medido con Tab: 622 → 698 → 496). Con el
-                DOM en el orden canónico de cada piel, orden visual y orden de
-                lectura son el mismo por construcción.
+                ESTO SUSTITUYE AL REPARTO POR PIEL DE s160, y de paso lo que
+                aquella sesión arregló ya no puede volver: s160 quitó el swap por
+                "order" del CSS porque en escritorio el foco de teclado bajaba a
+                la tarjeta y luego SUBÍA a los chips (WCAG 2.4.3, medido con Tab:
+                622 → 698 → 496). La lección era que orden visual y orden de DOM
+                no deben poder divergir; con UN orden para todo el viewport no
+                hay ni dos órdenes que sincronizar. La piel sigue decidiendo el
+                aspecto —quién hace de horizonte, cuánto solapa— pero ya no
+                decide la SECUENCIA.
 
-                LAS KEYS NO SON DECORACIÓN: sin ellas React reconcilia por
-                posición y al cruzar 769px REMONTA los dos bloques en vez de
-                moverlos. Con key estable mueve los nodos, que además es lo que
-                el observador de home-geometry.js espera ver (vigila el
-                childList DIRECTO del stack y re-suscribe su ResizeObserver). */}
-            {(() => {
-              const camino = <SuggestedPathCard key="spc" />;
-              const actividades = (
-                <ActivityBar
-                  key="act"
-                  onOpenLibrary={(kind) => setOpenLibrary(kind)}
-                  onOpenHydrate={() => setOpenHydrate(true)}
-                />
-              );
-              return piel === 'escritorio'
-                ? [actividades, camino]
-                : [camino, actividades];
-            })()}
+                LAS KEYS SE QUEDAN: el observador de home-geometry.js vigila el
+                childList DIRECTO del stack y re-suscribe su ResizeObserver, así
+                que sigue interesando que React mueva nodos y no los remonte. */}
+            <ActivityBar
+              key="act"
+              onOpenLibrary={(kind) => setOpenLibrary(kind)}
+              onOpenHydrate={() => setOpenHydrate(true)}
+            />
+            <SuggestedPathCard key="spc" />
           </div>
         </div>
       </main>

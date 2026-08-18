@@ -42,7 +42,11 @@ function parseLocalDateKey(isoDate) {
 }
 
 function zeroEntry() {
-  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
+  /* s166: `holdSeconds` entra aqui y no solo en weeklyStats porque la semana
+     se vacia en el rollover: sin bajar al historico, la retencion solo
+     existiria hasta el lunes y no se podria comparar una semana con otra,
+     que es justo la escala a la que se decidio mostrarla. */
+  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0, holdSeconds: 0 };
 }
 
 /* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
@@ -75,6 +79,10 @@ function recomputeMonthFromDays(days, monthKey) {
       acc.breathMinutes += d.breathMinutes || 0;
       acc.moveMinutes   += d.moveMinutes   || 0;
       acc.waterGlasses  += d.waterGlasses  || 0;
+      /* s166 · `|| 0` no es cosmetico aqui: los dias archivados ANTES de
+         s166 no tienen la clave, y sin el fallback el mes entero saldria
+         NaN en cuanto hubiera un solo dia viejo. */
+      acc.holdSeconds   += d.holdSeconds   || 0;
     }
   }
   return acc;
@@ -90,6 +98,10 @@ function recomputeYearFromDays(days, yearKey) {
       acc.breathMinutes += d.breathMinutes || 0;
       acc.moveMinutes   += d.moveMinutes   || 0;
       acc.waterGlasses  += d.waterGlasses  || 0;
+      /* s166 · `|| 0` no es cosmetico aqui: los dias archivados ANTES de
+         s166 no tienen la clave, y sin el fallback el mes entero saldria
+         NaN en cuanto hubiera un solo dia viejo. */
+      acc.holdSeconds   += d.holdSeconds   || 0;
     }
   }
   return acc;
@@ -122,6 +134,10 @@ function archiveDayToHistory(history, dateStr, weeklyStats) {
     breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
     moveMinutes:   (weeklyStats.moveMinutes   || [])[idx] || 0,
     waterGlasses:  (weeklyStats.waterGlasses  || [])[idx] || 0,
+    /* s166 · el patron `(x || [])[idx] || 0` ya estaba y es justo el que
+       hace que una clave nueva no necesite migracion: una instalacion sin
+       `holdSeconds` archiva 0 y sigue. */
+    holdSeconds:   (weeklyStats.holdSeconds   || [])[idx] || 0,
   };
   const hasData = Object.values(delta).some(v => v > 0);
   if (!hasData) return history;

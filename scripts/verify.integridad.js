@@ -42,8 +42,10 @@ var eventos = require('./verify.eventos.js');   // tanda de pace.events.v1 (s155
 var CENSO = {
   /* i18n: claves que declaran `app/i18n/strings/*` en CADA idioma (s152; el
      split de s148 midio 195 sobre su propio alcance, no sobre el total). */
-  i18nClaves: 511,   // +1 en s155b: tweaks.msg.import.storage.err
+  i18nClaves: 515,   // +1 en s155b: tweaks.msg.import.storage.err
                      // +1 en s161: tweaks.palette.auto (tercera pill de paleta)
+                     // +1 en s166: focus.startPause (el CTA en Pausa/Larga)
+                     // +3 en s166: stats.hold.label/min/sec (el tiempo de retencion)
 
   /* glifos */
   glifosEjercicio: 47,          // exercise-glyphs.jsx + .extra.jsx (s148)

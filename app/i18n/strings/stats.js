@@ -23,6 +23,13 @@ Object.assign(window.PACE_STRINGS.es, {
     // siempre); en stats se etiqueta "Cuerpo" para no mentir por omision.
     'stats.label.body':                'Cuerpo',
     // Tabs — sesión 43
+    /* s166 · RETENCION. El copy dice «esta semana» y no «total» a proposito:
+       lo que se muestra es la suma de la semana en curso, que es la escala a
+       la que se decidio (una mejora respiratoria se nota en semanas). Es un
+       ACUMULADO, nunca un maximo -- ver la nota de completeBreathSession. */
+    'stats.hold.label':                'Retención esta semana',
+    'stats.hold.min':                  '{m} min {s} s',
+    'stats.hold.sec':                  '{s} s',
     'stats.tab.week':                  'Semana',
     'stats.tab.month':                 'Mes',
     'stats.tab.year':                  'Año',
@@ -75,6 +82,9 @@ Object.assign(window.PACE_STRINGS.en, {
     // s101: moveMinutes = Move AND Stretch combined -- labelled "Body" in stats.
     'stats.label.body':                'Body',
     // Tabs — session 43
+    'stats.hold.label':                'Breath holds this week',
+    'stats.hold.min':                  '{m} min {s} s',
+    'stats.hold.sec':                  '{s} s',
     'stats.tab.week':                  'Week',
     'stats.tab.month':                 'Month',
     'stats.tab.year':                  'Year',
