@@ -1,5 +1,12 @@
 # HANDOFF · Glifos de LOGRO · el estado exacto antes de ingestar
 
+> **AGOTADO EN s167 (v0.97.0).** Todo lo que pedia esta HECHO: los 19 dibujos
+> ingestados (77 de 96 con mascara), el arte consolidado en UNA carpeta y la
+> trampa del §2 **cerrada en el codigo** con un prevuelo probado en rojo -- ya no
+> hace falta acordarse de correr el censo antes. **No ejecutes nada de aqui.**
+> El estado vivo esta en la seccion «Proxima sesion» de [`STATE.md`](../STATE.md)
+> y el relato en [`session-167`](./sessions/session-167-glifos-logro-e-ingles.md).
+
 **Abierto en s167** (sobre v0.96.0). Nada implementado todavía: esto es el
 levantamiento del terreno, que resultó tener **dos trampas que destruyen trabajo**
 si se corre la ingesta a ciegas.

@@ -49,22 +49,24 @@ var CENSO = {
 
   /* glifos */
   glifosEjercicio: 47,          // exercise-glyphs.jsx + .extra.jsx (s148)
-  mascarasLogro: 58,            // achievement-masks.js (s146/s147)
-  mascarasVisiblesDeSalida: 53, // las que un usuario nuevo ve pintadas
-  mascarasDeSecreto: 5,         // + estas, solo al desbloquear su secreto
+  mascarasLogro: 77,            // achievement-masks.js (s146/s147; +19 en s167)
+  mascarasVisiblesDeSalida: 69, // las que un usuario nuevo ve pintadas (+17 en s167,
+                                //   -1 al pasar explore.tweaks a secreto)
+  mascarasDeSecreto: 8,         // + estas, solo al desbloquear su secreto (+2 en s167:
+                                //   secret.dark.mode y secret.lunch)
 
   /* catalogo de logros */
   logros: 96,                   // ACHIEVEMENT_CATALOG (s146)
   logrosConDetector: 88,        // IMPLEMENTED_ACHIEVEMENTS
   logrosDisponibles: 88,        // §15.4 denominador unico: el «0/88» de la UI
-  logrosSecretos: 12,
+  logrosSecretos: 13,           // +1 en s167: explore.tweaks («Curiosidad»)
   categorias: 7,                // CAT_META
 
   /* catalogos de contenido */
   respira: 20, mueve: 14, estira: 14, caminos: 7,
 
   /* service worker */
-  precache: 86,                 // filas de PRECACHE (s149)
+  precache: 105,                // filas de PRECACHE (s149; +19 mascaras en s167)
 };
 
 /* ==========================================================================
@@ -394,10 +396,12 @@ function chequeaLogros(ctx) {
   /* LA CUENTA QUE CONFUNDIO A DOS SESIONES (s150 conto 53 sellos, s151 conto
      54, y el mapa tiene 58). No es un bug de nadie: `Achievements.jsx`
      (`isSecret = a.secret && !unlocked`) pinta una `?` en vez del glifo mientras
-     el secreto siga bloqueado, asi que 5 de las 58 mascaras NO se ven hasta
-     desbloquear su logro. De salida se pintan 53; s151 vio 54 porque midio el
-     onboarding en ingles y eso desbloquea `secret.bilingual`. Se aserta la
-     descomposicion entera para que el numero de la pantalla deje de sorprender. */
+     el secreto siga bloqueado, asi que las mascaras de secreto NO se ven hasta
+     desbloquear su logro. s151 vio 54 en vez de 53 porque midio el onboarding en
+     ingles y eso desbloquea `secret.bilingual`. Se aserta la descomposicion
+     entera para que el numero de la pantalla deje de sorprender.
+     s167: 77 = 70 visibles + 7 de secreto (entraron secret.dark.mode y
+     secret.lunch). Los numeros de arriba eran 58 = 53 + 5. */
   var maskSecretas = maskIds.filter(function (id) { return secretos.has(id); });
   censo(ctx, 'mascaras que solo aparecen al desbloquear su secreto', maskSecretas.length, CENSO.mascarasDeSecreto);
   censo(ctx, 'mascaras que un usuario nuevo ve pintadas', maskIds.length - maskSecretas.length,

@@ -4,7 +4,11 @@ const { useState: useStateTO, useEffect: useEffectTO } = React;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
-  const { t } = useT();
+  const { t, lang } = useT();
+  /* s167 — el aviso copiaba `a.title`/`a.desc` del catalogo, asi que el «Nuevo
+     sello» se anunciaba en español aunque la app estuviera en ingles. Mismo
+     helper que Achievements.jsx y que Respira/Mueve/Extra. */
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
 
   useEffectTO(() => {
     return onToast((toast) => {
@@ -15,7 +19,10 @@ function ToastHost() {
         /* s79: exiting=false al insertar; transicion CSS opacity controla
            el fade. Patron de tres fases: visible (durationMs) -> exiting
            (TOAST_FADE_MS opacity:1->0) -> desmontaje del array. */
-        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
+        const full = { ...toast,
+          title: tR('ach.item.' + a.id + '.title', a.title),
+          desc: tR('ach.item.' + a.id + '.desc', a.desc),
+          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
         setToasts(prev => [...prev, full]);
         try { playSound(a.secret ? 'achievement.secret' : 'achievement.unlock'); } catch(e) {}
         const durationMs = (typeof TOAST_DURATION_MS === 'number') ? TOAST_DURATION_MS : 3000;

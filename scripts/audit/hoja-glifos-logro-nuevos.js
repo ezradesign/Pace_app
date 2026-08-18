@@ -19,8 +19,26 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = path.resolve(process.argv[2] || process.cwd());
 const SALIDA = process.argv[3] || path.join(ROOT, '_revision-glifos-nuevos.png');
-const ORIGEN = process.argv[4] || path.resolve(ROOT, '..', 'Glifos de logros');
+/* s167: el arte fuente se consolido en UNA carpeta, asi que esta hoja ya no
+   puede ser «todo lo que hay en la carpeta de los nuevos» — ahi dentro conviven
+   los ya ingestados y los pendientes. Pasa a montar LOS QUE NO ESTAN EN EL
+   MAPEO, que es justo la pregunta que la hoja existe para contestar, y ademas se
+   mantiene sola: en el siguiente lote no habra que tocar ninguna ruta. */
+const ORIGEN = process.argv[4] || path.resolve(ROOT, '..', '.old', 'Glifos_logros');
 const sharp = require(path.join(ROOT, 'node_modules', 'sharp'));
+
+/* Mismo criterio de clave que la ingesta y que el censo: id del asset si lo
+   lleva, y si no el nombre completo. Tres copias divergentes de esto es como se
+   reasignan glifos en silencio (s146). */
+const claveDe = f => { const m = f.match(/^asset_([a-z0-9]+)_/i); return m ? m[1] : f; };
+function clavesYaMapeadas() {
+  const src = fs.readFileSync(path.join(ROOT, 'scripts', 'ingest-glifos-logro.js'), 'utf8');
+  const ini = src.indexOf('const MAPEO = {'), fin = src.indexOf('\n};', ini);
+  const set = new Set();
+  for (const m of src.slice(ini, fin).matchAll(/"[^"]+":\s*"([^"]+)"/g)) set.add(m[1]);
+  if (!set.size) { console.error('HOJA ROTA: el MAPEO se leyo VACIO'); process.exit(1); }
+  return set;
+}
 
 const CELDA = 320;
 const ETIQUETA = 46;
@@ -29,8 +47,23 @@ const PAPEL = { r: 242, g: 237, b: 224 };   // --paper de PACE
 
 (async () => {
   if (!fs.existsSync(ORIGEN)) { console.error('No existe: ' + ORIGEN); process.exit(1); }
-  const pngs = fs.readdirSync(ORIGEN).filter(f => /\.png$/i.test(f)).sort();
-  if (!pngs.length) { console.error('Cero PNG en ' + ORIGEN); process.exit(1); }
+  const todos = fs.readdirSync(ORIGEN).filter(f => /\.png$/i.test(f)).sort();
+  if (!todos.length) { console.error('Cero PNG en ' + ORIGEN); process.exit(1); }
+  const mapeadas = clavesYaMapeadas();
+  const vistas = new Set();
+  const pngs = todos.filter(f => {          // un dibujo por clave, no un fichero
+    const k = claveDe(f);
+    if (mapeadas.has(k) || vistas.has(k)) return false;
+    vistas.add(k); return true;
+  });
+  /* GUARD DE CERO: «0 sin asignar» tiene que ser una noticia, no una hoja en
+     blanco que parezca que el script funciono. */
+  if (!pngs.length) {
+    console.error('CERO dibujos sin asignar en ' + ORIGEN + ' (' + todos.length +
+      ' ficheros, ' + mapeadas.size + ' claves ya en el MAPEO). No hay hoja que montar.');
+    process.exit(1);
+  }
+  console.log(todos.length + ' ficheros -> ' + pngs.length + ' dibujos SIN asignar\n');
 
   const filas = Math.ceil(pngs.length / COLS);
   const W = COLS * CELDA;

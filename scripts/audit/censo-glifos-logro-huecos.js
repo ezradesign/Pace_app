@@ -22,11 +22,15 @@ const path = require('path');
 const ROOT = path.resolve(process.argv[2] || process.cwd());
 const babel = require(path.join(ROOT, 'node_modules', '@babel', 'core'));
 
-/* Las dos carpetas donde vive el arte hoy. La original NO es la que el script
-   trae por defecto (`../Glifos_logros`): esa no existe. */
+/* s167: el arte fuente vive ya en UNA sola carpeta. Estaba repartido en dos
+   —los 58 implementados aqui y los 19 nuevos en `../Glifos de logros`— y el
+   script de ingesta acepta un solo origen, asi que apuntarlo a la de los nuevos
+   habria borrado las 58 mascaras que funcionaban. Decision del usuario: juntar
+   el archivo de disenos, que es suyo y vive FUERA del repo (lo que la app
+   consume son las .webp de `app/glyphs/assets/logros/`, esas si versionadas).
+   Los 19 del lote nuevo se reconocen por el prefijo `exlibris_handcraft`. */
 const CARPETAS = [
   path.resolve(ROOT, '..', '.old', 'Glifos_logros'),
-  path.resolve(ROOT, '..', 'Glifos de logros'),
 ];
 
 const win = {};

@@ -73,6 +73,11 @@ function checkTimeOfDayAchievements() {
       const next = [...list, today].slice(-30);
       setState({ morningDates: next });
       if (next.length >= 5) unlockAchievement('morning.5');
+      /* s167 — «Treinta amaneceres» se cuelga aqui, no de la racha. La lista ya
+         guardaba los ultimos 30 dias DISTINTOS con sesion antes de las 9, asi
+         que el hito no necesita estado nuevo: llegar a 30 ES el logro, y el
+         titulo pasa a ser literal en vez de un sinonimo de racha. */
+      if (next.length >= 30) unlockAchievement('stats.streak.30');
     }
   }
   checkSecretosDeHora();
@@ -275,7 +280,12 @@ function updateStreak() {
   if (current >= 3)   unlockAchievement('streak.3');
   if (current >= 7)   unlockAchievement('streak.7');
   if (current >= 14)  unlockAchievement('streak.14');
-  if (current >= 30)  { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
+  /* s167 — AQUI SE DESBLOQUEABAN DOS LOGROS CON LA MISMA CONDICION: «Luna
+     llena» (constancia, «30 dias seguidos») y «Treinta amaneceres»
+     (estadisticas, «un mes seguido sin perder el ritmo»). Eran el mismo hito
+     contado dos veces en dos familias. `stats.streak.30` pasa a medir lo que su
+     nombre dice de verdad -- treinta AMANECERES -- junto a `morning.5`. */
+  if (current >= 30)  unlockAchievement('streak.30');
   if (current >= 60)  unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
   if (current >= 365) unlockAchievement('streak.365');

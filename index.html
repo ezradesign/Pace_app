@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.96.0</title>
+  <title>PACE · Foco · Cuerpo — v0.97.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3786,6 +3786,233 @@ Object.assign(window.PACE_STRINGS.en, {
 </script>
   <script>
 ;(function () {
+/* PACE · Traducciones EN de contenido — LOGROS (sesion 167)
+   ===========================================================
+   Cierra el hallazgo ABIERTO desde s146: los 96 logros mostraban su titulo y
+   su descripcion **en español tambien en ingles**, porque `Achievements.jsx` y
+   `Toast.jsx` leian `a.title`/`a.desc` crudos del catalogo, sin pasar por t().
+
+   POR QUE AQUI Y NO EN strings/*: este archivo es un patch de INGLES, igual
+   que content/breathe, move y extra. El español NO se duplica -- vive en
+   `app/achievements/catalog.js`, que sigue siendo su unica fuente, y los
+   componentes caen a el con el helper `tR(clave, fallback)`. Meter estas
+   claves en strings/* obligaria a mantener el castellano en DOS sitios, y el
+   propio verify PROHIBE que content/* toque el español.
+
+   Carga DESPUES de strings/* — ese orden es CONTRATO y el verify lo comprueba.
+*/
+Object.assign(window.PACE_STRINGS.en, {
+
+  // ── Primeros pasos ─────────────────────────────
+  'ach.item.first.step.title': 'First step',
+  'ach.item.first.step.desc': 'Complete your first Pomodoro',
+  'ach.item.first.breath.title': 'First breath',
+  'ach.item.first.breath.desc': 'Your first breathing session',
+  'ach.item.first.stretch.title': 'First stretch',
+  'ach.item.first.stretch.desc': 'Your first mobility session',
+  'ach.item.first.sip.title': 'First sip',
+  'ach.item.first.sip.desc': 'Your first glass of water',
+  'ach.item.first.extra.title': 'First calisthenics',
+  'ach.item.first.extra.desc': 'Your first Extra exercise',
+  'ach.item.first.cycle.title': 'Full cycle',
+  'ach.item.first.cycle.desc': 'One Pomodoro plus an active break',
+  'ach.item.first.ritual.title': 'First ritual',
+  'ach.item.first.ritual.desc': 'Use all four modules in one day',
+  'ach.item.first.day.title': 'First day',
+  'ach.item.first.day.desc': 'One day with two different activities',
+  'ach.item.first.plan.title': 'With a plan',
+  'ach.item.first.plan.desc': "Complete the day's plan three times",
+  'ach.item.first.return.title': 'You return',
+  'ach.item.first.return.desc': 'Open the app the next day',
+
+  // ── Constancia ─────────────────────────────
+  'ach.item.streak.3.title': 'Three as one',
+  'ach.item.streak.3.desc': '3 days in a row',
+  'ach.item.streak.7.title': 'First quarter',
+  'ach.item.streak.7.desc': '7 days in a row',
+  'ach.item.streak.14.title': 'A fortnight',
+  'ach.item.streak.14.desc': '14 days in a row',
+  'ach.item.streak.30.title': 'Full moon',
+  'ach.item.streak.30.desc': '30 days in a row',
+  'ach.item.streak.60.title': 'A season',
+  'ach.item.streak.60.desc': '60 days in a row',
+  'ach.item.streak.100.title': 'The hundred',
+  'ach.item.streak.100.desc': '100 days in a row',
+  'ach.item.streak.365.title': 'Around the sun',
+  'ach.item.streak.365.desc': '365 days in a row',
+  'ach.item.focus.hours.10.title': '10 hours of focus',
+  'ach.item.focus.hours.10.desc': 'Accumulated time',
+  'ach.item.focus.hours.50.title': '50 hours of focus',
+  'ach.item.focus.hours.50.desc': 'Accumulated time',
+  'ach.item.focus.hours.100.title': '100 hours of focus',
+  'ach.item.focus.hours.100.desc': 'Accumulated time',
+  'ach.item.breathe.sessions.10.title': '10 breathing sessions',
+  'ach.item.breathe.sessions.10.desc': 'Accumulated sessions',
+  'ach.item.breathe.sessions.50.title': '50 breathing sessions',
+  'ach.item.breathe.sessions.50.desc': 'Accumulated sessions',
+  'ach.item.move.sessions.25.title': '25 mobility sessions',
+  'ach.item.move.sessions.25.desc': 'Accumulated sessions',
+  'ach.item.hydrate.week.perfect.title': 'A hydrated week',
+  'ach.item.hydrate.week.perfect.desc': '8 glasses / 7 days',
+  'ach.item.morning.5.title': 'Early riser',
+  'ach.item.morning.5.desc': '5 sessions before 9am',
+
+  // ── Repertorio ─────────────────────────────
+  'ach.item.explore.box.title': 'Box settled',
+  'ach.item.explore.box.desc': 'Three Box 4·4·4·4 sessions',
+  'ach.item.explore.478.title': '4·7·8',
+  'ach.item.explore.478.desc': 'Three sessions of the calming one',
+  'ach.item.explore.coherent.title': 'Coherent',
+  'ach.item.explore.coherent.desc': 'Three coherence sessions',
+  'ach.item.explore.rounds.title': 'Rounds',
+  'ach.item.explore.rounds.desc': 'Three sessions in rounds',
+  'ach.item.explore.bhastrika.title': 'Bhastrika',
+  'ach.item.explore.bhastrika.desc': 'Three sessions of the energising pranayama',
+  'ach.item.explore.nadi.title': 'Nadi Shodhana',
+  'ach.item.explore.nadi.desc': 'Three alternate-nostril sessions',
+  'ach.item.explore.ujjayi.title': 'Ujjayi',
+  'ach.item.explore.ujjayi.desc': 'Three oceanic sessions',
+  'ach.item.explore.kapalabhati.title': 'Kapalabhati',
+  'ach.item.explore.kapalabhati.desc': 'Three sessions of the kriya',
+  'ach.item.explore.physiological.title': 'Physiological sigh',
+  'ach.item.explore.physiological.desc': 'Three physiological sighs',
+  'ach.item.explore.hips.title': 'Free hips',
+  'ach.item.explore.hips.desc': 'Three hip sessions',
+  'ach.item.explore.shoulders.title': 'Shoulders reset',
+  'ach.item.explore.shoulders.desc': 'Three shoulder sessions',
+  'ach.item.explore.atg.title': 'ATG settled',
+  'ach.item.explore.atg.desc': 'Three deep-range sessions',
+  'ach.item.explore.ancestral.title': 'Ancestral',
+  'ach.item.explore.ancestral.desc': 'Three ancestral sessions',
+  'ach.item.explore.neck.title': 'Neck tended',
+  'ach.item.explore.neck.desc': 'Three neck sessions',
+  'ach.item.explore.desk.title': 'Desk express',
+  'ach.item.explore.desk.desc': 'Three sessions without standing up',
+  'ach.item.explore.all.breathe.title': 'Field lungs',
+  'ach.item.explore.all.breathe.desc': 'Every breathing routine',
+  'ach.item.explore.all.move.title': 'Field body',
+  'ach.item.explore.all.move.desc': 'Every mobility routine',
+  'ach.item.explore.all.extra.title': 'Strong at the desk',
+  'ach.item.explore.all.extra.desc': 'Every Extra routine',
+  'ach.item.explore.tweaks.title': 'Curiosity',
+  'ach.item.explore.tweaks.desc': 'Open the Tweaks panel',
+
+  // ── Maestria ─────────────────────────────
+  'ach.item.master.pomodoro.8.title': 'A day of eight',
+  'ach.item.master.pomodoro.8.desc': '8 Pomodoros in one day',
+  'ach.item.master.pomodoro.12.title': 'Twelve deep',
+  'ach.item.master.pomodoro.12.desc': '12 Pomodoros',
+  'ach.item.master.long.focus.title': 'The long session',
+  'ach.item.master.long.focus.desc': 'Five 45-minute blocks without a break',
+  'ach.item.master.box.15.title': 'Box mastered',
+  'ach.item.master.box.15.desc': '15 Box sessions',
+  'ach.item.master.coherent.15.title': 'Heart in time',
+  'ach.item.master.coherent.15.desc': '15 coherence sessions',
+  'ach.item.master.rounds.15.title': 'Rounds mastered',
+  'ach.item.master.rounds.15.desc': '15 sessions',
+  'ach.item.master.atg.20.title': 'Knees of steel',
+  'ach.item.master.atg.20.desc': '20 ATG sessions',
+  'ach.item.master.hips.20.title': 'Hips set free',
+  'ach.item.master.hips.20.desc': '20 hip sessions',
+  'ach.item.master.shoulders.20.title': 'Shoulders set free',
+  'ach.item.master.shoulders.20.desc': '20 shoulder sessions',
+  'ach.item.master.ancestral.10.title': 'Primeval',
+  'ach.item.master.ancestral.10.desc': '10 ancestral sessions',
+  'ach.item.master.hydrate.30.title': 'Steady river',
+  'ach.item.master.hydrate.30.desc': '30 days at 8 glasses',
+  'ach.item.master.hydrate.90.title': 'The spring',
+  'ach.item.master.hydrate.90.desc': '90 days at 8 glasses',
+  'ach.item.master.extra.all.week.title': 'A strong week',
+  'ach.item.master.extra.all.week.desc': 'Every Extra in one week',
+  'ach.item.master.silent.day.title': 'A silent day',
+  'ach.item.master.silent.day.desc': '5 days in silent mode',
+  'ach.item.master.dawn.title': 'Daybreak',
+  'ach.item.master.dawn.desc': 'Five days with a session before 7am',
+  'ach.item.master.dusk.title': 'Nightfall',
+  'ach.item.master.dusk.desc': 'Five days with a session after 9pm',
+  'ach.item.master.midnight.never.title': 'Never at midnight',
+  'ach.item.master.midnight.never.desc': '30 days with no use after 11pm',
+  'ach.item.master.focus.day.title': 'A day of focus',
+  'ach.item.master.focus.day.desc': '4h of focus in one day',
+  'ach.item.master.retreat.title': 'Personal retreat',
+  'ach.item.master.retreat.desc': '2h of breathing and movement in one day',
+  'ach.item.master.marathon.title': 'The marathon',
+  'ach.item.master.marathon.desc': '2000 minutes in total',
+  'ach.item.master.centurion.title': 'Centurion',
+  'ach.item.master.centurion.desc': '100 breathing sessions',
+  'ach.item.master.gardener.title': 'The gardener',
+  'ach.item.master.gardener.desc': '200 glasses accumulated',
+  'ach.item.master.antidote.title': 'The full antidote',
+  'ach.item.master.antidote.desc': '50 SIT sessions',
+  'ach.item.master.collector.half.title': 'Forty-five seals',
+  'ach.item.master.collector.half.desc': '45 seals gathered',
+  'ach.item.master.collector.full.title': 'Seventy-five seals',
+  'ach.item.master.collector.full.desc': '75 seals gathered',
+  'ach.item.master.path.all7.title': 'The cartographer',
+  'ach.item.master.path.all7.desc': 'Walk all seven paths at least once',
+
+  // ── Secretos ─────────────────────────────
+  'ach.item.secret.cow.click.title': 'Happy cow',
+  'ach.item.secret.cow.click.desc': 'Did you tickle her?',
+  'ach.item.secret.night.owl.title': 'Night owl',
+  'ach.item.secret.night.owl.desc': 'Use the app between 2 and 4am',
+  'ach.item.secret.lunch.title': 'Midday pause',
+  'ach.item.secret.lunch.desc': 'A session at 2pm',
+  'ach.item.secret.rain.title': 'Mental rain',
+  'ach.item.secret.rain.desc': '3 breathing sessions in a row',
+  'ach.item.secret.first.monday.title': 'First Monday',
+  'ach.item.secret.first.monday.desc': 'The first Monday of the month',
+  'ach.item.secret.new.year.title': 'New year',
+  'ach.item.secret.new.year.desc': 'January 1st',
+  'ach.item.secret.dark.mode.title': 'Dark mode',
+  'ach.item.secret.dark.mode.desc': '7 days in dark',
+  'ach.item.secret.bilingual.title': 'Two tongues',
+  'ach.item.secret.bilingual.desc': 'You used the app in both languages',
+  'ach.item.secret.backup.title': 'Notebook safe',
+  'ach.item.secret.backup.desc': 'You exported your data',
+  'ach.item.secret.safety.read.title': 'The fine print',
+  'ach.item.secret.safety.read.desc': 'You read the safety guide',
+  'ach.item.secret.zen.title': 'Accidental zen',
+  'ach.item.secret.zen.desc': '30 minutes of breathing in one day',
+  'ach.item.secret.supporter.title': 'You tend the pasture',
+  'ach.item.secret.supporter.desc': 'You supported the project',
+
+  // ── Estadisticas ─────────────────────────────
+  'ach.item.stats.month.first.title': 'A month lived in',
+  'ach.item.stats.month.first.desc': 'Twenty days with pace in a single month',
+  'ach.item.stats.month.focus.title': 'A deep month',
+  'ach.item.stats.month.focus.desc': 'Twenty hours of focus in a month',
+  'ach.item.stats.year.first.title': 'A whole year',
+  'ach.item.stats.year.first.desc': 'Twelve months with pace, without missing one',
+  'ach.item.stats.streak.30.title': 'Thirty dawns',
+  'ach.item.stats.streak.30.desc': 'Thirty days with a session before 9am',
+
+  // ── Estacionales ─────────────────────────────
+  'ach.item.season.spring.title': 'Spring',
+  'ach.item.season.spring.desc': '1 session a day in spring',
+  'ach.item.season.summer.title': 'Summer',
+  'ach.item.season.summer.desc': '1 session a day in summer',
+  'ach.item.season.autumn.title': 'Autumn',
+  'ach.item.season.autumn.desc': '1 session a day in autumn',
+  'ach.item.season.winter.title': 'Winter',
+  'ach.item.season.winter.desc': '1 session a day in winter',
+  'ach.item.season.solstice.summer.title': 'Summer solstice',
+  'ach.item.season.solstice.summer.desc': 'June 21st',
+  'ach.item.season.solstice.winter.title': 'Winter solstice',
+  'ach.item.season.solstice.winter.desc': 'December 21st',
+  'ach.item.season.equinox.spring.title': 'Spring equinox',
+  'ach.item.season.equinox.spring.desc': 'March 20th',
+  'ach.item.season.equinox.autumn.title': 'Autumn equinox',
+  'ach.item.season.equinox.autumn.desc': 'September 22nd',
+  'ach.item.season.four.title': 'Four seasons',
+  'ach.item.season.four.desc': 'All four in one year',
+  'ach.item.season.cycle.title': 'Full cycle',
+  'ach.item.season.cycle.desc': 'One year plus the solstices'
+});
+})();
+</script>
+  <script>
+;(function () {
 /* PACE · i18n helper — useT + detectInitialLang
    Sesión 35 · v0.17.0
 
@@ -4464,7 +4691,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.96.0';
+const PACE_VERSION = 'v0.97.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5432,6 +5659,11 @@ function checkTimeOfDayAchievements() {
       const next = [...list, today].slice(-30);
       setState({ morningDates: next });
       if (next.length >= 5) unlockAchievement('morning.5');
+      /* s167 — «Treinta amaneceres» se cuelga aqui, no de la racha. La lista ya
+         guardaba los ultimos 30 dias DISTINTOS con sesion antes de las 9, asi
+         que el hito no necesita estado nuevo: llegar a 30 ES el logro, y el
+         titulo pasa a ser literal en vez de un sinonimo de racha. */
+      if (next.length >= 30) unlockAchievement('stats.streak.30');
     }
   }
   checkSecretosDeHora();
@@ -5634,7 +5866,12 @@ function updateStreak() {
   if (current >= 3) unlockAchievement('streak.3');
   if (current >= 7) unlockAchievement('streak.7');
   if (current >= 14) unlockAchievement('streak.14');
-  if (current >= 30) {unlockAchievement('streak.30');unlockAchievement('stats.streak.30');}
+  /* s167 — AQUI SE DESBLOQUEABAN DOS LOGROS CON LA MISMA CONDICION: «Luna
+     llena» (constancia, «30 dias seguidos») y «Treinta amaneceres»
+     (estadisticas, «un mes seguido sin perder el ritmo»). Eran el mismo hito
+     contado dos veces en dos familias. `stats.streak.30` pasa a medir lo que su
+     nombre dice de verdad -- treinta AMANECERES -- junto a `morning.5`. */
+  if (current >= 30) unlockAchievement('streak.30');
   if (current >= 60) unlockAchievement('streak.60');
   if (current >= 100) unlockAchievement('streak.100');
   if (current >= 365) unlockAchievement('streak.365');
@@ -9889,7 +10126,11 @@ const { useState: useStateTO, useEffect: useEffectTO } = React;
 
 function ToastHost() {
   const [toasts, setToasts] = useStateTO([]);
-  const { t } = useT();
+  const { t, lang } = useT();
+  /* s167 — el aviso copiaba `a.title`/`a.desc` del catalogo, asi que el «Nuevo
+     sello» se anunciaba en español aunque la app estuviera en ingles. Mismo
+     helper que Achievements.jsx y que Respira/Mueve/Extra. */
+  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
 
   useEffectTO(() => {
     return onToast((toast) => {
@@ -9900,7 +10141,10 @@ function ToastHost() {
         /* s79: exiting=false al insertar; transicion CSS opacity controla
            el fade. Patron de tres fases: visible (durationMs) -> exiting
            (TOAST_FADE_MS opacity:1->0) -> desmontaje del array. */
-        const full = { ...toast, title: a.title, desc: a.desc, glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
+        const full = { ...toast,
+          title: tR('ach.item.' + a.id + '.title', a.title),
+          desc: tR('ach.item.' + a.id + '.desc', a.desc),
+          glyph: a.glyph, glyphSvg: a.glyphSvg, exiting: false };
         setToasts((prev) => [...prev, full]);
         try {playSound(a.secret ? 'achievement.secret' : 'achievement.unlock');} catch (e) {}
         const durationMs = typeof TOAST_DURATION_MS === 'number' ? TOAST_DURATION_MS : 3000;
@@ -18215,10 +18459,15 @@ const ACHIEVEMENT_MASKS = {
   'breathe.sessions.10': 'app/glyphs/assets/logros/breathe.sessions.10.webp',
   'explore.478': 'app/glyphs/assets/logros/explore.478.webp',
   'explore.all.breathe': 'app/glyphs/assets/logros/explore.all.breathe.webp',
+  'explore.all.move': 'app/glyphs/assets/logros/explore.all.move.webp',
+  'explore.ancestral': 'app/glyphs/assets/logros/explore.ancestral.webp',
+  'explore.atg': 'app/glyphs/assets/logros/explore.atg.webp',
   'explore.bhastrika': 'app/glyphs/assets/logros/explore.bhastrika.webp',
   'explore.coherent': 'app/glyphs/assets/logros/explore.coherent.webp',
+  'explore.desk': 'app/glyphs/assets/logros/explore.desk.webp',
   'explore.hips': 'app/glyphs/assets/logros/explore.hips.webp',
   'explore.nadi': 'app/glyphs/assets/logros/explore.nadi.webp',
+  'explore.neck': 'app/glyphs/assets/logros/explore.neck.webp',
   'explore.physiological': 'app/glyphs/assets/logros/explore.physiological.webp',
   'explore.tweaks': 'app/glyphs/assets/logros/explore.tweaks.webp',
   'explore.ujjayi': 'app/glyphs/assets/logros/explore.ujjayi.webp',
@@ -18235,23 +18484,35 @@ const ACHIEVEMENT_MASKS = {
   'focus.hours.10': 'app/glyphs/assets/logros/focus.hours.10.webp',
   'focus.hours.100': 'app/glyphs/assets/logros/focus.hours.100.webp',
   'focus.hours.50': 'app/glyphs/assets/logros/focus.hours.50.webp',
+  'hydrate.week.perfect': 'app/glyphs/assets/logros/hydrate.week.perfect.webp',
+  'master.ancestral.10': 'app/glyphs/assets/logros/master.ancestral.10.webp',
   'master.antidote': 'app/glyphs/assets/logros/master.antidote.webp',
+  'master.atg.20': 'app/glyphs/assets/logros/master.atg.20.webp',
   'master.centurion': 'app/glyphs/assets/logros/master.centurion.webp',
   'master.coherent.15': 'app/glyphs/assets/logros/master.coherent.15.webp',
   'master.collector.full': 'app/glyphs/assets/logros/master.collector.full.webp',
   'master.collector.half': 'app/glyphs/assets/logros/master.collector.half.webp',
   'master.dawn': 'app/glyphs/assets/logros/master.dawn.webp',
   'master.dusk': 'app/glyphs/assets/logros/master.dusk.webp',
+  'master.extra.all.week': 'app/glyphs/assets/logros/master.extra.all.week.webp',
   'master.focus.day': 'app/glyphs/assets/logros/master.focus.day.webp',
   'master.gardener': 'app/glyphs/assets/logros/master.gardener.webp',
+  'master.hips.20': 'app/glyphs/assets/logros/master.hips.20.webp',
+  'master.hydrate.30': 'app/glyphs/assets/logros/master.hydrate.30.webp',
+  'master.hydrate.90': 'app/glyphs/assets/logros/master.hydrate.90.webp',
+  'master.long.focus': 'app/glyphs/assets/logros/master.long.focus.webp',
   'master.marathon': 'app/glyphs/assets/logros/master.marathon.webp',
+  'master.midnight.never': 'app/glyphs/assets/logros/master.midnight.never.webp',
   'master.path.all7': 'app/glyphs/assets/logros/master.path.all7.webp',
   'master.pomodoro.12': 'app/glyphs/assets/logros/master.pomodoro.12.webp',
   'master.retreat': 'app/glyphs/assets/logros/master.retreat.webp',
+  'master.rounds.15': 'app/glyphs/assets/logros/master.rounds.15.webp',
   'master.silent.day': 'app/glyphs/assets/logros/master.silent.day.webp',
   'morning.5': 'app/glyphs/assets/logros/morning.5.webp',
   'move.sessions.25': 'app/glyphs/assets/logros/move.sessions.25.webp',
+  'season.autumn': 'app/glyphs/assets/logros/season.autumn.webp',
   'season.cycle': 'app/glyphs/assets/logros/season.cycle.webp',
+  'season.equinox.autumn': 'app/glyphs/assets/logros/season.equinox.autumn.webp',
   'season.equinox.spring': 'app/glyphs/assets/logros/season.equinox.spring.webp',
   'season.four': 'app/glyphs/assets/logros/season.four.webp',
   'season.solstice.summer': 'app/glyphs/assets/logros/season.solstice.summer.webp',
@@ -18260,6 +18521,8 @@ const ACHIEVEMENT_MASKS = {
   'season.winter': 'app/glyphs/assets/logros/season.winter.webp',
   'secret.backup': 'app/glyphs/assets/logros/secret.backup.webp',
   'secret.bilingual': 'app/glyphs/assets/logros/secret.bilingual.webp',
+  'secret.dark.mode': 'app/glyphs/assets/logros/secret.dark.mode.webp',
+  'secret.lunch': 'app/glyphs/assets/logros/secret.lunch.webp',
   'secret.night.owl': 'app/glyphs/assets/logros/secret.night.owl.webp',
   'secret.safety.read': 'app/glyphs/assets/logros/secret.safety.read.webp',
   'secret.supporter': 'app/glyphs/assets/logros/secret.supporter.webp',
@@ -18317,7 +18580,12 @@ const ACHIEVEMENT_CATALOG = [
 
 // Constancia (11-25)
 { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III', glyphSvg: GLYPH_SVG['streak.3'] },
-{ id: 'streak.7', cat: 'constancia', title: 'Semana vaca', desc: '7 días seguidos', glyph: 'VII', glyphSvg: GLYPH_SVG['streak.7'] },
+/* s167 — era «Semana vaca», un juego con el logo que al leerlo sonaba a
+   «semana VACÍA», o sea lo contrario de lo que premia. La familia de racha no
+   va por numeros: va por CICLOS NATURALES (Luna llena, Estacion, Vuelta al
+   sol). Siete dias son un cuarto del ciclo lunar, asi que el nombre es literal
+   y enhebra 7 -> 30 -> 365; y «creciente» es ademas lo que hace una racha. */
+{ id: 'streak.7', cat: 'constancia', title: 'Cuarto creciente', desc: '7 días seguidos', glyph: 'VII', glyphSvg: GLYPH_SVG['streak.7'] },
 { id: 'streak.14', cat: 'constancia', title: 'Quince días', desc: '14 días seguidos', glyph: 'XIV' },
 { id: 'streak.30', cat: 'constancia', title: 'Luna llena', desc: '30 días seguidos', glyph: '●', glyphSvg: GLYPH_SVG['streak.30'] },
 { id: 'streak.60', cat: 'constancia', title: 'Estación', desc: '60 días seguidos', glyph: '⟢' },
@@ -18351,7 +18619,6 @@ const ACHIEVEMENT_CATALOG = [
 { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
 { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
 { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
-{ id: 'explore.tweaks', cat: 'exploracion', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙' },
 
 // Maestría (46-70) - placeholders
 { id: 'master.pomodoro.8', cat: 'maestria', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
@@ -18403,12 +18670,24 @@ const ACHIEVEMENT_CATALOG = [
    parte del tono. Glifo '✦' para que al desbloquearse muestre una chispa
    más cálida (el resto de secretos son '?'). */
 { id: 'secret.supporter', cat: 'secretos', title: 'Sostienes el pasto', desc: 'Apoyaste el proyecto', glyph: '✦', secret: true },
+/* s167 — VENIA DE `exploracion`, y desentonaba: los otros 18 de aquella
+   familia son «Tres sesiones de X» y este es «Abre los Tweaks», una accion de
+   app. Sus hermanos de verdad son `secret.backup` y `secret.safety.read`.
+   Pasa a SECRETO porque encontrar los Tweaks es, literalmente, un
+   descubrimiento -- que es la mecanica de esta familia.
+   EL ID NO SE TOCA: renombrarlo borraria el logro a quien ya lo tuviera. */
+{ id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙', secret: true },
 
 // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
 { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
 { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
 { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
-{ id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Un mes seguido sin perder el ritmo', glyph: '✦' },
+/* s167 — la descripcion decia «un mes seguido sin perder el ritmo» y la
+   desbloqueaba LA MISMA LINEA que `streak.30` («Luna llena», 30 dias
+   seguidos): dos sellos para un solo hito. Ahora mide treinta AMANECERES de
+   verdad, que es lo que su titulo dice, sobre la lista `morningDates` que ya
+   existia. El id no se toca. */
+{ id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
 
 // Estacionales (91-100)
 { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },
@@ -18650,7 +18929,13 @@ function Achievements(_ref) {let { open, onClose } = _ref;
    Los secretos no-desbloqueados saltan siempre a modo secreto (glifo ?,
    título "Secreto") — su mecánica es intriga, no señalización. */
 function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
-  const { t } = useT();
+  const { t, lang } = useT();
+  /* s167 — hasta hoy el titulo y la descripcion salian CRUDOS del catalogo, asi
+     que en ingles se leian en español (hallazgo de s146, abierto dos versiones).
+     Mismo patron que Respira/Mueve/Extra: el castellano sigue viviendo SOLO en
+     `catalog.js` y el ingles llega de `i18n/content/achievements.js`; si falta
+     la clave, cae al dato. */
+  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const a = achievement;
   const isSecret = a.secret && !unlocked;
   const isComingSoon = !unlocked && !implemented && !a.secret;
@@ -18661,19 +18946,35 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
 
   return (/*#__PURE__*/
     React.createElement("div", {
+      /* s167 — el id en el DOM para que la suite pueda comparar sello a sello.
+         Sin el, un aserto de idioma solo puede mirar el texto ENTERO del panel
+         con `includes`, que casa por SUBCADENA: el ingles «Coherent» aparecia
+         dentro del castellano «Coherente» y daba un falso positivo. */
+      "data-pace-ach": a.id,
       style: {
-        aspectRatio: '1/1.15',
         /* s147 — el sello se anclaba al CENTRO de la tarjeta, así que flotaba con
            el largo de la descripción: reportado por el usuario con «Setenta y
            cinco sellos» (1 línea) al lado de «Cartógrafa» (3 líneas). Medido
            sobre los 96 sellos, tres posiciones distintas —15, 20 y 26 px del
            borde— y 11 px de deriva dentro de la misma fila.
-            Se ancla ARRIBA, que es la regla de alturas reservadas de s119: la
-           tarjeta ya tiene alto FIJO (`aspectRatio`) y el círculo alto fijo, así
-           que con el ancla arriba se alinean los sellos Y los títulos, y lo que
-           varía —la descripción— cae hacia el hueco de abajo. Es seguro porque
-           está medido: 0 de 96 tarjetas desbordan su alto, y a la más cargada le
-           sobran 16 px. */
+            Se ancla ARRIBA, que es la regla de alturas reservadas de s119: con el
+           ancla arriba se alinean los sellos Y los títulos, y lo que varía —la
+           descripción— cae hacia el hueco de abajo.
+            s167 — AQUÍ VIVÍA `aspectRatio: '1/1.15'`, y era el defecto que el
+           usuario reportó como «mucho aire por debajo»: ataba el ALTO de la
+           tarjeta a su ANCHO. Con `minmax(128px, 1fr)`, al estrechar el viewport
+           caben menos columnas, cada tarjeta se ensancha y la proporción la
+           estira — mientras el texto sigue midiendo lo mismo. Medido sobre los
+           96 en siete anchos: a 1440 sobran 24 px bajo el último texto, pero a
+           320 la tarjeta mide 283 px y 157 son aire, el 55 % vacía.
+            Sin alto fijo lo marca el CONTENIDO, y la rejilla iguala por FILA
+           (`align-items: stretch` es el defecto del grid). La regla de s147
+           sigue en pie: su defecto era la deriva DENTRO de una fila, y el
+           estirado por fila la impide igual porque todas las tarjetas de una
+           fila siguen midiendo lo mismo. Se pierde la regularidad ENTRE filas;
+           se gana que la tarjeta deje de crecer sola en móvil. */
+
+
 
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
         padding: '14px 8px',
@@ -18686,7 +18987,7 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
         cursor: 'default',
         textAlign: 'center'
       },
-      title: isComingSoon ? t('ach.coming.soon') : a.desc },
+      title: isComingSoon ? t('ach.coming.soon') : tR('ach.item.' + a.id + '.desc', a.desc) },
 
 
     isComingSoon && /*#__PURE__*/
@@ -18736,9 +19037,9 @@ function Seal(_ref3) {let { achievement, unlocked, implemented, color } = _ref3;
         lineHeight: 1.15,
         marginBottom: 4,
         color: unlocked ? 'var(--ink)' : 'var(--ink-3)'
-      } }, isSecret ? t('ach.seal.secret') : a.title), /*#__PURE__*/
+      } }, isSecret ? t('ach.seal.secret') : tR('ach.item.' + a.id + '.title', a.title)), /*#__PURE__*/
     React.createElement("div", { style: { fontSize: 9.5, letterSpacing: '0.05em', color: 'var(--ink-3)', lineHeight: 1.3 } },
-    isSecret ? '?????' : isComingSoon ? t('ach.seal.soon') : a.desc
+    isSecret ? '?????' : isComingSoon ? t('ach.seal.soon') : tR('ach.item.' + a.id + '.desc', a.desc)
     )
     ));
 

@@ -33,7 +33,12 @@ const ACHIEVEMENT_CATALOG = [
 
   // Constancia (11-25)
   { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III', glyphSvg: GLYPH_SVG['streak.3'] },
-  { id: 'streak.7', cat: 'constancia', title: 'Semana vaca', desc: '7 días seguidos', glyph: 'VII', glyphSvg: GLYPH_SVG['streak.7'] },
+  /* s167 — era «Semana vaca», un juego con el logo que al leerlo sonaba a
+     «semana VACÍA», o sea lo contrario de lo que premia. La familia de racha no
+     va por numeros: va por CICLOS NATURALES (Luna llena, Estacion, Vuelta al
+     sol). Siete dias son un cuarto del ciclo lunar, asi que el nombre es literal
+     y enhebra 7 -> 30 -> 365; y «creciente» es ademas lo que hace una racha. */
+  { id: 'streak.7', cat: 'constancia', title: 'Cuarto creciente', desc: '7 días seguidos', glyph: 'VII', glyphSvg: GLYPH_SVG['streak.7'] },
   { id: 'streak.14', cat: 'constancia', title: 'Quince días', desc: '14 días seguidos', glyph: 'XIV' },
   { id: 'streak.30', cat: 'constancia', title: 'Luna llena', desc: '30 días seguidos', glyph: '●', glyphSvg: GLYPH_SVG['streak.30'] },
   { id: 'streak.60', cat: 'constancia', title: 'Estación', desc: '60 días seguidos', glyph: '⟢' },
@@ -67,7 +72,6 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.all.breathe', cat: 'exploracion', title: 'Pulmones de campo', desc: 'Todas las respiraciones', glyph: '❦' },
   { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
   { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
-  { id: 'explore.tweaks', cat: 'exploracion', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙' },
 
   // Maestría (46-70) - placeholders
   { id: 'master.pomodoro.8', cat: 'maestria', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
@@ -119,12 +123,24 @@ const ACHIEVEMENT_CATALOG = [
      parte del tono. Glifo '✦' para que al desbloquearse muestre una chispa
      más cálida (el resto de secretos son '?'). */
   { id: 'secret.supporter', cat: 'secretos', title: 'Sostienes el pasto', desc: 'Apoyaste el proyecto', glyph: '✦', secret: true },
+  /* s167 — VENIA DE `exploracion`, y desentonaba: los otros 18 de aquella
+     familia son «Tres sesiones de X» y este es «Abre los Tweaks», una accion de
+     app. Sus hermanos de verdad son `secret.backup` y `secret.safety.read`.
+     Pasa a SECRETO porque encontrar los Tweaks es, literalmente, un
+     descubrimiento -- que es la mecanica de esta familia.
+     EL ID NO SE TOCA: renombrarlo borraria el logro a quien ya lo tuviera. */
+  { id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙', secret: true },
 
   // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
   { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
   { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
   { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
-  { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Un mes seguido sin perder el ritmo', glyph: '✦' },
+  /* s167 — la descripcion decia «un mes seguido sin perder el ritmo» y la
+     desbloqueaba LA MISMA LINEA que `streak.30` («Luna llena», 30 dias
+     seguidos): dos sellos para un solo hito. Ahora mide treinta AMANECERES de
+     verdad, que es lo que su titulo dice, sobre la lista `morningDates` que ya
+     existia. El id no se toca. */
+  { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
 
   // Estacionales (91-100)
   { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },

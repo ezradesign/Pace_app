@@ -1,5 +1,11 @@
 # HANDOFF · s166 → siguiente sesión
 
+> **AGOTADO EN s167 (v0.97.0).** Sus cuatro decisiones se resolvieron: la
+> retencion se queda **«esta semana»**, el instrumento E2E queda en `workers: 2`
+> con su porque medido, y los glifos de logro ya entraron. Siguen vivos **solo**
+> la pill de movil (§2.3) y «muy similar a web» (§2.4), que se recogen en
+> [`STATE.md`](../STATE.md). **No ejecutes nada de aqui.**
+
 **v0.96.0** · 2026-08-18 · sustituye a `HANDOFF_s164.md`, que queda **agotado**
 (su §3 lo cumplió s165 y su §4 lo cumple parcialmente s166: el mecanismo de los
 glifos ya está montado, solo falta el arte).
