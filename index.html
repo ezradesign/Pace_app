@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.94.0</title>
+  <title>PACE · Foco · Cuerpo — v0.95.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4426,7 +4426,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.94.0';
+const PACE_VERSION = 'v0.95.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -14335,7 +14335,7 @@ Object.assign(window, { BreatheLibrary, BreatheSafety });
 </script>
   <script>
 ;(function () {
-/* PACE · Respiración — Sesión guiada
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);} /* PACE · Respiración — Sesión guiada
    Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
    Depende de BreatheVisual.jsx (BreathVisual, getSequence) que carga antes.
 */
@@ -14626,7 +14626,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
         routine: displayRoutine,
         onExit: onExit,
         atmosphere: atmo,
-        headerExtra: /*#__PURE__*/React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' } }, t('session.round'), " ", round, " / ", routine.rounds),
+        headerExtra: /*#__PURE__*/React.createElement("div", { "data-pace-breathe-round-label": true, style: { fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--breathe)' } }, t('session.round'), " ", round, " / ", routine.rounds),
         footer: /*#__PURE__*/React.createElement(Button, { variant: "terracota", onClick: releaseHold }, t('session.breatheAgain')) }, /*#__PURE__*/
 
       React.createElement("div", { style: { textAlign: 'center', maxWidth: 520 } }, /*#__PURE__*/
@@ -14668,27 +14668,24 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
-  // Progreso de la sesion (s97): BARRA SEGMENTADA por bloques de respiracion.
-  // Un segmento por bloque -- rounds: una por ronda; no-rounds: una por CICLO
-  // del patron (el "grupo 4·4·4·4"). El segmento activo se rellena con el
-  // progreso DENTRO del bloque; los completados quedan llenos. Sintetiza "la
-  // barra" + "agrupar por bloques" (feedback usuario) y usa el mismo lenguaje
-  // que la barra segmentada de Mueve. Tope de 24 segmentos: en rutinas largas
-  // (Coherente 6·6 = ~50 ciclos) cada segmento agrupa varios y la barra no se
-  // astilla; en las cortas (Box 5min = ~19) es 1 segmento por ciclo exacto.
-  const cycleSec = sequence.reduce((sum, p) => sum + p.duration, 0) || 1;
-  // Progreso continuo 0..1. Rounds: por ronda/respiracion (ya inmune a pausas).
-  // No-rounds (s98): TIEMPO ACTIVO / duracion objetivo -> mismo reloj que decide
-  // el fin y el credito; las pausas no avanzan la barra. Al terminar (activo =
-  // routine.min*60) llega a 1 y los segTotal segmentos quedan llenos.
-  const sessionProgress = isRounds ?
-  Math.min(1, (round - 1 + Math.min(1, breathCount / routine.breaths)) / routine.rounds) :
-  Math.min(1, getActiveSec() / (routine.min * 60));
-  const rawSegments = isRounds ? routine.rounds : Math.max(1, Math.round(routine.min * 60 / cycleSec));
-  const segTotal = Math.min(rawSegments, 24);
-  const filledExact = sessionProgress * segTotal;
-  const segFilled = Math.floor(filledExact);
-  const segActiveProgress = filledExact - segFilled;
+  /* 5A (s165) · el hueco de la cuenta atras se reserva POR RUTINA, no por fase.
+     s138 lo hizo permanente por una razon buena: en Suspiro fisiologico —2 s,
+     1 s, 5 s— montarlo y desmontarlo movia TODO el texto 21 px entre fases. Esa
+     razon vale DENTRO de una rutina que mezcla fases largas y cortas; en las 3
+     rutinas de rondas NINGUNA fase llega a 4 s, asi que ahi el hueco reservaba
+     28 px + 4 de margen para un numero que no aparece nunca (medido, s164). */
+  const anyLongPhase = sequence.some((p) => p.duration >= 4);
+  /* 4B (s165) · BARRA CONTINUA, solo en las 17 rutinas por tiempo. La segmentada
+     de s97 hablaba tres idiomas: 2 segmentos en Rondas express, 19 en Box
+     (trazos de 11 px que se leen como linea de puntos) y 24 en Coherente, donde
+     el tope agrupaba ~2 ciclos por segmento; y su «1 segmento por ciclo exacto»
+     era aproximado (300/16 = 18,75 -> 19 de 15,79 s contra ciclos de 16 s). Aqui
+     lo que corre es TIEMPO, asi que se dibuja como tiempo; los bloques de verdad
+     —las rondas— los llevan los puntos. Relleno = TIEMPO ACTIVO / objetivo
+     (s98): mismo reloj que decide el fin y el credito, asi que las pausas no la
+     mueven. El desfase de una respiracion (D1, s164) vivia en la rama de rondas,
+     que ya no usa barra. */
+  const sessionProgress = Math.min(1, getActiveSec() / (routine.min * 60));
 
   const footer = /*#__PURE__*/
   React.createElement(React.Fragment, null, /*#__PURE__*/
@@ -14701,6 +14698,11 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   );
 
 
+  /* s165: la cabecera de la pantalla ACTIVA ya no lleva «RONDA n / N» — no se le
+     pasa `headerExtra`. Lo cuenta la barra segmentada de abajo, y decirlo dos
+     veces en la misma pantalla era media redundancia de las que arrastraba s164.
+     En la RETENCION si se conserva, porque alli no hay barra (decision del
+     usuario) y es la unica referencia de ronda que queda. */
   return (/*#__PURE__*/
     React.createElement(SessionShell, {
       routine: displayRoutine,
@@ -14709,12 +14711,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
       centerGap: true,
       footerGap: 16,
       footer: footer,
-      hint: t('session.hint'),
-      headerExtra: isRounds ? /*#__PURE__*/
-      React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' } },
-      t('session.round'), " ", round, " / ", routine.rounds
-      ) :
-      null }, /*#__PURE__*/
+      hint: t('session.hint') }, /*#__PURE__*/
 
     React.createElement(BreathVisual, {
       style: state.breathStyle,
@@ -14728,11 +14725,11 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
 
 
     React.createElement("div", { style: { textAlign: 'center', flexShrink: 0 } }, /*#__PURE__*/
-    React.createElement("div", { style: {
+    React.createElement("div", { "data-pace-breathe-phase": current.label, style: {
         ...displayItalic,
         fontSize: 44, fontWeight: 500, color: 'var(--ink)',
         marginBottom: 8, lineHeight: 1
-      } }, displayLabel), /*#__PURE__*/
+      } }, displayLabel),
 
 
 
@@ -14741,7 +14738,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
 
 
 
-    React.createElement("div", { style: {
+
+
+    anyLongPhase && /*#__PURE__*/
+    React.createElement("div", { "data-pace-breathe-countdown": showCountdown ? String(remaining) : '', style: {
         ...displayItalic,
         fontSize: 28, color: 'var(--breathe)',
         fontVariantNumeric: 'tabular-nums', marginTop: 4,
@@ -14751,8 +14751,15 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
 
 
 
+
+
+
+
     isRounds && /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 } },
+    React.createElement("div", { "data-pace-breathe-breath": breathCount, style: {
+        fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginTop: 14
+      } },
     `${t('common.breath')} ${breathCount} ${t('common.of')} ${routine.breaths}`
     )
 
@@ -14760,36 +14767,56 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
 
 
 
-    React.createElement("div", { style: {
-        display: 'flex', gap: 3, alignItems: 'center', flexShrink: 0,
-        width: '100%', maxWidth: 260, height: 5, margin: '0 auto'
-      } },
-    Array.from({ length: segTotal }).map((_, i) => {
-      const fill = i < segFilled ? 1 : i === segFilled ? segActiveProgress : 0;
-      return (/*#__PURE__*/
-        React.createElement("div", { key: i, style: {
-            flex: 1, height: '100%',
-            borderRadius: 'var(--r-pill)',
-            background: 'var(--line)',
-            position: 'relative', overflow: 'hidden'
-          } }, /*#__PURE__*/
-        React.createElement("div", { style: {
-            position: 'absolute', inset: 0,
-            width: `${fill * 100}%`,
-            background: 'var(--breathe)',
-            borderRadius: 'var(--r-pill)',
-            transition: 'width 1s linear'
-          } })
-        ));
 
-    })
+
+
+
+
+
+
+
+
+    React.createElement("div", _extends({
+      "data-pace-breathe-progress": isRounds ?
+      ((round - 1) / routine.rounds).toFixed(4) :
+      sessionProgress.toFixed(4) },
+    isRounds ? { 'data-pace-breathe-round': round, 'data-pace-breathe-rounds': routine.rounds } : {}, {
+      style: {
+        flexShrink: 0, display: 'flex', gap: 4, alignItems: 'center',
+        width: '100%', maxWidth: 260, height: 5, margin: '0 auto'
+      } }),
+
+    isRounds ?
+    Array.from({ length: routine.rounds }).map((_, i) => /*#__PURE__*/
+    React.createElement("div", { key: i, style: {
+        flex: 1, borderRadius: 'var(--r-pill)',
+        height: i <= round - 1 ? 5 : 2,
+        background: i < round - 1 ? 'var(--breathe)' :
+        i === round - 1 ? 'var(--line)' : 'var(--paper-3)',
+        transition: 'height 220ms'
+      } })
+    ) : /*#__PURE__*/
+
+    React.createElement("div", { style: {
+        flex: 1, height: '100%', position: 'relative', overflow: 'hidden',
+        borderRadius: 'var(--r-pill)', background: 'var(--line)'
+      } }, /*#__PURE__*/
+    React.createElement("div", { style: {
+        position: 'absolute', inset: 0,
+        width: `${sessionProgress * 100}%`,
+        background: 'var(--breathe)',
+        borderRadius: 'var(--r-pill)',
+        transition: 'width 1s linear'
+      } })
+    )
+
     )
     ));
 
 }
 
 Object.assign(window, { BreatheSession });
-;Object.assign(window, { BreatheSession });
+;Object.assign(window, { _extends, BreatheSession });
 })();
 </script>
   <!-- Datos de Mueve (s110 · B2.2): MOVE_ROUTINES + getMoveRoutine. ANTES de

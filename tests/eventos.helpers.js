@@ -9,12 +9,27 @@
 const CLAVE_EVENTOS = 'pace.events.v1';
 
 
-/* Lee el contenedor crudo desde el navegador. */
-function leerContenedor(page) {
-  return page.evaluate(clave => {
+/* Lee el contenedor crudo desde el navegador.
+   TRAMPA MEDIDA (s165): el import de un backup REINICIA el contenedor y la app
+   RECARGA. El `waitForFunction` que espera al contenedor nuevo ve la ESCRITURA,
+   que ocurre antes de la recarga, asi que la lectura siguiente puede caer justo
+   dentro de la navegacion y morir con «Execution context was destroyed». No es
+   un fallo del producto ni del aserto: es leer en el unico instante en que no
+   hay documento. Salio con la suite entera a 8 workers y no aislada -- la misma
+   dependencia de la CARGA que s162. Se reintenta UNA vez tras asentar la carga;
+   cualquier otro error se propaga tal cual, para no enterrar fallos de verdad. */
+async function leerContenedor(page) {
+  const leer = () => page.evaluate(clave => {
     const raw = localStorage.getItem(clave);
     return raw ? JSON.parse(raw) : null;
   }, CLAVE_EVENTOS);
+  try {
+    return await leer();
+  } catch (e) {
+    if (!/Execution context was destroyed|context or browser has been closed/.test(e.message)) throw e;
+    await page.waitForLoadState('domcontentloaded');
+    return await leer();
+  }
 }
 
 /* Espera a que la inicializacion del arranque haya terminado. La fachada
