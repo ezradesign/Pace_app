@@ -37,7 +37,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.first.return.title':              'You return',
   'ach.item.first.return.desc':               'Open the app the next day',
 
-  // ── Constancia ─────────────────────────────
+  // ── Constancia ─────────────────────────────────
   'ach.item.streak.3.title':                  'Three as one',
   'ach.item.streak.3.desc':                   '3 days in a row',
   'ach.item.streak.7.title':                  'First quarter',
@@ -66,10 +66,14 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.move.sessions.25.desc':           'Accumulated sessions',
   'ach.item.hydrate.week.perfect.title':      'A hydrated week',
   'ach.item.hydrate.week.perfect.desc':       '8 glasses / 7 days',
-  'ach.item.morning.5.title':                 'Early riser',
-  'ach.item.morning.5.desc':                  '5 sessions before 9am',
+  'ach.item.stats.month.first.title':         'A month lived in',
+  'ach.item.stats.month.first.desc':          'Twenty days with pace in a single month',
+  'ach.item.stats.month.focus.title':         'A deep month',
+  'ach.item.stats.month.focus.desc':          'Twenty hours of focus in a month',
+  'ach.item.stats.year.first.title':          'A whole year',
+  'ach.item.stats.year.first.desc':           'Twelve months with pace, without missing one',
 
-  // ── Repertorio ─────────────────────────────
+  // ── Exploracion ────────────────────────────────
   'ach.item.explore.box.title':               'Box settled',
   'ach.item.explore.box.desc':                'Three Box 4·4·4·4 sessions',
   'ach.item.explore.478.title':               '4·7·8',
@@ -106,12 +110,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.explore.all.move.desc':           'Every mobility routine',
   'ach.item.explore.all.extra.title':         'Strong at the desk',
   'ach.item.explore.all.extra.desc':          'Every Extra routine',
-  'ach.item.explore.tweaks.title':            'Curiosity',
-  'ach.item.explore.tweaks.desc':             'Open the Tweaks panel',
 
-  // ── Maestria ─────────────────────────────
-  'ach.item.master.pomodoro.8.title':         'A day of eight',
-  'ach.item.master.pomodoro.8.desc':          '8 Pomodoros in one day',
+  // ── Maestria ───────────────────────────────────
   'ach.item.master.pomodoro.12.title':        'Twelve deep',
   'ach.item.master.pomodoro.12.desc':         '12 Pomodoros',
   'ach.item.master.long.focus.title':         'The long session',
@@ -136,18 +136,6 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.hydrate.90.desc':          '90 days at 8 glasses',
   'ach.item.master.extra.all.week.title':     'A strong week',
   'ach.item.master.extra.all.week.desc':      'Every Extra in one week',
-  'ach.item.master.silent.day.title':         'A silent day',
-  'ach.item.master.silent.day.desc':          '5 days in silent mode',
-  'ach.item.master.dawn.title':               'Daybreak',
-  'ach.item.master.dawn.desc':                'Five days with a session before 7am',
-  'ach.item.master.dusk.title':               'Nightfall',
-  'ach.item.master.dusk.desc':                'Five days with a session after 9pm',
-  'ach.item.master.midnight.never.title':     'Never at midnight',
-  'ach.item.master.midnight.never.desc':      '30 days with no use after 11pm',
-  'ach.item.master.focus.day.title':          'A day of focus',
-  'ach.item.master.focus.day.desc':           '4h of focus in one day',
-  'ach.item.master.retreat.title':            'Personal retreat',
-  'ach.item.master.retreat.desc':             '2h of breathing and movement in one day',
   'ach.item.master.marathon.title':           'The marathon',
   'ach.item.master.marathon.desc':            '2000 minutes in total',
   'ach.item.master.centurion.title':          'Centurion',
@@ -163,7 +151,27 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.master.path.all7.title':          'The cartographer',
   'ach.item.master.path.all7.desc':           'Walk all seven paths at least once',
 
-  // ── Secretos ─────────────────────────────
+  // ── La jornada ─────────────────────────────────
+  'ach.item.master.dawn.title':               'Daybreak',
+  'ach.item.master.dawn.desc':                'Five days with a session before 7am',
+  'ach.item.morning.5.title':                 'Early riser',
+  'ach.item.morning.5.desc':                  '5 sessions before 9am',
+  'ach.item.stats.streak.30.title':           'Thirty dawns',
+  'ach.item.stats.streak.30.desc':            'Thirty days with a session before 9am',
+  'ach.item.master.dusk.title':               'Nightfall',
+  'ach.item.master.dusk.desc':                'Five days with a session after 9pm',
+  'ach.item.master.midnight.never.title':     'Never at midnight',
+  'ach.item.master.midnight.never.desc':      '30 days with no use after 11pm',
+  'ach.item.master.pomodoro.8.title':         'A day of eight',
+  'ach.item.master.pomodoro.8.desc':          '8 Pomodoros in one day',
+  'ach.item.master.focus.day.title':          'A day of focus',
+  'ach.item.master.focus.day.desc':           '4h of focus in one day',
+  'ach.item.master.retreat.title':            'Personal retreat',
+  'ach.item.master.retreat.desc':             '2h of breathing and movement in one day',
+  'ach.item.master.silent.day.title':         'A silent day',
+  'ach.item.master.silent.day.desc':          '5 days in silent mode',
+
+  // ── Secretos ───────────────────────────────────
   'ach.item.secret.cow.click.title':          'Happy cow',
   'ach.item.secret.cow.click.desc':           'Did you tickle her?',
   'ach.item.secret.night.owl.title':          'Night owl',
@@ -188,18 +196,10 @@ Object.assign(window.PACE_STRINGS.en, {
   'ach.item.secret.zen.desc':                 '30 minutes of breathing in one day',
   'ach.item.secret.supporter.title':          'You tend the pasture',
   'ach.item.secret.supporter.desc':           'You supported the project',
+  'ach.item.explore.tweaks.title':            'Curiosity',
+  'ach.item.explore.tweaks.desc':             'Open the Tweaks panel',
 
-  // ── Estadisticas ─────────────────────────────
-  'ach.item.stats.month.first.title':         'A month lived in',
-  'ach.item.stats.month.first.desc':          'Twenty days with pace in a single month',
-  'ach.item.stats.month.focus.title':         'A deep month',
-  'ach.item.stats.month.focus.desc':          'Twenty hours of focus in a month',
-  'ach.item.stats.year.first.title':          'A whole year',
-  'ach.item.stats.year.first.desc':           'Twelve months with pace, without missing one',
-  'ach.item.stats.streak.30.title':           'Thirty dawns',
-  'ach.item.stats.streak.30.desc':            'Thirty days with a session before 9am',
-
-  // ── Estacionales ─────────────────────────────
+  // ── Estacionales ───────────────────────────────
   'ach.item.season.spring.title':             'Spring',
   'ach.item.season.spring.desc':              '1 session a day in spring',
   'ach.item.season.summer.title':             'Summer',

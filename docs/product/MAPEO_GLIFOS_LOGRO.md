@@ -100,10 +100,60 @@ Consecuencias:
 
 ---
 
+## s168 · El farol se muda, y lo que eso midió
+
+El dibujo #15 del lote de s167 se lee como un **farol**, y estaba en
+`season.equinox.autumn`. Ahí el argumento del logro —día y noche iguales— vive en
+**el sol y la luna, que son ilegibles a 56 px**: el sello no puede sostener su
+propia idea. Pasa a **`stats.streak.30` «Treinta amaneceres»**, donde sol y luna
+juntos **son** el amanecer —el momento en que uno releva al otro— y ese detalle
+es un **bonus**: el sello ya dice «farol al alba» aunque no distingas los astros.
+
+El equinoccio espera la imagen que su encargo ya tenía escrita —*una balanza de
+dos platos a la misma altura, con una hoja en un plato y una espiga en el otro*—
+y mientras tanto **cae a su glifo de texto, que es precisamente un `⚖`**. Ojo al
+mirarlo: `season.equinox.spring` **sí** tiene su balanza dibujada, así que los
+dos equinoccios quedan uno al lado del otro en sistemas visuales distintos.
+
+### Una regla que este cambio permitió acotar
+
+La advertencia vigente es que la ingesta **reescribe todas las máscaras** y que
+el peso de tinta se iguala contra la **mediana del conjunto**, así que meter arte
+nuevo cambia máscaras viejas: en s167 fueron **17 de 58**.
+
+Medido aquí: cambiaron **cero**. 77 antes y 77 después, una nueva
+(`stats.streak.30`), una ida (`season.equinox.autumn`) y **las 76 comunes byte a
+byte idénticas**.
+
+> **El efecto de conjunto lo produce cambiar el CONJUNTO DE DIBUJOS, no
+> re-correr la ingesta.** Reasignar a qué logro va un dibujo que ya estaba deja
+> la mediana intacta. Reordenar el `MAPEO` es barato; añadir arte no.
+
+Los cuatro números del CENSO tampoco se movieron (`mascarasLogro` 77,
+`mascarasVisiblesDeSalida` 69, `mascarasDeSecreto` 8, `precache` 105): entra y
+sale una máscara **no secreta**.
+
+---
+
 ## Huecos conocidos
 
-- **38 logros sin arte**, entre ellos `hydrate.week.perfect`, que perdió el suyo a
-  propósito y necesita un **dibujo de agua**.
+- **19 logros sin arte.** Mudar el farol no cambió el número, solo *quién*.
+  Reparto por familia, con el catálogo de s168:
+
+  | Familia | N | Logros |
+  |---|---|---|
+  | constancia | 4 | `streak.7` · `streak.14` · `breathe.sessions.50` · `stats.month.focus` |
+  | exploración | 5 | `explore.box` · `explore.rounds` · `explore.kapalabhati` · `explore.shoulders` · `explore.all.extra` |
+  | maestría | 2 | `master.box.15` · `master.shoulders.20` |
+  | la jornada | 1 | `master.pomodoro.8` |
+  | secretos | 5 | `secret.cow.click` · `secret.rain` · `secret.first.monday` · `secret.new.year` · `secret.zen` |
+  | estacionales | 2 | `season.summer` · `season.equinox.autumn` |
+
+  Medición reproducible: `node scripts/audit/censo-glifos-logro-huecos.js`.
 - **Sobran lunas y relojes de arena** para los logros de esa familia; alguno
   acabará sin usar.
-- **No hay dibujo evidente** para `streak.7` ni `streak.14`.
+- **No hay dibujo evidente** para `streak.7` ni `streak.14` — pero desde s167
+  `streak.7` se llama **«Cuarto creciente»**, así que ahora sí lo hay: una luna
+  en cuarto creciente.
+- `hydrate.week.perfect` perdió el suyo a propósito y **ya lo recuperó**: hoy
+  tiene máscara. Esta lista decía **38 sin arte** hasta s168, cuando ya eran 19.

@@ -34,17 +34,20 @@ const ORIGEN = path.resolve(ROOT, '..', 'Glifos_logros');
 const MASCARAS = path.join(ROOT, 'app', 'glyphs', 'assets', 'logros');
 const SALIDA = path.join(ROOT, '_revision-glifos.html');
 
-/* Colores de CAT_META resueltos a su valor de la paleta crema: la hoja no monta
-   React, así que no hay quien resuelva las var() de categoría. */
-const COLOR_CAT = {
-  primeros: 'var(--ink-3)',
-  constancia: 'var(--focus)',
-  exploracion: 'var(--breathe)',
-  maestria: 'var(--achievement)',
-  secretos: 'var(--ink-2)',
-  estacionales: 'var(--move)',
-  estadisticas: 'var(--hydrate)',
-};
+/* Colores de categoria: la hoja no monta React, asi que nadie resuelve las
+   var() por ella. Hasta s168 este mapa era una COPIA a mano de CAT_META con
+   un `|| var(--ink-3)` detras, o sea que una familia nueva se pintaba del
+   color de «primeros pasos» sin decir nada -- y s168 estreno una. Ahora se
+   lee de la fuente y la familia desconocida REVIENTA la hoja. */
+const CAT_META = (() => {
+  const vm = require('vm');
+  const sb = { window: {}, console };
+  vm.createContext(sb);
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'app', 'achievements', 'catalog.js'), 'utf8'), sb);
+  const m = sb.window.CAT_META;
+  if (!m || !Object.keys(m).length) throw new Error('CAT_META sale vacio de catalog.js');
+  return m;
+})();
 
 /* ─── 1. Las 9 apuestas ─────────────────────────────────────────────────────
    Copiadas de la tabla ○ de docs/product/MAPEO_GLIFOS_LOGRO.md. `nota` es el
@@ -145,7 +148,9 @@ function sello(url, color, px) {
 }
 
 function ficha(a, url, extra) {
-  const color = COLOR_CAT[a.cat] || 'var(--ink-3)';
+  const meta = CAT_META[a.cat];
+  if (!meta) throw new Error('familia sin entrada en CAT_META: ' + a.cat + ' (logro ' + a.id + ')');
+  const color = meta.color;
   return '<article class="ficha">' +
     '<div class="par">' + sello(url, color, 56) + sello(url, color, 168) + '</div>' +
     '<div class="txt">' +

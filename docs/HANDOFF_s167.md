@@ -1,5 +1,14 @@
 # HANDOFF · s167 → siguiente sesión
 
+> **AGOTADO en s168.** Las tres decisiones de este documento estan **tomadas y
+> hechas**: el farol se mudo a `stats.streak.30`, maestria se partio y nacio «La
+> jornada», y la etiqueta volvio a «Exploracion». Lo que abrio s168 vive en
+> [`HANDOFF_s168.md`](./HANDOFF_s168.md). Se conserva por su diagnostico medido.
+>
+> **Una correccion**: la § 3 planteaba el umbral de la pill como una cuestion de
+> ALTURA. No lo es — la pill esta fuera de flujo y lo que falla es el SOLAPE con
+> los iconos, en todos los anchos de telefono. Medido en s168.
+
 **v0.97.0** · 2026-08-18 · sustituye a [`HANDOFF_s166.md`](./HANDOFF_s166.md) y a
 [`HANDOFF_glifos_logro.md`](./HANDOFF_glifos_logro.md), los dos **agotados**.
 

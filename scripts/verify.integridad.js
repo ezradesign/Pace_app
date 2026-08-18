@@ -31,7 +31,6 @@
 
 var fs   = require('fs');
 var path = require('path');
-var vm   = require('vm');
 var eventos = require('./verify.eventos.js');   // tanda de pace.events.v1 (s155)
 
 /* --------------------------------------------------------------------------
@@ -70,65 +69,13 @@ var CENSO = {
 };
 
 /* ==========================================================================
-   Sandbox: `window` de mentira + una IIFE por archivo (como el artefacto)
+   Sandbox: extraido a verify.sandbox.js en s168 (regla §1, este archivo
+   llego a 503 lineas). Se le dan los mismos nombres locales a proposito:
+   asi las 5 llamadas de las tandas se quedan como estaban.
    ========================================================================== */
-function nuevoSandbox() {
-  /* React de mentira: solo hace falta para que los modulos con JSX evaluen. De
-     ellos se quieren los DATOS, no el arbol de componentes. */
-  var React = new Proxy({
-    createElement: function (t, p) { return { __el: t, props: p }; },
-    Fragment: 'Fragment', memo: function (f) { return f; },
-    useState: function (v) { return [v, function () {}]; },
-    useEffect: function () {}, useRef: function () { return { current: null }; },
-    useMemo: function (f) { return f(); }, useCallback: function (f) { return f; },
-  }, { get: function (t, k) { return (k in t) ? t[k] : function () {}; } });
-
-  var sb = {
-    React: React, console: console, JSON: JSON, Math: Math, Date: Date,
-    Object: Object, Array: Array, String: String, Number: Number,
-    Boolean: Boolean, RegExp: RegExp, Set: Set, Map: Map, Error: Error,
-    parseInt: parseInt, parseFloat: parseFloat, isNaN: isNaN,
-    setTimeout: setTimeout, clearTimeout: clearTimeout,
-  };
-  sb.window = sb;
-  sb.globalThis = sb;
-  sb.document = {
-    createElement: function () { return { style: {}, setAttribute: function () {}, appendChild: function () {} }; },
-    head: { appendChild: function () {} },
-    getElementById: function () { return null; },
-    querySelector: function () { return null; },
-  };
-  sb.localStorage = { getItem: function () { return null; }, setItem: function () {}, removeItem: function () {} };
-  sb.navigator = { language: 'es' };
-  vm.createContext(sb);
-  return sb;
-}
-
-/* Carga un archivo en el sandbox dentro de su IIFE. `exporta` saca a proposito
-   valores LEXICOS que el archivo no publica (`const EXTRA_ROUTINES`, etc.):
-   dentro de la IIFE no cruzarian, exactamente igual que en el artefacto. */
-function cargar(ctx, sb, f, exporta) {
-  var abs = path.join(ctx.ROOT, f);
-  if (!fs.existsSync(abs)) return f + ': no existe';
-  var code;
-  try {
-    code = ctx.babel.transformSync(fs.readFileSync(abs, 'utf8'), {
-      presets: [[path.join(ctx.ROOT, 'node_modules', '@babel', 'preset-react'), {}]],
-      filename: abs, configFile: false, babelrc: false, sourceType: 'script',
-    }).code;
-  } catch (e) { return f + ' (compilando): ' + e.message.split('\n')[0]; }
-
-  var extra = '';
-  if (exporta) {
-    Object.keys(exporta).forEach(function (k) {
-      extra += ';try{window[' + JSON.stringify(k) + ']=' + exporta[k] + ';}catch(e){}';
-    });
-  }
-  try {
-    vm.runInContext(';(function () {\n' + code + '\n' + extra + '\n})();', sb, { filename: abs });
-    return null;
-  } catch (e) { return f + ': ' + e.message.split('\n')[0]; }
-}
+var sandbox = require('./verify.sandbox.js');
+var nuevoSandbox = sandbox.nuevoSandbox;
+var cargar = sandbox.cargar;
 
 function cuentaItems(grupos) {
   return Object.keys(grupos || {}).reduce(function (n, k) {
@@ -160,7 +107,7 @@ function chequeaI18n(ctx, declarados) {
 
   if (!strings.length) {
     ctx.falla('i18n: PACE.html no declara ni un archivo de app/i18n/strings/ -- el analisis no ha mirado nada');
-    return;
+    return null;
   }
 
   /* ORDEN: `content/*` parchea EN por encima de `strings/*` (override D-1), asi
@@ -219,6 +166,10 @@ function chequeaI18n(ctx, declarados) {
     ctx.ok('desequilibrio global explicado: ' + esFinal.length + ' ES / ' + enFinal.length +
            ' EN = ' + aportaContent + ' claves de contenido solo en EN');
   }
+
+  /* Las devuelve para que chequeaLogros contraste los labelKey de CAT_META
+     contra ellas: son dos tandas distintas y hasta s168 no se hablaban. */
+  return S;
 }
 
 /* ==========================================================================
@@ -311,7 +262,7 @@ function chequeaGlifosEjercicio(ctx, declarados) {
 /* ==========================================================================
    Logros: catalogo + mascaras. Devuelve el mapa de mascaras para el precache.
    ========================================================================== */
-function chequeaLogros(ctx) {
+function chequeaLogros(ctx, STR) {
   var sb = nuevoSandbox();
   ['app/glyphs/achievement-glyphs.jsx', 'app/glyphs/achievement-masks.js',
    'app/achievements/catalog.js'].forEach(function (f) {
@@ -351,6 +302,43 @@ function chequeaLogros(ctx) {
 
   var catsFuera = [...new Set(CAT.map(function (a) { return a.cat; }))].filter(function (c) { return !META[c]; });
   if (catsFuera.length) ctx.falla('logros: categoria(s) usadas sin entrada en CAT_META: ' + listaCorta(catsFuera));
+
+  /* RELACIONAL (s168) · el reves del anterior. `catsFuera` cazaba la familia
+     usada y no declarada; esta caza la DECLARADA y vacia, que es el error de
+     la otra mano: Achievements.jsx itera CAT_META, asi que una familia sin
+     logros pinta su cabecera y debajo nada. Es el fallo exacto que se rozaba
+     al disolver «estadisticas» en s168 -- si los cuatro se mueven y la
+     entrada de CAT_META se queda, el panel abre una seccion vacia. */
+  var famVacias = Object.keys(META).filter(function (c) {
+    return !CAT.some(function (a) { return a.cat === c; });
+  });
+  if (famVacias.length) {
+    ctx.falla('logros: ' + famVacias.length + ' familia(s) declaradas en CAT_META SIN un solo logro (' +
+              listaCorta(famVacias) + ') -- el panel pinta su cabecera y debajo nada');
+  } else {
+    ctx.ok('las ' + Object.keys(META).length + ' familias de CAT_META tienen al menos un logro');
+  }
+
+  /* RELACIONAL (s168) · el labelKey contra i18n, en los DOS idiomas. Nadie lo
+     miraba: una familia nueva con su labelKey sin escribir pinta la CLAVE CRUDA
+     de cabecera («ach.cat.jornada») y ni el verify ni la suite se enteraban. */
+  if (!STR || !STR.es || !Object.keys(STR.es).length) {
+    ctx.falla('logros: no me han pasado las cadenas i18n -- no he podido mirar un solo labelKey');
+  } else {
+    var sinEtiqueta = [];
+    Object.keys(META).forEach(function (c) {
+      var k = META[c].labelKey;
+      if (!k) { sinEtiqueta.push(c + ' (sin labelKey)'); return; }
+      if (!(k in STR.es)) sinEtiqueta.push(c + ' -> ' + k + ' (falta ES)');
+      if (!(k in (STR.en || {}))) sinEtiqueta.push(c + ' -> ' + k + ' (falta EN)');
+    });
+    if (sinEtiqueta.length) {
+      ctx.falla('logros: ' + sinEtiqueta.length + ' etiqueta(s) de familia sin cadena i18n: ' +
+                listaCorta(sinEtiqueta) + ' -- el panel pintaria la clave cruda');
+    } else {
+      ctx.ok('las ' + Object.keys(META).length + ' etiquetas de familia existen en ES y en EN');
+    }
+  }
 
   /* Un secreto cuenta como DISPONIBLE aunque no tenga detector (§15.4: «su
      mecanica es intriga, no pronto»), asi que entra en el denominador de la UI
@@ -434,9 +422,9 @@ function chequeaContenido(ctx) {
 /* ========================================================================== */
 function tandaIntegridad(ctx, declarados) {
   console.log('\n[4/4] Integridad de catalogos, i18n, precache y glifos ...');
-  chequeaI18n(ctx, declarados);
+  var STR = chequeaI18n(ctx, declarados);
   chequeaGlifosEjercicio(ctx, declarados);
-  var mascaras = chequeaLogros(ctx);
+  var mascaras = chequeaLogros(ctx, STR);
   chequeaPrecache(ctx, mascaras);
   chequeaContenido(ctx);
   eventos.chequeaEventos(ctx, declarados, listaCorta);
@@ -455,6 +443,10 @@ var NO_CUBRE = [
   'precache: que el archivo exista en DISCO, no que el navegador lo cachee ' +
     '-- el contraste con la cache real lo hace «npm run test:e2e» (s154)',
   'glifos: se cuentan mapa y ficheros -- ni un pixel del dibujo se mira',
+  /* s168 */
+  'familias de logro: se comprueba que ninguna este vacia y que su etiqueta exista en los ' +
+    'dos idiomas, NO que cada logro este en la familia correcta -- eso es criterio, no dato, ' +
+    'y es justo lo que s168 movio a mano',
   'los numeros del CENSO son un censo: si el contenido crece a proposito, hay que subirlos a mano',
 ];
 
