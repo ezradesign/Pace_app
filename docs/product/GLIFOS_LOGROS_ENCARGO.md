@@ -1,11 +1,21 @@
-# Encargo de arte · los 38 glifos de LOGRO que faltan
+# Encargo de arte · los 19 glifos de LOGRO que faltan
 
-**Calculado del árbol en s164 (v0.94.0).** Catálogo: **96 logros** · con arte:
-**58** · **sin arte: 38**.
+**Remedido del árbol en s169 (v0.99.0).** Catálogo: **96 logros** · con arte:
+**77** · **sin arte: 19**.
 
-> Cómo se sacó: cargando `catalog.js` y `achievement-masks.js` —cada uno en su
-> propia IIFE, como en el artefacto— y cruzando catálogo contra arte existente.
-> Los 38 coinciden con lo que decía `STATE.md`.
+> **Este documento decía 38 y ya sólo faltan 19.** El cálculo original es de s164
+> (v0.94.0), cuando había 58 con arte; **s167 entregó los 19 que faltaban para
+> llegar a 77** y nadie volvió a tocar esta lista, así que la mitad de lo que
+> pedía **ya estaba dibujado**. Las 38 filas siguen aquí, pero las entregadas van
+> tachadas y marcadas **ENTREGADO**: lo que no lleva marca es lo que falta.
+>
+> Cómo se remidió: cargando `catalog.js` y `achievement-masks.js` —cada uno en su
+> propia IIFE, como en el artefacto— y cruzando **id a id** las filas de este
+> documento contra el mapa de máscaras real. La cuenta cierra por **biyección**:
+> **19 entregadas + 19 sin arte = 38 filas**, **cero** ids que no existan en el
+> catálogo y **cero** logros sin arte que este documento no liste. Si algún día
+> no cierra, es que una de las dos partes se movió sin la otra.
+
 
 ---
 
@@ -39,15 +49,29 @@ borde y su anillo de categoría— a tamaño y a 3×.
 
 ---
 
-## 2 · Prioridad 1 · el que perdió su dibujo a propósito
+## 2 · Prioridad 1 · el que se nota al lado de su gemelo
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
-| `hydrate.week.perfect` | Semana hidratada | 8 vasos, 7 días | carácter `◌` | **Una jarra o cántaro de barro con siete marcas de nivel** en el costado. Se le quitó su dibujo en s147 porque llevaba un pincel de caligrafía, que no dice nada de agua. Alternativa: una gota grande con seis gotas menores en arco. |
+| `season.equinox.autumn` | Equinoccio otoño | 22 de septiembre | carácter `⚖` | **Una balanza de dos platos a la misma altura**, con una hoja en un plato y una espiga en el otro. |
+| ~~`hydrate.week.perfect`~~ **ENTREGADO** | Semana hidratada | 8 vasos, 7 días | carácter `◌` | **Una jarra o cántaro de barro con siete marcas de nivel** en el costado. Se le quitó su dibujo en s147 porque llevaba un pincel de caligrafía, que no dice nada de agua. Alternativa: una gota grande con seis gotas menores en arco. |
+
+**Por qué es el primero, y no porque su sello falle** — el `⚖` de texto aguanta
+solo. Es **el par**: `season.equinox.spring` **sí tiene balanza dibujada**
+(`achievement-masks.js`), los dos viven en la misma familia (`estacionales`),
+son adyacentes en el catálogo y comparten el mismo carácter de respaldo. O sea
+que en el panel se ven **uno al lado del otro con dos sistemas visuales
+distintos**. De los 19 que faltan, es el único en esa situación: los demás son
+huecos sueltos y este es un **desparejado**, que se ve más.
+
+> **La Prioridad 1 anterior ya está entregada**, y por eso se queda tachada en la
+> tabla en vez de desaparecer: la fila cuenta para el censo de la cabecera y deja a la
+> vista que ese hueco se cerró.
+
 
 ---
 
-## 3 · Constancia (3)
+## 3 · Constancia · **3 sin arte** de 3
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
@@ -57,7 +81,7 @@ borde y su anillo de categoría— a tamaño y a 3×.
 
 ---
 
-## 4 · Exploración (10) · «tres sesiones de…»
+## 4 · Exploración · **5 sin arte** de 10 · «tres sesiones de…»
 
 Son diez hermanas y **se ven juntas en la rejilla**, así que conviene que
 compartan familia visual: mismo peso de trazo y motivos del mismo tamaño óptico.
@@ -68,16 +92,16 @@ compartan familia visual: mismo peso de trazo y motivos del mismo tamaño óptic
 | `explore.rounds` | Rondas | 3 sesiones en rondas | SVG | **Tres anillos concéntricos con un corte** en el más externo: rondas que se cierran. |
 | `explore.kapalabhati` | Kapalabhati | 3 × el kriya | carácter `✦` | **Una llama corta con tres chispas ascendentes** (limpieza, calor, exhalación rápida). |
 | `explore.shoulders` | Hombros resetados | 3 sesiones de hombros | carácter `⌢` | **Un yugo de madera** —la pieza que descansa sobre los hombros— visto de frente. |
-| `explore.atg` | ATG asentado | 3 sesiones en rango profundo | SVG | **Una rodilla flexionada de perfil, geometrizada**: dos segmentos y un arco cerrado. |
-| `explore.ancestral` | Ancestral | 3 sesiones ancestrales | SVG | **Una huella de pie descalzo.** |
-| `explore.neck` | Cuello atendido | 3 sesiones de cuello | carácter `~` | **Tres vértebras cervicales apiladas**, muy simplificadas, con una curva suave. |
-| `explore.desk` | Escritorio express | 3 sesiones sin levantarse | carácter `⊡` | **Una mesa de escritorio de perfil con su silla**: dos trazos y un plano. |
-| `explore.all.move` | Cuerpo de campo | todas las movilidades | carácter `✤` | **Una brújula de cuatro puntas con hojas** en lugar de flechas: moverse en todas las direcciones. |
+| ~~`explore.atg`~~ **ENTREGADO** | ATG asentado | 3 sesiones en rango profundo | SVG | **Una rodilla flexionada de perfil, geometrizada**: dos segmentos y un arco cerrado. |
+| ~~`explore.ancestral`~~ **ENTREGADO** | Ancestral | 3 sesiones ancestrales | SVG | **Una huella de pie descalzo.** |
+| ~~`explore.neck`~~ **ENTREGADO** | Cuello atendido | 3 sesiones de cuello | carácter `~` | **Tres vértebras cervicales apiladas**, muy simplificadas, con una curva suave. |
+| ~~`explore.desk`~~ **ENTREGADO** | Escritorio express | 3 sesiones sin levantarse | carácter `⊡` | **Una mesa de escritorio de perfil con su silla**: dos trazos y un plano. |
+| ~~`explore.all.move`~~ **ENTREGADO** | Cuerpo de campo | todas las movilidades | carácter `✤` | **Una brújula de cuatro puntas con hojas** en lugar de flechas: moverse en todas las direcciones. |
 | `explore.all.extra` | Fuerte en la oficina | todos los Estira | carácter `⚔` | **Una piedra de amolar con mango**, o un yunque pequeño. **Nada de espadas** — hoy es `⚔`, que choca de frente con el tono. |
 
 ---
 
-## 5 · Maestría (12) · el escalón alto de cada familia
+## 5 · Maestría · **3 sin arte** de 12 · el escalón alto de cada familia
 
 Deben leerse como «la versión mayor» de su exploración: **el mismo motivo con un
 elemento más**, no un dibujo distinto.
@@ -85,26 +109,27 @@ elemento más**, no un dibujo distinto.
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
 | `master.pomodoro.8` | Jornada de ocho | 8 Pomodoros en un día | SVG | **Un reloj de sol** con ocho marcas en el arco. |
-| `master.long.focus` | Larga sesión | 5 bloques de 45 min | SVG | **Una vela consumida a la mitad** con la llama alta y quieta. |
+| ~~`master.long.focus`~~ **ENTREGADO** | Larga sesión | 5 bloques de 45 min | SVG | **Una vela consumida a la mitad** con la llama alta y quieta. |
 | `master.box.15` | Caja maestra | 15 sesiones Box | carácter `▣` | El cuadrado de `explore.box` **con un segundo cuadrado inscrito**. |
-| `master.rounds.15` | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. |
-| `master.atg.20` | Rodillas de acero | 20 sesiones ATG | carácter `△` | La rodilla de `explore.atg` **con un remache o refuerzo** en el vértice. |
-| `master.hips.20` | Caderas libres | 20 sesiones de caderas | carácter `◇` | **Una bisagra abierta de par en par**: dos placas y su eje. |
+| ~~`master.rounds.15`~~ **ENTREGADO** | Rondas maestra | 15 sesiones | carácter `◶` | Los anillos de `explore.rounds` **cerrados y con un punto central**. |
+| ~~`master.atg.20`~~ **ENTREGADO** | Rodillas de acero | 20 sesiones ATG | carácter `△` | La rodilla de `explore.atg` **con un remache o refuerzo** en el vértice. |
+| ~~`master.hips.20`~~ **ENTREGADO** | Caderas libres | 20 sesiones de caderas | carácter `◇` | **Una bisagra abierta de par en par**: dos placas y su eje. |
 | `master.shoulders.20` | Hombros libres | 20 sesiones de hombros | carácter `⌢` | El yugo de `explore.shoulders` **partido o desatado**: se ha quitado el peso. |
-| `master.ancestral.10` | Primitiva | 10 sesiones ancestrales | carácter `☖` | **Una lasca de sílex** o una punta de piedra tallada. |
-| `master.hydrate.30` | Río constante | 30 días de 8 vasos | carácter `≈` | **Un río de tres ondas paralelas entre dos orillas.** |
-| `master.hydrate.90` | Manantial | 90 días de 8 vasos | carácter `∿` | **Una fuente brotando de una roca**, con la lámina de agua cayendo. Es el escalón por encima del río. |
-| `master.extra.all.week` | Semana fuerte | todos los Estira en 1 semana | carácter `✧` | **Una gavilla atada con siete tallos** y la cuerda cruzada. |
-| `master.midnight.never` | Nunca a medianoche | 30 días sin uso tras las 23 h | carácter `○` | **Una luna llena con una persiana o visillo bajado** por delante: la noche cerrada a propósito. |
+| ~~`master.ancestral.10`~~ **ENTREGADO** | Primitiva | 10 sesiones ancestrales | carácter `☖` | **Una lasca de sílex** o una punta de piedra tallada. |
+| ~~`master.hydrate.30`~~ **ENTREGADO** | Río constante | 30 días de 8 vasos | carácter `≈` | **Un río de tres ondas paralelas entre dos orillas.** |
+| ~~`master.hydrate.90`~~ **ENTREGADO** | Manantial | 90 días de 8 vasos | carácter `∿` | **Una fuente brotando de una roca**, con la lámina de agua cayendo. Es el escalón por encima del río. |
+| ~~`master.extra.all.week`~~ **ENTREGADO** | Semana fuerte | todos los Estira en 1 semana | carácter `✧` | **Una gavilla atada con siete tallos** y la cuerda cruzada. |
+| ~~`master.midnight.never`~~ **ENTREGADO** | Nunca a medianoche | 30 días sin uso tras las 23 h | carácter `○` | **Una luna llena con una persiana o visillo bajado** por delante: la noche cerrada a propósito. |
 
-> **Estos dos van al final de la cola**: `master.extra.all.week` y
-> `master.midnight.never` **no tienen detector**, así que su sello se pinta
-> «Pronto» aunque llegue el arte. No es motivo para no dibujarlos; sí para no
-> ponerlos primeros.
+> ~~**Estos dos van al final de la cola**~~ **YA NO APLICA A NADIE** — los dos
+> están entregados. Se conserva el criterio, que sigue siendo bueno para lo que
+> venga: `master.extra.all.week` y `master.midnight.never` **no tienen
+> detector**, así que su sello se pinta «Pronto» aunque llegue el arte. No es
+> motivo para no dibujarlos; sí para no ponerlos primeros.
 
 ---
 
-## 6 · Secretos (7) · el dibujo solo se ve al desbloquear
+## 6 · Secretos · **5 sin arte** de 7 · el dibujo solo se ve al desbloquear
 
 Mientras están bloqueados pintan `?`, así que aquí **el arte es recompensa pura**.
 Margen para que sean los más juguetones del conjunto.
@@ -112,24 +137,26 @@ Margen para que sean los más juguetones del conjunto.
 | id | Título | Qué premia | Sugerencia |
 |---|---|---|---|
 | `secret.cow.click` | Vaca feliz | hacerle cosquillas al logo | **La vaca de PACE con los ojos cerrados y una pata levantada.** Hoy tiene SVG heráldico; es el que más gana con arte propio. |
-| `secret.lunch` | Pausa de mediodía | sesión a las 14:00 | **Un plato y un tenedor cruzados con una ramita**, muy simple. |
+| ~~`secret.lunch`~~ **ENTREGADO** | Pausa de mediodía | sesión a las 14:00 | **Un plato y un tenedor cruzados con una ramita**, muy simple. |
 | `secret.rain` | Lluvia mental | 3 respiraciones seguidas | **Una nube con tres gotas largas** cayendo en paralelo. |
 | `secret.first.monday` | Primer lunes | el primer lunes del mes | **Una hoja de calendario con la esquina doblada** y una marca en la primera casilla. |
 | `secret.new.year` | Año nuevo | 1 de enero | **Una rama con un brote nuevo saliendo de un corte de poda.** Nada de cohetes ni de copas. |
-| `secret.dark.mode` | Modo oscuro | 7 días en oscuro **elegido** | **Una lámpara de aceite apagada con el humo subiendo**, o una luna con siete estrellas mínimas. |
+| ~~`secret.dark.mode`~~ **ENTREGADO** | Modo oscuro | 7 días en oscuro **elegido** | **Una lámpara de aceite apagada con el humo subiendo**, o una luna con siete estrellas mínimas. |
 | `secret.zen` | Zen accidental | 30 min de Respira en un día | **Un círculo trazado a mano alzada que no cierra del todo** (ensō). El más obvio y el más bonito de los siete. |
 
 ---
 
-## 7 · Estadísticas (2) y estacionales (3)
+## 7 · Estadísticas y estacionales · **2 sin arte** de 4
 
 | id | Título | Qué premia | Hoy | Sugerencia |
 |---|---|---|---|---|
 | `stats.month.focus` | Mes profundo | 20 h de foco en un mes | carácter `✦` | **Una plomada colgando de su cuerda**: profundidad medida. |
-| `stats.streak.30` | Treinta amaneceres | un mes sin perder el ritmo | carácter `✦` | **Un sol saliendo tras una línea de horizonte, con treinta muescas** en la línea. Rima con el amanecer de la home. |
+| ~~`stats.streak.30`~~ **ENTREGADO** | Treinta amaneceres | un mes sin perder el ritmo | carácter `✦` | **Un sol saliendo tras una línea de horizonte, con treinta muescas** en la línea. Rima con el amanecer de la home. |
 | `season.summer` | Verano | 1 sesión/día en verano | carácter `☀` | **Una espiga madura y una cigarra**, o un sol alto con la sombra corta de un árbol. |
-| `season.autumn` | Otoño | 1 sesión/día en otoño | carácter `❦` | **Dos hojas cayendo en diagonal**, una de ellas curvada. |
-| `season.equinox.autumn` | Equinoccio otoño | 22 de septiembre | carácter `⚖` | **Una balanza de dos platos a la misma altura**, con una hoja en un plato y una espiga en el otro. |
+| ~~`season.autumn`~~ **ENTREGADO** | Otoño | 1 sesión/día en otoño | carácter `❦` | **Dos hojas cayendo en diagonal**, una de ellas curvada. |
+
+> `season.equinox.autumn` **estaba aquí y se ha subido a §2**: es el único de los
+> 19 que faltan cuyo **gemelo ya está dibujado**, así que su hueco se ve.
 
 ---
 

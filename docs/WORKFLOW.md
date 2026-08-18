@@ -191,9 +191,11 @@ anade **al `verify` o a la suite, no al YAML**.
 
 ### Proteger `main` — lo hace el usuario, no Claude
 
-Requiere permisos de administracion del repo, y `gh` **no esta instalado** en esta
-maquina (comprobado en s153), asi que la afirmacion de la auditoria integral de que
-`main` esta sin proteger **sigue sin verificar**. Se hace desde la web:
+Requiere permisos de administracion del repo. `gh` **SI esta instalado y autenticado**
+en esta maquina (medido en s169 leyendo los logs del CI; la nota de s153 que decia lo
+contrario estuvo vigente 16 sesiones), asi que la afirmacion de la auditoria integral
+de que `main` esta sin proteger **ya se puede comprobar sin salir de la terminal** --
+pero CAMBIARLO sigue siendo accion del usuario, desde la web:
 
 > **Settings → Rules → Rulesets → New ruleset → New branch ruleset**
 > - **Name:** `main protegida`

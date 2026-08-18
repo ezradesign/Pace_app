@@ -348,6 +348,17 @@ El CSS interpola cada hueco con `calc(base - delta * var(--pace-home-squeeze, 0)
 **El `min-height` del TopBar es el que manda**: bajar solo su padding no gana nada (suelo de
 56px con ~45px de contenido). 48px es el mismo suelo que ya usa el tier móvil.
 
+**Excepción de s169 — la banda donde la pill tiene fila propia.** En
+`(min-width: 390px) and (max-width: 768px) and (min-height: 760px)` la topbar suma
+**+42 px** a su `padding-top` (34 de pill + 8 de hueco) y alinea a `flex-end`, de modo
+que Foco/Pausa/Larga va **arriba** y los iconos debajo. Esos 42 px **salen del aro**, y
+por eso el suelo de alto es 760 y no menos: a 736 el aro paga 4 px a 412, 20 a 428 y 30
+a 440, y a 760 es gratis en todos los anchos (medido A/B en el mismo viewport). El suelo
+de **ancho** no lo pone el aro sino el botón «Abrir panel», que vive **fuera** de la
+topbar: la pill mide 244 px fijos y va centrada, así que a 320 lo pisa 15 px y a 390 deja
+20. Ojo al tocar esta banda: `--pace-home-squeeze` **ya vale 0 desde 736**, así que no
+sirve para distinguirla.
+
 **Solo se toca AIRE**: ningún texto, tamaño de fuente ni glifo cambia, y el CTA conserva su
 suelo de 44px. Efecto a 1366×610 (1366×768 con el chrome del navegador): el aro pasa de 256
 a 349 y el solapamiento de 0.078 a 0.143.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.98.0</title>
+  <title>PACE · Foco · Cuerpo — v0.99.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4691,7 +4691,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.98.0';
+const PACE_VERSION = 'v0.99.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -25435,9 +25435,68 @@ Object.assign(window, { Onboarding });
         gap: 4px !important;
       }
       /* Tabs Foco/Pausa/Larga: ocultos en móvil (s46 · v0.25.0)
-         BreakMenu maneja la selección post-Pomodoro en móvil. */
+         BreakMenu maneja la selección post-Pomodoro en móvil.
+
+         s169 los devuelve, pero SOLO donde caben sin costarle un píxel al aro.
+         Ver el bloque de dos bandas justo debajo. La regla de s46 sigue siendo
+         el DEFECTO: si no hay sitio, la pill no aparece, y el BreakMenu sigue
+         proponiendo modo al terminar el Pomodoro (las dos cosas CONVIVEN). */
       [data-pace-topbar] [data-pace-tabs] {
         display: none !important;
+      }
+
+      /* LA PILL EN SU PROPIA FILA · s169.
+         ---------------------------------------------------------------
+         Por qué no cabe en la misma fila, y por qué la altura no era la
+         pregunta: [data-pace-tabs] es position:absolute centrada
+         (TopBar.jsx:46-48), o sea FUERA DE FLUJO. No empuja, no encoge y no
+         cambia el alto de la fila — lo único que puede hacer es SOLAPARSE con
+         los tres iconos, y lo hace idéntico de 568 a 932 px de alto (s168).
+         Sólo se limpiaría por encima de ~560 px de ANCHO, que ningún teléfono
+         alcanza en vertical.
+
+         EL GATE TIENE UN SUELO DE ANCHO Y OTRO DE ALTO, y cada uno sale de una
+         medida distinta:
+
+         · ALTO >= 760. Darle su propia línea cuesta +42 px de topbar (34 de
+           pill + 8 de hueco) y esos 42 px salen del aro. Barrido de 9 anchos
+           (320 a 768) x 8 alturas (s169): a 736 el aro paga 4 px a 412, 20 a
+           428 y 30 a 440; a 760 ya es GRATIS en todos los anchos, medido A/B
+           en el mismo viewport. Aviso para quien venga a tocarlo: NO es
+           «alto >= 844» —ese número era la siguiente altura que s168 había
+           medido, no el umbral— y NO se puede gatear con
+           --pace-home-squeeze == 0, primero porque es una custom property que
+           fija el JS y una media query no la lee, y segundo porque vale 0
+           EXACTAMENTE desde 736, o sea justo por debajo del umbral real.
+
+         · ANCHO >= 390. Este suelo NO es por el aro: es por el botón de menú
+           («Abrir panel»), que vive FUERA de la topbar y por eso ni el banco de
+           s168 ni la primera versión de este gate lo miraban. La pill mide 244
+           px fijos y va centrada, así que su hueco con el menú es
+           ancho / 2 - 175,5: a 320 lo PISA 15 px, a 360 deja 5, a 375 deja 12
+           y a 390 deja 20. El usuario descartó los 12 px de 375 por justos, así
+           que el suelo es 390 y por debajo la pill sencillamente no aparece.
+
+         La pill va ARRIBA y los iconos debajo, y eso no es estético: el DOM la
+         tiene ANTES que los iconos (TopBar.jsx), así que ponerla debajo haría
+         que el foco recorriera la topbar de abajo arriba (WCAG 2.4.3) — el
+         defecto exacto que s160 arregló en la home. Con la pill arriba, orden
+         visual y orden del DOM coinciden sin tocar el JSX.
+         Lo aserta tests/topbar-pill-movil.spec.js. */
+      @media (min-width: 390px) and (max-width: 768px) and (min-height: 760px) {
+        [data-pace-topbar] {
+          /* Los 42 px se añaden ARRIBA y los iconos bajan con align-items.
+             El min-height de la piel (48 px) no interviene: 102 lo supera. */
+          align-items: flex-end !important;
+          padding-top: calc(10px - 4px * var(--pace-home-squeeze, 0) + 42px) !important;
+        }
+        [data-pace-topbar] [data-pace-tabs] {
+          display: inline-flex !important;
+          /* Sólo se recentra en X: la Y la fija el padding de arriba, no el 50%
+             de la fila, que ahora mide 102 px y la dejaría sobre los iconos. */
+          top: calc(10px - 4px * var(--pace-home-squeeze, 0)) !important;
+          transform: translateX(-50%) !important;
+        }
       }
       /* Iconos top-right: hit target 40x40 */
       [data-pace-topbar] [data-pace-topbar-icon] {

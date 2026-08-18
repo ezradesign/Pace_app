@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.99.0** | 2026-08-18 | feat(movil): **la pill vuelve a movil, y el censo que miraba el sitio equivocado** — sesion **cortada por limite de tokens** y cerrada en una pasada posterior: de las cuatro decisiones de s168 se implementan **dos** —A y C— y **D** (el `apt` del CI) queda **decidida y sin hacer**. Foco/Pausa/Larga vuelve a verse en movil, en **su propia fila y arriba**. El arreglo no es «dejar sitio»: `[data-pace-tabs]` es `position:absolute` centrada, o sea **fuera de flujo** —no empuja, no encoge, solo puede **solaparse**, e identico de 568 a 932 px de alto—, asi que se la **saca de la fila de los iconos** con `align-items: flex-end` y `padding-top: calc(10px - 4px * squeeze + 42px)`, recentrandola **solo en X** porque el `top: 50%` de una fila que ahora mide 102 px la dejaria encima de ellos. **Va ARRIBA y eso no es estetico**: el DOM la tiene **antes** que los iconos, asi que ponerla debajo haria que el foco recorriera la topbar **de abajo arriba** (WCAG 2.4.3, el defecto que s160 arreglo en la home) — y **ninguna prueba se habria enterado**, porque `home-a11y.spec.js` filtra a `[data-pace-home-stack]` y excluye la topbar a proposito. **EL GATE TIENE DOS SUELOS Y CADA UNO SALE DE UNA MEDIDA DISTINTA**: **alto >= 760** por el **aro** —la fila propia cuesta **+42 px** y salen de el; barrido de 9 anchos x 8 alturas A/B en el mismo viewport: a 736 paga 4 px a 412, 20 a 428 y 30 a 440, y **a 760 es gratis en todos**— y **ancho >= 390** por el **boton de menu**, que vive **FUERA** de la topbar: la pill mide 244 px fijos y va centrada, asi que el hueco es `ancho/2 - 175,5` y a 320 lo **PISA 15 px**, a 360 deja 5, a 375 deja 12 y a 390 deja 20 (el usuario descarto los 12 por justos). **Dos correcciones medidas al handoff de s168**: «alto >= 844» **no era el umbral** —era la siguiente altura que se habia medido— y **«squeeze == 0» no sirve de gate**, porque una media query **no lee custom properties** y ademas vale 0 desde 736, justo por debajo del umbral bueno. **EL DEFECTO QUE SE ESCAPO**: el banco de s168 cruzaba `[data-pace-topbar] > *` y la primera sonda `[data-pace-topbar-icon]`, y **las dos daban cero solapes a 320 px mientras la pill pisaba el boton de menu 15x34 px** — porque ese boton no es hijo de la topbar. Un censo que mira donde no esta el problema **dice «limpio» con la misma cara** que uno que mira donde si. **11 asertos nuevos (81 -> 92) y los 11 calibrados en rojo**, con el aro medido **A/B dentro del mismo viewport** y no contra una constante. De propina, medido y **sin ejecutar** (es la decision D): **`gh` SI esta instalado** —s153 lo dio por ausente y la nota se arrastro 16 sesiones—, y leyendo los logs de los 11 ultimos runs **la cola del CI no era la descarga de Chromium (~10 s) sino `apt` bajando 21,1 MB de FUENTES** (10 min 49 s en el run de 672 s, 3 min 15 s en el de 217, que fue **fallo** de cache), asi que la cache **no puede tocarla** y el comentario del YAML es falso. **C · EL ENCARGO DE GLIFOS**: la decision era mover una fila y al medir por que hacia falta salio algo mayor — el documento decia **«los 38 glifos que faltan»** y ya solo faltan **19**, porque **s167 entrego 19 y nadie volvio a tocar la lista**: quien la abriera para dibujar se encontraria **la mitad del trabajo ya hecho**, sin nada que lo marcara (la misma deriva que s168 cazo en `CONTENT.md`, pero esta se paga en horas de dibujo). Las 19 entregadas quedan tachadas, cruzadas **id a id contra el mapa de mascaras real**, y la cuenta cierra por **biyeccion**: 19 + 19 = 38 filas, cero ids fantasma y cero logros sin arte sin listar. El equinoccio entra de **Prioridad 1** en un hueco que estaba **libre**, porque `hydrate.week.perfect` —su unica fila— tambien se entrego; y su motivo no es el sello suelto (el `⚖` de texto aguanta) sino **el par**, porque `season.equinox.spring` **si** tiene balanza dibujada y son adyacentes en la misma familia. **El propio cruce cazo un defecto mio**: al mover esa fila a una nota dejo de contar, la biyeccion cayo a 37 = 18 + 19 y la cabecera recien escrita seguia diciendo 38 | 169 | [abajo](#v0990----2026-08-18----featmovil-la-pill-vuelve-a-movil-y-el-censo-que-miraba-el-sitio-equivocado) |
 | **v0.98.0** | 2026-08-18 | feat(logros+glifos+red): **las familias del catalogo, el farol que se muda, y una pregunta que estaba mal hecha** — **tres cifras** de la documentacion salieron mal al medirlas: el reparto de familias que daba `STATE.md` (gana el handoff: `exploracion` **18** y `secretos` **13**, no 19 y 12) y el **100/92** de `CONTENT.md` contra **96/88** reales; ademas `explore.tweaks` vive en `secretos`, unico id cuyo prefijo no casa con su familia, y ese **no se arregla renombrando** porque los ids si se persisten. **LAS FAMILIAS**: maestria (26) mezclaba profundidad en una practica con habitos de hora del dia, y «estadisticas» (4) se definia por su **procedencia tecnica** —«viene del panel de stats»—, que no es una idea reconocible: de ahi el duplicado de s167. Se parte maestria (**26 → 19**), se disuelve estadisticas y nace **«La jornada»** (9) heredando su color: **siguen siendo 7** y ningun token se reparte de nuevo. **La familia no se invento — el codigo ya la trataba junta**: `checkTimeOfDayAchievements()` desbloquea `master.dawn`, `master.dusk`, `morning.5` y `stats.streak.30` **en la MISMA funcion**, y los dos ultimos comparten la lista `morningDates`, o sea **la misma condicion a dos umbrales** (5 y 30 dias) repartida en **tres familias**. Los tres hitos de calendario van a **constancia** (acumulacion sostenida, hermanos de `focus.hours.*`) y no a estacionales. **«Ritmo» se descarto midiendo**: `stats.title` **es** «Ritmo». «Repertorio» vuelve a **«Exploracion»** (s146 lo renombro sin dejar motivo escrito). **RED**: dos comprobaciones RELACIONALES nuevas —**familia declarada y VACIA** (el panel pinta cabecera y nada debajo) y **`labelKey` sin cadena i18n en los dos idiomas** (pintaria la clave cruda)— con sus **tres rojos verificados**, guard de cero incluido; `chequeaI18n` pasa a devolver las cadenas porque eran dos tandas que no se hablaban. Eso dejo `verify.integridad.js` en **503 lineas** y el verify se puso rojo por su propia regla §1 ⇒ **troceo** en `verify.sandbox.js` (**451 + 78**), eligiendo la costura de la **infraestructura pura** y no la de una tanda. **EL FAROL** deja el equinoccio —el sol y la luna que lo justifican son **ilegibles a 56 px**— y pasa a `stats.streak.30`, donde ese detalle es **bonus** y no argumento. Y **afina el aviso del handoff**: la ingesta cambio **CERO** mascaras viejas (77 → 77, las 76 comunes **byte a byte identicas**), porque el efecto de conjunto viene de cambiar el **conjunto de dibujos**, no de re-correrla; los cuatro numeros del CENSO tampoco se movieron. El equinoccio cae a su glifo de **texto ⚖** justo al lado de `season.equinox.spring`, que **si** tiene balanza dibujada. **LA PILL**: se pidio medir a partir de que ALTURA cabe y la respuesta fue **«no se mueve nada en las 15 combinaciones»** — que no era que quepa, sino que la pregunta era otra: es **`position:absolute`** centrada, esta **fuera de flujo** y no puede empujar nada por construccion. Lo que si hace es **SOLAPARSE** con los iconos: **320** pisa tres (40+40+15 px), **375** dos (40+32), **414** dos (40+12), **identico de 568 a 932** — la altura no interviene —, y solo se limpia **entre 520 y 560 px de ANCHO**. Su propia linea cuesta **+42 px** y ahi el umbral es doble: **667** a 320, **736** a 375, **844** a 414. **El diagnostico llevaba archivado desde s128** y los handoffs no lo arrastraron. **INSTRUMENTOS**: `revision-sellos-tamano-real.js` esperaba 15 s a `[data-pace-home]`, **que no existe**, con un `.catch` que se lo tragaba desde s167; y `revision-glifos.js` duplicaba CAT_META con un fallback silencioso. **CI**: cache de Chromium, pero con su motivo corregido — medido sobre 9 runs, el paso tardo **672 s UNA vez** y 21-28 s las otras ocho, o sea que se cachea por la **cola**, no por 11 minutos por push | 168 | [abajo](#v0980----2026-08-18----featlogrosglifosred-las-familias-del-catalogo-el-farol-que-se-muda-y-una-pregunta-que-estaba-mal-hecha) |
-| **v0.97.0** | 2026-08-18 | feat(glifos+i18n+logros): **los 19 dibujos, los 96 logros en ingles, y una recomendacion retirada** — entran los **19 glifos de logro** nuevos (**77 de 96** con mascara, quedan 19) y la asignacion la cierra el usuario **mirando** la hoja de contactos. Las dos trampas del handoff eran ciertas pero **medirlas las afino en las dos direcciones**: mas pequenas —lo que la app consume son las `.webp` **committeadas**, no los PNG del archivo de disenos— y mas grandes —el `ABORTADO — no existe el dibujo` vivia **despues** del borrado (305 contra 296), y ese si era el camino destructivo—. Ahora hay **prevuelo**: resuelve las 77 claves antes de tocar nada, probado en rojo (58 huerfanas → exit 1, 58 mascaras intactas). El censo se valida con una **biyeccion**: 91 PNG = 83 `asset_*` (50 ids) + 8 `Premium_*` = **58 dibujos = 58 filas**; y como el lote nuevo comparte slug y solo cambia el timestamp, sus duplicados se descartan por **19 md5 distintos**, no por nombre. La ingesta **modifico 17 mascaras viejas** —por diseno: el peso de tinta se iguala contra la mediana del CONJUNTO— y una sospecha mia de que los nuevos iban apretados **la desmintio la medida** (58,5–86,2 % contra 54,5–85,3 %). **EL INGLES DE LOS 96 LOGROS** cierra el hallazgo abierto desde **s146**: `Achievements.jsx` y `Toast.jsx` leian `a.title`/`a.desc` crudos del catalogo. Van a `i18n/content/` —patch de **solo EN**, que es lo que el propio verify exige—, asi que el castellano no se duplica y el **CENSO de i18n se queda en 515**, corrigiendo una estimacion mia de ~707. **192 claves, biyeccion 96 = 96.** **EL AIRE DE LAS TARJETAS** lo reporto el usuario y a 1280 parecia cosmetico (24,3 px); **medirlo en siete anchos cambio el diagnostico**: a 320 la tarjeta media **283 px con 157 de aire, el 55 % vacia**, porque `aspectRatio: 1/1.15` ataba el **alto al ancho**. Sus dos ideas no lo arreglaban —encoger rompia «Cartografa» (0,6 px de reserva) y **centrar es lo que s147 quito a peticion suya**—, asi que se quita el alto proporcional y la rejilla iguala **por fila**: a 320, de 283 a **127 px**. **Yo recomende primero la opcion equivocada y la retire antes de tocar nada.** Buscando otra cosa salio un **DUPLICADO MEDIDO**: `state-achievements.jsx:278` desbloqueaba «Luna llena» y «Treinta amaneceres» **con la misma condicion**; ahora el segundo mide treinta amaneceres **de verdad** sobre `morningDates`, que ya existia capada a 30. «Curiosidad» pasa a **secretos**. `streak.7` deja de llamarse «Semana vaca» y pasa a **«Cuarto creciente»** (7 dias = un cuarto del ciclo lunar, y enhebra 7→30→365). **EL INSTRUMENTO**: se abaratan los tests de Respira retirando el `waitForTimeout` por segundo (20,9 → 15,8 s, control rojo verificado), pero **no basto** — a 4 workers medi **3 de 3 verde** y **era una ventana afortunada**: repetido, **rojo 3 de 3**, con el reloj pasando de 49 s a 3,1 min. La maquina: **CPU al 6 % y 5,8 GB libres de 15,7** → el cuello es **MEMORIA**, no CPU. A 2 workers, **81/81 dos veces**. Se fija **2 en los dos lados**. **+3 asertos (78 → 81)**, los tres primeros de la suite sobre el **IDIOMA** | 167 | [abajo](#v0970----2026-08-18----featglifosi18nlogros-los-19-dibujos-los-96-logros-en-ingles-y-una-recomendacion-retirada) |
+| **v0.97.0** | 2026-08-18 | feat(glifos+i18n+logros): **los 19 dibujos, los 96 logros en ingles, y una recomendacion retirada** — entran los **19 glifos de logro** nuevos (**77 de 96** con mascara, quedan 19) y la asignacion la cierra el usuario **mirando** la hoja de contactos. Las dos trampas del handoff eran ciertas pero **medirlas las afino en las dos direcciones**: mas pequenas —lo que la app consume son las `.webp` **committeadas**, no los PNG del archivo de disenos— y mas grandes —el `ABORTADO — no existe el dibujo` vivia **despues** del borrado (305 contra 296), y ese si era el camino destructivo—. Ahora hay **prevuelo**: resuelve las 77 claves antes de tocar nada, probado en rojo (58 huerfanas → exit 1, 58 mascaras intactas). El censo se valida con una **biyeccion**: 91 PNG = 83 `asset_*` (50 ids) + 8 `Premium_*` = **58 dibujos = 58 filas**; y como el lote nuevo comparte slug y solo cambia el timestamp, sus duplicados se descartan por **19 md5 distintos**, no por nombre. La ingesta **modifico 17 mascaras viejas** —por diseno: el peso de tinta se iguala contra la mediana del CONJUNTO— y una sospecha mia de que los nuevos iban apretados **la desmintio la medida** (58,5–86,2 % contra 54,5–85,3 %). **EL INGLES DE LOS 96 LOGROS** cierra el hallazgo abierto desde **s146**: `Achievements.jsx` y `Toast.jsx` leian `a.title`/`a.desc` crudos del catalogo. Van a `i18n/content/` —patch de **solo EN**, que es lo que el propio verify exige—, asi que el castellano no se duplica y el **CENSO de i18n se queda en 515**, corrigiendo una estimacion mia de ~707. **192 claves, biyeccion 96 = 96.** **EL AIRE DE LAS TARJETAS** lo reporto el usuario y a 1280 parecia cosmetico (24,3 px); **medirlo en siete anchos cambio el diagnostico**: a 320 la tarjeta media **283 px con 157 de aire, el 55 % vacia**, porque `aspectRatio: 1/1.15` ataba el **alto al ancho**. Sus dos ideas no lo arreglaban —encoger rompia «Cartografa» (0,6 px de reserva) y **centrar es lo que s147 quito a peticion suya**—, asi que se quita el alto proporcional y la rejilla iguala **por fila**: a 320, de 283 a **127 px**. **Yo recomende primero la opcion equivocada y la retire antes de tocar nada.** Buscando otra cosa salio un **DUPLICADO MEDIDO**: `state-achievements.jsx:278` desbloqueaba «Luna llena» y «Treinta amaneceres» **con la misma condicion**; ahora el segundo mide treinta amaneceres **de verdad** sobre `morningDates`, que ya existia capada a 30. «Curiosidad» pasa a **secretos**. `streak.7` deja de llamarse «Semana vaca» y pasa a **«Cuarto creciente»** (7 dias = un cuarto del ciclo lunar, y enhebra 7→30→365). **EL INSTRUMENTO**: se abaratan los tests de Respira retirando el `waitForTimeout` por segundo (20,9 → 15,8 s, control rojo verificado), pero **no basto** — a 4 workers medi **3 de 3 verde** y **era una ventana afortunada**: repetido, **rojo 3 de 3**, con el reloj pasando de 49 s a 3,1 min. La maquina: **CPU al 6 % y 5,8 GB libres de 15,7** → el cuello es **MEMORIA**, no CPU. A 2 workers, **81/81 dos veces**. Se fija **2 en los dos lados**. **+3 asertos (78 → 81)**, los tres primeros de la suite sobre el **IDIOMA** | 167 | [session-167](./docs/sessions/session-167-glifos-logro-e-ingles.md) |
 | **v0.96.0** | 2026-08-18 | feat(retencion+home+glifos): **cuatro frentes y nueve mentiras del instrumento** — la sesion arranca destapando que el `72/72` declarado **no reproducia**: 68 y 70 en dos pasadas, siempre los cuatro tests de bucle de `respira-progreso.spec.js` y siempre por **timeout**, con los que si pasaban en **58,0 s y 59,6 s contra un plazo de 60**. La variable es `workers: CI ? 2 : undefined`, o sea **8 en local**; el control lo cierra: **a 2 workers, 72/72 y al DOBLE de velocidad** (1,0 min contra 2,2). El defecto es del INSTRUMENTO y **queda sin arreglar**, esperando decision. **(1) EL CTA DEL POMODORO** decia «Empezar foco» en Pausa y Larga sobre un reloj que no es de foco: una sola `startLabel` para los dos sitios que arrancan, y **12 casos medidos** —`{foco,pausa,larga} × {es,en} × {claro,oscuro}`— con 0 discrepancias. **(2) LA BARRA DE RESPIRA EN MOVIL CABE**, y de sobra: caso peor 5 rondas a 320 px, **segmentos de 48,8 px** y 100 px de holgura. Pero el primer banco era una **TAUTOLOGIA** —medir «desborda a su padre» cuando la barra es `width:100%` de ese padre—, comprobado saboteando `maxWidth` de 260 a 600 y viendo «0 desbordes» con la barra a 374; rehecho con **control positivo** que cae. **(3) UN SOLO ORDEN DE HOME**, aro → Actividades → Camino en las dos pieles: Actividades hereda el papel de horizonte por el selector de hermano adyacente que s156 ya tenia, y **el lector de `--pace-skin` en JS se retira entero** por quedarse sin consumidor. Se **RETIRAN DOS AFIRMACIONES** hechas al usuario —«el solapamiento pasa de 64 a 54» y «arregla un retroceso de foco a 320»—: la primera era medir a media convergencia (el motor publica mas de una vez) y sale **identica en las 5 vistas**; la segunda, que a 320 la home desborda 8 px y tabular arrastra el viewport. El banco pasa a **consumir la sonda de la suite** en vez de la suya. **(4) EL TIEMPO DE RETENCION**, aprobado en s165 con sus tres condiciones: se guarda como **serie semanal en segundos** (`weeklyStats.holdSeconds`) porque esa escala soporta las seis variantes fotografiadas y la de por vida no, y se pinta como **linea al pie**, que **no aparece si vale cero** —solo 3 de 20 rutinas tienen retencion—. **El banco de mutaciones obligo a cambiar el CODIGO**: M1 no mordia porque habia **dos mecanismos redundantes** tapandose entre si; se quito uno y las cuatro muerden. **(5) EL MECANISMO DE LAS MASCARAS DE EJERCICIO**, montado con el mapa **VACIO** y precedencia sobre el SVG, para que los 62 dibujos puedan llegar **por partes**; la ingesta se corrigio sola dos veces (51 identidades leyendo solo el registro, 62 contando dibujos huerfanos que el encargo dice no rehacer) hasta dar **61 = 61**. **+6 asertos (72 -> 78)**, i18n **511 -> 515** | 166 | [session-166](./docs/sessions/session-166-retencion-orden-y-mascaras.md) |
 | **v0.95.0** | 2026-08-17 | feat(respira): **una barra que dice lo que la app sabe** — el progreso de una sesion de Respira se rehace tras el diagnostico de s164, y la decision se tomo **mirando capturas de la app real**, no leyendo codigo. Primero se implanto 1C con **puntos** y el usuario, viendolo, devolvio la pantalla de HOY; en vez de deducir por que, se le pregunto — y pidio **revisar las 20 rutinas antes de proponer nada**. El censo (`censo-respira-ritmos.js`, preguntandole a `getSequence()`) destapa **tres familias de ritmo y no dos**: por bloques (3), por tiempo (15) y **BOMBEO** (Bhastrika y Kapalabhati, fases de **1 s** y 90 ciclos en 3 min). Y corrige tres cosas escritas: **el hueco muerto de la cuenta atras es de 5 rutinas, no de 3** (las de bombeo tampoco la enseñan jamas); **una barra de TIEMPO mentiria en las rondas**, porque no terminan por reloj —la retencion no tiene duracion fijada (B1) y sus 4/12/20 min son NOMINALES—; y «un segmento por ciclo» **no era exacto** en las cinco donde los ciclos no caen redondos (18,8 · 17,5 · 37,5 · 9,5 · 12,9), con el tope de 24 agrupando ya en **10 de las 17**. El liston no lo puso el gusto sino una decision del propio usuario, recuperada de **s139 §A4**: descarto marcas y enso **porque miden**, «invita a mirar la medida en vez de a respirar». Con eso entraron al menu dos opciones que no estabamos explorando —**ningun indicador** y una **linea a sangre**— y el **aro**, que choca con esa decision, para verlo en su sitio. **18 capturas sobre la app real** (la sesion se conduce de verdad y solo se sustituye el indicador, apagando variantes con los hooks recien creados: **ni una bandera en produccion**). Resultado: **T1 + R3** — barra **continua** en las 17 por tiempo, barra **segmentada por rondas** en las 3 de bloques con el bloque en curso marcado por **carril** (vocabulario de Mueve) y sin relleno por respiraciones. Mismo sitio, mismo ancho y **misma altura (5 px)** en las dos familias. La ronda pasa a decirse **una vez por pantalla**: la barra en la sesion, la cabecera en la retencion —que se queda como estaba, por decision del usuario—. **5 asertos nuevos (67 -> 72) y los 5 mordieron** contra producto saboteado | 165 | [session-165](./docs/sessions/session-165-respira-progreso.md) |
 | **v0.94.0** | 2026-08-17 | refactor(estructura): **los cinco de la regla 1, y dos pruebas en vez de una mirada** — el trinquete de s162 tenia congelados cinco archivos por encima de las 500 lineas de `CLAUDE.md` §1 y esta version los trocea **todos**: `_responsive.js` **1132 -> 438** (el JS de la luz a `_responsive.atmosfera.js` y las dos pieles @media a `_responsive.pieles.js`), `FocusTimer.jsx` **686 -> 481** (reparte en sus dos hermanos, que nacieron para esto en s102 y s124), `tokens.css` **676 -> 322** (el comportamiento a `motion.css`), `TweaksPanel.jsx` **534 -> 467** y `state-core.jsx` **515 -> 449**. `DEUDA_500` queda **vacia**. 3833 lineas antes y 4109 despues: **+276 y ni una de codigo** — todo lo que crece son cabeceras y punteros, porque el cuerpo se movio con scripts que **extraen el rango exacto** y asertan los dos bordes en vez de reteclearlo. **Los dos casos de CSS se CORTAN por un punto, no se extraen**: en CSS el orden es la semantica, y sacar un bloque de en medio dejaria las mismas reglas en otra cascada — hay un contrato que depende de eso (`--pace-skin` vale `movil` en la hoja base y `escritorio` en el @media de las pieles, misma especificidad, asi que a >=769px gana la que se inyecta DESPUES; al reves la home de escritorio se creeria movil y `main.jsx` renderizaria el orden de lectura de la otra piel). **Y se probo dos veces, porque la suite no compara ni un pixel**: la huella de REGLAS (comentarios fuera) es identica en archivos y en navegador —45435 bytes, `473c5319…` y `c022e1c9…`— y sirviendo el `index.html` de HEAD en paralelo salen **0 pixeles distintos** de 921 600 y 329 160, en dos anchos y dos paletas, con la consola limpia. El guard §1 se comprobo con la lista vacia | 163 | [session-163](./docs/sessions/session-163-troceo-regla-1.md) |
@@ -361,6 +362,142 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.99.0] -- 2026-08-18 -- feat(movil): la pill vuelve a movil, y el censo que miraba el sitio equivocado
+
+> Sesion **cortada por limite de tokens** y cerrada en una pasada posterior. De las
+> cuatro decisiones que traia el handoff de s168 se implementan **dos** —A, la pill, y
+> C, el encargo de glifos—; **B** no pedia codigo y **D** (el `apt` del CI) queda
+> **decidida y sin hacer**, con sus medidas en `docs/HANDOFF_s169.md`.
+
+### La pill de Foco/Pausa/Larga vuelve a movil
+
+s46 (v0.25.0) la oculto porque **colisiona** con los tres iconos top-right. s128
+diagnostico por que y s168 lo midio: `[data-pace-tabs]` es `position: absolute`
+centrada, o sea **fuera de flujo** — no empuja, no encoge y no puede cambiar el alto de
+la fila, asi que lo unico que puede hacer es **solaparse**, y lo hace **identico de 568
+a 932 px de alto**. Solo se limpiaria por encima de ~560 px de **ancho**, que ningun
+telefono alcanza en vertical.
+
+Por eso el arreglo no es dejar sitio, es **sacarla de la fila de los iconos**: una sola
+media query le da su propia linea, **arriba**, con `align-items: flex-end` y
+`padding-top: calc(10px - 4px * squeeze + 42px)`. Sigue siendo `absolute` pero **solo se
+recentra en X**; su Y la fija el padding, porque el `top: 50%` de una fila que ahora mide
+102 px la dejaria encima de los iconos.
+
+**Va arriba y eso no es estetico**: el DOM la tiene **antes** que los iconos, asi que
+ponerla debajo haria que el foco recorriera la topbar **de abajo arriba** — WCAG 2.4.3,
+el defecto exacto que s160 arreglo en la home. Y ninguna prueba se habria enterado:
+`home-a11y.spec.js` filtra a `[data-pace-home-stack]` y **excluye la topbar a proposito**.
+
+La regla de s46 sigue siendo el **defecto**: donde no hay sitio la pill no aparece y el
+BreakMenu sigue proponiendo modo al terminar el Pomodoro. Las dos cosas **conviven**.
+
+### El gate tiene dos suelos, y cada uno sale de una medida distinta
+
+- **ALTO >= 760, por el ARO.** La fila propia cuesta **+42 px** (34 de pill + 8 de hueco)
+  y salen del aro. Barrido de 9 anchos (320-768) x 8 alturas, **A/B en el mismo
+  viewport**: a 736 el aro paga 4 px a 412, 20 a 428 y 30 a 440; **a 760 es gratis en
+  todos los anchos**.
+- **ANCHO >= 390, por el BOTON DE MENU**, que vive **fuera** de la topbar. La pill mide
+  244 px fijos y va centrada ⇒ hueco = `ancho / 2 - 175,5`: a 320 lo **PISA 15 px**, a
+  360 deja 5, a 375 deja 12 y a 390 deja 20. El usuario **descarto los 12 px de 375** por
+  justos, asi que el suelo es 390.
+
+**Dos correcciones al handoff de s168, medidas.** «alto >= 844» **no era el umbral** —era
+la siguiente altura que s168 habia medido—, el real es **760**. Y **«squeeze == 0» no
+sirve de gate**: `--pace-home-squeeze` es una custom property que fija el JS y **una media
+query no lee custom properties**, y ademas vale 0 **exactamente desde 736**, o sea justo
+por debajo del umbral bueno.
+
+### Un censo que mira el sitio equivocado dice «limpio» igual que uno bueno
+
+El banco de s168 cruzaba `[data-pace-topbar] > *` y la primera sonda de esta sesion
+cruzaba `[data-pace-topbar-icon]`. **Las dos daban CERO SOLAPES a 320 px mientras la pill
+pisaba el boton de menu 15x34 px**, porque ese boton **no es hijo de la topbar**. De ahi
+salio el suelo de ancho, que en el handoff no existia. La sonda del spec cruza ahora
+**todos** los `button, a, [role=button]` del documento, no un subarbol.
+
+### 11 asertos nuevos (81 -> 92), los 11 calibrados en rojo
+
+`tests/topbar-pill-movil.spec.js`: **cero solape con cualquier control** en las 9
+combinaciones · **hueco minimo de 16 px** con el vecino de su fila —umbral de CRITERIO:
+12 px los descarto el usuario y 20 px es lo que deja el ancho mas estrecho que pasa— ·
+**el aro no encoge**, medido **A/B dentro del mismo viewport** (con la pill y con la pill
+a `display:none`) y **no contra una constante escrita en el test**, que caducaria en
+cuanto cambie la geometria · el **orden de foco de la topbar**, que ninguna otra prueba
+mira · **no regresion en escritorio**. Calibracion: bajando el suelo a 320 salieron los
+tres rojos esperados **con su mensaje**.
+
+El banco de s168 **no probaba el arreglo**: simulaba la fila propia creciendo el
+`min-height` de la topbar 42 px y media lo que le costaba al aro, o sea el **coste**, no
+el **arreglo**. Cruzar los rectangulos de verdad es lo unico que demuestra que ya no se
+pisan.
+
+### El diagnostico del CI de s168 estaba mal, y lo corrigio el log
+
+No ejecutado —es la decision D, pendiente—, pero medido, y cambia **la razon** del cambio.
+Antes, un hecho de la maquina: **`gh` SI esta instalado y autenticado**; s153 lo dio por
+ausente y la nota se arrastro **16 sesiones** en `docs/WORKFLOW.md` (corregida aqui). Es
+lo que permitio leer los logs paso a paso de los 11 ultimos runs.
+
+**La cola no era la descarga de Chromium: era `apt` bajando 21,1 MB de FUENTES.** Los
+mismos 9 paquetes (CJK, cirilico, `xfonts-*`) se instalan en **todos** los runs, con
+cache y sin ella, mientras todas las librerias del navegador dicen `already the newest
+version` —ya estan en la imagen—. El binario cuesta **~10 s**; el `apt` costo **10 min
+49 s** en el run de 672 s y **3 min 15 s** en el de 217 s, que fue un **fallo** de cache.
+Por tanto la cache de `~/.cache/ms-playwright` **como mucho ahorra esos 10 s** y **no
+puede tocar la cola**. El comentario del YAML que dice lo contrario es falso.
+
+### C · el equinoccio sube, y al comprobarlo el trabajo crecio
+
+La decision era mover una fila. Al medir por que hacia falta, salio algo mayor:
+**el encargo decia «los 38 glifos de LOGRO que faltan» y ya solo faltan 19.** El
+calculo era de s164; **s167 entrego 19 y nadie volvio a tocar esa lista**, asi que
+quien la abriera para ponerse a dibujar se encontraria **la mitad del trabajo ya
+hecho**, sin nada que lo marcara. Es la misma deriva que s168 cazo en `CONTENT.md`
+(100/92 contra 96/88), pero esta se paga en horas de dibujo.
+
+Ahora las 19 entregadas van **tachadas y marcadas `ENTREGADO`**, cruzadas **id a id
+contra el mapa de mascaras real** y no de memoria, con la cuenta cerrando por
+**biyeccion**: **19 entregadas + 19 sin arte = 38 filas**, **cero** ids que no
+existan en el catalogo y **cero** logros sin arte que el documento no liste. Cada
+seccion lleva ademas su **«N sin arte de M»**, para que el orden se lea de un
+vistazo.
+
+**El equinoccio entra de Prioridad 1, en un hueco que estaba libre.** `§2 ·
+Prioridad 1` tenia una sola fila, `hydrate.week.perfect`, **y tambien se entrego**.
+Y el motivo del equinoccio no es que su sello falle —el `⚖` de texto aguanta
+solo— sino **el par**: `season.equinox.spring` **si** tiene balanza dibujada
+(`achievement-masks.js`), los dos viven en `estacionales`, son **adyacentes en el
+catalogo** y comparten el mismo caracter de respaldo, asi que en el panel se ven
+uno al lado del otro con **dos sistemas visuales distintos**. De los 19 que faltan
+es el unico **desparejado**; los demas son huecos sueltos. De paso, el bloque
+«estos dos van al final de la cola» de la §5 **ya no aplicaba a nadie**.
+
+**Y el propio cruce cazo un defecto mio**: al mover `hydrate.week.perfect` a una
+nota dejo de ser fila de tabla, la biyeccion cayo a **37 = 18 + 19** y la cabecera
+recien escrita seguia diciendo 38. La fila vuelve a la tabla, tachada.
+
+### Verificacion
+
+`npm run verify` **PASA** (0 problemas, 8,7 s, 1 aviso: el `[INFO]` de siempre) ·
+**regla §1**: `_responsive.pieles.js` en **478 de 500** tras ganar 61 lineas, deuda vacia
+· `index.html` del disco **= build de las fuentes** (`53800C9DCE60E2B7`) ·
+`npm run test:e2e` **92/92** en 1,2 min sobre el artefacto ya regenerado ·
+`PACE_standalone.html` **intacto en v0.71.0** byte a byte (`998E3E35…`), restaurado a
+mano tras el build manual, porque el `verify` solo lo restaura alrededor de **su** pasada
+(la torpeza de s162) · **v0.99.0** coherente en los 7 sitios.
+
+### Lo que NO se cubre
+
+**Ni un pixel comparado** · **sin mirar en ingles ni en oscuro** —las etiquetas son mas
+largas en ingles y la pill mide 244 px **fijos**: si el texto no cupiera, el aserto de
+solape seguiria en verde— · **sin telefono real**, todo es viewport emulado · los suelos
+son **de hoy**, y si la topbar o el boton de menu cambian de tamaño el spec lo dira en
+rojo · **C y D siguen sin hacer**, y D **solo se verifica empujando**.
+
+---
+
 ## [v0.98.0] -- 2026-08-18 -- feat(logros+glifos+red): las familias del catalogo, el farol que se muda, y una pregunta que estaba mal hecha
 
 ### Tres cifras que la documentacion tenia mal
@@ -490,158 +627,3 @@ local**: un cambio de YAML solo se prueba empujando.
 exit 0, **76 s** de reloj · hoja de revision con 7 familias, 96 sellos, biyeccion
 exacta y **cero errores de consola**.
 
----
-
-## [v0.97.0] -- 2026-08-18 -- feat(glifos+i18n+logros): los 19 dibujos, los 96 logros en ingles, y una recomendacion retirada
-
-### Los 19 glifos de logro
-
-- **77 de 96 logros tienen mascara** (eran 58). Quedan **19 sin arte**.
-- La asignacion la cerro el usuario **mirando** la hoja de contactos; el `MAPEO`
-  se escribe por **nombre de archivo**, nunca por posicion (leccion de s146).
-- Efecto secundario por diseno: la ingesta **modifico 17 mascaras que ya
-  existian**, porque el peso de tinta se iguala contra la **mediana del conjunto
-  entero** y 19 dibujos la mueven. Las otras 41, identicas byte a byte.
-- Una sospecha mia que **la medida desmintio**: los 19 nuevos ocupan del **58,5 %
-  al 86,2 %** del lienzo y los 58 viejos del **54,5 % al 85,3 %**. Mismo rango.
-
-### Las dos trampas del handoff, afinadas en las dos direcciones
-
-- **Mas pequenas**: lo que la app consume son las `.webp` de
-  `app/glyphs/assets/logros/`, **committeadas**. Los PNG son el archivo de
-  disenos del usuario, fuera del repo, y la app no los abre nunca.
-- **Mas grandes**: el `ABORTADO — no existe el dibujo` vivia **despues** del
-  borrado (linea 305 contra 296). Ese si era el camino destructivo.
-- **Prevuelo nuevo**: resuelve las 77 claves **antes** de borrar. Probado en
-  rojo — 58 filas huerfanas, aborta con exit 1, las 58 mascaras intactas.
-- **Documentacion corregida** (gana el codigo): la ruta por defecto apuntaba a
-  una carpeta inexistente, y la cabecera anunciaba un flag `--todos` **que no
-  existe** — no hay un solo `argv` en el script.
-- El arte fuente se consolida en **una carpeta**, por decision del usuario, con
-  los 19 movidos y su **md5 comprobado antes y despues**.
-
-### La biyeccion que valida el censo
-
-```
-.old\Glifos_logros = 91 PNG = 83 `asset_*` (→ 50 ids) + 8 `Premium_*` (→ 8 slugs)
-                            = 58 dibujos = las 58 filas del MAPEO
-```
-
-El lote nuevo **no tiene esa senal**: los 19 comparten slug y solo cambian el
-timestamp, asi que las re-exportaciones se descartan por **19 md5 distintos**.
-
-### Los 96 logros en ingles
-
-Cierra el hallazgo abierto desde **s146**: `Achievements.jsx` y `Toast.jsx` leian
-`a.title`/`a.desc` **crudos** del catalogo, asi que en ingles se mostraban en
-castellano.
-
-- **192 claves** nuevas en `app/i18n/content/achievements.js`, con la **biyeccion
-  96 = 96** comprobada antes de generarlo.
-- Van a `content/` y no a `strings/` porque **el propio verify lo exige**:
-  `strings/*` es biyectivo ES/EN y `content/*` es un patch de **solo ingles** —
-  anadir una clave espanola desde ahi es un FALLO explicito. El castellano sigue
-  viviendo **solo** en `catalog.js` y los componentes caen a el con
-  `tR(clave, fallback)`, el mismo patron de Respira/Mueve/Extra.
-- Consecuencia que **corrige una estimacion mia**: el CENSO de i18n **se queda en
-  515**, no sube a ~707. Las claves de `content/*` no se cuentan ahi.
-- **+3 asertos (78 → 81)**, los tres primeros de la suite sobre el **IDIOMA**,
-  que era uno de sus huecos declarados. Control rojo: reintroducido el defecto de
-  s146, **caen ingles y aviso y pasa el espanol** — la firma exacta.
-
-### El aire de las tarjetas: el defecto no era el que parecia
-
-Reportado por el usuario. A 1280 parecia cosmetico (24,3 px de mediana);
-**medirlo en siete anchos cambio el diagnostico**:
-
-| Viewport | Tarjeta antes | Aire minimo | Tarjeta ahora |
-|---|---|---|---|
-| 1440 | 127 × 146 | 0,6 px | 127 × **134** |
-| 768 | 154 × 178 | 39 px | 154 × **140** |
-| **320** | 246 × **283** | **156,6 px** | 246 × **127** |
-
-La causa era `aspectRatio: '1/1.15'`, que ataba el **alto al ancho**: con
-`minmax(128px, 1fr)`, al estrechar caben menos columnas, cada tarjeta se ensancha
-y la proporcion la estira mientras el texto sigue midiendo lo mismo.
-
-**Las dos ideas del usuario no lo arreglaban**: encoger rompia
-`master.path.all7` («Cartografa»), que consumia la reserva entera y le sobraban
-**0,6 px**; y **centrar es exactamente lo que s147 quito, a peticion suya**. Se le
-notifico como restriccion previa.
-
-Arreglo: sin alto proporcional, la rejilla iguala **por fila**. La regla de s147
-sigue en pie porque su defecto era la deriva *dentro* de una fila.
-
-**Yo recomende primero la opcion equivocada** —acortar el copy y encoger el alto
-fijo— y la medida por anchos me hizo retirarla antes de tocar nada.
-
-### El duplicado medido, y dos arreglos de catalogo
-
-```js
-state-achievements.jsx:278
-if (current >= 30) { unlockAchievement('streak.30'); unlockAchievement('stats.streak.30'); }
-```
-
-**La misma condicion desbloqueaba dos logros en dos categorias.**
-`stats.streak.30` pasa a medir **treinta amaneceres de verdad** — 30 dias
-distintos con sesion antes de las 9:00 — sobre la lista `morningDates`, que ya
-existia capada a 30 justo al lado de `morning.5`. Sin estado nuevo, y el titulo
-pasa a ser literal.
-
-- **«Curiosidad»** (`explore.tweaks`) pasa a **secretos** con `secret: true`: los
-  otros 18 de exploracion son «Tres sesiones de X» y este es «Abre los Tweaks».
-- **`streak.7`** deja de llamarse «Semana vaca» —sonaba a *semana vacia*— y pasa
-  a **«Cuarto creciente»**: siete dias son un cuarto del ciclo lunar, enhebra
-  7 → 30 → 365 con «Luna llena» y «Vuelta al sol», y «creciente» es lo que hace
-  una racha.
-- **Ningun `id` se toca**: renombrarlo borraria el logro a quien ya lo tuviera.
-
-### El instrumento E2E
-
-El usuario eligio **abaratar los tests**, no calibrar workers. Se retiro el
-`waitForTimeout(12)` por segundo simulado —**1 de cada 2 viajes al navegador**—
-con control rojo verificado: la spec sola pasa de **20,9 s a 15,8 s**.
-
-**No basto.** A 8 workers seguia rojo 2 de 3, y caian tests **distintos** a los
-del diagnostico heredado. A 4 medi **3 de 3 en verde** y lo di por bueno:
-**era una ventana afortunada**. Repetido mas tarde, **rojo 3 de 3**, con el reloj
-pasando de **49 s a 3,1 min** para el mismo trabajo.
-
-Medida de la maquina: **CPU al 6 %** y **5,8 GB libres de 15,7**. El cuello **no
-es CPU, es memoria**, y depende de cuanta tenga cogida el navegador del usuario.
-**A 2 workers: 81/81 dos veces.** Se fija **2 en los dos lados** — una red de
-seguridad que falla segun lo que tengas abierto no es una red.
-
-### Verificacion
-
-- `npm run verify` **PASA** · v0.97.0 coherente en los 7 sitios.
-- `npm run test:e2e` **81/81** con la config committeada.
-- CENSO a mano: mascaras **58 → 77**, de secreto **5 → 8**, visibles **53 → 69**,
-  precache **86 → 105**, logros secretos **12 → 13**. i18n **sigue en 515**.
-- `index.html` regenerado · **`PACE_standalone.html` intacto en v0.71.0**.
-- Revision **a tamano real** de los 19 sellos sobre la app, guard exacto 19 = 19
-  y cero errores de consola.
-
-### Cinco mentiras del instrumento
-
-| Mentira | Causa |
-|---|---|
-| «el censo dedupe mal» | lei un `ls \| head -8` y `Premium_*` ordena **antes** que `asset_*` |
-| la captura «del panel» era del **onboarding** | invente `onboarded: true`; la clave real es `firstSeen`, y el helper lo avisa por escrito |
-| «19 de 19 tarjetas» cuando eran **20** | la sidebar pinta su propia previsualizacion, y mi guard solo miraba «no falta ninguna» |
-| el test acusaba a la app de colar ingles en espanol | `includes` casa por **SUBCADENA**: «Coherent» ⊂ «Coherente» |
-| «EXIT=0, el guard no aborta» | era el codigo de `head`, no del script |
-
-La segunda es la que mas ensena: **el guard de cero decia la verdad y aun asi la
-captura no revisaba nada** — los 77 sellos si estaban pintados, detras del
-onboarding. Lo caza **mirar la imagen**.
-
-### Abierto
-
-- **19 logros sin arte**, y `season.equinox.autumn`: el farol se lee, pero el sol
-  y la luna que justifican el equinoccio **son ilegibles a 56 px**.
-- **Las familias del catalogo**: **maestria (26) mezcla** profundidad con habitos
-  de hora del dia, **estadisticas se solapa con constancia** (el duplicado era su
-  sintoma) y la clave dice `exploracion` mientras la etiqueta dice «Repertorio».
-
----
