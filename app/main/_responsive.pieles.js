@@ -189,13 +189,29 @@
       [data-pace-home-body] [data-pace-main-content] {
         justify-content: center !important;
       }
-      /* HORIZONTE EN MÓVIL CUANDO NO HAY TARJETA (s156). El bloque que hace de
-         horizonte es «el primero después del aro»: normalmente la tarjeta de
-         Camino, pero con un Camino EN CURSO la tarjeta no existe y ese papel
-         pasa a Actividades. El selector de hermano adyacente lo dice sin que
-         nadie tenga que saber por qué falta la tarjeta; con tarjeta, no casa. */
+      /* EL HORIZONTE EN MÓVIL ES ACTIVIDADES (s166) — antes lo era la tarjeta
+         de Camino, y solo pasaba a Actividades cuando la tarjeta no existía
+         (Camino EN CURSO, s156). Con el orden único de s166 —aro, Actividades,
+         Camino en las dos pieles— Actividades es SIEMPRE el primero después del
+         aro, así que este selector de hermano adyacente ya casa siempre y dice
+         exactamente lo mismo que antes: «el horizonte es el primero de abajo».
+         Se conserva el selector adyacente y no un [data-pace-activitybar] a
+         secas porque es lo que impide que el día que algo se cuele entre el aro
+         y Actividades el solapamiento siga aplicándose al bloque equivocado.
+         MISMA REGLA QUE ESCRITORIO, y el z-index también: Actividades pinta
+         SOBRE el arco del aro, que es lo que la tarjeta hacía con su z-index:2. */
       [data-pace-home-stack] > [data-pace-main-content] + [data-pace-activitybar] {
+        position: relative;
+        z-index: 1;
         margin-top: calc(var(--pace-horizon) * -1) !important;
+      }
+      /* Y LA TARJETA DEJA DE SER EL HORIZONTE. Su margin-top negativo vive en
+         SuggestedPathCard.jsx y era correcto mientras la tarjeta iba pegada al
+         aro; ahora va debajo de Actividades y ese margen la subiría encima de
+         los chips. Escritorio ya lo anulaba por esta misma razón desde s126 —
+         es la misma línea, palabra por palabra. */
+      [data-pace-spc] {
+        margin-top: 0 !important;
       }
       /* REPARTO DEL SOBRANTE (s156). En móvil el aro topa por ANCHO, así que
          sobra alto por construcción y el margin:auto lo repartía a partes

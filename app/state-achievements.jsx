@@ -285,15 +285,30 @@ function updateStreak() {
    ACCIONES DE SESION
    ============================ */
 
-function completeBreathSession(routineId, durationMin) {
+/* s166 · `holdSec` es OPCIONAL y por diseño: solo las 3 rutinas de rondas
+   tienen retencion, y `PathBreatheStep` llama a esto sin ese argumento. Sin
+   dato, la semana no se toca -- que no es lo mismo que sumarle 0, porque asi
+   una instalacion sin la clave no la estrena hasta que hay retencion de
+   verdad. NINGUN LOGRO lo consume, y es una de las tres condiciones de la
+   decision: B1/s89 retiro la cifra de la retencion por ser un RECORD, no por
+   ser un dato, asi que un total acumulado entra y un maximo no. */
+function completeBreathSession(routineId, durationMin, holdSec) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
   const week = [...s.weeklyStats.breathMinutes];
   week[day] += durationMin;
+  /* Lectura DEFENSIVA: el merge de loadState es superficial y una instalacion
+     anterior a s166 trae un weeklyStats sin esta clave. Sin el fallback,
+     `hold[day] += x` sobre undefined escribe NaN y lo persiste. */
+  const holdPrevio = (s.weeklyStats && s.weeklyStats.holdSeconds) || [0,0,0,0,0,0,0];
+  const hold = [...holdPrevio];
+  const holdRedondeado = Math.max(0, Math.round(Number(holdSec) || 0));
+  if (holdRedondeado > 0) hold[day] += holdRedondeado;
   setState({
     plan: { ...s.plan, respira: true },
-    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
+    weeklyStats: Object.assign({ ...s.weeklyStats, breathMinutes: week },
+      holdRedondeado > 0 ? { holdSeconds: hold } : {}),
     breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1,
   });
   unlockAchievement('first.breath');

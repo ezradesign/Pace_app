@@ -9,8 +9,12 @@ const { useState, useRef, useEffect } = React;
    ===================================================================== */
 
 function WeekView({ state }) {
-  const { t } = useT();
+  const { t, tn } = useT();
   const w = state.weeklyStats;
+  /* RETENCION (s166). Lectura DEFENSIVA y no `w.holdSeconds` a secas: el
+     merge de loadState es superficial, asi que una instalacion anterior a
+     s166 trae un weeklyStats de cuatro claves y esta no viene. */
+  const holdSeg = ((w && w.holdSeconds) || []).reduce((a, b) => a + (b || 0), 0);
 
   const totals = {
     focus:  w.focusMinutes.reduce((a,b)=>a+b, 0),
@@ -78,6 +82,33 @@ function WeekView({ state }) {
       {bars.map(b => (
         <WeekBarRow key={b.key} label={b.label} data={b.data} color={b.color} unit={b.unit} />
       ))}
+
+      {/* LA RETENCION VA AQUI Y NO ARRIBA, y es la decision, no la maqueta.
+          Las cuatro tarjetas y las cuatro filas son el plano donde se compara
+          un dia con otro; la retencion no se compara -- B1/s89 le quito la
+          cifra por ser un RECORD. Una linea al pie la deja legible sin
+          invitar a perseguirla, que es el mismo criterio de s139 §A4: gana lo
+          mas periferico que todavia orienta.
+
+          NO APARECE SI VALE CERO. Un «0 s» permanente en la pantalla de
+          alguien que no practica rondas es exactamente el recordatorio de una
+          metrica sin cumplir que §2.5 y el tono del producto rechazan; y solo
+          3 de las 20 rutinas de Respira tienen retencion, asi que para la
+          mayoria de la gente el cero es el estado normal, no un hueco. */}
+      {holdSeg > 0 && (
+        <div data-pace-week-hold={String(holdSeg)} style={{
+          marginTop: 10, display: 'flex', justifyContent: 'space-between',
+          alignItems: 'baseline', padding: '0 2px',
+        }}>
+          <Meta style={{ fontSize: 9 }}>{t('stats.hold.label')}</Meta>
+          <span style={{
+            fontFamily: 'var(--font-display)', fontStyle: 'italic',
+            fontSize: 15, color: 'var(--ink-2)', fontVariantNumeric: 'tabular-nums',
+          }}>{holdSeg < 60
+            ? tn('stats.hold.sec', { s: holdSeg })
+            : tn('stats.hold.min', { m: Math.floor(holdSeg / 60), s: String(holdSeg % 60).padStart(2, '0') })}</span>
+        </div>
+      )}
 
       <div data-pace-week-note style={{
         marginTop: 10, padding: 8,

@@ -130,13 +130,19 @@ test.describe('geometria de la home · composicion', () => {
   test.describe('movil', () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
-    test('orden visual movil: aro, Camino, Actividades', async ({ page, context }) => {
+    /* s166: ERA 'dial > spc > act'. El usuario miro movil y web al lado y pidio
+       el MISMO orden en las dos, asi que ahora movil dice lo mismo que la piel
+       de escritorio de aqui arriba. Los dos asertos se dejan SEPARADOS aunque
+       hoy esperen la misma cadena: el dia que una piel vuelva a divergir, el
+       que falle dira cual, y fundirlos ahorraria cuatro lineas a cambio de
+       perder esa informacion. */
+    test('orden visual movil: aro, Actividades, Camino (el mismo que web)', async ({ page, context }) => {
       await sembrar(context);
       await irAlArtefacto(page);
       await asentar(page);
       const m = await sonda(page);
       expect(m.hayDial, 'GUARD: no hay ningun aro en la home').toBe(true);
-      expect(m.ordenVisual).toBe('dial > spc > act');
+      expect(m.ordenVisual).toBe('dial > act > spc');
     });
 
     /* El aro dentro de los limites que el propio modulo declara: por encima del

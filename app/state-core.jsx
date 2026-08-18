@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.95.0';
+const PACE_VERSION = 'v0.96.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -113,6 +113,16 @@ const defaultState = {
     breathMinutes: [0,0,0,0,0,0,0],
     moveMinutes:   [0,0,0,0,0,0,0],
     waterGlasses:  [0,0,0,0,0,0,0],
+    /* TIEMPO DE RETENCION en SEGUNDOS (s166), no en minutos como los otros
+       tres: una retencion dura 15-60 s y redondearla a minutos la dejaria
+       casi siempre en 0 o en 1.
+
+       OJO AL LEERLO: el merge de `loadState` es {...defaultState, ...parsed}
+       y es SUPERFICIAL, asi que una instalacion existente trae su propio
+       `weeklyStats` de cuatro claves y ESTA NO VIENE. Todo consumidor lee con
+       fallback; no hay migracion porque no hay nada que migrar (el dato no
+       existia) y una semana sin retencion es legitimamente cero. */
+    holdSeconds:   [0,0,0,0,0,0,0],
   },
 
   // Streak

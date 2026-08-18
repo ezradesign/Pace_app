@@ -199,8 +199,9 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.96.0** | 2026-08-18 | feat(retencion+home+glifos): **cuatro frentes y nueve mentiras del instrumento** — la sesion arranca destapando que el `72/72` declarado **no reproducia**: 68 y 70 en dos pasadas, siempre los cuatro tests de bucle de `respira-progreso.spec.js` y siempre por **timeout**, con los que si pasaban en **58,0 s y 59,6 s contra un plazo de 60**. La variable es `workers: CI ? 2 : undefined`, o sea **8 en local**; el control lo cierra: **a 2 workers, 72/72 y al DOBLE de velocidad** (1,0 min contra 2,2). El defecto es del INSTRUMENTO y **queda sin arreglar**, esperando decision. **(1) EL CTA DEL POMODORO** decia «Empezar foco» en Pausa y Larga sobre un reloj que no es de foco: una sola `startLabel` para los dos sitios que arrancan, y **12 casos medidos** —`{foco,pausa,larga} × {es,en} × {claro,oscuro}`— con 0 discrepancias. **(2) LA BARRA DE RESPIRA EN MOVIL CABE**, y de sobra: caso peor 5 rondas a 320 px, **segmentos de 48,8 px** y 100 px de holgura. Pero el primer banco era una **TAUTOLOGIA** —medir «desborda a su padre» cuando la barra es `width:100%` de ese padre—, comprobado saboteando `maxWidth` de 260 a 600 y viendo «0 desbordes» con la barra a 374; rehecho con **control positivo** que cae. **(3) UN SOLO ORDEN DE HOME**, aro → Actividades → Camino en las dos pieles: Actividades hereda el papel de horizonte por el selector de hermano adyacente que s156 ya tenia, y **el lector de `--pace-skin` en JS se retira entero** por quedarse sin consumidor. Se **RETIRAN DOS AFIRMACIONES** hechas al usuario —«el solapamiento pasa de 64 a 54» y «arregla un retroceso de foco a 320»—: la primera era medir a media convergencia (el motor publica mas de una vez) y sale **identica en las 5 vistas**; la segunda, que a 320 la home desborda 8 px y tabular arrastra el viewport. El banco pasa a **consumir la sonda de la suite** en vez de la suya. **(4) EL TIEMPO DE RETENCION**, aprobado en s165 con sus tres condiciones: se guarda como **serie semanal en segundos** (`weeklyStats.holdSeconds`) porque esa escala soporta las seis variantes fotografiadas y la de por vida no, y se pinta como **linea al pie**, que **no aparece si vale cero** —solo 3 de 20 rutinas tienen retencion—. **El banco de mutaciones obligo a cambiar el CODIGO**: M1 no mordia porque habia **dos mecanismos redundantes** tapandose entre si; se quito uno y las cuatro muerden. **(5) EL MECANISMO DE LAS MASCARAS DE EJERCICIO**, montado con el mapa **VACIO** y precedencia sobre el SVG, para que los 62 dibujos puedan llegar **por partes**; la ingesta se corrigio sola dos veces (51 identidades leyendo solo el registro, 62 contando dibujos huerfanos que el encargo dice no rehacer) hasta dar **61 = 61**. **+6 asertos (72 -> 78)**, i18n **511 -> 515** | 166 | [abajo](#v0960----2026-08-18----featretencionhomeglifos-cuatro-frentes-y-nueve-mentiras-del-instrumento) |
 | **v0.95.0** | 2026-08-17 | feat(respira): **una barra que dice lo que la app sabe** — el progreso de una sesion de Respira se rehace tras el diagnostico de s164, y la decision se tomo **mirando capturas de la app real**, no leyendo codigo. Primero se implanto 1C con **puntos** y el usuario, viendolo, devolvio la pantalla de HOY; en vez de deducir por que, se le pregunto — y pidio **revisar las 20 rutinas antes de proponer nada**. El censo (`censo-respira-ritmos.js`, preguntandole a `getSequence()`) destapa **tres familias de ritmo y no dos**: por bloques (3), por tiempo (15) y **BOMBEO** (Bhastrika y Kapalabhati, fases de **1 s** y 90 ciclos en 3 min). Y corrige tres cosas escritas: **el hueco muerto de la cuenta atras es de 5 rutinas, no de 3** (las de bombeo tampoco la enseñan jamas); **una barra de TIEMPO mentiria en las rondas**, porque no terminan por reloj —la retencion no tiene duracion fijada (B1) y sus 4/12/20 min son NOMINALES—; y «un segmento por ciclo» **no era exacto** en las cinco donde los ciclos no caen redondos (18,8 · 17,5 · 37,5 · 9,5 · 12,9), con el tope de 24 agrupando ya en **10 de las 17**. El liston no lo puso el gusto sino una decision del propio usuario, recuperada de **s139 §A4**: descarto marcas y enso **porque miden**, «invita a mirar la medida en vez de a respirar». Con eso entraron al menu dos opciones que no estabamos explorando —**ningun indicador** y una **linea a sangre**— y el **aro**, que choca con esa decision, para verlo en su sitio. **18 capturas sobre la app real** (la sesion se conduce de verdad y solo se sustituye el indicador, apagando variantes con los hooks recien creados: **ni una bandera en produccion**). Resultado: **T1 + R3** — barra **continua** en las 17 por tiempo, barra **segmentada por rondas** en las 3 de bloques con el bloque en curso marcado por **carril** (vocabulario de Mueve) y sin relleno por respiraciones. Mismo sitio, mismo ancho y **misma altura (5 px)** en las dos familias. La ronda pasa a decirse **una vez por pantalla**: la barra en la sesion, la cabecera en la retencion —que se queda como estaba, por decision del usuario—. **5 asertos nuevos (67 -> 72) y los 5 mordieron** contra producto saboteado | 165 | [abajo](#v0950----2026-08-17----featrespira-una-barra-que-dice-lo-que-la-app-sabe) |
-| **v0.94.0** | 2026-08-17 | refactor(estructura): **los cinco de la regla 1, y dos pruebas en vez de una mirada** — el trinquete de s162 tenia congelados cinco archivos por encima de las 500 lineas de `CLAUDE.md` §1 y esta version los trocea **todos**: `_responsive.js` **1132 -> 438** (el JS de la luz a `_responsive.atmosfera.js` y las dos pieles @media a `_responsive.pieles.js`), `FocusTimer.jsx` **686 -> 481** (reparte en sus dos hermanos, que nacieron para esto en s102 y s124), `tokens.css` **676 -> 322** (el comportamiento a `motion.css`), `TweaksPanel.jsx` **534 -> 467** y `state-core.jsx` **515 -> 449**. `DEUDA_500` queda **vacia**. 3833 lineas antes y 4109 despues: **+276 y ni una de codigo** — todo lo que crece son cabeceras y punteros, porque el cuerpo se movio con scripts que **extraen el rango exacto** y asertan los dos bordes en vez de reteclearlo. **Los dos casos de CSS se CORTAN por un punto, no se extraen**: en CSS el orden es la semantica, y sacar un bloque de en medio dejaria las mismas reglas en otra cascada — hay un contrato que depende de eso (`--pace-skin` vale `movil` en la hoja base y `escritorio` en el @media de las pieles, misma especificidad, asi que a >=769px gana la que se inyecta DESPUES; al reves la home de escritorio se creeria movil y `main.jsx` renderizaria el orden de lectura de la otra piel). **Y se probo dos veces, porque la suite no compara ni un pixel**: la huella de REGLAS (comentarios fuera) es identica en archivos y en navegador —45435 bytes, `473c5319…` y `c022e1c9…`— y sirviendo el `index.html` de HEAD en paralelo salen **0 pixeles distintos** de 921 600 y 329 160, en dos anchos y dos paletas, con la consola limpia. El guard §1 se comprobo con la lista vacia | 163 | [abajo](#v0940----2026-08-17----refactorestructura-los-cinco-de-la-regla-1-y-dos-pruebas-en-vez-de-una-mirada) |
+| **v0.94.0** | 2026-08-17 | refactor(estructura): **los cinco de la regla 1, y dos pruebas en vez de una mirada** — el trinquete de s162 tenia congelados cinco archivos por encima de las 500 lineas de `CLAUDE.md` §1 y esta version los trocea **todos**: `_responsive.js` **1132 -> 438** (el JS de la luz a `_responsive.atmosfera.js` y las dos pieles @media a `_responsive.pieles.js`), `FocusTimer.jsx` **686 -> 481** (reparte en sus dos hermanos, que nacieron para esto en s102 y s124), `tokens.css` **676 -> 322** (el comportamiento a `motion.css`), `TweaksPanel.jsx` **534 -> 467** y `state-core.jsx` **515 -> 449**. `DEUDA_500` queda **vacia**. 3833 lineas antes y 4109 despues: **+276 y ni una de codigo** — todo lo que crece son cabeceras y punteros, porque el cuerpo se movio con scripts que **extraen el rango exacto** y asertan los dos bordes en vez de reteclearlo. **Los dos casos de CSS se CORTAN por un punto, no se extraen**: en CSS el orden es la semantica, y sacar un bloque de en medio dejaria las mismas reglas en otra cascada — hay un contrato que depende de eso (`--pace-skin` vale `movil` en la hoja base y `escritorio` en el @media de las pieles, misma especificidad, asi que a >=769px gana la que se inyecta DESPUES; al reves la home de escritorio se creeria movil y `main.jsx` renderizaria el orden de lectura de la otra piel). **Y se probo dos veces, porque la suite no compara ni un pixel**: la huella de REGLAS (comentarios fuera) es identica en archivos y en navegador —45435 bytes, `473c5319…` y `c022e1c9…`— y sirviendo el `index.html` de HEAD en paralelo salen **0 pixeles distintos** de 921 600 y 329 160, en dos anchos y dos paletas, con la consola limpia. El guard §1 se comprobo con la lista vacia | 163 | [session-163](./docs/sessions/session-163-troceo-regla-1.md) |
 | **v0.93.0** | 2026-08-17 | fix(home): **el test intermitente tenia razon** — sesion que empieza como AUDITORIA y acaba como saneamiento. La suite llevaba **un rojo cada dos pasadas** en reduced-motion («el aro mide distinto, 420 vs 406») y **no era el instrumento**: es el mecanismo de s160 **un nodo mas abajo**. El bloque que hace de horizonte consume `--pace-activities-overlap` como `margin-top` negativo y no estaba en la exencion de s160 (solo el aro y sus cuatro nodos interiores), asi que bajo el kill de reduced-motion ese margen **es una transicion**: el alto del stack aterriza en otro frame mientras el motor mide en la misma tarea, el desbordamiento se queda clavado en **11 px** —los de s156, dados por cerrados en s160—, el guard «nunca encoger a ciegas» revierte D a 420 y **gasta su unico reintento**; cuando el reintento corre la misma carrera, el motor **se rinde en 420 y ahi se queda**. El rojo sale en la maquina **rapida** y desaparece con la CPU frenada, y **un `resize` a mano lo baja a 406**: el motor podia medirlo y no lo volvio a medir. Arreglo acotado a la media query, con control (sin reduce el margen ya aterriza en la misma tarea y no hay transicion viva; con reduce, `margin-top:running`). Ademas: **«Regresas» (`first.return`) se perdia por una CARRERA**, no «nunca» como decia s148 — el artefacto son **109 etiquetas `<script>`** (tareas separadas) y `unlockAchievement` se referencia PELADA desde un modulo que corre antes del suyo, asi que el `setTimeout(0)` del rollover puede ganarle y el `try/catch` vacio entierra el ReferenceError; **lo decide la carga de la maquina**, y por eso dos sondas tranquilas dijeron «funciona» mientras la suite completa lo desmentia dos veces. Ahora la concesion va **dentro del estado que devuelve el rollover**; **la regla 1 pasa a estar vigilada** por `scripts/verify.tamano.js`, que **se cazo a si mismo** al dejar `verify.js` en 544 lineas, con un **trinquete** de tres dientes verificados en rojo; los dos README suben de v0.84.0 a v0.93.0 y **entran en la comprobacion de version**; y el CHANGELOG pierde sus **26** enlaces a diarios que nunca se escribieron. **2 asertos nuevos (65 -> 67) y los 2 mordieron** | 162 | [session-162](./docs/sessions/session-162-carrera-reduced-motion-y-trinquete.md) |
 | **v0.92.0** | 2026-08-08 | feat(settings): **la paleta sigue al sistema, salvo cuando el aro es el sol** — nace el modo **Auto** de paleta, que REVISA la decisión de s89 («el sistema solo manda en el primer arranque»): esa fila sigue siendo cierta para quien elige a mano, y lo que cambia es que ahora se puede elegir **que mande el sistema**. Cuatro decisiones del usuario, cada una con su coste medido delante: **por sistema y no por hora** —esta app **ya tiene un día y dura 25 minutos**, `--pace-k` recorre amanecer→mediodía→noche dentro de cada bloque, así que una paleta por reloj metería un segundo ciclo a otra velocidad—, **suspender durante un bloque** —cambiar en vivo cuesta 32 de 66 frames, y sobre todo en oscuro `--sun-shade` y `--sun-cast` valen **cero** por decisión de s158, así que a mitad de sesión el sol perdería su sombra—, **tercera pill «Auto»** como el idioma, y **fundido de tokens por `@property`**. **El cambio de paleta no era un corte seco**: movía **1875 declaraciones** sobre 87 nodos, de las que **88 se fundían a cuatro velocidades a la vez** (180/200/220/320 ms) y **1787 saltaban**. Ahora los tokens interpolan solos —única vía que alcanza los estilos **inline**, que es como pinta esta app— y con el Pomodoro parado es **gratis**: 66 frames contra 67 del control negativo. **Dos defectos cazados antes de publicar**: el `transition` de 320 ms del `body` **perseguía** al token de 640 (una transición cuyo destino cambia cada frame **se reinicia cada frame**) y dejaba **188 unidades RGB** entre el fondo y unas tarjetas ya oscuras — el defecto de s159 en otra superficie, corregido de **237 a 15** de desviación contra una verdad de campo; y **registrar `--breathe` apagaba la atmósfera del Pomodoro**, porque un token registrado computa `rgb(...)` en vez de `#hex` y el `hexToRgb` de `interpolateRingColor` devolvía NaN ⇒ `--pace-arco` inválido ⇒ el bloom entero a `background-image: none`. Auditados los 15: solo `--breathe` y `--focus` tenían lector en JS, y **se arregló el lector** — `aRgb` acepta las dos formas y devuelve un respaldo en vez de NaN, así que entran los quince. Además, guard de Auto en `secret.dark.mode` (gemelo del de s139): el logro premia haber **elegido** el oscuro. **6 rojos y los 6 mordieron** | 161 | [session-161](./docs/sessions/session-161-paleta-automatica.md) |
 | **v0.91.0** | 2026-08-07 | fix(home): **una transición de 0,01 ms sigue siendo una transición** — dos deudas de s156 cerradas y un tirón que **no reproduce**. **Reduced-motion**: el aro salía a 420 px con 11 px de scroll y la microcausa llevaba una sesión sin identificar; es que el kill de `tokens.css` pone `transition-duration` en 0,01 ms sobre TODO y, como el valor inicial de `transition-property` es **`all`**, cualquier cambio de geometría **pasa a ser una transición** — cuyo valor aterriza en otro frame, mientras `applyD()` mide en la MISMA tarea. Se demostró porque **ni un `height !important` en línea movía el aro**: en la cascada solo una transición viva gana a `!important`. Arreglo validado antes de proponerlo (`transition-property: none` en el aro **y en sus cuatro nodos interiores**, que es de donde salían los 3 px que quedaban): aro **406** y solapamiento **−65** con y sin reduced-motion, idénticos. **A11y**: en escritorio el `order` del CSS reordenaba con el DOM quieto, así que el foco bajaba a la tarjeta del fondo (622, 698) y **subía** a los chips (496) — WCAG 2.4.3, medido con Tab real. Ahora el DOM lleva el orden canónico de cada piel, leyendo `--pace-skin` **de la propia hoja** para no escribir una tercera copia del breakpoint, y con `key` estable para que React **mueva** en vez de remontar; el orden visual no cambia ni un píxel. **El tirón del arco NO reproduce**: la transición cubre el segundo entero (0 ms quieto) en v0.90.0 **y** en v0.89.0, y la sospecha de las publicaciones de s159 cae por ritmo (2 en 8 s) y por control positivo (forzando 60/s la transición sigue corriendo). El instrumento **sí** ve el defecto: con reduced-motion da 1 frame y 983 ms quieto | 160 | [session-160](./docs/sessions/session-160-tiron-reduced-motion-y-foco.md) |
@@ -358,6 +359,123 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.96.0] -- 2026-08-18 -- feat(retencion+home+glifos): cuatro frentes y nueve mentiras del instrumento
+
+### El estado declarado no reproducia
+
+El arranque daba el `72/72` por bueno. **Daba 68.** Tres pasadas sobre el mismo
+arbol: 68/72, 70/72 y **5/5 con la spec aislada**. Los cuatro fallos, siempre de
+`respira-progreso.spec.js` y siempre `Test timeout of 60000ms exceeded`. El numero
+que lo explica esta en los que SI pasaron: **58,0 s y 59,6 s contra 60 s de plazo**.
+
+Control con la unica variable cambiada -- `workers` --:
+
+| Condicion | Resultado | Reloj |
+|---|---|---|
+| 8 workers (el `undefined` en local, 16 hilos) | 68/72 y 70/72 | 2,2 / 2,0 min |
+| **2 workers (lo que usa el CI)** | **72/72** | **1,0 min** |
+
+A 2 workers **no solo sale verde: sale al doble de velocidad**. El CI lleva verde
+desde s165 por correr en la condicion tranquila. **Queda SIN ARREGLAR**, esperando
+decision entre capar workers, subir el plazo (s165 lo rechazo por escrito) o
+abaratar los cuatro tests. Toda la sesion se corrio con `--workers=2`, sin tocar
+`playwright.config.js`.
+
+### Anadido
+
+- **El tiempo de retencion**, aprobado en s165 con tres condiciones que son la
+  decision: **total acumulado y nunca un maximo** (B1/s89 retiro la cifra por ser
+  un RECORD, no por ser un dato), **invisible durante la practica** y **sin logro**.
+  Se guarda como **serie semanal en SEGUNDOS** (`weeklyStats.holdSeconds`; en
+  minutos seria siempre 0 o 1) que baja al historico por el rollover. La escala
+  semanal se eligio porque **soporta las seis variantes fotografiadas** y la de por
+  vida no. Se pinta como **linea al pie** del panel Ritmo, y **no aparece si vale
+  cero**: solo 3 de las 20 rutinas de Respira tienen retencion. **No es «empezar a
+  contar la apnea»**: `activeMsRef` la suma desde s98; esto la saca a un numero
+  propio. El reloj vive en `BreatheSession.support.jsx` (§1: el componente estaba
+  en 480 de 500).
+- **`focus.startPause`**: el CTA del Pomodoro en Pausa y Larga. **12 casos medidos**
+  en los dos idiomas y las dos paletas, 0 discrepancias.
+- **El mecanismo de las mascaras de ejercicio**: `exercise-masks.js` con el mapa
+  **VACIO** y precedencia sobre el SVG en `ExerciseGlyph`, igual que s146 con los
+  sellos. Con el mapa vacio la app pinta exactamente lo de ayer, y cada dibujo que
+  entre sustituye al suyo: **los 62 no tienen que llegar de golpe**.
+- **`scripts/ingest-glifos-ejercicio.js`**, probado sobre PNG sinteticos: empareja
+  por **slug contra la identidad visual** (nunca por posicion), escribe `.webp` a
+  384 px y reescribe mapa y precache. La normalizacion lleva un trazo de L=120 a
+  **alfa 255**; sin ella se quedaria en el 49 %.
+- **Cinco bancos** en `scripts/audit/`: CTA del Pomodoro, barra de Respira en movil,
+  orden de la home contra HEAD, variantes de retencion y los cuatro cuadrantes.
+- **+6 asertos (72 -> 78)**: `tests/retencion.spec.js` (4) y
+  `tests/glifos-mascara-ejercicio.spec.js` (2).
+
+### Cambiado
+
+- **Un solo orden de home para las dos pieles**: aro -> Actividades -> Camino.
+  Actividades hereda el papel de horizonte **sin mecanismo nuevo** —el selector de
+  hermano adyacente de s156 ya decia «el horizonte es el primero despues del aro»—
+  y la tarjeta suelta su margen negativo, como escritorio desde s126.
+- **`ExerciseGlyph` da precedencia a la mascara** sobre su SVG.
+- CENSO de i18n **511 -> 515**.
+
+### Retirado
+
+- **El lector de `--pace-skin` en JS** (s160), con su listener de resize y su rAF:
+  existia solo para elegir el orden del DOM y se quedo sin consumidor. Era un
+  re-render de la home entera al cruzar el breakpoint a cambio de nada.
+  `--pace-skin` sigue publicandose y las hojas lo siguen leyendo.
+- **Un mecanismo redundante en el reloj de retencion.** El banco de mutaciones lo
+  destapo: `finish()` cerraba el segmento **y** `segundos()` contaba el abierto, asi
+  que romper cualquiera de los dos no cambiaba el resultado. Eso no es defensa: es
+  codigo del que no se puede saber si funciona.
+
+### Corregido
+
+- **DOS AFIRMACIONES HECHAS AL USUARIO, retiradas.** Se le reporto que el
+  solapamiento pasaba de **64 a 54 px** a 375 y que el cambio arreglaba un retroceso
+  de foco previo a 320. Las dos eran del banco:
+
+| Mentira | Causa | Bien medido |
+|---|---|---|
+| «el solapamiento cambia» | esperar 500 ms fijos en vez de a que el motor CALLE (publica mas de una vez) | **identico en las 5 vistas**: 47/47 · 54/54 · 57/57 · 1/1 · 80/80, publicado == real |
+| «arregla un retroceso de foco» | a 320 la home desborda 8 px y tabular arrastra el viewport | la lectura **no vale** en ninguna columna |
+| «`--pace-dial-d` es NaN» | leerlo de `:root`, donde no esta | los tokens son `--pace-timer-d` y `--pace-activities-overlap` |
+| «1 retroceso en toda vista movil» | contar el ciclo del foco dando la vuelta | 0 |
+
+  Las cuatro estaban **ya resueltas** en `tests/home.helpers.js` con su porque al
+  lado; el banco pasa a **consumir la sonda de la suite** en vez de la suya.
+- **El banco de movil era una tautologia**: medir «desborda a su padre» cuando la
+  barra es `width:100%` **de ese padre**. Saboteando `maxWidth` de 260 a 600 seguia
+  diciendo «0 desbordes» con la barra a 374 px. Rehecho con **control positivo**.
+- **La ingesta se corrigio sola dos veces**: 51 identidades leyendo solo el registro
+  (faltaban los pasos de las rutinas; `EXTRA_ROUTINES` no se publica en `window`) y
+  62 al anadir los dibujos huerfanos, que el encargo dice **expresamente** que no hay
+  que rehacer. **61 = 61**, lo que la app PIDE.
+- **La semilla de los bancos mintio dos veces**: sin
+  `_weeklyStatsReindexed_v0_28_8`, `loadState` aplica la reindexacion de v0.28.8 y
+  **rota la semana un dia**; y un cero **no pinta `<span>`**, que es lo correcto.
+  Casi cuesta acusar al producto de un defecto que no tenia.
+
+### Verificacion
+
+- `npm run verify` **PASA** · v0.96.0 coherente en los 7 sitios.
+- `npm run test:e2e` **78/78** con `--workers=2`.
+- `index.html` regenerado · **`PACE_standalone.html` intacto en v0.71.0**,
+  restaurado tras cada uno de los ~15 builds de la sesion.
+- Consola **limpia** en todas las pasadas de los cinco bancos.
+
+### Lo que NO se cubre, declarado
+
+- La **variante de la retencion es una suposicion**: la nota de s165 decia «a escala
+  de semanas» y no hubo eleccion mirando. Pasar a la de por vida es una linea.
+- El **arreglo del instrumento E2E** sigue abierto.
+- La **ingesta no se ha corrido sobre arte real**: dos PNG sinteticos.
+- La **retencion se miro a 1280x900**; en movil, sin medir.
+- **`BreatheSession.jsx` queda en 493 de 500.**
+- La **pill de Foco/Pausa/Larga en movil de pantallas largas** queda anotada con sus
+  dos preguntas sin responder.
+
+---
 ## [v0.95.0] -- 2026-08-17 -- feat(respira): una barra que dice lo que la app sabe
 
 ### Cambiado
@@ -445,61 +563,3 @@ versiones anteriores, la tabla enlaza al diario completo en
 Diario: [session-165](./docs/sessions/session-165-respira-progreso.md).
 
 ---
-
-## [v0.94.0] -- 2026-08-17 -- refactor(estructura): los cinco de la regla 1, y dos pruebas en vez de una mirada
-
-### Cambiado
-
-- **LOS CINCO ARCHIVOS QUE ROMPIAN `CLAUDE.md` §1, TROCEADOS.** El trinquete de
-  s162 los tenia congelados; `DEUDA_500` queda **vacia**.
-
-  | Archivo | Antes | Ahora | A donde fue |
-  |---|---|---|---|
-  | `app/main/_responsive.js` | 1132 | **438** | `_responsive.atmosfera.js` (396) + `_responsive.pieles.js` (403) |
-  | `app/focus/FocusTimer.jsx` | 686 | **481** | `FocusTimer.support.jsx` (129 -> 290) + `.parts.jsx` (161 -> 256) |
-  | `app/tokens.css` | 676 | **322** | `app/motion.css` (400) |
-  | `app/tweaks/TweaksPanel.jsx` | 534 | **467** | `TweaksPanel.support.jsx` (100) |
-  | `app/state-core.jsx` | 515 | **449** | `state-core.palette.jsx` (107) |
-
-  **3833 lineas antes, 4109 despues: +276 y ni una de codigo.** Lo que crece son
-  cabeceras y punteros. Ningun archivo nuevo se invento donde ya habia sitio:
-  `FocusTimer` repartio en sus dos hermanos (s102, s124) y `TweaksPanel` estreno el
-  `.support.jsx` que ya usan Sidebar, MoveSessionV1 y BreatheVisual.
-
-- **El reparto es por DOMINIO, no por tamaño**: `state-core.palette.jsx` es como
-  la paleta llega al DOM (y recibe el estado por PARAMETRO, porque carga antes que
-  el store); `motion.css` es el COMPORTAMIENTO frente a los VALORES de
-  `tokens.css`; `_responsive.atmosfera.js` compone degradados y no tiene una regla;
-  `_responsive.pieles.js` son los dos `@media` y no tiene una linea de logica
-  (medido: 0 interpolaciones de 22).
-
-### Verificado
-
-- **Los dos CSS se CORTARON por un punto, no se extrajeron.** En CSS el orden es la
-  semantica: sacar un bloque de en medio deja las mismas reglas en otra cascada.
-  Con el corte y el `<link>`/inyeccion en su sitio, la concatenacion es la de
-  antes — y eso protege un contrato real: `--pace-skin` vale `movil` en la hoja base
-  y `escritorio` en el `@media` de las pieles, con la MISMA especificidad, asi que
-  a >=769px gana la que va DESPUES.
-- **Huella de REGLAS identica** (comentarios fuera, espacio normalizado): 45435
-  bytes y el mismo sha antes y despues, en archivos (`473c5319…`) y **en navegador**
-  leyendo los 18 `<style>` del documento en orden (`c022e1c9…`).
-- **0 PIXELES DISTINTOS**, sirviendo el `index.html` de HEAD en paralelo: 0 de
-  921 600 a 1280x720 y 0 de 329 160 a 390x844, en crema y en oscuro, con la consola
-  limpia en las cuatro. **Es la primera vez que este proyecto compara pixeles.**
-- **Verify + suite tras CADA troceo**, no al final: cinco veces verde, 67/67.
-- **El guard §1, con la lista vacia**: un archivo nuevo de 501 lineas lo pone rojo
-  con «trocear, no anadir a DEUDA_500».
-
-### Arreglado
-
-- **El checker mentia sobre si mismo** con la deuda vacia: el `NO_CUBRE` seguia
-  diciendo «los cinco archivos registrados siguen por encima del limite» y el
-  mensaje verde cantaba «0 con deuda registrada», que es cierto y no se entiende.
-- **Una mentira del instrumento, cazada por el banco**: la primera huella viva leyo
-  un `tokens.css` de 36883 bytes, o sea el ANTERIOR al corte — `npm run verify`
-  compara el build con el disco y luego **restaura** el artefacto, asi que
-  `index.html` seguia siendo el de antes. Regenerar es el paso 3 del cierre.
-
-Diario: [session-163](./docs/sessions/session-163-troceo-regla-1.md).
-

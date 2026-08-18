@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.95.0</title>
+  <title>PACE · Foco · Cuerpo — v0.96.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1934,6 +1934,12 @@ Object.assign(window.PACE_STRINGS.es, {
   'focus.restart': 'Reiniciar',
   'focus.restartBlock': 'Reiniciar bloque',
   'focus.start': 'Empezar foco',
+  /* s166: el CTA del Pomodoro dependia SOLO del estado del motor, nunca del
+     modo, asi que en Pausa y Larga invitaba a 'Empezar foco' encima de un
+     reloj de 5 min que no es foco. La etiqueta se elige por modo mas abajo
+     (FocusTimer.jsx); las dos pausas comparten palabra porque el tab de
+     arriba ya dice cual de las dos es. */
+  'focus.startPause': 'Empezar pausa',
   'focus.pause': 'Pausar',
   'focus.continue': 'Continuar',
   'focus.startAnother': 'Empezar otro ciclo',
@@ -2107,6 +2113,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'focus.restart': 'Restart',
   'focus.restartBlock': 'Restart focus',
   'focus.start': 'Start focus',
+  'focus.startPause': 'Start break',
   'focus.pause': 'Pause',
   'focus.continue': 'Continue',
   'focus.startAnother': 'Start another cycle',
@@ -2593,6 +2600,13 @@ Object.assign(window.PACE_STRINGS.es, {
   // siempre); en stats se etiqueta "Cuerpo" para no mentir por omision.
   'stats.label.body': 'Cuerpo',
   // Tabs — sesión 43
+  /* s166 · RETENCION. El copy dice «esta semana» y no «total» a proposito:
+     lo que se muestra es la suma de la semana en curso, que es la escala a
+     la que se decidio (una mejora respiratoria se nota en semanas). Es un
+     ACUMULADO, nunca un maximo -- ver la nota de completeBreathSession. */
+  'stats.hold.label': 'Retención esta semana',
+  'stats.hold.min': '{m} min {s} s',
+  'stats.hold.sec': '{s} s',
   'stats.tab.week': 'Semana',
   'stats.tab.month': 'Mes',
   'stats.tab.year': 'Año',
@@ -2645,6 +2659,9 @@ Object.assign(window.PACE_STRINGS.en, {
   // s101: moveMinutes = Move AND Stretch combined -- labelled "Body" in stats.
   'stats.label.body': 'Body',
   // Tabs — session 43
+  'stats.hold.label': 'Breath holds this week',
+  'stats.hold.min': '{m} min {s} s',
+  'stats.hold.sec': '{s} s',
   'stats.tab.week': 'Week',
   'stats.tab.month': 'Month',
   'stats.tab.year': 'Year',
@@ -3876,7 +3893,11 @@ function parseLocalDateKey(isoDate) {
 }
 
 function zeroEntry() {
-  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0 };
+  /* s166: `holdSeconds` entra aqui y no solo en weeklyStats porque la semana
+     se vacia en el rollover: sin bajar al historico, la retencion solo
+     existiria hasta el lunes y no se podria comparar una semana con otra,
+     que es justo la escala a la que se decidio mostrarla. */
+  return { focusMinutes: 0, breathMinutes: 0, moveMinutes: 0, waterGlasses: 0, holdSeconds: 0 };
 }
 
 /* Indice lunes-primero (sesion 69). 0=lunes ... 6=domingo. */
@@ -3909,6 +3930,10 @@ function recomputeMonthFromDays(days, monthKey) {
       acc.breathMinutes += d.breathMinutes || 0;
       acc.moveMinutes += d.moveMinutes || 0;
       acc.waterGlasses += d.waterGlasses || 0;
+      /* s166 · `|| 0` no es cosmetico aqui: los dias archivados ANTES de
+         s166 no tienen la clave, y sin el fallback el mes entero saldria
+         NaN en cuanto hubiera un solo dia viejo. */
+      acc.holdSeconds += d.holdSeconds || 0;
     }
   }
   return acc;
@@ -3924,6 +3949,10 @@ function recomputeYearFromDays(days, yearKey) {
       acc.breathMinutes += d.breathMinutes || 0;
       acc.moveMinutes += d.moveMinutes || 0;
       acc.waterGlasses += d.waterGlasses || 0;
+      /* s166 · `|| 0` no es cosmetico aqui: los dias archivados ANTES de
+         s166 no tienen la clave, y sin el fallback el mes entero saldria
+         NaN en cuanto hubiera un solo dia viejo. */
+      acc.holdSeconds += d.holdSeconds || 0;
     }
   }
   return acc;
@@ -3955,7 +3984,11 @@ function archiveDayToHistory(history, dateStr, weeklyStats) {
     focusMinutes: (weeklyStats.focusMinutes || [])[idx] || 0,
     breathMinutes: (weeklyStats.breathMinutes || [])[idx] || 0,
     moveMinutes: (weeklyStats.moveMinutes || [])[idx] || 0,
-    waterGlasses: (weeklyStats.waterGlasses || [])[idx] || 0
+    waterGlasses: (weeklyStats.waterGlasses || [])[idx] || 0,
+    /* s166 · el patron `(x || [])[idx] || 0` ya estaba y es justo el que
+       hace que una clave nueva no necesite migracion: una instalacion sin
+       `holdSeconds` archiva 0 y sigue. */
+    holdSeconds: (weeklyStats.holdSeconds || [])[idx] || 0
   };
   const hasData = Object.values(delta).some((v) => v > 0);
   if (!hasData) return history;
@@ -4158,6 +4191,11 @@ function reindexWeeklyStatsMondayFirst(ws) {
   [arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[0]] :
   [0, 0, 0, 0, 0, 0, 0];
   return {
+    /* s166 · holdSeconds va en la lista aunque hoy no pueda llegar aqui con
+       datos: esta funcion RECONSTRUYE el objeto, asi que toda clave que no
+       enumere se pierde en silencio. Enumerarla cuesta una linea y evita que
+       el dia que alguien reordene las migraciones se caiga sin ruido. */
+    holdSeconds: rot(ws && ws.holdSeconds),
     focusMinutes: rot(ws && ws.focusMinutes),
     breathMinutes: rot(ws && ws.breathMinutes),
     moveMinutes: rot(ws && ws.moveMinutes),
@@ -4426,7 +4464,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.95.0';
+const PACE_VERSION = 'v0.96.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4520,7 +4558,17 @@ const defaultState = {
     focusMinutes: [0, 0, 0, 0, 0, 0, 0],
     breathMinutes: [0, 0, 0, 0, 0, 0, 0],
     moveMinutes: [0, 0, 0, 0, 0, 0, 0],
-    waterGlasses: [0, 0, 0, 0, 0, 0, 0]
+    waterGlasses: [0, 0, 0, 0, 0, 0, 0],
+    /* TIEMPO DE RETENCION en SEGUNDOS (s166), no en minutos como los otros
+       tres: una retencion dura 15-60 s y redondearla a minutos la dejaria
+       casi siempre en 0 o en 1.
+        OJO AL LEERLO: el merge de `loadState` es {...defaultState, ...parsed}
+       y es SUPERFICIAL, asi que una instalacion existente trae su propio
+       `weeklyStats` de cuatro claves y ESTA NO VIENE. Todo consumidor lee con
+       fallback; no hay migracion porque no hay nada que migrar (el dato no
+       existia) y una semana sin retencion es legitimamente cero. */
+
+    holdSeconds: [0, 0, 0, 0, 0, 0, 0]
   },
 
   // Streak
@@ -5596,15 +5644,30 @@ function updateStreak() {
    ACCIONES DE SESION
    ============================ */
 
-function completeBreathSession(routineId, durationMin) {
+/* s166 · `holdSec` es OPCIONAL y por diseño: solo las 3 rutinas de rondas
+   tienen retencion, y `PathBreatheStep` llama a esto sin ese argumento. Sin
+   dato, la semana no se toca -- que no es lo mismo que sumarle 0, porque asi
+   una instalacion sin la clave no la estrena hasta que hay retencion de
+   verdad. NINGUN LOGRO lo consume, y es una de las tres condiciones de la
+   decision: B1/s89 retiro la cifra de la retencion por ser un RECORD, no por
+   ser un dato, asi que un total acumulado entra y un maximo no. */
+function completeBreathSession(routineId, durationMin, holdSec) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
   const week = [...s.weeklyStats.breathMinutes];
   week[day] += durationMin;
+  /* Lectura DEFENSIVA: el merge de loadState es superficial y una instalacion
+     anterior a s166 trae un weeklyStats sin esta clave. Sin el fallback,
+     `hold[day] += x` sobre undefined escribe NaN y lo persiste. */
+  const holdPrevio = s.weeklyStats && s.weeklyStats.holdSeconds || [0, 0, 0, 0, 0, 0, 0];
+  const hold = [...holdPrevio];
+  const holdRedondeado = Math.max(0, Math.round(Number(holdSec) || 0));
+  if (holdRedondeado > 0) hold[day] += holdRedondeado;
   setState({
     plan: { ...s.plan, respira: true },
-    weeklyStats: { ...s.weeklyStats, breathMinutes: week },
+    weeklyStats: Object.assign({ ...s.weeklyStats, breathMinutes: week },
+    holdRedondeado > 0 ? { holdSeconds: hold } : {}),
     breatheSessionsTotal: (s.breatheSessionsTotal || 0) + 1
   });
   unlockAchievement('first.breath');
@@ -12263,6 +12326,71 @@ window.resolveVisualId = resolveVisualId;
 })();
 </script>
   <!-- Glifos canónicos de ejercicio (sesión 59) — debe cargarse antes de MoveModule, BreatheSession y PathRunner -->
+  <!-- Mascaras de EJERCICIO (s166): el mapa del arte del usuario. ANTES de
+       exercise-glyphs, que le da PRECEDENCIA sobre su SVG. Nace vacio, asi que
+       hoy no cambia un pixel; cada dibujo que entre sustituye al suyo. -->
+  <script>
+;(function () {
+/* PACE · Glifos de EJERCICIO como MÁSCARA CSS · sesión 166
+   Cuarto sistema visual de `app/glyphs/`, hermano de:
+     - achievement-glyphs.jsx  → 34 glifos heráldicos en SVG (s83)
+     - exercise-glyphs.jsx     → line-art de Mueve/Estira en SVG (s60)
+     - achievement-masks.js    → arte de logro del usuario como máscara (s146)
+
+   Aquí NO hay dibujo: solo el mapa `identidad visual → archivo de máscara`. El
+   arte lo genera `scripts/ingest-glifos-ejercicio.js` desde los PNG del
+   usuario. Regla D-4: si llega arte nuevo se RE-CORRE el script; nunca se
+   retoca un .webp a mano.
+
+   POR QUÉ EXISTE, y qué decidió el usuario. El encargo
+   (`docs/product/GLIFOS_EJERCICIOS_REDISENO.md`) es rehacer **los 62 dibujos
+   desde cero** en vez de parchear los 20 huecos, y eso trae una consecuencia
+   que el usuario confirmó: los de ejercicio **dejan de ser SVG dibujado en
+   código** y pasan a máscaras, como el loto y los sellos de logro. Un solo
+   mecanismo para todo el arte de la app.
+
+   EL MAPA NACE VACÍO A PROPÓSITO, y es lo que hace que esto se pueda montar
+   ANTES de que exista el arte. `ExerciseGlyph` da PRECEDENCIA a la máscara y
+   cae al SVG cuando no la hay, exactamente como s146 hizo con los logros: con
+   el mapa vacío la app pinta hoy lo mismo que pintaba ayer —los 41 SVG— y cada
+   dibujo que entre sustituye al suyo sin tocar a los demás. Los 62 no tienen
+   que llegar de golpe.
+
+   LA CLAVE ES LA IDENTIDAD VISUAL, no el nombre del ejercicio. Varios
+   ejercicios comparten dibujo vía `VISUAL_ALIAS` (s110), así que quien resuelve
+   es `resolveVisualId()` — el mismo resolutor que usa la rama SVG. Mapear por
+   nombre de ejercicio crearía 62 filas donde hacen falta 61 y dejaría alias
+   apuntando a nada. (s141 ya se comió esto: un alias TAPA el glifo propio, y
+   así murieron 5 dibujos.)
+
+   OJO — LAS RUTAS VAN ENTERAS Y LITERALES en las filas, nunca concatenadas, y
+   TAMPOCO PUEDEN APARECER EN LOS COMENTARIOS. El inliner del build sustituye
+   REFERENCIAS TEXTUALES: busca la ruta completa del asset en el bundle y la
+   cambia por su data URI; después comprueba que no queda ni rastro del prefijo,
+   y una mención en prosa hace saltar el guardarraíl y ABORTA el build. Las dos
+   trampas están medidas en s146 (ver la cabecera de `achievement-masks.js`).
+   Si añades un glifo: una fila abajo, y nada de rutas en los comentarios. */
+const EXERCISE_MASKS = {
+
+
+
+
+  /* VACIO hasta que el usuario entregue los PNG. Lo rellena
+     , que reescribe SOLO este objeto y las
+     filas de precache de , y valida contra lo que la app PIDE (61
+     identidades visuales, el mismo numero que da el censo de s164). */}; /* Devuelve la ruta de la máscara de un ejercicio, o null.
+   Resuelve por IDENTIDAD VISUAL primero y por nombre propio después, que es el
+   mismo orden que `ExerciseGlyph` usa con los SVG: así un alias no se queda sin
+   arte y un nombre sin alias tampoco. */function exerciseMaskUrl(name) {
+  if (!name) return null;
+  const vid = window.resolveVisualId ? window.resolveVisualId(name) : name;
+  return EXERCISE_MASKS[vid] || EXERCISE_MASKS[name] || null;
+}
+
+Object.assign(window, { EXERCISE_MASKS, exerciseMaskUrl });
+;Object.assign(window, { exerciseMaskUrl });
+})();
+</script>
   <script>
 ;(function () {
 /* PACE · Glifos canónicos de ejercicio · sesión 84 / v0.34.0
@@ -12463,6 +12591,27 @@ function DefaultGlyph(_ref13) {let { size = 44, className = '' } = _ref13;
 }
 
 function ExerciseGlyph(_ref14) {let { id, size = 88, className = '' } = _ref14;
+  /* s166 · EL ARTE DEL USUARIO ENTRA COMO MASCARA Y GANA AL SVG, igual que
+     s146 hizo con los sellos de logro y por la misma razon: asi los 62
+     dibujos del rediseno pueden llegar POR PARTES sin dejar huecos -- lo que
+     todavia no tiene mascara sigue con su SVG. Hoy, con el mapa vacio, esta
+     rama no se toma ni una vez y la app pinta exactamente lo de ayer.
+     `currentColor` de fondo es lo que conserva el tintado por token del
+     modulo, que es justo lo que se perderia pintando el PNG como imagen. */
+  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id);
+  if (mask) {
+    const url = 'url("' + mask + '")';
+    return (/*#__PURE__*/
+      React.createElement("span", { className: className, style: {
+          display: 'block', width: size, height: size,
+          backgroundColor: 'currentColor',
+          WebkitMaskImage: url, maskImage: url,
+          WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center', maskPosition: 'center',
+          WebkitMaskSize: 'contain', maskSize: 'contain'
+        } }));
+
+  }
   /* visualId (B2.2): los duplicados de nombre (Chest opener, Deep squat hold,
      Deep breaths, Dead hang · opcional) resuelven al glifo canónico que
      absorbe. resolveVisualId es identidad para nombres no aliasados; se lee
@@ -13196,18 +13345,25 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
        completed -> arranca otro bloque (fix del inerte)
        paused    -> «Continuar»
        idle      -> «Empezar foco». */
+  /* s166: la etiqueta de ARRANQUE depende del MODO, no solo del motor. En
+     Pausa y Larga el boton decia 'Empezar foco' sobre un reloj que no es de
+     foco (lo vio el usuario en la web). Una sola constante para los dos sitios
+     donde se arranca -- idle y completed -- porque separarlas fue justo como
+     nacio el desajuste. */
+  const startLabel = isFocoMode ? t('focus.start') : t('focus.startPause');
+
   let ctaLabel, ctaAction;
   if (running) {
     ctaLabel = t('focus.pause');
     ctaAction = toggle;
   } else if (isCompleted) {
-    ctaLabel = isFocoMode ? t('focus.startAnother') : t('focus.start');
+    ctaLabel = isFocoMode ? t('focus.startAnother') : startLabel;
     ctaAction = handleStartAnotherCycle;
   } else if (status === 'paused') {
     ctaLabel = t('focus.continue');
     ctaAction = handleNormalStart;
   } else {
-    ctaLabel = t('focus.start');
+    ctaLabel = startLabel;
     ctaAction = handleNormalStart;
   }
 
@@ -14335,6 +14491,79 @@ Object.assign(window, { BreatheLibrary, BreatheSafety });
 </script>
   <script>
 ;(function () {
+/* PACE · Respiración — el RELOJ DE RETENCIÓN (s166)
+   =================================================
+   Nace aquí y no dentro de `BreatheSession.jsx` por la regla §1: aquel archivo
+   estaba en 480 líneas de 500 y STATE.md ya dejaba dicho que «lo siguiente que
+   entre ahí va a un .support». Sigue el patrón de `BreatheVisual.support.jsx`.
+
+   CARGA ANTES QUE `BreatheSession.jsx` — el componente lo llama en su cuerpo.
+
+   QUÉ CUENTA, y por qué no es «empezar a contar la apnea». El tiempo de
+   retención YA se acreditaba: `activeMsRef` (s98) suma 'active' Y 'hold', así
+   que la retención lleva desde entonces entrando en los minutos de Respira. Lo
+   que faltaba era poder DECIRLO por separado. Este reloj no cambia lo que se
+   acredita; saca un número que ya estaba dentro de otro.
+
+   LAS TRES CONDICIONES de la decisión (aprobada en s165) viven fuera de aquí,
+   pero conviene saber cuáles son porque explican lo que este archivo NO hace:
+     1. total ACUMULADO, nunca un máximo — B1/s89 no retiró la cifra de la
+        retención por ser un dato, la retiró por ser un RÉCORD. Aquí no se
+        guarda ni se compara ninguna sesión contra otra.
+     2. invisible durante la práctica — este reloj no publica nada al DOM y
+        `BreatheSession` no lo pinta ni en 'hold' ni en 'done'.
+     3. sin logro asociado — ningún detector lo consume.
+
+   MISMA DISCIPLINA QUE EL RELOJ DE s98: timestamp-based (decisión s96), no un
+   contador de ticks. Excluye las pausas manuales; el tiempo con la pestaña
+   oculta cuenta, igual que en Foco.
+*/
+
+const { useRef: useRefBS } = React;
+
+/**
+ * Reloj de tiempo en retención. Se le dice en cada render si la sesión está
+ * retenienzo AHORA (stage === 'hold' y sin pausar) y él segmenta.
+ *
+ * Devuelve { marcar, segundos }:
+ *   · marcar(activo) — abre o cierra el segmento. Idempotente: llamarlo dos
+ *     veces con el mismo valor no acumula de más, que es lo que permite
+ *     llamarlo desde un efecto sin dependencias finas.
+ *   · segundos() — total acumulado, incluyendo el segmento abierto.
+ */
+function useHoldClock() {
+  const acumuladoMs = useRefBS(0);
+  const inicioSeg = useRefBS(null);
+
+  const marcar = (activo) => {
+    if (activo) {
+      if (inicioSeg.current == null) inicioSeg.current = Date.now();
+    } else if (inicioSeg.current != null) {
+      acumuladoMs.current += Date.now() - inicioSeg.current;
+      inicioSeg.current = null;
+    }
+  };
+
+  /* ESTA es la unica linea que carga con el dato, y por eso `finish()` ya no
+     cierra el reloj a mano (lo hacia, y las dos cosas se tapaban entre si).
+     En la ultima ronda `releaseHold()` llama a `finish()` sin pasar por
+     'active', asi que al leer el total el segmento de la retencion mas larga
+     sigue ABIERTO: si `abierto` no se sumara, esa retencion —la que mas
+     cuesta— se perderia entera. Medido con el banco de mutaciones de s166. */
+  const segundos = () => {
+    const abierto = inicioSeg.current != null ? Date.now() - inicioSeg.current : 0;
+    return (acumuladoMs.current + abierto) / 1000;
+  };
+
+  return { marcar, segundos };
+}
+
+Object.assign(window, { useHoldClock });
+;Object.assign(window, { useHoldClock });
+})();
+</script>
+  <script>
+;(function () {
 function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);} /* PACE · Respiración — Sesión guiada
    Extraído de BreatheModule.jsx en sesión 34 (v0.16.0).
    Depende de BreatheVisual.jsx (BreathVisual, getSequence) que carga antes.
@@ -14386,6 +14615,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   // el credito a stats/logros. Honra la decision s96 (timers nuevos = timestamp).
   const activeMsRef = useRef(0); // ms activos acumulados entre pausas
   const segStartRef = useRef(null); // inicio del segmento activo en curso, o null
+  /* s166 · el mismo tiempo, contado APARTE cuando es retencion. No cambia lo
+     que se acredita (activeMsRef ya sumaba 'hold' desde s98): saca un numero
+     que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
+  const relojHold = useHoldClock();
   const getActiveSec = () => {
     const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
     return (activeMsRef.current + open) / 1000;
@@ -14405,6 +14638,11 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
       activeMsRef.current += Date.now() - segStartRef.current;
       segStartRef.current = null;
     }
+    /* s166: en el MISMO efecto y no en uno propio, para que los dos relojes
+       abran y cierren en la misma tarea. Con dos efectos, pausar durante la
+       retencion los cerraria en ordenes distintos segun el orden de montaje
+       y los totales se separarian unos milisegundos por sesion. */
+    relojHold.marcar(stage === 'hold' && !paused);
   }, [stage, paused]);
 
   // Helper: reproduce el sonido de una fase por su label.
@@ -14566,7 +14804,14 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
     // rounds (retenciones incluidas -> mas honesto) que a no-rounds. Minimo 1
     // min si hubo practica (las sesiones muy cortas cuentan en stats/plan).
     const activeMin = Math.max(1, Math.round(getActiveSec() / 60));
-    completeBreathSession(routine.id, activeMin);
+    /* NO se cierra el reloj aqui, y es deliberado: `segundos()` ya cuenta el
+       segmento abierto —igual que `getActiveSec()` justo arriba—, asi que
+       cerrarlo antes de leer era una SEGUNDA forma de hacer lo mismo. El banco
+       de mutaciones de s166 lo destapo: con las dos puestas, romper cualquiera
+       de ellas dejaba los cuatro asertos en verde, o sea que no habia forma de
+       saber si alguna funcionaba. Con una sola, la mutacion muerde. El efecto
+       cierra el segmento al pasar a 'done', que es donde toca. */
+    completeBreathSession(routine.id, activeMin, relojHold.segundos());
     try {playSound('breathe.session.end');} catch (e) {}
     setStage('done');
   };
@@ -19168,8 +19413,12 @@ const { useState, useRef, useEffect } = React;
    ===================================================================== */
 
 function WeekView(_ref) {let { state } = _ref;
-  const { t } = useT();
+  const { t, tn } = useT();
   const w = state.weeklyStats;
+  /* RETENCION (s166). Lectura DEFENSIVA y no `w.holdSeconds` a secas: el
+     merge de loadState es superficial, asi que una instalacion anterior a
+     s166 trae un weeklyStats de cuatro claves y esta no viene. */
+  const holdSeg = (w && w.holdSeconds || []).reduce((a, b) => a + (b || 0), 0);
 
   const totals = {
     focus: w.focusMinutes.reduce((a, b) => a + b, 0),
@@ -19236,7 +19485,34 @@ function WeekView(_ref) {let { state } = _ref;
 
     bars.map((b) => /*#__PURE__*/
     React.createElement(WeekBarRow, { key: b.key, label: b.label, data: b.data, color: b.color, unit: b.unit })
+    ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+    holdSeg > 0 && /*#__PURE__*/
+    React.createElement("div", { "data-pace-week-hold": String(holdSeg), style: {
+        marginTop: 10, display: 'flex', justifyContent: 'space-between',
+        alignItems: 'baseline', padding: '0 2px'
+      } }, /*#__PURE__*/
+    React.createElement(Meta, { style: { fontSize: 9 } }, t('stats.hold.label')), /*#__PURE__*/
+    React.createElement("span", { style: {
+        fontFamily: 'var(--font-display)', fontStyle: 'italic',
+        fontSize: 15, color: 'var(--ink-2)', fontVariantNumeric: 'tabular-nums'
+      } }, holdSeg < 60 ?
+    tn('stats.hold.sec', { s: holdSeg }) :
+    tn('stats.hold.min', { m: Math.floor(holdSeg / 60), s: String(holdSeg % 60).padStart(2, '0') }))
     ), /*#__PURE__*/
+
 
     React.createElement("div", { "data-pace-week-note": true, style: {
         marginTop: 10, padding: 8,
@@ -24909,13 +25185,29 @@ Object.assign(window, { Onboarding });
       [data-pace-home-body] [data-pace-main-content] {
         justify-content: center !important;
       }
-      /* HORIZONTE EN MÓVIL CUANDO NO HAY TARJETA (s156). El bloque que hace de
-         horizonte es «el primero después del aro»: normalmente la tarjeta de
-         Camino, pero con un Camino EN CURSO la tarjeta no existe y ese papel
-         pasa a Actividades. El selector de hermano adyacente lo dice sin que
-         nadie tenga que saber por qué falta la tarjeta; con tarjeta, no casa. */
+      /* EL HORIZONTE EN MÓVIL ES ACTIVIDADES (s166) — antes lo era la tarjeta
+         de Camino, y solo pasaba a Actividades cuando la tarjeta no existía
+         (Camino EN CURSO, s156). Con el orden único de s166 —aro, Actividades,
+         Camino en las dos pieles— Actividades es SIEMPRE el primero después del
+         aro, así que este selector de hermano adyacente ya casa siempre y dice
+         exactamente lo mismo que antes: «el horizonte es el primero de abajo».
+         Se conserva el selector adyacente y no un [data-pace-activitybar] a
+         secas porque es lo que impide que el día que algo se cuele entre el aro
+         y Actividades el solapamiento siga aplicándose al bloque equivocado.
+         MISMA REGLA QUE ESCRITORIO, y el z-index también: Actividades pinta
+         SOBRE el arco del aro, que es lo que la tarjeta hacía con su z-index:2. */
       [data-pace-home-stack] > [data-pace-main-content] + [data-pace-activitybar] {
+        position: relative;
+        z-index: 1;
         margin-top: calc(var(--pace-horizon) * -1) !important;
+      }
+      /* Y LA TARJETA DEJA DE SER EL HORIZONTE. Su margin-top negativo vive en
+         SuggestedPathCard.jsx y era correcto mientras la tarjeta iba pegada al
+         aro; ahora va debajo de Actividades y ese margen la subiría encima de
+         los chips. Escritorio ya lo anulaba por esta misma razón desde s126 —
+         es la misma línea, palabra por palabra. */
+      [data-pace-spc] {
+        margin-top: 0 !important;
       }
       /* REPARTO DEL SOBRANTE (s156). En móvil el aro topa por ANCHO, así que
          sobra alto por construcción y el margin:auto lo repartía a partes
@@ -25549,32 +25841,12 @@ function PaceApp() {
      cerrar el preview te devuelve a ella, no a la home. */
   const [previewRoutine, setPreviewRoutine] = useStateMain(null);
 
-  /* QUÉ PIEL ESTÁ PUESTA (s160), para que el DOM lleve el orden CANÓNICO.
-     La piel la declara la hoja de _responsive.js en --pace-skin, que es donde
-     ya vive el breakpoint de 769px: aquí no se escribe una tercera copia de ese
-     número. Se lee del estilo computado en vez de con matchMedia justamente por
-     eso — si mañana el breakpoint cambia, cambia en un sitio y esto lo sigue.
-     Un resize la revisa, coalescido a un frame: solo re-renderiza cuando el
-     valor CAMBIA de verdad, o sea al cruzar el breakpoint. */
-  const leerPiel = () => {
-    if (typeof window === 'undefined' || !window.getComputedStyle) return 'movil';
-    return getComputedStyle(document.documentElement).
-    getPropertyValue('--pace-skin').trim() || 'movil';
-  };
-  const [piel, setPiel] = useStateMain(leerPiel);
-  useEffectMain(() => {
-    let raf = 0;
-    const revisar = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {raf = 0;setPiel(leerPiel());});
-    };
-    window.addEventListener('resize', revisar);
-    revisar(); // primera lectura ya con la hoja aplicada
-    return () => {
-      window.removeEventListener('resize', revisar);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+  /* s166: aquí vivía el lector de --pace-skin de s160, que existía SOLO para
+     elegir el orden del DOM. Con un orden único (abajo) se quedó sin consumidor
+     y se ha ido entero, con su listener de resize y su rAF: era un re-render de
+     la home entera cada vez que se cruzaba el breakpoint, a cambio de nada.
+     --pace-skin NO desaparece — lo sigue publicando _responsive.pieles.js y lo
+     siguen leyendo las hojas; lo que se va es la copia en JS. */
   const lanzarDesdePreview = () => {
     const p = previewRoutine;
     setPreviewRoutine(null);
@@ -25680,7 +25952,6 @@ function PaceApp() {
 
 
 
-
     React.createElement("div", { "data-pace-home-body": true, style: {
         flex: 1,
         minHeight: 0,
@@ -25713,7 +25984,7 @@ function PaceApp() {
         padding: '10px 40px 0'
       } }, /*#__PURE__*/
     React.createElement(FocusTimer, { onFinish: handleFocusFinish })
-    ),
+    ), /*#__PURE__*/
 
 
 
@@ -25733,19 +26004,12 @@ function PaceApp() {
 
 
 
-    (() => {
-      const camino = /*#__PURE__*/React.createElement(SuggestedPathCard, { key: "spc" });
-      const actividades = /*#__PURE__*/
-      React.createElement(ActivityBar, {
-        key: "act",
-        onOpenLibrary: (kind) => setOpenLibrary(kind),
-        onOpenHydrate: () => setOpenHydrate(true) }
-      );
-
-      return piel === 'escritorio' ?
-      [actividades, camino] :
-      [camino, actividades];
-    })()
+    React.createElement(ActivityBar, {
+      key: "act",
+      onOpenLibrary: (kind) => setOpenLibrary(kind),
+      onOpenHydrate: () => setOpenHydrate(true) }
+    ), /*#__PURE__*/
+    React.createElement(SuggestedPathCard, { key: "spc" })
     )
     )
     ), /*#__PURE__*/
