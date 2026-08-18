@@ -31,7 +31,7 @@ const NUEVOS = ['explore.atg','master.atg.20','hydrate.week.perfect','master.lon
   const errores = [];
   page.on('console', m => { if (m.type() === 'error') errores.push(m.text()); });
   await page.goto('http://localhost:8765/index.html');
-  await page.waitForSelector('[data-pace-home]', { timeout: 15000 }).catch(() => {});
+  await page.waitForSelector('[data-pace-home-body]', { timeout: 15000 });
   /* El panel se abre por EVENTO, no por un boton con texto: la sidebar hace
      `dispatchEvent(new CustomEvent('pace:open-achievements'))` (Sidebar.jsx:123).
      Buscarlo por rol y nombre fallo -- el texto del enlace es «te quedan N». */

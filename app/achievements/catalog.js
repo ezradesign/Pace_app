@@ -31,7 +31,9 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'first.plan', cat: 'primeros', title: 'Con un plan', desc: 'Completa el plan del día tres veces', glyph: '✓', glyphSvg: GLYPH_SVG['first.plan'] },
   { id: 'first.return', cat: 'primeros', title: 'Regresas', desc: 'Abre la app al día siguiente', glyph: '↻' },
 
-  // Constancia (11-25)
+  // Constancia (11-27) — s168: +los tres hitos de calendario que venian de
+  // «estadisticas» (mes habitado, mes profundo, año entero); -morning.5, que se
+  // va a «la jornada» con sus hermanas de hora.
   { id: 'streak.3', cat: 'constancia', title: 'Tres como una', desc: '3 días seguidos', glyph: 'III', glyphSvg: GLYPH_SVG['streak.3'] },
   /* s167 — era «Semana vaca», un juego con el logo que al leerlo sonaba a
      «semana VACÍA», o sea lo contrario de lo que premia. La familia de racha no
@@ -51,9 +53,11 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'breathe.sessions.50', cat: 'constancia', title: '50 respiraciones', desc: 'Sesiones acumuladas', glyph: '≋', glyphSvg: GLYPH_SVG['breathe.sessions.50'] },
   { id: 'move.sessions.25', cat: 'constancia', title: '25 movilidades', desc: 'Sesiones acumuladas', glyph: '∷', glyphSvg: GLYPH_SVG['move.sessions.25'] },
   { id: 'hydrate.week.perfect', cat: 'constancia', title: 'Semana hidratada', desc: '8 vasos / 7 días', glyph: '◌' },
-  { id: 'morning.5', cat: 'constancia', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
+  { id: 'stats.month.first', cat: 'constancia', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
+  { id: 'stats.month.focus', cat: 'constancia', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
+  { id: 'stats.year.first', cat: 'constancia', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
 
-  // Exploración (26-45)
+  // Exploración (28-45)
   { id: 'explore.box', cat: 'exploracion', title: 'Box asentada', desc: 'Tres sesiones de Box 4·4·4·4', glyph: '▢', glyphSvg: GLYPH_SVG['explore.box'] },
   { id: 'explore.478', cat: 'exploracion', title: '4·7·8', desc: 'Tres sesiones de la relajante', glyph: '4·7·8' },
   { id: 'explore.coherent', cat: 'exploracion', title: 'Coherente', desc: 'Tres sesiones de coherencia', glyph: '♥', glyphSvg: GLYPH_SVG['explore.coherent'] },
@@ -73,8 +77,8 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'explore.all.move', cat: 'exploracion', title: 'Cuerpo de campo', desc: 'Todas las movilidades', glyph: '✤' },
   { id: 'explore.all.extra', cat: 'exploracion', title: 'Fuerte en la oficina', desc: 'Todos los Extra', glyph: '⚔' },
 
-  // Maestría (46-70) - placeholders
-  { id: 'master.pomodoro.8', cat: 'maestria', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
+  // Maestría (46-64) — s168: solo PROFUNDIDAD en una practica. Los siete de
+  // hora del dia y carga de jornada se fueron a «la jornada».
   { id: 'master.pomodoro.12', cat: 'maestria', title: 'Doce profundos', desc: '12 Pomodoros', glyph: 'XII' },
   { id: 'master.long.focus', cat: 'maestria', title: 'Larga sesión', desc: 'Cinco bloques de 45 min sin pausa', glyph: '═', glyphSvg: GLYPH_SVG['master.long.focus'] },
   { id: 'master.box.15', cat: 'maestria', title: 'Caja maestra', desc: '15 sesiones Box', glyph: '▣' },
@@ -87,12 +91,6 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.hydrate.30', cat: 'maestria', title: 'Río constante', desc: '30 días 8 vasos', glyph: '≈' },
   { id: 'master.hydrate.90', cat: 'maestria', title: 'Manantial', desc: '90 días 8 vasos', glyph: '∿' },
   { id: 'master.extra.all.week', cat: 'maestria', title: 'Semana fuerte', desc: 'Todos los Extra en 1 semana', glyph: '✧' },
-  { id: 'master.silent.day', cat: 'maestria', title: 'Día silencioso', desc: '5 días en modo silencio', glyph: '𝇇' },
-  { id: 'master.dawn', cat: 'maestria', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
-  { id: 'master.dusk', cat: 'maestria', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
-  { id: 'master.midnight.never', cat: 'maestria', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
-  { id: 'master.focus.day', cat: 'maestria', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
-  { id: 'master.retreat', cat: 'maestria', title: 'Retiro personal', desc: '2h respira + mueve en día', glyph: '❖', glyphSvg: GLYPH_SVG['master.retreat'] },
   { id: 'master.marathon', cat: 'maestria', title: 'Maratoniana', desc: '2000 min totales', glyph: 'ℳ', glyphSvg: GLYPH_SVG['master.marathon'] },
   { id: 'master.centurion', cat: 'maestria', title: 'Centurión', desc: '100 sesiones respiración', glyph: 'C', glyphSvg: GLYPH_SVG['master.centurion'] },
   { id: 'master.gardener', cat: 'maestria', title: 'Jardinera', desc: '200 vasos acumulados', glyph: '❀' },
@@ -101,7 +99,29 @@ const ACHIEVEMENT_CATALOG = [
   { id: 'master.collector.full', cat: 'maestria', title: 'Setenta y cinco sellos', desc: '75 sellos reunidos', glyph: 'C' },
   { id: 'master.path.all7', cat: 'maestria', title: 'Cartógrafa', desc: 'Recorre los siete caminos al menos una vez', glyph: '✦', glyphSvg: GLYPH_SVG['master.path.all7'] },
 
-  // Secretos (71-90)
+  // La jornada (65-73) — s168: SALE de maestria (la hora a la que trabajas no
+  // es profundidad en nada) y recoge el racimo que el CODIGO ya trataba junto:
+  // checkTimeOfDayAchievements() desbloquea dawn, dusk, morning.5 y
+  // stats.streak.30 en la MISMA funcion, y las dos ultimas comparten la lista
+  // `morningDates` (5 dias y 30 dias de la misma condicion) desde tres familias
+  // distintas. La idea de la familia: a que hora empiezas y cierras el dia, y
+  // cuanto cabe dentro de el.
+  { id: 'master.dawn', cat: 'jornada', title: 'Amanecer', desc: 'Cinco días con sesión antes de las 7am', glyph: '↑', glyphSvg: GLYPH_SVG['master.dawn'] },
+  { id: 'morning.5', cat: 'jornada', title: 'Madrugadora', desc: '5 sesiones antes de las 9am', glyph: '☀' },
+  /* s167 — la descripcion decia «un mes seguido sin perder el ritmo» y la
+     desbloqueaba LA MISMA LINEA que `streak.30` («Luna llena», 30 dias
+     seguidos): dos sellos para un solo hito. Ahora mide treinta AMANECERES de
+     verdad, que es lo que su titulo dice, sobre la lista `morningDates` que ya
+     existia. El id no se toca. */
+  { id: 'stats.streak.30', cat: 'jornada', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
+  { id: 'master.dusk', cat: 'jornada', title: 'Ocaso', desc: 'Cinco días con sesión después de las 21h', glyph: '↓', glyphSvg: GLYPH_SVG['master.dusk'] },
+  { id: 'master.midnight.never', cat: 'jornada', title: 'Nunca a medianoche', desc: '30 días sin uso tras 23h', glyph: '○' },
+  { id: 'master.pomodoro.8', cat: 'jornada', title: 'Jornada de ocho', desc: '8 Pomodoros en un día', glyph: 'VIII', glyphSvg: GLYPH_SVG['master.pomodoro.8'] },
+  { id: 'master.focus.day', cat: 'jornada', title: 'Día de foco', desc: '4h de foco en un día', glyph: 'IV', glyphSvg: GLYPH_SVG['master.focus.day'] },
+  { id: 'master.retreat', cat: 'jornada', title: 'Retiro personal', desc: '2h respira + mueve en día', glyph: '❖', glyphSvg: GLYPH_SVG['master.retreat'] },
+  { id: 'master.silent.day', cat: 'jornada', title: 'Día silencioso', desc: '5 días en modo silencio', glyph: '𝇇' },
+
+  // Secretos (74-86)
   { id: 'secret.cow.click', cat: 'secretos', title: 'Vaca feliz', desc: '¿Le hiciste cosquillas?', glyph: '?', glyphSvg: GLYPH_SVG['secret.cow.click'], secret: true },
   { id: 'secret.night.owl', cat: 'secretos', title: 'Búho', desc: 'Usa la app entre 2 y 4am', glyph: '?', secret: true },
   { id: 'secret.lunch', cat: 'secretos', title: 'Pausa de mediodía', desc: 'Sesión a las 14:00', glyph: '?', secret: true },
@@ -131,18 +151,7 @@ const ACHIEVEMENT_CATALOG = [
      EL ID NO SE TOCA: renombrarlo borraria el logro a quien ya lo tuviera. */
   { id: 'explore.tweaks', cat: 'secretos', title: 'Curiosidad', desc: 'Abre los Tweaks', glyph: '⚙', secret: true },
 
-  // Estadísticas (101-104) — glifo provisional, será reemplazado en bloque D
-  { id: 'stats.month.first', cat: 'estadisticas', title: 'Mes habitado', desc: 'Veinte días con pace en un mismo mes', glyph: '✦' },
-  { id: 'stats.month.focus', cat: 'estadisticas', title: 'Mes profundo', desc: 'Veinte horas de foco en un mes', glyph: '✦' },
-  { id: 'stats.year.first', cat: 'estadisticas', title: 'Año entero', desc: 'Doce meses con pace, sin saltarte ninguno', glyph: '✦' },
-  /* s167 — la descripcion decia «un mes seguido sin perder el ritmo» y la
-     desbloqueaba LA MISMA LINEA que `streak.30` («Luna llena», 30 dias
-     seguidos): dos sellos para un solo hito. Ahora mide treinta AMANECERES de
-     verdad, que es lo que su titulo dice, sobre la lista `morningDates` que ya
-     existia. El id no se toca. */
-  { id: 'stats.streak.30', cat: 'estadisticas', title: 'Treinta amaneceres', desc: 'Treinta días con sesión antes de las 9', glyph: '✦' },
-
-  // Estacionales (91-100)
+  // Estacionales (87-96)
   { id: 'season.spring', cat: 'estacionales', title: 'Primavera', desc: '1 sesión/día en primavera', glyph: '❀' },
   { id: 'season.summer', cat: 'estacionales', title: 'Verano', desc: '1 sesión/día en verano', glyph: '☀' },
   { id: 'season.autumn', cat: 'estacionales', title: 'Otoño', desc: '1 sesión/día en otoño', glyph: '❦' },
@@ -160,9 +169,9 @@ const CAT_META = {
   constancia: { labelKey: 'ach.cat.constancia', color: 'var(--focus)' },
   exploracion: { labelKey: 'ach.cat.exploracion', color: 'var(--breathe)' },
   maestria: { labelKey: 'ach.cat.maestria', color: 'var(--achievement)' },
+  jornada: { labelKey: 'ach.cat.jornada', color: 'var(--hydrate)' },
   secretos: { labelKey: 'ach.cat.secretos', color: 'var(--ink-2)' },
   estacionales: { labelKey: 'ach.cat.estacionales', color: 'var(--move)' },
-  estadisticas: { labelKey: 'ach.cat.stats', color: 'var(--hydrate)' },
 };
 
 /* Logros con trigger implementado en state.jsx / main.jsx / BreatheModule.jsx.
@@ -204,7 +213,7 @@ const IMPLEMENTED_ACHIEVEMENTS = new Set([
   'master.box.15', 'master.coherent.15', 'master.rounds.15', 'master.atg.20',
   // Caminos (1/1) — sesión 78
   'master.path.all7',
-  // Estadísticas (4/4) — sesión 46
+  // Los cuatro que fueron «estadisticas» hasta s168 (hoy: constancia y jornada)
   'stats.month.first', 'stats.month.focus', 'stats.year.first', 'stats.streak.30',
   // Exploración extra (1/20) — tweak-secrets desbloqueados por abrir el panel
   'explore.tweaks',

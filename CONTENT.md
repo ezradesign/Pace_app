@@ -308,9 +308,14 @@ hombro, gato-camello. Más activar los **15 glifos pendientes** (D-4 de
 ## 🏆 Logros — taxonomía
 
 > **Fuente de verdad = código:** la lista completa vive en
-> `app/achievements/catalog.js` (`ACHIEVEMENT_CATALOG`, **100 entradas**;
-> `IMPLEMENTED_ACHIEVEMENTS`, **92 activos**). Aquí solo el mapa de
+> `app/achievements/catalog.js` (`ACHIEVEMENT_CATALOG`, **96 entradas**;
+> `IMPLEMENTED_ACHIEVEMENTS`, **88 activos**). Aquí solo el mapa de
 > categorías para no duplicar (y desincronizar) la lista.
+>
+> **s168** — este párrafo decía **100/92** y el código tenía **96/88** desde
+> hacía varias sesiones. Corregido midiendo, no recordando: los números salen de
+> `CENSO.logros` y `CENSO.logrosConDetector` en `scripts/verify.integridad.js`,
+> que el verify comprueba en cada pasada.
 >
 > **s146 (v0.79.0)** — de 106/69 a 100/92: se retiraron **6 sin forma razonable
 > de detectarse** (`explore.chrome`, `secret.konami`, `secret.birthday`,
@@ -326,15 +331,39 @@ Estética: sello circular, tinta oliva/terracota sobre crema, glifo
 heráldico (`app/glyphs/achievement-glyphs.jsx`) + texto en mayúsculas.
 `CAT_META` define 7 categorías:
 
-| Categoría | Key | Color | Tema |
-|---|---|---|---|
-| Primeros pasos | `primeros` | `--ink-3` | Primer uso de cada cosa |
-| Constancia | `constancia` | `--focus` | Rachas, horas, sesiones acumuladas |
-| Exploración | `exploracion` | `--breathe` | Descubrir cada técnica/rutina |
-| Maestría | `maestria` | `--achievement` | Repetición y volumen |
-| Secretos | `secretos` | `--ink-2` | Ocultos (incluye `secret.supporter`, solo de honor) |
-| Estacionales | `estacionales` | `--move` | Solsticios, equinoccios, estaciones |
-| Estadísticas | `estadisticas` | `--hydrate` | Hitos de la colección |
+| Categoría | Key | Color | Tema | N |
+|---|---|---|---|---|
+| Primeros pasos | `primeros` | `--ink-3` | Primer uso de cada cosa | 10 |
+| Constancia | `constancia` | `--focus` | Rachas, horas, sesiones y meses acumulados | 17 |
+| Exploración | `exploracion` | `--breathe` | Descubrir cada técnica/rutina | 18 |
+| Maestría | `maestria` | `--achievement` | Profundidad en UNA práctica | 19 |
+| La jornada | `jornada` | `--hydrate` | A qué hora abres y cierras el día, y cuánto cabe en él | 9 |
+| Secretos | `secretos` | `--ink-2` | Ocultos (incluye `secret.supporter`, solo de honor) | 13 |
+| Estacionales | `estacionales` | `--move` | Solsticios, equinoccios, estaciones | 10 |
+
+**s168 (v0.98.0) — el reparto cambió y siguen siendo 7.** Maestría (26) mezclaba
+profundidad en una práctica con hábitos de hora del día, y «Estadísticas» (4) se
+definía por su procedencia técnica —«viene del panel de stats»—, que no es una
+idea que el usuario reconozca; de ahí el duplicado que arregló s167. Se partió
+maestría y se disolvió estadísticas, que suelta su color para la familia nueva.
+El nombre **«Ritmo»** se descartó porque ya está cogido: `stats.title` es
+«Ritmo», o sea el propio panel de estadísticas.
+
+**«La jornada» no se inventó: el código ya la trataba junta.**
+`checkTimeOfDayAchievements()` (`state-achievements.jsx`) desbloquea
+`master.dawn`, `master.dusk`, `morning.5` y `stats.streak.30` en la MISMA
+función, y los dos últimos comparten la lista `morningDates` —5 días y 30 días
+de la misma condición— repartidos hasta ahora en tres familias distintas.
+
+Los tres hitos de calendario de la familia disuelta (`stats.month.first`,
+`stats.month.focus`, `stats.year.first`) van a **constancia**, no a estacionales:
+son acumulación sostenida, hermanos de `focus.hours.*`, mientras que estacionales
+va de fechas señaladas del año.
+
+> **Los `id` no se tocan nunca** — renombrarlos borraría el logro a quien ya lo
+> tuviera. Por eso `stats.streak.30` vive en «La jornada» y `explore.tweaks` en
+> «Secretos» con el prefijo que traían de antes. Lo que sí es libre es `cat`: a
+> `localStorage` solo va `{ id: timestamp }`.
 
 > `secret.supporter` se activa por honor desde el modal de Buy Me a
 > Coffee ("Ya doné"). **No hay verificación y no desbloquea contenido** —

@@ -164,7 +164,16 @@ const MAPEO = {
   "explore.ancestral":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786996152945.png",
   "master.hydrate.90":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786996160234.png",
   "master.ancestral.10":      "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997887902.png",
-  "season.equinox.autumn":    "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997898447.png",
+  /* s168 — EL FAROL SE MUDA. Venia en season.equinox.autumn y ahi el sol y la
+     luna que justifican el equinoccio son ILEGIBLES a 56 px: el argumento del
+     logro vive justo en el detalle que desaparece. En «Treinta amaneceres» ese
+     mismo detalle es un BONUS -- sol y luna juntos SON el amanecer, el momento
+     en que uno releva al otro -- y el sello ya dice «farol al alba» aunque no
+     distingas los dos astros. El equinoccio espera la balanza de dos platos que
+     ya pide GLIFOS_LOGROS_ENCARGO.md (dos platos a la misma altura: eso SI es
+     una forma y no un detalle) y mientras tanto cae a su glifo de TEXTO, que
+     resulta ser precisamente una balanza. */
+  "stats.streak.30":          "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997898447.png",
   "master.midnight.never":    "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997907300.png",
   "secret.lunch":             "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997912255.png",
   "master.hydrate.30":        "Premium_editorial_zen_seal_exlibris_handcraft_A-1786997917267.png",

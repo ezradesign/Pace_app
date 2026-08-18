@@ -88,7 +88,7 @@ function Achievements({ open, onClose }) {
         const items = ACHIEVEMENT_CATALOG.filter(a => a.cat === cat);
         const gotThisCat = items.filter(a => unlocked[a.id]).length;
         return (
-          <div key={cat} style={{ marginBottom: 28 }}>
+          <div key={cat} data-pace-ach-cat={cat} style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
               <h3 style={{ ...displayItalic, fontSize: 22, margin: 0, fontWeight: 500, color: meta.color }}>{t(meta.labelKey)}</h3>
               <Meta>{gotThisCat} / {items.length}</Meta>

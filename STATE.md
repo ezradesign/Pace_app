@@ -10,8 +10,8 @@
 
 ---
 
-**Version actual:** v0.97.0 (s167 — **LOS 19 DIBUJOS, LOS 96 LOGROS EN INGLES, Y UNA RECOMENDACION RETIRADA**. Entran los **19 glifos de logro** nuevos: **77 de 96** con mascara, quedan 19. Las dos trampas del handoff eran ciertas pero **medirlas las afino en las DOS direcciones**: mas pequenas —lo que la app consume son las `.webp` **committeadas**, no los PNG del archivo de disenos, que viven fuera del repo— y mas grandes —el `ABORTADO — no existe el dibujo` vivia **despues** del borrado (linea 305 contra 296), y ese si era el camino destructivo—. Ahora hay **prevuelo** que resuelve las 77 claves antes de tocar nada, probado en rojo. El censo se valida con una **biyeccion** (91 PNG = 50 ids + 8 slugs = 58 dibujos = 58 filas) y los duplicados del lote nuevo se descartan por **19 md5 distintos**, porque ahi el nombre no distingue. Se cierra el hallazgo abierto desde **s146**: los **96 logros hablan ingles**, 192 claves en `i18n/content/achievements.js` —patch de **solo EN**, que es lo que el propio verify exige—, asi que el castellano no se duplica y el **CENSO de i18n se queda en 515**, corrigiendo una estimacion mia de ~707. El **aire de las tarjetas** que reporto el usuario resulto ser `aspectRatio: 1/1.15` atando el **alto al ANCHO**: a 1280 parecia cosmetico, pero a 320 px la tarjeta media **283 px con 157 de aire, el 55 % vacia**. Sus dos ideas no lo arreglaban —encoger rompia «Cartografa» (0,6 px de reserva) y **centrar es lo que s147 quito a peticion suya**—, y **mi primera recomendacion tambien era la equivocada**: la retiro la medida por siete anchos antes de tocar nada. Buscando las familias salio un **DUPLICADO MEDIDO**: `state-achievements.jsx:278` desbloqueaba «Luna llena» y «Treinta amaneceres» **con la misma condicion**. Ademas «Curiosidad» pasa a secretos y `streak.7` deja de llamarse «Semana vaca» para ser **«Cuarto creciente»**. Y el instrumento: abaratar los tests **no basto**, mi «3 de 3 en verde» a 4 workers **era una ventana afortunada** (repetido: rojo 3 de 3, con el reloj de 49 s a 3,1 min), y la maquina dijo que el cuello es **MEMORIA y no CPU** —6 % de CPU con 5,8 GB libres de 15,7— asi que `workers: 2` queda fijo en los dos lados. **+3 asertos (78 → 81)**, los tres primeros de la suite sobre el **IDIOMA**. Detalle abajo.)
-**Version anterior:** v0.96.0 (s166 — **CUATRO FRENTES Y NUEVE MENTIRAS DEL INSTRUMENTO**. La sesion arranca destapando que el **`72/72` declarado NO reproducia**: 68 y 70 en dos pasadas, siempre los cuatro tests de bucle de `respira-progreso.spec.js` y siempre por **timeout**, con los que si pasaban en **58,0 s y 59,6 s contra un plazo de 60**. El control aisla la variable: **a 2 workers, 72/72 y al DOBLE de velocidad**. Entra el **tiempo de retencion** como **serie semanal en segundos**, con sus tres condiciones asertadas y una linea al pie que **no aparece si vale cero**. La home pasa a **un solo orden en las dos pieles** (aro → Actividades → Camino) y se retira el lector de `--pace-skin` en JS por quedarse sin consumidor. El **CTA del Pomodoro** deja de decir «Empezar foco» en Pausa y Larga. Y se monta el **mecanismo de las mascaras de ejercicio** con el mapa **VACIO**, para que los 62 dibujos puedan llegar **por partes**. **Nueve de las once mentiras de la sesion fueron del INSTRUMENTO**, incluidas **dos afirmaciones que hubo que retirarle al usuario**. **+6 asertos (72 → 78).** Detalle abajo.)
+**Version actual:** v0.98.0 (s168 — **LAS FAMILIAS DEL CATALOGO, EL FAROL QUE SE MUDA, Y UNA PREGUNTA QUE ESTABA MAL HECHA**. Tres cifras de la documentacion salieron mal al medirlas: el reparto de familias de este archivo (ganaba el handoff: `exploracion` **18** y `secretos` **13**) y el **100/92** de `CONTENT.md` contra **96/88** reales. **LAS FAMILIAS**: maestria (26) mezclaba profundidad en una practica con habitos de hora del dia, y «estadisticas» (4) se definia por su **procedencia tecnica** —«viene del panel de stats»—, que no es una idea reconocible: de ahi el duplicado de s167. Se parte maestria (**26 → 19**), se disuelve estadisticas y nace **«La jornada»** (9) heredando su color, asi que **siguen siendo 7** y ningun token se reparte de nuevo: **10 · 17 · 18 · 19 · 9 · 13 · 10 = 96**. **La familia no se invento — el codigo ya la trataba junta**: `checkTimeOfDayAchievements()` desbloquea `master.dawn`, `master.dusk`, `morning.5` y `stats.streak.30` **en la MISMA funcion**, y los dos ultimos comparten `morningDates`, o sea **la misma condicion a dos umbrales** repartida en **tres familias**. «Ritmo» se descarto midiendo: `stats.title` **es** «Ritmo». «Repertorio» vuelve a **«Exploracion»**. **RED**: dos comprobaciones RELACIONALES nuevas —**familia declarada y VACIA** y **`labelKey` sin cadena i18n en los dos idiomas**— con sus **tres rojos verificados**, guard de cero incluido; eso dejo `verify.integridad.js` en **503 lineas** y el verify se puso rojo por su propia regla §1 ⇒ **troceo** en `verify.sandbox.js` (**451 + 78**). **EL FAROL** deja el equinoccio —sol y luna **ilegibles a 56 px**— y pasa a `stats.streak.30`, y **afina el aviso del handoff**: cambio **CERO** mascaras viejas (las 76 comunes **byte a byte identicas**), porque el efecto de conjunto viene de cambiar el **conjunto de dibujos**, no de re-correr la ingesta. **LA PILL**: se pidio medir a partir de que ALTURA cabe, y **no se mueve nada en las 15 combinaciones** — que no era que quepa, sino que es **`position:absolute`** y esta **fuera de flujo**. Lo que hace es **SOLAPARSE con los iconos** (320 pisa tres, 375 y 414 dos, **identico de 568 a 932**), y solo se limpia por encima de **~560 px de ANCHO**. Su propia linea cuesta **+42 px** con umbral **doble**: 667 a 320, 736 a 375, 844 a 414. **El diagnostico llevaba archivado desde s128.** **INSTRUMENTOS**: `revision-sellos-tamano-real.js` esperaba 15 s a `[data-pace-home]`, **que no existe**, con un `.catch` que se lo tragaba desde s167; `revision-glifos.js` duplicaba CAT_META con fallback silencioso. **CI**: cache de Chromium, con su motivo corregido —**672 s UNA vez** y 21-28 s las otras ocho—, **sin verificar hasta el primer push**. `npm run verify` PASA · `npm run test:e2e` **81/81** en 76 s · diario en [session-168](./docs/sessions/session-168-familias-farol-y-pill.md))
+**Version anterior:** v0.97.0 (s167 — **LOS 19 DIBUJOS, LOS 96 LOGROS EN INGLES, Y UNA RECOMENDACION RETIRADA**. Entran los **19 glifos de logro** nuevos: **77 de 96** con mascara, quedan 19. Las dos trampas del handoff eran ciertas pero **medirlas las afino en las DOS direcciones**: mas pequenas —lo que la app consume son las `.webp` **committeadas**, no los PNG del archivo de disenos, que viven fuera del repo— y mas grandes —el `ABORTADO — no existe el dibujo` vivia **despues** del borrado (linea 305 contra 296), y ese si era el camino destructivo—. Ahora hay **prevuelo** que resuelve las 77 claves antes de tocar nada, probado en rojo. El censo se valida con una **biyeccion** (91 PNG = 50 ids + 8 slugs = 58 dibujos = 58 filas) y los duplicados del lote nuevo se descartan por **19 md5 distintos**, porque ahi el nombre no distingue. Se cierra el hallazgo abierto desde **s146**: los **96 logros hablan ingles**, 192 claves en `i18n/content/achievements.js` —patch de **solo EN**, que es lo que el propio verify exige—, asi que el castellano no se duplica y el **CENSO de i18n se queda en 515**, corrigiendo una estimacion mia de ~707. El **aire de las tarjetas** que reporto el usuario resulto ser `aspectRatio: 1/1.15` atando el **alto al ANCHO**: a 1280 parecia cosmetico, pero a 320 px la tarjeta media **283 px con 157 de aire, el 55 % vacia**. Sus dos ideas no lo arreglaban —encoger rompia «Cartografa» (0,6 px de reserva) y **centrar es lo que s147 quito a peticion suya**—, y **mi primera recomendacion tambien era la equivocada**: la retiro la medida por siete anchos antes de tocar nada. Buscando las familias salio un **DUPLICADO MEDIDO**: `state-achievements.jsx:278` desbloqueaba «Luna llena» y «Treinta amaneceres» **con la misma condicion**. Ademas «Curiosidad» pasa a secretos y `streak.7` deja de llamarse «Semana vaca» para ser **«Cuarto creciente»**. Y el instrumento: abaratar los tests **no basto**, mi «3 de 3 en verde» a 4 workers **era una ventana afortunada** (repetido: rojo 3 de 3, con el reloj de 49 s a 3,1 min), y la maquina dijo que el cuello es **MEMORIA y no CPU** —6 % de CPU con 5,8 GB libres de 15,7— asi que `workers: 2` queda fijo en los dos lados. **+3 asertos (78 → 81)**, los tres primeros de la suite sobre el **IDIOMA**. Detalle abajo.)
 **Version anterior (2):** v0.95.0 (s165 — **UNA BARRA QUE DICE LO QUE LA APP SABE**. El progreso de una sesion de Respira se rehace tras el diagnostico de s164, y se decidio **mirando capturas de la app real**. Las 17 rutinas **por tiempo** pasan a **barra continua**; las 3 de **rondas**, a barra **segmentada por rondas** con el bloque en curso marcado por carril y **sin relleno por respiraciones**. Mismo sitio, mismo ancho y **misma altura (5 px)**. Lo que decide cual va donde **no es el gusto**: las de rondas **no terminan por reloj** —la retencion no tiene duracion fijada (B1)— y sus 4/12/20 min son NOMINALES, asi que una barra de tiempo alli dibujaria una duracion que nadie conoce. Cierra el **desfase de una respiracion** (D1), el **hueco muerto de la cuenta atras** (que era de **5 rutinas y no de 3**) y deja la ronda dicha **una vez por pantalla**. La retencion no cambia. **+5 asertos (67 -> 72) y los 5 mordieron.** Detalle abajo.)
 **Ultima sesion:** #166 -- 2026-08-18 - **CUATRO FRENTES Y NUEVE MENTIRAS DEL INSTRUMENTO**. Bump **v0.95.0 -> v0.96.0**. **(0) EL ESTADO DECLARADO NO REPRODUCIA.** El arranque daba el `72/72` por bueno y daban **68**; tres pasadas sobre el mismo arbol (68/72, 70/72, **5/5 aislada**), siempre `respira-progreso.spec.js` y siempre `Test timeout of 60000ms exceeded`. El numero esta en los que SI pasaron: **58,0 s y 59,6 s contra 60**. La variable es `workers: CI ? 2 : undefined` = **8 en local**, y el control cierra el diagnostico: **2 workers dan 72/72 en 1,0 min contra 2,2 min y rojo con 8**. El CI lleva verde desde s165 **por correr en la condicion tranquila**. **SIN ARREGLAR a proposito**: es decision del usuario entre capar workers, subir el plazo (s165 lo rechazo por escrito) o abaratar los cuatro tests; toda la sesion corrio con `--workers=2` sin tocar la config. **(1) EL CTA DEL POMODORO.** Decia «Empezar foco» en Pausa y Larga sobre un reloj que no es de foco. Una sola `startLabel` para los dos sitios que arrancan —idle y completed—, porque tenerlas separadas fue como nacio el desajuste. `banco-cta-pomodoro.js` mide **12 casos** (`{foco,pausa,larga} × {es,en} × {claro,oscuro}`): 0 discrepancias. **El usuario lo reporto como no arreglado con capturas de `paceweb.pages.dev`** — el sitio publicado, no el arbol local. **(2) LA BARRA DE RESPIRA EN MOVIL CABE**: caso peor 5 rondas a 320 px, **5 segmentos de 48,8 px** y 100 px de holgura, 16 escenas y 0 fuera de vista. Pero la primera version del banco era una **TAUTOLOGIA** —medir «desborda a su padre» cuando la barra es `width:100%` DE ESE PADRE—, demostrado saboteando `maxWidth` de 260 a 600: la barra crecio a 374 px y siguio diciendo «0 desbordes». El guard de cero no bastaba: **un detector que no puede decir que SI no esta midiendo**. Rehecho para mirar el ancho de segmento y que la barra entre entera —el riesgo de movil es VERTICAL— y con **control positivo** a 320x300 que TIENE que caer. **(3) UN SOLO ORDEN DE HOME**, aro → Actividades → Camino en las dos pieles, pedido por el usuario mirando movil y web al lado. Actividades hereda el papel de horizonte **sin mecanismo nuevo** (el selector de hermano adyacente de s156 ya decia «el primero despues del aro») y la tarjeta suelta su margen negativo como escritorio desde s126. **El lector de `--pace-skin` en JS se retira entero**: existia solo para elegir el orden y era un re-render de la home al cruzar el breakpoint a cambio de nada. **SE RETIRAN DOS AFIRMACIONES HECHAS AL USUARIO**: «el solapamiento pasa de 64 a 54 px» y «arregla un retroceso de foco a 320». La primera era medir **a media convergencia** —el motor publica mas de una vez— y sale **identica en las 5 vistas** (47/47 · 54/54 · 57/57 · 1/1 · 80/80, publicado == real); la segunda, que a 320 la home **desborda 8 px** y tabular arrastra el viewport (22 paradas en vez de 12). Las cuatro trampas estaban **ya resueltas en `tests/home.helpers.js`** con su porque al lado, asi que el banco pasa a **consumir la sonda de la suite**. De propina: **los chips SI llevan subtitulo** a 360/375/390 y solo desaparecen a 320. **(4) EL TIEMPO DE RETENCION**, aprobado en s165. Se fotografian **seis variantes sobre el panel Ritmo real** y se implementa como **serie semanal en SEGUNDOS** (`weeklyStats.holdSeconds`, que baja al historico por el rollover): esa escala **soporta las seis** y la de por vida no. Linea al pie que **NO aparece si vale cero** —solo 3 de 20 rutinas tienen retencion—. **No es «empezar a contar la apnea»**: `activeMsRef` la suma desde s98. El reloj vive en `BreatheSession.support.jsx` por §1. **EL BANCO DE MUTACIONES OBLIGO A CAMBIAR EL CODIGO**: M1 no mordio dos veces, y la segunda la culpa era del producto —**dos mecanismos redundantes** tapandose entre si—; se quito uno y **las cuatro muerden**. **(5) EL MECANISMO DE LAS MASCARAS DE EJERCICIO** con el mapa **VACIO** y precedencia sobre el SVG: con el mapa vacio la app pinta lo de ayer y **los 62 no tienen que llegar de golpe**. `ingest-glifos-ejercicio.js` probado sobre PNG sinteticos (un trazo de L=120 llega a **alfa 255**; sin normalizar, al 49 %) y **corregido dos veces por si mismo**: 51 identidades leyendo solo el registro y 62 contando dibujos huerfanos que el encargo dice no rehacer, hasta dar **61 = 61**. Sus dos asertos costaron **tres rojos** (la biblioteca no pinta glifos, reabrir navegando pierde el estado inyectado, y una ruta falsa da 404). **VERIFICACION**: `verify` PASA, **78/78**, `PACE_standalone.html` intacto en v0.71.0 tras ~15 builds, consola limpia en los cinco bancos. **NO CUBIERTO**: la variante de retencion es **suposicion** (V4 es una linea) · el instrumento E2E sigue abierto · la ingesta sin arte real · retencion sin mirar en movil · `BreatheSession.jsx` en **493 de 500** · la **pill de Foco/Pausa/Larga en pantallas largas** anotada con sus dos preguntas sin responder. Diario: [session-166](docs/sessions/session-166-retencion-orden-y-mascaras.md).
 
@@ -47,7 +47,8 @@
 | `tests/paleta-auto.spec.js` | **EL MODO AUTO DE PALETA (s161)**: que Auto siga al sistema **en caliente** y que a mano NO lo siga (las dos mitades en la MISMA prueba, o «no cambia» podria significar que el gesto no llego a producirse) · que un **bloque vivo SUSPENDA** el cambio —tambien pausado— y que al terminarlo entre **solo** · que el primer papel entre **seco** · que **nadie persiga al token** durante el cruce · y que en Auto un dia en oscuro **no cuente** para el logro secreto, con **control positivo en la misma prueba** (a mano SI cuenta). **Todos RELACIONALES**: ninguno dice de que color es la paleta ni cuantos tokens cruzan. **Tres trampas medidas viven aqui**: en Ajustes hay **DOS** botones «Automatico» (idioma y paleta) y `getByRole` sin acotar revienta por strict mode · con Auto, `emulateMedia` **corre contra la navegacion** y bajo carga la prueba se sembraba su propio defecto · y el guard de cero va en **dos ejes** (frames mirados Y valores distintos del token), porque contar frames solo mide cuanto se miro, no que lo mirado se moviera | **NUEVO s161** |
 | `tests/home-a11y.spec.js` | **EL ORDEN DE LECTURA DE LA HOME (s160)**: recorre con **Tab de verdad** y exige que el foco **nunca retroceda** en pantalla, en las dos pieles. Cierra la deuda WCAG 2.4.3 que s156 documento y decidio no asertar. **Aserta el CONTRATO, no el mecanismo**: el orden del DOM no se toca en el aserto, para poder arreglarlo manana de otra forma. Lleva **guard de piel** (`--pace-skin`): sin el, la prueba de escritorio mediria la de movil, que nunca tuvo el defecto, y pasaria sin demostrar nada | **NUEVO s160** |
 | `scripts/verify.js` | **Red de seguridad LOCAL** (`npm run verify`, s150): `node --check` de todos los `.js` + build con salida 0 + **analisis de AMBITO del artefacto** (el crash de s144) + biyeccion `app/` ↔ `PACE.html` + coherencia de version. **Restaura los dos artefactos byte a byte**; imprime sus propios huecos en cada pasada. **s152: orquesta ademas la tanda [4/4]** y lee `PACE.html` UNA vez para las dos que la necesitan | **415 ln · s152** |
-| `scripts/verify.integridad.js` | **Segunda tanda del verify (s152)**: integridad de **i18n · precache · glifos · catalogos**. **NO es un script suelto** — lo invoca `verify.js` como su tanda `[4/4]` en cada `npm run verify`; vive aparte solo por el limite de 500 ln. Dos clases de comprobacion que **no se mezclan**: RELACIONAL (sin numero, no caduca) y **CENSO** (los numeros esperados, TODOS en la constante `CENSO`, que se sube a mano cuando el contenido crece a proposito). Carga cada archivo **en su propia IIFE** —`GLYPH_SVG` es `const` en dos archivos— y declara sus propios huecos. **s155: suma la tanda de `pace.events.v1`**, cinco comprobaciones RELACIONALES (cero red en `app/events/` · una fuente de verdad por dominio · reset por la barrera · import por la barrera · **el gate export ↔ emisor**) mas su **guard de cero**. La de «cero red» **mira el CODIGO SIN COMENTARIOS** (Babel con `comments:false`): las cabeceras de `app/events/*` NOMBRAN `fetch` y `WebSocket` para prohibirlos, asi que un grep a secas **se autoinculpa** — la trampa de s146 por otra puerta | **s155 · 455 ln** |
+| `scripts/verify.integridad.js` | **Segunda tanda del verify (s152)**: integridad de **i18n · precache · glifos · catalogos**. **NO es un script suelto** — lo invoca `verify.js` como su tanda `[4/4]` en cada `npm run verify`; vive aparte solo por el limite de 500 ln. Dos clases de comprobacion que **no se mezclan**: RELACIONAL (sin numero, no caduca) y **CENSO** (los numeros esperados, TODOS en la constante `CENSO`, que se sube a mano cuando el contenido crece a proposito). Carga cada archivo **en su propia IIFE** —`GLYPH_SVG` es `const` en dos archivos— y declara sus propios huecos. **s155: suma la tanda de `pace.events.v1`**, cinco comprobaciones RELACIONALES (cero red en `app/events/` · una fuente de verdad por dominio · reset por la barrera · import por la barrera · **el gate export ↔ emisor**) mas su **guard de cero**. La de «cero red» **mira el CODIGO SIN COMENTARIOS** (Babel con `comments:false`): las cabeceras de `app/events/*` NOMBRAN `fetch` y `WebSocket` para prohibirlos, asi que un grep a secas **se autoinculpa** — la trampa de s146 por otra puerta. **s168: dos comprobaciones mas** — familia declarada y VACIA (el panel itera `CAT_META`, asi que pintaria su cabecera con nada debajo) y **`labelKey` sin cadena i18n en los DOS idiomas** (pintaria la clave cruda); para la segunda, `chequeaI18n` pasa a **devolver** las cadenas, porque eran dos tandas que no se hablaban | **s168 · 451 ln** |
+| `scripts/verify.sandbox.js` | **EL `window` DE MENTIRA Y EL CARGADOR POR IIFE (s168)**, cortados de `verify.integridad.js` cuando aquel llego a **503 ln** al ganar dos comprobaciones y el propio verify se puso rojo por la regla §1. Se eligio ESTA costura y no la de una tanda porque aqui **no hay ni una comprobacion**: es infraestructura pura, no aserta nada y no conoce el dominio, mientras que mover `chequeaLogros` habria arrastrado `censo`, `CENSO` y `listaCorta` detras. Los **nombres locales se conservan** en el sitio de donde sale, asi que las 5 llamadas de las tandas no cambian | **NUEVO s168 · 78 ln** |
 | `.github/workflows/ci.yml` | **Red de seguridad REMOTA (s153)** — un job, `verify`, en `ubuntu-latest` con Node 24: `npm ci` -> **`npm run verify` invocado tal cual** -> frescura del artefacto. **No comprueba nada que no corra en local**: vigilancia nueva se anade al `verify`, NO aqui, o el CI se vuelve un oraculo que nadie sabe interrogar. **Lo unico propio** es que el `index.html` **committeado** sea el build de las fuentes — el `verify` no puede, su aviso de deriva es `[INFO]` a proposito. **Dos cosas que no se pueden simplificar**: el diff va **ACOTADO a `index.html`** (a secas seria rojo SIEMPRE por el standalone congelado de s134) y se compara con **`git diff`, nunca con un hash** (el worktree de Windows deja 500 bytes CR dentro del artefacto). Proteger `main`: instrucciones en `docs/WORKFLOW.md` §8, **accion del usuario**. **s154: pasa a DOS jobs** — se suma `e2e`, que invoca `npm run test:e2e` con **`needs: verify`** (la suite carga el `index.html` COMMITTEADO, y es el job de arriba el que acaba de probar que esta al dia). Va aparte y no como pasos del primero porque el `verify` son ~5 s sin dependencias y esto descarga un Chromium de ~115 MB | **s154** |
 | `playwright.config.js` | **Configuracion de la suite E2E (s154)**. Levanta `.claude/static-server.js` como `webServer` y apunta a **`/index.html`** explicito (el servidor mapea `/` a `PACE.html`, el entry de DESARROLLO). Fija a proposito **`locale: es-ES`** (los textos asertados son los espanoles; `detectInitialLang` los elige), `timezoneId`, **`colorScheme: light`** (o la prueba de paleta no tendria de donde salir) y **viewport 1280x720**. **`retries: 0`**: un test que solo pasa al segundo intento esta diciendo algo. Sin `devices[...]`, que puede traer un `channel` exigiendo un Chrome del sistema | **NUEVO s154** |
 | `tests/helpers.js` | Utilidades compartidas de la suite. **Tres trampas medidas viven documentadas aqui**: (1) la semilla de `firstSeen` se escribe **SOLO SI FALTA**, porque `addInitScript` corre en CADA navegacion y a secas machaca el estado en los `reload()`; (2) los matchers comparan **`textContent`**, no lo que se ve — `innerText` trae el `text-transform` de CSS aplicado; (3) contar sellos exige **acotar a `[data-pace-modal-backdrop]`** (s152), y por eso el contador ofrece las dos cuentas: para poder asertar la diferencia | **NUEVO s154** |
@@ -449,99 +450,124 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **las familias del catalogo, y el arte que falta**
+## Proxima sesion -- **la pill ya medida, el color de la familia nueva, y el arte que falta**
 
-> **LAS TRES DECISIONES DEL USUARIO, con su pregunta y una sugerencia cada una,
-> viven en [HANDOFF_s167](./docs/HANDOFF_s167.md)**: el farol del equinoccio, las
-> familias del catalogo y la pill de movil. Lo de aqui abajo es el estado y las
+> **LAS DECISIONES QUE ESPERAN, cada una con su pregunta, lo ya medido y una
+> sugerencia, viven en [HANDOFF_s168](./docs/HANDOFF_s168.md)**: la pill, el
+> color de «La jornada» y el equinoccio. Lo de aqui abajo es el estado y las
 > trampas; alli esta lo que hay que DECIDIR.
 
-> **LO QUE s167 DEJA CERRADO Y NO HAY QUE VOLVER A MIRAR:**
-> - **77 de 96 logros tienen mascara.** El prevuelo de `ingest-glifos-logro.js`
->   hace que **ya no pueda destruir trabajo**: resuelve las 77 claves antes de
->   borrar nada, probado en rojo. El arte fuente vive en **UNA carpeta**
->   (`..\.old\Glifos_logros`), fuera del repo; los 19 del ultimo lote se
->   reconocen por el prefijo `exlibris_handcraft`.
-> - **Los 96 logros hablan ingles.** 192 claves en `i18n/content/achievements.js`
->   y tres asertos que lo defienden. El CENSO de i18n **se queda en 515** porque
->   `content/*` no cuenta ahi -- no es un despiste.
-> - **El aire de las tarjetas.** Sin `aspectRatio`, la rejilla iguala por fila:
->   a 320 px la tarjeta pasa de **283 a 127 px**. Medido en siete anchos.
-> - **El instrumento E2E.** `workers: 2` fijo en los dos lados, con su porque
->   medido en el comentario de `playwright.config.js`. **No volver a subirlo sin
->   medir el RELOJ ademas del resultado**: a 4 workers hubo una ventana de 3
->   pasadas verdes que no reproducia.
-
-> **LO QUE ESPERA DECISION DEL USUARIO:**
+> **LO QUE ESPERA DECISION DEL USUARIO** (las tres de s167 ya estan decididas y
+> hechas; estas son las que ABRE s168, y las dos primeras se deciden MIRANDO):
 >
-> 1. **LAS FAMILIAS DEL CATALOGO** -- lo pregunto el en s167 y quedo abierto. El
->    reparto es **10 · 15 · 19 · 26 · 12 · 10 · 4** y hay tres costuras medidas:
->    **(a) maestria (26) mezcla dos cosas**: profundidad en una practica (15
->    sesiones de Box, 20 de caderas) con **habitos de hora del dia** (Amanecer,
->    Ocaso, Dia silencioso, Nunca a medianoche). **(b) estadisticas (4) se solapa
->    con constancia** -- el duplicado que s167 arreglo era su sintoma, no la
->    causa. **(c) la clave dice `exploracion` y la etiqueta dice «Repertorio»**,
->    y el usuario avisa de que ese nombre no cuadra con el diseno original.
->    Tocarlo mueve `cat`, `CAT_META`, las etiquetas i18n y los numeros del CENSO.
-> 2. **`season.equinox.autumn`** -- el farol se lee bien a 56 px, pero **el sol y
->    la luna que justifican el equinoccio son ilegibles** a ese tamano. O se
->    acepta, o ese logro espera otro dibujo.
-> 3. **LA PILL DE FOCO/PAUSA/LARGA EN MOVIL DE PANTALLAS LARGAS** (heredado de
->    s166, intacto). Dos preguntas sin responder: ¿conviven o la pill sustituye
->    al BreakMenu en esos altos?, y ¿el umbral se fija o se mide antes? La regla
->    vive en `_responsive.pieles.js`
->    (`[data-pace-topbar] [data-pace-tabs] { display: none }`).
-> 4. **«MUY SIMILAR A WEB» en movil** (heredado de s166): lo unico que sigue
->    distinto es la rejilla 2×2 contra la fila de cuatro.
+> 1. **LA PILL DE FOCO/PAUSA/LARGA: el umbral ya esta medido, falta maquetarla.**
+>    La pregunta de s166/s167 («¿a partir de que ALTURA cabe?») no tenia
+>    respuesta porque estaba mal hecha: `[data-pace-tabs]` es
+>    **`position:absolute`** centrada y esta **fuera de flujo**, asi que no puede
+>    empujar nada -- por eso «no se mueve nada» sale limpio hasta a 320 px. Lo
+>    que hace es **SOLAPARSE con los iconos**: a 320 pisa tres (40+40+15 px), a
+>    375 dos (40+32), a 414 dos (40+12), **identico de 568 a 932 px de alto**, y
+>    solo se limpia por encima de **~560 px de ANCHO**, que ningun telefono en
+>    vertical alcanza. **Darle su propia linea cuesta +42 px** y ahi si hay
+>    umbral, pero es DOBLE: limpio desde **667** a 320 de ancho, **736** a 375 y
+>    **844** a 414; a 568 desborda 50 px siempre. **Una media query por altura a
+>    secas elige mal en uno de los tres anchos.** Lo que falta decidir: si la
+>    fila propia o si los iconos ceden sitio, y con que condicion se gatea.
+>    Reproducible: `node scripts/audit/banco-pill-movil.js`, que acepta
+>    `--anchos` y `--alturas`.
+> 2. **EL COLOR DE «LA JORNADA»**. Heredo `--hydrate` de la familia disuelta, que
+>    es **el unico frio de una paleta tierra**, y ha pasado de estar al final del
+>    panel con 4 sellos a estar **en medio con 9**. Se sostiene —sol, luna,
+>    reloj y sahumerio piden azul mejor que ocre— pero es una decision visual sin
+>    tomar. Hoja: `node scripts/audit/revision-familias.js <salida.png>`.
+> 3. **EL EQUINOCCIO DE OTOÑO** cae ahora a su glifo de **texto ⚖** y
+>    `season.equinox.spring` **si** tiene balanza DIBUJADA: los dos quedan juntos
+>    en sistemas visuales distintos. El encargo de su dibujo ya esta escrito en
+>    `GLIFOS_LOGROS_ENCARGO.md` (balanza de dos platos, hoja y espiga).
+
+> **LO QUE s168 DEJA CERRADO Y NO HAY QUE VOLVER A MIRAR:**
+> - **Las familias son 7 y el reparto es 10 · 17 · 18 · 19 · 9 · 13 · 10 = 96.**
+>   Nace «La jornada», se disuelve «estadisticas», «Repertorio» vuelve a ser
+>   «Exploracion». Ningun token de color se reparte de nuevo.
+> - **`cat` se puede mover; un `id` NO.** Por eso `stats.streak.30` vive en «La
+>   jornada» y `explore.tweaks` en «secretos» con prefijos que no casan. No es
+>   descuido: renombrar un id borraria el logro a quien lo tuviera.
+> - **El efecto de conjunto de la ingesta esta acotado**: viene de cambiar el
+>   **conjunto de dibujos**, no de re-correrla. Reasignar a que id va un dibujo
+>   dejo las otras **76 mascaras byte a byte identicas**.
+> - **Dos comprobaciones nuevas del verify** (familia vacia · `labelKey` sin
+>   i18n), con sus tres rojos verificados.
 
 > **GLIFOS -- lo que queda.**
 >
-> - **19 logros sin arte.** Al re-correr la ingesta no hay que tocar nada mas:
->   se anade la fila al `MAPEO` **por nombre de archivo**, se anota el porque en
->   [`MAPEO_GLIFOS_LOGRO.md`](./docs/product/MAPEO_GLIFOS_LOGRO.md) y **se suben
->   a mano** los cuatro numeros del CENSO (`mascarasLogro`,
->   `mascarasVisiblesDeSalida`, `mascarasDeSecreto`, `precache`).
-> - **Ojo al efecto de conjunto**: la ingesta **reescribe todas las mascaras** y
->   el igualado de peso de tinta se calcula contra la **mediana del conjunto
->   entero**, asi que meter dibujos nuevos **cambia mascaras viejas** (17 de 58
->   en s167). No es un bug.
+> - **Siguen siendo 19**, pero el reparto cambio con las familias y con el farol
+>   (medido, no arrastrado):
+>
+>   | Familia | N | Logros |
+>   |---|---|---|
+>   | constancia | 4 | `streak.7` «Cuarto creciente» · `streak.14` · `breathe.sessions.50` · `stats.month.focus` |
+>   | exploracion | 5 | `explore.box` · `explore.rounds` · `explore.kapalabhati` · `explore.shoulders` · `explore.all.extra` |
+>   | maestria | 2 | `master.box.15` · `master.shoulders.20` |
+>   | la jornada | 1 | `master.pomodoro.8` |
+>   | secretos | 5 | `secret.cow.click` · `secret.rain` · `secret.first.monday` · `secret.new.year` · `secret.zen` |
+>   | estacionales | 2 | `season.summer` · `season.equinox.autumn` |
+>
+>   Censo exacto: `node scripts/audit/censo-glifos-logro-huecos.js`.
+> - **`master.pomodoro.8` es el unico hueco de «La jornada»** y se ve como un
+>   `VIII` de texto entre ocho dibujos. `streak.7` sigue mereciendo su luna en
+>   cuarto creciente, ahora que se llama asi.
+> - Al re-correr la ingesta: se añade la fila al `MAPEO` **por nombre de
+>   archivo**, se anota el porque en `MAPEO_GLIFOS_LOGRO.md` y **se suben a mano**
+>   los cuatro numeros del CENSO. El arte vive en `..\.old\Glifos_logros`.
 > - **Glifos de EJERCICIO**: mecanismo montado desde s166 con el mapa vacio,
 >   `--seco` primero. **Nunca se ha corrido sobre arte real.**
 
-> **HERRAMIENTAS QUE DEJA s167** (en `scripts/audit/`, solo leen o generan PNG):
-> `censo-glifos-logro-huecos.js` (cobertura + el guard de «assets que no se
-> encuentran») · `hoja-glifos-logro-nuevos.js` (hoja de contactos de **los no
-> asignados**, se mantiene sola) · `hoja-sellos-nuevos-en-app.js` (los sellos
-> **como los pinta la app**, con guard exacto) · `revision-sellos-tamano-real.js`
-> · `banco-aire-tarjetas-logro.js` (acepta el ancho como argumento).
+> **BUSCA EN EL ARCHIVO ANTES DE REPLANTEAR UNA PREGUNTA VIEJA.** La colision de
+> la pill estaba diagnosticada **entera** en la fila de v0.71.0 de
+> [`CHANGELOG_TABLA_HISTORICA.md`](docs/archive/CHANGELOG_TABLA_HISTORICA.md)
+> desde **s128** —fuera de flujo, colision con los tres iconos, fila propia
+> gateada por `min-height`— y los handoffs sucesivos no lo arrastraron. s168
+> gasto la sesion en **medirlo**, que era lo que faltaba, pero la pregunta se
+> habia reformulado como si nadie supiera la respuesta.
 
-> **ANTES DE ESCRIBIR UN BANCO SOBRE LA HOME**: consumir `tests/home.helpers.js`
-> (`sonda`, `asentarGeometria`, `px`) y **no reimplementar su sonda** (s166).
+> **HERRAMIENTAS** (en `scripts/audit/`, solo leen o generan PNG):
+> `revision-familias.js` (**NUEVO s168** · el panel con las 7 familias y sus
+> colores, con guard de biyeccion y anti-recorte) · `banco-pill-movil.js`
+> (**NUEVO s168** · el solape y el coste de la fila propia, con `--anchos` y
+> `--alturas`) · `censo-glifos-logro-huecos.js` · `hoja-glifos-logro-nuevos.js` ·
+> `hoja-sellos-nuevos-en-app.js` · `revision-sellos-tamano-real.js` ·
+> `banco-aire-tarjetas-logro.js`.
+>
+> Todos necesitan `node .claude/static-server.js` levantado aparte.
 
 > **AL SEMBRAR ESTADO EN UN BANCO O TEST**: consumir `SEMILLA` y `CLAVE_ESTADO`
-> de `tests/helpers.js`, **no inventarla**. En s167 invente `onboarded: true` y
-> la app arranco en el ONBOARDING: la captura de revision no ensenaba el panel
-> y **el guard de cero no lo vio**, porque los 77 sellos si estaban pintados
-> detras. Lo que abre el onboarding es `firstSeen == null`. Y los guards de
-> migracion (`_weeklyStatsReindexed_v0_28_8` y los tres de su lado) **no son
-> opcionales**: sin ellos `loadState` rota la semana un dia.
+> de `tests/helpers.js`, **no inventarla**. Lo que abre el onboarding es
+> `firstSeen == null`. Van tambien los guards de migracion
+> (`_weeklyStatsReindexed_v0_28_8`, `_historyRecalculated_v0_28_8`,
+> `_historyMigrated`, `lastActiveDay`) o `loadState` rota la semana un dia.
+> **Y la home se espera por `[data-pace-home-body]`**: `[data-pace-home]` NO
+> EXISTE, y desde s167 tres scripts lo esperaban 15 s con un `.catch` que se
+> tragaba el fallo (arreglado en s168).
 
-> **Antes de tocar `tests/`**: los matchers comparan **`textContent`** · `getByRole`
-> y `getByText` casan por **SUBCADENA**, y `String.includes` tambien -- en s167 el
-> ingles «Coherent» se encontraba dentro del castellano «Coherente» y el test
-> acuso a la app de un defecto inexistente; se arreglo comparando **sello a
-> sello** con `data-pace-ach` · **`addInitScript` corre en CADA navegacion** · y
-> **cada aserto nuevo se pone ROJO a proposito**.
+> **ANTES DE ESCRIBIR UN BANCO SOBRE LA HOME**: consumir `tests/home.helpers.js`
+> (`sonda`, `asentarGeometria`, `px`) y **no reimplementar su sonda** (s166); el
+> motor de geometria publica MAS DE UNA VEZ.
+
+> **Antes de tocar `tests/`**: los matchers comparan **`textContent`** ·
+> `getByRole`, `getByText` y `String.includes` casan por **SUBCADENA** (s167: el
+> ingles «Coherent» dentro del castellano «Coherente») · **`addInitScript` corre
+> en CADA navegacion** · y **cada aserto nuevo se pone ROJO a proposito**.
 
 > **Antes de tocar `scripts/verify*.js`**: una comprobacion nueva es **RELACIONAL
 > o CENSO** (no se mezclan), se pone **roja a proposito**, cero elementos
 > reconocidos es **FALLO explicito**, y lo que se anade **se declara** en
-> `NO_CUBRE`.
+> `NO_CUBRE`. El sandbox vive aparte desde s168 (`verify.sandbox.js`): aquel
+> archivo esta en 451 de 500 y la regla §1 dice **trocear**, no recortar
+> comentarios hasta caber.
 
 > **Antes de tocar i18n de contenido**: `strings/*` es **biyectivo ES/EN** y
 > `content/*` es un patch de **SOLO INGLES** -- anadir una clave espanola desde
-> `content/` es un fallo explicito del verify. El castellano de los catalogos
-> vive en su dato y los componentes caen a el con `tR(clave, fallback)`.
+> `content/` es un fallo explicito del verify.
 
 > **FASE 3 del plan (`pace.events.v1`)**: su Fase 1 esta CERRADA. Lo siguiente es
 > la **Fase 2 del esquema** (`session.completed`, `path.step.completed`,
@@ -552,7 +578,9 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > **Del frente CI queda una pieza y media**: **Wrangler** (deploy a Cloudflare
 > Pages; exige secretos del usuario, el YAML puede quedar inerte) y **proteger
 > `main`** (`WORKFLOW.md` §8, accion del usuario; **«exigir el check sin requerir
-> PR» no existe**).
+> PR» no existe**). La **cache de Chromium** entro en s168 pero **NO esta
+> verificada**: un cambio de YAML solo se prueba empujando, asi que el primer
+> push de s169 debe mirar el paso «Cache de Chromium» y confirmar el acierto.
 
 > **El tiron del arco** sigue esperando el banco de cuatro aros en el telefono del
 > usuario. **D3** (sidebar con racha Y record) espera sus dos versiones a tamano

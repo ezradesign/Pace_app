@@ -150,11 +150,38 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      # CACHE DEL NAVEGADOR (s168), con su medida al lado porque la razon que
+      # traia el backlog no era la real. Se decia que el CI gasta «11 de sus 13
+      # minutos» instalando Chromium en cada push; medido sobre los 9 ultimos
+      # runs con job e2e, este paso tardo 21, 23, 23, 24, 24, 25, 28, 28 s ...
+      # y 672 s UNA vez, que resulto ser el run que se miro. O sea: la mediana
+      # es ~24 s y lo que hubo fue un caso patologico, no un coste fijo.
+      #
+      # Se cachea igualmente, pero por lo que de verdad compra: quitar esa COLA.
+      # El ahorro tipico son ~20 s por push; el que importa es el de 11 minutos
+      # que puede repetirse cualquier dia sin avisar.
+      #
+      # La clave lleva `package-lock.json` porque de ahi sale la version de
+      # Playwright: al subirla, el navegador cacheado ya no sirve y la clave
+      # cambia sola. `--with-deps` instala ademas librerias de sistema por apt,
+      # que NO viven en ~/.cache/ms-playwright y por tanto no se cachean: con
+      # acierto de cache hay que seguir poniendolas con `install-deps`.
+      - name: Cache de Chromium
+        id: cache-chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       # Solo chromium: la suite declara ese unico proyecto en
-      # playwright.config.js. `--with-deps` trae las librerias de sistema que
-      # el runner de Linux no lleva de serie.
+      # playwright.config.js.
       - name: Instalar Chromium
+        if: steps.cache-chromium.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      - name: Librerias de sistema (el navegador ya estaba en cache)
+        if: steps.cache-chromium.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       # El servidor lo levanta y lo tumba la propia configuracion (`webServer`
       # -> `.claude/static-server.js`), asi que aqui no hay que orquestar nada.

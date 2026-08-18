@@ -59,7 +59,7 @@ PACE tiene un tono calmado, artesanal y cuidado. No gamificación agresiva.
 | `--move-soft` | `rgba(154,123,79,0.12)` | Fondos sutiles Mueve |
 | `--extra` | `#6B7A8F` | Acento Extra |
 | `--extra-soft` | `rgba(107,122,143,0.12)` | Fondos sutiles Extra |
-| `--hydrate` | `#5F8A9B` | Acento Hidrátate |
+| `--hydrate` | `#5F8A9B` | Acento Hidrátate · **y desde s168 la familia de logros «La jornada»**, que heredo el token al disolverse «estadisticas». Es **el unico frio de la paleta tierra** y ha pasado del final del panel de Logros (4 sellos) a su mitad (9): decision visual abierta en `HANDOFF_s168.md` |
 | `--hydrate-soft` | `rgba(95,138,155,0.12)` | Fondos sutiles Hidrátate |
 | `--achievement` | `#B8934A` | Acento Logros |
 | `--achievement-soft` | `rgba(184,147,74,0.12)` | Fondos sutiles Logros |
