@@ -32,6 +32,7 @@
 var fs   = require('fs');
 var path = require('path');
 var eventos = require('./verify.eventos.js');   // tanda de pace.events.v1 (s155)
+var encargo = require('./verify.encargo.js');   // el encargo de arte dice la verdad (s169)
 
 /* --------------------------------------------------------------------------
    CENSO. Cada numero esta MEDIDO del arbol, no estimado, y tiene su sesion.
@@ -395,7 +396,10 @@ function chequeaLogros(ctx, STR) {
   censo(ctx, 'mascaras que un usuario nuevo ve pintadas', maskIds.length - maskSecretas.length,
         CENSO.mascarasVisiblesDeSalida);
 
-  return MASK;
+  /* s169: el encargo necesita AMBOS. Se devuelven juntos en vez de que otro
+     modulo vuelva a cargar el sandbox -- duplicarlo fue el defecto de
+     `revision-glifos.js` que s168 tuvo que arreglar. */
+  return { MASK: MASK, CAT: CAT };
 }
 
 /* ==========================================================================
@@ -424,10 +428,11 @@ function tandaIntegridad(ctx, declarados) {
   console.log('\n[4/4] Integridad de catalogos, i18n, precache y glifos ...');
   var STR = chequeaI18n(ctx, declarados);
   chequeaGlifosEjercicio(ctx, declarados);
-  var mascaras = chequeaLogros(ctx, STR);
-  chequeaPrecache(ctx, mascaras);
+  var logros = chequeaLogros(ctx, STR);
+  chequeaPrecache(ctx, logros && logros.MASK);
   chequeaContenido(ctx);
   eventos.chequeaEventos(ctx, declarados, listaCorta);
+  encargo.chequeaEncargo(ctx, logros, listaCorta);
 }
 
 /* Lo que ESTA tanda sigue sin cubrir. Se suma al bloque que verify.js imprime
@@ -451,4 +456,5 @@ var NO_CUBRE = [
 ];
 
 module.exports = { tandaIntegridad: tandaIntegridad,
-                   NO_CUBRE: NO_CUBRE.concat(eventos.NO_CUBRE_EVENTOS), CENSO: CENSO };
+                   NO_CUBRE: NO_CUBRE.concat(eventos.NO_CUBRE_EVENTOS)
+                                     .concat(encargo.NO_CUBRE_ENCARGO), CENSO: CENSO };

@@ -1,7 +1,7 @@
 # PACE · integracion continua
 #
 # La red de seguridad LOCAL vive en `npm run verify` (s150 la creo, s152 la
-# completo: 4 tandas, 32 comprobaciones). Este workflow no la duplica ni la
+# completo; s169 le sumo la del encargo de arte). Este workflow no la duplica ni la
 # reinterpreta: la INVOCA. Si algo hay que vigilar, se anade al verify y aqui
 # no se toca nada — de ese modo lo que falla en CI se reproduce en local con
 # un solo comando, que es la unica forma de que un CI no se vuelva un oraculo.
