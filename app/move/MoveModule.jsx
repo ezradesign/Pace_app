@@ -366,7 +366,7 @@ function legacyEventoSesion(routine, inicioMs, activoSec, inPath) {
    s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
 /* s112: prop `size` opcional — el runner v1 lo escala a visual instructivo
    (~150-240px según altura); el default 72/44 deja el legacy byte-idéntico. */
-function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72 }) {
+function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72, side = 0 }) {
   return (
     <div style={{
       width: size, height: size, margin: '0 auto 20px',
@@ -379,7 +379,7 @@ function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-
           `ExerciseGlyph` por dentro a todo el mundo). Este es el unico sitio que
           lo quiere: el arte anatomico llena el circulo al 92 % y los 41 SVG al
           61 %, que es como se ve desde s170 y lo que la decision A/B revisara. */}
-      <ExerciseGlyph id={stepName} size={Math.round(size * 44 / 72)} maskScale={1.5} />
+      <ExerciseGlyph id={stepName} size={Math.round(size * 44 / 72)} maskScale={1.5} side={side} />
     </div>
   );
 }

@@ -195,7 +195,7 @@ function DefaultGlyph({ size = 44, className = '' }) {
   );
 }
 
-function ExerciseGlyph({ id, size = 88, className = '', maskScale = 1 }) {
+function ExerciseGlyph({ id, size = 88, className = '', maskScale = 1, side = 0 }) {
   /* s166 · EL ARTE DEL USUARIO ENTRA COMO MASCARA Y GANA AL SVG, igual que
      s146 hizo con los sellos de logro y por la misma razon: asi los 62
      dibujos del rediseno pueden llegar POR PARTES sin dejar huecos -- lo que
@@ -217,6 +217,18 @@ function ExerciseGlyph({ id, size = 88, className = '', maskScale = 1 }) {
      piden: con el 1.5 implicito el preview pedia 30 (y recibia la variante de
      trazo engordado, `<= MASK_MIN_HASTA`) para luego dibujarla a 45, que es
      justo el tramo donde NO corresponde. */
+  /* s172 · EL SEGUNDO LADO ES EL ESPEJO DEL PRIMERO, no un dibujo aparte.
+     Los 15 ejercicios que se ejecutan por lados son todos espejo puro (§3 del
+     encargo), y el set entero comparte convencion —«perfil mirando a la
+     derecha» (§1)—, asi que una sola decision global vale para todos: el dibujo
+     tal cual es el lado 1 («Izquierda») y su reflejo el lado 2. Cero dibujos
+     nuevos, y funciona igual sobre los 41 SVG que todavia no tienen mascara,
+     que es lo que hace que los pasos por lados se vean bien ANTES de que llegue
+     su arte. Lo que el espejo NO puede dar: en una figura de perfil, izquierda y
+     derecha no son legibles en el dibujo — garantiza que CAMBIA y que es
+     coherente con el set, no que un fisio lo firme. Un duplicado dibujado
+     tampoco lo daria: el limite es la vista de perfil, no el numero de piezas. */
+  const espejo = side === 1;
   const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id, px);
   if (mask) {
     const url = 'url("' + mask + '")'; size = px;
@@ -228,6 +240,7 @@ function ExerciseGlyph({ id, size = 88, className = '', maskScale = 1 }) {
         WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
         WebkitMaskPosition: 'center', maskPosition: 'center',
         WebkitMaskSize: 'contain', maskSize: 'contain',
+        transform: espejo ? 'scaleX(-1)' : undefined,
       }} />
     );
   }
@@ -238,7 +251,11 @@ function ExerciseGlyph({ id, size = 88, className = '', maskScale = 1 }) {
   const vid = (window.resolveVisualId ? window.resolveVisualId(id) : id);
   const Glyph = EXERCISE_GLYPHS[vid] || EXERCISE_GLYPHS[id];
   if (!Glyph) return <DefaultGlyph size={size} className={className} />;
-  return <Glyph size={size} className={className} />;
+  const dibujo = <Glyph size={size} className={className} />;
+  /* La envoltura SOLO existe al espejar: sin ella el arbol de los 41 SVG queda
+     byte a byte como estaba, y un nodo de mas en cada glifo de la app no es un
+     detalle (la lista del preview pinta decenas). */
+  return espejo ? <span style={{ display: 'block', transform: 'scaleX(-1)' }}>{dibujo}</span> : dibujo;
 }
 
 Object.assign(window, { ExerciseGlyph, EXERCISE_GLYPHS, DefaultGlyph });

@@ -407,7 +407,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
         {/* s172 · el descanso TAMBIEN pinta su circulo: con `!isRest` no es que no
             se moviera, es que DESAPARECIA. R5 se respeta por color, no por ausencia. */}
         <div data-pace-v1-glyph>
-          <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />
+          <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} side={v1LadoGlifo(step, phase, side)} />
         </div>
         {/* s171b · SE PINTA SIEMPRE (misma reserva que «Cuidate», s119): el rotulo
             solo existe al colocarse y movia el NOMBRE 29 px en cada cambio de fase. */}

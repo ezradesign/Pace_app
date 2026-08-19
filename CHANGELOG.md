@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.102.0** | 2026-08-20 | feat(eventos+runner+glifos): **el emisor, y dos mapeos que estaban al reves** — cierra el **PASO 2 de la Fase 3**: los cuatro tipos de `pace.events.v1` ya se emiten (`session.completed` en los cuatro modulos, `feedback.answered`, `path.step.completed`, `path.completed`) en **dual-write**, con el emisor en `app/state-events.jsx` — en la capa de estado y **fuera de `app/events/`**, porque el gate de `verify.eventos.js` define «emisor» justo asi y escondido dentro habria seguido diciendo «sin emisores» con emisores puestos. **EL MAPEO DE `kind:'body'` QUE TRAIA EL PLAN ESTABA AL REVES EN LOS CINCO CASOS QUE EXISTEN**: `move.neck.3`, `move.hips.5`, `move.atg.knees` y `move.chair.antidote` viven en `EXTRA_ROUTINES` y `extra.desk.pushups` en `MOVE_ROUTINES` — los ids son historicos (s15) y no dicen de que modulo son; ahora se pregunta a `resolveBodyRoutine()`. Con el prefijo, los eventos habrian salido con el modulo cambiado **sin romper nada**. El `runId` se genera al emitir y se recuerda en memoria (§7.2): **cero lineas** en los runners, y el feedback correlaciona solo si su rutina es la de esa sesion. **7 tests y 10 mutaciones**, con censo relacional del mapeo contra el catalogo entero **y prueba negativa**. **EL DESCANSO VUELVE A TENER CIRCULO**: el glifo iba dentro de un `{!isRest && ...}` y en el paso **mas repetido de la app** (18 apariciones) no es que se moviera, **desaparecia**; R5 se respeta por color y no por ausencia. Al medirlo se cayo la causa escrita de la deuda de s171: los ~25 px **no** son el gate «ready» sin contador, es el **FOOTER** (89 → 39 px, el centro crece 50 y el bloque centrado baja la mitad). **LOS 15 POR LADOS ENTRAN COMO ESPEJO** —`scaleX(-1)`, cero dibujos nuevos— y solo **12** pueden recibir lado: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` no tienen ni un paso `perSide`. Y los **dos prompts de arte pedidos eran la MISMA pieza**: las 12 apariciones de «Respira.» son todas de `Descanso`. | 172 | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
 | **v0.101.0** | 2026-08-19 | fix(runner+glifos): **el circulo del glifo, y los dos dibujos que sobraban** — tres defectos visuales que reporto el usuario, los tres **medidos antes de tocar**. (1) Las **miniaturas del preview se pisaban 5 px**: `ExerciseGlyph` multiplicaba el tamaño **×1,5 por dentro**, asi que la lista reservaba 30 px y recibia 45 mientras los 41 SVG, que si respetan la caja, quedaban limpios; ahora `maskScale` es **explicito con defecto 1** —la caja que se pinta es la que el llamante reserva— y la variante `.min` se elige por los pixeles que se **pintan**, no por los que se piden (el preview pedia la de 30 y la dibujaba a 45). Medido: **9,6 px de aire**. (2) El **circulo media 72 px en 6 rutinas y 179 en las otras 22** en el mismo viewport, porque unas corren en el runner **legacy** y otras en el **v1**: el legacy pasa a la curva de v1 y a su `clamp(30px, 6.5vh, 52px)` — su nombre de ejercicio estaba a **56 px fijos**, que era el «letras muy grandes» del reporte. (3) El circulo **se movia 43 px entre pasos en MOVIL**, porque las reservas de altura que lo anclan existian **solo para ≥641 px** desde s119; se aplican a las **dos pieles** y el desborde que aquella sesion temia **no reproduce**: 0 px a 360×640, 375×812 y 390×844. Ademas el circulo **crece un 30 % en escritorio** (198 → 257 a 1440×900, **0 px de desborde**: cabia en el hueco que ya habia), con el factor **despues del clamp** y la piel leida del contrato `--pace-skin`. Nace `tests/runner-circulo.spec.js` — **8 tests, los 8 calibrados en rojo** y **sin un solo numero de pixeles dentro**, porque el defecto no era un tamaño equivocado sino **dos superficies que no coincidian**; la primera version corria solo a 1280×720 y **habria pasado en verde antes del arreglo**. Revision del arte: las **47 mascaras miradas una a una**, **cero mal asignadas**, y las **2 piezas sin identificar de s170 resueltas emparejando por CONTENIDO** (la numeracion de aquella hoja no es reproducible) — son tomas alternativas, no identidades nuevas. **Faltan 10 muebles, no 5**, y `Puente torácico` no es un mueble que falta sino **otra postura**. **SEGUNDA MITAD**: entra la **segunda tanda de arte** — 18 dibujos que suben el catálogo de **47 a 57 identidades** (10 nuevas + 8 reemplazos por el mueble), con los **39 viejos recuperados emparejando por CONTENIDO** porque la ingesta reescribe el mapa entero y la numeración de s170 no es reproducible (peor pareja **0,849**); 0 piezas fuera del círculo, `precache` 199 → 219. Y **el bloque del runner declara alto mínimo** (70vh móvil / 72vh escritorio, con suelo **medido** de 780/880 px) con el rótulo de fase reservado vacío: el círculo y el nombre pasan de moverse **43–94 px a 0** entre pasos de trabajo. Queda **~25 px cruzando fases** por el gate «ready», que no pinta contador — **asertado con trinquete de 30 px, no anotado**. | 171 | [session-171](docs/sessions/session-171-el-circulo-del-glifo.md) |
 | **v0.100.0** | 2026-08-19 | feat(eventos+glifos): **el tiempo activo de Mueve, y el arte anatomico entra de verdad** — cierra el **PASO 1 de la Fase 3**: `useActiveClock` compartido da a Mueve/Estira la contabilidad de pausa que Respira tiene desde s98, con la politica de §6.4 aparte y pura (`v1TrabajoActivo`) y **4 mutaciones que muerden**; medido, activo 120 s contra 220 de pared. Las **cuatro decisiones abiertas del handoff las contestaba `EVENTOS_SCHEMA.md`** y tres de mis respuestas deducidas estaban mal. Entran **47 de los 61 glifos de ejercicio** como arte anatomico del usuario, y con ellos cinco defectos: el precache de la ingesta de s166 escribia `./` donde el resto de `sw.js` usa `/`; **`sharp` reordena sus operaciones** (`extend` va DESPUES de `resize`, y el relleno lateral convertia el dibujo en **rayas diagonales**); la **trampa de canales TRES veces**; y **dos umbrales de tinta distintos** que dejaban material fuera del encuadre y dentro del dibujo. El **encuadre se corrigio tres veces mirando**: caja → masa → **circunferencia minima**, que resuelve a la vez «esta descentrado» y «es pequeño» porque minimizar el radio ES maximizar el dibujo dentro del disco (**+17,7 % de area**, mismo tamaño optico por construccion). El **detector de rojo se comia el trazo** —la tinta es sepia y el 39-43 % de lo marcado era lum<120—, arreglado con suelo de luminancia (**+208 %** de trazo firme en el peor caso). Y la **miniatura gana archivo propio** (`.min.webp`, trazo engordado antes de reducir) porque a 30 px no es cuestion de ajustes. El test de glifos **caduco dos veces en la misma sesion** y se reescribio para no nombrar ninguna pieza. | 170 | [session-170](docs/sessions/session-170-tiempo-activo-y-arte-anatomico.md) |
 | **v0.99.1** | 2026-08-18 | feat(eventos): **el backup lleva `pace.events.v1`, y lo devuelve** — **condicion de entrada de la Fase 2**, puesta **ANTES que el primer emisor** para que el gate del `verify` no pille a nadie a mitad de camino. `privacy.html` promete exportar «**todo** tu estado ... e **importarlo** en otro dispositivo», y eso era cierto solo mientras el contenedor estuviera vacio. **No bastaba con exportarlo: el import lo TIRABA**, con su razon escrita al lado —«un backup de PACE no trae seccion de eventos»— y por eso reiniciaba el contenedor para evitar la MEZCLA de §17. Esa frase caduca el mismo dia que exista un emisor, asi que **las dos mitades se mueven juntas**: exportar historial que al restaurar se descarta seria **peor** que no exportarlo. Ahora el backup gana una seccion `events` **hermana** de `state` —y no dentro, porque son dos almacenes con ciclos de vida independientes y mezclarlos en el JSON invitaria a escribirlos como si fueran uno—, y el import tiene **tres caminos**: **CON seccion** reemplaza por completo (sin merge, sin deduplicar, idempotente) · **SIN seccion** reinicia como siempre, que es todo backup anterior · y **seccion CORRUPTA aborta el import ENTERO**, incluido **no escribir `pace.state.v2`**, que ni siquiera es de este subsistema — el fallo tentador es descartar la seccion mala y «al menos salvar el estado», y eso deja al usuario con estado nuevo e historial ajeno. La validacion vive **en la barrera** y no en el llamador, porque es quien puede garantizar el «antes de tocar nada»; y si el proceso muere entre la escritura legacy y el paso 3, la recuperacion del marcador **reinicia** en vez de reemplazar: se pierde el historial importado, no el del usuario. **3 asertos nuevos (92 -> 95) y los 3 calibrados en rojo**, el primero leyendo **el archivo que el navegador descarga de verdad** y no el objeto que lo construye. **DOS CORRECCIONES AL INSTRUMENTO**: el aserto de «no se toco el estado» comparaba `pace.state.v2` **entero** y **salio rojo con el producto SANO**, porque la app normaliza y re-persiste su propio estado al arrancar —comparar un documento que la app tambien escribe no es comprobar que el import no escribio—, y dos de las tres esperas aguardaban **solo el desenlace bueno**, dando timeouts mudos con el producto roto en vez del aserto que explica que paso. **Y UNA TRAMPA PROPIA, CARA**: el primer script de calibracion restauraba las mutaciones con `git checkout`, pero la linea base de esos archivos **no estaba committeada** — los devolvio a HEAD y **borro la implementacion entera**, con los tres tests en rojo por ausencia de producto. `git checkout` restaura al **ultimo commit**, no a como estaba hace un minuto | 169 | [abajo](#v0991----2026-08-18----feateventos-el-backup-lleva-paceeventsv1-y-lo-devuelve) |
@@ -365,6 +366,112 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.102.0] -- 2026-08-20 -- feat(eventos+runner+glifos): el emisor, y dos mapeos que estaban al reves
+
+**Dos de las tres cosas que el handoff daba por sabidas eran falsas, y las dos se
+cazaron midiendo.** El resto es lo que traia el plan: cerrar s171, el emisor de la
+Fase 3 y los prompts de arte.
+
+### El emisor de `pace.events.v1` (PASO 2 de la Fase 3)
+
+Los cuatro tipos emiten en **dual-write**: la escritura legacy sigue mandando
+—stats, logros, rachas— y el evento se anade al lado; si el evento falla, no se
+cae nada.
+
+**Donde vive el emisor lo decide el CHECKER, no el gusto.** `app/state-events.jsx`
+esta en la capa de estado y **fuera de `app/events/`** porque `verify.eventos.js`
+§5 define «emisor» como una llamada a `paceEventsAppend` fuera del subsistema, y
+con eso exige que el backup publico lleve la seccion de eventos. Escondida
+dentro, el gate habria seguido en verde diciendo «sin emisores» con emisores
+puestos.
+
+**EL MAPEO DE `kind:'body'` ESTABA AL REVES EN LOS CINCO CASOS.** El plan decia
+«prefijo `move.` -> move, `extra.` -> stretch»:
+
+| paso | dice el prefijo | dice el catalogo |
+|---|---|---|
+| `move.neck.3` · `move.hips.5` · `move.atg.knees` · `move.chair.antidote` | move | **stretch** |
+| `extra.desk.pushups` | stretch | **move** |
+
+Los ids son historicos —s15 movio rutinas de modulo y los conservo estables— asi
+que **no dicen de que modulo son**. Ahora se pregunta a `resolveBodyRoutine()`, el
+mismo resolutor que usa `PathBodyStep`. Con el prefijo, los eventos habrian salido
+con el modulo cambiado **sin romper nada**: ni error en consola ni test rojo.
+
+Dos decisiones que el esquema no cerraba: **`routineId` de Foco** = `focus.<min>`
+(lo que ya asumian los helpers de s155) y **`plannedSeconds` de Respira sin
+rondas** = `routine.min x 60` `declared`, porque el motor termina cuando el tiempo
+ACTIVO alcanza ese numero — la alternativa literal era `null` y perdia 17 de 20
+rutinas. Anotada como desviacion consciente de la letra de §6.4.
+
+El **`runId`** se genera al emitir y se recuerda en memoria (§7.2 dice que no hace
+falta persistirlo): **cero lineas** en los runners. El feedback correlaciona solo
+si su rutina es la de esa sesion; antes que inventar una correlacion, se pierde el
+evento.
+
+**7 tests y 10 mutaciones, todas muerden.** Incluye el censo relacional del mapeo
+contra el catalogo entero **con prueba negativa**: si algun dia ningun id
+contradice su prefijo, el test avisa de que ya no distingue las dos reglas. Y una
+**mentira del instrumento**: el primer aserto comparaba el ORDEN de llegada, y el
+almacen ordena por instante desempatando por `id` aleatorio (§11) — los tres pasos
+caian en el mismo milisegundo.
+
+### El descanso vuelve a tener circulo, y la deuda de s171 tenia otra causa
+
+El glifo iba dentro de un `{!isRest && ...}`: en el paso **mas repetido de la app**
+(18 apariciones) el circulo no es que se moviera, **desaparecia**. R5 de s113 («el
+descanso es el paso apagado») se respeta **por color y no por ausencia**. Mismo
+tamaño que el del trabajo (186 px a 390x844) y 0 px de desborde.
+
+Al medirlo se cayo la causa que estaba ESCRITA en el trinquete: los ~25 px que
+quedan cruzando fases **no** los causa el gate «ready» por no pintar contador.
+
+| a 390x844 | trabajo | descanso |
+|---|---|---|
+| `session-footer` | **89 px** (2 filas) | **39 px** (1 fila) |
+| `session-center` | 672 | **722** |
+| bloque (70vh) | 591 | 591 |
+| circulo `top` | **69** | **94** |
+
+El footer pierde 50 px, el centro crece 50 y el bloque —centrado— baja la mitad.
+La deuda sigue con su tope de 30 porque arreglarla (reservar el footer o alinear
+el bloque arriba) es una **decision visual**. Y el verde de esa suite **no decia
+nada de esta pantalla**: su recorrido avanza a clicks y un descanso termina solo,
+asi que nunca aterrizaba en uno.
+
+### Los 15 por lados: espejo, cero dibujos nuevos
+
+Los 15 son espejo puro y el set comparte convencion («perfil mirando a la
+derecha»), asi que el segundo lado es `scaleX(-1)`: **una decision global** en vez
+de 15 encargos, y funciona igual sobre los 41 SVG sin mascara. **Solo 12 pueden
+recibir lado**: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` no tienen ni
+un paso `perSide` en ningun catalogo, asi que un segundo dibujo suyo no se veria
+nunca — eso es contenido, no arte.
+
+Lo que el espejo NO da, por escrito: en una figura de perfil izquierda y derecha
+no son legibles. Garantiza que CAMBIA y que es coherente, no que un fisio lo firme
+— y un duplicado dibujado tampoco lo daria. La hoja de decision se ordeno por
+**cuanto se nota el espejo**, y ese numero mintio a la primera: comparar una linea
+de 1-2 px con su reflejo mide DESPLAZAMIENTO, no lateralidad, y las 12 puntuaban
+igual de altas mientras el ojo veia dos identicas.
+
+### Los dos prompts de arte eran la misma pieza
+
+Las **12** apariciones de «Respira.» en los catalogos son **todas** de un paso
+`Descanso`. Censo de los 66 nombres de paso: **3 sin ningun dibujo** (`Pica en
+escritorio`, `Onda espinal`, `Rana`) y **2 con SVG viejo** (`Descanso` x18 y
+`Puente isquio a una pierna`). Ojo: **Estira no se publica en `window`**, y
+mirando solo Mueve la primera pasada del censo dijo «1 sin dibujo».
+
+### Documentacion de s171, y dos generados que mentian
+
+`GLIFOS_EJERCICIOS_PENDIENTES.md` decia «47 con arte · 14 pendientes» cuando ya
+eran **57 · 4** (regenerado con su script); `GLIFOS_ESTIRA_PENDIENTES.md` no tiene
+generador en el repo y lleva aviso de CADUCADO. **Nada vigila estos dos** — el
+`verify.encargo.js` de s169 solo mira el encargo de logros.
+
+---
+
 ## [v0.101.0] -- 2026-08-19 -- fix(runner+glifos): el circulo del glifo, y los dos dibujos que sobraban
 
 > **Esta version son DOS MITADES.** Las tres primeras secciones son los defectos que
@@ -511,210 +618,4 @@ CSS**, otra vez (s139, s156, s157, s158, s162): el build **aborta**, y con la sa
 silenciada tres rondas de medicion corrieron **contra un artefacto viejo**.
 
 ---
-
-## [v0.99.1] -- 2026-08-18 -- feat(eventos): el backup lleva pace.events.v1, y lo devuelve
-
-**Condicion de entrada de la Fase 2 de `pace.events.v1`, puesta ANTES que el primer
-emisor** — a proposito: asi el gate del `verify` no puede pillar a nadie a mitad de
-camino. Sin emisores todavia, el contenedor va vacio y no cambia nada para nadie.
-
-### La promesa que se estaba a punto de romper
-
-`privacy.html` dice que puedes «exportar **todo** tu estado como archivo JSON ... e
-**importarlo** en otro dispositivo». Hasta aqui era cierto porque `pace.events.v1`
-estaba vacio. En cuanto un modulo emita, deja de serlo salvo que el backup lo lleve.
-
-Y no basta con exportarlo. **El import lo tiraba**, con su razon escrita al lado: *«un
-backup de PACE no trae seccion de eventos»*, y por eso reiniciaba el contenedor para
-evitar la MEZCLA de §17. Esa frase deja de ser cierta el mismo dia, asi que **las dos
-mitades tenian que moverse juntas**: exportar historial que al restaurar se descarta
-seria peor que no exportarlo — la mitad de la promesa es «e importarlo en otro
-dispositivo».
-
-### Lo que hace ahora
-
-- **Export**: el backup gana una seccion `events` **hermana** de `state`, no dentro.
-  Son dos almacenes con ciclos de vida independientes (s155) y mezclarlos en el JSON
-  invitaria a escribirlos como si fueran uno. Si el subsistema no puede leer, sale un
-  contenedor vacio normalizado: **el export nunca falla por esto**.
-- **Import**, con los dos caminos separados y §17 mandando:
-  - **CON seccion** → se **REEMPLAZA** por completo (sin merge, sin deduplicar,
-    idempotente).
-  - **SIN seccion** (todo backup anterior) → se **REINICIA** con `activatedAt` nuevo y
-    el baseline recapturado, exactamente como antes.
-  - **Seccion CORRUPTA** → se aborta el import **ENTERO**, y eso incluye **no escribir
-    `pace.state.v2`**, que ni siquiera pertenece a este subsistema. Es el fallo
-    tentador: descartar la seccion mala y «al menos salvar el estado». Eso deja al
-    usuario con estado nuevo e historial ajeno, que es la mezcla que todo el diseño
-    evita.
-- La validacion vive **en la barrera** y no en el llamador, porque es quien puede
-  garantizar el «antes de tocar nada». Y si el proceso muere entre la escritura legacy
-  y el paso 3, la recuperacion del marcador **reinicia** (no reemplaza): se pierde el
-  historial importado, no el del usuario, y el import se puede repetir.
-
-### 3 asertos nuevos (92 -> 95), los 3 calibrados en rojo
-
-`tests/eventos-backup.spec.js`. El primero lee **el archivo que el navegador descarga
-de verdad**, no el objeto que lo construye: lo que el usuario se lleva es el archivo.
-
-Y **dos correcciones al instrumento, las dos medidas**:
-
-- El aserto de «no se toco el estado» comparaba `pace.state.v2` **entero** contra una
-  foto de antes y **salio rojo con el producto SANO**: la app normaliza y re-persiste
-  su propio estado al arrancar. Comparar un documento que la app tambien escribe no es
-  lo mismo que comprobar que el import no escribio. Ahora mira **los campos que el
-  backup habria cambiado**, que es lo unico que distingue las dos hipotesis.
-- Dos de las tres esperas aguardaban **solo el desenlace bueno**, asi que con el
-  producto roto daban un `Timeout 15000ms exceeded` mudo en vez del aserto que explica
-  que paso. Reescritas para esperar a que el estado **CAMBIE** (T2) y para **correr los
-  dos desenlaces posibles** (T3). Con eso, las tres mutaciones caen con su mensaje.
-
-El `verify` tambien deja de mentir: su mensaje decia «el backup publico no lleva
-seccion de eventos» y ahora distingue el caso nuevo — sin emisores, pero con la
-condicion de entrada ya puesta.
-
-### Trampa propia, y cara
-
-El primer script de calibracion restauraba las mutaciones con
-`git checkout -- <archivo>`, pero **la linea base de esos dos archivos no estaba
-committeada**: los devolvio a HEAD y **borro la implementacion entera**. Los tres tests
-pasaron a rojo por ausencia de producto, no por el aserto. La calibracion se rehizo
-restaurando desde una copia del scratchpad. **`git checkout` restaura al ULTIMO COMMIT,
-no a como estaba hace un minuto.**
-
----
-
-## [v0.99.0] -- 2026-08-18 -- feat(movil): la pill vuelve a movil, y el censo que miraba el sitio equivocado
-
-> Sesion **cortada por limite de tokens** y cerrada en una pasada posterior. De las
-> cuatro decisiones que traia el handoff de s168 se implementan **dos** —A, la pill, y
-> C, el encargo de glifos—; **B** no pedia codigo y **D** (el `apt` del CI) queda
-> **decidida y sin hacer**, con sus medidas en `docs/HANDOFF_s169.md`.
-
-### La pill de Foco/Pausa/Larga vuelve a movil
-
-s46 (v0.25.0) la oculto porque **colisiona** con los tres iconos top-right. s128
-diagnostico por que y s168 lo midio: `[data-pace-tabs]` es `position: absolute`
-centrada, o sea **fuera de flujo** — no empuja, no encoge y no puede cambiar el alto de
-la fila, asi que lo unico que puede hacer es **solaparse**, y lo hace **identico de 568
-a 932 px de alto**. Solo se limpiaria por encima de ~560 px de **ancho**, que ningun
-telefono alcanza en vertical.
-
-Por eso el arreglo no es dejar sitio, es **sacarla de la fila de los iconos**: una sola
-media query le da su propia linea, **arriba**, con `align-items: flex-end` y
-`padding-top: calc(10px - 4px * squeeze + 42px)`. Sigue siendo `absolute` pero **solo se
-recentra en X**; su Y la fija el padding, porque el `top: 50%` de una fila que ahora mide
-102 px la dejaria encima de los iconos.
-
-**Va arriba y eso no es estetico**: el DOM la tiene **antes** que los iconos, asi que
-ponerla debajo haria que el foco recorriera la topbar **de abajo arriba** — WCAG 2.4.3,
-el defecto exacto que s160 arreglo en la home. Y ninguna prueba se habria enterado:
-`home-a11y.spec.js` filtra a `[data-pace-home-stack]` y **excluye la topbar a proposito**.
-
-La regla de s46 sigue siendo el **defecto**: donde no hay sitio la pill no aparece y el
-BreakMenu sigue proponiendo modo al terminar el Pomodoro. Las dos cosas **conviven**.
-
-### El gate tiene dos suelos, y cada uno sale de una medida distinta
-
-- **ALTO >= 760, por el ARO.** La fila propia cuesta **+42 px** (34 de pill + 8 de hueco)
-  y salen del aro. Barrido de 9 anchos (320-768) x 8 alturas, **A/B en el mismo
-  viewport**: a 736 el aro paga 4 px a 412, 20 a 428 y 30 a 440; **a 760 es gratis en
-  todos los anchos**.
-- **ANCHO >= 390, por el BOTON DE MENU**, que vive **fuera** de la topbar. La pill mide
-  244 px fijos y va centrada ⇒ hueco = `ancho / 2 - 175,5`: a 320 lo **PISA 15 px**, a
-  360 deja 5, a 375 deja 12 y a 390 deja 20. El usuario **descarto los 12 px de 375** por
-  justos, asi que el suelo es 390.
-
-**Dos correcciones al handoff de s168, medidas.** «alto >= 844» **no era el umbral** —era
-la siguiente altura que s168 habia medido—, el real es **760**. Y **«squeeze == 0» no
-sirve de gate**: `--pace-home-squeeze` es una custom property que fija el JS y **una media
-query no lee custom properties**, y ademas vale 0 **exactamente desde 736**, o sea justo
-por debajo del umbral bueno.
-
-### Un censo que mira el sitio equivocado dice «limpio» igual que uno bueno
-
-El banco de s168 cruzaba `[data-pace-topbar] > *` y la primera sonda de esta sesion
-cruzaba `[data-pace-topbar-icon]`. **Las dos daban CERO SOLAPES a 320 px mientras la pill
-pisaba el boton de menu 15x34 px**, porque ese boton **no es hijo de la topbar**. De ahi
-salio el suelo de ancho, que en el handoff no existia. La sonda del spec cruza ahora
-**todos** los `button, a, [role=button]` del documento, no un subarbol.
-
-### 11 asertos nuevos (81 -> 92), los 11 calibrados en rojo
-
-`tests/topbar-pill-movil.spec.js`: **cero solape con cualquier control** en las 9
-combinaciones · **hueco minimo de 16 px** con el vecino de su fila —umbral de CRITERIO:
-12 px los descarto el usuario y 20 px es lo que deja el ancho mas estrecho que pasa— ·
-**el aro no encoge**, medido **A/B dentro del mismo viewport** (con la pill y con la pill
-a `display:none`) y **no contra una constante escrita en el test**, que caducaria en
-cuanto cambie la geometria · el **orden de foco de la topbar**, que ninguna otra prueba
-mira · **no regresion en escritorio**. Calibracion: bajando el suelo a 320 salieron los
-tres rojos esperados **con su mensaje**.
-
-El banco de s168 **no probaba el arreglo**: simulaba la fila propia creciendo el
-`min-height` de la topbar 42 px y media lo que le costaba al aro, o sea el **coste**, no
-el **arreglo**. Cruzar los rectangulos de verdad es lo unico que demuestra que ya no se
-pisan.
-
-### El diagnostico del CI de s168 estaba mal, y lo corrigio el log
-
-No ejecutado —es la decision D, pendiente—, pero medido, y cambia **la razon** del cambio.
-Antes, un hecho de la maquina: **`gh` SI esta instalado y autenticado**; s153 lo dio por
-ausente y la nota se arrastro **16 sesiones** en `docs/WORKFLOW.md` (corregida aqui). Es
-lo que permitio leer los logs paso a paso de los 11 ultimos runs.
-
-**La cola no era la descarga de Chromium: era `apt` bajando 21,1 MB de FUENTES.** Los
-mismos 9 paquetes (CJK, cirilico, `xfonts-*`) se instalan en **todos** los runs, con
-cache y sin ella, mientras todas las librerias del navegador dicen `already the newest
-version` —ya estan en la imagen—. El binario cuesta **~10 s**; el `apt` costo **10 min
-49 s** en el run de 672 s y **3 min 15 s** en el de 217 s, que fue un **fallo** de cache.
-Por tanto la cache de `~/.cache/ms-playwright` **como mucho ahorra esos 10 s** y **no
-puede tocar la cola**. El comentario del YAML que dice lo contrario es falso.
-
-### C · el equinoccio sube, y al comprobarlo el trabajo crecio
-
-La decision era mover una fila. Al medir por que hacia falta, salio algo mayor:
-**el encargo decia «los 38 glifos de LOGRO que faltan» y ya solo faltan 19.** El
-calculo era de s164; **s167 entrego 19 y nadie volvio a tocar esa lista**, asi que
-quien la abriera para ponerse a dibujar se encontraria **la mitad del trabajo ya
-hecho**, sin nada que lo marcara. Es la misma deriva que s168 cazo en `CONTENT.md`
-(100/92 contra 96/88), pero esta se paga en horas de dibujo.
-
-Ahora las 19 entregadas van **tachadas y marcadas `ENTREGADO`**, cruzadas **id a id
-contra el mapa de mascaras real** y no de memoria, con la cuenta cerrando por
-**biyeccion**: **19 entregadas + 19 sin arte = 38 filas**, **cero** ids que no
-existan en el catalogo y **cero** logros sin arte que el documento no liste. Cada
-seccion lleva ademas su **«N sin arte de M»**, para que el orden se lea de un
-vistazo.
-
-**El equinoccio entra de Prioridad 1, en un hueco que estaba libre.** `§2 ·
-Prioridad 1` tenia una sola fila, `hydrate.week.perfect`, **y tambien se entrego**.
-Y el motivo del equinoccio no es que su sello falle —el `⚖` de texto aguanta
-solo— sino **el par**: `season.equinox.spring` **si** tiene balanza dibujada
-(`achievement-masks.js`), los dos viven en `estacionales`, son **adyacentes en el
-catalogo** y comparten el mismo caracter de respaldo, asi que en el panel se ven
-uno al lado del otro con **dos sistemas visuales distintos**. De los 19 que faltan
-es el unico **desparejado**; los demas son huecos sueltos. De paso, el bloque
-«estos dos van al final de la cola» de la §5 **ya no aplicaba a nadie**.
-
-**Y el propio cruce cazo un defecto mio**: al mover `hydrate.week.perfect` a una
-nota dejo de ser fila de tabla, la biyeccion cayo a **37 = 18 + 19** y la cabecera
-recien escrita seguia diciendo 38. La fila vuelve a la tabla, tachada.
-
-### Verificacion
-
-`npm run verify` **PASA** (0 problemas, 8,7 s, 1 aviso: el `[INFO]` de siempre) ·
-**regla §1**: `_responsive.pieles.js` en **478 de 500** tras ganar 61 lineas, deuda vacia
-· `index.html` del disco **= build de las fuentes** (`53800C9DCE60E2B7`) ·
-`npm run test:e2e` **92/92** en 1,2 min sobre el artefacto ya regenerado ·
-`PACE_standalone.html` **intacto en v0.71.0** byte a byte (`998E3E35…`), restaurado a
-mano tras el build manual, porque el `verify` solo lo restaura alrededor de **su** pasada
-(la torpeza de s162) · **v0.99.0** coherente en los 7 sitios.
-
-### Lo que NO se cubre
-
-**Ni un pixel comparado** · **sin mirar en ingles ni en oscuro** —las etiquetas son mas
-largas en ingles y la pill mide 244 px **fijos**: si el texto no cupiera, el aserto de
-solape seguiria en verde— · **sin telefono real**, todo es viewport emulado · los suelos
-son **de hoy**, y si la topbar o el boton de menu cambian de tamaño el spec lo dira en
-rojo · **C y D siguen sin hacer**, y D **solo se verifica empujando**.
 
