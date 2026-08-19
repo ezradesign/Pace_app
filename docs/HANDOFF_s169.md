@@ -1,18 +1,30 @@
-# HANDOFF · s169 → siguiente sesión
+# HANDOFF · s169 — CERRADO
 
-> **ACTUALIZADO AL CIERRE.** La sesión se cortó por límite de tokens y se cerró
-> en una pasada posterior: **A (la pill) está implementada, verificada y
-> publicada en v0.99.0**, con su diario en
-> [`session-169`](./sessions/session-169-pill-movil.md). **B** no pedía código.
-> **C** también se hizo, y creció al comprobarla (ver § 3). **Lo único que queda
-> vivo de este documento es D**, decidida y sin hacer: su § 4 está intacta y es la
-> razón de que el archivo siga aquí.
+> **LAS CUATRO DECISIONES ESTAN HECHAS. Este documento ya no dirige nada**: se
+> conserva **solo como memoria de las medidas** (el barrido del aro, los huecos
+> del boton de menu, la tabla de tiempos del CI), que no estan en ningun otro
+> sitio con este detalle. Para saber que hacer a continuacion, la fuente es
+> [`STATE.md`](../STATE.md) → «Diferido», no esto.
 >
-> Todo lo que hay debajo se escribió **antes** del cierre: donde dice «no se ha
-> corrido», ya se corrió. El estado real al cerrar es `npm run verify` **PASA**,
-> `npm run test:e2e` **92/92**, `_responsive.pieles.js` en **478 de 500** y
-> `PACE_standalone.html` intacto en v0.71.0.
+> | | | |
+> |---|---|---|
+> | **A · la pill** | **HECHA** | v0.99.0 · `05a113a` |
+> | **B · «La jornada»** | no pedia codigo | se queda `--hydrate` |
+> | **C · el encargo de glifos** | **HECHA**, y crecio (§ 3) | v0.99.0 · `05a113a` |
+> | **D · el `apt` del CI** | **HECHA** y observada en verde | `d14d2a2` |
+>
+> Y salieron dos cosas mas que este documento no preveia: el **checker del
+> encargo** (`77ceaec`), para que lo de C no vuelva a derivar, y la **condicion
+> de entrada de la Fase 2 de eventos** (v0.99.1, `e95ff75`).
+>
+> **UN HUECO SIGUE ABIERTO** y vive en `STATE.md`: el camino de **FALLO de
+> cache** del CI no se ha ejercitado nunca sin `--with-deps`.
+>
+> Todo lo que hay debajo se escribio **antes** del cierre: donde dice «no se ha
+> corrido» o «SIN HACER», ya se hizo. El diario con el relato completo es
+> [`session-169`](./sessions/session-169-pill-movil.md).
 
+---
 ---
 
 ## 0 · LO PRIMERO: qué hay en el árbol sin commitear
@@ -47,7 +59,7 @@
 | **A · la pill** | Fila propia, **arriba**, gate de dos suelos | **HECHA · publicada en v0.99.0** |
 | **B · color de «La jornada»** | **Se queda `--hydrate`** y se mira unos días | Nada que tocar |
 | **C · equinoccio de otoño** | **Sube en la cola** del encargo | **HECHA · v0.99.0**, y creció |
-| **D · caché del CI** | **Quitar apt de los DOS caminos** | **SIN HACER** |
+| **D · caché del CI** | **Quitar apt de los DOS caminos** | **HECHA · `d14d2a2`**, verde |
 
 ---
 
@@ -143,7 +155,7 @@ igual**.
 
 ---
 
-## 4 · D · El CI (SIN HACER) — y el diagnóstico de s168 estaba MAL
+## 4 · D · El CI — HECHO (`d14d2a2`), y el diagnóstico de s168 estaba MAL
 
 Esto se midió a fondo esta sesión y **cambia la razón del cambio**, no solo el
 cambio. `gh` **SÍ está instalado y autenticado** (s153 lo dio por ausente y
