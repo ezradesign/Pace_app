@@ -27,11 +27,21 @@ function TweaksDataSection() {
     try {
       const raw = localStorage.getItem('pace.state.v2') || '{}';
       const parsed = JSON.parse(raw);
+      /* s169 — LA SECCION DE EVENTOS ENTRA EN EL BACKUP. `privacy.html`
+         promete exportar «todo tu estado» e importarlo en otro dispositivo, y
+         desde que hay emisores eso incluye `pace.events.v1`, que vive en OTRA
+         clave. Va como seccion hermana de `state` y no dentro, porque son dos
+         almacenes con ciclos de vida independientes (s155) y mezclarlos en el
+         JSON invitaria a escribirlos como si fueran uno.
+         Si el subsistema no puede leer, `paceEventsExport()` devuelve un
+         contenedor vacio normalizado: el backup sale igual, con la seccion
+         puesta y sin eventos. El export NUNCA falla por esto. */
       const payload = {
         app: 'PACE',
         version: PACE_VERSION,
         exportedAt: new Date().toISOString(),
         state: parsed,
+        events: paceEventsExport(),
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -87,14 +97,28 @@ function TweaksDataSection() {
            marcador -> estado legacy (la verdad canonica va primero) ->
            contenedor de eventos REINICIADO con `activatedAt` nuevo y el
            baseline recapturado del estado que acaba de entrar.
-           Por que reiniciar y no conservar: un backup de PACE no trae seccion
-           de eventos, y dejar el contenedor de antes junto a un estado
-           importado seria exactamente la MEZCLA de historial anterior con
-           estado nuevo que hay que evitar — el baseline se habria capturado de
-           unos contadores que ya no son los de este estado.
+           Que pasa con el contenedor depende de SI EL BACKUP TRAE EVENTOS, y
+           s169 cambio esto: antes ningun backup los traia y el contenedor se
+           reiniciaba siempre.
+             · CON seccion  -> se REEMPLAZA por completo con la del backup
+               (§17: sin merge, sin deduplicar, idempotente).
+             · SIN seccion  -> se REINICIA con `activatedAt` nuevo y el
+               baseline recapturado del estado que entra. Dejar el contenedor
+               de antes junto a un estado importado seria exactamente la MEZCLA
+               de historial anterior con estado nuevo que hay que evitar — el
+               baseline se habria capturado de unos contadores que ya no son
+               los de este estado.
+           Y si la seccion viene CORRUPTA, la barrera aborta el import ENTERO
+           sin escribir el estado legacy: un backup a medias no es un backup.
            La recarga de 900 ms no es la garantia: si el proceso muriera antes
            de que la barrera termine, el MARCADOR sobrevive y la siguiente
            inicializacion completa el reinicio (§22), que es idempotente. */
+        /* La seccion de eventos, si el backup la trae. Los backups anteriores
+           a s169 no la llevan y `undefined` mantiene el camino de siempre:
+           reiniciar el contenedor. NO se valida aqui -- lo hace la barrera,
+           que es quien puede garantizar el «antes de tocar nada» de §17. */
+        const eventsSection = payload.events;
+
         const writeLegacy = () => localStorage.setItem('pace.state.v2', JSON.stringify(incoming));
         /* SE ESPERA A LA BARRERA, y el exito se anuncia solo si de verdad lo
            hubo. Antes se lanzaba sin esperar: si `setItem` fallaba por cuota o
@@ -102,7 +126,7 @@ function TweaksDataSection() {
            contenedor de eventos se reiniciaba igual, la UI decia «importado» y
            la pagina recargaba. Cuatro mentiras seguidas sobre una promesa de
            integridad. */
-        paceEventsStoreBarrier('import', writeLegacy, incoming).then((r) => {
+        paceEventsStoreBarrier('import', writeLegacy, incoming, eventsSection).then((r) => {
           if (!r || !r.legacyWritten) {
             setMsg({ kind: 'err', text: t('tweaks.msg.import.storage.err') });
             setTimeout(() => setMsg(null), 2600);

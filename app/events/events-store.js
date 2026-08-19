@@ -232,7 +232,7 @@ function paceEventsDiagnostics() {
    Si el subsistema no puede escribir, `writeLegacy()` se ejecuta igual: el
    import y el reset de Ajustes NO pueden depender de que los eventos
    funcionen (§19.5). */
-function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState) {
+function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState, eventsSection) {
   /* `writeLegacy` puede fallar de verdad: cuota agotada, almacenamiento
      bloqueado, modo privado. Su resultado NO se descarta — es la condicion de
      la que depende todo lo que viene despues. */
@@ -243,9 +243,27 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState) {
     return { result: result, legacyWritten: !!legacyWritten, container: null };
   };
 
+  /* §17 — SI EL BACKUP TRAE SECCION DE EVENTOS, SE VALIDA ENTERA ANTES DE
+     TOCAR NADA, y antes incluso de mirar si podemos escribir: una seccion
+     corrupta hace que el backup entero sea invalido, y entonces no se escribe
+     ni el estado legacy. Es lo contrario de degradar en silencio -- mas vale
+     que el usuario lo reintente con un archivo bueno que quedarse con un
+     estado nuevo y un historial que no le corresponde. */
+  let restaurar = null;
+  if (eventsSection !== null && eventsSection !== undefined) {
+    let v;
+    try { v = validateEventsImport(eventsSection); } catch (e) { v = { ok: false }; }
+    if (!v || !v.ok) return Promise.resolve(salida(EVENTS_REJECTED, false));
+    restaurar = eventsSection;
+  }
+
   /* Sin subsistema de eventos no hay contenedor que proteger: la escritura
      legacy se hace igual (§19.5) y se informa de si salio bien. */
   if (!paceEventsCanWrite()) {
+    /* §19.5: el import y el reset NO pueden depender de que los eventos
+       funcionen, asi que el estado legacy entra igual. La consecuencia, dicha:
+       si el backup traia seccion de eventos, ese historial NO se restaura --
+       no hay donde ponerlo. El estado del usuario, que es lo canonico, si. */
     const ok = doLegacy();
     return Promise.resolve(salida(ok ? EVENTS_UNAVAILABLE_RESULT : EVENTS_REJECTED, ok));
   }
@@ -272,7 +290,21 @@ function paceEventsStoreBarrier(op, writeLegacy, nextLegacyState) {
         });
       }
 
-      return eventsWebReset(nextLegacyState || null).then(function (r) {
+      /* PASO 3, y aqui esta la unica diferencia entre los dos tipos de backup.
+         CON seccion de eventos (backups desde la Fase 2): se REEMPLAZA por
+         completo -- sin merge y sin deduplicar, §17 --, que es lo que hace
+         cierta la frase de `privacy.html` sobre importar en otro dispositivo.
+         SIN seccion (backups anteriores, y los de cualquiera que exporte con
+         el contenedor vacio): se REINICIA con `activatedAt` nuevo y el
+         baseline recapturado del estado que acaba de entrar -- conservar el
+         contenedor de antes seria la MEZCLA que §17 prohibe.
+         Si el proceso muere entre 2 y 3, la recuperacion del marcador reinicia
+         (no reemplaza): se pierde el historial importado, no el del usuario, y
+         el import se puede repetir. Es la caida segura de las dos. */
+      const paso3 = restaurar
+        ? eventsWebReplaceFromImport(restaurar)
+        : eventsWebReset(nextLegacyState || null);
+      return paso3.then(function (r) {
         return salida(r && r.result === EVENTS_COMMITTED ? EVENTS_COMMITTED : EVENTS_INTERRUPTED, true);
       });
     })

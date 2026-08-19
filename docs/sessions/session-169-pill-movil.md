@@ -334,3 +334,70 @@ verify tiene «**32 comprobaciones**», censo de s152 que **ya estaba mal en dos
 antes de esta sesión (s168 añadió 2, s169 otras 4). Se quita el número en lugar
 de re-contarlo: es justo la clase de cifra que nadie mantiene, que es el mismo
 problema que acaba de arreglar el checker.
+
+---
+
+## 13 · v0.99.1 · el backup lleva `pace.events.v1`, y lo devuelve
+
+Arranca la **Fase 2 de `pace.events.v1`** por su **condición de entrada**, puesta
+**antes** que el primer emisor a propósito: así el gate del `verify` no puede
+pillar a nadie a mitad de camino.
+
+### No era añadir un campo al export
+
+`privacy.html` promete exportar «todo tu estado ... **e importarlo en otro
+dispositivo**». La segunda mitad es la que mandaba: **el import tiraba el
+historial**, y su comentario lo razonaba bien — *«un backup de PACE no trae
+sección de eventos»*, así que reiniciaba el contenedor para evitar la MEZCLA de
+§17. Esa frase caduca el día que exista un emisor. Exportar historial que al
+restaurar se descarta habría sido **peor** que no exportarlo.
+
+Así que las dos mitades se movieron juntas, con tres caminos:
+
+| el backup… | qué pasa |
+|---|---|
+| **trae sección** | se **reemplaza** por completo (sin merge, sin deduplicar, idempotente) |
+| **no la trae** (todos los anteriores) | se **reinicia**, exactamente como antes |
+| **la trae corrupta** | se aborta el import **entero**, y eso incluye **no escribir `pace.state.v2`** |
+
+El tercero es el que importa. El fallo tentador es descartar la sección mala y
+«al menos salvar el estado» — y eso deja al usuario con **estado nuevo e
+historial ajeno**, que es justo la mezcla que todo el diseño evita. La validación
+vive **en la barrera** y no en el llamador, porque es quien puede garantizar el
+«antes de tocar nada» de §17.
+
+La sección va **hermana** de `state` y no dentro: son dos almacenes con ciclos de
+vida independientes (s155) y mezclarlos en el JSON invitaría a escribirlos como
+si fueran uno.
+
+### 3 asertos (92 → 95), los 3 en rojo primero
+
+El primero lee **el archivo que el navegador descarga de verdad**, no el objeto
+que lo construye: lo que el usuario se lleva es el archivo. El segundo parte de
+**8** eventos y espera **3**, para que reinicio (0) y fusión (11) fallen los dos.
+
+### Dos mentiras del instrumento, y una trampa propia
+
+- **Comparar `pace.state.v2` entero salió rojo con el producto sano.** La app
+  normaliza y **re-persiste** su propio estado al arrancar, así que el documento
+  cambia sin que nadie importe nada. Comparar un documento que la app también
+  escribe **no es** comprobar que el import no escribió. Ahora se miran los
+  campos que el backup habría cambiado.
+- **Dos esperas aguardaban sólo el desenlace bueno**, así que con el producto
+  roto daban `Timeout 15000ms exceeded` y ni una palabra más. Reescritas para
+  esperar a que el estado **cambie** (T2) y para **correr los dos desenlaces**
+  (T3). Con eso las tres mutaciones caen con su mensaje propio.
+- **La trampa propia, y cara:** el primer script de calibración restauraba las
+  mutaciones con `git checkout -- <archivo>` sobre dos archivos cuya línea base
+  **no estaba committeada**. Los devolvió a HEAD y **borró la implementación
+  entera**; los tres tests pasaron a rojo por **ausencia de producto**, no por el
+  aserto. `git checkout` restaura al **último commit**, no a como estaba hace un
+  minuto. Rehecho restaurando desde una copia en el scratchpad.
+
+### Lo que queda de la Fase 2
+
+Los **cuatro emisores**. El terreno está reconocido y anotado en `STATE.md`: no
+viven en la UI sino en la capa de estado, y **el trabajo real no es llamar a
+`paceEventsAppend`** sino que esas funciones reciben hoy **minutos** y el payload
+pide `activeSeconds`, `plannedSeconds` con su origen, `completionReason`,
+`variant` y `runId`.
