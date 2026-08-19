@@ -142,10 +142,16 @@ function chequeaEventos(ctx, declarados, listaCorta) {
     var c = codigosSinComentariosCache(ctx, codigos, f);
     if (c && /\bpaceEventsAppend\s*\(/.test(c)) emisores.push(f);
   });
-  if (!emisores.length) {
+  var exporta = !!(datos && /paceEventsExport/.test(datos));
+  if (!emisores.length && exporta) {
+    /* s169 puso la condicion de entrada ANTES que el primer emisor, a
+       proposito: asi el gate no puede pillar a nadie a mitad de camino. */
+    ctx.ok('eventos: sin emisores todavia (Fase 2), pero el export de «Tus datos» YA lleva la ' +
+           'seccion -- la condicion de entrada esta puesta antes que el primer emisor');
+  } else if (!emisores.length) {
     ctx.ok('eventos: sin emisores todavia (Fase 2) -- el backup publico no lleva seccion de eventos, ' +
            'y en cuanto aparezca un emisor esta comprobacion exigira que la lleve');
-  } else if (datos && /paceEventsExport/.test(datos)) {
+  } else if (exporta) {
     ctx.ok('eventos: hay emisores (' + listaCorta(emisores) + ') y el export de «Tus datos» ' +
            'incluye la seccion de eventos');
   } else {
