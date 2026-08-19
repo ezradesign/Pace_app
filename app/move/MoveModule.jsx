@@ -98,8 +98,11 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
        ya cuenta el segmento abierto) y se congela en un ref, porque el 'done'
        se re-renderiza. */
     activeSecRef.current = Math.round(relojActivo.segundos());
-    if (kind === 'extra') completeExtraSession(routine.id, realMin);
-    else completeMoveSession(routine.id, realMin);
+    /* s172 · el tercer argumento son los datos del evento (dual-write): se arma
+       aquí porque `sessionStart` y el reloj activo solo existen aquí. */
+    const ev = legacyEventoSesion(routine, sessionStart.current, activeSecRef.current, inPath);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);
+    else completeMoveSession(routine.id, realMin, ev);
   };
   const [prepCount, setPrepCount] = useStateMV(3);
   const [stepIdx, setStepIdx] = useStateMV(0);
@@ -332,6 +335,26 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   );
 }
 
+/* s172 · LOS DATOS DE `session.completed` DEL RUNNER LEGACY (§6.4). Su plan es
+   el DECLARADO (`routine.min`), porque estas rutinas no tienen contrato de
+   pasos del que derivar nada — es la fila que el esquema les da; el runner v1
+   deriva el suyo con `estimateDuration` porque ahí sí hay de dónde.
+   `completionReason` es SIEMPRE 'natural': el legacy solo termina agotando el
+   último paso, y §6.3 dice explícitamente que llegar al final avanzando a mano
+   NO es 'early'. */
+function legacyEventoSesion(routine, inicioMs, activoSec, inPath) {
+  const min = (routine && typeof routine.min === 'number') ? routine.min : 0;
+  return {
+    inPath: !!inPath,
+    elapsedSeconds: Math.max(0, Math.round((Date.now() - inicioMs) / 1000)),
+    activeSeconds: Math.max(0, Math.round(activoSec || 0)),
+    plannedSeconds: min > 0 ? min * 60 : null,
+    plannedSecondsSource: min > 0 ? 'declared' : null,
+    variant: 'legacy',
+    completionReason: 'natural',
+  };
+}
+
 /* MoveHeader y MoveStat (antes locales aquí) se fusionaron en sesión 26
    con SessionHeader/Stat de Breathe en app/ui/SessionShell.jsx. Ver
    docs/audits/audit-v0.12.7.md §3.1. */
@@ -380,4 +403,4 @@ if (!_paceMoveResponsive) {
 }
 
 /* getMoveRoutine + MOVE_ROUTINES → app/move/move.data.js (split s110). */
-Object.assign(window, { MoveLibrary, MoveSession, StepGlyph });
+Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion });

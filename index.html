@@ -5484,13 +5484,29 @@ function completePomodoro() {
    updateStreak se resuelve en runtime (definido en state-achievements, que
    carga despues); el guard typeof lo protege por simetria con el resto. */
 function completeFocusSession(context, opts) {
+  const mins = opts && typeof opts.minutes === 'number' ? opts.minutes : 25;
   if (context === 'path') {
-    const mins = opts && typeof opts.minutes === 'number' ? opts.minutes : 25;
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
-    return;
+  } else {
+    completePomodoro();
   }
-  completePomodoro();
+  /* s172 · DUAL-WRITE: el evento va DESPUES de la escritura legacy y no puede
+     alterarla (`emitSessionCompleted` se traga sus propios fallos). Foco solo
+     llega aqui cuando la cuenta atras se agota —salir antes no completa—, asi
+     que `completionReason` es SIEMPRE 'natural' (§6.3). El plan es el preset y
+     el activo es la propia cuenta: el reloj de `useCountdown` no corre en
+     pausa, y lo pausado se queda en `elapsedSeconds` (§6.4). */
+  if (typeof emitSessionCompleted === 'function') {
+    emitSessionCompleted('focus', paceFocusRoutineId(mins), {
+      inPath: context === 'path',
+      elapsedSeconds: opts && opts.elapsedSeconds,
+      activeSeconds: opts && opts.activeSeconds,
+      plannedSeconds: mins * 60,
+      plannedSecondsSource: 'preset',
+      completionReason: 'natural'
+    });
+  }
 }
 
 Object.assign(window, {
@@ -5888,7 +5904,7 @@ function updateStreak() {
    verdad. NINGUN LOGRO lo consume, y es una de las tres condiciones de la
    decision: B1/s89 retiro la cifra de la retencion por ser un RECORD, no por
    ser un dato, asi que un total acumulado entra y un maximo no. */
-function completeBreathSession(routineId, durationMin, holdSec) {
+function completeBreathSession(routineId, durationMin, holdSec, evento) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -5947,9 +5963,13 @@ function completeBreathSession(routineId, durationMin, holdSec) {
   }
   updateStreak();
   flushAchievementToast('breathe');
+  /* s172 · dual-write: el evento SIEMPRE detras de la escritura legacy, que es
+     la que manda (stats, logros, racha). `evento` lo arma el runner, que es
+     quien tiene los tiempos; sin el, no se emite nada y la app sigue igual. */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, evento);
 }
 
-function completeMoveSession(routineId, durationMin) {
+function completeMoveSession(routineId, durationMin, evento) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -5971,9 +5991,10 @@ function completeMoveSession(routineId, durationMin) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, evento);
 }
 
-function completeExtraSession(routineId, durationMin) {
+function completeExtraSession(routineId, durationMin, evento) {
   if (durationMin === undefined) durationMin = 0;
   ensureDayFresh();
   const s = getState();
@@ -6012,6 +6033,9 @@ function completeExtraSession(routineId, durationMin) {
   }
   updateStreak();
   flushAchievementToast('extra');
+  /* El enum del esquema llama `stretch` a lo que el codigo llama `extra`: el
+     nombre del modulo se traduce AQUI y no en el runner (§8). */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, evento);
 }
 
 Object.assign(window, {
@@ -6133,7 +6157,13 @@ function startPath(pathId) {
         stepIndex: 0,
         startedAt: Date.now(),
         skippedSteps: [],
-        doneCount: 0 // s105: pasos hechos DE VERDAD (reason 'done')
+        doneCount: 0, // s105: pasos hechos DE VERDAD (reason 'done')
+        /* s172 · `pathRunId` (§7.1): nace con la EJECUCION y muere con ella,
+           que es exactamente el ciclo de vida de `current`. Va aqui dentro y no
+           en una clave aparte para que no pueda sobrevivir a su Camino. Se
+           persiste con el resto de `current` porque un Camino sobrevive a una
+           recarga y sus pasos tienen que seguir agrupandose igual. */
+        pathRunId: window.newEventId && window.newEventId() || null
       }
     }
   }));
@@ -6145,6 +6175,15 @@ function setLastViewedPath(pathId) {
 
 function advancePathStep(reason) {
   if (reason === undefined) reason = 'done';
+  /* s172 · SE LEE ANTES DE AVANZAR, y no es una precaucion: el updater de abajo
+     pone `paths.current` a null al cerrar el Camino, y con el se va el
+     `pathRunId` que los dos eventos necesitan — leerlo despues perderia justo
+     el evento que cierra. La emision va DESPUES del setState y FUERA del
+     updater, que en este repo es puro por contrato (s116). */
+  const antesPaths = getState().paths || {};
+  const antes = antesPaths.current;
+  const vecesAntes = antes && antesPaths.completed && antesPaths.completed[antes.id] &&
+  antesPaths.completed[antes.id].count || 0;
   setState((s) => {
     const c = s.paths.current;
     if (!c) return s;
@@ -6199,6 +6238,24 @@ function advancePathStep(reason) {
       }
     };
   });
+  if (!antes) return;
+  const camino = window.getPath && window.getPath(antes.id);
+  if (!camino) return;
+  /* Solo el paso HECHO emite: 'skip' y 'exit' no acreditan actividad (s105), y
+     el evento no puede decir lo contrario que las stats. */
+  if (reason === 'done' && typeof emitPathStepCompleted === 'function') {
+    emitPathStepCompleted(antes.id, antes.stepIndex, camino.steps[antes.stepIndex], antes.pathRunId);
+  }
+  /* El Camino esta completo si el CONTADOR subio. Se mira el efecto en vez de
+     repetir la condicion del updater (nextIndex >= steps.length && doneCount),
+     que es la que ya decide quien cuenta y quien no: dos copias de esa regla
+     acabarian diciendo cosas distintas. */
+  const despues = getState().paths || {};
+  const vecesDespues = despues.completed && despues.completed[antes.id] &&
+  despues.completed[antes.id].count || 0;
+  if (vecesDespues > vecesAntes && typeof emitPathCompleted === 'function') {
+    emitPathCompleted(antes.id, camino.steps.length, antes.pathRunId);
+  }
 }
 
 function completePath(pathId) {
@@ -6720,6 +6777,11 @@ function recordRoutineFeedback(routineId, response) {
     ...prev,
     routineFeedback: nextRoutineFeedback(prev.routineFeedback, id, resp)
   }));
+  /* s172 · dual-write: el contador de arriba sigue siendo la fuente de verdad
+     de «que te ayuda»; el evento se anade al lado. `later` NO emite (§15.2) y
+     tampoco emite si la sesion correlacionada no es esta rutina — el `runId`
+     de §7.1 referencia una sesion que EXISTE, no se inventa. */
+  if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
 }
 
 /* shouldPromptRoutineFeedback — ¿mostrar la pregunta para esta rutina AHORA?
@@ -8162,6 +8224,230 @@ Object.assign(window, {
   paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot
 });
 ;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
+})();
+</script>
+  <!-- EL EMISOR (s172 · Fase 3, PASO 2): el puente entre el dominio y el
+       envelope. Va DESPUES del subsistema (usa makeEvent/paceEventsAppend) y
+       antes de state.jsx. Las `complete*Session` que lo llaman cargan ANTES
+       que esto y no pasa nada: las llamadas ocurren en runtime, no al evaluar.
+       Y el `paceEventsAppend` esta aqui, FUERA de app/events/, a proposito: es
+       lo que hace que el gate de `verify.eventos.js` §5 vea que hay emisores y
+       exija que el backup publico lleve la seccion de eventos. -->
+  <script>
+;(function () {
+/* PACE · state-events.jsx
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   EL EMISOR de `pace.events.v1` (s172 · Fase 3, PASO 2). El puente entre el
+   dominio —una sesión que termina, un feedback contestado, un paso de Camino—
+   y el envelope canónico de `docs/product/EVENTOS_SCHEMA.md`.
+
+   POR QUÉ VIVE EN LA CAPA DE ESTADO Y NO EN LA UI (decisión s169). Las seis
+   llamadas a `complete*Session` están repartidas por cinco componentes; emitir
+   desde ahí serían seis puntos que se desincronizan. Aquí hay UNO por tipo de
+   evento, junto a la escritura legacy (dual-write): lo legacy manda y sigue
+   mandando —stats, logros, rachas— y el evento se añade al lado. Si el evento
+   falla, no se cae nada: `paceEmitirEvento` se traga todo, patrón `playSound`.
+
+   Y POR QUÉ EL `paceEventsAppend` ESTÁ AQUÍ Y NO DENTRO DE `app/events/`.
+   `scripts/verify.eventos.js` §5 define «emisor» como una llamada a
+   `paceEventsAppend` FUERA de `app/events/`, y con eso exige que el backup
+   público lleve la sección de eventos —la promesa de `privacy.html`—. Si esta
+   llamada se escondiera dentro del subsistema, el gate seguiría diciendo «sin
+   emisores todavía» con emisores puestos: un verde que no mira nada. La
+   frontera del checker es lo que hace que este archivo esté donde está.
+
+   ── LO QUE SE DECIDIÓ MIRANDO EL CATÁLOGO, NO EL PREFIJO ──────────────────
+   El registro de Caminos usa `kind:'body'` y el enum del esquema no lo tiene;
+   había que mapearlo. El plan heredado decía «`move.` → move, `extra.` →
+   stretch», Y ESO ESTÁ AL REVÉS EN LOS CINCO CASOS QUE EXISTEN: `move.neck.3`,
+   `move.hips.5`, `move.atg.knees` y `move.chair.antidote` viven en
+   `EXTRA_ROUTINES` (Estira) y `extra.desk.pushups` vive en `MOVE_ROUTINES`
+   (Mueve). Los ids son históricos —s15 movió rutinas de un módulo al otro y
+   los conservó como identificadores estables— así que NO dicen de qué módulo
+   son. Quien lo sabe es `resolveBodyRoutine()`, el mismo resolutor que usa
+   `PathBodyStep` para elegir el runner. Se pregunta al catálogo.
+
+   ── DURACIONES (§6.4), en un solo sitio para que se puedan leer juntas ─────
+     Foco     → preset (15/25/35/45 min), `preset`.
+     Mueve v1 → `estimateDuration().minSec`, `derived`. NO `routine.min`: el
+                declarado se desvía del calculado (por eso existe el dev-check).
+     legacy   → `routine.min × 60`, `declared`.
+     Respira  → rondas: rondas × respiraciones × ciclo, `derived`.
+                no-rondas: `routine.min × 60`, `declared` — el motor termina
+                por TIEMPO ACTIVO contra ese número, así que se conoce antes de
+                empezar. §6.4 no contempla el caso (su fila habla de rondas);
+                se aplica el mismo trato que el documento da al legacy de
+                cuerpo, que es el precedente más cercano. **Anotado como
+                desviación consciente de la letra, no como interpretación.**
+
+   ── `runId` SIN TOCAR LOS RUNNERS ─────────────────────────────────────────
+   §7.1 exige que `session.completed` y su `feedback.answered` compartan
+   `runId`, y §7.2 dice que no hace falta persistirlo: el feedback sólo se
+   contesta con el DONE montado. Así que el id se genera AQUÍ al emitir la
+   sesión y se recuerda en memoria (`paceUltimaSesion`) hasta que otra sesión
+   lo sustituya. El feedback correlaciona sólo si su `routineId` es el de esa
+   última sesión; si no coincide, NO se emite — antes que inventar una
+   correlación falsa, se pierde el evento (§7.1: no se crean runId ficticios).
+
+   Depende de: app/events/* (por window, en runtime) · state-core (getState) ·
+   app/paths/registry.js (resolveBodyRoutine). Carga DESPUÉS de events-store.
+*/
+
+/* Última sesión emitida, EN MEMORIA y nunca persistida (§7.2). Se limpia sola
+   al recargar, que es justo lo que se quiere: un DONE no sobrevive a eso. */
+let paceUltimaSesion = null;
+
+/* El ÚNICO punto que escribe en el almacén de eventos. Devuelve si se intentó,
+   no si se commiteó: el append es asíncrono y el llamante no espera. Si el
+   almacén lo rechaza, el `.then` deshace la memoria del runId para que un
+   feedback posterior no referencie una sesión que no existe. */
+function paceEmitirEvento(evento, alRechazar) {
+  if (!evento || typeof window.paceEventsAppend !== 'function') return false;
+  try {
+    const p = window.paceEventsAppend(evento);
+    if (p && typeof p.then === 'function') {
+      p.then(function (r) {
+        if (!r || r.result !== 'committed') {if (alRechazar) alRechazar();}
+      }, function () {if (alRechazar) alRechazar();});
+    }
+    return true;
+  } catch (e) {return false;}
+}
+
+/* El módulo de un paso de cuerpo, preguntando al CATÁLOGO (ver cabecera).
+   `null` si la rutina no se resuelve: sin módulo no hay evento válido, y
+   perderlo es mejor que etiquetarlo mal. */
+function paceModuloDeCuerpo(routineId) {
+  const r = window.resolveBodyRoutine && window.resolveBodyRoutine(routineId);
+  if (!r) return null;
+  return r.source === 'extra' ? 'stretch' : 'move';
+}
+
+/* `stepKind` de un paso de Camino: 'body' se resuelve; el resto tiene que
+   estar en el enum del esquema o no se emite (un `kind` nuevo sin fila en
+   EVENT_STEP_KINDS caería igualmente en `normalizeEventPayload`, pero ahí no
+   se vería el porqué). */
+function paceStepKindEvento(step) {
+  if (!step || !step.kind) return null;
+  const k = step.kind === 'body' ? paceModuloDeCuerpo(step.routineId) : step.kind;
+  const enums = window.EVENT_STEP_KINDS || [];
+  return enums.indexOf(k) !== -1 ? k : null;
+}
+
+/* Foco no tiene rutina, pero el payload pide `routineId` (§8). Se sintetiza
+   por duración, que es la única identidad que un bloque de foco tiene, y con
+   el mismo estilo que los ids del catálogo (`move.*`, `breathe.*`). */
+function paceFocusRoutineId(minutos) {
+  const n = Math.max(1, Math.round(Number(minutos) || 0));
+  return 'focus.' + n;
+}
+
+/* El `pathRunId` vivo, o null. Nace en `startPath` y muere con `paths.current`
+   (§7.1). Un Camino empezado ANTES de que existiera el emisor no lo tiene: sus
+   pasos no se emiten, y es correcto — no se inventa una ejecución. */
+function paceCaminoRunId() {
+  const s = typeof getState === 'function' ? getState() : null;
+  const c = s && s.paths && s.paths.current;
+  return c && typeof c.pathRunId === 'string' && c.pathRunId ? c.pathRunId : null;
+}
+
+/* session.completed — el emisor de los cuatro módulos. `datos` lo arma cada
+   runner con lo que sólo él sabe (tiempos y plan); aquí se decide la
+   correlación y se recuerda el runId para el feedback. */
+function emitSessionCompleted(module, routineId, datos) {
+  const d = datos || {};
+  /* Sin tiempos no hay evento: `normalizeEventPayload` lo rechazaría igual,
+     pero un llamante que aún no los pasa se vería como un silencio. */
+  if (typeof d.elapsedSeconds !== 'number' || typeof d.activeSeconds !== 'number') return null;
+  const runId = window.newEventId ? window.newEventId() : null;
+  if (!runId) return null;
+  const pathRunId = d.inPath ? paceCaminoRunId() : null;
+  const evento = window.makeEvent && window.makeEvent({
+    type: 'session.completed',
+    context: d.inPath ? 'path' : 'standalone',
+    runId: runId,
+    pathRunId: pathRunId,
+    payload: {
+      module: module,
+      routineId: routineId,
+      completionReason: d.completionReason === 'early' ? 'early' : 'natural',
+      elapsedSeconds: d.elapsedSeconds,
+      activeSeconds: d.activeSeconds,
+      plannedSeconds: typeof d.plannedSeconds === 'number' ? d.plannedSeconds : null,
+      plannedSecondsSource: d.plannedSecondsSource || null,
+      variant: d.variant || null
+    }
+  });
+  if (!evento) return null;
+  paceUltimaSesion = { runId: runId, routineId: routineId, module: module };
+  paceEmitirEvento(evento, function () {paceUltimaSesion = null;});
+  return runId;
+}
+
+/* feedback.answered — «Ahora no» (later) NO emite (§15.2), y sin la sesión
+   correlacionada tampoco: el `runId` es obligatorio y referencia una que
+   existe. El módulo se toma de la sesión recordada, no se deduce del id. */
+function emitFeedbackAnswered(routineId, response) {
+  if (response === 'later') return false;
+  const u = paceUltimaSesion;
+  if (!u || u.routineId !== routineId) return false;
+  const evento = window.makeEvent && window.makeEvent({
+    type: 'feedback.answered',
+    context: 'standalone',
+    runId: u.runId,
+    payload: { routineId: routineId, module: u.module, response: response }
+  });
+  return paceEmitirEvento(evento);
+}
+
+/* path.step.completed — `pathRunId` obligatorio; `runId` va a null a propósito:
+   correlacionar el paso con SU sub-sesión exigiría enhebrar el id por
+   `onExit(reason)` en los cuatro steps, y §7.1 lo declara opcional. La
+   correlación Camino↔sesión ya viaja por `pathRunId` en `session.completed`,
+   que es lo que §6.4 necesita para sumar el activo del Camino.
+   El `pathRunId` llega POR PARÁMETRO y no se lee del estado: en el último paso
+   el avance ya ha puesto `paths.current` a null cuando esto se llama, así que
+   leerlo aquí perdería justo el evento que cierra el Camino. */
+function emitPathStepCompleted(pathId, stepIndex, step, pathRunId) {
+  const kind = paceStepKindEvento(step);
+  if (!pathRunId || !kind) return false;
+  const evento = window.makeEvent && window.makeEvent({
+    type: 'path.step.completed',
+    context: 'path',
+    pathRunId: pathRunId,
+    payload: { pathId: pathId, stepIndex: stepIndex, stepKind: kind }
+  });
+  return paceEmitirEvento(evento);
+}
+
+/* path.completed — `runId` no aplica (§7.1). Se emite con el `pathRunId` que
+   se leyó ANTES de que el avance pusiera `paths.current` a null. */
+function emitPathCompleted(pathId, stepsCount, pathRunId) {
+  if (!pathRunId) return false;
+  const evento = window.makeEvent && window.makeEvent({
+    type: 'path.completed',
+    context: 'path',
+    pathRunId: pathRunId,
+    payload: { pathId: pathId, stepsCount: stepsCount }
+  });
+  return paceEmitirEvento(evento);
+}
+
+/* Sólo para pruebas: leer y limpiar la correlación en memoria. No lo usa la
+   app — existe para que un test pueda comprobar la regla de §7.1 sin abrir el
+   almacén. */
+function paceUltimaSesionEmitida() {return paceUltimaSesion;}
+function paceOlvidarUltimaSesion() {paceUltimaSesion = null;}
+
+Object.assign(window, {
+  paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId,
+  paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered,
+  emitPathStepCompleted, emitPathCompleted,
+  paceUltimaSesionEmitida, paceOlvidarUltimaSesion
+});
+;Object.assign(window, { paceEmitirEvento, paceModuloDeCuerpo, paceStepKindEvento, paceFocusRoutineId, paceCaminoRunId, emitSessionCompleted, emitFeedbackAnswered, emitPathStepCompleted, emitPathCompleted, paceUltimaSesionEmitida, paceOlvidarUltimaSesion });
 })();
 </script>
   <script>
@@ -11230,14 +11516,23 @@ const focusStyles = {
   }
 };
 
+/* s172 · el tiempo de PARED de un bloque de foco (§6.4): con las pausas
+   dentro, y nunca menor que la propia cuenta atras — si el inicio se perdio en
+   una recarga, el suelo es la duracion del preset, que es lo unico seguro. */
+function focoElapsedSec(inicioMs, durationSec) {
+  if (!inicioMs) return durationSec;
+  return Math.max(durationSec, Math.round((Date.now() - inicioMs) / 1000));
+}
+
 Object.assign(window, {
+  focoElapsedSec,
   /* s163 · lo que entro con el troceo de FocusTimer.jsx */
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */
   getFocusDescriptorKey, maybeNotifyFocusEnd, maybeRequestNotifyPermission,
   loadPersistedFocusTimer, persistFocusTimer
 });
-;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, curvaSuave, curvaCaida });
+;Object.assign(window, { getFocusDescriptorKey, maybeRequestNotifyPermission, maybeNotifyFocusEnd, loadPersistedFocusTimer, persistFocusTimer, curvaSuave, curvaCaida, focoElapsedSec });
 })();
 </script>
   <!-- Piezas de UI del Pomodoro (s124): MinutesPicker extraído. Declara sus
@@ -13748,7 +14043,11 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
           body: t('notify.focus.body')
         });
       } catch (e) {}
-      completeFocusSession('home');
+      /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
+         asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
+      completeFocusSession('home', { minutes: state.focusMinutes,
+        elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
+        activeSeconds: durationSec });
       onFinish && onFinish();
     }
   });
@@ -13758,12 +14057,19 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
      local, decisión s96). Al montar: reanuda solo si el foco guardado
      sigue VIVO y modo/minutos coinciden; expirado estando fuera se
      descarta sin acreditar (helpers en FocusTimer.support.jsx). */
+  /* s172 · reloj de PARED del bloque, solo para el evento (§6.4 lo quiere CON
+     las pausas dentro y `useCountdown` no guarda el inicio). Se fija al empezar
+     un bloque, NUNCA al reanudar: eso borraria la pausa que esto va a contar. */
+  const inicioBloqueRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
     const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
-    if (endsAtSaved) restore(endsAtSaved);
+    /* Reanudado tras recargar: el inicio real se fue con la pestaña y se DERIVA
+       del final guardado — estimacion que ignora las pausas previas, por eso no
+       toca `activeSeconds`, que sigue siendo exacto. */
+    if (endsAtSaved) {inicioBloqueRef.current = endsAtSaved - durationSec * 1000;restore(endsAtSaved);}
   }, []);
 
   // Escribe mientras hay un foco running; pausa/reset/fin/otros modos limpian.
@@ -13832,6 +14138,7 @@ function FocusTimer(_ref) {let { onFinish } = _ref;
      permiso de notificación. Lo comparten un arranque/reanudación normal y
      «Empezar otro ciclo», para idéntica semántica sin tocar el motor. */
   const startFocusVisual = () => {
+    if (status !== 'paused') inicioBloqueRef.current = Date.now(); // s172: bloque nuevo, no reanudacion
     try {playSound('pomodoro.start');} catch (e) {}
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
   };
@@ -15051,8 +15358,43 @@ function useHoldClock() {
   return useActiveClock();
 }
 
-Object.assign(window, { useHoldClock });
-;Object.assign(window, { useHoldClock });
+/* s172 · EL PLAN DE UNA SESION DE RESPIRA (§6.4), y las dos familias no se
+   planifican igual:
+     · no-rondas → `routine.min × 60`, `declared`. El motor termina cuando el
+       TIEMPO ACTIVO alcanza ese numero (BreatheSession, fin no-rounds), asi que
+       es un plan conocido antes de empezar y no una estimacion.
+     · rondas    → rondas × respiraciones × ciclo, `derived`. Es lo que §6.4
+       nombra, y hay que leerlo con su limite: la RETENCION la suelta el
+       usuario, no el reloj, asi que este plan cubre solo la parte respirada y
+       siempre va a quedar POR DEBAJO del activo real. Se emite igualmente
+       porque el consumidor lo compara con `plannedSecondsSource`, que dice de
+       donde sale; lo que no se puede es fingir que planifica la retencion.
+   La fila de §6.4 para Respira solo contempla la segunda; la primera se trata
+   como el legacy de cuerpo, que es el precedente mas cercano del documento. */
+function respiraPlanSec(routine) {
+  if (!routine) return null;
+  if (routine.pattern === 'rounds') {
+    const secs = (routine.rounds || 0) * (routine.breaths || 0) * 4; // 2 s inhala + 2 s exhala
+    return secs > 0 ? secs : null;
+  }
+  return typeof routine.min === 'number' && routine.min > 0 ? routine.min * 60 : null;
+}
+
+function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
+  const plan = respiraPlanSec(routine);
+  return {
+    inPath: !!inPath,
+    elapsedSeconds: Math.max(0, Math.round((Date.now() - inicioMs) / 1000)),
+    activeSeconds: Math.max(0, Math.round(activoSec || 0)),
+    plannedSeconds: plan,
+    plannedSecondsSource: plan === null ? null : routine.pattern === 'rounds' ? 'derived' : 'declared',
+    variant: null,
+    completionReason: early ? 'early' : 'natural'
+  };
+}
+
+Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion });
+;Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion });
 })();
 </script>
   <script>
@@ -15291,7 +15633,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
     }
   };
 
-  const finish = () => {
+  const finish = (motivo) => {
     // Credito = TIEMPO ACTIVO real (s98), no el nominal routine.min. Excluye
     // pausas y no sobre-acredita al pulsar "Finalizar" pronto. Aplica igual a
     // rounds (retenciones incluidas -> mas honesto) que a no-rounds. Minimo 1
@@ -15304,7 +15646,10 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
        de ellas dejaba los cuatro asertos en verde, o sea que no habia forma de
        saber si alguna funcionaba. Con una sola, la mutacion muerde. El efecto
        cierra el segmento al pasar a 'done', que es donde toca. */
-    completeBreathSession(routine.id, activeMin, relojHold.segundos());
+    /* s172 · el 4o argumento son los datos del evento (dual-write); `motivo`
+       separa el plan agotado ('natural') de «Finalizar» ('early', §6.3). */
+    completeBreathSession(routine.id, activeMin, relojHold.segundos(),
+    respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
     try {playSound('breathe.session.end');} catch (e) {}
     setStage('done');
   };
@@ -15430,7 +15775,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   React.createElement("button", { onClick: () => setPaused((p) => !p), style: sessionShellStyles.ctrlBtn, title: t('session.pause') },
   paused ? t('session.resume') : t('session.pause')
   ), /*#__PURE__*/
-  React.createElement("button", { onClick: finish, style: { ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }, title: t('session.finish') },
+  React.createElement("button", { onClick: () => finish('early'), style: { ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }, title: t('session.finish') },
   t('session.finish')
   )
   );
@@ -16066,8 +16411,11 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
        ya cuenta el segmento abierto) y se congela en un ref, porque el 'done'
        se re-renderiza. */
     activeSecRef.current = Math.round(relojActivo.segundos());
-    if (kind === 'extra') completeExtraSession(routine.id, realMin);else
-    completeMoveSession(routine.id, realMin);
+    /* s172 · el tercer argumento son los datos del evento (dual-write): se arma
+       aquí porque `sessionStart` y el reloj activo solo existen aquí. */
+    const ev = legacyEventoSesion(routine, sessionStart.current, activeSecRef.current, inPath);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);else
+    completeMoveSession(routine.id, realMin, ev);
   };
   const [prepCount, setPrepCount] = useStateMV(3);
   const [stepIdx, setStepIdx] = useStateMV(0);
@@ -16300,6 +16648,26 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
 
 }
 
+/* s172 · LOS DATOS DE `session.completed` DEL RUNNER LEGACY (§6.4). Su plan es
+   el DECLARADO (`routine.min`), porque estas rutinas no tienen contrato de
+   pasos del que derivar nada — es la fila que el esquema les da; el runner v1
+   deriva el suyo con `estimateDuration` porque ahí sí hay de dónde.
+   `completionReason` es SIEMPRE 'natural': el legacy solo termina agotando el
+   último paso, y §6.3 dice explícitamente que llegar al final avanzando a mano
+   NO es 'early'. */
+function legacyEventoSesion(routine, inicioMs, activoSec, inPath) {
+  const min = routine && typeof routine.min === 'number' ? routine.min : 0;
+  return {
+    inPath: !!inPath,
+    elapsedSeconds: Math.max(0, Math.round((Date.now() - inicioMs) / 1000)),
+    activeSeconds: Math.max(0, Math.round(activoSec || 0)),
+    plannedSeconds: min > 0 ? min * 60 : null,
+    plannedSecondsSource: min > 0 ? 'declared' : null,
+    variant: 'legacy',
+    completionReason: 'natural'
+  };
+}
+
 /* MoveHeader y MoveStat (antes locales aquí) se fusionaron en sesión 26
    con SessionHeader/Stat de Breathe en app/ui/SessionShell.jsx. Ver
    docs/audits/audit-v0.12.7.md §3.1. */
@@ -16348,8 +16716,8 @@ if (!_paceMoveResponsive) {
 }
 
 /* getMoveRoutine + MOVE_ROUTINES → app/move/move.data.js (split s110). */
-Object.assign(window, { MoveLibrary, MoveSession, StepGlyph });
-;Object.assign(window, { MoveLibrary, MoveSession, MoveSessionLegacy, StepGlyph });
+Object.assign(window, { MoveLibrary, MoveSession, StepGlyph, legacyEventoSesion });
+;Object.assign(window, { MoveLibrary, MoveSession, MoveSessionLegacy, legacyEventoSesion, StepGlyph });
 })();
 </script>
   <!-- Runner del contrato de pasos v1 (s110 · B2.2): MoveSessionV1. Tras
@@ -16807,14 +17175,45 @@ function useV1ActiveClock(stage, phase, step, paused) {
   return reloj;
 }
 
+/* s172 · i18n de `instruction` — sale del runner por la regla §1: el archivo
+   estaba clavado en 500 lineas y la contabilidad del evento necesitaba dos.
+   Recibe el traductor con fallback (`tR`) en vez de cerrarse sobre el, porque
+   quien conoce el idioma es el componente. */
+function v1Instr(tR, routine, idx, key) {
+  const st = routine.steps[idx];
+  return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+}
+
+/* s172 · LOS DATOS DE `session.completed` DEL RUNNER V1 (§6.4). Vive aqui y no
+   en el runner por la misma regla, y de paso queda al lado de
+   `estimateDuration`, que es de donde sale el plan.
+   `plannedSeconds` es el CALCULADO y no `routine.min`: el declarado se desvia
+   del calculado —para eso existe `v1DevCheckDuration`— asi que publicar el
+   declarado como plan seria publicar un numero que la propia app no se cree.
+   Y se calcula con el descanso VIGENTE (`v1RestSeconds()`), que es el que el
+   usuario tiene puesto en Ajustes: con el default fijo, el plan mentiria en
+   media rutina de fuerza para quien lo haya cambiado. */
+function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
+  return {
+    inPath: !!inPath,
+    elapsedSeconds: Math.max(0, Math.round((Date.now() - inicioMs) / 1000)),
+    activeSeconds: Math.max(0, Math.round(activoSec || 0)),
+    plannedSeconds: estimateDuration(routine, v1RestSeconds()).minSec,
+    plannedSecondsSource: 'derived',
+    variant: 'v1',
+    completionReason: early ? 'early' : 'natural'
+  };
+}
+
 Object.assign(window, {
+  v1Instr, v1EventoSesion,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1Instr, v1EventoSesion });
 })();
 </script>
   <script>
@@ -16866,10 +17265,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // s115 (B2.2b-1): instruction {setup,action,care} — key i18n
   // `id.sN.instruction.<k>`, fallback al dato anidado. Reemplaza los campos
   // sueltos placeCue/cue/careCue de s114 (migración atómica; sin doble fuente).
-  const tInstr = (idx, key) => {
-    const st = routine.steps[idx];
-    return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
-  };
+  const tInstr = (idx, key) => v1Instr(tR, routine, idx, key);
   const displayRoutine = lang === 'en' ?
   { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) } :
   routine;
@@ -16895,7 +17291,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
      `v1TrabajoActivo` (support), que es donde puede probarse sola. */
   const relojActivo = useV1ActiveClock(stage, phase, step, paused);
 
-  const dispatchComplete = () => {
+  const dispatchComplete = (early) => {
     const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
     /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
        tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
@@ -16903,8 +17299,11 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
        porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo — el
        defecto que ya tiene el `totalSec` de esa pantalla y que aquí no se hereda. */
     activeSecRef.current = Math.round(relojActivo.segundos());
-    if (kind === 'extra') completeExtraSession(routine.id, realMin);else
-    completeMoveSession(routine.id, realMin);
+    /* s172 · los datos del evento (dual-write) se arman en el support: el plan
+       sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
+    const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, early, inPath);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);else
+    completeMoveSession(routine.id, realMin, ev);
   };
 
   const startStep = (idx) => {
@@ -16921,8 +17320,8 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     if (su.mode === 'auto') {setPhase('place');setPlaceLeft(su.estimatedSeconds);} else
     setPhase('work');
   };
-  const advanceStep = () => {
-    if (stepIdx + 1 >= routine.steps.length) {dispatchComplete();setStage('done');} else
+  const advanceStep = (early) => {
+    if (stepIdx + 1 >= routine.steps.length) {dispatchComplete(early);setStage('done');} else
     startStep(stepIdx + 1);
   };
   const beginWork = () => {setPhase('work');setElapsed(0);};
@@ -16942,7 +17341,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
   const finishRepsEarly = () => {
     repsGuidedRef.current += Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    advanceStep();
+    advanceStep(true); // s172: «Terminar antes» ES el `early` de §6.3
   };
 
   // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).
@@ -23187,6 +23586,11 @@ function PathFocusStep(_ref) {let { step, onExit } = _ref;
   const stepMin = step.min || 25;
   const totalSec = stepMin * 60;
   const [done, setDone] = useStateFS(false);
+  /* s172 · inicio de PARED del bloque, para `elapsedSeconds` (§6.4). Aqui es el
+     MONTAJE del paso y no el arranque del reloj: en un Camino la pantalla del
+     paso ES el bloque —se entra y se empieza—, y con `useState` perezoso sale
+     estable sin traerse `useRef` a un archivo que no lo usa. */
+  const [inicioBloque] = useStateFS(() => Date.now());
 
   /* Motor timestamp-based compartido (s96). El foco de un Camino es
      CONTEXTUAL: acredita minutos + racha via completeFocusSession('path'),
@@ -23195,7 +23599,8 @@ function PathFocusStep(_ref) {let { step, onExit } = _ref;
     setDone(true);
     try {
       if (typeof completeFocusSession === 'function') {
-        completeFocusSession('path', { minutes: stepMin });
+        completeFocusSession('path', { minutes: stepMin,
+          elapsedSeconds: focoElapsedSec(inicioBloque, totalSec), activeSeconds: totalSec });
       }
     } catch (e) {}
   });

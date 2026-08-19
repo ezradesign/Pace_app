@@ -208,6 +208,14 @@
   <script type="text/babel" src="app/events/events-adapter-web.js"></script>
   <script type="text/babel" src="app/events/events-adapter-null.js"></script>
   <script type="text/babel" src="app/events/events-store.js"></script>
+  <!-- EL EMISOR (s172 · Fase 3, PASO 2): el puente entre el dominio y el
+       envelope. Va DESPUES del subsistema (usa makeEvent/paceEventsAppend) y
+       antes de state.jsx. Las `complete*Session` que lo llaman cargan ANTES
+       que esto y no pasa nada: las llamadas ocurren en runtime, no al evaluar.
+       Y el `paceEventsAppend` esta aqui, FUERA de app/events/, a proposito: es
+       lo que hace que el gate de `verify.eventos.js` §5 vea que hay emisores y
+       exija que el backup publico lleve la seccion de eventos. -->
+  <script type="text/babel" src="app/state-events.jsx"></script>
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>

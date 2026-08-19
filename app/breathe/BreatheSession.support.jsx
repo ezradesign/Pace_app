@@ -53,4 +53,39 @@ function useHoldClock() {
   return useActiveClock();
 }
 
-Object.assign(window, { useHoldClock });
+/* s172 · EL PLAN DE UNA SESION DE RESPIRA (§6.4), y las dos familias no se
+   planifican igual:
+     · no-rondas → `routine.min × 60`, `declared`. El motor termina cuando el
+       TIEMPO ACTIVO alcanza ese numero (BreatheSession, fin no-rounds), asi que
+       es un plan conocido antes de empezar y no una estimacion.
+     · rondas    → rondas × respiraciones × ciclo, `derived`. Es lo que §6.4
+       nombra, y hay que leerlo con su limite: la RETENCION la suelta el
+       usuario, no el reloj, asi que este plan cubre solo la parte respirada y
+       siempre va a quedar POR DEBAJO del activo real. Se emite igualmente
+       porque el consumidor lo compara con `plannedSecondsSource`, que dice de
+       donde sale; lo que no se puede es fingir que planifica la retencion.
+   La fila de §6.4 para Respira solo contempla la segunda; la primera se trata
+   como el legacy de cuerpo, que es el precedente mas cercano del documento. */
+function respiraPlanSec(routine) {
+  if (!routine) return null;
+  if (routine.pattern === 'rounds') {
+    const secs = (routine.rounds || 0) * (routine.breaths || 0) * 4;   // 2 s inhala + 2 s exhala
+    return secs > 0 ? secs : null;
+  }
+  return (typeof routine.min === 'number' && routine.min > 0) ? routine.min * 60 : null;
+}
+
+function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
+  const plan = respiraPlanSec(routine);
+  return {
+    inPath: !!inPath,
+    elapsedSeconds: Math.max(0, Math.round((Date.now() - inicioMs) / 1000)),
+    activeSeconds: Math.max(0, Math.round(activoSec || 0)),
+    plannedSeconds: plan,
+    plannedSecondsSource: plan === null ? null : (routine.pattern === 'rounds' ? 'derived' : 'declared'),
+    variant: null,
+    completionReason: early ? 'early' : 'natural',
+  };
+}
+
+Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion });

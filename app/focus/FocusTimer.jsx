@@ -40,7 +40,11 @@ function FocusTimer({ onFinish }) {
           body: t('notify.focus.body'),
         });
       } catch (e) {}
-      completeFocusSession('home');
+      /* s172 · `activeSeconds` ES el preset: la cuenta solo corre en 'running',
+         asi que llegar a 0 es haber contado eso; lo pausado va en elapsed. */
+      completeFocusSession('home', { minutes: state.focusMinutes,
+        elapsedSeconds: focoElapsedSec(inicioBloqueRef.current, durationSec),
+        activeSeconds: durationSec });
       onFinish && onFinish();
     }
   });
@@ -50,12 +54,19 @@ function FocusTimer({ onFinish }) {
      local, decisión s96). Al montar: reanuda solo si el foco guardado
      sigue VIVO y modo/minutos coinciden; expirado estando fuera se
      descarta sin acreditar (helpers en FocusTimer.support.jsx). */
+  /* s172 · reloj de PARED del bloque, solo para el evento (§6.4 lo quiere CON
+     las pausas dentro y `useCountdown` no guarda el inicio). Se fija al empezar
+     un bloque, NUNCA al reanudar: eso borraria la pausa que esto va a contar. */
+  const inicioBloqueRef = useRefFT(null);
   const restoredRef = useRefFT(false);
   useEffectFT(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
     const endsAtSaved = loadPersistedFocusTimer(state.focusMode, state.focusMinutes);
-    if (endsAtSaved) restore(endsAtSaved);
+    /* Reanudado tras recargar: el inicio real se fue con la pestaña y se DERIVA
+       del final guardado — estimacion que ignora las pausas previas, por eso no
+       toca `activeSeconds`, que sigue siendo exacto. */
+    if (endsAtSaved) { inicioBloqueRef.current = endsAtSaved - durationSec * 1000; restore(endsAtSaved); }
   }, []);
 
   // Escribe mientras hay un foco running; pausa/reset/fin/otros modos limpian.
@@ -124,6 +135,7 @@ function FocusTimer({ onFinish }) {
      permiso de notificación. Lo comparten un arranque/reanudación normal y
      «Empezar otro ciclo», para idéntica semántica sin tocar el motor. */
   const startFocusVisual = () => {
+    if (status !== 'paused') inicioBloqueRef.current = Date.now();   // s172: bloque nuevo, no reanudacion
     try { playSound('pomodoro.start'); } catch (e) {}
     if (state.focusMode === 'foco') maybeRequestNotifyPermission(state, set);
   };

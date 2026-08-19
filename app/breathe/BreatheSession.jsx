@@ -232,7 +232,7 @@ function BreatheSession({ routine, onExit, inPath }) {
     }
   };
 
-  const finish = () => {
+  const finish = (motivo) => {
     // Credito = TIEMPO ACTIVO real (s98), no el nominal routine.min. Excluye
     // pausas y no sobre-acredita al pulsar "Finalizar" pronto. Aplica igual a
     // rounds (retenciones incluidas -> mas honesto) que a no-rounds. Minimo 1
@@ -245,7 +245,10 @@ function BreatheSession({ routine, onExit, inPath }) {
        de ellas dejaba los cuatro asertos en verde, o sea que no habia forma de
        saber si alguna funcionaba. Con una sola, la mutacion muerde. El efecto
        cierra el segmento al pasar a 'done', que es donde toca. */
-    completeBreathSession(routine.id, activeMin, relojHold.segundos());
+    /* s172 · el 4o argumento son los datos del evento (dual-write); `motivo`
+       separa el plan agotado ('natural') de «Finalizar» ('early', §6.3). */
+    completeBreathSession(routine.id, activeMin, relojHold.segundos(),
+      respiraEventoSesion(routine, sessionStart.current, getActiveSec(), motivo === 'early', inPath));
     try { playSound('breathe.session.end'); } catch (e) {}
     setStage('done');
   };
@@ -371,7 +374,7 @@ function BreatheSession({ routine, onExit, inPath }) {
       <button onClick={() => setPaused(p => !p)} style={sessionShellStyles.ctrlBtn} title={t('session.pause')}>
         {paused ? t('session.resume') : t('session.pause')}
       </button>
-      <button onClick={finish} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title={t('session.finish')}>
+      <button onClick={() => finish('early')} style={{ ...sessionShellStyles.ctrlBtn, borderColor: 'transparent' }} title={t('session.finish')}>
         {t('session.finish')}
       </button>
     </React.Fragment>

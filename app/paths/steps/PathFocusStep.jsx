@@ -22,6 +22,11 @@ function PathFocusStep({ step, onExit }) {
   const stepMin = step.min || 25;
   const totalSec = stepMin * 60;
   const [done, setDone] = useStateFS(false);
+  /* s172 · inicio de PARED del bloque, para `elapsedSeconds` (§6.4). Aqui es el
+     MONTAJE del paso y no el arranque del reloj: en un Camino la pantalla del
+     paso ES el bloque —se entra y se empieza—, y con `useState` perezoso sale
+     estable sin traerse `useRef` a un archivo que no lo usa. */
+  const [inicioBloque] = useStateFS(() => Date.now());
 
   /* Motor timestamp-based compartido (s96). El foco de un Camino es
      CONTEXTUAL: acredita minutos + racha via completeFocusSession('path'),
@@ -30,7 +35,8 @@ function PathFocusStep({ step, onExit }) {
     setDone(true);
     try {
       if (typeof completeFocusSession === 'function') {
-        completeFocusSession('path', { minutes: stepMin });
+        completeFocusSession('path', { minutes: stepMin,
+          elapsedSeconds: focoElapsedSec(inicioBloque, totalSec), activeSeconds: totalSec });
       }
     } catch (e) {}
   });

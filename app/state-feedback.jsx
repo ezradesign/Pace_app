@@ -69,6 +69,11 @@ function recordRoutineFeedback(routineId, response) {
     ...prev,
     routineFeedback: nextRoutineFeedback(prev.routineFeedback, id, resp),
   }));
+  /* s172 · dual-write: el contador de arriba sigue siendo la fuente de verdad
+     de «que te ayuda»; el evento se anade al lado. `later` NO emite (§15.2) y
+     tampoco emite si la sesion correlacionada no es esta rutina — el `runId`
+     de §7.1 referencia una sesion que EXISTE, no se inventa. */
+  if (typeof emitFeedbackAnswered === 'function') emitFeedbackAnswered(id, resp);
 }
 
 /* shouldPromptRoutineFeedback — ¿mostrar la pregunta para esta rutina AHORA?
