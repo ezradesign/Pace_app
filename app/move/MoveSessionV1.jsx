@@ -404,11 +404,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       footer={footer} hint={t('session.hint')}
     >
       <div data-pace-v1-body style={{ textAlign: 'center', maxWidth: 620 }}>
-        {!isRest && (
-          <div data-pace-v1-glyph>
-            <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />
-          </div>
-        )}
+        {/* s172 · el descanso TAMBIEN pinta su circulo: con `!isRest` no es que no
+            se moviera, es que DESAPARECIA. R5 se respeta por color, no por ausencia. */}
+        <div data-pace-v1-glyph>
+          <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />
+        </div>
         {/* s171b · SE PINTA SIEMPRE (misma reserva que «Cuidate», s119): el rotulo
             solo existe al colocarse y movia el NOMBRE 29 px en cada cambio de fase. */}
         <div data-pace-v1-kicker style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>

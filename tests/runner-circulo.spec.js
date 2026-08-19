@@ -142,12 +142,17 @@ for (const piel of [
       `el nombre se mueve entre pasos de trabajo: ${JSON.stringify(trabajo)}`).toHaveLength(1);
 
     /* CRUZANDO FASES QUEDA DEUDA, Y SE ASERTA COMO TAL EN VEZ DE ANOTARSE. Al
-       entrar aquí eran 65 px de círculo y 94 de nombre; hoy son ~25 y ~29, y lo
-       que queda tiene UN nombre: el gate de tipo «ready» —el que espera al
-       usuario porque el paso pide suelo, cojín o pared— no pinta contador, y el
-       bloque se queda por debajo del suelo que lo ancla. El techo de 30 px es un
-       TRINQUETE: si alguien lo empeora, salta; si alguien lo arregla del todo,
-       hay que bajarlo a 0 y borrar este párrafo. */
+       entrar aquí eran 65 px de círculo y 94 de nombre; hoy son ~25 y ~29.
+       LA CAUSA QUE ESTABA ESCRITA AQUÍ ERA FALSA, y la corrige s172 midiéndola:
+       no es que el gate «ready» no pinte contador. Es el FOOTER. En una pantalla
+       de trabajo los controles ocupan dos filas (89 px a 390 de ancho) y en una
+       de descanso o de colocarse sólo una (39 px); el centro crece esos 50 px, y
+       como el bloque va centrado dentro de él, baja la mitad: 25. Medido con el
+       árbol delante (`data-pace-session-footer` 89 → 39, `center` 672 → 722).
+       Se arregla reservando el footer o alineando el bloque arriba, y las dos
+       son decisiones visuales — por eso sigue siendo deuda y no un descuido.
+       El techo de 30 px es un TRINQUETE: si alguien lo empeora, salta; si alguien
+       lo arregla del todo, hay que bajarlo a 0 y borrar este párrafo. */
     const TOPE_DEUDA = 30;
     const tops = medidas.map(m => m.top);
     const nombres = medidas.map(m => m.nombreTop).filter(v => v != null);
@@ -277,5 +282,57 @@ test('las miniaturas del preview no se pisan entre filas', async ({ page }) => {
     expect(solape, `«${filas[i - 1].paso}» pisa a «${filas[i].paso}» por ${solape} px`).toBeLessThanOrEqual(0);
   }
 
+  expect(errores).toEqual([]);
+});
+
+/* s172 · LA PANTALLA DE DESCANSO, que hasta hoy no pintaba glifo NINGUNO.
+   El usuario lo reporto como «los ejercicios que dicen respira no tienen
+   circulo», y era literal: el glifo iba dentro de un `{!isRest && ...}`, asi que
+   en el descanso —el paso MAS REPETIDO de la app, 18 apariciones— el circulo no
+   es que se moviera, desaparecia.
+   ESTE TEST NO LO CUBRIA EL RECORRIDO DE ARRIBA y por eso hace falta aparte: ese
+   avanza a clicks («Empezar ya» / «Siguiente») y un descanso termina SOLO, asi
+   que nunca aterrizaba en uno. Aqui se llega a proposito con «Terminar antes» y
+   el reloj virtual.
+   El tope es el MISMO trinquete de la deuda de arriba: el descanso hereda los
+   25 px del footer, no los suyos propios. */
+test('el descanso pinta su circulo, del mismo tamaño que el del trabajo', async ({ page }) => {
+  const errores = capturarErrores(page);
+  await page.clock.install();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await irAlArtefacto(page);
+  await page.getByRole('button', { name: /^Mueve/ }).click();
+  await page.getByRole('heading', { name: 'Flexiones de escritorio' }).click();
+  await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
+  const sesion = page.locator('[data-pace-session-root]');
+  await expect(sesion).toHaveCount(1);
+  const tic = async (n) => { for (let i = 0; i < n; i++) { await page.clock.fastForward(1000); await page.waitForTimeout(8); } };
+
+  let enTrabajo = false;
+  for (let i = 0; i < 40 && !enTrabajo; i++) {
+    enTrabajo = await sesion.getByRole('button', { name: /Terminar antes/ }).count() > 0;
+    if (!enTrabajo) await tic(1);
+  }
+  expect(enTrabajo, 'GUARD: la sesion nunca entro en el trabajo').toBe(true);
+  const trabajo = await medirCirculo(page);
+  expect(trabajo, 'GUARD: el paso de trabajo no pinta circulo, no hay contra que comparar').toBeTruthy();
+
+  /* «Terminar antes» lleva al descanso entre series sin esperar los 48 s. */
+  await sesion.getByRole('button', { name: /Terminar antes/ }).click();
+  await page.waitForTimeout(200);
+  let enDescanso = false;
+  for (let i = 0; i < 20 && !enDescanso; i++) {
+    const n = await sesion.locator('[data-pace-v1-name]').innerText().catch(() => '');
+    enDescanso = /descanso/i.test(n);
+    if (!enDescanso) await tic(1);
+  }
+  expect(enDescanso, 'GUARD: no se llego a la pantalla de descanso').toBe(true);
+
+  const descanso = await medirCirculo(page);
+  expect(descanso, 'EL DEFECTO: la pantalla de descanso no pinta circulo').toBeTruthy();
+  expect(descanso.w, 'el circulo del descanso no mide lo mismo que el del trabajo').toBe(trabajo.w);
+  expect(Math.abs(descanso.top - trabajo.top),
+    `el circulo del descanso se mueve mas que la deuda conocida (footer): ${JSON.stringify({ trabajo, descanso })}`)
+    .toBeLessThanOrEqual(30);
   expect(errores).toEqual([]);
 });

@@ -17623,12 +17623,12 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
       headerExtra: /*#__PURE__*/React.createElement(Meta, null, tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })),
       footer: footer, hint: t('session.hint') }, /*#__PURE__*/
 
-    React.createElement("div", { "data-pace-v1-body": true, style: { textAlign: 'center', maxWidth: 620 } },
-    !isRest && /*#__PURE__*/
+    React.createElement("div", { "data-pace-v1-body": true, style: { textAlign: 'center', maxWidth: 620 } }, /*#__PURE__*/
+
+
     React.createElement("div", { "data-pace-v1-glyph": true }, /*#__PURE__*/
     React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize })
     ), /*#__PURE__*/
-
 
 
     React.createElement("div", { "data-pace-v1-kicker": true, style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 } },
