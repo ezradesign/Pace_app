@@ -37,3 +37,31 @@ el scratchpad de la sesión; si se pierde, se reconstruye con
 Después: `node build-standalone.js` · `npm run verify` · `npm run test:e2e`, y
 **subir a mano** el censo `precache` de `scripts/verify.integridad.js`
 (**dos filas por pieza** desde s170: la máscara y su miniatura).
+
+---
+
+## LO QUE MÁS SE NOTÓ AL VER LAS 47 PRIMERAS (léelo antes de generar)
+
+**1 · El mueble no es decorado, es la identidad del producto.** De los 47 que
+entraron, **17 traen la postura correcta pero SIN el mueble** que el encargo pedía:
+Fondos en silla, Sentadilla a silla, Flexiones inclinadas, Hueco en silla y Puente
+torácico están dibujados en el aire o en el suelo. Funcionan, pero PACE es una app
+de oficina y sin la silla o la mesa el ejercicio pierde su contexto — y en algunos
+casos deja de distinguirse de otro parecido.
+
+> Al generar, **exige el mueble explícitamente** en el prompt cuando la tabla lo
+> mencione: «con la silla justo detrás», «manos en el borde de la mesa», «espalda
+> contra la pared». Una línea recta basta; el encargo no pide más escenografía.
+
+**2 · El rojo de la zona trabajada, mejor SUAVE y sólo sobre músculo.** La máscara
+descarta el color y la ingesta blanquea el tinte rojo, así que sirve como referencia
+para ti pero no llega a la app. Si el rojo se solapa con el trazo del contorno, ese
+contorno se pierde — costó un bug entero en s170.
+
+**3 · El trazo, cuanto más marcado mejor.** Estos dibujos son grabados de línea
+fina, y a 30 px hay que engordarlos artificialmente para que se lean. Un trazo de
+partida más grueso (como pide el encargo original) hace innecesario ese apaño.
+
+**4 · Encuadre: no te preocupes por centrar ni por el tamaño.** La ingesta recorta,
+centra por circunferencia mínima y normaliza todas las piezas al mismo tamaño
+óptico. Lo único que importa es que el cuerpo **entre entero** en el lienzo.
