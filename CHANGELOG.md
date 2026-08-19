@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.101.0** | 2026-08-19 | fix(runner+glifos): **el circulo del glifo, y los dos dibujos que sobraban** — tres defectos visuales que reporto el usuario, los tres **medidos antes de tocar**. (1) Las **miniaturas del preview se pisaban 5 px**: `ExerciseGlyph` multiplicaba el tamaño **×1,5 por dentro**, asi que la lista reservaba 30 px y recibia 45 mientras los 41 SVG, que si respetan la caja, quedaban limpios; ahora `maskScale` es **explicito con defecto 1** —la caja que se pinta es la que el llamante reserva— y la variante `.min` se elige por los pixeles que se **pintan**, no por los que se piden (el preview pedia la de 30 y la dibujaba a 45). Medido: **9,6 px de aire**. (2) El **circulo media 72 px en 6 rutinas y 179 en las otras 22** en el mismo viewport, porque unas corren en el runner **legacy** y otras en el **v1**: el legacy pasa a la curva de v1 y a su `clamp(30px, 6.5vh, 52px)` — su nombre de ejercicio estaba a **56 px fijos**, que era el «letras muy grandes» del reporte. (3) El circulo **se movia 43 px entre pasos en MOVIL**, porque las reservas de altura que lo anclan existian **solo para ≥641 px** desde s119; se aplican a las **dos pieles** y el desborde que aquella sesion temia **no reproduce**: 0 px a 360×640, 375×812 y 390×844. Ademas el circulo **crece un 30 % en escritorio** (198 → 257 a 1440×900, **0 px de desborde**: cabia en el hueco que ya habia), con el factor **despues del clamp** y la piel leida del contrato `--pace-skin`. Nace `tests/runner-circulo.spec.js` — **8 tests, los 8 calibrados en rojo** y **sin un solo numero de pixeles dentro**, porque el defecto no era un tamaño equivocado sino **dos superficies que no coincidian**; la primera version corria solo a 1280×720 y **habria pasado en verde antes del arreglo**. Revision del arte: las **47 mascaras miradas una a una**, **cero mal asignadas**, y las **2 piezas sin identificar de s170 resueltas emparejando por CONTENIDO** (la numeracion de aquella hoja no es reproducible) — son tomas alternativas, no identidades nuevas. **Faltan 10 muebles, no 5**, y `Puente torácico` no es un mueble que falta sino **otra postura**. **SEGUNDA MITAD**: entra la **segunda tanda de arte** — 18 dibujos que suben el catálogo de **47 a 57 identidades** (10 nuevas + 8 reemplazos por el mueble), con los **39 viejos recuperados emparejando por CONTENIDO** porque la ingesta reescribe el mapa entero y la numeración de s170 no es reproducible (peor pareja **0,849**); 0 piezas fuera del círculo, `precache` 199 → 219. Y **el bloque del runner declara alto mínimo** (70vh móvil / 72vh escritorio, con suelo **medido** de 780/880 px) con el rótulo de fase reservado vacío: el círculo y el nombre pasan de moverse **43–94 px a 0** entre pasos de trabajo. Queda **~25 px cruzando fases** por el gate «ready», que no pinta contador — **asertado con trinquete de 30 px, no anotado**. | 171 | [session-171](docs/sessions/session-171-el-circulo-del-glifo.md) |
 | **v0.100.0** | 2026-08-19 | feat(eventos+glifos): **el tiempo activo de Mueve, y el arte anatomico entra de verdad** — cierra el **PASO 1 de la Fase 3**: `useActiveClock` compartido da a Mueve/Estira la contabilidad de pausa que Respira tiene desde s98, con la politica de §6.4 aparte y pura (`v1TrabajoActivo`) y **4 mutaciones que muerden**; medido, activo 120 s contra 220 de pared. Las **cuatro decisiones abiertas del handoff las contestaba `EVENTOS_SCHEMA.md`** y tres de mis respuestas deducidas estaban mal. Entran **47 de los 61 glifos de ejercicio** como arte anatomico del usuario, y con ellos cinco defectos: el precache de la ingesta de s166 escribia `./` donde el resto de `sw.js` usa `/`; **`sharp` reordena sus operaciones** (`extend` va DESPUES de `resize`, y el relleno lateral convertia el dibujo en **rayas diagonales**); la **trampa de canales TRES veces**; y **dos umbrales de tinta distintos** que dejaban material fuera del encuadre y dentro del dibujo. El **encuadre se corrigio tres veces mirando**: caja → masa → **circunferencia minima**, que resuelve a la vez «esta descentrado» y «es pequeño» porque minimizar el radio ES maximizar el dibujo dentro del disco (**+17,7 % de area**, mismo tamaño optico por construccion). El **detector de rojo se comia el trazo** —la tinta es sepia y el 39-43 % de lo marcado era lum<120—, arreglado con suelo de luminancia (**+208 %** de trazo firme en el peor caso). Y la **miniatura gana archivo propio** (`.min.webp`, trazo engordado antes de reducir) porque a 30 px no es cuestion de ajustes. El test de glifos **caduco dos veces en la misma sesion** y se reescribio para no nombrar ninguna pieza. | 170 | [session-170](docs/sessions/session-170-tiempo-activo-y-arte-anatomico.md) |
 | **v0.99.1** | 2026-08-18 | feat(eventos): **el backup lleva `pace.events.v1`, y lo devuelve** — **condicion de entrada de la Fase 2**, puesta **ANTES que el primer emisor** para que el gate del `verify` no pille a nadie a mitad de camino. `privacy.html` promete exportar «**todo** tu estado ... e **importarlo** en otro dispositivo», y eso era cierto solo mientras el contenedor estuviera vacio. **No bastaba con exportarlo: el import lo TIRABA**, con su razon escrita al lado —«un backup de PACE no trae seccion de eventos»— y por eso reiniciaba el contenedor para evitar la MEZCLA de §17. Esa frase caduca el mismo dia que exista un emisor, asi que **las dos mitades se mueven juntas**: exportar historial que al restaurar se descarta seria **peor** que no exportarlo. Ahora el backup gana una seccion `events` **hermana** de `state` —y no dentro, porque son dos almacenes con ciclos de vida independientes y mezclarlos en el JSON invitaria a escribirlos como si fueran uno—, y el import tiene **tres caminos**: **CON seccion** reemplaza por completo (sin merge, sin deduplicar, idempotente) · **SIN seccion** reinicia como siempre, que es todo backup anterior · y **seccion CORRUPTA aborta el import ENTERO**, incluido **no escribir `pace.state.v2`**, que ni siquiera es de este subsistema — el fallo tentador es descartar la seccion mala y «al menos salvar el estado», y eso deja al usuario con estado nuevo e historial ajeno. La validacion vive **en la barrera** y no en el llamador, porque es quien puede garantizar el «antes de tocar nada»; y si el proceso muere entre la escritura legacy y el paso 3, la recuperacion del marcador **reinicia** en vez de reemplazar: se pierde el historial importado, no el del usuario. **3 asertos nuevos (92 -> 95) y los 3 calibrados en rojo**, el primero leyendo **el archivo que el navegador descarga de verdad** y no el objeto que lo construye. **DOS CORRECCIONES AL INSTRUMENTO**: el aserto de «no se toco el estado» comparaba `pace.state.v2` **entero** y **salio rojo con el producto SANO**, porque la app normaliza y re-persiste su propio estado al arrancar —comparar un documento que la app tambien escribe no es comprobar que el import no escribio—, y dos de las tres esperas aguardaban **solo el desenlace bueno**, dando timeouts mudos con el producto roto en vez del aserto que explica que paso. **Y UNA TRAMPA PROPIA, CARA**: el primer script de calibracion restauraba las mutaciones con `git checkout`, pero la linea base de esos archivos **no estaba committeada** — los devolvio a HEAD y **borro la implementacion entera**, con los tres tests en rojo por ausencia de producto. `git checkout` restaura al **ultimo commit**, no a como estaba hace un minuto | 169 | [abajo](#v0991----2026-08-18----feateventos-el-backup-lleva-paceeventsv1-y-lo-devuelve) |
 | **v0.99.0** | 2026-08-18 | feat(movil): **la pill vuelve a movil, y el censo que miraba el sitio equivocado** — sesion **cortada por limite de tokens** y cerrada en una pasada posterior: de las cuatro decisiones de s168 se implementan **dos** —A y C— y **D** (el `apt` del CI) queda **decidida y sin hacer**. Foco/Pausa/Larga vuelve a verse en movil, en **su propia fila y arriba**. El arreglo no es «dejar sitio»: `[data-pace-tabs]` es `position:absolute` centrada, o sea **fuera de flujo** —no empuja, no encoge, solo puede **solaparse**, e identico de 568 a 932 px de alto—, asi que se la **saca de la fila de los iconos** con `align-items: flex-end` y `padding-top: calc(10px - 4px * squeeze + 42px)`, recentrandola **solo en X** porque el `top: 50%` de una fila que ahora mide 102 px la dejaria encima de ellos. **Va ARRIBA y eso no es estetico**: el DOM la tiene **antes** que los iconos, asi que ponerla debajo haria que el foco recorriera la topbar **de abajo arriba** (WCAG 2.4.3, el defecto que s160 arreglo en la home) — y **ninguna prueba se habria enterado**, porque `home-a11y.spec.js` filtra a `[data-pace-home-stack]` y excluye la topbar a proposito. **EL GATE TIENE DOS SUELOS Y CADA UNO SALE DE UNA MEDIDA DISTINTA**: **alto >= 760** por el **aro** —la fila propia cuesta **+42 px** y salen de el; barrido de 9 anchos x 8 alturas A/B en el mismo viewport: a 736 paga 4 px a 412, 20 a 428 y 30 a 440, y **a 760 es gratis en todos**— y **ancho >= 390** por el **boton de menu**, que vive **FUERA** de la topbar: la pill mide 244 px fijos y va centrada, asi que el hueco es `ancho/2 - 175,5` y a 320 lo **PISA 15 px**, a 360 deja 5, a 375 deja 12 y a 390 deja 20 (el usuario descarto los 12 por justos). **Dos correcciones medidas al handoff de s168**: «alto >= 844» **no era el umbral** —era la siguiente altura que se habia medido— y **«squeeze == 0» no sirve de gate**, porque una media query **no lee custom properties** y ademas vale 0 desde 736, justo por debajo del umbral bueno. **EL DEFECTO QUE SE ESCAPO**: el banco de s168 cruzaba `[data-pace-topbar] > *` y la primera sonda `[data-pace-topbar-icon]`, y **las dos daban cero solapes a 320 px mientras la pill pisaba el boton de menu 15x34 px** — porque ese boton no es hijo de la topbar. Un censo que mira donde no esta el problema **dice «limpio» con la misma cara** que uno que mira donde si. **11 asertos nuevos (81 -> 92) y los 11 calibrados en rojo**, con el aro medido **A/B dentro del mismo viewport** y no contra una constante. De propina, medido y **sin ejecutar** (es la decision D): **`gh` SI esta instalado** —s153 lo dio por ausente y la nota se arrastro 16 sesiones—, y leyendo los logs de los 11 ultimos runs **la cola del CI no era la descarga de Chromium (~10 s) sino `apt` bajando 21,1 MB de FUENTES** (10 min 49 s en el run de 672 s, 3 min 15 s en el de 217, que fue **fallo** de cache), asi que la cache **no puede tocarla** y el comentario del YAML es falso. **C · EL ENCARGO DE GLIFOS**: la decision era mover una fila y al medir por que hacia falta salio algo mayor — el documento decia **«los 38 glifos que faltan»** y ya solo faltan **19**, porque **s167 entrego 19 y nadie volvio a tocar la lista**: quien la abriera para dibujar se encontraria **la mitad del trabajo ya hecho**, sin nada que lo marcara (la misma deriva que s168 cazo en `CONTENT.md`, pero esta se paga en horas de dibujo). Las 19 entregadas quedan tachadas, cruzadas **id a id contra el mapa de mascaras real**, y la cuenta cierra por **biyeccion**: 19 + 19 = 38 filas, cero ids fantasma y cero logros sin arte sin listar. El equinoccio entra de **Prioridad 1** en un hueco que estaba **libre**, porque `hydrate.week.perfect` —su unica fila— tambien se entrego; y su motivo no es el sello suelto (el `⚖` de texto aguanta) sino **el par**, porque `season.equinox.spring` **si** tiene balanza dibujada y son adyacentes en la misma familia. **El propio cruce cazo un defecto mio**: al mover esa fila a una nota dejo de contar, la biyeccion cayo a 37 = 18 + 19 y la cabecera recien escrita seguia diciendo 38 | 169 | [abajo](#v0990----2026-08-18----featmovil-la-pill-vuelve-a-movil-y-el-censo-que-miraba-el-sitio-equivocado) |
@@ -361,6 +362,153 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.101.0] -- 2026-08-19 -- fix(runner+glifos): el circulo del glifo, y los dos dibujos que sobraban
+
+> **Esta version son DOS MITADES.** Las tres primeras secciones son los defectos que
+> reporto el usuario; las dos ultimas —la segunda tanda de arte y el anclaje del
+> bloque— son el trabajo de la segunda mitad, destilado en s172.
+
+**La sesion no hizo lo que traia el handoff.** El plan era el PASO 2 de la Fase 3
+(el emisor de `session.completed`); a mitad de la revision de glifos el usuario
+mando cinco capturas con tres defectos visuales, y eso paso a ser el trabajo. **El
+emisor sigue sin escribir** y el terreno reconocido en `HANDOFF_s171.md` §2 vale
+entero.
+
+### Los tres defectos, medidos antes de tocar
+
+- **Las miniaturas del preview se pisaban.** `ExerciseGlyph` multiplicaba el tamaño
+  **×1,5 por dentro** cuando la pieza era mascara: la lista de pasos reserva **30 px**
+  y recibia **45**, con las filas cada 40 ⇒ **5 px de solape**. Los 41 glifos SVG, que
+  respetan la caja, quedaban limpios — por eso el defecto se veia a saltos. Ahora
+  `maskScale` es **explicito y su defecto es 1**: la caja que se pinta es la que el
+  llamante reserva, y el +50 % lo **pide** `StepGlyph`, que es el unico que lo quiere.
+  De paso se corrige que la variante `.min` se elegia por los pixeles **pedidos** (30 ⇒
+  trazo engordado) para luego pintar a 45, justo el tramo donde no corresponde. Medido
+  despues: **9,6 px de aire** entre cada dos miniaturas.
+  La decision de bajar a 30 se tomo **mirando a tamaño real**: ahi la app sirve la
+  variante `.min` y el dibujo sale **mas oscuro y legible que a 45**.
+- **El circulo no era el mismo.** 72 px en 6 rutinas y 179 en las otras 22, en el mismo
+  viewport, porque unas corren en el runner **legacy** y otras en el **v1**. No era el
+  arte: el llenado del circulo es identico (91,7 %) en los dos. El legacy pasa a la
+  curva de v1 y a su `clamp(30px, 6.5vh, 52px)` — su nombre estaba a **56 px fijos**.
+  Afecta a *Empuje · progresion*, *Piernas · a una*, *Ancestral*, *ATG · Rodillas a
+  prueba*, *Escritorio express* y *Caderas · suelo*.
+- **El circulo se movia, y la mitad rota era la de movil**: `top` 98 → 108 → 151, **43 px
+  de deriva**. Las reservas de altura que lo anclan existian **solo para ≥641 px** desde
+  s119. Se aplican a las **dos pieles**, y el desborde que aquella sesion temia **no
+  reproduce hoy**: 0 px a 360×640, 375×812 y 390×844.
+
+### El +30 % de escritorio
+
+`V1_GLYPH_WEB = 1.3` **despues del clamp**, o sea sobre la curva entera (suelo 94,
+techo 273): mover solo la pendiente aplanaria el aumento justo en las pantallas
+grandes, que son las que lo piden. La piel se lee del **contrato `--pace-skin`**, no de
+un `matchMedia` con el 769 copiado. Medido: **198 → 257 px** a 1440×900 con **0 px de
+desborde** — cabia en el hueco que ya habia. El aire alrededor del contador se recorta
+en la piel ancha y solo donde no hay compactacion.
+
+> **La linea vacia bajo el cue NO se toca, y es deliberado: ES el anclaje del circulo.**
+> Quitarla devuelve la deriva que la otra mitad del cambio arregla. Moverla al final del
+> bloque —despues de «Cuidate», donde no se leeria como hueco— exige que el bloque
+> entero declare alto minimo: cambio de mecanismo con cinco tiers medidos detras.
+> **Queda propuesto, no hecho.**
+
+### El banco: `tests/runner-circulo.spec.js`
+
+**8 tests y los 8 calibrados en rojo uno por uno**, cada uno revirtiendo su propio
+arreglo y comprobando que cae **solo** el suyo (72 vs 205 · 4,8 px de solape · 179 vs
+179 · 444 px de desborde). **Ni un numero de pixeles vive dentro de un aserto**: el
+defecto no era un tamaño equivocado sino **dos superficies que no coincidian**.
+
+Tres cosas que costaron una pasada cada una: la version de **un solo viewport** (el
+1280×720 del config) **habria pasado en verde antes del arreglo**, porque a esa anchura
+la reserva ya existia ⇒ va parametrizado por piel con **guard de `--pace-skin`** ·
+**guard de cero** en cada bucle · **control positivo** de que legacy y v1 siguen siendo
+dos runners. Y una **mentira del instrumento**: el primer muestreo dio `76, 76, 76, 122`
+y el 122 no era un paso de trabajo, sino la pantalla de descanso, que no pinta glifo.
+
+### La revision del arte
+
+Las **47 mascaras miradas una a una** contra la columna «que debe mostrar»: **cero mal
+asignadas**. Las **2 piezas sin identificar de s170** se resolvieron emparejando las 49
+fuentes con las 47 mascaras **por CONTENIDO** (firma de tinta → 32×32 → correlacion;
+la peor pareja de las 47 puntuo **0,849**), porque la numeracion de aquella hoja de
+contactos **no es reproducible**. Son **tomas alternativas** de `Apretar gluteos` y
+`90/90`, no identidades nuevas; el usuario decidio no cambiarlas.
+
+**Faltan 10 muebles, no 5**, y `Puente toracico` no es un mueble que falta sino **otra
+postura**. Todo en `GLIFOS_EJERCICIOS_REDISENO.md` §4 — cuyas tablas llevan **cuatro
+columnas** porque con tres el generador se las comio y reescribio tres ejercicios del
+documento generado. **Lo cazo el diff, no la vista.**
+
+
+### La segunda tanda de arte: 47 -> 57 identidades
+
+**Entran 18 dibujos**: **10 identidades** que no tenian nada (`Barbilla atras`,
+`Cuadriceps en pared`, `Inclinacion lateral`, `Isquio a una pierna`, `Rotacion lenta`,
+`Sentadilla bulgara`, `Sentadilla lateral`, `Sentadilla profunda`, `Sentarse y
+levantarse del suelo`, `Zancada con apertura`) y **8 reemplazos por el mueble**
+(`Circulos de tobillo`, `Extension toracica`, `Flexiones inclinadas`, `Giro sentado`,
+`Hueco en silla`, `Puente toracico`, `Rotacion toracica`, `Sentadilla a silla`).
+**Quedan 4 sin arte** — `Pica en escritorio`, `Nordics`, `Onda espinal` y `Rana` — y
+**2 muebles**: `Fondos en silla` y `Deslizamientos en pared`.
+
+**13 se asignaron con evidencia** (el encargo cita una marca y el dibujo la lleva: la
+linea del asiento, el pie bajo la mesa, el empeine contra la pared) y **7 las decidio
+el usuario** entre dos lecturas posibles. **Dos dibujos quedaron fuera**: una «V»
+invertida sin mesa que habria duplicado la silueta de `Marcha del elefante`, y una
+segunda sentadilla que chocaba con `Sentarse y levantarse del suelo`. El mapa, con el
+porque de cada fila, en `scripts/glifos/mapa-tanda2.txt`.
+
+Geometria: **0 piezas fuera del circulo** (radio 97,6-98,3 % del tope). `precache`
+199 -> **219**, dos filas por pieza.
+
+> **La ingesta reescribe el mapa ENTERO**, y la numeracion de la hoja de contactos de
+> s170 **no es reproducible**, asi que los **39 dibujos viejos que sobreviven** se
+> recuperaron **emparejandolos por CONTENIDO** contra las mascaras (firma de tinta ->
+> recorte -> 32x32 -> correlacion). **La peor pareja puntuo 0,849.** El script quedo en
+> el scratchpad: si hace falta otra tanda, hay que reescribirlo o moverlo a
+> `scripts/glifos/`.
+
+Y un **detector que NO sirvio**, para no reintentarlo: identificar el mueble por «recta
+larga». Tres versiones, tres respuestas — la estricta daba falsos negativos (la linea de
+la silla esta **partida por el cuerpo**), la relajada se disparaba con los contornos del
+dibujo, y la de tramos colineales perdia la mesa continua. **Lo que funciona es la pieza
+a 700 px con la descripcion del encargo al lado.**
+
+### El bloque del runner queda anclado
+
+El usuario verifico el arreglo del circulo en su telefono y **seguia viendo un salto**.
+`[data-pace-v1-body]` pasa a declarar **alto minimo** —70vh en movil, 72vh en
+escritorio— gateado por `min-height` de **780 / 880 px**, y el rotulo de fase se pinta
+**siempre, vacio cuando no hay**. Medido: el circulo y el nombre entre pasos de trabajo
+pasan de **43-94 px a 0**; cruzando fases quedan **~25 y ~29**.
+
+**Los suelos son el techo MEDIDO**, no una estimacion: el bloque mas alto que cabe es
+70,1vh a 375x780 · 71,2 a 812 · 72,4 a 844 · 76,0 a 1280x900. Va **en vh y no en px**
+porque el bloque crece con la altura del viewport y su techo tambien, y los intervalos
+validos de 780 y de 844 **no se solapan**. El rotulo vacio cuesta ~11 px y **fuera de
+los suelos no se paga**: a 360x640 eran justo los que faltaban.
+
+**Lo que queda tiene nombre**: el gate de tipo **`ready`** —el que espera al usuario
+porque el paso pide suelo, cojin o pared— **no pinta contador**, y su bloque se queda
+~50 px por debajo del suelo que ancla a los demas. Asertado como **deuda con trinquete**
+(tope 30 px) en `tests/runner-circulo.spec.js`: si se arregla, el tope baja a 0.
+
+**Cuatro errores que la medida corrigio**: (1) reservar cada texto por separado **no
+funciona** — las reservas son **aditivas** y el peor caso real no tenia a la vez nombre
+de 2 lineas y cue de 3, asi que el bloque paso de 460 a 529 px y **desbordo donde antes
+cabia**; (2) el bloque **no se compara contra el alto del centro**, porque ahi dentro
+vive tambien la barra de progreso —**61 px** sin contar—, y por eso una medida decia
+«holgura +11» mientras el test decia «rebasa 51»; (3) **con el bloque anclado no hace
+falta reservar ningun texto** (por encima del nombre solo hay glifo y rotulo, los dos de
+alto fijo), aunque las reservas de `cue` y `care` se quedan porque **por debajo de los
+suelos son lo unico que ancla**; (4) **los backticks dentro del template literal del
+CSS**, otra vez (s139, s156, s157, s158, s162): el build **aborta**, y con la salida
+silenciada tres rondas de medicion corrieron **contra un artefacto viejo**.
 
 ---
 
