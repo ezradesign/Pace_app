@@ -337,7 +337,7 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosph
 function SessionDone({
   routine, onExit, accent, accentSoft,
   doneMeta, doneCopy, stats = [],
-  buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback,
+  buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData,
 }) {
   const { t } = useT();
   /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
@@ -347,7 +347,13 @@ function SessionDone({
      feedback (s116 · B2.2b-2): slot OPCIONAL bajo el copy de cierre — los
      runners de cuerpo/respiración pasan <SessionFeedback/> (fuera de Caminos);
      undefined = sin bloque (Foco de Camino, PathFocusStep). El bloque decide
-     por sí mismo si mostrarse (gate por-día) y no altera el CTA de regreso. */
+     por sí mismo si mostrarse (gate por-día) y no altera el CTA de regreso.
+     rootData (s170): atributos `data-*` sueltos sobre el nodo del cierre, para
+     que un runner pueda publicar un número que la pantalla NO enseña. Nace con
+     el tiempo activo de Mueve/Estira, cuyo consumidor de verdad es el emisor
+     de `session.completed` (Fase 3) — hasta que exista, el dato no tendría
+     dónde comprobarse. Mismo recurso que `data-pace-week-hold` (s166): el
+     número viaja en el atributo y la vista sigue diciendo lo que decía. */
   const label = doneButtonLabel || t('session.backToHome');
   const btn = buttonVariant
     ? <Button variant={buttonVariant} onClick={() => onExit('done')}>{label}</Button>
@@ -355,7 +361,7 @@ function SessionDone({
 
   return (
     <SessionShell routine={routine} onExit={onExit} atmosphere={atmosphere} footer={btn}>
-      <div data-pace-session-done style={{ textAlign: 'center', maxWidth: 520 }}>
+      <div data-pace-session-done {...(rootData || {})} style={{ textAlign: 'center', maxWidth: 520 }}>
         <div data-pace-session-done-hero style={{
           width: 120, height: 120, margin: '0 auto 24px',
           borderRadius: '50%',

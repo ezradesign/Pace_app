@@ -203,9 +203,9 @@ function ExerciseGlyph({ id, size = 88, className = '' }) {
      rama no se toma ni una vez y la app pinta exactamente lo de ayer.
      `currentColor` de fondo es lo que conserva el tintado por token del
      modulo, que es justo lo que se perderia pintando el PNG como imagen. */
-  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id);
+  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id, size);
   if (mask) {
-    const url = 'url("' + mask + '")';
+    const url = 'url("' + mask + '")'; size = Math.round(size * 1.5);
     return (
       <span className={className} style={{
         display: 'block', width: size, height: size,

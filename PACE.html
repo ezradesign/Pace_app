@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.99.1</title>
+  <title>PACE · Foco · Cuerpo — v0.100.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -211,6 +211,11 @@
   <script type="text/babel" src="app/state.jsx"></script>
 
   <script type="text/babel" src="app/ui/Primitives.jsx"></script>
+  <!-- Reloj de tiempo activo compartido (s170): expone window.useActiveClock.
+       Lo consumen BreatheSession.support.jsx (retención) y los DOS runners de
+       cuerpo (MoveModule / MoveSessionV1). Debe cargarse antes que los tres —
+       MoveModule.jsx es el primero de ellos en este mismo orden. -->
+  <script type="text/babel" src="app/ui/SessionClock.jsx"></script>
   <script type="text/babel" src="app/ui/SessionShell.jsx"></script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
        en s116 (el shell rozaba 500 ln). Solo inyecta un <style> idempotente;

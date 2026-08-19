@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.99.1</title>
+  <title>PACE · Foco · Cuerpo — v0.100.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4691,7 +4691,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.99.1';
+const PACE_VERSION = 'v0.100.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -8592,9 +8592,90 @@ Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal, di
 ;Object.assign(window, { Modal, Card, Tag, Button, Divider, Meta, PremiumSeal });
 })();
 </script>
+  <!-- Reloj de tiempo activo compartido (s170): expone window.useActiveClock.
+       Lo consumen BreatheSession.support.jsx (retención) y los DOS runners de
+       cuerpo (MoveModule / MoveSessionV1). Debe cargarse antes que los tres —
+       MoveModule.jsx es el primero de ellos en este mismo orden. -->
   <script>
 ;(function () {
-/* PACE · Foco · Cuerpo
+/* PACE · SessionClock.jsx
+   Copyright © 2026 ezradesign
+   Licensed under the Elastic License 2.0 — see LICENSE
+
+   EL RELOJ DE TIEMPO ACTIVO, COMPARTIDO (s170)
+   ============================================
+   Un acumulador segmentado: se le dice en cada render si la sesión está
+   trabajando AHORA y él suma solo esos tramos. Es el mecanismo que Respira
+   tiene desde s98 (`activeMsRef`) y que Mueve/Estira NO tenían: hasta s170 su
+   único tiempo era de pared —`Date.now() - sessionStart`— o sea **con las
+   pausas dentro**.
+
+   POR QUÉ SALE A UN ARCHIVO PROPIO EN VEZ DE COPIARSE. Con este ya iban a ser
+   TRES copias del mismo bucle (Respira + los dos runners de cuerpo), y s147 ya
+   se comió que hubiera CUATRO copias del render de glifo: cada copia envejece
+   por su lado y el día que una se arregla las otras no se enteran. Lo que se
+   comparte es el MECANISMO (segmentar y sumar), nunca la política: qué cuenta
+   como «activo» lo decide cada runner al llamar a `marcar()`, y son criterios
+   distintos por módulo (§6.4 del esquema de eventos).
+
+   OJO AL TOCARLO: de aquí cuelgan la retención de Respira (`useHoldClock`, que
+   delega) y el tiempo activo de Mueve/Estira. Un cambio aquí los mueve a los
+   dos.
+
+   MISMA DISCIPLINA QUE EL RELOJ DE s98: timestamp-based (decisión s96), no un
+   contador de ticks — un `setInterval` pierde tiempo con la pestaña oculta y
+   deriva. El tiempo con la pestaña oculta CUENTA, igual que en Foco; lo que se
+   excluye son las pausas explícitas y las fases que el módulo declare inertes.
+
+   CARGA ANTES de sus consumidores: BreatheSession.support.jsx, MoveModule.jsx
+   y MoveSessionV1.jsx. Vive en `app/ui/` porque es el primer bloque que los
+   tres tienen por delante en el orden de PACE.html.
+*/
+
+const { useRef: useRefSC } = React;
+
+/**
+ * Reloj de tiempo activo. Devuelve { marcar, segundos }:
+ *   · marcar(activo) — abre o cierra el segmento en curso. IDEMPOTENTE:
+ *     llamarlo dos veces con el mismo valor no acumula de más, que es lo que
+ *     permite llamarlo desde un efecto sin dependencias finas.
+ *   · segundos() — total acumulado, INCLUYENDO el segmento abierto.
+ *
+ * Que `segundos()` cuente el segmento abierto no es un detalle: es lo que
+ * permite leer el total en el mismo gesto que termina la sesión, sin cerrar el
+ * reloj a mano antes. El banco de mutaciones de s166 demostró que tener las
+ * dos cosas —cerrar a mano Y contar lo abierto— se tapan entre sí: romper
+ * cualquiera de las dos dejaba los asertos en verde, o sea que no había forma
+ * de saber si alguna funcionaba. Con una sola, la mutación muerde.
+ */
+function useActiveClock() {
+  const acumuladoMs = useRefSC(0);
+  const inicioSeg = useRefSC(null);
+
+  const marcar = (activo) => {
+    if (activo) {
+      if (inicioSeg.current == null) inicioSeg.current = Date.now();
+    } else if (inicioSeg.current != null) {
+      acumuladoMs.current += Date.now() - inicioSeg.current;
+      inicioSeg.current = null;
+    }
+  };
+
+  const segundos = () => {
+    const abierto = inicioSeg.current != null ? Date.now() - inicioSeg.current : 0;
+    return (acumuladoMs.current + abierto) / 1000;
+  };
+
+  return { marcar, segundos };
+}
+
+Object.assign(window, { useActiveClock });
+;Object.assign(window, { useActiveClock });
+})();
+</script>
+  <script>
+;(function () {
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);} /* PACE · Foco · Cuerpo
    Copyright © 2026 ezradesign
    Licensed under the Elastic License 2.0 — see LICENSE
 
@@ -8934,7 +9015,7 @@ function SessionDone(_ref5)
 
 
 
-{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback } = _ref5;
+{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData } = _ref5;
   const { t } = useT();
   /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
      sesion pasa t('session.next') ("Siguiente") -- onExit('done') ya avanza
@@ -8943,7 +9024,13 @@ function SessionDone(_ref5)
      feedback (s116 · B2.2b-2): slot OPCIONAL bajo el copy de cierre — los
      runners de cuerpo/respiración pasan <SessionFeedback/> (fuera de Caminos);
      undefined = sin bloque (Foco de Camino, PathFocusStep). El bloque decide
-     por sí mismo si mostrarse (gate por-día) y no altera el CTA de regreso. */
+     por sí mismo si mostrarse (gate por-día) y no altera el CTA de regreso.
+     rootData (s170): atributos `data-*` sueltos sobre el nodo del cierre, para
+     que un runner pueda publicar un número que la pantalla NO enseña. Nace con
+     el tiempo activo de Mueve/Estira, cuyo consumidor de verdad es el emisor
+     de `session.completed` (Fase 3) — hasta que exista, el dato no tendría
+     dónde comprobarse. Mismo recurso que `data-pace-week-hold` (s166): el
+     número viaja en el atributo y la vista sigue diciendo lo que decía. */
   const label = doneButtonLabel || t('session.backToHome');
   const btn = buttonVariant ? /*#__PURE__*/
   React.createElement(Button, { variant: buttonVariant, onClick: () => onExit('done') }, label) : /*#__PURE__*/
@@ -8951,7 +9038,7 @@ function SessionDone(_ref5)
 
   return (/*#__PURE__*/
     React.createElement(SessionShell, { routine: routine, onExit: onExit, atmosphere: atmosphere, footer: btn }, /*#__PURE__*/
-    React.createElement("div", { "data-pace-session-done": true, style: { textAlign: 'center', maxWidth: 520 } }, /*#__PURE__*/
+    React.createElement("div", _extends({ "data-pace-session-done": true }, rootData || {}, { style: { textAlign: 'center', maxWidth: 520 } }), /*#__PURE__*/
     React.createElement("div", { "data-pace-session-done-hero": true, style: {
         width: 120, height: 120, margin: '0 auto 24px',
         borderRadius: '50%',
@@ -9045,7 +9132,7 @@ Object.assign(window, {
   paceGrainUrl, paceGlowRamp, PaceDither,
   sessionKeyOnControl, sessionDoneKeyBlocked
 });
-;Object.assign(window, { paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
 })();
 </script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
@@ -12647,23 +12734,131 @@ window.resolveVisualId = resolveVisualId;
    trampas están medidas en s146 (ver la cabecera de `achievement-masks.js`).
    Si añades un glifo: una fila abajo, y nada de rutas en los comentarios. */
 const EXERCISE_MASKS = {
+  '90/90': 'app/glyphs/assets/ejercicios/90-90.webp',
+  'Abrir y cerrar el puño': 'app/glyphs/assets/ejercicios/abrir-y-cerrar-el-puno.webp',
+  'Apertura con banda': 'app/glyphs/assets/ejercicios/apertura-con-banda.webp',
+  'Apertura de costillas + respiración': 'app/glyphs/assets/ejercicios/apertura-de-costillas-respiracion.webp',
+  'Apertura de pecho': 'app/glyphs/assets/ejercicios/apertura-de-pecho.webp',
+  'Apretar glúteos': 'app/glyphs/assets/ejercicios/apretar-gluteos.webp',
+  'Círculos de hombro': 'app/glyphs/assets/ejercicios/circulos-de-hombro.webp',
+  'Círculos de muñeca': 'app/glyphs/assets/ejercicios/circulos-de-muneca.webp',
+  'Círculos de tobillo': 'app/glyphs/assets/ejercicios/circulos-de-tobillo.webp',
+  'Cuello y trapecios': 'app/glyphs/assets/ejercicios/cuello-y-trapecios.webp',
+  'Deslizamientos en pared': 'app/glyphs/assets/ejercicios/deslizamientos-en-pared.webp',
+  'Elevación de puntas': 'app/glyphs/assets/ejercicios/elevacion-de-puntas.webp',
+  'Elevación de talones': 'app/glyphs/assets/ejercicios/elevacion-de-talones.webp',
+  'Encogimiento de hombros': 'app/glyphs/assets/ejercicios/encogimiento-de-hombros.webp',
+  'Escalenos': 'app/glyphs/assets/ejercicios/escalenos.webp',
+  'Estiramiento de muñeca': 'app/glyphs/assets/ejercicios/estiramiento-de-muneca.webp',
+  'Extensión de dedos': 'app/glyphs/assets/ejercicios/extension-de-dedos.webp',
+  'Extensión torácica': 'app/glyphs/assets/ejercicios/extension-toracica.webp',
+  'Flexiones inclinadas': 'app/glyphs/assets/ejercicios/flexiones-inclinadas.webp',
+  'Flexor de cadera': 'app/glyphs/assets/ejercicios/flexor-de-cadera.webp',
+  'Fondos en silla': 'app/glyphs/assets/ejercicios/fondos-en-silla.webp',
+  'Gateo': 'app/glyphs/assets/ejercicios/gateo.webp',
+  'Gato-camello': 'app/glyphs/assets/ejercicios/gato-camello.webp',
+  'Giro sentado': 'app/glyphs/assets/ejercicios/giro-sentado.webp',
+  'Hueco abdominal': 'app/glyphs/assets/ejercicios/hueco-abdominal.webp',
+  'Hueco en silla': 'app/glyphs/assets/ejercicios/hueco-en-silla.webp',
+  'Juntar omóplatos': 'app/glyphs/assets/ejercicios/juntar-omoplatos.webp',
+  'Marcha del elefante': 'app/glyphs/assets/ejercicios/marcha-del-elefante.webp',
+  'Palmas al suelo': 'app/glyphs/assets/ejercicios/palmas-al-suelo.webp',
+  'Paloma': 'app/glyphs/assets/ejercicios/paloma.webp',
+  'Plancha': 'app/glyphs/assets/ejercicios/plancha.webp',
+  'Plancha lateral': 'app/glyphs/assets/ejercicios/plancha-lateral.webp',
+  'Pliegue adelante': 'app/glyphs/assets/ejercicios/pliegue-adelante.webp',
+  'Puente con marcha': 'app/glyphs/assets/ejercicios/puente-con-marcha.webp',
+  'Puente torácico': 'app/glyphs/assets/ejercicios/puente-toracico.webp',
+  'Reset respiración': 'app/glyphs/assets/ejercicios/reset-respiracion.webp',
+  'Rezo invertido': 'app/glyphs/assets/ejercicios/rezo-invertido.webp',
+  'Rodar hacia abajo': 'app/glyphs/assets/ejercicios/rodar-hacia-abajo.webp',
+  'Rotación externa': 'app/glyphs/assets/ejercicios/rotacion-externa.webp',
+  'Rotación torácica': 'app/glyphs/assets/ejercicios/rotacion-toracica.webp',
+  'Sentadilla a silla': 'app/glyphs/assets/ejercicios/sentadilla-a-silla.webp',
+  'Sentadilla de cuádriceps': 'app/glyphs/assets/ejercicios/sentadilla-de-cuadriceps.webp',
+  'Silla en la pared': 'app/glyphs/assets/ejercicios/silla-en-la-pared.webp',
+  'Superman': 'app/glyphs/assets/ejercicios/superman.webp',
+  'Suspensión activa': 'app/glyphs/assets/ejercicios/suspension-activa.webp',
+  'Suspensión pasiva': 'app/glyphs/assets/ejercicios/suspension-pasiva.webp',
+  'Zancada profunda': 'app/glyphs/assets/ejercicios/zancada-profunda.webp'
+};
 
+/* MÁSCARA DE MINIATURA (s170) — un segundo asset SOLO para tamaños pequeños.
+   A 30 px la máscara grande no se lee, y no es cuestión de ajustes: una línea de
+   un píxel promediada 25 veces se vuelve gris. Subir el contraste del asset
+   grande para arreglar el pequeño estropearía el grande, así que la ingesta
+   genera un `.min.webp` aparte con el trazo ENGORDADO y el contraste al límite.
+   Con el mapa vacío no pasa nada: se usa el grande, como hasta ahora. */
+const EXERCISE_MASKS_MIN = {
+  '90/90': 'app/glyphs/assets/ejercicios/90-90.min.webp',
+  'Abrir y cerrar el puño': 'app/glyphs/assets/ejercicios/abrir-y-cerrar-el-puno.min.webp',
+  'Apertura con banda': 'app/glyphs/assets/ejercicios/apertura-con-banda.min.webp',
+  'Apertura de costillas + respiración': 'app/glyphs/assets/ejercicios/apertura-de-costillas-respiracion.min.webp',
+  'Apertura de pecho': 'app/glyphs/assets/ejercicios/apertura-de-pecho.min.webp',
+  'Apretar glúteos': 'app/glyphs/assets/ejercicios/apretar-gluteos.min.webp',
+  'Círculos de hombro': 'app/glyphs/assets/ejercicios/circulos-de-hombro.min.webp',
+  'Círculos de muñeca': 'app/glyphs/assets/ejercicios/circulos-de-muneca.min.webp',
+  'Círculos de tobillo': 'app/glyphs/assets/ejercicios/circulos-de-tobillo.min.webp',
+  'Cuello y trapecios': 'app/glyphs/assets/ejercicios/cuello-y-trapecios.min.webp',
+  'Deslizamientos en pared': 'app/glyphs/assets/ejercicios/deslizamientos-en-pared.min.webp',
+  'Elevación de puntas': 'app/glyphs/assets/ejercicios/elevacion-de-puntas.min.webp',
+  'Elevación de talones': 'app/glyphs/assets/ejercicios/elevacion-de-talones.min.webp',
+  'Encogimiento de hombros': 'app/glyphs/assets/ejercicios/encogimiento-de-hombros.min.webp',
+  'Escalenos': 'app/glyphs/assets/ejercicios/escalenos.min.webp',
+  'Estiramiento de muñeca': 'app/glyphs/assets/ejercicios/estiramiento-de-muneca.min.webp',
+  'Extensión de dedos': 'app/glyphs/assets/ejercicios/extension-de-dedos.min.webp',
+  'Extensión torácica': 'app/glyphs/assets/ejercicios/extension-toracica.min.webp',
+  'Flexiones inclinadas': 'app/glyphs/assets/ejercicios/flexiones-inclinadas.min.webp',
+  'Flexor de cadera': 'app/glyphs/assets/ejercicios/flexor-de-cadera.min.webp',
+  'Fondos en silla': 'app/glyphs/assets/ejercicios/fondos-en-silla.min.webp',
+  'Gateo': 'app/glyphs/assets/ejercicios/gateo.min.webp',
+  'Gato-camello': 'app/glyphs/assets/ejercicios/gato-camello.min.webp',
+  'Giro sentado': 'app/glyphs/assets/ejercicios/giro-sentado.min.webp',
+  'Hueco abdominal': 'app/glyphs/assets/ejercicios/hueco-abdominal.min.webp',
+  'Hueco en silla': 'app/glyphs/assets/ejercicios/hueco-en-silla.min.webp',
+  'Juntar omóplatos': 'app/glyphs/assets/ejercicios/juntar-omoplatos.min.webp',
+  'Marcha del elefante': 'app/glyphs/assets/ejercicios/marcha-del-elefante.min.webp',
+  'Palmas al suelo': 'app/glyphs/assets/ejercicios/palmas-al-suelo.min.webp',
+  'Paloma': 'app/glyphs/assets/ejercicios/paloma.min.webp',
+  'Plancha': 'app/glyphs/assets/ejercicios/plancha.min.webp',
+  'Plancha lateral': 'app/glyphs/assets/ejercicios/plancha-lateral.min.webp',
+  'Pliegue adelante': 'app/glyphs/assets/ejercicios/pliegue-adelante.min.webp',
+  'Puente con marcha': 'app/glyphs/assets/ejercicios/puente-con-marcha.min.webp',
+  'Puente torácico': 'app/glyphs/assets/ejercicios/puente-toracico.min.webp',
+  'Reset respiración': 'app/glyphs/assets/ejercicios/reset-respiracion.min.webp',
+  'Rezo invertido': 'app/glyphs/assets/ejercicios/rezo-invertido.min.webp',
+  'Rodar hacia abajo': 'app/glyphs/assets/ejercicios/rodar-hacia-abajo.min.webp',
+  'Rotación externa': 'app/glyphs/assets/ejercicios/rotacion-externa.min.webp',
+  'Rotación torácica': 'app/glyphs/assets/ejercicios/rotacion-toracica.min.webp',
+  'Sentadilla a silla': 'app/glyphs/assets/ejercicios/sentadilla-a-silla.min.webp',
+  'Sentadilla de cuádriceps': 'app/glyphs/assets/ejercicios/sentadilla-de-cuadriceps.min.webp',
+  'Silla en la pared': 'app/glyphs/assets/ejercicios/silla-en-la-pared.min.webp',
+  'Superman': 'app/glyphs/assets/ejercicios/superman.min.webp',
+  'Suspensión activa': 'app/glyphs/assets/ejercicios/suspension-activa.min.webp',
+  'Suspensión pasiva': 'app/glyphs/assets/ejercicios/suspension-pasiva.min.webp',
+  'Zancada profunda': 'app/glyphs/assets/ejercicios/zancada-profunda.min.webp'
+};
 
+/* Por debajo de este tamaño se prefiere la miniatura. 40 px deja fuera el sello
+   de 56 —que con el asset grande ya se lee— y coge la miniatura de 30 de la
+   biblioteca, que es la que fallaba. */
+const MASK_MIN_HASTA = 40;
 
-
-  /* VACIO hasta que el usuario entregue los PNG. Lo rellena
-     , que reescribe SOLO este objeto y las
-     filas de precache de , y valida contra lo que la app PIDE (61
-     identidades visuales, el mismo numero que da el censo de s164). */}; /* Devuelve la ruta de la máscara de un ejercicio, o null.
+/* Devuelve la ruta de la máscara de un ejercicio, o null.
    Resuelve por IDENTIDAD VISUAL primero y por nombre propio después, que es el
    mismo orden que `ExerciseGlyph` usa con los SVG: así un alias no se queda sin
-   arte y un nombre sin alias tampoco. */function exerciseMaskUrl(name) {
+   arte y un nombre sin alias tampoco. */
+function exerciseMaskUrl(name, size) {
   if (!name) return null;
   const vid = window.resolveVisualId ? window.resolveVisualId(name) : name;
+  if (typeof size === 'number' && size <= MASK_MIN_HASTA) {
+    const min = EXERCISE_MASKS_MIN[vid] || EXERCISE_MASKS_MIN[name];
+    if (min) return min;
+  }
   return EXERCISE_MASKS[vid] || EXERCISE_MASKS[name] || null;
 }
 
-Object.assign(window, { EXERCISE_MASKS, exerciseMaskUrl });
+Object.assign(window, { EXERCISE_MASKS, EXERCISE_MASKS_MIN, MASK_MIN_HASTA, exerciseMaskUrl });
 ;Object.assign(window, { exerciseMaskUrl });
 })();
 </script>
@@ -12874,9 +13069,9 @@ function ExerciseGlyph(_ref14) {let { id, size = 88, className = '' } = _ref14;
      rama no se toma ni una vez y la app pinta exactamente lo de ayer.
      `currentColor` de fondo es lo que conserva el tintado por token del
      modulo, que es justo lo que se perderia pintando el PNG como imagen. */
-  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id);
+  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id, size);
   if (mask) {
-    const url = 'url("' + mask + '")';
+    const url = 'url("' + mask + '")';size = Math.round(size * 1.5);
     return (/*#__PURE__*/
       React.createElement("span", { className: className, style: {
           display: 'block', width: size, height: size,
@@ -14795,43 +14990,31 @@ Object.assign(window, { BreatheLibrary, BreatheSafety });
    oculta cuenta, igual que en Foco.
 */
 
-const { useRef: useRefBS } = React;
-
 /**
  * Reloj de tiempo en retención. Se le dice en cada render si la sesión está
- * retenienzo AHORA (stage === 'hold' y sin pausar) y él segmenta.
+ * reteniendo AHORA (stage === 'hold' y sin pausar) y él segmenta.
  *
  * Devuelve { marcar, segundos }:
  *   · marcar(activo) — abre o cierra el segmento. Idempotente: llamarlo dos
  *     veces con el mismo valor no acumula de más, que es lo que permite
  *     llamarlo desde un efecto sin dependencias finas.
  *   · segundos() — total acumulado, incluyendo el segmento abierto.
+ *
+ * EL MECANISMO SE MUDÓ A `app/ui/SessionClock.jsx` EN s170, sin cambiarlo: al
+ * darle contabilidad de pausa a Mueve/Estira iban a ser tres copias del mismo
+ * bucle, que es el defecto que s147 pagó con el render de glifo. Lo que queda
+ * aquí es la POLÍTICA —qué cuenta como retención en Respira— y el nombre con
+ * el que la llama `BreatheSession.jsx`.
+ *
+ * Que `segundos()` incluya el segmento ABIERTO es la línea que carga con el
+ * dato, y por eso `finish()` ya no cierra el reloj a mano (lo hacía, y las dos
+ * cosas se tapaban entre sí). En la última ronda `releaseHold()` llama a
+ * `finish()` sin pasar por 'active', así que al leer el total el segmento de
+ * la retención más larga sigue ABIERTO: si no se sumara, esa retención —la que
+ * más cuesta— se perdería entera. Medido con el banco de mutaciones de s166.
  */
 function useHoldClock() {
-  const acumuladoMs = useRefBS(0);
-  const inicioSeg = useRefBS(null);
-
-  const marcar = (activo) => {
-    if (activo) {
-      if (inicioSeg.current == null) inicioSeg.current = Date.now();
-    } else if (inicioSeg.current != null) {
-      acumuladoMs.current += Date.now() - inicioSeg.current;
-      inicioSeg.current = null;
-    }
-  };
-
-  /* ESTA es la unica linea que carga con el dato, y por eso `finish()` ya no
-     cierra el reloj a mano (lo hacia, y las dos cosas se tapaban entre si).
-     En la ultima ronda `releaseHold()` llama a `finish()` sin pasar por
-     'active', asi que al leer el total el segmento de la retencion mas larga
-     sigue ABIERTO: si `abierto` no se sumara, esa retencion —la que mas
-     cuesta— se perderia entera. Medido con el banco de mutaciones de s166. */
-  const segundos = () => {
-    const abierto = inicioSeg.current != null ? Date.now() - inicioSeg.current : 0;
-    return (acumuladoMs.current + abierto) / 1000;
-  };
-
-  return { marcar, segundos };
+  return useActiveClock();
 }
 
 Object.assign(window, { useHoldClock });
@@ -15845,6 +16028,10 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
   // `routine.min` declarado (las stats heredaban el número declarado).
   const dispatchComplete = () => {
     const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    /* s170 · igual que en el runner v1: se LEE sin cerrar el reloj (segundos()
+       ya cuenta el segmento abierto) y se congela en un ref, porque el 'done'
+       se re-renderiza. */
+    activeSecRef.current = Math.round(relojActivo.segundos());
     if (kind === 'extra') completeExtraSession(routine.id, realMin);else
     completeMoveSession(routine.id, realMin);
   };
@@ -15852,7 +16039,12 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
   const [stepIdx, setStepIdx] = useStateMV(0);
   const [elapsed, setElapsed] = useStateMV(0);
   const [paused, setPaused] = useStateMV(false);
-  const sessionStart = useRefMV(Date.now());
+  const sessionStart = useRefMV(Date.now()); // wall-clock: incluye pausas
+  /* Reloj de TIEMPO ACTIVO (s170). El camino legacy también completa, así que
+     también lo necesita: si solo lo tuviera el runner v1, las rutinas sin
+     `mode` emitirían un tiempo activo que en realidad es de pared. */
+  const relojActivo = useActiveClock();
+  const activeSecRef = useRefMV(0);
   const step = routine.steps[stepIdx];
 
   // Preparación 3s
@@ -15882,6 +16074,18 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
     }, 1000);
     return () => clearInterval(intv);
   }, [stepIdx, paused, step, routine, stage]);
+
+  /* Segmentador del TIEMPO ACTIVO (s170) — misma política que el runner v1
+     (§6.4 del esquema de eventos): fuera la preparación y fuera las pausas.
+     LA DIFERENCIA ESTÁ EN CÓMO SE RECONOCE UN DESCANSO: aquí los pasos no
+     llevan `mode`, así que el descanso solo se distingue por su NOMBRE. No es
+     una convención inventada para esto — es la misma por la que se guían el
+     censo de glifos de s164 y la ingesta de s166, que excluyen `Descanso`
+     porque no es un ejercicio. El nombre es el canónico del dato: `tStep` solo
+     traduce para pintar, nunca toca `step.name`. */
+  useEffectMV(() => {
+    relojActivo.marcar(stage === 'active' && !paused && !!step && step.name !== 'Descanso');
+  }, [stage, paused, stepIdx, step]);
 
   // Atajos de teclado
   useEffectMV(() => {
@@ -15960,6 +16164,7 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
         { label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` },
         { label: t('move.steps'), value: String(routine.steps.length) }],
 
+        rootData: { 'data-pace-active-sec': activeSecRef.current },
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
         atmosphere: atmo,
@@ -16412,13 +16617,70 @@ if (!_paceMoveV1Css) {
   document.head.appendChild(s);
 }
 
+/* Stats de la pantalla final (s114, extraído aquí en s170 por la regla §1).
+   El criterio NO cambió: tiempo siempre; en rutinas de fuerza, series (nº de
+   sets de reps) + reps GUIADAS reales (jamás el objetivo); en mixtas, pasos
+   (ejercicios sin descansos) + reps; en movilidad, pasos. Sin calorías,
+   récords ni comparaciones. `tiempo` llega ya formateado y `t` es el traductor
+   del llamador — así el helper se queda puro. */
+function v1DoneStats(routine, guided, tiempo, t) {
+  const ejercicios = routine.steps.filter((s) => s.mode !== 'rest').length;
+  const conReps = routine.steps.filter((s) => s.mode === 'reps').length;
+  const stats = [{ label: t('common.time'), value: tiempo }];
+  if (conReps > 0 && conReps === ejercicios) {
+    stats.push({ label: t('move.series'), value: String(conReps) });
+    stats.push({ label: t('move.repsCount'), value: String(guided) });
+  } else if (conReps > 0) {
+    stats.push({ label: t('move.steps'), value: String(ejercicios) });
+    stats.push({ label: t('move.repsCount'), value: String(guided) });
+  } else {
+    stats.push({ label: t('move.steps'), value: String(ejercicios) });
+  }
+  return stats;
+}
+
+/* ¿ESTE INSTANTE CUENTA COMO TIEMPO ACTIVO? (s170) — helper PURO, y la razón
+   de que sea puro es que ES la decisión: el reloj de `useActiveClock` solo sabe
+   segmentar, y todo lo que puede salir mal vive en esta condición.
+
+   La política la fija §6.4 del esquema de eventos, y conviene leerla por lo que
+   DEJA FUERA:
+     · 'prep' y la colocación ('place') — preparaciones, no trabajo. Y la
+       colocación `ready` ni siquiera tiene reloj: espera al usuario sin límite,
+       así que contarla sería volver a meter tiempo de pared dentro.
+     · la transición de lado ('change') — el aviso de cambio no es trabajo,
+       aunque el trabajo de LOS DOS lados sí cuenta.
+     · los descansos entre series (`mode:'rest'`) — están en la rutina, pero
+       descansar no es moverse.
+     · las pausas explícitas.
+   Todo eso sigue vivo en el reloj de pared de `sessionStart`, que es el que
+   alimenta los minutos acreditados: esto NO cambia lo que se acredita, saca un
+   número que hasta ahora no existía. */
+function v1TrabajoActivo(stage, phase, step, paused) {
+  return stage === 'run' && phase === 'work' && !!step && step.mode !== 'rest' && !paused;
+}
+
+/* El reloj de tiempo activo del runner v1, ya cableado a su política. Sale del
+   componente por la regla §1 (el runner estaba en 496 de 500) siguiendo el
+   camino de `useHoldClock` en s166.
+   Las deps NO llevan `side` a propósito: cambiar de lado no interrumpe el
+   trabajo, y `marcar` es idempotente. Sí llevan `step`, porque de él depende
+   `step.mode` — sin él, entrar en un descanso no cerraría el segmento. */
+function useV1ActiveClock(stage, phase, step, paused) {
+  const reloj = useActiveClock();
+  React.useEffect(() => {
+    reloj.marcar(v1TrabajoActivo(stage, phase, step, paused));
+  }, [stage, phase, step, paused]);
+  return reloj;
+}
+
 Object.assign(window, {
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
-  estimateDuration, v1DevCheckDuration
+  estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, estimateDuration, v1DevCheckDuration });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock });
 })();
 </script>
   <script>
@@ -16487,14 +16749,26 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0); // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
-  const sessionStart = useRefV1(Date.now());
+  const sessionStart = useRefV1(Date.now()); // wall-clock: incluye pausas y colocaciones
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
   // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
   const repsGuidedRef = useRefV1(0);
+  const activeSecRef = useRefV1(0); // congelado al completar, no al renderizar
   const step = routine.steps[stepIdx];
+  /* Reloj de TIEMPO ACTIVO (s170) — lo que Respira tiene desde s98 y esta
+     familia no tenía: hasta ahora su único tiempo era `sessionStart`, o sea
+     reloj de pared CON LAS PAUSAS DENTRO. La política de qué cuenta vive en
+     `v1TrabajoActivo` (support), que es donde puede probarse sola. */
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused);
 
   const dispatchComplete = () => {
     const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
+       tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
+       s166); el efecto lo cierra al pasar a 'done'. Y se congela en un ref
+       porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo — el
+       defecto que ya tiene el `totalSec` de esa pantalla y que aquí no se hereda. */
+    activeSecRef.current = Math.round(relojActivo.segundos());
     if (kind === 'extra') completeExtraSession(routine.id, realMin);else
     completeMoveSession(routine.id, realMin);
   };
@@ -16677,29 +16951,17 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
     const secs = totalSec % 60;
     // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):
     // Mueve → «Movimiento completado» · Estira → «Estiramiento completado».
-    // Stats HONESTAS: tiempo siempre; en rutinas de fuerza, series (nº de sets
-    // de reps) + reps GUIADAS reales (repsGuidedRef — jamás el objetivo); en
-    // mixtas, pasos (ejercicios sin descansos) + reps; en movilidad, pasos.
-    // Sin calorías, récords ni comparaciones.
-    const exerciseSteps = routine.steps.filter((s) => s.mode !== 'rest').length;
-    const repsSteps = routine.steps.filter((s) => s.mode === 'reps').length;
-    const guided = repsGuidedRef.current;
-    const stats = [{ label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` }];
-    if (repsSteps > 0 && repsSteps === exerciseSteps) {
-      stats.push({ label: t('move.series'), value: String(repsSteps) });
-      stats.push({ label: t('move.repsCount'), value: String(guided) });
-    } else if (repsSteps > 0) {
-      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
-      stats.push({ label: t('move.repsCount'), value: String(guided) });
-    } else {
-      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
-    }
+    // Stats HONESTAS (s114) — el reparto por tipo de rutina vive en el support
+    // desde s170 (regla §1); el criterio no cambió.
+    const stats = v1DoneStats(routine, repsGuidedRef.current,
+    `${mins}:${String(secs).padStart(2, '0')}`, t);
     const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (/*#__PURE__*/
       React.createElement(SessionDone, {
         routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft,
         doneMeta: doneMeta, doneCopy: t('move.doneCopy'),
         stats: stats,
+        rootData: { 'data-pace-active-sec': activeSecRef.current },
         buttonStyle: { background: accent, borderColor: accent },
         doneButtonLabel: inPath ? t('session.next') : undefined,
         atmosphere: atmo,

@@ -26,43 +26,31 @@
    oculta cuenta, igual que en Foco.
 */
 
-const { useRef: useRefBS } = React;
-
 /**
  * Reloj de tiempo en retención. Se le dice en cada render si la sesión está
- * retenienzo AHORA (stage === 'hold' y sin pausar) y él segmenta.
+ * reteniendo AHORA (stage === 'hold' y sin pausar) y él segmenta.
  *
  * Devuelve { marcar, segundos }:
  *   · marcar(activo) — abre o cierra el segmento. Idempotente: llamarlo dos
  *     veces con el mismo valor no acumula de más, que es lo que permite
  *     llamarlo desde un efecto sin dependencias finas.
  *   · segundos() — total acumulado, incluyendo el segmento abierto.
+ *
+ * EL MECANISMO SE MUDÓ A `app/ui/SessionClock.jsx` EN s170, sin cambiarlo: al
+ * darle contabilidad de pausa a Mueve/Estira iban a ser tres copias del mismo
+ * bucle, que es el defecto que s147 pagó con el render de glifo. Lo que queda
+ * aquí es la POLÍTICA —qué cuenta como retención en Respira— y el nombre con
+ * el que la llama `BreatheSession.jsx`.
+ *
+ * Que `segundos()` incluya el segmento ABIERTO es la línea que carga con el
+ * dato, y por eso `finish()` ya no cierra el reloj a mano (lo hacía, y las dos
+ * cosas se tapaban entre sí). En la última ronda `releaseHold()` llama a
+ * `finish()` sin pasar por 'active', así que al leer el total el segmento de
+ * la retención más larga sigue ABIERTO: si no se sumara, esa retención —la que
+ * más cuesta— se perdería entera. Medido con el banco de mutaciones de s166.
  */
 function useHoldClock() {
-  const acumuladoMs = useRefBS(0);
-  const inicioSeg   = useRefBS(null);
-
-  const marcar = (activo) => {
-    if (activo) {
-      if (inicioSeg.current == null) inicioSeg.current = Date.now();
-    } else if (inicioSeg.current != null) {
-      acumuladoMs.current += Date.now() - inicioSeg.current;
-      inicioSeg.current = null;
-    }
-  };
-
-  /* ESTA es la unica linea que carga con el dato, y por eso `finish()` ya no
-     cierra el reloj a mano (lo hacia, y las dos cosas se tapaban entre si).
-     En la ultima ronda `releaseHold()` llama a `finish()` sin pasar por
-     'active', asi que al leer el total el segmento de la retencion mas larga
-     sigue ABIERTO: si `abierto` no se sumara, esa retencion —la que mas
-     cuesta— se perderia entera. Medido con el banco de mutaciones de s166. */
-  const segundos = () => {
-    const abierto = inicioSeg.current != null ? Date.now() - inicioSeg.current : 0;
-    return (acumuladoMs.current + abierto) / 1000;
-  };
-
-  return { marcar, segundos };
+  return useActiveClock();
 }
 
 Object.assign(window, { useHoldClock });

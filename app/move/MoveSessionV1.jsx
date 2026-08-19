@@ -62,14 +62,26 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   const [paused, setPaused] = useStateV1(false);
   const [placeLeft, setPlaceLeft] = useStateV1(0);  // cuenta-atrás de colocación
   const [changeLeft, setChangeLeft] = useStateV1(0); // transición auto de lado (s113)
-  const sessionStart = useRefV1(Date.now());
+  const sessionStart = useRefV1(Date.now());   // wall-clock: incluye pausas y colocaciones
   // Reps realmente guiadas en la sesión (enmienda R2): registro honesto que
   // consumirá la pantalla final de s114 — nunca se acredita el objetivo.
   const repsGuidedRef = useRefV1(0);
+  const activeSecRef = useRefV1(0);   // congelado al completar, no al renderizar
   const step = routine.steps[stepIdx];
+  /* Reloj de TIEMPO ACTIVO (s170) — lo que Respira tiene desde s98 y esta
+     familia no tenía: hasta ahora su único tiempo era `sessionStart`, o sea
+     reloj de pared CON LAS PAUSAS DENTRO. La política de qué cuenta vive en
+     `v1TrabajoActivo` (support), que es donde puede probarse sola. */
+  const relojActivo = useV1ActiveClock(stage, phase, step, paused);
 
   const dispatchComplete = () => {
     const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
+       tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
+       s166); el efecto lo cierra al pasar a 'done'. Y se congela en un ref
+       porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo — el
+       defecto que ya tiene el `totalSec` de esa pantalla y que aquí no se hereda. */
+    activeSecRef.current = Math.round(relojActivo.segundos());
     if (kind === 'extra') completeExtraSession(routine.id, realMin);
     else completeMoveSession(routine.id, realMin);
   };
@@ -252,29 +264,17 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     const secs = totalSec % 60;
     // s114 · pantalla final por MÓDULO (resuelve el P3 antidoteDone universal):
     // Mueve → «Movimiento completado» · Estira → «Estiramiento completado».
-    // Stats HONESTAS: tiempo siempre; en rutinas de fuerza, series (nº de sets
-    // de reps) + reps GUIADAS reales (repsGuidedRef — jamás el objetivo); en
-    // mixtas, pasos (ejercicios sin descansos) + reps; en movilidad, pasos.
-    // Sin calorías, récords ni comparaciones.
-    const exerciseSteps = routine.steps.filter(s => s.mode !== 'rest').length;
-    const repsSteps = routine.steps.filter(s => s.mode === 'reps').length;
-    const guided = repsGuidedRef.current;
-    const stats = [{ label: t('common.time'), value: `${mins}:${String(secs).padStart(2, '0')}` }];
-    if (repsSteps > 0 && repsSteps === exerciseSteps) {
-      stats.push({ label: t('move.series'), value: String(repsSteps) });
-      stats.push({ label: t('move.repsCount'), value: String(guided) });
-    } else if (repsSteps > 0) {
-      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
-      stats.push({ label: t('move.repsCount'), value: String(guided) });
-    } else {
-      stats.push({ label: t('move.steps'), value: String(exerciseSteps) });
-    }
+    // Stats HONESTAS (s114) — el reparto por tipo de rutina vive en el support
+    // desde s170 (regla §1); el criterio no cambió.
+    const stats = v1DoneStats(routine, repsGuidedRef.current,
+                              `${mins}:${String(secs).padStart(2, '0')}`, t);
     const doneMeta = kind === 'extra' ? t('session.stretchDone') : t('session.moveDone');
     return (
       <SessionDone
         routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft}
         doneMeta={doneMeta} doneCopy={t('move.doneCopy')}
         stats={stats}
+        rootData={{ 'data-pace-active-sec': activeSecRef.current }}
         buttonStyle={{ background: accent, borderColor: accent }}
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}

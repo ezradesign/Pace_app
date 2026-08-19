@@ -307,9 +307,66 @@ if (!_paceMoveV1Css) {
   document.head.appendChild(s);
 }
 
+/* Stats de la pantalla final (s114, extraído aquí en s170 por la regla §1).
+   El criterio NO cambió: tiempo siempre; en rutinas de fuerza, series (nº de
+   sets de reps) + reps GUIADAS reales (jamás el objetivo); en mixtas, pasos
+   (ejercicios sin descansos) + reps; en movilidad, pasos. Sin calorías,
+   récords ni comparaciones. `tiempo` llega ya formateado y `t` es el traductor
+   del llamador — así el helper se queda puro. */
+function v1DoneStats(routine, guided, tiempo, t) {
+  const ejercicios = routine.steps.filter(s => s.mode !== 'rest').length;
+  const conReps = routine.steps.filter(s => s.mode === 'reps').length;
+  const stats = [{ label: t('common.time'), value: tiempo }];
+  if (conReps > 0 && conReps === ejercicios) {
+    stats.push({ label: t('move.series'), value: String(conReps) });
+    stats.push({ label: t('move.repsCount'), value: String(guided) });
+  } else if (conReps > 0) {
+    stats.push({ label: t('move.steps'), value: String(ejercicios) });
+    stats.push({ label: t('move.repsCount'), value: String(guided) });
+  } else {
+    stats.push({ label: t('move.steps'), value: String(ejercicios) });
+  }
+  return stats;
+}
+
+/* ¿ESTE INSTANTE CUENTA COMO TIEMPO ACTIVO? (s170) — helper PURO, y la razón
+   de que sea puro es que ES la decisión: el reloj de `useActiveClock` solo sabe
+   segmentar, y todo lo que puede salir mal vive en esta condición.
+
+   La política la fija §6.4 del esquema de eventos, y conviene leerla por lo que
+   DEJA FUERA:
+     · 'prep' y la colocación ('place') — preparaciones, no trabajo. Y la
+       colocación `ready` ni siquiera tiene reloj: espera al usuario sin límite,
+       así que contarla sería volver a meter tiempo de pared dentro.
+     · la transición de lado ('change') — el aviso de cambio no es trabajo,
+       aunque el trabajo de LOS DOS lados sí cuenta.
+     · los descansos entre series (`mode:'rest'`) — están en la rutina, pero
+       descansar no es moverse.
+     · las pausas explícitas.
+   Todo eso sigue vivo en el reloj de pared de `sessionStart`, que es el que
+   alimenta los minutos acreditados: esto NO cambia lo que se acredita, saca un
+   número que hasta ahora no existía. */
+function v1TrabajoActivo(stage, phase, step, paused) {
+  return stage === 'run' && phase === 'work' && !!step && step.mode !== 'rest' && !paused;
+}
+
+/* El reloj de tiempo activo del runner v1, ya cableado a su política. Sale del
+   componente por la regla §1 (el runner estaba en 496 de 500) siguiendo el
+   camino de `useHoldClock` en s166.
+   Las deps NO llevan `side` a propósito: cambiar de lado no interrumpe el
+   trabajo, y `marcar` es idempotente. Sí llevan `step`, porque de él depende
+   `step.mode` — sin él, entrar en un descanso no cerraría el segmento. */
+function useV1ActiveClock(stage, phase, step, paused) {
+  const reloj = useActiveClock();
+  React.useEffect(() => {
+    reloj.marcar(v1TrabajoActivo(stage, phase, step, paused));
+  }, [stage, phase, step, paused]);
+  return reloj;
+}
+
 Object.assign(window, {
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
-  estimateDuration, v1DevCheckDuration,
+  estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock,
 });

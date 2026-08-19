@@ -94,6 +94,10 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   // `routine.min` declarado (las stats heredaban el número declarado).
   const dispatchComplete = () => {
     const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
+    /* s170 · igual que en el runner v1: se LEE sin cerrar el reloj (segundos()
+       ya cuenta el segmento abierto) y se congela en un ref, porque el 'done'
+       se re-renderiza. */
+    activeSecRef.current = Math.round(relojActivo.segundos());
     if (kind === 'extra') completeExtraSession(routine.id, realMin);
     else completeMoveSession(routine.id, realMin);
   };
@@ -101,7 +105,12 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
   const [stepIdx, setStepIdx] = useStateMV(0);
   const [elapsed, setElapsed] = useStateMV(0);
   const [paused, setPaused] = useStateMV(false);
-  const sessionStart = useRefMV(Date.now());
+  const sessionStart = useRefMV(Date.now());   // wall-clock: incluye pausas
+  /* Reloj de TIEMPO ACTIVO (s170). El camino legacy también completa, así que
+     también lo necesita: si solo lo tuviera el runner v1, las rutinas sin
+     `mode` emitirían un tiempo activo que en realidad es de pared. */
+  const relojActivo = useActiveClock();
+  const activeSecRef = useRefMV(0);
   const step = routine.steps[stepIdx];
 
   // Preparación 3s
@@ -131,6 +140,18 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
     }, 1000);
     return () => clearInterval(intv);
   }, [stepIdx, paused, step, routine, stage]);
+
+  /* Segmentador del TIEMPO ACTIVO (s170) — misma política que el runner v1
+     (§6.4 del esquema de eventos): fuera la preparación y fuera las pausas.
+     LA DIFERENCIA ESTÁ EN CÓMO SE RECONOCE UN DESCANSO: aquí los pasos no
+     llevan `mode`, así que el descanso solo se distingue por su NOMBRE. No es
+     una convención inventada para esto — es la misma por la que se guían el
+     censo de glifos de s164 y la ingesta de s166, que excluyen `Descanso`
+     porque no es un ejercicio. El nombre es el canónico del dato: `tStep` solo
+     traduce para pintar, nunca toca `step.name`. */
+  useEffectMV(() => {
+    relojActivo.marcar(stage === 'active' && !paused && !!step && step.name !== 'Descanso');
+  }, [stage, paused, stepIdx, step]);
 
   // Atajos de teclado
   useEffectMV(() => {
@@ -209,6 +230,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
           { label: t('common.time'), value: `${mins}:${String(secs).padStart(2,'0')}` },
           { label: t('move.steps'),  value: String(routine.steps.length) },
         ]}
+        rootData={{ 'data-pace-active-sec': activeSecRef.current }}
         buttonStyle={{ background: accent, borderColor: accent }}
         doneButtonLabel={inPath ? t('session.next') : undefined}
         atmosphere={atmo}
