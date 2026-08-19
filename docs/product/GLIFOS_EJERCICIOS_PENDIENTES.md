@@ -8,8 +8,8 @@
 | | |
 |---|---|
 | **Identidades que la app necesita** | **61** |
-| **Con arte propio ya ingestado** | **47** |
-| **Pendientes** | **14** |
+| **Con arte propio ya ingestado** | **57** |
+| **Pendientes** | **4** |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
 sigue pintando mientras no llegue el arte nuevo; `falta` = hoy no hay nada y
@@ -29,7 +29,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Suspensión activa | `suspension-activa.png` | falta | La misma barra, pero **hombros abajo y atrás** y el pecho un poco alto: la diferencia con la pasiva tiene que verse. *(«Hombros abajo y atrás, codos rectos.»)* |
 | **HECHO** | Suspensión pasiva | `suspension-pasiva.png` | dibujado | Figura colgando de una **barra horizontal**, cuerpo largo y relajado, hombros altos. *(«Cuelga relajado. Respira.»)* |
 
-## Piernas — 2 pendientes de 9
+## Piernas — 1 pendiente de 9
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -38,7 +38,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | — | Nordics | `nordics.png` | dibujado | De rodillas, tronco cayendo hacia delante con control, **tobillos sujetos**. |
 | **HECHO** | Puente con marcha | `puente-con-marcha.png` | dibujado | Tumbado boca arriba con la **cadera elevada** y **una rodilla subiendo** hacia el pecho. *(«Activación de glúteo profundo.»)* |
 | **HECHO** | Sentadilla a silla | `sentadilla-a-silla.png` | falta | Perfil a medio bajar con la **silla justo detrás**, roza sin sentarse. *(«Baja hasta rozar la silla, sube sin impulso.»)* |
-| — | Sentadilla búlgara | `sentadilla-bulgara.png` | falta | Perfil con el **empeine de atrás sobre la silla** y la rodilla delantera a 90°, tronco vertical. *(«Empeine sobre la silla, baja vertical.»)* |
+| **HECHO** | Sentadilla búlgara | `sentadilla-bulgara.png` | falta | Perfil con el **empeine de atrás sobre la silla** y la rodilla delantera a 90°, tronco vertical. *(«Empeine sobre la silla, baja vertical.»)* |
 | **HECHO** | Sentadilla de cuádriceps | `sentadilla-de-cuadriceps.png` | dibujado | De rodillas con el cuerpo echado atrás en línea, **talones levantados**, apoyo con una mano. *(«Apoyado. Rodillas adelante, talones arriba.»)* |
 | **HECHO** | Silla en la pared | `silla-en-la-pared.png` | dibujado | Perfil con la espalda pegada a una **pared vertical**, rodillas a 90°, muslos horizontales. *(«Espalda en pared, rodillas a 90°.»)* |
 | **HECHO** | Zancada profunda | `zancada-profunda.png` | dibujado | Zancada larga de perfil, **rodilla por delante del pie**, rodilla de atrás cerca del suelo. |
@@ -56,20 +56,20 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Plancha lateral | `plancha-lateral.png` | falta | De lado, **un antebrazo en el suelo**, cadera alta, brazo libre al techo. |
 | **HECHO** | Superman | `superman.png` | falta | Boca abajo en **arco convexo**: pecho, brazos y piernas levantados. |
 
-## Cuello y hombros — 3 pendientes de 10
+## Cuello y hombros — 0 pendientes de 10
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
 | **HECHO** | Apertura de pecho | `apertura-de-pecho.png` | dibujado | **Manos tras la nuca**, codos muy abiertos, mirada al techo. |
-| — | Barbilla atrás | `barbilla-atras.png` | dibujado | **Cabeza y cuello de perfil**, con una flecha corta horizontal: la barbilla se desliza atrás y la nuca se alarga. **No es bajar la cabeza.** |
+| **HECHO** | Barbilla atrás | `barbilla-atras.png` | dibujado | **Cabeza y cuello de perfil**, con una flecha corta horizontal: la barbilla se desliza atrás y la nuca se alarga. **No es bajar la cabeza.** |
 | **HECHO** | Círculos de hombro | `circulos-de-hombro.png` | falta | Torso de frente con **un brazo estirado** y un **círculo punteado** describiendo su recorrido. |
 | **HECHO** | Cuello y trapecios | `cuello-y-trapecios.png` | dibujado | Cabeza y hombros de frente, **oreja hacia el hombro**, mano opcional guiando. |
 | **HECHO** | Deslizamientos en pared | `deslizamientos-en-pared.png` | dibujado | De frente contra la **pared**, brazos en «W» subiendo a «Y», con flechas. |
 | **HECHO** | Encogimiento de hombros | `encogimiento-de-hombros.png` | dibujado | Torso de frente, **hombros subidos** hacia las orejas, dos flechas cortas hacia arriba. |
 | **HECHO** | Escalenos | `escalenos.png` | dibujado | Sentado, **una mano bajo el glúteo** (ancla el hombro) y la cabeza inclinada al lado opuesto. |
-| — | Inclinación lateral | `inclinacion-lateral.png` | dibujado | Igual que el anterior pero **sin mano** y con el arco de recorrido a los dos lados. |
+| **HECHO** | Inclinación lateral | `inclinacion-lateral.png` | dibujado | Igual que el anterior pero **sin mano** y con el arco de recorrido a los dos lados. |
 | **HECHO** | Rotación externa | `rotacion-externa.png` | dibujado | **Codo a 90° pegado al costado**, antebrazo abriéndose hacia fuera, flecha en arco. |
-| — | Rotación lenta | `rotacion-lenta.png` | dibujado | Cabeza girada **mirando sobre el hombro**, hombros de frente. |
+| **HECHO** | Rotación lenta | `rotacion-lenta.png` | dibujado | Cabeza girada **mirando sobre el hombro**, hombros de frente. |
 
 ## Columna — 1 pendiente de 8
 
@@ -84,28 +84,28 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Rodar hacia abajo | `rodar-hacia-abajo.png` | falta | De pie doblándose, columna en **espiral suave**, brazos colgando; flecha descendente. |
 | **HECHO** | Rotación torácica | `rotacion-toracica.png` | dibujado | **Sentado en la silla**, manos cruzadas al pecho, tronco rotado, cadera al frente. |
 
-## Caderas — 4 pendientes de 7
+## Caderas — 1 pendiente de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
 | **HECHO** | 90/90 | `90-90.png` | dibujado | Sentado en el suelo con **las dos rodillas a 90°**, una delante y otra al lado; flecha de rotación entre lados. |
-| — | Cuádriceps en pared | `cuadriceps-en-pared.png` | falta | De rodillas con el **empeine contra la pared** (o la silla) y la rodilla al fondo. |
+| **HECHO** | Cuádriceps en pared | `cuadriceps-en-pared.png` | falta | De rodillas con el **empeine contra la pared** (o la silla) y la rodilla al fondo. |
 | **HECHO** | Flexor de cadera | `flexor-de-cadera.png` | dibujado | **Una rodilla en el suelo**, la otra delante a 90°, pelvis empujando adelante. |
 | **HECHO** | Paloma | `paloma.png` | dibujado | **Tibia delantera cruzada** en el suelo, pierna de atrás extendida, peso adelante. |
 | — | Rana | `rana.png` | falta | Vista desde atrás/arriba: **rodillas muy abiertas** y cadera retrasada, mecido suave. |
-| — | Sentadilla lateral | `sentadilla-lateral.png` | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
-| — | Zancada con apertura | `zancada-con-apertura.png` | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
+| **HECHO** | Sentadilla lateral | `sentadilla-lateral.png` | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
+| **HECHO** | Zancada con apertura | `zancada-con-apertura.png` | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
 
-## Suelo y cadena posterior — 3 pendientes de 6
+## Suelo y cadena posterior — 0 pendientes de 6
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
 | **HECHO** | Gateo | `gateo.png` | dibujado | A cuatro patas avanzando **contralateral** (mano derecha y rodilla izquierda), rodillas despegadas. |
-| — | Isquio a una pierna | `isquio-a-una-pierna.png` | falta | **Talón apoyado en algo bajo** delante, pierna extendida, cadera echada atrás. |
+| **HECHO** | Isquio a una pierna | `isquio-a-una-pierna.png` | falta | **Talón apoyado en algo bajo** delante, pierna extendida, cadera echada atrás. |
 | **HECHO** | Marcha del elefante | `marcha-del-elefante.png` | dibujado | Doblado por la cadera **tocando el suelo alternando manos**, piernas casi estiradas. |
 | **HECHO** | Pliegue adelante | `pliegue-adelante.png` | falta | **Pies juntos**, tronco colgando, rodillas ligeramente blandas, brazos sueltos. |
-| — | Sentadilla profunda | `sentadilla-profunda.png` | dibujado | Sentadilla completa con **talones en el suelo** y **codos por dentro de las rodillas**. |
-| — | Sentarse y levantarse del suelo | `sentarse-y-levantarse-del-suelo.png` | dibujado | Dos siluetas no: **una figura a medio camino entre el suelo y de pie, sin manos apoyadas**. |
+| **HECHO** | Sentadilla profunda | `sentadilla-profunda.png` | dibujado | Sentadilla completa con **talones en el suelo** y **codos por dentro de las rodillas**. |
+| **HECHO** | Sentarse y levantarse del suelo | `sentarse-y-levantarse-del-suelo.png` | dibujado | Dos siluetas no: **una figura a medio camino entre el suelo y de pie, sin manos apoyadas**. |
 
 ## Muñecas, tobillos y pausas — 0 pendientes de 8
 

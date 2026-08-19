@@ -1,5 +1,15 @@
 # Estira · glifos que faltan
 
+> ## ⚠ CADUCADO — no encargues desde aquí
+>
+> Este documento se generó en **s170** con 14 identidades sin arte, y la segunda
+> tanda de **s171** dejó **4**. De los 11 de la tabla de abajo sólo siguen sin
+> dibujo **`Onda espinal`** y **`Rana`**; los otros nueve ya tienen máscara. No
+> tiene generador en el repo, así que **no se regenera**: la lista viva es
+> [`GLIFOS_EJERCICIOS_PENDIENTES.md`](GLIFOS_EJERCICIOS_PENDIENTES.md), que sí se
+> genera cruzando el catálogo con el mapa de máscaras real. Se conserva sólo por
+> los encargos de dibujo de su columna «qué debe mostrar».
+
 > **Generado** en s170 cruzando las rutinas de Estira (`app/extra/ExtraModule.jsx`)
 > con el mapa de máscaras real. De las **14 identidades sin arte** del catálogo
 > completo, **11 aparecen en rutinas de Estira**; las otras 3 son sólo de Mueve.
