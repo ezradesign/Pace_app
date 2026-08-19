@@ -71,25 +71,63 @@ const mascarasEnPantalla = page => page.evaluate(MARCA => {
   return n;
 }, MARCA);
 
-test('con el mapa VACIO los pasos se pintan en SVG y no hay ni una mascara', async ({ page }) => {
+/* s170 · ESTE ASERTO SE HA REESCRITO DOS VECES EN LA MISMA SESION, y la
+   segunda es la leccion.
+   v1 (s166) exigia que `EXERCISE_MASKS` estuviera VACIO — premisa que caduco en
+   cuanto entro el primer dibujo. v2 la cambio por «estos dos pasos concretos no
+   tienen mascara»... y caduco el mismo dia, al ingestar 47 piezas de golpe: una
+   de ellas era justo «Flexiones inclinadas». El guard salto y lo dijo, que es
+   para lo que estaba, pero el patron era el defectuoso: ATAR UN ASERTO A UN
+   NOMBRE que el proyecto esta rellenando a proposito es firmar su caducidad.
+   v3 no nombra a nadie. Le pregunta a la app que pasos tienen mascara, y exige
+   que el DOM coincida: los que la tienen la pintan y los que no, pintan SVG.
+   Vale con 0 masc/61 SVG y con 61/0, y no hay que volver a tocarlo. */
+test('cada paso pinta mascara o SVG segun lo que diga el mapa, sin mezclas', async ({ page }) => {
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
 
-  const vacio = await page.evaluate(() => Object.keys(window.EXERCISE_MASKS || {}).length);
-  expect(vacio, 'el mapa de mascaras no esta vacio: este aserto mide otra cosa').toBe(0);
-
   const preview = await abrirPreview(page);
 
-  /* GUARD DE CERO, y CONTADO SOBRE EL PREVIEW y no sobre la pagina: un «0
-     mascaras» sin glifos delante no significa nada, y contar todos los <svg>
-     del documento mide iconos que no son glifos de ejercicio. */
-  /* GUARD: que el preview este mostrando pasos. Que esos pasos LLEVEN glifo lo
-     demuestra el segundo test, que los convierte en mascara y los cuenta: si no
-     hubiera glifos, aquel no encontraria ninguna. */
-  const filas = await preview.locator('svg').count();
-  expect(filas, 'GUARD: el preview no pinto nada, no hay nada medido').toBeGreaterThan(0);
-  expect(await mascarasEnPantalla(page),
-    'con el mapa vacio no puede haber ni una mascara de ejercicio').toBe(0);
+  /* La verdad la da la APP, fila a fila. Nada de nombres codificados aqui: se
+     lee el nombre que el preview PINTA y se le pregunta al resolutor si esa
+     identidad tiene mascara. La suite corre en español, asi que el texto de la
+     fila es el nombre canonico (el fallback de `tR` devuelve el dato). */
+  const filas = await preview.evaluate((raiz) => {
+    const tieneMascara = (el) => {
+      for (const n of [el, ...el.querySelectorAll('*')]) {
+        const mi = getComputedStyle(n).maskImage || getComputedStyle(n).webkitMaskImage || 'none';
+        if (mi !== 'none' && mi !== 'initial') return true;
+      }
+      return false;
+    };
+    const out = [];
+    for (const svgOrSpan of raiz.querySelectorAll('svg')) {
+      const fila = svgOrSpan.closest('div');
+      if (fila) out.push({ texto: (fila.innerText || '').replace(/\s*×\s*\d+\s*$/, '').trim(), pinta: 'svg' });
+    }
+    for (const el of raiz.querySelectorAll('span')) {
+      const mi = getComputedStyle(el).maskImage || getComputedStyle(el).webkitMaskImage || 'none';
+      if (mi === 'none' || mi === 'initial') continue;
+      const fila = el.parentElement && el.parentElement.closest('div');
+      if (fila) out.push({ texto: (fila.innerText || '').replace(/\s*×\s*\d+\s*$/, '').trim(), pinta: 'mascara' });
+    }
+    return out.filter(f => f.texto);
+  });
+
+  /* GUARD DE CERO: sin filas no hay nada medido y el aserto pasaria en vacio. */
+  expect(filas.length, 'GUARD: el preview no pinto ni un paso con glifo').toBeGreaterThan(0);
+
+  /* RELACIONAL: lo que cada fila PINTA tiene que coincidir con lo que el mapa
+     DICE de ella. Una discrepancia en cualquiera de los dos sentidos —arte que
+     no se pinta, o SVG donde ya hay arte— sale aqui con el nombre delante. */
+  const discrepancias = [];
+  for (const f of filas) {
+    const conMascara = await page.evaluate(
+      n => !!(window.exerciseMaskUrl && window.exerciseMaskUrl(n)), f.texto);
+    const esperado = conMascara ? 'mascara' : 'svg';
+    if (f.pinta !== esperado) discrepancias.push(f.texto + ': mapa dice ' + esperado + ', pinta ' + f.pinta);
+  }
+  expect(discrepancias, 'la precedencia mascara/SVG no coincide con el mapa').toEqual([]);
 
   expect(errores).toEqual([]);
 });
@@ -104,9 +142,16 @@ test('cuando hay mascara, GANA al SVG — y solo para quien la tiene', async ({ 
   /* Se le da mascara a TODAS las identidades y no a una elegida a dedo: cual de
      ellas pinta este preview depende del catalogo, y atarlo a un nombre
      concreto seria apostar a que esa rutina no cambia nunca. */
+  /* s170: se inyecta en LOS DOS mapas. Desde que `ExerciseGlyph` pasa el tamaño,
+     `exerciseMaskUrl` consulta primero `EXERCISE_MASKS_MIN` por debajo de 40 px
+     — y el preview pinta a 30 —, asi que sembrar solo el grande dejaba ganar al
+     asset de miniatura REAL y este aserto media otra cosa. */
   const cuantas = await page.evaluate(ruta => {
     const ids = Object.keys(window.EXERCISE_GLYPHS || {});
-    ids.forEach(id => { window.EXERCISE_MASKS[id] = ruta; });
+    ids.forEach(id => {
+      window.EXERCISE_MASKS[id] = ruta;
+      if (window.EXERCISE_MASKS_MIN) window.EXERCISE_MASKS_MIN[id] = ruta;
+    });
     return ids.length;
   }, PRUEBA);
   expect(cuantas, 'GUARD: no hay ni una identidad a la que darle mascara').toBeGreaterThan(10);

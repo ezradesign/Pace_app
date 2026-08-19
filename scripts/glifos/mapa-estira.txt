@@ -1,0 +1,52 @@
+# MAPA · s170 · cada linea verificada contra «que debe mostrar» del encargo
+# --- ya ingestados ---
+01 = Círculos de muñeca
+04 = Suspensión pasiva
+05 = Apertura con banda
+11 = Elevación de talones
+12 = Extensión de dedos
+15 = Abrir y cerrar el puño
+17 = Superman
+27 = Círculos de tobillo
+42 = Estiramiento de muñeca
+43 = Plancha lateral
+49 = Rezo invertido
+# --- ALTA: el encargo cita una marca concreta y el dibujo la tiene ---
+02 = Gateo
+06 = Plancha
+07 = Juntar omóplatos
+08 = Rotación externa
+21 = Puente con marcha
+25 = Encogimiento de hombros
+26 = Suspensión activa
+29 = Rotación torácica
+30 = Elevación de puntas
+31 = Sentadilla de cuádriceps
+33 = Apretar glúteos
+36 = Cuello y trapecios
+37 = Círculos de hombro
+45 = Extensión torácica
+46 = Gato-camello
+47 = Silla en la pared
+# --- MEDIA-ALTA: la postura casa; al dibujo le falta el mueble o la flecha ---
+03 = Palmas al suelo
+10 = Fondos en silla
+13 = Sentadilla a silla
+16 = Flexiones inclinadas
+19 = Paloma
+20 = Escalenos
+22 = Marcha del elefante
+23 = Apertura de costillas + respiración
+24 = Rodar hacia abajo
+34 = 90/90
+35 = Puente torácico
+38 = Giro sentado
+39 = Hueco en silla
+40 = Reset respiración
+41 = Deslizamientos en pared
+44 = Pliegue adelante
+48 = Apertura de pecho
+18 = Flexor de cadera
+28 = Hueco abdominal
+32 = Zancada profunda
+# --- SIN ASIGNAR: 09 (segundo gluteo) y 14 (segunda vista del 90/90) ---

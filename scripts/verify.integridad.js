@@ -66,7 +66,7 @@ var CENSO = {
   respira: 20, mueve: 14, estira: 14, caminos: 7,
 
   /* service worker */
-  precache: 105,                // filas de PRECACHE (s149; +19 mascaras en s167)
+  precache: 199,                // filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170)
 };
 
 /* ==========================================================================
