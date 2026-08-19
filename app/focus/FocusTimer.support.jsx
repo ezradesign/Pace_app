@@ -281,7 +281,16 @@ const focusStyles = {
   },
 };
 
+/* s172 · el tiempo de PARED de un bloque de foco (§6.4): con las pausas
+   dentro, y nunca menor que la propia cuenta atras — si el inicio se perdio en
+   una recarga, el suelo es la duracion del preset, que es lo unico seguro. */
+function focoElapsedSec(inicioMs, durationSec) {
+  if (!inicioMs) return durationSec;
+  return Math.max(durationSec, Math.round((Date.now() - inicioMs) / 1000));
+}
+
 Object.assign(window, {
+  focoElapsedSec,
   /* s163 · lo que entro con el troceo de FocusTimer.jsx */
   curvaSuave, curvaCaida, focusStyles,
   /* s102 · los helpers con los que nacio este archivo */

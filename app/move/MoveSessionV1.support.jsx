@@ -446,7 +446,38 @@ function useV1ActiveClock(stage, phase, step, paused) {
   return reloj;
 }
 
+/* s172 · i18n de `instruction` — sale del runner por la regla §1: el archivo
+   estaba clavado en 500 lineas y la contabilidad del evento necesitaba dos.
+   Recibe el traductor con fallback (`tR`) en vez de cerrarse sobre el, porque
+   quien conoce el idioma es el componente. */
+function v1Instr(tR, routine, idx, key) {
+  const st = routine.steps[idx];
+  return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
+}
+
+/* s172 · LOS DATOS DE `session.completed` DEL RUNNER V1 (§6.4). Vive aqui y no
+   en el runner por la misma regla, y de paso queda al lado de
+   `estimateDuration`, que es de donde sale el plan.
+   `plannedSeconds` es el CALCULADO y no `routine.min`: el declarado se desvia
+   del calculado —para eso existe `v1DevCheckDuration`— asi que publicar el
+   declarado como plan seria publicar un numero que la propia app no se cree.
+   Y se calcula con el descanso VIGENTE (`v1RestSeconds()`), que es el que el
+   usuario tiene puesto en Ajustes: con el default fijo, el plan mentiria en
+   media rutina de fuerza para quien lo haya cambiado. */
+function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
+  return {
+    inPath: !!inPath,
+    elapsedSeconds: Math.max(0, Math.round((Date.now() - inicioMs) / 1000)),
+    activeSeconds: Math.max(0, Math.round(activoSec || 0)),
+    plannedSeconds: estimateDuration(routine, v1RestSeconds()).minSec,
+    plannedSecondsSource: 'derived',
+    variant: 'v1',
+    completionReason: early ? 'early' : 'natural',
+  };
+}
+
 Object.assign(window, {
+  v1Instr, v1EventoSesion,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,

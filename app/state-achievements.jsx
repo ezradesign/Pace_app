@@ -302,7 +302,7 @@ function updateStreak() {
    verdad. NINGUN LOGRO lo consume, y es una de las tres condiciones de la
    decision: B1/s89 retiro la cifra de la retencion por ser un RECORD, no por
    ser un dato, asi que un total acumulado entra y un maximo no. */
-function completeBreathSession(routineId, durationMin, holdSec) {
+function completeBreathSession(routineId, durationMin, holdSec, evento) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -361,9 +361,13 @@ function completeBreathSession(routineId, durationMin, holdSec) {
   }
   updateStreak();
   flushAchievementToast('breathe');
+  /* s172 · dual-write: el evento SIEMPRE detras de la escritura legacy, que es
+     la que manda (stats, logros, racha). `evento` lo arma el runner, que es
+     quien tiene los tiempos; sin el, no se emite nada y la app sigue igual. */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('breathe', routineId, evento);
 }
 
-function completeMoveSession(routineId, durationMin) {
+function completeMoveSession(routineId, durationMin, evento) {
   ensureDayFresh();
   const s = getState();
   const day = getDayIndexMondayFirst(new Date());
@@ -385,9 +389,10 @@ function completeMoveSession(routineId, durationMin) {
   checkSilentDayAchievement();
   updateStreak();
   flushAchievementToast('move');
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('move', routineId, evento);
 }
 
-function completeExtraSession(routineId, durationMin) {
+function completeExtraSession(routineId, durationMin, evento) {
   if (durationMin === undefined) durationMin = 0;
   ensureDayFresh();
   const s = getState();
@@ -426,6 +431,9 @@ function completeExtraSession(routineId, durationMin) {
   }
   updateStreak();
   flushAchievementToast('extra');
+  /* El enum del esquema llama `stretch` a lo que el codigo llama `extra`: el
+     nombre del modulo se traduce AQUI y no en el runner (§8). */
+  if (typeof emitSessionCompleted === 'function') emitSessionCompleted('stretch', routineId, evento);
 }
 
 Object.assign(window, {

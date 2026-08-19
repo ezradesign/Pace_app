@@ -45,10 +45,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // s115 (B2.2b-1): instruction {setup,action,care} — key i18n
   // `id.sN.instruction.<k>`, fallback al dato anidado. Reemplaza los campos
   // sueltos placeCue/cue/careCue de s114 (migración atómica; sin doble fuente).
-  const tInstr = (idx, key) => {
-    const st = routine.steps[idx];
-    return tR(`${routine.id}.s${idx}.instruction.${key}`, st.instruction ? st.instruction[key] : undefined);
-  };
+  const tInstr = (idx, key) => v1Instr(tR, routine, idx, key);
   const displayRoutine = lang === 'en'
     ? { ...routine, name: tR(`${routine.id}.name`, routine.name), code: tR(`${routine.id}.code`, routine.code) }
     : routine;
@@ -74,7 +71,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
      `v1TrabajoActivo` (support), que es donde puede probarse sola. */
   const relojActivo = useV1ActiveClock(stage, phase, step, paused);
 
-  const dispatchComplete = () => {
+  const dispatchComplete = (early) => {
     const realMin = Math.max(1, Math.round((Date.now() - sessionStart.current) / 60000));
     /* Se LEE sin cerrar el reloj: `segundos()` ya cuenta el segmento abierto, y
        tener las dos cosas hace que se tapen entre sí (banco de mutaciones de
@@ -82,8 +79,11 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
        porque el 'done' se re-renderiza y `Date.now()` seguiría corriendo — el
        defecto que ya tiene el `totalSec` de esa pantalla y que aquí no se hereda. */
     activeSecRef.current = Math.round(relojActivo.segundos());
-    if (kind === 'extra') completeExtraSession(routine.id, realMin);
-    else completeMoveSession(routine.id, realMin);
+    /* s172 · los datos del evento (dual-write) se arman en el support: el plan
+       sale de `estimateDuration`, que vive alli — y aqui no cabe una linea. */
+    const ev = v1EventoSesion(routine, sessionStart.current, activeSecRef.current, early, inPath);
+    if (kind === 'extra') completeExtraSession(routine.id, realMin, ev);
+    else completeMoveSession(routine.id, realMin, ev);
   };
 
   const startStep = (idx) => {
@@ -100,8 +100,8 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
     else if (su.mode === 'auto') { setPhase('place'); setPlaceLeft(su.estimatedSeconds); }
     else setPhase('work');
   };
-  const advanceStep = () => {
-    if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(); setStage('done'); }
+  const advanceStep = (early) => {
+    if (stepIdx + 1 >= routine.steps.length) { dispatchComplete(early); setStage('done'); }
     else startStep(stepIdx + 1);
   };
   const beginWork = () => { setPhase('work'); setElapsed(0); };
@@ -121,7 +121,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // Salida anticipada de reps guiadas: acredita solo las reps ya guiadas.
   const finishRepsEarly = () => {
     repsGuidedRef.current += Math.min(v1RepTarget(step), Math.floor(elapsed / v1RepSeconds(step)));
-    advanceStep();
+    advanceStep(true);   // s172: «Terminar antes» ES el `early` de §6.3
   };
 
   // Preparación 3-2-1 → primer paso (fase 'place', sin timer aún).

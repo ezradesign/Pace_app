@@ -65,13 +65,29 @@ function completePomodoro() {
    updateStreak se resuelve en runtime (definido en state-achievements, que
    carga despues); el guard typeof lo protege por simetria con el resto. */
 function completeFocusSession(context, opts) {
+  const mins = (opts && typeof opts.minutes === 'number') ? opts.minutes : 25;
   if (context === 'path') {
-    const mins = (opts && typeof opts.minutes === 'number') ? opts.minutes : 25;
     addFocusMinutes(mins);
     if (typeof updateStreak === 'function') updateStreak();
-    return;
+  } else {
+    completePomodoro();
   }
-  completePomodoro();
+  /* s172 · DUAL-WRITE: el evento va DESPUES de la escritura legacy y no puede
+     alterarla (`emitSessionCompleted` se traga sus propios fallos). Foco solo
+     llega aqui cuando la cuenta atras se agota —salir antes no completa—, asi
+     que `completionReason` es SIEMPRE 'natural' (§6.3). El plan es el preset y
+     el activo es la propia cuenta: el reloj de `useCountdown` no corre en
+     pausa, y lo pausado se queda en `elapsedSeconds` (§6.4). */
+  if (typeof emitSessionCompleted === 'function') {
+    emitSessionCompleted('focus', paceFocusRoutineId(mins), {
+      inPath: context === 'path',
+      elapsedSeconds: (opts && opts.elapsedSeconds),
+      activeSeconds: (opts && opts.activeSeconds),
+      plannedSeconds: mins * 60,
+      plannedSecondsSource: 'preset',
+      completionReason: 'natural',
+    });
+  }
 }
 
 Object.assign(window, {

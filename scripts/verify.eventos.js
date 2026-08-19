@@ -175,8 +175,10 @@ var NO_CUBRE_EVENTOS = [
     'envie nada -- es un checker ESTATICO y solo mira el subsistema',
   'eventos: se comprueba que el reset y el import PASEN por la barrera, no que la barrera ' +
     'funcione -- eso lo prueba «npm run test:e2e» en un navegador de verdad (s155)',
-  'eventos: la retencion por CALENDARIO (120 d, §12) esta implementada pero NO programada -- ' +
-    'sin emisores no hay nada que podar; la Fase 3 la engancha al rollover diario',
+  'eventos: la retencion por CALENDARIO (120 d, §12) sigue implementada y SIN PROGRAMAR, y desde ' +
+    's172 su premisa vieja («sin emisores no hay nada que podar») ya no vale: hay emisores y el ' +
+    'contenedor crece. Lo unico que lo acota hoy es la poda por PRESUPUESTO, que solo salta ante ' +
+    'un error de almacenamiento -- el punto de extension esta declarado en events-adapter-web.js',
 ];
 
 module.exports = { chequeaEventos: chequeaEventos, NO_CUBRE_EVENTOS: NO_CUBRE_EVENTOS };

@@ -19,6 +19,12 @@ function startPath(pathId) {
         startedAt: Date.now(),
         skippedSteps: [],
         doneCount: 0, // s105: pasos hechos DE VERDAD (reason 'done')
+        /* s172 · `pathRunId` (§7.1): nace con la EJECUCION y muere con ella,
+           que es exactamente el ciclo de vida de `current`. Va aqui dentro y no
+           en una clave aparte para que no pueda sobrevivir a su Camino. Se
+           persiste con el resto de `current` porque un Camino sobrevive a una
+           recarga y sus pasos tienen que seguir agrupandose igual. */
+        pathRunId: (window.newEventId && window.newEventId()) || null,
       },
     },
   }));
@@ -30,6 +36,15 @@ function setLastViewedPath(pathId) {
 
 function advancePathStep(reason) {
   if (reason === undefined) reason = 'done';
+  /* s172 · SE LEE ANTES DE AVANZAR, y no es una precaucion: el updater de abajo
+     pone `paths.current` a null al cerrar el Camino, y con el se va el
+     `pathRunId` que los dos eventos necesitan — leerlo despues perderia justo
+     el evento que cierra. La emision va DESPUES del setState y FUERA del
+     updater, que en este repo es puro por contrato (s116). */
+  const antesPaths = getState().paths || {};
+  const antes = antesPaths.current;
+  const vecesAntes = (antes && antesPaths.completed && antesPaths.completed[antes.id]
+    && antesPaths.completed[antes.id].count) || 0;
   setState(s => {
     const c = s.paths.current;
     if (!c) return s;
@@ -84,6 +99,24 @@ function advancePathStep(reason) {
       },
     };
   });
+  if (!antes) return;
+  const camino = window.getPath && window.getPath(antes.id);
+  if (!camino) return;
+  /* Solo el paso HECHO emite: 'skip' y 'exit' no acreditan actividad (s105), y
+     el evento no puede decir lo contrario que las stats. */
+  if (reason === 'done' && typeof emitPathStepCompleted === 'function') {
+    emitPathStepCompleted(antes.id, antes.stepIndex, camino.steps[antes.stepIndex], antes.pathRunId);
+  }
+  /* El Camino esta completo si el CONTADOR subio. Se mira el efecto en vez de
+     repetir la condicion del updater (nextIndex >= steps.length && doneCount),
+     que es la que ya decide quien cuenta y quien no: dos copias de esa regla
+     acabarian diciendo cosas distintas. */
+  const despues = getState().paths || {};
+  const vecesDespues = (despues.completed && despues.completed[antes.id]
+    && despues.completed[antes.id].count) || 0;
+  if (vecesDespues > vecesAntes && typeof emitPathCompleted === 'function') {
+    emitPathCompleted(antes.id, camino.steps.length, antes.pathRunId);
+  }
 }
 
 function completePath(pathId) {
