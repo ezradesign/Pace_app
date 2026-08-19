@@ -200,6 +200,30 @@
 > en [`docs/sessions/`](./docs/sessions/) y destilado en [`CHANGELOG.md`](./CHANGELOG.md).
 > Aqui solo lo que sigue VIVO: diferido y pendiente.
 
+
+- **[FASE 3 · los cuatro emisores — RECONOCIDO, sin implementar]** La condición de entrada
+  está puesta (v0.99.1: el backup lleva y devuelve la sección). Lo que queda, con el mapa ya
+  hecho para no volver a levantarlo:
+  - **La superficie son 6 llamadas en 5 archivos**: `BreatheSession.jsx:248` ·
+    `FocusTimer.jsx:43` · `MoveModule.jsx:97-98` · `MoveSessionV1.jsx:73-74` ·
+    `PathFocusStep.jsx:33`. Y `feedback.answered` en `state-feedback.jsx`,
+    `path.*` en `state-paths.jsx`.
+  - **DECISIÓN: el emisor va en la CAPA DE ESTADO**, no en la UI. Las `complete*`
+    ganan un argumento opcional con lo que pide el payload y emiten junto a la
+    escritura legacy (dual-write). Un punto de emisión por módulo en vez de seis
+    repartidos, que es además lo que hace auditable el gate del `verify`.
+  - **PRERREQUISITO ENCONTRADO, y no es opcional: Mueve y Estira NO pueden dar
+    `activeSeconds` hoy.** Respira sí (`activeMsRef` desde s98, acumula ms activos
+    entre pausas), pero Mueve/Estira sólo tienen un booleano `paused` y un
+    `sessionStart`: su único tiempo es de reloj de pared, **con las pausas dentro**.
+    Y `realMin` es `Math.max(1, Math.round(...))` — redondeado y con suelo de 1 min,
+    válido para sumar a la semana e inválido como hecho. Así que **antes del emisor
+    hay que darles contabilidad de pausa** como la de Respira. La alternativa
+    —`activeSeconds = elapsedSeconds`— es mentir en cuanto alguien pause, y el
+    consumidor de esto es el recomendador de la Fase 3.5: un campo inventado lo
+    envenena.
+  - Falta también decidir de dónde sale `runId` (requerido en `session.completed` y
+    `feedback.answered`) y `plannedSeconds` + su origen (`preset`/`derived`/`declared`).
 ### Diferido (documentado, NO ejecutado)
 
 - **[FASE 3 · `pace.events.v1`, Fase 2 del esquema] EMPEZADA — la condición de entrada
