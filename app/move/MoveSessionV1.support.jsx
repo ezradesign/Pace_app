@@ -446,6 +446,19 @@ function useV1ActiveClock(stage, phase, step, paused) {
   return reloj;
 }
 
+/* s172 · EL LADO QUE PINTA EL GLIFO en un paso por lados. Politica pura, aqui
+   y no en el runner, por la misma razon que `v1TrabajoActivo`: es una decision
+   y asi puede probarse sola.
+   En la TRANSICION se adelanta al lado que ENTRA. La pantalla ya lo anuncia
+   («Ahora: Derecha») y el dibujo no puede estar diciendo lo contrario; `side`
+   todavia vale 0 durante esos 10 s porque cambia al empezar el segundo lado.
+   Fuera de un paso `perSide` vale 0, o sea el dibujo tal cual: espejar algo que
+   no se ejecuta por lados seria voltear un gesto que solo tiene una version. */
+function v1LadoGlifo(step, phase, side) {
+  if (!step || step.mode !== 'perSide') return 0;
+  return phase === 'change' ? 1 : side;
+}
+
 /* s172 · i18n de `instruction` — sale del runner por la regla §1: el archivo
    estaba clavado en 500 lineas y la contabilidad del evento necesitaba dos.
    Recibe el traductor con fallback (`tR`) en vez de cerrarse sobre el, porque
@@ -477,7 +490,7 @@ function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
 }
 
 Object.assign(window, {
-  v1Instr, v1EventoSesion,
+  v1Instr, v1EventoSesion, v1LadoGlifo,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,

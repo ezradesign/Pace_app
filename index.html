@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.101.0</title>
+  <title>PACE · Foco · Cuerpo — v0.102.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4691,7 +4691,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.101.0';
+const PACE_VERSION = 'v0.102.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -13376,7 +13376,7 @@ function DefaultGlyph(_ref13) {let { size = 44, className = '' } = _ref13;
 
 }
 
-function ExerciseGlyph(_ref14) {let { id, size = 88, className = '', maskScale = 1 } = _ref14;
+function ExerciseGlyph(_ref14) {let { id, size = 88, className = '', maskScale = 1, side = 0 } = _ref14;
   /* s166 · EL ARTE DEL USUARIO ENTRA COMO MASCARA Y GANA AL SVG, igual que
      s146 hizo con los sellos de logro y por la misma razon: asi los 62
      dibujos del rediseno pueden llegar POR PARTES sin dejar huecos -- lo que
@@ -13398,6 +13398,18 @@ function ExerciseGlyph(_ref14) {let { id, size = 88, className = '', maskScale =
      piden: con el 1.5 implicito el preview pedia 30 (y recibia la variante de
      trazo engordado, `<= MASK_MIN_HASTA`) para luego dibujarla a 45, que es
      justo el tramo donde NO corresponde. */
+  /* s172 · EL SEGUNDO LADO ES EL ESPEJO DEL PRIMERO, no un dibujo aparte.
+     Los 15 ejercicios que se ejecutan por lados son todos espejo puro (§3 del
+     encargo), y el set entero comparte convencion —«perfil mirando a la
+     derecha» (§1)—, asi que una sola decision global vale para todos: el dibujo
+     tal cual es el lado 1 («Izquierda») y su reflejo el lado 2. Cero dibujos
+     nuevos, y funciona igual sobre los 41 SVG que todavia no tienen mascara,
+     que es lo que hace que los pasos por lados se vean bien ANTES de que llegue
+     su arte. Lo que el espejo NO puede dar: en una figura de perfil, izquierda y
+     derecha no son legibles en el dibujo — garantiza que CAMBIA y que es
+     coherente con el set, no que un fisio lo firme. Un duplicado dibujado
+     tampoco lo daria: el limite es la vista de perfil, no el numero de piezas. */
+  const espejo = side === 1;
   const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id, px);
   if (mask) {
     const url = 'url("' + mask + '")';size = px;
@@ -13408,7 +13420,8 @@ function ExerciseGlyph(_ref14) {let { id, size = 88, className = '', maskScale =
           WebkitMaskImage: url, maskImage: url,
           WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
           WebkitMaskPosition: 'center', maskPosition: 'center',
-          WebkitMaskSize: 'contain', maskSize: 'contain'
+          WebkitMaskSize: 'contain', maskSize: 'contain',
+          transform: espejo ? 'scaleX(-1)' : undefined
         } }));
 
   }
@@ -13419,7 +13432,11 @@ function ExerciseGlyph(_ref14) {let { id, size = 88, className = '', maskScale =
   const vid = window.resolveVisualId ? window.resolveVisualId(id) : id;
   const Glyph = EXERCISE_GLYPHS[vid] || EXERCISE_GLYPHS[id];
   if (!Glyph) return /*#__PURE__*/React.createElement(DefaultGlyph, { size: size, className: className });
-  return /*#__PURE__*/React.createElement(Glyph, { size: size, className: className });
+  const dibujo = /*#__PURE__*/React.createElement(Glyph, { size: size, className: className });
+  /* La envoltura SOLO existe al espejar: sin ella el arbol de los 41 SVG queda
+     byte a byte como estaba, y un nodo de mas en cada glifo de la app no es un
+     detalle (la lista del preview pinta decenas). */
+  return espejo ? /*#__PURE__*/React.createElement("span", { style: { display: 'block', transform: 'scaleX(-1)' } }, dibujo) : dibujo;
 }
 
 Object.assign(window, { ExerciseGlyph, EXERCISE_GLYPHS, DefaultGlyph });
@@ -16679,7 +16696,7 @@ function legacyEventoSesion(routine, inicioMs, activoSec, inPath) {
    s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
 /* s112: prop `size` opcional — el runner v1 lo escala a visual instructivo
    (~150-240px según altura); el default 72/44 deja el legacy byte-idéntico. */
-function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72 } = _ref4;
+function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72, side = 0 } = _ref4;
   return (/*#__PURE__*/
     React.createElement("div", { style: {
         width: size, height: size, margin: '0 auto 20px',
@@ -16692,7 +16709,7 @@ function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 
 
 
 
-    React.createElement(ExerciseGlyph, { id: stepName, size: Math.round(size * 44 / 72), maskScale: 1.5 })
+    React.createElement(ExerciseGlyph, { id: stepName, size: Math.round(size * 44 / 72), maskScale: 1.5, side: side })
     ));
 
 }
@@ -17175,6 +17192,19 @@ function useV1ActiveClock(stage, phase, step, paused) {
   return reloj;
 }
 
+/* s172 · EL LADO QUE PINTA EL GLIFO en un paso por lados. Politica pura, aqui
+   y no en el runner, por la misma razon que `v1TrabajoActivo`: es una decision
+   y asi puede probarse sola.
+   En la TRANSICION se adelanta al lado que ENTRA. La pantalla ya lo anuncia
+   («Ahora: Derecha») y el dibujo no puede estar diciendo lo contrario; `side`
+   todavia vale 0 durante esos 10 s porque cambia al empezar el segundo lado.
+   Fuera de un paso `perSide` vale 0, o sea el dibujo tal cual: espejar algo que
+   no se ejecuta por lados seria voltear un gesto que solo tiene una version. */
+function v1LadoGlifo(step, phase, side) {
+  if (!step || step.mode !== 'perSide') return 0;
+  return phase === 'change' ? 1 : side;
+}
+
 /* s172 · i18n de `instruction` — sale del runner por la regla §1: el archivo
    estaba clavado en 500 lineas y la contabilidad del evento necesitaba dos.
    Recibe el traductor con fallback (`tR`) en vez de cerrarse sobre el, porque
@@ -17206,14 +17236,14 @@ function v1EventoSesion(routine, inicioMs, activoSec, early, inPath) {
 }
 
 Object.assign(window, {
-  v1Instr, v1EventoSesion,
+  v1Instr, v1EventoSesion, v1LadoGlifo,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1Instr, v1EventoSesion });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Instr, v1EventoSesion });
 })();
 </script>
   <script>
@@ -17627,7 +17657,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
     React.createElement("div", { "data-pace-v1-glyph": true }, /*#__PURE__*/
-    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize })
+    React.createElement(StepGlyph, { stepName: step.name, accent: stepAccent, accentSoft: stepAccentSoft, size: glyphSize, side: v1LadoGlifo(step, phase, side) })
     ), /*#__PURE__*/
 
 

@@ -10,12 +10,12 @@
 
 ---
 
-**Version actual:** v0.101.0 (s171 — **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. La sesion **no hizo lo que traia el handoff**: el plan era el emisor de la Fase 3 y a mitad de la revision de glifos entraron **tres defectos visuales reportados por el usuario**, que pasaron a ser el trabajo. **El emisor sigue sin escribir.** (1) Las miniaturas del preview **se pisaban 5 px** porque `ExerciseGlyph` multiplicaba **×1,5 por dentro**: la lista reservaba 30 px y recibia 45 — `maskScale` pasa a ser **explicito con defecto 1**. (2) El circulo media **72 px en 6 rutinas y 179 en las otras 22** (runner legacy vs v1); el legacy se iguala en circulo y tipografia. (3) El circulo **se movia 43 px entre pasos EN MOVIL**, donde las reservas de s119 no llegaban. Ademas **+30 % en escritorio** (198 → 257, **0 px de desborde**). Nace `tests/runner-circulo.spec.js`: **8 tests, los 8 calibrados en rojo, sin un solo numero de pixeles dentro**. Y las **47 mascaras revisadas una a una: cero mal asignadas**, pero **faltan 10 muebles, no 5**. **SEGUNDA MITAD** (destilada en s172): entra la **segunda tanda de arte** — 18 dibujos, **47 → 57 identidades**, con los 39 viejos recuperados **emparejando por CONTENIDO** (peor pareja 0,849) porque la ingesta reescribe el mapa entero; y **el bloque del runner declara alto minimo** (70/72vh con suelo MEDIDO de 780/880 px) — el circulo y el nombre pasan de **43-94 px a 0** entre pasos de trabajo, y quedan **~25 px cruzando fases** por el gate «ready», que no pinta contador.)
-**Version anterior:** v0.100.0 (s170 — **EL TIEMPO ACTIVO DE MUEVE, Y EL ARTE ANATOMICO ENTRA DE VERDAD**. Cierra el **PASO 1 de la Fase 3** —`useActiveClock` compartido, politica de §6.4 aparte y pura, 4 mutaciones que muerden— y entran **47 de los 61 glifos de ejercicio**. Las cuatro decisiones abiertas del handoff **las contestaba `EVENTOS_SCHEMA.md`**: tres de mis respuestas deducidas estaban mal.)
-**Version anterior (2):** v0.98.0 (s168 — **LAS FAMILIAS DEL CATALOGO, EL FAROL QUE SE MUDA, Y UNA PREGUNTA QUE ESTABA MAL HECHA**. Tres cifras de la documentacion salieron mal al medirlas: el reparto de familias de este archivo (ganaba el handoff: `exploracion` **18** y `secretos` **13**) y el **100/92** de `CONTENT.md` contra **96/88** reales. **LAS FAMILIAS**: maestria (26) mezclaba profundidad en una practica con habitos de hora del dia, y «estadisticas» (4) se definia por su **procedencia tecnica** —«viene del panel de stats»—, que no es una idea reconocible: de ahi el duplicado de s167. Se parte maestria (**26 → 19**), se disuelve estadisticas y nace **«La jornada»** (9) heredando su color, asi que **siguen siendo 7** y ningun token se reparte de nuevo: **10 · 17 · 18 · 19 · 9 · 13 · 10 = 96**. **La familia no se invento — el codigo ya la trataba junta**: `checkTimeOfDayAchievements()` desbloquea `master.dawn`, `master.dusk`, `morning.5` y `stats.streak.30` **en la MISMA funcion**, y los dos ultimos comparten `morningDates`, o sea **la misma condicion a dos umbrales** repartida en **tres familias**. «Ritmo» se descarto midiendo: `stats.title` **es** «Ritmo». «Repertorio» vuelve a **«Exploracion»**. **RED**: dos comprobaciones RELACIONALES nuevas —**familia declarada y VACIA** y **`labelKey` sin cadena i18n en los dos idiomas**— con sus **tres rojos verificados**, guard de cero incluido; eso dejo `verify.integridad.js` en **503 lineas** y el verify se puso rojo por su propia regla §1 ⇒ **troceo** en `verify.sandbox.js` (**451 + 78**). **EL FAROL** deja el equinoccio —sol y luna **ilegibles a 56 px**— y pasa a `stats.streak.30`, y **afina el aviso del handoff**: cambio **CERO** mascaras viejas (las 76 comunes **byte a byte identicas**), porque el efecto de conjunto viene de cambiar el **conjunto de dibujos**, no de re-correr la ingesta. **LA PILL**: se pidio medir a partir de que ALTURA cabe, y **no se mueve nada en las 15 combinaciones** — que no era que quepa, sino que es **`position:absolute`** y esta **fuera de flujo**. Lo que hace es **SOLAPARSE con los iconos** (320 pisa tres, 375 y 414 dos, **identico de 568 a 932**), y solo se limpia por encima de **~560 px de ANCHO**. Su propia linea cuesta **+42 px** con umbral **doble**: 667 a 320, 736 a 375, 844 a 414. **El diagnostico llevaba archivado desde s128.** **INSTRUMENTOS**: `revision-sellos-tamano-real.js` esperaba 15 s a `[data-pace-home]`, **que no existe**, con un `.catch` que se lo tragaba desde s167; `revision-glifos.js` duplicaba CAT_META con fallback silencioso. **CI**: cache de Chromium, con su motivo corregido y luego **corregido otra vez por el propio push de cierre**: dije «672 s UNA vez sobre 9 runs» y ese run tardo **217 s**, asi que la cola es **2 de 10** y no una anecdota. Verificada en los DOS sentidos —con la cache vacia guardo 268,96 MiB, y con acierto restaura en **3 s** y omite la descarga—, pero **MIDE PEOR**: `install-deps` a solas tarda **94 s**, asi que el acierto cuesta **97 s** contra los **21-28 s** del camino rapido. Se queda porque cambia un 24 s/445 s bimodal por un 97 s estable, pero **no es la mejora que prometia el backlog**: queda como DECISION en el handoff (quitar `install-deps` del camino de acierto y medirlo). `npm run verify` PASA · `npm run test:e2e` **81/81** en 76 s · diario en [session-168](./docs/sessions/session-168-familias-farol-y-pill.md))
-**Ultima sesion:** #171 -- 2026-08-19 - **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Bump **v0.100.0 -> v0.101.0**. **La sesion NO hizo lo que traia el handoff**: el plan era el emisor de la Fase 3 y a mitad de la revision de glifos el usuario mando cinco capturas con tres defectos visuales, que pasaron a ser el trabajo. **(1) LAS MINIATURAS DEL PREVIEW SE PISABAN 5 px**: `ExerciseGlyph` multiplicaba **×1,5 por dentro**, asi que la lista reservaba 30 px y recibia 45 mientras los 41 SVG quedaban limpios; `maskScale` pasa a **explicito con defecto 1** y la variante `.min` se elige por los pixeles que se **pintan** (el preview pedia la de 30 y la dibujaba a 45). Medido: **9,6 px de aire**. La decision de bajar a 30 se tomo **mirando a tamaño real** — ahi sale mas oscuro y legible que a 45. **(2) EL CIRCULO MEDIA 72 px EN 6 RUTINAS Y 179 EN LAS OTRAS 22**, mismo viewport, porque unas corren en el runner **legacy** y otras en el **v1**; el legacy se iguala en circulo y tipografia (su nombre estaba a **56 px fijos**). **(3) EL CIRCULO SE MOVIA 43 px ENTRE PASOS EN MOVIL**, porque las reservas de anclaje de s119 valian **solo para >=641 px**; ahora valen en las dos pieles y el desborde que aquella temia **no reproduce** (0 px a 360x640, 375x812, 390x844). **+30 % en escritorio** (198 -> 257 a 1440x900, **0 px de desborde**: cabia en el hueco que ya habia), con el factor **despues del clamp** y la piel leida del contrato `--pace-skin`. **RED: `tests/runner-circulo.spec.js`, 8 tests y los 8 calibrados en rojo, sin un solo numero de pixeles dentro** — el defecto no era un tamaño equivocado sino **dos superficies que no coincidian**. La primera version corria solo a 1280x720 y **habria pasado en verde antes del arreglo**. **ARTE**: las **47 mascaras revisadas una a una, CERO mal asignadas**; las **2 piezas sin identificar de s170** resueltas emparejando **por CONTENIDO** (la numeracion de aquella hoja **no es reproducible**) — son tomas alternativas, no identidades nuevas. **Faltan 10 muebles, no 5**, y `Puente toracico` no es un mueble que falta sino **otra postura**. **TRAMPA CAZADA POR EL DIFF, NO POR LA VISTA**: la seccion nueva del encargo **corrompio el documento generado** (el generador captura filas de 3 columnas) ⇒ tablas editoriales a **cuatro**. **SEGUNDA MITAD** (destilada en s172): **18 dibujos mas, 47 → 57 identidades** —10 nuevas y 8 reemplazos por el mueble— con los **39 viejos recuperados emparejando por CONTENIDO** (peor pareja **0,849**) porque la ingesta reescribe el mapa entero; 0 piezas fuera del circulo, `precache` 199 → 219. Y **el bloque del runner declara alto minimo** (70vh movil / 72vh escritorio, suelo **medido** de 780/880 px) con el rotulo de fase reservado vacio: **43-94 px de deriva → 0** entre pasos de trabajo, y **~25 px cruzando fases** por el gate «ready», que no pinta contador (**deuda con trinquete de 30 px**, no anotada). `npm run verify` PASA · `npm run test:e2e` **105/105** (eran 97) · diario en [session-171](./docs/sessions/session-171-el-circulo-del-glifo.md)
+**Version actual:** v0.102.0 (s172 — **EL EMISOR, Y DOS MAPEOS QUE ESTABAN AL REVES**. Cierra el **PASO 2 de la Fase 3**: los cuatro tipos de `pace.events.v1` ya se emiten en **dual-write** desde `app/state-events.jsx`, en la capa de estado y **fuera de `app/events/`** porque el gate de `verify.eventos.js` define «emisor» justo asi. **El mapeo de `kind:'body'` que traia el plan estaba AL REVES en los cinco casos que existen** —los ids de rutina son historicos y no dicen de que modulo son— y ahora se pregunta al catalogo via `resolveBodyRoutine()`. **7 tests, 10 mutaciones.** Ademas: **el descanso vuelve a tener circulo** (el glifo iba dentro de un `{!isRest}` y en el paso mas repetido de la app DESAPARECIA), y al medirlo se cayo la causa escrita de la deuda de s171 — los ~25 px son el **FOOTER**, no el gate «ready». Y **los 15 por lados entran como ESPEJO**, cero dibujos nuevos, aunque solo **12** pueden recibir lado.)
+**Version anterior:** v0.101.0 (s171 — **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Tres defectos visuales del usuario, medidos antes de tocar: las miniaturas del preview se pisaban 5 px (`maskScale` pasa a explicito), el circulo media 72 px en 6 rutinas y 179 en las otras 22 (legacy vs v1) y se movia 43 px entre pasos en movil. Nace `tests/runner-circulo.spec.js`. **Segunda mitad**: entra la 2a tanda de arte —18 dibujos, **47 → 57 identidades**— y **el bloque del runner declara alto minimo**, con lo que el circulo y el nombre dejan de moverse entre pasos de trabajo.)
+**Version anterior (2):** v0.100.0 (s170 — **EL TIEMPO ACTIVO DE MUEVE, Y EL ARTE ANATOMICO ENTRA DE VERDAD**.)
+**Ultima sesion:** #172 -- 2026-08-20 - **EL EMISOR, Y DOS MAPEOS QUE ESTABAN AL REVES**. Bump **v0.101.0 -> v0.102.0**. **(0) LO DE s171 SE COMMITEA Y SE DESTILA**, y al hacerlo salen tres cosas: un comentario `s171b` **duplicado y huerfano** en el support del runner, y **dos documentos GENERADOS que la tanda de arte dejo mintiendo** — `GLIFOS_EJERCICIOS_PENDIENTES.md` decia «47 con arte · 14 pendientes» cuando ya eran **57 · 4** (regenerado) y `GLIFOS_ESTIRA_PENDIENTES.md`, que **no tiene generador en el repo**, lleva ya aviso de CADUCADO. **Nada vigila esos dos.** **(1) EL EMISOR DE `pace.events.v1`, PASO 2 DE LA FASE 3.** Los cuatro tipos emiten en **dual-write**; el emisor vive en `app/state-events.jsx` **fuera de `app/events/`** porque `verify.eventos.js` §5 define «emisor» como una llamada a `paceEventsAppend` fuera del subsistema — escondida dentro, el gate habria seguido en verde diciendo «sin emisores» **con emisores puestos**. **EL MAPEO DE `kind:'body'` DEL PLAN ESTABA AL REVES EN LOS CINCO CASOS**: `move.neck.3`, `move.hips.5`, `move.atg.knees` y `move.chair.antidote` viven en `EXTRA_ROUTINES` y `extra.desk.pushups` en `MOVE_ROUTINES`; los ids son historicos (s15) y **no dicen de que modulo son**. Con el prefijo, los eventos habrian salido con el modulo cambiado **sin romper nada**. Dos decisiones que el esquema no cerraba: `routineId` de Foco = `focus.<min>` y `plannedSeconds` de Respira sin rondas = `routine.min x 60` **`declared`** (desviacion consciente de la letra de §6.4; la alternativa literal perdia 17 de 20 rutinas). El **`runId`** se genera al emitir y se recuerda en memoria (§7.2): **cero lineas en los runners**. **7 tests y 10 mutaciones**, con censo relacional **y prueba negativa**; una **mentira del instrumento** — el primer aserto comparaba el ORDEN de llegada y el almacen desempata por `id` aleatorio (§11). **(2) EL DESCANSO VUELVE A TENER CIRCULO.** El glifo iba dentro de un `{!isRest && ...}`: en el paso **mas repetido de la app** (18 apariciones) no es que se moviera, **desaparecia**. R5 se respeta **por color, no por ausencia**. **(3) Y LA CAUSA ESCRITA DE LOS 25 px ERA FALSA**: no es el gate «ready» sin contador, es el **FOOTER** (89 → 39 px al pasar a una fila de controles; el centro crece 50 y el bloque, centrado, baja la mitad). La deuda sigue con su tope de 30: arreglarla es decision visual. **(4) LOS 15 POR LADOS, COMO ESPEJO** (`scaleX(-1)`, cero dibujos nuevos), y solo **12** pueden recibir lado — `90/90`, `Elevacion de talones` y `Sentadilla bulgara` no tienen ni un paso `perSide`. **(5) LOS DOS PROMPTS DE ARTE ERAN LA MISMA PIEZA**: las 12 apariciones de «Respira.» son todas de `Descanso`. `npm run verify` PASA · `npm run test:e2e` **115/115** (eran 105) · diario en [session-172](./docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md)
 
-**Sesion anterior:** #170 -- 2026-08-19 - **EL TIEMPO ACTIVO DE MUEVE, Y EL ARTE ANATOMICO ENTRA DE VERDAD**. Bump **v0.99.1 -> v0.100.0**. **(0) LAS CUATRO DECISIONES ABIERTAS DEL HANDOFF LAS CONTESTABA UN DOCUMENTO** que no habia abierto: `docs/product/EVENTOS_SCHEMA.md` §6.3/§6.4/§7.1/§7.2 las decide las cuatro, y **tres de mis respuestas deducidas estaban mal** (legacy es `routine.min x 60` **declared**, no derivado; **`early` SI tiene referente** —`finishRepsEarly` es «control explicito de finalizacion anticipada»—; y la receta UUIDv4 **ya esta implementada**). Hallazgo propio que sigue vivo: el registro de Caminos usa **`kind:'body'`** y el enum no lo tiene, asi que sin mapeo **todos** los `path.step.completed` de cuerpo se pierden EN SILENCIO. **(1) PASO 1 DE LA FASE 3, CERRADO.** `useActiveClock` compartido (`app/ui/SessionClock.jsx`) da a los dos runners de cuerpo la contabilidad de pausa que Respira tiene desde s98; `useHoldClock` pasa a delegar (iban a ser TRES copias del mismo bucle, el defecto que s147 pago con el render de glifo). La politica vive aparte y **pura** en `v1TrabajoActivo` porque ES la decision. Medido: activo **120 s** contra **220** de pared con una pausa de 30 s. **4 mutaciones y las 4 muerden**; la de perder el segmento abierto solo la caza el test de navegador, que es lo que justifica que haya dos. **(2) ENTRAN 47 DE LOS 61 GLIFOS DE EJERCICIO** como arte anatomico —decision del usuario contra el pictograma del encargo, con un argumento que se sostiene— y con ellos **cinco defectos**: el precache de la ingesta de s166 escribia `./` donde `sw.js` usa `/` (nunca habia corrido sobre arte real); **`sharp` REORDENA sus operaciones** —`extend` va DESPUES de `resize`, y el relleno LATERAL convertia el dibujo en **rayas diagonales**—; la **trampa de canales TRES veces en la misma sesion**; y **dos umbrales de tinta distintos** que dejaban material fuera del encuadre y dentro del dibujo. **(3) EL ENCUADRE SE CORRIGIO TRES VECES MIRANDO CON EL USUARIO**: caja (se salia del disco) -> masa (dejaba el hueco debajo) -> **circunferencia minima**. El acierto de fondo: **el contenedor es un CIRCULO y yo normalizaba a un CUADRADO**; con normalizacion circular **minimizar el radio ES maximizar el dibujo dentro del disco**, asi que un solo criterio resuelve «esta descentrado» y «es pequeño» a la vez: **+17,7 % de area en las 47** sin redibujar nada, y **mismo tamaño optico por construccion**, que es lo que el encargo exige y un encaje cuadrado no puede dar. **(4) EL DETECTOR DE ROJO SE COMIA EL TRAZO**: era solo de TONO y la tinta de estos grabados es **sepia**, asi que entre el **39 % y el 43 %** de lo marcado como rojo era trazo (lum<120). El usuario lo vio como «la linea del abdomen desaparece» y «contorno difuso», que **eran el mismo bug**. Suelo de luminancia; recuperacion de trazo firme **+208 %** en el peor caso, y **+28 %** en la pieza que el usuario usaba de referencia por verse bien — el orden confirma el diagnostico. **(5) LA MINIATURA GANA ARCHIVO PROPIO** (`.min.webp`, trazo engordado ANTES de reducir): a 30 px una linea de un pixel promediada 25 veces se vuelve gris y no es cuestion de ajustes. Comprobado **a los tres tamaños** antes de adoptarlo. **(6) EL TEST DE GLIFOS CADUCO DOS VECES EN LA MISMA SESION** —v1 exigia el mapa vacio, v2 nombraba dos pasos concretos y uno recibio arte ese mismo dia—: **atar un aserto a un nombre que el proyecto esta rellenando es firmar su caducidad**. v3 no nombra a nadie. **VERIFICACION**: `verify` PASA, **97/97**, standalone intacto en v0.71.0, auditoria geometrica de las 47 con **0 fuera del circulo**. **NO CUBIERTO**: el **emisor** (PASO 2) sin escribir · **2 piezas sin identificar** y **14 identidades sin arte** · **17 de los 47 son «media-alta»**: la postura casa pero falta el mueble que el encargo pide · nadie los ha mirado **en movil**. Diario: [session-170](docs/sessions/session-170-tiempo-activo-y-arte-anatomico.md).
+**Sesion anterior:** #171 -- 2026-08-19 - **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Bump **v0.100.0 -> v0.101.0**. **La sesion NO hizo lo que traia el handoff**: el plan era el emisor de la Fase 3 y a mitad de la revision de glifos el usuario mando cinco capturas con tres defectos visuales, que pasaron a ser el trabajo. Diario: [session-171](./docs/sessions/session-171-el-circulo-del-glifo.md).
 
 
 **Sesion anterior:** #166 -- 2026-08-18 - **CUATRO FRENTES Y NUEVE MENTIRAS DEL INSTRUMENTO**. Bump **v0.95.0 -> v0.96.0**. **(0) EL ESTADO DECLARADO NO REPRODUCIA.** El arranque daba el `72/72` por bueno y daban **68**; tres pasadas sobre el mismo arbol (68/72, 70/72, **5/5 aislada**), siempre `respira-progreso.spec.js` y siempre `Test timeout of 60000ms exceeded`. El numero esta en los que SI pasaron: **58,0 s y 59,6 s contra 60**. La variable es `workers: CI ? 2 : undefined` = **8 en local**, y el control cierra el diagnostico: **2 workers dan 72/72 en 1,0 min contra 2,2 min y rojo con 8**. El CI lleva verde desde s165 **por correr en la condicion tranquila**. **SIN ARREGLAR a proposito**: es decision del usuario entre capar workers, subir el plazo (s165 lo rechazo por escrito) o abaratar los cuatro tests; toda la sesion corrio con `--workers=2` sin tocar la config. **(1) EL CTA DEL POMODORO.** Decia «Empezar foco» en Pausa y Larga sobre un reloj que no es de foco. Una sola `startLabel` para los dos sitios que arrancan —idle y completed—, porque tenerlas separadas fue como nacio el desajuste. `banco-cta-pomodoro.js` mide **12 casos** (`{foco,pausa,larga} × {es,en} × {claro,oscuro}`): 0 discrepancias. **El usuario lo reporto como no arreglado con capturas de `paceweb.pages.dev`** — el sitio publicado, no el arbol local. **(2) LA BARRA DE RESPIRA EN MOVIL CABE**: caso peor 5 rondas a 320 px, **5 segmentos de 48,8 px** y 100 px de holgura, 16 escenas y 0 fuera de vista. Pero la primera version del banco era una **TAUTOLOGIA** —medir «desborda a su padre» cuando la barra es `width:100%` DE ESE PADRE—, demostrado saboteando `maxWidth` de 260 a 600: la barra crecio a 374 px y siguio diciendo «0 desbordes». El guard de cero no bastaba: **un detector que no puede decir que SI no esta midiendo**. Rehecho para mirar el ancho de segmento y que la barra entre entera —el riesgo de movil es VERTICAL— y con **control positivo** a 320x300 que TIENE que caer. **(3) UN SOLO ORDEN DE HOME**, aro → Actividades → Camino en las dos pieles, pedido por el usuario mirando movil y web al lado. Actividades hereda el papel de horizonte **sin mecanismo nuevo** (el selector de hermano adyacente de s156 ya decia «el primero despues del aro») y la tarjeta suelta su margen negativo como escritorio desde s126. **El lector de `--pace-skin` en JS se retira entero**: existia solo para elegir el orden y era un re-render de la home al cruzar el breakpoint a cambio de nada. **SE RETIRAN DOS AFIRMACIONES HECHAS AL USUARIO**: «el solapamiento pasa de 64 a 54 px» y «arregla un retroceso de foco a 320». La primera era medir **a media convergencia** —el motor publica mas de una vez— y sale **identica en las 5 vistas** (47/47 · 54/54 · 57/57 · 1/1 · 80/80, publicado == real); la segunda, que a 320 la home **desborda 8 px** y tabular arrastra el viewport (22 paradas en vez de 12). Las cuatro trampas estaban **ya resueltas en `tests/home.helpers.js`** con su porque al lado, asi que el banco pasa a **consumir la sonda de la suite**. De propina: **los chips SI llevan subtitulo** a 360/375/390 y solo desaparecen a 320. **(4) EL TIEMPO DE RETENCION**, aprobado en s165. Se fotografian **seis variantes sobre el panel Ritmo real** y se implementa como **serie semanal en SEGUNDOS** (`weeklyStats.holdSeconds`, que baja al historico por el rollover): esa escala **soporta las seis** y la de por vida no. Linea al pie que **NO aparece si vale cero** —solo 3 de 20 rutinas tienen retencion—. **No es «empezar a contar la apnea»**: `activeMsRef` la suma desde s98. El reloj vive en `BreatheSession.support.jsx` por §1. **EL BANCO DE MUTACIONES OBLIGO A CAMBIAR EL CODIGO**: M1 no mordio dos veces, y la segunda la culpa era del producto —**dos mecanismos redundantes** tapandose entre si—; se quito uno y **las cuatro muerden**. **(5) EL MECANISMO DE LAS MASCARAS DE EJERCICIO** con el mapa **VACIO** y precedencia sobre el SVG: con el mapa vacio la app pinta lo de ayer y **los 62 no tienen que llegar de golpe**. `ingest-glifos-ejercicio.js` probado sobre PNG sinteticos (un trazo de L=120 llega a **alfa 255**; sin normalizar, al 49 %) y **corregido dos veces por si mismo**: 51 identidades leyendo solo el registro y 62 contando dibujos huerfanos que el encargo dice no rehacer, hasta dar **61 = 61**. Sus dos asertos costaron **tres rojos** (la biblioteca no pinta glifos, reabrir navegando pierde el estado inyectado, y una ruta falsa da 404). **VERIFICACION**: `verify` PASA, **78/78**, `PACE_standalone.html` intacto en v0.71.0 tras ~15 builds, consola limpia en los cinco bancos. **NO CUBIERTO**: la variante de retencion es **suposicion** (V4 es una linea) · el instrumento E2E sigue abierto · la ingesta sin arte real · retencion sin mirar en movil · `BreatheSession.jsx` en **493 de 500** · la **pill de Foco/Pausa/Larga en pantallas largas** anotada con sus dos preguntas sin responder. Diario: [session-166](docs/sessions/session-166-retencion-orden-y-mascaras.md).
@@ -50,6 +50,9 @@
 | `index.html` | Artefacto WEB/PWA canonico (mismo compilado + `<link rel="manifest">`). **Es lo que conduce la suite E2E de s154**, nunca `PACE.html` | **v0.92.0** |
 | `tests/runner-circulo.spec.js` | **EL CIRCULO DEL GLIFO (s171)**: que mida lo mismo y este en el mismo sitio en todos los pasos, que **los dos runners coincidan** y que las miniaturas del preview no se pisen. **Ni un numero de pixeles vive dentro**: el defecto no era un tamaño equivocado sino **dos superficies que no coincidian**, asi que se aserta la igualdad, no la cifra — que ademas es una decision de diseño viva. La deriva va **parametrizada por PIEL con guard de `--pace-skin`**: escrita solo contra el viewport del config (1280×720) **habria pasado en verde antes del arreglo**, porque a esa anchura las reservas ya existian desde s119. Lleva **control positivo** de que legacy y v1 siguen siendo dos runners (si aquella rutina se migrara, el test compararia v1 consigo mismo) y **guard de cero** en cada bucle. Los tres asertos de **desborde en retrato** son el precio de extender las reservas a movil, vigilado en vez de anotado. **Los 8 calibrados en rojo** | **NUEVO s171 · 8 tests** |
 | `tests/topbar-pill-movil.spec.js` | **LA PILL EN MOVIL (s169)**: las 9 combinaciones del gate de dos suelos (`min-width: 390` + `min-height: 760`), cada suelo con su pareja al otro lado. Cruza la pill contra **TODOS** los `button, a, [role=button]` **del documento** y no contra un subarbol — el banco de s168 miraba `[data-pace-topbar] > *` y daba verde a 320 px mientras la pill pisaba el **boton de menu**, que **no es hijo de la topbar**. El aro se mide **A/B dentro del mismo viewport** (con la pill y con la pill a `display:none`), nunca contra una constante escrita aqui. Y aserta el **orden de foco de la topbar**, que `home-a11y.spec.js` **excluye a proposito** al filtrar a `[data-pace-home-stack]` | **NUEVO s169 · 11 tests** |
+| `app/state-events.jsx` | **EL EMISOR de `pace.events.v1` (s172)**: el puente entre el dominio y el envelope. Los cuatro tipos, en **dual-write** junto a la escritura legacy, y con el `paceEventsAppend` **fuera de `app/events/`** a proposito — el gate del verify define «emisor» asi. Dentro viven el mapeo de `kind:'body'` **por catalogo** (`resolveBodyRoutine`, nunca por prefijo), el `routineId` sintetico de Foco, el `pathRunId` leido de `paths.current` y la memoria del `runId` para correlacionar el feedback. **No se mueve de sitio.** | **NUEVO s172** |
+| `tests/eventos-emisor.spec.js` | **QUE EL EVENTO LLEGA, Y CON QUE (s172)**. 7 tests, **10 mutaciones y todas muerden**: una sesion de cuerpo deja UN `session.completed` con su payload y el feedback **comparte su `runId`** · salir por «Salir» no emite · el **censo relacional** del mapeo `kind:'body'` contra el catalogo entero, **con prueba negativa** (si ningun id contradice ya su prefijo, avisa de que el censo se volvio tautologia) · un Camino agrupa pasos y cierre bajo un mismo `pathRunId` · el feedback de otra rutina **no** se cuelga de la ultima sesion · Respira emite su plan declarado · «Finalizar» a mitad es `early`. **Se ordena por `stepIndex`**: el almacen guarda por instante y desempata por `id` aleatorio, y los tres pasos caen en el mismo milisegundo | **NUEVO s172 · 7 tests** |
+| `tests/glifos-por-lado.spec.js` | **EL ESPEJO POR LADOS (s172)**. 2 tests, **4 mutaciones**: el glifo no se espeja en un paso que no es `perSide`, el primer lado va tal cual, **la transicion ya pinta el lado que entra** (la pantalla lo anuncia) y el segundo lado lo mantiene; mas la politica pura de `v1LadoGlifo` caso a caso. Lee el `transform` **computado**, no el atributo. **Lo que NO prueba, y esta dicho en la cabecera**: que el lado dibujado sea el anatomicamente correcto — en una figura de perfil eso no es legible ni con un dibujo propio | **NUEVO s172 · 2 tests** |
 | `tests/eventos-backup.spec.js` | **EL BACKUP LLEVA `pace.events.v1` Y LO DEVUELVE (s169)**, condición de entrada de la Fase 2. Defiende la frase de `privacy.html` **entera**: exportar todo tu estado **e importarlo en otro dispositivo**. Tres asertos, los tres en rojo primero — el export leído sobre **el archivo que el navegador descarga de verdad** (no el objeto que lo construye) · un backup **con** sección devuelve ese historial en vez de reiniciarlo, con el número de partida DISTINTO para que reinicio (0) y fusión (11) fallen los dos · y una sección **corrupta** aborta el import **entero**, incluido `pace.state.v2`. Su primera versión comparaba el estado ENTERO y salió roja con el producto sano: la app re-persiste su propio estado al arrancar | **NUEVO s169 · 3 tests** |
 | `tests/paleta-auto.spec.js` | **EL MODO AUTO DE PALETA (s161)**: que Auto siga al sistema **en caliente** y que a mano NO lo siga (las dos mitades en la MISMA prueba, o «no cambia» podria significar que el gesto no llego a producirse) · que un **bloque vivo SUSPENDA** el cambio —tambien pausado— y que al terminarlo entre **solo** · que el primer papel entre **seco** · que **nadie persiga al token** durante el cruce · y que en Auto un dia en oscuro **no cuente** para el logro secreto, con **control positivo en la misma prueba** (a mano SI cuenta). **Todos RELACIONALES**: ninguno dice de que color es la paleta ni cuantos tokens cruzan. **Tres trampas medidas viven aqui**: en Ajustes hay **DOS** botones «Automatico» (idioma y paleta) y `getByRole` sin acotar revienta por strict mode · con Auto, `emulateMedia` **corre contra la navegacion** y bajo carga la prueba se sembraba su propio defecto · y el guard de cero va en **dos ejes** (frames mirados Y valores distintos del token), porque contar frames solo mide cuanto se miro, no que lo mirado se moviera | **NUEVO s161** |
 | `tests/home-a11y.spec.js` | **EL ORDEN DE LECTURA DE LA HOME (s160)**: recorre con **Tab de verdad** y exige que el foco **nunca retroceda** en pantalla, en las dos pieles. Cierra la deuda WCAG 2.4.3 que s156 documento y decidio no asertar. **Aserta el CONTRATO, no el mecanismo**: el orden del DOM no se toca en el aserto, para poder arreglarlo manana de otra forma. Lleva **guard de piel** (`--pace-skin`): sin el, la prueba de escritorio mediria la de movil, que nunca tuvo el defecto, y pasaria sin demostrar nada | **NUEVO s160** |
@@ -205,24 +208,26 @@
 > en [`docs/sessions/`](./docs/sessions/) y destilado en [`CHANGELOG.md`](./CHANGELOG.md).
 > Aqui solo lo que sigue VIVO: diferido y pendiente.
 
-- **[FASE 3 · los emisores — SIGUE SIN EMPEZAR EL PASO 2]** s171 **no lo toco**: entraron
-  tres defectos visuales del usuario y se llevaron la sesion entera. El terreno reconocido
-  vale entero y esta en [`docs/HANDOFF_s171.md`](docs/HANDOFF_s171.md) §2, con **las cuatro
-  decisiones ya contestadas por `docs/product/EVENTOS_SCHEMA.md`** §6.3/§6.4/§7.1/§7.2 —
-  leerlo ANTES de razonar nada, que en s170 tres de cuatro respuestas deducidas salieron mal.
-  - **PASO 1 CERRADO** (s170): Mueve y Estira ya saben su tiempo activo (`useActiveClock` +
-    `v1TrabajoActivo`). El valor se publica en el DONE como `data-pace-active-sec`.
-  - **La superficie son 6 llamadas en 5 archivos**: `BreatheSession.jsx:248` ·
-    `FocusTimer.jsx:43` · `MoveModule.jsx:97-98` · `MoveSessionV1.jsx:73-74` ·
-    `PathFocusStep.jsx:33`. Y `feedback.answered` en `state-feedback.jsx`, `path.*` en
-    `state-paths.jsx`.
-  - **DECISION: el emisor va en la CAPA DE ESTADO**, no en la UI (dual-write junto a la
-    escritura legacy). Un punto de emision por modulo, que es lo que hace auditable el gate
-    del `verify`.
-  - **EL DESAJUSTE QUE HAY QUE MAPEAR**: `EVENT_STEP_KINDS` no tiene `kind:'body'`, que es
-    lo que usa `app/paths/registry.js`. Sin mapear `'body'` → `move`/`stretch` por el prefijo
-    del `routineId`, **todos** los `path.step.completed` de cuerpo se pierden **en silencio**.
-    Y el enum llama **`stretch`** a lo que el codigo llama `extra`.
+- **[FASE 3 · EL PASO 2 ESTA HECHO (s172) — lo que queda es la RETENCION y los
+  consumidores]** Los cuatro tipos emiten en dual-write desde `app/state-events.jsx`.
+  - **EL EMISOR VIVE FUERA DE `app/events/` Y NO ES CASUAL**: `verify.eventos.js` §5
+    define «emisor» como una llamada a `paceEventsAppend` **fuera del subsistema**, y con
+    eso exige que el backup publico lleve la seccion de eventos. Metido dentro, el gate
+    seguiria diciendo «sin emisores» **con emisores puestos**. No mover ese archivo.
+  - **EL MAPEO DE `kind:'body'` SE PREGUNTA AL CATALOGO** (`resolveBodyRoutine()`), NUNCA
+    al prefijo del `routineId`: los ids son historicos y **los cinco casos que existen
+    dicen lo contrario de su prefijo**. Hay test relacional con prueba negativa.
+  - **LA RETENCION POR CALENDARIO (120 d, §12) SIGUE SIN PROGRAMAR**, y su premisa vieja
+    («sin emisores no hay nada que podar») **caduco**. Hoy lo unico que acota el
+    contenedor es la poda por PRESUPUESTO, que solo salta ante un error de
+    almacenamiento. El punto de extension esta declarado en `events-adapter-web.js`.
+  - **`path.step.completed` va sin `runId`** (§7.1 lo declara opcional): la correlacion
+    Camino↔sesion viaja por `pathRunId`. Enhebrar el id del paso exigiria tocar los
+    cuatro steps.
+  - Dos decisiones tomadas por s172 que el esquema no cerraba y **conviene revisar**:
+    `routineId` de Foco = `focus.<min>`, y `plannedSeconds` de Respira sin rondas =
+    `routine.min x 60` **`declared`** (§6.4 solo contempla la fila de rondas).
+
 
 - **[EL AIRE BAJO EL CUE — el prerrequisito YA ESTA, mover la linea NO]** (s171) La linea
   vacia que queda bajo la descripcion en la piel ancha **es el anclaje del circulo**:
@@ -233,55 +238,60 @@
   linea**: las reservas de `cue` y `care` continuan en el CSS y **por debajo de los suelos
   (780/880 px) son lo unico que ancla**, asi que no se pueden retirar a secas.
 
-- **[GLIFOS DE EJERCICIO — 57 de 61, y 2 muebles por rehacer]** (s171, 2a tanda) El encargo
-  de lo que falta esta escrito en [`GLIFOS_EJERCICIOS_REDISENO.md`](docs/product/GLIFOS_EJERCICIOS_REDISENO.md)
-  §4 y la cola viva en [`GLIFOS_ENCARGO_TANDA.md`](docs/product/GLIFOS_ENCARGO_TANDA.md);
-  **el arte lo genera el usuario**. Faltan **4 identidades** (`Pica en escritorio`, `Nordics`,
-  `Onda espinal`, `Rana`) y **2 muebles** (`Fondos en silla`, `Deslizamientos en pared`).
-  Tres fidelidades menores quedan **aceptadas** y no se rehacen (`Elevacion de puntas`,
-  `90/90`, `Escalenos`). Las **2 tomas sobrantes** de `Apretar gluteos` y `90/90` **no se
-  usan**, por decision del usuario. **`Puente toracico`** entro con silla y **sigue sin
+- **[GLIFOS DE EJERCICIO — 57 de 61, y 2 muebles por rehacer]** (s171/s172) El encargo
+  vivo esta en [`GLIFOS_ENCARGO_TANDA.md`](docs/product/GLIFOS_ENCARGO_TANDA.md);
+  **el arte lo genera el usuario**. Faltan **4 identidades** (`Pica en escritorio`,
+  `Nordics`, `Onda espinal`, `Rana`) y **2 muebles** (`Fondos en silla`,
+  `Deslizamientos en pared`). **`Puente toracico`** entro con silla y **sigue sin
   mirarse a tamaño real**.
-  - **LOS 15 POR LADOS NO SE PUEDEN ENSEÑAR HOY** (§3 del encargo): el mapa va por
-    **identidad**, sin nocion de lado, y el runner —que si sabe por cual va— no se lo pasa
-    al glifo. Cablearlo son 4 archivos (`MoveSessionV1.jsx:409` → `StepGlyph`
-    (`MoveModule.jsx:346`) → `ExerciseGlyph` → `exerciseMaskUrl`), pero **solo 12 de los 15
-    pueden recibir lado**: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` **no tienen
-    ni un paso `mode:'perSide'`** en ningun catalogo (su lado vive en el cue), asi que un
-    segundo dibujo suyo no se veria nunca. **Hay que cablearlo ANTES de que entre ese arte.**
+  - **`Descanso` ES TAMBIEN EL QUE DICE «RESPIRA»**, y son la misma pieza: las 12
+    apariciones de «Respira.» en los catalogos son todas de un paso `Descanso`. Su
+    prompt esta escrito (§4 del encargo) y **el dibujo sigue sin llegar**: hoy se ve el
+    SVG viejo —dos barras de pausa— dentro del circulo. Es el paso **mas repetido de la
+    app**: 18 apariciones.
+  - **LOS 15 POR LADOS YA ESTAN CABLEADOS** (s172): el segundo lado es el **espejo** del
+    primero (`scaleX(-1)`), asi que **no hay que dibujar 15 piezas mas**. La convencion
+    global es «el dibujo tal cual es Izquierda». **Solo 12 de los 15 pueden recibir
+    lado**: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` **no tienen ni un paso
+    `mode:'perSide'`** en ningun catalogo, asi que ahi el lado es trabajo de CONTENIDO.
+  - **EL CENSO DE PASOS SIN DIBUJO SE MIRA EN LOS DOS CATALOGOS**: `EXTRA_ROUTINES` **no
+    se publica en `window`** y una pasada que solo mire `MOVE_ROUTINES` dice «1 sin
+    dibujo» donde hay 3. Los nombres de Estira salen del fuente.
   - **TRAMPA VIVA**: `scripts/glifos/generar-pendientes.js` captura las filas de **TRES
-    columnas** de ese documento. Una tabla nueva con nombres de ejercicio y 3 columnas
-    **sobrescribe** el generado en silencio (paso en s171 con 3 ejercicios). Las tablas
-    editoriales van a **cuatro columnas**, y tras tocar el encargo se corre el generador y
-    se **diffea** contra el anterior.
-  - **Y HAY QUE CORRERLO TRAS CADA TANDA**: s171 ingesto 18 dibujos y **no lo re-corrio**,
-    asi que el documento generado se quedo diciendo «47 con arte · 14 pendientes» cuando ya
-    eran **57 · 4** (regenerado al abrir s172). `GLIFOS_ESTIRA_PENDIENTES.md` **no tiene
-    generador** y quedo igual de viejo: lleva un aviso de CADUCADO. **Nada vigila estos dos
-    documentos** — el `verify.encargo.js` de s169 solo mira el de logros.
+    columnas** del encargo. Una tabla nueva con nombres de ejercicio y 3 columnas
+    **sobrescribe** el generado en silencio. Las tablas editoriales van a **cuatro**.
+  - **Y HAY QUE CORRERLO TRAS CADA TANDA**: s171 ingesto 18 dibujos y no lo re-corrio, y
+    el documento se quedo diciendo «47 · 14» cuando eran «57 · 4» (regenerado en s172).
+    `GLIFOS_ESTIRA_PENDIENTES.md` **no tiene generador** y lleva aviso de CADUCADO.
+    **Nada vigila estos dos** — `verify.encargo.js` solo mira el encargo de logros.
   - **La ingesta reescribe el mapa ENTERO**: la carpeta de origen tiene que llevar los 57
-    que ya estan, o se borran. Los viejos se recuperan **emparejando por CONTENIDO** (s171);
-    ese script quedo en el scratchpad, no en `scripts/glifos/`.
+    que ya estan, o se borran. Los viejos se recuperan **emparejando por CONTENIDO**
+    (s171); ese script quedo en el scratchpad, no en `scripts/glifos/`.
+
+- **[LOS 25 px DEL FOOTER — diagnosticados en s172, NO arreglados]** La deriva que queda
+  al cruzar fases en el runner **no** la causa el gate «ready» por no pintar contador,
+  como decia el comentario del trinquete hasta s172. Es el **FOOTER**: en una pantalla de
+  trabajo los controles ocupan dos filas (**89 px** a 390 de ancho) y en una de descanso o
+  de colocarse una sola (**39 px**); el centro crece esos 50 px y, como el bloque va
+  **centrado** dentro de el, baja la mitad. Medido: `session-footer` 89 → 39,
+  `session-center` 672 → 722, con el bloque en sus 591 px (70vh) en las dos.
+  **Las dos salidas son decisiones VISUALES del usuario**: reservar el alto del footer
+  (pero el footer *envuelve* segun el ancho, asi que el numero no es uno solo) o **alinear
+  el bloque arriba** en vez de centrarlo (mata la dependencia entera, pero cambia la
+  composicion vertical de TODAS las pantallas de sesion). Asertado con trinquete de 30 px
+  en `tests/runner-circulo.spec.js`; si se arregla, baja a 0.
+
+
 
 ### Diferido (documentado, NO ejecutado)
 
-- **[FASE 3 · `pace.events.v1`, Fase 2 del esquema] EMPEZADA — la condición de entrada
-  está puesta, faltan los emisores.** v0.99.1 cableó el backup en las dos direcciones
-  (export + import + sección corrupta), **antes** que el primer emisor a propósito.
-  **Lo que queda son los cuatro emisores**, y el terreno ya está reconocido:
-  - `session.completed` → la capa de estado, no la UI: `completeFocusSession`,
-    `completeBreathSession`, `completeMoveSession`, `completeExtraSession`.
-  - `feedback.answered` → `app/state-feedback.jsx`.
-  - `path.step.completed` y `path.completed` → `app/state-paths.jsx`.
-  - **El trabajo real no es llamar a `paceEventsAppend`**, es que esas funciones reciben
-    hoy **minutos** y el payload pide `activeSeconds`, `plannedSeconds` **con su origen**
-    (viajan juntos o los dos a `null`, §6.4), `completionReason`, `variant` y `runId`.
-    Hay que hacer llegar esos datos desde las sesiones hasta la capa de estado.
-  - Correlación TIPADA (§7.1), y no se inventan ids: `session.completed` y
-    `feedback.answered` exigen `runId`; `path.step.completed` exige `pathRunId` y el
-    `runId` es opcional; `path.completed` **no lleva `runId`**.
-  - Dato que ahorra un susto: el store **se inicializa solo** (`paceEventsBoot()` al
-    cargar `events-store.js`), así que no hay que arrancarlo desde producto.
+- **[FASE 3 · `pace.events.v1`, Fase 2 del esquema] CERRADA en s172.** v0.99.1 cablo el
+  backup en las dos direcciones **antes** que el primer emisor, y v0.102.0 puso los
+  cuatro emisores. Lo que queda de la Fase 3 del PLAN es la **Fase 3 del esquema**
+  (reducers de `aggregates`, encaje con `state-history`, normalizacion P1) y la
+  **retencion por calendario**, que sigue sin programar. Dato que ahorra un susto: el
+  store **se inicializa solo** (`paceEventsBoot()` al cargar `events-store.js`), asi que
+  no hay que arrancarlo desde producto.
 - **[s169 · CERRADO, con UN hueco declarado]** Las cuatro decisiones del handoff de s168
   están resueltas. Medidas en [`docs/HANDOFF_s169.md`](docs/HANDOFF_s169.md).
   - ~~**A · la pill**~~ **v0.99.0** (`05a113a`) · ~~**B**~~ no pedía código ·
@@ -555,20 +565,30 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **el emisor de la Fase 3, que lleva dos sesiones esperando**
+## Proxima sesion -- **el arte que falta, y la retencion que nadie ha programado**
 
-> **LO PRIMERO, Y NO ES LO QUE DICE EL RESTO DE ESTA SECCION**: el **PASO 2 de la
-> Fase 3** (el emisor de `session.completed`). s170 cerro su prerrequisito y s171
-> **no lo toco** — entraron tres defectos visuales del usuario y se llevaron la
-> sesion. El plan vive en [`docs/HANDOFF_s171.md`](docs/HANDOFF_s171.md) §2 y las
-> cuatro decisiones **ya estan contestadas** en `docs/product/EVENTOS_SCHEMA.md`
-> §6.3/§6.4/§7.1/§7.2: **leerlo antes de razonar nada**. Lo unico sin resolver es
-> el desajuste `kind:'body'`, detallado arriba en «Ultima sesion».
+> **EL EMISOR YA ESTA** (s172): la Fase 2 del esquema esta cerrada y el gate del verify
+> lo confirma. Lo que abre ahora, por orden de lo que mas cuesta si se olvida:
 >
-> Lo de mas abajo es de **s168** y se conserva por sus MEDIDAS, no por su orden:
-> la pill (punto 1) **ya esta hecha en v0.99.0** y el arte de ejercicio avanzo a
-> **57 de 61** tras la 2a tanda de s171. Siguen vivos el **color de «La jornada»**, el **equinoccio de otoño**
-> y los **19 glifos de logro**.
+> 1. **LA RETENCION POR CALENDARIO (120 d, §12), que sigue SIN PROGRAMAR.** Hasta s172
+>    su nota decia «sin emisores no hay nada que podar»; ya hay emisores y el contenedor
+>    crece. Lo unico que lo acota es la poda por PRESUPUESTO, que **solo salta ante un
+>    error de almacenamiento**. El punto de extension esta declarado en
+>    `events-adapter-web.js` y la §12 dice como: `selectEventsToPrune` +
+>    `foldEventsIntoBaseline` + `nextPruneCursor`, enganchado al rollover diario y **sin
+>    un segundo reloj**.
+> 2. **EL ARTE QUE FALTA**: 4 identidades (`Pica en escritorio`, `Nordics`, `Onda
+>    espinal`, `Rana`), 2 muebles (`Fondos en silla`, `Deslizamientos en pared`) y
+>    **`Descanso`**, que ya tiene prompt escrito y hoy se ve como dos barras de pausa en
+>    el paso mas repetido de la app. **Los 15 por lados NO necesitan dibujo**: entran por
+>    espejo desde s172.
+> 3. **LOS 25 px DEL FOOTER**, que necesitan una decision visual del usuario (arriba, en
+>    «Ultima sesion»). Es lo unico que impide bajar el trinquete de 30 a 0.
+> 4. **`Puente toracico` a tamaño real**, que lleva dos sesiones pedido.
+>
+> Lo de mas abajo es de **s168** y se conserva por sus MEDIDAS, no por su orden: la pill
+> **ya esta hecha en v0.99.0** y el arte de ejercicio va por **57 de 61**. Siguen vivos
+> el **color de «La jornada»**, el **equinoccio de otoño** y los **19 glifos de logro**.
 
 > **LAS DECISIONES QUE ESPERAN, cada una con su pregunta, lo ya medido y una
 > sugerencia, viven en [HANDOFF_s168](./docs/HANDOFF_s168.md)**: la pill, el
@@ -725,6 +745,12 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 
 | Decision | Desde |
 |---|---|
+| **El emisor de eventos vive en la CAPA DE ESTADO y FUERA de `app/events/` (lo define el gate del verify)** | s172 |
+| **El modulo de un paso `kind:'body'` se pregunta al CATALOGO, nunca al prefijo del `routineId`** | s172 |
+| **`routineId` de Foco = `focus.<min>` · `plannedSeconds` de Respira sin rondas = declarado** | s172 |
+| **El `runId` se genera al emitir y se recuerda en memoria: cero lineas en los runners** | s172 |
+| **El paso de DESCANSO pinta su circulo, apagado por COLOR y no por ausencia** | s172 |
+| **El segundo lado de un `perSide` es el ESPEJO del primero (y solo 12 de los 15 pueden recibir lado)** | s172 |
 | **`ExerciseGlyph` pinta DENTRO de la caja que se le pide (`maskScale` explicito, defecto 1)** | s171 |
 | **Un solo tamaño de circulo para los DOS runners, con factor por PIEL leido de `--pace-skin`** | s171 |
 | **Las reservas de altura del runner v1 valen en las DOS pieles -- y su linea vacia ES el anclaje** | s171 |
