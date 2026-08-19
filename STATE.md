@@ -201,7 +201,8 @@
 > Aqui solo lo que sigue VIVO: diferido y pendiente.
 
 
-- **[FASE 3 · los cuatro emisores — RECONOCIDO, sin implementar]** La condición de entrada
+- **[FASE 3 · los cuatro emisores — RECONOCIDO, sin implementar]** Plan de trabajo en
+  [`docs/HANDOFF_s170.md`](docs/HANDOFF_s170.md). La condición de entrada
   está puesta (v0.99.1: el backup lleva y devuelve la sección). Lo que queda, con el mapa ya
   hecho para no volver a levantarlo:
   - **La superficie son 6 llamadas en 5 archivos**: `BreatheSession.jsx:248` ·
