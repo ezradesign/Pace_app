@@ -170,3 +170,61 @@ el *cue* real que el usuario lee en la app, que es la fuente de verdad del gesto
 Una **prueba de una sola pieza antes de la tanda**: genera `plancha.png`, la
 ingesto y la vemos con el mecanismo real a 30 px y a tamaño de runner. Si el
 trazo aguanta a 30, aguanta todo lo demás.
+
+---
+
+## 4 · Lo entregado que hay que REHACER (revisión s171)
+
+> Salida de mirar **las 47 máscaras ya ingestadas** una por una contra la
+> columna «qué debe mostrar» de arriba. **No hay ni una pieza mal asignada**: no
+> hay cruces ni parejas intercambiadas, y los tres casos que más lo parecían los
+> salva el propio encargo (`Sentadilla de cuádriceps` es de rodillas echado
+> atrás ✔, `Apertura de costillas` es a cuatro patas con arcos ✔, `Rezo
+> invertido` es dorsos en contacto ✔). Lo que falla es **fidelidad**, y en casi
+> todo es el mismo fallo: **el mueble no está dibujado**.
+>
+> La tabla lleva **cuatro columnas a propósito**: `scripts/glifos/generar-pendientes.js`
+> captura las filas de TRES columnas de este documento para construir
+> `GLIFOS_EJERCICIOS_PENDIENTES.md`, y una quinta sección con los mismos nombres
+> de ejercicio sobrescribiría sus entradas en silencio. Comprobado: tras añadir
+> esto, el generado sigue saliendo byte a byte igual.
+
+**Faltan 10 muebles.** Los cuatro que sí lo llevan (`Suspensión activa` y
+`pasiva` con su barra, `Silla en la pared` y `Elevación de puntas` con su pared)
+demuestran que el generador sabe dibujarlo cuando lo pone en el prompt.
+
+| Ejercicio | Qué falta | Sin el mueble se lee como | Prioridad |
+|---|---|---|---|
+| Puente torácico | **la silla, y la postura entera** | un puente invertido en el suelo — el encargo pide «desde sentado en la silla, cadera elevada, manos en el asiento» | **la más alta: no es un mueble que falta, es otro ejercicio** |
+| Fondos en silla | la silla detrás | una mesa invertida en el suelo | alta |
+| Sentadilla a silla | la silla justo detrás | una sentadilla al aire | alta |
+| Hueco en silla | la silla | un hueco abdominal en el suelo (que es OTRA pieza del catálogo) | alta |
+| Flexiones inclinadas | el borde de la mesa | una plancha inclinada sin apoyo | alta |
+| Deslizamientos en pared | la pared | brazos arriba, sin más | alta |
+| Extensión torácica | el respaldo | un arqueo sentado en el suelo | media |
+| Giro sentado | el respaldo y la mano en él | un giro sentado en el suelo | media |
+| Rotación torácica | la silla | una rotación de pie a medio sentar | media |
+| Círculos de tobillo | la mesa encima | correcto, pero pierde el contexto de oficina | baja |
+
+**Tres fidelidades menores, ACEPTADAS por el usuario en s171** (no se rehacen).
+Esta tabla también lleva **cuatro columnas**, y no por simetría: con tres, el
+generador se comió estas filas y reescribió `Elevación de puntas`, `Escalenos` y
+`90/90` en el documento generado, moviéndolos de grupo y descuadrando cuatro
+recuentos. Lo cazó el diff contra el generado anterior, no la vista.
+
+| Ejercicio | Qué le falta respecto al encargo | Por qué se acepta | Estado |
+|---|---|---|---|
+| Elevación de puntas | las puntas **no están levantadas**: el pie sale plano con una flecha en el talón, que es el gesto de `Elevación de talones` | la pared lo distingue de su vecino y el nombre acompaña al glifo en la sesión. Es la única pareja del catálogo donde dos piezas distintas se leen casi igual a tamaño pequeño | aceptado s171 |
+| 90/90 | **sin la flecha de rotación** entre lados | la postura se lee bien; la toma que sí la lleva es más ancha y ocupada, y pierde a tamaño de miniatura | aceptado s171 |
+| Escalenos | sin la **mano bajo el glúteo** que ancla el hombro | el gesto de cuello se entiende igual; sin la mano se parece a `Inclinación lateral`, que sigue sin dibujo | aceptado s171 |
+
+**Dos dibujos entregados que NO se usan.** La carpeta traía 49 únicos y el
+catálogo pedía 47: sobran una segunda toma de `Apretar glúteos` (de pie con los
+**dos arcos** de tensión, más literal al encargo que la de dos flechas que está
+puesta) y una segunda de `90/90` (de frente, **con la flecha de rotación**). El
+usuario decidió en s171 **no cambiar ninguna de las dos**. Se identificaron
+emparejando las 49 fuentes con las 47 máscaras **por contenido** —firma de
+densidad de tinta, recorte al dibujo, 32×32, correlación— porque la numeración
+de la hoja de contactos de s170 **no es reproducible**: regenerarla por hash da
+otro orden y sus controles fallan. La pareja más débil de las 47 puntuó **0,849**,
+así que las dos sobrantes no son ambiguas.

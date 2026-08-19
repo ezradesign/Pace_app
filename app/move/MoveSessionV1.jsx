@@ -299,7 +299,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
   // insignia; en poca altura cede antes que instrucciones/controles (s113).
-  // El default 72 del legacy no cambia.
+  // s171: el legacy usa ESTA MISMA curva (era 72 fijo, menos de la mitad).
   const vpH = (typeof window !== 'undefined' && window.innerHeight) || 800;
   const glyphSize = v1GlyphSize(vpH);
 
@@ -403,17 +403,17 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
       headerExtra={<Meta>{tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}</Meta>}
       footer={footer} hint={t('session.hint')}
     >
-      <div style={{ textAlign: 'center', maxWidth: 620 }}>
+      <div data-pace-v1-body style={{ textAlign: 'center', maxWidth: 620 }}>
         {!isRest && (
           <div data-pace-v1-glyph>
             <StepGlyph stepName={step.name} accent={stepAccent} accentSoft={stepAccentSoft} size={glyphSize} />
           </div>
         )}
-        {kicker && (
-          <div data-pace-v1-kicker style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>
-            {kicker}
-          </div>
-        )}
+        {/* s171b · SE PINTA SIEMPRE (misma reserva que «Cuidate», s119): el rotulo
+            solo existe al colocarse y movia el NOMBRE 29 px en cada cambio de fase. */}
+        <div data-pace-v1-kicker style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: stepAccent, marginBottom: 12, fontWeight: 500 }}>
+          {kicker || null}
+        </div>
         <h1 data-pace-v1-name style={{ ...displayItalic, fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500, lineHeight: 1.05, margin: '0 0 14px' }}>
           {tStep(stepIdx, 'name')}
         </h1>

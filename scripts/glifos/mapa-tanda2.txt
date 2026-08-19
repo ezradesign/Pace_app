@@ -1,0 +1,35 @@
+# MAPA · s171 · segunda tanda de arte de ejercicio (20 dibujos nuevos)
+#
+# Numeracion N01..N20 = orden ALFABETICO del nombre de archivo, reproducible
+# (la hoja de s170 no lo era y por eso sus numeros no se pudieron reusar).
+# Las hojas de contactos estan en el scratchpad: nuevos-1.png .. nuevos-5.png
+#
+# --- ASIGNADOS CON EVIDENCIA (el encargo cita una marca y el dibujo la lleva) ---
+N02 = Barbilla atrás              # cabeza y cuello de perfil + flecha horizontal
+N03 = Extensión torácica          # sentado, arqueado atras, manos tras la nuca
+N04 = Rotación torácica           # sentado EN LA SILLA (linea de asiento) + manos cruzadas al pecho
+N06 = Giro sentado                # sentado, tronco rotado, una mano en el asiento
+N07 = Inclinación lateral         # oreja al hombro SIN mano + arco a los DOS lados
+N09 = Círculos de tobillo         # pie BAJO LA MESA + circulo punteado
+N10 = Zancada con apertura        # mano al suelo + brazo abriendose al techo
+N11 = Sentadilla lateral          # peso a un lado, la otra pierna estirada
+N17 = Flexiones inclinadas        # perfil inclinado, manos en un borde
+N19 = Isquio a una pierna         # talon apoyado en algo bajo, cadera atras
+N20 = Cuádriceps en pared         # empeine CONTRA LA PARED, de rodillas
+#
+# --- SIN RESOLVER: dos lecturas posibles, decide tu ---
+N01 = ???   # V invertida, manos en el SUELO. ¿«Pica en escritorio» sin la mesa, o rehacer «Marcha del elefante»?
+N05 = ???   # sentado en el borde con cuadriceps marcado. ¿«Sentadilla a silla» o «Sentarse y levantarse del suelo»?
+N08 = ???   # sentado, manos detras en el asiento, piernas estiradas. ¿«Hueco en silla» o «Fondos en silla»?
+N12 = ???   # zancada con rodilla de atras en el suelo. ¿«Sentadilla bulgara» sin la silla, o rehacer «Flexor de cadera»?
+N13 = Puente torácico                # LA MANO VA SOBRE UN PLANO ELEVADO (asiento), no en el suelo: por fin con silla
+N14 = ???   # sentadilla profunda con manos en el suelo. ¿«Rana» o «Sentadilla profunda»?
+N15 = ???   # sentadilla de perfil bajando, brazos al frente. ¿«Sentadilla a silla» o «Sentarse y levantarse del suelo»?
+N16 = ???   # sentado en el suelo, rodillas dobladas, manos detras. ¿«Hueco en silla» o «Sentarse y levantarse del suelo»?
+N18 = Rotación lenta                 # la cabeza SI esta girada sobre el hombro (se ve al ampliar), hombros de frente
+#
+# --- IDENTIDADES QUE SIGUEN SIN ARTE tras esta tanda (si nada las reclama) ---
+# Pica en escritorio · Nordics · Sentadilla bulgara · Rotacion lenta · Onda espinal
+# Rana · Sentadilla profunda · Sentarse y levantarse del suelo
+# --- REHACER POR EL MUEBLE que nadie ha reclamado todavia ---
+# Puente toracico · Fondos en silla · Sentadilla a silla · Hueco en silla · Deslizamientos en pared

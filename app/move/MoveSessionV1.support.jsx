@@ -124,8 +124,25 @@ function v1StepWeight(step) {
    desborde → scrollbar de 15 px; típico en portátiles 1366×768). Una sola
    pendiente elimina la discontinuidad; el suelo 72 conserva el comportamiento
    de poca altura (el glifo cede antes que instrucciones/controles). */
-function v1GlyphSize(vpH) {
-  return Math.max(72, Math.min(210, Math.round(vpH * 0.22)));
+/* s171 · EL CIRCULO CRECE UN 30 % EN ESCRITORIO, y la curva movil NO se toca:
+   la referencia que fijo el usuario es «Antidoto silla» en movil, que es esta
+   misma curva (179 px a 812 de alto). El factor se aplica DESPUES del clamp, o
+   sea que escala la curva entera —suelo 94, techo 273— en vez de mover solo la
+   pendiente y dejar el techo donde estaba, que aplanaria el aumento justo en
+   las pantallas grandes, que son las que lo piden.
+   La piel se lee del CONTRATO `--pace-skin` (`_responsive.pieles.js`), no de un
+   `matchMedia` con el 769 copiado: si el corte de pieles se mueve, esto lo
+   sigue solo. Se lee del root en cada render (una lectura, no un bucle). */
+const V1_GLYPH_WEB = 1.3;
+function v1EsEscritorio() {
+  try {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue('--pace-skin').trim() === 'escritorio';
+  } catch (e) { return false; }
+}
+function v1GlyphSize(vpH, escritorio) {
+  const web = escritorio == null ? v1EsEscritorio() : escritorio;
+  return Math.round(Math.max(72, Math.min(210, Math.round(vpH * 0.22))) * (web ? V1_GLYPH_WEB : 1));
 }
 
 /* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
@@ -235,9 +252,70 @@ if (!_paceMoveV1Css) {
        salto potencial, ya presente pre-s119) y el coste de las reservas —con el
        nombre a 2 líneas y fuentes grandes— desbordaba el retrato; ahí se
        renuncia a la reserva y se conserva el ajuste móvil previo (que cabía). */
-    @media (min-width: 641px) {
-      [data-pace-v1-cue]  { min-height: 3.1em; }   /* 2 líneas × 1.55 */
-      [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
+    /* s171 · LAS RESERVAS PASAN A SER DE LAS DOS PIELES. El usuario midió en su
+       teléfono lo que s119 había aceptado como coste: el círculo se mueve entre
+       pasos. Medido aquí antes de tocar nada: top 98 → 108 → 151 px en móvil,
+       43 px de deriva con el círculo del MISMO tamaño. La renuncia de s119 era
+       a las reservas «con el nombre a 2 líneas y fuentes grandes», y desde
+       entonces el nombre móvil ya es un clamp; el desborde se vuelve a medir en
+       360×640, 375×812 y 390×844 abajo, que es donde aquella decisión dolía. */
+    [data-pace-v1-cue]  { min-height: 3.1em; }   /* 2 líneas × 1.55 */
+    [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
+
+    /* s171b · EL BLOQUE ENTERO DECLARA ALTO MINIMO, y es lo unico que hace falta.
+       El circulo y el nombre se movian hasta 65 y 94 px entre pantallas de la
+       misma rutina, por TRES causas distintas: un cue de 3 lineas, un nombre de
+       2, y el gate de tipo «ready» —el que espera al usuario porque el paso pide
+       suelo, cojin o pared— que NO PINTA CONTADOR y dejaba el bloque 130 px mas
+       corto que el de trabajo. NO era la linea «Empiezas por», que fue la
+       primera sospecha: es la AUSENCIA del contador.
+       PRIMERO INTENTE RESERVAR CADA TEXTO y fue un error que la medida corrigio
+       dos veces. Uno: las reservas son ADITIVAS y el peor caso real no tenia a
+       la vez nombre de 2 lineas y cue de 3, asi que el bloque crecio de 460 a
+       529 y desbordo donde antes cabia. Dos: al comprobarlo compare el bloque
+       contra el alto del CENTRO, y dentro del centro tambien vive la barra de
+       progreso — 61 px que no estaba contando. El desborde real era de 51 px.
+       CON EL BLOQUE ANCLADO NO HACE FALTA RESERVAR NINGUN TEXTO: por encima del
+       nombre solo hay glifo y rotulo, los dos de alto fijo, asi que el circulo y
+       el nombre quedan clavados aunque el cue crezca. Lo que varie lo hace por
+       DEBAJO, y la holgura cae detras de «Cuidate», donde no se lee como hueco.
+       EN VH Y NO EN PX porque no hay un px que valga: el bloque crece con la
+       altura del viewport (el glifo es 0,22 x alto) y su techo tambien, y los
+       intervalos validos de 780 y de 844 NO SE SOLAPAN — medido.
+       LOS SUELOS SON EL TECHO MEDIDO, no una estimacion: el bloque mas alto que
+       cabe es 70,1vh a 375x780 · 71,2 a 812 · 72,4 a 844 · 76,0 a 1280x900.
+       LO QUE ESTO NO ARREGLA, dicho: por debajo de 780 (movil) y 880 (escritorio)
+       el circulo sigue moviendose. Ahi el centro no da para anclarlo sin robarle
+       altura a las instrucciones, y esa jerarquia la fijo s119. */
+    /* El rotulo de fase se pinta SIEMPRE —vacio cuando no hay— para que el
+       NOMBRE no suba y baje 29 px en cada cambio de fase. Pero VACIO NO CUESTA
+       NADA fuera de los suelos: a 360x640 esos 11 px eran justo los que
+       faltaban, y alli se prefiere que el nombre salte a que aparezca barra. */
+    [data-pace-v1-kicker]:empty { display: none; }
+    @media (max-width: 640px) and (min-height: 780px) {
+      [data-pace-v1-body] { min-height: 70vh; }
+      [data-pace-v1-kicker]:empty { display: block; min-height: 1.2em; }
+    }
+    @media (min-width: 641px) and (min-height: 880px) {
+      [data-pace-v1-body] { min-height: 72vh; }
+      [data-pace-v1-kicker]:empty { display: block; min-height: 1.2em; }
+    }
+
+    /* s171 · EL AIRE ALREDEDOR DEL CONTADOR, en la piel ancha y SOLO donde no
+       hay compactación (min-height 769: por debajo mandan los tiers de abajo,
+       que ya aprietan estos mismos márgenes). El usuario pidió el círculo un
+       30 % mayor «quitando el aire de la segunda frase de la descripción y el
+       contador de segundos»: el aumento cabe sin desbordar (medido: 0 px a
+       1440×900), así que esto no lo financia — recorta lo que él señaló.
+       La línea vacía bajo el cue NO se toca y es deliberado: ES el anclaje del
+       círculo. Quitarla devuelve la deriva que la mitad de este cambio arregla;
+       moverla al final del bloque (después de «Cuídate», donde no se leería
+       como hueco) exige que el bloque entero declare alto mínimo, y eso es un
+       cambio de mecanismo con cinco tiers medidos detrás. Queda propuesto. */
+    @media (min-width: 641px) and (min-height: 769px) {
+      [data-pace-v1-cue] { margin-bottom: 10px !important; }
+      [data-pace-v1-timer] + div { margin-top: 8px !important; }
+      [data-pace-v1-care] { margin-top: 10px !important; }
     }
 
     /* s119 · banda de portátil 701–768 px: con el glifo ya continuo (v1GlyphSize
@@ -296,7 +374,11 @@ if (!_paceMoveV1Css) {
        por anchura de SessionShell/MoveModule (s27). */
     @media (max-width: 640px) and (max-height: 700px) {
       [data-pace-v1-glyph] > div { margin-bottom: 12px !important; }
-      [data-pace-v1-kicker] { margin-bottom: 8px !important; }
+      /* s171b · de 8 a 3: el rotulo pasa a pintarse SIEMPRE (reserva del nombre)
+         y eso cuesta ~11 px en todo viewport. Aqui no sobraban: 360x640 quedaba
+         desbordando 3 px. Se recupera del margen del propio rotulo, que es lo
+         que lo causo, y no de las instrucciones — la jerarquia de s119. */
+      [data-pace-v1-kicker] { margin-bottom: 3px !important; }
       [data-pace-v1-name] { margin-bottom: 8px !important; }
       [data-pace-v1-cue] { margin-bottom: 10px !important; }
       [data-pace-v1-support-strong] { margin-top: 10px !important; }
@@ -368,5 +450,6 @@ Object.assign(window, {
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
   v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
+  V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock,
 });

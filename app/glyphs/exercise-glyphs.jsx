@@ -195,7 +195,7 @@ function DefaultGlyph({ size = 44, className = '' }) {
   );
 }
 
-function ExerciseGlyph({ id, size = 88, className = '' }) {
+function ExerciseGlyph({ id, size = 88, className = '', maskScale = 1 }) {
   /* s166 · EL ARTE DEL USUARIO ENTRA COMO MASCARA Y GANA AL SVG, igual que
      s146 hizo con los sellos de logro y por la misma razon: asi los 62
      dibujos del rediseno pueden llegar POR PARTES sin dejar huecos -- lo que
@@ -203,9 +203,23 @@ function ExerciseGlyph({ id, size = 88, className = '' }) {
      rama no se toma ni una vez y la app pinta exactamente lo de ayer.
      `currentColor` de fondo es lo que conserva el tintado por token del
      modulo, que es justo lo que se perderia pintando el PNG como imagen. */
-  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id, size);
+  /* s171 · `maskScale` es EXPLICITO y su defecto es 1: la caja que se pinta es
+     la que el llamante reserva. Hasta s170 la mascara se pintaba SIEMPRE a 1.5x
+     por dentro, y eso no es un tamaño: es un desbordamiento que el llamante no
+     puede prever. La lista de pasos del preview reservaba 30 px, recibia 45 y
+     las miniaturas anatomicas se PISABAN 5 px entre filas (medido) mientras las
+     41 SVG, que si respetan la caja, quedaban limpias. Quien quiera el +50 % de
+     presencia lo pide (`StepGlyph`, el circulo del runner); los demas no lo
+     heredan por accidente. La decision A/B —dar ese mismo +50 % a los 41 SVG—
+     sigue abierta y este parametro no la prejuzga. */
+  const px = Math.round(size * maskScale);
+  /* La variante se elige por los PIXELES QUE SE PINTAN, no por los que se
+     piden: con el 1.5 implicito el preview pedia 30 (y recibia la variante de
+     trazo engordado, `<= MASK_MIN_HASTA`) para luego dibujarla a 45, que es
+     justo el tramo donde NO corresponde. */
+  const mask = window.exerciseMaskUrl && window.exerciseMaskUrl(id, px);
   if (mask) {
-    const url = 'url("' + mask + '")'; size = Math.round(size * 1.5);
+    const url = 'url("' + mask + '")'; size = px;
     return (
       <span className={className} style={{
         display: 'block', width: size, height: size,
