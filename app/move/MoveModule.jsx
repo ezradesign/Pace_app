@@ -264,19 +264,32 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
       footer={footer}
       hint={t('move.hint')}
     >
-      <div style={{ textAlign: 'center', maxWidth: 620 }}>
-        <StepGlyph stepName={step.name} accent={accent} accentSoft={accentSoft} />
-        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: accent, marginBottom: 14, fontWeight: 500 }}>
+      {/* s171 · MISMO CÍRCULO Y MISMA TIPOGRAFÍA QUE v1. Las 6 rutinas que
+          siguen aquí (Empuje · progresión · Piernas · a una · Ancestral · ATG ·
+          Escritorio express · Caderas · suelo) enseñaban un círculo de 72 px
+          fijos junto a un nombre de 56 px, mientras las otras 22 lo enseñaban
+          a 0,22 × alto (179 en un móvil de 812) con el nombre en clamp: el
+          usuario lo leyó como «el círculo es muy pequeño y las letras muy
+          grandes», y era literal. El glifo NO se recalcula al redimensionar
+          (`innerHeight` en render, sin listener) — deuda previa de v1 (s119)
+          que aquí se hereda a propósito, para que los dos runners tengan el
+          mismo comportamiento y no dos. */}
+      <div data-pace-v1-body style={{ textAlign: 'center', maxWidth: 620 }}>
+        <StepGlyph stepName={step.name} accent={accent} accentSoft={accentSoft}
+          size={typeof v1GlyphSize === 'function'
+            ? v1GlyphSize((typeof window !== 'undefined' && window.innerHeight) || 800)
+            : 72} />
+        <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: accent, marginBottom: 12, fontWeight: 500 }}>
           {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>
         <h1 style={{
           ...displayItalic,
-          fontSize: 56, fontWeight: 500,
-          lineHeight: 1.05, margin: '0 0 20px',
+          fontSize: 'clamp(30px, 6.5vh, 52px)', fontWeight: 500,
+          lineHeight: 1.05, margin: '0 0 14px',
         }}>{tStep(stepIdx, 'name')}</h1>
         <p style={{
-          fontSize: 17, lineHeight: 1.55, color: 'var(--ink-2)',
-          maxWidth: 460, margin: '0 auto 22px',
+          fontSize: 16, lineHeight: 1.55, color: 'var(--ink-2)',
+          maxWidth: 460, margin: '0 auto 18px',
         }}>{tStep(stepIdx, 'cue')}</p>
 
         {/* Numeral centrado entre la descripcion y "SEGUNDOS": espacio
@@ -339,7 +352,11 @@ function StepGlyph({ stepName, accent = 'var(--move)', accentSoft = 'var(--move-
       display: 'grid', placeItems: 'center',
       color: accent,
     }}>
-      <ExerciseGlyph id={stepName} size={Math.round(size * 44 / 72)} />
+      {/* s171 · el +50 % de la mascara se PIDE aqui (antes lo aplicaba
+          `ExerciseGlyph` por dentro a todo el mundo). Este es el unico sitio que
+          lo quiere: el arte anatomico llena el circulo al 92 % y los 41 SVG al
+          61 %, que es como se ve desde s170 y lo que la decision A/B revisara. */}
+      <ExerciseGlyph id={stepName} size={Math.round(size * 44 / 72)} maskScale={1.5} />
     </div>
   );
 }
