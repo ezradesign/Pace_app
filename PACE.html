@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.102.0</title>
+  <title>PACE · Foco · Cuerpo — v0.102.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -305,6 +305,10 @@
        para rutinas con `mode` (guard typeof: degrada a legacy si no evaluó).
        s113: soporte sin UI (constantes del método + helpers de cadencia +
        CSS del pulso y compactación por altura) ANTES de su consumidor. -->
+  <!-- La HOJA DE ESTILO del runner v1 (s172b), cortada del support al rebasar
+       este las 500 lineas. No exporta nada: se inyecta al cargar con su guard
+       de id, asi que puede ir en cualquier punto de este bloque. -->
+  <script type="text/babel" src="app/move/MoveSessionV1.css.jsx"></script>
   <script type="text/babel" src="app/move/MoveSessionV1.support.jsx"></script>
   <script type="text/babel" src="app/move/MoveSessionV1.jsx"></script>
   <script type="text/babel" src="app/extra/ExtraModule.jsx"></script>

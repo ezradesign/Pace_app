@@ -141,19 +141,21 @@ for (const piel of [
     expect([...new Set(trabajo.map(m => m.nombreTop))],
       `el nombre se mueve entre pasos de trabajo: ${JSON.stringify(trabajo)}`).toHaveLength(1);
 
-    /* CRUZANDO FASES QUEDA DEUDA, Y SE ASERTA COMO TAL EN VEZ DE ANOTARSE. Al
-       entrar aquí eran 65 px de círculo y 94 de nombre; hoy son ~25 y ~29.
-       LA CAUSA QUE ESTABA ESCRITA AQUÍ ERA FALSA, y la corrige s172 midiéndola:
-       no es que el gate «ready» no pinte contador. Es el FOOTER. En una pantalla
-       de trabajo los controles ocupan dos filas (89 px a 390 de ancho) y en una
-       de descanso o de colocarse sólo una (39 px); el centro crece esos 50 px, y
-       como el bloque va centrado dentro de él, baja la mitad: 25. Medido con el
-       árbol delante (`data-pace-session-footer` 89 → 39, `center` 672 → 722).
-       Se arregla reservando el footer o alineando el bloque arriba, y las dos
-       son decisiones visuales — por eso sigue siendo deuda y no un descuido.
-       El techo de 30 px es un TRINQUETE: si alguien lo empeora, salta; si alguien
-       lo arregla del todo, hay que bajarlo a 0 y borrar este párrafo. */
-    const TOPE_DEUDA = 30;
+    /* CRUZANDO FASES YA NO SE MUEVE NADA, y el trinquete baja a 0 (s172b). Al
+       entrar aquí eran 65 px de círculo y 94 de nombre; s171 los dejó en ~25 y
+       ~29 y los aserto como deuda con tope 30.
+       LA CAUSA QUE SE ESCRIBIÓ ENTONCES ERA FALSA —«el gate ready no pinta
+       contador»— y la corrigió s172 midiendo: lo que se movía era el bloque
+       ENTERO, porque `centerBody` lo centra con `margin:auto` (s112) y su altura
+       cambia con el contenido. El anclaje en vh de s171 sólo compensaba eso POR
+       ENCIMA de sus suelos (780 móvil / 880 escritorio): con UN PIXEL menos se
+       apagaba entero y el salto volvía —61 px a 1280×879 y 53 a 360×730, que son
+       los dos viewports reales del usuario—. Era un ACANTILADO.
+       Arreglado alineando el bloque ARRIBA (`margin-top: 0 !important`, acotado
+       al runner v1 con `:has()`): la holgura cae debajo y el círculo queda
+       clavado a CUALQUIER altura. Medido en 8 viewports, 0 px en los ocho.
+       El tope es 0 y es un TRINQUETE: si vuelve a moverse un píxel, salta. */
+    const TOPE_DEUDA = 0;
     const tops = medidas.map(m => m.top);
     const nombres = medidas.map(m => m.nombreTop).filter(v => v != null);
     expect(Math.max(...tops) - Math.min(...tops),

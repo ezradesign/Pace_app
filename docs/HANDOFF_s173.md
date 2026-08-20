@@ -1,6 +1,6 @@
 # HANDOFF · s173
 
-**Punto de partida limpio.** Versión **v0.102.0** en los 7 sitios · `npm run verify`
+**Punto de partida limpio.** Versión **v0.102.1** en los 7 sitios · `npm run verify`
 PASA · `npm run test:e2e` **115/115** · `PACE_standalone.html` intacto en v0.71.0 ·
 **árbol commiteado y pusheado**.
 
@@ -17,6 +17,7 @@ PASA · `npm run test:e2e` **115/115** · `PACE_standalone.html` intacto en v0.7
 - **Los 15 glifos por lados**: entran por **espejo**, no por dibujo. Cableado y con
   test.
 - **El círculo del paso de descanso**, que no se pintaba.
+- **La deriva del círculo del runner**, cerrada en s172b: 0 px en 8 viewports.
 - **La documentación de s171**, destilada, y sus dos generados que mentían.
 
 ---
@@ -72,31 +73,23 @@ real**. Lleva dos sesiones pedido.
 
 ---
 
-## 3 · Los 25 px del footer — necesita que el usuario MIRE
+## 3 · El círculo del runner — CERRADO, y el trinquete está en 0
 
-La deriva que queda al cruzar fases en el runner está diagnosticada y **la causa que
-estaba escrita era falsa**. No es el gate «ready» por no pintar contador: es el
-**FOOTER**.
+Ya no hay nada que decidir aquí. Lo que se movía no era el gate «ready» (s171) ni sólo el
+footer (s172): era que **`centerBody` centra con `margin:auto` un bloque cuya altura varía
+con el contenido**, y el anclaje en vh de s171 era un **acantilado** que se apagaba entero
+un píxel por debajo de sus suelos — justo donde caían los dos dispositivos del usuario.
 
-| a 390×844 | trabajo | descanso |
-|---|---|---|
-| `session-footer` | **89 px** (2 filas de controles) | **39 px** (1 fila) |
-| `session-center` | 672 | **722** |
-| bloque (`min-height` 70vh) | 591 | 591 |
-| círculo `top` | **69** | **94** |
+Arreglado alineando el bloque arriba (`margin-top: 0 !important`, acotado con `:has()`).
+**0 px de deriva en 8 viewports**, y el trinquete de `runner-circulo.spec.js` está en
+**0**: si vuelve a moverse un píxel, salta.
 
-Dos salidas, **las dos visuales**:
+Dos cosas que conviene no deshacer:
 
-1. **Reservar el alto del footer.** Sólo toca las pantallas cuyo footer es más corto.
-   Pero el footer **envuelve según el ancho**, así que el número no es uno solo: habría
-   que medirlo por piel.
-2. **Alinear el bloque arriba** en vez de centrarlo. Mata la dependencia entera de una
-   vez, pero cambia la composición vertical de **todas** las pantallas de sesión.
-
-Asertado con trinquete de **30 px** en `tests/runner-circulo.spec.js`. **Si se arregla,
-hay que bajarlo a 0 y borrar el párrafo.**
-
----
+- **El `!important` no es pereza**: el margen viene como estilo EN LÍNEA desde s112.
+- **No tocar `margin:auto` en `SessionShell`**: alinea arriba cuando el contenido
+  desborda, y eso evita que un `justify-content:center` recorte el principio en pantallas
+  cortas.
 
 ## 4 · Dos decisiones del emisor que conviene revisar ANTES de que haya consumidores
 
@@ -134,10 +127,16 @@ contenedor todavía.
 - **Comparar una línea fina con su espejo mide DESPLAZAMIENTO, no lateralidad.** Sin
   desenfoque de tolerancia, las 12 piezas puntúan igual de asimétricas mientras el ojo ve
   dos idénticas.
-- **Tres archivos rozan las 500 líneas**: `BreatheSession.jsx` (500),
-  `MoveSessionV1.jsx` (500) y `MoveSessionV1.support.jsx` (499). **Lo siguiente que entre
-  ahí obliga a trocear** — esta sesión ya pagó ese peaje dos veces, y la regla dice
-  trocear, no recortar comentarios.
+- **NI UN BACKTICK dentro del template literal del CSS del runner.** Es la trampa que
+  más ha vuelto (s139, s156, s157, s158, s162, s171 y **tres veces seguidas en s172b**):
+  el build **ABORTA**, y si la salida está silenciada las medidas siguientes corren
+  contra el artefacto viejo y salen **idénticas**. Regla: **si una medida no cambia
+  cuando debería, mirar PRIMERO si el build pasó.** Está escrito en la cabecera de
+  `app/move/MoveSessionV1.css.jsx`.
+- **Dos archivos están clavados en 500 líneas**: `BreatheSession.jsx` y
+  `MoveSessionV1.jsx`. **Lo siguiente que entre ahí obliga a trocear** — s172 pagó ese
+  peaje tres veces, y la regla dice trocear, no recortar comentarios. El CSS del runner
+  ya salió a `MoveSessionV1.css.jsx` por eso.
 - **El emisor no se mueve de `app/state-events.jsx`.** Si se mete dentro de
   `app/events/`, el gate del verify vuelve a decir «sin emisores» **con emisores
   puestos**.
