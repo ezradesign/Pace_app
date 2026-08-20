@@ -1,6 +1,6 @@
 # s172 · EL EMISOR, Y DOS MAPEOS QUE ESTABAN AL REVÉS
 
-**v0.102.0** · `npm run verify` PASA · `npm run test:e2e` **115/115** (eran 105)
+**v0.102.1** · `npm run verify` PASA · `npm run test:e2e` **115/115** (eran 105)
 · `PACE_standalone.html` intacto en v0.71.0.
 
 > La sesión abrió con el árbol de s171 **sin commitear** y con tres bloques
@@ -160,30 +160,60 @@ respiración` ya ocupa los «dos arcos en el pecho».
 
 ---
 
-## 4 · La causa de los 25 px que quedaban NO era la que estaba escrita
+## 4 · El círculo: dos diagnósticos cortos y el que sí era
 
-El comentario del trinquete de `runner-circulo.spec.js` decía que la deriva
-residual la causa el gate «ready» por no pintar contador. **Es el FOOTER.**
+**Tres sesiones seguidas apuntando al sitio equivocado**, y el usuario viéndolo igual
+en su portátil y en su teléfono todo el rato.
 
-Medido con el árbol delante, a 390×844:
+- **s171** dijo: lo causa el gate «ready», que no pinta contador.
+- **s172** midió el footer y dijo: es el footer (89 → 39 px al pasar de dos filas de
+  controles a una; el centro crece 50 y el bloque, centrado, baja la mitad). Cierto,
+  **pero sólo para el caso descanso ↔ trabajo**.
+- **s172b**, con las capturas del usuario delante, midió los viewports y encontró lo
+  que faltaba: **el anclaje de s171 era un ACANTILADO**.
 
-| | Trabajo | Descanso |
+| viewport | `min-height` | salto |
 |---|---|---|
-| `session-footer` | **89 px** (2 filas de controles) | **39 px** (1 fila) |
-| `session-center` | 672 | **722** |
-| bloque (`min-height` 70vh) | 591 | 591 |
-| **círculo `top`** | **69** | **94** |
+| 1280×900 | 648px | 0 px |
+| 1280×880 | 633px | 3 px |
+| **1280×879** | **auto** | **61 px** |
+| 390×844 | 591px | 0 px |
+| 390×780 | 546px | 0 px |
+| **360×730** (su móvil) | **auto** | **53 px** |
+| 360×640 | auto | 53 px |
 
-El footer pierde 50 px, el centro crece esos 50, y como el bloque va **centrado**
-dentro de él baja la mitad: **25**. El párrafo del test queda corregido; la deuda
-sigue asertada con el mismo tope de 30 porque arreglarla —reservar el footer o
-alinear el bloque arriba— es una **decisión visual**, no un descuido.
+**Sus dos pantallas caen justo por debajo de los suelos** (780 móvil / 880 escritorio),
+así que el anclaje que las dos sesiones anteriores dieron por bueno **no se aplicaba ni
+una vez en sus dispositivos**.
 
-> **El verde de esa suite no decía nada de la pantalla de descanso**: su recorrido
-> avanza a clicks y un descanso **termina solo**, así que nunca aterrizaba en uno.
-> Por eso el test nuevo va aparte y llega a propósito con «Terminar antes».
+### La causa está un nivel más arriba de donde se buscó
 
----
+`centerBody` centra con `margin:auto` (s112) un bloque **cuya altura varía con el
+contenido**. El centrado reparte una holgura distinta en cada pantalla y el círculo baja
+la mitad de esa diferencia. El footer es **una** fuente de variación; el contenido es la
+otra (la pantalla de colocarse no pinta contador). Y ningún `min-height` del bloque puede
+arreglarlo por debajo del suelo, porque ahí el bloque ya no llega a ese alto.
+
+**Arreglo**: anular el margen superior y conservar el inferior, así que la holgura cae
+debajo —donde s171 la quería—. Acotado al runner v1 con `:has()`, y con `!important`
+porque **el margen es un estilo EN LÍNEA**: sin él la regla se aplica, no falla, y no
+cambia nada. Medido: **0 px en los 8 viewports**.
+
+Y los **3 px que aún movían el nombre**: la reserva del rótulo vacío era `1.2em` y el
+rótulo lleno se pintaba con el interlineado normal de la fuente (~1,45). Se fija
+`line-height: 1.2` y las dos formas miden lo mismo **por construcción**, en vez de que
+una reserva adivine lo que la otra mide. **El trinquete baja de 30 a 0.**
+
+### Lo que costó, y no fue el diagnóstico
+
+**La trampa de los backticks dentro del template literal del CSS mordió TRES veces en
+este mismo cambio** (s139, s156, s157, s158, s162, s171 y ahora), dos de ellas con la
+salida del build silenciada: las medidas salían **idénticas** y parecía que el arreglo no
+servía. La regla, ya escrita en la cabecera del archivo nuevo: **si una medida no cambia
+cuando debería, mirar PRIMERO si el build pasó**.
+
+El CSS del runner salió a `app/move/MoveSessionV1.css.jsx` (211 líneas) porque el support
+rebasaba las 500 — trocear, no recortar comentarios.
 
 ## 5 · Los 15 por lados: espejo, cero dibujos nuevos
 
