@@ -13,10 +13,12 @@ el estado antes de tocar nada.
 El plan está en `docs/HANDOFF_s173.md`. Léelo entero: trae medido lo que no hay que
 volver a medir y siete trampas que ya costaron tiempo.
 
-Contexto: s172 cerró en v0.102.0, commiteado y pusheado. `npm run verify` PASA y
-`npm run test:e2e` da 115/115. La Fase 2 del esquema de eventos quedó CERRADA (los
-cuatro emisores), los 15 glifos por lados entran por espejo sin dibujar nada, y el
-paso de descanso volvió a tener círculo.
+Contexto: s172 cerró en v0.102.1, commiteado y pusheado, con el CI en verde en sus
+dos jobs. `npm run verify` PASA y `npm run test:e2e` da 115/115. Quedaron cerrados:
+la Fase 2 del esquema de eventos (los cuatro emisores), los 15 glifos por lados —que
+entran por ESPEJO, sin dibujar nada—, el círculo del paso de descanso, que no se
+pintaba, y la deriva del círculo del runner, que era un acantilado bajo los suelos de
+s171 y ahora mide 0 px en 8 viewports.
 
 Orden de trabajo que propongo, dime si lo cambias:
 
@@ -27,10 +29,12 @@ Orden de trabajo que propongo, dime si lo cambias:
    de extensión está declarado por escrito en `app/events/events-adapter-web.js`.
    Léete §12 ANTES de razonar nada: en s170 y s172 varias respuestas deducidas
    sobre este esquema salieron mal, y el documento las contestaba.
-2. Los 25 px del footer, que necesitan que YO mire dos opciones. Están medidos en
-   §3 del handoff; no decidas por mí, enséñamelas.
-3. El arte que falta, si te paso dibujos: 4 identidades, 2 muebles y `Descanso`,
-   cuyo prompt ya está escrito en `GLIFOS_ENCARGO_TANDA.md` §4.
+2. El arte que falta, si te paso dibujos: 4 identidades, 2 muebles y `Descanso`,
+   cuyo prompt ya está escrito en `GLIFOS_ENCARGO_TANDA.md` §4. `Descanso` es el
+   paso más repetido de la app y hoy enseña dos barras de reproductor.
+3. Las dos decisiones del emisor que s172 tomó porque el esquema no las cerraba
+   (§4 del handoff). Cambiarlas ahora es barato: no hay ningún consumidor leyendo
+   el contenedor todavía.
 
 Antes de tocar el subsistema de eventos, lee su fila en
 `docs/product/DECISIONES_TECNICAS_VIGENTES.md`: hay seis decisiones nuevas de s172
@@ -57,7 +61,7 @@ El protocolo de `CLAUDE.md` ya lo dice, pero en corto y por orden de rentabilida
    vaya a tocar, ANTES de tocarlo.** Es lo que evita repetir regresiones.
 5. `DESIGN_SYSTEM.md` sólo si se toca algo visual.
 
-## Las tres cosas que más caro salen en este repo
+## Las cuatro cosas que más caro salen en este repo
 
 - **El artefacto se regenera y se verifica**: `node build-standalone.js` reescribe
   `index.html` (el canónico) y también `PACE_standalone.html`, que es **export bajo
@@ -67,3 +71,8 @@ El protocolo de `CLAUDE.md` ya lo dice, pero en corto y por orden de rentabilida
 - **Cada aserto nuevo se calibra en rojo.** Un test que nunca ha fallado no ha
   demostrado que mida algo; en s172, dos de ellos midieron el instrumento y no el
   producto hasta que se comprobó.
+- **Ni un backtick dentro del template literal del CSS del runner**
+  (`app/move/MoveSessionV1.css.jsx`). El build ABORTA, y con la salida silenciada las
+  medidas siguientes corren contra el artefacto viejo y salen idénticas: en s172
+  mordió tres veces seguidas. Si una medida no cambia cuando debería, lo primero es
+  mirar si el build pasó.
