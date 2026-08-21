@@ -191,7 +191,7 @@ bilaterales: **39**.
 
 ---
 
-## 5 · Los 7 que faltan · prompts listos para pegar (s172)
+## 5 · Los que faltan · alcance medido y prompts listos para pegar (s172)
 
 > El estilo **ya está diseñado y en producción**: son las 57 piezas que hay en
 > `app/glyphs/assets/ejercicios/`. Lo de abajo no lo reinventa — lo **describe** para
@@ -201,6 +201,43 @@ bilaterales: **39**.
 >
 > **Lo que más sube el acierto**: adjuntar 2 o 3 piezas existentes como referencia
 > visual junto al prompt. Con eso, el texto sólo tiene que decir el gesto.
+
+### ¿Hacen falta los siete? · el ALCANCE, medido (s172)
+
+No valen lo mismo, y **uno se puede quitar de la cola sin coste visible**. Esto sale
+de contar en cuántos pasos aparece cada identidad (Mueve por `window`, Estira y el
+constructor desde el fuente) y de mirar cómo se pinta hoy:
+
+| Pieza | ¿Dónde sale? | Hoy se ve como | Prioridad |
+|---|---|---|---|
+| **`Descanso`** | **18 pasos** en 10 rutinas de Mueve | SVG viejo: dos barras de reproductor entre 57 grabados | **1 — imprescindible** |
+| `Fondos en silla` | 3 pasos (`extra.chair.dips`) | grabado **sin silla**, y no es «le falta»: es otro ejercicio | **2** |
+| `Pica en escritorio` | 1 paso (`extra.push.ladder`) | **glifo por defecto** (tres arcos genéricos) | 3 |
+| `Onda espinal` | 1 paso de Estira | **glifo por defecto** | 3 |
+| `Rana` | 1 paso de Estira | **glifo por defecto** | 3 |
+| `Deslizamientos en pared` | 1 paso de Estira | grabado, pero la pared **no se lee** | 4 |
+| **`Nordics`** | **0 rutinas del catálogo** — sólo el constructor | SVG viejo, **no se ve roto** | **aplazable** |
+
+**Lo que cambia la lista:**
+
+- **`Nordics` sale de la cola.** No está en ninguna rutina fija: sólo en
+  `app/custom/exercise-registry.js`, así que únicamente lo ve quien se monte una
+  rutina propia con él — y ya tiene SVG, o sea que tampoco cae al glifo por defecto.
+  Dibujarlo no cambia nada que nadie esté viendo. Si algún día entra en una rutina
+  del catálogo, vuelve a la cola.
+- **Los tres del glifo por defecto** (`Pica en escritorio`, `Onda espinal`, `Rana`)
+  aparecen **una vez cada uno**, pero son los únicos que enseñan un dibujo que **no
+  es el ejercicio**: tres arcos concéntricos genéricos. Bajo alcance, defecto alto.
+- **`Fondos en silla` merece las prisas que no merece `Deslizamientos`**: el primero
+  sale 3 veces y su grabado actual apoya las manos **en el suelo** con la cadera a
+  ras —eso es un fondo en el suelo, no en silla—; el segundo sale una vez y ya trae
+  flechas y brazos arriba, sólo que la pared queda como una línea suelta que sale de
+  la coronilla y no se lee como plano.
+
+> **Si sólo vas a generar unos pocos**: `Descanso` primero y solo, que se ve más que
+> cualquier ejercicio del set. Después `Fondos en silla` y los tres del glifo por
+> defecto. `Deslizamientos en pared` el último, y `Nordics` ni eso.
+
 
 ### El preámbulo, que va DELANTE de cada uno de los siete
 
@@ -263,8 +300,11 @@ por centrar ni por el tamaño: sólo por que el cuerpo entre ENTERO en el lienzo
 > recta** (el borde de un mueble), que es como se hace sin compañero. Brazos por
 > delante, listos para amortiguar.
 >
-> Ojo: esta pieza sólo aparece hoy en el **constructor de rutinas**, no en los
-> catálogos fijos — es la que menos se ve de las siete.
+> **APLAZABLE, y es la única de las siete que lo es.** No aparece en **ninguna**
+> rutina del catálogo: sólo en `app/custom/exercise-registry.js`, o sea que la ve
+> quien se monte una rutina propia con ella. Y **ya tiene SVG**, así que tampoco cae
+> al glifo por defecto. Dibujarla no cambia nada que nadie esté viendo. La ficha se
+> queda escrita para el día que entre en una rutina fija.
 
 **3 · `onda-espinal.png`** — *«Recorre una ola lenta desde la pelvis hasta la cabeza.»*
 > De perfil, **de pie con las rodillas sueltas**, y una **línea DE PUNTOS ondulada
