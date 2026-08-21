@@ -21,6 +21,10 @@ pintaba, y la deriva del círculo del runner, que era un acantilado bajo los sue
 s171 y ahora mide 0 px en 8 viewports. Y las dos decisiones que el emisor había
 dejado abiertas están decididas y escritas en el esquema (rev. 6).
 
+Después de esa versión hubo un bloque solo-documental: los prompts del arte que
+falta, y un censo de glifos que decía 61 identidades donde hay 62 — mira la nota de
+s172 en el CHANGELOG antes de tocar nada de glifos.
+
 Orden de trabajo que propongo, dime si lo cambias:
 
 1. La RETENCIÓN por calendario de `pace.events.v1` (120 d, §12 del esquema). Es lo
@@ -30,9 +34,10 @@ Orden de trabajo que propongo, dime si lo cambias:
    de extensión está declarado por escrito en `app/events/events-adapter-web.js`.
    Léete §12 ANTES de razonar nada: en s170 y s172 varias respuestas deducidas
    sobre este esquema salieron mal, y el documento las contestaba.
-2. El arte que falta, si te paso dibujos: 4 identidades, 2 muebles y `Descanso`,
-   cuyo prompt ya está escrito en `GLIFOS_ENCARGO_TANDA.md` §4. `Descanso` es el
-   paso más repetido de la app y hoy enseña dos barras de reproductor.
+2. El arte que falta, si te paso dibujos: son **7 piezas** y su cola autocontenida
+   está en `docs/product/GLIFOS_A_DIBUJAR.md` — no hace falta abrir nada más.
+   `Descanso` es el paso más repetido de la app (18 apariciones) y hoy enseña dos
+   barras de reproductor; las otras seis suman 8 apariciones entre todas.
 3. `Puente torácico` a tamaño real, que lleva dos sesiones pedido, y los 3
    ejercicios que no pueden recibir lado (`90/90`, `Elevación de talones`,
    `Sentadilla búlgara`): su lado vive sólo en el texto y convertirlos es tocar
