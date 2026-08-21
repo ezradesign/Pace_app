@@ -99,12 +99,20 @@ function paceStepKindEvento(step) {
   return enums.indexOf(k) !== -1 ? k : null;
 }
 
-/* Foco no tiene rutina, pero el payload pide `routineId` (§8). Se sintetiza
-   por duración, que es la única identidad que un bloque de foco tiene, y con
-   el mismo estilo que los ids del catálogo (`move.*`, `breathe.*`). */
-function paceFocusRoutineId(minutos) {
-  const n = Math.max(1, Math.round(Number(minutos) || 0));
-  return 'focus.' + n;
+/* Foco no tiene rutina, pero el payload pide `routineId` (§8): se emite `focus`,
+   UNA sola identidad para el módulo entero.
+   DECISIÓN DEL USUARIO EN s172, revisada con las dos opciones delante. La otra
+   era `focus.<minutos>` —cuatro ids, uno por preset— y se descartó porque **la
+   duración ya viaja en `plannedSeconds`**: ponerla también en el id deja el
+   mismo hecho en dos sitios y obliga a sumar cuatro cubos para responder «total
+   de foco». Comparar 25 contra 45 sigue siendo posible leyendo ese campo.
+   Y el consumidor que agrupa por `routineId` es «qué te ayuda», que se alimenta
+   del feedback — **y en Foco no se pide feedback nunca** (`SessionFeedback` sólo
+   se monta en Respira, Mueve y Estira). O sea que los cuatro cubos no tenían
+   quien los leyera.
+   Reversible en las dos direcciones mientras la duración siga en el payload. */
+function paceFocusRoutineId() {
+  return 'focus';
 }
 
 /* El `pathRunId` vivo, o null. Nace en `startPath` y muere con `paths.current`

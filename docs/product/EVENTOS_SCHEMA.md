@@ -212,7 +212,14 @@ estado operativo (§4.3).
 - **Foco:** tiempo pausado en `elapsedSeconds`, excluido de `activeSeconds`.
   `plannedSeconds` = preset (15/25/35/45), `preset`.
 - **Respira:** inhalación, exhalación, retención y recuperación guiada = `activeSeconds`;
-  pausa manual excluida. `plannedSeconds` = rondas×ciclo, `derived`, o `null`.
+  pausa manual excluida. `plannedSeconds` según la familia de la rutina (rev. 6):
+  - **sin rondas** (17 de las 20) → `routine.min × 60`, **`declared`**. No es una
+    estimación: el motor termina la sesión cuando el **tiempo activo** alcanza ese
+    número, así que es el plan real y se conoce antes de empezar.
+  - **con rondas** (3 de las 20) → rondas × respiraciones × ciclo, `derived`, y con su
+    límite dicho: la **retención la suelta el usuario**, no el reloj, así que este plan
+    cubre sólo la parte respirada y queda **por debajo** del activo real.
+  - si ninguna de las dos es calculable → `null` **y** `plannedSecondsSource` = `null`.
 - **Caminos (`path.completed`):** `elapsedSeconds` = tiempo de pared del Camino;
   `activeSeconds` = suma de `activeSeconds` de sus pasos correlacionados (por
   `pathRunId`); transiciones editoriales van a `elapsedSeconds`; `plannedSeconds`
@@ -290,6 +297,13 @@ existente; un Camino tiene **un** `pathRunId`; un `pathRunId` agrupa **N** pasos
 ## 8. Payload por tipo
 
 **`session.completed`** (`v:1`)
+
+> **`routineId` cuando el módulo no tiene catálogo** (rev. 6): Foco emite **`focus`**,
+> una sola identidad para el módulo entero. La duración **no** entra en el id porque ya
+> viaja en `plannedSeconds`, y el consumidor que agrupa por `routineId` es «qué te
+> ayuda», que se alimenta del feedback — y en Foco **no se pide feedback**. Comparar
+> presets sigue siendo posible leyendo `plannedSeconds`.
+
 ```
 { module:'focus'|'breathe'|'move'|'stretch', routineId:string,
   completionReason:'natural'|'early',
@@ -844,9 +858,23 @@ UUIDv4, reorden de fases, candidatos aplazados, privacidad honesta.
 | L | Fases | Fase 1 web + fase Android/Capacitor propia; no emite sin `READ_WRITE` | §25 |
 | M | P0 single-writer | **RESUELTO** por adaptadores → **APTO PARA CIERRE** (no se cierra en s117) | §29 |
 
-**rev. 5** (esta) — **+iOS/Capacitor como runtime previsto**: adaptador nativo espejo
+**rev. 5** — **+iOS/Capacitor como runtime previsto**: adaptador nativo espejo
 de Android (§19.6; mismo contrato EventStore, garantías transaccionales, export,
 presupuesto y retención), detección explícita (§20), migración (§21) y lifecycle (§22)
 propios de iOS, matriz (§29), fases (§25), criterios (§26) y pruebas (§27)
 actualizados. **Sin** reabrir el modelo canónico ni el P0 single-writer. Sigue **APTO
 PARA CIERRE**.
+
+**rev. 6** (esta) — **lo que la implementación destapó al escribir los emisores
+(s172)**. Dos huecos del propio documento, decididos por el usuario con las opciones
+delante y escritos aquí para que el código y el esquema digan lo mismo:
+
+| # | Hueco | Resolución | Sección |
+|---|---|---|---|
+| N | §6.4 sólo contemplaba la Respira **con rondas**, que son 3 de 20 | Se añade la fila de las **sin rondas**: `routine.min × 60`, **`declared`** — es el número contra el que corre el motor, no una estimación. Emitir `null` habría tirado un dato exacto en 17 rutinas, y `plannedSecondsSource` ya permite al consumidor estricto ignorarlo | §6.4 |
+| O | §8 exige `routineId` y **Foco no tiene catálogo** | Foco emite **`focus`**, una identidad para el módulo. La duración no se duplica en el id: vive en `plannedSeconds`. Se descartó `focus.<minutos>` porque sus cuatro cubos no tienen consumidor — «qué te ayuda» agrupa por `routineId` y en Foco no se pide feedback | §8 |
+
+**No** reabre el modelo canónico, la correlación tipada ni el P0 single-writer. La
+**Fase 2 del plan (§25) queda CERRADA**: los cuatro emisores están puestos y probados
+en navegador. Lo siguiente del subsistema es la **retención por calendario** (§12), que
+sigue implementada y **sin programar**.
