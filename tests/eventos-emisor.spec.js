@@ -350,6 +350,17 @@ test('una sesion de Respira emite su plan DECLARADO (§6.4)', async ({ page }) =
      esta implementacion tuvo que interpretar, asi que se deja escrita de forma
      ejecutable. GUARD: el primer caso exige un numero, asi que si la funcion no
      existiera el evaluate reventaria en vez de pasar en vacio. */
+  /* EL `routineId` DE FOCO ES UNA SOLA IDENTIDAD (§8, rev. 6 del esquema). Se
+     descarto `focus.<minutos>` con el usuario delante: la duracion ya viaja en
+     `plannedSeconds` y los cuatro cubos no tienen consumidor —«que te ayuda»
+     agrupa por `routineId` y en Foco NO se pide feedback—. El aserto se pone
+     aqui, sobre la funcion pura, porque conducir un bloque de foco entero
+     costaria 25 minutos virtuales de reloj. */
+  const idFoco = await page.evaluate(() => [
+    window.paceFocusRoutineId(), window.paceFocusRoutineId(25), window.paceFocusRoutineId(45),
+  ]);
+  expect(idFoco, 'Foco emite UNA identidad, y no depende de los minutos').toEqual(['focus', 'focus', 'focus']);
+
   const planes = await page.evaluate(() => ({
     sinRondas: window.respiraPlanSec({ min: 5, pattern: 'coherent' }),
     conRondas: window.respiraPlanSec({ min: 4, pattern: 'rounds', rounds: 2, breaths: 25 }),

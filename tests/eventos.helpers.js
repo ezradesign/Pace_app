@@ -46,7 +46,7 @@ function sembrarEventos(page, n) {
       const e = window.makeEvent({
         type: 'session.completed', runId: 'run-' + i,
         payload: {
-          module: 'focus', routineId: 'focus.25', completionReason: 'natural',
+          module: 'focus', routineId: 'focus', completionReason: 'natural',
           elapsedSeconds: 1500, activeSeconds: 1500,
           plannedSeconds: 1500, plannedSecondsSource: 'preset',
         },

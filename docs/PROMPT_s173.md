@@ -13,12 +13,13 @@ el estado antes de tocar nada.
 El plan está en `docs/HANDOFF_s173.md`. Léelo entero: trae medido lo que no hay que
 volver a medir y siete trampas que ya costaron tiempo.
 
-Contexto: s172 cerró en v0.102.1, commiteado y pusheado, con el CI en verde en sus
+Contexto: s172 cerró en v0.102.2, commiteado y pusheado, con el CI en verde en sus
 dos jobs. `npm run verify` PASA y `npm run test:e2e` da 115/115. Quedaron cerrados:
 la Fase 2 del esquema de eventos (los cuatro emisores), los 15 glifos por lados —que
 entran por ESPEJO, sin dibujar nada—, el círculo del paso de descanso, que no se
 pintaba, y la deriva del círculo del runner, que era un acantilado bajo los suelos de
-s171 y ahora mide 0 px en 8 viewports.
+s171 y ahora mide 0 px en 8 viewports. Y las dos decisiones que el emisor había
+dejado abiertas están decididas y escritas en el esquema (rev. 6).
 
 Orden de trabajo que propongo, dime si lo cambias:
 
@@ -32,9 +33,10 @@ Orden de trabajo que propongo, dime si lo cambias:
 2. El arte que falta, si te paso dibujos: 4 identidades, 2 muebles y `Descanso`,
    cuyo prompt ya está escrito en `GLIFOS_ENCARGO_TANDA.md` §4. `Descanso` es el
    paso más repetido de la app y hoy enseña dos barras de reproductor.
-3. Las dos decisiones del emisor que s172 tomó porque el esquema no las cerraba
-   (§4 del handoff). Cambiarlas ahora es barato: no hay ningún consumidor leyendo
-   el contenedor todavía.
+3. `Puente torácico` a tamaño real, que lleva dos sesiones pedido, y los 3
+   ejercicios que no pueden recibir lado (`90/90`, `Elevación de talones`,
+   `Sentadilla búlgara`): su lado vive sólo en el texto y convertirlos es tocar
+   dosis del catálogo, no arte.
 
 Antes de tocar el subsistema de eventos, lee su fila en
 `docs/product/DECISIONES_TECNICAS_VIGENTES.md`: hay seis decisiones nuevas de s172

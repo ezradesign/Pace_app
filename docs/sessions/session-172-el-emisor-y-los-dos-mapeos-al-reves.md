@@ -1,6 +1,6 @@
 # s172 · EL EMISOR, Y DOS MAPEOS QUE ESTABAN AL REVÉS
 
-**v0.102.1** · `npm run verify` PASA · `npm run test:e2e` **115/115** (eran 105)
+**v0.102.2** · `npm run verify` PASA · `npm run test:e2e` **115/115** (eran 105)
 · `PACE_standalone.html` intacto en v0.71.0.
 
 > La sesión abrió con el árbol de s171 **sin commitear** y con tres bloques
@@ -72,15 +72,29 @@ módulo son**. Quien lo sabe es `resolveBodyRoutine()`, el mismo resolutor que
 habrían salido con el módulo cambiado **sin romper nada**: ni un error en
 consola, ni un test rojo, y el dato envenenado para siempre.
 
-### Dos decisiones que el esquema no cerraba
+### Dos decisiones que el esquema no cerraba — y que al final SE ESCRIBEN en él
 
-- **`routineId` de Foco** = `focus.<minutos>`. §8 lo exige y un bloque de foco no
-  tiene rutina. No es invento: es lo que ya asumían los helpers de s155.
-- **`plannedSeconds` de Respira sin rondas** = `routine.min × 60`, `declared`.
-  §6.4 sólo contempla la fila de rondas; el motor termina cuando el **tiempo
-  activo** alcanza ese número, así que es un plan conocido antes de empezar, no
-  una estimación. La alternativa literal era `null` y perdía **17 de 20**
-  rutinas. **Anotada como desviación consciente de la letra.**
+Se tomaron para poder emitir, anotadas como desviaciones conscientes; el usuario
+las revisó con las dos opciones delante y **acabaron en el esquema (rev. 6)**, así
+que dejan de ser notas que alguien pueda leer dentro de tres sesiones como si
+fueran la regla.
+
+- **`routineId` de Foco = `focus`**, una sola identidad para el módulo. §8 lo
+  exige y un bloque de foco no tiene catálogo detrás. Se descartó
+  `focus.<minutos>` por dos hechos medidos: **la duración ya viaja en
+  `plannedSeconds`** —duplicarla obliga además a sumar cuatro cubos para «total de
+  foco»— y **los cuatro cubos no tenían consumidor**, porque el que agrupa por
+  `routineId` es «qué te ayuda», que se alimenta del feedback, y **en Foco no se
+  pide feedback nunca**. Comparar 25 contra 45 sigue saliendo de `plannedSeconds`,
+  que es lo que hace la decisión reversible en las dos direcciones.
+- **`plannedSeconds` de Respira sin rondas = `routine.min × 60`, `declared`.** La
+  fila de §6.4 hablaba sólo de rondas, que son **3 de 20**; las otras 17 terminan
+  cuando el **tiempo activo** alcanza ese número, o sea que es el plan real y no
+  una estimación. Emitir `null` habría tirado un dato exacto **sin poder
+  recuperarlo después**, y `plannedSecondsSource` ya permite ignorarlo a quien
+  sólo se fíe de planes derivados. §6.4 pasa a separar las tres familias y a decir
+  el límite de las rondas: allí la retención la suelta el usuario, así que su plan
+  queda por debajo del activo real.
 
 ### El `runId` sin tocar los runners
 

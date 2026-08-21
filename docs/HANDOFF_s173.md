@@ -1,6 +1,6 @@
 # HANDOFF · s173
 
-**Punto de partida limpio.** Versión **v0.102.1** en los 7 sitios · `npm run verify`
+**Punto de partida limpio.** Versión **v0.102.2** en los 7 sitios · `npm run verify`
 PASA · `npm run test:e2e` **115/115** · `PACE_standalone.html` intacto en v0.71.0 ·
 **árbol commiteado y pusheado**.
 
@@ -91,20 +91,22 @@ Dos cosas que conviene no deshacer:
   desborda, y eso evita que un `justify-content:center` recorte el principio en pantallas
   cortas.
 
-## 4 · Dos decisiones del emisor que conviene revisar ANTES de que haya consumidores
+## 4 · Las dos decisiones del emisor — DECIDIDAS y escritas en el esquema
 
-Las tomó s172 porque el esquema no las cerraba, y están anotadas como **desviaciones
-conscientes**, no como interpretación:
+Ya no hay nada que revisar. El usuario las decidió con las dos opciones delante y
+**están escritas en `EVENTOS_SCHEMA.md` (rev. 6)**, así que código y documento dicen lo
+mismo:
 
-- **`routineId` de Foco = `focus.<minutos>`.** §8 exige `routineId` y un bloque de foco
-  no tiene rutina. Coincide con lo que ya asumían los helpers de s155.
-- **`plannedSeconds` de Respira sin rondas = `routine.min × 60`, `declared`.** §6.4 sólo
-  contempla la fila de rondas. El motor termina cuando el **tiempo activo** alcanza ese
-  número, así que es un plan conocido, no una estimación; emitir `null` habría perdido
-  **17 de 20** rutinas.
+- **Foco emite `focus`**, una sola identidad para el módulo. La duración vive sólo en
+  `plannedSeconds`. Se descartó `focus.<minutos>` porque sus cuatro cubos no tienen
+  consumidor: el que agrupa por `routineId` es «qué te ayuda», y **en Foco no se pide
+  feedback**.
+- **Respira sin rondas mantiene `routine.min × 60`, `declared`** — es el número contra
+  el que corre el motor, no una estimación. §6.4 gana la fila que le faltaba, con las
+  tres familias separadas y el límite de las rondas dicho por escrito.
 
-Si alguna no gusta, **cambiarla ahora es barato**: no hay ningún consumidor leyendo el
-contenedor todavía.
+**Lo que esto deja libre**: la Fase 2 del plan del esquema (§25) queda **CERRADA**. Lo
+siguiente del subsistema es la retención (§1 de este documento).
 
 ---
 

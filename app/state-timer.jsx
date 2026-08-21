@@ -79,7 +79,7 @@ function completeFocusSession(context, opts) {
      el activo es la propia cuenta: el reloj de `useCountdown` no corre en
      pausa, y lo pausado se queda en `elapsedSeconds` (§6.4). */
   if (typeof emitSessionCompleted === 'function') {
-    emitSessionCompleted('focus', paceFocusRoutineId(mins), {
+    emitSessionCompleted('focus', paceFocusRoutineId(), {
       inPath: context === 'path',
       elapsedSeconds: (opts && opts.elapsedSeconds),
       activeSeconds: (opts && opts.activeSeconds),

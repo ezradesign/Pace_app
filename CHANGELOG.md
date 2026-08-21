@@ -199,6 +199,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.102.2** | 2026-08-21 | fix(eventos): **las dos decisiones del emisor, decididas y escritas en el esquema** — Las dos decisiones que s172 tomo porque el esquema no las cerraba **pasan a estar decididas POR EL USUARIO y escritas en el esquema** (rev. 6), asi que deja de haber desviacion que recordar. **Foco emite `focus`**, una sola identidad: la duracion ya viaja en `plannedSeconds` y los cuatro cubos de `focus.<minutos>` **no tenian consumidor** — «que te ayuda» agrupa por `routineId` y en Foco NO se pide feedback (`SessionFeedback` solo se monta en Respira, Mueve y Estira). **Respira sin rondas mantiene `routine.min x 60` `declared`** —es el numero contra el que corre el motor, no una estimacion— y la fila que le faltaba a §6.4 **se escribe**, con las tres familias separadas y el limite de las rondas dicho: ahi la retencion la suelta el usuario, asi que su plan queda por debajo del activo real. El aserto que fija la identidad de Foco vive sobre la funcion PURA, porque conducir un bloque entero costaria 25 minutos virtuales; calibrado en rojo devolviendo `focus.<min>`. | 172c | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
 | **v0.102.1** | 2026-08-20 | fix(runner): **el circulo deja de moverse a cualquier altura** — El bloque del runner se ALINEA ARRIBA, y con eso el circulo deja de moverse a CUALQUIER altura de viewport. El anclaje en vh de s171 era un ACANTILADO: funcionaba por encima de sus suelos (780 movil / 880 escritorio) y con UN PIXEL menos se apagaba entero — 61 px de salto a 1280x879 y 53 a 360x730, que son los dos viewports REALES del usuario, y por eso lo seguia viendo en su portatil y en su telefono. La causa vive un nivel mas arriba de donde s171 y s172 la buscaron: `centerBody` centra con `margin:auto` (s112) un bloque cuya ALTURA VARIA con el contenido, asi que el centrado reparte una holgura distinta en cada pantalla; el footer (89 -> 39 px) es UNA de las fuentes de esa variacion, no la unica. Se anula el margen SUPERIOR y se conserva el inferior —acotado al runner v1 con `:has()`, y con `!important` porque el margen es un estilo EN LINEA—, asi que la holgura cae debajo, que es donde s171 la queria. Medido en **8 viewports: 0 px en los ocho**. Y los **3 px que aun movian el NOMBRE** eran la reserva del rotulo vacio (1.2em) contra el rotulo lleno con interlineado normal (~1.45): se fija `line-height: 1.2` y las dos formas miden lo mismo por construccion. **El trinquete baja de 30 a 0.** El CSS del runner sale a `MoveSessionV1.css.jsx` (el support rebasaba las 500 lineas: trocear, no recortar comentarios), y la trampa de los **backticks dentro del template literal** volvio a morder **tres veces** en este mismo cambio, dos de ellas con la salida del build silenciada. | 172b | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
 | **v0.102.0** | 2026-08-20 | feat(eventos+runner+glifos): **el emisor, y dos mapeos que estaban al reves** — cierra el **PASO 2 de la Fase 3**: los cuatro tipos de `pace.events.v1` ya se emiten (`session.completed` en los cuatro modulos, `feedback.answered`, `path.step.completed`, `path.completed`) en **dual-write**, con el emisor en `app/state-events.jsx` — en la capa de estado y **fuera de `app/events/`**, porque el gate de `verify.eventos.js` define «emisor» justo asi y escondido dentro habria seguido diciendo «sin emisores» con emisores puestos. **EL MAPEO DE `kind:'body'` QUE TRAIA EL PLAN ESTABA AL REVES EN LOS CINCO CASOS QUE EXISTEN**: `move.neck.3`, `move.hips.5`, `move.atg.knees` y `move.chair.antidote` viven en `EXTRA_ROUTINES` y `extra.desk.pushups` en `MOVE_ROUTINES` — los ids son historicos (s15) y no dicen de que modulo son; ahora se pregunta a `resolveBodyRoutine()`. Con el prefijo, los eventos habrian salido con el modulo cambiado **sin romper nada**. El `runId` se genera al emitir y se recuerda en memoria (§7.2): **cero lineas** en los runners, y el feedback correlaciona solo si su rutina es la de esa sesion. **7 tests y 10 mutaciones**, con censo relacional del mapeo contra el catalogo entero **y prueba negativa**. **EL DESCANSO VUELVE A TENER CIRCULO**: el glifo iba dentro de un `{!isRest && ...}` y en el paso **mas repetido de la app** (18 apariciones) no es que se moviera, **desaparecia**; R5 se respeta por color y no por ausencia. Al medirlo se cayo la causa escrita de la deuda de s171: los ~25 px **no** son el gate «ready» sin contador, es el **FOOTER** (89 → 39 px, el centro crece 50 y el bloque centrado baja la mitad). **LOS 15 POR LADOS ENTRAN COMO ESPEJO** —`scaleX(-1)`, cero dibujos nuevos— y solo **12** pueden recibir lado: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` no tienen ni un paso `perSide`. Y los **dos prompts de arte pedidos eran la MISMA pieza**: las 12 apariciones de «Respira.» son todas de `Descanso`. | 172 | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
 | **v0.101.0** | 2026-08-19 | fix(runner+glifos): **el circulo del glifo, y los dos dibujos que sobraban** — tres defectos visuales que reporto el usuario, los tres **medidos antes de tocar**. (1) Las **miniaturas del preview se pisaban 5 px**: `ExerciseGlyph` multiplicaba el tamaño **×1,5 por dentro**, asi que la lista reservaba 30 px y recibia 45 mientras los 41 SVG, que si respetan la caja, quedaban limpios; ahora `maskScale` es **explicito con defecto 1** —la caja que se pinta es la que el llamante reserva— y la variante `.min` se elige por los pixeles que se **pintan**, no por los que se piden (el preview pedia la de 30 y la dibujaba a 45). Medido: **9,6 px de aire**. (2) El **circulo media 72 px en 6 rutinas y 179 en las otras 22** en el mismo viewport, porque unas corren en el runner **legacy** y otras en el **v1**: el legacy pasa a la curva de v1 y a su `clamp(30px, 6.5vh, 52px)` — su nombre de ejercicio estaba a **56 px fijos**, que era el «letras muy grandes» del reporte. (3) El circulo **se movia 43 px entre pasos en MOVIL**, porque las reservas de altura que lo anclan existian **solo para ≥641 px** desde s119; se aplican a las **dos pieles** y el desborde que aquella sesion temia **no reproduce**: 0 px a 360×640, 375×812 y 390×844. Ademas el circulo **crece un 30 % en escritorio** (198 → 257 a 1440×900, **0 px de desborde**: cabia en el hueco que ya habia), con el factor **despues del clamp** y la piel leida del contrato `--pace-skin`. Nace `tests/runner-circulo.spec.js` — **8 tests, los 8 calibrados en rojo** y **sin un solo numero de pixeles dentro**, porque el defecto no era un tamaño equivocado sino **dos superficies que no coincidian**; la primera version corria solo a 1280×720 y **habria pasado en verde antes del arreglo**. Revision del arte: las **47 mascaras miradas una a una**, **cero mal asignadas**, y las **2 piezas sin identificar de s170 resueltas emparejando por CONTENIDO** (la numeracion de aquella hoja no es reproducible) — son tomas alternativas, no identidades nuevas. **Faltan 10 muebles, no 5**, y `Puente torácico` no es un mueble que falta sino **otra postura**. **SEGUNDA MITAD**: entra la **segunda tanda de arte** — 18 dibujos que suben el catálogo de **47 a 57 identidades** (10 nuevas + 8 reemplazos por el mueble), con los **39 viejos recuperados emparejando por CONTENIDO** porque la ingesta reescribe el mapa entero y la numeración de s170 no es reproducible (peor pareja **0,849**); 0 piezas fuera del círculo, `precache` 199 → 219. Y **el bloque del runner declara alto mínimo** (70vh móvil / 72vh escritorio, con suelo **medido** de 780/880 px) con el rótulo de fase reservado vacío: el círculo y el nombre pasan de moverse **43–94 px a 0** entre pasos de trabajo. Queda **~25 px cruzando fases** por el gate «ready», que no pinta contador — **asertado con trinquete de 30 px, no anotado**. | 171 | [session-171](docs/sessions/session-171-el-circulo-del-glifo.md) |
@@ -367,6 +368,48 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 ---
 
+## [v0.102.2] -- 2026-08-21 -- fix(eventos): las dos decisiones del emisor, decididas y escritas en el esquema
+
+s172 tomo dos decisiones porque `EVENTOS_SCHEMA.md` no las cerraba, y las dejo
+anotadas como **desviaciones conscientes**. El usuario las reviso con las dos
+opciones delante y ahora estan **decididas y escritas en el propio esquema**
+(rev. 6), asi que codigo y documento dicen lo mismo y no queda nota que recordar.
+
+### Foco emite `focus`, una sola identidad
+
+`§8` exige `routineId` y un bloque de foco **no tiene catalogo detras**. Se
+descarta `focus.<minutos>` por dos razones medidas:
+
+- **la duracion ya viaja en `plannedSeconds`**, asi que ponerla tambien en el id
+  deja el mismo hecho en dos sitios y obliga a sumar cuatro cubos para responder
+  «total de foco»;
+- **los cuatro cubos no tenian consumidor**: el que agrupa por `routineId` es
+  «que te ayuda», que se alimenta del feedback, y **en Foco no se pide feedback**
+  (`SessionFeedback` solo se monta en Respira, Mueve y Estira).
+
+Comparar 25 contra 45 sigue siendo posible leyendo `plannedSeconds`. La decision
+es **reversible en las dos direcciones** justamente por eso.
+
+### Respira sin rondas mantiene su plan, y §6.4 gana la fila que le faltaba
+
+La fila del esquema hablaba solo de «rondas x ciclo», que son **3 de las 20**
+rutinas. Las otras 17 terminan cuando el **tiempo activo** alcanza
+`routine.min x 60`: es el numero contra el que corre el motor, no una estimacion.
+Emitir `null` habria tirado un dato exacto en 17 rutinas **sin poder recuperarlo
+despues**, y `plannedSecondsSource` ya permite al consumidor estricto ignorarlo.
+
+§6.4 pasa a separar las tres familias, y dice el limite de las rondas por
+escrito: ahi **la retencion la suelta el usuario**, asi que su plan cubre solo la
+parte respirada y queda por debajo del activo real.
+
+### La red
+
+El aserto que fija la identidad de Foco vive sobre la **funcion pura**, porque
+conducir un bloque de foco entero costaria 25 minutos virtuales de reloj.
+Calibrado en rojo devolviendo `focus.<min>`: cae, y cae solo el suyo.
+
+---
+
 ## [v0.102.1] -- 2026-08-20 -- fix(runner): el circulo deja de moverse a cualquier altura
 
 **El usuario lo reporto con capturas de su portatil y de su telefono, y tenia razon
@@ -409,112 +452,6 @@ el support rebasaba las 500 y la regla §1 dice trocear, no recortar comentarios
 > ellas con la salida del build silenciada: las medidas salian identicas y parecia que
 > el arreglo no servia. **Si una medida no cambia cuando deberia, mirar PRIMERO si el
 > build paso.** La cabecera del archivo nuevo lo lleva escrito.
-
----
-
-## [v0.102.0] -- 2026-08-20 -- feat(eventos+runner+glifos): el emisor, y dos mapeos que estaban al reves
-
-**Dos de las tres cosas que el handoff daba por sabidas eran falsas, y las dos se
-cazaron midiendo.** El resto es lo que traia el plan: cerrar s171, el emisor de la
-Fase 3 y los prompts de arte.
-
-### El emisor de `pace.events.v1` (PASO 2 de la Fase 3)
-
-Los cuatro tipos emiten en **dual-write**: la escritura legacy sigue mandando
-—stats, logros, rachas— y el evento se anade al lado; si el evento falla, no se
-cae nada.
-
-**Donde vive el emisor lo decide el CHECKER, no el gusto.** `app/state-events.jsx`
-esta en la capa de estado y **fuera de `app/events/`** porque `verify.eventos.js`
-§5 define «emisor» como una llamada a `paceEventsAppend` fuera del subsistema, y
-con eso exige que el backup publico lleve la seccion de eventos. Escondida
-dentro, el gate habria seguido en verde diciendo «sin emisores» con emisores
-puestos.
-
-**EL MAPEO DE `kind:'body'` ESTABA AL REVES EN LOS CINCO CASOS.** El plan decia
-«prefijo `move.` -> move, `extra.` -> stretch»:
-
-| paso | dice el prefijo | dice el catalogo |
-|---|---|---|
-| `move.neck.3` · `move.hips.5` · `move.atg.knees` · `move.chair.antidote` | move | **stretch** |
-| `extra.desk.pushups` | stretch | **move** |
-
-Los ids son historicos —s15 movio rutinas de modulo y los conservo estables— asi
-que **no dicen de que modulo son**. Ahora se pregunta a `resolveBodyRoutine()`, el
-mismo resolutor que usa `PathBodyStep`. Con el prefijo, los eventos habrian salido
-con el modulo cambiado **sin romper nada**: ni error en consola ni test rojo.
-
-Dos decisiones que el esquema no cerraba: **`routineId` de Foco** = `focus.<min>`
-(lo que ya asumian los helpers de s155) y **`plannedSeconds` de Respira sin
-rondas** = `routine.min x 60` `declared`, porque el motor termina cuando el tiempo
-ACTIVO alcanza ese numero — la alternativa literal era `null` y perdia 17 de 20
-rutinas. Anotada como desviacion consciente de la letra de §6.4.
-
-El **`runId`** se genera al emitir y se recuerda en memoria (§7.2 dice que no hace
-falta persistirlo): **cero lineas** en los runners. El feedback correlaciona solo
-si su rutina es la de esa sesion; antes que inventar una correlacion, se pierde el
-evento.
-
-**7 tests y 10 mutaciones, todas muerden.** Incluye el censo relacional del mapeo
-contra el catalogo entero **con prueba negativa**: si algun dia ningun id
-contradice su prefijo, el test avisa de que ya no distingue las dos reglas. Y una
-**mentira del instrumento**: el primer aserto comparaba el ORDEN de llegada, y el
-almacen ordena por instante desempatando por `id` aleatorio (§11) — los tres pasos
-caian en el mismo milisegundo.
-
-### El descanso vuelve a tener circulo, y la deuda de s171 tenia otra causa
-
-El glifo iba dentro de un `{!isRest && ...}`: en el paso **mas repetido de la app**
-(18 apariciones) el circulo no es que se moviera, **desaparecia**. R5 de s113 («el
-descanso es el paso apagado») se respeta **por color y no por ausencia**. Mismo
-tamaño que el del trabajo (186 px a 390x844) y 0 px de desborde.
-
-Al medirlo se cayo la causa que estaba ESCRITA en el trinquete: los ~25 px que
-quedan cruzando fases **no** los causa el gate «ready» por no pintar contador.
-
-| a 390x844 | trabajo | descanso |
-|---|---|---|
-| `session-footer` | **89 px** (2 filas) | **39 px** (1 fila) |
-| `session-center` | 672 | **722** |
-| bloque (70vh) | 591 | 591 |
-| circulo `top` | **69** | **94** |
-
-El footer pierde 50 px, el centro crece 50 y el bloque —centrado— baja la mitad.
-La deuda sigue con su tope de 30 porque arreglarla (reservar el footer o alinear
-el bloque arriba) es una **decision visual**. Y el verde de esa suite **no decia
-nada de esta pantalla**: su recorrido avanza a clicks y un descanso termina solo,
-asi que nunca aterrizaba en uno.
-
-### Los 15 por lados: espejo, cero dibujos nuevos
-
-Los 15 son espejo puro y el set comparte convencion («perfil mirando a la
-derecha»), asi que el segundo lado es `scaleX(-1)`: **una decision global** en vez
-de 15 encargos, y funciona igual sobre los 41 SVG sin mascara. **Solo 12 pueden
-recibir lado**: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` no tienen ni
-un paso `perSide` en ningun catalogo, asi que un segundo dibujo suyo no se veria
-nunca — eso es contenido, no arte.
-
-Lo que el espejo NO da, por escrito: en una figura de perfil izquierda y derecha
-no son legibles. Garantiza que CAMBIA y que es coherente, no que un fisio lo firme
-— y un duplicado dibujado tampoco lo daria. La hoja de decision se ordeno por
-**cuanto se nota el espejo**, y ese numero mintio a la primera: comparar una linea
-de 1-2 px con su reflejo mide DESPLAZAMIENTO, no lateralidad, y las 12 puntuaban
-igual de altas mientras el ojo veia dos identicas.
-
-### Los dos prompts de arte eran la misma pieza
-
-Las **12** apariciones de «Respira.» en los catalogos son **todas** de un paso
-`Descanso`. Censo de los 66 nombres de paso: **3 sin ningun dibujo** (`Pica en
-escritorio`, `Onda espinal`, `Rana`) y **2 con SVG viejo** (`Descanso` x18 y
-`Puente isquio a una pierna`). Ojo: **Estira no se publica en `window`**, y
-mirando solo Mueve la primera pasada del censo dijo «1 sin dibujo».
-
-### Documentacion de s171, y dos generados que mentian
-
-`GLIFOS_EJERCICIOS_PENDIENTES.md` decia «47 con arte · 14 pendientes» cuando ya
-eran **57 · 4** (regenerado con su script); `GLIFOS_ESTIRA_PENDIENTES.md` no tiene
-generador en el repo y lleva aviso de CADUCADO. **Nada vigila estos dos** — el
-`verify.encargo.js` de s169 solo mira el encargo de logros.
 
 ---
 

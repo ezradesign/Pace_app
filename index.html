@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.102.1</title>
+  <title>PACE · Foco · Cuerpo — v0.102.2</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4691,7 +4691,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.102.1';
+const PACE_VERSION = 'v0.102.2';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -5498,7 +5498,7 @@ function completeFocusSession(context, opts) {
      el activo es la propia cuenta: el reloj de `useCountdown` no corre en
      pausa, y lo pausado se queda en `elapsedSeconds` (§6.4). */
   if (typeof emitSessionCompleted === 'function') {
-    emitSessionCompleted('focus', paceFocusRoutineId(mins), {
+    emitSessionCompleted('focus', paceFocusRoutineId(), {
       inPath: context === 'path',
       elapsedSeconds: opts && opts.elapsedSeconds,
       activeSeconds: opts && opts.activeSeconds,
@@ -8336,12 +8336,20 @@ function paceStepKindEvento(step) {
   return enums.indexOf(k) !== -1 ? k : null;
 }
 
-/* Foco no tiene rutina, pero el payload pide `routineId` (§8). Se sintetiza
-   por duración, que es la única identidad que un bloque de foco tiene, y con
-   el mismo estilo que los ids del catálogo (`move.*`, `breathe.*`). */
-function paceFocusRoutineId(minutos) {
-  const n = Math.max(1, Math.round(Number(minutos) || 0));
-  return 'focus.' + n;
+/* Foco no tiene rutina, pero el payload pide `routineId` (§8): se emite `focus`,
+   UNA sola identidad para el módulo entero.
+   DECISIÓN DEL USUARIO EN s172, revisada con las dos opciones delante. La otra
+   era `focus.<minutos>` —cuatro ids, uno por preset— y se descartó porque **la
+   duración ya viaja en `plannedSeconds`**: ponerla también en el id deja el
+   mismo hecho en dos sitios y obliga a sumar cuatro cubos para responder «total
+   de foco». Comparar 25 contra 45 sigue siendo posible leyendo ese campo.
+   Y el consumidor que agrupa por `routineId` es «qué te ayuda», que se alimenta
+   del feedback — **y en Foco no se pide feedback nunca** (`SessionFeedback` sólo
+   se monta en Respira, Mueve y Estira). O sea que los cuatro cubos no tenían
+   quien los leyera.
+   Reversible en las dos direcciones mientras la duración siga en el payload. */
+function paceFocusRoutineId() {
+  return 'focus';
 }
 
 /* El `pathRunId` vivo, o null. Nace en `startPath` y muere con `paths.current`
