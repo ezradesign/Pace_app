@@ -261,12 +261,77 @@ cabeza) a **1,60** (voltea el cuerpo entero).
 
 ---
 
-## 6 · Verificación
+## 6 · El encargo de arte, y un censo que veía 61 donde hay 62
+
+El usuario pidió los prompts de lo que falta, avisando de que **el estilo lo tiene
+diseñado él**. Así que el estilo no se inventa: se **describe** mirando las 57 piezas
+que ya están en producción. Las convenciones salieron del arte, no de un documento:
+
+| Elemento | Cómo lo dibuja el set |
+|---|---|
+| pared | línea vertical que cruza el encuadre, pegada al cuerpo |
+| suelo | línea horizontal corta bajo los pies |
+| silla / mesa | una línea recta a la altura del apoyo, sin dibujar el mueble |
+| movimiento | línea **de puntos** con punta de flecha pequeña |
+
+Y con eso, **§1 de `GLIFOS_EJERCICIOS_REDISENO.md` queda superado**: pedía pictograma
+de trazo grueso y lo que hay es grabado anatómico con rayado fino. Dicho donde toca.
+
+### Una contradicción entre el encargo y la app
+
+La ficha de `Deslizamientos en pared` decía «de frente contra la pared» y su propio
+*cue* —lo que el usuario lee mientras lo hace— dice **«ponte de espaldas a la
+pared»**. Manda el cue. Desde entonces **cada ficha lleva su cue escrito al lado**,
+que es lo que hace que el dibujo no pueda contradecir a la instrucción.
+
+### «¿Seguro que hacen falta todos?» — y no
+
+La pregunta del usuario destapó que las siete piezas de la cola **no valían lo
+mismo**, así que se midió el alcance de cada una: en cuántos pasos aparece y cómo se
+pinta hoy. `Descanso` sale **18 veces**; las demás, entre 1 y 3. Y **`Nordics` sale de
+la cola**: no está en ninguna rutina del catálogo —sólo en el registro del
+constructor— y ya tiene SVG, así que no cae al glifo por defecto. Dibujarla no cambia
+nada que nadie esté viendo.
+
+### EL CENSO DECÍA 61 IDENTIDADES Y SON 62
+
+La segunda pregunta —«¿ésos seis sólo?»— destapó lo caro. Faltaba una pieza,
+`Puente isquio a una pierna`, y no salía por **dos errores independientes**:
+
+1. **El patrón del generador veía sólo la mitad de los pasos.**
+   `identidadesVisuales()` sacaba los nombres con `/name: '([^']+)', mode:/`, y
+   `mode:` es el contrato del runner **v1**: los pasos **legacy** declaran `dur:`.
+2. **El encargo la daba por muerta.** Estaba en la lista de «cinco dibujos que no usa
+   nadie, cada uno tapado por su propio alias» (s142). Comprobadas las cinco: cuatro
+   **sí** están tapadas —`Apertura de pecho sentado`, `Suspensión pasiva · opcional`,
+   `Sentadilla profunda sostenida` y `Respiraciones profundas` resuelven a otra
+   identidad— y **ésta no tiene alias ninguno**. Es identidad propia y se usa en un
+   paso real de `move.atg.knees`.
+
+**Lo que lo hacía invisible es que el número salía redondo**: 61 coincidía con el
+censo de s164, que arrastraba el mismo punto ciego. Dos fuentes de acuerdo y las dos
+equivocadas — la misma forma del error de s169.
+
+Arreglado: patrón a `/name: '([^']+)',\s*(?:mode|dur):/`, fila escrita en el grupo
+«Suelo y cadena posterior» del encargo (de 6 a 7), la lista de «no rehacer» corregida
+de cinco a **cuatro**, y el censo regenerado — **62 · 57 · 5**, con su guard de «sin
+fila en el encargo» de 1 a **0**.
+
+### Lo que queda como cola viva
+
+Nace [`GLIFOS_A_DIBUJAR.md`](../product/GLIFOS_A_DIBUJAR.md): **autocontenido**, sólo
+lo pendiente, en orden de lo que más se nota, con el preámbulo de estilo y las reglas
+del pipeline dentro. `GLIFOS_ENCARGO_TANDA.md` acumulaba tres tandas y había que leer
+24 filas ya entregadas antes de llegar a lo que falta.
+
+---
+
+## 7 · Verificación
 
 `npm run verify` PASA (0 problemas) · `npm run test:e2e` **115/115** (eran 105)
 sobre el `index.html` regenerado · `PACE_standalone.html` intacto en v0.71.0.
 
-## 7 · NO cubierto
+## 8 · NO cubierto
 
 - **La retención por calendario**, sin programar (arriba).
 - **Los 25 px del footer**: diagnosticados y asertados, no arreglados. Las dos
@@ -279,6 +344,13 @@ sobre el `index.html` regenerado · `PACE_standalone.html` intacto en v0.71.0.
   SVG viejo dentro del círculo nuevo.
 - **`Puente torácico`** entró con silla en s171 y **sigue sin mirarse a tamaño
   real**.
+- **Los 18 dibujos de la 2ª tanda NO se han revisado a tamaño real.** La revisión
+  pieza a pieza se hizo sobre las 47 primeras; las 18 que entraron después se
+  asignaron pero no se miraron una a una, así que la lista de «hay que rehacer»
+  podría tener alguna más escondida ahí. El detector que funciona es la pieza a
+  700 px con la descripción del encargo al lado.
+- **`Rana` tiene una decisión de vista sin tomar**: su gesto se ve desde atrás o
+  arriba y sería la única del set fuera de perfil/frontal.
 - **Tres archivos rozan las 500 líneas** (`BreatheSession.jsx` 500,
   `MoveSessionV1.jsx` 500, `MoveSessionV1.support.jsx` 499): lo siguiente que
   entre ahí **obliga a trocear**, y esta sesión ya pagó ese peaje dos veces.

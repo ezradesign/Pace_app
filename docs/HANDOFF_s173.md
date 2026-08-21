@@ -41,35 +41,56 @@ exclusivo, como la poda por presupuesto.
 
 ---
 
-## 2 · El arte que falta, con su cola ya escrita
+## 2 · El arte que falta · 7 piezas, cola autocontenida
 
-`docs/product/GLIFOS_ENCARGO_TANDA.md` es la cola viva. **57 de 61 identidades con
-arte**; faltan:
+**[`docs/product/GLIFOS_A_DIBUJAR.md`](product/GLIFOS_A_DIBUJAR.md) es la cola viva** y
+no hace falta abrir nada más para generar: lleva dentro el preámbulo de estilo, las
+cuatro reglas del pipeline y una ficha por pieza con **el cue que el usuario lee en
+pantalla**. `GLIFOS_ENCARGO_TANDA.md` queda como el histórico de las tres tandas.
 
-| | Piezas |
-|---|---|
-| Sin dibujo | `Pica en escritorio` · `Nordics` · `Onda espinal` · `Rana` |
-| Con el mueble por rehacer | `Fondos en silla` · `Deslizamientos en pared` |
-| La 62ª, con prompt YA escrito (§4) | **`Descanso`** |
+| # | Pieza | ¿Dónde sale? | Hoy se ve como |
+|---|---|---|---|
+| 1 | `descanso.png` | **18 pasos** en 10 rutinas | dos barras de reproductor |
+| 2 | `fondos-en-silla.png` | 3 pasos | grabado **sin silla** = otro ejercicio |
+| 3 | `pica-en-escritorio.png` | 1 | glifo por defecto |
+| 4 | `onda-espinal.png` | 1 | glifo por defecto |
+| 5 | `rana.png` | 1 | glifo por defecto |
+| 6 | `puente-isquio-a-una-pierna.png` | 1 | SVG viejo |
+| 7 | `deslizamientos-en-pared.png` | 1 | grabado, pared no legible |
 
-**`Descanso` es el que más se ve de toda la app**: 18 apariciones, y hoy enseña dos
-barras de reproductor dentro del círculo nuevo. Su prompt está en §4 del encargo, en el
-estilo del set anatómico y avisando de que `Reset respiración` ya ocupa los «dos arcos
-en el pecho».
+**Si sólo entra una, la 1.** `Descanso` se ve más que cualquier ejercicio del set; las
+otras seis suman 8 apariciones entre todas. **`Nordics` NO está en la cola**: no
+aparece en ninguna rutina del catálogo —sólo en el registro del constructor— y ya
+tiene SVG, así que no cae al glifo por defecto.
 
-**Y ojo con `Puente torácico`**: entró con silla en s171 y **sigue sin mirarse a tamaño
-real**. Lleva dos sesiones pedido.
+### El estilo no se reinventa: está en producción
+
+Las convenciones salen de **mirar las 57 piezas**, no de un documento: **pared** =
+línea vertical pegada al cuerpo · **suelo** = horizontal corta bajo los pies ·
+**silla/mesa** = una recta a la altura del apoyo · **movimiento** = línea **de puntos**
+con punta de flecha. Con eso, **§1 de `GLIFOS_EJERCICIOS_REDISENO.md` está SUPERADO**:
+pedía pictograma de trazo grueso y lo que hay es grabado anatómico con rayado fino.
+
+### Dos cosas que sólo puede cerrar el usuario
+
+- **La vista de `Rana`**: su gesto se ve desde atrás o arriba y sería la única pieza
+  del set fuera de perfil/frontal. Las dos salidas están en su ficha.
+- **Mirar a tamaño real las 18 piezas de la 2ª tanda.** La revisión una a una se hizo
+  sobre las **47 primeras**; las 18 que entraron después se asignaron pero **nadie las
+  ha mirado**, así que la lista de «hay que rehacer» puede tener alguna más escondida.
+  El detector que funciona es la pieza a 700 px con su encargo al lado. **`Puente
+  torácico`** sigue esperando esa mirada desde s171.
 
 ### Trampas de la ingesta, todas pagadas ya
 
-- **La ingesta reescribe el mapa ENTERO**: la carpeta de origen tiene que llevar **las 57
-  que ya están**, o se borran. Los viejos se recuperaron en s171 **emparejando por
+- **La ingesta reescribe el mapa ENTERO**: la carpeta de origen tiene que llevar **las
+  57 que ya están**, o se borran. Los viejos se recuperaron en s171 **emparejando por
   CONTENIDO** (firma de tinta → 32×32 → correlación, peor pareja 0,849); ese script
   quedó en el scratchpad y **hay que reescribirlo o moverlo a `scripts/glifos/`**.
 - **Tras cada tanda hay que re-correr `generar-pendientes.js`** y subir a mano el censo
-  `precache` de `verify.integridad.js` (**dos filas por pieza**). s171 no lo hizo y el
-  documento se quedó diciendo «47 · 14» cuando eran «57 · 4».
-- Las tablas editoriales del encargo van a **CUATRO columnas** o el generador se las come.
+  `precache` de `verify.integridad.js` (**dos filas por pieza**).
+- Las tablas editoriales del encargo van a **CUATRO columnas** o el generador se las
+  come; las que describen piezas van a **TRES**, que es lo que él captura.
 
 ---
 
@@ -139,6 +160,12 @@ siguiente del subsistema es la retención (§1 de este documento).
   `MoveSessionV1.jsx`. **Lo siguiente que entre ahí obliga a trocear** — s172 pagó ese
   peaje tres veces, y la regla dice trocear, no recortar comentarios. El CSS del runner
   ya salió a `MoveSessionV1.css.jsx` por eso.
+- **SI UN CENSO CUADRA CON OTRO, NO SON DOS FUENTES.** El de glifos decía 61
+  identidades y son 62: el patrón de `identidadesVisuales()` sacaba los nombres con
+  `/name: '...', mode:/` —el contrato del runner v1— y **los pasos LEGACY declaran
+  `dur:`**. No saltó nada porque 61 coincidía con el censo de s164, que arrastraba el
+  **mismo punto ciego**. Arreglado en s172, pero la lección se queda: dos fuentes de
+  acuerdo pueden ser el mismo error dos veces.
 - **El emisor no se mueve de `app/state-events.jsx`.** Si se mete dentro de
   `app/events/`, el gate del verify vuelve a decir «sin emisores» **con emisores
   puestos**.
