@@ -217,7 +217,16 @@ function identidadesVisuales() {
      linea la lista daba 62 contra los 61 del censo, asi que la ingesta habria
      exigido para siempre un PNG de mas -- y justo de una pieza que el encargo
      dice EXPRESAMENTE que no hay que rehacer. La lista es lo que la app PIDE. */
-  const PASOS = /name: '([^']+)', mode:/g;
+  /* s172 · EL PATRON VEIA SOLO LA MITAD. Pedia `mode:` detras del nombre, y eso
+     es el contrato del runner v1: los pasos LEGACY declaran `dur:`. Se colaba
+     por el hueco `Puente isquio a una pierna` (un paso de `move.atg.knees`),
+     asi que el censo decia 61 identidades donde hay 62 y «4 pendientes» donde
+     hay 5. Y no saltaba nada: el numero salia redondo porque coincidia con el
+     censo de s164, que arrastraba el mismo punto ciego.
+     El encargo ademas la daba por «dibujo que no usa nadie», y de los cinco de
+     esa lista es la UNICA sin alias que la tape — o sea, la unica que si se ve.
+     Dos errores independientes que se cancelaban en un numero creible. */
+  const PASOS = /name: '([^']+)',\s*(?:mode|dur):/g;
   for (const rel of ['app/move/move.data.js', 'app/extra/ExtraModule.jsx']) {
     const txt = fs.readFileSync(path.join(ROOT, rel), 'utf8');
     let m;

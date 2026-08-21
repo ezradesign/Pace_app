@@ -7,9 +7,9 @@
 
 | | |
 |---|---|
-| **Identidades que la app necesita** | **61** |
+| **Identidades que la app necesita** | **62** |
 | **Con arte propio ya ingestado** | **57** |
-| **Pendientes** | **4** |
+| **Pendientes** | **5** |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
 sigue pintando mientras no llegue el arte nuevo; `falta` = hoy no hay nada y
@@ -96,7 +96,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Sentadilla lateral | `sentadilla-lateral.png` | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
 | **HECHO** | Zancada con apertura | `zancada-con-apertura.png` | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
 
-## Suelo y cadena posterior — 0 pendientes de 6
+## Suelo y cadena posterior — 1 pendiente de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -104,6 +104,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Isquio a una pierna | `isquio-a-una-pierna.png` | falta | **Talón apoyado en algo bajo** delante, pierna extendida, cadera echada atrás. |
 | **HECHO** | Marcha del elefante | `marcha-del-elefante.png` | dibujado | Doblado por la cadera **tocando el suelo alternando manos**, piernas casi estiradas. |
 | **HECHO** | Pliegue adelante | `pliegue-adelante.png` | falta | **Pies juntos**, tronco colgando, rodillas ligeramente blandas, brazos sueltos. |
+| — | Puente isquio a una pierna | `puente-isquio-a-una-pierna.png` | falta | **Tumbado boca arriba**, un pie apoyado en el suelo con la rodilla doblada y **la otra pierna extendida en el aire**; la cadera sube hasta alinear tronco y muslo. Es de UNA pierna: la que está en el aire tiene que verse clara. |
 | **HECHO** | Sentadilla profunda | `sentadilla-profunda.png` | dibujado | Sentadilla completa con **talones en el suelo** y **codos por dentro de las rodillas**. |
 | **HECHO** | Sentarse y levantarse del suelo | `sentarse-y-levantarse-del-suelo.png` | dibujado | Dos siluetas no: **una figura a medio camino entre el suelo y de pie, sin manos apoyadas**. |
 
