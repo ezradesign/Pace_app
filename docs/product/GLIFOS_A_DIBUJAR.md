@@ -1,12 +1,19 @@
-# Glifos a dibujar · las 6 que faltan
+# Glifos a dibujar · las 7 que faltan
 
 > **Autocontenido a propósito**: no hace falta abrir ningún otro documento para
 > generar estas piezas. Sale del censo de **s172** (v0.102.2) — si el catálogo
 > cambia, la verdad la dice el generado
 > [`GLIFOS_EJERCICIOS_PENDIENTES.md`](GLIFOS_EJERCICIOS_PENDIENTES.md), no esto.
 >
-> **57 de 61 identidades ya tienen arte.** Aquí sólo está lo que queda, en orden
+> **57 de 62 identidades ya tienen arte.** Aquí sólo está lo que queda, en orden
 > de lo que más se nota.
+>
+> **Ojo, el censo decía 61 y son 62.** El generador sacaba los nombres con un patrón
+> que sólo veía los pasos con `mode:` —el contrato del runner v1— y **los pasos
+> legacy declaran `dur:`**. Por ese hueco se colaba `Puente isquio a una pierna`, que
+> además el encargo daba por «dibujo que no usa nadie». Dos errores independientes
+> que se cancelaban en un número creíble. Corregido en s172: patrón arreglado, fila
+> escrita en el encargo y censo regenerado.
 
 ---
 
@@ -19,11 +26,12 @@
 | 3 | `pica-en-escritorio.png` | 1 paso | **glifo por defecto** |
 | 4 | `onda-espinal.png` | 1 paso | **glifo por defecto** |
 | 5 | `rana.png` | 1 paso | **glifo por defecto** |
-| 6 | `deslizamientos-en-pared.png` | 1 paso | grabado, pared no legible |
+| 6 | `puente-isquio-a-una-pierna.png` | 1 paso (`move.atg.knees`) | SVG viejo |
+| 7 | `deslizamientos-en-pared.png` | 1 paso | grabado, pared no legible |
 
 **Si sólo vas a hacer una, haz la 1.** `Descanso` se ve más veces que cualquier
-ejercicio del set y es el único que hoy rompe el sistema visual. Las otras cinco
-suman 7 apariciones entre todas.
+ejercicio del set y es el único que hoy rompe el sistema visual. Las otras seis
+suman 8 apariciones entre todas.
 
 *(`Nordics` estaba en la cola y **sale**: no aparece en ninguna rutina del catálogo
 —sólo en el constructor— y ya tiene SVG, así que no enseña el glifo por defecto.
@@ -152,7 +160,24 @@ cadera a ras, o sea que dibuja **otro ejercicio** (un fondo en el suelo).
 >   rodillas abiertas; la cadera atrás la marca la flecha. **Recomendada.**
 > - **(b) 3/4 desde atrás** — más fiel al gesto, pero sería la única en esa vista.
 
-## 6 · `deslizamientos-en-pared.png`
+## 6 · `puente-isquio-a-una-pierna.png`
+
+*En pantalla dice: «Tumbado, un pie apoyado: sube y baja la cadera con control.
+Cambia de pierna a mitad.»*
+
+Estaba en la lista de «dibujos que no usa nadie» del encargo, y **es la única de esas
+cinco que NO tiene alias que la tape**: identidad propia, en un paso real de
+`ATG · Rodillas a prueba`. Hoy enseña su SVG viejo.
+
+> **Gesto**: **tumbado boca arriba**, un pie apoyado en el suelo con la rodilla
+> doblada y **la otra pierna extendida en el aire**, alineada con el tronco; la cadera
+> subida hasta formar una línea de los hombros a la rodilla de apoyo. El suelo, la
+> línea horizontal de siempre bajo la espalda.
+>
+> **Es de UNA pierna y ahí está la lectura**: la pierna en el aire tiene que verse sin
+> dudas, o el dibujo se confunde con un puente de glúteo normal.
+
+## 7 · `deslizamientos-en-pared.png`
 
 *En pantalla dice: «Ponte de espaldas a la pared, brazos en cruz apoyados en ella.
 Sube y baja los brazos pegados a la pared, como alas.»*

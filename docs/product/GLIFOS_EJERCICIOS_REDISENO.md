@@ -40,11 +40,18 @@ Eso implica una decisión que ya tomaste al pedir el rediseño completo: los
 ejercicios **dejan de ser SVG dibujado en código** y pasan a ser máscaras, como el
 loto de Respira y los sellos de logro. Un solo mecanismo para todo el arte.
 
-**Cinco dibujos que NO hay que rehacer** — están dibujados y no los usa nadie
-(hallazgo de s142, cada uno tapado por su propio alias): `Apertura de pecho
-sentado`, `Puente isquio a una pierna`, `Suspensión pasiva · opcional`,
-`Sentadilla profunda sostenida`, `Respiraciones profundas`. Al rehacer el set,
-desaparecen.
+**CUATRO dibujos que NO hay que rehacer** — están dibujados y no los usa nadie,
+cada uno tapado por su propio alias (s142): `Apertura de pecho sentado` →
+`Apertura de pecho`, `Suspensión pasiva · opcional` → `Suspensión pasiva`,
+`Sentadilla profunda sostenida` → `Sentadilla profunda` y `Respiraciones
+profundas` → `Reset respiración`. Al rehacer el set, desaparecen.
+
+> **Eran cinco y se corrige en s172**: `Puente isquio a una pierna` estaba en esa
+> lista y **NO tiene alias que la tape**. Es una identidad propia y se usa en un
+> paso real de `move.atg.knees` («Tumbado, un pie apoyado: sube y baja la cadera
+> con control»), así que **sí necesita su dibujo**. La daban por muerta dos cosas a
+> la vez: esta línea y el patrón del generador, que sólo miraba los pasos con
+> `mode:` y no veía los legacy con `dur:`.
 
 ---
 
@@ -131,7 +138,7 @@ el *cue* real que el usuario lee en la app, que es la fuente de verdad del gesto
 | Sentadilla lateral | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
 | Zancada con apertura | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
 
-### Suelo y cadena posterior (6)
+### Suelo y cadena posterior (7)
 
 | Ejercicio | Hoy | Qué debe mostrar el dibujo |
 |---|---|---|
@@ -141,6 +148,7 @@ el *cue* real que el usuario lee en la app, que es la fuente de verdad del gesto
 | Marcha del elefante | dibujado | Doblado por la cadera **tocando el suelo alternando manos**, piernas casi estiradas. |
 | Pliegue adelante | **falta** | **Pies juntos**, tronco colgando, rodillas ligeramente blandas, brazos sueltos. |
 | Isquio a una pierna | **falta** | **Talón apoyado en algo bajo** delante, pierna extendida, cadera echada atrás. |
+| Puente isquio a una pierna | **falta** | **Tumbado boca arriba**, un pie apoyado en el suelo con la rodilla doblada y **la otra pierna extendida en el aire**; la cadera sube hasta alinear tronco y muslo. Es de UNA pierna: la que está en el aire tiene que verse clara. |
 
 ### Muñecas, tobillos y pausas (9, con `Descanso`)
 
