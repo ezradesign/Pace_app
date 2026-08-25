@@ -77,7 +77,7 @@ L.push('');
 L.push('«Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se');
 L.push('sigue pintando mientras no llegue el arte nuevo; `falta` = hoy no hay nada y');
 L.push('se pinta el glifo por defecto. **Las dos columnas son trabajo pendiente**: el');
-L.push('rediseño rehace las 61 piezas, y `falta` solo dice cuáles además están calvas.');
+L.push('rediseño rehace las ' + todas.length + ' piezas, y `falta` solo dice cuáles además están calvas.');
 L.push('');
 L.push('El **nombre de archivo** es el que espera la ingesta. Si no coincide, la pieza');
 L.push('no se empareja y el script lo dice en vez de adivinar.');
@@ -104,7 +104,7 @@ L.push('node scripts/ingest-glifos-ejercicio.js --origen "<carpeta con los PNG>"
 L.push('```');
 L.push('');
 L.push('Convierte cada PNG en máscara CSS, reescribe el mapa y las filas de precache');
-L.push('de `sw.js`. **No hace falta que lleguen los 61 de golpe**: lo que no tiene');
+L.push('de `sw.js`. **No hace falta que lleguen los ' + todas.length + ' de golpe**: lo que no tiene');
 L.push('máscara sigue pintando su SVG. Sale con código 1 si algún PNG no casa con');
 L.push('ninguna identidad o si queda alguna sin dibujo — un emparejamiento parcial en');
 L.push('silencio es justo lo que la regla D-4 quiere evitar.');

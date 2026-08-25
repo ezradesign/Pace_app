@@ -33,6 +33,7 @@ var fs   = require('fs');
 var path = require('path');
 var eventos = require('./verify.eventos.js');   // tanda de pace.events.v1 (s155)
 var encargo = require('./verify.encargo.js');   // el encargo de arte dice la verdad (s169)
+var mascaras = require('./verify.mascaras.js'); // mapa/disco/precache del arte de ejercicio (s173)
 
 /* --------------------------------------------------------------------------
    CENSO. Cada numero esta MEDIDO del arbol, no estimado, y tiene su sesion.
@@ -66,8 +67,10 @@ var CENSO = {
   respira: 20, mueve: 14, estira: 14, caminos: 7,
 
   /* service worker */
-  precache: 219,                // filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
-                                //  +20 en s171: la 2a tanda sube el arte de ejercicio de 47 a 57 identidades, y cada una son DOS filas)
+  precache: 223,                // filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
+                                //  +20 en s171: la 2a tanda sube el arte de ejercicio de 47 a 57 identidades, y cada una son DOS filas;
+                                //  +4 en s173: la 3a tanda son 4 dibujos pero solo DOS identidades nuevas -- «Fondos en silla» y
+                                //  «Deslizamientos en pared» ya tenian fila y la reutilizan, asi que suman 0)
 };
 
 /* ==========================================================================
@@ -235,6 +238,11 @@ function chequeaPrecache(ctx, mascaras) {
     if (sobran.length) ctx.falla('precache: ' + sobran.length + ' fila(s) de logros que ya no estan en el mapa: ' + listaCorta(sobran));
     if (!sinPre.length && !sobran.length) ctx.ok(deMapa.length + ' mascaras de logro: mapa y precache coinciden');
   }
+
+  /* Las devuelve para que `verify.mascaras.js` cruce las de EJERCICIO contra su
+     mapa (s173). Se pasan ya parseadas a proposito: dos parseos del mismo array
+     pueden divergir, y entonces el rojo no diria nada. */
+  return filas;
 }
 
 /* ==========================================================================
@@ -430,7 +438,8 @@ function tandaIntegridad(ctx, declarados) {
   var STR = chequeaI18n(ctx, declarados);
   chequeaGlifosEjercicio(ctx, declarados);
   var logros = chequeaLogros(ctx, STR);
-  chequeaPrecache(ctx, logros && logros.MASK);
+  var filasPre = chequeaPrecache(ctx, logros && logros.MASK);
+  mascaras.chequeaMascarasEjercicio(ctx, filasPre, listaCorta);
   chequeaContenido(ctx);
   eventos.chequeaEventos(ctx, declarados, listaCorta);
   encargo.chequeaEncargo(ctx, logros, listaCorta);
@@ -458,4 +467,5 @@ var NO_CUBRE = [
 
 module.exports = { tandaIntegridad: tandaIntegridad,
                    NO_CUBRE: NO_CUBRE.concat(eventos.NO_CUBRE_EVENTOS)
-                                     .concat(encargo.NO_CUBRE_ENCARGO), CENSO: CENSO };
+                                     .concat(encargo.NO_CUBRE_ENCARGO)
+                                     .concat(mascaras.NO_CUBRE_MASCARAS), CENSO: CENSO };
