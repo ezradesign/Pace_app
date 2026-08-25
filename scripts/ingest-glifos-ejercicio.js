@@ -4,8 +4,13 @@
    el mapa de `app/glyphs/exercise-masks.js` y las filas de precache de `sw.js`.
 
    Uso:  node scripts/ingest-glifos-ejercicio.js [--origen <carpeta>] [--seco]
-         --origen  carpeta con los PNG (por defecto ../Glifos_ejercicios)
-         --seco    no escribe nada: solo informa del emparejamiento
+                                                 [--fusionar]
+         --origen    carpeta con los PNG (por defecto ../Glifos_ejercicios)
+         --seco      no escribe nada: solo informa del emparejamiento
+         --fusionar  la carpeta trae SOLO lo nuevo: las identidades que no
+                     vengan en ella CONSERVAN su fila del mapa y del precache.
+                     Sin esta bandera el mapa se reescribe entero y lo que no
+                     esté en la carpeta desaparece (ver `.mapa.js`, s173).
 
    HERMANO DE `ingest-glifos-logro.js` (s146) Y CON SUS MISMAS RAZONES
    -------------------------------------------------------------------
@@ -39,9 +44,15 @@
 
    NADA SE EMPAREJA A CIEGAS: los PNG que no casen con ninguna identidad visual
    se listan y NO se ingestan, y las identidades que se queden sin dibujo se
-   listan también. El script sale con 1 si hay huérfanos por cualquiera de los
-   dos lados, porque un emparejamiento parcial silencioso es exactamente el
-   fallo que la regla D-4 quiere evitar.
+   listan también. Sin `--fusionar` el script sale con 1 si hay huérfanos por
+   cualquiera de los dos lados, porque un emparejamiento parcial silencioso es
+   exactamente el fallo que la regla D-4 quiere evitar. CON `--fusionar` solo el
+   PNG huérfano es error: una identidad sin arte es el estado normal mientras la
+   cola de `GLIFOS_A_DIBUJAR.md` no esté vacía (ver el comentario del `exit`).
+
+   ESTE ARCHIVO SE APOYA EN TRES HERMANOS, todos por la regla §1 de CLAUDE.md:
+     `.geometria.js` (s170) el encuadre · `.censo.js` (s173) qué identidades pide
+     la app · `.mapa.js` (s173) la escritura del mapa y del precache, y la fusión.
 
    Regla D-4: el arte se mide UNA vez. Si el usuario aporta dibujos nuevos se
    RE-CORRE este script; nunca se retoca un .webp a mano.
@@ -51,10 +62,13 @@
 const fs = require('fs');
 const path = require('path');
 const { calcularCaja } = require('./ingest-glifos-ejercicio.geometria.js');
+const mapaIO = require('./ingest-glifos-ejercicio.mapa.js');
+const { slug, identidadesVisuales } = require('./ingest-glifos-ejercicio.censo.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
 const SECO = args.includes('--seco');
+const FUSIONAR = args.includes('--fusionar');
 const iOrigen = args.indexOf('--origen');
 const ORIGEN = iOrigen !== -1 && args[iOrigen + 1]
   ? path.resolve(args[iOrigen + 1])
@@ -169,72 +183,6 @@ const RADIO = numArg('--radio', 0.98);
    deja de tener trabajo (sigue puesto como red, no como muleta). */
 const PISO = RECORTE > 0 ? RECORTE : SUELO;
 
-/* --- slug: la misma normalización en las dos direcciones, o no casa nada --- */
-function slug(s) {
-  return String(s)
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')   // fuera acentos
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-/* --- las identidades visuales que la app necesita --------------------------
-   Se leen del ARBOL, no de una lista escrita a mano: el censo de s164 ya
-   demostro que la lista y el codigo divergen en cuanto alguien añade un paso. */
-function identidadesVisuales() {
-  const babel = require(path.join(ROOT, 'node_modules', '@babel', 'core'));
-  const win = {};
-  const cargar = rel => {
-    const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
-    const code = babel.transformSync(src, {
-      configFile: false, babelrc: false, sourceType: 'script', filename: rel,
-      presets: [[path.join(ROOT, 'node_modules', '@babel', 'preset-react'), {}]],
-    }).code;
-    new Function('window', 'React', '"use strict";(function(){' + code + '})();')(
-      win, { createElement: () => null, Fragment: 'F' });
-  };
-  cargar('app/custom/exercise-registry.js');
-  cargar('app/custom/exercise-aliases.js');
-  cargar('app/glyphs/exercise-glyphs.jsx');
-  cargar('app/glyphs/exercise-glyphs.extra.jsx');
-
-  /* EL REGISTRO NO BASTA, y la primera version de este script lo daba por
-     bueno: leyendo solo `EXERCISE_REGISTRY` + `EXERCISE_GLYPHS` salian 51
-     identidades, cuando el censo de s164 dice 61. Faltaban los nombres que
-     solo viven en los PASOS de las rutinas. Y esos no se pueden leer de
-     `window`: `EXTRA_ROUTINES` NO se publica (ExtraModule.jsx solo exporta
-     `ExtraLibrary`) y `MOVE_ROUTINES` es un objeto de grupos. Se sacan del
-     FUENTE con el mismo patron que usa `scripts/audit/censo-glifos-ejercicio.js`,
-     que ya pago este descubrimiento.
-     `Descanso` se excluye igual que alli: no es un ejercicio. */
-  const registro = win.EXERCISE_REGISTRY || {};
-  const resolver = win.resolveVisualId || (n => n);
-  const nombres = new Set();
-  const meter = n => { if (n && n !== 'Descanso') nombres.add(resolver(n)); };
-  Object.keys(registro).forEach(k => (registro[k].items || []).forEach(e => meter(e.name)));
-  /* NO se meten las claves de EXERCISE_GLYPHS: son lo DIBUJADO, no lo
-     NECESARIO, y hay 6 dibujos que no los usa nadie (censo de s164). Con esa
-     linea la lista daba 62 contra los 61 del censo, asi que la ingesta habria
-     exigido para siempre un PNG de mas -- y justo de una pieza que el encargo
-     dice EXPRESAMENTE que no hay que rehacer. La lista es lo que la app PIDE. */
-  /* s172 · EL PATRON VEIA SOLO LA MITAD. Pedia `mode:` detras del nombre, y eso
-     es el contrato del runner v1: los pasos LEGACY declaran `dur:`. Se colaba
-     por el hueco `Puente isquio a una pierna` (un paso de `move.atg.knees`),
-     asi que el censo decia 61 identidades donde hay 62 y «4 pendientes» donde
-     hay 5. Y no saltaba nada: el numero salia redondo porque coincidia con el
-     censo de s164, que arrastraba el mismo punto ciego.
-     El encargo ademas la daba por «dibujo que no usa nadie», y de los cinco de
-     esa lista es la UNICA sin alias que la tape — o sea, la unica que si se ve.
-     Dos errores independientes que se cancelaban en un numero creible. */
-  const PASOS = /name: '([^']+)',\s*(?:mode|dur):/g;
-  for (const rel of ['app/move/move.data.js', 'app/extra/ExtraModule.jsx']) {
-    const txt = fs.readFileSync(path.join(ROOT, rel), 'utf8');
-    let m;
-    while ((m = PASOS.exec(txt))) meter(m[1]);
-  }
-  return [...nombres].sort();
-}
-
 (async () => {
   if (!fs.existsSync(ORIGEN)) {
     console.error('\n  No existe la carpeta de origen:\n    ' + ORIGEN +
@@ -256,12 +204,20 @@ function identidadesVisuales() {
     if (id) parejas.push({ archivo: f, id, s });
     else huerfanosPng.push(f);
   }
+  /* CON `--fusionar` UNA IDENTIDAD «TIENE DIBUJO» TAMBIEN SI YA LO TENIA. Si no,
+     la ingesta de una tanda de 4 reportaria 58 identidades sin dibujo y saldria
+     con 1 — un rojo que no significa nada y que enseña a ignorar el codigo de
+     salida, que es peor que no tenerlo. */
   const conDibujo = new Set(parejas.map(p => p.id));
-  const sinDibujo = ids.filter(id => !conDibujo.has(id));
+  const yaEnMapa = FUSIONAR
+    ? new Set(Object.keys(mapaIO.leerMapaExistente(fs.readFileSync(MAPA, 'utf8')).EXERCISE_MASKS))
+    : new Set();
+  const sinDibujo = ids.filter(id => !conDibujo.has(id) && !yaEnMapa.has(id));
 
   console.log('\n  identidades visuales que la app necesita: ' + ids.length);
   console.log('  PNG en origen: ' + pngs.length);
   console.log('  emparejados: ' + parejas.length);
+  if (FUSIONAR) console.log('  --fusionar: identidades que ya tenian fila en el mapa: ' + yaEnMapa.size);
   console.log('  PNG sin identidad que los reclame: ' + huerfanosPng.length +
     (huerfanosPng.length ? '\n    ' + huerfanosPng.join('\n    ') : ''));
   console.log('  identidades sin dibujo: ' + sinDibujo.length +
@@ -443,52 +399,54 @@ function identidadesVisuales() {
     console.log('  · ' + p.archivo.padEnd(38) + '-> ' + p.id);
   }
 
-  /* --- reescribe SOLO el objeto del mapa, nunca el archivo entero ---------- */
-  const mapaSrc = fs.readFileSync(MAPA, 'utf8');
-  const ini = mapaSrc.indexOf('const EXERCISE_MASKS = {');
-  const fin = mapaSrc.indexOf('};', ini);
-  if (ini === -1 || fin === -1) {
-    console.error('\n  No encuentro el objeto EXERCISE_MASKS: no se toca nada.\n');
-    process.exit(1);
+  /* --- FUSION (s173): lo que esta tanda no trae CONSERVA su fila ----------
+     La escritura vive en `.mapa.js` desde s173, y la fusion con ella: son la
+     misma decision. Mapa y precache se escriben de la MISMA lista `filasFinales`,
+     que es lo que hace que no puedan desincronizarse. */
+  let filasFinales = filas;
+  if (FUSIONAR) {
+    const fus = mapaIO.fusionarConMapa(filas, fs.readFileSync(MAPA, 'utf8'), ROOT);
+    if (fus.errores.length) {
+      console.error('\n  FUSION ABORTADA -- no se ha escrito ni el mapa ni el precache:');
+      fus.errores.forEach(e => console.error('    · ' + e));
+      console.error('');
+      process.exit(1);
+    }
+    filasFinales = fus.filas;
+    console.log('\n  fusion: ' + filas.length + ' ingestada(s) + ' +
+                fus.conservadas + ' conservada(s) del mapa anterior');
   }
-  const cuerpo = filas
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .map(f => "  '" + f.id.replace(/'/g, "\\'") + "': '" + f.ruta + "',")
-    .join('\n');
-  let mapaNuevo = mapaSrc.slice(0, ini) + 'const EXERCISE_MASKS = {\n' + cuerpo + '\n' + mapaSrc.slice(fin);
-  /* El mapa de MINIATURAS se escribe con RUTAS LITERALES igual que el grande: el
-     inliner del build sustituye referencias TEXTUALES, asi que una ruta armada
-     por concatenacion no se inlinearia y el standalone se quedaria sin arte
-     (trampa documentada en la cabecera de `exercise-masks.js`). */
-  const iniMin = mapaNuevo.indexOf('const EXERCISE_MASKS_MIN = {');
-  const finMin = iniMin === -1 ? -1 : mapaNuevo.indexOf('};', iniMin);
-  if (iniMin === -1 || finMin === -1) {
-    console.error('  No encuentro EXERCISE_MASKS_MIN: no se escribe el mapa de miniaturas.');
-    process.exit(1);
-  }
-  const cuerpoMin = filas.filter(f => f.rutaMin)
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .map(f => "  '" + f.id.replace(/'/g, "\\'") + "': '" + f.rutaMin + "',")
-    .join('\n');
-  mapaNuevo = mapaNuevo.slice(0, iniMin) + 'const EXERCISE_MASKS_MIN = {\n' + cuerpoMin + '\n' + mapaNuevo.slice(finMin);
-  fs.writeFileSync(MAPA, mapaNuevo);
 
-  /* --- precache: las filas de esta carpeta se regeneran enteras ------------ */
-  const swSrc = fs.readFileSync(SW, 'utf8');
-  const prefijo = 'app/glyphs/assets/ejercicios/';
-  const lineas = swSrc.split('\n').filter(l => l.indexOf(prefijo) === -1);
-  const iPre = lineas.findIndex(l => l.indexOf('const PRECACHE = [') !== -1);
-  if (iPre === -1) { console.error('\n  No encuentro PRECACHE en sw.js.\n'); process.exit(1); }
-  const rutas = [];
-  filas.forEach(f => { rutas.push(f.ruta); if (f.rutaMin) rutas.push(f.rutaMin); });
-  lineas.splice(iPre + 1, 0, ...rutas.sort().map(r => "  '/" + r + "',"));
-  fs.writeFileSync(SW, lineas.join('\n'));
+  const errMapa = mapaIO.escribirMapa(filasFinales, MAPA);
+  if (errMapa) { console.error('\n  ' + errMapa + '\n'); process.exit(1); }
+  const errSw = mapaIO.escribirPrecache(filasFinales, SW);
+  if (errSw) { console.error('\n  ' + errSw + '\n'); process.exit(1); }
 
-  console.log('\n  mapa reescrito: ' + filas.length + ' filas');
-  console.log('  precache reescrito: ' + filas.length + ' filas');
+  /* Las filas de precache son DOS por pieza (la grande y su miniatura). La
+     version anterior imprimia `filas.length` en los dos sitios y por tanto
+     mentia en el segundo: son las que hay que subir a mano en el CENSO de
+     `verify.integridad.js`, asi que el numero tiene que ser el de verdad. */
+  const filasPre = filasFinales.reduce((n, f) => n + (f.rutaMin ? 2 : 1), 0);
+  console.log('\n  mapa reescrito: ' + filasFinales.length + ' filas');
+  console.log('  precache reescrito: ' + filasPre + ' filas');
   console.log('\n  SIGUIENTE: node build-standalone.js  ·  npm run verify  ·  npm run test:e2e\n');
 
   /* Emparejamiento parcial = salida 1. Un ingest a medias que pasa por bueno es
-     justo lo que la regla D-4 quiere evitar. */
-  process.exit(huerfanosPng.length || sinDibujo.length ? 1 : 0);
+     justo lo que la regla D-4 quiere evitar.
+
+     CON `--fusionar` LA MITAD DE ESA REGLA CAMBIA DE SIGNIFICADO (s173). Sin
+     fusion, «identidad sin dibujo» quiere decir «esta identidad va a PERDER su
+     fila en esta pasada»: es un fallo. Con fusion quiere decir «esta identidad
+     sigue esperando arte», que es el estado NORMAL mientras la cola de
+     `GLIFOS_A_DIBUJAR.md` no este vacia — hoy son tres. Un codigo de salida que
+     siempre vale 1 no es una red: es un codigo de salida que se aprende a
+     ignorar. Lo que sigue siendo error en los dos modos es un PNG huerfano: un
+     dibujo que nadie reclama significa que el nombre esta mal escrito y que el
+     usuario cree haber entregado algo que no ha entrado. */
+  const parcial = FUSIONAR ? huerfanosPng.length : (huerfanosPng.length || sinDibujo.length);
+  if (FUSIONAR && sinDibujo.length) {
+    console.log('  (' + sinDibujo.length + ' identidad(es) siguen sin arte y eso NO es un fallo ' +
+                'en modo fusion: la cola viva es docs/product/GLIFOS_A_DIBUJAR.md)\n');
+  }
+  process.exit(parcial ? 1 : 0);
 })().catch(e => { console.error('INGESTA ROTA:', e.message); process.exit(1); });

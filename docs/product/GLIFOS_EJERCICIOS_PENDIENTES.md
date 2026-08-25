@@ -8,13 +8,13 @@
 | | |
 |---|---|
 | **Identidades que la app necesita** | **62** |
-| **Con arte propio ya ingestado** | **57** |
-| **Pendientes** | **5** |
+| **Con arte propio ya ingestado** | **59** |
+| **Pendientes** | **3** |
 
 «Hoy» es lo que dice el encargo: `dibujado` = hay un SVG heredado que se
 sigue pintando mientras no llegue el arte nuevo; `falta` = hoy no hay nada y
 se pinta el glifo por defecto. **Las dos columnas son trabajo pendiente**: el
-rediseño rehace las 61 piezas, y `falta` solo dice cuáles además están calvas.
+rediseño rehace las 62 piezas, y `falta` solo dice cuáles además están calvas.
 
 El **nombre de archivo** es el que espera la ingesta. Si no coincide, la pieza
 no se empareja y el script lo dice en vez de adivinar.
@@ -71,7 +71,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Rotación externa | `rotacion-externa.png` | dibujado | **Codo a 90° pegado al costado**, antebrazo abriéndose hacia fuera, flecha en arco. |
 | **HECHO** | Rotación lenta | `rotacion-lenta.png` | dibujado | Cabeza girada **mirando sobre el hombro**, hombros de frente. |
 
-## Columna — 1 pendiente de 8
+## Columna — 0 pendientes de 8
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -79,7 +79,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Extensión torácica | `extension-toracica.png` | dibujado | Sentado, **arqueado hacia atrás sobre el respaldo** de la silla. |
 | **HECHO** | Gato-camello | `gato-camello.png` | falta | A cuatro patas con la espalda en **dos curvas superpuestas** (una arqueada, otra redondeada) y una flecha doble. |
 | **HECHO** | Giro sentado | `giro-sentado.png` | dibujado | Sentado, **rotado hacia el respaldo**, una mano en él. |
-| — | Onda espinal | `onda-espinal.png` | falta | De pie con una **línea ondulada** recorriendo la columna de la pelvis a la cabeza. |
+| **HECHO** | Onda espinal | `onda-espinal.png` | falta | De pie con una **línea ondulada** recorriendo la columna de la pelvis a la cabeza. |
 | **HECHO** | Puente torácico | `puente-toracico.png` | falta | **Desde sentado en la silla**: cadera elevada, pecho abierto al techo, manos en el asiento. |
 | **HECHO** | Rodar hacia abajo | `rodar-hacia-abajo.png` | falta | De pie doblándose, columna en **espiral suave**, brazos colgando; flecha descendente. |
 | **HECHO** | Rotación torácica | `rotacion-toracica.png` | dibujado | **Sentado en la silla**, manos cruzadas al pecho, tronco rotado, cadera al frente. |
@@ -96,7 +96,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Sentadilla lateral | `sentadilla-lateral.png` | dibujado | **Peso a un lado** con esa rodilla flexionada y **la otra pierna estirada**. |
 | **HECHO** | Zancada con apertura | `zancada-con-apertura.png` | dibujado | Zancada con **una mano en el suelo** y el otro brazo abriéndose al techo (rotación). |
 
-## Suelo y cadena posterior — 1 pendiente de 7
+## Suelo y cadena posterior — 0 pendientes de 7
 
 | Estado | Ejercicio | Archivo | Hoy | Qué debe mostrar |
 |---|---|---|---|---|
@@ -104,7 +104,7 @@ no se empareja y el script lo dice en vez de adivinar.
 | **HECHO** | Isquio a una pierna | `isquio-a-una-pierna.png` | falta | **Talón apoyado en algo bajo** delante, pierna extendida, cadera echada atrás. |
 | **HECHO** | Marcha del elefante | `marcha-del-elefante.png` | dibujado | Doblado por la cadera **tocando el suelo alternando manos**, piernas casi estiradas. |
 | **HECHO** | Pliegue adelante | `pliegue-adelante.png` | falta | **Pies juntos**, tronco colgando, rodillas ligeramente blandas, brazos sueltos. |
-| — | Puente isquio a una pierna | `puente-isquio-a-una-pierna.png` | falta | **Tumbado boca arriba**, un pie apoyado en el suelo con la rodilla doblada y **la otra pierna extendida en el aire**; la cadera sube hasta alinear tronco y muslo. Es de UNA pierna: la que está en el aire tiene que verse clara. |
+| **HECHO** | Puente isquio a una pierna | `puente-isquio-a-una-pierna.png` | falta | **Tumbado boca arriba**, un pie apoyado en el suelo con la rodilla doblada y **la otra pierna extendida en el aire**; la cadera sube hasta alinear tronco y muslo. Es de UNA pierna: la que está en el aire tiene que verse clara. |
 | **HECHO** | Sentadilla profunda | `sentadilla-profunda.png` | dibujado | Sentadilla completa con **talones en el suelo** y **codos por dentro de las rodillas**. |
 | **HECHO** | Sentarse y levantarse del suelo | `sentarse-y-levantarse-del-suelo.png` | dibujado | Dos siluetas no: **una figura a medio camino entre el suelo y de pie, sin manos apoyadas**. |
 
@@ -130,7 +130,7 @@ node scripts/ingest-glifos-ejercicio.js --origen "<carpeta con los PNG>"
 ```
 
 Convierte cada PNG en máscara CSS, reescribe el mapa y las filas de precache
-de `sw.js`. **No hace falta que lleguen los 61 de golpe**: lo que no tiene
+de `sw.js`. **No hace falta que lleguen los 62 de golpe**: lo que no tiene
 máscara sigue pintando su SVG. Sale con código 1 si algún PNG no casa con
 ninguna identidad o si queda alguna sin dibujo — un emparejamiento parcial en
 silencio es justo lo que la regla D-4 quiere evitar.

@@ -10,10 +10,10 @@
 
 ---
 
-**Version actual:** v0.102.2 (s172c — **LAS DOS DECISIONES DEL EMISOR, DECIDIDAS Y ESCRITAS**. Dejan de ser desviaciones anotadas: **Foco emite `focus`**, una sola identidad —la duracion ya viaja en `plannedSeconds` y los cuatro cubos de `focus.<min>` no tenian consumidor, porque en Foco NO se pide feedback— y **Respira sin rondas mantiene `routine.min x 60` `declared`**, con la fila que le faltaba a §6.4 ya escrita en el esquema (rev. 6). Codigo y documento dicen lo mismo.)
-**Version anterior:** v0.101.0 (s171 — **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Tres defectos visuales del usuario, medidos antes de tocar: las miniaturas del preview se pisaban 5 px (`maskScale` pasa a explicito), el circulo media 72 px en 6 rutinas y 179 en las otras 22 (legacy vs v1) y se movia 43 px entre pasos en movil. Nace `tests/runner-circulo.spec.js`. **Segunda mitad**: entra la 2a tanda de arte —18 dibujos, **47 → 57 identidades**— y **el bloque del runner declara alto minimo**, con lo que el circulo y el nombre dejan de moverse entre pasos de trabajo.)
-**Version anterior (2):** v0.100.0 (s170 — **EL TIEMPO ACTIVO DE MUEVE, Y EL ARTE ANATOMICO ENTRA DE VERDAD**.)
-**Ultima sesion:** #172 -- 2026-08-20 - **EL EMISOR, Y DOS MAPEOS QUE ESTABAN AL REVES**. Bump **v0.101.0 -> v0.102.0**. **(0) LO DE s171 SE COMMITEA Y SE DESTILA**, y al hacerlo salen tres cosas: un comentario `s171b` **duplicado y huerfano** en el support del runner, y **dos documentos GENERADOS que la tanda de arte dejo mintiendo** — `GLIFOS_EJERCICIOS_PENDIENTES.md` decia «47 con arte · 14 pendientes» cuando ya eran **57 · 4** (regenerado) y `GLIFOS_ESTIRA_PENDIENTES.md`, que **no tiene generador en el repo**, lleva ya aviso de CADUCADO. **Nada vigila esos dos.** **(1) EL EMISOR DE `pace.events.v1`, PASO 2 DE LA FASE 3.** Los cuatro tipos emiten en **dual-write**; el emisor vive en `app/state-events.jsx` **fuera de `app/events/`** porque `verify.eventos.js` §5 define «emisor» como una llamada a `paceEventsAppend` fuera del subsistema — escondida dentro, el gate habria seguido en verde diciendo «sin emisores» **con emisores puestos**. **EL MAPEO DE `kind:'body'` DEL PLAN ESTABA AL REVES EN LOS CINCO CASOS**: `move.neck.3`, `move.hips.5`, `move.atg.knees` y `move.chair.antidote` viven en `EXTRA_ROUTINES` y `extra.desk.pushups` en `MOVE_ROUTINES`; los ids son historicos (s15) y **no dicen de que modulo son**. Con el prefijo, los eventos habrian salido con el modulo cambiado **sin romper nada**. Dos decisiones que el esquema no cerraba: `routineId` de Foco = `focus.<min>` y `plannedSeconds` de Respira sin rondas = `routine.min x 60` **`declared`** (desviacion consciente de la letra de §6.4; la alternativa literal perdia 17 de 20 rutinas). El **`runId`** se genera al emitir y se recuerda en memoria (§7.2): **cero lineas en los runners**. **7 tests y 10 mutaciones**, con censo relacional **y prueba negativa**; una **mentira del instrumento** — el primer aserto comparaba el ORDEN de llegada y el almacen desempata por `id` aleatorio (§11). **(2) EL DESCANSO VUELVE A TENER CIRCULO.** El glifo iba dentro de un `{!isRest && ...}`: en el paso **mas repetido de la app** (18 apariciones) no es que se moviera, **desaparecia**. R5 se respeta **por color, no por ausencia**. **(3) Y LA CAUSA ESCRITA DE LOS 25 px ERA FALSA**: no es el gate «ready» sin contador, es el **FOOTER** (89 → 39 px al pasar a una fila de controles; el centro crece 50 y el bloque, centrado, baja la mitad). La deuda sigue con su tope de 30: arreglarla es decision visual. **(4) LOS 15 POR LADOS, COMO ESPEJO** (`scaleX(-1)`, cero dibujos nuevos), y solo **12** pueden recibir lado — `90/90`, `Elevacion de talones` y `Sentadilla bulgara` no tienen ni un paso `perSide`. **(5) LOS DOS PROMPTS DE ARTE ERAN LA MISMA PIEZA**: las 12 apariciones de «Respira.» son todas de `Descanso`. **(6) Y EL CENSO DE GLIFOS VEIA 61 IDENTIDADES DONDE HAY 62.** Al escribir los prompts de lo que falta —describiendo el estilo QUE YA ESTA EN PRODUCCION, con las convenciones sacadas de mirar las 57 piezas— el usuario pregunto dos veces si hacian falta todos, y las dos preguntas destaparon algo. La primera: **`Nordics` sale de la cola** (no esta en ninguna rutina del catalogo, solo en el constructor, y ya tiene SVG). La segunda: **faltaba `Puente isquio a una pierna`**, invisible por **DOS errores independientes** — el patron del generador sacaba los nombres con `mode:`, que es el contrato del runner v1, y **los pasos legacy declaran `dur:`**; y el encargo la daba por «dibujo que no usa nadie» cuando es **la unica de esas cinco SIN alias que la tape**. Lo que lo hacia invisible es que **el numero salia redondo**: 61 coincidia con el censo de s164, que arrastraba el mismo punto ciego. Censo regenerado: **62 · 57 · 5**. Nace **`GLIFOS_A_DIBUJAR.md`**, autocontenido, con las **7** piezas por orden de lo que mas se nota. `npm run verify` PASA · `npm run test:e2e` **115/115** (eran 105) · diario en [session-172](./docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md)
+**Version actual:** v0.103.0 (s173 — **LA INGESTA DEJA DE SER TODO-O-NADA, Y EL ARTE DE EJERCICIO GANA SU RED**. Entran 4 dibujos (**57 → 59 de 62**) y la cola baja de 7 a 3, pero no entraban: el mapa se reescribia ENTERO desde los emparejados, y los originales llegan con nombre opaco. Nace **`--fusionar`** —lo que no viene en la carpeta CONSERVA su fila— con tres guards que no se relajan, y **`verify.mascaras.js`**, las primeras comprobaciones relacionales del arte de ejercicio: cinco, en los dos sentidos, y un guard de cero que las justifica a todas porque con el mapa vacio las otras cuatro salian VERDES. Ademas, **el rediseno de las tres librerias aprobado MIRANDOLO** y sin implementar: [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md).)
+**Version anterior:** v0.102.2 (s172c — **LAS DOS DECISIONES DEL EMISOR, DECIDIDAS Y ESCRITAS**. Dejan de ser desviaciones anotadas: **Foco emite `focus`**, una sola identidad —la duracion ya viaja en `plannedSeconds` y los cuatro cubos de `focus.<min>` no tenian consumidor, porque en Foco NO se pide feedback— y **Respira sin rondas mantiene `routine.min x 60` `declared`**, con la fila que le faltaba a §6.4 ya escrita en el esquema (rev. 6). Codigo y documento dicen lo mismo.)
+**Version anterior (2):** v0.101.0 (s171 — **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Tres defectos visuales del usuario, medidos antes de tocar: las miniaturas del preview se pisaban 5 px (`maskScale` pasa a explicito), el circulo media 72 px en 6 rutinas y 179 en las otras 22 (legacy vs v1) y se movia 43 px entre pasos en movil. Nace `tests/runner-circulo.spec.js`. **Segunda mitad**: entra la 2a tanda de arte —18 dibujos, **47 → 57 identidades**— y **el bloque del runner declara alto minimo**, con lo que el circulo y el nombre dejan de moverse entre pasos de trabajo.)
+**Ultima sesion:** #173 -- 2026-08-25 - **LA INGESTA DEJA DE SER TODO-O-NADA, Y LAS LIBRERIAS SE DISENAN MIRANDOLAS**. Bump **v0.102.2 -> v0.103.0**. **(1) ENTRAN 4 DIBUJOS** —`Fondos en silla` ahora CON silla, `Onda espinal`, `Puente isquio a una pierna` y `Deslizamientos en pared`— identificados mirandolos y **contrastados con su cue del catalogo**: **57 → 59 de 62**, cola de 7 a **3**. **(2) PERO NO ENTRABAN.** El `--seco` daba **62 identidades, 102 PNG, 0 emparejados**: los originales llegan como `asset_*.png` y el emparejamiento es por slug; y renombrando solo esas cuatro **el mapa se reescribe entero** y las otras 57 desaparecen del mapa y del precache. La via de s171 (emparejar por CONTENIDO) **no sale limpia**: peor pareja **0,383** contra el 0,849 de entonces, once por debajo de 0,8 y dos PNG reclamados por dos mascaras. **(3) NACE `--fusionar`**: lo que no viene en la carpeta CONSERVA su fila. Control medido: **sin** la bandera, 58 identidades «sin dibujo» y el mapa en 4 filas; **con** ella, 3 y 59. Tres guards que no se relajan (fila conservada sin archivo **aborta sin escribir nada** · mapa sin **ni una** fila reconocible es fallo explicito · PNG huerfano sigue siendo salida 1) y **tres mutantes**, cada uno con su rojo y solo el suyo. **El codigo de salida cambia de sentido en la otra mitad**: con fusion «identidad sin dibujo» es el estado NORMAL, y un exit que siempre vale 1 se aprende a ignorar. El script llego a **511 lineas** ⇒ el censo sale a `.censo.js` y hubo que **redeclarar `ROOT`** (el fallo de s144 por otra puerta; ahi el verify no mira). **(4) NACE `verify.mascaras.js`.** El arte de ejercicio **no tenia ni una comprobacion relacional** —el precache cruzaba solo con el mapa de LOGROS— y `--fusionar` abre un fallo **MUDO**: una fila conservada sin archivo hace que el glifo caiga a su SVG viejo y el usuario vea **otro ejercicio**, sin un error en consola. Cinco relacionales en los DOS sentidos, **las cinco en rojo**, y el **guard de cero** las justifica a todas: con `EXERCISE_MASKS` vacio las otras cuatro cruzaban conjuntos vacios y salian **VERDES**. `CENSO.precache` **219 → 223**. **(5) LA FICHA DE `descanso.png` ESTABA MAL DESDE HACIA DOS SESIONES**: pedia una silla, y medido, **11 de los 18 descansos ocurren en rutinas `standing`** (5 seated, 2 floor) — una silla contradice 13 de 18. Al buscar alternativa salio que **las cuatro poses tranquilas obvias ya estan cogidas**, asi que pasa a **recuperar el aliento, de pie y de frente**. Y **`Descanso` NO entra por la ingesta**: esta excluido a mano del censo, asi que su PNG saldria como huerfano. **(6) EL REDISENO DE LAS TRES LIBRERIAS, APROBADO MIRANDOLO Y SIN IMPLEMENTAR** (doce maquetas; todo en [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md)). `npm run verify` PASA · `npm run test:e2e` **115/115** · diario en [session-173](./docs/sessions/session-173-fusionar-y-las-librerias.md)
 
 **Sesion anterior:** #171 -- 2026-08-19 - **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Bump **v0.100.0 -> v0.101.0**. **La sesion NO hizo lo que traia el handoff**: el plan era el emisor de la Fase 3 y a mitad de la revision de glifos el usuario mando cinco capturas con tres defectos visuales, que pasaron a ser el trabajo. Diario: [session-171](./docs/sessions/session-171-el-circulo-del-glifo.md).
 
@@ -209,108 +209,66 @@
 > en [`docs/sessions/`](./docs/sessions/) y destilado en [`CHANGELOG.md`](./CHANGELOG.md).
 > Aqui solo lo que sigue VIVO: diferido y pendiente.
 
-- **[FASE 3 · EL PASO 2 ESTA HECHO (s172) — lo que queda es la RETENCION y los
-  consumidores]** Los cuatro tipos emiten en dual-write desde `app/state-events.jsx`.
-  - **EL EMISOR VIVE FUERA DE `app/events/` Y NO ES CASUAL**: `verify.eventos.js` §5
-    define «emisor» como una llamada a `paceEventsAppend` **fuera del subsistema**, y con
-    eso exige que el backup publico lleve la seccion de eventos. Metido dentro, el gate
-    seguiria diciendo «sin emisores» **con emisores puestos**. No mover ese archivo.
-  - **EL MAPEO DE `kind:'body'` SE PREGUNTA AL CATALOGO** (`resolveBodyRoutine()`), NUNCA
-    al prefijo del `routineId`: los ids son historicos y **los cinco casos que existen
-    dicen lo contrario de su prefijo**. Hay test relacional con prueba negativa.
-  - **LA RETENCION POR CALENDARIO (120 d, §12) SIGUE SIN PROGRAMAR**, y su premisa vieja
-    («sin emisores no hay nada que podar») **caduco**. Hoy lo unico que acota el
-    contenedor es la poda por PRESUPUESTO, que solo salta ante un error de
-    almacenamiento. El punto de extension esta declarado en `events-adapter-web.js`.
-  - **`path.step.completed` va sin `runId`** (§7.1 lo declara opcional): la correlacion
-    Camino↔sesion viaja por `pathRunId`. Enhebrar el id del paso exigiria tocar los
-    cuatro steps.
-  - Dos decisiones tomadas por s172 que el esquema no cerraba y **conviene revisar**:
-    `routineId` de Foco = `focus.<min>`, y `plannedSeconds` de Respira sin rondas =
-    `routine.min x 60` **`declared`** (§6.4 solo contempla la fila de rondas).
+- **[LA RETENCION SIGUE SIN PROGRAMAR — era el punto 1 del handoff y no se toco]**
+  Las tres piezas de §12 estan implementadas (`selectEventsToPrune` +
+  `foldEventsIntoBaseline` + `nextPruneCursor`, con `EVENTS_RETENTION_DAYS = 120`) y el
+  punto de extension esta declarado en `events-adapter-web.js`. Lo unico que acota hoy el
+  contenedor es la poda por PRESUPUESTO, que **solo salta ante un error de almacenamiento**.
+  - **LA PREGUNTA DE DISENO ESTA PLANTEADA Y SIN RESPONDER**, y es lo que bloquea:
+    §12 dice «puede orquestarse en el rollover diario **sin crear un segundo reloj**», pero
+    `rolloverIfNeeded` es **sincrono y devuelve estado** y `paceEventsAppend` **devuelve una
+    promesa**. Las dos salidas cumplen la regla: (a) efecto **disparado-y-olvidado** desde el
+    rollover —no espera, y si falla el dia siguiente reintenta— o (b) **en el arranque**, justo
+    despues de `loadState`, leyendo el mismo cambio de dia que el rollover acaba de detectar.
+    **(b) es mas facil de probar en la suite.**
+  - **Ojo con el orden**: podar consolida en el `baseline`, asi que un fallo a medias no puede
+    dejar el contenedor sin los eventos Y sin el agregado. Todo dentro del lock exclusivo.
+  - **`tests/retencion.spec.js` YA EXISTE y es de OTRA retencion** — la apnea de Respira
+    (s166). Colision de nombre: el spec nuevo tiene que llamarse `eventos-retencion.spec.js`.
 
+- **[LAS LIBRERIAS: DISENO APROBADO, CERO CODIGO]** Todo en
+  [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md), decidido sobre **doce
+  maquetas** con catalogo real, mascaras reales y los tokens de `DESIGN_SYSTEM.md`.
+  - **LA TESIS**: si la tarjeta tiene que crecer para informar, **lo paga el FILTRO**, no la
+    compresion. Medido: la tarjeta crecio y aun asi scrollea menos (**4,50 → 3,57** pantallas
+    a 360x730), y con un filtro cae a **1,53**.
+  - **EL EJE SE ELIGE MIDIENDO CUAL PARTE EL CATALOGO**: en cuerpo la duracion no separa nada
+    (todo entre 1 y 6 min) y el contexto parte casi por la mitad; en Respira al reves (2 a 20
+    min). De ahi **gemelas + una aparte**, que no es estetica.
+  - **DOS DE LOS CUATRO FILTROS NO FILTRABAN**: «Aqui mismo» + «Con suelo» = **14 de 14**
+    (complementarios exactos) y «De pie» esta contenido **entero** en el primero.
+  - **LO QUE FALTA POR DECIDIR** antes de implementar: la **regla de «Para ahora»** (hoy son
+    dos ids a mano), si las **12 rutinas premium** van mezcladas o agrupadas, **Respira** (su
+    pantalla esta esbozada pero no cerrada, y sus **14 patrones** pedirian **14 glifos de
+    ritmo** = otro encargo de arte), y tres ideas propuestas y sin respuesta: **el glifo como
+    filtro**, **la transicion biblioteca→sesion** y **«ya la hiciste»**.
+  - **HALLAZGO DE CATALOGO, NO DE DISENO**: en la libreria pensada para la oficina, **solo 5
+    de las 14 rutinas de Estira se pueden hacer sin tirarse al suelo** (Mueve: 11 de 14). El
+    filtro lo va a hacer obvio en cuanto exista.
 
-- **[EL AIRE BAJO EL CUE — el prerrequisito YA ESTA, mover la linea NO]** (s171) La linea
-  vacia que queda bajo la descripcion en la piel ancha **es el anclaje del circulo**:
-  quitarla a secas devuelve la deriva. La forma de tener las dos cosas es **mover la holgura
-  al final del bloque** (despues de «Cuidate», donde no se lee como hueco). Eso exigia que el
-  bloque declarase **alto minimo**, y **la segunda mitad de s171 lo hizo**
-  (`[data-pace-v1-body]` con `min-height` 70/72vh). Lo que sigue sin hacer es **mover la
-  linea**: las reservas de `cue` y `care` continuan en el CSS y **por debajo de los suelos
-  (780/880 px) son lo unico que ancla**, asi que no se pueden retirar a secas.
-
-- **[GLIFOS DE EJERCICIO — 57 de 62, y 7 piezas en la cola]** (s171/s172) El encargo
-  vivo esta en [`GLIFOS_A_DIBUJAR.md`](docs/product/GLIFOS_A_DIBUJAR.md) —autocontenido,
-  solo lo pendiente, con el preambulo de estilo dentro—; `GLIFOS_ENCARGO_TANDA.md`
-  queda como el historico de las tres tandas. **El arte lo genera el usuario.**
-  Son **7**: `Descanso` (18 apariciones, la que mas se ve de la app), `Fondos en
-  silla` (3), y con 1 cada una `Pica en escritorio`, `Onda espinal`, `Rana`,
-  `Puente isquio a una pierna` y `Deslizamientos en pared`. **`Nordics` NO entra**:
-  no esta en ninguna rutina del catalogo —solo en el registro del constructor— y ya
-  tiene SVG, asi que no cae al glifo por defecto.
-  - **EL CENSO DECIA 61 IDENTIDADES Y SON 62** (s172). Dos errores que se cancelaban:
-    el patron de `identidadesVisuales()` sacaba los nombres con `mode:` —contrato del
-    runner v1— y **los pasos LEGACY declaran `dur:`**; y el encargo daba `Puente isquio
-    a una pierna` por «dibujo que no usa nadie», cuando es la unica de esas cinco SIN
-    alias que la tape. El numero salia redondo porque coincidia con el censo de s164,
-    que tenia el mismo punto ciego. **Si un censo cuadra con otro, no es una segunda
-    fuente: puede ser el mismo error dos veces.**
-  - **LAS 18 PIEZAS DE LA 2a TANDA NO SE HAN MIRADO A TAMAÑO REAL**: la revision una a
-    una se hizo sobre las 47 primeras. La lista de «hay que rehacer» puede tener alguna
-    mas escondida ahi. **`Puente toracico`** sigue esperando esa mirada.
-  - **`Rana` tiene una decision de vista sin tomar**: su gesto se ve desde atras o
-    arriba y seria la unica del set fuera de perfil/frontal.
-  - **EL ESTILO NO SE REINVENTA, SE DESCRIBE**: las convenciones salen de mirar el arte
-    —pared = linea vertical pegada al cuerpo, suelo = horizontal corta, silla/mesa =
-    una recta a la altura del apoyo, movimiento = linea de PUNTOS con flecha— y **§1 de
-    `GLIFOS_EJERCICIOS_REDISENO.md` esta SUPERADO**: pedia pictograma de trazo grueso y
-    lo que hay es grabado anatomico.
-  - **Cada ficha lleva el CUE que el usuario lee en pantalla.** Asi se cazo que la de
-    `Deslizamientos en pared` decia «de frente contra la pared» y su cue dice «de
-    ESPALDAS»: manda el cue.
-  - **`Descanso` ES TAMBIEN EL QUE DICE «RESPIRA»**, y son la misma pieza: las 12
-    apariciones de «Respira.» en los catalogos son todas de un paso `Descanso`. Su
-    prompt esta escrito (§4 del encargo) y **el dibujo sigue sin llegar**: hoy se ve el
-    SVG viejo —dos barras de pausa— dentro del circulo. Es el paso **mas repetido de la
+- **[GLIFOS DE EJERCICIO — 59 de 62, y la cola en 3]** La cola viva sigue en
+  [`GLIFOS_A_DIBUJAR.md`](docs/product/GLIFOS_A_DIBUJAR.md). **El arte lo genera el usuario.**
+  - **`descanso.png` NO ENTRA POR LA INGESTA TAL CUAL ESTA.** `Descanso` esta excluido a mano
+    del censo (`if (n && n !== 'Descanso')` en `.censo.js`, «no es un ejercicio»), asi que su
+    PNG sale listado como **huerfano**. Antes de que llegue el dibujo hay que decidir si pasa a
+    ser la identidad **nº 63** o si su arte entra por otra via. Es el paso **mas repetido de la
     app**: 18 apariciones.
-  - **LOS 15 POR LADOS YA ESTAN CABLEADOS** (s172): el segundo lado es el **espejo** del
-    primero (`scaleX(-1)`), asi que **no hay que dibujar 15 piezas mas**. La convencion
-    global es «el dibujo tal cual es Izquierda». **Solo 12 de los 15 pueden recibir
-    lado**: `90/90`, `Elevacion de talones` y `Sentadilla bulgara` **no tienen ni un paso
-    `mode:'perSide'`** en ningun catalogo, asi que ahi el lado es trabajo de CONTENIDO.
-  - **EL CENSO DE PASOS SIN DIBUJO SE MIRA EN LOS DOS CATALOGOS**: `EXTRA_ROUTINES` **no
-    se publica en `window`** y una pasada que solo mire `MOVE_ROUTINES` dice «1 sin
-    dibujo» donde hay 3. Los nombres de Estira salen del fuente.
-  - **TRAMPA VIVA**: `scripts/glifos/generar-pendientes.js` captura las filas de **TRES
-    columnas** del encargo. Una tabla nueva con nombres de ejercicio y 3 columnas
-    **sobrescribe** el generado en silencio. Las tablas editoriales van a **cuatro**.
-  - **Y HAY QUE CORRERLO TRAS CADA TANDA**: s171 ingesto 18 dibujos y no lo re-corrio, y
-    el documento se quedo diciendo «47 · 14» cuando eran «57 · 4» (regenerado en s172).
-    `GLIFOS_ESTIRA_PENDIENTES.md` **no tiene generador** y lleva aviso de CADUCADO.
-    **Nada vigila estos dos** — `verify.encargo.js` solo mira el encargo de logros.
-  - **La ingesta reescribe el mapa ENTERO**: la carpeta de origen tiene que llevar los 57
-    que ya estan, o se borran. Los viejos se recuperan **emparejando por CONTENIDO**
-    (s171); ese script quedo en el scratchpad, no en `scripts/glifos/`.
+  - **Y SU FICHA ESTUVO MAL DOS SESIONES**: pedia figura sentada en una silla, y **11 de los 18
+    descansos ocurren en rutinas `standing`** (5 seated, 2 floor). Corregida a **recuperar el
+    aliento, de pie y de frente** — las cuatro poses tranquilas obvias ya estaban cogidas
+    (`Hueco en silla`, tres sentados en el suelo, `Reset respiracion` y `Onda espinal`).
+  - **«SIN ROJO» YA NO APLICA**: las cuatro piezas nuevas vinieron con el musculo en rojo y
+    entraron limpias — desde s170 la ingesta separa mancha de trazo **por luminancia**.
+  - **A PARTIR DE AHORA SE INGESTA CON `--fusionar`** y basta con la carpeta de lo nuevo.
+    Sigue haciendo falta re-correr `generar-pendientes.js` y **subir a mano** `CENSO.precache`
+    (dos filas por identidad NUEVA; una sustitucion reutiliza su fila y suma 0).
+  - **`Rana` sigue con su decision de vista sin tomar** (frontal en cuadrupedia vs 3/4 desde
+    atras), y **`Puente toracico` sigue esperando la mirada a tamaño real** desde s171.
 
-- **[EL CIRCULO DEL RUNNER — CERRADO en s172b, y el trinquete esta en 0]** Lo que se
-  movia no era «el gate ready sin contador» (s171) ni solo el footer (s172): era que
-  **`centerBody` centra con `margin:auto` (s112) un bloque cuya ALTURA VARIA con el
-  contenido**. El footer es una fuente de variacion (89 → 39 px al pasar de dos filas de
-  controles a una) y el contenido es la otra (la pantalla de colocarse no pinta
-  contador). El anclaje en vh de s171 solo compensaba eso **por encima de sus suelos**:
-  era un ACANTILADO, y **con un pixel menos se apagaba entero** (61 px a 1280x879, 53 a
-  360x730 — los dos viewports reales del usuario).
-  - **Arreglado alineando el bloque ARRIBA**: `margin-top: 0 !important` sobre
-    `[data-pace-session-center-body]:has([data-pace-v1-body])`. El `!important` **no es
-    pereza**: el margen viene como estilo EN LINEA desde s112, y sin el la regla se
-    aplica, no falla y no cambia nada. El `:has()` acota el cambio al runner v1.
-  - **NO se toca la regla de s112 en `SessionShell`**: `margin:auto` alinea arriba
-    cuando el contenido DESBORDA, y eso es lo que evita que un `justify-content:center`
-    recorte el principio en pantallas cortas.
-  - Los `min-height` en vh de s171 **se quedan**: ya no gobiernan la posicion, pero
-    siguen dando cuerpo al bloque por encima de los suelos.
-  - **0 px en 8 viewports medidos**, y el trinquete de `runner-circulo.spec.js` esta
-    en **0**: si vuelve a moverse un pixel, salta.
+- **[EL ARTE DE LA 2a TANDA SIGUE SIN MIRARSE A TAMAÑO REAL]** La revision una a una se hizo
+  sobre las **47 primeras**; las 18 que entraron en s171 se asignaron y **nadie las ha mirado**.
+  El detector que funciona es la pieza a 700 px con su encargo al lado.
+
 
 ### Diferido (documentado, NO ejecutado)
 
@@ -594,7 +552,39 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **el arte que falta, y la retencion que nadie ha programado**
+## Proxima sesion -- **implementar las librerias, y la retencion que sigue sin programar**
+
+> **El diseno de las librerias esta APROBADO y no hay una linea escrita.** Lo que abre, por
+> orden de lo que cuesta si se olvida:
+>
+> 1. **CONTESTAR LO QUE FALTA DE `LIBRERIAS_REDISENO.md` §8 ANTES de tocar codigo**: la regla
+>    de «Para ahora», las 12 premium, y si Respira entra en esta tanda o espera a sus 14 glifos
+>    de ritmo. Implementar con eso abierto obliga a rehacer.
+> 2. **IMPLEMENTAR.** Toca `MoveModule.jsx`, `ExtraModule.jsx`, `BreatheLibrary.jsx`,
+>    `CustomRoutines.jsx` y `Primitives.jsx`. **Auditar antes**: `BreatheLibrary` usa `Card`
+>    con `accent` y ese patron **gobierna** (el color va en el hover, no en el reposo).
+>    Y el filtro necesita un sitio donde vivir: no hay estado de filtro en ninguna libreria.
+> 3. **LA RETENCION DE `pace.events.v1`**, con su pregunta (a)/(b) sin responder.
+> 4. **`Puente toracico` a tamaño real** y las 18 piezas de la 2a tanda, que lleva tres
+>    sesiones pedido.
+>
+> **NO empezar por lo mas facil**: el usuario pidio expresamente que no se implemente la opcion
+> mas sencilla si no es la mas profesional, bonita y util.
+
+> **REGLA DE CONTINUIDAD (s173): el diseno se aprueba MIRANDOLO.** Maqueta HTML con los
+> viewports reales (**360x730**, **412x844**, **1280**), el contenido REAL del catalogo y los
+> tokens de `DESIGN_SYSTEM.md`, **antes** de implementar nada. Si hay mas de una direccion
+> posible, van **una al lado de otra** en la misma maqueta para elegir mirando.
+
+> **CUATRO DEFECTOS DE LA SESION QUE SOLO APARECIERON MIDIENDO LA MAQUETA**, y que conviene no
+> repetir: el bloque «Para ahora» estuvo **VACIO dos versiones** por usar ids `extra.*` en
+> Estira —**cuyas 14 rutinas empiezan por `move.`**, la trampa que s172 prohibe expresamente—;
+> la rejilla **desbordaba 35 px** porque la tira de glifos y los sellos competian por la misma
+> linea; **`repeat(3,1fr)` no deja encoger** las columnas (`minmax(0,1fr)`); y **dos reglas
+> para la misma tarjeta**, con la vieja ganando por orden, dejaron un hover bien escrito **sin
+> nada que pintar**. Ninguno se veia mirando.
+
+
 
 > **EL EMISOR YA ESTA** (s172): la Fase 2 del esquema esta cerrada y el gate del verify
 > lo confirma. Lo que abre ahora, por orden de lo que mas cuesta si se olvida:
@@ -777,6 +767,8 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 |---|---|
 | **Foco emite `focus` (una identidad) y Respira sin rondas su plan `declared` — esquema rev. 6** | s172c |
 | **El bloque del runner v1 se ALINEA ARRIBA (el anclaje en vh era un acantilado bajo sus suelos)** | s172b |
+| **La ingesta de arte de ejercicio es FUSIONABLE (`--fusionar`), y el arte tiene su red RELACIONAL (`verify.mascaras.js`)** | s173 |
+| **El color de MODULO marca lo que se TOCA, no lo que hay: `Card` es neutra en reposo y pone el accent en el hover** | s173 |
 | **El emisor de eventos vive en la CAPA DE ESTADO y FUERA de `app/events/` (lo define el gate del verify)** | s172 |
 | **El modulo de un paso `kind:'body'` se pregunta al CATALOGO, nunca al prefijo del `routineId`** | s172 |
 | **El `runId` se genera al emitir y se recuerda en memoria: cero lineas en los runners** | s172 |

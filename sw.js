@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.102.2';
+const CACHE_NAME = 'pace-v0.103.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
@@ -73,6 +73,8 @@ const PRECACHE = [
   '/app/glyphs/assets/ejercicios/juntar-omoplatos.webp',
   '/app/glyphs/assets/ejercicios/marcha-del-elefante.min.webp',
   '/app/glyphs/assets/ejercicios/marcha-del-elefante.webp',
+  '/app/glyphs/assets/ejercicios/onda-espinal.min.webp',
+  '/app/glyphs/assets/ejercicios/onda-espinal.webp',
   '/app/glyphs/assets/ejercicios/palmas-al-suelo.min.webp',
   '/app/glyphs/assets/ejercicios/palmas-al-suelo.webp',
   '/app/glyphs/assets/ejercicios/paloma.min.webp',
@@ -85,6 +87,8 @@ const PRECACHE = [
   '/app/glyphs/assets/ejercicios/pliegue-adelante.webp',
   '/app/glyphs/assets/ejercicios/puente-con-marcha.min.webp',
   '/app/glyphs/assets/ejercicios/puente-con-marcha.webp',
+  '/app/glyphs/assets/ejercicios/puente-isquio-a-una-pierna.min.webp',
+  '/app/glyphs/assets/ejercicios/puente-isquio-a-una-pierna.webp',
   '/app/glyphs/assets/ejercicios/puente-toracico.min.webp',
   '/app/glyphs/assets/ejercicios/puente-toracico.webp',
   '/app/glyphs/assets/ejercicios/reset-respiracion.min.webp',
