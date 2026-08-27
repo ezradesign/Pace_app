@@ -147,7 +147,9 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ## 🎯 Producto · Tono · Visual
 
-**Módulos:** Foco (Pomodoro 15/25/35/45 min) · Respira (breathwork guiado) · Mueve (movilidad silla) · Estira (calistenia oficina) · Hidrátate (tracking vasos)
+**Módulos:** Foco (Pomodoro 15/25/35/45 min) · Respira (breathwork guiado) · **Mueve** (calistenia de oficina, fuerza y activación) · **Estira** (movilidad y estiramientos, antídoto a la silla) · Hidrátate (tracking vasos)
+
+> **OJO CON LOS IDS, QUE VAN CRUZADOS:** las rutinas de **Mueve** llevan ids `extra.*` y viven en `app/extra/ExtraModule.jsx`; las de **Estira** llevan `move.*` y viven en `app/move/move.data.js`. No se pueden renombrar sin borrar datos de la gente, así que se convive con ello. Hasta s176 este documento los describía **al revés**, y eso mandó a más de una sesión al archivo equivocado.
 
 **Tono:** calmado, artesanal, cuidado. Sin gamificación agresiva. Sin métricas abrumadoras. Copy corto en español ("¿Qué quieres cultivar hoy?").
 

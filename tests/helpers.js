@@ -126,7 +126,30 @@ function overlaySuperior(page) {
   return page.locator('[data-pace-modal-backdrop]').last();
 }
 
+/** Espera a que el modal de arriba TERMINE su animacion de entrada.
+ *
+ * TRAMPA MEDIDA (s176): `Modal` entra con `pace-modal-in`, que va de scale .96
+ * a 1, asi que cualquier caja medida antes de tiempo sale al 96 % -- 777,6 px
+ * donde la app da 810, o 584 donde da 607. Lo primero que probe fue esperar a
+ * que DOS lecturas seguidas coincidieran, y **no vale**: la curva se aplana
+ * cerca del final y dos muestras a 100 ms pueden coincidir a mitad del fundido.
+ * El aserto de Stats salio rojo por eso, con la app ya arreglada.
+ *
+ * `getAnimations()` no estima: pregunta. Se espera a que todas las animaciones
+ * del modal esten en `finished`, que es el unico momento en que la caja es la
+ * definitiva. */
+async function esperarModalAsentado(page) {
+  await page.waitForFunction(() => {
+    const el = [...document.querySelectorAll('[data-pace-modal-card]')]
+      .filter(e => e.getBoundingClientRect().width > 0).pop();
+    if (!el) return false;
+    const anims = typeof el.getAnimations === 'function' ? el.getAnimations() : [];
+    return anims.every(a => a.playState === 'finished');
+  }, null, { timeout: 15000, polling: 60 });
+}
+
 module.exports = {
+  esperarModalAsentado,
   CLAVE_ESTADO,
   RUTA_ARTEFACTO,
   SEMILLA,

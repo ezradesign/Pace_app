@@ -239,68 +239,12 @@ function TweaksPanel({ open, onClose }) {
 
       <Divider style={{ margin: '14px 0' }} />
 
-      {/* Audio */}
-      <div style={{ marginBottom: 16 }}>
-        <Meta style={{ marginBottom: 4 }}>{t('settings.audio.label')}</Meta>
-        <div style={{ fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 }}>{t('settings.audio.hint')}</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {[
-            { v: true, name: t('settings.audio.on') },
-            { v: false, name: t('settings.audio.off') },
-          ].map(opt => {
-            const active = state.soundOn === opt.v;
-            return (
-              <button key={String(opt.v)} onClick={() => set({ soundOn: opt.v })}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: active ? 500 : 400,
-                  background: active ? 'var(--ink)' : 'var(--paper-2)',
-                  color: active ? 'var(--paper)' : 'var(--ink-2)',
-                  border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-                  borderRadius: 'var(--r-sm)',
-                  transition: TWEAKS_PILL_TRANSITION,
-                  letterSpacing: 0.2,
-                }}>{opt.name}</button>
-            );
-          })}
-        </div>
-        {state.soundOn && (
-          <div style={{ marginTop: 8, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              onClick={() => {
-                const next = !state.ambientOn;
-                set({ ambientOn: next });
-                if (!next && window.ambientDrone) window.ambientDrone.stop(400);
-              }}
-              style={{
-                width: 14, height: 14, borderRadius: 3, padding: 0,
-                border: `1px solid ${state.ambientOn ? 'var(--focus)' : 'var(--line-2)'}`,
-                background: state.ambientOn ? 'var(--focus)' : 'transparent',
-                display: 'grid', placeItems: 'center',
-                color: 'var(--paper)', cursor: 'pointer', flexShrink: 0,
-              }}
-              aria-label={t('settings.audio.ambient')}
-            >
-              {state.ambientOn && (
-                <svg width="9" height="9" viewBox="0 0 16 16" fill="none"
-                     stroke="currentColor" strokeWidth="2"
-                     strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 8L7 12L13 4"/>
-                </svg>
-              )}
-            </button>
-            <span
-              style={{ fontSize: 11, color: 'var(--ink-2)', letterSpacing: 0.2, cursor: 'pointer' }}
-              onClick={() => {
-                const next = !state.ambientOn;
-                set({ ambientOn: next });
-                if (!next && window.ambientDrone) window.ambientDrone.stop(400);
-              }}
-            >+ {t('settings.audio.ambient')}</span>
-          </div>
-        )}
-      </div>
+      {/* SONIDO -> `TweaksAudio.jsx` (s176). Se fue de aqui por dos razones:
+          este archivo iba por 466 lineas y el bloque nuevo lo pasaba de las 500
+          de la regla §1, y ademas dejo de ser un eje de dos pills para ser dos
+          decisiones anidadas (que marca la fase / que suena detras). El porque
+          de esa forma esta escrito alli. */}
+      <TweaksAudioBlock state={state} set={set} />
 
       {/* Aviso de fin de Foco (s102 · PWA). Solo en web con Notification
           disponible; el permiso se pide al activar (enableNotify). */}

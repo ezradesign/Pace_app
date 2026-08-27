@@ -24,6 +24,31 @@
    cuarto no cabe sin deslizar — y deslizar chips esconde el que no ves. */
 var LIB_FILTROS = ['aqui', 'sinmat', 'corto'];
 
+/* LOS DE RESPIRA SON OTROS, y no por gusto: sus 20 rutinas no declaran
+   `position`, `equipment` ni `requiresFloor` (20 de 20, medido en s174), asi
+   que «Aqui mismo» y «Sin material» las dejarian pasar TODAS -- dos chips que
+   no filtran nada. Lo que Respira si tiene es duracion y forma de respirar.
+
+   SON DOS Y NO TRES, y esto se midio antes de cablearlo: la maqueta de s176
+   llevaba un tercero, «Sin rondas», y resulto ser un SUBCONJUNTO ESTRICTO del
+   segundo -- quita `rounds.express`, `rounds.full` y `rounds.long`, que son
+   exactamente las tres que «Sin retencion» ya quita, porque ninguna declara
+   `cycle` y las tres llevan `safety`. Un chip que no puede cambiar el resultado
+   de otro es decoracion.
+   Recuentos sobre el catalogo: «<= 5 min» deja 9 de 20 y «Sin retencion» 11. */
+var LIB_FILTROS_RESPIRA = ['corto', 'sinreten'];
+
+/* «Con retencion» = la respiracion se PARA en algun momento, llena o vacia.
+   El dato vive en `cycle` como [inhala, sosten, exhala, vacio], asi que basta
+   con mirar las posiciones 1 y 3. Las rutinas SIN `cycle` -rondas, kapalabhati,
+   los patrones con motor propio- no lo declaran, y ahi manda `safety`: las seis
+   que llevan aviso son precisamente las de apnea o hiperventilacion. */
+function libraryConRetencion(r) {
+  if (!r) return false;
+  if (Array.isArray(r.cycle)) return r.cycle[1] > 0 || r.cycle[3] > 0;
+  return !!r.safety;
+}
+
 /* EL UMBRAL DE «CORTO» ES RELATIVO A CADA BIBLIOTECA, y no un número escrito
    aquí. Medido en s174: con «≤ 3 min» fijo, el chip deja 12 de 14 en Mueve
    —quita dos: no filtra— y 3 de 14 en Estira. El mismo texto hacía dos cosas
@@ -56,6 +81,7 @@ function libraryPredicado(clave, umbral) {
   };
   if (clave === 'sinmat') return function (r) { return (r.equipment || []).length === 0; };
   if (clave === 'corto') return function (r) { return r.min <= umbral; };
+  if (clave === 'sinreten') return function (r) { return !libraryConRetencion(r); };
   return function () { return true; };
 }
 
@@ -159,9 +185,16 @@ function libraryDiaOrdinal(iso) {
    MEDIDO al elegir el pozo: con «aquí mismo» Y «sin material» son 3 rutinas en
    Estira y 5 en Mueve, y enseñando 2 de 3 casi siempre sale lo mismo. Con
    «aquí mismo» a secas son 5 y 11, que sí rotan. */
-function libraryParaAhora(rutinas, iso, cuantas) {
+function libraryParaAhora(rutinas, iso, cuantas, pozoPred) {
   var n = cuantas || 2;
-  var pozo = (rutinas || []).filter(libraryPredicado('aqui'));
+  /* EL POZO ES «LO QUE PUEDES HACER AHORA», y eso no significa lo mismo en
+     todas las bibliotecas. En cuerpo es el contexto (`aqui`). En Respira ese
+     predicado deja pasar las 20 -no hay suelo ni material- y la sugerencia
+     acababa cayendo en cosas como `Kumbhaka 1:4:2`, que es apnea avanzada con
+     modal de seguridad: lo destapo la maqueta de s176 al pintarla.
+     Por eso el predicado ENTRA por parametro y el de cuerpo queda de defecto:
+     ninguna biblioteca cambia de comportamiento por esto. */
+  var pozo = (rutinas || []).filter(pozoPred || libraryPredicado('aqui'));
   pozo = pozo.slice().sort(function (a, b) { return a.min - b.min; });
   if (pozo.length <= n) return pozo;
   var i = libraryDiaOrdinal(iso) % pozo.length;
@@ -186,6 +219,8 @@ function libraryMotivoVacio(ocultas) {
 
 Object.assign(window, {
   LIB_FILTROS: LIB_FILTROS,
+  LIB_FILTROS_RESPIRA: LIB_FILTROS_RESPIRA,
+  libraryConRetencion: libraryConRetencion,
   libraryUmbralCorto: libraryUmbralCorto,
   libraryPredicado: libraryPredicado,
   libraryFiltrar: libraryFiltrar,

@@ -43,7 +43,8 @@ var mascaras = require('./verify.mascaras.js'); // mapa/disco/precache del arte 
 var CENSO = {
   /* i18n: claves que declaran `app/i18n/strings/*` en CADA idioma (s152; el
      split de s148 midio 195 sobre su propio alcance, no sobre el total). */
-  i18nClaves: 549,   // +34 en s174: la biblioteca redisenada (chrome, filtros, lugar, material, grupo vacio y los ritmos de Respira)
+  i18nClaves: 558,   // +34 en s174: la biblioteca redisenada (chrome, filtros, lugar, material, grupo vacio y los ritmos de Respira)
+                     // +9 en s176: el bloque de sonido por funcion (8) y el filtro «Sin retencion» de Respira (1)
                      // +1 en s161: tweaks.palette.auto (tercera pill de paleta)
                      // +1 en s166: focus.startPause (el CTA en Pausa/Larga)
                      // +3 en s166: stats.hold.label/min/sec (el tiempo de retencion)
@@ -67,7 +68,7 @@ var CENSO = {
   respira: 20, mueve: 14, estira: 14, caminos: 7,
 
   /* service worker */
-  precache: 226,                // filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
+  precache: 229,                // +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
                                 //  +20 en s171: la 2a tanda sube el arte de ejercicio de 47 a 57 identidades, y cada una son DOS filas;
                                 //  +4 en s173: la 3a tanda son 4 dibujos pero solo DOS identidades nuevas -- «Fondos en silla» y
                                 //  «Deslizamientos en pared» ya tenian fila y la reutilizan, asi que suman 0)

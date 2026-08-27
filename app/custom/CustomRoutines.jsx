@@ -22,6 +22,25 @@
    grupos de Mueve y de Estira), asi que separarlas exigiria un campo nuevo e
    inventaria una taxonomia falsa. El aside lo dice en voz alta para que ver la
    misma lista dos veces no se lea como un bug. */
+/* s176 · «minmax(260px, ...)» DESBORDA EL LATERAL DE LA BIBLIOTECA, y no por
+   poco: el rail de escritorio deja 242 px de contenido (262 de caja menos 20 de
+   padding) y un track minimo de 260 px NO ENCOGE -- es un minimo, no una
+   preferencia--, asi que la tarjeta se pintaba 18 px mas ancha que el rail y
+   sobresalia por la derecha. Medido en s176 a 1536 px, la pantalla del usuario:
+   los chips y la tarjeta de «Para ahora» acababan en 428,93 y esta en 446,21.
+   Lo reporto el usuario mirando la app: «no esta centrado y va demasiado a la
+   derecha».
+
+   `min(260px, 100%)` es el minimo QUE SI PUEDE ENCOGER: donde caben 260 se
+   comporta igual que antes (catalogo movil y vista «Tus rutinas» a pantalla
+   completa) y donde el hueco es menor, el track vale el hueco. Se arregla en
+   los DOS ramos -bloqueado y desbloqueado- porque los dos viven en el rail.
+
+   No se arregla desde la hoja de la biblioteca: esto es un estilo EN LINEA y
+   alli haria falta «!important» (la trampa que ya costo una vuelta en s174 con
+   el padding del modal). Arreglar el valor es mas barato que taparlo. */
+const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
+
 function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
   const { t, tn } = useT();
   const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
@@ -64,7 +83,7 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
       </div>
 
       {!unlocked ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: REJILLA_TUS_RUTINAS, gap: 10 }}>
           <Card padded={false} style={{ padding: '16px 18px' }}>
             <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>
               {t('custom.locked.copy')}
@@ -78,7 +97,7 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
           ))}
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: REJILLA_TUS_RUTINAS, gap: 10 }}>
           {routines.map(r => (
             <CustomRoutineCard
               key={r.id}

@@ -62,40 +62,49 @@ const BREATHE_ROUTINES = {
   }
 };
 
-/* s174 · RESPIRA RECIBE LA TARJETA, NO LA PANTALLA.
-   La biblioteca conserva su estructura —sus cinco grupos, en su orden y sin
-   filtros— y estrena la tarjeta compartida y su tipografía. Lo que NO entra, y
-   por qué: Mueve y Estira se ordenan por CONTEXTO (11 de sus 28 exigen suelo)
-   y Respira por TIEMPO (de 2 a 20 min, factor 10), así que su pantalla propia
-   es otro diseño. Y su información más útil —el RITMO— pide dibujarlo: son 13
-   motores de ritmo y 19 ritmos distintos, un encargo de arte que aún no tiene
-   tamaño decidido. Mientras tanto el ritmo se DICE, en la línea de contexto,
-   donde hoy no se leía en ninguna pantalla.
-   Le entra la tarjeta y no espera a su sesión para que la app no tenga DOS
-   idiomas de tarjeta en tres botones contiguos de la misma home. */
+/* s176 · RESPIRA RECIBE TAMBIEN LA PANTALLA, y esto ANULA la decision de s174
+   («recibe la tarjeta, no la pantalla»).
+
+   POR QUE SE CAE AQUELLA DECISION: la razon escrita era que Mueve y Estira se
+   ordenan por CONTEXTO y Respira por TIEMPO, asi que su pantalla seria otro
+   diseno. La razon es cierta y la consecuencia no lo fue: sin pantalla propia,
+   las 20 tarjetas cayeron en el flujo del modal a **810 px de ancho** para
+   llevar unos 380 de contenido, y el sello de seguridad acababa a 700 px del
+   nombre al que pertenece. Medido a 1536 px en s176: **3,90 pantallas de
+   scroll**, MAS que las 3,82 de la biblioteca anterior al redisenio. El
+   redisenio se llevo el ancho y no cobro nada. Lo vio el usuario -«se ve
+   demasiado feo»- antes que cualquier medida.
+
+   LO QUE RESPIRA APORTA DE SUYO, todo por props y ninguna rama dentro de
+   `LibraryShell`:
+     · SUS FILTROS. Los de cuerpo -«Aqui mismo», «Sin material»- dejarian pasar
+       las 20, porque ninguna rutina de Respira declara `position` ni
+       `equipment` (20 de 20, s174). Los suyos son duracion y retencion.
+     · SU TARJETA (`variant="breathe"`): sin capitular, sin pill y con el RITMO
+       en la linea de contexto.
+     · SIN «Tus rutinas»: las rutinas propias se componen con ejercicios de
+       cuerpo. Aqui el bloque estaria vacio y el enlace de movil llevaria a una
+       pantalla sin nada.
+     · SU POZO DE SUGERENCIA. El de cuerpo es «lo que puedes hacer aqui», que en
+       Respira no descarta nada; sin acotarlo, la sugerencia del dia podia salir
+       siendo `Kumbhaka 1:4:2` -apnea avanzada, premium y con modal de
+       seguridad-. Lo destapo la maqueta al pintarla. Ahora el pozo excluye las
+       que llevan aviso: una sugerencia no puede ser algo que primero te obliga
+       a leer una advertencia.
+
+   LOS CINCO GRUPOS SIGUEN COMO ESTABAN, en su orden. Lo unico que cambia del
+   catalogo es que ahora se puede filtrar dentro de el. */
 function BreatheLibrary({ open, onClose, onStart }) {
-  const { t, lang } = useT();
-  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} maxWidth={860}>
-      <div className="pace-lib" style={{ '--tone': 'var(--breathe)' }}>
-        <div className="pace-lib-hd">
-          <div className="pace-lib-k">{t('lib.tag')}</div>
-          <div className="pace-lib-hd-fila"><h2>{t('lib.breathe.title')}</h2></div>
-          <p className="pace-lib-sub">{t('lib.breathe.subtitle')}</p>
-        </div>
-        {Object.entries(BREATHE_ROUTINES).map(([key, group]) => (
-          <div key={key}>
-            {/* Se cae el `aside` de grupo, igual que en Mueve y Estira: la
-                tarjeta nueva ya dice de qué va cada rutina. */}
-            <h3 className="pace-lib-grp">{tR(`breathe.cat.${key}.label`, group.label)}</h3>
-            {libraryOrdenar(group.items).map(r => (
-              <RoutineCard key={r.id} routine={r} color="var(--breathe)" variant="breathe" onClick={() => onStart(r)} />
-            ))}
-          </div>
-        ))}
-      </div>
-    </Modal>
+    <LibraryShell
+      open={open} onClose={onClose} onStart={onStart}
+      groups={BREATHE_ROUTINES} tone="var(--breathe)" catPrefix="breathe"
+      title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
+      variant="breathe"
+      filtros={window.LIB_FILTROS_RESPIRA}
+      conTuyas={false}
+      pozoAhora={(r) => !r.safety} />
   );
 }
 

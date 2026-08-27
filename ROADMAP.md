@@ -331,9 +331,13 @@ tras el cierre del §37. Es el escaparate del *free*: con eventos emitiendo pued
   constancia de los términos de uso comercial**. **La regla «voz/TTS: NUNCA» queda ANULADA en
   s175 por decisión explícita del usuario**: las locuciones entran, empezando por la voz
   `sulafat`. Lo que la decisión no cambia es la física: una locución dura lo que dura, y
-  **6 de las 20 rutinas tienen fases demasiado cortas para cualquiera de las dos voces**
-  (las tres de 1 s y las tres de rondas), así que la voz se elige **por fase** y cae al
-  sintetizador cuando no cabe. Medida: `node scripts/audit/censo-respira-fases.js`.
+  las dos voces **no caben en las mismas rutinas**: `sulafat`
+  entra en **17 de 20** (fuera, las tres de bombeo, con fases de 1 s) y `bradford` en **14**
+  (esas tres más las tres de rondas, por su «exhala» de 3,572 s). Por eso la voz se elige
+  **por fase** y cae al sintetizador cuando no cabe. Medida: `node
+  scripts/audit/censo-respira-fases.js`. **La música de fondo tiene sus briefs escritos** en
+  `docs/product/MUSICA_RESPIRA_BRIEFS.md` (s176), uno por familia y con los números del
+  catálogo detrás.
 - **Catálogo**: revisión de las 20 técnicas y **separar Técnicas de Viajes** (§9.1).
 - El **loto** ya entró en la Fase 1.5.
 

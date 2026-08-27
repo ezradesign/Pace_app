@@ -309,26 +309,13 @@ function MonthHeatmap({ history, lang, initialYear, initialMonth }) {
      grid en el modal (justify-content:center). Asi:
        - desktop: 7x56 + 6x6 gap = 428 px, centrado en ~756 utiles
        - 6 filas x 56 + 5x6 = 366 px de alto -> cabe sin scroll
+     s176: 48 -> 42 px. Aquel «cabe sin scroll» dejo de ser cierto en algun
+     momento -- medido a 1536x714, la pestana del mes desbordaba 37 px-, y 6
+     filas de 42 con 5 huecos de 6 dan 282 px, exactamente los 36 que sobraban.
+     El ancho baja de 372 a 330 px sobre ~756 utiles: sobra sitio de sobra.
        - movil: override a 32px sin gap. */
   return (
     <div>
-      <style>{`
-        .pace-heatmap-cell { width:48px;height:48px;border-radius:6px;cursor:default;transition:opacity 120ms;position:relative; }
-        .pace-heatmap-cell.has-data { cursor:pointer; }
-        .pace-heatmap-cell.has-data:hover { opacity:0.85; }
-        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 48px);gap:6px;justify-content:center; }
-        .pace-heatmap-header-day { width:48px;text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
-        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
-        .pace-heatmap-empty { width:48px;height:48px; }
-        @media (max-width:640px) {
-          .pace-heatmap-cell { width:32px !important;height:32px !important; }
-          .pace-heatmap-grid { grid-template-columns:repeat(7, 32px) !important;gap:4px !important; }
-          .pace-heatmap-header-day { width:32px !important;font-size:9px !important; }
-          .pace-heatmap-day-num { font-size:10px !important; }
-          .pace-heatmap-empty { width:32px !important;height:32px !important; }
-          .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
-        }
-      `}</style>
 
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
         <button onClick={prevMonth} aria-label="Mes anterior" style={{
@@ -466,10 +453,26 @@ function StatsPanel({ open, onClose }) {
         ))}
       </div>
 
-      {tab==='week'  && <WeekView state={state} />}
-      {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
-      {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
-      {tab==='paths' && <PathStats />}
+      {/* s176 · LAS CUATRO PESTANAS COMPARTEN CAJA EN ESCRITORIO. Medido a
+          1536x714 antes de tocar nada: el modal saltaba de 443,7 px en «Ano» a
+          606,9 en «Semana» y «Mes» -- 163,2 px de diferencia al cambiar de
+          pestana-, y dos de las cuatro ademas tenian scroll (13 px en Semana,
+          37 en Mes). Reportado por el usuario mirando la app: «cambiar entre
+          pestanas y que varie el tamano se queda un poco raro».
+          EL SUELO ES LO QUE CABE, no lo que mide la mas alta: a 714 px de alto
+          el modal da 605 utiles y el cromo (cabecera + pestanas + paddings) se
+          come 220,1, asi que la vista puede medir 384,9. Por eso se compacta el
+          calendario en vez de estirar la caja: estirarla habria fijado el
+          tamano DEJANDO el scroll, que es la mitad de lo que se pidio.
+          SOLO EN ESCRITORIO. En movil la altura util cambia con cada telefono y
+          un suelo fijo forzaria scroll donde hoy no lo hay. */}
+      <div data-pace-stats-vistas>
+        {tab==='week'  && <WeekView state={state} />}
+        {tab==='month' && <MonthHeatmap history={history} lang={lang} initialYear={jumpYear} initialMonth={jumpMonth} />}
+        {tab==='year'  && <YearView history={history} lang={lang} firstSeen={state.firstSeen} onNavigateToMonth={handleNavigateToMonth} />}
+        {tab==='paths' && <PathStats />}
+      </div>
+
     </Modal>
   );
 }

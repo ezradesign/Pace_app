@@ -64,6 +64,9 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.filter.title':                'Filtrar',
     'lib.filter.aqui':                 'Aquí mismo',
     'lib.filter.sinmat':               'Sin material',
+    // s176 · filtro propio de Respira: sus rutinas no declaran ni postura ni
+    // material, así que sus ejes son duración y retención.
+    'lib.filter.sinreten':             'Sin retención',
     /* El umbral viaja en la cadena porque es RELATIVO a cada biblioteca: ≤ 2
        min en Mueve y ≤ 4 en Estira (medido en s174). El chip ensena el suyo, y
        asi no miente al cambiar de biblioteca. */
@@ -191,6 +194,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.filter.title':                'Filter',
     'lib.filter.aqui':                 'Right here',
     'lib.filter.sinmat':               'No gear',
+    'lib.filter.sinreten':             'No breath holds',
     'lib.filter.short':                '≤ {n} min',
     'lib.where.floor':                 'on the floor',
     'lib.where.seated':                'seated',

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.105.0</title>
+  <title>PACE · Foco · Cuerpo — v0.106.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -360,6 +360,8 @@
   <script type="text/babel" src="app/stats/YearView.jsx"></script>
   <script type="text/babel" src="app/stats/PathYearView.jsx"></script>
   <script type="text/babel" src="app/stats/PathStats.jsx"></script>
+  <!-- StatsPanel.css (s176): la hoja del panel. Va ANTES del panel. -->
+  <script type="text/babel" src="app/stats/StatsPanel.css.jsx"></script>
   <script type="text/babel" src="app/stats/StatsPanel.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweakSecretsWatcher.jsx"></script>
   <!-- Split s89: secciones del panel cargan antes que TweaksPanel (que las consume) -->
@@ -371,6 +373,9 @@
        consumidor: sus dos nombres viajan por `window` porque un `const` no cruza
        la IIFE del build (trampa de s148 con `sidebarStyles`). -->
   <script type="text/babel" src="app/tweaks/TweaksPanel.support.jsx"></script>
+  <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que
+       TweaksPanel, que lo consume por el global. -->
+  <script type="text/babel" src="app/tweaks/TweaksAudio.jsx"></script>
   <script type="text/babel" src="app/tweaks/TweaksPanel.jsx"></script>
 
   <!-- Caminos - SuggestedPathCard UI (sesion 53) -->
