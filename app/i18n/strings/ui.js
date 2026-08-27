@@ -117,6 +117,20 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.audio.hint':           'Sonidos de la sesión',
     'settings.audio.ambient':        'ambiente durante sesiones',
 
+    // s176 · el bloque de sonido pasa a DOS decisiones (qué marca la fase /
+    // qué suena detrás). `settings.audio.ambient` se conserva: la usaba la
+    // casilla que sustituyen estas pills y retirar una clave es otra decision.
+    'settings.signal.label':         'Qué marca la fase',
+    'settings.signal.tone':          'Tono',
+    'settings.signal.voice':         'Voz',
+    // Las dos voces se nombran por su TIMBRE y no por su genero: medido,
+    // sulafat va por ~193 Hz y bradford por ~121.
+    'settings.voice.clear':          'Clara',
+    'settings.voice.deep':           'Grave',
+    'settings.bg.label':             'Qué suena detrás',
+    'settings.bg.none':              'Nada',
+    'settings.bg.ambient':           'Ambiente',
+
     // ActivityBar
     'activity.meta':                 'Actividades',
     'activity.breathe.label':        'Respira',
@@ -312,6 +326,16 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.audio.off':            'Muted',
     'settings.audio.hint':           'Session sounds',
     'settings.audio.ambient':        'ambient sound during sessions',
+
+    // s176 · see the ES block: the sound axis became two nested decisions.
+    'settings.signal.label':         'What marks the phase',
+    'settings.signal.tone':          'Tone',
+    'settings.signal.voice':         'Voice',
+    'settings.voice.clear':          'Clear',
+    'settings.voice.deep':           'Deep',
+    'settings.bg.label':             'What plays behind',
+    'settings.bg.none':              'Nothing',
+    'settings.bg.ambient':           'Ambient',
 
     // ActivityBar
     'activity.meta':                 'Activities',

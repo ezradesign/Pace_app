@@ -580,7 +580,17 @@ Reglas derivadas:
 
 ---
 
-## 🃏 La tarjeta de rutina y las bibliotecas (s174 · v0.104.0, ajustada en s175)
+## 🃏 La tarjeta de rutina y las bibliotecas (s174 · v0.104.0, ajustada en s175 y s176)
+
+> **s176 · LAS TRES BIBLIOTECAS COMPARTEN PANTALLA, no sólo tarjeta.** s174 dejó Respira
+> fuera de `LibraryShell` —se ordena por TIEMPO y no por contexto— y el resultado fue una
+> sola columna de **810 px** para tarjetas con ~380 px de contenido: **3,90 pantallas de
+> scroll, más que las 3,82 de la biblioteca anterior al rediseño** (medido a 1536×714).
+> Ahora Respira usa el mismo modal de 1240, la misma rejilla de tres y su propio rail:
+> tarjeta de **288 px** y **1,98 pantallas**. Lo suyo entra por props —`filtros`,
+> `variant`, `conTuyas`, `pozoAhora`, `ancho`— y Mueve y Estira no cambian.
+> **Sus filtros son DOS** (`≤ 5 min` · `Sin retención`) porque los de cuerpo no descartan
+> nada en Respira, y el tercero que se probó resultó ser un subconjunto del segundo.
 
 Componente: [`app/ui/RoutineCard.jsx`](app/ui/RoutineCard.jsx) · hoja:
 [`app/ui/library.css.jsx`](app/ui/library.css.jsx) · pantalla:

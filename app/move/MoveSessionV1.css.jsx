@@ -61,7 +61,23 @@ if (!_paceMoveV1Css) {
        a las reservas «con el nombre a 2 líneas y fuentes grandes», y desde
        entonces el nombre móvil ya es un clamp; el desborde se vuelve a medir en
        360×640, 375×812 y 390×844 abajo, que es donde aquella decisión dolía. */
-    [data-pace-v1-cue]  { min-height: 3.1em; }   /* 2 líneas × 1.55 */
+    /* s176 · LA RESERVA BAJO LA DESCRIPCION SE RETIRA, y no es un capricho: la
+       propia s171 dejo escrito que moverla «al final del bloque, despues de
+       Cuidate, donde no se leeria como hueco» exigia que el bloque entero
+       declarase alto minimo -- «un cambio de mecanismo con cinco tiers medidos
+       detras». ESE CAMBIO LO HIZO s172b: el bloque se alinea arriba y el
+       circulo queda clavado por construccion; su comentario lo dice con todas
+       las letras, «con el bloque anclado no hace falta reservar ningun texto».
+       La reserva se quedo por inercia y lo unico que hacia era empujar el
+       contador contra el «Cuidate».
+       LO QUE COSTABA, medido a 1536x714 (la pantalla del usuario): la barra de
+       progreso se metia 15 px DENTRO de los botones en la pantalla de trabajo,
+       y estaba 47,2 px mas abajo que en la de colocarse. Reportado mirando la
+       app: «la barra casi se superpone con los botones... deberia estar siempre
+       a la misma altura: referencia del colocate».
+       COMPROBADO que el circulo NO se mueve al quitarla: top 76,4 px en las dos
+       pantallas a 1536x714 y 58,6 en las dos a 360x730 y 375x812. */
+    /* [data-pace-v1-cue] min-height: retirada en s176 -- ver arriba */
     [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
 
     /* s171b · EL BLOQUE ENTERO DECLARA ALTO MINIMO, y es lo unico que hace falta.
@@ -111,6 +127,8 @@ if (!_paceMoveV1Css) {
        regla se aplica, no falla, y no cambia NADA — que es como se ve igual que
        antes y uno cree que el arreglo no sirve. */
     [data-pace-session-center-body]:has([data-pace-v1-body]) { margin-top: 0 !important; }
+
+
 
     /* El rotulo de fase se pinta SIEMPRE —vacio cuando no hay— para que el
        NOMBRE no suba y baje 29 px en cada cambio de fase. Pero VACIO NO CUESTA
@@ -218,6 +236,33 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-care] { margin-top: 8px !important; }
       [data-pace-v1-progress] { margin-top: 12px !important; }
     }
+
+    /* VA AL FINAL DE LA HOJA A PROPOSITO, y esto costo una medida: cuatro de
+       los tiers de arriba fijan «[data-pace-v1-progress] { margin-top: N px
+       !important }» para controlar el hueco cuando la barra FLUIA. Con la misma
+       especificidad gana la ultima regla del archivo, asi que puesta antes se
+       la comian: medido tras implementarla arriba, la barra volvia a 592,7 px
+       en trabajar y 545,5 en colocarse -- casi el defecto original. Aquellas
+       reglas quedan inertes por diseno: no se borran porque son la unica
+       memoria de cuanto aire llevaba cada tramo si algun dia se vuelve atras. */
+    /* s176 · LA BARRA DE PROGRESO SE ANCLA AL CENTRO, no al contenido.
+       Fluia detras del bloque, asi que su altura dependia de si la pantalla
+       pintaba contador: 570,3 px en colocarse y 617,5 en trabajar, y ahi se
+       metia 15 px dentro del pie. Anclada, cae a la MISMA altura pinte lo que
+       pinte -- 586,5 px en las dos, con 16 px de aire hasta los botones.
+       NO BASTA CON «margin-top: auto» EN LA BARRA, y esto costo una vuelta: el
+       bloque que la contiene se CENTRA con margin:auto (s112), asi que su alto
+       es el del contenido y «auto» la pegaba al fondo del BLOQUE, no del
+       centro. Medido con solo eso: 18 px de hueco en trabajar y 52 en
+       colocarse, o sea seguian a distinta altura. Hace falta que el bloque
+       OCUPE el centro entero.
+       El !important es por el mismo motivo de siempre: centerBody trae
+       margin:auto EN LINEA desde s112, y la barra su propio margin en linea. */
+    [data-pace-session-center-body]:has([data-pace-v1-body]) {
+      display: flex !important; flex-direction: column !important;
+      height: 100% !important; margin-bottom: 0 !important;
+    }
+    [data-pace-v1-progress] { margin-top: auto !important; margin-bottom: 16px !important; }
   `;
   document.head.appendChild(s);
 }

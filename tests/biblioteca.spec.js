@@ -243,11 +243,16 @@ test('la línea de series sólo aparece donde hay DOS series o más', async ({ p
   expect(total).toBeGreaterThan(0);
 });
 
-test('Respira comparte la tarjeta pero no la pantalla: sin capitular, con ritmo', async ({ page }) => {
+test('la tarjeta de Respira va sin capitular y con el ritmo dicho', async ({ page }) => {
   await irAlArtefacto(page);
   await abrir(page, /^Respira/);
-  /* sin filtros: su eje es el TIEMPO, no el contexto */
-  expect(await page.locator('.pace-lib .pace-lib-chip').count()).toBe(0);
+  /* s176 · AQUI HABIA UN ASERTO DE CERO CHIPS, y decia «su eje es el TIEMPO, no
+     el contexto». La observacion sigue siendo cierta y la consecuencia no lo
+     era: sin pantalla propia sus 20 tarjetas caian en el flujo del modal a
+     810 px de ancho y gastaban MAS scroll que antes del redisenio (3,90 contra
+     3,82). Desde s176 Respira usa `LibraryShell` con filtros SUYOS -duracion y
+     retencion-, y quien vigila eso es `tests/respira-biblioteca.spec.js`.
+     Este test se queda con lo que sigue siendo suyo: la TARJETA. */
   /* sin capitular: sus 20 rutinas no declaran metadatos de cuerpo */
   expect(await page.locator('.pace-lib .pace-lib-cap').count()).toBe(0);
   /* pero SÍ la tarjeta nueva, y con el ritmo dicho */
@@ -351,4 +356,62 @@ test('«Para ahora» propone UNA, y lo que sube NO desaparece de la pantalla', a
     expect(todos.length).toBe(cat.length);
     await page.keyboard.press('Escape');
   }
+});
+
+/* ── s176 · EL LATERAL NO SE DESBORDA ────────────────────────────────────── */
+
+test('«Tus rutinas» cabe en el lateral y no se sale por la derecha', async ({ page }) => {
+  await sembrar(page.context());
+  await irAlArtefacto(page);
+  await abrir(page, 'Estira');
+
+  const m = await page.evaluate(() => {
+    /* POR CAJA NO NULA: el lateral existe también en la piel móvil, apagado. */
+    const lat = [...document.querySelectorAll('.pace-lib-lateral')]
+      .find(e => e.getBoundingClientRect().width > 0);
+    if (!lat) return null;
+    const cs = getComputedStyle(lat);
+    const caja = lat.getBoundingClientRect();
+    /* El borde derecho ÚTIL del rail: su caja menos el padding. Es contra esto
+       y no contra la caja como se mide un desbordamiento. */
+    const util = caja.right - parseFloat(cs.paddingRight);
+    const der = (sel) => {
+      const e = [...lat.querySelectorAll(sel)].filter(x => x.getBoundingClientRect().width > 0)[0];
+      return e ? e.getBoundingClientRect().right : null;
+    };
+    return {
+      util,
+      chip: der('.pace-lib-chip'),
+      /* la tarjeta de «Tus rutinas» es un `Card` de Primitives, no una
+         `.pace-lib-card`: se busca por su rejilla */
+      tuyas: (() => {
+        const rej = [...lat.querySelectorAll('div[style*="grid"]')]
+          .filter(d => d.getBoundingClientRect().width > 0)[0];
+        const hijo = rej && rej.firstElementChild;
+        return hijo ? hijo.getBoundingClientRect().right : null;
+      })(),
+      ahora: der('[data-pace-lib-now] .pace-lib-card'),
+    };
+  });
+
+  expect(m, 'sin lateral visible: la prueba no mide nada').not.toBeNull();
+  /* GUARD DE CERO: si alguna pieza faltara, las comparaciones de abajo pasarían
+     comparando `null` con un número y el test sería decorativo. */
+  for (const k of ['chip', 'tuyas', 'ahora']) {
+    expect(m[k], 'falta la pieza «' + k + '» en el lateral').not.toBeNull();
+  }
+
+  /* EL DEFECTO QUE ARREGLA s176: la rejilla de «Tus rutinas» pedía un mínimo de
+     260 px dentro de un rail que deja 242, y un mínimo NO encoge — la tarjeta
+     se pintaba 18 px más ancha que el rail. Medido a 1536: los chips acababan
+     en 428,93 y ella en 446,21. Se compara con tolerancia de 1 px por el
+     redondeo del layout, no por dejar margen al defecto: 18 px lo cruza de
+     largo. */
+  expect(m.tuyas, '«Tus rutinas» se sale del lateral por la derecha')
+    .toBeLessThanOrEqual(m.util + 1);
+  /* Y ALINEADA CON SUS VECINAS, que es lo que se ve: un borde común. */
+  expect(Math.abs(m.tuyas - m.chip), '«Tus rutinas» no alinea con los chips')
+    .toBeLessThanOrEqual(1);
+  expect(Math.abs(m.tuyas - m.ahora), '«Tus rutinas» no alinea con «Para ahora»')
+    .toBeLessThanOrEqual(1);
 });

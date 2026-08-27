@@ -1,9 +1,22 @@
 /* PACE · app/ui/LibraryShell.jsx (sesión 174)
    =============================================
-   LA PANTALLA DE LAS BIBLIOTECAS DE CUERPO (Mueve y Estira), que son gemelas:
-   mismo catálogo de metadatos, mismo eje y misma tarjeta. Respira NO usa esto
-   -- se ordena por TIEMPO y no por contexto, así que comparte la tarjeta y no
-   la pantalla (decisión s174).
+   LA PANTALLA DE LAS TRES BIBLIOTECAS. Nació para Mueve y Estira, que son
+   gemelas (mismo catálogo de metadatos, mismo eje y misma tarjeta).
+
+   RESPIRA ENTRÓ EN s176, y la decisión de s174 —«comparte la tarjeta y no la
+   pantalla»— queda SUPERSEDED por lo que el usuario vio al probarla: sin esta
+   pantalla, sus 20 tarjetas caían en el flujo del modal a 810 px de ancho, con
+   unos 380 px de contenido dentro, y el resultado gastaba MÁS scroll que la
+   biblioteca anterior al rediseño (3,90 pantallas contra 3,82). Medido a 1536.
+   Lo que Respira cambia respecto a cuerpo entra por PROPS, no por ramas:
+     · `filtros` -- los suyos son otros porque no declara `position` ni
+       `equipment` (`LIB_FILTROS_RESPIRA`, library-rules.js)
+     · `variant` -- su tarjeta va sin capitular ni pills (`RoutineCard`)
+     · `conTuyas` -- «Tus rutinas» es de cuerpo: no hay rutinas propias de
+       respiración, así que ni el bloque del lateral ni el enlace de móvil
+     · `pozoAhora` -- de dónde sale la sugerencia del día
+   Ninguna de las cuatro cambia lo que ven Mueve y Estira: todas traen de
+   defecto lo que ya hacían.
 
    EL DIAGNÓSTICO NO ERA «SOBRA CONTENIDO», ERA «FALTA FORMA DE DESCARTAR».
    Cada rutina declara `position`, `equipment`, `requiresFloor`, `intensity` y
@@ -26,7 +39,8 @@
 
 const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
 
-function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix }) {
+function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, catPrefix,
+                       variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240 }) {
   const { t, tn, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   const [activos, setActivos] = useStateLib([]);
@@ -64,7 +78,7 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
      dos en móvil y una en el lateral dejaría la segunda sin aparecer en ninguna
      parte de la pantalla de escritorio. Que difieran exigiría leer la piel en
      JS, que es justo lo que s166 quitó a propósito. */
-  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1);
+  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
   /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya
@@ -77,9 +91,14 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   const alterna = (k) => setActivos(a => a.indexOf(k) === -1 ? a.concat([k]) : a.filter(x => x !== k));
   const nombreChip = (k) => k === 'corto' ? tn('lib.filter.short', { n: umbral }) : t('lib.filter.' + k);
 
+  /* La lista de filtros llega por prop; sin ella, los de cuerpo. Se lee de
+     `window` por si el orden de carga fallara -- el artefacto son scripts
+     sueltos y un `const` de otro archivo no siempre está ligado (s148). */
+  const listaFiltros = filtros || window.LIB_FILTROS || [];
+
   const chips = (
     <div className="pace-lib-chips" role="group" aria-label={t('lib.filter.title')}>
-      {LIB_FILTROS.map(k => (
+      {listaFiltros.map(k => (
         <button key={k} type="button" className="pace-lib-chip"
           aria-pressed={activos.indexOf(k) !== -1}
           onClick={() => alterna(k)}>
@@ -90,7 +109,7 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   );
 
   const tarjetas = (rs) => rs.map(r => (
-    <RoutineCard key={r.id} routine={r} color={tone} onClick={() => onStart(r)} />
+    <RoutineCard key={r.id} routine={r} color={tone} variant={variant} onClick={() => onStart(r)} />
   ));
 
   const bloqueAhora = ahora.length > 0 && (
@@ -135,12 +154,15 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
     );
   });
 
-  const enlaceTuyas = (
+  /* «Tus rutinas» es de CUERPO: las rutinas propias se componen con ejercicios
+     del catálogo de Mueve y Estira. En Respira no existe el bloque, así que
+     tampoco su enlace de móvil -- un acceso a una pantalla vacía. */
+  const enlaceTuyas = conTuyas ? (
     <button type="button" className="pace-lib-link"
       onClick={() => setVista(v => v === 'tuyas' ? 'catalogo' : 'tuyas')}>
       {vista === 'tuyas' ? t('lib.back') : t('custom.section.title')}
     </button>
-  );
+  ) : null;
 
   const cabecera = (
     <div className="pace-lib-hd">
@@ -153,12 +175,12 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
     </div>
   );
 
-  const tuyas = typeof CustomRoutinesSection !== 'undefined'
+  const tuyas = (conTuyas && typeof CustomRoutinesSection !== 'undefined')
     ? <CustomRoutinesSection onStart={onStart} accent={tone} />
     : null;
 
   return (
-    <Modal open={open} onClose={onClose} maxWidth={1240}>
+    <Modal open={open} onClose={onClose} maxWidth={ancho}>
       <div className="pace-lib" style={{ '--tone': tone }}>
         <div className="pace-lib-cuerpo">
           {/* LATERAL: sólo escritorio (la hoja lo oculta por debajo de 769 px).

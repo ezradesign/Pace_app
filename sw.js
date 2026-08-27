@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.105.0';
+const CACHE_NAME = 'pace-v0.106.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
@@ -155,6 +155,9 @@ const PRECACHE = [
   '/app/breathe/voz/sulafat-inhala.mp3',
   '/app/breathe/voz/sulafat-manten.mp3',
   '/app/breathe/voz/sulafat-exhala.mp3',
+  '/app/breathe/voz/bradford-inhala.mp3',
+  '/app/breathe/voz/bradford-manten.mp3',
+  '/app/breathe/voz/bradford-exhala.mp3',
   /* s146: glifos de logro del usuario, MASCARAS CSS.
      Mismo trato que el loto: archivo en web + precache, data URI solo en el
      standalone.

@@ -18,7 +18,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.105.0';
+const PACE_VERSION = 'v0.106.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -50,6 +50,19 @@ const defaultState = {
   // instalaciones nuevas: el merge de loadState conserva el valor persistido.
   soundOn: true,
   ambientOn: false,
+
+  // s176 · LA VOZ TIENE INTERRUPTOR PROPIO. Hasta s175 iba pegada a `soundOn`,
+  // asi que quien tenia sonido se encontro una voz y no podia quitarla sin
+  // apagarlo todo -- lo reporto el usuario al probarla.
+  // ARRANCA EN `true` A PROPOSITO: es el comportamiento que ya esta publicado
+  // en v0.105.0 (la version que el usuario probo), y el merge de loadState
+  // conserva el valor de quien lo cambie.
+  // Poner `false` aqui le quitaria la voz a quien ya la tiene sin pedirlo.
+  voiceOn: true,
+  // Cual de las dos locuciones. Los valores validos los declara `PACE_VOCES`
+  // (Sound.voz.jsx) y `paceVozActiva` cae a `sulafat` ante cualquier otra cosa,
+  // asi que un valor viejo o corrupto en localStorage no deja a nadie sin voz.
+  voice: 'sulafat',
 
   // Descanso entre series de fuerza (s114). SOLO afecta a los rests con
   // restKind:'betweenSets' del runner v1 (desk.pushups / chair.squats); los

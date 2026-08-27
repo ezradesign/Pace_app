@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.105.0</title>
+  <title>PACE · Foco · Cuerpo — v0.106.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1585,6 +1585,20 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.audio.hint': 'Sonidos de la sesión',
   'settings.audio.ambient': 'ambiente durante sesiones',
 
+  // s176 · el bloque de sonido pasa a DOS decisiones (qué marca la fase /
+  // qué suena detrás). `settings.audio.ambient` se conserva: la usaba la
+  // casilla que sustituyen estas pills y retirar una clave es otra decision.
+  'settings.signal.label': 'Qué marca la fase',
+  'settings.signal.tone': 'Tono',
+  'settings.signal.voice': 'Voz',
+  // Las dos voces se nombran por su TIMBRE y no por su genero: medido,
+  // sulafat va por ~193 Hz y bradford por ~121.
+  'settings.voice.clear': 'Clara',
+  'settings.voice.deep': 'Grave',
+  'settings.bg.label': 'Qué suena detrás',
+  'settings.bg.none': 'Nada',
+  'settings.bg.ambient': 'Ambiente',
+
   // ActivityBar
   'activity.meta': 'Actividades',
   'activity.breathe.label': 'Respira',
@@ -1780,6 +1794,16 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.audio.off': 'Muted',
   'settings.audio.hint': 'Session sounds',
   'settings.audio.ambient': 'ambient sound during sessions',
+
+  // s176 · see the ES block: the sound axis became two nested decisions.
+  'settings.signal.label': 'What marks the phase',
+  'settings.signal.tone': 'Tone',
+  'settings.signal.voice': 'Voice',
+  'settings.voice.clear': 'Clear',
+  'settings.voice.deep': 'Deep',
+  'settings.bg.label': 'What plays behind',
+  'settings.bg.none': 'Nothing',
+  'settings.bg.ambient': 'Ambient',
 
   // ActivityBar
   'activity.meta': 'Activities',
@@ -2313,6 +2337,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.filter.title': 'Filtrar',
   'lib.filter.aqui': 'Aquí mismo',
   'lib.filter.sinmat': 'Sin material',
+  // s176 · filtro propio de Respira: sus rutinas no declaran ni postura ni
+  // material, así que sus ejes son duración y retención.
+  'lib.filter.sinreten': 'Sin retención',
   /* El umbral viaja en la cadena porque es RELATIVO a cada biblioteca: ≤ 2
      min en Mueve y ≤ 4 en Estira (medido en s174). El chip ensena el suyo, y
      asi no miente al cambiar de biblioteca. */
@@ -2440,6 +2467,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.filter.title': 'Filter',
   'lib.filter.aqui': 'Right here',
   'lib.filter.sinmat': 'No gear',
+  'lib.filter.sinreten': 'No breath holds',
   'lib.filter.short': '≤ {n} min',
   'lib.where.floor': 'on the floor',
   'lib.where.seated': 'seated',
@@ -4782,7 +4810,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.105.0';
+const PACE_VERSION = 'v0.106.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -4814,6 +4842,19 @@ const defaultState = {
   // instalaciones nuevas: el merge de loadState conserva el valor persistido.
   soundOn: true,
   ambientOn: false,
+
+  // s176 · LA VOZ TIENE INTERRUPTOR PROPIO. Hasta s175 iba pegada a `soundOn`,
+  // asi que quien tenia sonido se encontro una voz y no podia quitarla sin
+  // apagarlo todo -- lo reporto el usuario al probarla.
+  // ARRANCA EN `true` A PROPOSITO: es el comportamiento que ya esta publicado
+  // en v0.105.0 (la version que el usuario probo), y el merge de loadState
+  // conserva el valor de quien lo cambie.
+  // Poner `false` aqui le quitaria la voz a quien ya la tiene sin pedirlo.
+  voiceOn: true,
+  // Cual de las dos locuciones. Los valores validos los declara `PACE_VOCES`
+  // (Sound.voz.jsx) y `paceVozActiva` cae a `sulafat` ante cualquier otra cosa,
+  // asi que un valor viejo o corrupto en localStorage no deja a nadie sin voz.
+  voice: 'sulafat',
 
   // Descanso entre series de fuerza (s114). SOLO afecta a los rests con
   // restKind:'betweenSets' del runner v1 (desk.pushups / chair.squats); los
@@ -10821,36 +10862,58 @@ Object.assign(window, { playSound, useSound, ambientDrone });
    `var`/`function` a propósito: un `const` top-level no cruza la IIFE del
    artefacto (trampa de s148). */
 
-/* La voz activa. Hoy sólo hay una; el día que entre `bradford` esto pasa a ser
-   una preferencia, y entonces habrá que decidir su sitio en Ajustes MIRÁNDOLO. */
-var PACE_VOZ = 'sulafat';
+/* LAS DOS VOCES. `sulafat` entro en s175; `bradford` en s176, ya medida.
+   La ACTIVA no se decide aqui: sale del estado (`state.voice`), porque desde
+   s176 es una preferencia del usuario con su sitio en Ajustes. */
+var PACE_VOZ_DEFECTO = 'sulafat';
+var PACE_VOCES = ['sulafat', 'bradford'];
 
-/* Margen sobre la duración del clip. Sin él, una locución de 2,52 s en una fase
+/* Margen sobre la duracion del clip. Sin el, una locucion de 2,52 s en una fase
    de exactamente 2,52 s termina en el mismo instante en que arranca la
-   siguiente señal, y las dos se tocan. 150 ms es lo que separa dos palabras. */
+   siguiente senal, y las dos se tocan. 150 ms es lo que separa dos palabras. */
 var PACE_VOZ_MARGEN = 0.15;
 
 /* LOS EXTREMOS DE LA VOZ DENTRO DE CADA ARCHIVO, en segundos. `ini` es donde
-   empieza a sonar la palabra y `fin` donde deja de sonar; `archivo` es lo que
-   dura el MP3 entero.
+   empieza a sonar la palabra y `fin` donde deja de sonar; `dur` es lo que dura
+   el MP3 entero.
 
    ESTO NO ES UN DETALLE DE AFINADO: LOS ARCHIVOS LLEVAN SILENCIO A LOS DOS
    LADOS, y medirlos por su duracion total dio dos errores seguidos. El «exhala»
-   ocupa 4,96 s de archivo y la palabra acaba a los **2,12** — hay 2,84 s de
-   cola muda y 0,65 s de silencio ANTES. Con la duracion del archivo como
-   criterio, la voz se caia de doce rutinas por un silencio que no molesta a
-   nadie; y ademas la senal llegaba **0,65 s tarde**, que en una fase de 4 s se
-   oye.
+   de sulafat ocupa 4,96 s de archivo y la palabra acaba a los **2,12** -- hay
+   2,84 s de cola muda y 0,65 s de silencio ANTES. Con la duracion del archivo
+   como criterio, la voz se caia de doce rutinas por un silencio que no molesta
+   a nadie; y ademas la senal llegaba **0,65 s tarde**, que en una fase de 4 s
+   se oye.
 
    COMO SE MIDIERON, y como se vuelven a medir si cambia un archivo: decodificando
    la onda (`decodeAudioData`) y buscando la primera y la ultima muestra por
-   encima del umbral. Dos umbrales —1 % del pico y -50 dBFS— dan lo mismo dentro
-   de 12 centesimas, asi que el dato es solido. NO se pueden deducir de
-   `audio.duration`: son propiedad del contenido, no del contenedor. */
+   encima del umbral. **EL UMBRAL QUE MANDA ES -50 dBFS**, que es el que se uso
+   para sulafat; el «1 % del pico» va como segunda opinion y en s176 se separo
+   1,73 s en un archivo de bradford por tener el pico bajo. NO se pueden deducir
+   de `audio.duration`: son propiedad del contenido, no del contenedor.
+
+   BRADFORD ES OTRA GRABACION, NO LA MISMA CON OTRA VOZ: sus palabras de inhala
+   y manten son mas CORTAS que las de sulafat (0,911 y 1,218 contra 1,404 y
+   1,320) pero su «exhala» dura **3,572 s**, mas del doble. Con el margen pide
+   fases de 3,72 s, asi que **cabe en 14 de las 20 rutinas** donde sulafat cabe
+   en 17: se cae de las tres de rondas. Como la decision es POR FASE, en esas
+   rutinas simplemente suena el sintetizador donde no entra. Reproducible:
+   `node scripts/audit/censo-respira-fases.js`.
+
+   Y SU «EXHALA» LLEGA HASTA EL FINAL DEL ARCHIVO (fin 3,68 = duracion): no
+   tiene cola muda. Si algun dia se recorta el MP3, estos numeros cambian y hay
+   que volver a medirlos. */
 var PACE_VOZ_CLIPS = {
-  'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
-  'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
-  'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+  sulafat: {
+    'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
+    'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
+    'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+  },
+  bradford: {
+    'breathe.inhale': { archivo: 'inhala', dur: 2.64, ini: 0.001, fin: 0.912 },
+    'breathe.hold': { archivo: 'manten', dur: 2.4, ini: 0.001, fin: 1.219 },
+    'breathe.exhale': { archivo: 'exhala', dur: 3.68, ini: 0.108, fin: 3.68 }
+  }
 };
 
 /* Pre-rodadura al saltar el silencio inicial: arrancar EXACTAMENTE en `ini`
@@ -10858,17 +10921,45 @@ var PACE_VOZ_CLIPS = {
    la «e» de «exhala» entera. */
 var PACE_VOZ_PREV = 0.04;
 
-var _paceVoz = null;
+/* QUE VOZ SUENA, Y SI SUENA SIQUIERA. Las dos preguntas se contestan leyendo el
+   estado en el MOMENTO de sonar, no al cargar: el usuario puede cambiarlas
+   desde Ajustes en mitad de una sesion.
+   `voiceOn` es la novedad de s176 y arranca en `true` para que quien ya tenia
+   la voz de s175 no la pierda por una actualizacion. */
+function paceVozEstado() {
+  try {return typeof getState === 'function' ? getState() : null;} catch (e) {return null;}
+}
+function paceVozActiva() {
+  var st = paceVozEstado();
+  var v = st && st.voice;
+  return PACE_VOCES.indexOf(v) !== -1 ? v : PACE_VOZ_DEFECTO;
+}
+function paceVozEncendida() {
+  var st = paceVozEstado();
+  /* sin estado no se adivina: se cae al sintetizador, que es lo de siempre */
+  if (!st) return false;
+  return st.voiceOn !== false;
+}
 
-function paceVozInit() {
-  if (_paceVoz) return _paceVoz;
-  _paceVoz = {};
-  Object.keys(PACE_VOZ_CLIPS).forEach(function (nombre) {
-    var ficha = PACE_VOZ_CLIPS[nombre];
+/* UN JUEGO DE CLIPS POR VOZ. Se precarga la que este activa, no las dos: son
+   seis archivos y solo suena uno de cada tres. Al cambiar de voz en Ajustes la
+   nueva se precarga en ese momento (`TweaksPanel` llama a `paceVozInit`), asi
+   que para cuando empieza una sesion ya esta lista. Si no lo estuviera,
+   `paceVozCabe` dice que no y suena el sintetizador -- nunca un silencio. */
+var _paceVoz = {};
+
+function paceVozInit(voz) {
+  var cual = PACE_VOCES.indexOf(voz) !== -1 ? voz : paceVozActiva();
+  if (_paceVoz[cual]) return _paceVoz[cual];
+  var juego = {};
+  _paceVoz[cual] = juego;
+  var fichas = PACE_VOZ_CLIPS[cual] || {};
+  Object.keys(fichas).forEach(function (nombre) {
+    var ficha = fichas[nombre];
     var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
-    _paceVoz[nombre] = slot;
+    juego[nombre] = slot;
     try {
-      var a = new Audio('app/breathe/voz/' + PACE_VOZ + '-' + ficha.archivo + '.mp3');
+      var a = new Audio('app/breathe/voz/' + cual + '-' + ficha.archivo + '.mp3');
       a.preload = 'auto';
       a.addEventListener('canplaythrough', function () {
         /* GUARD: los extremos de voz estan medidos sobre ESTE archivo. Si el
@@ -10882,22 +10973,25 @@ function paceVozInit() {
         }
         slot.listo = true;
       });
-      /* Si el archivo no está —el standalone, o una instalación a medias— el
+      /* Si el archivo no esta -el standalone, o una instalacion a medias- el
          clip simplemente no se marca listo y nadie se entera: suena el
          sintetizador. No se registra error porque no lo es. */
       a.addEventListener('error', function () {slot.listo = false;});
       a.load();
       slot.audio = a;
-    } catch (e) {/* sin Audio() no hay voz, y ya está */}
+    } catch (e) {/* sin Audio() no hay voz, y ya esta */}
   });
-  return _paceVoz;
+  return juego;
 }
 
 /* ¿Cabe la locución de esta señal en una fase de `faseSeg` segundos?
    `faseSeg` ausente = no se sabe, y no saber NO es que sí: se cae al
    sintetizador, que es el comportamiento de siempre. */
 function paceVozCabe(nombre, faseSeg) {
-  var slot = paceVozInit()[nombre];
+  /* EL INTERRUPTOR VA PRIMERO, antes incluso de precargar: si el usuario ha
+     elegido «Tono», ni siquiera se pide el archivo. */
+  if (!paceVozEncendida()) return false;
+  var slot = paceVozInit(paceVozActiva())[nombre];
   if (!slot || !slot.listo) return false;
   if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg <= 0) return false;
   /* Lo que puede pisar la senal siguiente es la PALABRA, no el archivo: la cola
@@ -10909,7 +11003,7 @@ function paceVozCabe(nombre, faseSeg) {
    locución; `playSound` usa esa respuesta para decidir si además sintetiza. */
 function paceVozIntenta(nombre, faseSeg) {
   if (!paceVozCabe(nombre, faseSeg)) return false;
-  var slot = _paceVoz[nombre];
+  var slot = _paceVoz[paceVozActiva()][nombre];
   try {
     /* Rebobinar en vez de clonar: la misma señal se repite decenas de veces por
        sesión y clonar dejaría un elemento nuevo por ciclo. Si el clip anterior
@@ -10930,14 +11024,17 @@ function paceVozIntenta(nombre, faseSeg) {
 }
 
 Object.assign(window, {
-  PACE_VOZ: PACE_VOZ,
+  PACE_VOCES: PACE_VOCES,
+  PACE_VOZ_DEFECTO: PACE_VOZ_DEFECTO,
+  paceVozActiva: paceVozActiva,
+  paceVozEncendida: paceVozEncendida,
   PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
   PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
   paceVozInit: paceVozInit,
   paceVozCabe: paceVozCabe,
   paceVozIntenta: paceVozIntenta
 });
-;Object.assign(window, { PACE_VOZ, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_PREV, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
+;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_PREV, paceVozEstado, paceVozActiva, paceVozEncendida, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
 })();
 </script>
   <script>
@@ -14472,6 +14569,31 @@ Object.assign(window, { RoutinePreview });
    cuarto no cabe sin deslizar — y deslizar chips esconde el que no ves. */
 var LIB_FILTROS = ['aqui', 'sinmat', 'corto'];
 
+/* LOS DE RESPIRA SON OTROS, y no por gusto: sus 20 rutinas no declaran
+   `position`, `equipment` ni `requiresFloor` (20 de 20, medido en s174), asi
+   que «Aqui mismo» y «Sin material» las dejarian pasar TODAS -- dos chips que
+   no filtran nada. Lo que Respira si tiene es duracion y forma de respirar.
+
+   SON DOS Y NO TRES, y esto se midio antes de cablearlo: la maqueta de s176
+   llevaba un tercero, «Sin rondas», y resulto ser un SUBCONJUNTO ESTRICTO del
+   segundo -- quita `rounds.express`, `rounds.full` y `rounds.long`, que son
+   exactamente las tres que «Sin retencion» ya quita, porque ninguna declara
+   `cycle` y las tres llevan `safety`. Un chip que no puede cambiar el resultado
+   de otro es decoracion.
+   Recuentos sobre el catalogo: «<= 5 min» deja 9 de 20 y «Sin retencion» 11. */
+var LIB_FILTROS_RESPIRA = ['corto', 'sinreten'];
+
+/* «Con retencion» = la respiracion se PARA en algun momento, llena o vacia.
+   El dato vive en `cycle` como [inhala, sosten, exhala, vacio], asi que basta
+   con mirar las posiciones 1 y 3. Las rutinas SIN `cycle` -rondas, kapalabhati,
+   los patrones con motor propio- no lo declaran, y ahi manda `safety`: las seis
+   que llevan aviso son precisamente las de apnea o hiperventilacion. */
+function libraryConRetencion(r) {
+  if (!r) return false;
+  if (Array.isArray(r.cycle)) return r.cycle[1] > 0 || r.cycle[3] > 0;
+  return !!r.safety;
+}
+
 /* EL UMBRAL DE «CORTO» ES RELATIVO A CADA BIBLIOTECA, y no un número escrito
    aquí. Medido en s174: con «≤ 3 min» fijo, el chip deja 12 de 14 en Mueve
    —quita dos: no filtra— y 3 de 14 en Estira. El mismo texto hacía dos cosas
@@ -14504,6 +14626,7 @@ function libraryPredicado(clave, umbral) {
   };
   if (clave === 'sinmat') return function (r) {return (r.equipment || []).length === 0;};
   if (clave === 'corto') return function (r) {return r.min <= umbral;};
+  if (clave === 'sinreten') return function (r) {return !libraryConRetencion(r);};
   return function () {return true;};
 }
 
@@ -14607,9 +14730,16 @@ function libraryDiaOrdinal(iso) {
    MEDIDO al elegir el pozo: con «aquí mismo» Y «sin material» son 3 rutinas en
    Estira y 5 en Mueve, y enseñando 2 de 3 casi siempre sale lo mismo. Con
    «aquí mismo» a secas son 5 y 11, que sí rotan. */
-function libraryParaAhora(rutinas, iso, cuantas) {
+function libraryParaAhora(rutinas, iso, cuantas, pozoPred) {
   var n = cuantas || 2;
-  var pozo = (rutinas || []).filter(libraryPredicado('aqui'));
+  /* EL POZO ES «LO QUE PUEDES HACER AHORA», y eso no significa lo mismo en
+     todas las bibliotecas. En cuerpo es el contexto (`aqui`). En Respira ese
+     predicado deja pasar las 20 -no hay suelo ni material- y la sugerencia
+     acababa cayendo en cosas como `Kumbhaka 1:4:2`, que es apnea avanzada con
+     modal de seguridad: lo destapo la maqueta de s176 al pintarla.
+     Por eso el predicado ENTRA por parametro y el de cuerpo queda de defecto:
+     ninguna biblioteca cambia de comportamiento por esto. */
+  var pozo = (rutinas || []).filter(pozoPred || libraryPredicado('aqui'));
   pozo = pozo.slice().sort(function (a, b) {return a.min - b.min;});
   if (pozo.length <= n) return pozo;
   var i = libraryDiaOrdinal(iso) % pozo.length;
@@ -14634,6 +14764,8 @@ function libraryMotivoVacio(ocultas) {
 
 Object.assign(window, {
   LIB_FILTROS: LIB_FILTROS,
+  LIB_FILTROS_RESPIRA: LIB_FILTROS_RESPIRA,
+  libraryConRetencion: libraryConRetencion,
   libraryUmbralCorto: libraryUmbralCorto,
   libraryPredicado: libraryPredicado,
   libraryFiltrar: libraryFiltrar,
@@ -14645,7 +14777,7 @@ Object.assign(window, {
   libraryParaAhora: libraryParaAhora,
   libraryMotivoVacio: libraryMotivoVacio
 });
-;Object.assign(window, { LIB_FILTROS, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
+;Object.assign(window, { LIB_FILTROS, LIB_FILTROS_RESPIRA, libraryConRetencion, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
 })();
 </script>
   <script>
@@ -15145,10 +15277,23 @@ Object.assign(window, { RoutineCard, routineRhythmText });
 ;(function () {
 /* PACE · app/ui/LibraryShell.jsx (sesión 174)
    =============================================
-   LA PANTALLA DE LAS BIBLIOTECAS DE CUERPO (Mueve y Estira), que son gemelas:
-   mismo catálogo de metadatos, mismo eje y misma tarjeta. Respira NO usa esto
-   -- se ordena por TIEMPO y no por contexto, así que comparte la tarjeta y no
-   la pantalla (decisión s174).
+   LA PANTALLA DE LAS TRES BIBLIOTECAS. Nació para Mueve y Estira, que son
+   gemelas (mismo catálogo de metadatos, mismo eje y misma tarjeta).
+
+   RESPIRA ENTRÓ EN s176, y la decisión de s174 —«comparte la tarjeta y no la
+   pantalla»— queda SUPERSEDED por lo que el usuario vio al probarla: sin esta
+   pantalla, sus 20 tarjetas caían en el flujo del modal a 810 px de ancho, con
+   unos 380 px de contenido dentro, y el resultado gastaba MÁS scroll que la
+   biblioteca anterior al rediseño (3,90 pantallas contra 3,82). Medido a 1536.
+   Lo que Respira cambia respecto a cuerpo entra por PROPS, no por ramas:
+     · `filtros` -- los suyos son otros porque no declara `position` ni
+       `equipment` (`LIB_FILTROS_RESPIRA`, library-rules.js)
+     · `variant` -- su tarjeta va sin capitular ni pills (`RoutineCard`)
+     · `conTuyas` -- «Tus rutinas» es de cuerpo: no hay rutinas propias de
+       respiración, así que ni el bloque del lateral ni el enlace de móvil
+     · `pozoAhora` -- de dónde sale la sugerencia del día
+   Ninguna de las cuatro cambia lo que ven Mueve y Estira: todas traen de
+   defecto lo que ya hacían.
 
    EL DIAGNÓSTICO NO ERA «SOBRA CONTENIDO», ERA «FALTA FORMA DE DESCARTAR».
    Cada rutina declara `position`, `equipment`, `requiresFloor`, `intensity` y
@@ -15171,7 +15316,8 @@ Object.assign(window, { RoutineCard, routineRhythmText });
 
 const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
 
-function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix } = _ref;
+function LibraryShell(_ref)
+{let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix, variant = 'body', filtros, conTuyas = true, pozoAhora, ancho = 1240 } = _ref;
   const { t, tn, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   const [activos, setActivos] = useStateLib([]);
@@ -15209,7 +15355,7 @@ function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, 
      dos en móvil y una en el lateral dejaría la segunda sin aparecer en ninguna
      parte de la pantalla de escritorio. Que difieran exigiría leer la piel en
      JS, que es justo lo que s166 quitó a propósito. */
-  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1);
+  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1, pozoAhora);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
   /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya
@@ -15222,9 +15368,14 @@ function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, 
   const alterna = (k) => setActivos((a) => a.indexOf(k) === -1 ? a.concat([k]) : a.filter((x) => x !== k));
   const nombreChip = (k) => k === 'corto' ? tn('lib.filter.short', { n: umbral }) : t('lib.filter.' + k);
 
+  /* La lista de filtros llega por prop; sin ella, los de cuerpo. Se lee de
+     `window` por si el orden de carga fallara -- el artefacto son scripts
+     sueltos y un `const` de otro archivo no siempre está ligado (s148). */
+  const listaFiltros = filtros || window.LIB_FILTROS || [];
+
   const chips = /*#__PURE__*/
   React.createElement("div", { className: "pace-lib-chips", role: "group", "aria-label": t('lib.filter.title') },
-  LIB_FILTROS.map((k) => /*#__PURE__*/
+  listaFiltros.map((k) => /*#__PURE__*/
   React.createElement("button", { key: k, type: "button", className: "pace-lib-chip",
     "aria-pressed": activos.indexOf(k) !== -1,
     onClick: () => alterna(k) },
@@ -15235,7 +15386,7 @@ function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, 
 
 
   const tarjetas = (rs) => rs.map((r) => /*#__PURE__*/
-  React.createElement(RoutineCard, { key: r.id, routine: r, color: tone, onClick: () => onStart(r) })
+  React.createElement(RoutineCard, { key: r.id, routine: r, color: tone, variant: variant, onClick: () => onStart(r) })
   );
 
   const bloqueAhora = ahora.length > 0 && /*#__PURE__*/
@@ -15280,12 +15431,15 @@ function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, 
 
   });
 
-  const enlaceTuyas = /*#__PURE__*/
+  /* «Tus rutinas» es de CUERPO: las rutinas propias se componen con ejercicios
+     del catálogo de Mueve y Estira. En Respira no existe el bloque, así que
+     tampoco su enlace de móvil -- un acceso a una pantalla vacía. */
+  const enlaceTuyas = conTuyas ? /*#__PURE__*/
   React.createElement("button", { type: "button", className: "pace-lib-link",
     onClick: () => setVista((v) => v === 'tuyas' ? 'catalogo' : 'tuyas') },
   vista === 'tuyas' ? t('lib.back') : t('custom.section.title')
-  );
-
+  ) :
+  null;
 
   const cabecera = /*#__PURE__*/
   React.createElement("div", { className: "pace-lib-hd" }, /*#__PURE__*/
@@ -15298,12 +15452,12 @@ function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, 
   );
 
 
-  const tuyas = typeof CustomRoutinesSection !== 'undefined' ? /*#__PURE__*/
+  const tuyas = conTuyas && typeof CustomRoutinesSection !== 'undefined' ? /*#__PURE__*/
   React.createElement(CustomRoutinesSection, { onStart: onStart, accent: tone }) :
   null;
 
   return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 1240 }, /*#__PURE__*/
+    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: ancho }, /*#__PURE__*/
     React.createElement("div", { className: "pace-lib", style: { '--tone': tone } }, /*#__PURE__*/
     React.createElement("div", { className: "pace-lib-cuerpo" }, /*#__PURE__*/
 
@@ -16632,40 +16786,49 @@ const BREATHE_ROUTINES = {
   }
 };
 
-/* s174 · RESPIRA RECIBE LA TARJETA, NO LA PANTALLA.
-   La biblioteca conserva su estructura —sus cinco grupos, en su orden y sin
-   filtros— y estrena la tarjeta compartida y su tipografía. Lo que NO entra, y
-   por qué: Mueve y Estira se ordenan por CONTEXTO (11 de sus 28 exigen suelo)
-   y Respira por TIEMPO (de 2 a 20 min, factor 10), así que su pantalla propia
-   es otro diseño. Y su información más útil —el RITMO— pide dibujarlo: son 13
-   motores de ritmo y 19 ritmos distintos, un encargo de arte que aún no tiene
-   tamaño decidido. Mientras tanto el ritmo se DICE, en la línea de contexto,
-   donde hoy no se leía en ninguna pantalla.
-   Le entra la tarjeta y no espera a su sesión para que la app no tenga DOS
-   idiomas de tarjeta en tres botones contiguos de la misma home. */
+/* s176 · RESPIRA RECIBE TAMBIEN LA PANTALLA, y esto ANULA la decision de s174
+   («recibe la tarjeta, no la pantalla»).
+
+   POR QUE SE CAE AQUELLA DECISION: la razon escrita era que Mueve y Estira se
+   ordenan por CONTEXTO y Respira por TIEMPO, asi que su pantalla seria otro
+   diseno. La razon es cierta y la consecuencia no lo fue: sin pantalla propia,
+   las 20 tarjetas cayeron en el flujo del modal a **810 px de ancho** para
+   llevar unos 380 de contenido, y el sello de seguridad acababa a 700 px del
+   nombre al que pertenece. Medido a 1536 px en s176: **3,90 pantallas de
+   scroll**, MAS que las 3,82 de la biblioteca anterior al redisenio. El
+   redisenio se llevo el ancho y no cobro nada. Lo vio el usuario -«se ve
+   demasiado feo»- antes que cualquier medida.
+
+   LO QUE RESPIRA APORTA DE SUYO, todo por props y ninguna rama dentro de
+   `LibraryShell`:
+     · SUS FILTROS. Los de cuerpo -«Aqui mismo», «Sin material»- dejarian pasar
+       las 20, porque ninguna rutina de Respira declara `position` ni
+       `equipment` (20 de 20, s174). Los suyos son duracion y retencion.
+     · SU TARJETA (`variant="breathe"`): sin capitular, sin pill y con el RITMO
+       en la linea de contexto.
+     · SIN «Tus rutinas»: las rutinas propias se componen con ejercicios de
+       cuerpo. Aqui el bloque estaria vacio y el enlace de movil llevaria a una
+       pantalla sin nada.
+     · SU POZO DE SUGERENCIA. El de cuerpo es «lo que puedes hacer aqui», que en
+       Respira no descarta nada; sin acotarlo, la sugerencia del dia podia salir
+       siendo `Kumbhaka 1:4:2` -apnea avanzada, premium y con modal de
+       seguridad-. Lo destapo la maqueta al pintarla. Ahora el pozo excluye las
+       que llevan aviso: una sugerencia no puede ser algo que primero te obliga
+       a leer una advertencia.
+
+   LOS CINCO GRUPOS SIGUEN COMO ESTABAN, en su orden. Lo unico que cambia del
+   catalogo es que ahora se puede filtrar dentro de el. */
 function BreatheLibrary(_ref) {let { open, onClose, onStart } = _ref;
-  const { t, lang } = useT();
-  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const { t } = useT();
   return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 860 }, /*#__PURE__*/
-    React.createElement("div", { className: "pace-lib", style: { '--tone': 'var(--breathe)' } }, /*#__PURE__*/
-    React.createElement("div", { className: "pace-lib-hd" }, /*#__PURE__*/
-    React.createElement("div", { className: "pace-lib-k" }, t('lib.tag')), /*#__PURE__*/
-    React.createElement("div", { className: "pace-lib-hd-fila" }, /*#__PURE__*/React.createElement("h2", null, t('lib.breathe.title'))), /*#__PURE__*/
-    React.createElement("p", { className: "pace-lib-sub" }, t('lib.breathe.subtitle'))
-    ),
-    Object.entries(BREATHE_ROUTINES).map((_ref2) => {let [key, group] = _ref2;return (/*#__PURE__*/
-        React.createElement("div", { key: key }, /*#__PURE__*/
-
-
-        React.createElement("h3", { className: "pace-lib-grp" }, tR(`breathe.cat.${key}.label`, group.label)),
-        libraryOrdenar(group.items).map((r) => /*#__PURE__*/
-        React.createElement(RoutineCard, { key: r.id, routine: r, color: "var(--breathe)", variant: "breathe", onClick: () => onStart(r) })
-        )
-        ));}
-    )
-    )
-    ));
+    React.createElement(LibraryShell, {
+      open: open, onClose: onClose, onStart: onStart,
+      groups: BREATHE_ROUTINES, tone: "var(--breathe)", catPrefix: "breathe",
+      title: t('lib.breathe.title'), subtitle: t('lib.breathe.subtitle'),
+      variant: "breathe",
+      filtros: window.LIB_FILTROS_RESPIRA,
+      conTuyas: false,
+      pozoAhora: (r) => !r.safety }));
 
 }
 
@@ -16675,7 +16838,7 @@ function BreatheLibrary(_ref) {let { open, onClose, onStart } = _ref;
    Mueve obligaba a abrir el módulo de Respira. El gating de contenido (`access`
    + `canAccessRoutine`) se fue con ella, intacto. */
 
-function BreatheSafety(_ref3) {let { routine, onAccept, onCancel } = _ref3;
+function BreatheSafety(_ref2) {let { routine, onAccept, onCancel } = _ref2;
   const { t } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
@@ -18238,7 +18401,23 @@ if (!_paceMoveV1Css) {
        a las reservas «con el nombre a 2 líneas y fuentes grandes», y desde
        entonces el nombre móvil ya es un clamp; el desborde se vuelve a medir en
        360×640, 375×812 y 390×844 abajo, que es donde aquella decisión dolía. */
-    [data-pace-v1-cue]  { min-height: 3.1em; }   /* 2 líneas × 1.55 */
+    /* s176 · LA RESERVA BAJO LA DESCRIPCION SE RETIRA, y no es un capricho: la
+       propia s171 dejo escrito que moverla «al final del bloque, despues de
+       Cuidate, donde no se leeria como hueco» exigia que el bloque entero
+       declarase alto minimo -- «un cambio de mecanismo con cinco tiers medidos
+       detras». ESE CAMBIO LO HIZO s172b: el bloque se alinea arriba y el
+       circulo queda clavado por construccion; su comentario lo dice con todas
+       las letras, «con el bloque anclado no hace falta reservar ningun texto».
+       La reserva se quedo por inercia y lo unico que hacia era empujar el
+       contador contra el «Cuidate».
+       LO QUE COSTABA, medido a 1536x714 (la pantalla del usuario): la barra de
+       progreso se metia 15 px DENTRO de los botones en la pantalla de trabajo,
+       y estaba 47,2 px mas abajo que en la de colocarse. Reportado mirando la
+       app: «la barra casi se superpone con los botones... deberia estar siempre
+       a la misma altura: referencia del colocate».
+       COMPROBADO que el circulo NO se mueve al quitarla: top 76,4 px en las dos
+       pantallas a 1536x714 y 58,6 en las dos a 360x730 y 375x812. */
+    /* [data-pace-v1-cue] min-height: retirada en s176 -- ver arriba */
     [data-pace-v1-care] { min-height: 3em; }     /* 2 líneas × 1.5 */
 
     /* s171b · EL BLOQUE ENTERO DECLARA ALTO MINIMO, y es lo unico que hace falta.
@@ -18288,6 +18467,8 @@ if (!_paceMoveV1Css) {
        regla se aplica, no falla, y no cambia NADA — que es como se ve igual que
        antes y uno cree que el arreglo no sirve. */
     [data-pace-session-center-body]:has([data-pace-v1-body]) { margin-top: 0 !important; }
+
+
 
     /* El rotulo de fase se pinta SIEMPRE —vacio cuando no hay— para que el
        NOMBRE no suba y baje 29 px en cada cambio de fase. Pero VACIO NO CUESTA
@@ -18395,6 +18576,33 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-care] { margin-top: 8px !important; }
       [data-pace-v1-progress] { margin-top: 12px !important; }
     }
+
+    /* VA AL FINAL DE LA HOJA A PROPOSITO, y esto costo una medida: cuatro de
+       los tiers de arriba fijan «[data-pace-v1-progress] { margin-top: N px
+       !important }» para controlar el hueco cuando la barra FLUIA. Con la misma
+       especificidad gana la ultima regla del archivo, asi que puesta antes se
+       la comian: medido tras implementarla arriba, la barra volvia a 592,7 px
+       en trabajar y 545,5 en colocarse -- casi el defecto original. Aquellas
+       reglas quedan inertes por diseno: no se borran porque son la unica
+       memoria de cuanto aire llevaba cada tramo si algun dia se vuelve atras. */
+    /* s176 · LA BARRA DE PROGRESO SE ANCLA AL CENTRO, no al contenido.
+       Fluia detras del bloque, asi que su altura dependia de si la pantalla
+       pintaba contador: 570,3 px en colocarse y 617,5 en trabajar, y ahi se
+       metia 15 px dentro del pie. Anclada, cae a la MISMA altura pinte lo que
+       pinte -- 586,5 px en las dos, con 16 px de aire hasta los botones.
+       NO BASTA CON «margin-top: auto» EN LA BARRA, y esto costo una vuelta: el
+       bloque que la contiene se CENTRA con margin:auto (s112), asi que su alto
+       es el del contenido y «auto» la pegaba al fondo del BLOQUE, no del
+       centro. Medido con solo eso: 18 px de hueco en trabajar y 52 en
+       colocarse, o sea seguian a distinta altura. Hace falta que el bloque
+       OCUPE el centro entero.
+       El !important es por el mismo motivo de siempre: centerBody trae
+       margin:auto EN LINEA desde s112, y la barra su propio margin en linea. */
+    [data-pace-session-center-body]:has([data-pace-v1-body]) {
+      display: flex !important; flex-direction: column !important;
+      height: 100% !important; margin-bottom: 0 !important;
+    }
+    [data-pace-v1-progress] { margin-top: auto !important; margin-bottom: 16px !important; }
   `;
   document.head.appendChild(s);
 }
@@ -19863,6 +20071,25 @@ window.getExerciseDef = getExerciseDef;
    grupos de Mueve y de Estira), asi que separarlas exigiria un campo nuevo e
    inventaria una taxonomia falsa. El aside lo dice en voz alta para que ver la
    misma lista dos veces no se lea como un bug. */
+/* s176 · «minmax(260px, ...)» DESBORDA EL LATERAL DE LA BIBLIOTECA, y no por
+   poco: el rail de escritorio deja 242 px de contenido (262 de caja menos 20 de
+   padding) y un track minimo de 260 px NO ENCOGE -- es un minimo, no una
+   preferencia--, asi que la tarjeta se pintaba 18 px mas ancha que el rail y
+   sobresalia por la derecha. Medido en s176 a 1536 px, la pantalla del usuario:
+   los chips y la tarjeta de «Para ahora» acababan en 428,93 y esta en 446,21.
+   Lo reporto el usuario mirando la app: «no esta centrado y va demasiado a la
+   derecha».
+
+   `min(260px, 100%)` es el minimo QUE SI PUEDE ENCOGER: donde caben 260 se
+   comporta igual que antes (catalogo movil y vista «Tus rutinas» a pantalla
+   completa) y donde el hueco es menor, el track vale el hueco. Se arregla en
+   los DOS ramos -bloqueado y desbloqueado- porque los dos viven en el rail.
+
+   No se arregla desde la hoja de la biblioteca: esto es un estilo EN LINEA y
+   alli haria falta «!important» (la trampa que ya costo una vuelta en s174 con
+   el padding del modal). Arreglar el valor es mas barato que taparlo. */
+const REJILLA_TUS_RUTINAS = 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))';
+
 function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = _ref;
   const { t, tn } = useT();
   const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
@@ -19905,7 +20132,7 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
     ),
 
     !unlocked ? /*#__PURE__*/
-    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 } }, /*#__PURE__*/
+    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: REJILLA_TUS_RUTINAS, gap: 10 } }, /*#__PURE__*/
     React.createElement(Card, { padded: false, style: { padding: '16px 18px' } }, /*#__PURE__*/
     React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } },
     t('custom.locked.copy')
@@ -19919,7 +20146,7 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
     )
     ) : /*#__PURE__*/
 
-    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 } },
+    React.createElement("div", { style: { display: 'grid', gridTemplateColumns: REJILLA_TUS_RUTINAS, gap: 10 } },
     routines.map((r) => /*#__PURE__*/
     React.createElement(CustomRoutineCard, {
       key: r.id,
@@ -22049,6 +22276,70 @@ Object.assign(window, { PathStats });
 ;Object.assign(window, { PathStatCard, PathTable, PathStats });
 })();
 </script>
+  <!-- StatsPanel.css (s176): la hoja del panel. Va ANTES del panel. -->
+  <script>
+;(function () {
+/* PACE · app/stats/StatsPanel.css.jsx (sesión 176)
+   =================================================
+   LA HOJA DE ESTADÍSTICAS, inyectada una sola vez. Patrón de
+   `MoveSessionV1.css.jsx` y `library.css.jsx`: IIFE idempotente con su guard de
+   id, sin exports, y basta con cargarla antes del panel.
+
+   POR QUÉ SALE DE `StatsPanel.jsx`: aquel archivo llevaba sus reglas en dos
+   `<style>` en línea dentro del JSX, y al añadir la caja común de s176 se pasó
+   de las 500 líneas de la regla §1. Sacar CSS es la extracción más barata --
+   no mueve ni una decisión de comportamiento.
+
+   NI UN BACKTICK DENTRO DEL TEMPLATE LITERAL: el build aborta y las medidas
+   siguientes corren contra el artefacto viejo (trampa de s172b).
+
+   LAS CUATRO PESTAÑAS COMPARTEN CAJA EN ESCRITORIO (s176). Medido a 1536x714
+   antes de tocar nada: el modal saltaba de 443,7 px en «Año» a 606,9 en
+   «Semana» y «Mes» -- 163,2 px al cambiar de pestaña-- y dos de las cuatro
+   además tenían scroll. El suelo es LO QUE CABE y no lo que mide la más alta:
+   a 714 px de alto el modal da 605 útiles y el cromo se come 220,1, así que la
+   vista puede medir 384,9. Por eso el calendario se compacta en vez de estirar
+   la caja: estirarla habría fijado el tamaño DEJANDO el scroll, que es la mitad
+   de lo que se pidió.
+   SÓLO EN ESCRITORIO: en móvil la altura útil cambia con cada teléfono y un
+   suelo fijo forzaría scroll donde hoy no lo hay. */
+(function () {
+  if (document.getElementById('pace-stats-css')) return;
+  var s = document.createElement('style');
+  s.id = 'pace-stats-css';
+  s.textContent = `
+        .pace-heatmap-cell { width:42px;height:42px;border-radius:6px;cursor:default;transition:opacity 120ms;position:relative; }
+        .pace-heatmap-cell.has-data { cursor:pointer; }
+        .pace-heatmap-cell.has-data:hover { opacity:0.85; }
+        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 42px);gap:6px;justify-content:center; }
+        .pace-heatmap-header-day { width:42px;text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
+        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
+        .pace-heatmap-empty { width:42px;height:42px; }
+        @media (max-width:640px) {
+          .pace-heatmap-cell { width:32px !important;height:32px !important; }
+          .pace-heatmap-grid { grid-template-columns:repeat(7, 32px) !important;gap:4px !important; }
+          .pace-heatmap-header-day { width:32px !important;font-size:9px !important; }
+          .pace-heatmap-day-num { font-size:10px !important; }
+          .pace-heatmap-empty { width:32px !important;height:32px !important; }
+          .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
+        }
+      
+
+    @media (min-width: 769px) {
+      [data-pace-stats-vistas] { min-height: 385px; }
+      /* LOS 13 PX QUE LE SOBRABAN A «SEMANA». Con el calendario ya compactado,
+         era la unica pestana que seguia con scroll. Salen del hueco ENTRE las
+         cuatro filas de barras -- 8 px x 4 = 32, que pasan a 4 x 4 = 16-- y no
+         de la altura de las barras: acortar la barra cambia lo que el grafico
+         dice, y el hueco entre filas no dice nada.
+         El !important es porque el margen es un estilo EN LINEA del JSX. */
+      [data-pace-week-bar-row] { margin-bottom: 4px !important; }
+    }
+  `;
+  document.head.appendChild(s);
+})();
+})();
+</script>
   <script>
 ;(function () {
 /* PACE · Panel de estadísticas — sesión 43/44
@@ -22362,26 +22653,13 @@ function MonthHeatmap(_ref3) {let { history, lang, initialYear, initialMonth } =
      grid en el modal (justify-content:center). Asi:
        - desktop: 7x56 + 6x6 gap = 428 px, centrado en ~756 utiles
        - 6 filas x 56 + 5x6 = 366 px de alto -> cabe sin scroll
+     s176: 48 -> 42 px. Aquel «cabe sin scroll» dejo de ser cierto en algun
+     momento -- medido a 1536x714, la pestana del mes desbordaba 37 px-, y 6
+     filas de 42 con 5 huecos de 6 dan 282 px, exactamente los 36 que sobraban.
+     El ancho baja de 372 a 330 px sobre ~756 utiles: sobra sitio de sobra.
        - movil: override a 32px sin gap. */
   return (/*#__PURE__*/
     React.createElement("div", null, /*#__PURE__*/
-    React.createElement("style", null, `
-        .pace-heatmap-cell { width:48px;height:48px;border-radius:6px;cursor:default;transition:opacity 120ms;position:relative; }
-        .pace-heatmap-cell.has-data { cursor:pointer; }
-        .pace-heatmap-cell.has-data:hover { opacity:0.85; }
-        .pace-heatmap-grid { display:grid;grid-template-columns:repeat(7, 48px);gap:6px;justify-content:center; }
-        .pace-heatmap-header-day { width:48px;text-align:center;font-size:10px;color:var(--ink-3);letter-spacing:0.5px;font-weight:600; }
-        .pace-heatmap-day-num { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;z-index:1; }
-        .pace-heatmap-empty { width:48px;height:48px; }
-        @media (max-width:640px) {
-          .pace-heatmap-cell { width:32px !important;height:32px !important; }
-          .pace-heatmap-grid { grid-template-columns:repeat(7, 32px) !important;gap:4px !important; }
-          .pace-heatmap-header-day { width:32px !important;font-size:9px !important; }
-          .pace-heatmap-day-num { font-size:10px !important; }
-          .pace-heatmap-empty { width:32px !important;height:32px !important; }
-          .pace-heatmap-totals { flex-wrap:wrap;gap:8px !important; }
-        }
-      `), /*#__PURE__*/
 
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 } }, /*#__PURE__*/
     React.createElement("button", { onClick: prevMonth, "aria-label": "Mes anterior", style: {
@@ -22517,12 +22795,28 @@ function StatsPanel(_ref4) {let { open, onClose } = _ref4;
     map((_ref5) => {let { key, label } = _ref5;return (/*#__PURE__*/
         React.createElement("button", { key: key, style: statsPanelTabStyles.tab(tab === key), onClick: () => setTab(key) }, label));}
     )
-    ),
+    ), /*#__PURE__*/
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    React.createElement("div", { "data-pace-stats-vistas": true },
     tab === 'week' && /*#__PURE__*/React.createElement(WeekView, { state: state }),
     tab === 'month' && /*#__PURE__*/React.createElement(MonthHeatmap, { history: history, lang: lang, initialYear: jumpYear, initialMonth: jumpMonth }),
     tab === 'year' && /*#__PURE__*/React.createElement(YearView, { history: history, lang: lang, firstSeen: state.firstSeen, onNavigateToMonth: handleNavigateToMonth }),
     tab === 'paths' && /*#__PURE__*/React.createElement(PathStats, null)
+    )
+
     ));
 
 }
@@ -23049,6 +23343,141 @@ if (!_paceTweaksResponsive) {
 Object.assign(window, { tweaksStyles, TWEAKS_PILL_TRANSITION });
 })();
 </script>
+  <!-- TweaksAudio (s176): el bloque de sonido del panel. Va ANTES que
+       TweaksPanel, que lo consume por el global. -->
+  <script>
+;(function () {
+/* PACE · app/tweaks/TweaksAudio.jsx (sesión 176)
+   ================================================
+   EL BLOQUE DE SONIDO DE AJUSTES. Sale de `TweaksPanel.jsx`, que ya iba por
+   466 líneas y con esto se pasaba de las 500 de la regla §1.
+
+   POR QUÉ CAMBIA DE FORMA, y no es una reorganización gratuita: s175 metió la
+   voz pegada a `soundOn`, así que quien tenía sonido se encontró una locución
+   y **no podía quitarla sin apagar todo el sonido**. Lo reportó el usuario al
+   probarla, y en la misma frase dijo el problema de fondo: «es demasiado menús
+   para voz / selección de género / música y sonido general on-off». O sea: la
+   pregunta no era dónde meter un interruptor más, era cómo no acabar con cinco.
+
+   LA FORMA ELEGIDA (variante V3 de la maqueta de s176, elegida mirándola):
+   cinco controles se vuelven **dos decisiones**, porque hay dos funciones y no
+   cinco:
+
+     · QUÉ MARCA LA FASE -> un tono o una voz. **Nunca los dos**, y eso no es
+       una simplificación de la UI: es lo que ya hacía el código. `playSound`
+       intenta la voz y **sólo si no cabe** sintetiza (Sound.jsx). Presentarlo
+       como una casilla de «añadir voz» habría descrito mal el mecanismo.
+     · QUÉ SUENA DETRÁS -> el fondo. Hoy sólo hay «nada» y el drone de
+       ambiente; la música, cuando exista, entra aquí como tercera opción y no
+       como un eje nuevo. **No se pinta todavía**: un control que no hace nada
+       es peor que un hueco.
+
+   Medido en la maqueta, a 280 px de contenido (el panel son 320 con 20 de
+   padding): el bloque ocupa **207 px** de alto con nueve controles. La variante
+   plana ocupaba 291.
+
+   LAS DOS VOCES SE LLAMAN POR SU TIMBRE, no por su género: medido decodificando
+   la onda, `sulafat` va por ~193 Hz y `bradford` por ~121 -- 1,59x. «Clara» y
+   «Grave» dicen lo que se oye y no afirman nada que la app no sepa.
+
+   `const` a nivel de módulo NO cruza la IIFE del artefacto (trampa de s148), y
+   por eso el componente se publica en `window` al final como todo lo demás. */
+
+function TweaksAudioBlock(_ref) {let { state, set } = _ref;
+  const { t } = useT();
+
+  /* La pill del panel, con los mismos valores que el resto de ejes. Vive aquí
+     y no en `tweaksStyles` porque `TweaksPanel` la escribe igual en cinco
+     sitios: unificarla es otra sesión y otro diff. */
+  const pill = (activa) => ({
+    padding: '6px 10px',
+    fontSize: 11,
+    fontWeight: activa ? 500 : 400,
+    background: activa ? 'var(--ink)' : 'var(--paper-2)',
+    color: activa ? 'var(--paper)' : 'var(--ink-2)',
+    border: `1px solid ${activa ? 'var(--ink)' : 'var(--line)'}`,
+    borderRadius: 'var(--r-sm)',
+    transition: TWEAKS_PILL_TRANSITION,
+    letterSpacing: 0.2
+  });
+
+  const fila = function (opts) {let extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};return (/*#__PURE__*/
+      React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4, ...extra } },
+      opts.map((o) => /*#__PURE__*/
+      React.createElement("button", { key: o.k, onClick: o.on, style: pill(o.activa) }, o.name)
+      )
+      ));};
+
+
+  const rotulo = (txt) => /*#__PURE__*/
+  React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', margin: '9px 0 5px', letterSpacing: 0.1 } },
+  txt
+  );
+
+
+  /* El fondo es un booleano en el estado (`ambientOn`) y dos pills aquí. Al
+     apagarlo se corta el drone que ya estuviera sonando, como hacía la casilla
+     que esto sustituye. */
+  const ponerFondo = (siAmbiente) => {
+    set({ ambientOn: siAmbiente });
+    if (!siAmbiente && window.ambientDrone) window.ambientDrone.stop(400);
+  };
+
+  /* Al elegir voz se PRECARGA en ese momento. Si se esperara a la primera fase
+     de la primera sesión, el clip no estaría listo (`canplaythrough`) y sonaría
+     el sintetizador esa vez -- correcto pero desconcertante justo después de
+     haber elegido una voz. */
+  const ponerVoz = (voz) => {
+    set({ voice: voz });
+    try {if (typeof window.paceVozInit === 'function') window.paceVozInit(voz);} catch (e) {/* sin Audio no hay precarga */}
+  };
+
+  const vozActiva = state.voice === 'bradford' ? 'bradford' : 'sulafat';
+
+  return (/*#__PURE__*/
+    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
+    React.createElement(Meta, { style: { marginBottom: 4 } }, t('settings.audio.label')), /*#__PURE__*/
+    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 } },
+    t('settings.audio.hint')
+    ),
+    fila([
+    { k: 'on', name: t('settings.audio.on'), activa: !!state.soundOn, on: () => set({ soundOn: true }) },
+    { k: 'off', name: t('settings.audio.off'), activa: !state.soundOn, on: () => set({ soundOn: false }) }]
+    ),
+
+
+
+
+    state.soundOn && /*#__PURE__*/
+    React.createElement(React.Fragment, null,
+    rotulo(t('settings.signal.label')),
+    fila([
+    { k: 'tono', name: t('settings.signal.tone'), activa: state.voiceOn === false, on: () => set({ voiceOn: false }) },
+    { k: 'voz', name: t('settings.signal.voice'), activa: state.voiceOn !== false, on: () => set({ voiceOn: true }) }],
+    { marginLeft: 16 }),
+
+
+
+    state.voiceOn !== false && fila([
+    { k: 'clara', name: t('settings.voice.clear'), activa: vozActiva === 'sulafat', on: () => ponerVoz('sulafat') },
+    { k: 'grave', name: t('settings.voice.deep'), activa: vozActiva === 'bradford', on: () => ponerVoz('bradford') }],
+    { marginLeft: 32, marginTop: 6 }),
+
+    rotulo(t('settings.bg.label')),
+    fila([
+    { k: 'nada', name: t('settings.bg.none'), activa: !state.ambientOn, on: () => ponerFondo(false) },
+    { k: 'amb', name: t('settings.bg.ambient'), activa: !!state.ambientOn, on: () => ponerFondo(true) }],
+    { marginLeft: 16 })
+    )
+
+    ));
+
+}
+
+Object.assign(window, { TweaksAudioBlock });
+;Object.assign(window, { TweaksAudioBlock });
+})();
+</script>
   <script>
 ;(function () {
 /* PACE · Panel de Ajustes (antes Tweaks)
@@ -23293,67 +23722,11 @@ function TweaksPanel(_ref) {let { open, onClose } = _ref;
     React.createElement(Divider, { style: { margin: '14px 0' } }), /*#__PURE__*/
 
 
-    React.createElement("div", { style: { marginBottom: 16 } }, /*#__PURE__*/
-    React.createElement(Meta, { style: { marginBottom: 4 } }, t('settings.audio.label')), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 10.5, color: 'var(--ink-3)', marginBottom: 6, letterSpacing: 0.1 } }, t('settings.audio.hint')), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-    [
-    { v: true, name: t('settings.audio.on') },
-    { v: false, name: t('settings.audio.off') }].
-    map((opt) => {
-      const active = state.soundOn === opt.v;
-      return (/*#__PURE__*/
-        React.createElement("button", { key: String(opt.v), onClick: () => set({ soundOn: opt.v }),
-          style: {
-            padding: '6px 10px',
-            fontSize: 11,
-            fontWeight: active ? 500 : 400,
-            background: active ? 'var(--ink)' : 'var(--paper-2)',
-            color: active ? 'var(--paper)' : 'var(--ink-2)',
-            border: `1px solid ${active ? 'var(--ink)' : 'var(--line)'}`,
-            borderRadius: 'var(--r-sm)',
-            transition: TWEAKS_PILL_TRANSITION,
-            letterSpacing: 0.2
-          } }, opt.name));
 
-    })
-    ),
-    state.soundOn && /*#__PURE__*/
-    React.createElement("div", { style: { marginTop: 8, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 8 } }, /*#__PURE__*/
-    React.createElement("button", {
-      onClick: () => {
-        const next = !state.ambientOn;
-        set({ ambientOn: next });
-        if (!next && window.ambientDrone) window.ambientDrone.stop(400);
-      },
-      style: {
-        width: 14, height: 14, borderRadius: 3, padding: 0,
-        border: `1px solid ${state.ambientOn ? 'var(--focus)' : 'var(--line-2)'}`,
-        background: state.ambientOn ? 'var(--focus)' : 'transparent',
-        display: 'grid', placeItems: 'center',
-        color: 'var(--paper)', cursor: 'pointer', flexShrink: 0
-      },
-      "aria-label": t('settings.audio.ambient') },
 
-    state.ambientOn && /*#__PURE__*/
-    React.createElement("svg", { width: "9", height: "9", viewBox: "0 0 16 16", fill: "none",
-      stroke: "currentColor", strokeWidth: "2",
-      strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
-    React.createElement("path", { d: "M3 8L7 12L13 4" })
-    )
 
-    ), /*#__PURE__*/
-    React.createElement("span", {
-      style: { fontSize: 11, color: 'var(--ink-2)', letterSpacing: 0.2, cursor: 'pointer' },
-      onClick: () => {
-        const next = !state.ambientOn;
-        set({ ambientOn: next });
-        if (!next && window.ambientDrone) window.ambientDrone.stop(400);
-      } },
-    "+ ", t('settings.audio.ambient'))
-    )
 
-    ),
+    React.createElement(TweaksAudioBlock, { state: state, set: set }),
 
 
 
