@@ -143,9 +143,9 @@ Capacitor (~4–6 sesiones, detrás de casi todo).
 
 - **`library-transition.js` sigue inerte** (130 líneas, con un test que vigila
   que no dejen rastro). Borrarlo es decisión del usuario.
-- **1,5 px a 360×730** en el runner: las dos pantallas ya coinciden entre sí
-  (585 y 585,3) pero el contenido sigue siendo más alto que el centro. Venía de
-  **−29,5**.
+- ~~1,5 px a 360×730 en el runner~~ **CERRADO** por el arreglo que destapó el
+  CI: con el hueco en el bloque, a 360×730 la barra deja **+16 px** en las dos
+  pantallas, igual que en escritorio. Venía de **−29,5**.
 - **Los términos de uso comercial del audio, sin revisar.** La FASE 5 los pide
   por escrito, y ya valen para las **seis** locuciones.
 - **El `CHANGELOG` tiene CINCO bloques de detalle** donde la convención son dos.

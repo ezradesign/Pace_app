@@ -139,7 +139,8 @@ caja:
 
 Quitar la reserva **pagó el anclaje sin tocar el tamaño del número**. Resultado:
 **586,5 px en las dos pantallas**, 16 de aire hasta los botones. A 375×812 pasa
-de solaparse a 16 iguales; a 360×730, de **−29,5 a −1,5**.
+de solaparse a 16 iguales; a 360×730, de **−29,5 a −1,5** — y a **+16** tras el
+arreglo que destapó el CI (§5 bis).
 
 **Lo que no se puede tener:** darle aire al contador rompe la igualdad (596,7
 contra 586,5). «Más aire» y «que quepa» no caben juntas — la misma lección que
