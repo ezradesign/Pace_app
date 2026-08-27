@@ -18,7 +18,7 @@
 
    API expuesta a `window`:
      - SessionShell   → root + header con salida
-     - SessionPrep    → cuenta atrás de preparación
+     - SessionPrep    → cuenta atrás (vive en `SessionPrep.jsx` desde s174)
      - SessionDone    → pantalla de completado
      - SessionStat    → cifra grande + label pequeño
      - sessionShellStyles → objeto de estilos por si un módulo necesita
@@ -277,49 +277,10 @@ function SessionHeader({ routine, onExit, extra }) {
   );
 }
 
-/* ============================================================
-   SessionPrep — pantalla de cuenta atrás 3-2-1
-   Props:
-     - routine        → header passthrough
-     - onExit         → header passthrough
-     - accent         → color del número gigante (var CSS)
-     - prepCount      → número a mostrar (3..0)
-     - copy           → línea italic bajo el número
-                        ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
-     - onSkip         → callback del botón "Empezar ahora"
-   ============================================================ */
-function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosphere }) {
-  const { t } = useT();
-  return (
-    <SessionShell
-      routine={routine}
-      onExit={onExit}
-      atmosphere={atmosphere}
-      footer={<button onClick={onSkip} style={sessionShellStyles.ctrlBtn}>{t('session.startNow')}</button>}
-    >
-      <div data-pace-session-prep style={{ textAlign: 'center', maxWidth: 460 }}>
-        <div style={{
-          fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: 'var(--ink-3)', marginBottom: 18,
-        }}>{t('session.prep')}</div>
-        <div data-pace-session-prep-num style={{
-          ...displayItalic,
-          fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-          color: accent,
-          fontVariantNumeric: 'tabular-nums',
-        }}>{prepCount > 0 ? prepCount : '·'}</div>
-        <div data-pace-session-prep-copy style={{
-          ...displayItalic,
-          /* marginTop 20 -> 40: el numeral (200px, lineHeight 0.9) baja su
-             tinta sobre el caption con solo 20px de aire -> solapamiento
-             (bug s96). Empujar el caption ~20px lo separa limpio. En movil
-             el override reduce el numeral a 128px, alli 20px basta. (s97) */
-          fontSize: 20, color: 'var(--ink-2)', marginTop: 40,
-        }}>{copy}</div>
-      </div>
-    </SessionShell>
-  );
-}
+/* s174 · `SessionPrep` VIVE AHORA EN `app/ui/SessionPrep.jsx`. Salió de aquí
+   al pasar este archivo de 500 líneas (regla §1) cuando la cuenta atrás ganó
+   el arte de la rutina, que es el destino de la transición desde la
+   biblioteca. Es una pantalla entera y no arrastró nada consigo. */
 
 /* ============================================================
    SessionDone — pantalla de completado
@@ -450,7 +411,7 @@ function sessionDoneKeyBlocked(e) {
 }
 
 Object.assign(window, {
-  SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
+  SessionShell, SessionHeader, SessionDone, SessionStat,
   sessionShellStyles, sessionAtmosphere,
   paceGrainUrl, paceGlowRamp, PaceDither,
   sessionKeyOnControl, sessionDoneKeyBlocked,

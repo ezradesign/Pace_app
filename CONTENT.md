@@ -93,7 +93,7 @@ sueltos dentro de una rutina (sería un muro de pago a mitad de flujo).
 |---|---|---|
 | **Respira** | `breathe.coherent.55` · Coherente 5·5 | `breathe.box.4` · Box 4·4·4·4 |
 | **Mueve** | `extra.desk.pushups` · Flexiones de escritorio | `extra.posture.set` · Postura reset |
-| **Estira** | `move.chair.antidote` · Antídoto silla | `move.neck.3` · Cuello · 3 min |
+| **Estira** | `move.chair.antidote` · Antídoto silla | `move.neck.3` · Cuello |
 
 **Siempre gratis pase lo que pase:** Pomodoro (Foco), Hidrátate, y las
 2 iniciales de cada módulo. El core funciona y es útil por sí solo.
@@ -198,13 +198,13 @@ Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
 | ID | Nombre | Grupo | min | `access` (real, F5) |
 |---|---|---|---|---|
 | `move.chair.antidote` | Antídoto silla | oficina | 5 | **free** (inicial) |
-| `move.neck.3` | Cuello · 3 min | oficina | 3 | **free** (inicial) |
+| `move.neck.3` | Cuello | oficina | 3 | **free** (inicial) |
 | `move.desk.quick` | Escritorio express | oficina | 2 | free (2 min sin levantarse) |
 | `move.wrists` | Muñecas y manos | oficina | 3 | free (F5 — antídoto al teclado) |
-| `move.shoulders.5` | Hombros · 5 pasos | hombros | 4 | free (reset accesible) |
+| `move.shoulders.5` | Hombros | hombros | 4 | free (reset accesible) |
 | `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
 | `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
-| `move.hips.5` | Caderas · 5 pasos | caderas | 6 | free |
+| `move.hips.5` | Caderas | caderas | 6 | free |
 | `move.couch.stretch` | Couch stretch | caderas | 6 | **premium** (F5 — flexores profundos) |
 | `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
 | `move.atg.knees` | ATG · Rodillas a prueba | caderas | 4 | **premium** (ATG avanzado) |

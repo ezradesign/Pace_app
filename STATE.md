@@ -10,8 +10,8 @@
 
 ---
 
-**Version actual:** v0.103.0 (s173 — **LA INGESTA DEJA DE SER TODO-O-NADA, Y EL ARTE DE EJERCICIO GANA SU RED**. Entran 4 dibujos (**57 → 59 de 62**) y la cola baja de 7 a 3, pero no entraban: el mapa se reescribia ENTERO desde los emparejados, y los originales llegan con nombre opaco. Nace **`--fusionar`** —lo que no viene en la carpeta CONSERVA su fila— con tres guards que no se relajan, y **`verify.mascaras.js`**, las primeras comprobaciones relacionales del arte de ejercicio: cinco, en los dos sentidos, y un guard de cero que las justifica a todas porque con el mapa vacio las otras cuatro salian VERDES. Ademas, **el rediseno de las tres librerias aprobado MIRANDOLO** y sin implementar: [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md).)
-**Version anterior:** v0.102.2 (s172c — **LAS DOS DECISIONES DEL EMISOR, DECIDIDAS Y ESCRITAS**. Dejan de ser desviaciones anotadas: **Foco emite `focus`**, una sola identidad —la duracion ya viaja en `plannedSeconds` y los cuatro cubos de `focus.<min>` no tenian consumidor, porque en Foco NO se pide feedback— y **Respira sin rondas mantiene `routine.min x 60` `declared`**, con la fila que le faltaba a §6.4 ya escrita en el esquema (rev. 6). Codigo y documento dicen lo mismo.)
+**Version actual:** v0.104.0 (s174 — **LAS TRES LIBRERIAS, IMPLEMENTADAS — Y LA TRANSICION QUE NO EXISTIA**. Se cierran las siete decisiones que s173 dejo abiertas **preguntando antes de escribir**, y el usuario amplia su regla: **«dame SIEMPRE ejemplos en html para que pueda decidir»** — toda opcion que yo proponga tiene que estar PINTADA antes de preguntar. Nacen `library-rules.js`, `library.css.jsx`, `RoutineCard.jsx` y `LibraryShell.jsx`. **La maqueta mentia sin querer**: se dibujo sobre un marco a pelo y la biblioteca es un modal, asi que el ancho util era **286 y no 328** y el scroll **4,33** pantallas contra las 3,50 prometidas — casi la app de antes (4,50); recortado el chrome, **310 y 3,97**. **La transicion que el diseno describia NO EXISTE**: entre la capitular y el circulo del runner hay **dos pantallas y 3.114 ms**, asi que aterriza en la cuenta atras — y ponerla ahi **introdujo un salto de 171/221 px** que se corrigio a **0**. Una duplicacion del DOM engano **seis veces**, y la sexta **en el codigo que se publica**. Ademas se programa la **retencion por calendario** (§12), implementada y sin disparar desde s155. **131/131 y 16 mutantes de 16 muerden**.)
+**Version anterior:** v0.103.0 (s173 — **LA INGESTA DEJA DE SER TODO-O-NADA, Y EL ARTE DE EJERCICIO GANA SU RED**. Entran 4 dibujos (**57 → 59 de 62**) con `--fusionar` y nace `verify.mascaras.js`, las primeras comprobaciones relacionales del arte de ejercicio. Ademas, el rediseno de las tres librerias **aprobado MIRANDOLO** y sin implementar.)
 **Version anterior (2):** v0.101.0 (s171 — **EL CIRCULO DEL GLIFO, Y LOS DOS DIBUJOS QUE SOBRABAN**. Tres defectos visuales del usuario, medidos antes de tocar: las miniaturas del preview se pisaban 5 px (`maskScale` pasa a explicito), el circulo media 72 px en 6 rutinas y 179 en las otras 22 (legacy vs v1) y se movia 43 px entre pasos en movil. Nace `tests/runner-circulo.spec.js`. **Segunda mitad**: entra la 2a tanda de arte —18 dibujos, **47 → 57 identidades**— y **el bloque del runner declara alto minimo**, con lo que el circulo y el nombre dejan de moverse entre pasos de trabajo.)
 **Ultima sesion:** #173 -- 2026-08-25 - **LA INGESTA DEJA DE SER TODO-O-NADA, Y LAS LIBRERIAS SE DISENAN MIRANDOLAS**. Bump **v0.102.2 -> v0.103.0**. **(1) ENTRAN 4 DIBUJOS** —`Fondos en silla` ahora CON silla, `Onda espinal`, `Puente isquio a una pierna` y `Deslizamientos en pared`— identificados mirandolos y **contrastados con su cue del catalogo**: **57 → 59 de 62**, cola de 7 a **3**. **(2) PERO NO ENTRABAN.** El `--seco` daba **62 identidades, 102 PNG, 0 emparejados**: los originales llegan como `asset_*.png` y el emparejamiento es por slug; y renombrando solo esas cuatro **el mapa se reescribe entero** y las otras 57 desaparecen del mapa y del precache. La via de s171 (emparejar por CONTENIDO) **no sale limpia**: peor pareja **0,383** contra el 0,849 de entonces, once por debajo de 0,8 y dos PNG reclamados por dos mascaras. **(3) NACE `--fusionar`**: lo que no viene en la carpeta CONSERVA su fila. Control medido: **sin** la bandera, 58 identidades «sin dibujo» y el mapa en 4 filas; **con** ella, 3 y 59. Tres guards que no se relajan (fila conservada sin archivo **aborta sin escribir nada** · mapa sin **ni una** fila reconocible es fallo explicito · PNG huerfano sigue siendo salida 1) y **tres mutantes**, cada uno con su rojo y solo el suyo. **El codigo de salida cambia de sentido en la otra mitad**: con fusion «identidad sin dibujo» es el estado NORMAL, y un exit que siempre vale 1 se aprende a ignorar. El script llego a **511 lineas** ⇒ el censo sale a `.censo.js` y hubo que **redeclarar `ROOT`** (el fallo de s144 por otra puerta; ahi el verify no mira). **(4) NACE `verify.mascaras.js`.** El arte de ejercicio **no tenia ni una comprobacion relacional** —el precache cruzaba solo con el mapa de LOGROS— y `--fusionar` abre un fallo **MUDO**: una fila conservada sin archivo hace que el glifo caiga a su SVG viejo y el usuario vea **otro ejercicio**, sin un error en consola. Cinco relacionales en los DOS sentidos, **las cinco en rojo**, y el **guard de cero** las justifica a todas: con `EXERCISE_MASKS` vacio las otras cuatro cruzaban conjuntos vacios y salian **VERDES**. `CENSO.precache` **219 → 223**. **(5) LA FICHA DE `descanso.png` ESTABA MAL DESDE HACIA DOS SESIONES**: pedia una silla, y medido, **11 de los 18 descansos ocurren en rutinas `standing`** (5 seated, 2 floor) — una silla contradice 13 de 18. Al buscar alternativa salio que **las cuatro poses tranquilas obvias ya estan cogidas**, asi que pasa a **recuperar el aliento, de pie y de frente**. Y **`Descanso` NO entra por la ingesta**: esta excluido a mano del censo, asi que su PNG saldria como huerfano. **(6) EL REDISENO DE LAS TRES LIBRERIAS, APROBADO MIRANDOLO Y SIN IMPLEMENTAR** (doce maquetas; todo en [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md)). `npm run verify` PASA · `npm run test:e2e` **115/115** · diario en [session-173](./docs/sessions/session-173-fusionar-y-las-librerias.md)
 
@@ -40,6 +40,15 @@
 
 | Archivo | Rol | Version |
 |---|---|---|
+| `app/ui/library-rules.js` | **LAS REGLAS DE LAS BIBLIOTECAS, SIN UI (s174)**: filtros, orden, «Para ahora», la tira de glifos y la linea de series, como funciones puras. Viven aparte para que se puedan asertar **sin abrir un navegador** — dentro del componente, la unica forma de probar que «Corto» filtra bien seria levantar Chromium y contar tarjetas. **El umbral de «Corto» es RELATIVO** y se calcula (el mayor cuyo recuento no pase de la mitad): con ≤3 min fijo dejaba **12 de 14 en Mueve** —quita dos: no filtra— y 3 de 14 en Estira, porque Mueve va de 1 a 4 min y Estira de 2 a 6. **`var`/`function` a proposito**: un `const` no cruza la IIFE del artefacto | **NUEVO s174 · 188 ln** |
+| `app/ui/RoutineCard.jsx` | **LA TARJETA, compartida por las TRES bibliotecas (s174)**. Sale de `BreatheLibrary.jsx`, donde vivia desde s34 por accidente historico. **NO es un boton gigante**, y eso no es estilo: un elemento con `role=button` vuelve **presentacionales a sus descendientes**, asi que el nombre dejaba de existir como encabezado — la primera version lo hacia y **tumbo 9 tests**. El encabezado lleva DENTRO un boton que se extiende sobre toda la tarjeta con un `::after`; se conserva el encabezado y se gana el teclado, que `Card` nunca tuvo. **La pill va FUERA del `<h4>`**: dentro, el nombre accesible pasaba a ser «Cuello · 3 min SUAVE». El gating de contenido (`access` + `canAccessRoutine`) viajo con ella, intacto | **NUEVO s174 · 155 ln** |
+| `app/ui/library.css.jsx` | **LA HOJA DE LAS TRES BIBLIOTECAS (s174)**, inyectada con su guard de id. Va en CSS y no en estilos en linea porque el color de modulo se comporta **distinto en cada piel** —filo en reposo en movil, solo en el hover en escritorio— y eso es una media query; con estilos en linea haria falta un listener de resize. **El breakpoint es 768/769, el MISMO que `--pace-skin`**. Recorta el chrome del modal solo para esta superficie con `:has(.pace-lib)` y **con `!important`, que no es pereza**: el padding del modal es un estilo EN LINEA y sin el las reglas no mueven un pixel. **Ni un backtick dentro del template literal** — el build aborta (trampa de s172b, que se cobro una pasada en s174) | **NUEVO s174 · 300 ln** |
+| `app/ui/LibraryShell.jsx` | **LA PANTALLA DE MUEVE Y ESTIRA (s174)**, que son gemelas. Respira NO la usa: se ordena por TIEMPO y no por contexto. **El estado de filtro vive aqui y NO en `pace.state.v2`** —un filtro es una intencion de este momento, no una preferencia— y **se limpia a mano al cerrar**, porque el modal se OCULTA y no se desmonta. **Un grupo vacio PORQUE sus rutinas subieron a «Para ahora» no se pinta**: si se pintara, su linea diria que faltan por el filtro cuando estan dos dedos mas arriba (lo destapo calibrar en rojo). El «Para ahora» de movil va **FUERA de la rejilla**: dentro, un subarbol oculto envenena toda consulta a `.pace-lib-rejilla` | **NUEVO s174 · 199 ln** |
+| `app/ui/SessionPrep.jsx` | **LA PANTALLA DE PREPARACION (s174)**, extraida de `SessionShell.jsx` al pasar aquel de 500 lineas. **Puede llevar el ARTE de la rutina**, y lo DERIVA ella sola de `routine.steps[0]` — los dos runners no le pasan nada, o «que dibujo enseña y de que tamaño» seria una decision escrita en tres sitios. El tamaño sale de `v1GlyphSizeAhora`, **la misma fuente que el circulo del runner**, por eso el relevo no salta. **El circulo va PRIMERO y el rotulo debajo**: con el rotulo encima el dibujo pegaba un salto de **171 px** (escritorio) y **221** (movil) al terminar la cuenta. Respira no se entera: sus rutinas no tienen `steps` | **NUEVO s174 · 137 ln** |
+| `app/ui/library-transition.js` | **LA CAPITULAR VUELA A LA SESION (s174)** — el pago de que la biblioteca no lleve wash. **Aterriza en la CUENTA ATRAS y no en el circulo del runner**, que es lo que el diseño decia: medido, entre los dos hay **dos pantallas y 3.114 ms**, asi que no hay movimiento continuo hasta alli. **Coge la copia VISIBLE de la tarjeta**: «Para ahora» esta dos veces en el DOM y con un `querySelector` a secas **en movil no volaba nada**. Se retira en silencio si falta cualquier pieza, y con `prefers-reduced-motion` no anima — usa la Web Animations API sobre un CLON, que el kill de s160 no toca, por eso comprueba la preferencia a mano | **NUEVO s174 · 133 ln** |
+| `tests/biblioteca.spec.js` | **LAS TRES BIBLIOTECAS REDISEÑADAS (s174)**. 7 tests, **7 mutantes y los 7 muerden**. Todo RELACIONAL: **el catalogo se lee de las FUENTES, no de la pagina** — no se puede leer de la pagina (`EXTRA_ROUTINES` y `BREATHE_ROUTINES` son `const` y no cruzan la IIFE), y aunque se pudiera, cruzar la pantalla contra un dato de esa MISMA pantalla no prueba nada. **El reloj va congelado** con `setFixedTime`: «Para ahora» rota por DIA y sin fijarlo hay asertos que muerden un martes y no un miercoles. **Toda consulta filtra por lo VISIBLE**, que costo cuatro medidas equivocadas antes de acotarlo | **NUEVO s174 · 7 tests** |
+| `tests/transicion-biblioteca.spec.js` | **EL VUELO DE LA CAPITULAR (s174)**. 5 tests, **5 mutantes**. El que importa **no dice ninguna cifra**: compara el circulo de la preparacion con el del paso y exige que midan lo mismo **y esten en el mismo sitio** — el tamaño es una decision viva. Vuela **en las dos pieles** (el fallo de movil no lo habria cazado ningun aserto de la biblioteca), con reduced-motion **no anima y aun asi se entra**, y Respira **no se entera**. Dos asertos **pasaban por carrera** y se corrigieron: el vuelo no empieza en el clic sino un frame despues de montarse la preparacion. **Un mutante NO muerde con razon** y esta dicho: la limpieza del clon tiene dos caminos a proposito | **NUEVO s174 · 5 tests** |
+| `tests/eventos-retencion.spec.js` | **LA RETENCION POR CALENDARIO (s174)**, la de `pace.events.v1` — **`tests/retencion.spec.js` es OTRA**, la de la apnea de Respira. 4 tests, **4 mutantes**. El que importa es **«se dispara SOLA en el arranque»**: estar implementada no servia de nada. **Ningun numero de dias vive dentro** (el suelo se lee de `eventsRetentionFloorKey`). Y una leccion del calibrado: **comparar el JSON del contenedor no prueba que no se escriba** —reescribir lo mismo da la misma cadena—, asi que se espia `setItem` con control positivo en la misma prueba | **NUEVO s174 · 4 tests** |
 | `app/main/_responsive.atmosfera.js` | **EL JS QUE COMPONE LA LUZ (s163)**, cortado de `_responsive.js`. Construye como CADENAS los degradados y mascaras que la hoja interpola — halo, limbo, bloom, horizonte y las paradas de color de la hora — y **no tiene ni una regla CSS**. Publica `window.paceAtmosfera` con los **13** nombres que la hoja usa y ni uno mas: la lista se derivo de las 22 interpolaciones reales y el troceo la asertaba. Un objeto y no 13 globales a proposito. **CARGA ANTES** de `_responsive.js`, que lo desestructura en su cuerpo | **NUEVO s163 · 396 ln** |
 | `app/main/_responsive.pieles.js` | **LAS DOS PIELES (s163)**, cortadas de `_responsive.js`: el `@media (max-width: 768px)`, el de pantallas cortas y el `@media (min-width: 769px)`. **Cero interpolaciones** (medido), asi que no lleva una linea de logica. **SE INYECTA DESPUES de `_responsive.js` Y ESO ES CONTRATO**: `--pace-skin` vale `movil` en la hoja base y `escritorio` aqui, las dos veces sobre `:root` — misma especificidad, gana la de despues. Al reves, la home de escritorio se cree movil y `main.jsx` (s160) renderiza el orden de lectura equivocado | **s163 · s169 · 478 ln** |
 | `app/motion.css` | **EL COMPORTAMIENTO (s163)**, cortado de `tokens.css`, que se queda con los VALORES. Aqui viven el cruce entre paletas (s161, con sus `@property` y los dos atributos del fundido), el kill de `prefers-reduced-motion` y los dos packs de microinteracciones de s99. **Su `<link>` va entre `tokens.css` y `paths/paths.css`**: aquella declara `[data-pace-reveal] > *` y esta lo anula por ORDEN | **NUEVO s163 · 400 ln** |
@@ -209,65 +218,67 @@
 > en [`docs/sessions/`](./docs/sessions/) y destilado en [`CHANGELOG.md`](./CHANGELOG.md).
 > Aqui solo lo que sigue VIVO: diferido y pendiente.
 
-- **[LA RETENCION SIGUE SIN PROGRAMAR — era el punto 1 del handoff y no se toco]**
-  Las tres piezas de §12 estan implementadas (`selectEventsToPrune` +
-  `foldEventsIntoBaseline` + `nextPruneCursor`, con `EVENTS_RETENTION_DAYS = 120`) y el
-  punto de extension esta declarado en `events-adapter-web.js`. Lo unico que acota hoy el
-  contenedor es la poda por PRESUPUESTO, que **solo salta ante un error de almacenamiento**.
-  - **LA PREGUNTA DE DISENO ESTA PLANTEADA Y SIN RESPONDER**, y es lo que bloquea:
-    §12 dice «puede orquestarse en el rollover diario **sin crear un segundo reloj**», pero
-    `rolloverIfNeeded` es **sincrono y devuelve estado** y `paceEventsAppend` **devuelve una
-    promesa**. Las dos salidas cumplen la regla: (a) efecto **disparado-y-olvidado** desde el
-    rollover —no espera, y si falla el dia siguiente reintenta— o (b) **en el arranque**, justo
-    despues de `loadState`, leyendo el mismo cambio de dia que el rollover acaba de detectar.
-    **(b) es mas facil de probar en la suite.**
-  - **Ojo con el orden**: podar consolida en el `baseline`, asi que un fallo a medias no puede
-    dejar el contenedor sin los eventos Y sin el agregado. Todo dentro del lock exclusivo.
-  - **`tests/retencion.spec.js` YA EXISTE y es de OTRA retencion** — la apnea de Respira
-    (s166). Colision de nombre: el spec nuevo tiene que llamarse `eventos-retencion.spec.js`.
+- **[LA REGLA DEL USUARIO SE AMPLIA: LAS OPCIONES SE VEN, NO SE LEEN]** s173 fijo que el
+  diseno se aprueba **mirandolo** en una maqueta. s174 lo extiende, con sus palabras: «dame
+  **siempre** ejemplos en html para que pueda decidir». **No basta con maquetar lo que se va a
+  implementar** — toda opcion que yo proponga tiene que estar **pintada antes de preguntar**,
+  incluidas las que invento dentro de una pregunta. Preguntar con opciones solo descritas es
+  un error aunque las descripciones lleven medidas.
 
-- **[LAS LIBRERIAS: DISENO APROBADO, CERO CODIGO]** Todo en
-  [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md), decidido sobre **doce
-  maquetas** con catalogo real, mascaras reales y los tokens de `DESIGN_SYSTEM.md`.
-  - **LA TESIS**: si la tarjeta tiene que crecer para informar, **lo paga el FILTRO**, no la
-    compresion. Medido: la tarjeta crecio y aun asi scrollea menos (**4,50 → 3,57** pantallas
-    a 360x730), y con un filtro cae a **1,53**.
-  - **EL EJE SE ELIGE MIDIENDO CUAL PARTE EL CATALOGO**: en cuerpo la duracion no separa nada
-    (todo entre 1 y 6 min) y el contexto parte casi por la mitad; en Respira al reves (2 a 20
-    min). De ahi **gemelas + una aparte**, que no es estetica.
-  - **DOS DE LOS CUATRO FILTROS NO FILTRABAN**: «Aqui mismo» + «Con suelo» = **14 de 14**
-    (complementarios exactos) y «De pie» esta contenido **entero** en el primero.
-  - **LO QUE FALTA POR DECIDIR** antes de implementar: la **regla de «Para ahora»** (hoy son
-    dos ids a mano), si las **12 rutinas premium** van mezcladas o agrupadas, **Respira** (su
-    pantalla esta esbozada pero no cerrada, y sus **14 patrones** pedirian **14 glifos de
-    ritmo** = otro encargo de arte), y tres ideas propuestas y sin respuesta: **el glifo como
-    filtro**, **la transicion biblioteca→sesion** y **«ya la hiciste»**.
-  - **HALLAZGO DE CATALOGO, NO DE DISENO**: en la libreria pensada para la oficina, **solo 5
-    de las 14 rutinas de Estira se pueden hacer sin tirarse al suelo** (Mueve: 11 de 14). El
-    filtro lo va a hacer obvio en cuanto exista.
+- **[LA CUENTA ATRAS ANCLA ARRIBA Y DEJA HUECO DEBAJO — decision reversible]** Para que el
+  circulo del paso releve al arte de la preparacion **sin saltar** (medido: 171 px en
+  escritorio y 221 en movil antes de arreglarlo, **0** ahora), esa pantalla pasa a anclarse
+  arriba como el runner. Coste visible y aceptado: durante los ~3 s de cuenta atras queda
+  **hueco por debajo**. Volver a centrarla devuelve el brinco.
 
-- **[GLIFOS DE EJERCICIO — 59 de 62, y la cola en 3]** La cola viva sigue en
-  [`GLIFOS_A_DIBUJAR.md`](docs/product/GLIFOS_A_DIBUJAR.md). **El arte lo genera el usuario.**
-  - **`descanso.png` NO ENTRA POR LA INGESTA TAL CUAL ESTA.** `Descanso` esta excluido a mano
-    del censo (`if (n && n !== 'Descanso')` en `.censo.js`, «no es un ejercicio»), asi que su
-    PNG sale listado como **huerfano**. Antes de que llegue el dibujo hay que decidir si pasa a
-    ser la identidad **nº 63** o si su arte entra por otra via. Es el paso **mas repetido de la
-    app**: 18 apariciones.
-  - **Y SU FICHA ESTUVO MAL DOS SESIONES**: pedia figura sentada en una silla, y **11 de los 18
-    descansos ocurren en rutinas `standing`** (5 seated, 2 floor). Corregida a **recuperar el
-    aliento, de pie y de frente** — las cuatro poses tranquilas obvias ya estaban cogidas
-    (`Hueco en silla`, tres sentados en el suelo, `Reset respiracion` y `Onda espinal`).
-  - **«SIN ROJO» YA NO APLICA**: las cuatro piezas nuevas vinieron con el musculo en rojo y
-    entraron limpias — desde s170 la ingesta separa mancha de trazo **por luminancia**.
-  - **A PARTIR DE AHORA SE INGESTA CON `--fusionar`** y basta con la carpeta de lo nuevo.
-    Sigue haciendo falta re-correr `generar-pendientes.js` y **subir a mano** `CENSO.precache`
-    (dos filas por identidad NUEVA; una sustitucion reutiliza su fila y suma 0).
+- **[«YA LA HICISTE» SE CAE DE LA TANDA, con su medida hecha]** El usuario eligio **ninguna**
+  de las tres formas. Lo medido se conserva y no hay que rehacerlo: el dato **solo lo tiene
+  `pace.events.v1`** (`routineId` por sesion desde s172; `routineCounts` va por CATEGORIA, no
+  por id), y en Capacitor el adaptador es `null`, asi que **en Android no se veria** hasta la
+  fase de porting. Ninguna de las tres variantes cambia la geometria de la tarjeta, asi que
+  **se puede anadir despues sin tocarla**.
+
+- **[EL GLIFO COMO FILTRO, DESCARTADO CON DATO]** En Mueve el **84 %** de sus 25 identidades
+  visibles sale en **una sola rutina** (en Estira, 58 % de 45), asi que tocar un dibujo
+  devolveria la tarjeta que ya estabas mirando. Ademas **9 identidades salen en las DOS
+  bibliotecas**, que son dos modales distintos. **No mejora dibujando mas**: es de catalogo.
+
+- **[RESPIRA TIENE TARJETA, NO PANTALLA]** Su rediseno propio sigue pendiente y con su coste
+  medido: se ordena por **TIEMPO** (2 a 20 min) y no por contexto, y su informacion mas util
+  —el ritmo— pide dibujarlo. Son **13 motores de ritmo** y **19 ritmos distintos**: el «14»
+  que arrastraba el documento **no sale de ninguna cuenta**, y hasta decidir que cuenta como
+  un ritmo el encargo de arte **no tiene tamaño**. Mientras tanto el ritmo se **dice**, en la
+  linea de contexto. Y su sello de seguridad son **6** rutinas (`safety`), no las 5 de apnea:
+  Kapalabhati es respiracion rapida y tambien lo lleva.
+
+- **[EL ARTE QUE FALTA — la cola sigue en 3, y una capitular sale vacia]** `Descanso` (18
+  pasos en 10 rutinas de Mueve), `Pica en escritorio` y `Rana`. Con la tarjeta nueva esto ya
+  **se ve**: **1 de los 28 capitulares sale sin dibujo** (`move.hips.ground`, que empieza por
+  `Rana`) y **6 de las 14 de Mueve tienen un solo dibujo con arte** porque su otro paso es
+  `Descanso` — media por tarjeta **2,9 en Mueve contra 5,1 en Estira**. `extra.calves` tiene
+  **una sola identidad**: no tiene tira.
+  - **`descanso.png` NO ENTRA POR LA INGESTA** tal cual: `Descanso` esta excluido a mano del
+    censo, asi que saldria como PNG huerfano. Hay que decidir antes si pasa a ser la
+    identidad **nº 63**.
   - **`Rana` sigue con su decision de vista sin tomar** (frontal en cuadrupedia vs 3/4 desde
     atras), y **`Puente toracico` sigue esperando la mirada a tamaño real** desde s171.
 
 - **[EL ARTE DE LA 2a TANDA SIGUE SIN MIRARSE A TAMAÑO REAL]** La revision una a una se hizo
   sobre las **47 primeras**; las 18 que entraron en s171 se asignaron y **nadie las ha mirado**.
   El detector que funciona es la pieza a 700 px con su encargo al lado.
+
+- **[DOS HALLAZGOS DE CATALOGO QUE LA TARJETA NUEVA HACE OBVIOS]**
+  - **9 de las 14 de Estira piden suelo** (§9 del rediseno). En la biblioteca pensada para
+    descomprimir **en la oficina**, dos tercios no se pueden hacer en una oficina. El filtro
+    ya no lo esconde: lo dice. **Es contenido, y sigue sin resolverse.**
+  - **Tres nombres decian lo que la tarjeta ya dice** y se les quito la coletilla (`Cuello`,
+    `Hombros`, `Caderas`). Solo cambio el texto visible; **los ids no se tocan**.
+
+- **[EL CHANGELOG LLEVA DOS BLOQUES DE DETALLE VIEJOS]** La convencion del archivo es
+  detallar **las 2 ultimas versiones**, y los bloques largos que hay son de **v0.102.2 y
+  v0.102.1**: **v0.103.0 nunca tuvo el suyo**. s174 anade el de v0.104.0 y **no borra los dos
+  viejos** —descartar texto es decision del usuario, no mia—, asi que el archivo tiene tres.
+  Su contenido no se pierde en ningun caso: vive en la tabla y en el diario de cada sesion.
 
 
 ### Diferido (documentado, NO ejecutado)
@@ -552,38 +563,51 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **implementar las librerias, y la retencion que sigue sin programar**
+## Proxima sesion -- **el arte que falta, y Respira**
 
-> **El diseno de las librerias esta APROBADO y no hay una linea escrita.** Lo que abre, por
-> orden de lo que cuesta si se olvida:
+> Las tres librerias estan **implementadas, verificadas y defendidas** (131/131, 16 mutantes
+> de 16 muerden) y la retencion por calendario **ya se dispara sola**. Lo que abre, por orden
+> de lo que cuesta si se olvida:
 >
-> 1. **CONTESTAR LO QUE FALTA DE `LIBRERIAS_REDISENO.md` §8 ANTES de tocar codigo**: la regla
->    de «Para ahora», las 12 premium, y si Respira entra en esta tanda o espera a sus 14 glifos
->    de ritmo. Implementar con eso abierto obliga a rehacer.
-> 2. **IMPLEMENTAR.** Toca `MoveModule.jsx`, `ExtraModule.jsx`, `BreatheLibrary.jsx`,
->    `CustomRoutines.jsx` y `Primitives.jsx`. **Auditar antes**: `BreatheLibrary` usa `Card`
->    con `accent` y ese patron **gobierna** (el color va en el hover, no en el reposo).
->    Y el filtro necesita un sitio donde vivir: no hay estado de filtro en ninguna libreria.
-> 3. **LA RETENCION DE `pace.events.v1`**, con su pregunta (a)/(b) sin responder.
-> 4. **`Puente toracico` a tamaño real** y las 18 piezas de la 2a tanda, que lleva tres
->    sesiones pedido.
->
-> **NO empezar por lo mas facil**: el usuario pidio expresamente que no se implemente la opcion
-> mas sencilla si no es la mas profesional, bonita y util.
+> 1. **EL ARTE — la cola son 3 y ahora SE VEN.** La tarjeta nueva puso el hueco en pantalla:
+>    una capitular de 28 sale vacia (`Rana`) y **6 de las 14 de Mueve tienen un solo dibujo**
+>    porque su otro paso es `Descanso`. Antes de dibujarlo hay que **decidir si `Descanso`
+>    pasa a ser la identidad nº 63**, porque hoy esta excluido a mano del censo y su PNG
+>    saldria como huerfano. Siguen esperando la vista de `Rana` y **`Puente toracico` a tamaño
+>    real**, mas las **18 piezas de la 2a tanda** que nadie ha mirado.
+> 2. **RESPIRA, su pantalla propia.** Tiene la tarjeta desde s174 y le falta el resto: orden
+>    por TIEMPO y los ritmos DIBUJADOS. **Primero hay que decidir que cuenta como un ritmo**
+>    —13 motores o 19 ritmos distintos—, porque hasta entonces el encargo no tiene tamaño.
+> 3. **LOS DOS HALLAZGOS DE CATALOGO** que la tarjeta hace obvios, y que **ninguna maqueta
+>    arregla**: 9 de las 14 de Estira piden suelo en una biblioteca pensada para la oficina.
+> 4. **«Ya la hiciste»**, si se quiere: esta medido, decidido que no entra en s174, y **no
+>    exige tocar la tarjeta** (ninguna de las tres formas cambiaba su geometria).
 
-> **REGLA DE CONTINUIDAD (s173): el diseno se aprueba MIRANDOLO.** Maqueta HTML con los
+> **REGLA DE CONTINUIDAD, AMPLIADA (s173 + s174): el diseno se aprueba MIRANDOLO, y TODA
+> opcion que yo proponga tiene que estar PINTADA antes de preguntar.** Maqueta HTML con los
 > viewports reales (**360x730**, **412x844**, **1280**), el contenido REAL del catalogo y los
-> tokens de `DESIGN_SYSTEM.md`, **antes** de implementar nada. Si hay mas de una direccion
-> posible, van **una al lado de otra** en la misma maqueta para elegir mirando.
+> tokens de `DESIGN_SYSTEM.md`. Si hay mas de una direccion posible van **una al lado de otra**
+> en la misma maqueta. Preguntar con opciones solo descritas es un error aunque las
+> descripciones lleven medidas.
 
-> **CUATRO DEFECTOS DE LA SESION QUE SOLO APARECIERON MIDIENDO LA MAQUETA**, y que conviene no
-> repetir: el bloque «Para ahora» estuvo **VACIO dos versiones** por usar ids `extra.*` en
-> Estira —**cuyas 14 rutinas empiezan por `move.`**, la trampa que s172 prohibe expresamente—;
-> la rejilla **desbordaba 35 px** porque la tira de glifos y los sellos competian por la misma
-> linea; **`repeat(3,1fr)` no deja encoger** las columnas (`minmax(0,1fr)`); y **dos reglas
-> para la misma tarjeta**, con la vieja ganando por orden, dejaron un hover bien escrito **sin
-> nada que pintar**. Ninguno se veia mirando.
+> **LO QUE s174 DEJA MEDIDO Y NO HAY QUE VOLVER A MEDIR:**
+> - **La maqueta se dibuja sobre un marco a pelo y la biblioteca es un MODAL.** El chrome se
+>   comia 42 px de ancho a 360 px y subia el scroll de 3,50 a **4,33** pantallas — casi la app
+>   de antes (4,50). Ya esta recortado con `:has(.pace-lib)`; **la leccion es medir el ancho
+>   UTIL de la superficie real antes de dar una maqueta por buena**.
+> - **Entre la capitular y el circulo del runner hay DOS pantallas y 3.114 ms.** Cualquier
+>   transicion futura hacia el runner tiene el mismo problema.
+> - **Respira: 13 motores de ritmo, 19 ritmos, 6 sellos de seguridad** (no 5), y **0 de 20**
+>   declaran `position`, `equipment` o `level`.
+> - **El glifo como filtro rinde 84 % de callejones sin salida** en Mueve.
 
+> **LA TRAMPA QUE MORDIO SEIS VECES, para no gastar una septima:** «Para ahora» y los filtros
+> se pintan **DOS veces** —lateral y movil— y la hoja apaga la copia que sobra (s166 quito a
+> proposito el lector de piel en JS: costaba un re-render de la home por cada cruce del
+> breakpoint). **Toda consulta al DOM de la biblioteca tiene que filtrar por lo VISIBLE**, y
+> eso incluye el codigo de produccion: la sexta vez fue en `library-transition.js`, donde
+> hacia que en movil no volara nada. Si un nodo oculto estorba, **se mueve el nodo**, no la
+> sonda.
 
 
 > **EL EMISOR YA ESTA** (s172): la Fase 2 del esquema esta cerrada y el gate del verify
@@ -762,6 +786,13 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > [`docs/product/DECISIONES_TECNICAS_VIGENTES.md`](docs/product/DECISIONES_TECNICAS_VIGENTES.md) (GOBIERNA).
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
+
+- **Toda opcion que yo proponga se PINTA antes de preguntar** (s174)
+- **La maqueta se dibuja sobre un marco a pelo; la superficie real tiene CHROME** (s174)
+- **Una pieza que se pinta DOS veces obliga a filtrar por lo VISIBLE, siempre** (s174)
+- **Una tarjeta clicable NO es un `role="button"`** (s174)
+- **Entre la biblioteca y el circulo del runner hay DOS pantallas y 3.114 ms** (s174)
+- **La retencion por calendario se dispara en el ARRANQUE, no en el rollover** (s174)
 
 | Decision | Desde |
 |---|---|

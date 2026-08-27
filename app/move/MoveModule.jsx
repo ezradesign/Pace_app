@@ -19,34 +19,22 @@
 
 const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
 
+/* s174 · LA BIBLIOTECA ES AHORA `LibraryShell`, compartida con Estira.
+   Lo que había aquí —modal, cabecera, rejilla auto-fill y el aside de grupo—
+   se fue entero a `app/ui/LibraryShell.jsx`, porque Mueve y Estira son gemelas:
+   mismo catálogo de metadatos, mismo eje (CONTEXTO, no duración: las 28 duran
+   entre 1 y 6 min y eso no separa nada) y misma tarjeta. Lo único propio de
+   cada una es el dato, el color y el prefijo de i18n de sus grupos.
+   Se cae el `aside` de grupo («Pecho, brazos, espalda alta»): la tarjeta nueva
+   ya dice de qué va cada rutina con su descripción, su contexto y sus dibujos,
+   y el aside repetía a nivel de grupo lo que ahora se lee en cada fila. */
 function MoveLibrary({ open, onClose, onStart }) {
-  const { t, lang } = useT();
-  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} maxWidth={860}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
-        {/* Tus rutinas — constructor premium (F7 · s93). s138: sube al PRIMER
-            lugar (estaba al final, tras 4 grupos de tarjetas, y por eso no lo
-            encontraba nadie) y aparece igual en Estira. Guard defensivo por si
-            el orden de carga fallara (patrón s83). */}
-        {typeof CustomRoutinesSection !== 'undefined' && (
-          <CustomRoutinesSection onStart={onStart} accent="var(--move)" />
-        )}
-        {Object.entries(MOVE_ROUTINES).map(([key, group]) => (
-          <div key={key}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{tR(`mueve.cat.${key}.label`, group.label)}</h3>
-              {group.aside && <Meta>{tR(`mueve.cat.${key}.aside`, group.aside)}</Meta>}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
-              {group.items.map(r => (
-                <RoutineCard key={r.id} routine={r} color="var(--move)" onClick={() => onStart(r)} />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </Modal>
+    <LibraryShell
+      open={open} onClose={onClose} onStart={onStart}
+      groups={MOVE_ROUTINES} tone="var(--move)" catPrefix="mueve"
+      title={t('lib.move.title')} subtitle={t('lib.move.subtitle')} />
   );
 }
 
@@ -208,6 +196,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
         routine={displayRoutine}
         onExit={onExit}
         accent={accent}
+        accentSoft={accentSoft}
         prepCount={prepCount}
         copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { setPrepCount(0); setStage('active'); sessionStart.current = Date.now(); }}
@@ -279,9 +268,7 @@ function MoveSessionLegacy({ routine, onExit, kind = 'move', inPath }) {
           mismo comportamiento y no dos. */}
       <div data-pace-v1-body style={{ textAlign: 'center', maxWidth: 620 }}>
         <StepGlyph stepName={step.name} accent={accent} accentSoft={accentSoft}
-          size={typeof v1GlyphSize === 'function'
-            ? v1GlyphSize((typeof window !== 'undefined' && window.innerHeight) || 800)
-            : 72} />
+          size={typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 72} />
         <div style={{ fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: accent, marginBottom: 12, fontWeight: 500 }}>
           {tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })}
         </div>

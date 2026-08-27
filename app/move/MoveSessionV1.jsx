@@ -249,7 +249,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   if (stage === 'prep') {
     return (
       <SessionPrep
-        routine={displayRoutine} onExit={onExit} accent={accent} prepCount={prepCount}
+        routine={displayRoutine} onExit={onExit} accent={accent} accentSoft={accentSoft} prepCount={prepCount}
         copy={tn('move.prepCopy', { n: routine.steps.length })}
         onSkip={() => { sessionStart.current = Date.now(); setPrepCount(0); setStage('run'); startStep(0); }}
         atmosphere={atmo}
@@ -300,8 +300,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
   // insignia; en poca altura cede antes que instrucciones/controles (s113).
   // s171: el legacy usa ESTA MISMA curva (era 72 fijo, menos de la mitad).
-  const vpH = (typeof window !== 'undefined' && window.innerHeight) || 800;
-  const glyphSize = v1GlyphSize(vpH);
+  const glyphSize = v1GlyphSizeAhora();
 
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false;   // place/change: número pequeño, no es el timer

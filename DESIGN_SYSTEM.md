@@ -580,6 +580,42 @@ Reglas derivadas:
 
 ---
 
+## 🃏 La tarjeta de rutina y las bibliotecas (s174 · v0.104.0)
+
+Componente: [`app/ui/RoutineCard.jsx`](app/ui/RoutineCard.jsx) · hoja:
+[`app/ui/library.css.jsx`](app/ui/library.css.jsx) · pantalla:
+[`app/ui/LibraryShell.jsx`](app/ui/LibraryShell.jsx). El diseño completo y su
+porqué: [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md).
+
+| Pieza | Qué es |
+|---|---|
+| **Capitular** | El primer dibujo de la rutina a **62 px**; el resto de glifos debajo a **20 px** con `opacity: .75`. **El 55 % no valía** — el usuario no los registraba y reportó «sólo muestra un glifo»: si no se leen, no están |
+| **Nombre** | `--font-display` itálica **20 px**. La pill de nivel va **FUERA** del `<h4>`: dentro cambia el nombre accesible del encabezado |
+| **Pill de nivel** | 9 px, versalita, borde `--line-2`, `--r-pill`. Coste consciente: 14 pills pintan **56 bordes** |
+| **Descripción** | 12,5 px, **dos líneas** — caben las 28 sin recortar (mediana 61 caracteres, la mayor 84) |
+| **Línea de contexto** | `--font-display` **itálica 15 px**, con todo el cómo-se-hace: dónde · con qué · «por lado» · Premium. **La cifra de minutos en `'EB Garamond', Georgia, serif` a 19 px**, blindada en el CSS igual que la racha del sidebar — no pasa por `--font-display`. «min» sigue en sans a 10 px |
+| **Separador** | Cuelga como `::after` del trozo **anterior**, nunca como `::before` del siguiente: los trozos son *flex items* y el navegador **colapsa el espacio al principio** de uno, y al partirse la línea el punto **abriría el renglón** |
+| **Línea de series** | Sólo cuando dice series **y** repeticiones, y exige **DOS series** — «1 SERIES» no es una serie. Son **8 de 28** |
+| **Grano** | `paceGrainUrl()` tal cual, con su opacidad **dentro del SVG**. No se vuelve a aplicar en CSS: sería 0,011² |
+
+**El color de módulo cambia de función entre pieles, y no es una excepción:**
+
+| | Reposo | Hover |
+|---|---|---|
+| **Móvil** (≤ 768) | filo de **3 px** del token del módulo — es lo único que dice de un vistazo en qué biblioteca estás con 3 o 4 tarjetas a la vista | — |
+| **Escritorio** (≥ 769) | **sin color** — con catorce a la vez, el mismo recurso satura | entra el filo + `translateY(-1px)` + `--sh-soft`, que es lo que hace `Card` |
+
+**El modal de biblioteca recorta su chrome** (`:has(.pace-lib)`, con
+`!important` porque el padding va en línea): fondo **8 px** y tarjeta **16 px**
+en móvil, **20 / 22-24** en escritorio, con `maxWidth: 1240`. Sin eso el ancho
+útil a 360 px cae de 310 a **286** y el scroll sube de 3,97 a **4,33** pantallas.
+
+**Y una tarjeta clicable no es un `role="button"`**: ese rol vuelve
+presentacionales a sus descendientes y el nombre deja de ser encabezado. El
+encabezado lleva **dentro** un botón que cubre la tarjeta con un `::after`.
+
+---
+
 ## 🗂️ Dónde vive cada hoja de estilos (s148)
 
 `app/tokens.css` llegó a **613 líneas** y más de un tercio no eran tokens: era el

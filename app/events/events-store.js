@@ -173,6 +173,20 @@ function paceEventsAppend(event) {
   return eventsWebAppend(event);
 }
 
+/* PODA POR CALENDARIO (§12), programada en s174. La fachada, como todas: nadie
+   habla con un adaptador directamente. Con el adaptador inerte (`file://`,
+   Capacitor) devuelve el resultado nulo y no pasa nada -- alli no hay
+   contenedor que podar.
+   El dia se puede FIJAR desde fuera, y por eso es un parametro y no una lectura
+   escondida: sin eso, probar que barre lo de hace 121 dias exigiria mover el
+   reloj del sistema o esperar cuatro meses. */
+function paceEventsPrune(todayKey) {
+  const dia = todayKey || (typeof todayISO === 'function' ? todayISO() : null);
+  if (!dia) return Promise.resolve(eventsNullResult());
+  if (!paceEventsCanWrite()) return Promise.resolve(eventsNullResult());
+  return eventsWebPruneByCalendar(dia);
+}
+
 /* Export del snapshot canonico (§17). NO incluye detalles fisicos del backend
    (clave, locks, marcador). En s155 no se cablea al backup publico de «Tus
    datos»: el contenedor esta vacio y meter una seccion sin contenido en el JSON
@@ -344,7 +358,18 @@ function paceEventsWipeAll(alTerminar) {
    Se expone tambien como funcion para que las pruebas la conduzcan. */
 function paceEventsBoot() {
   try {
-    paceEventsInitialize();
+    /* s174 · LA RETENCION POR CALENDARIO SE PROGRAMA AQUI, y en ningun otro
+       sitio: una vez por arranque, DESPUES de que la inicializacion confirme.
+       No es un reloj -- es el mismo momento en que el contenedor se abre.
+       Va encadenada y no en paralelo porque antes de confirmar no se sabe si se
+       puede escribir; y va con `catch` porque una poda que falle no puede
+       impedir que la app arranque. Este archivo carga DESPUES de
+       `state-core.jsx`, asi que `loadState` ya corrio y `todayISO` existe. */
+    const listo = paceEventsInitialize();
+    if (listo && typeof listo.then === 'function') {
+      listo.then(function () { return paceEventsPrune(); })
+           .catch(function () { /* la app no se entera */ });
+    }
   } catch (e) { /* la app no se entera */ }
 }
 
@@ -355,5 +380,5 @@ Object.assign(window, {
   paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState,
   paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
   paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
-  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot,
+  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune,
 });

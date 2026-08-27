@@ -42,10 +42,11 @@ test('el glifo se espeja al cambiar de lado, y sólo en los pasos por lados', as
   await page.clock.install();
   await irAlArtefacto(page);
 
-  /* «Cuello · 3 min» empieza con un paso de reps y sigue con tres `perSide`, así
+  /* «Cuello» (s174: se le quitó la coletilla «· 3 min», que repetía lo que la
+     tarjeta ya dice) empieza con un paso de reps y sigue con tres `perSide`, así
      que se llega al primero con un solo «Terminar antes». */
   await page.getByRole('button', { name: /^Estira/ }).click();
-  await page.getByRole('heading', { name: 'Cuello · 3 min', exact: true }).click();
+  await page.getByRole('heading', { name: 'Cuello', exact: true }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Empezar', exact: true }).click();
   const sesion = page.locator('[data-pace-session-root]');
   await expect(sesion).toHaveCount(1);

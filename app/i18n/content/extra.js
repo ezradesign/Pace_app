@@ -41,7 +41,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.s5.name':               'Breathing reset',
   'move.chair.antidote.s5.instruction.action': '3 deep inhales to close.',
 
-  'move.hips.5.name':                    'Hips · 5 steps',
+  'move.hips.5.name':                    'Hips',
   'move.hips.5.desc':                    '5 steps to unlock deep hips. Mostly on the floor.',
   'move.hips.5.code':                    'HIP',
   'move.hips.5.s0.name':                 'Cossack squat',
@@ -63,7 +63,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hips.5.s4.instruction.action':   'Lift your hips and hold. Raise one knee, then the other.',
   'move.hips.5.s4.instruction.care':     'Slow the pace if your lower back complains.',
 
-  'move.shoulders.5.name':               'Shoulders · 5 steps',
+  'move.shoulders.5.name':               'Shoulders',
   'move.shoulders.5.desc':               'Shoulder reset: rotators, chest, traps. You\'ll need a wall; bar optional.',
   'move.shoulders.5.code':               'SHLD',
   'move.shoulders.5.s0.name':            'Scapular wall slides',
@@ -113,7 +113,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.ancestral.s4.name':              'Rib pull + breathing',
   'move.ancestral.s4.cue':               'Cat/cow movement.',
 
-  'move.neck.3.name':                    'Neck · 3 min',
+  'move.neck.3.name':                    'Neck',
   'move.neck.3.desc':                    'Micro-break for tense cervicals.',
   'move.neck.3.code':                    'SIT',
   'move.neck.3.s0.name':                 'Chin tucks',

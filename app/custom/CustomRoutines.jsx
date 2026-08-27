@@ -53,7 +53,14 @@ function CustomRoutinesSection({ onStart, accent = 'var(--move)' }) {
           <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{t('custom.section.title')}</h3>
           <PremiumSeal />
         </div>
-        <Meta>{t('custom.section.aside')}</Meta>
+        {/* s174 · FUERA EL ASIDE «En Mueve y en Estira». Existía para que ver la
+            MISMA lista en las dos bibliotecas no pareciera un bug -- y no
+            funcionó ni con el autor de la app. El rediseño lo resuelve por la
+            forma y no por una nota: en móvil «Tus rutinas» es un ENLACE de la
+            cabecera y en escritorio un bloque del lateral, así que es un
+            ACCESO y no una lista repetida dentro del catálogo. La cadena
+            `custom.section.aside` se conserva en i18n: no la borra esta sesión
+            porque quitar una clave es otra decisión. */}
       </div>
 
       {!unlocked ? (
