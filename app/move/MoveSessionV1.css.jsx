@@ -262,7 +262,18 @@ if (!_paceMoveV1Css) {
       display: flex !important; flex-direction: column !important;
       height: 100% !important; margin-bottom: 0 !important;
     }
-    [data-pace-v1-progress] { margin-top: auto !important; margin-bottom: 16px !important; }
+    /* Y EL BLOQUE SE LLEVA EL HUECO, en vez de dejar que «auto» lo reparta.
+       «margin-top: auto» CEDE cuando el contenido desborda: alli reparte cero y
+       la barra vuelve a caer donde la deje el texto. En local sobraban 16 px y
+       no se noto; en el runner de CI -otras metricas de fuente, otro sistema-
+       el ejercicio se pasaba y la barra se separaba **9,4 px** de la de
+       colocarse. Lo canto el aserto, no una mirada.
+       Con «flex: 1» el bloque ocupa el hueco y la barra queda DESPUES, a su
+       distancia del fondo, pinte lo que pinte la pantalla y mida lo que mida
+       el texto. «min-height: 0» porque un item flexible no encoge por debajo
+       de su contenido sin el, que es justo lo que hay que permitir aqui. */
+    [data-pace-v1-body] { flex: 1 1 auto !important; min-height: 0 !important; }
+    [data-pace-v1-progress] { flex: 0 0 auto !important; margin-top: 0 !important; margin-bottom: 16px !important; }
   `;
   document.head.appendChild(s);
 }

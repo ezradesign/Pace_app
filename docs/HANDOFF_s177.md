@@ -103,6 +103,13 @@ no cambian ni un píxel.
   punto medio): hay que desdoblarlas al leer.
 - **Y LA DE SIEMPRE, que va por NUEVE**: toda consulta al DOM de la biblioteca
   **filtra por caja no nula**. En s176 mordió en el badge de mi propio banco.
+- **`margin-top: auto` CEDE cuando el contenido desborda**, así que no sirve
+  para anclar nada cuyo vecino pueda crecer. Lo cazó **el CI y no el local**: en
+  el runner, con otras métricas de fuente, la barra del runner se separaba
+  **9,4 px**. Un aserto que sólo se corre en una máquina no prueba nada sobre la
+  otra.
+- **Backticks dentro del template literal de una hoja CSS**: abortan el build.
+  Volvieron a morder en s176, como en s139 y s172b.
 
 ---
 

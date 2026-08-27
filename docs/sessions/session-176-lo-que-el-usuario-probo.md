@@ -197,6 +197,23 @@ Y una del propio banco: el badge de la variante con rail medía **la tarjeta del
 rail** (242 px) y no la de la rejilla. Van **nueve** veces que una consulta a la
 biblioteca devuelve la pieza equivocada.
 
+### Y una séptima, que sólo cazó el CI
+
+El primer anclaje de la barra usaba `margin-top: auto`, **que CEDE cuando el
+contenido desborda**: reparte cero y la barra vuelve a caer donde la deje el
+texto. En local sobraban 16 px y no se notó; **en el runner de CI —otras
+métricas de fuente— el ejercicio se pasaba y la barra se separaba 9,4 px** de la
+de colocarse. Rojo en `e2e` con `verify` en verde.
+
+El arreglo es que **el hueco se lo lleve el bloque** (`flex: 1` + `min-height:
+0`) y la barra vaya después: así su altura **no depende de lo que mida el
+texto**. De paso cerró el residuo de 360×730, que pasó de **−1,5 a +16 px**.
+
+Dos cosas que deja escritas: **un aserto que sólo se corre en una máquina no
+prueba nada sobre la otra**, y los **backticks dentro del template literal**
+volvieron a morder al escribir este mismo comentario — abortó el build, como en
+s139 y s172b.
+
 ---
 
 ## 6 · Deuda de documentación pagada
