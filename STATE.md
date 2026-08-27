@@ -244,10 +244,13 @@
   por escrito si el material se genero con IA. Vale ya para las **seis**
   locuciones, no solo para la musica.
 
-- **[1,5 px A 360x730 EN EL RUNNER]** Las dos pantallas ya coinciden entre si
-  (585 y 585,3) pero el contenido sigue siendo mas alto que el centro. Venia de
-  **−29,5**. Ahi el scroll es legitimo (s125) y cerrarlo pediria apretar algo
-  mas; queda dicho, no escondido.
+- **[EL RESIDUO DE 360x730 SE CERRO, Y LO DESTAPO EL CI]** El primer anclaje de
+  la barra usaba «margin-top: auto», que **CEDE cuando el contenido desborda**:
+  en local sobraban 16 px y no se noto, pero en el runner de CI —otras metricas
+  de fuente— la barra se separaba **9,4 px** entre pantallas. Rojo en `e2e` con
+  `verify` verde. Con el hueco en el BLOQUE (`flex: 1`), la altura de la barra
+  deja de depender del texto: **+16 px en las dos pantallas** a 1536x714, a
+  1280x720 y tambien a **360x730**, que venia de −29,5.
 
 - **[`library-transition.js` SIGUE INERTE]** 130 lineas que no pueden dispararse,
   con su test vigilando que no dejen rastro. **Borrarlo es decision del usuario**,
