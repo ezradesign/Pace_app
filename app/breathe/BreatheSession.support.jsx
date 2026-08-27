@@ -88,4 +88,36 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
   };
 }
 
-Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion });
+/* s175 · EL MAPEO DE ETIQUETA A SONIDO SALE AQUI. `BreatheSession.jsx` llego
+   a 509 lineas al anadir la senal del sosten, y STATE ya dejaba dicho desde
+   s166 que «lo siguiente que entre ahi va a su .support». Es ademas lo que
+   mejor se va: no toca estado ni React, solo traduce la etiqueta de la fase
+   —que viene del catalogo, en espanol— al nombre de la senal.
+   `playSound` se lee del global en la llamada, como en todo el repo. */
+// Helper: reproduce el sonido de una fase por su label.
+// (Decía «Sostén → silencio intencional» hasta s175; ver la rama del sostén.)
+function playPhaseSound(phaseLabel, phaseDur) {
+  if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+      phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
+      phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
+      phaseLabel === 'Inhala al vientre') {
+    try { playSound('breathe.inhale', phaseDur); } catch (e) {}
+  } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
+             phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
+             phaseLabel === 'Exhala zumbando') {
+    try { playSound('breathe.exhale', phaseDur); } catch (e) {}
+  } else if (phaseLabel === 'Sostén' || phaseLabel === 'Sostén en vacío') {
+    /* s175 · EL SOSTÉN DEJA DE SER SILENCIO, y esto cambia una decisión
+       anterior a propósito. El silencio era lo correcto mientras el sonido
+       era SINTETIZADO: un tono sostenido durante una retención invita a
+       escucharlo, no a retener. Una palabra dicha una vez al entrar en la
+       fase es otra cosa, y es lo que hace cualquier guía hablada.
+       `breathe.hold` NO tiene receta en `SOUND_RECIPES`: si la voz no cabe
+       —o no está— `playSound` no encuentra recipe y **vuelve el silencio de
+       siempre**, sin ruido nuevo. Quitar esta rama son cuatro líneas. */
+    try { playSound('breathe.hold', phaseDur); } catch (e) {}
+  }
+}
+
+
+Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });

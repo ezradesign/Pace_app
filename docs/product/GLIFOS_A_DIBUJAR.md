@@ -25,9 +25,17 @@
 | 2 | `pica-en-escritorio.png` | 1 paso | **glifo por defecto** |
 | 3 | `rana.png` | 1 paso | **glifo por defecto** |
 
-**Si sólo vas a hacer una, haz la 1.** `Descanso` se ve más veces que cualquier
-ejercicio del set y es el único que hoy rompe el sistema visual. Las otras dos
-suman 2 apariciones entre las dos.
+**Si sólo vas a hacer una, depende de DÓNDE mires** (medido en s175, y corrige lo
+que decía antes esta línea):
+
+- **En el runner, la 1.** `Descanso` sale 18 veces a ~200 px y es el único paso que
+  hoy rompe el sistema visual: un símbolo de pausa entre 59 grabados.
+- **En la biblioteca, la 3.** `Rana` es la **capitular** de `Caderas · suelo` y la
+  **única de las 28 tarjetas que sale sin dibujo**. `Descanso` **no aparece en la
+  tarjeta** —`libraryGlifos` lo descarta por nombre, haya dibujo o no— ni en la
+  lista del preview, así que `descanso.png` **no cambia ni un píxel de las tres
+  bibliotecas**. El usuario reportó la de `Rana` mirando la app; la de `Descanso`
+  no la ha visto nadie ahí porque no está.
 
 > ⚠ **`descanso.png` NO ENTRA POR LA INGESTA TAL CUAL ESTÁ HOY** (medido en s173).
 > `Descanso` está excluido a mano del censo de identidades —`if (n && n !==
@@ -167,14 +175,32 @@ perfil sólo se vería un brazo y quedaría demasiado cerca de `Onda espinal`.
 
 *En pantalla dice: «Rodillas anchas, empuja cadera atrás. Mece suave.»*
 
-> **Gesto**: a cuatro apoyos con las **rodillas muy abiertas**, cadera empujada
-> atrás, y una **flecha de puntos corta hacia atrás** marcando el balanceo.
+> **Gesto**: a cuatro apoyos, **VISTO DE FRENTE**, con las **rodillas muy
+> abiertas**, cadera empujada atrás, y una **flecha de puntos corta** marcando el
+> balanceo.
+
+**LA VISTA ESTÁ DECIDIDA (s175): frontal en cuadrupedia.** Era la única pieza del
+set con esta duda —el gesto se ve naturalmente desde atrás o desde arriba, y las
+otras 59 son perfil o frontal— y se cerró **mirándola**: los dos bocetos se
+pintaron a 183 / 62 / 30 / 20 px dentro de la tarjeta real, al lado de los
+cuadrúpedos que ya existen (`gateo`, `gato-camello`, `90-90`, `paloma`).
+
+Gana **(a) frontal** porque conserva la convención del set; la alternativa —3/4
+desde atrás— lee mejor el gesto pero **sería la única pieza en esa vista**, y a 62
+px eso se nota más que la fidelidad del gesto. Lo que la vista frontal no puede
+decir es que la cadera va hacia ATRÁS, porque de frente «atrás» es hacia dentro
+del papel: **eso lo tiene que llevar la flecha de puntos, y por eso no es
+opcional aquí**.
+
+> ### ES LA PIEZA QUE MÁS SE VE EN LA BIBLIOTECA, y esto cambia el orden de la cola
 >
-> ⚠ **Decisión de vista, y es la única pieza del set con este problema**: el gesto se
-> ve desde atrás o desde arriba, y **todas las demás son perfil o frontal**.
-> - **(a) Frontal en cuadrupedia** — mantiene la convención del set y deja ver las
->   rodillas abiertas; la cadera atrás la marca la flecha. **Recomendada.**
-> - **(b) 3/4 desde atrás** — más fiel al gesto, pero sería la única en esa vista.
+> Medido en s175 con la regla real (`libraryGlifos`, con control positivo):
+> `Rana` es la **capitular de `Caderas · suelo`** y **la única de las 28 tarjetas
+> que sale sin dibujo**, a **62 px**. El usuario la reportó por su cuenta.
+> `Descanso`, en cambio, **no se pinta nunca en la tarjeta** —la regla lo descarta
+> por nombre— **ni en la lista del preview**, que quita los descansos: su dibujo
+> sólo se ve en el círculo del runner. Las dos siguen mereciendo el encargo, pero
+> **para lo que se ve en la biblioteca, la que rinde es ésta.**
 
 ---
 

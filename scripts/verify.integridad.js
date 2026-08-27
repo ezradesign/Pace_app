@@ -67,7 +67,7 @@ var CENSO = {
   respira: 20, mueve: 14, estira: 14, caminos: 7,
 
   /* service worker */
-  precache: 223,                // filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
+  precache: 226,                // filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
                                 //  +20 en s171: la 2a tanda sube el arte de ejercicio de 47 a 57 identidades, y cada una son DOS filas;
                                 //  +4 en s173: la 3a tanda son 4 dibujos pero solo DOS identidades nuevas -- «Fondos en silla» y
                                 //  «Deslizamientos en pared» ya tenian fila y la reutilizan, asi que suman 0)

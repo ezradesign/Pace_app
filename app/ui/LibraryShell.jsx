@@ -54,7 +54,17 @@ function LibraryShell({ open, onClose, onStart, groups, tone, title, subtitle, c
   /* «Para ahora» se calcula sobre lo VISIBLE y no sobre el catálogo entero: el
      filtro gobierna la pantalla completa, o el bloque de arriba contradiría al
      chip que acabas de tocar. */
-  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '');
+  /* s175 · UNA SUGERENCIA, NO DOS, y la razón es que con dos el lateral NO CABE.
+     Medido a 1536x714 (1920x1080 al 125 % de escala, la pantalla del usuario):
+     con dos sugerencias el rail mide 578 px en un hueco de 556 y la segunda se
+     corta; dándole además el aire que le faltaba sube a 604 y se corta el doble.
+     Con una mide 490 y entra entero. Elegido MIRÁNDOLO (variante A2).
+     Y ES UNA EN LAS DOS PIELES, aunque el problema sea sólo de escritorio: lo
+     que sube aquí se RETIRA del catálogo (`enAhora`, más abajo), así que pintar
+     dos en móvil y una en el lateral dejaría la segunda sin aparecer en ninguna
+     parte de la pantalla de escritorio. Que difieran exigiría leer la piel en
+     JS, que es justo lo que s166 quitó a propósito. */
+  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
   /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya
