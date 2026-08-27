@@ -72,7 +72,9 @@ gateable es la sesión, no el ejercicio suelto (ver `CONTENT.md`).
 
 - **v1.0 = la primera versión PAGADA.** No es «la web pulida»: es que se pueda comprar.
 - **Travesías SÍ entran en v1** y son el **argumento principal de compra**.
-- **Viajes de respiración NO** — audio, voz, música y facilitadores quedan para después de v1.
+- **Viajes de respiración NO** — audio, música y facilitadores quedan para después de v1.
+  **Matiz de s175**: la *voz* sale de esta exclusión —las señales habladas de Respira entran
+  en v1—, pero los Viajes como formato siguen fuera.
 - **Sin fecha.** Se prioriza la coherencia del producto sobre el calendario.
 
 ### La evidencia que manda: lo que dijeron los beta testers
@@ -326,8 +328,12 @@ tras el cierre del §37. Es el escaparate del *free*: con eventos emitiendo pued
 - **Sonido**: inhalaciones y exhalaciones reales + fondo meditativo tipo hang drum. **Como
   archivos** en web y Capacitor; el standalone conserva el motor sintetizado. La pista de fondo se
   cachea al usarla, no en el precache. Si el material se genera con IA, **verificar y guardar
-  constancia de los términos de uso comercial**. La regla **voz/TTS: NUNCA** sigue en pie: esto es
-  aire y música, no locución.
+  constancia de los términos de uso comercial**. **La regla «voz/TTS: NUNCA» queda ANULADA en
+  s175 por decisión explícita del usuario**: las locuciones entran, empezando por la voz
+  `sulafat`. Lo que la decisión no cambia es la física: una locución dura lo que dura, y
+  **6 de las 20 rutinas tienen fases demasiado cortas para cualquiera de las dos voces**
+  (las tres de 1 s y las tres de rondas), así que la voz se elige **por fase** y cae al
+  sintetizador cuando no cabe. Medida: `node scripts/audit/censo-respira-fases.js`.
 - **Catálogo**: revisión de las 20 técnicas y **separar Técnicas de Viajes** (§9.1).
 - El **loto** ya entró en la Fase 1.5.
 
@@ -417,7 +423,7 @@ fecha.
 
 ### Fuera de v1 (explícito)
 
-Viajes de respiración con voz/música/facilitadores y CTB · **iOS** (Android SÍ entra, Fase 9) · extensión
+Viajes de respiración con música/facilitadores y CTB (la **voz** ya no está fuera: s175) · **iOS** (Android SÍ entra, Fase 9) · extensión
 Chrome · Vite/ESM real (Etapa B del build) · Path Builder público · Modo Retiro · temporadas ·
 versión para empresas · Wrapped.
 

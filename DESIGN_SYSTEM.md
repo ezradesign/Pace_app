@@ -580,7 +580,7 @@ Reglas derivadas:
 
 ---
 
-## 🃏 La tarjeta de rutina y las bibliotecas (s174 · v0.104.0)
+## 🃏 La tarjeta de rutina y las bibliotecas (s174 · v0.104.0, ajustada en s175)
 
 Componente: [`app/ui/RoutineCard.jsx`](app/ui/RoutineCard.jsx) · hoja:
 [`app/ui/library.css.jsx`](app/ui/library.css.jsx) · pantalla:
@@ -609,6 +609,21 @@ porqué: [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md).
 `!important` porque el padding va en línea): fondo **8 px** y tarjeta **16 px**
 en móvil, **20 / 22-24** en escritorio, con `maxWidth: 1240`. Sin eso el ancho
 útil a 360 px cae de 310 a **286** y el scroll sube de 3,97 a **4,33** pantallas.
+
+**s175 · LA COLUMNA DE LA IZQUIERDA SE QUEDA QUIETA Y RESPIRA IGUAL.** El rail
+pasa a `position: sticky; top: 0` con `align-self: flex-start` —estirado no puede
+pegarse— y el aire deja de colgar del rótulo: la regla era
+`.pace-lib-lateral-tit + *`, y «Tus rutinas» es el único bloque que **no va detrás
+de una versalita**, así que se caía del selector y quedaba a **0 px** de «Para
+ahora». Ahora el margen lo llevan los BLOQUES (`> :not(.pace-lib-lateral-tit)`) y
+los rótulos conservan sus 11.
+
+**Y «Para ahora» propone UNA, no dos** —en las dos pieles— porque con dos el rail
+no cabe: medido a **1536×714** (1920×1080 al 125 % de escala), 578 px de rail en
+556 de hueco. Dar aire **empeora** el recorte (22 → 48 px), así que lo único que
+cumple «más aire» y «que quepa» a la vez es una sugerencia. No puede diferir por
+piel: lo que sube se **retira** del catálogo, y la segunda no aparecería en
+ninguna parte.
 
 **Y una tarjeta clicable no es un `role="button"`**: ese rol vuelve
 presentacionales a sus descendientes y el nombre deja de ser encabezado. El

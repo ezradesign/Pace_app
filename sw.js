@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.104.0';
+const CACHE_NAME = 'pace-v0.105.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
@@ -149,6 +149,12 @@ const PRECACHE = [
      no está, el visual `flor` se queda sin dibujo (el fondo se recorta a nada),
      así que va en el precache y no bajo demanda. */
   '/app/breathe/assets/loto.webp',
+  /* s175: la VOZ de Respira. Van al precache y no al cacheo-al-usar como la
+     pista de fondo: son 204 KB en total y la primera senal suena a los pocos
+     segundos de abrir una sesion, asi que llegar tarde se NOTA. */
+  '/app/breathe/voz/sulafat-inhala.mp3',
+  '/app/breathe/voz/sulafat-manten.mp3',
+  '/app/breathe/voz/sulafat-exhala.mp3',
   /* s146: glifos de logro del usuario, MASCARAS CSS.
      Mismo trato que el loto: archivo en web + precache, data URI solo en el
      standalone.

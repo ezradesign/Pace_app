@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.104.0</title>
+  <title>PACE · Foco · Cuerpo — v0.105.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4782,7 +4782,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.104.0';
+const PACE_VERSION = 'v0.105.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -9582,77 +9582,34 @@ Object.assign(window, {
                         ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
      - onSkip         → callback del botón "Empezar ahora"
    ============================================================ */
-/* s174 · LA CUENTA ATRÁS PUEDE LLEVAR EL ARTE DE LA RUTINA, y ese es el destino
-   de la transición desde la biblioteca (opción A).
-   POR QUÉ AQUÍ Y NO EN EL CÍRCULO DEL RUNNER, que es lo que el diseño decía:
-   medido en s174, entre la capitular de la tarjeta y el círculo del runner hay
-   DOS pantallas —el Preview y esta— y el círculo tarda **3.114 ms** en existir
-   desde que pulsas «Empezar». Los dos elementos nunca están cerca en el tiempo,
-   así que no hay movimiento continuo posible hasta allí. Esta pantalla SÍ está
-   a un frame, y además es el sitio donde va a aparecer el círculo: el arte
-   aterriza en su tamaño y su posición, y cuando la cuenta termina el círculo
-   del runner lo releva sin que nada salte.
-   De regalo arregla algo real: hasta hoy esta pantalla era un número sobre nada
-   y no decía qué ibas a hacer.
-   `stepName` AUSENTE = comportamiento de siempre, byte a byte. Respira no pasa
-   arte (sus rutinas no tienen glifo de ejercicio) y no se entera de nada. */
-function SessionPrep(_ref) {let { routine, onExit, accent, accentSoft, prepCount, copy, onSkip, atmosphere } = _ref;
+/* s174 PUSO AQUÍ EL ARTE DE LA RUTINA y s175 LO QUITA. Queda escrito porque la
+   razón de s174 sigue siendo cierta y hay que saberla antes de volver a
+   intentarlo: entre la capitular de la tarjeta y el círculo del runner hay DOS
+   pantallas —el Preview y ésta— y el círculo tarda **3.114 ms** en existir desde
+   que pulsas «Empezar», así que ninguna transición continua puede llegar hasta
+   allí. Esta pantalla era el único punto intermedio posible.
+   POR QUÉ SE QUITA IGUAL: decisión del usuario, mirándola en Mueve y Estira
+   —«el prepárate no debería tener ningún glifo, sólo el contador regresivo»—.
+   Respira nunca lo tuvo: sus 20 rutinas no declaran `steps`, así que la rama del
+   arte no se tomaba nunca para ellas. Ahora las tres pantallas son la misma.
+   CONSECUENCIA QUE NO SE PUEDE PASAR POR ALTO: `[data-pace-session-prep-art]`
+   era el ÚNICO destino del vuelo de la capitular (`library-transition.js`), que
+   a partir de aquí no encuentra dónde aterrizar y se retira solo. */
+function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSkip, atmosphere } = _ref;
   const { t } = useT();
-  /* EL ARTE SE DERIVA AQUÍ, no lo pasan los runners. Los dos lo habrían pasado
-     con la misma expresión, y entonces «qué dibujo enseña la preparación y de
-     qué tamaño» sería una decisión escrita en tres sitios que hay que mantener
-     de acuerdo. El tamaño sale de `v1GlyphSize`, que es la MISMA fuente que usa
-     el círculo del runner: por eso el relevo no salta.
-     RESPIRA NO SE ENTERA: sus 20 rutinas no tienen `steps` (llevan `pattern` y
-     `cycle`), así que aquí no hay nombre de paso y la pantalla es la de
-     siempre, byte a byte. */
-  const primerPaso = routine && routine.steps && routine.steps[0] && routine.steps[0].name;
-  const glyphSize = typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 0;
-  const stepName = primerPaso;
-  const conArte = !!stepName && typeof StepGlyph === 'function' && glyphSize > 0;
-  const numero = prepCount > 0 ? prepCount : '·';
-  if (conArte) {
-    return (/*#__PURE__*/
-      React.createElement(SessionShell, {
-        routine: routine,
-        onExit: onExit,
-        atmosphere: atmosphere,
-        footer: /*#__PURE__*/React.createElement("button", { onClick: onSkip, style: sessionShellStyles.ctrlBtn }, t('session.startNow')) }, /*#__PURE__*/
-
-      React.createElement("div", { "data-pace-session-prep": true, style: { textAlign: 'center', maxWidth: 460 } }, /*#__PURE__*/
-
-
-
-
-
-
-
-      React.createElement("div", { "data-pace-session-prep-art": true, style: {
-          position: 'relative', width: glyphSize, margin: '0 auto',
-          /* el numeral se dimensiona CON el círculo, no con el breakpoint: la
-             hoja responsive fija 128 px al de siempre, y aquí eso llenaría el
-             círculo entero. Viaja como token para que una sola regla lo lea. */
-          '--pace-prep-num': Math.round(glyphSize * 0.34) + 'px'
-        } }, /*#__PURE__*/
-      React.createElement(StepGlyph, { stepName: stepName, accent: accent, accentSoft: accentSoft, size: glyphSize }), /*#__PURE__*/
-      React.createElement("div", { "data-pace-session-prep-num": true, "data-pace-prep-en-arte": true, style: {
-          position: 'absolute', left: 0, top: 0, width: glyphSize, height: glyphSize,
-          display: 'grid', placeItems: 'center', pointerEvents: 'none',
-          ...displayItalic, fontWeight: 400, lineHeight: 1, color: accent,
-          opacity: 0.34, fontVariantNumeric: 'tabular-nums'
-        } }, numero)
-      ), /*#__PURE__*/
-      React.createElement("div", { style: {
-          fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: 'var(--ink-3)', marginTop: 20
-        } }, t('session.prep')), /*#__PURE__*/
-      React.createElement("div", { "data-pace-session-prep-copy": true, style: {
-          ...displayItalic, fontSize: 20, color: 'var(--ink-2)', marginTop: 10
-        } }, copy)
-      )
-      ));
-
-  }
+  /* s175 · LA PREPARACION NO LLEVA ARTE, SOLO EL CONTADOR. Decision del
+     usuario mirandola en Mueve y Estira, que eran las unicas que lo tenian
+     (Respira nunca lo tuvo: sus 20 rutinas no declaran `steps`).
+     LO QUE SE VA CON ELLO, y no es poco: el circulo de arte era el DESTINO del
+     vuelo de la capitular desde la biblioteca (s174), asi que
+     `paceVueloDestino()` deja de encontrar nada y el vuelo se retira solo --
+     esta escrito para eso, sin ruido y sin romper la entrada a la sesion.
+     Y CON EL ARTE SE VAN SUS TRES REGLAS DE HOJA: el anclaje arriba existia
+     para que el circulo estuviera donde iba a aparecer el del paso, el numeral
+     se dimensionaba con ese circulo, y el CTA recogido (s175) reparaba el hueco
+     que dejaba el anclaje. Sin arte, esta pantalla vuelve a centrarse sola:
+     medido en la version sin arte que ya usa Respira, numeral de 200 px y el
+     CTA a 40 px del borde, sin ningun hueco en medio. */
   return (/*#__PURE__*/
     React.createElement(SessionShell, {
       routine: routine,
@@ -9684,29 +9641,6 @@ function SessionPrep(_ref) {let { routine, onExit, accent, accentSoft, prepCount
 
 }
 
-
-/* La hoja de ESTA pantalla, con su guard de id (patrón de
-   `MoveSessionV1.css.jsx`). Dos reglas, las dos sobre el modo CON ARTE:
-
-   1. EL MISMO ANCLAJE QUE EL RUNNER. `centerBody` centra con `margin:auto` y
-      el runner lo mata con una regla gemela (`:has([data-pace-v1-body])`,
-      s172b). Sin esto la preparación se centra y el paso se ancla arriba, y el
-      círculo salta al relevarse -- 171 px en escritorio, 221 en móvil.
-   2. EL NUMERAL SE DIMENSIONA CON EL CÍRCULO y no con el breakpoint. La hoja
-      responsive de sesión fija el numeral en 128 / 96 px con `!important`, y
-      dentro de un círculo de 161 eso lo llena entero. Gana por ESPECIFICIDAD
-      (dos atributos contra uno) y no por orden, así que sigue ganando aunque
-      mañana se añada un breakpoint más. */
-(function () {
-  if (document.getElementById('pace-session-prep-css')) return;
-  const s = document.createElement('style');
-  s.id = 'pace-session-prep-css';
-  s.textContent = [
-  '[data-pace-session-center-body]:has([data-pace-session-prep-art]) { margin-top: 0 !important; }',
-  '[data-pace-session-prep-num][data-pace-prep-en-arte] { font-size: var(--pace-prep-num, 72px) !important; }'].
-  join(String.fromCharCode(10));
-  document.head.appendChild(s);
-})();
 
 Object.assign(window, { SessionPrep });
 ;Object.assign(window, { SessionPrep });
@@ -10694,6 +10628,16 @@ function playSound(name) {
   try {
     var s = typeof getState === 'function' ? getState() : null;
     if (!s || !s.soundOn) return;
+    /* s175 · LA VOZ VA PRIMERO, y sólo si CABE en la fase. `paceVozIntenta`
+       recibe los segundos de esta fase y contesta de forma SÍNCRONA: devuelve
+       `true` únicamente cuando el clip está precargado y entra entero con su
+       margen. Si dice que no —fase demasiado corta, archivo ausente (el
+       standalone), navegador sin `Audio`— se sigue al sintetizador de siempre,
+       que es lo que sonaba antes de esta sesión.
+       Se lee de `window` en la llamada, no al definir, para no atarse al orden
+       de carga: el artefacto son 109 scripts en tareas separadas (s162). */
+    if (typeof window.paceVozIntenta === 'function' &&
+    window.paceVozIntenta(name, args[0])) return;
     var ctx = getCtx();
     if (!ctx) return;
     ensureRunning(ctx);
@@ -10812,6 +10756,188 @@ const ambientDrone = (() => {
 
 Object.assign(window, { playSound, useSound, ambientDrone });
 ;Object.assign(window, { note, getCtx, ensureRunning, envelope, tone, glide, chord, bell, breathNoise, SOUND_RECIPES, playSound, useSound });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · app/ui/Sound.voz.jsx (sesión 175)
+   ==========================================
+   LA VOZ DE RESPIRA. Locuciones grabadas para las señales de la respiración
+   guiada, empezando por la voz `sulafat`.
+
+   ESTO ANULA UNA REGLA ESCRITA, y conviene saberlo antes de tocarlo: «Voz/TTS:
+   NUNCA» estaba en cuatro filas de `DECISIONES_TECNICAS_VIGENTES.md` y dos veces
+   en `ROADMAP.md`. La anula una decisión explícita del usuario en s175, y las
+   apariciones viejas quedan marcadas `SUPERSEDED por s175` en vez de borradas.
+
+   ── LO QUE GOBIERNA EL DISEÑO ──────────────────────────────────────────────
+   UNA LOCUCIÓN DURA LO QUE DURA. El sonido sintetizado recibe la duración de la
+   fase (`playSound('breathe.inhale', phaseDur)`) y se estira con ella; un
+   archivo no. Por eso hay que saber, fase a fase, si la palabra entra.
+
+   Y LO QUE ENTRA O NO ES **LA PALABRA**, NO EL ARCHIVO. Medido en s175 contra
+   `getSequence()` de las 20 rutinas: las palabras de `sulafat` duran **1,40 ·
+   1,32 · 1,48 s** y **caben en 17 de 20**. Las tres que quedan fuera son las de
+   bombeo —`Suspiro fisiológico`, `Bhastrika`, `Kapalabhati`—, con fases de 1 s
+   y 90 ciclos en 3 minutos: ahí una palabra hablada no tendría sentido aunque
+   cupiera.
+
+   ESTA CIFRA COSTÓ DOS EQUIVOCACIONES MÍAS, y las dos van escritas porque la
+   forma de equivocarse se repite: medir el CONTENEDOR en vez del CONTENIDO.
+   Primero calculé la duración desde la cabecera MPEG (salía casi la mitad de la
+   real, y con ella un «14 de 20» falso); luego usé `audio.duration`, que es
+   correcta pero incluye los silencios, y salió «8 de 20» — también engañosa,
+   porque el «exhala» ocupa 4,96 s de archivo y **la palabra acaba a los 2,12**.
+   Reproducible: `node scripts/audit/censo-respira-fases.js`.
+
+   POR ESO LA DECISIÓN ES **POR FASE Y NO GLOBAL**: `paceVozIntenta` recibe los
+   segundos de la fase y sólo suena si la locución entra entera con su margen.
+   Cuando no cabe devuelve `false` y `playSound` sigue con el sintetizador de
+   siempre, que es exactamente lo que sonaba ayer.
+
+   ── POR QUÉ «LISTO» SE SABE ANTES DE SONAR ─────────────────────────────────
+   `audio.play()` es asíncrono: si el archivo no está, el fallo llega DESPUÉS y
+   ya sería tarde para caer al sintetizador — se habría perdido la señal. Por eso
+   cada clip se precarga al arrancar y sólo entra en juego cuando el navegador
+   dice `canplaythrough`. Así la pregunta «¿puedo cantar esta fase?» se contesta
+   de forma SÍNCRONA y sin adivinar.
+
+   Consecuencia buscada: **en `PACE_standalone.html` no hay voz**. Los clips
+   nunca quedan listos allí, así que suena el motor sintetizado — que es lo que
+   decidió s134.
+
+   Y POR ESO VIVEN EN `app/breathe/voz/` Y NO EN LA CARPETA DE ARTE DE RESPIRA:
+   el build recorre las carpetas de arte inlineando cada `.webp` y luego **aborta
+   si el prefijo de esa carpeta sigue apareciendo en el artefacto** — señal de
+   una referencia que no ha podido convertir en data URI. Un MP3 ahí dentro deja
+   `node build-standalone.js` sin escribir. El guard es correcto; lo que estaba
+   mal era la carpeta.
+
+   AVISO PARA QUIEN EDITE ESTE COMENTARIO: el guard busca la CADENA, no una
+   referencia real, así que escribir aquí la ruta de aquella carpeta —aunque sea
+   en prosa y dentro de un comentario— vuelve a abortar el build. Babel conserva
+   los comentarios en el artefacto. Pasó al escribir esta misma nota.
+
+   `var`/`function` a propósito: un `const` top-level no cruza la IIFE del
+   artefacto (trampa de s148). */
+
+/* La voz activa. Hoy sólo hay una; el día que entre `bradford` esto pasa a ser
+   una preferencia, y entonces habrá que decidir su sitio en Ajustes MIRÁNDOLO. */
+var PACE_VOZ = 'sulafat';
+
+/* Margen sobre la duración del clip. Sin él, una locución de 2,52 s en una fase
+   de exactamente 2,52 s termina en el mismo instante en que arranca la
+   siguiente señal, y las dos se tocan. 150 ms es lo que separa dos palabras. */
+var PACE_VOZ_MARGEN = 0.15;
+
+/* LOS EXTREMOS DE LA VOZ DENTRO DE CADA ARCHIVO, en segundos. `ini` es donde
+   empieza a sonar la palabra y `fin` donde deja de sonar; `archivo` es lo que
+   dura el MP3 entero.
+
+   ESTO NO ES UN DETALLE DE AFINADO: LOS ARCHIVOS LLEVAN SILENCIO A LOS DOS
+   LADOS, y medirlos por su duracion total dio dos errores seguidos. El «exhala»
+   ocupa 4,96 s de archivo y la palabra acaba a los **2,12** — hay 2,84 s de
+   cola muda y 0,65 s de silencio ANTES. Con la duracion del archivo como
+   criterio, la voz se caia de doce rutinas por un silencio que no molesta a
+   nadie; y ademas la senal llegaba **0,65 s tarde**, que en una fase de 4 s se
+   oye.
+
+   COMO SE MIDIERON, y como se vuelven a medir si cambia un archivo: decodificando
+   la onda (`decodeAudioData`) y buscando la primera y la ultima muestra por
+   encima del umbral. Dos umbrales —1 % del pico y -50 dBFS— dan lo mismo dentro
+   de 12 centesimas, asi que el dato es solido. NO se pueden deducir de
+   `audio.duration`: son propiedad del contenido, no del contenedor. */
+var PACE_VOZ_CLIPS = {
+  'breathe.inhale': { archivo: 'inhala', dur: 2.44, ini: 0.386, fin: 1.79 },
+  'breathe.hold': { archivo: 'manten', dur: 2.56, ini: 0.021, fin: 1.341 },
+  'breathe.exhale': { archivo: 'exhala', dur: 4.96, ini: 0.644, fin: 2.122 }
+};
+
+/* Pre-rodadura al saltar el silencio inicial: arrancar EXACTAMENTE en `ini`
+   corta el ataque de la consonante. 40 ms es inaudible como silencio y devuelve
+   la «e» de «exhala» entera. */
+var PACE_VOZ_PREV = 0.04;
+
+var _paceVoz = null;
+
+function paceVozInit() {
+  if (_paceVoz) return _paceVoz;
+  _paceVoz = {};
+  Object.keys(PACE_VOZ_CLIPS).forEach(function (nombre) {
+    var ficha = PACE_VOZ_CLIPS[nombre];
+    var slot = { listo: false, ini: ficha.ini, palabra: ficha.fin - ficha.ini, audio: null };
+    _paceVoz[nombre] = slot;
+    try {
+      var a = new Audio('app/breathe/voz/' + PACE_VOZ + '-' + ficha.archivo + '.mp3');
+      a.preload = 'auto';
+      a.addEventListener('canplaythrough', function () {
+        /* GUARD: los extremos de voz estan medidos sobre ESTE archivo. Si el
+           que llega dura otra cosa, ya no describen nada -- se desconfia y se
+           usa el archivo entero, que es el criterio conservador (sonara en
+           menos sitios, nunca encima de otra senal). */
+        if (isFinite(a.duration) && a.duration > 0 &&
+        Math.abs(a.duration - ficha.dur) > 0.25) {
+          slot.ini = 0;
+          slot.palabra = a.duration;
+        }
+        slot.listo = true;
+      });
+      /* Si el archivo no está —el standalone, o una instalación a medias— el
+         clip simplemente no se marca listo y nadie se entera: suena el
+         sintetizador. No se registra error porque no lo es. */
+      a.addEventListener('error', function () {slot.listo = false;});
+      a.load();
+      slot.audio = a;
+    } catch (e) {/* sin Audio() no hay voz, y ya está */}
+  });
+  return _paceVoz;
+}
+
+/* ¿Cabe la locución de esta señal en una fase de `faseSeg` segundos?
+   `faseSeg` ausente = no se sabe, y no saber NO es que sí: se cae al
+   sintetizador, que es el comportamiento de siempre. */
+function paceVozCabe(nombre, faseSeg) {
+  var slot = paceVozInit()[nombre];
+  if (!slot || !slot.listo) return false;
+  if (typeof faseSeg !== 'number' || !isFinite(faseSeg) || faseSeg <= 0) return false;
+  /* Lo que puede pisar la senal siguiente es la PALABRA, no el archivo: la cola
+     muda puede seguir corriendo sin molestar a nadie. */
+  return slot.palabra + PACE_VOZ_MARGEN <= faseSeg;
+}
+
+/* Intenta cantar la señal. Devuelve `true` SÓLO si de verdad ha arrancado la
+   locución; `playSound` usa esa respuesta para decidir si además sintetiza. */
+function paceVozIntenta(nombre, faseSeg) {
+  if (!paceVozCabe(nombre, faseSeg)) return false;
+  var slot = _paceVoz[nombre];
+  try {
+    /* Rebobinar en vez de clonar: la misma señal se repite decenas de veces por
+       sesión y clonar dejaría un elemento nuevo por ciclo. Si el clip anterior
+       siguiera sonando —no debería, porque cabe— se corta y empieza. */
+    /* Se entra por donde EMPIEZA LA VOZ, no por el principio del archivo: si no,
+       la senal llega tarde -- 0,65 s en el «exhala». */
+    slot.audio.currentTime = Math.max(0, slot.ini - PACE_VOZ_PREV);
+    var p = slot.audio.play();
+    /* `play()` devuelve promesa en los navegadores modernos. Se ignora su
+       rechazo A PROPÓSITO: el caso real es la política de autoplay antes del
+       primer gesto, y ahí perder una señal es preferible a un error en consola.
+       No se puede caer al sintetizador desde aquí: ya hemos dicho que sí. */
+    if (p && typeof p.catch === 'function') p.catch(function () {});
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+Object.assign(window, {
+  PACE_VOZ: PACE_VOZ,
+  PACE_VOZ_MARGEN: PACE_VOZ_MARGEN,
+  PACE_VOZ_CLIPS: PACE_VOZ_CLIPS,
+  paceVozInit: paceVozInit,
+  paceVozCabe: paceVozCabe,
+  paceVozIntenta: paceVozIntenta
+});
+;Object.assign(window, { PACE_VOZ, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_PREV, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
 })();
 </script>
   <script>
@@ -14758,9 +14884,16 @@ Object.assign(window, {
     box-shadow: var(--sh-soft);
   }
   .pace-lib-cuerpo { display: flex; align-items: flex-start; gap: 0; }
+  /* s175 · EL LATERAL SE QUEDA QUIETO AL BAJAR. Antes era "position: static" y
+     su caja se estiraba a la altura de la rejilla ("align-self: stretch"):
+     medido a 1920x1030, caja de 1250 px con 566 de contenido, asi que al llegar
+     al fondo del catalogo quedaban 144 px de rail y 697 px de columna VACIA.
+     Reportado por el usuario mirando la app, no leyendo el codigo.
+     "flex-start" en vez de "stretch" porque un elemento estirado no puede
+     pegarse: sticky necesita que la caja mida lo que su contenido. */
   .pace-lib-lateral {
     width: 262px; flex: 0 0 262px; padding: 4px 20px 20px 0;
-    align-self: stretch;
+    position: sticky; top: 0; align-self: flex-start;
   }
   .pace-lib-lateral .pace-lib-chips { flex-direction: column; padding-top: 0; overflow: visible; }
   .pace-lib-main { flex: 1; min-width: 0; padding-left: 22px; border-left: 1px solid var(--line); }
@@ -14777,7 +14910,16 @@ Object.assign(window, {
     font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink-3); margin: 0 0 11px;
   }
-  .pace-lib-lateral-tit + * { margin-bottom: 26px; }
+  /* s175 · EL AIRE ES DEL BLOQUE, NO DEL ROTULO. La regla era
+     ".pace-lib-lateral-tit + *", o sea que solo respiraba lo que iba DETRAS de
+     una versalita -- y "Tus rutinas" es el unico bloque que no lleva ninguna
+     encima (trae su propio titulo, ver LibraryShell). Por eso quedaba pegado a
+     "Para ahora" con CERO px de separacion mientras los demas tenian 26: no era
+     un valor mal puesto, era un bloque que se caia del selector. Lo vio el
+     usuario y luego se midio: 11 / 25 / 0 / 11.
+     Ahora el margen lo llevan los BLOQUES; los rotulos conservan sus 11 px. */
+  .pace-lib-lateral > :not(.pace-lib-lateral-tit) { margin-bottom: 26px; }
+  .pace-lib-lateral > :last-child { margin-bottom: 0; }
   /* en el lateral la tarjeta se compacta: sin descripción, sin series y sin
      tira -- el lateral orienta, no es catálogo */
   .pace-lib-lateral .pace-lib-card p,
@@ -15057,7 +15199,17 @@ function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, 
   /* «Para ahora» se calcula sobre lo VISIBLE y no sobre el catálogo entero: el
      filtro gobierna la pantalla completa, o el bloque de arriba contradiría al
      chip que acabas de tocar. */
-  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '');
+  /* s175 · UNA SUGERENCIA, NO DOS, y la razón es que con dos el lateral NO CABE.
+     Medido a 1536x714 (1920x1080 al 125 % de escala, la pantalla del usuario):
+     con dos sugerencias el rail mide 578 px en un hueco de 556 y la segunda se
+     corta; dándole además el aire que le faltaba sube a 604 y se corta el doble.
+     Con una mide 490 y entra entero. Elegido MIRÁNDOLO (variante A2).
+     Y ES UNA EN LAS DOS PIELES, aunque el problema sea sólo de escritorio: lo
+     que sube aquí se RETIRA del catálogo (`enAhora`, más abajo), así que pintar
+     dos en móvil y una en el lateral dejaría la segunda sin aparecer en ninguna
+     parte de la pantalla de escritorio. Que difieran exigiría leer la piel en
+     JS, que es justo lo que s166 quitó a propósito. */
+  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '', 1);
   const enAhora = (r) => ahora.indexOf(r) !== -1;
 
   /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya
@@ -16680,8 +16832,40 @@ function respiraEventoSesion(routine, inicioMs, activoSec, early, inPath) {
   };
 }
 
-Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion });
-;Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion });
+/* s175 · EL MAPEO DE ETIQUETA A SONIDO SALE AQUI. `BreatheSession.jsx` llego
+   a 509 lineas al anadir la senal del sosten, y STATE ya dejaba dicho desde
+   s166 que «lo siguiente que entre ahi va a su .support». Es ademas lo que
+   mejor se va: no toca estado ni React, solo traduce la etiqueta de la fase
+   —que viene del catalogo, en espanol— al nombre de la senal.
+   `playSound` se lee del global en la llamada, como en todo el repo. */
+// Helper: reproduce el sonido de una fase por su label.
+// (Decía «Sostén → silencio intencional» hasta s175; ver la rama del sostén.)
+function playPhaseSound(phaseLabel, phaseDur) {
+  if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
+  phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
+  phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
+  phaseLabel === 'Inhala al vientre') {
+    try {playSound('breathe.inhale', phaseDur);} catch (e) {}
+  } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
+  phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
+  phaseLabel === 'Exhala zumbando') {
+    try {playSound('breathe.exhale', phaseDur);} catch (e) {}
+  } else if (phaseLabel === 'Sostén' || phaseLabel === 'Sostén en vacío') {
+    /* s175 · EL SOSTÉN DEJA DE SER SILENCIO, y esto cambia una decisión
+       anterior a propósito. El silencio era lo correcto mientras el sonido
+       era SINTETIZADO: un tono sostenido durante una retención invita a
+       escucharlo, no a retener. Una palabra dicha una vez al entrar en la
+       fase es otra cosa, y es lo que hace cualquier guía hablada.
+       `breathe.hold` NO tiene receta en `SOUND_RECIPES`: si la voz no cabe
+       —o no está— `playSound` no encuentra recipe y **vuelve el silencio de
+       siempre**, sin ruido nuevo. Quitar esta rama son cuatro líneas. */
+    try {playSound('breathe.hold', phaseDur);} catch (e) {}
+  }
+}
+
+
+Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
+;Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
 })();
 </script>
   <script>
@@ -16767,20 +16951,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
     relojHold.marcar(stage === 'hold' && !paused);
   }, [stage, paused]);
 
-  // Helper: reproduce el sonido de una fase por su label.
-  // 'Sostén' / 'Sostén en vacío' → silencio intencional.
-  const playPhaseSound = (phaseLabel, phaseDur) => {
-    if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
-    phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
-    phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
-    phaseLabel === 'Inhala al vientre') {
-      try {playSound('breathe.inhale', phaseDur);} catch (e) {}
-    } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
-    phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
-    phaseLabel === 'Exhala zumbando') {
-      try {playSound('breathe.exhale', phaseDur);} catch (e) {}
-    }
-  };
+  /* El mapeo de etiqueta a sonido vive en `BreatheSession.support.jsx`. */
 
   // Preparación: cuenta atrás 3 segundos
   useEffect(() => {

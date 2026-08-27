@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.105.0** | 2026-08-27 | feat(voz+bibliotecas): **la voz de Respira, y los cuatro defectos que el usuario vio antes que yo** — El handoff traia «el arte y Respira»; el usuario mando **cuatro defectos de la biblioteca vistos en la app publicada** y pasaron a ser el trabajo. **Los cuatro reproducen, y el dato que faltaba era su pantalla**: 1920x1080 **al 125 % de escala son 1536 CSS px**, y a 1920 no reproducia. Huecos del rail **11/25/0/11** — y el cero **no era un valor mal puesto**: la regla da aire a lo que sigue a un rotulo y «Tus rutinas» es el unico bloque que **no lleva ninguno encima**, asi que se caia del selector. El rail era static con la caja estirada a **1250 px** sobre **566** de contenido: con el scroll al fondo quedaban **144 px de rail y 697 de columna vacia**. **Se pintaron ocho variantes en iframes de 1536x714 reales**, con las tarjetas de produccion y el CSS extraido de la hoja real, y **cada marco midiendose a si mismo** — de ahi salio lo que no se ve razonando: **dar aire EMPEORA el recorte** (de 22 px a 48), asi que «mas aire» y «que quepa» no caben juntas con dos sugerencias. Entregado **A2** (rail sticky, aire igual, **una** sugerencia): huecos **11/25/25/11**, recorte **0**, **481 px de rail intactos** al fondo. Y **una sugerencia en las DOS pieles** porque lo que sube se RETIRA del catalogo: pintar dos en movil y una en el lateral dejaria la segunda **sin aparecer en ninguna parte**. **EL PREPARATE PIERDE EL GLIFO** por decision del usuario, y con el **se cae la transicion de s174**: aquel circulo era su UNICO destino, asi que el vuelo se retira solo y library-transition.js queda **inerte** (130 lineas, con un test que vigila que no deje rastro). Las tres bibliotecas comparten ya la preparacion de Respira. **ENTRA LA VOZ**, lo que **anula «Voz/TTS: NUNCA»** —cuatro filas marcadas SUPERSEDED por s175 y tres sitios del ROADMAP—, y **el numero costo tres intentos**: por cabecera MPEG «14 de 20» (daba **casi la mitad** de la duracion real), por audio.duration «8 de 20» (correcta pero **incluye los silencios**) y, tras el apunte del usuario —«calcula lo que dura la palabra, el audio tiene colas»—, **17 de 20** midiendo los extremos de la onda. El «exhala» ocupa **4,96 s de archivo y la palabra acaba a los 2,12**. La misma equivocacion las dos veces: **medir el contenedor en vez del contenido**. De paso destapo un defecto que no habia visto: **0,65 s de silencio inicial** hacian que la senal llegara tarde. La decision es **por FASE y no global** y la disponibilidad se sabe **por precarga**, porque play() es asincrono. Fuera quedan solo las tres de bombeo. **Auditoria integral** en audit-integral-s175.md. **136/136** y **10 mutantes de 11 muerden** — el que no, retirado con su porque, y corregido el comentario que afirmaba lo contrario. | 175 | [session-175](docs/sessions/session-175-la-voz-y-lo-que-el-usuario-vio.md) |
 | **v0.104.0** | 2026-08-27 | feat(librerias): **las tres bibliotecas, implementadas — y la transicion que no existia** — s173 dejo el rediseno aprobado y sin una linea de codigo. Se cierran **las siete decisiones abiertas preguntando primero**, y el usuario amplia su regla de continuidad: **«dame SIEMPRE ejemplos en html para que pueda decidir»** — no basta con maquetar lo que se va a implementar, **toda opcion que yo proponga tiene que estar pintada antes de preguntar**. Nacen `library-rules.js` (reglas puras, asertables sin navegador), `library.css.jsx`, `RoutineCard.jsx` (sale de `BreatheLibrary`, donde vivia desde s34) y `LibraryShell.jsx`; Mueve y Estira quedan en 17 y 16 lineas de biblioteca. **SEIS numeros no cuadraban con lo dado por sabido**: «14 patrones» son **13 motores / 19 ritmos**; el sello de seguridad son **6** rutinas y no 5 (Kapalabhati no es apnea); las «12 premium» son 12 **solo si Respira se queda fuera** (19 en total); **1 de 28 capitulares no tiene arte** y en Mueve la media por tarjeta es **2,9** contra 5,1 en Estira; el estado vacio que ocurre es el **GRUPO** y no la biblioteca (`caderas` 0 de 5, `flujos` 0 de 2); y «Corto» a ≤3 min **quita dos rutinas de 14 en Mueve** — de ahi el **umbral relativo con su numero en el chip** (≤2 en Mueve, ≤4 en Estira). El **glifo como filtro** se descarta con dato: **84 %** de las identidades de Mueve sale en **una sola rutina**. **LA MAQUETA MENTIA SIN QUERER**: se dibujo sobre un marco de telefono a pelo y la biblioteca es un **modal**. Ancho util a 360: aprobado **328**, real **286** — y eso subia el scroll de las 3,50 pantallas prometidas a **4,33**, casi lo mismo que la app de hoy (4,50), o sea que **el rediseno no habria cobrado su promesa**. Recortado el chrome solo de este modal: **310 px y 3,97**; columna de escritorio **242 → 288**. El `!important` **no es pereza**: el padding del modal es un estilo EN LINEA y sin el las reglas no movian un pixel. **Cuatro defectos de mirar y medir**: «**1 SERIES** · 5 REPS» (dos rutinas de Estira tienen un UNICO paso de reps entre cuatro y cinco ⇒ la linea exige **dos series**, **10 de 28 → 8**); el separador **se comia su espacio** por ser `::before` de un flex item y **abria renglon** al partirse la linea; **`role="button"` en la tarjeta tumbo 9 tests** porque vuelve **presentacionales a sus descendientes** y el nombre dejaba de ser encabezado (reescrita al patron correcto, y gana teclado, que `Card` nunca tuvo); y **el grano se aplicaba dos veces** (0,011², invisible) — lo destapo el verify quejandose de un `const`, con lo que **el aviso era de ambito y el defecto de composicion**. **LA TRANSICION QUE EL DISENO DESCRIBIA NO EXISTE**: entre la capitular y el circulo del runner hay **DOS pantallas** y el circulo **tarda 3.114 ms** en existir. Se pintan los dos destinos posibles y el usuario elige **la cuenta atras**, que ademas es donde el circulo va a aparecer — y de paso deja de ser **un numero sobre nada**. Ponerlo ahi **introdujo un salto de 171 px (escritorio) y 221 (movil)**, porque el runner ancla arriba (s172b) y la preparacion se centraba: con el mismo anclaje, **salto 0**. **Y una duplicacion engano SEIS veces** (la copia oculta de «Para ahora»): cinco a las sondas y **la sexta al codigo que se publica** — en movil no volaba nada. La quinta se arreglo **moviendo el nodo**, no la sonda. **Se programa la RETENCION por calendario** (§12, 120 d), implementada y sin disparar desde s155: `eventsWebPruneByCalendar`, **una vez por arranque tras `loadState`** (y no en el rollover, que es sincrono), reutilizando las tres piezas que §12 nombraba y **sin escribir si no hay nada que podar**. **Tres nombres del catalogo** pierden su coletilla (`Cuello · 3 min`, `Hombros · 5 pasos`, `Caderas · 5 pasos`): decian lo que la tarjeta ya dice, y el primero ademas la contradecia. Los ids no se tocan. **131/131 tests** (+16) y **16 mutantes, 16 muerden** — con cuatro lecciones del calibrado: la linea de grupo vacio **mentia** si «Para ahora» subia sus rutinas, un guard de cero estaba **por biblioteca** cuando Estira no tiene ninguna rutina con dos series, comparar el JSON **no prueba** que no se escriba (se espia `setItem`), y dos asertos **pasaban por carrera**. | 174 | [session-174](docs/sessions/session-174-las-librerias-implementadas.md) |
 | **v0.103.0** | 2026-08-25 | feat(glifos+verify): **la ingesta deja de ser todo-o-nada, y el arte de ejercicio gana su red** — Entran **4 dibujos** (`Fondos en silla` ahora CON silla, `Onda espinal`, `Puente isquio a una pierna` y `Deslizamientos en pared`): **57 → 59 de 62**, y la cola baja de 7 a 3. Pero no entraban: el `--seco` daba **62 identidades, 102 PNG, 0 emparejados** —los originales llegan con nombre opaco y el emparejamiento es por slug— y renombrando solo esas cuatro el mapa **se reescribe entero** y las otras 57 desaparecen. La via de s171 (emparejar por CONTENIDO) **no sale limpia**: peor pareja **0,383** contra el 0,849 de entonces. Nace **`--fusionar`**: las identidades que no vienen en la carpeta CONSERVAN su fila, con la escritura y la fusion en `ingest-glifos-ejercicio.mapa.js`. **Lo que no se relaja**: una fila conservada tiene que apuntar a un archivo que exista o **aborta sin escribir nada**; un mapa sin **ni una** fila reconocible es fallo explicito; y un PNG huerfano sigue siendo salida 1. **El codigo de salida cambia de significado en la otra mitad**: con fusion, «identidad sin dibujo» ya no es un fallo sino el estado normal mientras la cola no este vacia — un exit code que siempre vale 1 es un exit code que se aprende a ignorar. Control medido: sin la bandera, **58 identidades «sin dibujo»** y el mapa en 4 filas; con ella, **3 y 59**. Calibrado con **tres mutantes** del modulo, cada uno con su rojo y solo el suyo. El script llego a **511 lineas** y el censo salio a `.censo.js` (regla §1), lo que obligo a **redeclarar `ROOT`** — el modo de fallo de s144 por otra puerta, y ahi el verify no mira porque su analisis de ambito es del artefacto. **NACE `verify.mascaras.js`**: el arte de ejercicio **no tenia ni una comprobacion relacional** (el precache cruzaba solo con el mapa de LOGROS), y `--fusionar` abre un fallo MUDO — una fila conservada sin archivo hace que el glifo caiga a su SVG viejo y el usuario vea **otro ejercicio**, sin un error en consola. Cinco relacionales en los dos sentidos, **los cinco calibrados en rojo**, y el **guard de cero** justifica a los otros cuatro: con el mapa vacio las cuatro cruzaban conjuntos vacios y salian **VERDES**. `CENSO.precache` **219 → 223**. Y la ficha de `descanso.png` **estaba mal desde hacia dos sesiones**: pedia una silla, y medido, **11 de los 18 descansos ocurren en rutinas `standing`** — una silla contradice 13 de 18. | 173 | [session-173](docs/sessions/session-173-fusionar-y-las-librerias.md) |
 | **v0.102.2** | 2026-08-21 | fix(eventos): **las dos decisiones del emisor, decididas y escritas en el esquema** — Las dos decisiones que s172 tomo porque el esquema no las cerraba **pasan a estar decididas POR EL USUARIO y escritas en el esquema** (rev. 6), asi que deja de haber desviacion que recordar. **Foco emite `focus`**, una sola identidad: la duracion ya viaja en `plannedSeconds` y los cuatro cubos de `focus.<minutos>` **no tenian consumidor** — «que te ayuda» agrupa por `routineId` y en Foco NO se pide feedback (`SessionFeedback` solo se monta en Respira, Mueve y Estira). **Respira sin rondas mantiene `routine.min x 60` `declared`** —es el numero contra el que corre el motor, no una estimacion— y la fila que le faltaba a §6.4 **se escribe**, con las tres familias separadas y el limite de las rondas dicho: ahi la retencion la suelta el usuario, asi que su plan queda por debajo del activo real. El aserto que fija la identidad de Foco vive sobre la funcion PURA, porque conducir un bloque entero costaria 25 minutos virtuales; calibrado en rojo devolviendo `focus.<min>`. | 172c | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
@@ -373,6 +374,90 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
 
 ---
+
+## [v0.105.0] -- 2026-08-27 -- feat(voz+bibliotecas): la voz de Respira, y los cuatro defectos que el usuario vio antes que yo
+
+### Lo que el usuario vio, y lo que hubo que preguntarle
+
+Cuatro defectos de la biblioteca reportados sobre la app publicada. **Los cuatro
+reproducen**, pero ninguno a la resolucion que yo probaba: su pantalla es
+**1920x1080 al 125 % de escala**, o sea **1536 CSS px**. Ese dato no se deduce de
+una captura y hubo que pedirlo.
+
+- **«Apretado entre Tus rutinas y Para ahora»** — huecos **11 / 25 / 0 / 11 px**.
+  El cero **no era un valor mal puesto**: la regla da aire a lo que sigue a un
+  rotulo y «Tus rutinas» es el unico bloque que no lleva ninguno encima, asi que
+  **se caia del selector**.
+- **«Al bajar, el lado se queda vacio»** — rail estatico con la caja estirada a
+  **1250 px** sobre **566** de contenido: al fondo quedaban **144 px de rail y
+  697 de columna vacia**.
+- **«Que quepa sin scroll»** — a su altura la segunda sugerencia **se corta 9 px**;
+  el umbral esta en **~723 px** de viewport.
+- **«Caderas · suelo sin glifo»** — es **la unica capitular vacia de las 28**, y
+  lo vio por su cuenta.
+
+### Lo que se pinto antes de preguntar
+
+Ocho variantes —cuatro de rail, cuatro de preparacion— en **iframes de 1536x714
+reales**, con la tarjeta de produccion renderizada de verdad y el CSS **extraido
+de la hoja real**, y **cada marco midiendose a si mismo**.
+
+De ahi salio lo que no se ve razonando: **dar aire empeora el recorte**. La
+variante que solo anadia los 26 px pasaba de cortar 22 px a cortar **48**. Las dos
+peticiones —mas aire y que quepa— **no caben juntas con dos sugerencias**.
+
+Entregado **A2**: rail fijo, aire igual en todos los bloques y **una** sugerencia.
+Medido contra el artefacto de HEAD servido en paralelo: huecos **11/25/25/11**,
+recorte **0**, **481 px de rail intactos** con el scroll al fondo. Y **una
+sugerencia en las dos pieles**: lo que sube a «Para ahora» se RETIRA del catalogo,
+asi que pintar dos en movil y una en el lateral dejaria la segunda **sin aparecer
+en ninguna parte** de la pantalla de escritorio.
+
+### El preparate pierde el glifo, y con el la transicion de s174
+
+Decision del usuario: **solo el contador**. Aquel circulo era el **UNICO destino**
+del vuelo de la capitular, asi que el vuelo **se retira solo** — esta escrito para
+eso. Con el se fueron sus tres reglas de hoja, incluida la que se acababa de
+implementar para recoger el CTA: sin anclaje no hay hueco que recoger. El modulo
+de la transicion queda **inerte**, con un test que vigila que no deje rastro.
+
+### La voz, y el numero que costo tres intentos
+
+Entra la voz `sulafat`, lo que **anula la regla «Voz/TTS: NUNCA»** escrita en
+**seis sitios**. Se marcan SUPERSEDED por s175 en vez de borrarse, como manda la
+convencion del propio documento.
+
+| Como lo medi | Resultado | Por que era falso |
+|---|---|---|
+| Cabecera MPEG | «14 de 20» | Daba **casi la mitad** de la duracion real |
+| Duracion del archivo | «8 de 20» | Correcta, pero **incluye los silencios** |
+| **Extremos de la onda** | **17 de 20** | Es lo que suena, y lo unico que puede pisar |
+
+El apunte que lo resolvio fue del usuario: «calcula lo que dura la palabra porque
+el audio tiene colas con silencio». El «exhala» ocupa **4,96 s de archivo y la
+palabra acaba a los 2,12** — 2,84 s de cola muda. **La misma equivocacion las dos
+veces: medir el CONTENEDOR en vez del CONTENIDO**, y por eso va escrita en la
+cabecera del modulo.
+
+De paso destapo **un defecto que no habia visto**: **0,65 s de silencio inicial**
+hacian que la senal llegara tarde. El clip entra ahora por donde empieza la voz.
+
+La decision es **por FASE y no global**, y la disponibilidad se sabe **por
+precarga** porque la reproduccion es asincrona y el fallo llegaria tarde. Fuera
+quedan solo las tres de bombeo (fases de 1 s). **El «manten» rompe un silencio
+deliberado** y es reversible en cuatro lineas.
+
+Dos trampas del build: aborta si queda una referencia bajo la carpeta de arte de
+Respira que no pueda inlinear —los MP3 viven aparte— y **volvio a abortar por el
+comentario que lo explicaba**, porque el guard busca la CADENA y Babel conserva
+los comentarios.
+
+### Verificacion
+
+`npm run verify` PASA · **136/136** · **10 mutantes de 11 muerden**. El que no
+—quitar el shrink del centro— **paso en verde** porque el arte se encoge solo con
+la altura y el centro nunca desborda: su test se **retira** con el porque escrito,
+y se corrige el comentario del codigo, que afirmaba que caia sin el.
 
 ## [v0.104.0] -- 2026-08-27 -- feat(librerias): las tres bibliotecas, implementadas — y la transicion que no existia
 

@@ -232,9 +232,16 @@
     box-shadow: var(--sh-soft);
   }
   .pace-lib-cuerpo { display: flex; align-items: flex-start; gap: 0; }
+  /* s175 · EL LATERAL SE QUEDA QUIETO AL BAJAR. Antes era "position: static" y
+     su caja se estiraba a la altura de la rejilla ("align-self: stretch"):
+     medido a 1920x1030, caja de 1250 px con 566 de contenido, asi que al llegar
+     al fondo del catalogo quedaban 144 px de rail y 697 px de columna VACIA.
+     Reportado por el usuario mirando la app, no leyendo el codigo.
+     "flex-start" en vez de "stretch" porque un elemento estirado no puede
+     pegarse: sticky necesita que la caja mida lo que su contenido. */
   .pace-lib-lateral {
     width: 262px; flex: 0 0 262px; padding: 4px 20px 20px 0;
-    align-self: stretch;
+    position: sticky; top: 0; align-self: flex-start;
   }
   .pace-lib-lateral .pace-lib-chips { flex-direction: column; padding-top: 0; overflow: visible; }
   .pace-lib-main { flex: 1; min-width: 0; padding-left: 22px; border-left: 1px solid var(--line); }
@@ -251,7 +258,16 @@
     font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink-3); margin: 0 0 11px;
   }
-  .pace-lib-lateral-tit + * { margin-bottom: 26px; }
+  /* s175 · EL AIRE ES DEL BLOQUE, NO DEL ROTULO. La regla era
+     ".pace-lib-lateral-tit + *", o sea que solo respiraba lo que iba DETRAS de
+     una versalita -- y "Tus rutinas" es el unico bloque que no lleva ninguna
+     encima (trae su propio titulo, ver LibraryShell). Por eso quedaba pegado a
+     "Para ahora" con CERO px de separacion mientras los demas tenian 26: no era
+     un valor mal puesto, era un bloque que se caia del selector. Lo vio el
+     usuario y luego se midio: 11 / 25 / 0 / 11.
+     Ahora el margen lo llevan los BLOQUES; los rotulos conservan sus 11 px. */
+  .pace-lib-lateral > :not(.pace-lib-lateral-tit) { margin-bottom: 26px; }
+  .pace-lib-lateral > :last-child { margin-bottom: 0; }
   /* en el lateral la tarjeta se compacta: sin descripción, sin series y sin
      tira -- el lateral orienta, no es catálogo */
   .pace-lib-lateral .pace-lib-card p,

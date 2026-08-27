@@ -79,20 +79,7 @@ function BreatheSession({ routine, onExit, inPath }) {
     relojHold.marcar(stage === 'hold' && !paused);
   }, [stage, paused]);
 
-  // Helper: reproduce el sonido de una fase por su label.
-  // 'Sostén' / 'Sostén en vacío' → silencio intencional.
-  const playPhaseSound = (phaseLabel, phaseDur) => {
-    if (phaseLabel === 'Inhala' || phaseLabel === 'Inhala más' ||
-        phaseLabel === 'Inhala oceánica' || phaseLabel === 'Inhala izq.' ||
-        phaseLabel === 'Inhala dcha.' || phaseLabel === 'Respira' ||
-        phaseLabel === 'Inhala al vientre') {
-      try { playSound('breathe.inhale', phaseDur); } catch (e) {}
-    } else if (phaseLabel === 'Exhala' || phaseLabel === 'Exhala oceánica' ||
-               phaseLabel === 'Exhala dcha.' || phaseLabel === 'Exhala izq.' ||
-               phaseLabel === 'Exhala zumbando') {
-      try { playSound('breathe.exhale', phaseDur); } catch (e) {}
-    }
-  };
+  /* El mapeo de etiqueta a sonido vive en `BreatheSession.support.jsx`. */
 
   // Preparación: cuenta atrás 3 segundos
   useEffect(() => {

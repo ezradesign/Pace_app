@@ -14,6 +14,11 @@ node_modules/
 
 # Hojas de revision generadas (scripts/audit/*): se regeneran, no se versionan
 _revision-*.html
+# Maquetas generadas (scripts/audit/maqueta-*.js): mismo criterio que las hojas
+# de revision -- lo que se versiona es el GENERADOR, no su salida
+_maqueta-*.html
+_maqueta-*/
+
 
 # Salida de Playwright (s154): informes y trazas se regeneran en cada pasada
 test-results/

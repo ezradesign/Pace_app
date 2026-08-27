@@ -179,7 +179,10 @@ test('«Para ahora» propone contexto y NO repite lo que ya está en su grupo', 
     return bloques.flatMap(b => Array.from(b.querySelectorAll('[data-pace-lib-card]'))
       .map(e => e.getAttribute('data-pace-lib-card')));
   });
-  expect(propuestas.length).toBe(2);
+  /* UNA, no dos (s175). El número es una DECISIÓN de producto y por eso se
+     escribe aquí: con dos, el lateral de escritorio no cabe a 1536x714 y la
+     segunda sugerencia se corta. Elegido mirándolo, variante A2. */
+  expect(propuestas.length).toBe(1);
   /* lo que propone se puede hacer DONDE ESTÁS: es la regla entera */
   propuestas.forEach(id => {
     const r = cat.find(x => x.id === id);
@@ -279,4 +282,73 @@ test('en escritorio el catálogo NO lleva color en reposo y el lateral sí exist
   /* control positivo: que el reposo sea REALMENTE transparente, y no otro
      color cualquiera distinto del hover */
   expect(reposo.replace(/\s/g, '')).toMatch(/rgba\(.*,0\)$/);
+});
+
+/* ── s175 · LO QUE EL USUARIO REPORTÓ MIRANDO LA APP ───────────────────────
+   Los dos asertos de abajo defienden lo que se arregló en s175, y los dos
+   nacen de un defecto que NADIE vio leyendo el código: el lateral se quedaba
+   vacío al bajar y «Tus rutinas» estaba pegado a «Para ahora». Ninguno escribe
+   un número de píxel: uno compara el lateral CONSIGO MISMO antes y después de
+   scrollear, y el otro cruza lo que se ve con el catálogo. */
+
+test('el lateral respira igual y se queda QUIETO al bajar', async ({ page }) => {
+  await irAlArtefacto(page);
+  await abrir(page, /^Estira/);
+  const m = await page.evaluate(() => {
+    const vis = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+    const lat = Array.from(document.querySelectorAll('.pace-lib-lateral')).filter(vis)[0];
+    if (!lat) return null;
+    let sc = lat;
+    while (sc && !(/(auto|scroll)/.test(getComputedStyle(sc).overflowY)
+                   && sc.scrollHeight > sc.clientHeight + 2)) sc = sc.parentElement;
+    if (!sc) return null;
+    const hijos = Array.from(lat.children);
+    const esRotulo = e => e.classList.contains('pace-lib-lateral-tit');
+    const huecos = hijos.slice(1).map((c, i) => ({
+      trasRotulo: esRotulo(hijos[i]),
+      px: Math.round(c.getBoundingClientRect().top - hijos[i].getBoundingClientRect().bottom),
+    }));
+    const dentro = () => Math.round(hijos[0].getBoundingClientRect().top - sc.getBoundingClientRect().top);
+    const arriba = dentro();
+    sc.scrollTop = sc.scrollHeight;
+    const abajo = dentro();
+    const desplazado = Math.round(sc.scrollTop);
+    sc.scrollTop = 0;
+    return { huecos, arriba, abajo, desplazado };
+  });
+  expect(m).not.toBeNull();
+  /* GUARD DE CERO: si no hubiera scroll que dar, «se queda quieto» sería
+     trivialmente cierto y este test pasaría con el lateral roto. */
+  expect(m.desplazado).toBeGreaterThan(100);
+  /* NINGÚN bloque pegado al siguiente. Es el defecto exacto que se reportó:
+     «Tus rutinas» y «Para ahora» estaban a CERO px. */
+  expect(Math.min(...m.huecos.map(h => h.px))).toBeGreaterThan(0);
+  /* Y EL AIRE ES DEL BLOQUE, NO DEL RÓTULO: todos los huecos que siguen a un
+     bloque miden lo mismo. La regla vieja sólo daba aire a lo que iba detrás de
+     una versalita, y por eso un bloque se caía del selector. */
+  const deBloque = m.huecos.filter(h => !h.trasRotulo).map(h => h.px);
+  expect(deBloque.length).toBeGreaterThan(1);
+  expect(new Set(deBloque).size).toBe(1);
+  /* Y AL FONDO SIGUE DONDE ESTABA. Antes, con el scroll abajo, la columna se
+     quedaba vacía: el lateral se iba con el catálogo. */
+  expect(Math.abs(m.abajo - m.arriba)).toBeLessThanOrEqual(2);
+});
+
+test('«Para ahora» propone UNA, y lo que sube NO desaparece de la pantalla', async ({ page }) => {
+  await irAlArtefacto(page);
+  for (const [boton, cual] of [[/^Estira/, 'extra'], [/^Mueve/, 'move']]) {
+    await abrir(page, boton);
+    const cat = await catalogo(page, cual);
+    const enLateral = await idsVisibles(page, '.pace-lib-lateral');
+    expect(enLateral.length).toBe(1);
+    /* RELACIONAL, y es el aserto que importa: lo que sube a «Para ahora» se
+       RETIRA de su grupo, así que si el lateral pintara menos de las que
+       promociona, la diferencia no aparecería en NINGÚN sitio -- un fallo que
+       no se ve mirando la pantalla, porque lo que falta no se ve. */
+    const enRejilla = await idsVisibles(page, '.pace-lib-rejilla');
+    const todos = enLateral.concat(enRejilla);
+    expect(new Set(todos).size).toBe(todos.length);
+    expect(todos.length).toBe(cat.length);
+    await page.keyboard.press('Escape');
+  }
 });

@@ -253,6 +253,16 @@ function playSound(name) {
   try {
     var s = (typeof getState === 'function') ? getState() : null;
     if (!s || !s.soundOn) return;
+    /* s175 · LA VOZ VA PRIMERO, y sólo si CABE en la fase. `paceVozIntenta`
+       recibe los segundos de esta fase y contesta de forma SÍNCRONA: devuelve
+       `true` únicamente cuando el clip está precargado y entra entero con su
+       margen. Si dice que no —fase demasiado corta, archivo ausente (el
+       standalone), navegador sin `Audio`— se sigue al sintetizador de siempre,
+       que es lo que sonaba antes de esta sesión.
+       Se lee de `window` en la llamada, no al definir, para no atarse al orden
+       de carga: el artefacto son 109 scripts en tareas separadas (s162). */
+    if (typeof window.paceVozIntenta === 'function' &&
+        window.paceVozIntenta(name, args[0])) return;
     var ctx = getCtx();
     if (!ctx) return;
     ensureRunning(ctx);
