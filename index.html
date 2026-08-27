@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.103.0</title>
+  <title>PACE · Foco · Cuerpo — v0.104.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -2297,6 +2297,60 @@ Object.assign(window.PACE_STRINGS.es, {
   'lib.level.intermediate': 'Intermedio',
   'lib.level.advanced': 'Avanzado',
 
+  /* ── BIBLIOTECA REDISENADA (s174) ───────────────────────────────────────
+     LA FORMA CORTA, NO LA DE `preview.eq.*`. Aquellas son requisitos en
+     lista y van en mayuscula y con frase entera («Una silla estable, sin
+     ruedas»); estas van EN MEDIO de una linea que se lee en voz alta -- «5
+     min · sentado · con silla · por lado»-- y por eso son minusculas y
+     preposicionales. No es un duplicado: es otro registro, y meter la frase
+     larga aqui dejaria la linea de contexto ilegible. */
+  'lib.min': 'min',
+  'lib.now': 'Para ahora',
+  'lib.back': 'Volver',
+  'lib.premium': 'Premium',
+  'lib.perSide': 'por lado',
+  'lib.series': '{s} series · {r} reps',
+  'lib.filter.title': 'Filtrar',
+  'lib.filter.aqui': 'Aquí mismo',
+  'lib.filter.sinmat': 'Sin material',
+  /* El umbral viaja en la cadena porque es RELATIVO a cada biblioteca: ≤ 2
+     min en Mueve y ≤ 4 en Estira (medido en s174). El chip ensena el suyo, y
+     asi no miente al cambiar de biblioteca. */
+  'lib.filter.short': '≤ {n} min',
+  'lib.where.floor': 'en el suelo',
+  'lib.where.seated': 'sentado',
+  'lib.where.standing': 'de pie',
+  'lib.gear.stableDesk': 'con mesa',
+  'lib.gear.stableChair': 'con silla',
+  'lib.gear.bar': 'con barra',
+  'lib.gear.wall': 'contra la pared',
+  'lib.gear.cushionOptional': 'cojín opcional',
+  'lib.gear.deskOptional': 'mesa opcional',
+  'lib.gear.barOptional': 'barra opcional',
+  /* El grupo que se queda a cero al filtrar. Dos formas porque `tn` sustituye
+     variables y NO conjuga: con «Las {n}» un grupo de una rutina diria «Las 1
+     de flujos piden suelo». Hoy el grupo mas pequeno tiene 2, asi que la
+     forma de singular no se ve nunca -- y existe justo para que anadir una
+     rutina al catalogo no rompa una frase. */
+  'lib.empty.floor.n': 'Las {n} de {g} piden suelo.',
+  'lib.empty.floor.1': 'La de {g} pide suelo.',
+  'lib.empty.any.n': 'Las {n} de {g} se quedan fuera de este filtro.',
+  'lib.empty.any.1': 'La de {g} se queda fuera de este filtro.',
+  'lib.empty.clear': 'quitar el filtro',
+  /* El RITMO de Respira, que es su informacion mas util y hoy no se lee en
+     ninguna pantalla. Los patrones con ciclo se dicen con cifras (4·7·8); los
+     que no lo tienen, con su palabra. Cuando lleguen los glifos de ritmo,
+     esto es lo que sustituyen. */
+  'lib.rhythm.rounds': '{r} rondas de {b}',
+  'lib.rhythm.diaphragm': 'hacia el vientre',
+  'lib.rhythm.physiological': 'doble inhalación',
+  'lib.rhythm.yin': 'con reposo al final',
+  'lib.rhythm.bhramari': 'con zumbido',
+  'lib.rhythm.bhastrika': 'fuelle rápido',
+  'lib.rhythm.nadi': 'alterna',
+  'lib.rhythm.kapalabhati': 'exhalaciones cortas',
+  'lib.rhythm.co2': 'sostén en vacío',
+
   /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
      dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
      ruedas», «Necesitas pared; barra opcional»— porque no tenian sitio. Este
@@ -2374,6 +2428,43 @@ Object.assign(window.PACE_STRINGS.en, {
   'lib.intensity.strong': 'Strong',
   'lib.level.intermediate': 'Intermediate',
   'lib.level.advanced': 'Advanced',
+
+  /* Biblioteca redisenada (s174) — ver la nota del bloque espanol: forma
+     CORTA, no la de `preview.eq.*`. */
+  'lib.min': 'min',
+  'lib.now': 'For now',
+  'lib.back': 'Back',
+  'lib.premium': 'Premium',
+  'lib.perSide': 'per side',
+  'lib.series': '{s} sets · {r} reps',
+  'lib.filter.title': 'Filter',
+  'lib.filter.aqui': 'Right here',
+  'lib.filter.sinmat': 'No gear',
+  'lib.filter.short': '≤ {n} min',
+  'lib.where.floor': 'on the floor',
+  'lib.where.seated': 'seated',
+  'lib.where.standing': 'standing',
+  'lib.gear.stableDesk': 'with a desk',
+  'lib.gear.stableChair': 'with a chair',
+  'lib.gear.bar': 'with a bar',
+  'lib.gear.wall': 'against a wall',
+  'lib.gear.cushionOptional': 'cushion optional',
+  'lib.gear.deskOptional': 'desk optional',
+  'lib.gear.barOptional': 'bar optional',
+  'lib.empty.floor.n': 'All {n} in {g} need the floor.',
+  'lib.empty.floor.1': 'The one in {g} needs the floor.',
+  'lib.empty.any.n': 'All {n} in {g} fall outside this filter.',
+  'lib.empty.any.1': 'The one in {g} falls outside this filter.',
+  'lib.empty.clear': 'clear the filter',
+  'lib.rhythm.rounds': '{r} rounds of {b}',
+  'lib.rhythm.diaphragm': 'into the belly',
+  'lib.rhythm.physiological': 'double inhale',
+  'lib.rhythm.yin': 'with a rest at the end',
+  'lib.rhythm.bhramari': 'with a hum',
+  'lib.rhythm.bhastrika': 'fast bellows',
+  'lib.rhythm.nadi': 'alternate nostril',
+  'lib.rhythm.kapalabhati': 'short exhales',
+  'lib.rhythm.co2': 'hold on empty',
 
   'preview.tag': 'Before you start',
   'preview.need': 'What you need',
@@ -3283,7 +3374,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.s5.name': 'Breathing reset',
   'move.chair.antidote.s5.instruction.action': '3 deep inhales to close.',
 
-  'move.hips.5.name': 'Hips · 5 steps',
+  'move.hips.5.name': 'Hips',
   'move.hips.5.desc': '5 steps to unlock deep hips. Mostly on the floor.',
   'move.hips.5.code': 'HIP',
   'move.hips.5.s0.name': 'Cossack squat',
@@ -3305,7 +3396,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hips.5.s4.instruction.action': 'Lift your hips and hold. Raise one knee, then the other.',
   'move.hips.5.s4.instruction.care': 'Slow the pace if your lower back complains.',
 
-  'move.shoulders.5.name': 'Shoulders · 5 steps',
+  'move.shoulders.5.name': 'Shoulders',
   'move.shoulders.5.desc': 'Shoulder reset: rotators, chest, traps. You\'ll need a wall; bar optional.',
   'move.shoulders.5.code': 'SHLD',
   'move.shoulders.5.s0.name': 'Scapular wall slides',
@@ -3355,7 +3446,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.ancestral.s4.name': 'Rib pull + breathing',
   'move.ancestral.s4.cue': 'Cat/cow movement.',
 
-  'move.neck.3.name': 'Neck · 3 min',
+  'move.neck.3.name': 'Neck',
   'move.neck.3.desc': 'Micro-break for tense cervicals.',
   'move.neck.3.code': 'SIT',
   'move.neck.3.s0.name': 'Chin tucks',
@@ -4691,7 +4782,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.103.0';
+const PACE_VERSION = 'v0.104.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -7518,10 +7609,10 @@ function eventsWebWrite(container) {
    el DETALLE por hecho pero nunca el total. La reconstruccion de agregados
    sigue siendo `baseline + fold(retenidos)`.
 
-   Punto de extension declarado: cuando la Fase 3 programe la poda por
-   retencion, va aqui al lado reutilizando `selectEventsToPrune` +
-   `foldEventsIntoBaseline` + `nextPruneCursor`, y sin un segundo reloj (se
-   engancha al rollover diario, §12). */
+   s174 — YA NO ES UN PUNTO DE EXTENSION: la poda por calendario existe, se
+   llama `eventsWebPruneByCalendar` y vive aqui debajo. Sigue siendo OTRA cosa
+   que esta: aquella barre por ANTIGUEDAD y esta por PRESION, y solo salta ante
+   un error de almacenamiento. */
 function eventsWebPruneForBudget(container) {
   const c = normalizeEventsContainer(container);
   if (!c.events.length) return c;
@@ -7546,6 +7637,49 @@ function eventsWebPruneForBudget(container) {
   }
   return { schemaVersion: c.schemaVersion, activatedAt: c.activatedAt,
     events: kept, baseline: baseline, pruneCursor: cursor, marker: c.marker };
+}
+
+/* PODA POR CALENDARIO (§12) — la de retencion, programada en s174.
+   Es la que el bloque de arriba declaraba como punto de extension, y usa
+   exactamente las tres piezas que aquel nombraba: `selectEventsToPrune` elige
+   el lote (posterior al cursor y anterior al suelo de 120 dias),
+   `foldEventsIntoBaseline` lo destila y `nextPruneCursor` avanza la marca. Se
+   pierde el DETALLE por hecho, nunca el total: la reconstruccion sigue siendo
+   `baseline + fold(retenidos)`.
+
+   SIN UN SEGUNDO RELOJ, que es la condicion de §12. Se dispara UNA vez en el
+   arranque, despues de `loadState` — de las dos vias posibles el usuario eligio
+   esta en s174, y no la del rollover: `rolloverIfNeeded` es SINCRONO y la poda
+   no, asi que engancharla alli seria disparar-y-olvidar dentro de una funcion
+   que devuelve estado, y probarlo pediria instrumentar el rollover. Aqui basta
+   con conducir el arranque, que la suite ya sabe hacer.
+   El dia lo pone quien llama (`todayISO`, regla §10 de CLAUDE.md: nunca
+   `new Date('YYYY-MM-DD')`), asi que una prueba puede fijar el calendario sin
+   tocar el reloj del sistema.
+
+   NO ESCRIBE SI NO HAY NADA QUE PODAR: devolver `container: null` deja el
+   almacen intacto. Importa mas de lo que parece — cada arranque pasaria por
+   aqui, y reescribir el contenedor entero para no cambiar nada es tocar
+   `localStorage` (y despertar a la otra pestana) sin motivo. */
+function eventsWebPruneByCalendar(todayKey) {
+  if (!todayKey) return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
+  return eventsWebRunExclusive(function (current) {
+    const batch = selectEventsToPrune(current, todayKey);
+    if (!batch.length) return { container: null, result: EVENTS_COMMITTED };
+    const fuera = Object.create(null);
+    for (let i = 0; i < batch.length; i++) fuera[batch[i].id] = true;
+    return {
+      container: {
+        schemaVersion: current.schemaVersion,
+        activatedAt: current.activatedAt,
+        events: current.events.filter(function (e) {return !fuera[e.id];}),
+        baseline: foldEventsIntoBaseline(current.baseline, batch, current.pruneCursor),
+        pruneCursor: nextPruneCursor(batch, current.pruneCursor),
+        marker: current.marker
+      },
+      result: EVENTS_COMMITTED
+    };
+  });
 }
 
 /* --- Exclusion ----------------------------------------------------------- */
@@ -7784,7 +7918,7 @@ Object.assign(window, {
   eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark,
   eventsWebDiagnostics
 });
-;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite, eventsWebPruneForBudget, eventsWebRunExclusive, eventsWebCapability, eventsWebStoredSchemaVersion, eventsWebClearMarker, eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
+;Object.assign(window, { eventsWebStorageUsable, eventsWebLocksAvailable, eventsWebRead, eventsWebWrite, eventsWebPruneForBudget, eventsWebPruneByCalendar, eventsWebRunExclusive, eventsWebCapability, eventsWebStoredSchemaVersion, eventsWebClearMarker, eventsWebInitialize, eventsWebFreshContainer, eventsWebReadSnapshot, eventsWebAppend, eventsWebReset, eventsWebReplaceFromImport, eventsWebMark, eventsWebDiagnostics });
 })();
 </script>
   <script>
@@ -8039,6 +8173,20 @@ function paceEventsAppend(event) {
   return eventsWebAppend(event);
 }
 
+/* PODA POR CALENDARIO (§12), programada en s174. La fachada, como todas: nadie
+   habla con un adaptador directamente. Con el adaptador inerte (`file://`,
+   Capacitor) devuelve el resultado nulo y no pasa nada -- alli no hay
+   contenedor que podar.
+   El dia se puede FIJAR desde fuera, y por eso es un parametro y no una lectura
+   escondida: sin eso, probar que barre lo de hace 121 dias exigiria mover el
+   reloj del sistema o esperar cuatro meses. */
+function paceEventsPrune(todayKey) {
+  const dia = todayKey || (typeof todayISO === 'function' ? todayISO() : null);
+  if (!dia) return Promise.resolve(eventsNullResult());
+  if (!paceEventsCanWrite()) return Promise.resolve(eventsNullResult());
+  return eventsWebPruneByCalendar(dia);
+}
+
 /* Export del snapshot canonico (§17). NO incluye detalles fisicos del backend
    (clave, locks, marcador). En s155 no se cablea al backup publico de «Tus
    datos»: el contenedor esta vacio y meter una seccion sin contenido en el JSON
@@ -8210,7 +8358,18 @@ function paceEventsWipeAll(alTerminar) {
    Se expone tambien como funcion para que las pruebas la conduzcan. */
 function paceEventsBoot() {
   try {
-    paceEventsInitialize();
+    /* s174 · LA RETENCION POR CALENDARIO SE PROGRAMA AQUI, y en ningun otro
+       sitio: una vez por arranque, DESPUES de que la inicializacion confirme.
+       No es un reloj -- es el mismo momento en que el contenedor se abre.
+       Va encadenada y no en paralelo porque antes de confirmar no se sabe si se
+       puede escribir; y va con `catch` porque una poda que falle no puede
+       impedir que la app arranque. Este archivo carga DESPUES de
+       `state-core.jsx`, asi que `loadState` ya corrio y `todayISO` existe. */
+    const listo = paceEventsInitialize();
+    if (listo && typeof listo.then === 'function') {
+      listo.then(function () {return paceEventsPrune();}).
+      catch(function () {/* la app no se entera */});
+    }
   } catch (e) {/* la app no se entera */}
 }
 
@@ -8221,9 +8380,9 @@ Object.assign(window, {
   paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState,
   paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport,
   paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics,
-  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot
+  paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot, paceEventsPrune
 });
-;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAppend, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
+;Object.assign(window, { detectEventsRuntime, selectEventsAdapter, paceEventsRuntime, paceEventsAdapter, paceEventsCapability, paceEventsCanWrite, paceEventsInitialize, paceEventsLegacyState, paceEventsSnapshot, paceEventsAppend, paceEventsPrune, paceEventsExport, paceEventsValidateImport, paceEventsReplaceFromImport, paceEventsReset, paceEventsDiagnostics, paceEventsStoreBarrier, paceEventsWipeAll, paceEventsBoot });
 })();
 </script>
   <!-- EL EMISOR (s172 · Fase 3, PASO 2): el puente entre el dominio y el
@@ -8989,7 +9148,7 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
    API expuesta a `window`:
      - SessionShell   → root + header con salida
-     - SessionPrep    → cuenta atrás de preparación
+     - SessionPrep    → cuenta atrás (vive en `SessionPrep.jsx` desde s174)
      - SessionDone    → pantalla de completado
      - SessionStat    → cifra grande + label pequeño
      - sessionShellStyles → objeto de estilos por si un módulo necesita
@@ -9248,49 +9407,10 @@ function SessionHeader(_ref3) {let { routine, onExit, extra } = _ref3;
 
 }
 
-/* ============================================================
-   SessionPrep — pantalla de cuenta atrás 3-2-1
-   Props:
-     - routine        → header passthrough
-     - onExit         → header passthrough
-     - accent         → color del número gigante (var CSS)
-     - prepCount      → número a mostrar (3..0)
-     - copy           → línea italic bajo el número
-                        ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
-     - onSkip         → callback del botón "Empezar ahora"
-   ============================================================ */
-function SessionPrep(_ref4) {let { routine, onExit, accent, prepCount, copy, onSkip, atmosphere } = _ref4;
-  const { t } = useT();
-  return (/*#__PURE__*/
-    React.createElement(SessionShell, {
-      routine: routine,
-      onExit: onExit,
-      atmosphere: atmosphere,
-      footer: /*#__PURE__*/React.createElement("button", { onClick: onSkip, style: sessionShellStyles.ctrlBtn }, t('session.startNow')) }, /*#__PURE__*/
-
-    React.createElement("div", { "data-pace-session-prep": true, style: { textAlign: 'center', maxWidth: 460 } }, /*#__PURE__*/
-    React.createElement("div", { style: {
-        fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
-        color: 'var(--ink-3)', marginBottom: 18
-      } }, t('session.prep')), /*#__PURE__*/
-    React.createElement("div", { "data-pace-session-prep-num": true, style: {
-        ...displayItalic,
-        fontSize: 200, fontWeight: 400, lineHeight: 0.9,
-        color: accent,
-        fontVariantNumeric: 'tabular-nums'
-      } }, prepCount > 0 ? prepCount : '·'), /*#__PURE__*/
-    React.createElement("div", { "data-pace-session-prep-copy": true, style: {
-        ...displayItalic,
-        /* marginTop 20 -> 40: el numeral (200px, lineHeight 0.9) baja su
-           tinta sobre el caption con solo 20px de aire -> solapamiento
-           (bug s96). Empujar el caption ~20px lo separa limpio. En movil
-           el override reduce el numeral a 128px, alli 20px basta. (s97) */
-        fontSize: 20, color: 'var(--ink-2)', marginTop: 40
-      } }, copy)
-    )
-    ));
-
-}
+/* s174 · `SessionPrep` VIVE AHORA EN `app/ui/SessionPrep.jsx`. Salió de aquí
+   al pasar este archivo de 500 líneas (regla §1) cuando la cuenta atrás ganó
+   el arte de la rutina, que es el destino de la transición desde la
+   biblioteca. Es una pantalla entera y no arrastró nada consigo. */
 
 /* ============================================================
    SessionDone — pantalla de completado
@@ -9305,11 +9425,11 @@ function SessionPrep(_ref4) {let { routine, onExit, accent, prepCount, copy, onS
      - buttonVariant  → 'terracota' (Breathe) o null (Move usa estilo custom)
      - buttonStyle    → override del style del botón "Volver al inicio"
    ============================================================ */
-function SessionDone(_ref5)
+function SessionDone(_ref4)
 
 
 
-{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData } = _ref5;
+{let { routine, onExit, accent, accentSoft, doneMeta, doneCopy, stats = [], buttonVariant, buttonStyle, doneButtonLabel, atmosphere, feedback, rootData } = _ref4;
   const { t } = useT();
   /* doneButtonLabel: override del label del CTA. Dentro de un Camino la
      sesion pasa t('session.next') ("Siguiente") -- onExit('done') ya avanza
@@ -9375,7 +9495,7 @@ function SessionDone(_ref5)
    SessionStat — cifra grande italic + label pequeño
    Fusión de `Stat` (Breathe) y `MoveStat` (Move) — byte-por-byte iguales.
    ============================================================ */
-function SessionStat(_ref6) {let { label, value } = _ref6;
+function SessionStat(_ref5) {let { label, value } = _ref5;
   return (/*#__PURE__*/
     React.createElement("div", { "data-pace-session-stat": true, style: { textAlign: 'center' } }, /*#__PURE__*/
     React.createElement("div", { "data-pace-session-stat-num": true, style: {
@@ -9421,12 +9541,175 @@ function sessionDoneKeyBlocked(e) {
 }
 
 Object.assign(window, {
-  SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat,
+  SessionShell, SessionHeader, SessionDone, SessionStat,
   sessionShellStyles, sessionAtmosphere,
   paceGrainUrl, paceGlowRamp, PaceDither,
   sessionKeyOnControl, sessionDoneKeyBlocked
 });
-;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionPrep, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+;Object.assign(window, { _extends, paceGrainUrl, paceGlowRamp, PaceDither, sessionAtmosphere, SessionShell, SessionHeader, SessionDone, SessionStat, sessionKeyOnControl, sessionDoneKeyBlocked });
+})();
+</script>
+  <!-- Pantalla de preparación (s174), extraída de SessionShell.jsx al pasar
+       aquel de 500 líneas cuando la cuenta atrás ganó el arte de la rutina.
+       DESPUÉS de SessionShell (usa `SessionShell` y `sessionShellStyles`) y
+       ANTES de los runners, que la montan. `StepGlyph` lo lee en render, así
+       que no exige que MoveModule cargue antes. -->
+  <script>
+;(function () {
+/* PACE · app/ui/SessionPrep.jsx (sesión 174)
+   ============================================
+   LA PANTALLA DE PREPARACIÓN, extraída de `SessionShell.jsx` al rebasar aquel
+   las 500 líneas (regla §1 de CLAUDE.md, vigilada con trinquete desde s162:
+   trocear, NO añadir a la tabla de deuda).
+
+   Se eligió ESTA costura y no otra porque `SessionPrep` es una PANTALLA
+   completa y autónoma —consume el shell, no lo define—, mientras que el resto
+   del archivo es el shell, su cabecera, la atmósfera y el grano, que sí se
+   necesitan entre sí. Lo que sale es lo único que podía irse sin arrastrar
+   nada detrás.
+
+   CARGA DESPUÉS de `SessionShell.jsx` (usa `SessionShell` y
+   `sessionShellStyles`) y ANTES de los runners, que la montan. */
+
+/* ============================================================
+   SessionPrep — pantalla de cuenta atrás 3-2-1
+   Props:
+     - routine        → header passthrough
+     - onExit         → header passthrough
+     - accent         → color del número gigante (var CSS)
+     - prepCount      → número a mostrar (3..0)
+     - copy           → línea italic bajo el número
+                        ("Siéntate cómodo. Respira natural." / "De pie. Sin prisa. 6 pasos.")
+     - onSkip         → callback del botón "Empezar ahora"
+   ============================================================ */
+/* s174 · LA CUENTA ATRÁS PUEDE LLEVAR EL ARTE DE LA RUTINA, y ese es el destino
+   de la transición desde la biblioteca (opción A).
+   POR QUÉ AQUÍ Y NO EN EL CÍRCULO DEL RUNNER, que es lo que el diseño decía:
+   medido en s174, entre la capitular de la tarjeta y el círculo del runner hay
+   DOS pantallas —el Preview y esta— y el círculo tarda **3.114 ms** en existir
+   desde que pulsas «Empezar». Los dos elementos nunca están cerca en el tiempo,
+   así que no hay movimiento continuo posible hasta allí. Esta pantalla SÍ está
+   a un frame, y además es el sitio donde va a aparecer el círculo: el arte
+   aterriza en su tamaño y su posición, y cuando la cuenta termina el círculo
+   del runner lo releva sin que nada salte.
+   De regalo arregla algo real: hasta hoy esta pantalla era un número sobre nada
+   y no decía qué ibas a hacer.
+   `stepName` AUSENTE = comportamiento de siempre, byte a byte. Respira no pasa
+   arte (sus rutinas no tienen glifo de ejercicio) y no se entera de nada. */
+function SessionPrep(_ref) {let { routine, onExit, accent, accentSoft, prepCount, copy, onSkip, atmosphere } = _ref;
+  const { t } = useT();
+  /* EL ARTE SE DERIVA AQUÍ, no lo pasan los runners. Los dos lo habrían pasado
+     con la misma expresión, y entonces «qué dibujo enseña la preparación y de
+     qué tamaño» sería una decisión escrita en tres sitios que hay que mantener
+     de acuerdo. El tamaño sale de `v1GlyphSize`, que es la MISMA fuente que usa
+     el círculo del runner: por eso el relevo no salta.
+     RESPIRA NO SE ENTERA: sus 20 rutinas no tienen `steps` (llevan `pattern` y
+     `cycle`), así que aquí no hay nombre de paso y la pantalla es la de
+     siempre, byte a byte. */
+  const primerPaso = routine && routine.steps && routine.steps[0] && routine.steps[0].name;
+  const glyphSize = typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 0;
+  const stepName = primerPaso;
+  const conArte = !!stepName && typeof StepGlyph === 'function' && glyphSize > 0;
+  const numero = prepCount > 0 ? prepCount : '·';
+  if (conArte) {
+    return (/*#__PURE__*/
+      React.createElement(SessionShell, {
+        routine: routine,
+        onExit: onExit,
+        atmosphere: atmosphere,
+        footer: /*#__PURE__*/React.createElement("button", { onClick: onSkip, style: sessionShellStyles.ctrlBtn }, t('session.startNow')) }, /*#__PURE__*/
+
+      React.createElement("div", { "data-pace-session-prep": true, style: { textAlign: 'center', maxWidth: 460 } }, /*#__PURE__*/
+
+
+
+
+
+
+
+      React.createElement("div", { "data-pace-session-prep-art": true, style: {
+          position: 'relative', width: glyphSize, margin: '0 auto',
+          /* el numeral se dimensiona CON el círculo, no con el breakpoint: la
+             hoja responsive fija 128 px al de siempre, y aquí eso llenaría el
+             círculo entero. Viaja como token para que una sola regla lo lea. */
+          '--pace-prep-num': Math.round(glyphSize * 0.34) + 'px'
+        } }, /*#__PURE__*/
+      React.createElement(StepGlyph, { stepName: stepName, accent: accent, accentSoft: accentSoft, size: glyphSize }), /*#__PURE__*/
+      React.createElement("div", { "data-pace-session-prep-num": true, "data-pace-prep-en-arte": true, style: {
+          position: 'absolute', left: 0, top: 0, width: glyphSize, height: glyphSize,
+          display: 'grid', placeItems: 'center', pointerEvents: 'none',
+          ...displayItalic, fontWeight: 400, lineHeight: 1, color: accent,
+          opacity: 0.34, fontVariantNumeric: 'tabular-nums'
+        } }, numero)
+      ), /*#__PURE__*/
+      React.createElement("div", { style: {
+          fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: 'var(--ink-3)', marginTop: 20
+        } }, t('session.prep')), /*#__PURE__*/
+      React.createElement("div", { "data-pace-session-prep-copy": true, style: {
+          ...displayItalic, fontSize: 20, color: 'var(--ink-2)', marginTop: 10
+        } }, copy)
+      )
+      ));
+
+  }
+  return (/*#__PURE__*/
+    React.createElement(SessionShell, {
+      routine: routine,
+      onExit: onExit,
+      atmosphere: atmosphere,
+      footer: /*#__PURE__*/React.createElement("button", { onClick: onSkip, style: sessionShellStyles.ctrlBtn }, t('session.startNow')) }, /*#__PURE__*/
+
+    React.createElement("div", { "data-pace-session-prep": true, style: { textAlign: 'center', maxWidth: 460 } }, /*#__PURE__*/
+    React.createElement("div", { style: {
+        fontSize: 12, letterSpacing: '0.22em', textTransform: 'uppercase',
+        color: 'var(--ink-3)', marginBottom: 18
+      } }, t('session.prep')), /*#__PURE__*/
+    React.createElement("div", { "data-pace-session-prep-num": true, style: {
+        ...displayItalic,
+        fontSize: 200, fontWeight: 400, lineHeight: 0.9,
+        color: accent,
+        fontVariantNumeric: 'tabular-nums'
+      } }, prepCount > 0 ? prepCount : '·'), /*#__PURE__*/
+    React.createElement("div", { "data-pace-session-prep-copy": true, style: {
+        ...displayItalic,
+        /* marginTop 20 -> 40: el numeral (200px, lineHeight 0.9) baja su
+           tinta sobre el caption con solo 20px de aire -> solapamiento
+           (bug s96). Empujar el caption ~20px lo separa limpio. En movil
+           el override reduce el numeral a 128px, alli 20px basta. (s97) */
+        fontSize: 20, color: 'var(--ink-2)', marginTop: 40
+      } }, copy)
+    )
+    ));
+
+}
+
+
+/* La hoja de ESTA pantalla, con su guard de id (patrón de
+   `MoveSessionV1.css.jsx`). Dos reglas, las dos sobre el modo CON ARTE:
+
+   1. EL MISMO ANCLAJE QUE EL RUNNER. `centerBody` centra con `margin:auto` y
+      el runner lo mata con una regla gemela (`:has([data-pace-v1-body])`,
+      s172b). Sin esto la preparación se centra y el paso se ancla arriba, y el
+      círculo salta al relevarse -- 171 px en escritorio, 221 en móvil.
+   2. EL NUMERAL SE DIMENSIONA CON EL CÍRCULO y no con el breakpoint. La hoja
+      responsive de sesión fija el numeral en 128 / 96 px con `!important`, y
+      dentro de un círculo de 161 eso lo llena entero. Gana por ESPECIFICIDAD
+      (dos atributos contra uno) y no por orden, así que sigue ganando aunque
+      mañana se añada un breakpoint más. */
+(function () {
+  if (document.getElementById('pace-session-prep-css')) return;
+  const s = document.createElement('style');
+  s.id = 'pace-session-prep-css';
+  s.textContent = [
+  '[data-pace-session-center-body]:has([data-pace-session-prep-art]) { margin-top: 0 !important; }',
+  '[data-pace-session-prep-num][data-pace-prep-en-arte] { font-size: var(--pace-prep-num, 72px) !important; }'].
+  join(String.fromCharCode(10));
+  document.head.appendChild(s);
+})();
+
+Object.assign(window, { SessionPrep });
+;Object.assign(window, { SessionPrep });
 })();
 </script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
@@ -14028,6 +14311,1053 @@ Object.assign(window, { RoutinePreview });
 })();
 </script>
 
+  <!-- BIBLIOTECAS (s174). Las tres piezas del rediseño, en este orden y no en
+       otro: las REGLAS primero (puras, sin React, para poder asertarlas sin
+       navegador), la HOJA después —interpola `paceGrainUrl()` de SessionShell,
+       así que va detrás de él— y los componentes al final. `RoutineCard` va
+       DESPUÉS de exercise-glyphs porque pinta la capitular con ExerciseGlyph, y
+       `LibraryShell` después de la tarjeta. Los tres ANTES de BreatheLibrary,
+       MoveModule y ExtraModule, que son quienes los consumen. -->
+  <script>
+;(function () {
+/* PACE · app/ui/library-rules.js (sesión 174)
+   =============================================
+   LAS REGLAS DE LAS BIBLIOTECAS, SIN UNA LÍNEA DE UI. Filtros, orden, «Para
+   ahora», la tira de glifos y la línea de series viven aquí como funciones
+   puras: lo que la maqueta v13 demostró mirando, escrito de forma que se pueda
+   asertar sin abrir un navegador.
+
+   POR QUÉ UN ARCHIVO APARTE. `LibraryShell.jsx` pinta y `RoutineCard.jsx`
+   también; si estas reglas vivieran dentro, la única manera de probar que
+   «Corto» filtra bien sería levantar Chromium y contar tarjetas. Separadas, el
+   `verify` puede cruzarlas contra el catálogo real en ~5 s.
+
+   `var` y `function` a propósito (no `const`): el build re-expone
+   function/var top-level como global (collectGlobalNames, s103), y un `const`
+   NO cruza la IIFE del artefacto — la trampa de s148, que ya se cobró una
+   sesión. El `Object.assign` final es el cinturón encima de los tirantes.
+
+   CARGA ANTES de `RoutineCard.jsx` y `LibraryShell.jsx`, y DESPUÉS de
+   `exercise-aliases.js` (usa `resolveVisualId`, leído de `window` por si el
+   orden fallara). */
+
+/* Los tres filtros, en el orden en que se pintan. Medido en s174: los tres
+   chips ocupan 277 px de los 328 disponibles a 360 px de ancho, así que un
+   cuarto no cabe sin deslizar — y deslizar chips esconde el que no ves. */
+var LIB_FILTROS = ['aqui', 'sinmat', 'corto'];
+
+/* EL UMBRAL DE «CORTO» ES RELATIVO A CADA BIBLIOTECA, y no un número escrito
+   aquí. Medido en s174: con «≤ 3 min» fijo, el chip deja 12 de 14 en Mueve
+   —quita dos: no filtra— y 3 de 14 en Estira. El mismo texto hacía dos cosas
+   distintas porque Mueve va de 1 a 4 min y Estira de 2 a 6.
+   Regla: el mayor umbral cuyo recuento NO pase de la mitad de la biblioteca.
+   Sale ≤ 2 min en Mueve (7 de 14) y ≤ 4 min en Estira (6 de 14). El chip
+   ENSEÑA su umbral, así que no miente aunque cambie de biblioteca. */
+function libraryUmbralCorto(rutinas) {
+  if (!rutinas || !rutinas.length) return 0;
+  var mins = [];
+  rutinas.forEach(function (r) {if (mins.indexOf(r.min) === -1) mins.push(r.min);});
+  mins.sort(function (a, b) {return a - b;});
+  var mitad = Math.ceil(rutinas.length / 2);
+  var t = mins[0];
+  mins.forEach(function (m) {
+    var n = rutinas.filter(function (r) {return r.min <= m;}).length;
+    if (n <= mitad) t = m;
+  });
+  return t;
+}
+
+/* «Aquí mismo» = lo que se puede hacer donde estás: sin tirarse al suelo y sin
+   una barra de la que colgarse. Medido: 11 de 14 en Mueve y 5 de 14 en Estira.
+   «De pie» y «Con suelo» se cayeron en s173 por no discriminar — el primero
+   está contenido entero en «Aquí mismo» y el segundo es su complemento exacto:
+   un filtro con dos nombres. */
+function libraryPredicado(clave, umbral) {
+  if (clave === 'aqui') return function (r) {
+    return !r.requiresFloor && (r.equipment || []).indexOf('bar') === -1;
+  };
+  if (clave === 'sinmat') return function (r) {return (r.equipment || []).length === 0;};
+  if (clave === 'corto') return function (r) {return r.min <= umbral;};
+  return function () {return true;};
+}
+
+/* Aplica el conjunto de filtros ACTIVOS (todos en Y). Sin filtros, identidad. */
+function libraryFiltrar(rutinas, activos, umbral) {
+  if (!activos || !activos.length) return rutinas;
+  var preds = activos.map(function (k) {return libraryPredicado(k, umbral);});
+  return rutinas.filter(function (r) {
+    return preds.every(function (p) {return p(r);});
+  });
+}
+
+/* ORDEN DENTRO DEL GRUPO: libres primero, luego por duración.
+   La primera mitad ya existía desde s90 en Respira («free primero, premium al
+   final»: el usuario free ve antes lo que puede usar); la segunda es el único
+   orden intrínseco que tiene el dato. Y hace legible el filtro de duración —lo
+   más corto ya está arriba, así que el chip confirma lo que ves en vez de
+   reordenarte la pantalla.
+   `slice()` antes de `sort` porque el catálogo NO se ordena en su sitio, y el
+   sort de JS es estable desde ES2019: a igualdad de las dos claves se conserva
+   el orden de catálogo. */
+function libraryOrdenar(rutinas) {
+  return (rutinas || []).slice().sort(function (a, b) {
+    var pa = a.access === 'premium' ? 1 : 0;
+    var pb = b.access === 'premium' ? 1 : 0;
+    if (pa !== pb) return pa - pb;
+    return a.min - b.min;
+  });
+}
+
+/* LA TIRA DE GLIFOS: las identidades VISUALES distintas de la rutina, en orden
+   de aparición. La primera hace de capitular a 62 px y el resto va a 20.
+   `Descanso` se cae: sale 18 veces en 10 rutinas de Mueve, todavía no tiene
+   dibujo (es una de las 3 de la cola) y no es un ejercicio — dibujar el
+   descanso en la tira sería contar como contenido lo que es una pausa.
+   Se resuelve por IDENTIDAD y no por nombre: varios ejercicios comparten dibujo
+   vía VISUAL_ALIAS (s110), y mapear por nombre duplicaría entradas. */
+function libraryGlifos(rutina) {
+  var out = [];
+  var resolver = window.resolveVisualId || function (n) {return n;};
+  (rutina && rutina.steps || []).forEach(function (s) {
+    if (!s || !s.name || s.name === 'Descanso') return;
+    var v = resolver(s.name);
+    if (out.indexOf(v) === -1) out.push(v);
+  });
+  return out;
+}
+
+/* LA LÍNEA DE SERIES SOBREVIVE SÓLO CUANDO DICE SERIES Y REPETICIONES, que es
+   lo único que ningún dibujo puede contar: las demás decían «5 posturas», y eso
+   ya lo dicen los glifos contándose.
+   Y EXIGE DOS SERIES. Defecto visto MIRANDO la maqueta v13, no leyendo el
+   diseño: la regla de s173 daba la línea a toda rutina con algún paso `reps`, y
+   en Estira eso son dos rutinas con un ÚNICO paso de repeticiones entre cuatro
+   y cinco (`move.neck.3`, `move.wrists`) — la tarjeta afirmaba «1 SERIES · 5
+   REPS» de un movimiento de los cuatro. Una serie no es una serie.
+   Medido: 10 de 28 -> 8 de 28, y las 8 son de Mueve. */
+function librarySeries(rutina) {
+  var reps = (rutina && rutina.steps || []).filter(function (s) {
+    return s && s.mode === 'reps';
+  });
+  if (reps.length < 2) return null;
+  var valores = [];
+  reps.forEach(function (s) {
+    var n = s.reps && typeof s.reps === 'object' ? s.reps.target : s.reps;
+    if (typeof n === 'number' && valores.indexOf(n) === -1) valores.push(n);
+  });
+  if (!valores.length) return null;
+  return { series: reps.length, reps: valores };
+}
+
+/* «por lado» se lleva a la línea de contexto, con el resto del cómo-se-hace. */
+function libraryPorLado(rutina) {
+  return (rutina && rutina.steps || []).some(function (s) {return s && s.mode === 'perSide';});
+}
+
+/* Ordinal de día a partir de una clave ISO LOCAL. `Math.round` y no `floor`:
+   el cambio de hora mueve la medianoche local ±1 h y el redondeo lo absorbe,
+   así que el ordinal sube exactamente uno por día también en marzo y octubre.
+   NO se usa `new Date('YYYY-MM-DD')` — la regla §10 de CLAUDE.md lo prohíbe
+   (parsea medianoche UTC y en husos negativos cae en el día anterior). */
+function libraryDiaOrdinal(iso) {
+  var p = String(iso || '').split('-');
+  if (p.length !== 3) return 0;
+  var d = new Date(+p[0], +p[1] - 1, +p[2]);
+  if (isNaN(d.getTime())) return 0;
+  return Math.round(d.getTime() / 86400000);
+}
+
+/* «PARA AHORA» — CONTEXTO + ROTACIÓN DIARIA (decidido en s174).
+   Fuera los dos ids escritos a mano, que en s173 dejaron el bloque VACÍO dos
+   versiones por asumir el prefijo `extra.*` en Estira (cuyas 14 rutinas
+   empiezan por `move.`, la trampa que s172 prohíbe expresamente).
+   El pozo es el CONTEXTO —lo que se puede hacer donde estás—, ordenado por
+   duración, y entra por el día. Determinista: sin reloj de horas (s161 ya
+   decidió que la paleta Auto va por SISTEMA y no por hora, porque «la app ya
+   tiene un día de 25 min», y meter franjas horarias aquí sería un segundo
+   modelo de tiempo dentro de la misma app), sin historial (que sólo tiene
+   `pace.events.v1`, y en Capacitor el adaptador es null) y asertable con
+   page.clock.
+   MEDIDO al elegir el pozo: con «aquí mismo» Y «sin material» son 3 rutinas en
+   Estira y 5 en Mueve, y enseñando 2 de 3 casi siempre sale lo mismo. Con
+   «aquí mismo» a secas son 5 y 11, que sí rotan. */
+function libraryParaAhora(rutinas, iso, cuantas) {
+  var n = cuantas || 2;
+  var pozo = (rutinas || []).filter(libraryPredicado('aqui'));
+  pozo = pozo.slice().sort(function (a, b) {return a.min - b.min;});
+  if (pozo.length <= n) return pozo;
+  var i = libraryDiaOrdinal(iso) % pozo.length;
+  if (i < 0) i += pozo.length;
+  var out = [];
+  for (var k = 0; k < n; k++) out.push(pozo[(i + k) % pozo.length]);
+  return out;
+}
+
+/* EL GRUPO QUE SE QUEDA VACÍO. Medido en s174: ninguna combinación de los tres
+   filtros vacía una biblioteca entera (el mínimo es 2, en Estira), pero con
+   «Aquí mismo» Estira deja `caderas` en 0 de 5 y `flujos` en 0 de 2 — dos
+   cabeceras con nada debajo, que es el mismo fallo que el verify vigila en las
+   familias de logro desde s168. La cabecera se queda y dice POR QUÉ.
+   Devuelve la CLAVE del motivo, no la frase: el texto vive en i18n, en los dos
+   idiomas y con su forma de singular. */
+function libraryMotivoVacio(ocultas) {
+  if (!ocultas || !ocultas.length) return null;
+  var suelo = ocultas.filter(function (r) {return r.requiresFloor;}).length;
+  return suelo === ocultas.length ? 'floor' : 'any';
+}
+
+Object.assign(window, {
+  LIB_FILTROS: LIB_FILTROS,
+  libraryUmbralCorto: libraryUmbralCorto,
+  libraryPredicado: libraryPredicado,
+  libraryFiltrar: libraryFiltrar,
+  libraryOrdenar: libraryOrdenar,
+  libraryGlifos: libraryGlifos,
+  librarySeries: librarySeries,
+  libraryPorLado: libraryPorLado,
+  libraryDiaOrdinal: libraryDiaOrdinal,
+  libraryParaAhora: libraryParaAhora,
+  libraryMotivoVacio: libraryMotivoVacio
+});
+;Object.assign(window, { LIB_FILTROS, libraryUmbralCorto, libraryPredicado, libraryFiltrar, libraryOrdenar, libraryGlifos, librarySeries, libraryPorLado, libraryDiaOrdinal, libraryParaAhora, libraryMotivoVacio });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · app/ui/library.css.jsx (sesión 174)
+   ===========================================
+   LA HOJA DE LAS TRES BIBLIOTECAS, inyectada una sola vez. Patrón de
+   `MoveSessionV1.css.jsx` (s172b): IIFE idempotente con su guard de id, sin
+   exports, y basta con cargarla antes de los componentes que la usan.
+
+   POR QUÉ EN CSS Y NO EN ESTILOS EN LÍNEA, que es lo que hace el resto de la
+   app: la decisión de s173 es que el color de módulo se comporte DISTINTO en
+   las dos pieles —filo en reposo en móvil, sólo en el hover en escritorio— y
+   eso es una media query. Con estilos en línea haría falta un listener de
+   resize y un re-render por cada cambio de ancho para pintar catorce tarjetas.
+
+   NI UN BACKTICK DENTRO DEL TEMPLATE LITERAL: el build aborta y las medidas
+   siguientes corren contra el artefacto viejo (trampa de s172b).
+
+   El breakpoint es 768/769, el MISMO que `_responsive.pieles.js` usa para
+   `--pace-skin`. Si algún día se mueve, se mueve en los dos sitios o la
+   biblioteca se creerá de escritorio dentro de una home móvil. */
+(function () {
+  if (document.getElementById('pace-library-css')) return;
+  /* EL GRANO SALE DEL SISTEMA, no de un valor nuevo: `paceGrainUrl()` vive en
+     SessionShell.jsx con sus 0,011 de opacidad, baseFrequency 1.4 y tile 160.
+     Se interpola aquí al inyectar, así que si aquel cambia, esto cambia con él.
+     Por eso esta hoja CARGA DESPUÉS de SessionShell.jsx y no antes.
+      Y LA OPACIDAD NO SE VUELVE A APLICAR EN CSS: va DENTRO del SVG (el `rect`
+     lleva su propio `opacity`), como en `PaceDither`. La primera versión de
+     esta hoja la ponía además como propiedad CSS, que es 0,011 x 0,011 -- un
+     grano invisible. Lo destapó el verify al quejarse de que
+     `PACE_GRAIN_OPACITY` es un `const` y no cruza la IIFE del artefacto: el
+     aviso era de ámbito y el defecto, de composición. */
+
+  const grano = typeof paceGrainUrl === 'function' ? paceGrainUrl() : 'none';
+  const s = document.createElement('style');
+  s.id = 'pace-library-css';
+  s.textContent = `
+/* ── cabecera ─────────────────────────────────────────────────────────── */
+.pace-lib-hd { margin-bottom: 2px; }
+.pace-lib-k {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pace-lib-hd-fila {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+}
+.pace-lib-hd h2 {
+  font-family: var(--font-display); font-style: italic; font-weight: 500;
+  font-size: 26px; margin: 2px 0; line-height: 1.15; color: var(--ink);
+}
+/* EL SUBTÍTULO EN CURSIVA DISPLAY, como el nombre. La única versalita que
+   queda arriba es BIBLIOTECA, que es sistema y no contenido. */
+.pace-lib-sub {
+  margin: 2px 0 0; font-family: var(--font-display); font-style: italic;
+  font-size: 15px; color: var(--ink-2); line-height: 1.3;
+}
+/* «Tus rutinas» en MÓVIL es un enlace en la cabecera; en escritorio es un
+   bloque del lateral. No es incoherencia: el enlace resuelve la falta de ALTO,
+   y en 1280 px esa falta no existe -- ahí el enlace cae en el punto más
+   ignorable de la pantalla (medido en s173: x=1194 de 1280, 68 px de ancho, y
+   el propio autor de la app no lo encontró). */
+.pace-lib-link {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-family: var(--font-display); font-style: italic; font-size: 15px;
+  color: var(--premium); white-space: nowrap;
+}
+.pace-lib-link::after { content: ' \\203A'; }
+
+/* ── filtros ──────────────────────────────────────────────────────────── */
+.pace-lib-chips {
+  display: flex; gap: 7px; padding: 12px 0 4px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.pace-lib-chips::-webkit-scrollbar { display: none; }
+.pace-lib-chip {
+  flex: 0 0 auto; font-family: inherit; font-size: 12px; padding: 7px 13px;
+  border-radius: var(--r-pill); border: 1px solid var(--line-2);
+  color: var(--ink-2); background: transparent; white-space: nowrap;
+  cursor: pointer; text-align: left;
+  transition: background 160ms var(--ease), color 160ms var(--ease), border-color 160ms var(--ease);
+}
+.pace-lib-chip[aria-pressed="true"] {
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+/* EL CONTADOR VIVE EN EL CHIP Y NO EN EL TÍTULO DE GRUPO. La regla: el número
+   sirve donde NO se ve la respuesta. En un chip todavía no ves el resultado, y
+   ahí evita el peor momento de un filtro -- tocarlo y encontrarte con nada.
+   Bajo un título de grupo las tarjetas están ahí debajo: contar es repetir. */
+.pace-lib-chip b {
+  font-weight: 500; margin-left: 7px; color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.pace-lib-chip[aria-pressed="true"] b { color: rgba(242, 237, 224, .7); }
+
+/* ── grupos y estado vacío ────────────────────────────────────────────── */
+.pace-lib-grp {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 500; margin: 18px 0 8px;
+}
+.pace-lib-now {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--tone); font-weight: 500; margin: 14px 0 9px;
+}
+.pace-lib-vacio {
+  margin: 0 0 14px; font-family: var(--font-display); font-style: italic;
+  font-size: 14.5px; color: var(--ink-3); line-height: 1.45;
+}
+.pace-lib-vacio b {
+  font-family: 'EB Garamond', Georgia, serif; font-style: normal;
+  font-weight: 400; color: var(--ink-2);
+}
+.pace-lib-quitar {
+  background: none; border: 0; padding: 0; font: inherit; cursor: pointer;
+  color: var(--tone); border-bottom: 1px solid currentColor;
+}
+.pace-lib-quitar::after { content: ' \\203A'; }
+
+/* ── la tarjeta ───────────────────────────────────────────────────────── */
+.pace-lib-card {
+  background: var(--paper-2); border-radius: var(--r-md);
+  border-left: 3px solid var(--tone);
+  padding: 11px 13px 11px 14px; margin-bottom: 9px;
+  position: relative; display: flex; gap: 12px; align-items: flex-start;
+  width: 100%; text-align: left; font-family: inherit; color: inherit;
+}
+
+.pace-lib-card > .pace-lib-txt { flex: 1; min-width: 0; }
+.pace-lib-titulo {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+}
+.pace-lib-card h4 {
+  font-family: var(--font-display); font-style: italic; font-weight: 500;
+  font-size: 20px; margin: 0; line-height: 1.2; color: var(--ink);
+}
+/* El boton que cubre la tarjeta entera. Es texto plano hasta que se enfoca:
+   asi el encabezado sigue siendo un encabezado y la tarjeta sigue siendo
+   clicable de punta a punta. El ::after se dimensiona contra la TARJETA, que
+   es quien lleva position:relative. */
+.pace-lib-hit {
+  background: none; border: 0; padding: 0; margin: 0; cursor: pointer;
+  font: inherit; color: inherit; text-align: left;
+}
+.pace-lib-hit::after { content: ''; position: absolute; inset: 0; }
+.pace-lib-hit:focus-visible::after {
+  outline: 2px solid var(--tone); outline-offset: 2px; border-radius: var(--r-md);
+}
+.pace-lib-hit:focus:not(:focus-visible) { outline: none; }
+.pace-lib-card p {
+  margin: 4px 0 6px; font-size: 12.5px; color: var(--ink-2); line-height: 1.4;
+}
+/* EL NIVEL EN PILL, junto al nombre. Se probaron pill sin borde y cursiva;
+   ganó la pill mirándola. Coste medido en s173: las 14 pills pintan 56 bordes,
+   más que todo lo demás junto. Decisión consciente. */
+.pace-lib-pill {
+  font-style: normal; font-family: var(--font-ui); font-size: 9px;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--line-2); border-radius: var(--r-pill);
+  padding: 2px 8px; position: relative; top: -2px;
+}
+/* LA LÍNEA DE CONTEXTO se lleva TODO lo que es cómo-se-hace: dónde, con qué,
+   «por lado» y Premium. Va en cursiva display, redactada como se diría en voz
+   alta. La CIFRA de minutos en EB Garamond porque DESIGN_SYSTEM.md fija esa
+   familia como las cifras de identidad (racha del sidebar, MM:SS del timer):
+   la duración es de esa familia y conecta la biblioteca con el timer. Sólo la
+   cifra -- «min» sigue en sans. */
+.pace-lib-ctx {
+  font-family: var(--font-display); font-style: italic; font-size: 15px;
+  color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 0 4px;
+  align-items: baseline; line-height: 1.35;
+}
+.pace-lib-ctx b {
+  font-family: 'EB Garamond', Georgia, serif; font-style: normal;
+  font-size: 19px; font-weight: 400; color: var(--ink-2); line-height: 1;
+}
+.pace-lib-ctx u {
+  font-family: var(--font-ui); font-style: normal; text-decoration: none;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); margin-left: 1px;
+}
+/* EL SEPARADOR CUELGA DEL TROZO ANTERIOR, y no del siguiente. Dos defectos de
+   un golpe, los dos vistos en la maqueta y ninguno leyendo: (1) los trozos son
+   flex items y el navegador COLAPSA el espacio al principio de uno, así que
+   «MIN · sentado» se leía «MIN ·sentado»; (2) al partirse la línea en dos, el
+   punto abría el renglón siguiente («·por lado»). Colgando del anterior no
+   puede hacer ninguna de las dos. */
+.pace-lib-ctx u::after,
+.pace-lib-ctx em:not(:last-child)::after {
+  content: '\\B7'; color: var(--line-2); font-style: normal; margin-left: .34em;
+}
+.pace-lib-ctx .pace-lib-pre { color: var(--premium); }
+.pace-lib-ctx .pace-lib-soon { color: var(--premium); font-weight: 500; }
+/* La tira: la capitular a 62 px y el resto a 20. El 55 % de opacidad NO valía
+   -- el usuario no los registraba y reportó «sólo muestra un glifo». Si no se
+   leen, no están. */
+.pace-lib-tira { display: flex; gap: 5px; align-items: center; margin: 7px 0 0; opacity: .75; }
+.pace-lib-cap { flex-shrink: 0; margin-top: 2px; color: var(--tone); }
+.pace-lib-tira, .pace-lib-tira * { color: var(--tone); }
+.pace-lib-pie {
+  margin-top: 7px; font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+/* El sello de seguridad de Respira: 6 rutinas con guía de apnea o de
+   respiración rápida (medido en s174 -- son SEIS, no cinco). */
+.pace-lib-safety {
+  position: absolute; top: 11px; right: 11px; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--breathe-soft); color: var(--breathe);
+  display: grid; place-items: center; font-size: 11px; font-weight: 600;
+}
+.pace-lib-card-resp { padding-right: 34px; }
+/* GRANO DE PAPEL con los valores del sistema, no unos nuevos:
+   PACE_GRAIN_OPACITY y paceGrainUrl() (SessionShell.jsx). La maqueta probó
+   0,055 -- cinco veces más-- y eso habría sido una decisión nueva. */
+.pace-lib-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  border-radius: inherit; background-size: 160px 160px;
+  background-image: ${grano};
+}
+
+/* ── lo que cambia entre las dos pieles ───────────────────────────────── */
+/* ESCRITORIO. El catálogo NO lleva color en reposo: aquí se ven catorce
+   tarjetas a la vez y el filo que en móvil orienta, aquí satura. El color de
+   módulo entra en el HOVER, que es lo que hace Card (Primitives.jsx:115) y lo
+   que la fila de s173 declara vigente: en PACE el color de módulo no dice lo
+   que hay, dice lo que estás tocando. */
+@media (min-width: 769px) {
+  .pace-lib-card {
+    border-left-color: transparent;
+    transition: transform 220ms var(--ease), box-shadow 220ms var(--ease),
+                border-left-color 220ms var(--ease);
+  }
+  .pace-lib-card:not([data-locked="1"]):hover {
+    border-left-color: var(--tone);
+    transform: translateY(-1px);
+    box-shadow: var(--sh-soft);
+  }
+  .pace-lib-cuerpo { display: flex; align-items: flex-start; gap: 0; }
+  .pace-lib-lateral {
+    width: 262px; flex: 0 0 262px; padding: 4px 20px 20px 0;
+    align-self: stretch;
+  }
+  .pace-lib-lateral .pace-lib-chips { flex-direction: column; padding-top: 0; overflow: visible; }
+  .pace-lib-main { flex: 1; min-width: 0; padding-left: 22px; border-left: 1px solid var(--line); }
+  /* minmax(0,1fr) y no 1fr: «repeat(3,1fr)» NO deja encoger las columnas y la
+     rejilla desbordaba 35 px (medido en s173). La cabecera de grupo va a todo
+     el ancho para que ningún grupo se parta entre columnas. */
+  .pace-lib-rejilla {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 20px; align-content: start;
+  }
+  .pace-lib-rejilla > .pace-lib-grp,
+  .pace-lib-rejilla > .pace-lib-vacio { grid-column: 1 / -1; }
+  .pace-lib-lateral-tit {
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-3); margin: 0 0 11px;
+  }
+  .pace-lib-lateral-tit + * { margin-bottom: 26px; }
+  /* en el lateral la tarjeta se compacta: sin descripción, sin series y sin
+     tira -- el lateral orienta, no es catálogo */
+  .pace-lib-lateral .pace-lib-card p,
+  .pace-lib-lateral .pace-lib-card .pace-lib-pie,
+  .pace-lib-lateral .pace-lib-tira { display: none; }
+  .pace-lib-lateral .pace-lib-card h4 { font-size: 17px; }
+}
+/* Las piezas que existen en las DOS pieles pero sólo se pintan en una. Se
+   montan las dos veces y la hoja apaga la que sobra: «--pace-skin» es un token
+   CSS, y decidir esto en JS pediría un listener de resize y un re-render por
+   cada cambio de ancho para catorce tarjetas. Lo apagado por «display:none»
+   sale del árbol de accesibilidad y no recibe clics, así que en cada momento
+   hay exactamente UNA viva. */
+@media (min-width: 769px) {
+  .pace-lib-solo-movil { display: none; }
+  /* en escritorio «Tus rutinas» es el bloque del lateral, no un enlace: ahí
+     caería en x=1194 de 1280, el punto más ignorable de la pantalla */
+  .pace-lib-hd .pace-lib-link { display: none; }
+}
+/* MÓVIL. Aquí el filo TRABAJA: ves 3 o 4 tarjetas a la vez y es lo único que
+   dice de un vistazo si estás en Mueve (ocre) o en Estira (azul) sin leer la
+   cabecera. No es una excepción a la regla de arriba: es otra función. */
+@media (max-width: 768px) {
+  .pace-lib-hd h2 { font-size: 24px; }
+  .pace-lib-lateral { display: none; }
+}
+
+/* EL CHROME DEL MODAL SE RECORTA PARA LA BIBLIOTECA, y esto salió de MEDIR la
+   app y no la maqueta -- que se dibujó sobre un marco de teléfono a pelo y por
+   eso nunca enseñó este coste. Medido en s174, antes de tocarlo:
+     a 360 px el ancho útil era 286 y no los 328 sobre los que se aprobó (42 px
+       menos, un 13 %), y eso subía el scroll de las 3,50 pantallas prometidas
+       a 4,33 -- casi lo mismo que la app de HOY (4,50), o sea que el rediseño
+       no habría cobrado su promesa
+     en escritorio la columna salía de 242 px y no de 310 (68 px menos)
+   La causa es la suma de dos paddings que el diseño no vio: el del fondo y el
+   de la tarjeta del modal. «:has()» acota el recorte a ESTE modal y no toca los
+   otros nueve (el mismo recurso que s125 usó para la barra de scroll).
+
+   Y EL «!important» NO ES PEREZA: el padding del modal es un ESTILO EN LÍNEA
+   —Primitives.jsx lo escribe en el objeto style—, así que una regla de hoja sin
+   él no lo toca. La primera versión de este bloque no movió ni un píxel y la
+   medida salió idéntica byte a byte. Es además lo que ya hace la hoja
+   responsive de aquel archivo, cuyo corte está en 640 px y no en 768. */
+@media (min-width: 769px) {
+  [data-pace-modal-backdrop]:has(.pace-lib) { padding: 20px !important; }
+  [data-pace-modal-card]:has(.pace-lib) { padding: 22px 24px 18px !important; }
+}
+@media (max-width: 768px) {
+  /* En un teléfono la biblioteca ES la pantalla: el margen del modal deja de
+     ser un marco y pasa a ser una mordida de 42 px al contenido. */
+  [data-pace-modal-backdrop]:has(.pace-lib) { padding: 8px !important; }
+  [data-pace-modal-card]:has(.pace-lib) { padding: 16px 16px 20px !important; }
+}
+`;
+  document.head.appendChild(s);
+})();
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · app/ui/RoutineCard.jsx (sesión 174)
+   ============================================
+   LA TARJETA DE RUTINA, compartida por las TRES bibliotecas. Sale de
+   `BreatheLibrary.jsx`, donde vivía desde s34 por accidente histórico: la
+   consumían también MoveModule y ExtraModule a través del global, así que
+   tocarla obligaba a abrir el módulo de Respira.
+
+   LO QUE ES, decidido mirando doce maquetas en s173 y una más en s174:
+     capitular a 62 px + el resto de glifos a 20 (variante «C1»)
+     nivel en PILL junto al nombre
+     descripción a DOS líneas -- caben las 28 sin recortar (mediana 61
+       caracteres, la mayor 84)
+     línea de contexto en CURSIVA display con TODO el cómo-se-hace: dónde, con
+       qué, «por lado» y Premium; la cifra de minutos en EB Garamond
+     línea de series SÓLO cuando dice series y repeticiones -- 8 de 28
+
+   EL 55 % DE OPACIDAD EN LA TIRA NO VALÍA: el usuario no los registraba y
+   reportó «sólo muestra un glifo». Si no se leen, no están. Van al 75 %.
+
+   VARIANTE `breathe`: SIN capitular. Sus 20 rutinas no declaran `position`,
+   `equipment` ni `level` (medido 20 de 20 en s174), así que no hay dibujo, ni
+   pill, ni lugar. Lo que sí tienen y hoy no se lee en ningún sitio es el
+   RITMO, y ahí es donde va. Su pantalla propia -- ordenada por tiempo y con
+   los ritmos DIBUJADOS -- es otra sesión: son 13 motores de ritmo y 19 ritmos
+   distintos, y el «14» del documento no sale de ninguna cuenta.
+
+   EL GATING NO SE TOCA (s87/s95): `access: 'premium'` marca contenido de pago
+   y el sello se ve siempre; el bloqueo real pasa por `canAccessRoutine`.
+   Cambiar esto aquí abriría premium sin ruta de compra. */
+
+function RoutineCard(_ref) {let { routine, color, onClick, variant = 'body' } = _ref;
+  const { t, tn, lang } = useT();
+  const [pace] = usePace(); // suscripción reactiva: al cambiar premiumUnlocked
+  // la tarjeta re-renderiza y el guard relee el store.
+  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const isPremium = routine.access === 'premium';
+  const isLocked = window.canAccessRoutine ?
+  !window.canAccessRoutine(routine.id) :
+  isPremium && !pace.premiumUnlocked;
+
+  /* Duración DERIVADA para las rutinas del contrato v1 (s115): una sola
+     promesa vía `estimateDuration`, con el preset de descanso actual. El resto
+     conserva `routine.min`. Prod nunca muestra las dos. */
+  const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
+  let cifra = String(routine.min);
+  if (isV1 && typeof window.estimateDuration === 'function') {
+    const est = window.estimateDuration(routine, pace.restBetweenSets);
+    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
+    cifra = lo === hi ? String(lo) : lo + '–' + hi;
+  }
+
+  const nivelKey = ['intermediate', 'advanced'].includes(routine.level) ? routine.level : null;
+  const intensKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ? routine.intensity : null;
+  /* El nivel TÉCNICO manda sobre la intensidad cuando existe, y `accessible` se
+     omite a propósito: marcarlo en las 16 accesibles sería ruido -- lo normal
+     no necesita etiqueta-- y apagaría la señal justo donde importa. */
+  const pill = nivelKey ? t('lib.level.' + nivelKey) : intensKey ? t('lib.intensity.' + intensKey) : null;
+
+  /* ── la línea de contexto ─────────────────────────────────────────────── */
+  const trozos = [];
+  if (variant === 'breathe') {
+    const ritmo = routineRhythmText(routine, tn, t);
+    if (ritmo) trozos.push({ k: 'ritmo', txt: ritmo });
+  } else {
+    const donde = routine.requiresFloor ? 'floor' :
+    routine.position && routine.position.length === 1 && routine.position[0] === 'seated' ? 'seated' :
+    'standing';
+    trozos.push({ k: 'donde', txt: t('lib.where.' + donde) });
+    (routine.equipment || []).forEach((e) => {
+      const s = t('lib.gear.' + e);
+      trozos.push({ k: 'gear-' + e, txt: s === 'lib.gear.' + e ? e : s });
+    });
+    if (window.libraryPorLado && window.libraryPorLado(routine)) {
+      trozos.push({ k: 'lado', txt: t('lib.perSide') });
+    }
+  }
+  if (isPremium) trozos.push({ k: 'premium', txt: t('lib.premium'), cls: 'pace-lib-pre' });
+
+  /* ── la tira de glifos ────────────────────────────────────────────────── */
+  const glifos = variant === 'breathe' || !window.libraryGlifos ? [] : window.libraryGlifos(routine);
+  const series = variant === 'breathe' || !window.librarySeries ? null : window.librarySeries(routine);
+
+  const abrir = isLocked ? undefined : onClick;
+  const nombre = tR(routine.id + '.name', routine.name);
+  return (/*#__PURE__*/
+    React.createElement("div", {
+      className: 'pace-lib-card' + (variant === 'breathe' ? ' pace-lib-card-resp' : ''),
+      "data-pace-lib-card": routine.id,
+      "data-locked": isLocked ? '1' : undefined,
+      style: { '--tone': color } },
+
+    routine.safety && /*#__PURE__*/
+    React.createElement("i", { className: "pace-lib-safety", title: t('breathe.safety.required'), "aria-label": t('breathe.safety.required') }, "\u26A0"),
+
+    glifos.length > 0 && /*#__PURE__*/
+    React.createElement("span", { className: "pace-lib-cap", "aria-hidden": "true" }, /*#__PURE__*/
+    React.createElement(ExerciseGlyph, { id: glifos[0], size: 62 })
+    ), /*#__PURE__*/
+
+    React.createElement("div", { className: "pace-lib-txt" }, /*#__PURE__*/
+
+
+
+
+
+
+
+
+
+
+
+
+    React.createElement("div", { className: "pace-lib-titulo" }, /*#__PURE__*/
+    React.createElement("h4", null, abrir ? /*#__PURE__*/
+    React.createElement("button", { type: "button", className: "pace-lib-hit", onClick: abrir }, nombre) :
+    nombre),
+    pill && /*#__PURE__*/React.createElement("i", { className: "pace-lib-pill" }, pill)
+    ), /*#__PURE__*/
+    React.createElement("p", null, tR(routine.id + '.desc', routine.desc)), /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-ctx" }, /*#__PURE__*/
+    React.createElement("b", null, cifra), /*#__PURE__*/React.createElement("u", null, t('lib.min')),
+    trozos.map((x) => /*#__PURE__*/React.createElement("em", { key: x.k, className: x.cls }, x.txt)),
+    isLocked && /*#__PURE__*/React.createElement("em", { className: "pace-lib-soon" }, t('premium.soon'))
+    ),
+    glifos.length > 1 && /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-tira", "aria-hidden": "true" },
+    glifos.slice(1).map((g) => /*#__PURE__*/React.createElement(ExerciseGlyph, { key: g, id: g, size: 20 }))
+    ),
+
+    series && /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-pie" },
+    tn('lib.series', { s: series.series, r: series.reps.join('·') })
+    )
+
+    )
+    ));
+
+}
+
+/* EL RITMO DE RESPIRA EN PALABRAS. Es su información más útil y la más difícil
+   de leer: hoy no aparece en ninguna pantalla. Los ciclos son
+   [inhala, sostén, exhala, vacío] y los ceros se caen, así que 5·0·5·0 se dice
+   «5·5» y 4·16·8·0 se dice «4·16·8». Los patrones sin ciclo llevan su palabra.
+   Cuando lleguen los glifos de ritmo, esta función es lo que sustituyen. */
+function routineRhythmText(routine, tn, t) {
+  if (!routine) return null;
+  if (routine.rounds) return tn('lib.rhythm.rounds', { r: routine.rounds, b: routine.breaths });
+  if (Array.isArray(routine.cycle)) {
+    const n = routine.cycle.filter((v) => v > 0);
+    if (n.length) return n.join('·');
+  }
+  const k = 'lib.rhythm.' + routine.pattern;
+  const s = t(k);
+  return s === k ? null : s;
+}
+
+Object.assign(window, { RoutineCard, routineRhythmText });
+;Object.assign(window, { RoutineCard, routineRhythmText });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · app/ui/LibraryShell.jsx (sesión 174)
+   =============================================
+   LA PANTALLA DE LAS BIBLIOTECAS DE CUERPO (Mueve y Estira), que son gemelas:
+   mismo catálogo de metadatos, mismo eje y misma tarjeta. Respira NO usa esto
+   -- se ordena por TIEMPO y no por contexto, así que comparte la tarjeta y no
+   la pantalla (decisión s174).
+
+   EL DIAGNÓSTICO NO ERA «SOBRA CONTENIDO», ERA «FALTA FORMA DE DESCARTAR».
+   Cada rutina declara `position`, `equipment`, `requiresFloor`, `intensity` y
+   `level` desde s115, se pintaban en la tarjeta y no filtraban nada; no había
+   filtro ni buscador en toda la app. Medido en s173: Estira ocupaba 4,50
+   pantallas de scroll a 360x730. Con la tarjeta NUEVA -- que es más grande--
+   baja a 3,50, y con un filtro a 1,59. La tesis es que si la tarjeta tiene que
+   crecer para informar, lo paga el FILTRO y no la compresión.
+
+   DÓNDE VIVE EL ESTADO DE FILTRO, que no existía en ninguna biblioteca: aquí,
+   en el componente, y NO en `pace.state.v2`. Un filtro es una intención de
+   este momento, no una preferencia: persistirlo haría que abrieras la
+   biblioteca un martes y te faltaran nueve rutinas por algo que tocaste el
+   viernes. Y como el modal NO se desmonta al cerrarse (`Modal` devuelve null
+   pero el componente sigue montado), hace falta limpiarlo a mano al cerrar --
+   si no, el estado sobrevive a la sesión igual que si estuviera persistido.
+
+   Las reglas puras (umbral, orden, «Para ahora», motivo del grupo vacío) viven
+   en `library-rules.js` para poder asertarse sin navegador. */
+
+const { useState: useStateLib, useEffect: useEffectLib, useMemo: useMemoLib } = React;
+
+function LibraryShell(_ref) {let { open, onClose, onStart, groups, tone, title, subtitle, catPrefix } = _ref;
+  const { t, tn, lang } = useT();
+  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const [activos, setActivos] = useStateLib([]);
+  const [vista, setVista] = useStateLib('catalogo');
+
+  /* El modal se OCULTA, no se desmonta: sin esto el filtro y la vista
+     sobreviven al cierre y la próxima apertura arranca a medio filtrar. */
+  useEffectLib(() => {
+    if (!open) {setActivos([]);setVista('catalogo');}
+  }, [open]);
+
+  const todas = useMemoLib(() => {
+    const out = [];
+    Object.keys(groups || {}).forEach((k) => (groups[k].items || []).forEach((r) => out.push(r)));
+    return out;
+  }, [groups]);
+
+  const umbral = useMemoLib(() => libraryUmbralCorto(todas), [todas]);
+  const pasa = useMemoLib(() => {
+    const preds = activos.map((k) => libraryPredicado(k, umbral));
+    return (r) => preds.every((p) => p(r));
+  }, [activos, umbral]);
+
+  const visibles = todas.filter(pasa);
+  /* «Para ahora» se calcula sobre lo VISIBLE y no sobre el catálogo entero: el
+     filtro gobierna la pantalla completa, o el bloque de arriba contradiría al
+     chip que acabas de tocar. */
+  const ahora = libraryParaAhora(visibles, typeof todayISO === 'function' ? todayISO() : '');
+  const enAhora = (r) => ahora.indexOf(r) !== -1;
+
+  /* El contador del chip dice cuántas sobrevivirían SI LO AÑADES a lo que ya
+     tienes puesto, no cuántas cumplen ese filtro por su cuenta: es la única
+     cuenta que responde a la pregunta que te haces antes de tocarlo. */
+  const cuenta = (k) => {
+    const set = activos.indexOf(k) === -1 ? activos.concat([k]) : activos;
+    return libraryFiltrar(todas, set, umbral).length;
+  };
+  const alterna = (k) => setActivos((a) => a.indexOf(k) === -1 ? a.concat([k]) : a.filter((x) => x !== k));
+  const nombreChip = (k) => k === 'corto' ? tn('lib.filter.short', { n: umbral }) : t('lib.filter.' + k);
+
+  const chips = /*#__PURE__*/
+  React.createElement("div", { className: "pace-lib-chips", role: "group", "aria-label": t('lib.filter.title') },
+  LIB_FILTROS.map((k) => /*#__PURE__*/
+  React.createElement("button", { key: k, type: "button", className: "pace-lib-chip",
+    "aria-pressed": activos.indexOf(k) !== -1,
+    onClick: () => alterna(k) },
+  nombreChip(k), /*#__PURE__*/React.createElement("b", null, cuenta(k))
+  )
+  )
+  );
+
+
+  const tarjetas = (rs) => rs.map((r) => /*#__PURE__*/
+  React.createElement(RoutineCard, { key: r.id, routine: r, color: tone, onClick: () => onStart(r) })
+  );
+
+  const bloqueAhora = ahora.length > 0 && /*#__PURE__*/
+  React.createElement("section", { "data-pace-lib-now": true }, /*#__PURE__*/
+
+
+  React.createElement("h3", { className: "pace-lib-now" }, t('lib.now')),
+  tarjetas(ahora)
+  );
+
+
+  const listaGrupos = Object.keys(groups || {}).map((k) => {
+    const items = libraryOrdenar(groups[k].items || []);
+    const vis = items.filter((r) => pasa(r) && !enAhora(r));
+    const ocultas = items.filter((r) => !pasa(r));
+    const promovidas = items.filter((r) => pasa(r) && enAhora(r));
+    /* UN GRUPO VACÍO PORQUE SUS RUTINAS SUBIERON A «PARA AHORA» NO ES UN GRUPO
+       VACÍO, y la diferencia importa porque la línea de abajo AFIRMA algo. Si
+       de un grupo de tres se esconde una por el filtro y las otras dos suben
+       arriba, `ocultas` vale 1 y la línea diría «La de hombros pide suelo» --
+       cierto de esa una, y mentira sobre el grupo, que está entero a dos dedos.
+       Cuando hay promovidas, el grupo NO se pinta: su contenido se ve arriba.
+       Lo destapó calibrar en rojo, no leerlo. */
+    if (!vis.length && promovidas.length) return null;
+    if (!vis.length && !ocultas.length) return null;
+    const label = tR(catPrefix + '.cat.' + k + '.label', groups[k].label);
+    return (/*#__PURE__*/
+      React.createElement(React.Fragment, { key: k }, /*#__PURE__*/
+      React.createElement("h3", { className: "pace-lib-grp" }, label),
+      vis.length ?
+      tarjetas(vis) : /*#__PURE__*/
+
+      React.createElement("p", { className: "pace-lib-vacio", "data-pace-lib-empty": k },
+      tn('lib.empty.' + libraryMotivoVacio(ocultas) + (ocultas.length === 1 ? '.1' : '.n'),
+      { n: ocultas.length, g: label.toLowerCase() }), ' ', /*#__PURE__*/
+      React.createElement("button", { type: "button", className: "pace-lib-quitar", onClick: () => setActivos([]) },
+      t('lib.empty.clear')
+      )
+      )
+
+      ));
+
+  });
+
+  const enlaceTuyas = /*#__PURE__*/
+  React.createElement("button", { type: "button", className: "pace-lib-link",
+    onClick: () => setVista((v) => v === 'tuyas' ? 'catalogo' : 'tuyas') },
+  vista === 'tuyas' ? t('lib.back') : t('custom.section.title')
+  );
+
+
+  const cabecera = /*#__PURE__*/
+  React.createElement("div", { className: "pace-lib-hd" }, /*#__PURE__*/
+  React.createElement("div", { className: "pace-lib-k" }, t('lib.tag')), /*#__PURE__*/
+  React.createElement("div", { className: "pace-lib-hd-fila" }, /*#__PURE__*/
+  React.createElement("h2", null, title),
+  enlaceTuyas
+  ), /*#__PURE__*/
+  React.createElement("p", { className: "pace-lib-sub" }, subtitle)
+  );
+
+
+  const tuyas = typeof CustomRoutinesSection !== 'undefined' ? /*#__PURE__*/
+  React.createElement(CustomRoutinesSection, { onStart: onStart, accent: tone }) :
+  null;
+
+  return (/*#__PURE__*/
+    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 1240 }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib", style: { '--tone': tone } }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-cuerpo" }, /*#__PURE__*/
+
+
+
+    React.createElement("aside", { className: "pace-lib-lateral" }, /*#__PURE__*/
+    React.createElement("p", { className: "pace-lib-lateral-tit" }, t('lib.filter.title')),
+    chips,
+
+
+
+    tuyas,
+    ahora.length > 0 && /*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("p", { className: "pace-lib-lateral-tit" }, t('lib.now')), /*#__PURE__*/
+
+
+
+
+
+
+    React.createElement("div", { "data-pace-lib-now": true }, tarjetas(ahora))
+    )
+
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-main" },
+    cabecera, /*#__PURE__*/
+
+
+    React.createElement("div", { className: "pace-lib-solo-movil" }, chips),
+    vista === 'tuyas' ? /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-solo-movil" }, tuyas) : /*#__PURE__*/
+
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+
+
+
+
+
+
+
+    React.createElement("div", { className: "pace-lib-solo-movil" }, bloqueAhora), /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-rejilla" }, listaGrupos)
+    )
+
+    )
+    )
+    )
+    ));
+
+}
+
+Object.assign(window, { LibraryShell });
+;Object.assign(window, { LibraryShell });
+})();
+</script>
+  <!-- La transición biblioteca -> sesión (s174). Lee `.pace-lib-cap` de la
+       tarjeta y el arte de la cuenta atrás; no importa el orden frente a
+       ninguno de los dos porque los busca en el DOM al vuelo, pero va aquí
+       para que se lea junto a lo que anima. -->
+  <script>
+;(function () {
+/* PACE · app/ui/library-transition.js (sesión 174)
+   =================================================
+   LA CAPITULAR DE LA TARJETA VUELA HASTA LA SESIÓN. Es el pago de haber
+   decidido que la biblioteca NO lleva wash (§6 del rediseño): sin él, el
+   momento de entrar se quedó sin su cambio de atmósfera, y esto se lo devuelve.
+
+   POR QUÉ ATERRIZA EN LA CUENTA ATRÁS Y NO EN EL CÍRCULO DEL RUNNER, que es lo
+   que el diseño decía. Medido en s174 sobre la app ya implementada: entre las
+   dos cosas hay DOS pantallas —el Preview y la preparación— y el círculo tarda
+   **3.114 ms** en existir desde que se pulsa «Empezar». Los dos elementos nunca
+   están cerca en el tiempo, así que no hay movimiento continuo hasta allí. La
+   cuenta atrás sí está a un frame, y desde s174 pinta el arte del primer paso
+   EN EL SITIO Y AL TAMAÑO del círculo que vendrá después (misma fuente:
+   `v1GlyphSizeAhora`), así que el relevo no salta.
+
+   TRES COSAS QUE NO HACE, a propósito:
+     · con `prefers-reduced-motion` no anima nada. La trampa de s160 aplica de
+       lleno: `transition-property` vale `all` por defecto, así que el kill
+       convierte cualquier cambio de geometría en transición. Aquí no se usa
+       `transition` sino la Web Animations API sobre un CLON, que el kill no
+       toca -- por eso se comprueba la preferencia a mano.
+     · no toca el DOM de la sesión más que para ESCONDER un instante el arte de
+       destino, y lo devuelve pase lo que pase (el `onfinish` y un plazo de
+       seguridad hacen lo mismo).
+     · si algo falta -- no hay capitular, no aparece el destino, el navegador no
+       trae `animate()` -- se retira en silencio y la app se comporta como antes.
+       Una transición no puede ser la razón de que no se entre en una sesión.
+
+   `var`/`function` a propósito: un `const` top-level no cruza la IIFE del
+   artefacto (trampa de s148). */
+
+var PACE_VUELO_MS = 520;
+var PACE_VUELO_FRAMES = 24; /* ~400 ms buscando el destino, y se rinde */
+
+function paceVueloReduce() {
+  return typeof matchMedia === 'function' &&
+  matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/* El arte de destino: dentro del círculo de la preparación. Se busca el NIETO
+   (el dibujo) y no el círculo, para que el vuelo sea dibujo -> dibujo y las dos
+   cajas midan lo mismo que lo que se ve. */
+function paceVueloDestino() {
+  var caja = document.querySelector('[data-pace-session-prep-art]');
+  if (!caja) return null;
+  var circulo = caja.firstElementChild;
+  var arte = circulo && circulo.firstElementChild;
+  if (!arte) return null;
+  var r = arte.getBoundingClientRect();
+  return r.width > 0 && r.height > 0 ? arte : null;
+}
+
+/* Captura la capitular ANTES de que la biblioteca se desmonte. Devuelve null
+   —y el que llama no hace nada— si no hay nada que volar. */
+function paceVueloCapitular(routineId) {
+  if (paceVueloReduce()) return null;
+  if (!routineId || typeof document === 'undefined') return null;
+  /* LA TARJETA PUEDE ESTAR DOS VECES EN EL DOM, y hay que quedarse con la que
+     SE VE. «Para ahora» se pinta en el lateral (escritorio) y bajo la cabecera
+     (móvil): las dos copias existen siempre y la hoja apaga la que sobra, que
+     es lo que s166 dejó decidido al quitar el lector de piel en JS.
+     Con un `querySelector` a secas, en MÓVIL salía primero la copia del lateral
+     —oculta, de ancho 0—, la función devolvía null y la transición no ocurría:
+     medido, el clon no llegaba a crearse. Es el mismo tropiezo que ya había
+     mentido cinco veces a las sondas de esta sesión; la sexta fue aquí, en el
+     código que se publica. */
+  var arte = null,r = null;
+  var caps = document.querySelectorAll('[data-pace-lib-card="' + routineId + '"] .pace-lib-cap');
+  for (var i = 0; i < caps.length; i++) {
+    var cand = caps[i].firstElementChild;
+    if (!cand) continue;
+    var caja = cand.getBoundingClientRect();
+    if (caja.width > 0 && caja.height > 0) {arte = cand;r = caja;break;}
+  }
+  if (!arte || !r || typeof arte.animate !== 'function') return null;
+
+  var clon = arte.cloneNode(true);
+  clon.setAttribute('data-pace-vuelo', '');
+  clon.setAttribute('aria-hidden', 'true');
+  clon.style.position = 'fixed';
+  clon.style.left = r.left + 'px';
+  clon.style.top = r.top + 'px';
+  clon.style.width = r.width + 'px';
+  clon.style.height = r.height + 'px';
+  clon.style.margin = '0';
+  clon.style.zIndex = '95'; /* sobre la sesión (90), bajo los modales (100) */
+  clon.style.pointerEvents = 'none';
+  clon.style.transformOrigin = 'top left';
+  /* El color se HEREDA por `currentColor` en la máscara, y el clon sale del
+     árbol de la tarjeta: sin fijarlo aquí, al colgarlo del <body> perdería el
+     tono del módulo y volaría con el color del texto. */
+  clon.style.color = getComputedStyle(arte).color;
+
+  return { rect: r, clon: clon, aterrizar: function () {paceVueloAterrizar(r, clon);} };
+}
+
+/* Espera a que el destino exista (la sesión se monta un tick después de que la
+   biblioteca se cierre) y anima. Si no aparece en PACE_VUELO_FRAMES, se rinde
+   sin dejar rastro. */
+function paceVueloAterrizar(origen, clon) {
+  var frames = 0;
+  var buscar = function () {
+    var destino = paceVueloDestino();
+    if (!destino) {
+      if (++frames > PACE_VUELO_FRAMES) return;
+      requestAnimationFrame(buscar);
+      return;
+    }
+    var d = destino.getBoundingClientRect();
+    document.body.appendChild(clon);
+    var previa = destino.style.visibility;
+    destino.style.visibility = 'hidden';
+    var limpiar = function () {
+      destino.style.visibility = previa || '';
+      if (clon.parentNode) clon.parentNode.removeChild(clon);
+    };
+    var k = d.width / origen.width;
+    var anim;
+    try {
+      anim = clon.animate([
+      { transform: 'translate(0px, 0px) scale(1)' },
+      { transform: 'translate(' + (d.left - origen.left) + 'px, ' + (d.top - origen.top) + 'px) scale(' + k + ')' }],
+      { duration: PACE_VUELO_MS, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
+    } catch (e) {limpiar();return;}
+    anim.onfinish = limpiar;
+    anim.oncancel = limpiar;
+    /* Red de seguridad: si la animación nunca termina (pestaña oculta, motor
+       que descarta la animación) el arte de destino NO puede quedarse invisible
+       para siempre. */
+    setTimeout(limpiar, PACE_VUELO_MS + 400);
+  };
+  requestAnimationFrame(buscar);
+}
+
+Object.assign(window, {
+  paceVueloCapitular: paceVueloCapitular,
+  paceVueloDestino: paceVueloDestino,
+  paceVueloReduce: paceVueloReduce,
+  PACE_VUELO_MS: PACE_VUELO_MS
+});
+;Object.assign(window, { PACE_VUELO_MS, PACE_VUELO_FRAMES, paceVueloReduce, paceVueloDestino, paceVueloCapitular, paceVueloAterrizar });
+})();
+</script>
+
   <script>
 ;(function () {
 /* PACE · Módulo Foco (Pomodoro)
@@ -15150,23 +16480,35 @@ const BREATHE_ROUTINES = {
   }
 };
 
+/* s174 · RESPIRA RECIBE LA TARJETA, NO LA PANTALLA.
+   La biblioteca conserva su estructura —sus cinco grupos, en su orden y sin
+   filtros— y estrena la tarjeta compartida y su tipografía. Lo que NO entra, y
+   por qué: Mueve y Estira se ordenan por CONTEXTO (11 de sus 28 exigen suelo)
+   y Respira por TIEMPO (de 2 a 20 min, factor 10), así que su pantalla propia
+   es otro diseño. Y su información más útil —el RITMO— pide dibujarlo: son 13
+   motores de ritmo y 19 ritmos distintos, un encargo de arte que aún no tiene
+   tamaño decidido. Mientras tanto el ritmo se DICE, en la línea de contexto,
+   donde hoy no se leía en ninguna pantalla.
+   Le entra la tarjeta y no espera a su sesión para que la app no tenga DOS
+   idiomas de tarjeta en tres botones contiguos de la misma home. */
 function BreatheLibrary(_ref) {let { open, onClose, onStart } = _ref;
   const { t, lang } = useT();
   const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
   return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('lib.tag'), title: t('lib.breathe.title'), subtitle: t('lib.breathe.subtitle'),
-      maxWidth: 860 }, /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 } },
+    React.createElement(Modal, { open: open, onClose: onClose, maxWidth: 860 }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib", style: { '--tone': 'var(--breathe)' } }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-hd" }, /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-k" }, t('lib.tag')), /*#__PURE__*/
+    React.createElement("div", { className: "pace-lib-hd-fila" }, /*#__PURE__*/React.createElement("h2", null, t('lib.breathe.title'))), /*#__PURE__*/
+    React.createElement("p", { className: "pace-lib-sub" }, t('lib.breathe.subtitle'))
+    ),
     Object.entries(BREATHE_ROUTINES).map((_ref2) => {let [key, group] = _ref2;return (/*#__PURE__*/
         React.createElement("div", { key: key }, /*#__PURE__*/
-        React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 } }, /*#__PURE__*/
-        React.createElement("h3", { style: { ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 } }, tR(`breathe.cat.${key}.label`, group.label)),
-        group.aside && /*#__PURE__*/React.createElement(Meta, null, tR(`breathe.cat.${key}.aside`, group.aside))
-        ), /*#__PURE__*/
-        React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 } },
-        group.items.map((r) => /*#__PURE__*/
-        React.createElement(RoutineCard, { key: r.id, routine: r, color: "var(--breathe)", onClick: () => onStart(r) })
-        )
+
+
+        React.createElement("h3", { className: "pace-lib-grp" }, tR(`breathe.cat.${key}.label`, group.label)),
+        libraryOrdenar(group.items).map((r) => /*#__PURE__*/
+        React.createElement(RoutineCard, { key: r.id, routine: r, color: "var(--breathe)", variant: "breathe", onClick: () => onStart(r) })
         )
         ));}
     )
@@ -15175,97 +16517,13 @@ function BreatheLibrary(_ref) {let { open, onClose, onStart } = _ref;
 
 }
 
-/* RoutineCard — tarjeta compartida por las 3 bibliotecas (Respira/Mueve/Estira),
-   expuesta a window y consumida también por MoveModule y ExtraModule.
+/* s174 · `RoutineCard` YA NO VIVE AQUÍ. Se fue a `app/ui/RoutineCard.jsx`.
+   Vivía en este archivo desde s34 por accidente histórico: la consumían también
+   MoveModule y ExtraModule a través del global, así que tocar la tarjeta de
+   Mueve obligaba a abrir el módulo de Respira. El gating de contenido (`access`
+   + `canAccessRoutine`) se fue con ella, intacto. */
 
-   Gating de contenido (s87 · bloque Contenido+Premium F3a):
-   convención del campo `access` en los datos de rutina —
-     ausente | 'free'  → libre (comportamiento normal, clicable)
-     'premium'         → de pago. El sello PREMIUM se muestra siempre como
-                         marca de contenido de pago. El bloqueo real (sello +
-                         'Pronto' + clic desactivado) depende de
-                         `premiumUnlocked` del state: mientras es false (su
-                         valor por defecto, sin ruta de compra hasta v1.0) toda
-                         premium está bloqueada. El cableado queda listo para
-                         que un flag futuro (compra / locked.initial /
-                         locked.achievement) ponga `premiumUnlocked` a true y
-                         las premium pasen a clicables sin tocar este componente.
-     Designación del set premium inicial: s88 (F3b). */
-function RoutineCard(_ref3) {let { routine, color, onClick } = _ref3;
-  const { t, lang } = useT();
-  const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
-  // premiumUnlocked el card re-renderiza y el guard relee el store.
-  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
-  const isPremium = routine.access === 'premium'; // marca "es de pago" (sello siempre)
-  // s95: el bloqueo real pasa por el guard central de entitlement. Equivalente
-  // exacto al antiguo `isPremium && !premiumUnlocked` (free->accesible,
-  // premium+bloqueado->locked). Fallback defensivo al chequeo inline por si el
-  // guard no estuviera cargado.
-  const isLocked = window.canAccessRoutine ?
-  !window.canAccessRoutine(routine.id) :
-  isPremium && !pace.premiumUnlocked;
-  // s115 (B2.2b-1): duración DERIVADA para rutinas del contrato v1 (algún step
-  // con `mode`) — UNA sola promesa vía helper puro `estimateDuration`, con el
-  // preset de descanso actual (reactivo: pace ya suscribe). El resto (Respira +
-  // las 22 rutinas legacy) conserva `routine.min`. Prod nunca muestra ambos.
-  /* s143 (ola E) — los metadatos existian en los datos desde s115 y NADIE los
-     consumia. Se leen defensivamente: Respira comparte esta tarjeta y sus
-     rutinas no los declaran, asi que sin dato no se pinta nada. El nivel
-     `accessible` se omite a proposito (ver el Tag de abajo). */
-  const intensityKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity) ?
-  routine.intensity : null;
-  const levelKey = ['intermediate', 'advanced'].includes(routine.level) ?
-  routine.level : null;
-  const isV1 = !!(routine.steps && routine.steps.some((s) => s && s.mode));
-  let durLabel = `${routine.min} min`;
-  if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60),hi = Math.ceil(est.maxSec / 60);
-    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
-  }
-  return (/*#__PURE__*/
-    React.createElement(Card, { accent: isLocked ? undefined : color, onClick: isLocked ? undefined : onClick, padded: false, style: { padding: '16px 18px', position: 'relative' } },
-    routine.safety && /*#__PURE__*/
-    React.createElement("div", { style: {
-        position: 'absolute', top: 12, right: 12,
-        width: 18, height: 18, borderRadius: '50%',
-        background: 'var(--breathe-soft)', color: 'var(--breathe)',
-        display: 'grid', placeItems: 'center',
-        fontSize: 11, fontWeight: 600
-      }, title: t('breathe.safety.required') }, "\u26A0"), /*#__PURE__*/
-
-    React.createElement("div", { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' } }, /*#__PURE__*/
-    React.createElement(Tag, { color: color }, routine.tag),
-    isPremium && /*#__PURE__*/React.createElement(PremiumSeal, null),
-
-
-
-
-
-    levelKey && /*#__PURE__*/React.createElement(Tag, { muted: true }, t(`lib.level.${levelKey}`))
-    ), /*#__PURE__*/
-    React.createElement("h4", { style: { ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 } }, tR(`${routine.id}.name`, routine.name)), /*#__PURE__*/
-    React.createElement("p", { style: { fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 } }, tR(`${routine.id}.desc`, routine.desc)), /*#__PURE__*/
-    React.createElement("div", { style: {
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        borderTop: '1px dashed var(--line)', paddingTop: 8
-      } }, /*#__PURE__*/
-    React.createElement("span", { style: { fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' } },
-    tR(`${routine.id}.code`, routine.code),
-    intensityKey && /*#__PURE__*/React.createElement("span", { style: { color: 'var(--line-2)' } }, " \xB7 "),
-    intensityKey && t(`lib.intensity.${intensityKey}`)
-    ),
-    isLocked ? /*#__PURE__*/
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 } }, t('premium.soon')) : /*#__PURE__*/
-
-    React.createElement("span", { style: { ...displayItalic, fontSize: 16, color: color, fontWeight: 500 } }, durLabel)
-
-    )
-    ));
-
-}
-
-function BreatheSafety(_ref4) {let { routine, onAccept, onCancel } = _ref4;
+function BreatheSafety(_ref3) {let { routine, onAccept, onCancel } = _ref3;
   const { t } = useT();
   const [checked, setChecked] = useState(false);
   if (!routine) return null;
@@ -15327,7 +16585,7 @@ function getBreatheRoutine(id) {
 window.getBreatheRoutine = getBreatheRoutine;
 
 Object.assign(window, { BreatheLibrary, BreatheSafety });
-;Object.assign(window, { BreatheLibrary, RoutineCard, BreatheSafety, getBreatheRoutine });
+;Object.assign(window, { BreatheLibrary, BreatheSafety, getBreatheRoutine });
 })();
 </script>
   <script>
@@ -16361,34 +17619,22 @@ window.MOVE_ROUTINES = MOVE_ROUTINES;
 
 const { useState: useStateMV, useEffect: useEffectMV, useRef: useRefMV } = React;
 
+/* s174 · LA BIBLIOTECA ES AHORA `LibraryShell`, compartida con Estira.
+   Lo que había aquí —modal, cabecera, rejilla auto-fill y el aside de grupo—
+   se fue entero a `app/ui/LibraryShell.jsx`, porque Mueve y Estira son gemelas:
+   mismo catálogo de metadatos, mismo eje (CONTEXTO, no duración: las 28 duran
+   entre 1 y 6 min y eso no separa nada) y misma tarjeta. Lo único propio de
+   cada una es el dato, el color y el prefijo de i18n de sus grupos.
+   Se cae el `aside` de grupo («Pecho, brazos, espalda alta»): la tarjeta nueva
+   ya dice de qué va cada rutina con su descripción, su contexto y sus dibujos,
+   y el aside repetía a nivel de grupo lo que ahora se lee en cada fila. */
 function MoveLibrary(_ref) {let { open, onClose, onStart } = _ref;
-  const { t, lang } = useT();
-  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const { t } = useT();
   return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('lib.tag'), title: t('lib.move.title'), subtitle: t('lib.move.subtitle'), maxWidth: 860 }, /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 } },
-
-
-
-
-    typeof CustomRoutinesSection !== 'undefined' && /*#__PURE__*/
-    React.createElement(CustomRoutinesSection, { onStart: onStart, accent: "var(--move)" }),
-
-    Object.entries(MOVE_ROUTINES).map((_ref2) => {let [key, group] = _ref2;return (/*#__PURE__*/
-        React.createElement("div", { key: key }, /*#__PURE__*/
-        React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 } }, /*#__PURE__*/
-        React.createElement("h3", { style: { ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 } }, tR(`mueve.cat.${key}.label`, group.label)),
-        group.aside && /*#__PURE__*/React.createElement(Meta, null, tR(`mueve.cat.${key}.aside`, group.aside))
-        ), /*#__PURE__*/
-        React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 } },
-        group.items.map((r) => /*#__PURE__*/
-        React.createElement(RoutineCard, { key: r.id, routine: r, color: "var(--move)", onClick: () => onStart(r) })
-        )
-        )
-        ));}
-    )
-    )
-    ));
+    React.createElement(LibraryShell, {
+      open: open, onClose: onClose, onStart: onStart,
+      groups: MOVE_ROUTINES, tone: "var(--move)", catPrefix: "mueve",
+      title: t('lib.move.title'), subtitle: t('lib.move.subtitle') }));
 
 }
 
@@ -16404,7 +17650,7 @@ function MoveSession(props) {
   return /*#__PURE__*/React.createElement(MoveSessionLegacy, props);
 }
 
-function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath } = _ref3;
+function MoveSessionLegacy(_ref2) {let { routine, onExit, kind = 'move', inPath } = _ref2;
   const { t, tn, lang } = useT();
   // Atmosfera del step: tinte del modulo por kind (Mueve tan / Estira
   // azul-gris). s138: deja de estar confinada a Caminos (revisa s99) -- se ve
@@ -16550,6 +17796,7 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
         routine: displayRoutine,
         onExit: onExit,
         accent: accent,
+        accentSoft: accentSoft,
         prepCount: prepCount,
         copy: tn('move.prepCopy', { n: routine.steps.length }),
         onSkip: () => {setPrepCount(0);setStage('active');sessionStart.current = Date.now();},
@@ -16621,9 +17868,7 @@ function MoveSessionLegacy(_ref3) {let { routine, onExit, kind = 'move', inPath 
 
     React.createElement("div", { "data-pace-v1-body": true, style: { textAlign: 'center', maxWidth: 620 } }, /*#__PURE__*/
     React.createElement(StepGlyph, { stepName: step.name, accent: accent, accentSoft: accentSoft,
-      size: typeof v1GlyphSize === 'function' ?
-      v1GlyphSize(typeof window !== 'undefined' && window.innerHeight || 800) :
-      72 }), /*#__PURE__*/
+      size: typeof v1GlyphSizeAhora === 'function' ? v1GlyphSizeAhora() : 72 }), /*#__PURE__*/
     React.createElement("div", { style: { fontSize: 12, letterSpacing: '0.24em', textTransform: 'uppercase', color: accent, marginBottom: 12, fontWeight: 500 } },
     tn('move.stepCount', { current: stepIdx + 1, total: routine.steps.length })
     ), /*#__PURE__*/
@@ -16708,7 +17953,7 @@ function legacyEventoSesion(routine, inicioMs, activoSec, inPath) {
    s110: expuesto a window — lo comparte MoveSessionV1 (contrato v1). */
 /* s112: prop `size` opcional — el runner v1 lo escala a visual instructivo
    (~150-240px según altura); el default 72/44 deja el legacy byte-idéntico. */
-function StepGlyph(_ref4) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72, side = 0 } = _ref4;
+function StepGlyph(_ref3) {let { stepName, accent = 'var(--move)', accentSoft = 'var(--move-soft)', size = 72, side = 0 } = _ref3;
   return (/*#__PURE__*/
     React.createElement("div", { style: {
         width: size, height: size, margin: '0 auto 20px',
@@ -17133,6 +18378,15 @@ function v1GlyphSize(vpH, escritorio) {
   return Math.round(Math.max(72, Math.min(210, Math.round(vpH * 0.22))) * (web ? V1_GLYPH_WEB : 1));
 }
 
+/* El mismo tamaño, leyendo el viewport de AHORA. La expresión estaba escrita
+   tres veces —el círculo del runner v1, el del legacy y, desde s174, el arte de
+   la cuenta atrás—, y son tres sitios que TIENEN que dar el mismo número: si
+   uno se desviara, el círculo de la sesión no relevaría al de la preparación
+   sino que saltaría. Una fuente, y se acabó la coincidencia por costumbre. */
+function v1GlyphSizeAhora() {
+  return v1GlyphSize(typeof window !== 'undefined' && window.innerHeight || 800);
+}
+
 /* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
    descanso, devuelve {minSec,maxSec,breakdown} sin tocar el runner ni el reloj.
      reps guiadas → target × tempo (FIJO; 'manual' añadiría banda, sin piloto).
@@ -17304,11 +18558,11 @@ Object.assign(window, {
   v1Instr, v1EventoSesion, v1LadoGlifo,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
-  v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
+  v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, v1GlyphSizeAhora,
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock
 });
-;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Instr, v1EventoSesion });
+;Object.assign(window, { v1TempoSeconds, v1RepSeconds, v1RepTarget, v1TransitionSeconds, v1CompletionMode, v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1EsEscritorio, v1GlyphSize, v1GlyphSizeAhora, estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock, v1LadoGlifo, v1Instr, v1EventoSesion });
 })();
 </script>
   <script>
@@ -17564,7 +18818,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   if (stage === 'prep') {
     return (/*#__PURE__*/
       React.createElement(SessionPrep, {
-        routine: displayRoutine, onExit: onExit, accent: accent, prepCount: prepCount,
+        routine: displayRoutine, onExit: onExit, accent: accent, accentSoft: accentSoft, prepCount: prepCount,
         copy: tn('move.prepCopy', { n: routine.steps.length }),
         onSkip: () => {sessionStart.current = Date.now();setPrepCount(0);setStage('run');startStep(0);},
         atmosphere: atmo }
@@ -17615,8 +18869,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
   // Visual instructivo: escala por ALTURA de viewport — el glifo deja de ser
   // insignia; en poca altura cede antes que instrucciones/controles (s113).
   // s171: el legacy usa ESTA MISMA curva (era 72 fijo, menos de la mitad).
-  const vpH = typeof window !== 'undefined' && window.innerHeight || 800;
-  const glyphSize = v1GlyphSize(vpH);
+  const glyphSize = v1GlyphSizeAhora();
 
   let bigNumber, bigLabel, kicker, primary, support, supportStrong;
   let gateNumber = false; // place/change: número pequeño, no es el timer
@@ -17878,7 +19131,7 @@ const EXTRA_ROUTINES = {
       { name: 'Reset respiración', mode: 'rest', dur: 30,
         instruction: { action: '3 inhalaciones profundas para cerrar.' } }]
     },
-    { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
+    { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello',
       desc: 'Micro-pausa para cervicales tensas.', min: 3,
       position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
@@ -17962,7 +19215,7 @@ const EXTRA_ROUTINES = {
        hombros → `timed` (BASE §3-B/D). Gate `ready` en los pasos que exigen
        PARED (wall slides) o BARRA (dead hang); el resto auto (s112). `name`
        intactos. Dead hang conserva su nombre «· opcional» (glifo intacto). */
-    { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
+    { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros',
       desc: 'Hombros a punto: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
       position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
       steps: [
@@ -18066,7 +19319,7 @@ const EXTRA_ROUTINES = {
        suelo (90/90, Squat, Puente) → `timed`. Gate `ready` en el PRIMER paso
        de suelo (90/90). 90/90, Pigeon y Puente con marcha comparten copy con
        couch.stretch (mismo ejercicio/glifo). `min` 6 dentro de rango. */
-    { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas · 5 pasos',
+    { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas',
       desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
       position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
       steps: [
@@ -18239,34 +19492,20 @@ const EXTRA_ROUTINES = {
   }
 };
 
+/* s174 · Espejo exacto de `MoveLibrary`: la pantalla es `LibraryShell` y aquí
+   sólo queda el dato, el color y el prefijo de i18n. Ver la nota de
+   `MoveModule.jsx` para el porqué de que sean gemelas.
+   OJO CON LOS IDS: las 14 rutinas de ESTIRA empiezan por `move.` y las 14 de
+   MUEVE por `extra.` — el swap de s14, blindado en CONTENT.md. Asumir el
+   prefijo es la trampa que s172 prohíbe expresamente y que en s173 dejó un
+   bloque VACÍO durante dos versiones de la maqueta. */
 function ExtraLibrary(_ref) {let { open, onClose, onStart } = _ref;
-  const { t, lang } = useT();
-  const tR = (key, fb) => {if (lang !== 'en') return fb;const v = t(key);return v === key ? fb : v;};
+  const { t } = useT();
   return (/*#__PURE__*/
-    React.createElement(Modal, { open: open, onClose: onClose, tagLabel: t('lib.tag'), title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle'), maxWidth: 860 }, /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 } },
-
-
-
-
-    typeof CustomRoutinesSection !== 'undefined' && /*#__PURE__*/
-    React.createElement(CustomRoutinesSection, { onStart: onStart, accent: "var(--extra)" }),
-
-    Object.entries(EXTRA_ROUTINES).map((_ref2) => {let [key, group] = _ref2;return (/*#__PURE__*/
-        React.createElement("div", { key: key }, /*#__PURE__*/
-        React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 } }, /*#__PURE__*/
-        React.createElement("h3", { style: { ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 } }, tR(`extra.cat.${key}.label`, group.label)),
-        group.aside && /*#__PURE__*/React.createElement(Meta, null, tR(`extra.cat.${key}.aside`, group.aside))
-        ), /*#__PURE__*/
-        React.createElement("div", { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 } },
-        group.items.map((r) => /*#__PURE__*/
-        React.createElement(RoutineCard, { key: r.id, routine: r, color: "var(--extra)", onClick: () => onStart(r) })
-        )
-        )
-        ));}
-    )
-    )
-    ));
+    React.createElement(LibraryShell, {
+      open: open, onClose: onClose, onStart: onStart,
+      groups: EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
+      title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle') }));
 
 }
 
@@ -18483,8 +19722,15 @@ function CustomRoutinesSection(_ref) {let { onStart, accent = 'var(--move)' } = 
     React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 10 } }, /*#__PURE__*/
     React.createElement("h3", { style: { ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 } }, t('custom.section.title')), /*#__PURE__*/
     React.createElement(PremiumSeal, null)
-    ), /*#__PURE__*/
-    React.createElement(Meta, null, t('custom.section.aside'))
+    )
+
+
+
+
+
+
+
+
     ),
 
     !unlocked ? /*#__PURE__*/
@@ -27172,8 +28418,18 @@ function PaceApp() {
     const p = previewRoutine;
     setPreviewRoutine(null);
     if (!p) return;
+    /* s174 · LA CAPITULAR VUELA A LA SESIÓN. Se captura AQUÍ y no dentro del
+       módulo del vuelo porque el orden es lo único que lo hace posible: la
+       biblioteca sigue montada DETRÁS del preview (decisión de arriba: cerrar
+       el preview te devuelve a ella), así que la tarjeta y su dibujo todavía
+       existen en este instante -- y dejan de existir en la línea siguiente.
+       Si no hay vuelo (reduced-motion, sin capitular, sin `animate`), esto es
+       null y las dos líneas de abajo corren igual que siempre. */
+    const vuelo = typeof paceVueloCapitular === 'function' ?
+    paceVueloCapitular(p.routine && p.routine.id) : null;
     setOpenLibrary(null);
     setView({ type: 'move-session', routine: p.routine, kind: p.kind });
+    if (vuelo) vuelo.aterrizar();
   };
 
   const handleStartMove = (routine) => {

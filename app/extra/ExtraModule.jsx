@@ -58,7 +58,7 @@ const EXTRA_ROUTINES = {
           { name: 'Reset respiración', mode: 'rest', dur: 30,
             instruction: { action: '3 inhalaciones profundas para cerrar.' } },
         ]},
-      { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello · 3 min',
+      { id: 'move.neck.3', tag: 'SIT', code: 'Cuello', name: 'Cuello',
         desc: 'Micro-pausa para cervicales tensas.', min: 3,
         position: ['seated'], equipment: [], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
@@ -142,7 +142,7 @@ const EXTRA_ROUTINES = {
          hombros → `timed` (BASE §3-B/D). Gate `ready` en los pasos que exigen
          PARED (wall slides) o BARRA (dead hang); el resto auto (s112). `name`
          intactos. Dead hang conserva su nombre «· opcional» (glifo intacto). */
-      { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros · 5 pasos',
+      { id: 'move.shoulders.5', tag: 'SHLD', code: 'Hombros', name: 'Hombros',
         desc: 'Hombros a punto: rotadores, pecho, trapecios. Necesitas pared; barra opcional.', min: 4,
         position: ['standing'], equipment: ['wall', 'barOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
         steps: [
@@ -246,7 +246,7 @@ const EXTRA_ROUTINES = {
          suelo (90/90, Squat, Puente) → `timed`. Gate `ready` en el PRIMER paso
          de suelo (90/90). 90/90, Pigeon y Puente con marcha comparten copy con
          couch.stretch (mismo ejercicio/glifo). `min` 6 dentro de rango. */
-      { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas · 5 pasos',
+      { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas',
         desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
         position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
         steps: [
@@ -419,34 +419,20 @@ const EXTRA_ROUTINES = {
   },
 };
 
+/* s174 · Espejo exacto de `MoveLibrary`: la pantalla es `LibraryShell` y aquí
+   sólo queda el dato, el color y el prefijo de i18n. Ver la nota de
+   `MoveModule.jsx` para el porqué de que sean gemelas.
+   OJO CON LOS IDS: las 14 rutinas de ESTIRA empiezan por `move.` y las 14 de
+   MUEVE por `extra.` — el swap de s14, blindado en CONTENT.md. Asumir el
+   prefijo es la trampa que s172 prohíbe expresamente y que en s173 dejó un
+   bloque VACÍO durante dos versiones de la maqueta. */
 function ExtraLibrary({ open, onClose, onStart }) {
-  const { t, lang } = useT();
-  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
+  const { t } = useT();
   return (
-    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.extra.title')} subtitle={t('lib.extra.subtitle')} maxWidth={860}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
-        {/* Tus rutinas — s138: el constructor premium vivia SOLO en Mueve.
-            Espejo de MoveLibrary con el acento de Estira; la lista es la misma
-            (una rutina propia no pertenece a un modulo). Guard defensivo por
-            el orden de carga (patron s83). */}
-        {typeof CustomRoutinesSection !== 'undefined' && (
-          <CustomRoutinesSection onStart={onStart} accent="var(--extra)" />
-        )}
-        {Object.entries(EXTRA_ROUTINES).map(([key, group]) => (
-          <div key={key}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{tR(`extra.cat.${key}.label`, group.label)}</h3>
-              {group.aside && <Meta>{tR(`extra.cat.${key}.aside`, group.aside)}</Meta>}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
-              {group.items.map(r => (
-                <RoutineCard key={r.id} routine={r} color="var(--extra)" onClick={() => onStart(r)} />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </Modal>
+    <LibraryShell
+      open={open} onClose={onClose} onStart={onStart}
+      groups={EXTRA_ROUTINES} tone="var(--extra)" catPrefix="extra"
+      title={t('lib.extra.title')} subtitle={t('lib.extra.subtitle')} />
   );
 }
 

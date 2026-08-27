@@ -143,8 +143,18 @@ function PaceApp() {
     const p = previewRoutine;
     setPreviewRoutine(null);
     if (!p) return;
+    /* s174 · LA CAPITULAR VUELA A LA SESIÓN. Se captura AQUÍ y no dentro del
+       módulo del vuelo porque el orden es lo único que lo hace posible: la
+       biblioteca sigue montada DETRÁS del preview (decisión de arriba: cerrar
+       el preview te devuelve a ella), así que la tarjeta y su dibujo todavía
+       existen en este instante -- y dejan de existir en la línea siguiente.
+       Si no hay vuelo (reduced-motion, sin capitular, sin `animate`), esto es
+       null y las dos líneas de abajo corren igual que siempre. */
+    const vuelo = (typeof paceVueloCapitular === 'function')
+      ? paceVueloCapitular(p.routine && p.routine.id) : null;
     setOpenLibrary(null);
     setView({ type: 'move-session', routine: p.routine, kind: p.kind });
+    if (vuelo) vuelo.aterrizar();
   };
 
   const handleStartMove = (routine) => {

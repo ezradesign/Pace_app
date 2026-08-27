@@ -48,6 +48,60 @@ Object.assign(window.PACE_STRINGS.es, {
     'lib.level.intermediate':          'Intermedio',
     'lib.level.advanced':              'Avanzado',
 
+    /* ── BIBLIOTECA REDISENADA (s174) ───────────────────────────────────────
+       LA FORMA CORTA, NO LA DE `preview.eq.*`. Aquellas son requisitos en
+       lista y van en mayuscula y con frase entera («Una silla estable, sin
+       ruedas»); estas van EN MEDIO de una linea que se lee en voz alta -- «5
+       min · sentado · con silla · por lado»-- y por eso son minusculas y
+       preposicionales. No es un duplicado: es otro registro, y meter la frase
+       larga aqui dejaria la linea de contexto ilegible. */
+    'lib.min':                         'min',
+    'lib.now':                         'Para ahora',
+    'lib.back':                        'Volver',
+    'lib.premium':                     'Premium',
+    'lib.perSide':                     'por lado',
+    'lib.series':                      '{s} series · {r} reps',
+    'lib.filter.title':                'Filtrar',
+    'lib.filter.aqui':                 'Aquí mismo',
+    'lib.filter.sinmat':               'Sin material',
+    /* El umbral viaja en la cadena porque es RELATIVO a cada biblioteca: ≤ 2
+       min en Mueve y ≤ 4 en Estira (medido en s174). El chip ensena el suyo, y
+       asi no miente al cambiar de biblioteca. */
+    'lib.filter.short':                '≤ {n} min',
+    'lib.where.floor':                 'en el suelo',
+    'lib.where.seated':                'sentado',
+    'lib.where.standing':              'de pie',
+    'lib.gear.stableDesk':             'con mesa',
+    'lib.gear.stableChair':            'con silla',
+    'lib.gear.bar':                    'con barra',
+    'lib.gear.wall':                   'contra la pared',
+    'lib.gear.cushionOptional':        'cojín opcional',
+    'lib.gear.deskOptional':           'mesa opcional',
+    'lib.gear.barOptional':            'barra opcional',
+    /* El grupo que se queda a cero al filtrar. Dos formas porque `tn` sustituye
+       variables y NO conjuga: con «Las {n}» un grupo de una rutina diria «Las 1
+       de flujos piden suelo». Hoy el grupo mas pequeno tiene 2, asi que la
+       forma de singular no se ve nunca -- y existe justo para que anadir una
+       rutina al catalogo no rompa una frase. */
+    'lib.empty.floor.n':               'Las {n} de {g} piden suelo.',
+    'lib.empty.floor.1':               'La de {g} pide suelo.',
+    'lib.empty.any.n':                 'Las {n} de {g} se quedan fuera de este filtro.',
+    'lib.empty.any.1':                 'La de {g} se queda fuera de este filtro.',
+    'lib.empty.clear':                 'quitar el filtro',
+    /* El RITMO de Respira, que es su informacion mas util y hoy no se lee en
+       ninguna pantalla. Los patrones con ciclo se dicen con cifras (4·7·8); los
+       que no lo tienen, con su palabra. Cuando lleguen los glifos de ritmo,
+       esto es lo que sustituyen. */
+    'lib.rhythm.rounds':               '{r} rondas de {b}',
+    'lib.rhythm.diaphragm':            'hacia el vientre',
+    'lib.rhythm.physiological':        'doble inhalación',
+    'lib.rhythm.yin':                  'con reposo al final',
+    'lib.rhythm.bhramari':             'con zumbido',
+    'lib.rhythm.bhastrika':            'fuelle rápido',
+    'lib.rhythm.nadi':                 'alterna',
+    'lib.rhythm.kapalabhati':          'exhalaciones cortas',
+    'lib.rhythm.co2':                  'sostén en vacío',
+
     /* Preview antes de empezar (§18.3). Los requisitos vivian metidos a mano
        dentro de la descripcion de 16 de las 28 rutinas —«Silla estable y sin
        ruedas», «Necesitas pared; barra opcional»— porque no tenian sitio. Este
@@ -125,6 +179,43 @@ Object.assign(window.PACE_STRINGS.en, {
     'lib.intensity.strong':            'Strong',
     'lib.level.intermediate':          'Intermediate',
     'lib.level.advanced':              'Advanced',
+
+    /* Biblioteca redisenada (s174) — ver la nota del bloque espanol: forma
+       CORTA, no la de `preview.eq.*`. */
+    'lib.min':                         'min',
+    'lib.now':                         'For now',
+    'lib.back':                        'Back',
+    'lib.premium':                     'Premium',
+    'lib.perSide':                     'per side',
+    'lib.series':                      '{s} sets · {r} reps',
+    'lib.filter.title':                'Filter',
+    'lib.filter.aqui':                 'Right here',
+    'lib.filter.sinmat':               'No gear',
+    'lib.filter.short':                '≤ {n} min',
+    'lib.where.floor':                 'on the floor',
+    'lib.where.seated':                'seated',
+    'lib.where.standing':              'standing',
+    'lib.gear.stableDesk':             'with a desk',
+    'lib.gear.stableChair':            'with a chair',
+    'lib.gear.bar':                    'with a bar',
+    'lib.gear.wall':                   'against a wall',
+    'lib.gear.cushionOptional':        'cushion optional',
+    'lib.gear.deskOptional':           'desk optional',
+    'lib.gear.barOptional':            'bar optional',
+    'lib.empty.floor.n':               'All {n} in {g} need the floor.',
+    'lib.empty.floor.1':               'The one in {g} needs the floor.',
+    'lib.empty.any.n':                 'All {n} in {g} fall outside this filter.',
+    'lib.empty.any.1':                 'The one in {g} falls outside this filter.',
+    'lib.empty.clear':                 'clear the filter',
+    'lib.rhythm.rounds':               '{r} rounds of {b}',
+    'lib.rhythm.diaphragm':            'into the belly',
+    'lib.rhythm.physiological':        'double inhale',
+    'lib.rhythm.yin':                  'with a rest at the end',
+    'lib.rhythm.bhramari':             'with a hum',
+    'lib.rhythm.bhastrika':            'fast bellows',
+    'lib.rhythm.nadi':                 'alternate nostril',
+    'lib.rhythm.kapalabhati':          'short exhales',
+    'lib.rhythm.co2':                  'hold on empty',
 
     'preview.tag':                     'Before you start',
     'preview.need':                    'What you need',

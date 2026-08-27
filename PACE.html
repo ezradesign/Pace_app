@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.103.0</title>
+  <title>PACE · Foco · Cuerpo — v0.104.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -225,6 +225,12 @@
        MoveModule.jsx es el primero de ellos en este mismo orden. -->
   <script type="text/babel" src="app/ui/SessionClock.jsx"></script>
   <script type="text/babel" src="app/ui/SessionShell.jsx"></script>
+  <!-- Pantalla de preparación (s174), extraída de SessionShell.jsx al pasar
+       aquel de 500 líneas cuando la cuenta atrás ganó el arte de la rutina.
+       DESPUÉS de SessionShell (usa `SessionShell` y `sessionShellStyles`) y
+       ANTES de los runners, que la montan. `StepGlyph` lo lee en render, así
+       que no exige que MoveModule cargue antes. -->
+  <script type="text/babel" src="app/ui/SessionPrep.jsx"></script>
   <!-- CSS responsive de las pantallas de sesión, extraído de SessionShell.jsx
        en s116 (el shell rozaba 500 ln). Solo inyecta un <style> idempotente;
        carga tras el shell. -->
@@ -285,6 +291,23 @@
   <!-- Preview «antes de empezar» (§18.3, s144). DESPUÉS de exercise-glyphs y de
        Primitives: consume ExerciseGlyph, Modal y Tag. Lo monta main.jsx. -->
   <script type="text/babel" src="app/ui/RoutinePreview.jsx"></script>
+
+  <!-- BIBLIOTECAS (s174). Las tres piezas del rediseño, en este orden y no en
+       otro: las REGLAS primero (puras, sin React, para poder asertarlas sin
+       navegador), la HOJA después —interpola `paceGrainUrl()` de SessionShell,
+       así que va detrás de él— y los componentes al final. `RoutineCard` va
+       DESPUÉS de exercise-glyphs porque pinta la capitular con ExerciseGlyph, y
+       `LibraryShell` después de la tarjeta. Los tres ANTES de BreatheLibrary,
+       MoveModule y ExtraModule, que son quienes los consumen. -->
+  <script type="text/babel" data-presets="env,react" src="app/ui/library-rules.js"></script>
+  <script type="text/babel" src="app/ui/library.css.jsx"></script>
+  <script type="text/babel" src="app/ui/RoutineCard.jsx"></script>
+  <script type="text/babel" src="app/ui/LibraryShell.jsx"></script>
+  <!-- La transición biblioteca -> sesión (s174). Lee `.pace-lib-cap` de la
+       tarjeta y el arte de la cuenta atrás; no importa el orden frente a
+       ninguno de los dos porque los busca en el DOM al vuelo, pero va aquí
+       para que se lea junto a lo que anima. -->
+  <script type="text/babel" data-presets="env,react" src="app/ui/library-transition.js"></script>
 
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>

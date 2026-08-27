@@ -145,6 +145,15 @@ function v1GlyphSize(vpH, escritorio) {
   return Math.round(Math.max(72, Math.min(210, Math.round(vpH * 0.22))) * (web ? V1_GLYPH_WEB : 1));
 }
 
+/* El mismo tamaño, leyendo el viewport de AHORA. La expresión estaba escrita
+   tres veces —el círculo del runner v1, el del legacy y, desde s174, el arte de
+   la cuenta atrás—, y son tres sitios que TIENEN que dar el mismo número: si
+   uno se desviara, el círculo de la sesión no relevaría al de la preparación
+   sino que saltaría. Una fuente, y se acabó la coincidencia por costumbre. */
+function v1GlyphSizeAhora() {
+  return v1GlyphSize((typeof window !== 'undefined' && window.innerHeight) || 800);
+}
+
 /* Duración DERIVADA de los pasos (s115/B2.2b-1). Helper PURO: dado el preset de
    descanso, devuelve {minSec,maxSec,breakdown} sin tocar el runner ni el reloj.
      reps guiadas → target × tempo (FIJO; 'manual' añadiría banda, sin piloto).
@@ -316,7 +325,7 @@ Object.assign(window, {
   v1Instr, v1EventoSesion, v1LadoGlifo,
   V1_PLACE_SECONDS, V1_REP_SECONDS, V1_CHANGE_SECONDS, V1_PREP_SECONDS,
   v1RepSeconds, v1RepTarget, v1TempoSeconds, v1TransitionSeconds, v1CompletionMode,
-  v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize,
+  v1RestSeconds, v1StepDur, v1StepSetup, v1StepProgress, v1StepWeight, v1GlyphSize, v1GlyphSizeAhora,
   V1_GLYPH_WEB, v1EsEscritorio,
   estimateDuration, v1DevCheckDuration, v1DoneStats, v1TrabajoActivo, useV1ActiveClock,
 });

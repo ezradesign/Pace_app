@@ -62,24 +62,36 @@ const BREATHE_ROUTINES = {
   }
 };
 
+/* s174 · RESPIRA RECIBE LA TARJETA, NO LA PANTALLA.
+   La biblioteca conserva su estructura —sus cinco grupos, en su orden y sin
+   filtros— y estrena la tarjeta compartida y su tipografía. Lo que NO entra, y
+   por qué: Mueve y Estira se ordenan por CONTEXTO (11 de sus 28 exigen suelo)
+   y Respira por TIEMPO (de 2 a 20 min, factor 10), así que su pantalla propia
+   es otro diseño. Y su información más útil —el RITMO— pide dibujarlo: son 13
+   motores de ritmo y 19 ritmos distintos, un encargo de arte que aún no tiene
+   tamaño decidido. Mientras tanto el ritmo se DICE, en la línea de contexto,
+   donde hoy no se leía en ninguna pantalla.
+   Le entra la tarjeta y no espera a su sesión para que la app no tenga DOS
+   idiomas de tarjeta en tres botones contiguos de la misma home. */
 function BreatheLibrary({ open, onClose, onStart }) {
   const { t, lang } = useT();
   const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   return (
-    <Modal open={open} onClose={onClose} tagLabel={t('lib.tag')} title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
-      maxWidth={860}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
+    <Modal open={open} onClose={onClose} maxWidth={860}>
+      <div className="pace-lib" style={{ '--tone': 'var(--breathe)' }}>
+        <div className="pace-lib-hd">
+          <div className="pace-lib-k">{t('lib.tag')}</div>
+          <div className="pace-lib-hd-fila"><h2>{t('lib.breathe.title')}</h2></div>
+          <p className="pace-lib-sub">{t('lib.breathe.subtitle')}</p>
+        </div>
         {Object.entries(BREATHE_ROUTINES).map(([key, group]) => (
           <div key={key}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-              <h3 style={{ ...displayItalic, fontSize: 20, margin: 0, fontWeight: 500 }}>{tR(`breathe.cat.${key}.label`, group.label)}</h3>
-              {group.aside && <Meta>{tR(`breathe.cat.${key}.aside`, group.aside)}</Meta>}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
-              {group.items.map(r => (
-                <RoutineCard key={r.id} routine={r} color="var(--breathe)" onClick={() => onStart(r)} />
-              ))}
-            </div>
+            {/* Se cae el `aside` de grupo, igual que en Mueve y Estira: la
+                tarjeta nueva ya dice de qué va cada rutina. */}
+            <h3 className="pace-lib-grp">{tR(`breathe.cat.${key}.label`, group.label)}</h3>
+            {libraryOrdenar(group.items).map(r => (
+              <RoutineCard key={r.id} routine={r} color="var(--breathe)" variant="breathe" onClick={() => onStart(r)} />
+            ))}
           </div>
         ))}
       </div>
@@ -87,95 +99,11 @@ function BreatheLibrary({ open, onClose, onStart }) {
   );
 }
 
-/* RoutineCard — tarjeta compartida por las 3 bibliotecas (Respira/Mueve/Estira),
-   expuesta a window y consumida también por MoveModule y ExtraModule.
-
-   Gating de contenido (s87 · bloque Contenido+Premium F3a):
-   convención del campo `access` en los datos de rutina —
-     ausente | 'free'  → libre (comportamiento normal, clicable)
-     'premium'         → de pago. El sello PREMIUM se muestra siempre como
-                         marca de contenido de pago. El bloqueo real (sello +
-                         'Pronto' + clic desactivado) depende de
-                         `premiumUnlocked` del state: mientras es false (su
-                         valor por defecto, sin ruta de compra hasta v1.0) toda
-                         premium está bloqueada. El cableado queda listo para
-                         que un flag futuro (compra / locked.initial /
-                         locked.achievement) ponga `premiumUnlocked` a true y
-                         las premium pasen a clicables sin tocar este componente.
-     Designación del set premium inicial: s88 (F3b). */
-function RoutineCard({ routine, color, onClick }) {
-  const { t, lang } = useT();
-  const [pace] = usePace(); // mantiene la suscripcion reactiva: al cambiar
-                            // premiumUnlocked el card re-renderiza y el guard relee el store.
-  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
-  const isPremium = routine.access === 'premium'; // marca "es de pago" (sello siempre)
-  // s95: el bloqueo real pasa por el guard central de entitlement. Equivalente
-  // exacto al antiguo `isPremium && !premiumUnlocked` (free->accesible,
-  // premium+bloqueado->locked). Fallback defensivo al chequeo inline por si el
-  // guard no estuviera cargado.
-  const isLocked = window.canAccessRoutine
-    ? !window.canAccessRoutine(routine.id)
-    : (isPremium && !pace.premiumUnlocked);
-  // s115 (B2.2b-1): duración DERIVADA para rutinas del contrato v1 (algún step
-  // con `mode`) — UNA sola promesa vía helper puro `estimateDuration`, con el
-  // preset de descanso actual (reactivo: pace ya suscribe). El resto (Respira +
-  // las 22 rutinas legacy) conserva `routine.min`. Prod nunca muestra ambos.
-  /* s143 (ola E) — los metadatos existian en los datos desde s115 y NADIE los
-     consumia. Se leen defensivamente: Respira comparte esta tarjeta y sus
-     rutinas no los declaran, asi que sin dato no se pinta nada. El nivel
-     `accessible` se omite a proposito (ver el Tag de abajo). */
-  const intensityKey = ['gentle', 'moderate', 'strong'].includes(routine.intensity)
-    ? routine.intensity : null;
-  const levelKey = ['intermediate', 'advanced'].includes(routine.level)
-    ? routine.level : null;
-  const isV1 = !!(routine.steps && routine.steps.some(s => s && s.mode));
-  let durLabel = `${routine.min} min`;
-  if (isV1 && typeof window.estimateDuration === 'function') {
-    const est = window.estimateDuration(routine, pace.restBetweenSets);
-    const lo = Math.floor(est.minSec / 60), hi = Math.ceil(est.maxSec / 60);
-    durLabel = lo === hi ? `${lo} min` : `${lo}–${hi} min`;
-  }
-  return (
-    <Card accent={isLocked ? undefined : color} onClick={isLocked ? undefined : onClick} padded={false} style={{ padding: '16px 18px', position: 'relative' }}>
-      {routine.safety && (
-        <div style={{
-          position: 'absolute', top: 12, right: 12,
-          width: 18, height: 18, borderRadius: '50%',
-          background: 'var(--breathe-soft)', color: 'var(--breathe)',
-          display: 'grid', placeItems: 'center',
-          fontSize: 11, fontWeight: 600,
-        }} title={t('breathe.safety.required')}>⚠</div>
-      )}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
-        <Tag color={color}>{routine.tag}</Tag>
-        {isPremium && <PremiumSeal />}
-        {/* Nivel TECNICO (§29.2), eje distinto de la intensidad: se ensena solo
-            cuando NO es basico. Marcarlo en las 16 accesibles seria ruido —lo
-            normal no necesita etiqueta— y ademas apagaria la senal justo donde
-            importa, que es lo intermedio y lo avanzado. `muted` a proposito:
-            informa, no reclama. */}
-        {levelKey && <Tag muted>{t(`lib.level.${levelKey}`)}</Tag>}
-      </div>
-      <h4 style={{ ...displayItalic, fontSize: 19, margin: '0 0 6px', fontWeight: 500, lineHeight: 1.15 }}>{tR(`${routine.id}.name`, routine.name)}</h4>
-      <p style={{ fontSize: 12.5, color: 'var(--ink-2)', margin: '0 0 12px', lineHeight: 1.5 }}>{tR(`${routine.id}.desc`, routine.desc)}</p>
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        borderTop: '1px dashed var(--line)', paddingTop: 8,
-      }}>
-        <span style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          {tR(`${routine.id}.code`, routine.code)}
-          {intensityKey && <span style={{ color: 'var(--line-2)' }}> · </span>}
-          {intensityKey && t(`lib.intensity.${intensityKey}`)}
-        </span>
-        {isLocked ? (
-          <span style={{ ...displayItalic, fontSize: 16, color: 'var(--premium)', fontWeight: 500 }}>{t('premium.soon')}</span>
-        ) : (
-          <span style={{ ...displayItalic, fontSize: 16, color: color, fontWeight: 500 }}>{durLabel}</span>
-        )}
-      </div>
-    </Card>
-  );
-}
+/* s174 · `RoutineCard` YA NO VIVE AQUÍ. Se fue a `app/ui/RoutineCard.jsx`.
+   Vivía en este archivo desde s34 por accidente histórico: la consumían también
+   MoveModule y ExtraModule a través del global, así que tocar la tarjeta de
+   Mueve obligaba a abrir el módulo de Respira. El gating de contenido (`access`
+   + `canAccessRoutine`) se fue con ella, intacto. */
 
 function BreatheSafety({ routine, onAccept, onCancel }) {
   const { t } = useT();

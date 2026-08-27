@@ -128,10 +128,10 @@ function eventsWebWrite(container) {
    el DETALLE por hecho pero nunca el total. La reconstruccion de agregados
    sigue siendo `baseline + fold(retenidos)`.
 
-   Punto de extension declarado: cuando la Fase 3 programe la poda por
-   retencion, va aqui al lado reutilizando `selectEventsToPrune` +
-   `foldEventsIntoBaseline` + `nextPruneCursor`, y sin un segundo reloj (se
-   engancha al rollover diario, §12). */
+   s174 — YA NO ES UN PUNTO DE EXTENSION: la poda por calendario existe, se
+   llama `eventsWebPruneByCalendar` y vive aqui debajo. Sigue siendo OTRA cosa
+   que esta: aquella barre por ANTIGUEDAD y esta por PRESION, y solo salta ante
+   un error de almacenamiento. */
 function eventsWebPruneForBudget(container) {
   const c = normalizeEventsContainer(container);
   if (!c.events.length) return c;
@@ -156,6 +156,49 @@ function eventsWebPruneForBudget(container) {
   }
   return { schemaVersion: c.schemaVersion, activatedAt: c.activatedAt,
            events: kept, baseline: baseline, pruneCursor: cursor, marker: c.marker };
+}
+
+/* PODA POR CALENDARIO (§12) — la de retencion, programada en s174.
+   Es la que el bloque de arriba declaraba como punto de extension, y usa
+   exactamente las tres piezas que aquel nombraba: `selectEventsToPrune` elige
+   el lote (posterior al cursor y anterior al suelo de 120 dias),
+   `foldEventsIntoBaseline` lo destila y `nextPruneCursor` avanza la marca. Se
+   pierde el DETALLE por hecho, nunca el total: la reconstruccion sigue siendo
+   `baseline + fold(retenidos)`.
+
+   SIN UN SEGUNDO RELOJ, que es la condicion de §12. Se dispara UNA vez en el
+   arranque, despues de `loadState` — de las dos vias posibles el usuario eligio
+   esta en s174, y no la del rollover: `rolloverIfNeeded` es SINCRONO y la poda
+   no, asi que engancharla alli seria disparar-y-olvidar dentro de una funcion
+   que devuelve estado, y probarlo pediria instrumentar el rollover. Aqui basta
+   con conducir el arranque, que la suite ya sabe hacer.
+   El dia lo pone quien llama (`todayISO`, regla §10 de CLAUDE.md: nunca
+   `new Date('YYYY-MM-DD')`), asi que una prueba puede fijar el calendario sin
+   tocar el reloj del sistema.
+
+   NO ESCRIBE SI NO HAY NADA QUE PODAR: devolver `container: null` deja el
+   almacen intacto. Importa mas de lo que parece — cada arranque pasaria por
+   aqui, y reescribir el contenedor entero para no cambiar nada es tocar
+   `localStorage` (y despertar a la otra pestana) sin motivo. */
+function eventsWebPruneByCalendar(todayKey) {
+  if (!todayKey) return Promise.resolve({ result: EVENTS_UNAVAILABLE_RESULT, container: null });
+  return eventsWebRunExclusive(function (current) {
+    const batch = selectEventsToPrune(current, todayKey);
+    if (!batch.length) return { container: null, result: EVENTS_COMMITTED };
+    const fuera = Object.create(null);
+    for (let i = 0; i < batch.length; i++) fuera[batch[i].id] = true;
+    return {
+      container: {
+        schemaVersion: current.schemaVersion,
+        activatedAt: current.activatedAt,
+        events: current.events.filter(function (e) { return !fuera[e.id]; }),
+        baseline: foldEventsIntoBaseline(current.baseline, batch, current.pruneCursor),
+        pruneCursor: nextPruneCursor(batch, current.pruneCursor),
+        marker: current.marker,
+      },
+      result: EVENTS_COMMITTED,
+    };
+  });
 }
 
 /* --- Exclusion ----------------------------------------------------------- */

@@ -1,6 +1,6 @@
 # Rediseño de las librerías · Respira · Mueve · Estira
 
-> **Diseño APROBADO mirándolo, NADA implementado** (s173). Cada decisión de aquí se
+> **IMPLEMENTADO EN s174** (v0.104.0). Diseño aprobado mirándolo en s173. Cada decisión de aquí se
 > tomó sobre una maqueta HTML con el catálogo real, las máscaras reales y los tokens
 > de `DESIGN_SYSTEM.md`, a **360×730** y **412×844** en móvil y **1280** en escritorio.
 > Doce iteraciones. Lo que sigue es el resultado, no el recorrido.
@@ -166,26 +166,33 @@ no la compresión.
 
 ---
 
-## 8 · Lo que queda ABIERTO
+## 8 · Lo que quedaba abierto — CERRADO en s174
 
-- **La regla de «Para ahora».** Hoy son dos ids a mano. Falta decidir si elige por hora
-  del día, por lo que no has hecho, o por lo más corto que cabe en tu contexto.
-- **Respira**: su pantalla propia está esbozada (ordenada por duración, sin arte, con el
-  ritmo dicho en palabras y el sello de seguridad de las 5 con apnea) pero **no cerrada**.
-  Los **14 patrones** son su información más útil y la más difícil de leer. La salida
-  sería **dibujarlos**: 14 glifos de ritmo, encargo de arte como el de ejercicios pero de
-  líneas y proporciones, no cuerpos.
-- **Las 12 rutinas premium**: ¿mezcladas con sello, o agrupadas aparte?
-- **Tres ideas propuestas y sin decidir**:
-  - **El glifo como filtro.** Tocar un dibujo = «enséñame todas las rutinas que lo llevan».
-    Convierte el arte en índice y **depende de tener 59 dibujos propios**.
-  - **La transición biblioteca → sesión.** Como no hay wash, entrar gana significado: la
-    capitular de la tarjeta podría **crecer** hasta el círculo del runner.
-  - **«Ya la hiciste».** Marca tenue en las de esta semana. Memoria, no racha (s133).
-- **El orden dentro de cada grupo** (hoy es orden de catálogo, que no es un orden) y **el
-  estado vacío**, que va a existir: 9 de las 14 de Estira piden suelo.
+Las siete decisiones se tomaron **antes de escribir código**, y el documento se
+cierra con lo que se decidió y lo que se midió al implementarlo.
 
----
+| Abierto en s173 | Decidido en s174 |
+|---|---|
+| La regla de «Para ahora» | **Contexto + rotación diaria.** El pozo es «aquí mismo», ordenado por duración, y entra por el día. Sin reloj de horas —s161 ya decidió que la paleta Auto va por SISTEMA— y sin historial, que sólo tiene `pace.events.v1`. Pozo medido: **5 en Estira, 11 en Mueve**; con «sin material» además serían 3 y 5, **demasiado poco para rotar** |
+| Las 12 premium | **Mezcladas, libres primero.** Es la regla que ya existía en Respira desde s90. Son 12 sólo si Respira se queda fuera: **6 + 6 + 7 = 19** |
+| Respira | **La tarjeta, no la pantalla.** Sus 20 rutinas no declaran `position`, `equipment` ni `level` (medido 20 de 20), así que no lleva capitular ni pill. Su pantalla propia es otra sesión: **13 motores de ritmo y 19 ritmos distintos** — el «14» de este documento **no salía de ninguna cuenta** |
+| El glifo como filtro | **NO.** En Mueve el **84 %** de sus 25 identidades sale en una sola rutina; y 9 identidades salen en las DOS bibliotecas, que son dos modales |
+| La transición | **SÍ, pero a la CUENTA ATRÁS.** Entre la capitular y el círculo del runner hay **dos pantallas y 3.114 ms**: el movimiento continuo que este documento pedía **no es posible** |
+| «Ya la hiciste» | **Ninguna de las tres formas, por ahora.** Se pintaron las tres. Ninguna cambia la geometría de la tarjeta, así que se puede añadir después sin tocarla |
+| El orden y el estado vacío | **Libres primero, luego por duración.** Y el estado vacío que ocurre es el **GRUPO**, no la biblioteca: ninguna combinación de filtros vacía una biblioteca (mínimo 2), pero con «Aquí mismo» Estira deja `caderas` en 0 de 5 y `flujos` en 0 de 2. La cabecera se queda y **dice por qué** |
+
+### Lo que este documento decía y no era
+
+- **§3 · la línea de series son 8 de 28, no 10.** Dos rutinas de Estira tienen un
+  **único** paso de repeticiones entre cuatro y cinco, y la tarjeta afirmaba
+  «1 SERIES · 5 REPS» de un movimiento de los cuatro. Ahora exige **dos**.
+- **§7 · las pantallas de scroll se midieron sobre un marco a pelo.** La
+  biblioteca es un **modal** y su chrome se comía 42 px de ancho: 3,50 → **4,33**
+  reales. Recortado el chrome sólo de esta superficie, **3,97** a 360×730 y
+  **3,07** a 412×844.
+- **El sello de seguridad de Respira son 6 rutinas** (`safety`), no las 5 de
+  apnea: Kapalabhati es respiración rápida y también lo lleva.
+- **El «14» de los patrones de ritmo** no corresponde a ninguna medida.
 
 ## 9 · Un hallazgo de CATÁLOGO, no de diseño
 

@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.104.0** | 2026-08-27 | feat(librerias): **las tres bibliotecas, implementadas — y la transicion que no existia** — s173 dejo el rediseno aprobado y sin una linea de codigo. Se cierran **las siete decisiones abiertas preguntando primero**, y el usuario amplia su regla de continuidad: **«dame SIEMPRE ejemplos en html para que pueda decidir»** — no basta con maquetar lo que se va a implementar, **toda opcion que yo proponga tiene que estar pintada antes de preguntar**. Nacen `library-rules.js` (reglas puras, asertables sin navegador), `library.css.jsx`, `RoutineCard.jsx` (sale de `BreatheLibrary`, donde vivia desde s34) y `LibraryShell.jsx`; Mueve y Estira quedan en 17 y 16 lineas de biblioteca. **SEIS numeros no cuadraban con lo dado por sabido**: «14 patrones» son **13 motores / 19 ritmos**; el sello de seguridad son **6** rutinas y no 5 (Kapalabhati no es apnea); las «12 premium» son 12 **solo si Respira se queda fuera** (19 en total); **1 de 28 capitulares no tiene arte** y en Mueve la media por tarjeta es **2,9** contra 5,1 en Estira; el estado vacio que ocurre es el **GRUPO** y no la biblioteca (`caderas` 0 de 5, `flujos` 0 de 2); y «Corto» a ≤3 min **quita dos rutinas de 14 en Mueve** — de ahi el **umbral relativo con su numero en el chip** (≤2 en Mueve, ≤4 en Estira). El **glifo como filtro** se descarta con dato: **84 %** de las identidades de Mueve sale en **una sola rutina**. **LA MAQUETA MENTIA SIN QUERER**: se dibujo sobre un marco de telefono a pelo y la biblioteca es un **modal**. Ancho util a 360: aprobado **328**, real **286** — y eso subia el scroll de las 3,50 pantallas prometidas a **4,33**, casi lo mismo que la app de hoy (4,50), o sea que **el rediseno no habria cobrado su promesa**. Recortado el chrome solo de este modal: **310 px y 3,97**; columna de escritorio **242 → 288**. El `!important` **no es pereza**: el padding del modal es un estilo EN LINEA y sin el las reglas no movian un pixel. **Cuatro defectos de mirar y medir**: «**1 SERIES** · 5 REPS» (dos rutinas de Estira tienen un UNICO paso de reps entre cuatro y cinco ⇒ la linea exige **dos series**, **10 de 28 → 8**); el separador **se comia su espacio** por ser `::before` de un flex item y **abria renglon** al partirse la linea; **`role="button"` en la tarjeta tumbo 9 tests** porque vuelve **presentacionales a sus descendientes** y el nombre dejaba de ser encabezado (reescrita al patron correcto, y gana teclado, que `Card` nunca tuvo); y **el grano se aplicaba dos veces** (0,011², invisible) — lo destapo el verify quejandose de un `const`, con lo que **el aviso era de ambito y el defecto de composicion**. **LA TRANSICION QUE EL DISENO DESCRIBIA NO EXISTE**: entre la capitular y el circulo del runner hay **DOS pantallas** y el circulo **tarda 3.114 ms** en existir. Se pintan los dos destinos posibles y el usuario elige **la cuenta atras**, que ademas es donde el circulo va a aparecer — y de paso deja de ser **un numero sobre nada**. Ponerlo ahi **introdujo un salto de 171 px (escritorio) y 221 (movil)**, porque el runner ancla arriba (s172b) y la preparacion se centraba: con el mismo anclaje, **salto 0**. **Y una duplicacion engano SEIS veces** (la copia oculta de «Para ahora»): cinco a las sondas y **la sexta al codigo que se publica** — en movil no volaba nada. La quinta se arreglo **moviendo el nodo**, no la sonda. **Se programa la RETENCION por calendario** (§12, 120 d), implementada y sin disparar desde s155: `eventsWebPruneByCalendar`, **una vez por arranque tras `loadState`** (y no en el rollover, que es sincrono), reutilizando las tres piezas que §12 nombraba y **sin escribir si no hay nada que podar**. **Tres nombres del catalogo** pierden su coletilla (`Cuello · 3 min`, `Hombros · 5 pasos`, `Caderas · 5 pasos`): decian lo que la tarjeta ya dice, y el primero ademas la contradecia. Los ids no se tocan. **131/131 tests** (+16) y **16 mutantes, 16 muerden** — con cuatro lecciones del calibrado: la linea de grupo vacio **mentia** si «Para ahora» subia sus rutinas, un guard de cero estaba **por biblioteca** cuando Estira no tiene ninguna rutina con dos series, comparar el JSON **no prueba** que no se escriba (se espia `setItem`), y dos asertos **pasaban por carrera**. | 174 | [session-174](docs/sessions/session-174-las-librerias-implementadas.md) |
 | **v0.103.0** | 2026-08-25 | feat(glifos+verify): **la ingesta deja de ser todo-o-nada, y el arte de ejercicio gana su red** — Entran **4 dibujos** (`Fondos en silla` ahora CON silla, `Onda espinal`, `Puente isquio a una pierna` y `Deslizamientos en pared`): **57 → 59 de 62**, y la cola baja de 7 a 3. Pero no entraban: el `--seco` daba **62 identidades, 102 PNG, 0 emparejados** —los originales llegan con nombre opaco y el emparejamiento es por slug— y renombrando solo esas cuatro el mapa **se reescribe entero** y las otras 57 desaparecen. La via de s171 (emparejar por CONTENIDO) **no sale limpia**: peor pareja **0,383** contra el 0,849 de entonces. Nace **`--fusionar`**: las identidades que no vienen en la carpeta CONSERVAN su fila, con la escritura y la fusion en `ingest-glifos-ejercicio.mapa.js`. **Lo que no se relaja**: una fila conservada tiene que apuntar a un archivo que exista o **aborta sin escribir nada**; un mapa sin **ni una** fila reconocible es fallo explicito; y un PNG huerfano sigue siendo salida 1. **El codigo de salida cambia de significado en la otra mitad**: con fusion, «identidad sin dibujo» ya no es un fallo sino el estado normal mientras la cola no este vacia — un exit code que siempre vale 1 es un exit code que se aprende a ignorar. Control medido: sin la bandera, **58 identidades «sin dibujo»** y el mapa en 4 filas; con ella, **3 y 59**. Calibrado con **tres mutantes** del modulo, cada uno con su rojo y solo el suyo. El script llego a **511 lineas** y el censo salio a `.censo.js` (regla §1), lo que obligo a **redeclarar `ROOT`** — el modo de fallo de s144 por otra puerta, y ahi el verify no mira porque su analisis de ambito es del artefacto. **NACE `verify.mascaras.js`**: el arte de ejercicio **no tenia ni una comprobacion relacional** (el precache cruzaba solo con el mapa de LOGROS), y `--fusionar` abre un fallo MUDO — una fila conservada sin archivo hace que el glifo caiga a su SVG viejo y el usuario vea **otro ejercicio**, sin un error en consola. Cinco relacionales en los dos sentidos, **los cinco calibrados en rojo**, y el **guard de cero** justifica a los otros cuatro: con el mapa vacio las cuatro cruzaban conjuntos vacios y salian **VERDES**. `CENSO.precache` **219 → 223**. Y la ficha de `descanso.png` **estaba mal desde hacia dos sesiones**: pedia una silla, y medido, **11 de los 18 descansos ocurren en rutinas `standing`** — una silla contradice 13 de 18. | 173 | [session-173](docs/sessions/session-173-fusionar-y-las-librerias.md) |
 | **v0.102.2** | 2026-08-21 | fix(eventos): **las dos decisiones del emisor, decididas y escritas en el esquema** — Las dos decisiones que s172 tomo porque el esquema no las cerraba **pasan a estar decididas POR EL USUARIO y escritas en el esquema** (rev. 6), asi que deja de haber desviacion que recordar. **Foco emite `focus`**, una sola identidad: la duracion ya viaja en `plannedSeconds` y los cuatro cubos de `focus.<minutos>` **no tenian consumidor** — «que te ayuda» agrupa por `routineId` y en Foco NO se pide feedback (`SessionFeedback` solo se monta en Respira, Mueve y Estira). **Respira sin rondas mantiene `routine.min x 60` `declared`** —es el numero contra el que corre el motor, no una estimacion— y la fila que le faltaba a §6.4 **se escribe**, con las tres familias separadas y el limite de las rondas dicho: ahi la retencion la suelta el usuario, asi que su plan queda por debajo del activo real. El aserto que fija la identidad de Foco vive sobre la funcion PURA, porque conducir un bloque entero costaria 25 minutos virtuales; calibrado en rojo devolviendo `focus.<min>`. | 172c | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
 | **v0.102.1** | 2026-08-20 | fix(runner): **el circulo deja de moverse a cualquier altura** — El bloque del runner se ALINEA ARRIBA, y con eso el circulo deja de moverse a CUALQUIER altura de viewport. El anclaje en vh de s171 era un ACANTILADO: funcionaba por encima de sus suelos (780 movil / 880 escritorio) y con UN PIXEL menos se apagaba entero — 61 px de salto a 1280x879 y 53 a 360x730, que son los dos viewports REALES del usuario, y por eso lo seguia viendo en su portatil y en su telefono. La causa vive un nivel mas arriba de donde s171 y s172 la buscaron: `centerBody` centra con `margin:auto` (s112) un bloque cuya ALTURA VARIA con el contenido, asi que el centrado reparte una holgura distinta en cada pantalla; el footer (89 -> 39 px) es UNA de las fuentes de esa variacion, no la unica. Se anula el margen SUPERIOR y se conserva el inferior —acotado al runner v1 con `:has()`, y con `!important` porque el margen es un estilo EN LINEA—, asi que la holgura cae debajo, que es donde s171 la queria. Medido en **8 viewports: 0 px en los ocho**. Y los **3 px que aun movian el NOMBRE** eran la reserva del rotulo vacio (1.2em) contra el rotulo lleno con interlineado normal (~1.45): se fija `line-height: 1.2` y las dos formas miden lo mismo por construccion. **El trinquete baja de 30 a 0.** El CSS del runner sale a `MoveSessionV1.css.jsx` (el support rebasaba las 500 lineas: trocear, no recortar comentarios), y la trampa de los **backticks dentro del template literal** volvio a morder **tres veces** en este mismo cambio, dos de ellas con la salida del build silenciada. | 172b | [session-172](docs/sessions/session-172-el-emisor-y-los-dos-mapeos-al-reves.md) |
@@ -370,6 +371,87 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.104.0] -- 2026-08-27 -- feat(librerias): las tres bibliotecas, implementadas — y la transicion que no existia
+
+s173 dejo el rediseno **aprobado mirandolo y sin una linea de codigo**, con siete
+decisiones abiertas. Esta version las cierra —**preguntando antes de escribir**—
+y las implementa. Por el camino aparecen seis numeros que no cuadraban, cuatro
+defectos que solo se ven mirando y **una decision del diseno que la app no puede
+cumplir**.
+
+### La regla del usuario se amplia: las opciones se VEN, no se leen
+
+La quinta pregunta se hizo **describiendo** las tres formas de «ya la hiciste», y
+la respuesta fue: «dame **siempre** ejemplos en html para que pueda decidir».
+Eso extiende la regla de continuidad de s173: no basta con maquetar el diseno
+que se va a implementar — **toda opcion que yo proponga tiene que estar pintada
+antes de preguntar**, incluidas las que invento dentro de la pregunta. Se pinto
+la tercera forma y se volvio a preguntar; la respuesta final fue **ninguna**, y
+como ninguna cambiaba la geometria de la tarjeta, se puede anadir despues sin
+tocarla.
+
+### La maqueta mentia sin querer: el chrome del modal
+
+Se dibujo sobre un marco de telefono a pelo, y la biblioteca es un **modal**.
+
+| | Maqueta | App | Tras recortar |
+|---|---|---|---|
+| Ancho util a 360 | 328 px | **286** | **310** |
+| Pantallas a 360 | 3,50 | **4,33** | **3,97** |
+| Columna en escritorio | 310 px | **242** | **288** |
+
+Las 4,33 son la cifra que importa: **la app de hoy iba por 4,50**, asi que el
+rediseno no habria cobrado su promesa. El recorte va acotado con `:has(.pace-lib)`
+y con `!important`, que **no es pereza**: el padding del modal es un estilo EN
+LINEA, y sin el la primera version de esas reglas **no movio ni un pixel**.
+
+### La transicion que el diseno describia no existe
+
+«La capitular crece hasta el circulo del runner». Medido sobre la app ya
+implementada: entre las dos cosas hay **DOS pantallas** —el Preview y la cuenta
+atras— y el circulo **tarda 3.114 ms** en existir desde que se pulsa «Empezar».
+Nunca estan cerca en el tiempo.
+
+Se pintaron los dos destinos posibles y el usuario eligio **la cuenta atras**,
+que ademas es **donde el circulo va a aparecer** — y que hasta hoy era un numero
+sobre nada. **Ponerlo ahi introdujo un defecto peor del que venia a arreglar**:
+el circulo **saltaba 171 px en escritorio y 221 en movil**, porque el runner
+ancla su bloque arriba (s172b) y la preparacion se centraba. Con el mismo
+anclaje y el circulo el primero, **el salto es 0**.
+
+### Seis veces la misma trampa, y la sexta en produccion
+
+«Para ahora» y los filtros se pintan **dos veces** —lateral y movil— y la hoja
+apaga la copia que sobra. Es lo correcto: **s166 quito a proposito** el lector de
+piel en JS porque costaba un re-render de la home en cada cruce del breakpoint.
+El coste cae en quien consulta el DOM, y cayo **seis veces**: cinco en sondas de
+medida y la sexta en `library-transition.js`, donde hacia que **en movil no
+volara nada**. Una se arreglo **moviendo el nodo** y no la sonda: el «Para ahora»
+de movil estaba **dentro de la rejilla**, y un subarbol oculto ahi envenena toda
+consulta a ella.
+
+### La retencion, por fin programada
+
+Llevaba desde s155 **implementada y sin disparar**. De las dos vias posibles, el
+usuario eligio **el arranque tras `loadState`** y no el rollover:
+`rolloverIfNeeded` es **sincrono** y la poda no. Nace `eventsWebPruneByCalendar`,
+que usa exactamente las tres piezas que §12 nombraba y **no escribe si no hay
+nada que podar** — cada arranque pasa por ahi, y una escritura inutil despierta a
+la otra pestana por nada.
+
+### Lo que dijo calibrar en rojo
+
+**16 mutantes, 16 muerden**, y cuatro cosas solo se supieron ahi: la linea de
+grupo vacio **mentia** cuando «Para ahora» subia las rutinas del grupo; un guard
+de cero estaba **por biblioteca** cuando **Estira no tiene ni una rutina con dos
+series**; **comparar el JSON del contenedor no prueba que no se escriba**
+(reescribir lo mismo da la misma cadena — ahora se espia `setItem`); y dos
+asertos **pasaban por carrera**, uno de ellos en verde por azar de milisegundos.
+
+Diario completo: [session-174](./docs/sessions/session-174-las-librerias-implementadas.md).
 
 ---
 
