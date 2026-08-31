@@ -224,6 +224,17 @@ const VARIANTES = {
     nota: 'B y D a la vez: el ancho de sus hermanas y la explicación de familia de vuelta. Es la que más rutinas enseña con la información más completa, sin estrenar filtros.',
     css: REJILLA(3) + ASIDE,
   },
+  /* s178 · LA QUE PIDIO EL USUARIO Y NO ESTABA PINTADA. Sus dos mensajes juntos daban «E ·
+     tres columnas + aside» y «C · con rail, como Mueve y Estira», que tal como estaban
+     maquetadas son EXCLUYENTES: C lleva rail y no aside, E al reves. Esta es la suma, y hay
+     que MIRARLA antes de implementarla porque es donde el ancho aprieta: s175 ya midio que
+     con DOS sugerencias el rail no cabe, asi que sumarle el aside puede pasarse de largo. */
+  f: {
+    modal: 1240, cols: 3, aside: true, rail: true,
+    titulo: 'F · Tres columnas + rail + el aside de familia',
+    nota: 'C y E a la vez, que es lo que pidio el usuario en s178: se navega como Mueve y Estira (rail con los filtros propios de Respira) y ademas vuelve la explicacion de familia. Es la que mas informacion lleva y la que menos ancho deja a la tarjeta — el marco dice cuanto.',
+    css: REJILLA(3) + ASIDE,
+  },
 };
 
 /* ── 5 · el marco se mide a sí mismo ─────────────────────────────────────── */
