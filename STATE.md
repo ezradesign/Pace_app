@@ -10,8 +10,8 @@
 
 ---
 
-**Version actual:** v0.106.0 (s176 — **LOS CUATRO SITIOS DONDE EL USUARIO TENIA RAZON**. Probo v0.105.0 y trajo cuatro defectos; los cuatro reproducen a 1536x714. **Respira recibe la PANTALLA** —anula «comparte la tarjeta y no la pantalla» de s174— porque sin ella sus 20 tarjetas caian a **810 px de ancho** y gastaban **3,90 pantallas contra las 3,82 de ANTES del redisenio**: el redisenio se llevo el ancho y no cobro nada. Ahora rejilla de 3 x 288 y **1,98**. Dos hallazgos de la maqueta: el tercer chip era un **subconjunto estricto** del segundo, y la sugerencia del dia salia una **apnea avanzada bloqueada**. **«Tus rutinas» se salia 18 px** (minimo de 260 en un hueco de 242). **La voz gana interruptor y hermana**: `bradford` medida abriendo el archivo —**14 de 20** contra 17, ~121 Hz contra ~193— y el 14 **casi lo digo mal** (el test daba 12 por usar un modelo mas estricto que el producto). Ajustes pasa a **dos decisiones, no cinco interruptores**. **El runner**: la barra fluia —**15 px dentro del pie**— y el hueco del contador **no era un margen** sino una linea vacia reservada que **s172b ya habia dejado obsoleta**. **Stats**: de **163,2 px** de salto entre pestanias a **0**, y sin scroll. **Seis mentiras del instrumento**, la mejor: «dos lecturas iguales» **no es esperar a un modal**. **146/146 y 12 de 12 mutantes muerden**.)
-**Version anterior:** v0.105.0 (s175 — **LA VOZ DE RESPIRA, Y LOS CUATRO DEFECTOS QUE EL USUARIO VIO ANTES QUE YO**. Entra la voz `sulafat` —anulando «Voz/TTS: NUNCA»— y el rail de la biblioteca queda fijo, con aire igual y UNA sugerencia. **Sus cuatro defectos los cierra s176.**)
+**Version actual:** v0.107.0 (s177 — **LO QUE NO SE OIA**. Cuatro bloques y los cuatro salieron de lo que el usuario vio y oyo al probar, que va por CUATRO sesiones seguidas reproduciendo. **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0**, y el numero unificado a **76 px** ANULA la decision de s112. «Subir el numero» no se podia hacer moviendolo: arriba habia 10,0 px y abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el MES no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores mios: la ganancia **se iguala por RMS y no por pico** (igualar picos la dejaba 20 dB bajo la voz), una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido** — la puntue mejor por «dejar el hueco de voz mas limpio», que es lo que la hacia inaudible. **150/150 y 6 de 6 mutantes muerden.**)
+**Version anterior:** v0.106.0 (s176 — **LOS CUATRO SITIOS DONDE EL USUARIO TENIA RAZON**. Respira recibe la PANTALLA anulando s174; la barra del runner se ancla al centro; Stats iguala sus cuatro pestanias; y la voz gana interruptor y hermana. 146/146.)
 **Version anterior (2):** v0.103.0 (s173 — **LA INGESTA DEJA DE SER TODO-O-NADA**: entran 4 dibujos con `--fusionar` y nace `verify.mascaras.js`.)
 **Ultima sesion:** #175 -- 2026-08-27 - **LA VOZ DE RESPIRA, Y LOS CUATRO DEFECTOS QUE EL USUARIO VIO ANTES QUE YO**. Bump **v0.104.0 -> v0.105.0**. **(1) LOS CUATRO DEFECTOS REPRODUCEN, y el dato que faltaba no estaba en sus capturas**: su pantalla es 1920x1080 **al 125 % de escala**, o sea **1536 CSS px**; a 1920 el recorte no ocurria. Huecos del rail **11/25/0/11**, y el cero **no era un valor mal puesto**: la regla da aire a lo que sigue a un rotulo y «Tus rutinas» es el unico bloque que no lleva ninguno encima, asi que **se caia del selector**. El rail era `static` con la caja estirada a **1250 px** sobre **566** de contenido, y al fondo quedaban **144 px de rail y 697 de columna vacia**. **(2) OCHO VARIANTES PINTADAS** en iframes de 1536x714 reales, con la tarjeta de produccion renderizada de verdad (`react-dom/server`) y el CSS **extraido de `library.css.jsx`**, cada marco **midiendose a si mismo**. De ahi el hallazgo que no se ve razonando: **dar aire EMPEORA el recorte** (22 -> 48 px), asi que «mas aire» y «que quepa» no caben juntas con dos sugerencias. Entregado **A2**: huecos **11/25/25/11**, recorte **0**, **481 px de rail intactos** al fondo, medido contra el artefacto de HEAD servido en paralelo. **UNA sugerencia en las DOS pieles** porque lo que sube se RETIRA del catalogo. **(3) EL PREPARATE PIERDE EL GLIFO** y con el **se cae la transicion de s174**: aquel circulo era su UNICO destino, asi que el vuelo se retira solo y `library-transition.js` queda **inerte** (130 lineas, con test que vigila que no deje rastro). Las tres bibliotecas comparten ya la preparacion de Respira. **(4) ENTRA LA VOZ `sulafat`**, lo que **anula «Voz/TTS: NUNCA»** —cuatro filas marcadas `SUPERSEDED por s175` y tres sitios del ROADMAP—. **El numero costo TRES intentos y los tres estan escritos**: cabecera MPEG «14 de 20» (daba casi la mitad de la duracion real), `audio.duration` «8 de 20» (correcta pero **incluye los silencios**) y, tras el apunte del usuario, **17 de 20** midiendo los extremos de la onda — el «exhala» ocupa **4,96 s de archivo y la palabra acaba a los 2,12**. **La misma equivocacion las dos veces: medir el CONTENEDOR en vez del CONTENIDO.** De paso destapo un defecto no visto: **0,65 s de silencio inicial** hacian que la senal llegara **tarde**. Decision **por FASE y no global**; disponibilidad **por precarga** porque `play()` es asincrono. Fuera solo las tres de bombeo. **(5) AUDITORIA INTEGRAL** en [audit-integral-s175](./docs/audits/audit-integral-s175.md). **(6) OCHO MENTIRAS DEL INSTRUMENTO, y casi todas MIAS**: la maqueta enseñaba el «despues» en el marco del «antes» (lee la hoja de produccion, que ya llevaba el arreglo); dibuje «Tus rutinas» a mano y daba 9 px donde la app da 0; el marco no heredaba `box-sizing` y se regalaba 40 px; **consulte el DOM sin filtrar por caja visible** —la trampa que s174 documento SEIS veces, y la septima fue en mi instrumento—; el alto del modal movil clavado en 706 px sacaba barra en un telefono de 568; el badge media **antes de cargar las fuentes**; y un control que estrechaba el root a mano **no recalcula el arte**, asi que no probaba nada. **(7) VERIFICACION**: `verify` PASA · **136/136** · **10 mutantes de 11 muerden** — el que no (quitar el `flex-shrink`) **paso en verde** porque el arte se encoge solo, asi que su test **se retira** y se corrige el comentario que afirmaba lo contrario. Diario: [session-175](./docs/sessions/session-175-la-voz-y-lo-que-el-usuario-vio.md)
 
@@ -214,74 +214,48 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> El informe operativo de cada sesion vive en su diario en [`docs/sessions/`](./docs/sessions/)
-> y destilado en [`CHANGELOG.md`](./CHANGELOG.md). Aqui solo lo que sigue VIVO.
+- **[EL USUARIO PROBO, Y OTRA VEZ TENIA RAZON]** Van **cuatro sesiones seguidas**
+  en las que lo que trae al probar reproduce. Ninguno de los cuatro bloques de
+  s177 estaba en el plan. Sigue **mandando lo que el traiga** sobre cualquier
+  cola.
 
-- **[EL USUARIO PROBO, Y TENIA RAZON EN LOS CUATRO]** Respira, «Tus rutinas», la
-  barra del runner y las pestanias de Stats: **los cuatro reproducen** a 1536x714,
-  su pantalla. Ninguno hizo falta discutirlo; lo que costo fue medir el porque.
-  Sigue **mandando lo que el traiga tras probar** sobre cualquier plan.
+- **[UN ARREGLO CAUSO EL DEFECTO SIGUIENTE]** El solape del runner lo provoco el
+  anclaje de la barra de s176: `flex: 1 1 auto; min-height: 0` deja al bloque
+  **encoger por debajo de su contenido**, asi que el bloque encoge, el texto no,
+  y el texto pinta encima. Merece recordarse al tocar cualquier caja flexible.
 
-- **[UNA PREGUNTA ABIERTA, YA PINTADA]** Eligio **E** para Respira y se corrigio
-  a **C**. Se diferencian en DOS cosas: el rail (que es lo que pidio, ya
-  implementado) y el **aside de familia** («Despierta el sistema»), que C no
-  lleva. **Es una linea** y lo tiene mirandolo en los marcos D y E de
-  `_maqueta-s176-respira.html`.
+- **[«SUBIRLO» NO ERA MOVERLO]** Arriba habia 10,0 px y abajo −15,0: no habia
+  holgura que repartir, **faltaba sitio**. Y arreglar el salto lo empeora
+  (reservar el rotulo cuesta 26,4). Cuando una peticion de colocacion no cabe,
+  la respuesta es **encontrar los pixeles y decir quien los paga**, no mover.
 
-- **[Y UNA OFERTA]** Un **tercer chip** para Respira, si lo quiere: el candidato
-  honesto es «Discreta» —sin zumbido ni hiperventilacion—, que dejaria **14 de
-  20**. Los otros dos ejes ya se descartaron midiendo.
+- **[TRES ERRORES DE NIVEL DE AUDIO, TODOS MIOS]** La ganancia **por RMS y no
+  por pico**; una pieza con el **82,6 % bajo 200 Hz** no sale de un altavoz
+  normal; y el **criterio de seleccion estaba invertido** — puntuaba mejor lo
+  que la hacia inaudible. **Al reescribir los seis briefs, exigir el grueso de
+  la energia entre 200 Hz y 2 kHz.**
 
-- **[LA MUSICA ESTA ENCARGADA, NO HECHA]** Briefs por familia en
-  [`MUSICA_RESPIRA_BRIEFS.md`](./docs/product/MUSICA_RESPIRA_BRIEFS.md), con las
-  cadencias sacadas del catalogo. **Dos cosas que deciden los numeros**:
-  Equilibrio y Balance **pueden compartir pieza** (sus cadencias se solapan) y
-  **Pranayama no cabe en una sola pieza con pulso** — va de **2,1 a 30
-  respiraciones por minuto**, factor 14. La tercera pill «Musica» **no se pinta
-  hasta que existan los archivos**.
+- **[UN MODULO QUE SE CALLA CUESTA TRES VUELTAS]** Seis `return` mudos y un
+  `catch` vacio hacian indistinguible «no hay pieza» de «suena y no lo oyes».
+  Ahora `paceMusica.ultimo` dice siempre por que.
 
-- **[LOS TERMINOS DE USO COMERCIAL DEL AUDIO, SIN REVISAR]** La FASE 5 los pide
-  por escrito si el material se genero con IA. Vale ya para las **seis**
-  locuciones, no solo para la musica.
+- **[LA CAMARA TIENE QUE COMPROBAR QUE FOTOGRAFIA]** Sembre `onboarded` en vez
+  de `firstSeen`: la app se monta **debajo** del overlay de bienvenida, los
+  selectores lo encuentran todo y **las medidas salen correctas** mientras la
+  camara retrata la bienvenida. Veintidos capturas del onboarding con una tabla
+  buena al lado, mandadas sin abrirlas. Los bancos llevan ya un guard.
 
-- **[EL RESIDUO DE 360x730 SE CERRO, Y LO DESTAPO EL CI]** El primer anclaje de
-  la barra usaba «margin-top: auto», que **CEDE cuando el contenido desborda**:
-  en local sobraban 16 px y no se noto, pero en el runner de CI —otras metricas
-  de fuente— la barra se separaba **9,4 px** entre pantallas. Rojo en `e2e` con
-  `verify` verde. Con el hueco en el BLOQUE (`flex: 1`), la altura de la barra
-  deja de depender del texto: **+16 px en las dos pantallas** a 1536x714, a
-  1280x720 y tambien a **360x730**, que venia de −29,5.
+- **[UNA TABLA QUE NO MIDE UNA PIEZA DICE «NO SE MUEVE»]** El banco comparaba
+  cuatro piezas, daba «salto 0» y el usuario veia moverse el numero — que no
+  estaba en la tabla.
 
-- **[`library-transition.js` SIGUE INERTE]** 130 lineas que no pueden dispararse,
-  con su test vigilando que no dejen rastro. **Borrarlo es decision del usuario**,
-  igual que darle otro destino a la capitular. s176 no lo ha tocado.
+- **[UN MUTANTE QUE NO MUERDE CORRIGE EL ASERTO]** Tres versiones del test
+  salian verdes al quitar la reserva, porque la rutina elegida no variaba de
+  texto entre pantallas. Se cambio la rutina, no el umbral.
 
-- **[LA COLA DE ARTE, INTACTA]** `Rana` tiene candidata valida (la segunda) con
-  **dos arreglos**: fondo aplanado sobre blanco y flecha que diga «cadera atras».
-  Quedan `Pica en escritorio` y `Descanso`, y los **19 glifos de logro**.
-
-- **[LAS 18 PIEZAS DE LA 2a TANDA SIGUEN SIN MIRARSE]** `node
-  scripts/audit/revision-tanda2.js` -> `_revision-tanda2.html`. **8 de las 18
-  SUSTITUYEN** a un dibujo anterior, asi que se juzgan contra lo que reemplazan.
-
-- **[DEUDA DE DOCUMENTACION PAGADA]** La fila de voz de
-  `DECISIONES_TECNICAS_VIGENTES.md` llevaba **las cifras que s175 descarto** —y
-  era la que el handoff mandaba leer antes de tocar la voz—; `CLAUDE.md`
-  describia **Mueve y Estira al reves** (ahora dice ademas que los ids van
-  cruzados: Mueve lleva `extra.*` y Estira `move.*`); y el ROADMAP daba «6 de 20»
-  para las dos voces cuando son **3** y **6**. **Queda una**: el `CHANGELOG`
-  tiene ahora **CINCO** bloques de detalle donde la convencion son dos — su
-  contenido no se pierde borrandolos, pero descartar texto es decision del
-  usuario.
-
-- **[9 de las 14 de Estira piden SUELO]** En una biblioteca pensada para la
-  oficina. Es **contenido**, no disenio: ninguna maqueta lo arregla.
-
-- **[LA REGLA DEL USUARIO, INTACTA]** El disenio se aprueba **mirandolo**, y
-  **toda opcion que yo proponga tiene que estar PINTADA antes de preguntar**. En
-  s176 se cumplio con seis variantes de Respira, tres del bloque de sonido, tres
-  de etiquetas de voz y ocho del runner, todas en viewports reales.
-
+- **[LA REGLA DEL USUARIO, INTACTA]** El disenio se aprueba **mirandolo**. En
+  s177 se cumplio con tres tamanios de numero del runner y cuatro variantes del
+  calendario, todas sobre la app real.
 ### Diferido (documentado, NO ejecutado)
 
 - **[FASE 3 · `pace.events.v1`, Fase 2 del esquema] CERRADA en s172.** v0.99.1 cablo el
@@ -564,79 +538,95 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **cerrar lo que quedo a una linea, y luego Stats de verdad**
+## Proxima sesion -- **una AUDITORIA COMPLETA antes de tocar nada**
 
-> **PRIMERO: dos preguntas suyas, las dos ya pintadas y baratas.**
-> 1. **El aside de familia en Respira.** Eligio E (lo lleva) y se corrigio a C
->    (no lo lleva); se diferencian en eso y en el rail. **Una linea**, y lo tiene
->    mirandolo en los marcos D y E de `_maqueta-s176-respira.html`.
-> 2. **Un tercer chip para Respira**, si lo quiere: «Discreta» dejaria **14 de
->    20**. Los otros dos ejes ya se descartaron midiendo.
+> **LO QUE PIDIO EL USUARIO, textual:** «empezamos s178 haciendo una auditoria
+> completa para saber que hay que hacer, que queda pendiente, que decisiones
+> estan obsoletas, etc».
 >
-> Y **lo que traiga tras seguir probando manda sobre todo lo de abajo**: en s174,
-> s175 y s176 sus defectos reprodujeron **todos**.
+> No es una tarea de limpieza: es que el proyecto lleva **79 decisiones tecnicas
+> vigentes**, 15 fases de ROADMAP y un backlog que nadie ha cruzado entre si
+> desde s137. Y el precedente esta medido: en s176 la documentacion describia
+> **Mueve y Estira al reves** y eso «mando a mas de una sesion al archivo
+> equivocado»; en s177, **tres decisiones anularon a otras tres** (s112, y dos
+> del propio brief de musica de s176).
 
-> **DESPUES, por orden:**
+> **QUE TIENE QUE CONTESTAR LA AUDITORIA, y con evidencia file:line:**
+> 1. **Que decisiones estan OBSOLETAS o se contradicen.** Las 79 filas de
+>    `DECISIONES_TECNICAS_VIGENTES.md`, cruzadas contra el codigo de hoy. s177
+>    encontro tres anulaciones sin buscarlas; buscando saldran mas.
+> 2. **Que queda REALMENTE pendiente** de las 15 fases del ROADMAP, y cuales se
+>    hicieron sin marcarse. El encargo de glifos de s167/s169 ya demostro que
+>    una lista puede estar entregada y nadie marcarla.
+> 3. **Que hay implementado que nadie sabe que existe.** `library-transition.js`
+>    lleva inerte desde s174 (130 lineas). Los bancos de s176 y s177 son doce
+>    scripts que no estan indexados en ningun sitio.
+> 4. **Que promesas publicas siguen siendo ciertas** (`privacy.html`, los dos
+>    README, el copy de premium). s151 ya encontro un `README_EN.md` vendiendo
+>    un modelo de negocio muerto.
+> 5. **Que deuda de la tabla de `Deuda tecnica activa` sigue viva.** s162 cazo
+>    que la tabla mentia en **cinco filas**.
+
+> **DESPUES DE LA AUDITORIA, la cola tal como quedo:**
 >
-> 1. **FASE 4 · Stats de verdad.** s176 arreglo lo que se pidio —mismo tamanio,
->    sin scroll— pero **eso no es la fase**: el destino escrito en
->    `STATS_DESTINO_PROPUESTA.md` sigue entero, y el propio usuario dijo «este
->    modulo tambien habra que optimizarlo cuando llegue su momento». Sigue
->    desbloqueada desde s172 y el ROADMAP la llama «el escaparate del free».
-> 2. **La musica**, si genera las piezas: los briefs estan escritos y el hueco en
->    Ajustes tambien — la tercera pill se enciende en `TweaksAudio.jsx`. Van a
->    `app/breathe/musica/`, **no** al precache, y **con los terminos de uso
->    comercial verificados**.
-> 3. **El arte**: `Rana` (candidata valida, dos arreglos) y los **19 glifos de
->    logro**. Y las **18 piezas de la 2a tanda** siguen sin mirarse.
-> 4. **FASE 8 · onboarding contextual**, la raiz real de «no me guia».
+> 1. **Las dos preguntas de s176**, que s177 no llego a abrir: el **aside de
+>    familia** en Respira (eligio E y se corrigio a C; pintado en los marcos D
+>    y E de `_maqueta-s176-respira.html`) y el **tercer chip «Discreta»**
+>    (14 de 20), que hay que **pintar antes de preguntar**.
+> 2. **FASE 4 · Stats de verdad.** s177 arreglo el ANCHO; el destino escrito en
+>    `STATS_DESTINO_PROPUESTA.md` sigue entero. El ROADMAP lo llama «el
+>    escaparate del free».
+> 3. **La musica.** Los seis briefs necesitan el requisito que faltaba antes de
+>    regenerar nada: **el grueso de la energia entre 200 Hz y 2 kHz**. Y hay
+>    que verificar los **terminos de uso comercial**, que valen ya para seis
+>    locuciones y las piezas.
+> 4. **El arte**: `Rana` y los 19 glifos de logro; las 18 piezas de la 2a tanda
+>    siguen sin mirarse.
+> 5. **FASE 8 · onboarding contextual.**
 
-> **LO QUE s176 DEJA MEDIDO Y NO HAY QUE VOLVER A MEDIR:**
-> - **Su pantalla son 1536 CSS px** (1920x1080 al 125 %). A 1920 sus defectos NO
->   reproducen.
-> - **Respira**: rejilla de 3 x **288 px**, rail 262, **1,98 pantallas**. Antes:
->   una columna de 810 y 3,90 — peor que las **3,82** de antes del redisenio.
-> - **Las voces**: `sulafat` 1,404 / 1,320 / 1,478 s de palabra, **~193 Hz**,
->   **17 de 20**. `bradford` 0,911 / 1,218 / **3,572**, **~121 Hz**, **14 de 20**.
->   Y **el modelo importa**: senal por senal da 14, contra la fase mas corta da
->   **12** — coinciden en `sulafat` y se separan en `yin` y `nadi.shodhana`.
-> - **El runner**: barra a **586,5 px** en las dos pantallas, 16 hasta el pie.
->   Circulo clavado en 76,4 (1536x714) y 58,6 (movil).
-> - **Stats**: la vista puede medir **384,9 px** a 714 de alto; el suelo esta en
->   **385**, que es lo que iguala las cuatro.
-> - **El precache va por 229 filas** y las claves i18n por **558**.
+> **LO QUE s177 DEJA MEDIDO Y NO HAY QUE VOLVER A MEDIR:**
+> - **Runner**: las 7 piezas a **0,0 px** entre pantallas, solape **0 en las 28
+>   rutinas**, huecos 9,8 / 9,7 a 1536x714. Verificado a 714, 768, 800, 900,
+>   1040, 690 y 660. **Por debajo de 641 NO se aplica** (a 1280x600 solapa 7,0
+>   con el numero a 58 y 12,7 con 64) y movil tampoco.
+> - **Stats**: modal **1240**, celda del anio **19**, hueco muerto **52,4**
+>   (era 163,7). **El mes no puede crecer**: 421,4 / 474,4 / 527,4 px contra
+>   los 385 de las demas.
+> - **Audio, niveles RMS**: musica **-30,53** · `sulafat-inhala` **-28,07** ·
+>   `sulafat-exhala` **-29,95** · drone (sine 0,02) **-36,99**. La musica y la
+>   voz tienen casi el mismo RMS a ganancia 1.
+> - **El drone esta en G2 = 96,22 Hz**, no en 96,7.
+> - **Reparto de banda** de las dos piezas probadas: equilibrio 82,6 % bajo
+>   200 Hz y **0 %** sobre 2 kHz · energia 48 / 40,8 / 10,8 / 0,4.
 
-> **TRAMPAS QUE s176 PAGO, y que valen para cualquier medida futura:**
-> - **UN MODAL MEDIDO A MEDIAS DA EL 96 %** (`pace-modal-in`, scale .96 → 1):
->   777,6 px donde la app da 810. Y **«dos lecturas iguales» NO basta** — la
->   curva se aplana y coinciden a mitad del fundido. Se usa
->   **`esperarModalAsentado`** (tests/helpers.js), que pregunta a
->   `getAnimations()`.
-> - **`querySelector('[data-pace-modal-card]')` devuelve el de ABAJO**: el
->   preview se abre ENCIMA de la biblioteca y los dos estan en el DOM. Hay que
->   coger el ultimo.
-> - **«Empezar» encuentra el «Empezar foco» de la home** y arranca el Pomodoro.
->   Todo click va acotado a su contenedor.
-> - **Un `</script>` dentro de un bloque de datos** cierra el script del padre
->   **sin dar error**: seis iframes vacios y consola limpia.
-> - **El CSS extraido de un archivo trae las barras DOBLADAS** (`\B7` en vez del
->   punto medio): hay que desdoblarlas al leer.
-> - **Y LA DE SIEMPRE, que ya va por NUEVE**: toda consulta al DOM de la
->   biblioteca **filtra por caja no nula**. En s176 mordio en el badge de mi
->   propio banco, que media la tarjeta del rail y no la de la rejilla.
+> **TRAMPAS DE s177, y valen para cualquier medida futura:**
+> - **LA SEMILLA ES `firstSeen`, NO `onboarded`** (`tests/helpers.js` lo dice).
+>   Con la clave mal puesta la app se monta DEBAJO del overlay de bienvenida:
+>   los selectores lo encuentran todo, **las medidas salen correctas** y la
+>   camara fotografia la bienvenida. Los bancos llevan guard.
+> - **`getBoundingClientRect()` devuelve la caja YA TRANSFORMADA.** El numero
+>   del runner late (`pace-rep-pulse`): la misma cifra de 76 px media 72,2 y
+>   65,0. Congelar la animacion para medir.
+> - **Una tabla que no mide una pieza dice «no se mueve»** igual que si no se
+>   moviera.
+> - **`git checkout` restaura al ULTIMO COMMIT** y borro una implementacion
+>   entera. Copia antes de mutar.
+> - **Backticks en el template literal**, dos veces y en dos archivos. Y
+>   **mandar el build a `/dev/null`** hizo correr un censo entero contra un
+>   artefacto roto.
+> - **Reservar de MAS cuesta igual que no reservar**: 41 px a tres bloques de
+>   cola convirtieron un solape de 15,0 en 27,0.
 
-> **HERRAMIENTAS NUEVAS de s176** (en `scripts/audit/`, solo leen o generan HTML;
-> su salida esta gitignorada):
-> `maqueta-s176.js` + `.audio` + `.pagina` + `.medir` (las seis variantes de
-> Respira y las cuatro del bloque de sonido, en iframes de viewport real, cada
-> marco midiendose a si mismo; `.medir` vuelca `medidas.json` para que la tabla
-> no lleve numeros a mano) · **`maqueta-s176.autonoma.js`** (la maqueta de
-> Respira en **UN solo archivo**, con fuentes e imagenes dentro: se abre desde
-> donde sea) · `banco-runner-s176.js` (el runner con **nueve** variantes de CSS
-> inyectadas sobre la app real, midiendo las dos pantallas).
+> **HERRAMIENTAS NUEVAS de s177** (en `scripts/audit/`, salida gitignorada):
+> `banco-musica-s177.js` (decodifica cada MP3 y lo mide contra el brief, con
+> las locuciones en la tabla) · `censo-runner-solape.js` (las 28 rutinas paso a
+> paso; mide los HIJOS, no el bloque) · `banco-runner-s177.js` (presupuesto de
+> altura + tabla de alturas de caja) · `banco-stats-s177.js` y
+> `maqueta-s177-stats.js` · `maqueta-s177-runner.js` ·
+> **`prueba-musica-s177.js`** (pagina de escucha en OTRO PUERTO, sin service
+> worker ni app, con medidor de nivel).
 
 > Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
-
 ---
 
 ## Decisiones activas -- indice
@@ -646,6 +636,9 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **La pantalla del runner se CONGELA, y el numero del gate deja de ser mas pequenio (se ANULA s112)** (s177)
+- **El modal de Stats sube a 1240 y cada vista lleva SU ancho** (s177)
+- **La musica de fondo se nivela por RMS y necesita banda AUDIBLE (200 Hz-2 kHz)** (s177)
 - **LA VOZ ENTRA EN RESPIRA: se ANULA la regla «Voz/TTS: NUNCA»** (s175)
 - **Toda opcion que yo proponga se PINTA antes de preguntar** (s174)
 - **La maqueta se dibuja sobre un marco a pelo; la superficie real tiene CHROME** (s174)
