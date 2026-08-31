@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pace-v0.107.0';
+const CACHE_NAME = 'pace-v0.108.0';
 /* s149: el export offline (PACE_standalone) SALE del precache. Es un export
    BAJO DEMANDA congelado a proposito (decision s134): estaba en v0.71.0 con la
    app en v0.81.0, asi que el SW metia un artefacto DIEZ versiones viejo en la
@@ -311,6 +311,15 @@ self.addEventListener('notificationclick', (event) => {
    a cache si no hay red) para que las actualizaciones lleguen sin esperar al
    re-chequeo del SW. El resto de assets sigue cache-first. */
 self.addEventListener('fetch', (event) => {
+  /* s178 (auditoria) · LA CACHE API SOLO ACEPTA GET. Los dos `cache.put` de
+     abajo reciben `event.request` tal cual, y con un HEAD o un POST la Cache API
+     RECHAZA la promesa. Como ninguna de las dos cadenas lleva `.catch()`, eso
+     era una rejection NO CAPTURADA en cada peticion no-GET que pasara por aqui.
+     Se sale antes de tocar nada: sin `respondWith`, el navegador la resuelve por
+     su cuenta, que es exactamente lo que queremos para algo que no cacheamos.
+     NO se arregla con un `.catch()` mudo a proposito: enterrar el error deja el
+     fallo indistinguible de que no lo haya (la leccion de s177). */
+  if (event.request.method !== 'GET') return;
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)

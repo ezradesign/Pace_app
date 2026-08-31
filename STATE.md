@@ -10,7 +10,8 @@
 
 ---
 
-**Version actual:** v0.107.0 (s177 — **LO QUE NO SE OIA**. Cuatro bloques y los cuatro salieron de lo que el usuario vio y oyo al probar, que va por CUATRO sesiones seguidas reproduciendo. **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0**, y el numero unificado a **76 px** ANULA la decision de s112. «Subir el numero» no se podia hacer moviendolo: arriba habia 10,0 px y abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el MES no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores mios: la ganancia **se iguala por RMS y no por pico** (igualar picos la dejaba 20 dB bajo la voz), una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido** — la puntue mejor por «dejar el hueco de voz mas limpio», que es lo que la hacia inaudible. **150/150 y 6 de 6 mutantes muerden.**)
+**Version actual:** v0.108.0 (s178 — **LA AUDITORIA COMPLETA**, el encargo del usuario. Lo primero que contesta es que **el papel iba por detras del codigo, y siempre en la misma direccion**: el ROADMAP pintaba MAS trabajo del que hay. La Fase 3 seguia «EN CURSO (s155)» con los emisores entregados en **v0.102.0** y la retencion corriendo sola desde **s174**; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38 sin dibujo** y es **77 de 96 / 19**. Trece hallazgos con evidencia file:line, **once cerrados en la misma sesion**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba dentro justo el absoluto que s151 prohibio — reescrito en ES y EN **y fechado**, porque la propia pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE**: `main.jsx` lo llamaba en CADA entrada a sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo; borrado en sus DOS sitios. La tabla de deuda **mentia en 10 de 14 filas** —s162 la cazo en cinco, o sea que empeoro— y pierde su columna de numeros: la cuenta la lleva el trinquete del `verify`. **El instrumento mintio SEIS veces**, y la cara fue excluir en un grep lo precedido por punto, que mata `window.X` y daba por muertos dos archivos vivisimos. **150/150 y `verify` en verde.**)
+**Version anterior:** v0.107.0 (s177 — **LO QUE NO SE OIA**. Cuatro bloques y los cuatro salieron de lo que el usuario vio y oyo al probar, que va por CUATRO sesiones seguidas reproduciendo. **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0**, y el numero unificado a **76 px** ANULA la decision de s112. «Subir el numero» no se podia hacer moviendolo: arriba habia 10,0 px y abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el MES no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores mios: la ganancia **se iguala por RMS y no por pico** (igualar picos la dejaba 20 dB bajo la voz), una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido** — la puntue mejor por «dejar el hueco de voz mas limpio», que es lo que la hacia inaudible. **150/150 y 6 de 6 mutantes muerden.**)
 **Version anterior:** v0.106.0 (s176 — **LOS CUATRO SITIOS DONDE EL USUARIO TENIA RAZON**. Respira recibe la PANTALLA anulando s174; la barra del runner se ancla al centro; Stats iguala sus cuatro pestanias; y la voz gana interruptor y hermana. 146/146.)
 **Version anterior (2):** v0.103.0 (s173 — **LA INGESTA DEJA DE SER TODO-O-NADA**: entran 4 dibujos con `--fusionar` y nace `verify.mascaras.js`.)
 **Ultima sesion:** #175 -- 2026-08-27 - **LA VOZ DE RESPIRA, Y LOS CUATRO DEFECTOS QUE EL USUARIO VIO ANTES QUE YO**. Bump **v0.104.0 -> v0.105.0**. **(1) LOS CUATRO DEFECTOS REPRODUCEN, y el dato que faltaba no estaba en sus capturas**: su pantalla es 1920x1080 **al 125 % de escala**, o sea **1536 CSS px**; a 1920 el recorte no ocurria. Huecos del rail **11/25/0/11**, y el cero **no era un valor mal puesto**: la regla da aire a lo que sigue a un rotulo y «Tus rutinas» es el unico bloque que no lleva ninguno encima, asi que **se caia del selector**. El rail era `static` con la caja estirada a **1250 px** sobre **566** de contenido, y al fondo quedaban **144 px de rail y 697 de columna vacia**. **(2) OCHO VARIANTES PINTADAS** en iframes de 1536x714 reales, con la tarjeta de produccion renderizada de verdad (`react-dom/server`) y el CSS **extraido de `library.css.jsx`**, cada marco **midiendose a si mismo**. De ahi el hallazgo que no se ve razonando: **dar aire EMPEORA el recorte** (22 -> 48 px), asi que «mas aire» y «que quepa» no caben juntas con dos sugerencias. Entregado **A2**: huecos **11/25/25/11**, recorte **0**, **481 px de rail intactos** al fondo, medido contra el artefacto de HEAD servido en paralelo. **UNA sugerencia en las DOS pieles** porque lo que sube se RETIRA del catalogo. **(3) EL PREPARATE PIERDE EL GLIFO** y con el **se cae la transicion de s174**: aquel circulo era su UNICO destino, asi que el vuelo se retira solo y `library-transition.js` queda **inerte** (130 lineas, con test que vigila que no deje rastro). Las tres bibliotecas comparten ya la preparacion de Respira. **(4) ENTRA LA VOZ `sulafat`**, lo que **anula «Voz/TTS: NUNCA»** —cuatro filas marcadas `SUPERSEDED por s175` y tres sitios del ROADMAP—. **El numero costo TRES intentos y los tres estan escritos**: cabecera MPEG «14 de 20» (daba casi la mitad de la duracion real), `audio.duration` «8 de 20» (correcta pero **incluye los silencios**) y, tras el apunte del usuario, **17 de 20** midiendo los extremos de la onda — el «exhala» ocupa **4,96 s de archivo y la palabra acaba a los 2,12**. **La misma equivocacion las dos veces: medir el CONTENEDOR en vez del CONTENIDO.** De paso destapo un defecto no visto: **0,65 s de silencio inicial** hacian que la senal llegara **tarde**. Decision **por FASE y no global**; disponibilidad **por precarga** porque `play()` es asincrono. Fuera solo las tres de bombeo. **(5) AUDITORIA INTEGRAL** en [audit-integral-s175](./docs/audits/audit-integral-s175.md). **(6) OCHO MENTIRAS DEL INSTRUMENTO, y casi todas MIAS**: la maqueta enseñaba el «despues» en el marco del «antes» (lee la hoja de produccion, que ya llevaba el arreglo); dibuje «Tus rutinas» a mano y daba 9 px donde la app da 0; el marco no heredaba `box-sizing` y se regalaba 40 px; **consulte el DOM sin filtrar por caja visible** —la trampa que s174 documento SEIS veces, y la septima fue en mi instrumento—; el alto del modal movil clavado en 706 px sacaba barra en un telefono de 568; el badge media **antes de cargar las fuentes**; y un control que estrechaba el root a mano **no recalcula el arte**, asi que no probaba nada. **(7) VERIFICACION**: `verify` PASA · **136/136** · **10 mutantes de 11 muerden** — el que no (quitar el `flex-shrink`) **paso en verde** porque el arte se encoge solo, asi que su test **se retira** y se corrige el comentario que afirmaba lo contrario. Diario: [session-175](./docs/sessions/session-175-la-voz-y-lo-que-el-usuario-vio.md)
@@ -214,55 +215,64 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-- **[EL USUARIO PROBO, Y OTRA VEZ TENIA RAZON]** Van **cuatro sesiones seguidas**
-  en las que lo que trae al probar reproduce. Ninguno de los cuatro bloques de
-  s177 estaba en el plan. Sigue **mandando lo que el traiga** sobre cualquier
-  cola.
+- **[EL PAPEL IBA POR DETRAS DEL CODIGO, Y SIEMPRE HACIA EL MISMO LADO]** Los cuatro
+  marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay, nunca menos. No es
+  casualidad: el plan **se lee al planificar y no se actualiza al entregar**. Quien abriera la
+  proxima fase leyendo el ROADMAP se creia tres cosas falsas.
 
-- **[UN ARREGLO CAUSO EL DEFECTO SIGUIENTE]** El solape del runner lo provoco el
-  anclaje de la barra de s176: `flex: 1 1 auto; min-height: 0` deja al bloque
-  **encoger por debajo de su contenido**, asi que el bloque encoge, el texto no,
-  y el texto pinta encima. Merece recordarse al tocar cualquier caja flexible.
+- **[UN GREP NO DISTINGUE «DESAPARECIO» DE «TIENE PROHIBIDO EXISTIR»]** De las 15 filas que el
+  checker señalo, **cinco eran ausencia POR DISEÑO**: la fila dice «NUNCA `discrete`» y cero
+  apariciones significa que la decision **se cumple**. Hay que leer la fila antes de acusarla.
 
-- **[«SUBIRLO» NO ERA MOVERLO]** Arriba habia 10,0 px y abajo −15,0: no habia
-  holgura que repartir, **faltaba sitio**. Y arreglar el salto lo empeora
-  (reservar el rotulo cuesta 26,4). Cuando una peticion de colocacion no cabe,
-  la respuesta es **encontrar los pixeles y decir quien los paga**, no mover.
+- **[EL INSTRUMENTO MINTIO SEIS VECES]** La cara: excluir en un grep lo precedido por punto
+  **mata `window.X`**, que es como consume media app, y daba por inertes
+  `achievement-glyphs.jsx` y `achievement-masks.js` estando vivisimos. Tambien: el heredoc de
+  bash **se come los backslashes** (regex rotas al disco) y **ejecuta los backticks** (esta
+  misma sesion, dos veces); llamar `exports` a una variable rompe el parseo CommonJS.
 
-- **[TRES ERRORES DE NIVEL DE AUDIO, TODOS MIOS]** La ganancia **por RMS y no
-  por pico**; una pieza con el **82,6 % bajo 200 Hz** no sale de un altavoz
-  normal; y el **criterio de seleccion estaba invertido** — puntuaba mejor lo
-  que la hacia inaudible. **Al reescribir los seis briefs, exigir el grueso de
-  la energia entre 200 Hz y 2 kHz.**
+- **[«ESTA INERTE» NO ES «NO SE EJECUTA»]** El primer cruce —`<script>` de `PACE.html` contra
+  archivos de `app/`— dio **122 = 122, cero huerfanos** y no vio nada. `library-transition.js`
+  se cargaba, **se llamaba desde `main.jsx` en cada sesion** y no hacia nada. La comprobacion
+  util no era el censo de carga sino la RELACIONAL: quien consume cada simbolo.
 
-- **[UN MODULO QUE SE CALLA CUESTA TRES VUELTAS]** Seis `return` mudos y un
-  `catch` vacio hacian indistinguible «no hay pieza» de «suena y no lo oyes».
-  Ahora `paceMusica.ultimo` dice siempre por que.
+- **[UN CHECKER DE UNA SOLA DIRECCION NO PRUEBA UN INDICE]** Documento → indice dio tres
+  huecos; hizo falta el cruce inverso para saber que al otro lado no faltaba nada. Y ese
+  segundo pase destapo que **los dos archivos redactan los titulos distinto**, asi que
+  cualquier comparacion automatica entre ellos tendra ruido permanente.
 
-- **[LA CAMARA TIENE QUE COMPROBAR QUE FOTOGRAFIA]** Sembre `onboarded` en vez
-  de `firstSeen`: la app se monta **debajo** del overlay de bienvenida, los
-  selectores lo encuentran todo y **las medidas salen correctas** mientras la
-  camara retrata la bienvenida. Veintidos capturas del onboarding con una tabla
-  buena al lado, mandadas sin abrirlas. Los bancos llevan ya un guard.
+- **[LA PAGINA LEGAL SE QUEDO FUERA DE UN BARRIDO DE COPY]** s151 prohibio los absolutos y
+  corrigio el onboarding y la superficie de apoyo. `privacy.html` **se ha tocado UNA vez en
+  toda la vida del proyecto** (v0.46.0) y seguia diciendo «Sin servidores propios». Al
+  reescribirla aparecio una promesa dentro de la propia pagina —«la fecha de arriba cambiara
+  con ella»— que **obligaba a fecharla**: se pregunto en vez de decidirlo yo.
 
-- **[UNA TABLA QUE NO MIDE UNA PIEZA DICE «NO SE MUEVE»]** El banco comparaba
-  cuatro piezas, daba «salto 0» y el usuario veia moverse el numero — que no
-  estaba en la tabla.
+- **[UNA TABLA QUE SE MANTIENE A MANO VUELVE A MENTIR SIEMPRE]** 10 de 14 filas, donde s162
+  encontro 5. Se retira la columna de numeros en vez de actualizarla: el trinquete del
+  `verify` ya lleva la cuenta, y copiarla a mano es el mecanismo que ha fallado **tres veces**
+  (s148, s162, s178).
 
-- **[UN MUTANTE QUE NO MUERDE CORRIGE EL ASERTO]** Tres versiones del test
-  salian verdes al quitar la reserva, porque la rutina elegida no variaba de
-  texto entre pantallas. Se cambio la rutina, no el umbral.
+- **[EL PASO 3 DEL CIERRE INVITA A ROMPER LA DECISION s134]** `node build-standalone.js` a mano
+  reescribe `PACE_standalone.html`, congelado en v0.71.0. El `verify` lo restaura cuando el
+  build lo lanza **el**; lanzandolo a mano, no. Hubo que devolverlo con `git checkout`.
 
-- **[LA REGLA DEL USUARIO, INTACTA]** El disenio se aprueba **mirandolo**. En
-  s177 se cumplio con tres tamanios de numero del runner y cuatro variantes del
-  calendario, todas sobre la app real.
+- **[LA REGLA DEL USUARIO, INTACTA Y AMPLIADA]** Las cuatro decisiones de la sesion se tomaron
+  con **las opciones delante**, y el copy de privacidad se pinto con el texto exacto —el de
+  hoy contra el propuesto— antes de preguntar.
+
+> Informe completo con evidencia `file:line`:
+> [`docs/audits/audit-completa-s178.md`](docs/audits/audit-completa-s178.md).
+> Los 17 bancos que nadie podia encontrar, indexados en [`docs/BANCOS.md`](docs/BANCOS.md).
+
 ### Diferido (documentado, NO ejecutado)
 
 - **[FASE 3 · `pace.events.v1`, Fase 2 del esquema] CERRADA en s172.** v0.99.1 cablo el
   backup en las dos direcciones **antes** que el primer emisor, y v0.102.0 puso los
   cuatro emisores. Lo que queda de la Fase 3 del PLAN es la **Fase 3 del esquema**
-  (reducers de `aggregates`, encaje con `state-history`, normalizacion P1) y la
-  **retencion por calendario**, que sigue sin programar. Dato que ahorra un susto: el
+  (reducers de `aggregates`, encaje con `state-history`, normalizacion P1).
+  **CORREGIDO EN s178**: esta linea decia ademas que la retencion por calendario
+  «sigue sin programar», y **lleva programada desde s174** — se dispara sola una
+  vez por arranque tras `loadState` (`app/events/events-store.js:370`), con su
+  spec en `tests/eventos-retencion.spec.js`. Dato que ahorra un susto: el
   store **se inicializa solo** (`paceEventsBoot()` al cargar `events-store.js`), asi que
   no hay que arrancarlo desde producto.
 - **[s169 · CERRADO, con UN hueco declarado]** Las cuatro decisiones del handoff de s168
@@ -538,93 +548,64 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **una AUDITORIA COMPLETA antes de tocar nada**
+## Proxima sesion -- **las dos preguntas de s176, y se PINTAN antes de preguntar**
 
-> **LO QUE PIDIO EL USUARIO, textual:** «empezamos s178 haciendo una auditoria
-> completa para saber que hay que hacer, que queda pendiente, que decisiones
-> estan obsoletas, etc».
+> **Eleccion del usuario en s178**, sobre la cola que dejo s177. Llevan dos sesiones esperando
+> y las dos son decisiones suyas, asi que la sesion **empieza por maquetas**, no por codigo.
+
+1. **El aside de familia en Respira.** Eligio **E** y se corrigio a **C**; esta pintado en los
+   marcos D y E de `_maqueta-s176-respira.html`, que se regenera con
+   `node scripts/audit/maqueta-s176.autonoma.js`.
+2. **El tercer chip «Discreta»** (14 de 20). Hay que **pintarlo antes de preguntar** — la
+   regla de s174, que s178 volvio a aplicar en las cuatro decisiones de la auditoria.
+
+> **DESPUES, la cola tal como quedo:**
 >
-> No es una tarea de limpieza: es que el proyecto lleva **79 decisiones tecnicas
-> vigentes**, 15 fases de ROADMAP y un backlog que nadie ha cruzado entre si
-> desde s137. Y el precedente esta medido: en s176 la documentacion describia
-> **Mueve y Estira al reves** y eso «mando a mas de una sesion al archivo
-> equivocado»; en s177, **tres decisiones anularon a otras tres** (s112, y dos
-> del propio brief de musica de s176).
+> 1. **FASE 4 · Stats de verdad.** s177 arreglo el ANCHO; el destino escrito en
+>    `STATS_DESTINO_PROPUESTA.md` sigue entero. El ROADMAP lo llama «el escaparate del free»,
+>    y con los eventos ya emitiendo puede nacer completa.
+> 2. **La musica.** Los seis briefs necesitan el requisito que faltaba antes de regenerar nada:
+>    **el grueso de la energia entre 200 Hz y 2 kHz**. Y hay que verificar los **terminos de
+>    uso comercial**, que valen ya para seis locuciones y las piezas.
+> 3. **El arte**: `Rana` (1 de los 3 glifos de ejercicio que faltan) y los **19** glifos de
+>    logro; las 18 piezas de la 2a tanda siguen sin mirarse.
+> 4. **FASE 8 · onboarding contextual.**
 
-> **QUE TIENE QUE CONTESTAR LA AUDITORIA, y con evidencia file:line:**
-> 1. **Que decisiones estan OBSOLETAS o se contradicen.** Las 79 filas de
->    `DECISIONES_TECNICAS_VIGENTES.md`, cruzadas contra el codigo de hoy. s177
->    encontro tres anulaciones sin buscarlas; buscando saldran mas.
-> 2. **Que queda REALMENTE pendiente** de las 15 fases del ROADMAP, y cuales se
->    hicieron sin marcarse. El encargo de glifos de s167/s169 ya demostro que
->    una lista puede estar entregada y nadie marcarla.
-> 3. **Que hay implementado que nadie sabe que existe.** `library-transition.js`
->    lleva inerte desde s174 (130 lineas). Los bancos de s176 y s177 son doce
->    scripts que no estan indexados en ningun sitio.
-> 4. **Que promesas publicas siguen siendo ciertas** (`privacy.html`, los dos
->    README, el copy de premium). s151 ya encontro un `README_EN.md` vendiendo
->    un modelo de negocio muerto.
-> 5. **Que deuda de la tabla de `Deuda tecnica activa` sigue viva.** s162 cazo
->    que la tabla mentia en **cinco filas**.
+> **LO QUE s178 DEJA CERRADO Y NO HAY QUE VOLVER A MIRAR:**
+> - Los cuatro marcadores del ROADMAP, el indice de decisiones, `privacy.html`, la tabla de
+>   deuda, el guard de `sw.js` y el borrado del vuelo. **Once de trece hallazgos.**
+> - **Cifras vivas medidas**: 77 de 96 logros con arte (19 sin dibujo) · 59 de 62 identidades
+>   de ejercicio con arte (**3** pendientes) · ningun archivo de `app/` pasa de 500.
+> - **Negativos honestos, no re-verificar**: cero peticiones externas en el artefacto · el
+>   texto de almacenamiento de `privacy.html` aguanta las tres claves · ningun archivo de
+>   `app/` esta sin cargar ni es totalmente huerfano · los `_*.html` de la raiz estan
+>   gitignoreados y no son deuda.
 
-> **DESPUES DE LA AUDITORIA, la cola tal como quedo:**
->
-> 1. **Las dos preguntas de s176**, que s177 no llego a abrir: el **aside de
->    familia** en Respira (eligio E y se corrigio a C; pintado en los marcos D
->    y E de `_maqueta-s176-respira.html`) y el **tercer chip «Discreta»**
->    (14 de 20), que hay que **pintar antes de preguntar**.
-> 2. **FASE 4 · Stats de verdad.** s177 arreglo el ANCHO; el destino escrito en
->    `STATS_DESTINO_PROPUESTA.md` sigue entero. El ROADMAP lo llama «el
->    escaparate del free».
-> 3. **La musica.** Los seis briefs necesitan el requisito que faltaba antes de
->    regenerar nada: **el grueso de la energia entre 200 Hz y 2 kHz**. Y hay
->    que verificar los **terminos de uso comercial**, que valen ya para seis
->    locuciones y las piezas.
-> 4. **El arte**: `Rana` y los 19 glifos de logro; las 18 piezas de la 2a tanda
->    siguen sin mirarse.
-> 5. **FASE 8 · onboarding contextual.**
+> **LO QUE SIGUE ABIERTO, dicho y no escondido:**
+> - **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes). D-2 es literal:
+>   `app/i18n/strings/paths.js:64` y `:73` dicen las dos «Hecho hoy».
+> - El **CHANGELOG** conserva sus SEIS bloques de detalle donde la convencion son dos
+>   (decision del usuario en s178: no se descarta texto).
+> - Por debajo de **641 px de alto** el runner no esta congelado, y movil tampoco.
+> - En las pantallas de **cambio de lado** la linea «El lado siguiente empieza solo» todavia se
+>   mueve **99,7 px** entre pasos.
+> - **9 de las 14 de Estira piden suelo**, en una biblioteca de oficina.
+> - El **lote de musica sin decidir**: cinco de las seis piezas sin usar, y la montada es
+>   provisional y suena en las seis familias.
 
-> **LO QUE s177 DEJA MEDIDO Y NO HAY QUE VOLVER A MEDIR:**
-> - **Runner**: las 7 piezas a **0,0 px** entre pantallas, solape **0 en las 28
->   rutinas**, huecos 9,8 / 9,7 a 1536x714. Verificado a 714, 768, 800, 900,
->   1040, 690 y 660. **Por debajo de 641 NO se aplica** (a 1280x600 solapa 7,0
->   con el numero a 58 y 12,7 con 64) y movil tampoco.
-> - **Stats**: modal **1240**, celda del anio **19**, hueco muerto **52,4**
->   (era 163,7). **El mes no puede crecer**: 421,4 / 474,4 / 527,4 px contra
->   los 385 de las demas.
-> - **Audio, niveles RMS**: musica **-30,53** · `sulafat-inhala` **-28,07** ·
->   `sulafat-exhala` **-29,95** · drone (sine 0,02) **-36,99**. La musica y la
->   voz tienen casi el mismo RMS a ganancia 1.
-> - **El drone esta en G2 = 96,22 Hz**, no en 96,7.
-> - **Reparto de banda** de las dos piezas probadas: equilibrio 82,6 % bajo
->   200 Hz y **0 %** sobre 2 kHz · energia 48 / 40,8 / 10,8 / 0,4.
-
-> **TRAMPAS DE s177, y valen para cualquier medida futura:**
-> - **LA SEMILLA ES `firstSeen`, NO `onboarded`** (`tests/helpers.js` lo dice).
->   Con la clave mal puesta la app se monta DEBAJO del overlay de bienvenida:
->   los selectores lo encuentran todo, **las medidas salen correctas** y la
->   camara fotografia la bienvenida. Los bancos llevan guard.
-> - **`getBoundingClientRect()` devuelve la caja YA TRANSFORMADA.** El numero
->   del runner late (`pace-rep-pulse`): la misma cifra de 76 px media 72,2 y
->   65,0. Congelar la animacion para medir.
-> - **Una tabla que no mide una pieza dice «no se mueve»** igual que si no se
->   moviera.
-> - **`git checkout` restaura al ULTIMO COMMIT** y borro una implementacion
->   entera. Copia antes de mutar.
-> - **Backticks en el template literal**, dos veces y en dos archivos. Y
->   **mandar el build a `/dev/null`** hizo correr un censo entero contra un
->   artefacto roto.
-> - **Reservar de MAS cuesta igual que no reservar**: 41 px a tres bloques de
->   cola convirtieron un solape de 15,0 en 27,0.
-
-> **HERRAMIENTAS NUEVAS de s177** (en `scripts/audit/`, salida gitignorada):
-> `banco-musica-s177.js` (decodifica cada MP3 y lo mide contra el brief, con
-> las locuciones en la tabla) · `censo-runner-solape.js` (las 28 rutinas paso a
-> paso; mide los HIJOS, no el bloque) · `banco-runner-s177.js` (presupuesto de
-> altura + tabla de alturas de caja) · `banco-stats-s177.js` y
-> `maqueta-s177-stats.js` · `maqueta-s177-runner.js` ·
-> **`prueba-musica-s177.js`** (pagina de escucha en OTRO PUERTO, sin service
-> worker ni app, con medidor de nivel).
+> **TRAMPAS VIGENTES** (s177 y s178, valen para cualquier medida futura):
+> - **LA SEMILLA ES `firstSeen`, NO `onboarded`** (`tests/helpers.js` lo avisa). Con la clave
+>   mal puesta la app se monta DEBAJO del overlay de bienvenida: los selectores lo encuentran
+>   todo, **las medidas salen correctas** y la camara fotografia la bienvenida.
+> - **`getBoundingClientRect()` devuelve la caja YA TRANSFORMADA.** Congelar la animacion antes
+>   de medir.
+> - **Una tabla que no mide una pieza dice «no se mueve»** igual que si no se moviera.
+> - **`git checkout` restaura al ULTIMO COMMIT.** Copia antes de mutar.
+> - **Backticks y backslashes en el shell**: un heredoc de bash **se come los backslashes** y
+>   un string entre comillas dobles **ejecuta los backticks**. Los scripts con regex y los
+>   textos con `code spans` se escriben con la herramienta de escritura o por stdin de node.
+> - **`node build-standalone.js` a mano reescribe el standalone** congelado (s134). El `verify`
+>   solo lo restaura alrededor de SU propia pasada.
 
 > Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
 ---
@@ -668,6 +649,8 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 | **Un solo tamaño de circulo para los DOS runners, con factor por PIEL leido de `--pace-skin`** | s171 |
 | **Las reservas de altura del runner v1 valen en las DOS pieles -- y su linea vacia ES el anclaje** | s171 |
 | **Las tablas editoriales del encargo de glifos llevan CUATRO columnas (el generador se come las de tres)** | s171 |
+| **Tiempo de retencion: DATO SI, RECORD NO** | s166 |
+| **El arte de ejercicio entra por PRECEDENCIA, no por sustitucion** | s166 |
 | **Trocear CSS es CORTAR por un punto, nunca extraer un bloque -- y el orden de las hojas es contrato** | s163 |
 | **Un `setTimeout(0)` NO alcanza a un modulo que se evalua despues: el artefacto son 109 scripts en tareas separadas** | s162 |
 | **Lo que el motor mide incluye el MARGEN NEGATIVO del horizonte, y ese nodo tambien tiene que ser inmedible-por-transicion** | s162 |
@@ -854,31 +837,41 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > **Trampa de medicion**: `Get-Content x | Measure-Object -Line` **no cuenta lineas en
 > blanco** (41 de menos en `tokens.css`). Usar `(Get-Content x).Count`.
 >
-> **Estado tras s148: ningun archivo de `app/` pasa de 500.** El techo es
-> `MoveSessionV1.jsx`, EXACTAMENTE en 500.
+> **s178 · LA COLUMNA DE LINEAS SE HA IDO, y la tabla se queda con la historia.** La
+> auditoria de s178 la midio archivo a archivo y **mentia en 10 de las 14 filas medidas** —
+> s162 la cazo mintiendo en cinco, o sea que **empeoro**. Los peores: `FocusTimer.jsx` decia
+> 450 y estaba en 499, `state-core.jsx` decia 402 y estaba en 477, `tokens.css` decia 386 y
+> estaba en 322. Mantener a mano una copia de lo que el `verify` YA mide es el mecanismo que
+> ha fallado tres veces (s148, s162, s178), asi que se retira el numero, no se actualiza.
+> **Decision del usuario, s178.**
+>
+> **Donde esta el numero vivo:** `npm run verify`, que mide los archivos de `app/`, `tests/` y
+> `scripts/` en cada pasada y cuyo `DEUDA_500` es un trinquete — la deuda no puede crecer ni
+> aparecer una nueva. **Estado medido en s178: ningun archivo pasa de 500**, y el techo lo
+> reporta el propio verify.
 
-| Archivo | Lineas | Prioridad |
-|---|---|---|
-| `app/move/MoveSessionV1.jsx` | **500** | **ALTA -- EN EL TOPE** (sin cambios en s148: no esta POR ENCIMA, pero es el proximo en caer. Lo que se añada va SI O SI a `MoveSessionV1.support.jsx`) |
-| `app/tweaks/TweaksPanel.jsx` | **493** | MEDIA (s148: recontado; el candidato natural sigue siendo extraer el bloque de notificacion a seccion propia) |
-| `app/extra/ExtraModule.jsx` | **462** | MEDIA (s148: recontado. Al retomar Estira, trocear los DATOS antes) |
-| `app/breathe/BreatheSession.jsx` | **493** | MEDIA (s165: 454 -> 481 al rehacer el progreso; el guard §1 la freno una vez a 507 y se recorto comentario, no codigo. Lo siguiente que entre aqui va a un `.support`) |
-| `app/ui/SessionShell.jsx` | **451** | BAJA (s148: recontado) |
-| `app/focus/FocusTimer.jsx` | **450** | BAJA (s148: recontado; helpers en `.support`, piezas de UI en `.parts`) |
-| `app/glyphs/exercise-glyphs.extra.jsx` | 406 | BAJA (**NUEVO s148**) |
-| `app/state-core.jsx` | 402 | BAJA (**s148: 510 -> 402**, migraciones y rollover a `.support`) |
-| `app/tokens.css` | 386 | BAJA (**s148: 613 -> 386**, el CSS de Caminos a `paths/paths.css`) |
-| `app/i18n/strings/sessions.js` | 353 | BAJA (**s148: 502 -> 353**, el dominio CUERPO a `sessions.body.js`) |
-| `app/glyphs/exercise-glyphs.jsx` | 209 | SALE (**s148: 571 -> 209**, Estira a `.extra.jsx`; la fila vieja lo daba por sano desde s84) |
-| `app/shell/Sidebar.jsx` | 141 | SALE (**s148: 570 -> 141**, reparto `.support` + `.parts` + orquestador) |
-| `app/i18n/strings/ui.js` | 395 | BAJA (s138: etiqueta del visual Flor -> Loto, ES+EN; dominio mas grande del split) |
-| `app/i18n/strings-content.js` | -- | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
-| `app/breathe/BreatheVisual.jsx` | 421 | BAJA (s139: llego a **512** con el encaje, el banding y la vela ⇒ TROCEADO a `BreatheVisual.support.jsx` (117 ln) con el patron `*.support.jsx`; queda en 421) |
-| `app/achievements/Achievements.jsx` | 184 | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
-| `app/main.jsx` | 380 | BAJA (s138: +14 ln del enrutado de credito de las rutinas propias; s82: split en main/_responsive + TopBar + ActivityBar) |
-| `app/state-achievements.jsx` | **397** | BAJA (s146: la curva nueva no cabia bajo 500 ⇒ los contadores y los 23 detectores nuevos viven en `state-achievements.support.jsx` (179 ln), patron `*.support`) |
-| `app/paths/PathRunner.jsx` | 244 | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
-| `app/i18n/strings.js` | -- | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
+| Archivo | Historia y criterio |
+|---|---|
+| `app/move/MoveSessionV1.jsx` | **ALTA -- EN EL TOPE** (sin cambios en s148: no esta POR ENCIMA, pero es el proximo en caer. Lo que se añada va SI O SI a `MoveSessionV1.support.jsx`) |
+| `app/tweaks/TweaksPanel.jsx` | MEDIA (s148: recontado; el candidato natural sigue siendo extraer el bloque de notificacion a seccion propia) |
+| `app/extra/ExtraModule.jsx` | MEDIA (s148: recontado. Al retomar Estira, trocear los DATOS antes) |
+| `app/breathe/BreatheSession.jsx` | MEDIA (s165: 454 -> 481 al rehacer el progreso; el guard §1 la freno una vez a 507 y se recorto comentario, no codigo. Lo siguiente que entre aqui va a un `.support`) |
+| `app/ui/SessionShell.jsx` | BAJA (s148: recontado) |
+| `app/focus/FocusTimer.jsx` | BAJA (s148: recontado; helpers en `.support`, piezas de UI en `.parts`) |
+| `app/glyphs/exercise-glyphs.extra.jsx` | BAJA (**NUEVO s148**) |
+| `app/state-core.jsx` | BAJA (**s148: 510 -> 402**, migraciones y rollover a `.support`) |
+| `app/tokens.css` | BAJA (**s148: 613 -> 386**, el CSS de Caminos a `paths/paths.css`) |
+| `app/i18n/strings/sessions.js` | BAJA (**s148: 502 -> 353**, el dominio CUERPO a `sessions.body.js`) |
+| `app/glyphs/exercise-glyphs.jsx` | SALE (**s148: 571 -> 209**, Estira a `.extra.jsx`; la fila vieja lo daba por sano desde s84) |
+| `app/shell/Sidebar.jsx` | SALE (**s148: 570 -> 141**, reparto `.support` + `.parts` + orquestador) |
+| `app/i18n/strings/ui.js` | BAJA (s138: etiqueta del visual Flor -> Loto, ES+EN; dominio mas grande del split) |
+| `app/i18n/strings-content.js` | SALE (s92: troceado en `app/i18n/content/` breathe 94 + move 186 + extra 202 ln al superar ~470 con F6) |
+| `app/breathe/BreatheVisual.jsx` | BAJA (s139: llego a **512** con el encaje, el banding y la vela ⇒ TROCEADO a `BreatheVisual.support.jsx` (117 ln) con el patron `*.support.jsx`; queda en 421) |
+| `app/achievements/Achievements.jsx` | SALE (s83, antes 409 -- split en achievements/catalog.js + glyphs/achievement-glyphs.jsx) |
+| `app/main.jsx` | BAJA (s138: +14 ln del enrutado de credito de las rutinas propias; s82: split en main/_responsive + TopBar + ActivityBar) |
+| `app/state-achievements.jsx` | BAJA (s146: la curva nueva no cabia bajo 500 ⇒ los contadores y los 23 detectores nuevos viven en `state-achievements.support.jsx` (179 ln), patron `*.support`) |
+| `app/paths/PathRunner.jsx` | SALE (s80, antes 835 -- split en steps/ + parts + CompletionScreen) |
+| `app/i18n/strings.js` | SALE (s81, antes 791 -- split en strings/_bootstrap + ui + sessions + paths + stats + achievements) |
 
 **Backlog tecnico MEDIA:** ver la tabla recontada arriba. Del P2 de
 la auditoria (`docs/audits/audit-producto-v0.34.4.md`): build precompilado

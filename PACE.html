@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.107.0</title>
+  <title>PACE · Foco · Cuerpo — v0.108.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -305,11 +305,10 @@
   <script type="text/babel" src="app/ui/library.css.jsx"></script>
   <script type="text/babel" src="app/ui/RoutineCard.jsx"></script>
   <script type="text/babel" src="app/ui/LibraryShell.jsx"></script>
-  <!-- La transición biblioteca -> sesión (s174). Lee `.pace-lib-cap` de la
-       tarjeta y el arte de la cuenta atrás; no importa el orden frente a
-       ninguno de los dos porque los busca en el DOM al vuelo, pero va aquí
-       para que se lea junto a lo que anima. -->
-  <script type="text/babel" data-presets="env,react" src="app/ui/library-transition.js"></script>
+  <!-- Aquí se cargaba `library-transition.js`, la transición biblioteca ->
+       sesión de s174. Retirada en s178: su único destino era el círculo de arte
+       de la preparación, que s175 quitó, y desde entonces sólo clonaba un nodo
+       y gastaba 24 frames buscando dónde aterrizar. -->
 
   <script type="text/babel" src="app/focus/FocusTimer.jsx"></script>
   <script type="text/babel" src="app/breathe/BreatheVisual.jsx"></script>
