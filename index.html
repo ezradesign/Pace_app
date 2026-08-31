@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.107.0</title>
+  <title>PACE · Foco · Cuerpo — v0.108.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4812,7 +4812,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.107.0';
+const PACE_VERSION = 'v0.108.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -9642,7 +9642,9 @@ Object.assign(window, {
    arte no se tomaba nunca para ellas. Ahora las tres pantallas son la misma.
    CONSECUENCIA QUE NO SE PUEDE PASAR POR ALTO: `[data-pace-session-prep-art]`
    era el ÚNICO destino del vuelo de la capitular (`library-transition.js`), que
-   a partir de aquí no encuentra dónde aterrizar y se retira solo. */
+   a partir de aquí no encuentra dónde aterrizar y se retira solo.
+   s178 · «SE RETIRA SOLO» NO ERA GRATIS: seguía clonando un nodo y gastando 24
+   frames por sesión buscando este selector. El módulo se borró entero. */
 function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSkip, atmosphere } = _ref;
   const { t } = useT();
   /* s175 · LA PREPARACION NO LLEVA ARTE, SOLO EL CONTADOR. Decision del
@@ -9652,6 +9654,8 @@ function SessionPrep(_ref) {let { routine, onExit, accent, prepCount, copy, onSk
      vuelo de la capitular desde la biblioteca (s174), asi que
      `paceVueloDestino()` deja de encontrar nada y el vuelo se retira solo --
      esta escrito para eso, sin ruido y sin romper la entrada a la sesion.
+     (s178: retirarse solo costaba un clon y 24 frames por sesion, medido en la
+     auditoria. El modulo del vuelo se borro entero.)
      Y CON EL ARTE SE VAN SUS TRES REGLAS DE HOJA: el anclaje arriba existia
      para que el circulo estuviera donde iba a aparecer el del paso, el numeral
      se dimensionaba con ese circulo, y el CTA recogido (s175) reparaba el hueco
@@ -15709,155 +15713,10 @@ Object.assign(window, { LibraryShell });
 ;Object.assign(window, { LibraryShell });
 })();
 </script>
-  <!-- La transición biblioteca -> sesión (s174). Lee `.pace-lib-cap` de la
-       tarjeta y el arte de la cuenta atrás; no importa el orden frente a
-       ninguno de los dos porque los busca en el DOM al vuelo, pero va aquí
-       para que se lea junto a lo que anima. -->
-  <script>
-;(function () {
-/* PACE · app/ui/library-transition.js (sesión 174)
-   =================================================
-   LA CAPITULAR DE LA TARJETA VUELA HASTA LA SESIÓN. Es el pago de haber
-   decidido que la biblioteca NO lleva wash (§6 del rediseño): sin él, el
-   momento de entrar se quedó sin su cambio de atmósfera, y esto se lo devuelve.
-
-   POR QUÉ ATERRIZA EN LA CUENTA ATRÁS Y NO EN EL CÍRCULO DEL RUNNER, que es lo
-   que el diseño decía. Medido en s174 sobre la app ya implementada: entre las
-   dos cosas hay DOS pantallas —el Preview y la preparación— y el círculo tarda
-   **3.114 ms** en existir desde que se pulsa «Empezar». Los dos elementos nunca
-   están cerca en el tiempo, así que no hay movimiento continuo hasta allí. La
-   cuenta atrás sí está a un frame, y desde s174 pinta el arte del primer paso
-   EN EL SITIO Y AL TAMAÑO del círculo que vendrá después (misma fuente:
-   `v1GlyphSizeAhora`), así que el relevo no salta.
-
-   TRES COSAS QUE NO HACE, a propósito:
-     · con `prefers-reduced-motion` no anima nada. La trampa de s160 aplica de
-       lleno: `transition-property` vale `all` por defecto, así que el kill
-       convierte cualquier cambio de geometría en transición. Aquí no se usa
-       `transition` sino la Web Animations API sobre un CLON, que el kill no
-       toca -- por eso se comprueba la preferencia a mano.
-     · no toca el DOM de la sesión más que para ESCONDER un instante el arte de
-       destino, y lo devuelve pase lo que pase (el `onfinish` y un plazo de
-       seguridad hacen lo mismo).
-     · si algo falta -- no hay capitular, no aparece el destino, el navegador no
-       trae `animate()` -- se retira en silencio y la app se comporta como antes.
-       Una transición no puede ser la razón de que no se entre en una sesión.
-
-   `var`/`function` a propósito: un `const` top-level no cruza la IIFE del
-   artefacto (trampa de s148). */
-
-var PACE_VUELO_MS = 520;
-var PACE_VUELO_FRAMES = 24; /* ~400 ms buscando el destino, y se rinde */
-
-function paceVueloReduce() {
-  return typeof matchMedia === 'function' &&
-  matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-/* El arte de destino: dentro del círculo de la preparación. Se busca el NIETO
-   (el dibujo) y no el círculo, para que el vuelo sea dibujo -> dibujo y las dos
-   cajas midan lo mismo que lo que se ve. */
-function paceVueloDestino() {
-  var caja = document.querySelector('[data-pace-session-prep-art]');
-  if (!caja) return null;
-  var circulo = caja.firstElementChild;
-  var arte = circulo && circulo.firstElementChild;
-  if (!arte) return null;
-  var r = arte.getBoundingClientRect();
-  return r.width > 0 && r.height > 0 ? arte : null;
-}
-
-/* Captura la capitular ANTES de que la biblioteca se desmonte. Devuelve null
-   —y el que llama no hace nada— si no hay nada que volar. */
-function paceVueloCapitular(routineId) {
-  if (paceVueloReduce()) return null;
-  if (!routineId || typeof document === 'undefined') return null;
-  /* LA TARJETA PUEDE ESTAR DOS VECES EN EL DOM, y hay que quedarse con la que
-     SE VE. «Para ahora» se pinta en el lateral (escritorio) y bajo la cabecera
-     (móvil): las dos copias existen siempre y la hoja apaga la que sobra, que
-     es lo que s166 dejó decidido al quitar el lector de piel en JS.
-     Con un `querySelector` a secas, en MÓVIL salía primero la copia del lateral
-     —oculta, de ancho 0—, la función devolvía null y la transición no ocurría:
-     medido, el clon no llegaba a crearse. Es el mismo tropiezo que ya había
-     mentido cinco veces a las sondas de esta sesión; la sexta fue aquí, en el
-     código que se publica. */
-  var arte = null,r = null;
-  var caps = document.querySelectorAll('[data-pace-lib-card="' + routineId + '"] .pace-lib-cap');
-  for (var i = 0; i < caps.length; i++) {
-    var cand = caps[i].firstElementChild;
-    if (!cand) continue;
-    var caja = cand.getBoundingClientRect();
-    if (caja.width > 0 && caja.height > 0) {arte = cand;r = caja;break;}
-  }
-  if (!arte || !r || typeof arte.animate !== 'function') return null;
-
-  var clon = arte.cloneNode(true);
-  clon.setAttribute('data-pace-vuelo', '');
-  clon.setAttribute('aria-hidden', 'true');
-  clon.style.position = 'fixed';
-  clon.style.left = r.left + 'px';
-  clon.style.top = r.top + 'px';
-  clon.style.width = r.width + 'px';
-  clon.style.height = r.height + 'px';
-  clon.style.margin = '0';
-  clon.style.zIndex = '95'; /* sobre la sesión (90), bajo los modales (100) */
-  clon.style.pointerEvents = 'none';
-  clon.style.transformOrigin = 'top left';
-  /* El color se HEREDA por `currentColor` en la máscara, y el clon sale del
-     árbol de la tarjeta: sin fijarlo aquí, al colgarlo del <body> perdería el
-     tono del módulo y volaría con el color del texto. */
-  clon.style.color = getComputedStyle(arte).color;
-
-  return { rect: r, clon: clon, aterrizar: function () {paceVueloAterrizar(r, clon);} };
-}
-
-/* Espera a que el destino exista (la sesión se monta un tick después de que la
-   biblioteca se cierre) y anima. Si no aparece en PACE_VUELO_FRAMES, se rinde
-   sin dejar rastro. */
-function paceVueloAterrizar(origen, clon) {
-  var frames = 0;
-  var buscar = function () {
-    var destino = paceVueloDestino();
-    if (!destino) {
-      if (++frames > PACE_VUELO_FRAMES) return;
-      requestAnimationFrame(buscar);
-      return;
-    }
-    var d = destino.getBoundingClientRect();
-    document.body.appendChild(clon);
-    var previa = destino.style.visibility;
-    destino.style.visibility = 'hidden';
-    var limpiar = function () {
-      destino.style.visibility = previa || '';
-      if (clon.parentNode) clon.parentNode.removeChild(clon);
-    };
-    var k = d.width / origen.width;
-    var anim;
-    try {
-      anim = clon.animate([
-      { transform: 'translate(0px, 0px) scale(1)' },
-      { transform: 'translate(' + (d.left - origen.left) + 'px, ' + (d.top - origen.top) + 'px) scale(' + k + ')' }],
-      { duration: PACE_VUELO_MS, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
-    } catch (e) {limpiar();return;}
-    anim.onfinish = limpiar;
-    anim.oncancel = limpiar;
-    /* Red de seguridad: si la animación nunca termina (pestaña oculta, motor
-       que descarta la animación) el arte de destino NO puede quedarse invisible
-       para siempre. */
-    setTimeout(limpiar, PACE_VUELO_MS + 400);
-  };
-  requestAnimationFrame(buscar);
-}
-
-Object.assign(window, {
-  paceVueloCapitular: paceVueloCapitular,
-  paceVueloDestino: paceVueloDestino,
-  paceVueloReduce: paceVueloReduce,
-  PACE_VUELO_MS: PACE_VUELO_MS
-});
-;Object.assign(window, { PACE_VUELO_MS, PACE_VUELO_FRAMES, paceVueloReduce, paceVueloDestino, paceVueloCapitular, paceVueloAterrizar });
-})();
-</script>
+  <!-- Aquí se cargaba `library-transition.js`, la transición biblioteca ->
+       sesión de s174. Retirada en s178: su único destino era el círculo de arte
+       de la preparación, que s175 quitó, y desde entonces sólo clonaba un nodo
+       y gastaba 24 frames buscando dónde aterrizar. -->
 
   <script>
 ;(function () {
@@ -29402,18 +29261,16 @@ function PaceApp() {
     const p = previewRoutine;
     setPreviewRoutine(null);
     if (!p) return;
-    /* s174 · LA CAPITULAR VUELA A LA SESIÓN. Se captura AQUÍ y no dentro del
-       módulo del vuelo porque el orden es lo único que lo hace posible: la
-       biblioteca sigue montada DETRÁS del preview (decisión de arriba: cerrar
-       el preview te devuelve a ella), así que la tarjeta y su dibujo todavía
-       existen en este instante -- y dejan de existir en la línea siguiente.
-       Si no hay vuelo (reduced-motion, sin capitular, sin `animate`), esto es
-       null y las dos líneas de abajo corren igual que siempre. */
-    const vuelo = typeof paceVueloCapitular === 'function' ?
-    paceVueloCapitular(p.routine && p.routine.id) : null;
+    /* s178: aquí se capturaba la capitular para el VUELO de s174, que aterrizaba
+       en el círculo de arte de la preparación. s175 quitó ese arte por decisión
+       del usuario y con él el único destino posible, así que desde entonces el
+       vuelo clonaba un nodo y gastaba 24 frames buscando dónde posarse antes de
+       rendirse. La auditoría de s178 lo midió y se ha ido entero: el módulo, su
+       <script> y esta llamada. Si algún día vuelve un destino, vuelve con él.
+       `tests/transicion-biblioteca.spec.js` sigue vigilando que no aparezca un
+       clon suelto. */
     setOpenLibrary(null);
     setView({ type: 'move-session', routine: p.routine, kind: p.kind });
-    if (vuelo) vuelo.aterrizar();
   };
 
   const handleStartMove = (routine) => {

@@ -143,18 +143,16 @@ function PaceApp() {
     const p = previewRoutine;
     setPreviewRoutine(null);
     if (!p) return;
-    /* s174 · LA CAPITULAR VUELA A LA SESIÓN. Se captura AQUÍ y no dentro del
-       módulo del vuelo porque el orden es lo único que lo hace posible: la
-       biblioteca sigue montada DETRÁS del preview (decisión de arriba: cerrar
-       el preview te devuelve a ella), así que la tarjeta y su dibujo todavía
-       existen en este instante -- y dejan de existir en la línea siguiente.
-       Si no hay vuelo (reduced-motion, sin capitular, sin `animate`), esto es
-       null y las dos líneas de abajo corren igual que siempre. */
-    const vuelo = (typeof paceVueloCapitular === 'function')
-      ? paceVueloCapitular(p.routine && p.routine.id) : null;
+    /* s178: aquí se capturaba la capitular para el VUELO de s174, que aterrizaba
+       en el círculo de arte de la preparación. s175 quitó ese arte por decisión
+       del usuario y con él el único destino posible, así que desde entonces el
+       vuelo clonaba un nodo y gastaba 24 frames buscando dónde posarse antes de
+       rendirse. La auditoría de s178 lo midió y se ha ido entero: el módulo, su
+       <script> y esta llamada. Si algún día vuelve un destino, vuelve con él.
+       `tests/transicion-biblioteca.spec.js` sigue vigilando que no aparezca un
+       clon suelto. */
     setOpenLibrary(null);
     setView({ type: 'move-session', routine: p.routine, kind: p.kind });
-    if (vuelo) vuelo.aterrizar();
   };
 
   const handleStartMove = (routine) => {

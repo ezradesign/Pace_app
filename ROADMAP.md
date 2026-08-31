@@ -200,7 +200,10 @@ El bloque del feedback beta. La más importante.
 > necesitas · posición · duración · intensidad · pasos con glifo), solo desde la biblioteca. Las
 > 28 rutinas declaran ya sus requisitos. **Desbloquea la reescritura editorial**: los requisitos
 > salen de la descripción, que era el motivo de que 16 de 28 sonaran a lista de la compra.
-> **Sigue pendiente: ola B**, los 20 dibujos — **EN PAUSA hasta que llegue el arte**.
+> **Sigue pendiente: ola B** — **3 dibujos**, no 20 (corregido en la auditoría de s178: la
+> cifra era de s141 y el arte ha entrado en varias tandas desde entonces). La verdad la dice
+> el documento **generado** [`GLIFOS_EJERCICIOS_PENDIENTES.md`](./docs/product/GLIFOS_EJERCICIOS_PENDIENTES.md):
+> **62 identidades · 59 con arte · 3 pendientes**. **EN PAUSA hasta que llegue el arte.**
 
 **Arrancó por una sesión de AUDITORÍA, sin tocar código** (protocolo del proyecto: auditar antes
 de escribir). Entregable: la **matriz §19.2 completa** cruzando, para los 92 nombres de paso,
@@ -274,10 +277,13 @@ demás, y las cuatro superficies cuentan la misma cifra.
 > **Estado tras s147 — CERRADA SALVO ARTE.** Los 7 puntos están hechos: matriz y curva medidas con
 > banco propio (s146, día 1 del 35 % al 18 % de lo que da un año) · entrega escalonada (s145) ·
 > amnistía en vez de recálculo (s146) · miniaturas pintando el glifo real (s146) · denominador
-> único (s146) · **58 de 96 logros con arte propio** (s146 + s147).
+> único (s146) · **77 de 96 logros con arte propio** (s146 + s147 y las tandas posteriores;
+> la nota decía «58 de 96», cifra de s147, corregida en la auditoría de s178).
 >
-> Lo que queda es **material, no diseño**: **38 logros sin dibujo**. El usuario avisa cuando tenga
-> arte nuevo y se re-corre `scripts/ingest-glifos-logro.js`. Prioridad dentro de esa tanda:
+> Lo que queda es **material, no diseño**: **19 logros sin dibujo** (la nota decía 38). El
+> usuario avisa cuando tenga arte nuevo y se re-corre `scripts/ingest-glifos-logro.js`. La
+> cifra viva la da `npm run verify` («máscaras de logro en el mapa»), no esta nota.
+> Prioridad dentro de esa tanda:
 > **`hydrate.week.perfect`**, único que perdió su dibujo a propósito en s147 —llevaba un pincel de
 > caligrafía— y hoy cae a su carácter; necesita un dibujo de agua.
 >
@@ -285,7 +291,7 @@ demás, y las cuatro superficies cuentan la misma cifra.
 > precedencia máscara → SVG heráldico → carácter deja entrar el arte por partes sin huecos, así
 > que lo que aún no tiene dibujo conserva el sistema viejo en vez de aplanarse a su categoría.
 
-### FASE 3 · Eventos, fase 1 web (`pace.events.v1`) — 🔄 EN CURSO (s155, v0.88.0)
+### FASE 3 · Eventos web (`pace.events.v1`) — 🔄 EN CURSO · emisores YA entregados (v0.102.0)
 
 Por qué aquí: es lo único cuyo valor **depende de haberlo hecho pronto** — el histórico que no se
 emite no se reconstruye, y de él dependen «Qué te ayuda», las comparaciones, el check-in de cierre
@@ -296,10 +302,23 @@ export/import sigue siendo reemplazo total.
 **s155 cerró la Fase 1 del esquema** —modelo canónico, adaptador web, Web Locks, baseline,
 export/import/reset, recuperación y pruebas multi-pestaña— **sin emisores**, porque §25 prohíbe
 emitir antes de estar en `READ_WRITE`. El single-writer está probado con **dos pestañas de verdad**
-(20 emisiones concurrentes, cero pérdidas) y `file://` selecciona el adaptador inerte. **Queda la
-Fase 2 del esquema**: los cuatro emisores, con la condición de entrada de que el export de «Tus
-datos» lleve la sección de eventos —lo exige el `verify`—. Diario:
+(20 emisiones concurrentes, cero pérdidas) y `file://` selecciona el adaptador inerte. Diario:
 [session-155](./docs/sessions/session-155-eventos-fase-1.md).
+
+> **PUESTO AL DÍA EN LA AUDITORÍA DE s178.** Este bloque se quedó en «queda la Fase 2 del
+> esquema: los cuatro emisores» y llevaba así **de v0.88.0 a v0.107.0**. Lo entregado desde
+> entonces:
+> - **v0.99.1** — el backup lleva y devuelve los eventos, cableado en las dos direcciones
+>   **antes** que el primer emisor.
+> - **v0.102.0 (s172)** — **los cuatro emisores**, con su suite (`tests/eventos-emisor.spec.js`,
+>   más `eventos-backup`, `eventos-barrera` y `eventos-retencion`). El emisor vive en
+>   `app/state-events.jsx:69`.
+> - **s174** — la **retención por calendario** (120 d, §12) se dispara **sola**, una vez por
+>   arranque tras `loadState` (`app/events/events-store.js:370`).
+>
+> **Lo que queda de verdad** es la **Fase 3 del esquema**: reducers de `aggregates`, encaje con
+> `state-history` y normalización P1. Dato que ahorra un susto: el store **se inicializa solo**
+> (`paceEventsBoot()` al cargar `events-store.js`), no hay que arrancarlo desde producto.
 
 ### FASE 3.5 · Pausa PACE (§17)
 
@@ -323,7 +342,7 @@ Fase 0 (marco de altura estable, agnóstica al contenido) y Fase 1 (Hoy + Semana
 [`STATS_DESTINO_PROPUESTA.md`](./docs/product/STATS_DESTINO_PROPUESTA.md), ya sin condicionantes
 tras el cierre del §37. Es el escaparate del *free*: con eventos emitiendo puede nacer completa.
 
-### FASE 5 · Respira: sonido real y catálogo
+### FASE 5 · Respira: sonido real y catálogo — 🔄 EN CURSO (voz s175 · música s177)
 
 - **Sonido**: inhalaciones y exhalaciones reales + fondo meditativo tipo hang drum. **Como
   archivos** en web y Capacitor; el standalone conserva el motor sintetizado. La pista de fondo se

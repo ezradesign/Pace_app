@@ -17,9 +17,16 @@
 
    LO QUE SÍ SIGUE IMPORTANDO, y es lo que hay debajo: que al tocar una tarjeta
    se ENTRE en la sesión, que la preparación sea sólo el contador en las tres
-   bibliotecas, y que no quede ni un clon suelto por el camino. Nada de esto se
-   ve leyendo el código: `library-transition.js` sigue cargado y es inerte, así
-   que si algún día volviera a encontrar destino, el último test lo diría.
+   bibliotecas, y que no quede ni un clon suelto por el camino.
+
+   s178 · EL MÓDULO YA NO EXISTE. La auditoría midió lo que este archivo daba
+   por «inerte» y no lo era: `main.jsx` lo llamaba en CADA entrada a sesión, y
+   el vuelo clonaba un nodo y gastaba 24 frames (~400 ms) buscando un destino
+   que s175 se había llevado. Decisión del usuario: fuera el módulo, su
+   `<script>` y la llamada. Estos tests NO se retiran con él — siguen siendo la
+   red de que la entrada a la sesión funciona y de que nadie deja un clon
+   pegado al `<body>`, y ahora además vigilan que el vuelo no vuelva por la
+   puerta de atrás.
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto, overlaySuperior } = require('./helpers');
@@ -108,14 +115,15 @@ test('las tres bibliotecas comparten la MISMA preparación', async ({ page }) =>
 });
 
 test('no queda ningún clon del vuelo: la transición ya no tiene dónde aterrizar', async ({ page }) => {
-  /* `library-transition.js` sigue cargado y sin destino. Está escrito para
-     retirarse en silencio, y esto lo comprueba en vez de confiar: si algún día
-     volviera a encontrar dónde aterrizar, o si dejara un clon huérfano pegado al
-     `<body>`, aquí saltaría. */
+  /* Desde s178 no hay módulo de vuelo que valga: se borró. Este test se queda
+     porque comprueba el RESULTADO —que no aparezca un clon pegado al `<body>`—
+     y no la implementación, así que seguiría mordiendo si alguien reintrodujera
+     una transición que deja rastro. */
   await irAlArtefacto(page);
   await lanzarPrimera(page, /^Estira/);
   await expect(page.locator('[data-pace-session-root]').getByText('PREPÁRATE')).toBeVisible();
-  await page.waitForTimeout(1200);   /* más que PACE_VUELO_MS + su red de 400 */
+  await page.waitForTimeout(1200);   /* holgura de sobra: el vuelo de s174 duraba
+                                        520 ms y buscaba destino otros ~400 */
   expect(await page.locator('[data-pace-vuelo]').count()).toBe(0);
   /* y la sesión ha entrado igual, que es lo único que la transición no podía
      poner en riesgo */

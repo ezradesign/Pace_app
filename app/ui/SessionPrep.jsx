@@ -36,7 +36,9 @@
    arte no se tomaba nunca para ellas. Ahora las tres pantallas son la misma.
    CONSECUENCIA QUE NO SE PUEDE PASAR POR ALTO: `[data-pace-session-prep-art]`
    era el ÚNICO destino del vuelo de la capitular (`library-transition.js`), que
-   a partir de aquí no encuentra dónde aterrizar y se retira solo. */
+   a partir de aquí no encuentra dónde aterrizar y se retira solo.
+   s178 · «SE RETIRA SOLO» NO ERA GRATIS: seguía clonando un nodo y gastando 24
+   frames por sesión buscando este selector. El módulo se borró entero. */
 function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosphere }) {
   const { t } = useT();
   /* s175 · LA PREPARACION NO LLEVA ARTE, SOLO EL CONTADOR. Decision del
@@ -46,6 +48,8 @@ function SessionPrep({ routine, onExit, accent, prepCount, copy, onSkip, atmosph
      vuelo de la capitular desde la biblioteca (s174), asi que
      `paceVueloDestino()` deja de encontrar nada y el vuelo se retira solo --
      esta escrito para eso, sin ruido y sin romper la entrada a la sesion.
+     (s178: retirarse solo costaba un clon y 24 frames por sesion, medido en la
+     auditoria. El modulo del vuelo se borro entero.)
      Y CON EL ARTE SE VAN SUS TRES REGLAS DE HOJA: el anclaje arriba existia
      para que el circulo estuviera donde iba a aparecer el del paso, el numeral
      se dimensionaba con ese circulo, y el CTA recogido (s175) reparaba el hueco
