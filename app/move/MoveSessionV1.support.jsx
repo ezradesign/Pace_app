@@ -133,7 +133,26 @@ function v1StepWeight(step) {
    La piel se lee del CONTRATO `--pace-skin` (`_responsive.pieles.js`), no de un
    `matchMedia` con el 769 copiado: si el corte de pieles se mueve, esto lo
    sigue solo. Se lee del root en cada render (una lectura, no un bucle). */
-const V1_GLYPH_WEB = 1.3;
+/* s177 · 1.3 -> 1.118, que es exactamente 1.3 x 0.86.
+   EL GLIFO PAGA PARTE DE LOS PIXELES QUE HACEN FALTA PARA CONGELAR EL RUNNER.
+   El usuario pidio que al pasar de «colocate» a «ejercicio» no se mueva ni
+   cambie de tamanio nada. Congelarlo cuesta: reservar el rotulo de fase son
+   26,4 px, reservar la descripcion a 3 lineas otros 24,8, y a 1536x714 ya
+   faltaban 15 -- el «Cuidate» se metia DENTRO de la barra. De 204 px el
+   circulo pasa a 181.
+
+   Y SE CAMBIA AQUI, EN LA FUENTE UNICA, NO CON CSS EN EL RUNNER. Este numero
+   lo consumen TRES sitios (el runner v1, el legacy de MoveModule y la cuenta
+   atras de s174) y el comentario de `v1GlyphSizeAhora` dice por que: si uno se
+   desvia, «el circulo de la sesion no relevaria al de la preparacion sino que
+   saltaria». Encogerlo por CSS solo en el runner habria arreglado un salto
+   creando otro, justo el que el usuario esta pidiendo que desaparezca.
+
+   Y ES UN FACTOR CONSTANTE, NO UN TRAMO. La regla de s119 prohibe reintroducir
+   un salto por tramos en `v1GlyphSize`: el pre-s119 saltaba de 0.22 a 0.25 en
+   vpH=720 y dejaba una banda muerta de 701 a 760 que desbordaba 7 px y sacaba
+   scrollbar en portatiles de 1366x768. La curva sigue siendo continua. */
+const V1_GLYPH_WEB = 1.118;
 function v1EsEscritorio() {
   try {
     return getComputedStyle(document.documentElement)

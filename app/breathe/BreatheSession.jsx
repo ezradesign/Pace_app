@@ -151,16 +151,25 @@ function BreatheSession({ routine, onExit, inPath }) {
     }
   }, [stage, paused]);
 
+  /* s177 · la musica de fondo, en BreatheSession.support.jsx (regla 500). */
+  useMusicaFondo(stage, paused, routine);
+
   // Stop drone si soundOn se apaga durante sesión
   useEffect(() => {
     if (!state.soundOn && window.ambientDrone && window.ambientDrone.isActive()) {
       window.ambientDrone.stop(400);
     }
+    if (!state.soundOn && window.paceMusica && window.paceMusica.isActive()) {
+      window.paceMusica.stop(400);
+    }
   }, [state.soundOn]);
 
   // Cleanup: para el drone en todos los caminos de onExit (unmount)
   useEffect(() => {
-    return () => { if (window.ambientDrone) window.ambientDrone.stop(800); };
+    return () => {
+      if (window.ambientDrone) window.ambientDrone.stop(800);
+      if (window.paceMusica) window.paceMusica.stop(800);
+    };
   }, []);
 
   // Atajos de teclado

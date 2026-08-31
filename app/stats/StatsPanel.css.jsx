@@ -46,6 +46,58 @@
 
     @media (min-width: 769px) {
       [data-pace-stats-vistas] { min-height: 385px; }
+      /* ══ s177 · EL AÑO SE LLEVA EL ANCHO, Y CADA VISTA EL SUYO ═════════════
+
+         LO QUE REPORTO EL USUARIO: «la vista de calendario podia ajustarse mas
+         al tamanio de la ventana para que no quede todo tan reducido».
+
+         MEDIDO A 1536x714 ANTES DE TOCAR NADA: el modal usaba 820 px de una
+         ventana de 1536 -- el 53 %-- y la rejilla del anio lleva celdas de
+         11x11 px ESCRITAS A MANO en el JSX, o sea 53 columnas x 13 = 754 px
+         pase lo que pase con la ventana. Resultado: la pestania «Anio» dejaba
+         163,7 px MUERTOS de sus 385, el 42 % de su caja. Las otras tres, 0.
+
+         EL MODAL SUBE A 1240, que no es un numero inventado: es el que usan
+         Mueve, Estira y Respira desde s176. Stats era el unico que se quedaba
+         en 820, asi que esto QUITA una excepcion en vez de anadirla.
+
+         LO QUE NO SE PUEDE HACER, Y ESTA MEDIDO: agrandar la rejilla del MES
+         para que acompanie. Con celda 48 su vista se va a 421,4 px, con 56 a
+         474,4 y con 64 a 527,4, contra los 385 de las otras tres -- o sea
+         vuelve el salto entre pestanias que s176 quito a peticion del usuario.
+         Los 42 px de hoy YA SON SU TECHO, que es justo lo que s176 encontro al
+         compactarlo de 48 a 42.
+
+         POR ESO CADA VISTA LLEVA SU ANCHO. Ensanchar el modal para el anio
+         dejaria al mes pequenio y solo en 1174 px: se arreglaria una pestania
+         estropeando otra. Las que NO son el anio se acotan a una columna de
+         820 y se centran, asi que se leen como una decision. El ':has()'
+         distingue una vista de otra sin tocar el JSX.
+
+         Y EL TAMANIO DE CELDA VA AQUI Y NO EN EL JSX, con '!important', porque
+         los 11 px son estilos EN LINEA por celda. 19 + 2 de hueco = 21 de
+         paso; 53 x 21 = 1113 mas 18 de la columna de dias = 1131, que entra en
+         los 1174 utiles. El rotulo de mes y la etiqueta de dia se mueven con
+         la celda porque tienen que seguir alineados con el paso de columna --
+         si uno se queda atras, los meses dejan de caer sobre su columna. */
+      [data-pace-modal-card]:has([data-pace-stats-vistas]) { max-width: 1240px; }
+      /* EL CENTRADO SE ACOTA AL ANIO, y esto lo corrigio una medida. Puesto en
+         todas las vistas, «Semana» pasaba de 385,9 a 389,9 px: una columna
+         flexible NO COLAPSA los margenes de sus hijos, asi que el margen de
+         cola dejaba de fundirse con el del contenedor y se sumaba. Son 4,9 px
+         de desviacion sobre la promesa de s176 -- las cuatro pestanias a la
+         misma altura-- y el centrado no le hacia falta a nadie mas: el hueco
+         muerto solo existe en el anio. */
+      [data-pace-stats-vistas]:has([data-pace-year-grid-wrap]) {
+        display: flex; flex-direction: column; justify-content: center;
+      }
+      [data-pace-stats-vistas]:not(:has([data-pace-year-grid-wrap])) > * {
+        max-width: 820px; margin-left: auto; margin-right: auto;
+      }
+      [data-pace-year-cell] { width: 19px !important; height: 19px !important; border-radius: 3px !important; }
+      [data-pace-year-month-lbl] { width: 19px !important; font-size: 11px !important; }
+      [data-pace-year-day-lbl] { height: 19px !important; font-size: 11px !important; }
+
       /* LOS 13 PX QUE LE SOBRABAN A «SEMANA». Con el calendario ya compactado,
          era la unica pestana que seguia con scroll. Salen del hueco ENTRE las
          cuatro filas de barras -- 8 px x 4 = 32, que pasan a 4 x 4 = 16-- y no

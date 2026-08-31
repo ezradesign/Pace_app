@@ -1598,6 +1598,7 @@ Object.assign(window.PACE_STRINGS.es, {
   'settings.bg.label': 'Qué suena detrás',
   'settings.bg.none': 'Nada',
   'settings.bg.ambient': 'Ambiente',
+  'settings.bg.music': 'Musica',
 
   // ActivityBar
   'activity.meta': 'Actividades',
@@ -1804,6 +1805,7 @@ Object.assign(window.PACE_STRINGS.en, {
   'settings.bg.label': 'What plays behind',
   'settings.bg.none': 'Nothing',
   'settings.bg.ambient': 'Ambient',
+  'settings.bg.music': 'Music',
 
   // ActivityBar
   'activity.meta': 'Activities',
@@ -4842,6 +4844,11 @@ const defaultState = {
   // instalaciones nuevas: el merge de loadState conserva el valor persistido.
   soundOn: true,
   ambientOn: false,
+  /* s177 · la tercera opcion de «que suena detras». Arranca APAGADA porque hoy
+     solo existe una pieza (Equilibrio) y es una prueba; y es EXCLUYENTE con
+     ambientOn -- la interfaz lo mantiene, y `paceMusica` lo vuelve a
+     comprobar por si acaso. */
+  musicOn: false,
 
   // s176 · LA VOZ TIENE INTERRUPTOR PROPIO. Hasta s175 iba pegada a `soundOn`,
   // asi que quien tenia sonido se encontro una voz y no podia quitarla sin
@@ -10699,7 +10706,11 @@ function useSound() {
 }
 
 /* === DRONE AMBIENTE (capa 2 opt-in) ===
-   Singleton. G2 ≈ 96.7 Hz · sine · peak 0.02.
+   Singleton. G2 = 96.22 Hz · sine · peak 0.02.
+   (s177: decía 96.7 y era falso. note('G2') con BASE_A=432 da 96.22; el LFO
+   modula GANANCIA, no frecuencia, así que nada lo desafina. El 96.7 ya se
+   había copiado a MUSICA_RESPIRA_BRIEFS.md, donde importa: la música de fondo
+   se afina contra este drone en Coherente 432.)
    LFO senoidal 0.1 Hz · ±0.002 para movimiento orgánico.
    Arranca solo si soundOn && ambientOn en el momento de llamar start().
    start(force) — F4/s90, Coherente 432: fuerza el arranque aunque
@@ -11035,6 +11046,190 @@ Object.assign(window, {
   paceVozIntenta: paceVozIntenta
 });
 ;Object.assign(window, { PACE_VOZ_DEFECTO, PACE_VOCES, PACE_VOZ_MARGEN, PACE_VOZ_CLIPS, PACE_VOZ_PREV, paceVozEstado, paceVozActiva, paceVozEncendida, _paceVoz, paceVozInit, paceVozCabe, paceVozIntenta });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · app/ui/Sound.musica.jsx (sesión 177)
+   ============================================
+   LA PISTA DE FONDO DE RESPIRA. Tercera capa de sonido, junto al tono/voz de
+   señal y al drone de ambiente.
+
+   ESTO ES UNA PRUEBA, Y SE DICE: hoy sólo existe UNA pieza, la de la familia
+   Equilibrio, generada con ElevenLabs y elegida por lo que midió
+   `scripts/audit/banco-musica-s177.js` -- de las seis candidatas es la que deja
+   el hueco de voz más limpio (15,6 % de su energía entre 200 Hz y 3 kHz y
+   0,02 % en la banda de consonantes, donde las locuciones ponen entre el 14 y
+   el 31 %) y la única afinada en la rejilla de la app (La2 a -0,3 cents de
+   432). Las otras cinco están medidas y esperando decisión.
+
+   LO QUE ESTA PIEZA TODAVÍA NO CUMPLE, medido y no escondido:
+     · NO HACE BUCLE. Entra 30,4 dB por debajo de su cuerpo y sale 48,6 por
+       debajo, o sea tiene fundidos en los dos extremos; repetirla dejaría un
+       bajón a casi silencio en cada vuelta. Por eso suena UNA vez y se acaba:
+       dura 4:00 y las rutinas de Equilibrio duran de 5 a 7 minutos, así que
+       los últimos minutos van sin fondo. Recortar los fundidos es trabajo de
+       edición, no de código.
+     · Lleva una periodicidad de 1,0 s que el brief no pedía. El número dice
+       que incumple; si suena bien, manda el oído.
+
+   LA GANANCIA SE IGUALA POR RMS Y NO POR PICO, y esto costó que el usuario no
+   oyera nada y lo reportara dos veces.
+
+   El drone de ambiente arranca a pico 0.02 (`Sound.jsx`) y es el único
+   precedente de «nivel de fondo» que el proyecto tiene. La primera versión
+   igualó PICO con PICO: la pieza tiene el suyo en -15,89 dBFS, así que 0.12
+   los dejaba iguales. Pero **el pico no es el volumen que se oye**. El drone es
+   una onda pura, con 3 dB de factor de cresta; esta pieza tiene 14,6. Igualar
+   picos la dejaba **11,6 dB por debajo** del drone en volumen percibido.
+
+   MEDIDO decodificando las ondas (mismo metodo que s176 con las locuciones):
+     musica            pico -15,89 dBFS   RMS -30,53
+     sulafat-inhala    pico -12,26        RMS -28,07
+     sulafat-exhala    pico  -8,26        RMS -29,95
+     drone (sine .02)  pico -33,98        RMS -36,99
+
+   Con ganancia 0.12 la musica quedaba en **-48,9 dBFS de RMS, unos 20 dB por
+   debajo de la voz**: estaba sonando y era fisica que no se oyera. Para igualar
+   el VOLUMEN del drone hace falta 0.475; se deja en **0.45**, que pone la
+   musica en -37,5 dBFS -- practicamente el nivel del drone, y **7,6 dB por
+   debajo de la locucion mas floja**, que es un fondo audible que no tapa.
+
+   Y OJO CON LA LECCION GENERAL: la musica y la voz tienen casi el mismo RMS a
+   ganancia 1 (-30,5 contra -28). Lo que las separa es SOLO esta ganancia.
+
+   NUNCA SUENA A LA VEZ QUE EL DRONE. La decisión de s176 dice que «qué suena
+   detrás» es UNA elección; la interfaz mantiene la exclusión, y aquí se
+   defiende otra vez porque `Coherente 432` FUERZA su drone pase lo que pase
+   (`BreatheSession.jsx`) y esa rutina se saltaría la regla desde el otro lado.
+
+   Consume: getState (Sound.jsx lo publica). No exporta nada por nombre salvo
+   los dos verbos en window, igual que `ambientDrone`. */
+
+/* Catalogo TAG -> archivo. Se indexa por el `tag` de la rutina ('EQU', 'BAL',
+   'ENE', 'REL', 'PRA', 'KRI') y no por el nombre del grupo: el tag viaja DENTRO
+   del objeto de rutina, asi que la sesion no tiene que saber en que grupo del
+   catalogo estaba. Una fila hoy; las demas entran cuando existan sus piezas.
+   Un tag sin fila simplemente no suena, y eso NO es un error: es el estado
+   normal de cinco de las seis familias. */
+/* LA GANANCIA ES POR PIEZA Y SE CALCULA, NO SE COPIA. Las dos que hay estan
+   masterizadas a niveles MUY distintos -- cuerpo -29,04 dBFS la de Equilibrio y
+   -15,37 la de Energia, 13,7 dB de diferencia-- asi que darles el mismo numero
+   pondria una inaudible o la otra por encima de la voz. La formula es
+   `10^((objetivo - cuerpoRMS)/20)` con el objetivo en unos -36 dBFS, que es el
+   nivel del drone y ~7 dB por debajo de la locucion mas floja. */
+/* UNA SOLA PIEZA EN LAS SEIS FAMILIAS, Y ES PROVISIONAL A PROPOSITO.
+   El catalogo final tendra una por familia -- cada brief pide otra cosa-- pero
+   hoy solo hay UNA que de verdad se oiga, y el objetivo ahora es ver el
+   conjunto de la app con musica, no afinar el reparto.
+
+   POR QUE ESTA Y NO LA DE EQUILIBRIO. La de Equilibrio se probo primero y el
+   usuario no la oia. Medido: el **82,6 % de su energia esta por debajo de 200
+   Hz** (0,5 % entre 500 Hz y 2 kHz, 0 % por encima de 2 kHz), o sea justo donde
+   los altavoces de portatil y de monitor no producen nada. Con ponderacion A
+   pierde **12,7 dB** contra los 7,4 de esta. No sonaba baja: no salia.
+
+   Y EL CRITERIO CON QUE LA ELEGI ESTABA INVERTIDO. La recomende por ser «la que
+   deja el hueco de voz mas limpio» -- 15,59 % en 200 Hz-3 kHz y 0,02 % en la
+   banda de consonantes-- que es exactamente la medida que la hacia inaudible.
+   El brief pedia a la vez «rango medio despejado» y registro grave, y entre las
+   dos cosas no queda banda que un altavoz normal reproduzca. Al reescribir los
+   seis briefs hay que anadir el requisito que faltaba: **el grueso de la
+   energia entre 200 Hz y 2 kHz**. */
+const PACE_MUSICA = (() => {
+  const pieza = { archivo: 'app/breathe/musica/energia.mp3', ganancia: 0.09, bucle: true };
+  const m = {};
+  ['ENE', 'EQU', 'BAL', 'REL', 'PRA', 'KRI'].forEach((tag) => {m[tag] = pieza;});
+  return m;
+})();
+
+const paceMusica = (() => {
+  let audio = null;
+  /* POR QUE NO SUENA: cada salida de `start` deja aqui su motivo, y el objeto
+     se puede leer desde la consola con `paceMusica.ultimo`.
+     ESTO NO ES INSTRUMENTACION DE LUJO, ES EL ARREGLO DE UN DEFECTO. La primera
+     version se tragaba TODAS las salidas en silencio -- seis returns mudos y un
+     `catch` vacio sobre la promesa de `play()`-- asi que «no se oye nada» no se
+     distinguia de «esta familia no tiene pieza». Costo tres vueltas de
+     diagnostico averiguar cual de los dos era. */
+  let ultimo = { motivo: 'sin intentar' };
+
+  function activa() {return !!audio;}
+  function no(motivo, extra) {
+    ultimo = Object.assign({ motivo }, extra || {});
+    return undefined;
+  }
+
+  function start(tag, forzarDrone) {
+    if (audio) return no('ya sonaba');
+    /* El drone forzado gana: `Coherente 432` es una rutina cuyo fondo ES el
+       drone, y ponerle musica encima seria las dos capas a la vez. */
+    if (forzarDrone) return no('la rutina fuerza su drone (Coherente 432)');
+    let s = null;
+    try {s = typeof getState === 'function' ? getState() : null;} catch (e) {s = null;}
+    if (!s) return no('no hay estado');
+    if (!s.soundOn) return no('el sonido maestro esta apagado');
+    if (!s.musicOn) return no('el fondo no esta en Musica');
+    const ficha = PACE_MUSICA[tag];
+    if (!ficha) return no('esta familia no tiene pieza', { tag: tag, hay: Object.keys(PACE_MUSICA) });
+    try {
+      const a = new Audio(ficha.archivo);
+      a.preload = 'auto';
+      /* EL BUCLE SE ENCIENDE POR PIEZA. Esta dura 2:09 y las rutinas van de 3 a
+         20 minutos, asi que sin bucle la mayor parte de la sesion iria en
+         silencio y no se podria juzgar el conjunto. El precio esta medido y se
+         oira: el archivo sale con un fundido de **-36,6 dB** en su ultimo
+         segundo, o sea que en cada vuelta hay un bajon de ~1 s. Recortar ese
+         fundido es edicion de audio, no codigo. */
+      a.loop = ficha.bucle === true;
+      a.volume = ficha.ganancia;
+      /* Si el archivo no esta, no suena fondo -- el standalone no lleva los MP3
+         por construccion (el build solo inlinea .webp), igual que con la voz.
+         Pero se DEJA DICHO, que es lo que faltaba. */
+      a.addEventListener('error', () => {audio = null;ultimo = { motivo: 'el archivo no carga', src: ficha.archivo };});
+      const pr = a.play();
+      if (pr && pr.catch) pr.catch((e) => {audio = null;ultimo = { motivo: 'el navegador rechazo play()', error: e && e.name };});
+      audio = a;
+      ultimo = { motivo: 'sonando', src: ficha.archivo, ganancia: ficha.ganancia };
+    } catch (e) {audio = null;no('excepcion al crear el Audio', { error: e && e.message });}
+  }
+
+  function pause() {try {if (audio) audio.pause();} catch (e) {/* da igual */}}
+  function resume() {
+    try {
+      if (!audio) return;
+      const pr = audio.play();
+      if (pr && pr.catch) pr.catch(() => {/* el navegador manda */});
+    } catch (e) {/* da igual */}
+  }
+
+  /* Se apaga con un fundido corto y no de golpe: un corte seco en una sesion de
+     respiracion se oye como un fallo. 400 ms es lo que usa el drone. */
+  function stop(ms) {
+    if (!audio) return;
+    const a = audio;
+    audio = null;
+    const paso = 40;
+    const total = Math.max(paso, ms || 400);
+    const caida = a.volume / (total / paso);
+    const id = setInterval(() => {
+      try {
+        if (a.volume > caida) {a.volume = a.volume - caida;return;}
+        clearInterval(id);
+        a.pause();
+      } catch (e) {clearInterval(id);}
+    }, paso);
+  }
+
+  /* `ultimo` es una PROPIEDAD y no una copia: se lee en el momento, no en el
+     momento de construir el objeto. */
+  return {
+    start, stop, pause, resume, isActive: activa,
+    get ultimo() {return ultimo;}
+  };
+})();
+
+Object.assign(window, { paceMusica, PACE_MUSICA });
 })();
 </script>
   <script>
@@ -17027,8 +17222,32 @@ function playPhaseSound(phaseLabel, phaseDur) {
 }
 
 
-Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
-;Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
+/* s177 · MUSICA DE FONDO — la tercera capa de «que suena detras».
+   Vive AQUI y no en BreatheSession.jsx por la regla de las 500 lineas: aquel
+   archivo se quedaba en 505 al meterlo. Tiene la misma forma que el efecto del
+   drone -- no arranca en preparacion, sigue durante la retencion, se pausa con
+   la sesion y se apaga al terminar-- y por eso se lee al lado.
+
+   `routine.drone` viaja hasta `paceMusica.start` para que `Coherente 432`, que
+   FUERZA su drone pase lo que pase, no acabe con las dos capas encima. El resto
+   del porque -- que pieza, a que ganancia y que le falta todavia-- vive en
+   `Sound.musica.jsx`, que es quien la toca. */
+function useMusicaFondo(stage, paused, routine) {
+  const { useEffect: useEffectM } = React;
+  useEffectM(() => {
+    if (!window.paceMusica) return;
+    const m = window.paceMusica;
+    if (stage === 'done') {m.stop(800);return;}
+    if (stage === 'prep' || stage === 'hold') return;
+    if (paused) m.pause();else
+    if (m.isActive()) m.resume();else
+    m.start(routine.tag, routine.drone === true);
+  }, [stage, paused]);
+}
+
+
+Object.assign(window, { useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
+;Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound, useMusicaFondo });
 })();
 </script>
   <script>
@@ -17186,16 +17405,25 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
     }
   }, [stage, paused]);
 
+  /* s177 · la musica de fondo, en BreatheSession.support.jsx (regla 500). */
+  useMusicaFondo(stage, paused, routine);
+
   // Stop drone si soundOn se apaga durante sesión
   useEffect(() => {
     if (!state.soundOn && window.ambientDrone && window.ambientDrone.isActive()) {
       window.ambientDrone.stop(400);
     }
+    if (!state.soundOn && window.paceMusica && window.paceMusica.isActive()) {
+      window.paceMusica.stop(400);
+    }
   }, [state.soundOn]);
 
   // Cleanup: para el drone en todos los caminos de onExit (unmount)
   useEffect(() => {
-    return () => {if (window.ambientDrone) window.ambientDrone.stop(800);};
+    return () => {
+      if (window.ambientDrone) window.ambientDrone.stop(800);
+      if (window.paceMusica) window.paceMusica.stop(800);
+    };
   }, []);
 
   // Atajos de teclado
@@ -18516,8 +18744,15 @@ if (!_paceMoveV1Css) {
        para no pisar el tier ≤700 (más agresivo, gobierna por debajo). */
     @media (min-width: 641px) and (min-height: 701px) and (max-height: 768px) {
       [data-pace-v1-timer] { font-size: 104px !important; }   /* v1 only, no legacy */
-      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
-      [data-pace-v1-name] { margin-bottom: 10px !important; }
+      /* s177 · 10 -> 6 en estos dos. Con el congelado de abajo puesto pero
+         estos margenes intactos, la holgura a 1536x714 se quedaba en 5,8 px
+         por lado; a 6 sube a 9,8. No es cosmetica: s176 midio que el CI, con
+         otras metricas de fuente, se desvia hasta 9,4 px de lo que da el
+         local, asi que 5,8 de margen es quedarse sin red. Los de la
+         descripcion y «Cuidate» no hace falta tocarlos: el bloque de s177 los
+         reescribe mas abajo y gana por ser la ultima regla del archivo. */
+      [data-pace-v1-glyph] > div { margin-bottom: 6px !important; }
+      [data-pace-v1-name] { margin-bottom: 6px !important; }
       [data-pace-v1-cue] { margin-bottom: 10px !important; }
       [data-pace-v1-care] { margin-top: 10px !important; }
       [data-pace-v1-progress] { margin-top: 16px !important; }
@@ -18614,6 +18849,116 @@ if (!_paceMoveV1Css) {
        de su contenido sin el, que es justo lo que hay que permitir aqui. */
     [data-pace-v1-body] { flex: 1 1 auto !important; min-height: 0 !important; }
     [data-pace-v1-progress] { flex: 0 0 auto !important; margin-top: 0 !important; margin-bottom: 16px !important; }
+
+    /* ══ s177 · LA PANTALLA SE CONGELA: nada se mueve ni cambia de tamanio al
+       pasar de «colocate» a «ejercicio» ══════════════════════════════════════
+
+       LO QUE REPORTO EL USUARIO, mirando la app: la barra de progreso se
+       superponia con las letras. Censadas las 28 rutinas paso a paso a
+       1536x714, el «Cuidate» se metia **15,0 px DENTRO de la barra en 11 de 47
+       pasos** y en 7 de las 16 rutinas libres. Lo causo el anclaje de s176: la
+       barra dejo de moverse, pero el bloque lleva 'min-height: 0' y ENCOGE por
+       debajo de su contenido, asi que el texto se sale y pinta encima.
+
+       Y PIDIO ALGO MAS DURO QUE «QUE NO SOLAPE»: «que no se note la transicion
+       de una pantalla a la otra, que ningun elemento se desplace de su eje o
+       tamanio». Medido antes de tocar, entre las dos pantallas se movian
+       CUATRO cosas -- el nombre y la descripcion 26,4 px (el rotulo de fase
+       vacio, que a esta altura no se reservaba), el numero 51,2 y su etiqueta
+       4,6 -- y ademas el numero cambiaba de 56 a 104 px.
+
+       «SUBIR EL NUMERO» NO SE PODIA HACER MOVIENDOLO: el hueco de arriba era
+       10,0 px y el de abajo -15,0. No habia holgura que repartir, faltaba
+       sitio. Congelarlo cuesta 26,4 (rotulo) + 24,8 (descripcion a 3 lineas)
+       encima de los 15 que ya faltaban, y esos 66 px salen del glifo
+       (204 -> 181, en 'V1_GLYPH_WEB', que es fuente unica para que el circulo
+       siga relevando al de la preparacion) y del numero.
+
+       ELEGIDO POR EL USUARIO MIRANDOLO, entre tres tamanios pintados sobre la
+       app real: 96, 76 y 56. Gana **76**, que no es ninguno de los dos de hoy.
+       Esto ANULA la decision de s112 de que «el numero del gate no es el
+       timer»: el tamanio se unifica. El COLOR no -- el gate sigue en tinta
+       secundaria, y cambiar de color no desplaza nada.
+
+       RESULTADO MEDIDO a 1536x714: solape 0,0 y las SIETE piezas -- glifo,
+       nombre, descripcion, numero, etiqueta, cola y barra -- a 0,0 px, con las
+       siete cajas midiendo lo mismo en las dos pantallas. Huecos 10,5 / 10,4.
+
+       ALCANCE: 'min-height: 641px'. Por debajo NO se aplica y queda como hoy,
+       y eso es una limitacion medida, no un olvido: con el glifo constante
+       (que la regla de s119 obliga a que lo sea) a 1280x600 sigue solapando
+       7,0 px con el numero a 58 y 12,7 con el numero a 64. Ese tramo necesita
+       otro mecanismo, no otro valor.
+
+       VA AL FINAL DE LA HOJA por lo mismo que la barra de s176: los tiers de
+       arriba fijan 'margin-top' con '!important' y a igual especificidad gana
+       la ultima regla del archivo. Puesto antes, el bloque de margenes le
+       ganaba a «Cuidate» (6 px contra 14) y la cola se movia 8,0 px -- medido,
+       no supuesto. */
+    @media (min-width: 641px) and (min-height: 641px) {
+      /* 1 · el rotulo de fase ocupa SIEMPRE: es la causa exacta del salto de
+         26,4 px (12 px x 1,2 de interlineado + 12 de margen). La app ya lo
+         hacia por encima de 880; ahora tambien aqui. */
+      [data-pace-v1-kicker]:empty { display: block !important; min-height: 1.2em !important; }
+
+      /* 2 · la descripcion reserva su peor caso (3 lineas) y CENTRA el texto
+         dentro. Reservando a secas, un cue de 2 lineas dejaria el hueco abajo
+         y el conjunto se leeria descolgado; centrado, el nombre de arriba y el
+         numero de abajo quedan quietos y el texto respira igual. */
+      [data-pace-v1-cue] {
+        min-height: 74.4px !important;
+        display: flex !important; flex-direction: column !important;
+        justify-content: center !important; margin-bottom: 0 !important;
+      }
+
+      /* 3 · el numero: mismo tamanio y misma caja en las dos pantallas. El
+         interlineado 0,95 no recorta nada -- los digitos no tienen
+         descendentes -- y devuelve 13,5 px de los 66 que hacian falta. */
+      [data-pace-v1-num] { line-height: 0.95 !important; }
+      [data-pace-v1-numlabel] { margin-top: 10px !important; }
+
+      /* 4 · la cola, con la misma caja pinte «Colocate sin prisa…» o
+         «Cuidate…». Sin esto el grupo mide distinto y el centrado de abajo
+         reparte distinto, que es un salto por la puerta de atras.
+         SOLO ESOS DOS, Y NO el '-support-strong': la primera version reservaba 41
+         px a los tres, y las pantallas que pintan DOS bloques de cola --las de
+         cambio de lado, «El lado siguiente empieza solo»-- sumaban el doble.
+         Medido censando las 28 rutinas: el solape original de 15,0 px se
+         convertia en 35,5 en 3 pasos de «Antidoto silla» y «Caderas». Reservar
+         de mas cuesta igual que no reservar. */
+      [data-pace-v1-care], [data-pace-v1-support] {
+        min-height: 41px !important; margin-top: 14px !important;
+      }
+      /* Y CUANDO LA COLA SON DOS BLOQUES, el segundo no reserva. Las pantallas
+         de cambio de lado pintan la linea fuerte («El lado siguiente empieza
+         solo») Y la de apoyo debajo, asi que reservar 41 px a la segunda suma
+         una caja entera de mas: medido, dejaba 27,0 px de solape en 3 pasos de
+         «Antidoto silla» y «Caderas» donde el defecto original eran 15,0.
+         Con el par ya lleno, la reserva no hace falta -- lo que reserva es
+         para que una cola de UN bloque mida lo mismo que la del otro paso. */
+      [data-pace-v1-support-strong] + [data-pace-v1-support] {
+        min-height: 0 !important; margin-top: 6px !important;
+      }
+
+      /* 5 · y el grupo se centra en el hueco que queda. CON 'auto' Y NO CON UN
+         MARGEN FIJO: un fijo solo es equidistante a una altura concreta --
+         medido, dejaba 251,7 px muertos debajo a 1920x1040 y 125,4 a 1536x900.
+         'auto' reparte, y como el grupo ya mide IGUAL en las dos pantallas,
+         reparte lo mismo en ambas: 10,5 / 10,4 a 714 y 130,8 / 130,8 a 1040. */
+      [data-pace-v1-body] { display: flex !important; flex-direction: column !important; }
+      [data-pace-v1-num] { margin-top: auto !important; }
+      [data-pace-v1-body] > *:last-child { margin-bottom: auto !important; }
+    }
+    /* El tamanio del numero SI va por tramos -- eso es practica establecida en
+       esta hoja (104 / 82 / 58) y no choca con la regla del glifo. 76 en la
+       banda del usuario y hacia arriba; 58 entre 641 y 700, donde el tramo de
+       abajo ya aprieta y con 76 no cabria. */
+    @media (min-width: 641px) and (min-height: 701px) {
+      [data-pace-v1-num] { font-size: 76px !important; }
+    }
+    @media (min-width: 641px) and (min-height: 641px) and (max-height: 700px) {
+      [data-pace-v1-num] { font-size: 58px !important; }
+    }
   `;
   document.head.appendChild(s);
 }
@@ -18756,7 +19101,26 @@ function v1StepWeight(step) {
    La piel se lee del CONTRATO `--pace-skin` (`_responsive.pieles.js`), no de un
    `matchMedia` con el 769 copiado: si el corte de pieles se mueve, esto lo
    sigue solo. Se lee del root en cada render (una lectura, no un bucle). */
-const V1_GLYPH_WEB = 1.3;
+/* s177 · 1.3 -> 1.118, que es exactamente 1.3 x 0.86.
+   EL GLIFO PAGA PARTE DE LOS PIXELES QUE HACEN FALTA PARA CONGELAR EL RUNNER.
+   El usuario pidio que al pasar de «colocate» a «ejercicio» no se mueva ni
+   cambie de tamanio nada. Congelarlo cuesta: reservar el rotulo de fase son
+   26,4 px, reservar la descripcion a 3 lineas otros 24,8, y a 1536x714 ya
+   faltaban 15 -- el «Cuidate» se metia DENTRO de la barra. De 204 px el
+   circulo pasa a 181.
+
+   Y SE CAMBIA AQUI, EN LA FUENTE UNICA, NO CON CSS EN EL RUNNER. Este numero
+   lo consumen TRES sitios (el runner v1, el legacy de MoveModule y la cuenta
+   atras de s174) y el comentario de `v1GlyphSizeAhora` dice por que: si uno se
+   desvia, «el circulo de la sesion no relevaria al de la preparacion sino que
+   saltaria». Encogerlo por CSS solo en el runner habria arreglado un salto
+   creando otro, justo el que el usuario esta pidiendo que desaparezca.
+
+   Y ES UN FACTOR CONSTANTE, NO UN TRAMO. La regla de s119 prohibe reintroducir
+   un salto por tramos en `v1GlyphSize`: el pre-s119 saltaba de 0.22 a 0.25 en
+   vpH=720 y dejaba una banda muerta de 701 a 760 que desbordaba 7 px y sacaba
+   scrollbar en portatiles de 1366x768. La curva sigue siendo continua. */
+const V1_GLYPH_WEB = 1.118;
 function v1EsEscritorio() {
   try {
     return getComputedStyle(document.documentElement).
@@ -19384,19 +19748,20 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
 
 
 
+
     bigNumber != null && gateNumber && /*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { style: { ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 } },
+    React.createElement("div", { "data-pace-v1-num": true, "data-pace-v1-num-gate": true, style: { ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 } },
     bigNumber
     ), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 } }, bigLabel)
+    React.createElement("div", { "data-pace-v1-numlabel": true, style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 } }, bigLabel)
     ),
 
 
 
     bigNumber != null && !gateNumber && /*#__PURE__*/
     React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { "data-pace-move-timer": true, "data-pace-v1-timer": true, style: {
+    React.createElement("div", { "data-pace-move-timer": true, "data-pace-v1-timer": true, "data-pace-v1-num": true, style: {
         ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
         /* s119: longhand (no el shorthand `animation`) para no mezclarlo con
            `animationPlayState` → silencia el warning de React. Delta 0. */
@@ -19404,7 +19769,7 @@ function MoveSessionV1(_ref) {let { routine, onExit, kind = 'move', inPath } = _
       } },
     bigNumber
     ), /*#__PURE__*/
-    React.createElement("div", { style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 } }, bigLabel)
+    React.createElement("div", { "data-pace-v1-numlabel": true, style: { fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 } }, bigLabel)
     ),
 
 
@@ -22338,6 +22703,58 @@ Object.assign(window, { PathStats });
 
     @media (min-width: 769px) {
       [data-pace-stats-vistas] { min-height: 385px; }
+      /* ══ s177 · EL AÑO SE LLEVA EL ANCHO, Y CADA VISTA EL SUYO ═════════════
+
+         LO QUE REPORTO EL USUARIO: «la vista de calendario podia ajustarse mas
+         al tamanio de la ventana para que no quede todo tan reducido».
+
+         MEDIDO A 1536x714 ANTES DE TOCAR NADA: el modal usaba 820 px de una
+         ventana de 1536 -- el 53 %-- y la rejilla del anio lleva celdas de
+         11x11 px ESCRITAS A MANO en el JSX, o sea 53 columnas x 13 = 754 px
+         pase lo que pase con la ventana. Resultado: la pestania «Anio» dejaba
+         163,7 px MUERTOS de sus 385, el 42 % de su caja. Las otras tres, 0.
+
+         EL MODAL SUBE A 1240, que no es un numero inventado: es el que usan
+         Mueve, Estira y Respira desde s176. Stats era el unico que se quedaba
+         en 820, asi que esto QUITA una excepcion en vez de anadirla.
+
+         LO QUE NO SE PUEDE HACER, Y ESTA MEDIDO: agrandar la rejilla del MES
+         para que acompanie. Con celda 48 su vista se va a 421,4 px, con 56 a
+         474,4 y con 64 a 527,4, contra los 385 de las otras tres -- o sea
+         vuelve el salto entre pestanias que s176 quito a peticion del usuario.
+         Los 42 px de hoy YA SON SU TECHO, que es justo lo que s176 encontro al
+         compactarlo de 48 a 42.
+
+         POR ESO CADA VISTA LLEVA SU ANCHO. Ensanchar el modal para el anio
+         dejaria al mes pequenio y solo en 1174 px: se arreglaria una pestania
+         estropeando otra. Las que NO son el anio se acotan a una columna de
+         820 y se centran, asi que se leen como una decision. El ':has()'
+         distingue una vista de otra sin tocar el JSX.
+
+         Y EL TAMANIO DE CELDA VA AQUI Y NO EN EL JSX, con '!important', porque
+         los 11 px son estilos EN LINEA por celda. 19 + 2 de hueco = 21 de
+         paso; 53 x 21 = 1113 mas 18 de la columna de dias = 1131, que entra en
+         los 1174 utiles. El rotulo de mes y la etiqueta de dia se mueven con
+         la celda porque tienen que seguir alineados con el paso de columna --
+         si uno se queda atras, los meses dejan de caer sobre su columna. */
+      [data-pace-modal-card]:has([data-pace-stats-vistas]) { max-width: 1240px; }
+      /* EL CENTRADO SE ACOTA AL ANIO, y esto lo corrigio una medida. Puesto en
+         todas las vistas, «Semana» pasaba de 385,9 a 389,9 px: una columna
+         flexible NO COLAPSA los margenes de sus hijos, asi que el margen de
+         cola dejaba de fundirse con el del contenedor y se sumaba. Son 4,9 px
+         de desviacion sobre la promesa de s176 -- las cuatro pestanias a la
+         misma altura-- y el centrado no le hacia falta a nadie mas: el hueco
+         muerto solo existe en el anio. */
+      [data-pace-stats-vistas]:has([data-pace-year-grid-wrap]) {
+        display: flex; flex-direction: column; justify-content: center;
+      }
+      [data-pace-stats-vistas]:not(:has([data-pace-year-grid-wrap])) > * {
+        max-width: 820px; margin-left: auto; margin-right: auto;
+      }
+      [data-pace-year-cell] { width: 19px !important; height: 19px !important; border-radius: 3px !important; }
+      [data-pace-year-month-lbl] { width: 19px !important; font-size: 11px !important; }
+      [data-pace-year-day-lbl] { height: 19px !important; font-size: 11px !important; }
+
       /* LOS 13 PX QUE LE SOBRABAN A «SEMANA». Con el calendario ya compactado,
          era la unica pestana que seguia con scroll. Salen del hueco ENTRE las
          cuatro filas de barras -- 8 px x 4 = 32, que pasan a 4 x 4 = 16-- y no
@@ -22795,7 +23212,7 @@ function StatsPanel(_ref4) {let { open, onClose } = _ref4;
 
   return (/*#__PURE__*/
     React.createElement(Modal, { open: open, onClose: onClose,
-      tagLabel: t('stats.tag'), title: t('stats.title'), subtitle: t('stats.subtitle'), maxWidth: 820 }, /*#__PURE__*/
+      tagLabel: t('stats.tag'), title: t('stats.title'), subtitle: t('stats.subtitle'), maxWidth: 1240 }, /*#__PURE__*/
 
     React.createElement("div", { style: statsPanelTabStyles.container },
     [
@@ -23429,9 +23846,15 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
   /* El fondo es un booleano en el estado (`ambientOn`) y dos pills aquí. Al
      apagarlo se corta el drone que ya estuviera sonando, como hacía la casilla
      que esto sustituye. */
-  const ponerFondo = (siAmbiente) => {
-    set({ ambientOn: siAmbiente });
-    if (!siAmbiente && window.ambientDrone) window.ambientDrone.stop(400);
+  /* s177 · TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision: la fila es
+     excluyente y nunca suenan dos capas a la vez (decision de s176). Se
+     mantiene con dos booleanos en vez de un tri-estado para no migrar el
+     `localStorage` de nadie por una prueba: la exclusion la garantiza ESTA
+     funcion, que es el unico sitio que los escribe. */
+  const ponerFondo = (cual) => {
+    set({ ambientOn: cual === 'amb', musicOn: cual === 'mus' });
+    if (cual !== 'amb' && window.ambientDrone) window.ambientDrone.stop(400);
+    if (cual !== 'mus' && window.paceMusica) window.paceMusica.stop(400);
   };
 
   /* Al elegir voz se PRECARGA en ese momento. Si se esperara a la primera fase
@@ -23476,8 +23899,14 @@ function TweaksAudioBlock(_ref) {let { state, set } = _ref;
 
     rotulo(t('settings.bg.label')),
     fila([
-    { k: 'nada', name: t('settings.bg.none'), activa: !state.ambientOn, on: () => ponerFondo(false) },
-    { k: 'amb', name: t('settings.bg.ambient'), activa: !!state.ambientOn, on: () => ponerFondo(true) }],
+    { k: 'nada', name: t('settings.bg.none'), activa: !state.ambientOn && !state.musicOn, on: () => ponerFondo('nada') },
+    { k: 'amb', name: t('settings.bg.ambient'), activa: !!state.ambientOn, on: () => ponerFondo('amb') },
+    /* s177 · «Musica» YA SE PINTA porque ya hay un archivo. El brief
+       decia que no se pintara hasta entonces -- «un control que no hace
+       nada es peor que un hueco»-- y hoy hace algo: suena en las
+       rutinas de Equilibrio. En las demas familias todavia no hay
+       pieza, asi que elegirla equivale a «Nada» hasta que existan. */
+    { k: 'mus', name: t('settings.bg.music'), activa: !!state.musicOn, on: () => ponerFondo('mus') }],
     { marginLeft: 16 })
     )
 

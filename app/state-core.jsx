@@ -50,6 +50,11 @@ const defaultState = {
   // instalaciones nuevas: el merge de loadState conserva el valor persistido.
   soundOn: true,
   ambientOn: false,
+  /* s177 · la tercera opcion de «que suena detras». Arranca APAGADA porque hoy
+     solo existe una pieza (Equilibrio) y es una prueba; y es EXCLUYENTE con
+     ambientOn -- la interfaz lo mantiene, y `paceMusica` lo vuelve a
+     comprobar por si acaso. */
+  musicOn: false,
 
   // s176 · LA VOZ TIENE INTERRUPTOR PROPIO. Hasta s175 iba pegada a `soundOn`,
   // asi que quien tenia sonido se encontro una voz y no podia quitarla sin

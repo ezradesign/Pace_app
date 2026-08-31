@@ -130,6 +130,7 @@ Object.assign(window.PACE_STRINGS.es, {
     'settings.bg.label':             'Qué suena detrás',
     'settings.bg.none':              'Nada',
     'settings.bg.ambient':           'Ambiente',
+    'settings.bg.music':             'Musica',
 
     // ActivityBar
     'activity.meta':                 'Actividades',
@@ -336,6 +337,7 @@ Object.assign(window.PACE_STRINGS.en, {
     'settings.bg.label':             'What plays behind',
     'settings.bg.none':              'Nothing',
     'settings.bg.ambient':           'Ambient',
+    'settings.bg.music':             'Music',
 
     // ActivityBar
     'activity.meta':                 'Activities',

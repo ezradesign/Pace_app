@@ -283,7 +283,11 @@ function useSound() {
 }
 
 /* === DRONE AMBIENTE (capa 2 opt-in) ===
-   Singleton. G2 ≈ 96.7 Hz · sine · peak 0.02.
+   Singleton. G2 = 96.22 Hz · sine · peak 0.02.
+   (s177: decía 96.7 y era falso. note('G2') con BASE_A=432 da 96.22; el LFO
+   modula GANANCIA, no frecuencia, así que nada lo desafina. El 96.7 ya se
+   había copiado a MUSICA_RESPIRA_BRIEFS.md, donde importa: la música de fondo
+   se afina contra este drone en Coherente 432.)
    LFO senoidal 0.1 Hz · ±0.002 para movimiento orgánico.
    Arranca solo si soundOn && ambientOn en el momento de llamar start().
    start(force) — F4/s90, Coherente 432: fuerza el arranque aunque
