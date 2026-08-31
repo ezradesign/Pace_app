@@ -18,6 +18,10 @@ _revision-*.html
 # de revision -- lo que se versiona es el GENERADOR, no su salida
 _maqueta-*.html
 _maqueta-*/
+# Capturas y recortes de trabajo (s177): mismo criterio -- se versiona el banco
+# que las genera, no la imagen. Llevan el prefijo `_` como todo lo generado.
+_*.jpg
+_*.png
 
 
 # Salida de Playwright (s154): informes y trazas se regeneran en cada pasada
