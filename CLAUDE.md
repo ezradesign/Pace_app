@@ -149,7 +149,16 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 **Módulos:** Foco (Pomodoro 15/25/35/45 min) · Respira (breathwork guiado) · **Mueve** (calistenia de oficina, fuerza y activación) · **Estira** (movilidad y estiramientos, antídoto a la silla) · Hidrátate (tracking vasos)
 
-> **OJO CON LOS IDS, QUE VAN CRUZADOS:** las rutinas de **Mueve** llevan ids `extra.*` y viven en `app/extra/ExtraModule.jsx`; las de **Estira** llevan `move.*` y viven en `app/move/move.data.js`. No se pueden renombrar sin borrar datos de la gente, así que se convive con ello. Hasta s176 este documento los describía **al revés**, y eso mandó a más de una sesión al archivo equivocado.
+> **OJO: LO CRUZADO SON LOS IDS, Y SÓLO LOS IDS. Los archivos NO.** Cada módulo vive en la carpeta que lleva su nombre; lo único que va del revés es el prefijo del `id`:
+>
+> | Módulo (lo que ve el usuario) | Vive en | Lo consume | ids |
+> |---|---|---|---|
+> | **Mueve** — calistenia y fuerza | `app/move/move.data.js` (`MOVE_ROUTINES`) | `MoveModule.jsx`, `catPrefix="mueve"` | **`extra.*`** |
+> | **Estira** — movilidad, antídoto a la silla | `app/extra/ExtraModule.jsx` (`EXTRA_ROUTINES`) | `ExtraModule.jsx`, `catPrefix="extra"` | **`move.*`** |
+>
+> Los ids no se pueden renombrar sin borrar datos de la gente, así que se convive con ello. **Verificado en s178 midiendo, no leyendo**: `lib.move.title` = «Mueve» y `lib.extra.title` = «Estira» (`app/i18n/strings/sessions.body.js:31,36`), y el censo `scripts/audit/censo-suelo-s178.js` resuelve las 28 rutinas por su módulo real.
+>
+> **HISTORIA, porque este párrafo ya ha mentido dos veces:** hasta s176 describía los ids al revés. s176 lo corrigió, pero **cruzó también las rutas de archivo, que nunca estuvieron cruzadas** — y en s178 eso mandó a esta misma sesión al archivo equivocado: un censo de «cuántas rutinas de Estira piden suelo» midió Mueve y devolvió **2** donde la respuesta es **9**. Si dudas, no leas: mira `catPrefix` y `lib.*.title`.
 
 **Tono:** calmado, artesanal, cuidado. Sin gamificación agresiva. Sin métricas abrumadoras. Copy corto en español ("¿Qué quieres cultivar hoy?").
 
