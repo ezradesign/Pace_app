@@ -615,6 +615,25 @@ porqué: [`LIBRERIAS_REDISENO.md`](docs/product/LIBRERIAS_REDISENO.md).
 | **Móvil** (≤ 768) | filo de **3 px** del token del módulo — es lo único que dice de un vistazo en qué biblioteca estás con 3 o 4 tarjetas a la vista | — |
 | **Escritorio** (≥ 769) | **sin color** — con catorce a la vez, el mismo recurso satura | entra el filo + `translateY(-1px)` + `--sh-soft`, que es lo que hace `Card` |
 
+### s177 · Stats tambien usa el modal de 1240, y cada vista lleva SU ancho
+
+Stats era el ultimo modal ancho que se quedaba en **820 px**, y eso dejaba a la
+pestania «Anio» con **163,7 px muertos de sus 385** (el 42 % de su caja) porque
+su rejilla lleva **celdas de 11x11 px cableadas** en el JSX: 53 columnas x 13 =
+754 px, mida lo que mida la ventana. Con 1240 la celda pasa a **19** y el hueco
+muerto a **52,4**. Subirlo **quita una excepcion**, no la anade.
+
+**Pero ensanchar el modal no basta, y agrandar el mes NO SE PUEDE.** Las cuatro
+pestanias comparten caja de 385 px (s176) y la del mes se va a **421,4** con
+celda 48, **474,4** con 56 y **527,4** con 64: cualquiera devuelve el salto entre
+pestanias. Los 42 px de hoy ya son su techo.
+
+Por eso **cada vista lleva su ancho**: el anio usa los 1174 utiles y las demas se
+acotan a **820 px** y se centran, con `:has([data-pace-year-grid-wrap])` para
+distinguirlas sin tocar el JSX. Y el **centrado vertical se acota al anio**: en
+todas las vistas metia 4,9 px en «Semana», porque una columna flexible no colapsa
+los margenes de sus hijos.
+
 **El modal de biblioteca recorta su chrome** (`:has(.pace-lib)`, con
 `!important` porque el padding va en línea): fondo **8 px** y tarjeta **16 px**
 en móvil, **20 / 22-24** en escritorio, con `maxWidth: 1240`. Sin eso el ancho
