@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.108.0</title>
+  <title>PACE · Foco · Cuerpo — v0.109.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -3404,6 +3404,29 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.chair.antidote.s5.name': 'Breathing reset',
   'move.chair.antidote.s5.instruction.action': '3 deep inhales to close.',
 
+  /* s178 · la hermana DE PIE de `move.hips.5`. Claves posicionales `sN` como el resto:
+     el orden de los pasos es contrato y re-indexarlos rompe el inglés en silencio (s118). */
+  'move.hips.standing.name': 'Standing Hips',
+  'move.hips.standing.desc': 'Hips without getting on the floor. Four positions by your desk.',
+  'move.hips.standing.code': 'Hips',
+  'move.hips.standing.s0.name': 'Deep squat',
+  'move.hips.standing.s0.instruction.action': 'Drop into a deep squat, heels down, elbows inside your knees.',
+  'move.hips.standing.s0.instruction.care': 'Hold the desk if you lose your balance. Put something under your heels if they lift.',
+  'move.hips.standing.s1.name': 'Cossack squat',
+  'move.hips.standing.s1.instruction.action': 'Feet very wide. Shift your weight to this side, other leg straight. Come up slowly.',
+  'move.hips.standing.s1.instruction.care': 'Heel down. Only go as low as you control.',
+  /* «ATG split squat» y no «Deep lunge»: es como ya se llama `Zancada profunda` en
+     `extra.legs.single.s2` y `move.atg.knees.s0`. Dos nombres EN para el mismo dibujo
+     confunden, y el glifo se resuelve por el `name` ES (s108). */
+  'move.hips.standing.s2.name': 'ATG split squat',
+  'move.hips.standing.s2.instruction.setup': 'Take a long step back, without resting your knee down.',
+  'move.hips.standing.s2.instruction.action': 'Sink the back hip and keep your chest tall.',
+  'move.hips.standing.s2.instruction.care': 'A soft stretch at the front of the back hip, never a sharp pull. Hold the desk if you need to.',
+  'move.hips.standing.s3.name': 'Forward fold',
+  'move.hips.standing.s3.instruction.action': 'Feet together, let your torso hang down. Soft knees.',
+  'move.hips.standing.s3.instruction.care': 'Rest your hands on your knees if you need to. Come up slowly, no jerking.',
+  'move.hips.standing.s4.name': 'Deep breaths',
+  'move.hips.standing.s4.instruction.action': '3 full breaths to finish.',
   'move.hips.5.name': 'Hips',
   'move.hips.5.desc': '5 steps to unlock deep hips. Mostly on the floor.',
   'move.hips.5.code': 'HIP',
@@ -3566,6 +3589,27 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.spine.waves.s1.instruction.setup': 'Stand up, knees loose.',
   'move.spine.waves.s1.instruction.action': 'Run a slow wave from your pelvis to your head.',
   'move.spine.waves.s1.instruction.care': 'Fluid movement, no rush.',
+  'move.spine.chair.name': 'Spine in the Chair',
+  'move.spine.chair.desc': 'Spine and neck without standing up. Four movements in your chair.',
+  'move.spine.chair.code': 'Spine',
+  'move.spine.chair.s0.name': 'Thoracic extension',
+  'move.spine.chair.s0.instruction.setup': 'Sit all the way back, upper back against the backrest.',
+  'move.spine.chair.s0.instruction.action': 'Arch gently over the backrest, opening your chest to the ceiling.',
+  'move.spine.chair.s0.instruction.care': 'The arch comes from your chest, not your lower back.',
+  'move.spine.chair.s1.name': 'Thoracic rotation',
+  'move.spine.chair.s1.instruction.setup': 'Sit tall, feet down. Cross your hands over your chest.',
+  'move.spine.chair.s1.instruction.action': 'Turn your torso slowly to one side. Come back to centre.',
+  'move.spine.chair.s1.instruction.care': 'The turn comes from your torso, not your neck.',
+  'move.spine.chair.s2.name': 'Lateral tilt',
+  'move.spine.chair.s2.instruction.setup': 'Sit tall, shoulders down.',
+  'move.spine.chair.s2.instruction.action': 'Take your ear toward your shoulder, slowly. Feel the stretch on the other side.',
+  'move.spine.chair.s2.instruction.care': 'Do not push with your hand. Let the weight of your head do it.',
+  'move.spine.chair.s3.name': 'Chin tucks',
+  'move.spine.chair.s3.instruction.action': 'Draw your chin straight back, making a double chin. Hold, then release.',
+  'move.spine.chair.s3.instruction.care': 'Small movement. Your head does not tip up or down, only back.',
+  'move.spine.chair.s4.name': 'Deep breaths',
+  'move.spine.chair.s4.instruction.action': '3 full breaths to finish.',
+
   'move.spine.waves.s2.name': 'Thoracic rotation',
   'move.spine.waves.s2.instruction.setup': 'Sit tall, hands crossed over your chest.',
   'move.spine.waves.s2.instruction.action': 'Rotate your trunk slowly to one side and the other.',
@@ -3623,6 +3667,30 @@ Object.assign(window.PACE_STRINGS.en, {
   'move.hamstrings.name': 'Posterior Chain',
   'move.hamstrings.desc': 'Hamstrings and posterior chain. Long legs again.',
   'move.hamstrings.code': 'Hamstrings',
+  /* s178 · la hermana DE PIE. Los nombres EN de paso se reutilizan de donde ya existen
+     («Roll down» de spine.waves, «Single-leg hamstring» y «Forward fold» de hamstrings,
+     «Sissy squat» de legs.single): mismo dibujo, mismo nombre. */
+  'move.hamstrings.standing.name': 'Standing Posterior Chain',
+  'move.hamstrings.standing.desc': 'Hamstrings and lower back without lying down. Four positions by your desk.',
+  'move.hamstrings.standing.code': 'Hamstrings',
+  'move.hamstrings.standing.s0.name': 'Roll down',
+  'move.hamstrings.standing.s0.instruction.setup': 'Stand with your feet hip-width apart.',
+  'move.hamstrings.standing.s0.instruction.action': 'Roll down one vertebra at a time until your torso hangs. Come up the same way, slowly.',
+  'move.hamstrings.standing.s0.instruction.care': 'Soft knees. Come up slowly so you do not get dizzy.',
+  'move.hamstrings.standing.s1.name': 'Single-leg hamstring',
+  'move.hamstrings.standing.s1.instruction.setup': 'Place one heel forward, that leg straight.',
+  'move.hamstrings.standing.s1.instruction.action': 'Send your hip back, torso long. Feel the stretch behind your thigh.',
+  'move.hamstrings.standing.s1.instruction.care': 'Standing knee slightly bent. No bouncing.',
+  'move.hamstrings.standing.s2.name': 'Sissy squat',
+  'move.hamstrings.standing.s2.instruction.setup': 'Hold the desk with both hands.',
+  'move.hamstrings.standing.s2.instruction.action': 'Drive your knees forward and lift your heels. Lower gradually.',
+  'move.hamstrings.standing.s2.instruction.care': 'Supported the whole time. Only go as low as you control.',
+  'move.hamstrings.standing.s3.name': 'Forward fold',
+  'move.hamstrings.standing.s3.instruction.action': 'Feet together, let your torso hang down. Soft knees.',
+  'move.hamstrings.standing.s3.instruction.care': 'Rest your hands on your knees if you need to. Come up slowly, no jerking.',
+  'move.hamstrings.standing.s4.name': 'Deep breaths',
+  'move.hamstrings.standing.s4.instruction.action': '3 full breaths to finish.',
+
   'move.hamstrings.s0.name': 'Elephant walk',
   'move.hamstrings.s0.instruction.action': 'Walk with your hands on the floor, legs as straight as possible.',
   'move.hamstrings.s0.instruction.care': 'Bend your knees a little if your hamstrings pull.',
@@ -4812,7 +4880,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.108.0';
+const PACE_VERSION = 'v0.109.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -19683,24 +19751,31 @@ Object.assign(window, { MoveSessionV1 });
 ;Object.assign(window, { MoveSessionV1 });
 })();
 </script>
+  <!-- El dato de Estira, troceado en s178 por la regla §1 (ExtraModule.jsx llegó a 553
+       líneas). EL ORDEN ES CONTRATO: `extra.data.js` declara `EXTRA_ROUTINES` y
+       `extra.data.piernas.js` le añade sus dos grupos; invertirlos deja media biblioteca
+       y por eso el segundo lleva guard que aborta. Los dos ANTES de `ExtraModule.jsx`,
+       que sólo pinta. -->
   <script>
 ;(function () {
-/* PACE · Módulo Estira (Estiramientos / Movilidad)
-   Botón: "Estira" · afloja tensión.
+/* PACE · app/extra/extra.data.js (s178) — LAS RUTINAS DE **ESTIRA**, primera mitad.
+   =================================================================================
+   OJO, QUE LOS IDS VAN CRUZADOS: este archivo vive en `app/extra/` y sus rutinas
+   llevan ids `move.*`, porque el SWAP de la sesión 14 cambió el contenedor visual
+   y no los ids, para no invalidar el localStorage ni los logros de nadie. Lo que
+   pinta esto es **Estira** (`lib.extra.title`). Ver la tabla de CLAUDE.md, que
+   hasta s178 tenía las RUTAS cambiadas y mandó a más de una sesión al archivo
+   equivocado.
 
-   v0.11.9 — SWAP de contenido (sesión 14):
-   Las rutinas de estiramiento/movilidad pasaron a este módulo (antes vivían
-   en MoveModule). La calistenia y la fuerza pasaron a MoveModule (botón
-   "Mueve"). Los ids (`move.*` / `extra.*`) y funciones de state
-   (completeMoveSession / completeExtraSession) se conservan para no
-   invalidar localStorage ni logros de usuarios existentes — solo cambia
-   qué contenedor visual los muestra.
+   POR QUÉ ESTÁ TROCEADO EN DOS: `ExtraModule.jsx` llegó a **553 líneas** al entrar
+   las tres rutinas de oficina de s178 y la regla §1 de CLAUDE.md manda trocear, no
+   registrar deuda. La tabla de STATE.md ya lo tenía escrito desde s148: «al retomar
+   Estira, trocear los DATOS antes». El corte es por GRUPO, que es la única costura
+   que el dato ya tenía; las dos mitades componen el mismo objeto.
 
-   F5 (s91): 7 → 14 rutinas, biblioteca agrupada como Respira (4 grupos,
-   free primero dentro de cada grupo). Inspiración: Strengthside (caderas/
-   hombros/columna, movilidad de suelo, flujos diarios cortos). Los pasos
-   nuevos sin glifo aprobado renderizan DefaultGlyph hasta el port (D-4). */
-
+   EL ORDEN DE CARGA ES CONTRATO: este archivo declara `EXTRA_ROUTINES` y
+   `extra.data.piernas.js` le añade sus dos grupos. Si se invierten en PACE.html, el
+   segundo aborta con su guard en vez de dejar media biblioteca en silencio. */
 const EXTRA_ROUTINES = {
   oficina: {
     label: 'Oficina',
@@ -19892,6 +19967,40 @@ const EXTRA_ROUTINES = {
        morning.flow (mismo glifo). Puente torácico: se consolida el cue existente
        + care ligero; su ESCALÓN de regresión (audit B2.1) queda para la ola
        editorial. `name` intactos. Acceso premium SIN cambios. */
+    /* s178 · LA HERMANA EN SILLA DE `move.spine.waves`, tercera del bloque de oficina.
+       Los cuatro ejercicios ya tienen arte y su `setup` los declara SENTADOS: `Extension
+       toracica` («apoya la espalda alta en el respaldo»), `Rotacion toracica` e
+       `Inclinacion lateral` («sientate erguido»).
+       `Barbilla atras` va en REPETICIONES y no en segundos porque BASE §3-E lo dice con
+       nombre y apellidos: el chin tuck es control postural, «5 repeticiones · manten 3-5 s»,
+       nunca «45 segundos». Se hace ENTERA sin levantarse de la silla. */
+    { id: 'move.spine.chair', tag: 'SPN', code: 'Columna', name: 'Columna en la silla',
+      desc: 'Columna y cuello sin levantarse. Cuatro movimientos en la silla.', min: 4,
+      position: ['seated'], equipment: ['stableChair'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+      steps: [
+      { name: 'Extensión torácica', mode: 'timed', dur: 35,
+        instruction: {
+          setup: 'Siéntate atrás del todo, con la espalda alta apoyada en el respaldo.',
+          action: 'Arquea suave sobre el respaldo, abriendo el pecho al techo.',
+          care: 'El arco nace del pecho, no de la zona lumbar.' } },
+      { name: 'Rotación torácica', mode: 'perSide', dur: 30, transition: { seconds: 8 },
+        instruction: {
+          setup: 'Siéntate erguido, pies apoyados. Cruza las manos sobre el pecho.',
+          action: 'Gira el tronco despacio hacia un lado. Vuelve al centro.',
+          care: 'El giro nace del tronco, no del cuello.' } },
+      { name: 'Inclinación lateral', mode: 'perSide', dur: 30, transition: { seconds: 8 },
+        instruction: {
+          setup: 'Siéntate erguido, deja los hombros abajo.',
+          action: 'Lleva la oreja hacia el hombro, despacio. Nota el estirón en el lado contrario.',
+          care: 'No empujes con la mano. Deja caer el peso de la cabeza.' } },
+      { name: 'Barbilla atrás', mode: 'reps', reps: 5, dur: 40,
+        tempo: { down: 2, hold: 4, up: 2 }, completion: { mode: 'guided' },
+        instruction: {
+          action: 'Lleva la barbilla atrás en horizontal, como haciendo papada. Mantén y relaja.',
+          care: 'Movimiento pequeño. La cabeza no sube ni baja, sólo va atrás.' } },
+      { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+        instruction: { action: '3 inhalaciones completas para cerrar.' } }]
+    },
     { id: 'move.spine.waves', tag: 'SPN', code: 'Columna', name: 'Columna · ondas',
       desc: 'Ondas y puentes, con paso por el suelo. La columna, vértebra a vértebra.', min: 5, access: 'premium',
       position: ['floor', 'standing', 'seated'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
@@ -19923,7 +20032,32 @@ const EXTRA_ROUTINES = {
           care: 'Rodillas suaves. Sube despacio para no marearte.' } }]
     }]
 
-  },
+  }
+};
+
+/* La segunda mitad (caderas y flujos) la añade `extra.data.piernas.js`. Se publica
+   AQUÍ y no al final del otro archivo para que el orden de grupos sea el de la
+   biblioteca: un `Object.assign` conserva el orden de inserción. */
+window.EXTRA_ROUTINES = EXTRA_ROUTINES;
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · app/extra/extra.data.piernas.js (s178) — LAS RUTINAS DE **ESTIRA**, 2ª mitad.
+   ====================================================================================
+   Los grupos `caderas` y `flujos`. Se separó de `extra.data.js` por la regla §1 (ver
+   la cabecera de aquel para el porqué del corte y para el aviso de los ids cruzados).
+
+   GUARD DE ORDEN: si este archivo se evalúa antes que `extra.data.js`, no hay objeto
+   al que añadir nada y la biblioteca se quedaría con media lista SIN QUE NADIE SE
+   ENTERE — el fallo por omisión que s169 dejó por escrito. Se aborta ruidosamente.
+   Es la regla de s148: si un archivo llama a algo al evaluarse, o quien se lo da carga
+   antes, o hay guard que aborte. */
+if (!window.EXTRA_ROUTINES) {
+  throw new Error('extra.data.piernas.js se ha evaluado ANTES que extra.data.js: revisa el orden en PACE.html');
+}
+
+Object.assign(window.EXTRA_ROUTINES, {
   caderas: {
     label: 'Caderas y piernas',
     aside: 'Desbloquea la mitad inferior',
@@ -19933,6 +20067,44 @@ const EXTRA_ROUTINES = {
        suelo (90/90, Squat, Puente) → `timed`. Gate `ready` en el PRIMER paso
        de suelo (90/90). 90/90, Pigeon y Puente con marcha comparten copy con
        couch.stretch (mismo ejercicio/glifo). `min` 6 dentro de rango. */
+    /* s178 · LA HERMANA DE PIE DE `move.hips.5`. Nace de un CENSO, no de una idea:
+       `scripts/audit/censo-suelo-s178.js` midió que Estira pide suelo en 9 de sus 14
+       rutinas, que las CUATRO de caderas son de suelo, y que las cinco rutinas sin suelo
+       que había eran TODAS de tren superior — en una biblioteca cuyo subtítulo es
+       «antídoto a la silla».
+       CERO GLIFOS NUEVOS: los cuatro ejercicios ya tienen arte ingestado y ya viven en el
+       catálogo. Lo único que cambia es que aquí ninguno obliga a bajar al suelo.
+       VERIFICADO UNO A UNO contra su propio `setup`/`action` antes de componer, que es la
+       regla de no inventar técnica: `Cuádriceps en pared` («la rodilla al fondo») y
+       `Marcha del elefante` («camina con las manos por el suelo») quedaron FUERA por eso.
+       `Sentadilla profunda` sí entra: «talones en el suelo» es en cuclillas, no tumbado.
+       UNIDADES por BASE §3-C (estiramiento estático → segundos POR LADO, 20-30 s estándar)
+       y §6 (cambio de lado 5-10 s). Rango por §5, Estira rutina completa: 4-8 min y 3-6
+       posiciones. Sale en 241 s activos = 4 min, con 4 posiciones y cierre. */
+    { id: 'move.hips.standing', tag: 'HIP', code: 'Caderas', name: 'Caderas de pie',
+      desc: 'Caderas sin bajar al suelo. Cuatro posiciones junto a la mesa.', min: 4,
+      position: ['standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+      steps: [
+      { name: 'Sentadilla profunda', mode: 'timed', dur: 50,
+        instruction: {
+          action: 'Baja a una sentadilla profunda, talones en el suelo, codos por dentro de las rodillas.',
+          care: 'Apóyate en la mesa si pierdes el equilibrio. Pon algo bajo los talones si no llegan.' } },
+      { name: 'Sentadilla lateral', mode: 'perSide', dur: 30, transition: { seconds: 8 },
+        instruction: {
+          action: 'Pies muy anchos. Baja el peso hacia este lado, con la otra pierna estirada. Sube despacio.',
+          care: 'Talón apoyado. Baja solo hasta donde controles.' } },
+      { name: 'Zancada profunda', mode: 'perSide', dur: 30, transition: { seconds: 8 },
+        instruction: {
+          setup: 'Da un paso largo hacia atrás, sin apoyar la rodilla.',
+          action: 'Hunde la cadera de atrás y mantén el pecho alto.',
+          care: 'Tensión suave delante de la cadera de atrás, nunca pinchazo. Sujétate a la mesa si lo necesitas.' } },
+      { name: 'Pliegue adelante', mode: 'timed', dur: 35,
+        instruction: {
+          action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
+          care: 'Apoya las manos en las rodillas si lo necesitas. Sal despacio, sin tirones.' } },
+      { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+        instruction: { action: '3 inhalaciones completas para cerrar.' } }]
+    },
     { id: 'move.hips.5', tag: 'HIP', code: 'Caderas', name: 'Caderas',
       desc: '5 pasos para desbloquear caderas profundas. Casi todo en el suelo.', min: 6,
       position: ['floor', 'standing'], equipment: ['cushionOptional'], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
@@ -20026,6 +20198,39 @@ const EXTRA_ROUTINES = {
        marcha → `timed` sobre SUELO (reutiliza el copy de hips.5/couch) con gate
        `ready` (entrada al suelo). `name` intactos → glifos sin tocar. `min` 5
        dentro de rango. Acceso premium SIN cambios. */
+    /* s178 · LA HERMANA DE PIE DE `move.hamstrings`, por el mismo censo. Los tres
+       ejercicios ya tienen arte y su propio `setup` los declara de pie: `Rodar hacia
+       abajo` («ponte de pie»), `Isquio a una pierna` («apoya un talon adelante») y
+       `Pliegue adelante` («manos en las rodillas si lo necesitas»).
+       `Marcha del elefante` NO entra aunque tenga arte: «camina con las manos por el
+       suelo» no pide tumbarse, pero en una oficina no es discreto — y la discrecion es
+       el eje de esta biblioteca. Unidades por BASE §3-C y §6. */
+    { id: 'move.hamstrings.standing', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior de pie',
+      desc: 'Isquios y espalda baja sin tumbarse. Cuatro posiciones junto a la mesa.', min: 4,
+      position: ['standing'], equipment: ['deskOptional'], requiresFloor: false, intensity: 'gentle', level: 'accessible',
+      steps: [
+      { name: 'Rodar hacia abajo', mode: 'timed', dur: 50,
+        instruction: {
+          setup: 'Ponte de pie, pies al ancho de las caderas.',
+          action: 'Baja vértebra a vértebra hasta colgar el tronco. Sube igual, despacio.',
+          care: 'Rodillas suaves. Sube despacio para no marearte.' } },
+      { name: 'Isquio a una pierna', mode: 'perSide', dur: 35, transition: { seconds: 8 },
+        instruction: {
+          setup: 'Apoya un talón adelante, con esa pierna estirada.',
+          action: 'Lleva la cadera atrás, tronco largo. Nota el estirón detrás del muslo.',
+          care: 'La rodilla de apoyo algo flexionada. Sin rebotes.' } },
+      { name: 'Sentadilla de cuádriceps', mode: 'timed', dur: 30,
+        instruction: {
+          setup: 'Sujétate a la mesa con las dos manos.',
+          action: 'Lleva las rodillas adelante y sube los talones. Baja poco a poco.',
+          care: 'Apoyado en todo momento. Baja solo hasta donde controles.' } },
+      { name: 'Pliegue adelante', mode: 'timed', dur: 45,
+        instruction: {
+          action: 'Pies juntos, deja caer el tronco hacia abajo. Rodillas suaves.',
+          care: 'Apoya las manos en las rodillas si lo necesitas. Sal despacio, sin tirones.' } },
+      { name: 'Respiraciones profundas', mode: 'rest', dur: 20,
+        instruction: { action: '3 inhalaciones completas para cerrar.' } }]
+    },
     { id: 'move.hamstrings', tag: 'LEG', code: 'Isquios', name: 'Cadena posterior',
       desc: 'Isquios y cadena posterior. Piernas largas otra vez.', min: 5, access: 'premium',
       position: ['standing', 'floor'], equipment: [], requiresFloor: true, intensity: 'moderate', level: 'intermediate',
@@ -20104,12 +20309,40 @@ const EXTRA_ROUTINES = {
     }]
 
   }
-};
+});
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Módulo Estira (Estiramientos / Movilidad)
+   Botón: "Estira" · afloja tensión.
+
+   v0.11.9 — SWAP de contenido (sesión 14):
+   Las rutinas de estiramiento/movilidad pasaron a este módulo (antes vivían
+   en MoveModule). La calistenia y la fuerza pasaron a MoveModule (botón
+   "Mueve"). Los ids (`move.*` / `extra.*`) y funciones de state
+   (completeMoveSession / completeExtraSession) se conservan para no
+   invalidar localStorage ni logros de usuarios existentes — solo cambia
+   qué contenedor visual los muestra.
+
+   F5 (s91): 7 → 14 rutinas, biblioteca agrupada como Respira (4 grupos,
+   free primero dentro de cada grupo). Inspiración: Strengthside (caderas/
+   hombros/columna, movilidad de suelo, flujos diarios cortos). Los pasos
+   nuevos sin glifo aprobado renderizan DefaultGlyph hasta el port (D-4). */
+
+
+/* s178 · EL DATO SE FUE A `extra.data.js` + `extra.data.piernas.js`. Este archivo llego a
+   553 lineas al entrar las tres rutinas de oficina y la regla §1 manda TROCEAR, no
+   registrar deuda; la tabla de STATE.md ya lo tenia planificado desde s148. Aqui queda
+   solo la pantalla, igual que `MoveModule.jsx` quedo con su `move.data.js` en s110.
+   SE LEE POR `window.` Y NO PELADO: `EXTRA_ROUTINES` es un `const` en otro archivo y en el
+   artefacto cada modulo viaja en su propia IIFE, asi que el binding NO cruza (s148). */
+
 
 /* s174 · Espejo exacto de `MoveLibrary`: la pantalla es `LibraryShell` y aquí
    sólo queda el dato, el color y el prefijo de i18n. Ver la nota de
    `MoveModule.jsx` para el porqué de que sean gemelas.
-   OJO CON LOS IDS: las 14 rutinas de ESTIRA empiezan por `move.` y las 14 de
+   OJO CON LOS IDS: las 17 rutinas de ESTIRA empiezan por `move.` y las 14 de
    MUEVE por `extra.` — el swap de s14, blindado en CONTENT.md. Asumir el
    prefijo es la trampa que s172 prohíbe expresamente y que en s173 dejó un
    bloque VACÍO durante dos versiones de la maqueta. */
@@ -20118,14 +20351,14 @@ function ExtraLibrary(_ref) {let { open, onClose, onStart } = _ref;
   return (/*#__PURE__*/
     React.createElement(LibraryShell, {
       open: open, onClose: onClose, onStart: onStart,
-      groups: EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
+      groups: window.EXTRA_ROUTINES, tone: "var(--extra)", catPrefix: "extra",
       title: t('lib.extra.title'), subtitle: t('lib.extra.subtitle') }));
 
 }
 
 /* Sesión 49 — helper de lookup para Caminos (s91: adaptado a grupos) */
 function getExtraRoutine(id) {
-  for (const group of Object.values(EXTRA_ROUTINES)) {
+  for (const group of Object.values(window.EXTRA_ROUTINES)) {
     const found = group.items.find((r) => r.id === id);
     if (found) return found;
   }

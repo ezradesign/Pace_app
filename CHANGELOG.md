@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.109.0** | 2026-08-31 | feat(estira)+fix(claude.md): **las tres rutinas de oficina, y el documento que mandaba al archivo equivocado** — Segunda mitad de s178. **`CLAUDE.md` tenia las RUTAS cambiadas** en el bloque escrito justo para evitarlo: lo cruzado son los ids y SOLO los ids, y por creerme la ruta un censo midio **Mueve creyendo que era Estira** y devolvio 2 donde la respuesta es 9. **ESTIRA 14 → 17**: `Caderas de pie`, `Cadena posterior de pie` y `Columna en la silla` suben las rutinas compatibles con oficina de **5 a 8** y cubren por primera vez caderas, cadena posterior y columna **sin bajar al suelo**. Salieron de un censo y **no se retiro ninguna**. Cada ejercicio verificado contra su propio `setup`. **La regla §1 mordio**: el dato se troceo en `extra.data.js` + `extra.data.piernas.js` con guard de orden, y `ExtraModule.jsx` baja de 553 a **53** lineas. **La suite lo cazo con SIETE rojos y ninguno era el producto.** Respira NO se toco: el usuario eligio C y C era **lo ya publicado**. | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
 | **v0.108.0** | 2026-08-31 | docs(auditoria)+fix(sw+vuelo): **la auditoria completa** — El encargo del usuario abre s178. Cinco preguntas cruzadas contra el codigo con dos checkers calibrados en rojo: **trece hallazgos con evidencia `file:line`, once cerrados en la misma sesion**. **EL PAPEL IBA POR DETRAS Y SIEMPRE HACIA EL MISMO LADO**: los cuatro marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay — la Fase 3 «EN CURSO (s155)» con los emisores en **v0.102.0** y la retencion corriendo desde s174; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38** y es **77 de 96 / 19**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba el absoluto que s151 prohibio: reescrito en ES y EN **y fechado**, porque la pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE** — `main.jsx:153` lo llamaba en cada sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo: borrado en sus dos sitios. Guard de metodo en `sw.js` (dos `cache.put`, ningun `.catch()`). La tabla de deuda **mentia en 10 de 14 filas** y pierde su columna de numeros. **El instrumento mintio SEIS veces.** | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
 | **v0.107.0** | 2026-08-31 | fix(runner+stats)+feat(musica): **lo que no se oia** — Cuatro bloques, los cuatro salidos de lo que el usuario vio y oyo al probar (van **cuatro sesiones seguidas** reproduciendo). **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre y la descripcion 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0 px**; el numero unificado a **76** (elegido mirando tres variantes) **ANULA la decision de s112**. «Subir el numero» no se podia hacer moviendolo: arriba 10,0 px, abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el mes no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores de disenio: la ganancia **se iguala por RMS y no por pico**, una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido**. **150/150 · 6 de 6 mutantes muerden.** | [177](docs/sessions/session-177-lo-que-no-se-oia.md) | [ver](#v01070) |
 | **v0.106.0** | 2026-08-27 | fix(respira+runner+stats): **los cuatro sitios donde el usuario tenia razon** — Probo v0.105.0 y trajo cuatro defectos: **los cuatro reproducen**, a 1536x714. **RESPIRA RECIBE LA PANTALLA**, lo que **anula «comparte la tarjeta y no la pantalla» (s174)**: aquella razon era cierta —se ordena por TIEMPO y no por contexto— y la consecuencia no, porque sin pantalla propia sus 20 tarjetas caian en el flujo del modal a **810 px de ancho para llevar ~380 de contenido**, con el sello a **700 px del nombre**, y gastaban **3,90 pantallas de scroll contra las 3,82 de la biblioteca ANTERIOR al redisenio**: el redisenio se llevo el ancho y **no cobro nada**. Seis variantes pintadas en iframes reales; elegida **C** (rail). Ahora: modal 1240, rejilla de 3 x **288 px**, **1,98 pantallas**, y en movil estrena chips que nunca tuvo. Es **menos codigo**: `LibraryShell` se parametriza con cinco props que traen el valor de cuerpo por defecto. **Dos hallazgos de la maqueta**: el tercer chip («Sin rondas») era un **SUBCONJUNTO ESTRICTO** del segundo —quita las tres que «Sin retencion» ya quita— y se cayo antes de cablearse; y la sugerencia del dia salia **`Kumbhaka 1:4:2`**, apnea avanzada, premium y con modal de seguridad, porque el pozo de cuerpo **no descarta nada** en Respira. **«TUS RUTINAS» SE SALIA 18 px** del rail: rejilla con minimo de **260 px** en un hueco de **242**, y un minimo **no encoge** (chips en 428,93, ella en 446,21). **LA VOZ GANA INTERRUPTOR Y HERMANA**: `bradford` medida **abriendo el archivo** (onda decodificada, umbral −50 dBFS, con `sulafat` de control reproduciendo **0,003 / 0 / 0** de diferencia) — palabra **0,911 · 1,218 · 3,572** y **~121 Hz** contra los ~193 de `sulafat`, asi que cabe en **14 de 20** donde la otra cabe en 17. **El 14 casi lo digo mal**: el test lo puso rojo con **12** porque exigia que las tres senales cupieran en la fase MAS CORTA, y el producto decide **senal por senal** — los dos modelos coinciden en `sulafat` (17 y 17) y se separan en `yin` y `nadi.shodhana`. El bloque de Ajustes pasa a **DOS decisiones y no cinco interruptores** (variante V3, elegida mirando): *que marca la fase* (Tono|Voz→Clara|Grave) y *que suena detras* (Nada|Ambiente); no es orden, **es lo unico que describe el mecanismo**, porque `playSound` sintetiza **solo si la voz no cabe**. **EL RUNNER**: la barra de progreso **fluia**, asi que caia **47,2 px mas abajo** en el ejercicio que en «colocate» y se metia **15 px dentro del pie**. Anclarla no basto —el bloque se centra con `margin:auto` (s112), asi que `auto` la pegaba al fondo del BLOQUE: 18 px de hueco contra 52— y hubo **segunda vuelta por especificidad**: cuatro tiers fijan su `margin-top` con `!important` y gana la ultima regla del archivo. **Y el hueco del contador no era un margen**: la caja decia 10/10, pero debajo de la descripcion habia **una linea vacia reservada** (s119) que **s172b ya habia dejado obsoleta y lo dice en su propio comentario**. Quitarla pago el anclaje **sin tocar el numero** (sigue en 104 px): **586,5 px en las dos pantallas**, y a 360x730 de **−29,5 a −1,5**. **STATS**: el modal saltaba **163,2 px** entre pestanias y dos de las cuatro tenian scroll → **0 px y ninguna**, con el suelo puesto en **lo que cabe** (385) y el calendario compactado (48→42 px, celdas vacias incluidas — se quedaron en 48 y por eso la primera pasada solo recupero 30 de 36). **SEIS MENTIRAS DEL INSTRUMENTO**, y la mejor: **«dos lecturas iguales» no es esperar a un modal** —la curva se aplana y coinciden a mitad del fundido—, asi que el aserto de Stats salio **rojo con la app ya arreglada**; ahora `getAnimations()` pregunta en vez de estimar. Ademas: un `</script>` dentro de un bloque de datos dejaba **seis iframes vacios sin un error en consola**, y el primer guard **no podia cazarlo**. **Deuda de documentacion pagada**: la fila de voz de `DECISIONES_TECNICAS_VIGENTES` llevaba las cifras que s175 **descarto** —y es la que el handoff mandaba leer—, `CLAUDE.md` describia **Mueve y Estira al reves**, y el ROADMAP daba «6 de 20» para las dos voces cuando son 3 y 6. **Briefs de musica** por familia, con los numeros del catalogo: **Pranayama no cabe en una sola pieza con pulso** (2,1 a 30 respiraciones/min). **146/146** (+10) y **12 mutantes, 12 muerden**. | 176 | [session-176](docs/sessions/session-176-lo-que-el-usuario-probo.md) |
@@ -377,6 +378,63 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
 
 ---
+
+## [v0.109.0] -- 2026-08-31 -- feat(estira)+fix(claude.md): las tres rutinas de oficina
+
+### El documento que mandaba al archivo equivocado
+
+`CLAUDE.md` llevaba las RUTAS cambiadas en el bloque «OJO CON LOS IDS». Lo cruzado son los
+ids y **solo** los ids; cada modulo vive en la carpeta de su nombre:
+
+    MUEVE  (lib.move.title)  <- app/move/move.data.js      ids extra.*
+    ESTIRA (lib.extra.title) <- app/extra/extra.data*.js   ids move.*
+
+Hasta s176 el parrafo describia los ids al reves; s176 los corrigio y **cruzo tambien las
+rutas, que estaban bien**. Coste medido: el primer censo de «cuantas de Estira piden suelo»
+midio MUEVE y devolvio **2** donde la respuesta es **9**. El codigo lo tenia bien desde
+s174 — lo decia `ExtraModule.jsx` en su propio comentario.
+
+### Estira: 14 -> 17 rutinas, y las de oficina de 5 a 8
+
+Salieron de `scripts/audit/censo-suelo-s178.js`, no de una idea: **9 de 14** pedian suelo,
+**las cuatro de caderas** eran de suelo, y las cinco sin suelo eran **todas de tren
+superior** — en la biblioteca cuyo subtitulo es «antidoto a la silla».
+
+- **`move.hips.standing` · Caderas de pie** — Sentadilla profunda · Sentadilla lateral ·
+  Zancada profunda · Pliegue adelante.
+- **`move.hamstrings.standing` · Cadena posterior de pie** — Rodar hacia abajo · Isquio a una
+  pierna · Sentadilla de cuadriceps · Pliegue adelante.
+- **`move.spine.chair` · Columna en la silla** — Extension toracica · Rotacion toracica ·
+  Inclinacion lateral · Barbilla atras.
+
+**No se retiro ninguna rutina** (decision del usuario): las nueve de suelo siguen enteras.
+**Ningun glifo nuevo**: los doce ejercicios ya tenian arte. Cada uno **verificado contra su
+propio `setup`** antes de componer — fuera `Cuadriceps en pared` («la rodilla al fondo») y
+`Marcha del elefante` («camina con las manos por el suelo»: no pide tumbarse, pero no es
+discreto). Unidades por BASE §3-C y §6; `Barbilla atras` en `reps` porque §3-E prohibe
+cronometrar el chin tuck con nombre y apellidos.
+
+### La regla §1 se cobro el crecimiento, y estaba previsto
+
+`ExtraModule.jsx` llego a **553 lineas**. El dato se troceo **por grupo** en
+`app/extra/extra.data.js` (oficina + hombros) y `app/extra/extra.data.piernas.js` (caderas +
+flujos), con **guard de orden** que aborta si el segundo se evalua antes. `ExtraModule.jsx`
+queda en **53 lineas**. La tabla de deuda de `STATE.md` ya lo tenia planificado desde s148.
+
+**La suite lo cazo con siete rojos y ninguno era el producto**: `biblioteca.spec.js` lee el
+catalogo **del archivo fuente** a proposito, y su guard de cero vio el archivo recien vaciado.
+
+### Respira: no se toco una linea
+
+El usuario eligio **C** tras mirar la maqueta —incluida la variante **F** (rail + aside), que
+se pinto para el y se descarto viendola— y **C es lo ya publicado desde s176**. Verificado en
+la app real: 3 columnas, tarjeta **283 px**, rail 262, cero aside, contra los 288 px de la
+maqueta. Honesta dentro de 5 px.
+
+### Red de seguridad
+
+`npm run verify` PASA · `npm run test:e2e` **150/150** · standalone intacto en **v0.71.0**.
+
 
 ## [v0.108.0] -- 2026-08-31 -- docs(auditoria)+fix(sw+vuelo): la auditoria completa
 

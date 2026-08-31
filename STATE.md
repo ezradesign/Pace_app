@@ -10,7 +10,8 @@
 
 ---
 
-**Version actual:** v0.108.0 (s178 — **LA AUDITORIA COMPLETA**, el encargo del usuario. Lo primero que contesta es que **el papel iba por detras del codigo, y siempre en la misma direccion**: el ROADMAP pintaba MAS trabajo del que hay. La Fase 3 seguia «EN CURSO (s155)» con los emisores entregados en **v0.102.0** y la retencion corriendo sola desde **s174**; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38 sin dibujo** y es **77 de 96 / 19**. Trece hallazgos con evidencia file:line, **once cerrados en la misma sesion**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba dentro justo el absoluto que s151 prohibio — reescrito en ES y EN **y fechado**, porque la propia pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE**: `main.jsx` lo llamaba en CADA entrada a sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo; borrado en sus DOS sitios. La tabla de deuda **mentia en 10 de 14 filas** —s162 la cazo en cinco, o sea que empeoro— y pierde su columna de numeros: la cuenta la lleva el trinquete del `verify`. **El instrumento mintio SEIS veces**, y la cara fue excluir en un grep lo precedido por punto, que mata `window.X` y daba por muertos dos archivos vivisimos. **150/150 y `verify` en verde.**)
+**Version actual:** v0.109.0 (s178b — **LAS TRES RUTINAS DE OFICINA, Y EL DOCUMENTO QUE MANDABA AL ARCHIVO EQUIVOCADO**. La segunda mitad de s178. **`CLAUDE.md` TENIA LAS RUTAS CAMBIADAS** en el bloque que existe justo para evitarlo: lo cruzado son los ids y SOLO los ids, y por creerme la ruta un censo midio **Mueve creyendo que era Estira** y devolvio 2 donde la respuesta es 9. **ESTIRA PASA DE 14 A 17**: `Caderas de pie`, `Cadena posterior de pie` y `Columna en la silla`, que suben las rutinas compatibles con oficina de **5 a 8** y cubren por primera vez caderas, cadena posterior y columna **sin bajar al suelo**. Salieron de un censo, no de una idea, y **no se retiro ninguna** (decision del usuario). Cada ejercicio verificado contra su propio `setup`: fuera `Cuadriceps en pared` («la rodilla al fondo») y `Marcha del elefante` («camina con las manos por el suelo»). **La regla §1 mordio**: `ExtraModule.jsx` llego a 553 lineas y el dato se troceo en `extra.data.js` + `extra.data.piernas.js`, con guard de orden. **La suite cazo el troceo con SIETE rojos y ninguno era el producto** — leen el catalogo del fuente a proposito, y su guard de cero vio el archivo recien vaciado. **La biblioteca de Respira NO se toco**: el usuario eligio C y C resulto ser **lo ya publicado desde s176**, verificado en la app contra la maqueta (283 px contra 288, honesta dentro de 5 px). **150/150 y `verify` en verde.**)
+**Version anterior:** v0.108.0 (s178 — **LA AUDITORIA COMPLETA**, el encargo del usuario. Lo primero que contesta es que **el papel iba por detras del codigo, y siempre en la misma direccion**: el ROADMAP pintaba MAS trabajo del que hay. La Fase 3 seguia «EN CURSO (s155)» con los emisores entregados en **v0.102.0** y la retencion corriendo sola desde **s174**; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38 sin dibujo** y es **77 de 96 / 19**. Trece hallazgos con evidencia file:line, **once cerrados en la misma sesion**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba dentro justo el absoluto que s151 prohibio — reescrito en ES y EN **y fechado**, porque la propia pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE**: `main.jsx` lo llamaba en CADA entrada a sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo; borrado en sus DOS sitios. La tabla de deuda **mentia en 10 de 14 filas** —s162 la cazo en cinco, o sea que empeoro— y pierde su columna de numeros: la cuenta la lleva el trinquete del `verify`. **El instrumento mintio SEIS veces**, y la cara fue excluir en un grep lo precedido por punto, que mata `window.X` y daba por muertos dos archivos vivisimos. **150/150 y `verify` en verde.**)
 **Version anterior:** v0.107.0 (s177 — **LO QUE NO SE OIA**. Cuatro bloques y los cuatro salieron de lo que el usuario vio y oyo al probar, que va por CUATRO sesiones seguidas reproduciendo. **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0**, y el numero unificado a **76 px** ANULA la decision de s112. «Subir el numero» no se podia hacer moviendolo: arriba habia 10,0 px y abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el MES no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores mios: la ganancia **se iguala por RMS y no por pico** (igualar picos la dejaba 20 dB bajo la voz), una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido** — la puntue mejor por «dejar el hueco de voz mas limpio», que es lo que la hacia inaudible. **150/150 y 6 de 6 mutantes muerden.**)
 **Version anterior:** v0.106.0 (s176 — **LOS CUATRO SITIOS DONDE EL USUARIO TENIA RAZON**. Respira recibe la PANTALLA anulando s174; la barra del runner se ancla al centro; Stats iguala sus cuatro pestanias; y la voz gana interruptor y hermana. 146/146.)
 **Version anterior (2):** v0.103.0 (s173 — **LA INGESTA DEJA DE SER TODO-O-NADA**: entran 4 dibujos con `--fusionar` y nace `verify.mascaras.js`.)
@@ -215,53 +216,54 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
+> s178 fue DOS bloques: la **auditoria completa** (v0.108.0) y, con su cola, **las tres
+> rutinas de oficina** (v0.109.0). Lo que sigue vale para los dos.
+
 - **[EL PAPEL IBA POR DETRAS DEL CODIGO, Y SIEMPRE HACIA EL MISMO LADO]** Los cuatro
-  marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay, nunca menos. No es
-  casualidad: el plan **se lee al planificar y no se actualiza al entregar**. Quien abriera la
-  proxima fase leyendo el ROADMAP se creia tres cosas falsas.
+  marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay, nunca menos. El
+  plan **se lee al planificar y no se actualiza al entregar**. Paso DOS veces el mismo dia:
+  la Fase 3 llevaba «EN CURSO (s155)» con los emisores en v0.102.0, y la pregunta pendiente
+  de Respira se cerro **sin escribir una linea** porque C ya era lo publicado desde s176.
 
-- **[UN GREP NO DISTINGUE «DESAPARECIO» DE «TIENE PROHIBIDO EXISTIR»]** De las 15 filas que el
-  checker señalo, **cinco eran ausencia POR DISEÑO**: la fila dice «NUNCA `discrete`» y cero
-  apariciones significa que la decision **se cumple**. Hay que leer la fila antes de acusarla.
+- **[UN DOCUMENTO QUE MANDA AL ARCHIVO EQUIVOCADO CUESTA UNA MEDIDA ENTERA]** `CLAUDE.md`
+  tenia las RUTAS cambiadas en el bloque escrito justo para evitarlo. Lo cruzado son los ids
+  y **solo** los ids; cada modulo vive en la carpeta de su nombre. Por creermelo, el primer
+  censo midio **Mueve creyendo que era Estira** y devolvio **2** donde la respuesta es **9** —
+  a un paso de decirle al usuario que el handoff se equivocaba. **El codigo lo tenia bien**:
+  `ExtraModule.jsx` lo decia en su propio comentario desde s174.
 
-- **[EL INSTRUMENTO MINTIO SEIS VECES]** La cara: excluir en un grep lo precedido por punto
-  **mata `window.X`**, que es como consume media app, y daba por inertes
-  `achievement-glyphs.jsx` y `achievement-masks.js` estando vivisimos. Tambien: el heredoc de
-  bash **se come los backslashes** (regex rotas al disco) y **ejecuta los backticks** (esta
-  misma sesion, dos veces); llamar `exports` a una variable rompe el parseo CommonJS.
+- **[UN GREP NO DISTINGUE «DESAPARECIO» DE «TIENE PROHIBIDO EXISTIR»]** Cinco de las 15
+  filas señaladas eran **ausencia POR DISEÑO**: la fila dice «NUNCA `discrete`» y cero
+  apariciones significa que la decision **se cumple**.
 
-- **[«ESTA INERTE» NO ES «NO SE EJECUTA»]** El primer cruce —`<script>` de `PACE.html` contra
-  archivos de `app/`— dio **122 = 122, cero huerfanos** y no vio nada. `library-transition.js`
-  se cargaba, **se llamaba desde `main.jsx` en cada sesion** y no hacia nada. La comprobacion
-  util no era el censo de carga sino la RELACIONAL: quien consume cada simbolo.
+- **[UN EJERCICIO NO SE ELIGE POR SU ETIQUETA, SINO POR SU `setup`]** Al componer las tres
+  rutinas de oficina: `Sentadilla profunda` ENTRA («talones en el suelo» es en cuclillas) y
+  `Cuadriceps en pared` NO («la rodilla al fondo»). `Marcha del elefante` se cayo aunque no
+  pide tumbarse: **no es discreto**, y la discrecion es el eje de esa biblioteca.
 
-- **[UN CHECKER DE UNA SOLA DIRECCION NO PRUEBA UN INDICE]** Documento → indice dio tres
-  huecos; hizo falta el cruce inverso para saber que al otro lado no faltaba nada. Y ese
-  segundo pase destapo que **los dos archivos redactan los titulos distinto**, asi que
-  cualquier comparacion automatica entre ellos tendra ruido permanente.
+- **[LA SUITE CAZO EL TROCEO CON SIETE ROJOS Y NINGUNO ERA EL PRODUCTO]** `biblioteca.spec.js`
+  lee el catalogo **del archivo fuente** a proposito —para que las dos fuentes sean
+  independientes— y su **guard de cero** vio el archivo que yo acababa de vaciar. Un guard de
+  cero es lo unico que distingue «cero» de «no he medido».
 
-- **[LA PAGINA LEGAL SE QUEDO FUERA DE UN BARRIDO DE COPY]** s151 prohibio los absolutos y
-  corrigio el onboarding y la superficie de apoyo. `privacy.html` **se ha tocado UNA vez en
-  toda la vida del proyecto** (v0.46.0) y seguia diciendo «Sin servidores propios». Al
-  reescribirla aparecio una promesa dentro de la propia pagina —«la fecha de arriba cambiara
-  con ella»— que **obligaba a fecharla**: se pregunto en vez de decidirlo yo.
+- **[EL INSTRUMENTO MINTIO SIETE VECES]** La cara: excluir en un grep lo precedido por punto
+  **mata `window.X`**, y daba por inertes dos archivos vivisimos. Del shell: el heredoc **se
+  come los backslashes** y las comillas dobles **ejecutan los backticks**. Y midiendo la
+  biblioteca en el navegador cogi **la tarjeta de sugerencia que vive DENTRO del rail** como
+  si fuera de la rejilla: «1 columna, 242 px» donde son 3 y 283.
 
-- **[UNA TABLA QUE SE MANTIENE A MANO VUELVE A MENTIR SIEMPRE]** 10 de 14 filas, donde s162
-  encontro 5. Se retira la columna de numeros en vez de actualizarla: el trinquete del
-  `verify` ya lleva la cuenta, y copiarla a mano es el mecanismo que ha fallado **tres veces**
-  (s148, s162, s178).
+- **[LA REGLA §1 SE COBRA LO QUE CRECE, Y ESTABA PREVISTO]** `ExtraModule.jsx` a 553 lineas.
+  La tabla de deuda ya decia desde s148 «al retomar Estira, trocear los DATOS antes»: es la
+  unica fila de esa tabla que ha servido para algo, y por eso la tabla pierde sus numeros
+  pero **conserva la historia**.
 
-- **[EL PASO 3 DEL CIERRE INVITA A ROMPER LA DECISION s134]** `node build-standalone.js` a mano
-  reescribe `PACE_standalone.html`, congelado en v0.71.0. El `verify` lo restaura cuando el
-  build lo lanza **el**; lanzandolo a mano, no. Hubo que devolverlo con `git checkout`.
-
-- **[LA REGLA DEL USUARIO, INTACTA Y AMPLIADA]** Las cuatro decisiones de la sesion se tomaron
-  con **las opciones delante**, y el copy de privacidad se pinto con el texto exacto —el de
-  hoy contra el propuesto— antes de preguntar.
+- **[LA REGLA DEL USUARIO, INTACTA Y COBRANDOSE UNA PIEZA]** Se pinto la variante F (rail +
+  aside) que no existia, **y al verla el usuario eligio C**. Pintar antes de decidir evito
+  implementar lo que no queria.
 
 > Informe completo con evidencia `file:line`:
 > [`docs/audits/audit-completa-s178.md`](docs/audits/audit-completa-s178.md).
-> Los 17 bancos que nadie podia encontrar, indexados en [`docs/BANCOS.md`](docs/BANCOS.md).
+> Los 17 bancos que nadie podia encontrar, en [`docs/BANCOS.md`](docs/BANCOS.md).
 
 ### Diferido (documentado, NO ejecutado)
 
@@ -548,64 +550,61 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 - **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
   capturas de tienda).
 
-## Proxima sesion -- **las dos preguntas de s176, y se PINTAN antes de preguntar**
+## Proxima sesion -- **mas rutinas de oficina, y esta vez SIN limite de glifos**
 
-> **Eleccion del usuario en s178**, sobre la cola que dejo s177. Llevan dos sesiones esperando
-> y las dos son decisiones suyas, asi que la sesion **empieza por maquetas**, no por codigo.
+> **Eleccion del usuario al cerrar s178**, y con una restriccion levantada: «no hay problema
+> si hay que disenar mas glifos». Las tres de s178 se compusieron con arte YA existente, asi
+> que se quedaron cortas a proposito. Lo siguiente ya no depende del set dibujado.
 
-1. **El aside de familia en Respira.** Eligio **E** y se corrigio a **C**; esta pintado en los
-   marcos D y E de `_maqueta-s176-respira.html`, que se regenera con
-   `node scripts/audit/maqueta-s176.autonoma.js`.
-2. **El tercer chip «Discreta»** (14 de 20). Hay que **pintarlo antes de preguntar** — la
-   regla de s174, que s178 volvio a aplicar en las cuatro decisiones de la auditoria.
+1. **Ejercicios de oficina que HOY NO EXISTEN en el catalogo.** Los huecos que se vieron al
+   componer: **gemelo de pie** (no hay estiramiento de gemelo, solo `Elevacion de talones`,
+   que es fuerza), **flexor de cadera contra la mesa** (el unico que hay pide arrodillarse) y
+   **aductores sentado**. Cada uno nace con su dibujo.
+2. **`move.chair.antidote`, pendiente de decision.** De sus SEIS pasos solo `Flexor de cadera`
+   pide suelo, y por el la rutina que se llama «Antidoto silla» —con etiqueta `SIT`— queda
+   FUERA del chip «Aqui mismo». Se le puso al usuario delante en s178 y no se decidio.
 
 > **DESPUES, la cola tal como quedo:**
 >
-> 1. **FASE 4 · Stats de verdad.** s177 arreglo el ANCHO; el destino escrito en
->    `STATS_DESTINO_PROPUESTA.md` sigue entero. El ROADMAP lo llama «el escaparate del free»,
->    y con los eventos ya emitiendo puede nacer completa.
-> 2. **La musica.** Los seis briefs necesitan el requisito que faltaba antes de regenerar nada:
->    **el grueso de la energia entre 200 Hz y 2 kHz**. Y hay que verificar los **terminos de
->    uso comercial**, que valen ya para seis locuciones y las piezas.
-> 3. **El arte**: `Rana` (1 de los 3 glifos de ejercicio que faltan) y los **19** glifos de
->    logro; las 18 piezas de la 2a tanda siguen sin mirarse.
-> 4. **FASE 8 · onboarding contextual.**
+> 1. **El tercer chip «Discreta»** (14 de 20), la ultima pregunta viva de s176. Hay que
+>    **pintarlo antes de preguntar**.
+> 2. **FASE 4 · Stats de verdad.** s177 arreglo el ANCHO; el destino de
+>    `STATS_DESTINO_PROPUESTA.md` sigue entero. El ROADMAP lo llama «el escaparate del free».
+> 3. **La musica.** Los seis briefs necesitan el requisito que faltaba: **el grueso de la
+>    energia entre 200 Hz y 2 kHz**. Y los **terminos de uso comercial**, sin verificar.
+> 4. **El arte**: `Rana` (1 de los 3 glifos de ejercicio que faltan) y los **19** de logro.
+> 5. **FASE 8 · onboarding contextual.**
 
 > **LO QUE s178 DEJA CERRADO Y NO HAY QUE VOLVER A MIRAR:**
 > - Los cuatro marcadores del ROADMAP, el indice de decisiones, `privacy.html`, la tabla de
->   deuda, el guard de `sw.js` y el borrado del vuelo. **Once de trece hallazgos.**
-> - **Cifras vivas medidas**: 77 de 96 logros con arte (19 sin dibujo) · 59 de 62 identidades
->   de ejercicio con arte (**3** pendientes) · ningun archivo de `app/` pasa de 500.
-> - **Negativos honestos, no re-verificar**: cero peticiones externas en el artefacto · el
->   texto de almacenamiento de `privacy.html` aguanta las tres claves · ningun archivo de
->   `app/` esta sin cargar ni es totalmente huerfano · los `_*.html` de la raiz estan
->   gitignoreados y no son deuda.
+>   deuda, el guard de `sw.js`, el borrado del vuelo y **el cruce Mueve/Estira de `CLAUDE.md`**.
+> - **La biblioteca de Respira**: el usuario eligio **C**, y C es **lo ya publicado desde
+>   s176**. Verificado en la app (3 columnas, tarjeta 283 px, rail 262, cero aside) contra la
+>   maqueta (288). **No hay nada que implementar ahi.** La variante F (rail + aside) se pinto
+>   y se descarto viendola.
+> - **Cifras vivas medidas**: Estira **17** rutinas, **8** sin suelo · Mueve 14, 12 sin suelo ·
+>   77 de 96 logros con arte (19 sin dibujo) · 59 de 62 identidades de ejercicio (3 pendientes).
 
 > **LO QUE SIGUE ABIERTO, dicho y no escondido:**
-> - **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes). D-2 es literal:
->   `app/i18n/strings/paths.js:64` y `:73` dicen las dos «Hecho hoy».
-> - El **CHANGELOG** conserva sus SEIS bloques de detalle donde la convencion son dos
->   (decision del usuario en s178: no se descarta texto).
-> - Por debajo de **641 px de alto** el runner no esta congelado, y movil tampoco.
+> - **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes).
+> - El **CHANGELOG** conserva sus bloques de detalle donde la convencion son dos (decision del
+>   usuario en s178: no se descarta texto).
+> - Por debajo de **641 px de alto** el runner no esta congelado, y movil tampoco. **El usuario
+>   pidio abrirlo como bloque propio** y s178 no llego.
 > - En las pantallas de **cambio de lado** la linea «El lado siguiente empieza solo» todavia se
 >   mueve **99,7 px** entre pasos.
-> - **9 de las 14 de Estira piden suelo**, en una biblioteca de oficina.
-> - El **lote de musica sin decidir**: cinco de las seis piezas sin usar, y la montada es
->   provisional y suena en las seis familias.
+> - El **lote de musica sin decidir**: cinco de las seis piezas sin usar.
 
-> **TRAMPAS VIGENTES** (s177 y s178, valen para cualquier medida futura):
-> - **LA SEMILLA ES `firstSeen`, NO `onboarded`** (`tests/helpers.js` lo avisa). Con la clave
->   mal puesta la app se monta DEBAJO del overlay de bienvenida: los selectores lo encuentran
->   todo, **las medidas salen correctas** y la camara fotografia la bienvenida.
-> - **`getBoundingClientRect()` devuelve la caja YA TRANSFORMADA.** Congelar la animacion antes
->   de medir.
-> - **Una tabla que no mide una pieza dice «no se mueve»** igual que si no se moviera.
+> **TRAMPAS VIGENTES:**
+> - **LA SEMILLA ES `firstSeen`, NO `onboarded`** (`tests/helpers.js` lo avisa).
+> - **`getBoundingClientRect()` devuelve la caja YA TRANSFORMADA.** Congelar antes de medir.
+> - **Al medir la biblioteca, EXCLUIR lo que vive dentro del rail**: la tarjeta de «Para ahora»
+>   se cuela y da «1 columna» donde hay 3 (s178).
+> - **Backticks y backslashes en el shell**: el heredoc **se come los backslashes** y las
+>   comillas dobles **ejecutan los backticks**. Escribir con la herramienta de escritura o por
+>   stdin de node.
+> - **`node build-standalone.js` a mano reescribe el standalone** congelado (s134).
 > - **`git checkout` restaura al ULTIMO COMMIT.** Copia antes de mutar.
-> - **Backticks y backslashes en el shell**: un heredoc de bash **se come los backslashes** y
->   un string entre comillas dobles **ejecuta los backticks**. Los scripts con regex y los
->   textos con `code spans` se escriben con la herramienta de escritura o por stdin de node.
-> - **`node build-standalone.js` a mano reescribe el standalone** congelado (s134). El `verify`
->   solo lo restaura alrededor de SU propia pasada.
 
 > Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
 ---
@@ -630,6 +629,8 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 
 | Decision | Desde |
 |---|---|
+| **Una rutina de Estira que quiera servir en una oficina se compone VERIFICANDO cada ejercicio contra su propio `setup`, no por su etiqueta** | s178 |
+| **El dato de Estira vive en DOS archivos y el orden es contrato** | s178 |
 | **Respira usa `LibraryShell`: se ANULA «comparte la tarjeta y no la pantalla» (s174)** | s176 |
 | **La barra de progreso del runner se ancla al CENTRO, no al contenido** | s176 |
 | **La reserva de 2 lineas bajo la descripcion del runner se RETIRA** | s176 |

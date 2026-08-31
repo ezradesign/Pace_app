@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.108.0</title>
+  <title>PACE · Foco · Cuerpo — v0.109.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -335,6 +335,13 @@
   <script type="text/babel" src="app/move/MoveSessionV1.css.jsx"></script>
   <script type="text/babel" src="app/move/MoveSessionV1.support.jsx"></script>
   <script type="text/babel" src="app/move/MoveSessionV1.jsx"></script>
+  <!-- El dato de Estira, troceado en s178 por la regla §1 (ExtraModule.jsx llegó a 553
+       líneas). EL ORDEN ES CONTRATO: `extra.data.js` declara `EXTRA_ROUTINES` y
+       `extra.data.piernas.js` le añade sus dos grupos; invertirlos deja media biblioteca
+       y por eso el segundo lleva guard que aborta. Los dos ANTES de `ExtraModule.jsx`,
+       que sólo pinta. -->
+  <script type="text/babel" data-presets="env,react" src="app/extra/extra.data.js"></script>
+  <script type="text/babel" data-presets="env,react" src="app/extra/extra.data.piernas.js"></script>
   <script type="text/babel" src="app/extra/ExtraModule.jsx"></script>
   <!-- Constructor de rutinas premium (F7 · s93): registro de ejercicios +
        sección "Tus rutinas" (consumida por MoveLibrary en render) +

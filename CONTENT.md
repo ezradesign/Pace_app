@@ -20,7 +20,7 @@ visual, por compatibilidad de `localStorage` y logros:
 | Botón (lo que ve el usuario) | Archivo | Constante | ids | Contenido |
 |---|---|---|---|---|
 | **Mueve** | `app/move/move.data.js` (s110) | `MOVE_ROUTINES` | `extra.*` | Fuerza / calistenia |
-| **Estira** | `app/extra/ExtraModule.jsx` | `EXTRA_ROUTINES` | `move.*` | Movilidad / estiramiento |
+| **Estira** | `app/extra/extra.data.js` + `.piernas.js` | `EXTRA_ROUTINES` | `move.*` | Movilidad / estiramiento |
 
 En este documento, "Mueve" y "Estira" se refieren siempre al **módulo
 visual** (el botón). No tocar los ids: están blindados por compat.
@@ -36,7 +36,7 @@ visual** (el botón). No tocar los ids: están blindados por compat.
 > los cierres respiratorios NO se tipan) y acredita **minutos reales**.
 >
 > **Cobertura del contrato v1 (migración MECÁNICA de B2.3 CERRADA en s121):** de las
-> 28 rutinas de cuerpo (14 Mueve + 14 Estira), **22 están en el contrato v1** — 5
+> 31 rutinas de cuerpo (14 Mueve + 17 Estira; +3 en s178), **25 están en el contrato v1** — 5
 > pilotos (`desk.pushups`, `chair.squats`, `neck.3`, `chair.antidote`, `couch.stretch`)
 > + **OLA 1** s118 (chair.dips, calves, grip.squeeze, glutes.stealth, posture.set) +
 > **OLA 2** s119 (wrists, shoulders.5, shoulder.circles, hips.5, morning.flow) +
@@ -190,10 +190,21 @@ con los ids `move.*` de Estira).
 
 Botón "Estira". Inspirado en Jess Martin (oficina) + Strengthside (ATG,
 caderas, hombros, columna, movilidad de suelo, flujos diarios). Datos en
-`app/extra/ExtraModule.jsx` (`EXTRA_ROUTINES`, ids `move.*`). Estado actual:
-**14 rutinas** (F5, s91, v0.36.0), biblioteca **agrupada en 4 grupos** como
-Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
-· caderas y piernas 5 · flujos 2.
+`app/extra/extra.data.js` + `app/extra/extra.data.piernas.js` (`EXTRA_ROUTINES`,
+ids `move.*`; troceados en s178 por la regla §1). Estado actual:
+**17 rutinas** (s178: 14 → 17), biblioteca **agrupada en 4 grupos** como
+Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 4
+· caderas y piernas 7 · flujos 2.
+
+> **s178 · TRES RUTINAS COMPATIBLES CON OFICINA.** Salieron de un censo
+> (`scripts/audit/censo-suelo-s178.js`), no de una idea: **9 de las 14** rutinas
+> pedían suelo, **las cuatro de caderas** eran de suelo, y las cinco sin suelo eran
+> **todas de tren superior** — en la biblioteca cuyo subtítulo es «antídoto a la
+> silla». Las tres nuevas cubren caderas, cadena posterior y columna **sin bajar al
+> suelo**, y suben las compatibles con oficina de **5 a 8**. **No se retiró ninguna
+> rutina**: las nueve de suelo siguen intactas (decisión del usuario, s178).
+> Ningún ejercicio es nuevo: los doce ya tenían arte, y cada uno se verificó contra
+> su propio `setup` antes de componer.
 
 | ID | Nombre | Grupo | min | `access` (real, F5) |
 |---|---|---|---|---|
@@ -203,11 +214,14 @@ Respira (free primero dentro de cada grupo): oficina 4 · hombros y columna 3
 | `move.wrists` | Muñecas y manos | oficina | 3 | free (F5 — antídoto al teclado) |
 | `move.shoulders.5` | Hombros | hombros | 4 | free (reset accesible) |
 | `move.shoulder.circles` | Hombros · círculos | hombros | 4 | free (F5 — CARs accesibles) |
+| **`move.spine.chair`** | **Columna en la silla** | hombros | 4 | **free** (s178 — sin levantarse) |
 | `move.spine.waves` | Columna · ondas | hombros | 5 | **premium** (F5 — segmentación avanzada) |
+| **`move.hips.standing`** | **Caderas de pie** | caderas | 4 | **free** (s178 — sin suelo) |
 | `move.hips.5` | Caderas | caderas | 6 | free |
 | `move.couch.stretch` | Couch stretch | caderas | 6 | **premium** (F5 — flexores profundos) |
 | `move.hips.ground` | Caderas · suelo | caderas | 6 | **premium** (F5 — flujo de suelo) |
 | `move.atg.knees` | ATG · Rodillas a prueba | caderas | 4 | **premium** (ATG avanzado) |
+| **`move.hamstrings.standing`** | **Cadena posterior de pie** | caderas | 4 | **free** (s178 — sin suelo) |
 | `move.hamstrings` | Cadena posterior | caderas | 5 | **premium** (F5 — isquios profundos) |
 | `move.morning.flow` | Despertar matinal | flujos | 5 | free (F5 — ancla de hábito diario) |
 | `move.ancestral` | Ancestral | flujos | 5 | **premium** (suelo/crawl/hang) |
