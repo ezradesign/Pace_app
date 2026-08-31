@@ -45,7 +45,14 @@ function catalogoFuente() {
   const sb = sandbox.nuevoSandbox();
   const errs = [
     sandbox.cargar(ctx, sb, 'app/move/move.data.js', { __M: 'MOVE_ROUTINES' }),
-    sandbox.cargar(ctx, sb, 'app/extra/ExtraModule.jsx', { __E: 'EXTRA_ROUTINES' }),
+    /* s178 · el dato de Estira se troceó en DOS por la regla §1 (`ExtraModule.jsx` llegó a
+       553 líneas al entrar las tres rutinas de oficina). Se cargan los dos y se pide el
+       objeto del SEGUNDO, que es el que ya lleva los cuatro grupos. Pedirlo del primero
+       daría 8 de 17 y los cruces de este archivo saldrían verdes sobre medio catálogo.
+       El guard de cero de abajo cazó exactamente esto cuando el troceo dejó la fuente
+       vieja vacía: siete tests en rojo por el mismo sitio, y ninguno era el producto. */
+    sandbox.cargar(ctx, sb, 'app/extra/extra.data.js', { __E1: 'EXTRA_ROUTINES' }),
+    sandbox.cargar(ctx, sb, 'app/extra/extra.data.piernas.js', { __E: 'window.EXTRA_ROUTINES' }),
     sandbox.cargar(ctx, sb, 'app/breathe/BreatheLibrary.jsx', { __B: 'BREATHE_ROUTINES' }),
   ].filter(Boolean);
   if (errs.length) throw new Error('no se pudo leer el catálogo: ' + errs.join(' · '));

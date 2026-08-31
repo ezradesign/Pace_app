@@ -1,7 +1,10 @@
-# Sesión 178 · La auditoría completa
+# Sesión 178 · La auditoría completa, y las tres rutinas de oficina
 
-> **v0.107.0 → v0.108.0** · `npm run verify` PASA · `npm run test:e2e` **150/150** ·
+> **v0.107.0 → v0.108.0 → v0.109.0** · `npm run verify` PASA · `npm run test:e2e` **150/150** ·
 > `PACE_standalone.html` intacto en v0.71.0 · consola limpia sobre el artefacto regenerado.
+>
+> **La sesión fue DOS bloques**: la auditoría completa que pedía el handoff (v0.108.0,
+> §0-§7) y, con su cola abierta, el catálogo de Estira (v0.109.0, §8-§12).
 >
 > El informe con la evidencia `file:line` vive aparte y **gobierna sobre este diario**:
 > [`docs/audits/audit-completa-s178.md`](../audits/audit-completa-s178.md).
@@ -138,3 +141,83 @@ Once hallazgos cerrados, listados en la tabla final del informe. Además:
 - **Un checker de una sola dirección no prueba un índice.** Se corrió el cruce inverso y salió
   limpio, pero destapó que los dos archivos **redactan los títulos distinto**: cualquier
   comparación automática entre ellos tendrá ruido permanente.
+
+---
+
+# Segunda parte · las tres rutinas de oficina (v0.109.0)
+
+> La sesión no acabó con la auditoría. Con su cola abierta, el usuario eligió el catálogo de
+> Estira, y por el camino salió el hallazgo que más caro habría salido de los dos días.
+
+## 8 · `CLAUDE.md` mandaba al archivo equivocado, y me pilló a mí
+
+El usuario preguntó si «9 de las 14 de Estira piden suelo» era cierto. Un grep a
+`requiresFloor: true` sobre `app/move/move.data.js` —el archivo que `CLAUDE.md` señala como
+el de Estira— devolvió **2**. Estuve a un paso de decirle que el handoff se equivocaba.
+
+`move.data.js` es **Mueve**. Lo cruzado son los ids y **sólo** los ids:
+
+| Módulo (lo que ve el usuario) | Vive en | ids |
+|---|---|---|
+| **Mueve** (`lib.move.title`) | `app/move/move.data.js` | `extra.*` |
+| **Estira** (`lib.extra.title`) | `app/extra/extra.data*.js` | `move.*` |
+
+Hasta s176 el párrafo describía los **ids** al revés. s176 los corrigió **y cruzó también las
+rutas, que estaban bien** — inventando un segundo cruce que no existe. El bloque escrito para
+evitar exactamente este error lo provocó.
+
+**El código lo tenía bien desde siempre**: `ExtraModule.jsx` decía en su propio comentario
+«las rutinas de ESTIRA empiezan por `move.`». La corrección salió de medir la etiqueta que ve
+el usuario (`lib.*.title`) y quién consume cada catálogo (`catPrefix`), no de leer.
+
+## 9 · Las tres rutinas, y por qué cada ejercicio entró o no
+
+El censo corregido: **Estira 9 de 14 · Mueve 2 de 14**. El handoff tenía razón. Y el hueco
+real era otro: las cinco rutinas sin suelo de Estira eran **todas de tren superior**; caderas,
+cadena posterior y columna existían **sólo en el suelo**.
+
+**Un ejercicio no se elige por su etiqueta.** No vale que tenga arte, ni que su rutina actual
+sea `requiresFloor: false` — se lee su `instruction.setup`/`action`:
+
+- **Entran**: `Sentadilla profunda` («talones en el suelo» es en cuclillas, no tumbado),
+  `Rodar hacia abajo` («ponte de pie»), `Isquio a una pierna` («apoya un talón adelante»).
+- **Fuera**: `Cuádriceps en pared` («la rodilla al fondo» — es un couch stretch) y
+  `Marcha del elefante` («camina con las manos por el suelo»): no pide tumbarse, pero **no es
+  discreto**, y la discreción es el eje de esa biblioteca.
+
+Unidades por BASE §3-C (20-30 s por lado) y §6 (cambio de lado 5-10 s). **`Barbilla atrás` va
+en repeticiones** porque §3-E lo prohíbe cronometrar con nombre y apellidos.
+
+Resultado: **17 rutinas, 8 compatibles con oficina** (eran 5). **No se retiró ninguna.**
+
+## 10 · La regla §1 se cobró el crecimiento, y estaba previsto
+
+`ExtraModule.jsx` a **553 líneas**. La tabla de deuda de `STATE.md` llevaba desde s148
+diciendo «al retomar Estira, trocear los DATOS antes» — es la única fila de esa tabla que ha
+servido para algo, y por eso al vaciarla de números **se le conservó la historia**.
+
+Corte **por grupo**, la única costura que el dato ya tenía. `ExtraModule.jsx` queda en 53
+líneas, sólo la pantalla.
+
+**Y la suite cazó el troceo: siete rojos, ninguno del producto.** `biblioteca.spec.js` lee el
+catálogo **del archivo fuente** a propósito —para que las dos fuentes que compara sean
+independientes— y su **guard de cero** vio el archivo que yo acababa de vaciar. Un guard de
+cero es lo único que distingue «cero» de «no he medido».
+
+## 11 · Respira: pintar antes de decidir evitó implementar lo que no quería
+
+El usuario pidió «tres columnas + rail + aside», que **no estaba maquetado**. Se pintó como
+variante **F** y se midió: F cuesta **2,22 pantallas** contra 2,19 de C — el aside es casi
+gratis, el rail se lleva **95 px** de la tarjeta.
+
+Al verla eligió **C**. Y C resultó ser **lo ya publicado desde s176**: verificado en la app
+real (3 columnas, tarjeta **283 px**, rail 262, cero aside) contra la maqueta (288). **No se
+escribió una línea de Respira.** Es la segunda vez en el día que el papel daba por pendiente
+algo que estaba hecho.
+
+## 12 · La séptima mentira del instrumento
+
+Midiendo la biblioteca en el navegador, la primera lectura dio «**1 columna, tarjeta 242 px,
+sin modal**». Cogía **la tarjeta de sugerencia que vive DENTRO del rail** como si fuera de la
+rejilla. Con ese número habría reportado que la app no coincide con la maqueta. Son **3
+columnas y 283 px**: hay que excluir lo que cuelga de `.pace-lib-lateral`.

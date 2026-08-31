@@ -77,7 +77,12 @@ console.log('=== CENSO s178 · quien pide SUELO ===\n');
    llevan ids `extra.*`; `ExtraModule.jsx` (catPrefix "extra") define `EXTRA_ROUTINES` con ids
    `move.*`. La etiqueta de modulo sale de QUIEN LO CONSUME, que es lo unico que no miente. */
 const wMove  = cargar('app/move/move.data.js');
-const wExtra = cargar('app/extra/ExtraModule.jsx');
+/* s178 · el dato de Estira se troceo en DOS por la regla §1, y el segundo archivo AÑADE
+   sus grupos al objeto del primero. Hay que cargar los dos en el MISMO contexto: con solo
+   el primero, este censo mediria 8 rutinas de 17 y diria «2 de 8 piden suelo» sin mentir
+   en la aritmetica y mintiendo en todo lo demas. */
+const wExtra = cargar('app/extra/extra.data.js');
+cargar('app/extra/extra.data.piernas.js', { window: wExtra });
 
 /* `ExtraModule.jsx` NO publica su catalogo: solo saca `getExtraRoutine` y `ExtraLibrary`
    (`EXTRA_ROUTINES` se queda de `const` en el modulo). Asi que no se lee el objeto — se
@@ -98,9 +103,7 @@ function porAccesor(rel, accesor) {
 
 const listas = [
   { k: 'MUEVE',  fuente: 'app/move/move.data.js',     items: aplanar(wMove.MOVE_ROUTINES) },
-  { k: 'ESTIRA', fuente: 'app/extra/ExtraModule.jsx', items: aplanar(wExtra.EXTRA_ROUTINES).length
-      ? aplanar(wExtra.EXTRA_ROUTINES)
-      : porAccesor('app/extra/ExtraModule.jsx', wExtra.getExtraRoutine) },
+  { k: 'ESTIRA', fuente: 'app/extra/extra.data*.js', items: aplanar(wExtra.EXTRA_ROUTINES) },
 ];
 for (const l of listas) console.log(l.k.padEnd(7) + ' <- ' + l.fuente.padEnd(34) + l.items.length + ' rutinas');
 console.log('');

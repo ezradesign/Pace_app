@@ -65,7 +65,10 @@ var CENSO = {
   categorias: 7,                // CAT_META
 
   /* catalogos de contenido */
-  respira: 20, mueve: 14, estira: 14, caminos: 7,
+  /* estira 14 -> 17 en s178: entran TRES rutinas de oficina, la primera `move.hips.standing` («Caderas de pie»). El censo midio
+     que las CUATRO rutinas de caderas pedian suelo y que las cinco sin suelo eran todas de
+     tren superior. Es una rutina ANADIDA: no se retiro ninguna. */
+  respira: 20, mueve: 14, estira: 17, caminos: 7,
 
   /* service worker */
   precache: 229,                // +3 en s176: las tres locuciones de `bradford`. filas de PRECACHE (s149; +19 mascaras de logro en s167; +47 glifos de ejercicio y sus 47 miniaturas en s170;
@@ -421,7 +424,11 @@ function chequeaContenido(ctx) {
      ninguno cruza, asi que se piden por EXPRESION al cargar cada archivo. */
   [['app/breathe/BreatheLibrary.jsx', { __B: 'BREATHE_ROUTINES' }],
    ['app/move/move.data.js',          { __M: 'MOVE_ROUTINES' }],
-   ['app/extra/ExtraModule.jsx',      { __E: 'EXTRA_ROUTINES' }],
+   /* s178: el dato de Estira se troceo en DOS por la regla §1. Se cargan los dos y se
+      pide el objeto del segundo, que es el que ya lleva los cuatro grupos: pedirlo del
+      primero daria 8 rutinas de 17 y el censo lo llamaria «se ha perdido algo». */
+   ['app/extra/extra.data.js',        { __E1: 'EXTRA_ROUTINES' }],
+   ['app/extra/extra.data.piernas.js', { __E: 'window.EXTRA_ROUTINES' }],
    ['app/paths/registry.js',          { __P: 'PATH_CATALOG' }]].forEach(function (par) {
     var e = cargar(ctx, sb, par[0], par[1]);
     if (e) ctx.falla('catalogos: no se pudo evaluar ' + e);
