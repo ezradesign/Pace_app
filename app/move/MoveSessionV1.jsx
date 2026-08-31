@@ -425,19 +425,20 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
 
         {/* s112: el número del GATE no es el timer — más pequeño y en tinta
             secundaria. s113: la transición de lado usa el mismo trato. */}
+        {/* s177 · `-num`/`-numlabel` en LAS DOS ramas: la hoja las iguala. */}
         {bigNumber != null && gateNumber && (
           <React.Fragment>
-            <div style={{ ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 }}>
+            <div data-pace-v1-num data-pace-v1-num-gate style={{ ...displayItalic, fontSize: 56, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink-2)', lineHeight: 1.08 }}>
               {bigNumber}
             </div>
-            <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>{bigLabel}</div>
+            <div data-pace-v1-numlabel style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 10 }}>{bigLabel}</div>
           </React.Fragment>
         )}
         {/* s113: en reps guiadas el número lleva el pulso de cadencia
             (decorativo: reduced-motion lo congela y queda el contador). */}
         {bigNumber != null && !gateNumber && (
           <React.Fragment>
-            <div data-pace-move-timer data-pace-v1-timer style={{
+            <div data-pace-move-timer data-pace-v1-timer data-pace-v1-num style={{
               ...displayItalic, fontSize: 128, fontWeight: 400, fontVariantNumeric: 'tabular-nums', color: 'var(--ink)', lineHeight: 1.08,
               /* s119: longhand (no el shorthand `animation`) para no mezclarlo con
                  `animationPlayState` → silencia el warning de React. Delta 0. */
@@ -445,7 +446,7 @@ function MoveSessionV1({ routine, onExit, kind = 'move', inPath }) {
             }}>
               {bigNumber}
             </div>
-            <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 }}>{bigLabel}</div>
+            <div data-pace-v1-numlabel style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 14 }}>{bigLabel}</div>
           </React.Fragment>
         )}
 

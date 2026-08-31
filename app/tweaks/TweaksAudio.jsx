@@ -69,9 +69,15 @@ function TweaksAudioBlock({ state, set }) {
   /* El fondo es un booleano en el estado (`ambientOn`) y dos pills aquí. Al
      apagarlo se corta el drone que ya estuviera sonando, como hacía la casilla
      que esto sustituye. */
-  const ponerFondo = (siAmbiente) => {
-    set({ ambientOn: siAmbiente });
-    if (!siAmbiente && window.ambientDrone) window.ambientDrone.stop(400);
+  /* s177 · TRES OPCIONES Y NO DOS, pero sigue siendo UNA decision: la fila es
+     excluyente y nunca suenan dos capas a la vez (decision de s176). Se
+     mantiene con dos booleanos en vez de un tri-estado para no migrar el
+     `localStorage` de nadie por una prueba: la exclusion la garantiza ESTA
+     funcion, que es el unico sitio que los escribe. */
+  const ponerFondo = (cual) => {
+    set({ ambientOn: cual === 'amb', musicOn: cual === 'mus' });
+    if (cual !== 'amb' && window.ambientDrone) window.ambientDrone.stop(400);
+    if (cual !== 'mus' && window.paceMusica) window.paceMusica.stop(400);
   };
 
   /* Al elegir voz se PRECARGA en ese momento. Si se esperara a la primera fase
@@ -116,8 +122,14 @@ function TweaksAudioBlock({ state, set }) {
 
           {rotulo(t('settings.bg.label'))}
           {fila([
-            { k: 'nada', name: t('settings.bg.none'), activa: !state.ambientOn, on: () => ponerFondo(false) },
-            { k: 'amb', name: t('settings.bg.ambient'), activa: !!state.ambientOn, on: () => ponerFondo(true) },
+            { k: 'nada', name: t('settings.bg.none'), activa: !state.ambientOn && !state.musicOn, on: () => ponerFondo('nada') },
+            { k: 'amb', name: t('settings.bg.ambient'), activa: !!state.ambientOn, on: () => ponerFondo('amb') },
+            /* s177 · «Musica» YA SE PINTA porque ya hay un archivo. El brief
+               decia que no se pintara hasta entonces -- «un control que no hace
+               nada es peor que un hueco»-- y hoy hace algo: suena en las
+               rutinas de Equilibrio. En las demas familias todavia no hay
+               pieza, asi que elegirla equivale a «Nada» hasta que existan. */
+            { k: 'mus', name: t('settings.bg.music'), activa: !!state.musicOn, on: () => ponerFondo('mus') },
           ], { marginLeft: 16 })}
         </React.Fragment>
       )}

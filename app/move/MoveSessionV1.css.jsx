@@ -176,8 +176,15 @@ if (!_paceMoveV1Css) {
        para no pisar el tier ≤700 (más agresivo, gobierna por debajo). */
     @media (min-width: 641px) and (min-height: 701px) and (max-height: 768px) {
       [data-pace-v1-timer] { font-size: 104px !important; }   /* v1 only, no legacy */
-      [data-pace-v1-glyph] > div { margin-bottom: 10px !important; }
-      [data-pace-v1-name] { margin-bottom: 10px !important; }
+      /* s177 · 10 -> 6 en estos dos. Con el congelado de abajo puesto pero
+         estos margenes intactos, la holgura a 1536x714 se quedaba en 5,8 px
+         por lado; a 6 sube a 9,8. No es cosmetica: s176 midio que el CI, con
+         otras metricas de fuente, se desvia hasta 9,4 px de lo que da el
+         local, asi que 5,8 de margen es quedarse sin red. Los de la
+         descripcion y «Cuidate» no hace falta tocarlos: el bloque de s177 los
+         reescribe mas abajo y gana por ser la ultima regla del archivo. */
+      [data-pace-v1-glyph] > div { margin-bottom: 6px !important; }
+      [data-pace-v1-name] { margin-bottom: 6px !important; }
       [data-pace-v1-cue] { margin-bottom: 10px !important; }
       [data-pace-v1-care] { margin-top: 10px !important; }
       [data-pace-v1-progress] { margin-top: 16px !important; }
@@ -274,6 +281,116 @@ if (!_paceMoveV1Css) {
        de su contenido sin el, que es justo lo que hay que permitir aqui. */
     [data-pace-v1-body] { flex: 1 1 auto !important; min-height: 0 !important; }
     [data-pace-v1-progress] { flex: 0 0 auto !important; margin-top: 0 !important; margin-bottom: 16px !important; }
+
+    /* ══ s177 · LA PANTALLA SE CONGELA: nada se mueve ni cambia de tamanio al
+       pasar de «colocate» a «ejercicio» ══════════════════════════════════════
+
+       LO QUE REPORTO EL USUARIO, mirando la app: la barra de progreso se
+       superponia con las letras. Censadas las 28 rutinas paso a paso a
+       1536x714, el «Cuidate» se metia **15,0 px DENTRO de la barra en 11 de 47
+       pasos** y en 7 de las 16 rutinas libres. Lo causo el anclaje de s176: la
+       barra dejo de moverse, pero el bloque lleva 'min-height: 0' y ENCOGE por
+       debajo de su contenido, asi que el texto se sale y pinta encima.
+
+       Y PIDIO ALGO MAS DURO QUE «QUE NO SOLAPE»: «que no se note la transicion
+       de una pantalla a la otra, que ningun elemento se desplace de su eje o
+       tamanio». Medido antes de tocar, entre las dos pantallas se movian
+       CUATRO cosas -- el nombre y la descripcion 26,4 px (el rotulo de fase
+       vacio, que a esta altura no se reservaba), el numero 51,2 y su etiqueta
+       4,6 -- y ademas el numero cambiaba de 56 a 104 px.
+
+       «SUBIR EL NUMERO» NO SE PODIA HACER MOVIENDOLO: el hueco de arriba era
+       10,0 px y el de abajo -15,0. No habia holgura que repartir, faltaba
+       sitio. Congelarlo cuesta 26,4 (rotulo) + 24,8 (descripcion a 3 lineas)
+       encima de los 15 que ya faltaban, y esos 66 px salen del glifo
+       (204 -> 181, en 'V1_GLYPH_WEB', que es fuente unica para que el circulo
+       siga relevando al de la preparacion) y del numero.
+
+       ELEGIDO POR EL USUARIO MIRANDOLO, entre tres tamanios pintados sobre la
+       app real: 96, 76 y 56. Gana **76**, que no es ninguno de los dos de hoy.
+       Esto ANULA la decision de s112 de que «el numero del gate no es el
+       timer»: el tamanio se unifica. El COLOR no -- el gate sigue en tinta
+       secundaria, y cambiar de color no desplaza nada.
+
+       RESULTADO MEDIDO a 1536x714: solape 0,0 y las SIETE piezas -- glifo,
+       nombre, descripcion, numero, etiqueta, cola y barra -- a 0,0 px, con las
+       siete cajas midiendo lo mismo en las dos pantallas. Huecos 10,5 / 10,4.
+
+       ALCANCE: 'min-height: 641px'. Por debajo NO se aplica y queda como hoy,
+       y eso es una limitacion medida, no un olvido: con el glifo constante
+       (que la regla de s119 obliga a que lo sea) a 1280x600 sigue solapando
+       7,0 px con el numero a 58 y 12,7 con el numero a 64. Ese tramo necesita
+       otro mecanismo, no otro valor.
+
+       VA AL FINAL DE LA HOJA por lo mismo que la barra de s176: los tiers de
+       arriba fijan 'margin-top' con '!important' y a igual especificidad gana
+       la ultima regla del archivo. Puesto antes, el bloque de margenes le
+       ganaba a «Cuidate» (6 px contra 14) y la cola se movia 8,0 px -- medido,
+       no supuesto. */
+    @media (min-width: 641px) and (min-height: 641px) {
+      /* 1 · el rotulo de fase ocupa SIEMPRE: es la causa exacta del salto de
+         26,4 px (12 px x 1,2 de interlineado + 12 de margen). La app ya lo
+         hacia por encima de 880; ahora tambien aqui. */
+      [data-pace-v1-kicker]:empty { display: block !important; min-height: 1.2em !important; }
+
+      /* 2 · la descripcion reserva su peor caso (3 lineas) y CENTRA el texto
+         dentro. Reservando a secas, un cue de 2 lineas dejaria el hueco abajo
+         y el conjunto se leeria descolgado; centrado, el nombre de arriba y el
+         numero de abajo quedan quietos y el texto respira igual. */
+      [data-pace-v1-cue] {
+        min-height: 74.4px !important;
+        display: flex !important; flex-direction: column !important;
+        justify-content: center !important; margin-bottom: 0 !important;
+      }
+
+      /* 3 · el numero: mismo tamanio y misma caja en las dos pantallas. El
+         interlineado 0,95 no recorta nada -- los digitos no tienen
+         descendentes -- y devuelve 13,5 px de los 66 que hacian falta. */
+      [data-pace-v1-num] { line-height: 0.95 !important; }
+      [data-pace-v1-numlabel] { margin-top: 10px !important; }
+
+      /* 4 · la cola, con la misma caja pinte «Colocate sin prisa…» o
+         «Cuidate…». Sin esto el grupo mide distinto y el centrado de abajo
+         reparte distinto, que es un salto por la puerta de atras.
+         SOLO ESOS DOS, Y NO el '-support-strong': la primera version reservaba 41
+         px a los tres, y las pantallas que pintan DOS bloques de cola --las de
+         cambio de lado, «El lado siguiente empieza solo»-- sumaban el doble.
+         Medido censando las 28 rutinas: el solape original de 15,0 px se
+         convertia en 35,5 en 3 pasos de «Antidoto silla» y «Caderas». Reservar
+         de mas cuesta igual que no reservar. */
+      [data-pace-v1-care], [data-pace-v1-support] {
+        min-height: 41px !important; margin-top: 14px !important;
+      }
+      /* Y CUANDO LA COLA SON DOS BLOQUES, el segundo no reserva. Las pantallas
+         de cambio de lado pintan la linea fuerte («El lado siguiente empieza
+         solo») Y la de apoyo debajo, asi que reservar 41 px a la segunda suma
+         una caja entera de mas: medido, dejaba 27,0 px de solape en 3 pasos de
+         «Antidoto silla» y «Caderas» donde el defecto original eran 15,0.
+         Con el par ya lleno, la reserva no hace falta -- lo que reserva es
+         para que una cola de UN bloque mida lo mismo que la del otro paso. */
+      [data-pace-v1-support-strong] + [data-pace-v1-support] {
+        min-height: 0 !important; margin-top: 6px !important;
+      }
+
+      /* 5 · y el grupo se centra en el hueco que queda. CON 'auto' Y NO CON UN
+         MARGEN FIJO: un fijo solo es equidistante a una altura concreta --
+         medido, dejaba 251,7 px muertos debajo a 1920x1040 y 125,4 a 1536x900.
+         'auto' reparte, y como el grupo ya mide IGUAL en las dos pantallas,
+         reparte lo mismo en ambas: 10,5 / 10,4 a 714 y 130,8 / 130,8 a 1040. */
+      [data-pace-v1-body] { display: flex !important; flex-direction: column !important; }
+      [data-pace-v1-num] { margin-top: auto !important; }
+      [data-pace-v1-body] > *:last-child { margin-bottom: auto !important; }
+    }
+    /* El tamanio del numero SI va por tramos -- eso es practica establecida en
+       esta hoja (104 / 82 / 58) y no choca con la regla del glifo. 76 en la
+       banda del usuario y hacia arriba; 58 entre 641 y 700, donde el tramo de
+       abajo ya aprieta y con 76 no cabria. */
+    @media (min-width: 641px) and (min-height: 701px) {
+      [data-pace-v1-num] { font-size: 76px !important; }
+    }
+    @media (min-width: 641px) and (min-height: 641px) and (max-height: 700px) {
+      [data-pace-v1-num] { font-size: 58px !important; }
+    }
   `;
   document.head.appendChild(s);
 }

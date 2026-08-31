@@ -120,4 +120,28 @@ function playPhaseSound(phaseLabel, phaseDur) {
 }
 
 
-Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
+/* s177 · MUSICA DE FONDO — la tercera capa de «que suena detras».
+   Vive AQUI y no en BreatheSession.jsx por la regla de las 500 lineas: aquel
+   archivo se quedaba en 505 al meterlo. Tiene la misma forma que el efecto del
+   drone -- no arranca en preparacion, sigue durante la retencion, se pausa con
+   la sesion y se apaga al terminar-- y por eso se lee al lado.
+
+   `routine.drone` viaja hasta `paceMusica.start` para que `Coherente 432`, que
+   FUERZA su drone pase lo que pase, no acabe con las dos capas encima. El resto
+   del porque -- que pieza, a que ganancia y que le falta todavia-- vive en
+   `Sound.musica.jsx`, que es quien la toca. */
+function useMusicaFondo(stage, paused, routine) {
+  const { useEffect: useEffectM } = React;
+  useEffectM(() => {
+    if (!window.paceMusica) return;
+    const m = window.paceMusica;
+    if (stage === 'done') { m.stop(800); return; }
+    if (stage === 'prep' || stage === 'hold') return;
+    if (paused) m.pause();
+    else if (m.isActive()) m.resume();
+    else m.start(routine.tag, routine.drone === true);
+  }, [stage, paused]);
+}
+
+
+Object.assign(window, { useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });

@@ -440,7 +440,7 @@ function StatsPanel({ open, onClose }) {
 
   return (
     <Modal open={open} onClose={onClose}
-            tagLabel={t('stats.tag')} title={t('stats.title')} subtitle={t('stats.subtitle')} maxWidth={820}
+            tagLabel={t('stats.tag')} title={t('stats.title')} subtitle={t('stats.subtitle')} maxWidth={1240}
     >
       <div style={statsPanelTabStyles.container}>
         {[

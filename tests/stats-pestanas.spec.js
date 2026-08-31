@@ -87,3 +87,59 @@ test('las cuatro pestañas de Stats miden lo mismo y ninguna se corta', async ({
     expect(medidas[nom].corta, 'la pestaña ' + nom + ' necesita scroll').toBeLessThanOrEqual(2);
   }
 });
+
+/* ── s177 · EL CALENDARIO DEL AÑO USA EL ANCHO ──────────────────────────────
+   Lo reportó el usuario en escritorio: «la vista de calendario podía ajustarse
+   más al tamaño de la ventana para que no quede todo tan reducido».
+
+   MEDIDO ANTES DE TOCAR NADA a 1536x714: el modal usaba 820 px de 1536 y la
+   rejilla llevaba celdas de 11x11 px escritas a mano en el JSX, así que la
+   pestaña «Año» dejaba 163,7 px MUERTOS de sus 385 -- el 42 % de su caja--
+   mientras las otras tres dejaban 0.
+
+   POR QUÉ MERECE UN ASERTO: el tamaño de celda vive en estilos EN LÍNEA del
+   JSX y lo que lo agranda es una regla con `!important` en otra hoja. Nada
+   avisa si alguien toca uno de los dos lados; el calendario simplemente vuelve
+   a encogerse y sigue funcionando. Y el ancho del modal es un número suelto en
+   `StatsPanel.jsx` que cualquiera puede devolver a 820 sin enterarse.
+
+   NO CUBRE: si el calendario se LEE mejor. Eso se decidió mirándolo. */
+test('el calendario del año aprovecha el ancho del modal', async ({ page, context }) => {
+  await sembrar(context);
+  await irAlArtefacto(page);
+  await abrirStats(page);
+  await medirPestana(page, 'Año');
+
+  const m = await page.evaluate(() => {
+    const vis = (s) => [...document.querySelectorAll(s)]
+      .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; })[0] || null;
+    const celda = vis('[data-pace-year-cell]');
+    const vista = vis('[data-pace-stats-vistas]');
+    const modal = [...document.querySelectorAll('[data-pace-modal-card]')]
+      .filter(e => e.getBoundingClientRect().width > 0).pop();
+    if (!celda || !vista || !modal) return null;
+    /* HUECO MUERTO: lo que sobra dentro de la vista por debajo de su último
+       hijo con caja. Es lo que se veía como «todo tan reducido». */
+    const rv = vista.getBoundingClientRect();
+    let masBajo = rv.top;
+    for (const e of vista.querySelectorAll('*')) {
+      const r = e.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0 && r.bottom > masBajo) masBajo = r.bottom;
+    }
+    return {
+      celda: Math.round(celda.getBoundingClientRect().width * 10) / 10,
+      modal: Math.round(modal.getBoundingClientRect().width * 10) / 10,
+      muerto: Math.round((rv.bottom - masBajo) * 10) / 10,
+    };
+  });
+  expect(m, 'no encuentro la rejilla del año').not.toBeNull();
+
+  /* Los tres números del arreglo, con margen para el redondeo. Antes: celda
+     11,0 · modal 820,0 · muerto 163,7. Ahora: 19,0 · 1240,0 · 52,4. */
+  expect(m.celda, 'la celda del año volvió a encogerse: ' + m.celda + ' px')
+    .toBeGreaterThanOrEqual(16);
+  expect(m.modal, 'el modal de Stats volvió a ser el estrecho: ' + m.modal + ' px')
+    .toBeGreaterThanOrEqual(1200);
+  expect(m.muerto, 'el año vuelve a dejar hueco muerto: ' + m.muerto + ' px')
+    .toBeLessThanOrEqual(80);
+});
