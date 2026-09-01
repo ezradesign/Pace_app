@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.111.0** | 2026-09-01 | feat(sidebar): **la sidebar como brujula, y el margen transparente que tapaba una compresion** — Primera mitad de un brief largo (sidebar + CTB musical); **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas: que he hecho hoy, que puedo continuar, como va la semana y cual fue mi ultimo logro. **SE APROBO MIRANDOLA** (nueve variantes sobre cajas a medida real) y ahi el usuario eligio: logo al 80 %, Hoy en rejilla 2x2 con glifos y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR** — nunca «prueba esto». **EL LOGO: 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0). Puesto en la banda gastaba **178,3 px de los que 104,9 eran aire**, y de regalo la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** — invisible **porque lo que desbordaba era transparencia**. Se recorta **por CSS y no con un archivo nuevo**: el `<img id="pace-logo-src">` lo leen DOS consumidores y un segundo PNG son ~100 KB de base64 en el artefacto. **LOS GLIFOS NO HUBO QUE DIBUJARLOS**: pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105. El unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS QUE CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable** (`PathRunner` tapa la pantalla y salir llama a `abandonPath()`); el ultimo logro **baja al pie**, porque su seccion costaba ~100 px y con ellos no cabe a 1280x720 con tarjeta; y la celda de Foco **no es un boton** porque no hay nada que abrir. **DOS DEFECTOS MIOS**: el recorte no se aplicaba —los estilos EN LINEA de la imagen ganan a la hoja, el mordisco de s174— y la celda «Respira» **se llamaba igual que el chip de la home**, lo que dejo **15 tests en rojo y ninguno del producto** (arreglado con «Abrir Respira», que ademas es mejor a11y). **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes: a 1536x714 la sidebar vieja ya scrolleaba. Movil sin scroll a 390x844 **y a 320x568**. **169/169** (eran 153), con `tests/sidebar-redesign.spec.js` y 3 mutantes que muerden. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
 | **v0.110.0** | 2026-09-01 | fix(runner): **el runner en movil corto, y un umbral elegido mirando un solo lado** — Cierra el bloque que s178 dejo abierto. **EL BANCO DIJO «CERO» Y SU GUARD PIDIO EL CONTROL POSITIVO**: servido el `index.html` de HEAD en un puerto aparte con sus `fonts/` —sin ellas las metricas de texto son otras y la comparacion no vale— la misma sonda solapaba a **1280x575 (4,7 px)** y **360x640 (26,3 px)**, el numero exacto que el diagnostico habia anotado. **EL UMBRAL ESTABA ELEGIDO MIRANDO UN SOLO LADO**: `max-height: 660` salio del viewport que se miraba (360x640), y ampliado el barrido HEAD solapaba a **375x667 — el iPhone SE/8 — con 7,2 px** y a **360x661 con 10,8**, los dos JUSTO POR ENCIMA del umbral y por tanto sin cubrir; 360x680 sobrevivia por **1,9 px**. Es el mismo error de s177, que declaro 641 cuando el borde real era 575. Sube a **700**, que es el breakpoint que la hoja YA usa. **EL BANCO DIJO ARREGLADO Y EL CENSO LO DESMINTIO** (mide UNA rutina y lo declara): a 360x640 quedaban **5 de 19 rutinas y 7 de 79 pasos**, de 16 y 60. **LA CAUSA REAL**: la pantalla de colocacion pinta `[data-pace-v1-num]` y **no** `-timer`, asi que todos los tramos cortos —**los de s119 en escritorio tambien**— comprimian un elemento que ahi no existe. Con el numero correcto y el nombre fijado a **30 px, el suelo que su propio clamp ya declara**, **ninguna rutina solapa** a 360x640, 375x667 ni 360x600. **Declarado y no arreglado**: por debajo de ~575 sigue solapando — lo unico que queda es el glifo y la fuente unica de s177 **prohibe** encogerlo por CSS. **153/153** (eran 150), 3 tests nuevos calibrados en rojo contra HEAD. | s179 | [session-179](./docs/sessions/session-179-el-runner-en-movil-corto.md) |
 | **v0.109.0** | 2026-08-31 | feat(estira)+fix(claude.md): **las tres rutinas de oficina, y el documento que mandaba al archivo equivocado** — Segunda mitad de s178. **`CLAUDE.md` tenia las RUTAS cambiadas** en el bloque escrito justo para evitarlo: lo cruzado son los ids y SOLO los ids, y por creerme la ruta un censo midio **Mueve creyendo que era Estira** y devolvio 2 donde la respuesta es 9. **ESTIRA 14 → 17**: `Caderas de pie`, `Cadena posterior de pie` y `Columna en la silla` suben las rutinas compatibles con oficina de **5 a 8** y cubren por primera vez caderas, cadena posterior y columna **sin bajar al suelo**. Salieron de un censo y **no se retiro ninguna**. Cada ejercicio verificado contra su propio `setup`. **La regla §1 mordio**: el dato se troceo en `extra.data.js` + `extra.data.piernas.js` con guard de orden, y `ExtraModule.jsx` baja de 553 a **53** lineas. **La suite lo cazo con SIETE rojos y ninguno era el producto.** Respira NO se toco: el usuario eligio C y C era **lo ya publicado**. | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
 | **v0.108.0** | 2026-08-31 | docs(auditoria)+fix(sw+vuelo): **la auditoria completa** — El encargo del usuario abre s178. Cinco preguntas cruzadas contra el codigo con dos checkers calibrados en rojo: **trece hallazgos con evidencia `file:line`, once cerrados en la misma sesion**. **EL PAPEL IBA POR DETRAS Y SIEMPRE HACIA EL MISMO LADO**: los cuatro marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay — la Fase 3 «EN CURSO (s155)» con los emisores en **v0.102.0** y la retencion corriendo desde s174; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38** y es **77 de 96 / 19**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba el absoluto que s151 prohibio: reescrito en ES y EN **y fechado**, porque la pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE** — `main.jsx:153` lo llamaba en cada sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo: borrado en sus dos sitios. Guard de metodo en `sw.js` (dos `cache.put`, ningun `.catch()`). La tabla de deuda **mentia en 10 de 14 filas** y pierde su columna de numeros. **El instrumento mintio SEIS veces.** | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
@@ -377,6 +378,124 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.111.0] -- 2026-09-01 -- feat(sidebar): la sidebar como brujula
+
+**El encargo llego como un brief largo** (sidebar + sesiones CTB musicales). Se
+implemento la **primera mitad**: la sidebar entera, escritorio y movil. **CTB
+queda fuera de v1** por decision del usuario -- el ROADMAP dice literalmente, en
+su seccion «Fuera de v1 (explicito)», *«Viajes de respiracion con
+musica/facilitadores y CTB»*, y no se toca. Se le puso la contradiccion delante
+y eligio: **fuera de v1, prototipo si**.
+
+### Lo que el brief daba por hacer y ya estaba
+
+Cinco encargos ya existian, y decirlo ahorro trabajo: el reparto de acceso de las
+tres rondas (`express` free, `full`/`long` premium), `canAccessRoutine()` como
+guard central, la retencion libre sin cronometro ni record (s166), el payload
+completo de `session.completed` y el criterio «el agua sola no mantiene racha»
+(s69).
+
+### El diseno se aprobo MIRANDOLO
+
+Nueve variantes sobre cajas **a medida real** (280 de ancho, 18 de padding, 1 de
+borde => 243 de contenido, 271 de banda de logo). Lo que el usuario eligio
+viendolo: **logo al 80 %**, **Hoy en rejilla 2x2 con los glifos y centrado**, la
+**regla del logo de vuelta** con el margen de las otras, **fuera la frase del dia
+activo** (no se entendia, y con razon: «hoy ya cuenta» no dice contar PARA QUE),
+**fuera la barra de progreso** y la tarjeta reducida a **CONTINUAR o REPETIR**.
+
+**Y tres veces escribi un numero que no habia medido.** Predije «Hoy» en 118 px
+contra 106 y son **85,0 y 84,3** -- la diferencia real es **0,7 px**, asi que
+entre las dos formas no se elige espacio sino lectura. Predije la banda en 178,9
+y son 178,3. Y el metodo para medir el suelo **mutaba el layout** y devolvia
+**6 px de mas en las cuatro variantes**, suficiente para voltear un veredicto:
+cambiado por uno que no toca nada y **estable en tres tomas**.
+
+### El logo, medido
+
+```
+lienzo 716x471 . dibujo 488x194 . 93,53 % a alfa 0
+margenes  izq 85 . dcha 143 . arriba 123 . abajo 154
+```
+
+En la banda de 271 px eso son **178,3 px de alto de los que 104,9 son aire**. Y
+la banda **ya se comprimia 7,3 px** (`flex-shrink: 1`, contenido 172), con la
+imagen desbordandola **13,7** sin que se notara **porque lo que desbordaba era
+transparencia**: el margen del PNG llevaba meses tapando un defecto real.
+
+**No se crea `pace-logo-sidebar.png`**: ese `<img>` lo leen `CowLogo.jsx` **y**
+`OnboardingScreens.jsx`, asi que mover el archivo le cambia el logo al
+onboarding, y anadir un segundo lo inlinearia otra vez (~100 KB de base64 por un
+dibujo que se pinta una vez). Se recorta **por CSS**, con la aritmetica escrita
+en la hoja.
+
+### Tres hallazgos que cambian lo acordado
+
+- **La rama «CONTINUA» de Camino es HOY INALCANZABLE.** `PathRunner` monta un
+  overlay a pantalla completa siempre que `paths.current` existe, y salir llama a
+  `abandonPath()`, que lo pone a `null`. Un Camino en curso **tapa la sidebar**,
+  o no existe. La rama se conserva escrita y **se dice que no esta probada**.
+- **El ultimo logro baja al PIE.** Con seccion propia costaba **~100 px** y con
+  ellos no cabe a 1280x720 en cuanto aparece la tarjeta. Se sigue enseñando uno.
+- **La celda de Foco no es un boton**: el timer ES la home, no hay nada que abrir.
+
+### Dos defectos mios
+
+**El recorte no se aplicaba**: la caja recortaba (107,8 px) pero el dibujo seguia
+a 271 x 178,4 -- los estilos **en linea** de `PaceLogoImage` ganan a la hoja, que
+es el mordisco que s174 ya documento con el padding del modal. Y estaba al 100 %
+cuando el usuario habia elegido **80 %**.
+
+**La celda «Respira» se llamaba igual que el chip de la ActivityBar**, asi que
+`getByRole('button', {name: /^Respira/})` dejo de ser unico: **15 tests en rojo y
+ninguno del producto**. El arreglo bueno no era tocar los tests -- la etiqueta
+pasa a «Abrir Respira», que es lo que un boton debe decir (WCAG 2.5.3).
+
+Y **dos veces** cai en los backticks dentro del template literal del CSS, la
+trampa anotada desde s139.
+
+### Los tests, y las tres semillas que hacian falta
+
+Nace `tests/sidebar-redesign.spec.js`, **16 asertos**, con 3 mutantes que
+muerden. **El primer mutante no mordio**, y no por debilidad del test: la suite
+corre sobre `index.html` y yo habia mutado la fuente **sin reconstruir**.
+
+**Tres rojos con el mismo sintoma** (la sidebar a ceros) antes de dar con la
+causa: sembrar `weeklyStats` o `water` **no basta**. Sin `lastActiveDay` el
+rollover archiva la semana; sin las guardas de migracion,
+`_historyRecalculated_v0_28_8` **recalcula `weeklyStats` desde un historico
+vacio** y la deja a ceros.
+
+`leerLogros` cambia de sonda: leia el contador «N/M» de un bloque que ya no
+existe, y ahora `leerUltimoLogro` lee **cual** fue el ultimo logro. El contador
+sigue donde manda 15.4: el modal.
+
+### Las tres de pulido
+
+**El chevron a 24, no a 44** -- WCAG 2.2 AA pide 24 y 22 se queda corto; a 44
+**pisa el dibujo 23 px**, a 24 lo pisa 3. Antes del recorte no se tocaban nunca:
+**el recorte crea este roce**. **En movil la accion va primera** (orden de DOM,
+no `order`: s160). **El cajon se cierra al elegir.**
+
+Y mover la accion de sitio destapo un defecto invisible leyendo: colgar el
+separador de cada bloque daba **dos reglas seguidas** en escritorio y ninguna
+antes de la tarjeta. Se arreglo el diseno: las secciones se componen en una lista
+y **los separadores van entre ellas**.
+
+### Numeros
+
+| | |
+|---|---|
+| Suelo escritorio | **662** (cabe a 720 con 58 px y a 714 con 52) |
+| La sidebar de s179 | **720 exactos, espaciador ya a 0** -- a 1536x714 ya scrolleaba |
+| Banda del logo | 96 px (dibujo 216,9 x 86,2) contra 164,7 (dibujo 271 x 178,4) |
+| Movil | 390x844 y **320x568 sin scroll**, cero scroll horizontal |
+| Suite | **169/169** (eran 153) |
+
+Diario: [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md).
 
 ---
 

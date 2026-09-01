@@ -167,7 +167,26 @@ function ABDrop() {
   );
 }
 
+function ABFocus() {
+  /* Aro del Pomodoro con la cabeza del recorrido — "Foco".
+     NACE EN s180 y no estaba antes por una razon: en la home Foco no es un
+     cuadrante de la ActivityBar, es el aro. Cuando la sidebar puso los cuatro
+     modulos en fila hizo falta un dibujo para el, y el unico honesto es el aro
+     mismo, con el punto brillante de su cabeza (la firma de s159). */
+  return (
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Track completo, apagado */}
+      <circle cx="14" cy="14" r="9.5" opacity="0.3" />
+      {/* Tramo recorrido */}
+      <path d="M14 4.5a9.5 9.5 0 0 1 8.23 4.75" />
+      {/* Cabeza */}
+      <circle cx="22.23" cy="9.25" r="1.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 /* s105: los glifos AB* se exponen para que el BreakMenu (menu post-Pomodoro)
    use EXACTAMENTE los mismos iconos que la ActivityBar de la home -- antes
-   llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual. */
-Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop });
+   llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual.
+   s180: la Sidebar es el tercer consumidor, y anade ABFocus. */
+Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus });

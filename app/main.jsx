@@ -75,6 +75,7 @@ function PaceApp() {
     return () => window.removeEventListener('pace:open-support', h);
   }, []);
 
+
   // Auto-trigger único del SupportModal a los 7 días de racha.
   // Consumidor del helper expuesto en SupportModule.jsx; la lógica
   // ('condición + flag de una sola vez') vive allí para mantenerla
@@ -158,6 +159,45 @@ function PaceApp() {
   const handleStartMove = (routine) => {
     setPreviewRoutine({ routine, kind: 'move' });
   };
+
+  /* Navegación desde la sidebar (s180). UN solo evento con `detail.kind` en vez
+     de un `pace:open-*` por destino: la sidebar no toca el estado interno de
+     los modales, solo dice qué quiere, y PaceApp decide con qué superficie se
+     cumple.
+
+     VA AQUÍ, y no arriba con los otros listeners, porque usa
+     `handleStartBreathe` y `setPreviewRoutine`, que se declaran más arriba pero
+     DESPUÉS de aquel bloque. Con `[]` de dependencias el efecto captura el
+     binding del primer render — que ya está inicializado cuando el handler
+     corre—, pero declararlo antes de lo que usa se lee como un error aunque no
+     lo sea.
+
+     `repeat` reutiliza las MISMAS puertas que la biblioteca: `handleStartBreathe`
+     con su gate de seguridad, o el Preview de §18.3 para cuerpo. Así una rutina
+     con `safety: true` no se salta su modal por entrar desde la sidebar. */
+  useEffectMain(() => {
+    const h = (ev) => {
+      const d = (ev && ev.detail) || {};
+      if (d.kind === 'stats') { setOpenStats(true); return; }
+      if (d.kind === 'module') {
+        /* 'focus' no abre nada a propósito: el timer ES la home, así que ya
+           estás encima de él (en móvil, con el drawer cerrándose detrás). */
+        if (d.target === 'breathe') setOpenLibrary('breathe');
+        else if (d.target === 'body') setOpenLibrary('move');
+        else if (d.target === 'water') setOpenHydrate(true);
+        return;
+      }
+      if (d.kind === 'repeat' && d.targetId) {
+        /* El módulo se le pregunta al CATÁLOGO, nunca al prefijo del id (s172). */
+        const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
+        if (b) { handleStartBreathe(b); return; }
+        const body = window.resolveBodyRoutine && window.resolveBodyRoutine(d.targetId);
+        if (body && body.routine) setPreviewRoutine({ routine: body.routine, kind: body.source });
+      }
+    };
+    window.addEventListener('pace:sidebar-action', h);
+    return () => window.removeEventListener('pace:sidebar-action', h);
+  }, []);
   const handleStartExtra = (routine) => {
     /* Reutiliza MoveSession pero marca kind='extra' para que la completion
        dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).

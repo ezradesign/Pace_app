@@ -1,180 +1,46 @@
-/* PACE · Piezas de UI del Sidebar — extraídas de `Sidebar.jsx` en s148
+/* PACE · Piezas de UI del Sidebar — extraídas de `Sidebar.jsx` en s148,
+   reescritas en s180
    ============================================================
-   Las secciones que el sidebar compone, cada una autónoma y sin estado
-   propio más allá del store: Sendero del día, WeekDots, miniaturas de logro y
-   StatusBar, más el chevron. `Sidebar.jsx` queda como orquestador.
+   Las secciones que el sidebar compone, cada una autónoma y sin estado propio
+   más allá del store. `Sidebar.jsx` queda como orquestador.
 
-   Mismo patrón que `FocusTimer.parts.jsx` (s124) y `PathRunner.parts.jsx`
-   (s80). Ver la cabecera de `Sidebar.support.jsx` para el reparto completo y
-   para por qué `sidebarStyles` se referencia PELADO (viaja por window).
+   QUÉ CAMBIÓ EN s180 y por qué. La sidebar informaba pero ayudaba poco a
+   decidir; ahora responde cuatro preguntas: qué he hecho hoy, qué puedo
+   continuar, cómo va la semana y cuál fue mi último logro.
+
+   LO QUE SE RETIRÓ (no revivir sin justificación de producto):
+     - `SenderoDelDia`  — sendero abstracto del día. Bonito y mudo: repartía
+                          hitos equidistantes que no eran cronología.
+     - `AchievementsPreview` — la rejilla de CINCO miniaturas. Queda UNA, la
+                          más reciente, que es la única pregunta que la
+                          persona se hace («¿cuál fue el último?»).
+     - `WeekDots`       — sustituido por `SidebarWeek`, que además ABRE
+                          Estadísticas. Los puntos se pintan igual.
+     - `StatusBar`      — el pill de apoyo ocupaba 44 px de la columna más
+                          valiosa. Ahora es un enlace en el pie.
+
+   LOS GLIFOS NO SON NUEVOS. `ABBreathe`, `ABMove` y `ABDrop` son los de
+   `app/main/ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105:
+   traerlos aquí QUITA una incoherencia en vez de añadir dibujo. `ABFocus`
+   nace en s180 porque Foco no tenía glifo — en la home Foco *es* el aro.
+   Se leen PELADOS y al RENDERIZAR: `ActivityBar.jsx` carga después que este
+   archivo, pero para cuando `main.jsx` monta nada, ya están todos.
 
    ORDEN DE CARGA: después de `Sidebar.support.jsx` (usa `sidebarStyles`) y de
-   `SupportModule.jsx` (StatusBar monta `<SupportButton/>`); antes de
-   `Sidebar.jsx`, que compone estas piezas.
+   `Sidebar.selectors.js`; antes de `Sidebar.jsx`.
 
-   OJO CON LOS ALIAS DE HOOKS. `useMemoSB` / `useIdSidebar` conservan su nombre
-   raro a propósito: en dev, Babel standalone evalúa cada archivo con un eval
-   INDIRECTO, así que un `const { useMemo } = React` top-level cae en el ámbito
-   léxico GLOBAL y choca con el de cualquier otro archivo que haga lo mismo
-   («Identifier already declared», y ese archivo entero deja de evaluar).
+   OJO CON LOS ALIAS DE HOOKS. `useMemoSB` conserva su nombre raro a propósito:
+   en dev, Babel standalone evalúa cada archivo con un eval INDIRECTO, así que
+   un `const { useMemo } = React` top-level cae en el ámbito léxico GLOBAL y
+   choca con el de cualquier otro archivo que haga lo mismo («Identifier
+   already declared», y ese archivo entero deja de evaluar).
    ============================================================ */
-
-const { useMemo: useMemoSB, useId: useIdSidebar } = React;
 
 function ChevronLeftIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="15 18 9 12 15 6" />
     </svg>
-  );
-}
-
-/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
-   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
-   contadores que los usaba. Si en el futuro vuelve algún contador
-   en otra ubicación, recuperar de git history.
-   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
-   ya no es un rail con chevron, vuelve a abrirse con el handle flotante
-   que vive en main.jsx (≡). */
-
-/* ============================================================
-   Sendero del día — línea ondulada horizontal que representa
-   el arco del día (6h → 22h). Los hitos son pomodoros y sesiones
-   completadas hasta ahora; aparecen como puntos sobre la curva.
-   B1: el sendero es ABSTRACTO — los hitos se reparten equidistantes
-   como secuencia de lo hecho hoy, sin pretender cronología (antes
-   se les inventaban horas). Lo único cronológico real es el puntero
-   de "ahora" sobre el arco 6h→22h.
-   ============================================================ */
-function SenderoDelDia({ state, compact }) {
-  const { t, tn } = useT();
-  /* Id unico por instancia (s94): evita colisiones de clipPath global
-     si el componente llegara a montarse dos veces. Mismo patron que los
-     radialGradient de SenderoBar.jsx. */
-  const clipId = `sendero-clip-${useIdSidebar()}`;
-  const now = new Date();
-  const hNow = now.getHours() + now.getMinutes() / 60;
-  const start = 6;  // 6:00
-  const end = 22;   // 22:00
-  const fraction = Math.min(1, Math.max(0, (hNow - start) / (end - start)));
-
-  // Hitos del día: pomodoros + sesiones (proxy desde state).
-  // B1: secuencia abstracta — puntos equidistantes a lo largo de todo el
-  // sendero, en orden fijo (foco → respira → cuerpo → agua). Sin horas
-  // inventadas: no sabemos CUÁNDO ocurrió cada uno, solo que ocurrió.
-  const hitos = useMemoSB(() => {
-    const out = [];
-    const cycle = state.cycle || 0;
-    for (let i = 0; i < cycle; i++) out.push({ kind: 'focus' });
-    /* Sesion 69 (v0.28.8): weeklyStats indexa lunes-primero. */
-    const day = getDayIndexMondayFirst(new Date());
-    const ws = state.weeklyStats || {};
-    if ((ws.breathMinutes?.[day] || 0) > 0) out.push({ kind: 'breathe' });
-    if ((ws.moveMinutes?.[day] || 0) > 0) out.push({ kind: 'move' });
-    if ((ws.waterGlasses?.[day] || 0) > 0) out.push({ kind: 'water' });
-    return out.map((h, i) => ({ ...h, x: (i + 1) / (out.length + 1) }));
-  }, [state.cycle, state.weeklyStats]);
-
-  const W = compact ? 180 : 240;
-  const H = compact ? 36 : 46;
-  const pathD = `M 0 ${H * 0.55} Q ${W * 0.2} ${H * 0.15}, ${W * 0.45} ${H * 0.55} T ${W} ${H * 0.55}`;
-
-  const colorOf = (kind) => ({
-    focus: 'var(--focus)',
-    breathe: 'var(--breathe)',
-    move: 'var(--move)',
-    water: 'var(--hydrate)',
-  })[kind] || 'var(--ink-3)';
-
-  // "Pointer" (posición actual en la onda) — aproximación lineal en el path
-  const pointerX = fraction * W;
-  // Para la altura aprox del path en x: usar la misma curva cuadrática
-  const pathY = (x) => {
-    // valores de control para una cuadrática M-Q-T-Q chainless:
-    // aquí aproximamos con dos quads empalmados. Bastante preciso para display.
-    if (x <= W * 0.45) {
-      const t = x / (W * 0.45);
-      const y = (1 - t) * (1 - t) * (H * 0.55) + 2 * (1 - t) * t * (H * 0.15) + t * t * (H * 0.55);
-      return y;
-    } else {
-      const t = (x - W * 0.45) / (W * 0.55);
-      const y = (1 - t) * (1 - t) * (H * 0.55) + 2 * (1 - t) * t * (H * 0.95) + t * t * (H * 0.55);
-      return y;
-    }
-  };
-
-  return (
-    <>
-      <div style={sidebarStyles.sectionHeader}>
-        <Meta>{t('sidebar.section.trail')}</Meta>
-        <span style={sidebarStyles.sectionAside}>{hitos.length} {hitos.length === 1 ? t('sidebar.trail.hito') : t('sidebar.trail.hitos')}</span>
-      </div>
-      <div style={{ marginTop: 6 }}>
-        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ display: 'block', width: '100%' }}>
-          {/* Camino completo (opacidad baja) */}
-          <path d={pathD} stroke="var(--line-2)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-          {/* Camino recorrido: clip al punto actual */}
-          <defs>
-            <clipPath id={clipId}>
-              <rect x="0" y="0" width={pointerX} height={H} />
-            </clipPath>
-          </defs>
-          <path d={pathD} stroke="var(--focus)" strokeWidth="1.8" fill="none" strokeLinecap="round" clipPath={`url(#${clipId})`} />
-          {/* Hitos */}
-          {hitos.map((h, i) => {
-            const cx = h.x * W;
-            const cy = pathY(cx);
-            return (
-              <g key={i}>
-                <circle cx={cx} cy={cy} r="4.5" fill="var(--paper)" stroke={colorOf(h.kind)} strokeWidth="1.6" />
-                <circle cx={cx} cy={cy} r="1.8" fill={colorOf(h.kind)} />
-              </g>
-            );
-          })}
-          {/* Puntero de "ahora" */}
-          <circle cx={pointerX} cy={pathY(pointerX)} r="3" fill="var(--ink)" />
-        </svg>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' }}>
-          <span>{t('sidebar.trail.hour.start')}</span>
-          <span style={{ ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' }}>{t('sidebar.trail.now')} · {String(now.getHours()).padStart(2,'0')}:{String(now.getMinutes()).padStart(2,'0')}</span>
-          <span>{t('sidebar.trail.hour.end')}</span>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function WeekDots({ weeklyStats, compact }) {
-  const { t } = useT();
-  const days = t('sidebar.days').split(',');
-  const today = (new Date().getDay() + 6) % 7; // L=0
-  const dotSize = compact ? 5 : 6;
-  /* Sesion 69 (v0.28.8): weeklyStats ahora es lunes-primero (i=0 -> lunes).
-     Eliminado el shift (i+1)%7 que rotaba desde getDay(). */
-  return (
-    <div style={{ display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 }}>
-      {days.map((d, i) => {
-        /* Criterio "dia activo" s69 (como YearView y la racha): cualquier
-           sesion de foco|respira|cuerpo enciende el punto; agua sola NO.
-           Antes solo miraba focusMinutes -- un dia de solo Respira/Mueve
-           quedaba gris (s101). */
-        const active = (weeklyStats.focusMinutes[i]  || 0) > 0
-                    || (weeklyStats.breathMinutes?.[i] || 0) > 0
-                    || (weeklyStats.moveMinutes?.[i]   || 0) > 0;
-        const isToday = i === today;
-        return (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 }}>
-            <div style={{
-              width: dotSize, height: dotSize, borderRadius: '50%',
-              background: active ? 'var(--focus)' : 'var(--line)',
-              outline: isToday ? '2px solid var(--ink-2)' : 'none',
-              outlineOffset: 2,
-            }} />
-            <span style={{ fontSize: 9, color: isToday ? 'var(--ink)' : 'var(--ink-3)', fontWeight: isToday ? 600 : 400 }}>{d}</span>
-          </div>
-        );
-      })}
-    </div>
   );
 }
 
@@ -192,86 +58,269 @@ function achMini(id) {
      Al CARACTER no: `renderGlyph` lo devuelve en un span SIN grid, así que un
      width/height lo convierte en una caja con la letra pegada arriba a la
      izquierda — se veía diminuta y descolocada. Lo que necesita es cuerpo de
-     letra; centrarlo ya lo hace el `placeItems:center` del botón. */
-  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '2em' };
+     letra; centrarlo ya lo hace el `placeItems:center` del contenedor. */
+  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '1.4em' };
   return {
     title: a.secret ? '?' : a.title,
     nodo: dibuja ? dibuja(a, estilo) : (a.glyph || '✦'),
   };
 }
 
-function AchievementsPreview({ onOpen }) {
-  const [state] = usePace();
-  const { t } = useT(); // sesión 37 hotfix v0.19.1: faltaba tras migración i18n
-  // Los 5 más recientes primero, por unlockedAt descendente
-  const unlocked = Object.entries(state.achievements || {})
-    .sort((a, b) => (b[1].unlockedAt || 0) - (a[1].unlockedAt || 0))
-    .map(([id]) => id);
-  const shown = 5;
+/* ============================================================
+   HOY — cuatro celdas, cada una un botón que abre su módulo.
+   Antes, para ir a Respira había que salir de la sidebar.
+   El glifo se apaga al 30 % cuando el valor es cero: eso distingue un día
+   empezado de uno en blanco sin escribir una palabra más.
+   ============================================================ */
+function SidebarHoyCelda({ modulo, glifo, color, nombre, valor, unidad, onOpen, extra, etiqueta }) {
+  const cero = !valor;
+  const dentro = (
+    <React.Fragment>
+      <span data-pace-hoy-ic style={{ ...sidebarStyles.hoyIc, color: cero ? 'var(--ink-3)' : color }}>
+        {glifo}
+      </span>
+      <span style={sidebarStyles.hoyNombre}>{nombre}</span>
+      <span style={{ ...sidebarStyles.hoyValor, ...(cero ? sidebarStyles.hoyValorCero : null) }}>
+        {valor}
+        <span style={sidebarStyles.hoyUnidad}>{unidad}</span>
+      </span>
+      {extra}
+    </React.Fragment>
+  );
+
+  /* FOCO NO ES UN BOTÓN, y no es un descuido. Las otras tres celdas abren su
+     módulo; Foco no tiene nada que abrir porque el timer ES la home, así que
+     un botón ahí sería un control que no hace nada. Se queda como dato. */
+  if (!onOpen) {
+    return (
+      <div data-pace-hoy-celda data-modulo={modulo} data-cero={cero ? '1' : '0'} data-inerte="1">
+        {dentro}
+      </div>
+    );
+  }
+
+  /* La ETIQUETA es «Abrir Respira», no «Respira». Dos motivos, y el primero es
+     de accesibilidad: un botón debe decir lo que hace. El segundo lo destapó la
+     suite -- con el nombre a secas, esta celda y el chip de la ActivityBar
+     pasaban a llamarse igual y `getByRole('button', {name: /^Respira/})` dejaba
+     de ser único: 15 tests en rojo, ninguno del producto. Conserva el nombre
+     visible dentro (WCAG 2.5.3, «label in name»). */
   return (
-    <div data-pace-sidebar-achievements style={{ display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 }}>
-      {Array.from({ length: shown }).map((_, i) => {
-        const id = unlocked[i];
-        return (
-          <button
-            key={i}
-            onClick={onOpen}
-            style={{
-              aspectRatio: '1/1',
-              borderRadius: '50%',
-              border: '1px solid var(--line)',
-              background: id ? 'var(--achievement-soft)' : 'transparent',
-              color: id ? 'var(--achievement)' : 'var(--ink-3)',
-              display: 'grid', placeItems: 'center',
-              fontSize: 10,
-              fontFamily: 'var(--font-display)',
-              fontStyle: 'italic',
-              cursor: 'pointer',
-              transition: 'all 180ms',
-            }}
-            title={(id && achMini(id).title) || t('ach.seal.discover')}
-          >
-            {id ? achMini(id).nodo : '·'}
-          </button>
-        );
-      })}
+    <button
+      data-pace-hoy-celda
+      data-modulo={modulo}
+      data-cero={cero ? '1' : '0'}
+      onClick={onOpen}
+      aria-label={etiqueta}
+      title={etiqueta}
+    >
+      {dentro}
+    </button>
+  );
+}
+
+function SidebarToday({ hoy, onOpen, onAddWater }) {
+  const { t, tn } = useT();
+  const gotas = [];
+  for (let i = 0; i < hoy.waterGoal; i++) {
+    gotas.push(
+      <i key={i} style={{ ...sidebarStyles.gota, ...(i < hoy.waterGlasses ? sidebarStyles.gotaOn : null) }} />
+    );
+  }
+  return (
+    <div data-pace-hoy>
+      <SidebarHoyCelda
+        modulo="focus" glifo={<ABFocus />} color="var(--focus)"
+        nombre={t('sidebar.today.focus')} valor={hoy.focusMinutes} unidad={t('sidebar.unit.min')}
+      />
+      <SidebarHoyCelda
+        modulo="breathe" glifo={<ABBreathe />} color="var(--breathe)"
+        nombre={t('sidebar.today.breathe')} valor={hoy.breatheMinutes} unidad={t('sidebar.unit.min')}
+        etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.breathe') })}
+        onOpen={() => onOpen('breathe')}
+      />
+      <SidebarHoyCelda
+        modulo="body" glifo={<ABMove />} color="var(--move)"
+        nombre={t('sidebar.today.body')} valor={hoy.bodyMinutes} unidad={t('sidebar.unit.min')}
+        etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.body') })}
+        onOpen={() => onOpen('body')}
+      />
+      {/* El «+1» NO puede ser hermano suelto: el grid le daría su propia
+          casilla y la rejilla pasaría de cuatro a cinco. Va envuelto. */}
+      <span data-pace-hoy-agua>
+        <SidebarHoyCelda
+          modulo="water" glifo={<ABDrop />} color="var(--hydrate)"
+          nombre={t('sidebar.today.water')} valor={hoy.waterGlasses}
+          unidad={tn('sidebar.unit.of', { n: hoy.waterGoal })}
+          etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.water') })}
+          onOpen={() => onOpen('water')}
+          extra={<span style={sidebarStyles.gotas}>{gotas}</span>}
+        />
+        <button data-pace-hoy-mas onClick={onAddWater} aria-label={t('sidebar.water.add')} title={t('sidebar.water.add')}>+</button>
+      </span>
     </div>
   );
 }
 
-/* StatusBar: barra inferior del sidebar.
+/* ============================================================
+   ACCIÓN PRINCIPAL — solo puede decir CONTINUAR o REPETIR, y las dos hablan
+   de algo que la persona YA hizo. Nunca «prueba esto»: si un día dijera eso
+   y otro «continúa» en el mismo sitio y con la misma pinta, dejaría de ser un
+   sitio fiable y sería una ranura de anuncios (decisión del usuario, s180).
 
-   v0.12.1 · Al quitar la sección Intención el footer gana aire,
-   así que el pill "Invita a un café" ahora respira más sin
-   necesitar cambiar su diseño — sigue siendo el pill delgado
-   y elegante del SupportModule (decisión de sesión 16: presencia
-   calmada, sin gritar). La elegancia viene del contraste con el
-   espacio vacío, no de inflar el componente.
+   La tarjeta ENTERA es el objetivo, con el patrón de s174: el título lleva
+   DENTRO el botón y este se extiende con un `::after` absoluto. Así conserva
+   el encabezado en el árbol de accesibilidad —un `role="button"` en la
+   tarjeta volvería presentacionales a sus descendientes y tumbó 9 tests en
+   s174— y el objetivo táctil crece a ~243 × 100 en vez de un botón de 44.
+   ============================================================ */
+/* sidebarActionView: traduce lo que dijo el selector a lo que se pinta, o
+   `null` si no hay nada que enseñar. Vive AQUÍ y no en los selectores porque
+   necesita los catálogos, y esos no son estado: los selectores se quedan puros.
 
-   Estructura (top → bottom):
-     1. "En camino" + tag Pace (identidad / estado).
-     2. Pill SupportButton — mismo diseño del sello original.
-     3. Versión + autor en micro-type.
-*/
-function StatusBar({ compact }) {
-  const [state] = usePace();
-  const { t } = useT();
-  const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
+   Devuelve `null` también cuando la rutina no se resuelve en ningún catálogo
+   —una sesión de Foco, por ejemplo, que no tiene ficha— porque enseñar un
+   `routineId` crudo sería peor que no enseñar nada. El orquestador consulta
+   esto ANTES de pintar el separador, así no queda una regla suelta. */
+function sidebarActionView(accion, t, tn, lang) {
+  if (!accion) return null;
+  if (accion.kind === 'path') {
+    const camino = window.getPath && window.getPath(accion.targetId);
+    if (!camino) return null;
+    const pasos = (camino.steps && camino.steps.length) || 0;
+    return {
+      kind: 'path',
+      eyebrow: t('sidebar.action.continue'),
+      color: 'var(--focus)',
+      titulo: camino.title || camino.name || accion.targetId,
+      meta: pasos ? tn('sidebar.action.path.meta', { n: Math.min(accion.stepIndex + 1, pasos), m: pasos }) : null,
+    };
+  }
+  /* El módulo se le pregunta al CATÁLOGO y nunca al prefijo del id (s172):
+     los ids de Mueve y Estira van cruzados y el prefijo miente. */
+  const b = (window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId)) || null;
+  const c = b || (((window.resolveBodyRoutine && window.resolveBodyRoutine(accion.targetId)) || {}).routine) || null;
+  if (!c) return null;
+  /* Mismo contrato que `RoutineCard`: en español manda el `name` del dato; en
+     inglés se busca la clave y se cae al dato si no existe. */
+  let titulo = c.name;
+  if (lang === 'en') {
+    const v = t(accion.targetId + '.name');
+    if (v !== accion.targetId + '.name') titulo = v;
+  }
+  return {
+    kind: 'repeat',
+    eyebrow: t('sidebar.action.repeat'),
+    color: b ? 'var(--breathe)' : 'var(--move)',
+    titulo: titulo,
+    meta: t('sidebar.action.repeat.meta'),
+  };
+}
+
+function SidebarPrimaryAction({ accion, vista, onAct }) {
+  if (!vista) return null;
+  const eyebrow = vista.eyebrow, color = vista.color, titulo = vista.titulo, meta = vista.meta;
   return (
-    <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 6 : 10 }}>
-      <div style={sidebarStyles.footerRow}>
-        <Meta>{t('sidebar.status.ontrack')}</Meta>
-        <Tag color="var(--breathe)">● Pace</Tag>
+    <div style={sidebarStyles.accion} data-pace-sidebar-accion data-kind={accion.kind}>
+      <div style={{ ...sidebarStyles.accionEyebrow, color }}>{eyebrow}</div>
+      <h4 style={sidebarStyles.accionTitulo}>
+        <button style={sidebarStyles.accionBoton} onClick={() => onAct(accion)}>{titulo}</button>
+        <span style={sidebarStyles.accionFlecha} aria-hidden="true">→</span>
+      </h4>
+      {meta ? <p style={sidebarStyles.accionMeta}>{meta}</p> : null}
+    </div>
+  );
+}
+
+/* ============================================================
+   ESTA SEMANA — los siete puntos, y el bloque ENTERO abre Estadísticas.
+   Siete objetivos de 44 px no caben: 7 × 44 = 308 y el ancho útil son 243.
+   Medido, cada día quedaba en 30 × 44 y además costaba 22 px de alto. Como
+   un solo botón el objetivo es 243 × ~59 y cuesta 0 px.
+   El criterio de «día activo» lo decide `selectSidebarWeek`, no esta pieza.
+   ============================================================ */
+function SidebarWeek({ semana, onOpen }) {
+  const { t, tn } = useT();
+  const letras = t('sidebar.days').split(',');
+  return (
+    <button data-pace-semana onClick={onOpen} aria-label={t('sidebar.week.open')} title={t('sidebar.week.open')}>
+      <span style={{ display: 'flex', gap: 6 }}>
+        {semana.days.map((d, i) => (
+          <span key={i} style={sidebarStyles.semDia}>
+            <span style={{ ...sidebarStyles.semLetra, color: d.isToday ? 'var(--ink)' : 'var(--ink-3)', fontWeight: d.isToday ? 600 : 400 }}>
+              {letras[i]}
+            </span>
+            <span style={{
+              ...sidebarStyles.semPunto,
+              background: d.active ? 'var(--focus)' : 'var(--line)',
+              outline: d.isToday ? '2px solid var(--ink-2)' : 'none',
+              outlineOffset: 2,
+            }} />
+          </span>
+        ))}
+      </span>
+      <span style={{ ...sidebarStyles.semPie, display: 'block' }}>
+        {semana.activeCount
+          ? tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak })
+          : tn('sidebar.week.none', { m: semana.longestStreak })}
+        {' '}<span aria-hidden="true">→</span>
+      </span>
+    </button>
+  );
+}
+
+/* ============================================================
+   PIE — «Apoyar PACE» deja de ser un pill de 44 px y pasa a enlace: devuelve
+   34 px de la columna más valiosa (44 del botón menos 10 del texto).
+   ============================================================ */
+function SidebarFooter({ ultimo, onCollection, onSupport, compact }) {
+  const { t } = useT();
+  /* EL ULTIMO LOGRO VIVE AQUI, y no en una seccion propia. El brief pedia
+     enseñar UNO -- y se enseña--, pero medido en la app una seccion con su
+     rotulo, su sello de 38 px y su fecha cuesta ~100 px, y con esos 100 la
+     sidebar no cabe a 1280x720 en cuanto aparece la tarjeta de accion. En el
+     pie el sitio ya estaba pagado: el enlace a la coleccion PASA A SER el
+     logro, con su sello. Es lo que la variante F4 llamaba «el logro se va al
+     pie». Sin fecha: «hace 2 dias» no cabe en una linea de pie y tampoco es
+     lo que se pregunta la persona, que es CUAL fue. */
+  const mini = ultimo ? achMini(ultimo.id) : null;
+  return (
+    <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: 6 }}>
+      <div style={sidebarStyles.pieFila}>
+        <button
+          style={{ ...sidebarStyles.pieEnlace, display: 'flex', alignItems: 'center', gap: 7, textDecoration: 'none' }}
+          onClick={onCollection}
+          title={mini ? mini.title : t('sidebar.collection')}
+          data-pace-sidebar-ultimo={ultimo ? ultimo.id : ''}
+        >
+          {mini ? <span style={sidebarStyles.pieSello}>{mini.nodo}</span> : null}
+          <span style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
+            {mini ? mini.title : t('sidebar.collection')}
+          </span>
+        </button>
+        <button
+          style={sidebarStyles.pieEnlace}
+          onClick={onSupport}
+          title={t('support.sidebar.title')}
+          aria-label={t('support.sidebar.label')}
+        >
+          {t('sidebar.support')}
+        </button>
       </div>
-      <div style={{ marginTop: compact ? 4 : 0, marginBottom: compact ? 4 : 0 }}>
-        <SupportButton onOpen={openSupport} />
-      </div>
-      <div style={sidebarStyles.footerRow}>
-        <span style={{ fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Pace {PACE_VERSION}</span>
+      <div style={sidebarStyles.pieFila}>
+        <span style={sidebarStyles.pieVer}>Pace {PACE_VERSION}</span>
         <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @ezradesign</span>
       </div>
     </div>
   );
 }
 
-Object.assign(window, { ChevronLeftIcon, SenderoDelDia, WeekDots, achMini, AchievementsPreview, StatusBar });
+Object.assign(window, {
+  ChevronLeftIcon,
+  achMini,
+  SidebarToday,
+  sidebarActionView,
+  SidebarPrimaryAction,
+  SidebarWeek,
+  SidebarFooter,
+});
