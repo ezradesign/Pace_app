@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.109.0</title>
+  <title>PACE · Foco · Cuerpo — v0.110.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4880,7 +4880,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.109.0';
+const PACE_VERSION = 'v0.110.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -18697,7 +18697,7 @@ if (!_paceMoveV1Css) {
       [data-pace-v1-care] { margin-top: 4px !important; }
       [data-pace-v1-progress] { margin-top: 10px !important; }
     }
-    @media (min-width: 641px) and (max-height: 560px) {
+    @media (min-width: 641px) and (max-height: 640px) {
       /* s119: con las reservas (cue+care a 2 líneas) el bloque de trabajo
          rebasaba ~35 px a 1024×512 — se recupera apretando MÁRGENES, NÚMERO y
          bajando un punto las fuentes ya reducidas (nunca instrucciones ni las
@@ -18885,6 +18885,83 @@ if (!_paceMoveV1Css) {
     }
     @media (min-width: 641px) and (min-height: 641px) and (max-height: 700px) {
       [data-pace-v1-num] { font-size: 58px !important; }
+    }
+
+    /* s179 · MOVIL CORTO: es el MISMO mecanismo de s176 que s177 arreglo solo en escritorio.
+       [data-pace-v1-body] lleva min-height:0 y ENCOGE por debajo de su contenido, asi que
+       el texto de la cola pinta sobre la barra. Medido a 360x640: **26,3 px dentro**.
+       s171b ya apreto el margen del rotulo de 8 a 3 por ESTE MISMO viewport cuando desbordaba
+       3 px; ahora no queda margen que dar sin tocar las instrucciones, que la jerarquia de
+       s119 prohibe.
+       SE APLICA LA DECISION s114: en poca altura se oculta el ROTULO «Cuidate», NUNCA el
+       contenido — la adaptacion sigue visible como linea secundaria. Es exactamente lo que ya
+       hace el tramo de escritorio corto, y aqui se hace igual en vez de inventar otra cosa.
+       VA AL FINAL DE LA HOJA por la razon de siempre: a igual especificidad gana la ultima
+       regla del archivo, y cuatro tiers de arriba fijan margin-top con !important.
+
+       s179b · EL UMBRAL ERA 660 Y ESTABA MAL PUESTO: se eligio por el viewport que se
+       estaba mirando (360x640) en vez de medir por los DOS lados, que es exactamente el
+       error que s177 cometio declarando 641 cuando el borde real estaba en 575. Barrido el
+       hueco, HEAD solapa a **375x667 — el iPhone SE/8 — con 7,2 px** y a 360x661 con 10,8,
+       los dos JUSTO POR ENCIMA de 660 y por tanto sin tramo que los cubriera; 360x680
+       sobrevivia por 1,9 px, que no es holgura sino suerte.
+       SUBE A 700, y no es un numero nuevo: es el breakpoint que esta misma hoja ya usa mas
+       arriba para «retrato estrecho con poca altura» (s27, apretado por s171b). Un tramo
+       mas de los que ya hay, no una frontera inventada. */
+    @media (max-width: 640px) and (max-height: 700px) {
+      [data-pace-v1-care-label] { display: none !important; }
+      /* El NUMERO, igual que hace el tramo corto de escritorio (58 px). Medido a 360x640:
+         era 72 px y solo con los margenes quedaban 8,3 px dentro de la barra. NO se toca el
+         cue: mide 74,4 px porque son TRES LINEAS DE TEXTO REAL a este ancho, no una reserva,
+         y la jerarquia de s119 prohibe recortar instrucciones. */
+      [data-pace-v1-timer] { font-size: 58px !important; }
+      /* s179b · Y EL NUMERO DE LA PANTALLA DE COLOCACION, QUE NO ES EL TIMER. Aqui estaba
+         el solape que quedaba: esa pantalla pinta [data-pace-v1-num] (el numero pequenio
+         de la puerta, s112) y NO -timer, asi que todos los tramos cortos —los de s119
+         tambien— comprimian un elemento que en esa pantalla ni existe. Censado a 360x640,
+         el texto que se metia en la barra era el de colocarse en 4 de los 5 casos que
+         quedaban, con 34,0 px en «Munyecas y manos». */
+      [data-pace-v1-num] { font-size: 50px !important; }
+      /* El NOMBRE baja a 30 px, y 30 NO es un numero nuevo: es el SUELO que su propio
+         clamp declara aceptable -- clamp(30px, 6.5vh, 52px) en MoveSessionV1.jsx. A 360 de
+         ancho, 6,5vh de 640 son 41,6 px y el nombre envuelve a DOS lineas: 87,3 px de una
+         pieza. Fijado al suelo del clamp cabe en una y devuelve 53,7. El cue no se toca:
+         son tres lineas de texto real y la jerarquia de s119 prohibe recortar instrucciones. */
+      [data-pace-v1-name] { font-size: 30px !important; line-height: 1.12 !important; }
+      [data-pace-v1-glyph] > div { margin-bottom: 6px !important; }
+      [data-pace-v1-name] { margin-bottom: 4px !important; }
+      [data-pace-v1-cue] { margin-bottom: 6px !important; }
+      [data-pace-v1-support-strong] { margin-top: 6px !important; }
+      [data-pace-v1-care] { font-size: 11.5px !important; margin-top: 4px !important; }
+      [data-pace-v1-support] { font-size: 12px !important; }
+      [data-pace-v1-progress] { margin-top: 8px !important; }
+    }
+
+    /* s179b · MOVIL MUY CORTO: el tramo de arriba NO BASTA. A 360x600 pasaba de 54,6 px
+       dentro de la barra a 15,5, que sigue siendo solape. Y 600 px de alto no es un movil
+       raro: es lo que le queda a un 360x640 cuando el navegador se come su barra.
+       Se sigue la escalera que ya usa el escritorio (700 -> 640 -> 430): cada tramo aprieta
+       lo mismo un punto mas. Bajan el NUMERO y los cuerpos ya reducidos; NO se toca el cue,
+       que a este ancho son tres lineas de texto real y no una reserva — la jerarquia de
+       s119 prohibe recortar instrucciones, y esa es la razon de que aqui se pague con el
+       numero y no con lo que hay que leer. */
+    @media (max-width: 640px) and (max-height: 620px) {
+      [data-pace-v1-timer] { font-size: 46px !important; }
+      [data-pace-v1-num] { font-size: 38px !important; }
+      /* s179b · el margen de la linea de apoyo, que es la que se metia: 14 px en linea desde
+         el runner. Censado a 360x600 quedaba UNA rutina dentro de la barra (Flexiones de
+         escritorio, 12,4 px) y esto es lo unico que queda por dar sin tocar el glifo -- que
+         a esta altura son 132 px y lo tiene PROHIBIDO por la fuente unica de s177 -- ni las
+         instrucciones, que prohibe s119. */
+      [data-pace-v1-support] { margin-top: 6px !important; }
+      [data-pace-v1-cue] { margin-bottom: 4px !important; }
+      [data-pace-v1-glyph] > div { margin-bottom: 2px !important; }
+      [data-pace-v1-glyph] > div { margin-bottom: 4px !important; }
+      [data-pace-v1-kicker] { margin-bottom: 2px !important; }
+      [data-pace-v1-name] { font-size: 24px !important; margin-bottom: 3px !important; }
+      [data-pace-v1-support-strong] { font-size: 18px !important; margin-top: 4px !important; }
+      [data-pace-v1-care] { margin-top: 3px !important; }
+      [data-pace-v1-progress] { margin-top: 6px !important; }
     }
   `;
   document.head.appendChild(s);

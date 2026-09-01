@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.109.0 (s178b — **LAS TRES RUTINAS DE OFICINA, Y EL DOCUMENTO QUE MANDABA AL ARCHIVO EQUIVOCADO**. La segunda mitad de s178. **`CLAUDE.md` TENIA LAS RUTAS CAMBIADAS** en el bloque que existe justo para evitarlo: lo cruzado son los ids y SOLO los ids, y por creerme la ruta un censo midio **Mueve creyendo que era Estira** y devolvio 2 donde la respuesta es 9. **ESTIRA PASA DE 14 A 17**: `Caderas de pie`, `Cadena posterior de pie` y `Columna en la silla`, que suben las rutinas compatibles con oficina de **5 a 8** y cubren por primera vez caderas, cadena posterior y columna **sin bajar al suelo**. Salieron de un censo, no de una idea, y **no se retiro ninguna** (decision del usuario). Cada ejercicio verificado contra su propio `setup`: fuera `Cuadriceps en pared` («la rodilla al fondo») y `Marcha del elefante` («camina con las manos por el suelo»). **La regla §1 mordio**: `ExtraModule.jsx` llego a 553 lineas y el dato se troceo en `extra.data.js` + `extra.data.piernas.js`, con guard de orden. **La suite cazo el troceo con SIETE rojos y ninguno era el producto** — leen el catalogo del fuente a proposito, y su guard de cero vio el archivo recien vaciado. **La biblioteca de Respira NO se toco**: el usuario eligio C y C resulto ser **lo ya publicado desde s176**, verificado en la app contra la maqueta (283 px contra 288, honesta dentro de 5 px). **150/150 y `verify` en verde.**)
+**Version actual:** v0.110.0 (s179 — **EL RUNNER EN MOVIL CORTO, Y UN UMBRAL ELEGIDO MIRANDO UN SOLO LADO**. Cierra el bloque que s178 dejo abierto. El arreglo llegaba escrito y **no arreglaba lo que decia**: su `max-height: 660` salio del viewport que se estaba mirando (360x640), y ampliado el barrido HEAD solapaba a **375x667 — el iPhone SE/8 — con 7,2 px** y a **360x661 con 10,8**, los dos justo por encima del umbral; 360x680 sobrevivia por 1,9 px. **Mismo error que s177**, que declaro 641 cuando el borde real era 575: sube a **700**, el breakpoint que la hoja ya usaba. **El guard de cero pidio el control positivo** y hacia falta — servido el `index.html` de HEAD con sus `fonts/`, la misma sonda daba 26,3 px a 360x640, el numero exacto del diagnostico. **El banco dijo «arreglado» y el censo lo desmintio** (el banco mide UNA rutina y lo declara): quedaban 5 de 19 rutinas y 7 de 79 pasos, de 16 y 60. **LA CAUSA REAL, invisible desde hace cinco sesiones**: la pantalla de colocacion pinta `[data-pace-v1-num]` y **no** `-timer`, asi que todos los tramos cortos —**los de s119 en escritorio tambien**— comprimian un elemento que ahi no existe. Con eso y el nombre fijado a **30 px, el suelo que su propio clamp ya declara**, **ninguna rutina solapa** a 360x640, 375x667 ni 360x600. **Declarado y no arreglado**: por debajo de ~575 sigue solapando, porque lo unico que queda es el glifo y **la fuente unica de s177 prohibe encogerlo por CSS**. **153/153** (eran 150) y `verify` en verde.)
 **Version anterior:** v0.108.0 (s178 — **LA AUDITORIA COMPLETA**, el encargo del usuario. Lo primero que contesta es que **el papel iba por detras del codigo, y siempre en la misma direccion**: el ROADMAP pintaba MAS trabajo del que hay. La Fase 3 seguia «EN CURSO (s155)» con los emisores entregados en **v0.102.0** y la retencion corriendo sola desde **s174**; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38 sin dibujo** y es **77 de 96 / 19**. Trece hallazgos con evidencia file:line, **once cerrados en la misma sesion**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba dentro justo el absoluto que s151 prohibio — reescrito en ES y EN **y fechado**, porque la propia pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE**: `main.jsx` lo llamaba en CADA entrada a sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo; borrado en sus DOS sitios. La tabla de deuda **mentia en 10 de 14 filas** —s162 la cazo en cinco, o sea que empeoro— y pierde su columna de numeros: la cuenta la lleva el trinquete del `verify`. **El instrumento mintio SEIS veces**, y la cara fue excluir en un grep lo precedido por punto, que mata `window.X` y daba por muertos dos archivos vivisimos. **150/150 y `verify` en verde.**)
 **Version anterior:** v0.107.0 (s177 — **LO QUE NO SE OIA**. Cuatro bloques y los cuatro salieron de lo que el usuario vio y oyo al probar, que va por CUATRO sesiones seguidas reproduciendo. **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0**, y el numero unificado a **76 px** ANULA la decision de s112. «Subir el numero» no se podia hacer moviendolo: arriba habia 10,0 px y abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el MES no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores mios: la ganancia **se iguala por RMS y no por pico** (igualar picos la dejaba 20 dB bajo la voz), una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido** — la puntue mejor por «dejar el hueco de voz mas limpio», que es lo que la hacia inaudible. **150/150 y 6 de 6 mutantes muerden.**)
 **Version anterior:** v0.106.0 (s176 — **LOS CUATRO SITIOS DONDE EL USUARIO TENIA RAZON**. Respira recibe la PANTALLA anulando s174; la barra del runner se ancla al centro; Stats iguala sus cuatro pestanias; y la voz gana interruptor y hermana. 146/146.)
@@ -216,54 +216,50 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s178 fue DOS bloques: la **auditoria completa** (v0.108.0) y, con su cola, **las tres
-> rutinas de oficina** (v0.109.0). Lo que sigue vale para los dos.
+> s179 cierra el bloque que s178 dejo abierto: **el runner por debajo de 641 px
+> de alto, y movil**. Una sola linea de trabajo, y casi todo lo caro fue
+> descubrir que el arreglo que ya estaba escrito no arreglaba lo que decia.
 
-- **[EL PAPEL IBA POR DETRAS DEL CODIGO, Y SIEMPRE HACIA EL MISMO LADO]** Los cuatro
-  marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay, nunca menos. El
-  plan **se lee al planificar y no se actualiza al entregar**. Paso DOS veces el mismo dia:
-  la Fase 3 llevaba «EN CURSO (s155)» con los emisores en v0.102.0, y la pregunta pendiente
-  de Respira se cerro **sin escribir una linea** porque C ya era lo publicado desde s176.
+- **[UN UMBRAL NO SE DECLARA, SE MIDE POR LOS DOS LADOS]** El tramo movil venia
+  con `max-height: 660`, y 660 salio **del viewport que se estaba mirando**
+  (360x640). Ampliado el barrido, HEAD solapaba a **375x667 — el iPhone SE/8 —
+  con 7,2 px** y a **360x661 con 10,8**, los dos JUSTO POR ENCIMA del umbral y
+  por tanto sin cubrir; 360x680 sobrevivia por **1,9 px**, que no es holgura
+  sino suerte. **Es el mismo error de s177**, que declaro el suelo en 641 cuando
+  el borde real estaba en 575.
 
-- **[UN DOCUMENTO QUE MANDA AL ARCHIVO EQUIVOCADO CUESTA UNA MEDIDA ENTERA]** `CLAUDE.md`
-  tenia las RUTAS cambiadas en el bloque escrito justo para evitarlo. Lo cruzado son los ids
-  y **solo** los ids; cada modulo vive en la carpeta de su nombre. Por creermelo, el primer
-  censo midio **Mueve creyendo que era Estira** y devolvio **2** donde la respuesta es **9** —
-  a un paso de decirle al usuario que el handoff se equivocaba. **El codigo lo tenia bien**:
-  `ExtraModule.jsx` lo decia en su propio comentario desde s174.
+- **[EL GUARD DE CERO PIDIO EL CONTROL POSITIVO, Y HACIA FALTA]** El banco daba
+  **0 de 14** sobre el artefacto arreglado. Servido el `index.html` de **HEAD**
+  en un puerto aparte —con sus `fonts/`, porque sin ellas las metricas de texto
+  son otras y la comparacion no vale— la misma sonda solapaba a 1280x575 y
+  360x640 con **26,3 px**, el numero exacto del diagnostico.
 
-- **[UN GREP NO DISTINGUE «DESAPARECIO» DE «TIENE PROHIBIDO EXISTIR»]** Cinco de las 15
-  filas señaladas eran **ausencia POR DISEÑO**: la fila dice «NUNCA `discrete`» y cero
-  apariciones significa que la decision **se cumple**.
+- **[EL BANCO DIJO «ARREGLADO» Y EL CENSO LO DESMINTIO]** El banco **mide UNA
+  rutina** y lo declara en su cabecera. El censo de s177 recorre las 28: a
+  360x640 quedaban **5 de 19 rutinas y 7 de 79 pasos** (de 16 y 60). El 88 % del
+  defecto no es el defecto.
 
-- **[UN EJERCICIO NO SE ELIGE POR SU ETIQUETA, SINO POR SU `setup`]** Al componer las tres
-  rutinas de oficina: `Sentadilla profunda` ENTRA («talones en el suelo» es en cuclillas) y
-  `Cuadriceps en pared` NO («la rodilla al fondo»). `Marcha del elefante` se cayo aunque no
-  pide tumbarse: **no es discreto**, y la discrecion es el eje de esa biblioteca.
+- **[LA COMPRESION APUNTABA A UN ELEMENTO QUE EN ESA PANTALLA NO EXISTE]** La
+  causa real, y llevaba cinco sesiones invisible: la **pantalla de colocacion**
+  pinta `[data-pace-v1-num]` (el numero pequenio de la puerta, s112) y **no**
+  `[data-pace-v1-timer]`. Todos los tramos cortos —**los de s119 en escritorio
+  tambien**— comprimen `-timer`. En la pantalla de trabajo el mismo elemento
+  lleva los dos atributos, y por eso alli si funcionaba.
 
-- **[LA SUITE CAZO EL TROCEO CON SIETE ROJOS Y NINGUNO ERA EL PRODUCTO]** `biblioteca.spec.js`
-  lee el catalogo **del archivo fuente** a proposito —para que las dos fuentes sean
-  independientes— y su **guard de cero** vio el archivo que yo acababa de vaciar. Un guard de
-  cero es lo unico que distingue «cero» de «no he medido».
+- **[UN NUMERO QUE NO HAY QUE INVENTAR PORQUE EL DISENIO YA LO DECLARA]** El
+  nombre a 360 de ancho envolvia a **dos lineas** (87,3 px de una pieza) con
+  `clamp(30px, 6.5vh, 52px)`. Fijado a **30 px** —el **suelo de su propio
+  clamp**— cabe en una. No es un valor nuevo: es el minimo que el diseno ya
+  admitia.
 
-- **[EL INSTRUMENTO MINTIO SIETE VECES]** La cara: excluir en un grep lo precedido por punto
-  **mata `window.X`**, y daba por inertes dos archivos vivisimos. Del shell: el heredoc **se
-  come los backslashes** y las comillas dobles **ejecutan los backticks**. Y midiendo la
-  biblioteca en el navegador cogi **la tarjeta de sugerencia que vive DENTRO del rail** como
-  si fuera de la rejilla: «1 columna, 242 px» donde son 3 y 283.
+- **[UNA DECISION ESCRITA IMPIDIO ARREGLAR UN SALTO CREANDO OTRO]** A 360x560 lo
+  unico que queda por encoger es el **glifo**, y por CSS funcionaba (123 -> 96,
+  +8,4 px). **La fuente unica de s177 lo prohibe por escrito**: el circulo de la
+  sesion dejaria de relevar al de la preparacion. Queda **declarado**.
 
-- **[LA REGLA §1 SE COBRA LO QUE CRECE, Y ESTABA PREVISTO]** `ExtraModule.jsx` a 553 lineas.
-  La tabla de deuda ya decia desde s148 «al retomar Estira, trocear los DATOS antes»: es la
-  unica fila de esa tabla que ha servido para algo, y por eso la tabla pierde sus numeros
-  pero **conserva la historia**.
+> Diario con las cinco trampas del instrumento:
+> [`docs/sessions/session-179-el-runner-en-movil-corto.md`](docs/sessions/session-179-el-runner-en-movil-corto.md).
 
-- **[LA REGLA DEL USUARIO, INTACTA Y COBRANDOSE UNA PIEZA]** Se pinto la variante F (rail +
-  aside) que no existia, **y al verla el usuario eligio C**. Pintar antes de decidir evito
-  implementar lo que no queria.
-
-> Informe completo con evidencia `file:line`:
-> [`docs/audits/audit-completa-s178.md`](docs/audits/audit-completa-s178.md).
-> Los 17 bancos que nadie podia encontrar, en [`docs/BANCOS.md`](docs/BANCOS.md).
 
 ### Diferido (documentado, NO ejecutado)
 
@@ -589,8 +585,13 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > - **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes).
 > - El **CHANGELOG** conserva sus bloques de detalle donde la convencion son dos (decision del
 >   usuario en s178: no se descarta texto).
-> - Por debajo de **641 px de alto** el runner no esta congelado, y movil tampoco. **El usuario
->   pidio abrirlo como bloque propio** y s178 no llego.
+> - ~~Por debajo de **641 px de alto** el runner no esta congelado, y movil tampoco~~ **CERRADO
+>   en s179 (v0.110.0)**, con un tramo declarado: por debajo de **~575 px de alto en movil**
+>   SIGUE SOLAPANDO. No es un olvido — lo unico que queda por encoger ahi es el **glifo** (123
+>   px a esa altura) y **la fuente unica de s177 prohibe encogerlo por CSS solo en el runner**,
+>   porque el circulo de la sesion dejaria de relevar al de la preparacion. La unica salida
+>   seria bajar el coeficiente en `v1GlyphSize`, que **afecta a todos los viewports** y
+>   contradice la queja del usuario de s174 («el circulo es muy pequenio»). **Es decision suya.**
 > - En las pantallas de **cambio de lado** la linea «El lado siguiente empieza solo» todavia se
 >   mueve **99,7 px** entre pasos.
 > - El **lote de musica sin decidir**: cinco de las seis piezas sin usar.
