@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.110.0** | 2026-09-01 | fix(runner): **el runner en movil corto, y un umbral elegido mirando un solo lado** — Cierra el bloque que s178 dejo abierto. **EL BANCO DIJO «CERO» Y SU GUARD PIDIO EL CONTROL POSITIVO**: servido el `index.html` de HEAD en un puerto aparte con sus `fonts/` —sin ellas las metricas de texto son otras y la comparacion no vale— la misma sonda solapaba a **1280x575 (4,7 px)** y **360x640 (26,3 px)**, el numero exacto que el diagnostico habia anotado. **EL UMBRAL ESTABA ELEGIDO MIRANDO UN SOLO LADO**: `max-height: 660` salio del viewport que se miraba (360x640), y ampliado el barrido HEAD solapaba a **375x667 — el iPhone SE/8 — con 7,2 px** y a **360x661 con 10,8**, los dos JUSTO POR ENCIMA del umbral y por tanto sin cubrir; 360x680 sobrevivia por **1,9 px**. Es el mismo error de s177, que declaro 641 cuando el borde real era 575. Sube a **700**, que es el breakpoint que la hoja YA usa. **EL BANCO DIJO ARREGLADO Y EL CENSO LO DESMINTIO** (mide UNA rutina y lo declara): a 360x640 quedaban **5 de 19 rutinas y 7 de 79 pasos**, de 16 y 60. **LA CAUSA REAL**: la pantalla de colocacion pinta `[data-pace-v1-num]` y **no** `-timer`, asi que todos los tramos cortos —**los de s119 en escritorio tambien**— comprimian un elemento que ahi no existe. Con el numero correcto y el nombre fijado a **30 px, el suelo que su propio clamp ya declara**, **ninguna rutina solapa** a 360x640, 375x667 ni 360x600. **Declarado y no arreglado**: por debajo de ~575 sigue solapando — lo unico que queda es el glifo y la fuente unica de s177 **prohibe** encogerlo por CSS. **153/153** (eran 150), 3 tests nuevos calibrados en rojo contra HEAD. | s179 | [session-179](./docs/sessions/session-179-el-runner-en-movil-corto.md) |
 | **v0.109.0** | 2026-08-31 | feat(estira)+fix(claude.md): **las tres rutinas de oficina, y el documento que mandaba al archivo equivocado** — Segunda mitad de s178. **`CLAUDE.md` tenia las RUTAS cambiadas** en el bloque escrito justo para evitarlo: lo cruzado son los ids y SOLO los ids, y por creerme la ruta un censo midio **Mueve creyendo que era Estira** y devolvio 2 donde la respuesta es 9. **ESTIRA 14 → 17**: `Caderas de pie`, `Cadena posterior de pie` y `Columna en la silla` suben las rutinas compatibles con oficina de **5 a 8** y cubren por primera vez caderas, cadena posterior y columna **sin bajar al suelo**. Salieron de un censo y **no se retiro ninguna**. Cada ejercicio verificado contra su propio `setup`. **La regla §1 mordio**: el dato se troceo en `extra.data.js` + `extra.data.piernas.js` con guard de orden, y `ExtraModule.jsx` baja de 553 a **53** lineas. **La suite lo cazo con SIETE rojos y ninguno era el producto.** Respira NO se toco: el usuario eligio C y C era **lo ya publicado**. | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
 | **v0.108.0** | 2026-08-31 | docs(auditoria)+fix(sw+vuelo): **la auditoria completa** — El encargo del usuario abre s178. Cinco preguntas cruzadas contra el codigo con dos checkers calibrados en rojo: **trece hallazgos con evidencia `file:line`, once cerrados en la misma sesion**. **EL PAPEL IBA POR DETRAS Y SIEMPRE HACIA EL MISMO LADO**: los cuatro marcadores desfasados del ROADMAP pintaban **MAS** trabajo del que hay — la Fase 3 «EN CURSO (s155)» con los emisores en **v0.102.0** y la retencion corriendo desde s174; la ola B decia **20 dibujos** y son **3**; el arte de logros decia **58 de 96 / 38** y es **77 de 96 / 19**. **`privacy.html` se habia tocado UNA vez en toda la vida del proyecto** (v0.46.0) y llevaba el absoluto que s151 prohibio: reescrito en ES y EN **y fechado**, porque la pagina promete que su fecha cambia con ella. **EL VUELO NO ESTABA INERTE** — `main.jsx:153` lo llamaba en cada sesion, clonaba un nodo y gastaba 24 frames buscando un destino que s175 se llevo: borrado en sus dos sitios. Guard de metodo en `sw.js` (dos `cache.put`, ningun `.catch()`). La tabla de deuda **mentia en 10 de 14 filas** y pierde su columna de numeros. **El instrumento mintio SEIS veces.** | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
 | **v0.107.0** | 2026-08-31 | fix(runner+stats)+feat(musica): **lo que no se oia** — Cuatro bloques, los cuatro salidos de lo que el usuario vio y oyo al probar (van **cuatro sesiones seguidas** reproduciendo). **EL RUNNER SE CONGELA**: el «Cuidate» se metia **15,0 px dentro de la barra en 11 de 47 pasos** —causado por el anclaje de s176, que dio al bloque `min-height: 0` y le permite ENCOGER bajo su contenido— y entre pantallas se movian el nombre y la descripcion 26,4 px, el numero **51,2** y su etiqueta 4,6. Ahora **las SIETE piezas a 0,0 px**; el numero unificado a **76** (elegido mirando tres variantes) **ANULA la decision de s112**. «Subir el numero» no se podia hacer moviendolo: arriba 10,0 px, abajo **−15,0**. **STATS**: el modal gastaba 820 de 1536 y «Anio» dejaba **163,7 px muertos** de sus 385; ahora 1240, celda 19 y 52,4 — y **el mes no puede crecer**, medido (421,4 / 474,4 / 527,4 contra 385). **LA MUSICA**, cinco «no se oye» y tres errores de disenio: la ganancia **se iguala por RMS y no por pico**, una pieza con el **82,6 % de su energia bajo 200 Hz no sale de un altavoz de portatil**, y **el criterio con que la elegi estaba invertido**. **150/150 · 6 de 6 mutantes muerden.** | [177](docs/sessions/session-177-lo-que-no-se-oia.md) | [ver](#v01070) |
@@ -378,6 +379,79 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
 
 ---
+
+## [v0.110.0] -- 2026-09-01 -- fix(runner): el runner en movil corto
+
+### Un umbral elegido mirando un solo lado
+
+El arreglo llegaba escrito de la primera mitad de la sesion, con `max-height:
+660` en el tramo movil nuevo. **660 salio del viewport que se estaba mirando**
+(360x640), no de medir por los dos lados. Ampliado el barrido, HEAD solapaba a:
+
+- **375x667 — el iPhone SE/8 — con 7,2 px**
+- **360x661 con 10,8 px**
+- 360x680 sobrevivia por **1,9 px**
+
+Los dos primeros quedaban **justo por encima** del umbral, o sea sin cubrir. Es
+el mismo error que s177, que declaro el suelo en 641 cuando el borde real
+estaba en 575. Sube a **700**, que no es un numero nuevo: es el breakpoint que
+esta misma hoja ya usa para «retrato estrecho con poca altura» (s27/s171b).
+
+### El banco dijo «cero» y su guard pidio el control positivo
+
+Sobre el artefacto arreglado el banco daba **0 de 14**, y su propio guard avisa
+de que «cero» y «no he medido» se parecen demasiado. Se sirvio el `index.html`
+de **HEAD** en un puerto aparte —con sus `fonts/`, porque sin ellas las metricas
+de texto son otras y la comparacion no vale— y la misma sonda, los mismos clics:
+**4,7 px a 1280x575 y 26,3 px a 360x640**, este ultimo el numero exacto que el
+diagnostico habia dejado anotado.
+
+### El banco dijo «arreglado» y el censo lo desmintio
+
+El banco declara que **mide UNA rutina**. Pasado el censo de s177, que recorre
+las 28 paso a paso, a 360x640:
+
+| | HEAD | primer arreglo |
+|---|---|---|
+| rutinas con solape | 16 de 19 | **5 de 19** |
+| pasos con solape | 60 de 79 | **7 de 79** |
+| el peor | 70,0 px | **34,0 px** |
+
+El 88 % del defecto, pero no el defecto.
+
+### La causa real: la compresion apuntaba a un elemento que ahi no existe
+
+Medidas las piezas de la pantalla que solapaba: la **pantalla de colocacion**
+pinta `[data-pace-v1-num]` (el numero pequenio de la puerta, s112) y **no**
+`[data-pace-v1-timer]`. Todos los tramos cortos —**incluidos los de s119 en
+escritorio**— comprimen `-timer`. En la pantalla de trabajo el mismo elemento
+lleva los dos atributos, y por eso alli funcionaba. Por eso el texto que se
+metia era el de colocarse en **4 de los 5 casos** que quedaban.
+
+La segunda pieza era el **nombre**: `clamp(30px, 6.5vh, 52px)` da 41,6 px a 640
+de alto y a 360 de ancho **envuelve a dos lineas** (87,3 px). Fijado a **30 px**
+—el suelo que su propio clamp ya declara aceptable— cabe en una y devuelve 53,7.
+
+**Ninguna rutina solapa** a 360x640, 375x667 ni 360x600.
+
+### Lo que queda declarado y no arreglado
+
+A **360x560** siguen solapando ~18,6 px. Lo unico que queda por encoger es el
+**glifo** (123 px), y por CSS funcionaba (123 -> 96, +8,4 px). **No se hizo**:
+la fuente unica de s177 lo prohibe por escrito, porque el circulo de la sesion
+dejaria de relevar al de la preparacion — arreglar un salto creando otro. Sin el
+glifo, apurando margenes y numero, se queda en **-1,1 px**, y apurar a +4,9
+seria quedarse sin red donde s176 midio que el CI se desvia hasta **9,4 px**.
+
+### La red
+
+Tres tests nuevos en `runner-congelado.spec.js` (360x640, 375x667, 360x600),
+**calibrados en rojo contra el `index.html` de HEAD**, con guard de cero. Y se
+corrigio la cabecera del spec, que declaraba «NO CUBRE: alturas por debajo de
+641 px. Ni movil» — cierto hasta hoy. **153/153** y `verify` en verde.
+
+---
+
 
 ## [v0.109.0] -- 2026-08-31 -- feat(estira)+fix(claude.md): las tres rutinas de oficina
 

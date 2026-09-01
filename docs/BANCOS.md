@@ -22,6 +22,7 @@
 
 | Banco | Qué pregunta contesta |
 |---|---|
+| `banco-runner-bajo-s179.js` | **A que altura EXACTA empieza a solapar el runner** (s179), barriendo escritorio y movil de arriba abajo. Nace porque el censo tarda ~3 min POR VIEWPORT y la pregunta era el UMBRAL, no el censo. **Mide UNA rutina y lo declara**: en s179 dio «cero» donde el censo encontro 5 de 19 rutinas rotas, asi que da el borde y no el cierre |
 | `banco-aire-tarjetas-logro.js` | **Cuánto aire sobra debajo de cada tarjeta de logro** (s167). Nace de que el usuario reportó demasiado hueco abajo |
 | `banco-home-orden.js` | **La home, antes y después del orden único** (s166): el mismo orden —aro, Actividades, Camino— en las dos pieles |
 | `banco-respira-movil.js` | **¿Cabe en móvil la barra de progreso de Respira?** (s166). s165 lo había dejado declarado como NO CUBIERTO, con la sospecha escrita |

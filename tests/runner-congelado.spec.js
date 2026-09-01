@@ -22,10 +22,18 @@
    en la cola convirtió el solape de 15,0 en 27,0 durante la propia sesión, y
    sólo lo dijo el censo.
 
-   NO CUBRE: alturas por debajo de 641 px, donde el congelado NO se aplica --
-   con el glifo constante (que la regla de s119 obliga a que lo sea) a 1280x600
-   sigue solapando. Ni móvil. Ni el `-support-strong` de las pantallas de cambio
-   de lado, que sigue moviéndose 99,7 px entre pasos y está declarado abierto.
+   s179 · YA SI CUBRE MOVIL Y ALTURAS BAJAS, y hasta hoy esta cabecera decia lo
+   contrario con razon. El bloque de abajo corre el mismo aserto a 360x640, a
+   375x667 (el iPhone SE/8) y a 360x600. Medido antes de arreglar, a 360x640 el
+   texto se metia dentro de la barra en 16 de las 19 rutinas recorribles y en 60
+   de sus 79 pasos, con 70,0 px en el peor caso.
+
+   NO CUBRE: por debajo de ~575 px de alto en movil SIGUE SOLAPANDO, y esta
+   declarado y no olvidado -- lo unico que queda por encoger ahi es el glifo (123
+   px a esa altura) y la fuente unica de s177 PROHIBE encogerlo por CSS solo en el
+   runner: el circulo de la sesion dejaria de relevar al de la preparacion, que es
+   arreglar un salto creando otro. Tampoco cubre el -support-strong de las
+   pantallas de cambio de lado, que sigue moviendose 99,7 px entre pasos.
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');
@@ -239,4 +247,58 @@ test.describe('el runner no se mueve entre pantallas', () => {
     /* Y que los huecos EXISTAN: dos ceros también serían «iguales». */
     expect(huecos.arriba, 'no hay aire entre la descripción y el número').toBeGreaterThan(2);
   });
+});
+
+/* ══ s179 · LO MISMO, PERO EN MOVIL Y EN POCA ALTURA ═══════════════════════════
+
+   POR QUE UN describe APARTE Y NO UN VIEWPORT MAS: la piel de movil es otra y el
+   ancho tambien aprieta -- a 360 px el nombre envolvia a DOS lineas donde en
+   escritorio cabe en una, y esa es media causa del defecto.
+
+   LOS TRES VIEWPORTS NO SON DECORATIVOS. 360x640 es el Android pequenio clasico;
+   375x667 es el iPhone SE/8, y entro en la lista porque el primer arreglo de esta
+   sesion puso el umbral en 660 mirando SOLO 360x640 y dejo 667 fuera con 7,2 px
+   de solape sin ningun tramo que lo cubriera; 360x600 es lo que le queda a un
+   movil de 640 cuando el navegador se come su barra.
+
+   SE RECORRE UNA RUTINA CON MUCHOS PASOS: el censo dijo que el texto que se
+   metia era el de COLOCARSE en 4 de los 5 casos que quedaban, y esa pantalla
+   solo aparece al entrar en cada ejercicio. */
+test.describe('el runner tampoco solapa en movil corto', () => {
+  for (const [w, h, quien] of [[360, 640, 'Android pequenio'],
+                               [375, 667, 'iPhone SE/8'],
+                               [360, 600, 'con la barra del navegador']]) {
+    test.describe(w + 'x' + h + ' - ' + quien, () => {
+      test.use({ viewport: { width: w, height: h } });
+      test('ni una letra se mete dentro de la barra de progreso', async ({ page, context }) => {
+        await sembrar(context);
+        await irAlArtefacto(page);
+        await abrirRutina(page, 'Estira', 'rculos');
+        await congelarPulso(page);
+
+        let pasos = 0;
+        for (let i = 0; i < 12; i++) {
+          const m = await medir(page, PIEZAS);
+          pasos++;
+          expect(m.solape, 'a ' + w + 'x' + h + ', en el paso ' + pasos + ' el texto "' +
+            m.quien + '" se mete dentro de la barra').toBeLessThanOrEqual(0);
+          const sigue = await page.evaluate(() => {
+            const pie = document.querySelector('[data-pace-session-footer]');
+            const b = [...(pie || document).querySelectorAll('button')]
+              .filter(x => x.getBoundingClientRect().width > 0)
+              .find(x => /Siguiente|Empezar|Terminar/i.test(x.textContent || ''));
+            if (!b || /Terminar/i.test(b.textContent || '')) return false;
+            b.click(); return true;
+          });
+          if (!sigue) break;
+          await page.waitForTimeout(350);
+        }
+        /* GUARD DE CERO, y aqui es MAS necesario que arriba: si la rutina no
+           arranca en un viewport corto, el bucle mide una pantalla y sale verde
+           con el defecto vivo. Cero y no-he-medido se parecen demasiado (s169). */
+        expect(pasos, 'la rutina no avanzo: el test no ha comprobado casi nada')
+          .toBeGreaterThanOrEqual(3);
+      });
+    });
+  }
 });
