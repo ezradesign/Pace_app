@@ -10,7 +10,7 @@
 
 const { test, expect } = require('@playwright/test');
 const {
-  sembrar, sembrarPisando, capturarErrores, irAlArtefacto, leerLogros, contarSellos, overlaySuperior,
+  sembrar, sembrarPisando, capturarErrores, irAlArtefacto, leerUltimoLogro, contarSellos, overlaySuperior,
 } = require('./helpers');
 
 test.beforeEach(async ({ context }) => { await sembrar(context); });
@@ -51,7 +51,7 @@ test('Logros: el primer sello se gana al instante, se anuncia y sobrevive a la r
   const errores = capturarErrores(page);
   await irAlArtefacto(page);
 
-  expect(await leerLogros(page)).toBe('0/88');
+  expect(await leerUltimoLogro(page)).toBe(null);
 
   await page.getByRole('button', { name: /^Hidrátate/ }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Un vaso más' }).click();
@@ -65,7 +65,7 @@ test('Logros: el primer sello se gana al instante, se anuncia y sobrevive a la r
   await expect(toast).toContainText('Primer sorbo');
 
   /* SE GANA AL INSTANTE (§2.5 «progreso sin culpa»): el contador ya subio. */
-  await expect.poll(() => leerLogros(page)).toBe('1/88');
+  await expect.poll(() => leerUltimoLogro(page)).toBe('first.sip');
   expect(await page.evaluate(() =>
     !!(JSON.parse(localStorage.getItem('pace.state.v2') || '{}').achievements || {})['first.sip']
   )).toBe(true);
@@ -73,7 +73,7 @@ test('Logros: el primer sello se gana al instante, se anuncia y sobrevive a la r
   /* Y sobrevive a la recarga. */
   await page.reload();
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-  expect(await leerLogros(page)).toBe('1/88');
+  expect(await leerUltimoLogro(page)).toBe('first.sip');
 
   expect(errores).toEqual([]);
 });
@@ -108,20 +108,23 @@ test('Logros: volver un dia despues concede «Regresas»', async ({ page, contex
   await irAlArtefacto(page);
 
   /* SE MIRA EL SELLO, NO EL CONTADOR, y la sonda arrastra su propio diagnostico.
-     La primera version poleaba `leerLogros` a secas y en la suite completa dio
-     «0/88» donde aislada daba «1/88»: el trigger es un `setTimeout(0)` y con ocho
+     La primera version poleaba el contador a secas y en la suite completa dio
+     «ninguno» donde aislada daba el sello: el trigger es un `setTimeout(0)` y con ocho
      workers cargando paginas pesadas ese callback puede llegar tarde, asi que un
      aserto sobre el TEXTO del sidebar mezcla dos cosas (que el sello exista y que
      el render ya lo refleje) y al fallar no dice cual. */
   const radiografia = () => page.evaluate(() => {
     const s = getState();
     const sb = document.querySelector('[data-pace-sidebar]');
-    const m = sb ? sb.innerText.match(/LOGROS\s*\n\s*(\d+)\s*\/\s*(\d+)/) : null;
+    const el = sb ? sb.querySelector('[data-pace-sidebar-ultimo]') : null;
     return {
       sello: !!(s.achievements || {})['first.return'],
       enCola: (s.achievementQueue || []).filter(id => id === 'first.return').length,
       dia: s.lastActiveDay,
-      contador: m ? m[1] + '/' + m[2] : null,
+      /* s180: era el contador «N/M» del bloque LOGROS, que el rediseño retiro.
+         El sustituto es el ULTIMO logro, que es lo que el sidebar enseña ahora
+         -- y de paso dice CUAL se concedio, no solo cuantos hay. */
+      ultimo: el ? (el.getAttribute('data-pace-sidebar-ultimo') || null) : null,
     };
   });
   await expect.poll(async () => (await radiografia()).sello, {
@@ -129,7 +132,7 @@ test('Logros: volver un dia despues concede «Regresas»', async ({ page, contex
   }).toBe(true);
 
   /* Y el usuario lo VE: se gana al instante (§2.5), no al persistir. */
-  await expect.poll(async () => (await radiografia()).contador).toBe('1/88');
+  await expect.poll(async () => (await radiografia()).ultimo).toBe('first.return');
 
   const r = await radiografia();
   expect(r.enCola, 'el aviso de «Regresas» esta en la cola ' + r.enCola + ' veces').toBe(1);
@@ -149,7 +152,7 @@ test('Logros: quien ya tiene «Regresas» no lo vuelve a ganar al volver', async
     achievementQueue: [],
   });
   await irAlArtefacto(page);
-  await expect.poll(() => leerLogros(page)).toBe('1/88');
+  await expect.poll(() => leerUltimoLogro(page)).toBe('first.return');
 
   const cola = await page.evaluate(() => getState().achievementQueue || []);
   expect(cola, 'se ha vuelto a encolar un aviso ya celebrado').toEqual([]);
@@ -163,7 +166,7 @@ test('Logros: el modal pinta las mascaras que el catalogo implica, ni una mas', 
      diferencia con la pagina exista de verdad. */
   await page.getByRole('button', { name: /^Hidrátate/ }).click();
   await overlaySuperior(page).getByRole('button', { name: 'Un vaso más' }).click();
-  await expect.poll(() => leerLogros(page)).toBe('1/88');
+  await expect.poll(() => leerUltimoLogro(page)).toBe('first.sip');
   await page.reload();
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
 

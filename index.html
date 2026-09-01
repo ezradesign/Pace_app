@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.110.0</title>
+  <title>PACE · Foco · Cuerpo — v0.111.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1559,6 +1559,27 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.days': 'L,M,X,J,V,S,D',
   'sidebar.open.title': 'Abrir panel',
   'sidebar.open.aria': 'Abrir panel',
+  // Sidebar s180 — Hoy / accion / semana / ultimo logro / pie
+  'sidebar.today': 'Hoy',
+  'sidebar.today.focus': 'Foco',
+  'sidebar.today.breathe': 'Respira',
+  'sidebar.today.body': 'Cuerpo',
+  'sidebar.today.water': 'Agua',
+  'sidebar.unit.min': 'min',
+  'sidebar.unit.of': 'de {n}',
+  'sidebar.open.module': 'Abrir {m}',
+  'sidebar.water.add': 'Añadir un vaso',
+  'sidebar.week': 'Esta semana',
+  'sidebar.week.rhythm': '{n} días en ritmo · mejor {m}',
+  'sidebar.week.none': 'Sin días todavía · mejor {m}',
+  'sidebar.week.open': 'Ver la semana en Estadísticas',
+  'sidebar.action.continue': 'Continúa',
+  'sidebar.action.repeat': 'Repetir',
+  'sidebar.action.path.meta': 'Paso {n} de {m}',
+  'sidebar.action.repeat.meta': 'Lo último que hiciste',
+  'sidebar.collection': 'Ver la colección',
+  'sidebar.support': 'Apoyar PACE',
+  'sidebar.empty': 'Tu día empieza en blanco. Lo que hagas se queda aquí.',
   'sidebar.trail.hour.start': '6h',
   'sidebar.trail.hour.end': '22h',
 
@@ -1770,6 +1791,27 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.days': 'Mo,Tu,We,Th,Fr,Sa,Su',
   'sidebar.open.title': 'Open panel',
   'sidebar.open.aria': 'Open panel',
+  // Sidebar s180
+  'sidebar.today': 'Today',
+  'sidebar.today.focus': 'Focus',
+  'sidebar.today.breathe': 'Breathe',
+  'sidebar.today.body': 'Body',
+  'sidebar.today.water': 'Water',
+  'sidebar.unit.min': 'min',
+  'sidebar.unit.of': 'of {n}',
+  'sidebar.open.module': 'Open {m}',
+  'sidebar.water.add': 'Add a glass',
+  'sidebar.week': 'This week',
+  'sidebar.week.rhythm': '{n} days in rhythm · best {m}',
+  'sidebar.week.none': 'No days yet · best {m}',
+  'sidebar.week.open': 'See the week in Stats',
+  'sidebar.action.continue': 'Continue',
+  'sidebar.action.repeat': 'Repeat',
+  'sidebar.action.path.meta': 'Step {n} of {m}',
+  'sidebar.action.repeat.meta': 'The last thing you did',
+  'sidebar.collection': 'See the collection',
+  'sidebar.support': 'Support PACE',
+  'sidebar.empty': 'Your day starts blank. Whatever you do stays here.',
   'sidebar.trail.hour.start': '6h',
   'sidebar.trail.hour.end': '22h',
 
@@ -4880,7 +4922,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.110.0';
+const PACE_VERSION = 'v0.111.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -13024,11 +13066,14 @@ Object.assign(window, {
 })();
 </script>
 
-  <!-- Sidebar troceado en s148 (llegó a 570 ln). Orden estricto:
-       support (hoja responsive + `sidebarStyles`, que viaja por window porque
-       el build encierra cada archivo en su IIFE) → parts (las secciones de UI)
-       → Sidebar.jsx (orquestador). `parts` monta <SupportButton/>, así que va
-       también DESPUÉS de SupportModule.jsx, que ya carga justo arriba. -->
+  <!-- Sidebar troceado en s148 (llegó a 570 ln) y reescrito en s180. Orden
+       estricto:
+         support   (hoja responsive + `sidebarStyles`, que viaja por window
+                    porque el build encierra cada archivo en su IIFE)
+         selectors (los cuatro selectores PUROS; s180)
+         parts     (las secciones de UI)
+         Sidebar   (orquestador)
+       El orquestador consume los tres. -->
   <script>
 ;(function () {
 /* PACE · Soporte sin UI del Sidebar — extraído de `Sidebar.jsx` en s148
@@ -13141,11 +13186,96 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       [data-pace-sidebar] [data-pace-sidebar-spacer] {
         display: none !important;
       }
-      [data-pace-sidebar] [data-pace-sidebar-achievements] {
-        grid-template-columns: repeat(5, 40px) !important;
-        gap: 4px !important;
-        margin-bottom: 6px !important;
-      }
+    }
+
+    /* ============================================================
+       s180 · EL RECORTE DEL LOGO, Y POR QUE VA EN CSS
+       ------------------------------------------------------------
+       'app/ui/pace-logo.png' es 716x471 pero su DIBUJO ocupa solo 488x194:
+       medido sobre el canal alfa, hay 85 px transparentes a la izquierda,
+       143 a la derecha, 123 arriba y 154 abajo, y el 93,53 % del lienzo esta
+       a alfa 0. Puesto en la banda de 271 px de la sidebar eso gastaba
+       178,3 px de alto de los que 104,9 eran aire, y ademas la imagen
+       DESBORDABA su banda 13,7 px sin que se notara -- justamente porque lo
+       que desbordaba era transparencia.
+
+       NO se crea un 'pace-logo-sidebar.png' a proposito. El '<img
+       id="pace-logo-src">' lo leen DOS consumidores ('CowLogo.jsx' y
+       'OnboardingScreens.jsx'), asi que cambiarlo de sitio le tocaria el logo
+       al onboarding; y anadir un segundo archivo lo inlinearia otra vez en el
+       artefacto (~100 KB de base64 por un dibujo que se pinta una vez).
+       Recortar por CSS deja el PNG intacto para todo el mundo.
+
+       LA ARITMETICA (si algun dia cambia el PNG, hay que volver a medirla):
+         ancho de la imagen = 716/488            = 146,72 %
+         izquierda          = -85/488            = -17,42 %
+         alto de la caja    = 194/488 del ancho  =  39,75 %
+         arriba: la imagen mide 0,96517 W de alto y hay que subirla
+                 123/471 de eso = 0,25207 W, que sobre una caja de
+                 0,39754 W de alto es                -63,41 %
+       ============================================================ */
+    [data-pace-sidebar] [data-pace-sidebar-logo] {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 488 / 194;
+      display: block;
+    }
+    /* NECESITA !important, y no es pereza: 'PaceLogoImage' pinta la <img> con
+       width/maxWidth/height EN LINEA, y un estilo en linea gana a la hoja sin
+       que haga falta un !important del otro lado. Medido: sin esto la caja
+       recortaba (107,8 px de alto, correcto) pero el dibujo seguia a 271x178,4,
+       o sea el recorte no hacia nada. Mismo mordisco que s174 con el padding
+       en linea del modal. */
+    [data-pace-sidebar] [data-pace-sidebar-logo] img {
+      position: absolute !important;
+      width: 146.72% !important;
+      max-width: none !important;
+      height: auto !important;
+      left: -17.42% !important;
+      top: -63.41% !important;
+    }
+
+    /* Hoy · rejilla 2x2. Las celdas son BOTONES: abren su modulo. Antes, para
+       ir a Respira habia que salir de la sidebar. */
+    [data-pace-sidebar] [data-pace-hoy] {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
+      /* Sin esto la fila del agua crece con sus ocho vasos y la rejilla queda
+         con filas de 87 y 99 px. Medido en la app, no supuesto. */
+      grid-auto-rows: 1fr;
+    }
+    [data-pace-sidebar] [data-pace-hoy-celda] {
+      border: 1px solid var(--line); border-radius: var(--r-sm);
+      padding: 9px 10px 8px; background: var(--paper);
+      display: flex; flex-direction: column; gap: 5px;
+      min-height: 74px; width: 100%; align-items: center; text-align: center;
+      transition: border-color 180ms, background 180ms;
+    }
+    [data-pace-sidebar] [data-pace-hoy-celda]:hover { border-color: var(--line-2); }
+    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] { background: transparent; }
+    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] [data-pace-hoy-ic] { opacity: 0.3; }
+
+    /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
+       su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
+    [data-pace-sidebar] [data-pace-hoy-agua] { position: relative; display: flex; }
+    [data-pace-sidebar] [data-pace-hoy-mas] {
+      position: absolute; left: 50%; transform: translateX(-50%); bottom: -2px;
+      width: 44px; height: 28px; display: grid; place-items: center;
+      color: var(--hydrate); font-size: 16px; border-radius: var(--r-sm);
+    }
+    [data-pace-sidebar] [data-pace-hoy-mas]:hover { background: var(--hydrate-soft); }
+
+    /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
+       ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
+    [data-pace-sidebar] [data-pace-semana] {
+      display: block; width: 100%; text-align: left;
+      border-radius: var(--r-sm); padding: 6px; margin: -6px;
+    }
+    [data-pace-sidebar] [data-pace-semana]:hover { background: var(--focus-soft); }
+
+    @media (max-width: 640px) {
+      /* El logo ya iba capado a 200 px desde s66; con el recorte eso son
+         200 x 79,5 en vez de los 121 de alto que daba sin tope a 390 px. */
+      [data-pace-sidebar] [data-pace-hoy] { gap: 8px; }
     }
   `;
   document.head.appendChild(s);
@@ -13177,15 +13307,31 @@ const sidebarStyles = {
     marginLeft: -14,
     marginRight: -14,
     marginTop: -4,
-    marginBottom: 4,
+    /* s180: era 4, y ese 4 dejaba la regla de debajo con 14 px de hueco
+       arriba contra los 10 de las otras dos. No era mas gruesa -- estaba
+       mas abajo. A 0 las tres van a 10 / 10 / 10. */
+    marginBottom: 0,
     minHeight: 96
   },
-  logo: { width: '100%', minWidth: 0, display: 'flex', justifyContent: 'center' },
+  /* s180: `display` sale de aqui a proposito. El recorte del logo vive en la
+     hoja (`overflow:hidden` + `aspect-ratio`), y un `display:flex` EN LINEA
+     ganaria a la regla `display:block` de la hoja -- los estilos en linea
+     pisan a la hoja sin necesidad de `!important`. Mismo mordisco que s174
+     con el padding en linea del modal. */
+  /* 80 % del ancho de la banda: es la variante A3, la que el usuario eligio
+     mirando las tres. Al 100 % el dibujo salia a 271 px y su banda a 107,8;
+     al 80 % son 216,8 x 86,2 y la banda vuelve a mandarla su min-height. */
+  logo: { width: '80%', minWidth: 0, margin: '0 auto' },
   toggleFloating: {
     position: 'absolute',
     top: 10,
     right: 10,
-    width: 22, height: 22,
+    /* 24 y no 22: WCAG 2.2 AA (2.5.8) pide 24x24 de objetivo minimo y 22 se
+       queda corto. TAMPOCO 44 -- que seria AAA-- porque con el logo recortado
+       ya no hay margen transparente donde apoyarse: medido, a 44 el chevron
+       PISA el dibujo 23 px, a 24 lo pisa 3 (el borde) y a 22 lo rozaba 1.
+       Antes del recorte no se tocaban nunca: el PNG traia 54 px de aire ahi. */
+    width: 24, height: 24,
     display: 'grid', placeItems: 'center',
     color: 'var(--ink-3)',
     border: '1px solid var(--line)',
@@ -13232,6 +13378,57 @@ const sidebarStyles = {
     padding: 0,
     marginTop: 4
   },
+
+  /* ---------- s180 ---------- */
+
+  /* Cabecera centrada + la fecha. La fecha va al MISMO cuerpo que el rotulo
+     (11 px) y no a 10: con 10 compartian linea base pero se veia mas baja,
+     porque su altura de x es menor. Lo unico que la separa es el color. */
+  sectionHeaderCentro: {
+    display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 7,
+    marginBottom: 10
+  },
+  fecha: {
+    fontSize: 'var(--size-meta)', letterSpacing: 'var(--track-meta)',
+    textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.75
+  },
+
+  hoyIc: { width: 24, height: 24, color: 'var(--ink-2)' },
+  hoyNombre: { fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 },
+  hoyValor: { fontFamily: 'var(--font-display)', fontSize: 22, lineHeight: 0.95, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums', marginTop: 'auto' },
+  hoyUnidad: { fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--ink-3)', marginLeft: 3 },
+  hoyValorCero: { color: 'var(--ink-3)', opacity: 0.55 },
+
+  gotas: { display: 'flex', gap: 3, justifyContent: 'center', marginTop: 2 },
+  gota: { width: 5, height: 7, borderRadius: '0 0 50% 50% / 0 0 40% 40%', border: '1px solid var(--hydrate)', opacity: 0.35 },
+  gotaOn: { background: 'var(--hydrate)', opacity: 1 },
+
+  /* La tarjeta ENTERA es el objetivo (patron s174: el titulo lleva DENTRO el
+     boton y este se extiende con un `::after`). Sin CTA suelto se ahorran
+     55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
+  accion: { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '12px 14px 13px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
+  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 7 },
+  accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.2, position: 'relative', margin: 0 },
+  accionBoton: { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
+  accionMeta: { fontSize: 11, color: 'var(--ink-3)', marginTop: 3, lineHeight: 1.4 },
+  accionFlecha: { position: 'absolute', right: 0, bottom: 12, color: 'var(--ink-3)', fontSize: 15 },
+
+  semDia: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
+  semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
+  semPunto: { width: 6, height: 6, borderRadius: '50%', background: 'var(--line)' },
+  semPie: { fontSize: 11, color: 'var(--ink-3)', marginTop: 11 },
+
+  /* El sello del ultimo logro, en el PIE. 20 px y no 38: ahi comparte linea
+     con «Apoyar PACE» y tiene que caber sin subir el alto del pie. */
+  pieSello: { width: 20, height: 20, flex: 'none', display: 'grid', placeItems: 'center', color: 'var(--ink-2)' },
+
+  /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
+     columna mas valiosa (44 del boton menos 10 del texto). */
+  pieFila: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
+  pieEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3 },
+  pieVer: { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
+
+  vacioCopy: { fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.5, fontStyle: 'italic', fontFamily: 'var(--font-display)', textAlign: 'center', padding: '6px 4px' },
   /* NOTA histórica: los estilos de Recordatorios (v0.11.6) e Intención
      (v0.12.1) se eliminaron aquí cuando esas secciones se quitaron del
      sidebar. Los campos `state.reminders` y `state.intention` siguen
@@ -13253,182 +13450,215 @@ Object.assign(window, { sidebarStyles });
 </script>
   <script>
 ;(function () {
-/* PACE · Piezas de UI del Sidebar — extraídas de `Sidebar.jsx` en s148
+/* PACE · Sidebar — selectores puros (s180)
    ============================================================
-   Las secciones que el sidebar compone, cada una autónoma y sin estado
-   propio más allá del store: Sendero del día, WeekDots, miniaturas de logro y
-   StatusBar, más el chevron. `Sidebar.jsx` queda como orquestador.
+   La sidebar dejó de ser un panel decorativo y pasó a responder cuatro
+   preguntas: qué he hecho hoy, qué puedo continuar, cómo va la semana y cuál
+   fue mi último logro. Este archivo es el ÚNICO sitio donde se decide la
+   respuesta; los componentes de `Sidebar.parts.jsx` solo pintan.
 
-   Mismo patrón que `FocusTimer.parts.jsx` (s124) y `PathRunner.parts.jsx`
-   (s80). Ver la cabecera de `Sidebar.support.jsx` para el reparto completo y
-   para por qué `sidebarStyles` se referencia PELADO (viaja por window).
+   SON PUROS A PROPÓSITO, y eso incluye no leer `window`. `selectSidebarPrimaryAction`
+   necesita los eventos, así que los RECIBE por parámetro en vez de llamar a
+   `paceEventsSnapshot()` por su cuenta: así una prueba puede darle una lista y
+   comprobar la prioridad sin montar el almacén ni el adaptador.
 
-   ORDEN DE CARGA: después de `Sidebar.support.jsx` (usa `sidebarStyles`) y de
-   `SupportModule.jsx` (StatusBar monta `<SupportButton/>`); antes de
-   `Sidebar.jsx`, que compone estas piezas.
+   NO DUPLICAN LOS CÁLCULOS DE ESTADÍSTICAS. Todo sale de lo que el store ya
+   guarda -- `weeklyStats`, `water`, `streak`, `paths.current`, `achievements`--
+   con las MISMAS reglas que ya usan otras superficies:
+     · índice del día LUNES-PRIMERO, igual que `WeekDots` desde s69.
+     · «día activo» = foco | respira | cuerpo. **El agua sola NO cuenta**, que
+       es el criterio de s69 compartido con `YearView` y con la racha.
 
-   OJO CON LOS ALIAS DE HOOKS. `useMemoSB` / `useIdSidebar` conservan su nombre
-   raro a propósito: en dev, Babel standalone evalúa cada archivo con un eval
-   INDIRECTO, así que un `const { useMemo } = React` top-level cae en el ámbito
-   léxico GLOBAL y choca con el de cualquier otro archivo que haga lo mismo
-   («Identifier already declared», y ese archivo entero deja de evaluar).
+   ORDEN DE CARGA: antes de `Sidebar.parts.jsx`, que los consume.
    ============================================================ */
 
-const { useMemo: useMemoSB, useId: useIdSidebar } = React;
+/* Índice del día lunes-primero (L=0 … D=6). `weeklyStats` se reindexó a este
+   orden en s69/v0.28.8; leerlo con `getDay()` a secas rota la semana. */
+function sidebarDayIndex(now) {
+  const d = now instanceof Date ? now : new Date();
+  return (d.getDay() + 6) % 7;
+}
+
+function sidebarAt(arr, i) {
+  return (Array.isArray(arr) ? arr[i] : 0) || 0;
+}
+
+/* selectSidebarToday(state, now) -> resumen de hoy.
+   El agua sale de `water.today` y no de `weeklyStats.waterGlasses[hoy]`:
+   `addWaterGlass` escribe en los dos, pero `water.today` es el que el rollover
+   reinicia, así que es el que manda. El array queda de respaldo. */
+function selectSidebarToday(state, now) {
+  const s = state || {};
+  const ws = s.weeklyStats || {};
+  const i = sidebarDayIndex(now);
+  const water = s.water || {};
+  return {
+    focusMinutes: sidebarAt(ws.focusMinutes, i),
+    breatheMinutes: sidebarAt(ws.breathMinutes, i),
+    bodyMinutes: sidebarAt(ws.moveMinutes, i),
+    waterGlasses: typeof water.today === 'number' ? water.today : sidebarAt(ws.waterGlasses, i),
+    waterGoal: typeof water.goal === 'number' && water.goal > 0 ? water.goal : 8,
+    dayIndex: i
+  };
+}
+
+/* selectSidebarWeek(state, now) -> los siete puntos + la racha.
+   `active` con el criterio de s69: cualquier sesión de foco, respira o cuerpo
+   enciende el día; el agua sola no. Si esto se cambia aquí, deja de coincidir
+   con `WeekDots`, con `YearView` y con la racha a la vez. */
+function selectSidebarWeek(state, now) {
+  const s = state || {};
+  const ws = s.weeklyStats || {};
+  const hoy = sidebarDayIndex(now);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const activo = sidebarAt(ws.focusMinutes, i) > 0 ||
+    sidebarAt(ws.breathMinutes, i) > 0 ||
+    sidebarAt(ws.moveMinutes, i) > 0;
+    days.push({ active: activo, isToday: i === hoy });
+  }
+  const streak = s.streak || {};
+  return {
+    days: days,
+    todayIndex: hoy,
+    activeCount: days.filter(function (d) {return d.active;}).length,
+    currentStreak: streak.current || 0,
+    longestStreak: streak.longest || 0
+  };
+}
+
+/* selectSidebarLastSession(eventos) -> la última sesión terminada.
+   Recorre la lista SIN ordenarla (no es suya) y se queda con el
+   `session.completed` de `occurredAt` más reciente. Devuelve null si no hay
+   ninguno, que es el caso normal en `file://` y en Capacitor: allí el
+   adaptador de eventos está inerte y el contenedor viene vacío. */
+function selectSidebarLastSession(eventos) {
+  if (!Array.isArray(eventos)) return null;
+  let mejor = null,mejorT = -Infinity;
+  for (let i = 0; i < eventos.length; i++) {
+    const e = eventos[i];
+    if (!e || e.type !== 'session.completed' || !e.payload) continue;
+    const t = Date.parse(e.occurredAt);
+    if (isNaN(t) || t < mejorT) continue;
+    mejorT = t;mejor = e;
+  }
+  if (!mejor) return null;
+  return {
+    routineId: mejor.payload.routineId || null,
+    module: mejor.payload.module || null,
+    occurredAt: mejor.occurredAt,
+    localDay: mejor.localDay || null
+  };
+}
+
+/* selectSidebarPrimaryAction(state, ctx) -> qué ofrece la tarjeta, o null.
+   DECISIÓN DE PRODUCTO (s180): la tarjeta solo puede decir CONTINUAR o
+   REPETIR, y las dos hablan de algo que la persona YA hizo. No sugiere.
+   Si dijera «prueba esto» un día y «continúa» otro en el mismo sitio y con la
+   misma pinta, dejaría de ser un sitio fiable y sería una ranura de anuncios.
+
+   Prioridad: 1) Camino en curso · 2) última sesión terminada · 3) nada.
+   Cuando no hay nada, devuelve null y la tarjeta NO SE PINTA -- no se deja un
+   bloque vacío ni un texto de relleno.
+
+   Las dos prioridades del brief que van delante de estas -- sesión CTB
+   interrumpida y CTB recuperable-- NO están aquí porque el runner todavía no
+   persiste ronda ni fase. Fingirlas sería prometer una reanudación que no
+   existe. Entran cuando exista `activeBreathSession`. */
+function selectSidebarPrimaryAction(state, ctx) {
+  const s = state || {};
+  const c = ctx || {};
+  const cur = s.paths && s.paths.current || null;
+  if (cur && cur.id) {
+    return {
+      kind: 'path',
+      targetId: cur.id,
+      stepIndex: typeof cur.stepIndex === 'number' ? cur.stepIndex : 0
+    };
+  }
+  const last = selectSidebarLastSession(c.events);
+  if (last && last.routineId) {
+    return {
+      kind: 'repeat',
+      targetId: last.routineId,
+      module: last.module,
+      localDay: last.localDay
+    };
+  }
+  return null;
+}
+
+/* selectSidebarLatestAchievement(state) -> el más reciente, o null.
+   UNO, no cinco: la rejilla de cinco miniaturas se retira en s180. El orden es
+   el mismo que usaba `AchievementsPreview` (`unlockedAt` descendente). */
+function selectSidebarLatestAchievement(state) {
+  const logros = state && state.achievements || {};
+  const ids = Object.keys(logros);
+  if (!ids.length) return null;
+  let mejor = null,mejorT = -Infinity;
+  for (let i = 0; i < ids.length; i++) {
+    const t = logros[ids[i]] && logros[ids[i]].unlockedAt || 0;
+    if (t < mejorT) continue;
+    mejorT = t;mejor = ids[i];
+  }
+  return mejor ? { id: mejor, unlockedAt: mejorT > 0 ? mejorT : null } : null;
+}
+
+Object.assign(window, {
+  sidebarDayIndex,
+  selectSidebarToday,
+  selectSidebarWeek,
+  selectSidebarLastSession,
+  selectSidebarPrimaryAction,
+  selectSidebarLatestAchievement
+});
+;Object.assign(window, { sidebarDayIndex, sidebarAt, selectSidebarToday, selectSidebarWeek, selectSidebarLastSession, selectSidebarPrimaryAction, selectSidebarLatestAchievement });
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Piezas de UI del Sidebar — extraídas de `Sidebar.jsx` en s148,
+   reescritas en s180
+   ============================================================
+   Las secciones que el sidebar compone, cada una autónoma y sin estado propio
+   más allá del store. `Sidebar.jsx` queda como orquestador.
+
+   QUÉ CAMBIÓ EN s180 y por qué. La sidebar informaba pero ayudaba poco a
+   decidir; ahora responde cuatro preguntas: qué he hecho hoy, qué puedo
+   continuar, cómo va la semana y cuál fue mi último logro.
+
+   LO QUE SE RETIRÓ (no revivir sin justificación de producto):
+     - `SenderoDelDia`  — sendero abstracto del día. Bonito y mudo: repartía
+                          hitos equidistantes que no eran cronología.
+     - `AchievementsPreview` — la rejilla de CINCO miniaturas. Queda UNA, la
+                          más reciente, que es la única pregunta que la
+                          persona se hace («¿cuál fue el último?»).
+     - `WeekDots`       — sustituido por `SidebarWeek`, que además ABRE
+                          Estadísticas. Los puntos se pintan igual.
+     - `StatusBar`      — el pill de apoyo ocupaba 44 px de la columna más
+                          valiosa. Ahora es un enlace en el pie.
+
+   LOS GLIFOS NO SON NUEVOS. `ABBreathe`, `ABMove` y `ABDrop` son los de
+   `app/main/ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105:
+   traerlos aquí QUITA una incoherencia en vez de añadir dibujo. `ABFocus`
+   nace en s180 porque Foco no tenía glifo — en la home Foco *es* el aro.
+   Se leen PELADOS y al RENDERIZAR: `ActivityBar.jsx` carga después que este
+   archivo, pero para cuando `main.jsx` monta nada, ya están todos.
+
+   ORDEN DE CARGA: después de `Sidebar.support.jsx` (usa `sidebarStyles`) y de
+   `Sidebar.selectors.js`; antes de `Sidebar.jsx`.
+
+   OJO CON LOS ALIAS DE HOOKS. `useMemoSB` conserva su nombre raro a propósito:
+   en dev, Babel standalone evalúa cada archivo con un eval INDIRECTO, así que
+   un `const { useMemo } = React` top-level cae en el ámbito léxico GLOBAL y
+   choca con el de cualquier otro archivo que haga lo mismo («Identifier
+   already declared», y ese archivo entero deja de evaluar).
+   ============================================================ */
 
 function ChevronLeftIcon() {
   return (/*#__PURE__*/
     React.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
     React.createElement("polyline", { points: "15 18 9 12 15 6" })
-    ));
-
-}
-
-/* NOTA: los iconos Pomodoro/Rounds/Flame (v0.11.7 · sesión 12) se
-   eliminaron en v0.28.2 · sesión 61 junto con el bloque de
-   contadores que los usaba. Si en el futuro vuelve algún contador
-   en otra ubicación, recuperar de git history.
-   NOTA: ChevronRightIcon se eliminó en v0.11.6 — el sidebar colapsado
-   ya no es un rail con chevron, vuelve a abrirse con el handle flotante
-   que vive en main.jsx (≡). */
-
-/* ============================================================
-   Sendero del día — línea ondulada horizontal que representa
-   el arco del día (6h → 22h). Los hitos son pomodoros y sesiones
-   completadas hasta ahora; aparecen como puntos sobre la curva.
-   B1: el sendero es ABSTRACTO — los hitos se reparten equidistantes
-   como secuencia de lo hecho hoy, sin pretender cronología (antes
-   se les inventaban horas). Lo único cronológico real es el puntero
-   de "ahora" sobre el arco 6h→22h.
-   ============================================================ */
-function SenderoDelDia(_ref) {let { state, compact } = _ref;
-  const { t, tn } = useT();
-  /* Id unico por instancia (s94): evita colisiones de clipPath global
-     si el componente llegara a montarse dos veces. Mismo patron que los
-     radialGradient de SenderoBar.jsx. */
-  const clipId = `sendero-clip-${useIdSidebar()}`;
-  const now = new Date();
-  const hNow = now.getHours() + now.getMinutes() / 60;
-  const start = 6; // 6:00
-  const end = 22; // 22:00
-  const fraction = Math.min(1, Math.max(0, (hNow - start) / (end - start)));
-
-  // Hitos del día: pomodoros + sesiones (proxy desde state).
-  // B1: secuencia abstracta — puntos equidistantes a lo largo de todo el
-  // sendero, en orden fijo (foco → respira → cuerpo → agua). Sin horas
-  // inventadas: no sabemos CUÁNDO ocurrió cada uno, solo que ocurrió.
-  const hitos = useMemoSB(() => {var _ws$breathMinutes, _ws$moveMinutes, _ws$waterGlasses;
-    const out = [];
-    const cycle = state.cycle || 0;
-    for (let i = 0; i < cycle; i++) out.push({ kind: 'focus' });
-    /* Sesion 69 (v0.28.8): weeklyStats indexa lunes-primero. */
-    const day = getDayIndexMondayFirst(new Date());
-    const ws = state.weeklyStats || {};
-    if ((((_ws$breathMinutes = ws.breathMinutes) === null || _ws$breathMinutes === void 0 ? void 0 : _ws$breathMinutes[day]) || 0) > 0) out.push({ kind: 'breathe' });
-    if ((((_ws$moveMinutes = ws.moveMinutes) === null || _ws$moveMinutes === void 0 ? void 0 : _ws$moveMinutes[day]) || 0) > 0) out.push({ kind: 'move' });
-    if ((((_ws$waterGlasses = ws.waterGlasses) === null || _ws$waterGlasses === void 0 ? void 0 : _ws$waterGlasses[day]) || 0) > 0) out.push({ kind: 'water' });
-    return out.map((h, i) => ({ ...h, x: (i + 1) / (out.length + 1) }));
-  }, [state.cycle, state.weeklyStats]);
-
-  const W = compact ? 180 : 240;
-  const H = compact ? 36 : 46;
-  const pathD = `M 0 ${H * 0.55} Q ${W * 0.2} ${H * 0.15}, ${W * 0.45} ${H * 0.55} T ${W} ${H * 0.55}`;
-
-  const colorOf = (kind) => ({
-    focus: 'var(--focus)',
-    breathe: 'var(--breathe)',
-    move: 'var(--move)',
-    water: 'var(--hydrate)'
-  })[kind] || 'var(--ink-3)';
-
-  // "Pointer" (posición actual en la onda) — aproximación lineal en el path
-  const pointerX = fraction * W;
-  // Para la altura aprox del path en x: usar la misma curva cuadrática
-  const pathY = (x) => {
-    // valores de control para una cuadrática M-Q-T-Q chainless:
-    // aquí aproximamos con dos quads empalmados. Bastante preciso para display.
-    if (x <= W * 0.45) {
-      const t = x / (W * 0.45);
-      const y = (1 - t) * (1 - t) * (H * 0.55) + 2 * (1 - t) * t * (H * 0.15) + t * t * (H * 0.55);
-      return y;
-    } else {
-      const t = (x - W * 0.45) / (W * 0.55);
-      const y = (1 - t) * (1 - t) * (H * 0.55) + 2 * (1 - t) * t * (H * 0.95) + t * t * (H * 0.55);
-      return y;
-    }
-  };
-
-  return (/*#__PURE__*/
-    React.createElement(React.Fragment, null, /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.sectionHeader }, /*#__PURE__*/
-    React.createElement(Meta, null, t('sidebar.section.trail')), /*#__PURE__*/
-    React.createElement("span", { style: sidebarStyles.sectionAside }, hitos.length, " ", hitos.length === 1 ? t('sidebar.trail.hito') : t('sidebar.trail.hitos'))
-    ), /*#__PURE__*/
-    React.createElement("div", { style: { marginTop: 6 } }, /*#__PURE__*/
-    React.createElement("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, style: { display: 'block', width: '100%' } }, /*#__PURE__*/
-
-    React.createElement("path", { d: pathD, stroke: "var(--line-2)", strokeWidth: "1.4", fill: "none", strokeLinecap: "round" }), /*#__PURE__*/
-
-    React.createElement("defs", null, /*#__PURE__*/
-    React.createElement("clipPath", { id: clipId }, /*#__PURE__*/
-    React.createElement("rect", { x: "0", y: "0", width: pointerX, height: H })
-    )
-    ), /*#__PURE__*/
-    React.createElement("path", { d: pathD, stroke: "var(--focus)", strokeWidth: "1.8", fill: "none", strokeLinecap: "round", clipPath: `url(#${clipId})` }),
-
-    hitos.map((h, i) => {
-      const cx = h.x * W;
-      const cy = pathY(cx);
-      return (/*#__PURE__*/
-        React.createElement("g", { key: i }, /*#__PURE__*/
-        React.createElement("circle", { cx: cx, cy: cy, r: "4.5", fill: "var(--paper)", stroke: colorOf(h.kind), strokeWidth: "1.6" }), /*#__PURE__*/
-        React.createElement("circle", { cx: cx, cy: cy, r: "1.8", fill: colorOf(h.kind) })
-        ));
-
-    }), /*#__PURE__*/
-
-    React.createElement("circle", { cx: pointerX, cy: pathY(pointerX), r: "3", fill: "var(--ink)" })
-    ), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', justifyContent: 'space-between', fontSize: 9, letterSpacing: '0.1em', color: 'var(--ink-3)', marginTop: 4, textTransform: 'uppercase' } }, /*#__PURE__*/
-    React.createElement("span", null, t('sidebar.trail.hour.start')), /*#__PURE__*/
-    React.createElement("span", { style: { ...displayItalic, fontSize: 11, letterSpacing: 0, color: 'var(--ink-2)', textTransform: 'none' } }, t('sidebar.trail.now'), " \xB7 ", String(now.getHours()).padStart(2, '0'), ":", String(now.getMinutes()).padStart(2, '0')), /*#__PURE__*/
-    React.createElement("span", null, t('sidebar.trail.hour.end'))
-    )
-    )
-    ));
-
-}
-
-function WeekDots(_ref2) {let { weeklyStats, compact } = _ref2;
-  const { t } = useT();
-  const days = t('sidebar.days').split(',');
-  const today = (new Date().getDay() + 6) % 7; // L=0
-  const dotSize = compact ? 5 : 6;
-  /* Sesion 69 (v0.28.8): weeklyStats ahora es lunes-primero (i=0 -> lunes).
-     Eliminado el shift (i+1)%7 que rotaba desde getDay(). */
-  return (/*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', gap: compact ? 4 : 6, marginTop: compact ? 8 : 12 } },
-    days.map((d, i) => {var _weeklyStats$breathMi, _weeklyStats$moveMinu;
-      /* Criterio "dia activo" s69 (como YearView y la racha): cualquier
-         sesion de foco|respira|cuerpo enciende el punto; agua sola NO.
-         Antes solo miraba focusMinutes -- un dia de solo Respira/Mueve
-         quedaba gris (s101). */
-      const active = (weeklyStats.focusMinutes[i] || 0) > 0 ||
-      (((_weeklyStats$breathMi = weeklyStats.breathMinutes) === null || _weeklyStats$breathMi === void 0 ? void 0 : _weeklyStats$breathMi[i]) || 0) > 0 ||
-      (((_weeklyStats$moveMinu = weeklyStats.moveMinutes) === null || _weeklyStats$moveMinu === void 0 ? void 0 : _weeklyStats$moveMinu[i]) || 0) > 0;
-      const isToday = i === today;
-      return (/*#__PURE__*/
-        React.createElement("div", { key: i, style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, flex: 1 } }, /*#__PURE__*/
-        React.createElement("div", { style: {
-            width: dotSize, height: dotSize, borderRadius: '50%',
-            background: active ? 'var(--focus)' : 'var(--line)',
-            outline: isToday ? '2px solid var(--ink-2)' : 'none',
-            outlineOffset: 2
-          } }), /*#__PURE__*/
-        React.createElement("span", { style: { fontSize: 9, color: isToday ? 'var(--ink)' : 'var(--ink-3)', fontWeight: isToday ? 600 : 400 } }, d)
-        ));
-
-    })
     ));
 
 }
@@ -13447,143 +13677,321 @@ function achMini(id) {
      Al CARACTER no: `renderGlyph` lo devuelve en un span SIN grid, así que un
      width/height lo convierte en una caja con la letra pegada arriba a la
      izquierda — se veía diminuta y descolocada. Lo que necesita es cuerpo de
-     letra; centrarlo ya lo hace el `placeItems:center` del botón. */
-  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '2em' };
+     letra; centrarlo ya lo hace el `placeItems:center` del contenedor. */
+  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '1.4em' };
   return {
     title: a.secret ? '?' : a.title,
     nodo: dibuja ? dibuja(a, estilo) : a.glyph || '✦'
   };
 }
 
-function AchievementsPreview(_ref3) {let { onOpen } = _ref3;
-  const [state] = usePace();
-  const { t } = useT(); // sesión 37 hotfix v0.19.1: faltaba tras migración i18n
-  // Los 5 más recientes primero, por unlockedAt descendente
-  const unlocked = Object.entries(state.achievements || {}).
-  sort((a, b) => (b[1].unlockedAt || 0) - (a[1].unlockedAt || 0)).
-  map((_ref4) => {let [id] = _ref4;return id;});
-  const shown = 5;
+/* ============================================================
+   HOY — cuatro celdas, cada una un botón que abre su módulo.
+   Antes, para ir a Respira había que salir de la sidebar.
+   El glifo se apaga al 30 % cuando el valor es cero: eso distingue un día
+   empezado de uno en blanco sin escribir una palabra más.
+   ============================================================ */
+function SidebarHoyCelda(_ref) {let { modulo, glifo, color, nombre, valor, unidad, onOpen, extra, etiqueta } = _ref;
+  const cero = !valor;
+  const dentro = /*#__PURE__*/
+  React.createElement(React.Fragment, null, /*#__PURE__*/
+  React.createElement("span", { "data-pace-hoy-ic": true, style: { ...sidebarStyles.hoyIc, color: cero ? 'var(--ink-3)' : color } },
+  glifo
+  ), /*#__PURE__*/
+  React.createElement("span", { style: sidebarStyles.hoyNombre }, nombre), /*#__PURE__*/
+  React.createElement("span", { style: { ...sidebarStyles.hoyValor, ...(cero ? sidebarStyles.hoyValorCero : null) } },
+  valor, /*#__PURE__*/
+  React.createElement("span", { style: sidebarStyles.hoyUnidad }, unidad)
+  ),
+  extra
+  );
+
+
+  /* FOCO NO ES UN BOTÓN, y no es un descuido. Las otras tres celdas abren su
+     módulo; Foco no tiene nada que abrir porque el timer ES la home, así que
+     un botón ahí sería un control que no hace nada. Se queda como dato. */
+  if (!onOpen) {
+    return (/*#__PURE__*/
+      React.createElement("div", { "data-pace-hoy-celda": true, "data-modulo": modulo, "data-cero": cero ? '1' : '0', "data-inerte": "1" },
+      dentro
+      ));
+
+  }
+
+  /* La ETIQUETA es «Abrir Respira», no «Respira». Dos motivos, y el primero es
+     de accesibilidad: un botón debe decir lo que hace. El segundo lo destapó la
+     suite -- con el nombre a secas, esta celda y el chip de la ActivityBar
+     pasaban a llamarse igual y `getByRole('button', {name: /^Respira/})` dejaba
+     de ser único: 15 tests en rojo, ninguno del producto. Conserva el nombre
+     visible dentro (WCAG 2.5.3, «label in name»). */
   return (/*#__PURE__*/
-    React.createElement("div", { "data-pace-sidebar-achievements": true, style: { display: 'grid', gridTemplateColumns: `repeat(${shown}, 1fr)`, gap: 6, marginBottom: 10 } },
-    Array.from({ length: shown }).map((_, i) => {
-      const id = unlocked[i];
-      return (/*#__PURE__*/
-        React.createElement("button", {
-          key: i,
-          onClick: onOpen,
-          style: {
-            aspectRatio: '1/1',
-            borderRadius: '50%',
-            border: '1px solid var(--line)',
-            background: id ? 'var(--achievement-soft)' : 'transparent',
-            color: id ? 'var(--achievement)' : 'var(--ink-3)',
-            display: 'grid', placeItems: 'center',
-            fontSize: 10,
-            fontFamily: 'var(--font-display)',
-            fontStyle: 'italic',
-            cursor: 'pointer',
-            transition: 'all 180ms'
-          },
-          title: id && achMini(id).title || t('ach.seal.discover') },
+    React.createElement("button", {
+      "data-pace-hoy-celda": true,
+      "data-modulo": modulo,
+      "data-cero": cero ? '1' : '0',
+      onClick: onOpen,
+      "aria-label": etiqueta,
+      title: etiqueta },
 
-        id ? achMini(id).nodo : '·'
-        ));
-
-    })
+    dentro
     ));
 
 }
 
-/* StatusBar: barra inferior del sidebar.
-
-   v0.12.1 · Al quitar la sección Intención el footer gana aire,
-   así que el pill "Invita a un café" ahora respira más sin
-   necesitar cambiar su diseño — sigue siendo el pill delgado
-   y elegante del SupportModule (decisión de sesión 16: presencia
-   calmada, sin gritar). La elegancia viene del contraste con el
-   espacio vacío, no de inflar el componente.
-
-   Estructura (top → bottom):
-     1. "En camino" + tag Pace (identidad / estado).
-     2. Pill SupportButton — mismo diseño del sello original.
-     3. Versión + autor en micro-type.
-*/
-function StatusBar(_ref5) {let { compact } = _ref5;
-  const [state] = usePace();
-  const { t } = useT();
-  const openSupport = () => window.dispatchEvent(new CustomEvent('pace:open-support'));
+function SidebarToday(_ref2) {let { hoy, onOpen, onAddWater } = _ref2;
+  const { t, tn } = useT();
+  const gotas = [];
+  for (let i = 0; i < hoy.waterGoal; i++) {
+    gotas.push(/*#__PURE__*/
+      React.createElement("i", { key: i, style: { ...sidebarStyles.gota, ...(i < hoy.waterGlasses ? sidebarStyles.gotaOn : null) } })
+    );
+  }
   return (/*#__PURE__*/
-    React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 6 : 10 } }, /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.footerRow }, /*#__PURE__*/
-    React.createElement(Meta, null, t('sidebar.status.ontrack')), /*#__PURE__*/
-    React.createElement(Tag, { color: "var(--breathe)" }, "\u25CF Pace")
+    React.createElement("div", { "data-pace-hoy": true }, /*#__PURE__*/
+    React.createElement(SidebarHoyCelda, {
+      modulo: "focus", glifo: /*#__PURE__*/React.createElement(ABFocus, null), color: "var(--focus)",
+      nombre: t('sidebar.today.focus'), valor: hoy.focusMinutes, unidad: t('sidebar.unit.min') }
     ), /*#__PURE__*/
-    React.createElement("div", { style: { marginTop: compact ? 4 : 0, marginBottom: compact ? 4 : 0 } }, /*#__PURE__*/
-    React.createElement(SupportButton, { onOpen: openSupport })
+    React.createElement(SidebarHoyCelda, {
+      modulo: "breathe", glifo: /*#__PURE__*/React.createElement(ABBreathe, null), color: "var(--breathe)",
+      nombre: t('sidebar.today.breathe'), valor: hoy.breatheMinutes, unidad: t('sidebar.unit.min'),
+      etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.breathe') }),
+      onOpen: () => onOpen('breathe') }
     ), /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.footerRow }, /*#__PURE__*/
-    React.createElement("span", { style: { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' } }, "Pace ", PACE_VERSION), /*#__PURE__*/
+    React.createElement(SidebarHoyCelda, {
+      modulo: "body", glifo: /*#__PURE__*/React.createElement(ABMove, null), color: "var(--move)",
+      nombre: t('sidebar.today.body'), valor: hoy.bodyMinutes, unidad: t('sidebar.unit.min'),
+      etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.body') }),
+      onOpen: () => onOpen('body') }
+    ), /*#__PURE__*/
+
+
+    React.createElement("span", { "data-pace-hoy-agua": true }, /*#__PURE__*/
+    React.createElement(SidebarHoyCelda, {
+      modulo: "water", glifo: /*#__PURE__*/React.createElement(ABDrop, null), color: "var(--hydrate)",
+      nombre: t('sidebar.today.water'), valor: hoy.waterGlasses,
+      unidad: tn('sidebar.unit.of', { n: hoy.waterGoal }),
+      etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.water') }),
+      onOpen: () => onOpen('water'),
+      extra: /*#__PURE__*/React.createElement("span", { style: sidebarStyles.gotas }, gotas) }
+    ), /*#__PURE__*/
+    React.createElement("button", { "data-pace-hoy-mas": true, onClick: onAddWater, "aria-label": t('sidebar.water.add'), title: t('sidebar.water.add') }, "+")
+    )
+    ));
+
+}
+
+/* ============================================================
+   ACCIÓN PRINCIPAL — solo puede decir CONTINUAR o REPETIR, y las dos hablan
+   de algo que la persona YA hizo. Nunca «prueba esto»: si un día dijera eso
+   y otro «continúa» en el mismo sitio y con la misma pinta, dejaría de ser un
+   sitio fiable y sería una ranura de anuncios (decisión del usuario, s180).
+
+   La tarjeta ENTERA es el objetivo, con el patrón de s174: el título lleva
+   DENTRO el botón y este se extiende con un `::after` absoluto. Así conserva
+   el encabezado en el árbol de accesibilidad —un `role="button"` en la
+   tarjeta volvería presentacionales a sus descendientes y tumbó 9 tests en
+   s174— y el objetivo táctil crece a ~243 × 100 en vez de un botón de 44.
+   ============================================================ */
+/* sidebarActionView: traduce lo que dijo el selector a lo que se pinta, o
+   `null` si no hay nada que enseñar. Vive AQUÍ y no en los selectores porque
+   necesita los catálogos, y esos no son estado: los selectores se quedan puros.
+
+   Devuelve `null` también cuando la rutina no se resuelve en ningún catálogo
+   —una sesión de Foco, por ejemplo, que no tiene ficha— porque enseñar un
+   `routineId` crudo sería peor que no enseñar nada. El orquestador consulta
+   esto ANTES de pintar el separador, así no queda una regla suelta. */
+function sidebarActionView(accion, t, tn, lang) {
+  if (!accion) return null;
+  if (accion.kind === 'path') {
+    const camino = window.getPath && window.getPath(accion.targetId);
+    if (!camino) return null;
+    const pasos = camino.steps && camino.steps.length || 0;
+    return {
+      kind: 'path',
+      eyebrow: t('sidebar.action.continue'),
+      color: 'var(--focus)',
+      titulo: camino.title || camino.name || accion.targetId,
+      meta: pasos ? tn('sidebar.action.path.meta', { n: Math.min(accion.stepIndex + 1, pasos), m: pasos }) : null
+    };
+  }
+  /* El módulo se le pregunta al CATÁLOGO y nunca al prefijo del id (s172):
+     los ids de Mueve y Estira van cruzados y el prefijo miente. */
+  const b = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId) || null;
+  const c = b || (window.resolveBodyRoutine && window.resolveBodyRoutine(accion.targetId) || {}).routine || null;
+  if (!c) return null;
+  /* Mismo contrato que `RoutineCard`: en español manda el `name` del dato; en
+     inglés se busca la clave y se cae al dato si no existe. */
+  let titulo = c.name;
+  if (lang === 'en') {
+    const v = t(accion.targetId + '.name');
+    if (v !== accion.targetId + '.name') titulo = v;
+  }
+  return {
+    kind: 'repeat',
+    eyebrow: t('sidebar.action.repeat'),
+    color: b ? 'var(--breathe)' : 'var(--move)',
+    titulo: titulo,
+    meta: t('sidebar.action.repeat.meta')
+  };
+}
+
+function SidebarPrimaryAction(_ref3) {let { accion, vista, onAct } = _ref3;
+  if (!vista) return null;
+  const eyebrow = vista.eyebrow,color = vista.color,titulo = vista.titulo,meta = vista.meta;
+  return (/*#__PURE__*/
+    React.createElement("div", { style: sidebarStyles.accion, "data-pace-sidebar-accion": true, "data-kind": accion.kind }, /*#__PURE__*/
+    React.createElement("div", { style: { ...sidebarStyles.accionEyebrow, color } }, eyebrow), /*#__PURE__*/
+    React.createElement("h4", { style: sidebarStyles.accionTitulo }, /*#__PURE__*/
+    React.createElement("button", { style: sidebarStyles.accionBoton, onClick: () => onAct(accion) }, titulo), /*#__PURE__*/
+    React.createElement("span", { style: sidebarStyles.accionFlecha, "aria-hidden": "true" }, "\u2192")
+    ),
+    meta ? /*#__PURE__*/React.createElement("p", { style: sidebarStyles.accionMeta }, meta) : null
+    ));
+
+}
+
+/* ============================================================
+   ESTA SEMANA — los siete puntos, y el bloque ENTERO abre Estadísticas.
+   Siete objetivos de 44 px no caben: 7 × 44 = 308 y el ancho útil son 243.
+   Medido, cada día quedaba en 30 × 44 y además costaba 22 px de alto. Como
+   un solo botón el objetivo es 243 × ~59 y cuesta 0 px.
+   El criterio de «día activo» lo decide `selectSidebarWeek`, no esta pieza.
+   ============================================================ */
+function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
+  const { t, tn } = useT();
+  const letras = t('sidebar.days').split(',');
+  return (/*#__PURE__*/
+    React.createElement("button", { "data-pace-semana": true, onClick: onOpen, "aria-label": t('sidebar.week.open'), title: t('sidebar.week.open') }, /*#__PURE__*/
+    React.createElement("span", { style: { display: 'flex', gap: 6 } },
+    semana.days.map((d, i) => /*#__PURE__*/
+    React.createElement("span", { key: i, style: sidebarStyles.semDia }, /*#__PURE__*/
+    React.createElement("span", { style: { ...sidebarStyles.semLetra, color: d.isToday ? 'var(--ink)' : 'var(--ink-3)', fontWeight: d.isToday ? 600 : 400 } },
+    letras[i]
+    ), /*#__PURE__*/
+    React.createElement("span", { style: {
+        ...sidebarStyles.semPunto,
+        background: d.active ? 'var(--focus)' : 'var(--line)',
+        outline: d.isToday ? '2px solid var(--ink-2)' : 'none',
+        outlineOffset: 2
+      } })
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("span", { style: { ...sidebarStyles.semPie, display: 'block' } },
+    semana.activeCount ?
+    tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak }) :
+    tn('sidebar.week.none', { m: semana.longestStreak }),
+    ' ', /*#__PURE__*/React.createElement("span", { "aria-hidden": "true" }, "\u2192")
+    )
+    ));
+
+}
+
+/* ============================================================
+   PIE — «Apoyar PACE» deja de ser un pill de 44 px y pasa a enlace: devuelve
+   34 px de la columna más valiosa (44 del botón menos 10 del texto).
+   ============================================================ */
+function SidebarFooter(_ref5) {let { ultimo, onCollection, onSupport, compact } = _ref5;
+  const { t } = useT();
+  /* EL ULTIMO LOGRO VIVE AQUI, y no en una seccion propia. El brief pedia
+     enseñar UNO -- y se enseña--, pero medido en la app una seccion con su
+     rotulo, su sello de 38 px y su fecha cuesta ~100 px, y con esos 100 la
+     sidebar no cabe a 1280x720 en cuanto aparece la tarjeta de accion. En el
+     pie el sitio ya estaba pagado: el enlace a la coleccion PASA A SER el
+     logro, con su sello. Es lo que la variante F4 llamaba «el logro se va al
+     pie». Sin fecha: «hace 2 dias» no cabe en una linea de pie y tampoco es
+     lo que se pregunta la persona, que es CUAL fue. */
+  const mini = ultimo ? achMini(ultimo.id) : null;
+  return (/*#__PURE__*/
+    React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: 6 } }, /*#__PURE__*/
+    React.createElement("div", { style: sidebarStyles.pieFila }, /*#__PURE__*/
+    React.createElement("button", {
+      style: { ...sidebarStyles.pieEnlace, display: 'flex', alignItems: 'center', gap: 7, textDecoration: 'none' },
+      onClick: onCollection,
+      title: mini ? mini.title : t('sidebar.collection'),
+      "data-pace-sidebar-ultimo": ultimo ? ultimo.id : '' },
+
+    mini ? /*#__PURE__*/React.createElement("span", { style: sidebarStyles.pieSello }, mini.nodo) : null, /*#__PURE__*/
+    React.createElement("span", { style: { textDecoration: 'underline', textUnderlineOffset: 3 } },
+    mini ? mini.title : t('sidebar.collection')
+    )
+    ), /*#__PURE__*/
+    React.createElement("button", {
+      style: sidebarStyles.pieEnlace,
+      onClick: onSupport,
+      title: t('support.sidebar.title'),
+      "aria-label": t('support.sidebar.label') },
+
+    t('sidebar.support')
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { style: sidebarStyles.pieFila }, /*#__PURE__*/
+    React.createElement("span", { style: sidebarStyles.pieVer }, "Pace ", PACE_VERSION), /*#__PURE__*/
     React.createElement("span", { style: { fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' } }, "by @ezradesign")
     )
     ));
 
 }
 
-Object.assign(window, { ChevronLeftIcon, SenderoDelDia, WeekDots, achMini, AchievementsPreview, StatusBar });
-;Object.assign(window, { ChevronLeftIcon, SenderoDelDia, WeekDots, achMini, AchievementsPreview, StatusBar });
+Object.assign(window, {
+  ChevronLeftIcon,
+  achMini,
+  SidebarToday,
+  sidebarActionView,
+  SidebarPrimaryAction,
+  SidebarWeek,
+  SidebarFooter
+});
+;Object.assign(window, { ChevronLeftIcon, achMini, SidebarHoyCelda, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarFooter });
 })();
 </script>
   <script>
 ;(function () {
 /* PACE · Sidebar izquierdo — colapsable
-   Secciones: Ritmo (racha), Sendero (línea del día con hitos), Logros.
-   Footer: StatusBar con botón destacado Donar café.
+   Secciones: Hoy · acción principal · Esta semana · último logro. Pie con
+   colección, apoyo, versión y autor.
 
-   TROCEADO EN s148 (llegó a 570 ln; el límite de CLAUDE.md es 500). Este
-   archivo queda como ORQUESTADOR: compone las secciones y no dibuja
-   ninguna por dentro. Lo demás vive en dos hermanos, con el mismo patrón
-   que Foco (`FocusTimer` + `.support` + `.parts`):
+   TROCEADO EN s148 (llegó a 570 ln; el límite de CLAUDE.md es 500) y
+   REESCRITO EN s180. Este archivo es el ORQUESTADOR: compone las secciones,
+   no dibuja ninguna por dentro y no decide ninguna. Lo demás vive en tres
+   hermanos, con el mismo patrón que Foco (`FocusTimer` + `.support` +
+   `.parts`):
 
-     · `Sidebar.support.jsx` → hoja responsive inyectada + `sidebarStyles`
-                               (que viaja por window: leer su cabecera)
-     · `Sidebar.parts.jsx`   → SenderoDelDia · WeekDots · AchievementsPreview
-                               · achMini · StatusBar · ChevronLeftIcon
+     · `Sidebar.support.jsx`   → hoja responsive inyectada + `sidebarStyles`
+                                 (que viaja por window: leer su cabecera)
+     · `Sidebar.selectors.js`  → los cuatro selectores PUROS
+     · `Sidebar.parts.jsx`     → las piezas de UI
 
-   Los dos cargan ANTES que este archivo en PACE.html.
+   Los tres cargan ANTES que este archivo en PACE.html.
+
+   QUÉ PREGUNTA RESPONDE AHORA (s180). La sidebar informaba pero ayudaba poco
+   a decidir. Ahora contesta cuatro cosas: qué he hecho hoy, qué puedo
+   continuar, cómo va la semana y cuál fue mi último logro. Menos panel de
+   estadísticas decorativo y más brújula cotidiana.
+
+   El ÚLTIMO LOGRO no tiene sección: vive en el pie. Ver `SidebarFooter`.
 
    Historial de lo eliminado (no revivir sin justificación de producto):
      - "Plan" del día — v0.11.2 (redundante con ActivityBar).
      - "Recordatorios" — v0.11.3 (no cabía sin scroll en 1920×1080).
-     - "Intención" — v0.12.1 (aporta poco valor; la misma pregunta se
-       hace al usuario nuevo en la bienvenida — hoy el onboarding s106,
-       antes el WelcomeModal — que la guarda en `state.intention`.
-       Quitarla libera espacio vertical y deja que el botón de Donar
-       gane prominencia en el footer).
+     - "Intención" — v0.12.1 (la misma pregunta se hace en el onboarding y se
+       guarda en `state.intention`).
+     - Contadores pomodoros/rondas/racha — v0.28.2.
+     - s180: la CIFRA GRANDE de racha (44 px), el SENDERO abstracto del día y
+       la rejilla de CINCO miniaturas de logro. La racha sigue, como texto
+       secundario dentro de "Esta semana".
 
-   RESPONSIVE (sesión 22 · v0.12.5):
-     En ≤768px el sidebar se desacopla y pasa a ser un drawer
-     fullscreen por encima del main (position:fixed; inset:0;
-     width:100vw). El bug previo era width:280px que dejaba un
-     trozo del main visible a la derecha en móvil. Ahora el main
-     sigue ocupando 100vw debajo pero el sidebar lo tapa entero
-     cuando se abre. Se añade un chevron grande (hit target
-     ≥44px) en esquina superior derecha para cerrar. Las reglas
-     viven en `Sidebar.support.jsx`.
+   RESPONSIVE (sesión 22 · v0.12.5): en ≤768px el sidebar se desacopla y pasa a
+   ser un drawer fullscreen por encima del main. Las reglas viven en
+   `Sidebar.support.jsx`.
 */
 
 function Sidebar() {
   const [state, set] = usePace();
-  const { t, tn } = useT();
+  const { t, tn, lang } = useT();
 
   const collapsed = !!state.sidebarCollapsed;
-  const unlockedCount = Object.keys(state.achievements || {}).length;
-  /* B1: total real del catalogo (106), no el 100 hardcodeado de s12. */
-  /* §15.4 · denominador ÚNICO, compartido con el modal (`catalog.js`). Antes
-     esto era `ACHIEVEMENT_CATALOG.length` y contaba los que NO tienen detector:
-     la sidebar dividía entre 96 y el modal entre 88, y el «por descubrir»
-     prometía 8 que nadie puede ganar. */
-  const totalAchievements = window.ACHIEVEMENTS_AVAILABLE ||
-  (window.ACHIEVEMENT_CATALOG || []).length;
   const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
@@ -13591,29 +13999,106 @@ function Sidebar() {
   /* Colapsado → ocultar TOTALMENTE.
      La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
      (Antes era un rail de 56px con iconos; se quitó por petición del usuario
-     para tener pantalla limpia como la referencia del 2026-04-22 / sesión 9.) */
+     para tener pantalla limpia como la referencia del 2026-04-22 / sesión 9.
+     s180 se planteó devolverlo con los glifos nuevos y NO se hizo: sigue
+     siendo una decisión suya, no un olvido.) */
   if (collapsed) return null;
+
+  const hoy = selectSidebarToday(state);
+  const semana = selectSidebarWeek(state);
+  const ultimo = selectSidebarLatestAchievement(state);
+
+  /* Los eventos entran POR PARÁMETRO al selector, que es puro. Aquí es donde
+     se toca el almacén, y con guardas: en `file://` y en Capacitor el
+     adaptador está inerte y el contenedor viene vacío, así que la tarjeta
+     simplemente no se pinta. Eso es degradación, no error. */
+  let eventos = null;
+  try {
+    const snap = window.paceEventsSnapshot && window.paceEventsSnapshot();
+    eventos = snap && Array.isArray(snap.events) ? snap.events : null;
+  } catch (e) {eventos = null;}
+
+  const accion = selectSidebarPrimaryAction(state, { events: eventos });
+  const vistaAccion = sidebarActionView(accion, t, tn, lang);
+
+  /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive
+     con lo que abre; en movil es un drawer a pantalla completa y quedarse
+     abierto te tapa justo lo que acabas de pedir. `sidebarCollapsed` es el
+     mismo estado que usa su chevron, asi que reabrirlo funciona igual. */
+  const emitir = (kind, extra) => {
+    window.dispatchEvent(
+      new CustomEvent('pace:sidebar-action', { detail: Object.assign({ kind: kind }, extra || {}) })
+    );
+    if (esCajon()) set({ sidebarCollapsed: true });
+  };
+
+  const diaEnBlanco = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes && !hoy.waterGlasses;
+  const sep = { margin: isMob ? '8px 0 10px' : '10px 0 12px' };
+  const accionPrimero = esCajon();
+
+  /* LAS SECCIONES SE COMPONEN Y LOS SEPARADORES VAN ENTRE ELLAS. Colgar el
+     `<Divider/>` de cada bloque parece equivalente y no lo es: con la acción
+     cambiando de sitio según la piel salieron DOS reglas seguidas en
+     escritorio y ninguna antes de la tarjeta. Con la lista, un bloque que no
+     se pinta no deja su regla huérfana, y el orden es lo único que cambia. */
+  const seccionHoy = /*#__PURE__*/
+  React.createElement("div", { style: sidebarStyles.section, key: "hoy" }, /*#__PURE__*/
+  React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, /*#__PURE__*/
+  React.createElement(Meta, null, t('sidebar.today')), /*#__PURE__*/
+  React.createElement("span", { style: sidebarStyles.fecha }, fechaCortaSidebar(lang))
+  ), /*#__PURE__*/
+  React.createElement(SidebarToday, {
+    hoy: hoy,
+    onOpen: (m) => emitir('module', { target: m }),
+    onAddWater: () => {try {addWaterGlass(1);} catch (e) {/* el store manda */}} }
+  )
+  );
+
+
+  const seccionAccion = vistaAccion ? /*#__PURE__*/
+  React.createElement(SidebarPrimaryAction, {
+    key: "accion",
+    accion: accion,
+    vista: vistaAccion,
+    onAct: (a) => emitir(a.kind, { targetId: a.targetId }) }
+  ) :
+  null;
+
+  /* El día en blanco solo habla cuando NO hay tarjeta: si hay algo que
+     continuar, decir «tu día empieza en blanco» sería mentir. */
+  const seccionVacio = !seccionAccion && diaEnBlanco ? /*#__PURE__*/
+  React.createElement("p", { style: sidebarStyles.vacioCopy, key: "vacio" }, t('sidebar.empty')) :
+  null;
+
+  const seccionSemana = /*#__PURE__*/
+  React.createElement("div", { style: sidebarStyles.section, key: "semana" }, /*#__PURE__*/
+  React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, /*#__PURE__*/
+  React.createElement(Meta, null, t('sidebar.week'))
+  ), /*#__PURE__*/
+  React.createElement(SidebarWeek, { semana: semana, onOpen: () => emitir('stats') })
+  );
+
+
+  /* EN MÓVIL LA ACCIÓN VA PRIMERA. El pulgar llega antes a lo que se pulsa que
+     a lo que se lee, y en un cajón a pantalla completa lo accionable no puede
+     quedar debajo de cuatro cifras. En escritorio no: allí se lee de arriba
+     abajo y Hoy es el contexto de la acción.
+     Es orden de DOM y no `order` de CSS: s160 midió que el orden visual y el
+     de foco tienen que ser el mismo, y `order` los separa. */
+  const secciones = (accionPrimero ?
+  [seccionAccion, seccionHoy, seccionVacio, seccionSemana] :
+  [seccionHoy, seccionAccion, seccionVacio, seccionSemana]).
+  filter(Boolean);
 
   return (/*#__PURE__*/
     React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true }, /*#__PURE__*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') }, /*#__PURE__*/
     React.createElement(ChevronLeftIcon, null)
     ), /*#__PURE__*/
+
+
+
+
     React.createElement("div", { style: sidebarStyles.logoBar, "data-pace-sidebar-logobar": true }, /*#__PURE__*/
     React.createElement("div", {
       style: { ...sidebarStyles.logo, cursor: 'pointer' },
@@ -13623,60 +14108,54 @@ function Sidebar() {
 
     React.createElement(PaceWordmark, { variant: state.logoVariant, color: "var(--ink)" })
     )
-    ), /*#__PURE__*/
+    ),
 
-    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '14px 0 16px' } }), /*#__PURE__*/
-
-
-    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
-    React.createElement("div", { style: { ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 } }, /*#__PURE__*/
-    React.createElement(Meta, null, t('sidebar.section.rhythm')), /*#__PURE__*/
-    React.createElement("span", { style: sidebarStyles.sectionAside }, state.streak.longest)
-    ), /*#__PURE__*/
-    React.createElement("div", { style: { display: 'flex', alignItems: 'baseline', gap: 10 } }, /*#__PURE__*/
-    React.createElement("span", { style: { ...sidebarStyles.streakNum, fontSize: isMob ? 32 : 44 } }, state.streak.current), /*#__PURE__*/
-    React.createElement("div", null, /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.streakLabel }, state.streak.current === 1 ? t('sidebar.streak.day') : t('sidebar.streak.days')), /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.streakSub }, tn('sidebar.streak.best', { n: state.streak.longest }))
-    )
-    ), /*#__PURE__*/
-    React.createElement(WeekDots, { weeklyStats: state.weeklyStats, compact: isMob })
-    ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '16px 0 14px' } }), /*#__PURE__*/
-
-
-    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
-    React.createElement(SenderoDelDia, { state: state, compact: isMob })
-    ), /*#__PURE__*/
-
-    React.createElement(Divider, { style: { margin: isMob ? '8px 0 10px' : '16px 0 14px' } }), /*#__PURE__*/
-
-
-    React.createElement("div", { style: sidebarStyles.section }, /*#__PURE__*/
-    React.createElement("div", { style: { ...sidebarStyles.sectionHeader, marginBottom: isMob ? 6 : 10 } }, /*#__PURE__*/
-    React.createElement(Meta, null, t('sidebar.section.achievements')), /*#__PURE__*/
-    React.createElement("span", { style: sidebarStyles.sectionAside }, unlockedCount, "/", totalAchievements)
-    ), /*#__PURE__*/
-    React.createElement(AchievementsPreview, { onOpen: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')) }), /*#__PURE__*/
-    React.createElement("button", {
-      onClick: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')),
-      style: sidebarStyles.linkBtn },
-
-    tn('sidebar.achievements.discover', { n: Math.max(0, totalAchievements - unlockedCount) })
+    secciones.map((sec, i) => /*#__PURE__*/
+    React.createElement(React.Fragment, { key: 's' + i }, /*#__PURE__*/
+    React.createElement(Divider, { style: sep }),
+    sec
     )
     ), /*#__PURE__*/
 
     React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1 } }), /*#__PURE__*/
 
 
-    React.createElement(StatusBar, { compact: isMob })
+
+
+
+    React.createElement(SidebarFooter, {
+      ultimo: ultimo,
+      compact: isMob,
+      onCollection: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')),
+      onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
+    )
     ));
 
 }
 
-Object.assign(window, { Sidebar });
-;Object.assign(window, { Sidebar });
+/* «Cajón» = el drawer a pantalla completa, que la hoja monta por debajo de
+   768 px. No es el mismo umbral que `isMob` (640, compactación tipográfica), y
+   confundirlos deja la acción arriba en una tablet que todavía ve la sidebar
+   como columna. */
+function esCajon() {
+  return typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+}
+
+function fechaCortaSidebar(lang) {
+  try {
+    const loc = lang === 'en' ? 'en-GB' : 'es-ES';
+    return new Date().
+    toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'short' })
+    /* `es-ES` devuelve «mar, 1 sept»: fuera la coma y los puntos. El rotulo
+       va en versalitas, asi que la puntuacion sobra. */.
+    replace(/[.,]/g, '');
+  } catch (e) {
+    return '';
+  }
+}
+
+Object.assign(window, { Sidebar, fechaCortaSidebar, esCajon });
+;Object.assign(window, { Sidebar, esCajon, fechaCortaSidebar });
 })();
 </script>
 
@@ -29417,11 +29896,30 @@ function ABDrop() {
 
 }
 
+function ABFocus() {
+  /* Aro del Pomodoro con la cabeza del recorrido — "Foco".
+     NACE EN s180 y no estaba antes por una razon: en la home Foco no es un
+     cuadrante de la ActivityBar, es el aro. Cuando la sidebar puso los cuatro
+     modulos en fila hizo falta un dibujo para el, y el unico honesto es el aro
+     mismo, con el punto brillante de su cabeza (la firma de s159). */
+  return (/*#__PURE__*/
+    React.createElement("svg", { width: "26", height: "26", viewBox: "0 0 28 28", fill: "none", stroke: "currentColor", strokeWidth: "1.2", strokeLinecap: "round", strokeLinejoin: "round" }, /*#__PURE__*/
+
+    React.createElement("circle", { cx: "14", cy: "14", r: "9.5", opacity: "0.3" }), /*#__PURE__*/
+
+    React.createElement("path", { d: "M14 4.5a9.5 9.5 0 0 1 8.23 4.75" }), /*#__PURE__*/
+
+    React.createElement("circle", { cx: "22.23", cy: "9.25", r: "1.5", fill: "currentColor", stroke: "none" })
+    ));
+
+}
+
 /* s105: los glifos AB* se exponen para que el BreakMenu (menu post-Pomodoro)
    use EXACTAMENTE los mismos iconos que la ActivityBar de la home -- antes
-   llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual. */
-Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop });
-;Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop });
+   llevaba dibujos genericos propios (BM*), rompiendo la coherencia visual.
+   s180: la Sidebar es el tercer consumidor, y anade ABFocus. */
+Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus });
+;Object.assign(window, { ActivityBar, ABBreathe, ABStretch, ABMove, ABDrop, ABFocus });
 })();
 </script>
   <script>
@@ -29502,6 +30000,7 @@ function PaceApp() {
     window.addEventListener('pace:open-support', h);
     return () => window.removeEventListener('pace:open-support', h);
   }, []);
+
 
   // Auto-trigger único del SupportModal a los 7 días de racha.
   // Consumidor del helper expuesto en SupportModule.jsx; la lógica
@@ -29586,6 +30085,45 @@ function PaceApp() {
   const handleStartMove = (routine) => {
     setPreviewRoutine({ routine, kind: 'move' });
   };
+
+  /* Navegación desde la sidebar (s180). UN solo evento con `detail.kind` en vez
+     de un `pace:open-*` por destino: la sidebar no toca el estado interno de
+     los modales, solo dice qué quiere, y PaceApp decide con qué superficie se
+     cumple.
+      VA AQUÍ, y no arriba con los otros listeners, porque usa
+     `handleStartBreathe` y `setPreviewRoutine`, que se declaran más arriba pero
+     DESPUÉS de aquel bloque. Con `[]` de dependencias el efecto captura el
+     binding del primer render — que ya está inicializado cuando el handler
+     corre—, pero declararlo antes de lo que usa se lee como un error aunque no
+     lo sea.
+      `repeat` reutiliza las MISMAS puertas que la biblioteca: `handleStartBreathe`
+     con su gate de seguridad, o el Preview de §18.3 para cuerpo. Así una rutina
+     con `safety: true` no se salta su modal por entrar desde la sidebar. */
+
+
+  useEffectMain(() => {
+    const h = (ev) => {
+      const d = ev && ev.detail || {};
+      if (d.kind === 'stats') {setOpenStats(true);return;}
+      if (d.kind === 'module') {
+        /* 'focus' no abre nada a propósito: el timer ES la home, así que ya
+           estás encima de él (en móvil, con el drawer cerrándose detrás). */
+        if (d.target === 'breathe') setOpenLibrary('breathe');else
+        if (d.target === 'body') setOpenLibrary('move');else
+        if (d.target === 'water') setOpenHydrate(true);
+        return;
+      }
+      if (d.kind === 'repeat' && d.targetId) {
+        /* El módulo se le pregunta al CATÁLOGO, nunca al prefijo del id (s172). */
+        const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
+        if (b) {handleStartBreathe(b);return;}
+        const body = window.resolveBodyRoutine && window.resolveBodyRoutine(d.targetId);
+        if (body && body.routine) setPreviewRoutine({ routine: body.routine, kind: body.source });
+      }
+    };
+    window.addEventListener('pace:sidebar-action', h);
+    return () => window.removeEventListener('pace:sidebar-action', h);
+  }, []);
   const handleStartExtra = (routine) => {
     /* Reutiliza MoveSession pero marca kind='extra' para que la completion
        dispare completeExtraSession (logros correctos, plan.extra, no plan.muevete).

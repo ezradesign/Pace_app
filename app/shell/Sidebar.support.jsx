@@ -108,11 +108,96 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
       [data-pace-sidebar] [data-pace-sidebar-spacer] {
         display: none !important;
       }
-      [data-pace-sidebar] [data-pace-sidebar-achievements] {
-        grid-template-columns: repeat(5, 40px) !important;
-        gap: 4px !important;
-        margin-bottom: 6px !important;
-      }
+    }
+
+    /* ============================================================
+       s180 · EL RECORTE DEL LOGO, Y POR QUE VA EN CSS
+       ------------------------------------------------------------
+       'app/ui/pace-logo.png' es 716x471 pero su DIBUJO ocupa solo 488x194:
+       medido sobre el canal alfa, hay 85 px transparentes a la izquierda,
+       143 a la derecha, 123 arriba y 154 abajo, y el 93,53 % del lienzo esta
+       a alfa 0. Puesto en la banda de 271 px de la sidebar eso gastaba
+       178,3 px de alto de los que 104,9 eran aire, y ademas la imagen
+       DESBORDABA su banda 13,7 px sin que se notara -- justamente porque lo
+       que desbordaba era transparencia.
+
+       NO se crea un 'pace-logo-sidebar.png' a proposito. El '<img
+       id="pace-logo-src">' lo leen DOS consumidores ('CowLogo.jsx' y
+       'OnboardingScreens.jsx'), asi que cambiarlo de sitio le tocaria el logo
+       al onboarding; y anadir un segundo archivo lo inlinearia otra vez en el
+       artefacto (~100 KB de base64 por un dibujo que se pinta una vez).
+       Recortar por CSS deja el PNG intacto para todo el mundo.
+
+       LA ARITMETICA (si algun dia cambia el PNG, hay que volver a medirla):
+         ancho de la imagen = 716/488            = 146,72 %
+         izquierda          = -85/488            = -17,42 %
+         alto de la caja    = 194/488 del ancho  =  39,75 %
+         arriba: la imagen mide 0,96517 W de alto y hay que subirla
+                 123/471 de eso = 0,25207 W, que sobre una caja de
+                 0,39754 W de alto es                -63,41 %
+       ============================================================ */
+    [data-pace-sidebar] [data-pace-sidebar-logo] {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 488 / 194;
+      display: block;
+    }
+    /* NECESITA !important, y no es pereza: 'PaceLogoImage' pinta la <img> con
+       width/maxWidth/height EN LINEA, y un estilo en linea gana a la hoja sin
+       que haga falta un !important del otro lado. Medido: sin esto la caja
+       recortaba (107,8 px de alto, correcto) pero el dibujo seguia a 271x178,4,
+       o sea el recorte no hacia nada. Mismo mordisco que s174 con el padding
+       en linea del modal. */
+    [data-pace-sidebar] [data-pace-sidebar-logo] img {
+      position: absolute !important;
+      width: 146.72% !important;
+      max-width: none !important;
+      height: auto !important;
+      left: -17.42% !important;
+      top: -63.41% !important;
+    }
+
+    /* Hoy · rejilla 2x2. Las celdas son BOTONES: abren su modulo. Antes, para
+       ir a Respira habia que salir de la sidebar. */
+    [data-pace-sidebar] [data-pace-hoy] {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
+      /* Sin esto la fila del agua crece con sus ocho vasos y la rejilla queda
+         con filas de 87 y 99 px. Medido en la app, no supuesto. */
+      grid-auto-rows: 1fr;
+    }
+    [data-pace-sidebar] [data-pace-hoy-celda] {
+      border: 1px solid var(--line); border-radius: var(--r-sm);
+      padding: 9px 10px 8px; background: var(--paper);
+      display: flex; flex-direction: column; gap: 5px;
+      min-height: 74px; width: 100%; align-items: center; text-align: center;
+      transition: border-color 180ms, background 180ms;
+    }
+    [data-pace-sidebar] [data-pace-hoy-celda]:hover { border-color: var(--line-2); }
+    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] { background: transparent; }
+    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] [data-pace-hoy-ic] { opacity: 0.3; }
+
+    /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
+       su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
+    [data-pace-sidebar] [data-pace-hoy-agua] { position: relative; display: flex; }
+    [data-pace-sidebar] [data-pace-hoy-mas] {
+      position: absolute; left: 50%; transform: translateX(-50%); bottom: -2px;
+      width: 44px; height: 28px; display: grid; place-items: center;
+      color: var(--hydrate); font-size: 16px; border-radius: var(--r-sm);
+    }
+    [data-pace-sidebar] [data-pace-hoy-mas]:hover { background: var(--hydrate-soft); }
+
+    /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
+       ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
+    [data-pace-sidebar] [data-pace-semana] {
+      display: block; width: 100%; text-align: left;
+      border-radius: var(--r-sm); padding: 6px; margin: -6px;
+    }
+    [data-pace-sidebar] [data-pace-semana]:hover { background: var(--focus-soft); }
+
+    @media (max-width: 640px) {
+      /* El logo ya iba capado a 200 px desde s66; con el recorte eso son
+         200 x 79,5 en vez de los 121 de alto que daba sin tope a 390 px. */
+      [data-pace-sidebar] [data-pace-hoy] { gap: 8px; }
     }
   `;
   document.head.appendChild(s);
@@ -144,15 +229,31 @@ const sidebarStyles = {
     marginLeft: -14,
     marginRight: -14,
     marginTop: -4,
-    marginBottom: 4,
+    /* s180: era 4, y ese 4 dejaba la regla de debajo con 14 px de hueco
+       arriba contra los 10 de las otras dos. No era mas gruesa -- estaba
+       mas abajo. A 0 las tres van a 10 / 10 / 10. */
+    marginBottom: 0,
     minHeight: 96,
   },
-  logo: { width: '100%', minWidth: 0, display: 'flex', justifyContent: 'center' },
+  /* s180: `display` sale de aqui a proposito. El recorte del logo vive en la
+     hoja (`overflow:hidden` + `aspect-ratio`), y un `display:flex` EN LINEA
+     ganaria a la regla `display:block` de la hoja -- los estilos en linea
+     pisan a la hoja sin necesidad de `!important`. Mismo mordisco que s174
+     con el padding en linea del modal. */
+  /* 80 % del ancho de la banda: es la variante A3, la que el usuario eligio
+     mirando las tres. Al 100 % el dibujo salia a 271 px y su banda a 107,8;
+     al 80 % son 216,8 x 86,2 y la banda vuelve a mandarla su min-height. */
+  logo: { width: '80%', minWidth: 0, margin: '0 auto' },
   toggleFloating: {
     position: 'absolute',
     top: 10,
     right: 10,
-    width: 22, height: 22,
+    /* 24 y no 22: WCAG 2.2 AA (2.5.8) pide 24x24 de objetivo minimo y 22 se
+       queda corto. TAMPOCO 44 -- que seria AAA-- porque con el logo recortado
+       ya no hay margen transparente donde apoyarse: medido, a 44 el chevron
+       PISA el dibujo 23 px, a 24 lo pisa 3 (el borde) y a 22 lo rozaba 1.
+       Antes del recorte no se tocaban nunca: el PNG traia 54 px de aire ahi. */
+    width: 24, height: 24,
     display: 'grid', placeItems: 'center',
     color: 'var(--ink-3)',
     border: '1px solid var(--line)',
@@ -199,6 +300,57 @@ const sidebarStyles = {
     padding: 0,
     marginTop: 4,
   },
+
+  /* ---------- s180 ---------- */
+
+  /* Cabecera centrada + la fecha. La fecha va al MISMO cuerpo que el rotulo
+     (11 px) y no a 10: con 10 compartian linea base pero se veia mas baja,
+     porque su altura de x es menor. Lo unico que la separa es el color. */
+  sectionHeaderCentro: {
+    display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 7,
+    marginBottom: 10,
+  },
+  fecha: {
+    fontSize: 'var(--size-meta)', letterSpacing: 'var(--track-meta)',
+    textTransform: 'uppercase', color: 'var(--ink-3)', opacity: 0.75,
+  },
+
+  hoyIc:     { width: 24, height: 24, color: 'var(--ink-2)' },
+  hoyNombre: { fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 },
+  hoyValor:  { fontFamily: 'var(--font-display)', fontSize: 22, lineHeight: 0.95, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums', marginTop: 'auto' },
+  hoyUnidad: { fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--ink-3)', marginLeft: 3 },
+  hoyValorCero: { color: 'var(--ink-3)', opacity: 0.55 },
+
+  gotas: { display: 'flex', gap: 3, justifyContent: 'center', marginTop: 2 },
+  gota:  { width: 5, height: 7, borderRadius: '0 0 50% 50% / 0 0 40% 40%', border: '1px solid var(--hydrate)', opacity: 0.35 },
+  gotaOn:{ background: 'var(--hydrate)', opacity: 1 },
+
+  /* La tarjeta ENTERA es el objetivo (patron s174: el titulo lleva DENTRO el
+     boton y este se extiende con un `::after`). Sin CTA suelto se ahorran
+     55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
+  accion:        { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '12px 14px 13px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
+  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 7 },
+  accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.2, position: 'relative', margin: 0 },
+  accionBoton:   { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
+  accionMeta:    { fontSize: 11, color: 'var(--ink-3)', marginTop: 3, lineHeight: 1.4 },
+  accionFlecha:  { position: 'absolute', right: 0, bottom: 12, color: 'var(--ink-3)', fontSize: 15 },
+
+  semDia:   { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
+  semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
+  semPunto: { width: 6, height: 6, borderRadius: '50%', background: 'var(--line)' },
+  semPie:   { fontSize: 11, color: 'var(--ink-3)', marginTop: 11 },
+
+  /* El sello del ultimo logro, en el PIE. 20 px y no 38: ahi comparte linea
+     con «Apoyar PACE» y tiene que caber sin subir el alto del pie. */
+  pieSello: { width: 20, height: 20, flex: 'none', display: 'grid', placeItems: 'center', color: 'var(--ink-2)' },
+
+  /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
+     columna mas valiosa (44 del boton menos 10 del texto). */
+  pieFila:   { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
+  pieEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3 },
+  pieVer:    { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
+
+  vacioCopy: { fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.5, fontStyle: 'italic', fontFamily: 'var(--font-display)', textAlign: 'center', padding: '6px 4px' },
   /* NOTA histórica: los estilos de Recordatorios (v0.11.6) e Intención
      (v0.12.1) se eliminaron aquí cuando esas secciones se quitaron del
      sidebar. Los campos `state.reminders` y `state.intention` siguen

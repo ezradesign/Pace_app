@@ -88,13 +88,27 @@ async function irAlArtefacto(page) {
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
 }
 
-/** Lee el contador de logros del sidebar, en formato «1/88». */
-function leerLogros(page) {
+/**
+ * El ULTIMO logro tal como lo ve el usuario en la sidebar.
+ *
+ * SUSTITUYE A `leerLogros` (s180). Aquella leia el contador «N/M» del bloque
+ * LOGROS del sidebar, y ese bloque ya no existe: el rediseño retiro la rejilla
+ * de cinco miniaturas y su contador, y dejo UN logro -- el mas reciente-- que
+ * es la unica pregunta que la persona se hace. El contador sigue vivo donde
+ * manda §15.4 (el modal de la coleccion), no aqui.
+ *
+ * Devuelve el ID del logro, o `null` si todavia no hay ninguno. Se lee el ID y
+ * no el titulo a proposito: el titulo cambia con el idioma y con el copy, y lo
+ * que estas pruebas quieren saber es CUAL se concedio. Que el titulo se pinte
+ * bien es cosa de `tests/logros-i18n.spec.js`.
+ */
+function leerUltimoLogro(page) {
   return page.evaluate(() => {
     const sb = document.querySelector('[data-pace-sidebar]');
     if (!sb) return null;
-    const m = sb.innerText.match(/LOGROS\s*\n\s*(\d+)\s*\/\s*(\d+)/);
-    return m ? m[1] + '/' + m[2] : null;
+    const el = sb.querySelector('[data-pace-sidebar-ultimo]');
+    if (!el) return null;
+    return el.getAttribute('data-pace-sidebar-ultimo') || null;
   });
 }
 
@@ -157,7 +171,7 @@ module.exports = {
   sembrarPisando,
   capturarErrores,
   irAlArtefacto,
-  leerLogros,
+  leerUltimoLogro,
   contarSellos,
   overlaySuperior,
 };

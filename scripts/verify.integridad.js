@@ -43,7 +43,7 @@ var mascaras = require('./verify.mascaras.js'); // mapa/disco/precache del arte 
 var CENSO = {
   /* i18n: claves que declaran `app/i18n/strings/*` en CADA idioma (s152; el
      split de s148 midio 195 sobre su propio alcance, no sobre el total). */
-  i18nClaves: 559,   // +34 en s174: la biblioteca redisenada (chrome, filtros, lugar, material, grupo vacio y los ritmos de Respira). +1 en s177: 'settings.bg.music', la tercera opcion de fondo, que ya existe porque ya hay un archivo
+  i18nClaves: 579,   // +34 en s174: la biblioteca redisenada (chrome, filtros, lugar, material, grupo vacio y los ritmos de Respira). +1 en s177: 'settings.bg.music', la tercera opcion de fondo, que ya existe porque ya hay un archivo. +20 en s180: la sidebar reescrita (Hoy y sus cuatro modulos, unidades, la semana clicable, la accion continuar/repetir, el ultimo logro con sus fechas relativas, el pie y el dia en blanco)
                      // +9 en s176: el bloque de sonido por funcion (8) y el filtro «Sin retencion» de Respira (1)
                      // +1 en s161: tweaks.palette.auto (tercera pill de paleta)
                      // +1 en s166: focus.startPause (el CTA en Pausa/Larga)

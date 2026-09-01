@@ -42,7 +42,10 @@
    Decisiones nuevas del usuario: **tipos de jornada DEDUCIDOS** de lo que hubo
    (cualitativos, sin puntuar, aplicables al histórico ya guardado) · la **pestaña
    Caminos se INTEGRA** en Hoy y Semana y su progreso profundo va a premium · la
-   **sidebar** se decide al repensarla (§14), con Stats como fuente única. Fases:
+   **sidebar** se decide al repensarla (§14), con Stats como fuente única. **HECHO en s180/v0.111.0**: la sidebar se repensó entera y no duplica ningún
+   cálculo -- todo sale de `weeklyStats`, `water`, `streak` y `achievements` con
+   las mismas reglas (índice lunes-primero de s69, «el agua sola no enciende el
+   día»), en `app/shell/Sidebar.selectors.js`. Fases:
    **0** marco de altura estable (agnóstico al contenido, ejecutable ya) · **1** Hoy
    + Semana sin eventos · **2** `pace.events.v1` · **3** licencia (re-gating de
    Mes/Año + «Qué te ayuda»). Se retiran `computeDayScore` como criterio de color y
@@ -575,8 +578,11 @@ enseñar). SVG animado SOLO si el estático valida.
   arquitectura por adaptadores; APTO). Falta **IMPLEMENTAR** (Fase 1 web + Fase
   Android/iOS Capacitor): antes de stats premium / licencia.
 - **Re-gating de stats** (decisión 3): sesión de licencia.
-- **Sidebar Ahora/Hoy/Repetir/Mis pausas**: necesita feedback+eventos; la
-  racha compacta y «Hoy» pueden adelantarse en una sesión de pulido.
+- ~~**Sidebar Ahora/Hoy/Repetir/Mis pausas**~~ **HECHO en s180/v0.111.0**, y con
+  más de lo que este apunte esperaba: «Hoy» y la racha compacta entraron, pero
+  también **«Repetir»**, que sí necesitaba los eventos y ya los tenía -- sale de
+  la última `session.completed` de `pace.events.v1`. Lo que **NO** entró es «Mis
+  pausas», y la tarjeta **nunca sugiere**: solo puede decir CONTINUAR o REPETIR.
 - Rituales personales (extensión del builder F7) · objetivo semanal suave
   («3 de 4 días laborables», va a la sesión de gamificación) · check-in
   «¿cómo llegas?» · portadas de rutina (nivel 2) · migrar `lastActiveDay` a
