@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.112.0** | 2026-09-02 | fix(sidebar): **la geometria fija, y el corte de CSS que se llevo un arreglo por delante** — Segunda mitad de s180: el usuario prueba la sidebar publicada y reporta diez cosas. **DECIDE GEOMETRIA FIJA EN ESCRITORIO**: la columna mide lo mismo en un portatil que en un monitor de 1440, con el pie anclado abajo. Se habia probado lo contrario -- repartir el aire con `margin: auto`-- y **NUNCA REPARTIO NADA**: el espaciador con `flex: 1` se comia el sobrante (378 px a 1030 de alto) porque el flex-grow va antes que los margenes automaticos, **y el numero estaba a la vista en la maqueta** (la variante «aire repartido» daba 455 px de hueco contra los 389 de la que no repartia) sin que yo lo leyera. **AJUSTES MEDIDOS uno a uno**: aire sobre el logo −12,7 % (31,5 → 27,5), del logo a su regla −19,8 % (35,6 → 28,5), «Esta semana» +15,8 % de aire arriba, la tarjeta de Repetir de 98 a 117 px, el logo un 20 % mas pequenio (216,9 → 173,4 de ancho) y el ultimo logro centrado, en peso 400 y tinta secundaria. **EL «+» DE AGUA DESAPARECE**: era un segundo objetivo en una celda de 117 px **y pisaba los ocho vasos 17,2 px**; ahora la celda entera suma el vaso y su etiqueta dice lo que hace. **TRES DEFECTOS QUE ESTABAN PUBLICADOS**: la tarjeta de accion **no era clicable entera** (el objetivo eran 74 x 23 px de 243 x 117, porque el patron de s174 necesita un `::after` y **React no crea pseudo-elementos desde un estilo en linea**), la miniatura del logro renderizaba a **16,1 px** y la semana decia **«1 dias en ritmo»**. **Y EL METODO SE COBRO UNA**: al retirar el CSS del «+», el corte se llevo por delante la regla del `::after` -- **la cazo su propio test**, escrito veinte minutos antes, probando las cuatro esquinas y el centro. El ultimo logro **recupera su rotulo**: en el pie «se entendia raro», y era el mismo problema que el hueco del final. Orden nuevo: Hoy → Continua → Ultimo logro → Esta semana. **171/171** (eran 153), 3 tests nuevos. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
 | **v0.111.0** | 2026-09-01 | feat(sidebar): **la sidebar como brujula, y el margen transparente que tapaba una compresion** — Primera mitad de un brief largo (sidebar + CTB musical); **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas: que he hecho hoy, que puedo continuar, como va la semana y cual fue mi ultimo logro. **SE APROBO MIRANDOLA** (nueve variantes sobre cajas a medida real) y ahi el usuario eligio: logo al 80 %, Hoy en rejilla 2x2 con glifos y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR** — nunca «prueba esto». **EL LOGO: 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0). Puesto en la banda gastaba **178,3 px de los que 104,9 eran aire**, y de regalo la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** — invisible **porque lo que desbordaba era transparencia**. Se recorta **por CSS y no con un archivo nuevo**: el `<img id="pace-logo-src">` lo leen DOS consumidores y un segundo PNG son ~100 KB de base64 en el artefacto. **LOS GLIFOS NO HUBO QUE DIBUJARLOS**: pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105. El unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS QUE CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable** (`PathRunner` tapa la pantalla y salir llama a `abandonPath()`); el ultimo logro **baja al pie**, porque su seccion costaba ~100 px y con ellos no cabe a 1280x720 con tarjeta; y la celda de Foco **no es un boton** porque no hay nada que abrir. **DOS DEFECTOS MIOS**: el recorte no se aplicaba —los estilos EN LINEA de la imagen ganan a la hoja, el mordisco de s174— y la celda «Respira» **se llamaba igual que el chip de la home**, lo que dejo **15 tests en rojo y ninguno del producto** (arreglado con «Abrir Respira», que ademas es mejor a11y). **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes: a 1536x714 la sidebar vieja ya scrolleaba. Movil sin scroll a 390x844 **y a 320x568**. **169/169** (eran 153), con `tests/sidebar-redesign.spec.js` y 3 mutantes que muerden. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
 | **v0.110.0** | 2026-09-01 | fix(runner): **el runner en movil corto, y un umbral elegido mirando un solo lado** — Cierra el bloque que s178 dejo abierto. **EL BANCO DIJO «CERO» Y SU GUARD PIDIO EL CONTROL POSITIVO**: servido el `index.html` de HEAD en un puerto aparte con sus `fonts/` —sin ellas las metricas de texto son otras y la comparacion no vale— la misma sonda solapaba a **1280x575 (4,7 px)** y **360x640 (26,3 px)**, el numero exacto que el diagnostico habia anotado. **EL UMBRAL ESTABA ELEGIDO MIRANDO UN SOLO LADO**: `max-height: 660` salio del viewport que se miraba (360x640), y ampliado el barrido HEAD solapaba a **375x667 — el iPhone SE/8 — con 7,2 px** y a **360x661 con 10,8**, los dos JUSTO POR ENCIMA del umbral y por tanto sin cubrir; 360x680 sobrevivia por **1,9 px**. Es el mismo error de s177, que declaro 641 cuando el borde real era 575. Sube a **700**, que es el breakpoint que la hoja YA usa. **EL BANCO DIJO ARREGLADO Y EL CENSO LO DESMINTIO** (mide UNA rutina y lo declara): a 360x640 quedaban **5 de 19 rutinas y 7 de 79 pasos**, de 16 y 60. **LA CAUSA REAL**: la pantalla de colocacion pinta `[data-pace-v1-num]` y **no** `-timer`, asi que todos los tramos cortos —**los de s119 en escritorio tambien**— comprimian un elemento que ahi no existe. Con el numero correcto y el nombre fijado a **30 px, el suelo que su propio clamp ya declara**, **ninguna rutina solapa** a 360x640, 375x667 ni 360x600. **Declarado y no arreglado**: por debajo de ~575 sigue solapando — lo unico que queda es el glifo y la fuente unica de s177 **prohibe** encogerlo por CSS. **153/153** (eran 150), 3 tests nuevos calibrados en rojo contra HEAD. | s179 | [session-179](./docs/sessions/session-179-el-runner-en-movil-corto.md) |
 | **v0.109.0** | 2026-08-31 | feat(estira)+fix(claude.md): **las tres rutinas de oficina, y el documento que mandaba al archivo equivocado** — Segunda mitad de s178. **`CLAUDE.md` tenia las RUTAS cambiadas** en el bloque escrito justo para evitarlo: lo cruzado son los ids y SOLO los ids, y por creerme la ruta un censo midio **Mueve creyendo que era Estira** y devolvio 2 donde la respuesta es 9. **ESTIRA 14 → 17**: `Caderas de pie`, `Cadena posterior de pie` y `Columna en la silla` suben las rutinas compatibles con oficina de **5 a 8** y cubren por primera vez caderas, cadena posterior y columna **sin bajar al suelo**. Salieron de un censo y **no se retiro ninguna**. Cada ejercicio verificado contra su propio `setup`. **La regla §1 mordio**: el dato se troceo en `extra.data.js` + `extra.data.piernas.js` con guard de orden, y `ExtraModule.jsx` baja de 553 a **53** lineas. **La suite lo cazo con SIETE rojos y ninguno era el producto.** Respira NO se toco: el usuario eligio C y C era **lo ya publicado**. | s178 | [session-178](./docs/sessions/session-178-la-auditoria-completa.md) |
@@ -378,6 +379,81 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.112.0] -- 2026-09-02 -- fix(sidebar): la geometria fija
+
+Segunda mitad de s180. El usuario prueba en produccion lo que se publico en
+v0.111.0 y reporta **diez cosas**. Tres eran defectos que estaban publicados.
+
+### La decision: GEOMETRIA FIJA
+
+La columna mide lo mismo en un portatil que en un monitor de 1440, con el pie
+anclado abajo y el sobrante al final. Palabras del usuario: «la barra va a
+disponer de una geometria fija independientemente de la resolucion del
+desktop». **Un ritmo que cambia con la pantalla no se puede afinar**, porque
+cada numero vale una cosa distinta en cada equipo.
+
+Antes se probo lo contrario -- repartir el sobrante entre las reglas con
+`margin: auto`-- y hay que decir que **NUNCA REPARTIO NADA**: el espaciador con
+`flex: 1` se comia el sobrante entero (**378 px** a 1030 de alto) porque el
+flex-grow se resuelve antes que los margenes automaticos. Y **el numero estaba
+a la vista en la maqueta**: su variante «aire repartido» daba **455 px** de
+hueco contra los **389** de la que no repartia, o sea MAS. No lo lei.
+
+### Los ajustes, medidos uno a uno
+
+| | Antes | Ahora | Pedido |
+|---|---|---|---|
+| Aire sobre el logo | 31,5 | **27,5** | −12 % |
+| Del logo a su regla | 35,6 | **28,5** | −20 % |
+| Aire sobre «Esta semana» | 19 | **22** | +15 % |
+| Tarjeta de Repetir | 98 px | **117 px** | mas aire entre lineas |
+| Logo (ancho del dibujo) | 216,9 | **173,4** | −20 % |
+
+El ultimo logro pasa a **centrado, peso 400 y tinta secundaria**: el 500 lo
+hacia competir con el nombre de la rutina, que es el unico titulo que deberia
+pesar. Todas las reglas quedan a **14/14** salvo la del logo, corta a proposito.
+
+### El «+» de Agua desaparece
+
+Era un **segundo objetivo** dentro de una celda de 117 px, y ademas **pisaba
+los ocho vasos 17,2 px** -- por eso se veia como un glifo raro encima de ellos.
+Ahora **la celda entera suma el vaso** (decision del usuario entre tres
+opciones) y su etiqueta dice lo que hace, no «Abrir Agua». Es la unica celda
+que ACTUA en vez de navegar.
+
+### Tres defectos que estaban publicados
+
+- **La tarjeta de accion no era clicable entera.** El objetivo eran **74 x 23
+  px** de una tarjeta de 243 x 117: el patron de s174 necesita un `::after`
+  absoluto y **React no crea pseudo-elementos desde un estilo en linea**. Tiene
+  que estar en la hoja, y ademas medirse contra la TARJETA y no contra el `<h4>`.
+- **La miniatura del logro renderizaba a 16,1 px.** El 62 % venia de cuando
+  eran cinco miniaturas diminutas; con el sello a 36 y el 72 %, ahora son 24,5.
+- **«1 dias en ritmo».** El singular va como clave aparte y no como un
+  `n === 1 ? 'dia' : 'dias'`: en ingles la frase entera cambia de forma.
+
+### Y el metodo se cobro una
+
+Al retirar el CSS del «+», el corte **se llevo por delante la regla del
+`::after`** que acababa de arreglar la clicabilidad. **La cazo su propio test**,
+escrito veinte minutos antes, que prueba las CUATRO esquinas y el centro en vez
+de un punto. Cinco minutos en vez de publicarlo roto otra vez.
+
+### El ultimo logro recupera su rotulo
+
+En v0.111.0 bajo al pie por espacio, y el usuario lo reporto: ahi «se entiende
+raro». Era **el mismo problema que el hueco del final** -- al quitarle la
+seccion se quedo sin lo que lo explicaba. Vuelve como seccion compacta (sin
+fecha, sello a 36) en el orden que eligio: **Hoy → Continua → Ultimo logro →
+Esta semana**.
+
+**171/171** (eran 153), con tres tests nuevos: el orden, la clicabilidad de la
+tarjeta y la celda de Agua.
+
+Diario: [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md).
 
 ---
 

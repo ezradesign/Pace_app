@@ -59,7 +59,11 @@ function achMini(id) {
      width/height lo convierte en una caja con la letra pegada arriba a la
      izquierda — se veía diminuta y descolocada. Lo que necesita es cuerpo de
      letra; centrarlo ya lo hace el `placeItems:center` del contenedor. */
-  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '1.4em' };
+  /* s180: el 62 % venia de la rejilla de cinco miniaturas, donde el sello era
+     diminuto. Aqui hay UNO solo y el usuario pidio poder verlo: con el sello a
+     36 px, el 72 % deja el dibujo en ~26 px -- medido, a 62 % se quedaba en
+     16,1 y no se leia. */
+  const estilo = a.glyphSvg ? { width: '72%', height: '72%' } : { fontSize: '1.5em' };
   return {
     title: a.secret ? '?' : a.title,
     nodo: dibuja ? dibuja(a, estilo) : (a.glyph || '✦'),
@@ -119,7 +123,7 @@ function SidebarHoyCelda({ modulo, glifo, color, nombre, valor, unidad, onOpen, 
   );
 }
 
-function SidebarToday({ hoy, onOpen, onAddWater }) {
+function SidebarToday({ hoy, onOpen }) {
   const { t, tn } = useT();
   const gotas = [];
   for (let i = 0; i < hoy.waterGoal; i++) {
@@ -145,19 +149,20 @@ function SidebarToday({ hoy, onOpen, onAddWater }) {
         etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.body') })}
         onOpen={() => onOpen('body')}
       />
-      {/* El «+1» NO puede ser hermano suelto: el grid le daría su propia
-          casilla y la rejilla pasaría de cuatro a cinco. Va envuelto. */}
-      <span data-pace-hoy-agua>
-        <SidebarHoyCelda
-          modulo="water" glifo={<ABDrop />} color="var(--hydrate)"
-          nombre={t('sidebar.today.water')} valor={hoy.waterGlasses}
-          unidad={tn('sidebar.unit.of', { n: hoy.waterGoal })}
-          etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.water') })}
-          onOpen={() => onOpen('water')}
-          extra={<span style={sidebarStyles.gotas}>{gotas}</span>}
-        />
-        <button data-pace-hoy-mas onClick={onAddWater} aria-label={t('sidebar.water.add')} title={t('sidebar.water.add')}>+</button>
-      </span>
+      {/* EL «+» SE FUE (s180, pedido mirandolo). Era un SEGUNDO objetivo dentro
+          de una celda de 117 px y ademas pisaba los ocho vasos 17,2 px. Ahora
+          la celda ENTERA suma el vaso, asi que el «+» sobraba: el objetivo es
+          mucho mayor y no hay dos controles que distinguir.
+          Es la unica celda que ACTUA en vez de navegar, y por eso su etiqueta
+          no dice «Abrir Agua» sino lo que hace. */}
+      <SidebarHoyCelda
+        modulo="water" glifo={<ABDrop />} color="var(--hydrate)"
+        nombre={t('sidebar.today.water')} valor={hoy.waterGlasses}
+        unidad={tn('sidebar.unit.of', { n: hoy.waterGoal })}
+        etiqueta={t('sidebar.water.add')}
+        onOpen={() => onOpen('water')}
+        extra={<span style={sidebarStyles.gotas}>{gotas}</span>}
+      />
     </div>
   );
 }
@@ -260,11 +265,48 @@ function SidebarWeek({ semana, onOpen }) {
         ))}
       </span>
       <span style={{ ...sidebarStyles.semPie, display: 'block' }}>
-        {semana.activeCount
-          ? tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak })
-          : tn('sidebar.week.none', { m: semana.longestStreak })}
+        {/* «1 dias en ritmo» lo vio el usuario en produccion. El singular es
+            una clave aparte y no un `n === 1 ? 'dia' : 'dias'` en el codigo:
+            en ingles la frase entera cambia de forma, y partirla por la
+            palabra obliga a que las dos lenguas compartan gramatica. */}
+        {semana.activeCount === 1
+          ? tn('sidebar.week.rhythm.one', { m: semana.longestStreak })
+          : semana.activeCount
+            ? tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak })
+            : tn('sidebar.week.none', { m: semana.longestStreak })}
         {' '}<span aria-hidden="true">→</span>
       </span>
+    </button>
+  );
+}
+
+/* ============================================================
+   ULTIMO LOGRO — uno, no cinco, y con su ROTULO. Vivio brevemente en el pie
+   por espacio y el usuario lo reporto: ahi «se entiende raro», porque sin el
+   rotulo un titulo suelto al lado de «Apoyar PACE» no dice que es.
+   El glifo sale de `achMini`, que reutiliza `renderGlyph`: un dibujo nuevo
+   entra aqui y en la coleccion a la vez.
+   ============================================================ */
+function SidebarLatestAchievement({ ultimo, onOpen }) {
+  const { t } = useT();
+  if (!ultimo) {
+    return (
+      <div style={sidebarStyles.logroFila} data-pace-sidebar-ultimo="">
+        <span style={{ ...sidebarStyles.logroSello, opacity: 0.4 }}>·</span>
+        <span style={{ ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' }}>{t('sidebar.latest.none')}</span>
+      </div>
+    );
+  }
+  const mini = achMini(ultimo.id);
+  return (
+    <button
+      style={sidebarStyles.logroFila}
+      onClick={onOpen}
+      title={mini.title}
+      data-pace-sidebar-ultimo={ultimo.id}
+    >
+      <span style={sidebarStyles.logroSello}>{mini.nodo}</span>
+      <span style={sidebarStyles.logroTitulo}>{mini.title}</span>
     </button>
   );
 }
@@ -273,31 +315,12 @@ function SidebarWeek({ semana, onOpen }) {
    PIE — «Apoyar PACE» deja de ser un pill de 44 px y pasa a enlace: devuelve
    34 px de la columna más valiosa (44 del botón menos 10 del texto).
    ============================================================ */
-function SidebarFooter({ ultimo, onCollection, onSupport, compact }) {
+function SidebarFooter({ onCollection, onSupport, compact }) {
   const { t } = useT();
-  /* EL ULTIMO LOGRO VIVE AQUI, y no en una seccion propia. El brief pedia
-     enseñar UNO -- y se enseña--, pero medido en la app una seccion con su
-     rotulo, su sello de 38 px y su fecha cuesta ~100 px, y con esos 100 la
-     sidebar no cabe a 1280x720 en cuanto aparece la tarjeta de accion. En el
-     pie el sitio ya estaba pagado: el enlace a la coleccion PASA A SER el
-     logro, con su sello. Es lo que la variante F4 llamaba «el logro se va al
-     pie». Sin fecha: «hace 2 dias» no cabe en una linea de pie y tampoco es
-     lo que se pregunta la persona, que es CUAL fue. */
-  const mini = ultimo ? achMini(ultimo.id) : null;
   return (
     <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: 6 }}>
       <div style={sidebarStyles.pieFila}>
-        <button
-          style={{ ...sidebarStyles.pieEnlace, display: 'flex', alignItems: 'center', gap: 7, textDecoration: 'none' }}
-          onClick={onCollection}
-          title={mini ? mini.title : t('sidebar.collection')}
-          data-pace-sidebar-ultimo={ultimo ? ultimo.id : ''}
-        >
-          {mini ? <span style={sidebarStyles.pieSello}>{mini.nodo}</span> : null}
-          <span style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
-            {mini ? mini.title : t('sidebar.collection')}
-          </span>
-        </button>
+        <button style={sidebarStyles.pieEnlace} onClick={onCollection}>{t('sidebar.collection')}</button>
         <button
           style={sidebarStyles.pieEnlace}
           onClick={onSupport}
@@ -322,5 +345,6 @@ Object.assign(window, {
   sidebarActionView,
   SidebarPrimaryAction,
   SidebarWeek,
+  SidebarLatestAchievement,
   SidebarFooter,
 });

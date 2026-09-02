@@ -178,13 +178,19 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
 
     /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
        su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
-    [data-pace-sidebar] [data-pace-hoy-agua] { position: relative; display: flex; }
-    [data-pace-sidebar] [data-pace-hoy-mas] {
-      position: absolute; left: 50%; transform: translateX(-50%); bottom: -2px;
-      width: 44px; height: 28px; display: grid; place-items: center;
-      color: var(--hydrate); font-size: 16px; border-radius: var(--r-sm);
+    /* LA TARJETA ENTERA ES EL OBJETIVO, y esto NO puede vivir en los estilos
+       en linea: React no crea pseudo-elementos. Sin esta regla el objetivo es
+       solo el titulo -- medido, 74 x 23 px de una tarjeta de 243 x 117, y un
+       click en la mitad de abajo cae en un div. Lo reporto el usuario, y luego
+       un corte de CSS se la llevo por delante: la cazo su test, que prueba las
+       CUATRO esquinas y el centro.
+       El patron es el de s174: el encabezado lleva DENTRO el boton y este se
+       extiende con un '::after' absoluto, para conservar el <h4> en el arbol de
+       accesibilidad. */
+    [data-pace-sidebar] [data-pace-sidebar-accion] h4 button::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
     }
-    [data-pace-sidebar] [data-pace-hoy-mas]:hover { background: var(--hydrate-soft); }
+    [data-pace-sidebar] [data-pace-sidebar-accion]:hover { border-color: var(--line-2); }
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
        ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
@@ -228,11 +234,21 @@ const sidebarStyles = {
     justifyContent: 'center',
     marginLeft: -14,
     marginRight: -14,
+    /* AIRE DEL LOGO, reportado por el usuario y medido antes de tocarlo:
+       tenia 18,9 px por encima del dibujo y 14,9 hasta la regla de abajo --
+       apretado por abajo, que es justo lo que dijo. Con `marginTop: 0` (era
+       -4) y `marginBottom: 8` (era 0) quedan **22,9 y 22,9**, simetricos.
+       El -4 y el 0 venian de igualar el hueco de las tres reglas; eso se
+       conserva, porque lo que cambia es el aire DEL LOGO, no el de la regla. */
+    /* EL LOGO SUBE UN 12 % (pedido mirandolo). El aire sobre el dibujo eran
+       31,6 px = 18 de padding + 13,6 de la holgura dentro de la banda; un 12 %
+       menos son 27,8, y salen de devolver el `marginTop` a -4. El de abajo se
+       queda en 8: ese lado ya estaba bien. */
     marginTop: -4,
-    /* s180: era 4, y ese 4 dejaba la regla de debajo con 14 px de hueco
-       arriba contra los 10 de las otras dos. No era mas gruesa -- estaba
-       mas abajo. A 0 las tres van a 10 / 10 / 10. */
-    marginBottom: 0,
+    /* El 8 baja a 6 como parte del -20 % del hueco hasta la regla de Hoy: ese
+       hueco son TRES sumandos (13,6 de holgura dentro de la banda + este
+       margen + el margen de la regla), y bajar solo uno se quedaba en -8,6 %. */
+    marginBottom: 6,
     minHeight: 96,
   },
   /* s180: `display` sale de aqui a proposito. El recorte del logo vive en la
@@ -240,10 +256,13 @@ const sidebarStyles = {
      ganaria a la regla `display:block` de la hoja -- los estilos en linea
      pisan a la hoja sin necesidad de `!important`. Mismo mordisco que s174
      con el padding en linea del modal. */
-  /* 80 % del ancho de la banda: es la variante A3, la que el usuario eligio
-     mirando las tres. Al 100 % el dibujo salia a 271 px y su banda a 107,8;
-     al 80 % son 216,8 x 86,2 y la banda vuelve a mandarla su min-height. */
-  logo: { width: '80%', minWidth: 0, margin: '0 auto' },
+  /* 64 % del ancho de la banda. Historia corta: el usuario eligio 80 % mirando
+     las tres variantes (A3), y al verlo en su pantalla pidio **un 20 % menos**
+     -- 80 x 0,8 = 64. En numeros: el dibujo pasa de 216,9 x 86,2 a 173,6 x 69,0
+     y, como la banda la manda su `min-height: 96`, el aire interior sube de
+     4,9 a 13,5 px por lado. En movil NO aplica: por debajo de 640 el tope de
+     200 px de s66 gana, y ese no se toca. */
+  logo: { width: '64%', minWidth: 0, margin: '0 auto' },
   toggleFloating: {
     position: 'absolute',
     top: 10,
@@ -328,21 +347,34 @@ const sidebarStyles = {
   /* La tarjeta ENTERA es el objetivo (patron s174: el titulo lleva DENTRO el
      boton y este se extiende con un `::after`). Sin CTA suelto se ahorran
      55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
-  accion:        { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '12px 14px 13px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
-  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 7 },
-  accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.2, position: 'relative', margin: 0 },
+  /* MAS AIRE ENTRE LINEAS, pedido mirandolo: sube el padding vertical y con
+     el `line-height` de sus tres piezas la tarjeta pasa de 98 a ~118 px. */
+  accion:        { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
+  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 },
+  /* SIN `position: relative`: el `::after` del boton se posiciona contra el
+     ancestro posicionado mas cercano, y ese tiene que ser la TARJETA. Con
+     el h4 relativo, el objetivo se quedaba del tamanio del titulo. */
+  accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0 },
   accionBoton:   { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
-  accionMeta:    { fontSize: 11, color: 'var(--ink-3)', marginTop: 3, lineHeight: 1.4 },
-  accionFlecha:  { position: 'absolute', right: 0, bottom: 12, color: 'var(--ink-3)', fontSize: 15 },
+  accionMeta:    { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
+  accionFlecha:  { position: 'absolute', right: 14, bottom: 16, color: 'var(--ink-3)', fontSize: 15 },
 
   semDia:   { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
   semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
   semPunto: { width: 6, height: 6, borderRadius: '50%', background: 'var(--line)' },
   semPie:   { fontSize: 11, color: 'var(--ink-3)', marginTop: 11 },
 
-  /* El sello del ultimo logro, en el PIE. 20 px y no 38: ahi comparte linea
-     con «Apoyar PACE» y tiene que caber sin subir el alto del pie. */
-  pieSello: { width: 20, height: 20, flex: 'none', display: 'grid', placeItems: 'center', color: 'var(--ink-2)' },
+  /* El ultimo logro, en SECCION propia y COMPACTA (L2/L4). El sello va a 28 y
+     no a 38, y no lleva fecha: «hace 2 dias» no es lo que la persona se
+     pregunta -- se pregunta CUAL fue-- y esos dos recortes son los que hacen
+     que la seccion quepa sin sacar nada de sitio. */
+  /* CENTRADO y no a la izquierda, como el resto de la columna -- lo pidio el
+     usuario viendolo junto a «Hoy» y «Esta semana», que ya van centradas. */
+  logroFila:   { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%' },
+  logroSello:  { width: 36, height: 36, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
+  /* MAS FINA Y SIN NEGRITA: el 500 lo hacia competir con el nombre de la
+     rutina de la tarjeta, que es el unico titulo que deberia pesar. */
+  logroTitulo: { fontSize: 12.5, fontWeight: 400, color: 'var(--ink-2)', lineHeight: 1.3, letterSpacing: '0.01em' },
 
   /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
      columna mas valiosa (44 del boton menos 10 del texto). */

@@ -83,7 +83,27 @@ function Sidebar() {
   };
 
   const diaEnBlanco = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes && !hoy.waterGlasses;
-  const sep = { margin: isMob ? '8px 0 10px' : '10px 0 12px' };
+  /* AIRE REPARTIDO (L3/L4). El sobrante se reparte ENTRE las reglas con
+     `margin: auto`, en vez de acumularse al final: a 1030 px de alto el hueco
+     del pie eran **389 px** y la sidebar parecia incompleta.
+     `paddingBottom` en las secciones es el SUELO: con `margin:auto` a solas,
+     en una pantalla justa el sobrante es 0 y las secciones quedarian pegadas
+     a la regla. Asi nunca baja de la separacion de siempre. */
+  /* GEOMETRIA FIJA EN ESCRITORIO (decision del usuario). El aire NO se reparte
+     con la resolucion: la columna mide lo mismo en un portatil que en un
+     monitor de 1440, y lo que sobra se va al final, con el pie anclado abajo.
+     Se probo lo contrario -- repartirlo con `margin: auto`-- y el usuario pidio
+     volver: una barra que cambia de ritmo segun la pantalla no se puede
+     afinar, porque cada numero vale una cosa distinta en cada equipo.
+     Estos son LOS numeros del ritmo, y estan afinados uno a uno sobre medidas:
+       · `sepHoy` es la regla que separa el logo de Hoy. Sube un 20 % respecto
+         a las demas, que es lo que pidio el usuario mirandolo.
+       · `aireSemana` baja «Esta semana» un 15 %, para que quede mas centrada
+         entre sus dos reglas. */
+  const sep = { marginTop: isMob ? 10 : 14, marginBottom: isMob ? 10 : 14 };
+  const sepHoy = { marginTop: isMob ? 7 : 9, marginBottom: isMob ? 10 : 14 };
+  const aireSemana = { paddingTop: isMob ? 6 : 8 };
+  const aire = {};
   const accionPrimero = esCajon();
 
   /* LAS SECCIONES SE COMPONEN Y LOS SEPARADORES VAN ENTRE ELLAS. Colgar el
@@ -92,15 +112,21 @@ function Sidebar() {
      escritorio y ninguna antes de la tarjeta. Con la lista, un bloque que no
      se pinta no deja su regla huérfana, y el orden es lo único que cambia. */
   const seccionHoy = (
-    <div style={sidebarStyles.section} key="hoy">
+    <div style={{ ...sidebarStyles.section, ...aire }} key="hoy">
       <div style={sidebarStyles.sectionHeaderCentro}>
         <Meta>{t('sidebar.today')}</Meta>
         <span style={sidebarStyles.fecha}>{fechaCortaSidebar(lang)}</span>
       </div>
+      {/* AGUA SUMA UN VASO AL PULSARLA, y por eso el «+» desaparece: era un
+          segundo objetivo dentro de una celda de 117 px y ademas pisaba los
+          ocho vasos. Es la unica celda que ACTUA en vez de navegar -- las otras
+          tres abren su modulo-- y eso se dice en su etiqueta. */}
       <SidebarToday
         hoy={hoy}
-        onOpen={(m) => emitir('module', { target: m })}
-        onAddWater={() => { try { addWaterGlass(1); } catch (e) { /* el store manda */ } }}
+        onOpen={(m) => {
+          if (m === 'water') { try { addWaterGlass(1); } catch (e) { /* el store manda */ } return; }
+          emitir('module', { target: m });
+        }}
       />
     </div>
   );
@@ -120,8 +146,25 @@ function Sidebar() {
     ? <p style={sidebarStyles.vacioCopy} key="vacio">{t('sidebar.empty')}</p>
     : null;
 
+  /* EL ULTIMO LOGRO RECUPERA SU ROTULO (s180, tras verlo el usuario en
+     produccion): en el pie, un titulo suelto al lado de «Apoyar PACE» no dice
+     que es -- «se entiende raro», con sus palabras. Vuelve a tener seccion,
+     pero COMPACTA: sin la fecha y con el sello a 28 en vez de 38, que es lo
+     que la maqueta pinto como L2. */
+  const seccionLogro = (
+    <div style={{ ...sidebarStyles.section, ...aire }} key="logro">
+      <div style={sidebarStyles.sectionHeaderCentro}>
+        <Meta>{t('sidebar.latest')}</Meta>
+      </div>
+      <SidebarLatestAchievement
+        ultimo={ultimo}
+        onOpen={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
+      />
+    </div>
+  );
+
   const seccionSemana = (
-    <div style={sidebarStyles.section} key="semana">
+    <div style={{ ...sidebarStyles.section, ...aireSemana }} key="semana">
       <div style={sidebarStyles.sectionHeaderCentro}>
         <Meta>{t('sidebar.week')}</Meta>
       </div>
@@ -135,9 +178,11 @@ function Sidebar() {
      abajo y Hoy es el contexto de la acción.
      Es orden de DOM y no `order` de CSS: s160 midió que el orden visual y el
      de foco tienen que ser el mismo, y `order` los separa. */
+  /* ORDEN, elegido por el usuario mirandolo: Hoy -> Continua -> Ultimo logro
+     -> Esta semana. En movil la accion se adelanta y el resto le sigue. */
   const secciones = (accionPrimero
-    ? [seccionAccion, seccionHoy, seccionVacio, seccionSemana]
-    : [seccionHoy, seccionAccion, seccionVacio, seccionSemana]
+    ? [seccionAccion, seccionHoy, seccionVacio, seccionLogro, seccionSemana]
+    : [seccionHoy, seccionAccion, seccionVacio, seccionLogro, seccionSemana]
   ).filter(Boolean);
 
   return (
@@ -162,19 +207,16 @@ function Sidebar() {
 
       {secciones.map((sec, i) => (
         <React.Fragment key={'s' + i}>
-          <Divider style={sep} />
+          <Divider style={i === 0 ? sepHoy : sep} />
           {sec}
         </React.Fragment>
       ))}
 
-      <div data-pace-sidebar-spacer style={{ flex: 1 }} />
+      {/* El pie se ancla ABAJO y el sobrante queda aqui: es lo que el usuario
+          eligio junto con la geometria fija. */}
+      <div data-pace-sidebar-spacer style={{ flex: 1, minHeight: 14 }} />
 
-      {/* EL ULTIMO LOGRO VA EN EL PIE, no en una sección propia: medido en la
-          app, la sección costaba ~100 px y con ellos la sidebar no cabe a
-          1280x720 en cuanto aparece la tarjeta de acción. Se sigue enseñando
-          UNO, que es lo que pedía el brief. */}
       <SidebarFooter
-        ultimo={ultimo}
         compact={isMob}
         onCollection={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
         onSupport={() => window.dispatchEvent(new CustomEvent('pace:open-support'))}

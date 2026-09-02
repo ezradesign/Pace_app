@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.111.0</title>
+  <title>PACE · Foco · Cuerpo — v0.112.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1571,12 +1571,15 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.water.add': 'Añadir un vaso',
   'sidebar.week': 'Esta semana',
   'sidebar.week.rhythm': '{n} días en ritmo · mejor {m}',
+  'sidebar.week.rhythm.one': '1 día en ritmo · mejor {m}',
   'sidebar.week.none': 'Sin días todavía · mejor {m}',
   'sidebar.week.open': 'Ver la semana en Estadísticas',
   'sidebar.action.continue': 'Continúa',
   'sidebar.action.repeat': 'Repetir',
   'sidebar.action.path.meta': 'Paso {n} de {m}',
   'sidebar.action.repeat.meta': 'Lo último que hiciste',
+  'sidebar.latest': 'Último logro',
+  'sidebar.latest.none': 'Aún no hay ninguno',
   'sidebar.collection': 'Ver la colección',
   'sidebar.support': 'Apoyar PACE',
   'sidebar.empty': 'Tu día empieza en blanco. Lo que hagas se queda aquí.',
@@ -1803,12 +1806,15 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.water.add': 'Add a glass',
   'sidebar.week': 'This week',
   'sidebar.week.rhythm': '{n} days in rhythm · best {m}',
+  'sidebar.week.rhythm.one': '1 day in rhythm · best {m}',
   'sidebar.week.none': 'No days yet · best {m}',
   'sidebar.week.open': 'See the week in Stats',
   'sidebar.action.continue': 'Continue',
   'sidebar.action.repeat': 'Repeat',
   'sidebar.action.path.meta': 'Step {n} of {m}',
   'sidebar.action.repeat.meta': 'The last thing you did',
+  'sidebar.latest': 'Latest badge',
+  'sidebar.latest.none': 'None yet',
   'sidebar.collection': 'See the collection',
   'sidebar.support': 'Support PACE',
   'sidebar.empty': 'Your day starts blank. Whatever you do stays here.',
@@ -4922,7 +4928,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.111.0';
+const PACE_VERSION = 'v0.112.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -13256,13 +13262,19 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
 
     /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
        su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
-    [data-pace-sidebar] [data-pace-hoy-agua] { position: relative; display: flex; }
-    [data-pace-sidebar] [data-pace-hoy-mas] {
-      position: absolute; left: 50%; transform: translateX(-50%); bottom: -2px;
-      width: 44px; height: 28px; display: grid; place-items: center;
-      color: var(--hydrate); font-size: 16px; border-radius: var(--r-sm);
+    /* LA TARJETA ENTERA ES EL OBJETIVO, y esto NO puede vivir en los estilos
+       en linea: React no crea pseudo-elementos. Sin esta regla el objetivo es
+       solo el titulo -- medido, 74 x 23 px de una tarjeta de 243 x 117, y un
+       click en la mitad de abajo cae en un div. Lo reporto el usuario, y luego
+       un corte de CSS se la llevo por delante: la cazo su test, que prueba las
+       CUATRO esquinas y el centro.
+       El patron es el de s174: el encabezado lleva DENTRO el boton y este se
+       extiende con un '::after' absoluto, para conservar el <h4> en el arbol de
+       accesibilidad. */
+    [data-pace-sidebar] [data-pace-sidebar-accion] h4 button::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
     }
-    [data-pace-sidebar] [data-pace-hoy-mas]:hover { background: var(--hydrate-soft); }
+    [data-pace-sidebar] [data-pace-sidebar-accion]:hover { border-color: var(--line-2); }
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
        ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
@@ -13306,11 +13318,21 @@ const sidebarStyles = {
     justifyContent: 'center',
     marginLeft: -14,
     marginRight: -14,
+    /* AIRE DEL LOGO, reportado por el usuario y medido antes de tocarlo:
+       tenia 18,9 px por encima del dibujo y 14,9 hasta la regla de abajo --
+       apretado por abajo, que es justo lo que dijo. Con `marginTop: 0` (era
+       -4) y `marginBottom: 8` (era 0) quedan **22,9 y 22,9**, simetricos.
+       El -4 y el 0 venian de igualar el hueco de las tres reglas; eso se
+       conserva, porque lo que cambia es el aire DEL LOGO, no el de la regla. */
+    /* EL LOGO SUBE UN 12 % (pedido mirandolo). El aire sobre el dibujo eran
+       31,6 px = 18 de padding + 13,6 de la holgura dentro de la banda; un 12 %
+       menos son 27,8, y salen de devolver el `marginTop` a -4. El de abajo se
+       queda en 8: ese lado ya estaba bien. */
     marginTop: -4,
-    /* s180: era 4, y ese 4 dejaba la regla de debajo con 14 px de hueco
-       arriba contra los 10 de las otras dos. No era mas gruesa -- estaba
-       mas abajo. A 0 las tres van a 10 / 10 / 10. */
-    marginBottom: 0,
+    /* El 8 baja a 6 como parte del -20 % del hueco hasta la regla de Hoy: ese
+       hueco son TRES sumandos (13,6 de holgura dentro de la banda + este
+       margen + el margen de la regla), y bajar solo uno se quedaba en -8,6 %. */
+    marginBottom: 6,
     minHeight: 96
   },
   /* s180: `display` sale de aqui a proposito. El recorte del logo vive en la
@@ -13318,10 +13340,13 @@ const sidebarStyles = {
      ganaria a la regla `display:block` de la hoja -- los estilos en linea
      pisan a la hoja sin necesidad de `!important`. Mismo mordisco que s174
      con el padding en linea del modal. */
-  /* 80 % del ancho de la banda: es la variante A3, la que el usuario eligio
-     mirando las tres. Al 100 % el dibujo salia a 271 px y su banda a 107,8;
-     al 80 % son 216,8 x 86,2 y la banda vuelve a mandarla su min-height. */
-  logo: { width: '80%', minWidth: 0, margin: '0 auto' },
+  /* 64 % del ancho de la banda. Historia corta: el usuario eligio 80 % mirando
+     las tres variantes (A3), y al verlo en su pantalla pidio **un 20 % menos**
+     -- 80 x 0,8 = 64. En numeros: el dibujo pasa de 216,9 x 86,2 a 173,6 x 69,0
+     y, como la banda la manda su `min-height: 96`, el aire interior sube de
+     4,9 a 13,5 px por lado. En movil NO aplica: por debajo de 640 el tope de
+     200 px de s66 gana, y ese no se toca. */
+  logo: { width: '64%', minWidth: 0, margin: '0 auto' },
   toggleFloating: {
     position: 'absolute',
     top: 10,
@@ -13406,21 +13431,34 @@ const sidebarStyles = {
   /* La tarjeta ENTERA es el objetivo (patron s174: el titulo lleva DENTRO el
      boton y este se extiende con un `::after`). Sin CTA suelto se ahorran
      55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
-  accion: { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '12px 14px 13px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
-  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 7 },
-  accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.2, position: 'relative', margin: 0 },
+  /* MAS AIRE ENTRE LINEAS, pedido mirandolo: sube el padding vertical y con
+     el `line-height` de sus tres piezas la tarjeta pasa de 98 a ~118 px. */
+  accion: { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
+  accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 },
+  /* SIN `position: relative`: el `::after` del boton se posiciona contra el
+     ancestro posicionado mas cercano, y ese tiene que ser la TARJETA. Con
+     el h4 relativo, el objetivo se quedaba del tamanio del titulo. */
+  accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0 },
   accionBoton: { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
-  accionMeta: { fontSize: 11, color: 'var(--ink-3)', marginTop: 3, lineHeight: 1.4 },
-  accionFlecha: { position: 'absolute', right: 0, bottom: 12, color: 'var(--ink-3)', fontSize: 15 },
+  accionMeta: { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
+  accionFlecha: { position: 'absolute', right: 14, bottom: 16, color: 'var(--ink-3)', fontSize: 15 },
 
   semDia: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
   semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
   semPunto: { width: 6, height: 6, borderRadius: '50%', background: 'var(--line)' },
   semPie: { fontSize: 11, color: 'var(--ink-3)', marginTop: 11 },
 
-  /* El sello del ultimo logro, en el PIE. 20 px y no 38: ahi comparte linea
-     con «Apoyar PACE» y tiene que caber sin subir el alto del pie. */
-  pieSello: { width: 20, height: 20, flex: 'none', display: 'grid', placeItems: 'center', color: 'var(--ink-2)' },
+  /* El ultimo logro, en SECCION propia y COMPACTA (L2/L4). El sello va a 28 y
+     no a 38, y no lleva fecha: «hace 2 dias» no es lo que la persona se
+     pregunta -- se pregunta CUAL fue-- y esos dos recortes son los que hacen
+     que la seccion quepa sin sacar nada de sitio. */
+  /* CENTRADO y no a la izquierda, como el resto de la columna -- lo pidio el
+     usuario viendolo junto a «Hoy» y «Esta semana», que ya van centradas. */
+  logroFila: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%' },
+  logroSello: { width: 36, height: 36, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
+  /* MAS FINA Y SIN NEGRITA: el 500 lo hacia competir con el nombre de la
+     rutina de la tarjeta, que es el unico titulo que deberia pesar. */
+  logroTitulo: { fontSize: 12.5, fontWeight: 400, color: 'var(--ink-2)', lineHeight: 1.3, letterSpacing: '0.01em' },
 
   /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
      columna mas valiosa (44 del boton menos 10 del texto). */
@@ -13678,7 +13716,11 @@ function achMini(id) {
      width/height lo convierte en una caja con la letra pegada arriba a la
      izquierda — se veía diminuta y descolocada. Lo que necesita es cuerpo de
      letra; centrarlo ya lo hace el `placeItems:center` del contenedor. */
-  const estilo = a.glyphSvg ? { width: '62%', height: '62%' } : { fontSize: '1.4em' };
+  /* s180: el 62 % venia de la rejilla de cinco miniaturas, donde el sello era
+     diminuto. Aqui hay UNO solo y el usuario pidio poder verlo: con el sello a
+     36 px, el 72 % deja el dibujo en ~26 px -- medido, a 62 % se quedaba en
+     16,1 y no se leia. */
+  const estilo = a.glyphSvg ? { width: '72%', height: '72%' } : { fontSize: '1.5em' };
   return {
     title: a.secret ? '?' : a.title,
     nodo: dibuja ? dibuja(a, estilo) : a.glyph || '✦'
@@ -13738,7 +13780,7 @@ function SidebarHoyCelda(_ref) {let { modulo, glifo, color, nombre, valor, unida
 
 }
 
-function SidebarToday(_ref2) {let { hoy, onOpen, onAddWater } = _ref2;
+function SidebarToday(_ref2) {let { hoy, onOpen } = _ref2;
   const { t, tn } = useT();
   const gotas = [];
   for (let i = 0; i < hoy.waterGoal; i++) {
@@ -13766,16 +13808,17 @@ function SidebarToday(_ref2) {let { hoy, onOpen, onAddWater } = _ref2;
     ), /*#__PURE__*/
 
 
-    React.createElement("span", { "data-pace-hoy-agua": true }, /*#__PURE__*/
+
+
+
+
     React.createElement(SidebarHoyCelda, {
       modulo: "water", glifo: /*#__PURE__*/React.createElement(ABDrop, null), color: "var(--hydrate)",
       nombre: t('sidebar.today.water'), valor: hoy.waterGlasses,
       unidad: tn('sidebar.unit.of', { n: hoy.waterGoal }),
-      etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.water') }),
+      etiqueta: t('sidebar.water.add'),
       onOpen: () => onOpen('water'),
       extra: /*#__PURE__*/React.createElement("span", { style: sidebarStyles.gotas }, gotas) }
-    ), /*#__PURE__*/
-    React.createElement("button", { "data-pace-hoy-mas": true, onClick: onAddWater, "aria-label": t('sidebar.water.add'), title: t('sidebar.water.add') }, "+")
     )
     ));
 
@@ -13879,6 +13922,12 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
     )
     ), /*#__PURE__*/
     React.createElement("span", { style: { ...sidebarStyles.semPie, display: 'block' } },
+
+
+
+
+    semana.activeCount === 1 ?
+    tn('sidebar.week.rhythm.one', { m: semana.longestStreak }) :
     semana.activeCount ?
     tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak }) :
     tn('sidebar.week.none', { m: semana.longestStreak }),
@@ -13889,34 +13938,46 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
 }
 
 /* ============================================================
+   ULTIMO LOGRO — uno, no cinco, y con su ROTULO. Vivio brevemente en el pie
+   por espacio y el usuario lo reporto: ahi «se entiende raro», porque sin el
+   rotulo un titulo suelto al lado de «Apoyar PACE» no dice que es.
+   El glifo sale de `achMini`, que reutiliza `renderGlyph`: un dibujo nuevo
+   entra aqui y en la coleccion a la vez.
+   ============================================================ */
+function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
+  const { t } = useT();
+  if (!ultimo) {
+    return (/*#__PURE__*/
+      React.createElement("div", { style: sidebarStyles.logroFila, "data-pace-sidebar-ultimo": "" }, /*#__PURE__*/
+      React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.4 } }, "\xB7"), /*#__PURE__*/
+      React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none'))
+      ));
+
+  }
+  const mini = achMini(ultimo.id);
+  return (/*#__PURE__*/
+    React.createElement("button", {
+      style: sidebarStyles.logroFila,
+      onClick: onOpen,
+      title: mini.title,
+      "data-pace-sidebar-ultimo": ultimo.id }, /*#__PURE__*/
+
+    React.createElement("span", { style: sidebarStyles.logroSello }, mini.nodo), /*#__PURE__*/
+    React.createElement("span", { style: sidebarStyles.logroTitulo }, mini.title)
+    ));
+
+}
+
+/* ============================================================
    PIE — «Apoyar PACE» deja de ser un pill de 44 px y pasa a enlace: devuelve
    34 px de la columna más valiosa (44 del botón menos 10 del texto).
    ============================================================ */
-function SidebarFooter(_ref5) {let { ultimo, onCollection, onSupport, compact } = _ref5;
+function SidebarFooter(_ref6) {let { onCollection, onSupport, compact } = _ref6;
   const { t } = useT();
-  /* EL ULTIMO LOGRO VIVE AQUI, y no en una seccion propia. El brief pedia
-     enseñar UNO -- y se enseña--, pero medido en la app una seccion con su
-     rotulo, su sello de 38 px y su fecha cuesta ~100 px, y con esos 100 la
-     sidebar no cabe a 1280x720 en cuanto aparece la tarjeta de accion. En el
-     pie el sitio ya estaba pagado: el enlace a la coleccion PASA A SER el
-     logro, con su sello. Es lo que la variante F4 llamaba «el logro se va al
-     pie». Sin fecha: «hace 2 dias» no cabe en una linea de pie y tampoco es
-     lo que se pregunta la persona, que es CUAL fue. */
-  const mini = ultimo ? achMini(ultimo.id) : null;
   return (/*#__PURE__*/
     React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: 6 } }, /*#__PURE__*/
     React.createElement("div", { style: sidebarStyles.pieFila }, /*#__PURE__*/
-    React.createElement("button", {
-      style: { ...sidebarStyles.pieEnlace, display: 'flex', alignItems: 'center', gap: 7, textDecoration: 'none' },
-      onClick: onCollection,
-      title: mini ? mini.title : t('sidebar.collection'),
-      "data-pace-sidebar-ultimo": ultimo ? ultimo.id : '' },
-
-    mini ? /*#__PURE__*/React.createElement("span", { style: sidebarStyles.pieSello }, mini.nodo) : null, /*#__PURE__*/
-    React.createElement("span", { style: { textDecoration: 'underline', textUnderlineOffset: 3 } },
-    mini ? mini.title : t('sidebar.collection')
-    )
-    ), /*#__PURE__*/
+    React.createElement("button", { style: sidebarStyles.pieEnlace, onClick: onCollection }, t('sidebar.collection')), /*#__PURE__*/
     React.createElement("button", {
       style: sidebarStyles.pieEnlace,
       onClick: onSupport,
@@ -13941,9 +14002,10 @@ Object.assign(window, {
   sidebarActionView,
   SidebarPrimaryAction,
   SidebarWeek,
+  SidebarLatestAchievement,
   SidebarFooter
 });
-;Object.assign(window, { ChevronLeftIcon, achMini, SidebarHoyCelda, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarFooter });
+;Object.assign(window, { ChevronLeftIcon, achMini, SidebarHoyCelda, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarLatestAchievement, SidebarFooter });
 })();
 </script>
   <script>
@@ -14033,7 +14095,27 @@ function Sidebar() {
   };
 
   const diaEnBlanco = !hoy.focusMinutes && !hoy.breatheMinutes && !hoy.bodyMinutes && !hoy.waterGlasses;
-  const sep = { margin: isMob ? '8px 0 10px' : '10px 0 12px' };
+  /* AIRE REPARTIDO (L3/L4). El sobrante se reparte ENTRE las reglas con
+     `margin: auto`, en vez de acumularse al final: a 1030 px de alto el hueco
+     del pie eran **389 px** y la sidebar parecia incompleta.
+     `paddingBottom` en las secciones es el SUELO: con `margin:auto` a solas,
+     en una pantalla justa el sobrante es 0 y las secciones quedarian pegadas
+     a la regla. Asi nunca baja de la separacion de siempre. */
+  /* GEOMETRIA FIJA EN ESCRITORIO (decision del usuario). El aire NO se reparte
+     con la resolucion: la columna mide lo mismo en un portatil que en un
+     monitor de 1440, y lo que sobra se va al final, con el pie anclado abajo.
+     Se probo lo contrario -- repartirlo con `margin: auto`-- y el usuario pidio
+     volver: una barra que cambia de ritmo segun la pantalla no se puede
+     afinar, porque cada numero vale una cosa distinta en cada equipo.
+     Estos son LOS numeros del ritmo, y estan afinados uno a uno sobre medidas:
+       · `sepHoy` es la regla que separa el logo de Hoy. Sube un 20 % respecto
+         a las demas, que es lo que pidio el usuario mirandolo.
+       · `aireSemana` baja «Esta semana» un 15 %, para que quede mas centrada
+         entre sus dos reglas. */
+  const sep = { marginTop: isMob ? 10 : 14, marginBottom: isMob ? 10 : 14 };
+  const sepHoy = { marginTop: isMob ? 7 : 9, marginBottom: isMob ? 10 : 14 };
+  const aireSemana = { paddingTop: isMob ? 6 : 8 };
+  const aire = {};
   const accionPrimero = esCajon();
 
   /* LAS SECCIONES SE COMPONEN Y LOS SEPARADORES VAN ENTRE ELLAS. Colgar el
@@ -14042,15 +14124,21 @@ function Sidebar() {
      escritorio y ninguna antes de la tarjeta. Con la lista, un bloque que no
      se pinta no deja su regla huérfana, y el orden es lo único que cambia. */
   const seccionHoy = /*#__PURE__*/
-  React.createElement("div", { style: sidebarStyles.section, key: "hoy" }, /*#__PURE__*/
+  React.createElement("div", { style: { ...sidebarStyles.section, ...aire }, key: "hoy" }, /*#__PURE__*/
   React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, /*#__PURE__*/
   React.createElement(Meta, null, t('sidebar.today')), /*#__PURE__*/
   React.createElement("span", { style: sidebarStyles.fecha }, fechaCortaSidebar(lang))
   ), /*#__PURE__*/
+
+
+
+
   React.createElement(SidebarToday, {
     hoy: hoy,
-    onOpen: (m) => emitir('module', { target: m }),
-    onAddWater: () => {try {addWaterGlass(1);} catch (e) {/* el store manda */}} }
+    onOpen: (m) => {
+      if (m === 'water') {try {addWaterGlass(1);} catch (e) {/* el store manda */}return;}
+      emitir('module', { target: m });
+    } }
   )
   );
 
@@ -14070,8 +14158,25 @@ function Sidebar() {
   React.createElement("p", { style: sidebarStyles.vacioCopy, key: "vacio" }, t('sidebar.empty')) :
   null;
 
+  /* EL ULTIMO LOGRO RECUPERA SU ROTULO (s180, tras verlo el usuario en
+     produccion): en el pie, un titulo suelto al lado de «Apoyar PACE» no dice
+     que es -- «se entiende raro», con sus palabras. Vuelve a tener seccion,
+     pero COMPACTA: sin la fecha y con el sello a 28 en vez de 38, que es lo
+     que la maqueta pinto como L2. */
+  const seccionLogro = /*#__PURE__*/
+  React.createElement("div", { style: { ...sidebarStyles.section, ...aire }, key: "logro" }, /*#__PURE__*/
+  React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, /*#__PURE__*/
+  React.createElement(Meta, null, t('sidebar.latest'))
+  ), /*#__PURE__*/
+  React.createElement(SidebarLatestAchievement, {
+    ultimo: ultimo,
+    onOpen: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')) }
+  )
+  );
+
+
   const seccionSemana = /*#__PURE__*/
-  React.createElement("div", { style: sidebarStyles.section, key: "semana" }, /*#__PURE__*/
+  React.createElement("div", { style: { ...sidebarStyles.section, ...aireSemana }, key: "semana" }, /*#__PURE__*/
   React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, /*#__PURE__*/
   React.createElement(Meta, null, t('sidebar.week'))
   ), /*#__PURE__*/
@@ -14085,9 +14190,11 @@ function Sidebar() {
      abajo y Hoy es el contexto de la acción.
      Es orden de DOM y no `order` de CSS: s160 midió que el orden visual y el
      de foco tienen que ser el mismo, y `order` los separa. */
+  /* ORDEN, elegido por el usuario mirandolo: Hoy -> Continua -> Ultimo logro
+     -> Esta semana. En movil la accion se adelanta y el resto le sigue. */
   const secciones = (accionPrimero ?
-  [seccionAccion, seccionHoy, seccionVacio, seccionSemana] :
-  [seccionHoy, seccionAccion, seccionVacio, seccionSemana]).
+  [seccionAccion, seccionHoy, seccionVacio, seccionLogro, seccionSemana] :
+  [seccionHoy, seccionAccion, seccionVacio, seccionLogro, seccionSemana]).
   filter(Boolean);
 
   return (/*#__PURE__*/
@@ -14112,19 +14219,16 @@ function Sidebar() {
 
     secciones.map((sec, i) => /*#__PURE__*/
     React.createElement(React.Fragment, { key: 's' + i }, /*#__PURE__*/
-    React.createElement(Divider, { style: sep }),
+    React.createElement(Divider, { style: i === 0 ? sepHoy : sep }),
     sec
     )
     ), /*#__PURE__*/
 
-    React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1 } }), /*#__PURE__*/
 
 
-
-
+    React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1, minHeight: 14 } }), /*#__PURE__*/
 
     React.createElement(SidebarFooter, {
-      ultimo: ultimo,
       compact: isMob,
       onCollection: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')),
       onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
