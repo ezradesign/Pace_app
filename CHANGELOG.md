@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.113.0** | 2026-09-02 | fix(sidebar): **la sidebar encoge entera, y la tarjeta que se amputaba sola** — Cierra el trabajo que s180 dejo sin commitear y resuelve el problema de altura que su handoff dejo ABIERTO, con un diagnostico DISTINTO del que ese handoff daba por bueno. **LOS 747 px DEL HANDOFF ERAN EL SUELO COMPRIMIDO, NO LA ALTURA**: la natural eran **835,9** (dos cuentas independientes: la suma de las piezas menos el chevron, que es absolute, y el primer viewport sin sobrante). **EL SINTOMA NO ERA UNA BARRA DE SCROLL sino la TARJETA quedandose sin texto**: `sidebarStyles.accion` lleva `overflow: hidden`, y eso **APAGA el tamano minimo automatico del flex** -- que solo aplica con `overflow: visible`-- asi que era el UNICO hijo comprimible de doce y absorbia el deficit entero amputandose. **DOS UMBRALES**: por debajo de 836 pierde contenido, y entre 750 y 836 lo pierde **sin barra que avise**. A 714 la tarjeta media **33 px**: rotulo y nada mas. **Y ESTABA PUBLICADO**: HEAD trae la misma linea y desborda **50 px** a 714, mas que el arbol. **SE CONSTRUYO LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA**: apurar el aire bajaba la columna a **700,3** (135,6 px, de los que **56 salian solo de las cuatro reglas**) pero cambiaba las PROPORCIONES. Su instruccion: «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto» ⇒ **la columna se ESCALA entera** con `transform`, misma composicion y solo mas pequena: **1 · 0,926 · 0,822 · 0,708** a 1000/800/714/620, con el pie siempre a 18 px del borde y sin agrandar nunca por encima de su tamano natural. **LA LENTE NO ESTABA EN EL PLAN**: la envoltura mide `100%/escala` de ancho y desbordaba **52 px** en layout, tumbando un guard de scroll lateral que ya existia -- se arreglo el diseno, no el guard. **LOS MINUTOS DE HOY YA COMPARTEN LINEA**: `puntosSesion` devolvia `null` sin sesiones, asi que tres celdas no tenian fila de bolas y Agua si, y con `marginTop: auto` el valor caia al fondo en tres y no en la cuarta. **EL ROJO INTERMITENTE TENIA RAZON Y ERA DEL PRODUCTO**: si las webfonts cargan DESPUES de calcular la escala, el numero queda hecho con la fuente de reserva y **nada lo corrige**. Ademas: regla nueva en el pie y **pill naranja** en «Mis rutinas». **El precio, dicho**: encoger encoge los objetivos tactiles (la semana, de 45 a **37,1 px** a 1280x720; sigue sobre el minimo AA de 24). **Tres mentiras del instrumento nuevas**: `setViewportSize` de Playwright **no emite `resize`**, el `ResizeObserver` no dispara sobre la lente en headless, y fotografie mi propia mutacion. **173/173** (eran 170), 3 tests nuevos y dos troceos por la regla §1. | s181 | [session-181](./docs/sessions/session-181-la-sidebar-que-encoge-entera.md) |
 | **v0.112.0** | 2026-09-02 | fix(sidebar): **la geometria fija, y el corte de CSS que se llevo un arreglo por delante** — Segunda mitad de s180: el usuario prueba la sidebar publicada y reporta diez cosas. **DECIDE GEOMETRIA FIJA EN ESCRITORIO**: la columna mide lo mismo en un portatil que en un monitor de 1440, con el pie anclado abajo. Se habia probado lo contrario -- repartir el aire con `margin: auto`-- y **NUNCA REPARTIO NADA**: el espaciador con `flex: 1` se comia el sobrante (378 px a 1030 de alto) porque el flex-grow va antes que los margenes automaticos, **y el numero estaba a la vista en la maqueta** (la variante «aire repartido» daba 455 px de hueco contra los 389 de la que no repartia) sin que yo lo leyera. **AJUSTES MEDIDOS uno a uno**: aire sobre el logo −12,7 % (31,5 → 27,5), del logo a su regla −19,8 % (35,6 → 28,5), «Esta semana» +15,8 % de aire arriba, la tarjeta de Repetir de 98 a 117 px, el logo un 20 % mas pequenio (216,9 → 173,4 de ancho) y el ultimo logro centrado, en peso 400 y tinta secundaria. **EL «+» DE AGUA DESAPARECE**: era un segundo objetivo en una celda de 117 px **y pisaba los ocho vasos 17,2 px**; ahora la celda entera suma el vaso y su etiqueta dice lo que hace. **TRES DEFECTOS QUE ESTABAN PUBLICADOS**: la tarjeta de accion **no era clicable entera** (el objetivo eran 74 x 23 px de 243 x 117, porque el patron de s174 necesita un `::after` y **React no crea pseudo-elementos desde un estilo en linea**), la miniatura del logro renderizaba a **16,1 px** y la semana decia **«1 dias en ritmo»**. **Y EL METODO SE COBRO UNA**: al retirar el CSS del «+», el corte se llevo por delante la regla del `::after` -- **la cazo su propio test**, escrito veinte minutos antes, probando las cuatro esquinas y el centro. El ultimo logro **recupera su rotulo**: en el pie «se entendia raro», y era el mismo problema que el hueco del final. Orden nuevo: Hoy → Continua → Ultimo logro → Esta semana. **171/171** (eran 153), 3 tests nuevos. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
 | **v0.111.0** | 2026-09-01 | feat(sidebar): **la sidebar como brujula, y el margen transparente que tapaba una compresion** — Primera mitad de un brief largo (sidebar + CTB musical); **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas: que he hecho hoy, que puedo continuar, como va la semana y cual fue mi ultimo logro. **SE APROBO MIRANDOLA** (nueve variantes sobre cajas a medida real) y ahi el usuario eligio: logo al 80 %, Hoy en rejilla 2x2 con glifos y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR** — nunca «prueba esto». **EL LOGO: 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0). Puesto en la banda gastaba **178,3 px de los que 104,9 eran aire**, y de regalo la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** — invisible **porque lo que desbordaba era transparencia**. Se recorta **por CSS y no con un archivo nuevo**: el `<img id="pace-logo-src">` lo leen DOS consumidores y un segundo PNG son ~100 KB de base64 en el artefacto. **LOS GLIFOS NO HUBO QUE DIBUJARLOS**: pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105. El unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS QUE CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable** (`PathRunner` tapa la pantalla y salir llama a `abandonPath()`); el ultimo logro **baja al pie**, porque su seccion costaba ~100 px y con ellos no cabe a 1280x720 con tarjeta; y la celda de Foco **no es un boton** porque no hay nada que abrir. **DOS DEFECTOS MIOS**: el recorte no se aplicaba —los estilos EN LINEA de la imagen ganan a la hoja, el mordisco de s174— y la celda «Respira» **se llamaba igual que el chip de la home**, lo que dejo **15 tests en rojo y ninguno del producto** (arreglado con «Abrir Respira», que ademas es mejor a11y). **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes: a 1536x714 la sidebar vieja ya scrolleaba. Movil sin scroll a 390x844 **y a 320x568**. **169/169** (eran 153), con `tests/sidebar-redesign.spec.js` y 3 mutantes que muerden. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
 | **v0.110.0** | 2026-09-01 | fix(runner): **el runner en movil corto, y un umbral elegido mirando un solo lado** — Cierra el bloque que s178 dejo abierto. **EL BANCO DIJO «CERO» Y SU GUARD PIDIO EL CONTROL POSITIVO**: servido el `index.html` de HEAD en un puerto aparte con sus `fonts/` —sin ellas las metricas de texto son otras y la comparacion no vale— la misma sonda solapaba a **1280x575 (4,7 px)** y **360x640 (26,3 px)**, el numero exacto que el diagnostico habia anotado. **EL UMBRAL ESTABA ELEGIDO MIRANDO UN SOLO LADO**: `max-height: 660` salio del viewport que se miraba (360x640), y ampliado el barrido HEAD solapaba a **375x667 — el iPhone SE/8 — con 7,2 px** y a **360x661 con 10,8**, los dos JUSTO POR ENCIMA del umbral y por tanto sin cubrir; 360x680 sobrevivia por **1,9 px**. Es el mismo error de s177, que declaro 641 cuando el borde real era 575. Sube a **700**, que es el breakpoint que la hoja YA usa. **EL BANCO DIJO ARREGLADO Y EL CENSO LO DESMINTIO** (mide UNA rutina y lo declara): a 360x640 quedaban **5 de 19 rutinas y 7 de 79 pasos**, de 16 y 60. **LA CAUSA REAL**: la pantalla de colocacion pinta `[data-pace-v1-num]` y **no** `-timer`, asi que todos los tramos cortos —**los de s119 en escritorio tambien**— comprimian un elemento que ahi no existe. Con el numero correcto y el nombre fijado a **30 px, el suelo que su propio clamp ya declara**, **ninguna rutina solapa** a 360x640, 375x667 ni 360x600. **Declarado y no arreglado**: por debajo de ~575 sigue solapando — lo unico que queda es el glifo y la fuente unica de s177 **prohibe** encogerlo por CSS. **153/153** (eran 150), 3 tests nuevos calibrados en rojo contra HEAD. | s179 | [session-179](./docs/sessions/session-179-el-runner-en-movil-corto.md) |
@@ -379,6 +380,98 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.113.0] -- 2026-09-02 -- fix(sidebar): la sidebar encoge entera
+
+### El diagnostico que corrige al handoff de s180
+
+`docs/HANDOFF_s180.md` dejaba el problema de altura abierto con este numero:
+«el contenido mide ~747 px y a 1536x714 hace scroll». **Los 747 eran reales pero
+no eran la altura del contenido: eran el suelo con la tarjeta YA aplastada.** La
+natural eran **835,9 px**, y coincidieron dos cuentas independientes -- la suma
+de las piezas menos el chevron (`position: absolute`, no ocupa columna) y el
+primer viewport donde no sobra nada.
+
+### El mecanismo
+
+`sidebarStyles.accion` lleva `overflow: 'hidden'`, y eso **apaga el tamano
+minimo automatico del flex**, que solo se aplica con `overflow: visible`. Los
+doce hijos de la columna tenian `flex-shrink: 1` y `min-height: auto`, y **once
+estaban protegidos por ese minimo; la tarjeta no**. Como su contenido interior no
+se mueve, lo que quedaba por debajo del recorte se **amputaba**.
+
+| viewport | desborde | tarjeta |
+|---|---|---|
+| 714 | 36 px | **33,0** -- solo el rotulo |
+| 750 | 0 | 35,7 |
+| 800 | 0 | 83,1 |
+| 836 | 0 | **117,3** integra |
+
+Entre 750 y 836 el contenido se perdia **sin barra de scroll que avisara**. Y no
+lo introducia el trabajo sin commitear: HEAD trae la misma linea y desborda
+**50 px** a 714, mas que el arbol.
+
+### La solucion la eligio el usuario, tirando la mia
+
+Se construyo la compactacion -- apurar aire hasta **700,3 px** sin quitar
+secciones, 135,6 px de los que **56 salian solo de las cuatro reglas**-- y la
+rechazo al verla: apretar el aire **cambia las proporciones**, las reglas encogen
+y el texto no. Su instruccion, textual: «si hay que hacer a la vez pequenos a
+TODOS los elementos de la sidebar, perfecto».
+
+Asi que la columna **se escala entera**. Misma composicion, solo mas pequena:
+escala **1 / 0,926 / 0,822 / 0,708** a 1000/800/714/620, con el pie terminando
+**siempre a 18 px** del borde. **Nunca agranda**: por encima del tamano natural
+se queda quieta y el sobrante va al espaciador (geometria fija de v0.112.0).
+
+### La lente
+
+La envoltura escalada mide `100%/escala` de ancho, o sea que **desborda 52 px en
+layout** aunque a la vista quepa -- una transformacion no cambia la caja. Ese
+desborde llegaba al `<aside>` y **tumbaba el guard de scroll lateral que ya
+existia**. Se arreglo el diseno y no el guard: una caja intermedia lo absorbe, y
+**solo recorta cuando hay escala de verdad**, para que sin ella el
+comportamiento siga siendo scroll y nunca un recorte mudo.
+
+### Los minutos de Hoy
+
+`puntosSesion` devolvia **`null`** sin sesiones: Foco, Respira y Cuerpo no tenian
+fila de bolas y Agua si, y con `marginTop: auto` el valor caia al fondo en tres
+celdas y una fila mas arriba en la cuarta. Ahora la fila se reserva siempre
+(`minHeight: 7`, el alto exacto de una gota) y los cuatro valores estan a `top`
+**57,6**.
+
+### El rojo intermitente era del producto
+
+Uno de cada tres, y el valor que daba era **exactamente el del arranque**. El
+alto natural depende de las metricas de la fuente, asi que **si las webfonts
+terminan de cargar despues de calcular la escala, el numero queda hecho con la
+fuente de reserva y nada lo corrige** -- el observador vigila la caja, y la caja
+no cambia porque cambien las fuentes. En conexion lenta la sidebar se quedaba mal
+escalada de forma permanente. Se recalcula tambien en `document.fonts.ready`.
+
+### El precio, dicho
+
+**Encoger encoge tambien lo que se pulsa**: el bloque de la semana pasa de 45 px
+a **37,1** a 1280x720. Sigue sobre el minimo de WCAG 2.2 AA (24x24) pero por
+debajo de los 44 que s180 busco a proposito. Lleva su propio aserto.
+
+### Estructura, contra la referencia del usuario
+
+Regla nueva entre «Mis rutinas» y la pill de apoyo, y **pill naranja** en «Mis
+rutinas» (forma de `SupportButton`, color de `--premium`). Una lectura mia
+equivocada de su segunda captura me hizo quitar la regla entre el logo y la
+semana; la tercera la mostraba puesta y se restauro -- y de paso quedo
+comprobado que el `marginBottom` del `logoBar` **depende** de esa regla: sin ella
+el aire de abajo cae a 13,5 contra 25,5 arriba.
+
+### Oficina
+
+Dos troceos por la regla §1: nace `tests/sidebar-altura.spec.js` (el spec llego a
+557) y `app/shell/Sidebar.hoja.jsx` (el support llego a 526). Los dos por una
+costura que el propio archivo ya declaraba.
 
 ---
 

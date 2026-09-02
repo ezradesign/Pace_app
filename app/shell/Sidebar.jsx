@@ -46,6 +46,132 @@ function Sidebar() {
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
 
+  /* ====================================================================
+     LA ESCALA · «que se vea siempre igual, en cualquier resolucion»
+     ====================================================================
+     Decision del usuario (s181), con sus palabras: «si hay que hacer a la vez
+     pequenos a TODOS los elementos de la sidebar, perfecto». Lo que se
+     conserva es la COMPOSICION, no un tamano en pixeles.
+
+     POR QUE UNA TRANSFORMACION Y NO APRETAR EL AIRE: se probo lo segundo y
+     bajaba la columna de 835,9 a 700,3 px, pero para lograrlo cambiaba las
+     PROPORCIONES -- las reglas pasaban de 12 a 5 px de margen mientras el texto
+     seguia igual-- y el usuario lo rechazo mirandolo. Una escala uniforme no
+     cambia ninguna proporcion: es la misma sidebar, mas pequena.
+
+     POR QUE SE MIDE Y NO SE FIJA UNA CONSTANTE: el alto natural depende del
+     contenido (que la tarjeta este o no, el idioma, el titulo del logro).
+     Medirlo se corrige solo; una constante habria que acordarse de tocarla.
+
+     COMO SE MIDE SIN MENTIR Y SIN MUTAR NADA: se suman los hijos con
+     `offsetHeight` + sus margenes, saltando el espaciador. `offsetHeight` es un
+     valor de LAYOUT y las transformaciones no lo tocan -- al contrario que
+     `getBoundingClientRect`, que devuelve la caja YA transformada (trampa de
+     s177). La primera version de esto anulaba el `min-height` con un atributo
+     para poder leer la envoltura entera, y eso invalidaba el layout DOS veces
+     por render; con el Pomodoro corriendo eso es cada segundo.
+
+     Y LA SALVAGUARDA: `data-escalado` solo se pone a 1 cuando de verdad hay
+     escala. Mientras vale 0 la sidebar conserva su `overflow-y: auto` de
+     siempre, asi que si esto no llegara a ejecutarse el resultado seria el
+     comportamiento de hoy -- scroll-- y nunca un recorte mudo. */
+  const escalaRef = React.useRef(null);
+  const ultimaEscalaRef = React.useRef(null);
+
+  React.useLayoutEffect(function () {
+    const caja = escalaRef.current;
+    if (!caja) return;
+    /* La lente es su padre y el aside su abuelo. El alto disponible se le
+       pregunta a la LENTE, que ya viene con el padding del aside descontado
+       por ser su hijo flexible: una resta menos que hacer a mano. */
+    const lente = caja.parentElement;
+    const aside = caja.closest('[data-pace-sidebar]');
+    if (!lente || !aside) return;
+
+    function aplicar(escala) {
+      /* Sin escribir de mas: el navegador invalida el layout con cada cambio de
+         estilo, y este efecto corre en cada render. */
+      if (ultimaEscalaRef.current === escala) return;
+      ultimaEscalaRef.current = escala;
+      caja.style.setProperty('--sb-escala', String(escala));
+      aside.setAttribute('data-escalado', escala < 1 ? '1' : '0');
+    }
+
+    function recalcular() {
+      /* EN MOVIL NO SE ESCALA. El cajon va a pantalla completa con
+         `height: auto` y se dimensiona al contenido: alli el scroll es el
+         comportamiento correcto, no un fallo que tapar. */
+      if (esCajon()) { aplicar(1); return; }
+
+      let natural = 0;
+      const hijos = caja.children;
+      for (let i = 0; i < hijos.length; i++) {
+        const el = hijos[i];
+        if (el.hasAttribute('data-pace-sidebar-spacer')) continue;
+        const st = window.getComputedStyle(el);
+        if (st.position === 'absolute' || st.position === 'fixed') continue;
+        natural += el.offsetHeight
+          + (parseFloat(st.marginTop) || 0)
+          + (parseFloat(st.marginBottom) || 0);
+      }
+
+      const disponible = lente.clientHeight;
+
+      if (!(natural > 0) || !(disponible > 0)) { aplicar(1); return; }
+
+      /* Nunca AGRANDA: por encima de su tamano natural la sidebar se queda como
+         esta y el sobrante se va al espaciador, que es lo que ya hacia. */
+      const escala = Math.min(1, Math.round((disponible / natural) * 10000) / 10000);
+      aplicar(escala);
+    }
+
+    recalcular();
+
+    /* SE OBSERVA LA CAJA, NO LA VENTANA -- y esto no es preferencia de estilo.
+       La primera version solo escuchaba `resize` de `window`, y MEDIDO: al
+       cambiar el viewport desde Playwright (`setViewportSize`) ese evento NO SE
+       DISPARA -- cero eventos con `innerHeight` ya cambiado-- asi que la escala
+       se quedaba clavada en el valor del arranque. Se vio porque la suite daba
+       0,8251 a los seis altos mientras el ratio real iba de 1,17 a 0,71.
+       Si un entorno de verdad hace lo mismo (algunos webviews al recolocar
+       barras), el defecto seria el mismo y silencioso. `ResizeObserver` mira el
+       alto de la LENTE, que es lo que de verdad manda, y se dispara venga de
+       donde venga el cambio. No hay realimentacion: la escala cambia el tamano
+       de la ENVOLTURA, y la lente la dimensiona el flex del aside.
+       El `resize` de ventana se queda como segunda via para el caso de un
+       navegador sin `ResizeObserver`.
+       SIN DEBOUNCE a proposito: con 60 ms la sidebar iba un instante por detras
+       al redimensionar, y el coste real es una lectura de layout que el
+       navegador ya iba a hacer. */
+    let observador = null;
+    if (typeof window.ResizeObserver === 'function') {
+      observador = new window.ResizeObserver(recalcular);
+      observador.observe(lente);
+    }
+    window.addEventListener('resize', recalcular);
+
+    /* Y OTRA VEZ CUANDO LLEGUEN LAS FUENTES. Este no es un remate defensivo:
+       lo destapo un rojo intermitente -- uno de cada tres-- y la causa era del
+       PRODUCTO, no del test. El alto natural depende de las metricas de la
+       fuente, asi que si las webfonts terminan de cargar DESPUES de calcular la
+       escala, el numero se queda hecho con la fuente de reserva. Nada lo
+       corrige: el ResizeObserver mira la lente, cuyo alto no cambia porque
+       cambien las fuentes. En una conexion lenta eso deja la sidebar mal
+       escalada de forma permanente.
+       `document.fonts.ready` es la promesa y es fiable; `document.fonts.check()`
+       NO -- devuelve false con las fuentes ya cargadas (trampa de s180). */
+    let vivo = true;
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+      document.fonts.ready.then(function () { if (vivo) recalcular(); });
+    }
+
+    return function () {
+      vivo = false;
+      window.removeEventListener('resize', recalcular);
+      if (observador) observador.disconnect();
+    };
+  });
+
   /* Colapsado → ocultar TOTALMENTE.
      La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
      (Antes era un rail de 56px con iconos; se quitó por petición del usuario
@@ -68,7 +194,42 @@ function Sidebar() {
     eventos = (snap && Array.isArray(snap.events)) ? snap.events : null;
   } catch (e) { eventos = null; }
 
-  const accion = selectSidebarPrimaryAction(state, { events: eventos });
+  /* Las cuentas de hoy salen de los MISMOS eventos que la tarjeta, y con el
+     dia local que la app escribe. `null` cuando el almacen no puede responder:
+     ahi no se pinta nada, en vez de pintar cero. */
+  const hoyISO = (function () {
+    const d = new Date();
+    const dd = n => (n < 10 ? '0' : '') + n;
+    return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate());
+  })();
+  const cuentas = selectSidebarTodayCounts(eventos, hoyISO);
+
+  /* LA SUGERENCIA REUTILIZA LA REGLA DE LA BIBLIOTECA (`libraryParaAhora`), no
+     una propia: ya rota por dia, ya ordena por duracion y su pozo es «lo que
+     puedes hacer donde estas». Inventar otra habria sido un segundo criterio
+     para la misma pregunta.
+     EL POZO ES CUERPO (Mueve + Estira) Y FILTRADO POR ACCESO: ninguna de esas
+     rutinas lleva `safety`, y el guard central quita las premium bloqueadas,
+     asi que la tarjeta no puede ofrecer algo que no se puede abrir. */
+  const sugerencia = (function () {
+    try {
+      if (typeof libraryParaAhora !== 'function') return null;
+      const todas = [];
+      [window.MOVE_ROUTINES, window.EXTRA_ROUTINES].forEach(function (cat) {
+        Object.keys(cat || {}).forEach(function (g) {
+          ((cat[g] || {}).items || []).forEach(function (r) { todas.push(r); });
+        });
+      });
+      const abiertas = todas.filter(function (r) {
+        if (r.safety) return false;
+        return !window.canAccessRoutine || window.canAccessRoutine(r.id);
+      });
+      const elegidas = libraryParaAhora(abiertas, hoyISO, 1);
+      return (elegidas && elegidas[0] && elegidas[0].id) || null;
+    } catch (e) { return null; }
+  })();
+
+  const accion = selectSidebarPrimaryAction(state, { events: eventos, sugerencia: sugerencia });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive
@@ -100,9 +261,10 @@ function Sidebar() {
          a las demas, que es lo que pidio el usuario mirandolo.
        · `aireSemana` baja «Esta semana» un 15 %, para que quede mas centrada
          entre sus dos reglas. */
-  const sep = { marginTop: isMob ? 10 : 14, marginBottom: isMob ? 10 : 14 };
-  const sepHoy = { marginTop: isMob ? 7 : 9, marginBottom: isMob ? 10 : 14 };
-  const aireSemana = { paddingTop: isMob ? 6 : 8 };
+  const sep = { marginTop: isMob ? 9 : 12, marginBottom: isMob ? 9 : 12 };
+  /* Ya no necesita el +15 % que llevaba cuando iba la ultima: ahora abre la
+     columna y su regla le da el aire. */
+  const aireSemana = {};
   const aire = {};
   const accionPrimero = esCajon();
 
@@ -123,6 +285,7 @@ function Sidebar() {
           tres abren su modulo-- y eso se dice en su etiqueta. */}
       <SidebarToday
         hoy={hoy}
+        cuentas={cuentas}
         onOpen={(m) => {
           if (m === 'water') { try { addWaterGlass(1); } catch (e) { /* el store manda */ } return; }
           emitir('module', { target: m });
@@ -165,9 +328,11 @@ function Sidebar() {
 
   const seccionSemana = (
     <div style={{ ...sidebarStyles.section, ...aireSemana }} key="semana">
-      <div style={sidebarStyles.sectionHeaderCentro}>
-        <Meta>{t('sidebar.week')}</Meta>
-      </div>
+      {/* SIN ROTULO NI FLECHA (idea del usuario): siete puntos con la inicial de
+          cada dia ya SE LEEN como una semana, y el rotulo repetia lo que el
+          dibujo dice. Lo que se pierde es la pista de que abre Estadisticas;
+          se conserva en el `aria-label` del boton y en su hover.
+          El nombre sigue existiendo para quien no ve la pantalla. */}
       <SidebarWeek semana={semana} onOpen={() => emitir('stats')} />
     </div>
   );
@@ -178,19 +343,32 @@ function Sidebar() {
      abajo y Hoy es el contexto de la acción.
      Es orden de DOM y no `order` de CSS: s160 midió que el orden visual y el
      de foco tienen que ser el mismo, y `order` los separa. */
-  /* ORDEN, elegido por el usuario mirandolo: Hoy -> Continua -> Ultimo logro
-     -> Esta semana. En movil la accion se adelanta y el resto le sigue. */
+  /* ORDEN, elegido por el usuario mirandolo: Esta semana -> Hoy -> Continua
+     -> Ultimo logro. En movil la accion se adelanta y el resto le sigue.
+     (El comentario decia otro orden distinto del que compone el array de
+     abajo, y el bueno siempre fue el array: corregido en s181.) */
   const secciones = (accionPrimero
-    ? [seccionAccion, seccionHoy, seccionVacio, seccionLogro, seccionSemana]
-    : [seccionHoy, seccionAccion, seccionVacio, seccionLogro, seccionSemana]
+    ? [seccionAccion, seccionSemana, seccionHoy, seccionVacio, seccionLogro]
+    : [seccionSemana, seccionHoy, seccionAccion, seccionVacio, seccionLogro]
   ).filter(Boolean);
 
   return (
-    <aside style={sidebarStyles.root} data-pace-sidebar>
+    <aside style={sidebarStyles.root} data-pace-sidebar data-escalado="0">
       <button onClick={toggle} style={sidebarStyles.toggleFloating} data-pace-sidebar-toggle title={t('sidebar.collapse.title')} aria-label={t('sidebar.collapse.aria')}>
         <ChevronLeftIcon />
       </button>
 
+      {/* LA COLUMNA ENTERA SE ESCALA PARA CABER (s181, decision del usuario:
+          «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto»).
+          Lo que se conserva no es un tamano sino la COMPOSICION: la sidebar se
+          ve igual en cualquier pantalla, solo que mas pequena donde no cabe.
+          Sustituye a la compactacion que se probo antes -- apurar aire cambiaba
+          las proporciones, y era justo lo que el usuario no queria.
+          EL CHEVRON SE QUEDA FUERA a proposito: es un control, no contenido, y
+          s180 lo fijo en 24 px por WCAG 2.2 AA (2.5.8). Escalarlo lo bajaria de
+          ese minimo en cuanto la pantalla apretara. */}
+      <div data-pace-sidebar-lente>
+      <div data-pace-sidebar-escala ref={escalaRef}>
       {/* LOGO · el área sigue siendo clicable para el easter egg
           "vaca feliz" (10 clicks → secret.cow.click). El recorte del margen
           transparente lo hace la hoja; ver su cabecera. */}
@@ -207,20 +385,30 @@ function Sidebar() {
 
       {secciones.map((sec, i) => (
         <React.Fragment key={'s' + i}>
-          <Divider style={i === 0 ? sepHoy : sep} />
+          {/* TODAS LLEVAN SU REGLA, INCLUIDA LA PRIMERA. Decidido en s180
+              mirandolo, y RECONFIRMADO en s181 contra la referencia que trajo
+              el usuario: entre el logo y la semana va regla. (En s181 llegue a
+              quitarla leyendo mal una captura suya; la siguiente, con su «asi
+              esta perfecto», la mostraba puesta.) El logo mantiene su simetria
+              -- 25,5 px arriba del dibujo y 25,5 hasta esta regla-- y ese
+              numero SE APOYA en el margen de aqui: ver `logoBar`. */}
+          <Divider style={sep} />
           {sec}
         </React.Fragment>
       ))}
 
       {/* El pie se ancla ABAJO y el sobrante queda aqui: es lo que el usuario
           eligio junto con la geometria fija. */}
-      <div data-pace-sidebar-spacer style={{ flex: 1, minHeight: 14 }} />
+      <div data-pace-sidebar-spacer style={{ flex: 1, minHeight: 0 }} />
 
       <SidebarFooter
         compact={isMob}
-        onCollection={() => window.dispatchEvent(new CustomEvent('pace:open-achievements'))}
+        misRutinas={(state.customRoutines || []).length}
+        onMisRutinas={() => emitir('custom')}
         onSupport={() => window.dispatchEvent(new CustomEvent('pace:open-support'))}
       />
+      </div>
+      </div>
     </aside>
   );
 }

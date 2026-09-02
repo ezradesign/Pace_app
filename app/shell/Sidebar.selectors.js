@@ -99,15 +99,55 @@ function selectSidebarLastSession(eventos) {
   };
 }
 
+/* selectSidebarTodayCounts(eventos, hoyISO) -> sesiones de HOY por modulo, o
+   `null` si no se puede saber.
+
+   EL DATO NO ESTA EN `weeklyStats`, que guarda MINUTOS y no cuentas -- no hay
+   ningun contador de sesiones por dia en el estado. Sale de `pace.events.v1`,
+   donde cada `session.completed` lleva su `module` y su `localDay`.
+
+   DEVUELVE `null` Y NO CEROS cuando no hay lista, y la diferencia importa: en
+   `file://` y en Capacitor el adaptador esta inerte y el contenedor viene
+   vacio, asi que pintar «0 sesiones» al lado de «25 min» seria una
+   contradiccion a la vista. Sin dato no se pinta nada; los minutos siguen.
+
+   CUERPO SUMA `move` Y `stretch`, igual que hacen sus minutos: son dos modulos
+   y una sola cifra, como en `weeklyStats.moveMinutes`. */
+function selectSidebarTodayCounts(eventos, hoyISO) {
+  if (!Array.isArray(eventos)) return null;
+  const hoy = typeof hoyISO === 'string' ? hoyISO : null;
+  const n = { focus: 0, breathe: 0, body: 0 };
+  for (let i = 0; i < eventos.length; i++) {
+    const e = eventos[i];
+    if (!e || e.type !== 'session.completed' || !e.payload) continue;
+    if (hoy && e.localDay !== hoy) continue;
+    const m = e.payload.module;
+    if (m === 'focus') n.focus++;
+    else if (m === 'breathe') n.breathe++;
+    else if (m === 'move' || m === 'stretch') n.body++;
+  }
+  return n;
+}
+
 /* selectSidebarPrimaryAction(state, ctx) -> qué ofrece la tarjeta, o null.
    DECISIÓN DE PRODUCTO (s180): la tarjeta solo puede decir CONTINUAR o
    REPETIR, y las dos hablan de algo que la persona YA hizo. No sugiere.
    Si dijera «prueba esto» un día y «continúa» otro en el mismo sitio y con la
    misma pinta, dejaría de ser un sitio fiable y sería una ranura de anuncios.
 
-   Prioridad: 1) Camino en curso · 2) última sesión terminada · 3) nada.
-   Cuando no hay nada, devuelve null y la tarjeta NO SE PINTA -- no se deja un
-   bloque vacío ni un texto de relleno.
+   Prioridad: 1) Camino en curso · 2) última sesión terminada · 3) SUGERENCIA.
+
+   LA TERCERA RAMA ANULA LA DECISIÓN ORIGINAL DE s180, y se dice: la primera
+   versión no sugería nunca, porque el usuario había pedido que la tarjeta no
+   cambiara de identidad. Al usarla decidió lo contrario -- «quiero que la
+   tarjeta vaya cambiando para que tenga más funcionalidades y así no
+   desaparezca si no se ha hecho nada»-- y lo que evita que vuelva el problema
+   que le molestaba es que el RÓTULO cambia de verdad (CONTINÚA / REPETIR /
+   PARA AHORA, cada uno con su color), en vez de que la misma caja diga cosas
+   distintas sin avisar.
+
+   La sugerencia entra POR PARÁMETRO (`ctx.sugerencia`), no se calcula aquí:
+   elegirla exige el catálogo y el guard de acceso, y este archivo es puro.
 
    Las dos prioridades del brief que van delante de estas -- sesión CTB
    interrumpida y CTB recuperable-- NO están aquí porque el runner todavía no
@@ -133,6 +173,9 @@ function selectSidebarPrimaryAction(state, ctx) {
       localDay: last.localDay,
     };
   }
+  if (c.sugerencia) {
+    return { kind: 'suggest', targetId: c.sugerencia };
+  }
   return null;
 }
 
@@ -156,6 +199,7 @@ Object.assign(window, {
   sidebarDayIndex,
   selectSidebarToday,
   selectSidebarWeek,
+  selectSidebarTodayCounts,
   selectSidebarLastSession,
   selectSidebarPrimaryAction,
   selectSidebarLatestAchievement,

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.112.0</title>
+  <title>PACE · Foco · Cuerpo — v0.113.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -266,14 +266,18 @@
        porque Sidebar importa <SupportButton/> en su StatusBar. -->
   <script type="text/babel" src="app/support/SupportModule.jsx"></script>
 
-  <!-- Sidebar troceado en s148 (llegó a 570 ln) y reescrito en s180. Orden
-       estricto:
-         support   (hoja responsive + `sidebarStyles`, que viaja por window
-                    porque el build encierra cada archivo en su IIFE)
+  <!-- Sidebar troceado en s148 (llegó a 570 ln), reescrito en s180 y partido
+       otra vez en s181, cuando `support` pasó de 500 al entrar la geometría de
+       la escala. Orden estricto:
+         hoja      (la hoja CSS inyectada: responsive, rejilla de Hoy, recorte
+                    del logo, lente y envoltura que escala)
+         support   (`sidebarStyles`, que viaja por window porque el build
+                    encierra cada archivo en su IIFE)
          selectors (los cuatro selectores PUROS; s180)
          parts     (las secciones de UI)
          Sidebar   (orquestador)
-       El orquestador consume los tres. -->
+       El orquestador consume los cuatro. -->
+  <script type="text/babel" src="app/shell/Sidebar.hoja.jsx"></script>
   <script type="text/babel" src="app/shell/Sidebar.support.jsx"></script>
   <script type="text/babel" src="app/shell/Sidebar.selectors.js"></script>
   <script type="text/babel" src="app/shell/Sidebar.parts.jsx"></script>

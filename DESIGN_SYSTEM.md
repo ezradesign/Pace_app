@@ -276,6 +276,45 @@ PACE usa un enfoque móvil-primero con **dos breakpoints principales**:
 - **`100vh` + `100dvh`** (fallback + override): usado en `app/main.jsx` raíz y `app/shell/Sidebar.jsx`.
 - **Scroll asimétrico** (sesión 24): home usa `100dvh` puro (4 botones siempre visibles); sidebar usa `min-height: calc(100dvh + 1px)` con `height: auto` para activar auto-hide de la barra del navegador.
 
+### La sidebar se escala entera para caber (s181 · v0.113.0)
+
+**Decisión del usuario:** la sidebar tiene que verse **igual en cualquier
+resolución**; si no cabe, encogen **todos** sus elementos a la vez. Lo que se
+conserva no es un tamaño en píxeles, es la **composición**.
+
+- **Qué NO se hace:** apretar el aire. Se probó —la columna bajaba de 835,9 a
+  700,3 px sin quitar ninguna sección— y se rechazó mirándolo: apretar el aire
+  cambia las **proporciones** (las reglas encogen y el texto no).
+- **Cómo:** `[data-pace-sidebar-escala]` con `transform: scale(var(--sb-escala))`,
+  `transform-origin: top left`, y `width` / `min-height` a
+  `calc(100% / var(--sb-escala))`. Los dos `calc` son obligatorios: **una
+  transformación no cambia la caja de layout**, así que la caja sin escalar tiene
+  que medir lo disponible **dividido entre** el factor.
+- **La lente:** por eso mismo la envoltura desborda en layout (52 px de ancho
+  medidos), y ese desborde muere en `[data-pace-sidebar-lente]`, que sólo recorta
+  cuando hay escala de verdad (`[data-escalado="1"]`). Sin ella el `<aside>`
+  declara scroll lateral.
+- **Nunca agranda.** Por encima del tamaño natural la escala vale 1 y el sobrante
+  va al espaciador, que es la **geometría fija** de v0.112.0.
+- **En móvil no aplica:** por debajo de 768 px el cajón tiene `height: auto` y
+  allí el scroll es correcto por diseño.
+
+| alto de ventana | escala | el pie termina a |
+|---|---|---|
+| 1000 | 1 | 18 px del borde |
+| 800 | 0,926 | 18 px |
+| 714 | 0,822 | 18 px |
+| 620 | 0,708 | 18 px |
+
+**El precio, que se acepta con los ojos abiertos:** los objetivos táctiles
+encogen con todo lo demás. El bloque de la semana pasa de 45 px a **37,1** a
+1280×720 — sobre el mínimo de WCAG 2.2 AA (24×24) pero por debajo de los 44 que
+s180 buscó a propósito. **El chevron de colapsar queda FUERA de la escala** a
+propósito: es un control, no contenido, y s180 lo fijó en 24 px por ese mismo
+criterio.
+
+---
+
 ### Home Desktop ≥769px — composición proporcional y horizonte (s126 · v0.69.0)
 
 > **Ámbito.** Este bloque rige **solo en Desktop (≥769px)** y **sustituye ahí** al modelo

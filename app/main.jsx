@@ -187,7 +187,16 @@ function PaceApp() {
         else if (d.target === 'water') setOpenHydrate(true);
         return;
       }
-      if (d.kind === 'repeat' && d.targetId) {
+      if (d.kind === 'custom') {
+        /* MIS RUTINAS. Con rutinas propias abre la biblioteca de Mueve, que es
+           donde vive su seccion (s93); sin ninguna, abre el CONSTRUCTOR, porque
+           llevar a una lista vacia seria peor que no llevar. */
+        const propias = (getState().customRoutines || []).length;
+        if (propias) setOpenLibrary('move');
+        else setCustomBuilder({ id: null });
+        return;
+      }
+      if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
         /* El módulo se le pregunta al CATÁLOGO, nunca al prefijo del id (s172). */
         const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
         if (b) { handleStartBreathe(b); return; }
