@@ -5,13 +5,15 @@
    con el patrón que el repo ya usa en Foco (`FocusTimer` + `.support` +
    `.parts`):
 
-     · Sidebar.support.jsx  (este) → hoja responsive inyectada + `sidebarStyles`
+     · Sidebar.hoja.jsx            → la hoja CSS inyectada (se separo en s181,
+                                     cuando este archivo paso de 500 lineas)
+     · Sidebar.support.jsx  (este) → `sidebarStyles`, los estilos en linea
      · Sidebar.parts.jsx           → las piezas de UI (Sendero, WeekDots,
                                      miniaturas de logro, StatusBar, chevron)
      · Sidebar.jsx                 → el orquestador y nada más
 
-   Aquí no hay JSX ni componentes: solo la hoja de estilos que se inyecta una
-   vez y el objeto de estilos inline que comparten los tres archivos.
+   Aquí no hay JSX ni componentes: solo el objeto de estilos en línea que
+   comparten los demás archivos. La hoja inyectada se fue a `Sidebar.hoja.jsx`.
 
    POR QUÉ `sidebarStyles` SE EXPONE A window
    ------------------------------------------
@@ -25,189 +27,9 @@
    archivo, así que no depende de quién evalúe antes — que en dev (PACE.html)
    no está garantizado, solo en el compilado.
 
-   ORDEN DE CARGA: este archivo ANTES de `Sidebar.parts.jsx` y de `Sidebar.jsx`.
+   ORDEN DE CARGA: `Sidebar.hoja.jsx` antes que este, y este ANTES de
+   `Sidebar.parts.jsx` y de `Sidebar.jsx`.
    ============================================================ */
-
-/* Inyecta reglas responsive del sidebar una sola vez.
-   Patrón ya usado en FocusTimer para spinners de number input.
-   Mantiene los inline styles intactos y sólo reescribe el layout
-   a partir del breakpoint móvil. */
-if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-responsive-css')) {
-  const s = document.createElement('style');
-  s.id = 'pace-sidebar-responsive-css';
-  s.textContent = `
-    @media (max-width: 768px) {
-      [data-pace-sidebar] {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        /* Alto del drawer fullscreen · SCROLL ASIMÉTRICO (sesión 24, v0.12.7).
-           A diferencia de la home (que usa 100dvh puro para que los 4
-           botones quepan siempre sin scroll), el sidebar FUERZA scroll
-           latente para que el navegador móvil oculte su barra de URL
-           y el contenido real (ritmo + sendero + logros + footer) tenga
-           espacio para respirar. Técnica: min-height 1px por encima
-           del viewport visible. Ese píxel extra activa el detector de
-           scroll del navegador → auto-hide de la barra → el usuario
-           recupera ~56-100px que el drawer aprovecha.
-             - min-height: calc(100dvh + 1px) con fallback 100vh+1px
-               — 1px invisible, no hay artefacto.
-             - height: auto — el drawer se dimensiona al contenido,
-               no al viewport. Sin límites artificiales.
-             - max-height: none — no limitamos arriba. Si el contenido
-               es más largo que el viewport, scroll natural.
-             - overflow-y: auto — red de seguridad para viewports
-               patológicos (landscape muy bajo).
-           Coste conocido: pequeño tirón la primera vez que se abre el
-           drawer (aparece con barra URL visible, el usuario desliza,
-           la barra se recoge, el drawer crece). A partir del segundo
-           uso con la barra ya oculta, se abre directamente expandido. */
-        min-height: calc(100vh + 1px) !important;
-        min-height: calc(100dvh + 1px) !important;
-        height: auto !important;
-        max-height: none !important;
-        z-index: 60 !important;
-        padding: 22px 22px !important;
-        border-right: none !important;
-        overflow-y: auto !important;
-      }
-      /* Chevron de cerrar: hit target ≥44px en móvil, más notorio */
-      [data-pace-sidebar] [data-pace-sidebar-toggle] {
-        top: 14px !important;
-        right: 14px !important;
-        width: 44px !important;
-        height: 44px !important;
-        opacity: 1 !important;
-      }
-      /* Logo bar con un poco menos de altura mínima para que quepa
-         ritmo + sendero + logros + footer sin scroll en móviles medios.
-         Los márgenes negativos se mantienen — el logo respira igual. */
-      [data-pace-sidebar] [data-pace-sidebar-logobar] {
-        min-height: 84px !important;
-      }
-    }
-    /* s63 (v0.28.4): Compactación sidebar en móviles ≤640px.
-       s64 (v0.28.5): márgenes negativos neutralizados para evitar clip lateral.
-       s66 (v0.28.6): eliminado max-height + overflow:hidden que recortaban logo
-       y tagline; logo limitado a max-width 200px con data-pace-sidebar-logo. */
-    @media (max-width: 640px) {
-      [data-pace-sidebar] [data-pace-sidebar-logobar] {
-        /* Márgenes neutralizados + overflow visible para mostrar logo+tagline íntegros */
-        overflow: visible !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        padding: 6px 4px !important;
-      }
-      [data-pace-sidebar] [data-pace-sidebar-logo] {
-        max-width: 200px !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-      }
-      /* Spacer flex:1 oculto: el contenido se apila desde arriba y
-         el espacio sobrante queda al final, antes del footer. */
-      [data-pace-sidebar] [data-pace-sidebar-spacer] {
-        display: none !important;
-      }
-    }
-
-    /* ============================================================
-       s180 · EL RECORTE DEL LOGO, Y POR QUE VA EN CSS
-       ------------------------------------------------------------
-       'app/ui/pace-logo.png' es 716x471 pero su DIBUJO ocupa solo 488x194:
-       medido sobre el canal alfa, hay 85 px transparentes a la izquierda,
-       143 a la derecha, 123 arriba y 154 abajo, y el 93,53 % del lienzo esta
-       a alfa 0. Puesto en la banda de 271 px de la sidebar eso gastaba
-       178,3 px de alto de los que 104,9 eran aire, y ademas la imagen
-       DESBORDABA su banda 13,7 px sin que se notara -- justamente porque lo
-       que desbordaba era transparencia.
-
-       NO se crea un 'pace-logo-sidebar.png' a proposito. El '<img
-       id="pace-logo-src">' lo leen DOS consumidores ('CowLogo.jsx' y
-       'OnboardingScreens.jsx'), asi que cambiarlo de sitio le tocaria el logo
-       al onboarding; y anadir un segundo archivo lo inlinearia otra vez en el
-       artefacto (~100 KB de base64 por un dibujo que se pinta una vez).
-       Recortar por CSS deja el PNG intacto para todo el mundo.
-
-       LA ARITMETICA (si algun dia cambia el PNG, hay que volver a medirla):
-         ancho de la imagen = 716/488            = 146,72 %
-         izquierda          = -85/488            = -17,42 %
-         alto de la caja    = 194/488 del ancho  =  39,75 %
-         arriba: la imagen mide 0,96517 W de alto y hay que subirla
-                 123/471 de eso = 0,25207 W, que sobre una caja de
-                 0,39754 W de alto es                -63,41 %
-       ============================================================ */
-    [data-pace-sidebar] [data-pace-sidebar-logo] {
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 488 / 194;
-      display: block;
-    }
-    /* NECESITA !important, y no es pereza: 'PaceLogoImage' pinta la <img> con
-       width/maxWidth/height EN LINEA, y un estilo en linea gana a la hoja sin
-       que haga falta un !important del otro lado. Medido: sin esto la caja
-       recortaba (107,8 px de alto, correcto) pero el dibujo seguia a 271x178,4,
-       o sea el recorte no hacia nada. Mismo mordisco que s174 con el padding
-       en linea del modal. */
-    [data-pace-sidebar] [data-pace-sidebar-logo] img {
-      position: absolute !important;
-      width: 146.72% !important;
-      max-width: none !important;
-      height: auto !important;
-      left: -17.42% !important;
-      top: -63.41% !important;
-    }
-
-    /* Hoy · rejilla 2x2. Las celdas son BOTONES: abren su modulo. Antes, para
-       ir a Respira habia que salir de la sidebar. */
-    [data-pace-sidebar] [data-pace-hoy] {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
-      /* Sin esto la fila del agua crece con sus ocho vasos y la rejilla queda
-         con filas de 87 y 99 px. Medido en la app, no supuesto. */
-      grid-auto-rows: 1fr;
-    }
-    [data-pace-sidebar] [data-pace-hoy-celda] {
-      border: 1px solid var(--line); border-radius: var(--r-sm);
-      padding: 9px 10px 8px; background: var(--paper);
-      display: flex; flex-direction: column; gap: 5px;
-      min-height: 74px; width: 100%; align-items: center; text-align: center;
-      transition: border-color 180ms, background 180ms;
-    }
-    [data-pace-sidebar] [data-pace-hoy-celda]:hover { border-color: var(--line-2); }
-    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] { background: transparent; }
-    [data-pace-sidebar] [data-pace-hoy-celda][data-cero="1"] [data-pace-hoy-ic] { opacity: 0.3; }
-
-    /* El «+1» de agua NO puede ser hermano suelto de la celda: el grid le daria
-       su propia casilla y la rejilla pasaria de cuatro a cinco. Va envuelto. */
-    /* LA TARJETA ENTERA ES EL OBJETIVO, y esto NO puede vivir en los estilos
-       en linea: React no crea pseudo-elementos. Sin esta regla el objetivo es
-       solo el titulo -- medido, 74 x 23 px de una tarjeta de 243 x 117, y un
-       click en la mitad de abajo cae en un div. Lo reporto el usuario, y luego
-       un corte de CSS se la llevo por delante: la cazo su test, que prueba las
-       CUATRO esquinas y el centro.
-       El patron es el de s174: el encabezado lleva DENTRO el boton y este se
-       extiende con un '::after' absoluto, para conservar el <h4> en el arbol de
-       accesibilidad. */
-    [data-pace-sidebar] [data-pace-sidebar-accion] h4 button::after {
-      content: ''; position: absolute; inset: 0; z-index: 1;
-    }
-    [data-pace-sidebar] [data-pace-sidebar-accion]:hover { border-color: var(--line-2); }
-
-    /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
-       ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
-    [data-pace-sidebar] [data-pace-semana] {
-      display: block; width: 100%; text-align: left;
-      border-radius: var(--r-sm); padding: 6px; margin: -6px;
-    }
-    [data-pace-sidebar] [data-pace-semana]:hover { background: var(--focus-soft); }
-
-    @media (max-width: 640px) {
-      /* El logo ya iba capado a 200 px desde s66; con el recorte eso son
-         200 x 79,5 en vez de los 121 de alto que daba sin tope a 390 px. */
-      [data-pace-sidebar] [data-pace-hoy] { gap: 8px; }
-    }
-  `;
-  document.head.appendChild(s);
-}
 
 const sidebarStyles = {
   root: {
@@ -244,11 +66,27 @@ const sidebarStyles = {
        31,6 px = 18 de padding + 13,6 de la holgura dentro de la banda; un 12 %
        menos son 27,8, y salen de devolver el `marginTop` a -4. El de abajo se
        queda en 8: ese lado ya estaba bien. */
-    marginTop: -4,
-    /* El 8 baja a 6 como parte del -20 % del hueco hasta la regla de Hoy: ese
-       hueco son TRES sumandos (13,6 de holgura dentro de la banda + este
-       margen + el margen de la regla), y bajar solo uno se quedaba en -8,6 %. */
-    marginBottom: 6,
+    /* -6 y no -4: la simetria del logo depende del margen de la regla, y ese
+       bajo de 14 a 12 para que la columna entera quepa en 1536x714. Arriba del
+       dibujo hay 18 de padding − 6 + 13,5 de holgura = 25,5; abajo, 13,5 + 12
+       de la regla = 25,5. Si se vuelve a tocar el ritmo, este numero se
+       recalcula: no es decorativo. */
+    marginTop: -6,
+    /* SIMETRIA DEL LOGO, sin regla debajo (idea del usuario). Arriba del dibujo
+       hay 27,5 px = 18 de padding − 4 de este margen + 13,5 de holgura dentro
+       de la banda. Abajo tiene que dar lo mismo: 13,5 de holgura + 14 = 27,5.
+       Antes eran 43,5 (13,5 + 6 + 9 + la regla + 14), asi que ademas se
+       ahorran 16 px de altura. Con «Esta semana» abriendo la columna, los 27,5
+       de abajo se miden hasta SU REGLA, no hasta un texto. */
+    /* CERO, y el numero sale de una suma: hasta la regla de «Esta semana» hay
+       13,5 de holgura dentro de la banda + este margen + los 12 del margen
+       superior de la regla. Para que de los mismos 25,5 que arriba, este tiene
+       que ser 0.
+       COMPROBADO EN s181: al quitar la regla (por una lectura mia equivocada de
+       una captura) el aire de abajo cayo a 13,5 contra 25,5 arriba, o sea que
+       este numero depende de ESA regla y no es decorativo. Si algun dia se
+       retira de verdad, aqui van 12. */
+    marginBottom: 0,
     minHeight: 96,
   },
   /* s180: `display` sale de aqui a proposito. El recorte del logo vive en la
@@ -340,7 +178,18 @@ const sidebarStyles = {
   hoyUnidad: { fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--ink-3)', marginLeft: 3 },
   hoyValorCero: { color: 'var(--ink-3)', opacity: 0.55 },
 
-  gotas: { display: 'flex', gap: 3, justifyContent: 'center', marginTop: 2 },
+  /* `minHeight` = el alto exacto de una gota (7). Es lo que RESERVA la fila
+     cuando todavia no hay ninguna bola, y sin ella los valores de Foco,
+     Respira y Cuerpo caian 9 px por debajo del de Agua. `alignItems`
+     porque las bolas de sesion miden 4 y las gotas 7: sin el, unas se
+     apoyarian arriba y otras llenarian la fila. */
+  gotas: { display: 'flex', gap: 3, justifyContent: 'center', alignItems: 'center', marginTop: 2, minHeight: 7 },
+  /* LOS PUNTOS DE SESION NO SON LOS VASOS, y por eso no comparten forma. El
+     agua tiene META (8) y sus gotas dicen «vas por 3 de 8»; Foco, Respira y
+     Cuerpo no tienen meta, asi que sus puntos solo CUENTAN. Un circulo lleno
+     donde el agua pone una gota hueca: mismo sitio, dos significados
+     distintos, dibujos distintos. */
+  sesion: { width: 4, height: 4, borderRadius: '50%', flex: 'none' },
   gota:  { width: 5, height: 7, borderRadius: '0 0 50% 50% / 0 0 40% 40%', border: '1px solid var(--hydrate)', opacity: 0.35 },
   gotaOn:{ background: 'var(--hydrate)', opacity: 1 },
 
@@ -349,15 +198,22 @@ const sidebarStyles = {
      55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
   /* MAS AIRE ENTRE LINEAS, pedido mirandolo: sube el padding vertical y con
      el `line-height` de sus tres piezas la tarjeta pasa de 98 a ~118 px. */
-  accion:        { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
+  accion:        { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden', flexShrink: 0 },
   accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 },
   /* SIN `position: relative`: el `::after` del boton se posiciona contra el
      ancestro posicionado mas cercano, y ese tiene que ser la TARJETA. Con
      el h4 relativo, el objetivo se quedaba del tamanio del titulo. */
-  accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0 },
+  /* FILA, no bloque: el titulo y la flecha comparten linea. Antes la flecha
+     iba ABSOLUTA contra el fondo de la tarjeta y caia encima de la meta --
+     medido a 1536x864: **15 px de solape horizontal y 9,3 de vertical**. Con
+     un texto corto no se veia; con uno mas largo, o a otra escala de
+     escritorio, si. Lo reporto el usuario a 1920x1080 con Windows al 125 %, y
+     su apanio (bajar el zoom al 90 %) lo que hacia era justamente subir la
+     flecha a esta linea. */
+  accionTitulo:  { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 },
   accionBoton:   { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
   accionMeta:    { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
-  accionFlecha:  { position: 'absolute', right: 14, bottom: 16, color: 'var(--ink-3)', fontSize: 15 },
+  accionFlecha:  { flex: 'none', color: 'var(--ink-3)', fontSize: 15, lineHeight: 1 },
 
   semDia:   { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
   semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
@@ -370,7 +226,12 @@ const sidebarStyles = {
      que la seccion quepa sin sacar nada de sitio. */
   /* CENTRADO y no a la izquierda, como el resto de la columna -- lo pidio el
      usuario viendolo junto a «Hoy» y «Esta semana», que ya van centradas. */
-  logroFila:   { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%' },
+  /* CAJA como la de Repetir (pedido mirandolo): el logro deja de ser una fila
+     suelta y comparte el lenguaje de la tarjeta de accion -- mismo borde, mismo
+     radio, mismo papel. */
+  logroFila:   { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
+                 border: '1px solid var(--line)', borderRadius: 'var(--r-md)',
+                 padding: '12px 14px', background: 'var(--paper)' },
   logroSello:  { width: 36, height: 36, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
   /* MAS FINA Y SIN NEGRITA: el 500 lo hacia competir con el nombre de la
      rutina de la tarjeta, que es el unico titulo que deberia pesar. */
@@ -379,7 +240,27 @@ const sidebarStyles = {
   /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
      columna mas valiosa (44 del boton menos 10 del texto). */
   pieFila:   { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
+  /* PILL NARANJA (s181, pedido por el usuario). Antes era texto suelto al lado
+     de la pill de apoyo, y las dos filas del pie no se parecian en nada aunque
+     hicieran lo mismo: llevar a otro sitio. Toma la FORMA de `SupportButton`
+     -- mismo radio de pill, mismo padding-- y el color de `--premium`, que es
+     el token del gating y el que ya lleva el sello de dentro. El texto se
+     queda en tinta secundaria: con el borde y el sello ya hay naranja de
+     sobra, y ponerlo tambien en el rotulo lo hacia gritar. */
+  pieMisRutinas: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                   width: '100%', minHeight: 34, fontSize: 11.5, color: 'var(--ink-2)',
+                   padding: '9px 14px', background: 'var(--premium-soft)',
+                   border: '1px solid var(--premium)', borderRadius: 'var(--r-pill)',
+                   cursor: 'pointer', transition: 'background 220ms var(--ease)' },
+  /* La regla del pie: un hilo, no un borde de nadie. Como el pie es una
+     columna con `gap`, un elemento propio se separa solo por los dos
+     lados y no hay que compensar margenes. */
+  pieRegla: { display: 'block', height: 1, background: 'var(--line)' },
   pieEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3 },
+  /* «Ver la coleccion» se muda del pie a la seccion del ultimo logro: es donde
+     significa algo -- al lado del sello del que viene-- y ahi el pie recupera
+     su sitio para la pill de apoyo. */
+  logroEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3, display: 'block', margin: '10px auto 0' },
   pieVer:    { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
 
   vacioCopy: { fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.5, fontStyle: 'italic', fontFamily: 'var(--font-display)', textAlign: 'center', padding: '6px 4px' },

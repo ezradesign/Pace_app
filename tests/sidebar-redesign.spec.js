@@ -9,9 +9,12 @@
    · QUE EL AGUA SOLA NO ENCIENDA EL DÍA. Es el criterio de s69, compartido con
      `YearView` y con la racha. Es la regla más fácil de romper por descuido
      porque el agua SÍ aparece en «Hoy».
-   · QUE LA TARJETA NO SE PINTE SI NO HAY NADA. Decisión del usuario en s180: la
-     tarjeta solo puede decir CONTINUAR o REPETIR, nunca «prueba esto». Sin nada
-     que continuar, no hay tarjeta -- ni bloque vacío ni texto de relleno.
+   · QUE LA TARJETA SIEMPRE DIGA ALGO UTIL. La regla original de s180 --«solo
+     CONTINUAR o REPETIR, nunca prueba esto»-- la ANULO el usuario en la misma
+     s180 tras usarla: la tercera rama es PARA AHORA y reutiliza la regla de la
+     biblioteca, con el pozo filtrado por `safety` y por `canAccessRoutine`.
+     Lo que se vigila es ese FILTRO: la tarjeta no puede meter a nadie en apnea
+     ni prometer una premium que no abre.
    · QUE EL ORDEN CAMBIE CON LA PIEL. En móvil lo accionable va primero (el
      pulgar llega antes a lo que se pulsa); en escritorio va después de Hoy. Y
      que ese orden lo traiga el DOM, no `order` de CSS (s160).
@@ -53,12 +56,18 @@ function sb(page) {
   return page.locator('[data-pace-sidebar]');
 }
 
-/* Clasifica los hijos DIRECTOS de la sidebar. `matches` y no `querySelector`
-   para la tarjeta: el atributo está en ELLA MISMA, y buscar un descendiente la
-   clasificaba como «pie» -- me dio un orden falso una vez. */
+/* Clasifica las secciones de la sidebar en el orden en que estan en el DOM.
+   `matches` y no `querySelector` para la tarjeta: el atributo está en ELLA
+   MISMA, y buscar un descendiente la clasificaba como «pie» -- me dio un orden
+   falso una vez.
+   OJO AL NIVEL (s181): las secciones ya NO son hijas del `<aside>`. Cuelgan de
+   `[data-pace-sidebar-escala]`, la envoltura que se escala para caber en
+   cualquier alto, y esa a su vez de la lente que recorta su desborde. Leyendo
+   los hijos del aside esto devolvia una lista de un solo elemento y CUATRO
+   tests se ponian rojos sin que el producto tuviera nada. */
 function estructura(page) {
   return page.evaluate(() => {
-    const el = document.querySelector('[data-pace-sidebar]');
+    const el = document.querySelector('[data-pace-sidebar-escala]');
     if (!el) return null;
     return [...el.children].map(e => (
       e.matches('[data-pace-sidebar-accion]') ? 'ACCION'
@@ -226,7 +235,14 @@ test('la semana entera es UN objetivo y abre Estadísticas', async ({ page, cont
   const boton = sb(page).locator('[data-pace-semana]');
   await expect(boton).toHaveCount(1);
   /* Siete objetivos de 44 px no caben (7x44 = 308 y el ancho útil son 243), así
-     que el bloque entero es el objetivo. Se comprueba que sea GRANDE. */
+     que el bloque entero es el objetivo. Se comprueba que sea GRANDE.
+     Y SE MIDE A ESCALA 1 (s181). Desde que la sidebar encoge entera para caber,
+     `boundingBox()` devuelve la caja YA ESCALADA: a 1280x720 este boton daba
+     37,1 px y el aserto se ponia rojo sin que el diseno hubiera cambiado. Lo
+     que este test defiende es el DISENO -- que el objetivo sea el bloque y no
+     cada dia-- asi que se mide donde no hay escala. Que la escala no lo hunda
+     por debajo del minimo de WCAG lo vigila `sidebar-altura.spec.js`. */
+  await page.setViewportSize({ width: 1280, height: 1000 });
   const caja = await boton.boundingBox();
   expect(caja.width).toBeGreaterThan(200);
   expect(caja.height).toBeGreaterThan(44);
@@ -238,28 +254,38 @@ test('la semana entera es UN objetivo y abre Estadísticas', async ({ page, cont
    LA ACCIÓN PRINCIPAL
    ========================================================================== */
 
-test('sin nada que continuar NO hay tarjeta, y tampoco su separador', async ({ page, context }) => {
+test('sin nada que continuar, la tarjeta SUGIERE -- y la sugerencia es SEGURA', async ({ page, context }) => {
+  /* ESTO ANULA LA REGLA ORIGINAL DE s180 («si no hay nada, no hay tarjeta»).
+     El usuario la reviso usandola y decidio lo contrario: «quiero que la
+     tarjeta vaya cambiando para que tenga mas funcionalidades y asi no
+     desaparezca si no se ha hecho nada».
+     Lo que este aserto defiende AHORA no es que aparezca -- eso se ve-- sino
+     lo que NO se ve: que lo que ofrece se pueda hacer. Una sugerencia con
+     `safety: true` meteria a alguien en apnea sin haberlo pedido, y una
+     premium bloqueada prometeria algo que no abre. */
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
-  await expect(sb(page).locator('[data-pace-sidebar-accion]')).toHaveCount(0);
+
+  const card = sb(page).locator('[data-pace-sidebar-accion]');
+  await expect(card).toHaveCount(1);
+  await expect(card).toHaveAttribute('data-kind', 'suggest');
+
+  const seguro = await page.evaluate(() => {
+    const t = document.querySelector('[data-pace-sidebar-accion] h4 button').textContent.trim();
+    const todas = [];
+    [window.MOVE_ROUTINES, window.EXTRA_ROUTINES].forEach(cat => {
+      Object.keys(cat || {}).forEach(g => ((cat[g] || {}).items || []).forEach(r => todas.push(r)));
+    });
+    const r = todas.find(x => x.name === t);
+    return r ? { hallada: true, safety: !!r.safety, accesible: !window.canAccessRoutine || window.canAccessRoutine(r.id) } : { hallada: false, titulo: t };
+  });
+  expect(seguro.hallada, 'la sugerencia no sale del catalogo de cuerpo: ' + seguro.titulo).toBe(true);
+  expect(seguro.safety, 'la sugerencia lleva modal de seguridad').toBe(false);
+  expect(seguro.accesible, 'la sugerencia esta bloqueada por premium').toBe(true);
+
+  /* Y no deja reglas huerfanas al cambiar de rama. */
   const orden = await estructura(page);
-  expect(orden).not.toContain('ACCION');
-  /* Ni una regla huérfana: dos seguidas significa que un bloque desapareció y
-     su separador se quedó. */
   expect(orden.filter((x, i) => x === 'regla' && orden[i + 1] === 'regla')).toEqual([]);
-});
-
-test('con una sesión terminada la tarjeta dice REPETIR y nombra la rutina', async ({ page, context }) => {
-  await sembrar(context, ABIERTA);
-  await irAlArtefacto(page);
-  expect(await sembrarSesion(page, 'breathe.box.4', 'breathe')).toBe(1);
-  await page.reload();
-  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
-
-  const tarjeta = sb(page).locator('[data-pace-sidebar-accion]');
-  await expect(tarjeta).toHaveCount(1);
-  await expect(tarjeta).toHaveAttribute('data-kind', 'repeat');
-  await expect(tarjeta).toContainText('Box 4·4·4·4');
 });
 
 test('la tarjeta ENTERA es clicable, no solo su titulo', async ({ page, context }) => {
@@ -298,13 +324,19 @@ test('la tarjeta ENTERA es clicable, no solo su titulo', async ({ page, context 
   await expect(sb(page).locator('[data-pace-sidebar-accion] h4')).toHaveCount(1);
 });
 
-test('la tarjeta NUNCA sugiere: sin historial no ofrece nada', async ({ page, context }) => {
+test('el selector es PURO: la sugerencia entra por parametro, no la elige el', async ({ page, context }) => {
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
   /* El selector es puro: se le puede preguntar directamente. Con estado vacío y
      sin eventos la respuesta es `null`, no una sugerencia. */
+  /* El selector sigue siendo puro: SIN sugerencia inyectada devuelve null. Es
+     el orquestador quien la elige, porque hacerlo exige el catalogo y el guard
+     de acceso. */
   const sinNada = await page.evaluate(() => window.selectSidebarPrimaryAction(getState(), { events: [] }));
   expect(sinNada).toBe(null);
+  const conSugerencia = await page.evaluate(() =>
+    window.selectSidebarPrimaryAction(getState(), { events: [], sugerencia: 'move.neck' }));
+  expect(conSugerencia).toMatchObject({ kind: 'suggest', targetId: 'move.neck' });
 });
 
 /* ==========================================================================
@@ -385,10 +417,11 @@ test('el último logro tiene SECCIÓN con rótulo, y nombra el más reciente', a
   await expect(sb(page).getByRole('button', { name: 'Ver la colección' })).toHaveCount(1);
 });
 
-test('el orden es Hoy · Continúa · Último logro · Esta semana', async ({ page, context }) => {
-  /* Orden elegido por el usuario mirandolo. Se aserta la SECUENCIA entera y no
-     solo un par: mover una seccion sin darse cuenta es exactamente el fallo
-     que este aserto tiene que cazar. */
+test('el orden es Esta semana · Hoy · Continúa · Último logro', async ({ page, context }) => {
+  /* Orden elegido por el usuario mirandolo: «Esta semana» ABRE la columna con
+     sus dos reglas y el ultimo logro CIERRA. Se aserta la SECUENCIA entera y
+     no solo un par: mover una seccion sin darse cuenta es exactamente el
+     fallo que este aserto tiene que cazar -- ya lo cazo una vez. */
   await page.setViewportSize({ width: 1280, height: 900 });
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
@@ -397,7 +430,7 @@ test('el orden es Hoy · Continúa · Último logro · Esta semana', async ({ pa
   await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
 
   const orden = (await estructura(page)).filter(x => x !== 'regla' && x !== 'spacer');
-  expect(orden).toEqual(['logo', 'HOY', 'ACCION', 'LOGRO', 'SEMANA', 'pie']);
+  expect(orden).toEqual(['logo', 'SEMANA', 'HOY', 'ACCION', 'LOGRO', 'pie']);
 });
 
 test('el último logro es el MÁS RECIENTE, no el primero del objeto', async ({ page, context }) => {
@@ -422,7 +455,11 @@ test('en inglés la sidebar dice lo suyo y no se queda con claves crudas', async
   await irAlArtefacto(page);
   const texto = await sb(page).innerText();
   expect(texto).toContain('TODAY');
-  expect(texto).toContain('THIS WEEK');
+  /* «THIS WEEK» ya no se pinta: el rotulo de la semana se retiro y quedan solo
+     los puntos con la inicial de cada dia. El nombre sigue vivo donde importa
+     para quien no ve la pantalla -- el `aria-label` del boton-- y eso es lo
+     que se aserta ahora. */
+  await expect(sb(page).getByRole('button', { name: /week|Stats/i })).toHaveCount(1);
   expect(texto).toMatch(/FOCUS|BREATHE|BODY|WATER/);
   /* Una clave sin traducir se pinta tal cual («sidebar.week.open»): si aparece
      un punto entre dos palabras minúsculas, algo se quedó sin resolver. */

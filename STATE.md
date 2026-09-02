@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.112.0 (s180 — **LA SIDEBAR COMO BRUJULA, Y EL MARGEN TRANSPARENTE QUE TAPABA UNA COMPRESION**. Primera mitad de un brief largo (sidebar + CTB musical): **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas. **SE APROBO MIRANDOLA**, con nueve variantes sobre cajas a medida real, y ahi eligio: logo al **80 %**, Hoy en **rejilla 2x2 con glifos** y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR**. **EL LOGO ERA 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0): gastaba **178,3 px de los que 104,9 eran aire**, y la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** sin que se notara **porque lo que desbordaba era transparencia**. **LOS GLIFOS NO HUBO QUE DIBUJARLOS** — pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105; el unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable**, el ultimo logro **baja al pie** (su seccion costaba ~100 px) y la celda de Foco **no es un boton**. **DOS DEFECTOS MIOS**: el recorte no se aplicaba (los estilos EN LINEA ganan a la hoja, el mordisco de s174) y la celda «Respira» **se llamaba igual que el chip de la home**, con **15 tests en rojo y ninguno del producto**. **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes. **169/169** (eran 153).)
+**Version actual:** v0.113.0 (s181 — **LA SIDEBAR ENCOGE ENTERA, Y LA TARJETA QUE SE AMPUTABA SOLA**. Cierra lo que s180 dejo sin commitear y resuelve su problema de altura ABIERTO, con **otro diagnostico**: los **747 px** del handoff eran el **suelo comprimido**, no la altura -- la natural eran **835,9**-- y el sintoma no era una barra de scroll sino **la tarjeta quedandose sin texto**. `overflow: hidden` **APAGA el tamano minimo automatico del flex**, asi que la tarjeta era el UNICO hijo comprimible de doce y absorbia el deficit entero: a 714 media **33 px**, rotulo y nada dentro. **Dos umbrales**, y entre **750 y 836 perdia contenido SIN barra que avisara**. **Estaba PUBLICADO**: HEAD desborda 50 px a 714, mas que el arbol. **SE CONSTRUYO LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA** -- apurar aire hasta 700,3 px cambiaba las PROPORCIONES-- y eligio la buena: **la columna se ESCALA entera**, misma composicion y solo mas pequena (**1 / 0,926 / 0,822 / 0,708** a 1000/800/714/620, pie siempre a 18 px del borde, sin agrandar nunca). **La lente no estaba en el plan**: la envoltura desbordaba **52 px** en layout y tumbaba un guard de scroll lateral -- se arreglo el diseno, no el guard. **Los minutos de Hoy ya comparten linea** (`puntosSesion` devolvia `null` y tres celdas no tenian fila de bolas). **El rojo intermitente tenia razon y era del PRODUCTO**: si las webfonts cargan despues de calcular la escala, nada la corrige. **El precio, dicho**: los objetivos tactiles encogen (la semana, 45 → **37,1 px** a 1280x720). **173/173** (eran 170).)
 
 ## Red de seguridad -- archivos vivos
 
@@ -26,6 +26,7 @@
 | `app/ui/LibraryShell.jsx` | **LA PANTALLA DE MUEVE Y ESTIRA (s174)**, que son gemelas. Respira NO la usa: se ordena por TIEMPO y no por contexto. **El estado de filtro vive aqui y NO en `pace.state.v2`** —un filtro es una intencion de este momento, no una preferencia— y **se limpia a mano al cerrar**, porque el modal se OCULTA y no se desmonta. **Un grupo vacio PORQUE sus rutinas subieron a «Para ahora» no se pinta**: si se pintara, su linea diria que faltan por el filtro cuando estan dos dedos mas arriba (lo destapo calibrar en rojo). El «Para ahora» de movil va **FUERA de la rejilla**: dentro, un subarbol oculto envenena toda consulta a `.pace-lib-rejilla` | **NUEVO s174 · 199 ln** |
 | `app/ui/SessionPrep.jsx` | **LA PANTALLA DE PREPARACION (s174)**, extraida de `SessionShell.jsx` al pasar aquel de 500 lineas. **Puede llevar el ARTE de la rutina**, y lo DERIVA ella sola de `routine.steps[0]` — los dos runners no le pasan nada, o «que dibujo enseña y de que tamaño» seria una decision escrita en tres sitios. El tamaño sale de `v1GlyphSizeAhora`, **la misma fuente que el circulo del runner**, por eso el relevo no salta. **El circulo va PRIMERO y el rotulo debajo**: con el rotulo encima el dibujo pegaba un salto de **171 px** (escritorio) y **221** (movil) al terminar la cuenta. Respira no se entera: sus rutinas no tienen `steps` | **NUEVO s174 · 137 ln** |
 | `app/ui/library-transition.js` | **LA CAPITULAR VUELA A LA SESION (s174)** — el pago de que la biblioteca no lleve wash. **Aterriza en la CUENTA ATRAS y no en el circulo del runner**, que es lo que el diseño decia: medido, entre los dos hay **dos pantallas y 3.114 ms**, asi que no hay movimiento continuo hasta alli. **Coge la copia VISIBLE de la tarjeta**: «Para ahora» esta dos veces en el DOM y con un `querySelector` a secas **en movil no volaba nada**. Se retira en silencio si falta cualquier pieza, y con `prefers-reduced-motion` no anima — usa la Web Animations API sobre un CLON, que el kill de s160 no toca, por eso comprueba la preferencia a mano | **NUEVO s174 · 133 ln** |
+| `tests/sidebar-altura.spec.js` | **QUE LA SIDEBAR QUEPA ENTERA (nace en s181**, al pasar el spec de redesign de 500 lineas). 3 tests a 1000/836/800/714/660/620: que cabe y **nada se recorta por dentro**, que la composicion de LAYOUT es identica y solo cambia el factor de escala, y que **encoger no hunde los objetivos tactiles** bajo WCAG 2.2 AA (la semana, 45 → 37,1 px). **Calibrados en rojo**, y el orden de los asertos se corrigio calibrando: el primer rojo tiene que nombrar la causa, no el efecto. **Declara lo que NO cubre**: el camino del `ResizeObserver`, que bajo headless no dispara | **v0.113.0** |
 | `tests/biblioteca.spec.js` | **LAS TRES BIBLIOTECAS REDISEÑADAS (s174)**. 7 tests, **7 mutantes y los 7 muerden**. Todo RELACIONAL: **el catalogo se lee de las FUENTES, no de la pagina** — no se puede leer de la pagina (`EXTRA_ROUTINES` y `BREATHE_ROUTINES` son `const` y no cruzan la IIFE), y aunque se pudiera, cruzar la pantalla contra un dato de esa MISMA pantalla no prueba nada. **El reloj va congelado** con `setFixedTime`: «Para ahora» rota por DIA y sin fijarlo hay asertos que muerden un martes y no un miercoles. **Toda consulta filtra por lo VISIBLE**, que costo cuatro medidas equivocadas antes de acotarlo | **NUEVO s174 · 7 tests** |
 | `tests/transicion-biblioteca.spec.js` | **EL VUELO DE LA CAPITULAR (s174)**. 5 tests, **5 mutantes**. El que importa **no dice ninguna cifra**: compara el circulo de la preparacion con el del paso y exige que midan lo mismo **y esten en el mismo sitio** — el tamaño es una decision viva. Vuela **en las dos pieles** (el fallo de movil no lo habria cazado ningun aserto de la biblioteca), con reduced-motion **no anima y aun asi se entra**, y Respira **no se entera**. Dos asertos **pasaban por carrera** y se corrigieron: el vuelo no empieza en el clic sino un frame despues de montarse la preparacion. **Un mutante NO muerde con razon** y esta dicho: la limpieza del clon tiene dos caminos a proposito | **NUEVO s174 · 5 tests** |
 | `tests/eventos-retencion.spec.js` | **LA RETENCION POR CALENDARIO (s174)**, la de `pace.events.v1` — **`tests/retencion.spec.js` es OTRA**, la de la apnea de Respira. 4 tests, **4 mutantes**. El que importa es **«se dispara SOLA en el arranque»**: estar implementada no servia de nada. **Ningun numero de dias vive dentro** (el suelo se lee de `eventsRetentionFloorKey`). Y una leccion del calibrado: **comparar el JSON del contenedor no prueba que no se escriba** —reescribir lo mismo da la misma cadena—, asi que se espia `setItem` con control positivo en la misma prueba | **NUEVO s174 · 4 tests** |
@@ -120,8 +121,9 @@
 | `app/custom/exercise-aliases.js` | `VISUAL_ALIAS` + `resolveVisualId` — identidad visual compartida (visualId) | **NUEVO s110** |
 | `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.72.0** |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable — **solo ORQUESTADOR** desde s148 (compone secciones, no dibuja ninguna ni decide ninguna). **REESCRITO s180**: Hoy · accion · semana · pie. Las secciones se componen en una **lista** y los separadores van **entre** ellas — colgarlos de cada bloque daba dos reglas seguidas al mover la accion de sitio | **v0.112.0** |
-| `app/shell/Sidebar.support.jsx` | Soporte sin UI del sidebar: hoja responsive inyectada + `sidebarStyles`. **`sidebarStyles` viaja por `window`** (un `const` no cruza la IIFE del build; misma solucion que `pathStepStyles`) y se referencia PELADO. **Carga ANTES** de `.parts` y de `Sidebar.jsx` | **NUEVO s148** |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable — **solo ORQUESTADOR** desde s148 (compone secciones, no dibuja ninguna ni decide ninguna). **REESCRITO s180**: semana · Hoy · accion · logro · pie, compuestas en una **lista** con los separadores **entre** ellas. **s181: aqui vive EL CALCULO DE LA ESCALA** — mide el alto natural con `offsetHeight` (LAYOUT, que la transformacion no toca) y lo divide entre el alto de la lente; **nunca agranda**, y se redispara con `ResizeObserver`, `resize` **y `document.fonts.ready`** | **v0.113.0** |
+| `app/shell/Sidebar.hoja.jsx` | **LA HOJA CSS INYECTADA (nace en s181** al pasar `support` de 500 lineas). Responsive del cajon, rejilla de Hoy, recorte del logo, y la geometria de **la lente y la envoltura que escala**. Aqui vive lo que NO puede ir en linea: React no crea pseudo-elementos desde un estilo en linea, no hay media queries en linea, y **un estilo en linea gana a la hoja**. **CUIDADO: todo va dentro de un template literal y un backtick en un comentario ROMPE el archivo** (ha pasado cuatro veces) | **v0.113.0** |
+| `app/shell/Sidebar.support.jsx` | `sidebarStyles`, los estilos EN LINEA (la hoja se fue a `Sidebar.hoja.jsx` en s181). **Viaja por `window`** porque el build encierra cada archivo en su IIFE. **`accion` lleva `flexShrink: 0` desde s181** y no es cosmetico: con `overflow: hidden` un hijo flex pierde su minimo automatico y se come el deficit de la columna amputandose | **v0.113.0** |
 | `app/shell/Sidebar.selectors.js` | **Los cuatro selectores PUROS de la sidebar (s180)** — `selectSidebarToday` · `selectSidebarWeek` · `selectSidebarPrimaryAction` · `selectSidebarLatestAchievement`. **No leen `window`**: los eventos entran POR PARAMETRO, asi que se prueban sin montar el almacen. Aqui vive el criterio de dia activo (foco/respira/cuerpo; **el agua sola NO**) y el indice lunes-primero | **NUEVO s180** |
 | `app/shell/Sidebar.parts.jsx` | Piezas de UI del sidebar. **REESCRITO s180**: `SidebarToday` (rejilla 2x2 con los glifos de `ActivityBar`) · `sidebarActionView` + `SidebarPrimaryAction` · `SidebarWeek` (el bloque ENTERO es un boton) · `SidebarFooter` (lleva el ultimo logro) · `achMini` · `ChevronLeftIcon`. **RETIRADOS**: `SenderoDelDia`, `WeekDots`, `AchievementsPreview` y `StatusBar` | **NUEVO s148 · reescrito s180** |
 | `app/main/_responsive.js` | Hoja responsive global de la app (IIFE que inyecta un `<style>`). **s160: dos cosas nuevas y ninguna es cosmetica** — (1) `transition-property: none` en `[data-pace-dial-fit]` y en sus **cuatro nodos interiores**, que es la condicion para que el motor de geometria pueda MEDIRLOS bajo reduced-motion (leer su fila en DECISIONES); (2) publica **`--pace-skin`** (`movil` global, `escritorio` dentro del `@media (min-width: 769px)`) y **desaparecen los `order`** del bloque de escritorio: el orden lo trae el DOM. **OJO AL EDITAR: ni un backtick dentro del template literal** — ha abortado el build en s139, s156, s157 y s158 | **s160** |
@@ -195,68 +197,64 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s180 implementa la **primera mitad** de un brief largo del usuario (sidebar +
-> sesiones CTB musicales). La sidebar entera, escritorio y movil. **CTB queda
-> FUERA DE v1** -- lo dice el ROADMAP y el usuario lo confirmo al ponerle la
-> contradiccion delante: prototipo si, compromiso no.
+> s181 cierra el trabajo que s180 dejo **sin commitear** y resuelve el problema
+> de altura que su handoff dejo ABIERTO. Publica **v0.113.0**.
 
-- **[EL DISENO SE APROBO MIRANDOLO, Y TRES VECES MIS NUMEROS ERAN PREDICCIONES]**
-  Nueve variantes sobre cajas **a medida real** (243 de contenido, 271 de banda
-  de logo). Predije «Hoy» en 118 px contra 106 y son **85,0 y 84,3** -- la
-  diferencia real es **0,7 px**, asi que entre las dos formas no se elige
-  espacio sino **lectura**. Y el metodo para medir el suelo **mutaba el layout**
-  (`height:auto` + colapsar el espaciador) y devolvia **6 px de mas en las
-  cuatro variantes**, suficiente para voltear un veredicto: cambiado por uno que
-  no toca nada y **estable en tres tomas**.
+- **[EL NUMERO DEL HANDOFF ERA EL SUELO COMPRIMIDO, NO LA ALTURA]** Decia «~747 px
+  y a 1536x714 hace scroll». Los 747 eran reales pero eran **el suelo con la
+  tarjeta ya aplastada**: la altura natural eran **835,9**, y coincidieron dos
+  cuentas independientes -- la suma de las piezas menos el chevron (`absolute`,
+  no ocupa columna) y el primer viewport sin sobrante. Con el numero malo, las
+  tres salidas que ofrecia estaban mal planteadas: «recortar ~33 px» habria
+  quitado la barra de scroll **dejando la tarjeta igual de amputada**.
 
-- **[EL MARGEN TRANSPARENTE TAPABA UNA COMPRESION REAL]** El PNG es 716x471 para
-  un dibujo de **488x194**. La banda tiene `flex-shrink: 1`, pedia 172 px y se
-  renderizaba a **164,7** -- se comprimia **7,3**, con la imagen desbordandola
-  **13,7**, y nadie lo vio en meses **porque lo que desbordaba era
-  transparencia**. Con el recorte al 80 % la banda baja de **164,7 a 96** y el
-  dibujo **crece**.
+- **[EL SINTOMA NO ERA SCROLL: ERA TEXTO AMPUTADO]** `sidebarStyles.accion` lleva
+  `overflow: hidden`, y eso **apaga el tamano minimo automatico del flex** (solo
+  se aplica con `overflow: visible`). De los doce hijos de la columna, **once
+  estaban protegidos y la tarjeta no**, asi que absorbia el deficit entero. Su
+  contenido interior no se mueve al comprimirse, o sea que lo de debajo **se
+  recorta**: a 714 la tarjeta media **33 px**, con «PARA AHORA» y nada dentro.
+  **Dos umbrales**, y el peligroso es el de arriba: entre **750 y 836 perdia
+  contenido SIN barra de scroll que avisara**. Y **estaba publicado** -- HEAD
+  trae la misma linea y desborda 50 px a 714, mas que el arbol.
 
-- **[TRES HALLAZGOS QUE CAMBIAN LO ACORDADO]** La rama **«CONTINUA» de Camino es
-  hoy INALCANZABLE**: `PathRunner` monta overlay a pantalla completa siempre que
-  `paths.current` existe y salir llama a `abandonPath()`, que lo borra. Se
-  conserva escrita y **se declara sin probar**. El **ultimo logro baja al pie**,
-  porque su seccion costaba **~100 px** y con ellos no cabe a 1280x720 en cuanto
-  aparece la tarjeta. Y la **celda de Foco no es un boton**: el timer ES la home.
+- **[CONSTRUI LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA]** Apurar el
+  aire bajaba la columna a **700,3** px sin quitar secciones (135,6, de los que
+  **56 salian solo de las cuatro reglas**). Funcionaba, y aun asi era la
+  respuesta mala: **apretar el aire cambia las proporciones**. Su instruccion:
+  «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto» ⇒ **la
+  columna se escala entera**. Misma composicion, solo mas pequena: **1 / 0,926 /
+  0,822 / 0,708** a 1000/800/714/620, pie siempre a **18 px** del borde, y nunca
+  agranda por encima de su tamano natural.
 
-- **[UN NOMBRE ACCESIBLE DUPLICADO TUMBA LA SUITE]** La celda «Respira» se
-  llamaba igual que el chip de la ActivityBar, asi que
-  `getByRole('button', {name: /^Respira/})` dejo de ser unico: **15 rojos y
-  ninguno del producto**. El arreglo bueno no era tocar los tests -- la etiqueta
-  pasa a **«Abrir Respira»**, que es lo que un boton debe decir (WCAG 2.5.3).
+- **[LA LENTE NO ESTABA EN EL PLAN]** La envoltura escalada mide `100%/escala` de
+  ancho y **desbordaba 52 px en layout** aunque a la vista quepa -- una
+  transformacion no cambia la caja. Ese desborde llegaba al `<aside>` y **tumbaba
+  un guard de scroll lateral que ya existia**. Se arreglo **el diseno y no el
+  guard**: una caja intermedia lo absorbe, y solo recorta cuando hay escala de
+  verdad, para que sin ella el comportamiento siga siendo scroll.
 
-- **[SIETE OBJETIVOS DE 44 PX NO CABEN EN 243]** 7 x 44 = 308. La semana
-  clicable por dias daba objetivos de **30 x 44** y costaba 22 px de alto; el
-  bloque **entero** como un boton da **243 x 59** y cuesta **0**, porque la
-  flecha va dentro de la linea que ya existia.
+- **[EL ROJO INTERMITENTE TENIA RAZON, Y ERA DEL PRODUCTO]** Uno de cada tres, y
+  el valor que daba era **exactamente el del arranque**. El alto natural depende
+  de las metricas de la fuente: **si las webfonts cargan DESPUES de calcular la
+  escala, nada la corrige** -- el observador vigila la caja, y la caja no cambia
+  porque cambien las fuentes. En conexion lenta la sidebar quedaba mal escalada
+  para siempre. Se recalcula tambien en `document.fonts.ready`.
 
-- **[MUTAR LA FUENTE SIN REBUILD NO PRUEBA NADA]** El primer mutante de
-  calibracion no mordio, y no por debilidad del aserto: la suite corre sobre
-  `index.html`. Y sembrar `weeklyStats` o `water` **no basta** -- sin
-  `lastActiveDay` el rollover archiva la semana, y sin las guardas de migracion
-  `_historyRecalculated_v0_28_8` la recalcula desde un historico vacio. **Tres
-  rojos con el mismo sintoma** antes de dar con las dos manos.
+- **[LOS MINUTOS DE HOY YA COMPARTEN LINEA]** `puntosSesion` devolvia **`null`**
+  sin sesiones, asi que tres celdas no tenian fila de bolas y Agua si; con
+  `marginTop: auto` el valor caia al fondo en tres y una fila mas arriba en la
+  cuarta. Reservando la fila (`minHeight: 7`) los cuatro quedan a `top` **57,6**.
 
-- **[LA SEGUNDA MITAD: EL USUARIO PRUEBA Y REPORTA DIEZ COSAS]** (v0.112.0)
-  **Decide GEOMETRIA FIJA en escritorio** -- la columna mide lo mismo en
-  cualquier monitor, con el pie anclado abajo. Se habia probado repartir el
-  aire y **nunca repartio nada**: el espaciador con `flex: 1` se comia los
-  378 px porque el flex-grow va antes que los margenes automaticos, **y el
-  numero estaba a la vista en la maqueta** (455 de hueco contra 389) sin que lo
-  leyera. **Tres defectos estaban PUBLICADOS**: la tarjeta no era clicable
-  entera (74 x 23 px de 243 x 117 -- React no crea pseudo-elementos desde un
-  estilo en linea), la miniatura del logro salia a 16,1 px y la semana decia
-  «1 dias». **El «+» de Agua pisaba los ocho vasos 17,2 px** y se retira: la
-  celda entera suma. **Y el metodo se cobro una**: al quitar ese CSS el corte
-  se llevo la regla del `::after`, y **la cazo su propio test** escrito veinte
-  minutos antes.
+- **[EL PRECIO, DICHO Y MEDIDO]** Encoger encoge tambien lo que se pulsa: el
+  bloque de la semana pasa de 45 px a **37,1** a 1280x720. Sigue sobre el minimo
+  de WCAG 2.2 AA (24x24) pero por debajo de los 44 que s180 busco a proposito.
+  Lleva su propio aserto.
 
-> Diario con las siete mentiras del instrumento:
-> [`docs/sessions/session-180-la-sidebar-como-brujula.md`](docs/sessions/session-180-la-sidebar-como-brujula.md).
+> Diario con las siete mentiras del instrumento -- incluida **fotografiar mi
+> propia mutacion** y un control positivo mal disenado (120 equis son una palabra
+> impartible):
+> [`docs/sessions/session-181-la-sidebar-que-encoge-entera.md`](docs/sessions/session-181-la-sidebar-que-encoge-entera.md).
 
 
 ### Diferido (documentado, NO ejecutado)
@@ -546,6 +544,20 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 
 ## Proxima sesion -- **la decide el usuario**
 
+> **LO PRIMERO: EL MOVIL DE LA SIDEBAR.** Lo aplazo el usuario a proposito («no,
+> despues de commitear») y **nadie lo ha mirado a tamano real desde el rediseno
+> de s180**. La escala de s181 esta DESACTIVADA por debajo de 768 px a proposito
+> -- el cajon tiene `height: auto` y alli el scroll es correcto por diseno-- pero
+> eso es una decision, no una comprobacion. Ojo a un cambio que si le llega: el
+> `marginTop` del `logoBar` paso de -6 a -7.
+
+> Y dos cosas de la sidebar que el usuario dejo «asi de momento»:
+> la **pill naranja de «Mis rutinas» es lo mas llamativo de la columna** (fondo
+> tintado + borde a plena fuerza; quitarle el fondo la calmaria), y de su maqueta
+> **no se copiaron dos cosas** porque aviso de que algun elemento podia no estar
+> bien colocado: en su imagen **no aparece el lema** y **«Ver la coleccion» va a
+> la derecha**.
+
 > s180 desplazo la cola que s178 habia elegido, **por decision suya y sin perderla**.
 
 1. **La cola de s178, intacta**: ejercicios de oficina que HOY NO EXISTEN en el
@@ -620,6 +632,10 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **LA SIDEBAR SE ESCALA ENTERA PARA CABER: se AFINA la geometria fija de v0.112.0** (s181)
+- **`overflow: hidden` APAGA el tamano minimo automatico del flex, y eso convierte a un hijo en el amortiguador de su columna** (s181)
+- **Una fila de adorno que solo existe a veces DESALINEA la rejilla: se reserva siempre** (s181)
+- **Playwright NO emite `resize` al cambiar el viewport, y el `ResizeObserver` tampoco dispara en headless** (s181)
 - **La tarjeta de la sidebar solo puede decir CONTINUAR o REPETIR: NUNCA sugiere** (s180)
 - **El recorte del logo va en CSS y necesita `!important`, porque un estilo EN LINEA gana a la hoja** (s180)
 - **Siete objetivos tactiles de 44 px NO CABEN en 243: la semana entera es UN boton** (s180)

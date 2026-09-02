@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.112.0</title>
+  <title>PACE · Foco · Cuerpo — v0.113.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1578,6 +1578,9 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.action.repeat': 'Repetir',
   'sidebar.action.path.meta': 'Paso {n} de {m}',
   'sidebar.action.repeat.meta': 'Lo último que hiciste',
+  'sidebar.action.now': 'Para ahora',
+  'sidebar.action.now.meta': 'Cabe donde estás',
+  'sidebar.mine': 'Mis rutinas',
   'sidebar.latest': 'Último logro',
   'sidebar.latest.none': 'Aún no hay ninguno',
   'sidebar.collection': 'Ver la colección',
@@ -1813,6 +1816,9 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.action.repeat': 'Repeat',
   'sidebar.action.path.meta': 'Step {n} of {m}',
   'sidebar.action.repeat.meta': 'The last thing you did',
+  'sidebar.action.now': 'Right now',
+  'sidebar.action.now.meta': 'Fits where you are',
+  'sidebar.mine': 'My routines',
   'sidebar.latest': 'Latest badge',
   'sidebar.latest.none': 'None yet',
   'sidebar.collection': 'See the collection',
@@ -4928,7 +4934,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.112.0';
+const PACE_VERSION = 'v0.113.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -13072,45 +13078,45 @@ Object.assign(window, {
 })();
 </script>
 
-  <!-- Sidebar troceado en s148 (llegó a 570 ln) y reescrito en s180. Orden
-       estricto:
-         support   (hoja responsive + `sidebarStyles`, que viaja por window
-                    porque el build encierra cada archivo en su IIFE)
+  <!-- Sidebar troceado en s148 (llegó a 570 ln), reescrito en s180 y partido
+       otra vez en s181, cuando `support` pasó de 500 al entrar la geometría de
+       la escala. Orden estricto:
+         hoja      (la hoja CSS inyectada: responsive, rejilla de Hoy, recorte
+                    del logo, lente y envoltura que escala)
+         support   (`sidebarStyles`, que viaja por window porque el build
+                    encierra cada archivo en su IIFE)
          selectors (los cuatro selectores PUROS; s180)
          parts     (las secciones de UI)
          Sidebar   (orquestador)
-       El orquestador consume los tres. -->
+       El orquestador consume los cuatro. -->
   <script>
 ;(function () {
-/* PACE · Soporte sin UI del Sidebar — extraído de `Sidebar.jsx` en s148
-   ============================================================
-   `Sidebar.jsx` llegó a 570 líneas (regla nº 1 de CLAUDE.md: < 500) y crecía
-   sola: la tabla de deuda la anotaba en 541 y ya iba por 570. Se parte en tres
-   con el patrón que el repo ya usa en Foco (`FocusTimer` + `.support` +
-   `.parts`):
+/* PACE · la HOJA de estilos del Sidebar — extraída de `Sidebar.support.jsx` en s181
+   ==================================================================
+   `Sidebar.support.jsx` llegó a 526 líneas (regla nº 1 de CLAUDE.md: < 500) al
+   entrar la geometría de la escala de s181, y el `verify` lo cazó. El corte NO
+   es por kilometraje: el archivo llevaba DOS cosas que su propia cabecera ya
+   nombraba por separado -- la hoja CSS que se inyecta una vez y el objeto de
+   estilos en línea-- y son de naturaleza distinta.
 
-     · Sidebar.support.jsx  (este) → hoja responsive inyectada + `sidebarStyles`
-     · Sidebar.parts.jsx           → las piezas de UI (Sendero, WeekDots,
-                                     miniaturas de logro, StatusBar, chevron)
-     · Sidebar.jsx                 → el orquestador y nada más
+     · Sidebar.hoja.jsx     (este) → la hoja inyectada: responsive, la rejilla
+                                     de Hoy, el recorte del logo, la lente y la
+                                     envoltura que escala
+     · Sidebar.support.jsx         → `sidebarStyles`, los estilos en línea
+     · Sidebar.selectors.js        → los selectores puros
+     · Sidebar.parts.jsx           → las piezas de UI
+     · Sidebar.jsx                 → el orquestador
 
-   Aquí no hay JSX ni componentes: solo la hoja de estilos que se inyecta una
-   vez y el objeto de estilos inline que comparten los tres archivos.
+   AQUI VIVE LO QUE NO PUEDE IR EN LINEA, y no es una preferencia: React no crea
+   pseudo-elementos desde un estilo en línea (el `::after` que hace clicable la
+   tarjeta entera), las media queries no existen en línea, y un estilo en línea
+   GANA a la hoja sin `!important` -- por eso el recorte del logo lo lleva.
 
-   POR QUÉ `sidebarStyles` SE EXPONE A window
-   ------------------------------------------
-   Es un `const`, y en el artefacto compilado cada archivo va envuelto en su
-   propia IIFE: un `const` de este archivo NO lo ve `Sidebar.parts.jsx`. El
-   build solo re-expone automáticamente `function` y `var` top-level. Así que
-   se publica a mano, que es la misma solución que `window.pathStepStyles`
-   (decisión s80) para los estilos compartidos entre los Steps de Camino.
-   Los consumidores lo referencian PELADO (`sidebarStyles.root`), no
-   `window.sidebarStyles`: la resolución ocurre al RENDERIZAR, no al evaluar el
-   archivo, así que no depende de quién evalúe antes — que en dev (PACE.html)
-   no está garantizado, solo en el compilado.
+   CUIDADO AL EDITAR: todo esto vive dentro de un template literal, así que un
+   backtick en un comentario ROMPE el archivo. Ha pasado cuatro veces (s180 tres,
+   s181 una) y siempre lo caza el `verify` como error de sintaxis.
 
-   ORDEN DE CARGA: este archivo ANTES de `Sidebar.parts.jsx` y de `Sidebar.jsx`.
-   ============================================================ */
+   ORDEN DE CARGA: antes que `Sidebar.support.jsx`. */
 
 /* Inyecta reglas responsive del sidebar una sola vez.
    Patrón ya usado en FocusTimer para spinners de number input.
@@ -13278,11 +13284,76 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
 
     /* La semana entera es UN objetivo. Siete de 44 px no caben: 7x44 = 308 y el
        ancho util son 243. Asi el objetivo pasa a 243 x ~59 y cuesta 0 px. */
+    /* SIN ROTULO, EL BOTON TIENE QUE PONER SU PROPIO ALTO. La fila de puntos
+       mide 21 px y el minimo tactil son 44: el padding de 12 lo sube a 45 sin
+       anadir nada visible. Antes ese alto lo daba el rotulo de la seccion, que
+       se retiro. */
     [data-pace-sidebar] [data-pace-semana] {
       display: block; width: 100%; text-align: left;
-      border-radius: var(--r-sm); padding: 6px; margin: -6px;
+      border-radius: var(--r-sm); padding: 12px 6px; margin: -12px -6px;
     }
     [data-pace-sidebar] [data-pace-semana]:hover { background: var(--focus-soft); }
+
+    /* LA ENVOLTURA QUE SE ESCALA (s181). La sidebar se ve IGUAL en cualquier
+       resolucion: cuando no cabe, encoge entera en vez de recolocarse. El
+       factor lo calcula y lo escribe Sidebar.jsx en --sb-escala; aqui solo
+       vive la geometria.
+       LOS DOS calc NO SON ADORNO: una transformacion no cambia la caja de
+       layout, asi que para que el resultado ESCALADO mida justo el ancho y el
+       alto disponibles, la caja SIN escalar tiene que medir eso dividido entre
+       el factor. Con --sb-escala: 1 los dos calc valen 100% y esto no hace
+       absolutamente nada, que es como arranca. */
+    [data-pace-sidebar] [data-pace-sidebar-escala] {
+      --sb-escala: 1;
+      display: flex;
+      flex-direction: column;
+      flex: none;
+      width: calc(100% / var(--sb-escala));
+      min-height: calc(100% / var(--sb-escala));
+      transform: scale(var(--sb-escala));
+      transform-origin: top left;
+    }
+
+    /* Y por eso mismo la envoltura DESBORDA en layout aunque a la vista quepa.
+       Se tapa ese desborde SOLO cuando hay escala de verdad: mientras
+       data-escalado valga 0 la sidebar conserva su overflow-y: auto, asi
+       que si el calculo no llegara a correr el resultado seria el
+       comportamiento de siempre -- scroll-- y nunca un recorte mudo. */
+    /* LA LENTE. La envoltura escalada mide 100%/escala, o sea que DESBORDA su
+       caja de layout aunque a la vista quepa -- una transformacion no cambia la
+       caja. Ese desborde tiene que morir aqui y no llegar al aside: si llega,
+       el aside declara scroll horizontal (medido: 52 px a 1280x720) y se lleva
+       por delante el guard que ya existia contra el scroll lateral.
+       Y SOLO RECORTA CUANDO HAY ESCALA DE VERDAD: con data-escalado a 0 deja
+       pasar el desborde al aside, que tiene overflow-y auto, asi que si el
+       calculo no llegara a correr saldria scroll -- el comportamiento de
+       siempre-- y nunca un recorte mudo. */
+    [data-pace-sidebar] [data-pace-sidebar-lente] {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    [data-pace-sidebar][data-escalado="1"] [data-pace-sidebar-lente] { overflow: hidden; }
+
+    @media (max-width: 768px) {
+      [data-pace-sidebar] [data-pace-sidebar-lente] {
+        display: block !important;
+        flex: none !important;
+        overflow: visible !important;
+      }
+    }
+
+    /* EN EL CAJON DE MOVIL NO SE ESCALA NADA. Alli la sidebar tiene
+       height: auto y se dimensiona al contenido: el scroll es el
+       comportamiento correcto, no un fallo que tapar. */
+    @media (max-width: 768px) {
+      [data-pace-sidebar] [data-pace-sidebar-escala] {
+        width: 100% !important;
+        min-height: 0 !important;
+        transform: none !important;
+      }
+    }
 
     @media (max-width: 640px) {
       /* El logo ya iba capado a 200 px desde s66; con el recorte eso son
@@ -13292,6 +13363,42 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
   `;
   document.head.appendChild(s);
 }
+})();
+</script>
+  <script>
+;(function () {
+/* PACE · Soporte sin UI del Sidebar — extraído de `Sidebar.jsx` en s148
+   ============================================================
+   `Sidebar.jsx` llegó a 570 líneas (regla nº 1 de CLAUDE.md: < 500) y crecía
+   sola: la tabla de deuda la anotaba en 541 y ya iba por 570. Se parte en tres
+   con el patrón que el repo ya usa en Foco (`FocusTimer` + `.support` +
+   `.parts`):
+
+     · Sidebar.hoja.jsx            → la hoja CSS inyectada (se separo en s181,
+                                     cuando este archivo paso de 500 lineas)
+     · Sidebar.support.jsx  (este) → `sidebarStyles`, los estilos en linea
+     · Sidebar.parts.jsx           → las piezas de UI (Sendero, WeekDots,
+                                     miniaturas de logro, StatusBar, chevron)
+     · Sidebar.jsx                 → el orquestador y nada más
+
+   Aquí no hay JSX ni componentes: solo el objeto de estilos en línea que
+   comparten los demás archivos. La hoja inyectada se fue a `Sidebar.hoja.jsx`.
+
+   POR QUÉ `sidebarStyles` SE EXPONE A window
+   ------------------------------------------
+   Es un `const`, y en el artefacto compilado cada archivo va envuelto en su
+   propia IIFE: un `const` de este archivo NO lo ve `Sidebar.parts.jsx`. El
+   build solo re-expone automáticamente `function` y `var` top-level. Así que
+   se publica a mano, que es la misma solución que `window.pathStepStyles`
+   (decisión s80) para los estilos compartidos entre los Steps de Camino.
+   Los consumidores lo referencian PELADO (`sidebarStyles.root`), no
+   `window.sidebarStyles`: la resolución ocurre al RENDERIZAR, no al evaluar el
+   archivo, así que no depende de quién evalúe antes — que en dev (PACE.html)
+   no está garantizado, solo en el compilado.
+
+   ORDEN DE CARGA: `Sidebar.hoja.jsx` antes que este, y este ANTES de
+   `Sidebar.parts.jsx` y de `Sidebar.jsx`.
+   ============================================================ */
 
 const sidebarStyles = {
   root: {
@@ -13328,11 +13435,27 @@ const sidebarStyles = {
        31,6 px = 18 de padding + 13,6 de la holgura dentro de la banda; un 12 %
        menos son 27,8, y salen de devolver el `marginTop` a -4. El de abajo se
        queda en 8: ese lado ya estaba bien. */
-    marginTop: -4,
-    /* El 8 baja a 6 como parte del -20 % del hueco hasta la regla de Hoy: ese
-       hueco son TRES sumandos (13,6 de holgura dentro de la banda + este
-       margen + el margen de la regla), y bajar solo uno se quedaba en -8,6 %. */
-    marginBottom: 6,
+    /* -6 y no -4: la simetria del logo depende del margen de la regla, y ese
+       bajo de 14 a 12 para que la columna entera quepa en 1536x714. Arriba del
+       dibujo hay 18 de padding − 6 + 13,5 de holgura = 25,5; abajo, 13,5 + 12
+       de la regla = 25,5. Si se vuelve a tocar el ritmo, este numero se
+       recalcula: no es decorativo. */
+    marginTop: -6,
+    /* SIMETRIA DEL LOGO, sin regla debajo (idea del usuario). Arriba del dibujo
+       hay 27,5 px = 18 de padding − 4 de este margen + 13,5 de holgura dentro
+       de la banda. Abajo tiene que dar lo mismo: 13,5 de holgura + 14 = 27,5.
+       Antes eran 43,5 (13,5 + 6 + 9 + la regla + 14), asi que ademas se
+       ahorran 16 px de altura. Con «Esta semana» abriendo la columna, los 27,5
+       de abajo se miden hasta SU REGLA, no hasta un texto. */
+    /* CERO, y el numero sale de una suma: hasta la regla de «Esta semana» hay
+       13,5 de holgura dentro de la banda + este margen + los 12 del margen
+       superior de la regla. Para que de los mismos 25,5 que arriba, este tiene
+       que ser 0.
+       COMPROBADO EN s181: al quitar la regla (por una lectura mia equivocada de
+       una captura) el aire de abajo cayo a 13,5 contra 25,5 arriba, o sea que
+       este numero depende de ESA regla y no es decorativo. Si algun dia se
+       retira de verdad, aqui van 12. */
+    marginBottom: 0,
     minHeight: 96
   },
   /* s180: `display` sale de aqui a proposito. El recorte del logo vive en la
@@ -13424,7 +13547,18 @@ const sidebarStyles = {
   hoyUnidad: { fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--ink-3)', marginLeft: 3 },
   hoyValorCero: { color: 'var(--ink-3)', opacity: 0.55 },
 
-  gotas: { display: 'flex', gap: 3, justifyContent: 'center', marginTop: 2 },
+  /* `minHeight` = el alto exacto de una gota (7). Es lo que RESERVA la fila
+     cuando todavia no hay ninguna bola, y sin ella los valores de Foco,
+     Respira y Cuerpo caian 9 px por debajo del de Agua. `alignItems`
+     porque las bolas de sesion miden 4 y las gotas 7: sin el, unas se
+     apoyarian arriba y otras llenarian la fila. */
+  gotas: { display: 'flex', gap: 3, justifyContent: 'center', alignItems: 'center', marginTop: 2, minHeight: 7 },
+  /* LOS PUNTOS DE SESION NO SON LOS VASOS, y por eso no comparten forma. El
+     agua tiene META (8) y sus gotas dicen «vas por 3 de 8»; Foco, Respira y
+     Cuerpo no tienen meta, asi que sus puntos solo CUENTAN. Un circulo lleno
+     donde el agua pone una gota hueca: mismo sitio, dos significados
+     distintos, dibujos distintos. */
+  sesion: { width: 4, height: 4, borderRadius: '50%', flex: 'none' },
   gota: { width: 5, height: 7, borderRadius: '0 0 50% 50% / 0 0 40% 40%', border: '1px solid var(--hydrate)', opacity: 0.35 },
   gotaOn: { background: 'var(--hydrate)', opacity: 1 },
 
@@ -13433,15 +13567,22 @@ const sidebarStyles = {
      55 px y el objetivo tactil CRECE: 243 x ~100 en vez de un boton de 44. */
   /* MAS AIRE ENTRE LINEAS, pedido mirandolo: sube el padding vertical y con
      el `line-height` de sus tres piezas la tarjeta pasa de 98 a ~118 px. */
-  accion: { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden' },
+  accion: { border: '1px solid var(--line)', borderRadius: 'var(--r-md)', padding: '15px 14px 16px', background: 'var(--paper)', position: 'relative', overflow: 'hidden', flexShrink: 0 },
   accionEyebrow: { fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 10 },
   /* SIN `position: relative`: el `::after` del boton se posiciona contra el
      ancestro posicionado mas cercano, y ese tiene que ser la TARJETA. Con
      el h4 relativo, el objetivo se quedaba del tamanio del titulo. */
-  accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0 },
+  /* FILA, no bloque: el titulo y la flecha comparten linea. Antes la flecha
+     iba ABSOLUTA contra el fondo de la tarjeta y caia encima de la meta --
+     medido a 1536x864: **15 px de solape horizontal y 9,3 de vertical**. Con
+     un texto corto no se veia; con uno mas largo, o a otra escala de
+     escritorio, si. Lo reporto el usuario a 1920x1080 con Windows al 125 %, y
+     su apanio (bajar el zoom al 90 %) lo que hacia era justamente subir la
+     flecha a esta linea. */
+  accionTitulo: { fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500, fontSize: 19, lineHeight: 1.35, margin: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 },
   accionBoton: { font: 'inherit', color: 'inherit', textAlign: 'left', display: 'block' },
   accionMeta: { fontSize: 11, color: 'var(--ink-3)', marginTop: 7, lineHeight: 1.5 },
-  accionFlecha: { position: 'absolute', right: 14, bottom: 16, color: 'var(--ink-3)', fontSize: 15 },
+  accionFlecha: { flex: 'none', color: 'var(--ink-3)', fontSize: 15, lineHeight: 1 },
 
   semDia: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
   semLetra: { fontSize: 9, letterSpacing: '0.08em', color: 'var(--ink-3)' },
@@ -13454,7 +13595,12 @@ const sidebarStyles = {
      que la seccion quepa sin sacar nada de sitio. */
   /* CENTRADO y no a la izquierda, como el resto de la columna -- lo pidio el
      usuario viendolo junto a «Hoy» y «Esta semana», que ya van centradas. */
-  logroFila: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%' },
+  /* CAJA como la de Repetir (pedido mirandolo): el logro deja de ser una fila
+     suelta y comparte el lenguaje de la tarjeta de accion -- mismo borde, mismo
+     radio, mismo papel. */
+  logroFila: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%',
+    border: '1px solid var(--line)', borderRadius: 'var(--r-md)',
+    padding: '12px 14px', background: 'var(--paper)' },
   logroSello: { width: 36, height: 36, flex: 'none', border: '1px solid var(--line)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--ink-2)', background: 'var(--paper)', fontSize: 16 },
   /* MAS FINA Y SIN NEGRITA: el 500 lo hacia competir con el nombre de la
      rutina de la tarjeta, que es el unico titulo que deberia pesar. */
@@ -13463,7 +13609,27 @@ const sidebarStyles = {
   /* El pie sin boton: «Apoyar PACE» pasa a enlace y devuelve 34 px de la
      columna mas valiosa (44 del boton menos 10 del texto). */
   pieFila: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
+  /* PILL NARANJA (s181, pedido por el usuario). Antes era texto suelto al lado
+     de la pill de apoyo, y las dos filas del pie no se parecian en nada aunque
+     hicieran lo mismo: llevar a otro sitio. Toma la FORMA de `SupportButton`
+     -- mismo radio de pill, mismo padding-- y el color de `--premium`, que es
+     el token del gating y el que ya lleva el sello de dentro. El texto se
+     queda en tinta secundaria: con el borde y el sello ya hay naranja de
+     sobra, y ponerlo tambien en el rotulo lo hacia gritar. */
+  pieMisRutinas: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    width: '100%', minHeight: 34, fontSize: 11.5, color: 'var(--ink-2)',
+    padding: '9px 14px', background: 'var(--premium-soft)',
+    border: '1px solid var(--premium)', borderRadius: 'var(--r-pill)',
+    cursor: 'pointer', transition: 'background 220ms var(--ease)' },
+  /* La regla del pie: un hilo, no un borde de nadie. Como el pie es una
+     columna con `gap`, un elemento propio se separa solo por los dos
+     lados y no hay que compensar margenes. */
+  pieRegla: { display: 'block', height: 1, background: 'var(--line)' },
   pieEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3 },
+  /* «Ver la coleccion» se muda del pie a la seccion del ultimo logro: es donde
+     significa algo -- al lado del sello del que viene-- y ahi el pie recupera
+     su sitio para la pill de apoyo. */
+  logroEnlace: { fontSize: 11, color: 'var(--ink-3)', textDecoration: 'underline', textUnderlineOffset: 3, display: 'block', margin: '10px auto 0' },
   pieVer: { fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.14em', textTransform: 'uppercase' },
 
   vacioCopy: { fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.5, fontStyle: 'italic', fontFamily: 'var(--font-display)', textAlign: 'center', padding: '6px 4px' },
@@ -13589,15 +13755,55 @@ function selectSidebarLastSession(eventos) {
   };
 }
 
+/* selectSidebarTodayCounts(eventos, hoyISO) -> sesiones de HOY por modulo, o
+   `null` si no se puede saber.
+
+   EL DATO NO ESTA EN `weeklyStats`, que guarda MINUTOS y no cuentas -- no hay
+   ningun contador de sesiones por dia en el estado. Sale de `pace.events.v1`,
+   donde cada `session.completed` lleva su `module` y su `localDay`.
+
+   DEVUELVE `null` Y NO CEROS cuando no hay lista, y la diferencia importa: en
+   `file://` y en Capacitor el adaptador esta inerte y el contenedor viene
+   vacio, asi que pintar «0 sesiones» al lado de «25 min» seria una
+   contradiccion a la vista. Sin dato no se pinta nada; los minutos siguen.
+
+   CUERPO SUMA `move` Y `stretch`, igual que hacen sus minutos: son dos modulos
+   y una sola cifra, como en `weeklyStats.moveMinutes`. */
+function selectSidebarTodayCounts(eventos, hoyISO) {
+  if (!Array.isArray(eventos)) return null;
+  const hoy = typeof hoyISO === 'string' ? hoyISO : null;
+  const n = { focus: 0, breathe: 0, body: 0 };
+  for (let i = 0; i < eventos.length; i++) {
+    const e = eventos[i];
+    if (!e || e.type !== 'session.completed' || !e.payload) continue;
+    if (hoy && e.localDay !== hoy) continue;
+    const m = e.payload.module;
+    if (m === 'focus') n.focus++;else
+    if (m === 'breathe') n.breathe++;else
+    if (m === 'move' || m === 'stretch') n.body++;
+  }
+  return n;
+}
+
 /* selectSidebarPrimaryAction(state, ctx) -> qué ofrece la tarjeta, o null.
    DECISIÓN DE PRODUCTO (s180): la tarjeta solo puede decir CONTINUAR o
    REPETIR, y las dos hablan de algo que la persona YA hizo. No sugiere.
    Si dijera «prueba esto» un día y «continúa» otro en el mismo sitio y con la
    misma pinta, dejaría de ser un sitio fiable y sería una ranura de anuncios.
 
-   Prioridad: 1) Camino en curso · 2) última sesión terminada · 3) nada.
-   Cuando no hay nada, devuelve null y la tarjeta NO SE PINTA -- no se deja un
-   bloque vacío ni un texto de relleno.
+   Prioridad: 1) Camino en curso · 2) última sesión terminada · 3) SUGERENCIA.
+
+   LA TERCERA RAMA ANULA LA DECISIÓN ORIGINAL DE s180, y se dice: la primera
+   versión no sugería nunca, porque el usuario había pedido que la tarjeta no
+   cambiara de identidad. Al usarla decidió lo contrario -- «quiero que la
+   tarjeta vaya cambiando para que tenga más funcionalidades y así no
+   desaparezca si no se ha hecho nada»-- y lo que evita que vuelva el problema
+   que le molestaba es que el RÓTULO cambia de verdad (CONTINÚA / REPETIR /
+   PARA AHORA, cada uno con su color), en vez de que la misma caja diga cosas
+   distintas sin avisar.
+
+   La sugerencia entra POR PARÁMETRO (`ctx.sugerencia`), no se calcula aquí:
+   elegirla exige el catálogo y el guard de acceso, y este archivo es puro.
 
    Las dos prioridades del brief que van delante de estas -- sesión CTB
    interrumpida y CTB recuperable-- NO están aquí porque el runner todavía no
@@ -13623,6 +13829,9 @@ function selectSidebarPrimaryAction(state, ctx) {
       localDay: last.localDay
     };
   }
+  if (c.sugerencia) {
+    return { kind: 'suggest', targetId: c.sugerencia };
+  }
   return null;
 }
 
@@ -13646,11 +13855,12 @@ Object.assign(window, {
   sidebarDayIndex,
   selectSidebarToday,
   selectSidebarWeek,
+  selectSidebarTodayCounts,
   selectSidebarLastSession,
   selectSidebarPrimaryAction,
   selectSidebarLatestAchievement
 });
-;Object.assign(window, { sidebarDayIndex, sidebarAt, selectSidebarToday, selectSidebarWeek, selectSidebarLastSession, selectSidebarPrimaryAction, selectSidebarLatestAchievement });
+;Object.assign(window, { sidebarDayIndex, sidebarAt, selectSidebarToday, selectSidebarWeek, selectSidebarLastSession, selectSidebarTodayCounts, selectSidebarPrimaryAction, selectSidebarLatestAchievement });
 })();
 </script>
   <script>
@@ -13780,8 +13990,29 @@ function SidebarHoyCelda(_ref) {let { modulo, glifo, color, nombre, valor, unida
 
 }
 
-function SidebarToday(_ref2) {let { hoy, onOpen } = _ref2;
+/* Puntos de sesion. Tope de 8 a proposito: mas alla, la fila deja de contarse
+   de un vistazo y se convierte en una barra. `null` (sin dato) no pinta nada --
+   ver `selectSidebarTodayCounts`. */
+/* LA FILA DE BOLAS SE PINTA SIEMPRE, AUNQUE ESTE VACIA (s181, pedido por el
+   usuario mirandolo). Antes devolvia `null` sin sesiones, y entonces Foco,
+   Respira y Cuerpo NO tenian esa fila mientras Agua SI -- sus ocho vasos van
+   siempre. Como el valor lleva `marginTop: auto`, en las tres primeras caia
+   al fondo de la celda y en Agua se quedaba una fila mas arriba: los cuatro
+   numeros de una misma rejilla no compartian linea. Con la fila reservada
+   (`minHeight` = el alto de una gota) los cuatro se alinean, y el dia que
+   aparezca la primera bola nada se mueve de sitio. */
+function puntosSesion(n, color) {
+  const p = [];
+  const cuantas = typeof n === 'number' && n > 0 ? Math.min(n, 8) : 0;
+  for (let i = 0; i < cuantas; i++) {
+    p.push(/*#__PURE__*/React.createElement("i", { key: i, style: { ...sidebarStyles.sesion, background: color } }));
+  }
+  return /*#__PURE__*/React.createElement("span", { style: sidebarStyles.gotas }, p);
+}
+
+function SidebarToday(_ref2) {let { hoy, cuentas, onOpen } = _ref2;
   const { t, tn } = useT();
+  const c = cuentas || {};
   const gotas = [];
   for (let i = 0; i < hoy.waterGoal; i++) {
     gotas.push(/*#__PURE__*/
@@ -13792,19 +14023,22 @@ function SidebarToday(_ref2) {let { hoy, onOpen } = _ref2;
     React.createElement("div", { "data-pace-hoy": true }, /*#__PURE__*/
     React.createElement(SidebarHoyCelda, {
       modulo: "focus", glifo: /*#__PURE__*/React.createElement(ABFocus, null), color: "var(--focus)",
-      nombre: t('sidebar.today.focus'), valor: hoy.focusMinutes, unidad: t('sidebar.unit.min') }
+      nombre: t('sidebar.today.focus'), valor: hoy.focusMinutes, unidad: t('sidebar.unit.min'),
+      extra: puntosSesion(c.focus, 'var(--focus)') }
     ), /*#__PURE__*/
     React.createElement(SidebarHoyCelda, {
       modulo: "breathe", glifo: /*#__PURE__*/React.createElement(ABBreathe, null), color: "var(--breathe)",
       nombre: t('sidebar.today.breathe'), valor: hoy.breatheMinutes, unidad: t('sidebar.unit.min'),
       etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.breathe') }),
-      onOpen: () => onOpen('breathe') }
+      onOpen: () => onOpen('breathe'),
+      extra: puntosSesion(c.breathe, 'var(--breathe)') }
     ), /*#__PURE__*/
     React.createElement(SidebarHoyCelda, {
       modulo: "body", glifo: /*#__PURE__*/React.createElement(ABMove, null), color: "var(--move)",
       nombre: t('sidebar.today.body'), valor: hoy.bodyMinutes, unidad: t('sidebar.unit.min'),
       etiqueta: tn('sidebar.open.module', { m: t('sidebar.today.body') }),
-      onOpen: () => onOpen('body') }
+      onOpen: () => onOpen('body'),
+      extra: puntosSesion(c.body, 'var(--move)') }
     ), /*#__PURE__*/
 
 
@@ -13860,6 +14094,8 @@ function sidebarActionView(accion, t, tn, lang) {
   }
   /* El módulo se le pregunta al CATÁLOGO y nunca al prefijo del id (s172):
      los ids de Mueve y Estira van cruzados y el prefijo miente. */
+  /* Vale para `repeat` y para `suggest`: las dos nombran una rutina y las dos
+     la resuelven igual, preguntando al CATALOGO y nunca al prefijo del id. */
   const b = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId) || null;
   const c = b || (window.resolveBodyRoutine && window.resolveBodyRoutine(accion.targetId) || {}).routine || null;
   if (!c) return null;
@@ -13869,6 +14105,17 @@ function sidebarActionView(accion, t, tn, lang) {
   if (lang === 'en') {
     const v = t(accion.targetId + '.name');
     if (v !== accion.targetId + '.name') titulo = v;
+  }
+  if (accion.kind === 'suggest') {
+    return {
+      kind: 'suggest',
+      eyebrow: t('sidebar.action.now'),
+      /* Tinta secundaria y no un color de modulo: una sugerencia pesa MENOS
+         que algo que ya empezaste, y el rotulo es lo unico que lo dice. */
+      color: 'var(--ink-3)',
+      titulo: titulo,
+      meta: t('sidebar.action.now.meta')
+    };
   }
   return {
     kind: 'repeat',
@@ -13920,18 +14167,6 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
       } })
     )
     )
-    ), /*#__PURE__*/
-    React.createElement("span", { style: { ...sidebarStyles.semPie, display: 'block' } },
-
-
-
-
-    semana.activeCount === 1 ?
-    tn('sidebar.week.rhythm.one', { m: semana.longestStreak }) :
-    semana.activeCount ?
-    tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak }) :
-    tn('sidebar.week.none', { m: semana.longestStreak }),
-    ' ', /*#__PURE__*/React.createElement("span", { "aria-hidden": "true" }, "\u2192")
     )
     ));
 
@@ -13946,16 +14181,27 @@ function SidebarWeek(_ref4) {let { semana, onOpen } = _ref4;
    ============================================================ */
 function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
   const { t } = useT();
+  /* «VER LA COLECCION» VIVE AQUI, no en el pie. Ahi abajo era un enlace suelto
+     al lado de «Apoyar PACE» y no se sabia de que coleccion hablaba; junto al
+     sello del que viene, se explica solo. Y de paso el pie recupera su sitio
+     para la pill de apoyo. */
+  const enlace = /*#__PURE__*/
+  React.createElement("button", { style: sidebarStyles.logroEnlace, onClick: onOpen }, t('sidebar.collection'));
+
   if (!ultimo) {
     return (/*#__PURE__*/
+      React.createElement(React.Fragment, null, /*#__PURE__*/
       React.createElement("div", { style: sidebarStyles.logroFila, "data-pace-sidebar-ultimo": "" }, /*#__PURE__*/
       React.createElement("span", { style: { ...sidebarStyles.logroSello, opacity: 0.4 } }, "\xB7"), /*#__PURE__*/
       React.createElement("span", { style: { ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' } }, t('sidebar.latest.none'))
+      ),
+      enlace
       ));
 
   }
   const mini = achMini(ultimo.id);
   return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
     React.createElement("button", {
       style: sidebarStyles.logroFila,
       onClick: onOpen,
@@ -13964,6 +14210,8 @@ function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
 
     React.createElement("span", { style: sidebarStyles.logroSello }, mini.nodo), /*#__PURE__*/
     React.createElement("span", { style: sidebarStyles.logroTitulo }, mini.title)
+    ),
+    enlace
     ));
 
 }
@@ -13972,21 +14220,29 @@ function SidebarLatestAchievement(_ref5) {let { ultimo, onOpen } = _ref5;
    PIE — «Apoyar PACE» deja de ser un pill de 44 px y pasa a enlace: devuelve
    34 px de la columna más valiosa (44 del botón menos 10 del texto).
    ============================================================ */
-function SidebarFooter(_ref6) {let { onCollection, onSupport, compact } = _ref6;
+function SidebarFooter(_ref6) {let { onSupport, compact, misRutinas, onMisRutinas } = _ref6;
   const { t } = useT();
   return (/*#__PURE__*/
-    React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: 6 } }, /*#__PURE__*/
-    React.createElement("div", { style: sidebarStyles.pieFila }, /*#__PURE__*/
-    React.createElement("button", { style: sidebarStyles.pieEnlace, onClick: onCollection }, t('sidebar.collection')), /*#__PURE__*/
-    React.createElement("button", {
-      style: sidebarStyles.pieEnlace,
-      onClick: onSupport,
-      title: t('support.sidebar.title'),
-      "aria-label": t('support.sidebar.label') },
+    React.createElement("div", { style: { ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 8 : 10 } }, /*#__PURE__*/
 
-    t('sidebar.support')
-    )
+
+
+
+
+
+
+
+    React.createElement("button", { style: sidebarStyles.pieMisRutinas, onClick: onMisRutinas }, /*#__PURE__*/
+    React.createElement("span", null, t('sidebar.mine')),
+    typeof PremiumSeal === 'function' ? /*#__PURE__*/React.createElement(PremiumSeal, null) : null
     ), /*#__PURE__*/
+
+
+
+
+
+    React.createElement("span", { style: sidebarStyles.pieRegla, "aria-hidden": "true" }), /*#__PURE__*/
+    React.createElement(SupportButton, { onOpen: onSupport }), /*#__PURE__*/
     React.createElement("div", { style: sidebarStyles.pieFila }, /*#__PURE__*/
     React.createElement("span", { style: sidebarStyles.pieVer }, "Pace ", PACE_VERSION), /*#__PURE__*/
     React.createElement("span", { style: { fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' } }, "by @ezradesign")
@@ -14005,7 +14261,7 @@ Object.assign(window, {
   SidebarLatestAchievement,
   SidebarFooter
 });
-;Object.assign(window, { ChevronLeftIcon, achMini, SidebarHoyCelda, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarLatestAchievement, SidebarFooter });
+;Object.assign(window, { ChevronLeftIcon, achMini, SidebarHoyCelda, puntosSesion, SidebarToday, sidebarActionView, SidebarPrimaryAction, SidebarWeek, SidebarLatestAchievement, SidebarFooter });
 })();
 </script>
   <script>
@@ -14058,6 +14314,132 @@ function Sidebar() {
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
 
+  /* ====================================================================
+     LA ESCALA · «que se vea siempre igual, en cualquier resolucion»
+     ====================================================================
+     Decision del usuario (s181), con sus palabras: «si hay que hacer a la vez
+     pequenos a TODOS los elementos de la sidebar, perfecto». Lo que se
+     conserva es la COMPOSICION, no un tamano en pixeles.
+      POR QUE UNA TRANSFORMACION Y NO APRETAR EL AIRE: se probo lo segundo y
+     bajaba la columna de 835,9 a 700,3 px, pero para lograrlo cambiaba las
+     PROPORCIONES -- las reglas pasaban de 12 a 5 px de margen mientras el texto
+     seguia igual-- y el usuario lo rechazo mirandolo. Una escala uniforme no
+     cambia ninguna proporcion: es la misma sidebar, mas pequena.
+      POR QUE SE MIDE Y NO SE FIJA UNA CONSTANTE: el alto natural depende del
+     contenido (que la tarjeta este o no, el idioma, el titulo del logro).
+     Medirlo se corrige solo; una constante habria que acordarse de tocarla.
+      COMO SE MIDE SIN MENTIR Y SIN MUTAR NADA: se suman los hijos con
+     `offsetHeight` + sus margenes, saltando el espaciador. `offsetHeight` es un
+     valor de LAYOUT y las transformaciones no lo tocan -- al contrario que
+     `getBoundingClientRect`, que devuelve la caja YA transformada (trampa de
+     s177). La primera version de esto anulaba el `min-height` con un atributo
+     para poder leer la envoltura entera, y eso invalidaba el layout DOS veces
+     por render; con el Pomodoro corriendo eso es cada segundo.
+      Y LA SALVAGUARDA: `data-escalado` solo se pone a 1 cuando de verdad hay
+     escala. Mientras vale 0 la sidebar conserva su `overflow-y: auto` de
+     siempre, asi que si esto no llegara a ejecutarse el resultado seria el
+     comportamiento de hoy -- scroll-- y nunca un recorte mudo. */
+
+
+
+
+  const escalaRef = React.useRef(null);
+  const ultimaEscalaRef = React.useRef(null);
+
+  React.useLayoutEffect(function () {
+    const caja = escalaRef.current;
+    if (!caja) return;
+    /* La lente es su padre y el aside su abuelo. El alto disponible se le
+       pregunta a la LENTE, que ya viene con el padding del aside descontado
+       por ser su hijo flexible: una resta menos que hacer a mano. */
+    const lente = caja.parentElement;
+    const aside = caja.closest('[data-pace-sidebar]');
+    if (!lente || !aside) return;
+
+    function aplicar(escala) {
+      /* Sin escribir de mas: el navegador invalida el layout con cada cambio de
+         estilo, y este efecto corre en cada render. */
+      if (ultimaEscalaRef.current === escala) return;
+      ultimaEscalaRef.current = escala;
+      caja.style.setProperty('--sb-escala', String(escala));
+      aside.setAttribute('data-escalado', escala < 1 ? '1' : '0');
+    }
+
+    function recalcular() {
+      /* EN MOVIL NO SE ESCALA. El cajon va a pantalla completa con
+         `height: auto` y se dimensiona al contenido: alli el scroll es el
+         comportamiento correcto, no un fallo que tapar. */
+      if (esCajon()) {aplicar(1);return;}
+
+      let natural = 0;
+      const hijos = caja.children;
+      for (let i = 0; i < hijos.length; i++) {
+        const el = hijos[i];
+        if (el.hasAttribute('data-pace-sidebar-spacer')) continue;
+        const st = window.getComputedStyle(el);
+        if (st.position === 'absolute' || st.position === 'fixed') continue;
+        natural += el.offsetHeight + (
+        parseFloat(st.marginTop) || 0) + (
+        parseFloat(st.marginBottom) || 0);
+      }
+
+      const disponible = lente.clientHeight;
+
+      if (!(natural > 0) || !(disponible > 0)) {aplicar(1);return;}
+
+      /* Nunca AGRANDA: por encima de su tamano natural la sidebar se queda como
+         esta y el sobrante se va al espaciador, que es lo que ya hacia. */
+      const escala = Math.min(1, Math.round(disponible / natural * 10000) / 10000);
+      aplicar(escala);
+    }
+
+    recalcular();
+
+    /* SE OBSERVA LA CAJA, NO LA VENTANA -- y esto no es preferencia de estilo.
+       La primera version solo escuchaba `resize` de `window`, y MEDIDO: al
+       cambiar el viewport desde Playwright (`setViewportSize`) ese evento NO SE
+       DISPARA -- cero eventos con `innerHeight` ya cambiado-- asi que la escala
+       se quedaba clavada en el valor del arranque. Se vio porque la suite daba
+       0,8251 a los seis altos mientras el ratio real iba de 1,17 a 0,71.
+       Si un entorno de verdad hace lo mismo (algunos webviews al recolocar
+       barras), el defecto seria el mismo y silencioso. `ResizeObserver` mira el
+       alto de la LENTE, que es lo que de verdad manda, y se dispara venga de
+       donde venga el cambio. No hay realimentacion: la escala cambia el tamano
+       de la ENVOLTURA, y la lente la dimensiona el flex del aside.
+       El `resize` de ventana se queda como segunda via para el caso de un
+       navegador sin `ResizeObserver`.
+       SIN DEBOUNCE a proposito: con 60 ms la sidebar iba un instante por detras
+       al redimensionar, y el coste real es una lectura de layout que el
+       navegador ya iba a hacer. */
+    let observador = null;
+    if (typeof window.ResizeObserver === 'function') {
+      observador = new window.ResizeObserver(recalcular);
+      observador.observe(lente);
+    }
+    window.addEventListener('resize', recalcular);
+
+    /* Y OTRA VEZ CUANDO LLEGUEN LAS FUENTES. Este no es un remate defensivo:
+       lo destapo un rojo intermitente -- uno de cada tres-- y la causa era del
+       PRODUCTO, no del test. El alto natural depende de las metricas de la
+       fuente, asi que si las webfonts terminan de cargar DESPUES de calcular la
+       escala, el numero se queda hecho con la fuente de reserva. Nada lo
+       corrige: el ResizeObserver mira la lente, cuyo alto no cambia porque
+       cambien las fuentes. En una conexion lenta eso deja la sidebar mal
+       escalada de forma permanente.
+       `document.fonts.ready` es la promesa y es fiable; `document.fonts.check()`
+       NO -- devuelve false con las fuentes ya cargadas (trampa de s180). */
+    let vivo = true;
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+      document.fonts.ready.then(function () {if (vivo) recalcular();});
+    }
+
+    return function () {
+      vivo = false;
+      window.removeEventListener('resize', recalcular);
+      if (observador) observador.disconnect();
+    };
+  });
+
   /* Colapsado → ocultar TOTALMENTE.
      La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.
      (Antes era un rail de 56px con iconos; se quitó por petición del usuario
@@ -14080,7 +14462,42 @@ function Sidebar() {
     eventos = snap && Array.isArray(snap.events) ? snap.events : null;
   } catch (e) {eventos = null;}
 
-  const accion = selectSidebarPrimaryAction(state, { events: eventos });
+  /* Las cuentas de hoy salen de los MISMOS eventos que la tarjeta, y con el
+     dia local que la app escribe. `null` cuando el almacen no puede responder:
+     ahi no se pinta nada, en vez de pintar cero. */
+  const hoyISO = function () {
+    const d = new Date();
+    const dd = (n) => (n < 10 ? '0' : '') + n;
+    return d.getFullYear() + '-' + dd(d.getMonth() + 1) + '-' + dd(d.getDate());
+  }();
+  const cuentas = selectSidebarTodayCounts(eventos, hoyISO);
+
+  /* LA SUGERENCIA REUTILIZA LA REGLA DE LA BIBLIOTECA (`libraryParaAhora`), no
+     una propia: ya rota por dia, ya ordena por duracion y su pozo es «lo que
+     puedes hacer donde estas». Inventar otra habria sido un segundo criterio
+     para la misma pregunta.
+     EL POZO ES CUERPO (Mueve + Estira) Y FILTRADO POR ACCESO: ninguna de esas
+     rutinas lleva `safety`, y el guard central quita las premium bloqueadas,
+     asi que la tarjeta no puede ofrecer algo que no se puede abrir. */
+  const sugerencia = function () {
+    try {
+      if (typeof libraryParaAhora !== 'function') return null;
+      const todas = [];
+      [window.MOVE_ROUTINES, window.EXTRA_ROUTINES].forEach(function (cat) {
+        Object.keys(cat || {}).forEach(function (g) {
+          ((cat[g] || {}).items || []).forEach(function (r) {todas.push(r);});
+        });
+      });
+      const abiertas = todas.filter(function (r) {
+        if (r.safety) return false;
+        return !window.canAccessRoutine || window.canAccessRoutine(r.id);
+      });
+      const elegidas = libraryParaAhora(abiertas, hoyISO, 1);
+      return elegidas && elegidas[0] && elegidas[0].id || null;
+    } catch (e) {return null;}
+  }();
+
+  const accion = selectSidebarPrimaryAction(state, { events: eventos, sugerencia: sugerencia });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive
@@ -14112,9 +14529,10 @@ function Sidebar() {
          a las demas, que es lo que pidio el usuario mirandolo.
        · `aireSemana` baja «Esta semana» un 15 %, para que quede mas centrada
          entre sus dos reglas. */
-  const sep = { marginTop: isMob ? 10 : 14, marginBottom: isMob ? 10 : 14 };
-  const sepHoy = { marginTop: isMob ? 7 : 9, marginBottom: isMob ? 10 : 14 };
-  const aireSemana = { paddingTop: isMob ? 6 : 8 };
+  const sep = { marginTop: isMob ? 9 : 12, marginBottom: isMob ? 9 : 12 };
+  /* Ya no necesita el +15 % que llevaba cuando iba la ultima: ahora abre la
+     columna y su regla le da el aire. */
+  const aireSemana = {};
   const aire = {};
   const accionPrimero = esCajon();
 
@@ -14135,6 +14553,7 @@ function Sidebar() {
 
   React.createElement(SidebarToday, {
     hoy: hoy,
+    cuentas: cuentas,
     onOpen: (m) => {
       if (m === 'water') {try {addWaterGlass(1);} catch (e) {/* el store manda */}return;}
       emitir('module', { target: m });
@@ -14177,9 +14596,11 @@ function Sidebar() {
 
   const seccionSemana = /*#__PURE__*/
   React.createElement("div", { style: { ...sidebarStyles.section, ...aireSemana }, key: "semana" }, /*#__PURE__*/
-  React.createElement("div", { style: sidebarStyles.sectionHeaderCentro }, /*#__PURE__*/
-  React.createElement(Meta, null, t('sidebar.week'))
-  ), /*#__PURE__*/
+
+
+
+
+
   React.createElement(SidebarWeek, { semana: semana, onOpen: () => emitir('stats') })
   );
 
@@ -14190,19 +14611,32 @@ function Sidebar() {
      abajo y Hoy es el contexto de la acción.
      Es orden de DOM y no `order` de CSS: s160 midió que el orden visual y el
      de foco tienen que ser el mismo, y `order` los separa. */
-  /* ORDEN, elegido por el usuario mirandolo: Hoy -> Continua -> Ultimo logro
-     -> Esta semana. En movil la accion se adelanta y el resto le sigue. */
+  /* ORDEN, elegido por el usuario mirandolo: Esta semana -> Hoy -> Continua
+     -> Ultimo logro. En movil la accion se adelanta y el resto le sigue.
+     (El comentario decia otro orden distinto del que compone el array de
+     abajo, y el bueno siempre fue el array: corregido en s181.) */
   const secciones = (accionPrimero ?
-  [seccionAccion, seccionHoy, seccionVacio, seccionLogro, seccionSemana] :
-  [seccionHoy, seccionAccion, seccionVacio, seccionLogro, seccionSemana]).
+  [seccionAccion, seccionSemana, seccionHoy, seccionVacio, seccionLogro] :
+  [seccionSemana, seccionHoy, seccionAccion, seccionVacio, seccionLogro]).
   filter(Boolean);
 
   return (/*#__PURE__*/
-    React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true }, /*#__PURE__*/
+    React.createElement("aside", { style: sidebarStyles.root, "data-pace-sidebar": true, "data-escalado": "0" }, /*#__PURE__*/
     React.createElement("button", { onClick: toggle, style: sidebarStyles.toggleFloating, "data-pace-sidebar-toggle": true, title: t('sidebar.collapse.title'), "aria-label": t('sidebar.collapse.aria') }, /*#__PURE__*/
     React.createElement(ChevronLeftIcon, null)
     ), /*#__PURE__*/
 
+
+
+
+
+
+
+
+
+
+    React.createElement("div", { "data-pace-sidebar-lente": true }, /*#__PURE__*/
+    React.createElement("div", { "data-pace-sidebar-escala": true, ref: escalaRef }, /*#__PURE__*/
 
 
 
@@ -14219,19 +14653,29 @@ function Sidebar() {
 
     secciones.map((sec, i) => /*#__PURE__*/
     React.createElement(React.Fragment, { key: 's' + i }, /*#__PURE__*/
-    React.createElement(Divider, { style: i === 0 ? sepHoy : sep }),
+
+
+
+
+
+
+
+    React.createElement(Divider, { style: sep }),
     sec
     )
     ), /*#__PURE__*/
 
 
 
-    React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1, minHeight: 14 } }), /*#__PURE__*/
+    React.createElement("div", { "data-pace-sidebar-spacer": true, style: { flex: 1, minHeight: 0 } }), /*#__PURE__*/
 
     React.createElement(SidebarFooter, {
       compact: isMob,
-      onCollection: () => window.dispatchEvent(new CustomEvent('pace:open-achievements')),
+      misRutinas: (state.customRoutines || []).length,
+      onMisRutinas: () => emitir('custom'),
       onSupport: () => window.dispatchEvent(new CustomEvent('pace:open-support')) }
+    )
+    )
     )
     ));
 
@@ -30217,7 +30661,16 @@ function PaceApp() {
         if (d.target === 'water') setOpenHydrate(true);
         return;
       }
-      if (d.kind === 'repeat' && d.targetId) {
+      if (d.kind === 'custom') {
+        /* MIS RUTINAS. Con rutinas propias abre la biblioteca de Mueve, que es
+           donde vive su seccion (s93); sin ninguna, abre el CONSTRUCTOR, porque
+           llevar a una lista vacia seria peor que no llevar. */
+        const propias = (getState().customRoutines || []).length;
+        if (propias) setOpenLibrary('move');else
+        setCustomBuilder({ id: null });
+        return;
+      }
+      if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
         /* El módulo se le pregunta al CATÁLOGO, nunca al prefijo del id (s172). */
         const b = window.getBreatheRoutine && window.getBreatheRoutine(d.targetId);
         if (b) {handleStartBreathe(b);return;}

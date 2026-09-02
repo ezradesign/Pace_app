@@ -123,8 +123,29 @@ function SidebarHoyCelda({ modulo, glifo, color, nombre, valor, unidad, onOpen, 
   );
 }
 
-function SidebarToday({ hoy, onOpen }) {
+/* Puntos de sesion. Tope de 8 a proposito: mas alla, la fila deja de contarse
+   de un vistazo y se convierte en una barra. `null` (sin dato) no pinta nada --
+   ver `selectSidebarTodayCounts`. */
+/* LA FILA DE BOLAS SE PINTA SIEMPRE, AUNQUE ESTE VACIA (s181, pedido por el
+   usuario mirandolo). Antes devolvia `null` sin sesiones, y entonces Foco,
+   Respira y Cuerpo NO tenian esa fila mientras Agua SI -- sus ocho vasos van
+   siempre. Como el valor lleva `marginTop: auto`, en las tres primeras caia
+   al fondo de la celda y en Agua se quedaba una fila mas arriba: los cuatro
+   numeros de una misma rejilla no compartian linea. Con la fila reservada
+   (`minHeight` = el alto de una gota) los cuatro se alinean, y el dia que
+   aparezca la primera bola nada se mueve de sitio. */
+function puntosSesion(n, color) {
+  const p = [];
+  const cuantas = (typeof n === 'number' && n > 0) ? Math.min(n, 8) : 0;
+  for (let i = 0; i < cuantas; i++) {
+    p.push(<i key={i} style={{ ...sidebarStyles.sesion, background: color }} />);
+  }
+  return <span style={sidebarStyles.gotas}>{p}</span>;
+}
+
+function SidebarToday({ hoy, cuentas, onOpen }) {
   const { t, tn } = useT();
+  const c = cuentas || {};
   const gotas = [];
   for (let i = 0; i < hoy.waterGoal; i++) {
     gotas.push(
@@ -136,18 +157,21 @@ function SidebarToday({ hoy, onOpen }) {
       <SidebarHoyCelda
         modulo="focus" glifo={<ABFocus />} color="var(--focus)"
         nombre={t('sidebar.today.focus')} valor={hoy.focusMinutes} unidad={t('sidebar.unit.min')}
+        extra={puntosSesion(c.focus, 'var(--focus)')}
       />
       <SidebarHoyCelda
         modulo="breathe" glifo={<ABBreathe />} color="var(--breathe)"
         nombre={t('sidebar.today.breathe')} valor={hoy.breatheMinutes} unidad={t('sidebar.unit.min')}
         etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.breathe') })}
         onOpen={() => onOpen('breathe')}
+        extra={puntosSesion(c.breathe, 'var(--breathe)')}
       />
       <SidebarHoyCelda
         modulo="body" glifo={<ABMove />} color="var(--move)"
         nombre={t('sidebar.today.body')} valor={hoy.bodyMinutes} unidad={t('sidebar.unit.min')}
         etiqueta={tn('sidebar.open.module', { m: t('sidebar.today.body') })}
         onOpen={() => onOpen('body')}
+        extra={puntosSesion(c.body, 'var(--move)')}
       />
       {/* EL «+» SE FUE (s180, pedido mirandolo). Era un SEGUNDO objetivo dentro
           de una celda de 117 px y ademas pisaba los ocho vasos 17,2 px. Ahora
@@ -203,6 +227,8 @@ function sidebarActionView(accion, t, tn, lang) {
   }
   /* El módulo se le pregunta al CATÁLOGO y nunca al prefijo del id (s172):
      los ids de Mueve y Estira van cruzados y el prefijo miente. */
+  /* Vale para `repeat` y para `suggest`: las dos nombran una rutina y las dos
+     la resuelven igual, preguntando al CATALOGO y nunca al prefijo del id. */
   const b = (window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId)) || null;
   const c = b || (((window.resolveBodyRoutine && window.resolveBodyRoutine(accion.targetId)) || {}).routine) || null;
   if (!c) return null;
@@ -212,6 +238,17 @@ function sidebarActionView(accion, t, tn, lang) {
   if (lang === 'en') {
     const v = t(accion.targetId + '.name');
     if (v !== accion.targetId + '.name') titulo = v;
+  }
+  if (accion.kind === 'suggest') {
+    return {
+      kind: 'suggest',
+      eyebrow: t('sidebar.action.now'),
+      /* Tinta secundaria y no un color de modulo: una sugerencia pesa MENOS
+         que algo que ya empezaste, y el rotulo es lo unico que lo dice. */
+      color: 'var(--ink-3)',
+      titulo: titulo,
+      meta: t('sidebar.action.now.meta'),
+    };
   }
   return {
     kind: 'repeat',
@@ -264,18 +301,6 @@ function SidebarWeek({ semana, onOpen }) {
           </span>
         ))}
       </span>
-      <span style={{ ...sidebarStyles.semPie, display: 'block' }}>
-        {/* «1 dias en ritmo» lo vio el usuario en produccion. El singular es
-            una clave aparte y no un `n === 1 ? 'dia' : 'dias'` en el codigo:
-            en ingles la frase entera cambia de forma, y partirla por la
-            palabra obliga a que las dos lenguas compartan gramatica. */}
-        {semana.activeCount === 1
-          ? tn('sidebar.week.rhythm.one', { m: semana.longestStreak })
-          : semana.activeCount
-            ? tn('sidebar.week.rhythm', { n: semana.activeCount, m: semana.longestStreak })
-            : tn('sidebar.week.none', { m: semana.longestStreak })}
-        {' '}<span aria-hidden="true">→</span>
-      </span>
     </button>
   );
 }
@@ -289,25 +314,38 @@ function SidebarWeek({ semana, onOpen }) {
    ============================================================ */
 function SidebarLatestAchievement({ ultimo, onOpen }) {
   const { t } = useT();
+  /* «VER LA COLECCION» VIVE AQUI, no en el pie. Ahi abajo era un enlace suelto
+     al lado de «Apoyar PACE» y no se sabia de que coleccion hablaba; junto al
+     sello del que viene, se explica solo. Y de paso el pie recupera su sitio
+     para la pill de apoyo. */
+  const enlace = (
+    <button style={sidebarStyles.logroEnlace} onClick={onOpen}>{t('sidebar.collection')}</button>
+  );
   if (!ultimo) {
     return (
-      <div style={sidebarStyles.logroFila} data-pace-sidebar-ultimo="">
-        <span style={{ ...sidebarStyles.logroSello, opacity: 0.4 }}>·</span>
-        <span style={{ ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' }}>{t('sidebar.latest.none')}</span>
-      </div>
+      <React.Fragment>
+        <div style={sidebarStyles.logroFila} data-pace-sidebar-ultimo="">
+          <span style={{ ...sidebarStyles.logroSello, opacity: 0.4 }}>·</span>
+          <span style={{ ...sidebarStyles.logroTitulo, color: 'var(--ink-3)' }}>{t('sidebar.latest.none')}</span>
+        </div>
+        {enlace}
+      </React.Fragment>
     );
   }
   const mini = achMini(ultimo.id);
   return (
-    <button
-      style={sidebarStyles.logroFila}
-      onClick={onOpen}
-      title={mini.title}
-      data-pace-sidebar-ultimo={ultimo.id}
-    >
-      <span style={sidebarStyles.logroSello}>{mini.nodo}</span>
-      <span style={sidebarStyles.logroTitulo}>{mini.title}</span>
-    </button>
+    <React.Fragment>
+      <button
+        style={sidebarStyles.logroFila}
+        onClick={onOpen}
+        title={mini.title}
+        data-pace-sidebar-ultimo={ultimo.id}
+      >
+        <span style={sidebarStyles.logroSello}>{mini.nodo}</span>
+        <span style={sidebarStyles.logroTitulo}>{mini.title}</span>
+      </button>
+      {enlace}
+    </React.Fragment>
   );
 }
 
@@ -315,21 +353,29 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
    PIE — «Apoyar PACE» deja de ser un pill de 44 px y pasa a enlace: devuelve
    34 px de la columna más valiosa (44 del botón menos 10 del texto).
    ============================================================ */
-function SidebarFooter({ onCollection, onSupport, compact }) {
+function SidebarFooter({ onSupport, compact, misRutinas, onMisRutinas }) {
   const { t } = useT();
   return (
-    <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: 6 }}>
-      <div style={sidebarStyles.pieFila}>
-        <button style={sidebarStyles.pieEnlace} onClick={onCollection}>{t('sidebar.collection')}</button>
-        <button
-          style={sidebarStyles.pieEnlace}
-          onClick={onSupport}
-          title={t('support.sidebar.title')}
-          aria-label={t('support.sidebar.label')}
-        >
-          {t('sidebar.support')}
-        </button>
-      </div>
+    <div style={{ ...sidebarStyles.footer, marginTop: compact ? 8 : 14, paddingTop: compact ? 8 : 12, gap: compact ? 8 : 10 }}>
+      {/* LA PILL NARANJA VUELVE. En v0.111.0 se degrado a enlace para ahorrar
+          34 px, y con la geometria fija ese espacio existe de sobra: el sobrante
+          se va al final igualmente. Es el mismo `SupportButton` del
+          SupportModule -- el sello delgado de s16-- y no una copia. */}
+      {/* MIS RUTINAS · atajo a las rutinas propias. Lleva el sello premium
+          porque la superficie ENTERA lo es desde s93, y decirlo aqui evita
+          prometer algo que luego pide pagar. Si todavia no hay ninguna, el
+          destino es el CONSTRUCTOR: llevar a una lista vacia seria peor. */}
+      <button style={sidebarStyles.pieMisRutinas} onClick={onMisRutinas}>
+        <span>{t('sidebar.mine')}</span>
+        {typeof PremiumSeal === 'function' ? <PremiumSeal /> : null}
+      </button>
+      {/* REGLA ENTRE «MIS RUTINAS» Y LA PILL (s181, de la referencia del
+          usuario). Son dos cosas distintas -- una lleva a tu contenido, la otra
+          es apoyo al proyecto-- y sin separacion se leian como una lista de dos
+          botones. Va aqui y no como `borderTop` de la pill para que el pie siga
+          componiendose con el `gap` de su columna. */}
+      <span style={sidebarStyles.pieRegla} aria-hidden="true"></span>
+      <SupportButton onOpen={onSupport} />
       <div style={sidebarStyles.pieFila}>
         <span style={sidebarStyles.pieVer}>Pace {PACE_VERSION}</span>
         <span style={{ fontSize: 9, color: 'var(--ink-3)', fontStyle: 'italic', fontFamily: 'var(--font-display)' }}>by @ezradesign</span>
