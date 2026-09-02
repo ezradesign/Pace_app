@@ -20,8 +20,9 @@
    GANA a la hoja sin `!important` -- por eso el recorte del logo lo lleva.
 
    CUIDADO AL EDITAR: todo esto vive dentro de un template literal, así que un
-   backtick en un comentario ROMPE el archivo. Ha pasado cuatro veces (s180 tres,
-   s181 una) y siempre lo caza el `verify` como error de sintaxis.
+   backtick en un comentario ROMPE el archivo. Ha pasado CINCO veces (s180 tres,
+   s181 una, s182 una) y siempre lo caza el `verify` como error de sintaxis.
+   Los comentarios nuevos citan con «comillas latinas» por eso.
 
    ORDEN DE CARGA: antes que `Sidebar.support.jsx`. */
 
@@ -243,23 +244,59 @@ if (typeof document !== 'undefined' && !document.getElementById('pace-sidebar-re
     }
     [data-pace-sidebar][data-escalado="1"] [data-pace-sidebar-lente] { overflow: hidden; }
 
+    /* EL CAJON DE MOVIL TAMBIEN ESCALA DESDE s182 (v0.114.0), y hasta v0.113.0
+       no lo hacia: aqui vivian tres «!important» que apagaban la geometria
+       entera. La decision del usuario, con sus palabras: «escalarla en todas
+       las resoluciones que quede bien y en las mas pequenas aceptamos un
+       pequeno scroll sin barra».
+
+       LO QUE SIGUE SIENDO DISTINTO, y por eso este bloque no desaparece: en el
+       cajon la lente NO es un hijo flexible con un hueco que rellenar -- el
+       aside tiene «height: auto»-- asi que es «display: block» y se dimensiona
+       al contenido. Cuando hay escala, el alto que la columna OCUPA ya no es el
+       suyo de layout, y ese numero no se puede calcular en CSS: lo escribe
+       «Sidebar.jsx» en «--sb-alto» y aqui solo se consume. Sin esto la columna
+       encogeria a la vista y el cajon seguiria midiendo lo de antes, o sea que
+       la escala no habria servido de nada. */
     @media (max-width: 768px) {
       [data-pace-sidebar] [data-pace-sidebar-lente] {
         display: block !important;
         flex: none !important;
         overflow: visible !important;
       }
-    }
-
-    /* EN EL CAJON DE MOVIL NO SE ESCALA NADA. Alli la sidebar tiene
-       height: auto y se dimensiona al contenido: el scroll es el
-       comportamiento correcto, no un fallo que tapar. */
-    @media (max-width: 768px) {
-      [data-pace-sidebar] [data-pace-sidebar-escala] {
-        width: 100% !important;
-        min-height: 0 !important;
-        transform: none !important;
+      [data-pace-sidebar][data-escalado="1"] [data-pace-sidebar-lente] {
+        height: var(--sb-alto, auto);
+        overflow: hidden !important;
       }
+      /* El «min-height: calc(100% / escala)» de la envoltura es para RELLENAR
+         un hueco, y en el cajon no hay hueco que rellenar. El «width» y el
+         «transform» de la regla base SI valen aqui: con --sb-escala a 1 los dos
+         son la identidad, asi que sin escala esto se comporta como siempre. */
+      [data-pace-sidebar] [data-pace-sidebar-escala] { min-height: 0 !important; }
+
+      /* «UN PEQUENO SCROLL SIN BARRA» (s182). Por debajo del suelo de la escala
+         el cajon se desplaza, y el usuario pidio expresamente que no salga la
+         barra. Mismo patron que el centro de sesion (s125/s163): se oculta la
+         barra y se CONSERVA el scroll -- «overflow: hidden» lo mataria y
+         dejaria contenido inalcanzable. */
+      [data-pace-sidebar] {
+        scrollbar-width: none;            /* Firefox */
+        -ms-overflow-style: none;         /* Edge/IE legacy */
+      }
+      [data-pace-sidebar]::-webkit-scrollbar {
+        display: none;                    /* WebKit / Blink */
+      }
+
+      /* EL AIRE DE LA TARJETA, SOLO EN EL CAJON (s182, encargo B del usuario).
+         Bajo la ultima linea habia 28 px -- 16 de padding mas 12 del descender--
+         y bajar el padding a 8 devuelve 8 px exactos: a 428x800 el pie pasa de
+         quedar 1,4 px por DEBAJO del borde a tener 6,6 dentro.
+         VA AQUI Y NO EN «sidebarStyles.accion» porque ese objeto lo comparten
+         las dos pieles, y en escritorio el aire se afino mirandolo en s180.
+         Y LLEVA «!important» POR NECESIDAD, NO POR PEREZA: el padding lo pone un
+         estilo EN LINEA, que gana a la hoja sin que haga falta «!important» del
+         otro lado (misma trampa que s180 con el recorte del logo). */
+      [data-pace-sidebar] [data-pace-sidebar-accion] { padding-bottom: 8px !important; }
     }
 
     @media (max-width: 640px) {

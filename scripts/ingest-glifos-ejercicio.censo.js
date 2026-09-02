@@ -53,6 +53,23 @@ function identidadesVisuales() {
   cargar('app/custom/exercise-aliases.js');
   cargar('app/glyphs/exercise-glyphs.jsx');
   cargar('app/glyphs/exercise-glyphs.extra.jsx');
+  /* LOS DOS CATALOGOS, EVALUADOS. Hasta s182 los pasos se sacaban del FUENTE
+     con una expresion regular, y en s178 eso se quedo ciego: aquella sesion
+     troceo el dato de Estira a `extra.data.js` + `extra.data.piernas.js` y
+     dejo `ExtraModule.jsx` -- el archivo que este censo leia-- con CERO pasos.
+     El censo siguio dando un numero creible (61 en vez de 62) porque el
+     registro tapaba 24 de las 25 identidades de Estira; la que se perdia,
+     `Puente isquio a una pierna`, resulta que SI tiene arte, asi que
+     regenerar el encargo hoy habria escrito una identidad de menos y una fila
+     de arte aparentemente huerfana. Es el mismo modo de fallo que el propio
+     archivo documenta de s164 y s172, por tercera vez y por tercera causa.
+     Se evaluan y punto: un troceo mas no puede volver a cegar esto, porque el
+     orden de carga ya es contrato (s178) y el objeto final es el que la app
+     consume. `extra.data.piernas.js` AÑADE grupos con `Object.assign` y aborta
+     si el primero no esta, asi que el orden de estas dos lineas importa. */
+  cargar('app/move/move.data.js');
+  cargar('app/extra/extra.data.js');
+  cargar('app/extra/extra.data.piernas.js');
 
   /* EL REGISTRO NO BASTA, y la primera version de este script lo daba por
      bueno: leyendo solo `EXERCISE_REGISTRY` + `EXERCISE_GLYPHS` salian 51
@@ -73,7 +90,10 @@ function identidadesVisuales() {
      linea la lista daba 62 contra los 61 del censo, asi que la ingesta habria
      exigido para siempre un PNG de mas -- y justo de una pieza que el encargo
      dice EXPRESAMENTE que no hay que rehacer. La lista es lo que la app PIDE. */
-  /* s172 · EL PATRON VEIA SOLO LA MITAD. Pedia `mode:` detras del nombre, y eso
+  /* HISTORIA, y se conserva porque explica dos de los tres numeros erroneos que
+     ha dado este censo. El PATRON al que se refiere ya no existe desde s182.
+
+     s172 · EL PATRON VEIA SOLO LA MITAD. Pedia `mode:` detras del nombre, y eso
      es el contrato del runner v1: los pasos LEGACY declaran `dur:`. Se colaba
      por el hueco `Puente isquio a una pierna` (un paso de `move.atg.knees`),
      asi que el censo decia 61 identidades donde hay 62 y «4 pendientes» donde
@@ -82,11 +102,28 @@ function identidadesVisuales() {
      El encargo ademas la daba por «dibujo que no usa nadie», y de los cinco de
      esa lista es la UNICA sin alias que la tape — o sea, la unica que si se ve.
      Dos errores independientes que se cancelaban en un numero creible. */
-  const PASOS = /name: '([^']+)',\s*(?:mode|dur):/g;
-  for (const rel of ['app/move/move.data.js', 'app/extra/ExtraModule.jsx']) {
-    const txt = fs.readFileSync(path.join(ROOT, rel), 'utf8');
-    let m;
-    while ((m = PASOS.exec(txt))) meter(m[1]);
+  /* s182 · SE RECORREN LOS OBJETOS, no el fuente. La expresion regular que
+     vivia aqui («name: '...' seguido de mode: o dur:») ya no hace falta: leer
+     el catalogo evaluado no depende de en que archivo este escrito ni de con
+     que sintaxis, que eran las dos cosas que lo rompieron en s172 y s178. */
+  const catalogos = [
+    ['Mueve', win.MOVE_ROUTINES],
+    ['Estira', win.EXTRA_ROUTINES],
+  ];
+  for (const [modulo, cat] of catalogos) {
+    let pasos = 0;
+    Object.keys(cat || {}).forEach(g => ((cat[g] || {}).items || []).forEach(r => {
+      (r.steps || []).forEach(p => { pasos++; meter(p.name); });
+    }));
+    /* GUARD DE CERO, y no es adorno: es EXACTAMENTE el fallo que hubo. Un
+       catalogo vacio no da error -- da un censo mas corto, creible y en
+       silencio. Cero pasos en un modulo nunca puede parecerse a un censo
+       limpio (la regla que el `verify` aplica desde s150). */
+    if (pasos === 0) {
+      throw new Error('censo de identidades: ' + modulo + ' no aporta NI UN paso. '
+        + 'O el catalogo cambio de nombre, o se troceo a un archivo que este script '
+        + 'no carga. Un censo mas corto y silencioso es peor que este fallo.');
+    }
   }
   return [...nombres].sort();
 }

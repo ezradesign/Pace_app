@@ -296,8 +296,6 @@ conserva no es un tamaño en píxeles, es la **composición**.
   declara scroll lateral.
 - **Nunca agranda.** Por encima del tamaño natural la escala vale 1 y el sobrante
   va al espaciador, que es la **geometría fija** de v0.112.0.
-- **En móvil no aplica:** por debajo de 768 px el cajón tiene `height: auto` y
-  allí el scroll es correcto por diseño.
 
 | alto de ventana | escala | el pie termina a |
 |---|---|---|
@@ -305,6 +303,43 @@ conserva no es un tamaño en píxeles, es la **composición**.
 | 800 | 0,926 | 18 px |
 | 714 | 0,822 | 18 px |
 | 620 | 0,708 | 18 px |
+
+#### En el cajón de móvil también, con suelo (s182 · v0.114.0)
+
+Hasta v0.113.0 esto se apagaba por debajo de 768 px a propósito. **Se anula esa
+decisión**, porque el cajón natural mide **771 px** y ninguna pantalla de móvil
+corta los tiene: hasta 428×800 el pie quedaba **1,4 px por debajo del borde**.
+Palabras del usuario: *«escalarla en todas las resoluciones que quede bien y en
+las más pequeñas aceptamos un pequeño scroll sin barra»*.
+
+- **El suelo es `SUELO_CAJON = 0,80`** (`app/shell/Sidebar.escala.jsx`). Por
+  encima de ese factor la pantalla cabe entera; por debajo la columna se queda a
+  ese tamaño y **se desplaza, con la barra oculta**.
+- **Por qué 0,80:** el bloque de la semana —el objetivo táctil que s180 afinó a
+  45 px— se queda en **36**, holgado sobre el mínimo de WCAG 2.2 AA (24), y hace
+  caber entero **375×667**, el iPhone SE / 8. Con 0,85 aún se salían 38 px.
+- **Se desplaza, NO se recorta.** La lente lleva `overflow: hidden`, así que su
+  alto tiene que ser exactamente el que la columna escalada ocupa. Ese número no
+  se puede calcular en CSS —el cajón tiene `height: auto` y la lente se
+  dimensiona al contenido— así que lo escribe `Sidebar.escala.jsx` en
+  `--sb-alto` y la hoja sólo lo consume.
+- **La barra se oculta y el scroll se conserva** (`scrollbar-width: none` +
+  `::-webkit-scrollbar`), mismo patrón que el centro de sesión. `overflow:
+  hidden` haría lo primero matando lo segundo.
+
+| viewport | escala | fuera de pantalla | el texto de 11 px se ve a |
+|---|---|---|---|
+| 360 × 560 | **0,80** (suelo) | 101 px | 8,8 px |
+| 360 × 640 | **0,80** (suelo) | 21 px (sólo el padding) | 8,8 px |
+| 375 × 667 | 0,809 | **0** | 8,9 px |
+| 390 × 736 | 0,898 | **0** | 9,9 px |
+| 428 × 800 | 0,981 | **0** | 10,8 px |
+| 375 × 844 | 1 | **0** | 11 px |
+
+**Y de regalo, el aire de la tarjeta «Para ahora» se recorta SÓLO en el cajón**
+(`padding-bottom` 16 → 8): bajo su última línea había 28 px y quedan 20. En
+escritorio ese aire se afinó mirándolo en s180 y **no se toca**, así que la regla
+vive en la hoja y no en `sidebarStyles.accion`, que comparten las dos pieles.
 
 **El precio, que se acepta con los ojos abiertos:** los objetivos táctiles
 encogen con todo lo demás. El bloque de la semana pasa de 45 px a **37,1** a

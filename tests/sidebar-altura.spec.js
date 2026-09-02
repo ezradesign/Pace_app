@@ -27,9 +27,12 @@
        Esto es el precio de la decisión y por eso lleva su propio aserto: a
        1280x720 el bloque de la semana pasa de 45 px a 37,1.
 
-   NO CUBRE: móvil. El cajón a pantalla completa tiene `height: auto`, se
-   dimensiona al contenido y allí el scroll es correcto por diseño -- la escala
-   está desactivada por debajo de 768 px y estos asertos no significan nada.
+   NO CUBRE: móvil, y desde s182 eso ya no quiere decir «nadie lo mira». La
+   escala se encendió también en el cajón (v0.114.0, decisión del usuario), y
+   allí las condiciones son OTRAS -- hay un suelo, por debajo de él se desplaza
+   a propósito, y el alto disponible se pregunta en otro sitio-- así que sus
+   asertos viven aparte, en `tests/sidebar-movil.spec.js`. Estos de aquí siguen
+   siendo de escritorio: aplicados a un cajón no significarían nada.
 */
 const { test, expect } = require('@playwright/test');
 const { sembrar, irAlArtefacto } = require('./helpers');

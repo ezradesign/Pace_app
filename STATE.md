@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.113.0 (s181 — **LA SIDEBAR ENCOGE ENTERA, Y LA TARJETA QUE SE AMPUTABA SOLA**. Cierra lo que s180 dejo sin commitear y resuelve su problema de altura ABIERTO, con **otro diagnostico**: los **747 px** del handoff eran el **suelo comprimido**, no la altura -- la natural eran **835,9**-- y el sintoma no era una barra de scroll sino **la tarjeta quedandose sin texto**. `overflow: hidden` **APAGA el tamano minimo automatico del flex**, asi que la tarjeta era el UNICO hijo comprimible de doce y absorbia el deficit entero: a 714 media **33 px**, rotulo y nada dentro. **Dos umbrales**, y entre **750 y 836 perdia contenido SIN barra que avisara**. **Estaba PUBLICADO**: HEAD desborda 50 px a 714, mas que el arbol. **SE CONSTRUYO LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA** -- apurar aire hasta 700,3 px cambiaba las PROPORCIONES-- y eligio la buena: **la columna se ESCALA entera**, misma composicion y solo mas pequena (**1 / 0,926 / 0,822 / 0,708** a 1000/800/714/620, pie siempre a 18 px del borde, sin agrandar nunca). **La lente no estaba en el plan**: la envoltura desbordaba **52 px** en layout y tumbaba un guard de scroll lateral -- se arreglo el diseno, no el guard. **Los minutos de Hoy ya comparten linea** (`puntosSesion` devolvia `null` y tres celdas no tenian fila de bolas). **El rojo intermitente tenia razon y era del PRODUCTO**: si las webfonts cargan despues de calcular la escala, nada la corrige. **El precio, dicho**: los objetivos tactiles encogen (la semana, 45 → **37,1 px** a 1280x720). **173/173** (eran 170).)
+**Version actual:** v0.114.0 (s182 — **EL CAJON DE MOVIL ENCOGE TAMBIEN, Y EL CENSO QUE UN TROCEO DEJO CIEGO**. Los tres encargos que el usuario saco de mirar la revision de s181, medidos y **pintados antes de decidir**. **A no era un defecto**: 375x844 no corta nada -- el corte era del carrusel horizontal de la propia pagina de revision. **OTRO NUMERO DE MI PROPIO HANDOFF ERA FALSO**: 0,85 no hace caber 667 porque faltaba contar los **45 px del propio cajon** (22+22 de padding y el `min-height: 100dvh + 1px`), asi que el hueco real son 622. **La respuesta del usuario no fue ninguna de mis cuatro opciones**: «escalarla en todas las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno scroll **sin barra**». El suelo, **0,80**, sale de dos medidas: la semana se queda en 36 px (sobre los 24 de WCAG 2.2 AA) y hace caber ENTERO el iPhone SE/8. **En el cajon el alto disponible se pregunta en OTRO sitio** -- la lente se dimensiona al contenido y preguntarle da escala 1, verde y falsa-- y **hay que altarla a mano** con `--sb-alto`, o la lente se come el pie sin barra que lo diga. **EL BANCO FOTOGRAFIO SU PROPIA MUTACION**: borraba `--sb-escala`, que es donde escribe el producto, y dio «factor 1» sobre una app que en vivo estaba a 0,8083 -- ahora recarga por variante y **cruza dos instrumentos**. Y **el censo de glifos llevaba ciego a Estira desde s178** (61 donde hay 62), tercera vez que este censo da un numero erroneo y creible. La regla §1 mordio: el motor sale a `Sidebar.escala.jsx` y `Sidebar.jsx` baja de 506 a **318**. **185/185** (eran 173).)
 
 ## Red de seguridad -- archivos vivos
 
@@ -27,6 +27,7 @@
 | `app/ui/SessionPrep.jsx` | **LA PANTALLA DE PREPARACION (s174)**, extraida de `SessionShell.jsx` al pasar aquel de 500 lineas. **Puede llevar el ARTE de la rutina**, y lo DERIVA ella sola de `routine.steps[0]` — los dos runners no le pasan nada, o «que dibujo enseña y de que tamaño» seria una decision escrita en tres sitios. El tamaño sale de `v1GlyphSizeAhora`, **la misma fuente que el circulo del runner**, por eso el relevo no salta. **El circulo va PRIMERO y el rotulo debajo**: con el rotulo encima el dibujo pegaba un salto de **171 px** (escritorio) y **221** (movil) al terminar la cuenta. Respira no se entera: sus rutinas no tienen `steps` | **NUEVO s174 · 137 ln** |
 | `app/ui/library-transition.js` | **LA CAPITULAR VUELA A LA SESION (s174)** — el pago de que la biblioteca no lleve wash. **Aterriza en la CUENTA ATRAS y no en el circulo del runner**, que es lo que el diseño decia: medido, entre los dos hay **dos pantallas y 3.114 ms**, asi que no hay movimiento continuo hasta alli. **Coge la copia VISIBLE de la tarjeta**: «Para ahora» esta dos veces en el DOM y con un `querySelector` a secas **en movil no volaba nada**. Se retira en silencio si falta cualquier pieza, y con `prefers-reduced-motion` no anima — usa la Web Animations API sobre un CLON, que el kill de s160 no toca, por eso comprueba la preferencia a mano | **NUEVO s174 · 133 ln** |
 | `tests/sidebar-altura.spec.js` | **QUE LA SIDEBAR QUEPA ENTERA (nace en s181**, al pasar el spec de redesign de 500 lineas). 3 tests a 1000/836/800/714/660/620: que cabe y **nada se recorta por dentro**, que la composicion de LAYOUT es identica y solo cambia el factor de escala, y que **encoger no hunde los objetivos tactiles** bajo WCAG 2.2 AA (la semana, 45 → 37,1 px). **Calibrados en rojo**, y el orden de los asertos se corrigio calibrando: el primer rojo tiene que nombrar la causa, no el efecto. **Declara lo que NO cubre**: el camino del `ResizeObserver`, que bajo headless no dispara | **v0.113.0** |
+| `tests/sidebar-movil.spec.js` | **QUE EL CAJON DE MOVIL QUEPA, Y QUE POR DEBAJO DEL SUELO SE DESPLACE SIN RECORTARSE (s182)**. Nace porque `sidebar-altura` declaraba por escrito «NO CUBRE: movil», y eso dejo de ser cierto al encender la escala alli. **Cada viewport es su propio `describe` con `test.use`** y no un `setViewportSize`: asi la pagina nace en su tamano y se prueba el camino que recorre un telefono al abrir, sin el parche de emitir `resize` a mano. **El aserto clave no mira alturas**: hace scroll y comprueba que el pie SE VE, porque el fallo que la lente puede causar es un recorte MUDO. Y el suelo se le PREGUNTA a la app (`window.SUELO_CAJON`) en vez de copiarlo -- por eso hace falta ademas el aserto de WCAG, que es el unico que caza un suelo temerario. 12 asertos, 6 mutantes calibrados en rojo | **NUEVO s182 · 12 tests** |
 | `tests/biblioteca.spec.js` | **LAS TRES BIBLIOTECAS REDISEÑADAS (s174)**. 7 tests, **7 mutantes y los 7 muerden**. Todo RELACIONAL: **el catalogo se lee de las FUENTES, no de la pagina** — no se puede leer de la pagina (`EXTRA_ROUTINES` y `BREATHE_ROUTINES` son `const` y no cruzan la IIFE), y aunque se pudiera, cruzar la pantalla contra un dato de esa MISMA pantalla no prueba nada. **El reloj va congelado** con `setFixedTime`: «Para ahora» rota por DIA y sin fijarlo hay asertos que muerden un martes y no un miercoles. **Toda consulta filtra por lo VISIBLE**, que costo cuatro medidas equivocadas antes de acotarlo | **NUEVO s174 · 7 tests** |
 | `tests/transicion-biblioteca.spec.js` | **EL VUELO DE LA CAPITULAR (s174)**. 5 tests, **5 mutantes**. El que importa **no dice ninguna cifra**: compara el circulo de la preparacion con el del paso y exige que midan lo mismo **y esten en el mismo sitio** — el tamaño es una decision viva. Vuela **en las dos pieles** (el fallo de movil no lo habria cazado ningun aserto de la biblioteca), con reduced-motion **no anima y aun asi se entra**, y Respira **no se entera**. Dos asertos **pasaban por carrera** y se corrigieron: el vuelo no empieza en el clic sino un frame despues de montarse la preparacion. **Un mutante NO muerde con razon** y esta dicho: la limpieza del clon tiene dos caminos a proposito | **NUEVO s174 · 5 tests** |
 | `tests/eventos-retencion.spec.js` | **LA RETENCION POR CALENDARIO (s174)**, la de `pace.events.v1` — **`tests/retencion.spec.js` es OTRA**, la de la apnea de Respira. 4 tests, **4 mutantes**. El que importa es **«se dispara SOLA en el arranque»**: estar implementada no servia de nada. **Ningun numero de dias vive dentro** (el suelo se lee de `eventsRetentionFloorKey`). Y una leccion del calibrado: **comparar el JSON del contenedor no prueba que no se escriba** —reescribir lo mismo da la misma cadena—, asi que se espia `setItem` con control positivo en la misma prueba | **NUEVO s174 · 4 tests** |
@@ -121,6 +122,7 @@
 | `app/custom/exercise-aliases.js` | `VISUAL_ALIAS` + `resolveVisualId` — identidad visual compartida (visualId) | **NUEVO s110** |
 | `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.72.0** |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
+| `app/shell/Sidebar.escala.jsx` | **EL MOTOR DE LA ESCALA (nace en s182**, al pasar `Sidebar.jsx` de 500 a 506 lineas). Mide la columna, calcula el factor y lo aplica; no sabe nada de secciones. **El corte no es por kilometraje**: `Sidebar.jsx` es el ORQUESTADOR y esto es geometria que mide el DOM. Aqui vive `SUELO_CAJON = 0,80`, el suelo de la escala en movil, con las dos medidas que lo eligen. **Lo dificil no es el factor sino de donde sale el alto disponible**: en escritorio lo da la lente (hijo flexible), y en el cajon la lente se dimensiona AL CONTENIDO, asi que preguntarle devuelve escala 1 -- verde, silenciosa y falsa. Alli manda el aside menos su padding, y hay que ALTAR la lente a mano con `--sb-alto` o recorta el pie sin barra que lo diga | **NUEVO s182 · 208 ln** |
 | `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable — **solo ORQUESTADOR** desde s148 (compone secciones, no dibuja ninguna ni decide ninguna). **REESCRITO s180**: semana · Hoy · accion · logro · pie, compuestas en una **lista** con los separadores **entre** ellas. **s181: aqui vive EL CALCULO DE LA ESCALA** — mide el alto natural con `offsetHeight` (LAYOUT, que la transformacion no toca) y lo divide entre el alto de la lente; **nunca agranda**, y se redispara con `ResizeObserver`, `resize` **y `document.fonts.ready`** | **v0.113.0** |
 | `app/shell/Sidebar.hoja.jsx` | **LA HOJA CSS INYECTADA (nace en s181** al pasar `support` de 500 lineas). Responsive del cajon, rejilla de Hoy, recorte del logo, y la geometria de **la lente y la envoltura que escala**. Aqui vive lo que NO puede ir en linea: React no crea pseudo-elementos desde un estilo en linea, no hay media queries en linea, y **un estilo en linea gana a la hoja**. **CUIDADO: todo va dentro de un template literal y un backtick en un comentario ROMPE el archivo** (ha pasado cuatro veces) | **v0.113.0** |
 | `app/shell/Sidebar.support.jsx` | `sidebarStyles`, los estilos EN LINEA (la hoja se fue a `Sidebar.hoja.jsx` en s181). **Viaja por `window`** porque el build encierra cada archivo en su IIFE. **`accion` lleva `flexShrink: 0` desde s181** y no es cosmetico: con `overflow: hidden` un hijo flex pierde su minimo automatico y se come el deficit de la columna amputandose | **v0.113.0** |
@@ -197,65 +199,91 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s181 cierra el trabajo que s180 dejo **sin commitear** y resuelve el problema
-> de altura que su handoff dejo ABIERTO. Publica **v0.113.0**.
+> s182 resuelve los tres encargos que el usuario saco de mirar la revision de
+> s181 y contesta su pregunta sobre los glifos. Publica **v0.114.0**.
+> Suite **173 → 185**, `verify` en verde, 6 mutantes calibrados en rojo.
 
-- **[EL NUMERO DEL HANDOFF ERA EL SUELO COMPRIMIDO, NO LA ALTURA]** Decia «~747 px
-  y a 1536x714 hace scroll». Los 747 eran reales pero eran **el suelo con la
-  tarjeta ya aplastada**: la altura natural eran **835,9**, y coincidieron dos
-  cuentas independientes -- la suma de las piezas menos el chevron (`absolute`,
-  no ocupa columna) y el primer viewport sin sobrante. Con el numero malo, las
-  tres salidas que ofrecia estaban mal planteadas: «recortar ~33 px» habria
-  quitado la barra de scroll **dejando la tarjeta igual de amputada**.
+- **[A NO ERA UN DEFECTO DE LA APP, Y SE CIERRA SIN TOCAR CODIGO]** A 375x844 el
+  cajon llega a `right = 375`, el documento da `scrollWidth - clientWidth = 0` y
+  **queda 0 px fuera de la primera pantalla**. El corte era del **carrusel
+  horizontal de la propia pagina de revision** de s181, que recortaba capturas
+  sin decirlo. Un instrumento que recorta en silencio manda a alguien a buscar un
+  defecto que no existe: la revision nueva envuelve las bandas y lo dice en su
+  texto.
 
-- **[EL SINTOMA NO ERA SCROLL: ERA TEXTO AMPUTADO]** `sidebarStyles.accion` lleva
-  `overflow: hidden`, y eso **apaga el tamano minimo automatico del flex** (solo
-  se aplica con `overflow: visible`). De los doce hijos de la columna, **once
-  estaban protegidos y la tarjeta no**, asi que absorbia el deficit entero. Su
-  contenido interior no se mueve al comprimirse, o sea que lo de debajo **se
-  recorta**: a 714 la tarjeta media **33 px**, con «PARA AHORA» y nada dentro.
-  **Dos umbrales**, y el peligroso es el de arriba: entre **750 y 836 perdia
-  contenido SIN barra de scroll que avisara**. Y **estaba publicado** -- HEAD
-  trae la misma linea y desborda 50 px a 714, mas que el arbol.
+- **[OTRO NUMERO DE MI PROPIO HANDOFF ERA FALSO, Y HABRIA VICIADO LA DECISION]**
+  Proponia un suelo de 0,85 «porque 0,85 x 780 = 663, asi que de 667 para arriba
+  cabe entero». **Medido: a 375x667 con 0,85 todavia se salen 38 px.** Faltaba
+  contar el propio cajon -- **22 px de padding arriba y abajo** mas un
+  `min-height: calc(100dvh + 1px)`-- asi que a 667 el hueco real son **622**, no
+  667. El numero estaba construido sobre el VIEWPORT en vez de sobre el HUECO.
+  **Es el mismo modo de fallo que s181 documento de si misma**, en el handoff
+  siguiente: un numero heredado se vuelve a medir aunque lo haya escrito yo.
 
-- **[CONSTRUI LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA]** Apurar el
-  aire bajaba la columna a **700,3** px sin quitar secciones (135,6, de los que
-  **56 salian solo de las cuatro reglas**). Funcionaba, y aun asi era la
-  respuesta mala: **apretar el aire cambia las proporciones**. Su instruccion:
-  «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto» ⇒ **la
-  columna se escala entera**. Misma composicion, solo mas pequena: **1 / 0,926 /
-  0,822 / 0,708** a 1000/800/714/620, pie siempre a **18 px** del borde, y nunca
-  agranda por encima de su tamano natural.
+- **[LA RESPUESTA DEL USUARIO NO FUE NINGUNA DE MIS CUATRO OPCIONES]** Se
+  pintaron las opciones antes de preguntar (30 capturas, seis viewports x cinco
+  variantes, cada una a tamano de pixel CSS). Sus palabras: «escalarla en todas
+  las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno
+  scroll **sin barra**». Mis cuatro opciones eran «si con este suelo» o «no»; su
+  respuesta **anade un requisito que ninguna llevaba** y delega el suelo en una
+  medida.
 
-- **[LA LENTE NO ESTABA EN EL PLAN]** La envoltura escalada mide `100%/escala` de
-  ancho y **desbordaba 52 px en layout** aunque a la vista quepa -- una
-  transformacion no cambia la caja. Ese desborde llegaba al `<aside>` y **tumbaba
-  un guard de scroll lateral que ya existia**. Se arreglo **el diseno y no el
-  guard**: una caja intermedia lo absorbe, y solo recorta cuando hay escala de
-  verdad, para que sin ella el comportamiento siga siendo scroll.
+- **[EL SUELO SALE DE DOS MEDIDAS, NO DE LA VISTA]** `SUELO_CAJON = 0,80`
+  (`app/shell/Sidebar.escala.jsx`): el bloque de la semana -- el objetivo tactil
+  que s180 afino a 45 px-- se queda en **36**, holgado sobre el minimo de WCAG
+  2.2 AA (24), y hace caber ENTERO **375x667**, el iPhone SE/8. El precio, dicho:
+  el texto secundario de 11 px se ve a **8,8** y las iniciales de los dias, de 9,
+  a **7,2**. A 560 quedan **101 px** fuera y a 640, **21** (solo el padding).
 
-- **[EL ROJO INTERMITENTE TENIA RAZON, Y ERA DEL PRODUCTO]** Uno de cada tres, y
-  el valor que daba era **exactamente el del arranque**. El alto natural depende
-  de las metricas de la fuente: **si las webfonts cargan DESPUES de calcular la
-  escala, nada la corrige** -- el observador vigila la caja, y la caja no cambia
-  porque cambien las fuentes. En conexion lenta la sidebar quedaba mal escalada
-  para siempre. Se recalcula tambien en `document.fonts.ready`.
+- **[EL ALTO DISPONIBLE NO SE PREGUNTA EN EL MISMO SITIO EN LAS DOS PIELES]** En
+  escritorio la lente es un hijo FLEXIBLE y su `clientHeight` es el hueco real.
+  En el cajon es `display: block` y **se dimensiona al contenido**, asi que
+  preguntarle devuelve el alto natural y **la escala sale exactamente 1**: sin
+  error, sin aviso y sin efecto. Y el reves: el alto que la columna escalada
+  OCUPA tampoco lo sabe el CSS, lo escribe el motor en `--sb-alto`. Si ese numero
+  fuera menor que el contenido, la lente -- que lleva `overflow: hidden`-- se
+  comeria el pie **sin barra que lo dijera**. Por eso el test no mira alturas:
+  **hace scroll y comprueba que el pie SE VE**.
 
-- **[LOS MINUTOS DE HOY YA COMPARTEN LINEA]** `puntosSesion` devolvia **`null`**
-  sin sesiones, asi que tres celdas no tenian fila de bolas y Agua si; con
-  `marginTop: auto` el valor caia al fondo en tres y una fila mas arriba en la
-  cuarta. Reservando la fila (`minHeight: 7`) los cuatro quedan a `top` **57,6**.
+- **[EL BANCO FOTOGRAFIO SU PROPIA MUTACION, Y LA TABLA SE CONTRADECIA SOLA]**
+  Devolvia «escala 1 · fuera 0 · pie -126,4», tres cosas incompatibles en una
+  fila. Su limpieza entre variantes borraba `--sb-escala`, que es **exactamente**
+  donde escribe la implementacion, y con el memo de `aplicar()` el producto no la
+  volvia a escribir nunca: fotografiaba su propio borrado sobre una app que en
+  vivo estaba a **0,8083**. **Es la trampa que el handoff de s181 lista con
+  nombre**, y volvio a morder en el mismo banco. Arreglado con recarga por
+  variante y, lo que de verdad importa, **cruzando dos instrumentos**: la escala
+  geometrica contra lo que el producto dice en `--sb-escala`; si no coinciden, se
+  para.
 
-- **[EL PRECIO, DICHO Y MEDIDO]** Encoger encoge tambien lo que se pulsa: el
-  bloque de la semana pasa de 45 px a **37,1** a 1280x720. Sigue sobre el minimo
-  de WCAG 2.2 AA (24x24) pero por debajo de los 44 que s180 busco a proposito.
-  Lleva su propio aserto.
+- **[EL CENSO DE GLIFOS LLEVA CIEGO A ESTIRA DESDE s178, Y NADIE LO VIGILABA]**
+  Sacaba los pasos con una expresion regular sobre `app/extra/ExtraModule.jsx`, y
+  s178 troceo ese dato dejando el archivo con **cero pasos**. Devolvia **61 donde
+  hay 62** sin que nada saltara, porque el registro tapaba 24 de las 25
+  identidades. La que se perdia, `Puente isquio a una pierna`, **si tiene arte**:
+  regenerar el encargo habria escrito una identidad de menos y una fila de arte
+  aparentemente huerfana. **Tercera vez que este censo da un numero erroneo y
+  creible** (s164, s172, s182), y las tres con el mismo sintoma: un total redondo
+  que coincidia con otro censo con el mismo punto ciego. Ahora lee los catalogos
+  **evaluados** con guard de cero por modulo. Prueba: el documento regenerado sale
+  **identico byte a byte**.
 
-> Diario con las siete mentiras del instrumento -- incluida **fotografiar mi
-> propia mutacion** y un control positivo mal disenado (120 equis son una palabra
-> impartible):
-> [`docs/sessions/session-181-la-sidebar-que-encoge-entera.md`](docs/sessions/session-181-la-sidebar-que-encoge-entera.md).
+- **[LA PREGUNTA DE LOS GLIFOS, CONTESTADA: NO FALTA NADA NUEVO]** Las tres
+  rutinas de oficina de s178 reutilizan ejercicios que ya tenian arte, **15 de 15
+  pasos**. El censo bueno: **62 identidades · 59 con arte · 3 sin** (`Nordics`,
+  `Pica en escritorio`, `Rana`) **· 0 de arte que nadie pida**.
 
+- **[DOS ROJOS QUE NO ERAN DEL PRODUCTO, Y COMO SE SUPO]** La primera pasada dio
+  2 rojos por timeout en `home-geometria.spec.js`, uno de ellos llamado «el
+  contador del Pomodoro no dispara el observador de montaje» justo despues de que
+  yo anadiera un observador. No se dio por ruido: el run entero tardo **31,3 min**
+  en vez de ~1,5 (contencion de memoria, documentada en `playwright.config.js`) y
+  esos dos, corridos solos, pasan en **1,1 s y 1,6 s** sobre un timeout de 60.
+  Sola, la suite da **185/185 en 3,3 min**.
+
+> Diario completo (con el troceo de `Sidebar.jsx`, el mutante que no mordio y las
+> seis calibraciones):
+> [`docs/sessions/session-182-el-cajon-de-movil.md`](docs/sessions/session-182-el-cajon-de-movil.md).
 
 ### Diferido (documentado, NO ejecutado)
 
@@ -544,23 +572,30 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 
 ## Proxima sesion -- **la decide el usuario**
 
-> **LO PRIMERO: EL MOVIL DE LA SIDEBAR.** Lo aplazo el usuario a proposito («no,
-> despues de commitear») y **nadie lo ha mirado a tamano real desde el rediseno
-> de s180**. La escala de s181 esta DESACTIVADA por debajo de 768 px a proposito
-> -- el cajon tiene `height: auto` y alli el scroll es correcto por diseno-- pero
-> eso es una decision, no una comprobacion. Ojo a un cambio que si le llega: el
-> `marginTop` del `logoBar` paso de -6 a -7.
+> **EL MOVIL DE LA SIDEBAR YA ESTA MIRADO Y RESUELTO** (s182, v0.114.0): escala
+> con suelo 0,80, aire de la tarjeta recortado y barra oculta. Lo que queda de
+> aquel bloque son cosas que el usuario dejo «asi de momento», no defectos:
+>
+> - **la pill naranja de «Mis rutinas» sigue siendo lo mas llamativo de la
+>   columna** (fondo tintado + borde a plena fuerza; quitarle el fondo la
+>   calmaria);
+> - de su maqueta **no se copiaron dos cosas**, porque aviso de que algun
+>   elemento podia no estar bien colocado: en su imagen **no aparece el lema** y
+>   **«Ver la coleccion» va a la derecha**;
+> - **360x560 se desplaza 101 px y 360x640, 21** (que es solo el padding). Es la
+>   decision que tomo mirando las capturas, no un pendiente.
 
-> Y dos cosas de la sidebar que el usuario dejo «asi de momento»:
-> la **pill naranja de «Mis rutinas» es lo mas llamativo de la columna** (fondo
-> tintado + borde a plena fuerza; quitarle el fondo la calmaria), y de su maqueta
-> **no se copiaron dos cosas** porque aviso de que algun elemento podia no estar
-> bien colocado: en su imagen **no aparece el lema** y **«Ver la coleccion» va a
-> la derecha**.
+> **UN DEFECTO PREVIO Y PUBLICADO, medido y sin arreglar** (viene de s181): con la
+> app en ingles, el titulo del ultimo logro sale en espanol («Regresas» en vez de
+> «You return»). `achMini()` en `Sidebar.parts.jsx` devuelve `a.title` sin pasar
+> por i18n, mientras `Achievements.jsx:232` lo hace bien con
+> `tR('ach.item.' + a.id + '.title', a.title)`. La traduccion existe
+> (`app/i18n/content/achievements.js:37`). Es pequeno y esta localizado.
 
-> s180 desplazo la cola que s178 habia elegido, **por decision suya y sin perderla**.
+> s180 desplazo la cola que s178 habia elegido, **por decision suya y sin
+> perderla**. Sigue intacta:
 
-1. **La cola de s178, intacta**: ejercicios de oficina que HOY NO EXISTEN en el
+1. **La cola de s178**: ejercicios de oficina que HOY NO EXISTEN en el
    catalogo — **gemelo de pie** (no hay estiramiento de gemelo, solo
    `Elevacion de talones`, que es fuerza), **flexor de cadera contra la mesa** (el
    unico que hay pide arrodillarse) y **aductores sentado**. Cada uno nace con su
@@ -584,10 +619,12 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > 3. **La musica.** Los seis briefs necesitan el requisito que faltaba: **el
 >    grueso de la energia entre 200 Hz y 2 kHz**. Y los **terminos de uso
 >    comercial**, sin verificar.
-> 4. **El arte**: `Rana` y los **19** glifos de logro.
+> 4. **El arte**: `Rana`, `Pica en escritorio` y los **19** glifos de logro.
+>    (`Nordics` sigue FUERA de la cola por decision de s173: solo vive en el
+>    constructor y ya tiene SVG.)
 > 5. **FASE 8 · onboarding contextual.**
 
-> **LO QUE s180 DEJA ABIERTO, dicho y no escondido:**
+> **LO QUE SIGUE ABIERTO, dicho y no escondido:**
 > - **La rama «CONTINUA» de la tarjeta es INALCANZABLE** hasta que los Caminos se
 >   puedan pausar. Esta escrita y **no esta probada**, y se dice.
 > - **Que el agua sola no enciende el dia ya no lo dice ninguna superficie**: la
@@ -598,30 +635,6 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > - Por debajo de **~575 px de alto en movil** el runner SIGUE SOLAPANDO (s179):
 >   lo unico que queda por encoger es el glifo y la fuente unica de s177 lo
 >   prohibe. **Es decision del usuario.**
-> - En las pantallas de **cambio de lado** la linea «El lado siguiente empieza
->   solo» todavia se mueve **99,7 px** entre pasos.
-> - El **lote de musica sin decidir**: cinco de las seis piezas sin usar.
-
-> **TRAMPAS VIGENTES:**
-> - **UN ESTILO EN LINEA GANA A LA HOJA** sin necesidad de `!important` del otro
->   lado. Costo que el recorte del logo no hiciera nada (s180) y el padding del
->   modal en s174.
-> - **MUTAR LA FUENTE SIN REBUILD NO PRUEBA NADA**: la suite corre sobre
->   `index.html`.
-> - **Sembrar `weeklyStats`/`water` exige `lastActiveDay` Y las guardas de
->   migracion**, o el estado sale a ceros (s180).
-> - **LA SEMILLA ES `firstSeen`, NO `onboarded`** (`tests/helpers.js` lo avisa).
-> - **`getBoundingClientRect()` devuelve la caja YA TRANSFORMADA.** Congelar antes
->   de medir.
-> - **Backticks y backslashes en el shell**: el heredoc **se come los
->   backslashes** y las comillas dobles **ejecutan los backticks**. Escribir con
->   la herramienta de escritura o por stdin de node. **Y backticks dentro de un
->   template literal de CSS rompen el archivo** -- cai dos veces en s180.
-> - **`node build-standalone.js` a mano reescribe el standalone** congelado
->   (s134): copiarlo antes y restaurarlo despues.
-> - **`git checkout` restaura al ULTIMO COMMIT.** Copia antes de mutar.
-
-> Orden vigente: «Camino a v1.0» de [`ROADMAP.md`](./ROADMAP.md) (15 fases).
 
 ---
 
@@ -632,11 +645,14 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **EL CAJON DE MOVIL TAMBIEN ESCALA, con suelo: se ANULA «en movil no aplica» (s181)** (s182)
+- **El alto disponible de la sidebar se pregunta en SITIOS DISTINTOS segun la piel, y en el cajon la lente hay que ALTARLA a mano** (s182)
+- **Un censo del catalogo se lee del OBJETO evaluado, nunca del fuente** (s182)
 - **LA SIDEBAR SE ESCALA ENTERA PARA CABER: se AFINA la geometria fija de v0.112.0** (s181)
 - **`overflow: hidden` APAGA el tamano minimo automatico del flex, y eso convierte a un hijo en el amortiguador de su columna** (s181)
 - **Una fila de adorno que solo existe a veces DESALINEA la rejilla: se reserva siempre** (s181)
 - **Playwright NO emite `resize` al cambiar el viewport, y el `ResizeObserver` tampoco dispara en headless** (s181)
-- **La tarjeta de la sidebar solo puede decir CONTINUAR o REPETIR: NUNCA sugiere** (s180)
+- ~~**La tarjeta de la sidebar solo puede decir CONTINUAR o REPETIR: NUNCA sugiere**~~ **ANULADA en la misma s180**: la tercera rama es PARA AHORA (s182 lo detecto: el indice no llevaba la marca que el documento que gobierna si tiene)
 - **El recorte del logo va en CSS y necesita `!important`, porque un estilo EN LINEA gana a la hoja** (s180)
 - **Siete objetivos tactiles de 44 px NO CABEN en 243: la semana entera es UN boton** (s180)
 - **Las secciones de la sidebar se componen en una LISTA y los separadores van ENTRE ellas** (s180)
