@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.111.0 (s180 — **LA SIDEBAR COMO BRUJULA, Y EL MARGEN TRANSPARENTE QUE TAPABA UNA COMPRESION**. Primera mitad de un brief largo (sidebar + CTB musical): **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas. **SE APROBO MIRANDOLA**, con nueve variantes sobre cajas a medida real, y ahi eligio: logo al **80 %**, Hoy en **rejilla 2x2 con glifos** y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR**. **EL LOGO ERA 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0): gastaba **178,3 px de los que 104,9 eran aire**, y la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** sin que se notara **porque lo que desbordaba era transparencia**. **LOS GLIFOS NO HUBO QUE DIBUJARLOS** — pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105; el unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable**, el ultimo logro **baja al pie** (su seccion costaba ~100 px) y la celda de Foco **no es un boton**. **DOS DEFECTOS MIOS**: el recorte no se aplicaba (los estilos EN LINEA ganan a la hoja, el mordisco de s174) y la celda «Respira» **se llamaba igual que el chip de la home**, con **15 tests en rojo y ninguno del producto**. **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes. **169/169** (eran 153).)
+**Version actual:** v0.112.0 (s180 — **LA SIDEBAR COMO BRUJULA, Y EL MARGEN TRANSPARENTE QUE TAPABA UNA COMPRESION**. Primera mitad de un brief largo (sidebar + CTB musical): **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas. **SE APROBO MIRANDOLA**, con nueve variantes sobre cajas a medida real, y ahi eligio: logo al **80 %**, Hoy en **rejilla 2x2 con glifos** y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR**. **EL LOGO ERA 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0): gastaba **178,3 px de los que 104,9 eran aire**, y la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** sin que se notara **porque lo que desbordaba era transparencia**. **LOS GLIFOS NO HUBO QUE DIBUJARLOS** — pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105; el unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable**, el ultimo logro **baja al pie** (su seccion costaba ~100 px) y la celda de Foco **no es un boton**. **DOS DEFECTOS MIOS**: el recorte no se aplicaba (los estilos EN LINEA ganan a la hoja, el mordisco de s174) y la celda «Respira» **se llamaba igual que el chip de la home**, con **15 tests en rojo y ninguno del producto**. **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes. **169/169** (eran 153).)
 
 ## Red de seguridad -- archivos vivos
 
@@ -120,7 +120,7 @@
 | `app/custom/exercise-aliases.js` | `VISUAL_ALIAS` + `resolveVisualId` — identidad visual compartida (visualId) | **NUEVO s110** |
 | `app/extra/ExtraModule.jsx` | Modulo Estira (EXTRA_ROUTINES + getExtraRoutine) | **v0.72.0** |
 | `app/hydrate/HydrateModule.jsx` | Tracker de vasos | **v0.21.0** |
-| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable — **solo ORQUESTADOR** desde s148 (compone secciones, no dibuja ninguna ni decide ninguna). **REESCRITO s180**: Hoy · accion · semana · pie. Las secciones se componen en una **lista** y los separadores van **entre** ellas — colgarlos de cada bloque daba dos reglas seguidas al mover la accion de sitio | **v0.111.0** |
+| `app/shell/Sidebar.jsx` | Sidebar izquierdo colapsable — **solo ORQUESTADOR** desde s148 (compone secciones, no dibuja ninguna ni decide ninguna). **REESCRITO s180**: Hoy · accion · semana · pie. Las secciones se componen en una **lista** y los separadores van **entre** ellas — colgarlos de cada bloque daba dos reglas seguidas al mover la accion de sitio | **v0.112.0** |
 | `app/shell/Sidebar.support.jsx` | Soporte sin UI del sidebar: hoja responsive inyectada + `sidebarStyles`. **`sidebarStyles` viaja por `window`** (un `const` no cruza la IIFE del build; misma solucion que `pathStepStyles`) y se referencia PELADO. **Carga ANTES** de `.parts` y de `Sidebar.jsx` | **NUEVO s148** |
 | `app/shell/Sidebar.selectors.js` | **Los cuatro selectores PUROS de la sidebar (s180)** — `selectSidebarToday` · `selectSidebarWeek` · `selectSidebarPrimaryAction` · `selectSidebarLatestAchievement`. **No leen `window`**: los eventos entran POR PARAMETRO, asi que se prueban sin montar el almacen. Aqui vive el criterio de dia activo (foco/respira/cuerpo; **el agua sola NO**) y el indice lunes-primero | **NUEVO s180** |
 | `app/shell/Sidebar.parts.jsx` | Piezas de UI del sidebar. **REESCRITO s180**: `SidebarToday` (rejilla 2x2 con los glifos de `ActivityBar`) · `sidebarActionView` + `SidebarPrimaryAction` · `SidebarWeek` (el bloque ENTERO es un boton) · `SidebarFooter` (lleva el ultimo logro) · `achMini` · `ChevronLeftIcon`. **RETIRADOS**: `SenderoDelDia`, `WeekDots`, `AchievementsPreview` y `StatusBar` | **NUEVO s148 · reescrito s180** |
@@ -240,6 +240,20 @@
   `lastActiveDay` el rollover archiva la semana, y sin las guardas de migracion
   `_historyRecalculated_v0_28_8` la recalcula desde un historico vacio. **Tres
   rojos con el mismo sintoma** antes de dar con las dos manos.
+
+- **[LA SEGUNDA MITAD: EL USUARIO PRUEBA Y REPORTA DIEZ COSAS]** (v0.112.0)
+  **Decide GEOMETRIA FIJA en escritorio** -- la columna mide lo mismo en
+  cualquier monitor, con el pie anclado abajo. Se habia probado repartir el
+  aire y **nunca repartio nada**: el espaciador con `flex: 1` se comia los
+  378 px porque el flex-grow va antes que los margenes automaticos, **y el
+  numero estaba a la vista en la maqueta** (455 de hueco contra 389) sin que lo
+  leyera. **Tres defectos estaban PUBLICADOS**: la tarjeta no era clicable
+  entera (74 x 23 px de 243 x 117 -- React no crea pseudo-elementos desde un
+  estilo en linea), la miniatura del logro salia a 16,1 px y la semana decia
+  «1 dias». **El «+» de Agua pisaba los ocho vasos 17,2 px** y se retira: la
+  celda entera suma. **Y el metodo se cobro una**: al quitar ese CSS el corte
+  se llevo la regla del `::after`, y **la cazo su propio test** escrito veinte
+  minutos antes.
 
 > Diario con las siete mentiras del instrumento:
 > [`docs/sessions/session-180-la-sidebar-como-brujula.md`](docs/sessions/session-180-la-sidebar-como-brujula.md).

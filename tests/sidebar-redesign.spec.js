@@ -68,6 +68,7 @@ function estructura(page) {
       : e.getBoundingClientRect().height <= 2 ? 'regla'
       : e.querySelector('[data-pace-hoy]') ? 'HOY'
       : e.querySelector('[data-pace-semana]') ? 'SEMANA'
+      : e.querySelector('[data-pace-sidebar-ultimo]') ? 'LOGRO'
       : e.tagName === 'P' ? 'vacio'
       : 'pie'
     )).filter(x => x !== 'chevron');
@@ -173,11 +174,22 @@ test('la celda de Respira no se llama igual que el chip de la home', async ({ pa
   await expect(sb(page).getByRole('button', { name: 'Abrir Respira' })).toHaveCount(1);
 });
 
-test('el «+1» de agua suma un vaso sin salir de la sidebar', async ({ page, context }) => {
+test('la celda de Agua SUMA un vaso; las otras tres NAVEGAN', async ({ page, context }) => {
+  /* Agua es la unica celda que ACTUA. El «+» que habia antes se retiro: era un
+     segundo objetivo dentro de una celda de 117 px y ademas pisaba los ocho
+     vasos 17,2 px. Se aserta tambien que ya NO existe, porque volver a meterlo
+     seria repetir el defecto. */
   await sembrar(context, Object.assign({}, ABIERTA, { water: { goal: 8, today: 2, lastReset: null } }));
   await irAlArtefacto(page);
-  await sb(page).locator('[data-pace-hoy-mas]').click();
+  await expect(sb(page).locator('[data-pace-hoy-mas]')).toHaveCount(0);
+
+  await sb(page).locator('[data-pace-hoy-celda][data-modulo="water"]').click();
   await expect.poll(() => page.evaluate(() => getState().water.today)).toBe(3);
+  /* Y no abre ningun modal: sumar no es navegar. */
+  await expect(page.locator('[data-pace-modal-backdrop]')).toHaveCount(0);
+
+  /* Su etiqueta dice lo que HACE, no «Abrir Agua». */
+  await expect(sb(page).getByRole('button', { name: 'Añadir un vaso' })).toHaveCount(1);
 });
 
 /* ==========================================================================
@@ -250,6 +262,42 @@ test('con una sesión terminada la tarjeta dice REPETIR y nombra la rutina', asy
   await expect(tarjeta).toContainText('Box 4·4·4·4');
 });
 
+test('la tarjeta ENTERA es clicable, no solo su titulo', async ({ page, context }) => {
+  /* ESTUVO PUBLICADO ROTO y lo vio el usuario. El objetivo era el titulo --
+     medido, **74 x 23 px** de una tarjeta de 243 x 98-- porque el patron de
+     s174 necesita un `::after` absoluto y **React no crea pseudo-elementos
+     desde un estilo en linea**: tiene que estar en la hoja. Se prueban las
+     CUATRO esquinas y el centro, no un punto: con el `::after` mal medido
+     (contra el <h4> en vez de contra la tarjeta) el centro pasaba y las
+     esquinas de abajo no. */
+  await sembrar(context, ABIERTA);
+  await irAlArtefacto(page);
+  await sembrarSesion(page, 'breathe.box.4', 'breathe');
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+
+  const r = await page.evaluate(() => {
+    const c = document.querySelector('[data-pace-sidebar-accion]');
+    const b = c.getBoundingClientRect();
+    const puntos = [
+      ['arriba-izq', b.left + 12, b.top + 8],
+      ['arriba-dcha', b.right - 12, b.top + 8],
+      ['centro', b.left + b.width / 2, b.top + b.height / 2],
+      ['abajo-izq', b.left + 10, b.bottom - 8],
+      ['abajo-dcha', b.right - 20, b.bottom - 10],
+    ];
+    return puntos.map(([n, x, y]) => {
+      const el = document.elementFromPoint(x, y);
+      return { punto: n, llega: !!(el && el.closest('button') && el.closest('[data-pace-sidebar-accion]')) };
+    });
+  });
+  expect(r.filter(p => !p.llega), 'puntos de la tarjeta que NO llegan al boton').toEqual([]);
+
+  /* Y el encabezado sigue siendo encabezado: el patron existe justamente para
+     no perderlo (un `role="button"` en la tarjeta tumbo 9 tests en s174). */
+  await expect(sb(page).locator('[data-pace-sidebar-accion] h4')).toHaveCount(1);
+});
+
 test('la tarjeta NUNCA sugiere: sin historial no ofrece nada', async ({ page, context }) => {
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
@@ -311,13 +359,20 @@ test('ni en móvil ni en escritorio hay scroll horizontal', async ({ page, conte
    EL PIE Y EL ÚLTIMO LOGRO
    ========================================================================== */
 
-test('sin logros el pie ofrece la colección; con uno, lo nombra', async ({ page, context }) => {
+test('el último logro tiene SECCIÓN con rótulo, y nombra el más reciente', async ({ page, context }) => {
+  /* VIVIO BREVEMENTE EN EL PIE y el usuario lo reporto en produccion: ahi «se
+     entiende raro», porque sin rotulo un titulo suelto al lado de «Apoyar
+     PACE» no dice que es. El aserto del ROTULO es el que defiende ese arreglo:
+     sin el, la seccion podria volver a degradarse a un enlace y nadie se
+     enteraria. */
   await sembrar(context, ABIERTA);
   await irAlArtefacto(page);
+  await expect(sb(page).getByText('Último logro', { exact: true })).toHaveCount(1);
+
   const vacio = sb(page).locator('[data-pace-sidebar-ultimo]');
   await expect(vacio).toHaveCount(1);
   await expect(vacio).toHaveAttribute('data-pace-sidebar-ultimo', '');
-  await expect(vacio).toContainText('colección');
+  await expect(vacio).toContainText('Aún no hay ninguno');
 
   await sembrarPisando(context, Object.assign({}, ABIERTA, {
     achievements: { 'first.sip': { unlockedAt: 1736120000000 } },
@@ -326,6 +381,23 @@ test('sin logros el pie ofrece la colección; con uno, lo nombra', async ({ page
   const conUno = sb(page).locator('[data-pace-sidebar-ultimo]');
   await expect(conUno).toHaveAttribute('data-pace-sidebar-ultimo', 'first.sip');
   await expect(conUno).toContainText('Primer sorbo');
+  /* Y la coleccion sigue accesible desde el pie, que es otra cosa. */
+  await expect(sb(page).getByRole('button', { name: 'Ver la colección' })).toHaveCount(1);
+});
+
+test('el orden es Hoy · Continúa · Último logro · Esta semana', async ({ page, context }) => {
+  /* Orden elegido por el usuario mirandolo. Se aserta la SECUENCIA entera y no
+     solo un par: mover una seccion sin darse cuenta es exactamente el fallo
+     que este aserto tiene que cazar. */
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await sembrar(context, ABIERTA);
+  await irAlArtefacto(page);
+  await sembrarSesion(page, 'breathe.box.4', 'breathe');
+  await page.reload();
+  await page.locator('[data-pace-dial-number]').waitFor({ state: 'visible' });
+
+  const orden = (await estructura(page)).filter(x => x !== 'regla' && x !== 'spacer');
+  expect(orden).toEqual(['logo', 'HOY', 'ACCION', 'LOGRO', 'SEMANA', 'pie']);
 });
 
 test('el último logro es el MÁS RECIENTE, no el primero del objeto', async ({ page, context }) => {

@@ -232,3 +232,92 @@ Medidos en la app servida, con la tarjeta de acción presente:
 - **El raíl colapsado NO se propuso**: existía y **el usuario lo mandó quitar en
   s9**. Con los glifos nuevos volvería a tener sentido, pero es decisión suya.
 - **Que el agua sola no enciende el día** ya no lo dice ninguna superficie.
+
+---
+
+# Segunda mitad · v0.112.0 · la geometría fija
+
+> El usuario prueba en producción lo que se publicó en v0.111.0 y reporta
+> **diez cosas**. Tres eran defectos que estaban publicados.
+
+## 10 · La decisión: geometría FIJA
+
+Sus palabras: *«la barra va a disponer de una geometría fija independientemente
+de la resolución del desktop»*. La columna mide lo mismo en un portátil que en
+un monitor de 1440, con el pie anclado abajo y el sobrante al final.
+
+Es la decisión correcta y la razón es operativa: **un ritmo que cambia con la
+pantalla no se puede afinar**, porque cada número vale una cosa distinta en cada
+equipo. Con geometría fija, «sube un 20 %» es una instrucción ejecutable.
+
+**Y de paso corrige un error mío que estuvo a la vista todo el tiempo.** Antes
+se probó repartir el sobrante entre las reglas con `margin: auto`, y **nunca
+repartió nada**: el espaciador con `flex: 1` se comía el sobrante entero — 378
+px a 1030 de alto — porque el flex-grow se resuelve **antes** que los márgenes
+automáticos. El número estaba impreso en la propia maqueta: la variante «aire
+repartido» daba **455 px** de hueco contra los **389** de la que no repartía, o
+sea *más*. Lo publiqué como si funcionara.
+
+## 11 · Los ajustes, medidos uno a uno
+
+| | Antes | Ahora | Pedido |
+|---|---|---|---|
+| Aire sobre el logo | 31,5 | **27,5** | −12 % |
+| Del logo a su regla | 35,6 | **28,5** | −20 % |
+| Aire sobre «Esta semana» | 19 | **22** | +15 % |
+| Tarjeta de Repetir | 98 px | **117 px** | más aire entre líneas |
+| Logo (ancho del dibujo) | 216,9 | **173,4** | −20 % |
+
+El primer intento del −20 % se quedó en **−8,6 %**, y la causa es que ese hueco
+son **tres sumandos** —la holgura dentro de la banda, el margen del `logoBar` y
+el margen de la regla— y yo toqué uno. Bajar un porcentaje exige saber de qué
+está hecho el número.
+
+## 12 · Tres defectos que estaban publicados
+
+- **La tarjeta de acción no era clicable entera.** El objetivo eran **74 × 23 px**
+  de una tarjeta de 243 × 117. El patrón de s174 necesita un `::after` absoluto,
+  y **React no crea pseudo-elementos desde un estilo en línea**: tiene que estar
+  en la hoja. Además debe medirse contra la **tarjeta**, no contra el `<h4>` —
+  con el `<h4>` posicionado, el centro pasaba y las esquinas de abajo no.
+- **La miniatura del logro renderizaba a 16,1 px.** El 62 % venía de cuando eran
+  cinco miniaturas diminutas.
+- **«1 días en ritmo».** El singular va como clave aparte: en inglés la frase
+  entera cambia de forma, y partirla por la palabra obliga a que las dos lenguas
+  compartan gramática.
+
+## 13 · El «+» de Agua, y por qué se va
+
+No era «raro»: **pisaba los ocho vasos 17,2 px**. Y era un **segundo objetivo**
+dentro de una celda de 117 px. El usuario eligió entre tres opciones que **la
+celda entera sume el vaso**, así que el «+» sobra: el objetivo es mucho mayor y
+no hay dos controles que distinguir. Es la única celda que **actúa** en vez de
+navegar, y su etiqueta lo dice.
+
+## 14 · El método se cobró una
+
+Al retirar el CSS del «+», el corte **se llevó por delante la regla del
+`::after`** que acababa de arreglar la clicabilidad. **La cazó su propio test**,
+escrito veinte minutos antes, que prueba las **cuatro esquinas y el centro** en
+vez de un punto. Cinco minutos, en vez de publicarlo roto por segunda vez.
+
+Es el argumento entero a favor de calibrar en rojo: el test existía porque vi
+fallar el defecto, y por eso supo reconocerlo cuando volvió por otra puerta.
+
+## 15 · El último logro recupera su rótulo
+
+En v0.111.0 bajó al pie por espacio y el usuario lo reportó: ahí «se entiende
+raro». **Era el mismo problema que el hueco del final** — al quitarle la sección
+se quedó sin lo que lo explicaba. Vuelve como sección compacta en el orden que
+eligió: **Hoy → Continúa → Último logro → Esta semana**.
+
+## 16 · Lo que queda para la siguiente
+
+- **CTB entero**, fuera de v1, con permiso de prototipo.
+- **La cola de s178**: gemelo de pie, flexor de cadera contra la mesa, aductores
+  sentado, y la decisión sobre `move.chair.antidote`.
+- **El móvil no se ha revisado con estos ojos**: lleva sus propios números
+  (10/10 en vez de 14/14) y nadie los ha mirado a tamaño real.
+- **La rama «CONTINÚA» de Camino sigue inalcanzable** y sin probar.
+- **Escalar el contenido con la resolución queda DESCARTADO** por la decisión de
+  geometría fija.
