@@ -8,6 +8,7 @@
    hermanos, con el mismo patrón que Foco (`FocusTimer` + `.support` +
    `.parts`):
 
+     · `Sidebar.escala.jsx`    → el motor de la escala (s182)
      · `Sidebar.support.jsx`   → hoja responsive inyectada + `sidebarStyles`
                                  (que viaja por window: leer su cabecera)
      · `Sidebar.selectors.js`  → los cuatro selectores PUROS
@@ -46,131 +47,11 @@ function Sidebar() {
 
   const toggle = () => set({ sidebarCollapsed: !collapsed });
 
-  /* ====================================================================
-     LA ESCALA · «que se vea siempre igual, en cualquier resolucion»
-     ====================================================================
-     Decision del usuario (s181), con sus palabras: «si hay que hacer a la vez
-     pequenos a TODOS los elementos de la sidebar, perfecto». Lo que se
-     conserva es la COMPOSICION, no un tamano en pixeles.
-
-     POR QUE UNA TRANSFORMACION Y NO APRETAR EL AIRE: se probo lo segundo y
-     bajaba la columna de 835,9 a 700,3 px, pero para lograrlo cambiaba las
-     PROPORCIONES -- las reglas pasaban de 12 a 5 px de margen mientras el texto
-     seguia igual-- y el usuario lo rechazo mirandolo. Una escala uniforme no
-     cambia ninguna proporcion: es la misma sidebar, mas pequena.
-
-     POR QUE SE MIDE Y NO SE FIJA UNA CONSTANTE: el alto natural depende del
-     contenido (que la tarjeta este o no, el idioma, el titulo del logro).
-     Medirlo se corrige solo; una constante habria que acordarse de tocarla.
-
-     COMO SE MIDE SIN MENTIR Y SIN MUTAR NADA: se suman los hijos con
-     `offsetHeight` + sus margenes, saltando el espaciador. `offsetHeight` es un
-     valor de LAYOUT y las transformaciones no lo tocan -- al contrario que
-     `getBoundingClientRect`, que devuelve la caja YA transformada (trampa de
-     s177). La primera version de esto anulaba el `min-height` con un atributo
-     para poder leer la envoltura entera, y eso invalidaba el layout DOS veces
-     por render; con el Pomodoro corriendo eso es cada segundo.
-
-     Y LA SALVAGUARDA: `data-escalado` solo se pone a 1 cuando de verdad hay
-     escala. Mientras vale 0 la sidebar conserva su `overflow-y: auto` de
-     siempre, asi que si esto no llegara a ejecutarse el resultado seria el
-     comportamiento de hoy -- scroll-- y nunca un recorte mudo. */
-  const escalaRef = React.useRef(null);
-  const ultimaEscalaRef = React.useRef(null);
-
-  React.useLayoutEffect(function () {
-    const caja = escalaRef.current;
-    if (!caja) return;
-    /* La lente es su padre y el aside su abuelo. El alto disponible se le
-       pregunta a la LENTE, que ya viene con el padding del aside descontado
-       por ser su hijo flexible: una resta menos que hacer a mano. */
-    const lente = caja.parentElement;
-    const aside = caja.closest('[data-pace-sidebar]');
-    if (!lente || !aside) return;
-
-    function aplicar(escala) {
-      /* Sin escribir de mas: el navegador invalida el layout con cada cambio de
-         estilo, y este efecto corre en cada render. */
-      if (ultimaEscalaRef.current === escala) return;
-      ultimaEscalaRef.current = escala;
-      caja.style.setProperty('--sb-escala', String(escala));
-      aside.setAttribute('data-escalado', escala < 1 ? '1' : '0');
-    }
-
-    function recalcular() {
-      /* EN MOVIL NO SE ESCALA. El cajon va a pantalla completa con
-         `height: auto` y se dimensiona al contenido: alli el scroll es el
-         comportamiento correcto, no un fallo que tapar. */
-      if (esCajon()) { aplicar(1); return; }
-
-      let natural = 0;
-      const hijos = caja.children;
-      for (let i = 0; i < hijos.length; i++) {
-        const el = hijos[i];
-        if (el.hasAttribute('data-pace-sidebar-spacer')) continue;
-        const st = window.getComputedStyle(el);
-        if (st.position === 'absolute' || st.position === 'fixed') continue;
-        natural += el.offsetHeight
-          + (parseFloat(st.marginTop) || 0)
-          + (parseFloat(st.marginBottom) || 0);
-      }
-
-      const disponible = lente.clientHeight;
-
-      if (!(natural > 0) || !(disponible > 0)) { aplicar(1); return; }
-
-      /* Nunca AGRANDA: por encima de su tamano natural la sidebar se queda como
-         esta y el sobrante se va al espaciador, que es lo que ya hacia. */
-      const escala = Math.min(1, Math.round((disponible / natural) * 10000) / 10000);
-      aplicar(escala);
-    }
-
-    recalcular();
-
-    /* SE OBSERVA LA CAJA, NO LA VENTANA -- y esto no es preferencia de estilo.
-       La primera version solo escuchaba `resize` de `window`, y MEDIDO: al
-       cambiar el viewport desde Playwright (`setViewportSize`) ese evento NO SE
-       DISPARA -- cero eventos con `innerHeight` ya cambiado-- asi que la escala
-       se quedaba clavada en el valor del arranque. Se vio porque la suite daba
-       0,8251 a los seis altos mientras el ratio real iba de 1,17 a 0,71.
-       Si un entorno de verdad hace lo mismo (algunos webviews al recolocar
-       barras), el defecto seria el mismo y silencioso. `ResizeObserver` mira el
-       alto de la LENTE, que es lo que de verdad manda, y se dispara venga de
-       donde venga el cambio. No hay realimentacion: la escala cambia el tamano
-       de la ENVOLTURA, y la lente la dimensiona el flex del aside.
-       El `resize` de ventana se queda como segunda via para el caso de un
-       navegador sin `ResizeObserver`.
-       SIN DEBOUNCE a proposito: con 60 ms la sidebar iba un instante por detras
-       al redimensionar, y el coste real es una lectura de layout que el
-       navegador ya iba a hacer. */
-    let observador = null;
-    if (typeof window.ResizeObserver === 'function') {
-      observador = new window.ResizeObserver(recalcular);
-      observador.observe(lente);
-    }
-    window.addEventListener('resize', recalcular);
-
-    /* Y OTRA VEZ CUANDO LLEGUEN LAS FUENTES. Este no es un remate defensivo:
-       lo destapo un rojo intermitente -- uno de cada tres-- y la causa era del
-       PRODUCTO, no del test. El alto natural depende de las metricas de la
-       fuente, asi que si las webfonts terminan de cargar DESPUES de calcular la
-       escala, el numero se queda hecho con la fuente de reserva. Nada lo
-       corrige: el ResizeObserver mira la lente, cuyo alto no cambia porque
-       cambien las fuentes. En una conexion lenta eso deja la sidebar mal
-       escalada de forma permanente.
-       `document.fonts.ready` es la promesa y es fiable; `document.fonts.check()`
-       NO -- devuelve false con las fuentes ya cargadas (trampa de s180). */
-    let vivo = true;
-    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
-      document.fonts.ready.then(function () { if (vivo) recalcular(); });
-    }
-
-    return function () {
-      vivo = false;
-      window.removeEventListener('resize', recalcular);
-      if (observador) observador.disconnect();
-    };
-  });
+  /* LA ESCALA · la columna entera encoge para caber, en las DOS pieles.
+     El motor vive en `Sidebar.escala.jsx` (s182): son ~200 lineas de
+     geometria medida, y este archivo es el ORQUESTADOR. Devuelve la ref que
+     hay que colgar de la envoltura que escala. */
+  const escalaRef = useSidebarEscala();
 
   /* Colapsado → ocultar TOTALMENTE.
      La re-expansión se hace con un botón flotante que renderiza <PaceApp/>.

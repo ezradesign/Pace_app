@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.114.0** | 2026-09-02 | feat(sidebar)+fix(censo): **el cajon de movil encoge tambien, y el censo que un troceo dejo ciego** — Los tres encargos que el usuario saco de mirar la revision de s181, medidos y **pintados antes de decidir**. **A NO ERA UN DEFECTO**: 375x844 no corta nada -- el corte era del carrusel horizontal de la propia pagina de revision. **B y C los decidio el usuario viendo las 30 capturas**, y su respuesta a C no era ninguna de las cuatro opciones: «escalarla en todas las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno scroll **sin barra**». **UN NUMERO MIO DEL HANDOFF ERA FALSO Y HABRIA VICIADO LA DECISION**: 0,85 no hace caber 667, porque faltaba contar los 45 px del propio cajon. El suelo real es **0,80**, elegido por dos medidas (la semana se queda en 36 px, sobre los 24 de WCAG 2.2 AA; y hace caber entero el iPhone SE/8). **EL BANCO FOTOGRAFIO SU PROPIA MUTACION**: su limpieza entre variantes borraba `--sb-escala`, la propiedad que escribe el producto, y con el memo de `aplicar` no se volvia a escribir nunca -- dio «factor 1» sobre una app que en vivo estaba a 0,8083, y ahora recarga por variante y **cruza dos instrumentos**. Y el censo de glifos: **s178 lo dejo ciego a Estira entera** al trocear el dato, y devolvia **61 donde hay 62** sin que nada saltara. **173 → 185**, con 6 mutantes calibrados en rojo. | s182 | [session-182](./docs/sessions/session-182-el-cajon-de-movil.md) |
 | **v0.113.0** | 2026-09-02 | fix(sidebar): **la sidebar encoge entera, y la tarjeta que se amputaba sola** — Cierra el trabajo que s180 dejo sin commitear y resuelve el problema de altura que su handoff dejo ABIERTO, con un diagnostico DISTINTO del que ese handoff daba por bueno. **LOS 747 px DEL HANDOFF ERAN EL SUELO COMPRIMIDO, NO LA ALTURA**: la natural eran **835,9** (dos cuentas independientes: la suma de las piezas menos el chevron, que es absolute, y el primer viewport sin sobrante). **EL SINTOMA NO ERA UNA BARRA DE SCROLL sino la TARJETA quedandose sin texto**: `sidebarStyles.accion` lleva `overflow: hidden`, y eso **APAGA el tamano minimo automatico del flex** -- que solo aplica con `overflow: visible`-- asi que era el UNICO hijo comprimible de doce y absorbia el deficit entero amputandose. **DOS UMBRALES**: por debajo de 836 pierde contenido, y entre 750 y 836 lo pierde **sin barra que avise**. A 714 la tarjeta media **33 px**: rotulo y nada mas. **Y ESTABA PUBLICADO**: HEAD trae la misma linea y desborda **50 px** a 714, mas que el arbol. **SE CONSTRUYO LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA**: apurar el aire bajaba la columna a **700,3** (135,6 px, de los que **56 salian solo de las cuatro reglas**) pero cambiaba las PROPORCIONES. Su instruccion: «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto» ⇒ **la columna se ESCALA entera** con `transform`, misma composicion y solo mas pequena: **1 · 0,926 · 0,822 · 0,708** a 1000/800/714/620, con el pie siempre a 18 px del borde y sin agrandar nunca por encima de su tamano natural. **LA LENTE NO ESTABA EN EL PLAN**: la envoltura mide `100%/escala` de ancho y desbordaba **52 px** en layout, tumbando un guard de scroll lateral que ya existia -- se arreglo el diseno, no el guard. **LOS MINUTOS DE HOY YA COMPARTEN LINEA**: `puntosSesion` devolvia `null` sin sesiones, asi que tres celdas no tenian fila de bolas y Agua si, y con `marginTop: auto` el valor caia al fondo en tres y no en la cuarta. **EL ROJO INTERMITENTE TENIA RAZON Y ERA DEL PRODUCTO**: si las webfonts cargan DESPUES de calcular la escala, el numero queda hecho con la fuente de reserva y **nada lo corrige**. Ademas: regla nueva en el pie y **pill naranja** en «Mis rutinas». **El precio, dicho**: encoger encoge los objetivos tactiles (la semana, de 45 a **37,1 px** a 1280x720; sigue sobre el minimo AA de 24). **Tres mentiras del instrumento nuevas**: `setViewportSize` de Playwright **no emite `resize`**, el `ResizeObserver` no dispara sobre la lente en headless, y fotografie mi propia mutacion. **173/173** (eran 170), 3 tests nuevos y dos troceos por la regla §1. | s181 | [session-181](./docs/sessions/session-181-la-sidebar-que-encoge-entera.md) |
 | **v0.112.0** | 2026-09-02 | fix(sidebar): **la geometria fija, y el corte de CSS que se llevo un arreglo por delante** — Segunda mitad de s180: el usuario prueba la sidebar publicada y reporta diez cosas. **DECIDE GEOMETRIA FIJA EN ESCRITORIO**: la columna mide lo mismo en un portatil que en un monitor de 1440, con el pie anclado abajo. Se habia probado lo contrario -- repartir el aire con `margin: auto`-- y **NUNCA REPARTIO NADA**: el espaciador con `flex: 1` se comia el sobrante (378 px a 1030 de alto) porque el flex-grow va antes que los margenes automaticos, **y el numero estaba a la vista en la maqueta** (la variante «aire repartido» daba 455 px de hueco contra los 389 de la que no repartia) sin que yo lo leyera. **AJUSTES MEDIDOS uno a uno**: aire sobre el logo −12,7 % (31,5 → 27,5), del logo a su regla −19,8 % (35,6 → 28,5), «Esta semana» +15,8 % de aire arriba, la tarjeta de Repetir de 98 a 117 px, el logo un 20 % mas pequenio (216,9 → 173,4 de ancho) y el ultimo logro centrado, en peso 400 y tinta secundaria. **EL «+» DE AGUA DESAPARECE**: era un segundo objetivo en una celda de 117 px **y pisaba los ocho vasos 17,2 px**; ahora la celda entera suma el vaso y su etiqueta dice lo que hace. **TRES DEFECTOS QUE ESTABAN PUBLICADOS**: la tarjeta de accion **no era clicable entera** (el objetivo eran 74 x 23 px de 243 x 117, porque el patron de s174 necesita un `::after` y **React no crea pseudo-elementos desde un estilo en linea**), la miniatura del logro renderizaba a **16,1 px** y la semana decia **«1 dias en ritmo»**. **Y EL METODO SE COBRO UNA**: al retirar el CSS del «+», el corte se llevo por delante la regla del `::after` -- **la cazo su propio test**, escrito veinte minutos antes, probando las cuatro esquinas y el centro. El ultimo logro **recupera su rotulo**: en el pie «se entendia raro», y era el mismo problema que el hueco del final. Orden nuevo: Hoy → Continua → Ultimo logro → Esta semana. **171/171** (eran 153), 3 tests nuevos. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
 | **v0.111.0** | 2026-09-01 | feat(sidebar): **la sidebar como brujula, y el margen transparente que tapaba una compresion** — Primera mitad de un brief largo (sidebar + CTB musical); **CTB queda FUERA DE v1** por decision del usuario y el ROADMAP no se toca. La sidebar deja de informar y pasa a responder cuatro preguntas: que he hecho hoy, que puedo continuar, como va la semana y cual fue mi ultimo logro. **SE APROBO MIRANDOLA** (nueve variantes sobre cajas a medida real) y ahi el usuario eligio: logo al 80 %, Hoy en rejilla 2x2 con glifos y centrado, y la tarjeta que **solo puede decir CONTINUAR o REPETIR** — nunca «prueba esto». **EL LOGO: 716x471 DE LIENZO PARA UN DIBUJO DE 488x194** (93,53 % a alfa 0). Puesto en la banda gastaba **178,3 px de los que 104,9 eran aire**, y de regalo la banda **ya se comprimia 7,3 px** con la imagen desbordandola **13,7** — invisible **porque lo que desbordaba era transparencia**. Se recorta **por CSS y no con un archivo nuevo**: el `<img id="pace-logo-src">` lo leen DOS consumidores y un segundo PNG son ~100 KB de base64 en el artefacto. **LOS GLIFOS NO HUBO QUE DIBUJARLOS**: pulmones, mancuerna y gota son los de `ActivityBar.jsx`, que el BreakMenu ya reutilizaba desde s105. El unico nuevo es `ABFocus`, y faltaba porque en la home Foco **es el aro**. **TRES HALLAZGOS QUE CAMBIAN LO ACORDADO**: la rama «CONTINUA» de Camino es **hoy inalcanzable** (`PathRunner` tapa la pantalla y salir llama a `abandonPath()`); el ultimo logro **baja al pie**, porque su seccion costaba ~100 px y con ellos no cabe a 1280x720 con tarjeta; y la celda de Foco **no es un boton** porque no hay nada que abrir. **DOS DEFECTOS MIOS**: el recorte no se aplicaba —los estilos EN LINEA de la imagen ganan a la hoja, el mordisco de s174— y la celda «Respira» **se llamaba igual que el chip de la home**, lo que dejo **15 tests en rojo y ninguno del producto** (arreglado con «Abrir Respira», que ademas es mejor a11y). **Suelo 662** contra los **720 exactos con el espaciador ya a 0** de antes: a 1536x714 la sidebar vieja ya scrolleaba. Movil sin scroll a 390x844 **y a 320x568**. **169/169** (eran 153), con `tests/sidebar-redesign.spec.js` y 3 mutantes que muerden. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
@@ -380,6 +381,148 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.114.0] -- 2026-09-02 -- feat(sidebar)+fix(censo): el cajon de movil encoge tambien
+
+Los tres encargos que el usuario saco de mirar la revision de s181, medidos y
+**pintados antes de decidir**, mas su pregunta sobre los glifos.
+
+### A · 375x844 no era un defecto de la app
+
+Verificado y cerrado sin tocar codigo: el cajon llega a `right = 375`, el
+documento da `scrollWidth - clientWidth = 0` y **queda 0 px fuera de la primera
+pantalla**. El corte era del **carrusel horizontal de la propia pagina de
+revision** de s181, que recortaba capturas sin decirlo. Un instrumento que
+recorta en silencio manda a alguien a buscar un defecto que no existe.
+
+### B · El aire de la caja «Para ahora», solo en el cajon
+
+Bajo su ultima linea habia **28 px** (16 de `padding-bottom` + ~12 del
+descender). Bajar el padding a 8 devuelve **8 px exactos**, y a 428x800 eso mueve
+el pie de estar **1,4 px por debajo del borde** a tener **6,6 dentro**.
+
+Va en la hoja y **no** en `sidebarStyles.accion`, que comparten las dos pieles:
+en escritorio ese aire se afino mirandolo en s180 y no se toca. Y lleva
+`!important` **por necesidad**: el padding lo pone un estilo EN LINEA, que gana a
+la hoja sin que haga falta `!important` del otro lado (trampa de s180 con el
+recorte del logo).
+
+### C · La escala en movil, y el numero del handoff que era falso
+
+El handoff proponia un suelo de 0,85 «porque 0,85 x 780 = 663, asi que de 667
+para arriba cabe entero». **Medido: a 375x667 con 0,85 todavia se salen 38 px.**
+Faltaba contar el propio cajon -- **22 px de padding arriba y abajo** mas un
+`min-height: calc(100dvh + 1px)`-- asi que a 667 el hueco real son **622**. El
+numero estaba construido sobre el VIEWPORT en vez de sobre el HUECO, y habria
+viciado la decision entera.
+
+**La respuesta del usuario no fue ninguna de las cuatro opciones ofrecidas**:
+«escalarla en todas las resoluciones que quede bien y en las mas pequenas
+aceptamos un pequeno scroll **sin barra**». Las cuatro eran «si con este suelo» o
+«no»; su respuesta anade un requisito que ninguna llevaba.
+
+**`SUELO_CAJON = 0,80`**, elegido por dos medidas y no a ojo: el bloque de la
+semana -- el objetivo tactil que s180 afino a 45 px-- se queda en **36**, holgado
+sobre el minimo de WCAG 2.2 AA (24), y hace caber ENTERO **375x667**, el iPhone
+SE/8.
+
+| viewport | escala | fuera | el pie termina a |
+|---|---|---|---|
+| 360 x 560 | **0,80** (suelo) | 101 px | -79,1 |
+| 360 x 640 | **0,80** (suelo) | 21 px (solo padding) | +0,9 |
+| 375 x 667 | 0,809 | **0** | +21,5 |
+| 390 x 736 | 0,898 | **0** | +21,5 |
+| 428 x 800 | 0,981 | **0** | +21,6 |
+| 375 x 844 | 1 | **0** | +50,6 |
+
+El precio, dicho: el texto secundario de 11 px se ve a **8,8** y las iniciales de
+los dias, de 9, a **7,2**.
+
+### Lo que la implementacion tuvo que resolver, y no estaba en el plan
+
+**El alto disponible no se pregunta en el mismo sitio en las dos pieles.** En
+escritorio la lente es un hijo FLEXIBLE y su `clientHeight` es el hueco real. En
+el cajon es `display: block` y **se dimensiona al contenido**, asi que
+preguntarle devuelve el alto natural y la escala sale exactamente 1: sin error,
+sin aviso y sin efecto.
+
+**Y el reves del mismo hecho:** una transformacion no cambia la caja de layout,
+asi que el alto que la columna escalada OCUPA tampoco lo sabe el CSS. Lo escribe
+el motor en `--sb-alto` y la hoja lo consume. Si ese numero fuera menor que el
+contenido escalado, la lente -- que lleva `overflow: hidden`-- se comeria el pie
+**sin barra que lo dijera**. Por eso el test no mira alturas: hace scroll y
+comprueba que el pie SE VE.
+
+**El observador cambia y la guarda deja de ser una optimizacion.** En el cajon la
+lente ya no avisa de nada, porque su alto lo escribimos nosotros DESPUES del
+calculo; alli avisa el aside. Se observan los dos, y la guarda de valor de
+`aplicar()` pasa a **cortar un bucle**: converge en una pasada.
+
+**La barra se oculta y el scroll se conserva** (`scrollbar-width: none` +
+`::-webkit-scrollbar`), el patron del centro de sesion. `overflow: hidden` haria
+lo primero matando lo segundo, que no es lo que se pidio.
+
+**La regla §1 mordio**: `Sidebar.jsx` llego a 506 lineas y el motor sale a
+`app/shell/Sidebar.escala.jsx`. La costura no es de kilometraje -- `Sidebar.jsx`
+es el orquestador y esto es geometria-- y deja el orquestador en **318**.
+
+### El banco fotografio su propia mutacion
+
+Con la escala ya implementada, el banco devolvio «escala 1 · fuera 0 · pie
+-126,4»: tres cosas incompatibles en una fila. Su limpieza entre variantes hacia
+`removeProperty('--sb-escala')`, y **esa es exactamente la propiedad que escribe
+la implementacion**; con el memo de `aplicar()` el producto no la volvia a
+escribir nunca. Fotografiaba su propio borrado sobre una app que en vivo estaba a
+**0,8083**. Es la trampa que el handoff de s181 lista con nombre, y volvio a
+morder en el mismo banco.
+
+Arreglado con **recarga por variante** y, lo que de verdad importa, **cruzando
+dos instrumentos**: la escala geometrica (rect / offsetHeight) contra lo que el
+producto dice en `--sb-escala`. Si no coinciden, se para con un error en vez de
+imprimir una fila creible.
+
+### El censo de glifos llevaba ciego a Estira desde s178
+
+`scripts/ingest-glifos-ejercicio.censo.js` sacaba los pasos con una expresion
+regular sobre `app/extra/ExtraModule.jsx`, y **s178 troceo ese dato** dejando el
+archivo con **cero pasos**. Devolvia **61 donde hay 62** sin que nada saltara,
+porque el registro tapaba 24 de las 25 identidades de Estira. La que se perdia,
+`Puente isquio a una pierna`, **si tiene arte**: regenerar el encargo habria
+escrito una identidad de menos y una fila de arte aparentemente huerfana.
+
+**Tercera vez que este censo da un numero erroneo y creible** (s164: 61 · s172:
+el patron pedia `mode:` y los pasos legacy declaran `dur:` · s182: el archivo se
+vacio), y las tres con el mismo sintoma: un total redondo que coincidia con otro
+censo que arrastraba el mismo punto ciego.
+
+Ahora lee `window.MOVE_ROUTINES` y `window.EXTRA_ROUTINES` **ya evaluados**, que
+es lo que la app consume, con **guard de cero por modulo** calibrado
+reproduciendo el fallo de s178 exacto. Prueba de que el arreglo es correcto: el
+documento regenerado sale **identico byte a byte** al commiteado.
+
+**La pregunta del usuario, contestada:** las tres rutinas de oficina de s178
+reutilizan ejercicios que ya tenian arte, **15 de 15 pasos**. El censo bueno:
+**62 identidades · 59 con arte · 3 sin** (`Nordics`, `Pica en escritorio`,
+`Rana`) **· 0 de arte que nadie pida**.
+
+### La red
+
+`tests/sidebar-movil.spec.js`, **12 asertos**, **173 → 185**. Seis mutantes sobre
+`index.html` -- que es lo que la suite lee-- y **los seis mordieron**: el apagado
+de movil (4 rojos), la lente sin alto (3), la lente recortando de mas (2), la
+barra de vuelta (1), el aire al objeto compartido (1) y un suelo temerario (2).
+
+Los dos ultimos muerden **uno cada uno a proposito**: son los asertos por LADO.
+Que en movil el padding este recortado no prueba que en escritorio siga entero.
+
+**Dos rojos que no eran del producto**: la primera pasada dio 2 timeouts en
+`home-geometria.spec.js`, uno llamado «el contador del Pomodoro no dispara el
+observador de montaje» justo despues de anadir yo un observador. No se dio por
+ruido: el run tardo **31,3 min** en vez de ~1,5 (contencion de memoria,
+documentada en `playwright.config.js`) y esos dos, solos, pasan en **1,1 s y
+1,6 s** sobre un timeout de 60. Sola, la suite da **185/185 en 3,2 min**.
 
 ---
 
