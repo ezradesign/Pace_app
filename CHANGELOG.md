@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.114.1** | 2026-09-04 | fix(i18n)+docs(audit): **el logro que hablaba en espanol, y ocho premisas que ya no eran** — Cierra el unico defecto medido y **publicado** que quedaba de s182: con la app en ingles la fila del ultimo logro decia «Regresas». **Sobrevivio a s167 porque entonces esa superficie no decia ningun nombre** — pintaba cinco sellos sin texto, y **s180 los sustituyo por UNA fila con el nombre** sin tocar i18n. `achMini` recibe `tR` por parametro. **Dos asertos nuevos, con dos mutantes que muerden**, y el de espanol sigue verde con el primero: el par no se mide a si mismo. **185 → 187.** Y la **auditoria de premisas** encargada por el usuario, reutilizando los checkers de s178 y atacando la clase que aquellos declararon no poder ver. **Ocho hallazgos**: `CLAUDE.md` con cuatro datos falsos (arbol de 14 carpetas donde hay **19**, `WeeklyStats.jsx` inexistente, el dato de Estira apuntando a un archivo que ya no lo tiene -- **tercera vez que ese parrafo miente**-- y «65 tests» donde hay **187**) · **la musica pide dos cosas incompatibles a la vez**, y esa contradiccion es exactamente la causa que s177 midio de que la pieza no sonara · `EVENTOS_SCHEMA.md` decia «ninguna parte se ha cableado» con **1.453 lineas y 5 specs** vivas · el troceo de >500 lineas de la Fase 8.5 **ya estaba hecho** (322/261/318, y de 239 archivos ninguno pasa de 500) · `CONTENT.md` con **77 versiones** de deriva y Estira a 14 donde hay **17**, sospechado en s130 y sin verificar en 53 sesiones · y `stats-pestanas` **verde sobre el estado vacio**, ciego a que con datos «Semana» se corta 33 px y «Caminos» hasta 146. **Tanda 0 ejecutada**: cinco documentos corregidos. De Stats se decidio mucho y **no se implemento nada**: «Hoy» **no entra** (anula el §4.1 y el §37.4), la vista no se rehace, la barra es cinta escalonada y los Caminos se quedan fuera. | s183 | [session-183](./docs/sessions/session-183-auditoria-de-premisas.md) |
 | **v0.114.0** | 2026-09-02 | feat(sidebar)+fix(censo): **el cajon de movil encoge tambien, y el censo que un troceo dejo ciego** — Los tres encargos que el usuario saco de mirar la revision de s181, medidos y **pintados antes de decidir**. **A NO ERA UN DEFECTO**: 375x844 no corta nada -- el corte era del carrusel horizontal de la propia pagina de revision. **B y C los decidio el usuario viendo las 30 capturas**, y su respuesta a C no era ninguna de las cuatro opciones: «escalarla en todas las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno scroll **sin barra**». **UN NUMERO MIO DEL HANDOFF ERA FALSO Y HABRIA VICIADO LA DECISION**: 0,85 no hace caber 667, porque faltaba contar los 45 px del propio cajon. El suelo real es **0,80**, elegido por dos medidas (la semana se queda en 36 px, sobre los 24 de WCAG 2.2 AA; y hace caber entero el iPhone SE/8). **EL BANCO FOTOGRAFIO SU PROPIA MUTACION**: su limpieza entre variantes borraba `--sb-escala`, la propiedad que escribe el producto, y con el memo de `aplicar` no se volvia a escribir nunca -- dio «factor 1» sobre una app que en vivo estaba a 0,8083, y ahora recarga por variante y **cruza dos instrumentos**. Y el censo de glifos: **s178 lo dejo ciego a Estira entera** al trocear el dato, y devolvia **61 donde hay 62** sin que nada saltara. **173 → 185**, con 6 mutantes calibrados en rojo. | s182 | [session-182](./docs/sessions/session-182-el-cajon-de-movil.md) |
 | **v0.113.0** | 2026-09-02 | fix(sidebar): **la sidebar encoge entera, y la tarjeta que se amputaba sola** — Cierra el trabajo que s180 dejo sin commitear y resuelve el problema de altura que su handoff dejo ABIERTO, con un diagnostico DISTINTO del que ese handoff daba por bueno. **LOS 747 px DEL HANDOFF ERAN EL SUELO COMPRIMIDO, NO LA ALTURA**: la natural eran **835,9** (dos cuentas independientes: la suma de las piezas menos el chevron, que es absolute, y el primer viewport sin sobrante). **EL SINTOMA NO ERA UNA BARRA DE SCROLL sino la TARJETA quedandose sin texto**: `sidebarStyles.accion` lleva `overflow: hidden`, y eso **APAGA el tamano minimo automatico del flex** -- que solo aplica con `overflow: visible`-- asi que era el UNICO hijo comprimible de doce y absorbia el deficit entero amputandose. **DOS UMBRALES**: por debajo de 836 pierde contenido, y entre 750 y 836 lo pierde **sin barra que avise**. A 714 la tarjeta media **33 px**: rotulo y nada mas. **Y ESTABA PUBLICADO**: HEAD trae la misma linea y desborda **50 px** a 714, mas que el arbol. **SE CONSTRUYO LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA**: apurar el aire bajaba la columna a **700,3** (135,6 px, de los que **56 salian solo de las cuatro reglas**) pero cambiaba las PROPORCIONES. Su instruccion: «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto» ⇒ **la columna se ESCALA entera** con `transform`, misma composicion y solo mas pequena: **1 · 0,926 · 0,822 · 0,708** a 1000/800/714/620, con el pie siempre a 18 px del borde y sin agrandar nunca por encima de su tamano natural. **LA LENTE NO ESTABA EN EL PLAN**: la envoltura mide `100%/escala` de ancho y desbordaba **52 px** en layout, tumbando un guard de scroll lateral que ya existia -- se arreglo el diseno, no el guard. **LOS MINUTOS DE HOY YA COMPARTEN LINEA**: `puntosSesion` devolvia `null` sin sesiones, asi que tres celdas no tenian fila de bolas y Agua si, y con `marginTop: auto` el valor caia al fondo en tres y no en la cuarta. **EL ROJO INTERMITENTE TENIA RAZON Y ERA DEL PRODUCTO**: si las webfonts cargan DESPUES de calcular la escala, el numero queda hecho con la fuente de reserva y **nada lo corrige**. Ademas: regla nueva en el pie y **pill naranja** en «Mis rutinas». **El precio, dicho**: encoger encoge los objetivos tactiles (la semana, de 45 a **37,1 px** a 1280x720; sigue sobre el minimo AA de 24). **Tres mentiras del instrumento nuevas**: `setViewportSize` de Playwright **no emite `resize`**, el `ResizeObserver` no dispara sobre la lente en headless, y fotografie mi propia mutacion. **173/173** (eran 170), 3 tests nuevos y dos troceos por la regla §1. | s181 | [session-181](./docs/sessions/session-181-la-sidebar-que-encoge-entera.md) |
 | **v0.112.0** | 2026-09-02 | fix(sidebar): **la geometria fija, y el corte de CSS que se llevo un arreglo por delante** — Segunda mitad de s180: el usuario prueba la sidebar publicada y reporta diez cosas. **DECIDE GEOMETRIA FIJA EN ESCRITORIO**: la columna mide lo mismo en un portatil que en un monitor de 1440, con el pie anclado abajo. Se habia probado lo contrario -- repartir el aire con `margin: auto`-- y **NUNCA REPARTIO NADA**: el espaciador con `flex: 1` se comia el sobrante (378 px a 1030 de alto) porque el flex-grow va antes que los margenes automaticos, **y el numero estaba a la vista en la maqueta** (la variante «aire repartido» daba 455 px de hueco contra los 389 de la que no repartia) sin que yo lo leyera. **AJUSTES MEDIDOS uno a uno**: aire sobre el logo −12,7 % (31,5 → 27,5), del logo a su regla −19,8 % (35,6 → 28,5), «Esta semana» +15,8 % de aire arriba, la tarjeta de Repetir de 98 a 117 px, el logo un 20 % mas pequenio (216,9 → 173,4 de ancho) y el ultimo logro centrado, en peso 400 y tinta secundaria. **EL «+» DE AGUA DESAPARECE**: era un segundo objetivo en una celda de 117 px **y pisaba los ocho vasos 17,2 px**; ahora la celda entera suma el vaso y su etiqueta dice lo que hace. **TRES DEFECTOS QUE ESTABAN PUBLICADOS**: la tarjeta de accion **no era clicable entera** (el objetivo eran 74 x 23 px de 243 x 117, porque el patron de s174 necesita un `::after` y **React no crea pseudo-elementos desde un estilo en linea**), la miniatura del logro renderizaba a **16,1 px** y la semana decia **«1 dias en ritmo»**. **Y EL METODO SE COBRO UNA**: al retirar el CSS del «+», el corte se llevo por delante la regla del `::after` -- **la cazo su propio test**, escrito veinte minutos antes, probando las cuatro esquinas y el centro. El ultimo logro **recupera su rotulo**: en el pie «se entendia raro», y era el mismo problema que el hueco del final. Orden nuevo: Hoy → Continua → Ultimo logro → Esta semana. **171/171** (eran 153), 3 tests nuevos. | s180 | [session-180](./docs/sessions/session-180-la-sidebar-como-brujula.md) |
@@ -381,6 +382,89 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.114.1] -- 2026-09-04 -- fix(i18n)+docs(audit): el logro que hablaba en espanol, y ocho premisas que ya no eran
+
+Dos entregas y un tercer bloque que **no entra en producto** y se dice: cinco vueltas de
+diseno de la Semana de Stats, sin una sola linea implementada porque el diseno no convencio.
+
+### El unico defecto medido que quedaba de s182
+
+Con la app en ingles, la fila del ultimo logro de la sidebar decia «Regresas» en vez de «You
+return». Estaba **publicado** desde v0.108.0.
+
+**Por que sobrevivio a s167.** Aquel arreglo enruto por `tR()` las dos superficies que
+**entonces** decian el nombre de un logro -- el panel y el toast-- y la sidebar no lo decia:
+pintaba cinco sellos **sin texto**, solo dibujo. **s180 los sustituyo por UNA fila con el
+nombre** y el hueco se abrio sin que nadie tocara i18n.
+
+`achMini(id, tR)` recibe la funcion por parametro -- es una funcion suelta, no un componente,
+asi que no puede llamar a `useT()`. El secreto sigue siendo `'?'`: ahi no se oculta una
+traduccion, se oculta el logro.
+
+**Dos asertos nuevos, relacionales y calibrados en rojo con dos mutantes**: `achMini`
+devolviendo `a.title` crudo da `Expected "First step" · Received "Primer paso"`, y sacar el
+tooltip de `mini.title` muerde **por los dos lados**. Con el primer mutante el test en
+espanol **sigue verde**, que es lo que demuestra que el par no se mide a si mismo. El gancho
+es del TITULO y no de la fila: el `textContent` de la fila arrastra el glifo cuando es un
+caracter. **185 → 187.**
+
+### La auditoria de premisas
+
+Encargo del usuario: «audita todo el proyecto para detectar premisas obsoletas». Se
+**reutilizan los dos checkers de s178** en vez de inventar otros, y el trabajo se centra en
+la clase que aquellos declararon no poder ver: *una decision cuyo simbolo sigue vivo pero que
+ya describe mal lo que el codigo hace*. Ocho hallazgos, todos con evidencia medida:
+
+- **`CLAUDE.md`, el archivo que se lee primero, con cuatro datos falsos**: el arbol de `app/`
+  listaba 14 carpetas y hay **19** (faltaban `events/`, `paths/`, `glyphs/`, `main/`,
+  `custom/`); `WeeklyStats.jsx` **no existe**; el dato de Estira apuntaba a `ExtraModule.jsx`
+  cuando vive en `extra.data.js` + `.piernas.js` -- **tercera vez que ese parrafo miente**, y
+  esta vez porque el troceo de s178 lo rompio el mismo dia en que se arreglaba; y «65 tests,
+  ~25 s» cuando son **187 y 3,1 min**.
+- **LA MAS PELIGROSA, porque alimenta a un generador**: `MUSICA_RESPIRA_BRIEFS.md` pide
+  «rango medio despejado (≈200 Hz-3 kHz)» en cinco de sus seis prompts, y la decision de s177
+  que GOBIERNA pide **lo contrario** -- «el grueso de la energia entre 200 Hz y 2 kHz»--
+  porque midio que aquella restriccion **era la causa** de que la pieza no sonara. No es que
+  «falte anadir un requisito»: **hay dos incompatibles vivos a la vez**.
+- **`EVENTOS_SCHEMA.md` decia «ninguna parte de este documento se ha cableado»**. Falso desde
+  s155: **5 archivos, 1.453 lineas, 4 emisores, 5 specs**. Lo que si falta es su Fase 3, y
+  `aggregates` **no aparece ni una vez** en `app/`.
+- **Trabajo que ya no hay que hacer**: la vinieta «trocear lo que pasa de 500 lineas» de la
+  Fase 8.5 esta **hecha** -- `tokens.css` 613→**322**, `exercise-glyphs.jsx` 513→**261**,
+  `Sidebar.jsx` 510→**318**, y de **239 archivos ninguno pasa de 500**. Cayo sola, por el
+  trinquete que s162 metio en el `verify`.
+- **`CONTENT.md` lleva 77 versiones de deriva** (declara reflejar v0.37.0) y da **Estira a
+  14** donde hay **17**. La `AUDITORIA_DOCUMENTAL` §3 sospecho esto en **s130** y lo dejo «a
+  verificar»: **53 sesiones despues, verificado y real**.
+- **El aserto de Stats esta ciego por su semilla**: `stats-pestanas.spec.js` siembra el estado
+  **vacio**, asi que su verde no dice nada del panel con datos -- medido, «Semana» se corta
+  **33 px** y «Caminos» de **60 a 146**.
+- **«106 logros»** en tres documentos → **96** en catalogo, 88 con detector, **88** el
+  denominador de la UI.
+
+**Tanda 0 ejecutada en la misma sesion**: corregidos los cinco documentos. Y se cierra una
+duda del handoff de s182: **el CI de v0.114.0 esta verde** (`gh run list`, 4 m 42 s).
+
+### Lo que se decidio de Stats sin implementar nada
+
+**«Hoy» NO entra** -- «ya esta en la sidebar»--, lo que **anula el §4.1 y el §37.4** de
+`STATS_DESTINO_PROPUESTA.md` · **la vista no se rehace** (se tiraron tres redisenios
+completos ya pintados) · la barra es **cinta escalonada** · el dia es **un arco por tipo de
+jornada con relleno** · y **los Caminos no entran de momento**. El defecto de la barra
+actual, nombrado: **el valor va en el GROSOR de la linea**.
+
+### Tres trampas medidas
+
+**Mi propia maqueta proponia el defecto que denunciaba**: la primera «Semana» media **432 px**
+sobre un suelo de 385. **El banco volvio a fotografiar una animacion a medias** -- «Semana» a
+**1192,3** de ancho donde las otras daban 1240, el **96 % exacto** del `scale(.96)` de
+entrada; una tabla que se contradice a si misma es la senial. Y **cite el verify en 18,9 s y
+al re-medirlo dio 11,4**: oscila con la carga, asi que en `CLAUDE.md` va como rango.
+
+Diario: [session-183](./docs/sessions/session-183-auditoria-de-premisas.md).
 
 ---
 

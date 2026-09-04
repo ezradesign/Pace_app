@@ -49,8 +49,18 @@ function ChevronLeftIcon() {
    inactivas. Reutiliza `renderGlyph` de Achievements —la misma funcion, no una
    copia— asi que un glifo nuevo entra en las dos superficies a la vez. Sin SVG
    propio cae al caracter del catalogo (`☾`, `III`, `VII`...), que ya distingue.
-   Lectura defensiva: Achievements.jsx carga DESPUES que este archivo. */
-function achMini(id) {
+   Lectura defensiva: Achievements.jsx carga DESPUES que este archivo.
+
+   EL TITULO PASA POR `tR`, Y POR ESO ENTRA COMO PARAMETRO (s183). El catalogo
+   esta en castellano y el ingles vive como PATCH en
+   `app/i18n/content/achievements.js`; devolver `a.title` a pelo pintaba
+   «Regresas» con la app en ingles. s167 enruto por `tR()` las dos superficies
+   que ENTONCES decian el nombre —el panel y el toast—, pero esta no lo decia:
+   aqui habia cinco sellos SIN texto, solo dibujo. s180 los sustituyo por UNA
+   fila con el nombre y el hueco se abrio sin tocar este archivo. Es una funcion
+   suelta, no un componente, asi que no puede llamar a `useT()`: se lo da quien
+   la usa. */
+function achMini(id, tR) {
   const a = (window.ACHIEVEMENT_CATALOG || []).find(x => x.id === id);
   if (!a) return { title: id, nodo: '✦' };
   const dibuja = window.renderGlyph;
@@ -64,8 +74,11 @@ function achMini(id) {
      36 px, el 72 % deja el dibujo en ~26 px -- medido, a 62 % se quedaba en
      16,1 y no se leia. */
   const estilo = a.glyphSvg ? { width: '72%', height: '72%' } : { fontSize: '1.5em' };
+  /* El secreto sigue siendo '?' y no `ach.seal.secret`: ahi no se oculta una
+     traduccion, se oculta el logro, y el interrogante ya es el mismo signo en
+     los dos idiomas. */
   return {
-    title: a.secret ? '?' : a.title,
+    title: a.secret ? '?' : tR('ach.item.' + a.id + '.title', a.title),
     nodo: dibuja ? dibuja(a, estilo) : (a.glyph || '✦'),
   };
 }
@@ -313,7 +326,12 @@ function SidebarWeek({ semana, onOpen }) {
    entra aqui y en la coleccion a la vez.
    ============================================================ */
 function SidebarLatestAchievement({ ultimo, onOpen }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  /* EL MISMO `tR` QUE `Achievements.jsx:130`, palabra por palabra: en castellano
+     manda el dato del catalogo y en ingles el patch, cayendo al catalogo si esa
+     clave todavia no esta traducida. Es el idiom que ya repiten diez archivos
+     (Toast, RoutineCard, LibraryShell...), no una invencion de aqui. */
+  const tR = (key, fb) => { if (lang !== 'en') return fb; const v = t(key); return v === key ? fb : v; };
   /* «VER LA COLECCION» VIVE AQUI, no en el pie. Ahi abajo era un enlace suelto
      al lado de «Apoyar PACE» y no se sabia de que coleccion hablaba; junto al
      sello del que viene, se explica solo. Y de paso el pie recupera su sitio
@@ -332,7 +350,7 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
       </React.Fragment>
     );
   }
-  const mini = achMini(ultimo.id);
+  const mini = achMini(ultimo.id, tR);
   return (
     <React.Fragment>
       <button
@@ -342,7 +360,10 @@ function SidebarLatestAchievement({ ultimo, onOpen }) {
         data-pace-sidebar-ultimo={ultimo.id}
       >
         <span style={sidebarStyles.logroSello}>{mini.nodo}</span>
-        <span style={sidebarStyles.logroTitulo}>{mini.title}</span>
+        {/* El gancho es del TITULO y no de la fila: el `textContent` de la fila
+            arrastra tambien el glifo cuando es un caracter (`↻`, `☾`, `III`) y
+            un aserto de igualdad exacta mediria dos cosas a la vez. */}
+        <span style={sidebarStyles.logroTitulo} data-pace-sidebar-ultimo-titulo>{mini.title}</span>
       </button>
       {enlace}
     </React.Fragment>

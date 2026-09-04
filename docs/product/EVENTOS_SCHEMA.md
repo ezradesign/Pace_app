@@ -6,8 +6,20 @@
 > **Estado:** **rev. 5 — APTO PARA CIERRE** (no se cierra en s117 por decisión del
 > usuario). El P0 single-writer queda **resuelto por arquitectura de adaptadores**
 > (§29). **Android e iOS (Capacitor) entran como runtimes previstos** desde el
-> diseño, aunque su implementación llegue después. Ninguna parte de este documento
-> se ha cableado.
+> diseño, aunque su implementación llegue después.
+>
+> ⚠️ **PUESTO AL DÍA EN s183.** Este documento decía «ninguna parte se ha cableado», y eso
+> llevaba siendo falso desde s155. Medido sobre v0.114.0:
+> **Fase 1 HECHA** (s155) — modelo canónico, adaptador web, Web Locks, baseline, export/import/
+> reset, recuperación. **Fase 2 HECHA** (s172) — los **cuatro emisores** viven en
+> `app/state-events.jsx`. Más la retención por calendario, que se dispara sola en el arranque
+> (`app/events/events-store.js:370`). Son **5 archivos y 1.453 líneas** en `app/events/`, con
+> **5 specs** que lo vigilan (`eventos`, `eventos-emisor`, `eventos-backup`, `eventos-barrera`,
+> `eventos-retencion`).
+>
+> **Lo que sigue SIN cablear es la Fase 3**: los reducers de `aggregates`. Comprobado en s183 —
+> la palabra `aggregates` **no aparece ni una vez en `app/`**, sólo aquí. Y el contenedor tiene
+> hoy **un solo consumidor en toda la app**: la sidebar (`app/shell/Sidebar.jsx:74`).
 
 Este documento define **cómo serán** los eventos de PACE cuando se implementen.
 Es la fuente canónica para las sesiones de código posteriores (§25) y para B2.3.
