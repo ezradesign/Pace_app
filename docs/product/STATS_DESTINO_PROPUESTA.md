@@ -3,6 +3,22 @@ PACE · Stats destino — especificación de diseño
 Estado: DISEÑO. Docs-only, sin bump, CERO código (patrón s117/s109).
 Fecha: 2026-07-30 · sesión 129.
 
+⚠️ REVISIÓN s183 — DOS PREMISAS DE ESTE DOCUMENTO YA NO VALEN.
+
+  · «HOY» NO ENTRA. El §4.1 y el §37.4 ponen «Hoy» como la vista de entrada de Stats.
+    ANULADO por decisión del usuario en s183, con sus palabras: «la pestaña de hoy no va
+    a existir, ya está en la sidebar». Es coherente con la D3 de este mismo documento —
+    no puede haber dos superficies contestando «cómo va mi día». La Fase 1 se queda
+    entonces en UNA sola vista: la Semana.
+  · SU «FASE 2 · EVENTOS» ESTÁ HECHA desde s155/s172. Por eso el §5.2 declara «no
+    derivable» el conteo de pausas por día, la hora y duración por sesión y el feedback
+    fechado: los tres SON derivables hoy, para lo emitido de v0.88.0 en adelante (hacia
+    atrás no, y eso sigue siendo cierto).
+  · Lo que SÍ aguanta: el §7 daba 221 px de cromo del modal sobre v0.71.0 y en s183 se
+    re-midió en 221,9. La vista útil son 1174 × 385.
+
+  Medidas y evidencia: docs/audits/audit-premisas-v0.114.0.md
+
 REVISIÓN s133 — **el §37 se RE-DECIDIÓ y está CERRADO** (audit §37 bis). Este documento queda
 **sin condicionantes** y sus §4.4/§4.5 se confirman. Dos precisiones que vienen de esa ronda:
 

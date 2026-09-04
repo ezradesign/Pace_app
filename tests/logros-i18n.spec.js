@@ -166,3 +166,108 @@ test('el aviso de logro nuevo tambien habla ingles', async ({ page, context }) =
 
   expect(errores).toEqual([]);
 });
+
+/* ============================================================
+   LA TERCERA SUPERFICIE: EL ULTIMO LOGRO DE LA SIDEBAR (s183)
+   ------------------------------------------------------------
+   POR QUE ESTE HUECO SOBREVIVIO A s167. Aquel arreglo cubrio las dos
+   superficies que ENTONCES decian el nombre de un logro: el panel y el toast.
+   La sidebar no lo decia -- pintaba una rejilla de cinco sellos SIN texto, solo
+   dibujo-- asi que no habia nada que traducir. s180 la sustituyo por UNA fila
+   que si dice el nombre, leyendolo de `achMini()`, y el hueco se abrio sin que
+   nadie tocara i18n. Publicado desde v0.108.0.
+
+   POR QUE VIVE AQUI Y NO EN `sidebar-*.spec.js`. Lo que se prueba es el
+   CABLEADO i18n del catalogo de logros, que es de lo que trata este archivo;
+   los specs de sidebar prueban geometria. `tests/helpers.js` ya lo dice al
+   documentar `leerUltimoLogro`: «que el titulo se pinte bien es cosa de
+   logros-i18n.spec.js». Hasta hoy no lo era.
+
+   RELACIONAL COMO SUS HERMANOS: ni el id ni las dos cadenas se escriben a mano.
+   Se elige del catalogo DENTRO del artefacto el primer logro no secreto cuyos
+   titulos ES y EN difieran -- si fueran iguales el aserto pasaria sin distinguir
+   nada-- y se compara contra lo que la fila pinta de verdad.
+   ============================================================ */
+
+/* Deja UN solo logro desbloqueado, elegido por el propio artefacto, y devuelve
+   sus dos titulos. La forma del valor es `{ unlockedAt }` y no un numero pelado
+   porque es la que escribe el producto (state-achievements.jsx:227) y la que
+   lee el selector (`Sidebar.selectors.js:191`); un numero pelado deja el
+   `unlockedAt` en `undefined` y el «mas reciente» pasa a ser un empate.
+
+   LOS SECRETOS SE EXCLUYEN A PROPOSITO: la fila pinta '?' para ellos, que es
+   decision de producto, no un titulo sin traducir. */
+async function dejarUnSoloLogro(page) {
+  return page.evaluate(() => {
+    const cat = window.ACHIEVEMENT_CATALOG || [];
+    const en = (window.PACE_STRINGS && window.PACE_STRINGS.en) || {};
+    const elegido = cat.find(a => !a.secret &&
+      en['ach.item.' + a.id + '.title'] &&
+      en['ach.item.' + a.id + '.title'] !== a.title);
+    if (!elegido) return null;
+    const s = JSON.parse(localStorage.getItem('pace.state.v2') || '{}');
+    s.achievements = { [elegido.id]: { unlockedAt: Date.now() } };
+    localStorage.setItem('pace.state.v2', JSON.stringify(s));
+    return { id: elegido.id, es: elegido.title, en: en['ach.item.' + elegido.id + '.title'] };
+  });
+}
+
+/* La fila tal como queda en el DOM: a quien senala, que texto pinta y que dice
+   su tooltip. El titulo se lee de su propio gancho y no del `textContent` de la
+   fila, que arrastraria el glifo cuando es un caracter. */
+function leerFilaUltimo(page) {
+  return page.evaluate(() => {
+    const sb = document.querySelector('[data-pace-sidebar]');
+    const fila = sb && sb.querySelector('[data-pace-sidebar-ultimo]');
+    if (!fila) return null;
+    const tit = fila.querySelector('[data-pace-sidebar-ultimo-titulo]');
+    return {
+      id: fila.getAttribute('data-pace-sidebar-ultimo') || null,
+      titulo: tit ? tit.textContent : null,
+      tooltip: fila.getAttribute('title'),
+    };
+  });
+}
+
+test('en INGLES el ultimo logro de la sidebar tambien se lee en ingles', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await sembrar(context, estadoTodoDesbloqueado('en'));
+  await irAlArtefacto(page);
+
+  const elegido = await dejarUnSoloLogro(page);
+  expect(elegido, 'ningun logro no secreto tiene titulo EN distinto del ES').not.toBeNull();
+  await page.reload();
+  await page.locator('[data-pace-sidebar-ultimo]').waitFor({ state: 'visible' });
+
+  const fila = await leerFilaUltimo(page);
+  /* GUARD: si la siembra no llegara, lo de abajo mediria otra fila. */
+  expect(fila && fila.id).toBe(elegido.id);
+
+  expect(fila.titulo).toBe(elegido.en);
+  /* El tooltip sale del MISMO `mini.title`, pero por otro atributo: si manana
+     alguien tradujera solo el texto visible, esto lo dice. */
+  expect(fila.tooltip).toBe(elegido.en);
+  expect(fila.titulo).not.toBe(elegido.es);
+
+  expect(errores).toEqual([]);
+});
+
+test('en ESPANOL el ultimo logro de la sidebar sigue en castellano', async ({ page, context }) => {
+  const errores = capturarErrores(page);
+  await sembrar(context, estadoTodoDesbloqueado('es'));
+  await irAlArtefacto(page);
+
+  const elegido = await dejarUnSoloLogro(page);
+  expect(elegido).not.toBeNull();
+  await page.reload();
+  await page.locator('[data-pace-sidebar-ultimo]').waitFor({ state: 'visible' });
+
+  const fila = await leerFilaUltimo(page);
+  expect(fila && fila.id).toBe(elegido.id);
+
+  /* La otra direccion, la que se rompe al «arreglar» el ingles de mas. */
+  expect(fila.titulo).toBe(elegido.es);
+  expect(fila.tooltip).toBe(elegido.es);
+
+  expect(errores).toEqual([]);
+});

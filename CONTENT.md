@@ -9,6 +9,25 @@
 > catálogo **real** del código a fecha de **v0.37.0** (s92: Mueve crecida a
 > 14 rutinas por F6; s91: Estira a 14 por F5; s90: Respira a 20 por F4; s88:
 > columnas `access` fijadas por F3b), no el aspiracional.
+>
+> ⚠️ **DERIVA MEDIDA EN s183, sobre v0.114.0 — 77 versiones después.** La
+> `AUDITORIA_DOCUMENTAL.md` §3 sospechó esta deriva en **s130** y la dejó «a
+> verificar contra código»; han pasado 53 sesiones. **Verificada: existe.**
+> Las cifras vivas, evaluando el objeto y no leyendo el fuente
+> (`scripts/verify.integridad.js:427-439`, y el `verify` las cruza en cada
+> pasada):
+>
+> | | documento | **medido s183** |
+> |---|---|---|
+> | Respira | 20 | **20** ✓ |
+> | Mueve (ids `extra.*`) | 14 | **14** ✓ |
+> | **Estira** (ids `move.*`) | 14 | **17** ✗ |
+> | Caminos | 7 | **7** ✓ |
+>
+> Lo que dice este archivo de Estira más abajo es **historia cierta de F5**, no
+> el estado de hoy: faltan las 3 que entraron después. **Mientras no se rehaga
+> ficha a ficha, el número que manda es el del `verify`, no el de aquí.**
+> Evidencia: `docs/audits/audit-premisas-v0.114.0.md`.
 
 ---
 
@@ -154,7 +173,7 @@ pranayama 5.
 Botón "Mueve". Inspirado en Strengthside (progresiones de empuje,
 unilateral, colgarse) + Jess Martin (fuerza discreta de oficina). Ejercicios
 cortos, discretos, sin equipo (salvo "Colgarse": barra o marco), aptos para
-la oficina. Datos en `app/move/MoveModule.jsx` (`MOVE_ROUTINES`, ids
+la oficina. Datos en `app/move/move.data.js` (`MOVE_ROUTINES`, ids
 `extra.*`). Estado actual: **14 rutinas** (F6, s92, v0.37.0), biblioteca
 **agrupada en 4 grupos** como Respira/Estira (free primero dentro de cada
 grupo): empuje y tracción 4 · sigilo 4 · piernas 3 · espalda y core 3.

@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.114.0 (s182 — **EL CAJON DE MOVIL ENCOGE TAMBIEN, Y EL CENSO QUE UN TROCEO DEJO CIEGO**. Los tres encargos que el usuario saco de mirar la revision de s181, medidos y **pintados antes de decidir**. **A no era un defecto**: 375x844 no corta nada -- el corte era del carrusel horizontal de la propia pagina de revision. **OTRO NUMERO DE MI PROPIO HANDOFF ERA FALSO**: 0,85 no hace caber 667 porque faltaba contar los **45 px del propio cajon** (22+22 de padding y el `min-height: 100dvh + 1px`), asi que el hueco real son 622. **La respuesta del usuario no fue ninguna de mis cuatro opciones**: «escalarla en todas las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno scroll **sin barra**». El suelo, **0,80**, sale de dos medidas: la semana se queda en 36 px (sobre los 24 de WCAG 2.2 AA) y hace caber ENTERO el iPhone SE/8. **En el cajon el alto disponible se pregunta en OTRO sitio** -- la lente se dimensiona al contenido y preguntarle da escala 1, verde y falsa-- y **hay que altarla a mano** con `--sb-alto`, o la lente se come el pie sin barra que lo diga. **EL BANCO FOTOGRAFIO SU PROPIA MUTACION**: borraba `--sb-escala`, que es donde escribe el producto, y dio «factor 1» sobre una app que en vivo estaba a 0,8083 -- ahora recarga por variante y **cruza dos instrumentos**. Y **el censo de glifos llevaba ciego a Estira desde s178** (61 donde hay 62), tercera vez que este censo da un numero erroneo y creible. La regla §1 mordio: el motor sale a `Sidebar.escala.jsx` y `Sidebar.jsx` baja de 506 a **318**. **185/185** (eran 173).)
+**Version actual:** v0.114.1 (s183 — **EL LOGRO QUE HABLABA EN ESPANOL, Y OCHO PREMISAS QUE YA NO ERAN**. Cierra el unico defecto medido y **publicado** que quedaba de s182: con la app en ingles la fila del ultimo logro decia «Regresas». **Sobrevivio a s167 porque entonces esa superficie no decia ningun nombre** -- pintaba cinco sellos sin texto-- y **s180 los sustituyo por UNA fila con el nombre** sin que nadie tocara i18n. Dos asertos nuevos con dos mutantes que muerden, y el de espanol sigue verde con el primero: el par no se mide a si mismo. **185 → 187.** Y la **AUDITORIA DE PREMISAS** que encargo el usuario, reutilizando los checkers de s178 y atacando la clase que aquellos declararon no poder ver. **Ocho hallazgos**, y el mas peligroso es que **la musica pide dos cosas incompatibles a la vez** -- los briefs quieren «200 Hz-3 kHz despejado» y s177 midio que eso es justo lo que hacia la pieza inaudible. `CLAUDE.md` tenia **cuatro datos falsos**, `EVENTOS_SCHEMA.md` decia «ninguna parte se ha cableado» con 1.453 lineas vivas, el troceo de >500 de la Fase 8.5 **ya estaba hecho**, y `CONTENT.md` lleva **77 versiones** de deriva. **Tanda 0 ejecutada**: cinco documentos corregidos. De Stats se decidio mucho y **no se implemento nada**.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -199,91 +199,73 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s182 resuelve los tres encargos que el usuario saco de mirar la revision de
-> s181 y contesta su pregunta sobre los glifos. Publica **v0.114.0**.
-> Suite **173 → 185**, `verify` en verde, 6 mutantes calibrados en rojo.
+> s183 cierra el defecto arrastrado de s182 y entrega la **auditoria de premisas**
+> que pidio el usuario. Publica **v0.114.1**. Suite **185 → 187**, `verify` en
+> verde, CI de v0.114.0 comprobado y **verde**.
+>
+> Diario: [session-183](./docs/sessions/session-183-auditoria-de-premisas.md) ·
+> Auditoria: [`audit-premisas-v0.114.0.md`](./docs/audits/audit-premisas-v0.114.0.md)
 
-- **[A NO ERA UN DEFECTO DE LA APP, Y SE CIERRA SIN TOCAR CODIGO]** A 375x844 el
-  cajon llega a `right = 375`, el documento da `scrollWidth - clientWidth = 0` y
-  **queda 0 px fuera de la primera pantalla**. El corte era del **carrusel
-  horizontal de la propia pagina de revision** de s181, que recortaba capturas
-  sin decirlo. Un instrumento que recorta en silencio manda a alguien a buscar un
-  defecto que no existe: la revision nueva envuelve las bandas y lo dice en su
-  texto.
+- **[EL HUECO DE i18n QUE ABRIO UN REDISENIO, NO UN DESCUIDO]** `achMini()` devolvia
+  `a.title` crudo. s167 enruto por `tR()` las dos superficies que **entonces**
+  decian el nombre de un logro -- panel y toast-- y la sidebar no lo decia:
+  pintaba cinco sellos **sin texto**. **s180 los sustituyo por UNA fila con el
+  nombre** y el hueco se abrio sin tocar i18n. Leccion: **un redisenio puede
+  reabrir un defecto cerrado sin pasar por su archivo**. Ahora `achMini(id, tR)`
+  recibe la funcion por parametro, porque es una funcion suelta y no puede llamar
+  a `useT()`.
 
-- **[OTRO NUMERO DE MI PROPIO HANDOFF ERA FALSO, Y HABRIA VICIADO LA DECISION]**
-  Proponia un suelo de 0,85 «porque 0,85 x 780 = 663, asi que de 667 para arriba
-  cabe entero». **Medido: a 375x667 con 0,85 todavia se salen 38 px.** Faltaba
-  contar el propio cajon -- **22 px de padding arriba y abajo** mas un
-  `min-height: calc(100dvh + 1px)`-- asi que a 667 el hueco real son **622**, no
-  667. El numero estaba construido sobre el VIEWPORT en vez de sobre el HUECO.
-  **Es el mismo modo de fallo que s181 documento de si misma**, en el handoff
-  siguiente: un numero heredado se vuelve a medir aunque lo haya escrito yo.
+- **[UN ASERTO EN VERDE SOBRE EL ESTADO VACIO NO DICE NADA]** El hallazgo mas
+  reutilizable de la auditoria. `tests/stats-pestanas.spec.js` siembra la
+  **nada**, asi que su verde no dice nada del panel con datos: medido a 1536x714
+  con un anio sembrado, «Semana» **se corta 33 px** -- lo causa la linea de
+  retencion de s166, que solo ve quien practica apnea-- y «Caminos» de **60 a
+  146** segun cuantos haya. A 1920x1080 no se corta, pero las cuatro pestanias
+  dejan de medir lo mismo: **59,5 px de salto**, justo lo que s176 quito.
 
-- **[LA RESPUESTA DEL USUARIO NO FUE NINGUNA DE MIS CUATRO OPCIONES]** Se
-  pintaron las opciones antes de preguntar (30 capturas, seis viewports x cinco
-  variantes, cada una a tamano de pixel CSS). Sus palabras: «escalarla en todas
-  las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno
-  scroll **sin barra**». Mis cuatro opciones eran «si con este suelo» o «no»; su
-  respuesta **anade un requisito que ninguna llevaba** y delega el suelo en una
-  medida.
+- **[LA MUSICA PIDE DOS COSAS INCOMPATIBLES A LA VEZ]** El hallazgo mas peligroso,
+  porque alimenta a un generador. `MUSICA_RESPIRA_BRIEFS.md` exige «rango medio
+  despejado (≈200 Hz-3 kHz sin nada denso)» en **cinco de sus seis prompts**, y la
+  decision de s177 que GOBIERNA exige lo contrario -- «el grueso de la energia
+  entre 200 Hz y 2 kHz»-- porque **midio que aquella restriccion era la causa** de
+  que la pieza no sonara (82,6 % de la energia bajo 200 Hz, 0 % sobre 2 kHz). **No
+  es que falte anadir un requisito: hay dos vivos y se excluyen.** Generar musica
+  antes de resolverlo es tirar el trabajo.
 
-- **[EL SUELO SALE DE DOS MEDIDAS, NO DE LA VISTA]** `SUELO_CAJON = 0,80`
-  (`app/shell/Sidebar.escala.jsx`): el bloque de la semana -- el objetivo tactil
-  que s180 afino a 45 px-- se queda en **36**, holgado sobre el minimo de WCAG
-  2.2 AA (24), y hace caber ENTERO **375x667**, el iPhone SE/8. El precio, dicho:
-  el texto secundario de 11 px se ve a **8,8** y las iniciales de los dias, de 9,
-  a **7,2**. A 560 quedan **101 px** fuera y a 640, **21** (solo el padding).
+- **[`CLAUDE.md` MINTIO POR TERCERA VEZ SOBRE EL MISMO PARRAFO]** s176 corrigio los
+  ids y **cruzo las rutas**; s178 arreglo las rutas y **el troceo de aquel mismo
+  dia** saco el dato de Estira de `ExtraModule.jsx`, asi que la tabla volvio a
+  apuntar a un archivo sin dato. Corregido en s183, con la historia escrita dentro
+  para que la cuarta vez se note. Ademas: el arbol de `app/` listaba **14**
+  carpetas y hay **19**, `WeeklyStats.jsx` **no existe**, y decia «65 tests, ~25 s»
+  cuando son **187 y 3,1 min**.
 
-- **[EL ALTO DISPONIBLE NO SE PREGUNTA EN EL MISMO SITIO EN LAS DOS PIELES]** En
-  escritorio la lente es un hijo FLEXIBLE y su `clientHeight` es el hueco real.
-  En el cajon es `display: block` y **se dimensiona al contenido**, asi que
-  preguntarle devuelve el alto natural y **la escala sale exactamente 1**: sin
-  error, sin aviso y sin efecto. Y el reves: el alto que la columna escalada
-  OCUPA tampoco lo sabe el CSS, lo escribe el motor en `--sb-alto`. Si ese numero
-  fuera menor que el contenido, la lente -- que lleva `overflow: hidden`-- se
-  comeria el pie **sin barra que lo dijera**. Por eso el test no mira alturas:
-  **hace scroll y comprueba que el pie SE VE**.
+- **[TRABAJO QUE YA NO HAY QUE HACER, Y NADIE LO SABIA]** La vinieta «trocear lo que
+  pasa de 500 lineas» de la Fase 8.5 esta **hecha**: `tokens.css` 613 → **322**,
+  `exercise-glyphs.jsx` 513 → **261**, `Sidebar.jsx` 510 → **318**, y de **239
+  archivos ninguno pasa de 500**. Cayo sola, por el trinquete que s162 metio en el
+  `verify`. Un plan que no se re-mide acumula tareas fantasma.
 
-- **[EL BANCO FOTOGRAFIO SU PROPIA MUTACION, Y LA TABLA SE CONTRADECIA SOLA]**
-  Devolvia «escala 1 · fuera 0 · pie -126,4», tres cosas incompatibles en una
-  fila. Su limpieza entre variantes borraba `--sb-escala`, que es **exactamente**
-  donde escribe la implementacion, y con el memo de `aplicar()` el producto no la
-  volvia a escribir nunca: fotografiaba su propio borrado sobre una app que en
-  vivo estaba a **0,8083**. **Es la trampa que el handoff de s181 lista con
-  nombre**, y volvio a morder en el mismo banco. Arreglado con recarga por
-  variante y, lo que de verdad importa, **cruzando dos instrumentos**: la escala
-  geometrica contra lo que el producto dice en `--sb-escala`; si no coinciden, se
-  para.
+- **[DE STATS SE DECIDIO MUCHO Y NO SE IMPLEMENTO NADA, Y SE DICE]** Cinco vueltas
+  de maqueta. Cerrado: **«Hoy» NO entra** («ya esta en la sidebar»), lo que **anula
+  el §4.1 y el §37.4** de `STATS_DESTINO_PROPUESTA.md` · **la vista no se rehace**
+  (se tiraron tres redisenios completos ya pintados) · la barra es **cinta
+  escalonada** · el dia es **un arco por tipo de jornada con relleno** · **los
+  Caminos no entran de momento**. El defecto de la barra actual, nombrado: **el
+  valor va en el GROSOR de la linea**. Lo que falta es que el disenio convenza.
 
-- **[EL CENSO DE GLIFOS LLEVA CIEGO A ESTIRA DESDE s178, Y NADIE LO VIGILABA]**
-  Sacaba los pasos con una expresion regular sobre `app/extra/ExtraModule.jsx`, y
-  s178 troceo ese dato dejando el archivo con **cero pasos**. Devolvia **61 donde
-  hay 62** sin que nada saltara, porque el registro tapaba 24 de las 25
-  identidades. La que se perdia, `Puente isquio a una pierna`, **si tiene arte**:
-  regenerar el encargo habria escrito una identidad de menos y una fila de arte
-  aparentemente huerfana. **Tercera vez que este censo da un numero erroneo y
-  creible** (s164, s172, s182), y las tres con el mismo sintoma: un total redondo
-  que coincidia con otro censo con el mismo punto ciego. Ahora lee los catalogos
-  **evaluados** con guard de cero por modulo. Prueba: el documento regenerado sale
-  **identico byte a byte**.
+- **[MI PROPIA MAQUETA PROPONIA EL DEFECTO QUE DENUNCIABA]** La primera «Semana»
+  media **432 px** sobre un suelo de 385. Y el banco volvio a fotografiar una
+  animacion a medias: «Semana» a **1192,3** de ancho donde las otras daban 1240 --
+  el **96 % exacto** del `scale(.96)` de entrada. **Una tabla que se contradice a
+  si misma es la senial.**
 
-- **[LA PREGUNTA DE LOS GLIFOS, CONTESTADA: NO FALTA NADA NUEVO]** Las tres
-  rutinas de oficina de s178 reutilizan ejercicios que ya tenian arte, **15 de 15
-  pasos**. El censo bueno: **62 identidades · 59 con arte · 3 sin** (`Nordics`,
-  `Pica en escritorio`, `Rana`) **· 0 de arte que nadie pida**.
-
-- **[DOS ROJOS QUE NO ERAN DEL PRODUCTO, Y COMO SE SUPO]** La primera pasada dio
-  2 rojos por timeout en `home-geometria.spec.js`, uno de ellos llamado «el
-  contador del Pomodoro no dispara el observador de montaje» justo despues de que
-  yo anadiera un observador. No se dio por ruido: el run entero tardo **31,3 min**
-  en vez de ~1,5 (contencion de memoria, documentada en `playwright.config.js`) y
-  esos dos, corridos solos, pasan en **1,1 s y 1,6 s** sobre un timeout de 60.
-  Sola, la suite da **185/185 en 3,3 min**.
-
-> Diario completo (con el troceo de `Sidebar.jsx`, el mutante que no mordio y las
-> seis calibraciones):
-> [`docs/sessions/session-182-el-cajon-de-movil.md`](docs/sessions/session-182-el-cajon-de-movil.md).
+- **[UN NUMERO QUE OSCILA NO SE ESCRIBE COMO SI FUERA FIJO]** Cite el `verify` en
+  «18,9 s» y al re-medirlo dio **11,4**. En `CLAUDE.md` va como rango. Y mi propia
+  auditoria **cito mal una linea** -- dijo que `CONTENT.md:158` daba Estira a 14 y
+  esa linea habla de **Mueve**, donde 14 es correcto--; corregido, porque con los
+  ids cruzados una cita mal atribuida es el error que este proyecto ya ha cometido
+  tres veces.
 
 ### Diferido (documentado, NO ejecutado)
 
@@ -572,69 +554,77 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 
 ## Proxima sesion -- **la decide el usuario**
 
-> **EL MOVIL DE LA SIDEBAR YA ESTA MIRADO Y RESUELTO** (s182, v0.114.0): escala
-> con suelo 0,80, aire de la tarjeta recortado y barra oculta. Lo que queda de
-> aquel bloque son cosas que el usuario dejo «asi de momento», no defectos:
+> **LA COLA SALE DE LA AUDITORIA DE s183**, con su evidencia medida en
+> [`audit-premisas-v0.114.0.md`](./docs/audits/audit-premisas-v0.114.0.md).
+> El criterio del orden: primero lo que hace que la proxima sesion no se
+> equivoque, luego lo que desbloquea a otros, luego lo grande.
 >
-> - **la pill naranja de «Mis rutinas» sigue siendo lo mas llamativo de la
->   columna** (fondo tintado + borde a plena fuerza; quitarle el fondo la
->   calmaria);
-> - de su maqueta **no se copiaron dos cosas**, porque aviso de que algun
->   elemento podia no estar bien colocado: en su imagen **no aparece el lema** y
->   **«Ver la coleccion» va a la derecha**;
-> - **360x560 se desplaza 101 px y 360x640, 21** (que es solo el padding). Es la
->   decision que tomo mirando las capturas, no un pendiente.
+> **La Tanda 0 -- que los documentos dejen de mentir-- YA ESTA HECHA** (s183):
+> corregidos `CLAUDE.md`, `EVENTOS_SCHEMA.md`, `ROADMAP.md`,
+> `STATS_DESTINO_PROPUESTA.md` y `CONTENT.md`.
 
-> **UN DEFECTO PREVIO Y PUBLICADO, medido y sin arreglar** (viene de s181): con la
-> app en ingles, el titulo del ultimo logro sale en espanol («Regresas» en vez de
-> «You return»). `achMini()` en `Sidebar.parts.jsx` devuelve `a.title` sin pasar
-> por i18n, mientras `Achievements.jsx:232` lo hace bien con
-> `tR('ach.item.' + a.id + '.title', a.title)`. La traduccion existe
-> (`app/i18n/content/achievements.js:37`). Es pequeno y esta localizado.
+### TANDA 1 · El conflicto de la musica *(decision, no codigo)*
 
-> s180 desplazo la cola que s178 habia elegido, **por decision suya y sin
-> perderla**. Sigue intacta:
+**Bloquea generar las seis piezas.** `MUSICA_RESPIRA_BRIEFS.md` exige «rango medio
+despejado (≈200 Hz-3 kHz)» en cinco de sus seis prompts; la decision de s177 que
+GOBIERNA exige «el grueso de la energia entre 200 Hz y 2 kHz» porque midio que
+aquella restriccion **era la causa** de que la pieza no sonara. **Son
+incompatibles y hay que elegir** -- probablemente subiendo el hueco de voz por
+encima de 2 kHz, pero eso se decide midiendo. Hasta entonces, **generar musica es
+tirar el trabajo**. Y los terminos de uso comercial siguen sin verificar.
 
-1. **La cola de s178**: ejercicios de oficina que HOY NO EXISTEN en el
-   catalogo — **gemelo de pie** (no hay estiramiento de gemelo, solo
+### TANDA 2 · Lo que ya estaba en la cola del usuario
+
+1. **La pill naranja de «Mis rutinas»** en la sidebar: es lo mas llamativo de la
+   columna (fondo tintado + borde a plena fuerza) y quitarle el fondo la calmaria.
+   Lo mas corto de todo; se decide mirando una imagen.
+2. **De la maqueta del usuario quedaron dos cosas sin copiar**, porque aviso de
+   que algun elemento podia no estar bien colocado: en su imagen **no aparece el
+   lema** y **«Ver la coleccion» va a la derecha**.
+3. **Los tres ejercicios de oficina que HOY NO EXISTEN** en el catalogo -- cola de
+   s178, intacta: **gemelo de pie** (no hay estiramiento de gemelo, solo
    `Elevacion de talones`, que es fuerza), **flexor de cadera contra la mesa** (el
    unico que hay pide arrodillarse) y **aductores sentado**. Cada uno nace con su
-   dibujo. Y **`move.chair.antidote` sigue pendiente de decision**: de sus SEIS
-   pasos solo `Flexor de cadera` pide suelo, y por el la rutina que se llama
-   «Antidoto silla» queda FUERA del chip «Aqui mismo».
+   dibujo. Arrastra la decision de **`move.chair.antidote`**: de sus seis pasos
+   solo `Flexor de cadera` pide suelo, y por el la rutina que se llama «Antidoto
+   silla» queda FUERA del chip «Aqui mismo».
+4. **El tercer chip «Discreta»** (14 de 20), ultima pregunta viva de s176. **Hay
+   que pintarlo antes de preguntar.**
+5. **El arte**: **19** glifos de logro y **3** de ejercicio (`Rana`, `Pica en
+   escritorio`). Depende del usuario. (`Nordics` sigue FUERA por decision de s173.)
 
-2. **CTB, si y cuando el usuario quiera** — **fuera de v1**, con permiso para un
-   **prototipo tecnico**: llegada, dos rondas, retencion libre, recuperacion e
-   integracion, con musica provisional propia. **Nada de esto se ha tocado.** El
-   brief completo (arco de sesion, motor de audio por segmentos, maquina de
-   estados, persistencia `activeBreathSession`, manifiestos offline) sigue vivo
-   como especificacion.
+### TANDA 3 · Lo grande
 
-> **DESPUES, la cola tal como quedo:**
->
-> 1. **El tercer chip «Discreta»** (14 de 20), la ultima pregunta viva de s176.
->    Hay que **pintarlo antes de preguntar**.
-> 2. **FASE 4 · Stats de verdad.** s177 arreglo el ANCHO; el destino de
->    `STATS_DESTINO_PROPUESTA.md` sigue entero.
-> 3. **La musica.** Los seis briefs necesitan el requisito que faltaba: **el
->    grueso de la energia entre 200 Hz y 2 kHz**. Y los **terminos de uso
->    comercial**, sin verificar.
-> 4. **El arte**: `Rana`, `Pica en escritorio` y los **19** glifos de logro.
->    (`Nordics` sigue FUERA de la cola por decision de s173: solo vive en el
->    constructor y ya tiene SVG.)
-> 5. **FASE 8 · onboarding contextual.**
+1. **FASE 4 · Stats.** Queda **una sola vista**, la Semana. Ya decidido: la barra
+   es **cinta escalonada**, el dia es **un arco por tipo de jornada con relleno**,
+   **«Hoy» no entra** y **los Caminos tampoco de momento**. **Lo que falta es que
+   el disenio convenza** -- cinco vueltas de maqueta en s183 y sigue sin hacerlo.
+   Y de paso: que `stats-pestanas.spec.js` **siembre datos**, o el corte de 33 y
+   60 px volvera sin que nadie lo vea.
+2. **FASE 3 del esquema de eventos**: reducers de `aggregates`. Es lo que le daria
+   a Stats algo que leer -- hoy `pace.events.v1` tiene **un solo consumidor en toda
+   la app**, la sidebar (`Sidebar.jsx:74`), y `aggregates` no aparece ni una vez en
+   `app/`.
+3. **FASE 3.5 · Pausa PACE**: la recomendacion concreta. Necesita lo anterior.
+   Verificado en s183: el BreakMenu **solo ordena** (`computeScore` mira solo
+   `plan` y `water`) y `routineFeedback` **sigue sin consumidor** de recomendacion.
+4. **CTB**, fuera de v1, con permiso para un **prototipo tecnico**. Nada tocado.
+5. **FASE 8 · onboarding contextual.**
 
-> **LO QUE SIGUE ABIERTO, dicho y no escondido:**
-> - **La rama «CONTINUA» de la tarjeta es INALCANZABLE** hasta que los Caminos se
->   puedan pausar. Esta escrita y **no esta probada**, y se dice.
-> - **Que el agua sola no enciende el dia ya no lo dice ninguna superficie**: la
->   frase se pinto en tres redacciones y el usuario la descarto.
-> - **El rail colapsado NO se propuso**: existia y **el usuario lo mando quitar en
->   s9**. Con los glifos nuevos volveria a tener sentido, pero es decision suya.
-> - **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes).
-> - Por debajo de **~575 px de alto en movil** el runner SIGUE SOLAPANDO (s179):
->   lo unico que queda por encoger es el glifo y la fuente unica de s177 lo
->   prohibe. **Es decision del usuario.**
+### LO QUE SIGUE ABIERTO, dicho y no escondido
+
+- **La rama «CONTINUA» de la tarjeta de la sidebar es INALCANZABLE** hasta que los
+  Caminos se puedan pausar. Escrita y **sin probar**.
+- Por debajo de **~575 px de alto en movil el runner SIGUE SOLAPANDO** (s179): lo
+  unico que queda por encoger es el glifo y la fuente unica de s177 lo prohibe.
+  **Es decision del usuario.**
+- **360x560 desplaza 101 px y 360x640, 21** en el cajon de la sidebar. Es la
+  decision que tomo el usuario mirando las capturas, no un pendiente.
+- **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes).
+- **El onboarding sigue sin focus trap** (Fase 8.5), verificado en s183.
+- **`CONTENT.md` no se ha rehecho ficha a ficha**: s183 solo declaro la deriva y
+  dijo que la cifra que manda es la del `verify`.
+- Que el agua sola no enciende el dia **ya no lo dice ninguna superficie**.
 
 ---
 
@@ -645,6 +635,8 @@ Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **UN ASERTO QUE SIEMBRA EL ESTADO VACIO NO VIGILA NADA: la semilla es parte del aserto** (s183)
+- **Toda superficie que pinte el nombre de un logro pasa por `tR`, y un redisenio puede reabrir ese hueco sin tocar i18n** (s183)
 - **EL CAJON DE MOVIL TAMBIEN ESCALA, con suelo: se ANULA «en movil no aplica» (s181)** (s182)
 - **El alto disponible de la sidebar se pregunta en SITIOS DISTINTOS segun la piel, y en el cajon la lente hay que ALTARLA a mano** (s182)
 - **Un censo del catalogo se lee del OBJETO evaluado, nunca del fuente** (s182)

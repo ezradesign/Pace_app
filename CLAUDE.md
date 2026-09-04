@@ -49,8 +49,11 @@ Cuando el usuario diga "cierra sesión" o al terminar un cambio significativo:
 4. **`npm run test:e2e`** — comportamiento (s154). Abre un navegador de verdad sobre el
    `index.html` **recién regenerado** y ejecuta el «Checklist de cierre» de más abajo. Va DESPUÉS
    del paso 3 a propósito: así prueba el artefacto que se va a commitear, no el anterior. Es
-   **otra red** y se corre aparte del `verify`, que debe seguir costando ~5 s y no depender de
-   que haya navegadores instalados. **No cubre**: móvil, inglés, Caminos, premium ni un solo píxel
+   **otra red** y se corre aparte del `verify`, que debe seguir siendo **rápido** (s183, dos
+   medidas el mismo día: **11,4 y 18,9 s**; nació en ~5 — oscila con la carga de la máquina, así
+   que se cita como rango o no se cita) y no depender de que haya navegadores instalados. **No
+   cubre**: móvil, Caminos, premium ni un solo píxel — **inglés SÍ, desde s167**, en
+   `tests/logros-i18n.spec.js`
 5. **El standalone ya NO se regenera en cada cierre** — decisión s134: web y Capacitor son los
    objetivos canónicos y `PACE_standalone.html` pasa a **export bajo demanda**. Se regenera (y se
    rota a `backups/`, máx 20) **solo si el usuario lo pide** o antes de publicar una release.
@@ -109,22 +112,33 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 ├── playwright.config.js         ← suite E2E (s154): sirve index.html y lo conduce
 ├── tests/                       ← helpers.js + specs del checklist de cierre
 ├── manifest.json / sw.js        ← PWA
-├── app/
-│   ├── tokens.css / state.jsx / main.jsx
-│   ├── ui/        Primitives.jsx · SessionShell.jsx · CowLogo.jsx · Sound.jsx · Toast.jsx
-│   ├── shell/     Sidebar.jsx
+├── app/                         ← 19 carpetas. Esto es un MAPA, no un inventario:
+│   │                              la lista completa y con rol la da la «Red de
+│   │                              seguridad» de STATE.md, que se mantiene sola
+│   ├── tokens.css / motion.css / state.jsx (+ state-*.jsx por dominio) / main.jsx
+│   ├── ui/        Primitives · SessionShell · TimerDial · RoutineCard · LibraryShell
+│   │              · Sound (+ Sound.voz · Sound.musica) · Toast · library-rules.js
+│   ├── shell/     Sidebar.jsx (orquestador) + .parts · .support · .hoja · .escala
+│   │              · .selectors.js
+│   ├── main/      ActivityBar.jsx y la home
 │   ├── focus/     FocusTimer.jsx
-│   ├── breathe/   BreatheVisual.jsx · BreatheLibrary.jsx · BreatheSession.jsx
-│   ├── move/      MoveModule.jsx
-│   ├── extra/     ExtraModule.jsx
+│   ├── breathe/   BreatheVisual · BreatheLibrary · BreatheSession · voz/ · musica/
+│   ├── move/      MoveModule.jsx  ← **el DATO de Mueve: `move.data.js`**
+│   ├── extra/     ExtraModule.jsx ← **el DATO de Estira: `extra.data.js` +
+│   │              `extra.data.piernas.js`** (troceado en s178; el módulo solo lee
+│   │              `window.EXTRA_ROUTINES`)
 │   ├── hydrate/   HydrateModule.jsx
 │   ├── breakmenu/ BreakMenu.jsx
-│   ├── achievements/ Achievements.jsx
-│   ├── stats/     WeeklyStats.jsx
-│   ├── tweaks/    TweaksPanel.jsx
+│   ├── paths/     registry.js (los 7 Caminos) · PathRunner · steps/ · illustrations/
+│   ├── achievements/ Achievements.jsx · catalog.js
+│   ├── glyphs/    achievement-glyphs.jsx · exercise-glyphs.jsx · máscaras
+│   ├── events/    `pace.events.v1` — modelo · store · adaptadores (ver §Eventos)
+│   ├── custom/    constructor de rutinas propias
+│   ├── stats/     StatsPanel.jsx · YearView · PathStats · PathYearView · .css.jsx
+│   ├── tweaks/    TweaksPanel.jsx · TweaksAudio.jsx
 │   ├── onboarding/ Onboarding.jsx · OnboardingScreens.jsx · pickFirstPath.js
 │   ├── support/   SupportModule.jsx
-│   └── i18n/      strings.js · strings-content.js · useT.jsx
+│   └── i18n/      strings/ (8 dominios) · content/ (5 patches EN) · useT.jsx
 └── backups/       PACE_standalone_vX.Y_YYYYMMDD.html (máx 20)
 ```
 
@@ -154,11 +168,11 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 > | Módulo (lo que ve el usuario) | Vive en | Lo consume | ids |
 > |---|---|---|---|
 > | **Mueve** — calistenia y fuerza | `app/move/move.data.js` (`MOVE_ROUTINES`) | `MoveModule.jsx`, `catPrefix="mueve"` | **`extra.*`** |
-> | **Estira** — movilidad, antídoto a la silla | `app/extra/ExtraModule.jsx` (`EXTRA_ROUTINES`) | `ExtraModule.jsx`, `catPrefix="extra"` | **`move.*`** |
+> | **Estira** — movilidad, antídoto a la silla | `app/extra/extra.data.js` + `app/extra/extra.data.piernas.js` (`EXTRA_ROUTINES`) | `ExtraModule.jsx`, `catPrefix="extra"` | **`move.*`** |
 >
-> Los ids no se pueden renombrar sin borrar datos de la gente, así que se convive con ello. **Verificado en s178 midiendo, no leyendo**: `lib.move.title` = «Mueve» y `lib.extra.title` = «Estira» (`app/i18n/strings/sessions.body.js:31,36`), y el censo `scripts/audit/censo-suelo-s178.js` resuelve las 28 rutinas por su módulo real.
+> Los ids no se pueden renombrar sin borrar datos de la gente, así que se convive con ello. **Verificado en s178 midiendo, no leyendo**: `lib.move.title` = «Mueve» y `lib.extra.title` = «Estira» (`app/i18n/strings/sessions.body.js:31,36`), y el censo `scripts/audit/censo-suelo-s178.js` resuelve las rutinas por su módulo real. **Cuántas son, medido en s183 evaluando el objeto**: Mueve **14** · Estira **17** — o sea **31**, no 28.
 >
-> **HISTORIA, porque este párrafo ya ha mentido dos veces:** hasta s176 describía los ids al revés. s176 lo corrigió, pero **cruzó también las rutas de archivo, que nunca estuvieron cruzadas** — y en s178 eso mandó a esta misma sesión al archivo equivocado: un censo de «cuántas rutinas de Estira piden suelo» midió Mueve y devolvió **2** donde la respuesta es **9**. Si dudas, no leas: mira `catPrefix` y `lib.*.title`.
+> **HISTORIA, porque este párrafo ya ha mentido tres veces:** hasta s176 describía los ids al revés. s176 lo corrigió, pero **cruzó también las rutas de archivo, que nunca estuvieron cruzadas** — y en s178 eso mandó a esta misma sesión al archivo equivocado: un censo de «cuántas rutinas de Estira piden suelo» midió Mueve y devolvió **2** donde la respuesta es **9**. Y la tercera es de s178 también: el troceo de aquel día sacó el dato de Estira de `ExtraModule.jsx` **el mismo día en que se arreglaba la ruta**, así que la tabla volvió a apuntar a un archivo sin dato hasta s183. Si dudas, no leas: mira `catPrefix` y `lib.*.title`.
 
 **Tono:** calmado, artesanal, cuidado. Sin gamificación agresiva. Sin métricas abrumadoras. Copy corto en español ("¿Qué quieres cultivar hoy?").
 
@@ -168,10 +182,14 @@ Tweaks visuales menores no regeneran artefactos pero si se anotan en `STATE.md`.
 
 ## 🧪 Checklist de cierre
 
-> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): 65 tests de Playwright
-> sobre `index.html` en un navegador real, ~25 s. Los siete puntos de abajo son lo que aserta,
-> uno a uno. **Sigue mereciendo una mirada humana** lo que la suite no cubre y declara: móvil,
-> inglés, Caminos, premium y cualquier cosa visual — no compara ni un píxel.
+> **Desde s154 esto lo ejecuta `npm run test:e2e`** (paso 4 del cierre): **187 tests** de
+> Playwright sobre `index.html` en un navegador real, **~3 min** (medido en s183; nació con 65 y
+> ~25 s). Los siete puntos de abajo son lo que aserta, uno a uno. **Sigue mereciendo una mirada
+> humana** lo que la suite no cubre y declara: móvil, Caminos, premium y cualquier cosa visual —
+> no compara ni un píxel. **El inglés SÍ está cubierto** desde s167 (`logros-i18n.spec.js`).
+>
+> **Estos dos números caducan.** Se re-miden, no se copian: los de aquí son de s183 y ya han
+> estado tres veces desactualizados.
 
 - [ ] Pomodoro cuenta y termina → abre BreakMenu
 - [ ] Respira: librería · modal seguridad (Rondas) · sesión animada

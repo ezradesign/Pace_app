@@ -389,11 +389,16 @@ que quedó huérfano del plan anterior).
 Agrupado a propósito justo antes de la venta: vender una app con el onboarding sin focus trap y
 sin tests del estado es un riesgo que se paga en soporte.
 
-- **Trocear lo que pasa de 500 líneas** (regla propia): **`tokens.css` 613** — el peor y el que
-  nadie miraba —, `exercise-glyphs.jsx` ~513 y `Sidebar.jsx` ~510. Candidatos ya anotados:
-  extraer los `@font-face` (~90 ln) y el CSS del SenderoBar (~110 ln) de `tokens.css`; extraer
-  `SenderoDelDia` + `StatusBar` de `Sidebar.jsx`.
-- **Accesibilidad** (Bloque 9): tarjetas sin acceso por teclado · onboarding sin focus trap.
+- ~~**Trocear lo que pasa de 500 líneas** (regla propia): `tokens.css` 613, `exercise-glyphs.jsx`
+  ~513 y `Sidebar.jsx` ~510~~ **HECHO, y no en una sesión de saneamiento: fue cayendo solo**
+  porque desde s162 la regla §1 la vigila un trinquete en el `verify`. Medido en **s183**:
+  `tokens.css` **322** · `exercise-glyphs.jsx` **261** · `Sidebar.jsx` **318**, y de los **239
+  archivos** de `app/`, `tests/` y `scripts/` **ninguno pasa de 500** (el mayor es
+  `app/focus/FocusTimer.jsx`, con 500 clavados). Lo único por encima sigue siendo
+  `build-standalone.js` (**567**) y `PACE.html` (**547**), los dos fuera del censo a propósito.
+- **Accesibilidad** (Bloque 9): ~~tarjetas sin acceso por teclado~~ (resuelto en s174: la tarjeta
+  lleva un botón dentro que se extiende con `::after`, y no es un `role="button"` gigante) ·
+  **onboarding sin focus trap** — verificado en s183, sigue sin trap.
 - **Tests del state (A-6)** e **import sanitizado (A-7)**, del P2 de `audit-producto-v0.34.4.md`.
 - **i18n robustez (I18N-2)**: paridad de claves ES/EN, pseudolocalización, pluralización — una
   clave que falta es un **bug visible** en una app de pago. Más las deudas semánticas **D-1**
