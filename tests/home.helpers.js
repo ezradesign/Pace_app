@@ -36,32 +36,51 @@ function sonda(page) {
     const dial = q('[data-pace-dial-fit]');
     const spc = q('[data-pace-spc]');
     const act = q('[data-pace-activitybar]');
+    const chip = q('[data-pace-activitybar-chip]');
     const body = q('[data-pace-home-body]');
     const raiz = getComputedStyle(document.documentElement);
 
     /* EL HORIZONTE REAL, en px, leido de lo que el navegador ha computado.
 
-       Hasta s158 esto era el inset inferior de un `clip-path`. Ahora el aro no
-       se corta: se DESVANECE, con una mascara sobre [data-pace-dial-ring] cuyas
-       tres paradas caen en 100% - (horizonte + rampa), 100% - horizonte y
-       100% - (horizonte - rampa). La rampa es simetrica POR CONSTRUCCION, asi
-       que el horizonte es la parada del medio — y de paso la simetria se
-       comprueba, porque si dejara de cumplirse esta lectura estaria eligiendo
-       un numero cualquiera de tres. */
+       ESTA LECTURA HA CAMBIADO TRES VECES, y cada vez habia que venir aqui a
+       contar paradas: el inset de un clip-path (hasta s158), tres paradas con
+       rampa simetrica de las que valia la del medio (s158-s183), dos paradas
+       coincidentes (el corte seco de s184) y seis (la niebla con curva del mismo
+       s184). Contar paradas era el error: es un detalle de COMO esta escrito el
+       degradado, no de lo que significa.
+
+       La regla que no depende de la forma: EL HORIZONTE ES DONDE LA MASCARA
+       LLEGA A CERO. Por debajo de esa linea el anillo no existe —eso es lo que
+       significa el horizonte—, y da igual si encima hay dos paradas o seis. Con
+       cualquiera de las formas de s184 devuelve el mismo numero, y con una forma
+       nueva seguira devolviendolo mientras el degradado siga muriendo ahi.
+
+       `lecturaFiable` es el guard que sustituye al viejo `rampaSimetrica`: la
+       lectura vale si hay EXACTAMENTE una parada a cero. Con ninguna (una
+       mascara que no muere) o con varias (que no se sabria cual es la linea) se
+       devuelve null y los asertos fallan con mensaje propio en vez de comparar
+       contra un numero cualquiera. */
     let recorte = null;
-    let rampaSimetrica = null;
+    let lecturaFiable = null;
+    let niebla = null;
     const capaAnillo = dial ? dial.querySelector('[data-pace-dial-ring]') : null;
     if (capaAnillo) {
       const mascara = getComputedStyle(capaAnillo).maskImage || '';
       /* Con el GRUPO de captura, no limpiando la cadena: quitarle a
          «calc(100% - 65px)» todo lo que no sea digito deja «10065», y el aserto
          de abajo recibio exactamente ese 10000 de diferencia. */
-      const paradas = [...mascara.matchAll(/calc\(100% - ([\d.]+)px\)/g)]
-        .map(m2 => parseFloat(m2[1]))
-        .sort((a, b) => a - b);
-      if (paradas.length === 3) {
-        recorte = paradas[1];
-        rampaSimetrica = Math.abs((paradas[2] - paradas[1]) - (paradas[1] - paradas[0])) < 0.6;
+      const paradas = [...mascara.matchAll(/(rgba?\([^)]*\))\s+calc\(100% - ([\d.]+)px\)/g)]
+        .map(m2 => {
+          const rgba = m2[1].match(/rgba\(\s*[\d.]+,\s*[\d.]+,\s*[\d.]+,\s*([\d.]+)\)/);
+          return { alfa: rgba ? parseFloat(rgba[1]) : 1, pos: parseFloat(m2[2]) };
+        });
+      const ceros = paradas.filter(p => p.alfa === 0);
+      lecturaFiable = ceros.length === 1;
+      if (lecturaFiable) {
+        recorte = ceros[0].pos;
+        /* Ancho del desvanecido: de la parada opaca mas baja hasta el cero. */
+        const opacas = paradas.filter(p => p.alfa >= 1).map(p => p.pos);
+        niebla = opacas.length ? +(Math.min(...opacas) - recorte).toFixed(1) : 0;
       }
     }
     /* El bloque que hace de HORIZONTE se elige por POSICION, no por selector:
@@ -85,10 +104,11 @@ function sonda(page) {
       D: raiz.getPropertyValue('--pace-timer-d').trim(),
       solape: raiz.getPropertyValue('--pace-activities-overlap').trim(),
       recorte,
-      rampaSimetrica,
+      lecturaFiable,
+      niebla,
       // Solape REAL: cuanto del aro queda por debajo del borde superior del horizonte.
       solapeReal: (dial && horizonte) ? +(caja(dial).bottom - caja(horizonte).top).toFixed(1) : null,
-      dial: caja(dial), spc: caja(spc), act: caja(act),
+      dial: caja(dial), spc: caja(spc), act: caja(act), chip: caja(chip),
       desbordeV: body ? body.scrollHeight - body.clientHeight : null,
       desbordeH: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       ordenVisual: [

@@ -92,11 +92,128 @@ function TimerTicks({ progress, color }) {
   return <React.Fragment>{marks}</React.Fragment>;
 }
 
+/* ============================================================
+   EL RECORRIDO SOLO PISA LO QUE SE VE (s184).
+
+   Hasta v0.114.1 el arco daba los 360 grados: nacia en las 12, se hundia bajo
+   el horizonte —donde la mascara de s158 lo dejaba al 30 %, por detras de
+   Actividades— y volvia a salir por el otro lado. El usuario pidio que el
+   tiempo recorra EXACTAMENTE el tramo visible: que empiece en el extremo
+   izquierdo, suba por las 12 y muera en el derecho.
+
+   Y ESE ANGULO NO SE ESCRIBE, SE MIDE. El corte es --pace-corte, que el CSS
+   deriva del horizonte del motor restandole la banda del rotulo ACTIVIDADES
+   (medida, no escrita). Y el horizonte es el 16 % de D con un TECHO por el
+   CICLO, asi que su ratio ya oscila entre 0,147 y 0,176 segun el breakpoint
+   (contrato §0) — y la banda del rotulo tampoco es constante. Un angulo fijo
+   dejaria los dos cabos por debajo del corte en unos tamanos y flotando en
+   otros; con la separacion de s184 (el aro baja hasta el canto de las
+   tarjetas) el barrido pasa de 271,6 a 295,8 grados a 1280x800, asi que el
+   numero es aun menos escribible que antes.
+
+   LA ARITMETICA. El anillo tiene radio 0,475 D: r=47,5 en un viewBox de 100
+   que cubre el marco, y el marco es cuadrado (aspect-ratio 1/1 + meet), asi
+   que una unidad de viewBox es exactamente D/100 px. El corte cae D/2 − H
+   por debajo del centro, luego los dos cruces estan a
+   asin((D/2 − H) / 0,475 D) bajo la horizontal y el tramo visible mide
+   2 × (90° + ese angulo). Con H >= D/2 (corte por encima del centro, que hoy
+   no ocurre) el asin saldria de rango: ahi se devuelve el circulo entero en
+   vez de un NaN que borraria el arco.
+   ============================================================ */
+const { useState: useStateTD, useRef: useRefTD, useLayoutEffect: useLayoutEffectTD } = React;
+
+const DIAL_R = 47.5;                        /* radio del anillo, en viewBox */
+const DIAL_VUELTA = 360;
+
+/* Devuelve el barrido en grados, o `null` cuando AUN NO SE PUEDE DECIDIR.
+   Esa tercera respuesta no es defensa de manual: es el caso del arranque, y
+   costo la primera version de esta sesion. Sin layout todavia, o con
+   --pace-corte aun sin resolver, «no lo se» y «da la vuelta entera» son
+   respuestas distintas, y devolver la segunda CONGELA el circulo completo — el
+   observer que deberia corregirlo no vuelve a disparar porque D no cambia. */
+function medirBarridoVisible(marco) {
+  const D = marco.getBoundingClientRect().height;
+  if (!(D > 0)) return null;
+  const H = parseFloat(getComputedStyle(marco).getPropertyValue('--pace-corte'));
+  if (!isFinite(H)) return null;           /* el token aun no existe */
+  if (H <= 0) return DIAL_VUELTA;          /* sin horizonte: vuelta entera */
+  const sen = (D / 2 - H) / ((DIAL_R / 100) * D);
+  if (!(sen > -1 && sen < 1)) return DIAL_VUELTA;
+  return 2 * (90 + Math.asin(sen) * 180 / Math.PI);
+}
+
+/* QUE DISPARA LA MEDIDA, Y POR QUE NO BASTA EL TAMANO DEL MARCO.
+
+   La primera version observaba solo el marco con un ResizeObserver, razonando
+   que el horizonte no puede moverse sin que se mueva D. Es cierto EN REGIMEN y
+   FALSO EN EL ARRANQUE, que es justo cuando importa: medido en el artefacto,
+   la unica lectura que llego a ocurrir devolvio 360 porque --pace-horizon aun
+   no resolvia, y como el marco ya tenia sus 420 px definitivos el observer no
+   volvio a disparar nunca. El aro se quedaba redondo con el motor funcionando.
+
+   El disparo bueno es el que ve al MOTOR publicar. home-geometry.js escribe
+   --pace-timer-d y --pace-activities-overlap —los dos insumos de este
+   calculo— en el `style` de <html> (su `setVar`, home-geometry.js:136), y solo
+   cuando cambian. Un MutationObserver sobre ese atributo es por tanto el
+   evento exacto, sin sondeo y sin frames de mas.
+
+   El ResizeObserver se queda ADEMAS, y no por simetria: cubre el caso del
+   motor apagado, donde D y el horizonte salen de los fallbacks CSS y lo unico
+   que se mueve es el marco.
+
+   NINGUNO DE LOS DOS PUEDE REALIMENTARSE: lo que este hook cambia es el
+   dasharray de dos <circle> en position:absolute, que no altera ni el tamano
+   del marco ni el style de <html>. El umbral de 0,02° remata la garantia. */
+function useBarridoVisible(marcoRef, activo) {
+  const [barrido, setBarrido] = useStateTD(DIAL_VUELTA);
+  useLayoutEffectTD(() => {
+    if (!activo) { setBarrido(DIAL_VUELTA); return; }
+    const marco = marcoRef.current;
+    if (!marco) return;
+    const leer = () => {
+      const v = medirBarridoVisible(marco);
+      if (v == null) return;
+      setBarrido((prev) => (Math.abs(prev - v) > 0.02 ? v : prev));
+    };
+    leer();
+    let ro = null, mo = null;
+    if (typeof ResizeObserver === 'function') {
+      ro = new ResizeObserver(leer);
+      ro.observe(marco);
+    }
+    if (typeof MutationObserver === 'function') {
+      mo = new MutationObserver(leer);
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+    }
+    return () => { if (ro) ro.disconnect(); if (mo) mo.disconnect(); };
+  }, [activo]);
+  return barrido;
+}
+
 function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused }) {
-  const R = 47.5;
-  const C = 2 * Math.PI * R;
+  const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
   const ringColor = interpolateRingColor(progress, mode);
+
+  /* El recorte SOLO donde hay horizonte: la home (fitHeight) y solo en la
+     variante de arco. Caminos no pasa fitHeight y ademas va por `ticks`, asi
+     que su anillo sigue siendo la vuelta entera, byte-identico. */
+  const marcoRef = useRefTD(null);
+  const barrido = useBarridoVisible(marcoRef, !!fitHeight && !ticks);
+  const recortado = barrido < DIAL_VUELTA - 0.01;
+  /* EL TRAZO SE MIDE EN GRADOS, Y ESO ARREGLA UNA ASIMETRIA MEDIDA (s184).
+     `pathLength={360}` le dice al motor que trate el trazado como si midiera
+     360 unidades, asi que guion y desfase se escriben directamente en grados y
+     el barrido entra tal cual. No es azucar: sin el, las cuentas van contra la
+     circunferencia EXACTA (2πr = 298,451) mientras Chrome dibuja el circulo
+     con cuatro beziers cuya longitud real es 297,97 — un 0,16 % de sobra que
+     alarga el arco 0,44° y dejaba el cabo derecho 0,78 px POR DEBAJO del
+     izquierdo, medido sobre la pagina a 390x844. Con pathLength los dos cabos
+     caen en la misma linea porque el motor normaliza por su propio trazado.
+     El giro lleva el ORIGEN al extremo izquierdo; sin recorte vale 0 y
+     `360 360` pinta el circulo entero, o sea la rama de siempre. */
+  const giroInicio = recortado ? -barrido / 2 : 0;
+  const trazo = barrido.toFixed(3) + ' ' + DIAL_VUELTA;
 
   /* fitHeight (s123, SOLO home): el aro se dimensiona por la ALTURA ÚTIL de su
      contenedor (no por 56vh del viewport), encogiéndose en pantallas bajas hasta
@@ -117,7 +234,8 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
        amanecer distinga «pausado» de «reposo» — dos estados que hasta ahora se
        veian igual porque `running` es false en los dos. El padre decide; aqui no
        hay ni una linea de logica de temporizador. */
-    <div data-pace-dial-running={running ? '' : undefined}
+    <div ref={marcoRef}
+         data-pace-dial-running={running ? '' : undefined}
          data-pace-dial-paused={paused ? '' : undefined}
          data-pace-dial-fit={fitHeight ? '' : undefined}
          style={fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame}>
@@ -139,16 +257,71 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
           <TimerTicks progress={progress} color={ringColor} />
         </svg>
       ) : (
+        <React.Fragment>
+        {/* LA PISTA VIVE EN SU PROPIA CAPA (s184, enmienda), y esto no es
+            organizacion: es que la pista y el recorrido NO PUEDEN llevar la
+            misma niebla.
+
+            La primera version les puso una sola, larga (0,14 D), sobre
+            [data-pace-dial-ring]. Como el arco NACE en el horizonte —justo
+            donde esa mascara vale cero—, el recorrido salia de la niebla
+            despacio: el usuario lo reporto como «tarda en aparecer el contador
+            de la parte izquierda» y como que «no parece que empiece en el lugar
+            adecuado», que son el mismo defecto visto dos veces. Los primeros
+            minutos del bloque no tenian senal.
+
+            EL REPARTO SALE DE UNA FRASE QUE YA ESTABA ESCRITA EN tokens.css:
+            «Arco = informacion; halo = ambiente». La pista es ambiente —es la
+            ESCALA— y puede disolverse todo lo que haga falta para que el anillo
+            no termine en filo. El arco es informacion y **no puede
+            desaparecer**: lleva su propia niebla, corta, la justa para que el
+            remate no se lea cortado.
+
+            Dos <svg> con el MISMO viewBox y la MISMA rotacion, asi que se
+            superponen exactos; la pista va primera para quedar detras. La
+            mascara sigue sin poder ir en el <svg> —va rotado y el degradado
+            rotaria con el—, por eso cada una envuelve al suyo en un div. */}
+        <div data-pace-dial-pista style={timerDialStyles.ringLayer}>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
+            <g transform={`rotate(${giroInicio.toFixed(3)} 50 50)`}>
+              {/* Track suave. Se recorta CON el arco, y no por simetria: la
+                  pista es la ESCALA del recorrido, y una escala que siguiera
+                  dando la vuelta entera prometeria tiempo donde ya no lo hay. */}
+              <circle cx="50" cy="50" r={R} pathLength={DIAL_VUELTA} fill="none"
+                stroke="var(--line)" strokeWidth="0.7" strokeOpacity="0.85"
+                strokeDasharray={trazo} />
+            </g>
+          </svg>
+        </div>
         <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}>
-          {/* Track suave */}
-          <circle cx="50" cy="50" r={R} fill="none" stroke="var(--line)" strokeWidth="0.7" strokeOpacity="0.85" />
-          {/* Arco de progreso: mas presente (s99) con cap redondo */}
-          <circle cx="50" cy="50" r={R} fill="none"
+          {/* EL GRUPO QUE LLEVA EL ORIGEN AL EXTREMO IZQUIERDO (s184). Gira
+              medio barrido en sentido antihorario, asi que el punto 0 de los
+              tres trazados —pista, arco y punto guia— cae en el cruce
+              izquierdo y las 12 quedan justo en la mitad del recorrido. Sin
+              recorte vale 0 y el anillo es el de siempre. */}
+          <g transform={`rotate(${giroInicio.toFixed(3)} 50 50)`}>
+          {/* Arco de progreso: mas presente (s99) con cap redondo.
+
+              EL `key` NO ES DECORACION (s184). `stroke-dashoffset` lleva una
+              transicion de 1 s, y eso es correcto mientras lo que se mueve es
+              el PROGRESO. Cuando lo que cambia es el BARRIDO —un resize, y el
+              motor da hasta ocho pasadas de «encoger hasta caber»— el offset
+              salta a otro valor y la transicion lo recorre pintando arco por el
+              camino: con el Pomodoro parado aparecia un tramo de color en el
+              extremo izquierdo, visto en captura a 800x500. Es el mismo
+              principio que s160 dejo escrito para el alto del aro: la geometria
+              no se transiciona. Al colgar el `key` del barrido, React monta un
+              <circle> nuevo cuando la geometria cambia y el valor nuevo no
+              tiene desde donde viajar; entre resizes el key es constante y la
+              transicion del progreso queda intacta. */}
+          <circle key={'arco-' + barrido.toFixed(3)}
+            cx="50" cy="50" r={R} pathLength={DIAL_VUELTA} fill="none"
             stroke={ringColor} strokeWidth="1.3"
             strokeOpacity="0.92"
             strokeLinecap="round"
-            strokeDasharray={C} strokeDashoffset={C * (1 - progress)}
+            strokeDasharray={trazo} strokeDashoffset={(barrido * (1 - progress)).toFixed(3)}
             style={{ transition: 'stroke-dashoffset 1s linear, stroke 1s linear' }} />
           {/* Punto guia en la punta del progreso (halo + nucleo).
               s138 — el gate era `progress > 0.001` y hacia que el punto
@@ -178,15 +351,23 @@ function TimerDial({ mins, secs, progress, mode, modeLabel, subtitle, inner, run
               reposo— lo sigue cubriendo `progress > 0`: en idle a cero no corre
               nada. Pausado a mitad y completado conservan el punto por esa misma
               rama. */}
+          {/* s184 — el punto guia recorre el MISMO barrido que el arco, no los
+              360: va dentro del grupo girado, asi que su rotacion 0 ya es el
+              extremo izquierdo y su maximo es la punta del arco. Lo que s138 y
+              s139 dejaron atado —que monte en el mismo tick que el arco y que
+              nazca en el origen, no desplazado— se conserva intacto: el gate
+              es el mismo y con progress 0 el angulo sigue siendo 0. */}
           {(running || progress > 0) && (
-            <g transform={`rotate(${progress * 360} 50 50)`}
+            <g transform={`rotate(${(progress * barrido).toFixed(3)} 50 50)`}
                style={{ transition: 'transform 1s linear' }}>
               <circle cx={50 + R} cy="50" r="1.7" fill={ringColor} opacity="0.22" />
               <circle cx={50 + R} cy="50" r="0.85" fill={ringColor}
                 style={{ transition: 'fill 1s linear' }} />
             </g>
           )}
+          </g>
         </svg>
+        </React.Fragment>
       )}
       </div>
 

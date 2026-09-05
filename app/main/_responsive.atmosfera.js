@@ -216,6 +216,48 @@
      estrecha, y una caja del doble era un 58 % de área pintada de más para
      nada. EL ÁREA IMPORTA — §4 del plan. */
   const LIMBO_R = 0.66;   /* semilado de la caja, en unidades de D */
+
+  /* Longitudes en unidades de D. Sube aquí desde más abajo (s184): las tres
+     constantes de bordes que vienen a continuación la necesitan, y un `const`
+     no se puede usar antes de declararlo. */
+  const dd = (f) => 'calc(var(--pace-dial-d) * ' + f + ')';
+
+  /* ==================================================================
+     LOS CUATRO BORDES DE LA LUZ Y DEL ANILLO (s184). El usuario pidió que
+     ninguno se leyera como un CORTE, y son el mismo problema en cuatro sitios:
+     la luz no llega a la fila de minutos, pasa el horizonte y se apaga, la
+     pista se disuelve y el arco solo se remata. Los números salen del banco
+     (restar el mismo fotograma con el sol encendido y apagado), no de gusto, y
+     viven juntos para poder moverse a la vez. El porqué completo, en
+     `DECISIONES_TECNICAS_VIGENTES.md`.
+     ================================================================== */
+  const LUZ_TECHO = 0.52;   /* la luz muere a esta distancia del centro, hacia arriba */
+  const LUZ_PLENO = 0.24;   /* y desde aquí ya está a pleno */
+  const LUZ_COLA  = 0.22;   /* cuánto sigue la luz por debajo del horizonte */
+  /* DOS NIEBLAS, Y LA DIFERENCIA ENTRE ELLAS ES UN ARREGLO. Hubo una sola,
+     larga, sobre la capa del anillo entero — y como el arco NACE en el
+     horizonte, justo donde esa máscara vale cero, tardaba **~2,2 min** en llegar
+     a plena opacidad en un bloque de 25 (medido a 1280×800): los primeros
+     minutos no tenían señal. El reparto sale de una frase que ya estaba en
+     `tokens.css`, **arco = información, halo = ambiente**: la escala puede
+     disolverse todo lo que haga falta; el recorrido no puede desaparecer. */
+  const NIEBLA_PISTA = 0.14;   /* la escala se disuelve */
+  const NIEBLA_ARCO  = 0.035;  /* el recorrido solo se remata */
+  /* CON CURVA, NO LINEAL: la recta cae uniforme y pierde el tramo útil antes.
+     Así se mantiene el 94 % de presencia en tres cuartas partes del recorrido.
+     Pares [fracción del recorrido desde el horizonte hacia arriba, alfa]. */
+  const CURVA_NIEBLA = [[1, 1], [0.72, 0.94], [0.46, 0.74], [0.26, 0.44], [0.12, 0.18], [0, 0]];
+  /* EL TECHO, TAMBIÉN CON CURVA, y esto es un defecto que el usuario vio: «la
+     parte de arriba queda demasiado difusa y con una línea de corte». La rampa
+     recta de tres paradas metía un CODO en 0,24 D donde la pendiente cambia unas
+     cuatro veces, y el ojo encuentra un quiebre de pendiente igual que encuentra
+     un borde — la misma razón por la que el limbo lleva ONCE paradas y no cinco.
+     Esta S entra despacio desde el cero y se posa en `--sun-top` sin esquina, y
+     en el tramo medio pesa MÁS que la recta (0,66 contra 0,51 a 0,32 D): eso es
+     lo que quita lo difuso sin devolver luz a la fila de minutos.
+     Pares [distancia al centro en D, alfa]. */
+  const CURVA_TECHO = [[0.520, 0], [0.505, 0.06], [0.488, 0.16], [0.455, 0.36],
+                       [0.400, 0.56], [0.330, 0.68]];
   /* Paradas en % del radio de la caja, con su color y su valor de máscara. La
      máscara sale de la MISMA lista que el color: no pueden desincronizarse, que
      es como s157 acabó con un grano cuadrado sobre una luz redonda.
@@ -261,15 +303,37 @@
   const limboCon = (i) => 'radial-gradient(circle farthest-side, '
     + LIMBO.map(p => p[i] + ' ' + p[0]).join(', ') + ')';
 
-  /* MENOS LUZ ARRIBA, SIN DEJAR DE SER UN CÍRCULO. Por encima del aro solo hay
-     ~59 px hasta la fila de minutos, y ahí la corona competía con los chips. La
-     caída es una rampa vertical que cruza la caja ENTERA del limbo (1,32 D, o
-     sea 536 px con el aro de 406): un 0,05 % por píxel, demasiado lenta para
-     que el ojo encuentre un borde. Por eso atenúa sin cortar — el círculo sigue
-     completo, solo que su mitad de arriba pesa --sun-top.
-     Se INTERSECA con la máscara del anillo, igual que hace el bloom: la
-     vertical sola dejaría el grano fuera de la corona. */
-  const menosArriba = 'linear-gradient(180deg, rgb(0 0 0 / var(--sun-top, 1)) 0%, #000 68%)';
+  /* LA LUZ MUERE ANTES DE LA FILA DE MINUTOS (s184), y esto ATENÚA ya no basta.
+
+     Aquí había una rampa que bajaba la mitad superior de la corona a --sun-top
+     (0,72) «sin cortar, el círculo sigue completo», con esta premisa escrita al
+     lado: por encima del aro hay ~59 px hasta la fila de minutos. ESA PREMISA
+     YA NO SE CUMPLE. Medido hoy a 1280x800: el borde superior del aro cae en
+     y=167,1 y la píldora «45» acaba en y=142,6 — quedan 24,5 px, no 59. Y el
+     limbo muere a 0,628 D del centro, o sea 64 px pasado el aro. Fotografiando
+     el mismo fotograma con el sol encendido y apagado, la fila de minutos
+     recibía una desviación de 57 sobre 255: la corona la estaba pintando.
+
+     Atenuar al 72 % no arregla eso, porque 0,72 nunca es 0. Así que la rampa
+     pasa a MORIR: transparente por encima de 0,52 D del centro, y de ahí hacia
+     abajo sube hasta el hombro de --sun-top en 0,24 D. Son 0,28 D de recorrido
+     —118 px con el aro de 420—, tan gradual que no hay borde que encontrar.
+
+     LO QUE CUESTA ES CASI NADA, Y ESTÁ MEDIDO: el brillo justo por encima del
+     trazo del aro baja de 64 a 58 sobre 255, porque el NÚCLEO de la corona vive
+     entre 0,505 y 0,528 D —pegado al aro— y lo que se recorta es la COLA, que
+     es la que llegaba a los chips. El halo sigue rodeando el recorrido entero,
+     las 12 incluidas; lo que desaparece es el lavado ancho hacia arriba.
+     Fila de minutos: 57 -> 1. Uno sobre 255 no se ve.
+
+     El BLOOM no necesita nada de esto: su máscara direccional ya vale cero por
+     encima de 0,5 D del centro. Esta rampa es solo del limbo. */
+  const menosArriba = 'linear-gradient(180deg, transparent 0px, '
+    + CURVA_TECHO.map(function (p) {
+        return 'rgb(0 0 0 / ' + p[1] + ') ' + dd((LIMBO_R - p[0]).toFixed(4));
+      }).join(', ')
+    + ', rgb(0 0 0 / var(--sun-top, 1)) ' + dd((LIMBO_R - LUZ_PLENO).toFixed(4))
+    + ', #000 68%)';
 
   /* ------------------------------------------------------------------
      CAPA 2 · BLOOM — el derrame amplio, solo hacia abajo.
@@ -284,7 +348,8 @@
      0,60 D hacia abajo desde el horizonte contra 0,5 D + el propio horizonte de
      margen disponible. Una luz no puede acabar donde acaba su caja — las dos
      aristas rectas de s157 fueron exactamente eso. */
-  const dd = (f) => 'calc(var(--pace-dial-d) * ' + f + ')';
+  /* `dd` se declaraba aquí; subió junto a LIMBO_R en s184 porque las constantes
+     de bordes la necesitan antes. */
   /* EL BLOOM COMPARTE EL CENTRO DEL ARO. No es un detalle de implementación: es
      el defecto que el usuario vio como «una especie de círculo en la zona de
      pausar, ciclo, actividades, que no corresponde al sol». Con el centro en el
@@ -312,7 +377,7 @@
      su borde superior media D antes y el horizonte media D después menos el
      propio horizonte. Todo sale de los mismos dos tokens que gobiernan el aro. */
   const DESDE_ARRIBA = (extra, conHorizonte) => 'calc(var(--pace-dial-d) * '
-    + (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-horizon))' : ')');
+    + (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
   /* Radios del aro entre paréntesis (el radio de la luz es 1,05 D). La sombra
      ocupa los 81 px finales: ancha de sobra para no leerse como un aro, y
      colocada donde la máscara direccional la deja caer — a los lados del aro y
@@ -365,32 +430,62 @@
   const direccion = 'linear-gradient(180deg, transparent 0px, '
     + 'transparent ' + DESDE_ARRIBA(-0.5, false) + ', '
     + 'rgba(0,0,0,0.34) calc(var(--pace-dial-d) * ' + (BLOOM_H * BLOOM_SUBE).toFixed(3)
-    + ' - var(--pace-horizon) * 0.5), '
+    + ' - var(--pace-corte) * 0.5), '
     + '#000 ' + DESDE_ARRIBA(0.5, true) + ')';
 
-  /* EL HORIZONTE del anillo, y AHORA ES EL SOL EL QUE LO ABRE.
+  /* EL HORIZONTE del anillo: UN CORTE SECO, y ya no hay nada que abrir (s184).
 
-     Con el Pomodoro parado el aro vuelve a cortarse EN SECO en el horizonte,
-     como hasta v0.89.0: sin sesión no hay luz, así que tampoco hay motivo para
-     que el aro se abra. Con la sesión viva el corte se desvanece y el arco
-     completa los 360 grados. Todo cuelga de --pace-on, así que la apertura viaja
-     con la luz en los mismos 1,6 s y no hay un solo frame de salto.
+     HISTORIA CORTA, porque este bloque ha ido y vuelto. Hasta v0.89.0 cortaba
+     en seco. s158 lo convirtió en un desvanecido que la sesión ABRÍA
+     (--pace-abre), para que el arco COMPLETASE los 360 hundiéndose en la luz.
+     Ese encargo ya no existe: en s184 el arco dejó de bajar, así que la apertura
+     se quedó sin nada que atenuar y --pace-abre se retiró (no tenía otro
+     consumidor). Lo que NO se toca es --pace-arco: el tono sigue tiñendo la cola
+     del bloom (s159), y eso depende de qué hora es, no de que haya arco
+     enterrado.
 
-     --pace-abre es --pace-on tal cual: a media pausa el aro sigue abierto del
-     todo, porque pausar no termina la sesión. Y la RAMPA también se
-     multiplica por él: con la luz apagada mide 0 px, o sea las tres paradas
-     caen en el mismo sitio y el degradado ES un corte seco. Sin eso quedaría un
-     desvanecido de 20 px en reposo, que no es lo que se pidió. */
-  const RAMPA = 'calc(' + dd(0.05) + ' * var(--pace-abre))';
-  const horizonte = 'linear-gradient(180deg, #000 0px, '
-    + '#000 calc(100% - var(--pace-horizon) - ' + RAMPA + '), '
-    + 'rgb(0 0 0 / calc(0.62 * var(--pace-abre))) calc(100% - var(--pace-horizon)), '
-    + 'rgb(0 0 0 / calc(0.34 * var(--pace-abre))) calc(100% - var(--pace-horizon) + ' + RAMPA + '), '
-    + 'rgb(0 0 0 / calc(0.30 * var(--pace-abre))) 100%)';
-  /* Los TRECE que cruzan. El resto es andamio y no sale de esta IIFE. */
+     Y NO ES UN FILO, ES NIEBLA. El corte seco duró lo que tardó en verse: los
+     cabos se leían amputados. El degradado no salta de opaco a transparente,
+     recorre la niebla de arriba y llega a cero JUSTO en el horizonte. Sigue sin
+     haber luz por debajo y sigue sin depender de la sesión: lo único que cambia
+     respecto del corte es que el anillo ENTRA en ella en vez de chocar. */
+  const nieblaCon = (largo) => 'linear-gradient(180deg, #000 0px, '
+    + CURVA_NIEBLA.map(function (p) {
+        return 'rgb(0 0 0 / ' + p[1] + ') calc(100% - var(--pace-corte) - '
+          + dd((largo * p[0]).toFixed(4)) + ')';
+      }).join(', ') + ')';
+  /* La del ANILLO es la del arco: es la capa que envuelve arco y punto guia.
+     La de la PISTA se aplica ADEMAS a su propia capa, anidada dentro, asi que
+     las mascaras se multiplican -- y como la corta ya vale 1 muy pronto, lo que
+     la pista experimenta es practicamente la larga. */
+  const horizonte = nieblaCon(NIEBLA_ARCO);
+  const horizontePista = nieblaCon(NIEBLA_PISTA);
+
+  /* LA COLA DE LA LUZ — el tercero de los bordes de s184.
+
+     El halo no puede acabar en el horizonte con un filo: sería la arista recta
+     que s157 persiguió media sesión. Pero tampoco puede seguir como si no
+     hubiera horizonte, porque entonces el anillo ocupa 271 grados y su luz da la
+     vuelta entera, que es justo lo que el usuario no quiere. La salida es que la
+     luz PASE del horizonte y se apague: a pleno hasta él, muerta 0,22 D más
+     abajo (92 px con el aro de 420).
+
+     Cada capa lo mide desde SU borde superior, porque sus cajas no coinciden: el
+     limbo está centrado en el aro y el bloom sube un 36 % de su propio alto. De
+     ahí el parámetro, que es la distancia de ese borde al CENTRO del aro, en D.
+     Medido tras aplicarlo: 30 sobre 255 a 60 px por debajo del horizonte (era
+     79) y 0 al pie de Actividades (era 31). */
+  const colaEn = (centro) => 'linear-gradient(180deg, #000 0px, '
+    + '#000 calc(' + dd((centro + 0.5).toFixed(4)) + ' - var(--pace-corte)), '
+    + 'transparent calc(' + dd((centro + 0.5 + LUZ_COLA).toFixed(4)) + ' - var(--pace-corte)))';
+  const colaLimbo = colaEn(LIMBO_R);
+  const colaBloom = colaEn(BLOOM_H * BLOOM_SUBE);
+
+  /* Los DIECISEIS que cruzan. El resto es andamio y no sale de esta IIFE. */
   window.paceAtmosfera = {
     LUZ, NUCLEO, BORDE, horizonte, grano,
-    LIMBO_R, limboCon, menosArriba,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion,
+    horizontePista,
+    LIMBO_R, limboCon, menosArriba, colaLimbo,
+    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom,
   };
 })();

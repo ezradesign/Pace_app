@@ -47,9 +47,9 @@
      exactamente igual que cuando vivia en el mismo archivo: sus 22
      interpolaciones no se han tocado. */
   const {
-    LUZ, NUCLEO, BORDE, horizonte, grano,
-    LIMBO_R, limboCon, menosArriba,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion,
+    LUZ, NUCLEO, BORDE, horizonte, horizontePista, grano,
+    LIMBO_R, limboCon, menosArriba, colaLimbo,
+    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom,
   } = window.paceAtmosfera || {};
 
   const s = document.createElement('style');
@@ -125,7 +125,37 @@
          Ahora recorte y solapamiento salen del MISMO token, así que la frase
          «no pueden desincronizarse» pasa a ser cierta por construcción. */
       --pace-dial-d: var(--pace-timer-d, var(--pace-home-timer-size));
+      /* EL SOLAPAMIENTO Y EL HORIZONTE SIGUEN SIENDO EL MISMO TOKEN (s156): es
+         lo que sube Actividades y la tarjeta de Camino sobre el aro, y lo
+         consumen las dos pieles como margin-top negativo. No se toca. */
       --pace-horizon: var(--pace-activities-overlap, var(--pace-home-sunset-overlap));
+      /* EL CORTE DEL ARO, QUE DESDE s184 YA NO ES EL HORIZONTE.
+
+         Hasta aqui el aro se cortaba EN el horizonte, o sea en el borde superior
+         de Actividades -- por encima del rotulo--, y sus dos cabos morian en el
+         aire. Decision del usuario en s184, viendo las dos variantes pintadas:
+         que baje hasta el canto de las TARJETAS, porque asi lo que lo termina es
+         una OCLUSION (las tarjetas son opacas) y una oclusion no se lee nunca
+         como amputacion. El rotulo ACTIVIDADES queda dentro de su abertura.
+
+         SE SEPARA DEL HORIZONTE, PERO NO DE SU FUENTE, y esa distincion es la que
+         mantiene viva la garantia de s156: el motor calcula el corte restandole
+         al MISMO solapamiento la banda del rotulo, que MIDE. No se escribe un
+         32: depende del padding de la piel y del idioma. Aqui solo se elige
+         motor-o-fallback, igual que con --pace-dial-d y --pace-horizon.
+
+         POR QUE NO BASTABA CON BAJAR --pace-horizon: ese token TAMBIEN mueve el
+         layout: «_responsive.pieles.js» lo usa como margin-top negativo en las
+         dos pieles, y «SuggestedPathCard» igual. Bajarlo habria bajado las
+         tarjetas con el aro y la composicion entera se habria descolocado. Son
+         dos preguntas distintas y ahora tienen dos nombres.
+
+         Sin motor la banda vale 0 y el corte vuelve a ser el horizonte: el
+         comportamiento anterior, que es el fallback correcto y no una
+         aproximacion. Los 6 px son el aire entre el cabo y el canto de la
+         tarjeta; el suelo de 4 px impide que un rotulo desproporcionado deje el
+         aro sin recortar. Barrido: 271,6 -> 295,8 grados a 1280x800. */
+      --pace-corte: var(--pace-dial-corte, var(--pace-horizon));
     }
     @supports (height: 1dvh) {
       [data-pace-home-body] {
@@ -225,7 +255,7 @@
       }
     }
     /* ===================================================================
-       EL HORIZONTE (s158) — de corte seco a desvanecido.
+       EL HORIZONTE (s158, y de vuelta al corte seco en s184).
 
        OJO AL EDITAR: esto vive DENTRO del template literal de la hoja. Un solo
        backtick aqui aborta el build — paso tres veces en s157 y una mas en
@@ -235,21 +265,27 @@
        sobre el MARCO, y el comentario del bloque Desktop registraba que el
        corte duro era deliberado (= v0.64): un desvanecido dejaría «arco y punto
        atenuados flotando en la banda transparente, a los lados de
-       ACTIVIDADES». El usuario ha pedido probar justamente eso, ahora que hay
-       luz: que el arco de recorrido se COMPLETE los 360 grados aunque pase por
-       detrás de los chips, hundiéndose en la luz en vez de desaparecer. Si al
-       verlo no convence, la vuelta atrás es una sola parada: llevar el último
-       tramo a transparente y el arco vuelve a cortarse.
+       ACTIVIDADES». s158 probó justamente eso, a petición del usuario y ahora
+       que hay luz: que el arco de recorrido COMPLETASE los 360 grados aunque
+       pasara por detrás de los chips, hundiéndose en la luz.
 
-       LA MISMA MÁSCARA RESUELVE LAS DOS COSAS QUE PIDIÓ. Por debajo del
-       horizonte queda el 30 %: el arco es una línea saturada de 1,3 de grosor y
-       a ese 30 % se sigue leyendo; el track es --line al 0,85 de opacidad y a
-       ese 30 % desaparece. No hacen falta dos mecanismos.
+       s184 CIERRA ESE PARÉNTESIS, y no porque el desvanecido no convenciera:
+       porque se le acabó el trabajo. El arco ya no da los 360 — recorre solo el
+       tramo VISIBLE, del cruce izquierdo al derecho—, así que no queda nada
+       debajo del horizonte que atenuar. Lo único que la apertura seguía haciendo
+       era fundir los cabos, y el usuario pidió cabos limpios. La máscara vuelve
+       a ser un corte: opaco arriba, transparente abajo, igual con sesión y sin
+       ella. Es la vuelta atrás que este mismo comentario dejó escrita en s158
+       («llevar el último tramo a transparente»), ejecutada por otro motivo.
+
+       SIGUE SIENDO UNA MÁSCARA Y NO UN clip-path, y esa parte no es histórica:
+       la máscara cubre el halo ::after del marco, que el clip-path de v0.89.0
+       tenía que recortar aparte.
 
        POR QUÉ EN [data-pace-dial-ring] Y NO DONDE ESTABA. En el <svg> no puede
        ir: uno de los dos va rotado -90deg y la máscara rotaría con él (un
        degradado vertical se volvería horizontal). En el MARCO tampoco: contiene
-       el número, el CTA y el CICLO, y los desvanecería con el anillo.
+       el número, el CTA y el CICLO, y los recortaría con el anillo.
 
        --pace-horizon es el MISMO token que sube el bloque de abajo, así que
        horizonte y solapamiento siguen sin poder desincronizarse.
@@ -257,6 +293,16 @@
     [data-pace-dial-fit] [data-pace-dial-ring] {
       -webkit-mask-image: ${horizonte};
       mask-image: ${horizonte};
+    }
+    /* Y LA PISTA, ADEMAS, SE DISUELVE MUCHO ANTES (s184). Va en su propia capa
+       ANIDADA dentro del anillo, asi que las dos mascaras se MULTIPLICAN: la del
+       anillo vale 1 muy pronto, de modo que lo que la pista experimenta es en la
+       practica solo esta. El reparto —el arco es informacion y no puede
+       desaparecer; la escala es ambiente y si— esta en la cabecera de las dos
+       nieblas de _responsive.atmosfera.js. */
+    [data-pace-dial-fit] [data-pace-dial-pista] {
+      -webkit-mask-image: ${horizontePista};
+      mask-image: ${horizontePista};
     }
     /* ===================================================================
        EL SOL DE LA HOME (s158) — REEMPLAZA la atmósfera de s156 y la de s157.
@@ -304,9 +350,13 @@
       --pace-luz: ${LUZ};
       --pace-nucleo: ${NUCLEO};
       --pace-borde: ${BORDE};
-      /* Cuanto esta ABIERTO el horizonte. Satura en cuanto arranca la sesion,
-         asi que pausar no vuelve a cerrar el aro. */
-      --pace-abre: var(--pace-on, 0);
+      /* AQUI VIVIA --pace-abre (s158-s183), que decia cuanto estaba ABIERTO el
+         horizonte. Se retiro en s184 al recortar el arco: era el mando de un
+         desvanecido que ya no tiene a quien desvanecer, y su unico consumidor
+         era la mascara del anillo. El porque completo, en la cabecera de la
+         constante «horizonte» de _responsive.atmosfera.js. (Sin backticks: este
+         comentario vive DENTRO del template literal de la hoja, y uno solo
+         aborta el build — van cinco veces.) */
       /* La recogida de la pausa, resuelta en UN solo sitio: el interruptor lo
          publica FocusTimer y lo interpola la transicion de abajo; la
          profundidad la pone el papel. Con pausado=0 vale 1 (luz entera) y con
@@ -382,8 +432,12 @@
       border-radius: 50%;
       pointer-events: none;
       background-image: ${grano}, ${limboCon(1)};
-      -webkit-mask-image: ${limboCon(2)}, ${menosArriba};
-      mask-image: ${limboCon(2)}, ${menosArriba};
+      /* TRES máscaras intersecadas desde s184, y cada una tiene su borde: la
+         radial le da forma a la corona, «menosArriba» la mata antes de la fila
+         de minutos y «colaLimbo» la apaga por debajo del horizonte. Las tres
+         salen de _responsive.atmosfera.js, donde estan sus numeros medidos. */
+      -webkit-mask-image: ${limboCon(2)}, ${menosArriba}, ${colaLimbo};
+      mask-image: ${limboCon(2)}, ${menosArriba}, ${colaLimbo};
       -webkit-mask-composite: source-in;
       mask-composite: intersect;
     }
@@ -400,8 +454,11 @@
       transform: translate(-50%, -${(BLOOM_SUBE * 100).toFixed(0)}%);
       pointer-events: none;
       background-image: ${grano}, ${bloomCon(1)};
-      -webkit-mask-image: ${bloomCon(2)}, ${direccion};
-      mask-image: ${bloomCon(2)}, ${direccion};
+      /* s184: se le anade «colaBloom» por el mismo motivo que al limbo. Por
+         ARRIBA no necesita nada: «direccion» ya vale cero por encima de 0,5 D
+         del centro, que es mas alto que el techo que se le puso a la corona. */
+      -webkit-mask-image: ${bloomCon(2)}, ${direccion}, ${colaBloom};
+      mask-image: ${bloomCon(2)}, ${direccion}, ${colaBloom};
       -webkit-mask-composite: source-in;
       mask-composite: intersect;
     }

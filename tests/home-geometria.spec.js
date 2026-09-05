@@ -92,9 +92,11 @@ test.describe('geometria de la home · recorte y solapamiento', () => {
      SIN recortar. Esto lo aserta en los dos estados.
 
      s158: el aro ya no se CORTA en el horizonte, se DESVANECE ahi (el arco de
-     recorrido completa los 360 grados). El invariante no cambia ni un apice
-     —los dos siguen saliendo de --pace-horizon—, solo cambia de donde se lee:
-     antes del inset del clip-path, ahora de la parada central de la mascara. */
+     recorrido completa los 360 grados). s184: el arco deja de bajar y el
+     desvanecido pasa a ser NIEBLA que muere justo en el horizonte. El
+     invariante no cambia ni un apice en ninguno de los dos —los dos siguen
+     saliendo de --pace-horizon—, solo cambia de donde se lee: el inset del
+     clip-path, la parada central, y ahora la parada que llega a cero. */
   for (const [nombre, extra] of [['con tarjeta', null], ['con Camino activo', CAMINO_ACTIVO]]) {
     test('van juntos ' + nombre, async ({ page, context }) => {
       await sembrar(context, extra);
@@ -107,12 +109,34 @@ test.describe('geometria de la home · recorte y solapamiento', () => {
       const solape = px(m.solape);
       expect(solape, 'sin solapamiento publicado no hay nada que comparar').toBeGreaterThan(0);
       expect(m.recorte, 'el aro no lleva horizonte: no hay mascara con tres paradas').not.toBeNull();
-      /* GUARD de la lectura: si la rampa dejara de ser simetrica, la parada del
-         medio ya no seria el horizonte y el aserto de abajo compararia contra
-         un numero cualquiera de los tres. */
-      expect(m.rampaSimetrica, 'la rampa del horizonte no es simetrica: la lectura del medio no vale').toBe(true);
-      expect(Math.abs(m.recorte - solape), 'el horizonte del aro no vale el solapamiento publicado').toBeLessThanOrEqual(1);
+      /* GUARD de la lectura (s184): el horizonte se lee como la parada donde la
+         mascara llega a CERO, y eso solo es un numero si hay exactamente una.
+         Sin este guard, un degradado que dejara de morir —o que muriera dos
+         veces— haria que el aserto de abajo comparase contra cualquier cosa. */
+      expect(m.lecturaFiable, 'la mascara del anillo no llega a cero una sola vez: la lectura del horizonte no vale').toBe(true);
+      /* EL SOLAPAMIENTO SIGUE MANDANDO EN EL LAYOUT, y esto no cambia: el bloque
+         de abajo sube exactamente lo publicado. Es la mitad de s156 que sigue
+         viva tal cual. */
       expect(Math.abs(m.solapeReal - solape), 'el bloque que hace de horizonte no sube el solapamiento publicado').toBeLessThanOrEqual(1);
+
+      /* Y EL CORTE DEL ARO YA NO ES ESE MISMO NUMERO (s184). Baja hasta el canto
+         de las TARJETAS, para que lo termine una OCLUSION -- son opacas-- en vez
+         de un desvanecido en el aire. Se separo del horizonte porque aquel token
+         TAMBIEN mueve el layout: bajarlo habria bajado las tarjetas con el aro.
+         Lo que NO se pierde es la fuente unica: el motor lo calcula restandole al
+         MISMO solapamiento la banda del rotulo, que MIDE.
+         Se asertan las dos mitades de eso: que el corte cae por DEBAJO del
+         horizonte, y que aterriza justo ENCIMA del canto de las tarjetas. La
+         segunda sola pasaria con un corte que se hubiera desenganchado del
+         solapamiento; la primera sola pasaria con cualquier valor mas bajo. */
+      expect(m.chip, 'GUARD: no hay tarjetas de Actividades contra las que medir').not.toBeNull();
+      expect(m.recorte, 'el corte del aro no baja del horizonte: sigue cortandose en el rotulo')
+        .toBeLessThan(solape);
+      const cabo = m.dial.bottom - m.recorte;
+      expect(cabo, 'el cabo del aro asoma por debajo del canto de las tarjetas')
+        .toBeLessThanOrEqual(m.chip.top);
+      expect(m.chip.top - cabo, 'el cabo del aro se queda demasiado lejos del canto de las tarjetas')
+        .toBeLessThanOrEqual(12);
     });
   }
 });
