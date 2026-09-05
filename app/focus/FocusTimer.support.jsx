@@ -196,6 +196,24 @@ const focusStyles = {
     minHeight: 0,
     width: '100%',
     position: 'relative', // s157: ancla de [data-pace-sun]; su centro es el del aro
+    /* AIRE PARA EL HALO (s185). Entre la fila de minutos y el borde del aro
+       había 24,5 px a 1280×800 — exactamente el `gap: 14` del root más los 10,5
+       del marco— y la corona muere a 0,628 D del centro, o sea **64 px pasado el
+       aro**. No cabía, y cualquier máscara que la recortara dejaba un canto
+       PLANO sobre un halo redondo: es lo que el usuario vio como «recortado de
+       forma rara», y las dos rampas que probé antes eran los dos síntomas del
+       mismo hecho (larga → tenue · corta → cortada).
+
+       De dónde sale el sitio, medido: a 1280×800 el aro está topado por ANCHO
+       (0,42 de la columna) y a 1920×1080 por el tope de 520 — NO por altura—, y
+       encima de la fila quedan 52,6 y 150,6 px libres. Así que este margen no
+       encoge el aro: solo reparte. El bloque entero va centrado por el stack, de
+       modo que crecer aquí sube la fila y baja el aro a partes iguales.
+
+       En fracción de D y no en px para que escale con el aro. Donde el aro SÍ
+       está limitado por altura (1366×610: 6,1 px libres) el motor lo absorbe
+       encogiendo D, que es su trabajo y el reparto correcto. */
+    marginTop: 'calc(var(--pace-dial-d, 360px) * 0.055)',
   },
 
   /* NOTA s76: los estilos aroFrame/aroInner/modeLabel/numberHuge/

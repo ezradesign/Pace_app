@@ -423,6 +423,12 @@ const timerDialStyles = {
   },
 
   inner: {
+    /* EL BLOQUE INTERIOR SUBE (s185, peticion del usuario). Va como transform y
+       no como margen para no cambiar el ALTO del bloque: el marco lo centra con
+       place-items, asi que tocar el alto moveria las dos puntas a la vez y solo
+       la mitad de lo pedido llegaria abajo. El motor mide el CICLO con
+       getBoundingClientRect, que SI incluye el transform. */
+    transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030))',
     position: 'relative',
     textAlign: 'center',
     zIndex: 1,
@@ -440,6 +446,17 @@ const timerDialStyles = {
     fontWeight: 500,
   },
   numberHuge: {
+    /* EL NUMERO SUBE, Y LA CIFRA SALE DE MEDIR TINTA, NO CAJAS (s185). Por caja
+       estaba a 10,9 px de «FOCO MANUAL» y a 32,3 de «Foco breve» — parecia
+       pegado arriba. Fotografiando la pagina y buscando el primer y ultimo pixel
+       con tinta, la verdad es la contraria: **53 px arriba y 23 abajo**. El
+       `lineHeight: 0.9` de un serif de display deja unos 42 px de aire muerto
+       SOBRE los glifos, asi que la caja miente en 42. El usuario lo vio a ojo y
+       pidio las dos distancias iguales. 0,036 D dejaba 38/41 y el lo siguio viendo
+       alto; con 0,024 quedan **43/36**, un pelo mas arriba que abajo, que es lo
+       que pidio al verlo («un 5 % o asi»). El numero no se centra por caja: se
+       centra mirandolo, y la tinta es el instrumento. */
+    marginTop: 'calc(var(--pace-dial-d, 360px) * -0.024)',
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontWeight: 400,

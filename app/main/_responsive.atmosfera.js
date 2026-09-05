@@ -247,17 +247,22 @@
      Así se mantiene el 94 % de presencia en tres cuartas partes del recorrido.
      Pares [fracción del recorrido desde el horizonte hacia arriba, alfa]. */
   const CURVA_NIEBLA = [[1, 1], [0.72, 0.94], [0.46, 0.74], [0.26, 0.44], [0.12, 0.18], [0, 0]];
-  /* EL TECHO, TAMBIÉN CON CURVA, y esto es un defecto que el usuario vio: «la
-     parte de arriba queda demasiado difusa y con una línea de corte». La rampa
-     recta de tres paradas metía un CODO en 0,24 D donde la pendiente cambia unas
-     cuatro veces, y el ojo encuentra un quiebre de pendiente igual que encuentra
-     un borde — la misma razón por la que el limbo lleva ONCE paradas y no cinco.
-     Esta S entra despacio desde el cero y se posa en `--sun-top` sin esquina, y
-     en el tramo medio pesa MÁS que la recta (0,66 contra 0,51 a 0,32 D): eso es
-     lo que quita lo difuso sin devolver luz a la fila de minutos.
-     Pares [distancia al centro en D, alfa]. */
-  const CURVA_TECHO = [[0.520, 0], [0.505, 0.06], [0.488, 0.16], [0.455, 0.36],
-                       [0.400, 0.56], [0.330, 0.68]];
+  /* EL TECHO, TAMBIÉN CON CURVA · TRES INTENTOS, Y LOS DOS PRIMEROS ERAN EL
+     MISMO PROBLEMA. Una rampa RECTA metía un CODO en 0,24 D donde la pendiente
+     cambiaba cuatro veces, y el ojo encuentra un quiebre de pendiente igual que
+     encuentra un borde (por eso el limbo lleva ONCE paradas y no cinco): «una
+     línea de corte». Una S LARGA (0,520→0,330) mataba el NÚCLEO —que vive en
+     0,505-0,528 D, pegado al trazo— y salía «muy tenue». Una S CORTA lo
+     recuperaba (luz sobre el aro 45→66 contra 77 de referencia lateral) pero
+     dejaba un canto PLANO sobre un halo redondo: «recortado de forma rara».
+
+     Ninguna podía ganar, porque **la corona no cabía**: muere a 0,628 D del
+     centro y sobre el aro había 24,5 px. s185 le da sitio en el margen del
+     `timerWrap` (`FocusTimer.support.jsx`), y solo entonces la caída puede
+     empezar a 0,585 D y morir muy por encima del núcleo — sin canto y sin
+     apagarlo. Pares [distancia al centro en D, alfa]. */
+  const CURVA_TECHO = [[0.585, 0], [0.566, 0.10], [0.546, 0.30], [0.524, 0.58],
+                       [0.500, 0.82], [0.470, 0.95]];
   /* Paradas en % del radio de la caja, con su color y su valor de máscara. La
      máscara sale de la MISMA lista que el color: no pueden desincronizarse, que
      es como s157 acabó con un grano cuadrado sobre una luz redonda.
@@ -303,31 +308,18 @@
   const limboCon = (i) => 'radial-gradient(circle farthest-side, '
     + LIMBO.map(p => p[i] + ' ' + p[0]).join(', ') + ')';
 
-  /* LA LUZ MUERE ANTES DE LA FILA DE MINUTOS (s184), y esto ATENÚA ya no basta.
+  /* LA LUZ MUERE ANTES DE LA FILA DE MINUTOS (s184), y ATENUAR no bastaba.
 
      Aquí había una rampa que bajaba la mitad superior de la corona a --sun-top
-     (0,72) «sin cortar, el círculo sigue completo», con esta premisa escrita al
-     lado: por encima del aro hay ~59 px hasta la fila de minutos. ESA PREMISA
-     YA NO SE CUMPLE. Medido hoy a 1280x800: el borde superior del aro cae en
-     y=167,1 y la píldora «45» acaba en y=142,6 — quedan 24,5 px, no 59. Y el
-     limbo muere a 0,628 D del centro, o sea 64 px pasado el aro. Fotografiando
-     el mismo fotograma con el sol encendido y apagado, la fila de minutos
-     recibía una desviación de 57 sobre 255: la corona la estaba pintando.
+     (0,72) «sin cortar», con esta premisa al lado: por encima del aro hay ~59 px
+     hasta la fila de minutos. ERA FALSA — medido a 1280×800 quedan **24,5**, y
+     el limbo muere a 0,628 D del centro (64 px pasado el aro), así que la fila
+     recibía **57 sobre 255**. Y 0,72 nunca es 0. Ahora la rampa MUERE: nada por
+     encima de 0,52 D del centro. Cuesta poco porque el NÚCLEO vive entre 0,505 y
+     0,528 D —pegado al aro— y lo que se recorta es la cola. Fila: 57 → 1.
 
-     Atenuar al 72 % no arregla eso, porque 0,72 nunca es 0. Así que la rampa
-     pasa a MORIR: transparente por encima de 0,52 D del centro, y de ahí hacia
-     abajo sube hasta el hombro de --sun-top en 0,24 D. Son 0,28 D de recorrido
-     —118 px con el aro de 420—, tan gradual que no hay borde que encontrar.
-
-     LO QUE CUESTA ES CASI NADA, Y ESTÁ MEDIDO: el brillo justo por encima del
-     trazo del aro baja de 64 a 58 sobre 255, porque el NÚCLEO de la corona vive
-     entre 0,505 y 0,528 D —pegado al aro— y lo que se recorta es la COLA, que
-     es la que llegaba a los chips. El halo sigue rodeando el recorrido entero,
-     las 12 incluidas; lo que desaparece es el lavado ancho hacia arriba.
-     Fila de minutos: 57 -> 1. Uno sobre 255 no se ve.
-
-     El BLOOM no necesita nada de esto: su máscara direccional ya vale cero por
-     encima de 0,5 D del centro. Esta rampa es solo del limbo. */
+     El BLOOM no necesita esto: su máscara direccional ya vale cero por encima de
+     0,5 D del centro. Esta rampa es solo del limbo. */
   const menosArriba = 'linear-gradient(180deg, transparent 0px, '
     + CURVA_TECHO.map(function (p) {
         return 'rgb(0 0 0 / ' + p[1] + ') ' + dd((LIMBO_R - p[0]).toFixed(4));
@@ -363,16 +355,26 @@
      de esa continuación se ve en cada altura. Un solo campo de luz, sin
      segundo contorno posible. */
   const BLOOM_W = 2.2;      /* ancho de la caja, en unidades de D */
-  const BLOOM_H = 1.42;     /* alto de la caja */
-  const BLOOM_SUBE = 0.36;  /* fracción de su propio alto que se sube */
-  const BLOOM_R = 0.84;     /* radio de la luz, desde el centro del aro */
-  /* EL ALTO Y EL RADIO SALEN DE UNA MEDIDA, no de gusto: el hueco entre el
-     CENTRO del aro y el borde inferior de [data-pace-home-body] es de 0,96 D en
-     el peor breakpoint (1280x720 y 1440x900; en el resto va de 1,13 a 1,38 D).
-     La caja acaba en cy + 0,909 D y la luz muere en cy + 0,84 D, así que ni la
-     una ni la otra desbordan NUNCA el contenedor de scroll — y por eso no hace
-     falta recortar nada. Con 2,0 y 1,05 la caja acababa 126 px por debajo del
-     borde y eso era scroll: la home se podía arrastrar hacia la nada.
+  const BLOOM_H = 1.34;     /* alto de la caja */
+  const BLOOM_SUBE = 0.38;  /* fracción de su propio alto que se sube */
+  const BLOOM_R = 0.77;     /* radio de la luz, desde el centro del aro */
+  /* EL ALTO Y EL RADIO SALEN DE UNA MEDIDA — y en s185 hubo que REMEDIRLA.
+
+     La de s158 decía «0,96 D en el peor breakpoint» y concluía que la caja no
+     desborda «NUNCA» el scroll. Se tomó en cuatro breakpoints y el peor no
+     estaba: medido sobre los NUEVE de escritorio es **0,852 D a 1536×864** (y
+     0,887 a 1600×900). Con la caja acabando en cy + 0,909 D no cabía por 30 y
+     11 px, y el scroll real de la home era de **29 y 11** — coinciden al píxel.
+     En escritorio la home NO debe tener scroll vertical nunca, y lo que sobraba
+     no era contenido sino la caja de una DECORACIÓN, que el motor no puede
+     corregir porque mide el stack (s156) y el stack sí cabía.
+
+     Los tres números salen de ahí: la caja acaba en cy + 0,831 D (21 px de
+     margen con el aro de 520) y la luz muere en 0,77 D, o sea 0,061 D DENTRO de
+     su caja — una luz no puede acabar donde acaba la suya (las dos aristas
+     rectas de s157). `BLOOM_SUBE` sube a 0,38 para que el borde superior siga
+     por encima de 0,5 D del centro, donde la máscara direccional pone su parada
+     transparente; con 0,36 caía en negativo.
   /* Desde el borde SUPERIOR de la caja: el centro del aro cae en BLOOM_H*SUBE,
      su borde superior media D antes y el horizonte media D después menos el
      propio horizonte. Todo sale de los mismos dos tokens que gobiernan el aro. */

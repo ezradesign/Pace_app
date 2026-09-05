@@ -188,12 +188,28 @@ próxima sesión.
 deriva, da las cuatro cifras vivas y dice cuál manda. Rehacerlo entero es una tarea propia y no
 cabía aquí sin dejar de auditar.
 
-### Tanda 1 · El conflicto de la música *(decisión, no código)*
+### Tanda 1 · El conflicto de la música *(decisión, no código)* — **EJECUTADA EN s185**
 
 **1.1** Resolver **E**: los briefs piden «200 Hz–3 kHz despejado» y la decisión de s177 pide «el
 grueso de la energía entre 200 Hz y 2 kHz». Son incompatibles y hay que elegir —probablemente
 subiendo el hueco de voz por encima de 2 kHz, pero eso se decide midiendo, no aquí. Hasta que se
 resuelva, **generar música es tirar el trabajo**.
+
+> **RESUELTO EN s185, y la corazonada de arriba era la buena**: el hueco de voz sube por encima de
+> 2 kHz (las consonantes) y el grueso se queda en 200 Hz – 2 kHz. Lo que destrabó la contradicción,
+> sin embargo, fue algo que esta auditoría no podía ver: **el brief describía mal a su competidor**.
+> La señal sintetizada **no es un tono, es ruido** con paso-bajo barriendo 200→800 Hz, `breathe.hold`
+> no existe, y **con música esa señal no suena** — las combinaciones del producto son señal / voz /
+> voz+música, así que lo único que compite es la locución, y solo el **35,9 % del ciclo** de media
+> (medido cruzando las duraciones de palabra con `getSequence()`).
+>
+> Y apareció un **segundo conflicto que no estaba en la lista**: cinco prompts pedían «a sustained
+> low G» y el de Relajación «everything lives in the low and low-mid register» — o sea, exactamente
+> la pieza que s177 midió inaudible. Corregido: la raíz puede seguir siendo grave, pero el **timbre**
+> tiene que tener armónicos, no ser un pad casi senoidal.
+>
+> Detalle en `DECISIONES_TECNICAS_VIGENTES.md` y en el propio `MUSICA_RESPIRA_BRIEFS.md`.
+> **Ya se puede generar.**
 
 ### Tanda 2 · Lo que ya estaba en la cola del usuario
 
