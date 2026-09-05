@@ -102,7 +102,16 @@
   var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
   var CICLO_GAP = 4;           // px de aire MÍNIMO entre CICLO y el borde de Actividades
-  var AIRE_TARJETA = 6;        // px de aire ENCIMA del canto de las tarjetas (s184)
+  /* AIRE ENCIMA DEL CANTO DE LAS TARJETAS, en fraccion de D y no en px fijos
+     (s185). Lo que hay que despejar no es el trazo del aro: es el HALO DE LA
+     BOLA GUIA, que al empezar la sesion se para justo en el cabo. Ese halo es
+     un circulo de r=1,7 en un viewBox de 100, o sea 0,017 D -- 7,1 px con el
+     aro de 420. Con los 6 px fijos de s184 se metia 1,2 px DENTRO de la
+     tarjeta, y el usuario lo vio en cuanto arranco un bloque: «la bola y aro
+     naranja quedan por debajo como superpuestos». 0,030 D deja el halo entero
+     fuera con 5,5 px de sobra, y escala con el aro en vez de quedarse corto
+     en los grandes. */
+  var AIRE_HALO = 0.030;       // fraccion de D · el halo de la bola mide 0,017
   var OVERLAP_TARGET = 0.16;   // solapamiento nominal del contrato (§0): 16 % de D
   var MAX_FIT_PASSES = 8;      // iteraciones de ajuste «encoger hasta caber»
 
@@ -204,10 +213,11 @@
        salia NaN y el aro se quedaba dando la vuelta entera. Publicado en px por
        el motor, el CSS solo elige motor-o-fallback como con los otros dos. */
     /* El corte se mide desde ABAJO, asi que restar la banda lo BAJA hasta el
-       canto de las tarjetas y SUMAR el aire lo sube esos pocos px por encima.
+       canto de las tarjetas y SUMAR el aire lo sube por encima, lo justo para que
+       el halo de la bola guia no toque la tarjeta.
        Con el signo al reves el aro acababa 6 px POR DEBAJO del canto, o sea
        asomando por los huecos entre tarjetas: 310,3 grados en vez de 295,8. */
-    setVar('--pace-dial-corte', Math.max(4, overlap - banda + AIRE_TARJETA) + 'px');
+    setVar('--pace-dial-corte', Math.max(4, overlap - banda + Math.round(AIRE_HALO * D)) + 'px');
   }
 
   function compute() {

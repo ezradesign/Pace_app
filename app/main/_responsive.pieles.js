@@ -384,10 +384,22 @@
       }
       [data-pace-dial-fit] [data-pace-dial-number] {
         font-size: clamp(40px, calc(var(--pace-timer-d, 360px) * 0.255), 135px) !important;
+        /* s185 · el numero sube para quedar a la MISMA distancia de tinta de
+           «FOCO MANUAL» y de «Foco breve» (53/23 -> 43/36, medido en pixeles y
+           no por caja: el lineHeight 0.9 deja 42 px de aire muerto arriba). Va
+           aqui ademas de en linea porque estas reglas llevan !important. */
+        margin-top: calc(var(--pace-timer-d, 360px) * -0.024) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-subtitle] {
         font-size: clamp(11px, calc(var(--pace-timer-d, 360px) * 0.036), 19px) !important;
-        margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.077), 42px) !important;
+        /* s185 · +0,036 D para COMPENSAR el margen negativo del numero. Un
+           margen negativo arriba del numero se lo lleva todo lo de abajo con el
+           (flujo normal), asi que subirlo solo acercaba las dos cosas en bloque
+           y la distancia de abajo no se movia: medido, 53/23 pasaba a 38/25 en
+           vez de a 38/38. Sumando aqui lo mismo que se resto alli, el subtitulo
+           se queda donde estaba, el numero sube de verdad, **y el alto del
+           bloque no cambia** -- que importa porque el marco lo centra. */
+        margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.101), 56px) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-divider] {
         width: clamp(80px, calc(var(--pace-timer-d, 360px) * 0.28), 150px) !important;

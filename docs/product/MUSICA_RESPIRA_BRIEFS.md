@@ -16,20 +16,65 @@
 
 ---
 
-## Lo que manda sobre todo lo demás: no puede tapar la señal
+## Lo que manda sobre todo lo demás: no puede tapar la voz
 
 La música es **fondo**, y en Respira compite con lo único que lleva
-información: la señal de fase, que es un tono sintetizado o una locución según
-lo que elijas en Ajustes.
+información: la señal de fase.
 
-De ahí salen cuatro restricciones que valen para todas las piezas:
+**Y COMPITE CON LA VOZ, NO CON LA SEÑAL SINTETIZADA.** Este documento decía «un
+tono sintetizado o una locución» y de ahí salía media restricción equivocada.
+Dos correcciones, las dos comprobadas en el código:
+
+- **La señal sintetizada no es un tono: es RUIDO.** `breathe.inhale` y
+  `breathe.exhale` llaman a `breathNoise()` — ruido blanco por un paso-bajo
+  (Q 1,5) que barre **200 → 800 Hz** al inhalar y al revés al exhalar, con
+  envolvente durante toda la fase. Y `breathe.hold` **no existe**: los sostenes
+  son silencio deliberado ([`Sound.jsx:185`](../../app/ui/Sound.jsx)).
+- **Con música no suena esa señal.** Las combinaciones que el producto
+  contempla son **señal sintetizada** · **voz** · **voz con música**. Así que
+  la pieza se diseña contra la **locución** y contra nada más.
+
+  > **OJO: hoy los Ajustes no lo impiden.** Los dos ejes son INDEPENDIENTES en
+  > el código — `voiceOn` por un lado y el fondo (`ambientOn`/`musicOn`) por
+  > otro ([`TweaksAudio.jsx:110-133`](../../app/tweaks/TweaksAudio.jsx))—, así
+  > que «Tono» + «Música» es una combinación alcanzable. No es un defecto de
+  > sonido: el ruido vive en 200–800 Hz y la música le pasaría por encima sin
+  > romper nada, solo con menos aire. Pero **es la combinación para la que estos
+  > briefs NO se escriben**, y decidir si se cierra en la interfaz es trabajo de
+  > la FASE 5, no de este documento.
+
+De ahí salen **cinco** restricciones que valen para todas las piezas (eran cuatro
+hasta s185, y una de ellas era imposible — ver la nota bajo la tabla):
 
 | | por qué |
 |---|---|
 | **Sin percusión con ataque** | un golpe seco se confunde con la señal de cambio de fase. Nada de kick, claps, rimshots ni pizzicatos marcados |
-| **Rango medio despejado** (≈ 200 Hz – 3 kHz sin nada denso) | ahí viven las locuciones: `sulafat` ~193 Hz de fundamental y `bradford` ~121, con sus armónicos hasta bien arriba. Medido abriendo los archivos en s176 |
+| **El grueso de la energía entre 200 Hz y 2 kHz** | si no, **no sale del altavoz**. Medido en s177 sobre la pieza de Equilibrio: **82,6 % de su energía bajo 200 Hz**, 0,5 % entre 500 Hz y 2 kHz y **0 % por encima de 2 kHz** — con ponderación A perdía 12,7 dB. No sonaba baja: no salía. **No obliga a subir la afinación**: la raíz puede seguir siendo un Sol grave, pero el TIMBRE tiene que tener armónicos (cuerda frotada, lengüeta, sierra filtrada) y no ser un pad casi senoidal, que es lo que deja el 82 % debajo de 200 Hz |
+| **Poco por encima de 2 kHz** | ahí viven las consonantes de la locución, que es lo que la hace entendible. Sale gratis: un fondo en calma no necesita esa banda, y la pieza medida en s177 ya tenía **0,02 %** ahí |
 | **Dinámica plana** | sin crescendos ni caídas. Un swell hace que la persona levante la cabeza justo cuando debería estar contando su exhalación |
 | **Bucle sin costura** | la duración la pone la rutina, no la pieza: entre 2 y 20 minutos según cuál. El corte tiene que ser inaudible |
+
+> **AQUÍ HABÍA UNA RESTRICCIÓN IMPOSIBLE, y estuvo viva desde s176.** Pedía
+> «**rango medio despejado** (≈ 200 Hz – 3 kHz sin nada denso)» para dejarle
+> sitio a la locución — y s177 midió que **esa es exactamente la banda que la
+> pieza necesita ocupar para ser audible**. Las dos cosas no caben: son la misma
+> banda. La auditoría de s183 lo listó como el hallazgo más peligroso de las
+> ocho, porque alimenta a un generador: **generar con las dos vivas es tirar el
+> trabajo**.
+>
+> **Se resuelve separando por COMPORTAMIENTO y por el tramo alto, no por el
+> medio.** La locución no se pierde porque la música le deje un hueco de
+> frecuencia: se distingue porque **se mueve** —tres palabras articuladas sobre
+> un fondo plano y quieto— y porque sus consonantes viven por encima de 2 kHz,
+> que es donde la música no necesita estar. Las dos restricciones que ya había
+> —**dinámica plana** y **sin percusión con ataque**— no eran decoración: son
+> el mecanismo.
+>
+> **Y no compite tanto como parecía.** Medido cruzando las duraciones de palabra
+> con `getSequence()`: la locución suena el **35,9 % del ciclo** de media en las
+> 17 rutinas donde cabe entera — del **15 %** en `Kumbhaka 1:4:2` al **72 %** en
+> las tres de Rondas, que son las de ciclo de 4 s. El resto del tiempo la música
+> está sola.
 
 ### La afinación: Sol, A = 432 Hz — y por qué, exactamente
 
@@ -130,7 +175,11 @@ campo disponible es corto.
     before the next arrives. Open fifths only, no third, so the harmony never
     resolves anywhere. Airy high harmonics, soft-edged, never bright or
     metallic. Flat dynamics from start to finish, no build, no arrangement
-    changes. Keep the 200 Hz to 3 kHz range sparse and uncluttered. Mood: first
+    changes. Put most of the audible energy
+    between 200 Hz and 2 kHz: the root may be a low G, but the timbre must be
+    harmonically rich rather than a pure sine-like pad, or the piece will not
+    come out of a laptop speaker at all. Keep everything above 2 kHz sparse,
+    so a quiet spoken voice stays legible over it. Mood: first
     light, something beginning, unhurried. 4 minutes, seamless loop.
 
 Etiquetas: `ambient drone, handpan, warm analog pad, open fifths, no percussion,
@@ -149,8 +198,11 @@ sobra.*
     almost imperceptibly and never resolve: no third, no chord changes, no
     melodic line. A quiet synthesizer drone underneath holds the same G.
     Completely flat dynamics, no crescendos, no swells, nothing that draws
-    attention. No tempo of any kind should be perceptible. Leave the 200 Hz to
-    3 kHz range open for a spoken voice. Mood: a long, even breath that is in no
+    attention. No tempo of any kind should be perceptible. Put most of the audible energy
+    between 200 Hz and 2 kHz: the root may be a low G, but the timbre must be
+    harmonically rich rather than a pure sine-like pad, or the piece will not
+    come out of a laptop speaker at all. Keep everything above 2 kHz sparse,
+    so a quiet spoken voice stays legible over it. Mood: a long, even breath that is in no
     hurry. 4 minutes, seamless loop.
 
 Etiquetas: `ambient, sustained cello and viola, slow bowing, drone, no pulse,
@@ -167,7 +219,11 @@ Ningún pulso sirve a las dos puntas.*
     seconds exactly, in a smooth sine motion with no attack. It should be felt
     as a tide, never heard as a beat. The cycle is metronomically regular and
     identical every time. No arpeggios, no single notes, no melody, no chord
-    changes. Keep the 200 Hz to 3 kHz range clear. Mood: even, patient, tidal.
+    changes. Put most of the audible energy
+    between 200 Hz and 2 kHz: the root may be a low G, but the timbre must be
+    harmonically rich rather than a pure sine-like pad, or the piece will not
+    come out of a laptop speaker at all. Keep everything above 2 kHz sparse,
+    so a quiet spoken voice stays legible over it. Mood: even, patient, tidal.
     4 minutes, seamless loop.
 
 ### 3b · Balance · **ciclo de 10 s**
@@ -186,11 +242,16 @@ nada a quien sólo toque una.*
 
     Dark warm instrumental ambient for the end of the day, no percussion and no
     pulse. A thick low pad, processed strings or a very distant wordless choir,
-    on a low G with a minor third, in long reverb. Everything lives in the low
-    and low-mid register; the treble is barely present. Absolutely no events: no
+    on a low G with a minor third, in long reverb. The weight sits in the low-mid
+    register, with the low end present but never dominant; the treble is barely
+    there. Absolutely no events: no
     bells, no single notes, no entrances, no texture changes, nothing that would
     make a listener look up. Completely flat dynamics from the first second to
-    the last. Keep the 200 Hz to 3 kHz range uncluttered. Mood: the room after
+    the last. Put most of the audible energy
+    between 200 Hz and 2 kHz: the root may be a low G, but the timbre must be
+    harmonically rich rather than a pure sine-like pad, or the piece will not
+    come out of a laptop speaker at all. Keep everything above 2 kHz sparse,
+    so a quiet spoken voice stays legible over it. Mood: the room after
     the light goes off. 4 minutes, seamless loop.
 
 Etiquetas: `dark ambient, deep pad, distant wordless choir, long reverb,
@@ -208,7 +269,10 @@ exhalación a propósito. Cualquier evento sonoro en mitad de una exhalación de
     shimmering beating between the strings, over a shruti box holding the same
     tonic. No tabla, no bansuri, no flute, no melodic instrument, no raga
     melody: only the drone. The texture is identical from beginning to end. Keep
-    the 200 Hz to 3 kHz range open. Mood: sustaining without marking time.
+    Put most of the audible energy between 200 Hz and 2 kHz: the root may be a low G, but the timbre must be
+    harmonically rich rather than a pure sine-like pad, or the piece will not
+    come out of a laptop speaker at all. Keep everything above 2 kHz sparse,
+    so a quiet spoken voice stays legible over it. Mood: sustaining without marking time.
     4 minutes, seamless loop.
 
 Etiquetas: `tanpura drone, shruti box, Indian classical drone, tonic and fifth,

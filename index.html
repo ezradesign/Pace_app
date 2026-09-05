@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.115.0</title>
+  <title>PACE · Foco · Cuerpo — v0.115.1</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4934,7 +4934,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.115.0';
+const PACE_VERSION = 'v0.115.1';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -12018,6 +12018,12 @@ const timerDialStyles = {
   },
 
   inner: {
+    /* EL BLOQUE INTERIOR SUBE (s185, peticion del usuario). Va como transform y
+       no como margen para no cambiar el ALTO del bloque: el marco lo centra con
+       place-items, asi que tocar el alto moveria las dos puntas a la vez y solo
+       la mitad de lo pedido llegaria abajo. El motor mide el CICLO con
+       getBoundingClientRect, que SI incluye el transform. */
+    transform: 'translateY(calc(var(--pace-dial-d, 360px) * -0.030))',
     position: 'relative',
     textAlign: 'center',
     zIndex: 1,
@@ -12035,6 +12041,17 @@ const timerDialStyles = {
     fontWeight: 500
   },
   numberHuge: {
+    /* EL NUMERO SUBE, Y LA CIFRA SALE DE MEDIR TINTA, NO CAJAS (s185). Por caja
+       estaba a 10,9 px de «FOCO MANUAL» y a 32,3 de «Foco breve» — parecia
+       pegado arriba. Fotografiando la pagina y buscando el primer y ultimo pixel
+       con tinta, la verdad es la contraria: **53 px arriba y 23 abajo**. El
+       `lineHeight: 0.9` de un serif de display deja unos 42 px de aire muerto
+       SOBRE los glifos, asi que la caja miente en 42. El usuario lo vio a ojo y
+       pidio las dos distancias iguales. 0,036 D dejaba 38/41 y el lo siguio viendo
+       alto; con 0,024 quedan **43/36**, un pelo mas arriba que abajo, que es lo
+       que pidio al verlo («un 5 % o asi»). El numero no se centra por caja: se
+       centra mirandolo, y la tinta es el instrumento. */
+    marginTop: 'calc(var(--pace-dial-d, 360px) * -0.024)',
     fontFamily: 'var(--font-display)',
     fontStyle: 'italic',
     fontWeight: 400,
@@ -12446,7 +12463,25 @@ const focusStyles = {
     flex: '0 0 auto', // s123: aro a su tamaño propio (var); flex:1 lo colapsaría (basis 0%)
     minHeight: 0,
     width: '100%',
-    position: 'relative' // s157: ancla de [data-pace-sun]; su centro es el del aro
+    position: 'relative', // s157: ancla de [data-pace-sun]; su centro es el del aro
+    /* AIRE PARA EL HALO (s185). Entre la fila de minutos y el borde del aro
+       había 24,5 px a 1280×800 — exactamente el `gap: 14` del root más los 10,5
+       del marco— y la corona muere a 0,628 D del centro, o sea **64 px pasado el
+       aro**. No cabía, y cualquier máscara que la recortara dejaba un canto
+       PLANO sobre un halo redondo: es lo que el usuario vio como «recortado de
+       forma rara», y las dos rampas que probé antes eran los dos síntomas del
+       mismo hecho (larga → tenue · corta → cortada).
+        De dónde sale el sitio, medido: a 1280×800 el aro está topado por ANCHO
+       (0,42 de la columna) y a 1920×1080 por el tope de 520 — NO por altura—, y
+       encima de la fila quedan 52,6 y 150,6 px libres. Así que este margen no
+       encoge el aro: solo reparte. El bloque entero va centrado por el stack, de
+       modo que crecer aquí sube la fila y baja el aro a partes iguales.
+        En fracción de D y no en px para que escale con el aro. Donde el aro SÍ
+       está limitado por altura (1366×610: 6,1 px libres) el motor lo absorbe
+       encogiendo D, que es su trabajo y el reparto correcto. */
+
+
+    marginTop: 'calc(var(--pace-dial-d, 360px) * 0.055)'
   },
 
   /* NOTA s76: los estilos aroFrame/aroInner/modeLabel/numberHuge/
@@ -29438,17 +29473,22 @@ Object.assign(window, { Onboarding });
      Así se mantiene el 94 % de presencia en tres cuartas partes del recorrido.
      Pares [fracción del recorrido desde el horizonte hacia arriba, alfa]. */
   const CURVA_NIEBLA = [[1, 1], [0.72, 0.94], [0.46, 0.74], [0.26, 0.44], [0.12, 0.18], [0, 0]];
-  /* EL TECHO, TAMBIÉN CON CURVA, y esto es un defecto que el usuario vio: «la
-     parte de arriba queda demasiado difusa y con una línea de corte». La rampa
-     recta de tres paradas metía un CODO en 0,24 D donde la pendiente cambia unas
-     cuatro veces, y el ojo encuentra un quiebre de pendiente igual que encuentra
-     un borde — la misma razón por la que el limbo lleva ONCE paradas y no cinco.
-     Esta S entra despacio desde el cero y se posa en `--sun-top` sin esquina, y
-     en el tramo medio pesa MÁS que la recta (0,66 contra 0,51 a 0,32 D): eso es
-     lo que quita lo difuso sin devolver luz a la fila de minutos.
-     Pares [distancia al centro en D, alfa]. */
-  const CURVA_TECHO = [[0.520, 0], [0.505, 0.06], [0.488, 0.16], [0.455, 0.36],
-  [0.400, 0.56], [0.330, 0.68]];
+  /* EL TECHO, TAMBIÉN CON CURVA · TRES INTENTOS, Y LOS DOS PRIMEROS ERAN EL
+     MISMO PROBLEMA. Una rampa RECTA metía un CODO en 0,24 D donde la pendiente
+     cambiaba cuatro veces, y el ojo encuentra un quiebre de pendiente igual que
+     encuentra un borde (por eso el limbo lleva ONCE paradas y no cinco): «una
+     línea de corte». Una S LARGA (0,520→0,330) mataba el NÚCLEO —que vive en
+     0,505-0,528 D, pegado al trazo— y salía «muy tenue». Una S CORTA lo
+     recuperaba (luz sobre el aro 45→66 contra 77 de referencia lateral) pero
+     dejaba un canto PLANO sobre un halo redondo: «recortado de forma rara».
+      Ninguna podía ganar, porque **la corona no cabía**: muere a 0,628 D del
+     centro y sobre el aro había 24,5 px. s185 le da sitio en el margen del
+     `timerWrap` (`FocusTimer.support.jsx`), y solo entonces la caída puede
+     empezar a 0,585 D y morir muy por encima del núcleo — sin canto y sin
+     apagarlo. Pares [distancia al centro en D, alfa]. */
+
+  const CURVA_TECHO = [[0.585, 0], [0.566, 0.10], [0.546, 0.30], [0.524, 0.58],
+  [0.500, 0.82], [0.470, 0.95]];
   /* Paradas en % del radio de la caja, con su color y su valor de máscara. La
      máscara sale de la MISMA lista que el color: no pueden desincronizarse, que
      es como s157 acabó con un grano cuadrado sobre una luz redonda.
@@ -29494,29 +29534,16 @@ Object.assign(window, { Onboarding });
   const limboCon = (i) => 'radial-gradient(circle farthest-side, ' +
   LIMBO.map((p) => p[i] + ' ' + p[0]).join(', ') + ')';
 
-  /* LA LUZ MUERE ANTES DE LA FILA DE MINUTOS (s184), y esto ATENÚA ya no basta.
+  /* LA LUZ MUERE ANTES DE LA FILA DE MINUTOS (s184), y ATENUAR no bastaba.
       Aquí había una rampa que bajaba la mitad superior de la corona a --sun-top
-     (0,72) «sin cortar, el círculo sigue completo», con esta premisa escrita al
-     lado: por encima del aro hay ~59 px hasta la fila de minutos. ESA PREMISA
-     YA NO SE CUMPLE. Medido hoy a 1280x800: el borde superior del aro cae en
-     y=167,1 y la píldora «45» acaba en y=142,6 — quedan 24,5 px, no 59. Y el
-     limbo muere a 0,628 D del centro, o sea 64 px pasado el aro. Fotografiando
-     el mismo fotograma con el sol encendido y apagado, la fila de minutos
-     recibía una desviación de 57 sobre 255: la corona la estaba pintando.
-      Atenuar al 72 % no arregla eso, porque 0,72 nunca es 0. Así que la rampa
-     pasa a MORIR: transparente por encima de 0,52 D del centro, y de ahí hacia
-     abajo sube hasta el hombro de --sun-top en 0,24 D. Son 0,28 D de recorrido
-     —118 px con el aro de 420—, tan gradual que no hay borde que encontrar.
-      LO QUE CUESTA ES CASI NADA, Y ESTÁ MEDIDO: el brillo justo por encima del
-     trazo del aro baja de 64 a 58 sobre 255, porque el NÚCLEO de la corona vive
-     entre 0,505 y 0,528 D —pegado al aro— y lo que se recorta es la COLA, que
-     es la que llegaba a los chips. El halo sigue rodeando el recorrido entero,
-     las 12 incluidas; lo que desaparece es el lavado ancho hacia arriba.
-     Fila de minutos: 57 -> 1. Uno sobre 255 no se ve.
-      El BLOOM no necesita nada de esto: su máscara direccional ya vale cero por
-     encima de 0,5 D del centro. Esta rampa es solo del limbo. */
-
-
+     (0,72) «sin cortar», con esta premisa al lado: por encima del aro hay ~59 px
+     hasta la fila de minutos. ERA FALSA — medido a 1280×800 quedan **24,5**, y
+     el limbo muere a 0,628 D del centro (64 px pasado el aro), así que la fila
+     recibía **57 sobre 255**. Y 0,72 nunca es 0. Ahora la rampa MUERE: nada por
+     encima de 0,52 D del centro. Cuesta poco porque el NÚCLEO vive entre 0,505 y
+     0,528 D —pegado al aro— y lo que se recorta es la cola. Fila: 57 → 1.
+      El BLOOM no necesita esto: su máscara direccional ya vale cero por encima de
+     0,5 D del centro. Esta rampa es solo del limbo. */
 
 
   const menosArriba = 'linear-gradient(180deg, transparent 0px, ' +
@@ -29554,19 +29581,29 @@ Object.assign(window, { Onboarding });
      segundo contorno posible. */
 
   const BLOOM_W = 2.2; /* ancho de la caja, en unidades de D */
-  const BLOOM_H = 1.42; /* alto de la caja */
-  const BLOOM_SUBE = 0.36; /* fracción de su propio alto que se sube */
-  const BLOOM_R = 0.84; /* radio de la luz, desde el centro del aro */
-  /* EL ALTO Y EL RADIO SALEN DE UNA MEDIDA, no de gusto: el hueco entre el
-     CENTRO del aro y el borde inferior de [data-pace-home-body] es de 0,96 D en
-     el peor breakpoint (1280x720 y 1440x900; en el resto va de 1,13 a 1,38 D).
-     La caja acaba en cy + 0,909 D y la luz muere en cy + 0,84 D, así que ni la
-     una ni la otra desbordan NUNCA el contenedor de scroll — y por eso no hace
-     falta recortar nada. Con 2,0 y 1,05 la caja acababa 126 px por debajo del
-     borde y eso era scroll: la home se podía arrastrar hacia la nada.
+  const BLOOM_H = 1.34; /* alto de la caja */
+  const BLOOM_SUBE = 0.38; /* fracción de su propio alto que se sube */
+  const BLOOM_R = 0.77; /* radio de la luz, desde el centro del aro */
+  /* EL ALTO Y EL RADIO SALEN DE UNA MEDIDA — y en s185 hubo que REMEDIRLA.
+      La de s158 decía «0,96 D en el peor breakpoint» y concluía que la caja no
+     desborda «NUNCA» el scroll. Se tomó en cuatro breakpoints y el peor no
+     estaba: medido sobre los NUEVE de escritorio es **0,852 D a 1536×864** (y
+     0,887 a 1600×900). Con la caja acabando en cy + 0,909 D no cabía por 30 y
+     11 px, y el scroll real de la home era de **29 y 11** — coinciden al píxel.
+     En escritorio la home NO debe tener scroll vertical nunca, y lo que sobraba
+     no era contenido sino la caja de una DECORACIÓN, que el motor no puede
+     corregir porque mide el stack (s156) y el stack sí cabía.
+      Los tres números salen de ahí: la caja acaba en cy + 0,831 D (21 px de
+     margen con el aro de 520) y la luz muere en 0,77 D, o sea 0,061 D DENTRO de
+     su caja — una luz no puede acabar donde acaba la suya (las dos aristas
+     rectas de s157). `BLOOM_SUBE` sube a 0,38 para que el borde superior siga
+     por encima de 0,5 D del centro, donde la máscara direccional pone su parada
+     transparente; con 0,36 caía en negativo.
   /* Desde el borde SUPERIOR de la caja: el centro del aro cae en BLOOM_H*SUBE,
      su borde superior media D antes y el horizonte media D después menos el
      propio horizonte. Todo sale de los mismos dos tokens que gobiernan el aro. */
+
+
   const DESDE_ARRIBA = (extra, conHorizonte) => 'calc(var(--pace-dial-d) * ' +
   (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
   /* Radios del aro entre paréntesis (el radio de la luz es 1,05 D). La sombra
@@ -29899,6 +29936,12 @@ Object.assign(window, { Onboarding });
        la home se quedaba con 3 px de scroll en lugar de encajar. Se nombran uno
        a uno y NO se usa un selector de descendencia: dentro del aro vive el CTA,
        cuya transición de hover es legítima y no se toca. */
+    /* Y EL ENVOLTORIO DEL ARO DESDE s185, un nodo mas afuera y por lo mismo: su
+       margin-top (el aire del halo) es proporcional a D, asi que depende de lo
+       que el motor escribe y con el kill de reduced-motion se volvia TRANSICION.
+       Medido: 381 con reduced-motion contra 379 sin el, cazado por la tolerancia
+       de 1 px que dejo s162. Misma familia que sus 14 px y los 11 de s156. */
+    [data-pace-timer-wrap],
     [data-pace-dial-fit] [data-pace-dial-label],
     [data-pace-dial-fit] [data-pace-dial-number],
     [data-pace-dial-fit] [data-pace-dial-subtitle],
@@ -30036,13 +30079,9 @@ Object.assign(window, { Onboarding });
       --pace-luz: ${LUZ};
       --pace-nucleo: ${NUCLEO};
       --pace-borde: ${BORDE};
-      /* AQUI VIVIA --pace-abre (s158-s183), que decia cuanto estaba ABIERTO el
-         horizonte. Se retiro en s184 al recortar el arco: era el mando de un
-         desvanecido que ya no tiene a quien desvanecer, y su unico consumidor
-         era la mascara del anillo. El porque completo, en la cabecera de la
-         constante «horizonte» de _responsive.atmosfera.js. (Sin backticks: este
-         comentario vive DENTRO del template literal de la hoja, y uno solo
-         aborta el build — van cinco veces.) */
+      /* AQUI VIVIA --pace-abre (s158-s183): se retiro en s184 al recortar el
+         arco, porque era el mando de un desvanecido sin nada que desvanecer. El
+         porque, en la constante «horizonte» de _responsive.atmosfera.js. */
       /* La recogida de la pausa, resuelta en UN solo sitio: el interruptor lo
          publica FocusTimer y lo interpola la transicion de abajo; la
          profundidad la pone el papel. Con pausado=0 vale 1 (luz entera) y con
@@ -30569,10 +30608,22 @@ Object.assign(window, { Onboarding });
       }
       [data-pace-dial-fit] [data-pace-dial-number] {
         font-size: clamp(40px, calc(var(--pace-timer-d, 360px) * 0.255), 135px) !important;
+        /* s185 · el numero sube para quedar a la MISMA distancia de tinta de
+           «FOCO MANUAL» y de «Foco breve» (53/23 -> 43/36, medido en pixeles y
+           no por caja: el lineHeight 0.9 deja 42 px de aire muerto arriba). Va
+           aqui ademas de en linea porque estas reglas llevan !important. */
+        margin-top: calc(var(--pace-timer-d, 360px) * -0.024) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-subtitle] {
         font-size: clamp(11px, calc(var(--pace-timer-d, 360px) * 0.036), 19px) !important;
-        margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.077), 42px) !important;
+        /* s185 · +0,036 D para COMPENSAR el margen negativo del numero. Un
+           margen negativo arriba del numero se lo lleva todo lo de abajo con el
+           (flujo normal), asi que subirlo solo acercaba las dos cosas en bloque
+           y la distancia de abajo no se movia: medido, 53/23 pasaba a 38/25 en
+           vez de a 38/38. Sumando aqui lo mismo que se resto alli, el subtitulo
+           se queda donde estaba, el numero sube de verdad, **y el alto del
+           bloque no cambia** -- que importa porque el marco lo centra. */
+        margin-top: clamp(10px, calc(var(--pace-timer-d, 360px) * 0.101), 56px) !important;
       }
       [data-pace-dial-fit] [data-pace-dial-divider] {
         width: clamp(80px, calc(var(--pace-timer-d, 360px) * 0.28), 150px) !important;
@@ -31544,7 +31595,16 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
   var CICLO_GAP = 4; // px de aire MÍNIMO entre CICLO y el borde de Actividades
-  var AIRE_TARJETA = 6; // px de aire ENCIMA del canto de las tarjetas (s184)
+  /* AIRE ENCIMA DEL CANTO DE LAS TARJETAS, en fraccion de D y no en px fijos
+     (s185). Lo que hay que despejar no es el trazo del aro: es el HALO DE LA
+     BOLA GUIA, que al empezar la sesion se para justo en el cabo. Ese halo es
+     un circulo de r=1,7 en un viewBox de 100, o sea 0,017 D -- 7,1 px con el
+     aro de 420. Con los 6 px fijos de s184 se metia 1,2 px DENTRO de la
+     tarjeta, y el usuario lo vio en cuanto arranco un bloque: «la bola y aro
+     naranja quedan por debajo como superpuestos». 0,030 D deja el halo entero
+     fuera con 5,5 px de sobra, y escala con el aro en vez de quedarse corto
+     en los grandes. */
+  var AIRE_HALO = 0.030; // fraccion de D · el halo de la bola mide 0,017
   var OVERLAP_TARGET = 0.16; // solapamiento nominal del contrato (§0): 16 % de D
   var MAX_FIT_PASSES = 8; // iteraciones de ajuste «encoger hasta caber»
 
@@ -31646,10 +31706,11 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
        salia NaN y el aro se quedaba dando la vuelta entera. Publicado en px por
        el motor, el CSS solo elige motor-o-fallback como con los otros dos. */
     /* El corte se mide desde ABAJO, asi que restar la banda lo BAJA hasta el
-       canto de las tarjetas y SUMAR el aire lo sube esos pocos px por encima.
+       canto de las tarjetas y SUMAR el aire lo sube por encima, lo justo para que
+       el halo de la bola guia no toque la tarjeta.
        Con el signo al reves el aro acababa 6 px POR DEBAJO del canto, o sea
        asomando por los huecos entre tarjetas: 310,3 grados en vez de 295,8. */
-    setVar('--pace-dial-corte', Math.max(4, overlap - banda + AIRE_TARJETA) + 'px');
+    setVar('--pace-dial-corte', Math.max(4, overlap - banda + Math.round(AIRE_HALO * D)) + 'px');
   }
 
   function compute() {

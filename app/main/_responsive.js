@@ -213,6 +213,12 @@
        la home se quedaba con 3 px de scroll en lugar de encajar. Se nombran uno
        a uno y NO se usa un selector de descendencia: dentro del aro vive el CTA,
        cuya transición de hover es legítima y no se toca. */
+    /* Y EL ENVOLTORIO DEL ARO DESDE s185, un nodo mas afuera y por lo mismo: su
+       margin-top (el aire del halo) es proporcional a D, asi que depende de lo
+       que el motor escribe y con el kill de reduced-motion se volvia TRANSICION.
+       Medido: 381 con reduced-motion contra 379 sin el, cazado por la tolerancia
+       de 1 px que dejo s162. Misma familia que sus 14 px y los 11 de s156. */
+    [data-pace-timer-wrap],
     [data-pace-dial-fit] [data-pace-dial-label],
     [data-pace-dial-fit] [data-pace-dial-number],
     [data-pace-dial-fit] [data-pace-dial-subtitle],
@@ -350,13 +356,9 @@
       --pace-luz: ${LUZ};
       --pace-nucleo: ${NUCLEO};
       --pace-borde: ${BORDE};
-      /* AQUI VIVIA --pace-abre (s158-s183), que decia cuanto estaba ABIERTO el
-         horizonte. Se retiro en s184 al recortar el arco: era el mando de un
-         desvanecido que ya no tiene a quien desvanecer, y su unico consumidor
-         era la mascara del anillo. El porque completo, en la cabecera de la
-         constante «horizonte» de _responsive.atmosfera.js. (Sin backticks: este
-         comentario vive DENTRO del template literal de la hoja, y uno solo
-         aborta el build — van cinco veces.) */
+      /* AQUI VIVIA --pace-abre (s158-s183): se retiro en s184 al recortar el
+         arco, porque era el mando de un desvanecido sin nada que desvanecer. El
+         porque, en la constante «horizonte» de _responsive.atmosfera.js. */
       /* La recogida de la pausa, resuelta en UN solo sitio: el interruptor lo
          publica FocusTimer y lo interpola la transicion de abajo; la
          profundidad la pone el papel. Con pausado=0 vale 1 (luz entera) y con

@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.115.0 (s184 - **EL RECORRIDO QUE SOLO PISA LO QUE SE VE**. El arco del Pomodoro deja de dar los 360 grados y recorre **exactamente el tramo visible**: nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho. **Y ese «unos 270» no se escribe, se mide** -- el ratio horizonte/D no es constante, asi que el barrido va de **~266 a ~276 grados**; medido **271,58** a 1280x800 y **271,84** a 390x844, y un 270 fijo dejaria los cabos **1,9 px** fuera del corte. **Tres defectos solo aparecieron midiendo**: mi primera version **se quedo redonda con el motor funcionando** (devolvi «360» donde la respuesta era «aun no lo se»), el cabo derecho caia **0,78 px** por debajo del izquierdo (Chrome dibuja el circulo con beziers de 297,97, no con la circunferencia de 298,451), y al redimensionar aparecia un **fantasma de color con el Pomodoro parado**. Luego, **LOS TRES BORDES** que pidio el usuario: el horizonte pasa de filo a **NIEBLA con curva**, y **el halo dejaba de pintar la fila de minutos** -- que no era precaucion, **estaba pasando**: la premisa escrita en su propio comentario («~59 px hasta la fila») era falsa, hoy hay **24,5**, y la banda recibia **57 sobre 255**. Ahora **0-1 en seis viewports**. Se retira `--pace-abre`. **Y ENTONCES EL USUARIO LO PROBO**, y salieron tres cosas que ninguna suite iba a encontrar: el arco **tardaba ~2,2 min en verse** (nace EN el corte, donde la mascara vale cero, y le habia puesto encima la niebla larga) · arriba habia una **linea de corte**, que era el CODO de mi rampa · y el aro debia bajar **hasta el canto de las tarjetas**, para que lo termine una OCLUSION y no un desvanecido en el aire. Eso obligo a separar `--pace-corte` de `--pace-horizon`, porque ese token TAMBIEN mueve el layout. Barrido final **295,8 grados**. **187 → 191**, con **9 mutantes en rojo**, uno declarado que no muerde, y dos specs nuevos.)
+**Version actual:** v0.115.1 (s185 - **TRES PREMISAS CADUCADAS, Y UNA REGLA QUE NADIE VIGILABA**. Sesion de REVISION: no hubo encargo nuevo, el usuario probo v0.115.0 y fue senalando -- y **cada cosa que vio resulto cierta y medible DESPUES de verla**. En tres casos la causa era **una premisa escrita al lado del codigo que gobierna y que habia dejado de ser verdad**. **(0) SE DESBLOQUEA LA MUSICA**: los briefs pedian «200 Hz-3 kHz despejado» y s177 exige lo contrario porque MIDIO que esa restriccion hacia la pieza inaudible; lo que destraba la contradiccion es que **el brief describia mal a su competidor** -- la senal sintetizada no es un tono sino RUIDO con paso-bajo barriendo 200→800 Hz, `breathe.hold` no existe, y **con musica esa senal no suena**. Solo compite la locucion, y solo el **35,9 % del ciclo** de media. Se separa por COMPORTAMIENTO y por el tramo alto. Y aparecio un **segundo conflicto que la auditoria no vio**: cinco prompts pedian «a sustained low G». **(1) LA BOLA se metia 1,2 px DENTRO de la tarjeta**: el aire eran 6 px fijos y el halo de la bola mide 7,1 de radio; ahora 0,030 D. **(2) EL HALO, tres intentos y los dos primeros el mismo problema** (recta → codo · S larga → apaga el nucleo · S corta → canto plano): **la corona no cabia**, porque «sobre el aro hay ~59 px» era falso -- hay **24,5**; se le da sitio con un margen en el `timerWrap`, y se puede porque a 1280x800 el aro esta topado por ANCHO. **(3) EL NUMERO: las cajas mentian en 42 px** -- por caja 10,9/32,3, por TINTA **53/23**, que es lo contrario. Queda en 43/36. **(4) LA REGLA QUE NADIE VIGILABA**: en escritorio la home NO debe hacer scroll vertical, y **hacia 29 px a 1536x864** (15 ya en lo publicado). La causa, la caja del BLOOM: la premisa decia «0,96 D en el peor breakpoint» y se tomo en cuatro **sin el peor** -- el real es **0,852 D**, y prediccion y scroll medido **coinciden al pixel**. No lo veia ni el motor (mide el stack, y cabia) ni la suite (comparaba luz encendida contra apagada, y el desborde era identico). **(5) Y reproduje el defecto de s160/s162 un nodo mas afuera**: el margen proporcional a D se volvia transicion con reduced-motion. **191 → 195**, con 3 mutantes calibrados en rojo.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -31,7 +31,7 @@
 | `tests/biblioteca.spec.js` | **LAS TRES BIBLIOTECAS REDISEÑADAS (s174)**. 7 tests, **7 mutantes y los 7 muerden**. Todo RELACIONAL: **el catalogo se lee de las FUENTES, no de la pagina** — no se puede leer de la pagina (`EXTRA_ROUTINES` y `BREATHE_ROUTINES` son `const` y no cruzan la IIFE), y aunque se pudiera, cruzar la pantalla contra un dato de esa MISMA pantalla no prueba nada. **El reloj va congelado** con `setFixedTime`: «Para ahora» rota por DIA y sin fijarlo hay asertos que muerden un martes y no un miercoles. **Toda consulta filtra por lo VISIBLE**, que costo cuatro medidas equivocadas antes de acotarlo | **NUEVO s174 · 7 tests** |
 | `tests/transicion-biblioteca.spec.js` | **EL VUELO DE LA CAPITULAR (s174)**. 5 tests, **5 mutantes**. El que importa **no dice ninguna cifra**: compara el circulo de la preparacion con el del paso y exige que midan lo mismo **y esten en el mismo sitio** — el tamaño es una decision viva. Vuela **en las dos pieles** (el fallo de movil no lo habria cazado ningun aserto de la biblioteca), con reduced-motion **no anima y aun asi se entra**, y Respira **no se entera**. Dos asertos **pasaban por carrera** y se corrigieron: el vuelo no empieza en el clic sino un frame despues de montarse la preparacion. **Un mutante NO muerde con razon** y esta dicho: la limpieza del clon tiene dos caminos a proposito | **NUEVO s174 · 5 tests** |
 | `tests/eventos-retencion.spec.js` | **LA RETENCION POR CALENDARIO (s174)**, la de `pace.events.v1` — **`tests/retencion.spec.js` es OTRA**, la de la apnea de Respira. 4 tests, **4 mutantes**. El que importa es **«se dispara SOLA en el arranque»**: estar implementada no servia de nada. **Ningun numero de dias vive dentro** (el suelo se lee de `eventsRetentionFloorKey`). Y una leccion del calibrado: **comparar el JSON del contenedor no prueba que no se escriba** —reescribir lo mismo da la misma cadena—, asi que se espia `setItem` con control positivo en la misma prueba | **NUEVO s174 · 4 tests** |
-| `app/main/_responsive.atmosfera.js` | **EL JS QUE COMPONE LA LUZ (s163)**, cortado de `_responsive.js`. Construye como CADENAS los degradados y mascaras que la hoja interpola — halo, limbo, bloom, horizonte y las paradas de color de la hora — y **no tiene ni una regla CSS**. Publica `window.paceAtmosfera` con los nombres que la hoja usa y ni uno mas. **CARGA ANTES** de `_responsive.js`, que lo desestructura en su cuerpo. **s184: los TRES BORDES viven aqui juntos y a proposito** (`LUZ_TECHO`, `LUZ_PLENO`, `LUZ_COLA`, `NIEBLA`, `CURVA_NIEBLA`) -- el horizonte pasa de filo a niebla con curva, la rampa de arriba MUERE en vez de atenuar al 72 % (la fila de minutos recibia 57 sobre 255) y la luz se apaga 0,22 D bajo el horizonte. Sale `--pace-abre`; entran `colaLimbo` y `colaBloom`: **15 exportados** | **v0.115.0 · 485 ln** |
+| `app/main/_responsive.atmosfera.js` | **EL JS QUE COMPONE LA LUZ (s163)**, cortado de `_responsive.js`. Construye como CADENAS los degradados y mascaras que la hoja interpola — halo, limbo, bloom, horizonte y las paradas de color de la hora — y **no tiene ni una regla CSS**. Publica `window.paceAtmosfera` con los nombres que la hoja usa y ni uno mas. **CARGA ANTES** de `_responsive.js`, que lo desestructura en su cuerpo. **s184: los TRES BORDES viven aqui juntos y a proposito** (`LUZ_TECHO`, `LUZ_PLENO`, `LUZ_COLA`, `NIEBLA`, `CURVA_NIEBLA`) -- el horizonte pasa de filo a niebla con curva, la rampa de arriba MUERE en vez de atenuar al 72 % (la fila de minutos recibia 57 sobre 255) y la luz se apaga 0,22 D bajo el horizonte. Sale `--pace-abre`; entran `colaLimbo` y `colaBloom`: **15 exportados** **s185: la caja del BLOOM se ajusta porque DESBORDABA el contenedor de scroll** y la home hacia 29 px a 1536x864 (`BLOOM_H` 1,42→1,34, `BLOOM_SUBE` 0,36→0,38, `BLOOM_R` 0,84→0,77), y **`CURVA_TECHO` sube a 0,585-0,470**, que es donde la corona cabe entera una vez el `timerWrap` le da sitio. Exporta **16** nombres (la fila decia 15: recontados en s185) | **v0.115.1 · 493 ln** |
 | `app/main/_responsive.pieles.js` | **LAS DOS PIELES (s163)**, cortadas de `_responsive.js`: el `@media (max-width: 768px)`, el de pantallas cortas y el `@media (min-width: 769px)`. **Cero interpolaciones** (medido), asi que no lleva una linea de logica. **SE INYECTA DESPUES de `_responsive.js` Y ESO ES CONTRATO**: `--pace-skin` vale `movil` en la hoja base y `escritorio` aqui, las dos veces sobre `:root` — misma especificidad, gana la de despues. Al reves, la home de escritorio se cree movil y `main.jsx` (s160) renderiza el orden de lectura equivocado | **s163 · s169 · 478 ln** |
 | `app/motion.css` | **EL COMPORTAMIENTO (s163)**, cortado de `tokens.css`, que se queda con los VALORES. Aqui viven el cruce entre paletas (s161, con sus `@property` y los dos atributos del fundido), el kill de `prefers-reduced-motion` y los dos packs de microinteracciones de s99. **Su `<link>` va entre `tokens.css` y `paths/paths.css`**: aquella declara `[data-pace-reveal] > *` y esta lo anula por ORDEN | **NUEVO s163 · 400 ln** |
 | `app/state-core.palette.jsx` | **COMO LA PALETA LLEGA AL DOM (s163)**, extraido de `state-core.jsx`: `applyTheme` y los dos marcadores del cruce (`data-pace-palette-ready`, `data-pace-palette-crossing`, s161). **El estado entra por PARAMETRO** — carga ANTES de `state-core.jsx` porque `applyTheme(_state)` se llama en el CUERPO de aquel, y alli todavia no existe ni `_state` ni `getState`. Las REGLAS que consumen esos atributos viven en `app/motion.css` | **NUEVO s163 · 107 ln** |
@@ -60,7 +60,7 @@
 | `tests/home.helpers.js` | **Utilidades compartidas de la home (s159)**: la semilla del Camino en curso, la sonda unica de geometria, el parser de px y la espera a que la home se asiente. Extraidas al partir `home-geometria.spec.js`, que habia llegado a **631 lineas** — **ni una linea de cuerpo cambio**. **s160: nace `asentarGeometria()`**, que espera a que `--pace-timer-d` **repita valor tres frames seguidos** — el motor converge en varias pasadas y con la suite en 8 workers no le caben en dos frames (medido: el aro leido a destiempo daba **420 px**, su valor de PARTIDA). **NO se mete dentro de `asentar`** a proposito: lo llaman veinte sitios, algunos con `page.clock` instalado, y ahi rAF **solo corre cuando el reloj avanza** | **s160** |
 | `tests/home-luz.spec.js` | **El CONTRATO de la atmosfera (s158, extraido en s159)**: cuando existe, de donde saca el color, que no toca la geometria y que se apaga sola. **s184: los tres asertos de BORDES salen a `home-luz-bordes.spec.js`** al llegar este archivo a 581 lineas (581 → 322), y con ellos `perfilDeLuz`, que era su instrumento. El aserto del horizonte se reescribio: de «corta en seco» a «es niebla, muere en la linea, y no depende de la sesion» | **v0.115.0 · 322 ln** |
 | `tests/home-luz-curva.spec.js` | **La FORMA de la luz en el tiempo (s159)**: pico en la mitad, meseta 45-55 %, la hora con el mediodia centrado, el enfriamiento sin repunte y el maximo de calor centrado. **El calor se mide por el eje `b` de OKLab**, que es lo que el navegador ya devuelve —`--pace-luz` esta registrado con `@property`, asi que su valor computado llega como `oklab(L a b / alfa)`— y la presencia como alfa × envolvente × **distancia OKLab al papel**: la version con `max(0, L − L del papel)` es un modelo de papel OSCURO y en la paleta clara valia **cero en las diez paradas**, con el bucle comparando ceros. **Declara que no aserta la monotonia de la presencia compuesta en dia**, medida y presentada pero no compensada | **NUEVO s159** |
-| `tests/home-geometria.spec.js` | **20 tests de la geometria de la home (s156, +6 en s159)**. Defienden que el motor gobierne **con y sin tarjeta de Camino** (estado real: un Camino en curso, sembrado, **nunca borrando nodos**), que se recupere al salir **sin resize ni evento manual**, que recorte y solapamiento **no puedan** desincronizarse, el orden VISUAL de las dos pieles, 320 px sin desborde, la atmosfera por **atributo estable** y reduced-motion. La de «el contador no despierta al observador» se prueba **sin instrumentar el codigo**: instala un MutationObserver con la MISMA configuracion sobre la MISMA raiz. **NO aserta el orden del DOM** a proposito — es deuda de a11y conocida y consagrarla la volveria intocable | **NUEVO s156** |
+| `tests/home-geometria.spec.js` | **20 tests de la geometria de la home (s156, +6 en s159)**. Defienden que el motor gobierne **con y sin tarjeta de Camino** (estado real: un Camino en curso, sembrado, **nunca borrando nodos**), que se recupere al salir **sin resize ni evento manual**, que recorte y solapamiento **no puedan** desincronizarse, el orden VISUAL de las dos pieles, 320 px sin desborde, la atmosfera por **atributo estable** y reduced-motion. La de «el contador no despierta al observador» se prueba **sin instrumentar el codigo**: instala un MutationObserver con la MISMA configuracion sobre la MISMA raiz. **NO aserta el orden del DOM** a proposito — es deuda de a11y conocida y consagrarla la volveria intocable. **s185: el aire del cabo pasa a ser RELACIONAL** (que quepan los 0,017 D del halo de la bola, y que el cabo no se aleje mas de 0,05 D) y entran **+4 tests «la home de escritorio NO hace scroll vertical»**, la regla del usuario, en los dos estados y en los cuatro viewports criticos. **Miden moviendo `scrollTop`, no restando `scrollHeight`**: esa resta es la envolvente de toda decoracion absoluta y da falsos positivos — es justo por lo que el motor dejo de usarla en s156 | **s185 · 24 tests · 496 ln** |
 | `tests/*.spec.js` | **13 tests**: `artefacto` (es el compilado, consola limpia, precache real ↔ declarado) · `onboarding` (con estado limpio arranca AHI, y montado **detras** de la home en el DOM — la trampa de s153, convertida en aserto) · `checklist-foco` (Pomodoro con **reloj virtual** hasta el BreakMenu) · `checklist-cuerpo` (Respira + **modal de seguridad de apnea** + Mueve) · `checklist-estado` (Hidratate, Logros con toast, Tweaks, persistencia). **Al anadir un aserto: se pone ROJO a proposito** y se comprueba que muerde — `getByRole({name})` casa por **SUBCADENA**, asi que sin `exact: true` un renombrado sigue pasando | **NUEVO s154** |
 | `app/events/events-payloads.js` | **ESQUEMA DE PAYLOADS (s155)** — la mitad de la capa A donde vive la **MINIMIZACION**: cada payload se reconstruye **campo a campo** desde una **LISTA PERMITIDA**, no desde una lista de campos prohibidos (que siempre se queda corta). Lo que no esta en el esquema **no puede colarse aunque nadie lo haya previsto** — medido: un payload con `notaLibre`, `ip` y una ruta de archivo sale con tres claves. **Carga ANTES de `events-model.js`** | **NUEVO s155 · 112 ln** |
 | `scripts/verify.eventos.js` | **Tanda de `pace.events.v1` en el verify (s155)**. Como `verify.integridad.js`, **no es un script suelto**: aquella lo invoca dentro de la tanda [4/4]. Cinco comprobaciones RELACIONALES + guard de cero, y **dos de ellas defienden frases de `privacy.html`** en vez de invariantes internos. `listaCorta` llega **por parametro**: un segundo formateador daria mensajes distintos para el mismo problema | **NUEVO s155 · 176 ln** |
@@ -94,6 +94,7 @@
 | `app/glyphs/assets/logros/*.webp` | Las 58 mascaras (224 px, alfa = densidad de tinta; el color lo pone el token). **248 KB** | **s147** |
 | `scripts/ingest-glifos-logro.js` | Ingesta del arte de logro: mapeo por **clave estable** (nunca por posicion) + igualacion de peso de tinta + reescribe mapa y precache. Regla D-4: se RE-CORRE, no se retoca un `.webp` | **s147** |
 | `scripts/audit/glifos-v2.js` | Procesado compartido con la ingesta: deteccion y borrado del marco por angulo + encuadre + **suelo de papel ANTES del remuestreo, marco sobre el ORIGINAL** (s147) | **s147** |
+| `scripts/audit/revision-aro-s185.js` | **LA MAQUETA DE LOS NUEVE VIEWPORTS DE ESCRITORIO (s185)** -> `_revision-aro-s185.html` (ignorado por git). Captura cada uno con el reloj congelado y la sesion a mitad, y pone **los numeros debajo de cada figura**. **Su primera version RECORTABA**: le di scroll por figura creyendo que bastaba, y una barra de scroll no es enseñar la captura — es literalmente el defecto de s182. Ahora encaja al ancho con un interruptor de 1:1 y **rotula la escala** | **NUEVO s185** |
 | `scripts/audit/revision-glifos.js` | Hoja de revision del arte de logro -> `_revision-glifos.html` (ignorado por git). Pinta con el mecanismo REAL, a tamaño de sello y a 3x | **NUEVO s147** |
 | `LICENSE` | Elastic License 2.0 en la raiz | Sin cambios desde v0.12.9 |
 | `app/ui/pace-logo.png` | Logo oficial local | Presente; se inlinea en el standal… |
@@ -130,11 +131,11 @@
 | `app/shell/Sidebar.support.jsx` | `sidebarStyles`, los estilos EN LINEA (la hoja se fue a `Sidebar.hoja.jsx` en s181). **Viaja por `window`** porque el build encierra cada archivo en su IIFE. **`accion` lleva `flexShrink: 0` desde s181** y no es cosmetico: con `overflow: hidden` un hijo flex pierde su minimo automatico y se come el deficit de la columna amputandose | **v0.113.0** |
 | `app/shell/Sidebar.selectors.js` | **Los cuatro selectores PUROS de la sidebar (s180)** — `selectSidebarToday` · `selectSidebarWeek` · `selectSidebarPrimaryAction` · `selectSidebarLatestAchievement`. **No leen `window`**: los eventos entran POR PARAMETRO, asi que se prueban sin montar el almacen. Aqui vive el criterio de dia activo (foco/respira/cuerpo; **el agua sola NO**) y el indice lunes-primero | **NUEVO s180** |
 | `app/shell/Sidebar.parts.jsx` | Piezas de UI del sidebar. **REESCRITO s180**: `SidebarToday` (rejilla 2x2 con los glifos de `ActivityBar`) · `sidebarActionView` + `SidebarPrimaryAction` · `SidebarWeek` (el bloque ENTERO es un boton) · `SidebarFooter` (lleva el ultimo logro) · `achMini` · `ChevronLeftIcon`. **RETIRADOS**: `SenderoDelDia`, `WeekDots`, `AchievementsPreview` y `StatusBar` | **NUEVO s148 · reescrito s180** |
-| `app/main/_responsive.js` | Hoja responsive global de la app (IIFE que inyecta un `<style>`). **s160: dos cosas nuevas y ninguna es cosmetica** — (1) `transition-property: none` en `[data-pace-dial-fit]` y en sus **cuatro nodos interiores**, que es la condicion para que el motor de geometria pueda MEDIRLOS bajo reduced-motion (leer su fila en DECISIONES); (2) publica **`--pace-skin`** (`movil` global, `escritorio` dentro del `@media (min-width: 769px)`) y **desaparecen los `order`** del bloque de escritorio: el orden lo trae el DOM. **OJO AL EDITAR: ni un backtick dentro del template literal** — ha abortado el build en s139, s156, s157 y s158 | **s160** |
+| `app/main/_responsive.js` | Hoja responsive global de la app (IIFE que inyecta un `<style>`). **s160: dos cosas nuevas y ninguna es cosmetica** — (1) `transition-property: none` en `[data-pace-dial-fit]` y en sus **cuatro nodos interiores**, que es la condicion para que el motor de geometria pueda MEDIRLOS bajo reduced-motion (leer su fila en DECISIONES); (2) publica **`--pace-skin`** (`movil` global, `escritorio` dentro del `@media (min-width: 769px)`) y **desaparecen los `order`** del bloque de escritorio: el orden lo trae el DOM. **OJO AL EDITAR: ni un backtick dentro del template literal** — ha abortado el build en s139, s156, s157, s158 y **dos veces en s185**. **s185: `[data-pace-timer-wrap]` entra en la lista de exenciones de transicion** — su `margin-top` es proporcional a D, o sea depende de lo que el motor escribe, y con reduced-motion se volvia transicion y el aro convergia a 381 en vez de 379 | **s185** |
 | `app/main.jsx` | Orquestador: shell + modales + sesiones + overlays. **s160: el stack de la home renderiza el orden canonico POR PIEL**, leyendo `--pace-skin` del estilo computado (no un tercer `matchMedia` con el 769 escrito otra vez) y con **`key` estable** en los tres bloques, porque sin ella React reconcilia por posicion y **remonta** tarjeta y ActivityBar al cruzar el breakpoint | **s160** |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro). **s159: publica los CINCO mandos de la luz** en `[data-pace-home-body]` — `--pace-k` (la hora), `--pace-i` (la envolvente), `--pace-on` (interruptor), `--pace-pausado` (la pausa) y `--pace-arco` (el tono del recorrido, para que la cola lo herede). Aqui no se dibuja nada: son derivadas presentacionales de `progress` y `status`. **La PROFUNDIDAD de la pausa no se publica**, solo el interruptor: cuanto se recoge la luz es un valor por PALETA (`--sun-pausa`) y las paletas viven en CSS | **v0.90.0** |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
-| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep). **s184: en la home el recorrido es el TRAMO VISIBLE, no los 360**, y **pista y arco van en CAPAS SEPARADAS** porque no pueden llevar la misma niebla — el arco nace EN el corte y con la larga tardaba ~2,2 min en verse. -- nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho, y el angulo lo MIDE de `--pace-dial-d` y `--pace-horizon` (`asin((D/2-H)/0,475D)`), porque el ratio no es constante: **266-276 grados** segun el breakpoint. La medida devuelve `null` cuando no puede decidir -- devolver «360» congelo el aro redondo con el motor funcionando-- y la dispara un `MutationObserver` sobre el `style` de `<html>`. `pathLength=360` deja el trazo en grados y quita **0,78 px** de asimetria entre cabos. El `key` del arco cuelga del barrido: la geometria no se transiciona. **Caminos va por `ticks` y no cambia** | **v0.115.0** |
+| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep). **s184: en la home el recorrido es el TRAMO VISIBLE, no los 360**, y **pista y arco van en CAPAS SEPARADAS** porque no pueden llevar la misma niebla — el arco nace EN el corte y con la larga tardaba ~2,2 min en verse. -- nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho, y el angulo lo MIDE de `--pace-dial-d` y `--pace-horizon` (`asin((D/2-H)/0,475D)`), porque el ratio no es constante: **266-276 grados** segun el breakpoint. La medida devuelve `null` cuando no puede decidir -- devolver «360» congelo el aro redondo con el motor funcionando-- y la dispara un `MutationObserver` sobre el `style` de `<html>`. `pathLength=360` deja el trazo en grados y quita **0,78 px** de asimetria entre cabos. El `key` del arco cuelga del barrido: la geometria no se transiciona. **s185: el corte lo trae `--pace-corte`** (no `--pace-horizon`, que ademas mueve layout) **ya resuelto en px por el motor**, porque un custom property sin registrar devuelve TEXTO y `parseFloat` da NaN. Y el numero sube por TINTA, no por caja: un margen negativo arrastra todo lo de abajo, asi que se resta arriba y se **suma lo mismo** al subtitulo. **Caminos va por `ticks` y no cambia** | **v0.115.1 · 499 ln** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (modal + `Seal` + **`renderGlyph`, unico resolutor de glifo de logro**: mascara -> SVG -> caracter). El sello se ancla ARRIBA en la tarjeta (s147) | **v0.80.0** |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**96** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**88**) + la regla de denominador unico de §15.4 | **v0.79.1** |
@@ -162,8 +163,8 @@
 | `app/support/SupportModule.jsx` | Boton + modal Buy Me a Coffee | v0.12.8 |
 | `app/ui/CowLogo.jsx` | Logo component + lockup | **v0.28.9** |
 | `app/main.jsx` | Orquestador puro (composicion + state + handlers + JSX root) | **v0.79.0** |
-| `app/main/home-geometry.js` | Motor de geometria de la home (**las DOS pieles** desde s128): mide y publica en `:root` `--pace-timer-d`, `--pace-activities-overlap`, `--pace-home-squeeze` y (s156) `--pace-home-slack`. **s156: la tarjeta de Camino y Actividades son OPCIONALES** — exigirlas apagaba el motor entero con un Camino en curso, el UNICO estado real sin tarjeta. **Observadores en dos fases**: uno espera al montaje y se desconecta, otro vigila el `childList` **DIRECTO** del stack (sin `subtree`/`attributes`/`characterData`, o el contador del Pomodoro recalcularia 60 veces por minuto) y re-suscribe el ResizeObserver a los nodos VIVOS. **Primera pasada SINCRONA** (por rAF tardaba 1345 ms y el aro saltaba). **Nunca encoge a ciegas**: si una pasada no mejora la medida vuelve al ultimo D no desmentido — eso arreglo el aro de 244 px con `prefers-reduced-motion` | **v0.89.0** |
-| `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con las reglas @media globales del shell y **el modelo de la home**. **s156: aqui vive la RESOLUCION UNICA** — `--pace-dial-d` y `--pace-horizon` deciden en UN solo sitio si manda el motor o el fallback CSS; antes cada consumidor traia el suyo y no coincidian (Desktop tenia un `360px` a mano), asi que con el motor apagado **la tarjeta subia sobre un aro sin recortar**. Recorte y solapamiento salen ya del MISMO token. Trae ademas el **amanecer** (halo + linea de alba), reutilizando `paceGlowRamp`/`paceGrainUrl` de SessionShell. **Cuidado: el CSS va en un template literal — un backtick en un comentario aborta el build** (trampa de s139, repetida en s156) | **v0.89.0** |
+| `app/main/home-geometry.js` | Motor de geometria de la home (**las DOS pieles** desde s128): mide y publica en `:root` `--pace-timer-d`, `--pace-activities-overlap`, `--pace-home-squeeze` y (s156) `--pace-home-slack`. **s156: la tarjeta de Camino y Actividades son OPCIONALES** — exigirlas apagaba el motor entero con un Camino en curso, el UNICO estado real sin tarjeta. **Observadores en dos fases**: uno espera al montaje y se desconecta, otro vigila el `childList` **DIRECTO** del stack (sin `subtree`/`attributes`/`characterData`, o el contador del Pomodoro recalcularia 60 veces por minuto) y re-suscribe el ResizeObserver a los nodos VIVOS. **Primera pasada SINCRONA** (por rAF tardaba 1345 ms y el aro saltaba). **Nunca encoge a ciegas**: si una pasada no mejora la medida vuelve al ultimo D no desmentido — eso arreglo el aro de 244 px con `prefers-reduced-motion`. **s185: publica ademas `--pace-dial-corte`** — el mismo solapamiento menos la banda del rotulo que MIDE, mas `AIRE_HALO` (0,030 D), y **ya en px**, porque un custom property sin registrar no se computa. Ese aire no despeja el trazo del aro sino **el halo de la bola guia** (r=1,7 en viewBox 100 = 0,017 D), que es lo que se metia dentro de la tarjeta | **v0.115.1 · 413 ln** |
+| `app/main/_responsive.js` | IIFE: inyecta `<style id="pace-main-responsive-css">` con las reglas @media globales del shell y **el modelo de la home**. **s156: aqui vive la RESOLUCION UNICA** — `--pace-dial-d` y `--pace-horizon` deciden en UN solo sitio si manda el motor o el fallback CSS; antes cada consumidor traia el suyo y no coincidian (Desktop tenia un `360px` a mano), asi que con el motor apagado **la tarjeta subia sobre un aro sin recortar**. **s185: el corte del ARO se parte en `--pace-corte`** (`--pace-dial-corte` del motor, con `--pace-horizon` de fallback) y lo consumen las mascaras del anillo y de la pista; `--pace-horizon` se queda solo con el layout. Recorte y solapamiento salen ya del MISMO token. Trae ademas el **amanecer** (halo + linea de alba), reutilizando `paceGlowRamp`/`paceGrainUrl` de SessionShell. **Cuidado: el CSS va en un template literal — un backtick en un comentario aborta el build** (trampa de s139, repetida en s156) | **v0.89.0** |
 | `app/main/TopBar.jsx` | Tabs Foco/Pausa/Larga + 3 iconos top-right (Stats prop / Logros CustomEvent /… | **v0.33.2** |
 | `app/main/ActivityBar.jsx` | 4 chips Respira/Estira/Mueve/Hidratate + 4 iconos SVG inline… | **v0.33.2** |
 | `app/i18n/strings/_bootstrap.js` | Crea window.PACE_STRINGS = { es:{}, en:{} } vacio | **v0.33.1** |
@@ -194,105 +195,111 @@
 | `manifest.webmanifest` | PWA manifest (renombrado desde manifest.json en s102) | **v0.47.0** |
 | `sw.js` | Service Worker PWA. **s149: el export offline SALE del precache** (congelado a proposito en v0.71.0 y servido cache-first para siempre). **86 filas de `PRECACHE`**; si se toca, contar filas contra las entradas reales de la cache — `addAll` es atomico. **s152: eso ya lo aserta `npm run verify`** (fila ↔ archivo en disco, sin duplicados, sin rutas entrecomilladas en comentarios y mapa de mascaras ↔ precache); medido en vivo, la cache trae **86 entradas** | **v0.85.0** |
 | `app/ui/UpdatePrompt.jsx` | Aviso de version nueva del SW ("Actualizar / Luego") | **v0.47.0** |
-| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd`… | **v0.67.0** |
+| `app/focus/FocusTimer.support.jsx` | Helpers sin UI del Pomodoro: `getFocusDescriptorKey` + `maybeNotifyFocusEnd`… **s185: `timerWrap` lleva `margin-top: 0,055 D`**, que es el sitio del halo. No encoge el aro porque a 1280x800 esta topado por ANCHO y a 1920x1080 por el tope de 520 — **pero a 1366x610 si manda la altura**, y ahi se come el margen (5,3 px sobre ACTIVIDADES, declarado) | **v0.115.1 · 317 ln** |
 | `app/focus/FocusTimer.parts.jsx` | Piezas de UI del Pomodoro extraídas: `MinutesPicker` (selector de duración… | **NUEVO s124** |
 | `build-standalone.js` | Genera el bundle offline (AHORA compilador: Etapa A). **s153: `readFileClean` NORMALIZA los finales de linea a LF al leer** — sin eso el artefacto dependia del worktree de quien lo generaba (con CRLF, Babel indenta distinto los comentarios que conserva: **una linea, un espacio**) y el CI se ponia rojo sin causa visible. **Todo el texto que entra en el artefacto debe seguir pasando por esa funcion.** **s148: el inlineado de CSS deja de estar cableado a `tokens.css`** y recorre TODAS las hojas de `app/`, cada una en su sitio (conserva la cascada), abortando si falta o si no inlinea ninguna | **v0.81.0** |
 | `.claude/static-server.js` | Mini servidor estatico del preview (s80). **Desde s154 es tambien el `webServer` de la suite E2E** —esta committeado y no tiene dependencias—, asi que **el CI depende de el**: no se mueve ni se borra sin tocar `playwright.config.js`. Su `Cache-Control: no-store` juega a favor | **v0.49.0 · usado por s154** |
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s184 recorta el arco del Pomodoro al tramo visible, lo baja hasta el canto de las
-> tarjetas y suaviza los bordes de la luz. Publica **v0.115.0**. Suite **187 → 191**,
-> `verify` en verde, artefacto regenerado. **La mitad del trabajo salio de la
-> revision del usuario, no del encargo inicial.**
+> s185 no tuvo encargo: el usuario probo v0.115.0 y fue senalando, y **cada cosa que
+> vio resulto cierta y medible DESPUES de verla**. Publica **v0.115.1**. Suite
+> **191 → 195**, `verify` en verde, artefacto regenerado. De paso se desbloquea la
+> generacion de musica de Respira, parada desde s183.
 >
-> Diario: [session-184](./docs/sessions/session-184-el-recorrido-visible.md)
+> Diario: [session-185](./docs/sessions/session-185-tres-premisas-caducadas.md)
 
-- **[«NO LO SE» NO ES «360»: UNA MEDIDA TIENE TRES RESPUESTAS]** El defecto mas
-  reutilizable de la sesion, y era mio. La primera version del barrido devolvia
-  «vuelta entera» cuando `--pace-horizon` aun no resolvia -- caso del ARRANQUE--, y
-  como el marco ya tenia sus 420 px definitivos **el `ResizeObserver` no volvia a
-  disparar nunca**: el aro se quedaba redondo con toda la maquinaria nueva
-  funcionando. Un valor por defecto plausible **congela el estado en silencio**. La
-  forma correcta: `null` cuando no se puede decidir, y el disparador puesto donde
-  el motor **escribe** (`MutationObserver` sobre el `style` de `<html>`), no donde
-  se espera que algo cambie de tamano.
+- **[TRES PREMISAS CADUCADAS, Y ESE ES EL PATRON DE LA SESION]** No fueron tres
+  defectos distintos: fueron tres **comentarios escritos al lado del codigo que
+  gobiernan**, ciertos cuando se escribieron y falsos hoy, sin que nadie pasara por
+  su archivo. «Sobre el aro hay ~59 px hasta la fila de minutos» -- hay **24,5**, y
+  por eso ninguna rampa del halo podia ganar. «El hueco entre el centro del aro y el
+  borde es 0,96 D en el peor breakpoint» -- el peor es **0,852 D**, y por eso la
+  home hacia scroll. «La senal de fase es un tono» -- es **ruido**, y por eso los
+  briefs de musica pedian dos cosas incompatibles. **Lo reutilizable: la cifra
+  estaba escrita; lo que faltaba era volver a medirla antes de razonar sobre ella.**
 
-- **[UNA PREMISA ESCRITA AL LADO DEL CODIGO QUE GOBIERNA PUEDE SER FALSA]** La
-  rampa superior del limbo decia «por encima del aro solo hay ~59 px hasta la fila
-  de minutos» y por eso solo ATENUABA. Hoy hay **24,5 px**, el limbo muere **64 px**
-  pasado el aro, y la fila recibia **57 sobre 255**. Es la misma clase que la
-  auditoria de s183: un comentario que fue cierto y dejo de serlo sin que nadie
-  pasara por su archivo. **La cifra estaba escrita; lo que faltaba era volver a
-  medirla.**
+- **[LA REGLA QUE NADIE VIGILABA: CERO SCROLL VERTICAL EN ESCRITORIO]** El usuario
+  la dijo con esas palabras, y **lo publicado la incumplia**: 29 px a 1536x864, 11 a
+  1600x900, comprobado moviendo `scrollTop`. La causa no era contenido sino una
+  **DECORACION** -- la caja del bloom, que pedia 0,909 D donde caben 0,852. La caja
+  se ajusta y prediccion y medida **coinciden al pixel**. **Por que no lo veia
+  nadie**: el motor mide el STACK y no `scrollHeight` (decision correcta de s156,
+  porque esa resta es la envolvente de toda capa absoluta) y el stack SI cabia; y el
+  test de «encender la luz no anade scroll» **comparaba encendida contra apagada, y
+  el desborde era identico en los dos** porque la opacidad no quita layout. Misma
+  clase que el hallazgo de s183 sobre `stats-pestanas`: **verde sobre el estado
+  equivocado**.
 
-- **[UN MUTANTE PUEDE MENTIR EN VERDE]** La hoja declara la mascara DOS veces,
-  `-webkit-mask-image` y `mask-image`. Mutar solo la primera no cambia un pixel en
-  Chrome, que usa la segunda, y el mutante salio verde **dos pasadas seguidas**
-  pareciendo que el aserto no servia. Antes de declarar «este aserto no se pone
-  rojo», comprobar que el mutante LLEGA al artefacto.
+- **[LAS CAJAS MIENTEN: SE MIDE LA TINTA]** El numero del Pomodoro estaba, por caja,
+  a 10,9 px de «FOCO MANUAL» y a 32,3 de «Foco breve» — parecia pegado arriba.
+  Medido en **tinta** (primer y ultimo pixel pintado) es lo contrario: **53 y 23**.
+  El `line-height: 0.9` de un serif de display deja ~42 px de aire muerto sobre los
+  glifos. **Y la correccion obvia tampoco vale a la primera**: un margen negativo se
+  lleva consigo todo lo que va debajo, asi que sube los dos juntos (53/23 → 38/25).
+  Hay que restar arriba y **sumar lo mismo abajo**. Ademas, **una ventana por
+  elemento se contamina con el vecino**: la medida buena son bandas de tinta
+  CONTIGUAS en la columna — una ventana de ±16 px llego a dar una distancia negativa.
 
-- **[EL SERVICE WORKER SIRVE `.jsx` CACHEADOS, Y SE RE-REGISTRA EN CADA CARGA]** La
-  trampa de s139, pagada cuatro veces seguidas: llegue a diagnosticar «el efecto no
-  se ejecuta nunca» sobre una version que el navegador **ni habia cargado**.
-  Purgarlo una vez no basta -- vuelve en la siguiente navegacion.
+- **[EL AIRE DEL ARO NO DESPEJABA LO QUE HAY QUE DESPEJAR]** Eran 6 px fijos, pero
+  lo que se para en el cabo no es el trazo: es **el halo de la bola guia**, r=1,7 en
+  un viewBox de 100, o sea 0,017 D = **7,1 px**. Se metia 1,2 px dentro de la
+  tarjeta y el usuario lo vio al primer bloque. Ahora es 0,030 D y **el aserto es
+  relacional al halo**, no un numero.
 
-- **[EL PERFIL DE LUZ SE MIDE SOBRE EL MISMO FOTOGRAMA]** Restar «sesion apagada»
-  contra «sesion al 50 %» mide tambien digitos, CTA y arco: picos de **211** en la
-  banda del numero. Con el reloj congelado y apagando solo `[data-pace-sun]`, lo
-  que queda es la luz y nada mas. Es el instrumento que decidio los tres bordes.
+- **[LA MUSICA ESTABA BLOQUEADA POR UNA DESCRIPCION EQUIVOCADA DEL VECINO]** Los
+  briefs y s177 se contradecian sobre la misma banda, y no habia forma de elegir
+  hasta mirar el codigo del competidor: `breathe.inhale/exhale` llaman a
+  `breathNoise()` —ruido blanco por un paso-bajo que barre 200→800 Hz—, `breathe.hold`
+  **no existe**, y las combinaciones del producto son senal · voz · voz+musica, o sea
+  **con musica esa senal no suena**. Solo compite la locucion, y el **35,9 % del
+  ciclo** de media (15 % en Kumbhaka, 72 % en Rondas). La separacion pasa a ser por
+  COMPORTAMIENTO y por el tramo alto. **Y salio un segundo conflicto que la
+  auditoria de s183 no habia visto**: cinco prompts pedian «a sustained low G» — la
+  pieza que s177 midio inaudible. La raiz puede ser grave; el TIMBRE no.
 
-- **[LA REVISION ENCONTRO TRES DEFECTOS QUE LA SUITE NO PODIA VER]** Y ese es el
-  resumen de la sesion. Con 191 tests en verde, `verify` limpio y todo medido, el
-  usuario probo la app y salieron: un arco que **tardaba ~2,2 min en verse**, una
-  **linea de corte** en el halo, y un aro que debia bajar hasta el canto de las
-  tarjetas. Ninguno era una regresion: los tres eran decisiones mias que solo se
-  juzgan mirando. **La revision a tamano real sigue siendo el detector que manda**
-  (s147), y la red esta para que lo que se arregla no vuelva.
+- **[UN QUIEBRE DE PENDIENTE SE VE COMO UN BORDE, Y UN CANTO PLANO TAMBIEN]** Tres
+  rampas y las dos primeras eran el mismo problema: recta → CODO visible; S larga →
+  apaga el nucleo (0,505-0,528 D, pegado al trazo); S corta → canto plano sobre un
+  halo redondo. Ninguna podia ganar **porque la corona no cabia**. La salida no fue
+  otra curva: fue **darle sitio**, y comprobar antes por que lado esta topado el aro.
 
-- **[UNA SOLA NIEBLA PARA DOS COSAS QUE NO SON LA MISMA]** El arco nace EN el corte,
-  justo donde la mascara vale cero, asi que ponerle encima la niebla larga (0,14 D)
-  le costaba **~2,2 min** de un bloque de 25. El reparto correcto ya estaba escrito
-  en `tokens.css` desde s158 —**«Arco = informacion; halo = ambiente»**— y no lo
-  aplique. Ahora son dos capas: la pista se disuelve, el recorrido solo se remata.
-  **Leccion**: cuando un mecanismo sirve a dos cosas con contratos distintos, el
-  numero unico no es simplicidad, es una de las dos mal servida.
+- **[REPRODUJE EL DEFECTO DE s160/s162, UN NODO MAS AFUERA]** Mi margen del halo es
+  proporcional a D, o sea depende de lo que el motor escribe, y con reduced-motion se
+  convertia en transicion: el aro convergia a **381 con reduced-motion y 379 sin el**.
+  Lo cazo la tolerancia de 1 px que dejo s162. **Todo estilo que consuma un token del
+  motor entra en la lista de exenciones**, tambien los envoltorios.
 
-- **[UN QUIEBRE DE PENDIENTE SE VE COMO UN BORDE]** La «linea de corte» de arriba no
-  era un corte: era el CODO donde mi rampa pasaba de una pendiente a otra cuatro
-  veces menor. El propio archivo lo tenia escrito tres bloques mas arriba, en el
-  porque de que el limbo lleve **once** paradas y no cinco. Con una S de seis
-  paradas desaparece — y de paso pesa MAS en el tramo medio, que era la otra mitad
-  de la queja («demasiado difusa»).
+- **[LA RESTAURACION DE UN MUTANTE ES UNA COPIA, NO UN `git checkout`]** Mi guion
+  de calibrado restauraba con `git checkout -- <archivos>`, y los mutantes se
+  aplican sobre la FUENTE: la primera restauracion se llevo por delante **todo el
+  trabajo sin commitear** de `_responsive.atmosfera.js`, `_responsive.js` y
+  `home-geometry.js` -- el bloom, la curva del techo, el aire del cabo y la
+  exencion. `git checkout` restaura al ultimo COMMIT, no al estado previo a la
+  mutacion, y esos dos solo coinciden si no hay nada pendiente, que es lo que
+  nunca pasa a mitad de sesion. Se recupero entero desde el transcript y se
+  verifico contra las cuentas de lineas y el `diff --stat` anteriores. **La forma
+  correcta es `cp` antes y `cp` despues.**
 
-- **[UN TOKEN QUE SIRVE A DOS PREGUNTAS HAY QUE PARTIRLO, NO MOVERLO]** Bajar el aro
-  hasta las tarjetas parecia cambiar un numero, y no: `--pace-horizon` **tambien
-  mueve el layout** (las dos pieles lo usan como margin-top negativo, y
-  `SuggestedPathCard` igual), asi que bajarlo habria bajado las tarjetas con el aro.
-  Nace `--pace-corte`. **La garantia de s156 no se pierde, cambia de forma**: el
-  motor lo calcula restandole al MISMO solapamiento la banda del rotulo, que MIDE.
-  Una fuente, dos consumidores.
+- **[UN MUTANTE DE TEMPORIZACION SE CALIBRA CON EL SPEC ENTERO, NO CON `-g`]** El
+  de la exencion del margen del halo pasa **6 de 6** corriendo su test solo, y
+  muerde **a la primera** con el archivo entero y los workers en paralelo: en
+  aislamiento el frame que llega tarde llega a tiempo igual. Es la condicion que
+  s162 llamo «rojo intermitente», y ahora se sabe cual es.
 
-- **[UN CUSTOM PROPERTY SIN REGISTRAR NO SE COMPUTA]** Con la resta escrita en CSS,
-  `--pace-corte` valia el TEXTO `max(4px, calc(67px - 32px - 6px))`: `parseFloat` da
-  NaN y el aro se quedo dando la vuelta entera. Es **el mismo modo de fallo** que el
-  del arranque de arriba —una lectura que no puede decidir— por otra causa. Lo
-  publica el motor ya en px, como los otros dos.
+- **[LA MAQUETA DE REVISION VOLVIO A RECORTAR]** Le puse scroll por figura creyendo
+  que bastaba, y **una barra de scroll no es enseñar la captura**: de 1536 px para
+  arriba se veian cortadas. Es literalmente el defecto de s182, y la leccion estaba
+  escrita en el archivo que yo mismo acababa de escribir. La revision se enseña
+  **encajada al ancho, con la escala rotulada y un 1:1 al lado**.
 
-- **[«RESPONSIVE OK» NO ES «SE APLICO»]** Un script imprimio su mensaje de exito y yo
-  no verifique el reemplazo: la regla de la mascara de la pista **nunca se anadio**,
-  y la pista llevo la niebla del arco durante dos rondas de capturas mientras yo
-  describia lo contrario. Lo cazo un aserto que hubo que escribir **despues** de que
-  su mutante saliera verde.
-
-- **[LO QUE ESTA SESION NO CUBRE, DICHO]** Caminos no se toca (su aro va por
-  `ticks`, sin arco ni horizonte). Los estilos `barra` y `analogico` no pasan por
-  `TimerDial`. El perfil de la luz en **movil** lo mide el banco, no la suite. Las
-  dos nieblas se calibraron a 1280x800 y en movil se juzgaron **mirando**. Que un
-  degradado tenga un codo visible **no lo caza ningun aserto** — se intento y sale
-  verde. Y el aro pasa por detras de las tarjetas, pero **no se comprueba que hay en
-  los HUECOS** entre ellas a cada ancho: el cabo cae dentro de una tarjeta en los
-  cuatro viewports medidos, y en otros podria caer en un hueco.
+- **[LO QUE ESTA SESION NO CUBRE, DICHO]** A **1366x610** el aro esta limitado por
+  ALTURA, se come el margen del halo y quedan 5,3 px sobre ACTIVIDADES: reservarle
+  holgura al motor seria meterse en el bucle de «encoger hasta caber», y no se ha
+  hecho. **Movil**: la revision es de escritorio; sus numeros salen del banco. La
+  regla de no-scroll **solo se vigila en escritorio**, que es donde se pidio. Y que
+  un degradado tenga un CODO o un canto plano **no lo caza ningun aserto**: los tres
+  intentos del halo los distinguio el usuario mirando, no la suite.
 
 ---
 
@@ -303,6 +310,9 @@
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **EN ESCRITORIO LA HOME NO HACE SCROLL VERTICAL, NUNCA -- y una DECORACION puede romperlo sin que lo vea nadie** (s185)
+- **El aire del aro se mide contra el HALO DE LA BOLA, y las distancias del numero contra la TINTA -- no contra las cajas** (s185)
+- **La musica de Respira se disena contra la VOZ, y se separa por COMPORTAMIENTO y por el tramo alto -- nunca por el medio** (s185)
 - **El corte del aro NO es el horizonte: baja hasta el canto de las tarjetas, y se derivan de la misma fuente** (s184)
 - **La PISTA y el ARCO no pueden llevar la misma niebla: uno es ambiente y el otro informacion** (s184)
 - **El recorrido del aro es el TRAMO VISIBLE, y su angulo se MIDE del horizonte -- nunca se escribe** (s184)

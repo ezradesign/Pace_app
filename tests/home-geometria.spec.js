@@ -132,11 +132,82 @@ test.describe('geometria de la home · recorte y solapamiento', () => {
       expect(m.chip, 'GUARD: no hay tarjetas de Actividades contra las que medir').not.toBeNull();
       expect(m.recorte, 'el corte del aro no baja del horizonte: sigue cortandose en el rotulo')
         .toBeLessThan(solape);
+      /* EL AIRE SE MIDE CONTRA EL HALO DE LA BOLA, no contra un numero escrito
+         (s185). Lo que tiene que caber ahi no es el trazo del aro: es el halo de
+         la bola guia, que al empezar la sesion se para justo en el cabo y mide
+         r=1,7 en un viewBox de 100, o sea **0,017 D**. Con los 6 px fijos de
+         s184 se metia 1,2 px DENTRO de la tarjeta y el usuario lo vio al primer
+         bloque. Los dos limites son proporcionales para que sigan valiendo en
+         cualquier aro: el halo entero fuera, y el cabo lo bastante cerca como
+         para que siga leyendose que el aro llega a las tarjetas. */
       const cabo = m.dial.bottom - m.recorte;
-      expect(cabo, 'el cabo del aro asoma por debajo del canto de las tarjetas')
-        .toBeLessThanOrEqual(m.chip.top);
+      const D = px(m.D);
+      const halo = 0.017 * D;
+      expect(m.chip.top - cabo, 'el halo de la bola guia toca las tarjetas')
+        .toBeGreaterThan(halo);
       expect(m.chip.top - cabo, 'el cabo del aro se queda demasiado lejos del canto de las tarjetas')
-        .toBeLessThanOrEqual(12);
+        .toBeLessThanOrEqual(0.05 * D);
+    });
+  }
+});
+
+/* EN ESCRITORIO LA HOME NO HACE SCROLL VERTICAL. NUNCA (s185).
+ *
+ * Regla del usuario, dicha con esas palabras, y hasta s185 no la vigilaba nadie:
+ * lo publicado hacia **15 px** de scroll a 1536x864, y no lo veia ni el motor ni
+ * la suite. El motor porque mide el STACK (s156, y con razon: `scrollHeight` es
+ * la envolvente de toda decoracion absoluta), y el stack SI cabia. La suite
+ * porque `home-luz.spec.js` compara la luz encendida contra apagada, y el
+ * desborde era **identico en los dos estados** -- la opacidad no quita layout.
+ *
+ * Lo que sobraba era la caja del BLOOM: acababa en cy + 0,909 D y el hueco real
+ * mas estrecho es 0,852 D (a 1536x864), asi que no cabia por 30 px. El scroll
+ * medido eran 29. La premisa que lo permitia estaba escrita en
+ * `_responsive.atmosfera.js` -- «0,96 D en el peor breakpoint»-- y se habia
+ * tomado en cuatro breakpoints sin el peor.
+ *
+ * SE MIDE MOVIENDO `scrollTop`, no restando `scrollHeight`: la resta da falsos
+ * positivos con cualquier capa absoluta, que es justo por lo que el motor dejo
+ * de usarla. Si se puede arrastrar, hay scroll; si no, no lo hay.
+ *
+ * LOS DOS ESTADOS, porque el defecto no dependia de la sesion: en reposo y con
+ * la luz encendida. Y los cuatro viewports son los que el banco de s185 midio
+ * como criticos -- 1536x864 y 1600x900 fallaban, los otros dos son control. */
+test.describe('la home de escritorio no hace scroll vertical', () => {
+  for (const vista of [
+    { width: 1536, height: 864 }, { width: 1600, height: 900 },
+    { width: 1280, height: 800 }, { width: 1920, height: 1080 },
+  ]) {
+    test('ni parada ni con sesion · ' + vista.width + 'x' + vista.height, async ({ page, context }) => {
+      await page.setViewportSize(vista);
+      await sembrar(context);
+      await irAlArtefacto(page);
+      await asentarGeometria(page);
+
+      const arrastrable = () => page.evaluate(() => {
+        const b = document.querySelector('[data-pace-home-body]');
+        if (!b) return null;
+        const antes = b.scrollTop;
+        b.scrollTop = 9999;
+        const real = b.scrollTop;
+        b.scrollTop = antes;
+        return real;
+      });
+
+      const parada = await arrastrable();
+      expect(parada, 'GUARD: no existe la region de la home').not.toBeNull();
+      expect(parada, 'la home hace scroll vertical con el Pomodoro parado').toBe(0);
+
+      await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
+      /* Con la luz ENCENDIDA del todo: el fundido dura 1,6 s y la caja de la
+         decoracion existe desde el primer frame, pero se espera igual para que
+         el aserto describa el estado que la persona ve durante la sesion. */
+      await expect.poll(async () => Number(await page.evaluate(() => getComputedStyle(
+        document.querySelector('[data-pace-home-body]')).getPropertyValue('--pace-on'))),
+        { timeout: 6000 }).toBe(1);
+      await asentar(page);
+
+      expect(await arrastrable(), 'la home hace scroll vertical con la sesion viva').toBe(0);
     });
   }
 });
