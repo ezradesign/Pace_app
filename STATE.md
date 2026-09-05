@@ -10,7 +10,7 @@
 
 ---
 
-**Version actual:** v0.114.1 (s183 — **EL LOGRO QUE HABLABA EN ESPANOL, Y OCHO PREMISAS QUE YA NO ERAN**. Cierra el unico defecto medido y **publicado** que quedaba de s182: con la app en ingles la fila del ultimo logro decia «Regresas». **Sobrevivio a s167 porque entonces esa superficie no decia ningun nombre** -- pintaba cinco sellos sin texto-- y **s180 los sustituyo por UNA fila con el nombre** sin que nadie tocara i18n. Dos asertos nuevos con dos mutantes que muerden, y el de espanol sigue verde con el primero: el par no se mide a si mismo. **185 → 187.** Y la **AUDITORIA DE PREMISAS** que encargo el usuario, reutilizando los checkers de s178 y atacando la clase que aquellos declararon no poder ver. **Ocho hallazgos**, y el mas peligroso es que **la musica pide dos cosas incompatibles a la vez** -- los briefs quieren «200 Hz-3 kHz despejado» y s177 midio que eso es justo lo que hacia la pieza inaudible. `CLAUDE.md` tenia **cuatro datos falsos**, `EVENTOS_SCHEMA.md` decia «ninguna parte se ha cableado» con 1.453 lineas vivas, el troceo de >500 de la Fase 8.5 **ya estaba hecho**, y `CONTENT.md` lleva **77 versiones** de deriva. **Tanda 0 ejecutada**: cinco documentos corregidos. De Stats se decidio mucho y **no se implemento nada**.)
+**Version actual:** v0.115.0 (s184 - **EL RECORRIDO QUE SOLO PISA LO QUE SE VE**. El arco del Pomodoro deja de dar los 360 grados y recorre **exactamente el tramo visible**: nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho. **Y ese «unos 270» no se escribe, se mide** -- el ratio horizonte/D no es constante, asi que el barrido va de **~266 a ~276 grados**; medido **271,58** a 1280x800 y **271,84** a 390x844, y un 270 fijo dejaria los cabos **1,9 px** fuera del corte. **Tres defectos solo aparecieron midiendo**: mi primera version **se quedo redonda con el motor funcionando** (devolvi «360» donde la respuesta era «aun no lo se»), el cabo derecho caia **0,78 px** por debajo del izquierdo (Chrome dibuja el circulo con beziers de 297,97, no con la circunferencia de 298,451), y al redimensionar aparecia un **fantasma de color con el Pomodoro parado**. Luego, **LOS TRES BORDES** que pidio el usuario: el horizonte pasa de filo a **NIEBLA con curva**, y **el halo dejaba de pintar la fila de minutos** -- que no era precaucion, **estaba pasando**: la premisa escrita en su propio comentario («~59 px hasta la fila») era falsa, hoy hay **24,5**, y la banda recibia **57 sobre 255**. Ahora **0-1 en seis viewports**. Se retira `--pace-abre`. **Y ENTONCES EL USUARIO LO PROBO**, y salieron tres cosas que ninguna suite iba a encontrar: el arco **tardaba ~2,2 min en verse** (nace EN el corte, donde la mascara vale cero, y le habia puesto encima la niebla larga) · arriba habia una **linea de corte**, que era el CODO de mi rampa · y el aro debia bajar **hasta el canto de las tarjetas**, para que lo termine una OCLUSION y no un desvanecido en el aire. Eso obligo a separar `--pace-corte` de `--pace-horizon`, porque ese token TAMBIEN mueve el layout. Barrido final **295,8 grados**. **187 → 191**, con **9 mutantes en rojo**, uno declarado que no muerde, y dos specs nuevos.)
 
 ## Red de seguridad -- archivos vivos
 
@@ -31,7 +31,7 @@
 | `tests/biblioteca.spec.js` | **LAS TRES BIBLIOTECAS REDISEÑADAS (s174)**. 7 tests, **7 mutantes y los 7 muerden**. Todo RELACIONAL: **el catalogo se lee de las FUENTES, no de la pagina** — no se puede leer de la pagina (`EXTRA_ROUTINES` y `BREATHE_ROUTINES` son `const` y no cruzan la IIFE), y aunque se pudiera, cruzar la pantalla contra un dato de esa MISMA pantalla no prueba nada. **El reloj va congelado** con `setFixedTime`: «Para ahora» rota por DIA y sin fijarlo hay asertos que muerden un martes y no un miercoles. **Toda consulta filtra por lo VISIBLE**, que costo cuatro medidas equivocadas antes de acotarlo | **NUEVO s174 · 7 tests** |
 | `tests/transicion-biblioteca.spec.js` | **EL VUELO DE LA CAPITULAR (s174)**. 5 tests, **5 mutantes**. El que importa **no dice ninguna cifra**: compara el circulo de la preparacion con el del paso y exige que midan lo mismo **y esten en el mismo sitio** — el tamaño es una decision viva. Vuela **en las dos pieles** (el fallo de movil no lo habria cazado ningun aserto de la biblioteca), con reduced-motion **no anima y aun asi se entra**, y Respira **no se entera**. Dos asertos **pasaban por carrera** y se corrigieron: el vuelo no empieza en el clic sino un frame despues de montarse la preparacion. **Un mutante NO muerde con razon** y esta dicho: la limpieza del clon tiene dos caminos a proposito | **NUEVO s174 · 5 tests** |
 | `tests/eventos-retencion.spec.js` | **LA RETENCION POR CALENDARIO (s174)**, la de `pace.events.v1` — **`tests/retencion.spec.js` es OTRA**, la de la apnea de Respira. 4 tests, **4 mutantes**. El que importa es **«se dispara SOLA en el arranque»**: estar implementada no servia de nada. **Ningun numero de dias vive dentro** (el suelo se lee de `eventsRetentionFloorKey`). Y una leccion del calibrado: **comparar el JSON del contenedor no prueba que no se escriba** —reescribir lo mismo da la misma cadena—, asi que se espia `setItem` con control positivo en la misma prueba | **NUEVO s174 · 4 tests** |
-| `app/main/_responsive.atmosfera.js` | **EL JS QUE COMPONE LA LUZ (s163)**, cortado de `_responsive.js`. Construye como CADENAS los degradados y mascaras que la hoja interpola — halo, limbo, bloom, horizonte y las paradas de color de la hora — y **no tiene ni una regla CSS**. Publica `window.paceAtmosfera` con los **13** nombres que la hoja usa y ni uno mas: la lista se derivo de las 22 interpolaciones reales y el troceo la asertaba. Un objeto y no 13 globales a proposito. **CARGA ANTES** de `_responsive.js`, que lo desestructura en su cuerpo | **NUEVO s163 · 396 ln** |
+| `app/main/_responsive.atmosfera.js` | **EL JS QUE COMPONE LA LUZ (s163)**, cortado de `_responsive.js`. Construye como CADENAS los degradados y mascaras que la hoja interpola — halo, limbo, bloom, horizonte y las paradas de color de la hora — y **no tiene ni una regla CSS**. Publica `window.paceAtmosfera` con los nombres que la hoja usa y ni uno mas. **CARGA ANTES** de `_responsive.js`, que lo desestructura en su cuerpo. **s184: los TRES BORDES viven aqui juntos y a proposito** (`LUZ_TECHO`, `LUZ_PLENO`, `LUZ_COLA`, `NIEBLA`, `CURVA_NIEBLA`) -- el horizonte pasa de filo a niebla con curva, la rampa de arriba MUERE en vez de atenuar al 72 % (la fila de minutos recibia 57 sobre 255) y la luz se apaga 0,22 D bajo el horizonte. Sale `--pace-abre`; entran `colaLimbo` y `colaBloom`: **15 exportados** | **v0.115.0 · 485 ln** |
 | `app/main/_responsive.pieles.js` | **LAS DOS PIELES (s163)**, cortadas de `_responsive.js`: el `@media (max-width: 768px)`, el de pantallas cortas y el `@media (min-width: 769px)`. **Cero interpolaciones** (medido), asi que no lleva una linea de logica. **SE INYECTA DESPUES de `_responsive.js` Y ESO ES CONTRATO**: `--pace-skin` vale `movil` en la hoja base y `escritorio` aqui, las dos veces sobre `:root` — misma especificidad, gana la de despues. Al reves, la home de escritorio se cree movil y `main.jsx` (s160) renderiza el orden de lectura equivocado | **s163 · s169 · 478 ln** |
 | `app/motion.css` | **EL COMPORTAMIENTO (s163)**, cortado de `tokens.css`, que se queda con los VALORES. Aqui viven el cruce entre paletas (s161, con sus `@property` y los dos atributos del fundido), el kill de `prefers-reduced-motion` y los dos packs de microinteracciones de s99. **Su `<link>` va entre `tokens.css` y `paths/paths.css`**: aquella declara `[data-pace-reveal] > *` y esta lo anula por ORDEN | **NUEVO s163 · 400 ln** |
 | `app/state-core.palette.jsx` | **COMO LA PALETA LLEGA AL DOM (s163)**, extraido de `state-core.jsx`: `applyTheme` y los dos marcadores del cruce (`data-pace-palette-ready`, `data-pace-palette-crossing`, s161). **El estado entra por PARAMETRO** — carga ANTES de `state-core.jsx` porque `applyTheme(_state)` se llama en el CUERPO de aquel, y alli todavia no existe ni `_state` ni `getState`. Las REGLAS que consumen esos atributos viven en `app/motion.css` | **NUEVO s163 · 107 ln** |
@@ -55,8 +55,10 @@
 | `playwright.config.js` | **Configuracion de la suite E2E (s154)**. Levanta `.claude/static-server.js` como `webServer` y apunta a **`/index.html`** explicito (el servidor mapea `/` a `PACE.html`, el entry de DESARROLLO). Fija a proposito **`locale: es-ES`** (los textos asertados son los espanoles; `detectInitialLang` los elige), `timezoneId`, **`colorScheme: light`** (o la prueba de paleta no tendria de donde salir) y **viewport 1280x720**. **`retries: 0`**: un test que solo pasa al segundo intento esta diciendo algo. Sin `devices[...]`, que puede traer un `channel` exigiendo un Chrome del sistema | **NUEVO s154** |
 | `tests/helpers.js` | Utilidades compartidas de la suite. **Tres trampas medidas viven documentadas aqui**: (1) la semilla de `firstSeen` se escribe **SOLO SI FALTA**, porque `addInitScript` corre en CADA navegacion y a secas machaca el estado en los `reload()`; (2) los matchers comparan **`textContent`**, no lo que se ve — `innerText` trae el `text-transform` de CSS aplicado; (3) contar sellos exige **acotar a `[data-pace-modal-backdrop]`** (s152), y por eso el contador ofrece las dos cuentas: para poder asertar la diferencia | **NUEVO s154** |
 | `tests/eventos.spec.js` | **12 tests de `pace.events.v1` (s155)**. Defienden promesas escritas en una pagina **PUBLICA** (`privacy.html`) y en el diseño: activacion **idempotente** (si `activatedAt` se moviera, cada arranque recapturaria el baseline y **contaria de mas**) · **cero peticiones fuera del origen** mientras opera el contenedor, medido en el **cable** · la **lista permitida** del payload descartando `notaLibre`/`ip`/ruta de archivo · `reset` y el **«Borrar todos mis datos» de Ajustes** borrando los DOS almacenes · un **backup antiguo** reiniciando el contenedor por la UI real · `replaceFromImport` dejando **1 y no 7** · seis snapshots invalidos rechazados con el contenedor **byte a byte** igual · **DOS pestañas de verdad** emitiendo a la vez sin perder un evento (el **P0** del diseño) · marcador y **recuperacion idempotente** | **s155 · v0.88.1** |
+| `tests/aro-recorrido.spec.js` | **EL RECORRIDO DEL ARO (s184)**. 3 tests, **4 mutantes y los 4 muerden**. El aserto del barrido **no compara contra 270**: deriva el angulo esperado de la MASCARA del horizonte -- camino independiente del que recorre el componente, que lee la custom property-- y exige 0,2 grados de tolerancia. Mide **por los dos lados** (la leccion de s179: el cabo izquierdo esta donde esta tambien con el arco entero; el que distingue es el derecho) y su simetria. Con la sesion viva comprueba que a mitad de bloque la punta cae en las **12** -- el mutante «sin giro» la deja a 136 grados-- y que el punto guia recorre el MISMO barrido. **El angulo del punto se lee del ATRIBUTO**: su grupo lleva una transicion de 1 s y `page.clock` no mueve las transiciones CSS, asi que su rectangulo tras un `fastForward` da 139 px de diferencia con la app intacta. **Declara que NO cubre Caminos** | **NUEVO s184 · 3 tests** |
+| `tests/home-luz-bordes.spec.js` | **DONDE ACABAN LA LUZ Y EL ANILLO (s184)**, cortado de `home-luz.spec.js` por DOMINIO. 3 tests, **3 mutantes**. Se lleva `perfilDeLuz`, que no usa nadie mas: dos capturas del **MISMO fotograma** con el reloj congelado apagando solo `[data-pace-sun]` -- restar «apagada» contra «al 50 %» mide tambien digitos, CTA y arco, con picos de 211 en la banda del numero. El aserto de la fila de minutos es **RELACIONAL** (fraccion de la luz pegada al aro) con guard por arriba, para que un halo apagado del todo no lo pase con matricula. **El aserto de la cola SI se pone rojo**, cuando su version anterior declaraba por escrito que no se habia conseguido: el contrato cambio de «distinguir dos intensidades» a «distinguir algo de nada» | **NUEVO s184 · 3 tests** |
 | `tests/home.helpers.js` | **Utilidades compartidas de la home (s159)**: la semilla del Camino en curso, la sonda unica de geometria, el parser de px y la espera a que la home se asiente. Extraidas al partir `home-geometria.spec.js`, que habia llegado a **631 lineas** — **ni una linea de cuerpo cambio**. **s160: nace `asentarGeometria()`**, que espera a que `--pace-timer-d` **repita valor tres frames seguidos** — el motor converge en varias pasadas y con la suite en 8 workers no le caben en dos frames (medido: el aro leido a destiempo daba **420 px**, su valor de PARTIDA). **NO se mete dentro de `asentar`** a proposito: lo llaman veinte sitios, algunos con `page.clock` instalado, y ahi rAF **solo corre cuando el reloj avanza** | **s160** |
-| `tests/home-luz.spec.js` | **El CONTRATO de la atmosfera (s158, extraido en s159)**: cuando existe, de donde saca el color, que no toca la geometria y que se apaga sola. **s159 suma el alcance de la cola**, el unico aserto que mira PIXELES — y declara lo que no puede medir: halo y cola son un campo continuo, y separarlos por bandas de filas no funciona (Actividades **sube sobre el aro** por el solapamiento, y los chips opacos se comen las filas cercanas). Ese aserto **no se ha conseguido poner rojo**, y se dice | **NUEVO s159** |
+| `tests/home-luz.spec.js` | **El CONTRATO de la atmosfera (s158, extraido en s159)**: cuando existe, de donde saca el color, que no toca la geometria y que se apaga sola. **s184: los tres asertos de BORDES salen a `home-luz-bordes.spec.js`** al llegar este archivo a 581 lineas (581 → 322), y con ellos `perfilDeLuz`, que era su instrumento. El aserto del horizonte se reescribio: de «corta en seco» a «es niebla, muere en la linea, y no depende de la sesion» | **v0.115.0 · 322 ln** |
 | `tests/home-luz-curva.spec.js` | **La FORMA de la luz en el tiempo (s159)**: pico en la mitad, meseta 45-55 %, la hora con el mediodia centrado, el enfriamiento sin repunte y el maximo de calor centrado. **El calor se mide por el eje `b` de OKLab**, que es lo que el navegador ya devuelve —`--pace-luz` esta registrado con `@property`, asi que su valor computado llega como `oklab(L a b / alfa)`— y la presencia como alfa × envolvente × **distancia OKLab al papel**: la version con `max(0, L − L del papel)` es un modelo de papel OSCURO y en la paleta clara valia **cero en las diez paradas**, con el bucle comparando ceros. **Declara que no aserta la monotonia de la presencia compuesta en dia**, medida y presentada pero no compensada | **NUEVO s159** |
 | `tests/home-geometria.spec.js` | **20 tests de la geometria de la home (s156, +6 en s159)**. Defienden que el motor gobierne **con y sin tarjeta de Camino** (estado real: un Camino en curso, sembrado, **nunca borrando nodos**), que se recupere al salir **sin resize ni evento manual**, que recorte y solapamiento **no puedan** desincronizarse, el orden VISUAL de las dos pieles, 320 px sin desborde, la atmosfera por **atributo estable** y reduced-motion. La de «el contador no despierta al observador» se prueba **sin instrumentar el codigo**: instala un MutationObserver con la MISMA configuracion sobre la MISMA raiz. **NO aserta el orden del DOM** a proposito — es deuda de a11y conocida y consagrarla la volveria intocable | **NUEVO s156** |
 | `tests/*.spec.js` | **13 tests**: `artefacto` (es el compilado, consola limpia, precache real ↔ declarado) · `onboarding` (con estado limpio arranca AHI, y montado **detras** de la home en el DOM — la trampa de s153, convertida en aserto) · `checklist-foco` (Pomodoro con **reloj virtual** hasta el BreakMenu) · `checklist-cuerpo` (Respira + **modal de seguridad de apnea** + Mueve) · `checklist-estado` (Hidratate, Logros con toast, Tweaks, persistencia). **Al anadir un aserto: se pone ROJO a proposito** y se comprueba que muerde — `getByRole({name})` casa por **SUBCADENA**, asi que sin `exact: true` un renombrado sigue pasando | **NUEVO s154** |
@@ -132,7 +134,7 @@
 | `app/main.jsx` | Orquestador: shell + modales + sesiones + overlays. **s160: el stack de la home renderiza el orden canonico POR PIEL**, leyendo `--pace-skin` del estilo computado (no un tercer `matchMedia` con el 769 escrito otra vez) y con **`key` estable** en los tres bloques, porque sin ella React reconcilia por posicion y **remonta** tarjeta y ActivityBar al cruzar el breakpoint | **s160** |
 | `app/focus/FocusTimer.jsx` | Modulo Foco (pomodoro). **s159: publica los CINCO mandos de la luz** en `[data-pace-home-body]` — `--pace-k` (la hora), `--pace-i` (la envolvente), `--pace-on` (interruptor), `--pace-pausado` (la pausa) y `--pace-arco` (el tono del recorrido, para que la cola lo herede). Aqui no se dibuja nada: son derivadas presentacionales de `progress` y `status`. **La PROFUNDIDAD de la pausa no se publica**, solo el interruptor: cuanto se recoge la luz es un valor por PALETA (`--sun-pausa`) y las paletas viven en CSS | **v0.90.0** |
 | `app/focus/useCountdown.jsx` | Motor de cuenta atras timestamp-based compartido (FocusTimer home +… | **v0.47.0** |
-| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep) | **v0.73.0** |
+| `app/ui/TimerDial.jsx` | Anillo circular compartido (FocusTimer + PathFocusStep). **s184: en la home el recorrido es el TRAMO VISIBLE, no los 360**, y **pista y arco van en CAPAS SEPARADAS** porque no pueden llevar la misma niebla — el arco nace EN el corte y con la larga tardaba ~2,2 min en verse. -- nace en el cruce izquierdo del horizonte, sube por las 12 y muere en el derecho, y el angulo lo MIDE de `--pace-dial-d` y `--pace-horizon` (`asin((D/2-H)/0,475D)`), porque el ratio no es constante: **266-276 grados** segun el breakpoint. La medida devuelve `null` cuando no puede decidir -- devolver «360» congelo el aro redondo con el motor funcionando-- y la dispara un `MutationObserver` sobre el `style` de `<html>`. `pathLength=360` deja el trazo en grados y quita **0,78 px** de asimetria entre cabos. El `key` del arco cuelga del barrido: la geometria no se transiciona. **Caminos va por `ticks` y no cambia** | **v0.115.0** |
 | `app/breakmenu/BreakMenu.jsx` | Menu post-Pomodoro | **v0.73.0** |
 | `app/achievements/Achievements.jsx` | UI pura del catalogo (modal + `Seal` + **`renderGlyph`, unico resolutor de glifo de logro**: mascara -> SVG -> caracter). El sello se ancla ARRIBA en la tarjeta (s147) | **v0.80.0** |
 | `app/achievements/catalog.js` | ACHIEVEMENT_CATALOG (**96** entradas) + CAT_META (7 categorias) + IMPLEMENTED (**88**) + la regla de denominador unico de §15.4 | **v0.79.1** |
@@ -199,432 +201,98 @@
 
 ## Ultima sesion -- lo que sigue vivo
 
-> s183 cierra el defecto arrastrado de s182 y entrega la **auditoria de premisas**
-> que pidio el usuario. Publica **v0.114.1**. Suite **185 → 187**, `verify` en
-> verde, CI de v0.114.0 comprobado y **verde**.
+> s184 recorta el arco del Pomodoro al tramo visible, lo baja hasta el canto de las
+> tarjetas y suaviza los bordes de la luz. Publica **v0.115.0**. Suite **187 → 191**,
+> `verify` en verde, artefacto regenerado. **La mitad del trabajo salio de la
+> revision del usuario, no del encargo inicial.**
 >
-> Diario: [session-183](./docs/sessions/session-183-auditoria-de-premisas.md) ·
-> Auditoria: [`audit-premisas-v0.114.0.md`](./docs/audits/audit-premisas-v0.114.0.md)
+> Diario: [session-184](./docs/sessions/session-184-el-recorrido-visible.md)
 
-- **[EL HUECO DE i18n QUE ABRIO UN REDISENIO, NO UN DESCUIDO]** `achMini()` devolvia
-  `a.title` crudo. s167 enruto por `tR()` las dos superficies que **entonces**
-  decian el nombre de un logro -- panel y toast-- y la sidebar no lo decia:
-  pintaba cinco sellos **sin texto**. **s180 los sustituyo por UNA fila con el
-  nombre** y el hueco se abrio sin tocar i18n. Leccion: **un redisenio puede
-  reabrir un defecto cerrado sin pasar por su archivo**. Ahora `achMini(id, tR)`
-  recibe la funcion por parametro, porque es una funcion suelta y no puede llamar
-  a `useT()`.
+- **[«NO LO SE» NO ES «360»: UNA MEDIDA TIENE TRES RESPUESTAS]** El defecto mas
+  reutilizable de la sesion, y era mio. La primera version del barrido devolvia
+  «vuelta entera» cuando `--pace-horizon` aun no resolvia -- caso del ARRANQUE--, y
+  como el marco ya tenia sus 420 px definitivos **el `ResizeObserver` no volvia a
+  disparar nunca**: el aro se quedaba redondo con toda la maquinaria nueva
+  funcionando. Un valor por defecto plausible **congela el estado en silencio**. La
+  forma correcta: `null` cuando no se puede decidir, y el disparador puesto donde
+  el motor **escribe** (`MutationObserver` sobre el `style` de `<html>`), no donde
+  se espera que algo cambie de tamano.
 
-- **[UN ASERTO EN VERDE SOBRE EL ESTADO VACIO NO DICE NADA]** El hallazgo mas
-  reutilizable de la auditoria. `tests/stats-pestanas.spec.js` siembra la
-  **nada**, asi que su verde no dice nada del panel con datos: medido a 1536x714
-  con un anio sembrado, «Semana» **se corta 33 px** -- lo causa la linea de
-  retencion de s166, que solo ve quien practica apnea-- y «Caminos» de **60 a
-  146** segun cuantos haya. A 1920x1080 no se corta, pero las cuatro pestanias
-  dejan de medir lo mismo: **59,5 px de salto**, justo lo que s176 quito.
+- **[UNA PREMISA ESCRITA AL LADO DEL CODIGO QUE GOBIERNA PUEDE SER FALSA]** La
+  rampa superior del limbo decia «por encima del aro solo hay ~59 px hasta la fila
+  de minutos» y por eso solo ATENUABA. Hoy hay **24,5 px**, el limbo muere **64 px**
+  pasado el aro, y la fila recibia **57 sobre 255**. Es la misma clase que la
+  auditoria de s183: un comentario que fue cierto y dejo de serlo sin que nadie
+  pasara por su archivo. **La cifra estaba escrita; lo que faltaba era volver a
+  medirla.**
 
-- **[LA MUSICA PIDE DOS COSAS INCOMPATIBLES A LA VEZ]** El hallazgo mas peligroso,
-  porque alimenta a un generador. `MUSICA_RESPIRA_BRIEFS.md` exige «rango medio
-  despejado (≈200 Hz-3 kHz sin nada denso)» en **cinco de sus seis prompts**, y la
-  decision de s177 que GOBIERNA exige lo contrario -- «el grueso de la energia
-  entre 200 Hz y 2 kHz»-- porque **midio que aquella restriccion era la causa** de
-  que la pieza no sonara (82,6 % de la energia bajo 200 Hz, 0 % sobre 2 kHz). **No
-  es que falte anadir un requisito: hay dos vivos y se excluyen.** Generar musica
-  antes de resolverlo es tirar el trabajo.
+- **[UN MUTANTE PUEDE MENTIR EN VERDE]** La hoja declara la mascara DOS veces,
+  `-webkit-mask-image` y `mask-image`. Mutar solo la primera no cambia un pixel en
+  Chrome, que usa la segunda, y el mutante salio verde **dos pasadas seguidas**
+  pareciendo que el aserto no servia. Antes de declarar «este aserto no se pone
+  rojo», comprobar que el mutante LLEGA al artefacto.
 
-- **[`CLAUDE.md` MINTIO POR TERCERA VEZ SOBRE EL MISMO PARRAFO]** s176 corrigio los
-  ids y **cruzo las rutas**; s178 arreglo las rutas y **el troceo de aquel mismo
-  dia** saco el dato de Estira de `ExtraModule.jsx`, asi que la tabla volvio a
-  apuntar a un archivo sin dato. Corregido en s183, con la historia escrita dentro
-  para que la cuarta vez se note. Ademas: el arbol de `app/` listaba **14**
-  carpetas y hay **19**, `WeeklyStats.jsx` **no existe**, y decia «65 tests, ~25 s»
-  cuando son **187 y 3,1 min**.
+- **[EL SERVICE WORKER SIRVE `.jsx` CACHEADOS, Y SE RE-REGISTRA EN CADA CARGA]** La
+  trampa de s139, pagada cuatro veces seguidas: llegue a diagnosticar «el efecto no
+  se ejecuta nunca» sobre una version que el navegador **ni habia cargado**.
+  Purgarlo una vez no basta -- vuelve en la siguiente navegacion.
 
-- **[TRABAJO QUE YA NO HAY QUE HACER, Y NADIE LO SABIA]** La vinieta «trocear lo que
-  pasa de 500 lineas» de la Fase 8.5 esta **hecha**: `tokens.css` 613 → **322**,
-  `exercise-glyphs.jsx` 513 → **261**, `Sidebar.jsx` 510 → **318**, y de **239
-  archivos ninguno pasa de 500**. Cayo sola, por el trinquete que s162 metio en el
-  `verify`. Un plan que no se re-mide acumula tareas fantasma.
+- **[EL PERFIL DE LUZ SE MIDE SOBRE EL MISMO FOTOGRAMA]** Restar «sesion apagada»
+  contra «sesion al 50 %» mide tambien digitos, CTA y arco: picos de **211** en la
+  banda del numero. Con el reloj congelado y apagando solo `[data-pace-sun]`, lo
+  que queda es la luz y nada mas. Es el instrumento que decidio los tres bordes.
 
-- **[DE STATS SE DECIDIO MUCHO Y NO SE IMPLEMENTO NADA, Y SE DICE]** Cinco vueltas
-  de maqueta. Cerrado: **«Hoy» NO entra** («ya esta en la sidebar»), lo que **anula
-  el §4.1 y el §37.4** de `STATS_DESTINO_PROPUESTA.md` · **la vista no se rehace**
-  (se tiraron tres redisenios completos ya pintados) · la barra es **cinta
-  escalonada** · el dia es **un arco por tipo de jornada con relleno** · **los
-  Caminos no entran de momento**. El defecto de la barra actual, nombrado: **el
-  valor va en el GROSOR de la linea**. Lo que falta es que el disenio convenza.
+- **[LA REVISION ENCONTRO TRES DEFECTOS QUE LA SUITE NO PODIA VER]** Y ese es el
+  resumen de la sesion. Con 191 tests en verde, `verify` limpio y todo medido, el
+  usuario probo la app y salieron: un arco que **tardaba ~2,2 min en verse**, una
+  **linea de corte** en el halo, y un aro que debia bajar hasta el canto de las
+  tarjetas. Ninguno era una regresion: los tres eran decisiones mias que solo se
+  juzgan mirando. **La revision a tamano real sigue siendo el detector que manda**
+  (s147), y la red esta para que lo que se arregla no vuelva.
 
-- **[MI PROPIA MAQUETA PROPONIA EL DEFECTO QUE DENUNCIABA]** La primera «Semana»
-  media **432 px** sobre un suelo de 385. Y el banco volvio a fotografiar una
-  animacion a medias: «Semana» a **1192,3** de ancho donde las otras daban 1240 --
-  el **96 % exacto** del `scale(.96)` de entrada. **Una tabla que se contradice a
-  si misma es la senial.**
+- **[UNA SOLA NIEBLA PARA DOS COSAS QUE NO SON LA MISMA]** El arco nace EN el corte,
+  justo donde la mascara vale cero, asi que ponerle encima la niebla larga (0,14 D)
+  le costaba **~2,2 min** de un bloque de 25. El reparto correcto ya estaba escrito
+  en `tokens.css` desde s158 —**«Arco = informacion; halo = ambiente»**— y no lo
+  aplique. Ahora son dos capas: la pista se disuelve, el recorrido solo se remata.
+  **Leccion**: cuando un mecanismo sirve a dos cosas con contratos distintos, el
+  numero unico no es simplicidad, es una de las dos mal servida.
 
-- **[UN NUMERO QUE OSCILA NO SE ESCRIBE COMO SI FUERA FIJO]** Cite el `verify` en
-  «18,9 s» y al re-medirlo dio **11,4**. En `CLAUDE.md` va como rango. Y mi propia
-  auditoria **cito mal una linea** -- dijo que `CONTENT.md:158` daba Estira a 14 y
-  esa linea habla de **Mueve**, donde 14 es correcto--; corregido, porque con los
-  ids cruzados una cita mal atribuida es el error que este proyecto ya ha cometido
-  tres veces.
+- **[UN QUIEBRE DE PENDIENTE SE VE COMO UN BORDE]** La «linea de corte» de arriba no
+  era un corte: era el CODO donde mi rampa pasaba de una pendiente a otra cuatro
+  veces menor. El propio archivo lo tenia escrito tres bloques mas arriba, en el
+  porque de que el limbo lleve **once** paradas y no cinco. Con una S de seis
+  paradas desaparece — y de paso pesa MAS en el tramo medio, que era la otra mitad
+  de la queja («demasiado difusa»).
 
-### Diferido (documentado, NO ejecutado)
+- **[UN TOKEN QUE SIRVE A DOS PREGUNTAS HAY QUE PARTIRLO, NO MOVERLO]** Bajar el aro
+  hasta las tarjetas parecia cambiar un numero, y no: `--pace-horizon` **tambien
+  mueve el layout** (las dos pieles lo usan como margin-top negativo, y
+  `SuggestedPathCard` igual), asi que bajarlo habria bajado las tarjetas con el aro.
+  Nace `--pace-corte`. **La garantia de s156 no se pierde, cambia de forma**: el
+  motor lo calcula restandole al MISMO solapamiento la banda del rotulo, que MIDE.
+  Una fuente, dos consumidores.
 
-- **[FASE 3 · `pace.events.v1`, Fase 2 del esquema] CERRADA en s172.** v0.99.1 cablo el
-  backup en las dos direcciones **antes** que el primer emisor, y v0.102.0 puso los
-  cuatro emisores. Lo que queda de la Fase 3 del PLAN es la **Fase 3 del esquema**
-  (reducers de `aggregates`, encaje con `state-history`, normalizacion P1).
-  **CORREGIDO EN s178**: esta linea decia ademas que la retencion por calendario
-  «sigue sin programar», y **lleva programada desde s174** — se dispara sola una
-  vez por arranque tras `loadState` (`app/events/events-store.js:370`), con su
-  spec en `tests/eventos-retencion.spec.js`. Dato que ahorra un susto: el
-  store **se inicializa solo** (`paceEventsBoot()` al cargar `events-store.js`), asi que
-  no hay que arrancarlo desde producto.
-- **[s169 · CERRADO, con UN hueco declarado]** Las cuatro decisiones del handoff de s168
-  están resueltas. Medidas en [`docs/HANDOFF_s169.md`](docs/HANDOFF_s169.md).
-  - ~~**A · la pill**~~ **v0.99.0** (`05a113a`) · ~~**B**~~ no pedía código ·
-    ~~**C · el encargo de glifos**~~ **v0.99.0**, y creció: decía 38 y faltaban 19.
-  - ~~**D · quitar el `apt` de los DOS caminos del CI**~~ **HECHO** (`d14d2a2`) **y
-    observado en verde**. El paso desaparece entero: con acierto de caché el job pasa de
-    **121 s a 101 s** (`Librerías de sistema` costaba 14 s en ese run) y **la varianza se
-    va con él** — era de 14 s a **10 min 49 s**. Chromium arrancó sin las fuentes CJK ni
-    cirílicas y los **92 tests pasaron**, que era el riesgo asumido.
-  - **HUECO ABIERTO, y es el arriesgado: el camino de FALLO de caché no se ha
-    ejercitado.** El run de verificación fue un **acierto**, así que
-    `npx playwright install chromium` —ya sin `--with-deps`— **nunca ha corrido**. Sólo
-    ocurre al cambiar `package-lock.json`. Se fuerza borrando la caché
-    (`gh cache delete`) y lanzando un `workflow_dispatch`: un run, reversible, la caché
-    se reconstruye sola.
-  - ~~**El cruce del encargo, a mano**~~ **HECHO**: `scripts/verify.encargo.js`, cuatro
-    comprobaciones relacionales más guard de cero, **los 7 rojos verificados**. Cierra el
-    bucle que dejó C: ahora entregar arte sin marcar la lista **pone el `verify` rojo**.
+- **[UN CUSTOM PROPERTY SIN REGISTRAR NO SE COMPUTA]** Con la resta escrita en CSS,
+  `--pace-corte` valia el TEXTO `max(4px, calc(67px - 32px - 6px))`: `parseFloat` da
+  NaN y el aro se quedo dando la vuelta entera. Es **el mismo modo de fallo** que el
+  del arranque de arriba —una lectura que no puede decidir— por otra causa. Lo
+  publica el motor ya en px, como los otros dos.
 
-- **[RED DE SEGURIDAD]** ~~tanda 1 (s150)~~ y ~~tanda 2 (s152)~~ **HECHAS y verificadas**: el
-  `verify` tiene **4 tandas** y las 26 de entonces se pusieron **rojas a propósito**. (El «32
-  comprobaciones» que decía esta línea era el censo de s152 y **ya estaba obsoleto en dos**
-  cuando s169 lo miró: s168 añadió 2 y s169 otras 4. Se retira el número en vez de
-  re-contarlo cada vez — es justo la clase de cifra que nadie mantiene.)
-  Queda:
-  - ~~**CI: GitHub Actions / YAML**~~ **HECHO en s153** — `.github/workflows/ci.yml`, un job que
-    invoca `npm run verify` tal cual y anade lo unico que el verify no puede: que el `index.html`
-    committeado sea el build de las fuentes. Probado en verde y en rojo. Queda del frente CI:
-    - ~~**Playwright**~~ **HECHO en s154** — `npm run test:e2e`, **13 tests en ~25 s** sobre
-      `index.html`, con el checklist de cierre de `CLAUDE.md` entero y el Pomodoro completado con
-      el reloj virtual. **21 rojos verificados**, restaurados byte a byte. Segundo job del CI, con
-      `needs: verify`. **Lo que la suite NO cubre y hay que mirar a mano**: movil, ingles, Caminos,
-      premium y cualquier cosa visual — **no compara ni un pixel**, no hay capturas de referencia.
-    - **Wrangler** — deploy a Cloudflare Pages. Exige secretos de la cuenta del usuario en GitHub;
-      el YAML se puede dejar escrito, pero **inerte** hasta que existan.
-    - **[s155] El `verify` gana una quinta tanda de vigilancia**: `pace.events.v1`. Cinco
-      comprobaciones RELACIONALES en `scripts/verify.eventos.js` (cero red · una fuente de verdad
-      por dominio · reset por la barrera · import por la barrera · **el gate export ↔ emisor**)
-      mas su guard de cero. **Dos de ellas defienden frases de `privacy.html`**, no invariantes
-      internos: es la primera vez que la red de seguridad protege una promesa PUBLICA.
-    - **Proteger `main`** — instrucciones exactas en `docs/WORKFLOW.md` §8, **accion del usuario**:
-      `gh` ya esta instalado y autenticado desde s161, asi que la afirmacion de la auditoria de que `main` esta
-      sin proteger **sigue SIN VERIFICAR**. Y ojo: **«exigir el check sin requerir PR» no existe**
-      — requerir status checks **bloquea el push directo**, porque el check solo puede pasar
-      DESPUES de que el commit exista. El ruleset entregado (deletions + force pushes) preserva el
-      cierre actual; el gate de verdad obliga a pasar a rama → PR → merge.
-  - **Huecos declarados del verify**, por si algún día pesan — el script los imprime en cada
-    pasada, también en verde. De la tanda 1: no cubre **orden de carga** (un nombre publicado
-    DESPUÉS pasa igual, el análisis es estático) y su lista de plataforma tiene **99 nombres**,
-    así que declarar ahí un identificador de la app lo dejaría sin vigilar. De la tanda 2: i18n
-    comprueba que la clave **exista**, no que esté traducida ni que **quepa** (s151: 85 px por
-    columna) · los catálogos se **cuentan**, no se validan (dosis, cues, pasos, acceso) · el
-    precache mira el **disco**, no el navegador · de los glifos **no se mira un píxel** · y los
-    números del `CENSO` **se suben a mano** cuando el contenido crece a propósito.
-- **[DOCS, detectado en s152, NO tocado]** La tabla de `CHANGELOG.md` tiene **~10 filas antiguas**
-  cuyo enlace `[abajo](#…)` apunta a una sección de detalle que **ya no existe** (se archivó en
-  `docs/archive/CHANGELOG_TABLA_HISTORICA.md` cuando el archivo pasó a detallar solo las 2 últimas
-  versiones). Es el mismo defecto que s152 corrigió para la fila de v0.83.0 al degradarla, pero en
-  filas históricas: `v0.32.0`, `v0.28.11`, `v0.28.10`, `v0.28.0`, `v0.27.6`, `v0.27.3`, `v0.27.2`,
-  `v0.27.1`, `v0.27.0` y `v0.26.1`. Arreglo mecánico (apuntar cada una a su diario); fuera del
-  frente de s152, que era la red de seguridad.
-- ~~**s125 — scrollbar del runner v1**~~ **RESUELTO en s125/v0.68.0** (barra oculta conservando el scroll, confinada a v1 con `:has()`). Entrada OBSOLETA detectada en el recorrido de s137; se conserva el texto por su diagnostico medido:
-  `data-pace-session-center` (`overflowY:auto`) desborda ~17px a alturas ≤~660px en pasos
-  v1 `perSide` de texto largo. NO compactar copy/glifos/tipografía → sesión corta de runner
-  responsive. **Chip de tarea creado.** (El patrón de ocultar la barra de scroll de s123
-  puede reutilizarse.)
-- **Colisión CTA↔tarjeta en estilos barra/analógico** (no-default): PRE-existente de s123
-  (el solapamiento se dimensiona para el aro; los controles de esos estilos van fuera del
-  aro). Fuera de s124.
-- **git**: `focus/FocusTimer.jsx`, `focus/FocusTimer.support.jsx`, `focus/FocusTimer.parts.jsx`
-  (nuevo), `paths/steps/PathFocusStep.jsx`, `ui/TimerDial.jsx`, `i18n/strings/sessions.js` +
-  los de bump/build (state-core, PACE.html, sw.js, PACE_standalone, index) + docs; NADA de
-  `.claude/settings.local.json`.
+- **[«RESPONSIVE OK» NO ES «SE APLICO»]** Un script imprimio su mensaje de exito y yo
+  no verifique el reemplazo: la regla de la mascara de la pista **nunca se anadio**,
+  y la pista llevo la niebla del arco durante dos rondas de capturas mientras yo
+  describia lo contrario. Lo cazo un aserto que hubo que escribir **despues** de que
+  su mutante saliera verde.
 
-### Pendiente
-
-- **[EL REMAPEO DEL ARCO — aprobado en s159 PARA SU PROPIA SESION]** El horizonte tapa
-  **94,3° del aro, o sea el 26 % del bloque con la cabeza del recorrido invisible** detras de
-  los chips. La idea es del usuario y tiene dos mitades: **(A)** que el tiempo **no se gaste**
-  en el tramo oculto —el recorrido se reparte solo por los 265,7° visibles, de modo que el arco
-  visible se llena ENTERO al terminar— y **(B)** que el tramo enterrado **sea el que tiñe la
-  cola de luz**. **(B) ya entro en s159**; **(A) se aparto a proposito**: toca el arco, los 60
-  ticks y `TimerDial`, que esta **compartido con Caminos** (alli no hay horizonte, asi que el
-  remapeo tiene que cerrarse a la home con el mismo gate que ya usa la mascara). Se monto un
-  mock en banco y el usuario lo vio. **Las cinco decisiones que hay que tomar al abrirlo**, con
-  la recomendacion de s159: (1) **la cabeza al cruzar el horizonte** — que se desvanezca al
-  entrar y aparezca al salir, no que salte 94° en un frame, que seria el mismo corte que s159
-  quito dos veces; (2) **el track** cortado tambien, coherente con el corte seco; (3) **los 60
-  ticks** remapeados igual, o dirian una cosa distinta del trazo; (4) **Caminos intacto**;
-  (5) **el numero sigue contando tiempo real** — solo cambia donde se dibuja el avance.
-- ~~**[REDUCED-MOTION — deuda de s156]**~~ **CERRADA en s160/v0.91.0 — y tenia una SEGUNDA
-  CAUSA, cerrada en s162/v0.93.0**: el mismo mecanismo un nodo mas abajo (el `margin-top`
-  negativo del horizonte no estaba en la exencion), que dejaba el aro en 420 con 11 px de
-  desbordamiento PERMANENTES en la maquina rapida. Era el rojo intermitente de la suite.
-  Lo de s160: La microcausa era que el
-  kill de `tokens.css` deja `transition-duration` en 0,01 ms sobre TODO y `transition-property`
-  vale **`all`** por defecto ⇒ cada cambio de geometria era una **transicion** y su valor
-  aterrizaba en otro frame, mientras el motor mide en la misma tarea. Arreglado con
-  `transition-property: none` en el aro y sus cuatro nodos interiores; aro **406** y solape
-  **-65** identicos con y sin reduced-motion. Fila propia en DECISIONES + aserto en la suite.
-- ~~**[A11Y — orden de foco en escritorio, deuda de s156]**~~ **CERRADA en s160/v0.91.0.** El
-  `order` del CSS reordenaba con el DOM quieto (foco: 387 → 622 → 698 → **496**). Ahora el DOM
-  lleva el orden canonico de cada piel via `--pace-skin` y con `key` estable; **el orden visual
-  no cambia ni un pixel**. Aserto nuevo: `tests/home-a11y.spec.js`.
-- **[EL TIRON DEL ARCO — ABIERTO, esperando al usuario]** Reportado en uso real: «el aro da un
-  tick por segundo», en **paceweb.pages.dev**, **Doogee Blade 20 Max + Brave**, bloque de **1
-  minuto**, y lo que salta es **el punto brillante, no el trazo**. **NO reproduce en banco**: la
-  transicion cubre el segundo entero (0 ms quieto) en v0.90.0 **y** en v0.89.0, las publicaciones
-  de s159 son 2 en 8 s y forzando 60/s la transicion **sigue corriendo**; en pixeles, la cabeza se
-  arrastra en todas las tomas. Descartados por medida: reduced-motion (su sistema tiene las
-  animaciones activadas y en su movil la luz se funde), motor (Brave = Chromium) y artefacto
-  viejo (el desplegado es **byte a byte identico**). **Siguiente paso**: el usuario corre el banco
-  de cuatro aros en su telefono; segun cual de los cuatro de tirones, la causa es la mascara de
-  s158 (mia), el `transform` por atributo SVG (previo) o el coste de la luz en su dispositivo
-  (mia: con CPU frenada 10x, **42,6 fps contra 57,4**). **Sin ese dato no se toca nada.**
-- **[PRESENCIA PUBLICA — reportado por el usuario al cerrar s139]** De las dos cosas, **la
-  primera esta RESUELTA en s151** y la segunda sigue siendo decision del usuario:
-  - ~~**`README.md` MUY desactualizado**~~ **RESUELTO en s151/v0.84.0**, y eran **DOS archivos**:
-    tambien existia un **`README_EN.md` en v0.18.0** que **seguia vendiendo «Lifetime, Pase and
-    Seasons»** —s149 corrigio la licencia solo en el espanol—. Reescritos los dos en paridad con
-    cifras medidas del arbol; de paso salieron **dos enlaces rotos** (`HANDOFF.md` y
-    `docs/porting.md`, que no existen) y una **tabla de 5 ejes de personalizacion falsa en cuatro
-    filas** (solo la Paleta tiene control). Queda VIVO de este bloque: la **landing** de la
-    estrategia premium, que es otra cosa.
-  - **Claude aparece en «Contributors»**: NINGUN commit esta AUTORIZADO por Claude —los 166 son de
-    `ezradesign`, con dos correos (personal y el `noreply` de GitHub)—. Sale de **4 commits con
-    trailer `Co-Authored-By`**: `b1118a3` (v0.34.1), `97431ea` (s97), `0ac5707` (s115) y `6acd1e2`
-    (s119), **los cuatro ANTERIORES a la decision s127** que prohibio la coautoria; desde s127 el
-    historial esta limpio. **OJO al coste**: quitarlos exige REESCRIBIR EL HISTORIAL
-    (`git filter-repo` o rebase) y **force-push**, y como el mas antiguo es de v0.34.1 cambiarian
-    los hashes de mas de 100 commits — destructivo sobre un repo ya publicado. Decision del
-    usuario: (a) dejarlo y que los 4 queden como historia, (b) reescribir y forzar el push
-    asumiendo el riesgo, o (c) reescribir solo si algun dia se hace limpieza mayor del repo.
-
-- **Diferidos de s122 (claridad de la home)**:
-  - ~~**§0 solapamiento responsive a alturas <720px**~~ **RESUELTO en s126/v0.69.0 y s128/v0.71.0** (composicion proporcional + horizonte + squeeze, y motor universal en movil). Entrada OBSOLETA detectada en s137: el aro grande fijo + la
-    tarjeta no caben sin la geometría responsive de §0 (círculo que encoge por
-    altura, safe-zones). El solapamiento «sol» de s122 va con GATE ≥760px; por
-    debajo NO se aplica. Sesión propia de §0 (círculo responsive + solapamiento
-    controlado en todos los viewports del §8).
-  - **§7**: pills «Breve/Tranquilo/Amplio» de Tweaks + estabilidad del contenedor
-    de Estadísticas entre pestañas Semana/Mes/Año.
-  - **Scrollbar del runner v1 (HALLAZGO s122)**: `data-pace-session-center`
-    (`overflowY:auto`) desborda **~17px a alturas ≤~660px** en pasos v1 `perSide`
-    de texto largo (glifo v1 escala con la altura → contenido crece con el
-    viewport; legacy NO desborda). Restricción del usuario: NO compactar
-    copy/glifos/tipografía ni ocultar el overflow → sesión corta de runner
-    responsive (`MoveSessionV1.support` / `SessionShell.responsive`; verificar
-    ready/timed/reps/perSide/descansos/DONE en 360×640, 390×660, 412×667, ES/EN).
-    **Chip de tarea creado.**
-- **Las 3 deudas de layout del runner v1 — RESUELTAS s119** (FASE A): barra de
-  scroll fantasma (curva de glifo continua + tier de banda 701–768), glifo/botones
-  sin anclar (alturas reservadas) y warning rep-pulse (`MoveSessionV1.jsx:441`,
-  shorthand→longhand). Ya NO son deuda. (NOTA s122: la barra fantasma reaparece por
-  otra vía en pasos `perSide` de texto largo ≤660px — ver diferido arriba.)
-- **Migración MECÁNICA de B2.3 CERRADA (s121)** con OLA 4 (core.plank + wall.sit).
-  **Quedan 6 rutinas legacy BLOQUEADAS por reescritura editorial / progresión
-  técnica / revisión fisio** (`atg.knees` espera la revisión de Sissy squat). **No
-  son deuda mecánica.** NO se abrirá una OLA 5 mecánica salvo que una auditoría NUEVA
-  demuestre que alguna se puede migrar sin cambiar copy, dosis, estructura,
-  lateralidad ni escalones. Las 6: `push.ladder` (negativas sin nº de reps + Pica sin
-  escalón) · `legs.single` (aritmética imposible + 3/4 avanzados) · `desk.quick`
-  (Seated twist, falta 2º lado) · `hips.ground` (Ground transitions «con manos») ·
-  `ancestral` (Ground transitions + Rib pull identidad) · `atg.knees` (editorial +
-  FISIO Sissy squat, B4). + escalón de regresión de Puente torácico (`spine.waves`,
-  s120). **s122 (claridad UX de la home) HECHA**; la migración editorial de las 6
-  legacy sigue condicionada a la validación real de la home (ver "Proxima sesion").
-  La IMPLEMENTACIÓN de eventos (EventStore + adaptadores web/Capacitor +
-  emisores; diseño `EVENTOS_SCHEMA.md` rev.5, s117) es de fases futuras, antes de
-  stats premium / licencia.
-- **Consumidor del feedback** (Pausa PACE / recomendador scoring v2 / «qué te
-  ayuda» premium): queda para su fase — hoy solo se ALMACENA (nada de
-  porcentajes ni comparaciones, decisión s116).
-- **Latente (no bloqueante, pre-existente)**: `v1GlyphSize` lee `innerHeight` en
-  render y no hay listener de resize → redimensionar EN PAUSA no recomputa el glifo
-  hasta el próximo render; con re-render fresco al mismo viewport, los pasos anclan
-  (verificado). Place↔work del MISMO paso conserva un pequeño salto (gate 56px vs
-  timer 128px) — es transición de fase, no drift entre pasos; no se reserva.
-- **Diseño pendiente**: diagramas de dos poses (los itera el usuario, regla
-  D-4; candidatos Flexiones inclinadas + Flexor de cadera).
-- **Deuda de tamaño**: `MoveSessionV1.jsx` **498 ln** (margen JUSTO — el próximo
-  añadido va a `MoveSessionV1.support.jsx`) · `MoveSessionV1.support.jsx` ~305 ln ·
-  `ExtraModule.jsx` **447 ln** (cerca del techo 500; al retomar Estira, trocear los
-  datos ANTES) · `move.data.js` **396 ln** · `SessionShell.jsx` 336 ln · `dur` en
-  pasos `reps` sigue como reserva del fallback legacy.
-- **Deuda de entorno (s112/s113/s119)**: SW dev **re-registra tras cada carga
-  fresca** → tras editar hay que desregistrar SW + limpiar caches ANTES de recargar
-  (si no, sirve código stale; confirmado en s119) · buffer de consola del pane
-  duplica y sobrevive recargas → los 4 warnings de rep-pulse que aún aparecen son
-  STALE (el compilado es longhand, imposible que React los emita) · a11y (tarjetas sin teclado,
-  onboarding sin focus trap) · «Serie X de Y» inexistente (metadatos ya
-  presentes, sin consumidor UI aún) · timer de Move sigue setInterval
-  (foreground, aceptado).
-- **[Feedback s107-cierre] aun sin rutar**: salir de un Camino a la home
-  (via tactil explicita; el «×» avanza, diseño s99) · visual Respira «Loto»
-  (PNG del usuario, falta en el repo) · laminas HQ de Caminos (re-ingesta con
-  `ingest-lamina.js`, REGLA D-4: re-MEDIR, nunca swap directo).
-- **PWA en navegador REAL** (instalacion + notificacion): sigue del usuario
-  desde s102.
-- **B2.3 tras OLA 4 — migración MECÁNICA CERRADA (s121)**: quedan **6 rutinas legacy
-  BLOQUEADAS** por reescritura editorial / progresión técnica / revisión fisio, NO
-  por mecánica — 4 Mueve premium/free (`push.ladder`, `legs.single`) + parte de
-  Estira (`desk.quick`, `hips.ground`, `atg.knees`, `ancestral`) · trabajo de
-  lenguaje BASE §7-9: 4 cues (Seated twist, Rib pull, WGS, Ground transitions) + 2
-  rutinas (`legs.single`, resto de `atg.knees`) + escalón de Puente torácico
-  (`spine.waves`); `atg.knees` además espera la revisión FISIO de Sissy squat (B4).
-  (Conteo: 23 pre-OLA-1 → 18 tras s118 → 13 tras s119 → 8 tras s120 → **6 tras
-  s121**.)
-- ~~`tokens.css` 613 ln y `FocusTimer.jsx` 496 ln~~ **OBSOLETO**: s148 dejo `tokens.css` en 386
-  y el recuento real de `FocusTimer.jsx` es 450 (la cifra 496 era anterior al split de s124).
-- Automatizar el bump de version en el build (package.json como fuente).
-- ~~**[HALLAZGO s149] El ayudante de geometria de la home NO PUBLICA NINGUNA variable.**~~
-  **OBSOLETO, comprobado en s162**: el motor publica. La suite lee `--pace-timer-d` = **406 px**
-  en navegador real, y `asentarGeometria()` (s160) existe precisamente para esperar a que ese
-  token repita valor tres frames. La cautela que el propio hallazgo declaraba —«esta medido en
-  el panel de vista previa, no en un navegador real»— era la correcta. Texto original:
-  Salio al verificar que la correccion de la cabecera de `home-geometry.js` era inerte. Medido en
-  el panel de vista previa a **1280x720**, estado limpio y SW purgado: `--pace-timer-d`,
-  `--pace-activities-overlap`, `--pace-home-squeeze`, `--pace-home-timer-size` y
-  `--pace-home-sunset-overlap` **vacias**, `document.documentElement` **sin atributo `style`**, aro
-  de **360 px** —que es exactamente el fallback de `var(--pace-timer-d, 360px)`—, solapamiento de
-  **10 px = 0,028·D** contra el 0,16 nominal (banda de aceptacion **0,14–0,17** en
-  `DESIGN_SYSTEM.md`) y **17 px de scroll** en la home, cuando el modelo de s126 encoge D hasta
-  `overflowV <= 1`. **CONFIRMADO PREEXISTENTE**: se extrajo `index.html` de HEAD (v0.81.0), se
-  sirvio desde el mismo servidor y dio **lo mismo**. **Dos cautelas antes de perseguirlo**: (1)
-  esta medido en el panel de vista previa, no en un navegador real — reproducirlo fuera antes de
-  llamarlo bug de produccion; (2) la home **se ve bien** y el usuario la valido asi, lo que falla
-  no es el resultado visible sino que el contrato medido de s126 no se aplica. Encaja con el §10.2
-  de la auditoria integral, que pedia «auditar el contrato geometrico» sin poder medirlo.
-- ~~**[HALLAZGO s148] `first.return` («Regresas») no se desbloquea NUNCA.**~~ **CERRADO en
-  s162/v0.93.0, y no era «nunca»: era una CARRERA.** El artefacto son **109 etiquetas
-  `<script>`** (tareas separadas) y `unlockAchievement` se referencia PELADA desde un modulo
-  que corre ANTES del suyo, asi que el `setTimeout(0)` puede ganarle y el `try/catch` vacio
-  entierra el ReferenceError. Pagina quieta: se concede. Maquina cargada: se pierde. Ahora la
-  concesion va dentro del estado que devuelve el rollover, sin timer. Texto original: El rollover
-  lo concede con `setTimeout(unlockAchievement, 0)` para esperar a `state-achievements.jsx`, pero
-  0 ms llega **antes** de que ese archivo evalue: la funcion es `undefined` y el `try/catch` se lo
-  traga en silencio. **Confirmado PREEXISTENTE** contra el artefacto committeado de v0.80.0, que
-  se comporta identico — no lo introdujo el troceo. Hay `.webp` para un logro que nadie puede
-  ganar. Arreglo probable: diferir con `requestIdleCallback`, o concederlo desde
-  `state-achievements.jsx` al evaluar en vez de desde el rollover.
-
-### Backlog registrado en s117 (propuestas + multiplataforma; docs-only, SIN implementar)
-
-Registrado al cerrar s117; **ninguna de estas entradas se ha implementado**.
-
-**Visual / UX** (propuesta: [`HOME_REDISENO_PROPUESTA.md`](./docs/product/HOME_REDISENO_PROPUESTA.md)):
-- Pills **Breve / Tranquilo / Amplio** de Tweaks: corregir el tratamiento visual.
-- **Estadísticas**: dimensiones estables de la carcasa al alternar Semana/Mes/Año
-  (responsive entre viewports OK, no entre pestañas del mismo viewport).
-- **Jerarquía del Home**: Caminos / Camino sugerido POR ENCIMA de los accesos
-  manuales (Respira/Mueve/Estira/Hidrátate).
-- **Solapamiento editorial** intencional y responsive (margen negativo con
-  `clamp()`, círculo `aspect-ratio:1`, nunca tapar timer/controles/ciclo).
-
-**Multiplataforma** (arquitectura aprobada en `EVENTOS_SCHEMA.md`; implementación PENDIENTE):
-- **Capacitor compartido Android/iOS**: build dedicado, detección de runtime,
-  adaptadores nativos (SQLite log + Preferences/UserDefaults), lifecycle,
-  notificaciones, safe areas, export/import; pruebas en dispositivo real +
-  TestFlight iOS.
-- **`PurchaseAdapter`**: web · Google Play Billing · StoreKit (tiendas = fuente de
-  verdad de precio/moneda; no hardcodear importes en traducciones).
-- **Timer de Mueve multiplataforma basado en timestamps** (hoy `setInterval`
-  foreground; deuda menor ya registrada en plan-maestro).
-
-**i18n** (propuesta: [`I18N_EXPANSION_PROPUESTA.md`](./docs/product/I18N_EXPANSION_PROPUESTA.md)):
-- **I18N-1** modo Automático (detección BCP 47 web+Capacitor, override manual
-  persistente, fallback inglés).
-- **I18N-2** robustez (paridad de claves, pseudolocalización, pluralización).
-- **I18N-3** expansión comercial (validar alemán · pt-BR volumen · francés).
-- **I18N-4** localización nativa (permisos, notificaciones, compras, fichas y
-  capturas de tienda).
-
-## Proxima sesion -- **la decide el usuario**
-
-> **LA COLA SALE DE LA AUDITORIA DE s183**, con su evidencia medida en
-> [`audit-premisas-v0.114.0.md`](./docs/audits/audit-premisas-v0.114.0.md).
-> El criterio del orden: primero lo que hace que la proxima sesion no se
-> equivoque, luego lo que desbloquea a otros, luego lo grande.
->
-> **La Tanda 0 -- que los documentos dejen de mentir-- YA ESTA HECHA** (s183):
-> corregidos `CLAUDE.md`, `EVENTOS_SCHEMA.md`, `ROADMAP.md`,
-> `STATS_DESTINO_PROPUESTA.md` y `CONTENT.md`.
-
-### TANDA 1 · El conflicto de la musica *(decision, no codigo)*
-
-**Bloquea generar las seis piezas.** `MUSICA_RESPIRA_BRIEFS.md` exige «rango medio
-despejado (≈200 Hz-3 kHz)» en cinco de sus seis prompts; la decision de s177 que
-GOBIERNA exige «el grueso de la energia entre 200 Hz y 2 kHz» porque midio que
-aquella restriccion **era la causa** de que la pieza no sonara. **Son
-incompatibles y hay que elegir** -- probablemente subiendo el hueco de voz por
-encima de 2 kHz, pero eso se decide midiendo. Hasta entonces, **generar musica es
-tirar el trabajo**. Y los terminos de uso comercial siguen sin verificar.
-
-### TANDA 2 · Lo que ya estaba en la cola del usuario
-
-1. **La pill naranja de «Mis rutinas»** en la sidebar: es lo mas llamativo de la
-   columna (fondo tintado + borde a plena fuerza) y quitarle el fondo la calmaria.
-   Lo mas corto de todo; se decide mirando una imagen.
-2. **De la maqueta del usuario quedaron dos cosas sin copiar**, porque aviso de
-   que algun elemento podia no estar bien colocado: en su imagen **no aparece el
-   lema** y **«Ver la coleccion» va a la derecha**.
-3. **Los tres ejercicios de oficina que HOY NO EXISTEN** en el catalogo -- cola de
-   s178, intacta: **gemelo de pie** (no hay estiramiento de gemelo, solo
-   `Elevacion de talones`, que es fuerza), **flexor de cadera contra la mesa** (el
-   unico que hay pide arrodillarse) y **aductores sentado**. Cada uno nace con su
-   dibujo. Arrastra la decision de **`move.chair.antidote`**: de sus seis pasos
-   solo `Flexor de cadera` pide suelo, y por el la rutina que se llama «Antidoto
-   silla» queda FUERA del chip «Aqui mismo».
-4. **El tercer chip «Discreta»** (14 de 20), ultima pregunta viva de s176. **Hay
-   que pintarlo antes de preguntar.**
-5. **El arte**: **19** glifos de logro y **3** de ejercicio (`Rana`, `Pica en
-   escritorio`). Depende del usuario. (`Nordics` sigue FUERA por decision de s173.)
-
-### TANDA 3 · Lo grande
-
-1. **FASE 4 · Stats.** Queda **una sola vista**, la Semana. Ya decidido: la barra
-   es **cinta escalonada**, el dia es **un arco por tipo de jornada con relleno**,
-   **«Hoy» no entra** y **los Caminos tampoco de momento**. **Lo que falta es que
-   el disenio convenza** -- cinco vueltas de maqueta en s183 y sigue sin hacerlo.
-   Y de paso: que `stats-pestanas.spec.js` **siembre datos**, o el corte de 33 y
-   60 px volvera sin que nadie lo vea.
-2. **FASE 3 del esquema de eventos**: reducers de `aggregates`. Es lo que le daria
-   a Stats algo que leer -- hoy `pace.events.v1` tiene **un solo consumidor en toda
-   la app**, la sidebar (`Sidebar.jsx:74`), y `aggregates` no aparece ni una vez en
-   `app/`.
-3. **FASE 3.5 · Pausa PACE**: la recomendacion concreta. Necesita lo anterior.
-   Verificado en s183: el BreakMenu **solo ordena** (`computeScore` mira solo
-   `plan` y `water`) y `routineFeedback` **sigue sin consumidor** de recomendacion.
-4. **CTB**, fuera de v1, con permiso para un **prototipo tecnico**. Nada tocado.
-5. **FASE 8 · onboarding contextual.**
-
-### LO QUE SIGUE ABIERTO, dicho y no escondido
-
-- **La rama «CONTINUA» de la tarjeta de la sidebar es INALCANZABLE** hasta que los
-  Caminos se puedan pausar. Escrita y **sin probar**.
-- Por debajo de **~575 px de alto en movil el runner SIGUE SOLAPANDO** (s179): lo
-  unico que queda por encoger es el glifo y la fuente unica de s177 lo prohibe.
-  **Es decision del usuario.**
-- **360x560 desplaza 101 px y 360x640, 21** en el cajon de la sidebar. Es la
-  decision que tomo el usuario mirando las capturas, no un pendiente.
-- **D-1, D-2 y D-3** siguen vivas (decision del usuario: no urgentes).
-- **El onboarding sigue sin focus trap** (Fase 8.5), verificado en s183.
-- **`CONTENT.md` no se ha rehecho ficha a ficha**: s183 solo declaro la deriva y
-  dijo que la cifra que manda es la del `verify`.
-- Que el agua sola no enciende el dia **ya no lo dice ninguna superficie**.
+- **[LO QUE ESTA SESION NO CUBRE, DICHO]** Caminos no se toca (su aro va por
+  `ticks`, sin arco ni horizonte). Los estilos `barra` y `analogico` no pasan por
+  `TimerDial`. El perfil de la luz en **movil** lo mide el banco, no la suite. Las
+  dos nieblas se calibraron a 1280x800 y en movil se juzgaron **mirando**. Que un
+  degradado tenga un codo visible **no lo caza ningun aserto** — se intento y sale
+  verde. Y el aro pasa por detras de las tarjetas, pero **no se comprueba que hay en
+  los HUECOS** entre ellas a cada ancho: el cabo cae dentro de una tarjeta en los
+  cuatro viewports medidos, y en otros podria caer en un hueco.
 
 ---
 
@@ -635,6 +303,10 @@ tirar el trabajo**. Y los terminos de uso comercial siguen sin verificar.
 > Aqui solo el indice, para que este archivo siga siendo ligero en cada arranque.
 > **Antes de tocar un subsistema, leer su fila alli.**
 
+- **El corte del aro NO es el horizonte: baja hasta el canto de las tarjetas, y se derivan de la misma fuente** (s184)
+- **La PISTA y el ARCO no pueden llevar la misma niebla: uno es ambiente y el otro informacion** (s184)
+- **El recorrido del aro es el TRAMO VISIBLE, y su angulo se MIDE del horizonte -- nunca se escribe** (s184)
+- **La luz de la home muere ANTES de la fila de minutos, y el horizonte es NIEBLA, no filo** (s184)
 - **UN ASERTO QUE SIEMBRA EL ESTADO VACIO NO VIGILA NADA: la semilla es parte del aserto** (s183)
 - **Toda superficie que pinte el nombre de un logro pasa por `tR`, y un redisenio puede reabrir ese hueco sin tocar i18n** (s183)
 - **EL CAJON DE MOVIL TAMBIEN ESCALA, con suelo: se ANULA «en movil no aplica» (s181)** (s182)

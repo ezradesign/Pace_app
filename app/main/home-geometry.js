@@ -102,6 +102,7 @@
   var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
   var CICLO_GAP = 4;           // px de aire MÍNIMO entre CICLO y el borde de Actividades
+  var AIRE_TARJETA = 6;        // px de aire ENCIMA del canto de las tarjetas (s184)
   var OVERLAP_TARGET = 0.16;   // solapamiento nominal del contrato (§0): 16 % de D
   var MAX_FIT_PASSES = 8;      // iteraciones de ajuste «encoger hasta caber»
 
@@ -174,6 +175,39 @@
       : Math.round(D * OVERLAP_TARGET); // fallback si no se encuentra el CICLO
     var overlap = Math.min(Math.round(D * OVERLAP_TARGET), maxOverlap);
     setVar('--pace-activities-overlap', overlap + 'px');
+
+    /* LA BANDA DE LA ETIQUETA (s184). El aro deja de cortarse en el borde
+       superior de Actividades y baja hasta el canto de las TARJETAS, para que
+       lo que lo termine sea una oclusion real -- las tarjetas son opacas-- y no
+       un desvanecido en el vacio. Entre las dos cosas hay una banda: el padding
+       superior de la barra mas el rotulo ACTIVIDADES. 32 px medidos a 1280x800,
+       pero NO se escribe: depende del padding de la piel y del idioma, asi que se
+       mide aqui, que es donde ya se mide todo lo demas.
+
+       Publicarla es lo que permite que corte y solapamiento sigan sin poder
+       desincronizarse (la regla de s156): ya no son el MISMO token, pero el
+       corte se DERIVA del solapamiento restandole esta medida. Una sola fuente,
+       dos consumidores.
+
+       Sin chip o sin barra publica 0, y entonces el corte vuelve a valer el
+       solapamiento: exactamente el comportamiento anterior, que es el fallback
+       correcto y no una aproximacion. */
+    var chip = document.querySelector('[data-pace-activitybar-chip]');
+    var barra = document.querySelector('[data-pace-activitybar]');
+    var banda = (chip && barra)
+      ? Math.max(0, Math.round(chip.getBoundingClientRect().top - barra.getBoundingClientRect().top))
+      : 0;
+    /* SE PUBLICA EL CORTE YA RESUELTO, no la banda, y eso NO es comodidad: un
+       custom property SIN REGISTRAR no se computa -- `getPropertyValue` devuelve
+       el TEXTO. Dejando la resta en CSS, el token valia literalmente
+       "max(4px, calc(67px - 32px - 6px))", TimerDial lo leia con parseFloat, le
+       salia NaN y el aro se quedaba dando la vuelta entera. Publicado en px por
+       el motor, el CSS solo elige motor-o-fallback como con los otros dos. */
+    /* El corte se mide desde ABAJO, asi que restar la banda lo BAJA hasta el
+       canto de las tarjetas y SUMAR el aire lo sube esos pocos px por encima.
+       Con el signo al reves el aro acababa 6 px POR DEBAJO del canto, o sea
+       asomando por los huecos entre tarjetas: 310,3 grados en vez de 295,8. */
+    setVar('--pace-dial-corte', Math.max(4, overlap - banda + AIRE_TARJETA) + 'px');
   }
 
   function compute() {

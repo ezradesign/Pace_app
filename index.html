@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.114.1</title>
+  <title>PACE · Foco · Cuerpo — v0.115.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -4934,7 +4934,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.114.1';
+const PACE_VERSION = 'v0.115.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -11687,11 +11687,128 @@ function TimerTicks(_ref) {let { progress, color } = _ref;
   return /*#__PURE__*/React.createElement(React.Fragment, null, marks);
 }
 
+/* ============================================================
+   EL RECORRIDO SOLO PISA LO QUE SE VE (s184).
+
+   Hasta v0.114.1 el arco daba los 360 grados: nacia en las 12, se hundia bajo
+   el horizonte —donde la mascara de s158 lo dejaba al 30 %, por detras de
+   Actividades— y volvia a salir por el otro lado. El usuario pidio que el
+   tiempo recorra EXACTAMENTE el tramo visible: que empiece en el extremo
+   izquierdo, suba por las 12 y muera en el derecho.
+
+   Y ESE ANGULO NO SE ESCRIBE, SE MIDE. El corte es --pace-corte, que el CSS
+   deriva del horizonte del motor restandole la banda del rotulo ACTIVIDADES
+   (medida, no escrita). Y el horizonte es el 16 % de D con un TECHO por el
+   CICLO, asi que su ratio ya oscila entre 0,147 y 0,176 segun el breakpoint
+   (contrato §0) — y la banda del rotulo tampoco es constante. Un angulo fijo
+   dejaria los dos cabos por debajo del corte en unos tamanos y flotando en
+   otros; con la separacion de s184 (el aro baja hasta el canto de las
+   tarjetas) el barrido pasa de 271,6 a 295,8 grados a 1280x800, asi que el
+   numero es aun menos escribible que antes.
+
+   LA ARITMETICA. El anillo tiene radio 0,475 D: r=47,5 en un viewBox de 100
+   que cubre el marco, y el marco es cuadrado (aspect-ratio 1/1 + meet), asi
+   que una unidad de viewBox es exactamente D/100 px. El corte cae D/2 − H
+   por debajo del centro, luego los dos cruces estan a
+   asin((D/2 − H) / 0,475 D) bajo la horizontal y el tramo visible mide
+   2 × (90° + ese angulo). Con H >= D/2 (corte por encima del centro, que hoy
+   no ocurre) el asin saldria de rango: ahi se devuelve el circulo entero en
+   vez de un NaN que borraria el arco.
+   ============================================================ */
+const { useState: useStateTD, useRef: useRefTD, useLayoutEffect: useLayoutEffectTD } = React;
+
+const DIAL_R = 47.5; /* radio del anillo, en viewBox */
+const DIAL_VUELTA = 360;
+
+/* Devuelve el barrido en grados, o `null` cuando AUN NO SE PUEDE DECIDIR.
+   Esa tercera respuesta no es defensa de manual: es el caso del arranque, y
+   costo la primera version de esta sesion. Sin layout todavia, o con
+   --pace-corte aun sin resolver, «no lo se» y «da la vuelta entera» son
+   respuestas distintas, y devolver la segunda CONGELA el circulo completo — el
+   observer que deberia corregirlo no vuelve a disparar porque D no cambia. */
+function medirBarridoVisible(marco) {
+  const D = marco.getBoundingClientRect().height;
+  if (!(D > 0)) return null;
+  const H = parseFloat(getComputedStyle(marco).getPropertyValue('--pace-corte'));
+  if (!isFinite(H)) return null; /* el token aun no existe */
+  if (H <= 0) return DIAL_VUELTA; /* sin horizonte: vuelta entera */
+  const sen = (D / 2 - H) / (DIAL_R / 100 * D);
+  if (!(sen > -1 && sen < 1)) return DIAL_VUELTA;
+  return 2 * (90 + Math.asin(sen) * 180 / Math.PI);
+}
+
+/* QUE DISPARA LA MEDIDA, Y POR QUE NO BASTA EL TAMANO DEL MARCO.
+
+   La primera version observaba solo el marco con un ResizeObserver, razonando
+   que el horizonte no puede moverse sin que se mueva D. Es cierto EN REGIMEN y
+   FALSO EN EL ARRANQUE, que es justo cuando importa: medido en el artefacto,
+   la unica lectura que llego a ocurrir devolvio 360 porque --pace-horizon aun
+   no resolvia, y como el marco ya tenia sus 420 px definitivos el observer no
+   volvio a disparar nunca. El aro se quedaba redondo con el motor funcionando.
+
+   El disparo bueno es el que ve al MOTOR publicar. home-geometry.js escribe
+   --pace-timer-d y --pace-activities-overlap —los dos insumos de este
+   calculo— en el `style` de <html> (su `setVar`, home-geometry.js:136), y solo
+   cuando cambian. Un MutationObserver sobre ese atributo es por tanto el
+   evento exacto, sin sondeo y sin frames de mas.
+
+   El ResizeObserver se queda ADEMAS, y no por simetria: cubre el caso del
+   motor apagado, donde D y el horizonte salen de los fallbacks CSS y lo unico
+   que se mueve es el marco.
+
+   NINGUNO DE LOS DOS PUEDE REALIMENTARSE: lo que este hook cambia es el
+   dasharray de dos <circle> en position:absolute, que no altera ni el tamano
+   del marco ni el style de <html>. El umbral de 0,02° remata la garantia. */
+function useBarridoVisible(marcoRef, activo) {
+  const [barrido, setBarrido] = useStateTD(DIAL_VUELTA);
+  useLayoutEffectTD(() => {
+    if (!activo) {setBarrido(DIAL_VUELTA);return;}
+    const marco = marcoRef.current;
+    if (!marco) return;
+    const leer = () => {
+      const v = medirBarridoVisible(marco);
+      if (v == null) return;
+      setBarrido((prev) => Math.abs(prev - v) > 0.02 ? v : prev);
+    };
+    leer();
+    let ro = null,mo = null;
+    if (typeof ResizeObserver === 'function') {
+      ro = new ResizeObserver(leer);
+      ro.observe(marco);
+    }
+    if (typeof MutationObserver === 'function') {
+      mo = new MutationObserver(leer);
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+    }
+    return () => {if (ro) ro.disconnect();if (mo) mo.disconnect();};
+  }, [activo]);
+  return barrido;
+}
+
 function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle, inner, running, ticks, fitHeight, paused } = _ref2;
-  const R = 47.5;
-  const C = 2 * Math.PI * R;
+  const R = DIAL_R;
   // Color del arco/marcas una sola vez (lo comparten arco, punto guia y ticks).
   const ringColor = interpolateRingColor(progress, mode);
+
+  /* El recorte SOLO donde hay horizonte: la home (fitHeight) y solo en la
+     variante de arco. Caminos no pasa fitHeight y ademas va por `ticks`, asi
+     que su anillo sigue siendo la vuelta entera, byte-identico. */
+  const marcoRef = useRefTD(null);
+  const barrido = useBarridoVisible(marcoRef, !!fitHeight && !ticks);
+  const recortado = barrido < DIAL_VUELTA - 0.01;
+  /* EL TRAZO SE MIDE EN GRADOS, Y ESO ARREGLA UNA ASIMETRIA MEDIDA (s184).
+     `pathLength={360}` le dice al motor que trate el trazado como si midiera
+     360 unidades, asi que guion y desfase se escriben directamente en grados y
+     el barrido entra tal cual. No es azucar: sin el, las cuentas van contra la
+     circunferencia EXACTA (2πr = 298,451) mientras Chrome dibuja el circulo
+     con cuatro beziers cuya longitud real es 297,97 — un 0,16 % de sobra que
+     alarga el arco 0,44° y dejaba el cabo derecho 0,78 px POR DEBAJO del
+     izquierdo, medido sobre la pagina a 390x844. Con pathLength los dos cabos
+     caen en la misma linea porque el motor normaliza por su propio trazado.
+     El giro lleva el ORIGEN al extremo izquierdo; sin recorte vale 0 y
+     `360 360` pinta el circulo entero, o sea la rama de siempre. */
+  const giroInicio = recortado ? -barrido / 2 : 0;
+  const trazo = barrido.toFixed(3) + ' ' + DIAL_VUELTA;
 
   /* fitHeight (s123, SOLO home): el aro se dimensiona por la ALTURA ÚTIL de su
      contenedor (no por 56vh del viewport), encogiéndose en pantallas bajas hasta
@@ -11712,7 +11829,8 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
        amanecer distinga «pausado» de «reposo» — dos estados que hasta ahora se
        veian igual porque `running` es false en los dos. El padre decide; aqui no
        hay ni una linea de logica de temporizador. */
-    React.createElement("div", { "data-pace-dial-running": running ? '' : undefined,
+    React.createElement("div", { ref: marcoRef,
+      "data-pace-dial-running": running ? '' : undefined,
       "data-pace-dial-paused": paused ? '' : undefined,
       "data-pace-dial-fit": fitHeight ? '' : undefined,
       style: fitHeight ? timerDialStyles.frameFit : timerDialStyles.frame }, /*#__PURE__*/
@@ -11734,16 +11852,71 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
     React.createElement(TimerTicks, { progress: progress, color: ringColor })
     ) : /*#__PURE__*/
 
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    React.createElement("div", { "data-pace-dial-pista": true, style: timerDialStyles.ringLayer }, /*#__PURE__*/
+    React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
+      style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } }, /*#__PURE__*/
+    React.createElement("g", { transform: `rotate(${giroInicio.toFixed(3)} 50 50)` }, /*#__PURE__*/
+
+
+
+    React.createElement("circle", { cx: "50", cy: "50", r: R, pathLength: DIAL_VUELTA, fill: "none",
+      stroke: "var(--line)", strokeWidth: "0.7", strokeOpacity: "0.85",
+      strokeDasharray: trazo })
+    )
+    )
+    ), /*#__PURE__*/
     React.createElement("svg", { viewBox: "0 0 100 100", preserveAspectRatio: "xMidYMid meet",
       style: { position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' } }, /*#__PURE__*/
 
-    React.createElement("circle", { cx: "50", cy: "50", r: R, fill: "none", stroke: "var(--line)", strokeWidth: "0.7", strokeOpacity: "0.85" }), /*#__PURE__*/
 
-    React.createElement("circle", { cx: "50", cy: "50", r: R, fill: "none",
+
+
+
+    React.createElement("g", { transform: `rotate(${giroInicio.toFixed(3)} 50 50)` }, /*#__PURE__*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    React.createElement("circle", { key: 'arco-' + barrido.toFixed(3),
+      cx: "50", cy: "50", r: R, pathLength: DIAL_VUELTA, fill: "none",
       stroke: ringColor, strokeWidth: "1.3",
       strokeOpacity: "0.92",
       strokeLinecap: "round",
-      strokeDasharray: C, strokeDashoffset: C * (1 - progress),
+      strokeDasharray: trazo, strokeDashoffset: (barrido * (1 - progress)).toFixed(3),
       style: { transition: 'stroke-dashoffset 1s linear, stroke 1s linear' } }),
 
 
@@ -11773,14 +11946,22 @@ function TimerDial(_ref2) {let { mins, secs, progress, mode, modeLabel, subtitle
 
 
 
+
+
+
+
+
+
     (running || progress > 0) && /*#__PURE__*/
-    React.createElement("g", { transform: `rotate(${progress * 360} 50 50)`,
+    React.createElement("g", { transform: `rotate(${(progress * barrido).toFixed(3)} 50 50)`,
       style: { transition: 'transform 1s linear' } }, /*#__PURE__*/
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "1.7", fill: ringColor, opacity: "0.22" }), /*#__PURE__*/
     React.createElement("circle", { cx: 50 + R, cy: "50", r: "0.85", fill: ringColor,
       style: { transition: 'fill 1s linear' } })
     )
 
+    )
+    )
     )
 
     ), /*#__PURE__*/
@@ -11894,7 +12075,7 @@ const timerDialStyles = {
 };
 
 Object.assign(window, { TimerDial, interpolateRingColor });
-;Object.assign(window, { interpolateRingColor, TimerTicks, TimerDial });
+;Object.assign(window, { interpolateRingColor, TimerTicks, medirBarridoVisible, useBarridoVisible, TimerDial });
 })();
 </script>
   <!-- Motor de cuenta atras timestamp-based (s96): expone window.useCountdown,
@@ -29226,6 +29407,48 @@ Object.assign(window, { Onboarding });
 
 
   const LIMBO_R = 0.66; /* semilado de la caja, en unidades de D */
+
+  /* Longitudes en unidades de D. Sube aquí desde más abajo (s184): las tres
+     constantes de bordes que vienen a continuación la necesitan, y un `const`
+     no se puede usar antes de declararlo. */
+  const dd = (f) => 'calc(var(--pace-dial-d) * ' + f + ')';
+
+  /* ==================================================================
+     LOS CUATRO BORDES DE LA LUZ Y DEL ANILLO (s184). El usuario pidió que
+     ninguno se leyera como un CORTE, y son el mismo problema en cuatro sitios:
+     la luz no llega a la fila de minutos, pasa el horizonte y se apaga, la
+     pista se disuelve y el arco solo se remata. Los números salen del banco
+     (restar el mismo fotograma con el sol encendido y apagado), no de gusto, y
+     viven juntos para poder moverse a la vez. El porqué completo, en
+     `DECISIONES_TECNICAS_VIGENTES.md`.
+     ================================================================== */
+  const LUZ_TECHO = 0.52; /* la luz muere a esta distancia del centro, hacia arriba */
+  const LUZ_PLENO = 0.24; /* y desde aquí ya está a pleno */
+  const LUZ_COLA = 0.22; /* cuánto sigue la luz por debajo del horizonte */
+  /* DOS NIEBLAS, Y LA DIFERENCIA ENTRE ELLAS ES UN ARREGLO. Hubo una sola,
+     larga, sobre la capa del anillo entero — y como el arco NACE en el
+     horizonte, justo donde esa máscara vale cero, tardaba **~2,2 min** en llegar
+     a plena opacidad en un bloque de 25 (medido a 1280×800): los primeros
+     minutos no tenían señal. El reparto sale de una frase que ya estaba en
+     `tokens.css`, **arco = información, halo = ambiente**: la escala puede
+     disolverse todo lo que haga falta; el recorrido no puede desaparecer. */
+  const NIEBLA_PISTA = 0.14; /* la escala se disuelve */
+  const NIEBLA_ARCO = 0.035; /* el recorrido solo se remata */
+  /* CON CURVA, NO LINEAL: la recta cae uniforme y pierde el tramo útil antes.
+     Así se mantiene el 94 % de presencia en tres cuartas partes del recorrido.
+     Pares [fracción del recorrido desde el horizonte hacia arriba, alfa]. */
+  const CURVA_NIEBLA = [[1, 1], [0.72, 0.94], [0.46, 0.74], [0.26, 0.44], [0.12, 0.18], [0, 0]];
+  /* EL TECHO, TAMBIÉN CON CURVA, y esto es un defecto que el usuario vio: «la
+     parte de arriba queda demasiado difusa y con una línea de corte». La rampa
+     recta de tres paradas metía un CODO en 0,24 D donde la pendiente cambia unas
+     cuatro veces, y el ojo encuentra un quiebre de pendiente igual que encuentra
+     un borde — la misma razón por la que el limbo lleva ONCE paradas y no cinco.
+     Esta S entra despacio desde el cero y se posa en `--sun-top` sin esquina, y
+     en el tramo medio pesa MÁS que la recta (0,66 contra 0,51 a 0,32 D): eso es
+     lo que quita lo difuso sin devolver luz a la fila de minutos.
+     Pares [distancia al centro en D, alfa]. */
+  const CURVA_TECHO = [[0.520, 0], [0.505, 0.06], [0.488, 0.16], [0.455, 0.36],
+  [0.400, 0.56], [0.330, 0.68]];
   /* Paradas en % del radio de la caja, con su color y su valor de máscara. La
      máscara sale de la MISMA lista que el color: no pueden desincronizarse, que
      es como s157 acabó con un grano cuadrado sobre una luz redonda.
@@ -29271,15 +29494,37 @@ Object.assign(window, { Onboarding });
   const limboCon = (i) => 'radial-gradient(circle farthest-side, ' +
   LIMBO.map((p) => p[i] + ' ' + p[0]).join(', ') + ')';
 
-  /* MENOS LUZ ARRIBA, SIN DEJAR DE SER UN CÍRCULO. Por encima del aro solo hay
-     ~59 px hasta la fila de minutos, y ahí la corona competía con los chips. La
-     caída es una rampa vertical que cruza la caja ENTERA del limbo (1,32 D, o
-     sea 536 px con el aro de 406): un 0,05 % por píxel, demasiado lenta para
-     que el ojo encuentre un borde. Por eso atenúa sin cortar — el círculo sigue
-     completo, solo que su mitad de arriba pesa --sun-top.
-     Se INTERSECA con la máscara del anillo, igual que hace el bloom: la
-     vertical sola dejaría el grano fuera de la corona. */
-  const menosArriba = 'linear-gradient(180deg, rgb(0 0 0 / var(--sun-top, 1)) 0%, #000 68%)';
+  /* LA LUZ MUERE ANTES DE LA FILA DE MINUTOS (s184), y esto ATENÚA ya no basta.
+      Aquí había una rampa que bajaba la mitad superior de la corona a --sun-top
+     (0,72) «sin cortar, el círculo sigue completo», con esta premisa escrita al
+     lado: por encima del aro hay ~59 px hasta la fila de minutos. ESA PREMISA
+     YA NO SE CUMPLE. Medido hoy a 1280x800: el borde superior del aro cae en
+     y=167,1 y la píldora «45» acaba en y=142,6 — quedan 24,5 px, no 59. Y el
+     limbo muere a 0,628 D del centro, o sea 64 px pasado el aro. Fotografiando
+     el mismo fotograma con el sol encendido y apagado, la fila de minutos
+     recibía una desviación de 57 sobre 255: la corona la estaba pintando.
+      Atenuar al 72 % no arregla eso, porque 0,72 nunca es 0. Así que la rampa
+     pasa a MORIR: transparente por encima de 0,52 D del centro, y de ahí hacia
+     abajo sube hasta el hombro de --sun-top en 0,24 D. Son 0,28 D de recorrido
+     —118 px con el aro de 420—, tan gradual que no hay borde que encontrar.
+      LO QUE CUESTA ES CASI NADA, Y ESTÁ MEDIDO: el brillo justo por encima del
+     trazo del aro baja de 64 a 58 sobre 255, porque el NÚCLEO de la corona vive
+     entre 0,505 y 0,528 D —pegado al aro— y lo que se recorta es la COLA, que
+     es la que llegaba a los chips. El halo sigue rodeando el recorrido entero,
+     las 12 incluidas; lo que desaparece es el lavado ancho hacia arriba.
+     Fila de minutos: 57 -> 1. Uno sobre 255 no se ve.
+      El BLOOM no necesita nada de esto: su máscara direccional ya vale cero por
+     encima de 0,5 D del centro. Esta rampa es solo del limbo. */
+
+
+
+
+  const menosArriba = 'linear-gradient(180deg, transparent 0px, ' +
+  CURVA_TECHO.map(function (p) {
+    return 'rgb(0 0 0 / ' + p[1] + ') ' + dd((LIMBO_R - p[0]).toFixed(4));
+  }).join(', ') +
+  ', rgb(0 0 0 / var(--sun-top, 1)) ' + dd((LIMBO_R - LUZ_PLENO).toFixed(4)) +
+  ', #000 68%)';
 
   /* ------------------------------------------------------------------
      CAPA 2 · BLOOM — el derrame amplio, solo hacia abajo.
@@ -29294,7 +29539,8 @@ Object.assign(window, { Onboarding });
      aristas rectas de s157 fueron exactamente eso. */
 
 
-  const dd = (f) => 'calc(var(--pace-dial-d) * ' + f + ')';
+  /* `dd` se declaraba aquí; subió junto a LIMBO_R en s184 porque las constantes
+     de bordes la necesitan antes. */
   /* EL BLOOM COMPARTE EL CENTRO DEL ARO. No es un detalle de implementación: es
      el defecto que el usuario vio como «una especie de círculo en la zona de
      pausar, ciclo, actividades, que no corresponde al sol». Con el centro en el
@@ -29322,7 +29568,7 @@ Object.assign(window, { Onboarding });
      su borde superior media D antes y el horizonte media D después menos el
      propio horizonte. Todo sale de los mismos dos tokens que gobiernan el aro. */
   const DESDE_ARRIBA = (extra, conHorizonte) => 'calc(var(--pace-dial-d) * ' +
-  (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-horizon))' : ')');
+  (BLOOM_H * BLOOM_SUBE + extra).toFixed(3) + (conHorizonte ? ' - var(--pace-corte))' : ')');
   /* Radios del aro entre paréntesis (el radio de la luz es 1,05 D). La sombra
      ocupa los 81 px finales: ancha de sobra para no leerse como un aro, y
      colocada donde la máscara direccional la deja caer — a los lados del aro y
@@ -29375,33 +29621,63 @@ Object.assign(window, { Onboarding });
   const direccion = 'linear-gradient(180deg, transparent 0px, ' +
   'transparent ' + DESDE_ARRIBA(-0.5, false) + ', ' +
   'rgba(0,0,0,0.34) calc(var(--pace-dial-d) * ' + (BLOOM_H * BLOOM_SUBE).toFixed(3) +
-  ' - var(--pace-horizon) * 0.5), ' +
+  ' - var(--pace-corte) * 0.5), ' +
   '#000 ' + DESDE_ARRIBA(0.5, true) + ')';
 
-  /* EL HORIZONTE del anillo, y AHORA ES EL SOL EL QUE LO ABRE.
-      Con el Pomodoro parado el aro vuelve a cortarse EN SECO en el horizonte,
-     como hasta v0.89.0: sin sesión no hay luz, así que tampoco hay motivo para
-     que el aro se abra. Con la sesión viva el corte se desvanece y el arco
-     completa los 360 grados. Todo cuelga de --pace-on, así que la apertura viaja
-     con la luz en los mismos 1,6 s y no hay un solo frame de salto.
-      --pace-abre es --pace-on tal cual: a media pausa el aro sigue abierto del
-     todo, porque pausar no termina la sesión. Y la RAMPA también se
-     multiplica por él: con la luz apagada mide 0 px, o sea las tres paradas
-     caen en el mismo sitio y el degradado ES un corte seco. Sin eso quedaría un
-     desvanecido de 20 px en reposo, que no es lo que se pidió. */
+  /* EL HORIZONTE del anillo: UN CORTE SECO, y ya no hay nada que abrir (s184).
+      HISTORIA CORTA, porque este bloque ha ido y vuelto. Hasta v0.89.0 cortaba
+     en seco. s158 lo convirtió en un desvanecido que la sesión ABRÍA
+     (--pace-abre), para que el arco COMPLETASE los 360 hundiéndose en la luz.
+     Ese encargo ya no existe: en s184 el arco dejó de bajar, así que la apertura
+     se quedó sin nada que atenuar y --pace-abre se retiró (no tenía otro
+     consumidor). Lo que NO se toca es --pace-arco: el tono sigue tiñendo la cola
+     del bloom (s159), y eso depende de qué hora es, no de que haya arco
+     enterrado.
+      Y NO ES UN FILO, ES NIEBLA. El corte seco duró lo que tardó en verse: los
+     cabos se leían amputados. El degradado no salta de opaco a transparente,
+     recorre la niebla de arriba y llega a cero JUSTO en el horizonte. Sigue sin
+     haber luz por debajo y sigue sin depender de la sesión: lo único que cambia
+     respecto del corte es que el anillo ENTRA en ella en vez de chocar. */
 
 
-  const RAMPA = 'calc(' + dd(0.05) + ' * var(--pace-abre))';
-  const horizonte = 'linear-gradient(180deg, #000 0px, ' +
-  '#000 calc(100% - var(--pace-horizon) - ' + RAMPA + '), ' +
-  'rgb(0 0 0 / calc(0.62 * var(--pace-abre))) calc(100% - var(--pace-horizon)), ' +
-  'rgb(0 0 0 / calc(0.34 * var(--pace-abre))) calc(100% - var(--pace-horizon) + ' + RAMPA + '), ' +
-  'rgb(0 0 0 / calc(0.30 * var(--pace-abre))) 100%)';
-  /* Los TRECE que cruzan. El resto es andamio y no sale de esta IIFE. */
+  const nieblaCon = (largo) => 'linear-gradient(180deg, #000 0px, ' +
+  CURVA_NIEBLA.map(function (p) {
+    return 'rgb(0 0 0 / ' + p[1] + ') calc(100% - var(--pace-corte) - ' +
+    dd((largo * p[0]).toFixed(4)) + ')';
+  }).join(', ') + ')';
+  /* La del ANILLO es la del arco: es la capa que envuelve arco y punto guia.
+     La de la PISTA se aplica ADEMAS a su propia capa, anidada dentro, asi que
+     las mascaras se multiplican -- y como la corta ya vale 1 muy pronto, lo que
+     la pista experimenta es practicamente la larga. */
+  const horizonte = nieblaCon(NIEBLA_ARCO);
+  const horizontePista = nieblaCon(NIEBLA_PISTA);
+
+  /* LA COLA DE LA LUZ — el tercero de los bordes de s184.
+      El halo no puede acabar en el horizonte con un filo: sería la arista recta
+     que s157 persiguió media sesión. Pero tampoco puede seguir como si no
+     hubiera horizonte, porque entonces el anillo ocupa 271 grados y su luz da la
+     vuelta entera, que es justo lo que el usuario no quiere. La salida es que la
+     luz PASE del horizonte y se apague: a pleno hasta él, muerta 0,22 D más
+     abajo (92 px con el aro de 420).
+      Cada capa lo mide desde SU borde superior, porque sus cajas no coinciden: el
+     limbo está centrado en el aro y el bloom sube un 36 % de su propio alto. De
+     ahí el parámetro, que es la distancia de ese borde al CENTRO del aro, en D.
+     Medido tras aplicarlo: 30 sobre 255 a 60 px por debajo del horizonte (era
+     79) y 0 al pie de Actividades (era 31). */
+
+
+  const colaEn = (centro) => 'linear-gradient(180deg, #000 0px, ' +
+  '#000 calc(' + dd((centro + 0.5).toFixed(4)) + ' - var(--pace-corte)), ' +
+  'transparent calc(' + dd((centro + 0.5 + LUZ_COLA).toFixed(4)) + ' - var(--pace-corte)))';
+  const colaLimbo = colaEn(LIMBO_R);
+  const colaBloom = colaEn(BLOOM_H * BLOOM_SUBE);
+
+  /* Los DIECISEIS que cruzan. El resto es andamio y no sale de esta IIFE. */
   window.paceAtmosfera = {
     LUZ, NUCLEO, BORDE, horizonte, grano,
-    LIMBO_R, limboCon, menosArriba,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion
+    horizontePista,
+    LIMBO_R, limboCon, menosArriba, colaLimbo,
+    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom
   };
 })();
 })();
@@ -29457,9 +29733,9 @@ Object.assign(window, { Onboarding });
      exactamente igual que cuando vivia en el mismo archivo: sus 22
      interpolaciones no se han tocado. */
   const {
-    LUZ, NUCLEO, BORDE, horizonte, grano,
-    LIMBO_R, limboCon, menosArriba,
-    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion
+    LUZ, NUCLEO, BORDE, horizonte, horizontePista, grano,
+    LIMBO_R, limboCon, menosArriba, colaLimbo,
+    BLOOM_W, BLOOM_H, BLOOM_SUBE, bloomCon, direccion, colaBloom
   } = window.paceAtmosfera || {};
 
   const s = document.createElement('style');
@@ -29535,7 +29811,37 @@ Object.assign(window, { Onboarding });
          Ahora recorte y solapamiento salen del MISMO token, así que la frase
          «no pueden desincronizarse» pasa a ser cierta por construcción. */
       --pace-dial-d: var(--pace-timer-d, var(--pace-home-timer-size));
+      /* EL SOLAPAMIENTO Y EL HORIZONTE SIGUEN SIENDO EL MISMO TOKEN (s156): es
+         lo que sube Actividades y la tarjeta de Camino sobre el aro, y lo
+         consumen las dos pieles como margin-top negativo. No se toca. */
       --pace-horizon: var(--pace-activities-overlap, var(--pace-home-sunset-overlap));
+      /* EL CORTE DEL ARO, QUE DESDE s184 YA NO ES EL HORIZONTE.
+
+         Hasta aqui el aro se cortaba EN el horizonte, o sea en el borde superior
+         de Actividades -- por encima del rotulo--, y sus dos cabos morian en el
+         aire. Decision del usuario en s184, viendo las dos variantes pintadas:
+         que baje hasta el canto de las TARJETAS, porque asi lo que lo termina es
+         una OCLUSION (las tarjetas son opacas) y una oclusion no se lee nunca
+         como amputacion. El rotulo ACTIVIDADES queda dentro de su abertura.
+
+         SE SEPARA DEL HORIZONTE, PERO NO DE SU FUENTE, y esa distincion es la que
+         mantiene viva la garantia de s156: el motor calcula el corte restandole
+         al MISMO solapamiento la banda del rotulo, que MIDE. No se escribe un
+         32: depende del padding de la piel y del idioma. Aqui solo se elige
+         motor-o-fallback, igual que con --pace-dial-d y --pace-horizon.
+
+         POR QUE NO BASTABA CON BAJAR --pace-horizon: ese token TAMBIEN mueve el
+         layout: «_responsive.pieles.js» lo usa como margin-top negativo en las
+         dos pieles, y «SuggestedPathCard» igual. Bajarlo habria bajado las
+         tarjetas con el aro y la composicion entera se habria descolocado. Son
+         dos preguntas distintas y ahora tienen dos nombres.
+
+         Sin motor la banda vale 0 y el corte vuelve a ser el horizonte: el
+         comportamiento anterior, que es el fallback correcto y no una
+         aproximacion. Los 6 px son el aire entre el cabo y el canto de la
+         tarjeta; el suelo de 4 px impide que un rotulo desproporcionado deje el
+         aro sin recortar. Barrido: 271,6 -> 295,8 grados a 1280x800. */
+      --pace-corte: var(--pace-dial-corte, var(--pace-horizon));
     }
     @supports (height: 1dvh) {
       [data-pace-home-body] {
@@ -29635,7 +29941,7 @@ Object.assign(window, { Onboarding });
       }
     }
     /* ===================================================================
-       EL HORIZONTE (s158) — de corte seco a desvanecido.
+       EL HORIZONTE (s158, y de vuelta al corte seco en s184).
 
        OJO AL EDITAR: esto vive DENTRO del template literal de la hoja. Un solo
        backtick aqui aborta el build — paso tres veces en s157 y una mas en
@@ -29645,21 +29951,27 @@ Object.assign(window, { Onboarding });
        sobre el MARCO, y el comentario del bloque Desktop registraba que el
        corte duro era deliberado (= v0.64): un desvanecido dejaría «arco y punto
        atenuados flotando en la banda transparente, a los lados de
-       ACTIVIDADES». El usuario ha pedido probar justamente eso, ahora que hay
-       luz: que el arco de recorrido se COMPLETE los 360 grados aunque pase por
-       detrás de los chips, hundiéndose en la luz en vez de desaparecer. Si al
-       verlo no convence, la vuelta atrás es una sola parada: llevar el último
-       tramo a transparente y el arco vuelve a cortarse.
+       ACTIVIDADES». s158 probó justamente eso, a petición del usuario y ahora
+       que hay luz: que el arco de recorrido COMPLETASE los 360 grados aunque
+       pasara por detrás de los chips, hundiéndose en la luz.
 
-       LA MISMA MÁSCARA RESUELVE LAS DOS COSAS QUE PIDIÓ. Por debajo del
-       horizonte queda el 30 %: el arco es una línea saturada de 1,3 de grosor y
-       a ese 30 % se sigue leyendo; el track es --line al 0,85 de opacidad y a
-       ese 30 % desaparece. No hacen falta dos mecanismos.
+       s184 CIERRA ESE PARÉNTESIS, y no porque el desvanecido no convenciera:
+       porque se le acabó el trabajo. El arco ya no da los 360 — recorre solo el
+       tramo VISIBLE, del cruce izquierdo al derecho—, así que no queda nada
+       debajo del horizonte que atenuar. Lo único que la apertura seguía haciendo
+       era fundir los cabos, y el usuario pidió cabos limpios. La máscara vuelve
+       a ser un corte: opaco arriba, transparente abajo, igual con sesión y sin
+       ella. Es la vuelta atrás que este mismo comentario dejó escrita en s158
+       («llevar el último tramo a transparente»), ejecutada por otro motivo.
+
+       SIGUE SIENDO UNA MÁSCARA Y NO UN clip-path, y esa parte no es histórica:
+       la máscara cubre el halo ::after del marco, que el clip-path de v0.89.0
+       tenía que recortar aparte.
 
        POR QUÉ EN [data-pace-dial-ring] Y NO DONDE ESTABA. En el <svg> no puede
        ir: uno de los dos va rotado -90deg y la máscara rotaría con él (un
        degradado vertical se volvería horizontal). En el MARCO tampoco: contiene
-       el número, el CTA y el CICLO, y los desvanecería con el anillo.
+       el número, el CTA y el CICLO, y los recortaría con el anillo.
 
        --pace-horizon es el MISMO token que sube el bloque de abajo, así que
        horizonte y solapamiento siguen sin poder desincronizarse.
@@ -29667,6 +29979,16 @@ Object.assign(window, { Onboarding });
     [data-pace-dial-fit] [data-pace-dial-ring] {
       -webkit-mask-image: ${horizonte};
       mask-image: ${horizonte};
+    }
+    /* Y LA PISTA, ADEMAS, SE DISUELVE MUCHO ANTES (s184). Va en su propia capa
+       ANIDADA dentro del anillo, asi que las dos mascaras se MULTIPLICAN: la del
+       anillo vale 1 muy pronto, de modo que lo que la pista experimenta es en la
+       practica solo esta. El reparto —el arco es informacion y no puede
+       desaparecer; la escala es ambiente y si— esta en la cabecera de las dos
+       nieblas de _responsive.atmosfera.js. */
+    [data-pace-dial-fit] [data-pace-dial-pista] {
+      -webkit-mask-image: ${horizontePista};
+      mask-image: ${horizontePista};
     }
     /* ===================================================================
        EL SOL DE LA HOME (s158) — REEMPLAZA la atmósfera de s156 y la de s157.
@@ -29714,9 +30036,13 @@ Object.assign(window, { Onboarding });
       --pace-luz: ${LUZ};
       --pace-nucleo: ${NUCLEO};
       --pace-borde: ${BORDE};
-      /* Cuanto esta ABIERTO el horizonte. Satura en cuanto arranca la sesion,
-         asi que pausar no vuelve a cerrar el aro. */
-      --pace-abre: var(--pace-on, 0);
+      /* AQUI VIVIA --pace-abre (s158-s183), que decia cuanto estaba ABIERTO el
+         horizonte. Se retiro en s184 al recortar el arco: era el mando de un
+         desvanecido que ya no tiene a quien desvanecer, y su unico consumidor
+         era la mascara del anillo. El porque completo, en la cabecera de la
+         constante «horizonte» de _responsive.atmosfera.js. (Sin backticks: este
+         comentario vive DENTRO del template literal de la hoja, y uno solo
+         aborta el build — van cinco veces.) */
       /* La recogida de la pausa, resuelta en UN solo sitio: el interruptor lo
          publica FocusTimer y lo interpola la transicion de abajo; la
          profundidad la pone el papel. Con pausado=0 vale 1 (luz entera) y con
@@ -29792,8 +30118,12 @@ Object.assign(window, { Onboarding });
       border-radius: 50%;
       pointer-events: none;
       background-image: ${grano}, ${limboCon(1)};
-      -webkit-mask-image: ${limboCon(2)}, ${menosArriba};
-      mask-image: ${limboCon(2)}, ${menosArriba};
+      /* TRES máscaras intersecadas desde s184, y cada una tiene su borde: la
+         radial le da forma a la corona, «menosArriba» la mata antes de la fila
+         de minutos y «colaLimbo» la apaga por debajo del horizonte. Las tres
+         salen de _responsive.atmosfera.js, donde estan sus numeros medidos. */
+      -webkit-mask-image: ${limboCon(2)}, ${menosArriba}, ${colaLimbo};
+      mask-image: ${limboCon(2)}, ${menosArriba}, ${colaLimbo};
       -webkit-mask-composite: source-in;
       mask-composite: intersect;
     }
@@ -29810,8 +30140,11 @@ Object.assign(window, { Onboarding });
       transform: translate(-50%, -${(BLOOM_SUBE * 100).toFixed(0)}%);
       pointer-events: none;
       background-image: ${grano}, ${bloomCon(1)};
-      -webkit-mask-image: ${bloomCon(2)}, ${direccion};
-      mask-image: ${bloomCon(2)}, ${direccion};
+      /* s184: se le anade «colaBloom» por el mismo motivo que al limbo. Por
+         ARRIBA no necesita nada: «direccion» ya vale cero por encima de 0,5 D
+         del centro, que es mas alto que el techo que se le puso a la corona. */
+      -webkit-mask-image: ${bloomCon(2)}, ${direccion}, ${colaBloom};
+      mask-image: ${bloomCon(2)}, ${direccion}, ${colaBloom};
       -webkit-mask-composite: source-in;
       mask-composite: intersect;
     }
@@ -31211,6 +31544,7 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
   var WIDTH_CAP_MOBILE = 0.92;
   var D_FLOOR_MOBILE = 240;
   var CICLO_GAP = 4; // px de aire MÍNIMO entre CICLO y el borde de Actividades
+  var AIRE_TARJETA = 6; // px de aire ENCIMA del canto de las tarjetas (s184)
   var OVERLAP_TARGET = 0.16; // solapamiento nominal del contrato (§0): 16 % de D
   var MAX_FIT_PASSES = 8; // iteraciones de ajuste «encoger hasta caber»
 
@@ -31283,6 +31617,39 @@ if (typeof document !== 'undefined' && document.getElementById('pace-root')) {
     Math.round(D * OVERLAP_TARGET); // fallback si no se encuentra el CICLO
     var overlap = Math.min(Math.round(D * OVERLAP_TARGET), maxOverlap);
     setVar('--pace-activities-overlap', overlap + 'px');
+
+    /* LA BANDA DE LA ETIQUETA (s184). El aro deja de cortarse en el borde
+       superior de Actividades y baja hasta el canto de las TARJETAS, para que
+       lo que lo termine sea una oclusion real -- las tarjetas son opacas-- y no
+       un desvanecido en el vacio. Entre las dos cosas hay una banda: el padding
+       superior de la barra mas el rotulo ACTIVIDADES. 32 px medidos a 1280x800,
+       pero NO se escribe: depende del padding de la piel y del idioma, asi que se
+       mide aqui, que es donde ya se mide todo lo demas.
+        Publicarla es lo que permite que corte y solapamiento sigan sin poder
+       desincronizarse (la regla de s156): ya no son el MISMO token, pero el
+       corte se DERIVA del solapamiento restandole esta medida. Una sola fuente,
+       dos consumidores.
+        Sin chip o sin barra publica 0, y entonces el corte vuelve a valer el
+       solapamiento: exactamente el comportamiento anterior, que es el fallback
+       correcto y no una aproximacion. */
+
+
+    var chip = document.querySelector('[data-pace-activitybar-chip]');
+    var barra = document.querySelector('[data-pace-activitybar]');
+    var banda = chip && barra ?
+    Math.max(0, Math.round(chip.getBoundingClientRect().top - barra.getBoundingClientRect().top)) :
+    0;
+    /* SE PUBLICA EL CORTE YA RESUELTO, no la banda, y eso NO es comodidad: un
+       custom property SIN REGISTRAR no se computa -- `getPropertyValue` devuelve
+       el TEXTO. Dejando la resta en CSS, el token valia literalmente
+       "max(4px, calc(67px - 32px - 6px))", TimerDial lo leia con parseFloat, le
+       salia NaN y el aro se quedaba dando la vuelta entera. Publicado en px por
+       el motor, el CSS solo elige motor-o-fallback como con los otros dos. */
+    /* El corte se mide desde ABAJO, asi que restar la banda lo BAJA hasta el
+       canto de las tarjetas y SUMAR el aire lo sube esos pocos px por encima.
+       Con el signo al reves el aro acababa 6 px POR DEBAJO del canto, o sea
+       asomando por los huecos entre tarjetas: 310,3 grados en vez de 295,8. */
+    setVar('--pace-dial-corte', Math.max(4, overlap - banda + AIRE_TARJETA) + 'px');
   }
 
   function compute() {

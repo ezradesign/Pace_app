@@ -15,72 +15,6 @@ const sharp = require('sharp');
 const { sembrar, irAlArtefacto } = require('./helpers');
 const { sonda, px, asentar } = require('./home.helpers');
 
-/* EL PERFIL DE LA LUZ, fila a fila y EN PIXELES. Es el unico aserto de este
-   spec que mira la pantalla, y hace falta: el alcance de la cola no se puede
-   deducir de ninguna variable — es el resultado de un degradado, dos mascaras y
-   lo que quede tapado por los chips.
-   Se toman dos capturas del MISMO layout, una con luz y otra sin ella, y la
-   diferencia es la atmosfera y solo la atmosfera. La referencia NO puede ser
-   --pace-on:0: ese mando ademas cierra el horizonte del aro, asi que la toma de
-   control tendria el arco cortado y la diferencia incluiria el arco (medido: el
-   pico saltaba de 41 a 121 por eso). Se apagan solo las capas de luz. */
-const SIN_LUZ = '[data-pace-sun]::before,[data-pace-sun]::after{opacity:0 !important}'
-  + '[data-pace-home-body] [data-pace-activitybar-chip]{filter:none !important}'
-  + '[data-pace-home-body] [data-pace-activitybar-chip]::after,'
-  + '[data-pace-home-body] [data-pace-spc-card]::after{opacity:0 !important}';
-
-async function perfilDeLuz(page) {
-  await page.addStyleTag({ content: '#pace-sin-luz-e2e{}' });
-  await page.evaluate((css) => {
-    const s = document.createElement('style');
-    s.id = 'pace-sin-luz-e2e';
-    s.media = 'not all';
-    s.textContent = css;
-    document.head.appendChild(s);
-  }, SIN_LUZ);
-  const conLuz = await page.screenshot();
-  await page.evaluate(() => { document.getElementById('pace-sin-luz-e2e').media = 'all'; });
-  const sinLuz = await page.screenshot();
-  await page.evaluate(() => { document.getElementById('pace-sin-luz-e2e').media = 'not all'; });
-
-  const A = await sharp(conLuz).raw().toBuffer({ resolveWithObject: true });
-  const B = await sharp(sinLuz).raw().toBuffer();
-  const { width, height, channels } = A.info;
-  const geo = await page.evaluate(() => {
-    const c = (s) => { const e = document.querySelector(s); return e ? e.getBoundingClientRect() : null; };
-    return { dpr: devicePixelRatio, dial: c('[data-pace-dial-fit]'), act: c('[data-pace-activitybar]'),
-             spc: c('[data-pace-spc-card]'), home: c('[data-pace-home-body]') };
-  });
-  const x0 = Math.round(geo.home.left * geo.dpr);
-  const media = [], pico = [];
-  for (let y = 0; y < height; y++) {
-    let s = 0, n = 0, mx = 0;
-    for (let x = x0; x < width; x++) {
-      const o = (y * width + x) * channels;
-      const d = Math.abs(0.2126 * (A.data[o] - B[o]) + 0.7152 * (A.data[o + 1] - B[o + 1]) + 0.0722 * (A.data[o + 2] - B[o + 2]));
-      s += d; n++; if (d > mx) mx = d;
-    }
-    media.push(s / n); pico.push(mx);
-  }
-  /* DOS LECTURAS POR BANDA, y hacen falta las dos.
-     La MEDIA dice cuánta luz hay repartida en esa altura; el PICO, cuánta hay
-     concentrada. Comparar halos con colas por la media no funciona: el halo es
-     un aro compacto y la cola un lavado ancho, así que una cola tenue extendida
-     de lado a lado gana en media a un aro brillante y estrecho. Medido: por
-     medias, la banda de Actividades (5,08) salía por encima de la del borde
-     superior del aro (1,94) — y no porque compita, sino porque la luz es MÁS
-     FUERTE ABAJO A PROPÓSITO (--sun-top atenúa el techo y el bloom es
-     direccional hacia abajo). El pico sí distingue las dos cosas. */
-  const banda = (desde, hasta, cual) => {
-    const arr = cual === 'pico' ? pico : media;
-    const a = Math.max(0, Math.round(desde * geo.dpr)), b = Math.min(height, Math.round(hasta * geo.dpr));
-    if (b <= a) return 0;
-    let s = 0, mx = 0;
-    for (let y = a; y < b; y++) { s += arr[y]; if (arr[y] > mx) mx = arr[y]; }
-    return +(cual === 'pico' ? mx : s / (b - a)).toFixed(3);
-  };
-  return { geo, banda };
-}
 
 test.describe('geometria de la home · la luz del Pomodoro', () => {
   /* Lee las DOS magnitudes de la luz alli donde se publican, mas los atributos
@@ -264,44 +198,24 @@ test.describe('geometria de la home · la luz del Pomodoro', () => {
       .toBe(apagada);
   });
 
-  /* EL SOL ES QUIEN ABRE EL ARO. Sin sesion no hay luz, asi que tampoco hay
-     motivo para que el aro se abra: el horizonte vuelve al corte SECO de
-     v0.89.0. Con la sesion viva el corte se desvanece y el arco de recorrido
-     completa los 360 grados por detras de los chips.
+  /* EL HORIZONTE ES NIEBLA, MUERE EN LA LINEA, Y NO DEPENDE DE LA SESION (s184).
 
-     Se lee de la mascara COMPUTADA, no de una variable: en reposo sus tres
-     paradas colapsan en el mismo pixel y con alfa cero —que es literalmente lo
-     que significa «corte seco»— y con sesion se separan y toman alfa. Asi el
-     aserto describe lo que se VE, no como esta escrito. */
-  test('el horizonte esta cerrado en reposo y lo abre la sesion', async ({ page, context }) => {
-    await sembrar(context);
-    await irAlArtefacto(page);
-    await asentar(page);
+     ESTE ASERTO DECIA LO CONTRARIO Y ERA CORRECTO CUANDO SE ESCRIBIO. De s158 a
+     s183 el sol ABRIA el aro: el arco de recorrido daba los 360 grados y se
+     hundia bajo el horizonte, asi que la mascara tenia que desvanecerse para
+     dejarlo pasar por detras de los chips. En s184 el arco dejo de bajar —
+     recorre solo el tramo visible (`aro-recorrido.spec.js`)— y la apertura se
+     quedo sin nada que atenuar.
 
-    const leerHorizonte = () => page.evaluate(() => {
-      const r = document.querySelector('[data-pace-dial-fit] [data-pace-dial-ring]');
-      if (!r) return null;
-      const m = getComputedStyle(r).maskImage || '';
-      const pos = [...m.matchAll(/calc\(100% - ([\d.]+)px\)/g)].map(x => parseFloat(x[1]));
-      const colas = [...m.matchAll(/rgba\(0, 0, 0, ([\d.]+)\)/g)].map(x => parseFloat(x[1]));
-      return { anchoRampa: pos.length === 3 ? +(Math.max(...pos) - Math.min(...pos)).toFixed(1) : null,
-               alfaMaxima: colas.length ? Math.max(...colas) : 0 };
-    });
+     LO QUE SE DEFIENDE AHORA SON TRES COSAS A LA VEZ, y hacen falta las tres:
+       · que la mascara MUERA en el horizonte (por debajo no hay anillo);
+       · que llegue a cero por una RAMPA con ancho, no por un filo — un cabo
+         cortado en seco se lee amputado, y eso es lo que el usuario rechazo;
+       · que las dos cosas sean iguales con sesion y sin ella, que es lo que
+         sustituyo a --pace-abre.
+     Un aserto de «muere en el horizonte» a solas pasaria con el filo; uno de
+     «hay rampa» a solas pasaria con luz derramandose por debajo.
 
-    const reposo = await leerHorizonte();
-    expect(reposo, 'GUARD: no existe la capa del anillo').not.toBeNull();
-    expect(reposo.anchoRampa, 'en reposo el horizonte NO corta en seco: la rampa tiene ancho').toBe(0);
-    expect(reposo.alfaMaxima, 'en reposo asoma algo por debajo del horizonte').toBe(0);
-
-    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
-    await expect(page.locator('[data-pace-dial-fit]')).toHaveAttribute('data-pace-dial-running', '');
-    /* El fundido dura 1,6 s y --pace-i esta REGISTRADO para poder interpolarlo,
-       asi que leerlo antes devuelve un valor a medio camino. */
-    await expect.poll(async () => (await leerHorizonte()).alfaMaxima, { timeout: 5000 })
-      .toBeGreaterThan(0.2);
-    const activo = await leerHorizonte();
-    expect(activo.anchoRampa, 'con la sesion viva el horizonte sigue siendo un corte seco').toBeGreaterThan(4);
-  });
 
   /* UNA SOLA FUENTE DE COLOR PARA TODAS LAS CAPAS. Este es el defecto de s157
      convertido en red: alli la corona viajaba con la hora pero la luz de suelo
@@ -404,71 +318,5 @@ test.describe('geometria de la home · la luz del Pomodoro', () => {
          es exactamente lo que esa preferencia pide. */
       expect(parseFloat(dur.sol), 'el fundido del sol sigue vivo con reduced-motion').toBeLessThan(0.05);
     });
-  });
-
-  /* EL ALCANCE DE LA COLA (s159, M4). La cola se aflojo —paradas 85 % y 92 % del
-     bloom, de 0,30/0,12 a 0,42/0,20— porque la contencion de s158 la habia
-     dejado demasiado corta en escritorio: 0,75 de desviacion en la banda de
-     Actividades. Medido con la variante nueva: 0,90.
-
-     LO QUE ESTE ASERTO NO PUEDE MEDIR, Y POR QUE. La idea original era exigir
-     ademas que la cola fuera «claramente secundaria respecto al halo». No se
-     puede por bandas de filas, y el intento lo demostro tres veces:
-       · en escritorio Actividades SUBE sobre el aro (solapamiento del
-         horizonte), asi que su banda y la del aro se pisan 33 px y devolvian el
-         MISMO pico — 32,76 contra 32,76, comparando una banda consigo misma;
-       · por MEDIAS la banda de abajo gana siempre, y no por competir: la luz es
-         mas fuerte abajo A PROPOSITO (--sun-top atenua el techo y el bloom es
-         direccional). Medido: 5,08 abajo contra 1,94 arriba;
-       · y los chips OPACOS se comen las filas cercanas al aro, asi que la media
-         sube con la distancia en vez de bajar.
-     Halo y cola son un campo continuo: separarlos pide medir por RADIO y sin
-     oclusion, que es lo que hace el banco de s159. Aqui se aserta lo que la
-     pantalla si permite ver sin ambiguedad, y el reparto halo/cola se juzga
-     mirando, que desde s147 es el detector que manda.
-
-     ESTE ASERTO NO SE HA CONSEGUIDO PONER ROJO, y se declara en vez de
-     disimularlo. Se intentaron tres mutaciones —matar las dos paradas
-     exteriores del bloom, luego tres, y luego tambien las tres del limbo— y
-     siguio verde: en escritorio la franja libre cae a ~0,6 D del centro, donde
-     TODAVIA llega el limbo, asi que no existe una sola fila iluminada por la
-     cola en exclusiva. Lo que este aserto defiende de verdad es que la luz NO
-     se quede pegada al aro y que el fondo de la home siga limpio; la amplitud
-     concreta de la cola la mide el banco, no la suite.
-
-     SOLO ESCRITORIO, que es el viewport de la suite; el perfil de movil se mide
-     en el banco (alli la tarjeta de Camino se solapa con el aro). */
-  test('la cola llega a Actividades y no inunda la seccion', async ({ page, context }) => {
-    await sembrar(context);
-    await irAlArtefacto(page);
-    await asentar(page);
-    await page.getByRole('button', { name: 'Empezar foco', exact: true }).click();
-    await expect(page.locator('[data-pace-dial-fit]')).toHaveAttribute('data-pace-dial-running', '');
-    /* SIN RELOJ VIRTUAL, y no es un descuido. `page.clock` congela el fundido de
-       1,6 s de --pace-on: con el reloj instalado y avanzado a la meseta, la luz
-       se media con el interruptor a medio camino y el halo daba 0,067 —lo cazo
-       el guard de abajo—. Aqui no hace falta llegar a la meseta: los tres
-       asertos son RATIOS entre bandas, y la envolvente escala las tres por
-       igual. Se espera al fundido REAL, que es lo unico que se necesita. */
-    await expect.poll(async () => Number(await page.evaluate(() => getComputedStyle(
-      document.querySelector('[data-pace-home-body]')).getPropertyValue('--pace-on'))), { timeout: 6000 })
-      .toBe(1);
-    await asentar(page);
-
-    const { geo, banda } = await perfilDeLuz(page);
-    /* LA FRANJA LIBRE, que es el UNICO territorio visible de la cola en
-       escritorio: entre la base de los chips y el canto de la tarjeta de Camino.
-       Medir pegado al aro no vale —ahi manda la parada del 58 % del bloom, que
-       no es la cola— y por debajo de la tarjeta no hay pixel que mirar: es
-       opaca y llega al borde del viewport. */
-    const haloPico = banda(geo.dial.top, geo.dial.top + geo.dial.height * 0.75, 'pico');
-    const colaMedia = banda(geo.spc.top - 20, geo.spc.top - 1);
-    const fondoMedia = banda(geo.home.bottom - 24, geo.home.bottom - 2);
-
-    expect(haloPico, 'GUARD: no se mide luz ni en el aro; la comparacion seria vacia').toBeGreaterThan(5);
-    expect(colaMedia, 'la cola no llega a Actividades: la luz muere antes de tiempo')
-      .toBeGreaterThan(0.15);
-    expect(fondoMedia, 'la luz llega viva al fondo de la home: eso es una franja, no una cola')
-      .toBeLessThan(colaMedia * 0.5);
   });
 });

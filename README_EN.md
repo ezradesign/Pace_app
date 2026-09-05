@@ -3,7 +3,7 @@
 > Productivity and wellness web app for people who spend long hours sitting.
 > Thoughtful micro-interventions throughout the day, not lengthy workouts.
 
-**Status:** v0.114.1 · Pre-launch
+**Status:** v0.115.0 · Pre-launch
 **Build delivered:** `index.html` — web/PWA artifact, installable and offline
 **Author:** [@ezradesign](https://github.com/ezradesign)
 **Code license:** [Elastic License 2.0](./LICENSE) — see [§ License](#-license)
@@ -32,7 +32,7 @@ builder**, and an installable **PWA** that works offline.
 
 ---
 
-## 📊 Current state (v0.114.1)
+## 📊 Current state (v0.115.0)
 
 | Area | State |
 |---|---|

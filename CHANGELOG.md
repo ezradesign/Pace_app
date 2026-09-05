@@ -203,6 +203,7 @@ versiones anteriores, la tabla enlaza al diario completo en
 
 | Versión | Fecha | Título | Sesión | Detalle |
 |---|---|---|---|---|
+| **v0.115.0** | 2026-09-05 | feat(pomodoro): **el recorrido que solo pisa lo que se ve** — El arco del Pomodoro deja de dar los 360 grados y recorre **exactamente el tramo visible**: nace en el cruce izquierdo, sube por las 12 y muere en el derecho. **Y ese «unos 270» no se escribe, se mide**: el ratio horizonte/D no es constante (el motor publica el 16 % de D con un techo por el CICLO), asi que el barrido va de **~266° a ~276°** -- **271,58°** a 1280x800 y **271,84°** a 390x844. Un 270 fijo dejaria los cabos **1,9 px** fuera del corte. **Tres defectos solo aparecieron midiendo**: (1) mi primera version **se quedo redonda con el motor funcionando** -- la unica lectura devolvio 360 porque el token aun no resolvia, y el observer no volvia a disparar porque D ya no cambiaba; «no lo se» y «360» son respuestas distintas; (2) el cabo derecho caia **0,78 px** por debajo del izquierdo, porque Chrome dibuja el circulo con beziers de **297,97** y no con la circunferencia de **298,451** (pathLength=360 lo elimina y deja el trazo escrito en grados); (3) al redimensionar aparecia un **fantasma de color con el Pomodoro parado**, porque stroke-dashoffset transicionaba hacia el barrido nuevo pintando arco por el camino -- la geometria no se transiciona (s160), asi que el circulo se remonta. **Consecuencia bonita**: a mitad de bloque la punta cae clavada en las 12, justo donde s159 puso el maximo de luz. **LOS TRES BORDES**, encargo del usuario: el horizonte pasa de filo a **NIEBLA** (0,14 D **con curva**, porque una rampa recta apaga el 8,5 % final de cada extremo y ese tramo es informacion); **el halo dejaba de pintar la fila de minutos** -- y no era precaucion, **estaba pasando**: el comentario que gobernaba la rampa afirmaba «~59 px hasta la fila» y hoy hay **24,5**, con el limbo muriendo **64 px** pasado el aro; la banda recibia **57 sobre 255** y ahora **0-1 en seis viewports**, con el brillo pegado al aro cayendo solo de 64 a 58. Y la cola de la luz pasa el horizonte y se apaga **0,22 D** mas abajo: **30** a 60 px (era 79) y **0** al pie de Actividades (era 31). Se retira --pace-abre, que nacio para que el arco completase los 360 y se quedo sin trabajo. **187 → 191**, con **7 mutantes calibrados en rojo** y dos specs nuevos. **Tres trampas del instrumento**: el SW servia .jsx cacheados (cuatro medidas sobre codigo viejo), un mutante mentia en verde por tocar solo -webkit-mask-image, y el perfil salia contaminado con picos de 211 al restar dos fotogramas distintos. **Y TODO ESO SE REVISO MIRANDOLO, con tres correcciones mas.** (1) El arco **tardaba ~2,2 min** en verse en un bloque de 25: nace EN el corte, justo donde la mascara vale cero, y le habia puesto encima una niebla de 0,14 D. El reparto lo dictaba una frase que ya estaba escrita en `tokens.css` — **«Arco = informacion; halo = ambiente»**— y no la habia aplicado: ahora la pista lleva la niebla larga y el arco solo un remate de 0,035 D, en **capas separadas**. A los 8 s ya se ve. (2) **Una linea de corte arriba**: mi rampa iba recta de 0 a `--sun-top` y ahi la pendiente cambiaba 4x — el ojo encuentra un quiebre de pendiente igual que encuentra un borde, que es por lo que el limbo lleva ONCE paradas y no cinco. Ahora es una S que ademas pesa MAS en el tramo medio (0,66 contra 0,51 a 0,32 D). (3) **El aro baja hasta el canto de las TARJETAS** (295,8 grados a 1280x800, decision del usuario viendo las dos variantes pintadas): asi lo termina una **OCLUSION** —las tarjetas son opacas— y una oclusion no se lee nunca como amputacion. Eso obligo a **separar el corte del horizonte**, porque ese token TAMBIEN mueve el layout; siguen saliendo de una fuente unica: el motor resta al MISMO solapamiento la banda del rotulo, que MIDE. **Y tres trampas mas**: un custom property sin registrar no se computa (`--pace-corte` valia el TEXTO «max(4px, calc(...))», parseFloat daba NaN y el aro se quedaba redondo), el signo del aire invertido dejaba los cabos asomando bajo las tarjetas, y una regla que di por anadida **nunca lo estuvo** porque no verifique el reemplazo. | s184 | [session-184](./docs/sessions/session-184-el-recorrido-visible.md) |
 | **v0.114.1** | 2026-09-04 | fix(i18n)+docs(audit): **el logro que hablaba en espanol, y ocho premisas que ya no eran** — Cierra el unico defecto medido y **publicado** que quedaba de s182: con la app en ingles la fila del ultimo logro decia «Regresas». **Sobrevivio a s167 porque entonces esa superficie no decia ningun nombre** — pintaba cinco sellos sin texto, y **s180 los sustituyo por UNA fila con el nombre** sin tocar i18n. `achMini` recibe `tR` por parametro. **Dos asertos nuevos, con dos mutantes que muerden**, y el de espanol sigue verde con el primero: el par no se mide a si mismo. **185 → 187.** Y la **auditoria de premisas** encargada por el usuario, reutilizando los checkers de s178 y atacando la clase que aquellos declararon no poder ver. **Ocho hallazgos**: `CLAUDE.md` con cuatro datos falsos (arbol de 14 carpetas donde hay **19**, `WeeklyStats.jsx` inexistente, el dato de Estira apuntando a un archivo que ya no lo tiene -- **tercera vez que ese parrafo miente**-- y «65 tests» donde hay **187**) · **la musica pide dos cosas incompatibles a la vez**, y esa contradiccion es exactamente la causa que s177 midio de que la pieza no sonara · `EVENTOS_SCHEMA.md` decia «ninguna parte se ha cableado» con **1.453 lineas y 5 specs** vivas · el troceo de >500 lineas de la Fase 8.5 **ya estaba hecho** (322/261/318, y de 239 archivos ninguno pasa de 500) · `CONTENT.md` con **77 versiones** de deriva y Estira a 14 donde hay **17**, sospechado en s130 y sin verificar en 53 sesiones · y `stats-pestanas` **verde sobre el estado vacio**, ciego a que con datos «Semana» se corta 33 px y «Caminos» hasta 146. **Tanda 0 ejecutada**: cinco documentos corregidos. De Stats se decidio mucho y **no se implemento nada**: «Hoy» **no entra** (anula el §4.1 y el §37.4), la vista no se rehace, la barra es cinta escalonada y los Caminos se quedan fuera. | s183 | [session-183](./docs/sessions/session-183-auditoria-de-premisas.md) |
 | **v0.114.0** | 2026-09-02 | feat(sidebar)+fix(censo): **el cajon de movil encoge tambien, y el censo que un troceo dejo ciego** — Los tres encargos que el usuario saco de mirar la revision de s181, medidos y **pintados antes de decidir**. **A NO ERA UN DEFECTO**: 375x844 no corta nada -- el corte era del carrusel horizontal de la propia pagina de revision. **B y C los decidio el usuario viendo las 30 capturas**, y su respuesta a C no era ninguna de las cuatro opciones: «escalarla en todas las resoluciones que quede bien y en las mas pequenas aceptamos un pequeno scroll **sin barra**». **UN NUMERO MIO DEL HANDOFF ERA FALSO Y HABRIA VICIADO LA DECISION**: 0,85 no hace caber 667, porque faltaba contar los 45 px del propio cajon. El suelo real es **0,80**, elegido por dos medidas (la semana se queda en 36 px, sobre los 24 de WCAG 2.2 AA; y hace caber entero el iPhone SE/8). **EL BANCO FOTOGRAFIO SU PROPIA MUTACION**: su limpieza entre variantes borraba `--sb-escala`, la propiedad que escribe el producto, y con el memo de `aplicar` no se volvia a escribir nunca -- dio «factor 1» sobre una app que en vivo estaba a 0,8083, y ahora recarga por variante y **cruza dos instrumentos**. Y el censo de glifos: **s178 lo dejo ciego a Estira entera** al trocear el dato, y devolvia **61 donde hay 62** sin que nada saltara. **173 → 185**, con 6 mutantes calibrados en rojo. | s182 | [session-182](./docs/sessions/session-182-el-cajon-de-movil.md) |
 | **v0.113.0** | 2026-09-02 | fix(sidebar): **la sidebar encoge entera, y la tarjeta que se amputaba sola** — Cierra el trabajo que s180 dejo sin commitear y resuelve el problema de altura que su handoff dejo ABIERTO, con un diagnostico DISTINTO del que ese handoff daba por bueno. **LOS 747 px DEL HANDOFF ERAN EL SUELO COMPRIMIDO, NO LA ALTURA**: la natural eran **835,9** (dos cuentas independientes: la suma de las piezas menos el chevron, que es absolute, y el primer viewport sin sobrante). **EL SINTOMA NO ERA UNA BARRA DE SCROLL sino la TARJETA quedandose sin texto**: `sidebarStyles.accion` lleva `overflow: hidden`, y eso **APAGA el tamano minimo automatico del flex** -- que solo aplica con `overflow: visible`-- asi que era el UNICO hijo comprimible de doce y absorbia el deficit entero amputandose. **DOS UMBRALES**: por debajo de 836 pierde contenido, y entre 750 y 836 lo pierde **sin barra que avise**. A 714 la tarjeta media **33 px**: rotulo y nada mas. **Y ESTABA PUBLICADO**: HEAD trae la misma linea y desborda **50 px** a 714, mas que el arbol. **SE CONSTRUYO LA SOLUCION EQUIVOCADA Y EL USUARIO LA TIRO MIRANDOLA**: apurar el aire bajaba la columna a **700,3** (135,6 px, de los que **56 salian solo de las cuatro reglas**) pero cambiaba las PROPORCIONES. Su instruccion: «si hay que hacer a la vez pequenos a TODOS los elementos, perfecto» ⇒ **la columna se ESCALA entera** con `transform`, misma composicion y solo mas pequena: **1 · 0,926 · 0,822 · 0,708** a 1000/800/714/620, con el pie siempre a 18 px del borde y sin agrandar nunca por encima de su tamano natural. **LA LENTE NO ESTABA EN EL PLAN**: la envoltura mide `100%/escala` de ancho y desbordaba **52 px** en layout, tumbando un guard de scroll lateral que ya existia -- se arreglo el diseno, no el guard. **LOS MINUTOS DE HOY YA COMPARTEN LINEA**: `puntosSesion` devolvia `null` sin sesiones, asi que tres celdas no tenian fila de bolas y Agua si, y con `marginTop: auto` el valor caia al fondo en tres y no en la cuarta. **EL ROJO INTERMITENTE TENIA RAZON Y ERA DEL PRODUCTO**: si las webfonts cargan DESPUES de calcular la escala, el numero queda hecho con la fuente de reserva y **nada lo corrige**. Ademas: regla nueva en el pie y **pill naranja** en «Mis rutinas». **El precio, dicho**: encoger encoge los objetivos tactiles (la semana, de 45 a **37,1 px** a 1280x720; sigue sobre el minimo AA de 24). **Tres mentiras del instrumento nuevas**: `setViewportSize` de Playwright **no emite `resize`**, el `ResizeObserver` no dispara sobre la lente en headless, y fotografie mi propia mutacion. **173/173** (eran 170), 3 tests nuevos y dos troceos por la regla §1. | s181 | [session-181](./docs/sessions/session-181-la-sidebar-que-encoge-entera.md) |
@@ -382,6 +383,119 @@ versiones anteriores, la tabla enlaza al diario completo en
 | v0.10 | 2026-04-22 | Pulido del core (Respira + Mueve) | #3 | (sin diario) |
 | v0.9.2 | 2026-04-22 | Refinamiento post-feedback: Aro + Flor + Estira | #2 | (sin diario) |
 | v0.9 | 2026-04-22 | Base inicial — 14 JSX + 100 logros + 5 módulos | #1 | (sin diario) |
+
+---
+
+## [v0.115.0] -- 2026-09-05 -- feat(pomodoro): el recorrido que solo pisa lo que se ve
+
+### Cambiado
+- **El arco del Pomodoro recorre el tramo VISIBLE, no los 360.** Nace en el cruce izquierdo del
+  horizonte, sube por las 12 y muere en el derecho. La pista tenue se recorta con el: es la ESCALA
+  del recorrido, y una escala que siguiera dando la vuelta prometeria tiempo donde ya no lo hay.
+  Caminos NO se toca -- va por la rama `ticks` y no tiene horizonte del que recortar.
+- **El barrido se MIDE, no se declara.** Sale de los mismos dos tokens que dibujan el corte
+  (`--pace-dial-d` y `--pace-horizon`) con `asin((D/2 - H) / 0,475 D)`. Medido: **271,58 grados** a
+  1280x800 (D=420, H=67) y **271,84** a 390x844 (D=359, H=57); el rango real del contrato es
+  **266-276**. Un 270 escrito a mano deja los cabos **1,9 px** fuera del corte.
+- **El horizonte pasa de filo a NIEBLA.** El corte seco -- elegido por el usuario al retirar la
+  apertura de s158 -- duro lo que tardo en verse: los cabos se leian amputados. La mascara recorre
+  **0,14 D** (59 px con el aro de 420) y llega a cero JUSTO en el horizonte, **con curva**: con
+  rampa recta el arco pierde presencia en el 8,5 % final de cada extremo, y ese tramo son los
+  ultimos minutos del bloque.
+- **El halo muere antes de la fila de minutos.** La rampa superior del limbo pasa de ATENUAR al
+  72 % a MORIR: transparente por encima de 0,52 D del centro, a pleno desde 0,24 D.
+- **La luz pasa el horizonte y se apaga 0,22 D mas abajo**, en las dos capas del sol. Ni arista
+  recta en la linea ni cola hasta la tarjeta de Camino.
+
+### Retirado
+- **`--pace-abre`**, el mando que abria el horizonte con la sesion (s158). Nacio para que el arco
+  completase los 360 pasando por detras de los chips; con el arco arriba se quedo sin nada que
+  atenuar. No tenia otro consumidor.
+
+### Corregido
+- **El barrido se congelaba en 360 con el motor funcionando.** La medida inicial devolvia «vuelta
+  entera» cuando `--pace-horizon` aun no resolvia, y el `ResizeObserver` no volvia a disparar porque
+  D ya tenia su valor definitivo. Ahora devuelve `null` cuando no puede decidir, y el disparador es
+  un `MutationObserver` sobre el `style` de `<html>`, que es donde el motor escribe.
+- **Asimetria de 0,78 px entre los dos cabos.** Chrome aproxima el circulo con beziers de longitud
+  **297,97**, no la circunferencia exacta **298,451**; el guion se pasaba un 0,16 % y alargaba el
+  arco 0,44 grados. `pathLength="360"` normaliza por el trazado real y deja el trazo en grados.
+- **Fantasma de color con el Pomodoro parado.** Al cambiar el barrido, `stroke-dashoffset`
+  transicionaba 1 s hacia el valor nuevo pintando arco por el camino, y el motor da hasta ocho
+  pasadas de «encoger hasta caber». El `key` del `<circle>` cuelga del barrido: la geometria no se
+  transiciona (s160).
+- **El halo pintaba la fila de minutos**, con **57 sobre 255** medido. La premisa que lo permitia
+  -- «por encima del aro hay ~59 px hasta la fila», escrita en el propio comentario-- era falsa: hoy
+  hay **24,5 px** y el limbo muere **64 px** pasado el aro. Ahora **0-1** en seis viewports, y el
+  brillo pegado al trazo del aro baja solo de **64 a 58**, porque lo que se recorta es la cola y no
+  el nucleo (que vive entre 0,505 y 0,528 D).
+
+### Anadido -- red de seguridad
+- **`tests/aro-recorrido.spec.js`** (NUEVO, 3 tests). El aserto del barrido no compara contra 270:
+  deriva el angulo esperado de la MASCARA -- camino independiente del que recorre el componente-- y
+  mide **por los dos lados**, que es la leccion de s179. **4 mutantes calibrados en rojo**: 270 a
+  mano, sin giro del grupo, punto guia a 360, y pista sin recortar.
+- **`tests/home-luz-bordes.spec.js`** (NUEVO, 3 tests), al partir `home-luz.spec.js` (581 a 322 ln)
+  por DOMINIO: alli vive «donde acaban la luz y el anillo», y se lleva `perfilDeLuz`, que es su
+  instrumento. **3 mutantes mas**: el techo que solo atenua, la niebla a cero, y las dos colas
+  fuera. **El aserto de la cola SI se pone rojo**, cuando su version anterior declaraba por escrito
+  que no se habia conseguido -- el contrato cambio de «distinguir dos intensidades» a «distinguir
+  algo de nada» (0 contra 2,896).
+- **El reparto de nieblas se vigila** (`la pista no se disuelve mas que el recorrido`): sin ese
+  aserto, igualar las dos no ponia rojo nada — comprobado antes de escribirlo.
+- **El corte del aro aterriza sobre el canto de las tarjetas**, con dos mutantes en rojo: el signo
+  del aire invertido («el cabo del aro asoma por debajo del canto») y volver a cortar en el rotulo
+  («el corte del aro no baja del horizonte»).
+- **UN MUTANTE NO MUERDE Y SE DECLARA**: devolver la RECTA al techo de la luz. Que un degradado
+  tenga un codo visible no lo caza ningun aserto — es criterio, y lo detecta la revision a tamano
+  real, que desde s147 es el detector que manda.
+- **El horizonte se lee como «donde la mascara llega a CERO»** (`home.helpers.js`). Contar paradas
+  era el error: es un detalle de COMO esta escrito el degradado y ya habia cambiado tres veces.
+
+### La revision con el usuario, y las tres correcciones que salieron de ella
+- **EL ARCO TARDABA ~2,2 MIN EN VERSE** en un bloque de 25 (medido a 1280x800). Nace EN el corte,
+  que es justo donde la mascara vale cero, y llevaba encima la niebla larga de 0,14 D. **Dos
+  nieblas y dos capas**: la pista conserva la larga (es la escala, es ambiente) y el arco lleva
+  0,035 D, el remate justo. A los 8 s ya esta en el extremo izquierdo. El reparto no es un invento
+  de esta sesion: `tokens.css` ya decia **«Arco = informacion; halo = ambiente»** desde s158.
+- **LA LINEA DE CORTE DE ARRIBA** era el CODO de la rampa nueva: recta de 0 a `--sun-top`, con la
+  pendiente cambiando unas cuatro veces en 0,24 D. Se sustituye por una S de seis paradas que
+  ademas pesa **mas** en el tramo medio (0,66 contra 0,51 a 0,32 D), asi que quita a la vez el
+  borde y el aspecto lavado.
+- **EL ARO BAJA HASTA EL CANTO DE LAS TARJETAS**, decision del usuario viendo las dos variantes
+  pintadas. Lo que lo termina pasa a ser una **oclusion** — las tarjetas son opacas—, y una
+  oclusion no se lee nunca como amputacion. El rotulo ACTIVIDADES queda dentro de su abertura.
+  **Barrido: 271,6 -> 295,8 grados** a 1280x800; 290,5 a 1920x1080, 296,5 a 1280x720 y 298,4 a
+  390x844. El cabo queda a **5,9 px** del canto en los cuatro.
+- **SE SEPARA `--pace-corte` DE `--pace-horizon`**, y hubo que hacerlo: aquel token **tambien mueve
+  el layout** (las dos pieles lo usan como margin-top negativo, y `SuggestedPathCard` igual), asi
+  que bajarlo habria bajado las tarjetas con el aro. La garantia de s156 no se pierde, cambia de
+  forma: el motor calcula el corte restandole al MISMO solapamiento la banda del rotulo, que MIDE
+  (32 px a 1280x800, pero depende del padding de la piel y del idioma).
+
+### Trampas del instrumento, medidas
+- **El service worker servia `.jsx` cacheados** y cuatro medidas seguidas midieron codigo viejo,
+  incluida una en la que se diagnostico «el efecto no se ejecuta nunca» sobre una version que el
+  navegador ni habia cargado. Se re-registra en CADA carga (la trampa de s139).
+- **Un mutante mentia en verde**: la hoja declara la mascara DOS veces
+  (`-webkit-mask-image` y `mask-image`); mutar solo la primera no cambia un pixel en Chrome.
+- **El perfil de luz sale contaminado** si se resta «sesion apagada» contra «sesion al 50 %»: mide
+  tambien digitos, CTA y arco, con picos de **211** en la banda del numero. La resta buena es el
+  MISMO fotograma dos veces, apagando solo `[data-pace-sun]`.
+- **Un custom property SIN REGISTRAR no se computa.** Con la resta escrita en CSS,
+  `--pace-corte` valia literalmente `max(4px, calc(67px - 32px - 6px))`: `getPropertyValue`
+  devuelve el TEXTO, `parseFloat` daba NaN y **el aro se quedaba dando la vuelta entera**. Lo
+  resuelve el motor, que publica el corte ya en px — igual que hace con los otros dos.
+- **El signo del aire, invertido.** El corte se mide desde ABAJO, asi que restar la banda lo baja
+  hasta el canto y hay que SUMAR el aire para subirlo. Con el signo al reves el aro acababa 6 px
+  **por debajo** del canto, asomando por los huecos entre tarjetas: 310,3 grados en vez de 295,8.
+- **Una regla que di por anadida y nunca lo estuvo.** El script imprimio «responsive ok» y yo no
+  verifique el reemplazo: `[data-pace-dial-pista]` no tenia mascara propia, asi que la pista llevo
+  la niebla del arco durante dos rondas de capturas. Lo cazo el aserto del reparto, que aun no
+  existia — hubo que escribirlo despues de que **M8 saliera verde**.
+
+- **Backticks dentro del template literal de `_responsive.js`**, que aborta el build. Van **seis**
+  veces (s139, s156, s157, s158, s162 y esta, dos veces el mismo dia). Lo cazo el `verify`.
 
 ---
 
