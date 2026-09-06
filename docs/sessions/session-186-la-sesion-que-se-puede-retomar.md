@@ -172,6 +172,32 @@ pruebas** — y no cazarian a alguien que escribiera un viaje directamente en
 pagina. **Lo que sostiene la regla es la estructura**, y eso esta escrito en la
 cabecera del spec para que nadie lea mas de lo que hay.
 
+### La tarjeta, elegida mirandola (v0.117.1)
+
+Nacio en negro y el usuario pidio otra cosa. Se pintaron **19 variantes sobre la
+app de verdad** —terracotas, tres olivas, tabaco, pizarra calida, el azul de
+Hidratate, lavados, y el dibujo del modulo en seis tamanos y posiciones— **con el
+contraste medido en cada una**, porque el cuerpo de la tarjeta es de 13 px y por
+debajo de 4,5:1 una opcion bonita deja de ser una opcion. El terracota puro sobre
+crema se queda en **2,80:1**: el naranja «tal cual» nunca fue viable.
+
+Gano el lavado con **los pulmones del modulo sangrando por el borde derecho**. Lo
+que lo decidio no fue el color: el negro distinguia pero **no decia de quien era
+el viaje**, y el dibujo dice las dos cosas a la vez. Y hay un argumento de sistema
+que descarto los verdes por bonitos que fueran: en PACE **cada modulo tiene su
+color**, asi que un fondo verde dentro de la biblioteca de Respira dice «esto es
+de Foco» a quien ya aprendio el codigo.
+
+**Dos detalles que no son esteticos.** El lavado se compone con TOKENS
+—`--breathe-soft` sobre `--paper-2`— y no con un hex: con un color a fuego, en la
+paleta oscura habria quedado un bloque claro deslumbrando. Y el contraste ahora
+**se mide en la pagina**, un test por paleta, con los colores computados: su
+mutante —subir el lavado al `--breathe` entero— pone rojas las dos.
+
+**Y la trampa del backtick se cobro otra pasada**: un comentario nuevo dentro del
+template literal de `library.css.jsx` aborto el build. Ese archivo lleva el aviso
+en su propia ficha y van tres veces.
+
 ---
 
 ## La red

@@ -206,29 +206,46 @@
 }
 .pace-lib-card-resp { padding-right: 34px; }
 
-/* EL ESTANTE DE VIAJES (s186). La tarjeta va en OSCURO y con el nombre y la
-   cifra mas grandes: la diferencia tiene que leerse antes que el texto, porque
-   lo que comunica es «esto no es una tecnica de cinco minutos». Los colores van
-   a fuego y no por token -- es una superficie invertida dentro de una pantalla
-   clara, igual que la pastilla de FOCO de la topbar. */
+/* EL ESTANTE DE VIAJES (s186; el color, elegido mirandolo en s187).
+
+   NACIO EN NEGRO y se cambio por esto: un LAVADO del color de Respira sobre el
+   papel de la tarjeta, con los pulmones del modulo grandes al fondo. El negro
+   distinguia, pero no decia de quien era el viaje; el dibujo dice las dos cosas
+   -- que es otra cosa y que es Respira- sin gastar una palabra.
+
+   EL LAVADO SE COMPONE CON TOKENS, no con un hex nuevo: --breathe-soft (que
+   existe desde s99 para esto) sobre --paper-2. Asi la tarjeta funciona en las
+   dos paletas sin una sola regla de oscuro -- con un color escrito a fuego, en
+   la paleta oscura habria quedado un bloque claro deslumbrando.
+
+   EL DIBUJO SANGRA POR LA DERECHA a proposito: recortado por el borde se lee
+   como una pieza grafica y no como un icono decorativo. Va DETRAS del texto
+   (z-index) y se declara aria-hidden: no aporta nada que no diga el rotulo.
+   El aviso de seguridad vive arriba a la derecha, asi que no se pisan. 
+
+   (Sin backticks: este comentario vive DENTRO del template literal de la hoja y
+   uno solo aborta el build -- trampa de s172b, que ya se cobro una pasada en
+   s174 y otra aqui.) */
 .pace-lib-viajes {
   font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
   color: var(--tone); font-weight: 500;
-  /* El MISMO aire que «Para ahora» y los grupos: es un rotulo de seccion de
-     la misma familia, y con margin-top 0 quedaba pegado a los chips (visto
-     en la revision a tamano real). */
   margin: 14px 0 9px;
 }
 .pace-lib-card-viaje {
-  background: #17150F; border-left-color: var(--tone);
+  background: linear-gradient(var(--breathe-soft), var(--breathe-soft)), var(--paper-2);
+  border-left: 7px solid var(--tone);
   padding: 15px 16px 15px 17px; margin-bottom: 16px;
+  position: relative; overflow: hidden;
 }
-.pace-lib-card-viaje h4 { color: #F2EDE0; font-size: 24px; }
-.pace-lib-card-viaje p { color: #BDB5A2; }
-.pace-lib-card-viaje .pace-lib-ctx { color: #9A9284; }
-.pace-lib-card-viaje .pace-lib-ctx b { color: #F2EDE0; }
-.pace-lib-card-viaje .pace-lib-hit { color: inherit; }
-.pace-lib-card-viaje .pace-lib-pill { color: #BDB5A2; border-color: #4E4634; }
+.pace-lib-card-viaje h4 { font-size: 24px; }
+.pace-lib-card-viaje .pace-lib-txt { position: relative; z-index: 1; }
+.pace-lib-card-viaje .pace-lib-ctx b { color: var(--breathe-2); }
+.pace-lib-viaje-marca {
+  position: absolute; right: -42px; bottom: -27px;
+  width: 168px; height: 168px; z-index: 0; pointer-events: none;
+  color: var(--breathe-2); opacity: .22;
+}
+.pace-lib-viaje-marca svg { width: 100%; height: 100%; }
 /* GRANO DE PAPEL con los valores del sistema, no unos nuevos:
    PACE_GRAIN_OPACITY y paceGrainUrl() (SessionShell.jsx). La maqueta probó
    0,055 -- cinco veces más-- y eso habría sido una decisión nueva. */

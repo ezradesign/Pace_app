@@ -98,6 +98,12 @@ function RoutineCard({ routine, color, onClick, variant = 'body' }) {
       data-locked={isLocked ? '1' : undefined}
       style={{ '--tone': color }}
     >
+      {esViaje && typeof window.ABBreathe === 'function' && (
+        /* Los pulmones del modulo, GRANDES y al fondo. Es el mismo dibujo que
+           identifica a Respira en la barra de actividades -- no uno nuevo-, y
+           por eso no hace falta explicarlo. Decorativo: `aria-hidden`. */
+        <span className="pace-lib-viaje-marca" aria-hidden="true">{React.createElement(window.ABBreathe)}</span>
+      )}
       {routine.safety && (
         <i className="pace-lib-safety" title={t('breathe.safety.required')} aria-label={t('breathe.safety.required')}>&#9888;</i>
       )}

@@ -152,3 +152,72 @@ test('un viaje PREMIUM esta cerrado como cualquier otra rutina de pago', async (
   await expect(tarjeta, 'la tarjeta no se marca como bloqueada').toHaveAttribute('data-locked', '1');
   await expect(tarjeta).toContainText('Pronto');
 });
+
+/* ------------------------------------------------------------------ 7 */
+test('la tarjeta de viaje lleva los pulmones del modulo, detras y sin voz', async ({ page }) => {
+  await irAlArtefacto(page);
+  await sembrarViaje(page);
+  await abrirRespira(page);
+
+  const m = await page.evaluate(() => {
+    const c = document.querySelector('[data-pace-lib-card="breathe.viaje.prueba"]');
+    const marca = c && c.querySelector('.pace-lib-viaje-marca');
+    if (!marca) return null;
+    const txt = c.querySelector('.pace-lib-txt');
+    return {
+      svg: !!marca.querySelector('svg'),
+      oculta: marca.getAttribute('aria-hidden') === 'true',
+      zMarca: Number(getComputedStyle(marca).zIndex) || 0,
+      zTexto: Number(getComputedStyle(txt).zIndex) || 0,
+      recorta: getComputedStyle(c).overflow === 'hidden',
+    };
+  });
+
+  expect(m, 'la tarjeta de viaje no lleva la marca del modulo').not.toBeNull();
+  expect(m.svg, 'la marca no dibuja nada').toBe(true);
+  /* DECORATIVA: el nombre y la duracion ya lo dicen todo, y un dibujo que se
+     anuncia en el arbol de accesibilidad solo mete ruido. */
+  expect(m.oculta, 'la marca no esta oculta para un lector de pantalla').toBe(true);
+  expect(m.zMarca, 'la marca no queda DETRAS del texto').toBeLessThan(m.zTexto);
+  /* Sangra por el borde: sin recorte, el dibujo se saldria de la tarjeta. */
+  expect(m.recorta, 'la tarjeta no recorta: el dibujo sangraria fuera').toBe(true);
+});
+
+/* ------------------------------------------------------------------ 8 */
+for (const paleta of ['crema', 'oscuro']) {
+  test('el texto de la tarjeta de viaje se lee sobre su lavado · ' + paleta, async ({ page, context }) => {
+    /* EL LAVADO SE ELIGIO MIRANDOLO (s187) y se compone con tokens
+       -- `--breathe-soft` sobre `--paper-2`-, asi que un cambio de paleta o un
+       token que alguien aclare puede dejar el cuerpo por debajo de AA sin que
+       nadie lo note. Esto lo mide EN LA PAGINA, con los colores computados. */
+    await context.addInitScript((p) => {
+      const clave = 'pace.state.v2';
+      const s = JSON.parse(localStorage.getItem(clave) || '{}');
+      s.palette = p;
+      localStorage.setItem(clave, JSON.stringify(s));
+    }, paleta);
+    await irAlArtefacto(page);
+    await sembrarViaje(page);
+    await abrirRespira(page);
+
+    const r = await page.evaluate(() => {
+      const canal = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+      const lum = ([r, g, b]) => 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
+      const rgb = (s) => (s.match(/\d+/g) || []).map(Number).slice(0, 3);
+      const ratio = (a, b) => {
+        const x = lum(a), y = lum(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      };
+      const c = document.querySelector('[data-pace-lib-card="breathe.viaje.prueba"]');
+      const fondo = rgb(getComputedStyle(c).backgroundColor);
+      const cuerpo = rgb(getComputedStyle(c.querySelector('.pace-lib-txt > p')).color);
+      const meta = rgb(getComputedStyle(c.querySelector('.pace-lib-ctx')).color);
+      return { paleta: document.documentElement.getAttribute('data-palette'),
+               cuerpo: ratio(fondo, cuerpo), meta: ratio(fondo, meta) };
+    });
+
+    expect(r.paleta, 'GUARD: la paleta no se aplico').toBe(paleta);
+    expect(r.cuerpo, 'el cuerpo de la tarjeta de viaje no llega a 4,5:1').toBeGreaterThanOrEqual(4.5);
+    expect(r.meta, 'la linea de datos no llega a 4,5:1').toBeGreaterThanOrEqual(4.5);
+  });
+}
