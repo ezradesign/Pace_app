@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACE · Foco · Cuerpo — v0.115.1</title>
+  <title>PACE · Foco · Cuerpo — v0.116.0</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
@@ -1578,6 +1578,8 @@ Object.assign(window.PACE_STRINGS.es, {
   'sidebar.action.repeat': 'Repetir',
   'sidebar.action.path.meta': 'Paso {n} de {m}',
   'sidebar.action.repeat.meta': 'Lo último que hiciste',
+  'sidebar.action.resume.round': 'Ronda {n} de {m}',
+  'sidebar.action.resume.meta': 'La dejaste a medias',
   'sidebar.action.now': 'Para ahora',
   'sidebar.action.now.meta': 'Cabe donde estás',
   'sidebar.mine': 'Mis rutinas',
@@ -1816,6 +1818,8 @@ Object.assign(window.PACE_STRINGS.en, {
   'sidebar.action.repeat': 'Repeat',
   'sidebar.action.path.meta': 'Step {n} of {m}',
   'sidebar.action.repeat.meta': 'The last thing you did',
+  'sidebar.action.resume.round': 'Round {n} of {m}',
+  'sidebar.action.resume.meta': 'You left it unfinished',
   'sidebar.action.now': 'Right now',
   'sidebar.action.now.meta': 'Fits where you are',
   'sidebar.mine': 'My routines',
@@ -4934,7 +4938,7 @@ const LS_KEY = 'pace.state.v2';
 /* s104: OJO — llevaba v0.46.0 desde s101 (footer del sidebar + export JSON
    mentían la versión). Entra al checklist de bump de cada cierre junto a
    <title> y CACHE_NAME; automatizarlo en el build queda anotado. */
-const PACE_VERSION = 'v0.115.1';
+const PACE_VERSION = 'v0.116.0';
 
 /* Duracion del toast de logro desbloqueado (s77b). 3000ms da tiempo a leer
    sin interrumpir el ritmo de la sesion. Antes 5000ms se sentia largo. */
@@ -9271,8 +9275,14 @@ const { useRef: useRefSC } = React;
  * cualquiera de las dos dejaba los asertos en verde, o sea que no había forma
  * de saber si alguna funcionaba. Con una sola, la mutación muerde.
  */
-function useActiveClock() {
-  const acumuladoMs = useRefSC(0);
+/* s186 · ADMITE UNA SEMILLA, para que un reloj pueda CONTINUAR uno anterior.
+   La usa la reanudación de Respira: al volver a una sesión interrumpida, la
+   retención acumulada antes de irse no puede empezar de cero, o el total que
+   se acredita sería menor que la práctica real. Va como valor inicial de un
+   `useRef`, así que solo cuenta en el primer render y ningún consumidor
+   anterior cambia de comportamiento (sin argumento, sigue valiendo 0). */
+function useActiveClock(semillaMs) {
+  const acumuladoMs = useRefSC(Number.isFinite(semillaMs) && semillaMs > 0 ? semillaMs : 0);
   const inicioSeg = useRefSC(null);
 
   const marcar = (activo) => {
@@ -14287,13 +14297,27 @@ function selectSidebarTodayCounts(eventos, hoyISO) {
    La sugerencia entra POR PARÁMETRO (`ctx.sugerencia`), no se calcula aquí:
    elegirla exige el catálogo y el guard de acceso, y este archivo es puro.
 
-   Las dos prioridades del brief que van delante de estas -- sesión CTB
-   interrumpida y CTB recuperable-- NO están aquí porque el runner todavía no
-   persiste ronda ni fase. Fingirlas sería prometer una reanudación que no
-   existe. Entran cuando exista `activeBreathSession`. */
+   s186 · ENTRA LA PRIMERA PRIORIDAD DEL BRIEF: la sesión de Respira que se
+   quedó a medias. Estaba pendiente por escrito —«el runner todavía no persiste
+   ronda ni fase, fingirlo sería prometer una reanudación que no existe»— y hoy
+   sí la persiste (`pace.breathe.v1`, ver `BreatheSession.support.jsx`).
+
+   VA DELANTE DEL CAMINO, y no es un empate: el registro CADUCA en dos horas y
+   en el mismo día, mientras que un Camino en curso sigue ahí mañana. Lo que se
+   pierde por no ofrecerlo ahora no se recupera; lo otro sí.
+
+   La que sigue pendiente es «CTB recuperable», y sigue pendiente por lo mismo
+   de siempre: no hay sesiones CTB. Esto reanuda lo que existe hoy. */
 function selectSidebarPrimaryAction(state, ctx) {
   const s = state || {};
   const c = ctx || {};
+  const r = c.reanudable;
+  if (r && r.routineId) {
+    return {
+      kind: 'resume', targetId: r.routineId,
+      round: r.round || 1, rondas: r.rondas || 0
+    };
+  }
   const cur = s.paths && s.paths.current || null;
   if (cur && cur.id) {
     return {
@@ -14575,6 +14599,28 @@ function SidebarToday(_ref2) {let { hoy, cuentas, onOpen } = _ref2;
    esto ANTES de pintar el separador, así no queda una regla suelta. */
 function sidebarActionView(accion, t, tn, lang) {
   if (!accion) return null;
+  if (accion.kind === 'resume') {
+    const r = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId);
+    if (!r) return null;
+    /* MISMO ROTULO QUE UN CAMINO, «Continua», y a proposito: para quien lo
+       lee es la misma promesa —algo tuyo sigue abierto— y el proyecto ya
+       decidio que la tarjeta solo puede decir CONTINUAR o REPETIR. Lo que
+       cambia es el color, que es el del modulo, y la linea de abajo. */
+    let titulo = r.name;
+    if (lang === 'en') {
+      const v = t(accion.targetId + '.name');
+      if (v !== accion.targetId + '.name') titulo = v;
+    }
+    return {
+      kind: 'resume',
+      eyebrow: t('sidebar.action.continue'),
+      color: 'var(--breathe)',
+      titulo: titulo,
+      meta: accion.rondas ?
+      tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas }) :
+      t('sidebar.action.resume.meta')
+    };
+  }
   if (accion.kind === 'path') {
     const camino = window.getPath && window.getPath(accion.targetId);
     if (!camino) return null;
@@ -14881,7 +14927,13 @@ function Sidebar() {
     } catch (e) {return null;}
   }();
 
-  const accion = selectSidebarPrimaryAction(state, { events: eventos, sugerencia: sugerencia });
+  /* s186 · el registro de una sesion de Respira interrumpida. Se lee aqui, en
+     el cuerpo, igual que `sugerencia`: no es estado de la app sino una nota en
+     su propia clave, y la sidebar se re-renderiza al volver a la home, que es
+     cuando puede haber cambiado. */
+  const reanudable = window.leerRespiraGuardada && window.leerRespiraGuardada() || null;
+  const accion = selectSidebarPrimaryAction(state,
+  { events: eventos, sugerencia: sugerencia, reanudable: reanudable });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive
@@ -18489,8 +18541,189 @@ Object.assign(window, { BreatheLibrary, BreatheSafety });
  * la retención más larga sigue ABIERTO: si no se sumara, esa retención —la que
  * más cuesta— se perdería entera. Medido con el banco de mutaciones de s166.
  */
-function useHoldClock() {
-  return useActiveClock();
+function useHoldClock(semillaSec) {
+  return useActiveClock(Number.isFinite(semillaSec) ? semillaSec * 1000 : 0);
+}
+
+/* EL MAPA DE FASES -> CLAVE i18n. Es DATO, no logica, y vive aqui desde s186
+   por la regla §1: `BreatheSession.jsx` llego a 500 lineas exactas al entrar la
+   reanudacion, y este archivo nacio justo para eso («lo siguiente que entre ahi
+   va a un .support»). Se lee por `window` y no pelado porque un `const` no
+   cruza de archivo en el compilado (trampa de s148). */
+const PHASE_KEYS = {
+  'Inhala': 'breathe.phase.inhala',
+  'Exhala': 'breathe.phase.exhala',
+  'Sostén': 'breathe.phase.sosten',
+  'Inhala más': 'breathe.phase.inhala.mas',
+  'Inhala oceánica': 'breathe.phase.inhala.oceanica',
+  'Exhala oceánica': 'breathe.phase.exhala.oceanica',
+  'Inhala izq.': 'breathe.phase.inhala.izq',
+  'Inhala dcha.': 'breathe.phase.inhala.dcha',
+  'Exhala dcha.': 'breathe.phase.exhala.dcha',
+  'Exhala izq.': 'breathe.phase.exhala.izq',
+  'Respira': 'breathe.phase.respira',
+  'Inhala al vientre': 'breathe.phase.inhala.vientre',
+  'Exhala zumbando': 'breathe.phase.exhala.zumbando',
+  'Sostén en vacío': 'breathe.phase.sosten.vacio'
+};
+
+window.PHASE_KEYS = PHASE_KEYS;
+
+/* ============================================================
+   s186 · REANUDAR UNA SESIÓN DE RESPIRA INTERRUMPIDA
+   ============================================================
+   Clave `pace.breathe.v1`, FUERA de `pace.state.v2`, exactamente por lo mismo
+   que el Pomodoro con `pace.timer.v1` (s102): la sesión sigue siendo LOCAL, y
+   esta clave solo hace que sobreviva a irse.
+
+   LO QUE SE GUARDA Y LO QUE NO, que es la decisión de producto:
+
+   NO se guarda la fase ni el segundo dentro del ciclo, y no es una simplifica-
+   ción: **no puedes reengancharte a mitad de una inhalación que no estabas
+   haciendo**. Devolver a alguien al segundo 3 de una exhalación sería fingir
+   una continuidad que su cuerpo no tuvo. La unidad que sí significa algo es la
+   RONDA en las rutinas de rondas, y el TIEMPO PRACTICADO en las demás. Eso es
+   lo que se guarda, y por eso al volver se entra otra vez por la cuenta atrás
+   de preparación: hay que re-entrar en la respiración, no reanudar un vídeo.
+
+   NO SE ACREDITA NADA QUE NO SE HAYA PRESENCIADO — la línea de s101/s102. El
+   reloj de tiempo activo solo corre en 'active'/'hold' sin pausar, así que el
+   rato fuera no suma; al volver, el contador CONTINÚA donde estaba en vez de
+   reiniciarse, que es lo que evita el error contrario (regalar los minutos ya
+   practicados dos veces, o perderlos).
+
+   CADUCA, y el número es un juicio declarado: mismo DÍA LOCAL y como mucho
+   VENTANA_MS. Una sesión de respiración es un estado en el que estabas, no una
+   tarea pendiente: ofrecer «continúa» sobre la de anoche es ofrecer algo que ya
+   no existe. Un registro caducado se DESCARTA en silencio -- no se ofrece y no
+   se avisa de nada; no hace falta borrarlo, porque la siguiente sesion
+   escribe encima de la misma clave.
+
+   SE CONSERVA AL SALIR, y ahí está la diferencia con el Pomodoro. Salir de una
+   sesión de Respira ES la interrupción que queremos recuperar (te llaman,
+   cierras la pestaña, cambias de app). Solo se borra al TERMINAR. */
+const RESPIRA_KEY = 'pace.breathe.v1';
+const RESPIRA_VENTANA_MS = 2 * 60 * 60 * 1000; // 2 h · juicio, no medida
+
+function respiraDiaLocal(ts) {
+  const d = new Date(ts);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+  '-' + String(d.getDate()).padStart(2, '0');
+}
+
+/* leerRespiraGuardada() -> el registro si sigue siendo ofrecible, o null.
+   Total y silenciosa (patrón `playSound`): cualquier cosa rara -> null. La
+   COHERENCIA con el catálogo se comprueba aquí y no en el consumidor, porque
+   una rutina puede haber dejado de existir entre versiones. */
+function leerRespiraGuardada(ahora) {
+  try {
+    const crudo = localStorage.getItem(RESPIRA_KEY);
+    if (!crudo) return null;
+    const g = JSON.parse(crudo);
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    if (!g || g.v !== 1 || typeof g.routineId !== 'string') return null;
+    if (!Number.isFinite(g.savedAt) || t - g.savedAt > RESPIRA_VENTANA_MS || t < g.savedAt) return null;
+    if (respiraDiaLocal(g.savedAt) !== respiraDiaLocal(t)) return null;
+    const rutina = window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
+    if (!rutina) return null;
+    /* Blindaje, como el `endsAt-now <= duracion` de s102: un activo mayor que
+       tres veces el plan de la rutina es un registro corrupto, no una sesión. */
+    const techoMs = Math.max(1, rutina.min || 1) * 60 * 1000 * 3;
+    if (!Number.isFinite(g.activeMs) || g.activeMs < 0 || g.activeMs > techoMs) return null;
+    const rondas = rutina.pattern === 'rounds' ? rutina.rounds || 1 : 0;
+    if (rondas && (!Number.isFinite(g.round) || g.round < 1 || g.round > rondas)) return null;
+    return {
+      routineId: g.routineId, round: rondas ? g.round : 1,
+      breaths: Number.isFinite(g.breaths) && g.breaths > 0 ? g.breaths : 1,
+      activeMs: g.activeMs, holdSec: Number.isFinite(g.holdSec) && g.holdSec > 0 ? g.holdSec : 0,
+      startedAt: Number.isFinite(g.startedAt) ? g.startedAt : g.savedAt,
+      savedAt: g.savedAt, rondas: rondas
+    };
+  } catch (e) {return null;}
+}
+
+function olvidarRespiraGuardada() {
+  try {localStorage.removeItem(RESPIRA_KEY);} catch (e) {}
+}
+
+/* respiraReanudacion(routine, guardado) -> los valores de arranque de la
+   sesión. PURA. Sin registro utilizable devuelve el comienzo de siempre, así
+   que `BreatheSession` no necesita ninguna rama: siempre arranca de aquí. */
+function respiraReanudacion(routine, guardado) {
+  const ahora = Date.now();
+  const cero = { round: 1, breaths: 1, activeMs: 0, holdSec: 0, startedAt: ahora, reanudada: false };
+  if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
+  /* El arranque es el ORIGINAL y no el del regreso: el evento de sesion lleva
+     un `startedAt` de reloj de pared, y decir que empezo al volver borraria de
+     la historia el rato que la sesion estuvo abierta. Lo practicado sigue
+     siendo `activeMs`, que es lo que se acredita. */
+  return {
+    round: guardado.round || 1, breaths: guardado.breaths || 1,
+    activeMs: guardado.activeMs || 0, holdSec: guardado.holdSec || 0,
+    startedAt: Number.isFinite(guardado.startedAt) ? guardado.startedAt : ahora,
+    reanudada: true
+  };
+}
+
+/* useRespiraPersistencia(datos) — escribe el registro mientras la sesión está
+   viva y lo borra cuando termina.
+
+   NO ESCRIBE UNA VEZ POR SEGUNDO: escribe en los CAMBIOS que importan (ronda,
+   respiración, stage, pausa) y además cuando la página se esconde o se
+   descarga, que es el caso que de verdad hay que cubrir —cerrar la pestaña— y
+   el único en el que el tiempo activo tiene que quedar al día.
+
+   `pagehide` y no `beforeunload`: en móvil una pestaña puede irse a la nevera
+   sin disparar nunca `beforeunload`, y ese es justo el escenario de esta
+   función. `visibilitychange` cubre el cambio de app. */
+/* Alias propios, igual que `useEffectM` mas abajo: este archivo no
+   desestructura React arriba del todo. */
+const { useRef: useRefBS, useEffect: useEffectBS } = React;
+
+function useRespiraPersistencia(datos) {
+  const d = datos || {};
+  const vivo = d.stage === 'active' || d.stage === 'hold';
+  const ref = useRefBS(d);
+  ref.current = d;
+
+  const escribir = () => {
+    const c = ref.current;
+    if (!c || !c.routine) return;
+    if (c.stage !== 'active' && c.stage !== 'hold') return;
+    try {
+      localStorage.setItem(RESPIRA_KEY, JSON.stringify({
+        v: 1, routineId: c.routine.id, round: c.round, breaths: c.breathCount,
+        activeMs: Math.round(c.getActiveSec() * 1000),
+        holdSec: Math.round(c.holdSec()), startedAt: c.startedAt, savedAt: Date.now()
+      }));
+    } catch (e) {}
+  };
+
+  /* EL REGISTRO TIENE UNA SOLA DUENA, y es este efecto: escribe mientras la
+     sesion vive y BORRA en cuanto llega a 'done'. Ponerlo tambien en `finish()`
+     serian dos sitios haciendo lo mismo, que es exactamente lo que el banco de
+     mutaciones de s166 destapo con el reloj de retencion: con las dos puestas,
+     romper cualquiera de ellas deja los asertos en verde. */
+  useEffectBS(() => {
+    if (d.stage === 'done') {olvidarRespiraGuardada();return;}
+    if (!vivo) return;
+    escribir();
+  }, [vivo, d.stage, d.round, d.breathCount, d.paused]);
+
+  useEffectBS(() => {
+    const alEsconder = () => {if (document.visibilityState === 'hidden') escribir();};
+    window.addEventListener('pagehide', escribir);
+    document.addEventListener('visibilitychange', alEsconder);
+    return () => {
+      window.removeEventListener('pagehide', escribir);
+      document.removeEventListener('visibilitychange', alEsconder);
+      /* Al desmontar se escribe también: salir de la sesión ES la interrupción
+         que se quiere recuperar. `finish()` ya ha borrado antes de llegar aquí
+         y ha dejado el stage en 'done', así que una sesión terminada no se
+         re-guarda -- lo garantiza el guard de `escribir()`, no el orden. */
+      escribir();
+    };
+  }, []);
 }
 
 /* s172 · EL PLAN DE UNA SESION DE RESPIRA (§6.4), y las dos familias no se
@@ -18584,8 +18817,11 @@ function useMusicaFondo(stage, paused, routine) {
 }
 
 
-Object.assign(window, { useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
-;Object.assign(window, { useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound, useMusicaFondo });
+Object.assign(window, {
+  useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia
+});
+;Object.assign(window, { useHoldClock, respiraDiaLocal, leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia, respiraPlanSec, respiraEventoSesion, playPhaseSound, useMusicaFondo });
 })();
 </script>
   <script>
@@ -18597,24 +18833,8 @@ function _extends() {return _extends = Object.assign ? Object.assign.bind() : fu
 
 const { useState, useEffect, useRef } = React;
 
-const PHASE_KEYS = {
-  'Inhala': 'breathe.phase.inhala',
-  'Exhala': 'breathe.phase.exhala',
-  'Sostén': 'breathe.phase.sosten',
-  'Inhala más': 'breathe.phase.inhala.mas',
-  'Inhala oceánica': 'breathe.phase.inhala.oceanica',
-  'Exhala oceánica': 'breathe.phase.exhala.oceanica',
-  'Inhala izq.': 'breathe.phase.inhala.izq',
-  'Inhala dcha.': 'breathe.phase.inhala.dcha',
-  'Exhala dcha.': 'breathe.phase.exhala.dcha',
-  'Exhala izq.': 'breathe.phase.exhala.izq',
-  'Respira': 'breathe.phase.respira',
-  'Inhala al vientre': 'breathe.phase.inhala.vientre',
-  'Exhala zumbando': 'breathe.phase.exhala.zumbando',
-  'Sostén en vacío': 'breathe.phase.sosten.vacio'
-};
 
-function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
+function BreatheSession(_ref) {let { routine, onExit, inPath, reanudar } = _ref;
   const [state] = usePace();
   const { t, lang } = useT();
   // Atmosfera del step (s99): tinte terracota muy sutil SOLO en Camino.
@@ -18630,21 +18850,23 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
   const [prepCount, setPrepCount] = useState(3);
   const [phase, setPhase] = useState(0);
   const [phaseTime, setPhaseTime] = useState(0);
-  const [round, setRound] = useState(1);
-  const [breathCount, setBreathCount] = useState(1);
+  /* s186 · de donde arranca la sesion: del registro de una interrumpida si lo hay (el porque, en el support). */
+  const rein = respiraReanudacion(routine, reanudar);
+  const [round, setRound] = useState(rein.round);
+  const [breathCount, setBreathCount] = useState(rein.breaths);
   const [paused, setPaused] = useState(false);
-  const sessionStart = useRef(Date.now()); // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
+  const sessionStart = useRef(rein.startedAt); // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
   // Reloj de TIEMPO ACTIVO (s98): acumulador timestamp-based, local al modulo.
   // Suma solo el tiempo en 'active'/'hold' SIN pausar (excluye pausas manuales;
   // el tiempo con pestana oculta cuenta, igual que useCountdown de Focus).
   // Verdad unica para: fin de sesion no-rounds, barra de progreso no-rounds y
   // el credito a stats/logros. Honra la decision s96 (timers nuevos = timestamp).
-  const activeMsRef = useRef(0); // ms activos acumulados entre pausas
+  const activeMsRef = useRef(rein.activeMs); // ms activos acumulados entre pausas (s186: continua los de una sesion interrumpida)
   const segStartRef = useRef(null); // inicio del segmento activo en curso, o null
   /* s166 · el mismo tiempo, contado APARTE cuando es retencion. No cambia lo
      que se acredita (activeMsRef ya sumaba 'hold' desde s98): saca un numero
      que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
-  const relojHold = useHoldClock();
+  const relojHold = useHoldClock(rein.holdSec);
   const getActiveSec = () => {
     const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
     return (activeMsRef.current + open) / 1000;
@@ -18652,6 +18874,8 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
+  useRespiraPersistencia({ routine, stage, round, breathCount, paused, getActiveSec, // s186
+    holdSec: relojHold.segundos, startedAt: sessionStart.current });
 
   // Segmentador del reloj de tiempo activo (s98): abre segmento cuando la
   // sesion corre ('active'|'hold' sin pausa) y lo cierra (acumulando en
@@ -18934,7 +19158,7 @@ function BreatheSession(_ref) {let { routine, onExit, inPath } = _ref;
 
   // ACTIVE
   const current = sequence[phase] || sequence[0];
-  const displayLabel = tR(PHASE_KEYS[current.label] || current.label, current.label);
+  const displayLabel = tR(window.PHASE_KEYS[current.label] || current.label, current.label);
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;
@@ -31059,6 +31283,17 @@ function PaceApp() {
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
+  /* s186 · LA SESION DE RESPIRA QUE SE QUEDO A MEDIAS. Se lee al montar y se
+     RE-LEE al volver a la home, que es cuando puede haber cambiado (acabas de
+     salir de una sesion, o de terminarla). Vive aqui y no en el estado global
+     porque no es estado de la app: es una nota de `pace.breathe.v1`, la clave
+     aparte que sigue el patron del Pomodoro (s102). `pendienteReanudar` guarda
+     el registro mientras el modal de seguridad esta delante -- reanudar pasa
+     por la MISMA puerta que empezar, asi que una rutina con apnea vuelve a
+     pedir su confirmacion. */
+  const [reanudable, setReanudable] = useStateMain(
+    () => window.leerRespiraGuardada && window.leerRespiraGuardada() || null);
+  const [pendienteReanudar, setPendienteReanudar] = useStateMain(null);
 
   // Constructor de rutinas premium (F7 · s93). Overlay singleton abierto vía
   // CustomEvent `pace:open-custom-builder` (detail.id: rutina a editar o
@@ -31141,14 +31376,20 @@ function PaceApp() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  useEffectMain(() => {
+    if (view.type !== 'home') return;
+    setReanudable(window.leerRespiraGuardada && window.leerRespiraGuardada() || null);
+  }, [view.type]);
+
   // Handle start de una rutina
-  const handleStartBreathe = (routine) => {
+  const handleStartBreathe = (routine, reanudar) => {
     if (routine.safety) {
       setSafetyRoutine(routine);
+      setPendienteReanudar(reanudar || null);
       setOpenLibrary(null);
     } else {
       setOpenLibrary(null);
-      setView({ type: 'breathe-session', routine });
+      setView({ type: 'breathe-session', routine, reanudar: reanudar || null });
     }
   };
 
@@ -31220,6 +31461,15 @@ function PaceApp() {
         const propias = (getState().customRoutines || []).length;
         if (propias) setOpenLibrary('move');else
         setCustomBuilder({ id: null });
+        return;
+      }
+      if (d.kind === 'resume' && d.targetId) {
+        /* Reanudar entra por `handleStartBreathe` y no por un camino propio:
+           asi la rutina con apnea vuelve a pasar por su modal de seguridad y
+           el guard de acceso sigue siendo el mismo. */
+        const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
+        const r = g && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
+        if (r) handleStartBreathe(r, g);
         return;
       }
       if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
@@ -31431,8 +31681,12 @@ function PaceApp() {
     safetyRoutine && /*#__PURE__*/
     React.createElement(BreatheSafety, {
       routine: safetyRoutine,
-      onAccept: (r) => {setSafetyRoutine(null);setView({ type: 'breathe-session', routine: r });},
-      onCancel: () => setSafetyRoutine(null) }
+      onAccept: (r) => {
+        setSafetyRoutine(null);
+        setView({ type: 'breathe-session', routine: r, reanudar: pendienteReanudar });
+        setPendienteReanudar(null);
+      },
+      onCancel: () => {setSafetyRoutine(null);setPendienteReanudar(null);} }
     ),
 
 
@@ -31454,7 +31708,7 @@ function PaceApp() {
 
 
     view.type === 'breathe-session' && /*#__PURE__*/
-    React.createElement(BreatheSession, { routine: view.routine, onExit: (_reason) => setView({ type: 'home' }) }),
+    React.createElement(BreatheSession, { routine: view.routine, reanudar: view.reanudar, onExit: (_reason) => setView({ type: 'home' }) }),
 
     view.type === 'move-session' && /*#__PURE__*/
     React.createElement(MoveSession, { routine: view.routine, kind: view.kind || 'move', onExit: (_reason) => setView({ type: 'home' }) }), /*#__PURE__*/

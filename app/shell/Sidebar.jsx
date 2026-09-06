@@ -110,7 +110,13 @@ function Sidebar() {
     } catch (e) { return null; }
   })();
 
-  const accion = selectSidebarPrimaryAction(state, { events: eventos, sugerencia: sugerencia });
+  /* s186 · el registro de una sesion de Respira interrumpida. Se lee aqui, en
+     el cuerpo, igual que `sugerencia`: no es estado de la app sino una nota en
+     su propia clave, y la sidebar se re-renderiza al volver a la home, que es
+     cuando puede haber cambiado. */
+  const reanudable = (window.leerRespiraGuardada && window.leerRespiraGuardada()) || null;
+  const accion = selectSidebarPrimaryAction(state,
+    { events: eventos, sugerencia: sugerencia, reanudable: reanudable });
   const vistaAccion = sidebarActionView(accion, t, tn, lang);
 
   /* CERRAR EL CAJON AL ELEGIR (solo movil). En escritorio la sidebar convive

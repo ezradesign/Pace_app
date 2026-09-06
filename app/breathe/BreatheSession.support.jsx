@@ -49,8 +49,189 @@
  * la retención más larga sigue ABIERTO: si no se sumara, esa retención —la que
  * más cuesta— se perdería entera. Medido con el banco de mutaciones de s166.
  */
-function useHoldClock() {
-  return useActiveClock();
+function useHoldClock(semillaSec) {
+  return useActiveClock(Number.isFinite(semillaSec) ? semillaSec * 1000 : 0);
+}
+
+/* EL MAPA DE FASES -> CLAVE i18n. Es DATO, no logica, y vive aqui desde s186
+   por la regla §1: `BreatheSession.jsx` llego a 500 lineas exactas al entrar la
+   reanudacion, y este archivo nacio justo para eso («lo siguiente que entre ahi
+   va a un .support»). Se lee por `window` y no pelado porque un `const` no
+   cruza de archivo en el compilado (trampa de s148). */
+const PHASE_KEYS = {
+  'Inhala':           'breathe.phase.inhala',
+  'Exhala':           'breathe.phase.exhala',
+  'Sostén':           'breathe.phase.sosten',
+  'Inhala más':       'breathe.phase.inhala.mas',
+  'Inhala oceánica':  'breathe.phase.inhala.oceanica',
+  'Exhala oceánica':  'breathe.phase.exhala.oceanica',
+  'Inhala izq.':      'breathe.phase.inhala.izq',
+  'Inhala dcha.':     'breathe.phase.inhala.dcha',
+  'Exhala dcha.':     'breathe.phase.exhala.dcha',
+  'Exhala izq.':      'breathe.phase.exhala.izq',
+  'Respira':          'breathe.phase.respira',
+  'Inhala al vientre': 'breathe.phase.inhala.vientre',
+  'Exhala zumbando':  'breathe.phase.exhala.zumbando',
+  'Sostén en vacío':  'breathe.phase.sosten.vacio',
+};
+
+window.PHASE_KEYS = PHASE_KEYS;
+
+/* ============================================================
+   s186 · REANUDAR UNA SESIÓN DE RESPIRA INTERRUMPIDA
+   ============================================================
+   Clave `pace.breathe.v1`, FUERA de `pace.state.v2`, exactamente por lo mismo
+   que el Pomodoro con `pace.timer.v1` (s102): la sesión sigue siendo LOCAL, y
+   esta clave solo hace que sobreviva a irse.
+
+   LO QUE SE GUARDA Y LO QUE NO, que es la decisión de producto:
+
+   NO se guarda la fase ni el segundo dentro del ciclo, y no es una simplifica-
+   ción: **no puedes reengancharte a mitad de una inhalación que no estabas
+   haciendo**. Devolver a alguien al segundo 3 de una exhalación sería fingir
+   una continuidad que su cuerpo no tuvo. La unidad que sí significa algo es la
+   RONDA en las rutinas de rondas, y el TIEMPO PRACTICADO en las demás. Eso es
+   lo que se guarda, y por eso al volver se entra otra vez por la cuenta atrás
+   de preparación: hay que re-entrar en la respiración, no reanudar un vídeo.
+
+   NO SE ACREDITA NADA QUE NO SE HAYA PRESENCIADO — la línea de s101/s102. El
+   reloj de tiempo activo solo corre en 'active'/'hold' sin pausar, así que el
+   rato fuera no suma; al volver, el contador CONTINÚA donde estaba en vez de
+   reiniciarse, que es lo que evita el error contrario (regalar los minutos ya
+   practicados dos veces, o perderlos).
+
+   CADUCA, y el número es un juicio declarado: mismo DÍA LOCAL y como mucho
+   VENTANA_MS. Una sesión de respiración es un estado en el que estabas, no una
+   tarea pendiente: ofrecer «continúa» sobre la de anoche es ofrecer algo que ya
+   no existe. Un registro caducado se DESCARTA en silencio -- no se ofrece y no
+   se avisa de nada; no hace falta borrarlo, porque la siguiente sesion
+   escribe encima de la misma clave.
+
+   SE CONSERVA AL SALIR, y ahí está la diferencia con el Pomodoro. Salir de una
+   sesión de Respira ES la interrupción que queremos recuperar (te llaman,
+   cierras la pestaña, cambias de app). Solo se borra al TERMINAR. */
+const RESPIRA_KEY = 'pace.breathe.v1';
+const RESPIRA_VENTANA_MS = 2 * 60 * 60 * 1000;   // 2 h · juicio, no medida
+
+function respiraDiaLocal(ts) {
+  const d = new Date(ts);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+         '-' + String(d.getDate()).padStart(2, '0');
+}
+
+/* leerRespiraGuardada() -> el registro si sigue siendo ofrecible, o null.
+   Total y silenciosa (patrón `playSound`): cualquier cosa rara -> null. La
+   COHERENCIA con el catálogo se comprueba aquí y no en el consumidor, porque
+   una rutina puede haber dejado de existir entre versiones. */
+function leerRespiraGuardada(ahora) {
+  try {
+    const crudo = localStorage.getItem(RESPIRA_KEY);
+    if (!crudo) return null;
+    const g = JSON.parse(crudo);
+    const t = Number.isFinite(ahora) ? ahora : Date.now();
+    if (!g || g.v !== 1 || typeof g.routineId !== 'string') return null;
+    if (!Number.isFinite(g.savedAt) || t - g.savedAt > RESPIRA_VENTANA_MS || t < g.savedAt) return null;
+    if (respiraDiaLocal(g.savedAt) !== respiraDiaLocal(t)) return null;
+    const rutina = window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
+    if (!rutina) return null;
+    /* Blindaje, como el `endsAt-now <= duracion` de s102: un activo mayor que
+       tres veces el plan de la rutina es un registro corrupto, no una sesión. */
+    const techoMs = Math.max(1, (rutina.min || 1)) * 60 * 1000 * 3;
+    if (!Number.isFinite(g.activeMs) || g.activeMs < 0 || g.activeMs > techoMs) return null;
+    const rondas = rutina.pattern === 'rounds' ? (rutina.rounds || 1) : 0;
+    if (rondas && (!Number.isFinite(g.round) || g.round < 1 || g.round > rondas)) return null;
+    return {
+      routineId: g.routineId, round: rondas ? g.round : 1,
+      breaths: Number.isFinite(g.breaths) && g.breaths > 0 ? g.breaths : 1,
+      activeMs: g.activeMs, holdSec: Number.isFinite(g.holdSec) && g.holdSec > 0 ? g.holdSec : 0,
+      startedAt: Number.isFinite(g.startedAt) ? g.startedAt : g.savedAt,
+      savedAt: g.savedAt, rondas: rondas,
+    };
+  } catch (e) { return null; }
+}
+
+function olvidarRespiraGuardada() {
+  try { localStorage.removeItem(RESPIRA_KEY); } catch (e) {}
+}
+
+/* respiraReanudacion(routine, guardado) -> los valores de arranque de la
+   sesión. PURA. Sin registro utilizable devuelve el comienzo de siempre, así
+   que `BreatheSession` no necesita ninguna rama: siempre arranca de aquí. */
+function respiraReanudacion(routine, guardado) {
+  const ahora = Date.now();
+  const cero = { round: 1, breaths: 1, activeMs: 0, holdSec: 0, startedAt: ahora, reanudada: false };
+  if (!routine || !guardado || guardado.routineId !== routine.id) return cero;
+  /* El arranque es el ORIGINAL y no el del regreso: el evento de sesion lleva
+     un `startedAt` de reloj de pared, y decir que empezo al volver borraria de
+     la historia el rato que la sesion estuvo abierta. Lo practicado sigue
+     siendo `activeMs`, que es lo que se acredita. */
+  return {
+    round: guardado.round || 1, breaths: guardado.breaths || 1,
+    activeMs: guardado.activeMs || 0, holdSec: guardado.holdSec || 0,
+    startedAt: Number.isFinite(guardado.startedAt) ? guardado.startedAt : ahora,
+    reanudada: true,
+  };
+}
+
+/* useRespiraPersistencia(datos) — escribe el registro mientras la sesión está
+   viva y lo borra cuando termina.
+
+   NO ESCRIBE UNA VEZ POR SEGUNDO: escribe en los CAMBIOS que importan (ronda,
+   respiración, stage, pausa) y además cuando la página se esconde o se
+   descarga, que es el caso que de verdad hay que cubrir —cerrar la pestaña— y
+   el único en el que el tiempo activo tiene que quedar al día.
+
+   `pagehide` y no `beforeunload`: en móvil una pestaña puede irse a la nevera
+   sin disparar nunca `beforeunload`, y ese es justo el escenario de esta
+   función. `visibilitychange` cubre el cambio de app. */
+/* Alias propios, igual que `useEffectM` mas abajo: este archivo no
+   desestructura React arriba del todo. */
+const { useRef: useRefBS, useEffect: useEffectBS } = React;
+
+function useRespiraPersistencia(datos) {
+  const d = datos || {};
+  const vivo = d.stage === 'active' || d.stage === 'hold';
+  const ref = useRefBS(d);
+  ref.current = d;
+
+  const escribir = () => {
+    const c = ref.current;
+    if (!c || !c.routine) return;
+    if (c.stage !== 'active' && c.stage !== 'hold') return;
+    try {
+      localStorage.setItem(RESPIRA_KEY, JSON.stringify({
+        v: 1, routineId: c.routine.id, round: c.round, breaths: c.breathCount,
+        activeMs: Math.round(c.getActiveSec() * 1000),
+        holdSec: Math.round(c.holdSec()), startedAt: c.startedAt, savedAt: Date.now(),
+      }));
+    } catch (e) {}
+  };
+
+  /* EL REGISTRO TIENE UNA SOLA DUENA, y es este efecto: escribe mientras la
+     sesion vive y BORRA en cuanto llega a 'done'. Ponerlo tambien en `finish()`
+     serian dos sitios haciendo lo mismo, que es exactamente lo que el banco de
+     mutaciones de s166 destapo con el reloj de retencion: con las dos puestas,
+     romper cualquiera de ellas deja los asertos en verde. */
+  useEffectBS(() => {
+    if (d.stage === 'done') { olvidarRespiraGuardada(); return; }
+    if (!vivo) return;
+    escribir();
+  }, [vivo, d.stage, d.round, d.breathCount, d.paused]);
+
+  useEffectBS(() => {
+    const alEsconder = () => { if (document.visibilityState === 'hidden') escribir(); };
+    window.addEventListener('pagehide', escribir);
+    document.addEventListener('visibilitychange', alEsconder);
+    return () => {
+      window.removeEventListener('pagehide', escribir);
+      document.removeEventListener('visibilitychange', alEsconder);
+      /* Al desmontar se escribe también: salir de la sesión ES la interrupción
+         que se quiere recuperar. `finish()` ya ha borrado antes de llegar aquí
+         y ha dejado el stage en 'done', así que una sesión terminada no se
+         re-guarda -- lo garantiza el guard de `escribir()`, no el orden. */
+      escribir();
+    };
+  }, []);
 }
 
 /* s172 · EL PLAN DE UNA SESION DE RESPIRA (§6.4), y las dos familias no se
@@ -144,4 +325,7 @@ function useMusicaFondo(stage, paused, routine) {
 }
 
 
-Object.assign(window, { useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound });
+Object.assign(window, {
+  useMusicaFondo, useHoldClock, respiraPlanSec, respiraEventoSesion, playPhaseSound,
+  leerRespiraGuardada, olvidarRespiraGuardada, respiraReanudacion, useRespiraPersistencia,
+});

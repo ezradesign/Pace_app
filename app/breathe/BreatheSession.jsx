@@ -5,24 +5,8 @@
 
 const { useState, useEffect, useRef } = React;
 
-const PHASE_KEYS = {
-  'Inhala':           'breathe.phase.inhala',
-  'Exhala':           'breathe.phase.exhala',
-  'Sostén':           'breathe.phase.sosten',
-  'Inhala más':       'breathe.phase.inhala.mas',
-  'Inhala oceánica':  'breathe.phase.inhala.oceanica',
-  'Exhala oceánica':  'breathe.phase.exhala.oceanica',
-  'Inhala izq.':      'breathe.phase.inhala.izq',
-  'Inhala dcha.':     'breathe.phase.inhala.dcha',
-  'Exhala dcha.':     'breathe.phase.exhala.dcha',
-  'Exhala izq.':      'breathe.phase.exhala.izq',
-  'Respira':          'breathe.phase.respira',
-  'Inhala al vientre': 'breathe.phase.inhala.vientre',
-  'Exhala zumbando':  'breathe.phase.exhala.zumbando',
-  'Sostén en vacío':  'breathe.phase.sosten.vacio',
-};
 
-function BreatheSession({ routine, onExit, inPath }) {
+function BreatheSession({ routine, onExit, inPath, reanudar }) {
   const [state] = usePace();
   const { t, lang } = useT();
   // Atmosfera del step (s99): tinte terracota muy sutil SOLO en Camino.
@@ -38,21 +22,23 @@ function BreatheSession({ routine, onExit, inPath }) {
   const [prepCount, setPrepCount] = useState(3);
   const [phase, setPhase] = useState(0);
   const [phaseTime, setPhaseTime] = useState(0);
-  const [round, setRound] = useState(1);
-  const [breathCount, setBreathCount] = useState(1);
+  /* s186 · de donde arranca la sesion: del registro de una interrumpida si lo hay (el porque, en el support). */
+  const rein = respiraReanudacion(routine, reanudar);
+  const [round, setRound] = useState(rein.round);
+  const [breathCount, setBreathCount] = useState(rein.breaths);
   const [paused, setPaused] = useState(false);
-  const sessionStart = useRef(Date.now());   // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
+  const sessionStart = useRef(rein.startedAt);   // totalTime: wall-clock, incluye pausas (retenido para la distincion; no se muestra hoy)
   // Reloj de TIEMPO ACTIVO (s98): acumulador timestamp-based, local al modulo.
   // Suma solo el tiempo en 'active'/'hold' SIN pausar (excluye pausas manuales;
   // el tiempo con pestana oculta cuenta, igual que useCountdown de Focus).
   // Verdad unica para: fin de sesion no-rounds, barra de progreso no-rounds y
   // el credito a stats/logros. Honra la decision s96 (timers nuevos = timestamp).
-  const activeMsRef = useRef(0);      // ms activos acumulados entre pausas
+  const activeMsRef = useRef(rein.activeMs);   // ms activos acumulados entre pausas (s186: continua los de una sesion interrumpida)
   const segStartRef = useRef(null);   // inicio del segmento activo en curso, o null
   /* s166 · el mismo tiempo, contado APARTE cuando es retencion. No cambia lo
      que se acredita (activeMsRef ya sumaba 'hold' desde s98): saca un numero
      que ya estaba dentro de otro. Vive en BreatheSession.support.jsx por §1. */
-  const relojHold = useHoldClock();
+  const relojHold = useHoldClock(rein.holdSec);
   const getActiveSec = () => {
     const open = segStartRef.current != null ? Date.now() - segStartRef.current : 0;
     return (activeMsRef.current + open) / 1000;
@@ -60,6 +46,8 @@ function BreatheSession({ routine, onExit, inPath }) {
 
   const sequence = getSequence(routine);
   const isRounds = routine.pattern === 'rounds';
+  useRespiraPersistencia({ routine, stage, round, breathCount, paused, getActiveSec,   // s186
+    holdSec: relojHold.segundos, startedAt: sessionStart.current });
 
   // Segmentador del reloj de tiempo activo (s98): abre segmento cuando la
   // sesion corre ('active'|'hold' sin pausa) y lo cierra (acumulando en
@@ -342,7 +330,7 @@ function BreatheSession({ routine, onExit, inPath }) {
 
   // ACTIVE
   const current = sequence[phase] || sequence[0];
-  const displayLabel = tR(PHASE_KEYS[current.label] || current.label, current.label);
+  const displayLabel = tR(window.PHASE_KEYS[current.label] || current.label, current.label);
   const progress = current.duration > 0 ? phaseTime / current.duration : 0;
   const remaining = Math.max(0, current.duration - phaseTime);
   const showCountdown = current.duration >= 4;

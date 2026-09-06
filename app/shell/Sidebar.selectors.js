@@ -149,13 +149,27 @@ function selectSidebarTodayCounts(eventos, hoyISO) {
    La sugerencia entra POR PARÁMETRO (`ctx.sugerencia`), no se calcula aquí:
    elegirla exige el catálogo y el guard de acceso, y este archivo es puro.
 
-   Las dos prioridades del brief que van delante de estas -- sesión CTB
-   interrumpida y CTB recuperable-- NO están aquí porque el runner todavía no
-   persiste ronda ni fase. Fingirlas sería prometer una reanudación que no
-   existe. Entran cuando exista `activeBreathSession`. */
+   s186 · ENTRA LA PRIMERA PRIORIDAD DEL BRIEF: la sesión de Respira que se
+   quedó a medias. Estaba pendiente por escrito —«el runner todavía no persiste
+   ronda ni fase, fingirlo sería prometer una reanudación que no existe»— y hoy
+   sí la persiste (`pace.breathe.v1`, ver `BreatheSession.support.jsx`).
+
+   VA DELANTE DEL CAMINO, y no es un empate: el registro CADUCA en dos horas y
+   en el mismo día, mientras que un Camino en curso sigue ahí mañana. Lo que se
+   pierde por no ofrecerlo ahora no se recupera; lo otro sí.
+
+   La que sigue pendiente es «CTB recuperable», y sigue pendiente por lo mismo
+   de siempre: no hay sesiones CTB. Esto reanuda lo que existe hoy. */
 function selectSidebarPrimaryAction(state, ctx) {
   const s = state || {};
   const c = ctx || {};
+  const r = c.reanudable;
+  if (r && r.routineId) {
+    return {
+      kind: 'resume', targetId: r.routineId,
+      round: r.round || 1, rondas: r.rondas || 0,
+    };
+  }
   const cur = (s.paths && s.paths.current) || null;
   if (cur && cur.id) {
     return {

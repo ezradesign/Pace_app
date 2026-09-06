@@ -48,8 +48,14 @@ const { useRef: useRefSC } = React;
  * cualquiera de las dos dejaba los asertos en verde, o sea que no había forma
  * de saber si alguna funcionaba. Con una sola, la mutación muerde.
  */
-function useActiveClock() {
-  const acumuladoMs = useRefSC(0);
+/* s186 · ADMITE UNA SEMILLA, para que un reloj pueda CONTINUAR uno anterior.
+   La usa la reanudación de Respira: al volver a una sesión interrumpida, la
+   retención acumulada antes de irse no puede empezar de cero, o el total que
+   se acredita sería menor que la práctica real. Va como valor inicial de un
+   `useRef`, así que solo cuenta en el primer render y ningún consumidor
+   anterior cambia de comportamiento (sin argumento, sigue valiendo 0). */
+function useActiveClock(semillaMs) {
+  const acumuladoMs = useRefSC(Number.isFinite(semillaMs) && semillaMs > 0 ? semillaMs : 0);
   const inicioSeg   = useRefSC(null);
 
   const marcar = (activo) => {
