@@ -1,0 +1,788 @@
+<title>Marea baja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@300;400;500&display=swap">
+
+<style>
+/* ───────────────────────────────────────────────────────────────
+   Los tokens son los de PACE (app/tokens.css), no una paleta nueva:
+   esta página es una maqueta del producto y tiene que poder juzgarse
+   como se juzga el producto. Las MAQUETAS (los teléfonos) llevan sus
+   colores fijos a propósito — son la pantalla, no la página.
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  --paper:    #F2EDE0;
+  --paper-2:  #EAE4D4;
+  --paper-3:  #DFD8C4;
+  --ink:      #1F1C17;
+  --ink-2:    #4A453C;
+  --ink-3:    #8A8372;
+  --line:     #C9C0A8;
+  --line-2:   #B8AD8E;
+  --breathe:  #C97A5D;
+  --breathe-2:#A85E43;
+  --focus:    #3E5A3A;
+  --sombra:   0 1px 2px rgba(31,28,23,.05);
+}
+:root:not([data-theme="light"]) { }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:   #1D1A14;
+    --paper-2: #262218;
+    --paper-3: #2F2A1E;
+    --ink:     #EFEADC;
+    --ink-2:   #C4BCA8;
+    --ink-3:   #8F8875;
+    --line:    #3D3729;
+    --line-2:  #4E4634;
+    --breathe: #D98C6E;
+    --breathe-2:#C97A5D;
+    --focus:   #7C9877;
+    --sombra:  0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"] {
+  --paper:   #1D1A14;
+  --paper-2: #262218;
+  --paper-3: #2F2A1E;
+  --ink:     #EFEADC;
+  --ink-2:   #C4BCA8;
+  --ink-3:   #8F8875;
+  --line:    #3D3729;
+  --line-2:  #4E4634;
+  --breathe: #D98C6E;
+  --breathe-2:#C97A5D;
+  --focus:   #7C9877;
+  --sombra:  0 1px 2px rgba(0,0,0,.3);
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.62;
+  margin: 0;
+  padding: 0 20px 80px;
+  -webkit-font-smoothing: antialiased;
+}
+.envoltura { max-width: 1280px; margin: 0 auto; }
+.lectura   { max-width: 60ch; }
+
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 400; }
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(40px, 7vw, 66px);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(25px, 3.4vw, 33px);
+  line-height: 1.15;
+}
+h3 { font-family: 'Inter Tight', system-ui, sans-serif; font-size: 15px; font-weight: 500; }
+
+.rotulo {
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.sub { color: var(--ink-2); }
+em.ac { font-style: italic; color: var(--breathe-2); }
+strong { font-weight: 500; color: var(--ink); }
+
+header.cabecera {
+  padding: 72px 0 40px;
+  border-bottom: 1px solid var(--line);
+  display: grid; gap: 18px;
+}
+header.cabecera p { margin: 0; max-width: 62ch; color: var(--ink-2); font-size: 19px; }
+
+section { padding: 56px 0 0; }
+section > .rotulo { display: block; margin-bottom: 10px; }
+section > h2 + p { margin-top: 14px; }
+
+/* ── Avisos: lo que gobierna esta maqueta ──────────────────────── */
+.gobierna {
+  margin-top: 26px;
+  max-width: 980px;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.gobierna div {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.gobierna dt, .gobierna .k {
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 12.5px; font-weight: 500; letter-spacing: 0.05em;
+  color: var(--ink); padding-top: 2px;
+}
+.gobierna .v { color: var(--ink-2); font-size: 16px; }
+@media (max-width: 640px) {
+  .gobierna div { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* ── Las tres variantes ────────────────────────────────────────── */
+.variantes {
+  margin-top: 34px;
+  display: grid;
+  gap: 46px 28px;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  align-items: start;
+}
+.variante { display: grid; gap: 16px; justify-items: center; }
+.variante .texto { max-width: 44ch; }
+.variante .texto p { margin: 8px 0 0; color: var(--ink-2); font-size: 16px; }
+.variante .titulo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 27px; font-style: italic;
+}
+.coste {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 13px; color: var(--ink-3);
+}
+
+/* El teléfono: 390 × 844 reales. Si no cabe, se escala ENTERO y la
+   escala se rotula — una barra de scroll no es enseñar la captura. */
+.marco-envoltura { width: 100%; display: grid; justify-items: center; gap: 8px; }
+.marco-caja { width: 390px; height: 844px; transform-origin: top center; }
+.marco {
+  width: 390px; height: 844px;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 3px rgba(31,28,23,.10), 0 18px 44px rgba(31,28,23,.13);
+  border: 1px solid var(--line-2);
+}
+.escala {
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ── Interior de las pantallas (colores FIJOS: son el producto) ── */
+.pantalla {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 22px 24px 30px;
+  font-family: 'Inter Tight', system-ui, sans-serif;
+}
+.p-noche { background: #17150F; color: #E7E1D2; }
+.p-papel { background: #F2EDE0; color: #1F1C17; }
+
+.salida {
+  font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase;
+  opacity: .62; justify-self: start;
+}
+.centro { display: grid; place-items: center; align-content: center; gap: 0; }
+
+/* La forma que respira */
+.forma { width: 232px; height: 232px; display: grid; place-items: center; position: relative; }
+.aro-luz {
+  position: absolute; inset: -46px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(201,122,93,.30) 0%, rgba(201,122,93,.13) 42%, rgba(201,122,93,0) 70%);
+}
+.p-papel .aro-luz {
+  background: radial-gradient(circle at 50% 50%, rgba(201,122,93,.26) 0%, rgba(201,122,93,.10) 45%, rgba(201,122,93,0) 72%);
+}
+.disco {
+  width: 200px; height: 200px; border-radius: 50%;
+  border: 1px solid rgba(201,122,93,.55);
+  background: radial-gradient(circle at 50% 46%, rgba(201,122,93,.16), rgba(201,122,93,.03) 70%);
+  animation: respirar 11s ease-in-out infinite;
+}
+.p-papel .disco { border-color: rgba(168,94,67,.5); }
+@keyframes respirar {
+  0%, 100% { transform: scale(0.80); }
+  50%      { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .disco { animation: none; transform: scale(0.92); }
+  .pulso { animation: none !important; }
+}
+
+.cue {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 30px;
+  margin-top: 34px;
+  letter-spacing: .01em;
+}
+.cue-menor { font-size: 13px; letter-spacing: .16em; text-transform: uppercase; opacity: .55; margin-top: 12px; }
+
+/* Hitos: la sesión como seis tramos */
+.hitos { display: grid; gap: 11px; width: 100%; margin-top: 6px; }
+.hito { display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 12px; font-size: 13px; }
+.hito .marca { height: 1px; background: currentColor; opacity: .28; }
+.hito.hecho .marca { opacity: .5; }
+.hito.ahora .marca { height: 3px; opacity: 1; background: #C97A5D; }
+.hito.ahora { opacity: 1; }
+.hito span.n { opacity: .45; }
+.hito { opacity: .42; }
+.hito.hecho { opacity: .62; }
+
+/* Paisaje: el horizonte que sube */
+.paisaje { position: absolute; inset: 0; overflow: hidden; }
+.cielo { position: absolute; inset: 0; background: linear-gradient(180deg, #17150F 0%, #241E16 42%, #3A2A1E 72%, #6B4630 100%); }
+.sol {
+  position: absolute; left: 50%; bottom: 26%;
+  width: 300px; height: 300px; margin-left: -150px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(214,140,104,.55) 0%, rgba(201,122,93,.22) 40%, rgba(201,122,93,0) 68%);
+}
+.tierra { position: absolute; left: 0; right: 0; bottom: 0; height: 26%; background: #12100B; }
+.linea-h { position: absolute; left: 0; right: 0; bottom: 26%; height: 1px; background: rgba(231,225,210,.20); }
+
+.pie-sesion { display: grid; gap: 14px; justify-items: center; }
+.pulso {
+  width: 9px; height: 9px; border-radius: 50%; background: #C97A5D;
+  animation: latir 5.5s ease-in-out infinite;
+}
+@keyframes latir { 0%,100% { opacity:.30; transform: scale(.8);} 50% { opacity:1; transform: scale(1.25);} }
+.marcas-ronda { display: flex; gap: 7px; align-items: center; }
+.marcas-ronda i { display: block; width: 26px; height: 2px; background: currentColor; opacity: .22; }
+.marcas-ronda i.on { opacity: .85; background: #C97A5D; }
+
+/* ── Marca de la variante elegida ──────────────────────────────── */
+.variante.elegida .marco { border-color: var(--breathe); box-shadow: 0 0 0 2px rgba(201,122,93,.35), 0 2px 3px rgba(31,28,23,.10), 0 18px 44px rgba(31,28,23,.13); }
+.sello {
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--breathe-2); display: inline-block; margin-bottom: 2px;
+}
+.descartada .titulo, .descartada .texto p { opacity: .72; }
+
+/* ── Dónde vive: las tres opciones ─────────────────────────────── */
+.opciones { margin-top: 30px; max-width: 980px; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.opcion { display: grid; grid-template-columns: 34px 1fr; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.opcion .n { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; font-style: italic; color: var(--ink-3); line-height: 1; }
+.opcion h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-style: italic; font-weight: 400; margin-bottom: 6px; }
+.opcion p { margin: 0 0 8px; color: var(--ink-2); font-size: 16px; max-width: 72ch; }
+.opcion .veredicto { font-family: 'Inter Tight', system-ui, sans-serif; font-size: 13px; }
+.opcion .no  { color: var(--ink-3); }
+.opcion .si  { color: var(--breathe-2); }
+.opcion.recomendada h3 { color: var(--breathe-2); }
+
+.donde-par .texto .titulo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 27px; font-style: italic;
+}
+.donde-par .texto p { margin: 10px 0 0; color: var(--ink-2); font-size: 16px; }
+.donde-par { margin-top: 36px; display: grid; gap: 34px; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); align-items: start; }
+
+/* La biblioteca pintada: mismas piezas que la real */
+.lib { background: #F2EDE0; color: #1F1C17; position: absolute; inset: 0; padding: 26px 22px; overflow: hidden; font-family: 'Inter Tight', system-ui, sans-serif; }
+.lib .eyebrow { font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: #8A8372; }
+.lib h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 30px; font-weight: 400; margin: 2px 0 4px; }
+.lib .desc { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-size: 14.5px; color: #4A453C; margin: 0 0 16px; }
+.lib .seccion { font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: #8A8372; margin: 20px 0 9px; }
+.lib .seccion.viajes { color: #A85E43; }
+.tarjeta {
+  border-radius: 12px; background: #EAE4D4; padding: 13px 15px 14px;
+  border-left: 3px solid #C97A5D; margin-bottom: 10px;
+}
+.tarjeta .nom { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 21px; }
+.tarjeta .cuerpo { font-size: 13px; color: #4A453C; margin: 3px 0 7px; line-height: 1.42; }
+.tarjeta .meta { font-size: 12px; color: #8A8372; }
+.tarjeta .meta b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19px; font-weight: 400; color: #1F1C17; }
+.tarjeta.viaje {
+  background: #17150F; color: #E7E1D2; border-left: 3px solid #C97A5D;
+  padding: 16px 17px 17px;
+}
+.tarjeta.viaje .nom { font-size: 24px; }
+.tarjeta.viaje .cuerpo { color: #BDB5A2; }
+.tarjeta.viaje .meta { color: #9A9284; }
+.tarjeta.viaje .meta b { color: #E7E1D2; }
+
+/* ── Referencias ───────────────────────────────────────────────── */
+.refs { margin-top: 28px; max-width: 1040px; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.ref { display: grid; grid-template-columns: 210px 1fr; gap: 26px; padding: 20px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.ref .quien { font-family: 'Inter Tight', system-ui, sans-serif; font-size: 13px; font-weight: 500; }
+.ref .quien small { display: block; font-weight: 400; color: var(--ink-3); font-size: 12px; margin-top: 3px; letter-spacing: .02em; }
+.ref .que { color: var(--ink-2); font-size: 16px; }
+.ref .que .toma, .ref .que .deja {
+  font-family: 'Inter Tight', system-ui, sans-serif; font-size: 12.5px;
+  display: block; margin-top: 8px;
+}
+.ref .que .toma { color: var(--breathe-2); }
+.ref .que .deja { color: var(--ink-3); }
+@media (max-width: 720px) { .ref { grid-template-columns: 1fr; gap: 6px; } }
+
+/* ── El guion ──────────────────────────────────────────────────── */
+.guion { margin-top: 30px; max-width: 980px; border-top: 1px solid var(--line); }
+.tramo {
+  display: grid;
+  grid-template-columns: 92px 150px 1fr;
+  gap: 26px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.tramo .t {
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink-3);
+  letter-spacing: .02em;
+}
+.tramo .nombre { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-style: italic; }
+.tramo .que { color: var(--ink-2); font-size: 16px; }
+.tramo .que .dicho { color: var(--ink); font-style: italic; }
+.tramo.reten .nombre { color: var(--breathe-2); }
+@media (max-width: 720px) {
+  .tramo { grid-template-columns: 1fr; gap: 6px; padding: 16px 0; }
+}
+
+/* ── Lo que falta ──────────────────────────────────────────────── */
+.falta { margin-top: 28px; max-width: 1040px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.falta article {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 18px 20px 20px;
+  background: var(--paper-2);
+}
+.falta h3 { margin-bottom: 6px; }
+.falta p { margin: 0; font-size: 15.5px; color: var(--ink-2); }
+.falta .medida { font-family: 'Inter Tight', system-ui, sans-serif; font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+
+footer { margin-top: 66px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+</style>
+
+<div class="envoltura">
+
+  <header class="cabecera">
+    <span class="rotulo">PACE · Respiración en trance consciente · prototipo</span>
+    <h1>Marea baja</h1>
+    <p>Veinticinco minutos, música sin voz, tres rondas y dos retenciones. Esta página es
+      el <strong>entregable mínimo que el ROADMAP pide antes de escribir una línea de código</strong>:
+      el guion de una sesión y la pantalla que la sostiene. La pista musical es la tercera pata
+      y todavía no existe.</p>
+    <p><strong>Actualizado:</strong> pantalla elegida —<em class="ac">B, los cinco tramos</em>—, y
+      añadidas dos cosas que la elección abre: <strong>dónde vive esto dentro de la app</strong> y
+      qué traen las referencias que pasaste.</p>
+  </header>
+
+  <section>
+    <span class="rotulo">Lo que gobierna esta maqueta</span>
+    <h2>Cinco reglas que ya estaban decididas</h2>
+    <p class="lectura sub">Ninguna es nueva. Se listan porque son las que descartan la mitad de los
+      diseños posibles, y porque dos de ellas ya se rompieron una vez.</p>
+    <div class="gobierna">
+      <div><span class="k">Fuera de v1</span><span class="v">Decisión tuya en la sesión 180, con la contradicción delante: «fuera de v1, prototipo sí». Esto es el prototipo. No hay código de CTB en la app.</span></div>
+      <div><span class="k">Sin cronómetro de apnea</span><span class="v">La retención no lleva números, ni récord, ni tiempo objetivo (decisión de julio de 2026). Es guía calmada: pulso visual, un cue, y la salida siempre a la vista.</span></div>
+      <div><span class="k">Timer silencioso</span><span class="v">El ROADMAP pide «timer silencioso con hitos visuales». Ninguna de las tres pantallas enseña el tiempo que queda: lo que se ve es <em class="ac">por dónde vas</em>, no cuánto falta.</span></div>
+      <div><span class="k">Nada de scroll</span><span class="v">Una actividad en curso no enseña barra de scroll. Las tres caben enteras en 390 × 844, que es el teléfono más estrecho que se mide.</span></div>
+      <div><span class="k">Modal de seguridad</span><span class="v">Hay retenciones, así que entra por la misma puerta que Rondas: aviso, casilla y confirmación antes de empezar. También al reanudarla.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">Tres pantallas para el minuto 12</span>
+    <h2>La misma sesión, contada con más o menos información</h2>
+    <p class="lectura sub">Las tres están en el mismo instante: <strong>segunda ronda, respiración
+      conectada</strong>. Cambia cuánto te dice la pantalla. Elige mirándolas.</p>
+
+    <div class="variantes">
+
+      <!-- A ───────────────────────────────────────────────────── -->
+      <div class="variante descartada">
+        <div class="marco-envoltura">
+          <div class="marco-caja"><div class="marco">
+            <div class="pantalla p-noche">
+              <div class="salida">Salir</div>
+              <div class="centro">
+                <div class="forma">
+                  <div class="aro-luz"></div>
+                  <div class="disco"></div>
+                </div>
+                <div class="cue">Deja que entre</div>
+              </div>
+              <div class="pie-sesion">
+                <div class="marcas-ronda">
+                  <i class="on"></i><i class="on"></i><i></i>
+                </div>
+              </div>
+            </div>
+          </div></div>
+          <span class="escala" data-escala>1:1 · 390 × 844</span>
+        </div>
+        <div class="texto">
+          <div class="titulo">A · Solo la forma</div>
+          <p>Nada más que el disco que respira, el cue y tres marcas de ronda abajo. Es la lectura
+            más literal de «timer silencioso»: no hay nada que consultar, así que no hay nada que
+            vigilar.</p>
+          <p class="coste">Cuesta: a los 20 minutos no sabes si vas por la mitad o por el final.
+            Con los ojos cerrados da igual; al abrirlos, no.</p>
+        </div>
+      </div>
+
+      <!-- B ───────────────────────────────────────────────────── -->
+      <div class="variante elegida">
+        <div class="marco-envoltura">
+          <div class="marco-caja"><div class="marco">
+            <div class="pantalla p-noche">
+              <div class="salida">Salir</div>
+              <div class="centro">
+                <div class="forma">
+                  <div class="aro-luz"></div>
+                  <div class="disco"></div>
+                </div>
+                <div class="cue">Deja que entre</div>
+                <div class="cue-menor">Ronda dos</div>
+              </div>
+              <div class="hitos">
+                <div class="hito hecho"><span class="n">I</span><span class="marca"></span></div>
+                <div class="hito hecho"><span class="n">II</span><span class="marca"></span></div>
+                <div class="hito ahora"><span class="n">III</span><span class="marca"></span></div>
+                <div class="hito"><span class="n">IV</span><span class="marca"></span></div>
+                <div class="hito"><span class="n">V</span><span class="marca"></span></div>
+              </div>
+            </div>
+          </div></div>
+          <span class="escala" data-escala>1:1 · 390 × 844</span>
+        </div>
+        <div class="texto">
+          <span class="sello">Elegida</span>
+          <div class="titulo">B · Los cinco tramos</div>
+          <p>Lo mismo, más una columna de hitos: los cinco tramos del guion, el actual encendido.
+            Sigue sin haber ni un número — sabes dónde estás en la sesión, no cuánto queda.</p>
+          <p class="coste">Cuesta: cinco líneas más que mirar. Es información honesta, pero es
+            información, y una sesión de trance es justo el sitio donde deja de apetecer.</p>
+        </div>
+      </div>
+
+      <!-- C ───────────────────────────────────────────────────── -->
+      <div class="variante descartada">
+        <div class="marco-envoltura">
+          <div class="marco-caja"><div class="marco">
+            <div class="pantalla p-noche" style="background:#0F0E0A">
+              <div class="paisaje">
+                <div class="cielo"></div>
+                <div class="sol"></div>
+                <div class="tierra"></div>
+                <div class="linea-h"></div>
+              </div>
+              <div class="salida" style="position:relative">Salir</div>
+              <div class="centro" style="position:relative">
+                <div class="cue" style="margin-top:0">Deja que entre</div>
+              </div>
+              <div class="pie-sesion" style="position:relative">
+                <div class="pulso"></div>
+              </div>
+            </div>
+          </div></div>
+          <span class="escala" data-escala>1:1 · 390 × 844</span>
+        </div>
+        <div class="texto">
+          <div class="titulo">C · El paisaje</div>
+          <p>La sesión es una luz que sale y se pone: a los 12 minutos el sol está alto. El progreso
+            no se cuenta, se <em class="ac">ve</em>, y usa el mismo lenguaje de luz que la home ya
+            tiene construido.</p>
+          <p class="coste">Cuesta: es el más caro de hacer y el único que no reutiliza el aro. Y con
+            los ojos cerrados —que es como se hace esto— no lo ve nadie.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="lectura sub" style="margin-top:34px"><strong>Elegida la B</strong>, y lo que eso fija
+      no es solo un dibujo: la sesión <em class="ac">tiene tramos y se ven</em>. Eso obliga a que el
+      guion sea parte del dato —cinco hitos con nombre, no una duración— y a que la pantalla sepa en
+      cuál está. Es más trabajo que la A, y es lo que hace que a los veinte minutos sepas dónde estás
+      sin que aparezca ni un número.</p>
+  </section>
+
+  <section>
+    <span class="rotulo">Dónde vive esto</span>
+    <h2>Ni una técnica más, ni un Camino</h2>
+    <p class="lectura sub">La pregunta que hiciste, respondida mirando el código. Hay tres sitios
+      posibles y dos se caen solos.</p>
+
+    <div class="opciones">
+      <div class="opcion">
+        <span class="n">I</span>
+        <div>
+          <h3>Una técnica más en la biblioteca de Respira</h3>
+          <p>Es lo que parece más barato y es lo único que <strong>el motor no puede hacer</strong>:
+            una rutina tiene UN patrón —<code>rounds</code>, <code>coherent</code>, <code>co2</code>…—
+            y Marea baja tiene cinco tramos distintos. Además pondría una tarjeta de 25 minutos en la
+            misma lista que Box 4·4·4·4, que dura cinco.</p>
+          <span class="veredicto no">Descartada · exigiría reescribir el motor, y mezcla dos cosas que no se eligen igual</span>
+        </div>
+      </div>
+      <div class="opcion">
+        <span class="n">II</span>
+        <div>
+          <h3>Un Camino de respiración</h3>
+          <p>Esta sí sale casi gratis: <code>PathBreatheStep</code> ya encadena rutinas de Respira
+            dentro de un Camino, así que Marea baja podría ser cinco pasos y funcionaría mañana. Pero
+            la pantalla de un Camino es <strong>la de pasos</strong>, con su «Paso 2 de 5» y su corte
+            entre uno y otro: rompe exactamente lo que la variante B propone.</p>
+          <span class="veredicto no">Descartada como destino · pero es el atajo si quieres probar el guion sin construir nada</span>
+        </div>
+      </div>
+      <div class="opcion recomendada">
+        <span class="n">III</span>
+        <div>
+          <h3>Un estante propio dentro de Respira: <em>Viajes</em></h3>
+          <p>Y no es una idea nueva: <strong>ya está escrita en la Fase 5 del ROADMAP</strong> —
+            «revisión de las 20 técnicas y <em>separar Técnicas de Viajes</em>»—. Un viaje no es una
+            técnica más larga: es otra cosa. Dura de 15 a 45 minutos, lleva música, tiene nombre
+            propio y se elige por cómo quieres acabar, no por la técnica que usa.</p>
+          <p><strong>Y el reparto con la v1 cuadra solo:</strong> la separación entra en v1 porque es
+            Fase 5; el contenido CTB se queda fuera, como decidiste en la sesión 180. El estante
+            existe y se llena después.</p>
+          <span class="veredicto si">Recomendada · el sitio ya estaba previsto, faltaba ponerlo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="donde-par">
+      <div class="variante">
+        <div class="marco-envoltura">
+          <div class="marco-caja"><div class="marco">
+            <div class="lib">
+              <div class="eyebrow">Biblioteca</div>
+              <h4>Respiración</h4>
+              <p class="desc">Breathwork guiado: pranayamas, coherencia, rondas.</p>
+
+              <div class="seccion viajes">Viajes · con música</div>
+              <div class="tarjeta viaje">
+                <div class="nom">Marea baja</div>
+                <div class="cuerpo">Cinco tramos, tres rondas y dos retenciones. Ponte auriculares.</div>
+                <div class="meta"><b>25</b> MIN · cinco tramos · Premium</div>
+              </div>
+
+              <div class="seccion">Para ahora</div>
+              <div class="tarjeta">
+                <div class="nom">Rítmica yin</div>
+                <div class="cuerpo">Ritmo suave con reposo tras exhalar. Quietud que se asienta.</div>
+                <div class="meta"><b>8</b> MIN · con reposo al final</div>
+              </div>
+              <div class="seccion">Energía</div>
+              <div class="tarjeta">
+                <div class="nom">Rondas express</div>
+                <div class="cuerpo">Versión corta: 2 rondas de 25 respiraciones.</div>
+                <div class="meta"><b>4</b> MIN · 2 rondas de 25</div>
+              </div>
+              <div class="tarjeta">
+                <div class="nom">Respiración en rondas</div>
+                <div class="cuerpo">30 respiraciones profundas → retención en vacío. 3 rondas.</div>
+                <div class="meta"><b>12</b> MIN · 3 rondas de 30 · Premium</div>
+              </div>
+            </div>
+          </div></div>
+          <span class="escala" data-escala>1:1 · 390 × 844</span>
+        </div>
+      </div>
+
+      <div class="texto" style="max-width:52ch">
+        <div class="titulo">El estante, pintado</div>
+        <p>Arriba del todo y con <strong>otra tarjeta</strong>: fondo oscuro, el nombre grande, la
+          duración grande. Se lee como «esto es otra cosa» antes de leer una palabra — que es justo
+          lo que hay que decir para que nadie abra veinticinco minutos creyendo que abre cuatro.</p>
+        <p>Tres detalles que no son estéticos: salen de reglas que la biblioteca ya tiene.</p>
+        <p>· El filtro <strong>«≤ 5 min»</strong> no cuenta los viajes. Un viaje no compite con una
+          técnica corta, y si contara diría «0» y parecería roto.<br>
+          · <strong>«Para ahora» nunca propone un viaje.</strong> Esa sección significa «cabe donde
+          estás», y veinticinco minutos con auriculares no caben entre dos reuniones.<br>
+          · Los viajes con retención llevan <strong>el mismo aviso</strong> que Rondas, y entran por
+          la misma puerta.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">Las referencias que pasaste</span>
+    <h2>Qué traen, y qué no me llevo</h2>
+    <p class="lectura sub">Dos de audio y cinco de producto. De cada una, lo que cambia algo en PACE
+      — y lo que deliberadamente no, porque este proyecto ya decidió lo contrario.</p>
+
+    <div class="refs">
+      <div class="ref">
+        <div class="quien">Tom Woodfin · Mixcloud<small>46 sets · de 15 a 63 min</small></div>
+        <div class="que">Sus sesiones se llaman <em>CTB · Attunement</em>, <em>Gideon's Paradise
+          Forest</em>, <em>Talamanca's Rhythm</em>: <strong>nombre propio y prefijo de familia</strong>
+          (CTB, IDB, FGB), nunca «respiración conectada 30×3». Y duran de 15 a 63 minutos, sin una
+          duración canónica.
+          <span class="toma">Me llevo: un viaje se nombra como una pieza, no como una técnica, y la
+            familia va delante. Confirma «Marea baja» y confirma el estante.</span>
+          <span class="deja">Ojo: sus sets viven fuera de una app. Aquí la pista tiene que hacer bucle
+            o durar exactamente lo que dura la sesión.</span></div>
+      </div>
+      <div class="ref">
+        <div class="quien">Breathe With Sandy · YouTube<small>350+ sesiones · música propia</small></div>
+        <div class="que">Ordena por <strong>intención</strong> —calma, foco, energía, transformación
+          profunda—, no por técnica; recomienda auriculares; y produce ella la música, así que el
+          sonido no es un fondo: es parte de la sesión.
+          <span class="toma">Me llevo: el estante de Viajes se ordena por cómo quieres acabar, no por
+            lo que hace tu diafragma. Y el aviso de auriculares va en la tarjeta, no dentro.</span>
+          <span class="deja">No me llevo el volumen. 350 sesiones son un canal; cuatro bien hechas son
+            un producto que se puede vender.</span></div>
+      </div>
+      <div class="ref">
+        <div class="quien">Breathe · Havabee<small>1 M+ descargas · 4,86</small></div>
+        <div class="que">Patrones a medida con ajuste de 0,1 s, voz o campana como señal, y un
+          <strong>test de apnea</strong> con seguimiento de tu marca.
+          <span class="toma">Me llevo que la señal se elija — PACE ya lo hace: tono, voz, o voz con
+            música.</span>
+          <span class="deja">El test de apnea no, y es una negativa vieja de este proyecto: sin
+            cronómetro de retención y sin récord. Es la diferencia entre una guía y una competición
+            contigo mismo.</span></div>
+      </div>
+      <div class="ref">
+        <div class="quien">Home Workout · Leap Fitness<small>rutinas de 7 a 19 min</small></div>
+        <div class="que">Cada ejercicio se anima y al tocarlo se abre la técnica; el descanso se
+          alarga o se salta <strong>con un toque</strong>; y si un ejercicio no te sirve, lo cambias
+          sin salir de la rutina.
+          <span class="toma">Las dos últimas valen para Mueve y Estira tal cual, y una ya está en el
+            ROADMAP como «adaptación». Poder cambiar un ejercicio a mitad es lo que evita abandonar
+            la rutina entera por un solo movimiento que hoy no puedes hacer.</span></div>
+      </div>
+      <div class="ref">
+        <div class="quien">Stretching · Leap Fitness<small>categorías por momento</small></div>
+        <div class="que">Ordena por <strong>momento y situación</strong> —al despertar, antes de
+          dormir, antes de correr, después de correr— además de por zona del cuerpo.
+          <span class="toma">PACE ya tiene «Para ahora», que es esa idea en una línea. Lo que falta es
+            el momento de después: <em>acabas de terminar un Pomodoro largo</em> es un instante que la
+            app conoce y hoy no usa para proponer nada.</span></div>
+      </div>
+      <div class="ref">
+        <div class="quien">Water Tracker<small>recordatorios que se callan</small></div>
+        <div class="que">Recordatorios que <strong>paran solos cuando ya has llegado al objetivo</strong>,
+          y un calendario que enseña de un vistazo los días registrados.
+          <span class="toma">Un recordatorio que se calla en cuanto has bebido es exactamente el tono
+            de este producto. Hoy PACE solo avisa del fin de un Pomodoro.</span>
+          <span class="deja">La botella animada que se llena, no: es la gamificación blanda que el
+            proyecto ya descartó.</span></div>
+      </div>
+      <div class="ref">
+        <div class="quien">Habitica<small>la referencia en contra</small></div>
+        <div class="que">Avatar, experiencia, daño por fallar, jefes por equipos. Las reseñas de 2026
+          le reprochan justo lo que este proyecto decidió evitar: la capa de juego es ruido para quien
+          no la quiere, y pasarte veinte minutos mirando tus rachas <strong>es una forma de no hacer
+          el hábito</strong>.
+          <span class="toma">Me la llevo como prueba en contra: confirma «sin gamificación agresiva» y
+            «sin métricas abrumadoras» con evidencia ajena, no con gusto propio.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">El guion · 25 minutos</span>
+
+    <h2>Marea baja</h2>
+    <p class="lectura sub">Escrito sobre lo que la app ya sabe hacer: la coherencia de 5,5 s, las
+      rondas conectadas con retención en vacío y la exhalación alargada 4·6 son técnicas que ya
+      están en el catálogo. Lo nuevo es el <strong>arco</strong>, no las piezas.</p>
+
+    <div class="guion">
+      <div class="tramo">
+        <span class="t">0:00 – 3:00</span>
+        <span class="nombre">I · Llegada</span>
+        <span class="que">Sin guía de ritmo. Solo la postura y el peso.
+          <span class="dicho">«Siéntate como para quedarte. Deja que el aire entre sin empujarlo.»</span></span>
+      </div>
+      <div class="tramo">
+        <span class="t">3:00 – 8:00</span>
+        <span class="nombre">II · Marea</span>
+        <span class="que">Coherencia: 5,5 segundos dentro, 5,5 fuera. Veintisiete ciclos. La forma
+          empieza a marcar el ritmo y la música se abre.</span>
+      </div>
+      <div class="tramo reten">
+        <span class="t">8:00 – 19:00</span>
+        <span class="nombre">III · Tres rondas</span>
+        <span class="que">Treinta respiraciones conectadas · retención en vacío · quince segundos de
+          recuperación. Tres veces. <strong>La retención la sueltas tú</strong>: no hay cuenta, no
+          hay marca, no hay récord — solo el pulso y la salida.</span>
+      </div>
+      <div class="tramo">
+        <span class="t">19:00 – 23:00</span>
+        <span class="nombre">IV · Bajamar</span>
+        <span class="que">Exhalación alargada, cuatro dentro y seis fuera, hasta que deja de hacer
+          falta contar.</span>
+      </div>
+      <div class="tramo">
+        <span class="t">23:00 – 25:00</span>
+        <span class="nombre">V · Reposo</span>
+        <span class="que">Sin guía y sin forma: solo la música bajando. La sesión no termina con un
+          aviso, termina cuando el sonido se ha ido.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">Antes de que esto se pueda construir</span>
+    <h2>Lo que falta, y una cosa que no sabíamos</h2>
+    <div class="falta">
+      <article>
+        <h3>La pista, y tiene que hacer bucle</h3>
+        <p>Es la tercera pata del entregable mínimo. En el catálogo la falta de bucle era un detalle
+          —los últimos minutos van sin fondo—; en una sesión de 25 minutos deja de serlo.</p>
+        <p class="medida">La pieza que existe entra 30,4 dB y sale 48,6 dB por debajo de su cuerpo:
+          repetirla deja un bajón a casi silencio en cada vuelta.</p>
+      </article>
+      <article>
+        <h3>Qué pasa si sales a la mitad</h3>
+        <p>Desde hoy una sesión de Respira interrumpida se puede reanudar por la ronda en la que
+          estabas. Una sesión CTB de 25 minutos es el caso que más lo necesita, y ya tiene
+          mecanismo.</p>
+        <p class="medida">Caduca a las dos horas y dentro del mismo día: es un estado en el que
+          estabas, no una tarea pendiente.</p>
+      </article>
+      <article>
+        <h3>Cuántas van al lanzamiento</h3>
+        <p>El ROADMAP dice de cuatro a seis sesiones en el Lifetime. Con un guion cerrado y una
+          pista que funcione, la segunda cuesta mucho menos que la primera — pero cada una necesita
+          su música.</p>
+        <p class="medida">Cuatro sesiones · cuatro pistas con bucle · una sola pantalla.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    Maqueta de prototipo. CTB está fuera de la v1 por decisión de la sesión 180 y esta página no
+    cambia esa decisión: sirve para elegir pantalla y para saber qué costaría.
+  </footer>
+
+</div>
+
+<script>
+/* La maqueta se enseña ENTERA o no se enseña: si el teléfono de 390 no cabe,
+   se escala el marco completo y se rotula la escala. Una barra de scroll no es
+   enseñar la captura — es el defecto que ya costó una sesión. */
+(function () {
+  var cajas = document.querySelectorAll('.marco-caja');
+  function ajustar() {
+    for (var i = 0; i < cajas.length; i++) {
+      var caja = cajas[i];
+      var disp = caja.parentElement.clientWidth;
+      var k = Math.min(1, disp / 390);
+      caja.style.transform = 'scale(' + k.toFixed(4) + ')';
+      caja.style.height = (844 * k) + 'px';
+      var etiqueta = caja.parentElement.querySelector('[data-escala]');
+      if (etiqueta) {
+        etiqueta.textContent = k >= 0.999
+          ? '1:1 · 390 × 844'
+          : 'escala ' + k.toFixed(2).replace('.', ',') + '× · 390 × 844 reales';
+      }
+    }
+  }
+  ajustar();
+  window.addEventListener('resize', ajustar);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustar);
+})();
+</script>

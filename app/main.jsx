@@ -33,6 +33,17 @@ function PaceApp() {
 
   // Flujo de seguridad para respiración
   const [safetyRoutine, setSafetyRoutine] = useStateMain(null);
+  /* s186 · LA SESION DE RESPIRA QUE SE QUEDO A MEDIAS. Se lee al montar y se
+     RE-LEE al volver a la home, que es cuando puede haber cambiado (acabas de
+     salir de una sesion, o de terminarla). Vive aqui y no en el estado global
+     porque no es estado de la app: es una nota de `pace.breathe.v1`, la clave
+     aparte que sigue el patron del Pomodoro (s102). `pendienteReanudar` guarda
+     el registro mientras el modal de seguridad esta delante -- reanudar pasa
+     por la MISMA puerta que empezar, asi que una rutina con apnea vuelve a
+     pedir su confirmacion. */
+  const [reanudable, setReanudable] = useStateMain(
+    () => (window.leerRespiraGuardada && window.leerRespiraGuardada()) || null);
+  const [pendienteReanudar, setPendienteReanudar] = useStateMain(null);
 
   // Constructor de rutinas premium (F7 · s93). Overlay singleton abierto vía
   // CustomEvent `pace:open-custom-builder` (detail.id: rutina a editar o
@@ -115,14 +126,20 @@ function PaceApp() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  useEffectMain(() => {
+    if (view.type !== 'home') return;
+    setReanudable((window.leerRespiraGuardada && window.leerRespiraGuardada()) || null);
+  }, [view.type]);
+
   // Handle start de una rutina
-  const handleStartBreathe = (routine) => {
+  const handleStartBreathe = (routine, reanudar) => {
     if (routine.safety) {
       setSafetyRoutine(routine);
+      setPendienteReanudar(reanudar || null);
       setOpenLibrary(null);
     } else {
       setOpenLibrary(null);
-      setView({ type: 'breathe-session', routine });
+      setView({ type: 'breathe-session', routine, reanudar: reanudar || null });
     }
   };
 
@@ -194,6 +211,15 @@ function PaceApp() {
         const propias = (getState().customRoutines || []).length;
         if (propias) setOpenLibrary('move');
         else setCustomBuilder({ id: null });
+        return;
+      }
+      if (d.kind === 'resume' && d.targetId) {
+        /* Reanudar entra por `handleStartBreathe` y no por un camino propio:
+           asi la rutina con apnea vuelve a pasar por su modal de seguridad y
+           el guard de acceso sigue siendo el mismo. */
+        const g = window.leerRespiraGuardada && window.leerRespiraGuardada();
+        const r = g && window.getBreatheRoutine && window.getBreatheRoutine(g.routineId);
+        if (r) handleStartBreathe(r, g);
         return;
       }
       if ((d.kind === 'repeat' || d.kind === 'suggest') && d.targetId) {
@@ -405,8 +431,12 @@ function PaceApp() {
       {safetyRoutine && (
         <BreatheSafety
           routine={safetyRoutine}
-          onAccept={(r) => { setSafetyRoutine(null); setView({ type: 'breathe-session', routine: r }); }}
-          onCancel={() => setSafetyRoutine(null)}
+          onAccept={(r) => {
+            setSafetyRoutine(null);
+            setView({ type: 'breathe-session', routine: r, reanudar: pendienteReanudar });
+            setPendienteReanudar(null);
+          }}
+          onCancel={() => { setSafetyRoutine(null); setPendienteReanudar(null); }}
         />
       )}
 
@@ -428,7 +458,7 @@ function PaceApp() {
           se conserva la señal en la API para un futuro consumidor (p.ej.
           micro-animación de despedida distinta, o métrica de abandono). */}
       {view.type === 'breathe-session' && (
-        <BreatheSession routine={view.routine} onExit={(_reason) => setView({ type: 'home' })} />
+        <BreatheSession routine={view.routine} reanudar={view.reanudar} onExit={(_reason) => setView({ type: 'home' })} />
       )}
       {view.type === 'move-session' && (
         <MoveSession routine={view.routine} kind={view.kind || 'move'} onExit={(_reason) => setView({ type: 'home' })} />

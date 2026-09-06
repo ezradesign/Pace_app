@@ -226,6 +226,28 @@ function SidebarToday({ hoy, cuentas, onOpen }) {
    esto ANTES de pintar el separador, así no queda una regla suelta. */
 function sidebarActionView(accion, t, tn, lang) {
   if (!accion) return null;
+  if (accion.kind === 'resume') {
+    const r = window.getBreatheRoutine && window.getBreatheRoutine(accion.targetId);
+    if (!r) return null;
+    /* MISMO ROTULO QUE UN CAMINO, «Continua», y a proposito: para quien lo
+       lee es la misma promesa —algo tuyo sigue abierto— y el proyecto ya
+       decidio que la tarjeta solo puede decir CONTINUAR o REPETIR. Lo que
+       cambia es el color, que es el del modulo, y la linea de abajo. */
+    let titulo = r.name;
+    if (lang === 'en') {
+      const v = t(accion.targetId + '.name');
+      if (v !== accion.targetId + '.name') titulo = v;
+    }
+    return {
+      kind: 'resume',
+      eyebrow: t('sidebar.action.continue'),
+      color: 'var(--breathe)',
+      titulo: titulo,
+      meta: accion.rondas
+        ? tn('sidebar.action.resume.round', { n: accion.round, m: accion.rondas })
+        : t('sidebar.action.resume.meta'),
+    };
+  }
   if (accion.kind === 'path') {
     const camino = window.getPath && window.getPath(accion.targetId);
     if (!camino) return null;
