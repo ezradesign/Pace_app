@@ -103,6 +103,7 @@ function BreatheLibrary({ open, onClose, onStart }) {
       title={t('lib.breathe.title')} subtitle={t('lib.breathe.subtitle')}
       variant="breathe"
       filtros={window.LIB_FILTROS_RESPIRA}
+      viajes={window.BREATHE_VIAJES}
       conTuyas={false}
       pozoAhora={(r) => !r.safety} />
   );
@@ -165,12 +166,54 @@ function BreatheSafety({ routine, onAccept, onCancel }) {
 }
 
 
-/* Sesion 49 - helper de lookup para Caminos */
+/* ============================================================
+   EL ESTANTE DE VIAJES (s186)
+   ============================================================
+   UN VIAJE NO ES UNA TECNICA MAS LARGA: es otra cosa. Dura de 15 a 45 minutos,
+   lleva musica, tiene nombre propio y se elige por como quieres acabar, no por
+   la tecnica que usa. La Fase 5 del ROADMAP lo dice con estas palabras --
+   «separar Tecnicas de Viajes»-- y esta lista es esa separacion.
+
+   VIVE EN SU PROPIA LISTA Y NO COMO UN GRUPO MAS DE `BREATHE_ROUTINES`, y esa
+   es la decision entera. De ahi salen GRATIS las tres reglas que un viaje
+   necesita, sin escribir ni una excepcion:
+     · el filtro «≤ 5 min» no los cuenta -- no estan en el catalogo que cuenta;
+     · «Para ahora» no los propone -- se calcula sobre ese mismo catalogo;
+     · no compiten en el orden de los grupos.
+   Escritas como excepciones habrian sido tres sitios que recordar cada vez que
+   alguien toca las reglas de la biblioteca. Asi no hay nada que recordar.
+
+   LO QUE SI COMPARTEN con una tecnica: la puerta. `onStart` es el mismo, asi
+   que un viaje con retencion pasa por el MISMO modal de seguridad y por el
+   mismo guard de acceso.
+
+   ESTA VACIA A PROPOSITO. El contenido CTB esta FUERA de la v1 (decision del
+   usuario, s180); lo que entra en v1 es el sitio. Con la lista vacia la
+   biblioteca no pinta nada -- ni cabecera ni hueco--, que es la misma regla que
+   ya gobierna los grupos vacios. El prototipo de la primera sesion, con su
+   guion y su pantalla, vive en `docs/proposals/ctb-marea-baja.html`.
+
+   FORMA DE UN VIAJE (cuando lo haya): lo de una rutina —`id`, `name`, `desc`,
+   `min`, `access`, `safety`— mas `tramos` (cuantas partes tiene su guion) y
+   `pista` (el archivo de musica). El runner no existe todavia. */
+window.BREATHE_VIAJES = [];
+
+/* Sesion 49 - helper de lookup para Caminos.
+
+   s186: BUSCA TAMBIEN EN LOS VIAJES, y no es una comodidad -- es cerrar un
+   agujero de premium antes de que exista. `canAccessRoutine` resuelve el id por
+   esta funcion y es FAIL-OPEN a proposito («no es trabajo del guard bloquear
+   ids que no existen»), asi que el dia que se escriba un viaje `access:
+   'premium'` su id no estaria en ningun catalogo, el guard devolveria `true` y
+   el viaje se abriria gratis. Un viaje es una rutina de Respira a todos los
+   efectos de acceso y de seguridad; lo unico que cambia es donde se pinta. */
 function getBreatheRoutine(id) {
   for (const group of Object.values(BREATHE_ROUTINES)) {
     const found = group.items.find(r => r.id === id);
     if (found) return found;
   }
+  const viajes = window.BREATHE_VIAJES || [];
+  for (const v of viajes) if (v && v.id === id) return v;
   return null;
 }
 window.getBreatheRoutine = getBreatheRoutine;

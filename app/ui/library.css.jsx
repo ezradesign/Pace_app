@@ -205,6 +205,30 @@
   display: grid; place-items: center; font-size: 11px; font-weight: 600;
 }
 .pace-lib-card-resp { padding-right: 34px; }
+
+/* EL ESTANTE DE VIAJES (s186). La tarjeta va en OSCURO y con el nombre y la
+   cifra mas grandes: la diferencia tiene que leerse antes que el texto, porque
+   lo que comunica es «esto no es una tecnica de cinco minutos». Los colores van
+   a fuego y no por token -- es una superficie invertida dentro de una pantalla
+   clara, igual que la pastilla de FOCO de la topbar. */
+.pace-lib-viajes {
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--tone); font-weight: 500;
+  /* El MISMO aire que «Para ahora» y los grupos: es un rotulo de seccion de
+     la misma familia, y con margin-top 0 quedaba pegado a los chips (visto
+     en la revision a tamano real). */
+  margin: 14px 0 9px;
+}
+.pace-lib-card-viaje {
+  background: #17150F; border-left-color: var(--tone);
+  padding: 15px 16px 15px 17px; margin-bottom: 16px;
+}
+.pace-lib-card-viaje h4 { color: #F2EDE0; font-size: 24px; }
+.pace-lib-card-viaje p { color: #BDB5A2; }
+.pace-lib-card-viaje .pace-lib-ctx { color: #9A9284; }
+.pace-lib-card-viaje .pace-lib-ctx b { color: #F2EDE0; }
+.pace-lib-card-viaje .pace-lib-hit { color: inherit; }
+.pace-lib-card-viaje .pace-lib-pill { color: #BDB5A2; border-color: #4E4634; }
 /* GRANO DE PAPEL con los valores del sistema, no unos nuevos:
    PACE_GRAIN_OPACITY y paceGrainUrl() (SessionShell.jsx). La maqueta probó
    0,055 -- cinco veces más-- y eso habría sido una decisión nueva. */

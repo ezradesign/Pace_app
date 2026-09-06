@@ -1,6 +1,6 @@
 # s186 · La sesión que se puede retomar, y el sitio donde vivirá CTB
 
-**Fecha:** 2026-09-06 · **Versión publicada:** v0.116.0 · **Suite:** 195 → **200**
+**Fecha:** 2026-09-06 · **Versiones publicadas:** v0.116.0 y **v0.117.0** · **Suite:** 195 → **206**
 
 > Tres encargos encadenados: la revisión de móvil que s185 dejó declarada sin
 > hacer, la **reanudación de una sesión de Respira** —la primera prioridad del
@@ -127,6 +127,50 @@ aviso con la app cerrada sin un servidor de push**, y este producto es
 offline-first con licencia offline. En web solo cabe un aviso in-app; el de verdad
 llega con Capacitor (Fase 9). De regalo, un cadáver: **`state.reminders: []` sigue
 en el estado desde v0.11.6**, cuando se retiró su sección del sidebar.
+
+---
+
+## 4 · El estante de Viajes, construido (v0.117.0)
+
+Lo que la Fase 5 pide con esas palabras — «separar Tecnicas de Viajes» — puesto.
+
+**La decision es donde vive el dato, no como se pinta.** Los viajes llegan a
+`LibraryShell` por **su propia prop**, desde `window.BREATHE_VIAJES`, y **nunca
+entran en `todas`**. De ahi salen gratis las tres reglas que un viaje necesita:
+
+| Regla | De donde sale |
+|---|---|
+| El filtro «≤ 5 min» no los cuenta | No estan en el catalogo que cuenta |
+| «Para ahora» no los propone | Se calcula sobre ese mismo catalogo |
+| No compiten en el orden de los grupos | No son un grupo |
+
+Escritas como excepciones habrian sido **tres sitios que recordar** cada vez que
+alguien toca las reglas de la biblioteca. Asi no hay nada que recordar.
+
+**La lista esta vacia a proposito** y sin viajes no se pinta ni la cabecera, que
+es la misma regla que ya gobierna los grupos vacios. Entra el sitio; el contenido
+CTB sigue fuera de la v1.
+
+### El agujero de premium que aun no existia
+
+`canAccessRoutine` resuelve el id con `getBreatheRoutine` y es **fail-open** con
+los que no conoce — por diseno, y con razon: «no es trabajo del guard bloquear
+ids que no existen». Pero un viaje `access: 'premium'` **no habria estado en
+ningun catalogo**, asi que el guard habria dicho «adelante» y el viaje se habria
+abierto gratis. Se ve en la primera captura: la tarjeta decia «Premium» y no
+«Pronto», al reves que las tecnicas de pago. `getBreatheRoutine` busca ahora
+tambien en los viajes, con su mutante en rojo.
+
+### Un mutante que NO muerde, y su razon
+
+Meter los viajes en `todas` **no cambia nada en pantalla**: ese `useMemo` depende
+de `[groups]` y se calcula al arrancar la app, cuando `window.BREATHE_VIAJES`
+todavia esta vacia, y nunca se recalcula. Asi que los asertos «los chips no los
+cuentan» y «Para ahora no los propone» son **guardias de un refactor futuro, no
+pruebas** — y no cazarian a alguien que escribiera un viaje directamente en
+`BREATHE_ROUTINES`, porque ese catalogo es un `const` que no se alcanza desde la
+pagina. **Lo que sostiene la regla es la estructura**, y eso esta escrito en la
+cabecera del spec para que nadie lea mas de lo que hay.
 
 ---
 
